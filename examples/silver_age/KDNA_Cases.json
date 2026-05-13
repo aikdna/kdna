@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "silver_age",
+    "created": "2026-05-13",
+    "purpose": "Demonstrate silver age service patterns through concrete cases showing how invisible barriers are misread.",
+    "load_condition": "Load when the user asks for examples or case studies."
+  },
+  "cases": [
+    {
+      "id": "case_best_activity_center_empty",
+      "scene_id": "scene_decline_activity",
+      "title": "The best senior activity center that nobody attended",
+      "context": "A community center invested heavily in a state-of-the-art senior activity program — tai chi, art classes, book clubs, computer workshops. The program was free and located in a central accessible location. Marketing materials highlighted the facilities and schedule.",
+      "what_happened": "Attendance was under 20% of capacity after six months. Exit interviews with seniors who visited once but didn't return revealed a consistent theme: nobody wanted to be 'the new person' walking into an established group. The psychological cost of entering a room where everyone else already knew each other was higher than any activity benefit.",
+      "what_was_learned": "The facility solved practical barriers (free, accessible, good content) but ignored psychological entry cost. Adding a 'first-timer buddy' program — where a regular attendee personally invites and accompanies a new person — tripled retention within two months.",
+      "structural_pattern": "invest_in_content → ignore_entry_cost → low_attendance → add_bridge_person → psychological_safety_established → attendance_rises"
+    },
+    {
+      "id": "case_tech_class_graduated_no_one",
+      "scene_id": "scene_technology_anxiety",
+      "title": "The iPad class where everyone 'graduated' but nobody used an iPad again",
+      "context": "A senior center ran a 6-week iPad class with step-by-step tutorials. All 15 participants completed the course and received certificates. Follow-up surveys three months later found that only 2 participants were still using an iPad.",
+      "what_happened": "The class was designed for zero mistakes — every step pre-planned, every screen pre-configured. When participants went home and encountered something unexpected, they froze. The class had taught them to follow steps, not to recover from errors. Each unexpected screen became a failure that confirmed 'I can't do this.'",
+      "what_was_learned": "Teaching technology to seniors requires error-recovery design, not perfectionist instruction. The most important skill is not 'how to do it right' but 'what to do when something goes wrong.' A redesigned class where the instructor deliberately made mistakes and showed recovery cut the dropout rate from 87% to 15%.",
+      "structural_pattern": "perfectionist_instruction → no_error_recovery_training → home_environment_errors → shame_spiral → abandonment → redesign_for_mistake_recovery → confidence_restored"
+    },
+    {
+      "id": "case_missing_mr_chen",
+      "scene_id": "scene_withdrawal_isolation",
+      "title": "Mr. Chen, who disappeared because he 'didn't want to be a burden'",
+      "context": "An 82-year-old widower, Mr. Chen, was a regular at a community lunch program. He was well-liked and participated actively. Over three months, his attendance dropped from weekly to sporadically, then stopped entirely. Staff assumed he had lost interest or found other activities.",
+      "what_happened": "A volunteer who knew Mr. Chen personally visited him and discovered he had stopped coming because his daughter had been driving him and he felt guilty about the time it cost her. He had never mentioned this because he didn't want to 'complain' or 'be a problem.' The center had a volunteer driver program he didn't know about.",
+      "what_was_learned": "Mr. Chen's withdrawal had nothing to do with the program quality. He was self-isolating to avoid being a burden on his daughter. The program's exit process never asked 'Is there something making it hard to come?' — it just recorded absences. Personal outreach and burden-aware check-ins are the most important retention tools in senior services.",
+      "structural_pattern": "attendance_drops → staff_assumes_disinterest → no_personal_reach → burden_concern_unaddressed → permanent_withdrawal → personal_outreach_discovers_barrier → simple_solution_exists → lesson: always_ask_why_personally"
+    }
+  ]
+}

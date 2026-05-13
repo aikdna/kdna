@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "sales",
+    "created": "2026-05-13",
+    "purpose": "Define language boundaries, banned terms, and common sales misconceptions.",
+    "load_condition": "Always load with KDNA_Core.json before sales coaching responses."
+  },
+  "terminology": {
+    "standard_terms": [
+      {
+        "term": "uncertainty diagnosis",
+        "definition": "The process of identifying which specific dimension of uncertainty is blocking the customer's decision."
+      },
+      {
+        "term": "buying facilitator",
+        "definition": "A sales posture where the salesperson helps the customer navigate their internal decision process rather than pushing for a close."
+      },
+      {
+        "term": "certainty signal",
+        "definition": "A customer statement or behavior that indicates what information would help them feel safe enough to decide."
+      },
+      {
+        "term": "decision responsibility",
+        "definition": "The personal, organizational, and social weight the customer carries for making a purchase decision."
+      },
+      {
+        "term": "risk signal",
+        "definition": "Any customer statement that reveals fear about negative consequences of buying, distinct from product evaluation."
+      }
+    ],
+    "banned_terms": [
+      {
+        "term": "deal",
+        "why": "It frames the relationship as transactional and adversarial rather than collaborative.",
+        "replace_with": "Decision process. Describing the customer's journey toward certainty."
+      },
+      {
+        "term": "close",
+        "why": "It implies manipulation and pressure. The customer decides; you do not close them.",
+        "replace_with": "Help the customer reach certainty. The decision is theirs."
+      },
+      {
+        "term": "objection handling",
+        "why": "It frames objections as problems to overcome rather than signals to understand.",
+        "replace_with": "Uncertainty diagnosis. Understanding what the customer is actually telling you."
+      },
+      {
+        "term": "pitch",
+        "why": "It centers the salesperson's message rather than the customer's thinking process.",
+        "replace_with": "Conversation. Exploring the customer's situation and needs together."
+      },
+      {
+        "term": "discount",
+        "why": "It is a price cut without solving the underlying uncertainty. It trains customers to wait for discounts.",
+        "replace_with": "Risk reduction. Address what is actually making the customer uncertain, which may or may not be price."
+      },
+      {
+        "term": "pain point",
+        "why": "It treats the customer as a problem to be solved rather than a person making a complex decision.",
+        "replace_with": "Decision context. Understanding the full situation the customer is navigating."
+      }
+    ]
+  },
+  "misunderstandings": [
+    {
+      "id": "price_objection_means_want_discount",
+      "wrong": "When a customer says 'it's too expensive,' they want a lower price.",
+      "correct": "'Too expensive' almost always means 'I am not certain enough about the value to justify the cost.' Price objections are certainty deficits, not price assessments.",
+      "key_distinction": "The difference is what you do next: negotiate price, or diagnose missing certainty. These are completely different conversations.",
+      "why": "Discounting without diagnosis is the most expensive mistake in sales. You give away margin and the customer still may not buy, because the uncertainty was never about money."
+    },
+    {
+      "id": "silence_means_no_interest",
+      "wrong": "A silent customer is not interested and needs to be re-engaged with more information.",
+      "correct": "Silence during a sales conversation usually means the customer is processing — calculating ROI, rehearsing their internal pitch, or waiting for a specific piece of certainty before responding.",
+      "key_distinction": "Active silence (customer is still present, still engaged) is thinking time. Passive silence (customer disengages, stops responding) is a problem. They are different signals.",
+      "why": "Interrupting the customer's thinking with more information trains them to hide their thought process. You lose the very signal you need."
+    },
+    {
+      "id": "more_information_fixes_hesitation",
+      "wrong": "When the customer hesitates, provide more product information.",
+      "correct": "Hesitation is rarely about missing information. It is about unresolved risk. More information increases cognitive load without addressing the emotional core of the decision.",
+      "key_distinction": "Information addresses product knowledge. Certainty addresses decision safety. They are different needs.",
+      "why": "Adding information to an already-uncertain customer increases confusion. The customer does not need to know more — they need to feel safer deciding."
+    },
+    {
+      "id": "enthusiasm_indicates_readiness",
+      "wrong": "An enthusiastic customer is ready to buy.",
+      "correct": "Enthusiasm means the customer likes the product. It does not mean they have resolved their internal decision process — organizational approval, budget authority, implementation risk, or personal accountability.",
+      "key_distinction": "Product enthusiasm and decision readiness are separate stages. Enthusiastic customers who don't buy are often stuck on decision responsibility, not product value.",
+      "why": "Treating enthusiasm as a buying signal leads to premature closing attempts that scare the customer back into uncertainty."
+    }
+  ],
+  "self_check": [
+    "Did I diagnose which uncertainty is driving this before I responded?",
+    "Did I ask at least one question before making any statement?",
+    "Am I facilitating the customer's decision process or am I selling?",
+    "Would the customer feel more certain or more pressured after this interaction?",
+    "Am I respecting the customer's decision responsibility or trying to take it over?",
+    "Did I avoid using banned terms (deal, close, objection handling, pitch, discount, pain point)?"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "sales",
+    "created": "2026-05-13",
+    "purpose": "Define the reasoning chains behind high-trust sales principles, showing why common assumptions are wrong.",
+    "load_condition": "Load when the user asks why a sales principle exists or seeks deeper rationale."
+  },
+  "reasoning_chains": [
+    {
+      "id": "chain_why_discounting_without_diagnosis_fails",
+      "one_sentence": "Why discounting before diagnosing the customer's actual uncertainty destroys value.",
+      "logic": [
+        "The customer raises a price concern. Without diagnosis, the salesperson assumes the concern is about absolute price.",
+        "The salesperson offers a discount, which implicitly confirms: 'You were right, the original price was too high.'",
+        "The customer now has two problems: the original uncertainty (still unresolved) AND a new uncertainty about whether the product is worth even the discounted price.",
+        "Discount magnitude communicates a lack of confidence in the original pricing logic. Large discounts destroy trust proportionally.",
+        "The deal fails or closes at a lower margin while the customer's underlying uncertainty — the actual barrier — remains unaddressed."
+      ],
+      "so_what": "Before any price conversation, diagnose which of the four uncertainties (value, risk, decision-process, social) is actually blocking the customer. Only address the diagnosed uncertainty."
+    },
+    {
+      "id": "chain_why_certainty_not_information_closes_deals",
+      "one_sentence": "Why providing more product information rarely helps a hesitant customer decide.",
+      "logic": [
+        "A hesitant customer is not missing information — they are missing certainty about the implications of acting on that information.",
+        "More information increases the number of variables the customer must weigh, which increases decision paralysis.",
+        "What the customer needs is not more data points but a reduction in the perceived risk of being wrong.",
+        "Risk reduction comes from case examples, rollback plans, phased adoption, or social proof — not from additional feature explanations.",
+        "Therefore, when a customer hesitates, the right move is to reduce risk, not to add information."
+      ],
+      "so_what": "When the customer hesitates, ask: 'What would need to be true for you to feel confident moving forward?' This surfaces the certainty gap, not the information gap."
+    },
+    {
+      "id": "chain_why_sales_pressure_creates_resistance",
+      "one_sentence": "Why the harder you push, the more the customer resists.",
+      "logic": [
+        "Sales pressure signals to the customer: 'This person's goal is to close me, not to help me decide.'",
+        "When the customer perceives a persuasion agenda, they activate psychological defenses — counter-arguing, hiding concerns, presenting false objections.",
+        "The salesperson receives false signals and responds to them, creating a cycle of increasing misunderstanding.",
+        "Trust is the prerequisite for the customer sharing their real decision process. Pressure destroys trust.",
+        "Therefore, the most effective sales posture is to help the customer decide, not to persuade them."
+      ],
+      "so_what": "Replace 'What can I say to convince you?' with 'What would help you feel more certain about this decision?' The posture shift alone changes the conversation dynamic."
+    },
+    {
+      "id": "chain_why_price_is_rarely_the_real_issue",
+      "one_sentence": "Why 'it's too expensive' almost never means the price is wrong.",
+      "logic": [
+        "Price is the easiest objection to articulate. 'I'm afraid my team will blame me if this fails' is much harder to say.",
+        "Research consistently shows that when price objections are explored, 70-80% resolve to non-price concerns: risk, trust, internal politics, timing, or unclear ROI.",
+        "The customer uses price as a socially acceptable proxy for deeper uncertainties they either cannot articulate or do not want to reveal.",
+        "Offering a price reduction to a non-price concern leaves the real barrier intact. The customer still cannot decide.",
+        "Therefore, treat 'too expensive' as the start of the diagnosis, not the diagnosis itself."
+      ],
+      "so_what": "When you hear 'too expensive,' respond with: 'Help me understand — if the price were right, what else would you need to feel confident about moving forward?' This surfaces the real barrier."
+    }
+  ]
+}

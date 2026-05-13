@@ -1,0 +1,98 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "sales",
+    "created": "2026-05-13",
+    "purpose": "Define growth stages, capability layers, and measurable indicators for sales skill development.",
+    "load_condition": "Load when the user asks how to improve sales skills, measure progress, or identify current level."
+  },
+  "stages": [
+    {
+      "id": "stage_pitch_driven",
+      "name": "Pitch-Driven Seller",
+      "description": "Centers their own message. Talks more than they listen. Uses decks and demos as the primary tool. Measures success by meetings held and pitches delivered.",
+      "indicators": [
+        "Speaks more than 50% of the time in customer conversations",
+        "Responds to objections with arguments rather than questions",
+        "Uses banned terms: deal, close, objection handling, pitch, discount",
+        "Cannot name the specific uncertainty blocking a deal"
+      ]
+    },
+    {
+      "id": "stage_question_driven",
+      "name": "Question-Driven Seller",
+      "description": "Asks diagnostic questions but sometimes leads the customer toward a predetermined conclusion. Understands that objections are signals but hasn't fully internalized uncertainty diagnosis.",
+      "indicators": [
+        "Speaks 30-50% of the time in customer conversations",
+        "Asks follow-up questions when the customer hesitates",
+        "Can name the type of uncertainty (value/risk/process/social) in a deal",
+        "Still occasionally defaults to discounting when stuck"
+      ]
+    },
+    {
+      "id": "stage_facilitator",
+      "name": "Buying Facilitator",
+      "description": "Helps the customer navigate their internal decision process. Diagnoses uncertainty type before any response. The customer feels understood, not managed. Deals progress because certainty increases, not because pressure is applied.",
+      "indicators": [
+        "Speaks less than 30% of the time in customer conversations",
+        "Customer volunteers real concerns without being prompted",
+        "Never uses banned terminology — the vocabulary has fully shifted",
+        "Can predict where a deal will stall before the customer knows"
+      ]
+    },
+    {
+      "id": "stage_system_builder",
+      "name": "Sales System Builder",
+      "description": "Builds sales processes and training that encode uncertainty diagnosis into organizational capability. The team's sales effectiveness does not depend on any single person's intuition.",
+      "indicators": [
+        "Sales team uses uncertainty diagnosis as shared language",
+        "Deal reviews focus on certainty gaps, not close dates",
+        "Discount rate is measurably lower than industry average",
+        "New hires reach facilitator stage within 6 months through structured development"
+      ]
+    }
+  ],
+  "evolution_layers": [
+    {
+      "id": "layer_listening_ratio",
+      "name": "Listening Ratio",
+      "capability": "Ability to spend more time listening and diagnosing than talking and persuading.",
+      "from_stage": "stage_pitch_driven",
+      "to_stage": "stage_question_driven"
+    },
+    {
+      "id": "layer_uncertainty_diagnosis",
+      "name": "Uncertainty Diagnosis",
+      "capability": "Ability to identify which of the four uncertainty dimensions is blocking a specific deal and address only that dimension.",
+      "from_stage": "stage_question_driven",
+      "to_stage": "stage_facilitator"
+    },
+    {
+      "id": "layer_process_design",
+      "name": "Process Design",
+      "capability": "Ability to encode uncertainty diagnosis into team playbooks, training, and deal review processes.",
+      "from_stage": "stage_facilitator",
+      "to_stage": "stage_system_builder"
+    }
+  ],
+  "measurement": [
+    {
+      "id": "measure_speak_listen_ratio",
+      "what": "Ratio of salesperson speaking time to customer speaking time in conversations",
+      "how": "Record or transcribe 10 sales conversations. Calculate the percentage of words spoken by the salesperson.",
+      "threshold": "Salesperson speaks less than 35% of total words in at least 7 of 10 conversations."
+    },
+    {
+      "id": "measure_discount_rate",
+      "what": "Percentage of deals closed with a discount from initial price",
+      "how": "Track the frequency and magnitude of discounts across a quarter.",
+      "threshold": "Discount rate below 20% of deals, average discount below 10% of initial price."
+    },
+    {
+      "id": "measure_uncertainty_naming",
+      "what": "Whether the salesperson can name the specific uncertainty blocking each deal",
+      "how": "In deal reviews, ask for each stalled deal: 'What is the specific uncertainty blocking this?'",
+      "threshold": "Specific uncertainty is named (not generic) for at least 90% of stalled deals."
+    }
+  ]
+}

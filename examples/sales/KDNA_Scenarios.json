@@ -1,0 +1,86 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "sales",
+    "created": "2026-05-13",
+    "purpose": "Map concrete sales situations to structured response patterns.",
+    "load_condition": "Load when the user describes a specific sales situation or scenario."
+  },
+  "scenes": [
+    {
+      "id": "scene_price_objection",
+      "name": "Customer raises price concern",
+      "trigger_signal": "Customer says some form of 'it costs too much,' 'we don't have budget,' or 'your competitor is cheaper.'",
+      "sub_scenarios": [
+        {
+          "id": "sub_uncertainty_value",
+          "trap_belief": "If I explain the value better, they'll see the price is fair.",
+          "three_questions": {
+            "belief": "Does the customer actually understand what problem this solves for them?",
+            "state": "Is the customer comparing us to a known alternative or to an abstract 'cheaper option'?",
+            "need": "The customer needs to connect the specific value to their specific situation, not hear generic ROI numbers."
+          },
+          "action_template": [
+            "Acknowledge without defending: 'I understand. Let me ask — when you think about what this would solve for you, what feels uncertain?'",
+            "Diagnose which dimension: value uncertainty, risk uncertainty, or decision-process uncertainty.",
+            "Address only the diagnosed dimension. Do not add information about other dimensions."
+          ],
+          "replace": [
+            { "avoid": "Let me show you the ROI / Here's why our price is justified", "use": "Which part of the decision feels most uncertain to you right now?" }
+          ],
+          "expected_result": "The customer names their actual concern, which is rarely the price itself."
+        }
+      ]
+    },
+    {
+      "id": "scene_customer_silence",
+      "name": "Customer goes silent during conversation",
+      "trigger_signal": "Customer stops responding or goes quiet after receiving a proposal or key information.",
+      "sub_scenarios": [
+        {
+          "id": "sub_internal_processing",
+          "trap_belief": "Silence means they're losing interest. I need to say something.",
+          "three_questions": {
+            "belief": "Am I interpreting silence as rejection when it might be calculation?",
+            "state": "Has the customer been given something specific to think about, or are they stuck?",
+            "need": "The customer needs time and space to process, with a non-pressuring check-in."
+          },
+          "action_template": [
+            "Give space. Do not fill silence immediately.",
+            "After a pause, ask a process question: 'What questions are coming up for you as you think about this?'",
+            "If silence persists, offer structure: 'Would it help if I walked through how other teams thought about this decision?'"
+          ],
+          "replace": [
+            { "avoid": "So what do you think? / Do you have any questions?", "use": "What are you chewing on? / What part of this would you want to think through more?" }
+          ],
+          "expected_result": "The customer surfaces the specific thing they were processing internally."
+        }
+      ]
+    },
+    {
+      "id": "scene_check_with_team",
+      "name": "Customer needs to involve others",
+      "trigger_signal": "Customer says 'I need to check with my team/boss/colleagues' or 'let me run this by someone.'",
+      "sub_scenarios": [
+        {
+          "id": "sub_organizational_buy_in",
+          "trap_belief": "This is a delay tactic or brush-off.",
+          "three_questions": {
+            "belief": "Is the customer actually the decision-maker but afraid to decide alone?",
+            "state": "Does the customer understand how to pitch this internally?",
+            "need": "The customer needs help preparing their internal case, not pressure to skip the process."
+          },
+          "action_template": [
+            "Acknowledge the process as legitimate: 'That makes sense. What would your team need to feel confident about this?'",
+            "Offer to help them prepare: 'Would a one-page summary of the key points help for that conversation?'",
+            "Identify the actual decision process: 'Who else typically weighs in on decisions like this?'"
+          ],
+          "replace": [
+            { "avoid": "Are you the decision-maker? / Can you decide without them?", "use": "What would help your team feel good about moving forward?" }
+          ],
+          "expected_result": "Customer shares the real organizational dynamic and you help them navigate it."
+        }
+      ]
+    }
+  ]
+}

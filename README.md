@@ -19,6 +19,22 @@ Most agent frameworks focus on tools, retrieval, workflows, or memory. KDNA focu
 - Which scenario signals should change the agent's response strategy?
 - How should the agent reason from principles to action?
 
+## Before / After KDNA
+
+> **KDNA does not optimize wording. It changes reasoning trajectories.**
+
+| Without KDNA | With KDNA |
+|---|---|
+| Generic, knowledge-level answers | Domain-specific expert judgment |
+| Treats objections as literal statements | Diagnoses the uncertainty hidden behind the words |
+| "The client says it's too expensive → offer discount" | "Price objection is a certainty deficit → diagnose which dimension" |
+| "The employee won't execute → motivation problem" | "Execution failure → check upstream system conditions" |
+| "The elderly won't participate → make it more fun" | "Not interested → identify the invisible barrier (fear, burden, dignity threat)" |
+| This is a prompt library | This is a cognition encoding format |
+| Unverifiable | Each axiom, misunderstanding, and self-check is testable |
+
+See [`docs/kdna-in-action.md`](./docs/kdna-in-action.md) for the full comparison, including five detailed cases: same input, different KDNA domains, completely different cognitive paths.
+
 ## KDNA vs Skills
 
 | Dimension | KDNA | Skills |
@@ -96,9 +112,14 @@ See [SPEC.md](./SPEC.md) for the full v0.1 specification.
 
 ## Examples
 
-- [examples/communication](./examples/communication) — a minimal communication coaching domain
-- [examples/from-wiki-to-kdna](./examples/from-wiki-to-kdna) — demonstrates the Wiki-to-KDNA pipeline with a code review domain
-- [examples/product_decision](./examples/product_decision) — a full Chinese-language product decision domain
+| Domain | Core Insight | Language |
+|--------|-------------|----------|
+| [communication](./examples/communication) | State repair before content discussion | EN |
+| [code_review](./examples/from-wiki-to-kdna/kdna) | Classify every comment; review intent before code | EN |
+| [product_decision](./examples/product_decision) | Hypothesis validation over feature delivery | ZH |
+| [sales](./examples/sales) | Price objections are certainty deficits, not price problems | EN |
+| [silver_age](./examples/silver_age) | Psychological entry cost matters more than activity quality | EN |
+| [management](./examples/management) | Execution failures are system outputs, not motivation failures | EN |
 
 ## Languages
 
