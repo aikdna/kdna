@@ -8,6 +8,16 @@ Skills tell AI what to do.
 
 KDNA is not a prompt library, not a knowledge base, and not an operating manual. It is a structured way to package the judgment layer of a domain: axioms, terminology boundaries, common misunderstandings, scenario signals, reasoning chains, and capability evolution.
 
+## Why Now
+
+> **Agents are getting better at calling tools. They still lack domain judgment.**
+
+The current agent ecosystem has solved action: function calling, MCP, tool use, workflows. But action without judgment is dangerous — an agent that can do anything but cannot tell the difference between a price objection and a certainty deficit will execute the wrong actions with confidence.
+
+Tools let AI act. **KDNA lets AI not act badly.**
+
+Every domain has expert-level judgment patterns that currently live only in experienced practitioners' heads. KDNA is a format for extracting those patterns, encoding them in a machine-verifiable structure, and loading them into agents as a cognitive layer — separate from prompts, separate from knowledge, separate from tools.
+
 ## Why KDNA?
 
 Most agent frameworks focus on tools, retrieval, workflows, or memory. KDNA focuses on **judgment**:
@@ -109,6 +119,14 @@ node validators/kdna-lint.js examples/communication
 ## Specs
 
 See [SPEC.md](./SPEC.md) for the full v0.1 specification.
+
+### Try the demo
+
+```bash
+node examples/minimal-agent/agent.js
+```
+
+See the same user input produce completely different cognitive analyses with different KDNA domains loaded. No LLM required — pure cognition path comparison.
 
 ## Examples
 
