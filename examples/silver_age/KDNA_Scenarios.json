@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "silver_age",
+    "created": "2026-05-13",
+    "purpose": "Map concrete situations in elderly services to structured response patterns.",
+    "load_condition": "Load when the user describes a specific situation involving elderly individuals."
+  },
+  "scenes": [
+    {
+      "id": "scene_decline_activity",
+      "name": "Senior declines to participate in activities",
+      "trigger_signal": "Senior says 'I'm not interested,' 'I'm too old for that,' 'I don't want to,' or consistently refuses invitations.",
+      "sub_scenarios": [
+        {
+          "id": "sub_invisible_fear",
+          "trap_belief": "They just don't like activities. We need better activities.",
+          "three_questions": {
+            "belief": "Am I assuming the stated reason is the real reason?",
+            "state": "What would this person be afraid of losing or exposing by participating?",
+            "need": "The senior needs the entry cost lowered before they can even consider the activity itself."
+          },
+          "action_template": [
+            "Do not argue or persuade. Acknowledge the decline without pressure.",
+            "Ask a diagnostic question: 'What would make it feel easier to give it a try?'",
+            "Offer a minimal trial with a bridge person: 'How about I introduce you to [name], and you can just say hello — no commitment.'",
+            "Make it clear that declining now does not close the door: 'If you ever feel curious, the invitation is always open.'"
+          ],
+          "replace": [
+            { "avoid": "But you would really enjoy it! / Everyone loves this activity!", "use": "What would need to feel different for you to feel good about giving it a try?" }
+          ],
+          "expected_result": "Senior either surfaces the real barrier or feels respected enough to stay open to future invitations."
+        }
+      ]
+    },
+    {
+      "id": "scene_technology_anxiety",
+      "name": "Senior struggles with or refuses technology",
+      "trigger_signal": "Senior says 'I can't figure this out,' 'I'm too old for these things,' or avoids technology entirely.",
+      "sub_scenarios": [
+        {
+          "id": "sub_failure_shame",
+          "trap_belief": "They need a simpler device or more training.",
+          "three_questions": {
+            "belief": "Is the senior actually unable to learn, or afraid of what mistakes mean about them?",
+            "state": "Has every mistake been treated as normal or as evidence of decline?",
+            "need": "The senior needs a safe environment where mistakes are normalized, not a more detailed tutorial."
+          },
+          "action_template": [
+            "Normalize mistakes before any instruction: 'Everyone hits the wrong button at first. It's part of learning, not a sign you can't do it.'",
+            "Demonstrate and let them try immediately, with encouragement on attempt, not correctness.",
+            "Design for error recovery: 'If you press this by accident, here's how you get back. See? Nothing is broken.'",
+            "Celebrate the attempt, not the result."
+          ],
+          "replace": [
+            { "avoid": "It's easy / Just press this / No, not that one", "use": "Let's try together. If something unexpected happens, we'll figure it out." }
+          ],
+          "expected_result": "Senior's anxiety decreases with each normalized mistake. They begin to experiment rather than avoid."
+        }
+      ]
+    },
+    {
+      "id": "scene_withdrawal_isolation",
+      "name": "Senior is socially withdrawing or becoming isolated",
+      "trigger_signal": "Senior stops attending activities they previously enjoyed, reduces contact, or expresses feelings of being a burden.",
+      "sub_scenarios": [
+        {
+          "id": "sub_burden_concern",
+          "trap_belief": "They are depressed or losing social interest. Refer to mental health.",
+          "three_questions": {
+            "belief": "Is this withdrawal about mood, or about self-protection from perceived burden?",
+            "state": "Has something happened that made the person feel they are imposing on others?",
+            "need": "The senior needs to re-establish a sense of contribution and reciprocal relationship."
+          },
+          "action_template": [
+            "Reach out personally, not programmatically. A generic invitation feels like an obligation; a personal message feels like being wanted.",
+            "Create a role where they contribute, not just receive: 'We could really use someone who knows about gardening. Could you help us with that?'",
+            "Frame interaction as two-way: 'I would love to hear about [their past experience].'",
+            "Avoid language of concern from the start: 'We missed you' builds belonging. 'We were worried about you' builds burden."
+          ],
+          "replace": [
+            { "avoid": "We haven't seen you in a while. Are you okay?", "use": "I was thinking about that story you told me about [topic]. I'd love to hear more about it." }
+          ],
+          "expected_result": "Senior feels valued as a person with something to give, not as someone needing to be checked on."
+        }
+      ]
+    }
+  ]
+}

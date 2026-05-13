@@ -19,6 +19,22 @@ KDNA 不是提示词库，不是知识库，也不是操作手册。它是一种
 - 哪些场景信号应该改变 Agent 的响应策略？
 - Agent 应该如何从原则推导到行动？
 
+## Before / After KDNA
+
+> **KDNA 优化的不是措辞，而是推理路径。**
+
+| 没有 KDNA | 有 KDNA |
+|---|---|
+| 通用、知识层面的回答 | 领域特化的专家判断 |
+| 把反对意见当作字面陈述 | 诊断隐藏在话语背后的不确定性 |
+| "客户说太贵 → 给折扣" | "价格异议是确定性缺失 → 诊断是哪个维度" |
+| "员工不执行 → 积极性问题" | "执行失败 → 检查上游系统条件" |
+| "老人不参加 → 活动不够有趣" | "拒绝参与 → 识别隐形障碍（恐惧、负担感、尊严威胁）" |
+| 这是个 Prompt 库 | 这是个认知编码格式 |
+| 无法验证 | 每个公理、误解、自查项都可测试 |
+
+详见 [`docs/kdna-in-action.md`](./docs/kdna-in-action.md)（英文），包含五个详细案例：相同输入，不同 KDNA 领域，完全不同的认知路径。
+
 ## KDNA vs Skill
 
 | 维度 | KDNA | Skill |
@@ -92,9 +108,14 @@ node validators/kdna-lint.js examples/communication
 
 ## 示例
 
-- [examples/communication](./examples/communication) — 沟通辅导领域（英文）
-- [examples/from-wiki-to-kdna](./examples/from-wiki-to-kdna) — Wiki 到 KDNA 的转化流水线（代码审查）
-- [examples/product_decision](./examples/product_decision) — 产品决策领域（中文）
+| 领域 | 核心洞见 | 语言 |
+|--------|-------------|----------|
+| [communication](./examples/communication) | 先修复关系状态，再讨论内容 | EN |
+| [code_review](./examples/from-wiki-to-kdna/kdna) | 每条评论必须分级；先理解意图再评价代码 | EN |
+| [product_decision](./examples/product_decision) | 假设验证优于功能交付 | ZH |
+| [sales](./examples/sales) | 价格异议是确定性缺失，不是价格问题 | EN |
+| [silver_age](./examples/silver_age) | 心理进入成本比活动质量更重要 | EN |
+| [management](./examples/management) | 执行失败是系统输出，不是动力问题 | EN |
 
 ## 中文资源
 

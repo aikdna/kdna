@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "management",
+    "created": "2026-05-13",
+    "purpose": "Define reasoning chains behind management principles — why upstream diagnosis matters more than downstream intervention.",
+    "load_condition": "Load when the user asks why a management principle exists or seeks deeper rationale."
+  },
+  "reasoning_chains": [
+    {
+      "id": "chain_why_upstream_diagnosis_is_the_core_skill",
+      "one_sentence": "Why diagnosing upstream system conditions is the single most important management skill.",
+      "logic": [
+        "A downstream intervention (coaching the person, giving a warning, setting a tighter deadline) treats the symptom — the person's behavior.",
+        "If the system condition that produced the behavior is unchanged, the next person in that role will exhibit the same behavior.",
+        "The manager spends a career replacing people while the system reliably breaks each replacement.",
+        "This is the most expensive management failure mode — infinite churn without performance improvement.",
+        "Therefore, before any individual intervention, always ask: 'Would a different person in this same system produce the same result?' If yes, fix the system first."
+      ],
+      "so_what": "The first question after any execution failure is never 'what is wrong with this person' but 'what in the system made this outcome rational.' Answer that before deciding on action."
+    },
+    {
+      "id": "chain_why_clarity_beats_urgency",
+      "one_sentence": "Why providing clarity produces more execution than applying pressure.",
+      "logic": [
+        "Urgency (deadlines, pressure, escalation) increases speed — the rate at which work is attempted.",
+        "Clarity (standards, priorities, definitions of done) increases direction — the accuracy with which work is aimed.",
+        "Speed without direction produces busy teams that deliver the wrong things quickly.",
+        "Direction without speed may be slower but at least produces correct outcomes.",
+        "In most organizations, the bottleneck is not speed. It is confusion about what to do and what good looks like."
+      ],
+      "so_what": "Before you tighten the deadline, tighten the standard. If the team cannot self-assess whether their work is correct, the deadline does not matter."
+    },
+    {
+      "id": "chain_why_psychological_safety_is_performance_infrastructure",
+      "one_sentence": "Why teams that hide problems eventually fail, regardless of talent.",
+      "logic": [
+        "Every team generates problems. The difference between high-performing and low-performing teams is not the number of problems — it is the speed of problem detection and resolution.",
+        "Problem detection speed depends on how safe team members feel surfacing bad news.",
+        "When surfacing problems is punished (blame, public shaming, career consequences), the team learns to hide problems.",
+        "Hidden problems grow. A problem found at week 1 costs 10x less than the same problem found at week 10.",
+        "Therefore, psychological safety is not a 'nice to have' cultural value. It is performance infrastructure."
+      ],
+      "so_what": "The manager's response to the first early-surfaced problem of the quarter determines whether problems will be surfaced or hidden for the rest of the quarter. Make that response count."
+    },
+    {
+      "id": "chain_why_standards_replace_management",
+      "one_sentence": "Why the best-managed teams need the least management.",
+      "logic": [
+        "The primary function of a manager is to make decisions the team cannot make for themselves: what to do, how well, by when.",
+        "If these decisions are encoded as clear standards, the team can self-manage the execution.",
+        "The manager is freed from daily decision-making and can focus on higher-leverage work: strategy, system design, capability building.",
+        "A team that needs the manager present to make daily decisions has a manager bottleneck and an uncalibrated team.",
+        "Therefore, the manager's goal should be to make themselves progressively unnecessary for daily operations."
+      ],
+      "so_what": "After every decision, ask: 'Could I turn this into a standard so I don't have to make this decision again?' Invest in standard creation, not in decision repetition."
+    }
+  ]
+}

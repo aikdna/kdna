@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "sales",
+    "created": "2026-05-13",
+    "purpose": "Demonstrate sales cognition patterns through concrete cases showing how signals are misread and correctly interpreted.",
+    "load_condition": "Load when the user asks for examples, demonstrations, or case studies."
+  },
+  "cases": [
+    {
+      "id": "case_discount_that_backfired",
+      "scene_id": "scene_price_objection",
+      "title": "The 30% discount that killed the deal",
+      "context": "A salesperson had been talking to a procurement director for three months. The director said the price was too high. The salesperson secured a 30% discount from management and presented it as a win.",
+      "what_happened": "The director became more hesitant, not less. Two weeks later, they chose a competitor at nearly the same original price. The director later explained: 'When you dropped the price that much, I realized I didn't understand what the product was actually worth. If you could cut 30%, maybe you could cut 50%. I lost confidence in the value.'",
+      "what_was_learned": "Discounting without diagnosis destroyed the customer's value certainty. The discount communicated 'we were overcharging' rather than 'we want to help.' The actual uncertainty was about implementation risk, not price.",
+      "structural_pattern": "price_objection → undiagnosed → discount_offered → value_confidence_destroyed → deal_lost"
+    },
+    {
+      "id": "case_silent_cfo_bought_biggest_deal",
+      "scene_id": "scene_customer_silence",
+      "title": "The CFO who said nothing for 12 minutes — and bought the largest deal",
+      "context": "A salesperson presented a seven-figure proposal to a CFO. After finishing, there was complete silence. The CFO stared at the proposal document for 12 minutes without speaking.",
+      "what_happened": "The salesperson said nothing. Let the silence sit. After 12 minutes, the CFO looked up and said: 'Okay. I've been calculating the cost of not doing this against the cost of doing it. Let's move forward.' The deal closed at full price with no negotiation.",
+      "what_was_learned": "Silence was the CFO's calculation time. Interrupting would have broken the CFO's internal ROI modeling. The salesperson's discipline — staying silent — was the most important sales skill in that moment.",
+      "structural_pattern": "proposal_presented → customer_calculating_internally → salesperson_stays_silent → customer_reaches_certainty → deal_closes"
+    },
+    {
+      "id": "case_enthusiastic_champion_stalled",
+      "scene_id": "scene_check_with_team",
+      "title": "The enthusiastic champion who couldn't close internally",
+      "context": "A product manager at a tech company was extremely enthusiastic about a tool. After every demo, they said 'I love this. I want it.' But after three meetings, they still hadn't bought.",
+      "what_happened": "The salesperson asked: 'What would need to be true for your team to feel as confident as you do?' The product manager admitted they were terrified of advocating for a tool that might fail — their last recommendation had failed and damaged their credibility. The real barrier was decision responsibility, not product evaluation.",
+      "what_was_learned": "The product manager was enthusiastic about the product but uncertain about the personal consequences of recommending it. Enthusiasm and decision readiness are independent variables. Helping the champion prepare their internal case — including a rollback plan — was the actual sales work.",
+      "structural_pattern": "enthusiasm_misread_as_readiness → no_close_attempt_works → diagnosis_reveals_decision_fear → internal_case_coaching → deal_progresses"
+    }
+  ]
+}

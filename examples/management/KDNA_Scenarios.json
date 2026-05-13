@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "management",
+    "created": "2026-05-13",
+    "purpose": "Map concrete management situations to structured response patterns.",
+    "load_condition": "Load when the user describes a specific management situation or team problem."
+  },
+  "scenes": [
+    {
+      "id": "scene_missed_deadline",
+      "name": "Team member misses a deadline",
+      "trigger_signal": "A deliverable is late, incomplete, or below expected quality.",
+      "sub_scenarios": [
+        {
+          "id": "sub_system_not_person",
+          "trap_belief": "This person needs a conversation about accountability.",
+          "three_questions": {
+            "belief": "Am I assuming this is about the person when the system may have set them up to fail?",
+            "state": "Was the standard clear enough that they could self-assess before the deadline?",
+            "need": "The team member may need clarity, resources, or priority resolution — not motivation."
+          },
+          "action_template": [
+            "Start with diagnosis, not judgment: 'I noticed X was due Friday and didn't come in. Can you walk me through what happened?'",
+            "Listen for system signals: unclear standard, conflicting priority, missing resource, impossible timeline.",
+            "If it is a system issue, fix the system and acknowledge the system failure.",
+            "If it is a clarity issue, define the execution standard together: 'Let's agree on what done looks like, by when, and how we'll check.'"
+          ],
+          "replace": [
+            { "avoid": "Why didn't you get this done? / This is not acceptable.", "use": "Let's understand what happened and make sure the conditions are right for next time." }
+          ],
+          "expected_result": "Team member surfaces the actual barrier. Manager fixes the system condition. Recurrence rate drops."
+        }
+      ]
+    },
+    {
+      "id": "scene_team_resistance",
+      "name": "Team resists a new process or direction",
+      "trigger_signal": "Team members push back, go silent, comply without commitment, or find workarounds for new processes.",
+      "sub_scenarios": [
+        {
+          "id": "sub_resistance_is_signal",
+          "trap_belief": "The team is being difficult or resistant to change.",
+          "three_questions": {
+            "belief": "Is the resistance about the change itself, or about what the change signals about their autonomy and judgment?",
+            "state": "Did the team have any input into this change, or was it imposed?",
+            "need": "The team needs to understand the problem this change solves and have agency in how it is implemented."
+          },
+          "action_template": [
+            "Start with the problem, not the solution: 'Here's the problem we're trying to solve. Here's why it matters.'",
+            "Ask for input on implementation: 'Given this problem, how would you approach solving it?'",
+            "Be willing to adjust the solution based on team input. If you are unwilling to adjust, do not ask for input.",
+            "If the change is non-negotiable, be honest: 'This is happening. Let me explain why, and let's figure out together how to make it work best for us.'"
+          ],
+          "replace": [
+            { "avoid": "This is the new process. We need everyone on board.", "use": "Here's the problem we need to solve. I'd like your thinking on the best way to solve it." }
+          ],
+          "expected_result": "Team shifts from resisting the change to problem-solving the implementation. Agency is restored."
+        }
+      ]
+    },
+    {
+      "id": "scene_problems_surface_late",
+      "name": "Problems only surface when it's too late to fix them",
+      "trigger_signal": "Manager discovers problems at the deadline that the team knew about earlier but didn't raise.",
+      "sub_scenarios": [
+        {
+          "id": "sub_organizational_defense",
+          "trap_belief": "The team is hiding problems or not communicating.",
+          "three_questions": {
+            "belief": "Has the team learned that surfacing problems leads to punishment rather than support?",
+            "state": "What happens when someone raises a problem early — are they thanked or blamed?",
+            "need": "The team needs psychological safety to surface problems early, plus a structured process that normalizes it."
+          },
+          "action_template": [
+            "Model the behavior: 'I want to know about problems as early as possible. I will never punish you for raising an issue early. I will be frustrated if I find out late.'",
+            "Create a structured channel: 'Every Monday at standup, each person flags one risk or concern. No solution required — just flagging.'",
+            "Reward early surfacing publicly: 'Thank you for flagging that. Now we can deal with it before it becomes a crisis.'",
+            "Never punish someone for raising a problem early. One punishment undoes months of trust-building."
+          ],
+          "replace": [
+            { "avoid": "Why am I only hearing about this now?", "use": "Thank you for telling me. Let's figure out the path forward together." }
+          ],
+          "expected_result": "Team begins surfacing problems earlier because safety has been demonstrated consistently over time."
+        }
+      ]
+    }
+  ]
+}

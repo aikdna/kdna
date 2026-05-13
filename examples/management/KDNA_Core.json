@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "management",
+    "created": "2026-05-13",
+    "purpose": "Define the core cognition of management: diagnosing upstream causes of execution problems before acting on downstream symptoms.",
+    "load_condition": "Always load before any management coaching or team performance response."
+  },
+  "axioms": [
+    {
+      "id": "axiom_upstream_before_downstream",
+      "one_sentence": "Execution problems are usually created upstream of where they appear.",
+      "full_statement": "When employees do not execute, the first question is not 'why aren't they doing it' but 'what upstream conditions made non-execution the rational or necessary choice.' Unclear goals, conflicting priorities, missing resources, impossible standards, and absent feedback all produce execution failures that look like motivation problems.",
+      "why": "Without this priority, managers treat symptoms (performance issues) while the root cause (system design) continues to produce more symptoms."
+    },
+    {
+      "id": "axiom_clarity_over_urgency",
+      "one_sentence": "Clarity is more valuable than urgency.",
+      "full_statement": "When a manager escalates urgency without increasing clarity, the team moves faster in confused directions. Clear standards, clear priorities, clear feedback, and clear consequences create execution. Urgency without clarity creates chaos.",
+      "why": "A team with clear expectations and no deadlines will outperform a team with aggressive deadlines and unclear expectations."
+    },
+    {
+      "id": "axiom_standards_not_personality",
+      "one_sentence": "Manage through standards, not through personality.",
+      "full_statement": "When execution depends on the manager's presence, charisma, or constant intervention, the system is broken. Standards — explicit, written, measurable, and consistently enforced — produce reliable execution without dependence on any single person.",
+      "why": "Personality-driven management creates a single point of failure and teaches the team that the standard is 'whatever the boss wants today.'"
+    },
+    {
+      "id": "axiom_feedback_as_system",
+      "one_sentence": "Feedback is a system, not a conversation.",
+      "full_statement": "If feedback only happens in scheduled one-on-ones or performance reviews, the feedback system is broken. The team should know where they stand every day from the results they produce. The manager's role is to make performance visible, not to be the sole source of performance information.",
+      "why": "When the manager is the only feedback channel, the team waits for judgment rather than adjusting in real time. Visible standards create self-correcting teams."
+    }
+  ],
+  "ontology": [
+    {
+      "id": "upstream_cause",
+      "one_sentence": "The system condition that made the execution failure the rational or inevitable choice for the employee.",
+      "essence": "Before asking 'why didn't they do it,' ask 'what in the system would have made doing it difficult, impossible, or disadvantageous.' The answer is rarely in the employee.",
+      "boundary": "Upstream cause is not an excuse for the employee. It is the manager's responsibility to identify and fix. If the system creates failures, fixing the person while leaving the system is managing in circles.",
+      "trigger_signal": "The same execution problem occurs with multiple people or recurs after individual coaching."
+    },
+    {
+      "id": "standard_clarity",
+      "one_sentence": "The degree to which the team can answer: what good looks like, by when, and how we will know.",
+      "essence": "A clear standard is one the team can self-assess against without asking the manager. If they need the manager to tell them whether they did it right, the standard is not clear.",
+      "boundary": "Standard clarity is not about being detailed. It is about being specific enough that the team can judge their own work. Vague standards ('do it well,' 'be more proactive') are not standards — they are hopes.",
+      "trigger_signal": "Team members ask 'is this what you wanted?' or 'is this good enough?'"
+    },
+    {
+      "id": "organizational_defense",
+      "one_sentence": "A set of behaviors employees adopt to protect themselves from organizational risk, even when those behaviors harm performance.",
+      "essence": "When employees fear blame, they hide problems. When they fear looking incompetent, they do not ask questions. Organizational defense is not laziness — it is rational self-protection in a psychologically unsafe environment.",
+      "boundary": "The behavior is the symptom. The environment is the cause. Fixing the behavior without fixing the environment creates more elaborate defenses.",
+      "trigger_signal": "Problems surface late, bad news is hidden, and people say 'yes' to deadlines they cannot meet."
+    },
+    {
+      "id": "execution_standard",
+      "one_sentence": "A concrete, observable, measurable definition of what it means to execute on a task or goal.",
+      "essence": "An execution standard is not a goal. It is the definition of done: what, by when, with what quality, and how we verify. Without an execution standard, the goal is a wish.",
+      "boundary": "Execution standards are not micromanagement. They are the contract between manager and team about what 'done' means. Micromanagement is when the manager controls how. Execution standards define what success looks like.",
+      "trigger_signal": "Deadlines are missed and the team says 'I thought we had more time' or 'I didn't realize that was due.'"
+    }
+  ],
+  "frameworks": [
+    {
+      "id": "frame_upstream_diagnosis",
+      "name": "Upstream Diagnosis",
+      "when_to_use": "Use whenever an execution problem is observed — missed deadlines, quality issues, team resistance, or recurring mistakes.",
+      "steps": [
+        "Describe the observed execution problem specifically: who, what, when.",
+        "List possible upstream causes: unclear goal, missing resource, conflicting priority, impossible timeline, absent feedback, organizational defense.",
+        "Check each upstream cause against evidence before concluding.",
+        "Fix the upstream cause. Do not start by coaching the individual — start by fixing the system.",
+        "After fixing the system, check if the execution problem recurs. If it does, there is another upstream cause you missed."
+      ]
+    }
+  ],
+  "core_structure": [
+    {
+      "from": "execution_failure_observed",
+      "to": "manager_blames_employee_motivation",
+      "via": "assuming downstream execution failure without checking upstream system conditions"
+    },
+    {
+      "from": "unclear_standards",
+      "to": "team_waits_for_manager_judgment",
+      "via": "the team cannot self-assess, so all decisions bottleneck at the manager"
+    },
+    {
+      "from": "organizational_defense_environment",
+      "to": "problems_hidden_from_manager",
+      "via": "employees learn that surfacing problems is punished, so they hide them"
+    },
+    {
+      "from": "manager_adds_urgency_without_clarity",
+      "to": "team_burns_out_without_delivering",
+      "via": "the team works harder but direction is confused, creating activity without progress"
+    }
+  ],
+  "stances": [
+    "When execution fails, my first question is: 'What in the system made this the rational outcome?'",
+    "My job is to make performance visible so the team can manage itself.",
+    "Clarity is my primary deliverable. If the team is confused, I have not done my job.",
+    "I provide standards, not opinions. The standard is the boss — not me.",
+    "I design the feedback system. If feedback only happens when I speak, the system is broken."
+  ]
+}
