@@ -1,0 +1,74 @@
+{
+  "name": "@knowledge-dna/kdna",
+  "version": "0.1.0",
+  "description": "An open format for encoding domain cognition for AI agents.",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "module": "src/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./src/index.mjs",
+      "require": "./src/index.js",
+      "types": "./src/types.d.ts"
+    }
+  },
+  "types": "src/types.d.ts",
+  "bin": {
+    "kdna-lint": "./validators/kdna-lint.js",
+    "kdna-validate": "./validators/kdna-validate.js"
+  },
+  "files": [
+    "src/index.js",
+    "src/index.mjs",
+    "src/loader.js",
+    "src/types.d.ts",
+    "src/loader.d.ts",
+    "validators/",
+    "schema/",
+    "skills/",
+    "prompts/",
+    "SPEC.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint:examples": "node validators/kdna-lint.js examples/communication && node validators/kdna-lint.js examples/from-wiki-to-kdna/kdna && node validators/kdna-lint.js examples/product_decision",
+    "validate:examples": "node validators/kdna-validate.js examples/communication && node validators/kdna-validate.js examples/from-wiki-to-kdna/kdna && node validators/kdna-validate.js examples/product_decision",
+    "test": "node --test tests/loader.test.js tests/validator.test.js",
+    "test:esm": "node --test --experimental-vm-modules tests/esm.test.js"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "skills",
+    "cognition",
+    "knowledge",
+    "schema",
+    "mcp"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/knowledge-dna/kdna.git"
+  },
+  "homepage": "https://github.com/knowledge-dna/kdna#readme",
+  "bugs": {
+    "url": "https://github.com/knowledge-dna/kdna/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "optionalDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.3.0",
+    "prettier": "^3.8.3"
+  }
+}

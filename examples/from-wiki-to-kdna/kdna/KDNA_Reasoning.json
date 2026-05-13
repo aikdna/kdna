@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "code_review",
+    "created": "2026-05-13",
+    "purpose": "Define the chain of reasoning behind code review principles, moving from observation to actionable conclusion.",
+    "load_condition": "Load when the user asks why a code review principle exists, or requests rationale behind review practices."
+  },
+  "reasoning_chains": [
+    {
+      "id": "chain_why_not_gatekeep",
+      "one_sentence": "Why code review must be collaborative, not a gatekeeping checkpoint.",
+      "logic": [
+        "When reviews feel like approval/rejection judgments, authors become defensive rather than curious.",
+        "Defensiveness leads to hidden concerns — the author stops surfacing doubts and tradeoffs.",
+        "Hidden concerns lead to unexamined decisions and missed bug opportunities.",
+        "The team loses the primary value of review: collective intelligence applied to the change.",
+        "Therefore, review posture must be collaborative from the first comment."
+      ],
+      "so_what": "Every review comment must signal partnership, not judgment. The word 'you' should appear less than 'we'. Praise good decisions explicitly."
+    },
+    {
+      "id": "chain_why_classify_every_comment",
+      "one_sentence": "Why every review comment must carry an explicit classification.",
+      "logic": [
+        "An unclassified comment is ambiguous: is this a demand or a suggestion?",
+        "The author cannot prioritize ambiguous comments and will either over-react or under-react.",
+        "Over-reaction wastes time fixing non-blocking issues as if they were blocking.",
+        "Under-reaction means blocking issues may be treated as optional.",
+        "Classification eliminates the ambiguity cost — the author's next action is always clear."
+      ],
+      "so_what": "Always prefix comments with [blocking], [non-blocking], [nitpick], or [question]. This single practice transforms review throughput."
+    },
+    {
+      "id": "chain_why_speed_beats_completeness",
+      "one_sentence": "Why quick partial feedback is more valuable than slow complete feedback.",
+      "logic": [
+        "Every hour the PR sits unreviewed, the author's context degrades and merge conflicts accumulate.",
+        "A developer context-switched away from a PR needs 15-30 minutes to reload context for follow-up changes.",
+        "Directional feedback delivered fast lets the author correct course in the same session, avoiding context loss.",
+        "Merge conflicts from delayed review create work that would not exist if the review had been faster.",
+        "Therefore, delivering one blocking observation within hours beats delivering a full line-by-line review within days."
+      ],
+      "so_what": "Prioritize speed. Review the highest-risk section first and share directional feedback immediately. Follow up with depth on less critical sections."
+    },
+    {
+      "id": "chain_why_style_should_be_automated",
+      "one_sentence": "Why human review energy should not be spent on style preferences.",
+      "logic": [
+        "Style preferences are encoding errors — they can be detected and fixed deterministically by tools.",
+        "Detecting a style violation requires low cognitive effort; detecting an architectural flaw requires deep domain knowledge.",
+        "When a reviewer spends attention on style, they have less cognitive capacity remaining for architecture, correctness, and security.",
+        "Style automation (formatters, linters) provides instant, fatigue-free, consistent feedback with zero reviewer attention cost.",
+        "Every team pays the same cost for manual style review; the automation cost is paid once."
+      ],
+      "so_what": "Enforce style with automated tooling in CI. Reserve human review for what tools cannot do: design assessment, intent evaluation, and security reasoning."
+    },
+    {
+      "id": "chain_why_intent_before_code",
+      "one_sentence": "Why understanding intent must precede code evaluation.",
+      "logic": [
+        "Code is a solution to a problem. Evaluating a solution without knowing the problem is guesswork.",
+        "A correct implementation of the wrong approach is a defect, not a success.",
+        "Reviewers who skip intent understanding flag 'wrong approach' in cases where the approach is deliberately constrained by requirements they don't know.",
+        "False-blocking requests (change this design that was intentionally chosen) damage reviewer credibility and author motivation.",
+        "Therefore, every review must start with intent: what problem, what constraints, what was considered and rejected."
+      ],
+      "so_what": "Always read the PR description and ask intent-clarifying questions before evaluating the code itself. The first question should be 'what problem does this solve', not 'why did you code it this way'."
+    }
+  ]
+}

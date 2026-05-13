@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "code_review",
+    "created": "2026-05-13",
+    "purpose": "Define practice stages, capability layers, and measurable growth indicators for code review skill development.",
+    "load_condition": "Load when the user asks how to practice, improve, measure progress, or identify current level."
+  },
+  "stages": [
+    {
+      "id": "stage_silent_reader",
+      "name": "Silent Reader",
+      "description": "Reads code changes but rarely comments. When they do comment, feedback is vague ('looks good', 'maybe refactor this'). Does not classify comments or distinguish blocking from non-blocking.",
+      "indicators": [
+        "Leaves fewer than 2 substantive comments per review on average",
+        "Cannot name the primary risk in a change before being asked",
+        "Uses vague language: 'clean this up', 'improve this', 'this feels wrong'",
+        "Approves PRs without articulating what was checked"
+      ]
+    },
+    {
+      "id": "stage_pattern_matcher",
+      "name": "Pattern Matcher",
+      "description": "Identifies known patterns and applies standard rules. Catches surface-level issues reliably but struggles with novel problems or architectural tradeoffs. Comments are specific but may lack prioritization.",
+      "indicators": [
+        "Catches style issues, obvious bugs, and known anti-patterns reliably",
+        "Can classify comments but defaults most to non-blocking",
+        "Rarely identifies architectural risks or coupling before they cause problems",
+        "Review comments address the code, not the intent or context"
+      ]
+    },
+    {
+      "id": "stage_risk_aware",
+      "name": "Risk-Aware Reviewer",
+      "description": "Evaluates changes through a lens of risk and impact. Prioritizes by what could go wrong. Reads intent before code. Classifies every comment deliberately. Feedback shapes not just the code but the author's thinking.",
+      "indicators": [
+        "Starts every review by identifying the highest-risk change",
+        "Blocks on security, data integrity, and irreversible complexity",
+        "Review comments teach principles, not just flag problems",
+        "Can explain why a seemingly-working design will fail under future conditions"
+      ]
+    },
+    {
+      "id": "stage_system_builder",
+      "name": "System Builder",
+      "description": "Designs review processes and automation that improve the entire team's review quality. Teaches others to become risk-aware reviewers. The team's review velocity and quality no longer depend on any single reviewer.",
+      "indicators": [
+        "Review checklists and automated checks catch the issues they used to catch manually",
+        "Junior developers' reviews show risk-aware patterns within their first quarter",
+        "Post-incident reviews never reveal issues that should have been caught in code review",
+        "Team's average PR resolution time is under 24 hours"
+      ]
+    }
+  ],
+  "evolution_layers": [
+    {
+      "id": "layer_comment_specificity",
+      "name": "Comment Specificity",
+      "capability": "Ability to write comments that name the specific issue, its impact, and an actionable fix direction.",
+      "from_stage": "stage_silent_reader",
+      "to_stage": "stage_pattern_matcher"
+    },
+    {
+      "id": "layer_intent_reading",
+      "name": "Intent Reading",
+      "capability": "Ability to evaluate code based on the problem it solves and the constraints it faces, not just surface correctness.",
+      "from_stage": "stage_pattern_matcher",
+      "to_stage": "stage_risk_aware"
+    },
+    {
+      "id": "layer_review_system_design",
+      "name": "Review System Design",
+      "capability": "Ability to build processes, tools, and training that produce better reviews across the entire team.",
+      "from_stage": "stage_risk_aware",
+      "to_stage": "stage_system_builder"
+    }
+  ],
+  "measurement": [
+    {
+      "id": "measure_classification_rate",
+      "what": "Percentage of review comments that carry explicit classification",
+      "how": "Sample 20 reviews from the team. Count comments with and without [blocking]/[non-blocking]/[nitpick]/[question] prefixes.",
+      "threshold": "At least 90% of comments are classified."
+    },
+    {
+      "id": "measure_blocking_at_top",
+      "what": "Whether blocking issues appear before non-blocking comments in the review",
+      "how": "Check if the first comment in the review addresses the highest-risk concern. In 20 sampled reviews, verify ordering.",
+      "threshold": "In at least 80% of reviews, the first comment addresses the highest-risk issue."
+    },
+    {
+      "id": "measure_review_speed",
+      "what": "Time from PR submission to first meaningful review feedback",
+      "how": "Measure median time from PR open to first classified review comment.",
+      "threshold": "Median time under 4 business hours."
+    },
+    {
+      "id": "measure_post_review_incidents",
+      "what": "Production issues traceable to gaps in code review",
+      "how": "For each post-release incident or bug, classify whether the root cause was reviewable and whether it was missed in review.",
+      "threshold": "Zero incidents per quarter where a reviewable issue was missed due to review quality."
+    }
+  ]
+}

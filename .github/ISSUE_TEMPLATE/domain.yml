@@ -1,0 +1,34 @@
+---
+name: Domain proposal
+about: Propose a new KDNA domain for inclusion or discussion
+title: 'Domain: '
+labels: domain
+assignees: ''
+---
+
+## Domain name
+
+Proposed domain name (snake_case).
+
+## Domain sentence
+
+```
+This domain helps an AI agent judge ______ so that ______.
+```
+
+## Scope
+
+What specific situations does this domain cover? What does it NOT cover?
+
+## Key axioms (2-4)
+
+What are the irreducible starting assumptions?
+
+## Key terminology
+
+What terms are central to this domain? What terms should be banned?
+
+## Status
+
+- [ ] I have a draft KDNA_Core.json
+- [ ] I have a draft KDNA_Patterns.json

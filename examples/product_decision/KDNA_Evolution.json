@@ -1,0 +1,98 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "product_decision",
+    "created": "2026-05-12",
+    "purpose": "定义产品决策能力的成长阶段、能力层次和可测量指标。",
+    "load_condition": "当用户询问如何提升产品决策能力、评估当前水平或制定成长计划时加载。"
+  },
+  "stages": [
+    {
+      "id": "stage_feature_driven",
+      "name": "功能驱动型",
+      "description": "以功能产出衡量产品工作。决策依据是竞品功能和老板需求。能执行但不能独立做出产品判断。",
+      "indicators": [
+        "用功能数量或上线速度衡量产品成功",
+        "说不清楚目标用户是谁",
+        "方案讨论时直接进入功能细节",
+        "频繁使用老板说和竞品做了作为决策依据"
+      ]
+    },
+    {
+      "id": "stage_hypothesis_driven",
+      "name": "假设驱动型",
+      "description": "开始区分假设和事实。能在行动前定义待验证的不确定性。但验证方法仍然粗糙，容易被数据表面现象误导。",
+      "indicators": [
+        "产品方案附带核心假设说明",
+        "能说出目标用户和核心场景",
+        "开始追问数据的产生机制而非只看数字",
+        "仍然容易陷入完美方案陷阱"
+      ]
+    },
+    {
+      "id": "stage_judgment_driven",
+      "name": "判断驱动型",
+      "description": "在信息不完备时能做出大致正确的决策。理解可逆性并据此分配论证深度。能识别并纠正团队中的认知陷阱。",
+      "indicators": [
+        "能在讨论中快速识别假设并推动验证",
+        "对可逆决策快速决定，对不可逆决策深入论证",
+        "能将老板需求转化为验证项目",
+        "MVP 始终有明确的假设和验证标准"
+      ]
+    },
+    {
+      "id": "stage_system_driven",
+      "name": "系统驱动型",
+      "description": "设计产品决策系统和流程，让他人能做出更好的产品判断。不依赖个人判断力，而是构建判断力可复制的机制。",
+      "indicators": [
+        "团队在没有你的情况下也能做出符合原则的产品决策",
+        "产品决策框架被团队内化和自发使用",
+        "能够识别和纠正系统中的判断力退化信号",
+        "新人入职后能在一个月内掌握基本的假设驱动方法"
+      ]
+    }
+  ],
+  "evolution_layers": [
+    {
+      "id": "layer_problem_definition",
+      "name": "问题定义能力",
+      "capability": "在讨论方案之前，能清晰定义用户的什么问题需要在什么时间解决。",
+      "from_stage": "stage_feature_driven",
+      "to_stage": "stage_hypothesis_driven"
+    },
+    {
+      "id": "layer_hypothesis_extraction",
+      "name": "假设提取能力",
+      "capability": "能将模糊的需求和观点转化为可验证的假设，并设计最小验证方案。",
+      "from_stage": "stage_hypothesis_driven",
+      "to_stage": "stage_judgment_driven"
+    },
+    {
+      "id": "layer_system_design",
+      "name": "系统设计能力",
+      "capability": "能将个人的判断方法提炼为团队可复用的决策系统。",
+      "from_stage": "stage_judgment_driven",
+      "to_stage": "stage_system_driven"
+    }
+  ],
+  "measurement": [
+    {
+      "id": "measure_banned_term_frequency",
+      "what": "产品讨论中禁用词的出现频率",
+      "how": "记录产品评审会议中老板说、竞品做了、我觉得等词汇的出现次数。连续四周统计趋势。",
+      "threshold": "在加载 KDNA 的团队中，四周内禁用词频率下降 60% 以上。"
+    },
+    {
+      "id": "measure_hypothesis_before_build",
+      "what": "启动开发前是否定义了核心假设",
+      "how": "抽查最近 5 个产品方案文档，检查是否包含明确的核心假设和验证标准。",
+      "threshold": "至少 80% 的方案在启动前定义了可验证的核心假设。"
+    },
+    {
+      "id": "measure_decision_speed",
+      "what": "可逆决策的决策速度",
+      "how": "记录可逆决策从提出到决定的平均时间。可逆性由决策的可修正时间窗口和修正成本判断。",
+      "threshold": "可逆决策的平均决策时间在两周内。超过两周的可逆决策视为决策延迟。"
+    }
+  ]
+}

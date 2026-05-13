@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KDNA_Reasoning",
+  "type": "object",
+  "required": [
+    "meta",
+    "reasoning_chains"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": [
+        "version",
+        "domain",
+        "created",
+        "purpose",
+        "load_condition"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "created": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "load_condition": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "reasoning_chains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "one_sentence",
+          "logic",
+          "so_what"
+        ]
+      }
+    }
+  },
+  "additionalProperties": true
+}

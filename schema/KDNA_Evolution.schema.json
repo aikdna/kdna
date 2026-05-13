@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KDNA_Evolution",
+  "type": "object",
+  "required": [
+    "meta",
+    "stages",
+    "evolution_layers",
+    "measurement"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": [
+        "version",
+        "domain",
+        "created",
+        "purpose",
+        "load_condition"
+      ],
+      "properties": {
+        "version": { "type": "string" },
+        "domain": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "created": { "type": "string" },
+        "purpose": { "type": "string" },
+        "load_condition": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description", "indicators"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "indicators": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "evolution_layers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "capability", "from_stage", "to_stage"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "capability": { "type": "string" },
+          "from_stage": { "type": "string" },
+          "to_stage": { "type": "string" }
+        }
+      }
+    },
+    "measurement": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "what", "how", "threshold"],
+        "properties": {
+          "id": { "type": "string" },
+          "what": { "type": "string" },
+          "how": { "type": "string" },
+          "threshold": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

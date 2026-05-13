@@ -1,0 +1,33 @@
+---
+name: Bug report
+about: Report a problem with KDNA tools or schemas
+title: ''
+labels: bug
+assignees: ''
+---
+
+## Description
+
+Describe the bug.
+
+## Reproduction
+
+Steps to reproduce:
+
+1.
+2.
+3.
+
+## Expected behavior
+
+What should have happened?
+
+## Environment
+
+- KDNA version:
+- Node version:
+- OS:
+
+## Additional context
+
+Add any other context about the problem.

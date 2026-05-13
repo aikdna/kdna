@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KDNA_Scenarios",
+  "type": "object",
+  "required": [
+    "meta",
+    "scenes"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": [
+        "version",
+        "domain",
+        "created",
+        "purpose",
+        "load_condition"
+      ],
+      "properties": {
+        "version": { "type": "string" },
+        "domain": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "created": { "type": "string" },
+        "purpose": { "type": "string" },
+        "load_condition": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "trigger_signal"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "trigger_signal": { "type": "string" },
+          "sub_scenarios": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "trap_belief", "three_questions", "action_template", "expected_result"],
+              "properties": {
+                "id": { "type": "string" },
+                "trap_belief": { "type": "string" },
+                "three_questions": {
+                  "type": "object",
+                  "required": ["belief", "state", "need"],
+                  "properties": {
+                    "belief": { "type": "string" },
+                    "state": { "type": "string" },
+                    "need": { "type": "string" }
+                  }
+                },
+                "action_template": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "replace": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["avoid", "use"],
+                    "properties": {
+                      "avoid": { "type": "string" },
+                      "use": { "type": "string" }
+                    }
+                  }
+                },
+                "expected_result": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

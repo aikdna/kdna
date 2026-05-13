@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "communication",
+    "created": "2026-05-12",
+    "purpose": "Define practice stages, capability layers, and measurable growth indicators for communication coaching.",
+    "load_condition": "Load when the user asks how to practice, improve, measure progress, or identify current level."
+  },
+  "stages": [
+    {
+      "id": "stage_reactive",
+      "name": "Reactive Communicator",
+      "description": "Responds to situations emotionally. Focuses on what feels right in the moment. Does not consistently identify intent or relational state before speaking.",
+      "indicators": [
+        "Replies are driven by emotional reaction rather than intended outcome",
+        "Uses banned terms like 'winning', 'make them understand', 'prove I'm right'",
+        "Cannot name the desired outcome before speaking"
+      ]
+    },
+    {
+      "id": "stage_formulaic",
+      "name": "Formulaic Communicator",
+      "description": "Applies communication techniques mechanically. Has learned frameworks but uses them rigidly, sometimes making the conversation feel scripted or inauthentic.",
+      "indicators": [
+        "Can identify intent before speaking",
+        "Uses standard terminology but sometimes over-applies frameworks",
+        "Struggles to adapt when the situation does not fit a known pattern"
+      ]
+    },
+    {
+      "id": "stage_adaptive",
+      "name": "Adaptive Communicator",
+      "description": "Reads relational state in real time and adjusts approach fluidly. Frameworks are internalized, not recited. Communication feels natural and responsive.",
+      "indicators": [
+        "Adapts approach based on real-time state signals",
+        "Spontaneously generates alternatives to banned language",
+        "Can recover mid-conversation when an approach is not working"
+      ]
+    },
+    {
+      "id": "stage_integrative",
+      "name": "Integrative Communicator",
+      "description": "Helps others develop communication capacity. Models clarity and repair. Creates environments where difficult conversations become productive.",
+      "indicators": [
+        "Coaches others through communication breakdowns",
+        "Designs communication structures for teams and systems",
+        "Anticipates communication failure modes before they occur"
+      ]
+    }
+  ],
+  "evolution_layers": [
+    {
+      "id": "layer_intent_clarity",
+      "name": "Intent Clarity",
+      "capability": "Ability to name the desired outcome of a conversation before speaking.",
+      "from_stage": "stage_reactive",
+      "to_stage": "stage_formulaic"
+    },
+    {
+      "id": "layer_state_reading",
+      "name": "State Reading",
+      "capability": "Ability to identify and respond to the emotional readiness of both sides.",
+      "from_stage": "stage_formulaic",
+      "to_stage": "stage_adaptive"
+    },
+    {
+      "id": "layer_conflict_repair",
+      "name": "Conflict Repair",
+      "capability": "Ability to guide a conversation from defensiveness back to collaboration.",
+      "from_stage": "stage_adaptive",
+      "to_stage": "stage_integrative"
+    }
+  ],
+  "measurement": [
+    {
+      "id": "measure_banned_term_usage",
+      "what": "Frequency of banned terms in generated responses",
+      "how": "Count occurrences of banned terms in a set of 10 communication coaching responses. Compare to baseline (unloaded agent).",
+      "threshold": "Reduction of at least 70% compared to unloaded baseline indicates KDNA is working."
+    },
+    {
+      "id": "measure_intent_identification",
+      "what": "Whether the agent identifies intent before drafting words",
+      "how": "Present 5 communication scenarios. Check if the response names the desired outcome before offering wording.",
+      "threshold": "Intent is named in at least 80% of responses."
+    },
+    {
+      "id": "measure_state_acknowledgment",
+      "what": "Whether the agent checks relational state in emotionally complex situations",
+      "how": "Present 5 scenarios involving defensiveness or conflict. Check if the response acknowledges emotional state before offering content.",
+      "threshold": "Relational state is acknowledged in at least 80% of responses to emotionally charged scenarios."
+    }
+  ]
+}
