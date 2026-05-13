@@ -1,2 +1,5 @@
 node_modules/
 *.md
+.github/
+examples/
+schema/
