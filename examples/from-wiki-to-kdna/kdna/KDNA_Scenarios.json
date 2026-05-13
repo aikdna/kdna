@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "code_review",
+    "created": "2026-05-13",
+    "purpose": "Map concrete code review situations to structured response patterns.",
+    "load_condition": "Load when the user describes a specific code review situation, conflict, or scenario."
+  },
+  "scenes": [
+    {
+      "id": "scene_ambiguous_code",
+      "name": "Ambiguous or confusing code",
+      "trigger_signal": "The reviewer reads code that is unclear, indirect, or hard to follow but appears to work correctly.",
+      "sub_scenarios": [
+        {
+          "id": "sub_clever_overwork",
+          "trap_belief": "Clever code is good code.",
+          "three_questions": {
+            "belief": "Did the author choose cleverness over clarity?",
+            "state": "Will the on-call engineer at 3am understand this?",
+            "need": "The author needs specific, actionable suggestions for improving readability."
+          },
+          "action_template": [
+            "State what makes the code hard to follow, without judgment.",
+            "Suggest a simpler alternative with a concrete example.",
+            "Classify as non-blocking unless the ambiguity introduces a risk."
+          ],
+          "replace": [
+            { "avoid": "This is unreadable / This is messy", "use": "I struggled to follow this section because [specific reason]. Consider [specific alternative]." }
+          ],
+          "expected_result": "The author understands the readability concern and has a concrete path to improve it."
+        }
+      ]
+    },
+    {
+      "id": "scene_architecture_concern",
+      "name": "Architecture or design concern",
+      "trigger_signal": "The reviewer sees a design choice that could cause future problems even if the current code works.",
+      "sub_scenarios": [
+        {
+          "id": "sub_new_abstraction_wrong_time",
+          "trap_belief": "More abstraction is always better.",
+          "three_questions": {
+            "belief": "Does this abstraction solve a pattern that already exists, or anticipate one that might?",
+            "state": "Could this abstraction be added later, incrementally, without breaking changes?",
+            "need": "The author needs to understand why the current abstraction may be premature."
+          },
+          "action_template": [
+            "Identify the specific coupling or rigidity this design introduces.",
+            "Explain the future cost this design could create.",
+            "Classify as blocking if it introduces irreversible complexity."
+          ],
+          "replace": [
+            { "avoid": "This design is wrong / This won't scale", "use": "This design binds [X] to [Y] in a way that will make [scenario] difficult. Consider deferring the abstraction until [condition]." }
+          ],
+          "expected_result": "The author understands the long-term risk and has a direction for addressing it."
+        },
+        {
+          "id": "sub_missing_interface_boundary",
+          "trap_belief": "Direct coupling is fine if you're the only person working on this.",
+          "three_questions": {
+            "belief": "Are we assuming this coupling won't cause problems later?",
+            "state": "Would a new team member know this boundary exists?",
+            "need": "The author needs to see where the boundary should be and why."
+          },
+          "action_template": [
+            "Point to the specific boundary that should exist.",
+            "Name the future change scenario this coupling would break.",
+            "Classify as blocking if the coupling crosses a domain or service boundary."
+          ],
+          "replace": [
+            { "avoid": "This is too coupled", "use": "Module [A] now depends on an internal detail of [B] at line [L]. If [B] changes its [implementation], [A] will break silently." }
+          ],
+          "expected_result": "The author defines a clean boundary and tests it."
+        }
+      ]
+    },
+    {
+      "id": "scene_author_is_defensive",
+      "name": "Author becomes defensive or resistant",
+      "trigger_signal": "The author pushes back on feedback, explains away concerns, or shows signs of taking review personally.",
+      "sub_scenarios": [
+        {
+          "id": "sub_author_pushing_back",
+          "trap_belief": "The reviewer needs to prove they are right.",
+          "three_questions": {
+            "belief": "Is the author defending their work or genuinely disagreeing with the assessment?",
+            "state": "Have I made it clear that I'm on the author's side, working toward shipping together?",
+            "need": "The author needs to feel heard and partnered, not judged."
+          },
+          "action_template": [
+            "Acknowledge the author's perspective: 'I see why you took this approach.'",
+            "Restate the concern in terms of risk to the product, not judgment of the code.",
+            "Revisit the intent: 'Let's agree on what problem this code needs to solve, then evaluate.'"
+          ],
+          "replace": [
+            { "avoid": "You're wrong / This is how it should be done", "use": "I understand why you chose this. My concern is [specific risk]. How would you address that?" }
+          ],
+          "expected_result": "The conversation shifts from defense to problem-solving."
+        }
+      ]
+    },
+    {
+      "id": "scene_security_discovered",
+      "name": "Security vulnerability discovered",
+      "trigger_signal": "The reviewer finds code that introduces a security risk — injection, auth bypass, data leak, etc.",
+      "sub_scenarios": [
+        {
+          "id": "sub_sql_injection_or_injection",
+          "trap_belief": "Input sanitization is enough. ORMs prevent injection.",
+          "three_questions": {
+            "belief": "Are we assuming the framework protects us here?",
+            "state": "Has this code path been tested with malicious input?",
+            "need": "The author needs to see the exact attack vector and the correct fix."
+          },
+          "action_template": [
+            "Show the exact input that would trigger the vulnerability.",
+            "Explain the worst-case impact concretely.",
+            "Classify as blocking. Provide the specific fix with code example."
+          ],
+          "replace": [
+            { "avoid": "This is insecure", "use": "This code at line [L] is vulnerable to [attack type]. An attacker could [impact]. To fix, [specific change]. This is blocking." }
+          ],
+          "expected_result": "The author understands the vulnerability and applies the fix. A test is added for this attack vector."
+        }
+      ]
+    }
+  ]
+}

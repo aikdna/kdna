@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "code_review",
+    "created": "2026-05-12",
+    "purpose": "Define language boundaries and common code review misunderstandings.",
+    "load_condition": "Always load with KDNA_Core.json before code review responses."
+  },
+  "terminology": {
+    "standard_terms": [
+      {
+        "term": "blocking",
+        "definition": "An issue that must be fixed before the change can be merged safely."
+      },
+      {
+        "term": "non-blocking",
+        "definition": "A suggestion worth considering that does not prevent the change from shipping safely."
+      },
+      {
+        "term": "nitpick",
+        "definition": "A trivial observation the reviewer does not expect the author to act on."
+      },
+      {
+        "term": "question",
+        "definition": "A genuine request for understanding, not a disguised demand for change."
+      },
+      {
+        "term": "intent",
+        "definition": "The problem being solved and the constraints that shaped the approach."
+      }
+    ],
+    "banned_terms": [
+      {
+        "term": "this is bad",
+        "why": "It evaluates the author, not the code, and provides no actionable information.",
+        "replace_with": "This approach introduces a risk of [specific consequence] because [specific reason]."
+      },
+      {
+        "term": "you should",
+        "why": "It frames the review as directive rather than collaborative and can sound accusatory.",
+        "replace_with": "Consider [alternative] because [reason]."
+      },
+      {
+        "term": "good enough",
+        "why": "It dismisses review responsibility without specifying what has been checked and what the threshold is.",
+        "replace_with": "This is safe to ship because [specific reasons]. [Optional: non-blocking suggestions follow]."
+      },
+      {
+        "term": "just fix it",
+        "why": "It assumes the reviewer's authority without explaining the reasoning, which teaches nothing.",
+        "replace_with": "This needs to change because [specific impact]. Suggested approach: [specific direction]."
+      }
+    ]
+  },
+  "misunderstandings": [
+    {
+      "id": "more_comments_better_review",
+      "wrong": "Leaving more comments means you did a more thorough review.",
+      "correct": "Leaving fewer, well-classified, high-impact comments produces a more effective review.",
+      "key_distinction": "Review quality is measured by impact on the change, not by comment count. Twenty nitpicks dilute the signal of one blocking issue.",
+      "why": "Authors learn to skim past high-volume, low-signal reviews. The blocking issue gets lost in the noise."
+    },
+    {
+      "id": "style_equals_quality",
+      "wrong": "Pointing out style issues is a valuable part of code review.",
+      "correct": "Style issues that matter should be automated. Human review energy should go to correctness, security, design, and maintainability.",
+      "key_distinction": "Style preferences are encoding errors; defects and architecture mistakes are judgment errors. Humans are needed for the latter.",
+      "why": "Treating style as a review concern wastes reviewer attention and trains teams to expect manual style enforcement."
+    },
+    {
+      "id": "review_as_approval",
+      "wrong": "Review means approval or rejection of the author's work.",
+      "correct": "Review is a collaborative improvement process. The output is a better change and a smarter team, not a verdict on the author.",
+      "key_distinction": "The reviewer is a partner in shipping, not a judge. Approval flows naturally from iteration, not from a pronouncement.",
+      "why": "When review feels like judgment, authors become defensive and hide concerns rather than surfacing them."
+    },
+    {
+      "id": "thorough_over_timely",
+      "wrong": "A review should be as thorough as possible before the author receives any feedback.",
+      "correct": "Quick, directional feedback is better than slow, thorough feedback. Unblock the author fast; deepen the review as needed.",
+      "key_distinction": "Speed of initial feedback determines team velocity. A day-one 'looks good directionally, one concern about X' is more valuable than a day-three detailed line-by-line.",
+      "why": "Waiting for completeness creates merge conflicts, context loss for the author, and a culture where review is a bottleneck."
+    }
+  ],
+  "self_check": [
+    "Have I classified every comment as blocking, non-blocking, nitpick, or question?",
+    "Have I understood the intent of the change before evaluating the code?",
+    "Am I reviewing the change, or am I reviewing the author?",
+    "Would the author know exactly what to do after reading this review?",
+    "Have I acknowledged something the author did well?",
+    "Are any of my comments actually style preferences that should be automated?"
+  ]
+}

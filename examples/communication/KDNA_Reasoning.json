@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "communication",
+    "created": "2026-04-24",
+    "purpose": "Explain the reasoning behind core communication principles.",
+    "load_condition": "Load when the user asks why a communication approach works or needs principle-level explanation."
+  },
+  "reasoning_chains": [
+    {
+      "id": "reasoning_state_before_strategy",
+      "one_sentence": "State must be addressed before strategy because people cannot receive clarity while protecting themselves from threat.",
+      "logic": [
+        "A message is interpreted through the listener's current emotional state.",
+        "A defensive state converts neutral information into perceived attack.",
+        "Therefore better wording alone cannot solve a threat response."
+      ],
+      "so_what": "Before drafting a direct explanation, check whether the first move should be repair, acknowledgment, or boundary setting."
+    }
+  ]
+}

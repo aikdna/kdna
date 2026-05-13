@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "code_review",
+    "created": "2026-05-13",
+    "purpose": "Demonstrate code review patterns through concrete cases showing structure, not scripts.",
+    "load_condition": "Load when the user asks for examples, demonstrations, or full cases."
+  },
+  "cases": [
+    {
+      "id": "case_nitpicks_drowned_blocker",
+      "scene_id": "scene_ambiguous_code",
+      "title": "Twenty nitpicks hid a critical security issue",
+      "context": "A reviewer left 22 comments on a PR. Most were about variable naming, line breaks, and formatting. One comment, buried at position 17, flagged a SQL query constructed via string concatenation from user input.",
+      "what_happened": "The author skimmed the review, fixed the first few style comments, and approved their own changes via the CI/CD pipeline without reading all 22 comments. The SQL injection vulnerability shipped to production.",
+      "what_was_learned": "High-volume, low-signal reviews train authors to skim. The most dangerous comment is the one the author skips. Limit comments to what matters, separate blocking from non-blocking, and put the blocking issues at the top.",
+      "structural_pattern": "noise_flood → author_overwhelm → skip_reading → missed_blocker → production_incident"
+    },
+    {
+      "id": "case_intent_before_code_avoided_rewrite",
+      "scene_id": "scene_architecture_concern",
+      "title": "Understanding intent prevented a week of unnecessary refactoring",
+      "context": "A senior developer saw a PR that introduced a caching layer using an unconventional pattern. The code looked wrong — it bypassed the existing cache abstraction.",
+      "what_happened": "Instead of blocking the PR, the reviewer asked a question: 'Can you walk me through why this uses a separate cache rather than the existing cache abstraction?' The author explained: the existing cache library can't handle the new data type's serialization semantics, and the team had already decided to replace the cache library in the next quarter. This was an intentional, temporary bridge.",
+      "what_was_learned": "If the reviewer had assumed 'wrong approach' without asking about intent, the author would have spent a week refactoring into a system about to be replaced. A single question saved a week of wasted work.",
+      "structural_pattern": "unfamiliar_pattern → assume_wrong → would_have_blocked → asked_intent_first → discovered_valid_reason → saved_week"
+    },
+    {
+      "id": "case_classified_comments_transformed_velocity",
+      "scene_id": "scene_author_is_defensive",
+      "title": "Classification labels reduced review resolution time by 60%",
+      "context": "A team had an average PR review cycle of 3.2 days. Authors reported they spent the first day trying to figure out what the reviewer actually wanted them to change. Reviewers said authors were ignoring important feedback.",
+      "what_happened": "The team adopted a policy: every review comment must start with [blocking], [non-blocking], [nitpick], or [question]. After four weeks, the average review cycle dropped to 1.3 days. Authors reported they could immediately act on blocking issues and decide when to handle non-blocking suggestions.",
+      "what_was_learned": "The bottleneck wasn't review thoroughness — it was signal-to-noise ratio. Explicit classification turns an undifferentiated list of comments into a prioritized action plan the author can execute in one pass.",
+      "structural_pattern": "unclassified_comments → author_confusion → slow_resolution → add_classification → clear_priority → fast_resolution"
+    }
+  ]
+}

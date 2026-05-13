@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "communication",
+    "created": "2026-04-24",
+    "purpose": "Provide scenario triggers and action templates for communication coaching.",
+    "load_condition": "Load when the user describes a concrete communication situation, conflict, message, or relationship problem."
+  },
+  "scenes": [
+    {
+      "id": "conflict_repair",
+      "name": "Conflict repair",
+      "trigger_signal": "The user describes blame, defensiveness, silence, repeated emotional escalation, or wanting to reply after conflict.",
+      "sub_scenarios": [
+        {
+          "id": "defensive_reply",
+          "trap_belief": "If I explain harder, the other person will finally understand.",
+          "three_questions": {
+            "belief": "What assumption is driving the current reaction?",
+            "state": "What emotional state is each side likely in?",
+            "need": "What need is hidden under the reaction?"
+          },
+          "action_template": [
+            "Slow down the response.",
+            "Name the shared purpose.",
+            "Separate impact from intention.",
+            "Offer one concrete next step."
+          ],
+          "replace": [
+            {
+              "avoid": "You misunderstood me.",
+              "use": "I may not have made my intention clear. Let me restate what I was trying to solve."
+            }
+          ],
+          "expected_result": "The exchange shifts from defense to clarification."
+        }
+      ]
+    }
+  ]
+}
