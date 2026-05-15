@@ -8,6 +8,10 @@ Skill 告诉 AI 做什么。
 
 KDNA 不是提示词库，不是知识库，也不是操作手册。它是一种结构化方式，封装一个领域的判断层：公理、术语边界、常见误解、场景信号、推理链条和能力演进。
 
+> **本仓库仅定义 KDNA 协议、Schema、校验规则与治理方式。**  
+> 具体领域的 KDNA 应放在[独立仓库](#领域仓库)中，符合收录标准后可进入 [registry](./registry/domains.json)。  
+> 添加领域到注册表的标准详见 [docs/registry-policy.md](./docs/registry-policy.md)。
+
 ## 为什么现在需要 KDNA
 
 > **Agent 越来越会调用工具，但它们仍然缺少领域判断。**
@@ -124,16 +128,28 @@ node examples/minimal-agent/agent.js
 
 同一个用户输入，加载不同的 KDNA 领域，产生完全不同的认知分析。不需要 LLM——纯粹的判断路径对比。
 
-## 示例
+## 领域仓库
 
-| 领域 | 核心洞见 | 语言 |
-|--------|-------------|----------|
-| [communication](./examples/communication) | 先修复关系状态，再讨论内容 | EN |
-| [code_review](./examples/from-wiki-to-kdna/kdna) | 每条评论必须分级；先理解意图再评价代码 | EN |
-| [product_decision](./examples/product_decision) | 假设验证优于功能交付 | ZH |
-| [sales](./examples/sales) | 价格异议是确定性缺失，不是价格问题 | EN |
-| [silver_age](./examples/silver_age) | 心理进入成本比活动质量更重要 | EN |
-| [management](./examples/management) | 执行失败是系统输出，不是动力问题 | EN |
+领域认知包存放在独立仓库中。机器可读索引见 [registry/domains.json](./registry/domains.json)。
+
+| 领域 | 仓库 | 状态 |
+|---|---|---|
+| 业务增长 | [kdna-business-growth](https://github.com/knowledge-dna/kdna-business-growth) | experimental |
+| 沟通 | [kdna-communication](https://github.com/knowledge-dna/kdna-communication) | experimental |
+| 销售 | [kdna-sales](https://github.com/knowledge-dna/kdna-sales) | experimental |
+| 管理 | [kdna-management](https://github.com/knowledge-dna/kdna-management) | experimental |
+| 银发服务 | [kdna-silver-age](https://github.com/knowledge-dna/kdna-silver-age) | experimental |
+| 产品决策 | [kdna-product-decision](https://github.com/knowledge-dna/kdna-product-decision) | experimental |
+
+### 参考示例
+
+`examples/` 目录包含最小参考实现，用于测试校验器和说明规范。这些 **不是** 领域内容——它们是规范示例。
+
+| 示例 | 用途 |
+|---------|---------|
+| [communication](./examples/communication) | 校验器测试的参考领域 |
+| [minimal-agent](./examples/minimal-agent) | 加载多个 KDNA 领域的 Demo Agent |
+| [from-wiki-to-kdna](./examples/from-wiki-to-kdna) | LLM Wiki 到 KDNA 的流水线演示 |
 
 ## 中文资源
 
