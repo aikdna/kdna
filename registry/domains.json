@@ -1,0 +1,56 @@
+[
+  {
+    "id": "business-growth",
+    "name": "Business Growth KDNA",
+    "repo": "https://github.com/aikdna/kdna-business-growth",
+    "spec_version": "0.1",
+    "status": "experimental",
+    "language": ["en"],
+    "description": "Domain cognition for business growth, value proposition, pricing, trust building, monetization, and IP positioning."
+  },
+  {
+    "id": "communication",
+    "name": "Communication KDNA",
+    "repo": "https://github.com/aikdna/kdna-communication",
+    "spec_version": "0.1",
+    "status": "experimental",
+    "language": ["en"],
+    "description": "Domain cognition for conflict resolution, needs diagnosis, emotional states, and communication strategy."
+  },
+  {
+    "id": "sales",
+    "name": "Sales KDNA",
+    "repo": "https://github.com/aikdna/kdna-sales",
+    "spec_version": "0.1",
+    "status": "experimental",
+    "language": ["en"],
+    "description": "Domain cognition for sales judgment — price objections as certainty deficits, trust diagnosis, and deal advancement."
+  },
+  {
+    "id": "management",
+    "name": "Management KDNA",
+    "repo": "https://github.com/aikdna/kdna-management",
+    "spec_version": "0.1",
+    "status": "experimental",
+    "language": ["en"],
+    "description": "Domain cognition for management judgment — execution failures as system outputs, delegation, and team dynamics."
+  },
+  {
+    "id": "silver-age",
+    "name": "Silver Age Service KDNA",
+    "repo": "https://github.com/aikdna/kdna-silver-age",
+    "spec_version": "0.1",
+    "status": "experimental",
+    "language": ["en"],
+    "description": "Domain cognition for silver-age service — psychological entry cost, dignity preservation, and elder engagement."
+  },
+  {
+    "id": "product-decision",
+    "name": "Product Decision KDNA",
+    "repo": "https://github.com/aikdna/kdna-product-decision",
+    "spec_version": "0.1",
+    "status": "experimental",
+    "language": ["zh"],
+    "description": "Domain cognition for product decision-making — hypothesis validation over feature delivery."
+  }
+]

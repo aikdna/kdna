@@ -8,6 +8,10 @@ Skills tell AI what to do.
 
 KDNA is not a prompt library, not a knowledge base, and not an operating manual. It is a structured way to package the judgment layer of a domain: axioms, terminology boundaries, common misunderstandings, scenario signals, reasoning chains, and capability evolution.
 
+> **This repository defines the KDNA protocol, schemas, validation rules, and governance.**  
+> Domain-specific KDNA packages live in [separate repositories](#domain-repositories) and are listed in the [registry](./registry/domains.json).  
+> To add a domain to the registry, see [docs/registry-policy.md](./docs/registry-policy.md).
+
 ## Why Now
 
 > **Agents are getting better at calling tools. They still lack domain judgment.**
@@ -128,16 +132,28 @@ node examples/minimal-agent/agent.js
 
 See the same user input produce completely different cognitive analyses with different KDNA domains loaded. No LLM required — pure cognition path comparison.
 
-## Examples
+## Domain Repositories
 
-| Domain | Core Insight | Language |
-|--------|-------------|----------|
-| [communication](./examples/communication) | State repair before content discussion | EN |
-| [code_review](./examples/from-wiki-to-kdna/kdna) | Classify every comment; review intent before code | EN |
-| [product_decision](./examples/product_decision) | Hypothesis validation over feature delivery | ZH |
-| [sales](./examples/sales) | Price objections are certainty deficits, not price problems | EN |
-| [silver_age](./examples/silver_age) | Psychological entry cost matters more than activity quality | EN |
-| [management](./examples/management) | Execution failures are system outputs, not motivation failures | EN |
+Domain cognition packages live in separate repositories. See the [registry](./registry/domains.json) for the machine-readable index.
+
+| Domain | Repository | Status |
+|---|---|---|
+| Business Growth | [kdna-business-growth](https://github.com/aikdna/kdna-business-growth) | experimental |
+| Communication | [kdna-communication](https://github.com/aikdna/kdna-communication) | experimental |
+| Sales | [kdna-sales](https://github.com/aikdna/kdna-sales) | experimental |
+| Management | [kdna-management](https://github.com/aikdna/kdna-management) | experimental |
+| Silver Age Service | [kdna-silver-age](https://github.com/aikdna/kdna-silver-age) | experimental |
+| Product Decision | [kdna-product-decision](https://github.com/aikdna/kdna-product-decision) | experimental |
+
+### Reference Examples
+
+The `examples/` directory contains minimal reference implementations for testing validators and illustrating the spec. These are **not** domain content — they are spec illustrations.
+
+| Example | Purpose |
+|---------|---------|
+| [communication](./examples/communication) | Reference domain for validator testing |
+| [minimal-agent](./examples/minimal-agent) | Demo agent loading multiple KDNA domains |
+| [from-wiki-to-kdna](./examples/from-wiki-to-kdna) | Pipeline demonstration from LLM Wiki to KDNA |
 
 ## Languages
 
