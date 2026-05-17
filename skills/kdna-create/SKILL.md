@@ -15,7 +15,7 @@ KDNA is a structured format for encoding domain cognition. This skill handles al
 
 ## Workflow 1: Create from Conversation
 
-When the user wants to encode their expertise into KDNA, guide them through domain extraction.
+When the user wants to encode their expertise into KDNA, guide them through domain extraction. **These steps are a guide, not a fixed script. Adapt order and depth to the user's responses.** Skip steps the user covers naturally. Probe deeper on steps they struggle with.
 
 ### Step 1: Define the Domain
 

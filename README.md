@@ -195,6 +195,17 @@ The `examples/` directory contains minimal reference implementations for testing
 | [minimal-agent](./examples/minimal-agent) | Demo agent loading multiple KDNA domains |
 | [from-wiki-to-kdna](./examples/from-wiki-to-kdna) | Pipeline demonstration from LLM Wiki to KDNA |
 
+### Core Docs
+
+| Document | Description |
+|---|---|
+| [SPEC.md](./SPEC.md) | Protocol specification v0.1 |
+| [docs/getting-started.md](./docs/getting-started.md) | Install, create, and use KDNA ([中文](./docs/getting-started.zh.md)) |
+| [docs/evaluation.md](./docs/evaluation.md) | How to test whether KDNA improves judgment ([中文](./docs/evaluation.zh.md)) |
+| [docs/meta-cognition.md](./docs/meta-cognition.md) | When to use KDNA, conflict arbitration, domain composition ([中文](./docs/meta-cognition.zh.md)) |
+| [docs/registry-policy.md](./docs/registry-policy.md) | Domain inclusion criteria ([中文](./docs/registry-policy.zh.md)) |
+| [docs/kdna-in-action.md](./docs/kdna-in-action.md) | Five detailed before/after cases |
+
 ## Tools
 
 | Tool | Repository | Description |

@@ -195,6 +195,17 @@ node examples/minimal-agent/agent.js
 | [minimal-agent](./examples/minimal-agent) | 加载多个 KDNA 领域的 Demo Agent |
 | [from-wiki-to-kdna](./examples/from-wiki-to-kdna) | LLM Wiki 到 KDNA 的流水线演示 |
 
+### 核心文档
+
+| 文档 | 说明 |
+|---|---|
+| [SPEC.md](./SPEC.md) | 协议规范 v0.1 |
+| [docs/getting-started.zh.md](./docs/getting-started.zh.md) | 安装、创建和使用 KDNA |
+| [docs/evaluation.zh.md](./docs/evaluation.zh.md) | 如何检验 KDNA 是否改善了判断力 |
+| [docs/meta-cognition.zh.md](./docs/meta-cognition.zh.md) | 何时用 KDNA、冲突仲裁、领域组合 |
+| [docs/registry-policy.zh.md](./docs/registry-policy.zh.md) | 领域收录标准 |
+| [docs/kdna-in-chinese.md](./docs/kdna-in-chinese.md) | 中文 KDNA 编写指南 |
+
 ## 工具
 
 | 工具 | 仓库 | 说明 |
