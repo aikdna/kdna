@@ -15,10 +15,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const USER_KDNA_DIR = path.join(
-  process.env.HOME || process.env.USERPROFILE || '.',
-  '.kdna',
-);
+const USER_KDNA_DIR = path.join(process.env.HOME || process.env.USERPROFILE || '.', '.kdna');
 const INSTALL_DIR = path.join(USER_KDNA_DIR, 'domains');
 const REGISTRY_CACHE = path.join(USER_KDNA_DIR, 'registry', 'domains.json');
 
@@ -59,7 +56,7 @@ function ensureDir(dir) {
 function readJson(file) {
   try {
     return JSON.parse(fs.readFileSync(file, 'utf8'));
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -107,13 +104,9 @@ function cmdValidate(dir, schemaOnly) {
     }
   }
 
-  const jsonFiles = fs
-    .readdirSync(abs)
-    .filter((f) => f.endsWith('.json') && f !== 'kdna.json');
+  const jsonFiles = fs.readdirSync(abs).filter((f) => f.endsWith('.json') && f !== 'kdna.json');
   if (jsonFiles.length > 6) {
-    lintErrors.push(
-      `Domain has ${jsonFiles.length} JSON files; KDNA allows at most 6.`,
-    );
+    lintErrors.push(`Domain has ${jsonFiles.length} JSON files; KDNA allows at most 6.`);
   }
 
   const parsed = {};
@@ -128,13 +121,7 @@ function cmdValidate(dir, schemaOnly) {
     if (!data.meta) {
       lintErrors.push(`${f}: missing meta object`);
     } else {
-      for (const field of [
-        'version',
-        'domain',
-        'created',
-        'purpose',
-        'load_condition',
-      ]) {
+      for (const field of ['version', 'domain', 'created', 'purpose', 'load_condition']) {
         if (!data.meta[field] || data.meta[field] === '') {
           lintErrors.push(`${f}.meta: missing "${field}"`);
         }
@@ -144,35 +131,17 @@ function cmdValidate(dir, schemaOnly) {
 
   const core = parsed['KDNA_Core.json'];
   if (core) {
-    for (const field of [
-      'axioms',
-      'ontology',
-      'frameworks',
-      'core_structure',
-      'stances',
-    ]) {
+    for (const field of ['axioms', 'ontology', 'frameworks', 'core_structure', 'stances']) {
       if (!core[field]) lintErrors.push(`KDNA_Core.json: missing "${field}"`);
     }
     for (const a of core.axioms || []) {
       for (const f of ['id', 'one_sentence', 'full_statement', 'why']) {
-        if (!a[f])
-          lintErrors.push(
-            `KDNA_Core.json axiom ${a.id || '?'}: missing "${f}"`,
-          );
+        if (!a[f]) lintErrors.push(`KDNA_Core.json axiom ${a.id || '?'}: missing "${f}"`);
       }
     }
     for (const c of core.ontology || []) {
-      for (const f of [
-        'id',
-        'one_sentence',
-        'essence',
-        'boundary',
-        'trigger_signal',
-      ]) {
-        if (!c[f])
-          lintErrors.push(
-            `KDNA_Core.json ontology ${c.id || '?'}: missing "${f}"`,
-          );
+      for (const f of ['id', 'one_sentence', 'essence', 'boundary', 'trigger_signal']) {
+        if (!c[f]) lintErrors.push(`KDNA_Core.json ontology ${c.id || '?'}: missing "${f}"`);
       }
     }
   }
@@ -180,21 +149,17 @@ function cmdValidate(dir, schemaOnly) {
   const pat = parsed['KDNA_Patterns.json'];
   if (pat) {
     for (const field of ['terminology', 'misunderstandings', 'self_check']) {
-      if (!pat[field])
-        lintErrors.push(`KDNA_Patterns.json: missing "${field}"`);
+      if (!pat[field]) lintErrors.push(`KDNA_Patterns.json: missing "${field}"`);
     }
     for (const b of (pat.terminology || {}).banned_terms || []) {
       for (const f of ['term', 'why', 'replace_with']) {
-        if (!b[f])
-          lintErrors.push(`KDNA_Patterns.json banned_term: missing "${f}"`);
+        if (!b[f]) lintErrors.push(`KDNA_Patterns.json banned_term: missing "${f}"`);
       }
     }
     for (const m of pat.misunderstandings || []) {
       for (const f of ['id', 'wrong', 'correct', 'key_distinction', 'why']) {
         if (!m[f])
-          lintErrors.push(
-            `KDNA_Patterns.json misunderstanding ${m.id || '?'}: missing "${f}"`,
-          );
+          lintErrors.push(`KDNA_Patterns.json misunderstanding ${m.id || '?'}: missing "${f}"`);
       }
     }
     for (const s of pat.self_check || []) {
@@ -204,13 +169,9 @@ function cmdValidate(dir, schemaOnly) {
         !t.endsWith('？') &&
         !t.endsWith('吗') &&
         !t.includes('是否') &&
-        !/^(have|has|can|does|do|is|are|能不能|会不会|有没有|要不要|是不是)/i.test(
-          t,
-        )
+        !/^(have|has|can|does|do|is|are|能不能|会不会|有没有|要不要|是不是)/i.test(t)
       ) {
-        warnings.push(
-          `self_check item should be yes/no answerable: "${t.substring(0, 60)}"`,
-        );
+        warnings.push(`self_check item should be yes/no answerable: "${t.substring(0, 60)}"`);
       }
     }
   }
@@ -230,9 +191,7 @@ function cmdValidate(dir, schemaOnly) {
 
   const manifest = readJson(path.join(abs, 'kdna.json'));
   if (!manifest) {
-    warnings.push(
-      'No kdna.json manifest found. Run `kdna pack` to generate one.',
-    );
+    warnings.push('No kdna.json manifest found. Run `kdna pack` to generate one.');
   }
 
   let schemaOk = true;
@@ -278,17 +237,15 @@ function cmdValidate(dir, schemaOnly) {
         const ajvInstance = new ajv({ allErrors: true, strict: false });
         if (addFormats) addFormats(ajvInstance);
         try {
-          ajvInstance.addMetaSchema(
-            require('ajv/dist/refs/json-schema-2020-12.json'),
-          );
-        } catch {}
+          ajvInstance.addMetaSchema(require('ajv/dist/refs/json-schema-2020-12.json'));
+        } catch {
+          /* meta-schema not available */
+        }
 
         const validate = ajvInstance.compile(schema);
         if (!validate(data)) {
           for (const err of validate.errors || []) {
-            lintErrors.push(
-              `${file}${err.instancePath || '/'}: ${err.message}`,
-            );
+            lintErrors.push(`${file}${err.instancePath || '/'}: ${err.message}`);
           }
           schemaOk = false;
         }
@@ -307,11 +264,8 @@ function cmdValidate(dir, schemaOnly) {
   }
 
   const count = Object.keys(parsed).length;
-  const schemaMsg =
-    schemaOk !== null ? (schemaOk ? ', schema OK' : ', schema issues') : '';
-  console.log(
-    `✓ KDNA domain valid: ${abs} (${count} file${count !== 1 ? 's' : ''}${schemaMsg})`,
-  );
+  const schemaMsg = schemaOk !== null ? (schemaOk ? ', schema OK' : ', schema issues') : '';
+  console.log(`✓ KDNA domain valid: ${abs} (${count} file${count !== 1 ? 's' : ''}${schemaMsg})`);
 }
 
 // ─── Pack ────────────────────────────────────────────────────────────
@@ -351,10 +305,7 @@ function cmdPack(dir, outputDir) {
     languages: [core.meta?.language || 'en'],
     created: core.meta?.created || new Date().toISOString().slice(0, 10),
     updated: new Date().toISOString().slice(0, 10),
-    description:
-      core.meta?.description ||
-      core.meta?.purpose ||
-      `${domainName} domain cognition`,
+    description: core.meta?.description || core.meta?.purpose || `${domainName} domain cognition`,
     keywords: existingKeywords,
     access: 'open',
     author: {
@@ -373,9 +324,7 @@ function cmdPack(dir, outputDir) {
     file_count: jsonCount,
   };
 
-  const outPath = outputDir
-    ? path.join(outputDir, 'kdna.json')
-    : path.join(abs, 'kdna.json');
+  const outPath = outputDir ? path.join(outputDir, 'kdna.json') : path.join(abs, 'kdna.json');
   writeJson(outPath, manifest);
   console.log(`✓ kdna.json manifest created: ${outPath}`);
   console.log(`  Domain: ${manifest.name} v${manifest.version}`);
@@ -442,7 +391,7 @@ function cmdInstall(domainId, fromGit) {
     cloneOrDownload(repoUrl, tarballUrl, dest, domainId);
   }
 
-  validateInstalledDomain(dest, domainId);
+  validateInstalledDomain(dest);
 }
 
 function cloneOrDownload(repoUrl, tarballUrl, dest, domainId) {
@@ -450,22 +399,19 @@ function cloneOrDownload(repoUrl, tarballUrl, dest, domainId) {
   if (tryClone(repoUrl, dest)) return;
 
   // Strategy 2: SSH git clone
-  const sshUrl = repoUrl.replace(
-    /https:\/\/github\.com\//,
-    'git@github.com:',
-  ) + '.git';
+  const sshUrl = repoUrl.replace(/https:\/\/github\.com\//, 'git@github.com:') + '.git';
   if (tryClone(sshUrl, dest)) return;
 
   // Strategy 3: Download tarball from GitHub archive
   if (tarballUrl) {
     console.log(`Git clone failed. Trying tarball download...`);
-    if (tryTarball(tarballUrl, dest, domainId)) return;
+    if (tryTarball(tarballUrl, dest)) return;
   }
 
   error(
     `Failed to install "${domainId}".\n` +
-    `  Tried: HTTPS clone, SSH clone, tarball download.\n` +
-    `  Check your network and GitHub authentication.`,
+      `  Tried: HTTPS clone, SSH clone, tarball download.\n` +
+      `  Check your network and GitHub authentication.`,
   );
 }
 
@@ -481,13 +427,10 @@ function tryClone(url, dest) {
   }
 }
 
-function tryTarball(url, dest, domainId) {
+function tryTarball(url, dest) {
   try {
     const tarballPath = `${dest}.tar.gz`;
-    execSync(
-      `curl -fsSL -o "${tarballPath}" "${url}"`,
-      { stdio: 'pipe', timeout: 60000 },
-    );
+    execSync(`curl -fsSL -o "${tarballPath}" "${url}"`, { stdio: 'pipe', timeout: 60000 });
 
     // Extract to temp dir first (GitHub wraps in org-repo-commit/ dir)
     const tmpDir = `${dest}.tmp`;
@@ -518,7 +461,7 @@ function tryTarball(url, dest, domainId) {
   }
 }
 
-function validateInstalledDomain(dest, domainId) {
+function validateInstalledDomain(dest) {
   if (fs.existsSync(path.join(dest, 'KDNA_Core.json'))) {
     console.log('');
     console.log(`Domain installed: ${dest}`);
@@ -544,9 +487,7 @@ function validateInstalledDomain(dest, domainId) {
         return;
       }
     }
-    error(
-      `Installed directory does not appear to be a valid KDNA domain: ${dest}`,
-    );
+    error(`Installed directory does not appear to be a valid KDNA domain: ${dest}`);
   }
 }
 
@@ -568,9 +509,7 @@ function cmdInspect(dir) {
   const c = core;
 
   console.log('═'.repeat(50));
-  console.log(
-    `  ${m.name || c.meta?.domain || path.basename(abs)} — KDNA Domain`,
-  );
+  console.log(`  ${m.name || c.meta?.domain || path.basename(abs)} — KDNA Domain`);
   console.log('═'.repeat(50));
   console.log('');
   console.log(`  Version:     ${m.version || c.meta?.version || '?'}`);
@@ -609,17 +548,10 @@ function cmdInspect(dir) {
 
   const pat = readJson(path.join(abs, 'KDNA_Patterns.json'));
   if (pat) {
-    const preferred =
-      pat.terminology?.preferred_terms ||
-      pat.terminology?.standard_terms ||
-      [];
+    const preferred = pat.terminology?.preferred_terms || pat.terminology?.standard_terms || [];
     console.log(`  Preferred terms:    ${preferred.length}`);
-    console.log(
-      `  Banned terms:       ${(pat.terminology?.banned_terms || []).length}`,
-    );
-    console.log(
-      `  Misunderstandings:  ${(pat.misunderstandings || []).length}`,
-    );
+    console.log(`  Banned terms:       ${(pat.terminology?.banned_terms || []).length}`);
+    console.log(`  Misunderstandings:  ${(pat.misunderstandings || []).length}`);
     console.log(`  Self-checks:        ${(pat.self_check || []).length}`);
   }
 
@@ -630,14 +562,10 @@ function cmdInspect(dir) {
   if (cas) console.log(`  Cases:              ${(cas.cases || []).length}`);
 
   const rea = readJson(path.join(abs, 'KDNA_Reasoning.json'));
-  if (rea)
-    console.log(
-      `  Reasoning chains:   ${(rea.reasoning_chains || []).length}`,
-    );
+  if (rea) console.log(`  Reasoning chains:   ${(rea.reasoning_chains || []).length}`);
 
   const evo = readJson(path.join(abs, 'KDNA_Evolution.json'));
-  if (evo)
-    console.log(`  Evolution stages:   ${(evo.stages || []).length}`);
+  if (evo) console.log(`  Evolution stages:   ${(evo.stages || []).length}`);
 
   console.log('');
   console.log('  ── Axioms ──');
@@ -676,23 +604,15 @@ function cmdEval(dir) {
   const bannedTerms = new Set(
     (pat.terminology?.banned_terms || []).map((b) => b.term.toLowerCase()),
   );
-  const preferredTerms = new Set(
-    (pat.terminology?.preferred_terms || pat.terminology?.standard_terms || []).map(
-      (p) => (typeof p === 'string' ? p.toLowerCase() : p.term?.toLowerCase()),
-    ),
-  );
   const axiomKeywords = new Set(
     (core.axioms || []).flatMap((a) =>
-      (a.one_sentence + ' ' + a.full_statement).toLowerCase().split(/\s+/).filter((w) => w.length > 3),
+      (a.one_sentence + ' ' + a.full_statement)
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((w) => w.length > 3),
     ),
   );
-  const ontologyConcepts = new Set(
-    (core.ontology || []).map((o) => o.id?.toLowerCase()),
-  );
-  const misunderstandingPatterns = (pat.misunderstandings || []).map((m) => ({
-    wrong: m.wrong?.toLowerCase() || '',
-    correct: m.correct?.toLowerCase() || '',
-  }));
+  const ontologyConcepts = new Set((core.ontology || []).map((o) => o.id?.toLowerCase()));
   const selfCheckItems = (pat.self_check || []).map((s) =>
     (typeof s === 'string' ? s : s.question || '').toLowerCase(),
   );
@@ -738,9 +658,7 @@ function cmdEval(dir) {
     }
     checks.push({
       pass: conceptHit,
-      msg: conceptHit
-        ? 'References domain concepts'
-        : 'Does not reference domain concepts',
+      msg: conceptHit ? 'References domain concepts' : 'Does not reference domain concepts',
     });
 
     // 3. Axiom alignment (weight: 1)
@@ -828,9 +746,7 @@ function cmdList(showAvailable) {
     console.log('Available KDNA domains:');
     console.log('');
     for (const d of domains) {
-      const installed = fs.existsSync(path.join(INSTALL_DIR, d.id))
-        ? '[installed]'
-        : '';
+      const installed = fs.existsSync(path.join(INSTALL_DIR, d.id)) ? '[installed]' : '';
       console.log(
         `  ${(d.id || '?').padEnd(18)} ${(d.version || '?').padEnd(8)} ${(d.status || '').padEnd(14)} ${installed}`,
       );
@@ -844,15 +760,10 @@ function cmdList(showAvailable) {
       return;
     }
 
-    const dirs = fs
-      .readdirSync(INSTALL_DIR)
-      .filter((d) => {
-        const full = path.join(INSTALL_DIR, d);
-        return (
-          fs.statSync(full).isDirectory() &&
-          fs.existsSync(path.join(full, 'KDNA_Core.json'))
-        );
-      });
+    const dirs = fs.readdirSync(INSTALL_DIR).filter((d) => {
+      const full = path.join(INSTALL_DIR, d);
+      return fs.statSync(full).isDirectory() && fs.existsSync(path.join(full, 'KDNA_Core.json'));
+    });
 
     if (!dirs.length) {
       console.log('No domains installed.');
@@ -878,12 +789,7 @@ function cmdList(showAvailable) {
 // ─── Main ─────────────────────────────────────────────────────────────
 
 const args = process.argv.slice(2);
-if (
-  !args.length ||
-  args[0] === 'help' ||
-  args[0] === '--help' ||
-  args[0] === '-h'
-) {
+if (!args.length || args[0] === 'help' || args[0] === '--help' || args[0] === '-h') {
   usage();
   process.exit(0);
 }
