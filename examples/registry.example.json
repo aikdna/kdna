@@ -1,0 +1,45 @@
+{
+  "version": "0.1",
+  "root": "~/.agents/Kdna",
+  "domains": [
+    {
+      "id": "communication_expert",
+      "name": "Communication Expert",
+      "zh_name": "沟通专家",
+      "path": "communication_expert",
+      "status": "local",
+      "description": "Domain cognition for communication diagnosis, trust, defensiveness, conflict, and expression choices.",
+      "triggers": [
+        "communication",
+        "conversation",
+        "conflict",
+        "trust",
+        "feedback",
+        "沟通",
+        "关系",
+        "信任",
+        "冲突",
+        "表达",
+        "反馈"
+      ]
+    },
+    {
+      "id": "business_growth",
+      "name": "Business Growth",
+      "zh_name": "业务增长",
+      "path": "business_growth",
+      "status": "local",
+      "description": "Domain cognition for business growth, value proposition, pricing, trust building, and monetization.",
+      "triggers": [
+        "business growth",
+        "pricing",
+        "value proposition",
+        "monetization",
+        "增长",
+        "定价",
+        "价值主张",
+        "变现"
+      ]
+    }
+  ]
+}

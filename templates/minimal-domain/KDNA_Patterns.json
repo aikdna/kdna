@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "example_domain",
+    "created": "YYYY-MM-DD",
+    "purpose": "Define terminology, common misunderstandings, and self-checks.",
+    "load_condition": "Always load when this domain is selected."
+  },
+  "terminology": {
+    "preferred_terms": [
+      {
+        "term": "preferred term",
+        "meaning": "What this term means in this domain.",
+        "use_when": "When the agent should use this term."
+      }
+    ],
+    "banned_terms": [
+      {
+        "term": "term to avoid",
+        "why": "Why this term misleads agent judgment.",
+        "replace_with": "A better replacement."
+      }
+    ]
+  },
+  "misunderstandings": [
+    {
+      "wrong": "Common wrong interpretation.",
+      "correct": "Correct interpretation.",
+      "key_distinction": "The distinction the agent must preserve.",
+      "why": "Why this misunderstanding creates bad judgment."
+    }
+  ],
+  "self_check": [
+    {
+      "id": "SC-001",
+      "question": "Did the answer apply the domain's core distinction instead of giving generic advice?"
+    }
+  ]
+}

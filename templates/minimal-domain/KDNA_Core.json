@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "version": "0.1",
+    "domain": "example_domain",
+    "created": "YYYY-MM-DD",
+    "purpose": "Define the core cognition of this domain.",
+    "load_condition": "Always load when this domain is selected."
+  },
+  "axioms": [
+    {
+      "id": "AX-001",
+      "one_sentence": "One core judgment principle.",
+      "full_statement": "Explain the axiom in a testable and domain-specific way.",
+      "why": "Why this principle matters for agent judgment."
+    }
+  ],
+  "ontology": [
+    {
+      "id": "CON-001",
+      "one_sentence": "Name one central concept.",
+      "essence": "What this concept really means in this domain.",
+      "boundary": "What this concept is NOT.",
+      "trigger_signal": "When should the agent notice this concept is relevant."
+    }
+  ],
+  "frameworks": [
+    {
+      "id": "FW-001",
+      "name": "Example Framework",
+      "when_to_use": "When does this framework apply.",
+      "steps": ["Step 1", "Step 2", "Step 3"]
+    }
+  ],
+  "core_structure": {
+    "from": "Surface symptom or problem",
+    "to": "Deeper cause or resolution",
+    "via": "Diagnostic path or mechanism"
+  },
+  "stances": [
+    {
+      "id": "ST-001",
+      "stance": "The domain's default position on an issue.",
+      "anti_stance": "What this domain rejects."
+    }
+  ]
+}

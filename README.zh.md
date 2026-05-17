@@ -104,8 +104,8 @@ KDNA_Patterns.json
 ## 快速开始
 
 ```bash
-git clone https://github.com/aikdna/kdna.git
-cd kdna
+git clone https://github.com/aikdna/KDNA.git
+cd KDNA
 npm install
 npm run lint:examples
 ```
@@ -115,6 +115,28 @@ npm run lint:examples
 ```bash
 node validators/kdna-lint.js examples/communication
 ```
+
+## 本地使用 KDNA
+
+在自己的 Agent 中使用 KDNA：
+
+```bash
+# 1. 安装 loader skill
+mkdir -p ~/.agents/Skills/kdna-loader
+cp skills/kdna-loader/SKILL.md ~/.agents/Skills/kdna-loader/SKILL.md
+
+# 2. 创建 KDNA 本地库
+mkdir -p ~/.agents/Kdna/communication_expert
+cp examples/communication/KDNA_Core.json ~/.agents/Kdna/communication_expert/
+cp examples/communication/KDNA_Patterns.json ~/.agents/Kdna/communication_expert/
+
+# 3. 校验
+node validators/kdna-lint.js ~/.agents/Kdna/communication_expert
+```
+
+Agent 加载了 `kdna-loader` 后，当用户提出沟通相关问题时，Agent 会自动从 `~/.agents/Kdna/` 找到对应领域，加载认知文件并重塑判断。
+
+要创建自己的领域，从[最小模板](./templates/minimal-domain/)开始，参考[快速上手指南](./docs/getting-started.md)。
 
 ## 规范
 

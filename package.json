@@ -53,11 +53,11 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aikdna/kdna.git"
+    "url": "https://github.com/aikdna/KDNA.git"
   },
-  "homepage": "https://github.com/aikdna/kdna#readme",
+  "homepage": "https://github.com/aikdna/KDNA#readme",
   "bugs": {
-    "url": "https://github.com/aikdna/kdna/issues"
+    "url": "https://github.com/aikdna/KDNA/issues"
   },
   "engines": {
     "node": ">=18"

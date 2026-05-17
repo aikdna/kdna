@@ -108,8 +108,8 @@ KDNA_Patterns.json
 ## Quick Start
 
 ```bash
-git clone https://github.com/aikdna/kdna.git
-cd kdna
+git clone https://github.com/aikdna/KDNA.git
+cd KDNA
 npm install
 npm run lint:examples
 ```
@@ -119,6 +119,28 @@ Validate a domain:
 ```bash
 node validators/kdna-lint.js examples/communication
 ```
+
+## Use KDNA Locally
+
+To use KDNA with your own agent:
+
+```bash
+# 1. Install the loader skill
+mkdir -p ~/.agents/Skills/kdna-loader
+cp skills/kdna-loader/SKILL.md ~/.agents/Skills/kdna-loader/SKILL.md
+
+# 2. Create your KDNA library
+mkdir -p ~/.agents/Kdna/communication_expert
+cp examples/communication/KDNA_Core.json ~/.agents/Kdna/communication_expert/
+cp examples/communication/KDNA_Patterns.json ~/.agents/Kdna/communication_expert/
+
+# 3. Validate
+node validators/kdna-lint.js ~/.agents/Kdna/communication_expert
+```
+
+When your agent loads `kdna-loader` and a user asks about communication, the agent will find the domain under `~/.agents/Kdna/`, load Core + Patterns, and shape its judgment accordingly.
+
+To create your own domain, start from the [minimal template](./templates/minimal-domain/) and follow the [getting started guide](./docs/getting-started.md).
 
 ## Specs
 
