@@ -204,7 +204,7 @@ The `examples/` directory contains minimal reference implementations for testing
 ## Languages
 
 - [English](./README.md)
-- [中文](./README.zh.md)
+- [中文](./README.zh.md) — [快速上手](./docs/getting-started.zh.md) · [编写指南](./docs/kdna-in-chinese.md) · [收录标准](./docs/registry-policy.zh.md) · [国际化](./docs/i18n.md)
 
 ## License
 
