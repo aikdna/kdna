@@ -95,29 +95,6 @@
       "updated": "2026-05-17"
     },
     {
-      "id": "silver-age",
-      "name": "Silver Age Service KDNA",
-      "version": "0.1.0",
-      "repo": "https://github.com/knowledge-dna/kdna-silver-age",
-      "spec_version": "0.2",
-      "status": "experimental",
-      "access": "open",
-      "language": ["en"],
-      "author": {
-        "name": "KDNA Team",
-        "id": "kdna-team"
-      },
-      "license": {
-        "type": "CC-BY-4.0"
-      },
-      "keywords": ["silver-age", "elder", "dignity", "engagement"],
-      "description": "Domain cognition for silver-age service — psychological entry cost, dignity preservation, and elder engagement.",
-      "core_insight": "Psychological entry cost is more critical than activity quality.",
-      "file_count": 6,
-      "created": "2026-05-01",
-      "updated": "2026-05-17"
-    },
-    {
       "id": "product-decision",
       "name": "Product Decision KDNA",
       "version": "0.1.0",
