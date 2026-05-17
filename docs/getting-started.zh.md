@@ -1,5 +1,7 @@
 # KDNA 快速上手指南
 
+> [English](./getting-started.md)
+
 如何安装 KDNA、创建你的第一个领域、并在 Agent 中使用。
 
 ## 1. 安装加载器技能

@@ -1,5 +1,7 @@
 # Getting Started with KDNA
 
+> [中文版](./getting-started.zh.md)
+
 How to install KDNA, create your first domain, and use it with an agent.
 
 ## 1. Install the Loader Skill
