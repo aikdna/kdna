@@ -1,5 +1,7 @@
 # KDNA
 
+> 🧬 **[aikdna.com](https://aikdna.com)** — Official website
+
 **KDNA (Knowledge DNA)** is an open format for encoding **domain cognition** for AI agents.
 
 Prompts tell AI what to say.  

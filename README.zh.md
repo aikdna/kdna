@@ -1,5 +1,7 @@
 # KDNA
 
+> 🧬 **[aikdna.com](https://aikdna.com)** — 官方网站
+
 **KDNA（Knowledge DNA）** 是一种开放格式，用于为 AI Agent 编码**领域认知**。
 
 Prompt 告诉 AI 说什么。  
