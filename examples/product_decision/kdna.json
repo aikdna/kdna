@@ -1,0 +1,28 @@
+{
+  "kdna_spec": "0.2",
+  "name": "product_decision",
+  "version": "0.1",
+  "language": "en",
+  "languages": [
+    "en"
+  ],
+  "created": "2026-05-12",
+  "updated": "2026-05-17",
+  "description": "定义产品决策领域的核心认知：如何在不完备信息下做出可逆、可验证的产品判断。",
+  "keywords": [],
+  "access": "open",
+  "author": {
+    "name": "",
+    "id": ""
+  },
+  "license": {
+    "type": "CC-BY-4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "allow_agent_use": true,
+    "allow_redistribution": true,
+    "allow_training": false
+  },
+  "status": "experimental",
+  "registry": {},
+  "file_count": 6
+}

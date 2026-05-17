@@ -1,6 +1,6 @@
 # KDNA
 
-> 🧬 **[aikdna.com](https://aikdna.com)** — Official website
+> 🧬 **[aikdna.com](https://aikdna.com)** — Official website · [![npm](https://img.shields.io/npm/v/@aikdna/kdna)](https://www.npmjs.com/package/@aikdna/kdna) · Mirror: [@aikdna/kdna](https://www.npmjs.com/package/@aikdna/kdna)
 
 **KDNA (Knowledge DNA)** is an open format for encoding **domain cognition** for AI agents.
 
@@ -109,6 +109,13 @@ KDNA_Patterns.json
 ```
 
 ## Quick Start
+
+```bash
+npm i -g @aikdna/kdna
+kdna --help
+```
+
+Or clone the repo:
 
 ```bash
 git clone https://github.com/aikdna/KDNA.git

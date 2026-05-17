@@ -1,7 +1,7 @@
 {
   "name": "@aikdna/kdna",
-  "version": "0.1.0",
-  "description": "An open format for encoding domain cognition for AI agents.",
+  "version": "0.1.1",
+  "description": "KDNA CLI and toolkit — create, validate, and load domain cognition packages for AI agents.",
   "type": "commonjs",
   "main": "src/index.js",
   "module": "src/index.mjs",
@@ -14,12 +14,14 @@
   },
   "types": "src/types.d.ts",
   "bin": {
-    "kdna-lint": "./validators/kdna-lint.js",
-    "kdna-validate": "./validators/kdna-validate.js"
+    "kdna": "src/cli.js",
+    "kdna-lint": "validators/kdna-lint.js",
+    "kdna-validate": "validators/kdna-validate.js"
   },
   "files": [
     "src/index.js",
     "src/index.mjs",
+    "src/cli.js",
     "src/loader.js",
     "src/types.d.ts",
     "src/loader.d.ts",
@@ -27,6 +29,8 @@
     "schema/",
     "skills/",
     "prompts/",
+    "specs/",
+    "registry/",
     "SPEC.md",
     "CHANGELOG.md",
     "LICENSE",
@@ -42,18 +46,18 @@
     "test:esm": "node --test --experimental-vm-modules tests/esm.test.js"
   },
   "keywords": [
-    "ai",
-    "agents",
-    "skills",
-    "cognition",
-    "knowledge",
-    "schema",
-    "mcp"
+    "kdna",
+    "ai-agent",
+    "domain-cognition",
+    "aikdna",
+    "agent-skills",
+    "ai-tools",
+    "cli"
   ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aikdna/KDNA.git"
+    "url": "git+https://github.com/aikdna/KDNA.git"
   },
   "homepage": "https://aikdna.com",
   "bugs": {

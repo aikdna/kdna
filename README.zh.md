@@ -1,6 +1,6 @@
 # KDNA
 
-> 🧬 **[aikdna.com](https://aikdna.com)** — 官方网站
+> 🧬 **[aikdna.com](https://aikdna.com)** — 官方网站 · [![npm](https://img.shields.io/npm/v/@aikdna/kdna)](https://www.npmjs.com/package/@aikdna/kdna) · 镜像: [@aikdna/kdna](https://www.npmjs.com/package/@aikdna/kdna)
 
 **KDNA（Knowledge DNA）** 是一种开放格式，用于为 AI Agent 编码**领域认知**。
 
@@ -105,6 +105,13 @@ KDNA_Patterns.json
 ```
 
 ## 快速开始
+
+```bash
+npm i -g @aikdna/kdna
+kdna --help
+```
+
+或克隆仓库：
 
 ```bash
 git clone https://github.com/aikdna/KDNA.git

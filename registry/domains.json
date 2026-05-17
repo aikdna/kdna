@@ -1,56 +1,144 @@
-[
-  {
-    "id": "business-growth",
-    "name": "Business Growth KDNA",
-    "repo": "https://github.com/aikdna/kdna-business-growth",
-    "spec_version": "0.1",
-    "status": "experimental",
-    "language": ["en"],
-    "description": "Domain cognition for business growth, value proposition, pricing, trust building, monetization, and IP positioning."
-  },
-  {
-    "id": "communication",
-    "name": "Communication KDNA",
-    "repo": "https://github.com/aikdna/kdna-communication",
-    "spec_version": "0.1",
-    "status": "experimental",
-    "language": ["en"],
-    "description": "Domain cognition for conflict resolution, needs diagnosis, emotional states, and communication strategy."
-  },
-  {
-    "id": "sales",
-    "name": "Sales KDNA",
-    "repo": "https://github.com/aikdna/kdna-sales",
-    "spec_version": "0.1",
-    "status": "experimental",
-    "language": ["en"],
-    "description": "Domain cognition for sales judgment — price objections as certainty deficits, trust diagnosis, and deal advancement."
-  },
-  {
-    "id": "management",
-    "name": "Management KDNA",
-    "repo": "https://github.com/aikdna/kdna-management",
-    "spec_version": "0.1",
-    "status": "experimental",
-    "language": ["en"],
-    "description": "Domain cognition for management judgment — execution failures as system outputs, delegation, and team dynamics."
-  },
-  {
-    "id": "silver-age",
-    "name": "Silver Age Service KDNA",
-    "repo": "https://github.com/aikdna/kdna-silver-age",
-    "spec_version": "0.1",
-    "status": "experimental",
-    "language": ["en"],
-    "description": "Domain cognition for silver-age service — psychological entry cost, dignity preservation, and elder engagement."
-  },
-  {
-    "id": "product-decision",
-    "name": "Product Decision KDNA",
-    "repo": "https://github.com/aikdna/kdna-product-decision",
-    "spec_version": "0.1",
-    "status": "experimental",
-    "language": ["zh"],
-    "description": "Domain cognition for product decision-making — hypothesis validation over feature delivery."
-  }
-]
+{
+  "registry_version": "0.2",
+  "updated": "2026-05-17T10:00:00Z",
+  "domains": [
+    {
+      "id": "business-growth",
+      "name": "Business Growth KDNA",
+      "version": "0.1.0",
+      "repo": "https://github.com/aikdna/kdna-business-growth",
+      "spec_version": "0.2",
+      "status": "experimental",
+      "access": "open",
+      "language": ["en"],
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
+      "keywords": ["business", "growth", "pricing", "monetization"],
+      "description": "Domain cognition for business growth, value proposition, pricing, trust building, monetization, and IP positioning.",
+      "core_insight": "Value proposition is the foundation of all business growth.",
+      "file_count": 6,
+      "created": "2026-05-01",
+      "updated": "2026-05-17"
+    },
+    {
+      "id": "communication",
+      "name": "Communication KDNA",
+      "version": "0.1.0",
+      "repo": "https://github.com/aikdna/kdna-communication",
+      "spec_version": "0.2",
+      "status": "experimental",
+      "access": "open",
+      "language": ["en"],
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
+      "keywords": ["communication", "conflict", "needs", "strategy"],
+      "description": "Domain cognition for conflict resolution, needs diagnosis, emotional states, and communication strategy.",
+      "core_insight": "Intent is more important than words; state comes before strategy.",
+      "file_count": 6,
+      "created": "2026-05-01",
+      "updated": "2026-05-17"
+    },
+    {
+      "id": "sales",
+      "name": "Sales KDNA",
+      "version": "0.1.0",
+      "repo": "https://github.com/aikdna/kdna-sales",
+      "spec_version": "0.2",
+      "status": "experimental",
+      "access": "open",
+      "language": ["en"],
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
+      "keywords": ["sales", "trust", "negotiation", "b2b"],
+      "description": "Domain cognition for sales judgment — price objections as certainty deficits, trust diagnosis, and deal advancement.",
+      "core_insight": "Price objections are certainty deficits, not price problems.",
+      "file_count": 6,
+      "created": "2026-05-13",
+      "updated": "2026-05-17"
+    },
+    {
+      "id": "management",
+      "name": "Management KDNA",
+      "version": "0.1.0",
+      "repo": "https://github.com/aikdna/kdna-management",
+      "spec_version": "0.2",
+      "status": "experimental",
+      "access": "open",
+      "language": ["en"],
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
+      "keywords": ["management", "execution", "delegation", "team"],
+      "description": "Domain cognition for management judgment — execution failures as system outputs, delegation, and team dynamics.",
+      "core_insight": "Execution failure is a system output, not a motivation failure.",
+      "file_count": 6,
+      "created": "2026-05-01",
+      "updated": "2026-05-17"
+    },
+    {
+      "id": "silver-age",
+      "name": "Silver Age Service KDNA",
+      "version": "0.1.0",
+      "repo": "https://github.com/aikdna/kdna-silver-age",
+      "spec_version": "0.2",
+      "status": "experimental",
+      "access": "open",
+      "language": ["en"],
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
+      "keywords": ["silver-age", "elder", "dignity", "engagement"],
+      "description": "Domain cognition for silver-age service — psychological entry cost, dignity preservation, and elder engagement.",
+      "core_insight": "Psychological entry cost is more critical than activity quality.",
+      "file_count": 6,
+      "created": "2026-05-01",
+      "updated": "2026-05-17"
+    },
+    {
+      "id": "product-decision",
+      "name": "Product Decision KDNA",
+      "version": "0.1.0",
+      "repo": "https://github.com/aikdna/kdna-product-decision",
+      "spec_version": "0.2",
+      "status": "experimental",
+      "access": "open",
+      "language": ["zh"],
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
+      "keywords": ["product", "decision", "hypothesis", "validation"],
+      "description": "Domain cognition for product decision-making — hypothesis validation over feature delivery.",
+      "core_insight": "Validate hypotheses before delivering features.",
+      "file_count": 6,
+      "created": "2026-05-01",
+      "updated": "2026-05-17"
+    }
+  ]
+}

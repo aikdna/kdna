@@ -1,0 +1,28 @@
+{
+  "kdna_spec": "0.2",
+  "name": "silver_age",
+  "version": "0.1",
+  "language": "en",
+  "languages": [
+    "en"
+  ],
+  "created": "2026-05-13",
+  "updated": "2026-05-17",
+  "description": "Define the core cognition for serving elderly populations: dignity preservation, psychological safety, and understanding hidden barriers to engagement.",
+  "keywords": [],
+  "access": "open",
+  "author": {
+    "name": "",
+    "id": ""
+  },
+  "license": {
+    "type": "CC-BY-4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "allow_agent_use": true,
+    "allow_redistribution": true,
+    "allow_training": false
+  },
+  "status": "experimental",
+  "registry": {},
+  "file_count": 6
+}

@@ -62,7 +62,7 @@ if (!fs.existsSync(domainDir) || !fs.statSync(domainDir).isDirectory()) {
 }
 for (const f of requiredFiles)
   if (!fs.existsSync(path.join(domainDir, f))) errors.push(`Missing required file: ${f}`);
-const files = fs.readdirSync(domainDir).filter((f) => f.endsWith('.json'));
+const files = fs.readdirSync(domainDir).filter((f) => f.endsWith('.json') && f !== 'kdna.json');
 if (files.length > 6) errors.push(`Domain has ${files.length} JSON files; KDNA allows at most 6.`);
 const parsed = {};
 for (const f of files) {

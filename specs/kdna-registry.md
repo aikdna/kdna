@@ -1,0 +1,283 @@
+# KDNA Registry Specification
+
+Version: 0.2
+Status: Draft
+
+## 1. Purpose
+
+The KDNA Registry is the discovery and distribution layer for KDNA domain
+packages. It is analogous to npm for JavaScript, PyPI for Python, or
+Hugging Face Hub for ML models — but optimized for KDNA domain cognition assets.
+
+## 2. Registry Architecture
+
+```
+┌──────────────────────────────────────────────────┐
+│                  kdna CLI                         │
+│  kdna install sales                               │
+│  kdna search "writing"                            │
+│  kdna publish ./my-domain                         │
+└──────────────────┬───────────────────────────────┘
+                   │
+                   ▼
+┌──────────────────────────────────────────────────┐
+│              Registry API                          │
+│  GET  /v1/domains                                 │
+│  GET  /v1/domains/:id                             │
+│  GET  /v1/domains/:id/versions/:version           │
+│  POST /v1/domains                                 │
+└──────────────────┬───────────────────────────────┘
+                   │
+                   ▼
+┌──────────────────────────────────────────────────┐
+│           Registry Index                           │
+│  domains.json (machine-readable index)             │
+│  domain packages (GitHub repos / tarballs)         │
+└──────────────────────────────────────────────────┘
+```
+
+## 3. Registry Index Format
+
+The registry is defined by an index file (`domains.json`) that lists all
+registered KDNA domains.
+
+### Schema
+
+```json
+{
+  "registry_version": "0.2",
+  "updated": "2026-05-17T10:00:00Z",
+  "domains": [
+    {
+      "id": "sales",
+      "name": "Sales KDNA",
+      "version": "0.1.0",
+      "repo": "https://github.com/aikdna/kdna-sales",
+      "spec_version": "0.2",
+      "status": "experimental",
+      "access": "open",
+      "language": ["en"],
+      "author": {
+        "name": "Zhang Ling",
+        "id": "zhangling"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
+      "keywords": ["sales", "trust", "b2b"],
+      "description": "Domain cognition for high-trust sales judgment.",
+      "core_insight": "Price objections are certainty deficits, not price problems.",
+      "file_count": 6,
+      "created": "2026-05-13",
+      "updated": "2026-05-17"
+    }
+  ]
+}
+```
+
+### Domain Entry Fields
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `id` | Yes | Unique domain identifier. Lowercase snake_case. |
+| `name` | Yes | Human-readable domain name. |
+| `version` | Yes | Latest semantic version. |
+| `repo` | Yes | Source repository URL. |
+| `spec_version` | Yes | KDNA spec version the domain conforms to. |
+| `status` | Yes | Maturity: `experimental`, `basic`, `stable`, `pro`. |
+| `access` | Yes | Access mode: `open`, `licensed`, `runtime`. |
+| `language` | Yes | Array of language codes. |
+| `author` | Yes | Creator identity. |
+| `license` | Yes | License information. |
+| `keywords` | No | Search keywords. |
+| `description` | Yes | One-sentence description. |
+| `core_insight` | Yes | The domain's core judgment insight. |
+| `file_count` | No | Number of KDNA JSON files in the domain. |
+| `created` | No | Creation date. |
+| `updated` | No | Last update date. |
+| `download_url` | No | Direct download URL for the package tarball. |
+| `checksum` | No | SHA-256 checksum of the package tarball. |
+| `signature` | No | Creator's cryptographic signature. |
+| `dependencies` | No | Array of KDNA domain IDs this domain depends on. |
+
+## 4. Local Registry
+
+For offline development and testing, the KDNA toolchain supports a local registry
+file. The default location is:
+
+```
+~/.kdna/registry/domains.json
+```
+
+Project-level registries can override the global registry:
+
+```
+<project>/.kdna/registry/domains.json
+```
+
+The CLI searches in order:
+1. Project-level `.kdna/registry/domains.json`
+2. User-level `~/.kdna/registry/domains.json`
+3. Remote registry `https://registry.aikdna.com/v1/domains`
+
+## 5. Discovery Protocol
+
+### 5.1 Search
+
+```bash
+kdna search "writing"
+kdna search "sales"
+kdna search --status stable
+kdna search --language zh-CN
+```
+
+### 5.2 Info
+
+```bash
+kdna info sales
+```
+
+Output:
+```
+Name:        Sales KDNA
+ID:          sales
+Version:     0.1.0
+Status:      experimental
+Access:      open
+Language:    en
+Author:      Zhang Ling (zhangling)
+License:     CC-BY-4.0
+Description: Domain cognition for high-trust sales judgment.
+Core:        Price objections are certainty deficits, not price problems.
+Files:       6 (KDNA_Core, KDNA_Patterns, Scenarios, Cases, Reasoning, Evolution)
+Repo:        https://github.com/aikdna/kdna-sales
+```
+
+### 5.3 List
+
+```bash
+kdna list              # List installed domains
+kdna list --available  # List all available domains from registry
+kdna list --outdated   # List domains with available updates
+```
+
+## 6. Installation Protocol
+
+```bash
+kdna install sales
+kdna install sales@0.1.0
+kdna install --from-git https://github.com/aikdna/kdna-sales
+kdna install --from-url https://example.com/sales-0.1.0.kdnapack.tar.gz
+kdna install --from-path ./my-local-domain
+```
+
+### Installation Directory
+
+Installed domains are placed in:
+
+```
+~/.kdna/domains/<domain-id>/
+```
+
+For project-scoped installation:
+
+```
+<project>/.kdna/domains/<domain-id>/
+```
+
+### Domain Resolution Order
+
+When an Agent loads a KDNA domain, it looks in:
+
+1. Project-specific `.kdna/domains/` or `./Kdna/`
+2. User global `~/.kdna/domains/`
+3. Agent-specific KDNA directories (e.g., `~/.codex/Kdna/`)
+
+## 7. Publishing Protocol (Future)
+
+```bash
+kdna publish ./my-domain
+kdna publish --dry-run ./my-domain
+```
+
+Pre-publish checks:
+1. Domain passes `kdna validate`
+2. `kdna.json` manifest is complete
+3. Repository URL is valid
+4. Version is not already published
+5. License is declared
+
+## 8. Registry Security
+
+### Package Integrity
+
+- Every package tarball SHOULD have a SHA-256 checksum in the registry
+- The CLI SHOULD verify checksums after download
+- Signed domains SHOULD have a creator signature verified against a public key
+
+### Trust Levels
+
+| Level | Criteria | Badge |
+|-------|----------|-------|
+| Official | Maintained by the KDNA core team | `official-basic`, `official-pro` |
+| Verified | Reviewed and approved by core team | `verified` |
+| Community | Submitted by community members | `community` |
+| Experimental | Early-stage, may change | `experimental` |
+
+### Future: DID-Based Verification
+
+```
+{
+  "author": {
+    "name": "Zhang Ling",
+    "id": "did:kdna:creator:zhangling"
+  },
+  "signature": "0x..."
+}
+```
+
+## 9. Static Registry (Immediate)
+
+For the immediate roadmap, the registry will remain a simple static JSON file.
+This avoids infrastructure complexity while proving the installation workflow.
+
+```
+kdna-registry/
+├── domains.json
+├── README.md
+└── packages/
+    ├── sales-0.1.0.kdnapack.tar.gz
+    ├── management-0.1.0.kdnapack.tar.gz
+    ├── communication-0.1.0.kdnapack.tar.gz
+    ├── silver-age-0.1.0.kdnapack.tar.gz
+    ├── business-growth-0.1.0.kdnapack.tar.gz
+    └── product-decision-0.1.0.kdnapack.tar.gz
+```
+
+The CLI reads `domains.json` to resolve domain IDs to download URLs.
+Download URLs point to GitHub release assets or the registry's `packages/` directory.
+
+## 10. CLI Commands
+
+```bash
+kdna install <domain>        # Install a domain from registry
+kdna uninstall <domain>      # Remove an installed domain
+kdna search <query>          # Search the registry
+kdna list                    # List installed domains
+kdna list --available        # List all available domains
+kdna info <domain>           # Show domain details
+kdna update <domain>         # Update to latest version
+kdna update                  # Update all installed domains
+```
+
+## 11. GitHub Organization Integration
+
+Domains published under the `aikdna` GitHub organization are automatically
+discoverable. The registry index is generated from:
+
+1. Repository topics: `kdna-domain`, `kdna-open`, `kdna-basic`
+2. Repository's `kdna.json` at the root of the default branch
+3. GitHub release assets (`.kdnapack.tar.gz` files)
+
+A CI workflow in `kdna-registry` periodically regenerates `domains.json` by
+scanning all `kdna-*` repos in the organization.
