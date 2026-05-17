@@ -204,7 +204,9 @@ node examples/minimal-agent/agent.js
 ## 中文资源
 
 - [README.zh.md](./README.zh.md) — 中文 README（当前页面）
+- [docs/getting-started.zh.md](./docs/getting-started.zh.md) — 快速上手指南
 - [docs/kdna-in-chinese.md](./docs/kdna-in-chinese.md) — 中文 KDNA 编写指南
+- [docs/registry-policy.zh.md](./docs/registry-policy.zh.md) — 注册表收录标准
 - [docs/i18n.md](./docs/i18n.md) — KDNA 国际化策略
 
 ## 许可
