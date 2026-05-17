@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "KDNA CLI and toolkit — create, validate, and load domain cognition packages for AI agents.",
   "type": "commonjs",
   "main": "src/index.js",
