@@ -191,7 +191,6 @@ node examples/minimal-agent/agent.js
 | 沟通 | [kdna-communication](https://github.com/aikdna/kdna-communication) | experimental |
 | 销售 | [kdna-sales](https://github.com/aikdna/kdna-sales) | experimental |
 | 管理 | [kdna-management](https://github.com/aikdna/kdna-management) | experimental |
-| 银发服务 | [kdna-silver-age](https://github.com/aikdna/kdna-silver-age) | experimental |
 | 产品决策 | [kdna-product-decision](https://github.com/aikdna/kdna-product-decision) | experimental |
 
 ### 参考示例

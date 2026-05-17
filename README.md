@@ -191,7 +191,6 @@ Domain cognition packages live in separate repositories. See the [registry](./re
 | Communication | [kdna-communication](https://github.com/aikdna/kdna-communication) | experimental |
 | Sales | [kdna-sales](https://github.com/aikdna/kdna-sales) | experimental |
 | Management | [kdna-management](https://github.com/aikdna/kdna-management) | experimental |
-| Silver Age Service | [kdna-silver-age](https://github.com/aikdna/kdna-silver-age) | experimental |
 | Product Decision | [kdna-product-decision](https://github.com/aikdna/kdna-product-decision) | experimental |
 
 ### Reference Examples

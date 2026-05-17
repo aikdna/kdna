@@ -32,6 +32,3 @@ jobs:
 
       - name: kdna eval — management
         run: node src/cli.js eval examples/management
-
-      - name: kdna eval — silver_age
-        run: node src/cli.js eval examples/silver_age

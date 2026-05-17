@@ -50,7 +50,7 @@ for d in domains:
 echo "[1/4] Validating main repo..."
 cd "$ROOT_DIR"
 
-for domain_dir in examples/communication examples/from-wiki-to-kdna/kdna examples/product_decision examples/management examples/sales examples/silver_age; do
+for domain_dir in examples/communication examples/from-wiki-to-kdna/kdna examples/product_decision examples/management examples/sales; do
   domain_name=$(basename "$domain_dir")
   if [ -d "$domain_dir" ]; then
     if npx kdna-lint "$domain_dir" > /dev/null 2>&1; then
