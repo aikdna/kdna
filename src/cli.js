@@ -33,6 +33,7 @@ Usage:
   kdna install <domain-id>    Install a domain from registry
   kdna install --from-git <url>   Install from a git repository
   kdna inspect <path>         Inspect a domain directory or .kdna file
+  kdna eval <path>            Evaluate domain test cases (before/after score)
   kdna list                   List installed domains
   kdna list --available        List available domains from registry
   kdna help                   Show this help
@@ -648,6 +649,173 @@ function cmdInspect(dir) {
   console.log('═'.repeat(50));
 }
 
+// ─── Eval ────────────────────────────────────────────────────────────
+
+function cmdEval(dir) {
+  const abs = path.resolve(dir);
+  if (!fs.existsSync(abs) || !fs.statSync(abs).isDirectory()) {
+    error(`Not a directory: ${abs}`);
+  }
+
+  const core = readJson(path.join(abs, 'KDNA_Core.json'));
+  const pat = readJson(path.join(abs, 'KDNA_Patterns.json'));
+  if (!core) error('KDNA_Core.json not found');
+  if (!pat) error('KDNA_Patterns.json not found');
+
+  const testFile = path.join(abs, 'tests', 'before-after.json');
+  if (!fs.existsSync(testFile)) {
+    error(`No test cases found. Create: ${abs}/tests/before-after.json`);
+  }
+
+  const cases = readJson(testFile);
+  if (!Array.isArray(cases) || !cases.length) {
+    error('No test cases in before-after.json');
+  }
+
+  // Build lookup structures
+  const bannedTerms = new Set(
+    (pat.terminology?.banned_terms || []).map((b) => b.term.toLowerCase()),
+  );
+  const preferredTerms = new Set(
+    (pat.terminology?.preferred_terms || pat.terminology?.standard_terms || []).map(
+      (p) => (typeof p === 'string' ? p.toLowerCase() : p.term?.toLowerCase()),
+    ),
+  );
+  const axiomKeywords = new Set(
+    (core.axioms || []).flatMap((a) =>
+      (a.one_sentence + ' ' + a.full_statement).toLowerCase().split(/\s+/).filter((w) => w.length > 3),
+    ),
+  );
+  const ontologyConcepts = new Set(
+    (core.ontology || []).map((o) => o.id?.toLowerCase()),
+  );
+  const misunderstandingPatterns = (pat.misunderstandings || []).map((m) => ({
+    wrong: m.wrong?.toLowerCase() || '',
+    correct: m.correct?.toLowerCase() || '',
+  }));
+  const selfCheckItems = (pat.self_check || []).map((s) =>
+    (typeof s === 'string' ? s : s.question || '').toLowerCase(),
+  );
+
+  console.log('═'.repeat(60));
+  console.log(`  KDNA Evaluation: ${core.meta?.domain || path.basename(abs)}`);
+  console.log('═'.repeat(60));
+  console.log('');
+
+  let totalScore = 0;
+  const maxScore = cases.length * 5;
+  const results = [];
+
+  for (let i = 0; i < cases.length; i++) {
+    const tc = cases[i];
+    const withKdna = tc.with_kdna || {};
+    const withoutKdna = tc.without_kdna || {};
+    const kdnaText = JSON.stringify(withKdna).toLowerCase();
+    const noKdnaText = JSON.stringify(withoutKdna).toLowerCase();
+
+    const checks = [];
+
+    // 1. Banned term avoidance (weight: 1)
+    let bannedHit = false;
+    for (const term of bannedTerms) {
+      if (kdnaText.includes(term)) {
+        checks.push({ pass: false, msg: `Uses banned term: "${term}"` });
+        bannedHit = true;
+        break;
+      }
+    }
+    if (!bannedHit) {
+      checks.push({ pass: true, msg: 'Avoids all banned terms' });
+    }
+
+    // 2. Domain concept usage (weight: 1)
+    let conceptHit = false;
+    for (const concept of ontologyConcepts) {
+      if (kdnaText.includes(concept)) {
+        conceptHit = true;
+        break;
+      }
+    }
+    checks.push({
+      pass: conceptHit,
+      msg: conceptHit
+        ? 'References domain concepts'
+        : 'Does not reference domain concepts',
+    });
+
+    // 3. Axiom alignment (weight: 1)
+    let axiomWords = 0;
+    for (const word of axiomKeywords) {
+      if (kdnaText.includes(word)) axiomWords++;
+    }
+    const axiomAligned = axiomWords >= 2;
+    checks.push({
+      pass: axiomAligned,
+      msg: axiomAligned
+        ? `Axiom-aligned (${axiomWords} keyword matches)`
+        : `Weak axiom alignment (${axiomWords} keyword matches, need ≥2)`,
+    });
+
+    // 4. Judgement difference from no-KDNA (weight: 1)
+    const overlapWords = kdnaText.split(/\s+/).filter((w) => noKdnaText.includes(w)).length;
+    const kdnaWords = kdnaText.split(/\s+/).length || 1;
+    const overlapRatio = overlapWords / kdnaWords;
+    const clearlyDifferent = overlapRatio < 0.5;
+    checks.push({
+      pass: clearlyDifferent,
+      msg: clearlyDifferent
+        ? `Clearly different from no-KDNA (${Math.round(overlapRatio * 100)}% overlap)`
+        : `Similar to no-KDNA (${Math.round(overlapRatio * 100)}% overlap — should be more distinct)`,
+    });
+
+    // 5. Self-check relevance (weight: 1)
+    let selfCheckRelevant = 0;
+    for (const sc of selfCheckItems) {
+      if (kdnaText.includes(sc.substring(0, 20))) selfCheckRelevant++;
+    }
+    checks.push({
+      pass: true,
+      msg: `Self-check coverage: ${selfCheckRelevant}/${selfCheckItems.length} items potentially relevant`,
+    });
+
+    const caseScore = checks.filter((c) => c.pass).length;
+    totalScore += caseScore;
+
+    console.log(`  Case ${i + 1}: "${tc.input?.substring(0, 50)}..."`);
+    console.log(`  Score: ${caseScore}/5`);
+    for (const c of checks) {
+      console.log(`    ${c.pass ? '✓' : '✗'} ${c.msg}`);
+    }
+    console.log('');
+
+    results.push({ input: tc.input, score: caseScore, checks });
+  }
+
+  const finalScore = Math.round((totalScore / maxScore) * 100);
+  const grade = finalScore >= 90 ? 'A' : finalScore >= 70 ? 'B' : finalScore >= 50 ? 'C' : 'D';
+
+  console.log('═'.repeat(60));
+  console.log(`  Overall: ${finalScore}/100 (Grade: ${grade})`);
+  console.log(`  Cases: ${cases.length} | Total score: ${totalScore}/${maxScore}`);
+  console.log('═'.repeat(60));
+
+  // Recommendations
+  console.log('');
+  console.log('  Recommendations:');
+  if (finalScore < 90) {
+    const weakAreas = results.flatMap((r) => r.checks.filter((c) => !c.pass));
+    const uniqueMsgs = [...new Set(weakAreas.map((w) => w.msg))];
+    for (const msg of uniqueMsgs.slice(0, 5)) {
+      console.log(`    • ${msg}`);
+    }
+  } else {
+    console.log('    • Domain test coverage is strong. Consider adding more edge cases.');
+  }
+  console.log('');
+
+  return finalScore;
+}
+
 // ─── List ─────────────────────────────────────────────────────────────
 
 function cmdList(showAvailable) {
@@ -763,6 +931,12 @@ switch (cmd) {
     const target = args[1];
     if (!target) error('Usage: kdna inspect <path>');
     cmdInspect(target);
+    break;
+  }
+  case 'eval': {
+    const target = args[1];
+    if (!target) error('Usage: kdna eval <path>');
+    cmdEval(target);
     break;
   }
   case 'list': {

@@ -3,12 +3,12 @@
     "input": "我们团队的XX就是不上心，交代的事情总是做不好。",
     "without_kdna": {
       "expected_approach": "分析该员工的态度问题，建议加强督促或考虑替换",
-      "common_mistake": "直接归因于个人能力和态度问题"
+      "common_mistake": "直接归因于个人能力和态度问题——把系统输出当成动机失败"
     },
     "with_kdna": {
-      "expected_approach": "诊断上游系统原因：期望是否清晰？资源是否充足？反馈是否及时？",
-      "signal_reading": "执行失败是系统输出，不是动机问题",
-      "diagnosis_path": "'在上次交代任务时，你们是怎么确认他理解预期的？他手上有多少并行任务？'"
+      "expected_approach": "诊断上游系统原因（upstream_cause）：期望是否清晰？资源是否充足？反馈是否及时？运用 Upstream Diagnosis 框架逐层排查",
+      "signal_reading": "执行失败是系统输出（system output），不是动机问题。管理不是管理人，是管理系统。",
+      "diagnosis_path": "先检查 clarity_gap：上次交代任务时，他是怎么确认理解的？他手上有多少并行任务？feedback_loop 是否存在？"
     },
     "domain": "management",
     "trigger": "execution_failure"
@@ -17,12 +17,12 @@
     "input": "我跟他们说了很多次了，就是改不了。",
     "without_kdna": {
       "expected_approach": "建议更严厉的谈话或制定惩罚措施",
-      "common_mistake": "混淆传输与沟通：说了不等于被理解了"
+      "common_mistake": "混淆传输与沟通——说了不等于被理解了,这是 clarity_gap"
     },
     "with_kdna": {
-      "expected_approach": "诊断沟通是否产生了真正的理解：让员工用自己的话复述期望",
-      "signal_reading": "重复犯错说明期望未被理解，不是态度有问题",
-      "diagnosis_path": "'你确认过他是真的理解你所说的，还是只是点头了？试过让他复述一遍吗？'"
+      "expected_approach": "诊断 clarity_gap：用 Clarity Protocol 确认期望是否被真正理解。让员工用自己的话复述期望，检查 feedback_loop 是否持续运转",
+      "signal_reading": "重复犯错说明期望未被理解（clarity_gap），不是态度有问题。管理者的职责是创造clarity，不是督促。",
+      "diagnosis_path": "通过 Clarity Protocol 验证：'你能用自己的话告诉我，你认为这个任务的成功标准是什么吗？'"
     },
     "domain": "management",
     "trigger": "clarity_gap"
@@ -31,12 +31,12 @@
     "input": "这个项目很急，周末之前必须完成。",
     "without_kdna": {
       "expected_approach": "确认紧迫性，推动团队赶工，强调重要性",
-      "common_mistake": "用紧迫性替代清晰度：快但不清楚做什么"
+      "common_mistake": "用紧迫性替代清晰度——clarify比urgency更有价值"
     },
     "with_kdna": {
-      "expected_approach": "在施加时间压力前先确保期望清晰：具体交付物、质量标准、决策权限",
-      "signal_reading": "紧急但不清晰的任务会产生忙碌的失败",
-      "diagnosis_path": "'我们先花五分钟确认：'完成'具体是什么样子的？哪些决策可以自己做，哪些需要请示？'"
+      "expected_approach": "在施加时间压力前先确保期望清晰：运用 upstream diagnosis 和 Clarity Protocol。具体交付物是什么？质量标准是什么？决策权限边界是什么？",
+      "signal_reading": "紧急但不清晰的任务会产生忙碌的失败。Management KDNA 的核心 stance：clarity is more valuable than urgency。",
+      "diagnosis_path": "先花五分钟确认：'完成'具体是什么样子的？哪些决策可以自己做，哪些需要请示？这会比盲目赶工更快到达正确结果。"
     },
     "domain": "management",
     "trigger": "urgency_over_clarity"
@@ -45,12 +45,12 @@
     "input": "年终考核时员工说他不知道我的期望是什么。但我每周都开会。",
     "without_kdna": {
       "expected_approach": "认为员工在找借口，或建议增加会议频率",
-      "common_mistake": "把反馈视为事件（年终考核）而非系统（持续校准）"
+      "common_mistake": "把反馈视为事件（年终考核）而非系统（持续校准）——feedback_loop 是基础设施"
     },
     "with_kdna": {
-      "expected_approach": "诊断反馈系统是否持续运作：会上传达了但有没有形成可追溯的标准",
-      "signal_reading": "意外反馈说明反馈系统失效了，不是员工不知道",
-      "diagnosis_path": "'开会时你是怎么传达反馈的？有没有一个双方都看得见的、持续更新的期望清单？'"
+      "expected_approach": "诊断 feedback_loop 是否作为系统持续运作：会上传达了但有没有形成可追溯的标准？运用标准管理而非人格管理（standards not personality）",
+      "signal_reading": "意外反馈说明 feedback_loop 失效了——不是员工不知道，是反馈系统没有持续提供校准。upstream_cause 在这里是反馈机制本身的缺失。",
+      "diagnosis_path": "我们是否有一个双方都看得见的、持续更新的期望清单？如果没有，这就是 upstream cause。"
     },
     "domain": "management",
     "trigger": "feedback_as_event"

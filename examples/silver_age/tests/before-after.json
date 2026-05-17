@@ -3,12 +3,12 @@
     "input": "养老院的活动办了很多，但老人参与度一直不高。",
     "without_kdna": {
       "expected_approach": "分析活动不够有趣，建议更多样化的活动和奖励机制",
-      "common_mistake": "把参与度低归因于活动质量，忽略心理进入成本"
+      "common_mistake": "把参与度低归因于活动质量，忽略 psychological_entry_cost（心理进入成本）"
     },
     "with_kdna": {
-      "expected_approach": "诊断心理进入障碍：是害怕社交压力？担心成为负担？还是尊严感受损？",
-      "signal_reading": "心理进入成本比活动质量更关键",
-      "diagnosis_path": "'老人在参加活动前，最常说的一句犹豫的话是什么？有没有可能是怕去了做不好觉得丢人？'"
+      "expected_approach": "诊断 psychological_entry_cost：是害怕社交压力（dignity_preservation）？担心成为负担？还是尊严感受损？运用 Entry Cost Reduction 框架分析",
+      "signal_reading": "psychological_entry_cost 比活动质量更关键——dignity preservation 是 Silver Age KDNA 的核心公理。低参与度不是活动设计问题，是进入成本问题。",
+      "diagnosis_path": "老人在参加活动前，最常说的一句犹豫的话是什么？有没有可能是害怕去了做不好觉得丢人（dignity threat）？进入成本是心理的，不是物理的。"
     },
     "domain": "silver-age",
     "trigger": "psychological_entry_cost"
@@ -17,12 +17,12 @@
     "input": "我想让父母搬进养老社区，但他们坚决不愿意。",
     "without_kdna": {
       "expected_approach": "建议说服策略，列举社区的好处和便利性",
-      "common_mistake": "把老人的拒绝视为固执或不理性"
+      "common_mistake": "把老人的拒绝视为固执或不理性——忽略了 autonomy_preservation（自主维护）需求"
     },
     "with_kdna": {
-      "expected_approach": "诊断拒绝背后的尊严威胁：是否觉得这等于承认自己'老了'、'没用了'",
-      "signal_reading": "拒绝搬家不是不喜欢社区，是不想失去独立生活的身份认同",
-      "diagnosis_path": "'他们是怎么描述为什么不想去的？有没有提到'我自己还能行'或'不想给人添麻烦'？'"
+      "expected_approach": "诊断拒绝背后的 dignity_preservation 威胁：是否觉得这等于承认自己'老了'、'没用了'？autonomy_preservation 是 Silver Age KDNA 的核心公理——老人不是在拒绝便利，是在保护自主身份。",
+      "signal_reading": "拒绝搬家不是不喜欢社区，是不想失去独立生活的 social_identity。Silver Age KDNA 的核心 insight：尊严优先于便利。",
+      "diagnosis_path": "他们是怎么描述为什么不想去的？有没有提到'我自己还能行'（autonomy preservation）或'不想给人添麻烦'（dignity threat）？如果能保持独立，他们对社区的态度会不同吗？"
     },
     "domain": "silver-age",
     "trigger": "dignity_preservation"
@@ -31,12 +31,12 @@
     "input": "社区里的老人经常一个人待着，不太愿意社交。",
     "without_kdna": {
       "expected_approach": "建议组织更多的强制社交活动或安排工作人员主动攀谈",
-      "common_mistake": "把老人的状态看成问题，而非理解为自主选择"
+      "common_mistake": "把老人的状态看成问题，而非理解为自主选择——autonomy_preservation 优先于社交参与"
     },
     "with_kdna": {
-      "expected_approach": "区分自主选择vs.被迫孤立：是老人真心喜欢安静还是社会障碍导致退缩",
-      "signal_reading": "独处不等同于社交失败。尊重自主性优先于增加社交活动",
-      "diagnosis_path": "'有问过老人独处的时候他们在做什么吗？如果是在看书/写字/听音乐，那就不是孤立，是选择。'"
+      "expected_approach": "区分自主选择（autonomy_preservation）vs. 被迫孤立：是老人真心喜欢安静还是社会障碍导致退缩？尊重自主性优先于增加社交活动——这是 Silver Age KDNA 的 dignity preservation 原则。",
+      "signal_reading": "独处不等同于社交失败。social_identity 的维持方式因人而异——有人通过社交维持身份，有人通过独立维持身份。尊重自主选择。",
+      "diagnosis_path": "有问过老人独处的时候他们在做什么吗？如果是在看书/写字/听音乐，那就不是孤立，是自主选择（autonomy preservation）。需要解决的不是社交不足，而是社会身份重建。"
     },
     "domain": "silver-age",
     "trigger": "autonomy_preservation"
@@ -45,12 +45,12 @@
     "input": "有个老人的子女很少来看他，老人情绪越来越低落。",
     "without_kdna": {
       "expected_approach": "建议联系子女，强调孝顺责任，或安排更多院内活动填补",
-      "common_mistake": "把老人的价值感完全绑定在家庭关系上"
+      "common_mistake": "把老人的价值感完全绑定在家庭关系上——忽略了 social_identity 重建的可能性"
     },
     "with_kdna": {
-      "expected_approach": "帮助老人在社区中重建社会身份，而非替代家庭角色",
-      "signal_reading": "老人的低落可能来自社会身份丧失，不完全是子女缺席",
-      "diagnosis_path": "'老人在社区里有没有被需要的角色？比如帮别人做点力所能及的事、被请教什么问题？'"
+      "expected_approach": "帮助老人在社区中重建 social_identity，而非替代家庭角色。Silver Age KDNA 的核心框架：social_identity_not_age——一个人的价值不是由年龄或家庭关系定义的，而是在社区中的角色和贡献。",
+      "signal_reading": "老人的低落可能来自 social_identity 丧失，不完全是子女缺席。dignity_preservation 原则要求我们帮助老人找到被需要的角色，而不是填补家庭缺失。",
+      "diagnosis_path": "老人在社区里有没有被需要的角色？比如帮别人做点力所能及的事、被请教什么问题？重建 social_identity 比安排更多活动更能解决本质问题。"
     },
     "domain": "silver-age",
     "trigger": "social_identity_loss"
