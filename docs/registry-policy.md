@@ -1,6 +1,8 @@
 # Registry Policy
 
-This document defines the criteria a domain KDNA repository must meet to be listed in the [registry](./registry/domains.json).
+> [中文版](./registry-policy.zh.md)
+
+This document defines the criteria a domain KDNA repository must meet to be listed in the [registry](../registry/domains.json).
 
 KDNA is a **protocol**, not a content library. The main repository ([KDNA](https://github.com/knowledge-dna/KDNA)) defines the standard. Domain repositories encode domain cognition. The registry is the link between them — it is a curated index, not an automatic listing.
 

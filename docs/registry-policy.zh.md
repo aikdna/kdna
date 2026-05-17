@@ -1,5 +1,7 @@
 # 注册表收录标准
 
+> [English](./registry-policy.md)
+
 本文档定义了领域 KDNA 仓库被列入[注册表](../registry/domains.json)必须满足的条件。
 
 KDNA 是一个**协议**，不是内容库。主仓库（[KDNA](https://github.com/knowledge-dna/KDNA)）定义标准。领域仓库编码领域认知。注册表是二者之间的桥梁——它是精选索引，不是自动列表。
