@@ -7,8 +7,8 @@ How to install KDNA, create your first domain, and use it with an agent.
 The `kdna-loader` skill tells your agent how to find and apply KDNA.
 
 ```bash
-mkdir -p ~/.agents/Skills/kdna-loader
-cp skills/kdna-loader/SKILL.md ~/.agents/Skills/kdna-loader/SKILL.md
+mkdir -p ~/.agents/skills/kdna-loader
+cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
 ```
 
 ## 2. Set Up Your KDNA Library

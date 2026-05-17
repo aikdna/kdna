@@ -116,14 +116,24 @@ npm run lint:examples
 node validators/kdna-lint.js examples/communication
 ```
 
+## 安装到你的 Agent
+
+使用 **[kdna-skills](https://github.com/aikdna/kdna-skills)** 一键安装 loader 技能：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/aikdna/kdna-skills/main/install.sh | bash
+```
+
+支持 **Codex**、**Claude Code**、**OpenCode**、**Cursor** 和 **GitHub Copilot**。
+
 ## 本地使用 KDNA
 
 在自己的 Agent 中使用 KDNA：
 
 ```bash
 # 1. 安装 loader skill
-mkdir -p ~/.agents/Skills/kdna-loader
-cp skills/kdna-loader/SKILL.md ~/.agents/Skills/kdna-loader/SKILL.md
+mkdir -p ~/.agents/skills/kdna-loader
+cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
 
 # 2. 创建 KDNA 本地库
 mkdir -p ~/.agents/Kdna/communication_expert

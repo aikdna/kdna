@@ -120,14 +120,24 @@ Validate a domain:
 node validators/kdna-lint.js examples/communication
 ```
 
+## Install for Your Agent
+
+Use **[kdna-skills](https://github.com/aikdna/kdna-skills)** to install the loader skill for your agent:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/aikdna/kdna-skills/main/install.sh | bash
+```
+
+Supports **Codex**, **Claude Code**, **OpenCode**, **Cursor**, and **GitHub Copilot**.
+
 ## Use KDNA Locally
 
 To use KDNA with your own agent:
 
 ```bash
 # 1. Install the loader skill
-mkdir -p ~/.agents/Skills/kdna-loader
-cp skills/kdna-loader/SKILL.md ~/.agents/Skills/kdna-loader/SKILL.md
+mkdir -p ~/.agents/skills/kdna-loader
+cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
 
 # 2. Create your KDNA library
 mkdir -p ~/.agents/Kdna/communication_expert

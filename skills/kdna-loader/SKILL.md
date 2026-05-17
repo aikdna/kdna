@@ -10,7 +10,7 @@ Recommended local installation:
 
 ```text
 ~/.agents/
-  Skills/
+  skills/
     kdna-loader/
       SKILL.md
   Kdna/
