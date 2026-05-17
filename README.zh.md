@@ -10,6 +10,7 @@ KDNA 不是提示词库，不是知识库，也不是操作手册。它是一种
 
 > **本仓库仅定义 KDNA 协议、Schema、校验规则与治理方式。**  
 > 具体领域的 KDNA 应放在[独立仓库](#领域仓库)中，符合收录标准后可进入 [registry](./registry/domains.json)。  
+> 安装 KDNA 到你的 Agent，使用 [kdna-skills](https://github.com/aikdna/kdna-skills)。  
 > 添加领域到注册表的标准详见 [docs/registry-policy.md](./docs/registry-policy.md)。
 
 ## 为什么现在需要 KDNA
@@ -118,22 +119,31 @@ node validators/kdna-lint.js examples/communication
 
 ## 安装到你的 Agent
 
-使用 **[kdna-skills](https://github.com/aikdna/kdna-skills)** 一键安装 loader 技能：
+使用 **[kdna-skills](https://github.com/aikdna/kdna-skills)** 一键安装 KDNA 技能：
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/aikdna/kdna-skills/main/install.sh | bash
 ```
 
+安装两个技能：
+
+| 技能 | 作用 |
+|---|---|
+| **kdna-loader** | 加载领域认知——检测领域、应用公理、运行自查 |
+| **kdna-create** | 创建/获取 KDNA——对话创建、注册表下载、URL 导入、模板搭建 |
+
 支持 **Codex**、**Claude Code**、**OpenCode**、**Cursor** 和 **GitHub Copilot**。
 
 ## 本地使用 KDNA
 
-在自己的 Agent 中使用 KDNA：
+推荐使用上方安装器。手动安装：
 
 ```bash
-# 1. 安装 loader skill
+# 1. 安装两个技能
 mkdir -p ~/.agents/skills/kdna-loader
 cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
+mkdir -p ~/.agents/skills/kdna-create
+cp skills/kdna-create/SKILL.md ~/.agents/skills/kdna-create/SKILL.md
 
 # 2. 创建 KDNA 本地库
 mkdir -p ~/.agents/Kdna/communication_expert
@@ -143,6 +153,8 @@ cp examples/communication/KDNA_Patterns.json ~/.agents/Kdna/communication_expert
 # 3. 校验
 node validators/kdna-lint.js ~/.agents/Kdna/communication_expert
 ```
+
+要创建自己的领域，安装了 `kdna-create` 后直接问 Agent，或从[最小模板](./templates/minimal-domain/)开始。
 
 Agent 加载了 `kdna-loader` 后，当用户提出沟通相关问题时，Agent 会自动从 `~/.agents/Kdna/` 找到对应领域，加载认知文件并重塑判断。
 
@@ -182,6 +194,12 @@ node examples/minimal-agent/agent.js
 | [communication](./examples/communication) | 校验器测试的参考领域 |
 | [minimal-agent](./examples/minimal-agent) | 加载多个 KDNA 领域的 Demo Agent |
 | [from-wiki-to-kdna](./examples/from-wiki-to-kdna) | LLM Wiki 到 KDNA 的流水线演示 |
+
+## 工具
+
+| 工具 | 仓库 | 说明 |
+|---|---|---|
+| Skills | [kdna-skills](https://github.com/aikdna/kdna-skills) | 安装器 + kdna-loader 和 kdna-create 两个技能，支持主流 Agent |
 
 ## 中文资源
 

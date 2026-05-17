@@ -10,6 +10,7 @@ KDNA is not a prompt library, not a knowledge base, and not an operating manual.
 
 > **This repository defines the KDNA protocol, schemas, validation rules, and governance.**  
 > Domain-specific KDNA packages live in [separate repositories](#domain-repositories) and are listed in the [registry](./registry/domains.json).  
+> To install KDNA for your agent, use [kdna-skills](https://github.com/aikdna/kdna-skills).  
 > To add a domain to the registry, see [docs/registry-policy.md](./docs/registry-policy.md).
 
 ## Why Now
@@ -122,22 +123,31 @@ node validators/kdna-lint.js examples/communication
 
 ## Install for Your Agent
 
-Use **[kdna-skills](https://github.com/aikdna/kdna-skills)** to install the loader skill for your agent:
+Use **[kdna-skills](https://github.com/aikdna/kdna-skills)** to install KDNA support for your agent:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/aikdna/kdna-skills/main/install.sh | bash
 ```
 
+Installs two skills:
+
+| Skill | What it does |
+|---|---|
+| **kdna-loader** | Loads domain cognition before responding — detects domains, applies axioms, runs self-checks |
+| **kdna-create** | Creates or obtains KDNA domains — interview-based creation, registry download, URL import, template scaffolding |
+
 Supports **Codex**, **Claude Code**, **OpenCode**, **Cursor**, and **GitHub Copilot**.
 
 ## Use KDNA Locally
 
-To use KDNA with your own agent:
+The installer above is the recommended path. For manual setup:
 
 ```bash
-# 1. Install the loader skill
+# 1. Install both skills
 mkdir -p ~/.agents/skills/kdna-loader
 cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
+mkdir -p ~/.agents/skills/kdna-create
+cp skills/kdna-create/SKILL.md ~/.agents/skills/kdna-create/SKILL.md
 
 # 2. Create your KDNA library
 mkdir -p ~/.agents/Kdna/communication_expert
@@ -148,9 +158,7 @@ cp examples/communication/KDNA_Patterns.json ~/.agents/Kdna/communication_expert
 node validators/kdna-lint.js ~/.agents/Kdna/communication_expert
 ```
 
-When your agent loads `kdna-loader` and a user asks about communication, the agent will find the domain under `~/.agents/Kdna/`, load Core + Patterns, and shape its judgment accordingly.
-
-To create your own domain, start from the [minimal template](./templates/minimal-domain/) and follow the [getting started guide](./docs/getting-started.md).
+To create your own domain, ask your agent with `kdna-create` installed, or start from the [minimal template](./templates/minimal-domain/).
 
 ## Specs
 
@@ -186,6 +194,12 @@ The `examples/` directory contains minimal reference implementations for testing
 | [communication](./examples/communication) | Reference domain for validator testing |
 | [minimal-agent](./examples/minimal-agent) | Demo agent loading multiple KDNA domains |
 | [from-wiki-to-kdna](./examples/from-wiki-to-kdna) | Pipeline demonstration from LLM Wiki to KDNA |
+
+## Tools
+
+| Tool | Repository | Description |
+|---|---|---|
+| Skills | [kdna-skills](https://github.com/aikdna/kdna-skills) | Installer + kdna-loader and kdna-create skills for all major agents |
 
 ## Languages
 
