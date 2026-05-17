@@ -1,0 +1,28 @@
+{
+  "kdna_spec": "0.2",
+  "name": "writing_basic",
+  "version": "0.2",
+  "language": "en",
+  "languages": [
+    "en"
+  ],
+  "created": "2026-05-17",
+  "updated": "2026-05-17",
+  "description": "Define the core cognition of writing judgment: clarity, structure, and reader focus.",
+  "keywords": [],
+  "access": "open",
+  "author": {
+    "name": "",
+    "id": ""
+  },
+  "license": {
+    "type": "CC-BY-4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "allow_agent_use": true,
+    "allow_redistribution": true,
+    "allow_training": false
+  },
+  "status": "basic",
+  "registry": {},
+  "file_count": 2
+}

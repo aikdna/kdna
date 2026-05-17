@@ -139,6 +139,75 @@
       "file_count": 6,
       "created": "2026-05-01",
       "updated": "2026-05-17"
+    },
+    {
+      "id": "writing-basic",
+      "name": "Writing Basic KDNA",
+      "version": "0.2.0",
+      "repo": "https://github.com/aikdna/kdna-writing-basic",
+      "spec_version": "0.2",
+      "status": "basic",
+      "access": "open",
+      "language": ["en"],
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
+      "keywords": ["writing", "clarity", "editing", "structure"],
+      "description": "Basic writing cognition — clarity, structure, and reader focus.",
+      "core_insight": "Clarity is the writer's only obligation. Every sentence must earn its place.",
+      "file_count": 2,
+      "created": "2026-05-17",
+      "updated": "2026-05-17"
+    },
+    {
+      "id": "speaking-basic",
+      "name": "Speaking Basic KDNA",
+      "version": "0.2.0",
+      "repo": "https://github.com/aikdna/kdna-speaking-basic",
+      "spec_version": "0.2",
+      "status": "basic",
+      "access": "open",
+      "language": ["en"],
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
+      "keywords": ["speaking", "presentation", "audience", "public speaking"],
+      "description": "Basic speaking and presentation cognition — audience focus, structure, and delivery.",
+      "core_insight": "The audience's takeaway is the only measure of success.",
+      "file_count": 2,
+      "created": "2026-05-17",
+      "updated": "2026-05-17"
+    },
+    {
+      "id": "management-basic",
+      "name": "Management Basic KDNA",
+      "version": "0.2.0",
+      "repo": "https://github.com/aikdna/kdna-management-basic",
+      "spec_version": "0.2",
+      "status": "basic",
+      "access": "open",
+      "language": ["en"],
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
+      "keywords": ["management", "leadership", "delegation", "feedback"],
+      "description": "Basic management cognition — upstream diagnosis, system thinking, and clarity.",
+      "core_insight": "Execution problems are created upstream of where they appear.",
+      "file_count": 2,
+      "created": "2026-05-17",
+      "updated": "2026-05-17"
     }
   ]
 }

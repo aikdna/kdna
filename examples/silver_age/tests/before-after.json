@@ -1,0 +1,58 @@
+[
+  {
+    "input": "养老院的活动办了很多，但老人参与度一直不高。",
+    "without_kdna": {
+      "expected_approach": "分析活动不够有趣，建议更多样化的活动和奖励机制",
+      "common_mistake": "把参与度低归因于活动质量，忽略心理进入成本"
+    },
+    "with_kdna": {
+      "expected_approach": "诊断心理进入障碍：是害怕社交压力？担心成为负担？还是尊严感受损？",
+      "signal_reading": "心理进入成本比活动质量更关键",
+      "diagnosis_path": "'老人在参加活动前，最常说的一句犹豫的话是什么？有没有可能是怕去了做不好觉得丢人？'"
+    },
+    "domain": "silver-age",
+    "trigger": "psychological_entry_cost"
+  },
+  {
+    "input": "我想让父母搬进养老社区，但他们坚决不愿意。",
+    "without_kdna": {
+      "expected_approach": "建议说服策略，列举社区的好处和便利性",
+      "common_mistake": "把老人的拒绝视为固执或不理性"
+    },
+    "with_kdna": {
+      "expected_approach": "诊断拒绝背后的尊严威胁：是否觉得这等于承认自己'老了'、'没用了'",
+      "signal_reading": "拒绝搬家不是不喜欢社区，是不想失去独立生活的身份认同",
+      "diagnosis_path": "'他们是怎么描述为什么不想去的？有没有提到'我自己还能行'或'不想给人添麻烦'？'"
+    },
+    "domain": "silver-age",
+    "trigger": "dignity_preservation"
+  },
+  {
+    "input": "社区里的老人经常一个人待着，不太愿意社交。",
+    "without_kdna": {
+      "expected_approach": "建议组织更多的强制社交活动或安排工作人员主动攀谈",
+      "common_mistake": "把老人的状态看成问题，而非理解为自主选择"
+    },
+    "with_kdna": {
+      "expected_approach": "区分自主选择vs.被迫孤立：是老人真心喜欢安静还是社会障碍导致退缩",
+      "signal_reading": "独处不等同于社交失败。尊重自主性优先于增加社交活动",
+      "diagnosis_path": "'有问过老人独处的时候他们在做什么吗？如果是在看书/写字/听音乐，那就不是孤立，是选择。'"
+    },
+    "domain": "silver-age",
+    "trigger": "autonomy_preservation"
+  },
+  {
+    "input": "有个老人的子女很少来看他，老人情绪越来越低落。",
+    "without_kdna": {
+      "expected_approach": "建议联系子女，强调孝顺责任，或安排更多院内活动填补",
+      "common_mistake": "把老人的价值感完全绑定在家庭关系上"
+    },
+    "with_kdna": {
+      "expected_approach": "帮助老人在社区中重建社会身份，而非替代家庭角色",
+      "signal_reading": "老人的低落可能来自社会身份丧失，不完全是子女缺席",
+      "diagnosis_path": "'老人在社区里有没有被需要的角色？比如帮别人做点力所能及的事、被请教什么问题？'"
+    },
+    "domain": "silver-age",
+    "trigger": "social_identity_loss"
+  }
+]

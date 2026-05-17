@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "version": "0.2",
+    "domain": "speaking_basic",
+    "created": "2026-05-17",
+    "purpose": "Define language patterns, common mistakes, and self-checks for speaking judgment.",
+    "load_condition": "Always load when preparing or reviewing a talk, presentation, or pitch."
+  },
+  "terminology": {
+    "preferred_terms": [
+      {
+        "term": "takeaway",
+        "definition": "The one thing the audience should remember after the talk."
+      },
+      {
+        "term": "opening",
+        "definition": "The first 60 seconds that establish why the audience should care."
+      },
+      {
+        "term": "signal",
+        "definition": "Content that directly serves the takeaway."
+      }
+    ],
+    "banned_terms": [
+      {
+        "term": "I'll try to keep this short",
+        "why": "This phrase signals that the speaker knows the talk is too long but won't fix it. It requests patience instead of earning attention.",
+        "replace_with": "Cut content until the talk is the right length, then start without apology."
+      },
+      {
+        "term": "as you can see",
+        "why": "If the audience can see it, you don't need to say it. If they can't, the visual failed.",
+        "replace_with": "Point to the specific element and explain what it means, not that it exists."
+      },
+      {
+        "term": "basically / essentially / just",
+        "why": "Diminishers that undermine the speaker's authority before making a point.",
+        "replace_with": "State the point directly without qualifiers."
+      },
+      {
+        "term": "sorry / I'm not an expert but",
+        "why": "Pre-emptive apologies transfer the speaker's anxiety to the audience and undermine credibility.",
+        "replace_with": "If you have something valuable to say, say it. If not, don't speak."
+      }
+    ]
+  },
+  "misunderstandings": [
+    {
+      "id": "MS-001",
+      "wrong": "A good presentation needs beautiful, detailed slides.",
+      "correct": "A good presentation needs a clear argument. Slides exist to amplify the argument. A talk with no slides and a clear message beats a talk with beautiful slides and no message.",
+      "key_distinction": "Visual design is a multiplier: it makes a good talk better and a bad talk more visibly bad.",
+      "why": "New speakers invest time in slide aesthetics because it feels productive and avoids the harder work of structuring the argument."
+    },
+    {
+      "id": "MS-002",
+      "wrong": "Nervousness means the speaker is unprepared or bad at speaking.",
+      "correct": "Nervousness means the speaker cares about the outcome. The goal is not to eliminate nerves — it is to channel the energy into genuine engagement with the audience.",
+      "key_distinction": "Anxiety (fear of judgment) vs. excitement (anticipation of impact). The physiology is similar; the framing changes the outcome.",
+      "why": "Treating nervousness as a problem to solve creates more nervousness. Reframing it as energy to use makes it an asset."
+    },
+    {
+      "id": "MS-003",
+      "wrong": "The more content covered, the more valuable the talk.",
+      "correct": "The more the audience retains and uses, the more valuable the talk. A single idea that changes behavior is worth more than twenty ideas that are forgotten.",
+      "key_distinction": "Coverage vs. retention. The speaker's desire to 'cover everything' conflicts with the audience's ability to retain anything.",
+      "why": "Speakers fear leaving things out. Audiences fear wasting time. Meeting the audience's fear serves both parties."
+    }
+  ],
+  "self_check": [
+    "Can I state the talk's one message in a single sentence the audience could repeat?",
+    "Does the opening give the audience a reason to care within the first 60 seconds?",
+    "If removing any slide, story, or section does not weaken the takeaway, should it be removed?",
+    "If the audience remembers nothing else, will they remember the one message?"
+  ]
+}

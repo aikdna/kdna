@@ -77,7 +77,7 @@ Ask:
 
 Create yes/no questions the agent can use to verify its output respects the domain.
 
-### Step 10: Write and Validate
+### Step 10: Write, Validate, and Package
 
 1. Write `KDNA_Core.json` and `KDNA_Patterns.json`.
 2. Check that every field in the [KDNA spec](https://github.com/aikdna/KDNA/blob/main/SPEC.md) is populated.
@@ -85,6 +85,8 @@ Create yes/no questions the agent can use to verify its output respects the doma
 4. Check that every banned term has `why` and `replace_with`.
 5. Check that every misunderstanding has `key_distinction`.
 6. Write the files to the user's KDNA data directory (e.g., `~/.codex/Kdna/<domain>/`).
+7. Generate the `kdna.json` manifest with: `kdna pack <domain-directory>`
+8. Run full validation with: `kdna validate <domain-directory>`
 
 ### Key Principle
 
@@ -155,11 +157,13 @@ Before saving, verify:
 - [ ] Self-check items are yes/no answerable
 - [ ] All JSON files parse without errors
 
-For full automated validation, use: `npx kdna-lint <domain_path>`
+For full automated validation, use: `kdna validate <domain_path>` or `npx kdna-lint <domain_path>`
 
 ## Reference
 
 - [KDNA Specification](https://github.com/aikdna/KDNA/blob/main/SPEC.md)
+- [.kdna File Format Spec](https://github.com/aikdna/KDNA/blob/main/specs/kdna-file-format.md)
+- [.kdnapack Package Format Spec](https://github.com/aikdna/KDNA/blob/main/specs/kdna-package-format.md)
 - [Minimal Template](https://github.com/aikdna/KDNA/tree/main/templates/minimal-domain)
 - [Official Registry](https://github.com/aikdna/KDNA/blob/main/registry/domains.json)
 - [Getting Started Guide](https://github.com/aikdna/KDNA/blob/main/docs/getting-started.md)

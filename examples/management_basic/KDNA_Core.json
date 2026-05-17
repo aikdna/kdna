@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "version": "0.2",
+    "domain": "management_basic",
+    "created": "2026-05-17",
+    "purpose": "Define the core cognition of management judgment: upstream diagnosis, system thinking, and clarity.",
+    "load_condition": "Always load when giving management advice, diagnosing team problems, or coaching managers."
+  },
+  "axioms": [
+    {
+      "id": "AX-001",
+      "one_sentence": "Execution problems are created upstream of where they appear.",
+      "full_statement": "When a team fails to execute, the root cause is rarely at the point of failure. It is upstream: unclear expectations, missing resources, conflicting priorities, or broken feedback loops. Diagnose the system that produced the failure before addressing the individual who failed.",
+      "why": "Without this principle, managers treat every execution failure as a person problem, applying pressure instead of fixing the system. The same failures will recur with different people."
+    },
+    {
+      "id": "AX-002",
+      "one_sentence": "Clarity is more valuable than urgency.",
+      "full_statement": "When something is urgent but unclear, the team will move fast in the wrong direction. Five minutes spent making expectations unambiguous saves hours of rework. Clarity is not slow — it is the fastest path to correct execution.",
+      "why": "Managers under pressure default to 'just get it done' instead of 'let me make sure you know exactly what done looks like.' The former creates busy failure; the latter creates productive success."
+    },
+    {
+      "id": "AX-003",
+      "one_sentence": "Manage through standards, not through personality.",
+      "full_statement": "Build clear standards for what good looks like, and manage people against those standards — not against your mood, preferences, or personal style. This makes feedback objective and repeatable rather than personal and arbitrary.",
+      "why": "Personality-based management creates anxiety, favoritism, and inconsistency. Standards-based management creates clarity, fairness, and autonomous decision-making."
+    }
+  ],
+  "ontology": [
+    {
+      "id": "upstream_cause",
+      "one_sentence": "The root condition in the system that makes failure likely, regardless of who is executing.",
+      "essence": "A bottleneck, missing resource, unclear expectation, or conflicting priority that exists before any individual action.",
+      "boundary": "Not the person who made the mistake. Not the immediate trigger of the failure. It is the condition that made the mistake inevitable.",
+      "trigger_signal": "The same problem recurs with different people, or fixing one person doesn't fix the problem."
+    },
+    {
+      "id": "clarity_gap",
+      "one_sentence": "The distance between what the manager thinks they communicated and what the team member understood.",
+      "essence": "Instructions that feel clear to the giver but are ambiguous to the receiver. The gap is invisible to the manager and obvious to the team.",
+      "boundary": "Not insubordination, not lack of effort, not incompetence. It is a communication failure, not a character failure.",
+      "trigger_signal": "Manager says 'I told them to do X' and team member says 'I didn't know that's what you meant.'"
+    },
+    {
+      "id": "feedback_loop",
+      "one_sentence": "The mechanism by which a team learns whether their work is on track.",
+      "essence": "A regular, predictable process for checking work against standards. Without it, people guess. With it, people calibrate.",
+      "boundary": "Not an annual review, not a random compliment or criticism. It is a structured, recurring conversation about standards and results.",
+      "trigger_signal": "Team members express surprise at performance reviews, or problems are discovered long after they could have been corrected."
+    }
+  ],
+  "frameworks": [
+    {
+      "id": "FW-001",
+      "name": "Upstream Diagnosis",
+      "when_to_use": "When a team member or team fails to meet expectations.",
+      "steps": [
+        "Ask: 'Was the expectation clear and unambiguous?' If not, fix the expectation.",
+        "Ask: 'Did they have the resources, authority, and time needed?' If not, fix the system.",
+        "Ask: 'Did they receive timely feedback that they were off track?' If not, fix the feedback loop.",
+        "Only after all three are satisfied: address individual capability or motivation."
+      ]
+    },
+    {
+      "id": "FW-002",
+      "name": "Clarity Protocol",
+      "when_to_use": "When delegating a task or project.",
+      "steps": [
+        "State what success looks like in one sentence.",
+        "State the boundaries: what authority they have, what decisions they should escalate.",
+        "Ask them to restate the task in their own words.",
+        "Agree on when and how progress will be checked."
+      ]
+    }
+  ],
+  "core_structure": [
+    {
+      "from": "Individual performance failure",
+      "to": "Systemic root cause identified and corrected",
+      "via": "Upstream diagnosis (expectations → resources → feedback → capability)"
+    }
+  ],
+  "stances": [
+    {
+      "id": "ST-001",
+      "stance": "Every execution failure is a system output until proven otherwise.",
+      "anti_stance": "Execution failure means the person didn't try hard enough."
+    },
+    {
+      "id": "ST-002",
+      "stance": "A manager's primary job is to create clarity, not to motivate.",
+      "anti_stance": "A manager's primary job is to inspire and energize the team."
+    }
+  ]
+}

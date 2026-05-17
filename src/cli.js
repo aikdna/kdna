@@ -413,28 +413,111 @@ function cmdInstall(domainId, fromGit) {
   const repoUrl = fromGit || entry.repo;
   if (!repoUrl) error(`No repository URL found for domain "${domainId}".`);
 
+  // Extract repo org/name for tarball fallback
+  const repoMatch = repoUrl.match(/github\.com\/([^/]+)\/([^/.]+)/);
+  const tarballUrl = repoMatch
+    ? `https://api.github.com/repos/${repoMatch[1]}/${repoMatch[2]}/tarball/main`
+    : null;
+
   if (fs.existsSync(dest)) {
     console.log(`Updating ${domainId}...`);
+    let updated = false;
+
+    // Try git pull
     try {
       execSync(`git -C "${dest}" pull`, { stdio: 'inherit' });
+      updated = true;
     } catch {
       console.log('Pull failed, re-cloning...');
       fs.rmSync(dest, { recursive: true, force: true });
-      execSync(`git clone "${repoUrl}" "${dest}"`, { stdio: 'inherit' });
+    }
+
+    if (!updated && !fs.existsSync(dest)) {
+      // Re-clone after failed pull
+      cloneOrDownload(repoUrl, tarballUrl, dest, domainId);
     }
   } else {
     console.log(`Installing ${domainId} from ${repoUrl}...`);
-    try {
-      execSync(`git clone --depth 1 "${repoUrl}" "${dest}"`, {
-        stdio: 'inherit',
-      });
-    } catch {
-      error(
-        `Failed to clone ${repoUrl}. Check the URL and your network connection.`,
-      );
-    }
+    cloneOrDownload(repoUrl, tarballUrl, dest, domainId);
   }
 
+  validateInstalledDomain(dest, domainId);
+}
+
+function cloneOrDownload(repoUrl, tarballUrl, dest, domainId) {
+  // Strategy 1: HTTPS git clone
+  if (tryClone(repoUrl, dest)) return;
+
+  // Strategy 2: SSH git clone
+  const sshUrl = repoUrl.replace(
+    /https:\/\/github\.com\//,
+    'git@github.com:',
+  ) + '.git';
+  if (tryClone(sshUrl, dest)) return;
+
+  // Strategy 3: Download tarball from GitHub archive
+  if (tarballUrl) {
+    console.log(`Git clone failed. Trying tarball download...`);
+    if (tryTarball(tarballUrl, dest, domainId)) return;
+  }
+
+  error(
+    `Failed to install "${domainId}".\n` +
+    `  Tried: HTTPS clone, SSH clone, tarball download.\n` +
+    `  Check your network and GitHub authentication.`,
+  );
+}
+
+function tryClone(url, dest) {
+  try {
+    execSync(`git clone --depth 1 "${url}" "${dest}"`, {
+      stdio: 'pipe',
+      timeout: 30000,
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function tryTarball(url, dest, domainId) {
+  try {
+    const tarballPath = `${dest}.tar.gz`;
+    execSync(
+      `curl -fsSL -o "${tarballPath}" "${url}"`,
+      { stdio: 'pipe', timeout: 60000 },
+    );
+
+    // Extract to temp dir first (GitHub wraps in org-repo-commit/ dir)
+    const tmpDir = `${dest}.tmp`;
+    fs.mkdirSync(tmpDir, { recursive: true });
+    execSync(`tar -xzf "${tarballPath}" -C "${tmpDir}"`, { stdio: 'pipe' });
+    fs.unlinkSync(tarballPath);
+
+    // Move contents out of the wrapper directory
+    const entries = fs.readdirSync(tmpDir);
+    if (entries.length === 1) {
+      const wrapper = path.join(tmpDir, entries[0]);
+      if (fs.statSync(wrapper).isDirectory()) {
+        fs.renameSync(wrapper, dest);
+      } else {
+        fs.renameSync(tmpDir, dest);
+      }
+    } else {
+      fs.renameSync(tmpDir, dest);
+    }
+
+    // Cleanup
+    if (fs.existsSync(tmpDir)) {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function validateInstalledDomain(dest, domainId) {
   if (fs.existsSync(path.join(dest, 'KDNA_Core.json'))) {
     console.log('');
     console.log(`Domain installed: ${dest}`);

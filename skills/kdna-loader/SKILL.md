@@ -20,12 +20,33 @@ Prefer project-level over local. Folder names use `snake_case` (e.g., `business_
 
 **Skip KDNA:** purely mechanical tasks (format, extract, translate), or when domain judgment would not change the output. See [meta-cognition rules](https://github.com/aikdna/KDNA/blob/main/docs/meta-cognition.md) for detailed guidance.
 
-## Domain Selection
+## Domain Auto-Matching
+
+When the user's request does not name a domain but implies one, use keyword matching to select the best available KDNA:
+
+| Signal | Domain |
+|---|---|
+| "price", "discount", "close the deal", "objection", "客户说贵" | sales |
+| "team", "employee", "delegate", "execution", "执行力", "管理" | management |
+| "elderly", "senior", "aging", "retirement", "银发", "养老" | silver-age |
+| "conflict", "argument", "conversation", "misunderstanding", "沟通" | communication |
+| "growth", "revenue", "pricing model", "monetize", "增长" | business-growth |
+| "product decision", "feature", "roadmap", "MVP", "产品决策" | product-decision |
+| "write", "article", "essay", "clarity", "写作", "文章" | writing-basic |
+| "speak", "present", "talk", "audience", "演讲", "发言" | speaking-basic |
+
+Match algorithm:
+1. Score each installed domain by keyword hits in user input (case-insensitive).
+2. If no domain scores above threshold, do not load KDNA.
+3. If one domain clearly leads, load it. Prefer `stable` over `experimental` when scores tie.
+4. If multiple domains score high and conflict is possible, load one as leader and flag the conflict.
+
+## Domain Selection (Manual)
 
 1. Search the KDNA root for folders matching the user's task.
-2. If `registry.json` exists, use its `triggers` for matching; prefer `stable` > `experimental` > `draft`.
-3. One leading domain is usually sufficient. Load secondary domains only as constraints.
-4. If no domain matches, proceed without KDNA.
+2. Check `kdna.json` manifest for `keywords` and `description`.
+3. Prefer `stable` > `basic` > `experimental`.
+4. One leading domain is usually sufficient. Load secondary domains only as constraints.
 
 ## Loading Rules
 
@@ -39,6 +60,22 @@ Prefer project-level over local. Folder names use `snake_case` (e.g., `business_
 | `KDNA_Cases.json` | Examples, demonstrations, before/after comparison requested |
 | `KDNA_Reasoning.json` | "Why", principles, logic behind a judgment requested |
 | `KDNA_Evolution.json` | Practice, improvement, progress, capability level requested |
+
+## Loading Log
+
+Before responding, record internally (not in user-facing output):
+
+```
+[KDNA] loaded: <domain>@<version> | modules: core, patterns [+ scenarios, cases, reasoning, evolution] | mode: <minimum|auto|all>
+```
+
+For debug mode, expose this to the user:
+
+```
+Loaded KDNA: sales@0.1.0
+Applied modules: core, patterns, scenarios
+Mode: judgment shaping
+```
 
 ## Applying KDNA
 
