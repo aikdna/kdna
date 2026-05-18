@@ -10,9 +10,7 @@
       "spec_version": "0.2",
       "status": "experimental",
       "access": "open",
-      "language": [
-        "en"
-      ],
+      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -20,12 +18,7 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": [
-        "business",
-        "growth",
-        "pricing",
-        "monetization"
-      ],
+      "keywords": ["business", "growth", "pricing", "monetization"],
       "description": "Domain cognition for business growth, value proposition, pricing, trust building, monetization, and IP positioning.",
       "core_insight": "Value proposition is the foundation of all business growth.",
       "file_count": 6,
@@ -41,9 +34,7 @@
       "spec_version": "0.2",
       "status": "experimental",
       "access": "open",
-      "language": [
-        "en"
-      ],
+      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -51,12 +42,7 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": [
-        "communication",
-        "conflict",
-        "needs",
-        "strategy"
-      ],
+      "keywords": ["communication", "conflict", "needs", "strategy"],
       "description": "Domain cognition for conflict resolution, needs diagnosis, emotional states, and communication strategy.",
       "core_insight": "Intent is more important than words; state comes before strategy.",
       "file_count": 6,
@@ -72,9 +58,7 @@
       "spec_version": "0.2",
       "status": "experimental",
       "access": "open",
-      "language": [
-        "en"
-      ],
+      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -82,12 +66,7 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": [
-        "sales",
-        "trust",
-        "negotiation",
-        "b2b"
-      ],
+      "keywords": ["sales", "trust", "negotiation", "b2b"],
       "description": "Domain cognition for sales judgment — price objections as certainty deficits, trust diagnosis, and deal advancement.",
       "core_insight": "Price objections are certainty deficits, not price problems.",
       "file_count": 6,
@@ -104,9 +83,7 @@
       "spec_version": "0.2",
       "status": "experimental",
       "access": "open",
-      "language": [
-        "en"
-      ],
+      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -114,12 +91,7 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": [
-        "management",
-        "execution",
-        "delegation",
-        "team"
-      ],
+      "keywords": ["management", "execution", "delegation", "team"],
       "description": "Domain cognition for management judgment — execution failures as system outputs, delegation, and team dynamics.",
       "core_insight": "Execution failure is a system output, not a motivation failure.",
       "file_count": 6,
@@ -136,9 +108,7 @@
       "spec_version": "0.2",
       "status": "experimental",
       "access": "open",
-      "language": [
-        "zh"
-      ],
+      "language": ["zh"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -146,12 +116,7 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": [
-        "product",
-        "decision",
-        "hypothesis",
-        "validation"
-      ],
+      "keywords": ["product", "decision", "hypothesis", "validation"],
       "description": "Domain cognition for product decision-making — hypothesis validation over feature delivery.",
       "core_insight": "Validate hypotheses before delivering features.",
       "file_count": 6,
@@ -167,9 +132,7 @@
       "spec_version": "0.2",
       "status": "basic",
       "access": "open",
-      "language": [
-        "en"
-      ],
+      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -177,12 +140,7 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": [
-        "writing",
-        "clarity",
-        "editing",
-        "structure"
-      ],
+      "keywords": ["writing", "clarity", "editing", "structure"],
       "description": "Basic writing cognition — clarity, structure, and reader focus.",
       "core_insight": "Clarity is the writer's only obligation. Every sentence must earn its place.",
       "file_count": 2,
@@ -198,9 +156,7 @@
       "spec_version": "0.2",
       "status": "basic",
       "access": "open",
-      "language": [
-        "en"
-      ],
+      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -208,12 +164,7 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": [
-        "speaking",
-        "presentation",
-        "audience",
-        "public speaking"
-      ],
+      "keywords": ["speaking", "presentation", "audience", "public speaking"],
       "description": "Basic speaking and presentation cognition — audience focus, structure, and delivery.",
       "core_insight": "The audience's takeaway is the only measure of success.",
       "file_count": 2,
@@ -229,9 +180,7 @@
       "spec_version": "0.2",
       "status": "basic",
       "access": "open",
-      "language": [
-        "en"
-      ],
+      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -239,12 +188,7 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": [
-        "management",
-        "leadership",
-        "delegation",
-        "feedback"
-      ],
+      "keywords": ["management", "leadership", "delegation", "feedback"],
       "description": "Basic management cognition — upstream diagnosis, system thinking, and clarity.",
       "core_insight": "Execution problems are created upstream of where they appear.",
       "file_count": 2,
