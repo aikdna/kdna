@@ -1,0 +1,34 @@
+{
+  "name": "meeting-decision-intelligence",
+  "version": "0.1.0",
+  "purpose": "Judge whether meetings produce actionable decisions — not just discussion. A composable system of 5 judgment lenses.",
+  "packages": [
+    {
+      "id": "decision-state",
+      "role": "primary",
+      "use_when": ["meeting summary", "discussion transcript", "project update"]
+    },
+    {
+      "id": "owner-accountability",
+      "role": "advisor",
+      "use_when": ["tasks without owners", "unclear responsibility", "who should do this"]
+    },
+    {
+      "id": "risk-escalation",
+      "role": "constraint",
+      "use_when": ["unresolved blockers", "timeline conflicts", "dependency risk"]
+    }
+  ],
+  "composition_rules": [
+    "decision-state is always the primary — it classifies the meeting state first",
+    "owner-accountability activates when tasks lack named owners",
+    "risk-escalation activates when blockers or timeline conflicts exist",
+    "conflicts between packages must be surfaced, not blended",
+    "maximum 2 advisors loaded per task"
+  ],
+  "routing_questions": [
+    "Does the meeting contain a specific decision or just discussion?",
+    "Are action items assigned to named owners?",
+    "Are there unresolved blockers that conflict with stated timelines?"
+  ]
+}

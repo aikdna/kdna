@@ -117,3 +117,24 @@ When domains conflict: user intent > specific domain > general domain > evidence
 ## Quality Boundary
 
 KDNA does not replace tools, APIs, RAG, workflows, execution skills, or source verification. KDNA shapes judgment — evidence and user intent take priority when they conflict with domain axioms.
+
+## KDNA Clusters
+
+When multiple KDNA packages are organized into a cluster (see `docs/kdna-clusters.md`), the loader must assign roles:
+
+### Primary
+One package leads. It defines the main judgment lens for the current task. All other packages operate relative to this lens.
+
+### Advisor
+Supplements the primary from another angle. Maximum 3 advisors per task. Advisors enrich — they do not override.
+
+### Constraint
+Hard boundaries that override unsafe suggestions. If a constraint package flags a risk (e.g., unresolved blockers in a timeline), it takes priority over all other guidance.
+
+### Cluster Routing
+When a cluster is available, the loader should:
+1. Identify the cluster from available packages
+2. Select the primary based on task signal matching
+3. Activate advisors based on `use_when` conditions
+4. Always load constraints when risk signals are detected
+5. Surface role assignments in the loading log

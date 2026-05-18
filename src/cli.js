@@ -32,6 +32,7 @@ Usage:
   kdna inspect <path>         Inspect a domain directory or .kdna file
   kdna eval <path>            Evaluate domain test cases (before/after score)
   kdna eval --benchmark <file>  Evaluate a judgment benchmark file
+  kdna eval --cluster <file>    Evaluate a cluster manifest
   kdna list                   List installed domains
   kdna list --available        List available domains from registry
   kdna help                   Show this help
@@ -805,6 +806,66 @@ function cmdEvalBenchmark(benchmarkFile) {
   console.log('');
 }
 
+function cmdEvalCluster(clusterFile) {
+  const abs = path.resolve(clusterFile);
+  if (!fs.existsSync(abs)) error(`Cluster file not found: ${abs}`);
+
+  const cluster = readJson(abs);
+  if (!cluster || !cluster.packages) error('Invalid cluster file');
+
+  console.log('═'.repeat(60));
+  console.log(`  KDNA Cluster Eval: ${cluster.name} v${cluster.version}`);
+  console.log('═'.repeat(60));
+  console.log('');
+
+  let totalScore = 0;
+  const maxScore = 5;
+
+  // 1. Valid manifest structure
+  const hasName = Boolean(cluster.name);
+  const hasVersion = Boolean(cluster.version);
+  const hasPackages = Array.isArray(cluster.packages) && cluster.packages.length >= 2;
+  console.log(`  ${hasName ? '✓' : '✗'} Has name`);
+  console.log(`  ${hasVersion ? '✓' : '✗'} Has version`);
+  console.log(`  ${hasPackages ? '✓' : '✗'} Has ≥2 packages (${cluster.packages?.length || 0})`);
+  if (hasName && hasVersion && hasPackages) totalScore++;
+
+  // 2. Roles assigned
+  const hasPrimary = cluster.packages?.some((p) => p.role === 'primary');
+  const allRoles = cluster.packages?.every((p) =>
+    ['primary', 'advisor', 'constraint', 'critic'].includes(p.role),
+  );
+  console.log(`  ${hasPrimary ? '✓' : '✗'} Has primary package`);
+  console.log(`  ${allRoles ? '✓' : '✗'} All packages have valid roles`);
+  if (hasPrimary && allRoles) totalScore++;
+
+  // 3. Composition rules
+  const hasRules = Array.isArray(cluster.composition_rules) && cluster.composition_rules.length > 0;
+  console.log(
+    `  ${hasRules ? '✓' : '✗'} Has composition rules (${cluster.composition_rules?.length || 0})`,
+  );
+  if (hasRules) totalScore++;
+
+  // 4. Routing questions
+  const hasRouting =
+    Array.isArray(cluster.routing_questions) && cluster.routing_questions.length > 0;
+  console.log(
+    `  ${hasRouting ? '✓' : '✗'} Has routing questions (${cluster.routing_questions?.length || 0})`,
+  );
+  if (hasRouting) totalScore++;
+
+  // 5. use_when conditions on packages
+  const hasUseWhen = cluster.packages?.every(
+    (p) => Array.isArray(p.use_when) && p.use_when.length > 0,
+  );
+  console.log(`  ${hasUseWhen ? '✓' : '✗'} All packages have use_when conditions`);
+  if (hasUseWhen) totalScore++;
+
+  console.log('');
+  console.log(`  Score: ${totalScore}/${maxScore}`);
+  console.log('═'.repeat(60));
+}
+
 // ─── List ─────────────────────────────────────────────────────────────
 
 function cmdList(showAvailable) {
@@ -915,6 +976,8 @@ switch (cmd) {
     if (!target) error('Usage: kdna eval <path>');
     if (args.includes('--benchmark')) {
       cmdEvalBenchmark(target);
+    } else if (args.includes('--cluster')) {
+      cmdEvalCluster(target);
     } else {
       cmdEval(target);
     }

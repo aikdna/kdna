@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schema/KDNA_Cluster.schema.json",
+  "title": "KDNA Cluster Manifest",
+  "description": "Defines a composable group of KDNA packages that work together as a judgment system.",
+  "type": "object",
+  "required": ["name", "version", "packages"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Cluster identifier in lowercase snake_case."
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version of this cluster."
+    },
+    "purpose": {
+      "type": "string",
+      "description": "What complex domain task this cluster addresses."
+    },
+    "packages": {
+      "type": "array",
+      "description": "KDNA packages that form this cluster.",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "role"],
+        "properties": {
+          "id": { "type": "string" },
+          "role": {
+            "type": "string",
+            "enum": ["primary", "advisor", "constraint", "critic"]
+          },
+          "use_when": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Keywords or conditions that trigger this package."
+          }
+        }
+      }
+    },
+    "composition_rules": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Rules governing how packages in this cluster interact."
+    },
+    "routing_questions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Questions that help the router select the right primary and advisors."
+    }
+  }
+}
