@@ -28,7 +28,6 @@ When the user's request does not name a domain but implies one, use keyword matc
 |---|---|
 | "price", "discount", "close the deal", "objection", "客户说贵" | sales |
 | "team", "employee", "delegate", "execution", "执行力", "管理" | management |
-| "elderly", "senior", "aging", "retirement", "银发", "养老" | silver-age |
 | "conflict", "argument", "conversation", "misunderstanding", "沟通" | communication |
 | "growth", "revenue", "pricing model", "monetize", "增长" | business-growth |
 | "product decision", "feature", "roadmap", "MVP", "产品决策" | product-decision |
