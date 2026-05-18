@@ -146,42 +146,7 @@ This tells the agent **how to think** about the problem before saying anything.
 
 ---
 
-## Case 4: The Error Case — How KDNA Prevents Misjudgment
-
-**User says:**
-> "The elderly resident refuses to participate in any activities."
-
-### Without KDNA
-
-```
-Try adding more engaging activities or offering incentives for participation.
-```
-
-This is a **misdiagnosis**. It assumes the activity content is the problem.
-
-### With `silver_age` KDNA
-
-```
-"Not interested" is almost always a cover for an invisible barrier:
-- Psychological entry cost: fear of not fitting in, being the oldest, not knowing anyone
-- Dignity threat: past experience of being talked down to or treated as a demographic
-- Burden avoidance: not wanting to be a problem for family or staff
-- Identity mismatch: the program is framed by age, not by interest
-
-Do not change the activity. Reduce the entry cost. Connect through identity, not age.
-```
-
-### Why this matters for businesses
-
-The cost of the first (wrong) answer: wasted resources on activity redesign, continued low attendance, resident isolation deepens.
-
-The cost of the second (KDNA-guided) answer: targeted intervention on the actual barrier, higher impact per dollar spent.
-
-**KDNA's primary value proposition: reducing the cost of misdiagnosis.**
-
----
-
-## Case 5: Reasoning Shift — KDNA as Cognitive Runtime
+## Case 4: Reasoning Shift — KDNA as Cognitive Runtime
 
 **User says:**
 > "The customer went completely silent after I sent the proposal."
@@ -236,7 +201,7 @@ This is not a prompt. This is a **reasoning chain** that the agent runs before g
 
 3. **KDNA is structured, auditable, and evolvable.** You can version it, test it, combine it, and trace why an agent made a particular judgment.
 
-4. **KDNA is domain cognition, not domain knowledge.** It does not tell the agent facts about sales or elderly services. It tells the agent how experts in those domains *think* about situations.
+4. **KDNA is domain cognition, not domain knowledge.** It does not tell the agent facts about sales or management. It tells the agent how experts in those domains *think* about situations.
 
 ---
 
@@ -245,7 +210,6 @@ This is not a prompt. This is a **reasoning chain** that the agent runs before g
 | Domain | Core Insight | Files |
 |--------|-------------|-------|
 | `sales` | Price objections are certainty deficits | 6 |
-| `silver_age` | Psychological entry cost, not activity quality | 6 |
 | `management` | Execution failures are system outputs | 6 |
 | `communication` | State repair before content discussion | 6 |
 | `code_review` | Classify every comment; review intent before code | 6 |
