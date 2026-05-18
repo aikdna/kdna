@@ -31,6 +31,7 @@ Usage:
   kdna install --from-git <url>   Install from a git repository
   kdna inspect <path>         Inspect a domain directory or .kdna file
   kdna eval <path>            Evaluate domain test cases (before/after score)
+  kdna eval --benchmark <file>  Evaluate a judgment benchmark file
   kdna list                   List installed domains
   kdna list --available        List available domains from registry
   kdna help                   Show this help
@@ -734,6 +735,88 @@ function cmdEval(dir) {
   return finalScore;
 }
 
+function cmdEvalBenchmark(benchmarkFile) {
+  const abs = path.resolve(benchmarkFile);
+  if (!fs.existsSync(abs)) error(`Benchmark file not found: ${abs}`);
+
+  const benchmark = readJson(abs);
+  if (!benchmark || !benchmark.patterns) error('Invalid benchmark file');
+
+  console.log('═'.repeat(60));
+  console.log(`  KDNA Benchmark: ${benchmark.benchmark || path.basename(abs)}`);
+  console.log('═'.repeat(60));
+  console.log('');
+
+  let totalCases = 0;
+  let totalPassed = 0;
+
+  for (const pattern of benchmark.patterns) {
+    console.log(`  ${pattern.name}`);
+    console.log(`  ${pattern.tagline || ''}`);
+    let patternPassed = 0;
+
+    for (let i = 0; i < (pattern.cases || []).length; i++) {
+      const c = pattern.cases[i];
+      const checks = [];
+
+      // 1. Signal identified?
+      checks.push({
+        pass: Boolean(c.with_kdna && c.with_kdna.length > 20),
+        label: 'signal_identified',
+      });
+
+      // 2. Different from baseline?
+      const noKdna = (c.without_kdna || '').toLowerCase();
+      const withKdna = (c.with_kdna || '').toLowerCase();
+      const overlapWords = withKdna.split(/\s+/).filter((w) =>
+        noKdna.includes(w),
+      ).length;
+      const kdnaWords = withKdna.split(/\s+/).length || 1;
+      checks.push({
+        pass: overlapWords / kdnaWords < 0.6,
+        label: 'clearly_different',
+      });
+
+      // 3. Banned term check (simple heuristic)
+      const bannedPatterns = [
+        'offer discount',
+        'motivate harder',
+        'just build it',
+        'wait and see',
+      ];
+      const hasBanned = bannedPatterns.some((b) => withKdna.includes(b));
+      checks.push({ pass: !hasBanned, label: 'avoids_banned_terms' });
+
+      const casePassed = checks.filter((c) => c.pass).length;
+      if (casePassed >= 2) patternPassed++;
+
+      totalCases++;
+      totalPassed += casePassed >= 2 ? 1 : 0;
+
+      console.log(
+        `    Case ${i + 1}: ${casePassed >= 2 ? '✓' : '✗'} (${casePassed}/${checks.length} checks passed)`,
+      );
+    }
+
+    const rate = Math.round((patternPassed / Math.max(pattern.cases.length, 1)) * 100);
+    console.log(`    Score: ${patternPassed}/${pattern.cases.length} (${rate}%)`);
+    console.log('');
+  }
+
+  const finalRate = Math.round(
+    (totalPassed / Math.max(totalCases, 1)) * 100,
+  );
+  const grade =
+    finalRate >= 90 ? 'A' : finalRate >= 70 ? 'B' : finalRate >= 50 ? 'C' : 'D';
+
+  console.log('═'.repeat(60));
+  console.log(
+    `  Overall: ${totalPassed}/${totalCases} passed (${finalRate}%, Grade: ${grade})`,
+  );
+  console.log('═'.repeat(60));
+  console.log('');
+}
+
 // ─── List ─────────────────────────────────────────────────────────────
 
 function cmdList(showAvailable) {
@@ -842,7 +925,11 @@ switch (cmd) {
   case 'eval': {
     const target = args[1];
     if (!target) error('Usage: kdna eval <path>');
-    cmdEval(target);
+    if (args.includes('--benchmark')) {
+      cmdEvalBenchmark(target);
+    } else {
+      cmdEval(target);
+    }
     break;
   }
   case 'list': {
