@@ -768,9 +768,7 @@ function cmdEvalBenchmark(benchmarkFile) {
       // 2. Different from baseline?
       const noKdna = (c.without_kdna || '').toLowerCase();
       const withKdna = (c.with_kdna || '').toLowerCase();
-      const overlapWords = withKdna.split(/\s+/).filter((w) =>
-        noKdna.includes(w),
-      ).length;
+      const overlapWords = withKdna.split(/\s+/).filter((w) => noKdna.includes(w)).length;
       const kdnaWords = withKdna.split(/\s+/).length || 1;
       checks.push({
         pass: overlapWords / kdnaWords < 0.6,
@@ -778,12 +776,7 @@ function cmdEvalBenchmark(benchmarkFile) {
       });
 
       // 3. Banned term check (simple heuristic)
-      const bannedPatterns = [
-        'offer discount',
-        'motivate harder',
-        'just build it',
-        'wait and see',
-      ];
+      const bannedPatterns = ['offer discount', 'motivate harder', 'just build it', 'wait and see'];
       const hasBanned = bannedPatterns.some((b) => withKdna.includes(b));
       checks.push({ pass: !hasBanned, label: 'avoids_banned_terms' });
 
@@ -803,16 +796,11 @@ function cmdEvalBenchmark(benchmarkFile) {
     console.log('');
   }
 
-  const finalRate = Math.round(
-    (totalPassed / Math.max(totalCases, 1)) * 100,
-  );
-  const grade =
-    finalRate >= 90 ? 'A' : finalRate >= 70 ? 'B' : finalRate >= 50 ? 'C' : 'D';
+  const finalRate = Math.round((totalPassed / Math.max(totalCases, 1)) * 100);
+  const grade = finalRate >= 90 ? 'A' : finalRate >= 70 ? 'B' : finalRate >= 50 ? 'C' : 'D';
 
   console.log('═'.repeat(60));
-  console.log(
-    `  Overall: ${totalPassed}/${totalCases} passed (${finalRate}%, Grade: ${grade})`,
-  );
+  console.log(`  Overall: ${totalPassed}/${totalCases} passed (${finalRate}%, Grade: ${grade})`);
   console.log('═'.repeat(60));
   console.log('');
 }
