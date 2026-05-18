@@ -34,6 +34,7 @@ Usage:
   kdna eval --benchmark <file>  Evaluate a judgment benchmark file
   kdna eval --cluster <file>    Evaluate a cluster manifest
   kdna select "<task>"         Select the right KDNA packages for a task
+  kdna export <path> [--out <file>]  Export domain to single .kdna file
   kdna list                   List installed domains
   kdna list --available        List available domains from registry
   kdna help                   Show this help
@@ -919,6 +920,63 @@ function cmdList(showAvailable) {
   }
 }
 
+// ─── Export ──────────────────────────────────────────────────────────
+
+function cmdExport(dir, outFile) {
+  const abs = path.resolve(dir);
+  if (!fs.existsSync(abs) || !fs.statSync(abs).isDirectory()) {
+    error(`Not a directory: ${abs}`);
+  }
+  const core = readJson(path.join(abs, 'KDNA_Core.json'));
+  if (!core) error('KDNA_Core.json not found');
+  const pat = readJson(path.join(abs, 'KDNA_Patterns.json'));
+  const manifest = readJson(path.join(abs, 'kdna.json'));
+  const kdna = {
+    kdna_spec: '0.2',
+    meta: {
+      name: core.meta?.domain || path.basename(abs),
+      version: manifest?.version || core.meta?.version || '0.1.0',
+      language: 'en',
+      created: core.meta?.created || '',
+      description: manifest?.description || core.meta?.purpose || '',
+      access: manifest?.access || 'open',
+    },
+    author: manifest?.author || { name: '', id: '' },
+    license: manifest?.license || { type: 'CC-BY-4.0' },
+    core: {
+      axioms: core.axioms || [],
+      ontology: core.ontology || [],
+      frameworks: core.frameworks || [],
+      core_structure: core.core_structure || [],
+      stances: core.stances || [],
+    },
+    patterns: pat
+      ? {
+          terminology: pat.terminology || {},
+          misunderstandings: pat.misunderstandings || [],
+          self_check: pat.self_check || [],
+        }
+      : { terminology: {}, misunderstandings: [], self_check: [] },
+  };
+  for (const [key, filename] of [
+    ['scenarios', 'KDNA_Scenarios.json'],
+    ['cases', 'KDNA_Cases.json'],
+    ['reasoning', 'KDNA_Reasoning.json'],
+    ['evolution', 'KDNA_Evolution.json'],
+  ]) {
+    const data = readJson(path.join(abs, filename));
+    if (data) {
+      delete data.meta;
+      kdna[key] = data;
+    }
+  }
+  const name = outFile || `${kdna.meta.name}.kdna`;
+  const outPath = path.resolve(name);
+  fs.writeFileSync(outPath, JSON.stringify(kdna, null, 2));
+  console.log(`✓ Exported: ${outPath}`);
+  console.log(`  Domain: ${kdna.meta.name} v${kdna.meta.version}`);
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────
 
 const args = process.argv.slice(2);
@@ -987,6 +1045,15 @@ switch (cmd) {
   case 'select': {
     const { cmdSelect } = require('./select');
     cmdSelect(args.slice(1).join(' '));
+    break;
+  }
+  case 'export': {
+    const target = args[1];
+    if (!target) error('Usage: kdna export <path> [--out <file>]');
+    let outFile = null;
+    const outIdx = args.indexOf('--out');
+    if (outIdx >= 0) outFile = args[outIdx + 1];
+    cmdExport(target, outFile);
     break;
   }
   case 'list': {
