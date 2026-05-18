@@ -18,7 +18,6 @@ The same three user inputs, each processed through two different KDNA domains:
 |-------|----------|----------|--------------|
 | "The client keeps saying our price is too high." | `sales` | `management` | sales sees a certainty deficit to diagnose; management sees a resource/pricing negotiation issue |
 | "My team lead keeps missing every deadline." | `management` | `sales` | management diagnoses upstream system conditions; sales interprets as a commitment/reliability signal |
-| "An elderly neighbor stopped coming to events." | `silver_age` | `management` | silver_age looks for invisible barriers (dignity, burden, entry cost); management looks for system/process breakdowns |
 
 Each domain contributes its own: **stances** (posture), **axioms** (core truths), and **misunderstandings** (what not to think).
 

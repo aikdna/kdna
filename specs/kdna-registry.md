@@ -249,7 +249,7 @@ kdna-registry/
     ├── sales-0.1.0.kdnapack.tar.gz
     ├── management-0.1.0.kdnapack.tar.gz
     ├── communication-0.1.0.kdnapack.tar.gz
-    ├── silver-age-0.1.0.kdnapack.tar.gz
+    ├── sales-0.1.0.kdnapack.tar.gz
     ├── business-growth-0.1.0.kdnapack.tar.gz
     └── product-decision-0.1.0.kdnapack.tar.gz
 ```

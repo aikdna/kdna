@@ -223,7 +223,7 @@ kdna unpack sales.kdna -o ./sales
 ## 9. Schema Compatibility
 
 The KDNA JSON files within a `.kdnapack` use the same schema as the existing
-KDNA specification (SPEC.md v0.1). The `kdna.json` manifest is new in v0.2.
+KDNA specification (SPEC.md v0.3). The `kdna.json` manifest is new in v0.2.
 
 When a `.kdnapack` directory follows both the existing SPEC.md and this spec,
 it is considered a **v0.2-compatible KDNA domain package**.

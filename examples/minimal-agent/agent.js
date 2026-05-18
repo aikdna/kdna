@@ -26,15 +26,13 @@ const TEST_INPUTS = [
     domains: ['management', 'sales'],
   },
   {
-    input: "An elderly neighbor stopped coming to community events.",
-    domains: ['silver_age', 'management'],
+    input: "The team missed another deadline despite clear instructions.",
+    domains: ['management', 'sales'],
   },
 ];
-
 const DOMAIN_DIRS = {
   sales: __dirname + '/../sales',
   management: __dirname + '/../management',
-  silver_age: __dirname + '/../silver_age',
 };
 
 console.log('='.repeat(70));
