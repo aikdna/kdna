@@ -196,5 +196,15 @@
       "updated": "2026-05-17",
       "test_count": 0
     }
+  ],
+  "clusters": [
+    {
+      "id": "meeting-decision-intelligence",
+      "name": "Meeting Decision Intelligence Cluster",
+      "version": "0.1.0",
+      "status": "experimental",
+      "package_count": 3,
+      "description": "Judge whether meetings produce actionable decisions."
+    }
   ]
 }
