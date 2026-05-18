@@ -1,6 +1,20 @@
 # KDNA Demo: OpenCode Agent
 
-## How to reproduce
+## Actual Agent Context
+
+When the agent loads the sales KDNA domain, it receives this structured judgment context (6,302 chars):
+
+[View full context →](./sales-context.txt)
+
+Key elements injected into the agent's reasoning frame:
+- **5 stances** — Default postures (e.g., "I ask more than I tell")
+- **4 axioms** — Core judgment principles with why explanations
+- **4 ontology concepts** — With boundaries and trigger signals
+- **6 banned terms** — With reasons and replacements
+- **4 misunderstandings** — Wrong vs. correct interpretations
+- **6 self-checks** — Yes/no questions the agent asks itself
+
+## Reproduce
 
 ```bash
 # 1. Install KDNA
