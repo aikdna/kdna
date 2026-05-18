@@ -54,15 +54,18 @@ See [`docs/kdna-in-action.md`](./docs/kdna-in-action.md) for the full comparison
 
 ## KDNA vs Skills
 
-| Dimension | KDNA | Skills |
-|---|---|---|
-| Core role | Cognition framework | Execution procedure |
-| Main question | How should the agent think? | What should the agent do? |
-| Activation | Loaded as domain judgment | Called for a task |
-| Success signal | Better judgment, fewer domain errors | Task completion |
-| Typical content | Axioms, ontology, patterns, reasoning | Steps, scripts, templates, tools |
+**Skills encode repeatable workflows. KDNA encodes repeatable judgment patterns.**
 
-**A Skill executes. KDNA shapes judgment.**
+| Dimension | Skills | KDNA |
+|---|---|---|
+| Core question | How to do this task? | What kind of situation is this? |
+| Minimum unit | Task workflow | Judgment fork |
+| Typical structure | Steps, templates, tools, output format | Signal, misread, frame, boundary, action |
+| Success metric | Output stability, format consistency | Classification accuracy, misjudgment avoidance |
+| Best for | Repeatable tasks | Ambiguous situations |
+| Primary value | Reduce cost of re-explaining | Reduce cost of misunderstanding |
+
+**Use Skills** when the task has a clear procedure. **Use KDNA** when the same input could mean multiple things — and getting it wrong leads to wrong action. They work together: Skills execute, KDNA judges.
 
 ## KDNA and LLM Wiki
 

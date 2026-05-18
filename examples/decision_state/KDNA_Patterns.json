@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "version": "0.2",
+    "domain": "decision_state",
+    "created": "2026-05-18",
+    "purpose": "Language patterns and self-checks for decision state judgment.",
+    "load_condition": "Always load when analyzing meeting or discussion content."
+  },
+  "terminology": {
+    "standard_terms": [
+      { "term": "decision state", "definition": "Whether a discussion has produced an actionable decision (UNRESOLVED / CONDITIONAL / ACTIONABLE)." },
+      { "term": "operational commitment", "definition": "The state where choice + owner + action + timing are all explicit." },
+      { "term": "decision gap", "definition": "Missing elements that prevent discussion from becoming executable work." },
+      { "term": "intentional deferral", "definition": "A valid decision to not decide yet, with explicit conditions and a checkpoint." }
+    ],
+    "banned_terms": [
+      { "term": "the team agreed to / everyone was on board with", "why": "These describe social alignment, not operational commitment. They hide whether specific owners and deadlines exist.", "replace_with": "State exactly who will do what by when — or state that these elements are missing." },
+      { "term": "we'll figure it out / we'll circle back", "why": "These are deferrals without structure. A valid deferral has conditions and a checkpoint. These phrases usually mean 'we're avoiding the decision.'", "replace_with": "If deferring: state the condition needed and the next checkpoint date. If not: identify what's preventing the decision." },
+      { "term": "next steps: TBD", "why": "If next steps are TBD, the meeting produced discussion, not a decision. Call it what it is.", "replace_with": "State: 'No actionable next steps were established. Decision state: UNRESOLVED.'" }
+    ]
+  },
+  "misunderstandings": [
+    {
+      "id": "MS-001",
+      "wrong": "If everyone in the meeting seemed positive and agreed, the meeting was productive.",
+      "correct": "Productivity is measured by operational commitment produced, not by positive sentiment. A cheerful meeting with no decisions is a social event, not a productive one.",
+      "key_distinction": "Social agreement (sentiment) vs operational commitment (structure). They are unrelated.",
+      "why": "AI agents that rate meetings by tone will give high scores to pleasant but unproductive meetings — exactly the wrong metric."
+    },
+    {
+      "id": "MS-002",
+      "wrong": "If action items were listed, the meeting produced decisions.",
+      "correct": "Action items without owners, deadlines, or connection to specific decisions are a to-do list, not evidence of decision-making. Anyone can list things to do — it takes a decision to assign who does what by when.",
+      "key_distinction": "Task list (anyone can write) vs decision output (requires commitment).",
+      "why": "This misunderstanding causes AI to treat any meeting with a bulleted list as a success."
+    }
+  ],
+  "self_check": [
+    "Did I check for all four elements of operational commitment (choice, owner, action, timing)?",
+    "Did I classify the decision state as UNRESOLVED / CONDITIONAL / ACTIONABLE — not just describe the content?",
+    "Did I avoid treating social agreement ('everyone agreed') as evidence of a decision?",
+    "If the state is UNRESOLVED, did I identify which specific elements are missing?"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "meta": {
+    "version": "0.2",
+    "domain": "decision_state",
+    "created": "2026-05-18",
+    "purpose": "Judge whether a meeting, discussion, or planning session has produced an actionable decision — or just discussion. Helps AI agents distinguish progress from the appearance of progress.",
+    "load_condition": "Load when analyzing meeting transcripts, project updates, team discussions, or any collaborative text where actionability is in question."
+  },
+  "axioms": [
+    {
+      "id": "AX-001",
+      "one_sentence": "Discussion is not decision. Broad agreement is not commitment.",
+      "full_statement": "A team can discuss a topic thoroughly, express consensus, and still produce zero actionable output. A decision exists only when a specific choice, named owner, concrete next action, and deadline are all explicit. Everything short of this is discussion — valuable, but not executable.",
+      "why": "AI agents that treat well-summarized discussion as a decision will generate action items for things that were never actually decided. This creates busy work with no real progress."
+    },
+    {
+      "id": "AX-002",
+      "one_sentence": "The absence of objection is not the presence of commitment.",
+      "full_statement": "Silence or 'sounds good' in a meeting does not equal commitment. Commitment requires explicit acknowledgment of responsibility by a named person. Without a named owner, even the most detailed plan is just a suggestion.",
+      "why": "Teams often leave meetings feeling aligned when in reality no one has accepted ownership. The AI must distinguish between social agreement and operational commitment."
+    }
+  ],
+  "ontology": [
+    {
+      "id": "decision_gap",
+      "one_sentence": "The distance between what was discussed and what can now be executed.",
+      "essence": "A set of missing elements — owner, choice, timing, conditions — that prevent a discussion from becoming actionable work. The gap is invisible to those who participated but obvious when you check for these four elements.",
+      "boundary": "Not indecisiveness, not poor communication, not lack of expertise. It is a structural property of the meeting output, not a judgment about the people involved.",
+      "trigger_signal": "Meeting summary includes phrases like 'we discussed', 'the team agreed', 'everyone was on board' — without specific names, dates, and actions."
+    },
+    {
+      "id": "operational_commitment",
+      "one_sentence": "A state where a specific person has accepted accountability for a specific action by a specific time.",
+      "essence": "Four elements must all be present: (1) a specific choice among alternatives, (2) a named owner, (3) a concrete next action, (4) a deadline or checkpoint. If any of these four is missing, commitment has not been established.",
+      "boundary": "Not enthusiasm, not alignment, not agreement. These are emotional states. Operational commitment is a structural state — it either exists or it doesn't, regardless of how people feel.",
+      "trigger_signal": "Meeting output lists actions but lacks named owners or deadlines. Phrases like 'someone should' or 'we need to' indicate absent commitment."
+    }
+  ],
+  "frameworks": [
+    {
+      "id": "FW-001",
+      "name": "Decision State Detection",
+      "when_to_use": "When analyzing any meeting transcript, project update, or team discussion for actionability.",
+      "steps": [
+        "Check for a specific choice: was one option selected among alternatives?",
+        "Check for an owner: is a specific person named as responsible?",
+        "Check for a concrete next action: is there an action that can be done, not just discussed?",
+        "Check for timing: is there a deadline or next checkpoint?",
+        "Check for conditions: are there explicit conditions that must be met before action?",
+        "Classify: UNRESOLVED (missing choice or owner), CONDITIONAL (has all four but pending conditions), or ACTIONABLE (all four present, no blockers)."
+      ]
+    }
+  ],
+  "core_structure": [
+    {
+      "from": "Meeting transcript or discussion summary",
+      "to": "Decision state classified (UNRESOLVED / CONDITIONAL / ACTIONABLE)",
+      "via": "Decision State Detection — checking choice, owner, action, timing, conditions"
+    }
+  ],
+  "stances": [
+    "A well-summarized meeting with no decisions is still a meeting with no decisions.",
+    "The AI's job is not to make the meeting sound productive. It is to identify whether the meeting produced actionability.",
+    "Saying 'this meeting did not produce a decision' is a valuable judgment. It is not a criticism."
+  ]
+}
