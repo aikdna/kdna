@@ -1,6 +1,20 @@
 # KDNA Demo: Codex Agent
 
-## How to reproduce
+## Actual Agent Context
+
+When the agent loads the management KDNA domain, it receives this structured judgment context (7,248 chars):
+
+[View full context →](./management-context.txt)
+
+Key elements injected into the agent's reasoning frame:
+- **5 stances** — Default postures (e.g., "Every execution failure is a system output until proven otherwise")
+- **4 axioms** — With full statements and why explanations
+- **4 ontology concepts** — upstream_cause, clarity_gap, feedback_loop, execution_system
+- **5 banned terms** — "lazy/unmotivated" → describe the gap; "do better/step up" → give specific standards
+- **4 misunderstandings** — Wrong interpretations corrected with key distinctions
+- **5 self-checks** — Diagnostic questions the agent asks before responding
+
+## Reproduce
 
 ```bash
 npm i -g @aikdna/kdna
