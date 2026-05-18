@@ -33,6 +33,7 @@ Usage:
   kdna eval <path>            Evaluate domain test cases (before/after score)
   kdna eval --benchmark <file>  Evaluate a judgment benchmark file
   kdna eval --cluster <file>    Evaluate a cluster manifest
+  kdna select "<task>"         Select the right KDNA packages for a task
   kdna list                   List installed domains
   kdna list --available        List available domains from registry
   kdna help                   Show this help
@@ -981,6 +982,11 @@ switch (cmd) {
     } else {
       cmdEval(target);
     }
+    break;
+  }
+  case 'select': {
+    const { cmdSelect } = require('./select');
+    cmdSelect(args.slice(1).join(' '));
     break;
   }
   case 'list': {

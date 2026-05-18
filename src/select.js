@@ -1,0 +1,242 @@
+#!/usr/bin/env node
+/**
+ * kdna select — Given a user task, automatically select the right
+ * KDNA packages and assign roles (Primary / Advisor / Constraint).
+ *
+ * Usage: node src/cli.js select "客户说价格太高了怎么办"
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+const DOMAINS_DIR =
+  process.env.KDNA_DOMAINS || path.join(process.env.HOME || '.', '.kdna', 'domains');
+
+function readJson(file) {
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function loadRegistry() {
+  const locations = [
+    path.join(__dirname, '..', 'registry', 'domains.json'),
+    path.join(DOMAINS_DIR, '..', 'registry', 'domains.json'),
+  ];
+  for (const loc of locations) {
+    const data = readJson(loc);
+    if (data) {
+      const domains = Array.isArray(data) ? data : data.domains;
+      if (domains) return domains;
+    }
+  }
+  return [];
+}
+
+function findAvailableDomains() {
+  const registry = loadRegistry();
+  const available = [];
+
+  // Check installed domains first
+  if (fs.existsSync(DOMAINS_DIR)) {
+    for (const dir of fs.readdirSync(DOMAINS_DIR)) {
+      const full = path.join(DOMAINS_DIR, dir);
+      if (fs.statSync(full).isDirectory() && fs.existsSync(path.join(full, 'KDNA_Core.json'))) {
+        const manifest = readJson(path.join(full, 'kdna.json'));
+        const core = readJson(path.join(full, 'KDNA_Core.json'));
+        if (core) {
+          available.push({
+            id: dir,
+            name: manifest?.name || core.meta?.domain || dir,
+            keywords: manifest?.keywords || [],
+            description: manifest?.description || core.meta?.purpose || '',
+            status: manifest?.status || 'experimental',
+            core_insight: manifest?.core_insight || '',
+            stances: core.stances || [],
+            installed: true,
+          });
+        }
+      }
+    }
+  }
+
+  // Add registry domains not yet installed
+  for (const d of registry) {
+    if (!available.find((a) => a.id === d.id)) {
+      available.push({
+        id: d.id,
+        name: d.name || d.id,
+        keywords: d.keywords || [],
+        description: d.description || '',
+        status: d.status || 'experimental',
+        core_insight: d.core_insight || '',
+        installed: false,
+      });
+    }
+  }
+
+  return available;
+}
+
+function scoreDomain(domain, input) {
+  const text = input.toLowerCase();
+  let score = 0;
+
+  // Keyword matching (highest weight)
+  for (const kw of domain.keywords) {
+    if (text.includes(kw.toLowerCase())) score += 5;
+  }
+
+  // Name/ID matching
+  const domainWords = domain.id.toLowerCase().replace(/-/g, ' ').split(/\s+/);
+  for (const w of domainWords) {
+    if (w.length > 2 && text.includes(w)) score += 4;
+  }
+
+  // Description matching
+  const descWords = domain.description.toLowerCase().split(/\s+/);
+  for (const word of descWords) {
+    if (word.length > 3 && text.includes(word)) score += 1;
+  }
+
+  // Core insight matching (strong signal)
+  if (domain.core_insight) {
+    const insightWords = domain.core_insight.toLowerCase().split(/\s+/);
+    for (const word of insightWords) {
+      if (word.length > 3 && text.includes(word)) score += 2;
+    }
+  }
+
+  // Status boost
+  if (domain.status === 'basic') score += 2;
+  if (domain.status === 'stable') score += 3;
+
+  // Installed boost
+  if (domain.installed) score += 2;
+
+  return score;
+}
+
+function detectRiskSignals(input) {
+  const text = input.toLowerCase();
+  const signals = [];
+
+  const riskPatterns = [
+    {
+      words: ['deadline', 'urgent', 'asap', '紧急', '截止'],
+      domain: 'management',
+      reason: 'Time pressure without clarity creates execution risk',
+    },
+    {
+      words: ['discount', 'cheaper', 'too expensive', '降价', '便宜'],
+      domain: 'sales',
+      reason: 'Price objection may be a certainty deficit, not a price problem',
+    },
+    {
+      words: ['just build it', 'quick fix', 'hack', 'workaround', '临时'],
+      domain: 'product-decision',
+      reason: 'Quick fixes without diagnosis create technical debt',
+    },
+    {
+      words: ['fire', 'terminate', 'let go', '开除', '解雇'],
+      domain: 'management',
+      reason: 'Personnel decisions without upstream diagnosis',
+    },
+  ];
+
+  for (const pattern of riskPatterns) {
+    if (pattern.words.some((w) => text.includes(w))) {
+      signals.push(pattern);
+    }
+  }
+
+  return signals;
+}
+
+function cmdSelect(input) {
+  if (!input) {
+    console.error('Usage: kdna select "<task description>"');
+    process.exit(1);
+  }
+
+  const domains = findAvailableDomains();
+  if (!domains.length) {
+    console.log('No KDNA domains available. Install with: kdna install <domain>');
+    return;
+  }
+
+  // Score all domains
+  const scored = domains
+    .map((d) => ({ domain: d, score: scoreDomain(d, input) }))
+    .sort((a, b) => b.score - a.score);
+
+  // Select primary (highest score above threshold)
+  const threshold = 2;
+  const qualified = scored.filter((s) => s.score >= threshold);
+
+  if (!qualified.length) {
+    console.log('No matching KDNA domain found for this task.');
+    console.log('Available domains:', domains.map((d) => d.id).join(', '));
+    return;
+  }
+
+  // Assign roles
+  const primary = qualified[0];
+  const advisors = qualified.slice(1, 4);
+  const risks = detectRiskSignals(input);
+
+  // Output
+  console.log('═'.repeat(50));
+  console.log(`  KDNA Selection for: "${input.substring(0, 60)}${input.length > 60 ? '...' : ''}"`);
+  console.log('═'.repeat(50));
+  console.log('');
+
+  console.log(`  Primary: ${primary.domain.name} (${primary.domain.id})`);
+  console.log(
+    `    Score: ${primary.score} | Status: ${primary.domain.status} | ${primary.domain.installed ? 'Installed' : 'Not installed'}`,
+  );
+  if (primary.domain.core_insight) console.log(`    Insight: ${primary.domain.core_insight}`);
+  console.log('');
+
+  if (advisors.length) {
+    console.log('  Advisors:');
+    for (const a of advisors) {
+      console.log(
+        `    - ${a.domain.name} (score: ${a.score})${a.domain.installed ? '' : ' [not installed]'}`,
+      );
+    }
+    console.log('');
+  }
+
+  if (risks.length) {
+    console.log('  Constraints (risk signals detected):');
+    for (const r of risks) {
+      console.log(`    - ${r.domain}: ${r.reason}`);
+    }
+    console.log('');
+  }
+
+  // Loading command
+  console.log('  Load command:');
+  const loadCmd = primary.domain.installed
+    ? `kdna-loader: load ${primary.domain.id} as primary`
+    : `kdna install ${primary.domain.id} && kdna-loader: load ${primary.domain.id} as primary`;
+  console.log(`    ${loadCmd}`);
+  console.log('');
+
+  // Selection rationale
+  console.log('  Why this selection:');
+  console.log(
+    `    Matched keywords: ${primary.domain.keywords.filter((k) => input.toLowerCase().includes(k.toLowerCase())).join(', ') || '(from domain name/description match)'}`,
+  );
+  if (risks.length)
+    console.log(
+      `    Risk signals triggered: ${risks.map((r) => r.reason.split('.')[0]).join('; ')}`,
+    );
+  console.log('');
+  console.log('═'.repeat(50));
+}
+
+module.exports = { cmdSelect, findAvailableDomains, scoreDomain };

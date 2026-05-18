@@ -24,7 +24,8 @@
       "file_count": 6,
       "created": "2026-05-01",
       "updated": "2026-05-17",
-      "test_count": 0
+      "test_count": 0,
+      "quality_badge": "experimental"
     },
     {
       "id": "communication",
@@ -48,7 +49,8 @@
       "file_count": 6,
       "created": "2026-05-01",
       "updated": "2026-05-17",
-      "test_count": 0
+      "test_count": 0,
+      "quality_badge": "experimental"
     },
     {
       "id": "sales",
@@ -73,7 +75,8 @@
       "created": "2026-05-13",
       "updated": "2026-05-17",
       "eval_score": 80,
-      "test_count": 4
+      "test_count": 4,
+      "quality_badge": "validated"
     },
     {
       "id": "management",
@@ -98,7 +101,8 @@
       "created": "2026-05-01",
       "updated": "2026-05-17",
       "eval_score": 90,
-      "test_count": 4
+      "test_count": 4,
+      "quality_badge": "validated"
     },
     {
       "id": "product-decision",
@@ -122,7 +126,8 @@
       "file_count": 6,
       "created": "2026-05-01",
       "updated": "2026-05-17",
-      "test_count": 0
+      "test_count": 0,
+      "quality_badge": "experimental"
     },
     {
       "id": "writing-basic",
@@ -146,7 +151,8 @@
       "file_count": 2,
       "created": "2026-05-17",
       "updated": "2026-05-17",
-      "test_count": 0
+      "test_count": 0,
+      "quality_badge": "basic"
     },
     {
       "id": "speaking-basic",
@@ -170,7 +176,8 @@
       "file_count": 2,
       "created": "2026-05-17",
       "updated": "2026-05-17",
-      "test_count": 0
+      "test_count": 0,
+      "quality_badge": "basic"
     },
     {
       "id": "management-basic",
@@ -194,7 +201,8 @@
       "file_count": 2,
       "created": "2026-05-17",
       "updated": "2026-05-17",
-      "test_count": 0
+      "test_count": 0,
+      "quality_badge": "basic"
     }
   ],
   "clusters": [

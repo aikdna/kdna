@@ -6,7 +6,9 @@
 
 Prompts tell AI what to say.  
 Skills tell AI what to do.  
-**KDNA tells AI how to think within a domain.**
+**KDNA tells AI how to judge within a domain.**
+
+KDNA is to agent judgment what DNA is to biological cognition: it encodes the architecture — what to pay attention to, what to avoid, what to verify — while leaving factual knowledge to external memory and retrieval systems.
 
 KDNA is not a prompt library, not a knowledge base, and not an operating manual. It is a structured way to package the judgment layer of a domain: axioms, terminology boundaries, common misunderstandings, scenario signals, reasoning chains, and capability evolution.
 
