@@ -3,7 +3,7 @@
 ## 0.4.0 - 2026-05-19
 
 ### Added
-- **kdna-runtime loader bridge** (`loader.js`) — enables runtime tests to resolve KDNA loader from monorepo sibling
+- **Loader bridge** (`loader.js`) — enables cross-package loader resolution for testing
 - **core_structure** added to management-pro and silver-age-pro (schema compliance)
 - **steps** added to all frameworks in management-pro and silver-age-pro (schema compliance)
 - **id, key_distinction, why** added to all misunderstandings in management-pro and silver-age-pro (schema compliance)
@@ -12,13 +12,13 @@
 
 ### Changed
 - **Security**: Removed exposed GitHub PAT from all 15 repo remotes (replaced with clean HTTPS URLs)
-- **kdna-runtime tests**: Fixed broken require paths (`../src/runtime/*` → `../src/*`, `../src/loader` → `../loader`)
+- **Tests**: Fixed require path resolution in cross-package test setup
 - **Registry synced**: All domain versions bumped to 0.4.0, spec_version to 0.3, quality_badge added (basic/experimental)
 - **All example kdna.json**: Versions unified to 0.4.0, spec_version to 0.3
 - **Pro kdna.json**: management-pro and silver-age-pro versions corrected to 0.4.0
 
 ### Fixed
-- **kdna-runtime tests**: All 16 tests passing (was failing due to missing loader and incorrect paths)
+- **Tests**: All cross-package tests passing (was failing due to loader resolution)
 - **management-pro schema**: 23 lint errors resolved (missing core_structure, framework steps, misunderstanding fields)
 - **silver-age-pro schema**: 30 lint errors resolved (missing core_structure, framework steps, misunderstanding fields, reasoning chain fields)
 
