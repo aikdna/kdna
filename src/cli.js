@@ -17,7 +17,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
 const USER_KDNA_DIR = path.join(process.env.HOME || process.env.USERPROFILE || '.', '.kdna');
 const INSTALL_DIR = path.join(USER_KDNA_DIR, 'domains');
@@ -32,7 +31,14 @@ Usage:
   kdna pack <path>            Generate kdna.json manifest and create package
   kdna pack --output <dir> <path>  Pack to specific output directory
   kdna install <domain-id>    Install a domain from registry
+  kdna install github:user/repo  Install from GitHub
+  kdna install github:user/repo@v1.2.0  Install version-pinned
+  kdna install ./file.kdna     Install from local .kdna file
   kdna install --from-git <url>   Install from a git repository
+  kdna remove <domain>          Uninstall a domain
+  kdna info <domain>            Show source, version, trust level
+  kdna update <domain>          Update an installed domain
+  kdna update --all             Update all installed domains
   kdna inspect <path>         Inspect a domain directory or .kdna file
   kdna eval <path>            Evaluate domain test cases (before/after score)
   kdna eval --benchmark <file>  Evaluate a judgment benchmark file
@@ -67,10 +73,6 @@ Examples:
 function error(msg) {
   console.error(`Error: ${msg}`);
   process.exit(1);
-}
-
-function ensureDir(dir) {
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
 function readJson(file) {
@@ -356,162 +358,7 @@ function cmdPack(dir, outputDir) {
   cmdValidate(abs, false);
 }
 
-// ─── Install ─────────────────────────────────────────────────────────
-
-function cmdInstall(domainId, fromGit) {
-  ensureDir(INSTALL_DIR);
-
-  const domains = loadRegistry();
-  if (!domains || !domains.length) {
-    error('No registry found. Run `kdna list --available` to see available domains.');
-  }
-
-  const entry = domains.find((d) => d.id === domainId);
-  if (!entry) {
-    error(
-      `Domain "${domainId}" not found in registry.\nAvailable: ${domains.map((d) => d.id).join(', ')}`,
-    );
-  }
-
-  if (entry.access && entry.access !== 'open') {
-    error(
-      `Domain "${domainId}" requires "${entry.access}" access. Only "open" domains can be installed via CLI.`,
-    );
-  }
-
-  const dest = path.join(INSTALL_DIR, domainId);
-  const repoUrl = fromGit || entry.repo;
-  if (!repoUrl) error(`No repository URL found for domain "${domainId}".`);
-
-  // Extract repo org/name for tarball fallback
-  const repoMatch = repoUrl.match(/github\.com\/([^/]+)\/([^/.]+)/);
-  const tarballUrl = repoMatch
-    ? `https://api.github.com/repos/${repoMatch[1]}/${repoMatch[2]}/tarball/main`
-    : null;
-
-  if (fs.existsSync(dest)) {
-    console.log(`Updating ${domainId}...`);
-    let updated = false;
-
-    // Try git pull
-    try {
-      execSync(`git -C "${dest}" pull`, { stdio: 'inherit' });
-      updated = true;
-    } catch {
-      console.log('Pull failed, re-cloning...');
-      fs.rmSync(dest, { recursive: true, force: true });
-    }
-
-    if (!updated && !fs.existsSync(dest)) {
-      // Re-clone after failed pull
-      cloneOrDownload(repoUrl, tarballUrl, dest, domainId);
-    }
-  } else {
-    console.log(`Installing ${domainId} from ${repoUrl}...`);
-    cloneOrDownload(repoUrl, tarballUrl, dest, domainId);
-  }
-
-  validateInstalledDomain(dest);
-}
-
-function cloneOrDownload(repoUrl, tarballUrl, dest, domainId) {
-  // Strategy 1: HTTPS git clone
-  if (tryClone(repoUrl, dest)) return;
-
-  // Strategy 2: SSH git clone
-  const sshUrl = repoUrl.replace(/https:\/\/github\.com\//, 'git@github.com:') + '.git';
-  if (tryClone(sshUrl, dest)) return;
-
-  // Strategy 3: Download tarball from GitHub archive
-  if (tarballUrl) {
-    console.log(`Git clone failed. Trying tarball download...`);
-    if (tryTarball(tarballUrl, dest)) return;
-  }
-
-  error(
-    `Failed to install "${domainId}".\n` +
-      `  Tried: HTTPS clone, SSH clone, tarball download.\n` +
-      `  Check your network and GitHub authentication.`,
-  );
-}
-
-function tryClone(url, dest) {
-  try {
-    execSync(`git clone --depth 1 "${url}" "${dest}"`, {
-      stdio: 'pipe',
-      timeout: 30000,
-    });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function tryTarball(url, dest) {
-  try {
-    const tarballPath = `${dest}.tar.gz`;
-    execSync(`curl -fsSL -o "${tarballPath}" "${url}"`, { stdio: 'pipe', timeout: 60000 });
-
-    // Extract to temp dir first (GitHub wraps in org-repo-commit/ dir)
-    const tmpDir = `${dest}.tmp`;
-    fs.mkdirSync(tmpDir, { recursive: true });
-    execSync(`tar -xzf "${tarballPath}" -C "${tmpDir}"`, { stdio: 'pipe' });
-    fs.unlinkSync(tarballPath);
-
-    // Move contents out of the wrapper directory
-    const entries = fs.readdirSync(tmpDir);
-    if (entries.length === 1) {
-      const wrapper = path.join(tmpDir, entries[0]);
-      if (fs.statSync(wrapper).isDirectory()) {
-        fs.renameSync(wrapper, dest);
-      } else {
-        fs.renameSync(tmpDir, dest);
-      }
-    } else {
-      fs.renameSync(tmpDir, dest);
-    }
-
-    // Cleanup
-    if (fs.existsSync(tmpDir)) {
-      fs.rmSync(tmpDir, { recursive: true, force: true });
-    }
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function validateInstalledDomain(dest) {
-  if (fs.existsSync(path.join(dest, 'KDNA_Core.json'))) {
-    console.log('');
-    console.log(`Domain installed: ${dest}`);
-    cmdValidate(dest, false);
-    if (!fs.existsSync(path.join(dest, 'kdna.json'))) {
-      console.log('');
-      cmdPack(dest);
-    }
-  } else {
-    const dirs = fs.readdirSync(dest).filter((d) => {
-      const full = path.join(dest, d);
-      return fs.statSync(full).isDirectory();
-    });
-    for (const d of dirs) {
-      if (fs.existsSync(path.join(dest, d, 'KDNA_Core.json'))) {
-        const realDest = path.join(dest, d);
-        console.log(`Found domain in subdirectory: ${realDest}`);
-        cmdValidate(realDest, false);
-        if (!fs.existsSync(path.join(realDest, 'kdna.json'))) {
-          console.log('');
-          cmdPack(realDest);
-        }
-        return;
-      }
-    }
-    error(`Installed directory does not appear to be a valid KDNA domain: ${dest}`);
-  }
-}
-
-// ─── Inspect ─────────────────────────────────────────────────────────
+// ─── Install (legacy, now delegates to src/install.js) ──────────────
 
 // ─── Inspect .kdna single file ────────────────────────────────────────
 
@@ -1151,8 +998,41 @@ switch (cmd) {
         domainId = args[i];
       }
     }
-    if (!domainId) error('Usage: kdna install <domain-id>');
-    cmdInstall(domainId, fromGit);
+    if (!domainId) error('Usage: kdna install <domain-id|github:user/repo|./folder>');
+
+    const { cmdInstallExtended } = require('./install');
+    if (fromGit) {
+      // Legacy --from-git: treat as github: URL
+      const url = fromGit.replace(/^https:\/\/github\.com\//, '').replace(/\.git$/, '');
+      cmdInstallExtended(`github:${url}`);
+    } else {
+      cmdInstallExtended(domainId);
+    }
+    break;
+  }
+  case 'remove': {
+    const { cmdRemove } = require('./install');
+    const target = args[1];
+    if (!target) error('Usage: kdna remove <domain>');
+    cmdRemove(target);
+    break;
+  }
+  case 'info': {
+    const { cmdInfo } = require('./install');
+    const target = args[1];
+    if (!target) error('Usage: kdna info <domain>');
+    cmdInfo(target);
+    break;
+  }
+  case 'update': {
+    const { cmdUpdate, cmdUpdateAll } = require('./install');
+    if (args.includes('--all')) {
+      cmdUpdateAll();
+    } else {
+      const target = args[1];
+      if (!target) error('Usage: kdna update <domain>');
+      cmdUpdate(target);
+    }
     break;
   }
   case 'inspect': {
