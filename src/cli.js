@@ -43,6 +43,10 @@ Usage:
   kdna demo --trace           Output judgment trace as JSON
   kdna cluster lint <path>     Validate a cluster manifest
   kdna cluster apply <path> [input]  Simulate cluster routing for a task
+  kdna init <name>             Scaffold a new KDNA domain from template
+  kdna publish --check <path>  Run quality gate before publishing
+  kdna version bump <patch|minor|major> [path]  Bump domain version
+  kdna version                 Show kdna CLI version
   kdna help                   Show this help
 
 Examples:
@@ -1093,6 +1097,40 @@ switch (cmd) {
       cmdClusterApply(target, args.slice(3).join(' '));
     } else {
       error(`Unknown cluster subcommand: ${sub || '(none)'}\nUsage: kdna cluster lint <path>\n       kdna cluster apply <path> [input]`);
+    }
+    break;
+  }
+  case 'init': {
+    const { cmdInit } = require('./init');
+    cmdInit(args[1]);
+    break;
+  }
+  case 'publish': {
+    if (args.includes('--check')) {
+      const { cmdPublishCheck } = require('./publish');
+      const idx = args.indexOf('--check');
+      const target = args[idx + 1] || args.filter((a) => !a.startsWith('--'))[1] || '.';
+      if (!target || target.startsWith('--')) error('Usage: kdna publish --check <path>');
+      cmdPublishCheck(target);
+    } else {
+      error('Usage: kdna publish --check <path>\n\nRun quality gate checks before publishing a domain.');
+    }
+    break;
+  }
+  case 'version': {
+    const { cmdVersionBump } = require('./version');
+    const sub = args[1];
+    if (sub === 'bump') {
+      const level = args[2];
+      const target = args[3] || '.';
+      if (!level || !['patch', 'minor', 'major'].includes(level)) {
+        error('Usage: kdna version bump <patch|minor|major> [path]');
+      }
+      cmdVersionBump(level, target);
+    } else {
+      console.log(`kdna v${require('../package.json').version}`);
+      console.log('');
+      console.log('Usage: kdna version bump <patch|minor|major> [path]');
     }
     break;
   }

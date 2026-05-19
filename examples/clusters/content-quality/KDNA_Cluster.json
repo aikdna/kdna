@@ -1,0 +1,47 @@
+{
+  "name": "content-quality",
+  "version": "0.1.0",
+  "purpose": "Judge whether written or spoken content meets publication-level quality standards. A composable system of clarity, structure, audience awareness, and anti-vagueness lenses.",
+  "packages": [
+    {
+      "id": "writing-basic",
+      "role": "primary",
+      "use_when": ["writing", "draft", "article", "blog post", "documentation", "readme", "report", "email"]
+    },
+    {
+      "id": "speaking-basic",
+      "role": "primary",
+      "use_when": ["speech", "presentation", "talk", "keynote", "podcast", "script", "pitch"]
+    },
+    {
+      "id": "communication",
+      "role": "advisor",
+      "use_when": ["tone", "intent", "audience reaction", "conflict", "difficult conversation", "sensitive topic"]
+    },
+    {
+      "id": "product-decision",
+      "role": "advisor",
+      "use_when": ["feature announcement", "product update", "changelog", "release notes", "roadmap"]
+    },
+    {
+      "id": "anti-vagueness",
+      "role": "constraint",
+      "use_when": ["slogan", "fluff", "buzzword", "corporate speak", "vague", "generic advice", "thought leader", "synergy"]
+    }
+  ],
+  "composition_rules": [
+    "writing-basic is primary for written content; speaking-basic is primary for spoken content — never both",
+    "communication activates when tone or audience reaction risk is present",
+    "product-decision activates when content touches product claims or roadmap",
+    "anti-vagueness is a constraint — it vetoes slogans, buzzwords, and generic advice regardless of other packages",
+    "constraints override advisor suggestions when they conflict",
+    "maximum 2 advisors loaded per task",
+    "conflicts between clarity (writing-basic) and diplomacy (communication) must be surfaced, not averaged"
+  ],
+  "routing_questions": [
+    "Is this content written or spoken? (determines primary)",
+    "Does the content involve sensitive tone, conflict, or audience reaction risk? (activates communication)",
+    "Does the content make product claims or roadmap statements? (activates product-decision)",
+    "Does the content contain vague buzzwords, slogans, or corporate speak? (activates anti-vagueness — this is a veto)"
+  ]
+}

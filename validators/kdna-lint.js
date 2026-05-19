@@ -20,9 +20,12 @@ function readJson(file) {
 function has(o, k) {
   return Object.prototype.hasOwnProperty.call(o || {}, k);
 }
-function req(o, k, loc) {
-  if (!has(o, k) || o[k] === '' || o[k] == null)
-    errors.push(`${loc}: missing required field "${k}"`);
+function req(o, k, loc, hint) {
+  if (!has(o, k) || o[k] === '' || o[k] == null) {
+    let msg = `${loc}: missing required field "${k}"`;
+    if (hint) msg += `\n    → ${hint}`;
+    errors.push(msg);
+  }
 }
 function meta(o, file) {
   req(o, 'meta', file);
@@ -54,7 +57,7 @@ function yesno(s, loc) {
     /^(have|has|can|does|do|is|are|能不能|会不会|有没有|要不要|是不是)/.test(t)
   )
     return;
-  warnings.push(`${loc}: self_check should be answerable with yes/no`);
+  warnings.push(`${loc}: self_check should be answerable with yes/no\n    → Try: "Did the response [do X specific domain check]?"`);
 }
 if (!fs.existsSync(domainDir) || !fs.statSync(domainDir).isDirectory()) {
   console.error(`Not a directory: ${domainDir}`);
@@ -77,18 +80,34 @@ if (core) {
     req(core, f, 'KDNA_Core.json'),
   );
   (core.axioms || []).forEach((a, i) =>
-    ['id', 'one_sentence', 'full_statement', 'why'].forEach((f) =>
-      req(a, f, `KDNA_Core.json.axioms[${i}]`),
+    [
+      ['id', 'Unique identifier like "AX-001". See SPEC.md §5.2'],
+      ['one_sentence', 'One-sentence judgment principle. Must be specific enough to change agent behavior. See docs/authoring-guide.md'],
+      ['full_statement', 'Full explanation of the axiom — testable and domain-specific. See SPEC.md §5.2'],
+      ['why', 'What the agent would get wrong WITHOUT this axiom. See SPEC.md §5.2'],
+    ].forEach(([f, hint]) =>
+      req(a, f, `KDNA_Core.json.axioms[${i}]`, hint),
     ),
   );
   (core.ontology || []).forEach((c, i) =>
-    ['id', 'one_sentence', 'essence', 'boundary', 'trigger_signal'].forEach((f) =>
-      req(c, f, `KDNA_Core.json.ontology[${i}]`),
+    [
+      ['id', 'Unique identifier like "CON-001". See SPEC.md §5.3'],
+      ['one_sentence', 'Name one central concept the agent must distinguish.'],
+      ['essence', 'Operational meaning in this domain — not a dictionary definition. See docs/authoring-guide.md'],
+      ['boundary', 'What this concept is NOT. Name a specific concept it is often confused with. See docs/authoring-guide.md'],
+      ['trigger_signal', 'Observable words or patterns that signal this concept is relevant. See SPEC.md §5.3'],
+    ].forEach(([f, hint]) =>
+      req(c, f, `KDNA_Core.json.ontology[${i}]`, hint),
     ),
   );
   (core.frameworks || []).forEach((fw, i) =>
-    ['id', 'name', 'when_to_use', 'steps'].forEach((f) =>
-      req(fw, f, `KDNA_Core.json.frameworks[${i}]`),
+    [
+      ['id', 'Unique identifier like "FW-001". See SPEC.md §5.4'],
+      ['name', 'Descriptive name for this framework.'],
+      ['when_to_use', 'Specific condition or context where this framework applies.'],
+      ['steps', 'Array of actionable steps. Each step should tell the agent what to do. See SPEC.md §5.4'],
+    ].forEach(([f, hint]) =>
+      req(fw, f, `KDNA_Core.json.frameworks[${i}]`, hint),
     ),
   );
 }
@@ -103,8 +122,14 @@ if (pat) {
     ),
   );
   (pat.misunderstandings || []).forEach((m, i) =>
-    ['id', 'wrong', 'correct', 'key_distinction', 'why'].forEach((f) =>
-      req(m, f, `KDNA_Patterns.json.misunderstandings[${i}]`),
+    [
+      ['id', 'Unique identifier like "MS-001". See SPEC.md §6.3'],
+      ['wrong', 'Common wrong interpretation an agent without domain cognition would make. See docs/authoring-guide.md'],
+      ['correct', 'Correct interpretation according to domain principles. See SPEC.md §6.3'],
+      ['key_distinction', 'The specific conceptual boundary the agent must preserve. See SPEC.md §6.3'],
+      ['why', 'What bad judgment results from the wrong interpretation. See SPEC.md §6.3'],
+    ].forEach(([f, hint]) =>
+      req(m, f, `KDNA_Patterns.json.misunderstandings[${i}]`, hint),
     ),
   );
   (pat.self_check || []).forEach((s, i) => yesno(s, `KDNA_Patterns.json.self_check[${i}]`));
