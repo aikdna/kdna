@@ -4,12 +4,7 @@
   "title": "KDNA Outcome Record",
   "description": "Schema for recording the actual outcome of a KDNA-generated judgment, enabling long-term judgment-outcome tracking and domain package improvement.",
   "type": "object",
-  "required": [
-    "record_version",
-    "outcome_id",
-    "judgment_reference",
-    "recorded_at"
-  ],
+  "required": ["record_version", "outcome_id", "judgment_reference", "recorded_at"],
   "properties": {
     "record_version": {
       "type": "string",
@@ -94,7 +89,15 @@
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["email", "document", "meeting_notes", "ticket", "metric", "interview", "other"]
+                "enum": [
+                  "email",
+                  "document",
+                  "meeting_notes",
+                  "ticket",
+                  "metric",
+                  "interview",
+                  "other"
+                ]
               },
               "reference": {
                 "type": "string",
@@ -131,7 +134,14 @@
     "revision_type": {
       "type": "string",
       "description": "Type of revision needed, if any.",
-      "enum": ["false_positive", "false_negative", "misclassification", "missing_signal", "overconfident", "none"]
+      "enum": [
+        "false_positive",
+        "false_negative",
+        "misclassification",
+        "missing_signal",
+        "overconfident",
+        "none"
+      ]
     },
     "impact": {
       "type": "object",
@@ -184,7 +194,14 @@
             "properties": {
               "element_type": {
                 "type": "string",
-                "enum": ["axiom", "misunderstanding", "framework", "ontology", "self_check", "scenario"]
+                "enum": [
+                  "axiom",
+                  "misunderstanding",
+                  "framework",
+                  "ontology",
+                  "self_check",
+                  "scenario"
+                ]
               },
               "element_id": {
                 "type": "string",

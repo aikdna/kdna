@@ -26,10 +26,7 @@
       "category": "unresolved_missing_owner",
       "input": "Marketing team meeting. Discussed three campaign concepts for Q3. The creative director presented bold, conservative, and hybrid options. Team discussed pros and cons for 45 minutes. Everyone seemed to prefer the hybrid approach. Meeting ended with: 'Let's move forward with the hybrid concept. We should start developing creative assets soon.'",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "owner",
-        "timing"
-      ],
+      "missing_elements": ["owner", "timing"],
       "explanation": "A preference ('seemed to prefer') is not a choice. 'We should start soon' has no named owner and no deadline. No one accepted accountability.",
       "difficulty": "easy",
       "predicted_judgment": null,
@@ -49,10 +46,7 @@
       "category": "unresolved_missing_choice",
       "input": "Engineering standup. The team discussed performance issues in the payment API. Several ideas were raised: caching layer, database query optimization, and CDN changes. Sarah was asked to investigate. Meeting ended with no selection among the three options.",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "choice",
-        "timing"
-      ],
+      "missing_elements": ["choice", "timing"],
       "explanation": "Sarah was asked to investigate, but no specific option was chosen. Investigation is exploration, not commitment. No deadline given.",
       "difficulty": "easy",
       "predicted_judgment": null,
@@ -72,12 +66,7 @@
       "category": "unresolved_social_agreement",
       "input": "Product strategy session. The team reviewed the roadmap for H2. After discussion, the group was 'aligned' on prioritizing mobile experience improvements. The PM summarized: 'Great discussion. We're all on the same page about mobile-first. Let's make it happen.'",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "choice",
-        "owner",
-        "action",
-        "timing"
-      ],
+      "missing_elements": ["choice", "owner", "action", "timing"],
       "explanation": "'Aligned' and 'on the same page' are social states, not operational commitments. No specific action, owner, or deadline exists. 'Make it happen' is aspirational, not executable.",
       "difficulty": "easy",
       "predicted_judgment": null,
@@ -97,12 +86,7 @@
       "category": "unresolved_exploration_disguised",
       "input": "Leadership offsite. Executive team discussed entering the European market. They reviewed market size, competitive landscape, and regulatory requirements. The CEO concluded: 'This is promising. Let's explore this further and reconvene next quarter.'",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "choice",
-        "owner",
-        "action",
-        "timing"
-      ],
+      "missing_elements": ["choice", "owner", "action", "timing"],
       "explanation": "'Explore further' is discussion, not decision. 'Reconvene next quarter' is a meeting plan, not a decision checkpoint. No specific exploration task was assigned to a named owner.",
       "difficulty": "easy",
       "predicted_judgment": null,
@@ -122,12 +106,7 @@
       "category": "unresolved_vague_deferral",
       "input": "Sprint planning. Team discussed technical debt in the authentication module. After debate, the tech lead said: 'We need more data on user impact before we prioritize this. Let's revisit once we have that.' No date, no data-gathering owner, no criteria for 'enough data'.",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "choice",
-        "owner",
-        "timing",
-        "specific_condition"
-      ],
+      "missing_elements": ["choice", "owner", "timing", "specific_condition"],
       "explanation": "'Need more data' without: what data, who gathers it, by when, and how much is enough. This is vague deferral, not intentional deferral. No commitment exists.",
       "difficulty": "medium",
       "predicted_judgment": null,
@@ -147,10 +126,7 @@
       "category": "unresolved_someone_should",
       "input": "Customer success review. CS team identified a pattern of onboarding drop-offs at week 3. Discussion produced several hypotheses. Manager concluded: 'Someone should dig into the week 3 data and figure out what's happening.'",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "owner",
-        "timing"
-      ],
+      "missing_elements": ["owner", "timing"],
       "explanation": "'Someone should' is the canonical absence of owner. No one is named. No deadline. The task exists as an idea, not a commitment.",
       "difficulty": "easy",
       "predicted_judgment": null,
@@ -170,11 +146,7 @@
       "category": "unresolved_multiple_owners",
       "input": "Cross-functional initiative kickoff. Marketing, Sales, and Product discussed the new partner program. All three departments agreed to 'work together' on it. The program manager noted: 'We'll collaborate and share updates in our weekly sync.'",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "owner",
-        "action",
-        "timing"
-      ],
+      "missing_elements": ["owner", "action", "timing"],
       "explanation": "'Work together' distributes ownership so thinly that no one is accountable. 'Weekly sync' is a reporting cadence, not a deadline for action. No specific task assigned.",
       "difficulty": "medium",
       "predicted_judgment": null,
@@ -194,11 +166,7 @@
       "category": "unresolved_budget_discussion",
       "input": "Finance review. Department heads presented their FY27 budget requests. The CFO facilitated discussion and asked everyone to 'think about trade-offs and come back with refined numbers.' No decisions on allocations. No deadlines for revised submissions.",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "choice",
-        "owner",
-        "timing"
-      ],
+      "missing_elements": ["choice", "owner", "timing"],
       "explanation": "Discussion of requests is not approval of allocations. 'Think about trade-offs' is homework, not commitment. No deadline for 'refined numbers.'",
       "difficulty": "easy",
       "predicted_judgment": null,
@@ -218,10 +186,7 @@
       "category": "unresolved_consensus_without_commitment",
       "input": "Design critique. Team reviewed the new checkout flow. After feedback rounds, the designer asked: 'Does everyone feel good about this direction?' Everyone nodded. The design lead said: 'Great, let's finalize this and hand it off to engineering.'",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "owner",
-        "timing"
-      ],
+      "missing_elements": ["owner", "timing"],
       "explanation": "Nodding is social agreement, not operational commitment. 'Finalize and hand off' has no named owner and no deadline. The engineer who will receive it is not in the room.",
       "difficulty": "medium",
       "predicted_judgment": null,
@@ -241,12 +206,7 @@
       "category": "unresolved_tbd",
       "input": "Project status meeting. Action items from last week: 'Finalize vendor selection' — status TBD. 'Update project timeline' — status TBD. 'Schedule user interviews' — status TBD. Team spent the meeting discussing blockers but produced no new commitments.",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "choice",
-        "owner",
-        "action",
-        "timing"
-      ],
+      "missing_elements": ["choice", "owner", "action", "timing"],
       "explanation": "Three consecutive TBDs. The meeting produced discussion about why things are blocked, but no new decisions to unblock them. Status remains unchanged.",
       "difficulty": "easy",
       "predicted_judgment": null,
@@ -326,11 +286,7 @@
       "category": "conditional_vague_condition",
       "input": "Product feature decision. Team decided to build the analytics dashboard. Devin owns implementation. Target: end of next sprint. But 'pending stakeholder feedback on the mockups.' No specific stakeholders named. No deadline for feedback.",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "specific_condition",
-        "condition_owner",
-        "condition_timing"
-      ],
+      "missing_elements": ["specific_condition", "condition_owner", "condition_timing"],
       "explanation": "'Pending stakeholder feedback' is vague. Which stakeholders? How many? By when? What if they don't respond? Without these specifics, this is UNRESOLVED disguised as CONDITIONAL.",
       "difficulty": "medium",
       "predicted_judgment": null,
@@ -470,11 +426,7 @@
       "category": "intentional_deferral_vague",
       "input": "Technology stack review. Team discussed moving to microservices but felt they 'needed more experience with the current monolith before making a big change.' No specific experience criteria defined. No date to revisit. No owner assigned to gather experience or make the future decision.",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "specific_condition",
-        "timing",
-        "decision_owner"
-      ],
+      "missing_elements": ["specific_condition", "timing", "decision_owner"],
       "explanation": "'More experience' is vague. What constitutes 'enough' experience? When will the team revisit? Who decides? Without these three elements, this is UNRESOLVED — not intentional deferral.",
       "difficulty": "medium",
       "predicted_judgment": null,
@@ -494,10 +446,7 @@
       "category": "intentional_deferral_checkpoint_only",
       "input": "Product launch timing. Team agreed the feature is ready but wants to 'wait for the right market moment.' Set a checkpoint: 'We'll review again in October.' No criteria for 'right moment.' No owner to monitor market conditions. No contingency if October arrives and the moment still doesn't feel right.",
       "expected_state": "UNRESOLVED",
-      "missing_elements": [
-        "specific_condition",
-        "condition_owner"
-      ],
+      "missing_elements": ["specific_condition", "condition_owner"],
       "explanation": "A date alone (October) does not make a deferral intentional. The condition ('right market moment') is subjective and unmonitored. No one owns watching for it. This is UNRESOLVED with a calendar reminder.",
       "difficulty": "hard",
       "predicted_judgment": null,

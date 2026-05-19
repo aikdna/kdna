@@ -1035,12 +1035,12 @@ switch (cmd) {
   case 'eval': {
     if (args.includes('--benchmark')) {
       const idx = args.indexOf('--benchmark');
-      const target = args[idx + 1] || args.filter(a => !a.startsWith('--'))[1];
+      const target = args[idx + 1] || args.filter((a) => !a.startsWith('--'))[1];
       if (!target || target.startsWith('--')) error('Usage: kdna eval --benchmark <file>');
       cmdEvalBenchmark(target);
     } else if (args.includes('--cluster')) {
       const idx = args.indexOf('--cluster');
-      const target = args[idx + 1] || args.filter(a => !a.startsWith('--'))[1];
+      const target = args[idx + 1] || args.filter((a) => !a.startsWith('--'))[1];
       if (!target || target.startsWith('--')) error('Usage: kdna eval --cluster <file>');
       cmdEvalCluster(target);
     } else {

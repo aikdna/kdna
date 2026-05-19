@@ -129,7 +129,12 @@ function scoreResult(scenario, parsed) {
   let missingCorrect = true;
   if (scenario.expected_state === 'UNRESOLVED' && scenario.missing_elements.length > 0) {
     const expected = scenario.missing_elements.sort().join(',');
-    const actual = (parsed.missing || 'none').split(/[,;]/).map(s => s.trim()).filter(Boolean).sort().join(',');
+    const actual = (parsed.missing || 'none')
+      .split(/[,;]/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .sort()
+      .join(',');
     missingCorrect = expected === actual;
   }
   return {
@@ -144,7 +149,9 @@ async function runBenchmark(options = {}) {
   const scenarios = benchmark.scenarios.slice(0, limit);
   const results = [];
 
-  console.log(`Running ${scenarios.length} scenarios with ${useKDNA ? 'KDNA' : 'no-KDNA'} (${model})...`);
+  console.log(
+    `Running ${scenarios.length} scenarios with ${useKDNA ? 'KDNA' : 'no-KDNA'} (${model})...`,
+  );
 
   for (let i = 0; i < scenarios.length; i++) {
     const s = scenarios[i];
@@ -167,7 +174,9 @@ async function runBenchmark(options = {}) {
         missing_correct: scoring.missing_correct,
         raw_output: raw,
       });
-      console.log(`  [${i + 1}/${scenarios.length}] ${s.id}: expected=${s.expected_state} predicted=${parsed.state} score=${scoring.score}`);
+      console.log(
+        `  [${i + 1}/${scenarios.length}] ${s.id}: expected=${s.expected_state} predicted=${parsed.state} score=${scoring.score}`,
+      );
     } catch (err) {
       console.error(`  [${i + 1}/${scenarios.length}] ${s.id}: ERROR - ${err.message}`);
       results.push({
@@ -191,10 +200,10 @@ async function runBenchmark(options = {}) {
   stream.end();
 
   // Summary
-  const valid = results.filter(r => !r.error);
+  const valid = results.filter((r) => !r.error);
   const totalScore = valid.reduce((sum, r) => sum + r.score, 0);
   const maxScore = valid.length;
-  const stateCorrect = valid.filter(r => r.state_correct).length;
+  const stateCorrect = valid.filter((r) => r.state_correct).length;
 
   const summary = {
     timestamp: new Date().toISOString(),
@@ -227,8 +236,8 @@ async function runBenchmark(options = {}) {
 // CLI
 async function main() {
   const args = process.argv.slice(2);
-  const model = args.find(a => a.startsWith('--model='))?.split('=')[1] || 'claude-sonnet-4-6';
-  const limit = parseInt(args.find(a => a.startsWith('--limit='))?.split('=')[1] || '30');
+  const model = args.find((a) => a.startsWith('--model='))?.split('=')[1] || 'claude-sonnet-4-6';
+  const limit = parseInt(args.find((a) => a.startsWith('--limit='))?.split('=')[1] || '30');
   const useKDNA = args.includes('--kdna');
 
   await runBenchmark({ model, limit, useKDNA });

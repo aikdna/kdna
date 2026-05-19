@@ -4,12 +4,7 @@
   "title": "KDNA Judgment Trace",
   "description": "Schema for capturing a transparent, inspectable record of which KDNA-loaded rules were triggered during agent judgment.",
   "type": "object",
-  "required": [
-    "trace_version",
-    "timestamp",
-    "loaded_package",
-    "generated_judgment"
-  ],
+  "required": ["trace_version", "timestamp", "loaded_package", "generated_judgment"],
   "properties": {
     "trace_version": {
       "type": "string",
@@ -56,7 +51,14 @@
           "description": "Which files from the domain were loaded.",
           "items": {
             "type": "string",
-            "enum": ["KDNA_Core.json", "KDNA_Patterns.json", "KDNA_Scenarios.json", "KDNA_Cases.json", "KDNA_Reasoning.json", "KDNA_Evolution.json"]
+            "enum": [
+              "KDNA_Core.json",
+              "KDNA_Patterns.json",
+              "KDNA_Scenarios.json",
+              "KDNA_Cases.json",
+              "KDNA_Reasoning.json",
+              "KDNA_Evolution.json"
+            ]
           }
         }
       }
