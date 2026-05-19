@@ -11,6 +11,8 @@
  *   kdna help                  Show help
  *   kdna cluster lint <path>    Validate a cluster manifest
  *   kdna cluster apply <path> [input]  Simulate cluster routing for a task
+ *   kdna identity init           Generate Ed25519 identity key pair
+ *   kdna identity show           Display public key and buyer ID
  */
 
 const fs = require('fs');
@@ -47,6 +49,10 @@ Usage:
   kdna publish --check <path>  Run quality gate before publishing
   kdna version bump <patch|minor|major> [path]  Bump domain version
   kdna version                 Show kdna CLI version
+  kdna identity init            Generate Ed25519 identity key pair
+  kdna identity show            Display public key and buyer ID
+  kdna identity export [--out]  Backup private key (passphrase-encrypted)
+  kdna identity import <file>   Restore identity from backup
   kdna help                   Show this help
 
 Examples:
@@ -550,7 +556,9 @@ function inspectKdnaFile(filePath) {
   console.log(`  Frameworks:         ${(c.frameworks || []).length}`);
   console.log(`  Core structures:    ${(c.core_structure || []).length}`);
   console.log(`  Stances:            ${(c.stances || []).length}`);
-  console.log(`  Preferred terms:    ${(p.terminology?.standard_terms || p.terminology?.preferred_terms || []).length}`);
+  console.log(
+    `  Preferred terms:    ${(p.terminology?.standard_terms || p.terminology?.preferred_terms || []).length}`,
+  );
   console.log(`  Banned terms:       ${(p.terminology?.banned_terms || []).length}`);
   console.log(`  Misunderstandings:  ${(p.misunderstandings || []).length}`);
   console.log(`  Self-checks:        ${(p.self_check || []).length}`);
@@ -565,7 +573,6 @@ function parseSimpleYaml(raw) {
   // Parse a simple subset of YAML (no nesting beyond 1 level for sections)
   const result = {};
   let currentSection = null;
-  let currentArray = null;
 
   const lines = raw.split('\n');
   for (const line of lines) {
@@ -576,7 +583,6 @@ function parseSimpleYaml(raw) {
     if (/^[a-z_]+:$/.test(trimmed)) {
       currentSection = trimmed.slice(0, -1);
       if (!result[currentSection]) result[currentSection] = {};
-      currentArray = null;
       continue;
     }
 
@@ -1211,7 +1217,35 @@ switch (cmd) {
       if (!target) error('Usage: kdna cluster apply <path> [input]');
       cmdClusterApply(target, args.slice(3).join(' '));
     } else {
-      error(`Unknown cluster subcommand: ${sub || '(none)'}\nUsage: kdna cluster lint <path>\n       kdna cluster apply <path> [input]`);
+      error(
+        `Unknown cluster subcommand: ${sub || '(none)'}\nUsage: kdna cluster lint <path>\n       kdna cluster apply <path> [input]`,
+      );
+    }
+    break;
+  }
+  case 'identity': {
+    const {
+      cmdIdentityInit,
+      cmdIdentityShow,
+      cmdIdentityExport,
+      cmdIdentityImport,
+    } = require('./identity');
+    const sub = args[1];
+    if (sub === 'init') {
+      cmdIdentityInit();
+    } else if (sub === 'show') {
+      cmdIdentityShow();
+    } else if (sub === 'export') {
+      const outIdx = args.indexOf('--out');
+      cmdIdentityExport(outIdx >= 0 ? args[outIdx + 1] : null);
+    } else if (sub === 'import') {
+      const target = args[2];
+      if (!target) error('Usage: kdna identity import <file>');
+      cmdIdentityImport(target);
+    } else {
+      error(
+        `Usage: kdna identity init\n       kdna identity show\n       kdna identity export [--out <file>]\n       kdna identity import <file>`,
+      );
     }
     break;
   }
@@ -1228,7 +1262,9 @@ switch (cmd) {
       if (!target || target.startsWith('--')) error('Usage: kdna publish --check <path>');
       cmdPublishCheck(target);
     } else {
-      error('Usage: kdna publish --check <path>\n\nRun quality gate checks before publishing a domain.');
+      error(
+        'Usage: kdna publish --check <path>\n\nRun quality gate checks before publishing a domain.',
+      );
     }
     break;
   }
