@@ -12,7 +12,9 @@ function cmdInit(name) {
   }
 
   if (!/^[a-z][a-z0-9_]*$/.test(name)) {
-    console.error(`Error: Invalid domain name "${name}". Must be lowercase letters, numbers, underscores. Start with a letter.`);
+    console.error(
+      `Error: Invalid domain name "${name}". Must be lowercase letters, numbers, underscores. Start with a letter.`,
+    );
     process.exit(1);
   }
 
@@ -42,7 +44,7 @@ function cmdInit(name) {
   }
 
   console.log(`✓ Created KDNA domain: ${targetDir}/`);
-  console.log(`  Files: ${files.filter(f => f.endsWith('.json')).join(', ')}`);
+  console.log(`  Files: ${files.filter((f) => f.endsWith('.json')).join(', ')}`);
 
   // Validate
   try {
@@ -60,7 +62,9 @@ function cmdInit(name) {
   console.log('');
   console.log(`Next steps:`);
   console.log(`  1. Edit ${targetDir}/KDNA_Core.json — fill in your axioms, concepts, stances`);
-  console.log(`  2. Edit ${targetDir}/KDNA_Patterns.json — terminology, misunderstandings, self-checks`);
+  console.log(
+    `  2. Edit ${targetDir}/KDNA_Patterns.json — terminology, misunderstandings, self-checks`,
+  );
   console.log(`  3. Edit ${targetDir}/kdna.json — metadata`);
   console.log(`  4. Run: kdna publish --check ${name}  (quality gate)`);
   console.log(`  5. Run: kdna eval ${name}                 (test judgment)`);

@@ -22,7 +22,9 @@ function readJson(filePath) {
 
 function cmdVersionBump(level, domainPath) {
   if (!level || !['patch', 'minor', 'major'].includes(level)) {
-    error('Usage: kdna version bump <patch|minor|major> [path]\n\n  patch — fix wording, no judgment change\n  minor — add axiom/concept/framework (may change judgment)\n  major — remove/redefine axiom or change scope (breaking)');
+    error(
+      'Usage: kdna version bump <patch|minor|major> [path]\n\n  patch — fix wording, no judgment change\n  minor — add axiom/concept/framework (may change judgment)\n  major — remove/redefine axiom or change scope (breaking)',
+    );
   }
 
   const targetDir = path.resolve(domainPath || '.');
@@ -44,9 +46,18 @@ function cmdVersionBump(level, domainPath) {
   let [major, minor, patch] = parts;
 
   switch (level) {
-    case 'patch': patch++; break;
-    case 'minor': minor++; patch = 0; break;
-    case 'major': major++; minor = 0; patch = 0; break;
+    case 'patch':
+      patch++;
+      break;
+    case 'minor':
+      minor++;
+      patch = 0;
+      break;
+    case 'major':
+      major++;
+      minor = 0;
+      patch = 0;
+      break;
   }
 
   const newVersion = `${major}.${minor}.${patch}`;
@@ -61,9 +72,9 @@ function cmdVersionBump(level, domainPath) {
   console.log(`  ✓ kdna.json`);
 
   // Update all KDNA JSON files
-  const kdnaFiles = fs.readdirSync(targetDir).filter(
-    (f) => f.startsWith('KDNA_') && f.endsWith('.json'),
-  );
+  const kdnaFiles = fs
+    .readdirSync(targetDir)
+    .filter((f) => f.startsWith('KDNA_') && f.endsWith('.json'));
 
   for (const file of kdnaFiles) {
     const filePath = path.join(targetDir, file);

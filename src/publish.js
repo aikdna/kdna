@@ -41,9 +41,9 @@ const VAGUE_PHRASES = [
 ];
 
 const SLOGAN_PATTERNS = [
-  /^[A-Z][a-z]+ is [a-z]+\.?$/,      // "Trust is important."
-  /^Be [a-z]+\.?$/,                    // "Be helpful."
-  /^[A-Z][a-z]+ matters\.?$/,         // "Quality matters."
+  /^[A-Z][a-z]+ is [a-z]+\.?$/, // "Trust is important."
+  /^Be [a-z]+\.?$/, // "Be helpful."
+  /^[A-Z][a-z]+ matters\.?$/, // "Quality matters."
 ];
 
 function isVague(text) {
@@ -72,7 +72,9 @@ function isNegationOnly(boundary) {
 function isDictionaryDefinition(essence) {
   if (!essence || typeof essence !== 'string') return false;
   // Dictionary-style: starts with "the", follows with "is" or "of"
-  return /^the\s+(quality|state|act|process|ability|condition|fact|practice|use)\s+(of|in|to|that)/i.test(essence);
+  return /^the\s+(quality|state|act|process|ability|condition|fact|practice|use)\s+(of|in|to|that)/i.test(
+    essence,
+  );
 }
 
 function isStrawMan(wrong) {
@@ -152,26 +154,55 @@ function cmdPublishCheck(domainPath) {
       const label = ax.id || '?';
 
       if (!ax.one_sentence || ax.one_sentence.length < 20) {
-        fail('KDNA_Core.json', `axioms.${label}.one_sentence`, ax.one_sentence, 'Too short (min 20 chars). Axioms must be specific claims, not labels.');
+        fail(
+          'KDNA_Core.json',
+          `axioms.${label}.one_sentence`,
+          ax.one_sentence,
+          'Too short (min 20 chars). Axioms must be specific claims, not labels.',
+        );
       } else if (isSlogan(ax.one_sentence)) {
-        fail('KDNA_Core.json', `axioms.${label}.one_sentence`, ax.one_sentence, 'Reads like a slogan. Axioms must be specific judgment principles.');
+        fail(
+          'KDNA_Core.json',
+          `axioms.${label}.one_sentence`,
+          ax.one_sentence,
+          'Reads like a slogan. Axioms must be specific judgment principles.',
+        );
       } else if (isVague(ax.one_sentence)) {
         const v = isVague(ax.one_sentence);
-        fail('KDNA_Core.json', `axioms.${label}.one_sentence`, ax.one_sentence, `Vague phrase "${v.phrase}". Be specific about what the agent should judge.`);
+        fail(
+          'KDNA_Core.json',
+          `axioms.${label}.one_sentence`,
+          ax.one_sentence,
+          `Vague phrase "${v.phrase}". Be specific about what the agent should judge.`,
+        );
       } else {
         pass('KDNA_Core.json', `axioms.${label}.one_sentence`);
       }
 
       if (!ax.full_statement || ax.full_statement.length < 40) {
-        fail('KDNA_Core.json', `axioms.${label}.full_statement`, ax.full_statement, 'Too short (min 40 chars). Full statement must be testable and domain-specific.');
+        fail(
+          'KDNA_Core.json',
+          `axioms.${label}.full_statement`,
+          ax.full_statement,
+          'Too short (min 40 chars). Full statement must be testable and domain-specific.',
+        );
       } else if (isVague(ax.full_statement)) {
-        warn('KDNA_Core.json', `axioms.${label}.full_statement`, 'Contains vague language. Consider making it more operational.');
+        warn(
+          'KDNA_Core.json',
+          `axioms.${label}.full_statement`,
+          'Contains vague language. Consider making it more operational.',
+        );
       } else {
         pass('KDNA_Core.json', `axioms.${label}.full_statement`);
       }
 
       if (!ax.why || ax.why.length < 20) {
-        fail('KDNA_Core.json', `axioms.${label}.why`, ax.why, 'Too short. Must explain what the agent would get wrong without this axiom.');
+        fail(
+          'KDNA_Core.json',
+          `axioms.${label}.why`,
+          ax.why,
+          'Too short. Must explain what the agent would get wrong without this axiom.',
+        );
       } else {
         pass('KDNA_Core.json', `axioms.${label}.why`);
       }
@@ -184,8 +215,12 @@ function cmdPublishCheck(domainPath) {
       const label = con.id || '?';
 
       if (!con.essence || isDictionaryDefinition(con.essence)) {
-        fail('KDNA_Core.json', `ontology.${label}.essence`, con.essence,
-          'Reads like a dictionary definition. Essence must be operational — what the agent needs to check, not what a dictionary says.');
+        fail(
+          'KDNA_Core.json',
+          `ontology.${label}.essence`,
+          con.essence,
+          'Reads like a dictionary definition. Essence must be operational — what the agent needs to check, not what a dictionary says.',
+        );
       } else if (isVague(con.essence)) {
         warn('KDNA_Core.json', `ontology.${label}.essence`, 'Contains vague language.');
       } else {
@@ -193,14 +228,22 @@ function cmdPublishCheck(domainPath) {
       }
 
       if (!con.boundary || isNegationOnly(con.boundary)) {
-        fail('KDNA_Core.json', `ontology.${label}.boundary`, con.boundary,
-          'Negation-only boundary. Must name a specific concept this is often confused with, not just "not X".');
+        fail(
+          'KDNA_Core.json',
+          `ontology.${label}.boundary`,
+          con.boundary,
+          'Negation-only boundary. Must name a specific concept this is often confused with, not just "not X".',
+        );
       } else {
         pass('KDNA_Core.json', `ontology.${label}.boundary`);
       }
 
       if (!con.trigger_signal || con.trigger_signal.length < 15) {
-        warn('KDNA_Core.json', `ontology.${label}.trigger_signal`, 'Trigger signal too short. Should be observable words or patterns the agent can detect.');
+        warn(
+          'KDNA_Core.json',
+          `ontology.${label}.trigger_signal`,
+          'Trigger signal too short. Should be observable words or patterns the agent can detect.',
+        );
       } else {
         pass('KDNA_Core.json', `ontology.${label}.trigger_signal`);
       }
@@ -215,9 +258,19 @@ function cmdPublishCheck(domainPath) {
     for (let i = 0; i < core.stances.length; i++) {
       const s = core.stances[i];
       if (typeof s !== 'string') {
-        fail('KDNA_Core.json', `stances[${i}]`, JSON.stringify(s), 'Must be a string, not an object.');
+        fail(
+          'KDNA_Core.json',
+          `stances[${i}]`,
+          JSON.stringify(s),
+          'Must be a string, not an object.',
+        );
       } else if (isSlogan(s)) {
-        fail('KDNA_Core.json', `stances[${i}]`, s, 'Reads like a slogan. Stances must be prescriptive positions that bias agent behavior.');
+        fail(
+          'KDNA_Core.json',
+          `stances[${i}]`,
+          s,
+          'Reads like a slogan. Stances must be prescriptive positions that bias agent behavior.',
+        );
       } else if (isVague(s)) {
         warn('KDNA_Core.json', `stances[${i}]`, 'Contains vague language.');
       } else {
@@ -236,14 +289,22 @@ function cmdPublishCheck(domainPath) {
       const label = ms.id || '?';
 
       if (!ms.wrong || isStrawMan(ms.wrong)) {
-        fail('KDNA_Patterns.json', `misunderstandings.${label}.wrong`, ms.wrong,
-          'Straw-man argument. Must describe a belief a real agent might actually hold, not an absurd position.');
+        fail(
+          'KDNA_Patterns.json',
+          `misunderstandings.${label}.wrong`,
+          ms.wrong,
+          'Straw-man argument. Must describe a belief a real agent might actually hold, not an absurd position.',
+        );
       } else {
         pass('KDNA_Patterns.json', `misunderstandings.${label}.wrong`);
       }
 
       if (!ms.key_distinction || ms.key_distinction.length < 15) {
-        warn('KDNA_Patterns.json', `misunderstandings.${label}.key_distinction`, 'Key distinction too short. Must name the conceptual boundary.');
+        warn(
+          'KDNA_Patterns.json',
+          `misunderstandings.${label}.key_distinction`,
+          'Key distinction too short. Must name the conceptual boundary.',
+        );
       } else {
         pass('KDNA_Patterns.json', `misunderstandings.${label}.key_distinction`);
       }
@@ -255,9 +316,19 @@ function cmdPublishCheck(domainPath) {
     for (let i = 0; i < patterns.self_check.length; i++) {
       const sc = patterns.self_check[i];
       if (typeof sc !== 'string') {
-        fail('KDNA_Patterns.json', `self_check[${i}]`, JSON.stringify(sc), 'Must be a string, not an object.');
+        fail(
+          'KDNA_Patterns.json',
+          `self_check[${i}]`,
+          JSON.stringify(sc),
+          'Must be a string, not an object.',
+        );
       } else if (isGenericSelfCheck(sc)) {
-        fail('KDNA_Patterns.json', `self_check[${i}]`, sc, 'Generic question. Self-checks must be domain-specific, not "is this helpful?".');
+        fail(
+          'KDNA_Patterns.json',
+          `self_check[${i}]`,
+          sc,
+          'Generic question. Self-checks must be domain-specific, not "is this helpful?".',
+        );
       } else if (!sc.endsWith('?')) {
         warn('KDNA_Patterns.json', `self_check[${i}]`, 'Should end with a question mark.');
         passes++;
@@ -283,7 +354,11 @@ function cmdPublishCheck(domainPath) {
       pass('kdna.json', 'manifest');
     }
   } else {
-    warn('kdna.json', 'manifest', 'Not found. A kdna.json manifest is recommended for registry publication.');
+    warn(
+      'kdna.json',
+      'manifest',
+      'Not found. A kdna.json manifest is recommended for registry publication.',
+    );
   }
 
   // Summary

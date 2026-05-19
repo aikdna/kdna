@@ -100,7 +100,9 @@ function cmdClusterLint(clusterPath) {
   }
 
   console.log(`✓ KDNA Cluster valid: ${cluster.name} v${cluster.version}`);
-  console.log(`  Packages: ${cluster.packages.length} (${primaryCount} primary, ${cluster.packages.filter((p) => p.role === 'advisor').length} advisor, ${cluster.packages.filter((p) => p.role === 'constraint').length} constraint, ${cluster.packages.filter((p) => p.role === 'critic').length} critic)`);
+  console.log(
+    `  Packages: ${cluster.packages.length} (${primaryCount} primary, ${cluster.packages.filter((p) => p.role === 'advisor').length} advisor, ${cluster.packages.filter((p) => p.role === 'constraint').length} constraint, ${cluster.packages.filter((p) => p.role === 'critic').length} critic)`,
+  );
   console.log(`  Rules: ${cluster.composition_rules?.length || 0}`);
   console.log(`  Routing questions: ${cluster.routing_questions?.length || 0}`);
   if (warnings > 0) console.log(`  ${warnings} warning(s)`);
@@ -180,7 +182,9 @@ function cmdClusterApply(clusterPath, input) {
   console.log(`  Primary:  ${primary.id} (${primary.role})`);
   if (primary.use_when) {
     const matched = primary.use_when.filter((kw) => inputLower.includes(kw.toLowerCase()));
-    console.log(`    Matched: ${matched.length > 0 ? matched.join(', ') : '(fallback — no keyword match)'}`);
+    console.log(
+      `    Matched: ${matched.length > 0 ? matched.join(', ') : '(fallback — no keyword match)'}`,
+    );
   }
 
   if (advisors.length > 0) {
