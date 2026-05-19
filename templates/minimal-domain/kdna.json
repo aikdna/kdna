@@ -1,0 +1,32 @@
+{
+  "kdna_spec": "0.4",
+  "name": "example_domain",
+  "version": "0.1.0",
+  "language": "en",
+  "languages": ["en"],
+  "created": "YYYY-MM-DD",
+  "updated": "YYYY-MM-DD",
+  "description": "One-sentence description of what judgment this domain improves.",
+  "keywords": ["keyword1", "keyword2"],
+  "access": "open",
+  "author": {
+    "name": "Your Name",
+    "id": "your-id"
+  },
+  "license": {
+    "type": "CC-BY-4.0",
+    "commercial": false,
+    "allow_agent_use": true,
+    "allow_redistribution": true,
+    "allow_training": true
+  },
+  "status": "experimental",
+  "registry": {
+    "repo": "https://github.com/your-org/your-repo"
+  },
+  "file_count": 2,
+  "files": [
+    "KDNA_Core.json",
+    "KDNA_Patterns.json"
+  ]
+}

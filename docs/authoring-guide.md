@@ -1,51 +1,185 @@
 # KDNA Authoring Guide
 
+## Quick Start
+
+1. Copy `templates/minimal-domain/` to your working directory
+2. Rename the folder to your domain ID (e.g., `my_domain`)
+3. Edit each JSON file — fill in every placeholder in angle brackets
+4. Validate: `node validators/kdna-lint.js <your-domain-folder>`
+5. Test: `node src/cli.js eval <your-domain-folder>`
+
+---
+
 ## 1. Start Narrow
 
 Do not try to encode an entire profession at once.
 
-Bad: `leadership`  
-Better: `frontline_team_feedback`
+**Bad:** `leadership`  
+**Better:** `frontline_team_feedback`  
+**Best:** `feedback-delivery-first-time-manager`
+
+A narrow domain forces you to write axioms that actually change behavior. A broad domain produces generic advice.
+
+---
 
 ## 2. Write the Domain Sentence
 
-Template:
+Before writing any JSON, answer this:
 
 ```text
 This domain helps an AI agent judge ______ so that ______.
 ```
 
-## 3. Extract Axioms
+Example:
 
-Axioms should be few, strong, and hard to compress. A good axiom is not a slogan. It should change how the agent responds.
+> This domain helps an AI agent judge whether a meeting produced an actionable decision — or just discussion — so that the agent does not generate action items for commitments that don't exist.
 
-## 4. Define Boundaries
+If you cannot fill both blanks concretely, your domain is too vague.
 
-Every important concept needs a boundary. Without boundaries, concepts become decorative words.
+---
 
-## 5. Capture Misunderstandings
+## 3. Write Good Axioms
 
-Misunderstandings are usually more useful than definitions.
+Axioms are the domain's core judgment principles. They must change how the agent responds.
 
-For each misunderstanding, write:
+### What makes a good axiom:
 
-- wrong interpretation
-- correct interpretation
-- key distinction
-- why the distinction matters
+- **Specific**: Two experts would agree when it applies
+- **Falsifiable**: You can construct a scenario where it does NOT apply
+- **Behavior-changing**: The agent would say something different with vs without it
 
-## 6. Prefer Signals Over Abstract Labels
+### Good vs Bad:
 
-A trigger signal should be observable.
+| Bad (slogan) | Good (operational) |
+|---|---|
+| "Communication is important." | "The speaker's intent and the listener's interpretation are different things. Judge the gap, not the words." |
+| "Be user-centered." | "When a user requests feature X, first identify what outcome they are trying to achieve. Features are means; outcomes are ends." |
+| "Trust matters in sales." | "Price objections are certainty deficits, not price problems. Lowering price addresses the symptom; building certainty addresses the cause." |
 
-Bad: `When the user is defensive.`
+### Self-test for each axiom:
 
-Better: `When the user repeatedly justifies themselves, quotes the other person as unreasonable, or asks for a sentence that proves they are right.`
+- If I remove this axiom, would the agent give a different answer to at least one scenario?
+- Can I write a specific scenario where this axiom would change the agent's judgment?
+- Can I write a scenario where this axiom does NOT apply (proving it has a boundary)?
 
-## 7. Add so_what
+---
 
-Every reasoning chain must end with practical consequence. Without `so_what`, reasoning becomes commentary.
+## 4. Write Good Ontology Concepts
 
-## 8. Test Behaviorally
+Every concept needs a real boundary, not a dictionary definition.
 
-Compare two agent responses: without KDNA and with KDNA loaded. If the difference is only vocabulary, revise the KDNA.
+### What makes a good ontology entry:
+
+- **Operational essence**: Not "what does this word mean" but "what does the agent need to check"
+- **Real boundary**: Something the agent must NOT confuse this concept with
+- **Observable trigger**: Words or patterns the agent can detect in user input
+
+### Good vs Bad:
+
+| Bad (decorative) | Good (operational) |
+|---|---|
+| Essence: "Trust is important in relationships." Boundary: "Not distrust." | Essence: "The buyer believes you will prioritize their outcome over your commission." Boundary: "Not rapport. Rapport is comfort; trust is confidence in your intent." Trigger: "Buyer asks for references, pauses before answering pricing questions, or says 'I need to think about it' without a specific concern." |
+| Essence: "Quality means meeting standards." Boundary: "Not low quality." | Essence: "The product performs its core function without requiring workarounds." Boundary: "Not feature count. A product with 3 features that all work is higher quality than one with 20 features and 15 workarounds." |
+
+---
+
+## 5. Write Good Stances
+
+Stances are the domain's default positions. Think of them as "when in doubt, lean this way."
+
+### What makes a good stance:
+
+- Prescriptive, not descriptive
+- An agent would act differently depending on which stance it holds
+- Paired with its opposite (so the agent knows both positions exist)
+
+### Good vs Bad:
+
+| Bad (truism) | Good (prescriptive) |
+|---|---|
+| "Be honest." | "Transparency about uncertainty builds more trust than confident wrong answers." |
+| "Listen to the customer." | "The customer describes symptoms; the professional diagnoses causes. Do not build what the customer asks for — build what solves the problem they described." |
+
+---
+
+## 6. Write Good Misunderstandings
+
+Misunderstandings are usually more useful than definitions. For each:
+
+- **wrong**: What an agent without domain cognition would assume
+- **correct**: What the domain teaches instead
+- **key_distinction**: The specific conceptual boundary
+- **why**: What bad judgment results from the wrong interpretation
+
+### Good vs Bad:
+
+| Bad (straw man) | Good (real confusion) |
+|---|---|
+| Wrong: "Communication doesn't matter." | Wrong: "If the other person is upset, I should address their emotions first." |
+| Correct: "Communication matters." | Correct: "If the other person is upset, I should identify the unmet need behind the emotion. Addressing the emotion without the need is temporary relief." |
+| **(No real agent would hold this wrong belief)** | **(Many agents default to emotion-first because it feels empathetic)** |
+
+---
+
+## 7. Write Good Self-Checks
+
+Self-checks are yes/no questions the agent asks itself after generating a response. They are the last line of defense.
+
+### What makes a good self-check:
+
+- Yes/no answerable
+- Domain-specific (not generic "is this helpful?")
+- Would catch a real mistake the agent might make
+
+### Good vs Bad:
+
+| Bad (generic) | Good (domain-specific) |
+|---|---|
+| "Is the response helpful?" | "Did I check whether the meeting actually produced a decision, or did I just summarize what was discussed?" |
+| "Did I follow best practices?" | "Did I identify the buyer's specific certainty deficit before suggesting a response to their price objection?" |
+| "Is this clear?" | "Would a domain expert reading this response say 'yes, that's how you think about this' — or did the agent default to common sense?" |
+
+---
+
+## 8. Prefer Observable Signals Over Abstract Labels
+
+A trigger signal should be something the agent can actually detect in text.
+
+**Bad:** `When the user is defensive.`  
+**Better:** `When the user repeatedly justifies themselves, quotes the other person as unreasonable, or asks for a sentence that proves they are right.`
+
+---
+
+## 9. Pre-Publication Checklist
+
+Before submitting a domain, verify:
+
+- [ ] Each axiom changes agent behavior in at least one specific scenario
+- [ ] Each ontology concept has a real boundary (something it is NOT)
+- [ ] Each stance is prescriptive (would bias the agent toward a different answer)
+- [ ] Each misunderstanding describes a belief a real agent might hold
+- [ ] Each self-check is a yes/no question specific to this domain
+- [ ] All trigger signals are observable in text
+- [ ] `kdna-lint` passes with zero warnings
+- [ ] `kdna-validate` passes
+- [ ] A no-KDNA vs with-KDNA comparison shows a judgment change, not just vocabulary difference
+- [ ] The `kdna.json` manifest is filled and accurate
+
+---
+
+## 10. Test Behaviorally
+
+The only valid test: compare two agent responses to the same input — one without KDNA loaded, one with KDNA loaded.
+
+If the difference is only vocabulary (the agent uses different words but reaches the same conclusion), the KDNA is not working. Revise until the judgment itself changes.
+
+```bash
+# Test with kdna CLI
+node src/cli.js demo
+
+# Run eval on your domain
+node src/cli.js eval <your-domain-folder>
+
+# Compare before/after
+node benchmarks/eval-decision-state.js --limit=5
+```

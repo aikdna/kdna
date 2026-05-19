@@ -1,39 +1,37 @@
 {
   "meta": {
-    "version": "0.1",
+    "version": "0.4",
     "domain": "example_domain",
     "created": "YYYY-MM-DD",
     "purpose": "Define terminology, common misunderstandings, and self-checks.",
     "load_condition": "Always load when this domain is selected."
   },
   "terminology": {
-    "preferred_terms": [
+    "standard_terms": [
       {
         "term": "preferred term",
-        "meaning": "What this term means in this domain.",
-        "use_when": "When the agent should use this term."
+        "definition": "What this term means in this domain. Be operational, not dictionary-like."
       }
     ],
     "banned_terms": [
       {
         "term": "term to avoid",
-        "why": "Why this term misleads agent judgment.",
-        "replace_with": "A better replacement."
+        "why": "Why this term misleads agent judgment. What wrong assumption it encodes.",
+        "replace_with": "A concrete, domain-specific replacement."
       }
     ]
   },
   "misunderstandings": [
     {
-      "wrong": "Common wrong interpretation.",
-      "correct": "Correct interpretation.",
-      "key_distinction": "The distinction the agent must preserve.",
-      "why": "Why this misunderstanding creates bad judgment."
+      "id": "MS-001",
+      "wrong": "Common wrong interpretation that an agent without domain cognition would make.",
+      "correct": "The correct interpretation according to this domain's principles.",
+      "key_distinction": "The specific conceptual boundary the agent must preserve.",
+      "why": "What bad judgment results when the agent holds the wrong interpretation."
     }
   ],
   "self_check": [
-    {
-      "id": "SC-001",
-      "question": "Did the answer apply the domain's core distinction instead of giving generic advice?"
-    }
+    "Did the answer apply the domain's core distinction instead of giving generic advice?",
+    "Would a domain expert agree with this judgment, or did the agent default to common sense?"
   ]
 }
