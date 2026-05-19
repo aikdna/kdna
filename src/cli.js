@@ -507,10 +507,125 @@ function validateInstalledDomain(dest) {
 
 // ─── Inspect ─────────────────────────────────────────────────────────
 
+// ─── Inspect .kdna single file ────────────────────────────────────────
+
+function inspectKdnaFile(filePath) {
+  const raw = fs.readFileSync(filePath, 'utf8');
+  let data;
+
+  // Try JSON first
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    // Try YAML subset (simple key: value)
+    data = parseSimpleYaml(raw);
+  }
+
+  if (!data || !data.meta) {
+    error(`Invalid .kdna file: missing meta section`);
+  }
+
+  const m = data.meta || {};
+  const c = data.core || {};
+  const p = data.patterns || {};
+
+  console.log('═'.repeat(50));
+  console.log(`  ${m.name || m.domain || path.basename(filePath, '.kdna')} — KDNA Domain`);
+  console.log('═'.repeat(50));
+  console.log('');
+  console.log(`  Format:      .kdna (single file)`);
+  console.log(`  Spec:        ${m.spec_version || data.kdna_spec || '?'}`);
+  console.log(`  Version:     ${m.version || '?'}`);
+  console.log(`  Status:      ${data.status || '?'}`);
+  console.log(`  Access:      ${data.access || '?'}`);
+  console.log(`  Language:    ${data.language || '?'}`);
+  console.log(`  Author:      ${data.author?.name || '?'}`);
+  console.log(`  License:     ${data.license?.type || '?'}`);
+  console.log(`  Created:     ${m.created || '?'}`);
+  console.log(`  Description: ${data.description || m.purpose || '?'}`);
+  console.log('');
+  console.log('  ── Content ──');
+  console.log(`  Axioms:             ${(c.axioms || []).length}`);
+  console.log(`  Ontology concepts:  ${(c.ontology || []).length}`);
+  console.log(`  Frameworks:         ${(c.frameworks || []).length}`);
+  console.log(`  Core structures:    ${(c.core_structure || []).length}`);
+  console.log(`  Stances:            ${(c.stances || []).length}`);
+  console.log(`  Preferred terms:    ${(p.terminology?.standard_terms || p.terminology?.preferred_terms || []).length}`);
+  console.log(`  Banned terms:       ${(p.terminology?.banned_terms || []).length}`);
+  console.log(`  Misunderstandings:  ${(p.misunderstandings || []).length}`);
+  console.log(`  Self-checks:        ${(p.self_check || []).length}`);
+  if (data.scenarios) console.log(`  Scenarios:          ${(data.scenarios || []).length}`);
+  if (data.cases) console.log(`  Cases:              ${(data.cases || []).length}`);
+  if (data.reasoning) console.log(`  Reasoning chains:   ${(data.reasoning || []).length}`);
+  console.log('');
+  console.log('═'.repeat(50));
+}
+
+function parseSimpleYaml(raw) {
+  // Parse a simple subset of YAML (no nesting beyond 1 level for sections)
+  const result = {};
+  let currentSection = null;
+  let currentArray = null;
+
+  const lines = raw.split('\n');
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+
+    // Section header: "core:" or "  core:" etc
+    if (/^[a-z_]+:$/.test(trimmed)) {
+      currentSection = trimmed.slice(0, -1);
+      if (!result[currentSection]) result[currentSection] = {};
+      currentArray = null;
+      continue;
+    }
+
+    // Key: value
+    const kv = trimmed.match(/^([a-z_]+):\s*(.*)/i);
+    if (kv && !kv[1].startsWith('-')) {
+      const key = kv[1];
+      const val = kv[2].trim().replace(/^["']|["']$/g, '');
+      if (currentSection) {
+        if (key === 'version' && typeof result[currentSection] === 'object') {
+          result[currentSection][key] = val;
+        } else if (!result[currentSection][key]) {
+          result[currentSection][key] = val;
+        }
+      } else {
+        result[key] = val;
+      }
+      continue;
+    }
+
+    // Array item: "- value"
+    if (trimmed.startsWith('- ') && currentSection) {
+      // For counts only, we don't parse full arrays
+      if (currentSection === 'axioms' || currentSection === 'stances') {
+        if (!result.core) result.core = {};
+        if (!result.core[currentSection]) result.core[currentSection] = [];
+        result.core[currentSection].push({ _parsed: true });
+      }
+    }
+  }
+
+  return result;
+}
+
+// ─── Inspect ───────────────────────────────────────────────────────────
+
 function cmdInspect(dir) {
   const abs = path.resolve(dir);
   const stat = fs.existsSync(abs) ? fs.statSync(abs) : null;
   if (!stat) error(`Path not found: ${abs}`);
+
+  // Single .kdna file
+  if (stat.isFile() && abs.endsWith('.kdna')) {
+    inspectKdnaFile(abs);
+    return;
+  }
+
+  // Directory — existing logic
+  if (!stat.isDirectory()) error(`Not a KDNA domain: ${abs}`);
 
   const core = readJson(path.join(abs, 'KDNA_Core.json'));
   const manifest = readJson(path.join(abs, 'kdna.json'));

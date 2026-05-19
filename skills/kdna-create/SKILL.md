@@ -98,7 +98,7 @@ Create yes/no questions the agent can use to verify its output respects the doma
 2. Find the domain matching the user's request (by `id`, `name`, or `description`).
 3. Get the `repo` URL from the registry entry.
 4. Clone or download the repository files.
-5. Copy the KDNA JSON files to the user's KDNA data directory (`~/.codex/Kdna/<domain>/` for Codex, `~/.agents/Kdna/<domain>/` for OpenCode, `~/.claude/Kdna/<domain>/` for Claude Code).
+5. Copy the KDNA JSON files to `~/.kdna/<domain>/` (the unified KDNA root shared by all Agents). If your Agent expects a different path, create a symlink: `ln -s ~/.kdna ~/.claude/Kdna`.
 6. Validate: ensure `KDNA_Core.json` and `KDNA_Patterns.json` exist and parse as valid JSON.
 7. Optionally add the domain to the user's local `registry.json`.
 
