@@ -49,7 +49,7 @@ A cluster is defined by `KDNA_Cluster.json`:
 ```json
 {
   "name": "meeting-decision-intelligence",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "purpose": "Judge whether meetings produce actionable decisions.",
   "packages": [
     {

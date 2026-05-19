@@ -45,7 +45,7 @@ registered KDNA domains.
 
 ```json
 {
-  "registry_version": "0.2",
+  "registry_version": "0.4",
   "updated": "2026-05-17T10:00:00Z",
   "domains": [
     {
@@ -53,7 +53,7 @@ registered KDNA domains.
       "name": "Sales KDNA",
       "version": "0.1.0",
       "repo": "https://github.com/knowledge-dna/kdna-sales",
-      "spec_version": "0.2",
+      "spec_version": "0.4",
       "status": "experimental",
       "access": "open",
       "language": ["en"],
@@ -99,6 +99,49 @@ registered KDNA domains.
 | `checksum` | No | SHA-256 checksum of the package tarball. |
 | `signature` | No | Creator's cryptographic signature. |
 | `dependencies` | No | Array of KDNA domain IDs this domain depends on. |
+| `eval_score` | No | Current evaluation score (0-100). |
+| `test_count` | No | Number of test cases in evaluation. |
+| `quality_badge` | No | Current quality level: `experimental`, `basic`, `validated`, `expert-reviewed`, `production-ready`. |
+| `evaluation_history` | No | Array of historical evaluation records (see Section 3.1). |
+
+### 3.1 Evaluation History
+
+The `evaluation_history` array tracks how a domain's judgment quality changes over time. Each entry represents a benchmark run:
+
+```json
+{
+  "evaluation_history": [
+    {
+      "version": "0.4.0",
+      "eval_score": 96.7,
+      "test_count": 30,
+      "benchmark_id": "decision-state-benchmark-v2",
+      "evaluated_at": "2026-05-19T00:00:00Z",
+      "metrics": {
+        "state_accuracy": 96.7,
+        "false_actionization_errors": 0,
+        "full_score_rate": 56.7,
+        "scenarios_count": 30,
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    }
+  ]
+}
+```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `version` | Yes | Domain version evaluated. |
+| `eval_score` | Yes | Overall score (0-100). |
+| `test_count` | Yes | Number of scenarios tested. |
+| `benchmark_id` | Yes | Identifier of the benchmark used. |
+| `evaluated_at` | Yes | ISO 8601 timestamp. |
+| `metrics` | No | Additional benchmark-specific metrics. |
+
+**Purpose**: Evaluation history enables:
+1. **Regression detection** — Did a version change improve or degrade judgment?
+2. **Reproducibility** — Which benchmark, when, with what model?
+3. **Comparability** — Compare domains using the same benchmark.
 
 ## 4. Local Registry
 
@@ -223,6 +266,10 @@ Pre-publish checks:
 | Verified | Reviewed and approved by core team | `verified` |
 | Community | Submitted by community members | `community` |
 | Experimental | Early-stage, may change | `experimental` |
+| Basic | Core + Patterns only, minimal testing | `basic` |
+| Validated | Passed benchmark with measurable evidence | `validated` |
+| Expert-Reviewed | Reviewed by external domain expert | `expert-reviewed` |
+| Production-Ready | Used in production with outcome data | `production-ready` |
 
 ### Future: DID-Based Verification
 

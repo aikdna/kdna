@@ -2,10 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KDNA_Scenarios",
   "type": "object",
-  "required": [
-    "meta",
-    "scenes"
-  ],
+  "required": ["meta"],
   "properties": {
     "meta": {
       "type": "object",
@@ -24,6 +21,12 @@
         "load_condition": { "type": "string" }
       },
       "additionalProperties": true
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
     },
     "scenes": {
       "type": "array",

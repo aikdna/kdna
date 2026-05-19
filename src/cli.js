@@ -37,6 +37,8 @@ Usage:
   kdna export <path> [--out <file>]  Export domain to single .kdna file
   kdna list                   List installed domains
   kdna list --available        List available domains from registry
+  kdna demo                    Show no-KDNA vs with-KDNA judgment difference
+  kdna demo --trace           Output judgment trace as JSON
   kdna help                   Show this help
 
 Examples:
@@ -302,7 +304,7 @@ function cmdPack(dir, outputDir) {
     .filter((f) => f.endsWith('.json') && f !== 'kdna.json').length;
 
   const manifest = {
-    kdna_spec: '0.2',
+    kdna_spec: '0.4',
     name: domainName,
     version: currentVersion,
     language: core.meta?.language || 'en',
@@ -932,7 +934,7 @@ function cmdExport(dir, outFile) {
   const pat = readJson(path.join(abs, 'KDNA_Patterns.json'));
   const manifest = readJson(path.join(abs, 'kdna.json'));
   const kdna = {
-    kdna_spec: '0.2',
+    kdna_spec: '0.4',
     meta: {
       name: core.meta?.domain || path.basename(abs),
       version: manifest?.version || core.meta?.version || '0.1.0',
@@ -1031,13 +1033,19 @@ switch (cmd) {
     break;
   }
   case 'eval': {
-    const target = args[1];
-    if (!target) error('Usage: kdna eval <path>');
     if (args.includes('--benchmark')) {
+      const idx = args.indexOf('--benchmark');
+      const target = args[idx + 1] || args.filter(a => !a.startsWith('--'))[1];
+      if (!target || target.startsWith('--')) error('Usage: kdna eval --benchmark <file>');
       cmdEvalBenchmark(target);
     } else if (args.includes('--cluster')) {
+      const idx = args.indexOf('--cluster');
+      const target = args[idx + 1] || args.filter(a => !a.startsWith('--'))[1];
+      if (!target || target.startsWith('--')) error('Usage: kdna eval --cluster <file>');
       cmdEvalCluster(target);
     } else {
+      const target = args[1];
+      if (!target) error('Usage: kdna eval <path>');
       cmdEval(target);
     }
     break;
@@ -1058,6 +1066,15 @@ switch (cmd) {
   }
   case 'list': {
     cmdList(args.includes('--available'));
+    break;
+  }
+  case 'demo': {
+    const { runDemo, runDemoJson } = require('./demo');
+    if (args.includes('--trace') || args.includes('--json')) {
+      runDemoJson();
+    } else {
+      runDemo();
+    }
     break;
   }
   default:

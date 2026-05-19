@@ -1,7 +1,7 @@
 {
   "kdna_spec": "0.2",
   "name": "product_decision",
-  "version": "0.1",
+  "version": "0.4.0",
   "language": "en",
   "languages": [
     "en"
@@ -24,5 +24,6 @@
   },
   "status": "experimental",
   "registry": {},
-  "file_count": 6
+  "file_count": 6,
+  "spec_version": "0.3"
 }

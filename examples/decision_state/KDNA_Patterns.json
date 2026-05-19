@@ -33,12 +33,36 @@
       "correct": "Action items without owners, deadlines, or connection to specific decisions are a to-do list, not evidence of decision-making. Anyone can list things to do — it takes a decision to assign who does what by when.",
       "key_distinction": "Task list (anyone can write) vs decision output (requires commitment).",
       "why": "This misunderstanding causes AI to treat any meeting with a bulleted list as a success."
+    },
+    {
+      "id": "MS-003",
+      "wrong": "'We need more data' is a valid reason to defer a decision.",
+      "correct": "Deferral is only valid when it is structured: what specific data, by when, who will decide, and what interim action. 'We need more data' without these specifics is avoidance, not strategy.",
+      "key_distinction": "Intentional deferral (structured, committed, time-bound) vs vague deferral (indefinite, unowned, unstructured). The former is a decision; the latter is UNRESOLVED.",
+      "why": "Teams routinely mistake indefinite deferral for strategic patience. The AI must distinguish between 'we will decide on March 15 after the Q1 numbers' (INTENTIONAL_DEFERRAL) and 'we need more data' (UNRESOLVED)."
+    },
+    {
+      "id": "MS-004",
+      "wrong": "'Pending approval' means the decision is made and just waiting to execute.",
+      "correct": "'Pending approval' without explicit approver, criteria, and contingency is UNRESOLVED — not CONDITIONAL. The decision has not been made; it has been proposed. The approver may reject it, request changes, or never respond.",
+      "key_distinction": "Proposed action (one person wants it) vs committed action (organization has approved it). Until approval is explicit and specific, the state is UNRESOLVED.",
+      "why": "AI agents that treat 'pending approval' as progress will report false decision rates. The meeting did not produce a decision; it produced a request that may or may not be granted."
+    },
+    {
+      "id": "MS-005",
+      "wrong": "If the team decided to 'explore options' or 'look into it,' a decision was made.",
+      "correct": "'Explore options' is discussion, not decision. No specific choice has been made. No owner has been assigned to make the choice. No deadline exists for when the choice will be made. This is UNRESOLVED with extra words.",
+      "key_distinction": "Decision (commitment to a specific course) vs exploration (gathering information before any commitment). Exploration has value but is not a decision state.",
+      "why": "Language like 'explore', 'consider', 'look into' creates the appearance of forward motion without actual commitment. AI must identify these as UNRESOLVED, not as progress."
     }
   ],
   "self_check": [
     "Did I check for all four elements of operational commitment (choice, owner, action, timing)?",
-    "Did I classify the decision state as UNRESOLVED / CONDITIONAL / ACTIONABLE — not just describe the content?",
+    "Did I classify the decision state as UNRESOLVED / CONDITIONAL / INTENTIONAL_DEFERRAL / EXECUTABLE_DECISION — not just describe the content?",
     "Did I avoid treating social agreement ('everyone agreed') as evidence of a decision?",
-    "If the state is UNRESOLVED, did I identify which specific elements are missing?"
+    "If the state is UNRESOLVED, did I identify which specific elements are missing?",
+    "If deferral language appears ('need more data', 'revisit later'), did I verify the condition, date, and decision owner are explicit?",
+    "If conditions appear ('pending approval'), did I verify the approver, criteria, and contingency are explicit?",
+    "If the state appears to be EXECUTABLE_DECISION, did I confirm the owner has authority and resources to begin immediately?"
   ]
 }

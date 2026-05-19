@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-05-18T19:13:10.514Z",
+  "model": "kimi-for-coding",
+  "mode": "with-kdna",
+  "total_scenarios": 30,
+  "successful_runs": 30,
+  "failed_runs": 0,
+  "total_score": 17,
+  "max_possible": 30,
+  "accuracy_pct": "56.7",
+  "state_accuracy_pct": "96.7",
+  "raw_file": "/Users/AI/K/KDNA/benchmarks/raw/decision-state-with-kdna-kimi-for-coding-2026-05-18T19-13-10-506Z.jsonl"
+}

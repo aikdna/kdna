@@ -1,0 +1,228 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aikdna.com/specs/outcome-record-schema.json",
+  "title": "KDNA Outcome Record",
+  "description": "Schema for recording the actual outcome of a KDNA-generated judgment, enabling long-term judgment-outcome tracking and domain package improvement.",
+  "type": "object",
+  "required": [
+    "record_version",
+    "outcome_id",
+    "judgment_reference",
+    "recorded_at"
+  ],
+  "properties": {
+    "record_version": {
+      "type": "string",
+      "description": "Version of the outcome record schema.",
+      "enum": ["0.1.0"]
+    },
+    "outcome_id": {
+      "type": "string",
+      "description": "Unique identifier for this outcome record. UUID or ULID recommended."
+    },
+    "judgment_reference": {
+      "type": "object",
+      "description": "Reference to the judgment that produced this outcome.",
+      "required": ["trace_id", "input_hash"],
+      "properties": {
+        "trace_id": {
+          "type": "string",
+          "description": "The trace_id of the judgment trace that predicted this outcome."
+        },
+        "input_hash": {
+          "type": "string",
+          "description": "Hash of the original input. Must match the input_hash in the judgment trace."
+        },
+        "domain": {
+          "type": "string",
+          "description": "Domain used for the judgment."
+        },
+        "domain_version": {
+          "type": "string",
+          "description": "Version of the domain package at judgment time."
+        }
+      }
+    },
+    "predicted": {
+      "type": "object",
+      "description": "What the judgment predicted (copied from judgment trace for convenience).",
+      "properties": {
+        "classification": {
+          "type": "string",
+          "description": "Predicted classification."
+        },
+        "recommended_action": {
+          "type": "string",
+          "description": "Recommended action at judgment time."
+        },
+        "predicted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the prediction was made."
+        }
+      }
+    },
+    "actual_outcome": {
+      "type": "object",
+      "description": "What actually happened.",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "The actual outcome status.",
+          "enum": [
+            "confirmed_correct",
+            "partially_correct",
+            "incorrect",
+            "outcome_unknown",
+            "outcome_pending"
+          ]
+        },
+        "actual_classification": {
+          "type": "string",
+          "description": "The correct classification, if different from prediction. Only required if status is incorrect or partially_correct."
+        },
+        "description": {
+          "type": "string",
+          "description": "Narrative description of what actually happened."
+        },
+        "evidence": {
+          "type": "array",
+          "description": "Supporting evidence for the actual outcome.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["email", "document", "meeting_notes", "ticket", "metric", "interview", "other"]
+              },
+              "reference": {
+                "type": "string",
+                "description": "Link, ID, or reference to the evidence."
+              },
+              "summary": {
+                "type": "string",
+                "description": "Brief summary of what the evidence shows."
+              }
+            }
+          }
+        }
+      }
+    },
+    "outcome_delay": {
+      "type": "object",
+      "description": "How long until the outcome was known.",
+      "properties": {
+        "delay_days": {
+          "type": "number",
+          "description": "Number of days between prediction and outcome confirmation."
+        },
+        "delay_category": {
+          "type": "string",
+          "enum": ["immediate", "short_term", "medium_term", "long_term"],
+          "description": "Categorized delay."
+        }
+      }
+    },
+    "revision_needed": {
+      "type": "boolean",
+      "description": "Whether the original judgment needs revision. True if actual outcome contradicts prediction."
+    },
+    "revision_type": {
+      "type": "string",
+      "description": "Type of revision needed, if any.",
+      "enum": ["false_positive", "false_negative", "misclassification", "missing_signal", "overconfident", "none"]
+    },
+    "impact": {
+      "type": "object",
+      "description": "Business impact of the judgment (correct or incorrect).",
+      "properties": {
+        "cost_avoided": {
+          "type": "number",
+          "description": "Estimated cost avoided by correct judgment (in USD or local currency)."
+        },
+        "cost_incurred": {
+          "type": "number",
+          "description": "Estimated cost incurred by incorrect judgment."
+        },
+        "time_saved_days": {
+          "type": "number",
+          "description": "Time saved or lost in days."
+        },
+        "qualitative_impact": {
+          "type": "string",
+          "description": "Description of non-quantifiable impact (morale, trust, reputation)."
+        }
+      }
+    },
+    "feedback": {
+      "type": "object",
+      "description": "Human feedback on the judgment and outcome.",
+      "properties": {
+        "reviewer": {
+          "type": "string",
+          "description": "Identifier of the person who reviewed the outcome."
+        },
+        "reviewer_role": {
+          "type": "string",
+          "description": "Role of the reviewer.",
+          "examples": ["domain_expert", "product_manager", "team_lead", "external_auditor"]
+        },
+        "notes": {
+          "type": "string",
+          "description": "Free-form notes from the reviewer."
+        },
+        "domain_package_should_change": {
+          "type": "boolean",
+          "description": "Whether this outcome suggests the KDNA domain package needs updating."
+        },
+        "suggested_changes": {
+          "type": "array",
+          "description": "Specific changes suggested for the domain package.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "element_type": {
+                "type": "string",
+                "enum": ["axiom", "misunderstanding", "framework", "ontology", "self_check", "scenario"]
+              },
+              "element_id": {
+                "type": "string",
+                "description": "ID of the element to change."
+              },
+              "change": {
+                "type": "string",
+                "description": "Description of the suggested change."
+              }
+            }
+          }
+        }
+      }
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this outcome record was created."
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Optional metadata.",
+      "properties": {
+        "environment": {
+          "type": "string",
+          "enum": ["production", "staging", "research", "pilot"]
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "privacy_level": {
+          "type": "string",
+          "enum": ["public", "anonymized", "internal", "restricted"],
+          "description": "Privacy classification of this outcome record."
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -34,6 +34,34 @@
       "essence": "Four elements must all be present: (1) a specific choice among alternatives, (2) a named owner, (3) a concrete next action, (4) a deadline or checkpoint. If any of these four is missing, commitment has not been established.",
       "boundary": "Not enthusiasm, not alignment, not agreement. These are emotional states. Operational commitment is a structural state — it either exists or it doesn't, regardless of how people feel.",
       "trigger_signal": "Meeting output lists actions but lacks named owners or deadlines. Phrases like 'someone should' or 'we need to' indicate absent commitment."
+    },
+    {
+      "id": "unresolved",
+      "one_sentence": "A discussion that ends without a specific choice being made or a named owner assigned.",
+      "essence": "The meeting produced information exchange, opinion sharing, or social alignment — but no commitment. Missing at least one of: specific choice, named owner, concrete action, or timing. This is the most common and most misidentified decision state.",
+      "boundary": "Not a bad meeting. Discussion has value. The error is calling it a decision when it isn't. UNRESOLVED becomes dangerous only when mistaken for another state.",
+      "trigger_signal": "Summary uses phrases like 'we discussed options', 'the team aligned', 'everyone agreed' — but no one is named responsible for a specific action by a specific time."
+    },
+    {
+      "id": "conditional",
+      "one_sentence": "A decision with all four commitment elements present, but gated by an external condition that must be met before execution.",
+      "essence": "Choice, owner, action, and timing are all explicit. However, action cannot begin until a specified condition is satisfied. The condition must be explicit, testable, and have its own owner or checkpoint. Without these, CONDITIONAL collapses into UNRESOLVED.",
+      "boundary": "Not the same as 'we'll see.' A valid condition has: (1) what must be true, (2) how we will know it's true, (3) who verifies it, (4) what happens if it's not met by the checkpoint. Vague conditions ('pending approval') without these specifics are UNRESOLVED.",
+      "trigger_signal": "Action items exist with owners and deadlines, but include phrases like 'pending', 'subject to', 'once we get', 'if approved' — without explicit condition definition and verification plan."
+    },
+    {
+      "id": "intentional_deferral",
+      "one_sentence": "A valid, explicit decision to not decide yet — with clear conditions for when the decision will be made and who will make it.",
+      "essence": "Deferral is a decision, not a failure — but only when it is intentional and structured. Must include: (1) what information or condition is needed, (2) when the decision will be revisited, (3) who will make it at that time, (4) what interim action (if any) will be taken. Without these, deferral is avoidance masquerading as strategy.",
+      "boundary": "Not procrastination, not uncertainty, not 'we need more data.' Intentional deferral is a committed plan to decide later. If the team leaves without knowing when the decision will be made or who will make it, it is UNRESOLVED — not an intentional deferral.",
+      "trigger_signal": "Meeting concludes with 'let's revisit this' or 'we need more information' — but no date, no owner for the revisit, and no criteria for what 'enough information' means."
+    },
+    {
+      "id": "executable_decision",
+      "one_sentence": "A decision with all four commitment elements present and no blocking conditions — work can begin immediately.",
+      "essence": "The rare and valuable state where a specific person can take a specific action immediately, with a clear deadline, and no external gate. This is the only state where 'action items' are actually actionable. Most meetings claim to produce this; few do.",
+      "boundary": "Not merely 'we decided.' EXECUTABLE_DECISION requires that the owner has accepted the commitment and has the authority and resources to execute. A decision assigned to someone without authority or budget is CONDITIONAL, not executable.",
+      "trigger_signal": "Meeting summary lists named owners, specific actions, and deadlines — and the owner confirms they have what they need to begin immediately."
     }
   ],
   "frameworks": [
@@ -47,15 +75,49 @@
         "Check for a concrete next action: is there an action that can be done, not just discussed?",
         "Check for timing: is there a deadline or next checkpoint?",
         "Check for conditions: are there explicit conditions that must be met before action?",
-        "Classify: UNRESOLVED (missing choice or owner), CONDITIONAL (has all four but pending conditions), or ACTIONABLE (all four present, no blockers)."
+        "Classify: UNRESOLVED (missing choice or owner), CONDITIONAL (all four present but gated by external condition), INTENTIONAL_DEFERRAL (explicit decision to decide later with conditions and checkpoint), or EXECUTABLE_DECISION (all four present, no blockers, owner has authority and resources)."
+      ]
+    },
+    {
+      "id": "FW-002",
+      "name": "Deferral Validation",
+      "when_to_use": "When a meeting concludes with 'we need more information' or 'let's revisit this.' Distinguish intentional deferral from avoidance.",
+      "steps": [
+        "Check: what specific information or condition is needed? (Vague = UNRESOLVED)",
+        "Check: when exactly will the decision be revisited? (No date = UNRESOLVED)",
+        "Check: who will make the decision at that time? (No owner = UNRESOLVED)",
+        "Check: what interim action will be taken, if any?",
+        "If all three are explicit, classify as INTENTIONAL_DEFERRAL. If any is missing, classify as UNRESOLVED."
+      ]
+    },
+    {
+      "id": "FW-003",
+      "name": "Condition Specificity Test",
+      "when_to_use": "When action items include 'pending', 'subject to', or 'once we get' language.",
+      "steps": [
+        "Identify the stated condition.",
+        "Test: Is the condition specific and testable? ('budget approval' = specific; 'stakeholder buy-in' = vague)",
+        "Test: Who is responsible for verifying the condition is met? (No owner = UNRESOLVED)",
+        "Test: What happens if the condition is not met by the deadline? (No contingency = CONDITIONAL at best)",
+        "If all three tests pass, classify as CONDITIONAL. If any fails, classify as UNRESOLVED."
       ]
     }
   ],
   "core_structure": [
     {
       "from": "Meeting transcript or discussion summary",
-      "to": "Decision state classified (UNRESOLVED / CONDITIONAL / ACTIONABLE)",
-      "via": "Decision State Detection — checking choice, owner, action, timing, conditions"
+      "to": "Decision state classified (UNRESOLVED / CONDITIONAL / INTENTIONAL_DEFERRAL / EXECUTABLE_DECISION)",
+      "via": "Decision State Detection — checking choice, owner, action, timing, conditions, authority, and specificity"
+    },
+    {
+      "from": "Vague deferral language ('we need more data')",
+      "to": "UNRESOLVED (misidentified as progress)",
+      "via": "Deferral Validation — absence of specific condition, date, or decision owner"
+    },
+    {
+      "from": "Action items with 'pending approval'",
+      "to": "UNRESOLVED or CONDITIONAL",
+      "via": "Condition Specificity Test — vague conditions, missing verifier, or missing contingency"
     }
   ],
   "stances": [

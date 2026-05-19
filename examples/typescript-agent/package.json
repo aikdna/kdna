@@ -1,0 +1,17 @@
+{
+  "name": "kdna-typescript-agent-example",
+  "version": "0.4.0",
+  "description": "KDNA TypeScript custom agent example — framework-agnostic",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "demo": "npm run build && node dist/index.js"
+  },
+  "dependencies": {
+    "@aikdna/kdna": "file:../../"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}

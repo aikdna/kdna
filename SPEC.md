@@ -1,4 +1,4 @@
-# KDNA Specification v0.3
+# KDNA Specification v0.4
 
 **Status:** Draft
 **Editors:** KDNA Team

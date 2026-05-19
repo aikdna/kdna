@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-05-18T19:07:09.905Z",
+  "model": "claude-sonnet-4-6",
+  "mode": "no-kdna",
+  "total_scenarios": 5,
+  "successful_runs": 0,
+  "failed_runs": 5,
+  "total_score": 0,
+  "max_possible": 0,
+  "accuracy_pct": 0,
+  "state_accuracy_pct": 0,
+  "raw_file": "/Users/AI/K/KDNA/benchmarks/raw/decision-state-no-kdna-claude-sonnet-4-6-2026-05-18T19-07-09-895Z.jsonl"
+}
