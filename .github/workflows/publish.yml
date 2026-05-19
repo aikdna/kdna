@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish:
+  publish-primary:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -19,17 +19,30 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm test
-      - run: npm publish --provenance --access public
+      - name: Publish @aikdna/kdna
+        run: npm publish --provenance --access public || echo "Already published, skipping"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish mirror (@aikdna/kdna)
+  publish-mirror:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - name: Publish @aikdna/kdna (mirror)
         run: |
           node -e "
             const pkg = require('./package.json');
             pkg.name = '@aikdna/kdna';
             require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2) + '\n');
           "
-          npm publish --access public
+          npm publish --access public || echo "Already published, skipping"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
