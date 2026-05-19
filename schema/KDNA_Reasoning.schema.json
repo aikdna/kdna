@@ -2,10 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KDNA_Reasoning",
   "type": "object",
-  "required": [
-    "meta",
-    "reasoning_chains"
-  ],
+  "required": ["meta"],
   "properties": {
     "meta": {
       "type": "object",
@@ -35,6 +32,12 @@
         }
       },
       "additionalProperties": true
+    },
+    "reasoning": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
     },
     "reasoning_chains": {
       "type": "array",

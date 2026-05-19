@@ -1,0 +1,274 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aikdna.com/specs/judgment-trace-schema.json",
+  "title": "KDNA Judgment Trace",
+  "description": "Schema for capturing a transparent, inspectable record of which KDNA-loaded rules were triggered during agent judgment.",
+  "type": "object",
+  "required": [
+    "trace_version",
+    "timestamp",
+    "loaded_package",
+    "generated_judgment"
+  ],
+  "properties": {
+    "trace_version": {
+      "type": "string",
+      "description": "Version of the judgment trace schema.",
+      "enum": ["0.1.0"]
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "Unique identifier for this trace. UUID or ULID recommended.",
+      "examples": ["trace_01HY3J9K2M4N5P6Q7R8S9T0UV"]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the judgment was generated."
+    },
+    "input_hash": {
+      "type": "string",
+      "description": "Cryptographic hash of the input text. Enables trace linking without storing raw input. SHA-256 recommended.",
+      "examples": ["sha256:a3f5c8..."]
+    },
+    "loaded_package": {
+      "type": "object",
+      "description": "Information about the KDNA domain package that was loaded.",
+      "required": ["domain", "version"],
+      "properties": {
+        "domain": {
+          "type": "string",
+          "description": "Domain identifier.",
+          "examples": ["decision_state", "sales", "management"]
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of the loaded domain package.",
+          "examples": ["0.4.0"]
+        },
+        "source": {
+          "type": "string",
+          "description": "Where the package was loaded from.",
+          "examples": ["local", "registry", "private-registry"]
+        },
+        "loaded_files": {
+          "type": "array",
+          "description": "Which files from the domain were loaded.",
+          "items": {
+            "type": "string",
+            "enum": ["KDNA_Core.json", "KDNA_Patterns.json", "KDNA_Scenarios.json", "KDNA_Cases.json", "KDNA_Reasoning.json", "KDNA_Evolution.json"]
+          }
+        }
+      }
+    },
+    "triggered_concepts": {
+      "type": "array",
+      "description": "Ontology concepts whose trigger signals matched the input.",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Concept identifier from KDNA_Core ontology.",
+            "examples": ["unresolved", "conditional", "executable_decision"]
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable concept name."
+          },
+          "match_signal": {
+            "type": "string",
+            "description": "The specific signal text that triggered this concept."
+          }
+        }
+      }
+    },
+    "triggered_axioms": {
+      "type": "array",
+      "description": "Axioms whose conditions were met during judgment.",
+      "items": {
+        "type": "object",
+        "required": ["id", "statement"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Axiom identifier from KDNA_Core.",
+            "examples": ["AX-001", "AX-003"]
+          },
+          "statement": {
+            "type": "string",
+            "description": "The one_sentence statement of the axiom."
+          }
+        }
+      }
+    },
+    "triggered_frameworks": {
+      "type": "array",
+      "description": "Frameworks that were applied during judgment.",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Framework identifier from KDNA_Core.",
+            "examples": ["FW-001", "FW-002"]
+          },
+          "name": {
+            "type": "string",
+            "description": "Framework name."
+          },
+          "steps_applied": {
+            "type": "array",
+            "description": "Which steps of the framework were executed.",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "triggered_misunderstandings": {
+      "type": "array",
+      "description": "Common misunderstandings detected in the input.",
+      "items": {
+        "type": "object",
+        "required": ["id", "description"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Misunderstanding identifier from KDNA_Patterns.",
+            "examples": ["MS-001", "MS-002"]
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the detected misunderstanding."
+          },
+          "evidence": {
+            "type": "string",
+            "description": "Quote or signal from the input that triggered this detection."
+          }
+        }
+      }
+    },
+    "self_checks": {
+      "type": "array",
+      "description": "Self-checks executed before finalizing judgment.",
+      "items": {
+        "type": "object",
+        "required": ["check_id", "passed"],
+        "properties": {
+          "check_id": {
+            "type": "string",
+            "description": "Self-check identifier.",
+            "examples": ["SC-1", "SC-2", "SC-4"]
+          },
+          "description": {
+            "type": "string",
+            "description": "Text of the self-check."
+          },
+          "passed": {
+            "type": "boolean",
+            "description": "Whether the self-check passed."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Explanation of why the check passed or failed."
+          }
+        }
+      }
+    },
+    "selected_scenario": {
+      "type": "object",
+      "description": "If a scenario was matched, details of the match.",
+      "properties": {
+        "scene_id": {
+          "type": "string",
+          "description": "Matched scene identifier."
+        },
+        "scene_name": {
+          "type": "string",
+          "description": "Human-readable scene name."
+        },
+        "sub_scenario_id": {
+          "type": "string",
+          "description": "Matched sub-scenario identifier."
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Confidence in the scenario match."
+        }
+      }
+    },
+    "generated_judgment": {
+      "type": "object",
+      "description": "The final judgment produced by the agent.",
+      "required": ["classification"],
+      "properties": {
+        "classification": {
+          "type": "string",
+          "description": "The classified state or situation type.",
+          "examples": ["UNRESOLVED", "CONDITIONAL", "EXECUTABLE_DECISION", "INTENTIONAL_DEFERRAL"]
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Confidence in the classification."
+        },
+        "missing_elements": {
+          "type": "array",
+          "description": "Elements identified as missing from the input.",
+          "items": { "type": "string" }
+        },
+        "recommended_action": {
+          "type": "string",
+          "description": "Recommended next step based on the classification."
+        },
+        "reasoning_summary": {
+          "type": "string",
+          "description": "Brief summary of how the judgment was reached."
+        }
+      }
+    },
+    "agent_info": {
+      "type": "object",
+      "description": "Information about the agent that produced this judgment.",
+      "properties": {
+        "agent_name": {
+          "type": "string",
+          "description": "Name or identifier of the agent."
+        },
+        "agent_version": {
+          "type": "string",
+          "description": "Version of the agent software."
+        },
+        "model": {
+          "type": "string",
+          "description": "LLM model used, if applicable.",
+          "examples": ["claude-3-5-sonnet-20241022", "gpt-4"]
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Optional metadata for trace organization.",
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "description": "Session identifier for grouping related traces."
+        },
+        "tags": {
+          "type": "array",
+          "description": "User-defined tags for filtering.",
+          "items": { "type": "string" }
+        },
+        "environment": {
+          "type": "string",
+          "description": "Deployment environment.",
+          "examples": ["production", "staging", "development"]
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

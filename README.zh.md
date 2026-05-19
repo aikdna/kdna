@@ -173,7 +173,7 @@ Agent 加载了 `kdna-loader` 后，当用户提出沟通相关问题时，Agent
 
 ## 规范
 
-完整 v0.1 规范见 [SPEC.md](./SPEC.md)。
+完整 v0.4 规范见 [SPEC.md](./SPEC.md)。
 
 ### 试试 Demo
 
@@ -209,7 +209,7 @@ node examples/minimal-agent/agent.js
 
 | 文档 | 说明 |
 |---|---|
-| [SPEC.md](./SPEC.md) | 协议规范 v0.1 |
+| [SPEC.md](./SPEC.md) | 协议规范 v0.4 |
 | [docs/getting-started.zh.md](./docs/getting-started.zh.md) | 安装、创建和使用 KDNA |
 | [docs/evaluation.zh.md](./docs/evaluation.zh.md) | 如何检验 KDNA 是否改善了判断力 |
 | [docs/meta-cognition.zh.md](./docs/meta-cognition.zh.md) | 何时用 KDNA、冲突仲裁、领域组合 |

@@ -29,13 +29,13 @@ Encoding MUST be UTF-8.
 ## 4. Top-Level Structure
 
 ```yaml
-kdna_spec: "0.2"
+kdna_spec: "0.4"
 
 meta:
   name: "sales"
   version: "1.0.0"
   language: "en"
-  spec_version: "0.2"
+  spec_version: "0.4"
   created: "2026-05-17"
   description: "Domain cognition for high-trust sales."
   access: "open"
@@ -81,7 +81,7 @@ evolution:     # optional
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `kdna_spec` | Yes | The `.kdna` format spec version. MUST be `"0.2"` for this draft. |
+| `kdna_spec` | Yes | The `.kdna` format spec version. MUST be `"0.4"` for this draft. |
 | `meta` | Yes | Domain metadata (see section 6). |
 | `author` | Yes | Creator identity (see section 7). |
 | `license` | Yes | License declaration (see section 8). |
@@ -102,7 +102,7 @@ A valid minimal `.kdna` file MUST include `core.axioms`, `core.stances`,
 | `name` | Yes | Domain identifier. Lowercase snake_case matching `^[a-z][a-z0-9_]*$`. |
 | `version` | Yes | Semantic version of this KDNA (e.g. `"1.0.0"`). |
 | `language` | Yes | Primary language code (e.g. `"en"`, `"zh-CN"`, `"ja"`). |
-| `spec_version` | Yes | The KDNA spec version this file conforms to (`"0.2"`). |
+| `spec_version` | Yes | The KDNA spec version this file conforms to (`"0.4"`). |
 | `created` | Yes | Creation date in ISO 8601 format (`YYYY-MM-DD`). |
 | `description` | Yes | One-sentence description of the domain. |
 | `access` | Yes | Access mode: `"open"`, `"licensed"`, or `"runtime"`. See `kdna-access-modes.md`. |
@@ -157,12 +157,12 @@ existing optional KDNA JSON files. See SPEC.md for full field definitions.
 ## 12. Minimal Valid Example
 
 ```yaml
-kdna_spec: "0.2"
+kdna_spec: "0.4"
 meta:
   name: "writing_basic"
   version: "1.0.0"
   language: "en"
-  spec_version: "0.2"
+  spec_version: "0.4"
   created: "2026-05-17"
   description: "Basic cognition for writing judgment."
   access: "open"

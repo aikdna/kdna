@@ -54,6 +54,8 @@ Most agent frameworks focus on tools, retrieval, workflows, or memory. KDNA focu
 
 See [`docs/kdna-in-action.md`](./docs/kdna-in-action.md) for the full comparison, including five detailed cases: same input, different KDNA domains, completely different cognitive paths.
 
+> **Benchmark:** [Discussion vs Decision — 30 scenarios, 96.7% state accuracy with KDNA (vs 90.0% without), zero false actionization](./benchmarks/decision-state-comparison-report.md)
+
 ## KDNA vs Skills
 
 **Skills encode repeatable workflows. KDNA encodes repeatable judgment patterns.**
@@ -176,7 +178,7 @@ To create your own domain, ask your agent with `kdna-create` installed, or start
 
 ## Specs
 
-See [SPEC.md](./SPEC.md) for the full v0.1 specification.
+See [SPEC.md](./SPEC.md) for the full v0.4 specification.
 
 ### Try the demo
 
@@ -207,17 +209,26 @@ The `examples/` directory contains minimal reference implementations for testing
 | [communication](./examples/communication) | Reference domain for validator testing |
 | [minimal-agent](./examples/minimal-agent) | Demo agent loading multiple KDNA domains |
 | [from-wiki-to-kdna](./examples/from-wiki-to-kdna) | Pipeline demonstration from LLM Wiki to KDNA |
+| [python-sdk](./python-sdk) | `pip install kdna` — Python SDK with loader, formatter, classifier |
+| [typescript-agent](./examples/typescript-agent) | TypeScript custom agent with full type safety |
+| [langgraph](./examples/langgraph) | LangGraph integration — KDNA as judgment layer in state graphs |
+| [langchain](./examples/langchain) | LangChain integration — KDNA in a prompt chain |
+| [crewai](./examples/crewai) | CrewAI integration — KDNA shared across multi-agent crew |
+| [autogen](./examples/autogen) | AutoGen integration — KDNA in multi-agent conversation |
+| [mcp-resource](./examples/mcp-resource) | MCP Resource pattern — KDNA as resource, not tool |
 
 ### Core Docs
 
 | Document | Description |
 |---|---|
-| [SPEC.md](./SPEC.md) | Protocol specification v0.1 |
+| [SPEC.md](./SPEC.md) | Protocol specification v0.4 |
 | [docs/getting-started.md](./docs/getting-started.md) | Install, create, and use KDNA ([中文](./docs/getting-started.zh.md)) |
 | [docs/evaluation.md](./docs/evaluation.md) | How to test whether KDNA improves judgment ([中文](./docs/evaluation.zh.md)) |
 | [docs/meta-cognition.md](./docs/meta-cognition.md) | When to use KDNA, conflict arbitration, domain composition ([中文](./docs/meta-cognition.zh.md)) |
 | [docs/registry-policy.md](./docs/registry-policy.md) | Domain inclusion criteria ([中文](./docs/registry-policy.zh.md)) |
 | [docs/kdna-in-action.md](./docs/kdna-in-action.md) | Five detailed before/after cases |
+| [docs/agents-lack-judgment.md](./docs/agents-lack-judgment.md) | Architecture article: AI Agents Do Not Lack Tools. They Lack Judgment. |
+| [docs/case-study-meeting-decisions.md](./docs/case-study-meeting-decisions.md) | Case study: The $40,000 meeting that wasn't a decision |
 
 ## Tools
 

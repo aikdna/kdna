@@ -50,7 +50,7 @@ Create or edit `~/.agents/Kdna/registry.json`:
 
 ```json
 {
-  "version": "0.1",
+  "version": "0.4",
   "root": "~/.agents/Kdna",
   "domains": [
     {

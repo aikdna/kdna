@@ -1,7 +1,7 @@
 {
   "kdna_spec": "0.2",
   "name": "speaking_basic",
-  "version": "0.2",
+  "version": "0.4.0",
   "language": "en",
   "languages": [
     "en"
@@ -24,5 +24,6 @@
   },
   "status": "basic",
   "registry": {},
-  "file_count": 2
+  "file_count": 2,
+  "spec_version": "0.3"
 }

@@ -29,7 +29,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "title", "context", "what_happened", "what_was_learned", "structural_pattern"],
+        "required": ["id", "title"],
         "properties": {
           "id": { "type": "string" },
           "scene_id": { "type": "string" },
@@ -37,7 +37,12 @@
           "context": { "type": "string" },
           "what_happened": { "type": "string" },
           "what_was_learned": { "type": "string" },
-          "structural_pattern": { "type": "string" }
+          "structural_pattern": { "type": "string" },
+          "narrative": { "type": "string" },
+          "outcome": { "type": "string" },
+          "kdna_analysis": { "type": "string" },
+          "modern_parallel": { "type": "string" },
+          "axiom": { "type": "string" }
         }
       }
     }

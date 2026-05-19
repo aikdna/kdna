@@ -62,7 +62,7 @@ node validators/kdna-lint.js ~/.agents/Kdna/my_domain
 
 ```json
 {
-  "version": "0.1",
+  "version": "0.4",
   "root": "~/.agents/Kdna",
   "domains": [
     {

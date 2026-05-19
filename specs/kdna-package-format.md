@@ -48,7 +48,7 @@ identity card of the domain.
 
 ```json
 {
-  "kdna_spec": "0.2",
+  "kdna_spec": "0.4",
   "name": "sales",
   "version": "0.1.0",
   "language": "en",
@@ -82,7 +82,7 @@ identity card of the domain.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `kdna_spec` | Yes | Package format spec version. MUST be `"0.2"`. |
+| `kdna_spec` | Yes | Package format spec version. MUST be `"0.4"`. |
 | `name` | Yes | Domain identifier. Lowercase snake_case: `^[a-z][a-z0-9_]*$`. |
 | `version` | Yes | Semantic version (`MAJOR.MINOR.PATCH`). |
 | `language` | Yes | Primary language code (ISO 639-1 + optional region). |
@@ -223,7 +223,7 @@ kdna unpack sales.kdna -o ./sales
 ## 9. Schema Compatibility
 
 The KDNA JSON files within a `.kdnapack` use the same schema as the existing
-KDNA specification (SPEC.md v0.3). The `kdna.json` manifest is new in v0.2.
+KDNA specification (SPEC.md v0.4). The `kdna.json` manifest is new in v0.2.
 
 When a `.kdnapack` directory follows both the existing SPEC.md and this spec,
 it is considered a **v0.2-compatible KDNA domain package**.

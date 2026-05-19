@@ -40,10 +40,12 @@
     },
     "terminology": {
       "type": "object",
-      "required": [
-        "standard_terms",
-        "banned_terms"
-      ]
+      "minProperties": 1,
+      "properties": {
+        "standard_terms": { "type": "array" },
+        "preferred_terms": { "type": "array" },
+        "banned_terms": { "type": "array" }
+      }
     },
     "misunderstandings": {
       "type": "array",
