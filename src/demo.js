@@ -4,7 +4,7 @@
  * Uses pre-stored outputs so the demo works offline.
  */
 
-const { loadDomain, formatContext } = require('./loader');
+const { loadDomain } = require('./loader');
 const path = require('path');
 
 const DEMO_SCENARIO = {
