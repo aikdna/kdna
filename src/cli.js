@@ -9,6 +9,8 @@
  *   kdna inspect <path>        Inspect a domain and show summary
  *   kdna list                  List installed domains
  *   kdna help                  Show help
+ *   kdna cluster lint <path>    Validate a cluster manifest
+ *   kdna cluster apply <path> [input]  Simulate cluster routing for a task
  */
 
 const fs = require('fs');
@@ -39,6 +41,8 @@ Usage:
   kdna list --available        List available domains from registry
   kdna demo                    Show no-KDNA vs with-KDNA judgment difference
   kdna demo --trace           Output judgment trace as JSON
+  kdna cluster lint <path>     Validate a cluster manifest
+  kdna cluster apply <path> [input]  Simulate cluster routing for a task
   kdna help                   Show this help
 
 Examples:
@@ -1074,6 +1078,21 @@ switch (cmd) {
       runDemoJson();
     } else {
       runDemo();
+    }
+    break;
+  }
+  case 'cluster': {
+    const { cmdClusterLint, cmdClusterApply } = require('./cluster');
+    const sub = args[1];
+    const target = args[2];
+    if (sub === 'lint') {
+      if (!target) error('Usage: kdna cluster lint <path>');
+      cmdClusterLint(target);
+    } else if (sub === 'apply') {
+      if (!target) error('Usage: kdna cluster apply <path> [input]');
+      cmdClusterApply(target, args.slice(3).join(' '));
+    } else {
+      error(`Unknown cluster subcommand: ${sub || '(none)'}\nUsage: kdna cluster lint <path>\n       kdna cluster apply <path> [input]`);
     }
     break;
   }
