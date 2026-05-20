@@ -18,10 +18,10 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { loadRegistry } = require('./registry');
 
 const USER_KDNA_DIR = path.join(process.env.HOME || process.env.USERPROFILE || '.', '.kdna');
 const INSTALL_DIR = path.join(USER_KDNA_DIR, 'domains');
-const REGISTRY_CACHE = path.join(USER_KDNA_DIR, 'registry', 'domains.json');
 
 function error(msg) {
   console.error(`Error: ${msg}`);
@@ -103,18 +103,14 @@ function cmdInstallExtended(input) {
 }
 
 function installFromRegistry(domainId) {
-  const domains = readJson(REGISTRY_CACHE);
+  const domains = loadRegistry({ allowNetwork: true });
   if (!domains || !domains.length) {
     error('No registry found. Run: kdna list --available');
   }
 
-  const entry = Array.isArray(domains)
-    ? domains.find((d) => d.id === domainId)
-    : domains.domains?.find((d) => d.id === domainId);
+  const entry = domains.find((d) => d.id === domainId);
   if (!entry) {
-    const allIds = (Array.isArray(domains) ? domains : domains.domains || [])
-      .map((d) => d.id)
-      .join(', ');
+    const allIds = domains.map((d) => d.id).join(', ');
     error(`Domain "${domainId}" not found in registry.\nAvailable: ${allIds}`);
   }
 
@@ -132,6 +128,15 @@ function installFromRegistry(domainId) {
     : null;
 
   installRepo(repoUrl, tarballUrl, dest, domainId);
+
+  const manifest = readJson(path.join(dest, 'kdna.json')) || {};
+  manifest._source = {
+    type: 'registry',
+    id: domainId,
+    url: repoUrl,
+    installed_at: new Date().toISOString(),
+  };
+  fs.writeFileSync(path.join(dest, 'kdna.json'), JSON.stringify(manifest, null, 2) + '\n');
 }
 
 function installFromGitHub(source) {
@@ -178,34 +183,62 @@ function installFromLocalDir(dirPath) {
 
 function installFromLocalFile(filePath) {
   const abs = path.resolve(filePath);
-  const raw = fs.readFileSync(abs, 'utf8');
-  let data;
-
-  try {
-    data = JSON.parse(raw);
-  } catch {
-    // Try simple YAML subset
-    const lines = raw.split('\n');
-    data = {};
-    for (const line of lines) {
-      const m = line.match(/^([a-z_]+):\s*(.*)/i);
-      if (m) data[m[1]] = m[2].replace(/^["']|["']$/g, '');
-    }
+  if (!fs.existsSync(abs) || !fs.statSync(abs).isFile()) {
+    error(`Not a file: ${abs}`);
   }
 
-  const domainId = data?.meta?.domain || data?.domain || path.basename(abs, '.kdna');
+  const domainId = path.basename(abs, '.kdna');
   const dest = path.join(INSTALL_DIR, domainId);
 
   if (fs.existsSync(dest)) {
+    console.log(`Removing existing install: ${dest}`);
     fs.rmSync(dest, { recursive: true, force: true });
   }
 
   ensureDir(dest);
-  fs.writeFileSync(path.join(dest, path.basename(abs)), raw);
 
-  console.log(`✓ Installed .kdna file: ${domainId}`);
-  console.log(`  Location: ${dest}`);
-  console.log(`  Note: .kdna single file — run kdna inspect ${dest} to view`);
+  // .kdna is a ZIP container — extract contents into the domain folder
+  const script = `
+import zipfile, os
+zf = zipfile.ZipFile(${JSON.stringify(abs)}, 'r')
+zf.extractall(${JSON.stringify(dest)})
+zf.close()
+print('ok')
+`;
+  try {
+    execSync(`python3 -c ${JSON.stringify(script)}`, { stdio: 'pipe' });
+  } catch {
+    try {
+      execSync(`unzip -q -o "${abs}" -d "${dest}"`, { stdio: 'pipe' });
+    } catch {
+      error('Cannot extract .kdna file. Install python3 or unzip command.');
+    }
+  }
+
+  // Try to read domain name from extracted manifest
+  const manifest = readJson(path.join(dest, 'kdna.json'));
+  const core = readJson(path.join(dest, 'KDNA_Core.json'));
+  const resolvedId = manifest?.name || core?.meta?.domain || domainId;
+
+  // Rename dest if domain id differs from filename
+  if (resolvedId !== domainId) {
+    const newDest = path.join(INSTALL_DIR, resolvedId);
+    if (fs.existsSync(newDest)) {
+      fs.rmSync(newDest, { recursive: true, force: true });
+    }
+    fs.renameSync(dest, newDest);
+  }
+
+  const finalDest = resolvedId !== domainId ? path.join(INSTALL_DIR, resolvedId) : dest;
+
+  // Write source metadata
+  const destManifest = readJson(path.join(finalDest, 'kdna.json')) || {};
+  destManifest._source = { type: 'local-file', path: abs, installed_at: new Date().toISOString() };
+  fs.writeFileSync(path.join(finalDest, 'kdna.json'), JSON.stringify(destManifest, null, 2) + '\n');
+
+  validateInstalledDomain(finalDest);
+  console.log(`✓ Installed: ${resolvedId}`);
+  console.log(`  Location: ${finalDest}`);
 }
 
 function installRepo(repoUrl, tarballUrl, dest, domainId) {

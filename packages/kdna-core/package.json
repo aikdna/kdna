@@ -1,0 +1,44 @@
+{
+  "name": "@aikdna/kdna-core",
+  "version": "0.1.0",
+  "description": "KDNA core library — pure logic for loading, validating, linting, and rendering KDNA domain cognition packages. Zero Node.js dependencies.",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "module": "src/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./src/index.mjs",
+      "require": "./src/index.js",
+      "types": "./src/types.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./schema/*": "./schema/*"
+  },
+  "types": "src/types.d.ts",
+  "files": [
+    "src/",
+    "schema/"
+  ],
+  "keywords": [
+    "kdna",
+    "kdna-core",
+    "ai-agent",
+    "domain-cognition",
+    "aikdna"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aikdna/KDNA.git",
+    "directory": "packages/kdna-core"
+  },
+  "homepage": "https://aikdna.com",
+  "peerDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "peerDependenciesMeta": {
+    "ajv": { "optional": true },
+    "ajv-formats": { "optional": true }
+  }
+}

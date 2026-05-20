@@ -1,17 +1,48 @@
 {
-  "name": "kdna-typescript-agent-example",
-  "version": "0.4.0",
-  "description": "KDNA TypeScript custom agent example — framework-agnostic",
+  "name": "@aikdna/agent",
+  "version": "0.1.0",
+  "description": "KDNA TypeScript Agent SDK — framework-agnostic judgment layer for AI agents",
   "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "kdna-agent-demo": "./dist/demo.js"
+  },
   "scripts": {
     "build": "tsc",
-    "demo": "npm run build && node dist/index.js"
+    "demo": "npm run build && node dist/demo.js",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@aikdna/kdna": "file:../../"
+    "@aikdna/kdna": "^0.4.1"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "typescript": "^5.3.0"
-  }
+  },
+  "keywords": [
+    "kdna",
+    "ai-agent",
+    "domain-cognition",
+    "judgment",
+    "agent-sdk",
+    "typescript"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aikdna/KDNA.git",
+    "directory": "examples/typescript-agent"
+  },
+  "homepage": "https://aikdna.com"
 }

@@ -6,9 +6,15 @@ KDNA shapes judgment — framing, diagnosis, terminology, and self-checks — be
 
 ## File Locations
 
-**Default KDNA root:** `~/.kdna/`
+**KDNA search paths (checked in order):**
 
-All Agents share the same KDNA directory. If your Agent uses a different root, create a symlink:
+1. `./kdna/`, `./Kdna/` — project-level (preferred)
+2. `~/.kdna/domains/` — CLI install location (`kdna install` puts domains here)
+3. `~/.kdna/` — legacy root (domain folders directly under root)
+
+Domain folders use `snake_case` (e.g., `business_growth/`).
+
+If your Agent uses a different root, create a symlink:
 
 ```
 ln -s ~/.kdna ~/.claude/Kdna   # Claude Code
@@ -16,9 +22,7 @@ ln -s ~/.kdna ~/.codex/Kdna    # Codex
 ln -s ~/.kdna ~/.agents/Kdna   # OpenCode
 ```
 
-**Project-level roots (checked in order):** `./kdna/`, `./Kdna/`
-
-Prefer project-level over global. Domain folders use `snake_case` (e.g., `business_growth/`).
+Prefer project-level over global.
 
 ## When to Use
 

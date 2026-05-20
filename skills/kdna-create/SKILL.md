@@ -94,7 +94,7 @@ Create yes/no questions the agent can use to verify its output respects the doma
 
 ## Workflow 2: Download from Official Registry
 
-1. Fetch the registry: `https://raw.githubusercontent.com/aikdna/KDNA/main/registry/domains.json`
+1. Fetch the registry: `https://raw.githubusercontent.com/aikdna/kdna-registry/main/domains.json`
 2. Find the domain matching the user's request (by `id`, `name`, or `description`).
 3. Get the `repo` URL from the registry entry.
 4. Clone or download the repository files.
@@ -165,5 +165,5 @@ For full automated validation, use: `kdna validate <domain_path>` or `npx kdna-l
 - [.kdna File Format Spec](https://github.com/aikdna/KDNA/blob/main/specs/kdna-file-format.md)
 - [.kdnapack Package Format Spec](https://github.com/aikdna/KDNA/blob/main/specs/kdna-package-format.md)
 - [Minimal Template](https://github.com/aikdna/KDNA/tree/main/templates/minimal-domain)
-- [Official Registry](https://github.com/aikdna/KDNA/blob/main/registry/domains.json)
+- [Official Registry](https://github.com/aikdna/kdna-registry/blob/main/domains.json)
 - [Getting Started Guide](https://github.com/aikdna/KDNA/blob/main/docs/getting-started.md)

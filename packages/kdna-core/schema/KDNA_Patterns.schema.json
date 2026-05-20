@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KDNA_Patterns",
+  "type": "object",
+  "required": [
+    "meta",
+    "terminology",
+    "misunderstandings",
+    "self_check"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": [
+        "version",
+        "domain",
+        "created",
+        "purpose",
+        "load_condition"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "created": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "load_condition": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "terminology": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "standard_terms": { "type": "array" },
+        "preferred_terms": { "type": "array" },
+        "banned_terms": { "type": "array" }
+      }
+    },
+    "misunderstandings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "wrong",
+          "correct",
+          "key_distinction",
+          "why"
+        ]
+      }
+    },
+    "self_check": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}
