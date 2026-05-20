@@ -4,9 +4,10 @@
  *
  * Commands:
  *   kdna validate <path>       Validate a domain directory or .kdna file
- *   kdna pack <path>           Generate kdna.json manifest and package
+ *   kdna pack <path>           Pack a domain folder into .kdna container (ZIP)
+ *   kdna unpack <path>         Unpack .kdna container to domain folder
  *   kdna install <domain-id>   Install a domain from registry
- *   kdna inspect <path>        Inspect a domain and show summary
+ *   kdna inspect <path>        Inspect a domain directory or .kdna file
  *   kdna list                  List installed domains
  *   kdna help                  Show help
  *   kdna cluster lint <path>    Validate a cluster manifest
@@ -17,10 +18,15 @@
 
 const fs = require('fs');
 const path = require('path');
+const {
+  CANONICAL_REGISTRY_URL,
+  REGISTRY_CACHE,
+  fetchRegistry,
+  loadRegistry: loadCanonicalRegistry,
+} = require('./registry');
 
 const USER_KDNA_DIR = path.join(process.env.HOME || process.env.USERPROFILE || '.', '.kdna');
 const INSTALL_DIR = path.join(USER_KDNA_DIR, 'domains');
-const REGISTRY_CACHE = path.join(USER_KDNA_DIR, 'registry', 'domains.json');
 
 function usage() {
   console.log(`kdna — KDNA domain cognition asset tool
@@ -28,8 +34,10 @@ function usage() {
 Usage:
   kdna validate <path>        Validate a domain directory
   kdna validate --schema <path>  Validate with JSON Schema
-  kdna pack <path>            Generate kdna.json manifest and create package
-  kdna pack --output <dir> <path>  Pack to specific output directory
+  kdna pack <path>            Pack a domain folder into a .kdna container (ZIP)
+  kdna pack --output <dir> <path>  Output .kdna to specific directory
+  kdna unpack <path>          Unpack a .kdna container to a domain folder
+  kdna unpack --force <path>  Overwrite existing folder
   kdna install <domain-id>    Install a domain from registry
   kdna install github:user/repo  Install from GitHub
   kdna install github:user/repo@v1.2.0  Install version-pinned
@@ -44,9 +52,10 @@ Usage:
   kdna eval --benchmark <file>  Evaluate a judgment benchmark file
   kdna eval --cluster <file>    Evaluate a cluster manifest
   kdna select "<task>"         Select the right KDNA packages for a task
-  kdna export <path> [--out <file>]  Export domain to single .kdna file
+  kdna export <path> [--out <file>]  Alias for kdna pack
   kdna list                   List installed domains
   kdna list --available        List available domains from registry
+  kdna registry refresh        Refresh the canonical registry cache
   kdna demo                    Show no-KDNA vs with-KDNA judgment difference
   kdna demo --trace           Output judgment trace as JSON
   kdna cluster lint <path>     Validate a cluster manifest
@@ -65,7 +74,7 @@ Examples:
   kdna validate ./sales
   kdna validate ./sales --schema
   kdna pack ./sales
-  kdna install sales
+  kdna install writing
   kdna inspect ./sales
   kdna list`);
 }
@@ -88,24 +97,7 @@ function writeJson(file, data) {
 }
 
 function loadRegistry() {
-  // Check local cache first
-  if (fs.existsSync(REGISTRY_CACHE)) {
-    const data = readJson(REGISTRY_CACHE);
-    if (data) {
-      if (Array.isArray(data)) return data;
-      if (data.domains) return data.domains;
-    }
-  }
-  // Fall back to repo registry
-  const repoRegistry = path.join(__dirname, '..', 'registry', 'domains.json');
-  if (fs.existsSync(repoRegistry)) {
-    const data = readJson(repoRegistry);
-    if (data) {
-      if (Array.isArray(data)) return data;
-      if (data.domains) return data.domains;
-    }
-  }
-  return null;
+  return loadCanonicalRegistry({ allowNetwork: true });
 }
 
 // ─── Validate ────────────────────────────────────────────────────────
@@ -290,7 +282,9 @@ function cmdValidate(dir, schemaOnly) {
   console.log(`✓ KDNA domain valid: ${abs} (${count} file${count !== 1 ? 's' : ''}${schemaMsg})`);
 }
 
-// ─── Pack ────────────────────────────────────────────────────────────
+// ─── Pack / Unpack (.kdna ZIP container) ──────────────────────────────────
+
+const { execSync } = require('child_process');
 
 function cmdPack(dir, outputDir) {
   const abs = path.resolve(dir);
@@ -305,116 +299,227 @@ function cmdPack(dir, outputDir) {
 
   const domainName = core.meta?.domain || path.basename(abs);
 
-  const existing = readJson(path.join(abs, 'kdna.json'));
-  const currentVersion = existing?.version || core.meta?.version || '0.1.0';
+  // Ensure kdna.json manifest exists (generate if missing)
+  let manifest = readJson(path.join(abs, 'kdna.json'));
+  if (!manifest) {
+    const jsonCount = fs.readdirSync(abs).filter((f) => f.endsWith('.json') && f !== 'kdna.json').length;
+    manifest = {
+      kdna_spec: '0.4',
+      name: domainName,
+      version: core.meta?.version || '0.1.0',
+      status: 'experimental',
+      access: 'open',
+      language: 'en',
+      author: { name: '', id: '' },
+      license: { type: 'CC-BY-4.0' },
+      description: core.meta?.purpose || `${domainName} domain cognition`,
+      file_count: jsonCount,
+      created: core.meta?.created || new Date().toISOString().slice(0, 10),
+      updated: new Date().toISOString().slice(0, 10),
+    };
+    writeJson(path.join(abs, 'kdna.json'), manifest);
+  }
 
-  const authorName = existing?.author?.name || '';
-  const authorId = existing?.author?.id || '';
-  const existingLicense = existing?.license || null;
-  const existingRegistry = existing?.registry || {};
-  const existingKeywords = existing?.keywords || [];
-  const existingStatus = existing?.status || 'experimental';
+  // Create ZIP container
+  const outName = `${domainName}.kdna`;
+  const outPath = outputDir ? path.join(outputDir, outName) : path.join(process.cwd(), outName);
 
-  const jsonCount = fs
-    .readdirSync(abs)
-    .filter((f) => f.endsWith('.json') && f !== 'kdna.json').length;
+  // Use python3 zipfile (built-in, no dependency) for cross-platform ZIP
+  const script = `
+import zipfile, os, json, sys
+src = ${JSON.stringify(abs)}
+out = ${JSON.stringify(outPath)}
+with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as zf:
+    for f in sorted(os.listdir(src)):
+        fp = os.path.join(src, f)
+        if os.path.isfile(fp) and (f.endswith('.json') or f in ('README.md', 'LICENSE')):
+            zf.write(fp, f)
+print('ok')
+`;
+  try {
+    execSync(`python3 -c ${JSON.stringify(script)}`, { stdio: 'pipe' });
+  } catch {
+    // Fallback: use Node.js built-in zlib + manual ZIP (limited)
+    const { createWriteStream } = require('fs');
+    // Try using system zip command
+    try {
+      const cwd = process.cwd();
+      process.chdir(abs);
+      execSync(`zip -q -r "${outPath}" *.json README.md LICENSE 2>/dev/null || zip -q -r "${outPath}" *.json`, { stdio: 'pipe' });
+      process.chdir(cwd);
+    } catch {
+      error('Cannot create ZIP. Install python3 or zip command.');
+    }
+  }
 
-  const manifest = {
-    kdna_spec: '0.4',
-    name: domainName,
-    version: currentVersion,
-    language: core.meta?.language || 'en',
-    languages: [core.meta?.language || 'en'],
-    created: core.meta?.created || new Date().toISOString().slice(0, 10),
-    updated: new Date().toISOString().slice(0, 10),
-    description: core.meta?.description || core.meta?.purpose || `${domainName} domain cognition`,
-    keywords: existingKeywords,
-    access: 'open',
-    author: {
-      name: authorName,
-      id: authorId,
-    },
-    license: existingLicense || {
-      type: 'CC-BY-4.0',
-      url: 'https://creativecommons.org/licenses/by/4.0/',
-      allow_agent_use: true,
-      allow_redistribution: true,
-      allow_training: false,
-    },
-    status: existingStatus,
-    registry: existingRegistry,
-    file_count: jsonCount,
-  };
-
-  const outPath = outputDir ? path.join(outputDir, 'kdna.json') : path.join(abs, 'kdna.json');
-  writeJson(outPath, manifest);
-  console.log(`✓ kdna.json manifest created: ${outPath}`);
-  console.log(`  Domain: ${manifest.name} v${manifest.version}`);
-  console.log(`  Files: ${manifest.file_count}`);
-  console.log(`  Status: ${manifest.status}`);
-  console.log(`  Access: ${manifest.access}`);
-
-  console.log('');
-  cmdValidate(abs, false);
+  const fileCount = manifest.file_count || 0;
+  console.log(`✓ Packed: ${outPath}`);
+  console.log(`  Domain: ${domainName} v${manifest.version}`);
+  console.log(`  Files: ${fileCount} KDNA JSONs`);
+  console.log(`  Container: ZIP (DEFLATE)`);
 }
 
-// ─── Install (legacy, now delegates to src/install.js) ──────────────
+function cmdUnpack(filePath, force) {
+  const abs = path.resolve(filePath);
+  if (!fs.existsSync(abs) || !fs.statSync(abs).isFile()) {
+    error(`Not a file: ${abs}`);
+  }
+  if (!abs.endsWith('.kdna')) {
+    error(`Not a .kdna file: ${abs}`);
+  }
 
-// ─── Inspect .kdna single file ────────────────────────────────────────
+  const domainName = path.basename(abs, '.kdna');
+  const outDir = path.join(path.dirname(abs), domainName);
+
+  if (fs.existsSync(outDir)) {
+    if (!force) error(`Directory already exists: ${outDir}\nUse --force to overwrite.`);
+    fs.rmSync(outDir, { recursive: true, force: true });
+  }
+
+  fs.mkdirSync(outDir, { recursive: true });
+
+  // Unzip using python3 zipfile (built-in)
+  const script = `
+import zipfile, os
+zf = zipfile.ZipFile(${JSON.stringify(abs)}, 'r')
+zf.extractall(${JSON.stringify(outDir)})
+zf.close()
+print('ok')
+`;
+  try {
+    execSync(`python3 -c ${JSON.stringify(script)}`, { stdio: 'pipe' });
+  } catch {
+    // Fallback: use system unzip
+    try {
+      execSync(`unzip -q -o "${abs}" -d "${outDir}"`, { stdio: 'pipe' });
+    } catch {
+      error('Cannot unpack ZIP. Install python3 or unzip command.');
+    }
+  }
+
+  console.log(`✓ Unpacked: ${outDir}`);
+  const files = fs.readdirSync(outDir);
+  console.log(`  Files: ${files.length}`);
+  files.forEach((f) => console.log(`    ${f}`));
+}
+
+// ─── Inspect .kdna file (ZIP container or legacy merged JSON) ────────────
 
 function inspectKdnaFile(filePath) {
-  const raw = fs.readFileSync(filePath, 'utf8');
-  let data;
+  const abs = path.resolve(filePath);
+  const stat = fs.statSync(abs);
 
-  // Try JSON first
-  try {
-    data = JSON.parse(raw);
-  } catch {
-    // Try YAML subset (simple key: value)
-    data = parseSimpleYaml(raw);
+  // Detect format: ZIP container (binary header PK\x03\x04) vs text
+  const head = Buffer.alloc(4);
+  const fd = fs.openSync(abs, 'r');
+  fs.readSync(fd, head, 0, 4, 0);
+  fs.closeSync(fd);
+  const isZip = head[0] === 0x50 && head[1] === 0x4b;
+
+  let core, patterns, manifest;
+  let fileCount = 0;
+  const presentFiles = [];
+
+  if (isZip) {
+    // ZIP container — extract to temp, read files
+    const os = require('os');
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-inspect-'));
+    try {
+      const script = `
+import zipfile, os
+zf = zipfile.ZipFile(${JSON.stringify(abs)}, 'r')
+zf.extractall(${JSON.stringify(tmpDir)})
+zf.close()
+`;
+      execSync(`python3 -c ${JSON.stringify(script)}`, { stdio: 'pipe' });
+    } catch {
+      try {
+        execSync(`unzip -q -o "${abs}" -d "${tmpDir}"`, { stdio: 'pipe' });
+      } catch {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+        error('Cannot read .kdna container. Install python3 or unzip.');
+      }
+    }
+
+    core = readJson(path.join(tmpDir, 'KDNA_Core.json'));
+    patterns = readJson(path.join(tmpDir, 'KDNA_Patterns.json'));
+    manifest = readJson(path.join(tmpDir, 'kdna.json'));
+
+    for (const f of fs.readdirSync(tmpDir)) {
+      if (f.startsWith('KDNA_') && f.endsWith('.json')) {
+        presentFiles.push(f);
+        fileCount++;
+      }
+      if (f === 'README.md' || f === 'LICENSE') presentFiles.push(f);
+    }
+
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  } else {
+    // Legacy merged JSON/YAML format (deprecated)
+    const raw = fs.readFileSync(abs, 'utf8');
+    let data;
+    try { data = JSON.parse(raw); } catch { data = parseSimpleYaml(raw); }
+
+    if (!data || !data.meta) error(`Invalid .kdna file: missing meta section`);
+
+    const m = data.meta || {};
+    manifest = {
+      name: m.name || m.domain,
+      version: m.version || '?',
+      status: data.status || '?',
+      access: data.access || '?',
+      language: data.language || '?',
+      author: data.author || { name: '?' },
+      license: data.license || { type: '?' },
+      description: data.description || m.purpose || '?',
+      spec_version: m.spec_version || data.kdna_spec || '?',
+    };
+    core = data.core || {};
+    patterns = data.patterns || {};
+    fileCount = 1;
+    presentFiles.push('.kdna (legacy merged format)');
+    if (data.scenarios) { presentFiles.push('scenarios (inline)'); fileCount++; }
+    if (data.cases) { presentFiles.push('cases (inline)'); fileCount++; }
+    if (data.reasoning) { presentFiles.push('reasoning (inline)'); fileCount++; }
+    if (data.evolution) { presentFiles.push('evolution (inline)'); fileCount++; }
   }
 
-  if (!data || !data.meta) {
-    error(`Invalid .kdna file: missing meta section`);
-  }
+  if (!core) error('KDNA_Core.json not found in container');
 
-  const m = data.meta || {};
-  const c = data.core || {};
-  const p = data.patterns || {};
+  const m = manifest || {};
+  const c = core;
+  const p = patterns || {};
 
   console.log('═'.repeat(50));
-  console.log(`  ${m.name || m.domain || path.basename(filePath, '.kdna')} — KDNA Domain`);
+  console.log(`  ${m.name || c.meta?.domain || path.basename(abs, '.kdna')} — KDNA Domain`);
   console.log('═'.repeat(50));
   console.log('');
-  console.log(`  Format:      .kdna (single file)`);
-  console.log(`  Spec:        ${m.spec_version || data.kdna_spec || '?'}`);
+  console.log(`  Format:      .kdna ${isZip ? '(ZIP container)' : '(legacy merged)'}`);
+  console.log(`  Spec:        ${m.spec_version || m.kdna_spec || '0.4'}`);
   console.log(`  Version:     ${m.version || '?'}`);
-  console.log(`  Status:      ${data.status || '?'}`);
-  console.log(`  Access:      ${data.access || '?'}`);
-  console.log(`  Language:    ${data.language || '?'}`);
-  console.log(`  Author:      ${data.author?.name || '?'}`);
-  console.log(`  License:     ${data.license?.type || '?'}`);
-  console.log(`  Created:     ${m.created || '?'}`);
-  console.log(`  Description: ${data.description || m.purpose || '?'}`);
+  console.log(`  Status:      ${m.status || 'experimental'}`);
+  console.log(`  Access:      ${m.access || 'open'}`);
+  console.log(`  Author:      ${m.author?.name || '?'}`);
+  console.log(`  License:     ${m.license?.type || '?'}`);
+  console.log(`  Created:     ${m.created || c.meta?.created || '?'}`);
+  console.log(`  Description: ${m.description || c.meta?.purpose || '?'}`);
   console.log('');
   console.log('  ── Content ──');
   console.log(`  Axioms:             ${(c.axioms || []).length}`);
   console.log(`  Ontology concepts:  ${(c.ontology || []).length}`);
   console.log(`  Frameworks:         ${(c.frameworks || []).length}`);
-  console.log(`  Core structures:    ${(c.core_structure || []).length}`);
   console.log(`  Stances:            ${(c.stances || []).length}`);
-  console.log(
-    `  Preferred terms:    ${(p.terminology?.standard_terms || p.terminology?.preferred_terms || []).length}`,
-  );
   console.log(`  Banned terms:       ${(p.terminology?.banned_terms || []).length}`);
   console.log(`  Misunderstandings:  ${(p.misunderstandings || []).length}`);
   console.log(`  Self-checks:        ${(p.self_check || []).length}`);
-  if (data.scenarios) console.log(`  Scenarios:          ${(data.scenarios || []).length}`);
-  if (data.cases) console.log(`  Cases:              ${(data.cases || []).length}`);
-  if (data.reasoning) console.log(`  Reasoning chains:   ${(data.reasoning || []).length}`);
+  console.log('');
+  console.log('  ── Files ──');
+  presentFiles.forEach((f) => console.log(`    ${f}`));
   console.log('');
   console.log('═'.repeat(50));
 }
+
+// ─── Install (legacy, now delegates to src/install.js) ──────────────
 
 function parseSimpleYaml(raw) {
   // Parse a simple subset of YAML (no nesting beyond 1 level for sections)
@@ -856,6 +961,7 @@ function cmdList(showAvailable) {
     }
 
     console.log('Available KDNA domains:');
+    console.log(`Registry: ${REGISTRY_CACHE}`);
     console.log('');
     for (const d of domains) {
       const installed = fs.existsSync(path.join(INSTALL_DIR, d.id)) ? '[installed]' : '';
@@ -898,61 +1004,21 @@ function cmdList(showAvailable) {
   }
 }
 
+function cmdRegistry(subcommand) {
+  if (subcommand !== 'refresh') {
+    error('Usage: kdna registry refresh');
+  }
+  const domains = fetchRegistry();
+  console.log(`✓ Registry refreshed from ${CANONICAL_REGISTRY_URL}`);
+  console.log(`  Cache: ${REGISTRY_CACHE}`);
+  console.log(`  Domains: ${domains.length}`);
+}
+
 // ─── Export ──────────────────────────────────────────────────────────
 
+// cmdExport is now an alias for cmdPack (deprecated merged format, v0.1-v0.3)
 function cmdExport(dir, outFile) {
-  const abs = path.resolve(dir);
-  if (!fs.existsSync(abs) || !fs.statSync(abs).isDirectory()) {
-    error(`Not a directory: ${abs}`);
-  }
-  const core = readJson(path.join(abs, 'KDNA_Core.json'));
-  if (!core) error('KDNA_Core.json not found');
-  const pat = readJson(path.join(abs, 'KDNA_Patterns.json'));
-  const manifest = readJson(path.join(abs, 'kdna.json'));
-  const kdna = {
-    kdna_spec: '0.4',
-    meta: {
-      name: core.meta?.domain || path.basename(abs),
-      version: manifest?.version || core.meta?.version || '0.1.0',
-      language: 'en',
-      created: core.meta?.created || '',
-      description: manifest?.description || core.meta?.purpose || '',
-      access: manifest?.access || 'open',
-    },
-    author: manifest?.author || { name: '', id: '' },
-    license: manifest?.license || { type: 'CC-BY-4.0' },
-    core: {
-      axioms: core.axioms || [],
-      ontology: core.ontology || [],
-      frameworks: core.frameworks || [],
-      core_structure: core.core_structure || [],
-      stances: core.stances || [],
-    },
-    patterns: pat
-      ? {
-          terminology: pat.terminology || {},
-          misunderstandings: pat.misunderstandings || [],
-          self_check: pat.self_check || [],
-        }
-      : { terminology: {}, misunderstandings: [], self_check: [] },
-  };
-  for (const [key, filename] of [
-    ['scenarios', 'KDNA_Scenarios.json'],
-    ['cases', 'KDNA_Cases.json'],
-    ['reasoning', 'KDNA_Reasoning.json'],
-    ['evolution', 'KDNA_Evolution.json'],
-  ]) {
-    const data = readJson(path.join(abs, filename));
-    if (data) {
-      delete data.meta;
-      kdna[key] = data;
-    }
-  }
-  const name = outFile || `${kdna.meta.name}.kdna`;
-  const outPath = path.resolve(name);
-  fs.writeFileSync(outPath, JSON.stringify(kdna, null, 2));
-  console.log(`✓ Exported: ${outPath}`);
-  console.log(`  Domain: ${kdna.meta.name} v${kdna.meta.version}`);
+  cmdPack(dir, outFile);
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────
@@ -987,6 +1053,12 @@ switch (cmd) {
     cmdPack(target, output);
     break;
   }
+  case 'unpack': {
+    const target = args[1];
+    if (!target) error('Usage: kdna unpack <file.kdna>');
+    cmdUnpack(target, args.includes('--force'));
+    break;
+  }
   case 'install': {
     let domainId = null;
     let fromGit = null;
@@ -1008,6 +1080,10 @@ switch (cmd) {
     } else {
       cmdInstallExtended(domainId);
     }
+    break;
+  }
+  case 'registry': {
+    cmdRegistry(args[1]);
     break;
   }
   case 'remove': {
