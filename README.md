@@ -1,6 +1,7 @@
 # KDNA
 
 > 🧬 **[aikdna.com](https://aikdna.com)** — Official website · [![npm](https://img.shields.io/npm/v/@aikdna/kdna)](https://www.npmjs.com/package/@aikdna/kdna) · Mirror: [@knowledge-dna/kdna](https://www.npmjs.com/package/@knowledge-dna/kdna)
+> [![CI](https://github.com/knowledge-dna/KDNA/actions/workflows/validate.yml/badge.svg)](https://github.com/knowledge-dna/KDNA/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
 **KDNA (Knowledge DNA)** is an open format for encoding **domain cognition** for AI agents.
 
