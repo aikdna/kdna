@@ -8,6 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { loadRegistry: loadCanonicalRegistry } = require('./registry');
 
 const DOMAINS_DIR =
   process.env.KDNA_DOMAINS || path.join(process.env.HOME || '.', '.kdna', 'domains');
@@ -21,18 +22,7 @@ function readJson(file) {
 }
 
 function loadRegistry() {
-  const locations = [
-    path.join(__dirname, '..', 'registry', 'domains.json'),
-    path.join(DOMAINS_DIR, '..', 'registry', 'domains.json'),
-  ];
-  for (const loc of locations) {
-    const data = readJson(loc);
-    if (data) {
-      const domains = Array.isArray(data) ? data : data.domains;
-      if (domains) return domains;
-    }
-  }
-  return [];
+  return loadCanonicalRegistry({ allowNetwork: true });
 }
 
 function findAvailableDomains() {

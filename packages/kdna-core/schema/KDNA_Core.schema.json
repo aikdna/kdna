@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KDNA_Core",
+  "type": "object",
+  "required": [
+    "meta",
+    "axioms",
+    "ontology",
+    "frameworks",
+    "core_structure",
+    "stances"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": [
+        "version",
+        "domain",
+        "created",
+        "purpose",
+        "load_condition"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "created": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "load_condition": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "axioms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "one_sentence",
+          "full_statement",
+          "why"
+        ]
+      }
+    },
+    "ontology": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "one_sentence",
+          "essence",
+          "boundary",
+          "trigger_signal"
+        ]
+      }
+    },
+    "frameworks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "when_to_use",
+          "steps"
+        ]
+      }
+    },
+    "core_structure": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "via"
+        ]
+      }
+    },
+    "stances": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          { "type": "string" },
+          { "type": "object", "required": ["stance"] }
+        ]
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KDNA_Cases",
+  "type": "object",
+  "required": [
+    "meta",
+    "cases"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": [
+        "version",
+        "domain",
+        "created",
+        "purpose",
+        "load_condition"
+      ],
+      "properties": {
+        "version": { "type": "string" },
+        "domain": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "created": { "type": "string" },
+        "purpose": { "type": "string" },
+        "load_condition": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title"],
+        "properties": {
+          "id": { "type": "string" },
+          "scene_id": { "type": "string" },
+          "title": { "type": "string" },
+          "context": { "type": "string" },
+          "what_happened": { "type": "string" },
+          "what_was_learned": { "type": "string" },
+          "structural_pattern": { "type": "string" },
+          "narrative": { "type": "string" },
+          "outcome": { "type": "string" },
+          "kdna_analysis": { "type": "string" },
+          "modern_parallel": { "type": "string" },
+          "axiom": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}
