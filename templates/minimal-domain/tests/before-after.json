@@ -1,0 +1,16 @@
+[
+  {
+    "input": "A task related to this domain that needs expert judgment",
+    "without_kdna": {
+      "expected_approach": "How a generic AI would typically respond",
+      "common_mistake": "What the generic response gets wrong"
+    },
+    "with_kdna": {
+      "expected_approach": "How a domain-aware response should differ",
+      "signal_reading": "Which domain signal this input triggers",
+      "diagnosis_path": "The expert reasoning chain"
+    },
+    "domain": "example_domain",
+    "trigger": "keyword or pattern that activates this domain"
+  }
+]

@@ -40,6 +40,22 @@ function readJson(p) {
   }
 }
 
+function confirmStatus(domainId, status, yes) {
+  if (yes || (status !== 'experimental' && status !== 'draft')) return true;
+  console.log(`  Domain: ${domainId} (${status})`);
+  console.log(`  This domain is ${status} — judgment quality is not yet verified.`);
+  console.log(`  Use --yes to skip this check.`);
+  try {
+    const buf = Buffer.alloc(1);
+    process.stdout.write('Continue? [y/N] ');
+    fs.readSync(0, buf, 0, 1);
+    const answer = buf.toString().trim().toLowerCase();
+    return answer === 'y';
+  } catch {
+    return false;
+  }
+}
+
 // ─── Parse source ──────────────────────────────────────────────────────
 
 function parseSource(input) {
@@ -81,20 +97,21 @@ function parseSource(input) {
 
 // ─── Install ────────────────────────────────────────────────────────────
 
-function cmdInstallExtended(input) {
+function cmdInstallExtended(input, args) {
   ensureDir(INSTALL_DIR);
 
+  const yes = args && args.includes('--yes');
   const source = parseSource(input);
 
   switch (source.type) {
     case 'registry':
-      installFromRegistry(source.id);
+      installFromRegistry(source.id, yes);
       break;
     case 'github':
-      installFromGitHub(source);
+      installFromGitHub(source, yes);
       break;
     case 'local-dir':
-      installFromLocalDir(source.path);
+      installFromLocalDir(source.path, yes);
       break;
     case 'local-file':
       installFromLocalFile(source.path);
@@ -102,7 +119,7 @@ function cmdInstallExtended(input) {
   }
 }
 
-function installFromRegistry(domainId) {
+function installFromRegistry(domainId, yes) {
   const domains = loadRegistry({ allowNetwork: true });
   if (!domains || !domains.length) {
     error('No registry found. Run: kdna list --available');
@@ -118,6 +135,12 @@ function installFromRegistry(domainId) {
     error(
       `Domain "${domainId}" requires "${entry.access}" access. Only open domains can be installed via CLI.`,
     );
+  }
+
+  const status = entry.status || 'experimental';
+  if (!confirmStatus(domainId, status, yes)) {
+    console.log('Installation cancelled.');
+    process.exit(0);
   }
 
   const dest = path.join(INSTALL_DIR, domainId);
@@ -139,7 +162,7 @@ function installFromRegistry(domainId) {
   fs.writeFileSync(path.join(dest, 'kdna.json'), JSON.stringify(manifest, null, 2) + '\n');
 }
 
-function installFromGitHub(source) {
+function installFromGitHub(source, yes) {
   const domainId = source.display.replace(/[@#]/g, '-').replace(/\//g, '-');
   const dest = path.join(INSTALL_DIR, domainId);
 
@@ -157,12 +180,19 @@ function installFromGitHub(source) {
   fs.writeFileSync(path.join(dest, 'kdna.json'), JSON.stringify(manifest, null, 2) + '\n');
 }
 
-function installFromLocalDir(dirPath) {
+function installFromLocalDir(dirPath, yes) {
   const abs = path.resolve(dirPath);
   const manifest = readJson(path.join(abs, 'kdna.json'));
   const core = readJson(path.join(abs, 'KDNA_Core.json'));
 
   const domainId = manifest?.name || core?.meta?.domain || path.basename(abs);
+
+  const status = manifest?.status || 'experimental';
+  if (!confirmStatus(domainId, status, yes)) {
+    console.log('Installation cancelled.');
+    process.exit(0);
+  }
+
   const dest = path.join(INSTALL_DIR, domainId);
 
   if (fs.existsSync(dest)) {

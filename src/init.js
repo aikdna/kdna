@@ -31,20 +31,27 @@ function cmdInit(name) {
 
   const today = new Date().toISOString().slice(0, 10);
 
-  const files = fs.readdirSync(templateDir);
-  for (const file of files) {
-    const srcPath = path.join(templateDir, file);
-    if (fs.statSync(srcPath).isDirectory()) continue;
-
-    let content = fs.readFileSync(srcPath, 'utf8');
-    content = content.replace(/example_domain/g, name);
-    content = content.replace(/YYYY-MM-DD/g, today);
-
-    fs.writeFileSync(path.join(targetDir, file), content);
+  function copyRecursive(src, dest) {
+    const entries = fs.readdirSync(src);
+    for (const entry of entries) {
+      const srcPath = path.join(src, entry);
+      const destPath = path.join(dest, entry);
+      if (fs.statSync(srcPath).isDirectory()) {
+        fs.mkdirSync(destPath, { recursive: true });
+        copyRecursive(srcPath, destPath);
+      } else {
+        let content = fs.readFileSync(srcPath, 'utf8');
+        content = content.replace(/example_domain/g, name);
+        content = content.replace(/YYYY-MM-DD/g, today);
+        fs.writeFileSync(destPath, content);
+      }
+    }
   }
 
+  copyRecursive(templateDir, targetDir);
+
   console.log(`✓ Created KDNA domain: ${targetDir}/`);
-  console.log(`  Files: ${files.filter((f) => f.endsWith('.json')).join(', ')}`);
+  console.log(`  Files: KDNA_Core.json, KDNA_Patterns.json, kdna.json, tests/before-after.json`);
 
   // Validate
   try {

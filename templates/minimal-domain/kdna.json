@@ -6,8 +6,8 @@
   "languages": ["en"],
   "created": "YYYY-MM-DD",
   "updated": "YYYY-MM-DD",
-  "description": "One-sentence description of what judgment this domain improves.",
-  "keywords": ["keyword1", "keyword2"],
+  "description": "[TODO: describe what judgment this domain improves in one sentence]",
+  "keywords": ["[TODO: add relevant keywords]"],
   "access": "open",
   "author": {
     "name": "Your Name",

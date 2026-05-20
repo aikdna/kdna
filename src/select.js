@@ -85,10 +85,10 @@ function scoreDomain(domain, input) {
     if (w.length > 2 && text.includes(w)) score += 4;
   }
 
-  // Description matching
+  // Description matching (low weight — avoid placeholder text false positives)
   const descWords = domain.description.toLowerCase().split(/\s+/);
   for (const word of descWords) {
-    if (word.length > 3 && text.includes(word)) score += 1;
+    if (word.length > 3 && text.includes(word) && !word.startsWith('[todo')) score += 1;
   }
 
   // Core insight matching (strong signal)

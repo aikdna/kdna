@@ -1209,9 +1209,9 @@ switch (cmd) {
     if (fromGit) {
       // Legacy --from-git: treat as github: URL
       const url = fromGit.replace(/^https:\/\/github\.com\//, '').replace(/\.git$/, '');
-      cmdInstallExtended(`github:${url}`);
+      cmdInstallExtended(`github:${url}`, args);
     } else {
-      cmdInstallExtended(domainId);
+      cmdInstallExtended(domainId, args);
     }
     break;
   }
