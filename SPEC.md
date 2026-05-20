@@ -81,7 +81,7 @@ A domain package SHOULD include a `kdna.json` manifest:
 
 ```json
 {
-  "kdna_spec": "0.2",
+  "kdna_spec": "0.4",
   "name": "<domain-id>",
   "version": "<semver>",
   "status": "experimental | basic | stable | pro",
@@ -99,7 +99,7 @@ Every KDNA JSON file MUST include a `meta` object at the root with these REQUIRE
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `version` | string | Spec version this file conforms to (e.g., "0.2") |
+| `version` | string | Spec version this file conforms to (e.g., "0.4") |
 | `domain` | string | Domain identifier matching the package name |
 | `created` | string | ISO 8601 date (YYYY-MM-DD) |
 | `purpose` | string | One-sentence description of this file's role |
@@ -361,8 +361,8 @@ KDNA MUST NOT replace these systems. It provides a cognition layer that operates
 
 ## 12. Version Compatibility
 
-- KDNA v0.2 files are backward-compatible with v0.1 loaders for the Core+Patterns subset.
-- Fields added in v0.2 (`kdna.json` manifest, `access` mode) are OPTIONAL for v0.1.
+- KDNA v0.4 files are backward-compatible with v0.3 loaders for the Core+Patterns subset.
+- Fields added in v0.4 (cluster support, quality thresholds) are OPTIONAL for v0.3.
 - Loaders SHOULD ignore unknown fields to enable forward compatibility.
 
 ## 13. References
