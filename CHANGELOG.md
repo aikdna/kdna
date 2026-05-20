@@ -1,6 +1,47 @@
 # Changelog
 
-## 0.4.0 - 2026-05-19
+## 0.5.0 - 2026-05-20
+
+### First-Wave Official Domains (6 new, 8 removed)
+
+- **Added `writing`** — editorial judgment: diagnose structural argument problems, not surface language issues
+- **Added `knowledge_management`** — distinguish knowledge assets from raw material (proposition, boundary, counter-example, evolution record)
+- **Added `prompt_diagnosis`** — identify why a prompt failed (task mixing, goal ambiguity, context gap), not format fixes
+- **Added `agent_safety`** — safety gate before irreversible actions: verify authorization, backup, reversibility
+- **Added `open_source_project`** — adoption diagnosis: value-entry clarity, time-to-first-value, comparison honesty
+- **Added `content_strategy`** — topic worthiness filter: specific audience, cognitive contrast, discussability, comprehension barrier
+- **Removed** 8 legacy domains: business-growth, communication, sales, management, product-decision, writing-basic, speaking-basic, management-basic (deleted from GitHub; replaced by first-wave domains)
+
+### Schema & Validation
+
+- **Scenarios schema compliance**: `action_template` → `string[]`, `replace` → `[{avoid, use}]` across all 6 domains
+- **Smoke test** (`tests/smoke/smoke-test.js`): 49 tests across 10 suites — domain load, file count, anti-slogan, anti-truism, banned term completeness, self-check specificity, formatContext uniqueness, keyword triggers, optional file conditional loading
+- **kdna-lint** + **kdna-validate** passing on all 6 domains (6/6 files each)
+
+### Registry & CLI
+
+- **Registry cleanup**: `domains.json` reduced to 1 benchmark-proven domain (decision_state) + 6 first-wave domains in `kdna-registry`
+- **registry CI** (`validate-registry.js --remote`): validates all 6 domains on push
+- **`kdna list --available`** shows 6 first-wave domains with descriptions
+- **CLI keyword mapping** updated in `skills/kdna-loader/SKILL.md`, `skills/kdna-create/SKILL.md`, `src/select.js`
+
+### Website
+
+- **Domains page** (`/en/domains`): 7 domain cards (6 new + decision_state) with install commands
+- **Homepage**: install examples updated to `kdna install github:aikdna/kdna-writing`
+- **Docs**: all `writing-basic` references replaced with `writing` across EN/ZH docs
+
+### Infrastructure
+
+- **Creator workflow** (`docs/creator-workflow.md`): 6-stage documented process from domain selection to publication
+- **GitHub Discussions** enabled
+- **CI badge** added to README
+- **README Domain Repositories** table updated to 6 first-wave domains
+
+### Changed
+
+- Package `file_count` in `kdna-registry/domains.json` synced to 6 for all first-wave domains
+- All spec examples (`kdna-sales` → `kdna-writing`) updated
 
 ### Added
 - **Loader bridge** (`loader.js`) — enables cross-package loader resolution for testing
