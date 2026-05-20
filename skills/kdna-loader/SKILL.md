@@ -31,14 +31,14 @@ Prefer project-level over global. Domain folders use `snake_case` (e.g., `busine
 When the user's request does not name a domain but implies one, use keyword matching to select the best available KDNA:
 
 | Signal | Domain |
-|---|---|
-| "price", "discount", "close the deal", "objection", "客户说贵" | sales |
-| "team", "employee", "delegate", "execution", "执行力", "管理" | management |
-| "conflict", "argument", "conversation", "misunderstanding", "沟通" | communication |
-| "growth", "revenue", "pricing model", "monetize", "增长" | business-growth |
-| "product decision", "feature", "roadmap", "MVP", "产品决策" | product-decision |
-| "write", "article", "essay", "clarity", "写作", "文章" | writing-basic |
-| "speak", "present", "talk", "audience", "演讲", "发言" | speaking-basic |
+|---|---|---|
+| "review writing", "edit", "is this good", "feedback on", "argument", "hook", "content diagnosis", "写作诊断", "文章问题" | writing |
+| "notes", "knowledge base", "pkm", "obsidian", "notion", "second brain", "saved", "知识管理", "笔记" | knowledge_management |
+| "prompt not working", "fix prompt", "why did this prompt", "prompt diagnosis", "task mixing", "prompt优化", "提示词问题" | prompt_diagnosis |
+| "delete file", "organize files", "clean up", "remove", "safety", "irreversible", "before deleting", "安全", "删除文件" | agent_safety |
+| "open source", "github repo", "adoption", "stars", "why no users", "开源", "项目采用" | open_source_project |
+| "content idea", "what to write", "topic", "content strategy", "选题", "内容策略", "写什么" | content_strategy |
+| "meeting", "decision", "discussion", "action items", "会议", "决策" | decision_state |
 
 Match algorithm:
 1. Score each installed domain by keyword hits in user input (case-insensitive).

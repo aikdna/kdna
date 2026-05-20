@@ -42,7 +42,7 @@ Open `KDNA_Patterns.json`. Notice:
 
 **Without KDNA** — if you ask an agent to "review this blog post," it gives generic editing advice.
 
-**With writing-basic KDNA loaded** — the same agent:
+**With writing KDNA loaded** — the same agent:
 
 1. Checks whether each paragraph serves a single clear idea
 2. Flags sentences that use banned terms like "obviously" or "clearly"

@@ -29,7 +29,7 @@ cp skills/kdna-create/SKILL.md ~/.agents/skills/kdna-create/SKILL.md
 mkdir -p ~/.agents/Kdna
 ```
 
-从[注册表](../registry/domains.json)添加领域，或创建自己的。
+从官方 [kdna-registry](https://github.com/knowledge-dna/kdna-registry) 添加领域，或创建自己的。
 
 ## 3. 创建你的第一个领域
 

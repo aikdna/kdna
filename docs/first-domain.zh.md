@@ -42,7 +42,7 @@ kdna inspect ./my-domain
 
 **不使用 KDNA**——如果你让 Agent "帮我审这篇博客"，它给出的是通用编辑建议。
 
-**加载 writing-basic KDNA 后**——同一个 Agent：
+**加载 writing KDNA 后**——同一个 Agent：
 
 1. 检查每个段落是否服务于一个明确的想法
 2. 标记使用禁用词的句子

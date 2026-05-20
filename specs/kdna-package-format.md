@@ -72,8 +72,8 @@ identity card of the domain.
   },
   "status": "experimental",
   "registry": {
-    "id": "sales",
-    "repo": "https://github.com/knowledge-dna/kdna-sales"
+    "id": "writing",
+    "repo": "https://github.com/knowledge-dna/kdna-writing"
   }
 }
 ```
