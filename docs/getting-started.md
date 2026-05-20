@@ -19,7 +19,7 @@ cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
 mkdir -p ~/.agents/Kdna
 ```
 
-Add domains from the [registry](../registry/domains.json) or create your own.
+Add domains from the canonical [kdna-registry](https://github.com/aikdna/kdna-registry) or create your own.
 
 ## 3. Create Your First Domain
 

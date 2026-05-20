@@ -126,23 +126,23 @@ function detectRiskSignals(input) {
   const riskPatterns = [
     {
       words: ['deadline', 'urgent', 'asap', '紧急', '截止'],
-      domain: 'management',
-      reason: 'Time pressure without clarity creates execution risk',
+      domain: 'decision_state',
+      reason: 'Time pressure without clear decision state creates execution risk',
     },
     {
-      words: ['discount', 'cheaper', 'too expensive', '降价', '便宜'],
-      domain: 'sales',
-      reason: 'Price objection may be a certainty deficit, not a price problem',
+      words: ['delete', 'remove', 'clean up', 'organize', '删除', '清理'],
+      domain: 'agent_safety',
+      reason: 'File operations may be irreversible — verify authorization and backup first',
     },
     {
       words: ['just build it', 'quick fix', 'hack', 'workaround', '临时'],
-      domain: 'product-decision',
-      reason: 'Quick fixes without diagnosis create technical debt',
+      domain: 'agent_safety',
+      reason: 'Quick fixes without safety checks create downstream risk',
     },
     {
       words: ['fire', 'terminate', 'let go', '开除', '解雇'],
-      domain: 'management',
-      reason: 'Personnel decisions without upstream diagnosis',
+      domain: 'agent_safety',
+      reason: 'Irreversible personnel decisions require verification of authorization scope',
     },
   ];
 

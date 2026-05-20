@@ -2,15 +2,17 @@
 
 > [English](./registry-policy.md)
 
-本文档定义了领域 KDNA 仓库被列入[注册表](../registry/domains.json)必须满足的条件。
+本文档定义了领域 KDNA 仓库被列入官方 [kdna-registry](https://github.com/aikdna/kdna-registry) 必须满足的条件。
 
 KDNA 是一个**协议**，不是内容库。主仓库（[KDNA](https://github.com/aikdna/KDNA)）定义标准。领域仓库编码领域认知。注册表是二者之间的桥梁——它是精选索引，不是自动列表。
+
+`KDNA/examples/` 和 `KDNA/registry/` 目录只是协议夹具，不是官方领域目录。
 
 ## 收录条件
 
 领域仓库必须满足以下全部条件：
 
-1. **规范兼容。** 每个文件的 `meta` 对象中必须声明 `spec_version`，且与已发布的 KDNA 规范版本兼容。
+1. **规范兼容。** 每个 KDNA 文件必须在 `meta.version` 声明规范版本，注册表条目必须声明与已发布 KDNA 规范版本兼容的 `spec_version`。
 
 2. **校验通过。** 必须无错误地通过 `kdna-validate`（结构校验）。
 
@@ -41,7 +43,7 @@ KDNA 是一个**协议**，不是内容库。主仓库（[KDNA](https://github.c
 
 1. 在 `aikdna/` 下创建公开仓库，命名规范为 `kdna-<domain>`。
 2. 确保满足以上全部收录条件。
-3. 向 KDNA 仓库提交 Pull Request，在 `registry/domains.json` 中添加条目。
+3. 向 `kdna-registry` 仓库提交 Pull Request，在 `domains.json` 中添加条目。
 4. PR 描述中必须包含领域简介、边界说明以及确认符合收录条件的声明。
 
 PR 将根据收录条件进行审核。审核通过不代表对领域内容的认可——仅表示满足加入索引的结构和治理要求。

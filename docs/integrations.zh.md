@@ -28,7 +28,7 @@ kdna-loader skill 是一个纯文本指令文件 (SKILL.md)，告诉 Agent：
 所有 Agent 共享同一 `~/.kdna/` 目录。安装一次，到处使用：
 
 ```bash
-kdna install writing-basic
+kdna install writing
 # 现在 Claude Code、Codex、Cursor、OpenCode 都能用
 ```
 
@@ -48,7 +48,7 @@ curl -fsSL https://aikdna.com/install | bash
 
 ```bash
 npm install -g @aikdna/kdna
-kdna install writing-basic
+kdna install writing
 ```
 
 然后从 [kdna-skills](https://github.com/aikdna/kdna-skills) 安装对应 Agent 的 loader skill。

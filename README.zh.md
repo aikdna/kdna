@@ -13,7 +13,7 @@ KDNA 之于 Agent 的判断力，如同 DNA 之于生物的认知架构：它编
 KDNA 不是提示词库，不是知识库，也不是操作手册。它是一种结构化方式，封装一个领域的判断层：公理、术语边界、常见误解、场景信号、推理链条和能力演进。
 
 > **本仓库仅定义 KDNA 协议、Schema、校验规则与治理方式。**  
-> 具体领域的 KDNA 应放在[独立仓库](#领域仓库)中，符合收录标准后可进入 [registry](./registry/domains.json)。  
+> 具体领域的 KDNA 应放在[独立仓库](#领域仓库)中，符合收录标准后进入官方 [kdna-registry](https://github.com/aikdna/kdna-registry)。
 > 安装 KDNA 到你的 Agent，使用 [kdna-skills](https://github.com/aikdna/kdna-skills)。  
 > 添加领域到注册表的标准详见 [docs/registry-policy.md](./docs/registry-policy.md)。
 
@@ -125,7 +125,7 @@ npm run lint:examples
 校验一个领域：
 
 ```bash
-node validators/kdna-lint.js examples/communication
+node validators/kdna-lint.js examples/decision_state
 ```
 
 ## 安装到你的 Agent
@@ -156,13 +156,11 @@ cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
 mkdir -p ~/.agents/skills/kdna-create
 cp skills/kdna-create/SKILL.md ~/.agents/skills/kdna-create/SKILL.md
 
-# 2. 创建 KDNA 本地库
-mkdir -p ~/.agents/Kdna/communication_expert
-cp examples/communication/KDNA_Core.json ~/.agents/Kdna/communication_expert/
-cp examples/communication/KDNA_Patterns.json ~/.agents/Kdna/communication_expert/
+# 2. 从独立领域包创建 KDNA 本地库
+git clone https://github.com/aikdna/kdna-writing.git ~/.agents/Kdna/writing
 
 # 3. 校验
-node validators/kdna-lint.js ~/.agents/Kdna/communication_expert
+node validators/kdna-lint.js ~/.agents/Kdna/writing
 ```
 
 要创建自己的领域，安装了 `kdna-create` 后直接问 Agent，或从[最小模板](./templates/minimal-domain/)开始。
@@ -185,23 +183,24 @@ node examples/minimal-agent/agent.js
 
 ## 领域仓库
 
-领域认知包存放在独立仓库中。机器可读索引见 [registry/domains.json](./registry/domains.json)。
+领域认知包存放在独立仓库中。官方机器可读索引见 [aikdna/kdna-registry](https://github.com/aikdna/kdna-registry)。
 
 | 领域 | 仓库 | 状态 |
 |---|---|---|
-| 业务增长 | [kdna-business-growth](https://github.com/aikdna/kdna-business-growth) | experimental |
-| 沟通 | [kdna-communication](https://github.com/aikdna/kdna-communication) | experimental |
-| 销售 | [kdna-sales](https://github.com/aikdna/kdna-sales) | experimental |
-| 管理 | [kdna-management](https://github.com/aikdna/kdna-management) | experimental |
-| 产品决策 | [kdna-product-decision](https://github.com/aikdna/kdna-product-decision) | experimental |
+| Writing | [kdna-writing](https://github.com/aikdna/kdna-writing) | experimental |
+| Knowledge Management | [kdna-knowledge_management](https://github.com/aikdna/kdna-knowledge_management) | experimental |
+| Prompt Diagnosis | [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) | experimental |
+| Agent Safety Judgment | [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety) | experimental |
+| Open-source Project | [kdna-open_source_project](https://github.com/aikdna/kdna-open_source_project) | experimental |
+| Content Strategy | [kdna-content_strategy](https://github.com/aikdna/kdna-content_strategy) | experimental |
 
 ### 参考示例
 
-`examples/` 目录包含最小参考实现，用于测试校验器和说明规范。这些 **不是** 领域内容——它们是规范示例。
+`examples/` 目录包含最小参考实现，用于测试校验器和说明规范。这些 **不是** 官方领域目录——它们是规范示例。
 
 | 示例 | 用途 |
 |---------|---------|
-| [communication](./examples/communication) | 校验器测试的参考领域 |
+| [decision_state](./examples/decision_state) | 校验器测试的最小领域夹具 |
 | [minimal-agent](./examples/minimal-agent) | 加载多个 KDNA 领域的 Demo Agent |
 | [from-wiki-to-kdna](./examples/from-wiki-to-kdna) | LLM Wiki 到 KDNA 的流水线演示 |
 

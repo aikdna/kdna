@@ -28,7 +28,7 @@ No API keys, no network calls, no runtime dependency. The skill is pure instruct
 All agents share the same `~/.kdna/` directory. Install KDNA domains once, use them everywhere:
 
 ```bash
-kdna install writing-basic
+kdna install writing
 # Now available in Claude Code, Codex, Cursor, and OpenCode
 ```
 
@@ -48,7 +48,7 @@ Or manually:
 
 ```bash
 npm install -g @aikdna/kdna
-kdna install writing-basic
+kdna install writing
 ```
 
 Then install the loader skill for your agent from [kdna-skills](https://github.com/aikdna/kdna-skills).

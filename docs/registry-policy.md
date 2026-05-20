@@ -2,15 +2,17 @@
 
 > [中文版](./registry-policy.zh.md)
 
-This document defines the criteria a domain KDNA repository must meet to be listed in the [registry](../registry/domains.json).
+This document defines the criteria a domain KDNA repository must meet to be listed in the canonical [kdna-registry](https://github.com/aikdna/kdna-registry).
 
 KDNA is a **protocol**, not a content library. The main repository ([KDNA](https://github.com/aikdna/KDNA)) defines the standard. Domain repositories encode domain cognition. The registry is the link between them — it is a curated index, not an automatic listing.
+
+The `KDNA/examples/` and `KDNA/registry/` directories are protocol fixtures. They are not the official domain catalog.
 
 ## Inclusion Criteria
 
 A domain repository must meet all of the following:
 
-1. **Spec compatibility.** Must declare `spec_version` in each file's `meta` object and be compatible with a published KDNA spec version.
+1. **Spec compatibility.** Each KDNA file must declare the spec version in `meta.version`, and the registry entry must declare `spec_version` compatible with a published KDNA spec version.
 
 2. **Validator compliance.** Must pass `kdna-validate` (structural validation) without errors.
 
@@ -41,7 +43,7 @@ Each entry in the registry carries a status:
 
 1. Create a public GitHub repository under `aikdna/` with the naming convention `kdna-<domain>`.
 2. Ensure it meets all inclusion criteria above.
-3. Open a pull request to the KDNA repository that adds an entry to `registry/domains.json`.
+3. Open a pull request to the `kdna-registry` repository that adds an entry to `domains.json`.
 4. The PR description must include a brief summary of the domain, its boundary, and a statement confirming compliance with the criteria.
 
 The PR will be reviewed against the inclusion criteria. Acceptance does not imply endorsement of the domain content — only that it meets the structural and governance requirements for the index.

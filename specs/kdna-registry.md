@@ -14,7 +14,7 @@ Hugging Face Hub for ML models — but optimized for KDNA domain cognition asset
 ```
 ┌──────────────────────────────────────────────────┐
 │                  kdna CLI                         │
-│  kdna install sales                               │
+│  kdna install writing                               │
 │  kdna search "writing"                            │
 │  kdna publish ./my-domain                         │
 └──────────────────┬───────────────────────────────┘
@@ -49,10 +49,10 @@ registered KDNA domains.
   "updated": "2026-05-17T10:00:00Z",
   "domains": [
     {
-      "id": "sales",
-      "name": "Sales KDNA",
+      "id": "writing",
+      "name": "Writing KDNA",
       "version": "0.1.0",
-      "repo": "https://github.com/aikdna/kdna-sales",
+      "repo": "https://github.com/aikdna/kdna-writing",
       "spec_version": "0.4",
       "status": "experimental",
       "access": "open",
@@ -64,8 +64,8 @@ registered KDNA domains.
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": ["sales", "trust", "b2b"],
-      "description": "Domain cognition for high-trust sales judgment.",
+      "keywords": ["writing", "trust", "b2b"],
+      "description": "Domain cognition for high-trust writing judgment.",
       "core_insight": "Price objections are certainty deficits, not price problems.",
       "file_count": 6,
       "created": "2026-05-13",
@@ -169,7 +169,7 @@ The CLI searches in order:
 
 ```bash
 kdna search "writing"
-kdna search "sales"
+kdna search "writing"
 kdna search --status stable
 kdna search --language zh-CN
 ```
@@ -177,23 +177,23 @@ kdna search --language zh-CN
 ### 5.2 Info
 
 ```bash
-kdna info sales
+kdna info writing
 ```
 
 Output:
 ```
 Name:        Sales KDNA
-ID:          sales
+ID:          writing
 Version:     0.1.0
 Status:      experimental
 Access:      open
 Language:    en
 Author:      Zhang Ling (zhangling)
 License:     CC-BY-4.0
-Description: Domain cognition for high-trust sales judgment.
+Description: Domain cognition for high-trust writing judgment.
 Core:        Price objections are certainty deficits, not price problems.
 Files:       6 (KDNA_Core, KDNA_Patterns, Scenarios, Cases, Reasoning, Evolution)
-Repo:        https://github.com/aikdna/kdna-sales
+Repo:        https://github.com/aikdna/kdna-writing
 ```
 
 ### 5.3 List
@@ -207,10 +207,10 @@ kdna list --outdated   # List domains with available updates
 ## 6. Installation Protocol
 
 ```bash
-kdna install sales
-kdna install sales@0.1.0
-kdna install --from-git https://github.com/aikdna/kdna-sales
-kdna install --from-url https://example.com/sales-0.1.0.kdnapack.tar.gz
+kdna install writing
+kdna install writing@0.1.0
+kdna install --from-git https://github.com/aikdna/kdna-writing
+kdna install --from-url https://example.com/writing-0.1.0.kdnapack.tar.gz
 kdna install --from-path ./my-local-domain
 ```
 
@@ -293,12 +293,11 @@ kdna-registry/
 ├── domains.json
 ├── README.md
 └── packages/
-    ├── sales-0.1.0.kdnapack.tar.gz
+    ├── writing-0.1.0.kdnapack.tar.gz
     ├── management-0.1.0.kdnapack.tar.gz
     ├── communication-0.1.0.kdnapack.tar.gz
-    ├── sales-0.1.0.kdnapack.tar.gz
-    ├── business-growth-0.1.0.kdnapack.tar.gz
-    └── product-decision-0.1.0.kdnapack.tar.gz
+    ├── writing-0.1.0.kdnapack.tar.gz
+    └── writing-0.1.0.kdnapack.tar.gz
 ```
 
 The CLI reads `domains.json` to resolve domain IDs to download URLs.

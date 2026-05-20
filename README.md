@@ -13,7 +13,7 @@ KDNA is to agent judgment what DNA is to biological cognition: it encodes the ar
 KDNA is not a prompt library, not a knowledge base, and not an operating manual. It is a structured way to package the judgment layer of a domain: axioms, terminology boundaries, common misunderstandings, scenario signals, reasoning chains, and capability evolution.
 
 > **This repository defines the KDNA protocol, schemas, validation rules, and governance.**  
-> Domain-specific KDNA packages live in [separate repositories](#domain-repositories) and are listed in the [registry](./registry/domains.json).  
+> Domain-specific KDNA packages live in [separate repositories](#domain-repositories) and are listed in the canonical [kdna-registry](https://github.com/aikdna/kdna-registry).
 > To install KDNA for your agent, use [kdna-skills](https://github.com/aikdna/kdna-skills).  
 > To add a domain to the registry, see [docs/registry-policy.md](./docs/registry-policy.md).
 
@@ -134,7 +134,7 @@ npm run lint:examples
 Validate a domain:
 
 ```bash
-node validators/kdna-lint.js examples/communication
+node validators/kdna-lint.js examples/decision_state
 ```
 
 ## Install for Your Agent
@@ -165,13 +165,11 @@ cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
 mkdir -p ~/.agents/skills/kdna-create
 cp skills/kdna-create/SKILL.md ~/.agents/skills/kdna-create/SKILL.md
 
-# 2. Create your KDNA library
-mkdir -p ~/.agents/Kdna/communication_expert
-cp examples/communication/KDNA_Core.json ~/.agents/Kdna/communication_expert/
-cp examples/communication/KDNA_Patterns.json ~/.agents/Kdna/communication_expert/
+# 2. Create your KDNA library from a domain package
+git clone https://github.com/aikdna/kdna-writing.git ~/.agents/Kdna/writing
 
 # 3. Validate
-node validators/kdna-lint.js ~/.agents/Kdna/communication_expert
+node validators/kdna-lint.js ~/.agents/Kdna/writing
 ```
 
 To create your own domain, ask your agent with `kdna-create` installed, or start from the [minimal template](./templates/minimal-domain/).
@@ -190,15 +188,16 @@ See the same user input produce completely different cognitive analyses with dif
 
 ## Domain Repositories
 
-Domain cognition packages live in separate repositories. See the [registry](./registry/domains.json) for the machine-readable index.
+Domain cognition packages live in separate repositories. See [aikdna/kdna-registry](https://github.com/aikdna/kdna-registry) for the canonical machine-readable index.
 
 | Domain | Repository | Status |
 |---|---|---|
-| Business Growth | [kdna-business-growth](https://github.com/aikdna/kdna-business-growth) | experimental |
-| Communication | [kdna-communication](https://github.com/aikdna/kdna-communication) | experimental |
-| Sales | [kdna-sales](https://github.com/aikdna/kdna-sales) | experimental |
-| Management | [kdna-management](https://github.com/aikdna/kdna-management) | experimental |
-| Product Decision | [kdna-product-decision](https://github.com/aikdna/kdna-product-decision) | experimental |
+| Writing | [kdna-writing](https://github.com/aikdna/kdna-writing) | experimental |
+| Knowledge Management | [kdna-knowledge_management](https://github.com/aikdna/kdna-knowledge_management) | experimental |
+| Prompt Diagnosis | [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) | experimental |
+| Agent Safety Judgment | [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety) | experimental |
+| Open-source Project | [kdna-open_source_project](https://github.com/aikdna/kdna-open_source_project) | experimental |
+| Content Strategy | [kdna-content_strategy](https://github.com/aikdna/kdna-content_strategy) | experimental |
 
 ### Reference Examples
 
@@ -206,7 +205,7 @@ The `examples/` directory contains minimal reference implementations for testing
 
 | Example | Purpose |
 |---------|---------|
-| [communication](./examples/communication) | Reference domain for validator testing |
+| [decision_state](./examples/decision_state) | Minimal domain fixture for validator testing |
 | [minimal-agent](./examples/minimal-agent) | Demo agent loading multiple KDNA domains |
 | [from-wiki-to-kdna](./examples/from-wiki-to-kdna) | Pipeline demonstration from LLM Wiki to KDNA |
 | [python-sdk](./python-sdk) | `pip install kdna` — Python SDK with loader, formatter, classifier |

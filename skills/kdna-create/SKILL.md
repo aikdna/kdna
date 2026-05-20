@@ -102,7 +102,7 @@ Create yes/no questions the agent can use to verify its output respects the doma
 6. Validate: ensure `KDNA_Core.json` and `KDNA_Patterns.json` exist and parse as valid JSON.
 7. Optionally add the domain to the user's local `registry.json`.
 
-Available domains in the official registry include: business-growth, communication, sales, management, product-decision.
+Available domains in the official registry include: writing, knowledge_management, prompt_diagnosis, agent_safety, open_source_project, content_strategy.
 
 ## Workflow 3: Import from URL
 

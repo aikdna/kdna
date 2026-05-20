@@ -15,7 +15,7 @@ that can be read by both humans and AI agent loaders.
 .kdna
 ```
 
-Example: `writing-basic.kdna`, `sales-pro.kdna`
+Example: `writing.kdna`, `writing-pro.kdna`
 
 ## 3. Format
 
