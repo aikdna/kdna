@@ -238,14 +238,19 @@ with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as zf:
   try {
     execSync(`python3 -c ${JSON.stringify(pyScript)}`, { stdio: 'pipe' });
     packed = true;
-  } catch { /* Strategy 1 failed, try next */ }
+  } catch {
+    /* Strategy 1 failed, try next */
+  }
 
   // Strategy 2: system zip command
   if (!packed) {
     const cwd = process.cwd();
     try {
       process.chdir(abs);
-      execSync(`zip -q -r "${outPath}" *.json README.md LICENSE 2>/dev/null || zip -q -r "${outPath}" *.json`, { stdio: 'pipe' });
+      execSync(
+        `zip -q -r "${outPath}" *.json README.md LICENSE 2>/dev/null || zip -q -r "${outPath}" *.json`,
+        { stdio: 'pipe' },
+      );
       process.chdir(cwd);
       packed = true;
     } catch {
@@ -258,7 +263,9 @@ with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as zf:
     try {
       createNodeZip(abs, outPath);
       packed = true;
-    } catch { /* last attempt failed */ }
+    } catch {
+      /* last attempt failed */
+    }
   }
 
   if (!packed) {
@@ -281,11 +288,10 @@ with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as zf:
 // #22: Node.js-native ZIP creator (zero dependencies, fallback when python3/zip unavailable)
 function createNodeZip(srcDir, outPath) {
   const zlib = require('zlib');
-  const files = fs.readdirSync(srcDir).filter(
-    (f) => f.endsWith('.json') && f !== 'kdna.json'
-  ).concat(
-    ['README.md', 'LICENSE'].filter((f) => fs.existsSync(path.join(srcDir, f)))
-  );
+  const files = fs
+    .readdirSync(srcDir)
+    .filter((f) => f.endsWith('.json') && f !== 'kdna.json')
+    .concat(['README.md', 'LICENSE'].filter((f) => fs.existsSync(path.join(srcDir, f))));
 
   const centralDir = [];
   const fileData = [];

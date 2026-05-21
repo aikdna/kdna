@@ -76,11 +76,35 @@ function scoreDomain(domain, input) {
 
   // #23: Task-signal mapping — action verbs that strongly indicate domain
   const taskSignals = {
-    writing: ['write', 'writing', 'author', 'draft', 'revise', 'edit', 'blog post', 'article', 'essay', 'copy'],
-    agent_safety: ['irreversible', 'sandbox', 'delete file', 'delete database', 'rm -rf', 'sudo rm'],
+    writing: [
+      'write',
+      'writing',
+      'author',
+      'draft',
+      'revise',
+      'edit',
+      'blog post',
+      'article',
+      'essay',
+      'copy',
+    ],
+    agent_safety: [
+      'irreversible',
+      'sandbox',
+      'delete file',
+      'delete database',
+      'rm -rf',
+      'sudo rm',
+    ],
     decision_state: ['meeting', 'decision', 'decide', 'discussed', 'agreed', 'deferred'],
     content_strategy: ['audience', 'topic', 'content strategy', 'editorial'],
-    prompt_diagnosis: ['prompt fail', 'prompt not working', 'bad prompt', 'improve prompt', 'prompt diagnosis'],
+    prompt_diagnosis: [
+      'prompt fail',
+      'prompt not working',
+      'bad prompt',
+      'improve prompt',
+      'prompt diagnosis',
+    ],
     code_review: ['code review', 'pull request', 'pr review', 'review code', 'refactor'],
     knowledge_management: ['knowledge base', 'taxonomy', 'curate'],
     open_source_project: ['open source', 'adoption', 'community', 'contributors'],

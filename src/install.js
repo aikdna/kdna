@@ -122,7 +122,9 @@ function cmdInstallExtended(input, args) {
         }
       }
     }
-  } catch { /* No installed domains to scan */ }
+  } catch {
+    /* No installed domains to scan */
+  }
 
   const yes = args && args.includes('--yes');
   const source = parseSource(input);
@@ -381,8 +383,16 @@ function installRepo(repoUrl, tarballUrl, dest, domainId) {
       return;
     } catch {
       // #25: Clean up temp files on failure
-      try { if (tgz) fs.unlinkSync(tgz); } catch { /* cleanup may fail */ }
-      try { if (tmpDir) fs.rmSync(tmpDir, { recursive: true, force: true }); } catch { /* cleanup may fail */ }
+      try {
+        if (tgz) fs.unlinkSync(tgz);
+      } catch {
+        /* cleanup may fail */
+      }
+      try {
+        if (tmpDir) fs.rmSync(tmpDir, { recursive: true, force: true });
+      } catch {
+        /* cleanup may fail */
+      }
     }
   }
 
