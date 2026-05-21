@@ -123,6 +123,75 @@ test('kdna info refuses uninstalled domain', () => {
 // the "install ≠ load" safety model. Tests above already verify the
 // command exits with a clear explanation.
 
+// ─── kdna available / match / load (v0.9 agent-facing) ────────────────
+
+test('kdna available returns installed domains', { skip: !ensureWritingInstalled() }, () => {
+  const r = run(['available']);
+  assert.ok(r.ok, `available failed: ${r.stderr}`);
+  assert.match(r.stdout, /@aikdna\/writing/);
+});
+
+test('kdna available --json returns parseable JSON array', { skip: !ensureWritingInstalled() }, () => {
+  const r = run(['available', '--json']);
+  assert.ok(r.ok, `available --json failed: ${r.stderr}`);
+  const parsed = JSON.parse(r.stdout);
+  assert.ok(Array.isArray(parsed), 'output should be an array');
+  assert.ok(parsed.length > 0, 'should have at least one domain');
+  const writing = parsed.find((d) => d.name === '@aikdna/writing');
+  assert.ok(writing, 'writing should be in the list');
+  assert.ok(Array.isArray(writing.applies_when), 'should expose applies_when');
+});
+
+test('kdna match returns hint signals', { skip: !ensureWritingInstalled() }, () => {
+  const r = run(['match', 'review this blog post for structural problems']);
+  assert.ok(r.ok, `match failed: ${r.stderr}`);
+  // hints OR dropped should mention something
+  assert.match(r.stdout, /HINT|hint|Dropped|writing/i);
+});
+
+test('kdna match --json returns structured result', { skip: !ensureWritingInstalled() }, () => {
+  const r = run(['match', 'review this draft', '--json']);
+  assert.ok(r.ok, `match --json failed: ${r.stderr}`);
+  const parsed = JSON.parse(r.stdout);
+  assert.ok('hints' in parsed, 'result should have hints field');
+  assert.ok('dropped' in parsed, 'result should have dropped field');
+  assert.ok('task' in parsed, 'result should echo the task');
+});
+
+test('kdna load emits prompt-formatted text by default', { skip: !ensureWritingInstalled() }, () => {
+  const r = run(['load', '@aikdna/writing']);
+  assert.ok(r.ok, `load failed: ${r.stderr}`);
+  assert.match(r.stdout, /KDNA loaded/);
+  assert.match(r.stdout, /Axioms/);
+  // should NOT contain raw JSON braces at start
+  assert.ok(!r.stdout.startsWith('{'), 'default output should not be JSON');
+});
+
+test('kdna load --as=json emits parseable JSON', { skip: !ensureWritingInstalled() }, () => {
+  const r = run(['load', '@aikdna/writing', '--as=json']);
+  assert.ok(r.ok, `load --as=json failed: ${r.stderr}`);
+  const parsed = JSON.parse(r.stdout);
+  assert.ok('manifest' in parsed);
+  assert.ok('core' in parsed);
+  assert.ok('patterns' in parsed);
+});
+
+test('kdna load on uninstalled domain exits 2', () => {
+  const r = run(['load', '@aikdna/nonexistent_xxx']);
+  assert.ok(!r.ok);
+  assert.equal(r.code, 2);
+});
+
+// ─── deprecated commands give clear v0.9 explanation ──────────────────
+
+test('removed commands explain themselves', () => {
+  for (const cmd of ['preview', 'eval', 'select', 'export', 'demo']) {
+    const r = run([cmd, './nothing']);
+    assert.ok(!r.ok, `'${cmd}' should fail`);
+    assert.match(r.stderr, /removed in v0\.9/, `'${cmd}' should say it was removed`);
+  }
+});
+
 // ─── kdna diff ─────────────────────────────────────────────────────────
 
 test('kdna diff with no args explains usage', () => {

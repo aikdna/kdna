@@ -2,14 +2,18 @@
 /**
  * kdna setup — One-command KDNA installation.
  *
- * Detects the user's AI agent, installs kdna-loader + kdna-create skills,
- * creates directory structure, and initializes the local registry.
- * Zero domains are installed by default.
+ * Detects the user's AI agent, installs the kdna-loader skill (the only
+ * KDNA skill), creates the data directory, and initializes the local
+ * registry cache. Zero domains are installed by default — domains are
+ * a separate `kdna install <name>` action.
+ *
+ * The kdna-loader skill teaches the agent how to discover and use KDNA
+ * domains via the kdna CLI's available/match/load commands. Domains
+ * themselves are not skills.
  */
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
 const USER_KDNA_DIR = path.join(process.env.HOME || process.env.USERPROFILE || '.', '.kdna');
 const DOMAINS_DIR = path.join(USER_KDNA_DIR, 'domains');
@@ -19,33 +23,28 @@ const SKILLS_REPO = 'https://raw.githubusercontent.com/aikdna/kdna-skills/main';
 const AGENTS = [
   {
     name: 'OpenCode',
-    dir: path.join(process.env.HOME, '.agents'),
+    dir: path.join(process.env.HOME || '', '.agents'),
     skillsDir: 'skills',
-    dataDir: 'Kdna',
   },
   {
     name: 'Codex',
-    dir: path.join(process.env.HOME, '.codex'),
+    dir: path.join(process.env.HOME || '', '.codex'),
     skillsDir: 'skills',
-    dataDir: 'Kdna',
   },
   {
     name: 'Claude Code',
-    dir: path.join(process.env.HOME, '.claude'),
+    dir: path.join(process.env.HOME || '', '.claude'),
     skillsDir: 'skills',
-    dataDir: 'Kdna',
   },
   {
     name: 'Cursor',
-    dir: path.join(process.env.HOME, '.cursor'),
+    dir: path.join(process.env.HOME || '', '.cursor'),
     skillsDir: 'skills',
-    dataDir: 'Kdna',
   },
   {
-    name: 'GitHub Copilot',
-    dir: path.join(process.env.HOME, '.agents'),
+    name: 'Gemini Antigravity',
+    dir: path.join(process.env.HOME || '', '.gemini', 'antigravity'),
     skillsDir: 'skills',
-    dataDir: 'Kdna',
   },
 ];
 
@@ -64,26 +63,50 @@ function detectAgents() {
   return AGENTS.filter((a) => fs.existsSync(a.dir));
 }
 
-async function downloadSkill(agent, skillName) {
-  const skillDir = path.join(agent.dir, agent.skillsDir, skillName);
-  ensureDir(skillDir);
+// v2.1 marker — written into SKILL.md so we can detect outdated copies
+const V2_1_MARKER = 'kdna available';
 
-  const url = `${SKILLS_REPO}/${skillName}/SKILL.md`;
+async function downloadSkill(agent) {
+  const skillDir = path.join(agent.dir, agent.skillsDir, 'kdna-loader');
+  ensureDir(skillDir);
+  const dest = path.join(skillDir, 'SKILL.md');
+
+  // 1. Try remote (source of truth)
   try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const content = await res.text();
-    fs.writeFileSync(path.join(skillDir, 'SKILL.md'), content);
-    return true;
-  } catch {
-    // Fallback: copy from local if available
-    const localPath = path.join(__dirname, '..', '..', 'kdna-skills', skillName, 'SKILL.md');
-    if (fs.existsSync(localPath)) {
-      fs.copyFileSync(localPath, path.join(skillDir, 'SKILL.md'));
-      return true;
+    const res = await fetch(`${SKILLS_REPO}/kdna-loader/SKILL.md`);
+    if (res.ok) {
+      const content = await res.text();
+      if (content.includes(V2_1_MARKER)) {
+        fs.writeFileSync(dest, content);
+        return { ok: true, source: 'remote' };
+      }
     }
-    return false;
+  } catch {
+    /* network failure — try fallback */
   }
+
+  // 2. Fall back to bundled copy (works offline)
+  const local = path.join(__dirname, '..', 'skills', 'kdna-loader', 'SKILL.md');
+  if (fs.existsSync(local)) {
+    fs.copyFileSync(local, dest);
+    return { ok: true, source: 'bundled fallback' };
+  }
+
+  return { ok: false };
+}
+
+function cleanLegacySkills(agent) {
+  // Pre-v0.9 we also installed kdna-create. Remove any stale copy.
+  const legacy = path.join(agent.dir, agent.skillsDir, 'kdna-create');
+  if (fs.existsSync(legacy)) {
+    try {
+      fs.rmSync(legacy, { recursive: true, force: true });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  return false;
 }
 
 async function cmdSetup() {
@@ -96,63 +119,50 @@ async function cmdSetup() {
   const pkg = require(path.join(__dirname, '..', 'package.json'));
   log(`KDNA CLI v${pkg.version}`);
 
-  // 2. Detect agents
+  // 2. KDNA data root
+  ensureDir(DOMAINS_DIR);
+  ensureDir(CLUSTERS_DIR);
+  log(`Data root: ${USER_KDNA_DIR}/`);
+
+  // 3. Detect agents
   const detected = detectAgents();
 
   if (!detected.length) {
     warn('No supported AI agents detected.');
     console.log('  Supported: OpenCode (~/.agents), Codex (~/.codex),');
-    console.log('  Claude Code (~/.claude), Cursor (~/.cursor)');
+    console.log('  Claude Code (~/.claude), Cursor (~/.cursor),');
+    console.log('  Gemini Antigravity (~/.gemini/antigravity)');
     console.log('');
-    console.log('  Manual setup:');
-    console.log('    mkdir -p ~/.codex/skills/kdna-loader');
-    console.log('    curl -o ~/.codex/skills/kdna-loader/SKILL.md \\');
-    console.log(`      ${SKILLS_REPO}/kdna-loader/SKILL.md`);
+    console.log('  When you install one, re-run: kdna setup');
     console.log('');
   } else {
-    log(`Detected: ${detected.map((a) => a.name).join(', ')}`);
+    log(`Detected agents: ${detected.map((a) => a.name).join(', ')}`);
 
-    // 3. Install skills for each agent
     for (const agent of detected) {
-      const loaderOk = await downloadSkill(agent, 'kdna-loader');
-      const createOk = await downloadSkill(agent, 'kdna-create');
-
-      if (loaderOk && createOk) {
-        log(`kdna-loader + kdna-create → ${agent.name}`);
+      const result = await downloadSkill(agent);
+      if (result.ok) {
+        log(`kdna-loader → ${agent.name}  (${result.source})`);
       } else {
-        warn(`Failed to install skills for ${agent.name}`);
+        warn(`Failed to install kdna-loader for ${agent.name}`);
       }
-
-      // Create data directory
-      const dataDir = path.join(agent.dir, agent.dataDir);
-      ensureDir(dataDir);
+      if (cleanLegacySkills(agent)) {
+        log(`removed legacy kdna-create from ${agent.name}`);
+      }
     }
   }
 
-  // 4. KDNA data root
-  ensureDir(DOMAINS_DIR);
-  ensureDir(CLUSTERS_DIR);
-  log(`KDNA data root: ${USER_KDNA_DIR}/`);
-
-  // 5. Initialize local registry
-  const registryFile = path.join(USER_KDNA_DIR, 'registry.json');
-  if (!fs.existsSync(registryFile)) {
-    const registry = {
-      version: '0.5',
-      root: USER_KDNA_DIR,
-      domains: [],
-    };
-    fs.writeFileSync(registryFile, JSON.stringify(registry, null, 2) + '\n');
-    log('Registry initialized');
-  }
-
   console.log('');
-  console.log('KDNA is ready. Next:');
+  console.log('Setup complete. KDNA is ready.');
   console.log('');
-  console.log('  1. Add domains:      kdna install writing');
-  console.log('  2. Or create:         ask your agent "create a KDNA for my domain"');
-  console.log('  3. Browse available:  kdna list --available');
+  console.log('Next steps:');
+  console.log('  1. Install a domain:    kdna install @aikdna/writing');
+  console.log('  2. Verify it:           kdna verify @aikdna/writing');
+  console.log('  3. Browse the registry: kdna list --available');
+  console.log('  4. In your agent, ask any judgment-related question.');
+  console.log('     The kdna-loader skill will discover installed domains');
+  console.log('     and apply them silently when relevant.');
   console.log('');
 }
 
 module.exports = { cmdSetup, detectAgents };
+

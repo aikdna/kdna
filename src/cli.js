@@ -33,62 +33,63 @@ function usage() {
   console.log(`kdna — KDNA domain cognition asset tool
 
 Usage:
-  kdna validate <path>        Validate a domain directory
-  kdna validate --schema <path>  Validate with JSON Schema
-  kdna pack <path>            Pack a domain folder into a .kdna container (ZIP)
-  kdna pack --output <dir> <path>  Output .kdna to specific directory
-  kdna unpack <path>          Unpack a .kdna container to a domain folder
-  kdna unpack --force <path>  Overwrite existing folder
-  kdna preview <path>         Preview a .kdna or domain folder in browser
-  kdna install <name>          Install official domain: @aikdna/<name>
-  kdna install @scope/name     Install any scoped domain
-  kdna install @aikdna/animation   Install a cluster (installs all sub-domains)
-  kdna install ./file.kdna     Install from a local .kdna file
-  kdna install ./folder        Install from a local directory (dev)
-  kdna remove <name>           Uninstall a domain (accepts bare or @scope/name)
-  kdna info <name>             Show source, version, trust info
-  kdna update <name>           Update an installed domain
-  kdna update --all            Update all installed domains
-  kdna inspect <path>         Inspect a domain directory or .kdna file
-  kdna verify <name>           Quality check: structure + trust + judgment (v2.1)
-  kdna compare <name> --input "<text>"   With/without KDNA reasoning diff (needs LLM API key)
-  kdna diff <name>@<v1> <name>@<v2>      Judgment-level diff between two versions
-  kdna search <keyword>                  Search registry by name/keywords/insight
-  kdna eval <path>            Evaluate domain test cases (before/after score)
-  kdna eval --delta <path>    Delta comparison: With KDNA vs Without KDNA
-  kdna eval --benchmark <file>  Evaluate a judgment benchmark file
-  kdna eval --cluster <file>    Evaluate a cluster manifest
-  kdna select "<task>"         Select the right KDNA packages for a task
-  kdna export <path> [--out <file>]  Alias for kdna pack
-  kdna list                   List installed domains
-  kdna list --available        List available domains from registry
-  kdna registry refresh        Refresh the canonical registry cache
-  kdna demo                    Show no-KDNA vs with-KDNA (default: decision_state)
-  kdna demo writing            Show writing judgment demo
-  kdna demo code_review        Show code review judgment demo
-  kdna demo --trace           Output judgment trace as JSON
-  kdna setup                   One-command setup: install CLI + skills + data root
-  kdna cluster lint <path>     Validate a cluster manifest
-  kdna cluster apply <path> [input]  Simulate cluster routing for a task
-  kdna init <name>             Scaffold a new KDNA domain from template
-  kdna publish <path>          Pack + sign + output registry patch
+
+  --- Domain authors ---
+  kdna init <name>              Scaffold a new KDNA domain from template
+  kdna validate <path>          Validate a domain directory
+  kdna validate --schema <path>   ...with JSON Schema
+  kdna pack <path>              Pack a domain folder into a .kdna container
+  kdna pack --output <dir> <path>   Output .kdna to specific directory
+  kdna unpack <path>            Unpack a .kdna container to a folder
+  kdna inspect <path>           Inspect a domain directory or .kdna file
+  kdna publish <path>           Pack + sign + output registry patch
   kdna publish <path> --release-tag <tag> --repo <o/r>   ...also upload to GitHub
-  kdna publish --check <path>  Run quality gate only (no pack/upload)
-  kdna version bump <patch|minor|major> [path]  Bump domain version
-  kdna version                 Show kdna CLI version
+  kdna publish --check <path>   Run quality gate only (no pack/upload)
+  kdna version bump <patch|minor|major> [path]   Bump domain version
+  kdna cluster lint <path>      Validate a cluster manifest
+
+  --- Domain consumers ---
+  kdna install <name>           Install official domain: @aikdna/<name>
+  kdna install @scope/name      Install any scoped domain
+  kdna install @aikdna/animation    Install a cluster (installs all sub-domains)
+  kdna install ./file.kdna      Install from a local .kdna file
+  kdna install ./folder         Install from a local directory (dev)
+  kdna remove <name>            Uninstall a domain
+  kdna update <name>            Update an installed domain
+  kdna update --all             Update all installed domains
+  kdna info <name>              Show version, signature, governance, risks
+  kdna list                     List installed domains
+  kdna list --available         List available domains from registry
+  kdna search <keyword>         Search registry by name/keywords/insight
+  kdna registry refresh         Refresh the canonical registry cache
+
+  --- Quality + judgment ---
+  kdna verify <name>            Quality check: structure + trust + judgment
+  kdna compare <name> --input "<text>"   With/without KDNA reasoning diff
+  kdna diff <name>@<v1> <name>@<v2>      Judgment-level diff between versions
+
+  --- Agent-facing (called by the kdna-loader skill) ---
+  kdna available [--json]                List installed domains + v2.1 fields
+  kdna match "<task>" [--json]           Hint signals (dropped + weak overlap)
+  kdna load <name> [--as=prompt|json|raw]   Emit domain in agent-ready format
+
+  --- Identity ---
   kdna identity init            Generate Ed25519 identity key pair
   kdna identity show            Display public key and buyer ID
   kdna identity export [--out]  Backup private key (passphrase-encrypted)
   kdna identity import <file>   Restore identity from backup
-  kdna help                   Show this help
+
+  --- Other ---
+  kdna setup                    One-command setup: CLI + skill + data root
+  kdna version                  Show kdna CLI version
+  kdna help                     Show this help
 
 Examples:
-  kdna validate ./sales
-  kdna validate ./sales --schema
-  kdna pack ./sales
   kdna install writing
-  kdna inspect ./sales
-  kdna list`);
+  kdna verify @aikdna/writing
+  kdna available
+  kdna init my_domain
+  kdna publish ./my_domain --release-tag v0.1.0 --repo yourname/kdna-my_domain`);
 }
 
 function error(msg) {
@@ -1297,9 +1298,12 @@ switch (cmd) {
     break;
   }
   case 'preview': {
-    const target = args[1];
-    if (!target) error('Usage: kdna preview <file.kdna | folder>');
-    cmdPreview(target);
+    // Removed in v0.9 — no real user scenario for browser preview.
+    // To inspect a .kdna file, use: kdna inspect <path>
+    error(
+      'kdna preview was removed in v0.9.\n' +
+        'Use: kdna inspect <path>  to view a .kdna file or domain directory.',
+    );
     break;
   }
   case 'install': {
@@ -1421,6 +1425,31 @@ switch (cmd) {
     cmdSearch(query);
     break;
   }
+  case 'available': {
+    const { cmdAvailable } = require('./agent');
+    cmdAvailable(args);
+    break;
+  }
+  case 'match': {
+    const { cmdMatch } = require('./agent');
+    // Collect everything after 'match' up to (but not including) any flag
+    // as the task text. Then pass the flags separately.
+    const positional = [];
+    const flags = [];
+    for (let i = 1; i < args.length; i++) {
+      if (args[i].startsWith('--')) flags.push(args[i]);
+      else positional.push(args[i]);
+    }
+    cmdMatch(positional.join(' ').trim(), flags);
+    break;
+  }
+  case 'load': {
+    const { cmdLoad } = require('./agent');
+    const target = args.filter((a) => !a.startsWith('--'))[1];
+    if (!target) error('Usage: kdna load <name> [--as=prompt|json|raw]');
+    cmdLoad(target, args);
+    break;
+  }
   case 'project': {
     // Removed in v0.9 — project-level .kdna/config.json violated the
     // "install ≠ load" safety model. KDNA loading is now a per-task
@@ -1438,36 +1467,38 @@ switch (cmd) {
     break;
   }
   case 'eval': {
-    if (args.includes('--benchmark')) {
-      const idx = args.indexOf('--benchmark');
-      const target = args[idx + 1] || args.filter((a) => !a.startsWith('--'))[1];
-      if (!target || target.startsWith('--')) error('Usage: kdna eval --benchmark <file>');
-      cmdEvalBenchmark(target);
-    } else if (args.includes('--cluster')) {
-      const idx = args.indexOf('--cluster');
-      const target = args[idx + 1] || args.filter((a) => !a.startsWith('--'))[1];
-      if (!target || target.startsWith('--')) error('Usage: kdna eval --cluster <file>');
-      cmdEvalCluster(target);
-    } else {
-      const delta = args.includes('--delta');
-      const target = args.filter((a) => !a.startsWith('--'))[1];
-      if (!target) error('Usage: kdna eval <path>');
-      cmdEval(target, delta);
-    }
+    // Removed in v0.9 — overlapped with kdna compare without adding
+    // distinct value, and the agent-facing match/load commands cover
+    // the discovery path.
+    error(
+      'kdna eval was removed in v0.9.\n' +
+        'To compare with/without KDNA reasoning, use:\n' +
+        '  kdna compare <name> --input "<task>"\n' +
+        'To inspect a domain, use:\n' +
+        '  kdna info <name>',
+    );
     break;
   }
   case 'select': {
-    const { cmdSelect } = require('./select');
-    cmdSelect(args.slice(1).join(' '));
+    // Removed in v0.9 — replaced by the agent-facing kdna-loader skill.
+    // The skill discovers KDNA via 'kdna available' and decides fit
+    // using v2.1 applies_when fields. The agent makes the selection.
+    error(
+      'kdna select was removed in v0.9.\n' +
+        'KDNA selection is now done by the kdna-loader skill (installed\n' +
+        'into your agent at ~/.claude/skills/kdna-loader/ etc.).\n\n' +
+        'To inspect what an agent would see, use:\n' +
+        '  kdna available --json\n' +
+        '  kdna match "<task>" --json',
+    );
     break;
   }
   case 'export': {
-    const target = args[1];
-    if (!target) error('Usage: kdna export <path> [--out <file>]');
-    let outFile = null;
-    const outIdx = args.indexOf('--out');
-    if (outIdx >= 0) outFile = args[outIdx + 1];
-    cmdExport(target, outFile);
+    // Removed in v0.9 — was an alias for `kdna pack`.
+    error(
+      'kdna export was removed in v0.9 (it was an alias for pack).\n' +
+        'Use: kdna pack <path> [--output <dir>]',
+    );
     break;
   }
   case 'list': {
@@ -1475,13 +1506,16 @@ switch (cmd) {
     break;
   }
   case 'demo': {
-    const { runDemo, runDemoJson } = require('./demo');
-    const domain = args.filter((a, i) => i > 0 && !a.startsWith('--'))[0] || 'decision_state';
-    if (args.includes('--trace') || args.includes('--json')) {
-      runDemoJson(domain);
-    } else {
-      runDemo(domain);
-    }
+    // Removed in v0.9 — internal demo, not a user feature. To see
+    // before/after on a real input, use:
+    //   kdna compare <name> --input "<task>"   (requires LLM API key)
+    error(
+      'kdna demo was removed in v0.9.\n' +
+        'To see KDNA before/after on a real input, use:\n' +
+        '  kdna compare @aikdna/writing --input "<your task>"\n' +
+        '(requires ANTHROPIC_API_KEY, OPENAI_API_KEY, or an OpenAI-compatible\n' +
+        'endpoint in ~/.kdna/config.json)',
+    );
     break;
   }
   case 'setup': {
@@ -1490,18 +1524,23 @@ switch (cmd) {
     break;
   }
   case 'cluster': {
-    const { cmdClusterLint, cmdClusterApply } = require('./cluster');
+    const { cmdClusterLint } = require('./cluster');
     const sub = args[1];
     const target = args[2];
     if (sub === 'lint') {
       if (!target) error('Usage: kdna cluster lint <path>');
       cmdClusterLint(target);
     } else if (sub === 'apply') {
-      if (!target) error('Usage: kdna cluster apply <path> [input]');
-      cmdClusterApply(target, args.slice(3).join(' '));
+      // Removed in v0.9 — overlapped with install. To install a
+      // cluster's sub-domains: kdna install @scope/cluster-name
+      error(
+        'kdna cluster apply was removed in v0.9.\n' +
+          'To install a cluster (which installs all its sub-domains):\n' +
+          '  kdna install @aikdna/animation',
+      );
     } else {
       error(
-        `Unknown cluster subcommand: ${sub || '(none)'}\nUsage: kdna cluster lint <path>\n       kdna cluster apply <path> [input]`,
+        `Unknown cluster subcommand: ${sub || '(none)'}\nUsage: kdna cluster lint <path>`,
       );
     }
     break;
@@ -1535,15 +1574,6 @@ switch (cmd) {
   case 'init': {
     const { cmdInit } = require('./init');
     cmdInit(args[1]);
-    break;
-  }
-  case 'cluster': {
-    if (args[1] === 'init') {
-      const { cmdClusterInit } = require('./init');
-      cmdClusterInit(args[2]);
-    } else {
-      error('Usage: kdna cluster init <name>');
-    }
     break;
   }
   case 'publish': {

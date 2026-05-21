@@ -1,28 +1,30 @@
 # skills/
 
-> **The actual SKILL.md files live in [kdna-skills](https://github.com/aikdna/kdna-skills).**
+> **Source of truth:** [kdna-skills](https://github.com/aikdna/kdna-skills) repository.
+> The copy in this directory is an **offline fallback** for `kdna setup`
+> when GitHub is unreachable. It is kept in sync via release CI.
 
-This directory exists to give the CLI's `ensureLoaderSkill` a recognizable
-search path during development, but the **source of truth** for any
-`SKILL.md` is the `kdna-skills` repository.
+## Why ship a fallback copy
 
-## Why single-source
+`kdna setup` (and `ensureLoaderSkill` inside `kdna install`) tries to
+fetch the latest SKILL.md from
+`https://raw.githubusercontent.com/aikdna/kdna-skills/main/kdna-loader/SKILL.md`.
 
-Before v0.7.4 the CLI had two sources: (1) `KDNA/skills/*` shipped inside
-the npm package and (2) `kdna-skills/main` fetched at install time. The two
-drifted, and the local-source-preferred fallback overwrote already-updated
-agent skill files with stale copies.
+If the network is unavailable (corporate firewall, offline laptop, etc.)
+the npm package's bundled copy is used. This ensures `npm install -g
+@aikdna/kdna && kdna setup` works in **any** environment.
 
-v0.7.4+ resolves this:
+## Single source enforcement
 
-- `ensureLoaderSkill()` in `src/install.js` fetches from
-  `https://raw.githubusercontent.com/aikdna/kdna-skills/main/<skill>/SKILL.md`
-  by default.
-- The local search path is kept for offline development only and is empty
-  in the published npm tarball.
+To prevent drift (the v0.7.4 incident where the local copy lagged
+behind kdna-skills and overwrote agent installs with stale content):
+
+- The remote `kdna-skills` repo is checked **first**.
+- The local bundled copy is only used as a fallback.
+- `ensureLoaderSkill()` detects v2.1 marker and re-installs if outdated.
 
 ## Editing skills
 
-Edit them in the `kdna-skills` repo. After merge to `main`, users get the
-update the next time they run `kdna install <anything>` — `ensureLoaderSkill`
-detects the v2.1 marker and re-installs if outdated.
+Edit them in `kdna-skills`. Bundled copy here is auto-refreshed on
+KDNA release; do NOT edit it directly.
+
