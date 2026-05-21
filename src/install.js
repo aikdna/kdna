@@ -617,21 +617,103 @@ function cmdInfo(input) {
 
   const manifest = readJson(path.join(dest, 'kdna.json'));
   const core = readJson(path.join(dest, 'KDNA_Core.json'));
+  const pat = readJson(path.join(dest, 'KDNA_Patterns.json'));
   const source = manifest?._source || {};
 
-  console.log('═'.repeat(60));
+  // ─── Header ─────────────────────────────────────────────────────
+  console.log('═'.repeat(64));
   console.log(`  ${parsed.full}`);
-  console.log('═'.repeat(60));
-  console.log(`  Version:    ${manifest?.version || core?.meta?.version || '?'}`);
-  console.log(`  Status:     ${manifest?.status || '?'}`);
-  console.log(`  License:    ${manifest?.license?.type || '?'}`);
-  console.log(`  Source:     ${source.type || '?'}`);
-  if (source.kdna_url) console.log(`  URL:        ${source.kdna_url}`);
-  if (source.sha256) console.log(`  sha256:     ${source.sha256.slice(0, 16)}…`);
-  console.log(`  Installed:  ${source.installed_at || '?'}`);
-  console.log(`  Path:       ${dest}`);
-  console.log('');
+  console.log('═'.repeat(64));
+  console.log(`  Version:           ${manifest?.version || core?.meta?.version || '?'}`);
+  if (manifest?.judgment_version) {
+    console.log(`  Judgment version:  ${manifest.judgment_version}`);
+  }
+  console.log(`  Status:            ${manifest?.status || '?'}`);
+  console.log(`  License:           ${manifest?.license?.type || '?'}`);
+  console.log(`  Author:            ${manifest?.author?.name || '?'}`);
 
+  // ─── Identity & trust ──────────────────────────────────────────
+  console.log('');
+  console.log('  ── Identity & trust ──');
+  if (manifest?.author?.pubkey) {
+    console.log(`  Author pubkey:     ${manifest.author.pubkey.slice(0, 28)}…`);
+  }
+  if (manifest?.author?.public_key_pem) {
+    console.log(`  Embedded PEM:      yes (full Ed25519 verify available)`);
+  } else {
+    console.log(`  Embedded PEM:      no (legacy pre-v0.7.1 package)`);
+  }
+  if (source.kdna_url) console.log(`  Source URL:        ${source.kdna_url}`);
+  if (source.sha256) console.log(`  Source sha256:     ${source.sha256.slice(0, 32)}…`);
+  console.log(`  Installed:         ${source.installed_at || '?'}`);
+  console.log(`  Path:              ${dest}`);
+
+  // ─── Judgment surface ──────────────────────────────────────────
+  console.log('');
+  console.log('  ── Judgment surface ──');
+  const axiomCount = (core?.axioms || []).length;
+  const ontologyCount = (core?.ontology || []).length;
+  const stanceCount = (core?.stances || []).length;
+  const misCount = (pat?.misunderstandings || []).length;
+  const selfCheckCount = (pat?.self_check || []).length;
+  console.log(`  Axioms:            ${axiomCount}`);
+  console.log(`  Ontology:          ${ontologyCount}`);
+  console.log(`  Stances:           ${stanceCount}`);
+  console.log(`  Misunderstandings: ${misCount}`);
+  console.log(`  Self-checks:       ${selfCheckCount}`);
+
+  // ─── v2.1 governance score ─────────────────────────────────────
+  if (axiomCount > 0) {
+    const withApplies = (core?.axioms || []).filter(
+      (a) => Array.isArray(a.applies_when) && a.applies_when.length,
+    ).length;
+    const withDoesNotApply = (core?.axioms || []).filter(
+      (a) => Array.isArray(a.does_not_apply_when) && a.does_not_apply_when.length,
+    ).length;
+    const withFailureRisk = (core?.axioms || []).filter((a) => a.failure_risk).length;
+    const pct = Math.round(((withApplies + withDoesNotApply + withFailureRisk) / (axiomCount * 3)) * 100);
+    console.log('');
+    console.log('  ── v2.1 governance ──');
+    console.log(`  axioms with applies_when:      ${withApplies}/${axiomCount}`);
+    console.log(`  axioms with does_not_apply:    ${withDoesNotApply}/${axiomCount}`);
+    console.log(`  axioms with failure_risk:      ${withFailureRisk}/${axiomCount}`);
+    console.log(`  governance coverage:           ${pct}%`);
+  }
+
+  // ─── Eval cases ────────────────────────────────────────────────
+  const evalDir = path.join(dest, 'evals');
+  if (fs.existsSync(evalDir)) {
+    const evalFiles = fs.readdirSync(evalDir).filter((f) => f.endsWith('.json'));
+    let totalCases = 0;
+    for (const f of evalFiles) {
+      const data = readJson(path.join(evalDir, f));
+      if (data?.cases) totalCases += data.cases.length;
+    }
+    console.log('');
+    console.log('  ── Eval cases ──');
+    console.log(`  Files:             ${evalFiles.length}`);
+    console.log(`  Total cases:       ${totalCases}`);
+  }
+
+  // ─── Known risks (from kdna.json or axioms) ────────────────────
+  const risks = [];
+  if (core?.axioms) {
+    for (const a of core.axioms) {
+      if (a.failure_risk) risks.push({ source: a.id, text: a.failure_risk });
+    }
+  }
+  if (risks.length) {
+    console.log('');
+    console.log('  ── Known failure risks ──');
+    for (const r of risks.slice(0, 4)) {
+      const short = r.text.length > 110 ? r.text.slice(0, 107) + '…' : r.text;
+      console.log(`  ⚠ [${r.source}]`);
+      console.log(`    ${short}`);
+    }
+    if (risks.length > 4) console.log(`  (+ ${risks.length - 4} more — see KDNA_Core.json)`);
+  }
+
+  // ─── Files ─────────────────────────────────────────────────────
   const expected = [
     'KDNA_Core.json',
     'KDNA_Patterns.json',
@@ -641,7 +723,11 @@ function cmdInfo(input) {
     'KDNA_Evolution.json',
   ];
   const present = expected.filter((f) => fs.existsSync(path.join(dest, f)));
+  console.log('');
   console.log(`  Files: ${present.length}/${expected.length} (${present.join(', ') || 'none'})`);
+
+  console.log('');
+  console.log(`  Run 'kdna verify ${parsed.full}' for full structure/trust/judgment scoring.`);
 }
 
 // ─── Update ─────────────────────────────────────────────────────────────
