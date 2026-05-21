@@ -24,6 +24,71 @@ const USER_KDNA_DIR = path.join(process.env.HOME || process.env.USERPROFILE || '
 const INSTALL_DIR = path.join(USER_KDNA_DIR, 'domains');
 const CLUSTERS_DIR = path.join(USER_KDNA_DIR, 'clusters');
 
+// Agent skill directories (search order)
+const AGENT_SKILL_DIRS = [
+  path.join(process.env.HOME || '', '.agents', 'skills'),
+  path.join(process.env.HOME || '', '.claude', 'skills'),
+  path.join(process.env.HOME || '', '.codex', 'skills'),
+  path.join(process.env.HOME || '', '.cursor', 'skills'),
+  path.join(process.env.HOME || '', '.gemini', 'antigravity', 'skills'),
+];
+
+/**
+ * Ensure the kdna-loader skill is installed in at least one agent directory.
+ * Without this, installed KDNA domains are invisible to agents.
+ */
+function ensureLoaderSkill() {
+  // Check if loader skill already exists in any agent dir
+  for (const dir of AGENT_SKILL_DIRS) {
+    if (fs.existsSync(path.join(dir, 'kdna-loader', 'SKILL.md'))) {
+      return; // Already installed
+    }
+  }
+
+  // Try to auto-install via one-liner or copy from local templates
+  console.log('');
+  console.log('⚠  kdna-loader skill is NOT installed. Agents will not discover KDNA domains.');
+  console.log('   Installing kdna-loader skill...');
+
+  // Check if we have local templates (from KDNA repo checkout)
+  const localTemplate = path.resolve(__dirname, '..', 'skills', 'kdna-loader', 'SKILL.md');
+  if (fs.existsSync(localTemplate)) {
+    // Find the best agent dir to install into
+    for (const dir of AGENT_SKILL_DIRS) {
+      const skillDir = path.join(dir, 'kdna-loader');
+      try {
+        fs.mkdirSync(skillDir, { recursive: true });
+        fs.copyFileSync(localTemplate, path.join(skillDir, 'SKILL.md'));
+        console.log(`   ✓ Installed kdna-loader to ${dir}`);
+        return;
+      } catch {
+        // Try next dir
+      }
+    }
+  }
+
+  // Try to download from the skills repo
+  try {
+    const loaderUrl = 'https://raw.githubusercontent.com/aikdna/kdna-skills/main/kdna-loader/SKILL.md';
+    for (const dir of AGENT_SKILL_DIRS) {
+      const skillDir = path.join(dir, 'kdna-loader');
+      try {
+        fs.mkdirSync(skillDir, { recursive: true });
+        execSync(`curl -fsSL -o "${path.join(skillDir, 'SKILL.md')}" "${loaderUrl}"`, { stdio: 'pipe', timeout: 10000 });
+        console.log(`   ✓ Installed kdna-loader to ${dir}`);
+        return;
+      } catch {
+        // Try next dir
+      }
+    }
+  } catch {
+    // Download failed — but domain install should still proceed
+  }
+
+  console.log('   ⚠ Could not auto-install kdna-loader. Run: kdna setup');
+  console.log('   Without it, agents may not discover KDNA domains automatically.');
+}
+
 function error(msg) {
   console.error(`Error: ${msg}`);
   process.exit(1);
@@ -125,6 +190,9 @@ function cmdInstallExtended(input, args) {
   } catch {
     /* No installed domains to scan */
   }
+
+  // Auto-install loader skill if missing (critical: without it, agents can't see domains)
+  ensureLoaderSkill();
 
   const yes = args && args.includes('--yes');
   const source = parseSource(input);

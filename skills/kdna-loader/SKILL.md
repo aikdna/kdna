@@ -32,23 +32,33 @@ Prefer project-level over global.
 
 ## Domain Auto-Matching
 
-When the user's request does not name a domain but implies one, use keyword matching to select the best available KDNA:
+When the user's request does not name a domain but implies one, **dynamically scan ALL installed domains** to find the best match. Do NOT use a hardcoded list — new domains are added continuously.
 
-| Signal | Domain |
-|---|---|---|
-| "review writing", "edit", "is this good", "feedback on", "argument", "hook", "content diagnosis", "写作诊断", "文章问题" | writing |
-| "notes", "knowledge base", "pkm", "obsidian", "notion", "second brain", "saved", "知识管理", "笔记" | knowledge_management |
-| "prompt not working", "fix prompt", "why did this prompt", "prompt diagnosis", "task mixing", "prompt优化", "提示词问题" | prompt_diagnosis |
-| "delete file", "organize files", "clean up", "remove", "safety", "irreversible", "before deleting", "安全", "删除文件" | agent_safety |
-| "open source", "github repo", "adoption", "stars", "why no users", "开源", "项目采用" | open_source_project |
-| "content idea", "what to write", "topic", "content strategy", "选题", "内容策略", "写什么" | content_strategy |
-| "meeting", "decision", "discussion", "action items", "会议", "决策" | decision_state |
+### Scanning procedure
 
-Match algorithm:
+1. List all folders in the KDNA root paths.
+2. For each folder, check for ONE of these self-describing files (in priority order):
+   - `SKILL.md` — domain's own skill file with trigger keywords
+   - `kdna.json` — manifest with `keywords` and `description`
+   - `AGENTS.md` — agent instructions with loading guidance
+3. Score each domain by keyword overlap between the user's request and the domain's self-description. Extract keywords from:
+   - `SKILL.md`: the "When to load" section
+   - `kdna.json`: the `keywords` array
+   - `AGENTS.md`: the first paragraph describing the domain
+
+### Match algorithm
+
 1. Score each installed domain by keyword hits in user input (case-insensitive).
 2. If no domain scores above threshold, do not load KDNA.
 3. If one domain clearly leads, load it. Prefer `stable` over `experimental` when scores tie.
 4. If multiple domains score high and conflict is possible, load one as leader and flag the conflict.
+5. For KDNA clusters: read the cluster's `KDNA_Cluster.json` or `SKILL.md` to determine which sub-domains to load based on the specific task (see "Task-based loading" in the cluster's SKILL.md).
+
+### Self-bootstrapping domains
+
+A domain with a `SKILL.md` at its root is **self-bootstrapping** — it can be loaded even without the kdna-loader meta-skill. When any agent scans its skills directory and finds a domain folder with `SKILL.md`, it can load that domain directly by following the instructions in the SKILL.md file.
+
+This is the primary loading path. The kdna-loader meta-skill adds auto-matching and multi-domain conflict arbitration, but individual domains should work without it.
 
 ## Domain Selection (Manual)
 
