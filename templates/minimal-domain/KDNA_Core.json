@@ -8,7 +8,7 @@
   },
   "axioms": [
     {
-      "id": "AX-001",
+      "id": "ax-core-principle",
       "one_sentence": "One core judgment principle that changes how the agent evaluates situations.",
       "full_statement": "A testable, domain-specific principle. Must be specific enough that two experts would agree on when it applies. Avoid slogans.",
       "why": "Explain what the agent would get wrong WITHOUT this axiom, and what it gets right WITH it."
@@ -16,7 +16,7 @@
   ],
   "ontology": [
     {
-      "id": "CON-001",
+      "id": "con-key-distinction",
       "one_sentence": "Name one central concept the agent must distinguish.",
       "essence": "What this concept really means in this domain. Not a dictionary definition — the operational meaning.",
       "boundary": "What this concept is NOT. A real distinction the agent must not blur.",
@@ -25,7 +25,7 @@
   ],
   "frameworks": [
     {
-      "id": "FW-001",
+      "id": "fw-decision-procedure",
       "name": "Example Framework",
       "when_to_use": "Specific condition or context where this framework applies.",
       "steps": ["Step 1: What to check first", "Step 2: How to proceed", "Step 3: How to conclude"]

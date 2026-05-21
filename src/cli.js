@@ -1339,7 +1339,7 @@ switch (cmd) {
   }
   case 'demo': {
     const { runDemo, runDemoJson } = require('./demo');
-    const domain = args[1] || 'decision_state';
+    const domain = args.filter((a, i) => i > 0 && !a.startsWith('--'))[0] || 'decision_state';
     if (args.includes('--trace') || args.includes('--json')) {
       runDemoJson(domain);
     } else {
