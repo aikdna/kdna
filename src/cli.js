@@ -53,6 +53,9 @@ Usage:
   kdna verify <name>           Quality check: structure + trust + judgment (v2.1)
   kdna compare <name> --input "<text>"   With/without KDNA reasoning diff (needs LLM API key)
   kdna diff <name>@<v1> <name>@<v2>      Judgment-level diff between two versions
+  kdna search <keyword>                  Search registry by name/keywords/insight
+  kdna project info                      Show project-level KDNA config
+  kdna project init [@scope/name ...]    Create .kdna/config.json with pinned domains
   kdna eval <path>            Evaluate domain test cases (before/after score)
   kdna eval --delta <path>    Delta comparison: With KDNA vs Without KDNA
   kdna eval --benchmark <file>  Evaluate a judgment benchmark file
@@ -1412,6 +1415,25 @@ switch (cmd) {
       try { await cmdDiff(a, b); }
       catch (e) { console.error(`Error: ${e.message}`); process.exit(1); }
     })();
+    break;
+  }
+  case 'search': {
+    const { cmdSearch } = require('./search');
+    const query = args.slice(1).join(' ').trim();
+    cmdSearch(query);
+    break;
+  }
+  case 'project': {
+    const { cmdProjectInfo, cmdProjectInit } = require('./project');
+    const sub = args[1];
+    if (sub === 'init') {
+      const domains = args.slice(2).filter((a) => !a.startsWith('--'));
+      cmdProjectInit(domains);
+    } else if (!sub || sub === 'info') {
+      cmdProjectInfo();
+    } else {
+      error('Usage:\n  kdna project info\n  kdna project init [@scope/name ...]');
+    }
     break;
   }
   case 'eval': {
