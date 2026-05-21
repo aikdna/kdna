@@ -51,6 +51,8 @@ Usage:
   kdna update --all            Update all installed domains
   kdna inspect <path>         Inspect a domain directory or .kdna file
   kdna verify <name>           Quality check: structure + trust + judgment (v2.1)
+  kdna compare <name> --input "<text>"   With/without KDNA reasoning diff (needs LLM API key)
+  kdna diff <name>@<v1> <name>@<v2>      Judgment-level diff between two versions
   kdna eval <path>            Evaluate domain test cases (before/after score)
   kdna eval --delta <path>    Delta comparison: With KDNA vs Without KDNA
   kdna eval --benchmark <file>  Evaluate a judgment benchmark file
@@ -1370,6 +1372,46 @@ switch (cmd) {
       );
     }
     cmdVerify(target, args);
+    break;
+  }
+  case 'compare': {
+    const { cmdCompare } = require('./compare');
+    const target = args.filter((a) => !a.startsWith('--'))[1];
+    if (!target || !args.includes('--input')) {
+      error(
+        'Usage:\n' +
+          '  kdna compare <name> --input "<text>"\n' +
+          '\n' +
+          'Runs your input through the LLM twice (with/without KDNA loaded),\n' +
+          'then diffs the reasoning trajectory. Requires ANTHROPIC_API_KEY or\n' +
+          'OPENAI_API_KEY in the environment.',
+      );
+    }
+    (async () => {
+      try { await cmdCompare(target, args); }
+      catch (e) { console.error(`Error: ${e.message}`); process.exit(1); }
+    })();
+    break;
+  }
+  case 'diff': {
+    const { cmdDiff } = require('./diff');
+    const positional = args.filter((a) => !a.startsWith('--'));
+    const a = positional[1];
+    const b = positional[2];
+    if (!a) {
+      error(
+        'Usage:\n' +
+          '  kdna diff <name>@<v1> <name>@<v2>   Compare two versions\n' +
+          '  kdna diff <name>                     Installed vs registry-current\n' +
+          '\n' +
+          'Surfaces judgment-level diff: added/removed/changed axioms,\n' +
+          'misunderstandings, banned terms, stances.',
+      );
+    }
+    (async () => {
+      try { await cmdDiff(a, b); }
+      catch (e) { console.error(`Error: ${e.message}`); process.exit(1); }
+    })();
     break;
   }
   case 'eval': {
