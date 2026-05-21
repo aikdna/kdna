@@ -34,59 +34,81 @@ const AGENT_SKILL_DIRS = [
 ];
 
 /**
- * Ensure the kdna-loader skill is installed in at least one agent directory.
+ * Ensure the kdna-loader skill is installed in ALL detected agent directories.
  * Without this, installed KDNA domains are invisible to agents.
  */
 function ensureLoaderSkill() {
-  // Check if loader skill already exists in any agent dir
+  const alreadyInstalled = [];
+  const toInstall = [];
+
   for (const dir of AGENT_SKILL_DIRS) {
     if (fs.existsSync(path.join(dir, 'kdna-loader', 'SKILL.md'))) {
-      return; // Already installed
+      alreadyInstalled.push(dir);
+    } else {
+      toInstall.push(dir);
     }
   }
 
-  // Try to auto-install via one-liner or copy from local templates
-  console.log('');
-  console.log('⚠  kdna-loader skill is NOT installed. Agents will not discover KDNA domains.');
-  console.log('   Installing kdna-loader skill...');
+  // If already installed everywhere, nothing to do
+  if (toInstall.length === 0) return;
 
-  // Check if we have local templates (from KDNA repo checkout)
+  // Some agents already have it — notify which
+  if (alreadyInstalled.length > 0) {
+    console.log(`  ✓ kdna-loader found in: ${alreadyInstalled.map(d => path.basename(path.dirname(d))).join(', ')}`);
+  }
+
+  // Install to missing agents
+  console.log('  Installing kdna-loader skill to missing agent directories...');
+
+  let installed = 0;
+  const sources = [];
+
+  // Source 1: local templates (from KDNA repo checkout)
   const localTemplate = path.resolve(__dirname, '..', 'skills', 'kdna-loader', 'SKILL.md');
   if (fs.existsSync(localTemplate)) {
-    // Find the best agent dir to install into
-    for (const dir of AGENT_SKILL_DIRS) {
-      const skillDir = path.join(dir, 'kdna-loader');
+    sources.push({ type: 'local', path: localTemplate });
+  }
+
+  // Source 2: download from skills repo
+  sources.push({
+    type: 'remote',
+    url: 'https://raw.githubusercontent.com/knowledge-dna/kdna-skills/main/kdna-loader/SKILL.md',
+  });
+
+  for (const dir of toInstall) {
+    const skillDir = path.join(dir, 'kdna-loader');
+    for (const src of sources) {
       try {
         fs.mkdirSync(skillDir, { recursive: true });
-        fs.copyFileSync(localTemplate, path.join(skillDir, 'SKILL.md'));
-        console.log(`   ✓ Installed kdna-loader to ${dir}`);
-        return;
+        if (src.type === 'local') {
+          fs.copyFileSync(src.path, path.join(skillDir, 'SKILL.md'));
+        } else {
+          execSync(`curl -fsSL -o "${path.join(skillDir, 'SKILL.md')}" "${src.url}"`, {
+            stdio: 'pipe',
+            timeout: 10000,
+          });
+        }
+        installed++;
+        break; // Move to next agent dir
       } catch {
-        // Try next dir
+        // Try next source
       }
     }
   }
 
-  // Try to download from the skills repo
-  try {
-    const loaderUrl = 'https://raw.githubusercontent.com/knowledge-dna/kdna-skills/main/kdna-loader/SKILL.md';
-    for (const dir of AGENT_SKILL_DIRS) {
-      const skillDir = path.join(dir, 'kdna-loader');
-      try {
-        fs.mkdirSync(skillDir, { recursive: true });
-        execSync(`curl -fsSL -o "${path.join(skillDir, 'SKILL.md')}" "${loaderUrl}"`, { stdio: 'pipe', timeout: 10000 });
-        console.log(`   ✓ Installed kdna-loader to ${dir}`);
-        return;
-      } catch {
-        // Try next dir
-      }
-    }
-  } catch {
-    // Download failed — but domain install should still proceed
+  if (installed > 0) {
+    console.log(`   ✓ kdna-loader installed to ${installed} agent director${installed > 1 ? 'ies' : 'y'}`);
   }
 
-  console.log('   ⚠ Could not auto-install kdna-loader. Run: kdna setup');
-  console.log('   Without it, agents may not discover KDNA domains automatically.');
+  if (installed < toInstall.length) {
+    console.log(`   ⚠ Could not install to ${toInstall.length - installed} agent director${toInstall.length - installed > 1 ? 'ies' : 'y'}.`);
+    console.log('   Run: kdna setup --force');
+  }
+
+  if (installed === 0 && alreadyInstalled.length === 0) {
+    console.log('   ⚠ Could not install kdna-loader anywhere.');
+    console.log('   Run: kdna setup');
+  }
 }
 
 function error(msg) {
