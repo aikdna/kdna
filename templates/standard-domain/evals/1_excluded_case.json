@@ -1,0 +1,16 @@
+{
+  "$schema": "https://aikdna.com/schemas/eval-cases-v1.json",
+  "domain": "@yourscope/your_domain_id",
+  "category": "excluded",
+  "purpose": "Case where your KDNA should NOT be loaded at all. The loader skill should detect the mismatch.",
+  "cases": [
+    {
+      "id": "excluded-1-wrong-domain-entirely",
+      "title": "Task that belongs to a different KDNA (or no KDNA)",
+      "input": "...",
+      "should_load_this_domain": false,
+      "why_not": "Explain which feature of the input signals 'wrong domain' (format, audience, task type, etc.).",
+      "what_to_load_instead": "@yourscope/other_domain (if known) or no KDNA"
+    }
+  ]
+}

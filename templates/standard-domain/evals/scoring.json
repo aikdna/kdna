@@ -1,0 +1,20 @@
+{
+  "$schema": "https://aikdna.com/schemas/eval-scoring-v1.json",
+  "domain": "@yourscope/your_domain_id",
+  "scoring_framework": "D1-D8",
+  "purpose": "How to score whether loading your KDNA actually changes the agent's reasoning trajectory.",
+  "dimensions": [
+    { "id": "D1", "name": "Diagnostic depth", "question": "Root cause vs surface symptoms?", "scale": "0-5" },
+    { "id": "D2", "name": "Terminology consistency", "question": "Used domain-specific terms?", "scale": "0-5" },
+    { "id": "D3", "name": "Misunderstanding detection", "question": "Avoided named misdiagnoses?", "scale": "0-5" },
+    { "id": "D4", "name": "Axiom alignment", "question": "Response grounded in axioms?", "scale": "0-5" },
+    { "id": "D5", "name": "Scenario classification", "question": "Correctly identified case category?", "scale": "0-5" },
+    { "id": "D6", "name": "Actionable specificity", "question": "Suggestions specific enough to act on?", "scale": "0-5" },
+    { "id": "D7", "name": "Boundary awareness", "question": "Recognized when task is outside scope?", "scale": "0-5" },
+    { "id": "D8", "name": "Self-check pass rate", "question": "Of N self-checks, how many can the response answer 'yes'?", "scale": "0/N to N/N" }
+  ],
+  "minimum_threshold_for_kdna_value": {
+    "description": "Loading your KDNA must improve average score by at least +2 vs no-KDNA baseline, averaged across all 10 cases.",
+    "rationale": "If the lift is <+2, the domain is not adding value."
+  }
+}

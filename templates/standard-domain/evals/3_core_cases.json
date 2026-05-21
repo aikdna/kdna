@@ -1,0 +1,35 @@
+{
+  "$schema": "https://aikdna.com/schemas/eval-cases-v1.json",
+  "domain": "@yourscope/your_domain_id",
+  "category": "core",
+  "purpose": "Cases the domain MUST handle correctly. Loading should clearly change the agent's response from generic to domain-specific.",
+  "cases": [
+    {
+      "id": "core-1-typical-task",
+      "title": "Most common task in your domain",
+      "input": "[paste the user prompt that triggers your domain's typical task]",
+      "expected_without_kdna": "[what a baseline agent would say — usually surface-level]",
+      "expected_with_kdna": "[what your domain produces — root cause / specific terminology / boundary awareness]",
+      "must_contain": ["domain-specific term 1", "expected diagnosis word"],
+      "must_not_contain": ["generic advice phrase you want to avoid"]
+    },
+    {
+      "id": "core-2-edge-of-core",
+      "title": "Less-common but still inside scope",
+      "input": "...",
+      "expected_without_kdna": "...",
+      "expected_with_kdna": "...",
+      "must_contain": ["..."],
+      "must_not_contain": ["..."]
+    },
+    {
+      "id": "core-3-trickier-pattern",
+      "title": "A case requiring the agent to apply an axiom non-obviously",
+      "input": "...",
+      "expected_without_kdna": "...",
+      "expected_with_kdna": "...",
+      "must_contain": ["..."],
+      "must_not_contain": ["..."]
+    }
+  ]
+}

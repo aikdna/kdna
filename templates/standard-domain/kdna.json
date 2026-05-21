@@ -1,0 +1,28 @@
+{
+  "kdna_spec": "1.0",
+  "name": "@yourscope/your_domain_id",
+  "version": "0.1.0",
+  "judgment_version": "YYYY.MM",
+  "status": "experimental",
+  "access": "open",
+  "language": "en",
+  "created": "YYYY-MM-DD",
+  "updated": "YYYY-MM-DD",
+  "description": "[one-sentence description; appears on registry and in install output]",
+  "core_insight": "[one-sentence core insight that distinguishes this domain]",
+  "keywords": ["[add 3-6 keywords for kdna search]"],
+  "author": {
+    "name": "Your Name",
+    "id": "your-id",
+    "pubkey": "[set automatically by kdna publish — must match your scope trust_pubkey]"
+  },
+  "license": {
+    "type": "CC-BY-4.0",
+    "commercial": false,
+    "allow_agent_use": true,
+    "allow_redistribution": true,
+    "allow_training": true
+  },
+  "file_count": 2,
+  "files": ["KDNA_Core.json", "KDNA_Patterns.json"]
+}

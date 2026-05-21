@@ -1,0 +1,38 @@
+{
+  "$schema": "https://aikdna.com/schemas/eval-cases-v1.json",
+  "domain": "@yourscope/your_domain_id",
+  "category": "boundary",
+  "purpose": "Cases at the edge of the domain's scope. The agent should detect the boundary and either decline OR be careful about which axioms still apply.",
+  "cases": [
+    {
+      "id": "boundary-1-adjacent-domain",
+      "title": "Task that looks like your domain but isn't",
+      "input": "...",
+      "expected_without_kdna": "...",
+      "expected_with_kdna": "Agent recognizes the boundary, names which axiom's does_not_apply_when triggers, and does NOT over-apply your domain's frame.",
+      "must_contain": ["..."],
+      "must_not_contain": ["the over-applied frame you want to avoid"],
+      "boundary_signal": "[which axiom's does_not_apply_when should trigger]"
+    },
+    {
+      "id": "boundary-2-format-mismatch",
+      "title": "Right topic, wrong format",
+      "input": "...",
+      "expected_without_kdna": "...",
+      "expected_with_kdna": "...",
+      "must_contain": ["..."],
+      "must_not_contain": ["..."],
+      "boundary_signal": "..."
+    },
+    {
+      "id": "boundary-3-audience-mismatch",
+      "title": "Right task, wrong audience for the domain's stance",
+      "input": "...",
+      "expected_without_kdna": "...",
+      "expected_with_kdna": "...",
+      "must_contain": ["..."],
+      "must_not_contain": ["..."],
+      "boundary_signal": "..."
+    }
+  ]
+}

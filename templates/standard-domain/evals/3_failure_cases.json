@@ -1,0 +1,35 @@
+{
+  "$schema": "https://aikdna.com/schemas/eval-cases-v1.json",
+  "domain": "@yourscope/your_domain_id",
+  "category": "failure",
+  "purpose": "Cases where loading your KDNA produces a WORSE response than not loading it. Each case should cite the failure_risk declared by your domain.",
+  "cases": [
+    {
+      "id": "failure-1-known-risk-one",
+      "title": "Failure mode named in axiom_one.failure_risk",
+      "input": "...",
+      "expected_failure_with_kdna": "Agent over-applies axiom_one, fights the user's stated goal.",
+      "correct_behavior": "Agent recognizes the boundary, honors the user's actual request, surfaces the trade-off.",
+      "detection_signal": "...",
+      "failure_risk_named_in_domain": "axiom_one.failure_risk: '...'"
+    },
+    {
+      "id": "failure-2-known-risk-two",
+      "title": "Failure mode named in axiom_two.failure_risk",
+      "input": "...",
+      "expected_failure_with_kdna": "...",
+      "correct_behavior": "...",
+      "detection_signal": "...",
+      "failure_risk_named_in_domain": "axiom_two.failure_risk: '...'"
+    },
+    {
+      "id": "failure-3-misunderstanding-risk",
+      "title": "Failure mode named in a misunderstanding's failure_risk",
+      "input": "...",
+      "expected_failure_with_kdna": "...",
+      "correct_behavior": "...",
+      "detection_signal": "...",
+      "failure_risk_named_in_domain": "misread_one.failure_risk: '...'"
+    }
+  ]
+}

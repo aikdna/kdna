@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "version": "0.1.0",
+    "domain": "your_domain_id",
+    "created": "YYYY-MM-DD",
+    "purpose": "One-sentence statement of what this KDNA helps an AI agent judge in this domain.",
+    "load_condition": "Load when the user asks for <specific task type that triggers this domain>."
+  },
+  "axioms": [
+    {
+      "id": "axiom_one",
+      "one_sentence": "A specific, contestable principle this domain claims about judgment.",
+      "full_statement": "Expand into 2-3 sentences. Be specific. Avoid 'X is important' style. Two experts in this field should be able to agree on whether this axiom applies to a given situation.",
+      "why": "What would the agent get wrong without this axiom? (Be specific.)",
+      "confidence": "high",
+      "evidence_type": ["practice_pattern", "case_observation"],
+      "applies_when": [
+        "describe situation 1 where this axiom guides judgment correctly",
+        "describe situation 2"
+      ],
+      "does_not_apply_when": [
+        "describe situation where applying this axiom would mislead the agent",
+        "describe another case where the axiom should step back"
+      ],
+      "failure_risk": "What bad judgment results if the agent applies this axiom OUTSIDE its scope? (Be specific.)"
+    },
+    {
+      "id": "axiom_two",
+      "one_sentence": "(see writing the axioms guide)",
+      "full_statement": "...",
+      "why": "...",
+      "confidence": "medium",
+      "evidence_type": ["practice_pattern"],
+      "applies_when": ["..."],
+      "does_not_apply_when": ["..."],
+      "failure_risk": "..."
+    }
+  ],
+  "ontology": [
+    {
+      "id": "concept_one",
+      "one_sentence": "One-sentence description of a domain-specific concept.",
+      "essence": "What this concept fundamentally is. Operational, not dictionary.",
+      "boundary": "What this concept is often confused with. Name the confusable, not just 'not X'.",
+      "trigger_signal": "Observable signal in user input that this concept is relevant.",
+      "applies_when": ["..."],
+      "does_not_apply_when": ["..."]
+    }
+  ],
+  "frameworks": [
+    {
+      "id": "frame_diagnose_before_fix",
+      "name": "Diagnose Before Fix",
+      "when_to_use": "Use when asked to evaluate or improve in this domain.",
+      "steps": [
+        "Step 1: identify whether ...",
+        "Step 2: identify whether ...",
+        "Step 3: name the root before suggesting any fix."
+      ]
+    }
+  ],
+  "core_structure": [
+    {
+      "from": "user_symptom_or_complaint",
+      "to": "root_cause_in_this_domain",
+      "via": "the specific check or framing this domain provides"
+    }
+  ],
+  "stances": [
+    {
+      "stance": "A prescriptive position that biases agent behavior in this domain.",
+      "applies_when": ["..."],
+      "does_not_apply_when": ["..."]
+    }
+  ]
+}
