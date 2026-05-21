@@ -7,3 +7,8 @@ npm-debug.log*
 *.tgz
 python-sdk/dist/
 python-sdk/kdna.egg-info/
+python-sdk/.venv/
+python-sdk/venv/
+__pycache__/
+*.pyc
+.pytest_cache/

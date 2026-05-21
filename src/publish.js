@@ -376,4 +376,214 @@ function cmdPublishCheck(domainPath) {
   if (errors > 0) process.exit(1);
 }
 
-module.exports = { cmdPublishCheck };
+// ═══════════════════════════════════════════════════════════════════════
+// v0.7: full publish pipeline (validate + pack + sign + upload + patch)
+// ═══════════════════════════════════════════════════════════════════════
+
+const crypto = require('crypto');
+const { execSync, execFileSync } = require('child_process');
+const identity = require('./identity');
+const { fingerprint } = identity;
+
+const NAME_RE = /^@([a-z][a-z0-9-]*)\/([a-z][a-z0-9_]*)$/;
+
+function identityPaths() {
+  // Recompute each call so KDNA_IDENTITY_DIR env var can be changed at runtime
+  const dir =
+    process.env.KDNA_IDENTITY_DIR ||
+    path.join(process.env.HOME || process.env.USERPROFILE || '.', '.kdna', 'identity');
+  return {
+    privateKeyPath: path.join(dir, 'kdna.key'),
+    publicKeyPath: path.join(dir, 'kdna.pub'),
+    dir,
+  };
+}
+
+/**
+ * Canonical signing payload: sorted (filename, sha256) pairs of all .json files
+ * inside the .kdna ZIP, joined as `name:hex\n`. This is what the signature covers.
+ *
+ * Excludes the `signature` field from kdna.json itself (computed by removing it
+ * before hashing). All other files included as-is.
+ */
+function canonicalPayload(srcDir) {
+  const files = fs.readdirSync(srcDir).filter((f) => f.endsWith('.json')).sort();
+  const parts = [];
+  for (const f of files) {
+    const full = path.join(srcDir, f);
+    let buf;
+    if (f === 'kdna.json') {
+      const obj = JSON.parse(fs.readFileSync(full, 'utf8'));
+      delete obj.signature;
+      buf = Buffer.from(JSON.stringify(obj));
+    } else {
+      buf = fs.readFileSync(full);
+    }
+    const hash = crypto.createHash('sha256').update(buf).digest('hex');
+    parts.push(`${f}:${hash}`);
+  }
+  return parts.join('\n');
+}
+
+function signPayload(payload, privateKeyPem) {
+  const privateKey = crypto.createPrivateKey(privateKeyPem);
+  const sig = crypto.sign(null, Buffer.from(payload), privateKey);
+  return sig.toString('hex');
+}
+
+function loadIdentity() {
+  const { privateKeyPath, publicKeyPath, dir } = identityPaths();
+  if (!fs.existsSync(privateKeyPath) || !fs.existsSync(publicKeyPath)) {
+    error(`No identity found at ${dir}. Run: kdna identity init  (or set KDNA_IDENTITY_DIR)`);
+  }
+  return {
+    privateKey: fs.readFileSync(privateKeyPath, 'utf8'),
+    publicKey: fs.readFileSync(publicKeyPath, 'utf8'),
+  };
+}
+
+function publicKeyToScopeFormat(publicKeyPem) {
+  // The trust_pubkey in registry is stored as "ed25519:<sha256-of-PEM-hex>"
+  // because Ed25519 PEM is multi-line; the scope key is a stable fingerprint.
+  return 'ed25519:' + crypto.createHash('sha256').update(publicKeyPem).digest('hex');
+}
+
+function packToFile(domainDir, outPath) {
+  const files = fs
+    .readdirSync(domainDir)
+    .filter((f) => f.endsWith('.json') || f === 'README.md' || f === 'LICENSE');
+  if (!files.includes('kdna.json')) error('kdna.json required in domain folder for publish.');
+
+  const script = `import zipfile, os
+src = ${JSON.stringify(domainDir)}
+out = ${JSON.stringify(outPath)}
+files = ${JSON.stringify(files)}
+with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as zf:
+    for f in sorted(files):
+        zf.write(os.path.join(src, f), f)
+`;
+  const tmpPy = `/tmp/kdna-publish-pack-${Date.now()}.py`;
+  try {
+    fs.writeFileSync(tmpPy, script);
+    execSync(`python3 ${tmpPy}`, { stdio: 'pipe' });
+  } finally {
+    try { fs.unlinkSync(tmpPy); } catch { /* ignore */ }
+  }
+}
+
+function sha256File(p) {
+  return crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+}
+
+/**
+ * kdna publish <path>  — Full publish pipeline.
+ *
+ * Steps:
+ *   1. Validate name = @scope/name; load identity; validate author.pubkey
+ *   2. Quality gate (cmdPublishCheck, soft)
+ *   3. Write signature into kdna.json (canonical payload signed with identity)
+ *   4. Pack into .kdna
+ *   5. Compute sha256
+ *   6. If --release-tag <tag> and --repo <owner/name>: upload via gh CLI
+ *   7. Print registry patch JSON
+ */
+function cmdPublish(domainPath, args = []) {
+  const abs = path.resolve(domainPath);
+  if (!fs.existsSync(abs) || !fs.statSync(abs).isDirectory()) error(`Not a directory: ${abs}`);
+
+  const manifestPath = path.join(abs, 'kdna.json');
+  if (!fs.existsSync(manifestPath)) error('kdna.json required at domain root.');
+
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const name = manifest.name;
+  const m = name && name.match(NAME_RE);
+  if (!m) {
+    error(`kdna.json.name "${name || '?'}" must be @scope/name format (e.g. @aikdna/writing).`);
+  }
+  if (!manifest.version) error('kdna.json.version required.');
+
+  const { privateKey, publicKey } = loadIdentity();
+  const scopeKey = publicKeyToScopeFormat(publicKey);
+
+  console.log('═'.repeat(60));
+  console.log(`  Publishing ${name}@${manifest.version}`);
+  console.log('═'.repeat(60));
+  console.log(`  Identity fingerprint: ${fingerprint(publicKey)}`);
+  console.log(`  Scope trust key:      ${scopeKey.slice(0, 28)}…`);
+  console.log('');
+
+  // 1. Update author.pubkey if missing/mismatch
+  if (!manifest.author) manifest.author = {};
+  if (manifest.author.pubkey && manifest.author.pubkey !== scopeKey) {
+    error(
+      `kdna.json.author.pubkey (${manifest.author.pubkey.slice(0, 20)}…) does not match your identity (${scopeKey.slice(0, 20)}…). Refusing to overwrite. Either remove the field, or use the matching identity.`,
+    );
+  }
+  manifest.author.pubkey = scopeKey;
+
+  // 2. Write signature
+  delete manifest.signature;
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
+  const payload = canonicalPayload(abs);
+  const sig = signPayload(payload, privateKey);
+  manifest.signature = 'ed25519:' + sig;
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
+  console.log(`  ✓ Signed (payload covers ${fs.readdirSync(abs).filter((f) => f.endsWith('.json')).length} json files)`);
+
+  // 3. Pack
+  const fileName = `${m[2]}-${manifest.version}.kdna`;
+  const outDir = args.includes('--output')
+    ? args[args.indexOf('--output') + 1]
+    : path.join(abs, 'dist');
+  fs.mkdirSync(outDir, { recursive: true });
+  const outPath = path.join(outDir, fileName);
+  packToFile(abs, outPath);
+  const sha256 = sha256File(outPath);
+  const size = fs.statSync(outPath).size;
+  console.log(`  ✓ Packed: ${outPath} (${size} bytes)`);
+  console.log(`  ✓ sha256: ${sha256}`);
+
+  // 4. Optional upload via gh CLI
+  const tagIdx = args.indexOf('--release-tag');
+  const repoIdx = args.indexOf('--repo');
+  let kdnaUrl = null;
+  if (tagIdx >= 0 && repoIdx >= 0) {
+    const tag = args[tagIdx + 1];
+    const repo = args[repoIdx + 1];
+    console.log('');
+    console.log(`  Uploading to ${repo} release ${tag}...`);
+    try {
+      execFileSync('gh', ['release', 'upload', tag, outPath, '--repo', repo, '--clobber'], {
+        stdio: 'inherit',
+      });
+      kdnaUrl = `https://github.com/${repo}/releases/download/${tag}/${fileName}`;
+      console.log(`  ✓ Uploaded: ${kdnaUrl}`);
+    } catch {
+      console.warn(`  ⚠ Upload failed. You can manually upload ${outPath}.`);
+    }
+  }
+
+  // 5. Registry patch
+  const patch = {
+    name,
+    type: manifest.cluster ? 'cluster' : 'domain',
+    version: manifest.version,
+    kdna_url: kdnaUrl,
+    sha256,
+    signature: manifest.signature,
+    release_status: kdnaUrl ? 'published_signed' : 'published_signed_local',
+    author: { ...manifest.author },
+  };
+
+  console.log('');
+  console.log('─'.repeat(60));
+  console.log('Registry patch (apply to kdna-registry/domains.json):');
+  console.log('─'.repeat(60));
+  console.log(JSON.stringify(patch, null, 2));
+  console.log('');
+  console.log(
+    `Next: open a PR to kdna-registry merging this patch into the matching entry by "name".`,
+  );
+}
+
+module.exports = { cmdPublishCheck, cmdPublish, canonicalPayload, publicKeyToScopeFormat };

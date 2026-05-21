@@ -12,11 +12,9 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const IDENTITY_DIR = path.join(
-  process.env.HOME || process.env.USERPROFILE || '.',
-  '.kdna',
-  'identity',
-);
+const IDENTITY_DIR =
+  process.env.KDNA_IDENTITY_DIR ||
+  path.join(process.env.HOME || process.env.USERPROFILE || '.', '.kdna', 'identity');
 
 const PRIVATE_KEY_PATH = path.join(IDENTITY_DIR, 'kdna.key');
 const PUBLIC_KEY_PATH = path.join(IDENTITY_DIR, 'kdna.pub');
@@ -200,4 +198,14 @@ function cmdIdentityImport(filePath) {
   });
 }
 
-module.exports = { cmdIdentityInit, cmdIdentityShow, cmdIdentityExport, cmdIdentityImport };
+module.exports = {
+  cmdIdentityInit,
+  cmdIdentityShow,
+  cmdIdentityExport,
+  cmdIdentityImport,
+  PRIVATE_KEY_PATH,
+  PUBLIC_KEY_PATH,
+  IDENTITY_DIR,
+  fingerprint,
+  deriveBuyerId,
+};
