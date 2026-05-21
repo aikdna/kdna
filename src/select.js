@@ -74,18 +74,36 @@ function scoreDomain(domain, input) {
   const text = input.toLowerCase();
   let score = 0;
 
-  // Keyword matching (highest weight)
+  // #23: Task-signal mapping — action verbs that strongly indicate domain
+  const taskSignals = {
+    writing: ['write', 'writing', 'author', 'draft', 'revise', 'edit', 'blog post', 'article', 'essay', 'copy'],
+    agent_safety: ['irreversible', 'sandbox', 'delete file', 'delete database', 'rm -rf', 'sudo rm'],
+    decision_state: ['meeting', 'decision', 'decide', 'discussed', 'agreed', 'deferred'],
+    content_strategy: ['audience', 'topic', 'content strategy', 'editorial'],
+    prompt_diagnosis: ['prompt fail', 'prompt not working', 'bad prompt', 'improve prompt', 'prompt diagnosis'],
+    code_review: ['code review', 'pull request', 'pr review', 'review code', 'refactor'],
+    knowledge_management: ['knowledge base', 'taxonomy', 'curate'],
+    open_source_project: ['open source', 'adoption', 'community', 'contributors'],
+    kdna_authoring: ['create kdna', 'author kdna', 'domain cognition', 'kdna domain'],
+  };
+
+  const signals = taskSignals[domain.id] || [];
+  for (const signal of signals) {
+    if (text.includes(signal)) score += 10;
+  }
+
+  // Keyword matching
   for (const kw of domain.keywords) {
     if (text.includes(kw.toLowerCase())) score += 5;
   }
 
-  // Name/ID matching
+  // Name/ID matching (boosted for exact verb matches)
   const domainWords = domain.id.toLowerCase().replace(/-/g, ' ').split(/\s+/);
   for (const w of domainWords) {
-    if (w.length > 2 && text.includes(w)) score += 4;
+    if (w.length > 2 && text.includes(w)) score += 6;
   }
 
-  // Description matching (low weight — avoid placeholder text false positives)
+  // Description matching (low weight)
   const descWords = domain.description.toLowerCase().split(/\s+/);
   for (const word of descWords) {
     if (word.length > 3 && text.includes(word) && !word.startsWith('[todo')) score += 1;
