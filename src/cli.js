@@ -1406,6 +1406,15 @@ switch (cmd) {
     cmdInit(args[1]);
     break;
   }
+  case 'cluster': {
+    if (args[1] === 'init') {
+      const { cmdClusterInit } = require('./init');
+      cmdClusterInit(args[2]);
+    } else {
+      error('Usage: kdna cluster init <name>');
+    }
+    break;
+  }
   case 'publish': {
     if (args.includes('--check')) {
       const { cmdPublishCheck } = require('./publish');

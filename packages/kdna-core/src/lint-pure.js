@@ -7,6 +7,29 @@
  */
 
 /**
+ * Map of old/informal field names → correct v0.4 spec field names.
+ * Used to give helpful error messages when users write from scratch without the template.
+ */
+const OLD_FIELD_HINTS = {
+  statement: 'one_sentence or full_statement',
+  description: 'one_sentence',
+  summary: 'one_sentence',
+  claim: 'wrong',
+  misreading: 'wrong',
+  reality: 'correct',
+  definition: 'essence or one_sentence (on ontology entries)',
+  brief: 'title or context',
+  bad_pattern: 'what_happened',
+  master_pattern: 'structural_pattern',
+  conclusion: 'one_sentence',
+  capability_layers: 'stages',
+  name: 'id (on ontology entries — use id instead of name)',
+  input: 'from',
+  output: 'to',
+  judgment: 'via',
+};
+
+/**
  * Lint a KDNA domain from a map of parsed JSON objects.
  *
  * @param {Object} dataMap — keyed by filename, e.g. { 'KDNA_Core.json': {...}, ... }
@@ -23,6 +46,15 @@ function lintDomain(dataMap) {
   function req(o, k, loc, hint) {
     if (!has(o, k) || o[k] === '' || o[k] == null) {
       let msg = `${loc}: missing required field "${k}"`;
+      // Check for common old field name and suggest the correct one
+      if (o && typeof o === 'object') {
+        for (const [oldName, newName] of Object.entries(OLD_FIELD_HINTS)) {
+          if (has(o, oldName)) {
+            msg += `\n    → Found field "${oldName}" — this looks like an old/informal field name. Use "${newName}" instead.`;
+            break;
+          }
+        }
+      }
       if (hint) msg += `\n    → ${hint}`;
       errors.push(msg);
     }
