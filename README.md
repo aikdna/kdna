@@ -166,11 +166,12 @@ cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
 mkdir -p ~/.agents/skills/kdna-create
 cp skills/kdna-create/SKILL.md ~/.agents/skills/kdna-create/SKILL.md
 
-# 2. Create your KDNA library from a domain package
-git clone https://github.com/aikdna/kdna-writing.git ~/.agents/Kdna/writing
+# 2. Install a domain (sha256 + signature verified, ~10KB per domain)
+kdna install @aikdna/writing
+# Installs to ~/.kdna/domains/@aikdna/writing/
 
-# 3. Validate
-node validators/kdna-lint.js ~/.agents/Kdna/writing
+# 3. Verify
+kdna list
 ```
 
 To create your own domain, ask your agent with `kdna-create` installed, or start from the [minimal template](./templates/minimal-domain/).

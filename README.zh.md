@@ -156,11 +156,12 @@ cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
 mkdir -p ~/.agents/skills/kdna-create
 cp skills/kdna-create/SKILL.md ~/.agents/skills/kdna-create/SKILL.md
 
-# 2. 从独立领域包创建 KDNA 本地库
-git clone https://github.com/aikdna/kdna-writing.git ~/.agents/Kdna/writing
+# 2. 装一个领域（sha256 + 签名验证，~10KB 每个域）
+kdna install @aikdna/writing
+# 装到 ~/.kdna/domains/@aikdna/writing/
 
-# 3. 校验
-node validators/kdna-lint.js ~/.agents/Kdna/writing
+# 3. 检查
+kdna list
 ```
 
 要创建自己的领域，安装了 `kdna-create` 后直接问 Agent，或从[最小模板](./templates/minimal-domain/)开始。

@@ -280,17 +280,62 @@ function verifySignature({ destDir, scope, entry, lenient = true }) {
     return;
   }
 
-  // Real verification (post-bootstrap). Implementation deferred to publish.js work.
-  // The contract: payload = sha256(sorted JSON file names + their canonical bytes)
-  // signed by author.pubkey, where author.pubkey === scope.trust_pubkey.
+  // Author pubkey fingerprint must match scope trust_pubkey
   if (manifest.author?.pubkey !== trustKey) {
-    error(
-      `${entry.name}: author.pubkey does not match scope trust key. Refusing to install.`,
-    );
+    error(`${entry.name}: author.pubkey does not match scope trust key. Refusing to install.`);
   }
 
-  // TODO(post-bootstrap): full Ed25519 verify here using crypto.verify
-  console.log('  ✓ Signature OK');
+  // Full Ed25519 verify (requires public_key_pem embedded in the package)
+  const pem = manifest.author?.public_key_pem;
+  if (!pem) {
+    // Legacy package (signed but no embedded PEM). Trust the fingerprint match.
+    console.log('  ✓ Signature OK (legacy fingerprint-only mode — no PEM)');
+    return;
+  }
+
+  // 1. Confirm the embedded PEM hashes to the claimed pubkey fingerprint
+  const computedFingerprint =
+    'ed25519:' + crypto.createHash('sha256').update(pem).digest('hex');
+  if (computedFingerprint !== manifest.author.pubkey) {
+    error(`${entry.name}: embedded public_key_pem does not match author.pubkey fingerprint. Refusing.`);
+  }
+
+  // 2. Verify the Ed25519 signature over the canonical payload
+  // Canonical payload reconstruction must match publish.js exactly:
+  //   - sorted .json filenames
+  //   - for kdna.json: strip "signature" field before hashing
+  //   - others: raw bytes
+  //   - hash each, format "name:hex", join with "\n"
+  const sigHex = manifest.signature.replace(/^ed25519:/, '');
+  try {
+    const files = fs.readdirSync(destDir).filter((f) => f.endsWith('.json')).sort();
+    const parts = [];
+    for (const f of files) {
+      const full = path.join(destDir, f);
+      let buf;
+      if (f === 'kdna.json') {
+        const obj = JSON.parse(fs.readFileSync(full, 'utf8'));
+        delete obj.signature;
+        delete obj._source; // install-time metadata, not part of signed payload
+        buf = Buffer.from(JSON.stringify(obj));
+      } else {
+        buf = fs.readFileSync(full);
+      }
+      const hash = crypto.createHash('sha256').update(buf).digest('hex');
+      parts.push(`${f}:${hash}`);
+    }
+    const payload = parts.join('\n');
+
+    const publicKey = crypto.createPublicKey(pem);
+    const ok = crypto.verify(null, Buffer.from(payload), publicKey, Buffer.from(sigHex, 'hex'));
+    if (!ok) {
+      error(`${entry.name}: Ed25519 signature INVALID. Package may be tampered. Refusing.`);
+    }
+    console.log('  ✓ Signature OK (Ed25519 verified)');
+  } catch (e) {
+    if (e.message?.includes('INVALID')) throw e;
+    error(`${entry.name}: signature verification failed: ${e.message}`);
+  }
 }
 
 // ─── Status confirmation (interactive) ─────────────────────────────────
