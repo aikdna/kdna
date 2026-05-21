@@ -111,6 +111,19 @@ function parseSource(input) {
 function cmdInstallExtended(input, args) {
   ensureDir(INSTALL_DIR);
 
+  // #25: Clean up stale .tmp directories from previous failed installs
+  try {
+    const dirs = fs.readdirSync(INSTALL_DIR);
+    for (const d of dirs) {
+      if (d.endsWith('.tmp')) {
+        const full = path.join(INSTALL_DIR, d);
+        if (fs.statSync(full).isDirectory()) {
+          fs.rmSync(full, { recursive: true, force: true });
+        }
+      }
+    }
+  } catch { /* No installed domains to scan */ }
+
   const yes = args && args.includes('--yes');
   const source = parseSource(input);
 
@@ -303,12 +316,20 @@ print('ok')
 function installRepo(repoUrl, tarballUrl, dest, domainId) {
   if (fs.existsSync(dest)) {
     console.log(`Updating ${domainId}...`);
-    try {
-      execSync(`git -C "${dest}" pull`, { stdio: 'inherit' });
-      validateInstalledDomain(dest);
-      return;
-    } catch {
-      console.log('Pull failed, re-cloning...');
+    // #26: Only try git pull if this is a git repository
+    const isGitRepo = fs.existsSync(path.join(dest, '.git'));
+    if (isGitRepo) {
+      try {
+        execSync(`git -C "${dest}" pull`, { stdio: 'inherit' });
+        validateInstalledDomain(dest);
+        return;
+      } catch {
+        console.log('Pull failed, re-cloning...');
+        fs.rmSync(dest, { recursive: true, force: true });
+      }
+    } else {
+      // Tarball-installed — clean re-download instead of misleading git error
+      console.log('Re-installing (tarball source)...');
       fs.rmSync(dest, { recursive: true, force: true });
     }
   }
@@ -337,25 +358,31 @@ function installRepo(repoUrl, tarballUrl, dest, domainId) {
   // Try tarball
   if (tarballUrl) {
     console.log(`Trying tarball download...`);
+    let tgz = null;
+    let tmpDir = null;
     try {
-      const tgz = `${dest}.tar.gz`;
+      tgz = `${dest}.tar.gz`;
+      tmpDir = `${dest}.tmp`;
       execSync(`curl -fsSL -o "${tgz}" "${tarballUrl}"`, { stdio: 'pipe', timeout: 60000 });
-      const tmp = `${dest}.tmp`;
-      ensureDir(tmp);
-      execSync(`tar -xzf "${tgz}" -C "${tmp}"`, { stdio: 'pipe' });
+      ensureDir(tmpDir);
+      execSync(`tar -xzf "${tgz}" -C "${tmpDir}"`, { stdio: 'pipe' });
       fs.unlinkSync(tgz);
-      const entries = fs.readdirSync(tmp);
+      tgz = null;
+      const entries = fs.readdirSync(tmpDir);
       if (entries.length === 1) {
-        const wrapper = path.join(tmp, entries[0]);
+        const wrapper = path.join(tmpDir, entries[0]);
         if (fs.statSync(wrapper).isDirectory()) fs.renameSync(wrapper, dest);
-        else fs.renameSync(tmp, dest);
+        else fs.renameSync(tmpDir, dest);
       } else {
-        fs.renameSync(tmp, dest);
+        fs.renameSync(tmpDir, dest);
       }
+      tmpDir = null;
       validateInstalledDomain(dest);
       return;
     } catch {
-      /* Tarball strategy failed */
+      // #25: Clean up temp files on failure
+      try { if (tgz) fs.unlinkSync(tgz); } catch { /* cleanup may fail */ }
+      try { if (tmpDir) fs.rmSync(tmpDir, { recursive: true, force: true }); } catch { /* cleanup may fail */ }
     }
   }
 

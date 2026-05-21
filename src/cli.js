@@ -126,8 +126,10 @@ function cmdValidate(dir, schemaOnly) {
   for (const f of files) {
     try {
       dataMap[f] = JSON.parse(fs.readFileSync(path.join(abs, f), 'utf8'));
-    } catch {
+    } catch (e) {
       dataMap[f] = null;
+      // #24: Report JSON parse errors instead of "Missing required file"
+      console.error(`  JSON parse error in ${f}: ${e.message}`);
     }
   }
 
@@ -216,13 +218,15 @@ function cmdPack(dir, outputDir) {
     writeJson(path.join(abs, 'kdna.json'), manifest);
   }
 
-  // Create ZIP container
+  // Create ZIP container — try python3, then zip command, then Node.js native
   const outName = `${domainName}.kdna`;
   const outPath = outputDir ? path.join(outputDir, outName) : path.join(process.cwd(), outName);
 
-  // Use python3 zipfile (built-in, no dependency) for cross-platform ZIP
-  const script = `
-import zipfile, os, json, sys
+  let packed = false;
+
+  // Strategy 1: python3 zipfile (built-in on macOS, most Linux)
+  const pyScript = `
+import zipfile, os
 src = ${JSON.stringify(abs)}
 out = ${JSON.stringify(outPath)}
 with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as zf:
@@ -230,25 +234,41 @@ with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as zf:
         fp = os.path.join(src, f)
         if os.path.isfile(fp) and (f.endswith('.json') or f in ('README.md', 'LICENSE')):
             zf.write(fp, f)
-print('ok')
 `;
   try {
-    execSync(`python3 -c ${JSON.stringify(script)}`, { stdio: 'pipe' });
-  } catch {
-    // Fallback: use Node.js built-in zlib + manual ZIP (limited)
-    const { createWriteStream } = require('fs');
-    // Try using system zip command
+    execSync(`python3 -c ${JSON.stringify(pyScript)}`, { stdio: 'pipe' });
+    packed = true;
+  } catch { /* Strategy 1 failed, try next */ }
+
+  // Strategy 2: system zip command
+  if (!packed) {
+    const cwd = process.cwd();
     try {
-      const cwd = process.cwd();
       process.chdir(abs);
-      execSync(
-        `zip -q -r "${outPath}" *.json README.md LICENSE 2>/dev/null || zip -q -r "${outPath}" *.json`,
-        { stdio: 'pipe' },
-      );
+      execSync(`zip -q -r "${outPath}" *.json README.md LICENSE 2>/dev/null || zip -q -r "${outPath}" *.json`, { stdio: 'pipe' });
       process.chdir(cwd);
+      packed = true;
     } catch {
-      error('Cannot create ZIP. Install python3 or zip command.');
+      process.chdir(cwd);
     }
+  }
+
+  // #22: Strategy 3 — Node.js native ZIP (no external dependencies)
+  if (!packed) {
+    try {
+      createNodeZip(abs, outPath);
+      packed = true;
+    } catch { /* last attempt failed */ }
+  }
+
+  if (!packed) {
+    const platform = process.platform;
+    const hints = {
+      darwin: 'macOS includes python3 — ensure it is in PATH.',
+      linux: 'Install python3 or zip: apt install python3 / yum install python3 / apk add python3',
+      win32: 'Install python3 from python.org, or use WSL.',
+    };
+    error(`Cannot create ZIP.\n${hints[platform] || 'Install python3 or zip command.'}`);
   }
 
   const fileCount = manifest.file_count || 0;
@@ -256,6 +276,82 @@ print('ok')
   console.log(`  Domain: ${domainName} v${manifest.version}`);
   console.log(`  Files: ${fileCount} KDNA JSONs`);
   console.log(`  Container: ZIP (DEFLATE)`);
+}
+
+// #22: Node.js-native ZIP creator (zero dependencies, fallback when python3/zip unavailable)
+function createNodeZip(srcDir, outPath) {
+  const zlib = require('zlib');
+  const files = fs.readdirSync(srcDir).filter(
+    (f) => f.endsWith('.json') && f !== 'kdna.json'
+  ).concat(
+    ['README.md', 'LICENSE'].filter((f) => fs.existsSync(path.join(srcDir, f)))
+  );
+
+  const centralDir = [];
+  const fileData = [];
+  let offset = 0;
+
+  for (const f of files) {
+    const raw = fs.readFileSync(path.join(srcDir, f));
+    const crc = crc32(raw);
+    const compressed = zlib.deflateRawSync(raw);
+    const useStore = compressed.length >= raw.length;
+
+    const nameBytes = Buffer.from(f, 'utf8');
+    const localHeader = Buffer.alloc(30);
+    localHeader.writeUInt32LE(0x04034b50, 0); // local file header signature
+    localHeader.writeUInt16LE(20, 4); // version needed
+    localHeader.writeUInt16LE(0x0800, 6); // general purpose bit flag (UTF-8)
+    localHeader.writeUInt16LE(useStore ? 0 : 8, 8); // compression method: stored or deflated
+    // skip mod time, mod date
+    localHeader.writeUInt32LE(crc, 14);
+    localHeader.writeUInt32LE(useStore ? raw.length : compressed.length, 18); // compressed size
+    localHeader.writeUInt32LE(raw.length, 22); // uncompressed size
+    localHeader.writeUInt16LE(nameBytes.length, 26);
+
+    const stored = useStore ? raw : compressed;
+
+    fileData.push(Buffer.concat([localHeader, nameBytes, stored]));
+    offset += localHeader.length + nameBytes.length + stored.length;
+
+    // Central directory entry
+    const cdEntry = Buffer.alloc(46);
+    cdEntry.writeUInt32LE(0x02014b50, 0); // central dir signature
+    cdEntry.writeUInt16LE(20, 4); // version made by
+    cdEntry.writeUInt16LE(20, 6); // version needed
+    cdEntry.writeUInt16LE(0x0800, 8); // UTF-8
+    cdEntry.writeUInt16LE(useStore ? 0 : 8, 10);
+    cdEntry.writeUInt32LE(crc, 16);
+    cdEntry.writeUInt32LE(useStore ? raw.length : compressed.length, 20);
+    cdEntry.writeUInt32LE(raw.length, 24);
+    cdEntry.writeUInt16LE(nameBytes.length, 28);
+    cdEntry.writeUInt32LE(offset - stored.length - nameBytes.length - localHeader.length, 42);
+    centralDir.push(Buffer.concat([cdEntry, nameBytes]));
+  }
+
+  const cdOffset = offset;
+  const cdSize = centralDir.reduce((s, e) => s + e.length, 0);
+  const eocd = Buffer.alloc(22);
+  eocd.writeUInt32LE(0x06054b50, 0); // EOCD signature
+  eocd.writeUInt16LE(0, 8); // disk number
+  eocd.writeUInt16LE(files.length, 10); // entries on disk
+  eocd.writeUInt16LE(files.length, 12); // total entries
+  eocd.writeUInt32LE(cdSize, 16); // CD size
+  eocd.writeUInt32LE(cdOffset, 20); // CD offset
+
+  const all = Buffer.concat([...fileData, ...centralDir, eocd]);
+  fs.writeFileSync(outPath, all);
+}
+
+function crc32(buf) {
+  let crc = 0xffffffff;
+  for (let i = 0; i < buf.length; i++) {
+    crc ^= buf[i];
+    for (let j = 0; j < 8; j++) {
+      crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0);
+    }
+  }
+  return (crc ^ 0xffffffff) >>> 0;
 }
 
 function cmdUnpack(filePath, force) {
