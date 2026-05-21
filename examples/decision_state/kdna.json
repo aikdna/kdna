@@ -1,5 +1,5 @@
 {
-  "kdna_spec": "0.2",
+  "kdna_spec": "1.0-rc",
   "name": "decision_state",
   "version": "0.4.0",
   "language": "en",
@@ -24,6 +24,5 @@
   },
   "status": "experimental",
   "registry": {},
-  "file_count": 2,
-  "spec_version": "0.3"
+  "file_count": 2
 }
