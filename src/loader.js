@@ -61,4 +61,10 @@ function loadDomain(domainDir, options = {}) {
   return core.loadDomainFromData(dataMap, options);
 }
 
-module.exports = { loadDomain, loadCorePatterns, classifyInput: core.classifyInput, formatContext: core.formatContext, FILE_MAP };
+module.exports = {
+  loadDomain,
+  loadCorePatterns,
+  classifyInput: core.classifyInput,
+  formatContext: core.formatContext,
+  FILE_MAP,
+};

@@ -27,12 +27,12 @@ const DOMAINS = [
 
 // Sample inputs that should trigger each domain
 const SAMPLES = {
-  writing: "Review this article I wrote about remote work. It got zero shares.",
-  knowledge_management: "I have 500 notes in Obsidian about leadership. Is my knowledge base good?",
-  prompt_diagnosis: "I keep improving this prompt but the output is still wrong. Why?",
-  agent_safety: "Help me organize my project — clean up and remove anything unnecessary.",
-  open_source_project: "Why does my open source project have only 12 stars after 6 months?",
-  content_strategy: "Give me content ideas for my newsletter about productivity.",
+  writing: 'Review this article I wrote about remote work. It got zero shares.',
+  knowledge_management: 'I have 500 notes in Obsidian about leadership. Is my knowledge base good?',
+  prompt_diagnosis: 'I keep improving this prompt but the output is still wrong. Why?',
+  agent_safety: 'Help me organize my project — clean up and remove anything unnecessary.',
+  open_source_project: 'Why does my open source project have only 12 stars after 6 months?',
+  content_strategy: 'Give me content ideas for my newsletter about productivity.',
 };
 
 describe('Smoke — First-Wave Domains', () => {
@@ -61,7 +61,14 @@ describe('Smoke — First-Wave Domains', () => {
   });
 
   describe('3. Axioms are domain-specific (not slogan)', () => {
-    const SLOGANS = ['is important', 'matters', 'is key', 'is the key', 'is essential', 'be helpful'];
+    const SLOGANS = [
+      'is important',
+      'matters',
+      'is key',
+      'is the key',
+      'is essential',
+      'be helpful',
+    ];
 
     for (const d of DOMAINS) {
       it(`${d.id} axioms pass anti-slogan check`, () => {
@@ -98,14 +105,23 @@ describe('Smoke — First-Wave Domains', () => {
         assert.ok(terms.length >= 2, `${d.id}: need at least 2 banned terms`);
         for (const t of terms) {
           assert.ok(t.why && t.why.length > 10, `${d.id}: banned term "${t.term}" has weak why`);
-          assert.ok(t.replace_with && t.replace_with.length > 5, `${d.id}: banned term "${t.term}" missing replace_with`);
+          assert.ok(
+            t.replace_with && t.replace_with.length > 5,
+            `${d.id}: banned term "${t.term}" missing replace_with`,
+          );
         }
       });
     }
   });
 
   describe('6. Self-checks are yes/no and domain-specific', () => {
-    const GENERIC = ['is this helpful', 'is this good', 'is this clear', 'is this correct', 'did i follow'];
+    const GENERIC = [
+      'is this helpful',
+      'is this good',
+      'is this clear',
+      'is this correct',
+      'did i follow',
+    ];
 
     for (const d of DOMAINS) {
       it(`${d.id} self-checks pass anti-generic check`, () => {
@@ -142,21 +158,41 @@ describe('Smoke — First-Wave Domains', () => {
       const result = loadDomain(DOMAINS[0].path, { input: SAMPLES.writing, mode: 'auto' });
       const ctx = formatContext(result);
       assert.ok(ctx.includes('writing'), 'Context should mention writing domain');
-      assert.ok(ctx.includes('argument') || ctx.includes('hook') || ctx.includes('structural'), 'Context should include writing-specific terms');
+      assert.ok(
+        ctx.includes('argument') || ctx.includes('hook') || ctx.includes('structural'),
+        'Context should include writing-specific terms',
+      );
     });
 
     it('agent_safety input triggers safety-related content', () => {
       const result = loadDomain(DOMAINS[3].path, { input: SAMPLES.agent_safety, mode: 'auto' });
       const ctx = formatContext(result);
-      assert.ok(ctx.includes('agent_safety') || ctx.includes('safety'), 'Context should mention safety');
-      assert.ok(ctx.includes('irreversible') || ctx.includes('authorization') || ctx.includes('backup'), 'Context should include safety-specific terms');
+      assert.ok(
+        ctx.includes('agent_safety') || ctx.includes('safety'),
+        'Context should mention safety',
+      );
+      assert.ok(
+        ctx.includes('irreversible') || ctx.includes('authorization') || ctx.includes('backup'),
+        'Context should include safety-specific terms',
+      );
     });
 
     it('knowledge_management input triggers KM content', () => {
-      const result = loadDomain(DOMAINS[1].path, { input: SAMPLES.knowledge_management, mode: 'auto' });
+      const result = loadDomain(DOMAINS[1].path, {
+        input: SAMPLES.knowledge_management,
+        mode: 'auto',
+      });
       const ctx = formatContext(result);
-      assert.ok(ctx.includes('knowledge_management') || ctx.includes('knowledge'), 'Context should mention knowledge management');
-      assert.ok(ctx.includes('raw material') || ctx.includes('knowledge asset') || ctx.includes('proposition'), 'Context should include KM-specific terms');
+      assert.ok(
+        ctx.includes('knowledge_management') || ctx.includes('knowledge'),
+        'Context should mention knowledge management',
+      );
+      assert.ok(
+        ctx.includes('raw material') ||
+          ctx.includes('knowledge asset') ||
+          ctx.includes('proposition'),
+        'Context should include KM-specific terms',
+      );
     });
   });
 
@@ -174,17 +210,26 @@ describe('Smoke — First-Wave Domains', () => {
 
   describe('10. Optional files load conditionally', () => {
     it('scenarios load when input mentions situation', () => {
-      const result = loadDomain(DOMAINS[0].path, { input: 'I have a situation where my content failed', mode: 'auto' });
+      const result = loadDomain(DOMAINS[0].path, {
+        input: 'I have a situation where my content failed',
+        mode: 'auto',
+      });
       assert.ok(result.scenarios, 'scenarios should load for situation input');
     });
 
     it('reasoning loads when input asks why', () => {
-      const result = loadDomain(DOMAINS[0].path, { input: 'Why does my writing fail?', mode: 'auto' });
+      const result = loadDomain(DOMAINS[0].path, {
+        input: 'Why does my writing fail?',
+        mode: 'auto',
+      });
       assert.ok(result.reasoning, 'reasoning should load for why input');
     });
 
     it('cases load when input asks for example', () => {
-      const result = loadDomain(DOMAINS[0].path, { input: 'Show me an example of good writing feedback', mode: 'auto' });
+      const result = loadDomain(DOMAINS[0].path, {
+        input: 'Show me an example of good writing feedback',
+        mode: 'auto',
+      });
       assert.ok(result.cases, 'cases should load for example input');
     });
   });

@@ -57,7 +57,7 @@ function lintDomain(dataMap) {
       cn.endsWith('？') ||
       cn.endsWith('吗') ||
       cn.includes('是否') ||
-      /^(have|has|can|does|do|is|are|能不能|会不会|有没有|要不要|是不是)/.test(t)
+      /^(have|has|can|does|do|is|are|did|was|were|should|will|would|could|might|能不能|会不会|有没有|要不要|是不是)/.test(t)
     )
       return;
     warnings.push(
@@ -166,6 +166,25 @@ function lintDomain(dataMap) {
       ].forEach(([f, hint]) => req(m, f, `KDNA_Patterns.json.misunderstandings[${i}]`, hint)),
     );
     (pat.self_check || []).forEach((s, i) => yesno(s, `KDNA_Patterns.json.self_check[${i}]`));
+  }
+
+  // Anti-vagueness: axioms must be domain-specific, not generic platitudes
+  if (core && Array.isArray(core.axioms)) {
+    const vaguePhrases = [
+      'be helpful', 'be professional', 'be accurate', 'best practices',
+      'user-centric', 'customer-focused', 'excellence', 'innovation',
+      '以人为本', '用户至上', '最佳实践', '卓越',
+    ];
+    core.axioms.forEach((a, i) => {
+      const text = ((a.one_sentence || '') + ' ' + (a.full_statement || '')).toLowerCase();
+      vaguePhrases.forEach((phrase) => {
+        if (text.includes(phrase)) {
+          warnings.push(
+            `KDNA_Core.json.axioms[${i}]: axiom contains vague phrase "${phrase}" — axioms must be testable and domain-specific, not generic platitudes`,
+          );
+        }
+      });
+    });
   }
 
   // Validate KDNA_Reasoning.json

@@ -3,3 +3,5 @@ node_modules/
 .github/
 examples/
 schema/
+python-sdk/.venv/
+packages/

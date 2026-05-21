@@ -1,6 +1,6 @@
 {
-  "registry_version": "0.6.0",
-  "updated": "2026-05-20T12:00:00Z",
+  "registry_version": "1.0-rc",
+  "updated": "2026-05-21T00:00:00Z",
   "domains": [
     {
       "id": "decision_state",
@@ -11,8 +11,13 @@
       "status": "experimental",
       "access": "open",
       "language": ["en"],
-      "author": { "name": "KDNA Team", "id": "kdna-team" },
-      "license": { "type": "CC-BY-4.0" },
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
       "keywords": ["decision", "meeting", "discussion", "commitment", "execution"],
       "description": "Judge whether a meeting or discussion produced an actionable decision — or just discussion.",
       "core_insight": "Discussion is not decision. Broad agreement is not commitment.",
@@ -34,8 +39,13 @@
       "status": "experimental",
       "access": "open",
       "language": ["en"],
-      "author": { "name": "KDNA Team", "id": "kdna-team" },
-      "license": { "type": "CC-BY-4.0" },
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
       "keywords": ["agent safety", "irreversible", "authorization", "safety gate", "sandbox"],
       "description": "Halt before irreversible actions — verify authorization, backup, and reversibility.",
       "core_insight": "Tools make agents capable. Safety judgment makes agents cautious before irreversible action.",
@@ -56,8 +66,13 @@
       "status": "experimental",
       "access": "open",
       "language": ["en"],
-      "author": { "name": "KDNA Team", "id": "kdna-team" },
-      "license": { "type": "CC-BY-4.0" },
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
       "keywords": ["writing", "editing", "argument", "structure", "clarity"],
       "description": "Diagnose whether content has a real argument, a cognitive hook, and evidence density — not just language polish.",
       "core_insight": "Most writing problems are structural and argument-level, not language-level.",
@@ -78,8 +93,13 @@
       "status": "experimental",
       "access": "open",
       "language": ["en"],
-      "author": { "name": "KDNA Team", "id": "kdna-team" },
-      "license": { "type": "CC-BY-4.0" },
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
       "keywords": ["content strategy", "topic selection", "editorial", "marketing", "creator"],
       "description": "Evaluate topic worthiness — specific audience, cognitive contrast, discussability, and comprehension barrier.",
       "core_insight": "Ideas are cheap. Worthiness is rare. Filter topics by who they are for and what assumption they challenge.",
@@ -100,8 +120,13 @@
       "status": "experimental",
       "access": "open",
       "language": ["en"],
-      "author": { "name": "KDNA Team", "id": "kdna-team" },
-      "license": { "type": "CC-BY-4.0" },
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
       "keywords": ["prompt", "diagnosis", "failure mode", "task mixing", "goal ambiguity"],
       "description": "Diagnose why a prompt failed — root cause is task mixing, goal ambiguity, or context gap — not just format issues.",
       "core_insight": "Most prompt failures are task mixing and goal ambiguity, not missing format elements.",
@@ -122,8 +147,13 @@
       "status": "experimental",
       "access": "open",
       "language": ["en"],
-      "author": { "name": "KDNA Team", "id": "kdna-team" },
-      "license": { "type": "CC-BY-4.0" },
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
       "keywords": ["knowledge", "curation", "verification", "boundary", "taxonomy"],
       "description": "Distinguish knowledge assets from raw material — knowledge needs proposition, boundary, counter-example, and evolution record.",
       "core_insight": "Most 'knowledge bases' are raw material collections. Knowledge requires testing, not just saving.",
@@ -144,8 +174,13 @@
       "status": "experimental",
       "access": "open",
       "language": ["en"],
-      "author": { "name": "KDNA Team", "id": "kdna-team" },
-      "license": { "type": "CC-BY-4.0" },
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
       "keywords": ["kdna authoring", "meta-cognition", "expert interview", "quality audit"],
       "description": "Meta-cognition — teach agents how to author high-quality KDNA through interview-first authoring and quality auditing.",
       "core_insight": "KDNA encodes judgment, not information. Expert distinctions extracted through interview are the only valid raw material.",
@@ -166,8 +201,13 @@
       "status": "experimental",
       "access": "open",
       "language": ["en"],
-      "author": { "name": "KDNA Team", "id": "kdna-team" },
-      "license": { "type": "CC-BY-4.0" },
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
       "keywords": ["open source", "adoption", "value proposition", "community", "onboarding"],
       "description": "Diagnose why a project isn't gaining adoption — root cause is value-entry clarity, not documentation or feature gaps.",
       "core_insight": "Adoption failure is a value-entry problem: visitors cannot determine the problem and alternative in 30 seconds.",
@@ -178,6 +218,33 @@
       "updated": "2026-05-20",
       "test_count": 0,
       "quality_badge": "experimental"
+    },
+    {
+      "id": "code_review",
+      "name": "Code Review",
+      "version": "0.1.0",
+      "repo": "https://github.com/knowledge-dna/kdna-code_review",
+      "spec_version": "1.0-rc",
+      "status": "reference",
+      "access": "open",
+      "language": ["en"],
+      "author": {
+        "name": "KDNA Team",
+        "id": "kdna-team"
+      },
+      "license": {
+        "type": "CC-BY-4.0"
+      },
+      "keywords": ["code review", "pull request", "software engineering", "review quality"],
+      "description": "Reference domain for code review judgment — behavior-first review, comment classification, and anti-rubber-stamp principles.",
+      "core_insight": "Every review comment that requests a change must cite a specific failure mode.",
+      "domain_field": ["software-engineering"],
+      "judgment_patterns": ["quality-assessment"],
+      "file_count": 2,
+      "created": "2026-05-21",
+      "updated": "2026-05-21",
+      "test_count": 0,
+      "quality_badge": "reference"
     }
   ]
 }

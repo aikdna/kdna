@@ -22,6 +22,7 @@ const { loadRegistry } = require('./registry');
 
 const USER_KDNA_DIR = path.join(process.env.HOME || process.env.USERPROFILE || '.', '.kdna');
 const INSTALL_DIR = path.join(USER_KDNA_DIR, 'domains');
+const CLUSTERS_DIR = path.join(USER_KDNA_DIR, 'clusters');
 
 function error(msg) {
   console.error(`Error: ${msg}`);
@@ -59,8 +60,17 @@ function confirmStatus(domainId, status, yes) {
 // ─── Parse source ──────────────────────────────────────────────────────
 
 function parseSource(input) {
+  let isCluster = false;
+  let inner = input;
+
+  // cluster:github:user/repo or cluster:domain-id
+  if (input.startsWith('cluster:')) {
+    isCluster = true;
+    inner = input.slice(8);
+  }
+
   // github:user/repo@version or github:user/repo#branch or github:user/repo
-  const ghMatch = input.match(/^github:([^/]+)\/([^@#]+)(?:@(.+))?(?:#(.+))?$/);
+  const ghMatch = inner.match(/^github:([^/]+)\/([^@#]+)(?:@(.+))?(?:#(.+))?$/);
   if (ghMatch) {
     const [, user, repo, version, branch] = ghMatch;
     const cleanRepo = repo.replace(/\.git$/, '');
@@ -70,28 +80,29 @@ function parseSource(input) {
       tarballUrl: `https://api.github.com/repos/${user}/${cleanRepo}/tarball/${version || branch || 'main'}`,
       version: version || branch || 'main',
       display: `${user}/${cleanRepo}${version ? '@' + version : branch ? '#' + branch : ''}`,
+      isCluster,
     };
   }
 
   // Local directory
-  if (input.startsWith('./') || input.startsWith('/') || input.startsWith('~/')) {
-    const resolved = path.resolve(input.replace(/^~/, process.env.HOME || ''));
+  if (inner.startsWith('./') || inner.startsWith('/') || inner.startsWith('~/')) {
+    const resolved = path.resolve(inner.replace(/^~/, process.env.HOME || ''));
     if (fs.existsSync(resolved) && fs.statSync(resolved).isDirectory()) {
-      return { type: 'local-dir', path: resolved, display: resolved };
+      return { type: 'local-dir', path: resolved, display: resolved, isCluster };
     }
     if (fs.existsSync(resolved) && resolved.endsWith('.kdna')) {
-      return { type: 'local-file', path: resolved, display: resolved };
+      return { type: 'local-file', path: resolved, display: resolved, isCluster };
     }
     error(`Local path not found: ${resolved}`);
   }
 
   // Registry short name
-  if (/^[a-z][a-z0-9_-]*$/.test(input)) {
-    return { type: 'registry', id: input };
+  if (/^[a-z][a-z0-9_-]*$/.test(inner)) {
+    return { type: 'registry', id: inner, isCluster };
   }
 
   error(
-    `Cannot parse source: "${input}". Try:\n  kdna install <domain-id>\n  kdna install github:user/repo\n  kdna install ./folder`,
+    `Cannot parse source: "${input}". Try:\n  kdna install <domain-id>\n  kdna install github:user/repo\n  kdna install cluster:github:user/repo\n  kdna install ./folder`,
   );
 }
 
@@ -116,6 +127,11 @@ function cmdInstallExtended(input, args) {
     case 'local-file':
       installFromLocalFile(source.path);
       break;
+  }
+
+  // If installing a cluster, also install all referenced domains
+  if (source.isCluster) {
+    installClusterDomains(source);
   }
 }
 
@@ -164,13 +180,26 @@ function installFromRegistry(domainId, yes) {
 
 function installFromGitHub(source, yes) {
   const domainId = source.display.replace(/[@#]/g, '-').replace(/\//g, '-');
-  const dest = path.join(INSTALL_DIR, domainId);
+  let dest = path.join(INSTALL_DIR, domainId);
 
   console.log(`Installing github:${source.display}...`);
   installRepo(source.url, source.tarballUrl, dest, domainId);
 
-  // Save source metadata
+  // Resolve canonical domain name from installed kdna.json
   const manifest = readJson(path.join(dest, 'kdna.json')) || {};
+  const core = readJson(path.join(dest, 'KDNA_Core.json'));
+  const canonicalName = manifest.name || core?.meta?.domain;
+  if (canonicalName && canonicalName !== domainId) {
+    const canonicalDest = path.join(INSTALL_DIR, canonicalName);
+    if (fs.existsSync(canonicalDest)) {
+      fs.rmSync(canonicalDest, { recursive: true, force: true });
+    }
+    fs.renameSync(dest, canonicalDest);
+    dest = canonicalDest;
+    console.log(`  Installed as: ${canonicalName}`);
+  }
+
+  // Save source metadata
   manifest._source = {
     type: 'github',
     url: source.url,
@@ -442,6 +471,66 @@ function cmdUpdateAll() {
   for (const domainId of entries) {
     cmdUpdate(domainId);
     console.log('');
+  }
+}
+
+// ─── Cluster domain installation ───────────────────────────────────────
+
+function installClusterDomains(source) {
+  // Find the cluster.json in the installed directory
+  let clusterDir;
+  let clusterId;
+
+  switch (source.type) {
+    case 'github':
+      clusterId = source.url.split('/').pop().replace('.git', '');
+      clusterDir = path.join(CLUSTERS_DIR, clusterId);
+      break;
+    case 'registry':
+      clusterId = source.id;
+      clusterDir = path.join(CLUSTERS_DIR, clusterId);
+      break;
+    case 'local-dir':
+      clusterId = path.basename(source.path);
+      clusterDir = path.join(CLUSTERS_DIR, clusterId);
+      break;
+    default:
+      return;
+  }
+
+  let clusterFile = path.join(clusterDir, 'cluster.json');
+  if (!fs.existsSync(clusterFile)) {
+    // Also check the installed domain directory (clusters installed as domains)
+    const altFile = path.join(INSTALL_DIR, clusterId, 'cluster.json');
+    if (fs.existsSync(altFile)) {
+      clusterFile = altFile;
+    } else {
+      return;
+    }
+  }
+
+  const cluster = readJson(clusterFile);
+  if (!cluster || !Array.isArray(cluster.packages)) return;
+
+  console.log('');
+  console.log(`Installing ${cluster.packages.length} domains from cluster...`);
+
+  for (const pkg of cluster.packages) {
+    const domainId = pkg.id || pkg;
+    if (typeof domainId !== 'string') continue;
+
+    const domainDir = path.join(INSTALL_DIR, domainId);
+    if (fs.existsSync(domainDir)) {
+      console.log(`  ✓ ${domainId} (already installed)`);
+      continue;
+    }
+
+    // Try registry first, then github
+    try {
+      cmdInstallExtended(domainId, ['--yes']);
+    } catch {
+      console.log(`  ⚠ ${domainId}: install failed`);
+    }
   }
 }
 

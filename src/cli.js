@@ -10,7 +10,7 @@
  *   kdna install <domain-id>   Install a domain from registry
  *   kdna inspect <path>        Inspect a domain directory or .kdna file
  *   kdna list                  List installed domains
- *   kdna help                  Show help
+ *   kdna setup                   One-command setup: install CLI + skills + data root
  *   kdna cluster lint <path>    Validate a cluster manifest
  *   kdna cluster apply <path> [input]  Simulate cluster routing for a task
  *   kdna identity init           Generate Ed25519 identity key pair
@@ -43,6 +43,7 @@ Usage:
   kdna install <domain-id>    Install a domain from registry
   kdna install github:user/repo  Install from GitHub
   kdna install github:user/repo@v1.2.0  Install version-pinned
+  kdna install cluster:github:user/repo  Install a cluster + all domains
   kdna install ./file.kdna     Install from local .kdna file
   kdna install --from-git <url>   Install from a git repository
   kdna remove <domain>          Uninstall a domain
@@ -51,6 +52,7 @@ Usage:
   kdna update --all             Update all installed domains
   kdna inspect <path>         Inspect a domain directory or .kdna file
   kdna eval <path>            Evaluate domain test cases (before/after score)
+  kdna eval --delta <path>    Delta comparison: With KDNA vs Without KDNA
   kdna eval --benchmark <file>  Evaluate a judgment benchmark file
   kdna eval --cluster <file>    Evaluate a cluster manifest
   kdna select "<task>"         Select the right KDNA packages for a task
@@ -58,8 +60,11 @@ Usage:
   kdna list                   List installed domains
   kdna list --available        List available domains from registry
   kdna registry refresh        Refresh the canonical registry cache
-  kdna demo                    Show no-KDNA vs with-KDNA judgment difference
+  kdna demo                    Show no-KDNA vs with-KDNA (default: decision_state)
+  kdna demo writing            Show writing judgment demo
+  kdna demo code_review        Show code review judgment demo
   kdna demo --trace           Output judgment trace as JSON
+  kdna setup                   One-command setup: install CLI + skills + data root
   kdna cluster lint <path>     Validate a cluster manifest
   kdna cluster apply <path> [input]  Simulate cluster routing for a task
   kdna init <name>             Scaffold a new KDNA domain from template
@@ -110,178 +115,65 @@ function cmdValidate(dir, schemaOnly) {
     error(`Not a directory: ${abs}`);
   }
 
-  const requiredFiles = ['KDNA_Core.json', 'KDNA_Patterns.json'];
-  const warnings = [];
-  const lintErrors = [];
+  const { lintDomain, validateDomainSchema, validateCrossFile } = require('@aikdna/kdna-core');
+  const SCHEMA_DIR = path.join(__dirname, '..', 'packages', 'kdna-core', 'schema');
 
-  for (const f of requiredFiles) {
-    if (!fs.existsSync(path.join(abs, f))) {
-      lintErrors.push(`Missing required file: ${f}`);
-    }
-  }
+  // Read all KDNA JSON files
+  const files = fs.readdirSync(abs).filter((f) => f.endsWith('.json') && f !== 'kdna.json');
+  const dataMap = {};
+  const schemaMap = {};
 
-  const jsonFiles = fs.readdirSync(abs).filter((f) => f.endsWith('.json') && f !== 'kdna.json');
-  if (jsonFiles.length > 6) {
-    lintErrors.push(`Domain has ${jsonFiles.length} JSON files; KDNA allows at most 6.`);
-  }
-
-  const parsed = {};
-  for (const f of jsonFiles) {
-    const data = readJson(path.join(abs, f));
-    if (!data) {
-      lintErrors.push(`${f}: invalid JSON`);
-      continue;
-    }
-    parsed[f] = data;
-
-    if (!data.meta) {
-      lintErrors.push(`${f}: missing meta object`);
-    } else {
-      for (const field of ['version', 'domain', 'created', 'purpose', 'load_condition']) {
-        if (!data.meta[field] || data.meta[field] === '') {
-          lintErrors.push(`${f}.meta: missing "${field}"`);
-        }
-      }
-    }
-  }
-
-  const core = parsed['KDNA_Core.json'];
-  if (core) {
-    for (const field of ['axioms', 'ontology', 'frameworks', 'core_structure', 'stances']) {
-      if (!core[field]) lintErrors.push(`KDNA_Core.json: missing "${field}"`);
-    }
-    for (const a of core.axioms || []) {
-      for (const f of ['id', 'one_sentence', 'full_statement', 'why']) {
-        if (!a[f]) lintErrors.push(`KDNA_Core.json axiom ${a.id || '?'}: missing "${f}"`);
-      }
-    }
-    for (const c of core.ontology || []) {
-      for (const f of ['id', 'one_sentence', 'essence', 'boundary', 'trigger_signal']) {
-        if (!c[f]) lintErrors.push(`KDNA_Core.json ontology ${c.id || '?'}: missing "${f}"`);
-      }
-    }
-  }
-
-  const pat = parsed['KDNA_Patterns.json'];
-  if (pat) {
-    for (const field of ['terminology', 'misunderstandings', 'self_check']) {
-      if (!pat[field]) lintErrors.push(`KDNA_Patterns.json: missing "${field}"`);
-    }
-    for (const b of (pat.terminology || {}).banned_terms || []) {
-      for (const f of ['term', 'why', 'replace_with']) {
-        if (!b[f]) lintErrors.push(`KDNA_Patterns.json banned_term: missing "${f}"`);
-      }
-    }
-    for (const m of pat.misunderstandings || []) {
-      for (const f of ['id', 'wrong', 'correct', 'key_distinction', 'why']) {
-        if (!m[f])
-          lintErrors.push(`KDNA_Patterns.json misunderstanding ${m.id || '?'}: missing "${f}"`);
-      }
-    }
-    for (const s of pat.self_check || []) {
-      const t = String(s).trim();
-      if (
-        !t.endsWith('?') &&
-        !t.endsWith('？') &&
-        !t.endsWith('吗') &&
-        !t.includes('是否') &&
-        !/^(have|has|can|does|do|is|are|能不能|会不会|有没有|要不要|是不是)/i.test(t)
-      ) {
-        warnings.push(`self_check item should be yes/no answerable: "${t.substring(0, 60)}"`);
-      }
-    }
-  }
-
-  const seen = new Set();
-  function collectIds(obj) {
-    if (Array.isArray(obj)) obj.forEach(collectIds);
-    else if (obj && typeof obj === 'object') {
-      if (typeof obj.id === 'string') {
-        if (seen.has(obj.id)) lintErrors.push(`Duplicate ID: "${obj.id}"`);
-        seen.add(obj.id);
-      }
-      Object.values(obj).forEach(collectIds);
-    }
-  }
-  for (const [, data] of Object.entries(parsed)) collectIds(data);
-
-  const manifest = readJson(path.join(abs, 'kdna.json'));
-  if (!manifest) {
-    warnings.push('No kdna.json manifest found. Run `kdna pack` to generate one.');
-  }
-
-  let schemaOk = true;
-  if (schemaOnly || process.argv.includes('--schema')) {
-    const SCHEMA_DIR = path.join(__dirname, '..', 'schema');
-    const schemaMap = {
-      'KDNA_Core.json': 'KDNA_Core.schema.json',
-      'KDNA_Patterns.json': 'KDNA_Patterns.schema.json',
-      'KDNA_Scenarios.json': 'KDNA_Scenarios.schema.json',
-      'KDNA_Cases.json': 'KDNA_Cases.schema.json',
-      'KDNA_Reasoning.json': 'KDNA_Reasoning.schema.json',
-      'KDNA_Evolution.json': 'KDNA_Evolution.schema.json',
-    };
-
-    let ajv, addFormats;
+  for (const f of files) {
     try {
-      ajv = require('ajv');
-      try {
-        addFormats = require('ajv-formats');
-      } catch {
-        addFormats = null;
-      }
+      dataMap[f] = JSON.parse(fs.readFileSync(path.join(abs, f), 'utf8'));
     } catch {
-      warnings.push(
-        'ajv not available. Schema validation skipped. Install: npm install ajv ajv-formats',
-      );
-      schemaOk = null;
+      dataMap[f] = null;
     }
+  }
 
-    if (schemaOk !== null) {
-      for (const [file, schemaFile] of Object.entries(schemaMap)) {
-        const filePathVal = path.join(abs, file);
-        const schemaPath = path.join(SCHEMA_DIR, schemaFile);
-        if (!fs.existsSync(filePathVal) || !fs.existsSync(schemaPath)) continue;
+  // Lint using kdna-core
+  const lintResult = lintDomain(dataMap);
 
-        const data = readJson(filePathVal);
-        if (!data) continue;
+  // Schema validation
+  const FILE_TO_SCHEMA = {
+    'KDNA_Core.json': 'KDNA_Core.schema.json',
+    'KDNA_Patterns.json': 'KDNA_Patterns.schema.json',
+    'KDNA_Scenarios.json': 'KDNA_Scenarios.schema.json',
+    'KDNA_Cases.json': 'KDNA_Cases.schema.json',
+    'KDNA_Reasoning.json': 'KDNA_Reasoning.schema.json',
+    'KDNA_Evolution.json': 'KDNA_Evolution.schema.json',
+  };
 
-        const schema = readJson(schemaPath);
-        if (!schema) continue;
-        delete schema.$schema;
-
-        const ajvInstance = new ajv({ allErrors: true, strict: false });
-        if (addFormats) addFormats(ajvInstance);
-        try {
-          ajvInstance.addMetaSchema(require('ajv/dist/refs/json-schema-2020-12.json'));
-        } catch {
-          /* meta-schema not available */
-        }
-
-        const validate = ajvInstance.compile(schema);
-        if (!validate(data)) {
-          for (const err of validate.errors || []) {
-            lintErrors.push(`${file}${err.instancePath || '/'}: ${err.message}`);
-          }
-          schemaOk = false;
-        }
+  for (const [file, schemaFile] of Object.entries(FILE_TO_SCHEMA)) {
+    const schemaPath = path.join(SCHEMA_DIR, schemaFile);
+    if (fs.existsSync(schemaPath)) {
+      try {
+        schemaMap[schemaFile] = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
+      } catch {
+        /* skip */
       }
     }
   }
+
+  const schemaResult = validateDomainSchema(dataMap, schemaMap);
+  const crossResult = validateCrossFile(dataMap);
+
+  // Combine results
+  const errors = [...lintResult.errors, ...schemaResult.errors, ...crossResult.errors];
+  const warnings = [...lintResult.warnings, ...schemaResult.warnings, ...crossResult.warnings];
 
   if (warnings.length) {
     console.log('Warnings:');
     warnings.forEach((w) => console.log(`  - ${w}`));
   }
-  if (lintErrors.length) {
+  if (errors.length) {
     console.error('Errors:');
-    lintErrors.forEach((e) => console.error(`  - ${e}`));
+    errors.forEach((e) => console.error(`  - ${e}`));
     process.exit(1);
   }
 
-  const count = Object.keys(parsed).length;
-  const schemaMsg = schemaOk !== null ? (schemaOk ? ', schema OK' : ', schema issues') : '';
-  console.log(`✓ KDNA domain valid: ${abs} (${count} file${count !== 1 ? 's' : ''}${schemaMsg})`);
+  const validCount = Object.keys(dataMap).filter((k) => dataMap[k]).length;
+  console.log(`✓ KDNA domain valid: ${abs} (${validCount} files, schema OK)`);
 }
 
 // ─── Pack / Unpack (.kdna ZIP container) ──────────────────────────────────
@@ -304,7 +196,9 @@ function cmdPack(dir, outputDir) {
   // Ensure kdna.json manifest exists (generate if missing)
   let manifest = readJson(path.join(abs, 'kdna.json'));
   if (!manifest) {
-    const jsonCount = fs.readdirSync(abs).filter((f) => f.endsWith('.json') && f !== 'kdna.json').length;
+    const jsonCount = fs
+      .readdirSync(abs)
+      .filter((f) => f.endsWith('.json') && f !== 'kdna.json').length;
     manifest = {
       kdna_spec: '0.4',
       name: domainName,
@@ -347,7 +241,10 @@ print('ok')
     try {
       const cwd = process.cwd();
       process.chdir(abs);
-      execSync(`zip -q -r "${outPath}" *.json README.md LICENSE 2>/dev/null || zip -q -r "${outPath}" *.json`, { stdio: 'pipe' });
+      execSync(
+        `zip -q -r "${outPath}" *.json README.md LICENSE 2>/dev/null || zip -q -r "${outPath}" *.json`,
+        { stdio: 'pipe' },
+      );
       process.chdir(cwd);
     } catch {
       error('Cannot create ZIP. Install python3 or zip command.');
@@ -423,8 +320,11 @@ function cmdPreview(filePath) {
       const script = `import zipfile,os\nzf=zipfile.ZipFile(${JSON.stringify(abs)},'r')\nzf.extractall(${JSON.stringify(tmpDir)})\nzf.close()`;
       execSync(`python3 -c ${JSON.stringify(script)}`, { stdio: 'pipe' });
     } catch {
-      try { execSync(`unzip -q -o "${abs}" -d "${tmpDir}"`, { stdio: 'pipe' }); }
-      catch { error('Cannot read .kdna container. Install python3 or unzip.'); }
+      try {
+        execSync(`unzip -q -o "${abs}" -d "${tmpDir}"`, { stdio: 'pipe' });
+      } catch {
+        error('Cannot read .kdna container. Install python3 or unzip.');
+      }
     }
     core = readJson(path.join(tmpDir, 'KDNA_Core.json'));
     patterns = readJson(path.join(tmpDir, 'KDNA_Patterns.json'));
@@ -487,24 +387,24 @@ function cmdPreview(filePath) {
 <div class="meta">
   <span class="name">${escHtml(name)}</span>
   <span class="ver">v${escHtml(version)}</span>
-  <span class="badge badge-${status==='validated'?'ok':'warn'}">${escHtml(status)}</span>
-  <span style="color:var(--dim);font-size:13px">${presentFiles.length||'?'} files</span>
+  <span class="badge badge-${status === 'validated' ? 'ok' : 'warn'}">${escHtml(status)}</span>
+  <span style="color:var(--dim);font-size:13px">${presentFiles.length || '?'} files</span>
 </div>
 ${desc ? `<p class="desc">${escHtml(desc)}</p>` : ''}
 <div class="cards">
-${renderCard('Axioms', core.axioms?.length, (core.axioms||[]).map(a => `<div class="item"><strong>${escHtml(a.one_sentence||'')}</strong><div class="detail">${escHtml(a.full_statement||a.why||'')}</div></div>`).join(''))}
-${renderCard('Concepts', core.ontology?.length, (core.ontology||[]).map(o => `<div class="item"><strong>${escHtml(o.one_sentence||o.id||'')}</strong><div class="detail">${escHtml(o.essence||'')}</div><div class="meta">Boundary: ${escHtml(o.boundary||'')}</div></div>`).join(''))}
-${renderCard('Frameworks', core.frameworks?.length, (core.frameworks||[]).map(f => `<div class="item"><strong>${escHtml(f.name||'')}</strong><div class="detail">When: ${escHtml(f.when_to_use||'')}</div><div class="detail">Steps: ${(f.steps||[]).map(s => escHtml(s)).join(' → ')}</div></div>`).join(''))}
-${renderCard('Stances', core.stances?.length, (core.stances||[]).map(s => `<div class="item"><strong>${escHtml(typeof s==='string'?s:s.one_sentence||'')}</strong></div>`).join(''))}
-${renderCard('Banned Terms', patterns?.terminology?.banned_terms?.length, (patterns?.terminology?.banned_terms||[]).map(bt => `<div class="item"><strong>${escHtml(bt.term)} <span class="replace">→ ${escHtml(bt.replace_with||'')}</span></strong><div class="why">${escHtml(bt.why||'')}</div></div>`).join(''))}
-${renderCard('Misunderstandings', patterns?.misunderstandings?.length, (patterns?.misunderstandings||[]).map(mu => `<div class="item"><strong>Wrong: ${escHtml(mu.wrong||'')}</strong><div class="detail">Correct: ${escHtml(mu.correct||'')}</div><div class="meta">${escHtml(mu.key_distinction||'')}</div></div>`).join(''))}
-${renderCard('Self-Checks', patterns?.self_check?.length, (patterns?.self_check||[]).map(sc => `<div class="item"><strong>✓ ${escHtml(typeof sc==='string'?sc:sc.one_sentence||'')}</strong></div>`).join(''))}
-${scenarios ? renderCard('Scenarios', scenarios.scenes?.length||0, (scenarios.scenes||[]).map(s => `<div class="item"><strong>${escHtml(s.name||s.id||'')}</strong><div class="detail">${escHtml(s.trigger_signal||'')}</div></div>`).join('')) : ''}
-${cases ? renderCard('Cases', cases.cases?.length||0, (cases.cases||[]).map(c => `<div class="item"><strong>${escHtml(c.title||c.id||'')}</strong><div class="detail">${escHtml((c.what_was_learned||'').substring(0,150))}</div></div>`).join('')) : ''}
-${reasoning ? renderCard('Reasoning', reasoning.reasoning_chains?.length||0, (reasoning.reasoning_chains||[]).map(r => `<div class="item"><strong>${escHtml(r.one_sentence||r.id||'')}</strong><div class="detail">${escHtml(r.so_what||'')}</div></div>`).join('')) : ''}
-${evolution ? renderCard('Evolution', evolution.stages?.length||0, (evolution.stages||[]).map(s => `<div class="item"><strong>${escHtml(s.name||s.id||'')}</strong><div class="detail">${escHtml(s.description||'')}</div></div>`).join('')) : ''}
+${renderCard('Axioms', core.axioms?.length, (core.axioms || []).map((a) => `<div class="item"><strong>${escHtml(a.one_sentence || '')}</strong><div class="detail">${escHtml(a.full_statement || a.why || '')}</div></div>`).join(''))}
+${renderCard('Concepts', core.ontology?.length, (core.ontology || []).map((o) => `<div class="item"><strong>${escHtml(o.one_sentence || o.id || '')}</strong><div class="detail">${escHtml(o.essence || '')}</div><div class="meta">Boundary: ${escHtml(o.boundary || '')}</div></div>`).join(''))}
+${renderCard('Frameworks', core.frameworks?.length, (core.frameworks || []).map((f) => `<div class="item"><strong>${escHtml(f.name || '')}</strong><div class="detail">When: ${escHtml(f.when_to_use || '')}</div><div class="detail">Steps: ${(f.steps || []).map((s) => escHtml(s)).join(' → ')}</div></div>`).join(''))}
+${renderCard('Stances', core.stances?.length, (core.stances || []).map((s) => `<div class="item"><strong>${escHtml(typeof s === 'string' ? s : s.one_sentence || '')}</strong></div>`).join(''))}
+${renderCard('Banned Terms', patterns?.terminology?.banned_terms?.length, (patterns?.terminology?.banned_terms || []).map((bt) => `<div class="item"><strong>${escHtml(bt.term)} <span class="replace">→ ${escHtml(bt.replace_with || '')}</span></strong><div class="why">${escHtml(bt.why || '')}</div></div>`).join(''))}
+${renderCard('Misunderstandings', patterns?.misunderstandings?.length, (patterns?.misunderstandings || []).map((mu) => `<div class="item"><strong>Wrong: ${escHtml(mu.wrong || '')}</strong><div class="detail">Correct: ${escHtml(mu.correct || '')}</div><div class="meta">${escHtml(mu.key_distinction || '')}</div></div>`).join(''))}
+${renderCard('Self-Checks', patterns?.self_check?.length, (patterns?.self_check || []).map((sc) => `<div class="item"><strong>✓ ${escHtml(typeof sc === 'string' ? sc : sc.one_sentence || '')}</strong></div>`).join(''))}
+${scenarios ? renderCard('Scenarios', scenarios.scenes?.length || 0, (scenarios.scenes || []).map((s) => `<div class="item"><strong>${escHtml(s.name || s.id || '')}</strong><div class="detail">${escHtml(s.trigger_signal || '')}</div></div>`).join('')) : ''}
+${cases ? renderCard('Cases', cases.cases?.length || 0, (cases.cases || []).map((c) => `<div class="item"><strong>${escHtml(c.title || c.id || '')}</strong><div class="detail">${escHtml((c.what_was_learned || '').substring(0, 150))}</div></div>`).join('')) : ''}
+${reasoning ? renderCard('Reasoning', reasoning.reasoning_chains?.length || 0, (reasoning.reasoning_chains || []).map((r) => `<div class="item"><strong>${escHtml(r.one_sentence || r.id || '')}</strong><div class="detail">${escHtml(r.so_what || '')}</div></div>`).join('')) : ''}
+${evolution ? renderCard('Evolution', evolution.stages?.length || 0, (evolution.stages || []).map((s) => `<div class="item"><strong>${escHtml(s.name || s.id || '')}</strong><div class="detail">${escHtml(s.description || '')}</div></div>`).join('')) : ''}
 </div>
-<div class="footer">Generated: ${new Date().toISOString().slice(0,10)} · <a href="https://aikdna.com">aikdna.com</a></div>
+<div class="footer">Generated: ${new Date().toISOString().slice(0, 10)} · <a href="https://aikdna.com">aikdna.com</a></div>
 </body></html>`;
 
   const os = require('os');
@@ -528,7 +428,13 @@ function renderCard(title, count, items) {
   return `<div class="card"><h3>${title} <span>${count}</span></h3>${items}</div>`;
 }
 
-function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escHtml(s) {
+  return (s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
 // ─── Inspect .kdna file (ZIP container or legacy merged JSON) ────────────
 
@@ -544,7 +450,6 @@ function inspectKdnaFile(filePath) {
   const isZip = head[0] === 0x50 && head[1] === 0x4b;
 
   let core, patterns, manifest;
-  let fileCount = 0;
   const presentFiles = [];
 
   if (isZip) {
@@ -575,7 +480,6 @@ zf.close()
     for (const f of fs.readdirSync(tmpDir)) {
       if (f.startsWith('KDNA_') && f.endsWith('.json')) {
         presentFiles.push(f);
-        fileCount++;
       }
       if (f === 'README.md' || f === 'LICENSE') presentFiles.push(f);
     }
@@ -585,7 +489,11 @@ zf.close()
     // Legacy merged JSON/YAML format (deprecated)
     const raw = fs.readFileSync(abs, 'utf8');
     let data;
-    try { data = JSON.parse(raw); } catch { data = parseSimpleYaml(raw); }
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      data = parseSimpleYaml(raw);
+    }
 
     if (!data || !data.meta) error(`Invalid .kdna file: missing meta section`);
 
@@ -603,12 +511,19 @@ zf.close()
     };
     core = data.core || {};
     patterns = data.patterns || {};
-    fileCount = 1;
     presentFiles.push('.kdna (legacy merged format)');
-    if (data.scenarios) { presentFiles.push('scenarios (inline)'); fileCount++; }
-    if (data.cases) { presentFiles.push('cases (inline)'); fileCount++; }
-    if (data.reasoning) { presentFiles.push('reasoning (inline)'); fileCount++; }
-    if (data.evolution) { presentFiles.push('evolution (inline)'); fileCount++; }
+    if (data.scenarios) {
+      presentFiles.push('scenarios (inline)');
+    }
+    if (data.cases) {
+      presentFiles.push('cases (inline)');
+    }
+    if (data.reasoning) {
+      presentFiles.push('reasoning (inline)');
+    }
+    if (data.evolution) {
+      presentFiles.push('evolution (inline)');
+    }
   }
 
   if (!core) error('KDNA_Core.json not found in container');
@@ -793,7 +708,7 @@ function cmdInspect(dir) {
 
 // ─── Eval ────────────────────────────────────────────────────────────
 
-function cmdEval(dir) {
+function cmdEval(dir, deltaMode) {
   const abs = path.resolve(dir);
   if (!fs.existsSync(abs) || !fs.statSync(abs).isDirectory()) {
     error(`Not a directory: ${abs}`);
@@ -818,6 +733,10 @@ function cmdEval(dir) {
   const bannedTerms = new Set(
     (pat.terminology?.banned_terms || []).map((b) => b.term.toLowerCase()),
   );
+  const bannedReplacements = {};
+  (pat.terminology?.banned_terms || []).forEach((b) => {
+    bannedReplacements[b.term.toLowerCase()] = (b.replace_with || '').toLowerCase();
+  });
   const axiomKeywords = new Set(
     (core.axioms || []).flatMap((a) =>
       (a.one_sentence + ' ' + a.full_statement)
@@ -831,121 +750,155 @@ function cmdEval(dir) {
     (typeof s === 'string' ? s : s.question || '').toLowerCase(),
   );
 
-  console.log('═'.repeat(60));
-  console.log(`  KDNA Evaluation: ${core.meta?.domain || path.basename(abs)}`);
-  console.log('═'.repeat(60));
-  console.log('');
-
-  let totalScore = 0;
-  const maxScore = cases.length * 5;
-  const results = [];
-
-  for (let i = 0; i < cases.length; i++) {
-    const tc = cases[i];
-    const withKdna = tc.with_kdna || {};
-    const withoutKdna = tc.without_kdna || {};
-    const kdnaText = JSON.stringify(withKdna).toLowerCase();
-    const noKdnaText = JSON.stringify(withoutKdna).toLowerCase();
-
+  function scoreOutput(text, label) {
+    const lower = text.toLowerCase();
     const checks = [];
 
-    // 1. Banned term avoidance (weight: 1)
+    // 1. Banned term avoidance
     let bannedHit = false;
     for (const term of bannedTerms) {
-      if (kdnaText.includes(term)) {
+      if (lower.includes(term)) {
         checks.push({ pass: false, msg: `Uses banned term: "${term}"` });
         bannedHit = true;
         break;
       }
     }
-    if (!bannedHit) {
-      checks.push({ pass: true, msg: 'Avoids all banned terms' });
-    }
+    if (!bannedHit) checks.push({ pass: true, msg: 'Avoids all banned terms' });
 
-    // 2. Domain concept usage (weight: 1)
+    // 2. Domain concept usage
     let conceptHit = false;
     for (const concept of ontologyConcepts) {
-      if (kdnaText.includes(concept)) {
+      if (lower.includes(concept)) {
         conceptHit = true;
         break;
       }
     }
     checks.push({
       pass: conceptHit,
-      msg: conceptHit ? 'References domain concepts' : 'Does not reference domain concepts',
+      msg: conceptHit ? 'References domain concepts' : 'No domain concepts referenced',
     });
 
-    // 3. Axiom alignment (weight: 1)
+    // 3. Axiom alignment
     let axiomWords = 0;
     for (const word of axiomKeywords) {
-      if (kdnaText.includes(word)) axiomWords++;
+      if (lower.includes(word)) axiomWords++;
     }
     const axiomAligned = axiomWords >= 2;
     checks.push({
       pass: axiomAligned,
       msg: axiomAligned
-        ? `Axiom-aligned (${axiomWords} keyword matches)`
-        : `Weak axiom alignment (${axiomWords} keyword matches, need ≥2)`,
+        ? `Axiom-aligned (${axiomWords} matches)`
+        : `Weak axiom alignment (${axiomWords} matches)`,
     });
 
-    // 4. Judgement difference from no-KDNA (weight: 1)
-    const overlapWords = kdnaText.split(/\s+/).filter((w) => noKdnaText.includes(w)).length;
-    const kdnaWords = kdnaText.split(/\s+/).length || 1;
-    const overlapRatio = overlapWords / kdnaWords;
-    const clearlyDifferent = overlapRatio < 0.5;
+    // 4. Structural indicators
+    const hasStructure =
+      /^(findings|verified|checked|recommend|classification)/im.test(text) ||
+      text.includes('**') ||
+      text.includes('triggered') ||
+      text.includes('missing');
     checks.push({
-      pass: clearlyDifferent,
-      msg: clearlyDifferent
-        ? `Clearly different from no-KDNA (${Math.round(overlapRatio * 100)}% overlap)`
-        : `Similar to no-KDNA (${Math.round(overlapRatio * 100)}% overlap — should be more distinct)`,
+      pass: hasStructure,
+      msg: hasStructure ? 'Has structured judgment output' : 'Output is unstructured/generic',
     });
 
-    // 5. Self-check relevance (weight: 1)
+    // 5. Self-check relevance
     let selfCheckRelevant = 0;
     for (const sc of selfCheckItems) {
-      if (kdnaText.includes(sc.substring(0, 20))) selfCheckRelevant++;
+      if (sc && lower.includes(sc.substring(0, Math.min(20, sc.length)))) selfCheckRelevant++;
     }
     checks.push({
-      pass: true,
-      msg: `Self-check coverage: ${selfCheckRelevant}/${selfCheckItems.length} items potentially relevant`,
+      pass: selfCheckRelevant > 0,
+      msg:
+        selfCheckRelevant > 0
+          ? `Self-check coverage: ${selfCheckRelevant}/${selfCheckItems.length}`
+          : 'No self-check indicators',
     });
 
-    const caseScore = checks.filter((c) => c.pass).length;
-    totalScore += caseScore;
+    const score = checks.filter((c) => c.pass).length;
+    return { score, max: 5, checks, label };
+  }
 
-    console.log(`  Case ${i + 1}: "${tc.input?.substring(0, 50)}..."`);
-    console.log(`  Score: ${caseScore}/5`);
-    for (const c of checks) {
-      console.log(`    ${c.pass ? '✓' : '✗'} ${c.msg}`);
+  const domain = core.meta?.domain || path.basename(abs);
+  console.log('═'.repeat(60));
+  console.log(`  KDNA Evaluation: ${domain}`);
+  if (deltaMode) console.log('  Mode: Delta (With KDNA vs Without KDNA)');
+  console.log('═'.repeat(60));
+  console.log('');
+
+  let withTotal = 0,
+    withoutTotal = 0;
+  const maxScore = cases.length * 5;
+  const results = [];
+
+  for (let i = 0; i < cases.length; i++) {
+    const tc = cases[i];
+    const withKdna =
+      typeof tc.with_kdna === 'string' ? tc.with_kdna : JSON.stringify(tc.with_kdna || {});
+    const withoutKdna =
+      typeof tc.without_kdna === 'string' ? tc.without_kdna : JSON.stringify(tc.without_kdna || {});
+
+    const withResult = scoreOutput(withKdna, 'With KDNA');
+    const withoutResult = scoreOutput(withoutKdna, 'Without KDNA');
+
+    withTotal += withResult.score;
+    withoutTotal += withoutResult.score;
+
+    const delta = withResult.score - withoutResult.score;
+
+    if (deltaMode) {
+      console.log(`  Case ${i + 1}: "${(tc.input || '').substring(0, 60)}..."`);
+      console.log(
+        `  Without KDNA: ${withoutResult.score}/5  |  With KDNA: ${withResult.score}/5  |  Δ +${delta > 0 ? '+' : ''}${delta}`,
+      );
+      for (const c of withResult.checks) {
+        console.log(`    ${c.pass ? '✓' : '✗'} ${c.msg}`);
+      }
+      console.log('');
+    } else {
+      console.log(`  Case ${i + 1}: "${(tc.input || '').substring(0, 50)}..."`);
+      console.log(`  Score: ${withResult.score}/5`);
+      for (const c of withResult.checks) {
+        console.log(`    ${c.pass ? '✓' : '✗'} ${c.msg}`);
+      }
+      console.log('');
     }
+
+    results.push({
+      input: tc.input,
+      withScore: withResult.score,
+      withoutScore: withoutResult.score,
+      delta,
+      checks: withResult.checks,
+    });
+  }
+
+  if (deltaMode) {
+    const withPct = Math.round((withTotal / maxScore) * 100);
+    const withoutPct = Math.round((withoutTotal / maxScore) * 100);
+    const deltaPct = withPct - withoutPct;
+
+    console.log('═'.repeat(60));
+    console.log(`  Delta Results:`);
+    console.log(`    Without KDNA: ${withoutTotal}/${maxScore} (${withoutPct}%)`);
+    console.log(`    With KDNA:    ${withTotal}/${maxScore} (${withPct}%)`);
+    console.log(`    Δ Improvement: +${deltaPct}%`);
+    console.log('═'.repeat(60));
     console.log('');
-
-    results.push({ input: tc.input, score: caseScore, checks });
-  }
-
-  const finalScore = Math.round((totalScore / maxScore) * 100);
-  const grade = finalScore >= 90 ? 'A' : finalScore >= 70 ? 'B' : finalScore >= 50 ? 'C' : 'D';
-
-  console.log('═'.repeat(60));
-  console.log(`  Overall: ${finalScore}/100 (Grade: ${grade})`);
-  console.log(`  Cases: ${cases.length} | Total score: ${totalScore}/${maxScore}`);
-  console.log('═'.repeat(60));
-
-  // Recommendations
-  console.log('');
-  console.log('  Recommendations:');
-  if (finalScore < 90) {
-    const weakAreas = results.flatMap((r) => r.checks.filter((c) => !c.pass));
-    const uniqueMsgs = [...new Set(weakAreas.map((w) => w.msg))];
-    for (const msg of uniqueMsgs.slice(0, 5)) {
-      console.log(`    • ${msg}`);
-    }
+    console.log(
+      `  Cases: ${cases.length} | Average Δ: +${(deltaPct / cases.length).toFixed(1)}% per case`,
+    );
+    console.log('');
   } else {
-    console.log('    • Domain test coverage is strong. Consider adding more edge cases.');
+    const finalScore = Math.round((withTotal / maxScore) * 100);
+    const grade = finalScore >= 90 ? 'A' : finalScore >= 70 ? 'B' : finalScore >= 50 ? 'C' : 'D';
+    console.log('═'.repeat(60));
+    console.log(`  Overall: ${finalScore}/100 (Grade: ${grade})`);
+    console.log(`  Cases: ${cases.length} | Total score: ${withTotal}/${maxScore}`);
+    console.log('═'.repeat(60));
   }
-  console.log('');
 
-  return finalScore;
+  return { withTotal, withoutTotal, maxScore, results };
 }
 
 function cmdEvalBenchmark(benchmarkFile) {
@@ -1160,9 +1113,10 @@ const cmd = args[0];
 
 switch (cmd) {
   case 'validate': {
-    const target = args[1];
+    const schemaFlag = args.includes('--schema');
+    const target = args.filter((a, i) => i > 0 && a !== '--schema')[0];
     if (!target) error('Usage: kdna validate <path>');
-    cmdValidate(target, args.includes('--schema'));
+    cmdValidate(target, schemaFlag);
     break;
   }
   case 'pack': {
@@ -1262,9 +1216,10 @@ switch (cmd) {
       if (!target || target.startsWith('--')) error('Usage: kdna eval --cluster <file>');
       cmdEvalCluster(target);
     } else {
-      const target = args[1];
+      const delta = args.includes('--delta');
+      const target = args.filter((a) => !a.startsWith('--'))[1];
       if (!target) error('Usage: kdna eval <path>');
-      cmdEval(target);
+      cmdEval(target, delta);
     }
     break;
   }
@@ -1288,11 +1243,17 @@ switch (cmd) {
   }
   case 'demo': {
     const { runDemo, runDemoJson } = require('./demo');
+    const domain = args[1] || 'decision_state';
     if (args.includes('--trace') || args.includes('--json')) {
-      runDemoJson();
+      runDemoJson(domain);
     } else {
-      runDemo();
+      runDemo(domain);
     }
+    break;
+  }
+  case 'setup': {
+    const { cmdSetup } = require('./setup');
+    cmdSetup();
     break;
   }
   case 'cluster': {
