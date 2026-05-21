@@ -395,6 +395,20 @@ KDNA MUST NOT replace these systems. It provides a cognition layer that operates
 - Fields added in v0.4 (cluster support, quality thresholds) are OPTIONAL for v0.3.
 - Loaders SHOULD ignore unknown fields to enable forward compatibility.
 
+### 12.1 Domain Version Semantics
+
+KDNA domains follow [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH). The `kdna.json` manifest `version` field and each file's `meta.version` MUST use semver.
+
+| Level | Increment when | Examples |
+|-------|---------------|----------|
+| **PATCH** (0.4.x) | Content refinement without structural change | Fix typo in axiom statement, clarify ontology boundary wording, improve self-check phrasing |
+| **MINOR** (0.x.0) | New judgment structures added; no breaking changes to existing logic | Add new axiom, add ontology concept, add framework, add misunderstanding, add scenario |
+| **MAJOR** (x.0.0) | Breaking changes to existing judgment logic | Remove axiom, change framework steps order, redefine concept boundary, change self-check trigger |
+
+A domain at `v0.2.0` with only Core+Patterns is less mature than `v0.4.0` with Core+Patterns+Scenarios+Cases. The version number reflects structural evolution, not functional superiority. Two domains at different versions MAY both be valid for their respective scopes.
+
+The SPEC version (`kdna_spec` in manifest) indicates which version of this specification the domain conforms to (e.g., `1.0-rc`). This is independent of the domain's own version number.
+
 ## 13. References
 
 - [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) — Key words for use in RFCs
