@@ -209,8 +209,13 @@ class RegistryResolver {
     }
 
     if (entry.yanked) {
+      const reason = entry.yanked_reason ? `\nReason: ${entry.yanked_reason}` : '';
+      const when = entry.yanked_at ? ` (yanked ${entry.yanked_at.slice(0, 10)})` : '';
+      const replace = entry.replaced_by
+        ? `\nTry: kdna install ${entry.replaced_by}`
+        : '';
       throw new Error(
-        `${entry.name}@${entry.version} has been yanked. Try a different version or domain.`,
+        `${entry.name}@${entry.version} has been yanked${when}.${reason}${replace}`,
       );
     }
 

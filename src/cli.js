@@ -50,6 +50,7 @@ Usage:
   kdna update <name>           Update an installed domain
   kdna update --all            Update all installed domains
   kdna inspect <path>         Inspect a domain directory or .kdna file
+  kdna verify <name>           Quality check: structure + trust + judgment (v2.1)
   kdna eval <path>            Evaluate domain test cases (before/after score)
   kdna eval --delta <path>    Delta comparison: With KDNA vs Without KDNA
   kdna eval --benchmark <file>  Evaluate a judgment benchmark file
@@ -1354,6 +1355,21 @@ switch (cmd) {
     const target = args[1];
     if (!target) error('Usage: kdna inspect <path>');
     cmdInspect(target);
+    break;
+  }
+  case 'verify': {
+    const { cmdVerify } = require('./verify');
+    const target = args.filter((a) => !a.startsWith('--'))[1];
+    if (!target) {
+      error(
+        'Usage:\n' +
+          '  kdna verify <name>             Run all three layers (structure / trust / judgment)\n' +
+          '  kdna verify <name> --structure  Files + schema only\n' +
+          '  kdna verify <name> --trust      Signature + scope + Ed25519 only\n' +
+          '  kdna verify <name> --judgment   v2.1 governance fields + eval cases only',
+      );
+    }
+    cmdVerify(target, args);
     break;
   }
   case 'eval': {

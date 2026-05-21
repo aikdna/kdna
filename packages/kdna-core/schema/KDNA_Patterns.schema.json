@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KDNA_Patterns",
+  "$comment": "Schema v2.1 — misunderstandings/banned_terms may carry judgment-governance fields. Recommended, not required.",
   "type": "object",
   "required": [
     "meta",
@@ -19,22 +20,11 @@
         "load_condition"
       ],
       "properties": {
-        "version": {
-          "type": "string"
-        },
-        "domain": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9_]*$"
-        },
-        "created": {
-          "type": "string"
-        },
-        "purpose": {
-          "type": "string"
-        },
-        "load_condition": {
-          "type": "string"
-        }
+        "version": { "type": "string" },
+        "domain": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "created": { "type": "string" },
+        "purpose": { "type": "string" },
+        "load_condition": { "type": "string" }
       },
       "additionalProperties": true
     },
@@ -44,27 +34,77 @@
       "properties": {
         "standard_terms": { "type": "array" },
         "preferred_terms": { "type": "array" },
-        "banned_terms": { "type": "array" }
+        "banned_terms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "term": { "type": "string" },
+              "why": { "type": "string" },
+              "replace_with": { "type": "string" },
+              "applies_when": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "v2.1 (recommended)"
+              }
+            },
+            "additionalProperties": true
+          }
+        }
       }
     },
     "misunderstandings": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "id",
-          "wrong",
-          "correct",
-          "key_distinction",
-          "why"
-        ]
+        "required": ["id", "wrong", "correct", "key_distinction", "why"],
+        "properties": {
+          "id": { "type": "string" },
+          "wrong": { "type": "string" },
+          "correct": { "type": "string" },
+          "key_distinction": { "type": "string" },
+          "why": { "type": "string" },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low"],
+            "description": "v2.1 (recommended)"
+          },
+          "evidence_type": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "practice_pattern",
+                "case_observation",
+                "research_finding",
+                "industry_consensus",
+                "personal_experience",
+                "working_hypothesis"
+              ]
+            },
+            "description": "v2.1 (recommended)"
+          },
+          "applies_when": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "v2.1 (recommended): when this distinction is the agent's likely failure mode"
+          },
+          "does_not_apply_when": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "v2.1 (recommended): when this distinction would be a red herring"
+          },
+          "failure_risk": {
+            "type": "string",
+            "description": "v2.1 (recommended): consequence of over-applying this distinction"
+          }
+        },
+        "additionalProperties": true
       }
     },
     "self_check": {
       "type": "array",
-      "items": {
-        "type": "string"
-      }
+      "items": { "type": "string" }
     }
   },
   "additionalProperties": true
