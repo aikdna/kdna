@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "KDNA CLI and toolkit — create, validate, and load domain cognition packages for AI agents.",
   "type": "commonjs",
   "main": "src/index.js",
@@ -38,7 +38,7 @@
     "format:check": "prettier --check .",
     "lint:examples": "node validators/kdna-lint.js examples/communication && node validators/kdna-lint.js examples/from-wiki-to-kdna/kdna && node validators/kdna-lint.js examples/product_decision && node validators/kdna-lint.js examples/management && node validators/kdna-lint.js examples/sales",
     "validate:examples": "node validators/kdna-validate.js examples/communication && node validators/kdna-validate.js examples/from-wiki-to-kdna/kdna && node validators/kdna-validate.js examples/product_decision && node validators/kdna-validate.js examples/management && node validators/kdna-validate.js examples/sales",
-    "test": "node --test tests/loader.test.js tests/validator.test.js",
+    "test": "node --test tests/loader.test.js tests/validator.test.js tests/v07-commands.test.js",
     "test:esm": "node --test --experimental-vm-modules tests/esm.test.js"
   },
   "keywords": [
