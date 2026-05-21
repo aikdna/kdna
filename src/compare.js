@@ -46,7 +46,16 @@ function loadLlmConfig() {
   const provider = llm.provider || 'anthropic';
   const model = llm.model || (provider === 'anthropic' ? 'claude-sonnet-4-5' : 'gpt-4o-mini');
   const envName = llm.api_key_env || (provider === 'anthropic' ? 'ANTHROPIC_API_KEY' : 'OPENAI_API_KEY');
-  const apiKey = process.env[envName];
+  const apiKey = process.env[envName] || llm.api_key || null;
+
+  // base_url lets users point the "openai" provider at any OpenAI-compatible
+  // endpoint (SiliconFlow, Groq, OpenRouter, local llama.cpp, etc.).
+  // Default: official endpoints for each provider.
+  const defaultBase = provider === 'anthropic'
+    ? 'https://api.anthropic.com'
+    : 'https://api.openai.com';
+  const baseUrl = llm.base_url || defaultBase;
+
   if (!apiKey) {
     error(
       `LLM API key not found. Set ${envName} in your environment, or edit ~/.kdna/config.json:\n` +
@@ -54,22 +63,34 @@ function loadLlmConfig() {
         `    "llm": {\n` +
         `      "provider": "anthropic" | "openai",\n` +
         `      "model": "<model-id>",\n` +
-        `      "api_key_env": "ANTHROPIC_API_KEY"\n` +
+        `      "api_key_env": "${envName}",\n` +
+        `      "base_url": "https://...   (optional, for OpenAI-compatible endpoints)"\n` +
         `    }\n` +
         `  }`,
     );
   }
-  return { provider, model, apiKey, envName };
+  return { provider, model, apiKey, envName, baseUrl };
+}
+
+// Parse "https://host[:port]/path/prefix" → { host, port, basePath }
+function parseBaseUrl(url) {
+  const u = new URL(url);
+  return {
+    host: u.hostname,
+    port: u.port ? parseInt(u.port, 10) : 443,
+    basePath: u.pathname.replace(/\/$/, ''), // strip trailing slash
+  };
 }
 
 // ─── HTTP helpers ──────────────────────────────────────────────────────
 
-function httpsPost(host, pathPart, headers, body) {
+function httpsPost(host, port, pathPart, headers, body) {
   return new Promise((resolve, reject) => {
     const data = JSON.stringify(body);
     const req = https.request(
       {
         host,
+        port: port || 443,
         path: pathPart,
         method: 'POST',
         headers: { ...headers, 'Content-Length': Buffer.byteLength(data) },
@@ -96,10 +117,13 @@ function httpsPost(host, pathPart, headers, body) {
 }
 
 async function callLlm(cfg, systemPrompt, userMessage) {
+  const { host, port, basePath } = parseBaseUrl(cfg.baseUrl);
+
   if (cfg.provider === 'anthropic') {
     const resp = await httpsPost(
-      'api.anthropic.com',
-      '/v1/messages',
+      host,
+      port,
+      `${basePath}/v1/messages`,
       {
         'content-type': 'application/json',
         'anthropic-version': '2023-06-01',
@@ -107,7 +131,7 @@ async function callLlm(cfg, systemPrompt, userMessage) {
       },
       {
         model: cfg.model,
-        max_tokens: 2048,
+        max_tokens: 4096,
         system: systemPrompt,
         messages: [{ role: 'user', content: userMessage }],
       },
@@ -115,16 +139,23 @@ async function callLlm(cfg, systemPrompt, userMessage) {
     return resp.content?.map((c) => c.text || '').join('') || '';
   }
   if (cfg.provider === 'openai') {
+    // For OpenAI-compatible endpoints the base may already include /v1 (e.g.
+    // SiliconFlow: https://api.siliconflow.cn/v1). Append /chat/completions
+    // if the basePath doesn't already end with /v1.
+    const endpoint = basePath.endsWith('/v1')
+      ? `${basePath}/chat/completions`
+      : `${basePath}/v1/chat/completions`;
     const resp = await httpsPost(
-      'api.openai.com',
-      '/v1/chat/completions',
+      host,
+      port,
+      endpoint,
       {
         'content-type': 'application/json',
         authorization: `Bearer ${cfg.apiKey}`,
       },
       {
         model: cfg.model,
-        max_tokens: 2048,
+        max_tokens: 4096,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userMessage },

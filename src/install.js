@@ -78,17 +78,20 @@ function ensureLoaderSkill() {
   let installed = 0;
   const sources = [];
 
-  // Source 1: local templates (from KDNA repo checkout)
-  const localTemplate = path.resolve(__dirname, '..', 'skills', 'kdna-loader', 'SKILL.md');
-  if (fs.existsSync(localTemplate)) {
-    sources.push({ type: 'local', path: localTemplate });
-  }
-
-  // Source 2: download from skills repo
+  // Source 1: download from kdna-skills repo (single source of truth, v0.7.4+).
+  // This must come FIRST so we don't ship stale local copies to users.
   sources.push({
     type: 'remote',
     url: 'https://raw.githubusercontent.com/aikdna/kdna-skills/main/kdna-loader/SKILL.md',
   });
+
+  // Source 2: offline fallback — KDNA repo local checkout, only used if the
+  // CDN is unreachable. The npm-published tarball does NOT include SKILL.md
+  // files anymore (they live solely in kdna-skills).
+  const localTemplate = path.resolve(__dirname, '..', 'skills', 'kdna-loader', 'SKILL.md');
+  if (fs.existsSync(localTemplate)) {
+    sources.push({ type: 'local', path: localTemplate });
+  }
 
   for (const dir of targets) {
     const skillDir = path.join(dir, 'kdna-loader');
