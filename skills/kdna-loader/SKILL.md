@@ -4,25 +4,53 @@ Use this skill to load KDNA domain cognition before responding to domain-specifi
 
 KDNA shapes judgment — framing, diagnosis, terminology, and self-checks — before output generation.
 
-## File Locations
+## File Locations (v0.7+ layout)
 
-**KDNA search paths (checked in order):**
+**Project-level (highest priority):**
 
-1. `./kdna/`, `./Kdna/` — project-level (preferred)
-2. `~/.kdna/domains/` — CLI install location (`kdna install` puts domains here)
-3. `~/.kdna/` — legacy root (domain folders directly under root)
+Before doing anything else, search upward from the current working directory for:
+1. `./.kdna/config.json`
+2. `./kdna.config.json`
 
-Domain folders use `snake_case` (e.g., `business_growth/`).
+If found, parse it as:
 
-If your Agent uses a different root, create a symlink:
-
+```json
+{
+  "kdna": {
+    "domains": ["@aikdna/writing", "@aikdna/agent_safety"],
+    "mode": "auto" | "manual",
+    "conflict_policy": "surface" | "first_wins"
+  }
+}
 ```
+
+- `domains[]` — list of pinned `@scope/name` to consider for THIS repository
+- `mode: "manual"` — only load pinned domains, never auto-match
+- `mode: "auto"` (default) — pinned domains get priority, but auto-matching still runs
+- `conflict_policy: "surface"` — when two domains disagree, tell the user, never blend silently
+- `conflict_policy: "first_wins"` — first in `domains[]` is leader, others advise only
+
+**Global install root:**
+
+`~/.kdna/domains/@<scope>/<name>/` (v0.7 scoped layout)
+
+Examples:
+- `~/.kdna/domains/@aikdna/writing/`
+- `~/.kdna/domains/@aikdna/code_review/`
+- `~/.kdna/domains/@zhangling/internal_writing/`
+
+**Legacy paths (deprecated, only read if `@scope` paths absent):**
+
+- `./kdna/`, `./Kdna/` — old project-level
+- `~/.kdna/domains/<bare_name>/` — pre-v0.7 unscoped layout (warn user to reinstall)
+
+If your agent uses a different root, create a symlink:
+
+```bash
 ln -s ~/.kdna ~/.claude/Kdna   # Claude Code
 ln -s ~/.kdna ~/.codex/Kdna    # Codex
 ln -s ~/.kdna ~/.agents/Kdna   # OpenCode
 ```
-
-Prefer project-level over global.
 
 ## When to Use
 
@@ -30,37 +58,49 @@ Prefer project-level over global.
 
 **Skip KDNA:** purely mechanical tasks (format, extract, translate), or when domain judgment would not change the output. See [meta-cognition rules](https://github.com/knowledge-dna/KDNA/blob/main/docs/meta-cognition.md) for detailed guidance.
 
-## Domain Auto-Matching
+## Domain Selection — v2.1 (governance-aware)
 
-When the user's request does not name a domain but implies one, **dynamically scan ALL installed domains** to find the best match. Do NOT use a hardcoded list — new domains are added continuously.
+Use this order when deciding which domain to load:
 
-### Scanning procedure
+### Step 1 — Project config takes priority
 
-1. List all folders in `~/.kdna/domains/` (and `./kdna/` for project-level).
-2. For each folder, read the `kdna.json` manifest — this is the required self-describing file.
-3. Score each domain by keyword overlap between the user's request and the manifest's `keywords` array and `description` field.
-4. KDNA clusters also have a `KDNA_Cluster.json` or `cluster.json` — read these to discover sub-domain routing rules.
+If a project-level `.kdna/config.json` was found and `mode: "manual"`, ONLY consider domains in `config.domains`. Skip auto-matching entirely.
 
-### Match algorithm
+If `mode: "auto"` (or no config), pinned domains get a +5 score bonus in the matching below.
 
-1. Score each installed domain by keyword hits in user input (case-insensitive).
-2. If no domain scores above threshold, do not load KDNA.
-3. If one domain clearly leads, load it. Prefer `stable` > `basic` > `experimental` when scores tie.
-4. If multiple domains score high and conflict is possible, load one as leader and flag the conflict.
-5. For KDNA clusters: read the `KDNA_Cluster.json` to determine which sub-domains to load based on the specific task and composition rules.
+### Step 2 — Score candidate domains by signal
 
-### Architecture note
+For each installed domain at `~/.kdna/domains/@<scope>/<name>/`:
 
-KDNA domains are **pure judgment data** — JSON files + `kdna.json` manifest. They do NOT contain skill files (no SKILL.md, no AGENTS.md). The kdna-loader skill is the **single entry point** for all domain loading.
+1. **Keyword hits** in user input against the domain's `keywords` field (`kdna.json`) and `core_insight`.
+2. **applies_when match** — read `KDNA_Core.json > axioms[].applies_when` and `ontology[].applies_when`. If the user's task description matches one of these conditions, add +3 per match.
+3. **does_not_apply_when CHECK** — read the same axioms' `does_not_apply_when`. If the user's task matches one of these, **subtract** the domain's total score by 10 (it disqualifies itself).
 
-All domain discovery goes through this central loader: scan directories → read `kdna.json` keywords → match → load the JSON.
+A domain whose `does_not_apply_when` clearly matches the task should NOT be loaded even if keywords match.
 
-## Domain Selection (Manual)
+### Step 3 — Project config conflict policy
 
-1. Search the KDNA root for folders matching the user's task.
-2. Check `kdna.json` manifest for `keywords` and `description`.
-3. Prefer `stable` > `basic` > `experimental`.
-4. One leading domain is usually sufficient. Load secondary domains only as constraints.
+If multiple domains tie, use `conflict_policy`:
+- `surface` — pick the highest score as leader, list the others as "advisors", surface conflict to user
+- `first_wins` — first in `config.domains` wins, others are advisors only
+
+### Step 4 — Status preference
+
+When all else is equal: `stable` > `reference` > `experimental` > `deprecated`. Never load `yanked` domains.
+
+### Fallback keyword table (when no manifest keywords are clear)
+
+| Signal | Domain |
+|---|---|
+| "review writing", "edit", "is this good", "feedback on", "argument", "hook", "content diagnosis", "写作诊断", "文章问题" | `@aikdna/writing` |
+| "notes", "knowledge base", "pkm", "obsidian", "notion", "second brain", "saved", "知识管理", "笔记" | `@aikdna/knowledge_management` |
+| "prompt not working", "fix prompt", "why did this prompt", "prompt diagnosis", "task mixing", "prompt优化", "提示词问题" | `@aikdna/prompt_diagnosis` |
+| "delete file", "organize files", "clean up", "remove", "safety", "irreversible", "before deleting", "安全", "删除文件" | `@aikdna/agent_safety` |
+| "open source", "github repo", "adoption", "stars", "why no users", "开源", "项目采用" | `@aikdna/open_source_project` |
+| "content idea", "what to write", "topic", "content strategy", "选题", "内容策略", "写什么" | `@aikdna/content_strategy` |
+| "meeting", "decision", "discussion", "action items", "会议", "决策" | `@aikdna/decision_state` |
+| "review pr", "review code", "pull request", "code review", "代码评审" | `@aikdna/code_review` |
+| "animation", "motion", "gsap", "scroll", "transition", "动效", "动画" | `@aikdna/animation` (cluster) |
 
 ## Loading Rules
 
@@ -80,75 +120,70 @@ All domain discovery goes through this central loader: scan directories → read
 Before responding, record internally (not in user-facing output):
 
 ```
-[KDNA] loaded: <domain>@<version> | modules: core, patterns [+ scenarios, cases, reasoning, evolution] | mode: <minimum|auto|all>
+[KDNA] loaded: @aikdna/<name>@<version> | judgment_version: 2026.05
+       modules: core, patterns [+ scenarios, cases, reasoning, evolution]
+       source: project-config / auto-match / user-explicit
+       mode: <minimum|auto|all>
 ```
 
 For debug mode, expose this to the user:
 
 ```
-Loaded KDNA: sales@0.1.0
+Loaded KDNA: @aikdna/writing v0.7.2 (judgment_version 2026.05)
+Source: matched on axiom.applies_when "user asked for content feedback"
 Applied modules: core, patterns, scenarios
-Mode: judgment shaping
 ```
 
-## Applying KDNA
+## Applying KDNA — v2.1 (boundary-aware)
 
-1. Internalize axioms and stances as the domain frame.
-2. Use preferred terminology; avoid banned terms even if the user uses them.
-3. Detect likely misunderstandings in the user's framing.
-4. Apply frameworks and scenario signals to classify the situation.
-5. Use reasoning chains when explaining rationale.
-6. Run self-check items before final output.
-7. Produce a domain-shaped answer — not a KDNA summary.
+1. **Internalize** axioms and stances as the domain frame.
+2. **Boundary check** — for each axiom you'd apply, verify the task is in its `applies_when` AND not in its `does_not_apply_when`. If `does_not_apply_when` matches, DO NOT apply that axiom; surface this to the user if it changes the answer materially.
+3. **Failure risk pre-check** — read each axiom's `failure_risk`. Before producing output, ask yourself: "Am I about to commit the failure this domain explicitly warns about?" If yes, step back.
+4. **Use** preferred terminology; avoid banned terms even if the user uses them.
+5. **Detect** likely misunderstandings in the user's framing.
+6. **Apply** frameworks and scenario signals to classify the situation.
+7. **Self-check** items from `KDNA_Patterns.json > self_check` before final output.
+8. **Produce** a domain-shaped answer — not a KDNA summary.
 
 ## Response Protocol
 
 **Normal tasks:** Do not announce loading. Don't quote KDNA. Don't say "According to KDNA…" Answer directly with judgment shaped silently by the domain.
 
-**Debugging:** State which domain was loaded, report missing/ invalid files, flag terminology conflicts, suggest file-level fixes.
+**Debugging:** State which domain was loaded, report missing/invalid files, flag terminology conflicts, suggest file-level fixes.
 
-## Multi-Domain
+## Multi-Domain (with conflict_policy)
 
-1. Load Core + Patterns for each candidate.
-2. Compare axioms and terminology. Choose one leading domain.
-3. Use secondary domains as constraints only.
-4. **Surface conflicts — never silently blend contradictory guidance.** Tell the user: "Domain A interprets this as X. Domain B sees it as Y. Which perspective fits better?"
+When `.kdna/config.json` pins multiple domains:
+
+1. Load Core + Patterns for each.
+2. Compare axioms and terminology.
+3. **If `conflict_policy: surface`** — pick leader by score; list others as advisors. When their stances disagree on the current task, tell the user: "Domain A sees this as X. Domain B sees it as Y. Which fits?"
+4. **If `conflict_policy: first_wins`** — first pinned domain is leader. Others can add constraints but cannot override leader's stance.
+5. **Never silently blend** contradictory guidance — that is the definition of judgment pollution.
 
 ## Conflict Arbitration
 
-When domains conflict: user intent > specific domain > general domain > evidence > boundary declaration. If a domain says "do NOT cover X" and the task is about X, that domain disqualifies itself. See [meta-cognition: conflict arbitration](https://github.com/knowledge-dna/KDNA/blob/main/docs/meta-cognition.md#3-conflict-arbitration).
+When domains conflict: user intent > specific domain > general domain > evidence > boundary declaration.
+
+If a domain's `does_not_apply_when` matches the task, that domain disqualifies itself — do not "weigh it in".
+
+See [meta-cognition: conflict arbitration](https://github.com/knowledge-dna/KDNA/blob/main/docs/meta-cognition.md#3-conflict-arbitration).
 
 ## Failure Handling
 
 | Situation | Action |
 |---|---|
-| No KDNA root | Continue without KDNA. If user requested KDNA, report expected path. |
-| Domain folder missing | Report not found. Do not fabricate. |
+| No KDNA root | Continue without KDNA. If user requested KDNA, report expected path `~/.kdna/domains/@scope/name/`. |
+| Domain folder missing | Report not found. Do not fabricate. Suggest `kdna search <keyword>`. |
+| `.kdna/config.json` invalid JSON | Report the path + error. Continue with auto-matching. |
+| `.kdna/config.json` references uninstalled domain | Suggest `kdna install <name>`. Continue with the rest. |
 | Required files missing | Report which files. Minimum: `KDNA_Core.json` + `KDNA_Patterns.json`. |
 | JSON invalid | Report the file. Continue with valid files if possible. |
-| Optional files missing | Not fatal. Continue with Core + Patterns. |
+| Legacy unscoped path detected | Suggest `kdna remove <name> && kdna install @aikdna/<name>` (v0.7 breaking change). |
+| Domain has `yanked: true` (in registry) | Do not load. Suggest `replaced_by` if present. |
 
 ## Quality Boundary
 
 KDNA does not replace tools, APIs, RAG, workflows, execution skills, or source verification. KDNA shapes judgment — evidence and user intent take priority when they conflict with domain axioms.
 
-## KDNA Clusters
-
-When multiple KDNA packages are organized into a cluster (see `docs/kdna-clusters.md`), the loader must assign roles:
-
-### Primary
-One package leads. It defines the main judgment lens for the current task. All other packages operate relative to this lens.
-
-### Advisor
-Supplements the primary from another angle. Maximum 3 advisors per task. Advisors enrich — they do not override.
-
-### Constraint
-Hard boundaries that override unsafe suggestions. If a constraint package flags a risk (e.g., unresolved blockers in a timeline), it takes priority over all other guidance.
-
-### Cluster Routing
-When a cluster is available, the loader should:
-1. Identify the cluster from available packages
-2. Select the primary based on task signal matching
-3. Activate advisors based on `use_when` conditions
-4. Always load constraints when risk signals are detected
-5. Surface role assignments in the loading log
+**KDNA humility:** if a domain has `failure_risk` declared and your draft answer hits that risk, the domain has self-disqualified for this task. Respect that and adjust.
