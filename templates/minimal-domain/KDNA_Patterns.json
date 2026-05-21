@@ -23,7 +23,7 @@
   },
   "misunderstandings": [
     {
-      "id": "MS-001",
+      "id": "ms-common-confusion",
       "wrong": "Common wrong interpretation that an agent without domain cognition would make.",
       "correct": "The correct interpretation according to this domain's principles.",
       "key_distinction": "The specific conceptual boundary the agent must preserve.",
