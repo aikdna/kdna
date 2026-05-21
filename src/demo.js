@@ -1,219 +1,199 @@
 /**
- * KDNA Demo — Show no-KDNA / with-KDNA judgment difference in 60 seconds.
+ * KDNA Demo — Multi-domain before/after judgment comparison.
  *
- * Uses pre-stored outputs so the demo works offline.
+ * Usage: kdna demo [domain]
+ *   kdna demo              → decision_state (default)
+ *   kdna demo writing      → writing demo
+ *   kdna demo decision_state → decision_state demo
+ *   kdna demo --trace      → JSON trace output
  */
 
 const { loadDomain } = require('./loader');
 const path = require('path');
 
-const DEMO_SCENARIO = {
-  title: 'Sprint Planning Meeting',
-  input: `Team discussed technical debt in the authentication module. After debate, the tech lead said: "We need more data on user impact before we prioritize this. Let's revisit once we have that." No date was set. No owner was assigned to gather data. No criteria defined for "enough data."`,
-};
-
-const NO_KDNA_OUTPUT = `The team discussed technical debt in the authentication module. The tech lead wants more data on user impact before prioritizing. They plan to revisit this once they have the data.
+const DEMOS = {
+  decision_state: {
+    title: 'Discussion vs Decision',
+    input: `Team discussed technical debt in the authentication module. After debate, the tech lead said: "We need more data on user impact before we prioritize this. Let's revisit once we have that." No date was set. No owner was assigned. No criteria defined for "enough data."`,
+    noKdna: `The team discussed technical debt in the authentication module. The tech lead wants more data on user impact before prioritizing. They plan to revisit this once they have the data.
 
 Key points:
 - Authentication module has technical debt
 - Need user impact data
 - Will revisit when data is available
-- No immediate action required`;
+- No immediate action required`,
+    withKdna: `**Decision State: UNRESOLVED**
 
-const WITH_KDNA_OUTPUT = `**Decision State: UNRESOLVED**
+Four critical elements are missing:
+1. No specific choice — "Prioritize this" is vague
+2. No named owner — "We" is not a person
+3. No timing — "Revisit once we have that" has no date
+4. No condition specificity — "More data" is unbounded
 
-The meeting produced discussion, not a decision. Four critical elements are missing:
+Why this matters: treating discussion as decision leads to action items for commitments that don't exist.
 
-1. **No specific choice**: "Prioritize this" is vague — what exactly will be done and when?
-2. **No named owner**: Who gathers the user impact data? "We" is not a person.
-3. **No timing**: "Revisit once we have that" has no date. This is a deferral without structure.
-4. **No condition specificity**: "More data" is unbounded. How much is enough? What metrics?
+Triggered: AX-001 Discussion≠Decision, AX-002 Silence≠Commitment, FW-002 Deferral Validation, MS-003 Vague deferral misclassification`,
+    whatChanged: [
+      'Generic AI: summarizes content passively — misses that no action was committed.',
+      'KDNA: identifies missing commitment elements (owner, timing, choice, condition).',
+      'KDNA: classifies state as UNRESOLVED rather than describing it as neutral.',
+      'KDNA: transparent judgment path — shows which axioms triggered.',
+    ],
+  },
 
-**Why this matters**: If an AI agent treats this as a decision, it will generate action items for a commitment that does not exist. The team will leave thinking "we decided" when in reality no one is accountable.
+  code_review: {
+    title: 'Code Review',
+    input: `Pull Request: "Refactor: extract authentication logic into AuthService class." Changes: moved 200 lines from UserController to new AuthService. Added unit tests for happy path. No tests for invalid token, expired session, or concurrent login scenarios.`,
+    noKdna: `Code review: LGTM. Clean extraction, good separation of concerns. Tests cover the main flow. Ship it.`,
+    withKdna: `**Review: Behavior-first analysis completed.**
 
-**Triggered axioms**:
-- "Discussion is not decision. Broad agreement is not commitment." (AX-001)
-- "The absence of objection is not the presence of commitment." (AX-002)
+Findings:
+1. Missing edge case tests: invalid token, expired session, concurrent login — these are the highest-risk scenarios for authentication code. The happy-path test coverage is not sufficient.
+2. The refactor moved 200 lines but the PR description does not state what behavioral guarantees are preserved. What existing integration tests verify the auth flow end-to-end?
 
-**Triggered framework**: Deferral Validation — the condition ("more data") lacks specificity, date, and decision owner. This is UNRESOLVED, not intentional deferral.`;
+Preference (optional): Consider renaming AuthService.authenticate() to AuthService.verifyCredentials() for clarity.
 
-function runDemo() {
-  console.log('\n=== KDNA Demo: Discussion vs Decision ===\n');
-  console.log(`Scenario: ${DEMO_SCENARIO.title}`);
+Verified: Core extraction is clean. No logic changes detected in happy-path comparison.
+Checked: Callers of UserController — all three updated correctly.
+Not checked: Session timeout behavior after refactor — auth token expiry logic was in the moved code block. Verify with integration test.
+
+Triggered: AX-002 Behavior before implementation. AX-003 Comment classification — findings cite specific failure modes. FW-001 Behavior-First Review applied. MS-001 Silent approval is not review.`,
+    whatChanged: [
+      'Generic AI: LGTM, ship it — no verification recorded.',
+      'KDNA: Documents what was verified, what was not checked, and what risk remains.',
+      'KDNA: Classifies findings (must-fix) vs preferences (optional) explicitly.',
+      'KDNA: Identifies the highest-risk missing tests (auth edge cases) rather than style feedback.',
+    ],
+  },
+  writing: {
+    title: 'Product Announcement',
+    input: `Write a product announcement for a new AI-powered analytics dashboard called "InsightFlow". It has real-time data, beautiful visualizations, and helps teams make better decisions.`,
+    noKdna: `Introducing InsightFlow: Your AI-Powered Analytics Dashboard
+
+In today's fast-paced business environment, data-driven decisions are more critical than ever. InsightFlow brings the power of artificial intelligence to your analytics workflow, with stunning real-time visualizations and intuitive dashboards that your entire team will love.
+
+Key features:
+- Real-time data that keeps you ahead of the curve
+- Beautiful, customizable visualizations
+- AI-powered insights that help you make smarter decisions
+- Seamless team collaboration
+
+Don't get left behind. Try InsightFlow today and transform the way your team works with data.
+
+Schedule a demo now!`,
+    withKdna: `**Judgment: Warning — decorative language, no argument structure**
+
+Issues detected:
+1. No cognitive hook — what specific problem does the reader have that InsightFlow solves? "Data-driven decisions" is everyone's problem, which means it's no one's specific problem.
+2. Anxiety-selling pattern detected — "Don't get left behind" creates fear without earning the right to resolve it.
+3. Vague judgment terms — "smarter decisions" and "better decisions" say nothing. What specific decision does InsightFlow improve?
+
+Recommended rewrite direction:
+- Open with the specific frustration: "Your team spent 3 hours in a spreadsheet and still doesn't know which channel drove last month's revenue."
+- Name the cognitive contrast: "Most dashboards show you what happened. InsightFlow tells you which number to act on."
+- Replace decorative adjectives with operational claims.
+
+Triggered: AX-001 Writing problems are structural, not language-level. AX-002 Content must exert judgment pressure on the reader. Banned terms: "beautiful", "stunning", "transform", "Don't get left behind". Self-check: Does the title create a real decision question? → FAIL.`,
+    whatChanged: [
+      'Generic AI: produces fluent, decorative marketing copy with no argument.',
+      'KDNA: rejects anxiety-selling language and vague judgment claims.',
+      'KDNA: demands a cognitive hook — what specific problem?',
+      'KDNA: flags banned decorative terms and suggests operational alternatives.',
+    ],
+  },
+};
+
+function runDemo(domainName = 'decision_state') {
+  const demo = DEMOS[domainName];
+  if (!demo) {
+    console.error(`Unknown demo: ${domainName}`);
+    console.error(`Available: ${Object.keys(DEMOS).join(', ')}`);
+    process.exit(1);
+  }
+
+  console.log('\n' + '='.repeat(60));
+  console.log(`KDNA Demo: ${demo.title}`);
+  console.log('='.repeat(60));
+  console.log();
+  console.log('TASK:');
   console.log('-'.repeat(60));
-  console.log(DEMO_SCENARIO.input);
+  console.log(demo.input);
   console.log('-'.repeat(60));
   console.log();
 
-  console.log('\n--- WITHOUT KDNA (Generic AI Summary) ---\n');
-  console.log(NO_KDNA_OUTPUT);
+  console.log('WITHOUT KDNA (Generic AI):');
+  console.log('-'.repeat(60));
+  console.log(demo.noKdna);
+  console.log('-'.repeat(60));
   console.log();
 
-  console.log('\n--- WITH KDNA (Judgment-First Analysis) ---\n');
-  console.log(WITH_KDNA_OUTPUT);
+  console.log('WITH KDNA (Judgment-First):');
+  console.log('-'.repeat(60));
+  console.log(demo.withKdna);
+  console.log('-'.repeat(60));
   console.log();
 
-  console.log('\n=== What Changed? ===\n');
-  console.log(
-    'Without KDNA, the AI summarizes content — producing a pleasant but useless summary of a non-decision.',
-  );
-  console.log(
-    'With KDNA, the AI checks structural elements (owner, timing, choice, action) and classifies the state.',
-  );
-  console.log();
-  console.log('Key differences:');
-  console.log(
-    "  1. Generic AI: 'No immediate action required' — misses that NO action was ever committed.",
-  );
-  console.log('  2. KDNA: Explicitly identifies 4 missing elements that prevent execution.');
-  console.log(
-    '  3. KDNA: Distinguishes vague deferral from intentional deferral using the Deferral Validation framework.',
-  );
-  console.log(
-    '  4. KDNA: Shows which axioms and frameworks were triggered — transparent judgment path.',
-  );
+  console.log('WHAT CHANGED:');
+  console.log('-'.repeat(60));
+  demo.whatChanged.forEach((c, i) => console.log(`${i + 1}. ${c}`));
+  console.log('-'.repeat(60));
   console.log();
 
-  console.log('\n=== Judgment Trace ===\n');
-  console.log('When KDNA loads, the agent receives structured judgment context:');
-  console.log();
+  // Load domain trace if available
   try {
-    const domainDir = path.resolve(__dirname, '..', 'examples', 'decision_state');
-    const domain = loadDomain(domainDir, { mode: 'all' });
+    let domainPath;
+    if (domainName === 'decision_state') {
+      domainPath = path.resolve(__dirname, '..', 'examples', 'decision_state');
+    } else {
+      domainPath = path.resolve(__dirname, '..', '..', `kdna-${domainName}`);
+    }
+
+    const domain = loadDomain(domainPath, { mode: 'all' });
     if (domain) {
-      console.log(`  Loaded package: ${domain.core.meta.domain} v${domain.core.meta.version}`);
+      console.log('DOMAIN LOADED:');
+      console.log(`  ${domain.core.meta.domain} v${domain.core.meta.version}`);
       console.log(`  Axioms: ${domain.core?.axioms?.length || 0}`);
-      console.log(`  Ontology entries: ${domain.core?.ontology?.length || 0}`);
+      console.log(`  Concepts: ${domain.core?.ontology?.length || 0}`);
       console.log(`  Frameworks: ${domain.core?.frameworks?.length || 0}`);
       console.log(`  Misunderstandings: ${domain.patterns?.misunderstandings?.length || 0}`);
       console.log(`  Self-checks: ${domain.patterns?.self_check?.length || 0}`);
-      console.log();
-      console.log('Triggered by this scenario:');
-      console.log("  [AX-001] 'Discussion is not decision. Broad agreement is not commitment.'");
-      console.log(
-        "    → Scenario shows 'discussed' and 'after debate' but no commitment structure.",
-      );
-      console.log("  [AX-002] 'The absence of objection is not the presence of commitment.'");
-      console.log('    → No one objected, but no one accepted ownership either.');
-      console.log("  [MS-003] Vague deferral ('need more data') without condition, date, owner.");
-      console.log('    → Maps to UNRESOLVED, not intentional deferral.');
-      console.log('  [FW-002] Deferral Validation: fails all 3 checks (condition, date, owner).');
-      console.log();
-      console.log('Self-checks the agent runs:');
-      console.log('  ✓ Did I check for all four operational commitment elements?');
-      console.log('  ✓ Did I classify the decision state (not just describe content)?');
-      console.log(
-        '  ✗ Did I verify deferral language has specific condition, date, and decision owner?',
-      );
-      console.log("    → FAIL: 'more data' is vague, no date, no owner.");
+      if (domain.patterns?.terminology?.banned_terms?.length) {
+        console.log(`  Banned terms: ${domain.patterns.terminology.banned_terms.length}`);
+      }
     }
-  } catch (err) {
-    console.log('  Debug:', err.message);
-    console.log('  (Domain files not available for trace display)');
+  } catch {
+    // Domain files not available locally
   }
 
-  console.log('\n=== Try it yourself ===\n');
-  console.log('  kdna validate ./examples/decision_state');
-  console.log('  kdna eval ./examples/decision_state');
-  console.log('  node benchmarks/eval-decision-state.js --limit=5 --kdna');
+  console.log();
+  console.log('TRY IT:');
+  console.log(`  npx @aikdna/kdna demo ${domainName}`);
+  console.log(`  kdna install ${domainName}`);
+  console.log(`  kdna validate ~/.kdna/domains/${domainName}`);
   console.log();
 }
 
-function buildTrace() {
-  const domainDir = path.resolve(__dirname, '..', 'examples', 'decision_state');
-  const domain = loadDomain(domainDir, { mode: 'all' });
-  if (!domain) return null;
-
-  return {
-    trace_version: '0.1.0',
-    trace_id: `trace_${Date.now()}`,
-    timestamp: new Date().toISOString(),
-    input_hash: 'sha256:demo',
-    loaded_package: {
-      domain: domain.core.meta.domain,
-      version: domain.core.meta.version,
-      source: 'local',
-      loaded_files: ['KDNA_Core.json', 'KDNA_Patterns.json'],
-    },
-    triggered_concepts: [
-      {
-        id: 'unresolved',
-        name: 'Unresolved Discussion',
-        match_signal: "discussed, after debate, let's revisit",
-      },
-    ],
-    triggered_axioms: [
-      {
-        id: 'AX-001',
-        statement: 'Discussion is not decision. Broad agreement is not commitment.',
-      },
-      {
-        id: 'AX-002',
-        statement: 'The absence of objection is not the presence of commitment.',
-      },
-    ],
-    triggered_frameworks: [
-      {
-        id: 'FW-002',
-        name: 'Deferral Validation',
-        steps_applied: [
-          'Check condition specificity',
-          'Check deferral date',
-          'Check decision owner',
-        ],
-      },
-    ],
-    triggered_misunderstandings: [
-      {
-        id: 'MS-003',
-        description: 'Vague deferral without condition, date, owner',
-        evidence: "Let's revisit once we have that — no date, no owner, no criteria",
-      },
-    ],
-    self_checks: [
-      {
-        check_id: 'SC-1',
-        description: 'Did I verify all four operational commitment elements?',
-        passed: false,
-        reason: 'Missing: explicit choice, owner, timing, condition specificity',
-      },
-      {
-        check_id: 'SC-2',
-        description: 'Did I distinguish social agreement from explicit choice?',
-        passed: true,
-        reason: 'No explicit choice was made; social agreement detected',
-      },
-      {
-        check_id: 'SC-5',
-        description:
-          'Did I verify deferral language has specific condition, date, and decision owner?',
-        passed: false,
-        reason: "'More data' is vague, no date set, no owner assigned",
-      },
-    ],
-    generated_judgment: {
-      classification: 'UNRESOLVED',
-      confidence: 'high',
-      missing_elements: ['explicit choice', 'owner', 'timing', 'condition specificity'],
-      recommended_action:
-        "Before execution: assign owner, set date, define 'enough data' criteria. Do not treat as decided.",
-      reasoning_summary:
-        'Input shows discussion and vague deferral without operational commitment structure. All four commitment elements are missing.',
-    },
-    agent_info: {
-      agent_name: 'kdna-demo',
-      agent_version: '0.4.0',
-    },
-  };
-}
-
-function runDemoJson() {
-  const trace = buildTrace();
-  if (!trace) {
-    console.error(JSON.stringify({ error: 'Failed to load domain' }, null, 2));
+function runDemoJson(domainName = 'decision_state') {
+  const demo = DEMOS[domainName];
+  if (!demo) {
+    console.error(JSON.stringify({ error: `Unknown demo: ${domainName}` }));
     process.exit(1);
   }
-  console.log(JSON.stringify(trace, null, 2));
+
+  console.log(
+    JSON.stringify(
+      {
+        demo: domainName,
+        input: demo.input,
+        without_kdna: demo.noKdna,
+        with_kdna: demo.withKdna,
+        what_changed: demo.whatChanged,
+        timestamp: new Date().toISOString(),
+      },
+      null,
+      2,
+    ),
+  );
 }
 
-module.exports = { runDemo, runDemoJson, DEMO_SCENARIO, NO_KDNA_OUTPUT, WITH_KDNA_OUTPUT };
+module.exports = { runDemo, runDemoJson, DEMOS };

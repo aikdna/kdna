@@ -86,6 +86,4 @@ if (errors.length) {
 }
 
 const validCount = Object.keys(dataMap).length;
-console.log(
-  `✓ KDNA domain valid (schema): ${domainDir} (${validCount} files passed)`,
-);
+console.log(`✓ KDNA domain valid (schema): ${domainDir} (${validCount} files passed)`);

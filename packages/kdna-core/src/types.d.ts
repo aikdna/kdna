@@ -252,3 +252,9 @@ export function validateCrossFile(dataMap: KDNAFileDataMap): ValidationResult;
 export function renderPreviewHTML(domain: LoadedDomain, manifest?: KDNAManifest): string;
 export function escHtml(s: string): string;
 export function renderCard(title: string, count: number | undefined, items: string): string;
+
+// Compose
+export function composeContext(domains: LoadedDomain[], options?: { separator?: string }): string;
+export function classifySignals(input: string, domains: Array<{ id: string; core: { trigger_signals?: string[] } }>): number[];
+export function composeChecks(domains: Array<{ id: string; core: { meta: { domain: string } }; patterns: { self_check: string[] } }>): string[];
+export function loadAndCompose(dataMaps: KDNAFileDataMap[], options?: LoadOptions & { separator?: string }): { domains: LoadedDomain[]; context: string; activeIndices: number[] };
