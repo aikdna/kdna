@@ -36,29 +36,24 @@ When the user's request does not name a domain but implies one, **dynamically sc
 
 ### Scanning procedure
 
-1. List all folders in the KDNA root paths.
-2. For each folder, check for ONE of these self-describing files (in priority order):
-   - `SKILL.md` — domain's own skill file with trigger keywords
-   - `kdna.json` — manifest with `keywords` and `description`
-   - `AGENTS.md` — agent instructions with loading guidance
-3. Score each domain by keyword overlap between the user's request and the domain's self-description. Extract keywords from:
-   - `SKILL.md`: the "When to load" section
-   - `kdna.json`: the `keywords` array
-   - `AGENTS.md`: the first paragraph describing the domain
+1. List all folders in `~/.kdna/domains/` (and `./kdna/` for project-level).
+2. For each folder, read the `kdna.json` manifest — this is the required self-describing file.
+3. Score each domain by keyword overlap between the user's request and the manifest's `keywords` array and `description` field.
+4. KDNA clusters also have a `KDNA_Cluster.json` or `cluster.json` — read these to discover sub-domain routing rules.
 
 ### Match algorithm
 
 1. Score each installed domain by keyword hits in user input (case-insensitive).
 2. If no domain scores above threshold, do not load KDNA.
-3. If one domain clearly leads, load it. Prefer `stable` over `experimental` when scores tie.
+3. If one domain clearly leads, load it. Prefer `stable` > `basic` > `experimental` when scores tie.
 4. If multiple domains score high and conflict is possible, load one as leader and flag the conflict.
-5. For KDNA clusters: read the cluster's `KDNA_Cluster.json` or `SKILL.md` to determine which sub-domains to load based on the specific task (see "Task-based loading" in the cluster's SKILL.md).
+5. For KDNA clusters: read the `KDNA_Cluster.json` to determine which sub-domains to load based on the specific task and composition rules.
 
-### Self-bootstrapping domains
+### Architecture note
 
-A domain with a `SKILL.md` at its root is **self-bootstrapping** — it can be loaded even without the kdna-loader meta-skill. When any agent scans its skills directory and finds a domain folder with `SKILL.md`, it can load that domain directly by following the instructions in the SKILL.md file.
+KDNA domains are **pure judgment data** — JSON files + `kdna.json` manifest. They do NOT contain skill files (no SKILL.md, no AGENTS.md). The kdna-loader skill is the **single entry point** for all domain loading.
 
-This is the primary loading path. The kdna-loader meta-skill adds auto-matching and multi-domain conflict arbitration, but individual domains should work without it.
+All domain discovery goes through this central loader: scan directories → read `kdna.json` keywords → match → load the JSON.
 
 ## Domain Selection (Manual)
 
