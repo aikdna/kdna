@@ -520,6 +520,8 @@ function cmdPublish(domainPath, args = []) {
     );
   }
   manifest.author.pubkey = scopeKey;
+  // Embed full PEM so consumers can verify the signature against author.pubkey fingerprint
+  manifest.author.public_key_pem = publicKey;
 
   // 2. Write signature
   delete manifest.signature;
