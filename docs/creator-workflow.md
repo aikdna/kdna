@@ -217,7 +217,7 @@ kdna-<domain-id>/
 
 # kdna-<domain-id>
 
-[![KDNA Spec](https://img.shields.io/badge/KDNA-v0.4-4c1)](https://github.com/aikdna/KDNA)
+[![KDNA Spec](https://img.shields.io/badge/KDNA-v1.0-4c1)](https://github.com/aikdna/KDNA)
 
 **<Domain Name>** — <one-line description>
 
@@ -228,7 +228,7 @@ kdna-<domain-id>/
 ## Install
 
 \`\`\`bash
-kdna install github:aikdna/kdna-<domain-id>
+kdna install @aikdna/<domain-id>
 \`\`\`
 
 ## Scope
@@ -258,38 +258,72 @@ kdna validate .
 CC BY 4.0
 ```
 
-### 5.4 注册到 Registry
+### 5.4 注册到 Registry（v2.0 schema）
 
-在 `kdna-registry/domains.json` 中添加条目：
+**首选**：用新 publish 命令一键打包+签名+上传+生成 patch：
+
+```bash
+# 设置 identity（首次）
+kdna identity init
+
+# 一键发布：打包、签名、上传 GitHub Release、输出 registry patch
+kdna publish ./your-domain \
+  --release-tag v0.1.0 \
+  --repo yourname/kdna-<domain-id>
+```
+
+命令输出末尾会打印一段 JSON patch，复制到 `kdna-registry/domains.json` 的 `domains` 数组里。字段示例：
 
 ```json
 {
-  "id": "<domain-id>",
-  "name": "<Domain Name>",
+  "name": "@yourname/<domain-id>",
+  "type": "domain",
   "version": "0.1.0",
-  "repo": "https://github.com/aikdna/kdna-<domain-id>",
-  "spec_version": "0.4",
+  "spec_version": "1.0",
   "status": "experimental",
   "access": "open",
-  "language": ["en"],
-  "author": { "name": "KDNA Team", "id": "kdna-team" },
+  "kdna_url": "https://github.com/yourname/kdna-<domain-id>/releases/download/v0.1.0/<domain-id>-0.1.0.kdna",
+  "sha256": "<由 publish 命令算出>",
+  "signature": "<Ed25519 签名>",
+  "release_status": "published_signed",
+  "repo": "https://github.com/yourname/kdna-<domain-id>",
+  "author": { "name": "Your Name", "id": "your-id", "pubkey": "ed25519:<你的指纹>" },
   "license": { "type": "CC-BY-4.0" },
-  "keywords": [...],
   "description": "<one-line>",
   "core_insight": "<one-line>",
+  "keywords": [...],
+  "domain_field": [...],
+  "judgment_patterns": [...],
   "file_count": <number>,
+  "deprecated": false,
+  "yanked": false,
+  "replaced_by": null,
   "created": "<YYYY-MM-DD>",
-  "updated": "<YYYY-MM-DD>",
-  "test_count": 0,
-  "quality_badge": "experimental"
+  "updated": "<YYYY-MM-DD>"
+}
+```
+
+注意：第一次提交 `@yourname/*` 还需在 `domains.json` 的 `scopes` 段加入你的 scope：
+
+```json
+"scopes": {
+  "@yourname": {
+    "type": "community",
+    "trust_pubkey": "ed25519:<你的指纹>",
+    "verified": false
+  }
 }
 ```
 
 运行验证脚本确认：
 
 ```bash
-node scripts/validate-registry.js
+cd kdna-registry
+node scripts/validate-registry.js          # offline checks
+node scripts/validate-registry.js --remote # check kdna_url + sha256
 ```
+
+提 PR 到 `aikdna/kdna-registry`，通过后用户即可 `kdna install @yourname/<domain-id>`。
 
 ### 5.5 更新网站 Domains 页
 
