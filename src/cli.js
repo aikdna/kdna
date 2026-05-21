@@ -54,8 +54,6 @@ Usage:
   kdna compare <name> --input "<text>"   With/without KDNA reasoning diff (needs LLM API key)
   kdna diff <name>@<v1> <name>@<v2>      Judgment-level diff between two versions
   kdna search <keyword>                  Search registry by name/keywords/insight
-  kdna project info                      Show project-level KDNA config
-  kdna project init [@scope/name ...]    Create .kdna/config.json with pinned domains
   kdna eval <path>            Evaluate domain test cases (before/after score)
   kdna eval --delta <path>    Delta comparison: With KDNA vs Without KDNA
   kdna eval --benchmark <file>  Evaluate a judgment benchmark file
@@ -1424,16 +1422,19 @@ switch (cmd) {
     break;
   }
   case 'project': {
-    const { cmdProjectInfo, cmdProjectInit } = require('./project');
-    const sub = args[1];
-    if (sub === 'init') {
-      const domains = args.slice(2).filter((a) => !a.startsWith('--'));
-      cmdProjectInit(domains);
-    } else if (!sub || sub === 'info') {
-      cmdProjectInfo();
-    } else {
-      error('Usage:\n  kdna project info\n  kdna project init [@scope/name ...]');
-    }
+    // Removed in v0.9 — project-level .kdna/config.json violated the
+    // "install ≠ load" safety model. KDNA loading is now a per-task
+    // decision made by the agent (via kdna-loader skill), not a
+    // project-level whitelist.
+    error(
+      'kdna project was removed in v0.9. The .kdna/config.json file is no\n' +
+        'longer read by the kdna-loader skill — it would have forced KDNA\n' +
+        'loading on tasks where the user did not ask for it.\n\n' +
+        'The agent now discovers KDNA on demand by reading ~/.kdna/domains/\n' +
+        'and matching the task against v2.1 applies_when fields.\n\n' +
+        'If you have stale .kdna/config.json files in your projects, you\n' +
+        'can delete them — nothing reads them anymore.',
+    );
     break;
   }
   case 'eval': {

@@ -1,35 +1,55 @@
 # KDNA Agent Integrations
 
-KDNA integrates with major AI coding agents through the kdna-skills system. All integrations share a single KDNA root directory: `~/.kdna/`.
+KDNA integrates with major AI coding agents through a single skill: `kdna-loader`. All KDNA domains live in `~/.kdna/` and are discovered by the agent on demand — they are not registered as separate skills.
 
 ## Supported Agents
 
-| Agent | Skill Path | Notes |
-|-------|-----------|-------|
-| **Claude Code** | `~/.claude/skills/kdna-loader/SKILL.md` | Anthropic — runs `kdna-loader` skill on every request |
-| **Codex** (OpenAI) | `~/.codex/skills/kdna-loader/SKILL.md` | OpenAI — same skill, different directory |
-| **OpenCode** | `~/.agents/skills/kdna-loader/SKILL.md` | Open-source agent |
-| **Cursor** | `~/.cursor/skills/kdna-loader/SKILL.md` | AI-native code editor |
-| **GitHub Copilot** | Via `kdna-loader` skill | Manual skill setup |
+| Agent | Skill Path |
+|-------|-----------|
+| **Claude Code** | `~/.claude/skills/kdna-loader/SKILL.md` |
+| **Codex** (OpenAI) | `~/.codex/skills/kdna-loader/SKILL.md` |
+| **OpenCode** | `~/.agents/skills/kdna-loader/SKILL.md` |
+| **Cursor** | `~/.cursor/skills/kdna-loader/SKILL.md` |
+| **GitHub Copilot** | Via `kdna-loader` skill (manual setup) |
 
-## How It Works
+## How It Works (the safe-by-default model)
 
-The kdna-loader skill is a plain text instruction file (SKILL.md) that tells the agent:
+The `kdna-loader` skill is a single instruction file (SKILL.md) that
+teaches the agent the **protocol** for using KDNA. It does NOT
+pre-load any domains; it does NOT scan all installed domains on every
+request.
 
-1. Look for KDNA domains in `~/.kdna/`
-2. Match user request keywords against domain manifests
-3. Load matched domain's Core + Patterns into context
-4. Apply axioms, stances, frameworks, and self-checks silently
+When you ask the agent a question, the agent decides per-task:
 
-No API keys, no network calls, no runtime dependency. The skill is pure instruction text.
+1. **Does this task need KDNA at all?** Most tasks (formatting,
+   lookup, code execution) don't. Skip silently.
+2. **What's installed?** The agent reads `~/.kdna/domains/` to
+   discover available domains. This is filesystem-only — no preloaded
+   list.
+3. **What fits?** For each candidate domain, the agent reads its small
+   `kdna.json` (~1 KB) and checks the v2.1 `applies_when` /
+   `does_not_apply_when` fields on the domain's axioms.
+4. **Load 0 or 1 primary domain.** If `does_not_apply_when` matches,
+   the domain disqualifies itself. If two domains fit and disagree,
+   the agent surfaces the choice to the user — never silently blends.
+5. **Apply silently.** Once loaded, the agent reasons from the
+   domain's axioms, but never quotes KDNA back to the user.
+
+**Why this matters at scale**: a user with 50 installed KDNAs incurs
+no context bloat — the agent only reads tiny `kdna.json` files during
+discovery and at most loads one full domain's `KDNA_Core.json` +
+`KDNA_Patterns.json` per task.
+
+For the full protocol, see [loader-behavior.md](./loader-behavior.md).
 
 ## Cross-Agent Compatibility
 
-All agents share the same `~/.kdna/` directory. Install KDNA domains once, use them everywhere:
+All agents share the same `~/.kdna/` directory. Install KDNA domains
+once, use them everywhere:
 
 ```bash
-kdna install writing
-# Now available in Claude Code, Codex, Cursor, and OpenCode
+kdna install @aikdna/writing
+# Now available in Claude Code, Codex, Cursor, and OpenCode.
 ```
 
 If your agent uses a different default path, create a symlink:
@@ -48,7 +68,17 @@ Or manually:
 
 ```bash
 npm install -g @aikdna/kdna
-kdna install writing
+kdna install @aikdna/writing
 ```
 
-Then install the loader skill for your agent from [kdna-skills](https://github.com/aikdna/kdna-skills).
+Then install the `kdna-loader` skill for your agent from [kdna-skills](https://github.com/aikdna/kdna-skills).
+
+## What's NOT installed as a skill
+
+- KDNA domains themselves (they live in `~/.kdna/domains/`, discovered
+  on demand)
+- A domain creator (use `kdna init <name>` CLI when needed)
+- Per-project pinning (the v0.7–v0.8 `.kdna/config.json` mechanism was
+  removed in v0.9 because it forced loading on tasks the user didn't
+  ask for, violating the "install ≠ load" safety model)
+

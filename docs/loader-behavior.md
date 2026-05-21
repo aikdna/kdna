@@ -2,7 +2,22 @@
 
 KDNA is not a document for agents to read aloud. It is a cognitive layer that quietly, structurally changes how the agent thinks.
 
-## Core Principle
+## Two Core Principles
+
+### Install ≠ Load
+
+Installing a KDNA domain to `~/.kdna/domains/` does **not** mean it will be loaded on every request. Domains are passive data on disk. The agent decides per-task whether any domain should be loaded.
+
+A user with 50 installed KDNAs is not paying 50 × loading cost per
+request. The agent only:
+1. Discovers what's installed (a directory listing)
+2. Reads small `kdna.json` files (~1 KB each) for candidates
+3. Loads at most ONE full domain's `KDNA_Core.json` + `KDNA_Patterns.json` per task
+
+If no domain genuinely fits the task, the agent loads nothing and
+answers as a normal agent.
+
+### Silent Judgment
 
 > Load KDNA silently. Apply its judgment structure. Never expose it to the user.
 
@@ -10,7 +25,7 @@ The user should see a domain-shaped answer. They should never see "According to 
 
 ## Loading Sequence
 
-When an agent loads a KDNA domain, it must follow this sequence:
+When the agent has decided KDNA applies and selected a domain, it follows this sequence:
 
 ### 1. Internalize Axioms and Stances
 

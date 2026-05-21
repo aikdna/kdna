@@ -57,7 +57,12 @@ test('kdna help mentions v0.7+ commands', () => {
   assert.match(r.stdout, /kdna compare/);
   assert.match(r.stdout, /kdna diff/);
   assert.match(r.stdout, /kdna search/);
-  assert.match(r.stdout, /kdna project/);
+});
+
+test('kdna project reports it was removed (v0.9)', () => {
+  const r = run(['project', 'info']);
+  assert.ok(!r.ok, 'kdna project should fail with explanation');
+  assert.match(r.stderr, /removed in v0\.9/);
 });
 
 // ─── kdna search ───────────────────────────────────────────────────────
@@ -112,46 +117,11 @@ test('kdna info refuses uninstalled domain', () => {
   assert.ok(!r.ok);
 });
 
-// ─── kdna project ──────────────────────────────────────────────────────
-
-test('kdna project info reports absence cleanly when no config', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-smoke-'));
-  try {
-    const r = run(['project', 'info'], { cwd: tmp });
-    assert.ok(r.ok, `project info failed: ${r.stderr}`);
-    assert.match(r.stdout, /No project-level KDNA config/);
-  } finally {
-    fs.rmSync(tmp, { recursive: true, force: true });
-  }
-});
-
-test('kdna project init creates .kdna/config.json', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-smoke-'));
-  try {
-    const r = run(['project', 'init', '@aikdna/writing'], { cwd: tmp });
-    assert.ok(r.ok, `project init failed: ${r.stderr}`);
-    const configPath = path.join(tmp, '.kdna', 'config.json');
-    assert.ok(fs.existsSync(configPath), 'config.json was not created');
-    const cfg = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-    assert.deepEqual(cfg.kdna.domains, ['@aikdna/writing']);
-    assert.equal(cfg.kdna.mode, 'auto');
-    assert.equal(cfg.kdna.conflict_policy, 'surface');
-  } finally {
-    fs.rmSync(tmp, { recursive: true, force: true });
-  }
-});
-
-test('kdna project init refuses to overwrite', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-smoke-'));
-  try {
-    run(['project', 'init'], { cwd: tmp });
-    const r = run(['project', 'init'], { cwd: tmp });
-    assert.ok(!r.ok, 'second init should fail');
-    assert.match(r.stderr, /Already exists/);
-  } finally {
-    fs.rmSync(tmp, { recursive: true, force: true });
-  }
-});
+// ─── kdna project (removed in v0.9) ────────────────────────────────────
+// The project command was removed because .kdna/config.json forced
+// KDNA loading on tasks the user did not explicitly ask for, violating
+// the "install ≠ load" safety model. Tests above already verify the
+// command exits with a clear explanation.
 
 // ─── kdna diff ─────────────────────────────────────────────────────────
 
