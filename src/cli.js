@@ -40,16 +40,15 @@ Usage:
   kdna unpack <path>          Unpack a .kdna container to a domain folder
   kdna unpack --force <path>  Overwrite existing folder
   kdna preview <path>         Preview a .kdna or domain folder in browser
-  kdna install <domain-id>    Install a domain from registry
-  kdna install github:user/repo  Install from GitHub
-  kdna install github:user/repo@v1.2.0  Install version-pinned
-  kdna install cluster:github:user/repo  Install a cluster + all domains
-  kdna install ./file.kdna     Install from local .kdna file
-  kdna install --from-git <url>   Install from a git repository
-  kdna remove <domain>          Uninstall a domain
-  kdna info <domain>            Show source, version, trust level
-  kdna update <domain>          Update an installed domain
-  kdna update --all             Update all installed domains
+  kdna install <name>          Install official domain: @aikdna/<name>
+  kdna install @scope/name     Install any scoped domain
+  kdna install @aikdna/animation   Install a cluster (installs all sub-domains)
+  kdna install ./file.kdna     Install from a local .kdna file
+  kdna install ./folder        Install from a local directory (dev)
+  kdna remove <name>           Uninstall a domain (accepts bare or @scope/name)
+  kdna info <name>             Show source, version, trust info
+  kdna update <name>           Update an installed domain
+  kdna update --all            Update all installed domains
   kdna inspect <path>         Inspect a domain directory or .kdna file
   kdna eval <path>            Evaluate domain test cases (before/after score)
   kdna eval --delta <path>    Delta comparison: With KDNA vs Without KDNA
@@ -68,7 +67,9 @@ Usage:
   kdna cluster lint <path>     Validate a cluster manifest
   kdna cluster apply <path> [input]  Simulate cluster routing for a task
   kdna init <name>             Scaffold a new KDNA domain from template
-  kdna publish --check <path>  Run quality gate before publishing
+  kdna publish <path>          Pack + sign + output registry patch
+  kdna publish <path> --release-tag <tag> --repo <o/r>   ...also upload to GitHub
+  kdna publish --check <path>  Run quality gate only (no pack/upload)
   kdna version bump <patch|minor|major> [path]  Bump domain version
   kdna version                 Show kdna CLI version
   kdna identity init            Generate Ed25519 identity key pair
@@ -224,22 +225,25 @@ function cmdPack(dir, outputDir) {
 
   let packed = false;
 
-  // Strategy 1: python3 zipfile (built-in on macOS, most Linux)
-  const pyScript = `
-import zipfile, os
+  // Strategy 1: python3 zipfile (built-in on macOS, most Linux) — use temp file
+  const tmpPyFile = path.join(fs.existsSync('/tmp') ? '/tmp' : require('os').tmpdir(), `kdna-pack-${Date.now()}.py`);
+  try {
+    const pyScript = `import zipfile, os
 src = ${JSON.stringify(abs)}
 out = ${JSON.stringify(outPath)}
 with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as zf:
     for f in sorted(os.listdir(src)):
         fp = os.path.join(src, f)
-        if os.path.isfile(fp) and (f.endswith('.json') or f in ('README.md', 'LICENSE')):
+        if os.path.isfile(fp) and (f.endswith('.json') or f in ('README.md', 'LICENSE', 'kdna.json')):
             zf.write(fp, f)
 `;
-  try {
-    execSync(`python3 -c ${JSON.stringify(pyScript)}`, { stdio: 'pipe' });
+    fs.writeFileSync(tmpPyFile, pyScript);
+    execSync(`python3 ${tmpPyFile}`, { stdio: 'pipe' });
     packed = true;
   } catch {
     /* Strategy 1 failed, try next */
+  } finally {
+    try { fs.unlinkSync(tmpPyFile); } catch { /* cleanup */ }
   }
 
   // Strategy 2: system zip command
@@ -290,7 +294,7 @@ function createNodeZip(srcDir, outPath) {
   const zlib = require('zlib');
   const files = fs
     .readdirSync(srcDir)
-    .filter((f) => f.endsWith('.json') && f !== 'kdna.json')
+    .filter((f) => f.endsWith('.json'))
     .concat(['README.md', 'LICENSE'].filter((f) => fs.existsSync(path.join(srcDir, f))));
 
   const centralDir = [];
@@ -338,12 +342,14 @@ function createNodeZip(srcDir, outPath) {
   const cdOffset = offset;
   const cdSize = centralDir.reduce((s, e) => s + e.length, 0);
   const eocd = Buffer.alloc(22);
-  eocd.writeUInt32LE(0x06054b50, 0); // EOCD signature
-  eocd.writeUInt16LE(0, 8); // disk number
-  eocd.writeUInt16LE(files.length, 10); // entries on disk
-  eocd.writeUInt16LE(files.length, 12); // total entries
-  eocd.writeUInt32LE(cdSize, 16); // CD size
-  eocd.writeUInt32LE(cdOffset, 20); // CD offset
+  eocd.writeUInt32LE(0x06054b50, 0);  // EOCD signature
+  eocd.writeUInt16LE(0, 4);           // disk number
+  eocd.writeUInt16LE(0, 6);           // disk with CD
+  eocd.writeUInt16LE(files.length, 8); // entries on disk
+  eocd.writeUInt16LE(files.length, 10); // total entries
+  eocd.writeUInt32LE(cdSize, 12);     // CD size
+  eocd.writeUInt32LE(cdOffset, 16);   // CD offset
+  eocd.writeUInt16LE(0, 20);          // comment length
 
   const all = Buffer.concat([...fileData, ...centralDir, eocd]);
   fs.writeFileSync(outPath, all);
@@ -1137,7 +1143,7 @@ function cmdEvalCluster(clusterFile) {
 
 function cmdList(showAvailable) {
   if (showAvailable) {
-    const domains = loadRegistry();
+    const domains = loadRegistry({ allowNetwork: true });
     if (!domains || !domains.length) {
       error('No registry found.');
     }
@@ -1146,44 +1152,88 @@ function cmdList(showAvailable) {
     console.log(`Registry: ${REGISTRY_CACHE}`);
     console.log('');
     for (const d of domains) {
-      const installed = fs.existsSync(path.join(INSTALL_DIR, d.id)) ? '[installed]' : '';
+      const name = d.name || d.id || '?';
+      const [scope, ident] = name.includes('/') ? name.split('/') : [null, name];
+      const installedPath = scope ? path.join(INSTALL_DIR, scope, ident) : null;
+      const installed = installedPath && fs.existsSync(installedPath) ? '[installed]' : '';
+      const yanked = d.yanked ? '[yanked] ' : '';
+      const dep = d.deprecated ? '[deprecated] ' : '';
       console.log(
-        `  ${(d.id || '?').padEnd(18)} ${(d.version || '?').padEnd(8)} ${(d.status || '').padEnd(14)} ${installed}`,
+        `  ${name.padEnd(36)} ${(d.version || '?').padEnd(8)} ${(d.type || 'domain').padEnd(8)} ${(d.status || '').padEnd(14)} ${yanked}${dep}${installed}`,
       );
       if (d.description) console.log(`    ${d.description}`);
       console.log('');
     }
-  } else {
-    if (!fs.existsSync(INSTALL_DIR)) {
-      console.log('No domains installed.');
-      console.log(`Installation directory: ${INSTALL_DIR}`);
-      return;
-    }
-
-    const dirs = fs.readdirSync(INSTALL_DIR).filter((d) => {
-      const full = path.join(INSTALL_DIR, d);
-      return fs.statSync(full).isDirectory() && fs.existsSync(path.join(full, 'KDNA_Core.json'));
-    });
-
-    if (!dirs.length) {
-      console.log('No domains installed.');
-      console.log(`Run: kdna install <domain-id>`);
-      return;
-    }
-
-    console.log('Installed KDNA domains:');
-    console.log('');
-    for (const d of dirs) {
-      const core = readJson(path.join(INSTALL_DIR, d, 'KDNA_Core.json'));
-      const manifest = readJson(path.join(INSTALL_DIR, d, 'kdna.json'));
-      const version = manifest?.version || core?.meta?.version || '?';
-      const desc = manifest?.description || core?.meta?.purpose || '';
-      console.log(`  ${d.padEnd(18)} v${version}`);
-      if (desc) console.log(`    ${desc}`);
-    }
-    console.log('');
-    console.log(`Location: ${INSTALL_DIR}`);
+    return;
   }
+
+  if (!fs.existsSync(INSTALL_DIR)) {
+    console.log('No domains installed.');
+    console.log(`Installation directory: ${INSTALL_DIR}`);
+    return;
+  }
+
+  // v0.7 layout: ~/.kdna/domains/@scope/name/
+  const scopes = fs.readdirSync(INSTALL_DIR).filter((d) => {
+    if (!d.startsWith('@')) return false;
+    try {
+      return fs.statSync(path.join(INSTALL_DIR, d)).isDirectory();
+    } catch {
+      return false;
+    }
+  });
+
+  const installed = [];
+  for (const scope of scopes) {
+    const sd = path.join(INSTALL_DIR, scope);
+    for (const ident of fs.readdirSync(sd)) {
+      if (ident.startsWith('.')) continue;
+      const full = path.join(sd, ident);
+      try {
+        if (!fs.statSync(full).isDirectory()) continue;
+      } catch {
+        continue;
+      }
+      installed.push({ scope, ident, full });
+    }
+  }
+
+  // Detect and warn about legacy (un-scoped) installs
+  const legacy = fs.readdirSync(INSTALL_DIR).filter((d) => {
+    if (d.startsWith('@') || d.startsWith('.')) return false;
+    try {
+      return fs.statSync(path.join(INSTALL_DIR, d)).isDirectory();
+    } catch {
+      return false;
+    }
+  });
+  if (legacy.length) {
+    console.log('⚠ Legacy (un-scoped) directories detected — please remove + re-install:');
+    legacy.forEach((d) => console.log(`    ~/.kdna/domains/${d}/`));
+    console.log('');
+  }
+
+  if (!installed.length) {
+    console.log('No v0.7 domains installed.');
+    console.log(`Run: kdna install <name>      # e.g. kdna install writing`);
+    return;
+  }
+
+  console.log('Installed KDNA domains:');
+  console.log('');
+  for (const { scope, ident, full } of installed) {
+    const core = readJson(path.join(full, 'KDNA_Core.json'));
+    const manifest = readJson(path.join(full, 'kdna.json'));
+    const cluster = readJson(path.join(full, 'cluster.json'));
+    const name = `${scope}/${ident}`;
+    const version = manifest?.version || manifest?._source?.version || core?.meta?.version || '?';
+    const kind = cluster ? '[cluster]' : '';
+    const desc = manifest?.description || core?.meta?.purpose || '';
+    console.log(`  ${name.padEnd(36)} v${version} ${kind}`);
+    if (desc) console.log(`    ${desc}`);
+  }
+  console.log('');
+  console.log(`Location: ${INSTALL_DIR}`);
 }
 
 function cmdRegistry(subcommand) {
@@ -1423,9 +1473,18 @@ switch (cmd) {
       if (!target || target.startsWith('--')) error('Usage: kdna publish --check <path>');
       cmdPublishCheck(target);
     } else {
-      error(
-        'Usage: kdna publish --check <path>\n\nRun quality gate checks before publishing a domain.',
-      );
+      const { cmdPublish } = require('./publish');
+      const target = args.filter((a) => !a.startsWith('--'))[1];
+      if (!target) {
+        error(
+          'Usage:\n' +
+            '  kdna publish <path>                      Pack + sign, output patch JSON\n' +
+            '  kdna publish <path> --release-tag <tag> --repo <owner/name>\n' +
+            '                                           ...also upload to GitHub Release\n' +
+            '  kdna publish --check <path>              Quality gate only',
+        );
+      }
+      cmdPublish(target, args);
     }
     break;
   }
