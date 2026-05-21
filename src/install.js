@@ -39,25 +39,41 @@ const AGENT_SKILL_DIRS = [
 function ensureLoaderSkill() {
   const alreadyInstalled = [];
   const toInstall = [];
+  const toUpdate = []; // present but outdated (pre-v2.1)
+
+  // v2.1 marker — present in current SKILL.md, absent in old one
+  const V2_1_MARKER = 'applies_when';
 
   for (const dir of AGENT_SKILL_DIRS) {
-    if (fs.existsSync(path.join(dir, 'kdna-loader', 'SKILL.md'))) {
-      alreadyInstalled.push(dir);
+    const skillFile = path.join(dir, 'kdna-loader', 'SKILL.md');
+    if (fs.existsSync(skillFile)) {
+      let isCurrent = false;
+      try {
+        const content = fs.readFileSync(skillFile, 'utf8');
+        isCurrent = content.includes(V2_1_MARKER);
+      } catch {
+        /* unreadable — treat as missing */
+      }
+      if (isCurrent) alreadyInstalled.push(dir);
+      else toUpdate.push(dir);
     } else {
       toInstall.push(dir);
     }
   }
 
-  // If already installed everywhere, nothing to do
-  if (toInstall.length === 0) return;
+  // If all up-to-date, nothing to do
+  if (toInstall.length === 0 && toUpdate.length === 0) return;
 
-  // Some agents already have it — notify which
+  // Notify which are current
   if (alreadyInstalled.length > 0) {
-    console.log(`  ✓ kdna-loader found in: ${alreadyInstalled.map(d => path.basename(path.dirname(d))).join(', ')}`);
+    console.log(`  ✓ kdna-loader (v2.1) found in: ${alreadyInstalled.map(d => path.basename(path.dirname(d))).join(', ')}`);
   }
 
-  // Install to missing agents
-  console.log('  Installing kdna-loader skill to missing agent directories...');
+  // Install + update share the same target list
+  const targets = [...toInstall, ...toUpdate];
+  const verb = toUpdate.length && !toInstall.length
+    ? 'Updating' : (toInstall.length && !toUpdate.length ? 'Installing' : 'Installing/updating');
+  console.log(`  ${verb} kdna-loader skill (v2.1)...`);
 
   let installed = 0;
   const sources = [];
@@ -74,7 +90,7 @@ function ensureLoaderSkill() {
     url: 'https://raw.githubusercontent.com/aikdna/kdna-skills/main/kdna-loader/SKILL.md',
   });
 
-  for (const dir of toInstall) {
+  for (const dir of targets) {
     const skillDir = path.join(dir, 'kdna-loader');
     for (const src of sources) {
       try {
@@ -96,11 +112,11 @@ function ensureLoaderSkill() {
   }
 
   if (installed > 0) {
-    console.log(`   ✓ kdna-loader installed to ${installed} agent director${installed > 1 ? 'ies' : 'y'}`);
+    console.log(`   ✓ kdna-loader installed/updated in ${installed} agent director${installed > 1 ? 'ies' : 'y'}`);
   }
 
-  if (installed < toInstall.length) {
-    console.log(`   ⚠ Could not install to ${toInstall.length - installed} agent director${toInstall.length - installed > 1 ? 'ies' : 'y'}.`);
+  if (installed < targets.length) {
+    console.log(`   ⚠ Could not install to ${targets.length - installed} agent director${targets.length - installed > 1 ? 'ies' : 'y'}.`);
     console.log('   Run: kdna setup --force');
   }
 
