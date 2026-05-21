@@ -119,6 +119,55 @@ function classifyInput(text) {
 }
 
 /**
+ * Known field name mapping for detecting old/incorrect field names.
+ * When a common old name is found, log a warning and suggest the correct name.
+ */
+const FIELD_ALIASES = {
+  statement: 'one_sentence or full_statement',
+  description: 'one_sentence',
+  summary: 'one_sentence',
+  claim: 'wrong',
+  misreading: 'wrong',
+  reality: 'correct',
+  definition: 'essence or one_sentence (on ontology)',
+  brief: 'title or context',
+  bad_pattern: 'what_happened',
+  master_pattern: 'structural_pattern',
+  conclusion: 'one_sentence',
+  capability_layers: 'stages',
+  name: 'id (on ontology entries)',
+  input: 'from',
+  output: 'to',
+  judgment: 'via',
+};
+
+/**
+ * Deep-scan an object tree for known old field names and return warnings.
+ * @param {object} obj
+ * @param {string} path
+ * @param {string[]} [warnings]
+ * @returns {string[]}
+ */
+function detectOldFieldNames(obj, path = '', warnings = []) {
+  if (!obj || typeof obj !== 'object') return warnings;
+  if (Array.isArray(obj)) {
+    obj.forEach((item, i) => detectOldFieldNames(item, `${path}[${i}]`, warnings));
+    return warnings;
+  }
+  for (const key of Object.keys(obj)) {
+    if (FIELD_ALIASES[key]) {
+      warnings.push(
+        `[KDNA LOADER] ${path}.${key}: field "${key}" is not in spec v0.4. Use "${FIELD_ALIASES[key]}" instead. See docs/authoring-guide.md §0.`,
+      );
+    }
+    if (typeof obj[key] === 'object' && obj[key] !== null) {
+      detectOldFieldNames(obj[key], `${path}.${key}`, warnings);
+    }
+  }
+  return warnings;
+}
+
+/**
  * Format a loaded KDNA domain into a context string suitable for
  * inclusion in an agent's system prompt.
  *
@@ -131,6 +180,17 @@ function formatContext(domain) {
   const parts = [];
   const core = domain.core;
   const pat = domain.patterns;
+
+  // Scan for old field names and warn
+  const warnings = detectOldFieldNames(domain, domain.core?.meta?.domain || 'domain');
+  if (warnings.length) {
+    parts.push('<!-- KDNA FIELD NAME WARNINGS:');
+    for (const w of warnings) parts.push(`  ${w}`);
+    parts.push('  These fields will be SILENTLY IGNORED by the loader.');
+    parts.push('  See: docs/authoring-guide.md §0 (Field Name Reference)');
+    parts.push('-->');
+    parts.push('');
+  }
 
   parts.push('## Domain Cognition (KDNA)');
   parts.push(`Domain: ${core.meta.domain}`);

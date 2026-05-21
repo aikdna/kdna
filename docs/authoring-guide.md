@@ -10,6 +10,79 @@
 
 ---
 
+## 0. Field Name Reference (REQUIRED — read before writing any JSON)
+
+If you write KDNA JSON from scratch, you MUST use these exact field names. The loader reads by field name; the validator checks by field name; wrong field names silently produce zero agent judgment.
+
+### KDNA_Core.json
+
+| Section | Required Fields | Notes |
+|---------|----------------|-------|
+| `meta` | `version`, `domain`, `created`, `purpose`, `load_condition` | Invariant — must be in every KDNA file |
+| `axioms[]` | `id`, `one_sentence`, `full_statement`, `why` | Invariant — see SPEC §5.2 |
+| `ontology[]` | `id`, `one_sentence`, `essence`, `boundary`, `trigger_signal` | Invariant — see SPEC §5.3 |
+| `frameworks[]` | `id`, `name`, `when_to_use`, `steps` | Invariant — see SPEC §5.4 |
+| `core_structure[]` | `from`, `to`, `via` | Invariant — see SPEC §5.5 |
+| `stances` | `string[]` | Invariant — array of stance strings |
+
+### KDNA_Patterns.json
+
+| Section | Required Fields | Notes |
+|---------|----------------|-------|
+| `meta` | (same as above) | Invariant |
+| `terminology.standard_terms[]` | `term`, `definition` | Standard vocabulary |
+| `terminology.banned_terms[]` | `term`, `why`, `replace_with` | Invariant — see SPEC §6.2 |
+| `misunderstandings[]` | `id`, `wrong`, `correct`, `key_distinction`, `why` | Invariant — see SPEC §6.3 |
+| `self_check` | `string[]` | Invariant — yes/no questions |
+
+### KDNA_Scenarios.json
+
+| Section | Required Fields | Notes |
+|---------|----------------|-------|
+| `meta` | (same as above) | Invariant |
+| `scenes[]` | `id`, `name`, `trigger_signal`, `sub_scenarios[]` | |
+
+### KDNA_Cases.json
+
+| Section | Required Fields | Notes |
+|---------|----------------|-------|
+| `meta` | (same as above) | Invariant |
+| `cases[]` | `id`, `title`, `context`, `what_happened`, `what_was_learned`, `structural_pattern` | |
+
+### KDNA_Reasoning.json
+
+| Section | Required Fields | Notes |
+|---------|----------------|-------|
+| `meta` | (same as above) | Invariant |
+| `reasoning_chains[]` | `id`, `one_sentence`, `logic` (string[]), `so_what` | Invariant — see SPEC §7.3 |
+
+### KDNA_Evolution.json
+
+| Section | Required Fields | Notes |
+|---------|----------------|-------|
+| `meta` | (same as above) | Invariant |
+| `stages[]` | `id`, `name`, `description`, `indicators` (string[]) | |
+| `evolution_layers[]` | `id`, `name`, `capability`, `from_stage`, `to_stage` | |
+| `measurement[]` | `id`, `what`, `how`, `threshold` | |
+
+### Common mistakes (field names that do NOT exist)
+
+| If you wrote... | Use instead... |
+|-----------------|----------------|
+| `statement` | `one_sentence` (short) or `full_statement` (long) |
+| `description` / `summary` | `one_sentence` |
+| `name` / `definition` (on ontology) | `id` / `one_sentence` + `essence` |
+| `claim` / `misreading` (on misunderstanding) | `wrong` |
+| `reality` (on misunderstanding) | `correct` |
+| `input` / `judgment` / `output` (on core_structure) | `from` / `via` / `to` |
+| `conclusion` (on reasoning) | `one_sentence` |
+| `brief` / `bad_pattern` / `master_pattern` (on cases) | `title` / `what_happened` / `structural_pattern` |
+| `capability_layers` (on evolution) | `stages` |
+
+**Always start from a template** (`kdna init <name>` or `kdna cluster init <name>`). The template guarantees correct field names. If you write JSON from scratch, use this table as your reference card.
+
+---
+
 ## 1. Start Narrow
 
 Do not try to encode an entire profession at once.
@@ -183,3 +256,11 @@ node src/cli.js eval <your-domain-folder>
 # Compare before/after
 node benchmarks/eval-decision-state.js --limit=5
 ```
+
+---
+
+## 11. Cluster Authoring (multi-domain)
+
+For clusters containing multiple domains, use `kdna cluster init <name>` and see `templates/cluster/`.
+
+Each sub-domain in a cluster follows the same six-file structure. The cluster manifest (`KDNA_Cluster.json`) declares packages and composition rules.
