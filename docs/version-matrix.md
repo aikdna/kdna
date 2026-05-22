@@ -33,10 +33,10 @@ This document explains the relationship between the four version numbers you wil
 | `quality_badge` | Minimum Evidence | Who assigns it |
 |-----------------|-----------------|----------------|
 | `untested` | Passes `kdna validate` (schema + lint). No eval cases. | Self-declared |
-| `tested` | >= 3 eval cases with manual verification. | Self-declared |
-| `validated` | >= 10 eval cases, `kdna verify --judgment` passes. | Self-declared, machine-verified |
-| `expert_reviewed` | >= 10 eval cases + external domain expert sign-off. | External expert |
-| `production_ready` | `validated` + real-world deployment evidence. | Registry maintainer |
+| `tested` | >= 10 standardized eval cases conforming to `schema/eval.schema.json`. | Self-declared, machine-verified |
+| `validated` | >= 30 eval cases + blind review + raw outputs + benchmark report. | Self-declared, machine-verified |
+| `expert_reviewed` | `validated` + at least one external domain expert review, reviewer identity public. | External expert |
+| `production_ready` | `expert_reviewed` + real-world usage data from at least one independent deployment + multi-model stability evidence. | Registry maintainer |
 
 ## Historical Migrations
 

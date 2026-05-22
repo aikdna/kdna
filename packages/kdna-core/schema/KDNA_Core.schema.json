@@ -58,7 +58,10 @@
           "type": "string"
         },
         "does_not_act_as": {
-          "type": "string"
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
         },
         "responsibility": {
           "type": "string"

@@ -158,10 +158,12 @@
             "type": "string"
           },
           "signals_good": {
-            "type": "string"
+            "type": "array",
+            "items": { "type": "string" }
           },
           "signals_bad": {
-            "type": "string"
+            "type": "array",
+            "items": { "type": "string" }
           }
         },
         "additionalProperties": true
@@ -183,10 +185,12 @@
             "type": "string"
           },
           "must_not_do": {
-            "type": "string"
+            "type": "array",
+            "items": { "type": "string" }
           },
           "acceptable_exception": {
-            "type": "string"
+            "type": "array",
+            "items": { "type": "string" }
           }
         },
         "additionalProperties": true
@@ -208,10 +212,12 @@
           }
         },
         "must_block_when": {
-          "type": "string"
+          "type": "array",
+          "items": { "type": "string" }
         },
         "warn_when": {
-          "type": "string"
+          "type": "array",
+          "items": { "type": "string" }
         }
       },
       "additionalProperties": true

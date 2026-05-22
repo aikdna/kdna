@@ -39,9 +39,8 @@
       "kdna_file_count": 6,
       "created": "2026-05-19",
       "updated": "2026-05-22",
-      "eval_score": 97,
-      "test_count": 30,
-      "quality_badge": "validated"
+      "test_count": 10,
+      "quality_badge": "tested"
     },
     {
       "id": "agent_safety",
@@ -119,9 +118,9 @@
       "file_count": 6,
       "kdna_file_count": 6,
       "created": "2026-05-20",
-      "updated": "2026-05-20",
-      "test_count": 0,
-      "quality_badge": "untested"
+      "updated": "2026-05-22",
+      "test_count": 10,
+      "quality_badge": "tested"
     },
     {
       "id": "content_strategy",
@@ -198,9 +197,9 @@
       ],
       "file_count": 6,
       "created": "2026-05-20",
-      "updated": "2026-05-20",
-      "test_count": 0,
-      "quality_badge": "untested"
+      "updated": "2026-05-22",
+      "test_count": 10,
+      "quality_badge": "tested"
     },
     {
       "id": "knowledge_management",
@@ -350,11 +349,12 @@
       "judgment_patterns": [
         "quality-assessment"
       ],
-      "file_count": 2,
+      "file_count": 6,
       "created": "2026-05-21",
-      "updated": "2026-05-21",
+      "updated": "2026-05-22",
       "test_count": 0,
-      "quality_badge": "untested"
+      "quality_badge": "untested",
+      "kdna_file_count": 6
     }
   ]
 }

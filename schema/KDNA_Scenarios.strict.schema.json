@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "KDNA_Scenarios",
+  "title": "KDNA_Scenarios (Strict)",
   "type": "object",
-  "required": ["meta"],
+  "required": ["meta", "scenarios"],
   "properties": {
     "meta": {
       "type": "object",
@@ -28,43 +28,32 @@
     "scenarios": {
       "type": "array",
       "items": {
-        "type": "object"
-      }
-    },
-    "scenes": {
-      "description": "Deprecated since v1.0-rc. Use scenarios (canonical) instead. Kept for backward compatibility.",
-      "type": "array",
-      "items": {
         "type": "object",
-        "required": ["id", "name"],
+        "required": ["id", "name", "trigger_signals"],
         "properties": {
           "id": { "type": "string" },
           "name": { "type": "string" },
-          "trigger_signal": {
-            "type": "string",
-            "description": "Deprecated since v1.0-rc. Use trigger_signals (array) instead. Kept for backward compatibility."
-          },
           "trigger_signals": {
             "type": "array",
             "items": { "type": "string" },
-            "description": "Signals that trigger this scene."
+            "description": "Signals that trigger this scenario."
           },
           "negative_signals": {
             "type": "array",
             "items": { "type": "string" },
-            "description": "Signals that explicitly exclude this scene."
+            "description": "Signals that explicitly exclude this scenario."
           },
           "classification_rule": {
             "type": "string",
-            "description": "Rule for classifying input into this scene."
+            "description": "Rule for classifying input into this scenario."
           },
           "risk_level": {
             "type": "string",
-            "description": "Risk level associated with this scene."
+            "description": "Risk level associated with this scenario."
           },
           "expected_judgment_shift": {
             "type": "string",
-            "description": "How judgment should shift when this scene is detected."
+            "description": "How judgment should shift when this scenario is detected."
           },
           "sub_scenarios": {
             "type": "array",
@@ -108,5 +97,5 @@
       }
     }
   },
-  "additionalProperties": true
+  "additionalProperties": false
 }

@@ -231,7 +231,11 @@
           "wrong",
           "correct",
           "key_distinction",
-          "why"
+          "why",
+          "applies_when",
+          "does_not_apply_when",
+          "failure_risk",
+          "confidence"
         ],
         "properties": {
           "id": {
