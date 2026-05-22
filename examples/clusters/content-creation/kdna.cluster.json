@@ -1,0 +1,71 @@
+{
+  "cluster_id": "@aikdna/content-creation-cluster",
+  "name": "Content Creation Cluster",
+  "version": "0.1.0",
+  "description": "A horizontal cluster for content creation judgment — combines writing, content strategy, and prompt diagnosis.",
+  "type": "horizontal",
+  "status": "experimental",
+  "access": "open",
+  "domains": [
+    {
+      "id": "@aikdna/writing",
+      "version": "^0.7.0",
+      "role": "primary",
+      "required": true,
+      "load_condition": "when the task involves writing, editing, or content review"
+    },
+    {
+      "id": "@aikdna/content_strategy",
+      "version": "^0.1.0",
+      "role": "advisor",
+      "required": false,
+      "load_condition": "when the task involves topic selection, editorial strategy, or audience analysis"
+    },
+    {
+      "id": "@aikdna/prompt_diagnosis",
+      "version": "^0.1.0",
+      "role": "advisor",
+      "required": false,
+      "load_condition": "when the user's prompt itself seems ineffective or the AI needs to diagnose why a prompt failed"
+    }
+  ],
+  "relationships": [
+    {
+      "from": "@aikdna/content_strategy",
+      "to": "@aikdna/writing",
+      "type": "informs",
+      "description": "Content strategy topic analysis informs what kind of writing judgment is needed"
+    },
+    {
+      "from": "@aikdna/prompt_diagnosis",
+      "to": "@aikdna/writing",
+      "type": "informs",
+      "description": "Prompt diagnosis may reveal that the user's request is ambiguous before writing judgment is applied"
+    }
+  ],
+  "composition": {
+    "strategy": "signal_based",
+    "max_active_domains": 3,
+    "default_domains": ["@aikdna/writing"],
+    "conflict_policy": "surface",
+    "priority_order": [
+      "@aikdna/writing",
+      "@aikdna/prompt_diagnosis",
+      "@aikdna/content_strategy"
+    ]
+  },
+  "token_budget": {
+    "max_context_tokens": 8000,
+    "domain_summary_mode": "full",
+    "compression_strategy": "preserve_axioms_and_risks"
+  },
+  "evaluation": {
+    "eval_set": "./evals",
+    "minimum_pass_rate": 0.7,
+    "required_dimensions": [
+      "classification",
+      "conflict_detection",
+      "judgment_delta"
+    ]
+  }
+}

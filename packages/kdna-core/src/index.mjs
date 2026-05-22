@@ -16,4 +16,4 @@ export { validateDomainSchema, validateCrossFile } from './validate-pure.js';
 
 export { renderPreviewHTML, escHtml, renderCard } from './render.js';
 
-export { composeContext, classifySignals, composeChecks, loadAndCompose } from './compose.js';
+export { composeContext, composeContextWithAttribution, classifySignals, classifySignalsAcrossDomains, composeChecks, loadAndCompose, loadCluster, detectDomainConflicts, generateClusterTrace } from './compose.js';
