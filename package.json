@@ -1,56 +1,18 @@
 {
-  "name": "@aikdna/kdna",
-  "version": "0.8.0",
-  "description": "KDNA CLI and toolkit — create, validate, and load domain cognition packages for AI agents.",
+  "name": "@aikdna/kdna-monorepo",
+  "version": "0.9.0",
+  "private": true,
+  "description": "KDNA protocol specification, core library, and domain registry.",
   "type": "commonjs",
-  "main": "src/index.js",
-  "module": "src/index.mjs",
-  "exports": {
-    ".": {
-      "import": "./src/index.mjs",
-      "require": "./src/index.js",
-      "types": "./src/types.d.ts"
-    }
-  },
-  "types": "src/types.d.ts",
-  "bin": {
-    "kdna": "src/cli.js",
-    "kdna-lint": "validators/kdna-lint.js",
-    "kdna-validate": "validators/kdna-validate.js"
-  },
-  "files": [
-    "src/",
-    "validators/",
-    "schema/",
-    "skills/",
-    "prompts/",
-    "specs/",
-    "registry/",
-    "templates/",
-    "SPEC.md",
-    "CHANGELOG.md",
-    "LICENSE",
-    "NOTICE"
-  ],
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint packages/kdna-core/src/",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint:examples": "node validators/kdna-lint.js examples/communication && node validators/kdna-lint.js examples/from-wiki-to-kdna/kdna && node validators/kdna-lint.js examples/product_decision && node validators/kdna-lint.js examples/management && node validators/kdna-lint.js examples/sales",
-    "validate:examples": "node validators/kdna-validate.js examples/communication && node validators/kdna-validate.js examples/from-wiki-to-kdna/kdna && node validators/kdna-validate.js examples/product_decision && node validators/kdna-validate.js examples/management && node validators/kdna-validate.js examples/sales",
-    "test": "node --test tests/loader.test.js tests/validator.test.js tests/v07-commands.test.js",
-    "test:esm": "node --test --experimental-vm-modules tests/esm.test.js",
+    "lint:examples": "kdna-lint examples/communication && kdna-lint examples/from-wiki-to-kdna/kdna && kdna-lint examples/product_decision && kdna-lint examples/management && kdna-lint examples/sales",
+    "validate:examples": "kdna-validate examples/communication && kdna-validate examples/from-wiki-to-kdna/kdna && kdna-validate examples/product_decision && kdna-validate examples/management && kdna-validate examples/sales",
+    "test": "npm --workspace @aikdna/kdna-core test",
     "pretest": "npm install --ignore-scripts"
   },
-  "keywords": [
-    "kdna",
-    "ai-agent",
-    "domain-cognition",
-    "knowledge-dna",
-    "agent-skills",
-    "ai-tools",
-    "cli"
-  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -60,20 +22,11 @@
   "bugs": {
     "url": "https://github.com/knowledge-dna/KDNA/issues"
   },
-  "engines": {
-    "node": ">=18"
-  },
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {
-    "@aikdna/kdna-core": "^0.3.0"
-  },
-  "optionalDependencies": {
-    "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1"
-  },
   "devDependencies": {
+    "@aikdna/kdna-cli": "^0.9.0",
     "@eslint/js": "^9.39.0",
     "eslint": "^9.39.0",
     "prettier": "^3.8.3"

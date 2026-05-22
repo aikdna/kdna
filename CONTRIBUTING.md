@@ -15,14 +15,16 @@ This repository is the KDNA protocol specification. You can contribute at multip
 git clone https://github.com/knowledge-dna/KDNA.git
 cd KDNA
 npm install
-npm test         # 8 validator + loader tests + CLI smoke tests
+npm test         # kdna-core unit tests
 ```
+
+For CLI development, see the [kdna-cli](https://github.com/knowledge-dna/kdna-cli) repository.
 
 ### Available Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `npm test` | Run full test suite (loader, validator, CLI commands) |
+| `npm test` | Run kdna-core test suite |
 | `npm run lint` | ESLint code quality check |
 | `npm run format:check` | Prettier format validation |
 | `npm run lint:examples` | Validate example domains via kdna-lint |
@@ -33,7 +35,7 @@ npm test         # 8 validator + loader tests + CLI smoke tests
 ### 1. Protocol Contribution
 Improve the KDNA specification, schema, validators, CLI, loader, skills, or documentation.
 
-**Scope:** SPEC.md, schema/*, validators/*, src/*, docs/*, tests/*
+**Scope:** SPEC.md, schema/*, packages/kdna-core/*, docs/*
 
 ### 2. Judgment Pattern Contribution
 Submit a reusable judgment pattern — the smallest unit of KDNA.
