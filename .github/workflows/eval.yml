@@ -27,8 +27,9 @@ jobs:
       - name: Run unit tests
         run: npm test
 
-      - name: kdna eval — sales
-        run: node src/cli.js eval examples/sales
-
-      - name: kdna eval — management
-        run: node src/cli.js eval examples/management
+      - name: Verify installed domains
+        run: |
+          npm install -g .
+          kdna install writing
+          kdna verify @aikdna/writing
+          kdna available

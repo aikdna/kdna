@@ -18,7 +18,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 const { execSync, execFileSync } = require('child_process');
 const { RegistryResolver, parseName } = require('./registry');
 
@@ -32,7 +31,11 @@ function error(msg) {
 }
 
 function readJson(p) {
-  try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return null; }
+  try {
+    return JSON.parse(fs.readFileSync(p, 'utf8'));
+  } catch {
+    return null;
+  }
 }
 
 // ─── Parse "<name>@<ver>" ──────────────────────────────────────────────
@@ -104,20 +107,15 @@ function loadJudgment(domainDir) {
     judgment_version: manifest.judgment_version || null,
     axioms: Object.fromEntries((core.axioms || []).map((a) => [a.id, a])),
     ontology: Object.fromEntries((core.ontology || []).map((o) => [o.id, o])),
-    stances: (core.stances || []).map((s) => (typeof s === 'string' ? s : s.stance)).filter(Boolean),
+    stances: (core.stances || [])
+      .map((s) => (typeof s === 'string' ? s : s.stance))
+      .filter(Boolean),
     misunderstandings: Object.fromEntries((pat.misunderstandings || []).map((m) => [m.id, m])),
-    banned_terms: Object.fromEntries(
-      (pat.terminology?.banned_terms || []).map((t) => [t.term, t]),
-    ),
+    banned_terms: Object.fromEntries((pat.terminology?.banned_terms || []).map((t) => [t.term, t])),
   };
 }
 
 // ─── Set diff helpers ─────────────────────────────────────────────────
-
-function objSummary(o) {
-  if (!o) return '(missing)';
-  return Object.keys(o).join(', ') || '(empty)';
-}
 
 function diffMaps(label, oldMap, newMap, render) {
   const oldIds = new Set(Object.keys(oldMap));
@@ -150,7 +148,8 @@ function diffMaps(label, oldMap, newMap, render) {
       console.log(`    now: "${render(newMap[id])}"`);
     }
     // Surface key diffs in v2.1 boundary fields
-    const a = oldMap[id], b = newMap[id];
+    const a = oldMap[id],
+      b = newMap[id];
     for (const field of ['applies_when', 'does_not_apply_when', 'failure_risk', 'confidence']) {
       const before = JSON.stringify(a[field] ?? null);
       const after = JSON.stringify(b[field] ?? null);
@@ -192,7 +191,8 @@ async function cmdDiff(a, b) {
   let oldVersion, newVersion, oldEntry, newEntry;
   if (bParsed) {
     const { entry: entryB } = resolver.resolve(bParsed.full);
-    if (aParsed.full !== bParsed.full) error('Comparing across different domains is not supported.');
+    if (aParsed.full !== bParsed.full)
+      error('Comparing across different domains is not supported.');
     oldVersion = aParsed.version || entryA.version;
     newVersion = bParsed.version || entryB.version;
     oldEntry = entryA;
@@ -210,7 +210,9 @@ async function cmdDiff(a, b) {
     oldEntry = entryA;
     newEntry = entryA;
     if (oldVersion === newVersion) {
-      console.log(`${aParsed.full}@${oldVersion} is the current registry version. Nothing to diff.`);
+      console.log(
+        `${aParsed.full}@${oldVersion} is the current registry version. Nothing to diff.`,
+      );
       return;
     }
   }
@@ -233,25 +235,39 @@ async function cmdDiff(a, b) {
   const newJ = loadJudgment(tmpNew);
 
   console.log('');
-  console.log('  judgment_version: ' +
-    (oldJ.judgment_version || '(not declared)') +
-    '  →  ' +
-    (newJ.judgment_version || '(not declared)'));
+  console.log(
+    '  judgment_version: ' +
+      (oldJ.judgment_version || '(not declared)') +
+      '  →  ' +
+      (newJ.judgment_version || '(not declared)'),
+  );
 
   diffMaps('axioms', oldJ.axioms, newJ.axioms, (a) => a.one_sentence || a.id);
   diffMaps('ontology', oldJ.ontology, newJ.ontology, (o) => o.one_sentence || o.id);
-  diffMaps('misunderstandings', oldJ.misunderstandings, newJ.misunderstandings, (m) => m.wrong || m.id);
+  diffMaps(
+    'misunderstandings',
+    oldJ.misunderstandings,
+    newJ.misunderstandings,
+    (m) => m.wrong || m.id,
+  );
   diffMaps('banned_terms', oldJ.banned_terms, newJ.banned_terms, (t) => t.term || '');
   diffStanceList(oldJ.stances, newJ.stances);
 
   // Cleanup
-  try { fs.rmSync(tmpOld, { recursive: true, force: true }); } catch { /* ignore */ }
-  try { fs.rmSync(tmpNew, { recursive: true, force: true }); } catch { /* ignore */ }
+  try {
+    fs.rmSync(tmpOld, { recursive: true, force: true });
+  } catch {
+    /* ignore */
+  }
+  try {
+    fs.rmSync(tmpNew, { recursive: true, force: true });
+  } catch {
+    /* ignore */
+  }
 
   console.log('');
   console.log('═'.repeat(64));
-  const drift =
-    Object.keys(newJ.axioms).length - Object.keys(oldJ.axioms).length;
+  const drift = Object.keys(newJ.axioms).length - Object.keys(oldJ.axioms).length;
   const note = drift !== 0 ? ` (axiom count drift: ${drift > 0 ? '+' : ''}${drift})` : '';
   console.log(`  Judgment surface change: ${oldVersion} → ${newVersion}${note}`);
   console.log(`  Agent loading the new version may classify, diagnose, or recommend differently.`);

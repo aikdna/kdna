@@ -13,8 +13,7 @@
 
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
-const path = require('path');
-const { loadDomain, loadCorePatterns, classifyInput, formatContext } = require('../../src/loader');
+const { loadDomain, formatContext } = require('../../src/loader');
 
 const DOMAINS = [
   { id: 'writing', path: '/Users/AI/K/kdna-writing' },

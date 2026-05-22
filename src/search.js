@@ -57,13 +57,17 @@ function cmdSearch(query) {
   for (const { d, score } of matches) {
     const yanked = d.yanked ? ' [yanked]' : '';
     const dep = d.deprecated ? ' [deprecated]' : '';
-    console.log(`  ${(d.name || d.id || '?').padEnd(36)} v${d.version || '?'}  ${(d.type || 'domain').padEnd(8)}  score:${score}${yanked}${dep}`);
+    console.log(
+      `  ${(d.name || d.id || '?').padEnd(36)} v${d.version || '?'}  ${(d.type || 'domain').padEnd(8)}  score:${score}${yanked}${dep}`,
+    );
     if (d.description) console.log(`    ${d.description}`);
     if (d.core_insight) console.log(`    » ${d.core_insight}`);
     console.log('');
   }
 
-  console.log(`To install: kdna install <name>     # e.g. kdna install ${matches[0].d.name || matches[0].d.id}`);
+  console.log(
+    `To install: kdna install <name>     # e.g. kdna install ${matches[0].d.name || matches[0].d.id}`,
+  );
 }
 
 module.exports = { cmdSearch };

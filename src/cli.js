@@ -115,7 +115,7 @@ function loadRegistry() {
 
 // ─── Validate ────────────────────────────────────────────────────────
 
-function cmdValidate(dir, schemaOnly) {
+function cmdValidate(dir, _schemaOnly) {
   const abs = path.resolve(dir);
   if (!fs.existsSync(abs) || !fs.statSync(abs).isDirectory()) {
     error(`Not a directory: ${abs}`);
@@ -152,7 +152,7 @@ function cmdValidate(dir, schemaOnly) {
     'KDNA_Evolution.json': 'KDNA_Evolution.schema.json',
   };
 
-  for (const [file, schemaFile] of Object.entries(FILE_TO_SCHEMA)) {
+  for (const [, schemaFile] of Object.entries(FILE_TO_SCHEMA)) {
     const schemaPath = path.join(SCHEMA_DIR, schemaFile);
     if (fs.existsSync(schemaPath)) {
       try {
@@ -232,7 +232,10 @@ function cmdPack(dir, outputDir) {
   let packed = false;
 
   // Strategy 1: python3 zipfile (built-in on macOS, most Linux) — use temp file
-  const tmpPyFile = path.join(fs.existsSync('/tmp') ? '/tmp' : require('os').tmpdir(), `kdna-pack-${Date.now()}.py`);
+  const tmpPyFile = path.join(
+    fs.existsSync('/tmp') ? '/tmp' : require('os').tmpdir(),
+    `kdna-pack-${Date.now()}.py`,
+  );
   try {
     const pyScript = `import zipfile, os
 src = ${JSON.stringify(abs)}
@@ -249,7 +252,11 @@ with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as zf:
   } catch {
     /* Strategy 1 failed, try next */
   } finally {
-    try { fs.unlinkSync(tmpPyFile); } catch { /* cleanup */ }
+    try {
+      fs.unlinkSync(tmpPyFile);
+    } catch {
+      /* cleanup */
+    }
   }
 
   // Strategy 2: system zip command
@@ -348,14 +355,14 @@ function createNodeZip(srcDir, outPath) {
   const cdOffset = offset;
   const cdSize = centralDir.reduce((s, e) => s + e.length, 0);
   const eocd = Buffer.alloc(22);
-  eocd.writeUInt32LE(0x06054b50, 0);  // EOCD signature
-  eocd.writeUInt16LE(0, 4);           // disk number
-  eocd.writeUInt16LE(0, 6);           // disk with CD
+  eocd.writeUInt32LE(0x06054b50, 0); // EOCD signature
+  eocd.writeUInt16LE(0, 4); // disk number
+  eocd.writeUInt16LE(0, 6); // disk with CD
   eocd.writeUInt16LE(files.length, 8); // entries on disk
   eocd.writeUInt16LE(files.length, 10); // total entries
-  eocd.writeUInt32LE(cdSize, 12);     // CD size
-  eocd.writeUInt32LE(cdOffset, 16);   // CD offset
-  eocd.writeUInt16LE(0, 20);          // comment length
+  eocd.writeUInt32LE(cdSize, 12); // CD size
+  eocd.writeUInt32LE(cdOffset, 16); // CD offset
+  eocd.writeUInt16LE(0, 20); // comment length
 
   const all = Buffer.concat([...fileData, ...centralDir, eocd]);
   fs.writeFileSync(outPath, all);
@@ -392,7 +399,10 @@ function cmdUnpack(filePath, force) {
   fs.mkdirSync(outDir, { recursive: true });
 
   // Unzip using python3 zipfile (built-in) — use temp file to avoid -c multiline escaping issues
-  const tmpUnpackPy = path.join(fs.existsSync('/tmp') ? '/tmp' : require('os').tmpdir(), `kdna-unpack-${Date.now()}.py`);
+  const tmpUnpackPy = path.join(
+    fs.existsSync('/tmp') ? '/tmp' : require('os').tmpdir(),
+    `kdna-unpack-${Date.now()}.py`,
+  );
   try {
     const script = `import zipfile, os
 zf = zipfile.ZipFile(${JSON.stringify(abs)}, 'r')
@@ -409,7 +419,11 @@ zf.close()
       error('Cannot unpack ZIP. Install python3 or unzip command.');
     }
   } finally {
-    try { fs.unlinkSync(tmpUnpackPy); } catch { /* cleanup */ }
+    try {
+      fs.unlinkSync(tmpUnpackPy);
+    } catch {
+      /* cleanup */
+    }
   }
 
   console.log(`✓ Unpacked: ${outDir}`);
@@ -418,155 +432,13 @@ zf.close()
   files.forEach((f) => console.log(`    ${f}`));
 }
 
-// ─── Preview (.kdna → browser) ──────────────────────────────────────────
-
-function cmdPreview(filePath) {
-  const abs = path.resolve(filePath);
-  if (!fs.existsSync(abs)) error(`File not found: ${abs}`);
-
-  let core, patterns, manifest;
-  let scenarios, cases, reasoning, evolution;
-  const presentFiles = [];
-  const isKdna = abs.endsWith('.kdna');
-
-  if (isKdna) {
-    const os = require('os');
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-preview-'));
-    try {
-      const tmpPreviewPy = path.join(fs.existsSync('/tmp') ? '/tmp' : require('os').tmpdir(), `kdna-preview-${Date.now()}.py`);
-      try {
-        const script = `import zipfile, os
-zf = zipfile.ZipFile(${JSON.stringify(abs)}, 'r')
-zf.extractall(${JSON.stringify(tmpDir)})
-zf.close()
-`;
-        fs.writeFileSync(tmpPreviewPy, script);
-        execSync(`python3 ${tmpPreviewPy}`, { stdio: 'pipe' });
-      } finally {
-        try { fs.unlinkSync(tmpPreviewPy); } catch { /* cleanup */ }
-      }
-    } catch {
-      try {
-        execSync(`unzip -q -o "${abs}" -d "${tmpDir}"`, { stdio: 'pipe' });
-      } catch {
-        error('Cannot read .kdna container. Install python3 or unzip.');
-      }
-    }
-    core = readJson(path.join(tmpDir, 'KDNA_Core.json'));
-    patterns = readJson(path.join(tmpDir, 'KDNA_Patterns.json'));
-    manifest = readJson(path.join(tmpDir, 'kdna.json'));
-    scenarios = readJson(path.join(tmpDir, 'KDNA_Scenarios.json'));
-    cases = readJson(path.join(tmpDir, 'KDNA_Cases.json'));
-    reasoning = readJson(path.join(tmpDir, 'KDNA_Reasoning.json'));
-    evolution = readJson(path.join(tmpDir, 'KDNA_Evolution.json'));
-    for (const f of fs.readdirSync(tmpDir)) {
-      if (f.startsWith('KDNA_') && f.endsWith('.json')) presentFiles.push(f);
-    }
-    fs.rmSync(tmpDir, { recursive: true, force: true });
-  } else if (fs.statSync(abs).isDirectory()) {
-    core = readJson(path.join(abs, 'KDNA_Core.json'));
-    patterns = readJson(path.join(abs, 'KDNA_Patterns.json'));
-    manifest = readJson(path.join(abs, 'kdna.json'));
-    scenarios = readJson(path.join(abs, 'KDNA_Scenarios.json'));
-    cases = readJson(path.join(abs, 'KDNA_Cases.json'));
-    reasoning = readJson(path.join(abs, 'KDNA_Reasoning.json'));
-    evolution = readJson(path.join(abs, 'KDNA_Evolution.json'));
-  } else {
-    error('Must be a .kdna file or domain folder');
-  }
-
-  if (!core) error('KDNA_Core.json not found');
-
-  const name = manifest?.name || core.meta?.domain || path.basename(abs, '.kdna');
-  const version = manifest?.version || core.meta?.version || '?';
-  const status = manifest?.status || 'experimental';
-  const desc = manifest?.description || core.meta?.purpose || '';
-  const fileCount = presentFiles.length || (core ? 2 : 0);
-
-  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${escHtml(name)} — KDNA Preview</title>
-<style>
-:root{--bg:#08100d;--bg2:#0d1713;--border:#24352b;--text:#f0ead7;--dim:#c3baa0;--muted:#8b836c;--accent:#d1ad63;--green:#76b987;--red:#df806d;--blue:#8fa7d7;--sans:Inter,system-ui,sans-serif;--mono:SF Mono,monospace}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;max-width:960px;margin:0 auto;padding:40px 24px}
-.meta{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:20px 24px;border:1px solid var(--border);border-radius:10px;background:var(--bg2);margin-bottom:24px}
-.meta .name{font-size:24px;font-weight:700}
-.meta .ver{color:var(--muted);font-size:14px}
-.meta .badge{padding:3px 12px;border-radius:999px;font-size:11px;font-weight:700}
-.badge-ok{background:rgba(118,185,135,.15);color:var(--green)}
-.badge-warn{background:rgba(209,173,99,.15);color:var(--accent)}
-.desc{color:var(--dim);margin:16px 0 24px;font-size:15px;line-height:1.7}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px}
-.card{border:1px solid var(--border);border-radius:10px;background:var(--bg2);padding:20px}
-.card h3{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;display:flex;justify-content:space-between}
-.card h3 span{color:var(--dim);font-weight:400}
-.card .item{padding:10px 0;border-bottom:1px solid rgba(36,53,43,.5)}
-.card .item:last-child{border-bottom:0}
-.card .item strong{display:block;font-size:14px;margin-bottom:2px}
-.card .item .detail{font-size:13px;color:var(--dim);line-height:1.5}
-.card .item .meta{font-size:11px;color:var(--muted);margin-top:2px;padding:0;border:0;background:transparent;margin-bottom:0}
-.card .item .why{color:var(--red);font-size:12px}
-.card .item .replace{color:var(--green);font-size:12px}
-.footer{text-align:center;color:var(--muted);margin-top:40px;font-size:13px}
-.footer a{color:var(--accent)}
-@media(max-width:680px){.cards{grid-template-columns:1fr}}
-</style></head><body>
-<h1 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px">KDNA Domain Preview</h1>
-<div class="meta">
-  <span class="name">${escHtml(name)}</span>
-  <span class="ver">v${escHtml(version)}</span>
-  <span class="badge badge-${status === 'validated' ? 'ok' : 'warn'}">${escHtml(status)}</span>
-  <span style="color:var(--dim);font-size:13px">${presentFiles.length || '?'} files</span>
-</div>
-${desc ? `<p class="desc">${escHtml(desc)}</p>` : ''}
-<div class="cards">
-${renderCard('Axioms', core.axioms?.length, (core.axioms || []).map((a) => `<div class="item"><strong>${escHtml(a.one_sentence || '')}</strong><div class="detail">${escHtml(a.full_statement || a.why || '')}</div></div>`).join(''))}
-${renderCard('Concepts', core.ontology?.length, (core.ontology || []).map((o) => `<div class="item"><strong>${escHtml(o.one_sentence || o.id || '')}</strong><div class="detail">${escHtml(o.essence || '')}</div><div class="meta">Boundary: ${escHtml(o.boundary || '')}</div></div>`).join(''))}
-${renderCard('Frameworks', core.frameworks?.length, (core.frameworks || []).map((f) => `<div class="item"><strong>${escHtml(f.name || '')}</strong><div class="detail">When: ${escHtml(f.when_to_use || '')}</div><div class="detail">Steps: ${(f.steps || []).map((s) => escHtml(s)).join(' → ')}</div></div>`).join(''))}
-${renderCard('Stances', core.stances?.length, (core.stances || []).map((s) => `<div class="item"><strong>${escHtml(typeof s === 'string' ? s : s.one_sentence || '')}</strong></div>`).join(''))}
-${renderCard('Banned Terms', patterns?.terminology?.banned_terms?.length, (patterns?.terminology?.banned_terms || []).map((bt) => `<div class="item"><strong>${escHtml(bt.term)} <span class="replace">→ ${escHtml(bt.replace_with || '')}</span></strong><div class="why">${escHtml(bt.why || '')}</div></div>`).join(''))}
-${renderCard('Misunderstandings', patterns?.misunderstandings?.length, (patterns?.misunderstandings || []).map((mu) => `<div class="item"><strong>Wrong: ${escHtml(mu.wrong || '')}</strong><div class="detail">Correct: ${escHtml(mu.correct || '')}</div><div class="meta">${escHtml(mu.key_distinction || '')}</div></div>`).join(''))}
-${renderCard('Self-Checks', patterns?.self_check?.length, (patterns?.self_check || []).map((sc) => `<div class="item"><strong>✓ ${escHtml(typeof sc === 'string' ? sc : sc.one_sentence || '')}</strong></div>`).join(''))}
-${scenarios ? renderCard('Scenarios', scenarios.scenes?.length || 0, (scenarios.scenes || []).map((s) => `<div class="item"><strong>${escHtml(s.name || s.id || '')}</strong><div class="detail">${escHtml(s.trigger_signal || '')}</div></div>`).join('')) : ''}
-${cases ? renderCard('Cases', cases.cases?.length || 0, (cases.cases || []).map((c) => `<div class="item"><strong>${escHtml(c.title || c.id || '')}</strong><div class="detail">${escHtml((c.what_was_learned || '').substring(0, 150))}</div></div>`).join('')) : ''}
-${reasoning ? renderCard('Reasoning', reasoning.reasoning_chains?.length || 0, (reasoning.reasoning_chains || []).map((r) => `<div class="item"><strong>${escHtml(r.one_sentence || r.id || '')}</strong><div class="detail">${escHtml(r.so_what || '')}</div></div>`).join('')) : ''}
-${evolution ? renderCard('Evolution', evolution.stages?.length || 0, (evolution.stages || []).map((s) => `<div class="item"><strong>${escHtml(s.name || s.id || '')}</strong><div class="detail">${escHtml(s.description || '')}</div></div>`).join('')) : ''}
-</div>
-<div class="footer">Generated: ${new Date().toISOString().slice(0, 10)} · <a href="https://aikdna.com">aikdna.com</a></div>
-</body></html>`;
-
-  const os = require('os');
-  const outPath = path.join(os.tmpdir(), `kdna-preview-${name}.html`);
-  fs.writeFileSync(outPath, html);
-  console.log(`✓ Preview: ${outPath}`);
-
-  const platform = process.platform;
-  try {
-    if (platform === 'darwin') execSync(`open "${outPath}"`);
-    else if (platform === 'win32') execSync(`start "" "${outPath}"`);
-    else execSync(`xdg-open "${outPath}"`);
-    console.log('  Browser opened');
-  } catch {
-    console.log(`  Open manually: file://${outPath}`);
-  }
-}
-
-function renderCard(title, count, items) {
-  if (!count || !items) return '';
-  return `<div class="card"><h3>${title} <span>${count}</span></h3>${items}</div>`;
-}
-
-function escHtml(s) {
-  return (s || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
+// ─── Inspect .kdna file (ZIP container or legacy merged JSON) ────────────
 
 // ─── Inspect .kdna file (ZIP container or legacy merged JSON) ────────────
 
 function inspectKdnaFile(filePath) {
   const abs = path.resolve(filePath);
-  const stat = fs.statSync(abs);
+  fs.statSync(abs); // verify file exists
 
   // Detect format: ZIP container (binary header PK\x03\x04) vs text
   const head = Buffer.alloc(4);
@@ -583,7 +455,10 @@ function inspectKdnaFile(filePath) {
     const os = require('os');
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-inspect-'));
     try {
-      const tmpInspectPy = path.join(fs.existsSync('/tmp') ? '/tmp' : require('os').tmpdir(), `kdna-inspect-${Date.now()}.py`);
+      const tmpInspectPy = path.join(
+        fs.existsSync('/tmp') ? '/tmp' : require('os').tmpdir(),
+        `kdna-inspect-${Date.now()}.py`,
+      );
       try {
         const script = `import zipfile, os
 zf = zipfile.ZipFile(${JSON.stringify(abs)}, 'r')
@@ -593,7 +468,11 @@ zf.close()
         fs.writeFileSync(tmpInspectPy, script);
         execSync(`python3 ${tmpInspectPy}`, { stdio: 'pipe' });
       } finally {
-        try { fs.unlinkSync(tmpInspectPy); } catch { /* cleanup */ }
+        try {
+          fs.unlinkSync(tmpInspectPy);
+        } catch {
+          /* cleanup */
+        }
       }
     } catch {
       try {
@@ -837,331 +716,6 @@ function cmdInspect(dir) {
   console.log('═'.repeat(50));
 }
 
-// ─── Eval ────────────────────────────────────────────────────────────
-
-function cmdEval(dir, deltaMode) {
-  const abs = path.resolve(dir);
-  if (!fs.existsSync(abs) || !fs.statSync(abs).isDirectory()) {
-    error(`Not a directory: ${abs}`);
-  }
-
-  const core = readJson(path.join(abs, 'KDNA_Core.json'));
-  const pat = readJson(path.join(abs, 'KDNA_Patterns.json'));
-  if (!core) error('KDNA_Core.json not found');
-  if (!pat) error('KDNA_Patterns.json not found');
-
-  const testFile = path.join(abs, 'tests', 'before-after.json');
-  if (!fs.existsSync(testFile)) {
-    error(`No test cases found. Create: ${abs}/tests/before-after.json`);
-  }
-
-  const cases = readJson(testFile);
-  if (!Array.isArray(cases) || !cases.length) {
-    error('No test cases in before-after.json');
-  }
-
-  // Build lookup structures
-  const bannedTerms = new Set(
-    (pat.terminology?.banned_terms || []).map((b) => b.term.toLowerCase()),
-  );
-  const bannedReplacements = {};
-  (pat.terminology?.banned_terms || []).forEach((b) => {
-    bannedReplacements[b.term.toLowerCase()] = (b.replace_with || '').toLowerCase();
-  });
-  const axiomKeywords = new Set(
-    (core.axioms || []).flatMap((a) =>
-      (a.one_sentence + ' ' + a.full_statement)
-        .toLowerCase()
-        .split(/\s+/)
-        .filter((w) => w.length > 3),
-    ),
-  );
-  const ontologyConcepts = new Set((core.ontology || []).map((o) => o.id?.toLowerCase()));
-  const selfCheckItems = (pat.self_check || []).map((s) =>
-    (typeof s === 'string' ? s : s.question || '').toLowerCase(),
-  );
-
-  function scoreOutput(text, label) {
-    const lower = text.toLowerCase();
-    const checks = [];
-
-    // 1. Banned term avoidance
-    let bannedHit = false;
-    for (const term of bannedTerms) {
-      if (lower.includes(term)) {
-        checks.push({ pass: false, msg: `Uses banned term: "${term}"` });
-        bannedHit = true;
-        break;
-      }
-    }
-    if (!bannedHit) checks.push({ pass: true, msg: 'Avoids all banned terms' });
-
-    // 2. Domain concept usage
-    let conceptHit = false;
-    for (const concept of ontologyConcepts) {
-      if (lower.includes(concept)) {
-        conceptHit = true;
-        break;
-      }
-    }
-    checks.push({
-      pass: conceptHit,
-      msg: conceptHit ? 'References domain concepts' : 'No domain concepts referenced',
-    });
-
-    // 3. Axiom alignment
-    let axiomWords = 0;
-    for (const word of axiomKeywords) {
-      if (lower.includes(word)) axiomWords++;
-    }
-    const axiomAligned = axiomWords >= 2;
-    checks.push({
-      pass: axiomAligned,
-      msg: axiomAligned
-        ? `Axiom-aligned (${axiomWords} matches)`
-        : `Weak axiom alignment (${axiomWords} matches)`,
-    });
-
-    // 4. Structural indicators
-    const hasStructure =
-      /^(findings|verified|checked|recommend|classification)/im.test(text) ||
-      text.includes('**') ||
-      text.includes('triggered') ||
-      text.includes('missing');
-    checks.push({
-      pass: hasStructure,
-      msg: hasStructure ? 'Has structured judgment output' : 'Output is unstructured/generic',
-    });
-
-    // 5. Self-check relevance
-    let selfCheckRelevant = 0;
-    for (const sc of selfCheckItems) {
-      if (sc && lower.includes(sc.substring(0, Math.min(20, sc.length)))) selfCheckRelevant++;
-    }
-    checks.push({
-      pass: selfCheckRelevant > 0,
-      msg:
-        selfCheckRelevant > 0
-          ? `Self-check coverage: ${selfCheckRelevant}/${selfCheckItems.length}`
-          : 'No self-check indicators',
-    });
-
-    const score = checks.filter((c) => c.pass).length;
-    return { score, max: 5, checks, label };
-  }
-
-  const domain = core.meta?.domain || path.basename(abs);
-  console.log('═'.repeat(60));
-  console.log(`  KDNA Evaluation: ${domain}`);
-  if (deltaMode) console.log('  Mode: Delta (With KDNA vs Without KDNA)');
-  console.log('═'.repeat(60));
-  console.log('');
-
-  let withTotal = 0,
-    withoutTotal = 0;
-  const maxScore = cases.length * 5;
-  const results = [];
-
-  for (let i = 0; i < cases.length; i++) {
-    const tc = cases[i];
-    const withKdna =
-      typeof tc.with_kdna === 'string' ? tc.with_kdna : JSON.stringify(tc.with_kdna || {});
-    const withoutKdna =
-      typeof tc.without_kdna === 'string' ? tc.without_kdna : JSON.stringify(tc.without_kdna || {});
-
-    const withResult = scoreOutput(withKdna, 'With KDNA');
-    const withoutResult = scoreOutput(withoutKdna, 'Without KDNA');
-
-    withTotal += withResult.score;
-    withoutTotal += withoutResult.score;
-
-    const delta = withResult.score - withoutResult.score;
-
-    if (deltaMode) {
-      console.log(`  Case ${i + 1}: "${(tc.input || '').substring(0, 60)}..."`);
-      console.log(
-        `  Without KDNA: ${withoutResult.score}/5  |  With KDNA: ${withResult.score}/5  |  Δ +${delta > 0 ? '+' : ''}${delta}`,
-      );
-      for (const c of withResult.checks) {
-        console.log(`    ${c.pass ? '✓' : '✗'} ${c.msg}`);
-      }
-      console.log('');
-    } else {
-      console.log(`  Case ${i + 1}: "${(tc.input || '').substring(0, 50)}..."`);
-      console.log(`  Score: ${withResult.score}/5`);
-      for (const c of withResult.checks) {
-        console.log(`    ${c.pass ? '✓' : '✗'} ${c.msg}`);
-      }
-      console.log('');
-    }
-
-    results.push({
-      input: tc.input,
-      withScore: withResult.score,
-      withoutScore: withoutResult.score,
-      delta,
-      checks: withResult.checks,
-    });
-  }
-
-  if (deltaMode) {
-    const withPct = Math.round((withTotal / maxScore) * 100);
-    const withoutPct = Math.round((withoutTotal / maxScore) * 100);
-    const deltaPct = withPct - withoutPct;
-
-    console.log('═'.repeat(60));
-    console.log(`  Delta Results:`);
-    console.log(`    Without KDNA: ${withoutTotal}/${maxScore} (${withoutPct}%)`);
-    console.log(`    With KDNA:    ${withTotal}/${maxScore} (${withPct}%)`);
-    console.log(`    Δ Improvement: +${deltaPct}%`);
-    console.log('═'.repeat(60));
-    console.log('');
-    console.log(
-      `  Cases: ${cases.length} | Average Δ: +${(deltaPct / cases.length).toFixed(1)}% per case`,
-    );
-    console.log('');
-  } else {
-    const finalScore = Math.round((withTotal / maxScore) * 100);
-    const grade = finalScore >= 90 ? 'A' : finalScore >= 70 ? 'B' : finalScore >= 50 ? 'C' : 'D';
-    console.log('═'.repeat(60));
-    console.log(`  Overall: ${finalScore}/100 (Grade: ${grade})`);
-    console.log(`  Cases: ${cases.length} | Total score: ${withTotal}/${maxScore}`);
-    console.log('═'.repeat(60));
-  }
-
-  return { withTotal, withoutTotal, maxScore, results };
-}
-
-function cmdEvalBenchmark(benchmarkFile) {
-  const abs = path.resolve(benchmarkFile);
-  if (!fs.existsSync(abs)) error(`Benchmark file not found: ${abs}`);
-
-  const benchmark = readJson(abs);
-  if (!benchmark || !benchmark.patterns) error('Invalid benchmark file');
-
-  console.log('═'.repeat(60));
-  console.log(`  KDNA Benchmark: ${benchmark.benchmark || path.basename(abs)}`);
-  console.log('═'.repeat(60));
-  console.log('');
-
-  let totalCases = 0;
-  let totalPassed = 0;
-
-  for (const pattern of benchmark.patterns) {
-    console.log(`  ${pattern.name}`);
-    console.log(`  ${pattern.tagline || ''}`);
-    let patternPassed = 0;
-
-    for (let i = 0; i < (pattern.cases || []).length; i++) {
-      const c = pattern.cases[i];
-      const checks = [];
-
-      // 1. Signal identified?
-      checks.push({
-        pass: Boolean(c.with_kdna && c.with_kdna.length > 20),
-        label: 'signal_identified',
-      });
-
-      // 2. Different from baseline?
-      const noKdna = (c.without_kdna || '').toLowerCase();
-      const withKdna = (c.with_kdna || '').toLowerCase();
-      const overlapWords = withKdna.split(/\s+/).filter((w) => noKdna.includes(w)).length;
-      const kdnaWords = withKdna.split(/\s+/).length || 1;
-      checks.push({
-        pass: overlapWords / kdnaWords < 0.6,
-        label: 'clearly_different',
-      });
-
-      // 3. Banned term check (simple heuristic)
-      const bannedPatterns = ['offer discount', 'motivate harder', 'just build it', 'wait and see'];
-      const hasBanned = bannedPatterns.some((b) => withKdna.includes(b));
-      checks.push({ pass: !hasBanned, label: 'avoids_banned_terms' });
-
-      const casePassed = checks.filter((c) => c.pass).length;
-      if (casePassed >= 2) patternPassed++;
-
-      totalCases++;
-      totalPassed += casePassed >= 2 ? 1 : 0;
-
-      console.log(
-        `    Case ${i + 1}: ${casePassed >= 2 ? '✓' : '✗'} (${casePassed}/${checks.length} checks passed)`,
-      );
-    }
-
-    const rate = Math.round((patternPassed / Math.max(pattern.cases.length, 1)) * 100);
-    console.log(`    Score: ${patternPassed}/${pattern.cases.length} (${rate}%)`);
-    console.log('');
-  }
-
-  const finalRate = Math.round((totalPassed / Math.max(totalCases, 1)) * 100);
-  const grade = finalRate >= 90 ? 'A' : finalRate >= 70 ? 'B' : finalRate >= 50 ? 'C' : 'D';
-
-  console.log('═'.repeat(60));
-  console.log(`  Overall: ${totalPassed}/${totalCases} passed (${finalRate}%, Grade: ${grade})`);
-  console.log('═'.repeat(60));
-  console.log('');
-}
-
-function cmdEvalCluster(clusterFile) {
-  const abs = path.resolve(clusterFile);
-  if (!fs.existsSync(abs)) error(`Cluster file not found: ${abs}`);
-
-  const cluster = readJson(abs);
-  if (!cluster || !cluster.packages) error('Invalid cluster file');
-
-  console.log('═'.repeat(60));
-  console.log(`  KDNA Cluster Eval: ${cluster.name} v${cluster.version}`);
-  console.log('═'.repeat(60));
-  console.log('');
-
-  let totalScore = 0;
-  const maxScore = 5;
-
-  // 1. Valid manifest structure
-  const hasName = Boolean(cluster.name);
-  const hasVersion = Boolean(cluster.version);
-  const hasPackages = Array.isArray(cluster.packages) && cluster.packages.length >= 2;
-  console.log(`  ${hasName ? '✓' : '✗'} Has name`);
-  console.log(`  ${hasVersion ? '✓' : '✗'} Has version`);
-  console.log(`  ${hasPackages ? '✓' : '✗'} Has ≥2 packages (${cluster.packages?.length || 0})`);
-  if (hasName && hasVersion && hasPackages) totalScore++;
-
-  // 2. Roles assigned
-  const hasPrimary = cluster.packages?.some((p) => p.role === 'primary');
-  const allRoles = cluster.packages?.every((p) =>
-    ['primary', 'advisor', 'constraint', 'critic'].includes(p.role),
-  );
-  console.log(`  ${hasPrimary ? '✓' : '✗'} Has primary package`);
-  console.log(`  ${allRoles ? '✓' : '✗'} All packages have valid roles`);
-  if (hasPrimary && allRoles) totalScore++;
-
-  // 3. Composition rules
-  const hasRules = Array.isArray(cluster.composition_rules) && cluster.composition_rules.length > 0;
-  console.log(
-    `  ${hasRules ? '✓' : '✗'} Has composition rules (${cluster.composition_rules?.length || 0})`,
-  );
-  if (hasRules) totalScore++;
-
-  // 4. Routing questions
-  const hasRouting =
-    Array.isArray(cluster.routing_questions) && cluster.routing_questions.length > 0;
-  console.log(
-    `  ${hasRouting ? '✓' : '✗'} Has routing questions (${cluster.routing_questions?.length || 0})`,
-  );
-  if (hasRouting) totalScore++;
-
-  // 5. use_when conditions on packages
-  const hasUseWhen = cluster.packages?.every(
-    (p) => Array.isArray(p.use_when) && p.use_when.length > 0,
-  );
-  console.log(`  ${hasUseWhen ? '✓' : '✗'} All packages have use_when conditions`);
-  if (hasUseWhen) totalScore++;
-
-  console.log('');
-  console.log(`  Score: ${totalScore}/${maxScore}`);
-  console.log('═'.repeat(60));
-}
-
 // ─── List ─────────────────────────────────────────────────────────────
 
 function cmdList(showAvailable) {
@@ -1270,11 +824,6 @@ function cmdRegistry(subcommand) {
 }
 
 // ─── Export ──────────────────────────────────────────────────────────
-
-// cmdExport is now an alias for cmdPack (deprecated merged format, v0.1-v0.3)
-function cmdExport(dir, outFile) {
-  cmdPack(dir, outFile);
-}
 
 // ─── Main ─────────────────────────────────────────────────────────────
 
@@ -1411,8 +960,12 @@ switch (cmd) {
       );
     }
     (async () => {
-      try { await cmdCompare(target, args); }
-      catch (e) { console.error(`Error: ${e.message}`); process.exit(1); }
+      try {
+        await cmdCompare(target, args);
+      } catch (e) {
+        console.error(`Error: ${e.message}`);
+        process.exit(1);
+      }
     })();
     break;
   }
@@ -1432,8 +985,12 @@ switch (cmd) {
       );
     }
     (async () => {
-      try { await cmdDiff(a, b); }
-      catch (e) { console.error(`Error: ${e.message}`); process.exit(1); }
+      try {
+        await cmdDiff(a, b);
+      } catch (e) {
+        console.error(`Error: ${e.message}`);
+        process.exit(1);
+      }
     })();
     break;
   }
@@ -1557,9 +1114,7 @@ switch (cmd) {
           '  kdna install @aikdna/animation',
       );
     } else {
-      error(
-        `Unknown cluster subcommand: ${sub || '(none)'}\nUsage: kdna cluster lint <path>`,
-      );
+      error(`Unknown cluster subcommand: ${sub || '(none)'}\nUsage: kdna cluster lint <path>`);
     }
     break;
   }

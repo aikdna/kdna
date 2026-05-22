@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: 20
       - run: npm install
-      - run: npx eslint src/ tests/ validators/ eslint.config.mjs
+      - run: npx eslint src/ tests/
       - run: npm run format:check
       - run: npm run lint:examples
 

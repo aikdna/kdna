@@ -37,7 +37,11 @@ const USER_KDNA_DIR = path.join(process.env.HOME || process.env.USERPROFILE || '
 const INSTALL_DIR = path.join(USER_KDNA_DIR, 'domains');
 
 function readJson(p) {
-  try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return null; }
+  try {
+    return JSON.parse(fs.readFileSync(p, 'utf8'));
+  } catch {
+    return null;
+  }
 }
 
 function listInstalled() {
@@ -128,7 +132,10 @@ function cmdAvailable(args = []) {
 // ─── kdna match ────────────────────────────────────────────────────────
 
 function tokenize(text) {
-  return (text || '').toLowerCase().split(/[^a-z0-9_一-鿿]+/g).filter(Boolean);
+  return (text || '')
+    .toLowerCase()
+    .split(/[^a-z0-9_一-鿿]+/g)
+    .filter(Boolean);
 }
 
 function overlapScore(taskTokens, declaredText) {
@@ -214,7 +221,7 @@ function cmdMatch(taskText, args = []) {
     hints,
     note:
       'These are surface keyword signals only — many false positives are normal. ' +
-      'The agent must read each candidate domain\'s description + applies_when ' +
+      "The agent must read each candidate domain's description + applies_when " +
       'in full and decide using language understanding. dropped is a hard signal: ' +
       'do not load any domain in dropped.',
   };

@@ -19,8 +19,8 @@ function copyRecursive(src, dest, replacements) {
       copyRecursive(srcPath, destPath, replacements);
     } else {
       let content = fs.readFileSync(srcPath, 'utf8');
-      for (const [from, to] of Object.entries(replacements)) {
-        content = content.replace(from, to);
+      for (const [pattern, to] of Object.entries(replacements)) {
+        content = content.replaceAll(pattern, to);
       }
       fs.writeFileSync(destPath, content);
     }
@@ -52,8 +52,8 @@ function cmdInit(name) {
 
   fs.mkdirSync(targetDir, { recursive: true });
   copyRecursive(templateDir, targetDir, {
-    /example_domain/g: name,
-    /YYYY-MM-DD/g: today,
+    example_domain: name,
+    'YYYY-MM-DD': today,
   });
 
   console.log(`✓ Created KDNA domain: ${targetDir}/`);
@@ -115,28 +115,40 @@ function cmdClusterInit(name) {
 
   let clusterContent = fs.readFileSync(path.join(clusterTemplateDir, 'KDNA_Cluster.json'), 'utf8');
   clusterContent = clusterContent.replace(/example_cluster/g, name);
-  clusterContent = clusterContent.replace(/sub_domain_/g, `${name.replace(/_cluster$/, '')}_domain_`);
+  clusterContent = clusterContent.replace(
+    /sub_domain_/g,
+    `${name.replace(/_cluster$/, '')}_domain_`,
+  );
   fs.writeFileSync(path.join(targetDir, 'KDNA_Cluster.json'), clusterContent);
 
   // Copy cluster README
   const clusterReadme = fs.readFileSync(path.join(clusterTemplateDir, 'README.md'), 'utf8');
-  fs.writeFileSync(path.join(targetDir, 'README.md'), clusterReadme.replace(/example_cluster/g, name));
+  fs.writeFileSync(
+    path.join(targetDir, 'README.md'),
+    clusterReadme.replace(/example_cluster/g, name),
+  );
 
   // Create first example sub-domain from domain template
   const subDir = path.join(targetDir, 'domain_one');
   fs.mkdirSync(subDir, { recursive: true });
   copyRecursive(domainTemplateDir, subDir, {
-    /example_domain/g: `${name.replace(/_cluster$/, '')}_domain_one`,
-    /YYYY-MM-DD/g: today,
+    example_domain: `${name.replace(/_cluster$/, '')}_domain_one`,
+    'YYYY-MM-DD': today,
   });
 
   console.log(`✅ Created KDNA cluster: ${targetDir}/`);
   console.log(`   Files: KDNA_Cluster.json, domain_one/ (6 KDNA files + kdna.json + tests/)`);
   console.log('');
   console.log(`Next steps:`);
-  console.log(`  1. Edit ${targetDir}/KDNA_Cluster.json — set packages, composition rules, routing`);
-  console.log(`  2. Edit ${targetDir}/domain_one/KDNA_Core.json — fill in axioms, concepts, stances`);
-  console.log(`  3. Add more sub-domains: cp -r ${targetDir}/domain_one ${targetDir}/your_new_domain`);
+  console.log(
+    `  1. Edit ${targetDir}/KDNA_Cluster.json — set packages, composition rules, routing`,
+  );
+  console.log(
+    `  2. Edit ${targetDir}/domain_one/KDNA_Core.json — fill in axioms, concepts, stances`,
+  );
+  console.log(
+    `  3. Add more sub-domains: cp -r ${targetDir}/domain_one ${targetDir}/your_new_domain`,
+  );
   console.log(`  4. Run: kdna validate ${name}              (check all sub-domains)`);
 }
 

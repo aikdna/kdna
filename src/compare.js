@@ -30,7 +30,11 @@ const CONFIG_FILE = path.join(USER_KDNA_DIR, 'config.json');
 const { parseName } = require('./registry');
 
 function readJson(p) {
-  try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return null; }
+  try {
+    return JSON.parse(fs.readFileSync(p, 'utf8'));
+  } catch {
+    return null;
+  }
 }
 
 function error(msg) {
@@ -45,15 +49,15 @@ function loadLlmConfig() {
   const llm = cfg.llm || {};
   const provider = llm.provider || 'anthropic';
   const model = llm.model || (provider === 'anthropic' ? 'claude-sonnet-4-5' : 'gpt-4o-mini');
-  const envName = llm.api_key_env || (provider === 'anthropic' ? 'ANTHROPIC_API_KEY' : 'OPENAI_API_KEY');
+  const envName =
+    llm.api_key_env || (provider === 'anthropic' ? 'ANTHROPIC_API_KEY' : 'OPENAI_API_KEY');
   const apiKey = process.env[envName] || llm.api_key || null;
 
   // base_url lets users point the "openai" provider at any OpenAI-compatible
   // endpoint (SiliconFlow, Groq, OpenRouter, local llama.cpp, etc.).
   // Default: official endpoints for each provider.
-  const defaultBase = provider === 'anthropic'
-    ? 'https://api.anthropic.com'
-    : 'https://api.openai.com';
+  const defaultBase =
+    provider === 'anthropic' ? 'https://api.anthropic.com' : 'https://api.openai.com';
   const baseUrl = llm.base_url || defaultBase;
 
   if (!apiKey) {
@@ -104,8 +108,11 @@ function httpsPost(host, port, pathPart, headers, body) {
             reject(new Error(`HTTP ${res.statusCode}: ${text.slice(0, 500)}`));
             return;
           }
-          try { resolve(JSON.parse(text)); }
-          catch { reject(new Error(`Bad JSON from ${host}: ${text.slice(0, 500)}`)); }
+          try {
+            resolve(JSON.parse(text));
+          } catch {
+            reject(new Error(`Bad JSON from ${host}: ${text.slice(0, 500)}`));
+          }
         });
       },
     );
@@ -186,7 +193,8 @@ function buildKdnaPrompt(destDir) {
     for (const a of core.axioms) {
       sections.push(`- **${a.one_sentence}** ${a.full_statement}`);
       if (a.applies_when?.length) sections.push(`  - APPLIES WHEN: ${a.applies_when.join('; ')}`);
-      if (a.does_not_apply_when?.length) sections.push(`  - DOES NOT APPLY WHEN: ${a.does_not_apply_when.join('; ')}`);
+      if (a.does_not_apply_when?.length)
+        sections.push(`  - DOES NOT APPLY WHEN: ${a.does_not_apply_when.join('; ')}`);
       if (a.failure_risk) sections.push(`  - FAILURE RISK: ${a.failure_risk}`);
     }
     sections.push('');

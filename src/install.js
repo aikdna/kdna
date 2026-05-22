@@ -66,13 +66,19 @@ function ensureLoaderSkill() {
 
   // Notify which are current
   if (alreadyInstalled.length > 0) {
-    console.log(`  ✓ kdna-loader (v2.1) found in: ${alreadyInstalled.map(d => path.basename(path.dirname(d))).join(', ')}`);
+    console.log(
+      `  ✓ kdna-loader (v2.1) found in: ${alreadyInstalled.map((d) => path.basename(path.dirname(d))).join(', ')}`,
+    );
   }
 
   // Install + update share the same target list
   const targets = [...toInstall, ...toUpdate];
-  const verb = toUpdate.length && !toInstall.length
-    ? 'Updating' : (toInstall.length && !toUpdate.length ? 'Installing' : 'Installing/updating');
+  const verb =
+    toUpdate.length && !toInstall.length
+      ? 'Updating'
+      : toInstall.length && !toUpdate.length
+        ? 'Installing'
+        : 'Installing/updating';
   console.log(`  ${verb} kdna-loader skill (v2.1)...`);
 
   let installed = 0;
@@ -115,11 +121,15 @@ function ensureLoaderSkill() {
   }
 
   if (installed > 0) {
-    console.log(`   ✓ kdna-loader installed/updated in ${installed} agent director${installed > 1 ? 'ies' : 'y'}`);
+    console.log(
+      `   ✓ kdna-loader installed/updated in ${installed} agent director${installed > 1 ? 'ies' : 'y'}`,
+    );
   }
 
   if (installed < targets.length) {
-    console.log(`   ⚠ Could not install to ${targets.length - installed} agent director${targets.length - installed > 1 ? 'ies' : 'y'}.`);
+    console.log(
+      `   ⚠ Could not install to ${targets.length - installed} agent director${targets.length - installed > 1 ? 'ies' : 'y'}.`,
+    );
     console.log('   Run: kdna setup --force');
   }
 
@@ -194,7 +204,10 @@ function warnLegacy() {
 
 function parseSource(input) {
   // Local file
-  if (input.endsWith('.kdna') && (input.startsWith('./') || input.startsWith('/') || input.startsWith('~/'))) {
+  if (
+    input.endsWith('.kdna') &&
+    (input.startsWith('./') || input.startsWith('/') || input.startsWith('~/'))
+  ) {
     const resolved = path.resolve(input.replace(/^~/, process.env.HOME || ''));
     if (!fs.existsSync(resolved)) error(`Local file not found: ${resolved}`);
     return { type: 'local-file', path: resolved };
@@ -292,9 +305,13 @@ function verifySignature({ destDir, scope, entry, lenient = true }) {
   // v0.7 bootstrap: signatures may be absent. Warn but allow.
   if (!entry.signature || !manifest.signature) {
     if (isPlaceholder) {
-      console.warn(`  ⚠ Bootstrap mode: scope ${entry.name.split('/')[0]} has placeholder trust key. Signature not verified.`);
+      console.warn(
+        `  ⚠ Bootstrap mode: scope ${entry.name.split('/')[0]} has placeholder trust key. Signature not verified.`,
+      );
     } else {
-      console.warn(`  ⚠ ${entry.name}: no signature on package. (Will be required post-bootstrap.)`);
+      console.warn(
+        `  ⚠ ${entry.name}: no signature on package. (Will be required post-bootstrap.)`,
+      );
     }
     return;
   }
@@ -313,10 +330,11 @@ function verifySignature({ destDir, scope, entry, lenient = true }) {
   }
 
   // 1. Confirm the embedded PEM hashes to the claimed pubkey fingerprint
-  const computedFingerprint =
-    'ed25519:' + crypto.createHash('sha256').update(pem).digest('hex');
+  const computedFingerprint = 'ed25519:' + crypto.createHash('sha256').update(pem).digest('hex');
   if (computedFingerprint !== manifest.author.pubkey) {
-    error(`${entry.name}: embedded public_key_pem does not match author.pubkey fingerprint. Refusing.`);
+    error(
+      `${entry.name}: embedded public_key_pem does not match author.pubkey fingerprint. Refusing.`,
+    );
   }
 
   // 2. Verify the Ed25519 signature over the canonical payload
@@ -327,7 +345,10 @@ function verifySignature({ destDir, scope, entry, lenient = true }) {
   //   - hash each, format "name:hex", join with "\n"
   const sigHex = manifest.signature.replace(/^ed25519:/, '');
   try {
-    const files = fs.readdirSync(destDir).filter((f) => f.endsWith('.json')).sort();
+    const files = fs
+      .readdirSync(destDir)
+      .filter((f) => f.endsWith('.json'))
+      .sort();
     const parts = [];
     for (const f of files) {
       const full = path.join(destDir, f);
@@ -431,7 +452,9 @@ function installFromRegistry(parsed, yes) {
   }
 
   if (entry.deprecated) {
-    console.warn(`  ⚠ ${entry.name} is deprecated.${entry.replaced_by ? ` Use ${entry.replaced_by} instead.` : ''}`);
+    console.warn(
+      `  ⚠ ${entry.name} is deprecated.${entry.replaced_by ? ` Use ${entry.replaced_by} instead.` : ''}`,
+    );
   }
   if (entry.access && entry.access !== 'open') {
     error(`${entry.name} requires "${entry.access}" access. Not installable via CLI yet.`);
@@ -473,7 +496,11 @@ function installSingleFromUrl({ entry, scope }) {
   // sha256 check
   const actual = sha256File(tmpFile);
   if (entry.sha256 && actual !== entry.sha256) {
-    try { fs.unlinkSync(tmpFile); } catch { /* ignore */ }
+    try {
+      fs.unlinkSync(tmpFile);
+    } catch {
+      /* ignore */
+    }
     error(`sha256 mismatch for ${entry.name}: expected ${entry.sha256}, got ${actual}`);
   }
   console.log(`  ✓ sha256 verified`);
@@ -485,7 +512,11 @@ function installSingleFromUrl({ entry, scope }) {
   ensureDir(dest);
 
   extractKdna(tmpFile, dest);
-  try { fs.unlinkSync(tmpFile); } catch { /* ignore */ }
+  try {
+    fs.unlinkSync(tmpFile);
+  } catch {
+    /* ignore */
+  }
 
   verifySignature({ destDir: dest, scope, entry, lenient: true });
 
@@ -505,7 +536,7 @@ function installSingleFromUrl({ entry, scope }) {
   console.log(`  Location: ${dest}`);
 }
 
-function installCluster(clusterEntry, resolver, yes) {
+function installCluster(clusterEntry, resolver, _yes) {
   const subdomains = clusterEntry.cluster?.domains || [];
   if (!subdomains.length) {
     error(`Cluster ${clusterEntry.name} has no sub-domains listed.`);
@@ -690,7 +721,9 @@ function cmdInfo(input) {
       (a) => Array.isArray(a.does_not_apply_when) && a.does_not_apply_when.length,
     ).length;
     const withFailureRisk = (core?.axioms || []).filter((a) => a.failure_risk).length;
-    const pct = Math.round(((withApplies + withDoesNotApply + withFailureRisk) / (axiomCount * 3)) * 100);
+    const pct = Math.round(
+      ((withApplies + withDoesNotApply + withFailureRisk) / (axiomCount * 3)) * 100,
+    );
     console.log('');
     console.log('  ── v2.1 governance ──');
     console.log(`  axioms with applies_when:      ${withApplies}/${axiomCount}`);

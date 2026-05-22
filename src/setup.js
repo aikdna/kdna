@@ -165,4 +165,3 @@ async function cmdSetup() {
 }
 
 module.exports = { cmdSetup, detectAgents };
-

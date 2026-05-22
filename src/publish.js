@@ -407,7 +407,10 @@ function identityPaths() {
  * before hashing). All other files included as-is.
  */
 function canonicalPayload(srcDir) {
-  const files = fs.readdirSync(srcDir).filter((f) => f.endsWith('.json')).sort();
+  const files = fs
+    .readdirSync(srcDir)
+    .filter((f) => f.endsWith('.json'))
+    .sort();
   const parts = [];
   for (const f of files) {
     const full = path.join(srcDir, f);
@@ -467,7 +470,11 @@ with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as zf:
     fs.writeFileSync(tmpPy, script);
     execSync(`python3 ${tmpPy}`, { stdio: 'pipe' });
   } finally {
-    try { fs.unlinkSync(tmpPy); } catch { /* ignore */ }
+    try {
+      fs.unlinkSync(tmpPy);
+    } catch {
+      /* ignore */
+    }
   }
 }
 
@@ -530,7 +537,9 @@ function cmdPublish(domainPath, args = []) {
   const sig = signPayload(payload, privateKey);
   manifest.signature = 'ed25519:' + sig;
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
-  console.log(`  ✓ Signed (payload covers ${fs.readdirSync(abs).filter((f) => f.endsWith('.json')).length} json files)`);
+  console.log(
+    `  ✓ Signed (payload covers ${fs.readdirSync(abs).filter((f) => f.endsWith('.json')).length} json files)`,
+  );
 
   // 3. Pack
   const fileName = `${m[2]}-${manifest.version}.kdna`;

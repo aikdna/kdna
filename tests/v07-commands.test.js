@@ -82,13 +82,17 @@ test('kdna search reports no-match cleanly', () => {
 
 // ─── kdna verify ───────────────────────────────────────────────────────
 
-test('kdna verify runs all three layers on an installed domain', { skip: !ensureWritingInstalled() }, () => {
-  const r = run(['verify', '@aikdna/writing']);
-  assert.ok(r.ok, `verify failed: ${r.stderr || r.stdout}`);
-  assert.match(r.stdout, /STRUCTURE/);
-  assert.match(r.stdout, /TRUST/);
-  assert.match(r.stdout, /JUDGMENT/);
-});
+test(
+  'kdna verify runs all three layers on an installed domain',
+  { skip: !ensureWritingInstalled() },
+  () => {
+    const r = run(['verify', '@aikdna/writing']);
+    assert.ok(r.ok, `verify failed: ${r.stderr || r.stdout}`);
+    assert.match(r.stdout, /STRUCTURE/);
+    assert.match(r.stdout, /TRUST/);
+    assert.match(r.stdout, /JUDGMENT/);
+  },
+);
 
 test('kdna verify --judgment exits 0 with score line', { skip: !ensureWritingInstalled() }, () => {
   const r = run(['verify', '@aikdna/writing', '--judgment']);
@@ -131,16 +135,20 @@ test('kdna available returns installed domains', { skip: !ensureWritingInstalled
   assert.match(r.stdout, /@aikdna\/writing/);
 });
 
-test('kdna available --json returns parseable JSON array', { skip: !ensureWritingInstalled() }, () => {
-  const r = run(['available', '--json']);
-  assert.ok(r.ok, `available --json failed: ${r.stderr}`);
-  const parsed = JSON.parse(r.stdout);
-  assert.ok(Array.isArray(parsed), 'output should be an array');
-  assert.ok(parsed.length > 0, 'should have at least one domain');
-  const writing = parsed.find((d) => d.name === '@aikdna/writing');
-  assert.ok(writing, 'writing should be in the list');
-  assert.ok(Array.isArray(writing.applies_when), 'should expose applies_when');
-});
+test(
+  'kdna available --json returns parseable JSON array',
+  { skip: !ensureWritingInstalled() },
+  () => {
+    const r = run(['available', '--json']);
+    assert.ok(r.ok, `available --json failed: ${r.stderr}`);
+    const parsed = JSON.parse(r.stdout);
+    assert.ok(Array.isArray(parsed), 'output should be an array');
+    assert.ok(parsed.length > 0, 'should have at least one domain');
+    const writing = parsed.find((d) => d.name === '@aikdna/writing');
+    assert.ok(writing, 'writing should be in the list');
+    assert.ok(Array.isArray(writing.applies_when), 'should expose applies_when');
+  },
+);
 
 test('kdna match returns hint signals', { skip: !ensureWritingInstalled() }, () => {
   const r = run(['match', 'review this blog post for structural problems']);
@@ -158,14 +166,18 @@ test('kdna match --json returns structured result', { skip: !ensureWritingInstal
   assert.ok('task' in parsed, 'result should echo the task');
 });
 
-test('kdna load emits prompt-formatted text by default', { skip: !ensureWritingInstalled() }, () => {
-  const r = run(['load', '@aikdna/writing']);
-  assert.ok(r.ok, `load failed: ${r.stderr}`);
-  assert.match(r.stdout, /KDNA loaded/);
-  assert.match(r.stdout, /Axioms/);
-  // should NOT contain raw JSON braces at start
-  assert.ok(!r.stdout.startsWith('{'), 'default output should not be JSON');
-});
+test(
+  'kdna load emits prompt-formatted text by default',
+  { skip: !ensureWritingInstalled() },
+  () => {
+    const r = run(['load', '@aikdna/writing']);
+    assert.ok(r.ok, `load failed: ${r.stderr}`);
+    assert.match(r.stdout, /KDNA loaded/);
+    assert.match(r.stdout, /Axioms/);
+    // should NOT contain raw JSON braces at start
+    assert.ok(!r.stdout.startsWith('{'), 'default output should not be JSON');
+  },
+);
 
 test('kdna load --as=json emits parseable JSON', { skip: !ensureWritingInstalled() }, () => {
   const r = run(['load', '@aikdna/writing', '--as=json']);

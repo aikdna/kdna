@@ -21,11 +21,11 @@ const USER_KDNA_DIR = path.join(process.env.HOME || process.env.USERPROFILE || '
 const INSTALL_DIR = path.join(USER_KDNA_DIR, 'domains');
 
 function readJson(p) {
-  try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return null; }
-}
-
-function pad(s, n) {
-  return (s + '                                ').slice(0, n);
+  try {
+    return JSON.parse(fs.readFileSync(p, 'utf8'));
+  } catch {
+    return null;
+  }
 }
 
 // ─── Structure layer ───────────────────────────────────────────────────
@@ -131,15 +131,22 @@ function checkTrust(destDir, scope, entry) {
     passed.push('embedded public_key_pem present');
 
     // Recompute fingerprint
-    const fp = 'ed25519:' + crypto.createHash('sha256').update(manifest.author.public_key_pem).digest('hex');
+    const fp =
+      'ed25519:' + crypto.createHash('sha256').update(manifest.author.public_key_pem).digest('hex');
     if (fp !== manifest.author.pubkey) {
-      issues.push({ severity: 'error', msg: 'embedded PEM does not match author.pubkey fingerprint' });
+      issues.push({
+        severity: 'error',
+        msg: 'embedded PEM does not match author.pubkey fingerprint',
+      });
     } else {
       passed.push('PEM fingerprint matches author.pubkey');
 
       // Full Ed25519 verify
       try {
-        const files = fs.readdirSync(destDir).filter((f) => f.endsWith('.json')).sort();
+        const files = fs
+          .readdirSync(destDir)
+          .filter((f) => f.endsWith('.json'))
+          .sort();
         const parts = [];
         for (const f of files) {
           const full = path.join(destDir, f);
@@ -160,7 +167,11 @@ function checkTrust(destDir, scope, entry) {
         const publicKey = crypto.createPublicKey(manifest.author.public_key_pem);
         const ok = crypto.verify(null, Buffer.from(payload), publicKey, Buffer.from(sigHex, 'hex'));
         if (ok) passed.push('Ed25519 signature VALID over canonical payload');
-        else issues.push({ severity: 'error', msg: 'Ed25519 signature INVALID — package may be tampered' });
+        else
+          issues.push({
+            severity: 'error',
+            msg: 'Ed25519 signature INVALID — package may be tampered',
+          });
       } catch (e) {
         issues.push({ severity: 'error', msg: `signature verify failed: ${e.message}` });
       }
@@ -207,13 +218,19 @@ function checkJudgment(destDir) {
   //    OR v2.1 "Four Questions" section (#2 = applies, #4 = does not).
   const readmePath = path.join(destDir, 'README.md');
   let readme = '';
-  try { readme = fs.readFileSync(readmePath, 'utf8'); } catch { /* ok */ }
+  try {
+    readme = fs.readFileSync(readmePath, 'utf8');
+  } catch {
+    /* ok */
+  }
   const hasScope = /^##\s+Scope\b/im.test(readme);
   const hasOutOfScope = /^##\s+(Out of Scope|Out-of-Scope|Not for|Where this does)/im.test(readme);
   const hasFourQuestions =
     /(Four Questions|四个问题|四问)/i.test(readme) &&
     /(Where (does it|it) apply|适用|2\.\s+(Where|Applies))/i.test(readme) &&
-    /(does(?:\s+it)?\s+NOT\s+apply|when it does not apply|何时不|when not to (use|load))/i.test(readme);
+    /(does(?:\s+it)?\s+NOT\s+apply|when it does not apply|何时不|when not to (use|load))/i.test(
+      readme,
+    );
   if ((hasScope && hasOutOfScope) || hasFourQuestions) {
     bump(2, 2, 'README declares boundary (Scope+Out-of-Scope, or v2.1 Four Questions)');
   } else if (hasScope || hasOutOfScope) {
@@ -225,26 +242,58 @@ function checkJudgment(destDir) {
   // 2. v2.1 axiom governance fields
   if (core?.axioms) {
     const axioms = core.axioms;
-    const withApplies = axioms.filter((a) => Array.isArray(a.applies_when) && a.applies_when.length).length;
-    const withDoesNotApply = axioms.filter((a) => Array.isArray(a.does_not_apply_when) && a.does_not_apply_when.length).length;
+    const withApplies = axioms.filter(
+      (a) => Array.isArray(a.applies_when) && a.applies_when.length,
+    ).length;
+    const withDoesNotApply = axioms.filter(
+      (a) => Array.isArray(a.does_not_apply_when) && a.does_not_apply_when.length,
+    ).length;
     const withFailureRisk = axioms.filter((a) => a.failure_risk).length;
     const withConfidence = axioms.filter((a) => a.confidence).length;
-    const withEvidence = axioms.filter((a) => Array.isArray(a.evidence_type) && a.evidence_type.length).length;
+    const withEvidence = axioms.filter(
+      (a) => Array.isArray(a.evidence_type) && a.evidence_type.length,
+    ).length;
 
     bump(axioms.length, withApplies, `axioms with applies_when (${withApplies}/${axioms.length})`);
-    bump(axioms.length, withDoesNotApply, `axioms with does_not_apply_when (${withDoesNotApply}/${axioms.length})`);
-    bump(axioms.length, withFailureRisk, `axioms with failure_risk (${withFailureRisk}/${axioms.length})`);
-    bump(axioms.length, withConfidence, `axioms with confidence (${withConfidence}/${axioms.length})`);
-    bump(axioms.length, withEvidence, `axioms with evidence_type (${withEvidence}/${axioms.length})`);
+    bump(
+      axioms.length,
+      withDoesNotApply,
+      `axioms with does_not_apply_when (${withDoesNotApply}/${axioms.length})`,
+    );
+    bump(
+      axioms.length,
+      withFailureRisk,
+      `axioms with failure_risk (${withFailureRisk}/${axioms.length})`,
+    );
+    bump(
+      axioms.length,
+      withConfidence,
+      `axioms with confidence (${withConfidence}/${axioms.length})`,
+    );
+    bump(
+      axioms.length,
+      withEvidence,
+      `axioms with evidence_type (${withEvidence}/${axioms.length})`,
+    );
   }
 
   // 3. v2.1 misunderstanding governance fields
   if (pat?.misunderstandings) {
     const ms = pat.misunderstandings;
-    const withApplies = ms.filter((m) => Array.isArray(m.applies_when) && m.applies_when.length).length;
+    const withApplies = ms.filter(
+      (m) => Array.isArray(m.applies_when) && m.applies_when.length,
+    ).length;
     const withFailureRisk = ms.filter((m) => m.failure_risk).length;
-    bump(ms.length, withApplies, `misunderstandings with applies_when (${withApplies}/${ms.length})`);
-    bump(ms.length, withFailureRisk, `misunderstandings with failure_risk (${withFailureRisk}/${ms.length})`);
+    bump(
+      ms.length,
+      withApplies,
+      `misunderstandings with applies_when (${withApplies}/${ms.length})`,
+    );
+    bump(
+      ms.length,
+      withFailureRisk,
+      `misunderstandings with failure_risk (${withFailureRisk}/${ms.length})`,
+    );
   }
 
   // 4. self_check format: yes/no questions
@@ -252,7 +301,8 @@ function checkJudgment(destDir) {
     const total = pat.self_check.length;
     const yn = pat.self_check.filter((q) => typeof q === 'string' && q.trim().endsWith('?')).length;
     bump(total, yn, `self_check questions ending in "?" (${yn}/${total})`);
-    if (total < 3) issues.push({ severity: 'warn', msg: `only ${total} self_check entries (recommend ≥3)` });
+    if (total < 3)
+      issues.push({ severity: 'warn', msg: `only ${total} self_check entries (recommend ≥3)` });
   }
 
   // 5. eval cases present
@@ -260,7 +310,8 @@ function checkJudgment(destDir) {
   if (fs.existsSync(evalDir)) {
     const files = fs.readdirSync(evalDir).filter((f) => f.endsWith('.json'));
     if (files.length >= 4) bump(2, 2, `evals/ directory has ${files.length} case files`);
-    else if (files.length > 0) bump(2, 1, `evals/ has ${files.length} files (recommend ≥4: core/boundary/failure/excluded)`);
+    else if (files.length > 0)
+      bump(2, 1, `evals/ has ${files.length} files (recommend ≥4: core/boundary/failure/excluded)`);
     else bump(2, 0, 'evals/ has case files');
   } else {
     bump(2, 0, 'evals/ directory present');
@@ -287,7 +338,8 @@ function renderLayer(result) {
   console.log('─'.repeat(64));
   let header = `  ${result.layer.toUpperCase().padEnd(10)}  passed:${passCount}  warn:${warns}  errors:${errors}`;
   if (result.score) {
-    const pct = result.score.max > 0 ? Math.round((result.score.total / result.score.max) * 100) : 0;
+    const pct =
+      result.score.max > 0 ? Math.round((result.score.total / result.score.max) * 100) : 0;
     header += `  score:${result.score.total}/${result.score.max} (${pct}%)`;
   }
   console.log(header);
@@ -324,7 +376,8 @@ function cmdVerify(input, args = []) {
     process.exit(2);
   }
 
-  let scope = null, entry = null;
+  let scope = null,
+    entry = null;
   if (want.trust) {
     try {
       const resolver = new RegistryResolver({ allowNetwork: false });
@@ -343,17 +396,22 @@ function cmdVerify(input, args = []) {
 
   const results = [];
   if (want.structure) results.push(checkStructure(destDir));
-  if (want.trust)     results.push(checkTrust(destDir, scope, entry));
-  if (want.judgment)  results.push(checkJudgment(destDir));
+  if (want.trust) results.push(checkTrust(destDir, scope, entry));
+  if (want.judgment) results.push(checkJudgment(destDir));
 
   for (const r of results) renderLayer(r);
 
-  const totalErrors = results.reduce((sum, r) => sum + r.issues.filter((i) => i.severity === 'error').length, 0);
+  const totalErrors = results.reduce(
+    (sum, r) => sum + r.issues.filter((i) => i.severity === 'error').length,
+    0,
+  );
 
   console.log('');
   console.log('═'.repeat(64));
   if (totalErrors === 0) {
-    console.log(`  ✓ All ${results.length} layer(s) passed (warnings are quality signals, not failures)`);
+    console.log(
+      `  ✓ All ${results.length} layer(s) passed (warnings are quality signals, not failures)`,
+    );
   } else {
     console.log(`  ✗ ${totalErrors} hard failure(s)`);
   }
