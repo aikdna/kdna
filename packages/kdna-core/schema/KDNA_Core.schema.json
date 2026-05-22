@@ -81,11 +81,7 @@
           "id",
           "one_sentence",
           "full_statement",
-          "why",
-          "applies_when",
-          "does_not_apply_when",
-          "failure_risk",
-          "confidence"
+          "why"
         ],
         "properties": {
           "id": {
