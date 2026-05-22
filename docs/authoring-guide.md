@@ -6,7 +6,7 @@
 2. Rename the folder to your domain ID (e.g., `my_domain`)
 3. Edit each JSON file — fill in every placeholder in angle brackets
 4. Validate: `node validators/kdna-lint.js <your-domain-folder>`
-5. Test: `node src/cli.js eval <your-domain-folder>`
+5. Test: `kdna verify <your-domain-folder>`
 
 ---
 
@@ -247,14 +247,11 @@ The only valid test: compare two agent responses to the same input — one witho
 If the difference is only vocabulary (the agent uses different words but reaches the same conclusion), the KDNA is not working. Revise until the judgment itself changes.
 
 ```bash
-# Test with kdna CLI
-node src/cli.js demo
+# Verify your domain structure
+kdna verify <your-domain-folder>
 
-# Run eval on your domain
-node src/cli.js eval <your-domain-folder>
-
-# Compare before/after
-node benchmarks/eval-decision-state.js --limit=5
+# Compare before/after judgment (requires API key)
+kdna compare <domain-name> --input "<test prompt>"
 ```
 
 ---
