@@ -172,7 +172,7 @@ kdna install ./offline-packages/decision_state-0.4.0.kdna
 kdna install ./offline-packages/my_internal_domain-0.1.0.kdna
 
 # Verify installations
-kdna available
+kdna list
 kdna verify @aikdna/code_review
 ```
 
