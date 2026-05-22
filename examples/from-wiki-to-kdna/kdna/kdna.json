@@ -1,6 +1,6 @@
 {
-  "kdna_spec": "0.2",
-  "name": "code_review",
+  "kdna_spec": "1.0-rc",
+  "name": "@aikdna/code_review",
   "version": "0.1",
   "language": "en",
   "languages": [

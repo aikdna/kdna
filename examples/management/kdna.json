@@ -1,6 +1,6 @@
 {
-  "kdna_spec": "0.2",
-  "name": "management",
+  "kdna_spec": "1.0-rc",
+  "name": "@aikdna/management",
   "version": "0.4.0",
   "language": "en",
   "languages": [
@@ -25,5 +25,5 @@
   "status": "experimental",
   "registry": {},
   "file_count": 6,
-  "spec_version": "0.3"
+  "spec_version": "1.0-rc"
 }

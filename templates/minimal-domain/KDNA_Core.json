@@ -8,15 +8,20 @@
   },
   "axioms": [
     {
-      "id": "ax-core-principle",
+      "id": "ed_ax_foundation",
       "one_sentence": "One core judgment principle that changes how the agent evaluates situations.",
       "full_statement": "A testable, domain-specific principle. Must be specific enough that two experts would agree on when it applies. Avoid slogans.",
-      "why": "Explain what the agent would get wrong WITHOUT this axiom, and what it gets right WITH it."
+      "why": "Explain what the agent would get wrong WITHOUT this axiom, and what it gets right WITH it.",
+      "applies_when": ["When the task involves evaluating [situation type]"],
+      "does_not_apply_when": ["When the task is purely mechanical or factual lookup"],
+      "failure_risk": "Without this axiom, the agent would treat [situation] as [wrong assumption], leading to [bad outcome].",
+      "confidence": "medium",
+      "evidence_type": "practice_patterns"
     }
   ],
   "ontology": [
     {
-      "id": "con-key-distinction",
+      "id": "ed_con_core_distinction",
       "one_sentence": "Name one central concept the agent must distinguish.",
       "essence": "What this concept really means in this domain. Not a dictionary definition — the operational meaning.",
       "boundary": "What this concept is NOT. A real distinction the agent must not blur.",
@@ -25,10 +30,10 @@
   ],
   "frameworks": [
     {
-      "id": "fw-decision-procedure",
-      "name": "Example Framework",
-      "when_to_use": "Specific condition or context where this framework applies.",
-      "steps": ["Step 1: What to check first", "Step 2: How to proceed", "Step 3: How to conclude"]
+      "id": "ed_fw_assessment",
+      "name": "Assessment Framework",
+      "when_to_use": "When the agent needs to evaluate a situation in this domain.",
+      "steps": ["Step 1: Identify the core signal", "Step 2: Check against domain principles", "Step 3: Form a domain-informed judgment"]
     }
   ],
   "core_structure": [

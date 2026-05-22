@@ -445,7 +445,12 @@ function cmdInstallExtended(input, args = []) {
 
 function installFromRegistry(parsed, yes) {
   const resolver = new RegistryResolver({ allowNetwork: true });
-  const { scope, entry } = resolver.resolve(parsed.full);
+  let scope, entry;
+  try {
+    ({ scope, entry } = resolver.resolve(parsed.full));
+  } catch (e) {
+    error(e.message);
+  }
 
   if (parsed.wasShort) {
     console.log(`  Resolved "${parsed.ident}" → ${entry.name}`);
@@ -797,7 +802,12 @@ function cmdUpdate(input) {
   const installedVersion = manifest.version || manifest._source?.version || '?';
 
   const resolver = new RegistryResolver({ allowNetwork: true, refresh: true });
-  const { entry } = resolver.resolve(parsed.full);
+  let entry;
+  try {
+    ({ entry } = resolver.resolve(parsed.full));
+  } catch (e) {
+    error(e.message);
+  }
 
   if (entry.version === installedVersion) {
     console.log(`${parsed.full}@${installedVersion} is up to date.`);

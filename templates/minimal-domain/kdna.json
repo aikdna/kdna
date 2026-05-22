@@ -1,14 +1,16 @@
 {
-  "kdna_spec": "0.4",
-  "name": "example_domain",
+  "kdna_spec": "1.0-rc",
+  "name": "@aikdna/example_domain",
   "version": "0.1.0",
   "language": "en",
   "languages": ["en"],
   "created": "YYYY-MM-DD",
   "updated": "YYYY-MM-DD",
   "description": "[TODO: describe what judgment this domain improves in one sentence]",
+  "core_insight": "[TODO: one-sentence insight that captures the domain's core judgment principle]",
   "keywords": ["[TODO: add relevant keywords]"],
   "access": "open",
+  "status": "experimental",
   "author": {
     "name": "Your Name",
     "id": "your-id"
@@ -20,10 +22,10 @@
     "allow_redistribution": true,
     "allow_training": true
   },
-  "status": "experimental",
   "registry": {
     "repo": "https://github.com/your-org/your-repo"
   },
-  "file_count": 2,
-  "files": ["KDNA_Core.json", "KDNA_Patterns.json"]
+  "file_count": 3,
+  "kdna_file_count": 3,
+  "files": ["KDNA_Core.json", "KDNA_Patterns.json", "tests/before-after.json"]
 }

@@ -105,6 +105,35 @@ A domain package MAY include any of the following:
 
 A domain package MUST NOT include more than 6 KDNA JSON files (excluding `kdna.json`).
 
+#### 3.3.1 Optional File Semantics
+
+Each optional file MAY be legitimately absent when the domain's judgment surface does not require it. To prevent consumer confusion between "does not need this file" and "has not written it yet," domain authors MAY document the reason for absence:
+
+| File | Can Be Absent When |
+|------|-------------------|
+| `KDNA_Scenarios.json` | Domain judgment does not depend on situation-specific triggers. All axioms apply uniformly. |
+| `KDNA_Cases.json` | Axioms are self-demonstrating without worked examples. The domain's concepts are simple enough that cases add no clarity. |
+| `KDNA_Reasoning.json` | Axioms contain their own rationale (the `why` field is sufficient). No separate reasoning chains are needed. |
+| `KDNA_Evolution.json` | Domain is designed as a static judgment reference, not a progressive skill path. No stage-based growth model exists. |
+
+If a domain omits optional files, it SHOULD document the reason in its README. A domain reviewer or tool consumer who sees "2/6 files" MUST NOT assume incompleteness without reading the domain's rationale for omission.
+
+#### 3.3.2 Quality Badge System
+
+Each registered domain carries a `quality_badge` to communicate judgment maturity. The criteria are:
+
+| Badge | Minimum Requirement |
+|-------|-------------------|
+| **experimental** | Valid `KDNA_Core.json` + `KDNA_Patterns.json`. `kdna validate` passes. Domain may contain placeholder or incomplete content. |
+| **basic** | experimental + no cross-file version warnings. All required invariant fields populated (not placeholder). |
+| **validated** | basic + benchmark score >= 80% + `evals/` directory with at least 3 core cases + 3 boundary cases + 3 failure cases. |
+| **reference** | validated + domain designed to demonstrate format conformance. Serves as teaching example for domain authors. |
+| **production** | validated + real-world usage data from at least one independent deployment. Evidence of agent judgment improvement in practice. |
+
+A domain that carries `reference` status MUST also meet all `validated` requirements. The `reference` badge does NOT imply higher quality than `validated` — it signals pedagogical intent, not judgment superiority. Tools that sort by badge MUST sort `validated` above `reference` when ranking by judgment quality.
+
+The `quality_badge` is stored in the registry entry (`domains.json`), not in the domain package itself. The badge reflects external verification, not self-declaration.
+
 ### 3.4 Manifest
 
 A domain package SHOULD include a `kdna.json` manifest:
