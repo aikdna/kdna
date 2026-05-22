@@ -105,7 +105,10 @@ function cmdAvailable(args = []) {
   }
 
   if (wantJson) {
-    process.stdout.write(JSON.stringify(out, null, 2) + '\n');
+    const result = out.length
+      ? out
+      : { count: 0, domains: [], note: 'No domains installed. Run: kdna install <name>   See: kdna list --available' };
+    process.stdout.write(JSON.stringify(result, null, 2) + '\n');
     return;
   }
 
@@ -139,16 +142,21 @@ function tokenize(text) {
 }
 
 function overlapScore(taskTokens, declaredText) {
-  // Simple unigram + bigram overlap. Not semantic — substring/token.
+  // Simple unigram overlap. Not semantic — substring/token.
   // The agent layers semantic judgment on top of this signal.
-  if (!declaredText) return 0;
+  if (!declaredText) return { hits: 0, coverage: 0 };
   const declaredTokens = tokenize(declaredText);
-  if (!declaredTokens.length) return 0;
+  if (!declaredTokens.length) return { hits: 0, coverage: 0 };
   const dSet = new Set(declaredTokens);
   let hits = 0;
   for (const t of taskTokens) if (dSet.has(t)) hits++;
-  return hits;
+  const coverage = taskTokens.length ? hits / taskTokens.length : 0;
+  return { hits, coverage };
 }
+
+// Minimum signal strength to report a hint (avoid noise from single-word matches)
+const MIN_HITS = 2;
+const MIN_COVERAGE = 0.15;
 
 function cmdMatch(taskText, args = []) {
   const wantJson = args.includes('--json');
@@ -179,7 +187,8 @@ function cmdMatch(taskText, args = []) {
     let disqualified = null;
     for (const a of core.axioms || []) {
       for (const d of a.does_not_apply_when || []) {
-        if (overlapScore(taskTokens, d) >= 2) {
+        const score = overlapScore(taskTokens, d);
+        if (score.hits >= 2) {
           disqualified = { axiom: a.id, text: d };
           break;
         }
@@ -199,9 +208,14 @@ function cmdMatch(taskText, args = []) {
     const signals = [];
     for (const a of core.axioms || []) {
       for (const ap of a.applies_when || []) {
-        const s = overlapScore(taskTokens, ap);
-        if (s > 0) {
-          signals.push({ source: `${a.id}.applies_when`, hits: s, text: ap.slice(0, 120) });
+        const score = overlapScore(taskTokens, ap);
+        if (score.hits >= MIN_HITS || score.coverage >= MIN_COVERAGE) {
+          signals.push({
+            source: `${a.id}.applies_when`,
+            hits: score.hits,
+            coverage: score.coverage,
+            text: ap.slice(0, 120),
+          });
         }
       }
     }
@@ -248,7 +262,7 @@ function cmdMatch(taskText, args = []) {
   }
 
   if (!hints.length) {
-    console.log('No keyword hints. Either no KDNA fits, or fit is by meaning not words.');
+    console.log('No strong keyword matches. Either no KDNA fits, or fit is by meaning not words.');
     console.log('Run: kdna available  to see what is installed and decide.');
   } else {
     console.log(`Keyword hints (${hints.length} domains had some token overlap):`);
@@ -256,7 +270,8 @@ function cmdMatch(taskText, args = []) {
       console.log(`  ${h.name}  [${h.status}]`);
       console.log(`    ${h.description}`);
       for (const s of h.top_signals) {
-        console.log(`    ↳ ${s.source} (${s.hits} hits): ${s.text}`);
+        const pct = Math.round((s.coverage || 0) * 100);
+        console.log(`    ↳ ${s.source} (${s.hits} hits, ${pct}% coverage): ${s.text}`);
       }
     }
     console.log('');

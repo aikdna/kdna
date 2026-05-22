@@ -59,17 +59,14 @@ function cmdInit(name) {
   console.log(`✓ Created KDNA domain: ${targetDir}/`);
   console.log(`  Files: KDNA_Core.json, KDNA_Patterns.json, kdna.json, tests/before-after.json`);
 
-  // Validate
+  // Validate — pipe stdout so success/failure messages are visible
   try {
     const { execSync } = require('child_process');
     const cli = process.argv[1];
-    execSync(`node "${cli}" validate "${targetDir}"`, { stdio: 'pipe' });
-    console.log(`  ✓ Validation passed`);
-
-    execSync(`node "${cli}" validate --schema "${targetDir}"`, { stdio: 'pipe' });
-    console.log(`  ✓ Schema validation passed`);
+    execSync(`node "${cli}" validate "${targetDir}"`, { stdio: 'inherit' });
+    execSync(`node "${cli}" validate --schema "${targetDir}"`, { stdio: 'inherit' });
   } catch {
-    console.log(`  ⚠ Validation had issues — check files manually`);
+    console.error(`  ⚠ Validation had issues — check files above`);
   }
 
   console.log('');

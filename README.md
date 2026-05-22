@@ -17,6 +17,14 @@ KDNA is not a prompt library, not a knowledge base, and not an operating manual.
 > Domain-specific KDNA packages live in [separate repositories](#domain-repositories) and are listed in the canonical [kdna-registry](https://github.com/aikdna/kdna-registry).
 > To install KDNA for your agent, use [kdna-skills](https://github.com/aikdna/kdna-skills).  
 > To add a domain to the registry, see [docs/registry-policy.md](./docs/registry-policy.md).
+>
+> **Version map:** npm `@aikdna/kdna` (CLI/toolkit) and KDNA Specification evolve independently.  
+> | Component | Current Version | What it tracks |
+> |---|---|---|
+> | npm `@aikdna/kdna` | `0.7.8` | CLI commands, validation engine, loader SDK |
+> | SPEC.md | `v1.0-rc` | File format, schema rules, conformance requirements |
+> | Registry index | `registry_version: 1.0-rc` | Registry protocol and listing format |
+> | Domain `spec_version` | `0.4` | Minimum SPEC version a domain conforms to (domains stay valid as SPEC evolves) |
 
 ## Why Now
 
@@ -178,15 +186,16 @@ To create your own domain, ask your agent with `kdna-create` installed, or start
 
 ## Specs
 
-See [SPEC.md](./SPEC.md) for the full v0.4 specification.
+See [SPEC.md](./SPEC.md) for the full v1.0-rc specification.
 
-### Try the demo
+### Try KDNA
 
 ```bash
-node examples/minimal-agent/agent.js
+kdna install writing
+kdna info @aikdna/writing
+kdna available
+kdna match "my article got zero shares"
 ```
-
-See the same user input produce completely different cognitive analyses with different KDNA domains loaded. No LLM required — pure cognition path comparison.
 
 ## Domain Repositories
 
@@ -222,7 +231,7 @@ The `examples/` directory contains minimal reference implementations for testing
 
 | Document | Description |
 |---|---|
-| [SPEC.md](./SPEC.md) | Protocol specification v0.4 |
+| [SPEC.md](./SPEC.md) | Protocol specification v1.0-rc |
 | [docs/getting-started.md](./docs/getting-started.md) | Install, create, and use KDNA ([中文](./docs/getting-started.zh.md)) |
 | [docs/evaluation.md](./docs/evaluation.md) | How to test whether KDNA improves judgment ([中文](./docs/evaluation.zh.md)) |
 | [docs/meta-cognition.md](./docs/meta-cognition.md) | When to use KDNA, conflict arbitration, domain composition ([中文](./docs/meta-cognition.zh.md)) |

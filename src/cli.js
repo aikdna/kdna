@@ -122,7 +122,12 @@ function cmdValidate(dir, _schemaOnly) {
   }
 
   const { lintDomain, validateDomainSchema, validateCrossFile } = require('@aikdna/kdna-core');
-  const SCHEMA_DIR = path.join(__dirname, '..', 'packages', 'kdna-core', 'schema');
+
+  // Try multiple schema locations: development (packages/kdna-core/schema) vs npm package (../schema)
+  let SCHEMA_DIR = path.join(__dirname, '..', 'packages', 'kdna-core', 'schema');
+  if (!fs.existsSync(SCHEMA_DIR)) {
+    SCHEMA_DIR = path.join(__dirname, '..', 'schema');
+  }
 
   // Read all KDNA JSON files
   const files = fs.readdirSync(abs).filter((f) => f.endsWith('.json') && f !== 'kdna.json');
