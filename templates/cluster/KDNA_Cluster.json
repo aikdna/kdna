@@ -14,8 +14,12 @@
       "use_when": ["Task matches this sub-domain's scope"]
     }
   ],
-  "composition_rules": ["Rule 1: when these domains conflict, this principle takes priority.",
-                         "Rule 2: domain-specific guidance overrides generic advice."],
-  "routing_questions": ["Question 1 that determines which sub-domain to load.",
-                         "Question 2 that determines which sub-domain to load."]
+  "composition_rules": [
+    "Rule 1: when these domains conflict, this principle takes priority.",
+    "Rule 2: domain-specific guidance overrides generic advice."
+  ],
+  "routing_questions": [
+    "Question 1 that determines which sub-domain to load.",
+    "Question 2 that determines which sub-domain to load."
+  ]
 }

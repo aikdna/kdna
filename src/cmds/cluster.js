@@ -38,11 +38,11 @@ function cmdCluster(args) {
   } else {
     error(
       `Unknown cluster subcommand: ${sub || '(none)'}\n` +
-      'Usage: kdna cluster lint <path>\n' +
-      '       kdna cluster init <name>\n' +
-      '       kdna cluster info <cluster.json>\n' +
-      '       kdna cluster match <cluster.json> --input "<task>"\n' +
-      '       kdna cluster load <cluster.json> --input "<task>"',
+        'Usage: kdna cluster lint <path>\n' +
+        '       kdna cluster init <name>\n' +
+        '       kdna cluster info <cluster.json>\n' +
+        '       kdna cluster match <cluster.json> --input "<task>"\n' +
+        '       kdna cluster load <cluster.json> --input "<task>"',
     );
   }
 }
@@ -106,7 +106,8 @@ function cmdClusterLoad(target, args = []) {
 
   const INSTALL_DIR = path.join(
     process.env.HOME || process.env.USERPROFILE || '.',
-    '.kdna', 'domains',
+    '.kdna',
+    'domains',
   );
 
   // Domain loader: resolve from installed ~/.kdna/domains/
@@ -197,7 +198,8 @@ function cmdClusterMatch(target, args = []) {
 
   const INSTALL_DIR = path.join(
     process.env.HOME || process.env.USERPROFILE || '.',
-    '.kdna', 'domains',
+    '.kdna',
+    'domains',
   );
 
   const domainLoader = (domainId) => {
@@ -217,7 +219,9 @@ function cmdClusterMatch(target, args = []) {
   console.log(`Input: ${input.slice(0, 100)}${input.length > 100 ? '...' : ''}`);
   console.log(`Cluster: ${manifest.cluster_id} (${result.domains.length} domains loaded)`);
   console.log('');
-  console.log(`Matched: ${classification.selected.length} | Excluded: ${classification.excluded.length}`);
+  console.log(
+    `Matched: ${classification.selected.length} | Excluded: ${classification.excluded.length}`,
+  );
   console.log('');
 
   classification.selected.forEach((d) => {

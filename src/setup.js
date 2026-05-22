@@ -136,7 +136,9 @@ async function cmdSetup() {
     });
     if (legacy.length) {
       console.log('');
-      warn(`Removing ${legacy.length} legacy (un-scoped) domain director${legacy.length > 1 ? 'ies' : 'y'}:`);
+      warn(
+        `Removing ${legacy.length} legacy (un-scoped) domain director${legacy.length > 1 ? 'ies' : 'y'}:`,
+      );
       for (const d of legacy) {
         const dPath = path.join(DOMAINS_DIR, d);
         try {

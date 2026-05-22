@@ -30,6 +30,6 @@ jobs:
       - name: Verify installed domains
         run: |
           npm install -g .
-          kdna install writing
+          kdna install writing --yes
           kdna verify @aikdna/writing
-          kdna available
+          kdna list

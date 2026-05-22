@@ -19,16 +19,8 @@
  */
 
 const { usage, error } = require('./cmds/_common');
-const {
-  cmdValidate,
-  cmdPack,
-  cmdUnpack,
-  cmdInspect,
-} = require('./cmds/domain');
-const {
-  cmdList,
-  cmdRegistry,
-} = require('./cmds/registry');
+const { cmdValidate, cmdPack, cmdUnpack, cmdInspect } = require('./cmds/domain');
+const { cmdList, cmdRegistry } = require('./cmds/registry');
 const {
   cmdCompare,
   cmdDiff,
@@ -40,14 +32,7 @@ const {
 const { cmdCluster } = require('./cmds/cluster');
 const { cmdIdentity } = require('./cmds/identity');
 const { cmdSetup } = require('./cmds/setup');
-const {
-  cmdPreview,
-  cmdProject,
-  cmdEval,
-  cmdSelect,
-  cmdExport,
-  cmdDemo,
-} = require('./cmds/legacy');
+const { cmdPreview, cmdProject, cmdEval, cmdSelect, cmdExport, cmdDemo } = require('./cmds/legacy');
 
 // ─── Main ─────────────────────────────────────────────────────────────
 
