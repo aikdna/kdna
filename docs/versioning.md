@@ -66,7 +66,7 @@ Every version change that affects judgment (MINOR + MAJOR) MUST be re-evaluated:
 
 ```bash
 # Before release, compare old vs new
-kdna eval --before examples/my_domain_v1 --after examples/my_domain_v2
+kdna compare --before examples/my_domain_v1 --after examples/my_domain_v2
 ```
 
 The `evaluation_history` in `domains.json` tracks this:

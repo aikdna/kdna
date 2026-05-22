@@ -4,17 +4,18 @@
  *
  * Commands:
  *   kdna validate <path>       Validate a domain directory or .kdna file
+ *   kdna verify <path>         Verify a domain (alias for validate)
  *   kdna pack <path>           Pack a domain folder into .kdna container (ZIP)
  *   kdna unpack <path>         Unpack .kdna container to domain folder
- *   kdna preview <path>        Preview .kdna or domain folder in browser
  *   kdna install <domain-id>   Install a domain from registry
  *   kdna inspect <path>        Inspect a domain directory or .kdna file
  *   kdna list                  List installed domains
- *   kdna setup                   One-command setup: install CLI + skills + data root
- *   kdna cluster lint <path>    Validate a cluster manifest
- *   kdna cluster apply <path> [input]  Simulate cluster routing for a task
- *   kdna identity init           Generate Ed25519 identity key pair
- *   kdna identity show           Display public key and buyer ID
+ *   kdna compare <before> <after>  Compare judgment with/without KDNA
+ *   kdna match "<task>"        Match task against available domains
+ *   kdna setup                 One-command setup: install CLI + skills + data root
+ *   kdna cluster lint <path>   Validate a cluster manifest
+ *   kdna identity init         Generate Ed25519 identity key pair
+ *   kdna identity show         Display public key and buyer ID
  */
 
 const fs = require('fs');

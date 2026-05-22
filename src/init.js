@@ -77,7 +77,7 @@ function cmdInit(name) {
   );
   console.log(`  3. Edit ${targetDir}/kdna.json — metadata`);
   console.log(`  4. Run: kdna publish --check ${name}  (quality gate)`);
-  console.log(`  5. Run: kdna eval ${name}                 (test judgment)`);
+  console.log(`  5. Run: kdna verify ${name}               (test judgment)`);
 }
 
 /**

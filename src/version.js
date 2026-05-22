@@ -102,7 +102,7 @@ function cmdVersionBump(level, domainPath) {
   // Benchmark reminder for minor/major
   if (level === 'minor' || level === 'major') {
     console.log(`  ⚠ MINOR/MAJOR bump — must re-run benchmark before release`);
-    console.log(`     kdna eval ${domainPath || '.'}`);
+    console.log(`     kdna verify ${domainPath || '.'}`);
   }
 
   console.log('');

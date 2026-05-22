@@ -401,5 +401,5 @@ KDNA MUST NOT replace these systems. It provides a cognition layer that operates
 - [Semantic Versioning](https://semver.org/) — Version numbering
 - [SPDX License List](https://spdx.org/licenses/) — License identifiers
 - JSON Schema files: `schema/KDNA_*.schema.json`
-- CLI tools: `kdna validate`, `kdna pack`, `kdna eval`
+- CLI tools: `kdna validate`, `kdna pack`, `kdna compare`
 - Registry: `registry/domains.json`

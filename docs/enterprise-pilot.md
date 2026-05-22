@@ -31,7 +31,7 @@ KDNA encodes expert judgment — how to decide what kind of situation this is be
 ### Phase 3: Testing (Week 5-6)
 - Create 5-10 before/after test cases per package
 - Compare agent output without KDNA vs with KDNA
-- Score using `kdna eval`
+- Score using `kdna verify`
 - Iterate based on expert review of agent outputs
 
 ### Phase 4: Integration (Week 7-8)

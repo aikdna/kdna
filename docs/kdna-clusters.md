@@ -20,7 +20,7 @@ A single monolithic KDNA for a broad domain has four problems:
 | **Scope** | One judgment fork | A complex domain |
 | **Files** | 2-6 JSON files | Manifest + multiple packages |
 | **Loading** | Load the package | Route to the right packages |
-| **Validation** | kdna validate | kdna eval --cluster |
+| **Validation** | kdna validate | kdna validate |
 | **Example** | price-objection KDNA | Sales Judgment Cluster (5 packages) |
 
 ## Cluster Roles

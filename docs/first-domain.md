@@ -62,7 +62,7 @@ Edit `KDNA_Core.json` — write 2-3 axioms for your domain. Then:
 ```bash
 kdna publish --check ./my-domain
 kdna validate ./my-domain
-kdna eval ./my-domain
+kdna verify ./my-domain
 ```
 
 **Next step:** [Loader Behavior](/en/docs/loader-behavior) — understand how agents should use KDNA.

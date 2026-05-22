@@ -80,7 +80,7 @@
 - **CrewAI example** (`examples/crewai/`) — KDNA shared across multi-agent crew
 - **AutoGen example** (`examples/autogen/`) — KDNA in multi-agent conversation system
 - **MCP Resource example** (`examples/mcp-resource/`) — KDNA served as MCP Resource (not tool)
-- **`kdna demo` CLI command** — 60-second no-KDNA / with-KDNA offline demo with judgment trace output
+- **`kdna demo` CLI command** — 60-second no-KDNA / with-KDNA offline demo with judgment trace output (removed in v0.9)
 - **Architecture article** (`docs/agents-lack-judgment.md`) — "AI Agents Do Not Lack Tools. They Lack Judgment."
 - **Case study** (`docs/case-study-meeting-decisions.md`) — "$40,000 meeting that wasn't a decision"
 
@@ -91,7 +91,7 @@
 ### Added (Phase 4: Judgment Trace and Outcome Data Infrastructure)
 - **Judgment Trace schema** (`specs/judgment-trace-schema.json`) — formal JSON schema for transparent judgment traces
 - **Outcome Record schema** (`specs/outcome-record-schema.json`) — schema for long-term judgment-outcome tracking
-- **CLI trace output** — `kdna demo --trace` outputs structured JSON trace conforming to schema
+- **CLI trace output** — `kdna demo --trace` outputs structured JSON trace conforming to schema (removed in v0.9)
 - **Runtime API trace** — `/v1/project` and `/v1/judge` responses now include `trace` field with triggered axioms/frameworks/self-checks
 - **Registry evaluation history** — `domains.json` v0.4.1 with `evaluation_history` array per domain
 - **Registry spec update** — documented `eval_score`, `test_count`, `quality_badge`, and `evaluation_history` fields
@@ -119,7 +119,7 @@
 ## 0.3.0 - 2026-05-18
 
 ### Added
-- **kdna eval** — 5-dimension quality evaluation (banned terms, concept usage, axiom alignment, distinctness, self-check coverage)
+- **kdna eval** — 5-dimension quality evaluation (banned terms, concept usage, axiom alignment, distinctness, self-check coverage) (removed in v0.9)
 - **Agent demos** (`demos/`) — OpenCode + Codex running records with before/after comparison
 - **CI/CD**: `eval.yml` (auto eval on PR), `registry-validate.yml` (auto registry checks)
 - **SPEC v0.2**: RFC 2119 rewrite (MUST/SHOULD/MAY), conformance levels, security considerations

@@ -415,5 +415,5 @@ The SPEC version (`kdna_spec` in manifest) indicates which version of this speci
 - [Semantic Versioning](https://semver.org/) — Version numbering
 - [SPDX License List](https://spdx.org/licenses/) — License identifiers
 - JSON Schema files: `schema/KDNA_*.schema.json`
-- CLI tools: `kdna validate`, `kdna pack`, `kdna eval`
+- CLI tools: `kdna validate`, `kdna pack`, `kdna compare`
 - Registry: `registry/domains.json`
