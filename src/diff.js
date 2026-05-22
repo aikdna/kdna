@@ -211,7 +211,8 @@ async function cmdDiff(a, b) {
     newEntry = entryA;
     if (oldVersion === newVersion) {
       console.log(
-        `${aParsed.full}@${oldVersion} is the current registry version. Nothing to diff.`,
+        `${aParsed.full}@${oldVersion}: only one version found.\n` +
+          `To compare across versions, specify two: kdna diff ${aParsed.full}@${oldVersion} ${aParsed.full}@<other>`,
       );
       return;
     }
