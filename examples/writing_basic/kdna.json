@@ -22,8 +22,9 @@
     "allow_redistribution": true,
     "allow_training": false
   },
-  "status": "basic",
+  "status": "experimental",
   "registry": {},
   "file_count": 2,
-  "spec_version": "1.0-rc"
+  "spec_version": "1.0-rc",
+  "quality_badge": "untested"
 }

@@ -117,7 +117,7 @@ Smoke test 不证明质量。它只捕捉接线错误：registry 错、术语缺
 ```json
 {
   "status": "experimental",
-  "quality_badge": "experimental",
+  "quality_badge": "untested",
   "test_count": 0
 }
 ```

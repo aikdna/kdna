@@ -1,7 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KDNA_Core",
-  "$comment": "Schema v2.1 — axioms/ontology may carry judgment-governance fields (applies_when, does_not_apply_when, failure_risk, confidence, evidence_type). These are recommended, not required, so existing v0.4/v1.0 domains stay valid.",
   "type": "object",
   "required": [
     "meta",
@@ -22,57 +21,108 @@
         "load_condition"
       ],
       "properties": {
-        "version": { "type": "string" },
-        "domain": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
-        "created": { "type": "string" },
-        "purpose": { "type": "string" },
-        "load_condition": { "type": "string" }
+        "version": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "created": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "load_condition": {
+          "type": "string"
+        }
       },
       "additionalProperties": true
+    },
+    "highest_question": {
+      "type": "string",
+      "description": "The highest-order question this domain answers."
+    },
+    "worldview": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Default assumptions about how the world works in this domain."
+    },
+    "judgment_role": {
+      "type": "object",
+      "properties": {
+        "acts_as": {
+          "type": "string"
+        },
+        "does_not_act_as": {
+          "type": "string"
+        },
+        "responsibility": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "value_order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Priority ordering of values in this domain."
     },
     "axioms": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "one_sentence", "full_statement", "why"],
+        "required": [
+          "id",
+          "one_sentence",
+          "full_statement",
+          "why",
+          "applies_when",
+          "does_not_apply_when",
+          "failure_risk",
+          "confidence"
+        ],
         "properties": {
-          "id": { "type": "string" },
-          "one_sentence": { "type": "string" },
-          "full_statement": { "type": "string" },
-          "why": { "type": "string" },
+          "id": {
+            "type": "string"
+          },
+          "one_sentence": {
+            "type": "string"
+          },
+          "full_statement": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          },
           "confidence": {
-            "type": "string",
-            "enum": ["high", "medium", "low"],
-            "description": "v2.1 (recommended): how strongly the author claims this axiom — high = repeatedly tested, medium = practice pattern, low = working hypothesis"
+            "type": "string"
           },
           "evidence_type": {
             "type": "array",
             "items": {
-              "type": "string",
-              "enum": [
-                "practice_pattern",
-                "case_observation",
-                "research_finding",
-                "industry_consensus",
-                "personal_experience",
-                "working_hypothesis"
-              ]
-            },
-            "description": "v2.1 (recommended): what kind of evidence backs this axiom"
+              "type": "string"
+            }
           },
           "applies_when": {
             "type": "array",
-            "items": { "type": "string" },
-            "description": "v2.1 (recommended): situations where this axiom guides judgment correctly"
+            "items": {
+              "type": "string"
+            }
           },
           "does_not_apply_when": {
             "type": "array",
-            "items": { "type": "string" },
-            "description": "v2.1 (recommended): situations where applying this axiom would mislead"
+            "items": {
+              "type": "string"
+            }
           },
           "failure_risk": {
-            "type": "string",
-            "description": "v2.1 (recommended): what bad judgment results if this axiom is applied outside its scope"
+            "type": "string"
           }
         },
         "additionalProperties": true
@@ -82,22 +132,40 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "one_sentence", "essence", "boundary", "trigger_signal"],
+        "required": [
+          "id",
+          "one_sentence",
+          "essence",
+          "boundary",
+          "trigger_signal"
+        ],
         "properties": {
-          "id": { "type": "string" },
-          "one_sentence": { "type": "string" },
-          "essence": { "type": "string" },
-          "boundary": { "type": "string" },
-          "trigger_signal": { "type": "string" },
+          "id": {
+            "type": "string"
+          },
+          "one_sentence": {
+            "type": "string"
+          },
+          "essence": {
+            "type": "string"
+          },
+          "boundary": {
+            "type": "string"
+          },
+          "trigger_signal": {
+            "type": "string"
+          },
           "applies_when": {
             "type": "array",
-            "items": { "type": "string" },
-            "description": "v2.1 (recommended)"
+            "items": {
+              "type": "string"
+            }
           },
           "does_not_apply_when": {
             "type": "array",
-            "items": { "type": "string" },
-            "description": "v2.1 (recommended)"
+            "items": {
+              "type": "string"
+            }
           }
         },
         "additionalProperties": true
@@ -107,35 +175,106 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "name", "when_to_use", "steps"]
+        "required": [
+          "id",
+          "name",
+          "when_to_use",
+          "steps"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "when_to_use": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "applies_when": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "does_not_apply_when": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
       }
     },
     "core_structure": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["from", "to", "via"]
+        "required": [
+          "from",
+          "to",
+          "via"
+        ],
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "via": {
+            "type": "string"
+          },
+          "applies_when": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "does_not_apply_when": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
       }
     },
     "stances": {
       "type": "array",
       "items": {
         "anyOf": [
-          { "type": "string" },
+          {
+            "type": "string"
+          },
           {
             "type": "object",
-            "required": ["stance"],
+            "required": [
+              "stance"
+            ],
             "properties": {
-              "stance": { "type": "string" },
+              "stance": {
+                "type": "string"
+              },
               "applies_when": {
                 "type": "array",
-                "items": { "type": "string" },
-                "description": "v2.1 (recommended)"
+                "items": {
+                  "type": "string"
+                }
               },
               "does_not_apply_when": {
                 "type": "array",
-                "items": { "type": "string" },
-                "description": "v2.1 (recommended)"
+                "items": {
+                  "type": "string"
+                }
               }
             },
             "additionalProperties": true

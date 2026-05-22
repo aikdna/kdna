@@ -63,6 +63,44 @@ KDNA is a *judgment structure format*, not a general content format. The followi
 - Embedding executable code or workflow steps within KDNA files
 - Using KDNA files as general-purpose configuration stores
 
+## 1.6. Judgment Model
+
+KDNA encodes domain judgment. This section defines what judgment consists of and how the 13 constituent elements map to KDNA file structures.
+
+A **judgment** in KDNA is a domain-specific process that includes:
+
+1. Classifying the current situation into a type the domain recognizes
+2. Applying domain values, boundaries, and risk models
+3. Weighing trade-offs between action paths
+4. Selecting a response framework
+5. Verifying the output against domain standards
+
+### 1.6.1. Thirteen Judgment Components
+
+The following table maps each component to its meaning and its location within a domain package:
+
+| Component | Meaning | KDNA File | Field |
+|-----------|---------|-----------|-------|
+| `worldview` | Default assumptions about how the world works in this domain | `KDNA_Core.json` | `worldview` (top level) |
+| `values` | What matters more than what | `KDNA_Core.json` | `value_order`, `stances` |
+| `purpose` | What this judgment serves | `meta` / `KDNA_Core.json` | `purpose`, `highest_question` |
+| `role` | Who is judging and what they are responsible for | `KDNA_Core.json` | `judgment_role` |
+| `knowledge` | Background knowledge that shapes judgment | `KDNA_Core.json` / `KDNA_Cases.json` | `ontology`, `cases` |
+| `ontology` | How concepts are carved up and bounded | `KDNA_Core.json` | `ontology` |
+| `classification` | Which situation type the current input belongs to | `KDNA_Scenarios.json` | `scenes[].trigger_signals` |
+| `taste` | What counts as good vs. bad in this domain | `KDNA_Patterns.json` | `aesthetic_preferences` |
+| `boundaries` | What must not be done | `KDNA_Patterns.json` | `boundaries`, `banned_terms` |
+| `risk_model` | Which errors cost the most | `KDNA_Patterns.json` | `risk_model` |
+| `context_signals` | When to trigger which judgment apparatus | `KDNA_Scenarios.json` | `trigger_signals`, `negative_signals` |
+| `experience` | Historical cases and failure patterns | `KDNA_Cases.json` / `KDNA_Patterns.json` | `cases`, `counterexamples`, `misunderstandings` |
+| `evaluation` | How to confirm judgment was valid | `evals/` directory / `KDNA_Evolution.json` | `eval_results`, `measurement` |
+
+A domain author SHOULD populate all components that are relevant to the domain's judgment surface. A component MAY be omitted when the domain's judgment does not depend on it (e.g., a purely diagnostic domain may omit `taste`).
+
+### 1.6.2. Boundary Statement
+
+KDNA does not claim to exhaust human judgment. It provides a structured method for approximating repeatable judgment patterns: principles, concept distinctions, signals, boundaries, risks, cases, and evaluation. Some judgment remains implicit, situational, and the ultimate responsibility of the human operator.
+
 ## 2. Conformance Levels
 
 Implementations MAY conform at one of three levels:
@@ -118,21 +156,31 @@ Each optional file MAY be legitimately absent when the domain's judgment surface
 
 If a domain omits optional files, it SHOULD document the reason in its README. A domain reviewer or tool consumer who sees "2/6 files" MUST NOT assume incompleteness without reading the domain's rationale for omission.
 
-#### 3.3.2 Quality Badge System
+#### 3.3.2 Three-Field System
 
-Each registered domain carries a `quality_badge` to communicate judgment maturity. The criteria are:
+Every domain package and registry entry MUST use a consistent three-field system to separate maturity, quality, and access:
 
-| Badge | Minimum Requirement |
-|-------|-------------------|
-| **experimental** | Valid `KDNA_Core.json` + `KDNA_Patterns.json`. `kdna validate` passes. Domain may contain placeholder or incomplete content. |
-| **basic** | experimental + no cross-file version warnings. All required invariant fields populated (not placeholder). |
-| **validated** | basic + benchmark score >= 80% + `evals/` directory with at least 3 core cases + 3 boundary cases + 3 failure cases. |
-| **reference** | validated + domain designed to demonstrate format conformance. Serves as teaching example for domain authors. |
-| **production** | validated + real-world usage data from at least one independent deployment. Evidence of agent judgment improvement in practice. |
+| Field | Permitted Values | Meaning |
+|-------|-----------------|---------|
+| `status` | `draft` \| `experimental` \| `stable` \| `deprecated` | Maturity of the domain's structure and content. `draft` = early work in progress; `experimental` = complete but not yet tested in practice; `stable` = structure frozen, content mature; `deprecated` = superseded by another domain. |
+| `quality_badge` | `untested` \| `tested` \| `validated` \| `expert_reviewed` \| `production_ready` | Evidence level for the domain's judgment quality. `untested` = passes schema validation only; `tested` = has eval cases with manual verification; `validated` >= 10 eval cases with automated judgment scoring; `expert_reviewed` = externally reviewed by a domain expert; `production_ready` = validated + real-world deployment evidence. |
+| `access` | `open` \| `licensed` \| `runtime` | How the domain is distributed. `open` = plaintext, freely available; `licensed` = encrypted, requires local license; `runtime` = not distributed, server-side API only. |
 
-A domain that carries `reference` status MUST also meet all `validated` requirements. The `reference` badge does NOT imply higher quality than `validated` — it signals pedagogical intent, not judgment superiority. Tools that sort by badge MUST sort `validated` above `reference` when ranking by judgment quality.
+**Rules:**
+- `status` and `quality_badge` are independent. A domain MAY be `stable` but `untested` (mature structure, no eval evidence), or `experimental` but `validated` (new domain with thorough testing).
+- `quality_badge` SHOULD be stored in both the domain's `kdna.json` manifest AND the registry entry. Self-declared badges MUST be verifiable via `kdna verify --judgment`.
+- `deprecated` domains MUST set `replaced_by` to the successor domain name.
+- The old values `basic`, `pro`, and `reference` are retired. Previously `reference` domains SHOULD migrate to `status: stable` + `quality_badge: validated` or `expert_reviewed`.
 
-The `quality_badge` is stored in the registry entry (`domains.json`), not in the domain package itself. The badge reflects external verification, not self-declaration.
+**Minimum eval requirements by badge:**
+
+| Badge | Minimum Eval Cases | Automated Scoring |
+|-------|-------------------|-------------------|
+| `untested` | 0 | N/A |
+| `tested` | >= 3 | Manual verification |
+| `validated` | >= 10 | `kdna verify --judgment` passes |
+| `expert_reviewed` | >= 10 | External expert sign-off |
+| `production_ready` | >= 10 | Deployment metrics + judgment improvement evidence |
 
 ### 3.4 Manifest
 
@@ -140,10 +188,11 @@ A domain package SHOULD include a `kdna.json` manifest:
 
 ```json
 {
-  "kdna_spec": "0.4",
+  "kdna_spec": "1.0-rc",
   "name": "<domain-id>",
   "version": "<semver>",
-  "status": "experimental | basic | stable | pro",
+  "status": "draft | experimental | stable | deprecated",
+  "quality_badge": "untested | tested | validated | expert_reviewed | production_ready",
   "access": "open | licensed | runtime",
   "language": "<ISO 639-1>",
   "author": { "name": "...", "id": "..." },

@@ -14,22 +14,11 @@
         "load_condition"
       ],
       "properties": {
-        "version": {
-          "type": "string"
-        },
-        "domain": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9_]*$"
-        },
-        "created": {
-          "type": "string"
-        },
-        "purpose": {
-          "type": "string"
-        },
-        "load_condition": {
-          "type": "string"
-        }
+        "version": { "type": "string" },
+        "domain": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "created": { "type": "string" },
+        "purpose": { "type": "string" },
+        "load_condition": { "type": "string" }
       },
       "additionalProperties": true
     },
@@ -48,7 +37,38 @@
           "one_sentence",
           "logic",
           "so_what"
-        ]
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "one_sentence": { "type": "string" },
+          "logic": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "so_what": { "type": "string" },
+          "tradeoffs": {
+            "type": "string",
+            "description": "Trade-offs inherent in this reasoning chain."
+          },
+          "conflict_resolution": {
+            "type": "string",
+            "description": "How to resolve conflicts when this chain clashes with other principles."
+          },
+          "when_not_to_use": {
+            "type": "string",
+            "description": "Situations where this reasoning chain should not be applied."
+          },
+          "evidence_required": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Evidence needed before this chain can be confidently applied."
+          },
+          "uncertainty_handling": {
+            "type": "string",
+            "description": "How to proceed when evidence is incomplete or ambiguous."
+          }
+        },
+        "additionalProperties": true
       }
     }
   },

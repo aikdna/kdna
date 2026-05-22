@@ -15,7 +15,10 @@
       ],
       "properties": {
         "version": { "type": "string" },
-        "domain": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "domain": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
         "created": { "type": "string" },
         "purpose": { "type": "string" },
         "load_condition": { "type": "string" }
@@ -32,16 +35,41 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "name", "trigger_signal"],
+        "required": ["id", "name"],
         "properties": {
           "id": { "type": "string" },
           "name": { "type": "string" },
-          "trigger_signal": { "type": "string" },
+          "trigger_signal": {
+            "type": "string",
+            "description": "Deprecated: use trigger_signals (array) instead. Kept for backward compatibility."
+          },
+          "trigger_signals": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Signals that trigger this scene."
+          },
+          "negative_signals": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Signals that explicitly exclude this scene."
+          },
+          "classification_rule": {
+            "type": "string",
+            "description": "Rule for classifying input into this scene."
+          },
+          "risk_level": {
+            "type": "string",
+            "description": "Risk level associated with this scene."
+          },
+          "expected_judgment_shift": {
+            "type": "string",
+            "description": "How judgment should shift when this scene is detected."
+          },
           "sub_scenarios": {
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["id", "trap_belief", "three_questions", "action_template", "expected_result"],
+              "required": ["id", "trap_belief", "action_template", "expected_result"],
               "properties": {
                 "id": { "type": "string" },
                 "trap_belief": { "type": "string" },
@@ -70,10 +98,12 @@
                   }
                 },
                 "expected_result": { "type": "string" }
-              }
+              },
+              "additionalProperties": true
             }
           }
-        }
+        },
+        "additionalProperties": true
       }
     }
   },

@@ -42,8 +42,34 @@
           "outcome": { "type": "string" },
           "kdna_analysis": { "type": "string" },
           "modern_parallel": { "type": "string" },
-          "axiom": { "type": "string" }
-        }
+          "axiom": { "type": "string" },
+          "judgment_path": {
+            "type": "string",
+            "description": "The judgment process applied in this case."
+          },
+          "good_response": {
+            "type": "string",
+            "description": "An example of a good judgment response."
+          },
+          "bad_response": {
+            "type": "string",
+            "description": "An example of a poor judgment response."
+          },
+          "why_good": {
+            "type": "string",
+            "description": "Why the good response aligns with domain judgment."
+          },
+          "why_bad": {
+            "type": "string",
+            "description": "Why the bad response violates domain judgment."
+          },
+          "triggered_axioms": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Axioms triggered by this case."
+          }
+        },
+        "additionalProperties": true
       }
     }
   },

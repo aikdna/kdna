@@ -18,13 +18,13 @@ KDNA is not a prompt library, not a knowledge base, and not an operating manual.
 > To install KDNA for your agent, use [kdna-skills](https://github.com/aikdna/kdna-skills).  
 > To add a domain to the registry, see [docs/registry-policy.md](./docs/registry-policy.md).
 >
-> **Version map:** npm `@aikdna/kdna` (CLI/toolkit) and KDNA Specification evolve independently.  
+> **Version map:** npm `@aikdna/kdna` (CLI/toolkit) and KDNA Specification evolve independently. See [docs/version-matrix.md](./docs/version-matrix.md) for the full compatibility matrix.  
 > | Component | Current Version | What it tracks |
 > |---|---|---|
 > | npm `@aikdna/kdna` | `0.7.8` | CLI commands, validation engine, loader SDK |
 > | SPEC.md | `v1.0-rc` | File format, schema rules, conformance requirements |
-> | Registry index | `registry_version: 1.0-rc` | Registry protocol and listing format |
-> | Domain `spec_version` | `0.4` | Minimum SPEC version a domain conforms to (domains stay valid as SPEC evolves) |
+> | Registry index | `registry_version: 2.0` | Registry protocol and listing format |
+> | Domain `spec_version` | `1.0-rc` | Minimum SPEC version a domain conforms to (domains stay valid as SPEC evolves) |
 
 ## Why Now
 

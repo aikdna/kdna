@@ -40,6 +40,39 @@
       },
       "additionalProperties": true
     },
+    "highest_question": {
+      "type": "string",
+      "description": "The highest-order question this domain answers."
+    },
+    "worldview": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Default assumptions about how the world works in this domain."
+    },
+    "judgment_role": {
+      "type": "object",
+      "properties": {
+        "acts_as": {
+          "type": "string"
+        },
+        "does_not_act_as": {
+          "type": "string"
+        },
+        "responsibility": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "value_order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Priority ordering of values in this domain."
+    },
     "axioms": {
       "type": "array",
       "items": {
@@ -48,8 +81,51 @@
           "id",
           "one_sentence",
           "full_statement",
-          "why"
-        ]
+          "why",
+          "applies_when",
+          "does_not_apply_when",
+          "failure_risk",
+          "confidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "one_sentence": {
+            "type": "string"
+          },
+          "full_statement": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "string"
+          },
+          "evidence_type": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "applies_when": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "does_not_apply_when": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "failure_risk": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
       }
     },
     "ontology": {
@@ -62,7 +138,37 @@
           "essence",
           "boundary",
           "trigger_signal"
-        ]
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "one_sentence": {
+            "type": "string"
+          },
+          "essence": {
+            "type": "string"
+          },
+          "boundary": {
+            "type": "string"
+          },
+          "trigger_signal": {
+            "type": "string"
+          },
+          "applies_when": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "does_not_apply_when": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
       }
     },
     "frameworks": {
@@ -74,7 +180,37 @@
           "name",
           "when_to_use",
           "steps"
-        ]
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "when_to_use": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "applies_when": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "does_not_apply_when": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
       }
     },
     "core_structure": {
@@ -85,15 +221,64 @@
           "from",
           "to",
           "via"
-        ]
+        ],
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "via": {
+            "type": "string"
+          },
+          "applies_when": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "does_not_apply_when": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
       }
     },
     "stances": {
       "type": "array",
       "items": {
         "anyOf": [
-          { "type": "string" },
-          { "type": "object", "required": ["stance"] }
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "required": [
+              "stance"
+            ],
+            "properties": {
+              "stance": {
+                "type": "string"
+              },
+              "applies_when": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "does_not_apply_when": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": true
+          }
         ]
       }
     }

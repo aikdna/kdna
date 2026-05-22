@@ -40,8 +40,34 @@
           "indicators": {
             "type": "array",
             "items": { "type": "string" }
+          },
+          "changed_judgments": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Judgments that changed at this stage."
+          },
+          "deprecated_axioms": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Axioms that are no longer held at this stage."
+          },
+          "new_failure_modes": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "New failure patterns that emerge at this stage."
+          },
+          "eval_results": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Evaluation results associated with this stage."
+          },
+          "known_limitations": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Known limitations at this stage."
           }
-        }
+        },
+        "additionalProperties": true
       }
     },
     "evolution_layers": {
@@ -55,7 +81,8 @@
           "capability": { "type": "string" },
           "from_stage": { "type": "string" },
           "to_stage": { "type": "string" }
-        }
+        },
+        "additionalProperties": true
       }
     },
     "measurement": {
@@ -68,8 +95,34 @@
           "what": { "type": "string" },
           "how": { "type": "string" },
           "threshold": { "type": "string" }
-        }
+        },
+        "additionalProperties": true
       }
+    },
+    "changed_judgments": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Domain-wide judgment changes across versions."
+    },
+    "deprecated_axioms": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Axioms deprecated across the domain's evolution."
+    },
+    "new_failure_modes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "New failure modes discovered over time."
+    },
+    "eval_results": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Evaluation results across versions."
+    },
+    "known_limitations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Known limitations of the domain's judgment model."
     }
   },
   "additionalProperties": true
