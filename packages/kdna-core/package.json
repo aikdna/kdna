@@ -15,6 +15,9 @@
     "./schema/*": "./schema/*"
   },
   "types": "src/types.d.ts",
+  "scripts": {
+    "test": "node -e \"const m = require('./src/index.js'); console.log('kdna-core exports:', Object.keys(m).join(', '));\""
+  },
   "files": [
     "src/",
     "schema/",
