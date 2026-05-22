@@ -124,6 +124,34 @@ async function cmdSetup() {
   ensureDir(CLUSTERS_DIR);
   log(`Data root: ${USER_KDNA_DIR}/`);
 
+  // 2b. Clean legacy (un-scoped) domain directories from pre-v0.7
+  if (fs.existsSync(DOMAINS_DIR)) {
+    const legacy = fs.readdirSync(DOMAINS_DIR).filter((e) => {
+      if (e.startsWith('@') || e.startsWith('.')) return false;
+      try {
+        return fs.statSync(path.join(DOMAINS_DIR, e)).isDirectory();
+      } catch {
+        return false;
+      }
+    });
+    if (legacy.length) {
+      console.log('');
+      warn(`Removing ${legacy.length} legacy (un-scoped) domain director${legacy.length > 1 ? 'ies' : 'y'}:`);
+      for (const d of legacy) {
+        const dPath = path.join(DOMAINS_DIR, d);
+        try {
+          fs.rmSync(dPath, { recursive: true, force: true });
+          log(`  removed ~/.kdna/domains/${d}/`);
+        } catch (e) {
+          warn(`  could not remove ~/.kdna/domains/${d}/ — ${e.message}`);
+          console.log(`    To remove manually:  rm -rf ~/.kdna/domains/${d}/`);
+        }
+      }
+      console.log('  Re-install with: kdna install @aikdna/<name>');
+      console.log('');
+    }
+  }
+
   // 3. Detect agents
   const detected = detectAgents();
 
