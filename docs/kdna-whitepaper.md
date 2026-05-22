@@ -245,7 +245,7 @@ KDNA is defined by an open protocol specification (SPEC v1.0-rc) and JSON Schema
 | Tool | Purpose | Status |
 |------|---------|:------:|
 | `@aikdna/kdna-core` | Pure logic library (zero deps) for loading, validating, linting, rendering, composing domains | Published (npm, v0.2.2) |
-| `@aikdna/kdna` CLI | Command-line tool: validate, pack, unpack, install, preview, eval, demo, setup | Published (npm, v0.6.5) |
+| `@aikdna/kdna` CLI | Command-line tool: validate, verify, pack, unpack, install, compare, match, setup | Published (npm, v0.7.0) |
 | `@aikdna/agent` | TypeScript SDK with KDNAAgent class for custom agent integration | Published (npm, v0.1.1) |
 | kdna-vscode | VS Code extension: validate, preview, create domains in-editor | Marketplace published |
 | kdna-website | aikdna.com: domain browser, viewer, docs, tools, studio | Deployed |
@@ -294,13 +294,13 @@ We are at Layer 1–2, building deliberately. We do not describe KDNA as a finan
 |-----------|:------|
 | Protocol specification (SPEC v1.0-rc) | Published |
 | JSON Schema definitions (6 standard files) | Published |
-| CLI tool (validate, pack, unpack, install, preview, eval, demo, setup) | Published (npm, v0.6.5) |
+| CLI tool (validate, verify, pack, unpack, install, compare, match, setup) | Published (npm, v0.7.0) |
 | Core library (load, validate, lint, render, compose) | Published (npm, v0.2.2) |
 | TypeScript Agent SDK | Published (npm, v0.1.1) |
 | VS Code extension | Marketplace published |
 | Website (domain browser, viewer, docs, tools, studio) | Deployed (aikdna.com) |
 | Public registry (9 domains, dual-axis classification) | Published, early |
-| Benchmark evaluation | Preliminary, internal |
+| Domain quality validation system | Implemented, running continuously |
 | Cluster format and composition | Implemented, experimental |
 
 ---
