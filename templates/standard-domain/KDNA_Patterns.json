@@ -31,12 +31,8 @@
       "why": "What bad output results when an agent holds the wrong belief.",
       "confidence": "high",
       "evidence_type": ["practice_pattern"],
-      "applies_when": [
-        "describe situations where this misunderstanding is likely"
-      ],
-      "does_not_apply_when": [
-        "describe situations where this distinction would be a red herring"
-      ],
+      "applies_when": ["describe situations where this misunderstanding is likely"],
+      "does_not_apply_when": ["describe situations where this distinction would be a red herring"],
       "failure_risk": "What harm if the agent over-applies this distinction outside its scope."
     }
   ],

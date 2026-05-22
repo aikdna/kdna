@@ -107,7 +107,11 @@ function cmdAvailable(args = []) {
   if (wantJson) {
     const result = out.length
       ? out
-      : { count: 0, domains: [], note: 'No domains installed. Run: kdna install <name>   See: kdna list --available' };
+      : {
+          count: 0,
+          domains: [],
+          note: 'No domains installed. Run: kdna install <name>   See: kdna list --available',
+        };
     process.stdout.write(JSON.stringify(result, null, 2) + '\n');
     return;
   }
@@ -298,7 +302,10 @@ function cmdMatch(taskText, args = []) {
     for (const h of hints) {
       console.log(`  ${h.name}  [${h.status}]`);
       console.log(`    ${h.description}`);
-      const relevanceIndicator = h.domain_relevance >= 2 ? ` (domain relevance: ${'★'.repeat(Math.min(h.domain_relevance, 5))})` : '';
+      const relevanceIndicator =
+        h.domain_relevance >= 2
+          ? ` (domain relevance: ${'★'.repeat(Math.min(h.domain_relevance, 5))})`
+          : '';
       if (relevanceIndicator) console.log(relevanceIndicator);
       for (const s of h.top_signals) {
         const pct = Math.round((s.coverage || 0) * 100);

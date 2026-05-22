@@ -60,7 +60,9 @@ function cmdValidate(dir, schemaOnly) {
   }
 
   if (missingSchemas.length) {
-    console.log(`  Note: ${missingSchemas.length} schema file(s) not found (optional file schemas): ${missingSchemas.join(', ')}`);
+    console.log(
+      `  Note: ${missingSchemas.length} schema file(s) not found (optional file schemas): ${missingSchemas.join(', ')}`,
+    );
     console.log(`  Schema dir: ${SCHEMA_DIR}`);
   }
 
@@ -96,7 +98,9 @@ function cmdValidate(dir, schemaOnly) {
   }
 
   const validCount = Object.keys(dataMap).filter((k) => dataMap[k]).length;
-  const schemaInfo = schemaOnly ? ` (schema-only mode, ${loadedSchemas.length} schemas loaded)` : '';
+  const schemaInfo = schemaOnly
+    ? ` (schema-only mode, ${loadedSchemas.length} schemas loaded)`
+    : '';
   console.log(`✓ KDNA domain valid: ${abs} (${validCount} files, schema OK${schemaInfo})`);
 }
 

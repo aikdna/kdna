@@ -33,7 +33,11 @@
       "id": "ed_fw_assessment",
       "name": "Assessment Framework",
       "when_to_use": "When the agent needs to evaluate a situation in this domain.",
-      "steps": ["Step 1: Identify the core signal", "Step 2: Check against domain principles", "Step 3: Form a domain-informed judgment"]
+      "steps": [
+        "Step 1: Identify the core signal",
+        "Step 2: Check against domain principles",
+        "Step 3: Form a domain-informed judgment"
+      ]
     }
   ],
   "core_structure": [

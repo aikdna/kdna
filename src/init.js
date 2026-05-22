@@ -74,7 +74,14 @@ function cmdInit(name) {
   } catch (e) {
     console.error(`  ⚠ Structural validation had issues:`);
     const stderr = e.stderr?.toString() || e.stdout?.toString() || '';
-    if (stderr) console.error(stderr.trim().split('\n').map(l => `    ${l}`).join('\n'));
+    if (stderr)
+      console.error(
+        stderr
+          .trim()
+          .split('\n')
+          .map((l) => `    ${l}`)
+          .join('\n'),
+      );
   }
 
   console.log('');
