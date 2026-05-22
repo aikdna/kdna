@@ -142,8 +142,6 @@ function tokenize(text) {
 }
 
 function overlapScore(taskTokens, declaredText) {
-  // Simple unigram overlap. Not semantic — substring/token.
-  // The agent layers semantic judgment on top of this signal.
   if (!declaredText) return { hits: 0, coverage: 0 };
   const declaredTokens = tokenize(declaredText);
   if (!declaredTokens.length) return { hits: 0, coverage: 0 };
@@ -158,6 +156,23 @@ function overlapScore(taskTokens, declaredText) {
 const MIN_HITS = 2;
 const MIN_COVERAGE = 0.15;
 
+function domainRelevanceScore(taskTokens, domain) {
+  let score = 0;
+  const sources = [
+    (domain.description || '').toLowerCase(),
+    (domain.core_insight || '').toLowerCase(),
+    (domain.keywords || []).join(' ').toLowerCase(),
+  ];
+  for (const source of sources) {
+    const tokens = tokenize(source);
+    const srcSet = new Set(tokens);
+    for (const t of taskTokens) {
+      if (srcSet.has(t)) score += 2;
+    }
+  }
+  return score;
+}
+
 function cmdMatch(taskText, args = []) {
   const wantJson = args.includes('--json');
   if (!taskText) {
@@ -167,12 +182,7 @@ function cmdMatch(taskText, args = []) {
   const taskTokens = tokenize(taskText);
   const installed = listInstalled();
 
-  // HARD: domains explicitly disqualified by does_not_apply_when
   const dropped = [];
-  // WEAK: substring overlap signals — these are NOT decisions, just hints.
-  // Agent must use language understanding to decide. Pure token overlap
-  // produces many false positives (e.g. "JSON" matching a prompt domain
-  // that mentions JSON output format).
   const hints = [];
 
   for (const e of installed) {
@@ -219,20 +229,33 @@ function cmdMatch(taskText, args = []) {
         }
       }
     }
-    if (signals.length) {
+
+    // Domain-level relevance: check description, core_insight, keywords
+    const domainRelevance = domainRelevanceScore(taskTokens, manifest);
+
+    if (signals.length || domainRelevance >= 2) {
       hints.push({
         name: manifest.name || e.full,
         description: manifest.description || '',
         status: manifest.status || 'experimental',
+        domain_relevance: domainRelevance,
         top_signals: signals.sort((a, b) => b.hits - a.hits).slice(0, 3),
       });
     }
   }
 
+  // Sort hints by combined relevance (applies_when hits + domain relevance)
+  hints.sort((a, b) => {
+    const aScore = a.top_signals.reduce((s, sig) => s + sig.hits, 0) + (a.domain_relevance || 0);
+    const bScore = b.top_signals.reduce((s, sig) => s + sig.hits, 0) + (b.domain_relevance || 0);
+    return bScore - aScore;
+  });
+
   const result = {
     task: taskText.slice(0, 200),
     dropped,
     hints,
+    no_strong_matches: hints.length === 0,
     note:
       'These are surface keyword signals only — many false positives are normal. ' +
       "The agent must read each candidate domain's description + applies_when " +
@@ -262,13 +285,21 @@ function cmdMatch(taskText, args = []) {
   }
 
   if (!hints.length) {
-    console.log('No strong keyword matches. Either no KDNA fits, or fit is by meaning not words.');
+    console.log('No strong keyword matches from installed domains.');
+    console.log('This means one of:');
+    console.log('  - No KDNA domain fits this task yet');
+    console.log('  - The fit is by meaning, not by word overlap');
+    console.log('  - The matching domain is not installed');
+    console.log('');
     console.log('Run: kdna available  to see what is installed and decide.');
+    console.log('See the registry: kdna search "<query>"  (searches all published domains)');
   } else {
     console.log(`Keyword hints (${hints.length} domains had some token overlap):`);
     for (const h of hints) {
       console.log(`  ${h.name}  [${h.status}]`);
       console.log(`    ${h.description}`);
+      const relevanceIndicator = h.domain_relevance >= 2 ? ` (domain relevance: ${'★'.repeat(Math.min(h.domain_relevance, 5))})` : '';
+      if (relevanceIndicator) console.log(relevanceIndicator);
       for (const s of h.top_signals) {
         const pct = Math.round((s.coverage || 0) * 100);
         console.log(`    ↳ ${s.source} (${s.hits} hits, ${pct}% coverage): ${s.text}`);

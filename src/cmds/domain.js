@@ -5,7 +5,7 @@ const { error, readJson, writeJson } = require('./_common');
 
 // ─── Validate ────────────────────────────────────────────────────────
 
-function cmdValidate(dir, _schemaOnly) {
+function cmdValidate(dir, schemaOnly) {
   const abs = path.resolve(dir);
   if (!fs.existsSync(abs) || !fs.statSync(abs).isDirectory()) {
     error(`Not a directory: ${abs}`);
@@ -29,15 +29,11 @@ function cmdValidate(dir, _schemaOnly) {
       dataMap[f] = JSON.parse(fs.readFileSync(path.join(abs, f), 'utf8'));
     } catch (e) {
       dataMap[f] = null;
-      // #24: Report JSON parse errors instead of "Missing required file"
       console.error(`  JSON parse error in ${f}: ${e.message}`);
     }
   }
 
-  // Lint using kdna-core
-  const lintResult = lintDomain(dataMap);
-
-  // Schema validation
+  // Schema validation — always load all available schemas
   const FILE_TO_SCHEMA = {
     'KDNA_Core.json': 'KDNA_Core.schema.json',
     'KDNA_Patterns.json': 'KDNA_Patterns.schema.json',
@@ -47,23 +43,47 @@ function cmdValidate(dir, _schemaOnly) {
     'KDNA_Evolution.json': 'KDNA_Evolution.schema.json',
   };
 
+  const loadedSchemas = [];
+  const missingSchemas = [];
   for (const [, schemaFile] of Object.entries(FILE_TO_SCHEMA)) {
     const schemaPath = path.join(SCHEMA_DIR, schemaFile);
     if (fs.existsSync(schemaPath)) {
       try {
         schemaMap[schemaFile] = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
+        loadedSchemas.push(schemaFile);
       } catch {
-        /* skip */
+        missingSchemas.push(schemaFile);
       }
+    } else {
+      missingSchemas.push(schemaFile);
     }
   }
 
-  const schemaResult = validateDomainSchema(dataMap, schemaMap);
-  const crossResult = validateCrossFile(dataMap);
+  if (missingSchemas.length) {
+    console.log(`  Note: ${missingSchemas.length} schema file(s) not found (optional file schemas): ${missingSchemas.join(', ')}`);
+    console.log(`  Schema dir: ${SCHEMA_DIR}`);
+  }
 
-  // Combine results
-  const errors = [...lintResult.errors, ...schemaResult.errors, ...crossResult.errors];
-  const warnings = [...lintResult.warnings, ...schemaResult.warnings, ...crossResult.warnings];
+  // Validation layers
+  const errors = [];
+  const warnings = [];
+
+  // Layer 1: Lint (structural + content checks)
+  if (!schemaOnly) {
+    const lintResult = lintDomain(dataMap);
+    errors.push(...lintResult.errors);
+    warnings.push(...lintResult.warnings);
+  }
+
+  // Layer 2: JSON Schema validation against loaded schemas
+  const schemaResult = validateDomainSchema(dataMap, schemaMap);
+  errors.push(...schemaResult.errors);
+  warnings.push(...schemaResult.warnings);
+
+  // Layer 3: Cross-file consistency
+  const crossResult = validateCrossFile(dataMap);
+  errors.push(...crossResult.errors);
+  warnings.push(...crossResult.warnings);
 
   if (warnings.length) {
     console.log('Warnings:');
@@ -76,7 +96,8 @@ function cmdValidate(dir, _schemaOnly) {
   }
 
   const validCount = Object.keys(dataMap).filter((k) => dataMap[k]).length;
-  console.log(`✓ KDNA domain valid: ${abs} (${validCount} files, schema OK)`);
+  const schemaInfo = schemaOnly ? ` (schema-only mode, ${loadedSchemas.length} schemas loaded)` : '';
+  console.log(`✓ KDNA domain valid: ${abs} (${validCount} files, schema OK${schemaInfo})`);
 }
 
 // ─── Pack / Unpack (.kdna ZIP container) ──────────────────────────────────

@@ -185,12 +185,22 @@ async function cmdDiff(a, b) {
   if (!aParsed) error(`Cannot parse "${a}"`);
 
   const resolver = new RegistryResolver({ allowNetwork: true });
-  const { entry: entryA } = resolver.resolve(aParsed.full);
+  let entryA;
+  try {
+    ({ entry: entryA } = resolver.resolve(aParsed.full));
+  } catch (e) {
+    error(e.message);
+  }
 
   // Determine targets
   let oldVersion, newVersion, oldEntry, newEntry;
   if (bParsed) {
-    const { entry: entryB } = resolver.resolve(bParsed.full);
+    let entryB;
+    try {
+      ({ entry: entryB } = resolver.resolve(bParsed.full));
+    } catch (e) {
+      error(e.message);
+    }
     if (aParsed.full !== bParsed.full)
       error('Comparing across different domains is not supported.');
     oldVersion = aParsed.version || entryA.version;

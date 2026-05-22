@@ -7,6 +7,9 @@ function cmdCluster(args) {
   if (sub === 'lint') {
     if (!target) error('Usage: kdna cluster lint <path>');
     cmdClusterLint(target);
+  } else if (sub === 'init') {
+    const { cmdClusterInit } = require('../init');
+    cmdClusterInit(target);
   } else if (sub === 'apply') {
     // Removed in v0.9 — overlapped with install. To install a
     // cluster's sub-domains: kdna install @scope/cluster-name
@@ -16,7 +19,7 @@ function cmdCluster(args) {
         '  kdna install @aikdna/animation',
     );
   } else {
-    error(`Unknown cluster subcommand: ${sub || '(none)'}\nUsage: kdna cluster lint <path>`);
+    error(`Unknown cluster subcommand: ${sub || '(none)'}\nUsage: kdna cluster lint <path>\n       kdna cluster init <name>`);
   }
 }
 

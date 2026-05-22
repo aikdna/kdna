@@ -28,7 +28,11 @@ if (!fs.existsSync(domainDir) || !fs.statSync(domainDir).isDirectory()) {
   process.exit(2);
 }
 
-const SCHEMA_DIR = path.join(__dirname, '..', 'packages', 'kdna-core', 'schema');
+const SCHEMA_DIR = (() => {
+  const pkgPath = path.join(__dirname, '..', 'packages', 'kdna-core', 'schema');
+  if (fs.existsSync(pkgPath)) return pkgPath;
+  return path.join(__dirname, '..', 'schema');
+})();
 
 const FILE_MAP = {
   'KDNA_Core.json': 'KDNA_Core.schema.json',

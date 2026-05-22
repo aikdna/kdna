@@ -59,25 +59,34 @@ function cmdInit(name) {
   console.log(`✓ Created KDNA domain: ${targetDir}/`);
   console.log(`  Files: KDNA_Core.json, KDNA_Patterns.json, kdna.json, tests/before-after.json`);
 
-  // Validate — pipe stdout so success/failure messages are visible
+  // Run structural validation (lint + schema only). Content quality checks
+  // are for publish time, not scaffold time — the template contains placeholders
+  // marked [TODO] that the author is expected to replace.
   try {
     const { execSync } = require('child_process');
     const cli = process.argv[1];
-    execSync(`node "${cli}" validate "${targetDir}"`, { stdio: 'inherit' });
-    execSync(`node "${cli}" validate --schema "${targetDir}"`, { stdio: 'inherit' });
-  } catch {
-    console.error(`  ⚠ Validation had issues — check files above`);
+    const validCmd = `node "${cli}" validate "${targetDir}"`;
+    const { status } = execSync(validCmd, { stdio: 'pipe', encoding: 'utf8' });
+    // Structural validation passed (non-zero exit means purely structural failure)
+    if (status === null || status === undefined) {
+      console.log(`  ✓ Structural validation passed (lint + schema OK)`);
+    }
+  } catch (e) {
+    console.error(`  ⚠ Structural validation had issues:`);
+    const stderr = e.stderr?.toString() || e.stdout?.toString() || '';
+    if (stderr) console.error(stderr.trim().split('\n').map(l => `    ${l}`).join('\n'));
   }
 
   console.log('');
   console.log(`Next steps:`);
-  console.log(`  1. Edit ${targetDir}/KDNA_Core.json — fill in your axioms, concepts, stances`);
+  console.log(`  1. Edit ${targetDir}/KDNA_Core.json — replace all [TODO] placeholders`);
   console.log(
-    `  2. Edit ${targetDir}/KDNA_Patterns.json — terminology, misunderstandings, self-checks`,
+    `  2. Edit ${targetDir}/KDNA_Patterns.json — replace terminology and misunderstandings`,
   );
-  console.log(`  3. Edit ${targetDir}/kdna.json — metadata`);
-  console.log(`  4. Run: kdna publish --check ${name}  (quality gate)`);
-  console.log(`  5. Run: kdna verify ${name}               (test judgment)`);
+  console.log(`  3. Edit ${targetDir}/kdna.json — set author, description, repo`);
+  console.log(`  4. Run: kdna validate ${name}               (structural check)`);
+  console.log(`  5. Run: kdna publish --check ${name}         (content quality gate)`);
+  console.log(`  6. Run: kdna verify ${name}                  (full judgment scoring)`);
 }
 
 /**

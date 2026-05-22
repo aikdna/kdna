@@ -2,6 +2,32 @@
 
 This repository is the KDNA protocol specification. You can contribute at multiple levels.
 
+## Prerequisites
+
+- **Node.js >= 18** (check: `node --version`)
+- **npm** (comes with Node.js)
+- **Python 3** (needed for `.kdna` ZIP packaging; check: `python3 --version`)
+- **Git** (for submitting PRs)
+
+### Developer Setup
+
+```bash
+git clone https://github.com/aikdna/KDNA.git
+cd KDNA
+npm install
+npm test         # 8 validator + loader tests + CLI smoke tests
+```
+
+### Available Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `npm test` | Run full test suite (loader, validator, CLI commands) |
+| `npm run lint` | ESLint code quality check |
+| `npm run format:check` | Prettier format validation |
+| `npm run lint:examples` | Validate example domains via kdna-lint |
+| `npm run validate:examples` | Schema-validate example domains |
+
 ## Contribution Types
 
 ### 1. Protocol Contribution
