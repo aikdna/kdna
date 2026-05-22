@@ -23,8 +23,8 @@ kdna setup
 Verify:
 
 ```bash
-kdna version  # → kdna v0.7.8
-kdna available  # → "No KDNA domains installed."
+kdna version  # → kdna v0.8.0
+kdna list     # → "No KDNA domains installed."
 ```
 
 ---
@@ -56,11 +56,11 @@ kdna search "security"
 Verify installation:
 
 ```bash
-kdna available
+kdna list
 
 # Output:
 # 1 installed KDNA domain(s):
-#   @aikdna/writing  v0.7.2  [experimental]
+#   @aikdna/writing  v0.7.2  [tested]
 #     Diagnose whether content has a real argument...
 #     applies when: 4 situations declared
 #     does NOT apply when: 2 situations declared
@@ -77,9 +77,9 @@ The `kdna-loader` skill (installed by `kdna setup`) teaches your agent how to di
 ### How it works (under the hood)
 
 When you start a conversation, the `kdna-loader` skill:
-1. Calls `kdna available --json` to discover installed domains
+1. Calls `kdna list --json` to discover installed domains
 2. Reads each domain's `applies_when` and `does_not_apply_when` fields
-3. If a domain fits your task, calls `kdna load <name> --as=prompt` to inject the domain's axioms, stances, misunderstandings, and self-checks into the agent's context
+3. If a domain fits your task, loads the domain to inject its axioms, stances, misunderstandings, and self-checks into the agent's context
 
 You don't need to think about any of this. The agent does it silently.
 
@@ -178,7 +178,7 @@ ls ~/.codex/skills/kdna-loader/SKILL.md    # Codex
 If the file exists but KDNA isn't loading, the task might not match any domain's `applies_when` fields. Try:
 
 ```bash
-kdna match "your task description" --json
+kdna select "your task description"
 ```
 
 This shows which domains would be considered and why.
