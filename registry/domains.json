@@ -35,10 +35,10 @@
       "judgment_patterns": [
         "classification"
       ],
-      "file_count": 3,
-      "kdna_file_count": 3,
+      "file_count": 6,
+      "kdna_file_count": 6,
       "created": "2026-05-19",
-      "updated": "2026-05-19",
+      "updated": "2026-05-22",
       "eval_score": 97,
       "test_count": 30,
       "quality_badge": "validated"

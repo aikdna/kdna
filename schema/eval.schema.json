@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KDNA_Eval",
+  "type": "object",
+  "required": [
+    "id",
+    "domain",
+    "input",
+    "expected_classification",
+    "output_rubric"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this eval case."
+    },
+    "domain": {
+      "type": "string",
+      "description": "The domain this eval tests, e.g., @aikdna/writing."
+    },
+    "input": {
+      "type": "string",
+      "description": "The user input text to be evaluated."
+    },
+    "expected_classification": {
+      "type": "string",
+      "description": "The scenario or state the input should be classified into."
+    },
+    "expected_axioms": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Axiom IDs that should be triggered by this input."
+    },
+    "expected_misunderstandings_avoided": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Misunderstanding IDs the agent should avoid falling into."
+    },
+    "expected_banned_terms_avoided": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Banned terms the agent should avoid using."
+    },
+    "output_rubric": {
+      "type": "string",
+      "description": "What the judgment output should contain to pass."
+    },
+    "pass": {
+      "type": "boolean",
+      "description": "Whether this eval passed (set during verification)."
+    },
+    "evidence": {
+      "type": "string",
+      "description": "Explanation of why the eval passed or failed."
+    }
+  },
+  "additionalProperties": true
+}

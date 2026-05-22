@@ -238,6 +238,11 @@ Each axiom MUST include:
 | `one_sentence` | string | Core principle in one sentence |
 | `full_statement` | string | Complete, testable explanation |
 | `why` | string | Why this principle matters for agent judgment |
+| `applies_when` | array of strings | Specific situations where this axiom is applicable |
+| `does_not_apply_when` | array of strings | Specific situations where this axiom SHOULD NOT be applied |
+| `failure_risk` | string | What failure occurs when this axiom is over-applied or misapplied |
+| `confidence` | string | Confidence under the domain's expected evidence conditions (high/medium/low). NOT absolute truth confidence — the same axiom may have high confidence in one evidence context and low in another |
+| `evidence_type` | string | Type of evidence supporting this axiom (practice_patterns / research_finding / industry_consensus / case_observation) |
 
 A domain SHOULD have between 2 and 6 axioms.
 
@@ -486,6 +491,100 @@ KDNA domains follow [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATC
 A domain at `v0.2.0` with only Core+Patterns is less mature than `v0.4.0` with Core+Patterns+Scenarios+Cases. The version number reflects structural evolution, not functional superiority. Two domains at different versions MAY both be valid for their respective scopes.
 
 The SPEC version (`kdna_spec` in manifest) indicates which version of this specification the domain conforms to (e.g., `1.0-rc`). This is independent of the domain's own version number.
+
+## 14. Domain Composition and Clusters
+
+KDNA domains MAY be composed into clusters to handle multi-faceted judgment tasks. A cluster is a composable judgment system — not a merged domain, but a coordinated assembly of independent domains with explicit composition rules.
+
+### 14.1 Conceptual Model
+
+```
+Judgment Atom    = Domain (single KDNA package, 2–6 files)
+Judgment Cluster = Composable system of domains with composition policy
+Judgment System  = Enterprise-level governance over one or more clusters
+```
+
+A domain encodes the judgment of a single expert or domain. A cluster encodes how multiple domains interact. A judgment system encodes organizational governance over clusters — who maintains what, what overrides what, and how conflicts are resolved.
+
+### 14.2 Cluster Types
+
+| Type | Purpose | Loading Strategy |
+|------|---------|-----------------|
+| `horizontal` | Cross-domain capability cluster (e.g., content creation) | signal_based |
+| `vertical` | Business process cluster (e.g., product launch) | staged |
+| `governance` | Safety and compliance overlay cluster | always-on / risk-triggered |
+| `enterprise_system` | Organization-wide judgment governance | fixed with overlay |
+
+### 14.3 Cluster Manifest
+
+A cluster MUST include a `kdna.cluster.json` manifest describing its domains and composition rules. The manifest is separate from the 6-file domain standard — a cluster is a composition layer above domains, not a 7th domain file.
+
+**Required fields:** `cluster_id`, `name`, `version`, `domains[]`, `composition`.
+
+**Domain entries** within the cluster MUST declare:
+- `id`: Fully qualified domain name (`@scope/name`)
+- `version`: Acceptable version range (semver-compatible)
+- `role`: `primary` | `advisor` | `risk_guard` | `style_and_trust` | `evaluator`
+- `required`: Whether this domain MUST be loaded for the cluster to function
+- `load_condition`: Human-readable condition for when this domain is activated
+
+**Relationships** between domains within the cluster MAY be declared:
+- `depends_on` — Domain A requires Domain B's output
+- `constrains` — Domain A limits Domain B's recommendations
+- `overrides` — Domain A takes precedence over Domain B
+- `blocks` — Domain A prevents Domain B from activating
+- `informs` — Domain A provides context for Domain B
+- `conflicts_with` — Two domains produce contradictory guidance
+
+### 14.4 Composition Strategies
+
+A cluster MUST declare one of five composition strategies:
+
+| Strategy | Behavior |
+|----------|----------|
+| `fixed` | All declared domains load unconditionally |
+| `signal_based` | Domains activate based on trigger_signals matching user input |
+| `staged` | Domains load in ordered phases (e.g., analysis → risk review → expression) |
+| `overlay` | A primary domain paired with always-on governance domains |
+| `user_confirmed` | System recommends domains; user confirms selection |
+
+### 14.5 Conflict Policy
+
+When multiple domains produce contradictory guidance, a conforming runtime SHOULD surface the conflict rather than silently resolve it, unless explicit priority rules are defined in the composition policy.
+
+Conflict types include: `value_conflict`, `term_conflict`, `risk_conflict`, `stance_conflict`, `framework_conflict`.
+
+Resolution strategies: `surface` (expose to user), `priority_wins` (follow priority order), `risk_wins` (safety domain overrides), `block` (refuse to proceed), `ask_user`.
+
+### 14.6 Load Profiles
+
+To prevent token budget explosion with large clusters, domains MAY declare load profiles:
+
+| Profile | Content | Use Case |
+|---------|---------|----------|
+| `index` | Manifest + trigger_signals only | Domain selection |
+| `compact` | highest_question + axioms + risk_model + self_check | Lightweight judgment participation |
+| `scenario` | Relevant scenarios + frameworks for current task | Task-specific judgment |
+| `full` | All 6 files | High-relevance or high-risk tasks |
+
+### 14.7 Composition Policy File
+
+A cluster MAY include a separate `composition.policy.json` file defining detailed selection, priority, conflict, merge, and output rules. This is particularly relevant for enterprise governance clusters where organizational policy must be explicit and auditable.
+
+### 14.8 Source Attribution
+
+When multiple domains are composed into a single context, all injected content MUST preserve source attribution. Each axiom, misunderstanding, banned term, or self-check injected SHALL be prefixed with its origin: `[domain_id:field.id]`. This enables judgment trace to identify which domain influenced which part of the output.
+
+### 14.9 Cluster Evaluation
+
+Cluster evaluation is distinct from single-domain evaluation. A cluster eval MUST test:
+1. Whether the correct domains were selected for a given input
+2. Whether irrelevant domains were excluded
+3. Whether conflicts were correctly surfaced
+4. Whether priority rules were correctly applied
+5. Whether the composed output is better than any single domain alone
+
+---
 
 ## 13. References
 

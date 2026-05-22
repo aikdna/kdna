@@ -1,53 +1,132 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://aikdna.com/schema/KDNA_Cluster.schema.json",
   "title": "KDNA Cluster Manifest",
-  "description": "Defines a composable group of KDNA packages that work together as a judgment system.",
+  "description": "Schema for kdna.cluster.json — defines a composable judgment system of KDNA domains.",
   "type": "object",
-  "required": ["name", "version", "packages"],
+  "required": ["cluster_id", "name", "version", "domains", "composition"],
   "properties": {
+    "cluster_id": {
+      "type": "string",
+      "description": "Fully qualified cluster identifier, e.g., @company/product-launch-system"
+    },
     "name": {
       "type": "string",
-      "description": "Cluster identifier in lowercase snake_case."
+      "description": "Human-readable cluster name"
     },
     "version": {
       "type": "string",
-      "description": "Semantic version of this cluster."
+      "description": "Semantic version of this cluster manifest"
     },
-    "purpose": {
+    "description": {
       "type": "string",
-      "description": "What complex domain task this cluster addresses."
+      "description": "What judgment system this cluster provides"
     },
-    "packages": {
+    "type": {
+      "type": "string",
+      "enum": ["horizontal", "vertical", "governance", "enterprise_system"],
+      "description": "Cluster type determining default loading strategy"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "experimental", "stable", "deprecated"]
+    },
+    "access": {
+      "type": "string",
+      "enum": ["open", "licensed", "runtime"]
+    },
+    "domains": {
       "type": "array",
-      "description": "KDNA packages that form this cluster.",
-      "minItems": 2,
       "items": {
         "type": "object",
-        "required": ["id", "role"],
+        "required": ["id", "version", "role", "required", "load_condition"],
         "properties": {
-          "id": { "type": "string" },
+          "id": {
+            "type": "string",
+            "description": "Fully qualified domain name (@scope/name)"
+          },
+          "version": {
+            "type": "string",
+            "description": "Semver range, e.g., ^1.2.0"
+          },
           "role": {
             "type": "string",
-            "enum": ["primary", "advisor", "constraint", "critic"]
+            "enum": ["primary", "advisor", "risk_guard", "style_and_trust", "evaluator"]
           },
-          "use_when": {
-            "type": "array",
-            "items": { "type": "string" },
-            "description": "Keywords or conditions that trigger this package."
+          "required": {
+            "type": "boolean",
+            "description": "Whether this domain must load for cluster to function"
+          },
+          "load_condition": {
+            "type": "string",
+            "description": "When this domain should activate"
           }
         }
       }
     },
-    "composition_rules": {
+    "relationships": {
       "type": "array",
-      "items": { "type": "string" },
-      "description": "Rules governing how packages in this cluster interact."
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "type"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["depends_on", "constrains", "overrides", "blocks", "informs", "extends", "refines", "conflicts_with", "evaluates", "expressed_through"]
+          },
+          "description": { "type": "string" }
+        }
+      }
     },
-    "routing_questions": {
-      "type": "array",
-      "items": { "type": "string" },
-      "description": "Questions that help the router select the right primary and advisors."
+    "composition": {
+      "type": "object",
+      "required": ["strategy", "conflict_policy", "priority_order"],
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["fixed", "signal_based", "staged", "overlay", "user_confirmed"]
+        },
+        "max_active_domains": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "default_domains": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "conflict_policy": {
+          "type": "string",
+          "enum": ["surface", "priority", "block", "ask_user"]
+        },
+        "priority_order": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ordered list of domain names, highest priority first"
+        }
+      }
+    },
+    "token_budget": {
+      "type": "object",
+      "properties": {
+        "max_context_tokens": { "type": "integer" },
+        "domain_summary_mode": {
+          "type": "string",
+          "enum": ["full", "compact", "axioms_only", "scenario_only"]
+        },
+        "compression_strategy": { "type": "string" }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "properties": {
+        "eval_set": { "type": "string" },
+        "minimum_pass_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "required_dimensions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
     }
   }
 }
