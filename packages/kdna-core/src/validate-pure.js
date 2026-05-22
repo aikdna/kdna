@@ -118,7 +118,7 @@ function validateCrossFile(dataMap) {
       if (version === null) {
         version = data.meta.version;
       } else if (data.meta.version !== version) {
-        warnings.push(
+        errors.push(
           `${file}: version "${data.meta.version}" differs from "${version}" in other files`,
         );
       }

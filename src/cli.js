@@ -227,6 +227,7 @@ function cmdPack(dir, outputDir) {
   // Create ZIP container — try python3, then zip command, then Node.js native
   const outName = `${domainName}.kdna`;
   const outPath = outputDir ? path.join(outputDir, outName) : path.join(process.cwd(), outName);
+  if (outputDir && !fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
 
   let packed = false;
 
@@ -390,16 +391,16 @@ function cmdUnpack(filePath, force) {
 
   fs.mkdirSync(outDir, { recursive: true });
 
-  // Unzip using python3 zipfile (built-in)
-  const script = `
-import zipfile, os
+  // Unzip using python3 zipfile (built-in) — use temp file to avoid -c multiline escaping issues
+  const tmpUnpackPy = path.join(fs.existsSync('/tmp') ? '/tmp' : require('os').tmpdir(), `kdna-unpack-${Date.now()}.py`);
+  try {
+    const script = `import zipfile, os
 zf = zipfile.ZipFile(${JSON.stringify(abs)}, 'r')
 zf.extractall(${JSON.stringify(outDir)})
 zf.close()
-print('ok')
 `;
-  try {
-    execSync(`python3 -c ${JSON.stringify(script)}`, { stdio: 'pipe' });
+    fs.writeFileSync(tmpUnpackPy, script);
+    execSync(`python3 ${tmpUnpackPy}`, { stdio: 'pipe' });
   } catch {
     // Fallback: use system unzip
     try {
@@ -407,6 +408,8 @@ print('ok')
     } catch {
       error('Cannot unpack ZIP. Install python3 or unzip command.');
     }
+  } finally {
+    try { fs.unlinkSync(tmpUnpackPy); } catch { /* cleanup */ }
   }
 
   console.log(`✓ Unpacked: ${outDir}`);
@@ -430,8 +433,18 @@ function cmdPreview(filePath) {
     const os = require('os');
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-preview-'));
     try {
-      const script = `import zipfile,os\nzf=zipfile.ZipFile(${JSON.stringify(abs)},'r')\nzf.extractall(${JSON.stringify(tmpDir)})\nzf.close()`;
-      execSync(`python3 -c ${JSON.stringify(script)}`, { stdio: 'pipe' });
+      const tmpPreviewPy = path.join(fs.existsSync('/tmp') ? '/tmp' : require('os').tmpdir(), `kdna-preview-${Date.now()}.py`);
+      try {
+        const script = `import zipfile, os
+zf = zipfile.ZipFile(${JSON.stringify(abs)}, 'r')
+zf.extractall(${JSON.stringify(tmpDir)})
+zf.close()
+`;
+        fs.writeFileSync(tmpPreviewPy, script);
+        execSync(`python3 ${tmpPreviewPy}`, { stdio: 'pipe' });
+      } finally {
+        try { fs.unlinkSync(tmpPreviewPy); } catch { /* cleanup */ }
+      }
     } catch {
       try {
         execSync(`unzip -q -o "${abs}" -d "${tmpDir}"`, { stdio: 'pipe' });
@@ -570,13 +583,18 @@ function inspectKdnaFile(filePath) {
     const os = require('os');
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-inspect-'));
     try {
-      const script = `
-import zipfile, os
+      const tmpInspectPy = path.join(fs.existsSync('/tmp') ? '/tmp' : require('os').tmpdir(), `kdna-inspect-${Date.now()}.py`);
+      try {
+        const script = `import zipfile, os
 zf = zipfile.ZipFile(${JSON.stringify(abs)}, 'r')
 zf.extractall(${JSON.stringify(tmpDir)})
 zf.close()
 `;
-      execSync(`python3 -c ${JSON.stringify(script)}`, { stdio: 'pipe' });
+        fs.writeFileSync(tmpInspectPy, script);
+        execSync(`python3 ${tmpInspectPy}`, { stdio: 'pipe' });
+      } finally {
+        try { fs.unlinkSync(tmpInspectPy); } catch { /* cleanup */ }
+      }
     } catch {
       try {
         execSync(`unzip -q -o "${abs}" -d "${tmpDir}"`, { stdio: 'pipe' });
