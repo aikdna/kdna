@@ -153,16 +153,16 @@ Organizations may configure stricter gates. The Console blocks deployment of any
 The Governance Console is a UI layer over the KDNA CLI protocol:
 
 ```bash
-# Ingest a proposal
+# Ingest a proposal (Phase 6 — CLI implementation pending)
 kdna proposal ingest ./proposal.json --console
 
-# Review queue
+# Review queue (Phase 6 — CLI implementation pending)
 kdna proposal list --status under_review
 
-# Apply human lock
+# Apply human lock (Phase 6 — CLI implementation pending)
 kdna proposal lock prop_ds_001 --accept --reason "Evidence is strong."
 
-# Regression test before approval
+# Regression test before approval (Phase 6 — CLI implementation pending)
 kdna verify @aikdna/decision_state --judgment --regression
 
 # Publish approved domain

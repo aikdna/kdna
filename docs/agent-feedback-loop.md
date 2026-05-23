@@ -46,7 +46,7 @@ A production agent SHOULD generate a Judgment Trace for every KDNA-influenced de
 
 A trace records which KDNA rules were triggered during judgment.
 
-**Schema:** [`specs/judgment-trace-schema.json`](https://aikdna.com/specs/judgment-trace-schema.json)
+**Schema:** [`specs/judgment-trace-schema.json`](./judgment-trace-schema.json)
 
 **Key fields:**
 - `trace_id`: unique identifier
@@ -96,7 +96,7 @@ When multiple domains are loaded (cluster mode), the trace MUST include:
 
 After the agent acts, reality produces an outcome. The Outcome Record compares the judgment's prediction against what actually happened.
 
-**Schema:** [`specs/outcome-record-schema.json`](https://aikdna.com/specs/outcome-record-schema.json)
+**Schema:** [`specs/outcome-record-schema.json`](./outcome-record-schema.json)
 
 **Key fields:**
 - `judgment_reference.trace_id`: links back to the trace
@@ -227,7 +227,8 @@ This is recorded in the domain's `KDNA_Evolution.json` as:
       "locked_at": "2026-05-23T14:00:00Z",
       "locked_by": "zhangling",
       "lock_type": "accept",
-      "reason": "Evidence is strong. 3 misclassifications in one week. Risk balance favors change."
+      "reason": "Evidence is strong. 3 misclassifications in one week. Risk balance favors change.",
+      "affected_files": ["KDNA_Core.json"]
     }
   ]
 }
@@ -272,7 +273,7 @@ Before deployment, the new version MUST pass regression tests.
 # Run all evals for a domain
 kdna verify @aikdna/decision_state --judgment
 
-# Compare two versions for regression
+# Compare two versions for regression (Phase 6 — CLI --from/--to/--evals pending)
 kdna compare @aikdna/decision_state --from 0.7.1 --to 0.7.2 --evals ./evals/
 
 # Expected output:

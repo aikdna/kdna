@@ -196,6 +196,10 @@
       "description": "Human Judgment Lock record, populated when the proposal is accepted.",
       "properties": {
         "lock_id": { "type": "string" },
+        "proposal_id": {
+          "type": "string",
+          "description": "Reference to the improvement proposal that triggered this lock."
+        },
         "locked_at": {
           "type": "string",
           "format": "date-time"
@@ -210,6 +214,11 @@
         },
         "reason": {
           "type": "string"
+        },
+        "affected_files": {
+          "type": "array",
+          "description": "KDNA files affected by the locked change.",
+          "items": { "type": "string" }
         }
       }
     },
