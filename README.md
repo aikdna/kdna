@@ -70,11 +70,12 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 | If you are a... | Read this |
 |-----------------|-----------|
 | **Developer wanting to connect KDNA to an agent** | [5-minute guide](./docs/5-minute-guide.md) |
-| **Domain expert wanting to encode your judgment** | [Judgment Anatomy](./docs/judgment-anatomy.md) — how to decompose your expertise into 13 structured elements |
+| **Domain expert wanting to encode your judgment** | [KDNA Studio Core](https://github.com/aikdna/kdna-studio) — open-source authoring kernel |
 | **Evaluator wanting to measure judgment improvement** | [Evaluation guide](./docs/evaluation.md) |
 | **Enterprise evaluating private deployment** | [Enterprise guide](./docs/enterprise.md) |
 | **Contributor wanting to improve KDNA itself** | [CONTRIBUTING.md](./CONTRIBUTING.md) |
 | **Curious about the full specification** | [SPEC.md](./SPEC.md) |
+| **Understanding governance and safety** | [Governance](./docs/GOVERNANCE.md) · [Safety](./docs/SAFETY.md) · [Risk Policy](./docs/RISK_POLICY.md) · [KDNA Card Spec](./docs/KDNA_CARD_SPEC.md) · [Security](./docs/SECURITY.md) |
 | **Browsing available domains** | [Registry](https://github.com/aikdna/kdna-registry) · [aikdna.com/domains](https://aikdna.com/domains) |
 | **Reading in Chinese** | [中文版](./README.zh.md) |
 
