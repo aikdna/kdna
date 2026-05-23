@@ -2,7 +2,7 @@
 
 > 🧬 **[aikdna.com](https://aikdna.com)** — 官方网站 · [![npm](https://img.shields.io/npm/v/@aikdna/kdna)](https://www.npmjs.com/package/@aikdna/kdna) · 镜像: [@aikdna/kdna](https://www.npmjs.com/package/@aikdna/kdna)
 
-**KDNA（Knowledge DNA）** 是一种开放格式，用于为 AI Agent 编码**领域认知**。
+**KDNA（Knowledge DNA）** 是一种开放协议，用于将领域判断打包为 AI Agent 可加载、可测试、可治理的认知资产。
 
 Prompt 告诉 AI 说什么。  
 Skill 告诉 AI 做什么。  
@@ -24,6 +24,8 @@ KDNA 不是提示词库，不是知识库，也不是操作手册。它是一种
 当前的 Agent 生态已经解决了"行动"问题：函数调用、MCP、工具使用、工作流。但能行动不等于能判断——一个什么都能做的 Agent，如果分辨不了"价格异议"和"确定性缺失"，就会带着自信执行错误的操作。
 
 工具让 AI 能行动。**KDNA 让 AI 不乱行动。**
+
+自我改进型 Agent 需要判断治理。没有显式判断的改进，本质上只是漂移。KDNA 是人类判断治理的自我改进基础设施：Agent 可以从工作中学习，但判断标准的更新必须经过人类判断锁定。
 
 每个领域都有专家级的判断模式，目前只存在于资深从业者的头脑中。KDNA 是一种把这些模式提取出来、编码为可机器验证的结构、作为认知层加载到 Agent 中的格式——独立于 Prompt，独立于知识库，独立于工具。
 

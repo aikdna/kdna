@@ -1,0 +1,50 @@
+{
+  "trace_version": "0.1.0",
+  "trace_id": "trace_ds_20260515_001",
+  "timestamp": "2026-05-15T09:30:00Z",
+  "input_hash": "sha256:7e3a9f...",
+  "loaded_package": {
+    "domain": "@aikdna/decision_state",
+    "version": "0.7.5",
+    "source": "registry",
+    "loaded_files": ["KDNA_Core.json", "KDNA_Patterns.json", "KDNA_Scenarios.json"]
+  },
+  "triggered_axioms": [
+    {
+      "id": "ax-absence-not-commitment",
+      "statement": "The absence of objection is not the presence of commitment."
+    }
+  ],
+  "triggered_misunderstandings": [],
+  "self_checks": [
+    {
+      "check_id": "sc-owner-named",
+      "description": "Is a specific person named as owner?",
+      "passed": false,
+      "reason": "No explicit verbal commitment found. Only emoji reactions (👍) on async video."
+    },
+    {
+      "check_id": "sc-deadline-exists",
+      "description": "Is there a deadline or checkpoint?",
+      "passed": true,
+      "reason": "Deadline 'May 20' mentioned in video."
+    }
+  ],
+  "selected_scenario": {
+    "scene_id": "async-review",
+    "scene_name": "Asynchronous team review",
+    "confidence": "medium"
+  },
+  "generated_judgment": {
+    "classification": "UNRESOLVED",
+    "confidence": "high",
+    "missing_elements": ["named owner explicitly accepting commitment"],
+    "recommended_action": "Request explicit written confirmation from the intended owner before treating this as committed work.",
+    "reasoning_summary": "The team reviewed the Loom proposal via async video. 4 members reacted with 👍. However, per ax-absence-not-commitment, emoji reactions do not constitute operational commitment. No one explicitly stated 'I will do this.' Classification: UNRESOLVED."
+  },
+  "agent_info": {
+    "agent_name": "meeting-analyzer-v2",
+    "agent_version": "2.1.0",
+    "model": "claude-sonnet-4-6"
+  }
+}

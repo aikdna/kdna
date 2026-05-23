@@ -1,0 +1,53 @@
+{
+  "proposal_id": "prop_ds_20260516_001",
+  "source": "outcome_record",
+  "domain": "@aikdna/decision_state",
+  "domain_version": "0.7.5",
+  "proposed_change_type": "revise_axiom",
+  "target_element": {
+    "file": "KDNA_Core.json",
+    "element_id": "ax-absence-not-commitment"
+  },
+  "evidence": [
+    {
+      "type": "outcome_record",
+      "id": "out_ds_20260515_001",
+      "summary": "Agent classified an async Loom review with 👍 reactions as UNRESOLVED. In this team's protocol, 👍 on deliverable-bound messages = commitment. The agent's classification was incorrect and eroded user trust."
+    },
+    {
+      "type": "case_study",
+      "id": "async_commitment_survey_2026",
+      "summary": "Survey of 12 async-first teams: 9 use emoji protocols (👍=commit, 👀=reviewing, ❓=blocker). 7 have this documented in team charter. 3 use tool-native reactions (GitHub review approval, Notion comment resolve) as commitment signals."
+    }
+  ],
+  "reason": "The axiom 'absence of objection is not presence of commitment' is correct for traditional meetings but too absolute for modern async workflows. Teams increasingly use explicit, documented protocols where emoji reactions or structured tool signals DO constitute commitment. The axiom should acknowledge this boundary: when a team has an explicit async commitment protocol, the absence of objection (within that protocol) CAN be presence of commitment. Without this boundary, the agent will systematically misclassify valid executable decisions as unresolved in async teams.",
+  "risk_if_accepted": "Agent may overclassify vague social agreement as commitment if it sees any emoji reaction. We must ensure the exception is narrowly scoped to documented protocols, not general social media behavior.",
+  "risk_if_rejected": "Agent will continue to misclassify async commitments in teams with documented emoji protocols. This will systematically fail for a growing segment of remote/async teams and erode trust in KDNA's relevance.",
+  "requires_human_lock": true,
+  "status": "accepted",
+  "review": {
+    "reviewer": "zhangling",
+    "reviewed_at": "2026-05-16T14:00:00Z",
+    "decision": "accept",
+    "decision_reason": "Evidence is strong. The async commitment pattern is real and growing. The proposed boundary is narrow enough (requires documented protocol) to avoid overgeneralization. I accept with the modification that the does_not_apply_when entry must explicitly require 'documented team charter or explicit protocol definition' — not just informal habit.",
+    "counterexamples": [
+      {
+        "description": "What if someone 👍es a message without reading it carefully?",
+        "severity": "medium"
+      },
+      {
+        "description": "What if a new team member doesn't know the emoji protocol?",
+        "severity": "low"
+      }
+    ]
+  },
+  "human_lock": {
+    "lock_id": "lock_ds_20260516_001",
+    "locked_at": "2026-05-16T14:30:00Z",
+    "locked_by": "zhangling",
+    "lock_type": "accept",
+    "reason": "Evidence strong. Async commitment protocols are a documented pattern. Narrow exception protects against overgeneralization. Counterexamples addressed by requiring explicit protocol documentation."
+  },
+  "created_at": "2026-05-16T10:00:00Z",
+  "updated_at": "2026-05-16T14:30:00Z"
+}

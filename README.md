@@ -2,12 +2,14 @@
 
 > [![npm](https://img.shields.io/npm/v/@aikdna/kdna)](https://www.npmjs.com/package/@aikdna/kdna) [![CI](https://github.com/aikdna/KDNA/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/KDNA/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
-**KDNA is an open format for packaging domain judgment into loadable, testable, reusable assets for AI agents.**
+**KDNA is an open protocol for packaging domain judgment into loadable, testable, governable assets for AI agents.**
 
 Prompts tell AI what to say. Skills tell AI what to do. MCP connects AI to tools.  
 **KDNA tells AI how to judge within a domain.**
 
 AI agents have tools, workflows, and knowledge bases. What they lack is transferable judgment — the ability to evaluate a situation the way an expert would, not the way a general-purpose model would. KDNA encodes that judgment in a machine-verifiable, human-inspectable format.
+
+Self-improving agents need judgment governance. Without explicit judgment, improvement becomes drift. KDNA is the protocol for human-governed self-improvement: agents can learn from work, but judgment updates require Human Judgment Lock.
 
 > **Version map**: npm `0.7.8` · SPEC `v1.0-rc` · Registry `v2.0`. See [docs/version-matrix.md](./docs/version-matrix.md).
 
