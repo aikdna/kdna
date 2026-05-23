@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "domain": "short_video_subtitle",
+    "version": "0.1.0",
+    "created": "2026-05-23",
+    "purpose": "Misunderstandings, banned terms, and self-checks for short-video subtitle judgment.",
+    "load_condition": "auto"
+  },
+  "misunderstandings": [
+    {
+      "id": "ms_clarity_beats_voice",
+      "wrong": "If a subtitle line is ambiguous, always rewrite it for clarity.",
+      "correct": "Ambiguity is sometimes the speaker's intended effect. Rewriting for clarity can erase personality. Only clarify when the ambiguity causes genuine misunderstanding, not when it's a stylistic choice.",
+      "why": "Over-clarifying strips the speaker's personality, making branded content feel anonymous.",
+      "key_distinction": "Stylistic ambiguity (speaker's voice) vs. harmful ambiguity (viewer will misunderstand the content).",
+      "failure_risk": "Sanitizing every ambiguous phrase produces subtitles that read like corporate copy."
+    },
+    {
+      "id": "ms_shorter_is_better",
+      "wrong": "Shorter subtitle lines are always better because they're easier to read.",
+      "correct": "A line that is too short but breaks the speaker's emotional rhythm is worse than a slightly longer line that preserves the flow. The viewer's emotional connection matters more than optimal character count.",
+      "why": "Optimizing for character count produces emotionally disconnected subtitles.",
+      "key_distinction": "Readability (character count) vs. watchability (emotional flow)."
+    },
+    {
+      "id": "ms_one_style_fits_all",
+      "wrong": "The same subtitle style works for all audiences — just keep it clean and readable.",
+      "correct": "Different audiences have different reading speeds, attention patterns, and expectations. A subtitle style tuned for Douyin teenagers will alienate WeChat Channels seniors, and vice versa.",
+      "why": "One-size-fits-all subtitles serve no specific audience well and feel off-brand.",
+      "key_distinction": "Universal readability vs. audience-specific resonance."
+    }
+  ],
+  "terminology": {
+    "banned_terms": [
+      {"term": "make it flow better", "replace_with": "match the speaker's emotional pacing", "why": "Vague direction that doesn't help the agent decide what to change."},
+      {"term": "improve readability", "replace_with": "match audience reading habits", "why": "Too generic — readability means different things for different audiences."},
+      {"term": "polish the subtitles", "replace_with": "align with account voice and audience expectations", "why": "Implies surface-level edit when subtitles need judgment-level decisions."},
+      {"term": "just split it at 15 characters", "replace_with": "split at the speaker's natural pauses", "why": "Mechanical character-count splitting ignores emotional rhythm."},
+      {"term": "you don't want to miss this", "replace_with": "[no replacement — remove the urgency]", "why": "Manufactures urgency and erodes trust when overused."},
+      {"term": "most people get this wrong", "replace_with": "[no replacement — avoid anxiety language]", "why": "Anxiety-driving language that positions the audience as deficient."}
+    ],
+    "preferred_terms": []
+  },
+  "self_check": [
+    "Does this subtitle break respect the speaker's emotional beat?",
+    "Would this tone feel right for our target audience?",
+    "Did I preserve the speaker's voice, or did I sanitize it?",
+    "Is any line using fear or urgency language unnecessarily?",
+    "Would a viewer feel the pacing is too fast or too slow?"
+  ]
+}

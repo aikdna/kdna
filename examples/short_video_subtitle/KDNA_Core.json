@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "domain": "short_video_subtitle",
+    "version": "0.1.0",
+    "load_condition": "auto",
+    "purpose": "Judgment layer for short-video subtitles: what makes a subtitle not just correct but audience-appropriate, rhythm-aware, and brand-aligned.",
+    "language": "en",
+    "created": "2026-05-23"
+  },
+  "axioms": [
+    {
+      "id": "sub_rhythm_before_rules",
+      "one_sentence": "Subtitle breaks must serve the emotional rhythm of the content, not just character-count rules.",
+      "full_statement": "When splitting long subtitles, prioritize the speaker's pacing, emotional beats, and natural pauses over mechanical line-length limits. A technically short line that breaks mid-emotion is worse than a slightly long line that preserves the emotional flow.",
+      "why": "Rigid character-count splitting produces subtitles that are easy to read but dead to the rhythm. Viewers feel the disconnect even if they can't name it.",
+      "applies_when": ["the content is emotional/rhythmic (storytelling, commentary, vlogs)", "the speaker's pacing is part of the message"],
+      "does_not_apply_when": ["the content is purely informational (tutorials, news)", "auto-captioning for accessibility without creative intent"],
+      "failure_risk": "Mechanically chopped subtitles that read correctly but feel wrong — the viewer trusts the content less.",
+      "confidence": "high",
+      "evidence_type": ["subtitle timing analysis", "viewer engagement metrics"]
+    },
+    {
+      "id": "sub_audience_not_default",
+      "one_sentence": "Subtitle tone and density must adapt to the target audience, not default to universal readability.",
+      "full_statement": "A subtitle track for teenagers on Douyin needs different line length, vocabulary level, and reading speed than a subtitle track for senior audiences on WeChat Channels. Defaulting to one-size-fits-all readability means serving no audience well.",
+      "why": "Generic subtitles feel off-brand because they ignore the audience's reading habits, attention span, and platform norms.",
+      "applies_when": ["the content targets a specific audience segment", "the platform has known audience demographics"],
+      "does_not_apply_when": ["the content is designed for maximum reach across all audiences", "the platform provides no audience data"],
+      "failure_risk": "Subtitles that are technically readable but contextually alienating — seniors get overwhelmed, teenagers get bored.",
+      "confidence": "high",
+      "evidence_type": ["platform analytics", "audience focus groups"]
+    },
+    {
+      "id": "sub_tone_over_clarity",
+      "one_sentence": "When clarity and tone conflict, preserve the tone that matches the account's brand voice.",
+      "full_statement": "Ambiguous phrases in speech can often be clarified by rewriting. But rewriting for clarity can strip the speaker's personality — their humor, their warmth, their authority. For branded content, losing voice is more damaging than losing perfect clarity.",
+      "why": "Over-clarified subtitles feel like they were written by a committee. The audience came for the speaker's voice, not a textbook.",
+      "applies_when": ["the content is personality-driven (influencer, thought leader, brand account)", "the speaker has a distinctive voice"],
+      "does_not_apply_when": ["the content is instructional where clarity is paramount", "the speaker's phrasing could cause genuine misunderstanding"],
+      "failure_risk": "Sanitized subtitles that are perfectly clear but no longer sound like the person who made the video.",
+      "confidence": "medium"
+    },
+    {
+      "id": "sub_fear_language",
+      "one_sentence": "Anxiety-driving language in subtitles undermines trust, even if the underlying content is accurate.",
+      "full_statement": "Phrases like 'you're making a huge mistake,' 'most people get this wrong,' or 'if you don't do this now' may increase short-term engagement but erode long-term credibility. Trust-building accounts avoid manufactured urgency in subtitles.",
+      "why": "Viewers subconsciously associate the account with the emotional state the subtitles induce. Anxiety = untrustworthy source.",
+      "applies_when": ["the content discusses health, finance, career, parenting, or any high-stakes topic", "the account positions itself as a trusted advisor"],
+      "does_not_apply_when": ["the content is entertainment or satire", "genuine urgency exists (breaking news, safety alerts)"],
+      "failure_risk": "High engagement in the short term, eroded credibility in the long term. The account becomes known for fear-mongering.",
+      "confidence": "high",
+      "evidence_type": ["audience trust surveys", "long-term retention metrics"]
+    }
+  ],
+  "ontology": [
+    {
+      "id": "reading_pace",
+      "one_sentence": "Reading pace is cognitive load per screen, not words-per-minute.",
+      "concept": "Reading pace",
+      "essence": "Subtitle reading pace is not words-per-minute — it's the cognitive load per screen. A short line that introduces a new concept may need more screen time than a long line of familiar words.",
+      "boundary": "Reading pace is not typing speed. It's about how fast the viewer processes meaning, not characters.",
+      "trigger_signal": "viewer re-reads, viewer pauses video, viewer comments 'too fast'"
+    },
+    {
+      "id": "emotional_beat",
+      "one_sentence": "An emotional beat is a feeling-carrying moment in delivery — subtitle breaks must respect it.",
+      "concept": "Emotional beat",
+      "essence": "An emotional beat is a moment in the speaker's delivery that carries feeling — a pause, a laugh, a shift in tone. Subtitle breaks that ignore emotional beats make the content feel flat.",
+      "boundary": "An emotional beat is not the same as a sentence boundary. A speaker may pause mid-sentence for effect.",
+      "trigger_signal": "speaker pauses, tone shifts, laughter, sigh, emphasis word"
+    }
+  ],
+  "stances": [
+    "Subtitles are editorial decisions, not transcription. Every line break is a creative choice.",
+    "Serve the audience, not the algorithm. Engagement at the cost of trust is failure.",
+    "When in doubt, preserve the speaker's voice over perfect grammar."
+  ],
+  "frameworks": [],
+  "core_structure": []
+}
