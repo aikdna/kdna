@@ -7,7 +7,7 @@
  * 3. Run judgment on user input
  */
 
-import { loadDomain, formatContext, classifyInput, type LoadedDomain } from "@aikdna/kdna";
+import { loadDomain, formatContext, classifyInput, type LoadedDomain } from "@aikdna/kdna-core";
 
 export interface JudgmentResult {
   classification: string;
