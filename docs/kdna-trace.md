@@ -1,4 +1,6 @@
-# KDNA Agent Call Logging (kdna trace)
+# KDNA Agent Call Logging (kdna trace) — Design Specification
+
+> **Status:** Design specification. CLI implementation pending.
 
 ## Overview
 

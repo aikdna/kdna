@@ -1,4 +1,6 @@
-# KDNA macOS Integration Design
+# KDNA macOS Integration — Design Specification
+
+> **Status:** Design specification. Implementation pending in KDNAChat.
 
 ## Overview
 

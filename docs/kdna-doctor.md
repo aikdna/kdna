@@ -1,4 +1,6 @@
-# kdna doctor
+# kdna doctor — Design Specification
+
+> **Status:** Design specification. CLI implementation pending.
 
 `kdna doctor` diagnoses the KDNA installation and agent integration status.
 

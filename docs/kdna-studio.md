@@ -1,4 +1,6 @@
-# KDNA Studio — Authoring Flow Design
+# KDNA Studio — Design Specification
+
+> **Status:** Design specification. Implementation pending in KDNAChat / VS Code.
 
 ## Overview
 

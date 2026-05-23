@@ -1,4 +1,6 @@
-# KDNA Encryption & Authorization Design
+# KDNA Encryption & Authorization — Design Specification
+
+> **Status:** Design specification. Implementation pending.
 
 ## Overview
 

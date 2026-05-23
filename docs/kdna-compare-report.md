@@ -1,4 +1,6 @@
-# KDNA Compare — Standard Evaluation Report
+# KDNA Compare Report — Design Specification
+
+> **Status:** Design specification. Implementation pending in kdna-cli.
 
 ## Overview
 
