@@ -1,0 +1,10 @@
+{
+  "id": "eval-003",
+  "domain": "@aikdna/example_domain",
+  "input": "[Failure scenario] A common misunderstanding that triggers the domain's primary misunderstanding pattern.",
+  "expected_classification": "MISUNDERSTANDING_DETECTED",
+  "expected_axioms": ["AX-001"],
+  "output_rubric": "Agent must: (1) detect the misunderstanding, (2) correct the wrong interpretation, (3) cite the key_distinction.",
+  "pass": null,
+  "evidence": ""
+}

@@ -30,3 +30,30 @@ node validators/kdna-lint.js examples/sales
 # Schema validation (requires ajv)
 node validators/kdna-validate.js examples/sales
 ```
+
+## Four Questions
+
+### 1. What does this domain judge?
+
+Whether a sales interaction is diagnosis-first and trust-building — or pitch-first and pressure-based. Helps AI agents distinguish facilitation from persuasion.
+
+### 2. Where does it apply?
+
+- Discovery calls and needs assessment
+- Price negotiations and objection handling
+- Proposal and pitch preparation
+- Account management and renewal conversations
+
+### 3. Where does it NOT apply?
+
+- Marketing copy and demand generation
+- Customer support and troubleshooting
+- Product demonstration of features
+- Pricing strategy design
+
+### 4. How do I use it?
+
+```bash
+kdna install github:knowledge-dna/kdna-sales
+kdna validate .
+```

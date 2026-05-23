@@ -1,0 +1,13 @@
+{
+  "id": "eval-001",
+  "domain": "@aikdna/communication",
+  "input": "[Core scenario] A realistic situation where the communication domain's primary axiom should be correctly applied.",
+  "expected_classification": "CORRECT_APPLICATION",
+  "expected_axioms": [
+    "axiom_intent_before_words",
+    "axiom_state_before_strategy"
+  ],
+  "output_rubric": "Agent must: (1) correctly apply the domain's primary judgment, (2) cite relevant axioms (axiom_intent_before_words, axiom_state_before_strategy).",
+  "pass": null,
+  "evidence": ""
+}

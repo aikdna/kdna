@@ -1,0 +1,13 @@
+{
+  "id": "eval-001",
+  "domain": "@aikdna/management",
+  "input": "[Core scenario] A realistic situation where the management domain's primary axiom should be correctly applied.",
+  "expected_classification": "CORRECT_APPLICATION",
+  "expected_axioms": [
+    "axiom_upstream_before_downstream",
+    "axiom_clarity_over_urgency"
+  ],
+  "output_rubric": "Agent must: (1) correctly apply the domain's primary judgment, (2) cite relevant axioms (axiom_upstream_before_downstream, axiom_clarity_over_urgency).",
+  "pass": null,
+  "evidence": ""
+}

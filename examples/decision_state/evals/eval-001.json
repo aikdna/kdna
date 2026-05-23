@@ -1,0 +1,13 @@
+{
+  "id": "eval-001",
+  "domain": "@aikdna/decision_state",
+  "input": "Meeting summary: 'Sarah will rewrite the authentication module using OAuth 2.0. She will deliver the first draft by Friday, March 15. The module must pass all existing unit tests before merge. Sarah confirmed she has access to the staging environment and the OAuth credentials.'",
+  "expected_classification": "EXECUTABLE_DECISION",
+  "expected_axioms": [
+    "AX-001",
+    "AX-002"
+  ],
+  "output_rubric": "Agent must: (1) classify as EXECUTABLE_DECISION, (2) identify all four commitment elements: specific choice (OAuth 2.0), named owner (Sarah), concrete action (rewrite auth module), deadline (March 15), (3) note that no blocking conditions exist and owner has confirmed resources. Failure if agent calls this CONDITIONAL or UNRESOLVED.",
+  "pass": null,
+  "evidence": ""
+}

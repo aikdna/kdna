@@ -2,6 +2,7 @@
   "kdna_spec": "1.0-rc",
   "name": "@aikdna/example_domain",
   "version": "0.1.0",
+  "judgment_version": "0.1.0",
   "language": "en",
   "languages": ["en"],
   "created": "YYYY-MM-DD",
@@ -27,5 +28,5 @@
   },
   "file_count": 3,
   "kdna_file_count": 3,
-  "files": ["KDNA_Core.json", "KDNA_Patterns.json", "tests/before-after.json"]
+  "files": ["KDNA_Core.json", "KDNA_Patterns.json", "evals/"]
 }
