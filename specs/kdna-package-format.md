@@ -48,7 +48,7 @@ identity card of the domain.
 
 ```json
 {
-  "kdna_spec": "0.4",
+  "kdna_spec": "1.0-rc",
   "name": "sales",
   "version": "0.1.0",
   "language": "en",
@@ -82,7 +82,7 @@ identity card of the domain.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `kdna_spec` | Yes | Package format spec version. MUST be `"0.4"`. |
+| `kdna_spec` | Yes | Package format spec version. MUST be `"1.0-rc"`. |
 | `name` | Yes | Domain identifier. Lowercase snake_case: `^[a-z][a-z0-9_]*$`. |
 | `version` | Yes | Semantic version (`MAJOR.MINOR.PATCH`). |
 | `language` | Yes | Primary language code (ISO 639-1 + optional region). |

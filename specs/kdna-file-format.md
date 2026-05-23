@@ -72,7 +72,7 @@ does not have a separate metadata header — it is transparent ZIP.
 
 ```json
 {
-  "kdna_spec": "0.4",
+  "kdna_spec": "1.0-rc",
   "name": "sketchnote-style",
   "version": "0.1.0",
   "status": "experimental",

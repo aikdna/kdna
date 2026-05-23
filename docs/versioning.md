@@ -44,7 +44,7 @@ Did you remove or fundamentally redefine what the domain judges?
 A single version bump must update ALL of these:
 
 1. **`kdna.json`** → `"version": "0.2.0"`
-2. **Every KDNA JSON file meta** → `"version": "0.4"` (spec version, not package version — see below)
+2. **Every KDNA JSON file meta** → `"version": "1.0-rc"` (spec version, not package version — see below)
 3. **`CHANGELOG.md`** → New version entry
 4. **`package.json`** (if npm package) → `"version": "0.2.0"`
 5. **Registry** → Update `domains.json` entry when published
@@ -56,9 +56,9 @@ KDNA has TWO version concepts:
 | Concept | Field | Example | Changes when |
 |---------|-------|---------|-------------|
 | Package version | `kdna.json` → `version` | `"0.2.0"` | Domain content changes |
-| Spec version | KDNA JSON files → `meta.version` | `"0.4"` | KDNA protocol format changes |
+| Spec version | KDNA JSON files → `meta.version` | `"1.0-rc"` | KDNA protocol format changes |
 
-The spec version in each KDNA JSON file refers to which version of the KDNA protocol the file follows — NOT the domain's content version. A domain at `0.2.0` can still use spec version `0.4`.
+The spec version in each KDNA JSON file refers to which version of the KDNA protocol the file follows — NOT the domain's content version. A domain at `0.2.0` can still use spec version `1.0-rc`.
 
 ## Version and Evaluation
 

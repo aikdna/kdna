@@ -7,7 +7,7 @@
 
 ## Abstract
 
-KDNA (Knowledge DNA) is a structured format for encoding domain cognition for AI agents. This specification defines the file format, validation rules, loading behavior, and conformance requirements for KDNA domains.
+KDNA (Knowledge DNA) is a structured format for encoding domain judgment for AI agents. This specification defines the file format, validation rules, loading behavior, and conformance requirements for KDNA domains.
 
 ## Terminology
 
@@ -25,7 +25,7 @@ KDNA is designed for:
 - AI agents that need stable domain judgment
 - Domain experts packaging expertise for AI consumption
 - Agent runtimes requiring structured context beyond raw documents
-- Skill systems needing a cognition layer separate from execution steps
+- Skill systems needing a judgment layer separate from execution steps
 
 KDNA is NOT designed for:
 - Storing large document collections
@@ -262,7 +262,7 @@ Every KDNA JSON file MUST include a `meta` object at the root with these REQUIRE
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `version` | string | Spec version this file conforms to (e.g., "0.4") |
+| `version` | string | Spec version this file conforms to (e.g., "1.0-rc") |
 | `domain` | string | Domain identifier matching the package name |
 | `created` | string | ISO 8601 date (YYYY-MM-DD) |
 | `purpose` | string | One-sentence description of this file's role |
@@ -516,14 +516,14 @@ The evaluation output MUST include a score and specific evidence for each dimens
 ## 10. Compatibility
 
 KDNA MAY be used with:
-- Agent Skills (as a cognition layer loaded before task execution)
+- Agent Skills (as a judgment layer loaded before task execution)
 - MCP Resources (as structured context provided to tools)
 - RAG systems (as a judgment lens for retrieved documents)
 - Prompt routers (as domain-specific system prompts)
 - Custom agent runtimes
 - Local file-based assistants
 
-KDNA MUST NOT replace these systems. It provides a cognition layer that operates alongside them.
+KDNA MUST NOT replace these systems. It provides a judgment layer that operates alongside them.
 
 ## 11. Security Considerations
 

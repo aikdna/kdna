@@ -7,7 +7,7 @@ Status: Draft
 
 This specification defines the license framework for KDNA assets.
 It separates the open-source protocol license from the domain asset license,
-and defines the KDNA Commercial License for protected domain cognition.
+and defines the KDNA Commercial License for protected domain judgment.
 
 ## 2. Dual Licensing Architecture
 

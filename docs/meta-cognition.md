@@ -8,7 +8,7 @@ This is the judgment layer for the judgment layer.
 
 ## 1. The First Question: Should KDNA Be Used At All?
 
-Before loading any KDNA, the agent should ask: **"Would domain cognition change the reasoning trajectory here, or just add overhead?"**
+Before loading any KDNA, the agent should ask: **"Would domain judgment change the reasoning trajectory here, or just add overhead?"**
 
 ### Use KDNA when
 

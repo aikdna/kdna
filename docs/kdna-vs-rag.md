@@ -4,7 +4,7 @@ RAG and KDNA solve different problems.
 
 RAG retrieves relevant information from a large corpus. It answers: what information should the model see right now?
 
-KDNA encodes stable domain cognition. It answers: how should the model interpret and judge what it sees?
+KDNA encodes stable domain judgment. It answers: how should the model interpret and judge what it sees?
 
 ## Use Together
 

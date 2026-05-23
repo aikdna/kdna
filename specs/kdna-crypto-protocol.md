@@ -88,7 +88,7 @@ Package published to registry:
 
 ```json
 {
-  "kdna_spec": "0.4",
+  "kdna_spec": "1.0-rc",
   "crypto_protocol": "0.1",
   "domain": "silver-care",
   "version": "1.0.0",

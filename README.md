@@ -11,7 +11,7 @@ AI agents have tools, workflows, and knowledge bases. What they lack is transfer
 
 Self-improving agents need judgment governance. Without explicit judgment, improvement becomes drift. KDNA is the protocol for human-governed self-improvement: agents can learn from work, but judgment updates require Human Judgment Lock.
 
-> **Version map**: npm `0.7.8` · SPEC `v1.0-rc` · Registry `v2.0`. See [docs/version-matrix.md](./docs/version-matrix.md).
+> **Version map**: SPEC `v1.0-rc` · Registry `v2.0`. See [docs/version-matrix.md](./docs/version-matrix.md).
 
 ---
 
