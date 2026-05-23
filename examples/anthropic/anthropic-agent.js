@@ -2,13 +2,13 @@
  * KDNA + Anthropic — 10-minute integration example.
  *
  * Usage:
- *   1. npm install @aikdna/kdna @anthropic-ai/sdk
+ *   1. npm install @aikdna/kdna-core @anthropic-ai/sdk
  *   2. export ANTHROPIC_API_KEY=sk-ant-...
  *   3. node anthropic-agent.js
  */
 
 import Anthropic from "@anthropic-ai/sdk";
-import { loadDomain, formatContext } from "@aikdna/kdna";
+import { loadDomain, formatContext } from "@aikdna/kdna-core";
 
 const client = new Anthropic();
 

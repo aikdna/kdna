@@ -24,7 +24,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@aikdna/kdna": "^0.6.2",
+    "@aikdna/kdna-core": "^0.6.2",
     "@aikdna/kdna-core": "^0.2.1"
   },
   "devDependencies": {

@@ -30,7 +30,7 @@ npm run demo
 ## Use in your project
 
 ```typescript
-import { loadDomain, formatContext } from "@aikdna/kdna";
+import { loadDomain, formatContext } from "@aikdna/kdna-core";
 
 const domain = loadDomain("./my-domain", { mode: "all" });
 const context = domain ? formatContext(domain) : "";

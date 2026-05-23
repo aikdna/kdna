@@ -1,6 +1,6 @@
 # KDNA
 
-> 🧬 **[aikdna.com](https://aikdna.com)** — 官方网站 · [![npm](https://img.shields.io/npm/v/@aikdna/kdna)](https://www.npmjs.com/package/@aikdna/kdna) · 镜像: [@aikdna/kdna](https://www.npmjs.com/package/@aikdna/kdna)
+> [aikdna.com](https://aikdna.com) — 官方网站 . [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli)
 
 **KDNA（Knowledge DNA）** 是一种开放协议，用于将领域判断打包为 AI Agent 可加载、可测试、可治理的认知资产。
 

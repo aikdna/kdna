@@ -6,7 +6,7 @@
  * 2. Inject into system prompt
  * 3. Run judgment on user input
  */
-import { loadDomain, formatContext, classifyInput } from "@aikdna/kdna";
+import { loadDomain, formatContext, classifyInput } from "@aikdna/kdna-core";
 export class KDNAAgent {
     domain;
     context;

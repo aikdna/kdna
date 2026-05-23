@@ -2,13 +2,13 @@
  * KDNA + OpenAI — 10-minute integration example.
  *
  * Usage:
- *   1. npm install @aikdna/kdna openai
+ *   1. npm install @aikdna/kdna-core openai
  *   2. export OPENAI_API_KEY=sk-...
  *   3. node openai-agent.js
  */
 
 import OpenAI from "openai";
-import { loadDomain, formatContext } from "@aikdna/kdna";
+import { loadDomain, formatContext } from "@aikdna/kdna-core";
 
 const client = new OpenAI();
 
