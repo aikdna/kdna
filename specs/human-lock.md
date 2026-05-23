@@ -24,35 +24,37 @@ Only Judgment-class updates require Human Judgment Lock. This distinction is wha
 
 ## Fields Requiring Human Judgment Lock
 
-The following fields in a KDNA domain MUST NOT be modified without a recorded Human Judgment Lock:
+The following fields in a KDNA domain MUST NOT be modified without a recorded Human Judgment Lock.
+
+> **Core fields** (required by [SPEC §1.7.2](../SPEC.md#172-fields-requiring-human-judgment-lock)) are marked with ★. Extended fields (recommended but not mandated by SPEC) are marked with ○. Validators MUST enforce ★ fields; they SHOULD enforce ○ fields for production domains.
 
 ### KDNA_Core.json
-- `axioms` — any add, remove, or revise
-- `value_order` — any reorder, add, or remove
-- `judgment_role` — any change to acts_as, does_not_act_as, or responsibility
-- `ontology` — any change to concept boundaries or trigger signals that affects judgment
-- `frameworks` — any change to steps or when_to_use that affects judgment outcomes
-- `stances` — any change to stance declarations or their applicability conditions
+- ★ `axioms` — any add, remove, or revise
+- ★ `value_order` — any reorder, add, or remove
+- ★ `judgment_role` — any change to acts_as, does_not_act_as, or responsibility
+- ○ `ontology` — any change to concept boundaries or trigger signals that affects judgment
+- ○ `frameworks` — any change to steps or when_to_use that affects judgment outcomes
+- ○ `stances` — any change to stance declarations or their applicability conditions
 
 ### KDNA_Patterns.json
-- `boundaries` — any change to what must not be done
-- `risk_model` — any change to which errors cost the most
-- `banned_terms` — any add or remove (changes output constraints)
-- `aesthetic_preferences` — any change to taste-based judgment
+- ★ `boundaries` — any change to what must not be done
+- ★ `risk_model` — any change to which errors cost the most
+- ○ `banned_terms` — any add or remove (changes output constraints)
+- ○ `aesthetic_preferences` — any change to taste-based judgment
 
 ### KDNA_Scenarios.json
-- `scenes` — any change to trigger signals that affects scenario classification
-- `negative_signals` — any change
+- ○ `scenes` — any change to trigger signals that affects scenario classification
+- ○ `negative_signals` — any change
 
 ### KDNA_Evolution.json
-- `stages` — any change to maturity or capability stages
-- `evolution_layers` — any change to capability transitions
+- ○ `stages` — any change to maturity or capability stages
+- ○ `evolution_layers` — any change to capability transitions
 
 ### composition.policy.json (if present)
-- Any change to selection, priority, conflict, merge, or output rules
+- ★ Any change to selection, priority, conflict, merge, or output rules
 
 ### Governance cluster priority rules
-- Any change to organizational policy overlays
+- ○ Any change to organizational policy overlays
 
 ---
 

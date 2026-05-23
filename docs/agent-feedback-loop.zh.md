@@ -46,7 +46,7 @@ Agent 接收输入，加载一个或多个 KDNA 域，并产生判断。
 
 追踪记录了判断过程中触发了哪些 KDNA 规则。
 
-**Schema：** [`specs/judgment-trace-schema.json`](https://aikdna.com/specs/judgment-trace-schema.json)
+**Schema：** [`specs/judgment-trace-schema.json`](./judgment-trace-schema.json)
 
 **关键字段：**
 - `trace_id`：唯一标识符
@@ -96,7 +96,7 @@ Agent 接收输入，加载一个或多个 KDNA 域，并产生判断。
 
 Agent 行动后，现实产生结果。结果记录将判断的预测与实际发生的情况进行比较。
 
-**Schema：** [`specs/outcome-record-schema.json`](https://aikdna.com/specs/outcome-record-schema.json)
+**Schema：** [`specs/outcome-record-schema.json`](./outcome-record-schema.json)
 
 **关键字段：**
 - `judgment_reference.trace_id`：链接回追踪
@@ -227,7 +227,8 @@ AI **可以**协助审核：
       "locked_at": "2026-05-23T14:00:00Z",
       "locked_by": "zhangling",
       "lock_type": "accept",
-      "reason": "证据充分。一周内 3 次误分类。风险平衡支持变更。"
+      "reason": "证据充分。一周内 3 次误分类。风险平衡支持变更。",
+      "affected_files": ["KDNA_Core.json"]
     }
   ]
 }
@@ -272,7 +273,7 @@ AI **可以**协助审核：
 # 运行域的所有评估
 kdna verify @aikdna/decision_state --judgment
 
-# 比较两个版本以检测回归
+# 比较两个版本以检测回归（Phase 6 — CLI --from/--to/--evals 待实现）
 kdna compare @aikdna/decision_state --from 0.7.1 --to 0.7.2 --evals ./evals/
 
 # 预期输出：
