@@ -700,7 +700,7 @@ KDNA is early, but several components already exist.
 ### 13.2 Reference Toolchain
 
 - `@aikdna/kdna-core`: pure logic library for loading, validating, linting, rendering, and composing domains.
-- `@aikdna/kdna` CLI: command-line tool for setup, validate, verify, install, load, match, compare, diff, pack, unpack, registry, identity, and cluster-related workflows.
+- `@aikdna/kdna-cli` CLI: command-line tool for setup, validate, verify, install, load, match, compare, diff, pack, unpack, registry, identity, and cluster-related workflows.
 - Python SDK: programmatic integration.
 - Swift core package: native Swift implementation for macOS and iOS clients.
 - VS Code extension: validation, preview, and domain authoring support.
@@ -797,4 +797,4 @@ If this succeeds, the AI stack will not only have models, tools, knowledge, and 
 
 *Website: https://aikdna.com*  
 *GitHub: https://github.com/aikdna/KDNA*  
-*npm: @aikdna/kdna, @aikdna/kdna-core*
+*npm: @aikdna/kdna-cli, @aikdna/kdna-core*

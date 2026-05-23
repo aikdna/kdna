@@ -700,7 +700,7 @@ KDNA 仍处于早期，但若干组件已经存在。
 ### 13.2 参考工具链
 
 - `@aikdna/kdna-core`：用于加载、验证、lint、渲染和组合 domains 的纯逻辑库。
-- `@aikdna/kdna` CLI：命令行工具，支持 setup、validate、verify、install、load、match、compare、diff、pack、unpack、registry、identity 和 cluster 相关工作流。
+- `@aikdna/kdna-cli` CLI：命令行工具，支持 setup、validate、verify、install、load、match、compare、diff、pack、unpack、registry、identity 和 cluster 相关工作流。
 - Python SDK：程序化集成。
 - Swift core package：面向 macOS 和 iOS 客户端的原生 Swift 实现。
 - VS Code extension：验证、预览和 domain authoring 支持。
@@ -797,4 +797,4 @@ KDNA 不替代模型、提示词、知识库、Skills、工作流、工具、检
 
 *网站：https://aikdna.com*  
 *GitHub：https://github.com/aikdna/KDNA*  
-*npm：@aikdna/kdna, @aikdna/kdna-core*
+*npm：@aikdna/kdna-cli, @aikdna/kdna-core*

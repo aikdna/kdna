@@ -12,7 +12,7 @@ fetch the latest SKILL.md from
 
 If the network is unavailable (corporate firewall, offline laptop, etc.)
 the npm package's bundled copy is used. This ensures `npm install -g
-@aikdna/kdna && kdna setup` works in **any** environment.
+@aikdna/kdna-cli && kdna setup` works in **any** environment.
 
 ## Single source enforcement
 
