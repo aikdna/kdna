@@ -67,7 +67,7 @@ curl -fsSL https://aikdna.com/install | bash
 Or manually:
 
 ```bash
-npm install -g @aikdna/kdna
+npm install -g @aikdna/kdna-cli
 kdna install @aikdna/writing
 ```
 

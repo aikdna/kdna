@@ -300,7 +300,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install -g @aikdna/kdna
+      - run: npm install -g @aikdna/kdna-cli
       - run: kdna validate my_domain
       - run: kdna publish --check my_domain  # quality gate
 ```
