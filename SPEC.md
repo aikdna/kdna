@@ -833,7 +833,102 @@ Studio Core MUST NOT create a parallel KDNA dialect. The canonical domain struct
 
 ---
 
-## 16. References
+## 16. Internationalization and Localization
+
+KDNA domains encode judgment. Localization changes the language of expression, not the logic of judgment. See [KDNA_I18N_SPEC.md](./docs/KDNA_I18N_SPEC.md) for the full specification.
+
+### 16.1 Core Principle
+
+**Localization MUST NOT change the logical meaning of axioms, boundaries, risks, or self-checks.**
+
+### 16.2 Language Declaration
+
+Every domain MUST declare its language configuration in `kdna.json`:
+
+```json
+{
+  "language": {
+    "canonical": "en",
+    "available": ["en", "zh-CN"],
+    "fallback": "en"
+  },
+  "i18n_level": "L2"
+}
+```
+
+- `canonical`: The primary language of the domain's judgment content
+- `available`: All languages for which the domain provides localization
+- `fallback`: Language to use when a requested locale is unavailable
+- `i18n_level`: L0 (monolingual) through L4 (full locale evals)
+
+### 16.3 Localization Levels
+
+| Level | Requirements |
+|:-----:|-------------|
+| L0 | Canonical language only |
+| L1 | Localized KDNA_CARD.json + README in `locales/<tag>/` |
+| L2 | L1 + localized text fields for core axioms and misunderstandings via overlay |
+| L3 | L2 + full overlays for all 6 KDNA files |
+| L4 | L3 + locale-specific eval cases |
+
+Official domains published to the canonical registry MUST achieve at least L1 in en + zh-CN.
+
+### 16.4 Locale Directory Structure
+
+```
+locales/
+  zh-CN/
+    KDNA_CARD.json          # Localized governance metadata
+    README.md                # Localized human-readable documentation
+    KDNA_Core.overlay.json   # L2+: text field translations
+    KDNA_Patterns.overlay.json
+    evals.json               # L4: locale-specific test cases
+```
+
+### 16.5 Overlay Format
+
+Locale overlays translate text fields only. They reference canonical IDs and MUST NOT add, remove, or reorder structural fields.
+
+```json
+{
+  "locale": "zh-CN",
+  "base": "en",
+  "translations": {
+    "ax_001.one_sentence": "Translated text...",
+    "ax_001.full_statement": "Translated text...",
+    "ms_001.key_distinction": "Translated text..."
+  }
+}
+```
+
+### 16.6 Registry Declaration
+
+Registry entries for localized domains MUST include:
+
+```json
+{
+  "languages": ["en", "zh-CN"],
+  "default_language": "en",
+  "i18n_level": "L2",
+  "localized": {
+    "en": { "display_name": "...", "description": "..." },
+    "zh-CN": { "display_name": "...", "description": "..." }
+  }
+}
+```
+
+### 16.7 Validation
+
+A conforming validator MUST verify:
+1. Declared `languages` match actual `locales/` directories
+2. Overlay IDs reference existing canonical IDs
+3. Overlays do not modify structural fields
+4. Localized KDNA_CARD has all required fields
+5. `i18n_level` matches actual content coverage
+
+---
+
+## 17. References
 
 - [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) — Key words for use in RFCs
 - [Semantic Versioning](https://semver.org/) — Version numbering
