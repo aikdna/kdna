@@ -4,7 +4,7 @@
 
 本文档定义了领域 KDNA 仓库被列入官方 [kdna-registry](https://github.com/knowledge-dna/kdna-registry) 必须满足的条件。
 
-KDNA 是一个**协议**，不是内容库。主仓库（[KDNA](https://github.com/knowledge-dna/KDNA)）定义标准。领域仓库编码领域认知。注册表是二者之间的桥梁——它是精选索引，不是自动列表。
+KDNA 是一个**协议**，不是内容库。主仓库（[KDNA](https://github.com/knowledge-dna/KDNA)）定义标准。领域仓库编码领域判断。注册表是二者之间的桥梁——它是精选索引，不是自动列表。
 
 `KDNA/examples/` 和 `KDNA/registry/` 目录只是协议夹具，不是官方领域目录。
 
@@ -34,7 +34,7 @@ KDNA 是一个**协议**，不是内容库。主仓库（[KDNA](https://github.c
 
 | 状态 | 含义 |
 |---|---|
-| `draft` | 草稿，仅表示初步认知结构，不建议使用 |
+| `draft` | 草稿，仅表示初步判断结构，不建议使用 |
 | `experimental` | 可用，但结构可能大幅变化。使用时应有此意识 |
 | `stable` | 字段和核心判断稳定。可用于生产环境 Agent |
 | `deprecated` | 不再推荐使用。保留在索引中仅供参考 |

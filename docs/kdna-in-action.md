@@ -139,7 +139,7 @@ This tells the agent **how to think** about the problem before saying anything.
 |----------|--------|------|
 | **Verifiable** | No — is the prompt "correct"? Unanswerable. | Yes — each axiom, misunderstanding, and self-check can be tested. |
 | **Evolvable** | Edit-and-hope. Changing one section may break context. | Add/modify a specific axiom or misunderstanding. Structure is preserved. |
-| **Composable** | Prompts interfere with each other when combined. | Multiple KDNA domains can be loaded together. Each contributes a cognition layer. |
+| **Composable** | Prompts interfere with each other when combined. | Multiple KDNA domains can be loaded together. Each contributes a judgment layer. |
 | **Versionable** | Diff of a prompt is a semantic mess. | Diff of a KDNA file shows exactly what changed (e.g., "removed outdated misunderstanding about X"). |
 | **Auditable** | You cannot trace why the agent said something. | You can trace: which axiom was triggered → which misunderstanding was avoided → which self-check was applied. |
 | **Migratable** | Prompts are agent-specific (`You are a...`). | KDNA is agent-agnostic. The same domain works with any LLM, any agent framework. |
@@ -201,7 +201,7 @@ This is not a prompt. This is a **reasoning chain** that the agent runs before g
 
 3. **KDNA is structured, auditable, and evolvable.** You can version it, test it, combine it, and trace why an agent made a particular judgment.
 
-4. **KDNA is domain cognition, not domain knowledge.** It does not tell the agent facts about sales or management. It tells the agent how experts in those domains *think* about situations.
+4. **KDNA is domain judgment, not domain knowledge.** It does not tell the agent facts about sales or management. It tells the agent how experts in those domains *think* about situations.
 
 ---
 

@@ -4,7 +4,7 @@
 
 This document defines the criteria a domain KDNA repository must meet to be listed in the canonical [kdna-registry](https://github.com/knowledge-dna/kdna-registry).
 
-KDNA is a **protocol**, not a content library. The main repository ([KDNA](https://github.com/knowledge-dna/KDNA)) defines the standard. Domain repositories encode domain cognition. The registry is the link between them — it is a curated index, not an automatic listing.
+KDNA is a **protocol**, not a content library. The main repository ([KDNA](https://github.com/knowledge-dna/KDNA)) defines the standard. Domain repositories encode domain judgment. The registry is the link between them — it is a curated index, not an automatic listing.
 
 The `KDNA/examples/` and `KDNA/registry/` directories are protocol fixtures. They are not the official domain catalog.
 

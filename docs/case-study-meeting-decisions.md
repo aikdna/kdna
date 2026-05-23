@@ -178,7 +178,7 @@ KDNA does the opposite. It adds a **judgment gate** between discussion and execu
 
 1. **False actionization is a real, measurable business risk.** It is not a theoretical concern.
 2. **Summarization is not judgment.** An AI that summarizes well can still mislead dangerously.
-3. **KDNA changes the trajectory.** The same input produces fundamentally different output — not because the model is bigger, but because it has structured domain cognition.
+3. **KDNA changes the trajectory.** The same input produces fundamentally different output — not because the model is bigger, but because it has structured domain judgment.
 4. **Judgment traces enable accountability.** When the AI flags something as UNRESOLVED, you can inspect exactly why. When it misses something, you can trace the failure.
 5. **The cost of prevention is zero. The cost of failure is real.**
 

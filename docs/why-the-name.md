@@ -45,7 +45,7 @@ KDNA describes standards, boundaries, tradeoffs, risks, signals, priorities, and
 
 This is why KDNA is not KBase, Prompt Pack, or Agent Rules. Those names sound like "materials" or "instructions." KDNA expresses something deeper:
 
-> A domain cognition structure that AI agents can inherit and express.
+> A domain judgment structure that AI agents can inherit and express.
 
 ## What AI Agents Actually Lack
 

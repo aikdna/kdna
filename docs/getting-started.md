@@ -50,7 +50,7 @@ Create or edit `~/.agents/Kdna/registry.json`:
 
 ```json
 {
-  "version": "0.4",
+  "version": "1.0-rc",
   "root": "~/.agents/Kdna",
   "domains": [
     {
@@ -93,7 +93,7 @@ Start with Core + Patterns. Use the domain for a while. Then add files when:
 
 ## What KDNA Does Not Do
 
-KDNA is a cognition layer, not:
+KDNA is a judgment layer, not:
 - A prompt library (it doesn't store wording templates)
 - A knowledge base (it doesn't store facts or documents)
 - A tool API (it doesn't execute actions)

@@ -62,7 +62,7 @@ node validators/kdna-lint.js ~/.agents/Kdna/my_domain
 
 ```json
 {
-  "version": "0.4",
+  "version": "1.0-rc",
   "root": "~/.agents/Kdna",
   "domains": [
     {
@@ -88,7 +88,7 @@ node validators/kdna-lint.js ~/.agents/Kdna/my_domain
 3. 根据用户任务按需加载可选文件
 4. 在回答前应用领域公理、术语和自查清单
 
-用户看到的是一个被领域认知塑造过的回答——而不是 KDNA 的摘要。
+用户看到的是一个被领域判断塑造过的回答——而不是 KDNA 的摘要。
 
 ## 7. 何时扩展
 
@@ -105,7 +105,7 @@ node validators/kdna-lint.js ~/.agents/Kdna/my_domain
 
 ## KDNA 不是什么
 
-KDNA 是认知层，不是：
+KDNA 是判断层，不是：
 - 提示词库（不存话术模板）
 - 知识库（不存事实或文档）
 - 工具 API（不执行操作）

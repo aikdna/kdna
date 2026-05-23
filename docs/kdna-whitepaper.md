@@ -1,22 +1,58 @@
-# KDNA: An Open Format for Domain Cognition in AI Agents
+# KDNA: An Open Protocol for Domain Judgment in AI Agents
 
-*Making Domain Judgment Explicit, Portable, Verifiable, and Reusable*
+*Making Expert Judgment Explicit, Portable, Verifiable, Composable, and Reusable*
 
-**White Paper v1.0 — May 2026**
+**White Paper v1.2 — May 2026**  
+**Website:** https://aikdna.com  
+**GitHub:** https://github.com/knowledge-dna/KDNA
 
 ---
 
 ## Abstract
 
-AI agents are becoming capable enough to search, reason, generate, call tools, and execute multi-step work. As this capability grows, a deeper question emerges: not only what an agent can do, but how it should judge what is worth doing, what should be rejected, and what counts as done right within a specific domain.
+AI agents are becoming capable enough to understand language, generate outputs, call tools, retrieve knowledge, operate software, and execute multi-step work. As this capability grows, a deeper question becomes more important: not only what an agent can do, but how it should judge what is worth doing, what should be rejected, which risks matter, and what counts as done right within a specific domain.
 
 Today, domain judgment already exists. It appears in expert habits, team conventions, prompts, style guides, rubrics, checklists, retrieved documents, workflow rules, tests, fine-tuned behavior, and tool-specific policies. These mechanisms can and should continue to be used.
 
-But domain judgment is usually fragmented across them: partly written in prompts, partly hidden in documents, partly embedded in tools, partly internalized by models, and partly retained only in the minds of experienced practitioners. When an agent fails, it is difficult to inspect which judgment rule was missing, outdated, or ignored.
+But domain judgment is usually fragmented across them: partly written in prompts, partly hidden in documents, partly embedded in workflows, partly internalized by models, and partly retained only in the minds of experienced practitioners. When an agent fails, it is difficult to inspect which judgment rule was missing, outdated, contradicted, or ignored.
 
-KDNA is an open format for representing domain judgment. It encodes the principles, conceptual boundaries, misunderstanding patterns, scenario signals, reasoning chains, and self-checks that shape expert judgment — in a form that AI agents can load, humans can inspect, and tools can validate. Its contribution is not the claim that judgment has never existed in AI systems, but that judgment now deserves its own portable, verifiable representation.
+KDNA is an open protocol for representing domain judgment. It encodes the principles, conceptual boundaries, misunderstanding patterns, scenario signals, reasoning chains, risk boundaries, and self-checks that shape expert judgment — in a form that AI agents can load, humans can inspect, and tools can validate.
 
-The specification is open, the reference toolchain is published under Apache 2.0, and an early public registry of open-access domains is available. KDNA does not replace prompts, knowledge bases, skills, MCP, tools, retrieval, evaluation, or fine-tuning. It gives them a clearer judgment reference.
+KDNA does not claim that judgment has never existed in AI systems. Its contribution is that judgment now deserves its own portable, verifiable representation: a domain package that can be authored, reviewed, validated, versioned, composed, distributed, and improved over time.
+
+KDNA stands for **Knowledge DNA**. The name does not treat knowledge as a static collection of content, but as a structure that can be expressed, inherited, and evolved. In biological systems, DNA is not the organism itself, nor any single behavior; it is an underlying code that allows stable traits to be preserved, expressed, copied, and changed over time. KDNA uses this metaphor for domain judgment: the most valuable part of expertise is often not isolated knowledge, but the recurring judgment structure behind it — how experts draw distinctions, recognize situations, weigh risks, preserve boundaries, form taste, avoid misunderstandings, and decide what counts as done well. KDNA gives this implicit structure a readable, verifiable, composable, and transmissible form.
+
+The specification is open, the reference toolchain is published under Apache 2.0, and an early public registry of open-access domains is available. KDNA does not replace prompts, knowledge bases, skills, MCP, tools, retrieval, evaluation, workflows, or fine-tuning. It gives them a clearer judgment reference.
+
+---
+
+## 0. The Missing Layer in the AI Agent Stack
+
+AI agents already have several major capability layers:
+
+| Layer | What it gives the agent | Examples |
+|---|---|---|
+| **Model Layer** | General language, reasoning, and generation capability | LLMs, multimodal models |
+| **Knowledge Layer** | Access to external facts, context, documents, and memory | RAG, vector databases, search, memory |
+| **Tool Layer** | Ability to act on external systems | APIs, MCP, function calling, computer use |
+| **Workflow Layer** | Procedures for organizing tasks and execution order | agent frameworks, skills, workflows, automations |
+| **Judgment Layer** | Domain-specific standards for classification, trade-offs, risks, boundaries, and output quality | KDNA domains and clusters |
+
+The first four layers allow agents to answer questions, retrieve information, call systems, and execute tasks. But after an agent answers or acts, a different question remains:
+
+- Was this answer good?
+- Was this decision sound?
+- Was the right standard applied?
+- Was the task correctly classified?
+- Were the relevant risks considered?
+- Did the output cross a boundary that should have blocked it?
+- Did it satisfy the domain’s own criteria for being done right?
+
+These questions can be partially answered by a model. Strong LLMs do have judgment. KDNA does not deny that. The question is not whether LLMs can judge. The question is whose judgment they are using, whether that judgment is visible, and whether it can be tested, versioned, composed, and reused.
+
+A model contains implicit judgment. A workflow may contain embedded judgment. A skill may include procedural judgment. A prompt may include task-specific judgment. But when judgment is hidden inside weights, scattered across prompts, or buried in execution procedures, it cannot be governed as an independent asset.
+
+KDNA gives this missing layer a name and a structure: the judgment layer.
 
 ---
 
@@ -28,290 +64,716 @@ AI agents are moving from passive response generation toward active work. They c
 
 In earlier AI usage, the main concern was: *Can the model produce a useful answer?* In agentic AI, the question becomes: *How does the agent decide what is worth doing, what should be avoided, and what counts as done right?*
 
-A coding agent may be able to modify files and run tests. A writing agent may be able to produce fluent prose. But in each case, the harder question is domain-specific: what makes a fix sound rather than superficial? What makes an argument substantive rather than decorative? What makes a product decision strategically coherent rather than merely plausible?
+A coding agent may be able to modify files, inspect diffs, run tests, and call linters. But the harder question is domain-specific: is the change safe to merge? Does it address the root cause, or merely suppress a symptom? Is the comment a meaningful blocker, or just review noise?
+
+A meeting assistant may be able to transcribe, summarize, and extract action items. But the harder question is judgmental: did this conversation actually produce a decision, or did it remain a discussion? Was responsibility assigned, or only implied?
+
+A writing assistant may be able to produce fluent prose, correct grammar, and suggest stronger wording. But the harder question is editorial: is the problem in the language, the structure, the argument, the evidence, the audience frame, or the underlying point?
 
 As agent capability grows, judgment becomes more important, not less.
 
 ### 1.2 Judgment Already Exists, But It Is Fragmented
 
-Domain judgment is not absent. Experts already use it. Teams already rely on it. AI systems already approximate parts of it through many existing mechanisms: system prompts, style guides, code review standards, compliance policies, internal playbooks, checklists, evaluation suites, fine-tuned behavior, and tool-specific validators.
+Domain judgment is not absent. Experts already use it. Teams already rely on it. AI systems already approximate parts of it through many existing mechanisms: system prompts, style guides, code review standards, compliance policies, internal playbooks, checklists, evaluation suites, fine-tuned behavior, tool-specific validators, and human review.
 
 These mechanisms are useful. KDNA does not argue against them.
 
-The problem is that judgment is scattered across them. A principle may live in a prompt. A concept boundary may be described in a style guide. A failure mode may be known only by a senior reviewer. A check may be implemented in a tool. A preferred reasoning pattern may never have been written down at all. When an agent fails, it is hard to inspect which rule was missing, outdated, or contradicted.
+The problem is that judgment is scattered across them. A principle may live in a prompt. A concept boundary may be described in a style guide. A failure mode may be known only by a senior reviewer. A check may be implemented in a tool. A preferred reasoning pattern may never have been written down at all. When an agent fails, it is hard to inspect which rule was missing, outdated, contradicted, or ignored.
 
-This is not a prompting problem. It is a representation problem.
+This is not merely a prompting problem. It is a representation problem.
 
 ### 1.3 The Representation Problem
 
 If domain judgment remains only in prompts, it is often fragile and task-specific. A good prompt may work in one session but is difficult to validate, version, reuse, and compose across systems.
 
-If it remains only in documents, the agent may retrieve it but not consistently apply it. A document can contain principles, but it does not by itself distinguish axioms from examples or required self-checks from background explanation.
+If judgment remains only in documents, the agent may retrieve the document but not consistently apply the relevant distinctions. A document can contain principles, but it does not by itself distinguish axioms from examples, risk boundaries from background explanation, or required self-checks from optional guidance.
 
-If it remains only in model weights, it may be powerful but opaque. The behavior can be difficult to inspect, update precisely, or attribute to a specific principle.
+If judgment remains only in model weights, it may be powerful but opaque. The behavior can be difficult to inspect, update precisely, attribute to a specific principle, or transfer across models.
 
-If it remains only in people's heads, it becomes vulnerable to loss. When experts leave, their judgment leaves with them. When teams scale, judgment becomes inconsistent.
+If judgment remains only inside workflows and skills, it becomes coupled to a specific execution path. It may guide one procedure well, but it is hard to test, compose, license, or reuse independently.
 
-KDNA addresses this by treating domain judgment as a first-class artifact: something that can be written, reviewed, validated, versioned, distributed, loaded, and improved.
+If judgment remains only in people's heads, it becomes vulnerable to loss. When experts leave, their judgment leaves with them. When teams scale, judgment becomes inconsistent.
+
+KDNA addresses this by treating domain judgment as a first-class artifact: something that can be written, reviewed, validated, versioned, distributed, loaded, composed, and improved.
 
 ### 1.4 What KDNA Adds
 
-KDNA does not claim that existing approaches are wrong. It claims that as agents become more active, these approaches benefit from a portable judgment representation: one that can be inspected, validated, reused, and composed across systems. Prompts define the current task. Knowledge bases provide information. Skills package procedures. Fine-tuning shapes model behavior. Evaluations measure performance. KDNA represents the domain judgment that should guide how an agent uses these capabilities.
+KDNA does not claim that existing approaches are wrong. It claims that as agents become more active, these approaches benefit from a portable judgment representation.
 
-KDNA is close in spirit to rules files, rubrics, style guides, and structured prompts. Its contribution is not that principles have never been written down before. It is that KDNA defines a common open package format, validation rules, loading semantics, and composition model for domain judgment.
+Prompts define the current task. Knowledge bases provide information. Skills package procedures. Workflows organize steps. MCP connects tools and context. Fine-tuning shapes model behavior. Evaluations measure performance. KDNA represents the domain judgment that should guide how an agent uses these capabilities.
+
+KDNA is close in spirit to rules files, rubrics, style guides, and structured prompts. Its contribution is not that principles have never been written down before. It is that KDNA defines a common open package format, validation rules, loading semantics, composition model, and quality governance path for domain judgment.
 
 ---
 
-## 2. What KDNA Is
+## 2. Origin: From a Book to a Judgment Protocol
 
-### 2.1 Definition
+KDNA began with a concrete authoring problem. Zhang Ling, the author of *Minimal Communication*, initially was not trying to design a protocol. He was trying to structure the underlying judgment behind his own book: which principles were non-negotiable, which conceptual distinctions had to be preserved, which expressions appeared reasonable but led communication into misunderstanding, and which questions had to be checked before finalizing an answer.
 
-KDNA is an open, file-based format for encoding domain judgment as structured, verifiable packages. A KDNA domain is a directory containing a small set of standard JSON files. Together, they describe the principles, concepts, boundaries, misunderstandings, scenarios, reasoning patterns, and self-checks that guide judgment in a specific domain.
+That process exposed a broader problem. A book can record knowledge. A course can teach methods. A prompt can describe a task. But the judgment accumulated by an expert over years — how they classify situations, detect misunderstandings, preserve boundaries, weigh risks, and decide what counts as done right — rarely has a stable representation.
 
-A domain does not try to store all information. It does not try to replace an expert. It captures the judgment structures that experts repeatedly use when deciding: what matters, what should be rejected, what distinctions must be preserved, what mistakes commonly occur, what signals should change strategy, what reasoning path to follow, what must be checked before finalizing output.
+The early goal was not merely to make an AI system know what *Minimal Communication* said. It was to make the judgment structure behind the work loadable, inspectable, and usable when an agent faced concrete communication, writing, or content problems.
 
-KDNA is compact by design. A useful domain may contain only two files. Richer domains contain up to six. The goal is not volume — it is clarity, specificity, and reusability.
+KDNA emerged from that process. What began as an attempt to structure one author’s domain judgment became a more general question: how can the implicit judgment of experts, teams, and organizations be encoded as an open format that AI agents can load, humans can inspect, tools can validate, and multiple systems can compose?
 
-### 2.2 What KDNA Encodes
+KDNA therefore did not begin as an abstract protocol idea. It began as a real attempt to extract and preserve domain judgment, and evolved into an open judgment protocol.
 
-**Axioms** — Inviolable principles. Not inspirational statements. These are judgment anchors that define what must remain true when the agent reasons. Example: *A bug fix should address the root cause, not merely suppress the visible symptom.*
+---
 
-**Ontology** — Core concepts and their boundaries. What a concept is, what it is not, and which distinctions must not be blurred. Example: *Emotional resonance helps the reader recognize a real experience. Anxiety-selling pressures the reader by making them feel inadequate.*
+## 3. What Judgment Is Made Of
+
+### 2.1 Definition of Judgment
+
+Judgment is a domain-specific process of classifying a situation, applying values and boundaries, weighing risks, choosing a response frame, and verifying whether the output satisfies domain standards.
+
+More simply:
+
+> Judgment is knowing what kind of situation this is, what matters most, what must not be done, and what counts as a good response.
+
+Judgment is not a single rule. It is a structured interaction among principles, distinctions, values, risks, cases, signals, and self-checks.
+
+### 2.2 The 13 Elements of Domain Judgment
+
+A KDNA domain is designed to encode recurring judgment patterns. The following elements describe what domain judgment usually consists of and where KDNA carries each element.
+
+| Judgment element | What it answers | KDNA carrier |
+|---|---|---|
+| **Worldview** | How this domain assumes the world works | `KDNA_Core.json` |
+| **Values** | What matters more than what | `KDNA_Core.json`, `KDNA_Patterns.json` |
+| **Purpose** | What this judgment serves | `meta`, `KDNA_Core.json` |
+| **Role** | Who is judging and with what responsibility | `KDNA_Core.json` |
+| **Knowledge assumptions** | What background knowledge affects judgment | `KDNA_Core.json`, `KDNA_Cases.json` |
+| **Ontology** | What distinctions must not be blurred | `KDNA_Core.json` |
+| **Classification** | What kind of situation this is | `KDNA_Scenarios.json` |
+| **Taste / aesthetics** | What counts as good, poor, elegant, crude, trustworthy, or noisy | `KDNA_Patterns.json`, `KDNA_Cases.json` |
+| **Boundaries** | What must not be done, even if it might appear effective | `KDNA_Patterns.json`, `KDNA_Core.json` |
+| **Risk model** | Which errors are most costly | `KDNA_Patterns.json`, `KDNA_Scenarios.json` |
+| **Context signals** | When this judgment should be activated | `KDNA_Scenarios.json` |
+| **Experience** | Past cases, failure patterns, and counterexamples | `KDNA_Cases.json`, `KDNA_Patterns.json` |
+| **Evaluation** | How judgment quality is tested | `evals/`, `KDNA_Evolution.json` |
+
+This is why KDNA is not merely a prompt template. A prompt usually gives a task instruction. A KDNA domain models the recurring judgment structure behind a class of tasks.
+
+### 2.3 What KDNA Can and Cannot Formalize
+
+KDNA does not claim to exhaust human judgment. It provides a structure for approximating recurring judgment patterns: principles, distinctions, signals, boundaries, risks, cases, and evaluations.
+
+Some judgment remains tacit, contextual, perceptual, and human-accountable. KDNA is most useful when a domain has recurring standards, stable distinctions, known failure modes, explicit risk boundaries, and reviewable outputs.
+
+KDNA should not be used to pretend that all judgment can be reduced to rules. It should be used to make the parts of judgment that are recurring, teachable, reviewable, and testable easier to preserve and apply.
+
+---
+
+## 4. What KDNA Is
+
+### 3.1 Definition
+
+KDNA is an open, file-based protocol for encoding domain judgment as structured, verifiable packages. A KDNA domain is a directory containing a small set of standard JSON files. Together, they describe the principles, concepts, boundaries, misunderstandings, scenarios, reasoning patterns, risk models, examples, and self-checks that guide judgment in a specific domain.
+
+A domain does not try to store all information. It does not try to replace an expert. It captures the judgment structures that experts repeatedly use when deciding:
+
+- what kind of situation this is;
+- what matters most;
+- what should be rejected;
+- what distinctions must be preserved;
+- what mistakes commonly occur;
+- what signals should change strategy;
+- what reasoning path should be followed;
+- what risks should block or warn;
+- what must be checked before finalizing output.
+
+KDNA is compact by design. A useful domain may contain only two files. Richer domains contain up to six. The goal is not volume. The goal is clarity, specificity, verifiability, and reusability.
+
+### 3.2 What KDNA Encodes
+
+**Axioms** — Inviolable judgment anchors. Not inspirational statements. These are principles that define what must remain true when the agent reasons. Example: *A bug fix should address the root cause, not merely suppress the visible symptom.*
+
+**Ontology** — Core concepts and their boundaries. What a concept is, what it is not, and which distinctions must not be blurred. Example: *A discussion is not a decision unless ownership, commitment, and next action are sufficiently specified.*
 
 **Frameworks** — Decision procedures with trigger conditions, steps, and expected outputs.
 
 **Stances** — Default positions. What the domain tends to prefer or reject before a specific task begins. Example: *Prefer concrete tension over decorative adjectives.*
 
-**Terminology** — Standard terms with operational definitions, and banned terms with concrete replacements. Words often carry hidden assumptions. A domain can reject certain terms not for style reasons, but because they encode the wrong mental model.
+**Judgment role** — The role the agent should assume when applying the domain. Example: *Act as a structural writing diagnostician, not a language polisher.*
 
-**Misunderstandings** — Common wrong interpretations, paired with correct interpretations and the key distinction to preserve. Helps the agent detect when output is drifting into a known error pattern.
+**Terminology** — Standard terms with operational definitions, and banned terms with concrete replacements. Banned terms are not taboos. They are signals that a term may push the agent toward the wrong classification or mental model.
+
+**Misunderstandings** — Common wrong interpretations, paired with correct interpretations and the key distinction to preserve. These help the agent detect when output is drifting into a known error pattern.
+
+**Aesthetic preferences** — What this domain considers good, poor, elegant, noisy, manipulative, trustworthy, generic, or precise. Taste is not treated as mysticism; it is encoded through preferences, examples, counterexamples, and self-checks.
+
+**Boundaries** — What must not be done, even if it might appear effective.
+
+**Risk model** — Which errors carry the highest cost, when to warn, and when to block.
 
 **Self-checks** — Yes/no questions the agent must answer before finalizing output. Verifiable, not vague. Example: *Does the recommendation identify the trade-off, rather than presenting only the benefit?*
 
 **Scenario signals** — Observable input patterns that should change how the agent responds.
 
-**Reasoning chains** — Structured paths from premise to conclusion to practical consequence.
+**Reasoning chains** — Structured paths from premise to conclusion to practical consequence, including trade-offs, evidence requirements, and uncertainty handling.
 
-**Capability stages** — Definitions of what improvement looks like, enabling evaluation over time.
+**Capability stages and evolution** — Definitions of how the domain improves over time, including changed judgments, deprecated assumptions, new failure modes, and evaluation results.
 
-### 2.3 Domain Structure
+### 3.3 The Six Standard Files
 
-A KDNA domain is a directory named in lowercase snake_case. A complete domain may contain up to six standard files:
+A KDNA domain is a directory named in lowercase snake_case or an equivalent scoped package name. A complete domain may contain up to six standard files:
 
 | File | Encodes | Required |
-|------|---------|:--------:|
-| `KDNA_Core.json` | Axioms, ontology, frameworks, core structure, stances | Yes |
-| `KDNA_Patterns.json` | Terminology, misunderstandings, self-checks | Yes |
-| `KDNA_Scenarios.json` | Scenario signals that trigger strategy shifts | No |
-| `KDNA_Cases.json` | Concrete cases demonstrating judgment in action | No |
-| `KDNA_Reasoning.json` | Reasoning chains from premise to consequence | No |
-| `KDNA_Evolution.json` | Capability stages and measurement | No |
+|---|---|:---:|
+| `KDNA_Core.json` | Axioms, ontology, frameworks, core structure, stances, worldview, judgment role, value order | Yes |
+| `KDNA_Patterns.json` | Terminology, misunderstandings, self-checks, boundaries, risk model, aesthetic preferences, counterexamples | Yes |
+| `KDNA_Scenarios.json` | Scenario signals, classification rules, risk levels, expected judgment shifts | No |
+| `KDNA_Cases.json` | Concrete cases demonstrating judgment in action, good/bad responses, judgment paths | No |
+| `KDNA_Reasoning.json` | Reasoning chains, trade-offs, conflict resolution, evidence requirements, uncertainty handling | No |
+| `KDNA_Evolution.json` | Capability stages, measurement, changed judgments, known limitations, evaluation history | No |
 
-The minimum valid domain contains `KDNA_Core.json` and `KDNA_Patterns.json`. Each file contains a required `meta` object with `version`, `domain`, `created`, `purpose`, and `load_condition`. All files are validated against published JSON Schemas.
+The minimum valid domain contains `KDNA_Core.json` and `KDNA_Patterns.json`. Each file contains a required `meta` object with `version`, `domain`, `created`, `purpose`, and `load_condition`. Standard files are validated against published JSON Schemas.
 
-The canonical form is a directory of JSON files — source-first, transparent, version-controllable. For distribution, the toolchain can package a domain into a `.kdna` container (ZIP-based single file with packaging metadata).
+The canonical form is a directory of JSON files — source-first, transparent, version-controllable. For distribution, the toolchain can package a domain into a `.kdna` container.
 
-### 2.4 Why a File Format Matters
+### 3.4 Why a File Format Matters
 
-A file format may seem modest compared with a model, agent framework, or platform. But formats matter because they make things portable. Documents became portable because they had document formats. Packages became reusable because ecosystems had package formats. APIs became interoperable because they had interface descriptions. Configuration became manageable because behavior could be separated from code.
+A file format may seem modest compared with a model, agent framework, or platform. But formats matter because they make things portable.
 
-KDNA applies this logic to domain judgment. Just as configuration files separate environment-specific behavior from application code, KDNA separates domain judgment from temporary prompts and agent implementations. It gives judgment a place to live.
+Documents became portable because they had document formats. Packages became reusable because ecosystems had package formats. APIs became interoperable because they had interface descriptions. Configuration became manageable because behavior could be separated from code.
 
-### 2.5 What KDNA Is Not
+KDNA applies this logic to domain judgment. Just as configuration files separate environment-specific behavior from application code, KDNA separates domain judgment from temporary prompts, agent implementations, and platform-specific workflows. It gives judgment a place to live.
+
+### 3.5 What KDNA Is Not
 
 | KDNA is not | Why |
-|-------------|-----|
-| **Not a prompt library** | Prompts are task-scoped. KDNA is domain-scoped and versioned. |
-| **Not a knowledge base** | Knowledge bases store information. KDNA encodes judgment constraints. |
+|---|---|
+| **Not a prompt library** | Prompts are task-scoped. KDNA is domain-scoped, versioned, and structured for validation and composition. |
+| **Not a knowledge base** | Knowledge bases store information. KDNA encodes judgment constraints, distinctions, risk boundaries, and self-checks. |
 | **Not a workflow engine** | Workflows define steps. KDNA defines judgment across steps. |
+| **Not a skill package** | Skills encode repeatable procedures. KDNA encodes repeatable judgment standards. Skills execute. KDNA judges. |
 | **Not a fine-tuned model** | Fine-tuning internalizes behavior in model weights. KDNA keeps selected judgment principles explicit and auditable. |
-| **Not an agent framework** | KDNA is a format — not an agent. Any framework can implement loading. |
-| **Not a guarantee of correctness** | KDNA provides an explicit reference. Quality depends on the judgment encoded. |
+| **Not an agent framework** | KDNA is a protocol and package format, not an agent. Any framework can implement loading. |
+| **Not a guarantee of correctness** | KDNA provides an explicit reference. Quality depends on the judgment encoded, the evaluation evidence, and responsible use. |
 
 ---
 
-## 3. How KDNA Works
+## 5. How KDNA Works
 
-### 3.1 Validation
+### 4.1 Validation
 
 KDNA domains can be verified at multiple levels:
 
-- **Structural linting** — Required files present, fields populated, IDs unique, self-checks answerable with yes/no, cross-file references valid, and flags for potentially vague axioms or non-actionable checks.
-- **Schema validation** — Fields match JSON Schema types, arrays have required items, cross-file references are consistent.
-- **Quality evaluation** — Benchmark-based scoring against human-annotated test cases, measuring whether agent output follows domain principles.
+- **Structural linting** — Required files present, fields populated, IDs unique, self-checks answerable with yes/no, cross-file references valid, and flags for vague axioms or non-actionable checks.
+- **Schema validation** — Fields match JSON Schema types, arrays have required items, and cross-file references are consistent.
+- **Judgment validation** — Governance fields exist, boundaries are declared, risk models are present, and self-checks are concrete.
+- **Quality evaluation** — Benchmark-based scoring against annotated test cases, measuring whether agent output follows domain principles and avoids known failure patterns.
 
-The first two levels are fully automated. The third is emerging. Schema compliance does not guarantee quality. A domain can be structurally valid but weak in judgment. KDNA separates structural validity from judgment quality.
+The first two levels are highly automatable. The third is partially automatable. The fourth depends on evaluation design, benchmark quality, and human review.
 
-### 3.2 Loading
+Schema compliance does not guarantee quality. A domain can be structurally valid but weak in judgment. KDNA separates structural validity from judgment quality.
 
-When an agent loads a KDNA domain, the loader reads and validates the domain files, renders them into a structured context block using a standard template, and makes that context available to the agent at runtime. The rendered context preserves the domain's structure as distinct, named sections. Multiple domains can be loaded simultaneously — each contributes an independent judgment reference.
+### 4.2 Loading
 
-### 3.3 Composition and Clusters
+When an agent loads a KDNA domain, the loader reads and validates the domain files, renders them into a structured context block using a standard template, and makes that context available to the agent at runtime.
 
-Rich judgment often comes from composing several smaller domains. A coding agent may need bug diagnosis judgment, test-driven development judgment, security review judgment, and technical writing judgment. Each should remain separate.
+The rendered context preserves the domain's structure as distinct, named sections:
 
-A **cluster** groups multiple domains and declares how they should be composed:
+- domain purpose;
+- judgment role;
+- axioms;
+- ontology;
+- frameworks;
+- terminology;
+- misunderstandings;
+- risk boundaries;
+- self-checks;
+- relevant scenario signals.
 
-- **Primary domains** are always loaded.
-- **Secondary domains** are loaded only when scenario signals match the task.
-- **Boundary preservation** — each domain's axioms, terminology, and self-checks remain distinct. When domains conflict, the agent reports the conflict rather than silently merging incompatible principles.
+Multiple domains can be loaded simultaneously. Each contributes an independent judgment reference.
 
-### 3.4 Examples
+### 4.3 Verification and Evals
 
-**Writing.** An AI agent asked to write a product announcement may produce fluent copy. But without explicit judgment criteria, it may use anxiety-selling language, decorate text with impressive-sounding phrases that do not change understanding, or fail to create a real decision question for the reader. A writing KDNA domain can encode these distinctions: axioms about structural argument, banned patterns such as abstract praise without concrete meaning or transformation claims without a specified before-and-after change, and self-checks like "Can the core tension be stated in one concrete sentence?" The agent works against a declared editorial judgment structure.
+A domain should not be trusted merely because it is valid JSON. KDNA encourages domains to include evaluation cases that test whether the expected judgment actually appears in agent behavior.
 
-**Code Review.** An AI agent reviewing a pull request may have access, tests, linters, and a long prompt. But it may approve a fix that removes a symptom while preserving the underlying cause — because no judgment rule explicitly required root cause analysis. A code review domain can encode axioms such as "A fix that removes a symptom while preserving the failure condition is not complete," misunderstandings like "Confusing tests passed with risk removed," and self-checks like "Has the change introduced a new hidden dependency?"
+A standard evaluation case may include:
+
+```json
+{
+  "id": "eval-001",
+  "domain": "@aikdna/writing",
+  "input": "Help me improve this post.",
+  "expected_classification": "structural_writing_diagnosis",
+  "expected_axioms": ["writing_ax_structural_problem"],
+  "expected_misunderstandings_avoided": ["more_detail_equals_more_evidence"],
+  "expected_banned_terms_avoided": ["polish the language"],
+  "output_rubric": "The output should diagnose the structural writing problem before suggesting language changes.",
+  "pass": true,
+  "evidence": "The agent explicitly classified the issue as structural and avoided direct language polishing."
+}
+```
+
+Evaluation results can feed quality badges, registry metadata, benchmark reports, and compare-mode evidence.
+
+### 4.4 Judgment Trace and Judgment Delta
+
+KDNA should make judgment inspectable, not merely influence output invisibly.
+
+A **Judgment Trace** records what happened during a KDNA-guided response:
+
+- which domains were loaded;
+- which scenario signals were detected;
+- which axioms were triggered;
+- which misunderstandings were avoided;
+- which banned terms or risky patterns were detected;
+- which self-checks passed or failed;
+- which conflicts appeared between domains;
+- which composition policy resolved or surfaced the conflict.
+
+A **Judgment Delta** compares the reasoning path with and without KDNA:
+
+```text
+Same model. Same input.
+
+Without KDNA:
+  Treats the request as language polishing.
+
+With writing.kdna:
+  Classification: structural writing diagnosis
+  Triggered axiom: writing problems are often structural, not language-level
+  Avoided misunderstanding: more detail equals better evidence
+  Avoided term: polish the language
+  Self-checks: 5/5 passed
+```
+
+Judgment Delta is important because KDNA should be evaluated by observable judgment changes, not by claims.
 
 ---
 
-## 4. Where KDNA Fits
+## 6. Composition, Clusters, and Judgment Systems
+
+### 5.1 Why Composition Matters
+
+Real judgment is often multi-domain. A single task may involve technical correctness, strategic judgment, audience understanding, legal caution, brand voice, safety boundaries, and product trade-offs.
+
+If these standards are merged into one giant prompt, the result becomes brittle. Sources blur. Conflicts disappear. Token budgets explode. The agent cannot explain which domain shaped which judgment.
+
+KDNA allows domains to remain separate while being loaded together. The goal is not to concatenate instructions. The goal is source-preserving composition of independent judgment references.
+
+### 5.2 Three Levels
+
+KDNA composition can be understood in three levels:
+
+| Level | Definition | Example |
+|---|---|---|
+| **Judgment Atom** | A single KDNA domain | `writing`, `code_review`, `decision_state` |
+| **Judgment Cluster** | A composed set of domains with a composition policy | `content_creation_cluster`, `product_launch_cluster` |
+| **Judgment System** | An organization-level judgment architecture with governance | an enterprise product, brand, compliance, and safety system |
+
+A cluster is not a folder of domains. It is a composition policy: what to load, when to load it, how to preserve source attribution, how to expose conflicts, and how to evaluate combined judgment.
+
+### 5.3 Composition Strategies
+
+KDNA clusters may support several composition strategies:
+
+- **Fixed** — Always load a defined set of domains.
+- **Signal-based** — Load domains based on trigger signals in the input.
+- **Staged** — Load different domains at different phases of a workflow.
+- **Overlay** — Use a primary domain plus governance domains that always constrain it.
+- **User-confirmed** — Recommend domains and let a human approve or adjust the stack.
+
+### 5.4 Cluster Types
+
+KDNA clusters may serve different purposes:
+
+- **Horizontal clusters** combine domains across a broad capability, such as content creation.
+- **Vertical clusters** support a business process, such as product launch judgment.
+- **Governance clusters** provide safety, compliance, legal, privacy, or brand boundaries across other domains.
+
+### 5.5 Conflict Surfacing
+
+Domain conflicts are not failures. They are part of real judgment.
+
+A brand domain may encourage emotional intensity while a compliance domain requires conservative wording. A growth domain may push toward urgency while a trust domain rejects false certainty. A code review domain may prefer strict blocking while a product velocity domain may tolerate controlled risk.
+
+KDNA's principle is:
+
+> When domains conflict, the runtime should surface the conflict, not silently resolve it, unless a composition policy explicitly defines priority.
+
+This is one of the differences between KDNA composition and large prompt concatenation.
+
+### 5.6 Source Attribution and Judgment Graphs
+
+When multiple domains are composed, KDNA should preserve source attribution. A rendered axiom, misunderstanding, banned term, or self-check should remain traceable to its domain of origin.
+
+At larger scale, domains form a judgment graph:
+
+- one domain may depend on another;
+- one domain may constrain another;
+- one domain may override another in high-risk contexts;
+- one domain may provide expression standards for another;
+- one domain may evaluate the output of another.
+
+This makes KDNA suitable not only for individual expert domains, but for organization-level judgment systems.
+
+### 5.7 Load Profiles and Token Budgets
+
+Loading too many domains can dilute judgment rather than improve it. KDNA clusters should support selective loading:
+
+| Load profile | What is loaded | Purpose |
+|---|---|---|
+| **Index** | Manifest and trigger signals | Domain selection |
+| **Compact** | Highest question, top axioms, risk model, self-checks | Lightweight guidance |
+| **Scenario** | Relevant scenarios and frameworks | Task-specific judgment |
+| **Full** | All six standard files | High-relevance or high-risk tasks |
+
+Better-selected KDNA is better than more KDNA.
+
+---
+
+## 7. Where KDNA Fits
 
 KDNA is easiest to understand alongside existing agent components:
 
-| Component | Primary Role | What It Usually Does Not Standardize |
-|-----------|-------------|-------------------------------------|
+| Component | Primary role | What it usually does not standardize |
+|---|---|---|
+| **LLMs** | General reasoning, language, generation | Inspectable, editable, domain-owned judgment standards |
 | **Prompts** | Define the current task or behavior | Reusable domain judgment as a versioned artifact |
-| **Knowledge Bases** | Provide information and references | Structured judgment constraints, self-checks, composition rules |
-| **Skills** | Package repeatable procedures | The domain principles for accepting or rejecting results |
+| **Knowledge bases / RAG** | Provide information and references | Structured judgment constraints, self-checks, and risk boundaries |
+| **Skills** | Package repeatable procedures | Independent domain principles for accepting or rejecting results |
+| **Workflows** | Organize execution order | Judgment that can be reused outside that workflow |
 | **MCP / APIs** | Connect agents to tools and data | Domain-specific evaluation principles |
 | **Fine-tuning** | Internalize behavior patterns | Inspectable and precisely editable judgment rules |
-| **Evaluation Suites** | Measure performance | The portable judgment package being measured |
+| **Evaluation suites** | Measure performance | The portable judgment package being measured |
 | **KDNA** | Represent domain judgment | It does not execute tasks or replace model capability |
 
-KDNA is not a competitor to these components. It is a complement. A prompt tells the agent what to do now. A skill tells it how to perform a procedure. MCP connects it to tools. A knowledge base provides reference material. Fine-tuning shapes behavior. Evaluations measure outcomes. KDNA gives the agent a structured domain judgment reference for deciding what matters, what to reject, and what counts as good within a specific field.
+KDNA is not a competitor to these components. It is a complement.
+
+A prompt tells the agent what to do now. A skill tells it how to perform a procedure. A workflow organizes steps. MCP connects it to tools. A knowledge base provides reference material. Fine-tuning shapes behavior. Evaluations measure outcomes. KDNA gives the agent a structured domain judgment reference for deciding what matters, what to reject, and what counts as good within a specific field.
+
+Workflows can contain judgment, but they cannot govern judgment independently. When judgment is embedded inside workflows, it cannot be easily tested, versioned, composed, licensed, or reused across agents. KDNA extracts recurring judgment into a separate asset layer.
 
 ---
 
-## 5. Why Explicit Domain Judgment Matters
+## 8. Why Explicit Domain Judgment Matters
 
-### 5.1 Inspectability
+### 7.1 Inspectability
 
-When judgment is hidden in prompts, model behavior, or undocumented expert habits, it is difficult to inspect. KDNA makes judgment readable. A human can open a domain and ask: Are these principles correct? Are the concept boundaries clear? Are the self-checks concrete? An agent's output may still need review, but the judgment reference guiding it is no longer invisible.
+When judgment is hidden in prompts, model behavior, workflows, or undocumented expert habits, it is difficult to inspect. KDNA makes judgment readable. A human can open a domain and ask: Are these principles correct? Are the concept boundaries clear? Are the self-checks concrete? Are the risk boundaries appropriate?
 
-### 5.2 Portability
+An agent's output may still need review, but the judgment reference guiding it is no longer invisible.
 
-A prompt may work in one tool but not another. A team convention may exist in one department but not another. A fine-tuned behavior may be bound to one model. KDNA makes domain judgment portable — stored in a repository, packaged as a `.kdna` container, installed through tooling, loaded by different agents, and versioned over time.
+### 7.2 Portability
 
-### 5.3 Verifiability
+A prompt may work in one tool but not another. A team convention may exist in one department but not another. A fine-tuned behavior may be bound to one model. KDNA makes domain judgment portable: stored in a repository, packaged as a domain, installed through tooling, loaded by different agents, and versioned over time.
 
-Unstructured judgment is difficult to check. KDNA introduces multiple levels of verification: schema validation, structural linting, cross-file consistency, self-check quality rules, benchmark-based evaluation, human review, and version history. This does not make judgment automatically correct. But it makes judgment reviewable. A domain can be compared, improved, and given quality badges based on evidence.
+### 7.3 Verifiability
 
-### 5.4 Composability
+Unstructured judgment is difficult to check. KDNA introduces multiple levels of verification: schema validation, structural linting, cross-file consistency, governance checks, self-check quality rules, benchmark-based evaluation, human review, and version history.
+
+This does not make judgment automatically correct. But it makes judgment reviewable. A domain can be compared, improved, and given quality badges based on evidence.
+
+### 7.4 Composability
 
 Real work is multi-domain. A single task may involve technical accuracy, strategic judgment, audience understanding, legal caution, and brand voice. If all are merged into one prompt, the result becomes brittle. KDNA allows domains to remain separate while being loaded together, each contributing an independent judgment reference.
 
-### 5.5 Inheritance
+### 7.5 Inheritance
 
-Organizations often underestimate where their expertise lives. It is in the repeated judgments of experienced people: what they notice first, what they reject immediately, what trade-offs they consider, what mistakes they have learned to avoid. When these people leave, much of this judgment leaves with them. KDNA does not fully preserve a person's expertise — no format can. But it can preserve recurring judgment principles, concept boundaries, failure patterns, and self-checks. That is enough to make expert judgment more teachable, reviewable, and available to AI agents.
+Organizations often underestimate where their expertise lives. It is in the repeated judgments of experienced people: what they notice first, what they reject immediately, what trade-offs they consider, what mistakes they have learned to avoid.
 
----
+When these people leave, much of this judgment leaves with them. KDNA does not fully preserve a person's expertise — no format can. But it can preserve recurring judgment principles, concept boundaries, failure patterns, and self-checks. That is enough to make expert judgment more teachable, reviewable, and available to AI agents.
 
-## 6. Public and Private Domains
+### 7.6 Governance
 
-KDNA supports both modes:
+As agents become more active, organizations will need to govern not only tools and data access, but also the standards used to classify situations, make trade-offs, block risky action, and evaluate outputs.
 
-**Public domains** are shared openly through a registry under explicit content licenses (such as CC-BY-4.0 or other open licenses). They serve as reference implementations, learning resources, community-maintained judgment packages, and examples of high-quality authoring.
-
-**Private domains** encode proprietary or organization-specific judgment: an internal design review standard, a company's brand voice judgment, a compliance interpretation framework, a senior architect's review principles. They can be stored in private repositories or internal registries.
-
-The format and tooling are identical for both. Only the distribution channel differs.
+KDNA provides a path for governing judgment as an explicit layer: authored, reviewed, versioned, evaluated, and audited.
 
 ---
 
-## 7. Limits and Risks
+## 9. Public, Private, and Enterprise Domains
 
-A serious format must define its limits.
+KDNA supports several modes of use.
 
-**Not all expertise can be fully formalized.** Some judgment is deeply tacit — depending on perception, context, timing, or years of practice. KDNA is most useful when a domain has recurring principles, stable concept boundaries, known failure modes, and reviewable output criteria.
+### 8.1 Open Reference Domains
 
-**Explicit judgment can become rigid.** A poorly written domain may over-constrain the agent, reject useful variation, or preserve outdated assumptions. Domains need versioning, review, feedback, and evolution.
+Open reference domains are shared publicly through a registry under explicit content licenses. They serve as reference implementations, learning resources, community-maintained judgment packages, and examples of high-quality authoring.
 
-**Schema validity is not quality.** A domain can pass validation and still be bad — vague principles, shallow distinctions, weak self-checks. Tooling checks structure. Quality requires expert review and real usage evaluation.
+### 8.2 Creator Domains
 
-**Context limits matter.** Loading too many domains can dilute judgment rather than improve it. Clusters must be selective. Better-selected KDNA is better than more KDNA.
+A respected editor could publish a writing judgment domain. A senior engineer could publish a code review domain. A product leader could publish a prioritization domain.
 
-**Domains can conflict.** A brand domain may encourage emotional intensity while a compliance domain requires conservative wording. KDNA should expose these conflicts, not hide them. Conflict reporting is part of responsible judgment composition.
+These would not be templates. They would be structured judgment packages carrying the creator's principles, distinctions, risk boundaries, and self-checks. As registries and evaluation systems mature, high-quality domains can accumulate reputation.
 
-**KDNA does not replace accountability.** Even with KDNA, humans remain accountable for high-stakes decisions. KDNA improves inspectability. It does not eliminate responsibility.
+### 8.3 Enterprise Private Domains
 
----
+Organizations hold cognitive assets they rarely recognize as assets:
 
-## 8. The Ecosystem
+- how senior engineers review architecture;
+- how compliance teams interpret risk;
+- how product teams prioritize trade-offs;
+- how brand teams decide what language preserves trust;
+- how support teams classify customer states;
+- how leadership teams distinguish discussion from decision.
 
-### 8.1 Open Format and Toolchain
+Private KDNA domains allow organizations to encode this expertise in a format that can be loaded by AI agents and reviewed by humans. This is not automation of expertise. It is preservation, distribution, and operationalization of expertise.
 
-KDNA is defined by an open protocol specification (SPEC v1.0-rc) and JSON Schemas covering all standard domain files. The reference implementation and toolchain are published under Apache 2.0. Any agent or framework that can read structured files and inject context can implement KDNA loading.
+### 8.4 Enterprise Judgment Systems
 
-| Tool | Purpose | Status |
-|------|---------|:------:|
-| `@aikdna/kdna-core` | Pure logic library (zero deps) for loading, validating, linting, rendering, composing domains | Published (npm, v0.2.2) |
-| `@aikdna/kdna` CLI | Command-line tool: validate, verify, pack, unpack, install, compare, match, setup | Published (npm, v0.7.0) |
-| `@aikdna/agent` | TypeScript SDK with KDNAAgent class for custom agent integration | Published (npm, v0.1.1) |
-| kdna-vscode | VS Code extension: validate, preview, create domains in-editor | Marketplace published |
-| kdna-website | aikdna.com: domain browser, viewer, docs, tools, studio | Deployed |
+At enterprise scale, the most valuable artifact may not be a single domain, but a cluster or system of domains:
 
-All tools share the same core library, ensuring consistent behavior.
+- product judgment;
+- legal risk;
+- security review;
+- brand voice;
+- customer communication;
+- pricing policy;
+- escalation boundaries;
+- compliance standards.
 
-### 8.2 Registry
-
-The public KDNA registry (`domains.json`) is a machine-readable index of available domains. Currently includes 9 open-access domains classified by two axes: **domain field** (which context) and **judgment pattern** (what type of judgment). Registry entries carry metadata: name, author, version, status, keyword tags, quality badge, and evaluation history where available. The registry is early and growing.
-
-### 8.3 Quality Signals
-
-KDNA domains should not be treated as equally valuable simply because they pass schema validation. Quality requires additional signals: expert review, benchmark performance, usage evidence, version history, community feedback, and clear authorship. The format guarantees structure. It does not guarantee expertise.
-
----
-
-## 9. Economic Vision
-
-### 9.1 Judgment as a Reusable Asset
-
-The internet made information abundant. AI makes generation abundant. But judgment remains scarce — not because it cannot be expressed, but because it is often not structured as a reusable asset. A KDNA domain can encode how a person, team, or community judges within a domain. If useful, it can be reused across tasks, agents, teams, and organizations. This gives domain judgment some properties of intellectual property: authorship, versioning, review, licensing, attribution, reputation, and improvement over time.
-
-### 9.2 Creator Domains
-
-A respected editor could publish a writing judgment domain. A senior engineer could publish a code review domain. A product leader could publish a prioritization domain. These would not be templates — they would be structured judgment packages carrying the creator's principles, distinctions, and self-checks. As registries and evaluation systems mature, high-quality domains could accumulate reputation. If domains prove useful in real workflows, creators who build verified, well-reviewed domains may accrue value that compounds across their body of work.
-
-### 9.3 Enterprise Private Domains
-
-Organizations hold cognitive assets they rarely recognize as assets: how senior engineers review architecture, how compliance teams interpret risk, how product teams prioritize trade-offs. These judgment patterns are scattered across people, documents, workflows, and review comments. Private KDNA domains allow organizations to encode this expertise in a format that can be loaded by AI agents and reviewed by humans. This is not automation of expertise — it is preservation, distribution, and operationalization of expertise.
-
-### 9.4 Long-Term Evolution
-
-1. **Format Layer** (today) — Standardized encoding of domain judgment.
-2. **Verification Layer** (emerging) — Benchmark results, review processes, quality badges.
-3. **Discovery Layer** (building) — Registry, faceted browsing, domain preview.
-4. **Market Layer** (future) — Licensing, attribution, revenue sharing.
-5. **Asset Layer** (horizon) — Cognitive assets as a recognized category of reusable intellectual property.
-
-We are at Layer 1–2, building deliberately. We do not describe KDNA as a financial instrument.
+The long-term enterprise use case is not merely a private prompt library. It is an internal judgment system: a governed set of domains, composition policies, quality badges, audit traces, and review cycles.
 
 ---
 
-## 10. Current Status
+## 10. Quality Governance
 
-| Component | Status |
-|-----------|:------|
-| Protocol specification (SPEC v1.0-rc) | Published |
-| JSON Schema definitions (6 standard files) | Published |
-| CLI tool (validate, verify, pack, unpack, install, compare, match, setup) | Published (npm, v0.7.0) |
-| Core library (load, validate, lint, render, compose) | Published (npm, v0.2.2) |
-| TypeScript Agent SDK | Published (npm, v0.1.1) |
-| VS Code extension | Marketplace published |
-| Website (domain browser, viewer, docs, tools, studio) | Deployed (aikdna.com) |
-| Public registry (9 domains, dual-axis classification) | Published, early |
-| Domain quality validation system | Implemented, running continuously |
-| Cluster format and composition | Implemented, experimental |
+A KDNA domain should not be treated as high quality simply because it passes schema validation. Quality requires evidence.
+
+KDNA separates several levels of quality governance:
+
+### 9.1 Structural Inclusion
+
+A domain can be included structurally if it:
+
+- passes schema validation;
+- has required files;
+- has unique IDs;
+- has a README;
+- declares license and authorship;
+- has no obvious structural errors.
+
+### 9.2 Judgment Inclusion
+
+A domain should demonstrate judgment substance:
+
+- clear core insight;
+- at least two meaningful axioms;
+- explicit ontology or concept boundaries;
+- at least two misunderstandings or failure patterns;
+- explicit boundaries or risk rules;
+- concrete yes/no self-checks.
+
+### 9.3 Evaluation Inclusion
+
+A domain should include evaluation cases. A minimum official threshold may require at least three evals. Stronger domains should include more.
+
+Evaluation should test not only output quality, but also:
+
+- classification accuracy;
+- axiom trigger accuracy;
+- misunderstanding avoidance;
+- banned term or risky pattern avoidance;
+- self-check pass rate;
+- judgment delta compared with baseline.
+
+### 9.4 Badge Promotion
+
+Quality badges should be evidence-based, not manually assigned as decoration.
+
+A possible badge path:
+
+| Badge | Evidence |
+|---|---|
+| `untested` | Structurally valid, no meaningful eval set |
+| `tested` | At least 10 evals with reproducible results |
+| `validated` | At least 30 evals and strong benchmark performance |
+| `expert_reviewed` | Reviewed by qualified external experts |
+| `production_ready` | Real-world use evidence, maintained version history, and monitoring |
+
+Quality governance is necessary because a structured domain can still encode shallow, outdated, or harmful judgment.
 
 ---
 
-## 11. Roadmap
+## 11. Economic Vision
 
-**Near term (0–3 months):** Publish 3–5 high-quality reference domains. Strengthen benchmark methodology toward independent auditability. Provide before/after demonstrations. Launch enterprise pilot with private domain registry.
+### 10.1 Judgment as a Reusable Asset
 
-**Mid term (3–12 months):** Establish expert review processes for domain quality assurance. Add outcome tracking infrastructure (judgment-outcome pairs). Grow cluster compositions demonstrating multi-domain judgment.
+The internet made information abundant. AI makes generation abundant. But judgment remains scarce — not because it cannot be expressed, but because it is often not structured as a reusable asset.
 
-**Long term (12+ months):** Develop licensing and attribution infrastructure for domain creators. Support private registries for enterprise deployments. Establish domain cognition as a recognized category in AI agent architecture.
+A KDNA domain can encode how a person, team, or community judges within a domain. If useful, it can be reused across tasks, agents, teams, and organizations. This gives domain judgment some properties of intellectual property: authorship, versioning, review, licensing, attribution, reputation, and improvement over time.
+
+### 10.2 Creator Domains
+
+A respected editor could publish a writing judgment domain. A senior engineer could publish a code review domain. A product leader could publish a prioritization domain. A communication expert could publish a relationship diagnosis domain. A security expert could publish an agent safety domain.
+
+These would not be generic templates. They would be structured judgment packages carrying the creator's principles, distinctions, risk boundaries, examples, and self-checks.
+
+If domains prove useful in real workflows, creators who build verified, well-reviewed domains may accrue value that compounds across their body of work.
+
+### 10.3 Enterprise Private Domains
+
+Organizations hold judgment assets in scattered form: review comments, style guides, decision memos, onboarding documents, escalation policies, compliance notes, and the habits of senior people.
+
+Private KDNA domains allow organizations to encode these judgment assets in a format that can be loaded by AI agents and reviewed by humans.
+
+The most important enterprise value may come from judgment continuity: preserving and distributing standards that would otherwise remain implicit, inconsistent, or dependent on a few experienced individuals.
+
+### 10.4 Long-Term Evolution
+
+1. **Format Layer** — Standardized encoding of domain judgment.
+2. **Verification Layer** — Evaluation cases, benchmark results, review processes, quality badges.
+3. **Discovery Layer** — Registry, faceted browsing, domain preview, dependency discovery.
+4. **Composition Layer** — Clusters, composition policies, judgment graphs, conflict surfacing.
+5. **Market Layer** — Licensing, attribution, revenue sharing, creator reputation.
+6. **Asset Layer** — Cognitive and judgment assets as a recognized category of reusable intellectual property.
+
+KDNA is currently at the format and verification layers, with early work on discovery and composition. We do not describe KDNA as a financial instrument.
+
+---
+
+## 12. Beyond Software Agents
+
+KDNA is initially most applicable to software agents: writing assistants, coding agents, research agents, meeting assistants, workflow agents, and domain-specific AI copilots.
+
+But as AI systems become more embodied — operating computers, machines, robots, vehicles, labs, factories, or physical environments — the cost of poor judgment increases.
+
+Perception, planning, tools, and control systems are necessary, but they are not sufficient. Embodied agents also need explicit judgment boundaries:
+
+- when not to act;
+- when to ask for confirmation;
+- which risks block action;
+- which trade-offs require escalation;
+- which domain standards govern safe execution;
+- which outputs require human review.
+
+KDNA is not a robotics control system. It does not replace perception, planning, safety controllers, simulation, formal verification, or human oversight. It provides a portable judgment reference that higher-level agents may use when deciding whether and how to act.
+
+As AI moves from text generation toward action in the world, explicit judgment references become more important, not less.
+
+---
+
+## 13. Limits and Risks
+
+A serious protocol must define its limits.
+
+### 12.1 Not All Expertise Can Be Fully Formalized
+
+Some judgment is deeply tacit — depending on perception, context, timing, emotional sensitivity, embodied practice, or years of experience. KDNA is most useful when a domain has recurring principles, stable concept boundaries, known failure modes, and reviewable output criteria.
+
+### 12.2 Judgment Capture Can Distort Judgment
+
+Encoding judgment can oversimplify it. A poorly authored domain may preserve a caricature of expertise rather than expertise itself. Authors must avoid reducing living judgment into rigid slogans.
+
+### 12.3 Explicit Judgment Can Become Rigid
+
+A poorly written domain may over-constrain the agent, reject useful variation, or preserve outdated assumptions. Domains need versioning, review, feedback, and evolution.
+
+### 12.4 Schema Validity Is Not Quality
+
+A domain can pass validation and still be bad: vague principles, shallow distinctions, weak self-checks, missing boundaries, or poor examples. Tooling checks structure. Quality requires expert review and real usage evaluation.
+
+### 12.5 Structured Domains Can Create False Authority
+
+A domain may appear authoritative because it is structured. KDNA must distinguish structure from authority. Quality badges and registry trust should be evidence-based.
+
+### 12.6 Context Limits Matter
+
+Loading too many domains can dilute judgment rather than improve it. Clusters must be selective. Better-selected KDNA is better than more KDNA.
+
+### 12.7 Domains Can Conflict
+
+A brand domain may encourage emotional intensity while a compliance domain requires conservative wording. KDNA should expose these conflicts, not hide them. Conflict reporting is part of responsible judgment composition.
+
+### 12.8 KDNA Does Not Replace Accountability
+
+Even with KDNA, humans remain accountable for high-stakes decisions. KDNA improves inspectability. It does not eliminate responsibility.
+
+---
+
+## 14. Current Status
+
+KDNA is early, but several components already exist.
+
+### 13.1 Open Protocol
+
+- Protocol specification: SPEC v1.0-rc.
+- Six standard domain files.
+- JSON Schemas for validation.
+- Public registry of open domains.
+- Quality badge and evaluation metadata emerging.
+
+### 13.2 Reference Toolchain
+
+- `@aikdna/kdna-core`: pure logic library for loading, validating, linting, rendering, and composing domains.
+- `@aikdna/kdna` CLI: command-line tool for setup, validate, verify, install, load, match, compare, diff, pack, unpack, registry, identity, and cluster-related workflows.
+- Python SDK: programmatic integration.
+- Swift core package: native Swift implementation for macOS and iOS clients.
+- VS Code extension: validation, preview, and domain authoring support.
+- Agent skills: loader patterns for agent environments.
+
+Specific version numbers should be read from the published version matrix and package registries, as the toolchain is evolving.
+
+### 13.3 Reference Domains
+
+The public registry includes early domains such as:
+
+- writing;
+- decision_state;
+- prompt_diagnosis;
+- code_review;
+- content_strategy;
+- agent_safety;
+- knowledge_mgmt;
+- open_source_project;
+- kdna_authoring.
+
+Not all domains are equally mature. Some are reference examples. Some are experimental. Quality should be judged by eval evidence, expert review, and usage results.
+
+### 13.4 Reference GUI Client
+
+KDNAChat is an emerging reference GUI client for making KDNA visible in conversation. Its role is not to define the protocol truth. SPEC and the reference core implementation define the protocol. KDNAChat demonstrates how judgment can be loaded, compared, traced, and made visible to users.
+
+Compare Mode is especially important: same input, same model, without KDNA versus with KDNA, showing the judgment delta.
+
+---
+
+## 15. Roadmap
+
+KDNA's next phase is not to add as many domains as possible. It is to move from domain packages toward a full judgment protocol.
+
+### Phase 1: Protocol Foundation
+
+- Add a formal Judgment Model section to SPEC.
+- Define the 13 elements of judgment and their file carriers.
+- Upgrade schemas in controlled waves:
+  - Core + Patterns;
+  - Scenarios + Cases;
+  - Reasoning + Evolution + manifest/version matrix.
+- Unify `status`, `quality_badge`, and `access` fields.
+
+### Phase 2: Reference Domains
+
+- Strengthen three reference domains first:
+  - writing;
+  - decision_state;
+  - prompt_diagnosis.
+- Ensure each has a complete six-file package.
+- Add at least 10 evals per domain.
+- Make `kdna verify --judgment` and `kdna compare` produce meaningful evidence.
+- Use reference domains to validate that the protocol is executable, not merely conceptual.
+
+### Phase 3: Composition and Clusters
+
+- Add cluster concepts to SPEC:
+  - Judgment Atom;
+  - Judgment Cluster;
+  - Judgment System.
+- Define cluster schema and composition policy schema.
+- Define load profiles and token budget strategies.
+- Defer full engineering implementation until real demand justifies it.
+
+### Phase 4: Developer and Public Experience
+
+- Simplify README.
+- Publish a Judgment Anatomy guide for domain creators.
+- Add Judgment Delta examples to the website.
+- Upgrade registry policy from inclusion rules to quality governance.
+- Improve onboarding for agent developers, domain creators, and evaluators.
 
 ---
 
@@ -319,15 +781,20 @@ We are at Layer 1–2, building deliberately. We do not describe KDNA as a finan
 
 AI agents are becoming more capable, more connected, and more active. That progress does not make human judgment less important. It makes the representation of human judgment more important.
 
-Domain judgment already exists in many places: prompts, documents, tools, policies, workflows, evaluations, model behavior, and expert habits. But it is often fragmented, implicit, task-scoped, platform-dependent, and difficult to validate or compose.
+Human knowledge has been digitized through books, documents, code, databases, and search. Human procedures have been digitized through workflows, automations, CI/CD systems, and agent frameworks. But human judgment — the implicit, multidimensional, experience-shaped standards by which experts classify situations, weigh risks, reject bad patterns, preserve boundaries, and decide what counts as good — has not had a standard, portable representation.
 
-KDNA addresses this representation problem. It gives domain judgment an open format — one that can be authored, validated, loaded, composed, versioned, shared, and improved. It does not replace existing mechanisms. It gives them a clearer judgment reference.
+KDNA addresses this representation problem. It gives domain judgment an open protocol: one that can be authored, validated, loaded, traced, composed, versioned, shared, and improved.
 
-The project is early. The format and toolchain exist. The next challenge is proof through high-quality domains and real usage — demonstrating that explicit domain judgment improves agent behavior in measurable, inspectable, and repeatable ways.
+KDNA does not replace models, prompts, knowledge bases, skills, workflows, tools, retrieval, evaluation, or fine-tuning. It gives them a clearer judgment reference.
+
+The project is early. The format and toolchain exist. The next challenge is proof through high-quality domains, benchmark evidence, Compare Mode, and real usage — demonstrating that explicit domain judgment can improve agent behavior in measurable, inspectable, and repeatable ways.
+
+If this succeeds, the AI stack will not only have models, tools, knowledge, and workflows. It will have a judgment layer.
 
 ---
 
-*KDNA is an open-source project under Apache 2.0 license. The specification, schemas, and reference toolchain are all published under this license. Individual domains may carry their own content licenses.*  
+*KDNA is an open-source project under Apache 2.0 license. The specification, schemas, and reference toolchain are published under this license. Individual domains may carry their own content licenses.*
+
 *Website: https://aikdna.com*  
-*GitHub: https://github.com/knowledge-dna/kdna*  
-*npm: @aikdna/kdna, @aikdna/kdna-core, @aikdna/agent*
+*GitHub: https://github.com/knowledge-dna/KDNA*  
+*npm: @aikdna/kdna, @aikdna/kdna-core*

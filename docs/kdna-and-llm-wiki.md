@@ -11,7 +11,7 @@ raw materials       (notes, transcripts, meeting logs, research)
 LLM Wiki            (linked Markdown knowledge base, structured for agents)
         │
         ▼
-KDNA                (domain cognition: axioms, patterns, judgment encoding)
+KDNA                (domain judgment: axioms, patterns, judgment encoding)
         │
         ▼
 Skills / Agents     (execution: tools, workflows, task completion)

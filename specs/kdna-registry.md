@@ -7,7 +7,7 @@ Status: Draft
 
 The KDNA Registry is the discovery and distribution layer for KDNA domain
 packages. It is analogous to npm for JavaScript, PyPI for Python, or
-Hugging Face Hub for ML models — but optimized for KDNA domain cognition assets.
+Hugging Face Hub for ML models — but optimized for KDNA domain judgment assets.
 
 ## 2. Registry Architecture
 
@@ -45,7 +45,7 @@ registered KDNA domains.
 
 ```json
 {
-  "registry_version": "0.4",
+  "registry_version": "1.0-rc",
   "updated": "2026-05-17T10:00:00Z",
   "domains": [
     {
@@ -53,7 +53,7 @@ registered KDNA domains.
       "name": "Writing KDNA",
       "version": "0.1.0",
       "repo": "https://github.com/knowledge-dna/kdna-writing",
-      "spec_version": "0.4",
+      "spec_version": "1.0-rc",
       "status": "experimental",
       "access": "open",
       "language": ["en"],

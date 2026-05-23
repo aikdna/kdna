@@ -179,7 +179,7 @@ Stances are the domain's default positions. Think of them as "when in doubt, lea
 
 Misunderstandings are usually more useful than definitions. For each:
 
-- **wrong**: What an agent without domain cognition would assume
+- **wrong**: What an agent without domain judgment would assume
 - **correct**: What the domain teaches instead
 - **key_distinction**: The specific conceptual boundary
 - **why**: What bad judgment results from the wrong interpretation

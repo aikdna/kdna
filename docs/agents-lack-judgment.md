@@ -72,7 +72,7 @@ When an agent misclassifies a meeting note, it is not because it lacked access t
 
 ## The Missing Layer: Domain Cognition
 
-What the agent needs is not more tools, more memory, or more documents. It needs **domain cognition**: a structured encoding of how experts in a specific domain classify situations, detect misunderstandings, and reason from principles to action.
+What the agent needs is not more tools, more memory, or more documents. It needs **domain judgment**: a structured encoding of how experts in a specific domain classify situations, detect misunderstandings, and reason from principles to action.
 
 This is what KDNA (Knowledge DNA) encodes:
 
@@ -151,4 +151,4 @@ The answer starts with encoding judgment.
 
 ---
 
-*KDNA (Knowledge DNA) is an open format for encoding domain cognition for AI agents. See [github.com/knowledge-dna/KDNA](https://github.com/knowledge-dna/KDNA) for the specification, reference implementations, and reproducible benchmarks.*
+*KDNA (Knowledge DNA) is an open format for encoding domain judgment for AI agents. See [github.com/knowledge-dna/KDNA](https://github.com/knowledge-dna/KDNA) for the specification, reference implementations, and reproducible benchmarks.*

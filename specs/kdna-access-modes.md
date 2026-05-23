@@ -6,7 +6,7 @@ Status: Draft
 ## 1. Purpose
 
 KDNA defines three access modes that govern how an AI Agent may load, use,
-and interact with a KDNA domain cognition asset.
+and interact with a KDNA domain judgment asset.
 
 Access modes are the bridge between the open-source protocol and the
 commercial asset layer. They determine:
