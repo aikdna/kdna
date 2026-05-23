@@ -221,6 +221,14 @@
       "format": "date-time",
       "description": "When this outcome record was created."
     },
+    "improvement_proposal_refs": {
+      "type": "array",
+      "description": "References to formal improvement proposals created from this outcome record.",
+      "items": {
+        "type": "string",
+        "description": "proposal_id of an improvement proposal."
+      }
+    },
     "metadata": {
       "type": "object",
       "description": "Optional metadata.",

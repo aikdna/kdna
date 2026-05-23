@@ -232,6 +232,61 @@
         }
       }
     },
+    "loaded_domains": {
+      "type": "array",
+      "description": "When multiple domains are loaded (cluster mode), list all loaded domain identifiers with versions.",
+      "items": {
+        "type": "object",
+        "required": ["domain", "version"],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "Domain identifier."
+          },
+          "version": {
+            "type": "string",
+            "description": "Version of the loaded domain."
+          },
+          "source": {
+            "type": "string",
+            "description": "Where this domain was loaded from.",
+            "examples": ["local", "registry", "private-registry"]
+          }
+        }
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "description": "Conflicts detected between loaded domains during judgment.",
+      "items": {
+        "type": "object",
+        "required": ["type", "description"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Type of conflict.",
+            "enum": ["axiom", "value", "boundary", "risk_model"]
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description of the conflict."
+          },
+          "involved_domains": {
+            "type": "array",
+            "description": "Domain identifiers involved in the conflict.",
+            "items": { "type": "string" }
+          },
+          "resolution": {
+            "type": "string",
+            "description": "How the conflict was resolved, if at all."
+          }
+        }
+      }
+    },
+    "composition_policy_id": {
+      "type": "string",
+      "description": "Identifier of the composition policy that governed how multiple domains were combined."
+    },
     "agent_info": {
       "type": "object",
       "description": "Information about the agent that produced this judgment.",
