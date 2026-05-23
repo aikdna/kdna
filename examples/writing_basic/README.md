@@ -37,3 +37,30 @@ Load `writing_basic/KDNA_Core.json` + `writing_basic/KDNA_Patterns.json` before 
 ## License
 
 CC BY 4.0
+
+## Four Questions
+
+### 1. What does this domain judge?
+
+Whether a piece of writing is clear, reader-focused, and structurally coherent — or complex, self-indulgent, and disorganized. Helps AI agents apply expert editing judgment.
+
+### 2. Where does it apply?
+
+- Business emails and memos
+- Documentation and help articles
+- Blog posts and essays
+- Reports and proposals
+
+### 3. Where does it NOT apply?
+
+- Creative fiction or poetry
+- Technical specifications where precision requires jargon
+- Legal contracts where ambiguity is intentional
+- Personal notes or journaling
+
+### 4. How do I use it?
+
+```bash
+kdna install github:aikdna/kdna-writing_basic
+kdna validate .
+```

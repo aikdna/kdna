@@ -231,13 +231,14 @@ Every domain package and registry entry MUST use a consistent three-field system
 
 ### 3.4 Manifest
 
-A domain package SHOULD include a `kdna.json` manifest:
+A domain package MUST include a `kdna.json` manifest with the following REQUIRED fields:
 
 ```json
 {
   "kdna_spec": "1.0-rc",
   "name": "<domain-id>",
   "version": "<semver>",
+  "judgment_version": "<semver>",
   "status": "draft | experimental | stable | deprecated",
   "quality_badge": "untested | tested | validated | expert_reviewed | production_ready",
   "access": "open | licensed | runtime",
@@ -247,6 +248,13 @@ A domain package SHOULD include a `kdna.json` manifest:
   "description": "..."
 }
 ```
+
+**Rules:**
+- `judgment_version` is REQUIRED. It tracks the version of the domain's judgment content (axioms, ontology, misunderstandings). It MUST be incremented when any judgment-relevant content changes. It MAY differ from `version` which tracks packaging or metadata changes.
+- `status` and `quality_badge` are independent. See §3.3.2.
+- Domains claiming `quality_badge` of `tested` or higher MUST include:
+  - An `evals/` directory with at least 4 case files (core, boundary, failure, excluded scenarios)
+  - A README.md with explicit boundary declaration (Scope + Out-of-Scope, or v2.1 Four Questions format)
 
 ## 4. Shared Root Structure
 
@@ -454,7 +462,7 @@ Multiple conditions MAY be true simultaneously.
 
 When multiple domains are available, the loader SHOULD:
 1. Match user input keywords against domain `kdna.json` keywords
-2. Prefer `stable` > `basic` > `experimental` status
+2. Prefer `stable` > `experimental` > `draft` status
 3. Load one domain as leader, others as constraints
 4. NOT load a domain if its boundary declaration conflicts with the task
 
@@ -490,13 +498,18 @@ A validator SHOULD also verify that the `domain` field in `meta` is consistent a
 
 ### 9.2 Behavioral Validation
 
-A conforming evaluator SHOULD test:
-- Loaded vs. unloaded response quality difference
-- Misunderstanding detection rate
-- Terminology consistency (preferred terms used, banned terms avoided)
-- Scenario trigger accuracy
-- Self-check pass rate
-- Axiom alignment in reasoning
+A conforming evaluator MUST test behavioral quality via the `evals/` directory:
+
+- Every domain claiming `quality_badge` of `tested` or higher MUST include an `evals/` directory with at least 4 case files
+- Each eval case MUST include: `id`, `domain`, `input`, `expected_classification`, `expected_axioms`, `output_rubric`
+- The 4 minimum cases SHOULD cover: core scenario (normal application), boundary scenario (domain does not apply), failure scenario (misunderstanding triggered), excluded scenario (edge case)
+- A conforming evaluator SHOULD also test:
+  - Loaded vs. unloaded response quality difference
+  - Misunderstanding detection rate
+  - Terminology consistency (preferred terms used, banned terms avoided)
+  - Scenario trigger accuracy
+  - Self-check pass rate
+  - Axiom alignment in reasoning
 
 The evaluation output MUST include a score and specific evidence for each dimension.
 

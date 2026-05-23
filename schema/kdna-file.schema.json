@@ -13,11 +13,12 @@
     "meta": {
       "type": "object",
       "description": "Domain metadata — equivalent to kdna.json fields.",
-      "required": ["name", "domain", "version"],
+      "required": ["name", "domain", "version", "judgment_version"],
       "properties": {
         "name": { "type": "string", "description": "Human-readable domain name." },
         "domain": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "description": "Domain identifier (snake_case)." },
         "version": { "type": "string", "description": "Semantic version (MAJOR.MINOR.PATCH)." },
+        "judgment_version": { "type": "string", "description": "Semantic version of the domain's judgment content. Incremented when axioms, ontology, or misunderstandings change." },
         "spec_version": { "type": "string", "description": "KDNA spec version this domain conforms to." },
         "created": { "type": "string", "description": "ISO date of first creation." },
         "updated": { "type": "string", "description": "ISO date of last update." },
@@ -47,7 +48,7 @@
     },
     "status": {
       "type": "string",
-      "enum": ["experimental", "basic", "stable", "pro"],
+      "enum": ["draft", "experimental", "stable", "deprecated"],
       "description": "Domain maturity level."
     },
     "access": {

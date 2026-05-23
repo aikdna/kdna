@@ -31,3 +31,30 @@ node validators/kdna-lint.js examples/management
 # Schema validation (requires ajv)
 node validators/kdna-validate.js examples/management
 ```
+
+## Four Questions
+
+### 1. What does this domain judge?
+
+Whether a manager's diagnosis, intervention, or delegation decision addresses the upstream system condition rather than the downstream symptom.
+
+### 2. Where does it apply?
+
+- Team performance issues or missed deadlines
+- Delegation and accountability design
+- Feedback and one-on-one conversations
+- Hiring, firing, and team structure decisions
+
+### 3. Where does it NOT apply?
+
+- Pure project management (timelines, resource allocation)
+- Technical architecture decisions
+- Individual contributor work quality review
+- HR policy compliance questions
+
+### 4. How do I use it?
+
+```bash
+kdna install github:aikdna/kdna-management
+kdna validate .
+```

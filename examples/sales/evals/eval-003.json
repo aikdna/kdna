@@ -1,0 +1,12 @@
+{
+  "id": "eval-003",
+  "domain": "@aikdna/sales",
+  "input": "[Failure scenario] A common misunderstanding in sales: a situation that looks like one thing but is actually another, triggering misunderstanding price_objection_means_want_discount.",
+  "expected_classification": "MISUNDERSTANDING_DETECTED",
+  "expected_axioms": [
+    "axiom_certainty_over_pitch"
+  ],
+  "output_rubric": "Agent must: (1) detect the misunderstanding (price_objection_means_want_discount), (2) correct the wrong interpretation with the right one, (3) cite the key_distinction.",
+  "pass": null,
+  "evidence": ""
+}

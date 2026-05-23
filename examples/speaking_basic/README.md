@@ -33,3 +33,30 @@ Load `speaking_basic/KDNA_Core.json` + `speaking_basic/KDNA_Patterns.json` befor
 ## License
 
 CC BY 4.0
+
+## Four Questions
+
+### 1. What does this domain judge?
+
+Whether a talk, presentation, or speech is audience-focused, single-messaged, and structurally sound — or speaker-focused, scattered, and disorganized.
+
+### 2. Where does it apply?
+
+- Preparing conference talks or keynotes
+- Team presentations and status updates
+- Pitch decks and investor presentations
+- Training sessions and workshops
+
+### 3. Where does it NOT apply?
+
+- Written reports or documents
+- Impromptu social conversation
+- Podcast or interview formats
+- Creative performance (theater, comedy)
+
+### 4. How do I use it?
+
+```bash
+kdna install github:aikdna/kdna-speaking_basic
+kdna validate .
+```

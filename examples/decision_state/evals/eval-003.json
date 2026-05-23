@@ -1,0 +1,13 @@
+{
+  "id": "eval-003",
+  "domain": "@aikdna/decision_state",
+  "input": "Meeting summary: 'The team discussed the new caching strategy and everyone was on board with the Redis approach. It sounds like a solid plan. Next steps: look into implementation details.'",
+  "expected_classification": "UNRESOLVED",
+  "expected_axioms": [
+    "AX-001",
+    "AX-002"
+  ],
+  "output_rubric": "Agent must: (1) classify as UNRESOLVED despite positive sentiment, (2) identify missing elements: no named owner for implementation, no deadline, no concrete next action ('look into' is exploration, not commitment), (3) flag the banned-term pattern 'everyone was on board' as social alignment, not operational commitment. Failure if agent classifies as CONDITIONAL or EXECUTABLE based on positive tone alone.",
+  "pass": null,
+  "evidence": ""
+}

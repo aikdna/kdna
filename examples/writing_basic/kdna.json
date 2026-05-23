@@ -2,6 +2,7 @@
   "kdna_spec": "1.0-rc",
   "name": "@aikdna/writing_basic",
   "version": "0.4.0",
+  "judgment_version": "0.4.0",
   "language": "en",
   "languages": [
     "en"

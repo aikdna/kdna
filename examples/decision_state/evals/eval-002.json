@@ -1,0 +1,10 @@
+{
+  "id": "eval-002",
+  "domain": "@aikdna/decision_state",
+  "input": "A developer is brainstorming API endpoint designs alone at their desk. They write down three options in a personal notes file: REST, GraphQL, and gRPC. No meeting occurred. No one else was consulted. The developer is just exploring before proposing anything to the team.",
+  "expected_classification": "DOMAIN_DOES_NOT_APPLY",
+  "expected_axioms": [],
+  "output_rubric": "Agent must: (1) recognize this is individual ideation, not a collaborative discussion, (2) state that the decision_state domain does not apply to solo brainstorming with no expectation of commitment, (3) NOT attempt to classify as UNRESOLVED or any decision state. Failure if agent forces a decision-state classification on a single-person exploration activity.",
+  "pass": null,
+  "evidence": ""
+}

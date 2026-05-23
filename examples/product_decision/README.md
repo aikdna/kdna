@@ -44,3 +44,30 @@
 ```bash
 node ../../validators/kdna-lint.js .
 ```
+
+## Four Questions
+
+### 1. What does this domain judge?
+
+Whether a product decision (feature, priority, scope) is reversible, user-value-driven, and hypothesis-based — or irreversible, authority-driven, and assumption-based.
+
+### 2. Where does it apply?
+
+- Feature prioritization and roadmap decisions
+- MVP scope and launch timing
+- Product strategy and positioning
+- A/B test design and metric selection
+
+### 3. Where does it NOT apply?
+
+- Technical implementation choices (architecture, stack)
+- Marketing campaign messaging
+- Pricing and revenue model decisions
+- Post-launch quantitative analytics
+
+### 4. How do I use it?
+
+```bash
+kdna install github:aikdna/kdna-product_decision
+kdna validate .
+```

@@ -1,0 +1,10 @@
+{
+  "id": "eval-004",
+  "domain": "@aikdna/management_basic",
+  "input": "[Excluded scenario] An edge case in management_basic that superficially resembles a domain situation but should be treated differently.",
+  "expected_classification": "EXCLUDED",
+  "expected_axioms": [],
+  "output_rubric": "Agent must: (1) recognize the edge case, (2) explain why standard domain application would be wrong, (3) provide the correct treatment.",
+  "pass": null,
+  "evidence": ""
+}

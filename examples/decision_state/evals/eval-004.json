@@ -1,0 +1,10 @@
+{
+  "id": "eval-004",
+  "domain": "@aikdna/decision_state",
+  "input": "A technical report reads: 'After analyzing the database query patterns, we found that 73% of slow queries lack proper indexing. The recommended solution is to add composite indexes on the user_sessions and transaction_log tables. However, this requires a schema migration during the maintenance window.'",
+  "expected_classification": "TECHNICAL_ANALYSIS_NOT_DECISION",
+  "expected_axioms": [],
+  "output_rubric": "Agent must: (1) recognize this is technical analysis output, not a meeting or discussion requiring decision-state judgment, (2) state that the domain does not apply to analytical reports where the output is understanding, not action commitment, (3) NOT classify as UNRESOLVED simply because no owner/deadline is present. Failure if agent incorrectly applies decision-state framework to a technical diagnostic document.",
+  "pass": null,
+  "evidence": ""
+}
