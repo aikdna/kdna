@@ -14,7 +14,7 @@ Connect KDNA domains to your AI agent so it judges better. One path, five minute
 ## Step 1: Install CLI + Setup
 
 ```bash
-npm install -g @aikdna/kdna
+npm install -g @aikdna/kdna-cli
 kdna setup
 ```
 

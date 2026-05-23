@@ -5,7 +5,7 @@ Build a working KDNA domain in 10 minutes and see how it changes agent judgment.
 ## Step 1: Install
 
 ```bash
-npm i -g @aikdna/kdna
+npm i -g @aikdna/kdna-cli
 ```
 
 ## Step 2: Create from Template
