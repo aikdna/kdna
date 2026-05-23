@@ -101,6 +101,53 @@ A domain author SHOULD populate all components that are relevant to the domain's
 
 KDNA does not claim to exhaust human judgment. It provides a structured method for approximating repeatable judgment patterns: principles, concept distinctions, signals, boundaries, risks, cases, and evaluation. Some judgment remains implicit, situational, and the ultimate responsibility of the human operator.
 
+## 1.7. Judgment Update Governance
+
+KDNA domains encode judgment standards. When a self-improving agent learns from work, not all learning is equal. This section defines which updates agents MAY apply automatically and which MUST receive Human Judgment Lock.
+
+### 1.7.1. Three Classes of Updates
+
+| Class | Auto-Apply? | Examples |
+|-------|-------------|----------|
+| **Operational** | Yes | Tool call parameters, API formats, output formatting preferences, project-specific commands |
+| **Evidence** | Record only | New outcome records, eval failures, trace anomalies, user feedback |
+| **Judgment** | **No** | Axioms, value order, boundaries, risk models, composition policy |
+
+Operational updates improve execution without changing what the agent considers correct. Evidence updates provide raw material for future proposals but do not modify judgment standards. Judgment updates change what the agent holds to be true, valuable, or risky — these MUST enter governance.
+
+### 1.7.2. Fields Requiring Human Judgment Lock
+
+The following MUST NOT be modified without a recorded Human Judgment Lock in `KDNA_Evolution.json`:
+
+- `axioms` — any addition, removal, or revision
+- `value_order` — any reorder, addition, or removal
+- `judgment_role` — any change
+- `boundaries` — any change to what must not be done
+- `risk_model` — any change to which errors cost the most
+- `does_not_apply_when` — any change to applicability conditions
+- `failure_risk` — any change to stated risks
+- `composition.policy.json` — any change to domain composition rules
+
+A conforming validator MUST reject a domain package that contains judgment-class changes without a corresponding `accept` Human Judgment Lock.
+
+### 1.7.3. Human Judgment Lock Format
+
+A Human Judgment Lock is an entry in `KDNA_Evolution.json` under `human_locks`:
+
+```
+{
+  "lock_id": "string",
+  "proposal_id": "string (optional)",
+  "locked_at": "ISO-8601 timestamp",
+  "locked_by": "human identifier",
+  "lock_type": "accept | reject | defer",
+  "reason": "non-empty string",
+  "affected_files": ["KDNA_Core.json", ...]
+}
+```
+
+Anonymous locks are prohibited. Every `accept` lock SHOULD reference an improvement proposal. Emergency overrides MUST be documented and ratified within 72 hours.
+
 ## 2. Conformance Levels
 
 Implementations MAY conform at one of three levels:

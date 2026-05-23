@@ -123,6 +123,186 @@
       "type": "array",
       "items": { "type": "string" },
       "description": "Known limitations of the domain's judgment model."
+    },
+    "improvement_history": {
+      "type": "array",
+      "description": "Chronological log of all improvement activity for this domain.",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "event_type"],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "event_type": {
+            "type": "string",
+            "enum": [
+              "proposal_created",
+              "proposal_reviewed",
+              "human_lock_applied",
+              "version_released",
+              "regression_tested",
+              "rollback_executed"
+            ]
+          },
+          "proposal_id": {
+            "type": "string"
+          },
+          "actor": {
+            "type": "string",
+            "description": "Identity of the human or system that triggered the event."
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "accepted_proposals": {
+      "type": "array",
+      "description": "Improvement proposals that were accepted and applied to this domain.",
+      "items": {
+        "type": "object",
+        "required": ["proposal_id", "locked_at", "locked_by"],
+        "properties": {
+          "proposal_id": { "type": "string" },
+          "locked_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "locked_by": { "type": "string" },
+          "change_summary": { "type": "string" },
+          "affected_elements": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "rejected_proposals": {
+      "type": "array",
+      "description": "Improvement proposals that were reviewed and rejected.",
+      "items": {
+        "type": "object",
+        "required": ["proposal_id", "rejected_at", "rejected_by", "reason"],
+        "properties": {
+          "proposal_id": { "type": "string" },
+          "rejected_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "rejected_by": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "human_locks": {
+      "type": "array",
+      "description": "Records of Human Judgment Locks applied to this domain.",
+      "items": {
+        "type": "object",
+        "required": ["lock_id", "locked_at", "locked_by", "lock_type"],
+        "properties": {
+          "lock_id": { "type": "string" },
+          "proposal_id": { "type": "string" },
+          "locked_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "locked_by": {
+            "type": "string",
+            "description": "Identity of the human who applied the lock."
+          },
+          "lock_type": {
+            "type": "string",
+            "enum": ["accept", "reject", "defer"]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "affected_files": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "judgment_diffs": {
+      "type": "array",
+      "description": "Diff records between consecutive versions of this domain's judgment layer.",
+      "items": {
+        "type": "object",
+        "required": ["from_version", "to_version", "diff_summary"],
+        "properties": {
+          "from_version": { "type": "string" },
+          "to_version": { "type": "string" },
+          "diff_summary": { "type": "string" },
+          "added_axioms": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "removed_axioms": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "modified_axioms": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "value_order_changed": { "type": "boolean" },
+          "boundaries_changed": { "type": "boolean" },
+          "risk_model_changed": { "type": "boolean" }
+        }
+      }
+    },
+    "regression_results": {
+      "type": "array",
+      "description": "Results of regression tests run after judgment updates.",
+      "items": {
+        "type": "object",
+        "required": ["tested_at", "version", "result"],
+        "properties": {
+          "tested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": { "type": "string" },
+          "result": {
+            "type": "string",
+            "enum": ["pass", "fail", "partial"]
+          },
+          "old_eval_pass_rate": {
+            "type": "string",
+            "description": "Pass rate for existing eval cases. Example: '10/10'"
+          },
+          "new_eval_pass_rate": {
+            "type": "string",
+            "description": "Pass rate for new eval cases. Example: '1/1'"
+          },
+          "regressions_found": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "rollback_points": {
+      "type": "array",
+      "description": "Known-good versions that can be rolled back to.",
+      "items": {
+        "type": "object",
+        "required": ["version", "reason"],
+        "properties": {
+          "version": { "type": "string" },
+          "reason": { "type": "string" },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
     }
   },
   "additionalProperties": true

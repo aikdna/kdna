@@ -1,0 +1,232 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aikdna.com/specs/improvement-proposal-schema.json",
+  "title": "KDNA Improvement Proposal",
+  "description": "Schema for structured, versioned requests to change the judgment layer of a KDNA domain. Improvement proposals are the governance objects that connect agent experience to human-reviewed domain evolution.",
+  "type": "object",
+  "required": [
+    "proposal_id",
+    "source",
+    "domain",
+    "domain_version",
+    "proposed_change_type",
+    "target_element",
+    "evidence",
+    "reason",
+    "requires_human_lock",
+    "status"
+  ],
+  "properties": {
+    "proposal_id": {
+      "type": "string",
+      "description": "Unique identifier for this proposal. Format: prop_{domain}_{date}_{sequence}."
+    },
+    "source": {
+      "type": "string",
+      "description": "Where this proposal originated.",
+      "enum": [
+        "outcome_record",
+        "human_feedback",
+        "eval_failure",
+        "trace_analysis",
+        "agent_reflection",
+        "audit_review"
+      ]
+    },
+    "domain": {
+      "type": "string",
+      "description": "Target domain identifier, including scope. Example: @aikdna/decision_state"
+    },
+    "domain_version": {
+      "type": "string",
+      "description": "Version of the domain this proposal applies to."
+    },
+    "proposed_change_type": {
+      "type": "string",
+      "description": "Category of judgment update being proposed.",
+      "enum": [
+        "add_axiom",
+        "revise_axiom",
+        "remove_axiom",
+        "add_misunderstanding",
+        "revise_misunderstanding",
+        "add_scenario_signal",
+        "revise_scenario_signal",
+        "revise_boundary",
+        "revise_risk_model",
+        "update_self_check",
+        "revise_value_order",
+        "revise_composition_policy"
+      ]
+    },
+    "target_element": {
+      "type": "object",
+      "description": "Specific element within the domain that this proposal targets.",
+      "required": ["file", "element_id"],
+      "properties": {
+        "file": {
+          "type": "string",
+          "description": "KDNA file containing the target element.",
+          "enum": [
+            "KDNA_Core.json",
+            "KDNA_Patterns.json",
+            "KDNA_Scenarios.json",
+            "KDNA_Cases.json",
+            "KDNA_Reasoning.json",
+            "KDNA_Evolution.json",
+            "composition.policy.json"
+          ]
+        },
+        "element_id": {
+          "type": "string",
+          "description": "ID of the specific element (axiom, misunderstanding, scenario, etc.) to change."
+        },
+        "parent_id": {
+          "type": "string",
+          "description": "Optional parent ID for nested elements."
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "description": "Supporting evidence for this proposal.",
+      "items": {
+        "type": "object",
+        "required": ["type", "id"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "trace",
+              "outcome_record",
+              "eval_result",
+              "human_feedback",
+              "case_study",
+              "literature"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "description": "Identifier of the evidence artifact."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Brief summary of what this evidence shows."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Optional link to the full evidence."
+          }
+        }
+      }
+    },
+    "reason": {
+      "type": "string",
+      "description": "Human-readable rationale for the proposed change."
+    },
+    "proposed_content": {
+      "type": "object",
+      "description": "Optional: the full proposed new content for the target element. If omitted, the proposal describes a problem without prescribing the exact fix.",
+      "additionalProperties": true
+    },
+    "risk_if_accepted": {
+      "type": "string",
+      "description": "What could go wrong if this change is adopted."
+    },
+    "risk_if_rejected": {
+      "type": "string",
+      "description": "What could go wrong if this change is ignored."
+    },
+    "requires_human_lock": {
+      "type": "boolean",
+      "description": "Whether this proposal MUST receive human approval before application. Always true for judgment updates."
+    },
+    "status": {
+      "type": "string",
+      "description": "Current state of the proposal in the governance pipeline.",
+      "enum": [
+        "proposed",
+        "under_review",
+        "accepted",
+        "rejected",
+        "deferred",
+        "superseded"
+      ]
+    },
+    "review": {
+      "type": "object",
+      "description": "Review decision, populated when status is accepted or rejected.",
+      "properties": {
+        "reviewer": {
+          "type": "string",
+          "description": "Identifier of the human reviewer."
+        },
+        "reviewed_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the review was completed."
+        },
+        "decision": {
+          "type": "string",
+          "enum": ["accept", "reject", "defer", "modify"]
+        },
+        "decision_reason": {
+          "type": "string",
+          "description": "Human-readable reason for the decision."
+        },
+        "counterexamples": {
+          "type": "array",
+          "description": "Counterexamples raised during review.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "description": { "type": "string" },
+              "severity": {
+                "type": "string",
+                "enum": ["low", "medium", "high"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "human_lock": {
+      "type": "object",
+      "description": "Human Judgment Lock record, populated when the proposal is accepted.",
+      "properties": {
+        "lock_id": { "type": "string" },
+        "locked_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "locked_by": {
+          "type": "string",
+          "description": "Identity of the human who applied the lock."
+        },
+        "lock_type": {
+          "type": "string",
+          "enum": ["accept", "reject", "defer"]
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "superseded_by": {
+      "type": "string",
+      "description": "If status is superseded, the proposal_id that replaced this one."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the proposal was created."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the proposal was last updated."
+    }
+  },
+  "additionalProperties": false
+}
