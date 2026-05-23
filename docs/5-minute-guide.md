@@ -113,7 +113,7 @@ The feedback changes from "make it more specific" to structurally diagnosing *wh
 For custom agent runtimes, use the KDNA SDK:
 
 ```javascript
-const { loadDomain, classifyInput, formatContext } = require('@aikdna/kdna');
+const { loadDomain, classifyInput, formatContext } = require('@aikdna/kdna-core');
 
 // Load a domain
 const domain = loadDomain('/path/to/kdna-agent_safety');

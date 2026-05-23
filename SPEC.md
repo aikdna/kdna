@@ -7,7 +7,7 @@
 
 ## Abstract
 
-KDNA (Knowledge DNA) is a structured format for encoding domain judgment for AI agents. This specification defines the file format, validation rules, loading behavior, and conformance requirements for KDNA domains.
+KDNA (Knowledge DNA) is a structured format for encoding domain judgment for AI agents. This specification defines the file format, validation rules, loading behavior, container format (.kdna), and conformance requirements for KDNA domains.
 
 ## Terminology
 
@@ -646,7 +646,165 @@ Cluster evaluation is distinct from single-domain evaluation. A cluster eval MUS
 
 ---
 
-## 14. References
+## 14. KDNA Container Format (.kdna)
+
+A `.kdna` file is the distribution unit for KDNA domain cognition. It is a portable, self-contained, verifiable container — not merely a ZIP of JSON files. The container format is separate from the domain package directory format: a domain package is edited as a directory; a `.kdna` container is what is distributed, installed, and verified.
+
+### 14.1 Design Principles
+
+1. **Self-contained:** A `.kdna` file MUST contain everything needed to install and verify a domain without external dependencies (except the CLI/loader).
+2. **Verifiable:** Every `.kdna` file MUST be checksum-able and signable. The container is the unit of trust.
+3. **Identity-carrying:** A `.kdna` file carries identity (name, version, author, scope) in its manifest. It is not an anonymous blob.
+4. **Stable:** Once published, a specific version of a `.kdna` file MUST be immutable. Content changes produce a new container with a new version.
+
+### 14.2 Container Format
+
+A `.kdna` file:
+
+- **MUST** be a ZIP archive (application/zip).
+- **MUST** use the `.kdna` file extension.
+- **MUST NOT** be password-protected or encrypted at the container level (encryption of licensed domains is handled separately at the content level, see §14.9).
+- **MUST** use UTF-8 encoding for all text files within the archive.
+- **MUST** use forward slash (`/`) as path separator within the archive.
+- **SHOULD** use Deflate compression (ZIP method 8).
+
+### 14.3 Required Contents
+
+A valid `.kdna` container MUST contain:
+
+| File | Required | Description |
+|------|----------|-------------|
+| `kdna.json` | REQUIRED | Container manifest (see §14.4) |
+| `KDNA_Core.json` | REQUIRED | Domain core: axioms, ontology, frameworks, stances |
+| `KDNA_Patterns.json` | REQUIRED | Domain patterns: terminology, misunderstandings, self-checks |
+| `KDNA_Scenarios.json` | OPTIONAL | Scenario signals and action triggers |
+| `KDNA_Cases.json` | OPTIONAL | Full cases demonstrating judgment application |
+| `KDNA_Reasoning.json` | OPTIONAL | Reasoning chains from principle to action |
+| `KDNA_Evolution.json` | OPTIONAL | Growth stages, capability layers, measurement |
+| `README.md` | OPTIONAL | Human-readable domain documentation |
+| `LICENSE` | OPTIONAL | License text file |
+| `evals/` | OPTIONAL | Evaluation test cases directory |
+| `signature.json` | RECOMMENDED | Ed25519 signature covering content (see §14.7) |
+
+A container MUST NOT contain more than 6 KDNA JSON files (Core, Patterns, Scenarios, Cases, Reasoning, Evolution). Additional files such as `README.md`, `LICENSE`, `signature.json`, and `evals/` are not counted toward this limit.
+
+### 14.4 Container Manifest (`kdna.json`)
+
+Every `.kdna` container MUST include a `kdna.json` at the archive root. This file declares the container's identity, version, and verification metadata.
+
+```json
+{
+  "format": "kdna",
+  "format_version": "1.0",
+  "name": "@aikdna/writing",
+  "version": "0.7.2",
+  "judgment_version": "2026.05",
+  "spec_version": "1.0-rc",
+  "description": "Editorial writing judgment — diagnose whether content has a real argument, a cognitive hook, and evidence density.",
+  "core_insight": "Most writing problems are structural and argument-level, not language-level.",
+  "author": {
+    "name": "KDNA Team",
+    "id": "kdna-team",
+    "pubkey": "ed25519:43d22af8f0e189b6fd42bfaab710f52f4bc5f0ae3f5e04719a1a1d9ce9760fbe"
+  },
+  "license": {
+    "type": "CC-BY-4.0"
+  },
+  "status": "experimental",
+  "quality_badge": "tested",
+  "access": "open",
+  "language": "en",
+  "keywords": ["writing", "editing", "editorial"],
+  "file_count": 6,
+  "created": "2026-05-01",
+  "updated": "2026-05-15",
+  "container_sha256": "abc123...",
+  "signature": "ed25519:def456..."
+}
+```
+
+**Required fields:** `format`, `format_version`, `name`, `version`, `spec_version`, `description`, `author`, `access`.
+
+**Optional fields:** `judgment_version`, `core_insight`, `license`, `status`, `quality_badge`, `language`, `keywords`, `file_count`, `created`, `updated`, `container_sha256`, `signature`.
+
+The `name` field follows the format `@scope/domain-name` and MUST match the registry entry.
+
+### 14.5 Checksum
+
+- **Container checksum:** The `container_sha256` field in `kdna.json` is the SHA-256 hash of the complete `.kdna` file (the ZIP archive bytes).
+- **Content checksum:** The registry entry `sha256` matches the container checksum.
+- Checksums MUST be verified during `kdna install` before unpacking.
+- Checksum verification MUST fail closed: any mismatch prevents installation.
+
+### 14.6 Signing
+
+A `.kdna` container MAY be signed using Ed25519.
+
+- The signature covers the **content tree** (all files within the archive, sorted by path, excluding `signature.json` itself).
+- The signing key corresponds to the scope's `trust_pubkey` in the registry.
+- The signature is stored in `signature.json` within the container:
+  ```json
+  {
+    "algorithm": "ed25519",
+    "public_key": "ed25519:43d22af8f0e189b6fd42bfaab710f52f4bc5f0ae3f5e04719a1a1d9ce9760fbe",
+    "signature": "base64-encoded-signature",
+    "signed_at": "2026-05-15T10:00:00Z"
+  }
+  ```
+- Signature verification is REQUIRED for domains with `access: licensed` or `access: runtime`.
+- Signature verification is RECOMMENDED for domains with `access: open`.
+
+### 14.7 Unpack Behavior
+
+When a `.kdna` file is installed via `kdna install` or `kdna unpack`:
+
+1. Verify container checksum (if available in registry).
+2. Verify signature (if `signature.json` is present).
+3. Extract to `~/.kdna/domains/@scope/name/`.
+4. Validate structural compliance (kdna-lint + kdna-validate).
+5. Register in the local domain index.
+
+The unpack target directory name is derived from the domain's `name` in `kdna.json`:
+- `@aikdna/writing` → `~/.kdna/domains/@aikdna/writing/`
+
+### 14.8 CLI Operations on Containers
+
+| Command | Operation |
+|---------|-----------|
+| `kdna pack ./writing` | Create `writing.kdna` from a domain directory |
+| `kdna unpack writing.kdna` | Extract container to a directory |
+| `kdna install @aikdna/writing` | Download from registry, verify, and unpack |
+| `kdna inspect writing.kdna` | Display container metadata without unpacking |
+| `kdna verify writing.kdna` | Verify checksum and signature without unpacking |
+| `kdna install ./writing.kdna` | Install from a local container file |
+
+### 14.9 Platform Recognition
+
+For operating system-level recognition of `.kdna` files:
+
+| Platform | Mechanism |
+|----------|-----------|
+| **macOS** | UTType: `com.aikdna.kdna` (or `public.kdna`). Registered by KDNAChat Mac App. Double-click opens in KDNAChat for inspection and installation. |
+| **Windows** | File extension association with KDNAChat or CLI. |
+| **Linux** | MIME type `application/x-kdna`. Desktop file association. |
+
+The recommended MIME type is `application/x-kdna`.
+
+### 14.10 Container vs Directory
+
+| | Domain Directory | .kdna Container |
+|---|---|---|
+| **Purpose** | Authoring and editing | Distribution and installation |
+| **Location** | Any filesystem path | `~/.kdna/domains/@scope/name/` (after unpack) |
+| **Verifiable** | Via `kdna validate` | Via `kdna verify` + checksum + signature |
+| **Immutable** | No | Yes (once published) |
+| **Directly Loadable** | Yes | No (must be unpacked first) |
+
+Domain authors work in directories. Users and agents receive `.kdna` containers. The container is the distribution primitive; the directory is the working copy.
+
+---
+
+## 15. References
 
 - [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) — Key words for use in RFCs
 - [Semantic Versioning](https://semver.org/) — Version numbering

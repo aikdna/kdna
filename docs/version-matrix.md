@@ -7,7 +7,7 @@ This document explains the relationship between the four version numbers you wil
 | Axis | Location | Example | What it means |
 |------|----------|---------|---------------|
 | **SPEC version** | `SPEC.md` title | `v1.0-rc` | The version of the KDNA protocol specification. Determines file format, required fields, and validation rules. |
-| **CLI version** | `npm @aikdna/kdna` | `v0.7.8` | The version of the command-line tool. Independent of SPEC version. |
+| **CLI version** | `npm @aikdna/kdna-cli` | `v0.7.8` | The version of the command-line tool. Independent of SPEC version. |
 | **Core library version** | `npm @aikdna/kdna-core` | `v0.2.3` | The version of the zero-dependency validation and formatting library. |
 | **Domain version** | Each domain's `kdna.json` | `v0.7.5` | The version of an individual domain's content. Follows SemVer (MAJOR.MINOR.PATCH). |
 

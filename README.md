@@ -36,28 +36,32 @@ The agent didn't get better at writing. It got better at *judging what kind of p
 
 ---
 
-## Quick start
+## 5-Minute Quick Start
+
+One path. Five minutes. See KDNA change an agent's judgment.
 
 ```bash
-npm i -g @aikdna/kdna
+npm install -g @aikdna/kdna-cli
 kdna setup
-kdna install writing
+kdna install @aikdna/writing
+kdna verify @aikdna/writing --judgment
 kdna compare @aikdna/writing --input "help me improve this post"
 ```
 
-- `kdna setup` — Installs the kdna-loader skill into your agent (OpenCode, Codex, Claude Code, Cursor, Gemini).
-- `kdna install <name>` — Downloads a domain from the registry. Writing, code review, decision state, and 6 others are available.
-- `kdna compare` — Sends the same input to an LLM with and without KDNA, diffing the judgment paths.
-- `kdna verify @aikdna/writing --judgment` — Scores governance coverage, eval pass rate, and structural integrity.
+That's it. Your agent now loads a domain judgment package. The last command sends the same input to an LLM with and without KDNA, diffing the judgment paths so you can see exactly what changed.
 
 ```bash
-# Create your own domain
-kdna init my_expertise
-# ... fill in KDNA_Core.json and KDNA_Patterns.json ...
-kdna validate my_expertise
-kdna publish --check my_expertise
-kdna publish my_expertise
+# Verify everything is working
+kdna doctor --agents
+
+# → Codex: detected, kdna-loader installed
+# → Claude Code: detected, kdna-loader installed
+# → OpenCode: not detected (install opencode first)
+# → KDNA data root: ~/.kdna
+# → Installed domains: 1
 ```
+
+Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Then `kdna validate my_expertise` checks it, and `kdna publish my_expertise` sends it to the registry.
 
 ---
 
