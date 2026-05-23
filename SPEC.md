@@ -663,7 +663,7 @@ A `.kdna` file:
 
 - **MUST** be a ZIP archive (application/zip).
 - **MUST** use the `.kdna` file extension.
-- **MUST NOT** be password-protected or encrypted at the container level (encryption of licensed domains is handled separately at the content level, see §14.9).
+- **MUST NOT** be password-protected or encrypted at the container level (encryption of licensed domains is handled by the licensed container extension; see [docs/kdna-encryption-authorization.md](./docs/kdna-encryption-authorization.md)).
 - **MUST** use UTF-8 encoding for all text files within the archive.
 - **MUST** use forward slash (`/`) as path separator within the archive.
 - **SHOULD** use Deflate compression (ZIP method 8).

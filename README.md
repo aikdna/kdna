@@ -1,6 +1,6 @@
 # KDNA
 
-> [![npm](https://img.shields.io/npm/v/@aikdna/kdna)](https://www.npmjs.com/package/@aikdna/kdna) [![CI](https://github.com/aikdna/KDNA/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/KDNA/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+> [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/KDNA/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/KDNA/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
 **KDNA is an open protocol for packaging domain judgment into loadable, testable, governable assets for AI agents.**
 
