@@ -25,6 +25,8 @@ A **protocol fork** typically:
 
 Protocol forks are not prohibited, but they create fragmentation. When multiple similar "DNA" standards exist, users are confused, tool builders must choose sides, and the ecosystem weakens.
 
+**We encourage protocol-level changes to be proposed through the KDNA governance process before creating a parallel public standard.** If you believe KDNA's core structure, schema, or validation rules need fundamental changes, open a proposal via [GOVERNANCE.md](./docs/GOVERNANCE.md). Innovation that strengthens the standard benefits everyone; innovation that fragments it benefits no one.
+
 ## Requirements for Public Forks
 
 If you create a public fork of any KDNA repository, you must:
