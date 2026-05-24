@@ -142,6 +142,7 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 | **Curious about the full specification** | [SPEC.md](./SPEC.md) |
 | **Understanding governance and safety** | [Governance](./docs/GOVERNANCE.md) · [Safety](./docs/SAFETY.md) · [Risk Policy](./docs/RISK_POLICY.md) · [KDNA Card Spec](./docs/KDNA_CARD_SPEC.md) · [Security](./docs/SECURITY.md) |
 | **Browsing available domains** | [Registry](https://github.com/aikdna/kdna-registry) · [aikdna.com/domains](https://aikdna.com/domains) |
+| **Reading the project roadmap** | [ROADMAP.md](./docs/ROADMAP.md) |
 | **Reading in Chinese** | [中文版](./README.zh.md) |
 
 ---
@@ -158,6 +159,26 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 | [kdna-vscode](https://github.com/aikdna/kdna-vscode) | VS Code extension — validate, preview, pack | Editor users |
 | [kdna-writing](https://github.com/aikdna/kdna-writing) · [decision_state](https://github.com/aikdna/kdna-decision_state) · [prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [agent_safety](https://github.com/aikdna/kdna-agent_safety) · [kdna_authoring](https://github.com/aikdna/kdna-authoring) · [content_strategy](https://github.com/aikdna/kdna-content_strategy) · [knowledge_management](https://github.com/aikdna/kdna-knowledge_management) · [open_source_project](https://github.com/aikdna/kdna-open_source_project) · [code_review](https://github.com/aikdna/kdna-code_review) · [animation](https://github.com/aikdna/kdna-animation) | Official domain packages (all L2 bilingual, 10+ evals) | Domain consumers |
 | [aikdna.com](https://github.com/aikdna/kdna-website) | Website source | Web contributors |
+
+---
+
+## Repository Scope
+
+This repository (`aikdna/kdna`) contains:
+
+- KDNA protocol specification
+- Canonical schemas and validation rules
+- Reference examples
+- Benchmark definitions and reports
+- Asset Card and Human Lock specifications
+- Core protocol documentation
+
+Related repositories:
+
+- [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — official CLI and runtime control plane
+- [`aikdna/kdna-registry`](https://github.com/aikdna/kdna-registry) — public domain catalog and registry schema
+- [`aikdna/kdna-studio`](https://github.com/aikdna/kdna-studio) — human-led judgment asset production
+- Official domain repositories — reference KDNA domains
 
 ---
 
