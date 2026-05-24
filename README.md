@@ -271,6 +271,19 @@ Run `kdna compare @aikdna/writing --input "help me improve this post"` to see a 
 [English](./README.md) · [中文](./README.zh.md)
 
 ## License
+
 - **Code** (CLI, Studio, Registry, Skills, VS Code extension): Apache-2.0
 - **Documentation, examples, and domain content**: CC-BY-4.0
 See [LICENSE](LICENSE) and [LICENSE-DOCS](LICENSE-DOCS) for full terms.
+
+## Open Standard, Not Open Identity
+
+KDNA is open source because domain judgment should become shared infrastructure for AI agents. We welcome developers, researchers, creators, and organizations to build KDNA domains, tools, validators, loaders, and agent integrations.
+
+However, KDNA is intended to grow as a **coherent open standard**, not as a set of fragmented renamed protocols. Forks are welcome for experimentation, but public derivative protocols must clearly identify themselves as independent and must not imply official KDNA compatibility or endorsement unless they follow the official SPEC and compatibility policy.
+
+- [TRADEMARK.md](./TRADEMARK.md) — KDNA name and marks protection
+- [COMPATIBILITY.md](./COMPATIBILITY.md) — what "KDNA-compatible" means
+- [FORK_POLICY.md](./FORK_POLICY.md) — constructive forks vs protocol forks
+- [GOVERNANCE.md](./docs/GOVERNANCE.md) — how the standard evolves
+- [registry-policy.md](./docs/registry-policy.md) — registry governance
