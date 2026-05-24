@@ -42,21 +42,23 @@ function loadEnv() {
 
 const KEYS = loadEnv();
 const PROVIDER = process.env.MODEL_PROVIDER || 'minimax';
-const RAW_DIR = join(process.cwd(), 'benchmarks', 'raw', 'agent_safety', PROVIDER);
-const REPORT_PATH = join(process.cwd(), 'benchmarks', `agent_safety-comparison-report-${PROVIDER}.md`);
 const CFG = {
   minimax:   { url: 'https://api.minimaxi.com/v1/chat/completions', key: KEYS.minimax,   model: 'MiniMax-M2.7' },
   anthropic: { url: 'https://api.anthropic.com/v1/messages',        key: KEYS.anthropic, model: 'claude-sonnet-4-20250514' },
   openai:    { url: 'https://api.openai.com/v1/chat/completions',    key: KEYS.openai,    model: 'gpt-4o' },
-  openrouter:{ url: 'https://openrouter.ai/api/v1/chat/completions', key: KEYS.openrouter, model: 'anthropic/claude-opus-4.7' },
+  openrouter:{ url: 'https://openrouter.ai/api/v1/chat/completions', key: KEYS.openrouter, model: process.env.MODEL || 'anthropic/claude-opus-4.7' },
 }[PROVIDER] || { url: '', key: '', model: '' };
+
+const modelSlug = CFG.model.replace(/\//g, '-');
+const RAW_DIR = join(process.cwd(), 'benchmarks', 'raw', 'agent_safety', PROVIDER, modelSlug);
+const REPORT_PATH = join(process.cwd(), 'benchmarks', `agent_safety-comparison-report-${modelSlug}.md`);
 
 // ══════════════════════════════════════════════════════════════════════════
 // API
 // ══════════════════════════════════════════════════════════════════════════
 
 async function callAPI(systemPrompt, userMessage) {
-  if (!CFG.key) return { error: `No API key for ${PROVIDER}` };
+  if (!CFG.key) return { error: `No API key for ${modelSlug}` };
   const headers = { 'Content-Type': 'application/json' };
   let body;
   if (PROVIDER === 'anthropic') {
@@ -159,7 +161,7 @@ function scoreResponse(expected, actual) {
 function generateReport(benchmark, results) {
   const L = [];
   L.push('# Agent Safety Mini Benchmark Report', '');
-  L.push(`**Model:** ${CFG.model} (${PROVIDER})`);
+  L.push(`**Model:** ${CFG.model} (${modelSlug})`);
   L.push(`**Date:** ${new Date().toISOString().slice(0, 10)}`);
   L.push(`**Scenarios:** ${benchmark.scenarios.length} cases · No KDNA · Best Prompt · KDNA`, '');
   L.push('## Summary', '');
@@ -215,7 +217,7 @@ async function main() {
   const dryRun = args.includes('--dry-run');
   const limit = parseInt(args[args.indexOf('--limit') + 1] || '10');
 
-  console.log(`=== KDNA Agent Safety Mini Benchmark (${PROVIDER}/${CFG.model}) ===`);
+  console.log(`=== KDNA Agent Safety Mini Benchmark (${modelSlug}/${CFG.model}) ===`);
   const bm = JSON.parse(readFileSync(BENCHMARK_PATH, 'utf8'));
   const diffs = bm.scenarios.map(s => s.difficulty);
   console.log(`Scenarios: ${bm.scenarios.length}  Easy: ${diffs.filter(d=>d==='easy').length}  Medium: ${diffs.filter(d=>d==='medium').length}  Hard: ${diffs.filter(d=>d==='hard').length}\n`);
