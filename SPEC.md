@@ -3,7 +3,7 @@
 **Status:** Release Candidate  
 **Previous:** v0.4 (superseded)  
 **Editors:** KDNA Team  
-**Repository:** https://github.com/knowledge-dna/kdna
+**Repository:** https://github.com/aikdna/kdna
 
 ## Abstract
 

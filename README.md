@@ -1,6 +1,6 @@
 # KDNA
 
-> [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/knowledge-dna/KDNA/actions/workflows/validate.yml/badge.svg)](https://github.com/knowledge-dna/KDNA/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+> [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/KDNA/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/KDNA/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
 **KDNA is an open protocol for packaging domain judgment into loadable, testable, governable assets for AI agents.**
 
@@ -70,13 +70,13 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 | If you are a... | Read this |
 |-----------------|-----------|
 | **Developer wanting to connect KDNA to an agent** | [5-minute guide](./docs/5-minute-guide.md) |
-| **Domain expert wanting to encode your judgment** | [KDNA Studio Core](https://github.com/knowledge-dna/kdna-studio) — open-source authoring kernel |
+| **Domain expert wanting to encode your judgment** | [KDNA Studio Core](https://github.com/aikdna/kdna-studio) — open-source authoring kernel |
 | **Evaluator wanting to measure judgment improvement** | [Evaluation guide](./docs/evaluation.md) |
 | **Enterprise evaluating private deployment** | [Enterprise guide](./docs/enterprise.md) |
 | **Contributor wanting to improve KDNA itself** | [CONTRIBUTING.md](./CONTRIBUTING.md) |
 | **Curious about the full specification** | [SPEC.md](./SPEC.md) |
 | **Understanding governance and safety** | [Governance](./docs/GOVERNANCE.md) · [Safety](./docs/SAFETY.md) · [Risk Policy](./docs/RISK_POLICY.md) · [KDNA Card Spec](./docs/KDNA_CARD_SPEC.md) · [Security](./docs/SECURITY.md) |
-| **Browsing available domains** | [Registry](https://github.com/knowledge-dna/kdna-registry) · [aikdna.com/domains](https://aikdna.com/domains) |
+| **Browsing available domains** | [Registry](https://github.com/aikdna/kdna-registry) · [aikdna.com/domains](https://aikdna.com/domains) |
 | **Reading in Chinese** | [中文版](./README.zh.md) |
 
 ---
@@ -85,14 +85,14 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 
 | Repository | Role | For |
 |------------|------|-----|
-| [KDNA](https://github.com/knowledge-dna/KDNA) | Protocol, SPEC, core library, governance docs | Everyone |
-| [kdna-cli](https://github.com/knowledge-dna/kdna-cli) | CLI — install, validate, verify, pack, load, trace | Developers |
-| [kdna-studio](https://github.com/knowledge-dna/kdna-studio) | Open-source authoring kernel (`@aikdna/studio-core`) | Domain creators, tool builders |
-| [kdna-registry](https://github.com/knowledge-dna/kdna-registry) | Domain catalog — discover, verify, distribute | Publishers, consumers |
-| [kdna-skills](https://github.com/knowledge-dna/kdna-skills) | Agent loader skill — one loader, many domains | Agent users |
-| [kdna-vscode](https://github.com/knowledge-dna/kdna-vscode) | VS Code extension — validate, preview, pack | Editor users |
-| [kdna-writing](https://github.com/knowledge-dna/kdna-writing) · [decision_state](https://github.com/knowledge-dna/kdna-decision_state) · [prompt_diagnosis](https://github.com/knowledge-dna/kdna-prompt_diagnosis) · [agent_safety](https://github.com/knowledge-dna/kdna-agent_safety) · [kdna_authoring](https://github.com/knowledge-dna/kdna-authoring) · [content_strategy](https://github.com/knowledge-dna/kdna-content_strategy) · [knowledge_management](https://github.com/knowledge-dna/kdna-knowledge_management) · [open_source_project](https://github.com/knowledge-dna/kdna-open_source_project) · [code_review](https://github.com/knowledge-dna/kdna-code_review) · [animation](https://github.com/knowledge-dna/kdna-animation) | Official domain packages (all L2 bilingual, 10+ evals) | Domain consumers |
-| [aikdna.com](https://github.com/knowledge-dna/kdna-website) | Website source | Web contributors |
+| [KDNA](https://github.com/aikdna/KDNA) | Protocol, SPEC, core library, governance docs | Everyone |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | CLI — install, validate, verify, pack, load, trace | Developers |
+| [kdna-studio](https://github.com/aikdna/kdna-studio) | Open-source authoring kernel (`@aikdna/studio-core`) | Domain creators, tool builders |
+| [kdna-registry](https://github.com/aikdna/kdna-registry) | Domain catalog — discover, verify, distribute | Publishers, consumers |
+| [kdna-skills](https://github.com/aikdna/kdna-skills) | Agent loader skill — one loader, many domains | Agent users |
+| [kdna-vscode](https://github.com/aikdna/kdna-vscode) | VS Code extension — validate, preview, pack | Editor users |
+| [kdna-writing](https://github.com/aikdna/kdna-writing) · [decision_state](https://github.com/aikdna/kdna-decision_state) · [prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [agent_safety](https://github.com/aikdna/kdna-agent_safety) · [kdna_authoring](https://github.com/aikdna/kdna-authoring) · [content_strategy](https://github.com/aikdna/kdna-content_strategy) · [knowledge_management](https://github.com/aikdna/kdna-knowledge_management) · [open_source_project](https://github.com/aikdna/kdna-open_source_project) · [code_review](https://github.com/aikdna/kdna-code_review) · [animation](https://github.com/aikdna/kdna-animation) | Official domain packages (all L2 bilingual, 10+ evals) | Domain consumers |
+| [aikdna.com](https://github.com/aikdna/kdna-website) | Website source | Web contributors |
 
 ---
 

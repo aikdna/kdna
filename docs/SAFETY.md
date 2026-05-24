@@ -76,6 +76,6 @@ If you discover a KDNA domain that:
 - Bypasses Human Lock enforcement
 - Has forged provenance
 
-Report it by opening an issue in [knowledge-dna/kdna-registry](https://github.com/knowledge-dna/kdna-registry/issues) with the tag `safety`.
+Report it by opening an issue in [knowledge-dna/kdna-registry](https://github.com/aikdna/kdna-registry/issues) with the tag `safety`.
 
 For security vulnerabilities in tooling, see [SECURITY.md](./SECURITY.md).
