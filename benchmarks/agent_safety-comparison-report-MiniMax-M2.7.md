@@ -36,16 +36,16 @@
 
 ## Raw Outputs
 
-- SAF-001: [no-kdna](./raw/agent_safety/no-kdna-SAF-001.json) · [best-prompt](./raw/agent_safety/best-prompt-SAF-001.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-001.json)
-- SAF-002: [no-kdna](./raw/agent_safety/no-kdna-SAF-002.json) · [best-prompt](./raw/agent_safety/best-prompt-SAF-002.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-002.json)
-- SAF-003: [no-kdna](./raw/agent_safety/no-kdna-SAF-003.json) · [best-prompt](./raw/agent_safety/best-prompt-SAF-003.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-003.json)
-- SAF-004: [no-kdna](./raw/agent_safety/no-kdna-SAF-004.json) · [best-prompt](./raw/agent_safety/best-prompt-SAF-004.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-004.json)
-- SAF-005: [no-kdna](./raw/agent_safety/no-kdna-SAF-005.json) · [best-prompt](./raw/agent_safety/best-prompt-SAF-005.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-005.json)
-- SAF-006: [no-kdna](./raw/agent_safety/no-kdna-SAF-006.json) · [best-prompt](./raw/agent_safety/best-prompt-SAF-006.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-006.json)
-- SAF-007: [no-kdna](./raw/agent_safety/no-kdna-SAF-007.json) · [best-prompt](./raw/agent_safety/best-prompt-SAF-007.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-007.json)
-- SAF-008: [no-kdna](./raw/agent_safety/no-kdna-SAF-008.json) · [best-prompt](./raw/agent_safety/best-prompt-SAF-008.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-008.json)
-- SAF-009: [no-kdna](./raw/agent_safety/no-kdna-SAF-009.json) · [best-prompt](./raw/agent_safety/best-prompt-SAF-009.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-009.json)
-- SAF-010: [no-kdna](./raw/agent_safety/no-kdna-SAF-010.json) · [best-prompt](./raw/agent_safety/best-prompt-SAF-010.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-010.json)
+- SAF-001: [no-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/no-kdna-SAF-001.json) · [best-prompt](./raw/agent_safety/minimax/MiniMax-M2.7/best-prompt-SAF-001.json) · [with-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/with-kdna-SAF-001.json)
+- SAF-002: [no-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/no-kdna-SAF-002.json) · [best-prompt](./raw/agent_safety/minimax/MiniMax-M2.7/best-prompt-SAF-002.json) · [with-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/with-kdna-SAF-002.json)
+- SAF-003: [no-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/no-kdna-SAF-003.json) · [best-prompt](./raw/agent_safety/minimax/MiniMax-M2.7/best-prompt-SAF-003.json) · [with-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/with-kdna-SAF-003.json)
+- SAF-004: [no-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/no-kdna-SAF-004.json) · [best-prompt](./raw/agent_safety/minimax/MiniMax-M2.7/best-prompt-SAF-004.json) · [with-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/with-kdna-SAF-004.json)
+- SAF-005: [no-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/no-kdna-SAF-005.json) · [best-prompt](./raw/agent_safety/minimax/MiniMax-M2.7/best-prompt-SAF-005.json) · [with-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/with-kdna-SAF-005.json)
+- SAF-006: [no-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/no-kdna-SAF-006.json) · [best-prompt](./raw/agent_safety/minimax/MiniMax-M2.7/best-prompt-SAF-006.json) · [with-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/with-kdna-SAF-006.json)
+- SAF-007: [no-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/no-kdna-SAF-007.json) · [best-prompt](./raw/agent_safety/minimax/MiniMax-M2.7/best-prompt-SAF-007.json) · [with-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/with-kdna-SAF-007.json)
+- SAF-008: [no-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/no-kdna-SAF-008.json) · [best-prompt](./raw/agent_safety/minimax/MiniMax-M2.7/best-prompt-SAF-008.json) · [with-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/with-kdna-SAF-008.json)
+- SAF-009: [no-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/no-kdna-SAF-009.json) · [best-prompt](./raw/agent_safety/minimax/MiniMax-M2.7/best-prompt-SAF-009.json) · [with-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/with-kdna-SAF-009.json)
+- SAF-010: [no-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/no-kdna-SAF-010.json) · [best-prompt](./raw/agent_safety/minimax/MiniMax-M2.7/best-prompt-SAF-010.json) · [with-kdna](./raw/agent_safety/minimax/MiniMax-M2.7/with-kdna-SAF-010.json)
 
 ## How to Reproduce
 
