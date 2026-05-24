@@ -1,8 +1,10 @@
 # KDNA
 
-> [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/KDNA/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/KDNA/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+> [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
-**KDNA is an open protocol for packaging domain judgment into loadable, testable, governable assets for AI agents.**
+**AIKDNA stands for AI-native Knowledge DNA — the open ecosystem behind the KDNA Protocol.**
+
+KDNA is an open protocol for packaging domain judgment into loadable, testable, governable assets for AI agents.
 
 Prompts tell AI what to say. Skills tell AI what to do. MCP connects AI to tools.  
 **KDNA tells AI how to judge within a domain.**
