@@ -87,7 +87,7 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 
 | Repository | Role | For |
 |------------|------|-----|
-| [KDNA](https://github.com/aikdna/KDNA) | Protocol, SPEC, core library, governance docs | Everyone |
+| [kdna](https://github.com/aikdna/kdna) | Protocol, SPEC, core library, governance docs | Everyone |
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | CLI — install, validate, verify, pack, load, trace | Developers |
 | [kdna-studio](https://github.com/aikdna/kdna-studio) | Open-source authoring kernel (`@aikdna/studio-core`) | Domain creators, tool builders |
 | [kdna-registry](https://github.com/aikdna/kdna-registry) | Domain catalog — discover, verify, distribute | Publishers, consumers |
