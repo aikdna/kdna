@@ -17,8 +17,6 @@ import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
 const BENCHMARK_PATH = join(process.cwd(), 'benchmarks', 'agent_safety-mini-benchmark.json');
-const RAW_DIR = join(process.cwd(), 'benchmarks', 'raw', 'agent_safety');
-const REPORT_PATH = join(process.cwd(), 'benchmarks', 'agent_safety-comparison-report.md');
 
 // ══════════════════════════════════════════════════════════════════════════
 // Config
@@ -30,10 +28,13 @@ function loadEnv() {
 
 const ENV = { ...process.env, ...loadEnv() };
 const PROVIDER = ENV.MODEL_PROVIDER || 'minimax';
+const RAW_DIR = join(process.cwd(), 'benchmarks', 'raw', 'agent_safety', PROVIDER);
+const REPORT_PATH = join(process.cwd(), 'benchmarks', `agent_safety-comparison-report-${PROVIDER}.md`);
 const CFG = {
   minimax: { url: 'https://api.minimaxi.com/v1/chat/completions', key: ENV.key || '', model: ENV.model || 'MiniMax-M2.7' },
   anthropic: { url: 'https://api.anthropic.com/v1/messages', key: ENV.ANTHROPIC_API_KEY || '', model: 'claude-sonnet-4-20250514' },
   openai: { url: 'https://api.openai.com/v1/chat/completions', key: ENV.OPENAI_API_KEY || '', model: 'gpt-4o' },
+  openrouter: { url: 'https://openrouter.ai/api/v1/chat/completions', key: (ENV['LLM openrouter'] || '').replace('key=', '').trim() || ENV.OPENROUTER_API_KEY || '', model: 'anthropic/claude-opus-4.7' },
 }[PROVIDER] || { url: '', key: '', model: '' };
 
 // ══════════════════════════════════════════════════════════════════════════
