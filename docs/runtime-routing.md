@@ -145,11 +145,27 @@ It composes existing CLI capabilities:
 - `kdna match "<task>" --json` → mechanical negative match
 - `kdna verify <domain>` → trust verification
 
+The output conforms to [`specs/route-result.schema.json`](../specs/route-result.schema.json).
+
 The Agent then executes exactly the route result:
 - `action: load` → `kdna load <domain>`
 - `action: skip` → answer normally
 - `action: ask` → present choice
 - `action: block` → stop loading
+
+### Action / Status Mapping
+
+| Status | Action | Behavior |
+|--------|--------|----------|
+| SKIP_NO_JUDGMENT_NEEDED | skip | Answer normally. Don't mention KDNA. |
+| SKIP_NO_LOCAL_DOMAIN | skip | Answer normally. Only mention KDNA if asked. |
+| SKIP_WEAK_FIT | skip | Answer normally. Trace the weak match. |
+| REJECT_NEGATIVE_MATCH | skip | Answer normally. The rejected domain's boundary excludes this task. |
+| ASK_AMBIGUOUS_DOMAIN | ask | Present choice to user. Don't blend. |
+| LOAD_STRONG_FIT | load | `kdna load <domain>` |
+| BLOCK_TRUST_FAILED | block | Stop. Trust/policy/lice verify failed. |
+
+**Note on REJECT_NEGATIVE_MATCH**: A candidate domain is rejected — but if no other domain matches, the route's action is `skip` (not `block`). The Agent answers normally. `block` is reserved for trust/policy failures where loading would violate governance.
 
 ## 9. Trace
 

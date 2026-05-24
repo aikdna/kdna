@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schemas/route-result.schema.json",
+  "title": "KDNA Route Result",
+  "description": "The output of kdna route <task> --json. Defines whether, which, and how a KDNA domain should be loaded for a given task.",
+  "type": "object",
+  "required": ["status", "action", "needs_kdna", "trace_id", "created_at"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "SKIP_NO_JUDGMENT_NEEDED",
+        "SKIP_NO_LOCAL_DOMAIN",
+        "SKIP_WEAK_FIT",
+        "REJECT_NEGATIVE_MATCH",
+        "ASK_AMBIGUOUS_DOMAIN",
+        "LOAD_STRONG_FIT",
+        "BLOCK_TRUST_FAILED"
+      ],
+      "description": "The routing state. Determined by the Router's 5-gate pipeline (Intent → Negative → Fit → Trust → Ambiguity)."
+    },
+    "action": {
+      "type": "string",
+      "enum": ["skip", "load", "ask", "block"],
+      "description": "The action the Agent must execute. skip = answer normally without KDNA. load = load the selected domain. ask = present choice to user. block = stop (trust/policy violation)."
+    },
+    "needs_kdna": {
+      "type": "boolean",
+      "description": "Whether the task could benefit from domain judgment. True even when no local domain is available — this distinguishes 'task doesn't need KDNA' from 'task could use KDNA but none installed.'"
+    },
+    "selected_domain": {
+      "type": ["string", "null"],
+      "description": "The domain to load. Present only when action is 'load'. Format: @scope/name."
+    },
+    "reason": {
+      "type": "string",
+      "description": "Human-readable explanation of the routing decision. Suitable for trace logs and developer debugging."
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Router's confidence in the match. Only meaningful when status is LOAD_STRONG_FIT or SKIP_WEAK_FIT."
+    },
+    "candidates": {
+      "type": "array",
+      "description": "All installed domains evaluated against the task.",
+      "items": {
+        "type": "object",
+        "required": ["domain", "decision"],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "Domain name (@scope/name)."
+          },
+          "decision": {
+            "type": "string",
+            "enum": ["rejected", "weak_match", "strong_match", "ambiguous"],
+            "description": "Per-domain routing decision. 'rejected' = excluded by does_not_apply_when or semantic mismatch. 'weak_match' = partial relevance below confidence threshold. 'strong_match' = high-confidence fit. 'ambiguous' = could apply but conflicts with another domain."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why this decision was made. For rejected: which exclusion triggered. For weak_match: what was insufficient."
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "matched_does_not_apply_when": {
+            "type": ["string", "null"],
+            "description": "If rejected by negative match: the specific does_not_apply_when entry that excluded this domain."
+          },
+          "matched_applies_when": {
+            "type": ["string", "null"],
+            "description": "If matched: the specific applies_when entry that triggered the match."
+          }
+        }
+      }
+    },
+    "rejected_domains": {
+      "type": "array",
+      "description": "Domains explicitly rejected by does_not_apply_when. Separated for audit clarity.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "domain": { "type": "string" },
+          "triggered_rule": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "trust": {
+      "type": "object",
+      "description": "Trust verification results. Only populated when a domain is a candidate for loading.",
+      "properties": {
+        "signature_valid": { "type": "boolean" },
+        "not_yanked": { "type": "boolean" },
+        "license_valid": { "type": "boolean" },
+        "risk_level_acceptable": { "type": "boolean" },
+        "compatibility_ok": { "type": "boolean" },
+        "failures": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of trust checks that failed, if any."
+        }
+      }
+    },
+    "ambiguity": {
+      "type": "object",
+      "description": "Present only when status is ASK_AMBIGUOUS_DOMAIN.",
+      "properties": {
+        "domains": {
+          "type": "array",
+          "description": "The 2+ domains that could apply but with different judgment frames.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "domain": { "type": "string" },
+              "description": { "type": "string" },
+              "judgment_frame": { "type": "string" },
+              "risk_if_wrong": { "type": "string" }
+            }
+          }
+        },
+        "recommendation": {
+          "type": "string",
+          "description": "Router's recommendation to the user, if any."
+        }
+      }
+    },
+    "registry_suggestions": {
+      "type": "array",
+      "description": "Domains available in the registry that could help, but are not installed. Present only when status is SKIP_NO_LOCAL_DOMAIN and discovery is enabled. The Agent MUST NOT auto-install these.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "domain": { "type": "string" },
+          "reason": { "type": "string" },
+          "trust": { "type": "string", "enum": ["official", "community", "verified"] },
+          "install_command": { "type": "string" }
+        }
+      }
+    },
+    "auto_install": {
+      "type": "boolean",
+      "description": "Always false. KDNA never auto-installs domains. This field exists to make the policy explicit in every route result.",
+      "const": false
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "Unique identifier for this routing decision. Used for audit and trace replay."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of when the route was evaluated."
+    }
+  }
+}
