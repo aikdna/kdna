@@ -5,7 +5,7 @@
 ## 第一步：安装
 
 ```bash
-npm i -g @aikdna/kdna
+npm i -g @aikdna/kdna-cli
 ```
 
 ## 第二步：从模板创建
