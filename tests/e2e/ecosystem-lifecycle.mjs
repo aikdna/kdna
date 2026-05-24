@@ -51,33 +51,110 @@ mkdirSync(TEST_DIR, { recursive: true });
 
 // ─── Step 1: Init domain structure ─────────────────────────────────────
 step('Create domain structure', () => {
-  writeFileSync(join(TEST_DIR, 'KDNA_Core.json'), JSON.stringify({
-    meta: { version: '1.0-rc', domain: TEST_DOMAIN, created: new Date().toISOString().slice(0, 10), purpose: 'E2E test domain', load_condition: 'always' },
-    axioms: [
-      { id: 'AX-001', one_sentence: 'Test axiom one', full_statement: 'First test axiom for E2E validation.', why: 'Without this, tests would fail silently.' },
-      { id: 'AX-002', one_sentence: 'Test axiom two', full_statement: 'Second test axiom for E2E validation.', why: 'Ensures multi-axiom domains work.' }
-    ],
-    ontology: [{ id: 'test_concept', one_sentence: 'A test concept', essence: 'Testing concept for validation', boundary: 'Not a production concept', trigger_signal: 'test' }],
-    frameworks: [{ id: 'FW-001', name: 'Test Framework', when_to_use: 'During testing', steps: ['Step 1: Verify', 'Step 2: Validate'] }],
-    core_structure: [{ from: 'test_input', to: 'test_output', via: 'testing' }],
-    stances: ['Test first, deploy later.']
-  }, null, 2));
+  writeFileSync(
+    join(TEST_DIR, 'KDNA_Core.json'),
+    JSON.stringify(
+      {
+        meta: {
+          version: '1.0-rc',
+          domain: TEST_DOMAIN,
+          created: new Date().toISOString().slice(0, 10),
+          purpose: 'E2E test domain',
+          load_condition: 'always',
+        },
+        axioms: [
+          {
+            id: 'AX-001',
+            one_sentence: 'Test axiom one',
+            full_statement: 'First test axiom for E2E validation.',
+            why: 'Without this, tests would fail silently.',
+          },
+          {
+            id: 'AX-002',
+            one_sentence: 'Test axiom two',
+            full_statement: 'Second test axiom for E2E validation.',
+            why: 'Ensures multi-axiom domains work.',
+          },
+        ],
+        ontology: [
+          {
+            id: 'test_concept',
+            one_sentence: 'A test concept',
+            essence: 'Testing concept for validation',
+            boundary: 'Not a production concept',
+            trigger_signal: 'test',
+          },
+        ],
+        frameworks: [
+          {
+            id: 'FW-001',
+            name: 'Test Framework',
+            when_to_use: 'During testing',
+            steps: ['Step 1: Verify', 'Step 2: Validate'],
+          },
+        ],
+        core_structure: [{ from: 'test_input', to: 'test_output', via: 'testing' }],
+        stances: ['Test first, deploy later.'],
+      },
+      null,
+      2,
+    ),
+  );
 
-  writeFileSync(join(TEST_DIR, 'KDNA_Patterns.json'), JSON.stringify({
-    meta: { version: '1.0-rc', domain: TEST_DOMAIN, purpose: 'E2E test patterns' },
-    terminology: { standard_terms: ['test', 'validate'], banned_terms: [{ term: 'assume', why: 'Assumptions bypass verification', replace_with: 'verify' }] },
-    misunderstandings: [{ id: 'MS-001', wrong: 'Testing is optional', correct: 'Testing is required for quality', key_distinction: 'Optional vs mandatory activity', why: 'Skipping tests leads to regressions' }],
-    self_check: ['Did the test pass?', 'Is coverage adequate?']
-  }, null, 2));
+  writeFileSync(
+    join(TEST_DIR, 'KDNA_Patterns.json'),
+    JSON.stringify(
+      {
+        meta: { version: '1.0-rc', domain: TEST_DOMAIN, purpose: 'E2E test patterns' },
+        terminology: {
+          standard_terms: ['test', 'validate'],
+          banned_terms: [
+            { term: 'assume', why: 'Assumptions bypass verification', replace_with: 'verify' },
+          ],
+        },
+        misunderstandings: [
+          {
+            id: 'MS-001',
+            wrong: 'Testing is optional',
+            correct: 'Testing is required for quality',
+            key_distinction: 'Optional vs mandatory activity',
+            why: 'Skipping tests leads to regressions',
+          },
+        ],
+        self_check: ['Did the test pass?', 'Is coverage adequate?'],
+      },
+      null,
+      2,
+    ),
+  );
 
-  writeFileSync(join(TEST_DIR, 'kdna.json'), JSON.stringify({
-    kdna_spec: '1.0-rc', name: `@aikdna/${TEST_DOMAIN}`, version: '0.1.0',
-    description: 'E2E test domain', languages: ['en'], default_language: 'en',
-    access: 'open', status: 'experimental',
-    license: { type: 'CC-BY-4.0', commercial: false, allow_agent_use: true, allow_redistribution: true, allow_training: false },
-    author: { name: 'E2E Test', id: 'e2e-test' },
-    file_count: 2, quality_badge: 'untested'
-  }, null, 2));
+  writeFileSync(
+    join(TEST_DIR, 'kdna.json'),
+    JSON.stringify(
+      {
+        kdna_spec: '1.0-rc',
+        name: `@aikdna/${TEST_DOMAIN}`,
+        version: '0.1.0',
+        description: 'E2E test domain',
+        languages: ['en'],
+        default_language: 'en',
+        access: 'open',
+        status: 'experimental',
+        license: {
+          type: 'CC-BY-4.0',
+          commercial: false,
+          allow_agent_use: true,
+          allow_redistribution: true,
+          allow_training: false,
+        },
+        author: { name: 'E2E Test', id: 'e2e-test' },
+        file_count: 2,
+        quality_badge: 'untested',
+      },
+      null,
+      2,
+    ),
+  );
 
   ok(existsSync(join(TEST_DIR, 'KDNA_Core.json')), 'KDNA_Core.json must exist');
   ok(existsSync(join(TEST_DIR, 'KDNA_Patterns.json')), 'KDNA_Patterns.json must exist');

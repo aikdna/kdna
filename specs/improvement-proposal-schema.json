@@ -145,14 +145,7 @@
     "status": {
       "type": "string",
       "description": "Current state of the proposal in the governance pipeline.",
-      "enum": [
-        "proposed",
-        "under_review",
-        "accepted",
-        "rejected",
-        "deferred",
-        "superseded"
-      ]
+      "enum": ["proposed", "under_review", "accepted", "rejected", "deferred", "superseded"]
     },
     "review": {
       "type": "object",
