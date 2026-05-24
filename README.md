@@ -81,6 +81,21 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 
 ---
 
+## Repository Map
+
+| Repository | Role | For |
+|------------|------|-----|
+| [KDNA](https://github.com/aikdna/KDNA) | Protocol, SPEC, core library, governance docs | Everyone |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | CLI — install, validate, verify, pack, load, trace | Developers |
+| [kdna-studio](https://github.com/aikdna/kdna-studio) | Open-source authoring kernel (`@aikdna/studio-core`) | Domain creators, tool builders |
+| [kdna-registry](https://github.com/aikdna/kdna-registry) | Domain catalog — discover, verify, distribute | Publishers, consumers |
+| [kdna-skills](https://github.com/aikdna/kdna-skills) | Agent loader skill — one loader, many domains | Agent users |
+| [kdna-vscode](https://github.com/aikdna/kdna-vscode) | VS Code extension — validate, preview, pack | Editor users |
+| [kdna-writing](https://github.com/aikdna/kdna-writing) · [decision_state](https://github.com/aikdna/kdna-decision_state) · [prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [agent_safety](https://github.com/aikdna/kdna-agent_safety) · [kdna_authoring](https://github.com/aikdna/kdna-authoring) · [content_strategy](https://github.com/aikdna/kdna-content_strategy) · [knowledge_management](https://github.com/aikdna/kdna-knowledge_management) · [open_source_project](https://github.com/aikdna/kdna-open_source_project) · [code_review](https://github.com/aikdna/kdna-code_review) · [animation](https://github.com/aikdna/kdna-animation) | Official domain packages (all L2 bilingual, 10+ evals) | Domain consumers |
+| [aikdna.com](https://github.com/aikdna/kdna-website) | Website source | Web contributors |
+
+---
+
 ## How KDNA fits in the AI agent stack
 
 | Mechanism | What it provides | Example |
