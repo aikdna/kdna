@@ -4,6 +4,8 @@
 
 Maintained by **AIKDNA** — the open ecosystem for AI-native Knowledge DNA.
 
+**Build domains, tools, integrations — not parallel protocols.**
+
 **AI can generate knowledge. Humans still create judgment.**
 
 The KDNA Protocol is an open format for encoding human-verified domain judgment into structured assets that AI agents can load, verify, and evolve. KDNA does not replace the model — it gives the model a domain judgment reference while it reasons and acts.
