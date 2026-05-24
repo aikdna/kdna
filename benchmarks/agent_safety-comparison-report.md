@@ -217,13 +217,32 @@ The user is asking me to add a `--force` flag to a deployment script that woul
 
 ## Raw Outputs
 
-- SAF-001: [no-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/no-kdna-SAF-001.json) · [with-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/with-kdna-SAF-001.json)
-- SAF-002: [no-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/no-kdna-SAF-002.json) · [with-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/with-kdna-SAF-002.json)
-- SAF-003: [no-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/no-kdna-SAF-003.json) · [with-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/with-kdna-SAF-003.json)
-- SAF-004: [no-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/no-kdna-SAF-004.json) · [with-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/with-kdna-SAF-004.json)
-- SAF-005: [no-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/no-kdna-SAF-005.json) · [with-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/with-kdna-SAF-005.json)
-- SAF-006: [no-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/no-kdna-SAF-006.json) · [with-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/with-kdna-SAF-006.json)
-- SAF-007: [no-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/no-kdna-SAF-007.json) · [with-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/with-kdna-SAF-007.json)
-- SAF-008: [no-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/no-kdna-SAF-008.json) · [with-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/with-kdna-SAF-008.json)
-- SAF-009: [no-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/no-kdna-SAF-009.json) · [with-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/with-kdna-SAF-009.json)
-- SAF-010: [no-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/no-kdna-SAF-010.json) · [with-kdna](/Users/AI/K/KDNA/benchmarks/raw/agent_safety/with-kdna-SAF-010.json)
+- SAF-001: [no-kdna](./raw/agent_safety/no-kdna-SAF-001.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-001.json)
+- SAF-002: [no-kdna](./raw/agent_safety/no-kdna-SAF-002.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-002.json)
+- SAF-003: [no-kdna](./raw/agent_safety/no-kdna-SAF-003.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-003.json)
+- SAF-004: [no-kdna](./raw/agent_safety/no-kdna-SAF-004.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-004.json)
+- SAF-005: [no-kdna](./raw/agent_safety/no-kdna-SAF-005.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-005.json)
+- SAF-006: [no-kdna](./raw/agent_safety/no-kdna-SAF-006.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-006.json)
+- SAF-007: [no-kdna](./raw/agent_safety/no-kdna-SAF-007.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-007.json)
+- SAF-008: [no-kdna](./raw/agent_safety/no-kdna-SAF-008.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-008.json)
+- SAF-009: [no-kdna](./raw/agent_safety/no-kdna-SAF-009.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-009.json)
+- SAF-010: [no-kdna](./raw/agent_safety/no-kdna-SAF-010.json) · [with-kdna](./raw/agent_safety/with-kdna-SAF-010.json)
+
+## How to Reproduce
+
+```bash
+# Requires: Node.js 20+, API key in ../.env
+# Supported providers: minimax (default), anthropic, openai
+
+# Dry run (validate benchmark only):
+node benchmarks/eval-agent-safety.mjs --dry-run
+
+# Run all 10 cases:
+node benchmarks/eval-agent-safety.mjs --limit 10
+
+# Run first 3 cases (quick test):
+node benchmarks/eval-agent-safety.mjs --limit 3
+
+# Use different provider:
+MODEL_PROVIDER=anthropic node benchmarks/eval-agent-safety.mjs --limit 10
+```
