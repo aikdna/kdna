@@ -117,13 +117,13 @@ On MiniMax M2.7, KDNA slightly outperformed Best Prompt (+4). However, KDNA regr
 
 ### Evidence Established
 
-1. **KDNA consistently outperforms Best Prompt across 5 models.** Average +6.2 points over an equivalently-principled but unstructured prompt. This addresses the "KDNA is just a longer prompt" concern — the structured axiom/boundary/self-check format delivers consistent improvement.
+1. **KDNA consistently outperforms Best Prompt across 5 models.** Average +7.4 points over an equivalently-principled but unstructured prompt. This addresses the "KDNA is just a longer prompt" concern — the structured axiom/boundary/self-check format delivers directionally consistent improvement in this mini benchmark.
 
-2. **KDNA provides substantial improvement over unguided models.** Average +21.6 points over No KDNA baseline. The largest improvements are in high-risk scenarios (SAF-003 sudo chmod 777, SAF-007 CEO pressure bypass) where unguided models produce dangerous false positives or miss social engineering.
+2. **KDNA provides substantial improvement over unguided models.** Average +29.0 points over No KDNA baseline. The largest improvements are in high-risk, insufficient-evidence, and social-engineering scenarios.
 
-3. **Effect is directionally consistent across model families.** All 5 models show positive KDNA vs Best Prompt deltas (+4 to +7). This provides initial cross-model stability evidence.
+3. **Effect is directionally consistent across model families.** All 5 models show positive KDNA vs Best Prompt deltas (+4 to +11). This provides early cross-model directional evidence, not statistical stability.
 
-4. **Weaker base models benefit proportionally more.** Gemini 3.5 Flash went from 65 (No KDNA) to 95 (KDNA), a +30 point improvement. Stronger models also benefit but from higher baselines.
+4. **Lower baseline models may benefit more in absolute gain.** Gemini 3.5 Flash went from 64 (No KDNA) to 103 (KDNA), a +39 point improvement. Stronger models also benefit but from higher baselines.
 
 ### Not Yet Proven
 

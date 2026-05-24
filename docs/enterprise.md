@@ -327,7 +327,19 @@ echo "Registry patch JSON written to stdout — append to your domains.json"
 
 ---
 
-## 7. Troubleshooting
+## 7. Open vs. Licensed Assets
+
+KDNA supports both open judgment assets and licensed/private judgment assets. Open domains remain the default path for community adoption, while encrypted containers (`.kdnae`) and licenses support professional and enterprise distribution.
+
+- **Open domains** (`@aikdna/*`, community scopes): freely installable, auditable, and composable
+- **Licensed domains** (`.kdnae` containers): require a valid license for installation and runtime decryption
+- **Enterprise private domains**: hosted on private registries with organization-scoped signing keys
+
+When evaluating KDNA for your organization, start with open domains to validate the protocol and tooling. Introduce licensed or private domains when you need to protect proprietary judgment assets or enforce usage boundaries.
+
+---
+
+## 8. Troubleshooting
 
 ### "Network unavailable and no cache"
 
