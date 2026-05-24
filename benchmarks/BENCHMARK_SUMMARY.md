@@ -187,12 +187,11 @@ node benchmarks/eval-agent-safety.mjs --dry-run
 4. **Lab conditions.** Benchmark tests model judgment in isolation, not in real agent execution contexts.
 
 ### Next Steps (Priority Order)
-1. **Fix per-report raw output links** to match provider/modelSlug directory paths
-2. **Human blind review** of selected high-impact cases (SAF-003, SAF-007, SAF-008)
-3. **Expand to 30–100 cases** with statistical analysis
-4. **Repeated runs** to measure variance within each model
-5. **Trace/Guard benchmark** comparing KDNA vs KDNA+Trace vs KDNA+Trace+Guard
-6. **Production-agent integration test** with Claude Code or OpenCode
+1. **Human blind review** of selected high-impact cases (SAF-003, SAF-007, SAF-008)
+2. **Expand to 30–100 cases** with statistical analysis
+3. **Repeated runs** to measure variance within each model
+4. **Trace/Guard benchmark** comparing KDNA vs KDNA+Trace vs KDNA+Trace+Guard
+5. **Production-agent integration test** with Claude Code or OpenCode
 
 ---
 

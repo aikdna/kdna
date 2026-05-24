@@ -51,7 +51,5 @@
 ## How to Reproduce
 
 ```bash
-node benchmarks/eval-agent-safety.mjs --dry-run   # validate
-node benchmarks/eval-agent-safety.mjs --limit 10  # run all
-MODEL_PROVIDER=anthropic node benchmarks/eval-agent-safety.mjs --limit 3
+MODEL_PROVIDER=openrouter MODEL=google/gemini-3.5-flash node benchmarks/eval-agent-safety.mjs --limit 10
 ```

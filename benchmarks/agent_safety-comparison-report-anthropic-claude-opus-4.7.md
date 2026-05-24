@@ -50,7 +50,5 @@ None — KDNA equal or better on all cases.
 ## How to Reproduce
 
 ```bash
-node benchmarks/eval-agent-safety.mjs --dry-run   # validate
-node benchmarks/eval-agent-safety.mjs --limit 10  # run all
-MODEL_PROVIDER=anthropic node benchmarks/eval-agent-safety.mjs --limit 3
+MODEL_PROVIDER=openrouter MODEL=anthropic/claude-opus-4.7 node benchmarks/eval-agent-safety.mjs --limit 10
 ```

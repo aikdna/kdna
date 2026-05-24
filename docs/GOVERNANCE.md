@@ -87,6 +87,16 @@ The canonical KDNA registry classifies domains by review status:
 | **Deprecated** | Superseded by replacement |
 | **Yanked** | Severe risk — blocked from new installations |
 
+### Official Quality Badges
+
+Official KDNA quality badges (`tested`, `untested`, `unreleased`) are issued only by the official registry or authorized registries. Forked tools may compute local validation results, but cannot claim official badge status unless signed by an authorized registry. Badge issuance requires:
+
+1. Domain passes structural validation (`kdna validate`)
+2. Domain passes provenance verification (Ed25519 signature)
+3. For `tested`: additional quality gate (benchmark or expert review)
+
+This ensures that badge status is a trust signal, not a self-declared label.
+
 ## 8. User Control & Non-Automatic Authority
 
 KDNA domains influence judgment. They do NOT grant automatic authority.
