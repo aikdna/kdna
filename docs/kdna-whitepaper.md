@@ -4,7 +4,7 @@
 
 **White Paper v1.2 — May 2026**  
 **Website:** https://aikdna.com  
-**GitHub:** https://github.com/aikdna/KDNA
+**GitHub:** https://github.com/aikdna/kdna
 
 ---
 
@@ -796,5 +796,5 @@ If this succeeds, the AI stack will not only have models, tools, knowledge, and 
 *KDNA is an open-source project under Apache 2.0 license. The specification, schemas, and reference toolchain are published under this license. Individual domains may carry their own content licenses.*
 
 *Website: https://aikdna.com*  
-*GitHub: https://github.com/aikdna/KDNA*  
+*GitHub: https://github.com/aikdna/kdna*  
 *npm: @aikdna/kdna-cli, @aikdna/kdna-core*

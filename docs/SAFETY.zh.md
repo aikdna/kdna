@@ -20,4 +20,4 @@
 4. 尊重优先级 — 系统安全 > 用户意图 > KDNA 判断
 5. 记录加载 — 记录加载了什么、为什么、触发了什么
 
-详见英文原版：[SAFETY.md](https://github.com/aikdna/KDNA/blob/main/docs/SAFETY.md)
+详见英文原版：[SAFETY.md](https://github.com/aikdna/kdna/blob/main/docs/SAFETY.md)

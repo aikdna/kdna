@@ -116,6 +116,6 @@ KDNA MUST NOT override system safety policies, legal requirements, or user's exp
 
 Security vulnerabilities: See [SECURITY.md](./SECURITY.md)
 
-Governance proposals: Open an issue in [aikdna/KDNA](https://github.com/aikdna/KDNA/issues)
+Governance proposals: Open an issue in [aikdna/kdna](https://github.com/aikdna/kdna/issues)
 
 Registry moderation requests: Open an issue in [aikdna/kdna-registry](https://github.com/aikdna/kdna-registry/issues)

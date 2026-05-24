@@ -217,7 +217,7 @@ kdna-<domain-id>/
 
 # kdna-<domain-id>
 
-[![KDNA Spec](https://img.shields.io/badge/KDNA-v1.0-4c1)](https://github.com/aikdna/KDNA)
+[![KDNA Spec](https://img.shields.io/badge/KDNA-v1.0-4c1)](https://github.com/aikdna/kdna)
 
 **<Domain Name>** — <one-line description>
 

@@ -4,7 +4,7 @@
 
 **白皮书 v1.2 — 2026 年 5 月**   
 **网站：** https://aikdna.com  
-**GitHub：** https://github.com/aikdna/KDNA
+**GitHub：** https://github.com/aikdna/kdna
 
 ---
 
@@ -796,5 +796,5 @@ KDNA 不替代模型、提示词、知识库、Skills、工作流、工具、检
 *KDNA 是一个 Apache 2.0 许可下的开源项目。规范、schemas 和参考工具链均以该许可发布。各个 domains 可能携带自己的内容许可。*
 
 *网站：https://aikdna.com*  
-*GitHub：https://github.com/aikdna/KDNA*  
+*GitHub：https://github.com/aikdna/kdna*  
 *npm：@aikdna/kdna-cli, @aikdna/kdna-core*

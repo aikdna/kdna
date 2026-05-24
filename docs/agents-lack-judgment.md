@@ -151,4 +151,4 @@ The answer starts with encoding judgment.
 
 ---
 
-*KDNA (Knowledge DNA) is an open format for encoding domain judgment for AI agents. See [github.com/aikdna/KDNA](https://github.com/aikdna/KDNA) for the specification, reference implementations, and reproducible benchmarks.*
+*KDNA (Knowledge DNA) is an open format for encoding domain judgment for AI agents. See [github.com/aikdna/kdna](https://github.com/aikdna/kdna) for the specification, reference implementations, and reproducible benchmarks.*
