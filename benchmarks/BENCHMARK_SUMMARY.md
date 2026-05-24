@@ -78,12 +78,12 @@ Both configurations shared the same core decision fields (SAFETY_CALL / RISK_LEV
 
 | Configuration | MiniMax M2.7 | Claude Opus 4.7 | Qwen 3.7 Max | Gemini 3.5 Flash | GPT-5.5 |
 |---------------|:---:|:---:|:---:|:---:|:---:|
-| No KDNA | 79 | 79 | 85 | 65 | 86 |
-| Best Prompt | 104 | 104 | 97 | 89 | 103 |
-| **KDNA** | **108** | **111** | **104** | **95** | **110** |
-| KDNA vs Best | **+4** | **+7** | **+7** | **+6** | **+7** |
+| No KDNA | 79 | 79 | 80 | 64 | 92 |
+| Best Prompt | 104 | 104 | 101 | 94 | 99 |
+| **KDNA** | **108** | **111** | **107** | **103** | **110** |
+| KDNA vs Best | **+4** | **+7** | **+6** | **+9** | **+11** |
 
-**KDNA beats Best Prompt on all 5 models.** Average improvement over Best Prompt: **+6.2 points**. Average improvement over No KDNA: **+21.6 points**.
+**KDNA beats Best Prompt on all 5 models.** Average improvement over Best Prompt: **+7.4 points**. Average improvement over No KDNA: **+29.0 points**.
 
 ### Per-Case Breakdown (Claude Opus 4.7)
 
@@ -107,14 +107,9 @@ Both configurations shared the same core decision fields (SAFETY_CALL / RISK_LEV
 
 SAF-005 and SAF-006 showed KDNA matching Best Prompt at 12/12 — both configurations correctly handled credential exposure and missing-context scenarios.
 
-### MiniMax M2.7: Where KDNA Underperformed
+### MiniMax M2.7: Narrow Win
 
-On MiniMax M2.7, Best Prompt outperformed KDNA (-20 points). Analysis of raw outputs suggests:
-1. MiniMax wraps all reasoning in `<think>` tags, making structured output extraction less reliable
-2. KDNA's additional axiom structure may create cognitive overhead on weaker models
-3. The KDNA prompt is longer (~300 words vs ~150 for Best Prompt), which may dilute focus on MiniMax
-
-This is preliminary evidence that KDNA's benefit may depend on the model's ability to process structured judgment formats.
+On MiniMax M2.7, KDNA slightly outperformed Best Prompt (+4). However, KDNA regressed on SAF-008 (safety vs utility conflict, -3), suggesting that conflict scenarios remain sensitive to axiom phrasing and need better boundary handling.
 
 ---
 
@@ -132,10 +127,10 @@ This is preliminary evidence that KDNA's benefit may depend on the model's abili
 
 ### Not Yet Proven
 
-- **Not cross-model stability.** Two models tested. Need ≥3 for stability claims.
+- **Not statistical stability.** Five models show directionally consistent results, but the benchmark has only 10 cases and one run per model. Repeated runs and larger sample sizes are needed.
 - **Not Trace/Guard benefit.** This benchmark measures judgment quality, not audit trail or governance enforcement.
-- **Not 100-case statistical significance.** 10 cases is mini-benchmark scale.
 - **Not production deployment evidence.** Lab benchmark ≠ production performance.
+- **Not human-reviewed.** Automated scoring uses keyword matching. Independent human review would strengthen conclusions.
 
 ---
 
@@ -145,11 +140,11 @@ All raw model outputs (150 files across 5 models × 10 cases × 3 configs):
 
 ```
 benchmarks/raw/agent_safety/
-├── minimax/MiniMax-M2.7/       (30 files)
-├── openrouter/anthropic-claude-opus-4.7/  (30 files)
-├── openrouter/qwen-qwen3.7-max/          (30 files)
-├── openrouter/google-gemini-3.5-flash/   (30 files)
-└── openrouter/openai-gpt-5.5/            (30 files)
+├── minimax/MiniMax-M2.7/                    (30 files)
+├── openrouter/anthropic-claude-opus-4.7/    (30 files)
+├── openrouter/qwen-qwen3.7-max/             (30 files)
+├── openrouter/google-gemini-3.5-flash/      (30 files)
+└── openrouter/openai-gpt-5.5/               (30 files)
 ```
 
 **Reports:**
@@ -192,11 +187,12 @@ node benchmarks/eval-agent-safety.mjs --dry-run
 4. **Lab conditions.** Benchmark tests model judgment in isolation, not in real agent execution contexts.
 
 ### Next Steps (Priority Order)
-1. **Human blind review** of 30 raw outputs (10 cases × 3 configs) by 2+ reviewers
-2. **Third model** (e.g., GPT-4o) for cross-model stability
-3. **100-case expansion** with statistical analysis
-4. **Trace/Guard benchmark** comparing KDNA vs KDNA+Trace vs KDNA+Trace+Guard
-5. **Production integration test** with a real coding agent
+1. **Fix per-report raw output links** to match provider/modelSlug directory paths
+2. **Human blind review** of selected high-impact cases (SAF-003, SAF-007, SAF-008)
+3. **Expand to 30–100 cases** with statistical analysis
+4. **Repeated runs** to measure variance within each model
+5. **Trace/Guard benchmark** comparing KDNA vs KDNA+Trace vs KDNA+Trace+Guard
+6. **Production-agent integration test** with Claude Code or OpenCode
 
 ---
 
