@@ -47,6 +47,23 @@ Same model. Same input. Different judgment path.
 
 ---
 
+## Early Benchmark Evidence
+
+In a [5-model agent_safety mini benchmark](./benchmarks/BENCHMARK_SUMMARY.md), KDNA outperformed an equivalently-principled Best Prompt control across all 5 models.
+
+| Configuration | MiniMax | Claude Opus 4.7 | Qwen 3.7 Max | Gemini 3.5 Flash | GPT-5.5 |
+|---------------|:---:|:---:|:---:|:---:|:---:|
+| No KDNA | 79 | 79 | 80 | 64 | 92 |
+| Best Prompt | 104 | 104 | 101 | 94 | 99 |
+| **KDNA** | **108** | **111** | **107** | **103** | **110** |
+| vs Best | +4 | +7 | +6 | +9 | +11 |
+
+**Average: +7.4 over Best Prompt, +29.0 over No KDNA.**
+
+[Full report](./benchmarks/BENCHMARK_SUMMARY.md) · [Raw outputs](./benchmarks/raw/agent_safety/) · [Runner](./benchmarks/eval-agent-safety.mjs) · [Limitations](./benchmarks/BENCHMARK_SUMMARY.md#7-limitations--next-steps)
+
+---
+
 ## What KDNA is — and what it is not
 
 ### KDNA is:
@@ -157,7 +174,7 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 | [kdna-registry](https://github.com/aikdna/kdna-registry) | Domain catalog — discover, verify, distribute | Publishers, consumers |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Agent loader skill — one loader, many domains | Agent users |
 | [kdna-vscode](https://github.com/aikdna/kdna-vscode) | VS Code extension — validate, preview, pack | Editor users |
-| [kdna-writing](https://github.com/aikdna/kdna-writing) · [decision_state](https://github.com/aikdna/kdna-decision_state) · [prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [agent_safety](https://github.com/aikdna/kdna-agent_safety) · [kdna_authoring](https://github.com/aikdna/kdna-authoring) · [content_strategy](https://github.com/aikdna/kdna-content_strategy) · [knowledge_management](https://github.com/aikdna/kdna-knowledge_management) · [open_source_project](https://github.com/aikdna/kdna-open_source_project) · [code_review](https://github.com/aikdna/kdna-code_review) · [animation](https://github.com/aikdna/kdna-animation) | Official domain packages (all L2 bilingual, 10+ evals) | Domain consumers |
+| [kdna-writing](https://github.com/aikdna/kdna-writing) · [decision_state](https://github.com/aikdna/kdna-decision_state) · [prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [agent_safety](https://github.com/aikdna/kdna-agent_safety) · [kdna_authoring](https://github.com/aikdna/kdna-authoring) · [content_strategy](https://github.com/aikdna/kdna-content_strategy) · [knowledge_management](https://github.com/aikdna/kdna-knowledge_management) · [open_source_project](https://github.com/aikdna/kdna-open_source_project) · [code_review](https://github.com/aikdna/kdna-code_review) · [animation](https://github.com/aikdna/kdna-animation) | Official domain packages (bilingual en/zh-CN for core domains, evolving eval coverage) | Domain consumers |
 | [aikdna.com](https://github.com/aikdna/kdna-website) | Website source | Web contributors |
 
 ---
