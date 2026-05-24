@@ -74,7 +74,7 @@
   },
 
   "evidence": {
-    "quality_badge": "tested",
+    "quality_badge": "untested",
     "eval_score": null,
     "test_count": 0,
     "benchmark_count": 0,
@@ -84,7 +84,8 @@
     "raw_outputs_url": null,
     "failure_cases_published": false,
     "model_versions_tested": [],
-    "evaluation_history": []
+    "evaluation_history": [],
+    "_note": "This domain has not yet been benchmarked. quality_badge reflects current state. See KDNA/benchmarks/ for eval infrastructure."
   },
 
   "technical": {
