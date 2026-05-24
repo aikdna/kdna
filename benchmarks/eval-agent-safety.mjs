@@ -23,18 +23,32 @@ const BENCHMARK_PATH = join(process.cwd(), 'benchmarks', 'agent_safety-mini-benc
 // ══════════════════════════════════════════════════════════════════════════
 
 function loadEnv() {
-  try { return Object.fromEntries(readFileSync(join(process.cwd(), '..', '.env'), 'utf8').split('\n').filter(l => l.trim() && !l.startsWith('#')).map(l => { const [k,...v] = l.split('='); let val = v.join('=').trim(); if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) val = val.slice(1,-1); if (val.startsWith('<') && val.endsWith('>')) val = val.slice(1,-1); return [k.trim(), val]; })); } catch { return {}; }
+  function readKey(pattern) {
+    try {
+      const raw = readFileSync(join(process.cwd(), '..', '.env'), 'utf8');
+      for (const line of raw.split('\n')) {
+        if (line.includes(pattern) && line.includes('=')) {
+          let v = line.split('=').slice(1).join('=').trim();
+          if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1,-1);
+          if (v.startsWith('<') && v.endsWith('>')) v = v.slice(1,-1);
+          return v;
+        }
+      }
+    } catch {}
+    return '';
+  }
+  return { minimax: readKey('sk-api-'), openrouter: readKey('sk-or-v1'), anthropic: process.env.ANTHROPIC_API_KEY || '', openai: process.env.OPENAI_API_KEY || '' };
 }
 
-const ENV = { ...process.env, ...loadEnv() };
-const PROVIDER = ENV.MODEL_PROVIDER || 'minimax';
+const KEYS = loadEnv();
+const PROVIDER = process.env.MODEL_PROVIDER || 'minimax';
 const RAW_DIR = join(process.cwd(), 'benchmarks', 'raw', 'agent_safety', PROVIDER);
 const REPORT_PATH = join(process.cwd(), 'benchmarks', `agent_safety-comparison-report-${PROVIDER}.md`);
 const CFG = {
-  minimax: { url: 'https://api.minimaxi.com/v1/chat/completions', key: ENV.key || '', model: ENV.model || 'MiniMax-M2.7' },
-  anthropic: { url: 'https://api.anthropic.com/v1/messages', key: ENV.ANTHROPIC_API_KEY || '', model: 'claude-sonnet-4-20250514' },
-  openai: { url: 'https://api.openai.com/v1/chat/completions', key: ENV.OPENAI_API_KEY || '', model: 'gpt-4o' },
-  openrouter: { url: 'https://openrouter.ai/api/v1/chat/completions', key: (ENV['LLM openrouter'] || '').replace('key=', '').trim() || ENV.OPENROUTER_API_KEY || '', model: 'anthropic/claude-opus-4.7' },
+  minimax:   { url: 'https://api.minimaxi.com/v1/chat/completions', key: KEYS.minimax,   model: 'MiniMax-M2.7' },
+  anthropic: { url: 'https://api.anthropic.com/v1/messages',        key: KEYS.anthropic, model: 'claude-sonnet-4-20250514' },
+  openai:    { url: 'https://api.openai.com/v1/chat/completions',    key: KEYS.openai,    model: 'gpt-4o' },
+  openrouter:{ url: 'https://openrouter.ai/api/v1/chat/completions', key: KEYS.openrouter, model: 'anthropic/claude-opus-4.7' },
 }[PROVIDER] || { url: '', key: '', model: '' };
 
 // ══════════════════════════════════════════════════════════════════════════
