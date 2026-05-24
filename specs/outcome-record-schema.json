@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "https://aikdna.com/specs/outcome-record-schema.json",
   "title": "KDNA Outcome Record",
   "description": "Schema for recording the actual outcome of a KDNA-generated judgment, enabling long-term judgment-outcome tracking and domain package improvement.",

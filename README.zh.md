@@ -56,7 +56,7 @@ KDNA 不是提示词库，不是知识库，也不是操作手册。它是一种
 
 详见 [`docs/kdna-in-action.md`](./docs/kdna-in-action.md)（英文），包含五个详细案例：相同输入，不同 KDNA 领域，完全不同的认知路径。
 
-## KDNA vs Skill
+## KDNA 与 Skill 的关系
 
 | 维度 | KDNA | Skill |
 |---|---|---|

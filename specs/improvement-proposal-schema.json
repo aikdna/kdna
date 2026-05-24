@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "https://aikdna.com/specs/improvement-proposal-schema.json",
   "title": "KDNA Improvement Proposal",
   "description": "Schema for structured, versioned requests to change the judgment layer of a KDNA domain. Improvement proposals are the governance objects that connect agent experience to human-reviewed domain evolution.",

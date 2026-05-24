@@ -91,12 +91,7 @@ else
   warn "specs/ directory not found"
 fi
 
-if [ -f "src/cli.js" ]; then
-  pass "CLI entry point (src/cli.js) present"
-else
-  fail "CLI entry point (src/cli.js) missing"
-  FAILURES=$((FAILURES + 1))
-fi
+# CLI has moved to a separate repo (kdna-cli); not checked here.
 
 echo ""
 

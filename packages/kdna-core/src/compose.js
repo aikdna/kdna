@@ -322,8 +322,8 @@ function detectDomainConflicts(domains) {
       for (const sa of sA) {
         for (const sb of sB) {
           // Simple negation check — can be extended
-          if (sa && sb && (sa.includes('not') && sb.toLowerCase().includes(sa.toLowerCase().replace('not ', ''))) ||
-              (sb.includes('not') && sa.toLowerCase().includes(sb.toLowerCase().replace('not ', '')))) {
+if (sa && sb && (/\bnot\b/.test(sa) && sb.toLowerCase().includes(sa.toLowerCase().replace('not ', ''))) ||
+    (/\bnot\b/.test(sb) && sa.toLowerCase().includes(sb.toLowerCase().replace('not ', '')))) {
             conflicts.push({
               type: 'stance_conflict',
               domains: [domains[i].id, domains[j].id],

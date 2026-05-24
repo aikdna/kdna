@@ -174,6 +174,16 @@ function detectOldFieldNames(obj, path = '', warnings = []) {
  * @param {object} domain — result from loadDomainFromData() or loadDomainFromFiles()
  * @returns {string}
  */
+function sanitize(str) {
+  if (typeof str !== 'string') return str;
+  return str
+    .replace(/^#{1,6}\s/gm, '\\# ')     // Escape leading # to prevent fake headers
+    .replace(/```/g, '\\`\\`\\`')        // Escape code blocks
+    .replace(/<\|/g, '&lt;|')            // Escape special tokens
+    .replace(/\b(ignore|forget|disregard)\s+(all\s+)?(previous|prior|above)\s+(instructions?|directives?|rules?|constraints?)\b/gi,
+      '[filtered: $&]');                 // Filter prompt injection patterns
+}
+
 function formatContext(domain) {
   if (!domain || !domain.core || !domain.patterns) return '';
 
@@ -193,13 +203,13 @@ function formatContext(domain) {
   }
 
   parts.push('## Domain Cognition (KDNA)');
-  parts.push(`Domain: ${core.meta.domain}`);
+  parts.push(`Domain: ${sanitize(core.meta.domain)}`);
   parts.push('');
 
   if (core.stances && core.stances.length) {
     parts.push('### Stances');
     for (const s of core.stances) {
-      parts.push(`- ${s}`);
+      parts.push(`- ${sanitize(s)}`);
     }
     parts.push('');
   }
@@ -207,8 +217,8 @@ function formatContext(domain) {
   if (core.axioms && core.axioms.length) {
     parts.push('### Axioms');
     for (const a of core.axioms) {
-      parts.push(`- **${a.one_sentence}** ${a.full_statement}`);
-      parts.push(`  *Why:* ${a.why}`);
+      parts.push(`- **${sanitize(a.one_sentence)}** ${sanitize(a.full_statement)}`);
+      parts.push(`  *Why:* ${sanitize(a.why)}`);
     }
     parts.push('');
   }
@@ -216,8 +226,8 @@ function formatContext(domain) {
   if (core.ontology && core.ontology.length) {
     parts.push('### Key Concepts');
     for (const c of core.ontology) {
-      parts.push(`- **${c.id.replace(/_/g, ' ')}** — ${c.one_sentence}`);
-      parts.push(`  Boundary: ${c.boundary}`);
+      parts.push(`- **${sanitize(c.id.replace(/_/g, ' '))}** — ${sanitize(c.one_sentence)}`);
+      parts.push(`  Boundary: ${sanitize(c.boundary)}`);
     }
     parts.push('');
   }
@@ -225,7 +235,7 @@ function formatContext(domain) {
   if (core.frameworks && core.frameworks.length) {
     parts.push('### Frameworks');
     for (const fw of core.frameworks) {
-      parts.push(`- **${fw.name}**: ${fw.when_to_use}`);
+      parts.push(`- **${sanitize(fw.name)}**: ${sanitize(fw.when_to_use)}`);
     }
     parts.push('');
   }
@@ -233,7 +243,7 @@ function formatContext(domain) {
   if (pat.terminology && pat.terminology.banned_terms && pat.terminology.banned_terms.length) {
     parts.push('### Avoid These Terms');
     for (const b of pat.terminology.banned_terms) {
-      parts.push(`- Avoid "${b.term}". ${b.why} Use "${b.replace_with}" instead.`);
+      parts.push(`- Avoid "${sanitize(b.term)}". ${sanitize(b.why)} Use "${sanitize(b.replace_with)}" instead.`);
     }
     parts.push('');
   }
@@ -241,8 +251,8 @@ function formatContext(domain) {
   if (pat.misunderstandings && pat.misunderstandings.length) {
     parts.push('### Watch For These Misunderstandings');
     for (const m of pat.misunderstandings) {
-      parts.push(`- **Wrong:** ${m.wrong}`);
-      parts.push(`  **Correct:** ${m.correct}`);
+      parts.push(`- **Wrong:** ${sanitize(m.wrong)}`);
+      parts.push(`  **Correct:** ${sanitize(m.correct)}`);
     }
     parts.push('');
   }
@@ -250,7 +260,7 @@ function formatContext(domain) {
   if (pat.self_check && pat.self_check.length) {
     parts.push('### Before Responding, Check');
     for (const s of pat.self_check) {
-      parts.push(`- [ ] ${s}`);
+      parts.push(`- [ ] ${sanitize(s)}`);
     }
     parts.push('');
   }
@@ -258,7 +268,7 @@ function formatContext(domain) {
   if (domain.scenarios && domain.scenarios.scenes) {
     parts.push('### Relevant Scenarios');
     for (const scene of domain.scenarios.scenes) {
-      parts.push(`- **${scene.name}**: ${scene.trigger_signal}`);
+      parts.push(`- **${sanitize(scene.name)}**: ${sanitize(scene.trigger_signal)}`);
     }
     parts.push('');
   }
@@ -266,7 +276,7 @@ function formatContext(domain) {
   if (domain.reasoning && domain.reasoning.reasoning_chains) {
     parts.push('### Reasoning Chains');
     for (const r of domain.reasoning.reasoning_chains) {
-      parts.push(`- **${r.one_sentence}** → ${r.so_what}`);
+      parts.push(`- **${sanitize(r.one_sentence)}** → ${sanitize(r.so_what)}`);
     }
     parts.push('');
   }
@@ -274,11 +284,11 @@ function formatContext(domain) {
   if (domain.cases && domain.cases.cases && domain.cases.cases.length) {
     parts.push('### Cases');
     for (const c of domain.cases.cases) {
-      parts.push(`- **${c.title}**`);
-      parts.push(`  Context: ${c.context}`);
-      parts.push(`  What happened: ${c.what_happened}`);
-      parts.push(`  Learned: ${c.what_was_learned}`);
-      parts.push(`  Pattern: ${c.structural_pattern}`);
+      parts.push(`- **${sanitize(c.title)}**`);
+      parts.push(`  Context: ${sanitize(c.context)}`);
+      parts.push(`  What happened: ${sanitize(c.what_happened)}`);
+      parts.push(`  Learned: ${sanitize(c.what_was_learned)}`);
+      parts.push(`  Pattern: ${sanitize(c.structural_pattern)}`);
     }
     parts.push('');
   }
@@ -288,7 +298,7 @@ function formatContext(domain) {
     if (evo.stages && evo.stages.length) {
       parts.push('### Growth Stages');
       for (const stage of evo.stages) {
-        parts.push(`- **${stage.name}**: ${stage.description}`);
+        parts.push(`- **${sanitize(stage.name)}**: ${sanitize(stage.description)}`);
       }
       parts.push('');
     }
@@ -296,7 +306,7 @@ function formatContext(domain) {
       parts.push('### Capability Layers');
       for (const layer of evo.evolution_layers) {
         parts.push(
-          `- **${layer.name}**: ${layer.capability} (${layer.from_stage} → ${layer.to_stage})`,
+          `- **${sanitize(layer.name)}**: ${sanitize(layer.capability)} (${sanitize(layer.from_stage)} → ${sanitize(layer.to_stage)})`,
         );
       }
       parts.push('');

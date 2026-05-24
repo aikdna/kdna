@@ -27,8 +27,7 @@
     "kdna",
     "kdna-core",
     "ai-agent",
-    "domain-cognition",
-    "aikdna"
+    "domain-cognition"
   ],
   "license": "Apache-2.0",
   "repository": {

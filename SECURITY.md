@@ -1,28 +1,30 @@
 # Security Policy
 
-## Supported Versions
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 0.1.x   | :white_check_mark: |
-
 ## Reporting a Vulnerability
 
-KDNA files are static JSON. The primary security surface is the validator tooling.
+Please **do not** report security vulnerabilities through public GitHub issues.
 
-If you discover a security vulnerability in a KDNA tool, please report it by
-opening a GitHub issue. Do not include exploit details in public issues for
-unreported vulnerabilities.
+Instead, use one of these private channels:
 
-We will acknowledge your report within 5 business days and provide an estimated
-timeline for a fix.
+- **GitHub Private Vulnerability Reporting**: Go to the [Security Advisories](https://github.com/aikdna/KDNA/security/advisories/new) page
+- **Email**: security@aikdna.com
 
-## Scope
+We aim to respond within 72 hours and provide a timeline for resolution within 1 week.
+Please do not disclose the vulnerability publicly until we have had a chance to address it.
 
-- Security of the KDNA CLI tool and loader library
-- Schema validation bypasses that could inject harmful content
+## Supported Versions
 
-## Out of Scope
+We actively support the latest release for security updates.
 
-- The contents of KDNA domain files authored by users
-- Upstream dependencies
+| Component | Supported Versions |
+|-----------|-------------------|
+| KDNA Protocol | Latest tagged release |
+| kdna-cli | Latest minor release |
+| kdna-studio | Latest minor release |
+| Official domains | Registry-listed current versions |
+
+Older versions may receive critical security patches on a case-by-case basis.
+
+## Security Model
+
+For the KDNA Protocol security architecture, see [GOVERNANCE.md](./GOVERNANCE.md).
