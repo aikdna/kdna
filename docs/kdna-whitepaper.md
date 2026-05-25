@@ -102,6 +102,8 @@ KDNA does not claim that existing approaches are wrong. It claims that as agents
 
 Prompts define the current task. Knowledge bases provide information. Skills package procedures. Workflows organize steps. MCP connects tools and context. Fine-tuning shapes model behavior. Evaluations measure performance. KDNA represents the domain judgment that should guide how an agent uses these capabilities.
 
+For a detailed comparison, see [KDNA and the AI Stack](kdna-and-ai-stack.md).
+
 KDNA is close in spirit to rules files, rubrics, style guides, and structured prompts. Its contribution is not that principles have never been written down before. It is that KDNA defines a common open package format, validation rules, loading semantics, composition model, and quality governance path for domain judgment.
 
 ### 1.5 Judgment System Assets
