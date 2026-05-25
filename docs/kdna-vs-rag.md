@@ -1,20 +1,3 @@
-> ⚠️ **This document has been superseded by [KDNA and the AI Stack](./kdna-and-ai-stack.md)**, which covers all AI stack component relationships in one place. This page is kept for reference.
->
-# KDNA vs RAG
+> ⚠️ **本文档已被 [KDNA 与 AI 技术栈](./kdna-and-ai-stack.md) 取代。** 所有 AI 技术栈组件的对比关系已统一收录。本页仅保留跳转。
 
-RAG and KDNA solve different problems.
-
-RAG retrieves relevant information from a large corpus. It answers: what information should the model see right now?
-
-KDNA encodes stable domain judgment. It answers: how should the model interpret and judge what it sees?
-
-## Use Together
-
-RAG can retrieve documents. KDNA can guide how those documents are interpreted.
-
-Example:
-
-```text
-RAG retrieves a customer complaint history.
-KDNA helps the agent avoid treating the complaint as merely a script-writing task and instead checks intent, emotional state, risk, and next-step clarity.
-```
+[查看新文档 →](./kdna-and-ai-stack.md)
