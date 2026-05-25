@@ -1,6 +1,6 @@
 # KDNA Compare Report — Design Specification
 
-> **Status:** Design specification. Implementation pending in kdna-cli.
+> **Status:** Implemented. `kdna compare` available in `@aikdna/kdna-cli`. Benchmark infrastructure exists with 5-model results at [benchmarks/](../benchmarks/).
 
 ## Overview
 

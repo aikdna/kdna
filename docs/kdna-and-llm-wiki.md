@@ -1,3 +1,5 @@
+> ⚠️ **This document has been superseded by [Judgment Systems](./judgment-systems.md) and [KDNA and the AI Stack](./kdna-and-ai-stack.md)**. The concepts here are now better explained in the core documents.
+>
 # KDNA and LLM Wiki
 
 KDNA and LLM Wiki are complementary layers. They solve different problems and work best together.

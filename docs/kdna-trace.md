@@ -1,6 +1,6 @@
 # KDNA Agent Call Logging (kdna trace) — Design Specification
 
-> **Status:** Design specification. CLI implementation pending.
+> **Status:** Implemented. `kdna trace` command available in `@aikdna/kdna-cli`. Runtime trace_id uses `crypto.randomUUID()`. See [runtime-routing.md](./runtime-routing.md) for the route trace schema.
 
 ## Overview
 

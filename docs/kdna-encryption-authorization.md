@@ -1,6 +1,6 @@
 # KDNA Encryption & Authorization — Design Specification
 
-> **Status:** Design specification. Implementation pending.
+> **Status:** Design specification. License verification MVP implemented in kdna-runtime. Encrypted package profile (.kdnae) in design stage. See [KCL-1.0](../specs/LICENSE-KCL-1.0.md) for the canonical commercial license.
 
 ## Overview
 

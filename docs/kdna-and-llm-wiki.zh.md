@@ -1,3 +1,5 @@
+> ⚠️ **This document has been superseded by [Judgment Systems](./judgment-systems.md) and [KDNA and the AI Stack](./kdna-and-ai-stack.md)**. The concepts here are now better explained in the core documents.
+>
 # KDNA 与 LLM Wiki
 
 从原始材料到 Agent 判断力的实践管线。

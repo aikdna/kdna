@@ -1,3 +1,5 @@
+> ⚠️ **This document has been superseded by [KDNA and the AI Stack](./kdna-and-ai-stack.md)**, which covers all AI stack component relationships in one place. This page is kept for reference.
+>
 # KDNA 与 RAG
 
 RAG（检索增强生成）和 KDNA 都在 Agent 行动前提供上下文——但提供的东西完全不同。
