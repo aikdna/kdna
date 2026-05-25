@@ -15,6 +15,18 @@ Prompts tell AI what to say. Skills tell AI what to do. MCP connects AI to tools
 
 > **Skill + KDNA** — Skills make agents capable. KDNA makes their judgment reliable. [Learn more →](./docs/kdna-and-ai-stack.md#4-kdna-vs-skill)
 
+## KDNA in 30 seconds
+
+KDNA is a file-based cognitive kernel for AI agents.
+
+It turns human insight, value stance, aesthetic preference, judgment boundaries, and quality standards into structured assets that agents can load, verify, compose, and evolve.
+
+A KDNA does not make an agent role-play an expert. It gives the agent an explicit judgment system to work within.
+
+- **Prompt** changes what AI says.
+- **Skill** changes what AI does.
+- **KDNA** changes how AI judges.
+
 ## Why now
 
 > **Agents already have general judgment. What they still need is explicit, human-led domain judgment systems that can be inspected, governed, and reused.**
@@ -80,6 +92,7 @@ In a [5-model agent_safety mini benchmark](./benchmarks/BENCHMARK_SUMMARY.md), K
 - **Not RAG or a knowledge base.** RAG retrieves facts. KDNA encodes what matters and what to watch for.
 - **Not a workflow engine or skill.** Skills define steps. KDNA defines the judgment criteria across those steps.
 - **Not fine-tuning.** Fine-tuning internalizes behavior into model weights. KDNA keeps judgment explicit, auditable, and editable.
+- **Not role-play.** KDNA does not ask an agent to pretend to be an expert. It provides structured judgment constraints, boundaries, and self-checks.
 - **Not a `.cursorrules` or project rules file.** KDNA is structured, validated, versioned, signed, and cross-agent portable.
 
 ---
@@ -280,6 +293,8 @@ See [LICENSE](LICENSE) and [LICENSE-DOCS](LICENSE-DOCS) for full terms.
 ## Open Standard, Not Open Identity
 
 KDNA is open source because domain judgment should become shared infrastructure for AI agents. We welcome developers, researchers, creators, and organizations to build KDNA domains, tools, validators, loaders, and agent integrations.
+
+**The format is open so the ecosystem can grow. The identity is protected so the ecosystem does not fragment.**
 
 However, KDNA is intended to grow as a **coherent open standard**, not as a set of fragmented renamed protocols. Forks are welcome for experimentation, but public derivative protocols must clearly identify themselves as independent and must not imply official KDNA compatibility or endorsement unless they follow the official SPEC and compatibility policy.
 

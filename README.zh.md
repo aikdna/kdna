@@ -2,15 +2,19 @@
 
 > [aikdna.com](https://aikdna.com) — 官方网站 . [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli)
 
-**KDNA（Knowledge DNA）** 是一种开放协议，用于将领域判断打包为 AI Agent 可加载、可测试、可治理的认知资产。
+**KDNA 是 AI Agent 可加载的认知内核。**
 
-Prompt 告诉 AI 说什么。  
-Skill 告诉 AI 做什么。  
-**KDNA 告诉 AI 在某个领域里怎么判断。**
+它以文件为载体，把人在某个领域中的核心洞察、价值主张、审美偏好、判断边界和质量标准，编码成可加载、可验证、可组合、可进化的认知资产。KDNA 不是让 Agent 扮演专家，而是让 Agent 在一套明确的判断系统中工作。
+
+- **Prompt** 改变回答。
+- **Skill** 改变动作。
+- **KDNA** 改变判断。
 
 KDNA 之于 Agent 的判断力，如同 DNA 之于生物的认知架构：它编码的是结构——关注什么、避开什么、验证什么——而把事实知识留给外部记忆和检索系统。
 
 KDNA 不是提示词库，不是知识库，也不是操作手册。它是一种结构化方式，封装一个领域的判断层：公理、术语边界、常见误解、场景信号、推理链条和能力演进。
+
+**它不是工具，但会改变使用者的能力。它不是内容，但能持续创造内容。它能被保存、分享、授权、订阅、购买和调用。它比"专家"更准确，因为它是构成专家的核心。**
 
 > **本仓库仅定义 KDNA 协议、Schema、校验规则与治理方式。**  
 > 具体领域的 KDNA 应放在[独立仓库](#领域仓库)中，符合收录标准后进入官方 [kdna-registry](https://github.com/aikdna/kdna-registry)。
