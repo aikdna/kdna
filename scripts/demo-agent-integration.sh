@@ -29,6 +29,13 @@ fi
 echo "Detected agents:${AGENTS}"
 echo ""
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+K_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+OPEN_SOURCE_DIR="$K_ROOT/OPEN_SOURCE"
+KDNA_REPO="$OPEN_SOURCE_DIR/kdna"
+KDNA_SKILLS_REPO="$OPEN_SOURCE_DIR/kdna-skills"
+KDNA_CLI_REPO="$OPEN_SOURCE_DIR/kdna-cli"
+
 # ─── Step 1: Install KDNA Skills ───
 
 echo -e "${GREEN}[1/4] Installing KDNA Skills...${NC}"
@@ -38,9 +45,9 @@ echo ""
 if echo "$AGENTS" | grep -q "codex"; then
   echo "  Installing for Codex..."
   mkdir -p ~/.codex/skills/kdna-loader ~/.codex/skills/kdna-create ~/.codex/Kdna
-  if [ -d "/Users/AI/K/kdna-skills/kdna-loader" ]; then
-    cp /Users/AI/K/kdna-skills/kdna-loader/SKILL.md ~/.codex/skills/kdna-loader/
-    cp /Users/AI/K/kdna-skills/kdna-create/SKILL.md ~/.codex/skills/kdna-create/
+  if [ -d "$KDNA_SKILLS_REPO/kdna-loader" ]; then
+    cp "$KDNA_SKILLS_REPO/kdna-loader/SKILL.md" ~/.codex/skills/kdna-loader/
+    cp "$KDNA_SKILLS_REPO/kdna-create/SKILL.md" ~/.codex/skills/kdna-create/
     echo "    ✓ kdna-loader and kdna-create installed"
   else
     curl -fsSL https://raw.githubusercontent.com/aikdna/kdna-skills/main/install.sh | bash
@@ -57,18 +64,18 @@ DOMAINS_DIR="$HOME/.kdna/domains"
 mkdir -p "$DOMAINS_DIR"
 
 # Copy sales domain from local examples (or install via CLI)
-if [ -d "/Users/AI/K/KDNA/examples/sales" ]; then
-  cp -r /Users/AI/K/KDNA/examples/sales "$DOMAINS_DIR/sales"
+if [ -d "$KDNA_REPO/examples/sales" ]; then
+  cp -r "$KDNA_REPO/examples/sales" "$DOMAINS_DIR/sales"
   echo "  ✓ sales installed to $DOMAINS_DIR/sales"
 fi
 
-if [ -d "/Users/AI/K/KDNA/examples/management" ]; then
-  cp -r /Users/AI/K/KDNA/examples/management "$DOMAINS_DIR/management"
+if [ -d "$KDNA_REPO/examples/management" ]; then
+  cp -r "$KDNA_REPO/examples/management" "$DOMAINS_DIR/management"
   echo "  ✓ management installed to $DOMAINS_DIR/management"
 fi
 
-if [ -d "/Users/AI/K/KDNA/examples/writing_basic" ]; then
-  cp -r /Users/AI/K/KDNA/examples/writing_basic "$DOMAINS_DIR/writing_basic"
+if [ -d "$KDNA_REPO/examples/writing_basic" ]; then
+  cp -r "$KDNA_REPO/examples/writing_basic" "$DOMAINS_DIR/writing_basic"
   echo "  ✓ writing_basic installed to $DOMAINS_DIR/writing_basic"
 fi
 
@@ -84,10 +91,10 @@ if command -v kdna &>/dev/null; then
       kdna validate "$DOMAINS_DIR/$domain" 2>&1 | head -1
     fi
   done
-elif [ -f "/Users/AI/K/KDNA/src/cli.js" ]; then
+elif [ -f "$KDNA_CLI_REPO/src/cli.js" ]; then
   for domain in sales management writing_basic; do
     if [ -d "$DOMAINS_DIR/$domain" ]; then
-      node /Users/AI/K/KDNA/src/cli.js validate "$DOMAINS_DIR/$domain" 2>&1 | head -1
+      node "$KDNA_CLI_REPO/src/cli.js" validate "$DOMAINS_DIR/$domain" 2>&1 | head -1
     fi
   done
 fi
