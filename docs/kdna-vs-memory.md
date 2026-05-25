@@ -1,3 +1,5 @@
+> ⚠️ **This document has been superseded by [KDNA and the AI Stack](./kdna-and-ai-stack.md)**, which covers all AI stack component relationships in one place. This page is kept for reference.
+>
 # KDNA vs Memory
 
 AI memory systems remember what happened. KDNA interprets what it means.

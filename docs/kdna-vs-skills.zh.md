@@ -1,3 +1,5 @@
+> ⚠️ **This document has been superseded by [KDNA and the AI Stack](./kdna-and-ai-stack.md)**, which covers all AI stack component relationships in one place. This page is kept for reference.
+>
 # KDNA 与 Skills
 
 Skills 和 KDNA 都是 Agent 的能力扩展机制，但解决不同层面的问题。

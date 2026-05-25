@@ -1,3 +1,5 @@
+> ⚠️ **This document has been superseded by [KDNA and the AI Stack](./kdna-and-ai-stack.md)**, which covers all AI stack component relationships in one place. This page is kept for reference.
+>
 # KDNA 与记忆系统
 
 AI 记忆系统记住发生了什么。KDNA 解释它意味着什么。

@@ -1,6 +1,6 @@
 # KDNA Studio — Design Specification
 
-> **Status:** Design specification. Implementation pending in KDNAChat / VS Code.
+> **Status:** Implemented. `@aikdna/kdna-studio` ([npm](https://www.npmjs.com/package/@aikdna/kdna-studio)) provides the JS authoring kernel. `kdna-studio-swift` ([SPM](https://github.com/aikdna/kdna-studio-swift)) provides the Swift authoring kernel. KDNaStudio is the reference macOS GUI client.
 
 ## Overview
 
