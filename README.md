@@ -13,9 +13,7 @@ The KDNA Protocol is an open format for encoding human-verified domain judgment 
 Prompts tell AI what to say. Skills tell AI what to do. MCP connects AI to tools.  
 **KDNA tells AI how to judge within a domain.**
 
-> **Version map**: SPEC `v1.0-rc` · Registry `v2.0`. See [docs/version-matrix.md](./docs/version-matrix.md).
-
----
+> **Skill + KDNA** — Skills make agents capable. KDNA makes their judgment reliable. [Learn more →](./docs/kdna-and-ai-stack.md#4-kdna-vs-skill)
 
 ## Why now
 
