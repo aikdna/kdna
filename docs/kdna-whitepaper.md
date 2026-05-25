@@ -20,7 +20,7 @@ KDNA is an open protocol for representing domain judgment. It encodes the princi
 
 KDNA does not claim that judgment has never existed in AI systems. Its contribution is that judgment now deserves its own portable, verifiable representation: a domain package that can be authored, reviewed, validated, versioned, composed, distributed, and improved over time.
 
-KDNA stands for **Knowledge DNA**. The name does not treat knowledge as a static collection of content, but as a structure that can be expressed, inherited, and evolved. In biological systems, DNA is not the organism itself, nor any single behavior; it is an underlying code that allows stable traits to be preserved, expressed, copied, and changed over time. KDNA uses this metaphor for domain judgment: the most valuable part of expertise is often not isolated knowledge, but the recurring judgment structure behind it — how experts draw distinctions, recognize situations, weigh risks, preserve boundaries, form taste, avoid misunderstandings, and decide what counts as done well. KDNA gives this implicit structure a readable, verifiable, composable, and transmissible form.
+KDNA stands for **Knowledge DNA**. The name does not treat knowledge as a static collection of content, but as a structure that can be expressed, inherited, and evolved. The "K" refers to structured domain cognition — the judgment system behind how knowledge is selected, interpreted, rejected, and applied — not to stored information in the narrow sense. In biological systems, DNA is not the organism itself, nor any single behavior; it is an underlying code that allows stable traits to be preserved, expressed, copied, and changed over time. KDNA uses this metaphor for domain judgment: the most valuable part of expertise is often not isolated knowledge, but the recurring judgment structure behind it — how experts draw distinctions, recognize situations, weigh risks, preserve boundaries, form taste, avoid misunderstandings, and decide what counts as done well. KDNA gives this implicit structure a readable, verifiable, composable, and transmissible form.
 
 The specification is open, the reference toolchain is published under Apache 2.0, and an early public registry of open-access domains is available. KDNA does not replace prompts, knowledge bases, skills, MCP, tools, retrieval, evaluation, workflows, or fine-tuning. It gives them a clearer judgment reference.
 
@@ -687,54 +687,106 @@ Even with KDNA, humans remain accountable for high-stakes decisions. KDNA improv
 
 ## 14. Current Status
 
-KDNA is early, but several components already exist.
+KDNA has moved from concept to a working protocol ecosystem with early evidence.
 
-### 13.1 Open Protocol
+### 14.1 Protocol & Governance
 
-- Protocol specification: SPEC v1.0-rc.
-- Six standard domain files.
-- JSON Schemas for validation.
-- Public registry of open domains.
-- Quality badge and evaluation metadata emerging.
+- Protocol specification: SPEC v1.0-rc. Six standard domain files. JSON Schemas.
+- Governance: TRADEMARK, COMPATIBILITY, FORK_POLICY, GOVERNANCE — open standard with protected identity.
+- Benchmark evidence: 5-model agent_safety mini benchmark (150 raw outputs, Best Prompt control). KDNA outperforms Best Prompt on all 5 models (avg +7.4 points).
 
-### 13.2 Reference Toolchain
+### 14.2 Runtime & Toolchain
 
-- `@aikdna/kdna-core`: pure logic library for loading, validating, linting, rendering, and composing domains.
-- `@aikdna/kdna-cli` CLI: command-line tool for setup, validate, verify, install, load, match, compare, diff, pack, unpack, registry, identity, and cluster-related workflows.
-- Python SDK: programmatic integration.
-- Swift core package: native Swift implementation for macOS and iOS clients.
-- VS Code extension: validation, preview, and domain authoring support.
-- Agent skills: loader patterns for agent environments.
+| Component | Repository | Role |
+|-----------|-----------|------|
+| `@aikdna/kdna-core` | aikdna/kdna | Pure JS logic: load, validate, lint, render, compose |
+| `@aikdna/kdna-cli` | aikdna/kdna-cli | CLI: verify, install, load, match, route, compare, diff, pack, publish, identity, trace, guard |
+| `@aikdna/kdna-studio` | aikdna/kdna-studio-core | JS authoring kernel: evidence → cards → Human Lock → compile → export |
+| kdna-core-swift | aikdna/kdna-core-swift | Native Swift runtime: load, validate, route (7-state), compose, trust verify |
+| kdna-studio-swift | aikdna/kdna-studio-swift | Native Swift authoring: project, cards, Human Lock, compile, export |
+| kdna-registry | aikdna/kdna-registry | Domain catalog with signatures, quality badges, risk levels, CI validation |
+| kdna-vscode | aikdna/kdna-vscode | VS Code extension: validate, preview, pack, configurable scan depth |
+| kdna-skills | aikdna/kdna-skills | Agent loader skill with 7-state routing ("No KDNA is better than wrong KDNA") |
+| kdna-runtime | (private) | Server-side projection engine with Judgment Guard, rate limiting, signed licenses |
 
-Specific version numbers should be read from the published version matrix and package registries, as the toolchain is evolving.
+### 14.3 Runtime Routing
 
-### 13.3 Reference Domains
+The `kdna route` command implements a 5-Gate 7-State domain router (Intent Gate → Negative Match → Domain Fit → Trust Gate → Ambiguity Gate). Output conforms to `specs/route-result.schema.json`. The router's first principle: "No KDNA is better than wrong KDNA" — skipping is the default, loading requires positive fit evidence.
 
-The public registry includes early domains such as:
+### 14.4 Human Lock Gate
 
-- writing;
-- decision_state;
-- prompt_diagnosis;
-- code_review;
-- content_strategy;
-- agent_safety;
-- knowledge_mgmt;
-- open_source_project;
-- kdna_authoring.
+Human Lock has moved from specification to working code at two enforcement points:
+- **Studio Gate**: integrated into `exportProject()` — blocks export if judgment-class cards are not properly locked. 4 rules: must be locked, must have Human Lock record, must confirm `applies_when`/`does_not_apply_when`/`failure_risk` reviewed, fingerprint change detection for post-lock modifications. 16 tests.
+- **CLI Gate**: integrated into `kdna pack` and `kdna publish` — blocks packaging and publishing with exit code 8 (HUMAN_LOCK_REQUIRED). `--force` emergency override with audit trail.
 
-Not all domains are equally mature. Some are reference examples. Some are experimental. Quality should be judged by eval evidence, expert review, and usage results.
+### 14.5 Reference Domains
 
-### 13.4 Reference GUI Client
+The public registry includes domains such as: writing, decision_state, prompt_diagnosis, code_review, content_strategy, agent_safety, knowledge_management, open_source_project, kdna_authoring, and an animation cluster (7 sub-domains). Commercial pro domains (writing-pro, speaking-pro, management-pro, silver-age-pro) are in staging.
 
-KDNAChat is an emerging reference GUI client for making KDNA visible in conversation. Its role is not to define the protocol truth. SPEC and the reference core implementation define the protocol. KDNAChat demonstrates how judgment can be loaded, compared, traced, and made visible to users.
+### 14.6 Reference Applications
 
-Compare Mode is especially important: same input, same model, without KDNA versus with KDNA, showing the judgment delta.
+- **KDNAChat** (macOS): reference GUI client for loading, comparing, and tracing KDNA judgment. Compare Mode: same input, same model, with/without KDNA.
+- **KDNaStudio** (macOS): authoring client built on Studio Core.
 
 ---
 
 ## 15. Roadmap
 
-KDNA's next phase is not to add as many domains as possible. It is to move from domain packages toward a full judgment protocol.
+KDNA's roadmap is organized into six phases, reflecting the protocol's evolution from format to ecosystem.
+
+### Phase 1: Protocol and Runtime Foundation ✅
+
+- SPEC v1.0-rc stable, six standard files, JSON Schemas
+- `@aikdna/kdna-core` — pure JS runtime library
+- `@aikdna/kdna-cli` — command-line toolchain (verify, install, load, match, route, compare, diff, pack, publish, identity, trace)
+- `kdna-registry` — machine-readable domain catalog with signatures, quality badges, CI validation
+- Benchmark infrastructure: 5-model mini benchmark with Best Prompt control, 150 raw outputs
+- Governance: TRADEMARK, COMPATIBILITY, FORK_POLICY, GOVERNANCE
+
+### Phase 2: Authoring Infrastructure ✅
+
+- `@aikdna/kdna-studio` (npm) — JS authoring kernel
+- `kdna-studio-swift` (SPM) — Swift authoring kernel for Apple platforms
+- Judgment Cards (9 types, 6-state machine)
+- Human Lock Gate (Studio + CLI enforcement, fingerprint change detection)
+- Quality Gates (readiness check, contradiction detection, anti-vagueness)
+- Compiler (locked cards → KDNA_Core.json + KDNA_Patterns.json)
+
+### Phase 3: Native App Integration ✅
+
+- `kdna-core-swift` — native Swift runtime (load, route, compose, trust verify)
+- `kdna-vscode` — VS Code extension (validate, preview, pack)
+- `kdna-skills` — Agent loader skill with 7-state routing
+- Agent integrations emerging (Claude Code, OpenCode, Codex)
+
+### Phase 4: Trust and Distribution (In Progress)
+
+- .kdna open package profile ✅
+- Ed25519 signing ✅
+- SHA256 hash verification ✅
+- Risk levels (R0–R3) ✅
+- Yanked/deprecated mechanism ✅
+- Registry attestation ✅
+- Judgment Guard (Runtime R1–R15) ✅
+- `kdna route` 7-state Trust Gate ✅
+
+### Phase 5: Encrypted and Licensed KDNA (Early)
+
+- Encrypted package profile (design stage)
+- License verification (MVP in runtime)
+- Entitlement model (spec drafted)
+- Private packages (pro domains in staging)
+- Organization access control
+- Offline license lease
+
+### Phase 6: KDNA Store and Judgment Asset Market (Future)
+
+- Creator profiles and verified creators
+- Package pages with quality evidence
+- Reviews and certifications
+- Paid domains and subscriptions
+- Enterprise private registry
+- Revenue sharing for multi-creator domains
 
 ### Phase 1: Protocol Foundation
 
