@@ -1,46 +1,69 @@
 # KDNA Roadmap
 
-## Current: v0.7 — Ecosystem Foundation (Q2 2026)
+## Phase 1: Protocol and Runtime Foundation ✅
 
-### Protocol
-- [x] Schema v2.2 — i18n, governance, risk_level fields
-- [x] CLI install and domain management
-- [x] Registry with 10 official domains
-- [ ] Signature infrastructure (Ed25519 signing pipeline)
-- [ ] Schema v2.3 — validator warnings for deprecated fields
+- ✅ SPEC v1.0-rc — six standard files, JSON Schemas, validation rules
+- ✅ `@aikdna/kdna-core` — pure JS runtime library (load, validate, lint, render, compose)
+- ✅ `@aikdna/kdna-cli` — CLI toolchain (verify, install, load, match, route, compare, diff, pack, publish, identity, trace)
+- ✅ `kdna-registry` — domain catalog with signatures, quality badges, risk levels, CI validation
+- ✅ `kdna-skills` — agent loader skill with 7-state routing
+- ✅ `kdna-vscode` — VS Code extension (validate, preview, pack)
+- ✅ 17 reference domains (10 core + animation cluster)
+- ✅ Benchmark infrastructure: 5-model mini benchmark with Best Prompt control, 150 raw outputs
+- ✅ Human Judgment Lock: protocol specification + Studio Gate + CLI Gate (4 rules, fingerprint detection)
+- ✅ Runtime routing: `kdna route`, 5-Gate 7-State router, route-result schema
+- ✅ Governance: TRADEMARK, COMPATIBILITY, FORK_POLICY, GOVERNANCE
 
-### Tools
-- [x] kdna-studio — guided authoring environment
-- [x] kdna-vscode — extension with validation and preview
-- [x] kdna-skills — agent loader for Codex, Claude Code, OpenCode
+## Phase 2: Authoring Infrastructure ✅
 
-### Ecosystem
-- [x] Community governance model (GOVERNANCE.md)
-- [x] I18N architecture (en/zh-CN)
-- [ ] GitHub Discussions enabled
-- [ ] External expert review for 3 reference domains
+- ✅ `@aikdna/kdna-studio` (npm) — JS authoring kernel
+- ✅ `kdna-studio-swift` (SPM) — Swift authoring kernel for Apple platforms
+- ✅ Judgment Cards (9 types, 6-state machine)
+- ✅ Human Lock Gate enforcement (Studio + CLI)
+- ✅ Quality Gates (readiness check, contradiction detection, anti-vagueness)
+- ✅ Compiler (locked cards → KDNA_Core.json + KDNA_Patterns.json)
 
-## v0.8 — Trust and Verification (Q3 2026)
-- [ ] Ed25519 signing for all official domains
-- [ ] sha256 verification on install
-- [ ] known_limitations_url populated for all domains
-- [ ] Benchmark v2 with independent audit methodology
-- [ ] CI validation gate for all domain repos
-- [ ] **Adaptive Loading** — CLI/runtime supports multiple loading modes based on model capability:
-  - `full-kdna` — complete structured judgment for strong models
-  - `compressed-kdna` — reduced axiom set for medium models
-  - `best-prompt-compatible` — free-text guidance for weaker models
-  - `trace-only` / `guard-only` — governance layer without full judgment injection
+## Phase 3: Native App Integration ✅
 
-## v0.9 — Ecosystem Growth (Q4 2026)
-- [ ] Community domain submission pipeline
-- [ ] Domain conflict resolution protocol
-- [ ] Python SDK
-- [ ] TypeScript SDK
-- [ ] Enterprise pilot with private registry
+- ✅ `kdna-core-swift` — native Swift runtime (load, route, compose, trust verify)
+- ✅ `kdna-studio-swift` — native Swift authoring kernel
+- ✅ KDNAChat — reference GUI client for macOS
+- ✅ KDNaStudio — reference authoring client for macOS
+- ✅ Agent integrations emerging (Claude Code, OpenCode, Codex)
 
-## v1.0 — Stable Protocol (2027)
-- [ ] Protocol frozen (v1.0 spec)
-- [ ] Backward compatibility guarantee
-- [ ] Third-party registry support
-- [ ] Mainstream agent framework integrations
+## Phase 4: Trust and Distribution (Current)
+
+- ✅ .kdna open package profile
+- ✅ Ed25519 signing pipeline
+- ✅ SHA256 hash verification
+- ✅ Risk levels (R0–R3)
+- ✅ Yanked/deprecated mechanism
+- ✅ Registry attestation + CI validation
+- ✅ Judgment Guard (Runtime R1–R15)
+- ✅ `kdna route` Trust Gate
+- ⬜ Official domain signing (pro domains in staging)
+- ⬜ Install-time signature verification in CLI
+
+## Phase 5: Encrypted and Licensed KDNA (Next)
+
+- ⬜ Encrypted package profile (.kdnae)
+- ✅ License verification MVP (runtime)
+- ✅ KCL-1.0 canonical commercial license
+- ⬜ Entitlement model
+- ⬜ Organization access control
+- ⬜ Offline license lease
+
+## Phase 6: KDNA Store and Judgment System Asset Market (Future)
+
+- ⬜ Creator profiles and verified creators
+- ⬜ Package pages with quality evidence
+- ⬜ Reviews and certifications
+- ⬜ Paid domains and subscriptions
+- ⬜ Enterprise private registry
+- ⬜ Revenue sharing for multi-creator domains
+
+## Long-Term Vision
+
+KDNA's long-term goal is to become the standard infrastructure for judgment system assets — the layer that turns human-led domain judgment into AI-usable, verifiable, composable, and licensable assets. This is not just a better prompt format or knowledge base. It is a new asset class for the AI era.
+
+> **Phase 1–3: Foundation → Phase 4: Trust → Phase 5: Licensing → Phase 6: Market**
