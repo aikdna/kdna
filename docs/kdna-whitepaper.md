@@ -104,6 +104,22 @@ Prompts define the current task. Knowledge bases provide information. Skills pac
 
 KDNA is close in spirit to rules files, rubrics, style guides, and structured prompts. Its contribution is not that principles have never been written down before. It is that KDNA defines a common open package format, validation rules, loading semantics, composition model, and quality governance path for domain judgment.
 
+### 1.5 Judgment System Assets
+
+A single KDNA domain is not a single opinion, rule, or prompt. It is a **judgment system asset**: a structured, connected set of principles, concept boundaries, stances, misunderstandings, risk thresholds, scenario signals, self-checks, and reasoning paths — all packaged as a versioned, loadable, verifiable unit.
+
+A judgment system asset is not a knowledge base (which stores information) or a skill (which packages a procedure). It defines **how** information should be interpreted, which procedures are appropriate, what quality standard applies, and when human confirmation is required.
+
+This concept is explored in detail in [Judgment Systems](judgment-systems.md).
+
+### 1.6 Human-Led, AI-Assisted
+
+KDNA domains may be assisted by AI, but they must be human-led. AI can help extract candidate principles, identify contradictions, generate test cases, and suggest structure. But domain judgment becomes KDNA only after human review, confirmation, and accountability.
+
+> **AI can propose. Human must confirm. Only human-locked judgment can become KDNA.**
+
+This principle is enforced in the KDNA authoring toolchain through the Human Lock mechanism: judgment-class cards (axioms, boundaries, risks) must be explicitly locked by a human before they can be compiled into a KDNA domain. Changes to locked content are detected via cryptographic fingerprint and require re-lock.
+
 ---
 
 ## 2. Origin: From a Book to a Judgment Protocol
