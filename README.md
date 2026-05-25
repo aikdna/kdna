@@ -154,7 +154,7 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 | If you are a... | Read this |
 |-----------------|-----------|
 | **Developer wanting to connect KDNA to an agent** | [5-minute guide](./docs/5-minute-guide.md) |
-| **Domain expert wanting to encode your judgment** | [KDNA Studio Core](https://github.com/aikdna/kdna-studio) — open-source authoring kernel |
+| **Domain expert wanting to encode your judgment** | [KDNA Studio](https://github.com/aikdna/kdna-studio-core) — authoring kernel (`@aikdna/kdna-studio`) |
 | **Evaluator wanting to measure judgment improvement** | [Evaluation guide](./docs/evaluation.md) |
 | **Enterprise evaluating private deployment** | [Enterprise guide](./docs/enterprise.md) |
 | **Contributor wanting to improve KDNA itself** | [CONTRIBUTING.md](./CONTRIBUTING.md) |
@@ -172,12 +172,7 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 |------------|------|-----|
 | [kdna](https://github.com/aikdna/kdna) | Protocol, SPEC, core library, governance docs | Everyone |
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | CLI — install, validate, verify, pack, load, trace | Developers |
-| [kdna-studio](https://github.com/aikdna/kdna-studio) | Studio UI — complete authoring environment | Domain creators |
-| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Authoring kernel — create KDNA from any app (npm) | App developers |
-| [kdna-registry](https://github.com/aikdna/kdna-registry) | Domain catalog — discover, verify, distribute | Publishers, consumers |
-| [kdna-skills](https://github.com/aikdna/kdna-skills) | Agent loader skill — one loader, many domains | Agent users |
-| [kdna-vscode](https://github.com/aikdna/kdna-vscode) | VS Code extension — validate, preview, pack | Editor users |
-| [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Native Swift runtime — use KDNA on macOS/iOS | Swift developers |
+| [kdna-studio](https://github.com/aikdna/kdna-studio-core) | Authoring kernel (npm) — `@aikdna/kdna-studio` | App developers |
 | [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Native Swift authoring — create KDNA on Apple platforms | Swift developers |
 | [kdna-writing](https://github.com/aikdna/kdna-writing) · [decision_state](https://github.com/aikdna/kdna-decision_state) · [prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [agent_safety](https://github.com/aikdna/kdna-agent_safety) · [kdna_authoring](https://github.com/aikdna/kdna-authoring) · [content_strategy](https://github.com/aikdna/kdna-content_strategy) · [knowledge_management](https://github.com/aikdna/kdna-knowledge_management) · [open_source_project](https://github.com/aikdna/kdna-open_source_project) · [code_review](https://github.com/aikdna/kdna-code_review) · [animation](https://github.com/aikdna/kdna-animation) | Official domain packages (bilingual en/zh-CN for core domains, evolving eval coverage) | Domain consumers |
 | [aikdna.com](https://github.com/aikdna/kdna-website) | Website source | Web contributors |
@@ -199,7 +194,7 @@ Related repositories:
 
 - [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — official CLI and runtime control plane
 - [`aikdna/kdna-registry`](https://github.com/aikdna/kdna-registry) — public domain catalog and registry schema
-- [`aikdna/kdna-studio`](https://github.com/aikdna/kdna-studio) — human-led judgment asset production
+- [`aikdna/kdna-studio-core`](https://github.com/aikdna/kdna-studio-core) — KDNA Studio authoring kernel (`@aikdna/kdna-studio`)
 - Official domain repositories — reference KDNA domains
 
 ---
@@ -242,7 +237,7 @@ RAG retrieves facts and documents for the model to reference. KDNA encodes what 
 <details>
 <summary>Can I use KDNA without coding?</summary>
 
-Yes — start with [KDNA Studio](https://github.com/aikdna/kdna-studio) for guided domain authoring. To install and use domains with your AI agent, you only need the CLI (`npm install -g @aikdna/kdna-cli`). Creating your own domain currently requires editing JSON files, though KDNA Studio's interview mode helps non-technical experts structure their judgment without writing code.
+Yes — start with [KDNA Studio](https://github.com/aikdna/kdna-studio-core) (`@aikdna/kdna-studio`) for guided domain authoring. To install and use domains with your AI agent, you only need the CLI (`npm install -g @aikdna/kdna-cli`). Creating your own domain currently requires editing JSON files, though KDNA Studio's interview mode helps non-technical experts structure their judgment without writing code.
 </details>
 
 <details>
