@@ -172,7 +172,8 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 |------------|------|-----|
 | [kdna](https://github.com/aikdna/kdna) | Protocol, SPEC, core library, governance docs | Everyone |
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | CLI — install, validate, verify, pack, load, trace | Developers |
-| [kdna-studio](https://github.com/aikdna/kdna-studio) | Open-source authoring kernel (`@aikdna/studio-core`) | Domain creators, tool builders |
+| [kdna-studio](https://github.com/aikdna/kdna-studio) | Studio UI — complete authoring environment | Domain creators |
+| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Authoring kernel — create KDNA from any app (npm) | App developers |
 | [kdna-registry](https://github.com/aikdna/kdna-registry) | Domain catalog — discover, verify, distribute | Publishers, consumers |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Agent loader skill — one loader, many domains | Agent users |
 | [kdna-vscode](https://github.com/aikdna/kdna-vscode) | VS Code extension — validate, preview, pack | Editor users |
