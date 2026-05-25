@@ -222,7 +222,7 @@ KDNA does not replace these mechanisms. It provides a judgment reference layer t
 <details>
 <summary>Is KDNA just a fancy system prompt?</summary>
 
-No. System prompts are free-text behavioral instructions scoped to a single conversation. KDNA is a structured, validated, version-controlled format with explicit fields (axioms, boundaries, self-checks, failure risks). KDNA packages are signed, hash-verified, and distributed through a registry — a system prompt is none of these.
+No. System prompts are free-text behavioral instructions scoped to a single conversation. KDNA is a structured, validated, version-controlled format with explicit fields (axioms, boundaries, self-checks, failure risks). KDNA packages are designed to be signed, hash-verified, and distributed through a registry — a system prompt is none of these.
 </details>
 
 <details>
