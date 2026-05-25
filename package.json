@@ -16,11 +16,11 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aikdna/KDNA.git"
+    "url": "git+https://github.com/aikdna/kdna.git"
   },
   "homepage": "https://aikdna.com",
   "bugs": {
-    "url": "https://github.com/aikdna/KDNA/issues"
+    "url": "https://github.com/aikdna/kdna/issues"
   },
   "workspaces": [
     "packages/*"

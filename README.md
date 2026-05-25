@@ -19,7 +19,7 @@ Prompts tell AI what to say. Skills tell AI what to do. MCP connects AI to tools
 
 ## Why now
 
-> **Agents are getting better at taking action. They still lack domain judgment.**
+> **Agents already have general judgment. What they still need is explicit, human-led domain judgment systems that can be inspected, governed, and reused.**
 
 The current agent ecosystem has solved the "doing" problem: function calls, MCP, tool use, workflows. But doing is not judging — an agent that can do anything, but cannot distinguish a price objection from an uncertainty signal, will confidently execute the wrong action.
 
@@ -97,7 +97,7 @@ In a [5-model agent_safety mini benchmark](./benchmarks/BENCHMARK_SUMMARY.md), K
 | **Fine-tuning** | Internalized behavior | Fine-tuning internalizes patterns. KDNA keeps judgment explicit, auditable, and version-controlled |
 | **.cursorrules / project rules** | File-level behavioral hints | KDNA is a standardized, validated, cross-agent format with signatures and registry distribution |
 
-For a deeper comparison, see [Where KDNA fits](https://aikdna.com/docs/positioning).
+For a deeper comparison, see [KDNA and the AI Stack](./docs/kdna-and-ai-stack.md).
 
 ---
 
@@ -153,6 +153,9 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 
 | If you are a... | Read this |
 |-----------------|-----------|
+| **Understanding why KDNA matters when LLMs are already intelligent** | [Judgment Systems](./docs/judgment-systems.md) |
+| **Comparing KDNA with RAG, Memory, Skills, MCP, Workflows, Evals** | [KDNA and the AI Stack](./docs/kdna-and-ai-stack.md) |
+| **Reading the white paper** | [KDNA White Paper](./docs/kdna-whitepaper.md) |
 | **Developer wanting to connect KDNA to an agent** | [5-minute guide](./docs/5-minute-guide.md) |
 | **Domain expert wanting to encode your judgment** | [KDNA Studio](https://github.com/aikdna/kdna-studio-core) — authoring kernel (`@aikdna/kdna-studio`) |
 | **Evaluator wanting to measure judgment improvement** | [Evaluation guide](./docs/evaluation.md) |
@@ -210,7 +213,7 @@ Related repositories:
 | **Fine-tuning** | What behavior to internalize | Model trained on expert decisions. |
 | **KDNA** | **How to judge within a domain** | "Classify whether this is a structural problem or a language problem. Apply axioms X and Y. Avoid banned term Z. Run self-checks." |
 
-KDNA does not replace these mechanisms. It provides a judgment reference layer that operates alongside them. For a deeper comparison, see [Where KDNA fits](https://aikdna.com/docs/positioning).
+KDNA does not replace these mechanisms. It provides a judgment reference layer that operates alongside them. For a deeper comparison, see [KDNA and the AI Stack](./docs/kdna-and-ai-stack.md).
 
 ---
 
