@@ -29,6 +29,15 @@ const OLD_FIELD_HINTS = {
   judgment: 'via',
 };
 
+const KDNA_DOMAIN_FILES = new Set([
+  'KDNA_Core.json',
+  'KDNA_Patterns.json',
+  'KDNA_Scenarios.json',
+  'KDNA_Cases.json',
+  'KDNA_Reasoning.json',
+  'KDNA_Evolution.json',
+]);
+
 /**
  * Lint a KDNA domain from a map of parsed JSON objects.
  *
@@ -104,9 +113,7 @@ function lintDomain(dataMap) {
   }
 
   // Check file count
-  const kdnaFiles = Object.keys(dataMap).filter(
-    (f) => f.endsWith('.json') && f !== 'kdna.json',
-  );
+  const kdnaFiles = Object.keys(dataMap).filter((f) => KDNA_DOMAIN_FILES.has(f));
   if (kdnaFiles.length > 6) errors.push(`Domain has ${kdnaFiles.length} JSON files; KDNA allows at most 6.`);
 
   // Validate meta on all files
@@ -245,4 +252,152 @@ function lintDomain(dataMap) {
   return { errors, warnings };
 }
 
-module.exports = { lintDomain };
+/**
+ * Canonical enum tables for manifest validation.
+ * Single source of truth — keep in sync with schema/kdna-manifest-v1rc.json and specs/enum-tables.md.
+ */
+const VALID_STATUS = new Set(['draft', 'experimental', 'stable', 'deprecated', 'staging']);
+const VALID_BADGE = new Set(['untested', 'tested', 'validated', 'expert_reviewed', 'production_ready']);
+const VALID_ACCESS = new Set(['open', 'licensed', 'runtime']);
+const VALID_RISK = new Set(['R0', 'R1', 'R2', 'R3']);
+const VALID_I18N = new Set(['L0', 'L1', 'L2', 'L3']);
+
+const MANIFEST_REQUIRED = [
+  'kdna_spec', 'name', 'version', 'judgment_version',
+  'description', 'author', 'license', 'status',
+  'quality_badge', 'access', 'language',
+];
+
+/**
+ * Validate a kdna.json manifest against the canonical v1.0-rc schema.
+ *
+ * @param {Object} manifest — parsed kdna.json
+ * @returns {{ errors: string[], warnings: string[] }}
+ */
+function validateManifest(manifest) {
+  const errors = [];
+  const warnings = [];
+
+  if (!manifest || typeof manifest !== 'object') {
+    errors.push('kdna.json: missing or empty manifest');
+    return { errors, warnings };
+  }
+
+  // 1. Check spec_version is NOT in domain manifest (use kdna_spec only)
+  if ('spec_version' in manifest) {
+    errors.push(
+      'kdna.json: spec_version is deprecated in domain manifests. Use kdna_spec. ' +
+      '(spec_version is reserved for .kdna container manifests only.)',
+    );
+  }
+
+  // 2. Check required fields
+  for (const field of MANIFEST_REQUIRED) {
+    if (!(field in manifest) || manifest[field] === undefined || manifest[field] === '') {
+      errors.push(`kdna.json: missing required field "${field}"`);
+    }
+  }
+
+  // 3. Validate name format
+  if (manifest.name && !/^@[a-z][a-z0-9-]*\/[a-z][a-z0-9_]*$/.test(manifest.name)) {
+    errors.push(`kdna.json.name: invalid format "${manifest.name}". Expected @scope/name.`);
+  }
+
+  // 4. Validate enum fields
+  if (manifest.status && !VALID_STATUS.has(manifest.status)) {
+    errors.push(
+      `kdna.json.status: invalid value "${manifest.status}". ` +
+      `Valid: ${[...VALID_STATUS].join(', ')}`,
+    );
+  }
+  if (manifest.quality_badge && !VALID_BADGE.has(manifest.quality_badge)) {
+    errors.push(
+      `kdna.json.quality_badge: invalid value "${manifest.quality_badge}". ` +
+      `Valid: ${[...VALID_BADGE].join(', ')}`,
+    );
+  }
+  if (manifest.access && !VALID_ACCESS.has(manifest.access)) {
+    errors.push(
+      `kdna.json.access: invalid value "${manifest.access}". ` +
+      `Valid: ${[...VALID_ACCESS].join(', ')}`,
+    );
+  }
+  if (manifest.risk_level && !VALID_RISK.has(manifest.risk_level)) {
+    errors.push(
+      `kdna.json.risk_level: invalid value "${manifest.risk_level}". ` +
+      `Valid: ${[...VALID_RISK].join(', ')}`,
+    );
+  }
+  if (manifest.i18n_level && !VALID_I18N.has(manifest.i18n_level)) {
+    warnings.push(
+      `kdna.json.i18n_level: non-standard value "${manifest.i18n_level}". ` +
+      `Valid: ${[...VALID_I18N].join(', ')}`,
+    );
+  }
+
+  // 5. Deprecated status must have replaced_by
+  if (manifest.status === 'deprecated' && !manifest.replaced_by) {
+    errors.push('kdna.json: status is "deprecated" but replaced_by is missing');
+  }
+
+  // 6. Tested+ badge must have signature
+  const needsSig = ['tested', 'validated', 'expert_reviewed', 'production_ready'];
+  if (needsSig.includes(manifest.quality_badge) && !manifest.signature) {
+    warnings.push(
+      `kdna.json: quality_badge "${manifest.quality_badge}" should have a signature`,
+    );
+  }
+
+  // 7. Validate author
+  if (manifest.author) {
+    if (!manifest.author.name) errors.push('kdna.json.author: missing "name"');
+    if (!manifest.author.id) errors.push('kdna.json.author: missing "id"');
+    if (manifest.author.pubkey && !/^ed25519:[0-9a-f]{64}$/.test(manifest.author.pubkey)) {
+      warnings.push('kdna.json.author.pubkey: non-standard format. Expected ed25519:<64 hex chars>.');
+    }
+  }
+
+  // 8. Validate license
+  if (manifest.license && !manifest.license.type) {
+    errors.push('kdna.json.license: missing "type"');
+  }
+
+  // 9. Validate kdna_spec value
+  if (manifest.kdna_spec && manifest.kdna_spec !== '1.0-rc') {
+    warnings.push(
+      `kdna.json.kdna_spec: non-standard value "${manifest.kdna_spec}". Expected "1.0-rc".`,
+    );
+  }
+
+  // 10. Validate version format
+  if (manifest.version && !/^\d+\.\d+\.\d+/.test(manifest.version)) {
+    warnings.push(
+      `kdna.json.version: non-semver format "${manifest.version}". Expected MAJOR.MINOR.PATCH.`,
+    );
+  }
+
+  // 11. Check for removed fields
+  const removedFields = ['release_status', 'domain_field', 'judgment_patterns', 'files', 'registry'];
+  for (const field of removedFields) {
+    if (field in manifest) {
+      warnings.push(
+        `kdna.json: field "${field}" is not in the canonical domain manifest and should be removed`,
+      );
+    }
+  }
+
+  // 12. Check removed license sub-fields
+  if (manifest.license && typeof manifest.license === 'object') {
+    for (const field of ['commercial', 'allow_agent_use', 'allow_redistribution', 'allow_training']) {
+      if (field in manifest.license) {
+        warnings.push(
+          `kdna.json.license.${field}: license-type-specific field, not universal. Consider removing.`,
+        );
+      }
+    }
+  }
+
+  return { errors, warnings };
+}
+
+module.exports = { lintDomain, validateManifest };
