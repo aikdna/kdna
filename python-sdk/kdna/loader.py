@@ -1,5 +1,8 @@
 """
-KDNA Loader — Load domain cognition packages in Python.
+KDNA Loader — Load KDNA dev source workspaces in Python.
+
+Canonical installed assets are `.kdna` files. This module is intentionally a
+developer source-tree helper until native Python asset loading is added.
 """
 
 import json
@@ -23,19 +26,19 @@ def _load_json(path: Path) -> Optional[Dict[str, Any]]:
         return json.load(f)
 
 
-def load_domain(domain_dir: str, mode: str = "minimum") -> Optional[Dict[str, Any]]:
+def load_dev_source(source_dir: str, mode: str = "minimum") -> Optional[Dict[str, Any]]:
     """
-    Load a KDNA domain directory.
+    Load a non-canonical KDNA dev source workspace.
 
     Args:
-        domain_dir: Path to the domain directory.
+        source_dir: Path to the dev source directory.
         mode: 'minimum' (Core + Patterns only), 'all' (all files),
               or 'auto' (load optional files based on input signals).
 
     Returns:
         Dict with 'core' and 'patterns' keys, or None if invalid.
     """
-    dpath = Path(domain_dir)
+    dpath = Path(source_dir)
     if not dpath.is_dir():
         return None
 

@@ -234,7 +234,7 @@ This is recorded in the domain's `KDNA_Evolution.json` as:
 }
 ```
 
-A domain package MUST NOT be published with judgment updates that lack corresponding human locks.
+A domain asset MUST NOT be published with judgment updates that lack corresponding human locks.
 
 Validators SHOULD check: if `axioms`, `value_order`, `boundaries`, or `risk_model` changed between versions, a human lock MUST exist in `KDNA_Evolution.json`.
 

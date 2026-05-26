@@ -1,15 +1,15 @@
 """
-KDNA Python SDK — Load domain cognition for AI agents.
+KDNA Python SDK — Load KDNA dev source workspaces for AI agents.
 
 Usage:
-    from kdna import load_domain, format_context
+    from kdna import load_dev_source, format_context
 
-    domain = load_domain("./sales")
+    domain = load_dev_source("./sales-source")
     context = format_context(domain)
 """
 
-from .loader import load_domain, classify_input
+from .loader import load_dev_source, classify_input
 from .context import format_context
 
 __version__ = "0.4.0"
-__all__ = ["load_domain", "format_context", "classify_input"]
+__all__ = ["load_dev_source", "format_context", "classify_input"]

@@ -14,7 +14,7 @@ from pathlib import Path
 # Add python-sdk to path if running without pip install
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "python-sdk"))
 
-from kdna import load_domain, format_context, classify_input
+from kdna import load_dev_source, format_context, classify_input
 
 # LangGraph imports
 try:
@@ -47,8 +47,8 @@ class State(TypedDict):
 
 def load_kdna_node(state: State) -> State:
     """Load KDNA decision_state domain and inject into state."""
-    domain_dir = Path(__file__).parent.parent / "examples" / "decision_state"
-    domain = load_domain(str(domain_dir), mode="all")
+    source_dir = Path(__file__).parent.parent / "examples" / "decision_state"
+    domain = load_dev_source(str(source_dir), mode="all")
     context = format_context(domain) if domain else ""
 
     return {

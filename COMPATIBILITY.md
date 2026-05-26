@@ -4,11 +4,11 @@ This document defines what it means to be KDNA-compatible. It exists to prevent 
 
 ## KDNA-Compatible: Definition
 
-A tool, library, platform, or domain package is **KDNA-compatible** if it satisfies the requirements below for its category.
+A tool, library, platform, or domain asset is **KDNA-compatible** if it satisfies the requirements below for its category.
 
 ### Category 1: Domain Package
 
-A domain package is KDNA-compatible if:
+A domain asset is KDNA-compatible if:
 
 1. It contains at minimum `KDNA_Core.json` and `KDNA_Patterns.json`
 2. Each file contains `meta.version`, `meta.domain`, `meta.created`, `meta.purpose`, and `meta.load_condition`

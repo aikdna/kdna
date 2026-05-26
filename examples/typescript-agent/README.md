@@ -17,7 +17,7 @@ npm run demo
 
 ## What it shows
 
-- `loadDomain()` — load a KDNA domain package
+- `loadDomain()` — load a KDNA domain asset
 - `formatContext()` — format domain into agent-readable context
 - `classifyInput()` — detect signals in user input
 - `KDNAAgent` class — framework-agnostic agent with KDNA-loaded judgment

@@ -47,11 +47,11 @@ python agent.py
 ## Key pattern
 
 ```python
-from kdna import load_domain, format_context
+from kdna import load_dev_source, format_context
 from langgraph.graph import StateGraph
 
 # Load KDNA domain
-domain = load_domain("../../examples/decision_state", mode="all")
+domain = load_dev_source("../../examples/decision_state", mode="all")
 context = format_context(domain)
 
 # Build LangGraph that uses KDNA context for judgment

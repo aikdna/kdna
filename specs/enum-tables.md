@@ -72,7 +72,7 @@
 
 | Context | Canonical Field | Deprecated |
 |---------|----------------|------------|
-| Domain package kdna.json (directory) | `kdna_spec: "1.0-rc"` | `spec_version` (remove from domain manifests) |
+| Domain asset kdna.json (directory) | `kdna_spec: "1.0-rc"` | `spec_version` (remove from domain manifests) |
 | .kdna container manifest (archive) | `spec_version: "1.0-rc"` | — |
 
 **Rule:** Domain repos use `kdna_spec`. Container manifests use `spec_version`. They MUST NOT both appear in the same manifest.

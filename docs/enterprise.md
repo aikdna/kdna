@@ -42,8 +42,8 @@ cat > my-registry/domains.json << 'EOF'
       "description": "Internal code review standards for MyCorp",
       "core_insight": "Our review process prioritizes security impact over style compliance.",
       "keywords": ["code review", "security", "mycorp internal"],
-      "kdna_url": "https://mycorp.internal/packages/internal_review-0.1.0.kdna",
-      "sha256": "..."
+      "asset_url": "https://mycorp.internal/packages/internal_review-0.1.0.kdna",
+      "asset_digest": "sha256:..."
     }
   ]
 }
@@ -192,7 +192,8 @@ cat > /mnt/shared/kdna-registry/domains.json << 'EOF'
     {
       "name": "@aikdna/code_review",
       "version": "0.1.0",
-      "kdna_url": "file:///mnt/shared/kdna-registry/packages/code_review-0.1.0.kdna",
+      "asset_url": "file:///mnt/shared/kdna-registry/packages/code_review-0.1.0.kdna",
+      "asset_digest": "sha256:...",
       "...": "full domain metadata"
     }
   ]
@@ -250,7 +251,7 @@ kdna publish ./my_domain_2
 }
 ```
 
-Domain packages signed by any delegated key are accepted by the CLI when the scope is `@mycorp`.
+Domain assets signed by any delegated key are accepted by the CLI when the scope is `@mycorp`.
 
 ---
 
@@ -266,15 +267,15 @@ Registry (domains.json)
   │   └─ registry_url: "https://mycorp.internal/..."
   │
   └─ Domain: @mycorp/internal_review
-      ├─ kdna_url: .kdna file download location
-      ├─ sha256: content integrity hash
+      ├─ asset_url: .kdna asset download location
+      ├─ asset_digest: whole-file asset integrity hash
       └─ signature: Ed25519 sig (stored in kdna.json inside the .kdna)
           └─ Verified against trust_pubkey on install
 ```
 
 ### Verification Chain
 
-1. **Registry → Domain**: Registry entry declares `sha256` hash → downloaded `.kdna` must match
+1. **Registry → Asset**: Registry entry declares `asset_digest` → downloaded `.kdna` must match
 2. **Domain → Author**: `kdna.json` declares `author.pubkey` → must match scope `trust_pubkey`
 3. **Author → Content**: `kdna.json` carries Ed25519 `signature` → verified against canonical payload
 4. **PEM → Pubkey**: Embedded `public_key_pem` hashes to `author.pubkey` → prevents fingerprint spoofing

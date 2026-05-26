@@ -161,7 +161,7 @@ KDNA Studio should prove that human judgment can become a governed domain asset.
 
 Required contract outputs:
 
-- domain package export
+- domain asset export
 - Human Lock evidence
 - quality gate result
 - local validation result
@@ -183,7 +183,7 @@ Required contract outputs:
 
 | Level | Name | Requirements |
 |---|---|---|
-| A | Domain Consumer | Can load validated domain packages and show loaded domain metadata. |
+| A | Domain Consumer | Can load validated domain assets and show loaded domain metadata. |
 | B | Routed Consumer | Level A + emits/records route results. |
 | C | Traceable Consumer | Level B + emits judgment trace artifacts. |
 | D | Reportable Consumer | Level C + generates a human-readable judgment report. |

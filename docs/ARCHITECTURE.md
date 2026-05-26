@@ -20,7 +20,7 @@ The KDNA Protocol defines how human domain expertise is encoded as machine-reada
 - **Central domain index** (`domains.json`) — the canonical listing of all published KDNA domains
 - **Quality badges**, risk levels (`R0`–`R3`), i18n metadata
 - **Review status ladder**: `unlisted` → `community` → `verified` → `reviewed` → `trusted` (+ `restricted`, `deprecated`, `yanked`)
-- **Provenance**: Every domain carries author identity, sha256 content hash, scope signature, and build metadata
+- **Provenance**: Every asset carries author identity, `asset_digest`, scope signature, and build metadata
 
 ### Layer 4: Distribution
 - **npm packages** (`@aikdna/*`) — installable via `kdna install`
@@ -50,7 +50,7 @@ Expert → Studio/CLI → .kdna Asset → Registry → Install → Agent Loader 
 
 - **Human Lock** — critical fields must be signed by a human expert; AI-generated draft cards never enter compile output
 - **Signature verification** — Ed25519 public key in `kdna.json`, verified against scope trust pubkeys in the registry
-- **Content hash** — sha256 of canonical file set, verified on install
+- **Asset digest** — whole-file `.kdna` digest, verified on install
 - **Task projection** — agents receive minimum context needed for the task, never the full domain
 - **Risk levels** — `R0` (low) through `R3` (restricted); agents must respect risk warnings
 

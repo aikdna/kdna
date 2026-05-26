@@ -97,8 +97,8 @@
     "i18n_level": "L2",
     "risk_level": "R1",
     "signature": "aikdna-ed25519-placeholder-pending-signing",
-    "sha256": null,
-    "kdna_url": null,
+    "asset_digest": null,
+    "asset_url": null,
     "repo": "https://github.com/aikdna/kdna-writing",
     "runtime_endpoint": null,
     "access_mode": "open"

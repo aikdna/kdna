@@ -1,4 +1,4 @@
-# KDNA Package Profiles
+# KDNA Asset Profiles
 
 Version: 0.1
 Status: Draft
@@ -73,7 +73,7 @@ domain-0.1.0.kdna
 
 - **Integrity**: SHA256 hash of each file and the container.
 - **Authorship**: Ed25519 signature (optional but recommended). Stored in `kdna.json`.
-- **Registry**: Registry entry provides `sha256` and `signature` for verification.
+- **Registry**: Registry entry provides `asset_digest` and `signature` for verification.
 - **Risk**: Risk level (R0–R3) and quality badge declared in registry metadata.
 - **Warning**: Unsigned `.kdna` must display a warning on load.
 

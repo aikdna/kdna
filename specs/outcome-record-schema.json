@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "https://aikdna.com/specs/outcome-record-schema.json",
   "title": "KDNA Outcome Record",
-  "description": "Schema for recording the actual outcome of a KDNA-generated judgment, enabling long-term judgment-outcome tracking and domain package improvement.",
+  "description": "Schema for recording the actual outcome of a KDNA-generated judgment, enabling long-term judgment-outcome tracking and domain asset improvement.",
   "type": "object",
   "required": ["record_version", "outcome_id", "judgment_reference", "recorded_at"],
   "properties": {
@@ -34,7 +34,7 @@
         },
         "domain_version": {
           "type": "string",
-          "description": "Version of the domain package at judgment time."
+          "description": "Version of the domain asset at judgment time."
         }
       }
     },
@@ -184,11 +184,11 @@
         },
         "domain_package_should_change": {
           "type": "boolean",
-          "description": "Whether this outcome suggests the KDNA domain package needs updating."
+          "description": "Whether this outcome suggests the KDNA domain asset needs updating."
         },
         "suggested_changes": {
           "type": "array",
-          "description": "Specific changes suggested for the domain package.",
+          "description": "Specific changes suggested for the domain asset.",
           "items": {
             "type": "object",
             "properties": {

@@ -1,6 +1,6 @@
 # KDNA as MCP Resource Example
 
-Shows how KDNA domain packages can be served as MCP (Model Context Protocol) Resources, making judgment cognition available to any MCP-compatible client.
+Shows how KDNA dev source workspaces can be served as MCP (Model Context Protocol) Resources, making judgment cognition available to any MCP-compatible client.
 
 ## Core Principle
 

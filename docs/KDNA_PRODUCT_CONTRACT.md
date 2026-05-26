@@ -157,8 +157,8 @@ When a domain is indexed in the registry:
 {
   "name": "@aikdna/writing",
   "version": "0.7.2",
-  "kdna_url": "https://github.com/aikdna/kdna-writing",
-  "sha256": "hex",
+  "asset_url": "https://github.com/aikdna/kdna-writing/releases/download/v0.7.2/writing-0.7.2.kdna",
+  "asset_digest": "sha256:<hex>",
   "signature": "ed25519:hex",
   "quality_badge": "tested",
   "risk_level": "R0",
@@ -178,16 +178,16 @@ All products MUST use the same local directory structure:
 ~/.kdna/
   config.json           # Global KDNA config
   identity/             # Author identity keys
-  domains/
-    official/           # Registry-installed domains
-    local/              # User-created domains
-    private/            # Enterprise/team private domains
+  packages/             # Immutable installed .kdna assets
+    @scope/name/version/name.kdna
+  index.json            # Installed asset index
+  licenses/             # Local activation records, not decrypted content
   clusters/             # Cluster manifests
   registry/             # Local registry cache
   traces/               # Judgment traces
   feedback/             # Feedback events
   evals/                # Eval cases
-  cache/                # Runtime cache
+  cache/                # Rebuildable runtime cache; never a trust source
   licenses/             # Enterprise license files
 ```
 

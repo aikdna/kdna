@@ -13,7 +13,7 @@ from pathlib import Path
 # Add python-sdk to path if running without pip install
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "python-sdk"))
 
-from kdna import load_domain, format_context
+from kdna import load_dev_source, format_context
 
 # LangChain imports
 try:
@@ -25,14 +25,14 @@ except ImportError:
     sys.exit(1)
 
 
-def build_judgment_chain(domain_dir: str):
+def build_judgment_chain(source_dir: str):
     """Build a LangChain chain that uses KDNA-loaded judgment.
 
     The chain injects KDNA domain cognition into the system prompt,
     then classifies the input and produces a structured judgment.
     """
     # Load KDNA domain
-    domain = load_domain(domain_dir, mode="all")
+    domain = load_dev_source(source_dir, mode="all")
     context = format_context(domain) if domain else ""
 
     # Build prompt with KDNA context as system message
@@ -109,10 +109,10 @@ def main():
     print("KDNA + LangChain Judgment Chain")
     print("=" * 60)
 
-    domain_dir = str(Path(__file__).parent.parent / "examples" / "decision_state")
+    source_dir = str(Path(__file__).parent.parent / "examples" / "decision_state")
 
     # Build both chains
-    kdna_chain = build_judgment_chain(domain_dir)
+    kdna_chain = build_judgment_chain(source_dir)
     naive_chain = build_naive_chain()
 
     scenarios = [

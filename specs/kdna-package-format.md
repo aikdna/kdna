@@ -218,4 +218,4 @@ The KDNA JSON files within a dev source directory use the same schema as the exi
 KDNA specification (SPEC.md v0.4). The `kdna.json` manifest is new in v0.2.
 
 When a dev source directory follows both the existing SPEC.md and this spec,
-it is considered a **v0.2-compatible KDNA domain package**.
+it is considered a **v0.2-compatible KDNA domain asset**.

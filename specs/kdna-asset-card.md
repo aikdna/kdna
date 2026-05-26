@@ -101,8 +101,8 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
     "i18n_level": "L2",
     "risk_level": "R1",
     "signature": "ed25519:<hex>",
-    "sha256": "<64-hex>",
-    "kdna_url": "https://github.com/aikdna/kdna-domain/releases/download/v0.7.5/domain.kdna",
+    "asset_digest": "sha256:<64-hex>",
+    "asset_url": "https://github.com/aikdna/kdna-domain/releases/download/v0.7.5/domain.kdna",
     "repo": "https://github.com/aikdna/kdna-domain",
     "runtime_endpoint": null,
     "access_mode": "open | licensed | runtime"
@@ -209,8 +209,8 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
 | `i18n_level` | No | Localization coverage level (L1/L2/L3). |
 | `risk_level` | Yes | R0 (safe) to R3 (high-risk). |
 | `signature` | Yes (commercial) | Cryptographic signature. |
-| `sha256` | Yes (installable) | Package checksum. |
-| `kdna_url` | Yes (installable) | Direct download URL. |
+| `asset_digest` | Yes (installable) | Whole-file `.kdna` asset digest. |
+| `asset_url` | Yes (installable) | Direct `.kdna` asset download URL. |
 | `repo` | Yes | Source repository URL. |
 | `runtime_endpoint` | No | Runtime API endpoint (for runtime-mode domains). |
 | `access_mode` | Yes | open, licensed, or runtime. |
@@ -267,7 +267,7 @@ Asset Cards are generated from:
 1. `kdna.json` manifest (technical, license, author fields)
 2. `KDNA_Core.json` (axioms, ontology, frameworks for judgment style)
 3. `KDNA_Evolution.json` (evaluation history)
-4. Registry entry (quality_badge, test_count, sha256, signature)
+4. Registry entry (quality_badge, test_count, asset_digest, signature)
 5. Creator-supplied content (audience, sample inputs, support policy)
 
 The Studio Creator flow will guide creators through completing all Asset Card fields.

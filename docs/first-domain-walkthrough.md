@@ -24,7 +24,7 @@ But most writing problems aren't prose problems. They're structural: no real arg
 
 ---
 
-## 2. This is a KDNA domain package
+## 2. This is a KDNA domain asset
 
 The `@aikdna/writing` domain encodes editorial judgment as a structured asset. Here's what's inside:
 

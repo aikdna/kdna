@@ -16,7 +16,7 @@
       {
         "type": "domain-package",
         "path": "exports/example-domain/",
-        "description": "Compiled domain package."
+        "description": "Compiled domain asset."
       }
     ]
   },

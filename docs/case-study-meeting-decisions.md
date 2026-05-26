@@ -143,7 +143,7 @@ For audit and reproducibility, here is the complete judgment trace:
 }
 ```
 
-This trace is inspectable, testable, and versioned. If the domain package is updated, the trace changes predictably. If the classification is wrong, you can trace exactly which axiom or framework led to the error.
+This trace is inspectable, testable, and versioned. If the domain asset is updated, the trace changes predictably. If the classification is wrong, you can trace exactly which axiom or framework led to the error.
 
 ---
 
@@ -154,7 +154,7 @@ This trace is inspectable, testable, and versioned. If the domain package is upd
 | **Without KDNA** | $40,000 wasted, 6 weeks lost, team conflict, production incidents |
 | **With KDNA** | Meeting correctly flagged as UNRESOLVED. Follow-up scheduled within 48 hours. Proper decision made with owner, timeline, and scope. Execution proceeds with clear mandate. |
 
-**ROI:** The cost of implementing KDNA judgment (loading a domain package, running classification) is approximately zero. The cost of false actionization in this case was $40,000+.
+**ROI:** The cost of implementing KDNA judgment (loading a domain asset, running classification) is approximately zero. The cost of false actionization in this case was $40,000+.
 
 ---
 
@@ -184,4 +184,4 @@ KDNA does the opposite. It adds a **judgment gate** between discussion and execu
 
 ---
 
-*This case study is based on a composite of real incidents. Identifying details have been changed. The KDNA analysis was produced using the `decision_state` domain package with reproducible benchmark methodology documented in [../benchmarks/decision-state-comparison-report.md](../benchmarks/decision-state-comparison-report.md).*
+*This case study is based on a composite of real incidents. Identifying details have been changed. The KDNA analysis was produced using the `decision_state` domain asset with reproducible benchmark methodology documented in [../benchmarks/decision-state-comparison-report.md](../benchmarks/decision-state-comparison-report.md).*

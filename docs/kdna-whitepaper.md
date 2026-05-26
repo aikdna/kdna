@@ -18,7 +18,7 @@ But domain judgment is usually fragmented across them: partly written in prompts
 
 KDNA is an open protocol for representing domain judgment. It encodes the principles, conceptual boundaries, misunderstanding patterns, scenario signals, reasoning chains, risk boundaries, and self-checks that shape expert judgment — in a form that AI agents can load, humans can inspect, and tools can validate.
 
-KDNA does not claim that judgment has never existed in AI systems. Its contribution is that judgment now deserves its own portable, verifiable representation: a domain package that can be authored, reviewed, validated, versioned, composed, distributed, and improved over time.
+KDNA does not claim that judgment has never existed in AI systems. Its contribution is that judgment now deserves its own portable, verifiable representation: a domain asset that can be authored, reviewed, validated, versioned, composed, distributed, and improved over time.
 
 KDNA stands for **Knowledge DNA**. The name does not treat knowledge as a static collection of content, but as a structure that can be expressed, inherited, and evolved. The "K" refers to structured domain cognition — the judgment system behind how knowledge is selected, interpreted, rejected, and applied — not to stored information in the narrow sense. In biological systems, DNA is not the organism itself, nor any single behavior; it is an underlying code that allows stable traits to be preserved, expressed, copied, and changed over time. KDNA uses this metaphor for domain judgment: the most valuable part of expertise is often not isolated knowledge, but the recurring judgment structure behind it — how experts draw distinctions, recognize situations, weigh risks, preserve boundaries, form taste, avoid misunderstandings, and decide what counts as done well. KDNA gives this implicit structure a readable, verifiable, composable, and transmissible form.
 
@@ -186,7 +186,7 @@ KDNA should not be used to pretend that all judgment can be reduced to rules. It
 
 ### 3.1 Definition
 
-KDNA is an open, file-based protocol for encoding domain judgment as structured, verifiable packages. A KDNA domain is a directory containing a small set of standard JSON files. Together, they describe the principles, concepts, boundaries, misunderstandings, scenarios, reasoning patterns, risk models, examples, and self-checks that guide judgment in a specific domain.
+KDNA is an open, file-based protocol for encoding domain judgment as structured, verifiable cognition assets. A KDNA domain is represented, distributed, installed, verified, and loaded as a `.kdna` asset file. Internally, that asset contains a small standard domain tree of JSON entries. The internal tree describes the principles, concepts, boundaries, misunderstandings, scenarios, reasoning patterns, risk models, examples, and self-checks that guide judgment in a specific domain.
 
 A domain does not try to store all information. It does not try to replace an expert. It captures the judgment structures that experts repeatedly use when deciding:
 
@@ -232,9 +232,9 @@ KDNA is compact by design. A useful domain may contain only two files. Richer do
 
 **Capability stages and evolution** — Definitions of how the domain improves over time, including changed judgments, deprecated assumptions, new failure modes, and evaluation results.
 
-### 3.3 The Six Standard Files
+### 3.3 The Internal Standard Entries
 
-A KDNA domain is a directory named in lowercase snake_case or an equivalent scoped package name. A complete domain may contain up to six standard files:
+A `.kdna` asset contains an internal domain tree. Authoring tools may expose a dev source workspace while creating an asset, but that workspace is not the canonical runtime or distribution form. A complete asset may contain up to six standard entries:
 
 | File | Encodes | Required |
 |---|---|:---:|
@@ -245,9 +245,9 @@ A KDNA domain is a directory named in lowercase snake_case or an equivalent scop
 | `KDNA_Reasoning.json` | Reasoning chains, trade-offs, conflict resolution, evidence requirements, uncertainty handling | No |
 | `KDNA_Evolution.json` | Capability stages, measurement, changed judgments, known limitations, evaluation history | No |
 
-The minimum valid domain contains `KDNA_Core.json` and `KDNA_Patterns.json`. Each file contains a required `meta` object with `version`, `domain`, `created`, `purpose`, and `load_condition`. Standard files are validated against published JSON Schemas.
+The minimum valid asset contains `KDNA_Core.json` and `KDNA_Patterns.json`. Each entry contains a required `meta` object with `version`, `domain`, `created`, `purpose`, and `load_condition`. Standard entries are validated against published JSON Schemas.
 
-The canonical form is a directory of JSON files — source-first, transparent, version-controllable. For distribution, the toolchain can package a domain into a `.kdna` container.
+The canonical form is the `.kdna` file. Dev source workspaces remain useful for review and version control, but they are non-canonical authoring inputs. Runtime loading, installation, registry distribution, signature verification, and licensing operate on the `.kdna` asset.
 
 ### 3.4 Why a File Format Matters
 

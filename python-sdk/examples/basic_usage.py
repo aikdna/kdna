@@ -3,10 +3,10 @@
 Basic KDNA Python SDK usage example.
 """
 
-from kdna import load_domain, format_context
+from kdna import load_dev_source, format_context
 
-# Load the decision_state domain
-domain = load_domain("../../examples/decision_state", mode="all")
+# Load the decision_state dev source
+domain = load_dev_source("../../examples/decision_state", mode="all")
 
 if domain:
     print("Domain loaded successfully!")

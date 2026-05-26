@@ -18,7 +18,7 @@ You may use the KDNA Marks to truthfully refer to the KDNA project, protocol, or
 
 - "compatible with KDNA"
 - "supports KDNA domains"
-- "KDNA domain package"
+- "KDNA domain asset"
 - "built for KDNA"
 - "KDNA tool"
 - "KDNA loader"
@@ -28,7 +28,7 @@ You may use the KDNA Marks to truthfully refer to the KDNA project, protocol, or
 You may use the Marks to describe compatibility, provided the description is accurate and references the specific [COMPATIBILITY.md](./COMPATIBILITY.md) level:
 
 - "This tool is KDNA-Core compatible (SPEC v1.0-rc)."
-- "This domain package follows the KDNA domain structure."
+- "This domain asset follows the KDNA domain structure."
 
 ### Community Content
 
@@ -61,7 +61,7 @@ You may **not** use the KDNA Marks in the following ways:
 
 ### 4. Domain Package Naming
 
-Domain packages that are compatible with KDNA should use clear naming:
+Domain assets that are compatible with KDNA should use clear naming:
 
 - ✅ `@yourorg/writing-kdna` — clear attribution, KDNA reference
 - ✅ `@aikdna/writing` — official domain

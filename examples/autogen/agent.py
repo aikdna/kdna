@@ -13,7 +13,7 @@ from pathlib import Path
 # Add python-sdk to path if running without pip install
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "python-sdk"))
 
-from kdna import load_domain, format_context
+from kdna import load_dev_source, format_context
 
 # AutoGen imports
 try:
@@ -176,8 +176,8 @@ def main():
     print("=" * 60)
 
     # Load KDNA domain
-    domain_dir = str(Path(__file__).parent.parent / "examples" / "decision_state")
-    domain = load_domain(domain_dir, mode="all")
+    source_dir = str(Path(__file__).parent.parent / "examples" / "decision_state")
+    domain = load_dev_source(source_dir, mode="all")
     kdna_context = format_context(domain) if domain else ""
 
     print(f"\nLoaded domain: decision_state")

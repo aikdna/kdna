@@ -1,6 +1,10 @@
 # KDNA Python SDK
 
-Load KDNA domain cognition packages in Python.
+Load KDNA cognition assets in Python.
+
+This SDK currently exposes a developer source-tree loader. Canonical installed
+assets are `.kdna` files; production runtimes should prefer the CLI/core
+asset reader path until native Python `.kdna` asset loading is added.
 
 ## Install
 
@@ -11,10 +15,10 @@ pip install kdna
 ## Quickstart
 
 ```python
-from kdna import load_domain, format_context
+from kdna import load_dev_source, format_context
 
-# Load a domain
-domain = load_domain("./sales")
+# Load a dev source workspace
+domain = load_dev_source("./sales-source")
 
 # Format for agent context
 context = format_context(domain)
@@ -25,22 +29,22 @@ print(context)
 
 ```python
 # Minimum: Core + Patterns only
-domain = load_domain("./sales", mode="minimum")
+domain = load_dev_source("./sales-source", mode="minimum")
 
 # All: load all 6 files
-domain = load_domain("./sales", mode="all")
+domain = load_dev_source("./sales-source", mode="all")
 
 # Auto: load based on input signals
-domain = load_domain("./sales", mode="auto")
+domain = load_dev_source("./sales-source", mode="auto")
 ```
 
 ## Use with LLM
 
 ```python
-from kdna import load_domain, format_context
+from kdna import load_dev_source, format_context
 import openai
 
-domain = load_domain("./sales")
+domain = load_dev_source("./sales-source")
 context = format_context(domain)
 
 response = openai.ChatCompletion.create(
@@ -54,11 +58,11 @@ response = openai.ChatCompletion.create(
 
 ## API
 
-### `load_domain(domain_dir, mode="minimum")`
+### `load_dev_source(source_dir, mode="minimum")`
 
-Load a KDNA domain directory.
+Load a non-canonical KDNA dev source workspace.
 
-- `domain_dir`: Path to the domain folder
+- `source_dir`: Path to the dev source folder
 - `mode`: `"minimum"`, `"all"`, or `"auto"`
 - Returns: `dict` with `core`, `patterns`, and optional files
 
@@ -66,7 +70,7 @@ Load a KDNA domain directory.
 
 Format a loaded domain into agent-readable text.
 
-- `domain`: Result from `load_domain()`
+- `domain`: Result from `load_dev_source()`
 - Returns: Formatted context string
 
 ### `classify_input(text)`

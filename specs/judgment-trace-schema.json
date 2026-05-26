@@ -28,7 +28,7 @@
     },
     "loaded_package": {
       "type": "object",
-      "description": "Information about the KDNA domain package that was loaded.",
+      "description": "Information about the KDNA domain asset that was loaded.",
       "required": ["domain", "version"],
       "properties": {
         "domain": {
@@ -38,7 +38,7 @@
         },
         "version": {
           "type": "string",
-          "description": "Version of the loaded domain package.",
+          "description": "Version of the loaded domain asset.",
           "examples": ["0.4.0"]
         },
         "source": {

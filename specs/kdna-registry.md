@@ -32,7 +32,7 @@ Hugging Face Hub for ML models — but optimized for KDNA domain judgment assets
 ┌──────────────────────────────────────────────────┐
 │           Registry Index                           │
 │  domains.json (machine-readable index)             │
-│  domain packages (GitHub repos / tarballs)         │
+│  domain assets (GitHub repos / tarballs)         │
 └──────────────────────────────────────────────────┘
 ```
 

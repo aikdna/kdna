@@ -62,13 +62,13 @@ When publishing a new official domain, verify:
 - [ ] License declared (recommended: CC-BY-4.0 for content)
 - [ ] Author identified
 - [ ] Signed with scope key
-- [ ] SHA-256 checksum published in registry
+- [ ] Asset digest published in registry as `asset_digest`
 - [ ] `status` and `quality_badge` match evidence level
 
 ### Distribution
 
 - [ ] `.kdna` container published as GitHub Release
-- [ ] Registry entry complete with `kdna_url`, `sha256`, `signature`
+- [ ] Registry entry complete with `asset_url`, `asset_digest`, `signature`
 - [ ] Version follows SemVer
 - [ ] `judgment_version` declared
 

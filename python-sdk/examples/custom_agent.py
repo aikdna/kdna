@@ -3,7 +3,7 @@
 Custom Agent with KDNA — No framework required.
 
 Shows how to integrate KDNA into any Python agent:
-1. Load domain cognition
+1. Load KDNA dev source cognition
 2. Inject into system prompt
 3. Run judgment on user input
 """
@@ -16,14 +16,14 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from kdna import load_domain, format_context, classify_input
+from kdna import load_dev_source, format_context, classify_input
 
 
 class KDNAAgent:
     """A minimal agent that uses KDNA domain cognition for judgment."""
 
-    def __init__(self, domain_dir: str):
-        self.domain = load_domain(domain_dir, mode="all")
+    def __init__(self, source_dir: str):
+        self.domain = load_dev_source(source_dir, mode="all")
         self.context = format_context(self.domain) if self.domain else ""
         self.history = []
 

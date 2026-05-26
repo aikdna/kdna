@@ -34,7 +34,7 @@ access: "open"
 can be loaded by any compatible Agent without restrictions.
 
 **Use cases:**
-- Open-source domain packages
+- Open-source domain assets
 - Community-contributed KDNA
 - Educational and reference KDNA
 - Basic/free tiers of commercial domains
@@ -60,7 +60,7 @@ The Agent must verify a license before loading. Content is decrypted at load tim
 but full content is still delivered to the authorized Agent.
 
 **Use cases:**
-- Paid domain packages (one-time purchase)
+- Paid domain assets (one-time purchase)
 - Team/enterprise licensed domains
 - Subscription-based KDNA access
 - Private/internal organizational KDNA

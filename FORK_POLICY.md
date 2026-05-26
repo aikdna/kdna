@@ -42,7 +42,7 @@ If you create a public fork of any KDNA repository, you must:
 
 ## Domain Packages
 
-Creating KDNA domain packages (writing-kdna, code-review-kdna, etc.) is NOT a fork. Domain packages are the primary form of ecosystem contribution we encourage. See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to publish domains.
+Creating KDNA domain assets (writing-kdna, code-review-kdna, etc.) is NOT a fork. Domain assets are the primary form of ecosystem contribution we encourage. See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to publish domains.
 
 ## Rationale
 

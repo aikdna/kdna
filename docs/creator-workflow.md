@@ -258,7 +258,7 @@ kdna dev validate .
 CC BY 4.0
 ```
 
-### 5.4 注册到 Registry（v2.0 schema）
+### 5.4 注册到 Registry（v3.0 schema）
 
 **首选**：用新 publish 命令一键打包+签名+上传+生成 patch：
 
@@ -282,8 +282,8 @@ kdna publish ./your-domain \
   "spec_version": "1.0",
   "status": "experimental",
   "access": "open",
-  "kdna_url": "https://github.com/yourname/kdna-<domain-id>/releases/download/v0.1.0/<domain-id>-0.1.0.kdna",
-  "sha256": "<由 publish 命令算出>",
+  "asset_url": "https://github.com/yourname/kdna-<domain-id>/releases/download/v0.1.0/<domain-id>-0.1.0.kdna",
+  "asset_digest": "sha256:<由 publish 命令算出>",
   "signature": "<Ed25519 签名>",
   "release_status": "published_signed",
   "repo": "https://github.com/yourname/kdna-<domain-id>",
@@ -320,7 +320,7 @@ kdna publish ./your-domain \
 ```bash
 cd kdna-registry
 node scripts/validate-registry.js          # offline checks
-node scripts/validate-registry.js --remote # check kdna_url + sha256
+node scripts/validate-registry.js --remote # check asset_url + asset_digest
 ```
 
 提 PR 到 `aikdna/kdna-registry`，通过后用户即可 `kdna install @yourname/<domain-id>`。

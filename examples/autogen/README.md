@@ -44,11 +44,11 @@ python agent.py
 ## Key pattern
 
 ```python
-from kdna import load_domain, format_context
+from kdna import load_dev_source, format_context
 import autogen
 
 # Load KDNA once
-domain = load_domain("./decision_state", mode="all")
+domain = load_dev_source("./decision_state", mode="all")
 context = format_context(domain)
 
 # Inject into each agent's system_message

@@ -31,7 +31,7 @@ A KDNA does not make an agent role-play an expert. It gives the agent an explici
 ```
 KDNAStudio                    kdna-cli                    KDNA Registry
 Creates judgment         →    Verifies & packs      →    Distributes trusted
-assets (expertise)            domain packages             domain assets
+assets (expertise)            domain assets             domain assets
       │                                                         │
       │                         ┌───────────────────────────────┘
       ▼                         ▼
@@ -121,7 +121,7 @@ In a [5-model agent_safety mini benchmark](./benchmarks/BENCHMARK_SUMMARY.md), K
 - A **judgment reference layer** that AI agents load before they act in a domain
 - A **structured format** for axioms, concept boundaries, failure risks, self-checks, and reasoning chains
 - A **human-verified encoding** — critical judgment fields require Human Judgment Lock before modification
-- A **composable protocol** — multiple domain packages can be loaded together with conflict reporting
+- A **composable protocol** — multiple domain assets can be loaded together with conflict reporting
 
 ### KDNA is not:
 
@@ -228,7 +228,7 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | CLI — install, validate, verify, pack, load, trace | Developers |
 | [kdna-studio](https://github.com/aikdna/kdna-studio-core) | Authoring kernel (npm) — `@aikdna/kdna-studio` | App developers |
 | [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Native Swift authoring — create KDNA on Apple platforms | Swift developers |
-| [kdna-writing](https://github.com/aikdna/kdna-writing) · [decision_state](https://github.com/aikdna/kdna-decision_state) · [prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [agent_safety](https://github.com/aikdna/kdna-agent_safety) · [kdna_authoring](https://github.com/aikdna/kdna-authoring) · [content_strategy](https://github.com/aikdna/kdna-content_strategy) · [knowledge_management](https://github.com/aikdna/kdna-knowledge_management) · [open_source_project](https://github.com/aikdna/kdna-open_source_project) · [code_review](https://github.com/aikdna/kdna-code_review) · [animation](https://github.com/aikdna/kdna-animation) | Official domain packages (bilingual en/zh-CN for core domains, evolving eval coverage) | Domain consumers |
+| [kdna-writing](https://github.com/aikdna/kdna-writing) · [decision_state](https://github.com/aikdna/kdna-decision_state) · [prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [agent_safety](https://github.com/aikdna/kdna-agent_safety) · [kdna_authoring](https://github.com/aikdna/kdna-authoring) · [content_strategy](https://github.com/aikdna/kdna-content_strategy) · [knowledge_management](https://github.com/aikdna/kdna-knowledge_management) · [open_source_project](https://github.com/aikdna/kdna-open_source_project) · [code_review](https://github.com/aikdna/kdna-code_review) · [animation](https://github.com/aikdna/kdna-animation) | Official domain assets (bilingual en/zh-CN for core domains, evolving eval coverage) | Domain consumers |
 | [aikdna.com](https://github.com/aikdna/kdna-website) | Website source | Web contributors |
 
 ---

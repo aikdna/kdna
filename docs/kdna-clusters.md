@@ -15,7 +15,7 @@ A single monolithic KDNA for a broad domain has four problems:
 
 ## Package vs Cluster
 
-| | KDNA Package | KDNA Cluster |
+| | KDNA Asset | KDNA Cluster |
 |---|---|---|
 | **Scope** | One judgment fork | A complex domain |
 | **Files** | 2-6 JSON files | Manifest + multiple packages |
@@ -89,7 +89,7 @@ A cluster is defined by `KDNA_Cluster.json`:
 ## Relationship to Existing Concepts
 
 - **Judgment Pattern**: the smallest unit — a specific signal/misread/frame/boundary (defined in `benchmarks/`)
-- **KDNA Package**: a domain package containing 2-6 JSON files (defined in `SPEC.md`)
+- **KDNA Asset**: a domain asset containing 2-6 JSON files (defined in `SPEC.md`)
 - **KDNA Cluster**: a composable system of packages with defined roles (this document)
 
 These three layers are complementary: patterns live inside packages, packages are organized into clusters.

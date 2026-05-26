@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aikdna.com/schema/kdna-manifest-v1rc.json",
   "title": "KDNA Domain Manifest (kdna.json)",
-  "description": "Canonical JSON Schema for the kdna.json manifest in a KDNA domain package directory. This is the single source of truth — CLI, Registry, and Studio MUST validate against this schema.",
+  "description": "Canonical JSON Schema for the kdna.json manifest inside a .kdna asset internal domain tree or dev source workspace. This is the single source of truth — CLI, Registry, and Studio MUST validate against this schema.",
 
   "type": "object",
   "required": [
@@ -22,13 +22,13 @@
 
     "kdna_spec": {
       "type": "string",
-      "description": "KDNA SPEC version this domain conforms to. Required. Canonical field name for domain package manifests. spec_version is a deprecated alias — use kdna_spec.",
+      "description": "KDNA SPEC version this domain conforms to. Required. Canonical field name for domain asset manifests. spec_version is a deprecated alias — use kdna_spec.",
       "examples": ["1.0-rc"]
     },
 
     "spec_version": {
       "type": "string",
-      "description": "DEPRECATED. Use kdna_spec. This field is reserved for the .kdna container manifest (package-profiles.md), not for domain package kdna.json."
+      "description": "DEPRECATED. Use kdna_spec. This field is reserved for the .kdna container manifest (package-profiles.md), not for domain asset kdna.json."
     },
 
     "name": {
@@ -40,7 +40,7 @@
 
     "version": {
       "type": "string",
-      "description": "Semantic version (MAJOR.MINOR.PATCH) of the domain package. Tracks packaging and metadata changes. Independent of judgment_version.",
+      "description": "Semantic version (MAJOR.MINOR.PATCH) of the domain asset. Tracks packaging and metadata changes. Independent of judgment_version.",
       "examples": ["0.7.2"]
     },
 
@@ -149,7 +149,7 @@
       "type": "integer",
       "minimum": 2,
       "maximum": 6,
-      "description": "Number of KDNA JSON files in the domain directory (excluding kdna.json). Minimum 2 (Core + Patterns). Maximum 6."
+      "description": "Number of standard KDNA JSON entries in the asset internal tree or dev source workspace (excluding kdna.json). Minimum 2 (Core + Patterns). Maximum 6."
     },
 
     "risk_level": {

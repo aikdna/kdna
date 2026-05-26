@@ -56,7 +56,7 @@ Negative Cases: (at least 1 example where the pattern should NOT trigger)
 **Submit to:** `benchmarks/judgment-benchmark.json` via PR
 
 ### 3. Domain Package Contribution
-Submit a complete KDNA domain package.
+Submit a complete KDNA domain asset.
 
 1. Create a repository under `kdna-<domain>` naming convention
 2. Include at least `KDNA_Core.json` and `KDNA_Patterns.json`
@@ -105,4 +105,4 @@ All contributions must:
 
 - Code contributions: Apache 2.0
 - Documentation and examples: CC BY 4.0
-- Domain packages: Contributor's choice (CC BY 4.0 recommended for open domains)
+- Domain assets: Contributor's choice (CC BY 4.0 recommended for open domains)

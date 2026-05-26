@@ -165,7 +165,7 @@ kdna setup
 npm i -g @aikdna/kdna-cli
 kdna setup
 
-# 2. 装一个领域（sha256 + 签名验证）
+# 2. 装一个领域（asset_digest + 签名验证）
 kdna install @aikdna/writing
 # 装到 ~/.kdna/packages/@aikdna/writing/0.7.2/writing-0.7.2.kdna
 

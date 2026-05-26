@@ -2,7 +2,7 @@
 """
 KDNA as MCP Resource — Conceptual Example
 
-Shows how KDNA domain packages can be served as MCP Resources,
+Shows how KDNA dev source workspaces can be served as MCP Resources,
 making judgment cognition available to any MCP-compatible client.
 
 Architecture:
@@ -18,14 +18,14 @@ from pathlib import Path
 # Add python-sdk to path if running without pip install
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "python-sdk"))
 
-from kdna import load_domain, format_context
+from kdna import load_dev_source, format_context
 
 # ---------------------------------------------------------------------------
 # In-memory "MCP Server" — conceptual implementation
 # ---------------------------------------------------------------------------
 
 class KDNAResourceServer:
-    """Serves KDNA domain packages as MCP-style resources.
+    """Serves KDNA dev source workspaces as MCP-style resources.
 
     In a real implementation, this would use the official MCP SDK:
     https://github.com/modelcontextprotocol/python-sdk
@@ -33,21 +33,21 @@ class KDNAResourceServer:
     This conceptual version shows the data model and resource schema.
     """
 
-    def __init__(self, domains_dir: str):
-        self.domains_dir = Path(domains_dir)
+    def __init__(self, source_root: str):
+        self.source_root = Path(source_root)
         self.loaded = {}
 
     def list_resources(self) -> list[dict]:
         """Return list of available KDNA resources."""
         resources = []
-        for domain_dir in self.domains_dir.iterdir():
-            if domain_dir.is_dir() and (domain_dir / "KDNA_Core.json").exists():
-                domain = load_domain(str(domain_dir), mode="minimum")
+        for source_dir in self.source_root.iterdir():
+            if source_dir.is_dir() and (source_dir / "KDNA_Core.json").exists():
+                domain = load_dev_source(str(source_dir), mode="minimum")
                 if domain:
                     meta = domain.get("core", {}).get("meta", {})
                     resources.append({
-                        "uri": f"kdna://{meta.get('domain', domain_dir.name)}",
-                        "name": meta.get("domain", domain_dir.name),
+                        "uri": f"kdna://{meta.get('domain', source_dir.name)}",
+                        "name": meta.get("domain", source_dir.name),
                         "description": meta.get("purpose", ""),
                         "mimeType": "application/json",
                     })
@@ -62,19 +62,19 @@ class KDNAResourceServer:
         # Parse URI: kdna://domain-name
         domain_name = uri.replace("kdna://", "")
 
-        domain_dir = self.domains_dir / domain_name
-        if not domain_dir.exists():
+        source_dir = self.source_root / domain_name
+        if not source_dir.exists():
             # Try fuzzy match
-            for d in self.domains_dir.iterdir():
+            for d in self.source_root.iterdir():
                 if d.is_dir():
-                    domain = load_domain(str(d), mode="minimum")
+                    domain = load_dev_source(str(d), mode="minimum")
                     if domain:
                         meta = domain.get("core", {}).get("meta", {})
                         if meta.get("domain") == domain_name:
-                            domain_dir = d
+                            source_dir = d
                             break
 
-        domain = load_domain(str(domain_dir), mode="all")
+        domain = load_dev_source(str(source_dir), mode="all")
         if not domain:
             return {"error": f"Domain not found: {domain_name}"}
 

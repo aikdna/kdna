@@ -63,11 +63,11 @@ jobs:
 
 ### 2. Remote URL Verification (`--remote`)
 
-For each domain entry with a `kdna_url`:
+For each domain entry with an `asset_url`:
 
 - URL is reachable (HTTP 200)
 - Content-type is `application/zip` or `application/octet-stream`
-- Downloaded file matches declared `sha256`
+- Downloaded file matches declared `asset_digest`
 - File is a valid ZIP archive
 - Contains `kdna.json` at root
 - Contains `KDNA_Core.json` and `KDNA_Patterns.json`
@@ -137,7 +137,7 @@ for (const domain of REGISTRY.domains) {
   }
 
   // Remote checks
-  if (REMOTE && domain.kdna_url) {
+  if (REMOTE && domain.asset_url) {
     await verifyRemoteURL(domain);
   }
 }
@@ -152,8 +152,8 @@ if (errors > 0) {
 
 Additional checks run on schedule to detect drift:
 
-1. **URL availability** — All `kdna_url` values still return 200
-2. **SHA-256 freshness** — No sha256 values silently changed upstream
+1. **URL availability** — All `asset_url` values still return 200
+2. **Asset digest freshness** — No `asset_digest` values silently changed upstream
 3. **Scope pubkey validity** — Keys haven't been revoked
 4. **New scopes** — Flag new untrusted scopes for review
 
@@ -161,7 +161,7 @@ Additional checks run on schedule to detect drift:
 
 | Severity | Blocks Merge | Examples |
 |----------|:-----------:|----------|
-| **Error** | Yes | Invalid schema, sha256 mismatch, missing required fields |
+| **Error** | Yes | Invalid schema, asset digest mismatch, missing required fields |
 | **Warning** | No | quality_badge consistency, missing optional fields |
 | **Info** | No | New scope addition, version increment |
 
