@@ -1,47 +1,23 @@
 {
-  "trace_version": "0.1.0",
-  "trace_id": "trace_chat_writing_001",
-  "timestamp": "2026-05-25T10:00:00Z",
-  "input_hash": "sha256:chat-writing-demo",
-  "route_result": {
-    "status": "LOAD_STRONG_FIT",
-    "action": "load",
-    "selected_domain": "@aikdna/writing",
-    "reason": "The user asked for content review where structure and argument quality matter.",
-    "confidence": 0.91
+  "trace_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "domain_id": "writing",
+  "domain_version": "0.7.2",
+  "mode": "enforce",
+  "timestamp": "2026-05-26T12:00:00Z",
+  "agent": "kdnachat",
+  "input_summary": "Review this blog post draft about productivity tools. We should leverage our synergies to create value.",
+  "signals_detected": ["writing"],
+  "axioms_triggered": ["axiom_problem_not_prose", "axiom_judgment_pressure"],
+  "patterns_matched": ["mis_emotional_hook"],
+  "misunderstandings_avoided": ["A hook is an emotional opening"],
+  "violations_blocked": ["leverage", "synergy", "value creation"],
+  "judgment_delta": {
+    "without_kdna": "3 violations (leverage, synergy, value creation), 1 misunderstanding, 2 self-checks failed",
+    "with_kdna": "0 violations, 0 misunderstandings, 0 self-checks failed",
+    "difference": "Avoided 3 banned terms, corrected 1 misunderstanding, improved 2 self-checks"
   },
-  "loaded_package": {
-    "domain": "@aikdna/writing",
-    "version": "0.7.2",
-    "source": "app-bundled",
-    "loaded_files": ["KDNA_Core.json", "KDNA_Patterns.json"]
-  },
-  "triggered_axioms": [
-    {
-      "id": "AX-writing-structure-first",
-      "statement": "Most writing problems are structural and argument-level, not language-level."
-    }
-  ],
-  "triggered_misunderstandings": [
-    {
-      "id": "MS-polish-first",
-      "description": "Treating weak argument structure as a wording problem.",
-      "evidence": "The user asked to improve a launch post but gave no reader decision problem."
-    }
-  ],
-  "self_checks": [
-    {
-      "check_id": "SC-real-argument",
-      "description": "Did the response diagnose whether the piece has a real argument?",
-      "passed": true,
-      "reason": "The response asked for the reader decision and evidence density before sentence polishing."
-    }
-  ],
-  "generated_judgment": {
-    "classification": "STRUCTURAL_WRITING_REVIEW",
-    "confidence": "high",
-    "missing_elements": ["reader decision", "specific evidence", "clear claim"],
-    "recommended_action": "Rewrite the opening around the reader's decision problem before polishing language.",
-    "reasoning_summary": "The loaded writing domain shifted the conversation from wording edits to argument diagnosis."
-  }
+  "confidence": 0.85,
+  "limitations": ["Not tested for technical documentation", "English-only judgment"],
+  "self_checks_passed": 4,
+  "self_checks_failed": 0
 }

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schema/judgment-trace.schema.json",
+  "title": "KDNA Judgment Trace",
+  "description": "Canonical judgment trace format shared across all KDNA products (Chat, Work, CLI, Studio). Trace proves inspectability, not correctness.",
+  "type": "object",
+  "required": ["trace_id", "domain_id", "mode", "timestamp", "agent"],
+  "properties": {
+    "trace_id": {
+      "type": "string",
+      "description": "Unique trace identifier (UUID v4)"
+    },
+    "domain_id": {
+      "type": "string",
+      "description": "KDNA domain identifier (e.g., 'writing', '@aikdna/code_review')"
+    },
+    "domain_version": {
+      "type": "string",
+      "description": "Domain version (SemVer)"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["enforce", "precheck", "off"],
+      "description": "Judgment enforcement mode"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO8601 trace creation timestamp"
+    },
+    "agent": {
+      "type": "string",
+      "enum": ["kdnachat", "kdnawork", "kdna-cli", "kdnastudio"],
+      "description": "Product that produced this trace"
+    },
+    "input_summary": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "First 200 characters of user input"
+    },
+    "signals_detected": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Trigger signals that matched this input"
+    },
+    "axioms_triggered": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Axiom IDs triggered during judgment"
+    },
+    "patterns_matched": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Pattern/misunderstanding IDs matched"
+    },
+    "misunderstandings_avoided": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Misunderstandings that KDNA prevented"
+    },
+    "violations_blocked": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Banned terms or boundary violations blocked"
+    },
+    "judgment_delta": {
+      "type": "object",
+      "description": "Before/after KDNA comparison summary",
+      "properties": {
+        "without_kdna": { "type": "string" },
+        "with_kdna": { "type": "string" },
+        "difference": { "type": "string" }
+      }
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "limitations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Known limitations of this domain/judgment"
+    },
+    "self_checks_passed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "self_checks_failed": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

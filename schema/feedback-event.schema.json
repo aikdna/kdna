@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schema/feedback-event.schema.json",
+  "title": "KDNA Feedback Event",
+  "description": "User feedback on a KDNA judgment — the link that closes the loop from consumption back to domain evolution.",
+  "type": "object",
+  "required": ["event_id", "source", "domain_id", "trace_id", "user_feedback", "timestamp"],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "description": "Unique feedback event identifier"
+    },
+    "source": {
+      "type": "string",
+      "enum": ["kdnachat", "kdnawork", "kdna-cli"],
+      "description": "Product that emitted this feedback"
+    },
+    "domain_id": {
+      "type": "string",
+      "description": "KDNA domain being reviewed"
+    },
+    "domain_version": {
+      "type": "string",
+      "description": "Domain version at time of feedback"
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "Linked judgment trace ID"
+    },
+    "input_ref": {
+      "type": "string",
+      "description": "Short reference to the original input"
+    },
+    "output_ref": {
+      "type": "string",
+      "description": "Short reference to the KDNA-shaped output"
+    },
+    "user_feedback": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "missed_axiom",
+            "wrong_route",
+            "weak_judgment",
+            "false_positive",
+            "useful_judgment",
+            "needs_new_case"
+          ],
+          "description": "Feedback type"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Free-text user comment"
+        },
+        "rating": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        }
+      }
+    },
+    "suggested_action": {
+      "type": "string",
+      "enum": ["create_eval_case", "revise_card", "add_boundary", "no_action"],
+      "description": "Suggested domain improvement action"
+    },
+    "human_review_status": {
+      "type": "string",
+      "enum": ["pending", "accepted", "rejected"],
+      "default": "pending",
+      "description": "Whether a domain author has reviewed this feedback"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO8601 feedback timestamp"
+    }
+  }
+}

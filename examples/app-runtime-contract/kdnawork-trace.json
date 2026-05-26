@@ -1,57 +1,23 @@
 {
-  "trace_version": "0.1.0",
-  "trace_id": "trace_work_agent_safety_001",
-  "timestamp": "2026-05-25T10:10:00Z",
-  "input_hash": "sha256:work-agent-safety-demo",
-  "route_result": {
-    "status": "LOAD_STRONG_FIT",
-    "action": "load",
-    "selected_domain": "@aikdna/agent_safety",
-    "reason": "The task includes an irreversible file deletion proposed by an agent workflow.",
-    "confidence": 0.96
+  "trace_id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+  "domain_id": "subtitle_quality",
+  "domain_version": "1.0.0",
+  "mode": "enforce",
+  "timestamp": "2026-05-26T12:05:00Z",
+  "agent": "kdnawork",
+  "input_summary": "Generate SRT subtitles for the video transcript at input/transcript.txt",
+  "signals_detected": ["subtitle"],
+  "axioms_triggered": ["timing_accuracy", "reading_speed", "line_break_rules"],
+  "patterns_matched": [],
+  "misunderstandings_avoided": [],
+  "violations_blocked": [],
+  "judgment_delta": {
+    "without_kdna": "120 subtitle lines, 18 timing warnings, 6 reading speed violations",
+    "with_kdna": "120 subtitle lines, 2 timing warnings, 0 reading speed violations",
+    "difference": "Fixed 16 timing issues, resolved 6 reading speed violations"
   },
-  "loaded_package": {
-    "domain": "@aikdna/agent_safety",
-    "version": "0.7.5",
-    "source": "registry",
-    "loaded_files": ["KDNA_Core.json", "KDNA_Patterns.json", "KDNA_Scenarios.json"]
-  },
-  "triggered_axioms": [
-    {
-      "id": "AX-irreversible-action",
-      "statement": "Irreversible actions require authorization, backup, and reversibility checks before execution."
-    }
-  ],
-  "triggered_frameworks": [
-    {
-      "id": "FW-safety-gate",
-      "name": "Irreversible action safety gate",
-      "steps_applied": ["classify action", "check authorization", "check backup", "check reversibility"]
-    }
-  ],
-  "self_checks": [
-    {
-      "check_id": "SC-before-execute",
-      "description": "Did the agent ask before executing an irreversible action?",
-      "passed": true,
-      "reason": "The workflow generated a review request instead of deleting files directly."
-    }
-  ],
-  "guard_events": [
-    {
-      "guard_id": "G-delete-without-backup",
-      "action": "delete generated output directory",
-      "risk_level": "high",
-      "decision": "require_approval",
-      "reason": "No backup or rollback path was attached to the action.",
-      "triggered_by": "AX-irreversible-action"
-    }
-  ],
-  "generated_judgment": {
-    "classification": "REQUIRES_APPROVAL",
-    "confidence": "high",
-    "missing_elements": ["explicit user authorization", "backup path"],
-    "recommended_action": "Pause the workflow and request approval with a rollback plan.",
-    "reasoning_summary": "KDNAWork converted a raw execution step into a reviewable guard event."
-  }
+  "confidence": 0.92,
+  "limitations": ["Not tested for non-English subtitles"],
+  "self_checks_passed": 9,
+  "self_checks_failed": 1
 }
