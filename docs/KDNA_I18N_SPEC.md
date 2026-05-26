@@ -156,7 +156,7 @@ kdna list --locale zh-CN
 The `i18n` module provides:
 
 ```js
-const { i18n } = require('@aikdna/studio-core');
+const { i18n } = require('@aikdna/kdna-studio');
 i18n.createLocaleOverlay(project, 'zh-CN');       // → overlay object
 i18n.validateLocaleOverlay(project, overlay);      // → { valid, issues }
 i18n.applyLocaleOverlay(domain, overlay);          // → localized domain

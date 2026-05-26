@@ -25,10 +25,10 @@ A KDNA domain encoding the expert judgment patterns of high-trust, diagnosis-fir
 
 ```bash
 # Lint
-node validators/kdna-lint.js examples/sales
+npx kdna validate examples/sales
 
 # Schema validation (requires ajv)
-node validators/kdna-validate.js examples/sales
+npx kdna validate --schema examples/sales
 ```
 
 ## Four Questions

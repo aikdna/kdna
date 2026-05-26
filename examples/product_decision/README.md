@@ -42,7 +42,7 @@
 ## 验证
 
 ```bash
-node ../../validators/kdna-lint.js .
+npx kdna validate .
 ```
 
 ## Four Questions

@@ -39,7 +39,7 @@ Fill in the placeholders. Keep it short at first — 2-3 axioms, 2-3 concepts, 2
 ## 4. Validate
 
 ```bash
-node validators/kdna-lint.js ~/.agents/Kdna/my_domain
+npx kdna validate ~/.agents/Kdna/my_domain
 ```
 
 Fix any errors before using the domain.

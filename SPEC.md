@@ -806,7 +806,7 @@ Domain authors work in directories. Users and agents receive `.kdna` containers.
 
 ## 15. Authoring Compatibility
 
-KDNA domains may be authored manually (by editing JSON files directly) or generated through KDNA Studio Core ([@aikdna/studio-core](https://www.npmjs.com/package/@aikdna/studio-core)).
+KDNA domains may be authored manually (by editing JSON files directly) or generated through KDNA Studio Core ([@aikdna/kdna-studio](https://www.npmjs.com/package/@aikdna/kdna-studio)).
 
 ### 15.1 Studio-Generated Domains
 

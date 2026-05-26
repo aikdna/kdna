@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-24
 **Status:** Five-model cross-model evidence collected.
-**Location:** `benchmarks/` in [aikdna/KDNA](https://github.com/aikdna/KDNA)
+**Location:** `benchmarks/` in [aikdna/kdna](https://github.com/aikdna/kdna)
 
 ---
 
@@ -15,13 +15,13 @@
   - Insufficient Evidence (2 cases): missing context, ambiguous intent
   - Conflict (2 cases): safety vs utility, multi-domain conflict
   - Human Lock Trigger (1 case): judgment-class modification requiring human review
-- File: [`benchmarks/agent_safety-mini-benchmark.json`](https://github.com/aikdna/KDNA/blob/main/benchmarks/agent_safety-mini-benchmark.json)
+- File: [`benchmarks/agent_safety-mini-benchmark.json`](https://github.com/aikdna/kdna/blob/main/benchmarks/agent_safety-mini-benchmark.json)
 
 ### Runner
 - Three-way comparison: **No KDNA · Best Prompt · KDNA**
 - Supports MiniMax, Anthropic, OpenAI, OpenRouter
 - Parallel API calls, secure JSON construction, `<think>` tag parsing
-- File: [`benchmarks/eval-agent-safety.mjs`](https://github.com/aikdna/KDNA/blob/main/benchmarks/eval-agent-safety.mjs)
+- File: [`benchmarks/eval-agent-safety.mjs`](https://github.com/aikdna/kdna/blob/main/benchmarks/eval-agent-safety.mjs)
 
 ### Scoring Rubric
 - Safety classification (3x weight): correct safety call vs dangerous opposite
@@ -148,18 +148,18 @@ benchmarks/raw/agent_safety/
 ```
 
 **Reports:**
-- [`benchmarks/agent_safety-comparison-report-MiniMax-M2.7.md`](https://github.com/aikdna/KDNA/blob/main/benchmarks/agent_safety-comparison-report-MiniMax-M2.7.md)
-- [`benchmarks/agent_safety-comparison-report-anthropic-claude-opus-4.7.md`](https://github.com/aikdna/KDNA/blob/main/benchmarks/agent_safety-comparison-report-anthropic-claude-opus-4.7.md)
-- [`benchmarks/agent_safety-comparison-report-qwen-qwen3.7-max.md`](https://github.com/aikdna/KDNA/blob/main/benchmarks/agent_safety-comparison-report-qwen-qwen3.7-max.md)
-- [`benchmarks/agent_safety-comparison-report-google-gemini-3.5-flash.md`](https://github.com/aikdna/KDNA/blob/main/benchmarks/agent_safety-comparison-report-google-gemini-3.5-flash.md)
-- [`benchmarks/agent_safety-comparison-report-openai-gpt-5.5.md`](https://github.com/aikdna/KDNA/blob/main/benchmarks/agent_safety-comparison-report-openai-gpt-5.5.md)
+- [`benchmarks/agent_safety-comparison-report-MiniMax-M2.7.md`](https://github.com/aikdna/kdna/blob/main/benchmarks/agent_safety-comparison-report-MiniMax-M2.7.md)
+- [`benchmarks/agent_safety-comparison-report-anthropic-claude-opus-4.7.md`](https://github.com/aikdna/kdna/blob/main/benchmarks/agent_safety-comparison-report-anthropic-claude-opus-4.7.md)
+- [`benchmarks/agent_safety-comparison-report-qwen-qwen3.7-max.md`](https://github.com/aikdna/kdna/blob/main/benchmarks/agent_safety-comparison-report-qwen-qwen3.7-max.md)
+- [`benchmarks/agent_safety-comparison-report-google-gemini-3.5-flash.md`](https://github.com/aikdna/kdna/blob/main/benchmarks/agent_safety-comparison-report-google-gemini-3.5-flash.md)
+- [`benchmarks/agent_safety-comparison-report-openai-gpt-5.5.md`](https://github.com/aikdna/kdna/blob/main/benchmarks/agent_safety-comparison-report-openai-gpt-5.5.md)
 
 ---
 
 ## 6. How to Reproduce
 
 ```bash
-git clone https://github.com/aikdna/KDNA.git
+git clone https://github.com/aikdna/kdna.git
 cd KDNA
 
 # Set API key in ../.env (line must contain 'sk-or-v1' for OpenRouter)

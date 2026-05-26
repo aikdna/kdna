@@ -88,8 +88,8 @@ node scripts/validate-registry.js --remote
 在 KDNA 协议仓库中运行：
 
 ```bash
-node validators/kdna-lint.js ../kdna-<domain>
-node validators/kdna-validate.js ../kdna-<domain>
+npx kdna validate ../kdna-<domain>
+npx kdna validate --schema ../kdna-<domain>
 ```
 
 两者都必须通过。

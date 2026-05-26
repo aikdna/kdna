@@ -4,7 +4,7 @@
 
 ## Checklist
 
-- [ ] New or updated KDNA domain passes `node validators/kdna-lint.js <domain-folder>`
+- [ ] New or updated KDNA domain passes `npx kdna validate <domain-folder>`
 - [ ] Code changes include tests where applicable
 - [ ] Documentation updated if behavior changes
 - [ ] New example domains include Core + Patterns at minimum

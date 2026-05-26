@@ -26,10 +26,10 @@ A KDNA domain encoding expert management judgment: diagnosing upstream system co
 
 ```bash
 # Lint
-node validators/kdna-lint.js examples/management
+npx kdna validate examples/management
 
 # Schema validation (requires ajv)
-node validators/kdna-validate.js examples/management
+npx kdna validate --schema examples/management
 ```
 
 ## Four Questions

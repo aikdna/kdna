@@ -7,7 +7,7 @@
 1. 复制 `templates/minimal-domain/` 到你的工作目录
 2. 重命名为你的领域 ID（如 `my_domain`）
 3. 编辑每个 JSON 文件——填入选角括号中的占位符
-4. 验证：`node validators/kdna-lint.js <你的领域目录>`
+4. 验证：`npx kdna validate <你的领域目录>`
 5. 测试：`kdna verify <你的领域目录>`
 
 ## 从窄开始

@@ -122,7 +122,7 @@ kdna --help
 或克隆仓库：
 
 ```bash
-git clone https://github.com/aikdna/KDNA.git
+git clone https://github.com/aikdna/kdna.git
 cd KDNA
 npm install
 npm run lint:examples
@@ -131,7 +131,7 @@ npm run lint:examples
 校验一个领域：
 
 ```bash
-node validators/kdna-lint.js examples/decision_state
+npx kdna validate examples/decision_state
 ```
 
 ## 安装到你的 Agent

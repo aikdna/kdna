@@ -12,7 +12,7 @@ This repository is the KDNA protocol specification. You can contribute at multip
 ### Developer Setup
 
 ```bash
-git clone https://github.com/aikdna/KDNA.git
+git clone https://github.com/aikdna/kdna.git
 cd KDNA
 npm install
 npm test         # kdna-core unit tests
