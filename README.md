@@ -1,30 +1,29 @@
-# KDNA Protocol
+# KDNA — Open Judgment Protocol for AI Systems
 
 > [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
-Maintained by **AIKDNA** — the open ecosystem for AI-native Knowledge DNA.
+Maintained by **AIKDNA** — the open ecosystem for the KDNA Protocol.
 
 **Build domains, tools, integrations — not parallel protocols.**
 
-**AI can generate knowledge. Humans still create judgment.**
+KDNA is an open judgment protocol for AI systems. It turns human-governed domain judgment into portable structural assets that agents can load, trace, verify, and evolve.
 
-The KDNA Protocol is an open format for encoding human-verified domain judgment into structured assets that AI agents can load, verify, and evolve. KDNA does not replace the model — it gives the model a domain judgment reference while it reasons and acts.
-
-Prompts tell AI what to say. Skills tell AI what to do. MCP connects AI to tools.  
-**KDNA tells AI how to judge within a domain.**
+Prompt changes what AI says. RAG changes what AI can access. Tools change what AI can do.  
+**KDNA changes how AI judges within a domain.**
 
 > **Skill + KDNA** — Skills make agents capable. KDNA makes their judgment reliable. [Learn more →](./docs/kdna-and-ai-stack.md#4-kdna-vs-skill)
 
 ## KDNA in 30 seconds
 
-KDNA is a file-based cognitive kernel for AI agents.
+KDNA is a file-based judgment kernel that AI agents can load as a domain reference.
 
-It turns human insight, value stance, aesthetic preference, judgment boundaries, and quality standards into structured assets that agents can load, verify, compose, and evolve.
+It turns human insight, value stance, aesthetic preference, judgment boundaries, and quality standards into portable structural assets that agents can load, verify, compose, and evolve.
 
 A KDNA does not make an agent role-play an expert. It gives the agent an explicit judgment system to work within.
 
 - **Prompt** changes what AI says.
-- **Skill** changes what AI does.
+- **RAG** changes what AI can access.
+- **Tools/Skills** change what AI can do.
 - **KDNA** changes how AI judges.
 
 ## KDNA Ecosystem
@@ -45,6 +44,16 @@ assets (expertise)            domain packages             domain assets
 
 > **KDNA is not a single project — it's a judgment asset operating system.**  
 > Studio creates, CLI verifies, Registry distributes, Chat makes judgment visible, Work puts judgment into real workflows, and feedback returns to improve the domain.
+
+## The KDNA Stack
+
+AIKDNA = the ecosystem / brand  
+KDNA Protocol = the open judgment protocol  
+KDNA Domain Package = a portable domain judgment asset
+
+**Protocol first. Products are reference implementations.**
+
+KDNA Protocol is open. KDNA CLI is reference tooling. KDNAChat is a reference client for using and comparing judgment. KDNAStudio is a reference environment for authoring and locking domains. KDNAWork is a reference workspace for applying judgment in workflows. Third-party apps can implement the same runtime contract.
 
 ## For whom
 
@@ -194,6 +203,7 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 | If you are a... | Read this |
 |-----------------|-----------|
 | **Understanding why KDNA matters when LLMs are already intelligent** | [Judgment Systems](./docs/judgment-systems.md) |
+| **Seeing a complete KDNA workflow from file to trace** | [First Domain Walkthrough](./docs/first-domain-walkthrough.md) |
 | **Comparing KDNA with RAG, Memory, Skills, MCP, Workflows, Evals** | [KDNA and the AI Stack](./docs/kdna-and-ai-stack.md) |
 | **Reading the white paper** | [KDNA White Paper](./docs/kdna-whitepaper.md) |
 | **Developer wanting to connect KDNA to an agent** | [5-minute guide](./docs/5-minute-guide.md) |
@@ -259,6 +269,23 @@ KDNA does not replace these mechanisms. It provides a judgment reference layer t
 ---
 
 ## FAQ
+
+<details>
+<summary>Is this related to biological kDNA, aikdna, or other DNA projects?</summary>
+
+No. In this project, KDNA refers to the KDNA Protocol: an open judgment protocol for AI systems. It focuses on human-governed domain judgment assets, not biological kinetoplast DNA, goal-tracking SaaS, codebase summaries, agent identity profiles, or model lineage analysis.
+</details>
+
+<details>
+<summary>How is KDNA different from Prompt, RAG, Skills, and MCP?</summary>
+
+- **Prompt** changes what AI says — task-scoped, ephemeral.
+- **RAG** changes what AI can access — retrieves facts.
+- **Tools/Skills/MCP** change what AI can do — connect to actions.
+- **KDNA** changes how AI judges — domain-scoped, version-controlled, auditable.
+
+KDNA is the judgment reference layer. It does not replace these mechanisms — it sits alongside them.
+</details>
 
 <details>
 <summary>Is KDNA just a fancy system prompt?</summary>

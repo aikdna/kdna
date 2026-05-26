@@ -39,7 +39,7 @@ KDNA is NOT designed for:
 KDNA is a *judgment structure format*, not a general content format. The following boundaries are defined to prevent format dilution:
 
 **Invariant (MUST NOT change across versions):**
-- A domain is a directory containing at most 6 standard KDNA files
+- A domain is a directory containing at most 6 standard KDNA judgment files; supporting files such as `kdna.json`, `README.md`, `LICENSE`, `signature.json`, `evals/`, `examples/`, and `reports/` do not count toward this limit
 - Minimum valid domain = `KDNA_Core.json` + `KDNA_Patterns.json`
 - Each file MUST contain a `meta` object with `version`, `domain`, `created`, `purpose`, `load_condition`
 - Axioms MUST have `one_sentence`, `full_statement`, and `why`
@@ -347,7 +347,7 @@ Stances MUST be an array of strings. Each string expresses the domain's default 
 - `meta` (object) — See Section 4
 - `terminology` (object) — See Section 6.2
 - `misunderstandings` (array) — See Section 6.3
-- `self_check` (array of strings) — See Section 6.4
+- `self_check` (array of strings or `{ "question": string }` objects) — See Section 6.5
 
 ### 6.2 Terminology
 
@@ -382,9 +382,31 @@ Each misunderstanding MUST include:
 
 A domain SHOULD have between 2 and 6 misunderstandings.
 
-### 6.4 Self-Checks
+### 6.4 Judgment Constraints
 
-`self_check` MUST be an array of strings. Each item MUST be answerable with yes or no. Self-checks SHOULD test domain-specific judgment, not generic quality.
+The following optional judgment constraint fields are schema-supported and SHOULD follow these shapes when present:
+
+| Field | Type | Required item fields | Description |
+|-------|------|----------------------|-------------|
+| `aesthetic_preferences` | array | `prefer`, `avoid` | What good vs. bad expression, form, or taste looks like in this domain |
+| `boundaries` | array | `rule`, `why` | What the domain must not do, and why |
+| `risk_model` | object | none | Highest-risk errors, acceptable errors, hard blocks, and warning conditions |
+
+### 6.5 Self-Checks
+
+`self_check` MUST be an array of strings or objects with a `question` string. Each item MUST be answerable with yes or no. Self-checks SHOULD test domain-specific judgment, not generic quality.
+
+Valid forms:
+
+```json
+[
+  "Did the response diagnose the domain-specific failure before prescribing an action?",
+  {
+    "question": "回答是否先区分事实和假设？",
+    "applies_when": ["The output makes a recommendation"]
+  }
+]
+```
 
 A domain SHOULD have between 2 and 6 self-check items.
 
@@ -399,7 +421,7 @@ When present, MUST include:
 
 Each scene MUST include `id`, `name`, `trigger_signal`, and `sub_scenarios`.
 
-Each sub-scenario MUST include `id`, `trap_belief`, `three_questions` (with `belief`, `state`, `need`), `action_template`, `replace`, and `expected_result`.
+Each sub-scenario MUST include `id`, `trap_belief`, `action_template`, and `expected_result`. `action_template` MUST be an array of strings. `replace`, when present, MUST be an array of `{ "avoid": string, "use": string }` objects. `three_questions`, when present, MUST contain `belief`, `state`, and `need`.
 
 ### 7.2 Cases (`KDNA_Cases.json`)
 

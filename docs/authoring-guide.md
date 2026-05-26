@@ -33,7 +33,7 @@ If you write KDNA JSON from scratch, you MUST use these exact field names. The l
 | `terminology.standard_terms[]` | `term`, `definition` | Standard vocabulary |
 | `terminology.banned_terms[]` | `term`, `why`, `replace_with` | Invariant — see SPEC §6.2 |
 | `misunderstandings[]` | `id`, `wrong`, `correct`, `key_distinction`, `why` | Invariant — see SPEC §6.3 |
-| `self_check` | `string[]` | Invariant — yes/no questions |
+| `self_check` | `string[]` or `{ question: string }[]` | Invariant — yes/no questions |
 
 ### KDNA_Scenarios.json
 
