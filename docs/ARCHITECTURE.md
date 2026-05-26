@@ -31,6 +31,7 @@ The KDNA Protocol defines how human domain expertise is encoded as machine-reada
 - **kdna-loader skill** — teaches agents to discover domains from `~/.kdna/domains/`
 - **Agent adapters**: Codex, Claude Code, OpenCode
 - **Runtime projection** — agents receive task-relevant judgment fragments, never the full domain
+- **App runtime contract** — shared Domain Package → Route Result → Judgment Trace → Judgment Report boundary for KDNAChat, KDNA Studio, KDNAWork, and agent runtimes
 
 ## Data Flow
 

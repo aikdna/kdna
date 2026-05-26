@@ -170,6 +170,7 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 | **Developer wanting to connect KDNA to an agent** | [5-minute guide](./docs/5-minute-guide.md) |
 | **Domain expert wanting to encode your judgment** | [KDNA Studio](https://github.com/aikdna/kdna-studio-core) — authoring kernel (`@aikdna/kdna-studio`) |
 | **Evaluator wanting to measure judgment improvement** | [Evaluation guide](./docs/evaluation.md) |
+| **App developer integrating KDNA into Chat, Studio, Work, or agent runtimes** | [App Runtime Contract](./docs/app-runtime-contract.md) |
 | **Enterprise evaluating private deployment** | [Enterprise guide](./docs/enterprise.md) |
 | **Contributor wanting to improve KDNA itself** | [CONTRIBUTING.md](./CONTRIBUTING.md) |
 | **Curious about the full specification** | [SPEC.md](./SPEC.md) |

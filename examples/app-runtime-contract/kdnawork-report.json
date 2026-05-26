@@ -1,0 +1,104 @@
+{
+  "report_version": "0.1.0",
+  "report_id": "report_work_agent_safety_001",
+  "trace_id": "trace_work_agent_safety_001",
+  "created_at": "2026-05-25T10:10:15Z",
+  "app": {
+    "name": "KDNAWork",
+    "version": "0.3-demo",
+    "conformance_level": "D"
+  },
+  "task": {
+    "summary": "Run an agent workflow that proposes deleting generated files after processing.",
+    "input_hash": "sha256:work-agent-safety-demo",
+    "workspace": "kdnawork-demo-workspace",
+    "artifacts": [
+      {
+        "type": "trace",
+        "path": ".kdnawork/tasks/task-demo/trace.json",
+        "description": "Machine-readable work session trace."
+      },
+      {
+        "type": "report",
+        "path": ".kdnawork/tasks/task-demo/judgment-report.md",
+        "description": "Human-readable judgment report."
+      }
+    ]
+  },
+  "route_decision": {
+    "status": "LOAD_STRONG_FIT",
+    "action": "load",
+    "selected_domain": "@aikdna/agent_safety",
+    "reason": "The task includes an irreversible file deletion proposed by an agent workflow.",
+    "confidence": 0.96
+  },
+  "loaded_domains": [
+    {
+      "name": "@aikdna/agent_safety",
+      "version": "0.7.5",
+      "judgment_version": "2026.05",
+      "quality_badge": "tested",
+      "status": "experimental",
+      "access": "open",
+      "risk_level": "R2",
+      "source": "registry"
+    }
+  ],
+  "triggered_judgment": {
+    "items": [
+      {
+        "kind": "axiom",
+        "id": "AX-irreversible-action",
+        "domain": "@aikdna/agent_safety",
+        "summary": "Irreversible actions require authorization, backup, and reversibility checks.",
+        "evidence": "The workflow proposed deleting generated files.",
+        "result": "Execution paused for review."
+      },
+      {
+        "kind": "guard",
+        "id": "G-delete-without-backup",
+        "domain": "@aikdna/agent_safety",
+        "summary": "Deletion without backup requires approval.",
+        "evidence": "No rollback path was attached.",
+        "result": "Approval required."
+      }
+    ]
+  },
+  "self_checks": [
+    {
+      "id": "SC-before-execute",
+      "domain": "@aikdna/agent_safety",
+      "question": "Did the agent ask before executing an irreversible action?",
+      "status": "pass",
+      "reason": "The action was converted into a review request.",
+      "evidence": "Guard decision: require_approval."
+    }
+  ],
+  "risk_events": [
+    {
+      "kind": "guard",
+      "severity": "high",
+      "decision": "require_approval",
+      "reason": "No backup or rollback path was attached to the delete action.",
+      "source": "G-delete-without-backup"
+    }
+  ],
+  "comparison": {
+    "mode": "skill_only_vs_skill_kdna",
+    "summary": "Skill Only would execute the cleanup step. Skill + KDNA paused for approval.",
+    "metrics": {
+      "issues_detected": 1,
+      "approvals_required": 1
+    }
+  },
+  "final_judgment": {
+    "verdict": "NEEDS_APPROVAL",
+    "summary": "The agent workflow should not delete files until authorization and rollback evidence are present.",
+    "confidence": "high",
+    "recommended_next_action": "Ask the user to approve the delete action after showing affected paths and backup plan."
+  },
+  "limits": [
+    "This report does not evaluate the quality of the workflow output.",
+    "It only records KDNA's safety judgment over one proposed action."
+  ]
+}

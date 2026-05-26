@@ -1,0 +1,92 @@
+{
+  "report_version": "0.1.0",
+  "report_id": "report_studio_authoring_001",
+  "trace_id": "trace_studio_authoring_001",
+  "created_at": "2026-05-25T10:05:10Z",
+  "app": {
+    "name": "KDNaStudio",
+    "version": "0.1-demo",
+    "conformance_level": "E"
+  },
+  "task": {
+    "summary": "Export a new KDNA domain created from locked judgment cards.",
+    "input_hash": "sha256:studio-authoring-demo",
+    "workspace": "studio-project-demo",
+    "artifacts": [
+      {
+        "type": "domain-package",
+        "path": "exports/example-domain/",
+        "description": "Compiled domain package."
+      }
+    ]
+  },
+  "route_decision": {
+    "status": "LOAD_STRONG_FIT",
+    "action": "load",
+    "selected_domain": "@aikdna/kdna_authoring",
+    "reason": "The user is turning raw expertise into a KDNA domain asset.",
+    "confidence": 0.94
+  },
+  "loaded_domains": [
+    {
+      "name": "@aikdna/kdna_authoring",
+      "version": "0.7.5",
+      "judgment_version": "2026.05",
+      "quality_badge": "tested",
+      "status": "experimental",
+      "access": "open",
+      "risk_level": "R1",
+      "source": "local"
+    }
+  ],
+  "triggered_judgment": {
+    "items": [
+      {
+        "kind": "axiom",
+        "id": "AX-human-lock-required",
+        "domain": "@aikdna/kdna_authoring",
+        "summary": "Only human-locked judgment can compile into KDNA.",
+        "evidence": "Export includes judgment-class cards.",
+        "result": "Export proceeded only after Human Lock checks passed."
+      },
+      {
+        "kind": "framework",
+        "id": "FW-quality-gate",
+        "domain": "@aikdna/kdna_authoring",
+        "summary": "Check locked cards, boundaries, and self-check specificity.",
+        "evidence": "Quality gate ran before export.",
+        "result": "Domain exported as experimental."
+      }
+    ]
+  },
+  "self_checks": [
+    {
+      "id": "SC-human-lock",
+      "domain": "@aikdna/kdna_authoring",
+      "question": "Are judgment-class cards human locked before export?",
+      "status": "pass",
+      "reason": "All exported judgment cards contain human lock evidence.",
+      "evidence": "human_lock.by present on exported axiom and boundary cards."
+    }
+  ],
+  "risk_events": [
+    {
+      "kind": "policy",
+      "severity": "medium",
+      "decision": "warn",
+      "reason": "The domain is structurally ready but lacks external expert review.",
+      "source": "quality-gate"
+    }
+  ],
+  "comparison": null,
+  "final_judgment": {
+    "verdict": "EXPORT_AS_EXPERIMENTAL",
+    "summary": "The domain may be exported, but its quality badge must not exceed available evidence.",
+    "confidence": "medium",
+    "recommended_next_action": "Add eval cases and expert review before claiming stable quality."
+  },
+  "limits": [
+    "The report validates governance and packaging evidence, not real-world domain effectiveness.",
+    "The domain should not be marketed as production-ready."
+  ]
+}

@@ -10,6 +10,7 @@
     "format:check": "prettier --check .",
     "lint:examples": "kdna-lint examples/communication && kdna-lint examples/from-wiki-to-kdna/kdna && kdna-lint examples/product_decision && kdna-lint examples/management && kdna-lint examples/sales",
     "validate:examples": "kdna-validate examples/communication && kdna-validate examples/from-wiki-to-kdna/kdna && kdna-validate examples/product_decision && kdna-validate examples/management && kdna-validate examples/sales",
+    "validate:runtime-contract": "node scripts/validate-runtime-contract.js",
     "test": "npm --workspace @aikdna/kdna-core test",
     "pretest": "npm install --ignore-scripts"
   },

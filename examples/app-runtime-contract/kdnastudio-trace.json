@@ -1,0 +1,47 @@
+{
+  "trace_version": "0.1.0",
+  "trace_id": "trace_studio_authoring_001",
+  "timestamp": "2026-05-25T10:05:00Z",
+  "input_hash": "sha256:studio-authoring-demo",
+  "route_result": {
+    "status": "LOAD_STRONG_FIT",
+    "action": "load",
+    "selected_domain": "@aikdna/kdna_authoring",
+    "reason": "The user is turning raw expertise into a KDNA domain asset.",
+    "confidence": 0.94
+  },
+  "loaded_package": {
+    "domain": "@aikdna/kdna_authoring",
+    "version": "0.7.5",
+    "source": "local",
+    "loaded_files": ["KDNA_Core.json", "KDNA_Patterns.json"]
+  },
+  "triggered_axioms": [
+    {
+      "id": "AX-human-lock-required",
+      "statement": "AI may propose judgment candidates, but humans must confirm judgment before compilation."
+    }
+  ],
+  "triggered_frameworks": [
+    {
+      "id": "FW-quality-gate",
+      "name": "KDNA domain quality gate",
+      "steps_applied": ["check locked cards", "check boundaries", "check self-check specificity"]
+    }
+  ],
+  "self_checks": [
+    {
+      "check_id": "SC-human-lock",
+      "description": "Are judgment-class cards human locked before export?",
+      "passed": true,
+      "reason": "All exported axiom and boundary cards include human_lock.by and reviewed boundary fields."
+    }
+  ],
+  "generated_judgment": {
+    "classification": "PUBLISH_READY_WITH_LIMITS",
+    "confidence": "medium",
+    "missing_elements": ["external expert review", "larger eval set"],
+    "recommended_action": "Export as experimental, not stable.",
+    "reasoning_summary": "The Studio flow can export the asset, but the quality badge should remain bounded by available evidence."
+  }
+}

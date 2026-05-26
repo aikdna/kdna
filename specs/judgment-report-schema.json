@@ -1,0 +1,278 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/specs/judgment-report-schema.json",
+  "title": "KDNA Judgment Report",
+  "description": "Human-readable report projection generated from a KDNA judgment trace. Apps may render this as Markdown, JSON, UI panels, PDF, or native views, but the shared sections should remain stable.",
+  "type": "object",
+  "required": [
+    "report_version",
+    "report_id",
+    "created_at",
+    "task",
+    "route_decision",
+    "loaded_domains",
+    "triggered_judgment",
+    "self_checks",
+    "final_judgment",
+    "limits"
+  ],
+  "properties": {
+    "report_version": {
+      "type": "string",
+      "enum": ["0.1.0"],
+      "description": "Version of the judgment report schema."
+    },
+    "report_id": {
+      "type": "string",
+      "description": "Unique report identifier. UUID or ULID recommended."
+    },
+    "trace_id": {
+      "type": ["string", "null"],
+      "description": "Identifier of the source Judgment Trace, if available."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the report was generated."
+    },
+    "app": {
+      "type": "object",
+      "description": "Application or runtime that generated the report.",
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "conformance_level": {
+          "type": "string",
+          "enum": ["A", "B", "C", "D", "E"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "task": {
+      "type": "object",
+      "required": ["summary"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "One-line summary of the task. Full input should be omitted unless explicitly allowed by policy."
+        },
+        "input_hash": {
+          "type": ["string", "null"],
+          "description": "Hash of the input text, usually sha256:<hex>."
+        },
+        "workspace": {
+          "type": ["string", "null"],
+          "description": "Workspace, project, or session identifier."
+        },
+        "artifacts": {
+          "type": "array",
+          "description": "Files, URLs, or records produced or reviewed during the task.",
+          "items": {
+            "type": "object",
+            "required": ["type", "path"],
+            "properties": {
+              "type": { "type": "string" },
+              "path": { "type": "string" },
+              "description": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "route_decision": {
+      "type": "object",
+      "required": ["status", "action"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "SKIP_NO_JUDGMENT_NEEDED",
+            "SKIP_NO_LOCAL_DOMAIN",
+            "SKIP_WEAK_FIT",
+            "REJECT_NEGATIVE_MATCH",
+            "ASK_AMBIGUOUS_DOMAIN",
+            "LOAD_STRONG_FIT",
+            "BLOCK_TRUST_FAILED"
+          ]
+        },
+        "action": {
+          "type": "string",
+          "enum": ["skip", "load", "ask", "block"]
+        },
+        "selected_domain": {
+          "type": ["string", "null"]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "loaded_domains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "version"],
+        "properties": {
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "judgment_version": { "type": ["string", "null"] },
+          "quality_badge": { "type": ["string", "null"] },
+          "status": { "type": ["string", "null"] },
+          "access": { "type": ["string", "null"] },
+          "risk_level": { "type": ["string", "null"] },
+          "source": {
+            "type": ["string", "null"],
+            "description": "local, registry, private-registry, runtime, or app-bundled."
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "triggered_judgment": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind", "id", "domain", "summary"],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "axiom",
+                  "ontology",
+                  "scenario",
+                  "framework",
+                  "misunderstanding",
+                  "boundary",
+                  "guard",
+                  "approval"
+                ]
+              },
+              "id": { "type": "string" },
+              "domain": { "type": "string" },
+              "summary": { "type": "string" },
+              "evidence": { "type": ["string", "null"] },
+              "result": { "type": ["string", "null"] }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "self_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "question", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "domain": { "type": ["string", "null"] },
+          "question": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["pass", "fail", "warn", "skipped"]
+          },
+          "reason": { "type": ["string", "null"] },
+          "evidence": { "type": ["string", "null"] }
+        },
+        "additionalProperties": true
+      }
+    },
+    "risk_events": {
+      "type": "array",
+      "description": "Boundary, guard, approval, or policy events relevant to the final judgment.",
+      "items": {
+        "type": "object",
+        "required": ["kind", "severity", "decision", "reason"],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": ["boundary", "guard", "approval", "policy", "license", "trust"]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["info", "low", "medium", "high", "critical"]
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "allow",
+              "warn",
+              "block",
+              "require_approval",
+              "approved",
+              "rejected",
+              "not_applicable"
+            ]
+          },
+          "reason": { "type": "string" },
+          "source": { "type": ["string", "null"] }
+        },
+        "additionalProperties": true
+      }
+    },
+    "comparison": {
+      "type": ["object", "null"],
+      "description": "Optional app-specific comparison, for example No KDNA vs Best Prompt vs KDNA or Skill Only vs Skill + KDNA.",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "no_kdna_vs_kdna",
+            "no_kdna_best_prompt_kdna",
+            "skill_only_vs_skill_kdna",
+            "custom"
+          ]
+        },
+        "summary": { "type": "string" },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "final_judgment": {
+      "type": "object",
+      "required": ["verdict", "summary"],
+      "properties": {
+        "verdict": {
+          "type": "string",
+          "description": "App-defined final classification or verdict."
+        },
+        "summary": {
+          "type": "string",
+          "description": "Short explanation of the judgment."
+        },
+        "confidence": {
+          "type": ["string", "null"],
+          "enum": ["high", "medium", "low", null]
+        },
+        "recommended_next_action": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "limits": {
+      "type": "array",
+      "description": "Known limits, unresolved questions, missing evidence, or reasons the report should not be over-interpreted.",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}
