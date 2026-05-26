@@ -1,6 +1,25 @@
 # Changelog
 
-## 0.5.0 - 2026-05-20
+## 0.6.0 — 2026-05-26
+
+### kdna-core 0.4.0
+
+- Bumped `@aikdna/kdna-core` from 0.3.0 → 0.4.0
+- Version parity with monorepo root (0.4.0)
+- Manifest validation fix: canonical manifest schema v1.0-rc conformance
+
+### CLI & Registry
+
+- 10 domain repos migrated to v1.0-rc manifest format
+- Registry validator green after enum alignment
+- `kdna validate` conformance pass across all domains
+
+### Ecosystem
+
+- Runtime contract fixtures aligned across KDNAChat, KDNaStudio, KDNAWork
+- kdna-core-swift standalone repo added to ekosystem (zero-dependency Swift package)
+
+## 0.5.0 — 2026-05-20
 
 ### First-Wave Official Domains (6 new, 8 removed)
 
