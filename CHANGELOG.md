@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.7.0 — 2026-05-27
+
+### Asset-First KDNA
+
+- Promoted `.kdna` to the canonical installed, verified, loaded, signed, and licensed asset.
+- Reframed dev source directories as non-canonical authoring workspaces only.
+- Added `~/.kdna/packages/`, `~/.kdna/index.json`, and receipt-based install model.
+- Documented that persistent extraction is not required for runtime loading and must not become a trust source.
+
+### kdna-core 0.5.0
+
+- Added direct `.kdna` ZIP entry reader with sync and async APIs.
+- Added canonical `asset_digest` and `content_digest` helpers.
+- Added direct asset verification with optional Ed25519 signature checks.
+- Added `kdna-licensed-entry-v1` encrypted-entry profile with AES-256-GCM and in-memory decrypt hooks.
+
+### Licensed Asset Contract
+
+- Added `specs/kdna-entitlement-api.md` for activation, sync, revocation, offline grace, and audit event contracts.
+- Updated crypto, package profile, identity key, access mode, and authorization docs to use licensed `.kdna` encrypted entries instead of alternate user-facing extensions.
+
 ## 0.6.0 — 2026-05-26
 
 ### kdna-core 0.4.0
@@ -12,7 +33,7 @@
 
 - 10 domain repos migrated to v1.0-rc manifest format
 - Registry validator green after enum alignment
-- `kdna validate` conformance pass across all domains
+- `kdna dev validate` conformance pass across all domains
 
 ### Ecosystem
 
@@ -166,7 +187,7 @@
 - **Unified `kdna` CLI** with commands: `validate`, `pack`, `install`, `inspect`, `list`
 - **Specs directory** (`specs/`):
   - `kdna-file-format.md` — `.kdna` single-file format specification (YAML/JSON)
-  - `kdna-package-format.md` — `.kdnapack` multi-file package format specification
+  - `kdna-package-format.md` — dev source workspace specification
   - `kdna-access-modes.md` — `open` / `licensed` / `runtime` access modes
   - `kdna-license.md` — KDNA Commercial License (KCL) v1.0 draft
   - `kdna-registry.md` — KDNA Registry specification

@@ -62,5 +62,5 @@ Whether a piece of writing is clear, reader-focused, and structurally coherent â
 
 ```bash
 kdna install github:aikdna/kdna-writing_basic
-kdna validate .
+kdna dev validate .
 ```

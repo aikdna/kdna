@@ -60,7 +60,7 @@ Submit a complete KDNA domain package.
 
 1. Create a repository under `kdna-<domain>` naming convention
 2. Include at least `KDNA_Core.json` and `KDNA_Patterns.json`
-3. Ensure the domain passes `kdna validate`
+3. Ensure the domain passes `kdna dev validate`
 4. Include `kdna.json` manifest and `README.md`
 5. Add tests in `tests/before-after.json` (minimum 3 cases)
 6. Open a PR adding an entry to `registry/domains.json`
@@ -95,7 +95,7 @@ Include: domain name, model used, test cases, baseline scores, KDNA-loaded score
 ## Quality Requirements
 
 All contributions must:
-- Pass `kdna validate` (for packages) or JSON schema validation (for clusters)
+- Pass `kdna dev validate` (for packages) or JSON schema validation (for clusters)
 - Have unique IDs across the submission
 - Include reasons for every banned term and key distinctions for every misunderstanding
 - Not contain proprietary or private data

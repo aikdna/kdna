@@ -34,7 +34,7 @@ This template demonstrates the minimum viable KDNA domain structure. Use it as a
 cp -r templates/minimal-domain domains/my-domain
 # Edit KDNA_Core.json, KDNA_Patterns.json, and kdna.json
 # Add evaluation cases to evals/
-kdna validate .
+kdna dev validate .
 ```
 
 ## License

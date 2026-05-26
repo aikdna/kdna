@@ -51,7 +51,7 @@ cp -r templates/minimal-domain ~/.agents/Kdna/my_domain
 ## 4. 校验
 
 ```bash
-npx kdna validate ~/.agents/Kdna/my_domain
+npx kdna dev validate ~/.agents/Kdna/my_domain
 ```
 
 修复所有错误后再使用。

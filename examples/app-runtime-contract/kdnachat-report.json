@@ -1,7 +1,7 @@
 {
   "report_version": "0.1.0",
   "report_id": "report_chat_writing_001",
-  "trace_id": "trace_chat_writing_001",
+  "trace_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "created_at": "2026-05-25T10:00:05Z",
   "app": {
     "name": "KDNAChat",
@@ -17,9 +17,13 @@
   "route_decision": {
     "status": "LOAD_STRONG_FIT",
     "action": "load",
+    "needs_kdna": true,
     "selected_domain": "@aikdna/writing",
     "reason": "The user asked for content review where structure and argument quality matter.",
-    "confidence": 0.91
+    "confidence": 0.91,
+    "trace_id": "route_chat_writing_001",
+    "created_at": "2026-05-26T12:00:00Z",
+    "auto_install": false
   },
   "loaded_domains": [
     {

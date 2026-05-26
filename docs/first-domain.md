@@ -61,7 +61,7 @@ Edit `KDNA_Core.json` — write 2-3 axioms for your domain. Then:
 
 ```bash
 kdna publish --check ./my-domain
-kdna validate ./my-domain
+kdna dev validate ./my-domain
 kdna verify ./my-domain
 ```
 

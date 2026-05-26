@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-monorepo",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "description": "KDNA protocol specification, core library, and domain registry.",
   "type": "commonjs",
@@ -8,8 +8,8 @@
     "lint": "eslint packages/kdna-core/src/",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint:examples": "echo 'Use npx kdna validate on individual domain repos'",
-    "validate:examples": "echo 'Use npx kdna validate on individual domain repos'",
+    "lint:examples": "echo 'Use npx kdna dev validate on individual domain repos'",
+    "validate:examples": "echo 'Use npx kdna dev validate on individual domain repos'",
     "validate:runtime-contract": "node scripts/validate-runtime-contract.js",
     "test": "npm --workspace @aikdna/kdna-core test",
     "pretest": "npm install --ignore-scripts"
@@ -27,7 +27,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@aikdna/kdna-cli": "^0.17.0",
+    "@aikdna/kdna-cli": "^0.18.0",
     "@eslint/js": "^9.39.0",
     "eslint": "^9.39.0",
     "prettier": "^3.8.3"

@@ -34,18 +34,18 @@ Those layers may vary by product. The judgment objects below should remain stabl
 Apps consume KDNA through a four-stage runtime boundary:
 
 ```
-Domain Package -> Route Result -> Judgment Trace -> Judgment Report
+KDNA Asset -> Route Result -> Judgment Trace -> Judgment Report
 ```
 
-The domain package is the judgment source. The route result decides whether and how to load it. The judgment trace records what influenced the agent. The judgment report turns the trace into a human-readable artifact.
+The `.kdna` asset is the judgment source. The route result decides whether and how to load it. The judgment trace records what influenced the agent. The judgment report turns the trace into a human-readable artifact.
 
 ## Contract Objects
 
-### 1. Domain Package
+### 1. KDNA Asset
 
 Canonical source: [SPEC.md](../SPEC.md)
 
-A domain package is a directory or container containing the standard KDNA files:
+A KDNA asset is a `.kdna` container containing the standard internal KDNA files:
 
 - `KDNA_Core.json`
 - `KDNA_Patterns.json`
@@ -54,13 +54,13 @@ A domain package is a directory or container containing the standard KDNA files:
 - `KDNA_Reasoning.json`
 - `KDNA_Evolution.json`
 
-Minimum valid package:
+Minimum valid asset:
 
 - `KDNA_Core.json`
 - `KDNA_Patterns.json`
 - `kdna.json`
 
-Apps must treat the six KDNA files as judgment content. Product metadata, UI state, or workflow configuration must not be stored by adding new required KDNA files.
+Apps must treat the six KDNA files as internal judgment content. Product metadata, UI state, install metadata, or workflow configuration must not be written into the asset after installation; use external indices, traces, or sidecars.
 
 ### 2. Route Result
 

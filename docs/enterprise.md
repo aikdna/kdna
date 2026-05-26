@@ -146,12 +146,10 @@ Deploy KDNA domains in environments without internet access.
 kdna install @aikdna/code_review
 kdna install @aikdna/decision_state
 
-# Pack all installed domains for transport
-kdna pack ~/.kdna/domains/@aikdna/code_review --output ./offline-packages/
-kdna pack ~/.kdna/domains/@aikdna/decision_state --output ./offline-packages/
+# Copy installed .kdna assets from ~/.kdna/packages/ for transport
 
 # Or pack your custom domain
-kdna pack ./my_internal_domain --output ./offline-packages/
+kdna dev pack ./my_internal_domain --output ./offline-packages/
 ```
 
 ### 3.2 Transport and install on air-gapped machine
@@ -301,7 +299,7 @@ jobs:
         with:
           node-version: '20'
       - run: npm install -g @aikdna/kdna-cli
-      - run: kdna validate my_domain
+      - run: kdna dev validate my_domain
       - run: kdna publish --check my_domain  # quality gate
 ```
 
@@ -329,11 +327,11 @@ echo "Registry patch JSON written to stdout — append to your domains.json"
 
 ## 7. Open vs. Licensed Assets
 
-KDNA supports both open judgment assets and licensed/private judgment assets. Open domains remain the default path for community adoption, while encrypted containers (`.kdnae`) and licenses support professional and enterprise distribution.
+KDNA supports both open judgment assets and licensed/private judgment assets. Open assets remain the default path for community adoption, while licensed `.kdna` profiles and licenses support professional and enterprise distribution.
 
-- **Open domains** (`@aikdna/*`, community scopes): freely installable, auditable, and composable
-- **Licensed domains** (`.kdnae` containers): require a valid license for installation and runtime decryption
-- **Enterprise private domains**: hosted on private registries with organization-scoped signing keys
+- **Open assets** (`@aikdna/*`, community scopes): freely installable, auditable, and composable
+- **Licensed assets** (`.kdna` with `access: "licensed"`): require a valid license for in-memory decryption
+- **Enterprise private assets**: hosted on private registries with organization-scoped signing keys
 
 When evaluating KDNA for your organization, start with open domains to validate the protocol and tooling. Introduce licensed or private domains when you need to protect proprietary judgment assets or enforce usage boundaries.
 

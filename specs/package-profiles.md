@@ -6,11 +6,11 @@ Canonical: `specs/package-profiles.md`
 
 ## 1. Purpose
 
-Define the three KDNA package distribution profiles. A package profile describes the format, trust model, and access control of a KDNA domain in its distributable form.
+Define the KDNA asset distribution profiles. A profile describes the access mode, trust model, and authorization controls of a KDNA asset in its distributable form.
 
-KDNA domains exist in two states:
-- **Authoring form**: a directory of standard KDNA JSON files (6 files max). Used for creation, Git versioning, review, and collaboration.
-- **Distribution form**: a `.kdna` package container. Used for publishing, downloading, verifying, installing, and loading.
+KDNA domains exist in two forms:
+- **Dev source form**: a non-canonical directory of standard KDNA JSON files. Used only by authoring tools, Git review, and debugging.
+- **Asset form**: a `.kdna` container. Used for publishing, downloading, verifying, installing, loading, licensing, and runtime use.
 
 This specification defines the distribution profiles and their containers.
 
@@ -20,9 +20,9 @@ This specification defines the distribution profiles and their containers.
 
 | Profile | Extension | Status | Description |
 |---------|-----------|--------|-------------|
-| **Open KDNA** | `.kdna` | **Stable** | Plaintext package. Free to share, inspect, and load. Signature optional but recommended. |
-| **Encrypted KDNA** | `.kdnae` | **Draft** | Content-encrypted package. Requires key to decrypt. Supports device and organization recipients. |
-| **Licensed KDNA** | `.kdnal` | **Draft** | License-controlled package. Requires entitlement verification. Supports subscription, trial, revocation. |
+| **Open KDNA** | `.kdna` | **Stable** | Plaintext asset. Free to share, inspect, and load. Signature required for registry publication. |
+| **Licensed KDNA** | `.kdna` | **Draft** | Same asset extension, selected entries encrypted with `kdna-licensed-entry-v1`. Requires local license activation before in-memory decryption. |
+| **Runtime KDNA** | registry entry / API | **Draft** | Asset remains server-side. Client receives runtime projection only. |
 
 ---
 
@@ -81,7 +81,7 @@ domain-0.1.0.kdna
 
 ```bash
 # Pack
-kdna pack ./my_domain
+kdna dev pack ./my_domain
 
 # Install
 kdna install @aikdna/writing
@@ -95,85 +95,61 @@ kdna load @aikdna/writing
 
 ---
 
-## 4. Encrypted KDNA (`.kdnae`) — Draft
+## 4. Licensed KDNA (`.kdna`, `access: "licensed"`) — CLI/Core MVP implemented
 
 ### 4.1 Description
 
-The `.kdnae` package is a content-encrypted KDNA package. The domain content is encrypted with a symmetric content key. The content key is wrapped for each authorized recipient using their public key (envelope encryption / HPKE model).
+Licensed KDNA uses the same `.kdna` asset extension. The manifest remains plaintext for discovery, while protected entries are encrypted with AES-256-GCM under the `kdna-licensed-entry-v1` encrypted-entry profile.
 
 ### 4.2 Container Structure (Draft)
 
 ```
-domain-1.0.0.kdnae
-├── manifest.json          # Package metadata (unencrypted)
-├── recipients.json        # Recipient public keys + wrapped content keys
-├── encrypted_payload.bin  # Encrypted domain content
-└── signature.sig          # Detached Ed25519 signature
+domain-1.0.0.kdna
+├── kdna.json              # Plaintext manifest, access/encryption metadata
+├── KDNA_Core.json         # JSON envelope, encrypted ciphertext
+├── KDNA_Patterns.json     # JSON envelope, encrypted ciphertext
+└── KDNA_CARD.json         # Optional plaintext public card
 ```
 
 ### 4.3 Encryption Model
 
-- **Scheme**: Envelope Encryption (HPKE-compatible)
-- **Content key**: Randomly generated per version. Encrypts the payload (all domain files).
-- **Recipient wrapping**: Content key is wrapped with each recipient's public key.
-- **Algorithm**: Reference HPKE (RFC 9180). Implementation MUST use mature cryptographic libraries. Never implement custom cryptography.
+- **Profile**: `kdna-licensed-entry-v1`
+- **Algorithm**: AES-256-GCM per protected entry.
+- **KDF**: `scrypt-sha256` over license key + machine fingerprint.
+- **Runtime rule**: decrypted plaintext MUST remain in memory and MUST NOT be written to cache as a trust source.
 
-### 4.4 MVP Recipient Types
+### 4.4 Entitlement and Activation
 
-| Type | Description |
-|------|-------------|
-| `device_public_key` | A specific device's public key. Content key wrapped for that device. |
-| `organization_public_key` | An organization's public key. All org members with the corresponding private key can unwrap. |
+License activation, sync, revocation, offline grace, and audit events are
+defined in `kdna-entitlement-api.md`.
 
-Future extensions (not in MVP):
-- `password` — password-derived key
-- `license_key` — key derived from license token
+The CLI/Core MVP uses:
 
-### 4.5 recipients.json
+- `license_key` + machine fingerprint as KDF input
+- local activation files under `~/.kdna/licenses/`
+- fail-closed checks for expired, revoked, machine-mismatched, or
+  offline-grace-expired activations
+- in-memory decrypt hooks only
 
-```json
-{
-  "recipients": [
-    {
-      "type": "device_public_key",
-      "user_id": "user_abc",
-      "device_id": "dev_xyz",
-      "algorithm": "X25519-HKDF-SHA256",
-      "wrapped_key": "<base64>"
-    },
-    {
-      "type": "organization_public_key",
-      "org_id": "org_456",
-      "algorithm": "X25519-HKDF-SHA256",
-      "wrapped_key": "<base64>"
-    }
-  ]
-}
-```
-
-### 4.6 Content Key Management
-
-- One content key per KDNA version.
-- Same content key used for all recipients of the same version.
-- Version upgrade → new content key generated.
-- Authorization changes → update `key_grants`, do not re-encrypt content.
+Organization and device-fleet entitlement policies are modeled at the
+Entitlement API layer, not as a separate user-facing package extension.
 
 ---
 
-## 5. Licensed KDNA (`.kdnal`) — Draft
+## 5. Runtime KDNA (`access: "runtime"`) — Draft
 
 ### 5.1 Description
 
-The `.kdnal` package is a license-controlled KDNA package. Access requires entitlement verification through KDNA Cloud. Supports subscription, trial, device binding, and revocation.
+Runtime KDNA is not distributed to clients as full judgment content. Access requires entitlement verification through KDNA Cloud or a private runtime. The client receives a projected context, not the underlying asset content.
 
-### 5.2 Relationship to `.kdnae`
+### 5.2 Relationship to licensed `.kdna`
 
-A `.kdnal` package MAY also be encrypted (`.kdnae`). The license policy is separate from the encryption layer:
+License policy is separate from the encryption layer:
 
-- **`.kdnae`** solves: "Can this file be opened?" (encryption)
-- **`.kdnal`** solves: "Is this user authorized to use this domain?" (entitlement)
+- **Licensed `.kdna` encryption** solves: "Can this local asset be decrypted?"
+- **Runtime entitlement** solves: "Is this user authorized to receive a projection?"
 
-They can be combined: a licensed domain may be encrypted for delivery and require both decryption AND entitlement verification.
+They can be combined: a licensed local asset may require both decryption and entitlement verification.
 
 ### 5.3 License Policy (Draft)
 
@@ -196,8 +172,8 @@ They can be combined: a licensed domain may be encrypted for delivery and requir
 
 1. Client requests download with license token
 2. KDNA Cloud verifies entitlement (active, not expired, not revoked, device limit not exceeded)
-3. If encrypted, Cloud returns wrapped content key for this device
-4. Client decrypts and loads the domain
+3. If encrypted, client activates a local license or receives an approved runtime projection
+4. Client decrypts and loads the domain only when activation is valid
 5. Offline use: license lease valid for N days (default 30). Must refresh online before expiry.
 6. R2/R3 risk domains: offline lease shorter (7-14 days) or online-only.
 
@@ -205,13 +181,13 @@ They can be combined: a licensed domain may be encrypted for delivery and requir
 
 ## 6. Profile Comparison
 
-| Feature | `.kdna` | `.kdnae` | `.kdnal` |
+| Feature | Open `.kdna` | Licensed `.kdna` | Runtime |
 |---------|:---:|:---:|:---:|
 | Content visible | ✅ | ❌ (encrypted) | ❌ (controlled) |
 | Free to share | ✅ | ✅ (but unusable without key) | ❌ |
 | Signature | Optional | Recommended | Required |
 | Offline use | ✅ | ✅ (with key) | ✅ (with lease) |
-| Requires account | ❌ | ❌ (for decryption) | ✅ |
+| Requires account | ❌ | Optional | ✅ |
 | Revocable | ❌ | Partial (key grant) | ✅ |
 | Status | **Stable** | **Draft** | **Draft** |
 
@@ -219,15 +195,15 @@ They can be combined: a licensed domain may be encrypted for delivery and requir
 
 ## 7. Authoring vs Distribution
 
-KDNA domains MUST be authored as directories (6 standard files). The `.kdna` container is a distribution format, not an editing format.
+KDNA domains MAY be authored in dev source directories, but the `.kdna` container is the canonical asset format.
 
 | State | Format | Purpose |
 |-------|--------|---------|
-| **Authoring** | Directory of JSON files | Git versioning, review, PR, diff, collaboration |
-| **Distribution** | `.kdna` / `.kdnae` / `.kdnal` | Publishing, downloading, verifying, installing, loading |
+| **Authoring** | Dev source directory | Git versioning, review, PR, diff, collaboration |
+| **Distribution** | `.kdna` | Publishing, downloading, verifying, installing, loading, licensing |
 
-Never edit a `.kdna` package directly. Always work from the source directory and repack.
+Users should edit `.kdna` through approved KDNA editors such as KDNAStudio. Manual unpack/edit/repack is a dev-only debugging path and invalidates trust.
 
 ---
 
-*This specification defines the three package profiles. `.kdna` is stable. `.kdnae` and `.kdnal` are draft profiles subject to change based on implementation experience.*
+*This specification defines access profiles under the single `.kdna` asset model. Separate `.kdnae` and `.kdnal` user-facing extensions are not part of the asset-first model.*

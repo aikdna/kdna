@@ -1,14 +1,50 @@
 {
+  "trace_version": "0.1.0",
   "trace_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "domain_id": "writing",
   "domain_version": "0.7.2",
   "mode": "enforce",
   "timestamp": "2026-05-26T12:00:00Z",
+  "input_hash": "sha256:chat-writing-demo",
   "agent": "kdnachat",
   "input_summary": "Review this blog post draft about productivity tools. We should leverage our synergies to create value.",
+  "route_result": {
+    "status": "LOAD_STRONG_FIT",
+    "action": "load",
+    "needs_kdna": true,
+    "selected_domain": "@aikdna/writing",
+    "reason": "The user asked for content review where structure and argument quality matter.",
+    "confidence": 0.91,
+    "trace_id": "route_chat_writing_001",
+    "created_at": "2026-05-26T12:00:00Z",
+    "auto_install": false
+  },
+  "loaded_package": {
+    "domain": "@aikdna/writing",
+    "version": "0.7.2",
+    "source": "app-bundled",
+    "loaded_files": ["KDNA_Core.json", "KDNA_Patterns.json"]
+  },
   "signals_detected": ["writing"],
   "axioms_triggered": ["axiom_problem_not_prose", "axiom_judgment_pressure"],
+  "triggered_axioms": [
+    {
+      "id": "AX-writing-structure-first",
+      "statement": "Most writing problems are structural and argument-level, not language-level."
+    },
+    {
+      "id": "AX-writing-judgment-pressure",
+      "statement": "Every piece of content must exert judgment pressure on the reader."
+    }
+  ],
   "patterns_matched": ["mis_emotional_hook"],
+  "triggered_misunderstandings": [
+    {
+      "id": "MS-polish-first",
+      "description": "Do not treat a weak argument as a wording problem.",
+      "evidence": "The draft relied on broad terms without a concrete claim."
+    }
+  ],
   "misunderstandings_avoided": ["A hook is an emotional opening"],
   "violations_blocked": ["leverage", "synergy", "value creation"],
   "judgment_delta": {
@@ -18,6 +54,21 @@
   },
   "confidence": 0.85,
   "limitations": ["Not tested for technical documentation", "English-only judgment"],
+  "generated_judgment": {
+    "classification": "STRUCTURAL_REWRITE_NEEDED",
+    "confidence": "high",
+    "missing_elements": ["clear reader decision", "specific evidence"],
+    "recommended_action": "Rewrite the opening around one concrete reader problem.",
+    "reasoning_summary": "The domain shifted the response from wording polish to argument structure."
+  },
+  "self_checks": [
+    {
+      "check_id": "SC-real-argument",
+      "description": "Did the response diagnose whether the piece has a real argument?",
+      "passed": true,
+      "reason": "The answer identified missing claim, reader decision, and evidence."
+    }
+  ],
   "self_checks_passed": 4,
   "self_checks_failed": 0
 }

@@ -4,7 +4,7 @@ Copyright (c) 2026 AIKDNA
 
 ## 1. Definitions
 
-- **KDNA Asset**: A structured domain judgment package (`.kdna` file, `.kdnapack` package, or runtime-projected domain) containing axioms, frameworks, boundaries, risk models, self-checks, and related judgment artifacts.
+- **KDNA Asset**: A structured domain judgment asset (`.kdna` file or runtime-projected domain) containing axioms, frameworks, boundaries, risk models, self-checks, and related judgment artifacts.
 - **Licensor**: The creator or rights holder of the KDNA Asset.
 - **Licensee**: The individual or organization that obtains a license to use the KDNA Asset.
 - **Agent**: An AI system, language model, or software agent that loads and applies KDNA Assets to inform its judgment, output, or behavior.

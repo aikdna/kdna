@@ -26,7 +26,7 @@ KDNA encodes expert judgment — how to decide what kind of situation this is be
 - Write axioms: the 2-3 principles that guide expert judgment in this scenario
 - Write misunderstandings: what novices typically get wrong
 - Write self-checks: the yes/no questions the expert asks themselves before deciding
-- Validate with `kdna validate`
+- Validate with `kdna dev validate`
 
 ### Phase 3: Testing (Week 5-6)
 - Create 5-10 before/after test cases per package

@@ -250,7 +250,7 @@ The accepted change is applied to the domain. The domain receives a new version.
 - Major semver bump (`0.7.x` → `0.8.0`): for breaking schema changes or removed axioms
 
 The updated domain MUST be:
-1. Structurally validated (`kdna validate`)
+1. Structurally validated (`kdna dev validate`)
 2. Behaviorally validated (`kdna verify --judgment`)
 3. Signed with the domain author's Ed25519 key (`kdna publish`)
 

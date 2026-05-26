@@ -112,7 +112,7 @@ for dir in $EXAMPLE_DIRS; do
   else fail "Missing KDNA_Patterns.json"; FAILURES=$((FAILURES + 1)); fi
 
   if [ -f "$dir/kdna.json" ]; then pass "kdna.json manifest present"
-  else warn "Missing kdna.json manifest (run: kdna pack $dir)"; fi
+  else warn "Missing kdna.json manifest (run: kdna dev pack $dir)"; fi
 
   if [ -f "$dir/README.md" ]; then pass "README.md present"
   else warn "Missing README.md"; fi

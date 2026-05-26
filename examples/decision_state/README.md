@@ -42,7 +42,7 @@ Whether a meeting, discussion, or planning session has produced an actionable de
 
 ```bash
 kdna install github:aikdna/kdna-decision_state
-kdna validate .
+kdna dev validate .
 ```
 
 ## License

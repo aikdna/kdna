@@ -58,5 +58,5 @@ Whether a talk, presentation, or speech is audience-focused, single-messaged, an
 
 ```bash
 kdna install github:aikdna/kdna-speaking_basic
-kdna validate .
+kdna dev validate .
 ```

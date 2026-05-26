@@ -8,12 +8,12 @@
 
 KDNAChat, KDNaStudio, KDNAWork are three products sharing one core object: the KDNA domain. Without a unified contract, they will diverge and the ecosystem will fragment. This document defines the minimum data structures all products must agree on.
 
-## 1. Domain Package Format
+## 1. KDNA Asset Format
 
-All products MUST support the canonical domain package structure:
+All products MUST support `.kdna` as the canonical domain asset. The internal asset tree is:
 
 ```
-domain-name/
+domain-name.kdna
   kdna.json              # Manifest (see below)
   KDNA_Core.json          # Axioms, ontology, frameworks, stances, risk_model, trigger_signals
   KDNA_Patterns.json      # Terminology, banned_terms, misunderstandings, self_check
@@ -26,6 +26,8 @@ domain-name/
   README.md               # Required: human-readable domain description
   LICENSE                 # Required: license file
 ```
+
+Products MUST NOT treat extracted directories as installed runtime domains. Source directories are dev workspaces only.
 
 ### Manifest (kdna.json) — Required Fields
 

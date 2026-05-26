@@ -14,7 +14,7 @@ The KDNA Protocol defines how human domain expertise is encoded as machine-reada
 
 ### Layer 2: Authoring
 - **kdna-studio** — guided authoring environment with card-level Human Lock, Feynman restatement, and quality gates
-- **CLI** (`kdna init`, `kdna validate`, `kdna pack`) — command-line toolchain for creating and validating domains
+- **CLI** (`kdna init`, `kdna dev validate`, `kdna dev pack`) — command-line toolchain for authoring dev source directories and building `.kdna` assets
 
 ### Layer 3: Registry
 - **Central domain index** (`domains.json`) — the canonical listing of all published KDNA domains
@@ -24,19 +24,19 @@ The KDNA Protocol defines how human domain expertise is encoded as machine-reada
 
 ### Layer 4: Distribution
 - **npm packages** (`@aikdna/*`) — installable via `kdna install`
-- **.kdna packaged files** — signed containers with full verification chain
+- **.kdna assets** — signed, installable, directly loadable containers with full verification chain
 - **Private registry** support for enterprise deployments
 
 ### Layer 5: Loading
-- **kdna-loader skill** — teaches agents to discover domains from `~/.kdna/domains/`
+- **kdna-loader skill** — teaches agents to discover installed `.kdna` assets through the CLI
 - **Agent adapters**: Codex, Claude Code, OpenCode
 - **Runtime projection** — agents receive task-relevant judgment fragments, never the full domain
-- **App runtime contract** — shared Domain Package → Route Result → Judgment Trace → Judgment Report boundary for KDNAChat, KDNA Studio, KDNAWork, and agent runtimes
+- **App runtime contract** — shared KDNA Asset → Route Result → Judgment Trace → Judgment Report boundary for KDNAChat, KDNA Studio, KDNAWork, and agent runtimes
 
 ## Data Flow
 
 ```
-Expert → Studio/CLI → Domain Package → Registry → Install → Agent Loader → AI Agent
+Expert → Studio/CLI → .kdna Asset → Registry → Install → Agent Loader → AI Agent
 ```
 
 1. A domain expert authors judgment content via Studio or CLI

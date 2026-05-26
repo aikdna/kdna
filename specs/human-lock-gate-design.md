@@ -8,7 +8,7 @@ Based on: `KDNA/specs/human-lock.md` (SPEC)
 
 Transform the Human Judgment Lock from a documented principle into an enforceable gate across three enforcement points:
 1. **Studio** — prevent export/publish of domains with judgment-class changes that lack Human Lock
-2. **CLI** (`kdna publish`, `kdna pack`, `kdna diff`) — fail on judgment-class diff without lock
+2. **CLI** (`kdna publish`, `kdna dev pack`, `kdna diff`) — fail on judgment-class diff without lock
 3. **Registry CI** — block PRs that contain judgment-class changes without lock evidence
 
 ## 2. Judgment-Class Diff Detection
@@ -97,7 +97,7 @@ To prevent false positives from key ordering:
 **Behavior**:
 1. `kdna diff <domain>`: Show judgment-class changes between versions, highlight which require Human Lock
 2. `kdna publish <domain>`: Before publishing, run judgment-class diff detection; fail with exit code 3 if lock required but missing
-3. `kdna pack <domain>`: Same check as publish; warn but allow (pack is development-only)
+3. `kdna dev pack <domain>`: Same check as publish; warn but allow (pack is development-only)
 
 **Exit codes**:
 - 0: No judgment-class changes, or changes properly locked

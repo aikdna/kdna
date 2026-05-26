@@ -89,7 +89,7 @@ Metrics displayed:
 **Purpose:** Package the domain for distribution.
 
 - Auto-generates all 2-6 KDNA JSON files
-- Runs `kdna validate`
+- Runs `kdna dev validate`
 - Generates README from card metadata
 - Runs evals suite
 - Creates `.kdna` container

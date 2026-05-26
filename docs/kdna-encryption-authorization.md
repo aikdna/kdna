@@ -1,6 +1,6 @@
 # KDNA Encryption & Authorization — Design Specification
 
-> **Status:** Design specification. License verification MVP implemented in kdna-runtime. Encrypted package profile (.kdnae) in design stage. See [KCL-1.0](../specs/LICENSE-KCL-1.0.md) for the canonical commercial license.
+> **Status:** Design specification with CLI/core MVP implemented. Licensed `.kdna` uses the `kdna-licensed-entry-v1` encrypted-entry profile. License activation, sync, revocation, offline grace, and audit events are defined in [KDNA Entitlement API](../specs/kdna-entitlement-api.md). See [KCL-1.0](../specs/LICENSE-KCL-1.0.md) for the canonical commercial license.
 
 ## Overview
 
@@ -14,39 +14,46 @@ KDNA domains with `access: licensed` or `access: runtime` require protection mec
 | `licensed` | Encrypted `.kdna` file | Requires local license key | @aikdna/writing-pro |
 | `runtime` | Server-side only | Requires API call to runtime | Enterprise domains |
 
-## Encrypted Container (.kdnae)
+## Licensed `.kdna` Container
 
-For `licensed` domains, the container is encrypted:
+For `licensed` domains, selected internal entries are encrypted inside the same `.kdna` asset:
 
-- Extension: `.kdnae` (KDNA Encrypted)
-- Encryption: AES-256-GCM at the ZIP level
+- Extension: `.kdna`
+- Profile: `kdna-licensed-entry-v1`
+- Encryption: AES-256-GCM per protected entry
 - Key: Derived from license key + machine fingerprint
 - The `kdna.json` manifest is stored in plaintext for discovery; only KDNA JSON files are encrypted
 
 ### Container Structure
 
 ```
-writing-pro.kdnae
+writing-pro.kdna
 ├── kdna.json          (plaintext — metadata for discovery)
 ├── KDNA_Core.json     (encrypted)
 ├── KDNA_Patterns.json (encrypted)
-├── KDNA_Scenarios.json(encrypted)
-├── signature.json    (plaintext — covers plaintext manifest)
-└── license.json       (plaintext — license requirements)
+└── KDNA_Scenarios.json(encrypted)
 ```
 
-### license.json
+License requirements are declared in `kdna.json` under `access` and
+`encryption`. Local activation state is stored outside the asset under
+`~/.kdna/licenses/`.
+
+### Manifest Encryption Fields
 
 ```json
 {
   "access": "licensed",
-  "license_type": "per_user",
-  "require_machine_binding": true,
-  "require_online_check": false,
-  "offline_grace_days": 7,
-  "license_server_url": "https://license.aikdna.com/v1/verify",
-  "allowed_agents": ["claude_code", "codex", "opencode"],
-  "max_concurrent_loads": 1
+  "encryption": {
+    "profile": "kdna-licensed-entry-v1",
+    "encrypted_entries": [
+      "KDNA_Core.json",
+      "KDNA_Patterns.json"
+    ]
+  },
+  "license": {
+    "type": "KCL-1.0",
+    "url": "https://aikdna.com/licenses/KCL-1.0"
+  }
 }
 ```
 
@@ -72,14 +79,15 @@ writing-pro.kdnae
 ```
 1. Agent requests kdna load @aikdna/writing-pro
 2. CLI checks kdna.json → access: licensed
-3. CLI reads license.json → finds local license
-4. Verify license signature (scope pubkey)
-5. Verify machine binding (fingerprint match)
-6. Verify expiration (not expired)
-7. Derive decryption key from license key + fingerprint
-8. Decrypt KDNA JSON files into memory
-9. Load domain into agent context
-10. Never write decrypted files to disk
+3. CLI reads local activation from ~/.kdna/licenses/
+4. Verify machine binding, expiration, revocation, and offline grace
+5. Derive decryption key from license key + fingerprint
+6. Decrypt protected KDNA entries into memory
+7. Load domain into agent context
+8. Never write decrypted files to disk
+
+Activation and sync request/response schemas are defined in
+`specs/kdna-entitlement-api.md`.
 ```
 
 ### Machine Fingerprint
@@ -190,8 +198,8 @@ Organizations can host private registries with their own signing keys:
 | Phase | Feature |
 |-------|---------|
 | **P0** | Signed containers for `open` domains (already done) |
-| **P1** | Encrypted container format (.kdnae) |
-| **P2** | License key generation and verification |
-| **P3** | Machine binding |
-| **P4** | Runtime server with watermarking |
+| **P1** | Licensed `.kdna` encrypted-entry profile (CLI/Core MVP implemented) |
+| **P2** | License key generation, activation, and sync (CLI MVP implemented) |
+| **P3** | Machine binding, offline grace, and fail-closed checks (CLI MVP implemented) |
+| **P4** | Runtime server with projection and watermarking |
 | **P5** | Enterprise private registry with SSO |

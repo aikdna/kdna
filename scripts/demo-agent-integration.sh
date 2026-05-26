@@ -88,7 +88,7 @@ echo ""
 if command -v kdna &>/dev/null; then
   for domain in sales management writing_basic; do
     if [ -d "$DOMAINS_DIR/$domain" ]; then
-      kdna validate "$DOMAINS_DIR/$domain" 2>&1 | head -1
+      kdna dev validate "$DOMAINS_DIR/$domain" 2>&1 | head -1
     fi
   done
 elif [ -f "$KDNA_CLI_REPO/src/cli.js" ]; then
@@ -125,10 +125,10 @@ echo "    Codex:       ~/.codex/skills/kdna-loader/SKILL.md"
 echo "    Claude Code: ~/.claude/skills/kdna-loader/SKILL.md"
 echo "    OpenCode:    ~/.agents/skills/kdna-loader/SKILL.md"
 echo ""
-echo "  Domain locations:"
-echo "    ~/.kdna/domains/sales/"
-echo "    ~/.kdna/domains/management/"
-echo "    ~/.kdna/domains/writing_basic/"
+echo "  Asset locations:"
+echo "    ~/.kdna/packages/@aikdna/sales/<version>/sales-<version>.kdna"
+echo "    ~/.kdna/packages/@aikdna/management/<version>/management-<version>.kdna"
+echo "    ~/.kdna/packages/@aikdna/writing/<version>/writing-<version>.kdna"
 echo ""
 echo "=========================================="
 echo "  Demo setup complete."

@@ -57,5 +57,5 @@ Whether a manager's diagnosis, intervention, or delegation decision addresses th
 
 ```bash
 kdna install github:aikdna/kdna-management_basic
-kdna validate .
+kdna dev validate .
 ```

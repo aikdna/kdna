@@ -143,10 +143,10 @@ kdna init my_expertise
 Edit the files, then:
 
 ```bash
-kdna validate my_expertise           # structural check
+kdna dev validate my_expertise       # structural check for dev source
 kdna publish --check my_expertise    # content quality gate
-kdna publish my_expertise            # pack + sign + output registry patch
-kdna install ./my_expertise          # install locally for testing
+kdna publish my_expertise            # build + sign + output registry patch
+kdna install ./my_expertise.kdna     # install local asset for testing
 ```
 
 ---
@@ -155,7 +155,7 @@ kdna install ./my_expertise          # install locally for testing
 
 ### "No KDNA domains installed"
 
-Run `kdna install <name>` to install a domain from the registry, or `kdna install ./folder` for a local domain.
+Run `kdna install <name>` to install an asset from the registry, or `kdna install ./file.kdna` for a local asset. Source directories are dev-only and cannot be installed directly.
 
 ### "kdna-loader skill not found"
 

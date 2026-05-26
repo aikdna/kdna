@@ -68,12 +68,12 @@ Define the metadata schema for commercial KDNA assets that enables:
 ### 4.1 Client-Side (licensed mode)
 
 ```
-1. User: kdna install @scope/domain-pro --license KDNA-LIC-XXXX
-2. CLI: POST /v1/license/verify { license_key, domain_id, agent_count }
-3. Server: Validate key, check expiration, check agent limit
-4. Server: Return { valid: true, expires: "2027-05-24", max_agents: 3, signature: "..." }
-5. CLI: Download domain, verify signature, install, store license in ~/.kdna/licenses/
-6. Agent: On load, check ~/.kdna/licenses/ for valid license before applying domain
+1. User: kdna install @scope/domain-pro
+2. User: kdna license activate @scope/domain-pro --key KDNA-LIC-XXXX --server <activate-url>
+3. CLI: POST /v1/entitlements/activate { license_key, domain, machine_fingerprint, client }
+4. Server: Validate key, check expiration, check agent/device limits, return activation object
+5. CLI: Stores activation metadata outside the asset in ~/.kdna/licenses/
+6. Agent: On load, checks activation status, revocation, machine binding, and offline grace before decrypting entries in memory
 ```
 
 ### 4.2 Server-Side (runtime mode)

@@ -16,7 +16,7 @@ Examples:
 
 Requirements:
 - Human Lock on all cards
-- Pass kdna validate
+- Pass kdna dev validate
 
 ### R1 — Medium Risk
 

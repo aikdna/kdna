@@ -55,7 +55,7 @@ When publishing a new official domain, verify:
 - [ ] All JSON validates against schema
 - [ ] File count ≤ 6
 - [ ] kdna.json manifest complete
-- [ ] `kdna validate` passes with 0 errors
+- [ ] `kdna dev validate` passes with 0 errors
 
 ### Trust & Governance
 

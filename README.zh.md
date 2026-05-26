@@ -138,7 +138,7 @@ npm run lint:examples
 校验一个领域：
 
 ```bash
-npx kdna validate examples/decision_state
+npx kdna dev validate examples/decision_state
 ```
 
 ## 安装到你的 Agent
@@ -167,7 +167,7 @@ kdna setup
 
 # 2. 装一个领域（sha256 + 签名验证）
 kdna install @aikdna/writing
-# 装到 ~/.kdna/domains/@aikdna/writing/
+# 装到 ~/.kdna/packages/@aikdna/writing/0.7.2/writing-0.7.2.kdna
 
 # 3. 检查
 kdna list
@@ -179,7 +179,7 @@ kdna verify @aikdna/writing --judgment
 ```bash
 kdna init my_expertise
 # 填写 KDNA_Core.json 和 KDNA_Patterns.json
-kdna validate my_expertise
+kdna dev validate my_expertise
 kdna publish my_expertise
 ```
 

@@ -2,7 +2,13 @@
 
 ## 1. Purpose
 
-KDNA Identity Keys provide cryptographic proof of ownership for KDNA licenses. Every buyer generates a key pair locally. The public key is registered with the KDNA Registry. The private key never leaves the buyer's device.
+KDNA Identity Keys provide cryptographic proof of authorship for published
+`.kdna` assets. They are used to sign asset metadata and establish registry
+trust, not to decrypt buyer licenses.
+
+Licensed user activation is defined in `kdna-entitlement-api.md`. Local
+licensed loading uses a `license_key` plus machine fingerprint to derive an
+in-memory decrypt hook for `kdna-licensed-entry-v1`.
 
 ## 2. Key Format
 
@@ -10,13 +16,14 @@ KDNA Identity Keys provide cryptographic proof of ownership for KDNA licenses. E
 - **Encoding:** PEM (PKCS#8 for private, SPKI for public)
 - **Storage:** `~/.kdna/identity/kdna.key` (chmod 600), `~/.kdna/identity/kdna.pub`
 
-## 3. Buyer ID Derivation
+## 3. Publisher Fingerprint Derivation
 
 ```
-buyer_id = SHA-256(public_key_pem)[0:16]
+fingerprint = SHA-256(public_key_pem)[0:12]
 ```
 
-The buyer_id is a hex string derived from the public key. It is stable across sessions and uniquely identifies the buyer to the Registry without revealing the public key in URLs or logs.
+The fingerprint is a short stable identifier for registry trust metadata and
+human-readable CLI output. It is not a license identifier.
 
 ## 4. Commands
 
@@ -26,7 +33,8 @@ The buyer_id is a hex string derived from the public key. It is stable across se
 kdna identity init
 ```
 
-Creates key pair if it doesn't exist. Outputs buyer_id. Idempotent — safe to run multiple times.
+Creates key pair if it does not exist. Outputs public key fingerprint.
+Idempotent and safe to run multiple times.
 
 ### 4.2 Export for Backup
 
@@ -50,7 +58,9 @@ Decrypts backup with passphrase, restores private key.
 kdna identity rotate
 ```
 
-Generates new key pair. All active licenses are re-encrypted with the new public key. Old private key is archived for 30 days.
+Generates a new publisher key pair. Existing published assets remain signed by
+the old key and continue to verify through registry trust metadata until the
+registry rotates or revokes that key.
 
 ### 4.5 Show Public Key
 
@@ -58,21 +68,24 @@ Generates new key pair. All active licenses are re-encrypted with the new public
 kdna identity show
 ```
 
-Displays buyer_id and public key fingerprint.
+Displays public key fingerprint.
 
-## 5. License Binding
+## 5. License Boundary
 
-When a license is issued, the Content Key (CK) is encrypted with the buyer's public key:
+Identity keys MUST NOT be treated as buyer license keys. The production licensed
+flow is:
 
-```
-ck_encrypted = ECDH-ES + AES-256-KW(public_key, CK)
-```
-
-Only the holder of the corresponding private key can decrypt CK.
+1. Install immutable `.kdna` asset under `~/.kdna/packages/`.
+2. Activate license through the Entitlement API.
+3. Store activation metadata outside the asset in `~/.kdna/licenses/`.
+4. Derive the entry decrypt hook in memory from `license_key` and
+   `machine_fingerprint`.
+5. Decrypt protected entries in memory only.
 
 ## 6. Security
 
 - Private key file MUST be chmod 600
 - Private key MUST NEVER be transmitted to the Registry
-- Registry stores only the public key
-- If private key is lost, all licenses are permanently inaccessible — backup is essential
+- Registry stores public trust metadata only
+- If private key is lost, existing published assets remain verifiable but the
+  publisher cannot sign new releases with that identity

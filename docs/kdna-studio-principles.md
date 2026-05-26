@@ -139,7 +139,7 @@ The emerging domain is tested against real inputs.
 
 The domain is validated, signed, and exported.
 
-- `kdna validate` — structural check
+- `kdna dev validate` — structural check
 - `kdna verify --judgment` — behavioral score
 - Ed25519 signature applied
 - `.kdna` package generated

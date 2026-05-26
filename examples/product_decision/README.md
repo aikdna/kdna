@@ -42,7 +42,7 @@
 ## 验证
 
 ```bash
-npx kdna validate .
+npx kdna dev validate .
 ```
 
 ## Four Questions
@@ -69,5 +69,5 @@ Whether a product decision (feature, priority, scope) is reversible, user-value-
 
 ```bash
 kdna install github:aikdna/kdna-product_decision
-kdna validate .
+kdna dev validate .
 ```

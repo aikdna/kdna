@@ -250,7 +250,7 @@ This KDNA is NOT <misunderstanding 1>. It is NOT <misunderstanding 2>. It does n
 ## Validate
 
 \`\`\`bash
-kdna validate .
+kdna dev validate .
 \`\`\`
 
 ## License

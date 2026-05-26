@@ -65,24 +65,24 @@ Output (json):
 
 ## 3. Signing Commands
 
-### 3.1 `kdna sign <domain-path>`
+### 3.1 `kdna publish <source-dir>`
 
-Sign a domain package with the creator's identity key.
+Build and sign a `.kdna` asset with the creator's identity key.
 
 ```
-kdna sign ./my-domain        # Sign a local domain directory
-kdna sign ./my-domain.kdna   # Sign a .kdna package file
+kdna publish ./my-domain-source --output ./dist
 
 Output:
   Signed: @aikdna/my-domain v0.1.0
   Signature: ed25519:def5678...
-  Written to: ./my-domain/kdna.json (signature field)
+  Packed: ./dist/my-domain-0.1.0.kdna
 ```
 
 Pre-flight checks:
 - Identity must be initialized (`kdna identity init`)
-- Domain must pass `kdna validate`
-- Domain must have complete metadata (author, license, version)
+- Source directory must pass `kdna dev validate`
+- Source directory must have complete metadata (author, license, version)
+- The published asset is the `.kdna` file; the source directory is dev-only
 
 ### 3.2 `kdna verify <domain>`
 
@@ -90,7 +90,7 @@ Verify a domain's signature against the author's public key.
 
 ```
 kdna verify @aikdna/writing        # Verify installed domain
-kdna verify ./my-domain.kdna       # Verify a .kdna package
+kdna verify ./my-domain.kdna       # Verify a .kdna dev package
 
 Output (valid):
   ✓ Signature valid
@@ -151,12 +151,14 @@ Output:
   @aikdna/decision_state   CC-BY-4.0      Open        Active
 ```
 
-### 4.3 `kdna license activate <domain> --key <license-key>`
+### 4.3 `kdna license activate <domain> --key <license-key> --server <url>`
 
 Activate a commercial license for a domain.
 
 ```
-kdna license activate @aikdna/writing-pro --key KDNA-LIC-XXXX-YYYY-ZZZZ
+kdna license activate @aikdna/writing-pro \
+  --key KDNA-LIC-XXXX-YYYY-ZZZZ \
+  --server https://license.example.com/v1/entitlements/activate
 
 Output:
   License activated: @aikdna/writing-pro
@@ -165,22 +167,28 @@ Output:
   Agents:  3
 ```
 
-## 5. Install with License
+The activation/sync contract is defined in `kdna-entitlement-api.md`.
 
-### 5.1 `kdna install <domain> --license <key>`
+## 5. Licensed and Runtime Installation
 
-Install a licensed (commercial) domain.
+### 5.1 Licensed `.kdna` flow
+
+Licensed assets are installed as immutable `.kdna` files first, then activated
+through the entitlement API. The license key is not passed to `kdna install`.
 
 ```
-kdna install @aikdna/writing-pro --license KDNA-LIC-XXXX
+kdna install @aikdna/writing-pro
+kdna license activate @aikdna/writing-pro \
+  --key KDNA-LIC-XXXX-YYYY-ZZZZ \
+  --server https://license.example.com/v1/entitlements/activate
 
 Behavior:
 1. Fetch domain metadata from registry
-2. Verify license key with license server
-3. Download domain package
-4. Verify signature against author's public key
-5. Install to ~/.kdna/domains/@aikdna/writing-pro/
-6. Store license key in ~/.kdna/licenses/
+2. Download `.kdna` asset
+3. Verify digest and signature against registry trust metadata
+4. Install immutable asset to ~/.kdna/packages/@aikdna/writing-pro/<version>/writing-pro-<version>.kdna
+5. Store activation metadata outside the asset in ~/.kdna/licenses/
+6. Load only when activation checks pass
 ```
 
 ### 5.2 `kdna install <domain> --runtime`
@@ -207,8 +215,8 @@ Behavior:
 | `kdna verify` | Phase 2 (Week 7-8) | existing signatures in registry |
 | `kdna license show` | Phase 2 (Week 7-8) | license fields in kdna.json |
 | `kdna license status` | Phase 3 (Week 9-12) | multiple installed domains |
-| `kdna license activate` | Phase 3 (Week 9-12) | license server / validation endpoint |
-| `kdna install --license` | Phase 3 (Week 9-12) | license activation flow |
+| `kdna license activate` | CLI MVP implemented | Entitlement API activation endpoint |
+| `kdna license sync` | CLI MVP implemented | Entitlement API sync endpoint |
 | `kdna install --runtime` | Phase 3 (Week 9-12) | runtime endpoint |
 
 ---

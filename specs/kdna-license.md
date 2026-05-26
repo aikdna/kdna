@@ -19,7 +19,7 @@ KDNA follows a strict two-layer licensing model:
 │  format, schema, validators, loader  │
 ├─────────────────────────────────────┤
 │     KDNA Domain Assets (per-asset)   │  ← Creator's choice
-│   .kdna files, .kdnapack packages    │
+│   .kdna files and runtime projections│
 └─────────────────────────────────────┘
 ```
 
@@ -35,7 +35,7 @@ This ensures:
 
 ### Layer 2: Domain Assets (Creator's Choice)
 
-Each `.kdna` file or `.kdnapack` package carries its own license.
+Each `.kdna` file or runtime-projected asset carries its own license.
 The creator chooses the license that governs how their domain judgment asset
 may be used, shared, and monetized.
 

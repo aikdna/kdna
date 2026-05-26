@@ -45,9 +45,6 @@ function validateDomainSchema(dataMap, schemaMap) {
     return { valid: true, errors: [], warnings };
   }
 
-  let validCount = 0;
-  let failCount = 0;
-
   for (const [file, schemaFile] of Object.entries(FILE_TO_SCHEMA)) {
     if (!dataMap[file]) continue;
     if (!schemaMap[schemaFile]) {
@@ -69,10 +66,7 @@ function validateDomainSchema(dataMap, schemaMap) {
     const validate = ajvInstance.compile(schema);
     const valid = validate(dataMap[file]);
 
-    if (valid) {
-      validCount++;
-    } else {
-      failCount++;
+    if (!valid) {
       for (const err of validate.errors || []) {
         const instancePath = err.instancePath || '/';
         errors.push(`${file}${instancePath}: ${err.message} (${err.keyword})`);

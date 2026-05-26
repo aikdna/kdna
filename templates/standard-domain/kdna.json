@@ -11,6 +11,7 @@
   "description": "[one-sentence description; appears on registry and in install output]",
   "core_insight": "[one-sentence core insight that distinguishes this domain]",
   "keywords": ["[add 3-6 keywords for kdna search]"],
+  "quality_badge": "untested",
   "author": {
     "name": "Your Name",
     "id": "your-id",

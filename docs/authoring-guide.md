@@ -5,7 +5,7 @@
 1. Copy `templates/minimal-domain/` to your working directory
 2. Rename the folder to your domain ID (e.g., `my_domain`)
 3. Edit each JSON file — fill in every placeholder in angle brackets
-4. Validate: `npx kdna validate <your-domain-folder>`
+4. Validate: `npx kdna dev validate <your-domain-folder>`
 5. Test: `kdna verify <your-domain-folder>`
 
 ---

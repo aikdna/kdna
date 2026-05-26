@@ -23,11 +23,11 @@ When you ask the agent a question, the agent decides per-task:
 
 1. **Does this task need KDNA at all?** Most tasks (formatting,
    lookup, code execution) don't. Skip silently.
-2. **What's installed?** The agent reads `~/.kdna/domains/` to
-   discover available domains. This is filesystem-only — no preloaded
-   list.
-3. **What fits?** For each candidate domain, the agent reads its small
-   `kdna.json` (~1 KB) and checks the v2.1 `applies_when` /
+2. **What's installed?** The agent calls `kdna available --json` to
+   discover installed `.kdna` assets. It does not inspect package
+   directories or unzip assets directly.
+3. **What fits?** For each candidate domain, the agent uses CLI-provided
+   metadata and checks the v2.1 `applies_when` /
    `does_not_apply_when` fields on the domain's axioms.
 4. **Load 0 or 1 primary domain.** If `does_not_apply_when` matches,
    the domain disqualifies itself. If two domains fit and disagree,
@@ -75,10 +75,9 @@ Then install the `kdna-loader` skill for your agent from [kdna-skills](https://g
 
 ## What's NOT installed as a skill
 
-- KDNA domains themselves (they live in `~/.kdna/domains/`, discovered
-  on demand)
+- KDNA domains themselves (they are installed `.kdna` assets, discovered
+  on demand through the CLI)
 - A domain creator (use `kdna init <name>` CLI when needed)
 - Per-project pinning (the v0.7–v0.8 `.kdna/config.json` mechanism was
   removed in v0.9 because it forced loading on tasks the user didn't
   ask for, violating the "install ≠ load" safety model)
-

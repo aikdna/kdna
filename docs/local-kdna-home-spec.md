@@ -1,11 +1,13 @@
 # ~/.kdna Directory Specification v1.0
 
 > **Status:** Draft · 2026-05-26
-> **Applies to:** kdna-cli, KDNAChat, KDNaStudio, KDNAWork
+> **Applies to:** kdna-cli, KDNAChat, KDNAStudio, KDNAWork
 
 ## Purpose
 
 Define the canonical local directory structure for all KDNA products. Every product MUST use `~/.kdna/` as its local KDNA home. Products that store KDNA data elsewhere break ecosystem interoperability.
+
+KDNA's canonical installed object is a `.kdna` asset. Products MUST NOT treat extracted domain directories as installed runtime domains.
 
 ## Directory Structure
 
@@ -13,28 +15,21 @@ Define the canonical local directory structure for all KDNA products. Every prod
 ~/.kdna/
 │
 ├── config.json                  # Global configuration
+├── index.json                   # Installed asset index
 │
-├── identity/                    # Author/developer identity
-│   ├── keypair.json             # ed25519 keypair (private key)
-│   └── pubkey.json              # Public key only (for sharing)
-│
-├── domains/                     # All installed domains
-│   ├── official/                # From KDNA Registry (npm install)
-│   │   └── @aikdna/
-│   │       ├── writing/
-│   │       ├── code_review/
-│   │       └── ...
-│   ├── local/                   # User-created (Studio output)
-│   │   └── my_domain/
-│   └── private/                 # Enterprise/team private domains
-│       └── company_domain/
+├── packages/                    # Canonical installed .kdna assets
+│   └── @aikdna/
+│       └── writing/
+│           └── 0.7.2/
+│               ├── writing-0.7.2.kdna
+│               └── receipt.json
 │
 ├── clusters/                    # Cluster manifests
 │   └── animation.json
 │
 ├── registry/                    # Local registry cache
-│   ├── cache.json               # Cached domains.json
-│   └── manifests/               # Individual domain manifests
+│   ├── domains.json             # Cached registry v3 index + trust metadata
+│   └── manifests/               # Individual registry manifests
 │
 ├── traces/                      # Judgment traces
 │   └── YYYY-MM-DD/
@@ -48,48 +43,53 @@ Define the canonical local directory structure for all KDNA products. Every prod
 │   └── <domain>/
 │       └── <case>.json
 │
-├── cache/                       # Runtime cache (temporary)
+├── cache/                       # Rebuildable runtime cache
 │   └── ...
+│
+├── identity/                    # Author/developer identity
+│   ├── keypair.json
+│   └── pubkey.json
 │
 └── licenses/                    # Enterprise/pro license files
     └── <license_id>.lic
 ```
 
-## config.json Format
+## Invariants
 
-```json
-{
-  "version": "1.0",
-  "default_author": "local",
-  "registry_url": "https://raw.githubusercontent.com/aikdna/kdna-registry/main/domains.json",
-  "preferred_language": "en",
-  "agent": "kdnachat",
-  "trace_enabled": true,
-  "feedback_enabled": true,
-  "auto_update_registry": true
-}
-```
+- `packages/` contains the real installed assets.
+- `index.json` records installed asset names, versions, local asset paths, and receipt paths.
+- `receipt.json` records install source, `asset_digest`, `content_digest`, signature status, access mode, install time, and local asset path.
+- `registry/domains.json` records registry v3 trust metadata, including snapshot expiry, timestamp expiry, and revocations.
+- `cache/` MAY contain temporary extracted files, but cache contents are not canonical and may be deleted.
+- `domains/` is not part of the runtime model.
+- Installers MUST NOT rewrite `kdna.json` inside an installed `.kdna` asset.
 
 ## Product Responsibilities
 
 | Product | Reads from | Writes to |
-|---------|-----------|-----------|
-| kdna-cli | `domains/`, `clusters/`, `registry/` | `domains/official/`, `identity/`, `licenses/` |
-| KDNAChat | `domains/`, `identity/`, `config.json` | `traces/`, `feedback/` |
-| KDNaStudio | `domains/local/`, `identity/` | `domains/local/`, `identity/` |
-| KDNAWork | `domains/`, `traces/`, `config.json` | `traces/`, `feedback/`, `domains/private/` |
+|---------|------------|-----------|
+| kdna-cli | `packages/`, `index.json`, `registry/` | `packages/`, `index.json`, `identity/`, `licenses/` |
+| KDNAChat | `packages/`, `index.json`, `config.json` | `traces/`, `feedback/` |
+| KDNAStudio | dev source workspaces, `identity/` | `.kdna` assets, `identity/` |
+| KDNAWork | `packages/`, `index.json`, `traces/`, `config.json` | `traces/`, `feedback/` |
 
-## Migration Path
+## Install Layout
 
-### Current State (2026-05-26)
-- KDNAChat reads domains from `~/.kdna/domains/` (flat)
-- KDNAWork manages its own workspace-local storage
-- KDNaStudio reads/writes to project-local paths
-- kdna-cli installs to `~/.agents/Kdna/`
+Installing `@aikdna/writing@0.7.2` MUST produce:
 
-### Target State (Phase 1-B)
-- All products use the structure above
-- kdna-cli `install` writes to `domains/official/`
-- KDNaStudio creates in `domains/local/` by default
-- KDNAChat loads from `domains/official/` and `domains/local/`
-- KDNAWork syncs `domains/private/` for team use
+```
+~/.kdna/packages/@aikdna/writing/0.7.2/writing-0.7.2.kdna
+~/.kdna/packages/@aikdna/writing/0.7.2/receipt.json
+~/.kdna/index.json
+```
+
+It MUST NOT produce:
+
+```
+~/.kdna/domains/@aikdna/writing/KDNA_Core.json
+~/.kdna/domains/@aikdna/writing/KDNA_Patterns.json
+```
+
+## Loading
+
+A conforming runtime loads from the `.kdna` asset path recorded in `index.json` and verified by `receipt.json`. If a registry entry exists, the runtime or verifier MUST also reject yanked or revoked assets. It may read ZIP entries directly or extract to a hidden temporary directory for the duration of a command. Persistent extraction is not required and MUST NOT become the source of trust.

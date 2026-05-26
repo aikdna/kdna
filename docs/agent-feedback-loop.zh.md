@@ -250,7 +250,7 @@ AI **可以**协助审核：
 - 主版本升级（`0.7.x` → `0.8.0`）：破坏性 schema 变更或删除公理
 
 更新的域**必须**：
-1. 通过结构验证（`kdna validate`）
+1. 通过结构验证（`kdna dev validate`）
 2. 通过行为验证（`kdna verify --judgment`）
 3. 使用域作者的 Ed25519 密钥签名（`kdna publish`）
 

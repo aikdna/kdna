@@ -69,7 +69,7 @@ kdna setup
 kdna install @aikdna/writing
 ```
 
-This downloads the domain package to `~/.kdna/domains/@aikdna/writing/`. The CLI verifies its SHA-256 hash and Ed25519 signature before accepting it.
+This downloads and stores the `.kdna` asset under `~/.kdna/packages/@aikdna/writing/<version>/writing.kdna`, then records it in `~/.kdna/index.db`. The CLI verifies its SHA-256 hash and Ed25519 signature before accepting it.
 
 ---
 

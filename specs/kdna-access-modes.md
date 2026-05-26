@@ -42,7 +42,7 @@ can be loaded by any compatible Agent without restrictions.
 **Protection:** None. Content is fully transparent. License terms (e.g., CC BY 4.0)
 govern attribution and redistribution, not access.
 
-**File format:** Plain `.kdna` (YAML/JSON) or `.kdnapack` directory.
+**File format:** Plain `.kdna` asset.
 
 **Agent behavior:**
 - Agent receives the complete KDNA context
@@ -55,7 +55,7 @@ govern attribution and redistribution, not access.
 access: "licensed"
 ```
 
-**Description:** Authorized-use KDNA. Delivered as an encrypted package (`.kdna.pkg`).
+**Description:** Authorized-use KDNA. Delivered as a `.kdna` asset with protected entries encrypted under `kdna-licensed-entry-v1`.
 The Agent must verify a license before loading. Content is decrypted at load time
 but full content is still delivered to the authorized Agent.
 
@@ -66,7 +66,7 @@ but full content is still delivered to the authorized Agent.
 - Private/internal organizational KDNA
 
 **Protection:**
-- Content encrypted at rest (`.kdna.pkg` format)
+- Content encrypted at rest inside the `.kdna` asset
 - License key verification before decryption
 - License key bound to user, team, or organization
 - Usage logging and audit trail
@@ -77,7 +77,7 @@ but full content is still delivered to the authorized Agent.
 - Human user with license can view content through approved tools
 - Redistribution and training are prohibited by license + technical enforcement
 
-**File format:** `.kdna.pkg` (encrypted archive).
+**File format:** `.kdna` with `access: "licensed"`.
 
 ### 2.3 Runtime Mode
 
@@ -110,7 +110,7 @@ only the judgment fragments relevant to the current task.
 - Agent applies the projection to its response
 - Agent must not attempt to reconstruct the full KDNA
 
-**File format:** `.kdna.pkg` on Runtime server. Agent only has an API endpoint.
+**File format:** `.kdna` on the Runtime server. Agent only has an API endpoint.
 
 ## 3. Task Projection (Runtime Mode)
 
@@ -182,10 +182,7 @@ meta:
 }
 ```
 
-**In .kdna.pkg (encrypted header):**
-```
-X-KDNA-Access: runtime
-```
+Runtime mode is declared in registry metadata and/or the server-side `.kdna` manifest with `access: "runtime"`.
 
 ## 5. Mode Transition
 
@@ -215,7 +212,7 @@ locked. Choose mode before first publication.
 ## 7. Security Considerations
 
 1. **Open mode:** No technical security. Relies on license + social norms.
-2. **Licensed mode:** Standard encryption + license key. Protects against casual copying, not determined reverse engineering.
+2. **Licensed mode:** `kdna-licensed-entry-v1` encrypted entries plus Entitlement API activation/sync. Protects against casual copying, not determined reverse engineering.
 3. **Runtime mode:** Server-side protection. Strongest defense. Trade-off: requires network, adds latency, reduces Agent context awareness.
 
 The choice of mode should balance:
@@ -228,4 +225,5 @@ The choice of mode should balance:
 - `kdna-file-format.md` — Defines how `access` is declared in `.kdna` files
 - `kdna-package-format.md` — Defines `access` in `kdna.json` manifests
 - `kdna-license.md` — Defines legal terms that complement access modes
-- KDNA Runtime — Technical implementation of `licensed` and `runtime` modes (future spec)
+- `kdna-entitlement-api.md` — Defines activation, sync, revocation, offline grace, and license audit events
+- KDNA Runtime — Technical implementation of `runtime` projection mode

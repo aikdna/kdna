@@ -39,7 +39,7 @@
 | Value | Description |
 |-------|-------------|
 | `open` | Plaintext, freely available. Distributed as `.kdna` package. |
-| `licensed` | Encrypted, requires local license. Distributed as `.kdnae` or `.kdnal` package. |
+| `licensed` | Encrypted, requires local license. Distributed as a `.kdna` asset with `access: "licensed"`. |
 | `runtime` | Not distributed. Server-side API only. Highest security tier. |
 
 ---

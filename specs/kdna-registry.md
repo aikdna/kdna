@@ -209,32 +209,30 @@ kdna list --outdated   # List domains with available updates
 ```bash
 kdna install writing
 kdna install writing@0.1.0
-kdna install --from-git https://github.com/aikdna/kdna-writing
-kdna install --from-url https://example.com/writing-0.1.0.kdnapack.tar.gz
-kdna install --from-path ./my-local-domain
+kdna install @aikdna/writing
+kdna install https://example.com/writing-0.1.0.kdna
+kdna install ./writing-0.1.0.kdna
 ```
 
-### Installation Directory
+### Installation Store
 
-Installed domains are placed in:
-
-```
-~/.kdna/domains/<domain-id>/
-```
-
-For project-scoped installation:
+Installed assets are stored as immutable `.kdna` files:
 
 ```
-<project>/.kdna/domains/<domain-id>/
+~/.kdna/packages/@scope/name/<version>/<name>-<version>.kdna
+~/.kdna/packages/@scope/name/<version>/receipt.json
+~/.kdna/index.json
 ```
 
-### Domain Resolution Order
+The internal domain tree is not the installed object. Any extraction cache is hidden, rebuildable, and not a trust source.
 
-When an Agent loads a KDNA domain, it looks in:
+### Asset Resolution Order
 
-1. Project-specific `.kdna/domains/` or `./Kdna/`
-2. User global `~/.kdna/domains/`
-3. Agent-specific KDNA directories (e.g., `~/.codex/Kdna/`)
+When an Agent loads a KDNA asset, it resolves:
+
+1. Explicit local `.kdna` file path
+2. Installed package index entry in `~/.kdna/index.json`
+3. Registry entry for install / update / trust verification
 
 ## 7. Publishing Protocol (Future)
 
@@ -244,7 +242,7 @@ kdna publish --dry-run ./my-domain
 ```
 
 Pre-publish checks:
-1. Domain passes `kdna validate`
+1. Domain passes `kdna dev validate`
 2. `kdna.json` manifest is complete
 3. Repository URL is valid
 4. Version is not already published
@@ -293,11 +291,9 @@ kdna-registry/
 ├── domains.json
 ├── README.md
 └── packages/
-    ├── writing-0.1.0.kdnapack.tar.gz
-    ├── management-0.1.0.kdnapack.tar.gz
-    ├── communication-0.1.0.kdnapack.tar.gz
-    ├── writing-0.1.0.kdnapack.tar.gz
-    └── writing-0.1.0.kdnapack.tar.gz
+    ├── writing-0.1.0.kdna
+    ├── management-0.1.0.kdna
+    └── communication-0.1.0.kdna
 ```
 
 The CLI reads `domains.json` to resolve domain IDs to download URLs.
@@ -323,7 +319,7 @@ discoverable. The registry index is generated from:
 
 1. Repository topics: `kdna-domain`, `kdna-open`, `kdna-basic`
 2. Repository's `kdna.json` at the root of the default branch
-3. GitHub release assets (`.kdnapack.tar.gz` files)
+3. GitHub release assets (`.kdna` files)
 
 A CI workflow in `kdna-registry` periodically regenerates `domains.json` by
 scanning all `kdna-*` repos in the organization.

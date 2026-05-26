@@ -93,14 +93,14 @@ does not have a separate metadata header — it is transparent ZIP.
 
 ```
 create    →  kdna init <name>           Scaffold standard domain folder
-validate  →  kdna validate <folder>     Check 6 JSON files against SPEC
-pack      →  kdna pack <folder>         Folder → .kdna container (ZIP)
+validate  →  kdna dev validate <folder>     Check 6 JSON files against SPEC
+pack      →  kdna dev pack <folder>         Folder → .kdna container (ZIP)
 inspect   →  kdna inspect <file.kdna>   Read container metadata + stats
-unpack    →  kdna unpack <file.kdna>    .kdna → folder (for editing)
+unpack    →  kdna dev unpack <file.kdna>    .kdna → folder (for editing)
 install   →  kdna install <file.kdna>   Install container to local registry
 ```
 
-### 7.1 `kdna pack`
+### 7.1 `kdna dev pack`
 
 Creates a `.kdna` container from a valid domain folder. The command:
 
@@ -110,16 +110,16 @@ Creates a `.kdna` container from a valid domain folder. The command:
 4. Outputs `<name>.kdna` in the current directory
 
 ```bash
-kdna pack ./sketchnote-style
+kdna dev pack ./sketchnote-style
 # → sketchnote-style.kdna
 ```
 
-### 7.2 `kdna unpack`
+### 7.2 `kdna dev unpack`
 
 Extracts a `.kdna` container back to a standard domain folder.
 
 ```bash
-kdna unpack sketchnote-style.kdna
+kdna dev unpack sketchnote-style.kdna
 # → sketchnote-style/
 #     KDNA_Core.json
 #     KDNA_Patterns.json
@@ -176,12 +176,12 @@ for the following reasons:
   and are the same model used by `.docx`, `.pptx`, `.epub`
 
 The `kdna export` command from v0.1–v0.3 (which produced merged single-files)
-is superseded by `kdna pack`.
+is superseded by `kdna dev pack`.
 
 ## 11. Version Compatibility
 
-- `.kdna` containers created by `kdna pack` v0.4 are ZIP archives containing
+- `.kdna` containers created by `kdna dev pack` v0.4 are ZIP archives containing
   spec v0.4 JSON files.
 - Older merged single-file `.kdna` files created by `kdna export` v0.1–v0.3
   are still accepted by `kdna inspect` for backward compatibility, but
-  `kdna pack` SHALL NOT produce this format.
+  `kdna dev pack` SHALL NOT produce this format.

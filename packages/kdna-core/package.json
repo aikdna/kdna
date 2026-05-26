@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-core",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "KDNA core library — pure logic for loading, validating, linting, and rendering KDNA domain cognition packages. Zero Node.js dependencies.",
   "type": "commonjs",
   "main": "src/index.js",
@@ -16,7 +16,7 @@
   },
   "types": "src/types.d.ts",
   "scripts": {
-    "test": "node -e \"const m = require('./src/index.js'); console.log('kdna-core exports:', Object.keys(m).join(', '));\""
+    "test": "node --test test/*.test.js && node -e \"const m = require('./src/index.js'); console.log('kdna-core exports:', Object.keys(m).join(', '));\""
   },
   "files": [
     "src/",

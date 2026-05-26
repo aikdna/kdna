@@ -25,10 +25,10 @@ A KDNA domain encoding the expert judgment patterns of high-trust, diagnosis-fir
 
 ```bash
 # Lint
-npx kdna validate examples/sales
+npx kdna dev validate examples/sales
 
 # Schema validation (requires ajv)
-npx kdna validate --schema examples/sales
+npx kdna dev validate --schema examples/sales
 ```
 
 ## Four Questions
@@ -55,5 +55,5 @@ Whether a sales interaction is diagnosis-first and trust-building — or pitch-f
 
 ```bash
 kdna install github:aikdna/kdna-sales
-kdna validate .
+kdna dev validate .
 ```

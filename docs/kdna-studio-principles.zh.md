@@ -139,7 +139,7 @@ AI 为每张卡片生成反例和压力测试。
 
 域被验证、签名并导出。
 
-- `kdna validate` — 结构检查
+- `kdna dev validate` — 结构检查
 - `kdna verify --judgment` — 行为评分
 - 应用 Ed25519 签名
 - 生成 `.kdna` 包

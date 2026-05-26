@@ -735,7 +735,7 @@ The `kdna route` command implements a 5-Gate 7-State domain router (Intent Gate 
 
 Human Lock has moved from specification to working code at two enforcement points:
 - **Studio Gate**: integrated into `exportProject()` — blocks export if judgment-class cards are not properly locked. 4 rules: must be locked, must have Human Lock record, must confirm `applies_when`/`does_not_apply_when`/`failure_risk` reviewed, fingerprint change detection for post-lock modifications. 16 tests.
-- **CLI Gate**: integrated into `kdna pack` and `kdna publish` — blocks packaging and publishing with exit code 8 (HUMAN_LOCK_REQUIRED). `--force` emergency override with audit trail.
+- **CLI Gate**: integrated into `kdna dev pack` and `kdna publish` — blocks asset building and publishing with exit code 8 (HUMAN_LOCK_REQUIRED). `--force` emergency override with audit trail.
 
 ### 14.5 Reference Domains
 
@@ -788,11 +788,11 @@ KDNA's roadmap is organized into six phases, reflecting the protocol's evolution
 - Judgment Guard (Runtime R1–R15) ✅
 - `kdna route` 7-state Trust Gate ✅
 
-### Phase 5: Encrypted and Licensed KDNA (Early)
+### Phase 5: Encrypted and Licensed KDNA (In Progress)
 
-- Encrypted package profile (design stage)
-- License verification (MVP in runtime)
-- Entitlement model (spec drafted)
+- Licensed encrypted-entry profile (CLI/Core MVP implemented)
+- License activation and verification (CLI MVP)
+- Entitlement API contract (activation, sync, revoke, audit)
 - Private packages (pro domains in staging)
 - Organization access control
 - Offline license lease

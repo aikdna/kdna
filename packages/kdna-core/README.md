@@ -1,6 +1,6 @@
 # @aikdna/kdna-core
 
-Pure logic library (zero dependencies) for loading, validating, linting, rendering, and composing KDNA domain cognition packages.
+Core library for loading, validating, linting, rendering, composing, and directly reading KDNA `.kdna` cognition assets. It has zero npm runtime dependencies.
 
 ## Installation
 
@@ -11,7 +11,12 @@ npm install @aikdna/kdna-core
 ## Usage
 
 ```js
-const { lintDomain, validateDomainSchema, validateCrossFile, renderDomain } = require('@aikdna/kdna-core');
+const {
+  createKdnaAssetReader,
+  lintDomain,
+  validateDomainSchema,
+  validateCrossFile
+} = require('@aikdna/kdna-core');
 
 // Validate a domain
 const dataMap = {
@@ -25,6 +30,65 @@ const crossResult = validateCrossFile(dataMap);
 ```
 
 ## API
+
+### `createKdnaAssetReader()`
+
+Direct `.kdna` container reader. The reader opens ZIP-backed `.kdna` assets without persistent extraction and exposes:
+
+- `open(pathOrBytes)`
+- `listEntries(asset)`
+- `readEntry(asset, entryName)`
+- `readJson(asset, entryName)`
+- `readManifest(asset)`
+- `readDataMap(asset)`
+- `contentDigest(asset)`
+- `verify(asset, { asset_digest?, content_digest?, requireSignature? })`
+- `loadProfile(asset, "index" | "compact" | "scenario" | "full", options?)`
+
+Example:
+
+```js
+const { createKdnaAssetReader } = require('@aikdna/kdna-core');
+
+const reader = createKdnaAssetReader();
+const asset = await reader.open('./writing.kdna');
+const manifest = await reader.readManifest(asset);
+const trust = await reader.verify(asset, { requireSignature: true });
+const loaded = await reader.loadProfile(asset, 'compact');
+```
+
+The asset reader treats extraction caches as implementation details. The `.kdna` file remains the identity, install, verification, and loading object.
+
+Licensed assets can list encrypted JSON entries in `kdna.json`:
+
+```json
+{
+  "access": "licensed",
+  "encryption": {
+    "profile": "kdna-licensed-entry-v1",
+    "encrypted_entries": ["KDNA_Core.json", "KDNA_Patterns.json"]
+  }
+}
+```
+
+The reader never writes decrypted entries to disk. Callers provide an in-memory
+`decryptEntry` hook when they have already validated license activation:
+
+```js
+const { createLicensedDecryptEntry } = require('@aikdna/kdna-core');
+
+const decryptEntry = createLicensedDecryptEntry({
+  licenseKey: activation.license_key,
+  machineFingerprint: activation.machine_fingerprint
+});
+
+const loaded = await reader.loadProfile(asset, 'compact', { decryptEntry });
+```
+
+The profile uses AES-256-GCM over each protected entry and derives the entry key
+from the license key plus machine fingerprint using `scrypt-sha256`. This is a
+runtime primitive, not a license activation system; callers must validate license
+status before passing a decrypt hook to the reader.
 
 ### `lintDomain(dataMap)`
 Structural linting — checks required files, field presence, unique IDs, yes/no answerable self-checks, cross-file references, and flags potentially vague axioms.

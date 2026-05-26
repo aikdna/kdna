@@ -49,5 +49,5 @@ The KDNA is not a summary of the Wiki. It is a transformation:
 ## Validation
 
 ```bash
-npx kdna validate kdna
+npx kdna dev validate kdna
 ```

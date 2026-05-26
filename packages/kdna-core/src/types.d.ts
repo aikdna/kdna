@@ -206,12 +206,23 @@ export interface KDNAManifest {
   kdna_spec: string;
   name: string;
   version: string;
-  status: 'experimental' | 'basic' | 'stable' | 'pro';
+  judgment_version?: string;
+  status: 'draft' | 'experimental' | 'stable' | 'deprecated' | 'basic' | 'pro';
   access: 'open' | 'licensed' | 'runtime';
-  language: string;
-  author: { name: string; id?: string };
+  language?: string;
+  default_language?: string;
+  languages?: string[];
+  author: { name: string; id?: string; pubkey?: string; public_key_pem?: string };
   license: { type: string; url?: string };
   description: string;
+  keywords?: string[];
+  encryption?: {
+    profile?: string;
+    encrypted_entries?: string[];
+    [key: string]: any;
+  };
+  content_digest?: string;
+  signature?: string;
 }
 
 export interface LintResult {
@@ -240,6 +251,167 @@ export function classifyInput(text: string): string[];
 export function formatContext(domain: LoadedDomain): string;
 
 export const FILE_MAP: Record<string, string>;
+
+// Asset reader — direct .kdna API
+export const STANDARD_ENTRIES: string[];
+
+export interface KdnaAsset {
+  path: string | null;
+  size: number;
+  asset_digest: string;
+  entries: Map<string, unknown>;
+  readEntry(name: string): Uint8Array;
+}
+
+export interface KdnaAssetVerifyResult {
+  ok: boolean;
+  errors: string[];
+  warnings: string[];
+  entries: string[];
+  manifest: KDNAManifest | null;
+  asset_digest: string;
+  content_digest: string;
+  signature_valid: boolean | null;
+}
+
+export interface KdnaAssetIndexProfile {
+  profile: 'index';
+  manifest: KDNAManifest;
+  asset_digest: string;
+  content_digest: string;
+  entries: string[];
+  name: string | null;
+  version: string | null;
+  judgment_version: string | null;
+  keywords: string[];
+}
+
+export interface KdnaAssetLoadProfile {
+  profile: string;
+  manifest: KDNAManifest;
+  domain: LoadedDomain | null;
+  context: string | null;
+}
+
+export interface KdnaAssetReader {
+  openSync(input: string | Uint8Array): KdnaAsset;
+  open(input: string | Uint8Array): Promise<KdnaAsset>;
+  listEntriesSync(asset: KdnaAsset): string[];
+  listEntries(asset: KdnaAsset): Promise<string[]>;
+  readEntrySync(asset: KdnaAsset, entryName: string): Uint8Array;
+  readEntrySync(asset: KdnaAsset, entryName: string, encoding: string): string;
+  readEntry(asset: KdnaAsset, entryName: string): Promise<Uint8Array>;
+  readEntry(asset: KdnaAsset, entryName: string, encoding: string): Promise<string>;
+  readJsonSync(asset: KdnaAsset, entryName: string, options?: KdnaDecryptOptions): any;
+  readJson(asset: KdnaAsset, entryName: string, options?: KdnaDecryptOptions): Promise<any>;
+  readManifestSync(asset: KdnaAsset): KDNAManifest;
+  readManifest(asset: KdnaAsset): Promise<KDNAManifest>;
+  readDataMapSync(
+    asset: KdnaAsset,
+    entries?: string[],
+    options?: KdnaDecryptOptions,
+  ): KDNAFileDataMap;
+  readDataMap(
+    asset: KdnaAsset,
+    entries?: string[],
+    options?: KdnaDecryptOptions,
+  ): Promise<KDNAFileDataMap>;
+  contentDigestSync(asset: KdnaAsset): string;
+  contentDigest(asset: KdnaAsset): Promise<string>;
+  verifySync(
+    asset: KdnaAsset,
+    options?: {
+      asset_digest?: string;
+      content_digest?: string;
+      requireSignature?: boolean;
+      requireDecryption?: boolean;
+    } & KdnaDecryptOptions,
+  ): KdnaAssetVerifyResult;
+  verify(
+    asset: KdnaAsset,
+    options?: {
+      asset_digest?: string;
+      content_digest?: string;
+      requireSignature?: boolean;
+      requireDecryption?: boolean;
+    } & KdnaDecryptOptions,
+  ): Promise<KdnaAssetVerifyResult>;
+  loadProfileSync(
+    asset: KdnaAsset,
+    profile: 'index',
+    options?: { input?: string; context?: boolean } & KdnaDecryptOptions,
+  ): KdnaAssetIndexProfile;
+  loadProfileSync(
+    asset: KdnaAsset,
+    profile?: 'compact' | 'scenario' | 'full' | string,
+    options?: { input?: string; context?: boolean } & KdnaDecryptOptions,
+  ): KdnaAssetLoadProfile;
+  loadProfile(
+    asset: KdnaAsset,
+    profile: 'index',
+    options?: { input?: string; context?: boolean } & KdnaDecryptOptions,
+  ): Promise<KdnaAssetIndexProfile>;
+  loadProfile(
+    asset: KdnaAsset,
+    profile?: 'compact' | 'scenario' | 'full' | string,
+    options?: { input?: string; context?: boolean } & KdnaDecryptOptions,
+  ): Promise<KdnaAssetLoadProfile>;
+}
+
+export interface KdnaDecryptOptions {
+  decryptEntry?: (args: {
+    asset: KdnaAsset;
+    manifest: KDNAManifest;
+    entryName: string;
+    ciphertext: Uint8Array;
+  }) => string | Uint8Array | Promise<string | Uint8Array>;
+}
+
+export function createKdnaAssetReader(): KdnaAssetReader;
+
+export const LICENSED_ENTRY_PROFILE: string;
+
+export interface LicensedEntryEnvelope {
+  profile: string;
+  alg: 'AES-256-GCM';
+  kdf: 'scrypt-sha256';
+  salt: string;
+  iv: string;
+  tag: string;
+  ciphertext: string;
+}
+
+export function deriveLicensedEntryKey(options: {
+  licenseKey: string;
+  machineFingerprint: string;
+  salt: string | Uint8Array;
+  keyLength?: number;
+}): Uint8Array;
+
+export function encryptLicensedEntry(
+  plaintext: string | Uint8Array,
+  options: {
+    entryName: string;
+    manifest?: KDNAManifest;
+    licenseKey: string;
+    machineFingerprint: string;
+  },
+): LicensedEntryEnvelope;
+
+export function decryptLicensedEntry(
+  envelope: string | Uint8Array | LicensedEntryEnvelope,
+  options: {
+    entryName: string;
+    manifest?: KDNAManifest;
+    licenseKey: string;
+    machineFingerprint: string;
+  },
+): Uint8Array;
+
+export function createLicensedDecryptEntry(options: {
+  licenseKey: string;
+  machineFingerprint: string;
+}): NonNullable<KdnaDecryptOptions['decryptEntry']>;
 
 // Lint
 export function lintDomain(dataMap: KDNAFileDataMap): LintResult;

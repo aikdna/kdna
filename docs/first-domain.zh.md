@@ -61,7 +61,7 @@ kdna init my-domain
 
 ```bash
 kdna publish --check ./my-domain
-kdna validate ./my-domain
+kdna dev validate ./my-domain
 ```
 
 **下一步**：[Loader 行为规范](/zh/docs/loader-behavior) — 理解 Agent 该如何使用 KDNA。

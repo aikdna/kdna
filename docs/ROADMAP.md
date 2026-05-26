@@ -46,7 +46,7 @@
 
 ## Phase 5: Encrypted and Licensed KDNA (Next)
 
-- ⬜ Encrypted package profile (.kdnae)
+- ⬜ Licensed `.kdna` encrypted-entry profile
 - ✅ License verification MVP (runtime)
 - ✅ KCL-1.0 canonical commercial license
 - ⬜ Entitlement model

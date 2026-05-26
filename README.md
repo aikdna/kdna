@@ -194,7 +194,7 @@ kdna doctor --agents
 # → Installed domains: 1
 ```
 
-Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Then `kdna validate my_expertise` checks it, and `kdna publish my_expertise` sends it to the registry.
+Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Then `kdna dev validate my_expertise` checks it, and `kdna publish my_expertise` sends it to the registry.
 
 ---
 

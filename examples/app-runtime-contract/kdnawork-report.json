@@ -1,7 +1,7 @@
 {
   "report_version": "0.1.0",
   "report_id": "report_work_agent_safety_001",
-  "trace_id": "trace_work_agent_safety_001",
+  "trace_id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
   "created_at": "2026-05-25T10:10:15Z",
   "app": {
     "name": "KDNAWork",
@@ -28,9 +28,13 @@
   "route_decision": {
     "status": "LOAD_STRONG_FIT",
     "action": "load",
+    "needs_kdna": true,
     "selected_domain": "@aikdna/agent_safety",
     "reason": "The task includes an irreversible file deletion proposed by an agent workflow.",
-    "confidence": 0.96
+    "confidence": 0.96,
+    "trace_id": "route_work_agent_safety_001",
+    "created_at": "2026-05-26T12:05:00Z",
+    "auto_install": false
   },
   "loaded_domains": [
     {

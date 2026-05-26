@@ -1,18 +1,17 @@
-# .kdnapack Package Format Specification
+# KDNA Dev Source Directory Format
 
 Version: 0.2
-Status: Draft
+Status: Superseded by asset-first `.kdna` model
 
 ## 1. Purpose
 
-`.kdnapack` is the multi-file KDNA domain package format. It is the canonical
-container for a complete KDNA domain, suitable for distribution, installation,
-version management, and future commercial packaging.
+This document now describes the dev source directory used by authoring tools.
+It is not the canonical asset format. The canonical KDNA object for distribution,
+installation, verification, licensing, and loading is the `.kdna` file.
 
-A `.kdnapack` can be:
-- A **directory** on disk (for development and local use)
-- A **tarball** (`.kdnapack.tar.gz`) for distribution
-- An **encrypted archive** (`.kdna.pkg`) for commercial use (future)
+A dev source directory can be:
+- A **directory** on disk for development and review
+- Built into a **`.kdna` asset** with `kdna dev pack`
 
 ## 2. Directory Structure
 
@@ -43,7 +42,7 @@ A `.kdnapack` can be:
 
 ## 3. Package Manifest: kdna.json
 
-Every `.kdnapack` MUST contain a `kdna.json` at the root. This is the machine-readable
+Every dev source directory MUST contain a `kdna.json` at the root. This is the machine-readable
 identity card of the domain.
 
 ```json
@@ -133,7 +132,7 @@ identity card of the domain.
 
 ### Development: Directory
 
-For development, a `.kdnapack` is simply a directory following the structure above.
+For development, the source form is simply a directory following the structure above.
 The directory name should match the `name` field in `kdna.json`.
 
 ```
@@ -146,31 +145,27 @@ sales/
 
 ### Distribution: Tarball
 
-For distribution via registry, the directory is archived:
+For distribution via registry, the directory is built into a `.kdna` asset:
 
 ```
-sales-0.1.0.kdnapack.tar.gz
-  └── sales/
-      ├── kdna.json
-      ├── KDNA_Core.json
-      └── ...
+sales-0.1.0.kdna
 ```
 
-The tarball filename convention is: `<name>-<version>.kdnapack.tar.gz`
+The asset filename convention is: `<name>-<version>.kdna`
 
-### Future: Encrypted Package
+### Licensed Asset
 
-For commercial KDNA, the directory is encrypted:
+For commercial KDNA, selected entries are encrypted inside the same `.kdna` asset:
 
 ```
-sales-pro-2.0.0.kdna.pkg
+sales-pro-2.0.0.kdna
 ```
 
-Encrypted packages can only be accessed via KDNA Runtime. See `kdna-access-modes.md`.
+Licensed assets require license activation and in-memory decryption. See `kdna-access-modes.md`.
 
 ## 6. Validation Requirements
 
-A valid `.kdnapack` MUST pass:
+A valid dev source directory MUST pass:
 
 1. **Manifest exists:** `kdna.json` at package root
 2. **Required files:** `KDNA_Core.json` + `KDNA_Patterns.json`
@@ -183,47 +178,44 @@ A valid `.kdnapack` MUST pass:
 ## 7. CLI Commands
 
 ```bash
-# Validate a package directory
-kdna validate ./sales
+# Validate a dev source directory
+kdna dev validate ./sales
 
-# Pack a directory into a distributable tarball
-kdna pack ./sales
+# Build a directory into a .kdna asset
+kdna dev pack ./sales
 
-# Unpack a tarball back into a directory
-kdna unpack sales-0.1.0.kdnapack.tar.gz
+# Unpack a .kdna asset back into a dev directory
+kdna dev unpack sales-0.1.0.kdna
 
 # Install from registry
 kdna install sales
 
-# Inspect package metadata
-kdna inspect ./sales
-kdna inspect sales-0.1.0.kdnapack.tar.gz
+# Inspect asset metadata
+kdna inspect sales-0.1.0.kdna
 ```
 
 ## 8. Conversion
 
-### .kdnapack → .kdna
+### Dev Source Directory → .kdna
 
-A `.kdnapack` directory can be converted to a single `.kdna` file:
+A dev source directory can be converted to a single `.kdna` file:
 
 ```bash
-kdna pack ./sales --single -o sales.kdna
+kdna dev pack ./sales --output sales.kdna
 ```
 
-This merges all JSON files into the YAML structure defined in `kdna-file-format.md`.
+### .kdna → Dev Source Directory
 
-### .kdna → .kdnapack
-
-A `.kdna` file can be expanded into a `.kdnapack` directory:
+A `.kdna` file can be expanded into a dev source directory:
 
 ```bash
-kdna unpack sales.kdna -o ./sales
+kdna dev unpack sales.kdna --output ./sales
 ```
 
 ## 9. Schema Compatibility
 
-The KDNA JSON files within a `.kdnapack` use the same schema as the existing
+The KDNA JSON files within a dev source directory use the same schema as the existing
 KDNA specification (SPEC.md v0.4). The `kdna.json` manifest is new in v0.2.
 
-When a `.kdnapack` directory follows both the existing SPEC.md and this spec,
+When a dev source directory follows both the existing SPEC.md and this spec,
 it is considered a **v0.2-compatible KDNA domain package**.
