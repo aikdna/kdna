@@ -27,6 +27,35 @@ A KDNA does not make an agent role-play an expert. It gives the agent an explici
 - **Skill** changes what AI does.
 - **KDNA** changes how AI judges.
 
+## KDNA Ecosystem
+
+```
+KDNAStudio                    kdna-cli                    KDNA Registry
+Creates judgment         →    Verifies & packs      →    Distributes trusted
+assets (expertise)            domain packages             domain assets
+      │                                                         │
+      │                         ┌───────────────────────────────┘
+      ▼                         ▼
+ KDNAChat / KDNAWork / Agent Skills
+ Use judgment · Compare responses · Trace decisions · Send feedback
+      │
+      ▼
+ Feedback → KDNAStudio → Domain evolves (revised, tested, republished)
+```
+
+> **KDNA is not a single project — it's a judgment asset operating system.**  
+> Studio creates, CLI verifies, Registry distributes, Chat makes judgment visible, Work puts judgment into real workflows, and feedback returns to improve the domain.
+
+## For whom
+
+| You are | Start here |
+|---------|-----------|
+| **AI user** who wants better judgment from the same model | [KDNAChat](https://github.com/aikdna/kdnachat) — load domains, compare responses, see judgment differences |
+| **Domain expert** who wants to encode expertise as verifiable assets | [KDNaStudio](https://github.com/aikdna/kdnastudio) — interview → cards → lock → test → export |
+| **Developer** integrating KDNA into agents or tools | [kdna-cli](https://github.com/aikdna/kdna-cli) · [kdna-core](https://www.npmjs.com/package/@aikdna/kdna-core) — install, validate, load, compare |
+| **Team lead** deploying shared judgment into workflows | [KDNAWork](https://github.com/aikdna/kdnawork) — workspaces, tasks, traces, team judgment |
+| **Tool builder** adding KDNA support to editors/IDEs | [kdna-vscode](https://github.com/aikdna/kdna-vscode) · [kdna-skills](https://github.com/aikdna/kdna-skills) |
+
 ## Why now
 
 > **Agents already have general judgment. What they still need is explicit, human-led domain judgment systems that can be inspected, governed, and reused.**
