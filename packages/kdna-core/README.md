@@ -20,6 +20,7 @@ const {
   validateKDNA,
   loadKDNA,
   renderForAgent,
+  verifyAsset,
   verifyDigest,
   verifySignature,
   matchDomain,
@@ -31,6 +32,10 @@ const validation = await validateKDNA('./writing.kdna');
 const loaded = await loadKDNA('./writing.kdna', { profile: 'compact' });
 const promptContext = await renderForAgent('./writing.kdna');
 
+await verifyAsset('./writing.kdna', {
+  asset_digest: info.asset_digest,
+  requireSignature: true
+});
 await verifyDigest('./writing.kdna', info.asset_digest);
 await verifySignature('./writing.kdna');
 
@@ -49,6 +54,7 @@ Stable entry points:
 | `validateKDNA()` | Run asset, lint, schema, and cross-file validation. |
 | `loadKDNA()` | Load index/compact/scenario/full profiles directly from `.kdna`. |
 | `renderForAgent()` | Render a loaded asset into agent prompt context. |
+| `verifyAsset()` | Run full asset verification: digest, content digest, signature, and trust metadata. |
 | `verifyDigest()` | Check whole-file `asset_digest`. |
 | `verifySignature()` | Require Ed25519 signature verification. |
 | `matchDomain()` | Rank candidate assets for a task string. |
