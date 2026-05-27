@@ -49,7 +49,7 @@ assets (expertise)            domain assets             domain assets
 
 AIKDNA = the ecosystem / brand  
 KDNA Protocol = the open judgment protocol  
-KDNA Domain Package = a portable domain judgment asset
+KDNA Domain Asset = a portable domain judgment asset
 
 **Protocol first. Products are reference implementations.**
 

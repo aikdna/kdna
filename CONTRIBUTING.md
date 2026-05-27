@@ -55,7 +55,7 @@ Negative Cases: (at least 1 example where the pattern should NOT trigger)
 
 **Submit to:** `benchmarks/judgment-benchmark.json` via PR
 
-### 3. Domain Package Contribution
+### 3. Domain Asset Contribution
 Submit a complete KDNA domain asset.
 
 1. Create a repository under `kdna-<domain>` naming convention

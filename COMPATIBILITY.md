@@ -6,7 +6,7 @@ This document defines what it means to be KDNA-compatible. It exists to prevent 
 
 A tool, library, platform, or domain asset is **KDNA-compatible** if it satisfies the requirements below for its category.
 
-### Category 1: Domain Package
+### Category 1: Domain Asset
 
 A domain asset is KDNA-compatible if:
 

@@ -34,7 +34,7 @@ KDNA 不是提示词库，不是知识库，也不是操作手册。它是一种
 
 AIKDNA = 生态/品牌  
 KDNA Protocol = 开放判断协议  
-KDNA Domain Package = 可携带的领域判断资产
+KDNA Domain Asset = 可携带的领域判断资产
 
 **协议优先。产品是参考实现。**
 
