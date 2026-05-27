@@ -56,22 +56,56 @@ function makeZip(entries) {
     const nameBuf = Buffer.from(name);
     const data = Buffer.from(value);
     const local = Buffer.concat([
-      u32(0x04034b50), u16(20), u16(0), u16(0), u16(0), u16(0), u32(0),
-      u32(data.length), u32(data.length), u16(nameBuf.length), u16(0), nameBuf, data,
+      u32(0x04034b50),
+      u16(20),
+      u16(0),
+      u16(0),
+      u16(0),
+      u16(0),
+      u32(0),
+      u32(data.length),
+      u32(data.length),
+      u16(nameBuf.length),
+      u16(0),
+      nameBuf,
+      data,
     ]);
     localParts.push(local);
-    centralParts.push(Buffer.concat([
-      u32(0x02014b50), u16(20), u16(20), u16(0), u16(0), u16(0), u16(0), u32(0),
-      u32(data.length), u32(data.length), u16(nameBuf.length), u16(0), u16(0), u16(0),
-      u16(0), u32(0), u32(offset), nameBuf,
-    ]));
+    centralParts.push(
+      Buffer.concat([
+        u32(0x02014b50),
+        u16(20),
+        u16(20),
+        u16(0),
+        u16(0),
+        u16(0),
+        u16(0),
+        u32(0),
+        u32(data.length),
+        u32(data.length),
+        u16(nameBuf.length),
+        u16(0),
+        u16(0),
+        u16(0),
+        u16(0),
+        u32(0),
+        u32(offset),
+        nameBuf,
+      ]),
+    );
     offset += local.length;
   }
   const central = Buffer.concat(centralParts);
   const local = Buffer.concat(localParts);
   const eocd = Buffer.concat([
-    u32(0x06054b50), u16(0), u16(0), u16(centralParts.length), u16(centralParts.length),
-    u32(central.length), u32(local.length), u16(0),
+    u32(0x06054b50),
+    u16(0),
+    u16(0),
+    u16(centralParts.length),
+    u16(centralParts.length),
+    u32(central.length),
+    u32(local.length),
+    u16(0),
   ]);
   return Buffer.concat([local, central, eocd]);
 }
@@ -108,15 +142,20 @@ function minimalEntries(overrides = {}) {
         {
           id: overrides.duplicateId ? 'same' : 'ax_minimal',
           one_sentence: 'Minimal domains must still express a concrete judgment.',
-          full_statement: 'Even the smallest KDNA asset must contain a concrete, inspectable judgment.',
+          full_statement:
+            'Even the smallest KDNA asset must contain a concrete, inspectable judgment.',
           why: 'Conformance needs a stable load/render target.',
         },
-        ...(overrides.duplicateId ? [{
-          id: 'same',
-          one_sentence: 'Duplicate IDs must fail.',
-          full_statement: 'Duplicate IDs must fail.',
-          why: 'References need stable identifiers.',
-        }] : []),
+        ...(overrides.duplicateId
+          ? [
+              {
+                id: 'same',
+                one_sentence: 'Duplicate IDs must fail.',
+                full_statement: 'Duplicate IDs must fail.',
+                why: 'References need stable identifiers.',
+              },
+            ]
+          : []),
       ],
       ontology: [],
       frameworks: [],
@@ -132,7 +171,9 @@ function minimalEntries(overrides = {}) {
       },
       terminology: { standard_terms: [], banned_terms: [] },
       misunderstandings: [],
-      self_check: [overrides.badSelfCheck ? 'Be accurate and helpful' : 'Did I preserve the asset boundary?'],
+      self_check: [
+        overrides.badSelfCheck ? 'Be accurate and helpful' : 'Did I preserve the asset boundary?',
+      ],
     }),
   };
 }
@@ -154,25 +195,40 @@ const fixtures = {
   full: writeAsset('valid-full-domain.kdna', {
     ...minimalEntries(),
     'KDNA_Scenarios.json': json({
-      meta: { domain: 'minimal', version: '0.1.0', created: '2026-05-27', purpose: 'optional fixture', load_condition: 'on signal' },
+      meta: {
+        domain: 'minimal',
+        version: '0.1.0',
+        created: '2026-05-27',
+        purpose: 'optional fixture',
+        load_condition: 'on signal',
+      },
       scenes: [],
     }),
   }),
   missingCore: writeAsset('invalid-missing-core.kdna', omit(minimalEntries(), 'KDNA_Core.json')),
-  missingPatterns: writeAsset('invalid-missing-patterns.kdna', omit(minimalEntries(), 'KDNA_Patterns.json')),
+  missingPatterns: writeAsset(
+    'invalid-missing-patterns.kdna',
+    omit(minimalEntries(), 'KDNA_Patterns.json'),
+  ),
   duplicateId: writeAsset('invalid-duplicate-id.kdna', minimalEntries({ duplicateId: true })),
   badMeta: writeAsset('invalid-bad-meta.kdna', minimalEntries({ badMeta: true })),
-  badSelfCheck: writeAsset('invalid-non-yes-no-self-check.kdna', minimalEntries({ badSelfCheck: true })),
+  badSelfCheck: writeAsset(
+    'invalid-non-yes-no-self-check.kdna',
+    minimalEntries({ badSelfCheck: true }),
+  ),
 };
 
 const inspect = await inspectKDNA(fixtures.minimal, { verify: true });
-const expectedInspect = JSON.parse(fs.readFileSync(path.join(root, 'fixtures', 'expected', 'minimal-inspect.json'), 'utf8'));
+const expectedInspect = JSON.parse(
+  fs.readFileSync(path.join(root, 'fixtures', 'expected', 'minimal-inspect.json'), 'utf8'),
+);
 assert.equal(inspect.name, expectedInspect.name);
 assert.equal(inspect.version, expectedInspect.version);
 assert.equal(inspect.access, expectedInspect.access);
 assert.equal(inspect.quality_badge, expectedInspect.quality_badge);
 assert.equal(inspect.risk_level, expectedInspect.risk_level);
-for (const entry of expectedInspect.required_entries) assert.ok(inspect.entries.includes(entry), `${entry} missing`);
+for (const entry of expectedInspect.required_entries)
+  assert.ok(inspect.entries.includes(entry), `${entry} missing`);
 
 const validation = await validateKDNA(fixtures.minimal);
 assert.equal(validation.ok, true, validation.errors.join('\n'));
@@ -182,8 +238,11 @@ assert.equal(loaded.domain.core.meta.domain, 'minimal');
 assert.ok(loaded.domain.scenarios);
 
 const prompt = await renderForAgent(fixtures.minimal);
-const expectedPrompt = fs.readFileSync(path.join(root, 'fixtures', 'expected', 'minimal-prompt-output.txt'), 'utf8').trim();
-for (const line of expectedPrompt.split('\n')) assert.match(prompt, new RegExp(line.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+const expectedPrompt = fs
+  .readFileSync(path.join(root, 'fixtures', 'expected', 'minimal-prompt-output.txt'), 'utf8')
+  .trim();
+for (const line of expectedPrompt.split('\n'))
+  assert.match(prompt, new RegExp(line.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 
 const digest = await verifyDigest(fixtures.minimal, inspect.asset_digest);
 assert.equal(digest.ok, true);
@@ -204,19 +263,23 @@ assert.match(weakSelfCheck.warnings.join('\n'), /yes\/no/i);
 
 fs.writeFileSync(
   path.join(os.tmpdir(), 'kdna-conformance-last-run.json'),
-  JSON.stringify({
-    ok: true,
-    profile,
-    certification_level: {
-      asset: 'KDNA Asset Compatible',
-      loader: 'KDNA Loader Compatible',
-      runtime: 'KDNA Runtime Compatible',
-      registry: 'KDNA Registry Compatible',
-      'asset-loader': 'KDNA Asset + Loader Compatible',
-    }[profile],
-    generated,
-    fixtures: Object.keys(fixtures),
-  }, null, 2),
+  JSON.stringify(
+    {
+      ok: true,
+      profile,
+      certification_level: {
+        asset: 'KDNA Asset Compatible',
+        loader: 'KDNA Loader Compatible',
+        runtime: 'KDNA Runtime Compatible',
+        registry: 'KDNA Registry Compatible',
+        'asset-loader': 'KDNA Asset + Loader Compatible',
+      }[profile],
+      generated,
+      fixtures: Object.keys(fixtures),
+    },
+    null,
+    2,
+  ),
 );
 
 console.log(`KDNA conformance suite passed (${profile})`);

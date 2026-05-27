@@ -52,11 +52,5 @@ jobs:
       - run: npm ci
       - name: Validate runtime contract examples
         run: npm run validate:runtime-contract
-      - name: Validate judgment-trace schema examples
-        run: |
-          npx ajv validate -s schema/judgment-trace.schema.json -d examples/app-runtime-contract/kdnachat-trace.json --errors=text
-          npx ajv validate -s schema/judgment-trace.schema.json -d examples/app-runtime-contract/kdnawork-trace.json --errors=text
-      - name: Validate feedback-event schema examples
-        run: |
-          npx ajv validate -s schema/feedback-event.schema.json -d examples/app-runtime-contract/kdnachat-feedback.json --errors=text
-          npx ajv validate -s schema/feedback-event.schema.json -d examples/app-runtime-contract/kdnawork-feedback.json --errors=text
+      - name: Validate app runtime schema examples
+        run: npm run validate:app-schemas
