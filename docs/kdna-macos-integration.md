@@ -49,7 +49,7 @@ Register a custom UTType for `.kdna` files:
 <array>
   <dict>
     <key>CFBundleTypeName</key>
-    <string>KDNA Domain Package</string>
+    <string>KDNA Domain Asset</string>
     <key>CFBundleTypeRole</key>
     <string>Viewer</string>
     <key>LSHandlerRank</key>

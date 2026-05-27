@@ -40,7 +40,7 @@ If you create a public fork of any KDNA repository, you must:
 
 4. **Do not redirect users from official KDNA resources.** Do not claim your fork is "the new KDNA," "the real KDNA," or "KDNA 2.0" without authorization.
 
-## Domain Packages
+## Domain Assets
 
 Creating KDNA domain assets (writing-kdna, code-review-kdna, etc.) is NOT a fork. Domain assets are the primary form of ecosystem contribution we encourage. See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to publish domains.
 

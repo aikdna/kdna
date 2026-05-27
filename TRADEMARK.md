@@ -59,7 +59,7 @@ You may **not** use the KDNA Marks in the following ways:
 - ❌ Using KDNA Marks as part of a paid product's primary branding
 - ❌ Implying KDNA endorsement of a commercial product or service
 
-### 4. Domain Package Naming
+### 4. Domain Asset Naming
 
 Domain assets that are compatible with KDNA should use clear naming:
 
