@@ -1,5 +1,8 @@
 # KDNA Demos
 
+- [`skill-plus-kdna-demo`](./skill-plus-kdna-demo) — shows how a workflow skill
+  changes when KDNA supplies domain judgment.
+
 Real agent loading records showing before/after judgment changes.
 
 ## Structure

@@ -5,6 +5,8 @@
 node_modules/
 npm-debug.log*
 *.tgz
+conformance/fixtures/generated/*
+!conformance/fixtures/generated/.gitkeep
 python-sdk/dist/
 python-sdk/kdna.egg-info/
 python-sdk/.venv/

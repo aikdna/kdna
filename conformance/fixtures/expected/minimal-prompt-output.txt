@@ -1,0 +1,4 @@
+## Domain Cognition (KDNA)
+Domain: minimal
+### Axioms
+Minimal domains must still express a concrete judgment.

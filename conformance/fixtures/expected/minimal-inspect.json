@@ -1,0 +1,12 @@
+{
+  "name": "@example/minimal",
+  "version": "0.1.0",
+  "access": "open",
+  "quality_badge": "untested",
+  "risk_level": "R0",
+  "required_entries": [
+    "KDNA_Core.json",
+    "KDNA_Patterns.json",
+    "kdna.json"
+  ]
+}

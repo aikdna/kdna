@@ -8,7 +8,53 @@ Core library for loading, validating, linting, rendering, composing, and directl
 npm install @aikdna/kdna-core
 ```
 
-## Usage
+## Preferred public API
+
+Third-party adapters should start with the stable asset-first API. These
+functions accept a `.kdna` file path, bytes, or an already opened asset and do
+not require persistent extraction.
+
+```js
+const {
+  inspectKDNA,
+  validateKDNA,
+  loadKDNA,
+  renderForAgent,
+  verifyDigest,
+  verifySignature,
+  matchDomain,
+  composeKDNA
+} = require('@aikdna/kdna-core');
+
+const info = await inspectKDNA('./writing.kdna');
+const validation = await validateKDNA('./writing.kdna');
+const loaded = await loadKDNA('./writing.kdna', { profile: 'compact' });
+const promptContext = await renderForAgent('./writing.kdna');
+
+await verifyDigest('./writing.kdna', info.asset_digest);
+await verifySignature('./writing.kdna');
+
+const matches = await matchDomain('Review this writing draft', ['./writing.kdna']);
+const composed = await composeKDNA(['./writing.kdna', './agent_safety.kdna'], {
+  input: 'Review this public release note for safety and writing quality'
+});
+```
+
+Stable entry points:
+
+| Function | Purpose |
+| --- | --- |
+| `openKDNA()` | Open a `.kdna` file or bytes as an immutable asset. |
+| `inspectKDNA()` | Return manifest, entries, access, quality, risk, and digests. |
+| `validateKDNA()` | Run asset, lint, schema, and cross-file validation. |
+| `loadKDNA()` | Load index/compact/scenario/full profiles directly from `.kdna`. |
+| `renderForAgent()` | Render a loaded asset into agent prompt context. |
+| `verifyDigest()` | Check whole-file `asset_digest`. |
+| `verifySignature()` | Require Ed25519 signature verification. |
+| `matchDomain()` | Rank candidate assets for a task string. |
+| `composeKDNA()` | Compose multiple assets with attribution and conflict reporting. |
+
+## Lower-level usage
 
 ```js
 const {

@@ -65,6 +65,15 @@ KDNA Protocol is open. KDNA CLI is reference tooling. KDNAChat is a reference cl
 | **Team lead** deploying shared judgment into workflows | [KDNAWork](https://github.com/aikdna/kdnawork) — workspaces, tasks, traces, team judgment |
 | **Tool builder** adding KDNA support to editors/IDEs | [kdna-vscode](https://github.com/aikdna/kdna-vscode) · [kdna-skills](https://github.com/aikdna/kdna-skills) |
 
+## Open Ecosystem Readiness
+
+External integrations should start with:
+
+- [`@aikdna/kdna-core`](./packages/kdna-core) for stable asset-first APIs.
+- [`conformance/`](./conformance) for loader and validator compatibility tests.
+- [`rfcs/`](./rfcs) for protocol evolution.
+- [`docs/open-ecosystem-readiness.md`](./docs/open-ecosystem-readiness.md) for the current ecosystem readiness contract.
+
 ## Why now
 
 > **Agents already have general judgment. What they still need is explicit, human-led domain judgment systems that can be inspected, governed, and reused.**
