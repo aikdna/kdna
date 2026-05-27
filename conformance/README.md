@@ -20,6 +20,32 @@ Run:
 npm run conformance
 ```
 
+Certification-oriented run:
+
+```bash
+npm run certify:asset-loader
+# or
+node conformance/run.mjs --profile asset
+node conformance/run.mjs --profile loader
+node conformance/run.mjs --profile runtime
+node conformance/run.mjs --profile registry
+```
+
+Profiles are intentionally explicit:
+
+| Profile | Claim |
+| --- | --- |
+| `asset` | Implementation can open and inspect canonical `.kdna` assets. |
+| `loader` | Implementation can validate, load, render, and digest-check assets. |
+| `asset-loader` | Combined asset + loader compatibility for SDKs and adapters. |
+| `runtime` | Runtime follows asset-first loading behavior. |
+| `registry` | Registry implementation preserves required metadata and trust checks. |
+
+Passing this suite is a technical compatibility signal. Public use of
+`Certified KDNA` marks still requires registry governance approval; see
+[`TRADEMARK.md`](../TRADEMARK.md) and
+[`docs/kdna-compatible-certification.md`](../docs/kdna-compatible-certification.md).
+
 The runner generates temporary `.kdna` fixtures under
 `conformance/fixtures/generated/` from in-file definitions. Generated assets are
 not source of truth; the test definitions and expected outputs are.
@@ -38,3 +64,6 @@ not source of truth; the test definitions and expected outputs are.
 
 External implementations should produce equivalent pass/fail behavior and
 compatible inspect/load output for the same fixtures.
+
+The last run writes a machine-readable summary to
+`$TMPDIR/kdna-conformance-last-run.json`.

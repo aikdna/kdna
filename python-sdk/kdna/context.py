@@ -10,7 +10,7 @@ def format_context(domain: Dict[str, Any]) -> str:
     Format a loaded KDNA domain into a string suitable for agent context.
 
     Args:
-        domain: Result from load_dev_source().
+        domain: Result from open_kdna() or load_dev_source().
 
     Returns:
         Formatted context string.

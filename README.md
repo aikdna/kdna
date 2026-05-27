@@ -69,8 +69,10 @@ KDNA Protocol is open. KDNA CLI is reference tooling. KDNAChat is a reference cl
 
 External integrations should start with:
 
+- [`docs/kdna-v1rc-standard-kit.md`](./docs/kdna-v1rc-standard-kit.md) for the canonical v1.0-rc implementer bundle.
 - [`@aikdna/kdna-core`](./packages/kdna-core) for stable asset-first APIs.
 - [`conformance/`](./conformance) for loader and validator compatibility tests.
+- [`docs/kdna-compatible-certification.md`](./docs/kdna-compatible-certification.md) for KDNA-compatible levels and certification boundaries.
 - [`rfcs/`](./rfcs) for protocol evolution.
 - [`docs/open-ecosystem-readiness.md`](./docs/open-ecosystem-readiness.md) for the current ecosystem readiness contract.
 

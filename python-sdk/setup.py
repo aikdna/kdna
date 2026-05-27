@@ -8,10 +8,10 @@ setup(
     version="0.4.0",
     author="Knowledge DNA",
     author_email="hello@aikdna.com",
-    description="KDNA Python SDK — Load KDNA dev source cognition for AI agents",
+    description="KDNA Python SDK — Load canonical .kdna cognition assets for AI agents",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/aikdna/KDNA",
+    url="https://github.com/aikdna/kdna",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",

@@ -84,7 +84,7 @@ registered KDNA domains.
 | `version` | Yes | Latest semantic version. |
 | `repo` | Yes | Source repository URL. |
 | `spec_version` | Yes | KDNA spec version the domain conforms to. |
-| `status` | Yes | Maturity: `experimental`, `basic`, `stable`, `pro`. |
+| `status` | Yes | Maturity: `draft`, `experimental`, `stable`, `deprecated`, `staging`. |
 | `access` | Yes | Access mode: `open`, `licensed`, `runtime`. |
 | `language` | Yes | Array of language codes. |
 | `author` | Yes | Creator identity. |
@@ -95,13 +95,13 @@ registered KDNA domains.
 | `file_count` | No | Number of KDNA JSON files in the domain. |
 | `created` | No | Creation date. |
 | `updated` | No | Last update date. |
-| `download_url` | No | Direct download URL for the package tarball. |
-| `checksum` | No | SHA-256 checksum of the package tarball. |
+| `asset_url` | Yes | Direct download URL for the canonical `.kdna` asset. |
+| `asset_digest` | Yes | Whole-file digest for the canonical `.kdna` asset. |
 | `signature` | No | Creator's cryptographic signature. |
 | `dependencies` | No | Array of KDNA domain IDs this domain depends on. |
 | `eval_score` | No | Current evaluation score (0-100). |
 | `test_count` | No | Number of test cases in evaluation. |
-| `quality_badge` | No | Current quality level: `experimental`, `basic`, `validated`, `expert-reviewed`, `production-ready`. |
+| `quality_badge` | No | Current quality level: `untested`, `tested`, `validated`, `expert_reviewed`, `production_ready`. |
 | `evaluation_history` | No | Array of historical evaluation records (see Section 3.1). |
 
 ### 3.1 Evaluation History
@@ -252,22 +252,22 @@ Pre-publish checks:
 
 ### Package Integrity
 
-- Every package tarball SHOULD have a SHA-256 checksum in the registry
-- The CLI SHOULD verify checksums after download
-- Signed domains SHOULD have a creator signature verified against a public key
+- Every canonical `.kdna` asset MUST publish an `asset_digest` in the registry.
+- The CLI MUST verify `asset_digest` after download.
+- Signed assets SHOULD have a creator signature verified against the scope public key.
 
 ### Trust Levels
 
 | Level | Criteria | Badge |
 |-------|----------|-------|
-| Official | Maintained by the KDNA core team | `official-basic`, `official-pro` |
-| Verified | Reviewed and approved by core team | `verified` |
-| Community | Submitted by community members | `community` |
-| Experimental | Early-stage, may change | `experimental` |
-| Basic | Core + Patterns only, minimal testing | `basic` |
-| Validated | Passed benchmark with measurable evidence | `validated` |
-| Expert-Reviewed | Reviewed by external domain expert | `expert-reviewed` |
-| Production-Ready | Used in production with outcome data | `production-ready` |
+| Official | Maintained by the KDNA core team | scope type `official` |
+| Verified | Signature and provenance verified | review status `verified` |
+| Community | Submitted by community members | review status `community` |
+| Untested | Schema validation only | `untested` |
+| Tested | >= 10 manually verified eval cases | `tested` |
+| Validated | >= 30 eval cases + benchmark report + raw outputs | `validated` |
+| Expert Reviewed | Validated evidence + external expert review | `expert_reviewed` |
+| Production Ready | Expert-reviewed + deployment evidence | `production_ready` |
 
 ### Future: DID-Based Verification
 

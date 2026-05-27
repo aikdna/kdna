@@ -122,7 +122,7 @@ Smoke test 不证明质量。它只捕捉接线错误：registry 错、术语缺
 }
 ```
 
-在证据门槛真实满足之前，不要声称 `validated`、`expert-reviewed` 或 `production-ready`。
+在证据门槛真实满足之前，不要声称 `validated`、`expert_reviewed` 或 `production_ready`。
 
 ## 9. 常见失败模式
 

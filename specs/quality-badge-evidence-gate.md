@@ -14,11 +14,11 @@ Define the evidence requirements for each quality badge level. A domain cannot a
 
 | Requirement | Threshold | Evidence |
 |-------------|-----------|----------|
-| Test cases exist | ≥ 1 eval case | `test_count` ≥ 1 in registry |
+| Test cases exist | ≥ 10 eval cases | `test_count` ≥ 10 in registry |
 | Test runner available | Runnable by third party | Eval script in domain repo |
 | Test specification | Anyone can understand what's being tested | test description + expected results per case |
 
-**Gate check**: `test_count >= 1` AND eval script is present in domain repo.
+**Gate check**: `test_count >= 10` AND eval script is present in domain repo.
 
 ### tested → validated
 
@@ -26,7 +26,7 @@ Define the evidence requirements for each quality badge level. A domain cannot a
 |-------------|-----------|----------|
 | Comparison report | No KDNA vs KDNA with raw outputs | Public URL to benchmark report |
 | Model version declared | Which model(s) were used | `evaluation_history[].metrics.model` |
-| Test count sufficient | ≥ 10 cases | `test_count` ≥ 10 |
+| Test count sufficient | ≥ 30 cases | `test_count` ≥ 30 |
 | Failure cases published | Not just cherry-picked wins | `failure_cases_published: true` in Asset Card |
 | Raw outputs accessible | Independent verification | `raw_outputs_url` in Asset Card |
 | Rubric defined | Scoring criteria are public | Rubric in benchmark design doc |
@@ -84,7 +84,7 @@ jobs:
 kdna badge promote @aikdna/writing --to validated
 
 Pre-flight checks:
-  ✅ test_count = 30 (>= 10)
+  ✅ test_count = 30 (>= 30)
   ✅ comparison_report_url = https://...
   ✅ raw_outputs_url = https://...
   ✅ failure_cases_published = true
@@ -142,7 +142,7 @@ A `benchmarks/` directory in each domain repo preserves:
 | Badge | Icon | Display |
 |-------|------|---------|
 | `untested` | ⚪ | No evidence available |
-| `tested` | 🟡 | Basic testing done (≥1 case) |
+| `tested` | 🟡 | Manual eval coverage (≥10 cases) |
 | `validated` | 🟢 | Benchmarked with public evidence |
 | `expert_reviewed` | 🔵 | Independently reviewed by domain expert |
 | `production_ready` | 🟣 | Used in production with outcome data |

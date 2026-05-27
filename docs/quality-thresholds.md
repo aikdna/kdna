@@ -6,16 +6,15 @@ Not every structurally valid KDNA domain deserves publication. This document def
 
 | Level | Badge | Meaning | Required Evidence |
 |-------|-------|---------|------------------|
-| 0. Draft | _(none)_ | Incomplete or untested | None |
-| 1. `experimental` | 🧪 | Structurally valid, untested | lint + validate pass |
-| 2. `basic` | 📋 | Core+Patterns only, minimal quality | experimental + all fields filled non-trivially |
-| 3. `validated` | ✓ | Measurably improves judgment | basic + benchmark with 4+ scenarios, public report, raw outputs |
-| 4. `expert-reviewed` | ⭐ | Independently verified | validated + 1+ external domain expert review, reviewer identity public |
-| 5. `production-ready` | 🏭 | Battle-tested | expert-reviewed + 30+ days real-world use, outcome data, no regressions |
+| 0. `untested` | None | Structurally valid, no judgment evidence | lint + validate pass |
+| 1. `tested` | >= 10 eval cases | Manually verified test coverage | evals + clear expected judgment |
+| 2. `validated` | >= 30 eval cases | Measurably improves judgment | benchmark report, rubric, raw outputs |
+| 3. `expert_reviewed` | >= 30 eval cases | Independently verified | validated + external domain expert review |
+| 4. `production_ready` | >= 30 eval cases | Battle-tested | expert_reviewed + 30+ days real-world use, outcome data, no regressions |
 
 ---
 
-## Level 0 → 1: Draft to Experimental
+## `untested` Gate: Structural Validity
 
 ### Gate: Structural Validity
 
@@ -39,9 +38,9 @@ Every field must be non-trivial. The following are REJECTED:
 
 ---
 
-## Level 1 → 2: Experimental to Basic
+## `tested` Gate: Manual Eval Coverage
 
-### Gate: Content Completeness
+### Gate: Content Completeness + 10 Eval Cases
 
 - [ ] At least 2 axioms, each with `one_sentence`, `full_statement`, `why`
 - [ ] At least 2 ontology concepts, each with `essence`, `boundary`, `trigger_signal`
@@ -52,10 +51,12 @@ Every field must be non-trivial. The following are REJECTED:
 - [ ] At least 3 self-checks (yes/no answerable)
 - [ ] Anti-vagueness: each field is domain-specific, not a truism
 - [ ] `kdna.json` manifest complete (no empty fields)
+- [ ] At least 10 eval cases with expected classifications or rubrics
+- [ ] Eval cases cover in-scope, boundary, failure, and out-of-scope inputs
 
 ---
 
-## Level 2 → 3: Basic to Validated
+## `validated` Gate: Measurable Judgment Improvement
 
 ### Gate: Measurable Judgment Improvement
 
@@ -63,7 +64,7 @@ Requires a benchmark that proves KDNA-loaded agents judge better than the same m
 
 #### Benchmark Requirements
 
-1. **At least 4 scenarios** covering different difficulty levels
+1. **At least 30 scenarios** covering different difficulty levels
 2. **Real model outputs** — not hand-written expected answers
 3. **Both conditions**: no-KDNA and with-KDNA outputs from the same model
 4. **Raw outputs preserved** in `tests/raw/` or `benchmarks/raw/`
@@ -88,7 +89,7 @@ Requires a benchmark that proves KDNA-loaded agents judge better than the same m
 
 ---
 
-## Level 3 → 4: Validated to Expert-Reviewed
+## `expert_reviewed` Gate: Independent Verification
 
 ### Gate: Independent Verification
 
@@ -114,7 +115,7 @@ Requires at least ONE external domain expert who:
 
 ---
 
-## Level 4 → 5: Expert-Reviewed to Production-Ready
+## `production_ready` Gate: Real-World Validation
 
 ### Gate: Real-World Validation
 
@@ -137,7 +138,7 @@ Before submitting any domain to the registry, verify:
 [ ] LICENSE file present and appropriate
 [ ] README.md explains what judgment this domain improves
 [ ] If claiming validated: benchmark report + raw outputs + eval script
-[ ] If claiming expert-reviewed: reviewer name + credentials + rubric scores
+[ ] If claiming expert_reviewed: reviewer name + credentials + rubric scores
 [ ] CHANGELOG entry for this version
 ```
 

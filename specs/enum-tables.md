@@ -25,10 +25,10 @@
 | Value | Min Eval Cases | Automated Scoring | Description |
 |-------|:---:|:---:|---|
 | `untested` | 0 | N/A | Passes schema validation only. No judgment quality evidence. |
-| `tested` | >= 3 | Manual verification | Has eval cases with manual verification. Requires `signature`. |
-| `validated` | >= 10 | `kdna verify --judgment` passes | Automated scoring passes. Requires `signature`. |
-| `expert_reviewed` | >= 10 | External expert sign-off | Reviewed by a domain expert. Requires `reviewed_by` and `signature`. |
-| `production_ready` | >= 10 | Deployment metrics | Validated + real-world deployment evidence. Requires `signature`. |
+| `tested` | >= 10 | Manual verification | Has eval cases with manual verification. Requires `signature`. |
+| `validated` | >= 30 | Automated scoring + raw outputs | Benchmark evidence passes. Requires `signature`. |
+| `expert_reviewed` | >= 30 | External expert sign-off | Reviewed by a domain expert. Requires `reviewed_by` and `signature`. |
+| `production_ready` | >= 30 | Deployment metrics | Expert-reviewed + real-world deployment evidence. Requires `signature`. |
 
 **Legacy values (retired):** `unreleased`
 

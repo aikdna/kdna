@@ -2,7 +2,7 @@
 """
 KDNA as MCP Resource — Conceptual Example
 
-Shows how KDNA dev source workspaces can be served as MCP Resources,
+Shows how canonical `.kdna` assets can be served as MCP Resources,
 making judgment cognition available to any MCP-compatible client.
 
 Architecture:
@@ -12,20 +12,21 @@ Architecture:
 """
 
 import json
+import os
 import sys
 from pathlib import Path
 
 # Add python-sdk to path if running without pip install
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "python-sdk"))
 
-from kdna import load_dev_source, format_context
+from kdna import open_kdna, inspect_kdna, format_context
 
 # ---------------------------------------------------------------------------
 # In-memory "MCP Server" — conceptual implementation
 # ---------------------------------------------------------------------------
 
 class KDNAResourceServer:
-    """Serves KDNA dev source workspaces as MCP-style resources.
+    """Serves `.kdna` assets as MCP-style resources.
 
     In a real implementation, this would use the official MCP SDK:
     https://github.com/modelcontextprotocol/python-sdk
@@ -33,24 +34,25 @@ class KDNAResourceServer:
     This conceptual version shows the data model and resource schema.
     """
 
-    def __init__(self, source_root: str):
-        self.source_root = Path(source_root)
+    def __init__(self, asset_root: str):
+        self.asset_root = Path(asset_root)
         self.loaded = {}
 
     def list_resources(self) -> list[dict]:
         """Return list of available KDNA resources."""
         resources = []
-        for source_dir in self.source_root.iterdir():
-            if source_dir.is_dir() and (source_dir / "KDNA_Core.json").exists():
-                domain = load_dev_source(str(source_dir), mode="minimum")
-                if domain:
-                    meta = domain.get("core", {}).get("meta", {})
-                    resources.append({
-                        "uri": f"kdna://{meta.get('domain', source_dir.name)}",
-                        "name": meta.get("domain", source_dir.name),
-                        "description": meta.get("purpose", ""),
-                        "mimeType": "application/json",
-                    })
+        if not self.asset_root.exists():
+            return resources
+
+        for asset_path in sorted(self.asset_root.glob("*.kdna")):
+            info = inspect_kdna(str(asset_path))
+            resources.append({
+                "uri": f"kdna://{info.get('name') or asset_path.stem}",
+                "name": info.get("name") or asset_path.stem,
+                "description": info.get("manifest", {}).get("description", ""),
+                "mimeType": "application/vnd.kdna.asset+json",
+                "asset_digest": info.get("asset_digest"),
+            })
         return resources
 
     def read_resource(self, uri: str) -> dict:
@@ -59,33 +61,29 @@ class KDNAResourceServer:
         Returns the formatted context suitable for injection into
         an agent's system prompt.
         """
-        # Parse URI: kdna://domain-name
-        domain_name = uri.replace("kdna://", "")
+        asset_name = uri.replace("kdna://", "")
 
-        source_dir = self.source_root / domain_name
-        if not source_dir.exists():
-            # Try fuzzy match
-            for d in self.source_root.iterdir():
-                if d.is_dir():
-                    domain = load_dev_source(str(d), mode="minimum")
-                    if domain:
-                        meta = domain.get("core", {}).get("meta", {})
-                        if meta.get("domain") == domain_name:
-                            source_dir = d
-                            break
+        asset_path = None
+        for candidate in self.asset_root.glob("*.kdna"):
+            info = inspect_kdna(str(candidate))
+            if info.get("name") == asset_name or candidate.stem == asset_name:
+                asset_path = candidate
+                break
 
-        domain = load_dev_source(str(source_dir), mode="all")
-        if not domain:
-            return {"error": f"Domain not found: {domain_name}"}
+        if not asset_path:
+            return {"error": f"Asset not found: {asset_name}"}
 
+        domain = open_kdna(str(asset_path), mode="all")
         context = format_context(domain)
+        info = domain.get("asset_info", {})
         meta = domain.get("core", {}).get("meta", {})
 
         return {
             "uri": uri,
-            "name": meta.get("domain", domain_name),
-            "version": meta.get("version", "?"),
-            "purpose": meta.get("purpose", ""),
+            "name": info.get("name") or meta.get("domain", asset_name),
+            "version": info.get("version") or meta.get("version", "?"),
+            "purpose": domain.get("manifest", {}).get("description") or meta.get("purpose", ""),
+            "asset_digest": info.get("asset_digest"),
             "context": context,
             "context_length": len(context),
             "axioms_count": len(domain.get("core", {}).get("axioms", [])),
@@ -137,15 +135,21 @@ def main():
     print("KDNA as MCP Resource — Server Demo")
     print("=" * 60)
 
-    server = KDNAResourceServer("../../examples")
+    asset_root = os.environ.get("KDNA_ASSET_ROOT", "./assets")
+    server = KDNAResourceServer(asset_root)
 
     print("\n--- Available Resources ---")
     resources = server.list_resources()
     for r in resources:
         print(f"  {r['uri']} — {r['description'][:60]}...")
 
-    print("\n--- Reading decision_state Resource ---")
-    resource = server.read_resource("kdna://decision_state")
+    if not resources:
+        print(f"  No .kdna assets found under {asset_root}")
+        print("  Set KDNA_ASSET_ROOT to a directory containing canonical assets.")
+        return
+
+    print("\n--- Reading First Resource ---")
+    resource = server.read_resource(resources[0]["uri"])
     print(f"  Name: {resource['name']}")
     print(f"  Version: {resource['version']}")
     print(f"  Context length: {resource['context_length']} chars")
@@ -158,16 +162,17 @@ def main():
     )
 
     print(f"\n--- Judgment Prompt (scenario: {scenario[:50]}...) ---")
-    judgment = server.get_judgment_prompt("kdna://decision_state", scenario)
+    judgment = server.get_judgment_prompt(resources[0]["uri"], scenario)
     print(f"  Prompt length: {judgment['prompt_length']} chars")
     print(f"  First 500 chars:\n{judgment['prompt'][:500]}...")
 
     print("\n--- JSON Resource Format ---")
     print(json.dumps({
-        "uri": "kdna://decision_state",
-        "mimeType": "application/json",
+        "uri": resource["uri"],
+        "mimeType": "application/vnd.kdna.asset+json",
         "context_length": resource['context_length'],
-        "schema_version": "0.3",
+        "asset_digest": resource["asset_digest"],
+        "schema_version": "1.0-rc",
     }, indent=2))
 
     print("\nDone.")

@@ -6,16 +6,15 @@
 
 | 级别 | 徽章 | 含义 | 要求证据 |
 |------|------|------|---------|
-| 0. 草稿 | _(无)_ | 不完整或未测试 | 无 |
-| 1. `experimental` | 🧪 | 结构有效，未测试 | lint + validate 通过 |
-| 2. `basic` | 📋 | 仅 Core+Patterns，最低质量 | experimental + 所有字段非空泛填充 |
-| 3. `validated` | ✓ | 可测量地改善判断 | basic + 4+ 场景 benchmark、公开报告、原始输出 |
-| 4. `expert-reviewed` | ⭐ | 独立验证 | validated + 1+ 外部领域专家审阅，审阅者身份公开 |
-| 5. `production-ready` | 🏭 | 实战验证 | expert-reviewed + 30+ 天真实使用、结果数据、无退化 |
+| 0 | `untested` | 结构有效，暂无判断证据 | lint + validate 通过 |
+| 1 | `tested` | 人工确认的测试覆盖 | ≥10 个 eval cases |
+| 2 | `validated` | 可测量地改善判断 | ≥30 个 eval cases + 公开 benchmark、rubric、原始输出 |
+| 3 | `expert_reviewed` | 独立验证 | validated 证据 + 外部领域专家审阅 |
+| 4 | `production_ready` | 实战验证 | expert_reviewed 证据 + 30+ 天真实使用、结果数据、无退化 |
 
 ## 反空洞门禁
 
-以下模式在 experimental 级别就被拒绝：
+以下模式在 `untested` 结构门禁中就会被拒绝：
 
 | 字段 | 拒绝模式 | 最低标准 |
 |------|---------|---------|
@@ -30,7 +29,7 @@
 
 要升级到 `validated`，需要一个 benchmark：
 
-- 至少 4 个场景
+- 至少 30 个场景
 - 真实模型输出（不是手写期望答案）
 - 两种条件：no-KDNA 和 with-KDNA
 - 原始输出保留

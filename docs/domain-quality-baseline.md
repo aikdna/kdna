@@ -30,10 +30,10 @@ KDNA domains advance through quality levels based on evidence:
 | Level | Badge | Evals Required | Additional |
 |-------|-------|:-------------:|------------|
 | 1 | `untested` | 0 | Structural validation only |
-| 2 | `tested` | ≥ 10 | Evals directory with test cases |
-| 3 | `validated` | ≥ 20 | Public eval report, raw outputs |
-| 4 | `expert_reviewed` | ≥ 30 | External domain expert review |
-| 5 | `production_ready` | ≥ 50 | 30+ days real-world usage |
+| 2 | `tested` | ≥ 10 | Evals directory with manually verified cases |
+| 3 | `validated` | ≥ 30 | Public benchmark report, rubric, raw outputs |
+| 4 | `expert_reviewed` | ≥ 30 | Validated evidence plus external domain expert review |
+| 5 | `production_ready` | ≥ 30 | Expert-reviewed evidence plus 30+ days real-world usage |
 
 ## Domain Checklist
 

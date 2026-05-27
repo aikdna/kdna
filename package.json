@@ -13,6 +13,7 @@
     "validate:runtime-contract": "node scripts/validate-runtime-contract.js",
     "test": "npm --workspace @aikdna/kdna-core test",
     "conformance": "node conformance/run.mjs",
+    "certify:asset-loader": "node conformance/run.mjs --profile asset-loader",
     "pretest": "npm install --ignore-scripts"
   },
   "license": "Apache-2.0",

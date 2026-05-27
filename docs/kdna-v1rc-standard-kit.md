@@ -1,0 +1,52 @@
+# KDNA v1.0-rc Standard Kit
+
+KDNA v1.0-rc is the asset-first release candidate for the open judgment asset
+layer. The goal of this kit is to give implementers one canonical entry point
+instead of forcing them to infer the standard from scattered repository files.
+
+## Canonical Documents
+
+| Area | Document |
+| --- | --- |
+| Protocol overview | [`SPEC.md`](../SPEC.md) |
+| Asset format | [`rfcs/RFC-0001-kdna-asset-format.md`](../rfcs/RFC-0001-kdna-asset-format.md) |
+| Registry trust model | [`rfcs/RFC-0002-registry-trust-model.md`](../rfcs/RFC-0002-registry-trust-model.md) |
+| Public registry trust operations | [`kdna-registry/TRUST_MODEL.md`](https://github.com/aikdna/kdna-registry/blob/main/TRUST_MODEL.md) |
+| Quality badges | [`rfcs/RFC-0003-domain-quality-badges.md`](../rfcs/RFC-0003-domain-quality-badges.md), [`docs/domain-quality-baseline.md`](./domain-quality-baseline.md) |
+| Runtime loading contract | [`rfcs/RFC-0004-runtime-loading-contract.md`](../rfcs/RFC-0004-runtime-loading-contract.md), [`docs/app-runtime-contract.md`](./app-runtime-contract.md) |
+| Composition policy | [`rfcs/RFC-0005-composition-policy.md`](../rfcs/RFC-0005-composition-policy.md) |
+| Conformance | [`conformance/README.md`](../conformance/README.md) |
+| Compatibility policy | [`COMPATIBILITY.md`](../COMPATIBILITY.md) |
+| Trademark and naming | [`TRADEMARK.md`](../TRADEMARK.md) |
+| Certification levels | [`docs/kdna-compatible-certification.md`](./kdna-compatible-certification.md) |
+| Governance | [`docs/GOVERNANCE.md`](./GOVERNANCE.md) |
+
+## Normative Implementation Rules
+
+1. `.kdna` is the canonical user-facing cognition asset.
+2. Source directories are dev-only authoring workspaces.
+3. Installed assets are stored as immutable packages, not persistent unpacked
+   domain directories.
+4. Loaders must read `.kdna` directly or use hidden, rebuildable caches.
+5. Installers must enforce `asset_digest`, yanked state, and revocation state.
+6. Trust-aware runtimes must verify signatures against registry scope keys.
+7. Licensed encrypted entries must be decrypted in memory.
+8. Composition must preserve attribution and surface conflicts.
+9. Quality badges must follow the official badge names and evidence thresholds.
+10. KDNA-compatible claims must pass the relevant conformance profile.
+
+## Implementer Path
+
+1. Build an asset reader that opens `.kdna` without persistent extraction.
+2. Implement inspect, validate, load, render, digest verification, and optional
+   signature verification.
+3. Run `npm run certify:asset-loader` or the matching profile command.
+4. Publish a compatibility report and known deviations.
+5. Request certification through the governance process if official marks are
+   needed.
+
+## Current Release-Candidate Boundary
+
+This kit defines the open protocol and compatibility surface. It does not claim
+that every official domain is validated or production-ready. Domain quality is
+governed separately by the registry badge evidence gates.

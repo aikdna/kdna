@@ -93,7 +93,7 @@ identity card of the domain.
 | `access` | Yes | Access mode: `"open"`, `"licensed"`, `"runtime"`. |
 | `author` | Yes | Creator identity object. |
 | `license` | Yes | License declaration object. |
-| `status` | No | Maturity: `"experimental"`, `"basic"`, `"stable"`, `"pro"`. |
+| `status` | No | Maturity: `"draft"`, `"experimental"`, `"stable"`, `"deprecated"`, `"staging"`. |
 | `registry` | No | Registry metadata for discovery. |
 | `compatibility` | No | Agent compatibility info. |
 | `dependencies` | No | Array of KDNA domain dependencies. |
@@ -102,10 +102,14 @@ identity card of the domain.
 
 | Value | Meaning |
 |-------|---------|
+| `draft` | Early work in progress. Not ready for use. |
 | `experimental` | Work in progress. May change significantly. |
-| `basic` | Complete minimal domain. Core + Patterns validated. |
 | `stable` | Full domain with cases, tests, and documentation. |
-| `pro` | Commercial-grade domain with premium features. |
+| `deprecated` | Superseded or no longer recommended. |
+| `staging` | Non-public pre-release for commercial or private review. |
+
+Legacy values `basic` and `pro` are retired. Use `quality_badge` for evidence
+level and `access` for commercial/runtime mode.
 
 ## 4. File Requirements
 

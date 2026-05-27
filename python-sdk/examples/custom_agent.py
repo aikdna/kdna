@@ -3,7 +3,7 @@
 Custom Agent with KDNA — No framework required.
 
 Shows how to integrate KDNA into any Python agent:
-1. Load KDNA dev source cognition
+1. Load a canonical .kdna judgment asset
 2. Inject into system prompt
 3. Run judgment on user input
 """
@@ -16,14 +16,14 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from kdna import load_dev_source, format_context, classify_input
+from kdna import open_kdna, format_context, classify_input
 
 
 class KDNAAgent:
-    """A minimal agent that uses KDNA domain cognition for judgment."""
+    """A minimal agent that uses a `.kdna` asset for judgment."""
 
-    def __init__(self, source_dir: str):
-        self.domain = load_dev_source(source_dir, mode="all")
+    def __init__(self, asset_path: str):
+        self.domain = open_kdna(asset_path, mode="all")
         self.context = format_context(self.domain) if self.domain else ""
         self.history = []
 
@@ -156,10 +156,11 @@ def main():
     print("KDNA Custom Agent Demo")
     print("=" * 60)
 
-    # Initialize agent with decision_state domain
-    agent = KDNAAgent("../../examples/decision_state")
+    # Set KDNA_ASSET to a local .kdna file, for example ./decision_state.kdna.
+    asset_path = os.environ.get("KDNA_ASSET", "./decision_state.kdna")
+    agent = KDNAAgent(asset_path)
 
-    print(f"\nLoaded domain: decision_state")
+    print(f"\nLoaded asset: {asset_path}")
     print(f"Context size: {len(agent.context)} chars")
     print()
 

@@ -85,9 +85,9 @@ For each domain entry with a `signature`:
 
 | Rule | Check |
 |------|-------|
-| `quality_badge: tested` → `test_count >= 1` | Error if test_count = 0 |
-| `quality_badge: validated` → `test_count >= 10` | Error if test_count < 10 |
-| `quality_badge: expert_reviewed` → reviewer field present | Warning if missing |
+| `quality_badge: tested` → `test_count >= 10` | Error if test_count < 10 |
+| `quality_badge: validated` → `test_count >= 30` | Error if test_count < 30 |
+| `quality_badge: expert_reviewed` → `test_count >= 30` and reviewer field present | Warning if reviewer evidence missing |
 | `quality_badge: production_ready` → `test_count >= 30` AND status = `stable` | Error if not met |
 | `status: stable` + `quality_badge: untested` | Warning — shouldn't be stable if untested |
 
@@ -127,8 +127,8 @@ for (const domain of REGISTRY.domains) {
   }
 
   // Quality badge
-  if (domain.quality_badge === 'tested' && domain.test_count < 1) {
-    error(`${domain.name}: tested badge requires test_count >= 1`);
+  if (domain.quality_badge === 'tested' && domain.test_count < 10) {
+    error(`${domain.name}: tested badge requires test_count >= 10`);
   }
 
   // Deprecation

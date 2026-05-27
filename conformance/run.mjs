@@ -14,6 +14,24 @@ const {
   verifyDigest,
 } = require('../packages/kdna-core/src');
 
+const args = process.argv.slice(2);
+function argValue(name, fallback = null) {
+  const prefixed = `${name}=`;
+  const inline = args.find((arg) => arg.startsWith(prefixed));
+  if (inline) return inline.slice(prefixed.length);
+  const index = args.indexOf(name);
+  if (index >= 0 && args[index + 1]) return args[index + 1];
+  return fallback;
+}
+
+const profile = argValue('--profile', 'asset-loader');
+const allowedProfiles = new Set(['asset', 'loader', 'runtime', 'registry', 'asset-loader']);
+if (!allowedProfiles.has(profile)) {
+  console.error(`Unknown conformance profile: ${profile}`);
+  console.error(`Allowed profiles: ${Array.from(allowedProfiles).join(', ')}`);
+  process.exit(2);
+}
+
 const root = path.dirname(fileURLToPath(import.meta.url));
 const generated = path.join(root, 'fixtures', 'generated');
 fs.mkdirSync(generated, { recursive: true });
@@ -186,7 +204,19 @@ assert.match(weakSelfCheck.warnings.join('\n'), /yes\/no/i);
 
 fs.writeFileSync(
   path.join(os.tmpdir(), 'kdna-conformance-last-run.json'),
-  JSON.stringify({ ok: true, generated, fixtures: Object.keys(fixtures) }, null, 2),
+  JSON.stringify({
+    ok: true,
+    profile,
+    certification_level: {
+      asset: 'KDNA Asset Compatible',
+      loader: 'KDNA Loader Compatible',
+      runtime: 'KDNA Runtime Compatible',
+      registry: 'KDNA Registry Compatible',
+      'asset-loader': 'KDNA Asset + Loader Compatible',
+    }[profile],
+    generated,
+    fixtures: Object.keys(fixtures),
+  }, null, 2),
 );
 
-console.log('KDNA conformance suite passed');
+console.log(`KDNA conformance suite passed (${profile})`);

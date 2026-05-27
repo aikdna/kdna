@@ -1,10 +1,10 @@
 # KDNA Python SDK
 
-Load KDNA cognition assets in Python.
+Load canonical KDNA `.kdna` cognition assets in Python.
 
-This SDK currently exposes a developer source-tree loader. Canonical installed
-assets are `.kdna` files; production runtimes should prefer the CLI/core
-asset reader path until native Python `.kdna` asset loading is added.
+The SDK is asset-first: public integration code should open `.kdna` files
+directly. Dev source directories are supported only for authoring and debugging
+tools.
 
 ## Install
 
@@ -15,10 +15,11 @@ pip install kdna
 ## Quickstart
 
 ```python
-from kdna import load_dev_source, format_context
+from kdna import open_kdna, inspect_kdna, verify_digest, format_context
 
-# Load a dev source workspace
-domain = load_dev_source("./sales-source")
+# Inspect and load a canonical asset without persistent extraction
+info = inspect_kdna("./writing.kdna")
+domain = open_kdna("./writing.kdna", mode="all")
 
 # Format for agent context
 context = format_context(domain)
@@ -29,22 +30,22 @@ print(context)
 
 ```python
 # Minimum: Core + Patterns only
-domain = load_dev_source("./sales-source", mode="minimum")
+domain = open_kdna("./writing.kdna", mode="minimum")
 
 # All: load all 6 files
-domain = load_dev_source("./sales-source", mode="all")
+domain = open_kdna("./writing.kdna", mode="all")
 
 # Auto: load based on input signals
-domain = load_dev_source("./sales-source", mode="auto")
+domain = open_kdna("./writing.kdna", mode="auto")
 ```
 
 ## Use with LLM
 
 ```python
-from kdna import load_dev_source, format_context
+from kdna import open_kdna, format_context
 import openai
 
-domain = load_dev_source("./sales-source")
+domain = open_kdna("./writing.kdna")
 context = format_context(domain)
 
 response = openai.ChatCompletion.create(
@@ -58,9 +59,26 @@ response = openai.ChatCompletion.create(
 
 ## API
 
+### `open_kdna(asset_path, mode="minimum")`
+
+Open a canonical `.kdna` asset directly.
+
+- `asset_path`: Path to the `.kdna` file
+- `mode`: `"minimum"`, `"all"`, or `"auto"`
+- Returns: `dict` with `manifest`, `core`, `patterns`, optional entries, and `asset_info`
+
+### `inspect_kdna(asset_path)`
+
+Inspect manifest metadata, internal entries, required-entry status, and
+whole-file `asset_digest` without extracting the asset.
+
+### `verify_digest(asset_path, expected_digest)`
+
+Verify a `.kdna` asset against a `sha256:<hex>` digest.
+
 ### `load_dev_source(source_dir, mode="minimum")`
 
-Load a non-canonical KDNA dev source workspace.
+Developer-only helper for non-canonical source workspaces.
 
 - `source_dir`: Path to the dev source folder
 - `mode`: `"minimum"`, `"all"`, or `"auto"`
@@ -70,7 +88,7 @@ Load a non-canonical KDNA dev source workspace.
 
 Format a loaded domain into agent-readable text.
 
-- `domain`: Result from `load_dev_source()`
+- `domain`: Result from `open_kdna()` or `load_dev_source()`
 - Returns: Formatted context string
 
 ### `classify_input(text)`

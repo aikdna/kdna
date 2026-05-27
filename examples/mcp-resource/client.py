@@ -7,6 +7,7 @@ would consume KDNA resources to enrich its judgment layer.
 """
 
 import sys
+import os
 from pathlib import Path
 
 # Add python-sdk to path if running without pip install
@@ -21,16 +22,21 @@ def main():
     print("=" * 60)
 
     # Connect to "server" (in real use, this would be an MCP stdio/sse connection)
-    server = KDNAResourceServer("../../examples")
+    asset_root = os.environ.get("KDNA_ASSET_ROOT", "./assets")
+    server = KDNAResourceServer(asset_root)
 
-    # Discover available KDNA domains
+    # Discover available KDNA assets
     print("\n--- Resource Discovery ---")
     resources = server.list_resources()
     for r in resources:
         print(f"  Found: {r['uri']}")
 
-    # Select decision_state domain
-    uri = "kdna://decision_state"
+    if not resources:
+        print(f"  No .kdna assets found under {asset_root}")
+        return
+
+    # Select first available asset
+    uri = resources[0]["uri"]
     print(f"\n--- Loading Resource: {uri} ---")
     resource = server.read_resource(uri)
     print(f"  Loaded: {resource['name']} v{resource['version']}")
@@ -60,7 +66,7 @@ In a real MCP setup:
 
 1. The MCP server (this script) runs as a separate process
 2. The client (Claude Desktop / Cursor / custom agent) connects via stdio or SSE
-3. The client calls `resources/list` to discover available KDNA domains
+3. The client calls `resources/list` to discover available KDNA assets
 4. The client calls `resources/read` to fetch the formatted context
 5. The client injects the context into the LLM system prompt
 6. The LLM now has KDNA-loaded judgment for all subsequent queries

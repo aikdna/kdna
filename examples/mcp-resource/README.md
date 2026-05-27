@@ -1,6 +1,8 @@
 # KDNA as MCP Resource Example
 
-Shows how KDNA dev source workspaces can be served as MCP (Model Context Protocol) Resources, making judgment cognition available to any MCP-compatible client.
+Shows how canonical `.kdna` assets can be served as MCP (Model Context
+Protocol) Resources, making judgment cognition available to any MCP-compatible
+client without exposing internal JSON entries.
 
 ## Core Principle
 
@@ -29,14 +31,14 @@ Shows how KDNA dev source workspaces can be served as MCP (Model Context Protoco
 
 ## Files
 
-- `server.py` — Conceptual MCP resource server exposing KDNA domains
+- `server.py` — Conceptual MCP resource server exposing `.kdna` assets
 - `client.py` — Client demonstrating resource discovery and consumption
 
 ## Run
 
 ```bash
-# Server demo (lists resources, reads domain, builds judgment prompts)
-python server.py
+# Server demo (lists resources, reads asset, builds judgment prompts)
+KDNA_ASSET_ROOT=./assets python server.py
 
 # Client demo (shows integration pattern)
 python client.py
@@ -56,7 +58,7 @@ python client.py
 ```python
 # 1. Discover available KDNA resources
 resources = mcp_client.list_resources()
-# -> [kdna://decision_state, kdna://sales, ...]
+# -> [kdna://@aikdna/writing, kdna://@aikdna/agent_safety, ...]
 
 # 2. Read the resource
 resource = mcp_client.read_resource("kdna://decision_state")

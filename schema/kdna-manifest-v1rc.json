@@ -106,7 +106,7 @@
     "quality_badge": {
       "type": "string",
       "enum": ["untested", "tested", "validated", "expert_reviewed", "production_ready"],
-      "description": "Evidence level for judgment quality. untested = schema validation only. tested = has eval cases with manual verification (>= 3). validated = >= 10 eval cases with automated scoring. expert_reviewed = externally reviewed by domain expert. production_ready = validated + real-world deployment evidence."
+      "description": "Evidence level for judgment quality. untested = schema validation only. tested = >= 10 eval cases with manual verification. validated = >= 30 eval cases with automated scoring and raw outputs. expert_reviewed = validated evidence plus external domain expert review. production_ready = expert_reviewed evidence plus real-world deployment evidence."
     },
 
     "access": {
