@@ -11,6 +11,7 @@
     "lint:examples": "echo 'Use npx kdna dev validate on individual domain repos'",
     "validate:examples": "echo 'Use npx kdna dev validate on individual domain repos'",
     "validate:runtime-contract": "node scripts/validate-runtime-contract.js",
+    "validate:app-schemas": "node scripts/validate-app-schemas.js",
     "test": "npm --workspace @aikdna/kdna-core test",
     "conformance": "node conformance/run.mjs",
     "certify:asset-loader": "node conformance/run.mjs --profile asset-loader",
@@ -31,6 +32,8 @@
   "devDependencies": {
     "@aikdna/kdna-cli": "^0.18.0",
     "@eslint/js": "^9.39.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
     "eslint": "^9.39.0",
     "prettier": "^3.8.3"
   }

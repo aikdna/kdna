@@ -31,5 +31,5 @@ jobs:
         run: |
           npm install -g @aikdna/kdna-cli
           kdna install writing --yes
-          kdna verify @aikdna/writing
+          kdna verify @aikdna/writing --trust
           kdna list

@@ -35,13 +35,27 @@ const DOMAIN_DIRS = [
 const CANONICAL_SPEC = '1.0-rc';
 
 const REQUIRED_FIELDS = [
-  'kdna_spec', 'name', 'version', 'judgment_version',
-  'description', 'author', 'license', 'status',
-  'quality_badge', 'access', 'language',
+  'kdna_spec',
+  'name',
+  'version',
+  'judgment_version',
+  'description',
+  'author',
+  'license',
+  'status',
+  'quality_badge',
+  'access',
+  'language',
 ];
 
 const VALID_STATUS = new Set(['draft', 'experimental', 'stable', 'deprecated', 'staging']);
-const VALID_BADGE = new Set(['untested', 'tested', 'validated', 'expert_reviewed', 'production_ready']);
+const VALID_BADGE = new Set([
+  'untested',
+  'tested',
+  'validated',
+  'expert_reviewed',
+  'production_ready',
+]);
 const VALID_ACCESS = new Set(['open', 'licensed', 'runtime']);
 const VALID_RISK = new Set(['R0', 'R1', 'R2', 'R3']);
 const VALID_I18N = new Set(['L0', 'L1', 'L2', 'L3']);
@@ -131,16 +145,22 @@ function migrateManifest(original, domainName) {
     errors.push(`INVALID status: "${migrated.status}". Valid: ${[...VALID_STATUS].join(', ')}`);
   }
   if (migrated.quality_badge && !VALID_BADGE.has(migrated.quality_badge)) {
-    errors.push(`INVALID quality_badge: "${migrated.quality_badge}". Valid: ${[...VALID_BADGE].join(', ')}`);
+    errors.push(
+      `INVALID quality_badge: "${migrated.quality_badge}". Valid: ${[...VALID_BADGE].join(', ')}`,
+    );
   }
   if (migrated.access && !VALID_ACCESS.has(migrated.access)) {
     errors.push(`INVALID access: "${migrated.access}". Valid: ${[...VALID_ACCESS].join(', ')}`);
   }
   if (migrated.risk_level && !VALID_RISK.has(migrated.risk_level)) {
-    warnings.push(`NON-STANDARD risk_level: "${migrated.risk_level}". Valid: ${[...VALID_RISK].join(', ')}`);
+    warnings.push(
+      `NON-STANDARD risk_level: "${migrated.risk_level}". Valid: ${[...VALID_RISK].join(', ')}`,
+    );
   }
   if (migrated.i18n_level && !VALID_I18N.has(migrated.i18n_level)) {
-    warnings.push(`NON-STANDARD i18n_level: "${migrated.i18n_level}". Valid: ${[...VALID_I18N].join(', ')}`);
+    warnings.push(
+      `NON-STANDARD i18n_level: "${migrated.i18n_level}". Valid: ${[...VALID_I18N].join(', ')}`,
+    );
   }
 
   // 7. Validate name format
@@ -154,7 +174,11 @@ function migrateManifest(original, domainName) {
   }
 
   // 9. Validate pubkey format if present
-  if (migrated.author && migrated.author.pubkey && !/^ed25519:[0-9a-f]{64}$/.test(migrated.author.pubkey)) {
+  if (
+    migrated.author &&
+    migrated.author.pubkey &&
+    !/^ed25519:[0-9a-f]{64}$/.test(migrated.author.pubkey)
+  ) {
     warnings.push(`NON-STANDARD author.pubkey format. Expected ed25519:<64 hex chars>.`);
   }
 
@@ -232,7 +256,9 @@ for (const dir of targets) {
 }
 
 console.log(`\n──────────────────────────────────────────`);
-console.log(`Total: ${totalChanges} changes, ${totalErrors} errors across ${targets.length} domains`);
+console.log(
+  `Total: ${totalChanges} changes, ${totalErrors} errors across ${targets.length} domains`,
+);
 
 if (!write) {
   console.log(`\nRun with --write to apply changes.`);
