@@ -1,0 +1,41 @@
+{
+  "name": "@aikdna/kdna",
+  "version": "0.8.2",
+  "description": "KDNA toolkit compatibility package. Use @aikdna/kdna-cli for the canonical CLI.",
+  "type": "commonjs",
+  "bin": {
+    "kdna": "bin/kdna.js",
+    "kdna-lint": "bin/kdna-lint.js",
+    "kdna-validate": "bin/kdna-validate.js"
+  },
+  "files": [
+    "bin/",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node bin/kdna.js --help >/dev/null && node bin/kdna-lint.js --help >/dev/null && node bin/kdna-validate.js --help >/dev/null"
+  },
+  "keywords": [
+    "kdna",
+    "kdna-cli",
+    "ai-agent",
+    "domain-judgment",
+    "judgment-protocol"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aikdna/kdna.git",
+    "directory": "packages/kdna"
+  },
+  "homepage": "https://aikdna.com",
+  "bugs": {
+    "url": "https://github.com/aikdna/kdna/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@aikdna/kdna-cli": "^0.19.0"
+  }
+}
