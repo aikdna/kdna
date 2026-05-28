@@ -1,8 +1,11 @@
-name: Registry Validate
+name: Protocol Fixture Registry Validate
 
 on:
   pull_request:
     paths: ['registry/domains.json']
+  push:
+    branches: [main]
+    paths: ['registry/domains.json', 'schema/kdna-manifest-v1rc.json', 'scripts/validate-protocol-fixtures.js']
 
 jobs:
   validate:
@@ -12,40 +15,5 @@ jobs:
       - uses: actions/setup-node@v6
         with: { node-version: '22' }
 
-      - run: npm install
-
-      - name: Validate registry JSON
-        run: |
-          node -e "
-          const fs = require('fs');
-          const data = JSON.parse(fs.readFileSync('registry/domains.json', 'utf8'));
-          const domains = Array.isArray(data) ? data : data.domains;
-          if (!domains || !domains.length) { console.error('No domains'); process.exit(1); }
-          const ids = new Set();
-          for (const d of domains) {
-            if (!d.id) { console.error('Missing id'); process.exit(1); }
-            if (ids.has(d.id)) { console.error('Duplicate id: ' + d.id); process.exit(1); }
-            ids.add(d.id);
-            if (!d.repo) { console.error(d.id + ': missing repo'); process.exit(1); }
-            if (!d.status) { console.error(d.id + ': missing status'); process.exit(1); }
-            if (!['experimental','basic','stable','pro'].includes(d.status)) {
-              console.error(d.id + ': invalid status: ' + d.status);
-              process.exit(1);
-            }
-          }
-          console.log('Registry valid: ' + domains.length + ' domains, all IDs unique');
-          "
-
-      - name: Check spec_version consistency
-        run: |
-          node -e "
-          const fs = require('fs');
-          const data = JSON.parse(fs.readFileSync('registry/domains.json', 'utf8'));
-          const domains = Array.isArray(data) ? data : data.domains;
-          for (const d of domains) {
-            if (d.spec_version && d.spec_version !== '0.2') {
-              console.warn(d.id + ': spec_version ' + d.spec_version + ' may need update');
-            }
-          }
-          console.log('spec_version check complete');
-          "
+      - run: npm ci
+      - run: npm run validate:protocol-fixtures

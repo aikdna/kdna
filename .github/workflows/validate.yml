@@ -41,6 +41,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm test
+      - run: npm run conformance
 
   contract:
     runs-on: ubuntu-latest
@@ -54,3 +55,5 @@ jobs:
         run: npm run validate:runtime-contract
       - name: Validate app runtime schema examples
         run: npm run validate:app-schemas
+      - name: Validate protocol fixtures
+        run: npm run validate:protocol-fixtures

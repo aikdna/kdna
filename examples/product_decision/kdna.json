@@ -1,17 +1,11 @@
 {
-  "kdna_spec": "1.0-rc",
+  "format": "kdna",
+  "format_version": "1.0",
+  "spec_version": "1.0-rc",
   "name": "@aikdna/product_decision",
   "version": "0.4.0",
   "judgment_version": "0.4.0",
-  "language": "en",
-  "languages": [
-    "en"
-  ],
-  "created": "2026-05-12",
-  "updated": "2026-05-17",
-  "description": "\u5b9a\u4e49\u4ea7\u54c1\u51b3\u7b56\u9886\u57df\u7684\u6838\u5fc3\u8ba4\u77e5\uff1a\u5982\u4f55\u5728\u4e0d\u5b8c\u5907\u4fe1\u606f\u4e0b\u505a\u51fa\u53ef\u9006\u3001\u53ef\u9a8c\u8bc1\u7684\u4ea7\u54c1\u5224\u65ad\u3002",
-  "keywords": [],
-  "access": "open",
+  "description": "定义产品决策领域的核心认知：如何在不完备信息下做出可逆、可验证的产品判断。",
   "author": {
     "name": "",
     "id": ""
@@ -24,7 +18,15 @@
     "allow_training": false
   },
   "status": "experimental",
-  "registry": {},
+  "quality_badge": "untested",
+  "access": "open",
+  "languages": [
+    "en"
+  ],
+  "default_language": "en",
+  "keywords": [],
   "file_count": 6,
-  "spec_version": "1.0-rc"
+  "created": "2026-05-12",
+  "updated": "2026-05-17",
+  "registry": {}
 }

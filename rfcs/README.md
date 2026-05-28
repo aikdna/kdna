@@ -11,6 +11,7 @@ Current initial RFC set:
 - [RFC-0003: Domain Quality Badges](./RFC-0003-domain-quality-badges.md)
 - [RFC-0004: Runtime Loading Contract](./RFC-0004-runtime-loading-contract.md)
 - [RFC-0005: Composition Policy](./RFC-0005-composition-policy.md)
+- [RFC-0006: Provenance, Signing, and Transparency](./RFC-0006-provenance-signing-transparency.md)
 
 ## RFC States
 

@@ -1,14 +1,25 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aikdna.com/schema/kdna-file.schema.json",
-  "title": "KDNA Single-File Format",
-  "description": "Schema for the .kdna single-file distribution format. Combines all KDNA domain files into one transportable file.",
+  "title": "KDNA Legacy Merged Single-File Format (Rejected)",
+  "description": "Legacy v0.x merged JSON/YAML single-file format. This format is not valid for KDNA v1.0-rc; conforming v1.0 tools MUST reject it and use the ZIP .kdna container with root mimetype and kdna.json.",
   "type": "object",
-  "required": ["kdna_spec", "meta", "core", "patterns"],
+  "not": {},
+  "required": ["format", "format_version", "spec_version", "meta", "core", "patterns"],
   "properties": {
-    "kdna_spec": {
+    "format": {
       "type": "string",
-      "description": "KDNA spec version this file conforms to (e.g., '0.4')."
+      "const": "kdna",
+      "description": "KDNA format marker."
+    },
+    "format_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "KDNA single-file manifest format version."
+    },
+    "spec_version": {
+      "type": "string",
+      "description": "KDNA spec version this file conforms to."
     },
     "meta": {
       "type": "object",
@@ -23,7 +34,6 @@
         "updated": { "type": "string", "description": "ISO date of last update." },
         "purpose": { "type": "string", "description": "What judgment this domain improves." },
         "description": { "type": "string" },
-        "language": { "type": "string" },
         "languages": { "type": "array", "items": { "type": "string" } }
       },
       "additionalProperties": true

@@ -239,14 +239,17 @@ A `.kdna` asset MUST include a `kdna.json` manifest with the following REQUIRED 
 
 ```json
 {
-  "kdna_spec": "1.0-rc",
+  "format": "kdna",
+  "format_version": "1.0",
+  "spec_version": "1.0-rc",
   "name": "<domain-id>",
   "version": "<semver>",
   "judgment_version": "<semver>",
   "status": "draft | experimental | stable | deprecated",
   "quality_badge": "untested | tested | validated | expert_reviewed | production_ready",
   "access": "open | licensed | runtime",
-  "language": "<ISO 639-1>",
+  "languages": ["<BCP 47>"],
+  "default_language": "<BCP 47>",
   "author": { "name": "...", "id": "..." },
   "license": { "type": "...", "url": "..." },
   "description": "..."
@@ -254,6 +257,8 @@ A `.kdna` asset MUST include a `kdna.json` manifest with the following REQUIRED 
 ```
 
 **Rules:**
+- `spec_version` is REQUIRED. It declares which KDNA specification version this asset conforms to. `kdna_spec` is not part of v1.0 and MUST be rejected by conforming tools.
+- `format` MUST be `"kdna"` and `format_version` MUST be `"1.0"` for v1.0 `.kdna` containers.
 - `judgment_version` is REQUIRED. It tracks the version of the domain's judgment content (axioms, ontology, misunderstandings). It MUST be incremented when any judgment-relevant content changes. It MAY differ from `version` which tracks packaging or metadata changes.
 - `status` and `quality_badge` are independent. See §3.3.2.
 - Domains claiming `quality_badge` of `tested` or higher MUST include:
@@ -558,11 +563,11 @@ KDNA MUST NOT replace these systems. It provides a judgment layer that operates 
 - The `kdna.json` manifest MUST NOT contain secrets or API keys.
 - Loaders SHOULD validate JSON before parsing to prevent injection.
 
-## 12. Version Compatibility
+## 12. Version Policy
 
-- KDNA v0.4 files are backward-compatible with v0.3 loaders for the Core+Patterns subset.
-- Fields added in v0.4 (cluster support, quality thresholds) are OPTIONAL for v0.3.
-- Loaders SHOULD ignore unknown fields to enable forward compatibility.
+- KDNA v1.0 tools implement the v1.0 schema and media type.
+- Pre-v1.0 aliases and package layouts are not part of the open protocol.
+- Loaders MUST reject manifest fields that are not defined by the active schema.
 
 ### 12.1 Domain Version Semantics
 
@@ -576,7 +581,7 @@ KDNA domains follow [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATC
 
 A domain at `v0.2.0` with only Core+Patterns is less mature than `v0.4.0` with Core+Patterns+Scenarios+Cases. The version number reflects structural evolution, not functional superiority. Two domains at different versions MAY both be valid for their respective scopes.
 
-The SPEC version (`kdna_spec` in manifest) indicates which version of this specification the domain conforms to (e.g., `1.0-rc`). This is independent of the domain's own version number.
+The SPEC version (`spec_version` in manifest) indicates which version of this specification the domain conforms to (e.g., `1.0-rc`). This is independent of the domain's own version number.
 
 ## 13. Domain Composition and Clusters
 
@@ -703,6 +708,7 @@ A valid `.kdna` container MUST contain:
 
 | File | Required | Description |
 |------|----------|-------------|
+| `mimetype` | REQUIRED | Fixed media type marker. Content MUST be `application/vnd.aikdna.kdna+zip` with no trailing newline. |
 | `kdna.json` | REQUIRED | Container manifest (see §14.4) |
 | `KDNA_Core.json` | REQUIRED | Domain core: axioms, ontology, frameworks, stances |
 | `KDNA_Patterns.json` | REQUIRED | Domain patterns: terminology, misunderstandings, self-checks |
@@ -715,7 +721,12 @@ A valid `.kdna` container MUST contain:
 | `evals/` | OPTIONAL | Evaluation test cases directory |
 | `signature.json` | RECOMMENDED | Ed25519 signature covering content (see §14.7) |
 
-A container MUST NOT contain more than 6 KDNA JSON files (Core, Patterns, Scenarios, Cases, Reasoning, Evolution). Additional files such as `README.md`, `LICENSE`, `signature.json`, and `evals/` are not counted toward this limit.
+A container MUST NOT contain more than 6 KDNA JSON files (Core, Patterns, Scenarios, Cases, Reasoning, Evolution). Additional files such as `kdna.json`, `README.md`, `LICENSE`, `signature.json`, and `evals/` are not counted toward this limit.
+
+The `mimetype` entry MUST be located at the ZIP root. Writers SHOULD store it as
+the first ZIP entry and SHOULD NOT compress it. Loaders MUST check both
+`mimetype` and `kdna.json`; a `.kdna` extension alone is not sufficient to treat
+an archive as a valid KDNA asset.
 
 ### 14.4 Container Manifest (`kdna.json`)
 
@@ -725,10 +736,10 @@ Every `.kdna` container MUST include a `kdna.json` at the archive root. This fil
 {
   "format": "kdna",
   "format_version": "1.0",
+  "spec_version": "1.0-rc",
   "name": "@aikdna/writing",
   "version": "0.7.2",
   "judgment_version": "2026.05",
-  "spec_version": "1.0-rc",
   "description": "Editorial writing judgment — diagnose whether content has a real argument, a cognitive hook, and evidence density.",
   "core_insight": "Most writing problems are structural and argument-level, not language-level.",
   "author": {
@@ -742,7 +753,8 @@ Every `.kdna` container MUST include a `kdna.json` at the archive root. This fil
   "status": "experimental",
   "quality_badge": "tested",
   "access": "open",
-  "language": "en",
+  "languages": ["en", "zh-CN"],
+  "default_language": "en",
   "keywords": ["writing", "editing", "editorial"],
   "file_count": 6,
   "created": "2026-05-01",
@@ -752,16 +764,16 @@ Every `.kdna` container MUST include a `kdna.json` at the archive root. This fil
 }
 ```
 
-**Required fields:** `format`, `format_version`, `name`, `version`, `spec_version`, `description`, `author`, `access`.
+**Required fields:** `format`, `format_version`, `spec_version`, `name`, `version`, `judgment_version`, `description`, `author`, `license`, `status`, `quality_badge`, `access`, `languages`, `default_language`.
 
-**Optional fields:** `judgment_version`, `core_insight`, `license`, `status`, `quality_badge`, `language`, `keywords`, `file_count`, `created`, `updated`, `content_digest`, `signature`.
+**Optional fields:** `core_insight`, `keywords`, `file_count`, `risk_level`, `privacy_level`, `asset_type`, `created`, `updated`, `content_digest`, `signature`, `fitness_for_purpose`.
 
-The `name` field follows the format `@scope/domain-name` and MUST match the registry entry.
+The `name` field follows the format `@scope/domain-name` and MUST match the registry entry. The `kdna_spec` field is not part of v1.0 and MUST be rejected.
 
 ### 14.5 Digest
 
 - **Asset digest:** `asset_digest` is the SHA-256 hash of the complete `.kdna` file bytes. It MUST be recorded outside the container, such as in the registry entry, local receipt, or lockfile.
-- **Content digest:** `content_digest` is the canonical SHA-256 hash of the internal content tree, excluding `signature.json` and local installation metadata. If stored in `kdna.json`, the `content_digest` field itself is excluded from its own digest calculation.
+- **Content digest:** `content_digest` is the canonical SHA-256 hash of the internal content tree, excluding `signature.json`, `.DS_Store`, and local installation metadata. If stored in `kdna.json`, the `content_digest` field itself is excluded from its own digest calculation.
 - Registries MUST use `asset_digest` for every installable `.kdna` asset and MAY also publish `content_digest`.
 - Installers MUST verify `asset_digest` before registration.
 - Digest verification MUST fail closed: any mismatch prevents installation.
@@ -772,7 +784,7 @@ The complete asset digest MUST NOT be embedded as a self-referential `container_
 
 A `.kdna` container MAY be signed using Ed25519. Registry-published assets MUST be signed.
 
-- The signature covers the **content tree** (all JSON files within the archive, sorted by path, with `kdna.json.signature`, `kdna.json.asset_digest`, local `_source`, and self-referential digest fields excluded).
+- The signature covers the **content tree**: every non-directory ZIP entry except `signature.json`, `.DS_Store`, and local installation metadata, sorted by path. JSON entries are canonicalized with lexicographically sorted object keys before hashing. For `kdna.json`, `signature`, `asset_digest`, `container_sha256`, local `_source`, and self-referential digest fields are excluded.
 - The signing key corresponds to the scope's `trust_pubkey` in the registry.
 - The signature is stored in `kdna.json`:
   ```json
@@ -855,9 +867,12 @@ For operating system-level recognition of `.kdna` files:
 |----------|-----------|
 | **macOS** | UTType: `com.aikdna.kdna` (or `public.kdna`). Registered by KDNAChat Mac App. Double-click opens in KDNAChat for inspection and installation. |
 | **Windows** | File extension association with KDNAChat or CLI. |
-| **Linux** | MIME type `application/x-kdna`. Desktop file association. |
+| **Linux** | MIME type `application/vnd.aikdna.kdna+zip`. Desktop file association. |
 
-The recommended MIME type is `application/x-kdna`.
+The recommended media type is `application/vnd.aikdna.kdna+zip`.
+`application/x-kdna` is not a KDNA v1.0 media type and MUST be rejected in
+registry metadata, HTTP responses, and OS integration files. See
+[`docs/MEDIA_TYPE.md`](./docs/MEDIA_TYPE.md).
 
 ### 14.10 Asset vs Dev Source Directory
 
@@ -917,18 +932,14 @@ Every domain MUST declare its language configuration in `kdna.json`:
 
 ```json
 {
-  "language": {
-    "canonical": "en",
-    "available": ["en", "zh-CN"],
-    "fallback": "en"
-  },
+  "default_language": "en",
+  "languages": ["en", "zh-CN"],
   "i18n_level": "L2"
 }
 ```
 
-- `canonical`: The primary language of the domain's judgment content
-- `available`: All languages for which the domain provides localization
-- `fallback`: Language to use when a requested locale is unavailable
+- `default_language`: The primary language of the domain's judgment content
+- `languages`: All languages for which the domain provides localization
 - `i18n_level`: L0 (monolingual) through L4 (full locale evals)
 
 ### 16.3 Localization Levels

@@ -54,7 +54,7 @@ domain-0.1.0.kdna
 {
   "format": "kdna",
   "format_version": "1.0",
-  "kdna_spec": "1.0-rc",
+  "spec_version": "1.0-rc",
   "domain": "writing_judgment",
   "version": "0.7.2",
   "author": {

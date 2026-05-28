@@ -68,14 +68,15 @@
 
 ## 6. Field Naming Canon
 
-### kdna_spec vs spec_version
+### spec_version
 
-| Context | Canonical Field | Deprecated |
+| Context | Canonical Field | Rejected |
 |---------|----------------|------------|
-| Domain asset kdna.json (directory) | `kdna_spec: "1.0-rc"` | `spec_version` (remove from domain manifests) |
-| .kdna container manifest (archive) | `spec_version: "1.0-rc"` | — |
+| Domain asset `kdna.json` | `spec_version: "1.0-rc"` | `kdna_spec` |
+| `.kdna` container manifest | `spec_version: "1.0-rc"` | `kdna_spec` |
 
-**Rule:** Domain repos use `kdna_spec`. Container manifests use `spec_version`. They MUST NOT both appear in the same manifest.
+**Rule:** v1.0-compatible manifests use `spec_version`. `kdna_spec` is outside
+the v1.0 protocol and MUST be rejected.
 
 ### version vs judgment_version
 

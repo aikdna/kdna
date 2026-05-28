@@ -1,17 +1,11 @@
 {
-  "kdna_spec": "1.0-rc",
+  "format": "kdna",
+  "format_version": "1.0",
+  "spec_version": "1.0-rc",
   "name": "@aikdna/sales",
   "version": "0.4.0",
   "judgment_version": "0.4.0",
-  "language": "en",
-  "languages": [
-    "en"
-  ],
-  "created": "2026-05-13",
-  "updated": "2026-05-17",
   "description": "Define the core cognition of high-trust sales: building certainty, not pushing product.",
-  "keywords": [],
-  "access": "open",
   "author": {
     "name": "",
     "id": ""
@@ -24,7 +18,15 @@
     "allow_training": false
   },
   "status": "experimental",
-  "registry": {},
+  "quality_badge": "untested",
+  "access": "open",
+  "languages": [
+    "en"
+  ],
+  "default_language": "en",
+  "keywords": [],
   "file_count": 6,
-  "spec_version": "1.0-rc"
+  "created": "2026-05-13",
+  "updated": "2026-05-17",
+  "registry": {}
 }

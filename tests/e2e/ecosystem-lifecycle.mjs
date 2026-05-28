@@ -132,9 +132,12 @@ step('Create domain structure', () => {
     join(TEST_DIR, 'kdna.json'),
     JSON.stringify(
       {
-        kdna_spec: '1.0-rc',
+        format: 'kdna',
+        format_version: '1.0',
+        spec_version: '1.0-rc',
         name: `@aikdna/${TEST_DOMAIN}`,
         version: '0.1.0',
+        judgment_version: '2026.05',
         description: 'E2E test domain',
         languages: ['en'],
         default_language: 'en',

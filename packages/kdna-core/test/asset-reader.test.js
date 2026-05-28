@@ -97,16 +97,22 @@ test('asset reader opens, verifies, and loads a .kdna asset without extraction',
   fs.writeFileSync(
     assetPath,
     makeZip({
+      mimetype: 'application/vnd.aikdna.kdna+zip',
       'kdna.json': json({
-        kdna_spec: '1.0-rc',
+        format: 'kdna',
+        format_version: '1.0',
+        spec_version: '1.0-rc',
         name: '@aikdna/writing',
         version: '0.1.0',
         judgment_version: '2026.05',
         access: 'open',
         status: 'experimental',
+        quality_badge: 'untested',
         description: 'Writing asset',
         author: { name: 'Test', id: 'test' },
         license: { type: 'CC-BY-4.0' },
+        languages: ['en'],
+        default_language: 'en',
         keywords: ['writing'],
       }),
       'KDNA_Core.json': json({
@@ -128,7 +134,7 @@ test('asset reader opens, verifies, and loads a .kdna asset without extraction',
   assert.match(asset.asset_digest, /^sha256:/);
 
   const entries = await reader.listEntries(asset);
-  assert.deepEqual(entries, ['KDNA_Core.json', 'KDNA_Patterns.json', 'kdna.json']);
+  assert.deepEqual(entries, ['KDNA_Core.json', 'KDNA_Patterns.json', 'kdna.json', 'mimetype']);
 
   const manifest = await reader.readManifest(asset);
   assert.equal(manifest.name, '@aikdna/writing');
@@ -149,6 +155,89 @@ test('asset reader opens, verifies, and loads a .kdna asset without extraction',
   assert.deepEqual(index.keywords, ['writing']);
 });
 
+test('asset verification rejects archives without the KDNA mimetype marker', async () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-no-mimetype-'));
+  const assetPath = path.join(tmp, 'legacy.kdna');
+  fs.writeFileSync(
+    assetPath,
+    makeZip({
+      'kdna.json': json({
+        format: 'kdna',
+        format_version: '1.0',
+        spec_version: '1.0-rc',
+        name: '@aikdna/legacy',
+        version: '0.1.0',
+        judgment_version: '2026.05',
+        access: 'open',
+        status: 'experimental',
+        quality_badge: 'untested',
+        description: 'Legacy asset without media marker',
+        author: { name: 'Test', id: 'test' },
+        license: { type: 'CC-BY-4.0' },
+        languages: ['en'],
+        default_language: 'en',
+      }),
+      'KDNA_Core.json': json({
+        meta: { domain: 'legacy', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
+        stances: ['Legacy assets need migration.'],
+        axioms: [{ id: 'a1', one_sentence: 'Markers matter.', full_statement: 'Markers matter.', why: 'Loaders need identity.' }],
+        ontology: [],
+      }),
+      'KDNA_Patterns.json': json({
+        meta: { domain: 'legacy', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
+        misunderstandings: [{ id: 'm1', wrong: 'Extension is enough.', correct: 'Mimetype is required.', key_distinction: 'identity', why: 'ZIP is generic.' }],
+        self_check: ['Did I check mimetype?'],
+      }),
+    }),
+  );
+
+  const reader = createKdnaAssetReader();
+  const verify = await reader.verify(await reader.open(assetPath));
+  assert.equal(verify.ok, false);
+  assert.ok(verify.errors.includes('required entry missing: mimetype'));
+});
+
+test('asset verification rejects deprecated kdna_spec manifests', async () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-kdna-spec-'));
+  const assetPath = path.join(tmp, 'legacy.kdna');
+  fs.writeFileSync(
+    assetPath,
+    makeZip({
+      mimetype: 'application/vnd.aikdna.kdna+zip',
+      'kdna.json': json({
+        kdna_spec: '1.0-rc',
+        name: '@aikdna/legacy',
+        version: '0.1.0',
+        judgment_version: '2026.05',
+        access: 'open',
+        status: 'experimental',
+        quality_badge: 'untested',
+        description: 'Legacy asset with deprecated field',
+        author: { name: 'Test', id: 'test' },
+        license: { type: 'CC-BY-4.0' },
+        languages: ['en'],
+        default_language: 'en',
+      }),
+      'KDNA_Core.json': json({
+        meta: { domain: 'legacy', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
+        stances: ['Legacy manifests need migration.'],
+        axioms: [{ id: 'a1', one_sentence: 'Canonical names matter.', full_statement: 'Canonical names matter.', why: 'Implementers need one name.' }],
+        ontology: [],
+      }),
+      'KDNA_Patterns.json': json({
+        meta: { domain: 'legacy', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
+        misunderstandings: [{ id: 'm1', wrong: 'Two spec fields are harmless.', correct: 'One field is canonical.', key_distinction: 'interop', why: 'Schema drift breaks loaders.' }],
+        self_check: ['Did I use spec_version?'],
+      }),
+    }),
+  );
+
+  const reader = createKdnaAssetReader();
+  const verify = await reader.verify(await reader.open(assetPath));
+  assert.equal(verify.ok, false);
+  assert.ok(verify.errors.includes('kdna.json: kdna_spec is not allowed. Use spec_version.'));
+});
+
 test('asset reader decrypts licensed entries only through an in-memory hook', async () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-licensed-'));
   const assetPath = path.join(tmp, 'writing-pro.kdna');
@@ -164,14 +253,20 @@ test('asset reader decrypts licensed entries only through an in-memory hook', as
     self_check: ['Did decryption stay in memory?'],
   };
   const manifest = {
-    kdna_spec: '1.0-rc',
+    format: 'kdna',
+    format_version: '1.0',
+    spec_version: '1.0-rc',
     name: '@aikdna/writing_pro',
     version: '0.1.0',
+    judgment_version: '2026.05',
     access: 'licensed',
     status: 'experimental',
+    quality_badge: 'untested',
     description: 'Licensed writing asset',
     author: { name: 'Test', id: 'test' },
     license: { type: 'KCL-1.0' },
+    languages: ['en'],
+    default_language: 'en',
     encryption: {
       profile: 'kdna-licensed-entry-v1',
       encrypted_entries: ['KDNA_Core.json', 'KDNA_Patterns.json'],
@@ -183,6 +278,7 @@ test('asset reader decrypts licensed entries only through an in-memory hook', as
   fs.writeFileSync(
     assetPath,
     makeZip({
+      mimetype: 'application/vnd.aikdna.kdna+zip',
       'kdna.json': json(manifest),
       'KDNA_Core.json': json(
         encryptLicensedEntry(json(core), {

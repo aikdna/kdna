@@ -12,6 +12,7 @@
     "validate:examples": "echo 'Use npx kdna dev validate on individual domain repos'",
     "validate:runtime-contract": "node scripts/validate-runtime-contract.js",
     "validate:app-schemas": "node scripts/validate-app-schemas.js",
+    "validate:protocol-fixtures": "node scripts/validate-protocol-fixtures.js",
     "test": "npm --workspace @aikdna/kdna-core test",
     "conformance": "node conformance/run.mjs",
     "certify:asset-loader": "node conformance/run.mjs --profile asset-loader",

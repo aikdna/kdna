@@ -14,7 +14,7 @@ This document explains the relationship between the four version numbers you wil
 
 ## Compatibility Rules
 
-- A domain with `kdna_spec: "1.0-rc"` in its manifest MUST conform to SPEC v1.0-rc.
+- A domain with `spec_version: "1.0-rc"` in its manifest MUST conform to SPEC v1.0-rc.
 - A CLI at v0.7.x can validate domains targeting SPEC v1.0-rc.
 - The core library version is independent — v0.2.3 implements SPEC v1.0-rc validation.
 - Domain version increments reflect content changes, not spec changes:

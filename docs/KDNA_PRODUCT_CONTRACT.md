@@ -33,7 +33,9 @@ Products MUST NOT treat extracted directories as installed runtime domains. Sour
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `kdna_spec` | string | Canonical spec version (e.g., "1.0-rc") |
+| `format` | string | Canonical format marker: `"kdna"` |
+| `format_version` | string | Container manifest version: `"1.0"` |
+| `spec_version` | string | Canonical spec version (e.g., "1.0-rc") |
 | `name` | string | `@scope/name` or bare name |
 | `version` | string | SemVer |
 | `description` | string | One-paragraph summary |

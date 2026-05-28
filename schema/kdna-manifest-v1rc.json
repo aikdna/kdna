@@ -2,11 +2,13 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aikdna.com/schema/kdna-manifest-v1rc.json",
   "title": "KDNA Domain Manifest (kdna.json)",
-  "description": "Canonical JSON Schema for the kdna.json manifest inside a .kdna asset internal domain tree or dev source workspace. This is the single source of truth — CLI, Registry, and Studio MUST validate against this schema.",
+  "description": "Canonical JSON Schema for the kdna.json manifest inside a .kdna asset internal domain tree or dev source workspace. This is the single source of truth: CLI, Registry, Studio, and compatible loaders MUST validate against this schema.",
 
   "type": "object",
   "required": [
-    "kdna_spec",
+    "format",
+    "format_version",
+    "spec_version",
     "name",
     "version",
     "judgment_version",
@@ -16,19 +18,27 @@
     "status",
     "quality_badge",
     "access",
-    "language"
+    "languages",
+    "default_language"
   ],
   "properties": {
 
-    "kdna_spec": {
+    "format": {
       "type": "string",
-      "description": "KDNA SPEC version this domain conforms to. Required. Canonical field name for domain asset manifests. spec_version is a deprecated alias — use kdna_spec.",
-      "examples": ["1.0-rc"]
+      "const": "kdna",
+      "description": "KDNA container format marker."
+    },
+
+    "format_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "KDNA container manifest format version."
     },
 
     "spec_version": {
       "type": "string",
-      "description": "DEPRECATED. Use kdna_spec. This field is reserved for the .kdna container manifest (package-profiles.md), not for domain asset kdna.json."
+      "description": "KDNA SPEC version this asset conforms to. Required.",
+      "examples": ["1.0-rc"]
     },
 
     "name": {
@@ -75,7 +85,7 @@
         },
         "public_key_pem": {
           "type": "string",
-          "description": "PEM-encoded Ed25519 public key. Present for backward compatibility with v0.7.1+ verify."
+          "description": "PEM-encoded Ed25519 public key used by verifiers."
         }
       }
     },
@@ -115,12 +125,6 @@
       "description": "Distribution mode. open = plaintext, freely available. licensed = encrypted, requires local license. runtime = not distributed, server-side API only."
     },
 
-    "language": {
-      "type": "string",
-      "description": "Primary language of the domain content (ISO 639-1).",
-      "examples": ["en", "zh"]
-    },
-
     "languages": {
       "type": "array",
       "items": { "type": "string" },
@@ -156,6 +160,37 @@
       "type": "string",
       "enum": ["R0", "R1", "R2", "R3"],
       "description": "Risk level for the domain. R0 = low risk (writing style, aesthetics). R1 = medium-low (product decisions, management). R2 = medium (safety, finance, legal). R3 = high (security strategy, code execution). Determines load warnings and certification requirements."
+    },
+
+    "privacy_level": {
+      "type": "string",
+      "enum": ["public", "private", "sensitive", "regulated"],
+      "description": "Privacy classification. Proposed for v1.1; optional in v1.0."
+    },
+
+    "asset_type": {
+      "type": "string",
+      "enum": [
+        "domain_judgment",
+        "personal_judgment",
+        "organization_standard",
+        "team_policy",
+        "creator_style",
+        "risk_guard"
+      ],
+      "description": "Judgment asset category. Proposed for v1.1; optional in v1.0."
+    },
+
+    "fitness_for_purpose": {
+      "type": "object",
+      "description": "Applicability boundary for runtime policy and human review.",
+      "properties": {
+        "intended_use": { "type": "array", "items": { "type": "string" } },
+        "not_for": { "type": "array", "items": { "type": "string" } },
+        "requires_human_review_when": { "type": "array", "items": { "type": "string" } },
+        "known_failure_modes": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
     },
 
     "signature": {

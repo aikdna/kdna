@@ -4,13 +4,12 @@
   "domains": [
     {
       "id": "decision_state",
-      "name": "Decision State",
+      "name": "@aikdna/decision_state",
       "version": "0.4.0",
       "repo": "https://github.com/aikdna/kdna-decision_state",
       "spec_version": "1.0-rc",
       "status": "experimental",
       "access": "open",
-      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -28,17 +27,22 @@
       "created": "2026-05-19",
       "updated": "2026-05-22",
       "test_count": 10,
-      "quality_badge": "tested"
+      "quality_badge": "tested",
+      "display_name": "Decision State",
+      "default_language": "en",
+      "languages": ["en"],
+      "type": "domain",
+      "asset_type": "domain_judgment",
+      "privacy_level": "public"
     },
     {
       "id": "agent_safety",
-      "name": "Agent Safety",
+      "name": "@aikdna/agent_safety",
       "version": "0.1.0",
       "repo": "https://github.com/aikdna/kdna-agent_safety",
       "spec_version": "1.0-rc",
       "status": "experimental",
       "access": "open",
-      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -56,17 +60,22 @@
       "created": "2026-05-20",
       "updated": "2026-05-20",
       "test_count": 0,
-      "quality_badge": "untested"
+      "quality_badge": "untested",
+      "display_name": "Agent Safety",
+      "default_language": "en",
+      "languages": ["en"],
+      "type": "domain",
+      "asset_type": "domain_judgment",
+      "privacy_level": "public"
     },
     {
       "id": "writing",
-      "name": "Writing",
+      "name": "@aikdna/writing",
       "version": "0.1.0",
       "repo": "https://github.com/aikdna/kdna-writing",
       "spec_version": "1.0-rc",
       "status": "experimental",
       "access": "open",
-      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -84,17 +93,22 @@
       "created": "2026-05-20",
       "updated": "2026-05-22",
       "test_count": 10,
-      "quality_badge": "tested"
+      "quality_badge": "tested",
+      "display_name": "Writing",
+      "default_language": "en",
+      "languages": ["en"],
+      "type": "domain",
+      "asset_type": "domain_judgment",
+      "privacy_level": "public"
     },
     {
       "id": "content_strategy",
-      "name": "Content Strategy",
+      "name": "@aikdna/content_strategy",
       "version": "0.1.0",
       "repo": "https://github.com/aikdna/kdna-content_strategy",
       "spec_version": "1.0-rc",
       "status": "experimental",
       "access": "open",
-      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -111,17 +125,22 @@
       "created": "2026-05-20",
       "updated": "2026-05-20",
       "test_count": 0,
-      "quality_badge": "untested"
+      "quality_badge": "untested",
+      "display_name": "Content Strategy",
+      "default_language": "en",
+      "languages": ["en"],
+      "type": "domain",
+      "asset_type": "domain_judgment",
+      "privacy_level": "public"
     },
     {
       "id": "prompt_diagnosis",
-      "name": "Prompt Diagnosis",
+      "name": "@aikdna/prompt_diagnosis",
       "version": "0.1.0",
       "repo": "https://github.com/aikdna/kdna-prompt_diagnosis",
       "spec_version": "1.0-rc",
       "status": "experimental",
       "access": "open",
-      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -138,17 +157,22 @@
       "created": "2026-05-20",
       "updated": "2026-05-22",
       "test_count": 10,
-      "quality_badge": "tested"
+      "quality_badge": "tested",
+      "display_name": "Prompt Diagnosis",
+      "default_language": "en",
+      "languages": ["en"],
+      "type": "domain",
+      "asset_type": "domain_judgment",
+      "privacy_level": "public"
     },
     {
       "id": "knowledge_management",
-      "name": "Knowledge Management",
+      "name": "@aikdna/knowledge_management",
       "version": "0.1.0",
       "repo": "https://github.com/aikdna/kdna-knowledge_management",
       "spec_version": "1.0-rc",
       "status": "experimental",
       "access": "open",
-      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -165,17 +189,22 @@
       "created": "2026-05-20",
       "updated": "2026-05-20",
       "test_count": 0,
-      "quality_badge": "untested"
+      "quality_badge": "untested",
+      "display_name": "Knowledge Management",
+      "default_language": "en",
+      "languages": ["en"],
+      "type": "domain",
+      "asset_type": "domain_judgment",
+      "privacy_level": "public"
     },
     {
       "id": "kdna_authoring",
-      "name": "KDNA Authoring",
+      "name": "@aikdna/kdna_authoring",
       "version": "0.1.0",
       "repo": "https://github.com/aikdna/kdna-authoring",
       "spec_version": "1.0-rc",
       "status": "experimental",
       "access": "open",
-      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -192,17 +221,22 @@
       "created": "2026-05-20",
       "updated": "2026-05-20",
       "test_count": 0,
-      "quality_badge": "untested"
+      "quality_badge": "untested",
+      "display_name": "KDNA Authoring",
+      "default_language": "en",
+      "languages": ["en"],
+      "type": "domain",
+      "asset_type": "domain_judgment",
+      "privacy_level": "public"
     },
     {
       "id": "open_source_project",
-      "name": "Open Source Project",
+      "name": "@aikdna/open_source_project",
       "version": "0.1.0",
       "repo": "https://github.com/aikdna/kdna-open_source_project",
       "spec_version": "1.0-rc",
       "status": "experimental",
       "access": "open",
-      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -219,17 +253,22 @@
       "created": "2026-05-20",
       "updated": "2026-05-20",
       "test_count": 0,
-      "quality_badge": "untested"
+      "quality_badge": "untested",
+      "display_name": "Open Source Project",
+      "default_language": "en",
+      "languages": ["en"],
+      "type": "domain",
+      "asset_type": "domain_judgment",
+      "privacy_level": "public"
     },
     {
       "id": "code_review",
-      "name": "Code Review",
+      "name": "@aikdna/code_review",
       "version": "0.1.0",
       "repo": "https://github.com/aikdna/kdna-code_review",
       "spec_version": "1.0-rc",
       "status": "stable",
       "access": "open",
-      "language": ["en"],
       "author": {
         "name": "KDNA Team",
         "id": "kdna-team"
@@ -247,7 +286,13 @@
       "updated": "2026-05-22",
       "test_count": 0,
       "quality_badge": "untested",
-      "kdna_file_count": 6
+      "kdna_file_count": 6,
+      "display_name": "Code Review",
+      "default_language": "en",
+      "languages": ["en"],
+      "type": "domain",
+      "asset_type": "domain_judgment",
+      "privacy_level": "public"
     }
   ]
 }

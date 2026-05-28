@@ -49,14 +49,14 @@ registered KDNA domains.
   "updated": "2026-05-17T10:00:00Z",
   "domains": [
     {
-      "id": "writing",
-      "name": "Writing KDNA",
+      "name": "@aikdna/writing",
       "version": "0.1.0",
       "repo": "https://github.com/aikdna/kdna-writing",
       "spec_version": "1.0-rc",
       "status": "experimental",
       "access": "open",
-      "language": ["en"],
+      "default_language": "en",
+      "languages": ["en"],
       "author": {
         "name": "Zhang Ling",
         "id": "zhangling"

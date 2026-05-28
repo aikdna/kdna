@@ -203,15 +203,18 @@ export interface KDNAFileDataMap {
 }
 
 export interface KDNAManifest {
-  kdna_spec: string;
+  format: 'kdna';
+  format_version: '1.0';
+  spec_version: string;
   name: string;
   version: string;
-  judgment_version?: string;
-  status: 'draft' | 'experimental' | 'stable' | 'deprecated' | 'basic' | 'pro';
+  judgment_version: string;
+  status: 'draft' | 'experimental' | 'stable' | 'deprecated' | 'staging';
+  quality_badge: 'untested' | 'tested' | 'validated' | 'expert_reviewed' | 'production_ready';
   access: 'open' | 'licensed' | 'runtime';
   language?: string;
-  default_language?: string;
-  languages?: string[];
+  default_language: string;
+  languages: string[];
   author: { name: string; id?: string; pubkey?: string; public_key_pem?: string };
   license: { type: string; url?: string };
   description: string;

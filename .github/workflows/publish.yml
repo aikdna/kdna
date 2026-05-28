@@ -19,6 +19,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm --workspace @aikdna/kdna-core test
+      - run: npm run conformance
       - name: Publish @aikdna/kdna-core
         run: npm publish --provenance --access public
         working-directory: packages/kdna-core

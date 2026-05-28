@@ -11,6 +11,8 @@ Conformance means:
 - Validation rejects missing required entries, malformed manifest metadata,
   duplicate IDs, invalid self-checks, unresolved references, and digest
   mismatches.
+- Validation rejects assets without root `mimetype`, manifests with `kdna_spec`,
+  and manifests with singular `language`.
 - Rendering produces deterministic agent context for a known fixture.
 - Inspection exposes asset metadata, entries, digests, quality, and risk.
 
@@ -60,6 +62,9 @@ not source of truth; the test definitions and expected outputs are.
 | `invalid/missing-patterns.kdna` | fails required-entry validation |
 | `invalid/duplicate-id.kdna` | fails lint validation |
 | `invalid/bad-meta.kdna` | fails cross-file validation |
+| `invalid/missing-mimetype.kdna` | fails media marker validation |
+| `invalid/disallowed-kdna-spec.kdna` | fails manifest validation |
+| `invalid/disallowed-language.kdna` | fails manifest validation |
 | `invalid/non-yes-no-self-check.kdna` | warns on weak self-check |
 
 External implementations should produce equivalent pass/fail behavior and

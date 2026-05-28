@@ -32,7 +32,7 @@ that preserve internal structure rather than flattening it into one document.
 
 Example: `writing.kdna`, `sketchnote-style.kdna`
 
-MIME type (provisional): `application/x-kdna+zip`
+Media type: `application/vnd.aikdna.kdna+zip`
 
 ## 4. Container Format
 
@@ -46,6 +46,7 @@ A valid `.kdna` container MUST contain:
 
 | File | Required | Purpose |
 |------|:---:|---------|
+| `mimetype` | ✅ | Fixed media marker: `application/vnd.aikdna.kdna+zip` |
 | `KDNA_Core.json` | ✅ | Axioms, ontology, frameworks, causal structure, stances |
 | `KDNA_Patterns.json` | ✅ | Terminology, banned terms, misunderstandings, self-checks |
 | `kdna.json` | ✅ | Domain manifest (name, version, author, license, keywords) |
@@ -72,12 +73,16 @@ does not have a separate metadata header — it is transparent ZIP.
 
 ```json
 {
-  "kdna_spec": "1.0-rc",
+  "format": "kdna",
+  "format_version": "1.0",
+  "spec_version": "1.0-rc",
   "name": "sketchnote-style",
   "version": "0.1.0",
+  "judgment_version": "2026.05",
   "status": "experimental",
   "access": "open",
-  "language": "en",
+  "languages": ["en"],
+  "default_language": "en",
   "author": { "name": "...", "id": "..." },
   "license": { "type": "CC-BY-4.0" },
   "keywords": ["sketchnote", "visual", "design"],
@@ -163,11 +168,11 @@ Implementations MAY verify this checksum before loading.
 A `.kdna` container MAY be digitally signed. Signature metadata (if present)
 SHALL be stored in `kdna.json` under a `signature` field, not as a separate file.
 
-## 10. Comparison with Merged Single-File (deprecated)
+## 10. Rejected Pre-v1.0 Merged Single-File
 
 KDNA v0.1–v0.3 used a merged JSON/YAML single-file format where all 6 files
-were concatenated into one document. This approach was **deprecated in v0.4**
-for the following reasons:
+were concatenated into one document. This approach is not part of KDNA v1.0 for
+the following reasons:
 
 - Complex domains produce files over 500 lines — unreadable for humans
 - Merged files cannot be incrementally edited or diffed per-section
@@ -175,13 +180,10 @@ for the following reasons:
 - ZIP containers preserve the standard structure, enable per-file loading,
   and are the same model used by `.docx`, `.pptx`, `.epub`
 
-The `kdna export` command from v0.1–v0.3 (which produced merged single-files)
-is superseded by `kdna dev pack`.
+The `kdna export` command from v0.1–v0.3 is outside the v1.0 protocol.
 
-## 11. Version Compatibility
+## 11. Version Policy
 
-- `.kdna` containers created by `kdna dev pack` v0.4 are ZIP archives containing
-  spec v0.4 JSON files.
-- Older merged single-file `.kdna` files created by `kdna export` v0.1–v0.3
-  are still accepted by `kdna inspect` for backward compatibility, but
-  `kdna dev pack` SHALL NOT produce this format.
+- `.kdna` containers are ZIP archives with root `mimetype` and `kdna.json`.
+- Pre-v1.0 merged single-file `.kdna` files MUST NOT be accepted by conforming
+  v1.0 tools.
