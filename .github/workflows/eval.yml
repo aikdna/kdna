@@ -3,10 +3,10 @@ name: KDNA Eval
 on:
   push:
     branches: [main]
-    paths: ['examples/**', 'packages/**', 'schema/**']
+    paths: ['.github/workflows/eval.yml', 'conformance/**', 'examples/**', 'packages/**', 'schema/**', 'scripts/**']
   pull_request:
     branches: [main]
-    paths: ['examples/**', 'packages/**', 'schema/**']
+    paths: ['.github/workflows/eval.yml', 'conformance/**', 'examples/**', 'packages/**', 'schema/**', 'scripts/**']
 
 jobs:
   eval:
@@ -16,20 +16,7 @@ jobs:
       - uses: actions/setup-node@v6
         with: { node-version: '22' }
 
-      - run: npm install
+      - run: npm ci
 
-      - name: Lint examples
-        run: npm run lint:examples
-
-      - name: Validate schemas
-        run: npm run validate:examples
-
-      - name: Run unit tests
-        run: npm test
-
-      - name: Verify installed domains
-        run: |
-          npm install -g @aikdna/kdna-cli
-          kdna install writing --yes
-          kdna verify @aikdna/writing --trust
-          kdna list
+      - name: Run deterministic protocol preflight
+        run: npm run release:preflight

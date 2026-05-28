@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
 const { execFileSync } = require('child_process');
+const os = require('os');
 const path = require('path');
 
 const root = path.join(__dirname, '..');
 const coreDir = path.join(root, 'packages', 'kdna-core');
 const compatDir = path.join(root, 'packages', 'kdna');
+const defaultNpmCache = path.join(os.tmpdir(), 'kdna-npm-cache');
 const requiredCoreFiles = [
   'schema/kdna-manifest-v1rc.json',
   'schema/kdna-file.schema.json',
@@ -26,8 +28,8 @@ function pack(cwd) {
     cwd,
     env: {
       ...process.env,
-      npm_config_cache: process.env.npm_config_cache || '/private/tmp/kdna-npm-cache',
-      NPM_CONFIG_CACHE: process.env.NPM_CONFIG_CACHE || '/private/tmp/kdna-npm-cache',
+      npm_config_cache: process.env.npm_config_cache || defaultNpmCache,
+      NPM_CONFIG_CACHE: process.env.NPM_CONFIG_CACHE || defaultNpmCache,
     },
     encoding: 'utf8',
   });
