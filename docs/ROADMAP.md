@@ -33,6 +33,7 @@
 
 ## Phase 4: Trust and Distribution (Current)
 
+- ⬜ v1.0 standardization freeze: manifest, media type, mimetype, canonicalization, trust boundary
 - ✅ .kdna open package profile
 - ✅ Ed25519 signing pipeline
 - ✅ SHA256 hash verification
@@ -43,6 +44,15 @@
 - ✅ `kdna route` Trust Gate
 - ⬜ Official domain signing (pro domains in staging)
 - ⬜ Install-time signature verification in CLI
+- ⬜ RFC-0006 provenance/signing/transparency accepted
+
+## Phase 4.5: Open Protocol Standardization (Next)
+
+- ⬜ Vendor-tree media type registration for `application/vnd.aikdna.kdna+zip`
+- ⬜ Third-party conformance reports for asset loaders and registries
+- ⬜ Personal KDNA and privacy-level fields promoted from proposal to schema
+- ⬜ Registry federation model for official, community, private, and local registries
+- ⬜ OCI artifact distribution experiment
 
 ## Phase 5: Encrypted and Licensed KDNA (Next)
 

@@ -1,11 +1,14 @@
 {
-  "kdna_spec": "1.0",
+  "format": "kdna",
+  "format_version": "1.0",
+  "spec_version": "1.0-rc",
   "name": "@yourscope/your_domain_id",
   "version": "0.1.0",
   "judgment_version": "YYYY.MM",
   "status": "experimental",
   "access": "open",
-  "language": "en",
+  "languages": ["en"],
+  "default_language": "en",
   "created": "YYYY-MM-DD",
   "updated": "YYYY-MM-DD",
   "description": "[one-sentence description; appears on registry and in install output]",
@@ -24,6 +27,5 @@
     "allow_redistribution": true,
     "allow_training": true
   },
-  "file_count": 2,
-  "files": ["KDNA_Core.json", "KDNA_Patterns.json"]
+  "file_count": 2
 }

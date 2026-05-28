@@ -4,7 +4,6 @@
     "version": "0.1.0",
     "load_condition": "auto",
     "purpose": "Judgment layer for short-video subtitles: what makes a subtitle not just correct but audience-appropriate, rhythm-aware, and brand-aligned.",
-    "language": "en",
     "created": "2026-05-23"
   },
   "axioms": [

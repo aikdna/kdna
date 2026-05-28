@@ -61,17 +61,23 @@ function writeFixture() {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-public-api-'));
   const assetPath = path.join(tmp, 'writing.kdna');
   fs.writeFileSync(assetPath, makeZip({
+    mimetype: 'application/vnd.aikdna.kdna+zip',
     'kdna.json': json({
-      kdna_spec: '1.0-rc',
+      format: 'kdna',
+      format_version: '1.0',
+      spec_version: '1.0-rc',
       name: '@aikdna/writing',
       version: '0.1.0',
+      judgment_version: '2026.05',
       access: 'open',
       status: 'experimental',
       description: 'Writing judgment asset',
       author: { name: 'Test', id: 'test' },
       license: { type: 'CC-BY-4.0' },
+      languages: ['en'],
+      default_language: 'en',
       keywords: ['writing', 'editorial'],
-      quality_badge: 'tested',
+      quality_badge: 'untested',
       risk_level: 'R0',
     }),
     'KDNA_Core.json': json({
@@ -97,7 +103,7 @@ test('stable public API inspects, validates, loads, renders, and matches .kdna a
 
   const inspected = await inspectKDNA(assetPath);
   assert.equal(inspected.name, '@aikdna/writing');
-  assert.equal(inspected.quality_badge, 'tested');
+  assert.equal(inspected.quality_badge, 'untested');
   assert.match(inspected.asset_digest, /^sha256:/);
 
   const validation = await validateKDNA(assetPath);

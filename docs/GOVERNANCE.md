@@ -89,11 +89,14 @@ The canonical KDNA registry classifies domains by review status:
 
 ### Official Quality Badges
 
-Official KDNA quality badges (`tested`, `untested`, `unreleased`) are issued only by the official registry or authorized registries. Forked tools may compute local validation results, but cannot claim official badge status unless signed by an authorized registry. Badge issuance requires:
+Official KDNA quality badges (`untested`, `tested`, `validated`, `expert_reviewed`, `production_ready`) are issued only by the official registry or authorized registries. Forked tools may compute local validation results, but cannot claim official badge status unless signed by an authorized registry. Badge issuance requires:
 
 1. Domain passes structural validation (`kdna dev validate`)
 2. Domain passes provenance verification (Ed25519 signature)
-3. For `tested`: additional quality gate (benchmark or expert review)
+3. For `tested`: at least 10 manually verified eval cases
+4. For `validated`: at least 30 eval cases, benchmark report, rubric, and raw outputs
+5. For `expert_reviewed`: validated evidence plus external domain expert review
+6. For `production_ready`: expert-reviewed evidence plus real-world deployment evidence
 
 This ensures that badge status is a trust signal, not a self-declared label.
 

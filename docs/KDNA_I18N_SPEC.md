@@ -46,7 +46,7 @@ my-domain/
   KDNA_Cases.json             ← canonical (en)
   KDNA_Reasoning.json         ← canonical (en)
   KDNA_Evolution.json         ← canonical (en)
-  kdna.json                   ← declares canonical language + available languages
+  kdna.json                   ← declares default_language + languages
   KDNA_CARD.json              ← canonical KDNA Card (en)
   README.md                   ← canonical README (en)
   locales/
@@ -64,11 +64,8 @@ my-domain/
 {
   "name": "@aikdna/writing",
   "version": "0.7.2",
-  "language": {
-    "canonical": "en",
-    "available": ["en", "zh-CN"],
-    "fallback": "en"
-  },
+  "default_language": "en",
+  "languages": ["en", "zh-CN"],
   "i18n_level": "L2"
 }
 ```

@@ -35,7 +35,9 @@ const DOMAIN_DIRS = [
 const CANONICAL_SPEC = '1.0-rc';
 
 const REQUIRED_FIELDS = [
-  'kdna_spec',
+  'format',
+  'format_version',
+  'spec_version',
   'name',
   'version',
   'judgment_version',
@@ -45,7 +47,8 @@ const REQUIRED_FIELDS = [
   'status',
   'quality_badge',
   'access',
-  'language',
+  'languages',
+  'default_language',
 ];
 
 const VALID_STATUS = new Set(['draft', 'experimental', 'stable', 'deprecated', 'staging']);
@@ -62,7 +65,8 @@ const VALID_I18N = new Set(['L0', 'L1', 'L2', 'L3']);
 
 // Fields that MUST be removed from domain kdna.json
 const REMOVED_FIELDS = [
-  'spec_version',
+  'kdna_spec',
+  'language',
   'release_status',
   'domain_field',
   'judgment_patterns',
@@ -96,16 +100,22 @@ function migrateManifest(original, domainName) {
   const errors = [];
   const migrated = JSON.parse(JSON.stringify(original));
 
-  // 1. Fix kdna_spec value
-  if (migrated.kdna_spec !== CANONICAL_SPEC) {
-    changes.push(`kdna_spec: "${migrated.kdna_spec}" → "${CANONICAL_SPEC}"`);
-    migrated.kdna_spec = CANONICAL_SPEC;
+  // 1. Normalize v1.0 identity fields
+  if (migrated.kdna_spec && !migrated.spec_version) {
+    changes.push(`spec_version: "${migrated.kdna_spec}" (from deprecated kdna_spec)`);
+    migrated.spec_version = migrated.kdna_spec;
   }
-
-  // 2. Remove spec_version from domain manifest
-  if ('spec_version' in migrated) {
-    changes.push(`REMOVED spec_version: "${migrated.spec_version}" (container-only field)`);
-    delete migrated.spec_version;
+  if (migrated.spec_version !== CANONICAL_SPEC) {
+    changes.push(`spec_version: "${migrated.spec_version}" -> "${CANONICAL_SPEC}"`);
+    migrated.spec_version = CANONICAL_SPEC;
+  }
+  if (migrated.format !== 'kdna') {
+    changes.push(`format: "${migrated.format}" -> "kdna"`);
+    migrated.format = 'kdna';
+  }
+  if (migrated.format_version !== '1.0') {
+    changes.push(`format_version: "${migrated.format_version}" -> "1.0"`);
+    migrated.format_version = '1.0';
   }
 
   // 3. Remove registry-only / deprecated fields
@@ -126,13 +136,19 @@ function migrateManifest(original, domainName) {
     }
   }
 
+  if (!Array.isArray(migrated.languages) || migrated.languages.length === 0) {
+    migrated.languages = [original.language || 'en'];
+    changes.push(`ADDED languages: ${JSON.stringify(migrated.languages)}`);
+  }
+  if (!migrated.default_language) {
+    migrated.default_language = migrated.languages[0] || 'en';
+    changes.push(`ADDED default_language: "${migrated.default_language}"`);
+  }
+
   // 5. Validate required fields
   for (const field of REQUIRED_FIELDS) {
     if (!(field in migrated) || migrated[field] === undefined || migrated[field] === '') {
-      if (field === 'language') {
-        changes.push(`ADDED language: "en" (default)`);
-        migrated.language = 'en';
-      } else if (field === 'quality_badge') {
+      if (field === 'quality_badge') {
         errors.push(`MISSING required field: ${field} — must be set manually`);
       } else {
         errors.push(`MISSING required field: ${field}`);

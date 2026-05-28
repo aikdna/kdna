@@ -47,11 +47,14 @@ identity card of the domain.
 
 ```json
 {
-  "kdna_spec": "1.0-rc",
+  "format": "kdna",
+  "format_version": "1.0",
+  "spec_version": "1.0-rc",
   "name": "sales",
   "version": "0.1.0",
-  "language": "en",
+  "judgment_version": "2026.05",
   "languages": ["en", "zh-CN"],
+  "default_language": "en",
   "created": "2026-05-13",
   "updated": "2026-05-17",
   "description": "Domain cognition for high-trust sales judgment.",
@@ -81,11 +84,14 @@ identity card of the domain.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `kdna_spec` | Yes | Package format spec version. MUST be `"1.0-rc"`. |
+| `format` | Yes | MUST be `"kdna"`. |
+| `format_version` | Yes | MUST be `"1.0"`. |
+| `spec_version` | Yes | KDNA spec version. MUST be `"1.0-rc"`. |
 | `name` | Yes | Domain identifier. Lowercase snake_case: `^[a-z][a-z0-9_]*$`. |
 | `version` | Yes | Semantic version (`MAJOR.MINOR.PATCH`). |
-| `language` | Yes | Primary language code (ISO 639-1 + optional region). |
-| `languages` | No | All supported language codes. |
+| `judgment_version` | Yes | Version of judgment content. |
+| `languages` | Yes | All supported language codes. |
+| `default_language` | Yes | Default language code. |
 | `created` | Yes | Creation date (ISO 8601: `YYYY-MM-DD`). |
 | `updated` | No | Last update date (ISO 8601). |
 | `description` | Yes | One-sentence domain description. |

@@ -15,11 +15,17 @@ instead of forcing them to infer the standard from scattered repository files.
 | Quality badges | [`rfcs/RFC-0003-domain-quality-badges.md`](../rfcs/RFC-0003-domain-quality-badges.md), [`docs/domain-quality-baseline.md`](./domain-quality-baseline.md) |
 | Runtime loading contract | [`rfcs/RFC-0004-runtime-loading-contract.md`](../rfcs/RFC-0004-runtime-loading-contract.md), [`docs/app-runtime-contract.md`](./app-runtime-contract.md) |
 | Composition policy | [`rfcs/RFC-0005-composition-policy.md`](../rfcs/RFC-0005-composition-policy.md) |
+| Media type | [`docs/MEDIA_TYPE.md`](./MEDIA_TYPE.md) |
+| Canonicalization | [`docs/CANONICALIZATION.md`](./CANONICALIZATION.md) |
+| Trust boundary | [`docs/KDNA_TRUST_BOUNDARY.md`](./KDNA_TRUST_BOUNDARY.md) |
+| Personal KDNA | [`docs/PERSONAL_KDNA.md`](./PERSONAL_KDNA.md) |
+| Provenance roadmap | [`rfcs/RFC-0006-provenance-signing-transparency.md`](../rfcs/RFC-0006-provenance-signing-transparency.md) |
 | Conformance | [`conformance/README.md`](../conformance/README.md) |
 | Compatibility policy | [`COMPATIBILITY.md`](../COMPATIBILITY.md) |
 | Trademark and naming | [`TRADEMARK.md`](../TRADEMARK.md) |
 | Certification levels | [`docs/kdna-compatible-certification.md`](./kdna-compatible-certification.md) |
 | Governance | [`docs/GOVERNANCE.md`](./GOVERNANCE.md) |
+| Release gate | [`docs/V1RC_RELEASE_GATE.md`](./V1RC_RELEASE_GATE.md) |
 
 ## Normative Implementation Rules
 
@@ -34,6 +40,9 @@ instead of forcing them to infer the standard from scattered repository files.
 8. Composition must preserve attribution and surface conflicts.
 9. Quality badges must follow the official badge names and evidence thresholds.
 10. KDNA-compatible claims must pass the relevant conformance profile.
+11. v1.0 assets must include root `mimetype` with
+    `application/vnd.aikdna.kdna+zip`.
+12. v1.0 manifests use `spec_version`; `kdna_spec` is not part of the protocol.
 
 ## Implementer Path
 

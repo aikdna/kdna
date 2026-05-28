@@ -91,8 +91,9 @@ Asset published to registry:
 
 ```json
 {
-  "kdna_spec": "1.0-rc",
+  "format": "kdna",
   "format_version": "1.0",
+  "spec_version": "1.0-rc",
   "domain": "silver-care",
   "version": "1.0.0",
   "access": "licensed",

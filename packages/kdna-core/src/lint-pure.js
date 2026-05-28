@@ -261,11 +261,20 @@ const VALID_BADGE = new Set(['untested', 'tested', 'validated', 'expert_reviewed
 const VALID_ACCESS = new Set(['open', 'licensed', 'runtime']);
 const VALID_RISK = new Set(['R0', 'R1', 'R2', 'R3']);
 const VALID_I18N = new Set(['L0', 'L1', 'L2', 'L3']);
+const VALID_PRIVACY = new Set(['public', 'private', 'sensitive', 'regulated']);
+const VALID_ASSET_TYPE = new Set([
+  'domain_judgment',
+  'personal_judgment',
+  'organization_standard',
+  'team_policy',
+  'creator_style',
+  'risk_guard',
+]);
 
 const MANIFEST_REQUIRED = [
-  'kdna_spec', 'name', 'version', 'judgment_version',
-  'description', 'author', 'license', 'status',
-  'quality_badge', 'access', 'language',
+  'format', 'format_version', 'spec_version', 'name', 'version',
+  'judgment_version', 'description', 'author', 'license', 'status',
+  'quality_badge', 'access', 'languages', 'default_language',
 ];
 
 /**
@@ -283,12 +292,14 @@ function validateManifest(manifest) {
     return { errors, warnings };
   }
 
-  // 1. Check spec_version is NOT in domain manifest (use kdna_spec only)
-  if ('spec_version' in manifest) {
+  // 1. Check disallowed pre-v1.0 manifest aliases
+  if ('kdna_spec' in manifest) {
     errors.push(
-      'kdna.json: spec_version is deprecated in domain manifests. Use kdna_spec. ' +
-      '(spec_version is reserved for .kdna container manifests only.)',
+      'kdna.json: kdna_spec is not allowed. Use spec_version.',
     );
+  }
+  if ('language' in manifest) {
+    errors.push('kdna.json: language is not allowed. Use default_language and languages.');
   }
 
   // 2. Check required fields
@@ -304,6 +315,14 @@ function validateManifest(manifest) {
   }
 
   // 4. Validate enum fields
+  if (manifest.format && manifest.format !== 'kdna') {
+    errors.push(`kdna.json.format: invalid value "${manifest.format}". Expected "kdna".`);
+  }
+  if (manifest.format_version && manifest.format_version !== '1.0') {
+    errors.push(
+      `kdna.json.format_version: invalid value "${manifest.format_version}". Expected "1.0".`,
+    );
+  }
   if (manifest.status && !VALID_STATUS.has(manifest.status)) {
     errors.push(
       `kdna.json.status: invalid value "${manifest.status}". ` +
@@ -334,6 +353,18 @@ function validateManifest(manifest) {
       `Valid: ${[...VALID_I18N].join(', ')}`,
     );
   }
+  if (manifest.privacy_level && !VALID_PRIVACY.has(manifest.privacy_level)) {
+    warnings.push(
+      `kdna.json.privacy_level: non-standard value "${manifest.privacy_level}". ` +
+      `Valid: ${[...VALID_PRIVACY].join(', ')}`,
+    );
+  }
+  if (manifest.asset_type && !VALID_ASSET_TYPE.has(manifest.asset_type)) {
+    warnings.push(
+      `kdna.json.asset_type: non-standard value "${manifest.asset_type}". ` +
+      `Valid: ${[...VALID_ASSET_TYPE].join(', ')}`,
+    );
+  }
 
   // 5. Deprecated status must have replaced_by
   if (manifest.status === 'deprecated' && !manifest.replaced_by) {
@@ -362,10 +393,10 @@ function validateManifest(manifest) {
     errors.push('kdna.json.license: missing "type"');
   }
 
-  // 9. Validate kdna_spec value
-  if (manifest.kdna_spec && manifest.kdna_spec !== '1.0-rc') {
+  // 9. Validate spec_version value
+  if (manifest.spec_version && manifest.spec_version !== '1.0-rc') {
     warnings.push(
-      `kdna.json.kdna_spec: non-standard value "${manifest.kdna_spec}". Expected "1.0-rc".`,
+      `kdna.json.spec_version: non-standard value "${manifest.spec_version}". Expected "1.0-rc".`,
     );
   }
 

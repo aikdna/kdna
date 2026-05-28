@@ -1,17 +1,11 @@
 {
-  "kdna_spec": "1.0-rc",
+  "format": "kdna",
+  "format_version": "1.0",
+  "spec_version": "1.0-rc",
   "name": "@aikdna/decision_state",
   "version": "0.4.0",
   "judgment_version": "0.4.0",
-  "language": "en",
-  "languages": [
-    "en"
-  ],
-  "created": "2026-05-18",
-  "updated": "2026-05-23",
-  "description": "Judge whether a meeting, discussion, or planning session has produced an actionable decision \u2014 or just discussion. Helps AI agents distinguish progress from the appearance of progress.",
-  "keywords": [],
-  "access": "open",
+  "description": "Judge whether a meeting, discussion, or planning session has produced an actionable decision — or just discussion. Helps AI agents distinguish progress from the appearance of progress.",
   "author": {
     "name": "KDNA Team",
     "id": "aikdna"
@@ -25,6 +19,14 @@
   },
   "status": "stable",
   "quality_badge": "tested",
-  "registry": {},
-  "file_count": 2
+  "access": "open",
+  "languages": [
+    "en"
+  ],
+  "default_language": "en",
+  "keywords": [],
+  "file_count": 2,
+  "created": "2026-05-18",
+  "updated": "2026-05-23",
+  "registry": {}
 }

@@ -1,17 +1,37 @@
 {
-  "kdna_spec": "1.0-rc",
+  "format": "kdna",
+  "format_version": "1.0",
+  "spec_version": "1.0-rc",
   "name": "@aikdna/short_video_subtitle",
   "version": "0.1.0",
   "judgment_version": "2026.05",
-  "status": "experimental",
-  "access": "open",
-  "language": "en",
-  "author": { "name": "KDNA Community", "id": "kdna" },
-  "license": { "type": "CC-BY-4.0" },
   "description": "Judgment layer for short-video subtitles: tone, rhythm, audience adaptation, and brand voice — not transcription mechanics.",
-  "keywords": ["subtitle", "short-video", "tone", "audience", "brand-voice", "rhythm"],
   "core_insight": "Subtitles are editorial decisions, not transcription. Every line break, word choice, and pacing decision is a creative judgment that affects how the audience feels about the content.",
-  "registry": { "repo": "aikdna/kdna-short_video_subtitle" },
+  "author": {
+    "name": "KDNA Community",
+    "id": "kdna"
+  },
+  "license": {
+    "type": "CC-BY-4.0"
+  },
+  "status": "experimental",
+  "quality_badge": "untested",
+  "access": "open",
+  "languages": [
+    "en"
+  ],
+  "default_language": "en",
+  "keywords": [
+    "subtitle",
+    "short-video",
+    "tone",
+    "audience",
+    "brand-voice",
+    "rhythm"
+  ],
   "created": "2026-05-23",
-  "updated": "2026-05-23"
+  "updated": "2026-05-23",
+  "registry": {
+    "repo": "aikdna/kdna-short_video_subtitle"
+  }
 }

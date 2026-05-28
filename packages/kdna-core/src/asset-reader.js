@@ -22,6 +22,7 @@ const STANDARD_ENTRIES = [
 ];
 
 const JSON_ENTRY_RE = /\.json$/i;
+const KDNA_MEDIA_TYPE = 'application/vnd.aikdna.kdna+zip';
 
 function sha256Hex(buf) {
   return crypto.createHash('sha256').update(buf).digest('hex');
@@ -181,8 +182,10 @@ function buildContentDigest(asset) {
     if (entryName === '.DS_Store' || entryName === 'signature.json') continue;
     const entryBuf = asset.readEntry(entryName);
     let digestBuf = entryBuf;
-    if (entryName === 'kdna.json') {
-      digestBuf = Buffer.from(stableStringify(manifestForDigest(parseJson(entryBuf, entryName))));
+    if (JSON_ENTRY_RE.test(entryName)) {
+      const parsed = parseJson(entryBuf, entryName);
+      const value = entryName === 'kdna.json' ? manifestForDigest(parsed) : parsed;
+      digestBuf = Buffer.from(stableStringify(value));
     }
     parts.push(`${entryName}:${sha256Hex(digestBuf)}`);
   }
@@ -201,16 +204,20 @@ function manifestForSignature(manifest, { stripDigestFields = true } = {}) {
   return copy;
 }
 
+function canonicalJsonEntry(entryName, entryBuf, options = {}) {
+  const parsed = parseJson(entryBuf, entryName);
+  const value = entryName === 'kdna.json' ? manifestForSignature(parsed, options) : parsed;
+  return Buffer.from(stableStringify(value));
+}
+
 function buildSigningPayload(asset, options = {}) {
   const parts = [];
-  for (const entryName of [...asset.entries.keys()].filter((name) => JSON_ENTRY_RE.test(name)).sort()) {
-    if (entryName === 'signature.json') continue;
+  for (const entryName of [...asset.entries.keys()].sort()) {
+    if (entryName === '.DS_Store' || entryName === 'signature.json') continue;
     const entryBuf = asset.readEntry(entryName);
     let payloadBuf = entryBuf;
-    if (entryName === 'kdna.json') {
-      payloadBuf = Buffer.from(
-        JSON.stringify(manifestForSignature(parseJson(entryBuf, entryName), options)),
-      );
+    if (JSON_ENTRY_RE.test(entryName)) {
+      payloadBuf = canonicalJsonEntry(entryName, entryBuf, options);
     }
     parts.push(`${entryName}:${sha256Hex(payloadBuf)}`);
   }
@@ -240,20 +247,43 @@ function verifySignature(asset, manifest, errors, warnings) {
   try {
     const signature = Buffer.from(String(manifest.signature).replace(/^ed25519:/, ''), 'hex');
     const publicKey = crypto.createPublicKey(manifest.author.public_key_pem);
-    let ok = crypto.verify(null, Buffer.from(buildSigningPayload(asset)), publicKey, signature);
-    if (!ok) {
-      ok = crypto.verify(
-        null,
-        Buffer.from(buildSigningPayload(asset, { stripDigestFields: false })),
-        publicKey,
-        signature,
-      );
-    }
+    const ok = crypto.verify(null, Buffer.from(buildSigningPayload(asset)), publicKey, signature);
     if (!ok) errors.push('Ed25519 signature invalid');
     return ok;
   } catch (e) {
     errors.push(`signature verification failed: ${e.message}`);
     return false;
+  }
+}
+
+function verifyMediaType(asset, errors) {
+  if (!asset.entries.has('mimetype')) {
+    errors.push('required entry missing: mimetype');
+    return;
+  }
+  const value = asset.readEntry('mimetype').toString('utf8');
+  if (value !== KDNA_MEDIA_TYPE) {
+    errors.push(`mimetype: expected ${KDNA_MEDIA_TYPE}, got ${JSON.stringify(value)}`);
+  }
+}
+
+function validateManifestIdentity(manifest, errors, _warnings) {
+  if (manifest.kdna_spec) {
+    errors.push('kdna.json: kdna_spec is not allowed. Use spec_version.');
+  }
+  if (manifest.format && manifest.format !== 'kdna') {
+    errors.push(`kdna.json.format: invalid value "${manifest.format}". Expected "kdna".`);
+  }
+  if (manifest.format_version && manifest.format_version !== '1.0') {
+    errors.push(
+      `kdna.json.format_version: invalid value "${manifest.format_version}". Expected "1.0".`,
+    );
+  }
+  if (!manifest.spec_version) errors.push('kdna.json: missing required field "spec_version"');
+  if (!manifest.format) errors.push('kdna.json: missing required field "format"');
+  if (!manifest.format_version) errors.push('kdna.json: missing required field "format_version"');
+  if (manifest.language) {
+    errors.push('kdna.json: language is not allowed. Use default_language and languages.');
   }
 }
 
@@ -307,6 +337,7 @@ function verifySync(asset, options = {}) {
   const entries = listEntries(asset);
 
   if (!asset.entries.has('kdna.json')) errors.push('required entry missing: kdna.json');
+  verifyMediaType(asset, errors);
   if (!asset.entries.has('KDNA_Core.json')) errors.push('required entry missing: KDNA_Core.json');
   if (!asset.entries.has('KDNA_Patterns.json')) {
     errors.push('required entry missing: KDNA_Patterns.json');
@@ -326,6 +357,7 @@ function verifySync(asset, options = {}) {
   if (asset.entries.has('kdna.json')) {
     try {
       manifest = readManifest(asset);
+      validateManifestIdentity(manifest, errors, warnings);
       const encrypted = encryptedEntries(manifest);
       if (encrypted.length) {
         warnings.push(`encrypted entries present: ${encrypted.join(', ')}`);
@@ -480,6 +512,7 @@ function createKdnaAssetReader() {
       const entries = [...asset.entries.keys()].sort();
 
       if (!asset.entries.has('kdna.json')) errors.push('required entry missing: kdna.json');
+      verifyMediaType(asset, errors);
       if (!asset.entries.has('KDNA_Core.json')) errors.push('required entry missing: KDNA_Core.json');
       if (!asset.entries.has('KDNA_Patterns.json')) {
         errors.push('required entry missing: KDNA_Patterns.json');
@@ -501,6 +534,7 @@ function createKdnaAssetReader() {
       if (asset.entries.has('kdna.json')) {
         try {
           manifest = parseJson(asset.readEntry('kdna.json'), 'kdna.json');
+          validateManifestIdentity(manifest, errors, warnings);
           const encrypted = encryptedEntries(manifest);
           if (encrypted.length) {
             warnings.push(`encrypted entries present: ${encrypted.join(', ')}`);

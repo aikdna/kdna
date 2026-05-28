@@ -114,15 +114,21 @@ const json = (value) => JSON.stringify(value, null, 2);
 
 function minimalEntries(overrides = {}) {
   return {
+    mimetype: 'application/vnd.aikdna.kdna+zip',
     'kdna.json': json({
-      kdna_spec: '1.0-rc',
+      format: 'kdna',
+      format_version: '1.0',
+      spec_version: '1.0-rc',
       name: '@example/minimal',
       version: '0.1.0',
+      judgment_version: '2026.05',
       access: 'open',
       status: 'experimental',
       description: 'Minimal conformance asset.',
       author: { name: 'KDNA Conformance', id: 'conformance' },
       license: { type: 'CC0-1.0' },
+      languages: ['en'],
+      default_language: 'en',
       keywords: ['minimal', 'conformance'],
       quality_badge: 'untested',
       risk_level: 'R0',
@@ -190,6 +196,13 @@ function omit(entries, key) {
   return copy;
 }
 
+function withManifest(entries, patch) {
+  const copy = { ...entries };
+  const manifest = JSON.parse(copy['kdna.json']);
+  copy['kdna.json'] = json({ ...manifest, ...patch });
+  return copy;
+}
+
 const fixtures = {
   minimal: writeAsset('valid-minimal-domain.kdna', minimalEntries()),
   full: writeAsset('valid-full-domain.kdna', {
@@ -202,7 +215,7 @@ const fixtures = {
         purpose: 'optional fixture',
         load_condition: 'on signal',
       },
-      scenes: [],
+      scenarios: [],
     }),
   }),
   missingCore: writeAsset('invalid-missing-core.kdna', omit(minimalEntries(), 'KDNA_Core.json')),
@@ -212,6 +225,15 @@ const fixtures = {
   ),
   duplicateId: writeAsset('invalid-duplicate-id.kdna', minimalEntries({ duplicateId: true })),
   badMeta: writeAsset('invalid-bad-meta.kdna', minimalEntries({ badMeta: true })),
+  missingMimetype: writeAsset('invalid-missing-mimetype.kdna', omit(minimalEntries(), 'mimetype')),
+  disallowedKdnaSpec: writeAsset(
+    'invalid-disallowed-kdna-spec.kdna',
+    withManifest(minimalEntries(), { kdna_spec: '1.0-rc' }),
+  ),
+  disallowedLanguage: writeAsset(
+    'invalid-disallowed-language.kdna',
+    withManifest(minimalEntries(), { language: 'en' }),
+  ),
   badSelfCheck: writeAsset(
     'invalid-non-yes-no-self-check.kdna',
     minimalEntries({ badSelfCheck: true }),
@@ -252,6 +274,9 @@ for (const [name, assetPath] of Object.entries({
   missingPatterns: fixtures.missingPatterns,
   duplicateId: fixtures.duplicateId,
   badMeta: fixtures.badMeta,
+  missingMimetype: fixtures.missingMimetype,
+  disallowedKdnaSpec: fixtures.disallowedKdnaSpec,
+  disallowedLanguage: fixtures.disallowedLanguage,
 })) {
   const result = await validateKDNA(assetPath);
   assert.equal(result.ok, false, `${name} should fail`);
