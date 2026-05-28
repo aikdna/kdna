@@ -8,6 +8,7 @@ const checks = [
   ['npm', ['run', 'lint']],
   ['npm', ['run', 'conformance']],
   ['npm', ['test']],
+  ['npm', ['run', 'check:pack']],
   ['git', ['diff', '--check']],
 ];
 

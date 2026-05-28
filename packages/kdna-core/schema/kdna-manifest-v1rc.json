@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schema/kdna-manifest-v1rc.json",
+  "title": "KDNA Domain Manifest (kdna.json)",
+  "description": "Canonical JSON Schema for the kdna.json manifest inside a .kdna asset internal domain tree or dev source workspace. This is the single source of truth: CLI, Registry, Studio, and compatible loaders MUST validate against this schema.",
+
+  "type": "object",
+  "required": [
+    "format",
+    "format_version",
+    "spec_version",
+    "name",
+    "version",
+    "judgment_version",
+    "description",
+    "author",
+    "license",
+    "status",
+    "quality_badge",
+    "access",
+    "languages",
+    "default_language"
+  ],
+  "properties": {
+
+    "format": {
+      "type": "string",
+      "const": "kdna",
+      "description": "KDNA container format marker."
+    },
+
+    "format_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "KDNA container manifest format version."
+    },
+
+    "spec_version": {
+      "type": "string",
+      "description": "KDNA SPEC version this asset conforms to. Required.",
+      "examples": ["1.0-rc"]
+    },
+
+    "name": {
+      "type": "string",
+      "pattern": "^@[a-z][a-z0-9-]*/[a-z][a-z0-9_]*$",
+      "description": "Scoped domain identifier. Format: @scope/name. scope matches the GitHub org. name uses snake_case.",
+      "examples": ["@aikdna/writing", "@aikdna/agent_safety"]
+    },
+
+    "version": {
+      "type": "string",
+      "description": "Semantic version (MAJOR.MINOR.PATCH) of the domain asset. Tracks packaging and metadata changes. Independent of judgment_version.",
+      "examples": ["0.7.2"]
+    },
+
+    "judgment_version": {
+      "type": "string",
+      "description": "Version of the domain's judgment content (axioms, ontology, misunderstandings). MUST be incremented when any judgment-relevant content changes. Uses YYYY.MM format or semver.",
+      "examples": ["2026.05"]
+    },
+
+    "description": {
+      "type": "string",
+      "minLength": 20,
+      "description": "What judgment this domain improves. One sentence that answers: what does loading this domain change about how an agent thinks?"
+    },
+
+    "core_insight": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Optional. The single most important cognitive shift this domain creates. Used for display in Compare Mode and registry previews."
+    },
+
+    "author": {
+      "type": "object",
+      "required": ["name", "id"],
+      "properties": {
+        "name": { "type": "string", "description": "Author display name." },
+        "id": { "type": "string", "description": "Author identifier (e.g., GitHub handle or email prefix)." },
+        "pubkey": {
+          "type": "string",
+          "pattern": "^ed25519:[0-9a-f]{64}$",
+          "description": "Ed25519 public key for signature verification. Required for signed domains."
+        },
+        "public_key_pem": {
+          "type": "string",
+          "description": "PEM-encoded Ed25519 public key used by verifiers."
+        }
+      }
+    },
+
+    "license": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "License identifier. CC-BY-4.0 for open domains, KCL-1.0 for commercial/pro domains.",
+          "examples": ["CC-BY-4.0", "KCL-1.0", "MIT"]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the full license text."
+        }
+      }
+    },
+
+    "status": {
+      "type": "string",
+      "enum": ["draft", "experimental", "stable", "deprecated", "staging"],
+      "description": "Domain maturity level. draft = early work in progress. experimental = complete but not yet proven in practice. stable = structure frozen, content mature. deprecated = superseded by another domain. staging = non-public pre-release (for pro/commercial domains)."
+    },
+
+    "quality_badge": {
+      "type": "string",
+      "enum": ["untested", "tested", "validated", "expert_reviewed", "production_ready"],
+      "description": "Evidence level for judgment quality. untested = schema validation only. tested = >= 10 eval cases with manual verification. validated = >= 30 eval cases with automated scoring and raw outputs. expert_reviewed = validated evidence plus external domain expert review. production_ready = expert_reviewed evidence plus real-world deployment evidence."
+    },
+
+    "access": {
+      "type": "string",
+      "enum": ["open", "licensed", "runtime"],
+      "description": "Distribution mode. open = plaintext, freely available. licensed = encrypted, requires local license. runtime = not distributed, server-side API only."
+    },
+
+    "languages": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "All languages this domain supports (ISO 639-1 codes).",
+      "examples": [["en", "zh-CN"]]
+    },
+
+    "default_language": {
+      "type": "string",
+      "description": "Default language for agent loading when none specified."
+    },
+
+    "i18n_level": {
+      "type": "string",
+      "enum": ["L0", "L1", "L2", "L3"],
+      "description": "Internationalization maturity. L0 = single language only. L1 = basic translation of axioms. L2 = full bilingual (en + zh-CN minimum). L3 = multi-language with locale-aware content."
+    },
+
+    "keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Discovery keywords for search and categorization."
+    },
+
+    "file_count": {
+      "type": "integer",
+      "minimum": 2,
+      "maximum": 6,
+      "description": "Number of standard KDNA JSON entries in the asset internal tree or dev source workspace (excluding kdna.json). Minimum 2 (Core + Patterns). Maximum 6."
+    },
+
+    "risk_level": {
+      "type": "string",
+      "enum": ["R0", "R1", "R2", "R3"],
+      "description": "Risk level for the domain. R0 = low risk (writing style, aesthetics). R1 = medium-low (product decisions, management). R2 = medium (safety, finance, legal). R3 = high (security strategy, code execution). Determines load warnings and certification requirements."
+    },
+
+    "privacy_level": {
+      "type": "string",
+      "enum": ["public", "private", "sensitive", "regulated"],
+      "description": "Privacy classification. Proposed for v1.1; optional in v1.0."
+    },
+
+    "asset_type": {
+      "type": "string",
+      "enum": [
+        "domain_judgment",
+        "personal_judgment",
+        "organization_standard",
+        "team_policy",
+        "creator_style",
+        "risk_guard"
+      ],
+      "description": "Judgment asset category. Proposed for v1.1; optional in v1.0."
+    },
+
+    "fitness_for_purpose": {
+      "type": "object",
+      "description": "Applicability boundary for runtime policy and human review.",
+      "properties": {
+        "intended_use": { "type": "array", "items": { "type": "string" } },
+        "not_for": { "type": "array", "items": { "type": "string" } },
+        "requires_human_review_when": { "type": "array", "items": { "type": "string" } },
+        "known_failure_modes": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+
+    "signature": {
+      "type": "string",
+      "pattern": "^ed25519:[0-9a-f]{128}$",
+      "description": "Ed25519 signature over the canonical payload. Required for domains with quality_badge >= tested."
+    },
+
+    "created": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO date of first creation."
+    },
+
+    "updated": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO date of last modification."
+    },
+
+    "replaced_by": {
+      "type": "string",
+      "description": "Required when status is deprecated. The name of the successor domain."
+    }
+  },
+
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "deprecated" } } },
+      "then": { "required": ["replaced_by"] }
+    },
+    {
+      "if": {
+        "properties": {
+          "quality_badge": { "enum": ["tested", "validated", "expert_reviewed", "production_ready"] }
+        }
+      },
+      "then": {
+        "required": ["signature"],
+        "properties": {
+          "author": { "required": ["pubkey"] }
+        }
+      }
+    }
+  ],
+
+  "additionalProperties": false
+}
