@@ -46,3 +46,25 @@ jobs:
         working-directory: packages/kdna
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-agent:
+    if: startsWith(github.ref_name, 'agent-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+        working-directory: examples/typescript-agent
+      - run: npm test
+        working-directory: examples/typescript-agent
+      - name: Publish @aikdna/agent
+        run: npm publish --provenance --access public
+        working-directory: examples/typescript-agent
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
