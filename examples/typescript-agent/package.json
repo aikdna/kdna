@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/agent",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "description": "KDNA TypeScript Agent SDK — framework-agnostic judgment layer for AI agents",
   "type": "module",
   "main": "./dist/index.js",
@@ -21,10 +21,11 @@
   "scripts": {
     "build": "tsc",
     "demo": "npm run build && node dist/demo.js",
+    "test": "npm run build && node dist/demo.js >/dev/null",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@aikdna/kdna-core": "^0.5.0"
+    "@aikdna/kdna-core": "^0.6.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

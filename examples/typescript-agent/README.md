@@ -1,40 +1,37 @@
-# KDNA TypeScript Custom Agent Example
+# @aikdna/agent
 
-A minimal TypeScript agent that uses KDNA domain cognition for judgment.
+KDNA Agent SDK - pre/post judgment guardrails for AI agents.
 
-## Setup
-
-```bash
-npm install
-npm run build
-```
-
-## Run
+## Install
 
 ```bash
-npm run demo
+npm install @aikdna/agent
 ```
 
-## What it shows
+## Usage
 
-- `loadDomain()` — load a KDNA domain asset
-- `formatContext()` — format domain into agent-readable context
-- `classifyInput()` — detect signals in user input
-- `KDNAAgent` class — framework-agnostic agent with KDNA-loaded judgment
+```ts
+import { KDNAAgent } from "@aikdna/agent";
 
-## Structure
+const agent = new KDNAAgent("/path/to/.kdna/domains");
 
-- `src/agent.ts` — `KDNAAgent` class with `analyze()` method
-- `src/index.ts` — demo runner with 3 scenarios
+const result = await agent.judge("Meeting transcript...", async (systemPrompt, input) => {
+  return await yourLLM.complete({ system: systemPrompt, user: input });
+});
 
-## Use in your project
-
-```typescript
-import { loadDomain, formatContext } from "@aikdna/kdna-core";
-
-const domain = loadDomain("./my-domain", { mode: "all" });
-const context = domain ? formatContext(domain) : "";
-
-// Inject into your LLM system prompt
-const systemPrompt = `You are an expert. Use this framework:\n\n${context}`;
+console.log(result.passed);
+console.log(result.pre_filter);
+console.log(result.post_validate);
 ```
+
+## API
+
+- `new KDNAAgent(domainDir)` loads a single KDNA domain directory or a parent directory containing multiple domains.
+- `agent.systemPrompt()` returns KDNA judgment context for injection into an LLM system message.
+- `agent.preFilter(input)` screens input for local banned terms and domain signals before an LLM call.
+- `agent.postValidate(response)` checks an LLM response against self-checks, banned terms, and known misunderstandings.
+- `agent.judge(input, llmCallFn)` runs pre-filter, calls your LLM function, then post-validates the response.
+
+## Package Boundary
+
+This SDK depends on `@aikdna/kdna-core` for KDNA loading and rendering. It does not depend on the legacy `@aikdna/kdna` CLI compatibility package.
