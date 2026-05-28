@@ -16,6 +16,7 @@
     "test": "npm --workspace @aikdna/kdna-core test",
     "conformance": "node conformance/run.mjs",
     "certify:asset-loader": "node conformance/run.mjs --profile asset-loader",
+    "release:preflight": "node scripts/release-preflight.js",
     "pretest": "npm install --ignore-scripts"
   },
   "license": "Apache-2.0",
