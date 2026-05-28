@@ -20,25 +20,19 @@ and already-published assets follow the protocol after the tools are released.
 Protocol repository:
 
 ```bash
-npm test
-npm run conformance
-npm run lint
-git diff --check
+npm run release:preflight
 ```
 
 CLI repository:
 
 ```bash
-npm run lint
-npm run test:all
-git diff --check
+npm run release:preflight
 ```
 
 Registry repository:
 
 ```bash
-npm test
-git diff --check
+npm run release:preflight
 ```
 
 Remote registry validation is intentionally after asset republishing:
@@ -57,10 +51,7 @@ release is complete, then run:
 ```bash
 npm install @aikdna/kdna-core@^0.6.0 --package-lock-only
 npm version 0.19.0 --no-git-tag-version
-npm ci
-npm run lint
-npm run format:check
-npm run test:all
+npm run release:preflight
 ```
 
 ## Non-Negotiable v1.0 Rules
