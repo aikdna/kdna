@@ -50,7 +50,7 @@ For open-access KDNA domains, we recommend:
 | **CC0** | Public domain. Maximum openness, no restrictions. |
 
 These licenses are suitable for:
-- Official KDNA domains (writing, knowledge_management, etc.)
+- Official KDNA domains (writing, code_review, agent_safety, etc.)
 - Community-contributed domains
 - Educational and reference KDNA
 

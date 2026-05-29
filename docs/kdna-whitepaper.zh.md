@@ -361,7 +361,7 @@ KDNA 组合可以理解为三个层级：
 
 | 层级 | 定义 | 示例 |
 |---|---|---|
-| **判断原子（Judgment Atom）** | 单个 KDNA domain | `writing`, `code_review`, `decision_state` |
+| **判断原子（Judgment Atom）** | 单个 KDNA domain | `writing`, `code_review`, `agent_safety` |
 | **判断集群（Judgment Cluster）** | 一组带有组合策略的 domains | `content_creation_cluster`, `product_launch_cluster` |
 | **判断系统（Judgment System）** | 带有治理机制的组织级判断架构 | 企业产品、品牌、合规和安全体系 |
 
@@ -710,19 +710,15 @@ KDNA 仍处于早期，但若干组件已经存在。
 
 ### 13.3 参考 Domains
 
-公共注册表包含早期 domains，例如：
+公共注册表可能为了透明性保留实验性或 yanked entries，但首发官方默认安装面只保留五个已签名资产：
 
-- writing；
-- decision_state；
+- kdna_authoring；
+- agent_safety；
 - prompt_diagnosis；
 - code_review；
-- content_strategy；
-- agent_safety；
-- knowledge_mgmt；
-- open_source_project；
-- kdna_authoring。
+- writing；
 
-并非所有 domains 都同样成熟。有些是参考示例。有些仍处于实验状态。质量应根据 eval 证据、专家审查和使用结果判断。
+其他 domains 暂不作为默认官方安装资产。有些是参考示例，有些仍处于实验状态，质量应根据 eval 证据、专家审查和使用结果判断。
 
 ### 13.4 参考 GUI 客户端
 
@@ -748,10 +744,12 @@ KDNA 下一阶段的目标不是尽可能增加 domains 数量，而是从 domai
 
 ### Phase 2：参考 Domains
 
-- 先强化三个参考 domains：
+- 先强化首发五个参考 domains：
+  - kdna_authoring；
+  - agent_safety；
+  - prompt_diagnosis；
+  - code_review；
   - writing；
-  - decision_state；
-  - prompt_diagnosis。
 - 确保每个都有完整六文件包。
 - 每个 domain 至少添加 10 个 evals。
 - 让 `kdna verify --judgment` 和 `kdna compare` 产生有意义证据。

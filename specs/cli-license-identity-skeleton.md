@@ -148,7 +148,7 @@ Output:
   @aikdna/writing          CC-BY-4.0      Open        Active
   @aikdna/writing-pro      KCL-1.0        Licensed    Active (expires 2027-05-24)
   @aikdna/management-pro   KCL-1.0        Licensed    Expired (2026-04-01)
-  @aikdna/decision_state   CC-BY-4.0      Open        Active
+  @aikdna/agent_safety     CC-BY-4.0      Open        Active
 ```
 
 ### 4.3 `kdna license activate <domain> --key <license-key> --server <url>`

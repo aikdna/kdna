@@ -46,8 +46,8 @@ kdna install writing
 # Code Review — behavior-first review, anti-rubber-stamp principles
 kdna install code_review
 
-# Decision State — was that meeting a decision or just discussion?
-kdna install decision_state
+# Agent Safety — gate irreversible actions before tools run
+kdna install agent_safety
 
 # Or search by keyword
 kdna search "security"
@@ -60,7 +60,7 @@ kdna list
 
 # Output:
 # 1 installed KDNA domain(s):
-#   @aikdna/writing  v0.7.2  [tested]
+#   @aikdna/writing  v0.7.3  [tested]
 #     Diagnose whether content has a real argument...
 #     applies when: 4 situations declared
 #     does NOT apply when: 2 situations declared

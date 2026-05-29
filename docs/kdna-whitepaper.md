@@ -379,7 +379,7 @@ KDNA composition can be understood in three levels:
 
 | Level | Definition | Example |
 |---|---|---|
-| **Judgment Atom** | A single KDNA domain | `writing`, `code_review`, `decision_state` |
+| **Judgment Atom** | A single KDNA domain | `writing`, `code_review`, `agent_safety` |
 | **Judgment Cluster** | A composed set of domains with a composition policy | `content_creation_cluster`, `product_launch_cluster` |
 | **Judgment System** | An organization-level judgment architecture with governance | an enterprise product, brand, compliance, and safety system |
 
@@ -739,7 +739,7 @@ Human Lock has moved from specification to working code at two enforcement point
 
 ### 14.5 Reference Domains
 
-The public registry includes domains such as: writing, decision_state, prompt_diagnosis, code_review, content_strategy, agent_safety, knowledge_management, open_source_project, kdna_authoring, and an animation cluster (7 sub-domains). Commercial pro domains (writing-pro, speaking-pro, management-pro, silver-age-pro) are in staging.
+The public registry may retain experimental and yanked entries for transparency, but the first-launch official install surface is intentionally limited to five signed assets: kdna_authoring, agent_safety, prompt_diagnosis, code_review, and writing. Commercial pro domains (writing-pro, speaking-pro, management-pro, silver-age-pro) are in staging.
 
 ### 14.6 Reference Applications
 
@@ -818,10 +818,12 @@ KDNA's roadmap is organized into six phases, reflecting the protocol's evolution
 
 ### Phase 2: Reference Domains
 
-- Strengthen three reference domains first:
+- Strengthen the first-launch reference set:
+  - kdna_authoring;
+  - agent_safety;
+  - prompt_diagnosis;
+  - code_review;
   - writing;
-  - decision_state;
-  - prompt_diagnosis.
 - Ensure each has a complete six-file package.
 - Add at least 10 evals per domain.
 - Make `kdna verify --judgment` and `kdna compare` produce meaningful evidence.
