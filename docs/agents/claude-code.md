@@ -51,7 +51,7 @@ cp ~/.kdna/skills/kdna-loader/SKILL.md ~/.claude/skills/kdna-loader/SKILL.md
 ```bash
 kdna list --available
 kdna install code_review
-kdna install decision_state
+kdna install agent_safety
 ```
 
 ## Common Issues

@@ -48,8 +48,8 @@
 
 | Value | Name | Load Behavior | Example Domains |
 |-------|------|---------------|----------------|
-| `R0` | Low | Load with no warning. | writing, content_strategy |
-| `R1` | Medium-Low | Load with informational notice. | decision_state, product decisions |
+| `R0` | Low | Load with no warning. | writing, prompt_diagnosis |
+| `R1` | Medium-Low | Load with informational notice. | code_review, product decisions |
 | `R2` | Medium | Load with strong warning. Recommend certified domains. | agent_safety, code_review |
 | `R3` | High | Load with mandatory warning. Require verified/reviewed badge. | security strategy, code execution |
 

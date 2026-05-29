@@ -239,7 +239,7 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | CLI — install, validate, verify, pack, load, trace | Developers |
 | [kdna-studio](https://github.com/aikdna/kdna-studio-core) | Authoring kernel (npm) — `@aikdna/kdna-studio` | App developers |
 | [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Native Swift authoring — create KDNA on Apple platforms | Swift developers |
-| [kdna-writing](https://github.com/aikdna/kdna-writing) · [decision_state](https://github.com/aikdna/kdna-decision_state) · [prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [agent_safety](https://github.com/aikdna/kdna-agent_safety) · [kdna_authoring](https://github.com/aikdna/kdna-authoring) · [content_strategy](https://github.com/aikdna/kdna-content_strategy) · [knowledge_management](https://github.com/aikdna/kdna-knowledge_management) · [open_source_project](https://github.com/aikdna/kdna-open_source_project) · [code_review](https://github.com/aikdna/kdna-code_review) · [animation](https://github.com/aikdna/kdna-animation) | Official domain assets (bilingual en/zh-CN for core domains, evolving eval coverage) | Domain consumers |
+| [kdna_authoring](https://github.com/aikdna/kdna-authoring) · [agent_safety](https://github.com/aikdna/kdna-agent_safety) · [prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [code_review](https://github.com/aikdna/kdna-code_review) · [kdna-writing](https://github.com/aikdna/kdna-writing) | First-launch official domain assets (signed `.kdna`, Human Lock, bilingual en/zh-CN) | Domain consumers |
 | [aikdna.com](https://github.com/aikdna/kdna-website) | Website source | Web contributors |
 
 ---

@@ -144,7 +144,7 @@ Deploy KDNA domains in environments without internet access.
 ```bash
 # Install domains from any registry
 kdna install @aikdna/code_review
-kdna install @aikdna/decision_state
+kdna install @aikdna/agent_safety
 
 # Copy installed .kdna assets from ~/.kdna/packages/ for transport
 
@@ -166,7 +166,7 @@ kdna setup
 
 # Install domains from local files
 kdna install ./offline-packages/code_review-0.1.0.kdna
-kdna install ./offline-packages/decision_state-0.4.0.kdna
+kdna install ./offline-packages/agent_safety-0.7.6.kdna
 kdna install ./offline-packages/my_internal_domain-0.1.0.kdna
 
 # Verify installations
