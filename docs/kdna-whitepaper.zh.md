@@ -710,7 +710,7 @@ KDNA 仍处于早期，但若干组件已经存在。
 
 ### 13.3 参考 Domains
 
-公共注册表可能为了透明性保留实验性或 yanked entries，但首发官方默认安装面只保留五个已签名资产：
+公共注册表可能为了透明性保留实验性或 yanked entries，但官方默认安装面是一个聚焦的参考集合：
 
 - kdna_authoring；
 - agent_safety；
@@ -718,7 +718,7 @@ KDNA 仍处于早期，但若干组件已经存在。
 - code_review；
 - writing；
 
-其他 domains 暂不作为默认官方安装资产。有些是参考示例，有些仍处于实验状态，质量应根据 eval 证据、专家审查和使用结果判断。
+这组参考集合覆盖创作、安全、提示诊断、代码评审和写作判断，用来证明 KDNA 的安装、验证和加载流程。其他 domains 暂不作为默认官方安装资产。有些是参考示例，有些仍处于实验状态，质量应根据 eval 证据、专家审查和使用结果判断。
 
 ### 13.4 参考 GUI 客户端
 
@@ -744,7 +744,7 @@ KDNA 下一阶段的目标不是尽可能增加 domains 数量，而是从 domai
 
 ### Phase 2：参考 Domains
 
-- 先强化首发五个参考 domains：
+- 先强化官方参考 domains：
   - kdna_authoring；
   - agent_safety；
   - prompt_diagnosis；
