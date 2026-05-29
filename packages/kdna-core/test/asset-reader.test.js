@@ -273,7 +273,6 @@ test('asset reader decrypts licensed entries only through an in-memory hook', as
     },
   };
   const licenseKey = 'KDNA-LIC-TEST';
-  const machineFingerprint = 'machine-test-fingerprint';
 
   fs.writeFileSync(
     assetPath,
@@ -285,7 +284,6 @@ test('asset reader decrypts licensed entries only through an in-memory hook', as
           entryName: 'KDNA_Core.json',
           manifest,
           licenseKey,
-          machineFingerprint,
         }),
       ),
       'KDNA_Patterns.json': json(
@@ -293,7 +291,6 @@ test('asset reader decrypts licensed entries only through an in-memory hook', as
           entryName: 'KDNA_Patterns.json',
           manifest,
           licenseKey,
-          machineFingerprint,
         }),
       ),
     }),
@@ -310,7 +307,7 @@ test('asset reader decrypts licensed entries only through an in-memory hook', as
     /encrypted entry requires decryptEntry hook/,
   );
 
-  const decryptEntry = createLicensedDecryptEntry({ licenseKey, machineFingerprint });
+  const decryptEntry = createLicensedDecryptEntry({ licenseKey });
   const verifyWithHook = await reader.verify(asset, { requireDecryption: true, decryptEntry });
   assert.equal(verifyWithHook.ok, true);
   assert.match(verifyWithHook.warnings.join('\n'), /encrypted entries present/);
@@ -327,7 +324,6 @@ test('asset reader decrypts licensed entries only through an in-memory hook', as
 
   const wrongDecryptEntry = createLicensedDecryptEntry({
     licenseKey: 'wrong',
-    machineFingerprint,
   });
   const wrongVerify = await reader.verify(asset, {
     requireDecryption: true,
