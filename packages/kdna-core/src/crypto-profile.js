@@ -1,5 +1,22 @@
 const crypto = require('crypto');
 
+/**
+ * NOTE — RFC-0008 compliance gap:
+ *
+ * RFC-0008 defines a key-wrapping model using HKDF-SHA256 + authenticated key
+ * wrapping. The current implementation uses scrypt-sha256 with a concatenated
+ * secret (`licenseKey|machineFingerprint`), which differs from the RFC.
+ *
+ * This profile will be renamed to `kdna-licensed-entry-experimental` and the
+ * RFC-0008 compliant profile will use `kdna-licensed-entry-v1` when encryption
+ * reaches production readiness.
+ *
+ * Migration path:
+ *   1. Implement HKDF-SHA256 key derivation per RFC-0008.
+ *   2. Add authenticated key wrapping / unwrapping.
+ *   3. Rename this profile → `kdna-licensed-entry-experimental`.
+ *   4. Introduce `kdna-licensed-entry-v1` with RFC-0008-compliant model.
+ */
 const LICENSED_ENTRY_PROFILE = 'kdna-licensed-entry-v1';
 const KDF = 'scrypt-sha256';
 const ALG = 'AES-256-GCM';
