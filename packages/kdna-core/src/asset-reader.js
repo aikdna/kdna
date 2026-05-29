@@ -173,13 +173,20 @@ function manifestForDigest(manifest) {
   delete copy.container_sha256;
   delete copy.content_digest;
   delete copy._source;
+  if (copy.authoring && typeof copy.authoring === 'object') {
+    const auth = { ...copy.authoring };
+    delete auth.content_digest;
+    copy.authoring = auth;
+  }
   return copy;
 }
 
 function buildContentDigest(asset) {
   const parts = [];
+  const excluded = new Set(['.DS_Store', 'signature.json', 'build-receipt.json']);
   for (const entryName of [...asset.entries.keys()].sort()) {
-    if (entryName === '.DS_Store' || entryName === 'signature.json') continue;
+    if (excluded.has(entryName)) continue;
+    if (entryName.startsWith('reports/')) continue;
     const entryBuf = asset.readEntry(entryName);
     let digestBuf = entryBuf;
     if (JSON_ENTRY_RE.test(entryName)) {

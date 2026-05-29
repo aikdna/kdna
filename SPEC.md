@@ -822,7 +822,7 @@ Trust is NOT inherited through lineage. Forked or adapted assets MUST go through
 ### 14.5 Digest
 
 - **Asset digest:** `asset_digest` is the SHA-256 hash of the complete `.kdna` file bytes. It MUST be recorded outside the container, such as in the registry entry, local receipt, or lockfile.
-- **Content digest:** `content_digest` is the canonical SHA-256 hash of the internal content tree, excluding `signature.json`, `.DS_Store`, and local installation metadata. If stored in `kdna.json`, the `content_digest` field itself is excluded from its own digest calculation.
+- **Content digest:** `content_digest` is the canonical SHA-256 hash of the internal content tree. The content tree includes all non-directory ZIP entries except `signature.json`, `.DS_Store`, `build-receipt.json`, `reports/*`, and local installation metadata. Reports and build receipts are build evidence, not judgment content — they are not part of the content digest. If stored in `kdna.json`, the `content_digest` field itself (and other self-referencing digest fields) are excluded from its own digest calculation.
 - Registries MUST use `asset_digest` for every installable `.kdna` asset and MAY also publish `content_digest`.
 - Installers MUST verify `asset_digest` before registration.
 - Digest verification MUST fail closed: any mismatch prevents installation.
