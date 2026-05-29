@@ -739,7 +739,7 @@ Human Lock has moved from specification to working code at two enforcement point
 
 ### 14.5 Reference Domains
 
-The public registry may retain experimental and yanked entries for transparency, but the first-launch official install surface is intentionally limited to five signed assets: kdna_authoring, agent_safety, prompt_diagnosis, code_review, and writing. Commercial pro domains (writing-pro, speaking-pro, management-pro, silver-age-pro) are in staging.
+The public registry may retain experimental and yanked entries for transparency, but the official install surface is a focused reference set: kdna_authoring, agent_safety, prompt_diagnosis, code_review, and writing. Together they demonstrate authoring, safety, prompt diagnosis, code review, and writing judgment across the core install, verify, and load flow. Commercial pro domains (writing-pro, speaking-pro, management-pro, silver-age-pro) are in staging.
 
 ### 14.6 Reference Applications
 
@@ -818,7 +818,7 @@ KDNA's roadmap is organized into six phases, reflecting the protocol's evolution
 
 ### Phase 2: Reference Domains
 
-- Strengthen the first-launch reference set:
+- Strengthen the official reference set:
   - kdna_authoring;
   - agent_safety;
   - prompt_diagnosis;
