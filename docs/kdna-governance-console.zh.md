@@ -166,7 +166,7 @@ kdna proposal lock prop_ds_001 --accept --reason "证据充分。"
 kdna verify @aikdna/decision_state --judgment --regression
 
 # 发布已批准的域
-kdna publish ./decision_state --release-tag v0.7.2
+kdna publish ./dist/decision_state.kdna --release-tag v0.7.2
 ```
 
 Console 可以用 Web 界面包装这些命令，但协议保持 CLI。这确保治理动作是可脚本化、可审计的，不锁定在任何单一 UI 中。

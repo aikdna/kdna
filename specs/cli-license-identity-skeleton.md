@@ -65,17 +65,18 @@ Output (json):
 
 ## 3. Signing Commands
 
-### 3.1 `kdna publish <source-dir>`
+### 3.1 `kdna publish <file.kdna>`
 
-Build and sign a `.kdna` asset with the creator's identity key.
+Publish an existing Studio-compiled `.kdna` asset. `kdna publish` does not
+create trusted assets from arbitrary source directories.
 
 ```
-kdna publish ./my-domain-source --output ./dist
+kdna publish ./dist/my-domain.kdna
 
 Output:
   Signed: @aikdna/my-domain v0.1.0
   Signature: ed25519:def5678...
-  Packed: ./dist/my-domain-0.1.0.kdna
+  Asset: ./dist/my-domain.kdna
 ```
 
 Pre-flight checks:
@@ -90,7 +91,7 @@ Verify a domain's signature against the author's public key.
 
 ```
 kdna verify @aikdna/writing        # Verify installed domain
-kdna verify ./my-domain.kdna       # Verify a .kdna dev package
+kdna verify ./my-domain.kdna       # Verify a .kdna asset
 
 Output (valid):
   ✓ Signature valid

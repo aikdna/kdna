@@ -735,7 +735,7 @@ The `kdna route` command implements a 5-Gate 7-State domain router (Intent Gate 
 
 Human Lock has moved from specification to working code at two enforcement points:
 - **Studio Gate**: integrated into `exportProject()` — blocks export if judgment-class cards are not properly locked. 4 rules: must be locked, must have Human Lock record, must confirm `applies_when`/`does_not_apply_when`/`failure_risk` reviewed, fingerprint change detection for post-lock modifications. 16 tests.
-- **CLI Gate**: integrated into `kdna dev pack` and `kdna publish` — blocks asset building and publishing with exit code 8 (HUMAN_LOCK_REQUIRED). `--force` emergency override with audit trail.
+- **Runtime Gate**: `kdna dev pack` remains a dev-only bundle path with Human Lock warnings, while `kdna publish` accepts existing `.kdna` assets and checks authoring provenance for trusted quality claims.
 
 ### 14.5 Reference Domains
 

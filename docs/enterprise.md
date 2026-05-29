@@ -114,13 +114,13 @@ kdna identity show
 #   Registered:    yes (in ~/.kdna/config.json)
 ```
 
-### 2.3 Sign a domain with your key
+### 2.3 Publish a Studio-compiled asset
 
 ```bash
-kdna publish ./my_domain
-# 1. Validates structure
-# 2. Validates content quality (publish --check)
-# 3. Signs with your Ed25519 key
+kdna publish ./dist/my_domain.kdna
+# 1. Reads an existing .kdna asset
+# 2. Checks authoring provenance for trusted quality claims
+# 3. Computes asset/content digests
 # 4. Outputs registry patch JSON
 ```
 
@@ -148,7 +148,7 @@ kdna install @aikdna/agent_safety
 
 # Copy installed .kdna assets from ~/.kdna/packages/ for transport
 
-# Or pack your custom domain
+# Or create a dev-only diagnostic bundle
 kdna dev pack ./my_internal_domain --output ./offline-packages/
 ```
 
@@ -223,8 +223,8 @@ kdna identity export --out ~/backup/mycorp-identity.backup
 kdna identity init --org "MyCorp-v2"
 
 # 2. Re-sign all domains with new key
-kdna publish ./my_domain_1
-kdna publish ./my_domain_2
+kdna publish ./dist/my_domain_1.kdna
+kdna publish ./dist/my_domain_2.kdna
 
 # 3. Update registry with new trust_pubkey
 # Update domains.json: scopes.@mycorp.trust_pubkey = new fingerprint

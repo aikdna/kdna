@@ -30,8 +30,8 @@ A KDNA does not make an agent role-play an expert. It gives the agent an explici
 
 ```
 KDNAStudio                    kdna-cli                    KDNA Registry
-Creates judgment         →    Verifies & packs      →    Distributes trusted
-assets (expertise)            domain assets             domain assets
+Creates + compiles       →    Verifies + runs       →    Distributes trusted
+trusted .kdna assets          existing .kdna assets      .kdna assets
       │                                                         │
       │                         ┌───────────────────────────────┘
       ▼                         ▼
@@ -43,7 +43,7 @@ assets (expertise)            domain assets             domain assets
 ```
 
 > **KDNA is not a single project — it's a judgment asset operating system.**  
-> Studio creates, CLI verifies, Registry distributes, Chat makes judgment visible, Work puts judgment into real workflows, and feedback returns to improve the domain.
+> Studio creates and compiles KDNA, CLI verifies and runs KDNA, Registry distributes trusted KDNA, Agents load and use KDNA.
 
 ## The KDNA Stack
 
@@ -205,7 +205,7 @@ kdna doctor --agents
 # → Installed domains: 1
 ```
 
-Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Then `kdna dev validate my_expertise` checks it, and `kdna publish my_expertise` sends it to the registry.
+Want to create your own trusted KDNA? Start with KDNA Studio. Studio turns human-reviewed judgment cards into canonical `.kdna` assets with authoring provenance, Human Locks, compiler metadata, and asset digest. `kdna-cli` verifies, installs, loads, compares, publishes, and audits existing `.kdna` assets; it does not author trusted KDNA.
 
 ---
 
@@ -218,7 +218,7 @@ Want to create your own? `kdna init my_expertise` scaffolds a minimal domain. Th
 | **Comparing KDNA with RAG, Memory, Skills, MCP, Workflows, Evals** | [KDNA and the AI Stack](./docs/kdna-and-ai-stack.md) |
 | **Reading the white paper** | [KDNA White Paper](./docs/kdna-whitepaper.md) |
 | **Developer wanting to connect KDNA to an agent** | [5-minute guide](./docs/5-minute-guide.md) |
-| **Domain expert wanting to encode your judgment** | [KDNA Studio](https://github.com/aikdna/kdna-studio-core) — authoring kernel (`@aikdna/kdna-studio`) |
+| **Domain expert wanting to encode your judgment** | [KDNA Studio](https://github.com/aikdna/kdna-studio-core) — Studio-compatible authoring pipeline and compiler (`@aikdna/kdna-studio`) |
 | **Evaluator wanting to measure judgment improvement** | [Evaluation guide](./docs/evaluation.md) |
 | **App developer integrating KDNA into Chat, Studio, Work, or agent runtimes** | [App Runtime Contract](./docs/app-runtime-contract.md) |
 | **Enterprise evaluating private deployment** | [Enterprise guide](./docs/enterprise.md) |
@@ -319,7 +319,7 @@ RAG retrieves facts and documents for the model to reference. KDNA encodes what 
 <details>
 <summary>Can I use KDNA without coding?</summary>
 
-Yes — start with [KDNA Studio](https://github.com/aikdna/kdna-studio-core) (`@aikdna/kdna-studio`) for guided domain authoring. To install and use domains with your AI agent, you only need the CLI (`npm install -g @aikdna/kdna-cli`). Creating your own domain currently requires editing JSON files, though KDNA Studio's interview mode helps non-technical experts structure their judgment without writing code.
+Yes — start with [KDNA Studio](https://github.com/aikdna/kdna-studio-core) (`@aikdna/kdna-studio`) for guided authoring, Human Lock, compile, and export. To install and use domains with your AI agent, you only need the CLI (`npm install -g @aikdna/kdna-cli`). Hand-written dev source directories are non-canonical and cannot become trusted assets unless compiled by a Studio-compatible pipeline.
 </details>
 
 <details>

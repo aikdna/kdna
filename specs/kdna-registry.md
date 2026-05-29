@@ -16,7 +16,7 @@ Hugging Face Hub for ML models — but optimized for KDNA domain judgment assets
 │                  kdna CLI                         │
 │  kdna install writing                               │
 │  kdna search "writing"                            │
-│  kdna publish ./my-domain                         │
+│  kdna publish ./dist/my-domain.kdna               │
 └──────────────────┬───────────────────────────────┘
                    │
                    ▼
@@ -237,13 +237,13 @@ When an Agent loads a KDNA asset, it resolves:
 ## 7. Publishing Protocol (Future)
 
 ```bash
-kdna publish ./my-domain
-kdna publish --dry-run ./my-domain
+kdna publish ./dist/my-domain.kdna
+kdna publish --dry-run ./dist/my-domain.kdna
 ```
 
 Pre-publish checks:
-1. Domain passes `kdna dev validate`
-2. `kdna.json` manifest is complete
+1. Asset passes `kdna verify`
+2. `kdna.json` manifest is complete and includes authoring provenance for trusted quality claims
 3. Repository URL is valid
 4. Version is not already published
 5. License is declared

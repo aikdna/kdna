@@ -133,14 +133,14 @@ if (signals.fit) {
 Package your own expertise as a KDNA domain:
 
 ```bash
-kdna init my_expertise
+kdna dev scaffold my_expertise
 # Creates: my_expertise/
 #   KDNA_Core.json    — your axioms, concepts, frameworks
 #   KDNA_Patterns.json — terminology, misunderstandings, self-checks
 #   kdna.json          — metadata (name, version, license)
 ```
 
-Edit the files, then:
+This is a non-canonical dev source workspace. Edit the files for experimentation, then use KDNA Studio or a Studio-compatible compiler for Human Lock, compile, and export.
 
 ```bash
 kdna dev validate my_expertise       # structural check for dev source

@@ -15,10 +15,11 @@ A `.kdna` file is **not** a merged single JSON or YAML document. It is a
 ## 2. Design Philosophy
 
 ```
-Development      →  Standard domain folder (6 JSON files, editable, diffable)
+Authoring        →  Studio project + dev source workspace (non-canonical)
+Compile/export   →  Studio-compatible compiler emits .kdna with provenance
 Distribution     →  .kdna container (ZIP archive, portable, signable)
 Reading          →  Unpack internally, load per SPEC loading rules
-Editing          →  Unpack back to folder, edit, re-pack
+Debugging        →  Unpack back to folder for inspection only
 ```
 
 This is the same model as `.docx`, `.pptx`, `.epub`, `.vsix` — container files
@@ -89,6 +90,19 @@ does not have a separate metadata header — it is transparent ZIP.
   "description": "Domain cognition for sketchnote visual style judgment.",
   "core_insight": "Visual clarity communicates before words do.",
   "file_count": 6,
+  "authoring": {
+    "created_by": "kdna-studio",
+    "authoring_tool": "KDNA Studio",
+    "authoring_tool_version": "0.3.0",
+    "compiler": "@aikdna/kdna-studio",
+    "compiler_version": "0.3.0",
+    "studio_project_digest": "sha256-...",
+    "human_lock_required": true,
+    "human_lock_count": 8,
+    "ai_assisted": true,
+    "human_confirmed": true,
+    "compiled_at": "2026-05-29T00:00:00Z"
+  },
   "created": "2026-05-20",
   "updated": "2026-05-20"
 }
@@ -97,17 +111,21 @@ does not have a separate metadata header — it is transparent ZIP.
 ## 7. Lifecycle Commands
 
 ```
-create    →  kdna init <name>           Scaffold standard domain folder
-validate  →  kdna dev validate <folder>     Check 6 JSON files against SPEC
-pack      →  kdna dev pack <folder>         Folder → .kdna container (ZIP)
+create    →  KDNA Studio / kdna studio scaffold   Studio-compatible authoring
+validate  →  kdna dev validate <folder>           Check dev source structure
+bundle    →  kdna dev pack <folder>               Dev-only non-trusted bundle
 inspect   →  kdna inspect <file.kdna>   Read container metadata + stats
-unpack    →  kdna dev unpack <file.kdna>    .kdna → folder (for editing)
+unpack    →  kdna dev unpack <file.kdna>    .kdna → folder (debugging only)
 install   →  kdna install <file.kdna>   Install container to local registry
 ```
 
 ### 7.1 `kdna dev pack`
 
-Creates a `.kdna` container from a valid domain folder. The command:
+Creates a dev-only `.kdna` bundle from a valid source folder. This command does
+not create a trusted KDNA asset. To create a canonical trusted `.kdna`, use a
+Studio-compatible compile/export pipeline.
+
+The command:
 
 1. Validates the folder has required files (`KDNA_Core.json` + `KDNA_Patterns.json`)
 2. Ensures `kdna.json` manifest exists (generates one if missing)
@@ -121,7 +139,8 @@ kdna dev pack ./sketchnote-style
 
 ### 7.2 `kdna dev unpack`
 
-Extracts a `.kdna` container back to a standard domain folder.
+Extracts a `.kdna` container back to a standard domain folder for debugging and
+inspection. Manual unpack/edit/repack invalidates trust.
 
 ```bash
 kdna dev unpack sketchnote-style.kdna

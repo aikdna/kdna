@@ -80,7 +80,7 @@ domain-0.1.0.kdna
 ### 3.5 Usage
 
 ```bash
-# Pack
+# Dev-only bundle
 kdna dev pack ./my_domain
 
 # Install

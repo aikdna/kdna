@@ -8,13 +8,13 @@
 npm i -g @aikdna/kdna-cli
 ```
 
-## 第二步：从模板创建
+## 第二步：创建开发源工作区
 
 ```bash
-kdna init my-domain
+kdna dev scaffold my-domain
 ```
 
-这会脚手架出一个最小领域，包含占位的公理、概念、立场和自检。它直接通过验证。
+这会脚手架出一个非权威的开发源工作区，包含占位的公理、概念、立场和自检。需要可信 `.kdna` 资产时，请使用 KDNA Studio 完成 Human Lock、编译和导出。
 
 ## 第三步：查看
 
@@ -54,7 +54,7 @@ kdna inspect ./my-domain
 ## 第六步：创建你自己的
 
 ```bash
-kdna init my-domain
+kdna dev scaffold my-domain
 ```
 
 编辑 `KDNA_Core.json`——为你的领域写 2-3 条公理。然后：

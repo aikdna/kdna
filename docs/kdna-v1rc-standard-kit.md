@@ -17,6 +17,7 @@ instead of forcing them to infer the standard from scattered repository files.
 | Composition policy | [`rfcs/RFC-0005-composition-policy.md`](../rfcs/RFC-0005-composition-policy.md) |
 | Media type | [`docs/MEDIA_TYPE.md`](./MEDIA_TYPE.md) |
 | Canonicalization | [`docs/CANONICALIZATION.md`](./CANONICALIZATION.md) |
+| Canonical authoring boundary | [`docs/CANONICAL_AUTHORING_BOUNDARY.md`](./CANONICAL_AUTHORING_BOUNDARY.md) |
 | Trust boundary | [`docs/KDNA_TRUST_BOUNDARY.md`](./KDNA_TRUST_BOUNDARY.md) |
 | Personal KDNA | [`docs/PERSONAL_KDNA.md`](./PERSONAL_KDNA.md) |
 | Provenance roadmap | [`rfcs/RFC-0006-provenance-signing-transparency.md`](../rfcs/RFC-0006-provenance-signing-transparency.md) |
@@ -31,18 +32,24 @@ instead of forcing them to infer the standard from scattered repository files.
 
 1. `.kdna` is the canonical user-facing cognition asset.
 2. Source directories are dev-only authoring workspaces.
-3. Installed assets are stored as immutable packages, not persistent unpacked
+3. Trusted `.kdna` assets must be compiled by a Studio-compatible authoring
+   pipeline with provenance, Human Lock evidence, compiler metadata, and asset
+   digest.
+4. `manual-dev-source` assets may be schema-valid but cannot receive trusted
+   registry quality badges.
+5. Installed assets are stored as immutable packages, not persistent unpacked
    domain directories.
-4. Loaders must read `.kdna` directly or use hidden, rebuildable caches.
-5. Installers must enforce `asset_digest`, yanked state, and revocation state.
-6. Trust-aware runtimes must verify signatures against registry scope keys.
-7. Licensed encrypted entries must be decrypted in memory.
-8. Composition must preserve attribution and surface conflicts.
-9. Quality badges must follow the official badge names and evidence thresholds.
-10. KDNA-compatible claims must pass the relevant conformance profile.
-11. v1.0 assets must include root `mimetype` with
+6. Loaders must read `.kdna` directly or use hidden, rebuildable caches.
+7. Installers must enforce `asset_digest`, yanked state, and revocation state.
+8. Trust-aware runtimes must verify signatures against registry scope keys.
+9. Licensed encrypted entries must be decrypted in memory.
+10. Composition must preserve attribution and surface conflicts.
+11. Quality badges must follow the official badge names, evidence thresholds,
+    and authoring provenance gates.
+12. KDNA-compatible claims must pass the relevant conformance profile.
+13. v1.0 assets must include root `mimetype` with
     `application/vnd.aikdna.kdna+zip`.
-12. v1.0 manifests use `spec_version`; `kdna_spec` is not part of the protocol.
+14. v1.0 manifests use `spec_version`; `kdna_spec` is not part of the protocol.
 
 ## Implementer Path
 

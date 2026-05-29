@@ -193,6 +193,38 @@
       "additionalProperties": false
     },
 
+    "authoring": {
+      "type": "object",
+      "description": "Studio-compatible authoring provenance. Required for trusted quality claims.",
+      "required": ["created_by"],
+      "properties": {
+        "created_by": {
+          "type": "string",
+          "enum": [
+            "kdna-studio",
+            "kdna-studio-cli",
+            "kdna-studio-sdk",
+            "third-party-studio-compatible",
+            "manual-dev-source"
+          ]
+        },
+        "authoring_tool": { "type": "string" },
+        "authoring_tool_version": { "type": "string" },
+        "compiler": { "type": "string" },
+        "compiler_version": { "type": "string" },
+        "studio_project_digest": {
+          "type": "string",
+          "pattern": "^sha256[-:][0-9a-f]{64}$"
+        },
+        "human_lock_required": { "type": "boolean" },
+        "human_lock_count": { "type": "integer", "minimum": 0 },
+        "ai_assisted": { "type": "boolean" },
+        "human_confirmed": { "type": "boolean" },
+        "compiled_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+
     "signature": {
       "type": "string",
       "pattern": "^ed25519:[0-9a-f]{128}$",
@@ -229,9 +261,30 @@
         }
       },
       "then": {
-        "required": ["signature"],
+        "required": ["signature", "authoring"],
         "properties": {
-          "author": { "required": ["pubkey"] }
+          "author": { "required": ["pubkey"] },
+          "authoring": {
+            "required": [
+              "compiler",
+              "compiler_version",
+              "compiled_at",
+              "human_confirmed",
+              "human_lock_count"
+            ],
+            "properties": {
+              "created_by": {
+                "enum": [
+                  "kdna-studio",
+                  "kdna-studio-cli",
+                  "kdna-studio-sdk",
+                  "third-party-studio-compatible"
+                ]
+              },
+              "human_confirmed": { "const": true },
+              "human_lock_count": { "minimum": 1 }
+            }
+          }
         }
       }
     }

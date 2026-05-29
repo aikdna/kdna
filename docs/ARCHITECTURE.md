@@ -13,8 +13,8 @@ The KDNA Protocol defines how human domain expertise is encoded as machine-reada
 - **Human Judgment Lock** — critical fields must be locked by a human author before publication
 
 ### Layer 2: Authoring
-- **kdna-studio** — guided authoring environment with card-level Human Lock, Feynman restatement, and quality gates
-- **CLI** (`kdna init`, `kdna dev validate`, `kdna dev pack`) — command-line toolchain for authoring dev source directories and building `.kdna` assets
+- **kdna-studio** — guided authoring environment with card-level Human Lock, Feynman restatement, quality gates, Studio-compatible compiler, and `.kdna` export
+- **CLI** (`kdna dev scaffold`, `kdna dev validate`, `kdna dev pack`) — dev source utilities for non-canonical workspaces and debugging bundles; not a trusted authoring authority
 
 ### Layer 3: Registry
 - **Central domain index** (`domains.json`) — the canonical listing of all published KDNA domains

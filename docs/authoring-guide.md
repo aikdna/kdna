@@ -79,7 +79,7 @@ If you write KDNA JSON from scratch, you MUST use these exact field names. The l
 | `brief` / `bad_pattern` / `master_pattern` (on cases) | `title` / `what_happened` / `structural_pattern` |
 | `capability_layers` (on evolution) | `stages` |
 
-**Always start from a template** (`kdna init <name>` or `kdna cluster init <name>`). The template guarantees correct field names. If you write JSON from scratch, use this table as your reference card.
+For dev source experiments, start from `kdna dev scaffold <name>` or `kdna cluster init <name>` so field names stay consistent. This creates a non-canonical workspace only. Trusted `.kdna` assets must be Human Locked and compiled/exported by KDNA Studio or a Studio-compatible compiler.
 
 ---
 

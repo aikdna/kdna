@@ -260,14 +260,14 @@ CC BY 4.0
 
 ### 5.4 注册到 Registry（v3.0 schema）
 
-**首选**：用新 publish 命令一键打包+签名+上传+生成 patch：
+**首选**：用 Studio-compatible compiler 先完成 Human Lock、compile/export，再用 publish 命令上传已有 `.kdna` 并生成 patch：
 
 ```bash
 # 设置 identity（首次）
 kdna identity init
 
-# 一键发布：打包、签名、上传 GitHub Release、输出 registry patch
-kdna publish ./your-domain \
+# 发布已有 .kdna：上传 GitHub Release、输出 registry patch
+kdna publish ./dist/your-domain.kdna \
   --release-tag v0.1.0 \
   --repo yourname/kdna-<domain-id>
 ```

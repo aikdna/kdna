@@ -8,13 +8,13 @@ Build a working KDNA domain in 10 minutes and see how it changes agent judgment.
 npm i -g @aikdna/kdna-cli
 ```
 
-## Step 2: Create from Template
+## Step 2: Create a Dev Source Workspace
 
 ```bash
-kdna init my-domain
+kdna dev scaffold my-domain
 ```
 
-This scaffolds a minimal domain with placeholder axioms, concepts, stances, and self-checks. It passes validation immediately.
+This scaffolds a non-canonical dev source workspace with placeholder axioms, concepts, stances, and self-checks. Use KDNA Studio for Human Lock, compile, and export when you need a trusted `.kdna` asset.
 
 ## Step 3: Inspect
 
@@ -54,7 +54,7 @@ This is the core shift: **KDNA changes what the agent notices, not just what wor
 ## Step 6: Create Your Own Domain
 
 ```bash
-kdna init my-domain
+kdna dev scaffold my-domain
 ```
 
 Edit `KDNA_Core.json` — write 2-3 axioms for your domain. Then:

@@ -11,7 +11,11 @@ installation, verification, licensing, and loading is the `.kdna` file.
 
 A dev source directory can be:
 - A **directory** on disk for development and review
-- Built into a **`.kdna` asset** with `kdna dev pack`
+- Bundled into a **dev-only `.kdna` file** with `kdna dev pack`
+
+Trusted `.kdna` assets must be created by KDNA Studio or a Studio-compatible
+compiler that records authoring provenance, Human Lock evidence, compiler
+metadata, and asset digest.
 
 ## 2. Directory Structure
 
@@ -208,11 +212,14 @@ kdna inspect sales-0.1.0.kdna
 
 ### Dev Source Directory → .kdna
 
-A dev source directory can be converted to a single `.kdna` file:
+A dev source directory can be bundled to a single dev-only `.kdna` file:
 
 ```bash
 kdna dev pack ./sales --output sales.kdna
 ```
+
+This bundle is not a registry-trusted asset. Manual unpack/edit/repack
+invalidates trust.
 
 ### .kdna → Dev Source Directory
 
