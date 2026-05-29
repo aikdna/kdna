@@ -177,13 +177,15 @@ kdna verify @aikdna/writing --judgment
 要创建自己的领域：
 
 ```bash
-kdna init my_expertise
-# 填写 KDNA_Core.json 和 KDNA_Patterns.json
-kdna dev validate my_expertise
-kdna publish my_expertise
+npm install -g @aikdna/kdna-studio
+kdna-studio create my_expertise --name @yourscope/my_expertise
+# 导入材料、生成判断卡片，并由人类确认 Human Lock
+kdna-studio export my_expertise --out dist/my_expertise.kdna --sign
+kdna verify dist/my_expertise.kdna --judgment
+kdna publish dist/my_expertise.kdna
 ```
 
-或使用 **KDNAChat** Mac App 或 **VS Code 插件** 进行引导式创作。从[最小模板](./templates/minimal-domain/)开始也很方便。
+可信 `.kdna` 不是通过手写 JSON 或 CLI 打包创建的，而是由兼容 Studio 的创建管线编译生成。VS Code 和 `kdna dev` 命令只用于开发源工作区的诊断。
 
 ## 规范
 
