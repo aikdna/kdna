@@ -760,15 +760,64 @@ Every `.kdna` container MUST include a `kdna.json` at the archive root. This fil
   "created": "2026-05-01",
   "updated": "2026-05-15",
   "content_digest": "sha256:abc123...",
-  "signature": "ed25519:def456..."
+  "signature": "ed25519:def456...",
+  "source_mode": "blank",
+  "creator": {
+    "creator_id": "kdna:creator:ed25519:8f3a...",
+    "display_name": "Zhang Ling",
+    "public_key": "-----BEGIN PUBLIC KEY-----...",
+    "verified": false
+  },
+  "lineage": {
+    "type": "original"
+  }
 }
 ```
 
-**Required fields:** `format`, `format_version`, `spec_version`, `name`, `version`, `judgment_version`, `description`, `author`, `license`, `status`, `quality_badge`, `access`, `languages`, `default_language`.
+**Required fields:** `format`, `format_version`, `spec_version`, `name`, `version`, `judgment_version`, `description`, `author`, `license`, `status`, `quality_badge`, `access`, `languages`, `default_language`, `source_mode`.
 
-**Optional fields:** `core_insight`, `keywords`, `file_count`, `risk_level`, `privacy_level`, `asset_type`, `created`, `updated`, `content_digest`, `signature`, `fitness_for_purpose`.
+**Optional fields:** `core_insight`, `keywords`, `file_count`, `risk_level`, `privacy_level`, `asset_type`, `created`, `updated`, `content_digest`, `signature`, `fitness_for_purpose`, `creator`, `lineage`.
 
 The `name` field follows the format `@scope/domain-name` and MUST match the registry entry. The `kdna_spec` field is not part of v1.0 and MUST be rejected.
+
+#### 14.4.1 Source Mode
+
+`source_mode` declares how this domain was originally created:
+
+| Value | Description |
+|-------|-------------|
+| `"blank"` | Created from scratch in Studio (original creation) |
+| `"kdna_asset"` | Forked or adapted from an existing `.kdna` asset |
+| `"source_folder"` | Migrated from a legacy JSON source folder |
+
+Assets with `source_mode: "kdna_asset"` SHOULD include a `lineage` record documenting the parent asset. Assets with `source_mode: "source_folder"` MUST be treated as untrusted until re-locked through a Studio-compatible pipeline.
+
+#### 14.4.2 Creator Identity
+
+`creator` records the local creator identity of the human who authored this domain:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `creator_id` | string | Unique creator identifier: `"kdna:creator:ed25519:<fingerprint>"` |
+| `display_name` | string | Human-readable name |
+| `public_key` | string | Ed25519 public key (PEM) |
+| `verified` | boolean | Whether this identity is bound to a verified account |
+
+The creator identity is generated locally and does not require registration. The `creator_id` is derived from the SHA-256 fingerprint of the creator's Ed25519 public key.
+
+#### 14.4.3 Lineage
+
+`lineage` documents the derivation history when an asset is not an original creation:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `type` | string | `"original"`, `"fork"`, `"adapt"`, or `"migrated"` |
+| `parent_name` | string | Name of the parent KDNA asset |
+| `parent_asset_uid` | string | Asset UID of the parent |
+| `parent_version` | string | Version of the parent at time of fork |
+| `parent_asset_digest` | string | Digest of the parent .kdna asset |
+
+Trust is NOT inherited through lineage. Forked or adapted assets MUST go through their own Human Lock and export pipeline. Imported domain folders (migrated) MUST be re-locked before export.
 
 ### 14.5 Digest
 
