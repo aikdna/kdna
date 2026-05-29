@@ -14,6 +14,6 @@
 |------|------|:--:|
 | @aikdna/kdna-cli | >=0.16.0 | 活跃 |
 | @aikdna/kdna-core | >=0.3.0 | 活跃 |
-| @aikdna/studio-core | >=1.0.0 | 活跃 |
+| @aikdna/kdna-studio-core | >=1.0.0 | 活跃 |
 
 详见英文原版：[SECURITY.md](https://github.com/aikdna/kdna/blob/main/docs/SECURITY.md)

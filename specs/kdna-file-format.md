@@ -94,7 +94,7 @@ does not have a separate metadata header — it is transparent ZIP.
     "created_by": "kdna-studio",
     "authoring_tool": "KDNA Studio",
     "authoring_tool_version": "0.3.0",
-    "compiler": "@aikdna/kdna-studio",
+    "compiler": "@aikdna/kdna-studio-core",
     "compiler_version": "0.3.0",
     "studio_project_digest": "sha256-...",
     "human_lock_required": true,

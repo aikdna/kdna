@@ -16,7 +16,8 @@
 
 ## Phase 2: Authoring Infrastructure ✅
 
-- ✅ `@aikdna/kdna-studio` (npm) — JS authoring kernel
+- ✅ `@aikdna/kdna-studio-core` (npm) — JS authoring kernel
+- ✅ `@aikdna/kdna-studio-cli` (npm) — `kdna-studio` command-line authoring entry
 - ✅ `kdna-studio-swift` (SPM) — Swift authoring kernel for Apple platforms
 - ✅ Judgment Cards (9 types, 6-state machine)
 - ✅ Human Lock Gate enforcement (Studio + CLI)

@@ -58,7 +58,7 @@ higher quality MUST include Studio-compatible authoring provenance:
     "created_by": "kdna-studio",
     "authoring_tool": "KDNA Studio",
     "authoring_tool_version": "0.3.0",
-    "compiler": "@aikdna/kdna-studio",
+    "compiler": "@aikdna/kdna-studio-core",
     "compiler_version": "0.3.0",
     "project_uid": "018f8f1c-...",
     "asset_uid": "018f8f2d-...",

@@ -177,7 +177,7 @@ kdna verify @aikdna/writing --judgment
 要创建自己的领域：
 
 ```bash
-npm install -g @aikdna/kdna-studio
+npm install -g @aikdna/kdna-studio-cli
 kdna-studio create my_expertise --name @yourscope/my_expertise
 # 导入材料、生成判断卡片，并由人类确认 Human Lock
 kdna-studio export my_expertise --out dist/my_expertise.kdna --sign

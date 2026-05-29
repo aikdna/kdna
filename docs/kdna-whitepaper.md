@@ -719,7 +719,8 @@ KDNA has moved from concept to a working protocol ecosystem with early evidence.
 |-----------|-----------|------|
 | `@aikdna/kdna-core` | aikdna/kdna | Pure JS logic: load, validate, lint, render, compose |
 | `@aikdna/kdna-cli` | aikdna/kdna-cli | CLI: verify, install, load, match, route, compare, diff, publish existing assets, identity, trace, guard |
-| `@aikdna/kdna-studio` | aikdna/kdna-studio-core | JS authoring kernel: evidence → cards → Human Lock → compile → export |
+| `@aikdna/kdna-studio-core` | aikdna/kdna-studio-core | JS authoring kernel: evidence → cards → Human Lock → compiler provenance |
+| `@aikdna/kdna-studio-cli` | aikdna/kdna-studio-cli | CLI: `kdna-studio` create, import, cards, lock, compile, export |
 | kdna-core-swift | aikdna/kdna-core-swift | Native Swift runtime: load, validate, route (7-state), compose, trust verify |
 | kdna-studio-swift | aikdna/kdna-studio-swift | Native Swift authoring: project, cards, Human Lock, compile, export |
 | kdna-registry | aikdna/kdna-registry | Domain catalog with signatures, quality badges, risk levels, CI validation |
@@ -763,7 +764,8 @@ KDNA's roadmap is organized into six phases, reflecting the protocol's evolution
 
 ### Phase 2: Authoring Infrastructure ✅
 
-- `@aikdna/kdna-studio` (npm) — JS authoring kernel
+- `@aikdna/kdna-studio-core` (npm) — JS authoring kernel
+- `@aikdna/kdna-studio-cli` (npm) — `kdna-studio` command-line authoring entry
 - `kdna-studio-swift` (SPM) — Swift authoring kernel for Apple platforms
 - Judgment Cards (9 types, 6-state machine)
 - Human Lock Gate (Studio + CLI enforcement, fingerprint change detection)

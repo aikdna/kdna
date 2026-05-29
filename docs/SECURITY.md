@@ -20,7 +20,7 @@ This policy covers the KDNA tooling and infrastructure. Domain judgment content 
 |------|---------|:-------:|
 | @aikdna/kdna-cli | >=0.16.0 | Active |
 | @aikdna/kdna-core | >=0.3.0 | Active |
-| @aikdna/kdna-studio | >=1.0.0 | Active |
+| @aikdna/kdna-studio-core | >=1.0.0 | Active |
 
 ## Responsible Disclosure
 
