@@ -21,6 +21,9 @@ instead of forcing them to infer the standard from scattered repository files.
 | Trust boundary | [`docs/KDNA_TRUST_BOUNDARY.md`](./KDNA_TRUST_BOUNDARY.md) |
 | Personal KDNA | [`docs/PERSONAL_KDNA.md`](./PERSONAL_KDNA.md) |
 | Provenance roadmap | [`rfcs/RFC-0006-provenance-signing-transparency.md`](../rfcs/RFC-0006-provenance-signing-transparency.md) |
+| Canonical asset build pipeline | [`rfcs/RFC-0007-canonical-authoring-build-pipeline.md`](../rfcs/RFC-0007-canonical-authoring-build-pipeline.md), [`docs/STUDIO_EXPORT_CONTRACT.md`](./STUDIO_EXPORT_CONTRACT.md) |
+| Licensed encrypted assets | [`rfcs/RFC-0008-encrypted-licensed-kdna-assets.md`](../rfcs/RFC-0008-encrypted-licensed-kdna-assets.md), [`docs/kdna-encryption-authorization.md`](./kdna-encryption-authorization.md) |
+| Asset identity | [`docs/ASSET_IDENTITY_MODEL.md`](./ASSET_IDENTITY_MODEL.md) |
 | Conformance | [`conformance/README.md`](../conformance/README.md) |
 | Compatibility policy | [`COMPATIBILITY.md`](../COMPATIBILITY.md) |
 | Trademark and naming | [`TRADEMARK.md`](../TRADEMARK.md) |
@@ -33,8 +36,9 @@ instead of forcing them to infer the standard from scattered repository files.
 1. `.kdna` is the canonical user-facing cognition asset.
 2. Source directories are dev-only authoring workspaces.
 3. Trusted `.kdna` assets must be compiled by a Studio-compatible authoring
-   pipeline with provenance, Human Lock evidence, compiler metadata, and asset
-   digest.
+   pipeline with Human Lock evidence, validation, canonicalization, identity
+   generation, digest computation, signing, optional encryption, provenance, and
+   asset digest.
 4. `manual-dev-source` assets may be schema-valid but cannot receive trusted
    registry quality badges.
 5. Installed assets are stored as immutable packages, not persistent unpacked

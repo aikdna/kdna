@@ -2,6 +2,11 @@
 
 KDNA assets are not ordinary JSON packages.
 
+A `.kdna` asset is not created by writing JSON files. It is compiled by a
+Studio-compatible authoring pipeline that performs human confirmation,
+validation, canonicalization, identity generation, digest computation, signing,
+optional encryption, and provenance recording.
+
 A conforming `.kdna` asset MAY NOT be created by directly packaging arbitrary
 source directories and presenting the result as trusted. A trusted `.kdna` asset
 MUST be compiled by a KDNA-compatible authoring pipeline that records
@@ -32,7 +37,8 @@ The trusted path for a `.kdna` asset is:
 4. Human review and confirmation.
 5. Human Lock.
 6. Studio-compatible compiler output.
-7. `.kdna` asset export with authoring provenance.
+7. `.kdna` asset export with identity, canonicalization, digests, signing,
+   optional encryption, and authoring provenance.
 8. CLI verification.
 9. Signature and registry publication.
 10. Agent loading and post-validation.
@@ -54,6 +60,12 @@ higher quality MUST include Studio-compatible authoring provenance:
     "authoring_tool_version": "0.3.0",
     "compiler": "@aikdna/kdna-studio",
     "compiler_version": "0.3.0",
+    "project_uid": "018f8f1c-...",
+    "asset_uid": "018f8f2d-...",
+    "build_id": "build_...",
+    "domain_id": "writing",
+    "registry_name": "@aikdna/writing",
+    "content_digest": "sha256:...",
     "studio_project_digest": "sha256-...",
     "human_lock_required": true,
     "human_lock_count": 8,
@@ -87,4 +99,3 @@ prove judgment quality.
 | Studio provenance + automated eval + quality report | `validated` |
 | External expert review | `expert_reviewed` |
 | Real deployment data + continuous eval | `production_ready` |
-

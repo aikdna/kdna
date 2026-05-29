@@ -718,12 +718,12 @@ KDNA has moved from concept to a working protocol ecosystem with early evidence.
 | Component | Repository | Role |
 |-----------|-----------|------|
 | `@aikdna/kdna-core` | aikdna/kdna | Pure JS logic: load, validate, lint, render, compose |
-| `@aikdna/kdna-cli` | aikdna/kdna-cli | CLI: verify, install, load, match, route, compare, diff, pack, publish, identity, trace, guard |
+| `@aikdna/kdna-cli` | aikdna/kdna-cli | CLI: verify, install, load, match, route, compare, diff, publish existing assets, identity, trace, guard |
 | `@aikdna/kdna-studio` | aikdna/kdna-studio-core | JS authoring kernel: evidence → cards → Human Lock → compile → export |
 | kdna-core-swift | aikdna/kdna-core-swift | Native Swift runtime: load, validate, route (7-state), compose, trust verify |
 | kdna-studio-swift | aikdna/kdna-studio-swift | Native Swift authoring: project, cards, Human Lock, compile, export |
 | kdna-registry | aikdna/kdna-registry | Domain catalog with signatures, quality badges, risk levels, CI validation |
-| kdna-vscode | aikdna/kdna-vscode | VS Code extension: validate, preview, pack, configurable scan depth |
+| kdna-vscode | aikdna/kdna-vscode | VS Code extension: validate, preview, dev-source diagnostics, configurable scan depth |
 | kdna-skills | aikdna/kdna-skills | Agent loader skill with 7-state routing ("No KDNA is better than wrong KDNA") |
 | kdna-runtime | (private) | Server-side projection engine with Judgment Guard, rate limiting, signed licenses |
 
@@ -735,7 +735,7 @@ The `kdna route` command implements a 5-Gate 7-State domain router (Intent Gate 
 
 Human Lock has moved from specification to working code at two enforcement points:
 - **Studio Gate**: integrated into `exportProject()` — blocks export if judgment-class cards are not properly locked. 4 rules: must be locked, must have Human Lock record, must confirm `applies_when`/`does_not_apply_when`/`failure_risk` reviewed, fingerprint change detection for post-lock modifications. 16 tests.
-- **Runtime Gate**: `kdna dev pack` remains a dev-only bundle path with Human Lock warnings, while `kdna publish` accepts existing `.kdna` assets and checks authoring provenance for trusted quality claims.
+- **Runtime Gate**: `kdna dev pack` remains a dev-only diagnostic bundle path, while `kdna publish` accepts existing Studio-compiled `.kdna` assets and checks authoring provenance for trusted quality claims.
 
 ### 14.5 Reference Domains
 
@@ -756,7 +756,7 @@ KDNA's roadmap is organized into six phases, reflecting the protocol's evolution
 
 - SPEC v1.0-rc stable, six standard files, JSON Schemas
 - `@aikdna/kdna-core` — pure JS runtime library
-- `@aikdna/kdna-cli` — command-line toolchain (verify, install, load, match, route, compare, diff, pack, publish, identity, trace)
+- `@aikdna/kdna-cli` — command-line toolchain (verify, install, load, match, route, compare, diff, publish existing assets, identity, trace)
 - `kdna-registry` — machine-readable domain catalog with signatures, quality badges, CI validation
 - Benchmark infrastructure: 5-model mini benchmark with Best Prompt control, 150 raw outputs
 - Governance: TRADEMARK, COMPATIBILITY, FORK_POLICY, GOVERNANCE

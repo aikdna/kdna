@@ -4,10 +4,10 @@
 
 - ✅ SPEC v1.0-rc — six standard files, JSON Schemas, validation rules
 - ✅ `@aikdna/kdna-core` — pure JS runtime library (load, validate, lint, render, compose)
-- ✅ `@aikdna/kdna-cli` — CLI toolchain (verify, install, load, match, route, compare, diff, pack, publish, identity, trace)
+- ✅ `@aikdna/kdna-cli` — CLI toolchain (verify, install, load, match, route, compare, diff, publish existing assets, identity, trace)
 - ✅ `kdna-registry` — domain catalog with signatures, quality badges, risk levels, CI validation
 - ✅ `kdna-skills` — agent loader skill with 7-state routing
-- ✅ `kdna-vscode` — VS Code extension (validate, preview, pack)
+- ✅ `kdna-vscode` — VS Code extension (validate, preview, dev-source diagnostics)
 - ✅ First-launch official domains: `kdna_authoring`, `agent_safety`, `prompt_diagnosis`, `code_review`, `writing`
 - ✅ Benchmark infrastructure: 5-model mini benchmark with Best Prompt control, 150 raw outputs
 - ✅ Human Judgment Lock: protocol specification + Studio Gate + CLI Gate (4 rules, fingerprint detection)

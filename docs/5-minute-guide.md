@@ -145,8 +145,9 @@ This is a non-canonical dev source workspace. Edit the files for experimentation
 ```bash
 kdna dev validate my_expertise       # structural check for dev source
 kdna publish --check my_expertise    # content quality gate
-kdna publish my_expertise            # build + sign + output registry patch
-kdna install ./my_expertise.kdna     # install local asset for testing
+kdna-studio export my_expertise --out ./dist/my_expertise.kdna --sign
+kdna publish ./dist/my_expertise.kdna # publish existing Studio-built asset
+kdna install ./dist/my_expertise.kdna # install local asset for testing
 ```
 
 ---

@@ -6,13 +6,19 @@
 
 KDNA Studio is the guided authoring and compile/export authority for creating high-quality KDNA domains. It replaces the current "write JSON by hand" approach with a structured, interview-first workflow that records authoring provenance, Human Lock evidence, compiler metadata, and asset digest.
 
+A `.kdna` asset is not created by writing JSON files. It is compiled by a
+Studio-compatible authoring pipeline that performs human confirmation,
+validation, canonicalization, identity generation, digest computation, signing,
+optional encryption, and provenance recording.
+
 ## Three Creation Paths
 
 | Path | User | Tool | Output |
 |------|------|------|--------|
-| **Developer** | CLI-savvy users | Studio CLI / VS Code dev source diagnostics | Non-canonical workspace |
-| **Guided** | Domain experts | KDNAChat / Mac App Studio | `.kdna` container |
-| **Expert Team** | Professional teams | KDNA Studio + Human Lock + CI | Signed, validated `.kdna` |
+| **Guided** | Domain experts | KDNA Studio App | `.kdna` |
+| **Developer** | CLI-savvy users | KDNA Studio CLI / Studio SDK | `.kdna` |
+| **Enterprise** | Professional teams | Studio Core + CI + Registry Gate | Signed or licensed `.kdna` |
+| **Dev Source Debug** | Tool builders | VS Code / `kdna dev` tools | Non-canonical source only |
 
 ## The Studio Workflow (5 Stages)
 

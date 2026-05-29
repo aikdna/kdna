@@ -148,8 +148,9 @@ kdna install @aikdna/agent_safety
 
 # Copy installed .kdna assets from ~/.kdna/packages/ for transport
 
-# Or create a dev-only diagnostic bundle
-kdna dev pack ./my_internal_domain --output ./offline-packages/
+# Or export a trusted offline asset from Studio
+kdna-studio export ./my_internal_project --out ./offline-packages/my_internal_domain.kdna --sign
+kdna verify ./offline-packages/my_internal_domain.kdna
 ```
 
 ### 3.2 Transport and install on air-gapped machine

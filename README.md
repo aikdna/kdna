@@ -45,6 +45,11 @@ trusted .kdna assets          existing .kdna assets      .kdna assets
 > **KDNA is not a single project — it's a judgment asset operating system.**  
 > Studio creates and compiles KDNA, CLI verifies and runs KDNA, Registry distributes trusted KDNA, Agents load and use KDNA.
 
+A `.kdna` asset is not created by writing JSON files. It is compiled by a
+Studio-compatible authoring pipeline that performs human confirmation,
+validation, canonicalization, identity generation, digest computation, signing,
+optional encryption, and provenance recording.
+
 ## The KDNA Stack
 
 AIKDNA = the ecosystem / brand  
@@ -70,6 +75,8 @@ KDNA Protocol is open. KDNA CLI is reference tooling. KDNAChat is a reference cl
 External integrations should start with:
 
 - [`docs/kdna-v1rc-standard-kit.md`](./docs/kdna-v1rc-standard-kit.md) for the canonical v1.0-rc implementer bundle.
+- [`docs/STUDIO_EXPORT_CONTRACT.md`](./docs/STUDIO_EXPORT_CONTRACT.md) for the required asset build outputs.
+- [`docs/ASSET_IDENTITY_MODEL.md`](./docs/ASSET_IDENTITY_MODEL.md) for asset/project/build identity fields.
 - [`@aikdna/kdna-core`](./packages/kdna-core) for stable asset-first APIs.
 - [`conformance/`](./conformance) for loader and validator compatibility tests.
 - [`docs/kdna-compatible-certification.md`](./docs/kdna-compatible-certification.md) for KDNA-compatible levels and certification boundaries.

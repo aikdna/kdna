@@ -12,6 +12,8 @@ Current initial RFC set:
 - [RFC-0004: Runtime Loading Contract](./RFC-0004-runtime-loading-contract.md)
 - [RFC-0005: Composition Policy](./RFC-0005-composition-policy.md)
 - [RFC-0006: Provenance, Signing, and Transparency](./RFC-0006-provenance-signing-transparency.md)
+- [RFC-0007: Canonical Authoring and Asset Build Pipeline](./RFC-0007-canonical-authoring-build-pipeline.md)
+- [RFC-0008: Encrypted and Licensed KDNA Assets](./RFC-0008-encrypted-licensed-kdna-assets.md)
 
 ## RFC States
 
