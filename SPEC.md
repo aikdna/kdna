@@ -849,6 +849,17 @@ A `.kdna` container MAY be signed using Ed25519. Registry-published assets MUST 
 - Signature verification is REQUIRED for domains with `access: licensed` or `access: runtime`.
 - Unsigned local `.kdna` files MAY be loaded only as untrusted local files.
 
+### 14.6.2 Publish Audit
+
+Registry entries for trusted assets SHOULD include a  block:
+
+| Field | Type | Description |
+|-------|------|-------------|
+|  | string | Identity of the publisher |
+|  | string | ISO 8601 timestamp of publication |
+|  | string | Tool chain used (e.g. "kdna-studio-cli v0.2.0 + kdna-studio-core v1.4.2") |
+|  | string | Human-readable note about what changed |
+
 ### 14.6.1 Registry Trust Metadata
 
 Conforming public registries MUST publish trust metadata alongside domain entries:
