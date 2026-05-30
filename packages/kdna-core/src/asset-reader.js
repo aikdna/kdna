@@ -274,6 +274,53 @@ function verifyMediaType(asset, errors) {
   }
 }
 
+/**
+ * Verify Human Lock signatures on locked axiom cards.
+ * Reconstructs signing payload (cardId|statement|fingerprint) and verifies
+ * against the creator's public key from kdna.json manifest.author.
+ */
+function verifyHumanLockSignatures(coreData, manifest, errors, warnings) {
+  const publicKeyPEM = manifest?.author?.public_key_pem;
+  if (!publicKeyPEM) {
+    // Skip if no public key available (unsigned assets are valid)
+    return;
+  }
+  const axioms = coreData?.axioms || [];
+  if (!Array.isArray(axioms) || axioms.length === 0) return;
+
+  let verified = 0, missing = 0, invalid = 0;
+  for (const ax of axioms) {
+    const hl = ax.human_lock;
+    if (!hl || !hl.signature) {
+      // Only warn for locked cards without signature
+      if (ax.status === 'locked' || ax.status === 'tested' || ax.status === 'published') {
+        missing++;
+      }
+      continue;
+    }
+    try {
+      const payload = [ax.id, hl.statement || '', hl.judgment_fingerprint || ''].join('\n');
+      const sig = Buffer.from(String(hl.signature).replace(/^ed25519:/, ''), 'hex');
+      const key = crypto.createPublicKey(publicKeyPEM);
+      const ok = crypto.verify(null, Buffer.from(payload), key, sig);
+      if (ok) { verified++; }
+      else { invalid++; }
+    } catch {
+      invalid++;
+    }
+  }
+
+  if (invalid > 0) {
+    errors.push(`${invalid} Human Lock signature(s) failed verification — judgment may have been altered`);
+  }
+  if (missing > 0) {
+    warnings.push(`${missing} locked card(s) have no Human Lock signature`);
+  }
+  if (verified > 0 && invalid === 0) {
+    // All signed locks verified — good
+  }
+}
+
 function validateManifestIdentity(manifest, errors, _warnings) {
   if (manifest.kdna_spec) {
     errors.push('kdna.json: kdna_spec is not allowed. Use spec_version.');
@@ -394,6 +441,15 @@ function verifySync(asset, options = {}) {
       }
       if (options.requireSignature || manifest.signature) {
         signature_valid = verifySignature(asset, manifest, errors, warnings);
+      }
+      // ── Human Lock signature verification ──────────────────
+      if (asset.entries.has('KDNA_Core.json')) {
+        try {
+          const coreData = parseJson(asset.readEntry('KDNA_Core.json'), 'KDNA_Core.json');
+          verifyHumanLockSignatures(coreData, manifest, errors, warnings);
+        } catch (e) {
+          warnings.push(`Human Lock signature check skipped: ${e.message}`);
+        }
       }
     } catch (e) {
       errors.push(e.message);
