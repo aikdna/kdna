@@ -26,7 +26,7 @@
         },
         "domain": {
           "type": "string",
-          "pattern": "^[a-z][a-z0-9_]*$"
+          "pattern": "^@?[a-z][a-z0-9_-]*(\\/[a-z][a-z0-9_]*)?$"
         },
         "created": {
           "type": "string"
@@ -59,8 +59,15 @@
         },
         "does_not_act_as": {
           "oneOf": [
-            { "type": "string" },
-            { "type": "array", "items": { "type": "string" } }
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           ]
         },
         "responsibility": {
@@ -103,10 +110,13 @@
             "type": "string"
           },
           "evidence_type": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "enum": [
+              "practice_patterns",
+              "research_finding",
+              "industry_consensus",
+              "case_observation"
+            ]
           },
           "applies_when": {
             "type": "array",

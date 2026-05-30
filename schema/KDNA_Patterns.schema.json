@@ -24,7 +24,7 @@
         },
         "domain": {
           "type": "string",
-          "pattern": "^[a-z][a-z0-9_]*$"
+          "pattern": "^@?[a-z][a-z0-9_-]*(\\/[a-z][a-z0-9_]*)?$"
         },
         "created": {
           "type": "string"
@@ -159,11 +159,15 @@
           },
           "signals_good": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
           "signals_bad": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         },
         "additionalProperties": true
@@ -186,11 +190,15 @@
           },
           "must_not_do": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
           "acceptable_exception": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         },
         "additionalProperties": true
@@ -213,11 +221,15 @@
         },
         "must_block_when": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "warn_when": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       },
       "additionalProperties": true
