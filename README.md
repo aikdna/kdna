@@ -6,20 +6,20 @@ Maintained by **AIKDNA** — the open ecosystem for the KDNA Protocol.
 
 **Build domains, tools, integrations — not parallel protocols.**
 
-KDNA is an open judgment protocol for AI systems. It turns human-governed domain judgment into portable structural assets that agents can load, trace, verify, and evolve.
+KDNA is an open protocol for encoding domain judgment as structured, agent-loadable assets. It turns human-governed principles, boundaries, standards, and taste into portable .kdna files that AI agents can load, verify, compose, and evolve.
+
+> **Like a .doc carries a portion of knowledge, a .kdna file carries a portion of judgment — principles, boundaries, standards, and taste — for a specific domain.**
 
 Prompt changes what AI says. RAG changes what AI can access. Tools change what AI can do.  
 **KDNA changes how AI judges within a domain.**
 
-> **Skill + KDNA** — Skills make agents capable. KDNA makes their judgment reliable. [Learn more →](./docs/kdna-and-ai-stack.md#4-kdna-vs-skill)
+> **Skill + KDNA** — Skills make agents capable. KDNA gives them judgment, taste, and standards. [Learn more →](./docs/kdna-and-ai-stack.md#4-kdna-vs-skill)
 
 ## KDNA in 30 seconds
 
-KDNA is a file-based judgment kernel that AI agents can load as a domain reference.
+KDNA is a file-based judgment framework that AI agents can load as a domain reference. It is not human judgment itself — like a .doc carries a portion of knowledge, a .kdna encodes a bounded set of domain-specific principles, boundaries, standards, and taste.
 
-It turns human insight, value stance, aesthetic preference, judgment boundaries, and quality standards into portable structural assets that agents can load, verify, compose, and evolve.
-
-A KDNA does not make an agent role-play an expert. It gives the agent an explicit judgment system to work within.
+It does not make an agent role-play an expert. It gives the agent an explicit framework to work within.
 
 - **Prompt** changes what AI says.
 - **RAG** changes what AI can access.
