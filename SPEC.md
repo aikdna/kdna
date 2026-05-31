@@ -7,7 +7,7 @@
 
 ## Abstract
 
-KDNA (Knowledge DNA) is a structured single-file asset format for encoding domain judgment for AI agents. This specification defines the `.kdna` asset format, internal file tree, validation rules, loading behavior, and conformance requirements for KDNA domains.
+KDNA (Knowledge DNA) is a structured asset format for encoding domain judgment for AI agents. A `.kdna` asset represents one scoped judgment domain; complex agent work MAY route and compose multiple `.kdna` assets into KDNA Clusters. This specification defines the `.kdna` asset format, internal file tree, validation rules, loading behavior, and conformance requirements for KDNA domains and their composition layer.
 
 ## Terminology
 

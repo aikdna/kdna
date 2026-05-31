@@ -6,9 +6,11 @@ Maintained by **AIKDNA** — the open ecosystem for the KDNA Protocol.
 
 **Build domains, tools, integrations — not parallel protocols.**
 
-KDNA is an open protocol for encoding domain judgment as structured, agent-loadable assets. It turns human-governed principles, boundaries, standards, and taste into portable .kdna files that AI agents can load, verify, compose, and evolve.
+KDNA is an open protocol for encoding domain judgment as structured, agent-loadable assets. It turns human-governed principles, boundaries, standards, and taste into portable `.kdna` files that AI agents can load, verify, compose, and evolve.
 
 > **Like a .doc carries a portion of knowledge, a .kdna file carries a portion of judgment — principles, boundaries, standards, and taste — for a specific domain.**
+
+A single `.kdna` asset represents one scoped judgment domain. Complex agent work can route and compose multiple `.kdna` assets into a KDNA Cluster, instead of flattening different judgment domains into one broad file.
 
 Prompt changes what AI says. RAG changes what AI can access. Tools change what AI can do.  
 **KDNA changes how AI judges within a domain.**
@@ -35,15 +37,15 @@ trusted .kdna assets          existing .kdna assets      .kdna assets
       │                                                         │
       │                         ┌───────────────────────────────┘
       ▼                         ▼
- KDNAChat / Agent Skills
- Use judgment · Compare responses · Trace decisions · Send feedback
+ KDNAChat / Agent Skills / Runtime Routers
+ Use judgment · Route clusters · Compare responses · Trace decisions · Send feedback
       │
       ▼
  Feedback → KDNAStudio → Domain evolves (revised, tested, republished)
 ```
 
 > **KDNA is not a single project — it's a judgment asset operating system.**  
-> Studio creates and compiles KDNA, CLI verifies and runs KDNA, Registry distributes trusted KDNA, Agents load and use KDNA.
+> Studio creates and compiles domain KDNA, CLI verifies and runs KDNA, Registry distributes trusted KDNA, runtime routers compose clusters, and agents load the right judgment for the task.
 
 A `.kdna` asset is not created by writing JSON files. It is compiled by a
 Studio-compatible authoring pipeline that performs human confirmation,
