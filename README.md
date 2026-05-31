@@ -35,7 +35,7 @@ trusted .kdna assets          existing .kdna assets      .kdna assets
       │                                                         │
       │                         ┌───────────────────────────────┘
       ▼                         ▼
- KDNAChat / KDNAWork / Agent Skills
+ KDNAChat / Agent Skills
  Use judgment · Compare responses · Trace decisions · Send feedback
       │
       ▼
@@ -58,7 +58,7 @@ KDNA Domain Asset = a portable domain judgment asset
 
 **Protocol first. Products are reference implementations.**
 
-KDNA Protocol is open. KDNA CLI is reference tooling. KDNAChat is a reference client for using and comparing judgment. KDNAStudio is a reference environment for authoring and locking domains. KDNAWork is a reference workspace for applying judgment in workflows. Third-party apps can implement the same runtime contract.
+KDNA Protocol is open. KDNA CLI is reference tooling. KDNAChat is a reference client for using and comparing judgment. KDNAStudio is a reference environment for authoring and locking domains. Third-party apps can implement the same runtime contract.
 
 ## For whom
 
@@ -67,7 +67,6 @@ KDNA Protocol is open. KDNA CLI is reference tooling. KDNAChat is a reference cl
 | **AI user** who wants better judgment from the same model | [KDNAChat](https://github.com/aikdna/kdnachat) — load domains, compare responses, see judgment differences |
 | **Domain expert** who wants to encode expertise as verifiable assets | [KDNaStudio](https://github.com/aikdna/kdnastudio) — interview → cards → lock → test → export |
 | **Developer** integrating KDNA into agents or tools | [kdna-cli](https://github.com/aikdna/kdna-cli) · [kdna-core](https://www.npmjs.com/package/@aikdna/kdna-core) — install, validate, load, compare |
-| **Team lead** deploying shared judgment into workflows | [KDNAWork](https://github.com/aikdna/kdnawork) — workspaces, tasks, traces, team judgment |
 | **Tool builder** adding KDNA support to editors/IDEs | [kdna-vscode](https://github.com/aikdna/kdna-vscode) · [kdna-skills](https://github.com/aikdna/kdna-skills) |
 
 ## Open Ecosystem Readiness
@@ -227,7 +226,7 @@ Want to create your own trusted KDNA? Start with KDNA Studio. Studio turns human
 | **Developer wanting to connect KDNA to an agent** | [5-minute guide](./docs/5-minute-guide.md) |
 | **Domain expert wanting to encode your judgment** | [KDNA Studio CLI](https://github.com/aikdna/kdna-studio-cli) — Studio-compatible command-line authoring (`@aikdna/kdna-studio-cli`) |
 | **Evaluator wanting to measure judgment improvement** | [Evaluation guide](./docs/evaluation.md) |
-| **App developer integrating KDNA into Chat, Studio, Work, or agent runtimes** | [App Runtime Contract](./docs/app-runtime-contract.md) |
+| **App developer integrating KDNA into Chat, Studio, or agent runtimes** | [App Runtime Contract](./docs/app-runtime-contract.md) |
 | **Enterprise evaluating private deployment** | [Enterprise guide](./docs/enterprise.md) |
 | **Contributor wanting to improve KDNA itself** | [CONTRIBUTING.md](./CONTRIBUTING.md) |
 | **Curious about the full specification** | [SPEC.md](./SPEC.md) |
