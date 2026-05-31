@@ -1,12 +1,12 @@
 # KDNA Product Contract v1.0
 
 > **Status:** Draft · 2026-05-26
-> **Audience:** KDNAChat, KDNaStudio, KDNAWork developers; domain authors; agent integrators
+> **Audience:** KDNAChat, KDNaStudio developers; domain authors; agent integrators
 > **Goal:** Every KDNA product MUST conform to this contract. No product defines its own data structures.
 
 ## Purpose
 
-KDNAChat, KDNaStudio, KDNAWork are three products sharing one core object: the KDNA domain. Without a unified contract, they will diverge and the ecosystem will fragment. This document defines the minimum data structures all products must agree on.
+KDNAChat and KDNaStudio share one core object: the KDNA domain. Without a unified contract, they will diverge and the ecosystem will fragment. This document defines the minimum data structures all products must agree on.
 
 ## 1. KDNA Asset Format
 

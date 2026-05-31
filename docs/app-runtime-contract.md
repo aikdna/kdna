@@ -2,7 +2,7 @@
 
 Version: 0.1  
 Status: Draft  
-Audience: KDNAChat, KDNA Studio, KDNAWork, VS Code, agent adapters, runtime integrators
+Audience: KDNAChat, KDNA Studio, VS Code, agent adapters, runtime integrators
 
 ## Purpose
 
