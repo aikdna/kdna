@@ -31,18 +31,35 @@ It does not make an agent role-play an expert. It gives the agent an explicit fr
 ## KDNA Ecosystem
 
 ```
-KDNAStudio                    kdna-cli                    KDNA Registry
-Creates + compiles       →    Verifies + runs       →    Distributes trusted
-trusted .kdna assets          existing .kdna assets      .kdna assets
-      │                                                         │
-      │                         ┌───────────────────────────────┘
-      ▼                         ▼
- KDNAChat / Agent Skills / Runtime Routers
- Use judgment · Route clusters · Compare responses · Trace decisions · Send feedback
-      │
-      ▼
- Feedback → KDNAStudio → Domain evolves (revised, tested, republished)
+Source / Evidence
+notes · docs · works · interviews · feedback
+        │
+        ▼
+KDNAStudio
+declare domain → distill candidates → Human Lock → compile
+        │
+        ▼
+Domain KDNA
+one scoped .kdna judgment asset
+        │
+        ▼
+Cluster / Route Policy
+compose multiple domain assets when the task needs more than one judgment lens
+        │
+        ▼
+Runtime Load
+KDNAChat · CLI · MCP · SDK · Agent adapters
+        │
+        ▼
+Trace / Review / Feedback
+record which judgment was used, what passed, what should evolve
+        │
+        ▼
+KDNA Evolution
+revise · test · sign · publish
 ```
+
+`Work Pack = KDNA or KDNA Cluster + Skill + Template + Review Gate + Risk Policy`.
 
 > **KDNA is not a single project — it's a judgment asset operating system.**  
 > Studio creates and compiles domain KDNA, CLI verifies and runs KDNA, Registry distributes trusted KDNA, runtime routers compose clusters, and agents load the right judgment for the task.
