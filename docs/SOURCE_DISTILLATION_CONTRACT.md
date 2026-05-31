@@ -389,16 +389,18 @@ kdna-studio target declare my_domain \              # Declare Distillation Targe
   --include "argument structure,tone,revision" \
   --exclude "life habits,food preference"
 
-kdna-studio source import ./my-notes               # Register source evidence
-kdna-studio source classify                        # Classify evidence against declared target
-kdna-studio distill candidates                     # Domain-constrained AI extraction
-kdna-studio candidate list                         # List candidates with scope_fit status
-kdna-studio candidate accept <id>                   # Accept candidate
-kdna-studio candidate reject <id>                   # Reject candidate
-kdna-studio candidate override <id>                 # Override scope_fit=false gate
-kdna-studio card promote                            # Promote accepted+scope_fit candidates
-kdna-studio lock                                    # Apply Human Judgment Lock (includes scope confirmation)
-kdna-studio export --sign                           # Compile → .kdna + provenance receipt
+kdna-studio import my_domain ./my-notes.md          # Register source evidence
+kdna-studio source classify my_domain               # Classify evidence against declared target
+kdna-studio distill my_domain --candidates candidates.json
+                                                     # Load domain-constrained AI candidates
+kdna-studio candidate list my_domain                # List candidates with scope_fit status
+kdna-studio candidate accept my_domain <id>          # Accept candidate
+kdna-studio candidate reject my_domain <id>          # Reject candidate
+kdna-studio candidate override my_domain <id>        # Override scope_fit=false gate
+kdna-studio candidate promote my_domain             # Promote accepted+scope_fit candidates
+kdna-studio lock my_domain                           # Apply Human Judgment Lock
+kdna-studio export my_domain --out dist/my_domain.kdna --sign
+                                                     # Compile → .kdna + provenance receipt
 ```
 
 ### With kdna-studio-core (JS/npm)

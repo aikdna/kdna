@@ -209,6 +209,21 @@ KDNA works best when it complements the rest of the stack.
 
 Each layer contributes something different. KDNA does not replace them. KDNA gives them a domain judgment system.
 
+### When One Task Needs Multiple Judgment Domains
+
+A single `.kdna` asset should stay scoped. If a task needs writing judgment, brand judgment, legal risk, and a review gate, the correct answer is not one broad "content" KDNA. The correct answer is a KDNA Cluster: multiple domain assets loaded under explicit roles and route policy.
+
+Example: a video creation workflow might compose:
+
+| Role | KDNA asset | Purpose |
+|------|------------|---------|
+| **Primary** | `creator_style.kdna` | Keeps the core expression and point of view consistent |
+| **Advisor** | `video_aesthetic.kdna` | Adds pacing, rhythm, cover, and visual taste judgment |
+| **Constraint** | `brand_boundary.kdna` | Blocks claims, tone, or formats outside brand standards |
+| **Critic** | `review_gate.kdna` | Reviews the final output before publishing |
+
+For reusable work, a Work Pack can combine a KDNA or KDNA Cluster with skills, task templates, output templates, review gates, risk policy, and trace/feedback contracts. KDNA remains the judgment layer; Work Pack is the reusable work capability.
+
 ---
 
 ## 13. Common Misunderstandings

@@ -1,6 +1,8 @@
 # KDNA Clusters
 
-A KDNA Cluster is a composable judgment system — multiple small KDNA packages working together under defined roles to handle complex domain tasks.
+A KDNA Cluster is a composable judgment system: multiple scoped KDNA domain assets working together under defined roles and route policy to handle complex tasks.
+
+A cluster is not a broader merged `.kdna`. Each domain asset keeps its own scope, version, provenance, and evaluation boundary. The cluster defines which assets participate, when they load, how conflicts surface, and how the combined system is reviewed.
 
 ## Why Not One Large KDNA?
 
@@ -10,22 +12,22 @@ A single monolithic KDNA for a broad domain has four problems:
 |---------|---------|
 | **Too vague** | A "Business Growth KDNA" with 20 principles becomes a collection of truisms |
 | **Context bloat** | Loading all judgment patterns when only 2 are relevant wastes agent context |
-| **Frame conflict** | "Speed over quality" and "trust over speed" clash silently inside the same package |
+| **Frame conflict** | "Speed over quality" and "trust over speed" clash silently inside the same asset |
 | **Untestable** | You cannot prove which specific judgment improved when everything is bundled together |
 
-## Package vs Cluster
+## Domain KDNA vs Cluster vs Work Pack
 
-| | KDNA Asset | KDNA Cluster |
+| Layer | Purpose | Answers |
 |---|---|---|
-| **Scope** | One judgment fork | A complex domain |
-| **Files** | 2-6 JSON files | Manifest + multiple packages |
-| **Loading** | Load the package | Route to the right packages |
-| **Validation** | kdna dev validate | kdna dev validate |
-| **Example** | price-objection KDNA | Sales Judgment Cluster (5 packages) |
+| **Domain KDNA** | One scoped judgment asset packaged as `.kdna` | In this domain and task, what standards should guide judgment? |
+| **KDNA Cluster** | A composition layer over multiple domain assets | Which KDNA assets should participate, in what role, and under what route policy? |
+| **Work Pack** | A reusable work capability built from judgment + execution material | How should a class of work be executed, reviewed, and improved? |
+
+Work Packs may include a KDNA Cluster, skills, task templates, output templates, review gates, risk policy, recommended tools, and trace/feedback contracts. KDNA remains the judgment layer inside that package.
 
 ## Cluster Roles
 
-Every package in a cluster has one of four roles:
+Every domain asset in a cluster has one of four roles:
 
 | Role | Responsibility | Rule |
 |------|---------------|------|
@@ -37,21 +39,22 @@ Every package in a cluster has one of four roles:
 ## Composition Rules
 
 1. **Must have a primary.** Every task has exactly one Primary KDNA. No exceptions.
-2. **Cannot average.** If two packages disagree, surface the conflict — do not blend them into a "balanced" nothing.
-3. **Conflicts must be visible.** Tell the user: "Package A sees this as X. Package B sees it as Y. Which lens fits better?"
-4. **Load by task phase.** Diagnosis → Design → Expression → Review each loads different packages. Do not load everything upfront.
-5. **Cluster has its own benchmark.** Test not just individual packages, but whether the cluster as a system selects the right primary, avoids irrelevant packages, detects conflicts, and produces layered judgments.
+2. **Cannot average.** If two assets disagree, surface the conflict — do not blend them into a "balanced" nothing.
+3. **Conflicts must be visible.** Tell the user: "Domain A sees this as X. Domain B sees it as Y. Which lens fits better?"
+4. **Load by task phase.** Diagnosis → Design → Expression → Review each loads different assets. Do not load everything upfront.
+5. **Trace attribution.** When multiple domains influence output, traces must preserve which domain supplied which judgment.
+6. **Cluster has its own benchmark.** Test not just individual assets, but whether the cluster as a system selects the right primary, avoids irrelevant assets, detects conflicts, and produces layered judgments.
 
 ## Cluster Manifest
 
-A cluster is defined by `KDNA_Cluster.json`:
+A cluster is defined by `kdna.cluster.json`:
 
 ```json
 {
   "name": "meeting-decision-intelligence",
   "version": "0.4.0",
   "purpose": "Judge whether meetings produce actionable decisions.",
-  "packages": [
+  "domains": [
     {
       "id": "discussion-vs-decision",
       "role": "primary",
@@ -77,19 +80,20 @@ A cluster is defined by `KDNA_Cluster.json`:
 }
 ```
 
-## When to Use a Cluster vs a Single Package
+## When to Use a Cluster vs a Single Domain Asset
 
-| Use a single package when | Use a cluster when |
+| Use a single domain asset when | Use a cluster when |
 |---|---|
 | The task has one clear judgment fork | The task spans multiple judgment dimensions |
 | One expert lens is sufficient | Different phases need different lenses |
 | The domain is narrow and well-defined | The domain is broad with interacting sub-domains |
-| You are building your first KDNA | You have multiple validated packages |
+| You are building your first KDNA | You have multiple validated domain assets |
 
 ## Relationship to Existing Concepts
 
-- **Judgment Pattern**: the smallest unit — a specific signal/misread/frame/boundary (defined in `benchmarks/`)
-- **KDNA Asset**: a domain asset containing 2-6 JSON files (defined in `SPEC.md`)
-- **KDNA Cluster**: a composable system of packages with defined roles (this document)
+- **Judgment Pattern**: the smallest unit — a specific signal/misread/frame/boundary.
+- **KDNA Asset**: a domain asset containing 2-6 standard KDNA judgment files (defined in `SPEC.md`).
+- **KDNA Cluster**: a composable system of domain assets with defined roles and route policy (this document).
+- **Work Pack**: a reusable work capability that can bundle KDNA or a KDNA Cluster with skills, templates, review gates, and trace/feedback contracts.
 
-These three layers are complementary: patterns live inside packages, packages are organized into clusters.
+These layers are complementary: patterns live inside domain assets, domain assets are organized into clusters, and clusters can be used inside Work Packs.
