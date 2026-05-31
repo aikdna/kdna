@@ -64,10 +64,10 @@ KDNA Protocol is open. KDNA CLI is reference tooling. KDNAChat is a reference cl
 
 | You are | Start here |
 |---------|-----------|
-| **AI user** who wants better judgment from the same model | [KDNAChat](https://github.com/AhaSparkCoach/kdnachat) — load domains, compare responses, see judgment differences |
-| **Domain expert** who wants to encode expertise as verifiable assets | [KDNaStudio](https://github.com/AhaSparkCoach/kdnastudio) — interview → cards → lock → test → export |
+| **AI user** who wants better judgment from the same model | [KDNAChat](https://github.com/aikdna/kdnachat) — load domains, compare responses, see judgment differences |
+| **Domain expert** who wants to encode expertise as verifiable assets | [KDNaStudio](https://github.com/aikdna/kdnastudio) — interview → cards → lock → test → export |
 | **Developer** integrating KDNA into agents or tools | [kdna-cli](https://github.com/aikdna/kdna-cli) · [kdna-core](https://www.npmjs.com/package/@aikdna/kdna-core) — install, validate, load, compare |
-| **Team lead** deploying shared judgment into workflows | [KDNAWork](https://github.com/AhaSparkCoach/kdnawork) — workspaces, tasks, traces, team judgment |
+| **Team lead** deploying shared judgment into workflows | [KDNAWork](https://github.com/aikdna/kdnawork) — workspaces, tasks, traces, team judgment |
 | **Tool builder** adding KDNA support to editors/IDEs | [kdna-vscode](https://github.com/aikdna/kdna-vscode) · [kdna-skills](https://github.com/aikdna/kdna-skills) |
 
 ## Open Ecosystem Readiness
