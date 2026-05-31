@@ -1,15 +1,15 @@
 # KDNA Source Distillation Contract
 
-> Version: 0.1  
-> Status: Draft  
+> Version: 0.2  
+> Status: Updated — added Distillation Target (Layer 0) and Scope Gate  
 > Audience: KDNA Studio, kdna-studio-cli, kdna-studio-core, Mac Apps, agent adapters  
 > Relationship: Companion to [`app-runtime-contract.md`](./app-runtime-contract.md)
 
 ## Purpose
 
-This contract defines the four-layer object model for distillation-first KDNA authoring: turning a user's existing content (notes, documents, works, feedback, recordings) into loadable .kdna judgment assets through AI-assisted pattern extraction and mandatory human confirmation.
+This contract defines the five-layer object model for distillation-first KDNA authoring: declaring a target domain, turning a user's existing content into loadable .kdna judgment assets through AI-assisted pattern extraction, and enforcing mandatory human confirmation — all within a declared scope.
 
-It establishes the minimum data structures, state transitions, and trust boundaries that all KDNA authoring tools must respect.
+The critical addition in v0.2: **Domain-First Distillation.** Before any content analysis begins, the user MUST declare what domain, scope, and granularity this KDNA targets. Without this declaration, distillation produces unfiltered personality dumps rather than domain-specific judgment assets.
 
 ## Non-goals
 
@@ -20,12 +20,122 @@ This contract does not define:
 - Pricing, licensing, or marketplace behavior
 - Interview-first authoring (covered by the existing Studio Export Contract)
 
-## Four-Layer Model
+## Five-Layer Model
 
 ```
-Source Layer       →  Distillation Layer  →  Judgment Asset Layer  →  Consumption Layer
-(Evidence)            (Candidates)           (Locked Cards)           (.kdna loading)
+Layer 0: Distillation Target  →  Declaration of domain / scope / granularity
+Layer 1: Source Layer           →  Evidence
+Layer 2: Distillation Layer     →  Candidates
+Layer 3: Judgment Asset Layer   →  Locked Cards
+Layer 4: Consumption Layer      →  .kdna loading
 ```
+
+### Layer 0: Distillation Target
+
+Before any evidence is analyzed, the user MUST declare a Distillation Target. This is not optional — distillation without a target produces mixed-personality artifacts that violate KDNA's core value proposition (domain-specific, loadable judgment).
+
+```json
+{
+  "target_id": "tgt_20260531_001",
+  "domain_name": "writing_style",
+  "domain_category": "expression_writing",
+  "owner_scope": "personal",
+  "granularity": "core_principles",
+  "task_scope": "longform article diagnosis and revision",
+  "include_areas": [
+    "argument structure",
+    "tone preference",
+    "headline boundaries",
+    "revision standards"
+  ],
+  "exclude_areas": [
+    "life habits",
+    "food/travel preference",
+    "general personality traits",
+    "unrelated professional knowledge"
+  ],
+  "load_condition": "Load when reviewing or drafting longform writing. Do not load for visual design or decision-making tasks.",
+  "declared_at": "2026-05-31T10:00:00Z",
+  "declared_by": "kdna-studio-cli v2.1.0"
+}
+```
+
+**Domain Categories:**
+
+| Category | ID | Examples |
+|----------|-----|---------|
+| Expression & Writing | `expression_writing` | Writing style, article structure, blog voice, social media tone |
+| Aesthetic & Creation | `aesthetic_creation` | Visual design, video rhythm, cover art, brand aesthetics |
+| Professional Field | `professional_field` | Industry-specific judgment (medical, legal, education, real estate) |
+| Decision Preference | `decision_preference` | Product decisions, investment criteria, prioritization methods |
+| Communication Style | `communication_style` | Client communication, team management, conflict handling |
+| Workflow & Process | `workflow_process` | Project reviews, meeting standards, sales follow-ups |
+| Life Preference | `life_preference` | Schedule preferences, learning habits, consumption choices |
+| Team & Organization | `team_organization` | Team brand standards, hiring criteria, service standards |
+
+**Owner Scopes:**
+
+| Scope | Description | Distillation extracts |
+|-------|-------------|----------------------|
+| `personal` | One person's individual standards | Personal preferences, boundaries, taste |
+| `team` | Shared team conventions | Team-wide standards, agreed practices |
+| `organization` | Company/organization policies | Organizational values, compliance boundaries |
+| `field` | Industry/profession-wide | Domain expertise beyond any single practitioner |
+
+**Granularity Levels:**
+
+| Level | Description | Extracts |
+|-------|-------------|----------|
+| `core_principles` | High-level axioms and boundaries | Foundational beliefs, what the person consistently prioritizes and rejects |
+| `concrete_patterns` | Recurring decision patterns | Specific rules and detectable habits |
+| `specific_scenarios` | Scenario-level triggers | Context-specific judgment triggers and responses |
+
+**Rules:**
+
+1. Distillation Target MUST be declared before any evidence analysis begins
+2. Domain category MUST be explicitly selected — no default or auto-detection
+3. include_areas and exclude_areas define the extraction boundary
+4. load_condition defines when this KDNA should and should not be loaded
+5. Evidence outside the declared scope is classified as out-of-scope and excluded from AI extraction
+6. Distillation Target is persisted with the project and referenced during Human Lock scope confirmation
+
+**Evidence Relevance Classification:**
+
+Every source material is classified against the declared Target:
+
+| Classification | Meaning | Action |
+|----------------|---------|--------|
+| `relevant` | Content matches declared domain and include areas | Sent to AI extraction |
+| `weakly_relevant` | Content has tangential connection to domain | Sent to AI extraction with lower weight |
+| `out_of_scope` | Content explicitly matches exclude areas or unrelated domains | Excluded from AI extraction |
+| `split_domain` | Content suggests a different domain category | Flagged for suggested separate KDNA |
+
+**Scope Gate on Candidates:**
+
+Every distillation candidate carries scope metadata:
+
+```json
+{
+  "scope_fit": true,
+  "domain_relevance_score": 80,
+  "relevance_evidence": null,
+  "suggested_split_domain": null
+}
+```
+
+- `scope_fit`: AI-assessed fit within declared domain. `false` = candidate appears outside declared scope.
+- `domain_relevance_score`: 0–100. 0-30 = likely out of scope. 70+ = strong domain match.
+- `relevance_evidence`: Explanation of why candidate failed scope check.
+- `suggested_split_domain`: If scope_fit is false and the candidate clearly belongs to a different domain, this field suggests which domain.
+
+**Scope Gate Rules:**
+
+1. scope_fit = false candidates are VISIBLE in review UI but NOT promoted to cards by default
+2. User may EXPLICITLY override scope gate via override action (records reason)
+3. Overridden candidates get scope_fit = true and relevance_evidence = "User explicitly overrode scope gate"
+4. Promote operation requires `status == accepted AND scope_fit == true`
+5. Human Lock MUST include scope confirmation when Distillation Target is declared:
+   - "I confirm this judgment belongs to the declared KDNA domain scope and does not introduce content from outside this domain."
 
 ### Layer 1: Source Layer — Source Evidence
 
@@ -224,7 +334,16 @@ Each distillation-produced .kdna MUST be accompanied by a provenance receipt. Th
 ## State Machine
 
 ```
+Distillation Target Declared ←── Layer 0: MUST happen first
+        │
+        ▼
 Source Content Imported
+        │
+        ▼
+Evidence Classified ──→ relevant / weaklyRelevant / outOfScope / splitDomain
+        │
+        ▼
+Relevant Evidence → AI Extraction (domain-constrained prompt)
         │
         ▼
 Evidence Registered ──→ privacy_level recorded, hash computed
@@ -262,15 +381,24 @@ Candidates Presented ──→ user reviews each candidate
 The Studio CLI is the authoring tool. Commands for distillation-first belong in `kdna-studio`, not in the runtime `kdna` CLI:
 
 ```bash
-kdna-studio source import ./my-notes          # Register source evidence
-kdna-studio source classify                   # Cluster content into domain categories
-kdna-studio distill candidates                # Extract judgment candidates
-kdna-studio card promote <candidate_id>       # Accept candidate → Judgment Card
-kdna-studio card reject <candidate_id>        # Reject candidate
-kdna-studio card modify <candidate_id>        # Edit and re-present candidate
-kdna-studio lock                              # Apply Human Judgment Lock to all draft cards
-kdna-studio export --sign                     # Compile locked cards → .kdna + provenance receipt
-kdna-studio verify --load-in-chat            # Export and test-load in KDNAChat
+kdna-studio target declare my_domain \              # Declare Distillation Target
+  --category expression_writing \
+  --scope personal \
+  --granularity core_principles \
+  --task "longform article review" \
+  --include "argument structure,tone,revision" \
+  --exclude "life habits,food preference"
+
+kdna-studio source import ./my-notes               # Register source evidence
+kdna-studio source classify                        # Classify evidence against declared target
+kdna-studio distill candidates                     # Domain-constrained AI extraction
+kdna-studio candidate list                         # List candidates with scope_fit status
+kdna-studio candidate accept <id>                   # Accept candidate
+kdna-studio candidate reject <id>                   # Reject candidate
+kdna-studio candidate override <id>                 # Override scope_fit=false gate
+kdna-studio card promote                            # Promote accepted+scope_fit candidates
+kdna-studio lock                                    # Apply Human Judgment Lock (includes scope confirmation)
+kdna-studio export --sign                           # Compile → .kdna + provenance receipt
 ```
 
 ### With kdna-studio-core (JS/npm)
