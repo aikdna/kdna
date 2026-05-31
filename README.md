@@ -308,6 +308,12 @@ KDNA is the judgment reference layer. It does not replace these mechanisms — i
 </details>
 
 <details>
+<summary>Does a .kdna file contain a person's full judgment?</summary>
+
+No. A .kdna file contains a bounded judgment framework. Just as a .doc contains only a portion of someone's knowledge, a .kdna file contains a portion of the principles, boundaries, standards, and taste that a person or team chooses to encode. Multiple .kdna files can form a judgment asset library — but no single file claims to capture a person's complete judgment ability.
+</details>
+
+<details>
 <summary>Is KDNA just a fancy system prompt?</summary>
 
 No. System prompts are free-text behavioral instructions scoped to a single conversation. KDNA is a structured, validated, version-controlled format with explicit fields (axioms, boundaries, self-checks, failure risks). KDNA packages are designed to be signed, hash-verified, and distributed through a registry — a system prompt is none of these.
