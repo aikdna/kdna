@@ -12,7 +12,7 @@ KDNA applications may have different user experiences:
 
 - KDNAChat shows judgment differences during conversation.
 - KDNA Studio creates, locks, tests, and exports judgment assets.
-- KDNAWork applies KDNA inside agent work and review loops.
+- Future/private workflow layers apply KDNA inside agent work and review loops.
 - VS Code and agent adapters provide developer and runtime entry points.
 
 They must not invent separate meanings for "route", "trace", "report", "domain quality", or "trust". This contract keeps the ecosystem interoperable.
@@ -124,7 +124,7 @@ Apps may add product-specific sections:
 
 - KDNAChat: side-by-side No KDNA / KDNA comparison
 - KDNA Studio: card provenance, Human Lock status, readiness gate
-- KDNAWork: Skill Only / Skill + KDNA comparison, artifact paths, approval events
+- Future/private workflow layer: Skill Only / Skill + KDNA comparison, artifact paths, approval events
 
 Product-specific sections must not redefine the shared sections above.
 
@@ -167,9 +167,9 @@ Required contract outputs:
 - local validation result
 - optional Test Lab report comparing No KDNA / Best Prompt / KDNA
 
-### KDNAWork
+### Future/private workflow layer
 
-KDNAWork should prove that KDNA enters an agent workflow as governance, not decoration.
+A future/private workflow layer should prove that KDNA enters an agent workflow as governance, not decoration.
 
 Required contract outputs:
 
@@ -189,7 +189,7 @@ Required contract outputs:
 | D | Reportable Consumer | Level C + generates a human-readable judgment report. |
 | E | Governed Consumer | Level D + enforces trust, risk, license, and Human Lock policy. |
 
-For financing demos and enterprise pilots, KDNAWork should target Level D at minimum. KDNAChat can target Level C for conversation demos. KDNA Studio should target Level E for domain creation and release flows.
+For financing demos and enterprise pilots, a private workflow layer should target Level D at minimum. KDNAChat can target Level C for conversation demos. KDNA Studio should target Level E for domain creation and release flows.
 
 ## Compatibility Rules
 
