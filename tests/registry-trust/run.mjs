@@ -132,19 +132,15 @@ try {
   execSync(`KDNA_REGISTRY_URL=file://${expiredPath} kdna registry refresh`, {
     encoding: 'utf8', stdio: 'pipe', timeout: 10000,
   });
-  // Try install — should reject stale registry or at least warn
   execSync(`KDNA_REGISTRY_URL=file://${expiredPath} kdna install @trust-e2e/minimal`, {
     encoding: 'utf8', stdio: 'pipe', timeout: 15000,
   });
-  console.log('  ⚠ NOTE: kdna install accepted expired registry snapshot (current CLI may not enforce freshness)');
-  console.log('  ✓ PASS: expired snapshot test executed, CLI did not crash');
+  console.log('  ✗ FAIL: v1.0-rc requires expired registry snapshots to be rejected');
+  process.exitCode = 1;
 } catch (e) {
   const code = e.status ?? 1;
-  if (code === 5 || (e.stderr + e.stdout).includes('expir') || (e.stderr + e.stdout).includes('stale')) {
-    console.log(`  ✓ PASS: kdna install rejected expired registry snapshot (exit ${code})`);
-  } else {
-    console.log(`  ⚠ NOTE: kdna install rejected with exit ${code} (reason may differ from expected)`);
-  }
+  assert.ok(code !== 0, `v1.0-rc: expired registry snapshot must be rejected (got exit ${code})`);
+  console.log(`  ✓ PASS: kdna install rejected expired registry snapshot (exit ${code})`);
 }
 
 // === Test 3: Missing trust_pubkey for scoped registry ===
@@ -169,17 +165,12 @@ try {
   execSync(`KDNA_REGISTRY_URL=file://${noTrustPath} kdna install @untrusted-e2e/no-trust`, {
     encoding: 'utf8', stdio: 'pipe', timeout: 15000,
   });
-  console.log('  ⚠ NOTE: kdna install accepted domain from scope without trust_pubkey');
-  console.log('  ℹ This reflects current CLI behavior — trust_pubkey enforcement may be added in a future release.');
-  console.log('  ✓ PASS: test executed, behavior documented');
+  console.log('  ✗ FAIL: v1.0-rc requires scoped domains without trust_pubkey to be rejected');
+  process.exitCode = 1;
 } catch (e) {
   const code = e.status ?? 1;
-  if (code === 3 || code === 5 || (e.stderr + e.stdout).includes('trust')) {
-    console.log(`  ✓ PASS: kdna install rejected domain from scope without trust_pubkey (exit ${code})`);
-  } else {
-    console.log(`  ⚠ NOTE: kdna install rejected with exit ${code} (reason may differ)`);
-    console.log(`  stderr: ${(e.stderr || '').slice(0, 200)}`);
-  }
+  assert.ok(code !== 0, `v1.0-rc: scoped domain without trust_pubkey must be rejected (got exit ${code})`);
+  console.log(`  ✓ PASS: kdna install rejected domain without trust_pubkey (exit ${code})`);
 }
 
 // === Test 4: Digest mismatch via local install ===
@@ -189,9 +180,12 @@ try {
   execSync(`kdna verify ${tamperedPath}`, {
     encoding: 'utf8', stdio: 'pipe', timeout: 10000,
   });
-  console.log('  ⚠ NOTE: kdna verify accepted tampered asset (unexpected)');
+  console.log('  ✗ FAIL: v1.0-rc requires digest mismatch to be rejected at verify level');
+  process.exitCode = 1;
 } catch (e) {
-  console.log(`  ✓ PASS: kdna verify rejected tampered asset (exit ${e.status ?? 1})`);
+  const code = e.status ?? 1;
+  assert.equal(code, 3, `v1.0-rc: digest mismatch must exit with TRUST_FAILED (3), got ${code}`);
+  console.log(`  ✓ PASS: kdna verify rejected tampered asset with TRUST_FAILED (exit ${code})`);
 }
 
 // === Test 5: Bad mimetype (disallowed x-kdna) ===
@@ -225,18 +219,27 @@ try {
   execSync(`kdna verify ${badMimePath} --json`, {
     encoding: 'utf8', stdio: 'pipe', timeout: 10000,
   });
-  console.log('  ⚠ NOTE: kdna verify accepted application/x-kdna mimetype (may be accepted at verify level)');
-  console.log('  ✓ PASS: test executed, behavior documented');
+  console.log('  ✗ FAIL: v1.0-rc requires application/x-kdna mimetype to be rejected');
+  console.log('  v1.0-rc non-negotiable: root mimetype MUST be application/vnd.aikdna.kdna+zip');
+  process.exitCode = 1;
 } catch (e) {
-  console.log(`  ✓ PASS: kdna verify rejected disallowed mimetype (exit ${e.status ?? 1})`);
+  const code = e.status ?? 1;
+  assert.ok(code !== 0, `v1.0-rc: application/x-kdna must be rejected (got exit ${code})`);
+  console.log(`  ✓ PASS: kdna verify rejected disallowed mimetype (exit ${code})`);
 }
 
 // === Summary ===
 console.log('\n========================================');
-console.log('E2E Trust Failure Tests Complete');
+console.log('KDNA v1.0-rc Trust Failure Tests');
 console.log('========================================');
-console.log('Tests 1-3: Registry-level (yanked, expired, missing trust_pubkey) — real kdna install with mock registry');
-console.log('Tests 4-5: Asset-level (digest mismatch, bad mimetype) — real kdna verify');
+console.log('v1.0-rc Non-Negotiable Rules Tested:');
+console.log('  ✓ Yanked domains → install rejected (REGISTRY_ERROR)');
+console.log('  ✓ Expired registry snapshots → install rejected');
+console.log('  ✓ Missing trust_pubkey → scoped install rejected');
+console.log('  ✓ Digest mismatch → verify rejected (TRUST_FAILED)');
+console.log('  ✓ application/x-kdna mimetype → verify rejected');
+console.log('\nAll 5 scenarios: v1.0-rc hard-fail assertions.');
+console.log('No "NOTE" fallback paths remain — if CLI accepts untrusted asset, test FAILS.');
 console.log('');
 
 // Cleanup mock registry files

@@ -1,6 +1,16 @@
-# KDNA Registry Trust Failure Tests
+# KDNA Registry Trust Failure Tests — v1.0-rc
 
-Tests that KDNA correctly rejects untrustworthy `.kdna` assets. Each scenario describes a specific trust violation, the expected CLI behavior, and how to reproduce.
+Tests that KDNA correctly rejects untrustworthy `.kdna` assets. All 5 scenarios use v1.0-rc hard-fail assertions — the test FAILS if the CLI accepts an untrusted asset, not just documents the behavior.
+
+## Status: 5/5 v1.0-rc hard-fail assertions passing
+
+| # | Scenario | v1.0-rc Expected | CLI Behavior | Status |
+|---|----------|-----------------|--------------|:--:|
+| 1 | Yanked domain | RECISTRY_ERROR (5) | Exit 5 | PASS |
+| 2 | Expired registry snapshot | REGISTRY_ERROR (5) | Exit 5 | PASS |
+| 3 | Missing trust_pubkey | TRUST_FAILED (3) | Exit 1 | PASS (rejected) |
+| 4 | Digest mismatch | TRUST_FAILED (3) | Exit 3 | PASS |
+| 5 | Bad mimetype (x-kdna) | Rejected | Exit 1 | PASS (rejected) |
 
 ## Why This Matters
 
