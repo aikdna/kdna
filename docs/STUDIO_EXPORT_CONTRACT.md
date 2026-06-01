@@ -8,6 +8,12 @@ Studio-compatible authoring pipeline that performs human confirmation,
 validation, canonicalization, identity generation, digest computation, signing,
 optional encryption, and provenance recording.
 
+**Hard boundary:** Optional encryption, when supported, MUST be represented as
+protected entries inside the `.kdna` container (RFC-0008). App-private encrypted
+envelopes, transfer wrappers, or any format that cannot be opened by KDNA Core
+are NOT conforming KDNA runtime assets and MUST NOT be treated as canonical
+exports.
+
 ## External Output
 
 A conforming Studio exporter SHOULD write:
@@ -55,6 +61,10 @@ signature.json
 
 Optional judgment entries include `KDNA_Scenarios.json`, `KDNA_Cases.json`,
 `KDNA_Reasoning.json`, and `KDNA_Evolution.json`.
+
+App-specific optional entries include `KDNA_Runtime_Report.json` (Studio/registry
+runtime report) and any additional evaluation artifacts placed under `evals/` or
+`reports/` that conforming runtimes may ignore.
 
 ## Export Gates
 
