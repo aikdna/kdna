@@ -6,11 +6,10 @@ and already-published assets follow the protocol after the tools are released.
 ## Release Order
 
 1. Merge and tag `aikdna/kdna`.
-2. Publish `@aikdna/kdna-core@0.6.0`.
+2. Publish `@aikdna/kdna-core@0.7.2`.
 3. In `aikdna/kdna-cli`, refresh dependencies against published
-   `@aikdna/kdna-core@0.6.0`; only then bump the CLI package metadata to
-   `0.19.0`.
-4. Publish `@aikdna/kdna-cli@0.19.0`.
+   `@aikdna/kdna-core@^0.7.2`; only then bump the CLI package metadata.
+4. Publish `@aikdna/kdna-cli`.
 5. Merge `aikdna/kdna-registry` metadata/tooling validation updates.
 6. Repack and resign registry assets with the new CLI.
 7. Run `npm run validate:remote` in `kdna-registry` after assets are republished.
@@ -44,13 +43,13 @@ npm run validate:remote
 ## Dependency Sequencing
 
 Do not commit a CLI `package-lock.json` that resolves
-`@aikdna/kdna-core@0.6.0` before that package exists on npm. Keep the CLI
+`@aikdna/kdna-core` against a version that doesn't exist on npm. Keep the CLI
 repository installable with the latest published core package until the core
 release is complete, then run:
 
 ```bash
-npm install @aikdna/kdna-core@^0.6.0 --package-lock-only
-npm version 0.19.0 --no-git-tag-version
+npm install @aikdna/kdna-core@^0.7.2 --package-lock-only
+npm version <version> --no-git-tag-version
 npm run release:preflight
 ```
 

@@ -251,6 +251,7 @@ Want to create your own trusted KDNA? Start with KDNA Studio. Studio turns human
 | **Curious about the full specification** | [SPEC.md](./SPEC.md) |
 | **Understanding governance and safety** | [Governance](./docs/GOVERNANCE.md) · [Safety](./docs/SAFETY.md) · [Risk Policy](./docs/RISK_POLICY.md) · [KDNA Card Spec](./docs/KDNA_CARD_SPEC.md) · [Security](./docs/SECURITY.md) |
 | **Understanding ecosystem naming** | [Ecosystem Naming](./docs/ECOSYSTEM_NAMING.md) |
+| **Navigating all repositories** | [Ecosystem Map](./docs/ecosystem-map.md) |
 | **Browsing available domains** | [Registry](https://github.com/aikdna/kdna-registry) · [aikdna.com/domains](https://aikdna.com/domains) |
 | **Reading the project roadmap** | [ROADMAP.md](./docs/ROADMAP.md) |
 | **Reading in Chinese** | [中文版](./README.zh.md) |
