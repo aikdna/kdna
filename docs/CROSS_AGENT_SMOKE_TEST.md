@@ -95,11 +95,11 @@ kill $PID
 
 | Agent | Tester | Date | KDNA judgment change observed | Notes |
 |-------|--------|------|:---:|-------|
-| Codex | — | — | ⬜ | |
-| Claude Code | — | — | ⬜ | |
-| OpenCode | — | — | ⬜ | |
-| Cursor | — | — | ⬜ | |
-| MCP Server | — | — | ⬜ | |
+| OpenCode | OpenCode agent | 2026-06-01 | ✅ | kdna-loader installed, `kdna load @aikdna/writing` returns 6328 chars of judgment context. Domain routing verified via `kdna available --json`. |
+| Codex | — | — | ⬜ | CLI pre-check green, needs live Codex session |
+| Claude Code | — | — | ⬜ | CLI pre-check green, needs live Claude Code session |
+| Cursor | — | — | ⬜ | CLI pre-check green, needs live Cursor session |
+| MCP Server | — | — | ⬜ | Package installed, needs tool invocation verification |
 
 ## See Also
 
