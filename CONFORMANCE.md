@@ -1,6 +1,6 @@
 # KDNA Conformance — Quick Reference
 
-For detailed certification levels, see [KDNA-Compatible Certification](./kdna-compatible-certification.md).
+For detailed certification levels, see [KDNA-Compatible Certification](./docs/kdna-compatible-certification.md).
 
 ## What Conformance Means
 
@@ -36,7 +36,7 @@ With this you must publish:
 4. `kdna-conformance-last-run.json` summary
 5. Known deviations (if any)
 
-See [conformance-report-example.md](./conformance-report-example.md) for a full template.
+See [conformance-report-example.md](./docs/conformance-report-example.md) for a full template.
 
 ## What Fails Conformance
 
