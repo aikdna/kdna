@@ -102,9 +102,35 @@ registered KDNA domains.
 | `eval_score` | No | Current evaluation score (0-100). |
 | `test_count` | No | Number of test cases in evaluation. |
 | `quality_badge` | No | Current quality level: `untested`, `tested`, `validated`, `expert_reviewed`, `production_ready`. |
+| `license_policy` | No | License enforcement policy for `access: licensed` domains. |
 | `evaluation_history` | No | Array of historical evaluation records (see Section 3.1). |
 
-### 3.1 Evaluation History
+### 3.1 License Policy
+
+When `access` is `licensed`, the registry entry MAY include a `license_policy`
+object that tells runtimes how to enforce the license:
+
+```json
+{
+  "license_policy": {
+    "activation": "local_license",
+    "offline_grace_days": 7,
+    "revocation_check": "registry_or_license_server",
+    "machine_binding": "optional",
+    "max_activations": 3
+  }
+}
+```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `activation` | Yes | How the license is activated: `local_license`, `entitlement_api`, `hardware_dongle`. |
+| `offline_grace_days` | No | Days a validated license can work offline before requiring re-sync. |
+| `revocation_check` | No | Where to check revocation: `registry`, `license_server`, `registry_or_license_server`, `none`. |
+| `machine_binding` | No | Whether the license is bound to a machine: `required`, `optional`, `none`. |
+| `max_activations` | No | Maximum number of simultaneous activations allowed. |
+
+### 3.2 Evaluation History
 
 The `evaluation_history` array tracks how a domain's judgment quality changes over time. Each entry represents a benchmark run:
 

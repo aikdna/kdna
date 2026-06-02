@@ -12,6 +12,8 @@ const {
   renderForAgent,
   validateKDNA,
   verifyDigest,
+  encryptLicensedEntry,
+  createLicensedDecryptEntry,
 } = require('../packages/kdna-core/src');
 
 const args = process.argv.slice(2);
@@ -240,6 +242,107 @@ const fixtures = {
   ),
 };
 
+// ── Licensed fixtures (RFC-0008) ───────────────────────────────────
+
+const TEST_LICENSE_KEY = 'KDNA-TEST-LICENSE-VECTOR-2026';
+
+function licensedManifest() {
+  return {
+    format: 'kdna',
+    format_version: '1.0',
+    spec_version: '1.0-rc',
+    name: '@example/licensed',
+    version: '0.1.0',
+    judgment_version: '2026.05',
+    access: 'licensed',
+    status: 'experimental',
+    description: 'Licensed conformance asset.',
+    author: { name: 'KDNA Conformance', id: 'conformance' },
+    license: { type: 'KCL-1.0' },
+    languages: ['en'],
+    default_language: 'en',
+    keywords: ['licensed', 'conformance'],
+    quality_badge: 'untested',
+    risk_level: 'R0',
+    encryption: {
+      profile: 'kdna-licensed-entry-v1',
+      encrypted_entries: ['KDNA_Core.json'],
+    },
+  };
+}
+
+const licensedCorePlaintext = json({
+  meta: {
+    domain: 'licensed',
+    version: '0.1.0',
+    created: '2026-05-27',
+    purpose: 'Conformance licensed fixture.',
+    load_condition: 'always',
+  },
+  stances: ['Licensed judgment stays protected.'],
+  axioms: [
+    {
+      id: 'ax_licensed',
+      one_sentence: 'Protected judgment loads in memory.',
+      full_statement: 'Protected judgment loads in memory.',
+      why: 'Assets can be licensed.',
+    },
+  ],
+  ontology: [],
+  frameworks: [],
+  core_structure: [],
+});
+
+const licensedPatternsPlaintext = json({
+  meta: {
+    domain: 'licensed',
+    version: '0.1.0',
+    created: '2026-05-27',
+    purpose: 'Conformance pattern fixture.',
+    load_condition: 'always',
+  },
+  terminology: { standard_terms: [], banned_terms: [] },
+  misunderstandings: [],
+  self_check: ['Did decryption stay in memory?'],
+});
+
+const manifestLicensed = licensedManifest();
+
+const licensedCoreEncrypted = json(
+  encryptLicensedEntry(licensedCorePlaintext, {
+    entryName: 'KDNA_Core.json',
+    manifest: manifestLicensed,
+    licenseKey: TEST_LICENSE_KEY,
+  }),
+);
+
+fixtures.licensedValid = writeAsset('valid-licensed-domain.kdna', {
+  mimetype: 'application/vnd.aikdna.kdna+zip',
+  'kdna.json': json(manifestLicensed),
+  'KDNA_Core.json': licensedCoreEncrypted,
+  'KDNA_Patterns.json': licensedPatternsPlaintext,
+});
+
+// Tamper with ciphertext: decode base64, flip first byte, re-encode
+const tamperedEnvelope = JSON.parse(licensedCoreEncrypted);
+const tamperedCipher = Buffer.from(tamperedEnvelope.ciphertext, 'base64');
+tamperedCipher[0] ^= 0xff;
+tamperedEnvelope.ciphertext = tamperedCipher.toString('base64');
+
+fixtures.licensedTampered = writeAsset('invalid-licensed-tampered-ciphertext.kdna', {
+  mimetype: 'application/vnd.aikdna.kdna+zip',
+  'kdna.json': json(manifestLicensed),
+  'KDNA_Core.json': json(tamperedEnvelope),
+  'KDNA_Patterns.json': licensedPatternsPlaintext,
+});
+
+// App-private envelope (non-canonical extension)
+fixtures.appPrivateEnvelope = (() => {
+  const assetPath = path.join(generated, 'invalid-app-private-envelope.kdnasealed');
+  fs.writeFileSync(assetPath, Buffer.from('NOT_A_KDNA_ASSET'));
+  return assetPath;
+})();
+
 const inspect = await inspectKDNA(fixtures.minimal, { verify: true });
 const expectedInspect = JSON.parse(
   fs.readFileSync(path.join(root, 'fixtures', 'expected', 'minimal-inspect.json'), 'utf8'),
@@ -285,6 +388,47 @@ for (const [name, assetPath] of Object.entries({
 const weakSelfCheck = await validateKDNA(fixtures.badSelfCheck);
 assert.equal(weakSelfCheck.ok, true);
 assert.match(weakSelfCheck.warnings.join('\n'), /yes\/no/i);
+
+// Licensed entry tests (RFC-0008)
+const licensedDecrypt = createLicensedDecryptEntry({ licenseKey: TEST_LICENSE_KEY });
+
+const licensedValidation = await validateKDNA(fixtures.licensedValid, {
+  requireDecryption: true,
+  decryptEntry: licensedDecrypt,
+});
+assert.equal(licensedValidation.ok, true, licensedValidation.errors.join('\n'));
+
+const licensedLoaded = await loadKDNA(fixtures.licensedValid, {
+  profile: 'compact',
+  decryptEntry: licensedDecrypt,
+});
+assert.equal(licensedLoaded.domain.core.meta.domain, 'licensed');
+assert.ok(licensedLoaded.context.includes('Protected judgment loads in memory'));
+
+const licensedNoHook = await validateKDNA(fixtures.licensedValid, { requireDecryption: true });
+assert.equal(licensedNoHook.ok, false, 'licensed asset without hook must fail');
+
+const wrongDecrypt = createLicensedDecryptEntry({ licenseKey: 'WRONG-KEY' });
+const licensedWrongKey = await validateKDNA(fixtures.licensedValid, {
+  requireDecryption: true,
+  decryptEntry: wrongDecrypt,
+});
+assert.equal(licensedWrongKey.ok, false, 'licensed asset with wrong key must fail');
+
+const licensedTampered = await validateKDNA(fixtures.licensedTampered, {
+  requireDecryption: true,
+  decryptEntry: licensedDecrypt,
+});
+assert.equal(licensedTampered.ok, false, 'tampered ciphertext must fail integrity check');
+
+// App-private envelope rejection
+let appPrivateRejected = false;
+try {
+  await inspectKDNA(fixtures.appPrivateEnvelope);
+} catch {
+  appPrivateRejected = true;
+}
+assert.equal(appPrivateRejected, true, 'app-private envelope must be rejected');
 
 fs.writeFileSync(
   path.join(os.tmpdir(), 'kdna-conformance-last-run.json'),

@@ -1,0 +1,21 @@
+{
+  "format": "kdna",
+  "format_version": "1.0",
+  "spec_version": "1.0-rc",
+  "name": "@aikdna/test-licensed-vector",
+  "version": "1.0.0",
+  "judgment_version": "2026.06",
+  "access": "licensed",
+  "status": "experimental",
+  "description": "RFC-0008 cross-language conformance test vector.",
+  "author": {
+    "name": "KDNA Conformance",
+    "id": "conformance"
+  },
+  "encryption": {
+    "profile": "kdna-licensed-entry-v1",
+    "encrypted_entries": [
+      "KDNA_Core.json"
+    ]
+  }
+}
