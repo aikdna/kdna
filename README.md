@@ -61,6 +61,8 @@ revise · test · sign · publish
 
 `Work Pack = KDNA or KDNA Cluster + Skill + Template + Review Gate + Risk Policy`.
 
+> **KDNA Work Pack** is an open packaging standard for reusable AI work capabilities. It combines KDNA judgment with skills, review gates, risk policies, and traces so agents can perform real work with explicit domain judgment. See [kdna-workpack](https://github.com/aikdna/kdna-workpack).
+
 > **KDNA is not a single project — it's a judgment asset operating system.**  
 > Studio creates and compiles domain KDNA, CLI verifies and runs KDNA, Registry distributes trusted KDNA, runtime routers compose clusters, and agents load the right judgment for the task.
 
@@ -87,6 +89,7 @@ KDNA Protocol is open. KDNA CLI is reference tooling. KDNAChat is a reference cl
 | **Domain expert** who wants to encode expertise as verifiable assets | [KDNaStudio](https://github.com/aikdna/kdnastudio) — interview → cards → lock → test → export |
 | **Developer** integrating KDNA into agents or tools | [kdna-cli](https://github.com/aikdna/kdna-cli) · [kdna-core](https://www.npmjs.com/package/@aikdna/kdna-core) — install, validate, load, compare |
 | **Tool builder** adding KDNA support to editors/IDEs | [kdna-vscode](https://github.com/aikdna/kdna-vscode) · [kdna-skills](https://github.com/aikdna/kdna-skills) |
+| **Team lead** wanting reusable AI work capabilities with judgment | [kdna-workpack](https://github.com/aikdna/kdna-workpack) — package KDNA + Skills + Gates into runnable Work Packs |
 
 ## Open Ecosystem Readiness
 
