@@ -14,6 +14,8 @@ const {
   verifyDigest,
   encryptLicensedEntry,
   createLicensedDecryptEntry,
+  encryptProtectedEntry,
+  createPasswordDecryptEntry,
 } = require('../packages/kdna-core/src');
 
 const args = process.argv.slice(2);
@@ -420,6 +422,130 @@ const licensedTampered = await validateKDNA(fixtures.licensedTampered, {
   decryptEntry: licensedDecrypt,
 });
 assert.equal(licensedTampered.ok, false, 'tampered ciphertext must fail integrity check');
+
+// Protected entry tests (RFC-0009)
+const TEST_PROTECTED_PASSWORD = 'KDNA-TEST-VECTOR-2026';
+
+function protectedManifest() {
+  return {
+    format: 'kdna',
+    format_version: '1.0',
+    spec_version: '1.0-rc',
+    name: '@example/protected',
+    version: '0.1.0',
+    judgment_version: '2026.05',
+    access: 'protected',
+    status: 'experimental',
+    description: 'Protected conformance asset.',
+    author: { name: 'KDNA Conformance', id: 'conformance' },
+    languages: ['en'],
+    default_language: 'en',
+    keywords: ['protected', 'conformance'],
+    quality_badge: 'untested',
+    risk_level: 'R0',
+    encryption: {
+      profile: 'kdna-password-protected-v1',
+      encrypted_entries: ['KDNA_Core.json'],
+    },
+  };
+}
+
+const protectedCorePlaintext = json({
+  meta: {
+    domain: 'protected',
+    version: '0.1.0',
+    created: '2026-06-02',
+    purpose: 'Conformance protected fixture.',
+    load_condition: 'always',
+  },
+  stances: ['Password-protected judgment stays protected.'],
+  axioms: [
+    {
+      id: 'ax_protected',
+      one_sentence: 'Password decryption works.',
+      full_statement: 'Password decryption works across languages.',
+      why: 'RFC-0009 interoperability.',
+    },
+  ],
+  ontology: [],
+  frameworks: [],
+  core_structure: [],
+});
+
+const protectedPatternsPlaintext = json({
+  meta: {
+    domain: 'protected',
+    version: '0.1.0',
+    created: '2026-06-02',
+    purpose: 'Conformance pattern fixture.',
+    load_condition: 'always',
+  },
+  terminology: { standard_terms: [], banned_terms: [] },
+  misunderstandings: [],
+  self_check: ['Did password decryption succeed?'],
+});
+
+const manifestProtected = protectedManifest();
+
+const protectedCoreEncrypted = json(
+  encryptProtectedEntry(protectedCorePlaintext, {
+    entryName: 'KDNA_Core.json',
+    manifest: manifestProtected,
+    password: TEST_PROTECTED_PASSWORD,
+  }),
+);
+
+fixtures.protectedValid = writeAsset('valid-protected-domain.kdna', {
+  mimetype: 'application/vnd.aikdna.kdna+zip',
+  'kdna.json': json(manifestProtected),
+  'KDNA_Core.json': protectedCoreEncrypted,
+  'KDNA_Patterns.json': protectedPatternsPlaintext,
+});
+
+// Tamper with protected ciphertext
+const tamperedProtectedEnvelope = JSON.parse(protectedCoreEncrypted);
+const tamperedProtectedCipher = Buffer.from(tamperedProtectedEnvelope.ciphertext, 'base64');
+tamperedProtectedCipher[0] ^= 0xff;
+tamperedProtectedEnvelope.ciphertext = tamperedProtectedCipher.toString('base64');
+
+fixtures.protectedTampered = writeAsset('invalid-protected-tampered-ciphertext.kdna', {
+  mimetype: 'application/vnd.aikdna.kdna+zip',
+  'kdna.json': json(manifestProtected),
+  'KDNA_Core.json': json(tamperedProtectedEnvelope),
+  'KDNA_Patterns.json': protectedPatternsPlaintext,
+});
+
+// Protected entry tests (RFC-0009)
+const protectedDecrypt = createPasswordDecryptEntry({ password: TEST_PROTECTED_PASSWORD });
+
+const protectedValidation = await validateKDNA(fixtures.protectedValid, {
+  requireDecryption: true,
+  decryptEntry: protectedDecrypt,
+});
+assert.equal(protectedValidation.ok, true, protectedValidation.errors.join('\n'));
+
+const protectedLoaded = await loadKDNA(fixtures.protectedValid, {
+  profile: 'compact',
+  decryptEntry: protectedDecrypt,
+});
+assert.equal(protectedLoaded.domain.core.meta.domain, 'protected');
+assert.ok(protectedLoaded.context.includes('Password decryption works'));
+
+const protectedNoHook = await validateKDNA(fixtures.protectedValid, { requireDecryption: true });
+assert.equal(protectedNoHook.ok, false, 'protected asset without hook must fail');
+
+const wrongProtectedDecrypt = createPasswordDecryptEntry({ password: 'wrong-password' });
+const protectedWrongPassword = await validateKDNA(fixtures.protectedValid, {
+  requireDecryption: true,
+  decryptEntry: wrongProtectedDecrypt,
+});
+assert.equal(protectedWrongPassword.ok, false, 'protected asset with wrong password must fail');
+
+const protectedTamperedResult = await validateKDNA(fixtures.protectedTampered, {
+  requireDecryption: true,
+  decryptEntry: protectedDecrypt,
+});
+assert.equal(protectedTamperedResult.ok, false, 'tampered protected ciphertext must fail integrity check');
 
 // App-private envelope rejection
 let appPrivateRejected = false;
