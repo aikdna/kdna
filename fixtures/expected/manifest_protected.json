@@ -1,0 +1,27 @@
+{
+  "format": "kdna",
+  "format_version": "1.0",
+  "spec_version": "1.0-rc",
+  "name": "@aikdna/protected_test",
+  "version": "0.1.0",
+  "judgment_version": "2026.06",
+  "access": "protected",
+  "status": "experimental",
+  "quality_badge": "untested",
+  "description": "RFC-0009 cross-language test asset",
+  "author": {
+    "name": "Test",
+    "id": "test"
+  },
+  "languages": [
+    "en"
+  ],
+  "default_language": "en",
+  "encryption": {
+    "profile": "kdna-password-protected-v1",
+    "encrypted_entries": [
+      "KDNA_Core.json",
+      "KDNA_Patterns.json"
+    ]
+  }
+}

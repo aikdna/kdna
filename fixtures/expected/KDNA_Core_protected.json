@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "domain": "protected_test",
+    "version": "0.1.0",
+    "created": "2026-06-02",
+    "purpose": "test",
+    "load_condition": "always"
+  },
+  "stances": [
+    "Protected judgment decrypts correctly across languages."
+  ],
+  "axioms": [
+    {
+      "id": "protected_a1",
+      "one_sentence": "Cross-language decryption works.",
+      "full_statement": "A JS-encrypted entry decrypts identically in Swift.",
+      "why": "RFC-0009 interoperability."
+    }
+  ],
+  "ontology": []
+}

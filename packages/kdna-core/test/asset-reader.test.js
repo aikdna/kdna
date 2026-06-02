@@ -8,6 +8,8 @@ const {
   createKdnaAssetReader,
   createLicensedDecryptEntry,
   encryptLicensedEntry,
+  createPasswordDecryptEntry,
+  encryptProtectedEntry,
 } = require('../src');
 
 function u16(n) {
@@ -550,4 +552,79 @@ test('protected .kdna asset loads and decrypts with password hook', async () => 
   const loaded = await reader.loadProfile(asset, 'compact', { decryptEntry });
   assert.equal(loaded.domain.core.axioms[0].id, 'a1');
   assert.ok(loaded.context.includes('Passwords are user-friendly'));
+
+  // Wrong password fails
+  const wrongDecryptEntry = createPasswordDecryptEntry({ password: 'wrong' });
+  await assert.rejects(
+    () => reader.loadProfile(asset, 'compact', { decryptEntry: wrongDecryptEntry }),
+    /AES-256-KW unwrap: integrity check failed|wrong password/,
+  );
+});
+
+test('cross-language fixture: decrypts shared test_protected_entry.kdna from Swift', async () => {
+  const fixturePath = path.resolve(__dirname, '../../../fixtures/test_protected_entry.kdna');
+  const expectedCorePath = path.resolve(__dirname, '../../../fixtures/expected/KDNA_Core_protected.json');
+  const expectedPatternsPath = path.resolve(__dirname, '../../../fixtures/expected/KDNA_Patterns_protected.json');
+
+  assert.ok(fs.existsSync(fixturePath), 'shared fixture must exist');
+
+  const reader = createKdnaAssetReader();
+  const asset = await reader.open(fixturePath);
+  const manifest = await reader.readManifest(asset);
+  assert.equal(manifest.access, 'protected');
+  assert.equal(manifest.encryption.profile, 'kdna-password-protected-v1');
+
+  const decryptEntry = createPasswordDecryptEntry({ password: 'KDNA-TEST-VECTOR-2026' });
+  const verifyWithHook = await reader.verify(asset, { requireDecryption: true, decryptEntry });
+  assert.equal(verifyWithHook.ok, true);
+
+  const loaded = await reader.loadProfile(asset, 'compact', { decryptEntry });
+  const expectedCore = JSON.parse(fs.readFileSync(expectedCorePath, 'utf8'));
+  const expectedPatterns = JSON.parse(fs.readFileSync(expectedPatternsPath, 'utf8'));
+
+  assert.deepEqual(loaded.domain.core, expectedCore);
+  assert.deepEqual(loaded.domain.patterns, expectedPatterns);
+});
+
+test('protected entry decrypt fails with tampered ciphertext', async () => {
+  const { createPasswordDecryptEntry, encryptProtectedEntry } = require('../src');
+  const password = 'KDNA-Test-Vector-2026';
+  const manifest = {
+    format: 'kdna',
+    format_version: '1.0',
+    spec_version: '1.0-rc',
+    name: '@test/protected',
+    version: '0.1.0',
+    judgment_version: '2026.05',
+    access: 'protected',
+    status: 'experimental',
+    quality_badge: 'untested',
+    description: 'Protected asset',
+    author: { name: 'Test', id: 'test' },
+    license: { type: 'CC-BY-4.0' },
+    languages: ['en'],
+    default_language: 'en',
+    encryption: {
+      profile: 'kdna-password-protected-v1',
+      encrypted_entries: ['KDNA_Core.json'],
+    },
+  };
+
+  const core = { meta: { domain: 'protected', version: '0.1.0' }, axioms: [{ id: 'a1' }] };
+  const envelope = encryptProtectedEntry(json(core), {
+    entryName: 'KDNA_Core.json',
+    manifest,
+    password,
+  });
+
+  // Tamper with ciphertext
+  const parsed = JSON.parse(json(envelope));
+  const ciphertextBuf = Buffer.from(parsed.ciphertext, 'base64');
+  ciphertextBuf[0] ^= 0xff;
+  parsed.ciphertext = ciphertextBuf.toString('base64');
+
+  const decryptEntry = createPasswordDecryptEntry({ password });
+  assert.throws(
+    () => decryptEntry({ entryName: 'KDNA_Core.json', ciphertext: json(parsed), manifest }),
+  );
 });
