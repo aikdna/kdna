@@ -204,6 +204,20 @@ Same as RFC-0008:
 - `content_digest` covers the internal tree as stored. For encrypted entries, the input is the ciphertext envelope.
 - Registry and CLI verification MUST be possible without decrypting.
 
+### Resealed Asset Rules
+
+When an asset is protected (`kdna protect`) or recovered (`kdna recover`), the encrypted entries receive new ciphertext envelopes (new CEK, IV, wrapped keys, and tags). This changes the asset's content digest and invalidates any existing signature.
+
+Implementations MUST:
+
+1. **Recompute `content_digest`** after producing the resealed asset, using the same canonical digest algorithm as for open assets.
+2. **Strip `signature`** from the manifest, because the signing payload no longer matches the encrypted content.
+3. **Strip `asset_digest` and `container_sha256`** if present, because the raw bytes have changed.
+4. **Preserve asset identity** (`asset_uid`, `project_uid`, `build_id`, `domain_id`, `authoring`) so the asset remains traceable to its origin.
+5. **Preserve or update `updated_at`** to reflect the reseal operation.
+
+A recovered asset is therefore **unsigned but structurally valid**. Re-signing after recovery requires the original author's private key and is a separate, optional step.
+
 ## Plaintext and Encrypted Entry Rules
 
 Same as RFC-0008:
