@@ -1,5 +1,12 @@
 const crypto = require('crypto');
 
+let argon2id;
+try {
+  ({ argon2id } = require('@noble/hashes/argon2.js'));
+} catch {
+  // Optional: password-protected assets require @noble/hashes
+}
+
 // ── Profile constants ──────────────────────────────────────────────
 
 /**
@@ -18,9 +25,19 @@ const LICENSED_ENTRY_PROFILE = 'kdna-licensed-entry-v1';
  */
 const LICENSED_EXPERIMENTAL_PROFILE = 'kdna-licensed-entry-experimental';
 
+/**
+ * RFC-0009 compliant profile.
+ * - Argon2id password-based key derivation
+ * - AES-256-KW content encryption key wrapping
+ * - AES-256-GCM content encryption
+ * - Dual key slots: password + recovery
+ */
+const PASSWORD_PROTECTED_PROFILE = 'kdna-password-protected-v1';
+
 const RFC_KDF = 'HKDF-SHA256';
 const RFC_KEY_WRAPPING = 'AES-256-KW';
 const LEGACY_KDF = 'scrypt-sha256';
+const PASSWORD_KDF = 'Argon2id';
 const ALG = 'AES-256-GCM';
 
 // ── Helpers ───────────────────────────────────────────────────────
@@ -246,6 +263,163 @@ function decryptLicensedEntryV1(envelopeValue, options = {}) {
   ]);
 }
 
+// ── RFC-0009: Password-protected encryption ───────────────────────
+
+function ensureArgon2id() {
+  if (!argon2id) {
+    throw new Error(
+      'password-protected assets require @noble/hashes. Install: npm install @noble/hashes',
+    );
+  }
+}
+
+function derivePasswordKey(password, params = {}) {
+  ensureArgon2id();
+  const {
+    salt,
+    memory_kib = 65536,
+    iterations = 3,
+    parallelism = 4,
+  } = params;
+  if (!salt) throw new Error('salt is required for Argon2id');
+  const saltBuf = decodeBase64(salt, 'salt');
+  const passwordBuf = toBuffer(password, 'password');
+  const key = argon2id(passwordBuf, saltBuf, {
+    t: iterations,
+    m: memory_kib,
+    p: parallelism,
+    dkLen: 32,
+  });
+  return Buffer.from(key);
+}
+
+function generateRecoveryCode() {
+  const raw = crypto.randomBytes(32); // 256 bits
+  const hex = raw.toString('hex').toUpperCase();
+  const groups = hex.match(/.{4}/g);
+  return `kdna-recover-${groups.join('-')}`;
+}
+
+function decodeRecoveryCode(code) {
+  if (typeof code !== 'string' || !code.startsWith('kdna-recover-')) {
+    throw new Error('recovery code must start with "kdna-recover-"');
+  }
+  const hex = code.slice('kdna-recover-'.length).replace(/-/g, '');
+  if (!/^[0-9A-Fa-f]{64}$/.test(hex)) {
+    throw new Error('recovery code format is invalid');
+  }
+  return Buffer.from(hex, 'hex');
+}
+
+function encryptProtectedEntry(plaintext, options = {}) {
+  const { entryName, manifest = {}, password, includeRecovery = true, recoveryCode } = options;
+  if (!entryName) throw new Error('entryName is required');
+  if (!password) throw new Error('password is required for protected encryption');
+
+  const cek = generateCEK();
+
+  // Password slot
+  const salt = crypto.randomBytes(16);
+  const passwordKdf = {
+    name: PASSWORD_KDF,
+    salt: salt.toString('base64'),
+    memory_kib: 65536,
+    iterations: 3,
+    parallelism: 4,
+  };
+  const passwordKey = derivePasswordKey(password, passwordKdf);
+  const passwordWrappedKey = wrapCEK(cek, passwordKey);
+
+  const keySlots = [
+    {
+      slot: 'password',
+      wrap: RFC_KEY_WRAPPING,
+      wrapped_key: passwordWrappedKey.toString('base64'),
+    },
+  ];
+
+  // Recovery slot
+  if (includeRecovery) {
+    const recoveryKey = recoveryCode ? decodeRecoveryCode(recoveryCode) : crypto.randomBytes(32);
+    const recoveryWrappedKey = wrapCEK(cek, recoveryKey);
+    keySlots.push({
+      slot: 'recovery',
+      wrap: RFC_KEY_WRAPPING,
+      wrapped_key: recoveryWrappedKey.toString('base64'),
+    });
+  }
+
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv('aes-256-gcm', cek, iv);
+  cipher.setAAD(encryptedEntryAad(entryName, manifest, PASSWORD_PROTECTED_PROFILE));
+  const ciphertext = Buffer.concat([cipher.update(toBuffer(plaintext, 'plaintext')), cipher.final()]);
+
+  return {
+    profile: PASSWORD_PROTECTED_PROFILE,
+    alg: ALG,
+    kdf: PASSWORD_KDF,
+    key_wrapping: RFC_KEY_WRAPPING,
+    password_kdf: passwordKdf,
+    key_slots: keySlots,
+    iv: iv.toString('base64'),
+    tag: cipher.getAuthTag().toString('base64'),
+    ciphertext: ciphertext.toString('base64'),
+  };
+}
+
+function decryptProtectedEntry(envelopeValue, options = {}) {
+  const { entryName, manifest = {}, password, recoveryCode } = options;
+  if (!entryName) throw new Error('entryName is required');
+  if (!password && !recoveryCode) {
+    throw new Error('password or recoveryCode is required for protected decryption');
+  }
+
+  const envelope = normalizeEnvelope(envelopeValue);
+  if (envelope.profile !== PASSWORD_PROTECTED_PROFILE) {
+    throw new Error(
+      `unsupported encrypted entry profile: ${envelope.profile || 'unknown'} (expected ${PASSWORD_PROTECTED_PROFILE})`,
+    );
+  }
+  if (envelope.alg !== ALG) throw new Error(`unsupported encrypted entry alg: ${envelope.alg}`);
+  if (envelope.kdf !== PASSWORD_KDF) throw new Error(`unsupported encrypted entry kdf: ${envelope.kdf}`);
+  if (envelope.key_wrapping !== RFC_KEY_WRAPPING) {
+    throw new Error(`unsupported encrypted entry key_wrapping: ${envelope.key_wrapping}`);
+  }
+
+  let cek;
+  if (password) {
+    const passwordKey = derivePasswordKey(password, envelope.password_kdf);
+    const passwordSlot = envelope.key_slots.find((s) => s.slot === 'password');
+    if (!passwordSlot) throw new Error('password slot missing from envelope');
+    cek = unwrapCEK(decodeBase64(passwordSlot.wrapped_key, 'wrapped_key'), passwordKey);
+  } else {
+    const recoveryKey = decodeRecoveryCode(recoveryCode);
+    const recoverySlot = envelope.key_slots.find((s) => s.slot === 'recovery');
+    if (!recoverySlot) throw new Error('recovery slot missing from envelope');
+    cek = unwrapCEK(decodeBase64(recoverySlot.wrapped_key, 'wrapped_key'), recoveryKey);
+  }
+
+  const decipher = crypto.createDecipheriv('aes-256-gcm', cek, decodeBase64(envelope.iv, 'iv'));
+  decipher.setAAD(encryptedEntryAad(entryName, manifest, PASSWORD_PROTECTED_PROFILE));
+  decipher.setAuthTag(decodeBase64(envelope.tag, 'tag'));
+  return Buffer.concat([
+    decipher.update(decodeBase64(envelope.ciphertext, 'ciphertext')),
+    decipher.final(),
+  ]);
+}
+
+function createPasswordDecryptEntry(options = {}) {
+  const { password } = options;
+  return ({ entryName, ciphertext, manifest }) =>
+    decryptProtectedEntry(ciphertext, { entryName, manifest, password });
+}
+
+function createRecoveryDecryptEntry(options = {}) {
+  const { recoveryCode } = options;
+  return ({ entryName, ciphertext, manifest }) =>
+    decryptProtectedEntry(ciphertext, { entryName, manifest, recoveryCode });
+}
+
 // ── Legacy / experimental profile (pre-RFC, backward compat) ───────
 
 function deriveLicensedEntryKeyLegacy(options = {}) {
@@ -329,10 +503,12 @@ module.exports = {
   // Profiles
   LICENSED_ENTRY_PROFILE,
   LICENSED_EXPERIMENTAL_PROFILE,
+  PASSWORD_PROTECTED_PROFILE,
   ALG,
   RFC_KDF,
   RFC_KEY_WRAPPING,
   LEGACY_KDF,
+  PASSWORD_KDF,
 
   // RFC-0008 compliant
   deriveWrappingKey,
@@ -341,6 +517,15 @@ module.exports = {
   unwrapCEK,
   encryptLicensedEntryV1,
   decryptLicensedEntryV1,
+
+  // RFC-0009 compliant
+  derivePasswordKey,
+  generateRecoveryCode,
+  decodeRecoveryCode,
+  encryptProtectedEntry,
+  decryptProtectedEntry,
+  createPasswordDecryptEntry,
+  createRecoveryDecryptEntry,
 
   // Legacy
   deriveLicensedEntryKey: deriveLicensedEntryKeyLegacy,

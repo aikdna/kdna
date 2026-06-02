@@ -1,6 +1,6 @@
 # RFC-0008: Encrypted and Licensed KDNA Assets
 
-Status: draft
+Status: active
 
 ## Summary
 
@@ -125,6 +125,109 @@ Container-level ZIP encryption is forbidden. Encryption occurs at the internal
 entry level with authenticated encryption. Plaintext manifest metadata must be
 minimal, truthful, and sufficient for policy decisions. Loaders must treat
 decrypted content as sensitive runtime memory.
+
+## Conformance Test Vectors
+
+Implementations MUST be able to decrypt a fixture produced by the reference
+implementation using the following reference values.
+
+### Reference Key
+
+```text
+KDNA-TEST-LICENSE-VECTOR-2026
+```
+
+### Key Derivation
+
+The key-wrapping key (KWK) is derived from the license key via HKDF-SHA256
+(RFC 5869):
+
+- IKM: `KDNA-TEST-LICENSE-VECTOR-2026` (UTF-8)
+- Salt: 32 zero bytes (`0x00 * 32`)
+- Info: `kdna-licensed-entry-v1-kwk` (UTF-8)
+- Output length: 32 bytes
+
+### AAD Format
+
+Additional authenticated data for AES-256-GCM is the UTF-8 encoding of four
+lines joined by `\n` (LF, U+000A):
+
+```
+kdna-licensed-entry-v1
+<manifest.name>
+<manifest.version>
+<entryName>
+```
+
+Example:
+
+```text
+kdna-licensed-entry-v1
+@aikdna/writing
+1.0.0
+KDNA_Core.json
+```
+
+### Envelope Schema
+
+Each encrypted entry inside the `.kdna` container is a JSON object with exactly
+these fields:
+
+```json
+{
+  "profile": "kdna-licensed-entry-v1",
+  "alg": "AES-256-GCM",
+  "kdf": "HKDF-SHA256",
+  "key_wrapping": "AES-256-KW",
+  "wrapped_key": "<base64>",
+  "iv": "<base64>",
+  "tag": "<base64>",
+  "ciphertext": "<base64>"
+}
+```
+
+Field constraints:
+
+| Field | Format | Size (decoded) |
+|-------|--------|----------------|
+| `wrapped_key` | Base64 | 40 bytes (AES-256-KW output for 32-byte CEK) |
+| `iv` | Base64 | 12 bytes (96-bit nonce) |
+| `tag` | Base64 | 16 bytes (AES-GCM authentication tag) |
+| `ciphertext` | Base64 | Variable |
+
+### Encryption Pipeline
+
+1. Generate a random 32-byte content encryption key (CEK).
+2. Derive KWK from license key via HKDF-SHA256 as specified above.
+3. Wrap CEK with KWK using AES-256-KW (RFC 3394) → 40 bytes.
+4. Encrypt plaintext with CEK using AES-256-GCM and the AAD defined above.
+5. Encode `wrapped_key`, `iv`, `tag`, and `ciphertext` as Base64.
+
+### Decryption Pipeline
+
+1. Derive KWK from license key via HKDF-SHA256.
+2. Unwrap CEK from `wrapped_key` using AES-256-KW; verify integrity.
+3. Decrypt `ciphertext` with CEK, `iv`, and AAD; verify `tag`.
+4. Return plaintext bytes.
+
+### Error Conditions
+
+Implementations MUST reject with a distinct error when:
+
+- `profile` is not `kdna-licensed-entry-v1`.
+- `alg` is not `AES-256-GCM`.
+- `kdf` is not `HKDF-SHA256`.
+- `key_wrapping` is not `AES-256-KW`.
+- `wrapped_key` is not valid Base64 or not exactly 40 bytes after decoding.
+- AES-256-KW unwrap fails (integrity check failure).
+- `iv` is not 12 bytes after decoding.
+- `tag` is not 16 bytes after decoding.
+- AES-GCM authentication fails (ciphertext tampered, wrong key, wrong AAD).
+
+### Memory-Only Rule
+
+Decrypted plaintext MUST remain in volatile memory only. Implementations MUST
+NOT write decrypted entries to persistent disk, logs, traces, or audit events.
 
 ## Open Questions
 

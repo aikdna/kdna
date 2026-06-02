@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "domain": "test-licensed-vector",
+    "version": "1.0.0"
+  },
+  "terminology": {
+    "standard_terms": [],
+    "banned_terms": []
+  },
+  "misunderstandings": [],
+  "self_check": []
+}

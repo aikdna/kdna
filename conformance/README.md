@@ -58,6 +58,7 @@ not source of truth; the test definitions and expected outputs are.
 | --- | --- |
 | `valid/minimal-domain.kdna` | loads, validates, renders |
 | `valid/full-domain.kdna` | loads optional entries and index profile |
+| `valid/licensed-domain.kdna` | decrypts and loads with correct hook (RFC-0008) |
 | `invalid/missing-core.kdna` | fails required-entry validation |
 | `invalid/missing-patterns.kdna` | fails required-entry validation |
 | `invalid/duplicate-id.kdna` | fails lint validation |
@@ -66,6 +67,10 @@ not source of truth; the test definitions and expected outputs are.
 | `invalid/disallowed-kdna-spec.kdna` | fails manifest validation |
 | `invalid/disallowed-language.kdna` | fails manifest validation |
 | `invalid/non-yes-no-self-check.kdna` | warns on weak self-check |
+| `valid/licensed-domain.kdna` (no hook) | fails when encrypted entries present but no decrypt hook |
+| `valid/licensed-domain.kdna` (wrong key) | fails decryption with wrong license key |
+| `invalid/licensed-tampered-ciphertext.kdna` | fails integrity check on tampered ciphertext |
+| `invalid/app-private-envelope.kdnasealed` | rejected — only `.kdna` is canonical |
 
 External implementations should produce equivalent pass/fail behavior and
 compatible inspect/load output for the same fixtures.

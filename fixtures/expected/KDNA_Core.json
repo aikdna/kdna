@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "domain": "test-licensed-vector",
+    "version": "1.0.0",
+    "purpose": "RFC-0008 conformance vector"
+  },
+  "stances": [
+    "Writing judgment should be structural first."
+  ],
+  "axioms": [
+    {
+      "id": "axiom-001",
+      "one_sentence": "Most writing problems are structural.",
+      "full_statement": "Diagnose structure before language.",
+      "why": "Surface polishing on weak structure wastes effort.",
+      "applies_when": [
+        "User asks to review content"
+      ],
+      "does_not_apply_when": [
+        "User asks for grammar check only"
+      ],
+      "failure_risk": "May over-diagnose structural problems."
+    }
+  ],
+  "ontology": [],
+  "frameworks": [],
+  "core_structure": []
+}
