@@ -18,9 +18,11 @@ not default-branch evidence.
 | KDNALAB condition-isolated output filenames | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
 | KDNALAB L2 judge assignment fix | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
 | KDNALAB agent_safety executable cases to 30 | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
+| KDNALAB process-isolated provider timeout and failure artifacts | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
+| `@aikdna/writing` raw/scored benchmark evidence snapshot | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
 | Reference source eval specs to 30 | Yes | https://github.com/aikdna/kdna-writing/pull/2, https://github.com/aikdna/kdna-prompt_diagnosis/pull/1, https://github.com/aikdna/kdna-agent_safety/pull/1 | No | No |
 | Signed `.kdna` assets republished with 30 eval specs | No | No | No | No |
-| Raw benchmark outputs for 3 domains | No | No | No | No |
+| Raw benchmark outputs for 3 domains | Partial: writing 1/3 | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
 | Registry `test_count` raised to 30 | No | No | No | No |
 | `quality_badge: validated` for 3 domains | No | No | No | No |
 | Codex/Claude/OpenCode/Cursor/MCP smoke matrix | No | No | No | No |
