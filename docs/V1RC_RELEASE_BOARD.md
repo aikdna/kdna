@@ -2,18 +2,24 @@
 
 > **Milestone:** v1.0-rc  
 > **Target:** External developers can integrate, verify, publish, and contribute to KDNA — without reading internal docs or asking the maintainer.  
-> **Status:** In progress
+> **Status:** Execution board active. Documentation gates and local protocol gates are in place; external smoke, validated domain evidence, and non-maintainer contributor trial remain release blockers.
+
+## Operating Rule
+
+v1.0-rc is a Public Confidence Release. The goal is not more features. The goal is that a stranger can install, verify, load, create, publish, test, integrate, and benchmark a `.kdna` judgment asset from public materials.
 
 ## Epic Overview
 
 | # | Epic | Owner | Status | Key Issues |
 |---|------|-------|--------|------------|
-| 1 | Protocol Freeze | — | ⬜ | SPEC audit, MUST/SHOULD consistency, non-negotiable rule CI enforcement |
-| 2 | Core/CLI Compatibility | — | ⬜ | verify/load/compare output stability, exit codes, JSON contract |
-| 3 | Registry Trust Verification | — | ⬜ | yanked/revoked/digest-mismatch/expired-snapshot test coverage |
-| 4 | Reference Domain Evidence | — | ⬜ | writing/prompt_diagnosis/agent_safety → validated (30+ evals) |
-| 5 | Agent Integration Kit | — | ⬜ | Codex/Claude Code/OpenCode/Cursor smoke test, MCP conformance |
-| 6 | External Contributor Path | — | ⬜ | fork→PR guide, issue templates, conformance badge, COMPATIBILITY.md |
+| 1 | Protocol Freeze | Protocol release captain | 🟨 | Non-negotiable rules are covered by conformance and release gate docs; full MUST/SHOULD audit still needs traceability table. |
+| 2 | Core/CLI Compatibility | Runtime lead | 🟨 | [CLI JSON contract](./cli-json-contract.md) published; verify JSON snapshot still needs CLI-side hardening. |
+| 3 | Registry Trust Verification | Registry lead | 🟨 | Failure tests pass locally and `kdna-registry` release preflight passes; revoked signature and expired license vectors still need coverage. |
+| 4 | Reference Domain Evidence | Domain evidence lead | 🟨 | writing/prompt_diagnosis/agent_safety source repos now have 30 eval cases and rubric/report coverage; [benchmark evidence contract](./reference-domain-benchmark-runbook.md) is published; signed release assets, raw outputs, and automated scoring artifacts remain before `validated`. |
+| 5 | Agent Integration Kit | Integration lead | 🟨 | [Agent integration kit](./agent-integration-kit.md) exists; live Codex/Claude/OpenCode/Cursor/MCP sign-offs required. |
+| 6 | External Contributor Path | Maintainer | 🟨 | Issue templates and CONTRIBUTING exist; non-maintainer trial and conformance badge remain. |
+
+Current cross-repo audit: [Public Confidence Audit 2026-06-03](./PUBLIC_CONFIDENCE_AUDIT_2026-06-03.md).
 
 ---
 
@@ -27,13 +33,14 @@
 - [ ] Review `SPEC.md` for all uses of MUST, SHOULD, MUST NOT, SHOULD NOT
 - [ ] Verify every MUST is a real implementability requirement (not aspirational)
 - [ ] Verify every SHOULD has a documented exception path
-- [ ] Cross-reference with conformance suite: every MUST should have a corresponding conformance test
+- [x] Start traceability map for non-negotiable rules
+- [ ] Complete cross-reference with conformance suite: every MUST should have a corresponding conformance test or documented exception
 
 #### 1.2 — Non-Negotiable Rules CI Enforcement
-- [ ] `format` (not `kdna_spec`) — CI rejects manifests with `kdna_spec`
-- [ ] `languages` (not singular `language`) — CI rejects singular field
-- [ ] `mimetype: application/vnd.aikdna.kdna+zip` — CI rejects `application/x-kdna`
-- [ ] `spec_version: "1.0-rc"` — CI warns on unknown spec_version
+- [x] `format` (not `kdna_spec`) — CI rejects manifests with `kdna_spec`
+- [x] `languages` (not singular `language`) — CI rejects singular field
+- [x] `mimetype: application/vnd.aikdna.kdna+zip` — CI rejects `application/x-kdna`
+- [x] `spec_version: "1.0-rc"` — CI warns on unknown spec_version
 - [ ] Signatures use v1.0 canonical content-tree payload only
 
 #### 1.3 — RFC Process Documentation
@@ -50,10 +57,11 @@
 ### Issues
 
 #### 2.1 — Command Output Stability Contract
-- [ ] `kdna verify --json` — document all fields, guarantee version compatibility
-- [ ] `kdna load` — document the prompt-mode output format (sections, headers, field order)
-- [ ] `kdna list --json` — document v2.1 fields (applies_when, does_not_apply_when, etc.)
-- [ ] Exit codes 0-8 are documented and stable
+- [x] `kdna verify --json` — document all fields, guarantee version compatibility
+- [ ] `kdna verify --json` — CLI-side snapshot coverage for success and failure outputs
+- [x] `kdna load` — document the prompt-mode output format (sections, headers, field order)
+- [x] `kdna list --json` — document v2.1 fields (applies_when, does_not_apply_when, etc.)
+- [x] Exit codes 0-8 are documented and stable
 
 #### 2.2 — SDK API Stability
 - [ ] Document `loadKDNA`, `validateKDNA`, `renderForAgent`, `inspectKDNA`, `verifyDigest` signatures
@@ -75,23 +83,23 @@
 ### Issues
 
 #### 3.1 — Trust Failure Test Cases
-- [ ] **Digest mismatch** — `asset_digest` in registry doesn't match downloaded `.kdna`
-- [ ] **Yanked domain** — blocked from new installation, existing installs preserved
+- [x] **Digest mismatch** — `asset_digest` in registry doesn't match downloaded `.kdna`
+- [x] **Yanked domain** — blocked from new installation, existing installs preserved
 - [ ] **Revoked signature** — `revoked_pubkeys` blocks installation
-- [ ] **Expired snapshot** — registry `updated` timestamp beyond tolerance
-- [ ] **Missing trust_pubkey** — scope declared but no trust anchor
+- [x] **Expired snapshot** — registry `updated` timestamp beyond tolerance
+- [x] **Missing trust_pubkey** — scope declared but no trust anchor
 - [ ] **Signature invalid** — Ed25519 signature doesn't verify against pubkey
 - [ ] **Expired license** — licensed asset with expired entitlement
 
 #### 3.2 — Registry Publishing Workflow
-- [ ] `PUBLISHING_EXAMPLE.md` — step-by-step from Studio export to PR merged
+- [x] `PUBLISHING_EXAMPLE.md` — step-by-step from Studio export to PR merged
 - [ ] Dry-run: `kdna publish --check` with actionable error messages
 - [ ] Trust gate automation: `scripts/check-domain-trust-gate.js` in CI
 
 #### 3.3 — Private Registry Demo
-- [ ] Static `domains.json` with scoped `@mycorp` entries
+- [x] Static `domains.json` with scoped `@mycorp` entries
 - [ ] Self-signed `.kdna` with organization Ed25519 key
-- [ ] `KDNA_REGISTRY_URL` override verification
+- [x] `KDNA_REGISTRY_URL` override verification
 
 ---
 
@@ -102,19 +110,28 @@
 ### Issues
 
 #### 4.1 — @aikdna/writing → validated
-- [ ] Expand evals from 15 to 30+ cases
+- [x] Expand evals from 15 to 30+ cases
+- [x] Publish benchmark evidence contract
+- [ ] Repack, sign, and release `.kdna` asset with 30 eval specs
 - [ ] Automated scoring script (`npm run eval`)
 - [ ] Save raw model outputs in `evals/raw/`
 - [ ] Publish benchmark report: models, inputs, scoring criteria, limitations
 - [ ] Regression test: compare v_current vs v_previous eval scores
 
 #### 4.2 — @aikdna/prompt_diagnosis → validated
-- [ ] Expand evals from 10 to 30+ cases
+- [x] Expand evals from 10 to 30+ cases
+- [x] Scoring rubric
+- [x] Benchmark report skeleton
+- [x] Publish benchmark evidence contract
+- [ ] Repack, sign, and release `.kdna` asset with 30 eval specs
 - [ ] Automated scoring script
-- [ ] Raw outputs + benchmark report
+- [ ] Raw outputs + benchmark report with completed model results
 
 #### 4.3 — @aikdna/agent_safety → validated
-- [ ] Expand evals from 10 to 30+ cases
+- [x] Expand evals from 10 to 30+ cases
+- [x] Scoring rubric
+- [x] Publish benchmark evidence contract
+- [ ] Repack, sign, and release `.kdna` asset with 30 eval specs
 - [ ] Automated scoring script
 - [ ] Raw outputs + benchmark report
 
@@ -123,7 +140,7 @@
 - [ ] `evals_url` pointing to public eval directory
 - [ ] `benchmark_report_url` pointing to public report
 - [ ] `known_limitations_url` pointing to `docs/known-limitations.md`
-- [ ] `test_count` updated in registry entry
+- [ ] `test_count` updated in registry entry after signed asset republish
 - [ ] Trust gate passes: `scripts/check-domain-trust-gate.js`
 
 ---
@@ -137,11 +154,11 @@
 #### 5.1 — Agent Smoke Test Matrix
 | Agent | Smoke Test | Status |
 |-------|-----------|--------|
-| Codex | Load @aikdna/writing, ask review question, verify judgment path changed | ⬜ |
-| Claude Code | Load @aikdna/writing, ask review question, verify judgment path changed | ⬜ |
-| OpenCode | Load @aikdna/writing, ask review question, verify judgment path changed | ⬜ |
-| Cursor | Load @aikdna/writing, ask review question, verify judgment path changed | ⬜ |
-| MCP Server | Start server, call all 5 tools, verify responses | ⬜ |
+| Codex | Load @aikdna/writing, ask review question, verify judgment path changed | 🟨 CLI precheck recorded; live sign-off still pending |
+| Claude Code | Load @aikdna/writing, ask review question, verify judgment path changed | ⬜ sign-off template ready |
+| OpenCode | Load @aikdna/writing, ask review question, verify judgment path changed | ⬜ sign-off template ready |
+| Cursor | Load @aikdna/writing, ask review question, verify judgment path changed | ⬜ sign-off template ready |
+| MCP Server | Start server, call all 5 tools, verify responses | ⬜ sign-off template ready |
 
 #### 5.2 — MCP Conformance
 - [ ] Run MCP server against conformance suite (asset + loader profiles)
@@ -149,8 +166,8 @@
 - [ ] Verify `kdna.available`, `kdna.inspect`, `kdna.verify`, `kdna.load`, `kdna.match`
 
 #### 5.3 — Integration Troubleshooting Guide
-- [ ] Common failure modes per agent
-- [ ] Debug mode: how to extract which KDNA loaded and why
+- [x] Common failure modes per agent
+- [x] Debug mode: how to extract which KDNA loaded and why
 - [ ] CLI-less integration path (SDK only, no CLI dependency)
 
 ---

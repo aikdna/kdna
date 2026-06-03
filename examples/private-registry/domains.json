@@ -1,0 +1,48 @@
+{
+  "registry_version": "1.0-rc",
+  "schema_version": "3.0",
+  "updated": "2026-06-03T00:00:00.000Z",
+  "scopes": {
+    "@mycorp": {
+      "type": "private",
+      "verified": true,
+      "trust_pubkey": "-----BEGIN PUBLIC KEY-----\\nMCowBQYDK2VwAyEAexampleexampleexampleexampleexample1234567890=\\n-----END PUBLIC KEY-----",
+      "revoked_pubkeys": []
+    }
+  },
+  "domains": [
+    {
+      "name": "@mycorp/writing_policy",
+      "version": "0.1.0",
+      "status": "experimental",
+      "description": "Private writing policy judgment asset.",
+      "media_type": "application/vnd.aikdna.kdna+zip",
+      "asset_url": "file:///absolute/path/to/writing-policy-0.1.0.kdna",
+      "asset_digest": "sha256:replace-with-real-digest",
+      "signature": "ed25519:replace-with-real-signature",
+      "quality_badge": "untested",
+      "risk_level": "R0",
+      "review_status": "private",
+      "languages": ["en"],
+      "default_language": "en"
+    },
+    {
+      "name": "@mycorp/yanked_example",
+      "version": "0.1.0",
+      "status": "deprecated",
+      "description": "Example yanked entry. New installs must be blocked.",
+      "media_type": "application/vnd.aikdna.kdna+zip",
+      "asset_url": "file:///absolute/path/to/yanked-example-0.1.0.kdna",
+      "asset_digest": "sha256:replace-with-real-digest",
+      "signature": "ed25519:replace-with-real-signature",
+      "quality_badge": "untested",
+      "risk_level": "R1",
+      "review_status": "private",
+      "languages": ["en"],
+      "default_language": "en",
+      "yanked": true,
+      "yanked_reason": "Private registry failure-mode example."
+    }
+  ]
+}
+

@@ -37,7 +37,7 @@
 
 ### Ecosystem
 
-- Runtime contract fixtures aligned across KDNAChat, KDNaStudio, KDNAWork
+- Runtime contract fixtures aligned across KDNAChat, KDNA Studio, KDNAWork
 - kdna-core-swift standalone repo added to ekosystem (zero-dependency Swift package)
 
 ## 0.5.0 — 2026-05-20

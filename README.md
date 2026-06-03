@@ -6,6 +6,20 @@ Maintained by **AIKDNA** — the open ecosystem for the KDNA Protocol.
 
 **Build domains, tools, integrations — not parallel protocols.**
 
+## Start Here
+
+KDNA v1.0-rc has five public paths:
+
+| You are | Start here | Success definition |
+| --- | --- | --- |
+| AI user | [5-minute guide](./docs/5-minute-guide.md) | See with/without KDNA judgment difference. |
+| Domain expert | [First domain walkthrough](./docs/first-domain-walkthrough.md) | Create and verify a first `.kdna` asset. |
+| Developer | [CLI JSON contract](./docs/cli-json-contract.md) | Load and verify KDNA with stable machine output. |
+| Agent builder | [Agent integration kit](./docs/agent-integration-kit.md) | Show loaded-domain trace in an agent runtime. |
+| Registry operator | [Private registry demo](./examples/private-registry/README.md) | Run a registry that fails closed on trust errors. |
+
+Current public release status: [State of KDNA](./STATE_OF_KDNA.md).
+
 KDNA is an open protocol for encoding domain judgment as structured, agent-loadable assets. It turns human-governed principles, boundaries, standards, and taste into portable `.kdna` files that AI agents can load, verify, compose, and evolve.
 
 > **Like a .doc carries a portion of knowledge, a .kdna file carries a portion of judgment — principles, boundaries, standards, and taste — for a specific domain.**
@@ -35,7 +49,7 @@ Source / Evidence
 notes · docs · works · interviews · feedback
         │
         ▼
-KDNAStudio
+KDNA Studio
 declare domain → distill candidates → Human Lock → compile
         │
         ▼
@@ -63,7 +77,7 @@ revise · test · sign · publish
 
 > **KDNA Work Pack** is an open packaging standard for reusable AI work capabilities. It combines KDNA judgment with skills, review gates, risk policies, and traces so agents can perform real work with explicit domain judgment. See [kdna-workpack](https://github.com/aikdna/kdna-workpack).
 
-> **KDNA is not a single project — it's a judgment asset operating system.**  
+> **KDNA is not a single app — it is an open protocol ecosystem for judgment assets.**
 > Studio creates and compiles domain KDNA, CLI verifies and runs KDNA, Registry distributes trusted KDNA, runtime routers compose clusters, and agents load the right judgment for the task.
 
 A `.kdna` asset is not created by writing JSON files. It is compiled by a
@@ -79,14 +93,14 @@ KDNA Domain Asset = a portable domain judgment asset
 
 **Protocol first. Products are reference implementations.**
 
-KDNA Protocol is open. KDNA CLI is reference tooling. KDNAChat is a reference client for using and comparing judgment. KDNAStudio is a reference environment for authoring and locking domains. Third-party apps can implement the same runtime contract.
+KDNA Protocol is open. KDNA CLI is reference tooling. KDNAChat is a reference client for using and comparing judgment. KDNA Studio is a reference environment for authoring and locking domains. Third-party apps can implement the same runtime contract.
 
 ## For whom
 
 | You are | Start here |
 |---------|-----------|
 | **AI user** who wants better judgment from the same model | [KDNAChat](https://github.com/aikdna/kdnachat) — load domains, compare responses, see judgment differences |
-| **Domain expert** who wants to encode expertise as verifiable assets | [KDNaStudio](https://github.com/aikdna/kdnastudio) — interview → cards → lock → test → export |
+| **Domain expert** who wants to encode expertise as verifiable assets | [KDNA Studio](https://github.com/aikdna/kdnastudio) — interview → cards → lock → test → export |
 | **Developer** integrating KDNA into agents or tools | [kdna-cli](https://github.com/aikdna/kdna-cli) · [kdna-core](https://www.npmjs.com/package/@aikdna/kdna-core) — install, validate, load, compare |
 | **Tool builder** adding KDNA support to editors/IDEs | [kdna-vscode](https://github.com/aikdna/kdna-vscode) · [kdna-skills](https://github.com/aikdna/kdna-skills) |
 | **Team lead** wanting reusable AI work capabilities with judgment | [kdna-workpack](https://github.com/aikdna/kdna-workpack) — package KDNA + Skills + Gates into runnable Work Packs |

@@ -7,7 +7,7 @@ If you've found one KDNA repository and are wondering which others exist and wha
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │ LAYER 4 — Consumption (Apps)                                 │
-│ KDNAChat · KDNaStudio · KDNAWork · kdna-ios                  │
+│ KDNAChat · KDNA Studio · KDNAWork · kdna-ios                  │
 ├──────────────────────────────────────────────────────────────┤
 │ LAYER 3 — Runtime & Protocol                                 │
 │ kdna-cli · kdna-core · kdna-core-swift · kdna-skills · MCP   │
@@ -75,7 +75,7 @@ These are `.kdna` judgment domain assets. Each is a separate repository containi
 | Application | Repository | Platform | Role | Status |
 |-------------|-----------|----------|------|--------|
 | **KDNAChat** | [aikdna/kdnachat](https://github.com/aikdna/kdnachat) | macOS (SwiftUI) | Consumption client — load, use, compare domains | Beta |
-| **KDNaStudio** | [aikdna/kdnastudio](https://github.com/aikdna/kdnastudio) | macOS (SwiftUI) | Authoring tool — interview, cards, Human Lock, export | Beta |
+| **KDNA Studio** | [aikdna/kdnastudio](https://github.com/aikdna/kdnastudio) | macOS (SwiftUI) | Authoring tool — interview, cards, Human Lock, export | Beta |
 | **KDNAWork** | [aikdna/kdnawork](https://github.com/aikdna/kdnawork) | Tauri v2 (cross-platform) | Agent judgment governance workbench | Phase 1 |
 | **kdna-ios** | [aikdna/kdna-ios](https://github.com/aikdna/kdna-ios) | iOS (SwiftUI) | Mobile KDNA runtime | Early |
 
@@ -118,7 +118,7 @@ See: [CONTRIBUTING.md](../CONTRIBUTING.md) · [GOVERNANCE.md](./GOVERNANCE.md) �
 
 - All npm packages: `@aikdna/kdna-*`
 - CLI commands: `kdna` (runtime), `kdna-studio` (authoring)
-- Swift modules: `KDNACore`, `KDNaStudio`
+- Swift modules: `KDNACore`, `KDNA Studio`
 - GitHub repos: `aikdna/kdna-*` (hyphens for tools, underscores for domain repos being migrated)
 
 See [ECOSYSTEM_NAMING.md](./ECOSYSTEM_NAMING.md) for the full naming policy.

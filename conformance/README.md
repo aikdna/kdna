@@ -54,6 +54,9 @@ not source of truth; the test definitions and expected outputs are.
 
 ## Fixture Matrix
 
+The canonical expected behavior matrix lives in
+[`EXPECTED.md`](./EXPECTED.md). The table below is the short-form overview.
+
 | Fixture | Expected |
 | --- | --- |
 | `valid/minimal-domain.kdna` | loads, validates, renders |

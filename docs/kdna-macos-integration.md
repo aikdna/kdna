@@ -1,6 +1,6 @@
 # KDNA macOS Integration — Design Specification
 
-> **Status:** Implemented. `kdna-core-swift` ([aikdna/kdna-core-swift](https://github.com/aikdna/kdna-core-swift)) and `kdna-studio-swift` ([aikdna/kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift)) provide native Swift runtimes for macOS and iOS. KDNAChat and KDNaStudio are reference GUI clients.
+> **Status:** Implemented. `kdna-core-swift` ([aikdna/kdna-core-swift](https://github.com/aikdna/kdna-core-swift)) and `kdna-studio-swift` ([aikdna/kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift)) provide native Swift runtimes for macOS and iOS. KDNAChat and KDNA Studio are reference GUI clients.
 
 ## Overview
 
