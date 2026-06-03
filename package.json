@@ -18,6 +18,7 @@
     "conformance": "node conformance/run.mjs",
     "certify:asset-loader": "node conformance/run.mjs --profile asset-loader",
     "test:registry-trust": "node tests/registry-trust/run.mjs",
+    "smoke:installed-domains": "bash scripts/smoke-installed-domains.sh",
     "check:pack": "node scripts/check-pack-contents.js",
     "release:preflight": "node scripts/release-preflight.js",
     "pretest": "npm install --ignore-scripts"

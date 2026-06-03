@@ -50,3 +50,14 @@ The agent must show a judgment-path change:
 | OpenCode | Pending | Needs live sign-off record. |
 | Cursor | Pending | Needs live sign-off record. |
 | MCP Server | Pending | Needs tool-call record for `kdna.available`, `kdna.inspect`, `kdna.verify`, `kdna.load`, `kdna.match`. |
+
+## Automated Installed-Domain Precheck
+
+```bash
+npm run smoke:installed-domains
+```
+
+This runs `kdna available --json`, `kdna load <domain> --as=json`, and
+`kdna verify <domain> --json` for all five official domains and outputs a JSON
+report. The precheck confirms the CLI path, installed assets, and trust chain.
+It does not replace live agent sign-off records.
