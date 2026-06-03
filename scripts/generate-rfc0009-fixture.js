@@ -42,17 +42,42 @@ function buildZip(entries) {
     const nameBuf = Buffer.from(name);
     const data = Buffer.from(value);
     const local = Buffer.concat([
-      u32(0x04034b50), u16(20), u16(0), u16(0), u16(0), u16(0),
-      u32(0), u32(data.length), u32(data.length), u16(nameBuf.length), u16(0),
-      nameBuf, data,
+      u32(0x04034b50),
+      u16(20),
+      u16(0),
+      u16(0),
+      u16(0),
+      u16(0),
+      u32(0),
+      u32(data.length),
+      u32(data.length),
+      u16(nameBuf.length),
+      u16(0),
+      nameBuf,
+      data,
     ]);
     localParts.push(local);
 
     centralParts.push(
       Buffer.concat([
-        u32(0x02014b50), u16(20), u16(20), u16(0), u16(0), u16(0), u16(0),
-        u32(0), u32(data.length), u32(data.length), u16(nameBuf.length), u16(0),
-        u16(0), u16(0), u16(0), u32(0), u32(offset), nameBuf,
+        u32(0x02014b50),
+        u16(20),
+        u16(20),
+        u16(0),
+        u16(0),
+        u16(0),
+        u16(0),
+        u32(0),
+        u32(data.length),
+        u32(data.length),
+        u16(nameBuf.length),
+        u16(0),
+        u16(0),
+        u16(0),
+        u16(0),
+        u32(0),
+        u32(offset),
+        nameBuf,
       ]),
     );
     offset += local.length;
@@ -61,8 +86,14 @@ function buildZip(entries) {
   const central = Buffer.concat(centralParts);
   const local = Buffer.concat(localParts);
   const eocd = Buffer.concat([
-    u32(0x06054b50), u16(0), u16(0), u16(centralParts.length), u16(centralParts.length),
-    u32(central.length), u32(local.length), u16(0),
+    u32(0x06054b50),
+    u16(0),
+    u16(0),
+    u16(centralParts.length),
+    u16(centralParts.length),
+    u32(central.length),
+    u32(local.length),
+    u16(0),
   ]);
   return Buffer.concat([local, central, eocd]);
 }
@@ -74,18 +105,46 @@ function json(value) {
 // ─── Reference vectors (must match RFC-0009 test vectors) ───────────
 
 const TEST_PASSWORD = 'KDNA-TEST-VECTOR-2026';
-const TEST_RECOVERY_CODE = 'kdna-recover-AABB-CCDD-1122-3344-5566-7788-9900-AABB-CCDD-EEFF-0011-2233-4455-6677-8899-AABB';
+const TEST_RECOVERY_CODE =
+  'kdna-recover-AABB-CCDD-1122-3344-5566-7788-9900-AABB-CCDD-EEFF-0011-2233-4455-6677-8899-AABB';
 
 const core = {
-  meta: { domain: 'protected_test', version: '0.1.0', created: '2026-06-02', purpose: 'test', load_condition: 'always' },
+  meta: {
+    domain: 'protected_test',
+    version: '0.1.0',
+    created: '2026-06-02',
+    purpose: 'test',
+    load_condition: 'always',
+  },
   stances: ['Protected judgment decrypts correctly across languages.'],
-  axioms: [{ id: 'protected_a1', one_sentence: 'Cross-language decryption works.', full_statement: 'A JS-encrypted entry decrypts identically in Swift.', why: 'RFC-0009 interoperability.' }],
+  axioms: [
+    {
+      id: 'protected_a1',
+      one_sentence: 'Cross-language decryption works.',
+      full_statement: 'A JS-encrypted entry decrypts identically in Swift.',
+      why: 'RFC-0009 interoperability.',
+    },
+  ],
   ontology: [],
 };
 
 const patterns = {
-  meta: { domain: 'protected_test', version: '0.1.0', created: '2026-06-02', purpose: 'test', load_condition: 'always' },
-  misunderstandings: [{ id: 'protected_m1', wrong: 'Different language decryption.', correct: 'Identical plaintext.', key_distinction: 'interoperability', why: 'Same algorithms produce same results.' }],
+  meta: {
+    domain: 'protected_test',
+    version: '0.1.0',
+    created: '2026-06-02',
+    purpose: 'test',
+    load_condition: 'always',
+  },
+  misunderstandings: [
+    {
+      id: 'protected_m1',
+      wrong: 'Different language decryption.',
+      correct: 'Identical plaintext.',
+      key_distinction: 'interoperability',
+      why: 'Same algorithms produce same results.',
+    },
+  ],
   self_check: ['Does JS ciphertext decrypt in Swift?'],
 };
 

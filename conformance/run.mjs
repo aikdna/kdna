@@ -545,7 +545,11 @@ const protectedTamperedResult = await validateKDNA(fixtures.protectedTampered, {
   requireDecryption: true,
   decryptEntry: protectedDecrypt,
 });
-assert.equal(protectedTamperedResult.ok, false, 'tampered protected ciphertext must fail integrity check');
+assert.equal(
+  protectedTamperedResult.ok,
+  false,
+  'tampered protected ciphertext must fail integrity check',
+);
 
 // App-private envelope rejection
 let appPrivateRejected = false;

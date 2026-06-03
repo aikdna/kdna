@@ -22,10 +22,13 @@ See [Public Sync Status 2026-06-03](./PUBLIC_SYNC_STATUS_2026-06-03.md).
 | Protocol conformance | Pass | `npm run conformance` in `OPEN_SOURCE/kdna` |
 | Runtime app contract | Pass | `npm run validate:runtime-contract` in `OPEN_SOURCE/kdna` |
 | Registry trust vectors | Pass | `npm run test:registry-trust` in `OPEN_SOURCE/kdna` |
-| Core unit tests | Pass | `npm test` in `OPEN_SOURCE/kdna` |
+| Core unit tests | Pass | `npm test` in `OPEN_SOURCE/kdna` (16/16, Node 18/22/24 compat) |
+| Format check | Pass | `npm run format:check` in `OPEN_SOURCE/kdna` |
+| Release preflight | Pass | `npm run release:preflight` in `OPEN_SOURCE/kdna` |
 | CLI command tests | Pass | `npm test` in `OPEN_SOURCE/kdna-cli` |
+| KDNALAB test suite | Pass | 45 passed, `pytest -q` in KDNALAB/kdna-lab |
 | Registry release preflight | Pass | `npm run release:preflight` in `OPEN_SOURCE/kdna-registry` |
-| Website dry-run deploy | Pass | `npm run check` in `kdna-website` |
+| Website dry-run deploy | Pass | `npm run check` in `kdna-website` (private repo) |
 | Website protocol drift | Fixed | `create` now emits `spec_version`, not `kdna_spec`; `.kdna` download uses `application/vnd.aikdna.kdna+zip`. |
 | Public naming drift | Fixed | Public website/docs/CLI/skills references use `KDNA Studio`, not `KDNAStudio` or `KDNaStudio`. |
 
@@ -42,13 +45,26 @@ See [Public Sync Status 2026-06-03](./PUBLIC_SYNC_STATUS_2026-06-03.md).
 - Expanded `writing`, `prompt_diagnosis`, and `agent_safety` to 30 standard `eval-*.json` cases each.
 - Added scoring rubrics for `prompt_diagnosis` and `agent_safety`.
 - Added a benchmark report skeleton for `prompt_diagnosis`.
-- Rechecked release assets and kept registry `test_count` tied to installable
-  asset evidence: writing=10, prompt_diagnosis=10, agent_safety=14.
+- Rechecked release assets and kept registry `test_count` tied to installable asset evidence: writing=10, prompt_diagnosis=10, agent_safety=14.
 - Added `npm run audit:public-confidence` to block over-claiming reference-domain evidence.
 - Added the reference-domain benchmark runbook and raw-output directory contracts.
-- Recorded a Codex CLI precheck: `kdna available` and `kdna load` pass, while
-  `kdna verify @aikdna/writing --json` exposes installable-asset judgment
-  quality blockers.
+- Recorded a Codex CLI precheck: `kdna available` and `kdna load` pass, while `kdna verify @aikdna/writing --json` exposes installable-asset judgment quality blockers.
+
+### KDNALAB Pipeline Fixes (2026-06-03, second pass)
+
+Five external-audit-identified blockers resolved in `aikdna/kdna-lab` PR branch:
+
+1. **Per-domain Best Prompt baselines** — Replaced generic KDNA communicator template with domain-specific strong baselines: writing (editorial structural diagnosis), prompt_diagnosis (prompt-debugging root-cause), agent_safety (irreversible-action safety gate).
+2. **Scored artifact metadata inheritance** — `benchmark-run-v1.scored.json` now inherits provider, model, base_url, domain_version, asset_digest, content_digest, and input_hash from the raw benchmark artifact.
+3. **Public artifact path portability** — `output_path` fields now use repo-relative paths instead of local absolute paths.
+4. **L2 provider-error handling** — Cases with provider errors (timeout, empty output) receive `status: not_run` in L2 scoring. Judge is not called for these cases.
+5. **Regression tests** — 12 new tests verify all four fixes. KDNALAB test suite: 45 passed.
+
+Main repo CI fix: format check, release preflight, and Node 18 compatibility resolved. All tests pass locally.
+
+### Remaining Blockers
+
+These pipeline fixes are correctness improvements, not quality evidence. The writing and prompt_diagnosis 30×3 benchmark runs must be re-executed with the corrected baselines before any results can be used as quality evidence. The earlier 90-output runs are pipeline readiness evidence only.
 
 ## Not Yet Complete
 

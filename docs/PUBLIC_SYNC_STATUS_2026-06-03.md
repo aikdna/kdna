@@ -19,6 +19,13 @@ not default-branch evidence.
 | KDNALAB L2 judge assignment fix | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
 | KDNALAB agent_safety executable cases to 30 | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
 | KDNALAB process-isolated provider timeout and failure artifacts | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
+| KDNALAB per-domain Best Prompt baselines | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
+| KDNALAB scored artifact metadata inheritance | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
+| KDNALAB public artifact path portability | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
+| KDNALAB L2 provider-error skip | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
+| KDNALAB regression test coverage (45 passed) | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
+| Main repo format check + release preflight CI fix | Yes | https://github.com/aikdna/kdna/pull/66 | No | No |
+| Main repo Node 18/22/24 test compat | Yes | https://github.com/aikdna/kdna/pull/66 | No | No |
 | `@aikdna/writing` raw/scored benchmark evidence snapshot | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
 | `@aikdna/prompt_diagnosis` raw/scored benchmark evidence snapshot | Yes | https://github.com/aikdna/kdna-lab/pull/1 | No | No |
 | Reference source eval specs to 30 | Yes | https://github.com/aikdna/kdna-writing/pull/2, https://github.com/aikdna/kdna-prompt_diagnosis/pull/1, https://github.com/aikdna/kdna-agent_safety/pull/1 | No | No |
@@ -38,7 +45,7 @@ artifact. Do not describe a public branch as merged/default evidence.
 
 - `https://github.com/aikdna/kdna/tree/codex/public-confidence-gates`
 - `https://github.com/aikdna/kdna-lab/tree/codex/evidence-artifact-pipeline`
-- `https://github.com/aikdna/kdna-website/tree/codex/public-docs-drift-fixes`
+- `https://github.com/aikdna/kdna-website/tree/codex/public-docs-drift-fixes` (repo is private — not publicly verifiable)
 - `https://github.com/aikdna/kdna-registry/tree/codex/registry-evidence-truth`
 - `https://github.com/aikdna/kdna-writing/tree/codex/source-eval-evidence`
 - `https://github.com/aikdna/kdna-prompt_diagnosis/tree/codex/source-eval-evidence`
@@ -50,7 +57,7 @@ artifact. Do not describe a public branch as merged/default evidence.
 
 - `https://github.com/aikdna/kdna/pull/66`
 - `https://github.com/aikdna/kdna-lab/pull/1`
-- `https://github.com/aikdna/kdna-website/pull/5`
+- `https://github.com/aikdna/kdna-website/pull/5` (draft — repo is private, not publicly verifiable)
 - `https://github.com/aikdna/kdna-registry/pull/3`
 - `https://github.com/aikdna/kdna-writing/pull/2`
 - `https://github.com/aikdna/kdna-prompt_diagnosis/pull/1`

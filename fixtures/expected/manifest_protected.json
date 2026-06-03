@@ -13,15 +13,10 @@
     "name": "Test",
     "id": "test"
   },
-  "languages": [
-    "en"
-  ],
+  "languages": ["en"],
   "default_language": "en",
   "encryption": {
     "profile": "kdna-password-protected-v1",
-    "encrypted_entries": [
-      "KDNA_Core.json",
-      "KDNA_Patterns.json"
-    ]
+    "encrypted_entries": ["KDNA_Core.json", "KDNA_Patterns.json"]
   }
 }

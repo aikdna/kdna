@@ -16,7 +16,7 @@
   },
   "types": "src/types.d.ts",
   "scripts": {
-    "test": "node --test test/*.test.js && node -e \"const m = require('./src/index.js'); console.log('kdna-core exports:', Object.keys(m).join(', '));\""
+    "test": "bash test/test-wrapper.sh && node -e \"const m = require('./src/index.js'); console.log('kdna-core exports:', Object.keys(m).join(', '));\""
   },
   "files": [
     "src/",

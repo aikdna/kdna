@@ -15,7 +15,5 @@
       "why": "Same algorithms produce same results."
     }
   ],
-  "self_check": [
-    "Does JS ciphertext decrypt in Swift?"
-  ]
+  "self_check": ["Does JS ciphertext decrypt in Swift?"]
 }

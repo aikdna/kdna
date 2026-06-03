@@ -30,6 +30,18 @@ KDNA is the open judgment asset protocol for AI agents. It is not another prompt
 - Existing early benchmark evidence should be described as early evidence until those gates pass.
 - External contributor readiness is not complete until a non-maintainer completes fork, install, conformance, registry-entry draft, and PR.
 
+### KDNALAB Pipeline Status (2026-06-03 update)
+
+Five pipeline blockers identified by external audit have been resolved:
+
+1. **Per-domain Best Prompt baselines** — Domain-specific strong baselines now exist for writing (editorial diagnosis), prompt_diagnosis (prompt-debugging root-cause), and agent_safety (irreversible-action safety gate). The previous generic KDNA communicator template is retained as fallback only.
+2. **Scored artifact metadata inheritance** — Scored `benchmark-run-v1.scored.json` now inherits provider, model, domain_version, asset_digest, content_digest, and input_hash from the raw artifact instead of using `unknown`/`null`.
+3. **Public artifact path portability** — `output_path` fields in benchmark-run JSON now use repo-relative paths instead of local absolute paths.
+4. **L2 provider-error handling** — L2 judge now skips cases with provider errors (timeout, empty output), recording `status: not_run` instead of incorrectly scoring unreceived outputs as passed.
+5. **Regression test coverage** — 12 new tests cover all four fixes above. KDNALAB test suite: 45 passed.
+
+Important: these are pipeline correctness fixes, not quality evidence. The writing and prompt_diagnosis 30×3 benchmark runs must be **re-executed** before any results can be treated as quality evidence. The earlier 90-output runs remain classified as pipeline readiness evidence only.
+
 ## Labs And Future
 
 These should not be presented as v1.0-rc launch requirements:
