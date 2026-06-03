@@ -18,7 +18,7 @@ Key elements injected into the agent's reasoning frame:
 
 ```bash
 # 1. Install KDNA
-npm i -g @aikdna/kdna
+npm i -g @aikdna/kdna-cli
 
 # 2. Install domain
 kdna install sales

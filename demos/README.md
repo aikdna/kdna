@@ -39,7 +39,7 @@ All demos use domains from the public registry.
 Install and run:
 
 ```bash
-npm i -g @aikdna/kdna
+npm i -g @aikdna/kdna-cli
 kdna install sales
 kdna install management
 bash scripts/demo-agent-integration.sh

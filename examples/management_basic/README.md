@@ -18,7 +18,7 @@ A minimal KDNA domain for management judgment. Helps AI agents apply expert mana
 ## Install
 
 ```bash
-npm i -g @aikdna/kdna
+npm i -g @aikdna/kdna-cli
 kdna install management-basic
 ```
 

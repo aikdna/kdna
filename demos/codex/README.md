@@ -17,7 +17,7 @@ Key elements injected into the agent's reasoning frame:
 ## Reproduce
 
 ```bash
-npm i -g @aikdna/kdna
+npm i -g @aikdna/kdna-cli
 kdna install sales
 curl -fsSL https://raw.githubusercontent.com/aikdna/kdna-skills/main/install.sh | bash -- --codex
 ```

@@ -18,7 +18,7 @@ A minimal KDNA domain for speaking and presentation judgment. Helps AI agents ap
 ## Install
 
 ```bash
-npm i -g @aikdna/kdna
+npm i -g @aikdna/kdna-cli
 kdna install speaking-basic
 ```
 

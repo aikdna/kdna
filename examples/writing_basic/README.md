@@ -19,7 +19,7 @@ A minimal KDNA domain for writing judgment. Helps AI agents apply expert writing
 
 ```bash
 # via npm CLI
-npm i -g @aikdna/kdna
+npm i -g @aikdna/kdna-cli
 kdna install writing-basic
 
 # via kdna-skills installer
