@@ -79,7 +79,7 @@ npx @aikdna/kdna-mcp-server &
 PID=$!
 
 # 2. Test tools via stdin/stdout JSON-RPC
-echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | nc localhost -
+echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | npx @aikdna/kdna-mcp-server
 
 # 3. Verify all 5 tools are registered:
 #    - kdna.inspect

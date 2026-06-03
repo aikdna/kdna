@@ -4,29 +4,34 @@
 
 How to install KDNA, create your first domain, and use it with an agent.
 
-## 1. Install the Loader Skill
-
-The `kdna-loader` skill tells your agent how to find and apply KDNA.
+## 1. Install the CLI
 
 ```bash
-mkdir -p ~/.agents/skills/kdna-loader
-cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
+npm install -g @aikdna/kdna-cli
+kdna setup
 ```
 
-## 2. Set Up Your KDNA Library
+## 2. Install a Domain
 
 ```bash
-mkdir -p ~/.agents/Kdna
+kdna install @aikdna/writing
+kdna verify @aikdna/writing --judgment
 ```
 
-Add domains from the canonical [kdna-registry](https://github.com/aikdna/kdna-registry) or create your own.
+Installed domains live in `~/.kdna/` (or `$KDNA_HOME` if set).
 
 ## 3. Create Your First Domain
 
-Start from the template:
+From the CLI:
 
 ```bash
-cp -r templates/minimal-domain ~/.agents/Kdna/my_domain
+kdna dev scaffold my_domain
+```
+
+Or start from the minimal template:
+
+```bash
+cp -r templates/minimal-domain ~/.kdna/my_domain
 ```
 
 Edit the two JSON files:
@@ -39,44 +44,25 @@ Fill in the placeholders. Keep it short at first — 2-3 axioms, 2-3 concepts, 2
 ## 4. Validate
 
 ```bash
-npx kdna dev validate ~/.agents/Kdna/my_domain
+kdna dev validate ~/.kdna/my_domain
 ```
 
 Fix any errors before using the domain.
 
-## 5. Add to the Registry (Optional)
+## 5. Use It with an Agent
 
-Create or edit `~/.agents/Kdna/registry.json`:
+Install the `kdna-loader` skill for your agent:
 
-```json
-{
-  "version": "1.0-rc",
-  "root": "~/.agents/Kdna",
-  "domains": [
-    {
-      "id": "my_domain",
-      "name": "My Domain",
-      "path": "my_domain",
-      "status": "local",
-      "description": "What this domain covers.",
-      "triggers": ["keyword1", "keyword2"]
-    }
-  ]
-}
+```bash
+mkdir -p ~/.agents/skills/kdna-loader
+cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
 ```
 
-The `triggers` field helps the agent discover which domain to load based on the user's question.
+When your agent has the loader skill and a domain is installed, the agent will discover and apply KDNA judgment automatically.
 
-## 6. Use It
+## 6. Share (Optional)
 
-When your agent has the `kdna-loader` skill installed and a user asks about your domain, the agent will:
-
-1. Search `~/.agents/Kdna/` for matching domains
-2. Load `KDNA_Core.json` and `KDNA_Patterns.json`
-3. Load optional files based on the user's task
-4. Apply domain axioms, terminology, and self-checks before responding
-
-The user sees a domain-shaped answer — not a summary of KDNA.
+Publish your domain to the [kdna-registry](https://github.com/aikdna/kdna-registry) so others can `kdna install` it.
 
 ## 7. When to Expand
 

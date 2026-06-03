@@ -4,39 +4,34 @@
 
 如何安装 KDNA、创建你的第一个领域、并在 Agent 中使用。
 
-## 1. 安装加载器技能
-
-**推荐：一键安装**
+## 1. 安装 CLI
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/aikdna/kdna-skills/main/install.sh | bash
+npm install -g @aikdna/kdna-cli
+kdna setup
 ```
 
-这会自动检测你安装的 Agent 并完成配置。详见 [kdna-skills](https://github.com/aikdna/kdna-skills)。
-
-**手动安装（OpenCode）：**
+## 2. 安装一个领域
 
 ```bash
-mkdir -p ~/.agents/skills/kdna-loader
-cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
-mkdir -p ~/.agents/skills/kdna-create
-cp skills/kdna-create/SKILL.md ~/.agents/skills/kdna-create/SKILL.md
+kdna install @aikdna/writing
+kdna verify @aikdna/writing --judgment
 ```
 
-## 2. 搭建 KDNA 本地库
-
-```bash
-mkdir -p ~/.agents/Kdna
-```
-
-从官方 [kdna-registry](https://github.com/aikdna/kdna-registry) 添加领域，或创建自己的。
+安装的领域存放在 `~/.kdna/`（或通过 `$KDNA_HOME` 自定义）。
 
 ## 3. 创建你的第一个领域
 
-从模板开始：
+通过 CLI：
 
 ```bash
-cp -r templates/minimal-domain ~/.agents/Kdna/my_domain
+kdna dev scaffold my_domain
+```
+
+或从最小模板开始：
+
+```bash
+cp -r templates/minimal-domain ~/.kdna/my_domain
 ```
 
 编辑两个 JSON 文件：
@@ -46,49 +41,28 @@ cp -r templates/minimal-domain ~/.agents/Kdna/my_domain
 
 填写模板中的占位符。一开始保持简短——2-3 条公理、2-3 个概念、2-3 个常见误解就够了。
 
-**更好的方式：** 安装 `kdna-create` 技能后，直接对你的 Agent 说"帮我创建一个 XX 领域的 KDNA"，Agent 会通过访谈引导你完成。
-
 ## 4. 校验
 
 ```bash
-npx kdna dev validate ~/.agents/Kdna/my_domain
+kdna dev validate ~/.kdna/my_domain
 ```
 
 修复所有错误后再使用。
 
-## 5. 添加到注册表（可选）
+## 5. 在 Agent 中使用
 
-创建或编辑 `~/.agents/Kdna/registry.json`：
+为你的 Agent 安装 `kdna-loader` 技能：
 
-```json
-{
-  "version": "1.0-rc",
-  "root": "~/.agents/Kdna",
-  "domains": [
-    {
-      "id": "my_domain",
-      "name": "我的领域",
-      "path": "my_domain",
-      "status": "local",
-      "description": "这个领域涵盖的内容。",
-      "triggers": ["关键词1", "关键词2"]
-    }
-  ]
-}
+```bash
+mkdir -p ~/.agents/skills/kdna-loader
+cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
 ```
 
-`triggers` 字段帮助 Agent 根据用户的问题自动发现应该加载哪个领域。
+当 Agent 安装了 loader 技能且有领域被安装后，Agent 会自动发现并应用 KDNA 判断。
 
-## 6. 使用
+## 6. 分享（可选）
 
-当你的 Agent 安装了 `kdna-loader` 技能，用户提出与你的领域相关的问题时，Agent 会：
-
-1. 在 `~/.agents/Kdna/` 中搜索匹配的领域
-2. 加载 `KDNA_Core.json` 和 `KDNA_Patterns.json`
-3. 根据用户任务按需加载可选文件
-4. 在回答前应用领域公理、术语和自查清单
-
-用户看到的是一个被领域判断塑造过的回答——而不是 KDNA 的摘要。
+将你的领域发布到 [kdna-registry](https://github.com/aikdna/kdna-registry)，其他人就可以 `kdna install` 使用。
 
 ## 7. 何时扩展
 
