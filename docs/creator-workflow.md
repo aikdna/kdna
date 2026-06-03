@@ -327,7 +327,7 @@ node scripts/validate-registry.js --remote # check asset_url + asset_digest
 
 ### 5.5 更新网站 Domains 页
 
-在 `kdna-website/src/pages/domains.js` 的 `DOMAINS_DATA` 数组中添加新域卡片。
+在网站的 Domains 页面数据中添加新域卡片。
 
 ### 5.6 推送到 GitHub
 

@@ -8,7 +8,6 @@ Scope:
 - `aikdna/kdna-cli`
 - `aikdna/kdna-registry`
 - `aikdna/kdna-skills`
-- `aikdna/kdna-website`
 - Reference domain repos: `kdna-writing`, `kdna-prompt_diagnosis`, `kdna-agent_safety`
 
 Important status boundary: these findings are local workspace findings until
@@ -28,7 +27,7 @@ See [Public Sync Status 2026-06-03](./PUBLIC_SYNC_STATUS_2026-06-03.md).
 | CLI command tests | Pass | `npm test` in `OPEN_SOURCE/kdna-cli` |
 | KDNALAB test suite | Pass | 45 passed, `pytest -q` in KDNALAB/kdna-lab |
 | Registry release preflight | Pass | `npm run release:preflight` in `OPEN_SOURCE/kdna-registry` |
-| Website dry-run deploy | Pass | `npm run check` in `kdna-website` (private repo) |
+| Website dry-run deploy | Not publicly verifiable (repo is private) | Deploy check passes locally |
 | Website protocol drift | Fixed | `create` now emits `spec_version`, not `kdna_spec`; `.kdna` download uses `application/vnd.aikdna.kdna+zip`. |
 | Public naming drift | Fixed | Public website/docs/CLI/skills references use `KDNA Studio`, not `KDNAStudio` or `KDNaStudio`. |
 

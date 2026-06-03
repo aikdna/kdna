@@ -9,5 +9,5 @@
   "max_possible": 30,
   "accuracy_pct": "56.7",
   "state_accuracy_pct": "96.7",
-  "raw_file": "/Users/AI/K/KDNA/benchmarks/raw/decision-state-with-kdna-kimi-for-coding-2026-05-18T19-13-10-506Z.jsonl"
+  "raw_file": "benchmarks/raw/decision-state-with-kdna-kimi-for-coding-2026-05-18T19-13-10-506Z.jsonl"
 }

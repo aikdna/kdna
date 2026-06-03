@@ -45,7 +45,6 @@ artifact. Do not describe a public branch as merged/default evidence.
 
 - `https://github.com/aikdna/kdna/tree/codex/public-confidence-gates`
 - `https://github.com/aikdna/kdna-lab/tree/codex/evidence-artifact-pipeline`
-- `https://github.com/aikdna/kdna-website/tree/codex/public-docs-drift-fixes` (repo is private — not publicly verifiable)
 - `https://github.com/aikdna/kdna-registry/tree/codex/registry-evidence-truth`
 - `https://github.com/aikdna/kdna-writing/tree/codex/source-eval-evidence`
 - `https://github.com/aikdna/kdna-prompt_diagnosis/tree/codex/source-eval-evidence`
@@ -57,7 +56,6 @@ artifact. Do not describe a public branch as merged/default evidence.
 
 - `https://github.com/aikdna/kdna/pull/66`
 - `https://github.com/aikdna/kdna-lab/pull/1`
-- `https://github.com/aikdna/kdna-website/pull/5` (draft — repo is private, not publicly verifiable)
 - `https://github.com/aikdna/kdna-registry/pull/3`
 - `https://github.com/aikdna/kdna-writing/pull/2`
 - `https://github.com/aikdna/kdna-prompt_diagnosis/pull/1`

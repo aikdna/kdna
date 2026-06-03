@@ -9,5 +9,5 @@
   "max_possible": 0,
   "accuracy_pct": 0,
   "state_accuracy_pct": 0,
-  "raw_file": "/Users/AI/K/KDNA/benchmarks/raw/decision-state-no-kdna-claude-sonnet-4-6-2026-05-19T01-07-44-478Z.jsonl"
+  "raw_file": "benchmarks/raw/decision-state-no-kdna-claude-sonnet-4-6-2026-05-19T01-07-44-478Z.jsonl"
 }

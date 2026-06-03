@@ -287,7 +287,7 @@ Want to create your own trusted KDNA? Start with KDNA Studio. Studio turns human
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Studio CLI — `kdna-studio` create, lock, compile, export | Domain creators |
 | [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Native Swift authoring — create KDNA on Apple platforms | Swift developers |
 | [kdna_authoring](https://github.com/aikdna/kdna-authoring) · [agent_safety](https://github.com/aikdna/kdna-agent_safety) · [prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [code_review](https://github.com/aikdna/kdna-code_review) · [kdna-writing](https://github.com/aikdna/kdna-writing) | First-launch official domain assets (signed `.kdna`, Human Lock, bilingual en/zh-CN) | Domain consumers |
-| [aikdna.com](https://github.com/aikdna/kdna-website) | Website source | Web contributors |
+| Website | Hosted at [aikdna.com](https://aikdna.com) | Web contributors |
 
 ---
 
