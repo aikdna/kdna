@@ -77,7 +77,7 @@ Then install the `kdna-loader` skill for your agent from [kdna-skills](https://g
 
 - KDNA domains themselves (they are installed `.kdna` assets, discovered
   on demand through the CLI)
-- A domain creator. Use KDNA Studio or a Studio-compatible compiler for trusted
+- A domain creator. Use An authoring environment or a Studio-compatible compiler for trusted
   `.kdna` creation; CLI dev scaffolds are non-canonical.
 - Per-project pinning (the v0.7–v0.8 `.kdna/config.json` mechanism was
   removed in v0.9 because it forced loading on tasks the user didn't

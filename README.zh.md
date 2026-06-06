@@ -38,7 +38,7 @@ KDNA Domain Asset = 可携带的领域判断资产
 
 **协议优先。产品是参考实现。**
 
-KDNA Protocol 是开放的。KDNA CLI 是参考工具。KDNAChat 是使用和对比判断的参考客户端。KDNA Studio 是编写和锁定领域的参考环境。第三方应用可以实现同样的运行时协议。
+KDNA Protocol 是开放的。KDNA CLI 是参考工具。a KDNA-compatible client 是使用和对比判断的参考客户端。An authoring environment 是编写和锁定领域的参考环境。第三方应用可以实现同样的运行时协议。
 
 ## 为什么需要 KDNA
 

@@ -744,8 +744,8 @@ The public registry may retain experimental and yanked entries for transparency,
 
 ### 14.6 Reference Applications
 
-- **KDNAChat** (macOS): reference GUI client for loading, comparing, and tracing KDNA judgment. Compare Mode: same input, same model, with/without KDNA.
-- **KDNA Studio** (macOS): authoring client built on Studio Core.
+- **a KDNA-compatible client** (macOS): reference GUI client for loading, comparing, and tracing KDNA judgment. Compare Mode: same input, same model, with/without KDNA.
+- **Authoring environment** (macOS): authoring client built on Studio Core.
 
 ---
 

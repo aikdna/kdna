@@ -6,7 +6,7 @@
   "mode": "enforce",
   "timestamp": "2026-05-26T12:00:00Z",
   "input_hash": "sha256:chat-writing-demo",
-  "agent": "kdnachat",
+  "agent": "client",
   "input_summary": "Review this blog post draft about productivity tools. We should leverage our synergies to create value.",
   "route_result": {
     "status": "LOAD_STRONG_FIT",

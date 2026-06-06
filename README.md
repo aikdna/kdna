@@ -49,7 +49,7 @@ Source / Evidence
 notes · docs · works · interviews · feedback
         │
         ▼
-KDNA Studio
+Authoring pipeline
 declare domain → distill candidates → Human Lock → compile
         │
         ▼
@@ -62,7 +62,7 @@ compose multiple domain assets when the task needs more than one judgment lens
         │
         ▼
 Runtime Load
-KDNAChat · CLI · MCP · SDK · Agent adapters
+Compatible clients · CLI · MCP · SDK · Agent adapters
         │
         ▼
 Trace / Review / Feedback
@@ -93,14 +93,14 @@ KDNA Domain Asset = a portable domain judgment asset
 
 **Protocol first. Products are reference implementations.**
 
-KDNA Protocol is open. KDNA CLI is reference tooling. KDNAChat is a reference client for using and comparing judgment. KDNA Studio is a reference environment for authoring and locking domains. Third-party apps can implement the same runtime contract.
+KDNA Protocol is open. KDNA CLI is reference tooling. Compatible clients serve as reference implementations for loading and comparing judgment domains. Authoring environments serve as reference implementations for creating and locking domains. Third-party apps can implement the same runtime contract.
 
 ## For whom
 
 | You are | Start here |
 |---------|-----------|
-| **AI user** who wants better judgment from the same model | [KDNAChat](https://github.com/aikdna/kdnachat) — load domains, compare responses, see judgment differences |
-| **Domain expert** who wants to encode expertise as verifiable assets | [KDNA Studio](https://github.com/aikdna/kdnastudio) — interview → cards → lock → test → export |
+| **AI user** who wants better judgment from the same model | [5-minute guide](./docs/5-minute-guide.md) — load domains, compare responses, see judgment differences |
+| **Domain expert** who wants to encode expertise as verifiable assets | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) — interview → cards → lock → test → export |
 | **Developer** integrating KDNA into agents or tools | [kdna-cli](https://github.com/aikdna/kdna-cli) · [kdna-core](https://www.npmjs.com/package/@aikdna/kdna-core) — install, validate, load, compare |
 | **Tool builder** adding KDNA support to editors/IDEs | [kdna-vscode](https://github.com/aikdna/kdna-vscode) · [kdna-skills](https://github.com/aikdna/kdna-skills) |
 | **Team lead** wanting reusable AI work capabilities with judgment | [kdna-workpack](https://github.com/aikdna/kdna-workpack) — package KDNA + Skills + Gates into runnable Work Packs |
@@ -247,7 +247,7 @@ kdna doctor --agents
 # → Installed domains: 1
 ```
 
-Want to create your own trusted KDNA? Start with KDNA Studio. Studio turns human-reviewed judgment cards into canonical `.kdna` assets with authoring provenance, Human Locks, compiler metadata, and asset digest. `kdna-cli` verifies, installs, loads, compares, publishes, and audits existing `.kdna` assets; it does not author trusted KDNA.
+Want to create your own trusted KDNA? Start with the authoring tool of your choice. An authoring pipeline turns human-reviewed judgment cards into canonical `.kdna` assets with authoring provenance, Human Locks, compiler metadata, and asset digest. `kdna-cli` verifies, installs, loads, compares, publishes, and audits existing `.kdna` assets; it does not author trusted KDNA.
 
 ---
 
@@ -260,7 +260,7 @@ Want to create your own trusted KDNA? Start with KDNA Studio. Studio turns human
 | **Comparing KDNA with RAG, Memory, Skills, MCP, Workflows, Evals** | [KDNA and the AI Stack](./docs/kdna-and-ai-stack.md) |
 | **Reading the white paper** | [KDNA White Paper](./docs/kdna-whitepaper.md) |
 | **Developer wanting to connect KDNA to an agent** | [5-minute guide](./docs/5-minute-guide.md) |
-| **Domain expert wanting to encode your judgment** | [KDNA Studio CLI](https://github.com/aikdna/kdna-studio-cli) — Studio-compatible command-line authoring (`@aikdna/kdna-studio-cli`) |
+| **Domain expert wanting to encode your judgment** | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) — Studio-compatible command-line authoring (`@aikdna/kdna-studio-cli`) |
 | **Evaluator wanting to measure judgment improvement** | [Evaluation guide](./docs/evaluation.md) |
 | **App developer integrating KDNA into Chat, Studio, or agent runtimes** | [App Runtime Contract](./docs/app-runtime-contract.md) |
 | **Enterprise evaluating private deployment** | [Enterprise guide](./docs/enterprise.md) |
@@ -282,11 +282,8 @@ Want to create your own trusted KDNA? Start with KDNA Studio. Studio turns human
 | Repository | Role | For |
 |------------|------|-----|
 | [kdna](https://github.com/aikdna/kdna) | Protocol, SPEC, core library, governance docs | Everyone |
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | Runtime CLI — install, validate, verify, load, compare, publish existing assets, trace | Developers |
-| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | Authoring kernel (npm) — `@aikdna/kdna-studio-core` | App developers |
-| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Studio CLI — `kdna-studio` create, lock, compile, export | Domain creators |
-| [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Native Swift authoring — create KDNA on Apple platforms | Swift developers |
-| [kdna_authoring](https://github.com/aikdna/kdna-authoring) · [agent_safety](https://github.com/aikdna/kdna-agent_safety) · [prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [code_review](https://github.com/aikdna/kdna-code_review) · [kdna-writing](https://github.com/aikdna/kdna-writing) | First-launch official domain assets (signed `.kdna`, Human Lock, bilingual en/zh-CN) | Domain consumers |
+| [kdna-registry](https://github.com/aikdna/kdna-registry) · [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) · [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Runtime tools, registry, authoring CLI | Developers · domain authors |
+| [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety) · [kdna-writing](https://github.com/aikdna/kdna-writing) · [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) · [kdna-code_review](https://github.com/aikdna/kdna-code_review) · [kdna-authoring](https://github.com/aikdna/kdna-authoring) | First-launch official domain assets (signed `.kdna`, Human Lock, bilingual en/zh-CN) | Domain consumers |
 | Website | Hosted at [aikdna.com](https://aikdna.com) | Web contributors |
 
 ---
@@ -306,7 +303,8 @@ Related repositories:
 
 - [`aikdna/kdna-cli`](https://github.com/aikdna/kdna-cli) — official CLI and runtime control plane
 - [`aikdna/kdna-registry`](https://github.com/aikdna/kdna-registry) — public domain catalog and registry schema
-- [`aikdna/kdna-studio-core`](https://github.com/aikdna/kdna-studio-core) — KDNA Studio authoring kernel (`@aikdna/kdna-studio-core`)
+- [`aikdna/kdna-studio-core`](https://github.com/aikdna/kdna-studio-core) — authoring kernel (`@aikdna/kdna-studio-core`)
+- [`aikdna/kdna-studio-cli`](https://github.com/aikdna/kdna-studio-cli) — CLI authoring entry point
 - Official domain repositories — reference KDNA domains
 
 ---
@@ -372,7 +370,7 @@ RAG retrieves facts and documents for the model to reference. KDNA encodes what 
 <details>
 <summary>Can I use KDNA without coding?</summary>
 
-Yes — start with [KDNA Studio CLI](https://github.com/aikdna/kdna-studio-cli) (`@aikdna/kdna-studio-cli`) for guided authoring, Human Lock, compile, and export. To install and use domains with your AI agent, you only need the runtime CLI (`npm install -g @aikdna/kdna-cli`). Hand-written dev source directories are non-canonical and cannot become trusted assets unless compiled by a Studio-compatible pipeline.
+Yes — start with [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) (`@aikdna/kdna-studio-cli`) for guided authoring, Human Lock, compile, and export. To install and use domains with your AI agent, you only need the runtime CLI (`npm install -g @aikdna/kdna-cli`). Hand-written dev source directories are non-canonical and cannot become trusted assets unless compiled by a Studio-compatible pipeline.
 </details>
 
 <details>

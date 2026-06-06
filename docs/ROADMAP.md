@@ -28,8 +28,8 @@
 
 - ✅ `kdna-core-swift` — native Swift runtime (load, route, compose, trust verify)
 - ✅ `kdna-studio-swift` — native Swift authoring kernel
-- ✅ KDNAChat — reference GUI client for macOS
-- ✅ KDNA Studio — reference authoring client for macOS
+- ✅ Reference consumption client — macOS
+- ✅ Reference authoring client — macOS
 - ✅ Agent integrations emerging (Claude Code, OpenCode, Codex)
 
 ## Phase 4: Trust and Distribution (Current)

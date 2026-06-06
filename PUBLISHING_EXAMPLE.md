@@ -4,7 +4,7 @@ This is the public v1.0-rc path from Studio export to registry PR.
 
 ## 1. Export A Trusted Asset
 
-Use KDNA Studio or a Studio-compatible compiler. The output must be a `.kdna` asset, not only a dev source directory.
+Use a Studio-compatible compiler. The output must be a `.kdna` asset, not only a dev source directory.
 
 ```bash
 kdna-studio export ./my-domain --out dist/my-domain-0.1.0.kdna --sign

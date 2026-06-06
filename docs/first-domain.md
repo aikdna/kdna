@@ -14,7 +14,7 @@ npm i -g @aikdna/kdna-cli
 kdna dev scaffold my-domain
 ```
 
-This scaffolds a non-canonical dev source workspace with placeholder axioms, concepts, stances, and self-checks. Use KDNA Studio for Human Lock, compile, and export when you need a trusted `.kdna` asset.
+This scaffolds a non-canonical dev source workspace with placeholder axioms, concepts, stances, and self-checks. Use An authoring environment for Human Lock, compile, and export when you need a trusted `.kdna` asset.
 
 ## Step 3: Inspect
 

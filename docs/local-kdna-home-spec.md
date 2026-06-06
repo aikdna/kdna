@@ -1,7 +1,7 @@
 # ~/.kdna Directory Specification v1.0
 
 > **Status:** Draft · 2026-05-26
-> **Applies to:** kdna-cli, KDNAChat, KDNA Studio
+> **Applies to:** kdna-cli, compatible clients, authoring tools
 
 ## Purpose
 
@@ -69,8 +69,8 @@ KDNA's canonical installed object is a `.kdna` asset. Products MUST NOT treat ex
 | Product | Reads from | Writes to |
 |---------|------------|-----------|
 | kdna-cli | `packages/`, `index.json`, `registry/` | `packages/`, `index.json`, `identity/`, `licenses/` |
-| KDNAChat | `packages/`, `index.json`, `config.json` | `traces/`, `feedback/` |
-| KDNA Studio | dev source workspaces, `identity/` | `.kdna` assets, `identity/` |
+| a KDNA-compatible client | `packages/`, `index.json`, `config.json` | `traces/`, `feedback/` |
+| Authoring environment | dev source workspaces, `identity/` | `.kdna` assets, `identity/` |
 
 ## Install Layout
 

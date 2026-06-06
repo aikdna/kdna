@@ -16,8 +16,8 @@ Status: v1.0-rc public naming canon
 | Runtime CLI package | `@aikdna/kdna-cli` |
 | Studio core package | `@aikdna/kdna-studio-core` |
 | Studio CLI package | `@aikdna/kdna-studio-cli` |
-| Reference app | KDNAChat |
-| Authoring app | KDNA Studio |
+| Reference app | a KDNA-compatible client |
+| Authoring app | An authoring environment |
 
 ## Scope And Domain Names
 
@@ -33,7 +33,7 @@ Rules:
 
 - Prefer snake_case for `domain_id` and scoped package names until a registry migration is planned.
 - Prefer hyphenated GitHub repository names, for example `kdna-agent-safety`.
-- Do not mix `KDNAStudio`, `KDNaStudio`, and `KDNA Studio` in public copy. Use `KDNA Studio`.
+- Do not mix `KDNAStudio`, `KDNaStudio`, and `Authoring environment` in public copy. Use `KDNA Studio Compatible` when referring to the authoring standard.
 - Treat `KDA` as a misspelling, not an alias.
 
 ## Boundary Statement

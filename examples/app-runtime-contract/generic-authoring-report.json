@@ -4,7 +4,7 @@
   "trace_id": "trace_studio_authoring_001",
   "created_at": "2026-05-25T10:05:10Z",
   "app": {
-    "name": "KDNA Studio",
+    "name": "an authoring environment",
     "version": "0.1-demo",
     "conformance_level": "E"
   },
