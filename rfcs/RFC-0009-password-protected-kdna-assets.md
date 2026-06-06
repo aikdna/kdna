@@ -250,7 +250,7 @@ Same as RFC-0008: decrypted plaintext MUST remain in volatile memory only. Imple
 
 ### Cache Policy
 
-Consumer applications (KDNAChat, KDNAWork) MUST NOT cache decrypted JSON to disk for performance. If caching is absolutely necessary, the cache MUST be encrypted at rest with a key tied to the local device (e.g., Keychain/Secure Enclave), and the cache MUST be clearly marked as derived, untrusted, and rebuildable.
+Consumer applications (a KDNA-compatible client, a runtime workbench) MUST NOT cache decrypted JSON to disk for performance. If caching is absolutely necessary, the cache MUST be encrypted at rest with a key tied to the local device (e.g., Keychain/Secure Enclave), and the cache MUST be clearly marked as derived, untrusted, and rebuildable.
 
 ## Conformance Test Vectors
 

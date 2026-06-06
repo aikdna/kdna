@@ -47,7 +47,7 @@
 - 反映公司特定的判断标准
 - 存储在私有仓库中
 - 通过私有 registry 安装：在 `~/.kdna/config.json` 加 `registries: { "@company": "https://registry.company.com" }`，然后 `kdna install @company/private-kdna`
-- 开发期可用 `kdna dev pack ./your-domain-source --output ./dist` 生成仅供诊断的 dev-only bundle；可信 `.kdna` 必须由 KDNA Studio 或 Studio-compatible compiler 编译导出后再安装
+- 开发期可用 `kdna dev pack ./your-domain-source --output ./dist` 生成仅供诊断的 dev-only bundle；可信 `.kdna` 必须由 Studio-compatible compiler 或 Studio-compatible compiler 编译导出后再安装
 
 ## 回滚策略
 

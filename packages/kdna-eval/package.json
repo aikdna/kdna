@@ -1,0 +1,48 @@
+{
+  "name": "@aikdna/kdna-eval",
+  "version": "0.1.0",
+  "description": "KDNA runtime scoring primitives — configurable condition matching, dimension scoring, and multi-domain weighted evaluation.",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "module": "src/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./src/index.mjs",
+      "require": "./src/index.js",
+      "types": "./src/types.d.ts"
+    },
+    "./loader": {
+      "import": "./src/loader.mjs",
+      "require": "./src/loader.js",
+      "types": "./src/types.d.ts"
+    },
+    "./route": {
+      "import": "./src/route.mjs",
+      "require": "./src/route.js",
+      "types": "./src/types.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "src/types.d.ts",
+  "scripts": {
+    "test": "node test/test-wrapper.js"
+  },
+  "files": [
+    "src/",
+    "README.md"
+  ],
+  "keywords": [
+    "kdna",
+    "scoring",
+    "evaluation",
+    "dimension",
+    "judgment"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aikdna/kdna.git",
+    "directory": "packages/kdna-eval"
+  },
+  "homepage": "https://aikdna.com"
+}

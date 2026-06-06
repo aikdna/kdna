@@ -80,7 +80,7 @@ Console 导出完整审计追踪以供合规审查。
 
 ## Governance Console vs. Studio
 
-| 关注点 | KDNA Studio（生产端） | KDNA Governance Console（审批端） |
+| 关注点 | Authoring environment (production) | KDNA Governance Console（审批端） |
 |--------|----------------------|-----------------------------------|
 | **主要用户** | 域作者、专家 | 治理官、团队负责人、合规人员 |
 | **核心活动** | 表达、挑战、锁定、测试判断 | 审核、批准、审计、回滚判断更新 |
@@ -175,7 +175,7 @@ Console 可以用 Web 界面包装这些命令，但协议保持 CLI。这确保
 
 ## 总结
 
-KDNA Studio 生产判断。KDNA Governance Console 治理其演化。
+An authoring environment 生产判断。KDNA Governance Console 治理其演化。
 
 二者共同实现了核心原则：
 

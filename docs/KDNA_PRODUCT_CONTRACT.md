@@ -1,12 +1,12 @@
 # KDNA Product Contract v1.0
 
 > **Status:** Draft · 2026-05-26
-> **Audience:** KDNAChat, KDNaStudio developers; domain authors; agent integrators
+> **Audience:** compatible client developers, authoring tool developers; domain authors; agent integrators
 > **Goal:** Every KDNA product MUST conform to this contract. No product defines its own data structures.
 
 ## Purpose
 
-KDNAChat and KDNaStudio share one core object: the KDNA domain. Without a unified contract, they will diverge and the ecosystem will fragment. This document defines the minimum data structures all products must agree on.
+a client app and an authoring tool share one core object: the KDNA domain. Without a unified contract, they will diverge and the ecosystem will fragment. This document defines the minimum data structures all products must agree on.
 
 ## 1. KDNA Asset Format
 
@@ -74,7 +74,7 @@ Every product that executes KDNA judgment MUST produce traces in this format:
   "domain_version": "0.2.0",
   "mode": "enforce | precheck | off",
   "timestamp": "ISO8601",
-  "agent": "kdnachat | kdnawork | kdna-cli | kdnastudio",
+  "agent": "cli | sdk | mcp | gui | app | custom",
   "input_summary": "first 200 chars of user input",
   "signals_detected": ["writing", "copy"],
   "axioms_triggered": ["axiom_1"],
@@ -119,7 +119,7 @@ When a user provides feedback on a KDNA judgment:
 ```json
 {
   "event_id": "uuid",
-  "source": "kdnachat | kdnawork",
+  "source": "cli | app | api",
   "domain_id": "writing",
   "trace_id": "uuid of judgment trace",
   "user_feedback": {

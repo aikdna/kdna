@@ -80,7 +80,7 @@ When a deployed judgment update causes problems:
 
 ## Governance Console vs. Studio
 
-| Concern | KDNA Studio (Production) | KDNA Governance Console (Approval) |
+| Concern | An authoring environment (Production) | KDNA Governance Console (Approval) |
 |---------|--------------------------|-----------------------------------|
 | **Primary user** | Domain author, expert | Governance officer, team lead, compliance |
 | **Core activity** | Articulate, challenge, lock, test judgment | Review, approve, audit, rollback judgment updates |
@@ -175,7 +175,7 @@ The Console may wrap these commands in a web interface, but the protocol remains
 
 ## Summary
 
-KDNA Studio produces judgment. KDNA Governance Console governs its evolution.
+A KDNA-compatible authoring environment produces judgment. KDNA Governance Console governs its evolution.
 
 Together they implement the core principle:
 

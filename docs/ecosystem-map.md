@@ -6,8 +6,8 @@ If you've found one KDNA repository and are wondering which others exist and wha
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│ LAYER 4 — Consumption (Apps)                                 │
-│ KDNAChat · KDNaStudio · KDNAWork · kdna-ios                  │
+│ LAYER 4 — Applications                                       │
+│ Reference clients · authoring tools · runtime workbenches     │
 ├──────────────────────────────────────────────────────────────┤
 │ LAYER 3 — Runtime & Protocol                                 │
 │ kdna-cli · kdna-core · kdna-core-swift · kdna-skills · MCP   │
@@ -27,6 +27,7 @@ If you've found one KDNA repository and are wondering which others exist and wha
 |------------|----------|------|-------------|
 | [aikdna/kdna](https://github.com/aikdna/kdna) | monorepo | Protocol SPEC, schemas, docs, governance, benchmarks | [README](https://github.com/aikdna/kdna) |
 | └ `packages/kdna-core` | `@aikdna/kdna-core` | JS runtime core: load, validate, inspect, render, compose | [package](https://github.com/aikdna/kdna/tree/main/packages/kdna-core) |
+| └ `packages/kdna-eval` | `@aikdna/kdna-eval` | Scoring primitives: condition matching, dimension scoring | [package](https://github.com/aikdna/kdna/tree/main/packages/kdna-eval) |
 | └ `conformance/` | — | Loader/validator/runtime compatibility tests | [conformance](https://github.com/aikdna/kdna/tree/main/conformance) |
 
 ## Layer 2 — Domain Content (Reference Assets)
@@ -72,12 +73,10 @@ These are `.kdna` judgment domain assets. Each is a separate repository containi
 
 ## Layer 4 — Applications
 
-| Application | Repository | Platform | Role | Status |
-|-------------|-----------|----------|------|--------|
-| **KDNAChat** | [aikdna/kdnachat](https://github.com/aikdna/kdnachat) | macOS (SwiftUI) | Consumption client — load, use, compare domains | Beta |
-| **KDNaStudio** | [aikdna/kdnastudio](https://github.com/aikdna/kdnastudio) | macOS (SwiftUI) | Authoring tool — interview, cards, Human Lock, export | Beta |
-| **KDNAWork** | [aikdna/kdnawork](https://github.com/aikdna/kdnawork) | Tauri v2 (cross-platform) | Agent judgment governance workbench | Phase 1 |
-| **kdna-ios** | [aikdna/kdna-ios](https://github.com/aikdna/kdna-ios) | iOS (SwiftUI) | Mobile KDNA runtime | Early |
+KDNA-compatible applications are built by the ecosystem. Reference implementations
+include consumption clients, authoring tools, runtime workbenches, and mobile
+runtimes. Third-party apps can implement the same runtime contract — see
+[docs/app-runtime-contract.md](./app-runtime-contract.md).
 
 ## Entry Points by Role
 
@@ -118,7 +117,7 @@ See: [CONTRIBUTING.md](../CONTRIBUTING.md) · [GOVERNANCE.md](./GOVERNANCE.md) �
 
 - All npm packages: `@aikdna/kdna-*`
 - CLI commands: `kdna` (runtime), `kdna-studio` (authoring)
-- Swift modules: `KDNACore`, `KDNaStudio`
+- Swift modules: `KDNACore`
 - GitHub repos: `aikdna/kdna-*` (hyphens for tools, underscores for domain repos being migrated)
 
 See [ECOSYSTEM_NAMING.md](./ECOSYSTEM_NAMING.md) for the full naming policy.

@@ -15,7 +15,7 @@ The critical addition in v0.2: **Domain-First Distillation.** Before any content
 
 This contract does not define:
 
-- UI layout or product flows for KDNA Studio Mac App
+- UI layout or product flows for desktop authoring application
 - File import format support list (which formats to support is a product decision)
 - Pricing, licensing, or marketplace behavior
 - Interview-first authoring (covered by the existing Studio Export Contract)
@@ -371,7 +371,7 @@ Candidates Presented ──→ user reviews each candidate
         .kdna Export ──→ asset exported with provenance receipt
                 │
                 ▼
-        Behavioral Verification ──→ loaded in KDNAChat, compared with/without
+        Behavioral Verification ──→ loaded in a KDNA-compatible client, compared with/without
 ```
 
 ## Integration Points
@@ -421,7 +421,7 @@ The Mac Studio app implements the UI for:
 - Candidate review cards → accept/reject/modify UI
 - Human Lock ceremony → explicit confirmation flow
 - Export flow → .kdna + receipt generation
-- Chat verification → load exported .kdna in KDNAChat for behavioral comparison
+- Chat verification → load exported .kdna in a KDNA-compatible client for behavioral comparison
 
 ## Trust Boundaries
 

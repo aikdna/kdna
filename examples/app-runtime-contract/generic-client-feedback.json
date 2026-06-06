@@ -1,6 +1,6 @@
 {
   "event_id": "fb-001-a1b2c3d4",
-  "source": "kdnachat",
+  "source": "app",
   "domain_id": "writing",
   "domain_version": "0.7.2",
   "trace_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
