@@ -1,12 +1,3 @@
-const RULE_OF_SIX_DEFAULTS = {
-  emotion: 0.51,
-  story: 0.23,
-  rhythm: 0.10,
-  eyeTrace: 0.07,
-  twoD: 0.05,
-  threeD: 0.03
-};
-
 const DEFAULT_SCORE = 50;
 const SCORE_MIN = 0;
 const SCORE_MAX = 100;
@@ -26,20 +17,13 @@ function evaluateCondition(candidate, condition, context) {
   else actual = getPath(candidate, pathStr);
 
   switch (op) {
-    case "eq":
-      return actual === value;
-    case "gt":
-      return actual > value;
-    case "gte":
-      return actual >= value;
-    case "lt":
-      return actual < value;
-    case "lte":
-      return actual <= value;
-    case "between":
-      return actual >= min && actual <= max;
-    default:
-      return false;
+    case "eq": return actual === value;
+    case "gt": return actual > value;
+    case "gte": return actual >= value;
+    case "lt": return actual < value;
+    case "lte": return actual <= value;
+    case "between": return actual >= min && actual <= max;
+    default: return false;
   }
 }
 
@@ -73,7 +57,7 @@ function validateWeight(weight, domainId) {
 function evaluateAxioms(candidate, axioms, context) {
   const index = context?.index ?? 0;
   const dimDefaults = context?.dimensionDefaults;
-  const dimNames = context?.dimensionNames ?? Object.keys(dimDefaults ?? { emotion: 50, story: 50, rhythm: 50, eyeTrace: 50, twoD: 50, threeD: 50 });
+  const dimNames = context?.dimensionNames ?? Object.keys(dimDefaults ?? {});
   const clampDef = context?.scoreClamp;
 
   const dimensions = {};
@@ -96,7 +80,7 @@ function evaluateAxioms(candidate, axioms, context) {
     }
     delta = clampDelta(delta, axiom.effect?.clamp);
 
-    const targetDims = axiom.dimensions ?? ["story"];
+    const targetDims = axiom.dimensions ?? [];
     for (const dim of targetDims) {
       if (dimensions[dim] != null) {
         dimensions[dim] += delta;
@@ -117,18 +101,20 @@ function evaluateAxioms(candidate, axioms, context) {
     );
   }
 
-  const composite = computeComposite(dimensions, context?.dimensionWeights);
+  const composite = computeComposite(dimensions, context?.dimensionWeights, dimNames);
   return { score: composite, dimensions, triggered };
 }
 
-function computeComposite(dimensions, dimensionWeights) {
-  const weights = dimensionWeights ?? RULE_OF_SIX_DEFAULTS;
+function computeComposite(dimensions, dimensionWeights, dimensionNames) {
+  const weights = dimensionWeights ?? {};
+  const dims = dimensionNames ?? Object.keys(dimensions ?? {});
   let total = 0;
   let weightSum = 0;
-  for (const [dim, weight] of Object.entries(weights)) {
+  for (const dim of dims) {
     const val = dimensions[dim] ?? DEFAULT_SCORE;
-    total += val * weight;
-    weightSum += weight;
+    const w = weights[dim] ?? 1;
+    total += val * w;
+    weightSum += w;
   }
   if (weightSum === 0) return DEFAULT_SCORE;
   return Math.round(total / weightSum);
@@ -145,12 +131,15 @@ function evaluateCandidates(candidates, domains, options) {
   const results = [];
   for (let i = 0; i < candidates.length; i++) {
     const candidate = candidates[i];
-    const dimNames = dimensionNames ?? (dimensionDefaults ? Object.keys(dimensionDefaults) : ["emotion", "story", "rhythm", "eyeTrace", "twoD", "threeD"]);
+    const dimNames = dimensionNames ?? Object.keys(dimensionDefaults ?? {});
+    if (!dimNames.length) {
+      results.push({ candidate, index: i, score: DEFAULT_SCORE, dimensions: {}, triggered: [] });
+      continue;
+    }
 
     const mergedDimensions = {};
-    for (const dim of dimNames) {
-      mergedDimensions[dim] = 0;
-    }
+    for (const dim of dimNames) mergedDimensions[dim] = 0;
+
     let totalWeight = 0;
     const allTriggered = [];
 
@@ -190,16 +179,8 @@ function evaluateCandidates(candidates, domains, options) {
 
     if (totalWeight === 0) {
       const defaultDims = {};
-      for (const dim of dimNames) {
-        defaultDims[dim] = DEFAULT_SCORE;
-      }
-      results.push({
-        candidate,
-        index: i,
-        score: DEFAULT_SCORE,
-        dimensions: defaultDims,
-        triggered: []
-      });
+      for (const dim of dimNames) defaultDims[dim] = DEFAULT_SCORE;
+      results.push({ candidate, index: i, score: DEFAULT_SCORE, dimensions: defaultDims, triggered: [] });
       continue;
     }
 
@@ -210,14 +191,8 @@ function evaluateCandidates(candidates, domains, options) {
       );
     }
 
-    const composite = computeComposite(mergedDimensions, dimensionWeights);
-    results.push({
-      candidate,
-      index: i,
-      score: composite,
-      dimensions: mergedDimensions,
-      triggered: allTriggered
-    });
+    const composite = computeComposite(mergedDimensions, dimensionWeights, dimNames);
+    results.push({ candidate, index: i, score: composite, dimensions: mergedDimensions, triggered: allTriggered });
   }
 
   return results;
@@ -225,15 +200,15 @@ function evaluateCandidates(candidates, domains, options) {
 
 function createEvaluator(options) {
   const {
-    dimensions = ["emotion", "story", "rhythm", "eyeTrace", "twoD", "threeD"],
-    defaults: dimensionDefaults,
+    dimensions = [],
+    defaults: dimensionDefaults = {},
     weights: dimensionWeights,
     scoreClamp
   } = options ?? {};
 
   const defaultScores = {};
   for (const dim of dimensions) {
-    defaultScores[dim] = dimensionDefaults?.[dim] ?? DEFAULT_SCORE;
+    defaultScores[dim] = dimensionDefaults[dim] ?? DEFAULT_SCORE;
   }
 
   return {
@@ -254,7 +229,6 @@ function createEvaluator(options) {
 }
 
 module.exports = {
-  RULE_OF_SIX_DEFAULTS,
   DEFAULT_SCORE,
   SCORE_MIN,
   SCORE_MAX,

@@ -1,24 +1,24 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { getRoutePolicy, resolveDomains, OPERATIONS } = require("../src/route.js");
+const { getRoutePolicy, resolveDomains } = require("../src/route.js");
 
 test("getRoutePolicy returns correct policy", () => {
-  const p = getRoutePolicy("select_segments");
-  assert.equal(p.operation, "select_segments");
-  assert.ok(p.domains.length > 0);
+  const policies = {
+    my_op: { operation: "my_op", loadProfile: "compact", domains: [{ id: "my.kdna", weight: 1 }] }
+  };
+  const p = getRoutePolicy("my_op", policies);
+  assert.equal(p.operation, "my_op");
 });
 
 test("getRoutePolicy throws for unknown operation", () => {
-  assert.throws(() => getRoutePolicy("unknown"), /Unknown operation/);
-});
-
-test("getRoutePolicy accepts custom policies", () => {
-  const custom = { custom: { operation: "custom", loadProfile: "compact", domains: [{ id: "x.kdna", weight: 1 }] } };
-  assert.equal(getRoutePolicy("custom", custom).domains[0].id, "x.kdna");
+  assert.throws(() => getRoutePolicy("unknown", {}), /Unknown operation/);
 });
 
 test("resolveDomains uses selected/loadStatus not loaded", () => {
-  const res = resolveDomains("select_segments");
+  const policies = {
+    test: { operation: "test", loadProfile: "compact", domains: [{ id: "d.kdna", weight: 1 }] }
+  };
+  const res = resolveDomains("test", { policies });
   for (const d of res.domains) {
     assert.ok("selected" in d);
     assert.ok("loadStatus" in d);
@@ -26,21 +26,22 @@ test("resolveDomains uses selected/loadStatus not loaded", () => {
 });
 
 test("resolveDomains handles override turning domain off", () => {
-  const res = resolveDomains("select_segments", { domainOverrides: { "segment_selection.kdna": false } });
-  const seg = res.domains.find((d) => d.id === "segment_selection.kdna");
-  assert.equal(seg.selected, false);
-  assert.equal(seg.loadStatus, "skipped");
+  const policies = {
+    test: { operation: "test", loadProfile: "compact", domains: [{ id: "d.kdna", weight: 1 }] }
+  };
+  const res = resolveDomains("test", { policies, domainOverrides: { "d.kdna": false } });
+  const d = res.domains.find((x) => x.id === "d.kdna");
+  assert.equal(d.selected, false);
+  assert.equal(d.loadStatus, "skipped");
 });
 
 test("resolveDomains handles weight override", () => {
-  const res = resolveDomains("select_segments", { domainOverrides: { "segment_selection.kdna": 2.5 } });
-  const seg = res.domains.find((d) => d.id === "segment_selection.kdna");
-  assert.equal(seg.weight, 2.5);
-  assert.equal(seg.selected, true);
-  assert.equal(seg.loadStatus, "pending");
-});
-
-test("OPERATIONS includes built-in ops", () => {
-  assert.ok(OPERATIONS.includes("select_segments"));
-  assert.ok(OPERATIONS.includes("arrange_timeline"));
+  const policies = {
+    test: { operation: "test", loadProfile: "compact", domains: [{ id: "d.kdna", weight: 1 }] }
+  };
+  const res = resolveDomains("test", { policies, domainOverrides: { "d.kdna": 2.5 } });
+  const d = res.domains.find((x) => x.id === "d.kdna");
+  assert.equal(d.weight, 2.5);
+  assert.equal(d.selected, true);
+  assert.equal(d.loadStatus, "pending");
 });

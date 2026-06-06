@@ -32,12 +32,11 @@ test("loadFlatDomainFromFile loads JSON file", async () => {
   await rm(dir, { recursive: true, force: true });
 });
 
-test("loadFlatDomainFromFile falls back to built-in defaults", async () => {
-  const domain = await loadFlatDomainFromFile("segment_selection.kdna", "/nonexistent");
-  assert.equal(domain.id, "segment_selection.kdna");
+test("loadFlatDomainFromFile uses provided defaults as fallback", async () => {
+  const defaults = { "my-domain.kdna": { id: "my-domain", schemaVersion: 1, x_eval: { rules: [] } } };
+  const domain = await loadFlatDomainFromFile("my-domain.kdna", "/nonexistent", defaults);
+  assert.equal(domain.id, "my-domain");
   assert.equal(domain._source.type, "builtin-fallback");
-  assert.equal(domain._source.package, "@aikdna/kdna-eval");
-  assert.ok(domain.x_eval.rules.length > 0);
 });
 
 test("loadDomainFromFile is an alias for loadFlatDomainFromFile", async () => {
@@ -58,8 +57,7 @@ test("loadFlatDomains preserves input order", async () => {
   await writeFile(path.join(dir, "a.kdna"), JSON.stringify({ id: "a", schemaVersion: 1 }));
   await writeFile(path.join(dir, "b.kdna"), JSON.stringify({ id: "b", schemaVersion: 1 }));
   await writeFile(path.join(dir, "c.kdna"), JSON.stringify({ id: "c", schemaVersion: 1 }));
-
-  const { loaded, skipped } = await loadFlatDomains(["a.kdna", "b.kdna", "c.kdna"], { kdnaDir: dir });
+  const { loaded } = await loadFlatDomains(["a.kdna", "b.kdna", "c.kdna"], { kdnaDir: dir });
   assert.equal(loaded.length, 3);
   assert.equal(loaded[0].id, "a");
   assert.equal(loaded[1].id, "b");
@@ -67,15 +65,18 @@ test("loadFlatDomains preserves input order", async () => {
   await rm(dir, { recursive: true, force: true });
 });
 
-test("loadFlatDomains returns skipped for missing", async () => {
-  const { loaded, skipped } = await loadFlatDomains(["segment_selection.kdna", "nonexistent.kdna"], { kdnaDir: "/nonexistent" });
+test("loadFlatDomains reports skipped for missing domains", async () => {
+  const defaults = { "existing.kdna": { id: "existing", schemaVersion: 1 } };
+  const { loaded, skipped } = await loadFlatDomains(["existing.kdna", "missing.kdna"], { kdnaDir: "/nonexistent", defaults });
   assert.equal(loaded.length, 1);
   assert.equal(skipped.length, 1);
+  assert.equal(skipped[0].id, "missing.kdna");
 });
 
 test("listPersonas returns built-in defaults when no dir", async () => {
-  const ids = await listPersonas("/nonexistent");
-  assert.ok(ids.includes("explainer-director"));
+  const defaults = { "my-persona": { id: "my-persona", schemaVersion: 1, name: "Test", ruleOfSix: {}, domains: [], preferences: {} } };
+  const ids = await listPersonas("/nonexistent", defaults);
+  assert.deepEqual(ids, ["my-persona"]);
 });
 
 test("listPersonas includes filesystem personas", async () => {
@@ -83,13 +84,15 @@ test("listPersonas includes filesystem personas", async () => {
   const pd = path.join(dir, "personas");
   await mkdir(pd, { recursive: true });
   await writeFile(path.join(pd, "custom.json"), JSON.stringify({ id: "custom", schemaVersion: 1, name: "C", ruleOfSix: {}, domains: [], preferences: {} }));
-  const ids = await listPersonas(dir);
+  const ids = await listPersonas(dir, { "builtin": { id: "builtin", schemaVersion: 1, name: "B", ruleOfSix: {}, domains: [], preferences: {} } });
   assert.ok(ids.includes("custom"));
+  assert.ok(ids.includes("builtin"));
   await rm(dir, { recursive: true, force: true });
 });
 
 test("loadPersona falls back with provenance", async () => {
-  const p = await loadPersona("explainer-director", { kdnaDir: "/nonexistent" });
-  assert.equal(p.id, "explainer-director");
+  const defaults = { "test-persona": { id: "test-persona", schemaVersion: 1, name: "Test", ruleOfSix: {}, domains: [], preferences: {} } };
+  const p = await loadPersona("test-persona", { kdnaDir: "/nonexistent", defaults });
+  assert.equal(p.id, "test-persona");
   assert.equal(p._source.type, "builtin-fallback");
 });

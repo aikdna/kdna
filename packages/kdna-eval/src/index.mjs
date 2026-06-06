@@ -1,5 +1,4 @@
 export {
-  RULE_OF_SIX_DEFAULTS,
   computeComposite,
   createEvaluator,
   evaluateAxioms,

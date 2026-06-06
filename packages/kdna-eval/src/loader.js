@@ -3,35 +3,21 @@ const path = require("node:path");
 const os = require("node:os");
 
 const KDNA_DIR = path.join(os.homedir(), ".kdna");
-const { STORYCUT_DEFAULTS } = require("./defaults/domains");
-const { DEFAULT_PERSONAS } = require("./defaults/personas");
-
-const PKG_NAME = "@aikdna/kdna-eval";
-const PKG_VERSION = "0.1.0";
 
 function validateDomain(data, fileName) {
   if (!data || typeof data !== "object") {
-    throw new Error(`Invalid KDNA domain ${fileName}: must be an object`);
+    throw new Error(`Invalid domain ${fileName}: must be an object`);
   }
   if (!data.id || !data.schemaVersion) {
-    throw new Error(`Invalid KDNA domain ${fileName}: missing id or schemaVersion`);
+    throw new Error(`Invalid domain ${fileName}: missing id or schemaVersion`);
   }
   return data;
 }
 
 function validatePersona(data) {
-  if (!data || typeof data !== "object") throw new Error("Invalid KDNA persona: must be an object");
-  if (!data.id || !data.schemaVersion) throw new Error("Invalid KDNA persona: missing id or schemaVersion");
+  if (!data || typeof data !== "object") throw new Error("Invalid persona: must be an object");
+  if (!data.id || !data.schemaVersion) throw new Error("Invalid persona: missing id or schemaVersion");
   return data;
-}
-
-function fallbackProvenance(fileName) {
-  return {
-    type: "builtin-fallback",
-    package: PKG_NAME,
-    version: PKG_VERSION,
-    id: fileName
-  };
 }
 
 function listDomains(kdnaDir) {
@@ -49,7 +35,6 @@ function listDomains(kdnaDir) {
 
 function loadFlatDomainFromFile(fileName, kdnaDir, defaults) {
   const dir = kdnaDir ?? KDNA_DIR;
-  const domainDefaults = defaults ?? STORYCUT_DEFAULTS;
   const filePath = path.join(dir, fileName);
   return readFile(filePath, "utf8")
     .then((text) => {
@@ -59,17 +44,12 @@ function loadFlatDomainFromFile(fileName, kdnaDir, defaults) {
       return domain;
     })
     .catch((err) => {
-      if (err.code === "ENOENT") {
-        const fallback = domainDefaults[fileName];
-        if (fallback) {
-          return {
-            ...fallback,
-            _source: fallbackProvenance(fileName)
-          };
-        }
-        throw new Error(`KDNA domain ${fileName} not found in ${dir} and no default available`);
+      if (err.code === "ENOENT" && defaults?.[fileName]) {
+        return { ...defaults[fileName], _source: { type: "builtin-fallback", id: fileName } };
       }
-      throw err;
+      throw err.code === "ENOENT"
+        ? new Error(`Domain ${fileName} not found in ${dir} and no fallback available`)
+        : err;
     });
 }
 const loadDomainFromFile = loadFlatDomainFromFile;
@@ -84,7 +64,7 @@ const loadDomainFromData = loadFlatDomainFromData;
 
 function loadFlatDomains(domainNames, options) {
   const { kdnaDir, defaults } = options ?? {};
-  const domainDefaults = defaults ?? STORYCUT_DEFAULTS;
+  const domainDefaults = defaults ?? {};
 
   const results = domainNames.map((name) =>
     loadFlatDomainFromFile(name, kdnaDir, domainDefaults)
@@ -103,7 +83,7 @@ const loadDomains = loadFlatDomains;
 function listPersonas(kdnaDir, defaults) {
   const dir = kdnaDir ?? KDNA_DIR;
   const personasDir = path.join(dir, "personas");
-  const personaDefaults = defaults ?? DEFAULT_PERSONAS;
+  const personaDefaults = defaults ?? {};
   return access(personasDir)
     .then(() => readdir(personasDir, { withFileTypes: true }))
     .then((entries) => {
@@ -120,7 +100,7 @@ function loadPersona(personaId, options) {
   const { kdnaDir, defaults } = options ?? {};
   const dir = kdnaDir ?? KDNA_DIR;
   const personasDir = path.join(dir, "personas");
-  const personaDefaults = defaults ?? DEFAULT_PERSONAS;
+  const personaDefaults = defaults ?? {};
   const filePath = path.join(personasDir, `${personaId}.json`);
   return readFile(filePath, "utf8")
     .then((text) => {
@@ -130,17 +110,12 @@ function loadPersona(personaId, options) {
       return persona;
     })
     .catch((err) => {
-      if (err.code === "ENOENT") {
-        const fallback = personaDefaults[personaId];
-        if (fallback) {
-          return {
-            ...fallback,
-            _source: fallbackProvenance(personaId)
-          };
-        }
-        throw new Error(`Persona ${personaId} not found in ${personasDir} and no default available`);
+      if (err.code === "ENOENT" && personaDefaults[personaId]) {
+        return { ...personaDefaults[personaId], _source: { type: "builtin-fallback", id: personaId } };
       }
-      throw err;
+      throw err.code === "ENOENT"
+        ? new Error(`Persona ${personaId} not found in ${personasDir} and no fallback available`)
+        : err;
     });
 }
 
@@ -156,6 +131,5 @@ module.exports = {
   listPersonas,
   loadPersona,
   validateDomain,
-  validatePersona,
-  fallbackProvenance
+  validatePersona
 };

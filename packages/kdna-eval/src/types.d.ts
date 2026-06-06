@@ -27,13 +27,10 @@ export interface ScoringRule {
 export interface KdnaDomainData {
   id: string;
   schemaVersion: number;
-  x_eval?: {
-    rules?: ScoringRule[];
-    thresholds?: Record<string, unknown>;
-  };
+  x_eval?: { rules?: ScoringRule[]; thresholds?: Record<string, unknown> };
   axioms?: ScoringRule[];
   thresholds?: Record<string, unknown>;
-  _source?: { type: string; path?: string; package?: string; version?: string; id?: string };
+  _source?: { type: string; path?: string; id?: string };
 }
 
 export interface DimensionScores {
@@ -85,7 +82,7 @@ export interface Persona {
   ruleOfSix: Record<string, number>;
   domains: { id: string; weight: number }[];
   preferences: Record<string, unknown>;
-  _source?: { type: string; path?: string; package?: string; version?: string; id?: string };
+  _source?: { type: string; path?: string; id?: string };
 }
 
 export interface CreateEvaluatorOptions {
@@ -150,7 +147,6 @@ export interface DomainResolution {
   skippedDomains: string[];
 }
 
-export declare const RULE_OF_SIX_DEFAULTS: Record<string, number>;
 export declare const DEFAULT_SCORE: number;
 export declare const SCORE_MIN: number;
 export declare const SCORE_MAX: number;
@@ -158,7 +154,7 @@ export declare const SCORE_MAX: number;
 export declare function getPath(obj: Record<string, unknown>, pathStr: string): unknown;
 export declare function evaluateCondition(candidate: Record<string, unknown>, condition: Condition, context?: { index: number }): boolean;
 export declare function evaluateAxioms(candidate: Record<string, unknown>, axioms: ScoringRule[], context?: Record<string, unknown>): AxiomEvaluationResult;
-export declare function computeComposite(dimensions: DimensionScores, dimensionWeights?: Record<string, number>): number;
+export declare function computeComposite(dimensions: DimensionScores, dimensionWeights?: Record<string, number>, dimensionNames?: string[]): number;
 export declare function evaluateCandidates(candidates: Record<string, unknown>[], domains: DomainReference[], options?: EvaluateCandidatesOptions): CandidateResult[];
 export declare function createEvaluator(options?: CreateEvaluatorOptions): Evaluator;
 export declare function extractRules(domainData: KdnaDomainData): ScoringRule[];

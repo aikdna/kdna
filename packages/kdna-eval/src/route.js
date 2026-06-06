@@ -1,32 +1,7 @@
-const DEFAULT_POLICIES = {
-  select_segments: {
-    operation: "select_segments",
-    loadProfile: "scenario",
-    domains: [
-      { id: "segment_selection.kdna", weight: 0.45 },
-      { id: "narrative_structure.kdna", weight: 0.25 }
-    ]
-  },
-  arrange_timeline: {
-    operation: "arrange_timeline",
-    loadProfile: "scenario",
-    domains: [
-      { id: "narrative_structure.kdna", weight: 0.45 },
-      { id: "pacing_rhythm.kdna", weight: 0.3 },
-      { id: "segment_selection.kdna", weight: 0.15 }
-    ]
-  }
-};
-
-const OPERATIONS = Object.keys(DEFAULT_POLICIES);
-
 function getRoutePolicy(operation, policies) {
-  const source = policies ?? DEFAULT_POLICIES;
-  const policy = source[operation];
-  if (!policy) {
-    throw new Error(`Unknown operation: ${operation}. Supported: ${OPERATIONS.join(", ")}`);
-  }
-  return policy;
+  const p = (policies ?? {})[operation];
+  if (!p) throw new Error(`Unknown operation: ${operation}`);
+  return p;
 }
 
 function resolveDomains(operation, options) {
@@ -53,4 +28,4 @@ function resolveDomains(operation, options) {
   };
 }
 
-module.exports = { DEFAULT_POLICIES, OPERATIONS, getRoutePolicy, resolveDomains };
+module.exports = { getRoutePolicy, resolveDomains };
