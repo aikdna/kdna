@@ -1,7 +1,7 @@
 {
   "name": "@aikdna/kdna-eval",
   "version": "0.1.0",
-  "description": "KDNA axiom evaluation engine — generic condition matching, dimension scoring, and multi-domain weighted judgment. Zero Node.js dependencies.",
+  "description": "KDNA runtime scoring primitives — configurable condition matching, dimension scoring, and multi-domain weighted evaluation. Complements @aikdna/kdna-core (which loads/render) with runtime scoring execution.",
   "type": "commonjs",
   "main": "src/index.js",
   "module": "src/index.mjs",
@@ -21,6 +21,11 @@
       "require": "./src/route.js",
       "types": "./src/types.d.ts"
     },
+    "./storycut": {
+      "import": "./src/storycut.mjs",
+      "require": "./src/storycut.js",
+      "types": "./src/types.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "types": "src/types.d.ts",
@@ -34,10 +39,10 @@
   "keywords": [
     "kdna",
     "kdna-eval",
-    "axiom",
-    "evaluation",
-    "judgment",
     "scoring",
+    "evaluation",
+    "dimension",
+    "judgment",
     "ai-agent"
   ],
   "license": "Apache-2.0",

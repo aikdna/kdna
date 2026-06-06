@@ -14,7 +14,7 @@
     "audit:public-confidence": "node scripts/audit-public-confidence.js",
     "validate:app-schemas": "node scripts/validate-app-schemas.js",
     "validate:protocol-fixtures": "node scripts/validate-protocol-fixtures.js",
-    "test": "npm --workspace @aikdna/kdna-core test",
+    "test": "npm --workspace @aikdna/kdna-core test && npm --workspace @aikdna/kdna-eval test",
     "conformance": "node conformance/run.mjs",
     "certify:asset-loader": "node conformance/run.mjs --profile asset-loader",
     "test:registry-trust": "node tests/registry-trust/run.mjs",

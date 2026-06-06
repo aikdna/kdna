@@ -1,10 +1,4 @@
 #!/usr/bin/env node
-/**
- * kdna-eval test wrapper
- *
- * Runs all test files under test/ with node:test.
- */
-
 const { spawnSync } = require("node:child_process");
 const path = require("node:path");
 const fs = require("node:fs");
@@ -19,6 +13,7 @@ let allPassed = true;
 
 for (const file of files) {
   const label = path.basename(file);
+  console.error(`\n=== ${label} ===`);
   const result = spawnSync(process.execPath, ["--test", file], {
     stdio: "inherit",
     cwd: path.resolve(__dirname, "..")
@@ -29,8 +24,12 @@ for (const file of files) {
   }
 }
 
-if (!allPassed) {
-  process.exit(1);
-}
+console.error(`\n=== smoke-esm.mjs ===`);
+const esmResult = spawnSync(process.execPath, [path.join(testDir, "smoke-esm.mjs")], {
+  stdio: "inherit",
+  cwd: path.resolve(__dirname, "..")
+});
+if (esmResult.status !== 0) allPassed = false;
 
+if (!allPassed) process.exit(1);
 console.log("\nAll kdna-eval tests passed.");

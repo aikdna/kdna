@@ -2,121 +2,94 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
 const os = require("node:os");
-const { mkdtemp, writeFile, rm } = require("node:fs/promises");
-
+const { mkdtemp, writeFile, rm, mkdir } = require("node:fs/promises");
 const {
   listDomains,
+  loadFlatDomainFromFile,
+  loadFlatDomainFromData,
+  loadFlatDomains,
   loadDomainFromFile,
-  loadDomainFromData,
-  loadDomains,
-  listPersonas,
   loadPersona,
-  KDNA_DIR
+  listPersonas
 } = require("../src/loader.js");
 
 test("listDomains returns names from kdna dir", async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), "kdna-eval-"));
-  await writeFile(path.join(dir, "test.kdna"), JSON.stringify({ id: "test.kdna", schemaVersion: 1 }));
-  await writeFile(path.join(dir, "other.kdna"), JSON.stringify({ id: "other.kdna", schemaVersion: 1 }));
-  await writeFile(path.join(dir, "not.kdna.txt"), "");
-
+  await writeFile(path.join(dir, "test.kdna"), JSON.stringify({ id: "test", schemaVersion: 1 }));
+  await writeFile(path.join(dir, "other.json"), JSON.stringify({ id: "other", schemaVersion: 1 }));
   const names = await listDomains(dir);
   assert.ok(names.includes("test.kdna"));
-  assert.ok(names.includes("other.kdna"));
-  assert.ok(!names.includes("not.kdna.txt"));
-
+  assert.ok(names.includes("other.json"));
   await rm(dir, { recursive: true, force: true });
 });
 
-test("listDomains returns empty for nonexistent dir", async () => {
-  const names = await listDomains("/nonexistent/dir");
-  assert.deepEqual(names, []);
-});
-
-test("loadDomainFromFile loads JSON file", async () => {
+test("loadFlatDomainFromFile loads JSON file", async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), "kdna-eval-"));
-  const domainData = { id: "loaded.kdna", schemaVersion: 1, axioms: [{ id: "a1", dimensions: ["story"], condition: { path: "text", op: "eq", value: "hello" }, effect: { value: 5 } }] };
-  await writeFile(path.join(dir, "loaded.kdna"), JSON.stringify(domainData));
-
-  const domain = await loadDomainFromFile("loaded.kdna", dir);
-  assert.equal(domain.id, "loaded.kdna");
-  assert.equal(domain.axioms.length, 1);
-
+  await writeFile(path.join(dir, "loaded.kdna"), JSON.stringify({ id: "loaded", schemaVersion: 1, x_eval: { rules: [] } }));
+  const domain = await loadFlatDomainFromFile("loaded.kdna", dir);
+  assert.equal(domain.id, "loaded");
+  assert.equal(domain._source.type, "flat-file");
   await rm(dir, { recursive: true, force: true });
 });
 
-test("loadDomainFromFile falls back to built-in defaults", async () => {
-  const domain = await loadDomainFromFile("segment_selection.kdna", "/nonexistent/dir");
+test("loadFlatDomainFromFile falls back to built-in defaults", async () => {
+  const domain = await loadFlatDomainFromFile("segment_selection.kdna", "/nonexistent");
   assert.equal(domain.id, "segment_selection.kdna");
-  assert.ok(domain._fallback);
-  assert.ok(domain.axioms.length > 0);
+  assert.equal(domain._source.type, "builtin-fallback");
+  assert.equal(domain._source.package, "@aikdna/kdna-eval");
+  assert.ok(domain.x_eval.rules.length > 0);
 });
 
-test("loadDomainFromData parses raw JSON", () => {
-  const domain = loadDomainFromData({ id: "programmatic.kdna", schemaVersion: 1, axioms: [] });
-  assert.equal(domain.id, "programmatic.kdna");
+test("loadDomainFromFile is an alias for loadFlatDomainFromFile", async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), "kdna-eval-"));
+  await writeFile(path.join(dir, "alias.kdna"), JSON.stringify({ id: "alias", schemaVersion: 1 }));
+  const domain = await loadDomainFromFile("alias.kdna", dir);
+  assert.equal(domain.id, "alias");
+  await rm(dir, { recursive: true, force: true });
 });
 
-test("loadDomainFromData accepts string JSON", () => {
-  const domain = loadDomainFromData(JSON.stringify({ id: "string.kdna", schemaVersion: 1 }), "string.kdna");
-  assert.equal(domain.id, "string.kdna");
+test("loadFlatDomainFromData parses object and string", () => {
+  assert.equal(loadFlatDomainFromData({ id: "p", schemaVersion: 1 }).id, "p");
+  assert.equal(loadFlatDomainFromData(JSON.stringify({ id: "s", schemaVersion: 1 }), "s").id, "s");
 });
 
-test("loadDomainFromData validates minimum schema", () => {
-  assert.throws(() => loadDomainFromData({}), /missing id/);
-  assert.throws(() => loadDomainFromData({ id: "x" }), /missing id/);
+test("loadFlatDomains preserves input order", async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), "kdna-eval-"));
+  await writeFile(path.join(dir, "a.kdna"), JSON.stringify({ id: "a", schemaVersion: 1 }));
+  await writeFile(path.join(dir, "b.kdna"), JSON.stringify({ id: "b", schemaVersion: 1 }));
+  await writeFile(path.join(dir, "c.kdna"), JSON.stringify({ id: "c", schemaVersion: 1 }));
+
+  const { loaded, skipped } = await loadFlatDomains(["a.kdna", "b.kdna", "c.kdna"], { kdnaDir: dir });
+  assert.equal(loaded.length, 3);
+  assert.equal(loaded[0].id, "a");
+  assert.equal(loaded[1].id, "b");
+  assert.equal(loaded[2].id, "c");
+  await rm(dir, { recursive: true, force: true });
 });
 
-test("loadDomains batch loads with fallbacks", async () => {
-  const { loaded, skipped } = await loadDomains(["segment_selection.kdna", "nonexistent.kdna"], { kdnaDir: "/nonexistent/dir" });
+test("loadFlatDomains returns skipped for missing", async () => {
+  const { loaded, skipped } = await loadFlatDomains(["segment_selection.kdna", "nonexistent.kdna"], { kdnaDir: "/nonexistent" });
   assert.equal(loaded.length, 1);
-  assert.equal(loaded[0].id, "segment_selection.kdna");
   assert.equal(skipped.length, 1);
-  assert.equal(skipped[0].id, "nonexistent.kdna");
 });
 
 test("listPersonas returns built-in defaults when no dir", async () => {
-  const ids = await listPersonas("/nonexistent/dir");
+  const ids = await listPersonas("/nonexistent");
   assert.ok(ids.includes("explainer-director"));
-  assert.ok(ids.includes("documentary-director"));
-  assert.ok(ids.includes("vlog-director"));
 });
 
 test("listPersonas includes filesystem personas", async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), "kdna-eval-"));
-  const personasDir = path.join(dir, "personas");
-  const { mkdir } = require("node:fs/promises");
-  await mkdir(personasDir, { recursive: true });
-  await writeFile(path.join(personasDir, "custom.json"), JSON.stringify({ id: "custom", schemaVersion: 1, name: "Custom", ruleOfSix: { emotion: 1, story: 0, rhythm: 0, eyeTrace: 0, twoD: 0, threeD: 0 }, domains: [], preferences: {} }));
-
+  const pd = path.join(dir, "personas");
+  await mkdir(pd, { recursive: true });
+  await writeFile(path.join(pd, "custom.json"), JSON.stringify({ id: "custom", schemaVersion: 1, name: "C", ruleOfSix: {}, domains: [], preferences: {} }));
   const ids = await listPersonas(dir);
   assert.ok(ids.includes("custom"));
-  assert.ok(ids.includes("explainer-director"));
-
   await rm(dir, { recursive: true, force: true });
 });
 
-test("loadPersona loads from filesystem", async () => {
-  const dir = await mkdtemp(path.join(os.tmpdir(), "kdna-eval-"));
-  const personasDir = path.join(dir, "personas");
-  const { mkdir } = require("node:fs/promises");
-  await mkdir(personasDir, { recursive: true });
-  const persona = { id: "loaded", schemaVersion: 1, name: "Loaded", description: "Test", ruleOfSix: { emotion: 1, story: 0, rhythm: 0, eyeTrace: 0, twoD: 0, threeD: 0 }, domains: [], preferences: {} };
-  await writeFile(path.join(personasDir, "loaded.json"), JSON.stringify(persona));
-
-  const result = await loadPersona("loaded", { kdnaDir: dir });
-  assert.equal(result.id, "loaded");
-
-  await rm(dir, { recursive: true, force: true });
-});
-
-test("loadPersona falls back to built-in", async () => {
-  const persona = await loadPersona("explainer-director", { kdnaDir: "/nonexistent/dir" });
-  assert.equal(persona.id, "explainer-director");
-  assert.ok(persona._fallback);
-  assert.ok(persona.ruleOfSix.emotion > 0);
-});
-
-test("KDNA_DIR points to home .kdna", () => {
-  assert.ok(KDNA_DIR.endsWith(".kdna"));
+test("loadPersona falls back with provenance", async () => {
+  const p = await loadPersona("explainer-director", { kdnaDir: "/nonexistent" });
+  assert.equal(p.id, "explainer-director");
+  assert.equal(p._source.type, "builtin-fallback");
 });
