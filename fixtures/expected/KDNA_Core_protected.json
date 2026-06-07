@@ -6,9 +6,7 @@
     "purpose": "test",
     "load_condition": "always"
   },
-  "stances": [
-    "Protected judgment decrypts correctly across languages."
-  ],
+  "stances": ["Protected judgment decrypts correctly across languages."],
   "axioms": [
     {
       "id": "protected_a1",
