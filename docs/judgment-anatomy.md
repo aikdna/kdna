@@ -129,6 +129,6 @@ Example for writing domain:
 
 ## From interview to domain
 
-The questions above are designed for live interviews. A KDNA Creator tool (like KDNAChat Studio) would walk a domain expert through 10-15 questions, building the domain incrementally. The finished domain can then be immediately tested in Compare Mode.
+The questions above are designed for live interviews. A KDNA Creator tool (like a KDNA-compatible client Studio) would walk a domain expert through 10-15 questions, building the domain incrementally. The finished domain can then be immediately tested in Compare Mode.
 
 Until a Creator tool exists, use this document as your interview guide. Answer each question. Then fill in the corresponding KDNA file.

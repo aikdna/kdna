@@ -1,12 +1,13 @@
 # App Runtime Contract Examples
 
-These examples show how different KDNA products can produce different evidence while sharing the same runtime contract.
+These examples show how different KDNA-compatible apps can produce different
+evidence while sharing the same runtime contract.
 
-They are not product fixtures. They are contract fixtures:
+They are not product fixtures. They are contract fixtures, showing:
 
-- KDNAChat uses KDNA during a conversation.
-- KDNA Studio creates and exports a governed domain asset.
-- KDNAWork applies KDNA inside an agent work session.
+- A client app that uses KDNA during a conversation
+- An authoring tool that creates and exports a governed domain asset
+- A workbench that applies KDNA inside an agent work session
 
 Each pair contains:
 
@@ -19,4 +20,5 @@ Run:
 npm run validate:runtime-contract
 ```
 
-The validator checks the examples for the shared route, trace, report, and trace/report consistency fields that apps must preserve.
+The validator checks the examples for the shared route, trace, report, and
+trace/report consistency fields that apps must preserve.

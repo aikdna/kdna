@@ -14,8 +14,6 @@
   },
   "encryption": {
     "profile": "kdna-licensed-entry-v1",
-    "encrypted_entries": [
-      "KDNA_Core.json"
-    ]
+    "encrypted_entries": ["KDNA_Core.json"]
   }
 }

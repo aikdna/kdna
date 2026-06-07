@@ -722,7 +722,7 @@ KDNA 仍处于早期，但若干组件已经存在。
 
 ### 13.4 参考 GUI 客户端
 
-KDNAChat 是一个正在形成的参考 GUI 客户端，用来让 KDNA 在对话中变得可见。它的职责不是定义协议真理。SPEC 和参考 core implementation 定义协议。KDNAChat 展示判断如何被加载、比较、追踪，并对用户可见。
+a KDNA-compatible client 是一个正在形成的参考 GUI 客户端，用来让 KDNA 在对话中变得可见。它的职责不是定义协议真理。SPEC 和参考 core implementation 定义协议。a KDNA-compatible client 展示判断如何被加载、比较、追踪，并对用户可见。
 
 Compare Mode 尤其重要：同一输入，同一模型，无 KDNA 与有 KDNA 对比，展示 judgment delta。
 

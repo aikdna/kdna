@@ -925,8 +925,8 @@ For operating system-level recognition of `.kdna` files:
 
 | Platform | Mechanism |
 |----------|-----------|
-| **macOS** | UTType: `com.aikdna.kdna` (or `public.kdna`). Registered by KDNAChat Mac App. Double-click opens in KDNAChat for inspection and installation. |
-| **Windows** | File extension association with KDNAChat or CLI. |
+| **macOS** | UTType: `com.aikdna.kdna` (or `public.kdna`). Registered by a KDNA-compatible client Mac App. Double-click opens in a KDNA-compatible client for inspection and installation. |
+| **Windows** | File extension association with a KDNA-compatible client or CLI. |
 | **Linux** | MIME type `application/vnd.aikdna.kdna+zip`. Desktop file association. |
 
 The recommended media type is `application/vnd.aikdna.kdna+zip`.

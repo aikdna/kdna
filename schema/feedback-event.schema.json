@@ -12,7 +12,7 @@
     },
     "source": {
       "type": "string",
-      "enum": ["kdnachat", "kdnawork", "kdna-cli"],
+      "enum": ["cli", "app", "api", "custom"],
       "description": "Product that emitted this feedback"
     },
     "domain_id": {

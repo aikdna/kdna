@@ -30,8 +30,8 @@
     },
     "agent": {
       "type": "string",
-      "enum": ["kdnachat", "kdnawork", "kdna-cli", "kdnastudio"],
-      "description": "Product that produced this trace"
+      "enum": ["cli", "sdk", "mcp", "gui", "app", "custom"],
+      "description": "Runtime context that produced this trace"
     },
     "input_summary": {
       "type": "string",

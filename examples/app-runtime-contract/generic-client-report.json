@@ -4,7 +4,7 @@
   "trace_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "created_at": "2026-05-25T10:00:05Z",
   "app": {
-    "name": "KDNAChat",
+    "name": "a KDNA-compatible client",
     "version": "0.1-demo",
     "conformance_level": "C"
   },
@@ -34,7 +34,7 @@
       "status": "experimental",
       "access": "open",
       "risk_level": "R0",
-      "source": "app-bundled"
+      "source": "app"
     }
   ],
   "triggered_judgment": {

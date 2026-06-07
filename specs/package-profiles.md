@@ -202,7 +202,7 @@ KDNA domains MAY be authored in dev source directories, but the `.kdna` containe
 | **Authoring** | Dev source directory | Git versioning, review, PR, diff, collaboration |
 | **Distribution** | `.kdna` | Publishing, downloading, verifying, installing, loading, licensing |
 
-Users should edit `.kdna` through approved KDNA editors such as KDNAStudio. Manual unpack/edit/repack is a dev-only debugging path and invalidates trust.
+Users should edit `.kdna` through approved KDNA editors such as a Studio-compatible authoring tool. Manual unpack/edit/repack is a dev-only debugging path and invalidates trust.
 
 ---
 

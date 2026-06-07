@@ -161,7 +161,7 @@ function main() {
     readJson(path.join(ROOT, schema));
   }
 
-  for (const prefix of ['kdnachat', 'kdnastudio', 'kdnawork']) {
+  for (const prefix of ['generic-client', 'generic-authoring', 'generic-workbench']) {
     const tracePath = path.join(EXAMPLE_DIR, `${prefix}-trace.json`);
     const reportPath = path.join(EXAMPLE_DIR, `${prefix}-report.json`);
 

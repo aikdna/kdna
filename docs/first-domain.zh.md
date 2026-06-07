@@ -14,7 +14,7 @@ npm i -g @aikdna/kdna-cli
 kdna dev scaffold my-domain
 ```
 
-这会脚手架出一个非权威的开发源工作区，包含占位的公理、概念、立场和自检。需要可信 `.kdna` 资产时，请使用 KDNA Studio 完成 Human Lock、编译和导出。
+这会脚手架出一个非权威的开发源工作区，包含占位的公理、概念、立场和自检。需要可信 `.kdna` 资产时，请使用 An authoring environment 完成 Human Lock、编译和导出。
 
 ## 第三步：查看
 
