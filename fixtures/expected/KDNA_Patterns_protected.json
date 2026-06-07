@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "domain": "protected_test",
+    "version": "0.1.0",
+    "created": "2026-06-02",
+    "purpose": "test",
+    "load_condition": "always"
+  },
+  "misunderstandings": [
+    {
+      "id": "protected_m1",
+      "wrong": "Different language decryption.",
+      "correct": "Identical plaintext.",
+      "key_distinction": "interoperability",
+      "why": "Same algorithms produce same results."
+    }
+  ],
+  "self_check": ["Does JS ciphertext decrypt in Swift?"]
+}

@@ -13,7 +13,7 @@ A dev source directory can be:
 - A **directory** on disk for development and review
 - Bundled into a **dev-only `.kdna` file** with `kdna dev pack`
 
-Trusted `.kdna` assets must be created by KDNA Studio or a Studio-compatible
+Trusted `.kdna` assets must be created by a Studio-compatible pipeline or a
 compiler that records authoring provenance, Human Lock evidence, compiler
 metadata, and asset digest.
 

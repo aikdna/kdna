@@ -6,19 +6,19 @@ const addFormats = require('ajv-formats');
 const checks = [
   {
     schema: 'schema/judgment-trace.schema.json',
-    data: 'examples/app-runtime-contract/kdnachat-trace.json',
+    data: 'examples/app-runtime-contract/generic-client-trace.json',
   },
   {
     schema: 'schema/judgment-trace.schema.json',
-    data: 'examples/app-runtime-contract/kdnawork-trace.json',
+    data: 'examples/app-runtime-contract/generic-workbench-trace.json',
   },
   {
     schema: 'schema/feedback-event.schema.json',
-    data: 'examples/app-runtime-contract/kdnachat-feedback.json',
+    data: 'examples/app-runtime-contract/generic-client-feedback.json',
   },
   {
     schema: 'schema/feedback-event.schema.json',
-    data: 'examples/app-runtime-contract/kdnawork-feedback.json',
+    data: 'examples/app-runtime-contract/generic-workbench-feedback.json',
   },
 ];
 

@@ -1,6 +1,6 @@
-# KDNA Studio Principles
+# Authoring Pipeline Principles
 
-KDNA Studio is the judgment production interface. It helps humans turn implicit expertise into explicit, structured, testable, and versioned judgment assets.
+A KDNA-compatible authoring pipeline is the judgment production interface. It helps humans turn implicit expertise into explicit, structured, testable, and versioned judgment assets.
 
 It is not a domain generator. It is not an AI autopilot for judgment. It is the workshop where domain authors discover, articulate, challenge, lock, and export their judgment.
 
@@ -12,7 +12,7 @@ It is not a domain generator. It is not an AI autopilot for judgment. It is the 
 
 AI may interview. AI may challenge. AI may compile and test. But the judgment itself originates from the human domain expert.
 
-KDNA Studio makes this explicit in its workflow:
+the authoring pipeline makes this explicit in its workflow:
 - The author speaks their judgment.
 - The AI asks clarifying questions and generates counterexamples.
 - The author refines, rejects, or confirms.
@@ -22,7 +22,7 @@ The Studio does not replace human expertise. It makes expertise extraction struc
 
 ### 2. The Studio is not a generator
 
-KDNA Studio does not "write KDNA for you." It provides:
+A KDNA-compatible authoring pipeline does not "write KDNA for you." It provides:
 - An interview flow that surfaces implicit judgment
 - Card-based organization of judgment elements (axioms, boundaries, scenarios)
 - Counterexample challenges to stress-test each judgment
@@ -72,7 +72,7 @@ The Studio's output is not just a file. It is a **governed judgment asset**:
 
 ### 6. Studio is the production layer, not the governance layer
 
-KDNA Studio handles **how judgment assets are created**.
+A KDNA-compatible authoring pipeline handles **how judgment assets are created**.
 
 **KDNA Governance Console** (a separate future product) handles **how judgment updates are approved, published, rolled back, and audited** within an organization.
 
@@ -169,7 +169,7 @@ The domain is validated, signed, and exported.
 | **Agent Runtime** | Loads KDNA and generates judgments | Studio's Test Lab uses a sandbox runtime for validation |
 | **Eval Suite** | Tests judgment quality | Studio runs evals during Test Lab phase |
 | **KDNA Governance Console** | Organizational approval, audit, rollback | Receives domains from Studio for governance review |
-| **KDNAChat** | Consumer-facing agent with built-in Studio Beta | KDNAChat Studio Beta is the first embedded implementation |
+| **a KDNA-compatible client** | Consumer-facing agent with built-in Studio Beta | a KDNA-compatible client Studio Beta is the first embedded implementation |
 
 ---
 
@@ -188,7 +188,7 @@ These principles have concrete implications for Studio implementation:
 
 ## Summary
 
-KDNA Studio exists because human judgment is the scarce resource in the agent era.
+the authoring pipeline exists because human judgment is the scarce resource in the agent era.
 
 The Studio does not replace human judgment. It makes human judgment **articulable, challengeable, testable, and transferable** across the agent ecosystem.
 

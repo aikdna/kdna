@@ -140,7 +140,7 @@ kdna dev scaffold my_expertise
 #   kdna.json          — metadata (name, version, license)
 ```
 
-This is a non-canonical dev source workspace. Edit the files for experimentation, then use KDNA Studio or a Studio-compatible compiler for Human Lock, compile, and export.
+This is a non-canonical dev source workspace. Edit the files for experimentation, then use An authoring environment or a Studio-compatible compiler for Human Lock, compile, and export.
 
 ```bash
 kdna dev validate my_expertise       # structural check for dev source

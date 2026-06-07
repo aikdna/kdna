@@ -56,7 +56,7 @@ higher quality MUST include Studio-compatible authoring provenance:
 {
   "authoring": {
     "created_by": "kdna-studio",
-    "authoring_tool": "KDNA Studio",
+    "authoring_tool": "KDNA Studio Compatible",
     "authoring_tool_version": "0.3.0",
     "compiler": "@aikdna/kdna-studio-core",
     "compiler_version": "0.3.0",

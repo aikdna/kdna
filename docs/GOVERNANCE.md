@@ -14,7 +14,7 @@ Every KDNA domain published to the registry carries the author's explicit confir
 
 ## 2. No One-Click Domain Generation
 
-KDNA Studio and all compliant authoring tools MUST NOT offer automated domain generation that bypasses human review.
+KDNA-compatible authoring tools and all compliant authoring tools MUST NOT offer automated domain generation that bypasses human review.
 
 A valid KDNA domain requires:
 - Evidence collection

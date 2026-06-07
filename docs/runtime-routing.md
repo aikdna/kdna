@@ -100,7 +100,7 @@ Before loading, verify:
 - Skip/weak/reject → no user interruption
 - Trace everything for audit
 
-### Mode B: Interactive Choice (KDNAChat, KDNA Studio)
+### Mode B: Interactive Choice (a KDNA-compatible client, authoring tools)
 - Auto-evaluate route
 - Ambiguous → show user the choice
 - No local domain → suggest discovery (but don't auto-install)

@@ -1,10 +1,10 @@
 # KDNA macOS Integration — Design Specification
 
-> **Status:** Implemented. `kdna-core-swift` ([aikdna/kdna-core-swift](https://github.com/aikdna/kdna-core-swift)) and `kdna-studio-swift` ([aikdna/kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift)) provide native Swift runtimes for macOS and iOS. KDNAChat and KDNaStudio are reference GUI clients.
+> **Status:** Implemented. `kdna-core-swift` ([aikdna/kdna-core-swift](https://github.com/aikdna/kdna-core-swift)) and `kdna-studio-swift` ([aikdna/kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift)) provide native Swift runtimes for macOS and iOS. a KDNA-compatible client and the authoring pipeline are reference GUI clients.
 
 ## Overview
 
-Make `.kdna` files first-class citizens on macOS — double-clickable, previewable, and recognizably associated with KDNAChat.
+Make `.kdna` files first-class citizens on macOS — double-clickable, previewable, and recognizably associated with a KDNA-compatible client.
 
 ## File Association
 
@@ -13,7 +13,7 @@ Make `.kdna` files first-class citizens on macOS — double-clickable, previewab
 Register a custom UTType for `.kdna` files:
 
 ```xml
-<!-- Info.plist in KDNAChat.app -->
+<!-- Info.plist in a KDNA-compatible client.app -->
 <key>UTExportedTypeDeclarations</key>
 <array>
   <dict>
@@ -67,16 +67,16 @@ Register a custom UTType for `.kdna` files:
 ### Double-Click
 
 1. User double-clicks `writing.kdna` in Finder
-2. macOS launches KDNAChat (if installed)
-3. KDNAChat opens the Domain Inspector view
+2. macOS launches a KDNA-compatible client (if installed)
+3. a KDNA-compatible client opens the Domain Inspector view
 4. Shows: name, version, status, author, description, file inventory
 5. Offers: "Install to KDNA Library" or "View Contents"
 
 ### Drag-and-Drop
 
 1. User drags `.kdna` file onto:
-   - KDNAChat dock icon → Opens in Domain Inspector
-   - KDNAChat window → Same as double-click
+   - a KDNA-compatible client dock icon → Opens in Domain Inspector
+   - a KDNA-compatible client window → Same as double-click
    - Terminal → CLI could auto-run `kdna install ./file.kdna`
 
 ### Right-Click / Context Menu
@@ -85,7 +85,7 @@ Finder context menu options for `.kdna` files:
 
 | Option | Action |
 |--------|--------|
-| **Open** | Opens in KDNAChat Domain Inspector |
+| **Open** | Opens in a KDNA-compatible client Domain Inspector |
 | **Validate** | Shell: `kdna verify <file>` with result notification |
 | **Install** | Shell: `kdna install <file>` with result notification |
 | **Inspect** | Shows metadata without unpacking |
@@ -116,7 +116,7 @@ Design a `.kdna` file icon that:
 
 ## Installer Integration
 
-When KDNAChat is installed or updated:
+When a KDNA-compatible client is installed or updated:
 
 1. Register UTType via Launch Services
 2. `LSSetDefaultRoleHandlerForContentType` for `com.aikdna.kdna`
@@ -126,7 +126,7 @@ When KDNAChat is installed or updated:
 
 ```bash
 # After app install
-/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f /Applications/KDNAChat.app
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f /Applications/a KDNA-compatible client.app
 ```
 
 ## MIME Type Registration

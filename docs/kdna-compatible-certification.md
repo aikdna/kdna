@@ -17,7 +17,7 @@ KDNA`, `Official KDNA`, or AIKDNA marks is governed by
 | KDNA Loader Compatible | Can validate, load, render, and digest-check `.kdna` files. | `node conformance/run.mjs --profile loader` |
 | KDNA Runtime Compatible | Loads `.kdna` as the trust source and treats caches as rebuildable. | Runtime contract report + conformance |
 | KDNA Registry Compatible | Publishes asset-first entries with digest, signature, yank, and revocation metadata. | Registry schema + trust gate |
-| KDNA Studio Compatible | Produces `.kdna` assets through Human Judgment Lock and quality gates. | Studio contract report |
+| Authoring environment Compatible | Produces `.kdna` assets through Human Judgment Lock and quality gates. | Studio contract report |
 | KDNA Enterprise Compatible | Adds private registry, entitlement, audit, and revocation controls. | Enterprise review |
 
 ## Minimum Public Claim

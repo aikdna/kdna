@@ -92,7 +92,7 @@ does not have a separate metadata header — it is transparent ZIP.
   "file_count": 6,
   "authoring": {
     "created_by": "kdna-studio",
-    "authoring_tool": "KDNA Studio",
+    "authoring_tool": "KDNA Studio Compatible",
     "authoring_tool_version": "0.3.0",
     "compiler": "@aikdna/kdna-studio-core",
     "compiler_version": "0.3.0",
@@ -111,7 +111,7 @@ does not have a separate metadata header — it is transparent ZIP.
 ## 7. Lifecycle Commands
 
 ```
-create    →  KDNA Studio / kdna studio scaffold   Studio-compatible authoring
+create    →  Authoring environment / kdna studio scaffold   Studio-compatible authoring
 validate  →  kdna dev validate <folder>           Check dev source structure
 bundle    →  kdna dev pack <folder>               Dev-only non-trusted bundle
 inspect   →  kdna inspect <file.kdna>   Read container metadata + stats

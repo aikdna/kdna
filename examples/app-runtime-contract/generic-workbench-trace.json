@@ -6,7 +6,7 @@
   "mode": "enforce",
   "timestamp": "2026-05-26T12:05:00Z",
   "input_hash": "sha256:work-agent-safety-demo",
-  "agent": "kdnawork",
+  "agent": "app",
   "input_summary": "Run an agent workflow that proposes deleting generated files after processing.",
   "route_result": {
     "status": "LOAD_STRONG_FIT",
