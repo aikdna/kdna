@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schemas/stage-definition.schema.json",
+  "title": "KDNA Stage Definition",
+  "description": "Declares a single stage in a multi-stage KDNA artifact pipeline. Each stage defines its inputs (which KDNA assets to load, which upstream artifacts to consume), the artifact types it produces, quality gates that must pass, and dependencies on other stages.",
+  "type": "object",
+  "required": ["stage_id", "stage_name", "stage_order", "produces_artifacts"],
+  "properties": {
+    "stage_id": {
+      "type": "string",
+      "description": "Unique machine-readable identifier for this stage within the pipeline."
+    },
+    "stage_name": {
+      "type": "string",
+      "description": "Human-readable stage name for reports and traces."
+    },
+    "stage_order": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Sequential position in the pipeline. Determines default execution order when no explicit dependency constraints restrict ordering."
+    },
+    "description": {
+      "type": "string",
+      "description": "What this stage does, in one sentence."
+    },
+    "requires_inputs": {
+      "type": "array",
+      "description": "Artifact types or artifact IDs that must be available before this stage can execute.",
+      "items": {
+        "type": "object",
+        "required": ["ref_type"],
+        "properties": {
+          "ref_type": {
+            "type": "string",
+            "enum": ["artifact_type", "artifact_id", "run_input"],
+            "description": "artifact_type = any artifact of this type from a previous stage. artifact_id = a specific upstream artifact. run_input = the original pipeline input."
+          },
+          "artifact_type": {
+            "type": "string",
+            "description": "Required when ref_type is artifact_type. The business artifact type that must exist."
+          },
+          "artifact_id": {
+            "type": "string",
+            "description": "Required when ref_type is artifact_id."
+          },
+          "stage_id": {
+            "type": "string",
+            "description": "Optional constraint: only accept artifacts produced by a specific stage."
+          },
+          "required": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether the stage must block (hard dependency) or warn (soft dependency) if this input is missing."
+          }
+        }
+      }
+    },
+    "produces_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Artifact types this stage produces. A stage may produce multiple artifacts (e.g. a parallel compilation stage that emits both pilot_lesson and sales_brief).",
+      "items": {
+        "type": "object",
+        "required": ["artifact_type"],
+        "properties": {
+          "artifact_type": {
+            "type": "string",
+            "description": "Business artifact type identifier."
+          },
+          "content_schema": {
+            "type": "string",
+            "description": "Optional URI or file path to the JSON Schema for this artifact's content field."
+          },
+          "is_final": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this artifact type represents a final deliverable (vs. an intermediate stage output). Final artifacts trigger the finalize stage."
+          }
+        }
+      }
+    },
+    "loaded_kdna": {
+      "type": "array",
+      "description": "KDNA domains this stage loads for judgment governance. If empty, inherits from the pipeline-level KDNA configuration.",
+      "items": {
+        "type": "object",
+        "required": ["name", "role"],
+        "properties": {
+          "name": { "type": "string", "description": "Domain name (@scope/name)." },
+          "version": { "type": "string", "description": "Acceptable version range (semver)." },
+          "role": {
+            "type": "string",
+            "enum": ["primary", "advisor", "constraint", "risk_guard", "evaluator", "style_and_trust"]
+          },
+          "load_profile": {
+            "type": "string",
+            "enum": ["index", "compact", "scenario", "full"],
+            "description": "How deeply to load this domain. Inherits from pipeline default if omitted."
+          }
+        }
+      }
+    },
+    "quality_gates": {
+      "type": "array",
+      "description": "Quality checks applied to this stage's output artifacts before they can flow to downstream stages.",
+      "items": {
+        "type": "object",
+        "required": ["gate_id", "gate_type"],
+        "properties": {
+          "gate_id": { "type": "string" },
+          "gate_type": {
+            "type": "string",
+            "enum": [
+              "schema_validation",
+              "kdna_compliance",
+              "fidelity_check",
+              "human_review",
+              "llm_critique",
+              "eval_benchmark",
+              "custom"
+            ]
+          },
+          "blocking": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether a fail result blocks the pipeline or only generates a warning."
+          },
+          "config": {
+            "type": "object",
+            "description": "Gate-type-specific configuration. E.g. for fidelity_check: { protocol_version, min_score }. For schema_validation: { schema_path }."
+          }
+        }
+      }
+    },
+    "depends_on": {
+      "type": "array",
+      "description": "Stage IDs that must complete successfully before this stage can start. Expresses sequential constraints beyond stage_order.",
+      "items": { "type": "string" }
+    },
+    "parallel_with": {
+      "type": "array",
+      "description": "Stage IDs that may execute concurrently with this stage. All stages in a parallel group start when their shared dependencies complete.",
+      "items": { "type": "string" }
+    },
+    "retry_policy": {
+      "type": "object",
+      "description": "What happens when this stage fails.",
+      "properties": {
+        "max_attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Maximum execution attempts before marking the stage as failed."
+        },
+        "backoff": {
+          "type": "string",
+          "enum": ["none", "linear", "exponential"],
+          "default": "none"
+        },
+        "on_final_failure": {
+          "type": "string",
+          "enum": ["block_pipeline", "skip_stage", "use_fallback_artifact"],
+          "description": "What happens when all retries are exhausted."
+        }
+      }
+    },
+    "human_review_required": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this stage's output must be reviewed by a human before downstream stages can consume it."
+    }
+  }
+}
