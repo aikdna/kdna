@@ -1,5 +1,7 @@
-# KDNA — Open Judgment Protocol for AI Systems
+# KDNA — The Open Judgment Standard for AI Agents
 
+> **Loading, composing, measuring, and trusting human judgment in agent workflows.**
+>
 > [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
 Maintained by **AIKDNA** — the open ecosystem for the KDNA Protocol.
@@ -79,6 +81,23 @@ revise · test · sign · publish
 
 > **KDNA is not a single app — it is an open protocol ecosystem for judgment assets.**
 > Studio creates and compiles domain KDNA, CLI verifies and runs KDNA, Registry distributes trusted KDNA, runtime routers compose clusters, and agents load the right judgment for the task.
+
+## Phase 2 — From Judgment Asset to Trusted Product
+
+KDNA v1.0-rc defined how judgment is encoded. **Phase 2** defines how judgment flows into real work:
+
+| Component | RFC | What it solves |
+|-----------|-----|----------------|
+| **Artifact Contract** | [RFC-0009](./specs/artifact-contract.md) | Standard envelope for any KDNA-governed output — identity, provenance, quality, trace, review |
+| **Fidelity Protocol** | [RFC-0010](./specs/fidelity-protocol.md) | Measures whether judgment actually transferred into the final artifact — blind A/B/C comparison with calibration anchors |
+| **WorkPack Pipeline** | [kdna-workpack](https://github.com/aikdna/kdna-workpack) | Multi-stage orchestration of Work Packs with DAG dependencies, parallel execution, and artifact flow |
+| **Product Runtime** | [RFC-0011](./docs/product-runtime.md) | Long-running product cycle — Schedule → Select → Generate → Deliver → Observe → Adapt — for coaching, learning, and wellness products |
+| **Registry Fidelity Gate** | [kdna-registry](https://github.com/aikdna/kdna-registry) | Fidelity evidence as a requirement for validated+ quality badges |
+| **SDK** | [@aikdna/kdna-artifact-engine](https://www.npmjs.com/package/@aikdna/kdna-artifact-engine) · [@aikdna/kdna-fidelity-core](https://www.npmjs.com/package/@aikdna/kdna-fidelity-core) | TypeScript reference implementations |
+| **CLI** | `kdna protocol validate` / `inspect` | Schema validation for all RFC artifacts |
+| **E2E Demo** | [kdna-lab](https://github.com/aikdna/kdna-lab) | Full protocol chain: load → pipeline → envelope → fidelity → result |
+
+> **Phase 2 architecture:** [docs/phase2-architecture.md](./docs/phase2-architecture.md) — integration matrix, data flow, and RFC status tracking.
 
 A `.kdna` asset is not created by writing JSON files. It is compiled by a
 Studio-compatible authoring pipeline that performs human confirmation,
