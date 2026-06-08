@@ -351,4 +351,4 @@ All six components consume the same `product-runtime.json` manifest. The manifes
 
 ## 8. Schema File
 
-- `specs/product-runtime.schema.json` — Product Runtime manifest schema (to be created)
+- `specs/product-runtime.schema.json` — Product Runtime manifest schema
