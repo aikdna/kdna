@@ -1,0 +1,65 @@
+{
+  "format": "kdna-product-runtime",
+  "format_version": "0.1",
+  "name": "daily-coaching",
+  "version": "0.1.0",
+  "description": "Daily KDNA-governed coaching letter with micro-practice and adaptive improvement across conflict, EQ, expression, and intimacy domains",
+  "schedule": {
+    "type": "cron",
+    "cron": "0 8 * * *",
+    "timezone": "Asia/Shanghai",
+    "skip_policy": "generate_immediately",
+    "max_backlog": 3
+  },
+  "selection": {
+    "type": "context_aware",
+    "domain_pool": [
+      { "name": "@aikdna/conflict", "role": "primary" },
+      { "name": "@aikdna/eq", "role": "primary" },
+      { "name": "@aikdna/expression", "role": "primary" },
+      { "name": "@aikdna/intimacy", "role": "primary" }
+    ],
+    "context_signals": ["user.last_reply_emotion", "user.current_challenge"],
+    "artifact_type": "daily_letter",
+    "user_state_path": "~/.kdna/users/{user_id}/state.json"
+  },
+  "generation": {
+    "engine": "daily-letter-engine",
+    "engine_version": "0.1.0",
+    "artifact_type": "daily_letter",
+    "quality_gates": [
+      { "gate_type": "schema_validation", "blocking": true },
+      { "gate_type": "kdna_compliance", "blocking": true },
+      { "gate_type": "fidelity_check", "blocking": false }
+    ],
+    "kdna_load_profile": "full",
+    "max_generation_attempts": 2
+  },
+  "delivery": {
+    "type": "push_notification",
+    "template": "Your daily letter is ready: {artifact.title}"
+  },
+  "observation": {
+    "sources": ["user_reply", "explicit_feedback"],
+    "signal_mapping": [
+      { "source": "user_reply", "extract": "emotional_tone", "maps_to": "emotion" },
+      { "source": "user_reply", "extract": "stated_challenge", "maps_to": "blocker" },
+      { "source": "explicit_feedback", "extract": "rating", "maps_to": "feedback" }
+    ]
+  },
+  "adaptation": {
+    "enabled": true,
+    "max_adaptation_depth": 5,
+    "adaptation_rules": [
+      { "signal_type": "emotion", "condition": "value == 'frustrated'", "action": "simplify" },
+      { "signal_type": "progress", "condition": "value == 'stuck'", "action": "repeat_domain" },
+      { "signal_type": "feedback", "condition": "rating < 3", "action": "change_domain" }
+    ],
+    "human_lock_required": false
+  },
+  "trace": {
+    "enabled": true,
+    "record_observations": true,
+    "record_adaptations": true
+  }
+}

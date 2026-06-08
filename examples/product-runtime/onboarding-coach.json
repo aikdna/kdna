@@ -1,0 +1,40 @@
+{
+  "format": "kdna-product-runtime",
+  "format_version": "0.1",
+  "name": "onboarding-coach",
+  "version": "0.1.0",
+  "description": "Event-driven onboarding coach triggered by user signup — sends a welcome letter and 7-day guided course",
+  "schedule": {
+    "type": "event_driven",
+    "event_trigger": "user.signup",
+    "skip_policy": "delay",
+    "max_backlog": 1
+  },
+  "selection": {
+    "type": "fixed",
+    "domain_pool": [{ "name": "@aikdna/coaching", "role": "primary" }],
+    "artifact_type": "welcome_letter"
+  },
+  "generation": {
+    "engine": "daily-letter-engine",
+    "engine_version": "0.1.0",
+    "artifact_type": "welcome_letter",
+    "quality_gates": [
+      { "gate_type": "schema_validation", "blocking": true }
+    ],
+    "kdna_load_profile": "compact",
+    "max_generation_attempts": 1
+  },
+  "delivery": {
+    "type": "email",
+    "template": "Welcome to your coaching journey: {artifact.title}"
+  },
+  "observation": {
+    "sources": ["user_action"],
+    "signal_mapping": [
+      { "source": "user_action", "extract": "lesson_opened", "maps_to": "completion_rate" }
+    ]
+  },
+  "adaptation": { "enabled": false },
+  "trace": { "enabled": true }
+}
