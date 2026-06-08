@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schemas/fidelity-result.schema.json",
+  "title": "KDNA Fidelity Result",
+  "description": "The output of a fidelity measurement run — measures whether domain judgment actually transferred into a generated artifact, not whether the output is stylistically good.",
+  "type": "object",
+  "required": ["fidelity_id", "protocol_version", "target_artifact", "overall_score", "dimensions", "completed_at"],
+  "properties": {
+    "fidelity_id": {
+      "type": "string",
+      "description": "Unique fidelity run identifier (UUID v4)."
+    },
+    "protocol_version": {
+      "type": "string",
+      "description": "Semver of the Fidelity Protocol used for this measurement."
+    },
+    "target_artifact": {
+      "type": "object",
+      "description": "The artifact being measured for fidelity.",
+      "required": ["artifact_id", "artifact_type"],
+      "properties": {
+        "artifact_id": { "type": "string" },
+        "artifact_type": { "type": "string" },
+        "content_digest": { "type": "string" },
+        "generator": {
+          "type": "object",
+          "properties": {
+            "engine": { "type": "string" },
+            "version": { "type": "string" }
+          }
+        }
+      }
+    },
+    "source_kdna": {
+      "type": "array",
+      "description": "KDNA domains whose judgment transfer is being measured. Must match target_artifact.source_kdna.",
+      "items": {
+        "type": "object",
+        "required": ["name", "version", "role"],
+        "properties": {
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "role": { "type": "string" }
+        }
+      }
+    },
+    "overall_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Aggregate fidelity score across all dimensions. 0 = no judgment transferred. 1 = complete judgment transfer identical to domain gold standard."
+    },
+    "pass_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Minimum overall_score required to pass. Default 0.70. Domains with higher risk levels may require higher thresholds."
+    },
+    "passed": {
+      "type": "boolean",
+      "description": "Whether overall_score >= pass_threshold."
+    },
+    "dimensions": {
+      "type": "array",
+      "description": "Per-dimension fidelity measurements. Each dimension measures a specific aspect of judgment transfer.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["dimension_id", "dimension_name", "score", "weight"],
+        "properties": {
+          "dimension_id": {
+            "type": "string",
+            "description": "Machine-readable dimension identifier."
+          },
+          "dimension_name": {
+            "type": "string",
+            "description": "Human-readable dimension name."
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Relative weight of this dimension in overall_score. All weights should sum to 1.0."
+          },
+          "evidence": {
+            "type": "array",
+            "description": "Specific evidence supporting the score.",
+            "items": {
+              "type": "object",
+              "required": ["claim", "verdict"],
+              "properties": {
+                "claim": { "type": "string", "description": "What was checked." },
+                "verdict": { "type": "string", "enum": ["confirmed", "partial", "absent", "contradicted"] },
+                "detail": { "type": "string", "description": "Why the verdict was assigned." }
+              }
+            }
+          },
+          "threshold": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Minimum score for this dimension to pass individually. Used for hard-fail dimensions."
+          }
+        }
+      }
+    },
+    "per_axiom": {
+      "type": "array",
+      "description": "Per-axiom transfer fidelity. Maps each domain axiom to its measured transfer strength.",
+      "items": {
+        "type": "object",
+        "required": ["axiom_id", "domain", "score"],
+        "properties": {
+          "axiom_id": { "type": "string" },
+          "domain": { "type": "string", "description": "Which KDNA domain this axiom belongs to." },
+          "score": { "type": "number", "minimum": 0, "maximum": 1 },
+          "transfer_level": {
+            "type": "string",
+            "enum": ["operationalized", "referenced", "mentioned", "absent", "contradicted"],
+            "description": "Level of transfer. operationalized = axiom shapes decisions. referenced = axiom cited and applied. mentioned = axiom quoted but not operationalized. absent = axiom not detected. contradicted = output conflicts with axiom."
+          },
+          "evidence": { "type": "string" }
+        }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "description": "Results from controlled comparison: same task, same model, different judgment conditions.",
+      "required": ["conditions", "blind_delta"],
+      "properties": {
+        "conditions": {
+          "type": "array",
+          "description": "The comparison conditions tested.",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["condition_id", "condition_type"],
+            "properties": {
+              "condition_id": { "type": "string" },
+              "condition_type": {
+                "type": "string",
+                "enum": ["no_kdna", "best_prompt", "kdna_loaded", "kdna_cluster", "calibration_positive", "calibration_negative"],
+                "description": "no_kdna = baseline without any judgment. best_prompt = optimized prompt without KDNA. kdna_loaded = KDNA domain loaded. kdna_cluster = multiple KDNA domains composed. calibration_positive = expected to score high. calibration_negative = expected to score low."
+              },
+              "model": { "type": "string", "description": "Model used for this condition." },
+              "model_config": {
+                "type": "object",
+                "description": "Temperature, top_p, and other generation parameters.",
+                "properties": {
+                  "temperature": { "type": "number" },
+                  "top_p": { "type": "number" }
+                }
+              },
+              "score": { "type": "number", "minimum": 0, "maximum": 1 },
+              "judgment_delta": {
+                "type": "number",
+                "description": "Score difference from baseline (no_kdna). Positive = KDNA improved judgment transfer."
+              }
+            }
+          }
+        },
+        "blind_delta": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1,
+          "description": "The measured difference between KDNA and Best Prompt in a blind evaluation. Positive = KDNA provides measurable value beyond the best prompt-only approach. This is the key metric for judging whether KDNA matters."
+        },
+        "blind_design": {
+          "type": "string",
+          "enum": ["a_b_shuffled", "a_b_c_shuffled", "pairwise", "ranking"],
+          "description": "Blind evaluation design. a_b_shuffled = two outputs randomly labeled A/B. a_b_c_shuffled = three outputs (no_kdna, best_prompt, kdna) randomly labeled A/B/C. pairwise = all pairs compared. ranking = all outputs ranked."
+        },
+        "evaluator_model": {
+          "type": "string",
+          "description": "Model used for blind evaluation (should differ from generation model)."
+        },
+        "evaluator_rubric": {
+          "type": "string",
+          "description": "The evaluation rubric or prompt used for blind scoring."
+        }
+      }
+    },
+    "calibration": {
+      "type": "object",
+      "description": "Calibration anchor results. Verifies that the fidelity measurement itself is working correctly.",
+      "properties": {
+        "positive_anchor": {
+          "type": "object",
+          "description": "A case expected to show high fidelity (domain gold standard scenario).",
+          "properties": {
+            "expected_score_min": { "type": "number" },
+            "actual_score": { "type": "number" },
+            "passed": { "type": "boolean", "description": "Whether actual >= expected_min." }
+          }
+        },
+        "negative_anchor": {
+          "type": "object",
+          "description": "A case expected to show low fidelity (domain explicitly does not apply).",
+          "properties": {
+            "expected_score_max": { "type": "number" },
+            "actual_score": { "type": "number" },
+            "passed": { "type": "boolean", "description": "Whether actual <= expected_max." }
+          }
+        },
+        "calibration_valid": {
+          "type": "boolean",
+          "description": "Whether both anchors passed. If false, the fidelity result should not be trusted."
+        }
+      }
+    },
+    "cross_model": {
+      "type": "array",
+      "description": "Cross-model consistency: same KDNA, same task, different models. Measures whether judgment transfer is model-dependent.",
+      "items": {
+        "type": "object",
+        "required": ["model", "score"],
+        "properties": {
+          "model": { "type": "string" },
+          "score": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "cross_model_variance": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Standard deviation of scores across models. Low variance = judgment transfers consistently regardless of model."
+    },
+    "tasks": {
+      "type": "array",
+      "description": "The evaluation tasks used for measurement. Each task tests judgment transfer from a different angle.",
+      "items": {
+        "type": "object",
+        "required": ["task_id", "task_type"],
+        "properties": {
+          "task_id": { "type": "string" },
+          "task_type": {
+            "type": "string",
+            "enum": ["core_scenario", "boundary_scenario", "failure_scenario", "excluded_scenario", "novel_scenario", "adversarial_scenario"],
+            "description": "core = normal application. boundary = domain does not apply. failure = misunderstanding triggered. excluded = edge case. novel = unseen variation. adversarial = designed to confuse."
+          },
+          "input_summary": { "type": "string" },
+          "expected_axioms": { "type": "array", "items": { "type": "string" } },
+          "expected_misunderstandings_avoided": { "type": "array", "items": { "type": "string" } },
+          "task_score": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "trace_refs": {
+      "type": "array",
+      "description": "Links to KDNA trace records from the measured generation.",
+      "items": {
+        "type": "object",
+        "required": ["trace_id"],
+        "properties": {
+          "trace_id": { "type": "string" },
+          "trace_type": { "type": "string" }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "description": "Measurement quality warnings.",
+      "items": {
+        "type": "object",
+        "required": ["type", "message"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "calibration_failed",
+              "high_variance",
+              "low_task_count",
+              "evaluator_bias_risk",
+              "model_same_as_generator",
+              "trace_incomplete"
+            ]
+          },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when measurement completed."
+    },
+    "measurement_duration_ms": {
+      "type": "integer",
+      "description": "Total measurement duration in milliseconds."
+    },
+    "evaluator": {
+      "type": "object",
+      "description": "What performed the fidelity measurement.",
+      "properties": {
+        "engine": { "type": "string", "description": "fidelity-engine, assay-cli, etc." },
+        "version": { "type": "string" }
+      }
+    }
+  }
+}
