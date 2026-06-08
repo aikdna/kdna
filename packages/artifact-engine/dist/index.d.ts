@@ -4,4 +4,6 @@ export { ArtifactSchema, ArtifactStatusSchema, ArtifactEnvelopeSchema } from './
 export type { StorageAdapter } from './storage.js';
 export type { StageContext, StageResult, StageDefinition, HumanReviewGate } from './runner.js';
 export { AutoApproveGate, wrapAsEnvelope } from './runner.js';
+export type { EvidenceTrace } from './trace-bridge.js';
+export { createStageTrace, linkArtifactToTrace, linkQualityReport, linkHumanReview, traceChain } from './trace-bridge.js';
 //# sourceMappingURL=index.d.ts.map
