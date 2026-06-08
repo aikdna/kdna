@@ -69,11 +69,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
-      - name: Build @kdna/artifact-engine
-        run: npm run build --workspace=@kdna/artifact-engine
-      - name: Test @kdna/artifact-engine
-        run: npm test --workspace=@kdna/artifact-engine
-      - name: Build @kdna/fidelity-core
-        run: npm run build --workspace=@kdna/fidelity-core
-      - name: Test @kdna/fidelity-core
-        run: npm test --workspace=@kdna/fidelity-core
+      - name: Build @aikdna/kdna-artifact-engine
+        run: npm run build --workspace=@aikdna/kdna-artifact-engine
+      - name: Test @aikdna/kdna-artifact-engine
+        run: npm test --workspace=@aikdna/kdna-artifact-engine
+      - name: Build @aikdna/kdna-fidelity-core
+        run: npm run build --workspace=@aikdna/kdna-fidelity-core
+      - name: Test @aikdna/kdna-fidelity-core
+        run: npm test --workspace=@aikdna/kdna-fidelity-core
