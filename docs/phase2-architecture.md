@@ -27,7 +27,7 @@ Phase 2 extends KDNA from "how to encode judgment" to "how judgment flows into p
 │           │         SDK LAYER             │               │
 │           │                               │               │
 │  ┌────────┴──────────────────┐ ┌─────────┴───────────┐  │
-│  │ @kdna/artifact-engine     │ │ @kdna/fidelity-core  │  │
+│  │ @aikdna/kdna-artifact-engine │ │ @aikdna/kdna-fidelity-core │  │
 │  │ • Run/Stage/Artifact types│ │ • classifyVerdict    │  │
 │  │ • ArtifactEnvelope (Zod)  │ │ • computeStats (CI95)│  │
 │  │ • StorageAdapter          │ │ • normalizeGap        │  │
