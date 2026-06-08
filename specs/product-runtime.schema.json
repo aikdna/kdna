@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schemas/product-runtime.schema.json",
+  "title": "KDNA Product Runtime Manifest",
+  "description": "Defines a long-running KDNA-governed product cycle: Schedule → Select → Generate → Deliver → Observe → Adapt. This is a pattern contract — not a runtime engine. Any product runtime (coaching app, learning platform, wellness tracker) implements this contract.",
+  "type": "object",
+  "required": ["format", "format_version", "name", "version", "schedule", "selection", "generation", "delivery"],
+  "properties": {
+    "format": { "type": "string", "const": "kdna-product-runtime" },
+    "format_version": { "type": "string", "const": "0.1" },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+    "version": { "type": "string" },
+    "description": { "type": "string", "maxLength": 280 },
+    "schedule": {
+      "type": "object",
+      "description": "When does the product cycle trigger?",
+      "required": ["type", "skip_policy", "max_backlog"],
+      "properties": {
+        "type": { "type": "string", "enum": ["cron", "interval", "event_driven", "manual"] },
+        "cron": { "type": "string" },
+        "interval_seconds": { "type": "integer", "minimum": 60 },
+        "event_trigger": { "type": "string" },
+        "timezone": { "type": "string", "default": "UTC" },
+        "skip_policy": { "type": "string", "enum": ["skip", "delay", "generate_immediately"] },
+        "max_backlog": { "type": "integer", "minimum": 0, "default": 1 }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "description": "Which KDNA domain governs this cycle? What artifact type?",
+      "required": ["type", "domain_pool", "artifact_type"],
+      "properties": {
+        "type": { "type": "string", "enum": ["fixed", "rotating", "context_aware", "user_choice"] },
+        "domain_pool": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "version": { "type": "string" },
+              "role": { "type": "string", "enum": ["primary", "advisor", "constraint", "risk_guard", "evaluator", "style_and_trust"], "default": "primary" }
+            }
+          }
+        },
+        "rotation": { "type": "string", "enum": ["sequential", "weighted", "adaptive"] },
+        "context_signals": { "type": "array", "items": { "type": "string" } },
+        "artifact_type": { "type": "string" },
+        "user_state_path": { "type": "string" }
+      }
+    },
+    "generation": {
+      "type": "object",
+      "description": "How to generate the artifact.",
+      "required": ["engine", "artifact_type"],
+      "properties": {
+        "engine": { "type": "string" },
+        "engine_version": { "type": "string" },
+        "artifact_type": { "type": "string" },
+        "template": { "type": "string" },
+        "quality_gates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["gate_type", "blocking"],
+            "properties": {
+              "gate_type": { "type": "string", "enum": ["schema_validation", "kdna_compliance", "fidelity_check", "human_review"] },
+              "blocking": { "type": "boolean" }
+            }
+          }
+        },
+        "kdna_load_profile": { "type": "string", "enum": ["index", "compact", "scenario", "full"], "default": "full" },
+        "max_generation_attempts": { "type": "integer", "minimum": 1, "default": 1 }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "description": "How the artifact reaches the user.",
+      "required": ["type"],
+      "properties": {
+        "type": { "type": "string", "enum": ["push_notification", "email", "in_app", "sms", "api_webhook"] },
+        "template": { "type": "string" },
+        "metadata": { "type": "object" }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "description": "What to observe from user interaction and how to extract signals.",
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["user_reply", "user_action", "completion_rate", "explicit_feedback"] }
+        },
+        "signal_mapping": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source", "extract", "maps_to"],
+            "properties": {
+              "source": { "type": "string" },
+              "extract": { "type": "string" },
+              "maps_to": { "type": "string" }
+            }
+          }
+        },
+        "kdna_for_observation": { "type": "string" }
+      }
+    },
+    "adaptation": {
+      "type": "object",
+      "description": "How observations from cycle N influence cycle N+1. Must respect Human Judgment Lock boundary.",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "max_adaptation_depth": { "type": "integer", "minimum": 1, "default": 5 },
+        "adaptation_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["signal_type", "condition", "action"],
+            "properties": {
+              "signal_type": { "type": "string" },
+              "condition": { "type": "string" },
+              "action": { "type": "string", "enum": ["adjust_tone", "change_domain", "increase_detail", "simplify", "skip_next", "escalate", "repeat_domain"] },
+              "params": { "type": "object" }
+            }
+          }
+        },
+        "human_lock_required": { "type": "boolean", "default": false }
+      }
+    },
+    "trace": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "record_observations": { "type": "boolean", "default": true },
+        "record_adaptations": { "type": "boolean", "default": true }
+      }
+    }
+  }
+}
