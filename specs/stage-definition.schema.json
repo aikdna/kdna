@@ -90,7 +90,14 @@
           "version": { "type": "string", "description": "Acceptable version range (semver)." },
           "role": {
             "type": "string",
-            "enum": ["primary", "advisor", "constraint", "risk_guard", "evaluator", "style_and_trust"]
+            "enum": [
+              "primary",
+              "advisor",
+              "constraint",
+              "risk_guard",
+              "evaluator",
+              "style_and_trust"
+            ]
           },
           "load_profile": {
             "type": "string",

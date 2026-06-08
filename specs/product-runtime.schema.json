@@ -4,7 +4,16 @@
   "title": "KDNA Product Runtime Manifest",
   "description": "Defines a long-running KDNA-governed product cycle: Schedule → Select → Generate → Deliver → Observe → Adapt. This is a pattern contract — not a runtime engine. Any product runtime (coaching app, learning platform, wellness tracker) implements this contract.",
   "type": "object",
-  "required": ["format", "format_version", "name", "version", "schedule", "selection", "generation", "delivery"],
+  "required": [
+    "format",
+    "format_version",
+    "name",
+    "version",
+    "schedule",
+    "selection",
+    "generation",
+    "delivery"
+  ],
   "properties": {
     "format": { "type": "string", "const": "kdna-product-runtime" },
     "format_version": { "type": "string", "const": "0.1" },
@@ -40,7 +49,18 @@
             "properties": {
               "name": { "type": "string" },
               "version": { "type": "string" },
-              "role": { "type": "string", "enum": ["primary", "advisor", "constraint", "risk_guard", "evaluator", "style_and_trust"], "default": "primary" }
+              "role": {
+                "type": "string",
+                "enum": [
+                  "primary",
+                  "advisor",
+                  "constraint",
+                  "risk_guard",
+                  "evaluator",
+                  "style_and_trust"
+                ],
+                "default": "primary"
+              }
             }
           }
         },
@@ -65,12 +85,19 @@
             "type": "object",
             "required": ["gate_type", "blocking"],
             "properties": {
-              "gate_type": { "type": "string", "enum": ["schema_validation", "kdna_compliance", "fidelity_check", "human_review"] },
+              "gate_type": {
+                "type": "string",
+                "enum": ["schema_validation", "kdna_compliance", "fidelity_check", "human_review"]
+              },
               "blocking": { "type": "boolean" }
             }
           }
         },
-        "kdna_load_profile": { "type": "string", "enum": ["index", "compact", "scenario", "full"], "default": "full" },
+        "kdna_load_profile": {
+          "type": "string",
+          "enum": ["index", "compact", "scenario", "full"],
+          "default": "full"
+        },
         "max_generation_attempts": { "type": "integer", "minimum": 1, "default": 1 }
       }
     },
@@ -79,7 +106,10 @@
       "description": "How the artifact reaches the user.",
       "required": ["type"],
       "properties": {
-        "type": { "type": "string", "enum": ["push_notification", "email", "in_app", "sms", "api_webhook"] },
+        "type": {
+          "type": "string",
+          "enum": ["push_notification", "email", "in_app", "sms", "api_webhook"]
+        },
         "template": { "type": "string" },
         "metadata": { "type": "object" }
       }
@@ -90,7 +120,10 @@
       "properties": {
         "sources": {
           "type": "array",
-          "items": { "type": "string", "enum": ["user_reply", "user_action", "completion_rate", "explicit_feedback"] }
+          "items": {
+            "type": "string",
+            "enum": ["user_reply", "user_action", "completion_rate", "explicit_feedback"]
+          }
         },
         "signal_mapping": {
           "type": "array",
@@ -121,7 +154,18 @@
             "properties": {
               "signal_type": { "type": "string" },
               "condition": { "type": "string" },
-              "action": { "type": "string", "enum": ["adjust_tone", "change_domain", "increase_detail", "simplify", "skip_next", "escalate", "repeat_domain"] },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "adjust_tone",
+                  "change_domain",
+                  "increase_detail",
+                  "simplify",
+                  "skip_next",
+                  "escalate",
+                  "repeat_domain"
+                ]
+              },
               "params": { "type": "object" }
             }
           }
