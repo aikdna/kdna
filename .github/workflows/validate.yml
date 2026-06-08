@@ -57,3 +57,23 @@ jobs:
         run: npm run validate:app-schemas
       - name: Validate protocol fixtures
         run: npm run validate:protocol-fixtures
+
+  sdk:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22, 24]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - name: Build @kdna/artifact-engine
+        run: npm run build --workspace=@kdna/artifact-engine
+      - name: Test @kdna/artifact-engine
+        run: npm test --workspace=@kdna/artifact-engine
+      - name: Build @kdna/fidelity-core
+        run: npm run build --workspace=@kdna/fidelity-core
+      - name: Test @kdna/fidelity-core
+        run: npm test --workspace=@kdna/fidelity-core
