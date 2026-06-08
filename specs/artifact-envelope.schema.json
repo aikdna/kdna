@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schemas/artifact-envelope.schema.json",
+  "title": "KDNA Artifact Envelope",
+  "description": "Standard envelope for any artifact produced from KDNA-governed generation. Universally references the KDNA assets, upstream artifacts, trace records, quality results, and human review status associated with a single generated artifact. Business-specific content is carried in the content field under its own schema.",
+  "type": "object",
+  "required": [
+    "artifact_id",
+    "artifact_type",
+    "schema_version",
+    "created_at",
+    "generator",
+    "source_kdna",
+    "content_digest"
+  ],
+  "properties": {
+    "artifact_id": {
+      "type": "string",
+      "description": "Unique artifact identifier (UUID v4 or content-hash URN). Stable across reprocessing — the same logical artifact retains the same ID."
+    },
+    "artifact_type": {
+      "type": "string",
+      "description": "Business-level artifact type. Examples: course_package, pilot_lesson, daily_letter, assessment_report, consulting_offer. Type-specific validation uses this field to select the appropriate content schema."
+    },
+    "schema_version": {
+      "type": "string",
+      "description": "Semver of the artifact envelope schema this artifact conforms to."
+    },
+    "content_schema_version": {
+      "type": "string",
+      "description": "Semver of the business-specific content schema (e.g. the course-package schema version). Different from schema_version which tracks the envelope itself."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when this artifact version was generated."
+    },
+    "generator": {
+      "type": "object",
+      "description": "Provenance: which engine and version produced this artifact.",
+      "required": ["engine", "version"],
+      "properties": {
+        "engine": {
+          "type": "string",
+          "description": "Engine identifier. Examples: course-engine, daily-letter-engine, report-engine."
+        },
+        "version": {
+          "type": "string",
+          "description": "Semver of the engine that generated this artifact."
+        },
+        "run_id": {
+          "type": "string",
+          "description": "ID of the pipeline run that produced this artifact. Links to ArtifactRun."
+        }
+      }
+    },
+    "source_kdna": {
+      "type": "array",
+      "description": "KDNA domains loaded during generation. Records which judgment assets governed this artifact's creation.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "version", "role"],
+        "properties": {
+          "name": { "type": "string", "description": "Fully qualified domain name (@scope/name)." },
+          "version": { "type": "string", "description": "Domain version at generation time." },
+          "judgment_version": { "type": "string", "description": "Domain judgment_version from kdna.json manifest." },
+          "digest": { "type": "string", "description": "Asset digest of the .kdna file loaded (sha256:hex)." },
+          "role": {
+            "type": "string",
+            "enum": ["primary", "advisor", "constraint", "risk_guard", "evaluator", "style_and_trust"],
+            "description": "Role this domain played in the generation stage."
+          }
+        }
+      }
+    },
+    "source_artifacts": {
+      "type": "array",
+      "description": "Upstream artifacts that served as input to this artifact. Empty for initial stages that consume raw inputs.",
+      "items": {
+        "type": "object",
+        "required": ["artifact_id", "artifact_type"],
+        "properties": {
+          "artifact_id": { "type": "string" },
+          "artifact_type": { "type": "string" },
+          "content_digest": { "type": "string" },
+          "relationship": {
+            "type": "string",
+            "enum": ["input", "template", "reference", "evaluation_target"],
+            "description": "How this upstream artifact was used in generating the current artifact."
+          }
+        }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "description": "Which pipeline stage produced this artifact. Present when the generation occurred within a multi-stage pipeline; omitted for single-step generation.",
+      "required": ["stage_id", "stage_order"],
+      "properties": {
+        "stage_id": { "type": "string" },
+        "stage_name": { "type": "string" },
+        "stage_order": { "type": "integer", "minimum": 1 },
+        "stage_attempt": { "type": "integer", "minimum": 1, "description": "Which attempt of this stage produced this version (1-based)." },
+        "stage_status": {
+          "type": "string",
+          "enum": ["running", "completed", "failed", "skipped"],
+          "description": "Status of this stage when the artifact was recorded."
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "description": "Business-specific artifact content. Must conform to the schema identified by artifact_type and content_schema_version. This field carries the actual work product — course package, daily letter, assessment report, etc."
+    },
+    "content_digest": {
+      "type": "string",
+      "description": "SHA-256 digest of the canonical JSON serialization of content. Used for integrity verification and deduplication across reprocessing."
+    },
+    "quality": {
+      "type": "object",
+      "description": "Quality gate results and fidelity measurement for this artifact.",
+      "properties": {
+        "gate_results": {
+          "type": "array",
+          "description": "Results from each quality gate applied to this artifact.",
+          "items": {
+            "type": "object",
+            "required": ["gate_id", "result"],
+            "properties": {
+              "gate_id": { "type": "string" },
+              "gate_type": { "type": "string", "description": "schema_validation, kdna_compliance, fidelity_check, human_review, llm_critique" },
+              "result": { "type": "string", "enum": ["pass", "fail", "warn", "skipped"] },
+              "score": { "type": "number" },
+              "evidence": { "type": "string" }
+            }
+          }
+        },
+        "overall_result": {
+          "type": "string",
+          "enum": ["pass", "fail", "conditional_pass"],
+          "description": "Composed result across all quality gates."
+        },
+        "fidelity": {
+          "type": "object",
+          "description": "Judgment transfer fidelity measurement. Computed by the Fidelity Protocol when enabled.",
+          "required": ["score", "protocol_version"],
+          "properties": {
+            "score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Overall fidelity score. 0 = no judgment transferred, 1 = complete judgment transfer."
+            },
+            "protocol_version": {
+              "type": "string",
+              "description": "Version of the Fidelity Protocol used for measurement."
+            },
+            "report_artifact_id": {
+              "type": "string",
+              "description": "Artifact ID of the full Fidelity Report, if generated as a separate artifact."
+            }
+          }
+        }
+      }
+    },
+    "trace_refs": {
+      "type": "array",
+      "description": "Judgment trace identifiers produced during this artifact's generation. Links to the KDNA trace system.",
+      "items": {
+        "type": "object",
+        "required": ["trace_id"],
+        "properties": {
+          "trace_id": { "type": "string" },
+          "trace_type": {
+            "type": "string",
+            "enum": ["route", "load", "generation", "postvalidate", "fidelity"],
+            "description": "Which phase of the pipeline produced this trace."
+          }
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "description": "Human review status. Null before review; populated after a human reviews and approves/rejects.",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "approved", "rejected", "changes_requested"],
+          "description": "Current human review status."
+        },
+        "reviewed_by": {
+          "type": "string",
+          "description": "Identity of the reviewer."
+        },
+        "reviewed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "review_notes": {
+          "type": "string",
+          "description": "Reviewer's notes or rationale for the decision."
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Extensible metadata. Implementations may add namespaced fields.",
+      "properties": {
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "environment": {
+          "type": "string",
+          "enum": ["dev", "staging", "production"]
+        }
+      }
+    }
+  }
+}
