@@ -4,7 +4,14 @@
   "title": "KDNA Fidelity Result",
   "description": "The output of a fidelity measurement run — measures whether domain judgment actually transferred into a generated artifact, not whether the output is stylistically good.",
   "type": "object",
-  "required": ["fidelity_id", "protocol_version", "target_artifact", "overall_score", "dimensions", "completed_at"],
+  "required": [
+    "fidelity_id",
+    "protocol_version",
+    "target_artifact",
+    "overall_score",
+    "dimensions",
+    "completed_at"
+  ],
   "properties": {
     "fidelity_id": {
       "type": "string",
@@ -95,7 +102,10 @@
               "required": ["claim", "verdict"],
               "properties": {
                 "claim": { "type": "string", "description": "What was checked." },
-                "verdict": { "type": "string", "enum": ["confirmed", "partial", "absent", "contradicted"] },
+                "verdict": {
+                  "type": "string",
+                  "enum": ["confirmed", "partial", "absent", "contradicted"]
+                },
                 "detail": { "type": "string", "description": "Why the verdict was assigned." }
               }
             }
@@ -144,7 +154,14 @@
               "condition_id": { "type": "string" },
               "condition_type": {
                 "type": "string",
-                "enum": ["no_kdna", "best_prompt", "kdna_loaded", "kdna_cluster", "calibration_positive", "calibration_negative"],
+                "enum": [
+                  "no_kdna",
+                  "best_prompt",
+                  "kdna_loaded",
+                  "kdna_cluster",
+                  "calibration_positive",
+                  "calibration_negative"
+                ],
                 "description": "no_kdna = baseline without any judgment. best_prompt = optimized prompt without KDNA. kdna_loaded = KDNA domain loaded. kdna_cluster = multiple KDNA domains composed. calibration_positive = expected to score high. calibration_negative = expected to score low."
               },
               "model": { "type": "string", "description": "Model used for this condition." },
@@ -240,7 +257,14 @@
           "task_id": { "type": "string" },
           "task_type": {
             "type": "string",
-            "enum": ["core_scenario", "boundary_scenario", "failure_scenario", "excluded_scenario", "novel_scenario", "adversarial_scenario"],
+            "enum": [
+              "core_scenario",
+              "boundary_scenario",
+              "failure_scenario",
+              "excluded_scenario",
+              "novel_scenario",
+              "adversarial_scenario"
+            ],
             "description": "core = normal application. boundary = domain does not apply. failure = misunderstanding triggered. excluded = edge case. novel = unseen variation. adversarial = designed to confuse."
           },
           "input_summary": { "type": "string" },

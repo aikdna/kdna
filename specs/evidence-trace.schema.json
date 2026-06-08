@@ -38,7 +38,10 @@
       "description": "Which agent and model produced this trace.",
       "required": ["agent_name"],
       "properties": {
-        "agent_name": { "type": "string", "description": "Claude Code, Codex, OpenCode, Cursor, cli, course-engine, daily-letter-engine, etc." },
+        "agent_name": {
+          "type": "string",
+          "description": "Claude Code, Codex, OpenCode, Cursor, cli, course-engine, daily-letter-engine, etc."
+        },
         "agent_version": { "type": "string" },
         "model": { "type": "string", "description": "LLM model used for generation." },
         "model_config": {
@@ -64,7 +67,17 @@
           "version": { "type": "string" },
           "judgment_version": { "type": "string" },
           "digest": { "type": "string", "description": "Asset digest (sha256:hex)." },
-          "role": { "type": "string", "enum": ["primary", "advisor", "constraint", "risk_guard", "evaluator", "style_and_trust"] },
+          "role": {
+            "type": "string",
+            "enum": [
+              "primary",
+              "advisor",
+              "constraint",
+              "risk_guard",
+              "evaluator",
+              "style_and_trust"
+            ]
+          },
           "load_profile": { "type": "string", "enum": ["index", "compact", "scenario", "full"] },
           "source": { "type": "string", "enum": ["local", "registry", "private-registry"] }
         }
@@ -109,7 +122,10 @@
             "enum": ["operationalized", "referenced", "mentioned"],
             "description": "How deeply the axiom entered the agent's reasoning."
           },
-          "evidence": { "type": "string", "description": "Quote or summary showing where the axiom appeared in the output." }
+          "evidence": {
+            "type": "string",
+            "description": "Quote or summary showing where the axiom appeared in the output."
+          }
         }
       }
     },
@@ -175,7 +191,10 @@
         "type": "object",
         "required": ["type", "severity", "description"],
         "properties": {
-          "type": { "type": "string", "enum": ["banned_term_used", "boundary_crossed", "risk_triggered", "self_check_failed"] },
+          "type": {
+            "type": "string",
+            "enum": ["banned_term_used", "boundary_crossed", "risk_triggered", "self_check_failed"]
+          },
           "severity": { "type": "string", "enum": ["error", "warning", "info"] },
           "description": { "type": "string" },
           "domain": { "type": "string" }
@@ -186,11 +205,18 @@
       "type": "object",
       "description": "The final judgment produced by the agent.",
       "properties": {
-        "classification": { "type": "string", "description": "Situation type the agent classified the input as." },
+        "classification": {
+          "type": "string",
+          "description": "Situation type the agent classified the input as."
+        },
         "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
         "recommended_action": { "type": "string" },
         "reasoning_summary": { "type": "string" },
-        "missing_elements": { "type": "array", "items": { "type": "string" }, "description": "Information the agent identified as missing." }
+        "missing_elements": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Information the agent identified as missing."
+        }
       }
     },
     "artifact_refs": {
@@ -219,7 +245,10 @@
         "required": ["report_id"],
         "properties": {
           "report_id": { "type": "string" },
-          "report_type": { "type": "string", "enum": ["llm_critique", "fidelity", "deterministic", "human_review"] },
+          "report_type": {
+            "type": "string",
+            "enum": ["llm_critique", "fidelity", "deterministic", "human_review"]
+          },
           "overall_result": { "type": "string", "enum": ["pass", "fail", "conditional_pass"] },
           "score": { "type": "number" }
         }
@@ -231,7 +260,10 @@
       "properties": {
         "review_id": { "type": "string" },
         "reviewer_id": { "type": "string" },
-        "decision": { "type": "string", "enum": ["approved", "approved_with_changes", "rejected", "pending"] },
+        "decision": {
+          "type": "string",
+          "enum": ["approved", "approved_with_changes", "rejected", "pending"]
+        },
         "reviewed_at": { "type": "string", "format": "date-time" }
       }
     },
@@ -241,10 +273,22 @@
       "items": {
         "type": "object",
         "properties": {
-          "type": { "type": "string", "enum": ["value_conflict", "term_conflict", "risk_conflict", "stance_conflict", "framework_conflict"] },
+          "type": {
+            "type": "string",
+            "enum": [
+              "value_conflict",
+              "term_conflict",
+              "risk_conflict",
+              "stance_conflict",
+              "framework_conflict"
+            ]
+          },
           "description": { "type": "string" },
           "involved_domains": { "type": "array", "items": { "type": "string" } },
-          "resolution": { "type": "string", "enum": ["surfaced", "priority_wins", "risk_wins", "blocked", "asked_user"] }
+          "resolution": {
+            "type": "string",
+            "enum": ["surfaced", "priority_wins", "risk_wins", "blocked", "asked_user"]
+          }
         }
       }
     },

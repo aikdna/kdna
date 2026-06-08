@@ -64,11 +64,24 @@
         "properties": {
           "name": { "type": "string", "description": "Fully qualified domain name (@scope/name)." },
           "version": { "type": "string", "description": "Domain version at generation time." },
-          "judgment_version": { "type": "string", "description": "Domain judgment_version from kdna.json manifest." },
-          "digest": { "type": "string", "description": "Asset digest of the .kdna file loaded (sha256:hex)." },
+          "judgment_version": {
+            "type": "string",
+            "description": "Domain judgment_version from kdna.json manifest."
+          },
+          "digest": {
+            "type": "string",
+            "description": "Asset digest of the .kdna file loaded (sha256:hex)."
+          },
           "role": {
             "type": "string",
-            "enum": ["primary", "advisor", "constraint", "risk_guard", "evaluator", "style_and_trust"],
+            "enum": [
+              "primary",
+              "advisor",
+              "constraint",
+              "risk_guard",
+              "evaluator",
+              "style_and_trust"
+            ],
             "description": "Role this domain played in the generation stage."
           }
         }
@@ -100,7 +113,11 @@
         "stage_id": { "type": "string" },
         "stage_name": { "type": "string" },
         "stage_order": { "type": "integer", "minimum": 1 },
-        "stage_attempt": { "type": "integer", "minimum": 1, "description": "Which attempt of this stage produced this version (1-based)." },
+        "stage_attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Which attempt of this stage produced this version (1-based)."
+        },
         "stage_status": {
           "type": "string",
           "enum": ["running", "completed", "failed", "skipped"],
@@ -128,7 +145,10 @@
             "required": ["gate_id", "result"],
             "properties": {
               "gate_id": { "type": "string" },
-              "gate_type": { "type": "string", "description": "schema_validation, kdna_compliance, fidelity_check, human_review, llm_critique" },
+              "gate_type": {
+                "type": "string",
+                "description": "schema_validation, kdna_compliance, fidelity_check, human_review, llm_critique"
+              },
               "result": { "type": "string", "enum": ["pass", "fail", "warn", "skipped"] },
               "score": { "type": "number" },
               "evidence": { "type": "string" }
