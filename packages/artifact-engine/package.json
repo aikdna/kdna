@@ -1,5 +1,5 @@
 {
-  "name": "@kdna/artifact-engine",
+  "name": "@aikdna/kdna-artifact-engine",
   "version": "0.1.0",
   "description": "KDNA Artifact Engine — reference SDK for multi-stage KDNA-governed artifact generation pipelines",
   "type": "module",
