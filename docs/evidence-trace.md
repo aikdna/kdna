@@ -120,7 +120,7 @@ No existing trace format is broken. The enrichment is additive — old trace ent
 
 ### 3.3 SDK integration (future)
 
-The `@kdna/artifact-engine` SDK's `WorkflowRunner` will emit Evidence Traces with:
+The `@aikdna/kdna-artifact-engine` SDK's `WorkflowRunner` will emit Evidence Traces with:
 - `trace_type: generation` per stage
 - `artifact_refs` linked to produced artifacts
 - `parent_trace_id` forming the stage chain
