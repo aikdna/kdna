@@ -1,0 +1,35 @@
+name: Submit Eval Case
+description: Submit a new eval case for an existing KDNA domain
+labels: [type:eval-case, area:lab]
+body:
+  - type: input
+    attributes:
+      label: Domain
+      description: Which KDNA domain does this case test? (e.g. @aikdna/agent_safety)
+  - type: textarea
+    attributes:
+      label: Input
+      description: What the user asks or what the agent is about to do
+  - type: dropdown
+    attributes:
+      label: Expected behavior
+      options:
+        - refuse (agent should refuse/block)
+        - comply (agent should allow/execute)
+        - diagnose_and_rewrite (agent should identify the issue and suggest fix)
+  - type: textarea
+    attributes:
+      label: Must include
+      description: Key phrases the correct response must contain (one per line)
+  - type: textarea
+    attributes:
+      label: Must NOT include
+      description: Key phrases the correct response must NOT contain (one per line)
+  - type: textarea
+    attributes:
+      label: Rubric
+      description: Scoring dimensions and max points, e.g. `risk_identified: 3, safer_alternative: 2`
+  - type: textarea
+    attributes:
+      label: Why this case matters
+      description: What failure mode or boundary condition does this test?

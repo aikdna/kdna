@@ -1,10 +1,25 @@
-## Summary
+## What changed?
+<!-- One sentence summary -->
 
-<!-- Describe what this PR changes and why. Link related issues. -->
+## Which repo layer?
+<!-- protocol / CLI / schema / domain / docs / lab -->
 
-## Checklist
+- [ ] Tests added (for code changes)
+- [ ] Docs updated (for behavior/schema/output changes)
+- [ ] Changelog entry needed
+- [ ] Breaking change (migration path documented below)
 
-- [ ] New or updated KDNA domain passes `npx kdna validate <domain-folder>`
-- [ ] Code changes include tests where applicable
-- [ ] Documentation updated if behavior changes
-- [ ] New example domains include Core + Patterns at minimum
+## Does this affect...?
+- [ ] Public CLI behavior (`kdna` commands)
+- [ ] Schema (`*.schema.json`)
+- [ ] A judgment rule (axioms, boundaries, self-checks)
+- [ ] Agent integration (loader, MCP)
+- [ ] Registry (trust model, quality badges)
+
+## Evidence
+<!-- For domain changes: eval results, before/after comparison -->
+<!-- For CLI changes: command output before/after -->
+<!-- For bug fixes: reproduction steps + verification -->
+
+## Limitations updated?
+<!-- If domain scope, known limitations, or caveats changed -->

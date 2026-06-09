@@ -1,5 +1,9 @@
 # KDNA — The Open Judgment Standard for AI Agents
 
+> **New to KDNA? → [Start Here](./docs/start-here.md)**
+>
+> This repo is part of the [KDNA ecosystem](https://github.com/aikdna). KDNA helps AI agents judge by explicit human standards.
+
 > **Loading, composing, measuring, and trusting human judgment in agent workflows.**
 >
 > [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
