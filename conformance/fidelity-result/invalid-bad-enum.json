@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "fidelity_id": "fid_bad_enum_001",
+  "protocol_version": "1.0.0",
+  "target_artifact": {
+    "artifact_id": "art_bad_enum_001",
+    "artifact_type": "daily_letter"
+  },
+  "overall_score": 0.75,
+  "dimensions": [
+    {
+      "dimension_id": "bad_dim",
+      "dimension_name": "Bad Dimension",
+      "score": 1.5,
+      "weight": 1.0,
+      "evidence": [
+        {
+          "claim": "test",
+          "verdict": "not_a_real_verdict"
+        }
+      ]
+    }
+  ],
+  "per_axiom": [
+    {
+      "axiom_id": "ax_001",
+      "domain": "@example/test",
+      "score": 0.80,
+      "transfer_level": "not_a_real_level"
+    }
+  ],
+  "comparison": {
+    "conditions": [
+      {
+        "condition_id": "A",
+        "condition_type": "not_a_condition_type",
+        "score": 0.50
+      }
+    ],
+    "blind_delta": 0.10,
+    "blind_design": "not_a_design",
+    "evaluator_model": "test-model"
+  },
+  "completed_at": "2026-06-09T00:00:00Z"
+}

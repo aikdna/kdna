@@ -16,6 +16,7 @@
     "validate:protocol-fixtures": "node scripts/validate-protocol-fixtures.js",
     "test": "npm --workspace @aikdna/kdna-core test && npm --workspace @aikdna/kdna-eval test",
     "conformance": "node conformance/run.mjs",
+    "conformance:phase2": "node conformance/run.mjs --profile phase2-protocol",
     "certify:asset-loader": "node conformance/run.mjs --profile asset-loader",
     "test:registry-trust": "node tests/registry-trust/run.mjs",
     "smoke:installed-domains": "bash scripts/smoke-installed-domains.sh",

@@ -42,6 +42,7 @@ Profiles are intentionally explicit:
 | `asset-loader` | Combined asset + loader compatibility for SDKs and adapters. |
 | `runtime` | Runtime follows asset-first loading behavior. |
 | `registry` | Registry implementation preserves required metadata and trust checks. |
+| `phase2-protocol` | Implementation validates all Phase 2 RFC schema fixtures (artifact-envelope, fidelity-result, product-runtime, stage-definition). |
 
 Passing this suite is a technical compatibility signal. Public use of
 `Certified KDNA` marks still requires registry governance approval; see
@@ -77,3 +78,29 @@ compatible inspect/load output for the same fixtures.
 
 The last run writes a machine-readable summary to
 `$TMPDIR/kdna-conformance-last-run.json`.
+
+## Phase 2 Protocol Fixtures
+
+In addition to the `.kdna` asset conformance suite above, Phase 2 introduces
+static JSON fixtures for each RFC schema. These validate protocol artifact
+shapes independently of the asset loader.
+
+| Directory | Schema | Valid | Invalid |
+|-----------|--------|-------|---------|
+| `artifact-envelope/` | `artifact-envelope.schema.json` (RFC-0009) | valid-minimal, valid-full | missing-required, bad-enum, bad-linkage |
+| `fidelity-result/` | `fidelity-result.schema.json` (RFC-0010) | valid-minimal, valid-full | missing-required, bad-enum |
+| `product-runtime/` | `product-runtime.schema.json` (RFC-0011) | valid-minimal, valid-full | missing-required, bad-enum |
+| `stage-definition/` | `stage-definition.schema.json` (RFC-0009) | valid-minimal, valid-full | missing-required |
+
+Validate all Phase 2 fixtures with:
+
+```bash
+kdna protocol validate conformance/artifact-envelope/valid-minimal.json --schema artifact-envelope
+kdna protocol validate conformance/fidelity-result/valid-minimal.json --schema fidelity-result
+kdna protocol validate conformance/product-runtime/valid-minimal.json --schema product-runtime
+kdna protocol validate conformance/stage-definition/valid-minimal.json --schema stage-definition
+```
+
+Invalid fixtures should be rejected by their respective schemas. A
+third-party claiming KDNA Phase 2 compatibility must pass validation on all
+valid fixtures and correctly reject all invalid ones.

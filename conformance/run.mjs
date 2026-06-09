@@ -18,6 +18,8 @@ const {
   createPasswordDecryptEntry,
 } = require('../packages/kdna-core/src');
 
+import { runPhase2Conformance } from './phase2-protocol.mjs';
+
 const args = process.argv.slice(2);
 function argValue(name, fallback = null) {
   const prefixed = `${name}=`;
@@ -29,11 +31,16 @@ function argValue(name, fallback = null) {
 }
 
 const profile = argValue('--profile', 'asset-loader');
-const allowedProfiles = new Set(['asset', 'loader', 'runtime', 'registry', 'asset-loader']);
+const allowedProfiles = new Set(['asset', 'loader', 'runtime', 'registry', 'asset-loader', 'phase2-protocol']);
 if (!allowedProfiles.has(profile)) {
   console.error(`Unknown conformance profile: ${profile}`);
   console.error(`Allowed profiles: ${Array.from(allowedProfiles).join(', ')}`);
   process.exit(2);
+}
+
+if (profile === 'phase2-protocol') {
+  runPhase2Conformance();
+  process.exit(0);
 }
 
 const root = path.dirname(fileURLToPath(import.meta.url));
@@ -572,6 +579,7 @@ fs.writeFileSync(
         runtime: 'KDNA Runtime Compatible',
         registry: 'KDNA Registry Compatible',
         'asset-loader': 'KDNA Asset + Loader Compatible',
+        'phase2-protocol': 'KDNA Phase 2 Protocol Compatible',
       }[profile],
       generated,
       fixtures: Object.keys(fixtures),

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "stage_id": "minimal-stage",
+  "stage_name": "Minimal Stage",
+  "stage_order": 1,
+  "description": "A minimal pipeline stage for conformance testing.",
+  "produces_artifacts": [
+    { "artifact_type": "daily_letter" }
+  ]
+}

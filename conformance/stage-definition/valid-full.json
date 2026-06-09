@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "stage_id": "compile-course",
+  "stage_name": "Compile Course Package",
+  "stage_order": 3,
+  "description": "Compiles the final course package from upstream analysis and design artifacts.",
+  "requires_inputs": [
+    {
+      "ref_type": "artifact_type",
+      "artifact_type": "course_analysis",
+      "stage_id": "analyze-requirements",
+      "required": true
+    },
+    {
+      "ref_type": "artifact_id",
+      "artifact_id": "art_design_001",
+      "required": false
+    }
+  ],
+  "produces_artifacts": [
+    {
+      "artifact_type": "course_package",
+      "content_schema": "schemas/course-package.schema.json",
+      "is_final": true
+    },
+    {
+      "artifact_type": "sales_brief",
+      "content_schema": "schemas/sales-brief.schema.json",
+      "is_final": false
+    }
+  ],
+  "loaded_kdna": [
+    {
+      "name": "@aikdna/writing",
+      "version": "0.7.2",
+      "role": "primary",
+      "load_profile": "full"
+    },
+    {
+      "name": "@aikdna/agent_safety",
+      "version": "0.7.2",
+      "role": "risk_guard",
+      "load_profile": "compact"
+    }
+  ],
+  "quality_gates": [
+    {
+      "gate_id": "schema-valid",
+      "gate_type": "schema_validation",
+      "blocking": true,
+      "config": { "schema_path": "schemas/course-package.schema.json" }
+    },
+    {
+      "gate_id": "kdna-compliance",
+      "gate_type": "kdna_compliance",
+      "blocking": true
+    },
+    {
+      "gate_id": "fidelity-check",
+      "gate_type": "fidelity_check",
+      "blocking": false,
+      "config": { "protocol_version": "1.0.0", "min_score": 0.70 }
+    },
+    {
+      "gate_id": "human-review",
+      "gate_type": "human_review",
+      "blocking": true
+    }
+  ],
+  "depends_on": ["analyze-requirements", "design-course"],
+  "parallel_with": ["generate-sales-brief"],
+  "retry_policy": {
+    "max_attempts": 2,
+    "backoff": "exponential",
+    "on_final_failure": "block_pipeline"
+  },
+  "human_review_required": true
+}

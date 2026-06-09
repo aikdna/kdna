@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "fidelity_id": "fid_full_001",
+  "protocol_version": "1.0.0",
+  "target_artifact": {
+    "artifact_id": "art_full_001",
+    "artifact_type": "course_package",
+    "content_digest": "sha256:c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2",
+    "generator": {
+      "engine": "course-engine",
+      "version": "1.2.0"
+    }
+  },
+  "source_kdna": [
+    {
+      "name": "@aikdna/writing",
+      "version": "0.7.2",
+      "role": "primary"
+    },
+    {
+      "name": "@aikdna/agent_safety",
+      "version": "0.7.2",
+      "role": "risk_guard"
+    }
+  ],
+  "overall_score": 0.88,
+  "pass_threshold": 0.70,
+  "passed": true,
+  "dimensions": [
+    {
+      "dimension_id": "judgment_activation",
+      "dimension_name": "Judgment Activation",
+      "score": 0.90,
+      "weight": 0.35,
+      "evidence": [
+        {
+          "claim": "Axioms triggered in generation trace",
+          "verdict": "confirmed",
+          "detail": "All 3 axioms detected in trace"
+        }
+      ]
+    },
+    {
+      "dimension_id": "judgment_differentiation",
+      "dimension_name": "Judgment Differentiation",
+      "score": 0.85,
+      "weight": 0.35,
+      "evidence": [
+        {
+          "claim": "KDNA output differs from best_prompt",
+          "verdict": "confirmed",
+          "detail": "Blind evaluator identified difference in 5/5 tasks"
+        }
+      ]
+    },
+    {
+      "dimension_id": "judgment_artifact_presence",
+      "dimension_name": "Artifact Presence",
+      "score": 0.89,
+      "weight": 0.30,
+      "evidence": [
+        {
+          "claim": "Banned terms avoided in artifact",
+          "verdict": "confirmed",
+          "detail": "No banned terms detected in final output"
+        }
+      ],
+      "threshold": 0.60
+    }
+  ],
+  "per_axiom": [
+    {
+      "axiom_id": "diagnose_before_polish",
+      "domain": "@aikdna/writing",
+      "score": 0.92,
+      "transfer_level": "operationalized",
+      "evidence": "Artifact opens with diagnosis section before any prescriptive content"
+    },
+    {
+      "axiom_id": "audience_before_prose",
+      "domain": "@aikdna/writing",
+      "score": 0.84,
+      "transfer_level": "operationalized",
+      "evidence": "Audience analysis present before prose recommendations"
+    },
+    {
+      "axiom_id": "evidence_density_matters",
+      "domain": "@aikdna/writing",
+      "score": 0.79,
+      "transfer_level": "referenced",
+      "evidence": "Each claim cites specific content evidence"
+    }
+  ],
+  "comparison": {
+    "conditions": [
+      {
+        "condition_id": "A",
+        "condition_type": "no_kdna",
+        "model": "claude-sonnet-4-5",
+        "score": 0.35
+      },
+      {
+        "condition_id": "B",
+        "condition_type": "best_prompt",
+        "model": "claude-sonnet-4-5",
+        "score": 0.62
+      },
+      {
+        "condition_id": "C",
+        "condition_type": "kdna_loaded",
+        "model": "claude-sonnet-4-5",
+        "score": 0.88,
+        "judgment_delta": 0.53
+      }
+    ],
+    "blind_delta": 0.26,
+    "blind_design": "a_b_c_shuffled",
+    "evaluator_model": "gpt-4o",
+    "evaluator_rubric": "Rate each output on: (1) diagnostic depth, (2) structural awareness, (3) evidence orientation."
+  },
+  "calibration": {
+    "positive_anchor": {
+      "expected_score_min": 0.80,
+      "actual_score": 0.88,
+      "passed": true
+    },
+    "negative_anchor": {
+      "expected_score_max": 0.30,
+      "actual_score": 0.15,
+      "passed": true
+    },
+    "calibration_valid": true
+  },
+  "cross_model": [
+    { "model": "claude-sonnet-4-5", "score": 0.88 },
+    { "model": "gpt-4o", "score": 0.85 },
+    { "model": "gemini-2.5-pro", "score": 0.83 }
+  ],
+  "cross_model_variance": 0.025,
+  "tasks": [
+    {
+      "task_id": "task_core_001",
+      "task_type": "core_scenario",
+      "input_summary": "Review an article with weak argument structure",
+      "expected_axioms": ["diagnose_before_polish", "audience_before_prose"],
+      "task_score": 0.88
+    },
+    {
+      "task_id": "task_boundary_001",
+      "task_type": "boundary_scenario",
+      "input_summary": "Grammar-only check request",
+      "expected_misunderstandings_avoided": ["polish_is_sufficient"],
+      "task_score": 0.85
+    },
+    {
+      "task_id": "task_novel_001",
+      "task_type": "novel_scenario",
+      "input_summary": "Technical documentation with structural issues",
+      "task_score": 0.90
+    }
+  ],
+  "trace_refs": [
+    { "trace_id": "trace_route_001", "trace_type": "route" },
+    { "trace_id": "trace_generation_001", "trace_type": "generation" }
+  ],
+  "warnings": [],
+  "completed_at": "2026-06-09T10:35:00Z",
+  "measurement_duration_ms": 3420,
+  "evaluator": {
+    "engine": "fidelity-engine",
+    "version": "0.1.0"
+  }
+}

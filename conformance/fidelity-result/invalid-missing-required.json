@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "protocol_version": "1.0.0",
+  "target_artifact": {
+    "artifact_type": "daily_letter"
+  },
+  "overall_score": 0.75,
+  "dimensions": [],
+  "completed_at": "2026-06-09T00:00:00Z"
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "format": "kdna-product-runtime",
+  "format_version": "0.1",
+  "name": "minimal-coach",
+  "version": "0.1.0",
+  "description": "A minimal coaching product runtime for conformance testing.",
+  "schedule": {
+    "type": "cron",
+    "cron": "0 9 * * *",
+    "timezone": "UTC",
+    "skip_policy": "skip",
+    "max_backlog": 1
+  },
+  "selection": {
+    "type": "fixed",
+    "domain_pool": [
+      { "name": "@aikdna/writing", "version": "0.7.2", "role": "primary" }
+    ],
+    "artifact_type": "daily_letter"
+  },
+  "generation": {
+    "engine": "daily-letter-engine",
+    "engine_version": "0.1.0",
+    "artifact_type": "daily_letter",
+    "kdna_load_profile": "full",
+    "max_generation_attempts": 1
+  },
+  "delivery": {
+    "type": "email",
+    "template": "daily-letter-template"
+  }
+}

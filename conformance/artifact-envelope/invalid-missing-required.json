@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "artifact_type": "daily_letter",
+  "created_at": "2026-06-09T00:00:00Z",
+  "generator": {
+    "engine": "test-engine"
+  },
+  "source_kdna": [],
+  "content_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+}

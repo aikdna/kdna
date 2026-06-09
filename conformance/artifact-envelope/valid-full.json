@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "artifact_id": "art_full_001",
+  "artifact_type": "course_package",
+  "schema_version": "1.0.0",
+  "content_schema_version": "0.2.0",
+  "created_at": "2026-06-09T10:30:00Z",
+  "generator": {
+    "engine": "course-engine",
+    "version": "1.2.0",
+    "run_id": "run_001"
+  },
+  "source_kdna": [
+    {
+      "name": "@aikdna/writing",
+      "version": "0.7.2",
+      "judgment_version": "2026.05",
+      "digest": "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+      "role": "primary"
+    },
+    {
+      "name": "@aikdna/agent_safety",
+      "version": "0.7.2",
+      "role": "risk_guard"
+    }
+  ],
+  "source_artifacts": [
+    {
+      "artifact_id": "art_template_001",
+      "artifact_type": "course_template",
+      "content_digest": "sha256:b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2",
+      "relationship": "template"
+    }
+  ],
+  "stage": {
+    "stage_id": "compile-course",
+    "stage_name": "Compile Course Package",
+    "stage_order": 3,
+    "stage_attempt": 1,
+    "stage_status": "completed"
+  },
+  "content": {
+    "title": "Introduction to Domain Judgment",
+    "modules": [
+      { "title": "What is KDNA", "lessons": 3 },
+      { "title": "First Domain", "lessons": 5 }
+    ],
+    "total_lessons": 8
+  },
+  "content_digest": "sha256:c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2",
+  "quality": {
+    "gate_results": [
+      { "gate_id": "schema_valid", "gate_type": "schema_validation", "result": "pass" },
+      { "gate_id": "axioms_applied", "gate_type": "kdna_compliance", "result": "pass", "score": 0.95 },
+      { "gate_id": "fidelity_check", "gate_type": "fidelity_check", "result": "pass", "score": 0.88 },
+      { "gate_id": "human_reviewed", "gate_type": "human_review", "result": "pass" }
+    ],
+    "overall_result": "pass",
+    "fidelity": {
+      "score": 0.88,
+      "protocol_version": "1.0.0",
+      "report_artifact_id": "fid_full_001"
+    }
+  },
+  "trace_refs": [
+    { "trace_id": "trace_route_001", "trace_type": "route" },
+    { "trace_id": "trace_generation_001", "trace_type": "generation" },
+    { "trace_id": "trace_postvalidate_001", "trace_type": "postvalidate" },
+    { "trace_id": "trace_fidelity_001", "trace_type": "fidelity" }
+  ],
+  "review": {
+    "status": "approved",
+    "reviewed_by": "expert-reviewer-001",
+    "reviewed_at": "2026-06-09T11:00:00Z",
+    "review_notes": "All axioms applied correctly. Fidelity score 0.88 above threshold."
+  },
+  "metadata": {
+    "tags": ["courseware", "kdna-intro", "validated"],
+    "environment": "production"
+  }
+}
