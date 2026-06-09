@@ -14,9 +14,7 @@
   },
   "selection": {
     "type": "fixed",
-    "domain_pool": [
-      { "name": "@aikdna/writing", "version": "0.7.2", "role": "primary" }
-    ],
+    "domain_pool": [{ "name": "@aikdna/writing", "version": "0.7.2", "role": "primary" }],
     "artifact_type": "daily_letter"
   },
   "generation": {

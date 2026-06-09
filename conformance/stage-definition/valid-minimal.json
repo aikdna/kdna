@@ -4,7 +4,5 @@
   "stage_name": "Minimal Stage",
   "stage_order": 1,
   "description": "A minimal pipeline stage for conformance testing.",
-  "produces_artifacts": [
-    { "artifact_type": "daily_letter" }
-  ]
+  "produces_artifacts": [{ "artifact_type": "daily_letter" }]
 }

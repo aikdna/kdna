@@ -25,7 +25,7 @@
     {
       "axiom_id": "ax_001",
       "domain": "@example/test",
-      "score": 0.80,
+      "score": 0.8,
       "transfer_level": "not_a_real_level"
     }
   ],
@@ -34,10 +34,10 @@
       {
         "condition_id": "A",
         "condition_type": "not_a_condition_type",
-        "score": 0.50
+        "score": 0.5
       }
     ],
-    "blind_delta": 0.10,
+    "blind_delta": 0.1,
     "blind_design": "not_a_design",
     "evaluator_model": "test-model"
   },

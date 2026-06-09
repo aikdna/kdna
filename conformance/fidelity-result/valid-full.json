@@ -24,13 +24,13 @@
     }
   ],
   "overall_score": 0.88,
-  "pass_threshold": 0.70,
+  "pass_threshold": 0.7,
   "passed": true,
   "dimensions": [
     {
       "dimension_id": "judgment_activation",
       "dimension_name": "Judgment Activation",
-      "score": 0.90,
+      "score": 0.9,
       "weight": 0.35,
       "evidence": [
         {
@@ -57,7 +57,7 @@
       "dimension_id": "judgment_artifact_presence",
       "dimension_name": "Artifact Presence",
       "score": 0.89,
-      "weight": 0.30,
+      "weight": 0.3,
       "evidence": [
         {
           "claim": "Banned terms avoided in artifact",
@@ -65,7 +65,7 @@
           "detail": "No banned terms detected in final output"
         }
       ],
-      "threshold": 0.60
+      "threshold": 0.6
     }
   ],
   "per_axiom": [
@@ -120,12 +120,12 @@
   },
   "calibration": {
     "positive_anchor": {
-      "expected_score_min": 0.80,
+      "expected_score_min": 0.8,
       "actual_score": 0.88,
       "passed": true
     },
     "negative_anchor": {
-      "expected_score_max": 0.30,
+      "expected_score_max": 0.3,
       "actual_score": 0.15,
       "passed": true
     },
@@ -156,7 +156,7 @@
       "task_id": "task_novel_001",
       "task_type": "novel_scenario",
       "input_summary": "Technical documentation with structural issues",
-      "task_score": 0.90
+      "task_score": 0.9
     }
   ],
   "trace_refs": [

@@ -11,17 +11,13 @@
   },
   "selection": {
     "type": "not_a_valid_selection_type",
-    "domain_pool": [
-      { "name": "@example/test", "role": "not_a_valid_role" }
-    ],
+    "domain_pool": [{ "name": "@example/test", "role": "not_a_valid_role" }],
     "artifact_type": "test"
   },
   "generation": {
     "engine": "test",
     "artifact_type": "test",
-    "quality_gates": [
-      { "gate_type": "not_a_gate_type", "blocking": true }
-    ],
+    "quality_gates": [{ "gate_type": "not_a_gate_type", "blocking": true }],
     "kdna_load_profile": "not_a_profile"
   },
   "delivery": {

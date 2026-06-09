@@ -59,7 +59,7 @@
       "gate_id": "fidelity-check",
       "gate_type": "fidelity_check",
       "blocking": false,
-      "config": { "protocol_version": "1.0.0", "min_score": 0.70 }
+      "config": { "protocol_version": "1.0.0", "min_score": 0.7 }
     },
     {
       "gate_id": "human-review",
