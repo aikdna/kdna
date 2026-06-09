@@ -51,8 +51,18 @@
   "quality": {
     "gate_results": [
       { "gate_id": "schema_valid", "gate_type": "schema_validation", "result": "pass" },
-      { "gate_id": "axioms_applied", "gate_type": "kdna_compliance", "result": "pass", "score": 0.95 },
-      { "gate_id": "fidelity_check", "gate_type": "fidelity_check", "result": "pass", "score": 0.88 },
+      {
+        "gate_id": "axioms_applied",
+        "gate_type": "kdna_compliance",
+        "result": "pass",
+        "score": 0.95
+      },
+      {
+        "gate_id": "fidelity_check",
+        "gate_type": "fidelity_check",
+        "result": "pass",
+        "score": 0.88
+      },
       { "gate_id": "human_reviewed", "gate_type": "human_review", "result": "pass" }
     ],
     "overall_result": "pass",

@@ -31,7 +31,14 @@ function argValue(name, fallback = null) {
 }
 
 const profile = argValue('--profile', 'asset-loader');
-const allowedProfiles = new Set(['asset', 'loader', 'runtime', 'registry', 'asset-loader', 'phase2-protocol']);
+const allowedProfiles = new Set([
+  'asset',
+  'loader',
+  'runtime',
+  'registry',
+  'asset-loader',
+  'phase2-protocol',
+]);
 if (!allowedProfiles.has(profile)) {
   console.error(`Unknown conformance profile: ${profile}`);
   console.error(`Allowed profiles: ${Array.from(allowedProfiles).join(', ')}`);

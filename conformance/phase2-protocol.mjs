@@ -38,7 +38,11 @@ function validateFixture(schemaName, fixturePath, expectValid) {
   const label = `${schemaName}/${fixtureName}`;
 
   if (expectValid) {
-    assert.equal(valid, true, `${label}: expected valid but got errors:\n${ajv.errorsText(validate.errors)}`);
+    assert.equal(
+      valid,
+      true,
+      `${label}: expected valid but got errors:\n${ajv.errorsText(validate.errors)}`,
+    );
   } else {
     assert.equal(valid, false, `${label}: expected invalid but passed validation`);
   }
@@ -53,14 +57,22 @@ export function runPhase2Conformance() {
   // Artifact Envelope (RFC-0009)
   validateFixture('artifact-envelope', path.join(artifactsDir, 'valid-minimal.json'), true);
   validateFixture('artifact-envelope', path.join(artifactsDir, 'valid-full.json'), true);
-  validateFixture('artifact-envelope', path.join(artifactsDir, 'invalid-missing-required.json'), false);
+  validateFixture(
+    'artifact-envelope',
+    path.join(artifactsDir, 'invalid-missing-required.json'),
+    false,
+  );
   validateFixture('artifact-envelope', path.join(artifactsDir, 'invalid-bad-enum.json'), false);
   validateFixture('artifact-envelope', path.join(artifactsDir, 'invalid-bad-linkage.json'), false);
 
   // Fidelity Result (RFC-0010)
   validateFixture('fidelity-result', path.join(fidelityDir, 'valid-minimal.json'), true);
   validateFixture('fidelity-result', path.join(fidelityDir, 'valid-full.json'), true);
-  validateFixture('fidelity-result', path.join(fidelityDir, 'invalid-missing-required.json'), false);
+  validateFixture(
+    'fidelity-result',
+    path.join(fidelityDir, 'invalid-missing-required.json'),
+    false,
+  );
   validateFixture('fidelity-result', path.join(fidelityDir, 'invalid-bad-enum.json'), false);
 
   // Product Runtime (RFC-0011)
