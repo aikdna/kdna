@@ -181,11 +181,11 @@ Validate every output file against its declared schema:
 | 6. Documentation | Consistent | ✅ (9/10 verified, STATE_OF_KDNA date updated) |
 | 7. CLI commands | Working | ✅ (all validate/inspect + 16 fixtures + E2E) |
 | 8. Version alignment | Correct | ✅ (all 7 checks pass) |
-| 9. Tag & release | Published | 🟡 (pending: tag + npm publish) |
+| 9. Tag & release | Published | ✅ (v0.9.0 tagged, all 4 packages on npm) |
 
-**v0.9.0 release readiness: 56/63 items verified (89%).**
+**v0.9.0 release: 59/63 verified (94%).** All release-critical items pass.
 
-Remaining: tag v0.9.0, publish 4 npm packages, and Epic 4 domain evidence.
+Remaining non-blocking: Epic 4 domain evidence (3 domains → validated with 30+ evals each).
 
 ---
 
