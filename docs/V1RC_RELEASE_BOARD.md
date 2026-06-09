@@ -205,7 +205,7 @@ Before tagging `v1.0-rc`:
 | `@aikdna/kdna-studio-core` | 1.4.2 | 1.4.x (compatible) |
 | `@aikdna/kdna-studio-cli` | 0.2.0 | 0.2.x (compatible) |
 | `kdna-core-swift` | main | 0.3.0 |
-| Registry schema | 3.0 | ✅ Current |
+| Registry schema | 3.1.0 | ✅ Current |
 
 ---
 
