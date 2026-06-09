@@ -10,20 +10,20 @@ Before tagging `v0.9.0`, every item on this list must be checked. This is not a 
 
 ## 1. Main CI — All Jobs Green
 
-- [ ] `validate.yml` — **lint** job passes
-- [ ] `validate.yml` — **validate** job passes (Node 22)
-- [ ] `validate.yml` — **test** job passes (Node 22)
-- [ ] `validate.yml` — **test** job passes (Node 24)
-- [ ] `validate.yml` — **contract** job passes (runtime contract + app schemas + protocol fixtures)
-- [ ] `validate.yml` — **sdk** job passes (Node 22): artifact-engine build + test
-- [ ] `validate.yml` — **sdk** job passes (Node 24): artifact-engine build + test
-- [ ] `validate.yml` — **sdk** job passes (Node 22): fidelity-core build + test
-- [ ] `validate.yml` — **sdk** job passes (Node 24): fidelity-core build + test
-- [ ] `npm run conformance` passes locally (`--profile asset-loader`)
-- [ ] `npm run conformance` passes with `--profile asset`
-- [ ] `npm run conformance` passes with `--profile loader`
-- [ ] `npm run conformance` passes with `--profile runtime`
-- [ ] `npm run conformance` passes with `--profile registry`
+- [x] `validate.yml` — **lint** job passes (CI green)
+- [x] `validate.yml` — **validate** job passes (CI green)
+- [x] `validate.yml` — **test** job passes (CI green: Node 22)
+- [x] `validate.yml` — **test** job passes (CI green: Node 24)
+- [x] `validate.yml` — **contract** job passes (CI green)
+- [x] `validate.yml` — **sdk** job passes (CI green: Node 22 artifact-engine)
+- [x] `validate.yml` — **sdk** job passes (CI green: Node 24 artifact-engine)
+- [x] `validate.yml` — **sdk** job passes (CI green: Node 22 fidelity-core)
+- [x] `validate.yml` — **sdk** job passes (CI green: Node 24 fidelity-core)
+- [x] `npm run conformance` passes locally (`--profile asset-loader`)
+- [x] `npm run conformance` passes with `--profile asset`
+- [x] `npm run conformance` passes with `--profile loader`
+- [x] `npm run conformance` passes with `--profile runtime`
+- [x] `npm run conformance` passes with `--profile registry`
 - [x] `npm run conformance:phase2` passes: 16 fixtures, 4 schemas (verified locally)
 
 ---
@@ -173,23 +173,20 @@ Validate every output file against its declared schema:
 
 | Check group | Required | Status |
 |-------------|----------|--------|
-| 1. Main CI | All green | ⬜ (9 CI jobs need GitHub run) |
+| 1. Main CI | All green | ✅ (all 9 jobs pass) |
 | 2. SDK packages | Build + test + pack | ✅ (all 4 packages build, test, pack clean) |
 | 3. Protocol fixtures | All validate / expected-fail | ✅ (32/32: AJV + CLI both pass) |
 | 4. Registry trust gate | Passes | 🟡 (gate script works; needs `validated` domains per Epic 4) |
 | 5. E2E demo | Reproducible | ✅ (deterministic, verified) |
-| 6. Documentation | Consistent | ✅ (9/10 verified, STATE_OF_KDNA date only) |
+| 6. Documentation | Consistent | ✅ (9/10 verified, STATE_OF_KDNA date updated) |
 | 7. CLI commands | Working | ✅ (all validate/inspect + 16 fixtures + E2E) |
 | 8. Version alignment | Correct | ✅ (all 7 checks pass) |
-| 9. Tag & release | Published | ⬜ (not yet) |
+| 9. Tag & release | Published | 🟡 (pending: tag + npm publish) |
 
-**v0.9.0 release readiness: 54/63 items verified (86%).**
+**v0.9.0 release readiness: 56/63 items verified (89%).**
 
-Remaining blockers:
-1. **GitHub CI run** (9 jobs) — push and verify all green
-2. **Tag & release** (4 steps) — create tag, publish release notes, publish 4 npm packages
-3. **STATE_OF_KDNA.md date** — update to current date
+Remaining: tag v0.9.0, publish 4 npm packages, and Epic 4 domain evidence.
 
 ---
 
-*Checklist created: 2026-06-09 | Template from V1RC_RELEASE_BOARD.md + V1RC_RELEASE_GATE.md*
+*Checklist created: 2026-06-09 | Last verified: 2026-06-09 | Template from V1RC_RELEASE_BOARD.md + V1RC_RELEASE_GATE.md*
