@@ -42,6 +42,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run conformance
+      - run: npm run conformance:phase2
 
   contract:
     runs-on: ubuntu-latest

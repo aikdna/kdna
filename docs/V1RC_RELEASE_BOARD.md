@@ -209,4 +209,13 @@ Before tagging `v1.0-rc`:
 
 ---
 
-*Board created: 2026-06-01 | Last updated: 2026-06-01*
+---
+
+## Related
+
+- [RELEASE_CHECKLIST_0.9.0.md](../RELEASE_CHECKLIST_0.9.0.md) — mechanical hardening checklist for the v0.9.0 Phase 2 release
+- [V1RC_RELEASE_GATE.md](./V1RC_RELEASE_GATE.md) — release order and non-negotiable v1.0 rules
+
+---
+
+*Board created: 2026-06-01 | Last updated: 2026-06-09*

@@ -1,6 +1,6 @@
 # State of KDNA
 
-Date: 2026-06-03
+Date: 2026-06-09
 
 KDNA is the open judgment asset protocol for AI agents. It is not another prompt format. A `.kdna` asset is a verifiable, signed, inspectable domain judgment asset that an agent can load before it acts.
 

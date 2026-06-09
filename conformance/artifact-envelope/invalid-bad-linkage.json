@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "artifact_id": "art_bad_linkage_001",
+  "artifact_type": "assessment_report",
+  "schema_version": "1.0.0",
+  "created_at": "2026-06-09T00:00:00Z",
+  "generator": {
+    "engine": "test-engine",
+    "version": "0.1.0"
+  },
+  "source_kdna": [
+    {
+      "name": "@example/bad-linkage",
+      "version": "0.1.0",
+      "role": "primary"
+    }
+  ],
+  "source_artifacts": [
+    {
+      "artifact_id": "art_upstream_001",
+      "relationship": "not_a_valid_relationship"
+    }
+  ],
+  "stage": {
+    "stage_id": "bad-stage",
+    "stage_order": 1,
+    "stage_status": "unknown_status"
+  },
+  "content_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "quality": {
+    "gate_results": [
+      {
+        "gate_id": "bad-gate",
+        "result": "not_a_valid_result"
+      }
+    ],
+    "overall_result": "not_valid"
+  },
+  "review": {
+    "status": "not_a_valid_status"
+  },
+  "metadata": {
+    "environment": "not_valid_env"
+  }
+}

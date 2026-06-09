@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "format": "kdna-product-runtime",
+  "format_version": "0.1",
+  "name": "bad-enum-runtime",
+  "version": "0.1.0",
+  "schedule": {
+    "type": "not_a_valid_schedule_type",
+    "skip_policy": "not_a_valid_policy",
+    "max_backlog": 1
+  },
+  "selection": {
+    "type": "not_a_valid_selection_type",
+    "domain_pool": [
+      { "name": "@example/test", "role": "not_a_valid_role" }
+    ],
+    "artifact_type": "test"
+  },
+  "generation": {
+    "engine": "test",
+    "artifact_type": "test",
+    "quality_gates": [
+      { "gate_type": "not_a_gate_type", "blocking": true }
+    ],
+    "kdna_load_profile": "not_a_profile"
+  },
+  "delivery": {
+    "type": "not_a_channel"
+  },
+  "observation": {
+    "sources": ["not_a_source"]
+  },
+  "adaptation": {
+    "adaptation_rules": [
+      {
+        "signal_type": "test",
+        "condition": "always",
+        "action": "not_a_valid_action"
+      }
+    ]
+  }
+}

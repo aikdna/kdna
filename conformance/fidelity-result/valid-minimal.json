@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "fidelity_id": "fid_minimal_001",
+  "protocol_version": "1.0.0",
+  "target_artifact": {
+    "artifact_id": "art_minimal_001",
+    "artifact_type": "daily_letter"
+  },
+  "overall_score": 0.75,
+  "dimensions": [
+    {
+      "dimension_id": "judgment_activation",
+      "dimension_name": "Judgment Activation",
+      "score": 0.80,
+      "weight": 0.34
+    },
+    {
+      "dimension_id": "judgment_differentiation",
+      "dimension_name": "Judgment Differentiation",
+      "score": 0.72,
+      "weight": 0.33
+    },
+    {
+      "dimension_id": "judgment_artifact_presence",
+      "dimension_name": "Artifact Presence",
+      "score": 0.73,
+      "weight": 0.33
+    }
+  ],
+  "completed_at": "2026-06-09T00:00:00Z"
+}

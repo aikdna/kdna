@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "artifact_id": "art_minimal_001",
+  "artifact_type": "daily_letter",
+  "schema_version": "1.0.0",
+  "created_at": "2026-06-09T00:00:00Z",
+  "generator": {
+    "engine": "test-engine",
+    "version": "0.1.0"
+  },
+  "source_kdna": [
+    {
+      "name": "@example/minimal",
+      "version": "0.1.0",
+      "role": "primary"
+    }
+  ],
+  "content_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+}

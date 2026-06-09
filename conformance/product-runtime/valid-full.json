@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "format": "kdna-product-runtime",
+  "format_version": "0.1",
+  "name": "full-wellness-tracker",
+  "version": "0.2.0",
+  "description": "A full-featured wellness tracking product runtime with observation and adaptation.",
+  "schedule": {
+    "type": "cron",
+    "cron": "0 8 * * 1-5",
+    "timezone": "America/New_York",
+    "skip_policy": "generate_immediately",
+    "max_backlog": 3
+  },
+  "selection": {
+    "type": "context_aware",
+    "domain_pool": [
+      { "name": "@aikdna/writing", "version": "0.7.2", "role": "primary" },
+      { "name": "@aikdna/agent_safety", "version": "0.7.2", "role": "risk_guard" }
+    ],
+    "rotation": "adaptive",
+    "context_signals": ["user_mood", "recent_engagement", "time_of_day"],
+    "artifact_type": "wellness_checkin",
+    "user_state_path": "/user/state/preferences.json"
+  },
+  "generation": {
+    "engine": "wellness-engine",
+    "engine_version": "0.2.0",
+    "artifact_type": "wellness_checkin",
+    "template": "wellness-checkin-v2",
+    "quality_gates": [
+      { "gate_type": "schema_validation", "blocking": true },
+      { "gate_type": "kdna_compliance", "blocking": true },
+      { "gate_type": "fidelity_check", "blocking": false },
+      { "gate_type": "human_review", "blocking": false }
+    ],
+    "kdna_load_profile": "full",
+    "max_generation_attempts": 2
+  },
+  "delivery": {
+    "type": "push_notification",
+    "template": "wellness-push-v2",
+    "metadata": {
+      "priority": "high",
+      "category": "wellness"
+    }
+  },
+  "observation": {
+    "sources": ["user_reply", "completion_rate", "explicit_feedback"],
+    "signal_mapping": [
+      {
+        "source": "user_reply",
+        "extract": "sentiment_analysis",
+        "maps_to": "user_mood"
+      },
+      {
+        "source": "completion_rate",
+        "extract": "percentage_completed",
+        "maps_to": "engagement_score"
+      }
+    ],
+    "kdna_for_observation": "@aikdna/writing"
+  },
+  "adaptation": {
+    "enabled": true,
+    "max_adaptation_depth": 5,
+    "adaptation_rules": [
+      {
+        "signal_type": "user_mood",
+        "condition": "mood < 0.3",
+        "action": "adjust_tone",
+        "params": { "tone": "gentle" }
+      },
+      {
+        "signal_type": "engagement_score",
+        "condition": "engagement < 0.2",
+        "action": "simplify",
+        "params": { "level": "basic" }
+      }
+    ],
+    "human_lock_required": true
+  },
+  "trace": {
+    "enabled": true,
+    "record_observations": true,
+    "record_adaptations": true
+  }
+}
