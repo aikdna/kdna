@@ -1,108 +1,95 @@
 # Contributing to KDNA
 
-This repository is the KDNA protocol specification. You can contribute at multiple levels.
+KDNA is an open judgment protocol. Contributions can be:
 
-## Prerequisites
+- **Eval cases** — test whether a domain's judgment actually transfers
+- **Domain proposals** — new judgment domains (start as experimental)
+- **Bug reports** — CLI, loader, conformance, or schema issues
+- **Docs / tutorials** — make the public path clearer
+- **Agent integrations** — adapters for new agent runtimes
 
-- **Node.js >= 18** (check: `node --version`)
-- **npm** (comes with Node.js)
-- **Python 3** (needed for `.kdna` ZIP packaging; check: `python3 --version`)
-- **Git** (for submitting PRs)
+## Before You Start
 
-### Developer Setup
+1. Read [Start Here](./docs/start-here.md)
+2. Read [State of KDNA](./STATE_OF_KDNA.md) — what's stable, what's not
+3. Check [open issues](https://github.com/aikdna/kdna/issues) — especially `good-first-kdna`
+
+## Quick Path
 
 ```bash
 git clone https://github.com/aikdna/kdna.git
-cd KDNA
-npm install
-npm test         # kdna-core unit tests
+cd kdna
+npm ci
+npm test                 # 16 kdna-core tests + 31 kdna-eval tests
+npm run conformance       # .kdna asset conformance
+npm run conformance:phase2 # Phase 2 protocol conformance
 ```
 
-For CLI development, see the [kdna-cli](https://github.com/aikdna/kdna-cli) repository.
+All tests must pass before submitting a PR.
 
-### Available Scripts
+## What Goes Where
 
-| Script | Purpose |
-|--------|---------|
-| `npm test` | Run kdna-core test suite |
-| `npm run lint` | ESLint code quality check |
-| `npm run format:check` | Prettier format validation |
-| `npm run lint:examples` | Validate example domains via kdna-lint |
-| `npm run validate:examples` | Schema-validate example domains |
+| If you're contributing... | Go to this repo |
+|---------------------------|----------------|
+| Protocol spec, schemas, conformance | `aikdna/kdna` (this repo) |
+| CLI features or fixes | `aikdna/kdna-cli` |
+| Agent loader adapters | `aikdna/kdna-skills` |
+| Domain authoring tools | `aikdna/kdna-studio-cli` |
+| Registry, trust gates | `aikdna/kdna-registry` |
+| Eval cases, benchmark runner | `aikdna/kdna-lab` |
+| Work Pack definitions | `aikdna/kdna-workpack` |
+| New domain | `aikdna/kdna-<domain>` |
 
-## Contribution Types
+## PR Requirements
 
-### 1. Protocol Contribution
-Improve the KDNA specification, schema, validators, CLI, loader, skills, or documentation.
+Every PR must include:
 
-**Scope:** SPEC.md, schema/*, packages/kdna-core/*, docs/*
+- [ ] **What changed** — one sentence summary
+- [ ] **Which repo layer** — protocol / CLI / schema / docs / domain
+- [ ] **Tests added** — for code changes
+- [ ] **Docs updated** — if behavior, schema, or command output changes
+- [ ] **Changelog-worthy** — if yes, note what to add
+- [ ] **Breaking change** — if yes, migration path documented
 
-### 2. Judgment Pattern Contribution
-Submit a reusable judgment pattern — the smallest unit of KDNA.
+For protocol/schema changes: conformance fixtures must be updated.
+For CLI changes: help text, README, and JSON contract must be updated.
+For domain changes: evals, limitations, and version must be updated.
 
-**Template:**
-```
-Pattern ID: (e.g., discussion-vs-decision)
-Surface Signal: (what the user says or what data shows)
-Common Misread: (how ordinary AI gets this wrong)
-Expert Frame: (how an expert re-interprets the signal)
-Diagnostic Questions: (what to ask before acting)
-Decision Boundary: (when to classify as unresolved)
-Action Implication: (what follows from the judgment)
-Positive Cases: (at least 2 examples where the pattern works)
-Negative Cases: (at least 1 example where the pattern should NOT trigger)
-```
+## Issue Labels
 
-**Submit to:** `benchmarks/judgment-benchmark.json` via PR
+| Label | Meaning |
+|-------|---------|
+| `area:protocol` | SPEC, schemas, conformance |
+| `area:cli` | kdna-cli runtime commands |
+| `area:skills` | Agent loader adapters |
+| `area:studio` | Authoring tools |
+| `area:registry` | Trust catalog, distribution |
+| `area:lab` | Benchmarks, eval infrastructure |
+| `area:domain` | Domain judgment assets |
+| `area:docs` | Documentation, tutorials |
+| `type:bug` | Something is broken |
+| `type:feature` | New capability |
+| `type:eval-case` | New or improved eval case |
+| `type:docs` | Documentation improvement |
+| `priority:p0` | Blocking release or user activation |
+| `priority:p1` | Important, not blocking |
+| `priority:p2` | Nice to have |
+| `good-first-kdna` | Suitable for new contributors |
 
-### 3. Domain Asset Contribution
-Submit a complete KDNA domain asset.
+## Review Process
 
-1. Create a repository under `kdna-<domain>` naming convention
-2. Include at least `KDNA_Core.json` and `KDNA_Patterns.json`
-3. Ensure the domain passes `kdna dev validate`
-4. Include `kdna.json` manifest and `README.md`
-5. Add tests in `tests/before-after.json` (minimum 3 cases)
-6. Open a PR adding an entry to `registry/domains.json`
+1. Open an issue first for anything larger than a typo fix
+2. PRs are reviewed within one week
+3. Protocol/schema PRs require 1 maintainer approval
+4. Domain PRs require evidence (eval cases, before/after)
 
-### 4. Case Contribution
-Submit test cases that prove KDNA changes judgment.
+## Code of Conduct
 
-Add entries to existing domain `tests/before-after.json` or submit new test files following the format:
-```json
-{
-  "input": "...",
-  "without_kdna": { "expected_approach": "...", "common_mistake": "..." },
-  "with_kdna": { "expected_approach": "...", "signal_reading": "...", "diagnosis_path": "..." },
-  "domain": "...",
-  "trigger": "..."
-}
-```
-
-### 5. Cluster Contribution
-Submit a KDNA Cluster — a composable group of packages.
-
-1. Create `KDNA_Cluster.json` following the schema
-2. Ensure all referenced packages exist in the registry
-3. Include composition rules and routing questions
-4. Submit to `examples/clusters/`
-
-### 6. Evaluation Report Contribution
-Submit a report comparing agent judgment with and without KDNA.
-
-Include: domain name, model used, test cases, baseline scores, KDNA-loaded scores, specific improvements observed.
-
-## Quality Requirements
-
-All contributions must:
-- Pass `kdna dev validate` (for packages) or JSON schema validation (for clusters)
-- Have unique IDs across the submission
-- Include reasons for every banned term and key distinctions for every misunderstanding
-- Not contain proprietary or private data
-- Use clear domain boundaries
+See [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
 
 ## License
 
-- Code contributions: Apache 2.0
-- Documentation and examples: CC BY 4.0
-- Domain assets: Contributor's choice (CC BY 4.0 recommended for open domains)
+- Code: Apache-2.0
+- Documentation and examples: CC-BY-4.0
+
+By contributing, you agree that your contributions will be licensed under these terms.

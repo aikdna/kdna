@@ -1,0 +1,32 @@
+name: Propose Domain
+description: Propose a new KDNA judgment domain
+labels: [type:feature, area:domain]
+body:
+  - type: input
+    attributes:
+      label: Domain name
+      description: Proposed @scope/name
+  - type: textarea
+    attributes:
+      label: What judgment does this domain change?
+      description: What does an agent judge differently with this domain loaded?
+  - type: textarea
+    attributes:
+      label: What is this domain for?
+      description: When should an agent use this domain?
+  - type: textarea
+    attributes:
+      label: What is this domain NOT for?
+      description: When should an agent NOT use this domain?
+  - type: textarea
+    attributes:
+      label: Core axioms (at least 3)
+      description: One sentence each. What principles should the agent reason from?
+  - type: textarea
+    attributes:
+      label: Self-checks (at least 3)
+      description: Yes/no questions the agent should ask itself after applying this domain
+  - type: textarea
+    attributes:
+      label: Example before/after
+      description: Same task, without KDNA vs with KDNA — show the judgment difference

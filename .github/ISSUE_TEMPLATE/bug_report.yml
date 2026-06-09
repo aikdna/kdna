@@ -1,0 +1,39 @@
+name: Bug Report
+description: Something is broken — CLI, loader, conformance, or schema
+labels: [type:bug]
+body:
+  - type: input
+    attributes:
+      label: What happened?
+      description: One sentence summary
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands or actions
+      render: bash
+  - type: textarea
+    attributes:
+      label: Expected behavior
+  - type: textarea
+    attributes:
+      label: Actual behavior
+      description: Error message, wrong output, etc.
+  - type: input
+    attributes:
+      label: KDNA CLI version
+      description: Output of `kdna --version`
+  - type: input
+    attributes:
+      label: Node version
+      description: Output of `node --version`
+  - type: dropdown
+    attributes:
+      label: Area
+      options:
+        - area:cli
+        - area:skills
+        - area:studio
+        - area:registry
+        - area:lab
+        - area:domain
+        - area:docs
