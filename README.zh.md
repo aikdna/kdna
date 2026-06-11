@@ -122,15 +122,25 @@ KDNA_Patterns.json
 ## 快速开始
 
 ```bash
-npm i -g @aikdna/kdna-cli
-kdna --help
+npm install -g @aikdna/kdna-cli
+kdna setup
+kdna install @aikdna/writing
+kdna verify @aikdna/writing --judgment
+kdna compare @aikdna/writing --input "帮我改进这篇文章"
+```
+
+你的 Agent 现在加载了一个领域判断资产。最后一条命令会把同一个输入发送给 LLM 两次——加载 KDNA 和不加载——让你直接看到判断路径的区别。
+
+```bash
+# 检查一切是否正常
+kdna doctor --agents
 ```
 
 或克隆仓库：
 
 ```bash
 git clone https://github.com/aikdna/kdna.git
-cd KDNA
+cd kdna
 npm install
 npm run lint:examples
 ```

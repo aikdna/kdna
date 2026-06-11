@@ -1,12 +1,16 @@
 # KDNA Authoring Guide
 
-## Quick Start
+> **For trusted KDNA assets, use [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli).** The dev source workflow below is for experimentation and CI validation of open-source domain repos. Dev source directories are non-canonical and do not produce trusted assets.
+
+## Quick Start (Dev Source — for experimentation)
 
 1. Copy `templates/minimal-domain/` to your working directory
 2. Rename the folder to your domain ID (e.g., `my_domain`)
 3. Edit each JSON file — fill in every placeholder in angle brackets
 4. Validate: `npx kdna dev validate <your-domain-folder>`
 5. Test: `kdna verify <your-domain-folder>`
+
+> **To produce a trusted `.kdna` asset:** create a Studio project with `kdna-studio create`, lock cards, compile, and export. See [getting-started.md](./getting-started.md).
 
 ---
 

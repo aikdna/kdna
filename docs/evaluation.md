@@ -98,7 +98,7 @@ Running self-check items against outputs gives a machine-verifiable quality sign
 
 | Score range | Label | Meaning |
 |---|---|---|
-| 8–8 (all D1–D8 at max) | Exceptional | KDNA is transforming judgment; domain is highly effective |
+| 8–40 (all D1–D8 at max) | Exceptional | KDNA is transforming judgment; domain is highly effective |
 | 6–7 | Effective | Clear improvement over baseline; domain is working |
 | 4–5 | Marginal | Some improvement but not consistently across dimensions |
 | 1–3 | Ineffective | KDNA is not changing reasoning trajectory; domain needs revision |
