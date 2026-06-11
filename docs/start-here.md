@@ -85,7 +85,7 @@ KDNA is at **v1.0-rc** (Release Candidate). What's stable and what's not is docu
 
 **Not stable / not claimed:** Marketplace, paid domains, enterprise governance, OCI distribution, more official domains.
 
-**Release evidence:** [v0.9.0 Release Checklist](../RELEASE_CHECKLIST_0.9.0.md) — 63/63 verified.
+**Release evidence:** [Release Board](./V1RC_RELEASE_BOARD.md)
 
 ---
 

@@ -918,7 +918,7 @@ Persistent extraction MUST NOT be required for loading. A runtime MAY create int
 | `kdna load @aikdna/writing` | Load the installed `.kdna` asset directly into agent context |
 | `kdna load writing.kdna` | Load a local `.kdna` asset directly into agent context |
 | `kdna compare writing.kdna --input "..."` | Compare with/without a local `.kdna` asset |
-| `kdna dev pack ./writing-source` | [DEPRECATED] Build a dev-only, non-trusted diagnostic bundle from a non-canonical source directory. Use `kdna-studio compile/export` for trusted assets. |
+| `kdna dev pack ./writing-source` | Build a dev-only non-trusted diagnostic bundle from a non-canonical source directory. For trusted assets, use `kdna-studio migrate`. |
 | `kdna dev unpack writing.kdna` | Unpack into a dev source directory for inspection or editing |
 
 ### 14.9 Platform Recognition
@@ -1090,5 +1090,5 @@ A conforming validator MUST verify:
 - [Semantic Versioning](https://semver.org/) — Version numbering
 - [SPDX License List](https://spdx.org/licenses/) — License identifiers
 - JSON Schema files: `schema/KDNA_*.schema.json`
-- CLI tools: `kdna dev validate`, `kdna dev pack` (deprecated, use `kdna-studio`), `kdna compare`
+- CLI tools: `kdna dev validate`, `kdna dev pack`, `kdna compare`, `kdna-studio migrate`
 - Registry: `registry/domains.json`

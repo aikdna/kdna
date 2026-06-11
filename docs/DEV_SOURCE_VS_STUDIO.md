@@ -32,14 +32,23 @@ The primary authoring format for open-source domains is still the dev source dir
 - **Prototype/experiment**: `kdna dev scaffold <name>` → edit JSON files
 - **Trusted release**: `kdna-studio create <name>` → card add → lock → compile → export
 
-## Roadmap
+## Migration (one command)
 
-1. **Short-term**: Fix `kdna-studio create --from-folder` to fully import all content (not just axioms)
-2. **Medium-term**: Provide a `kdna-studio migrate <dev-source-dir>` command for seamless conversion
-3. **Long-term**: Transition all domain repos to Studio project format as primary source
+```bash
+kdna-studio migrate ./my-domain --out ./my-domain.kdna --name @scope/my-domain --by "your-id" --statement "reviewed all axioms" --sign
+```
+
+This single command:
+1. Imports ALL content from the dev source directory (axioms, ontology, stances, frameworks, terminology, misunderstandings, self-checks, scenarios, cases, reasoning, evolution)
+2. Preserves manifest metadata (version, languages, description, judgment_version)
+3. Auto-approves and Human Locks all cards
+4. Compiles a trusted `.kdna` asset
+5. Exports it to the specified output file
+
+No separate create/approve/lock/compile/export steps needed.
 
 ## Honesty Note
 
 We acknowledge that the canonical authoring path (Studio) currently has zero adoption in the open-source domain ecosystem. This document exists to prevent the confusion that arises when users read the SPEC saying "use Studio" but find no Studio projects anywhere in the ecosystem.
 
-The dev source directory format remains the practical authoring format for open-source domain contributors until the Studio migration path is seamless.
+The `kdna-studio migrate` command closes this gap. Both formats are valid authoring paths.

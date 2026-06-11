@@ -311,7 +311,7 @@ node scripts/check-domain-trust-gate.js --domain @aikdna/writing
 | You want to | Go here |
 |-------------|---------|
 | Create your first KDNA domain | [First Domain Walkthrough](./first-domain-walkthrough.md) |
-| Integrate KDNA into an agent | [Agent Integration Kit](./agent-integration-kit.md) |
+| Integrate KDNA into an agent | [kdna-skills](https://github.com/aikdna/kdna-skills) |
 | Understand the full spec | [SPEC.md](../SPEC.md) |
 | See all Phase 2 architecture | [Phase 2 Architecture](./phase2-architecture.md) |
 | Run the conformance suite | [Conformance README](../conformance/README.md) |
