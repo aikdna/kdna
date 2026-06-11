@@ -36,3 +36,15 @@ This policy covers the KDNA tooling and infrastructure. Domain judgment content 
 - Third-party domains not distributed through the official registry
 - Social engineering attacks
 - Physical security issues
+
+## Supply Chain: cbor-extract Prebuilt Binaries
+
+KDNA v2 depends on `cbor-x` which optionally uses `cbor-extract` — a Node.js native addon with prebuilt binaries for darwin-arm64, darwin-x64, linux-arm, linux-arm64, linux-x64, and win32-x64. These binaries are fetched at install time from npm.
+
+**Mitigations:**
+- `cbor-x` falls back to pure JavaScript decode when `cbor-extract` is unavailable
+- CI verifies both paths (with and without native addon)
+- Package lockfile pins exact versions with integrity hashes
+- Future: evaluate pure-JS CBOR implementation to eliminate native binary dependency entirely
+
+**Monitoring:** Check `npm audit` output for cbor-extract advisories on each release.
