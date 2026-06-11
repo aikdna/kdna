@@ -1,22 +1,21 @@
-# KDNA Container v2
-
+# KDNA Container
+**Version:** 2.0
 **Version:** 2.0  
 **Status:** Draft  
-**Replaces:** v1 plaintext ZIP container (removed)
 
 ## 1. Design Principle
 
-KDNA v1 used a ZIP container with plaintext JSON entries. This meant any generic `unzip` + JSON parser could fully consume KDNA judgment. The `.kdna` file was a renamed ZIP archive, not a true asset format.
+V1 format used a ZIP container with plaintext JSON entries. This meant any generic `unzip` + JSON parser could fully consume KDNA judgment. The `.kdna` file was a renamed ZIP archive, not a true asset format.
 
-KDNA Container v2 fixes this. The `.kdna` file remains a ZIP container for transport compatibility, but internal judgment content is encoded in a binary payload that requires a KDNA-compatible decoder. Generic tools can inspect metadata but cannot consume judgment.
+KDNA Container fixes this. The `.kdna` file remains a ZIP container for transport compatibility, but internal judgment content is encoded in a binary payload that requires a KDNA-compatible decoder. Generic tools can inspect metadata but cannot consume judgment.
 
-**KDNA v2 does not:**
+**KDNA Container does not:**
 - Provide DRM or copy protection
 - Require encryption keys for open access
 - Prevent third-party compatible implementations
 - Hide the format specification
 
-**KDNA v2 does:**
+**KDNA Container does:**
 - Establish format sovereignty — `.kdna` is a dedicated asset format, not a renamed ZIP
 - Require KDNA-compatible tooling for consumption
 - Separate metadata (readable by anyone) from judgment payload (requires decoder)
@@ -61,7 +60,7 @@ kdna.json                       └── build-receipt.json
 
 ### 3.3 Forbidden Entries
 
-The following entries MUST NOT exist in a v2 `.kdna` asset. Their presence indicates a v1 plaintext container and the asset MUST be rejected.
+The following entries MUST NOT exist in a v2 `.kdna` asset. Their presence indicates a V1 plaintext (removed) container and the asset MUST be rejected.
 
 - `KDNA_Core.json`
 - `KDNA_Patterns.json`
@@ -252,7 +251,7 @@ kdna dev decode domain.kdna --reveal
 
 A conforming loader MUST reject:
 
-1. **v1 plaintext container**: If `KDNA_Core.json` or any v1 judgment entry exists in the ZIP → `ERR_LEGACY_PLAINTEXT_CONTAINER`
+1. **V1 plaintext (removed) container**: If `KDNA_Core.json` or any v1 judgment entry exists in the ZIP → `ERR_LEGACY_PLAINTEXT_CONTAINER`
 2. **Missing payload**: If `payload.kdnab` is absent → `ERR_MISSING_PAYLOAD`
 3. **Digest mismatch**: If `container.payload_digest` does not match SHA-256 of decoded payload → `ERR_PAYLOAD_DIGEST_MISMATCH`
 4. **Schema violation**: If decoded judgment fails schema validation → `ERR_SCHEMA_VALIDATION_FAILED`
@@ -262,7 +261,7 @@ A conforming loader MUST reject:
 
 ## 9. Migration from v1
 
-v1 plaintext `.kdna` files are not valid assets. To migrate:
+V1 plaintext (removed) `.kdna` files are not valid assets. To migrate:
 
 ```bash
 # From source tree (recommended):
@@ -277,7 +276,7 @@ kdna-studio migrate ./extracted --out domain.kdna  # rebuild as v2
 
 All KDNA-compatible implementations MUST:
 
-- Reject v1 plaintext containers
+- Reject V1 plaintext (removed) containers
 - Decode `payload.kdnab` via CBOR
 - Emit context capsules (not raw JSON) from the default load path
 - Verify signatures and digests before serving content
@@ -287,4 +286,4 @@ All KDNA-compatible implementations MUST:
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 2.0 | 2026-06-11 | Initial v2 specification. Removes v1 plaintext JSON entries. Introduces CBOR-encoded payload. Mandates capsule output. |
+| 2.0 | 2026-06-11 | Initial v2 specification. Removes V1 plaintext (removed) JSON entries. Introduces CBOR-encoded payload. Mandates capsule output. |
