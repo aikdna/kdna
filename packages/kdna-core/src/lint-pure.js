@@ -318,9 +318,9 @@ function validateManifest(manifest) {
   if (manifest.format && manifest.format !== 'kdna') {
     errors.push(`kdna.json.format: invalid value "${manifest.format}". Expected "kdna".`);
   }
-  if (manifest.format_version && manifest.format_version !== '1.0') {
+  if (manifest.format_version && manifest.format_version !== '2.0') {
     errors.push(
-      `kdna.json.format_version: invalid value "${manifest.format_version}". Expected "1.0".`,
+      `kdna.json.format_version: invalid value "${manifest.format_version}". Expected "2.0".`,
     );
   }
   if (manifest.status && !VALID_STATUS.has(manifest.status)) {

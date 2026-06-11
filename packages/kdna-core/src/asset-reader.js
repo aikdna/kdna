@@ -1,8 +1,5 @@
 /**
  * KDNA Asset Reader — direct .kdna container access.
- *
- * Supports KDNA Container v2 (payload.kdnab via CBOR).
- * V1 plaintext containers (KDNA_Core.json etc. as ZIP entries) are rejected.
  */
 
 const fs = require('fs');
@@ -11,27 +8,6 @@ const zlib = require('zlib');
 const cbor = require('cbor-x');
 const { loadDomainFromFiles, formatContext } = require('./loader');
 
-const STANDARD_ENTRIES = [
-  'kdna.json',
-  'payload.kdnab',
-  'KDNA_Core.json',
-  'KDNA_Patterns.json',
-  'KDNA_Scenarios.json',
-  'KDNA_Cases.json',
-  'KDNA_Reasoning.json',
-  'KDNA_Evolution.json',
-];
-
-const V1_ENTRIES = [
-  'KDNA_Core.json',
-  'KDNA_Patterns.json',
-  'KDNA_Scenarios.json',
-  'KDNA_Cases.json',
-  'KDNA_Reasoning.json',
-  'KDNA_Evolution.json',
-];
-
-const JSON_ENTRY_RE = /\.json$/i;
 const KDNA_MEDIA_TYPE = 'application/vnd.aikdna.kdna+zip';
 
 function sha256Hex(buf) {
@@ -338,9 +314,9 @@ function validateManifestIdentity(manifest, errors, _warnings) {
   if (manifest.format && manifest.format !== 'kdna') {
     errors.push(`kdna.json.format: invalid value "${manifest.format}". Expected "kdna".`);
   }
-  if (manifest.format_version && manifest.format_version !== '1.0') {
+  if (manifest.format_version && manifest.format_version !== '2.0') {
     errors.push(
-      `kdna.json.format_version: invalid value "${manifest.format_version}". Expected "1.0".`,
+      `kdna.json.format_version: invalid value "${manifest.format_version}". Expected "2.0".`,
     );
   }
   if (!manifest.spec_version) errors.push('kdna.json: missing required field "spec_version"');
@@ -380,11 +356,10 @@ function readManifest(asset) {
   return parseJson(asset.readEntry('kdna.json'), 'kdna.json');
 }
 
-function readDataMapSync(asset, entries = STANDARD_ENTRIES, options = {}) {
+function readDataMapSync(asset, options = {}) {
   const dataMap = {};
   const manifest = readManifest(asset);
 
-  // ── KDNA Container v2: decode CBOR payload ──
   if (asset.entries.has('payload.kdnab')) {
     const payloadBuf = asset.readEntry('payload.kdnab');
     const payload = cbor.decode(payloadBuf);
@@ -396,19 +371,15 @@ function readDataMapSync(asset, entries = STANDARD_ENTRIES, options = {}) {
       if (payload.judgment.reasoning) dataMap['KDNA_Reasoning.json'] = payload.judgment.reasoning;
       if (payload.judgment.evolution) dataMap['KDNA_Evolution.json'] = payload.judgment.evolution;
     }
+
+    const encrypted = encryptedEntries(manifest);
+    if (encrypted.length && typeof options.decryptEntry !== 'function') {
+      throw new Error(`encrypted entries require decryptEntry hook: ${encrypted.join(', ')}`);
+    }
     return dataMap;
   }
 
-  const encrypted = encryptedEntries(manifest).filter((entryName) => entries.includes(entryName));
-  if (encrypted.length && typeof options.decryptEntry !== 'function') {
-    throw new Error(`encrypted entries require decryptEntry hook: ${encrypted.join(', ')}`);
-  }
-  for (const entryName of entries) {
-    if (!asset.entries.has(entryName)) continue;
-    const buf = maybeDecryptEntrySync(asset, manifest, entryName, asset.readEntry(entryName), options);
-    dataMap[entryName] = parseJson(buf, entryName);
-  }
-  return dataMap;
+  throw new Error('Not a KDNA asset: missing payload.kdnab');
 }
 
 function verifySync(asset, options = {}) {
@@ -418,10 +389,7 @@ function verifySync(asset, options = {}) {
 
   if (!asset.entries.has('kdna.json')) errors.push('required entry missing: kdna.json');
   verifyMediaType(asset, errors);
-  if (!asset.entries.has('KDNA_Core.json')) errors.push('required entry missing: KDNA_Core.json');
-  if (!asset.entries.has('KDNA_Patterns.json')) {
-    errors.push('required entry missing: KDNA_Patterns.json');
-  }
+  if (!asset.entries.has('payload.kdnab')) errors.push('required entry missing: payload.kdnab');
 
   const content_digest = buildContentDigest(asset);
   const asset_digest = asset.asset_digest;
