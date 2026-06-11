@@ -8,10 +8,8 @@ const root = path.join(__dirname, '..');
 const coreDir = path.join(root, 'packages', 'kdna-core');
 const compatDir = path.join(root, 'packages', 'kdna');
 const defaultNpmCache = path.join(os.tmpdir(), 'kdna-npm-cache');
+// Schema files moved to repo-root schema/ — no longer in npm package
 const requiredCoreFiles = [
-  'schema/kdna-manifest-v1rc.json',
-  'schema/kdna-file.schema.json',
-  'schema/KDNA_Core.schema.json',
   'src/asset-reader.js',
   'src/index.js',
   'src/types.d.ts',
