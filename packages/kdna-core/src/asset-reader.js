@@ -399,18 +399,6 @@ function readDataMapSync(asset, entries = STANDARD_ENTRIES, options = {}) {
     return dataMap;
   }
 
-  // ── V1 plaintext container detection ──
-  const hasV1Entries = V1_ENTRIES.some(e => asset.entries.has(e));
-  if (hasV1Entries) {
-    const found = V1_ENTRIES.filter(e => asset.entries.has(e));
-    const err = new Error(
-      `ERR_LEGACY_PLAINTEXT_CONTAINER: This .kdna uses the removed v1 plaintext ZIP format ` +
-      `(found: ${found.join(', ')}). Rebuild from source with KDNA Container v2.`
-    );
-    err.code = 'ERR_LEGACY_PLAINTEXT_CONTAINER';
-    throw err;
-  }
-
   const encrypted = encryptedEntries(manifest).filter((entryName) => entries.includes(entryName));
   if (encrypted.length && typeof options.decryptEntry !== 'function') {
     throw new Error(`encrypted entries require decryptEntry hook: ${encrypted.join(', ')}`);
