@@ -23,7 +23,7 @@ kdna setup
 Verify:
 
 ```bash
-kdna version  # → kdna v0.8.0
+kdna version  # → kdna v0.x.x
 kdna list     # → "No KDNA domains installed."
 ```
 
@@ -130,7 +130,15 @@ if (signals.fit) {
 
 ## Step 6: Author Your Own Domain
 
-Package your own expertise as a KDNA domain:
+To create a trusted `.kdna` asset, use the Studio CLI:
+
+```bash
+npm install -g @aikdna/kdna-studio-cli
+kdna-studio create my_expertise
+# Then: add cards → lock → compile → export
+```
+
+For experimentation and prototyping, you can scaffold a dev source workspace (non-canonical, does not produce trusted assets):
 
 ```bash
 kdna dev scaffold my_expertise
@@ -140,12 +148,17 @@ kdna dev scaffold my_expertise
 #   kdna.json          — metadata (name, version, license)
 ```
 
-This is a non-canonical dev source workspace. Edit the files for experimentation, then use An authoring environment or a Studio-compatible compiler for Human Lock, compile, and export.
+Edit the files for experimentation, then validate:
 
 ```bash
 kdna dev validate my_expertise       # structural check for dev source
-kdna publish --check my_expertise    # content quality gate
-kdna-studio export my_expertise --out ./dist/my_expertise.kdna --sign
+```
+
+To produce a trusted asset, use a Studio-compatible compiler for Human Lock, compile, and export:
+
+```bash
+kdna-studio compile --project my_expertise
+kdna-studio export --project my_expertise --out ./dist/my_expertise.kdna --sign
 kdna publish ./dist/my_expertise.kdna # publish existing Studio-built asset
 kdna install ./dist/my_expertise.kdna # install local asset for testing
 ```
