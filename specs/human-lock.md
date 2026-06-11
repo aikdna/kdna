@@ -80,6 +80,10 @@ The following should be recorded automatically but treated as evidence, not appr
 
 ## Human Judgment Lock Record Format
 
+There are two lock formats in use. The protocol-level format records locks in `KDNA_Evolution.json`. The inline format is used in `kdna.json` for dev-pack and compile-time validation.
+
+### Protocol Format (KDNA_Evolution.json)
+
 A Human Judgment Lock is recorded in `KDNA_Evolution.json` under the `human_locks` array:
 
 ```json
@@ -108,6 +112,36 @@ A Human Judgment Lock is recorded in `KDNA_Evolution.json` under the `human_lock
 | `lock_type` | Yes | `accept`, `reject`, or `defer`. |
 | `reason` | Yes | Human-readable rationale. Must be non-empty. |
 | `affected_files` | No | Array of KDNA files affected by the locked change. |
+
+### Inline Format (kdna.json, dev-pack compatible)
+
+The `kdna dev pack` CLI and Studio-compatible compilers use a simpler inline format embedded in `kdna.json` under the `human_lock` key (singular, not plural). This is the format users encounter when hand-editing domain metadata:
+
+```json
+{
+  "human_lock": {
+    "status": "locked",
+    "by": "human-identifier",
+    "statement": "Human-readable confirmation of what was reviewed and approved.",
+    "checked": {
+      "applies_when": true,
+      "does_not_apply_when": true,
+      "failure_risk": true
+    }
+  }
+}
+```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `status` | Yes | Must be `"locked"`. |
+| `by` | Yes | Identity of the human who applied the lock. |
+| `statement` | Yes | Human-readable confirmation of what was reviewed. |
+| `checked.applies_when` | Yes | Boolean — confirmed all `applies_when` conditions correct. |
+| `checked.does_not_apply_when` | Yes | Boolean — confirmed all `does_not_apply_when` conditions correct. |
+| `checked.failure_risk` | Yes | Boolean — confirmed all `failure_risk` entries correct. |
+
+This inline format is what the `kdna dev pack` command checks for before accepting a domain. The protocol-level format in `KDNA_Evolution.json` is the long-term record; the inline format is the build-time gate.
 
 ---
 
