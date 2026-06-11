@@ -110,13 +110,16 @@
             "type": "string"
           },
           "evidence_type": {
-            "type": "string",
-            "enum": [
-              "practice_patterns",
-              "research_finding",
-              "industry_consensus",
-              "case_observation"
-            ]
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "practice_patterns",
+                "research_finding",
+                "industry_consensus",
+                "case_observation"
+              ]
+            }
           },
           "applies_when": {
             "type": "array",

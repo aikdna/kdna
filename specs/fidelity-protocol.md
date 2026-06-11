@@ -3,7 +3,7 @@
 **Status:** Draft  
 **Proposed:** 2026-06-08  
 **Authors:** KDNA Maintainers  
-**Related:** RFC-0009 (Artifact Contract), KDNA SPEC v1.0-rc §3.3.2 (Quality Badges), §9 (Validation)
+**Related:** RFC-0012 (Artifact Contract), KDNA SPEC v1.0-rc §3.3.2 (Quality Badges), §9 (Validation)
 
 ---
 
@@ -13,7 +13,7 @@ KDNA's current quality system measures structural validity (schema conformance, 
 
 This RFC proposes the **KDNA Fidelity Protocol**: a standardized method for measuring judgment transfer fidelity. It defines three measurement axes (triggered, changed, reached artifact), a multi-task blind comparison design with calibration anchors, per-axiom transfer levels, and cross-model consistency testing.
 
-The Fidelity Protocol produces a Fidelity Result (`fidelity-result.schema.json`), which can be wrapped as an Artifact (per RFC-0009) for storage, review, and registry linkage.
+The Fidelity Protocol produces a Fidelity Result (`fidelity-result.schema.json`), which can be wrapped as an Artifact (per RFC-0012) for storage, review, and registry linkage.
 
 ---
 

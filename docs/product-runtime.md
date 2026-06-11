@@ -3,13 +3,13 @@
 **Status:** Draft  
 **Proposed:** 2026-06-08  
 **Authors:** KDNA Maintainers  
-**Related:** RFC-0009 (Artifact Contract), RFC-0010 (Fidelity Protocol), KDNA SPEC v1.0-rc, KDNA App Runtime Contract
+**Related:** RFC-0012 (Artifact Contract), RFC-0010 (Fidelity Protocol), KDNA SPEC v1.0-rc, KDNA App Runtime Contract
 
 ---
 
 ## Abstract
 
-KDNA's existing runtime patterns address three modes: **Chat Runtime** (single conversation, request-response via kdna-load), **Pipeline Runtime** (multi-stage batch generation via WorkPack Pipeline, RFC-0009), and **Agent Runtime** (tool-using agent loop via kdna-loader skill). None address the fourth mode: a **Product Runtime** — a long-running cycle where KDNA-governed artifacts are generated, delivered, observed, and adapted over weeks or months in a sustained human-AI relationship.
+KDNA's existing runtime patterns address three modes: **Chat Runtime** (single conversation, request-response via kdna-load), **Pipeline Runtime** (multi-stage batch generation via WorkPack Pipeline, RFC-0012), and **Agent Runtime** (tool-using agent loop via kdna-loader skill). None address the fourth mode: a **Product Runtime** — a long-running cycle where KDNA-governed artifacts are generated, delivered, observed, and adapted over weeks or months in a sustained human-AI relationship.
 
 This RFC defines the **Product Runtime Pattern**: a protocol contract for schedule-driven, observation-adaptive, relationship-sustaining KDNA artifact delivery. It does not define a runtime engine — only the contract that any product runtime (coaching app, learning platform, wellness tracker) can implement.
 
@@ -22,7 +22,7 @@ This RFC defines the **Product Runtime Pattern**: a protocol contract for schedu
 | Runtime Mode | Cycle | Example | KDNA Contract |
 |-------------|-------|---------|---------------|
 | **Chat** | Request → Load KDNA → Response | KDNAChat, agent conversation | `kdna route` + `kdna load` |
-| **Pipeline** | Stage 1 → Stage 2 → ... → Stage N → Finalize | Course generation | WorkPack Pipeline + RFC-0009 |
+| **Pipeline** | Stage 1 → Stage 2 → ... → Stage N → Finalize | Course generation | WorkPack Pipeline + RFC-0012 |
 | **Agent** | Observe → Decide → Act → Observe → ... | Codex, Claude Code | kdna-loader skill |
 | **Product** | Schedule → Select → Generate → Deliver → **Observe → Adapt** → Schedule → ... | CoachLettersAI, daily coaching | **This RFC** |
 
@@ -125,7 +125,7 @@ interface GenerationConfig {
 }
 ```
 
-Generation produces an RFC-0009 ArtifactEnvelope containing the deliverable. Per RFC-0010, fidelity measurement may run inline.
+Generation produces an RFC-0012 ArtifactEnvelope containing the deliverable. Per RFC-0010, fidelity measurement may run inline.
 
 ### 2.5 Phase 4: Deliver
 

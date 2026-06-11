@@ -2,106 +2,75 @@
 
 > [English](./getting-started.md)
 
-如何安装 KDNA、创建你的第一个领域、并在 Agent 中使用。
+KDNA 有两个角色：**消费者**（使用已有领域）和**创作者**（自己创作）。本指南覆盖两者。
 
-## 1. 安装加载器技能
+---
 
-**推荐：一键安装**
+## 消费者路径：使用 KDNA 领域
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/aikdna/kdna-skills/main/install.sh | bash
-```
-
-这会自动检测你安装的 Agent 并完成配置。详见 [kdna-skills](https://github.com/aikdna/kdna-skills)。
-
-**手动安装（OpenCode）：**
+### 1. 安装 CLI
 
 ```bash
-mkdir -p ~/.agents/skills/kdna-loader
-cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
-mkdir -p ~/.agents/skills/kdna-create
-cp skills/kdna-create/SKILL.md ~/.agents/skills/kdna-create/SKILL.md
+npm install -g @aikdna/kdna-cli
+kdna setup
 ```
 
-## 2. 搭建 KDNA 本地库
+这会安装 `kdna` 命令和为你的 AI Agent 安装 `kdna-loader` 技能。
+
+### 2. 安装领域
 
 ```bash
-mkdir -p ~/.agents/Kdna
+kdna install @aikdna/writing
 ```
 
-从官方 [kdna-registry](https://github.com/aikdna/kdna-registry) 添加领域，或创建自己的。
-
-## 3. 创建你的第一个领域
-
-从模板开始：
+或浏览可用领域：
 
 ```bash
-cp -r templates/minimal-domain ~/.agents/Kdna/my_domain
+kdna list --available
 ```
 
-编辑两个 JSON 文件：
+### 3. 使用
 
-- `KDNA_Core.json` — 公理、本体、框架、因果结构、立场
-- `KDNA_Patterns.json` — 术语、禁用词、常见误解、自查清单
+你的 Agent 会通过 `kdna-loader` 自动发现已安装的 KDNA 领域。当用户提出领域相关问题，Agent 静默加载领域并应用其判断。用户看到的是更精准的判断，而不是 KDNA 内部细节。
 
-填写模板中的占位符。一开始保持简短——2-3 条公理、2-3 个概念、2-3 个常见误解就够了。
+---
 
-**更好的方式：** 安装 `kdna-create` 技能后，直接对你的 Agent 说"帮我创建一个 XX 领域的 KDNA"，Agent 会通过访谈引导你完成。
+## 创作者路径：创作 KDNA 领域
 
-## 4. 校验
+**受信 KDNA 资产的创建路径有且只有一条：**
 
 ```bash
-npx kdna dev validate ~/.agents/Kdna/my_domain
+npm install -g @aikdna/kdna-studio-cli
+kdna-studio create my-domain
 ```
 
-修复所有错误后再使用。
+这会创建一个 Studio 项目（`studio.project.json`）——规范的创作工作区。
 
-## 5. 添加到注册表（可选）
+### 创作流程
 
-创建或编辑 `~/.agents/Kdna/registry.json`：
+1. **创建** Studio 项目：`kdna-studio create my-domain`
+2. **添加卡片**（判断卡片：公理、本体、误解等）：`kdna-studio card add`
+3. **锁定**卡片（内容确认后）：`kdna-studio lock --all`
+4. **编译**为 `.kdna` 资产：`kdna-studio compile`
+5. **导出**受信 `.kdna` 文件：`kdna-studio export`
 
-```json
-{
-  "version": "1.0-rc",
-  "root": "~/.agents/Kdna",
-  "domains": [
-    {
-      "id": "my_domain",
-      "name": "我的领域",
-      "path": "my_domain",
-      "status": "local",
-      "description": "这个领域涵盖的内容。",
-      "triggers": ["关键词1", "关键词2"]
-    }
-  ]
-}
+### 以下路径不产生受信资产
+
+- `kdna dev scaffold` — 创建非规范开发源目录，仅供实验
+- `kdna dev pack` — 构建仅供开发的非受信包，不符合质量徽章要求
+- 手动编辑 JSON — 适合早期原型，但不产生受信资产
+
+### 开源领域贡献者
+
+领域仓库使用 dev source 目录进行 Git 协作和 CI 校验。校验命令：
+
+```bash
+kdna dev validate .
 ```
 
-`triggers` 字段帮助 Agent 根据用户的问题自动发现应该加载哪个领域。
+受信 `.kdna` 资产通过 `kdna-studio` 编译发布。
 
-## 6. 使用
-
-当你的 Agent 安装了 `kdna-loader` 技能，用户提出与你的领域相关的问题时，Agent 会：
-
-1. 在 `~/.agents/Kdna/` 中搜索匹配的领域
-2. 加载 `KDNA_Core.json` 和 `KDNA_Patterns.json`
-3. 根据用户任务按需加载可选文件
-4. 在回答前应用领域公理、术语和自查清单
-
-用户看到的是一个被领域判断塑造过的回答——而不是 KDNA 的摘要。
-
-## 7. 何时扩展
-
-从 Core + Patterns 开始。用一段时间。然后在以下情况添加文件：
-
-| 添加 | 时机 |
-|---|---|
-| `KDNA_Scenarios.json` | 你发现 Agent 对场景的分类有偏差 |
-| `KDNA_Cases.json` | 你需要可复用的案例 |
-| `KDNA_Reasoning.json` | 用户频繁问"为什么"类问题 |
-| `KDNA_Evolution.json` | 你需要跟踪能力成长路径 |
-
-**不要一开始就写满六个文件。** 让实际使用告诉你缺少什么。
+---
 
 ## KDNA 不是什么
 
