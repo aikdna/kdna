@@ -51,4 +51,4 @@ No separate create/approve/lock/compile/export steps needed.
 
 We acknowledge that the canonical authoring path (Studio) currently has zero adoption in the open-source domain ecosystem. This document exists to prevent the confusion that arises when users read the SPEC saying "use Studio" but find no Studio projects anywhere in the ecosystem.
 
-The dev source directory format remains the practical authoring format for open-source domain contributors until the Studio migration path is seamless.
+The `kdna-studio migrate` command closes this gap. Both formats are valid authoring paths.

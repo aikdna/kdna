@@ -192,5 +192,4 @@ The license framework supports these revenue models:
 4. **Enterprise:** Custom pricing for organization-wide deployment
 5. **Royalty split:** Multi-creator KDNA with automated revenue sharing
 
-Revenue sharing details are defined in the KDNA Marketplace specification
-(future).
+Revenue sharing details are defined in the KDNA Marketplace specification.

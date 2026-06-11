@@ -105,7 +105,7 @@ The App Runtime Contract defines: `KDNA Asset → Route Result → Judgment Trac
 - `specs/evidence-trace.schema.json` — the unified schema (superset of judgment-trace-schema.json v0.1.0)
 - `specs/judgment-trace-schema.json` — preserved as-is (backward compatible)
 
-### 3.2 Runtime enrichment (future kdna-cli change)
+### 3.2 Runtime enrichment
 
 The existing `recordTrace()` function in `src/cmds/trace.js` records 7 call sites with limited fields. The upgrade enriches each call site:
 
@@ -118,9 +118,9 @@ The existing `recordTrace()` function in `src/cmds/trace.js` records 7 call site
 
 No existing trace format is broken. The enrichment is additive — old trace entries remain readable, new entries carry more data.
 
-### 3.3 SDK integration (future)
+### 3.3 SDK integration
 
-The `@aikdna/kdna-artifact-engine` SDK's `WorkflowRunner` will emit Evidence Traces with:
+The `@aikdna/kdna-artifact-engine` SDK's `WorkflowRunner` emits Evidence Traces with:
 - `trace_type: generation` per stage
 - `artifact_refs` linked to produced artifacts
 - `parent_trace_id` forming the stage chain
