@@ -166,33 +166,32 @@ Implementations MAY conform at one of three levels:
 
 A KDNA domain MUST be represented, distributed, installed, verified, and loaded as a `.kdna` container.
 
-The internal file tree of a `.kdna` container MAY contain standard KDNA JSON entries, but this tree MUST NOT be exposed as the canonical user-facing asset. Directory-based source trees are allowed only as development workspaces and MUST be treated as non-canonical.
+The internal tree of a `.kdna` container is encoded in `payload.kdnab` (CBOR). Source trees (KDNA_Core.json, KDNA_Patterns.json, etc.) are authoring workspaces only and MUST NOT appear as top-level entries in a distribution `.kdna` asset. See `specs/container.md`.
 
-A `.kdna` asset MUST include a `kdna.json` manifest at the archive root. See Section 6.
+A `.kdna` asset MUST include a `kdna.json` manifest at the archive root.
 
-### 3.2 Required Files
+### 3.2 Required Entries (Distribution Asset)
 
-A conforming `.kdna` asset MUST include the following internal entries:
+A conforming distribution `.kdna` asset MUST include:
 
-| File | Responsibility | Load Condition |
-|------|---------------|----------------|
-| `KDNA_Core.json` | Axioms, ontology, frameworks, causal structure, stances | ALWAYS |
-| `KDNA_Patterns.json` | Terminology, banned terms, misunderstandings, self-checks | ALWAYS |
+| Entry | Description |
+|-------|-------------|
+| `kdna.json` | Public manifest and metadata (no judgment content) |
+| `payload.kdnab` | CBOR-encoded judgment payload (all domain content) |
+| `signature.kdsig` | Ed25519 signature over canonical payload digest |
 
-A `.kdna` asset that does not include both files MUST NOT be considered a valid KDNA domain.
+A `.kdna` asset MUST NOT include `KDNA_Core.json`, `KDNA_Patterns.json`, `KDNA_Scenarios.json`, `KDNA_Cases.json`, `KDNA_Reasoning.json`, or `KDNA_Evolution.json` as top-level ZIP entries. Those files belong to the source tree only.
 
-### 3.3 Optional Files
+### 3.3 Source Tree
 
-A `.kdna` asset MAY include any of the following internal entries:
+The authoring source tree uses standard JSON files for human editing and Git review:
 
-| File | Responsibility | Load Condition |
-|------|---------------|----------------|
-| `KDNA_Scenarios.json` | Scenario triggers and action orientation | Concrete situation detected |
-| `KDNA_Cases.json` | Complete examples demonstrating structure | Examples or cases requested |
-| `KDNA_Reasoning.json` | Reasoning chains and why explanations | Rationale or principles requested |
-| `KDNA_Evolution.json` | Practice stages and measurable growth | Practice or measurement requested |
+| File | Responsibility |
+|------|---------------|
+| `KDNA_Core.json` | Axioms, ontology, frameworks, causal structure, stances |
+| `KDNA_Patterns.json` | Terminology, banned terms, misunderstandings, self-checks |
 
-A `.kdna` asset MUST NOT include more than 6 KDNA JSON files (excluding `kdna.json`).
+A valid source tree MUST include `KDNA_Core.json` + `KDNA_Patterns.json`. Optional files MAY include `KDNA_Scenarios.json`, `KDNA_Cases.json`, `KDNA_Reasoning.json`, `KDNA_Evolution.json`. Maximum 6 KDNA JSON files (excluding `kdna.json`).
 
 #### 3.3.1 Optional File Semantics
 
@@ -472,7 +471,7 @@ A conforming loader MUST follow this decision tree:
 ```
 User message received
 │
-├─ ALWAYS load KDNA_Core.json + KDNA_Patterns.json
+├─ Decode payload.kdnab and load judgment content
 │
 ├─ Does input contain concrete situation/scene/case signals?
 │   └─ Load KDNA_Scenarios.json
@@ -514,7 +513,8 @@ The agent SHOULD NOT announce KDNA loading in normal responses. The agent MUST N
 
 A conforming validator MUST check:
 
-1. Required files exist (`KDNA_Core.json` + `KDNA_Patterns.json`)
+1. For distribution assets: required container entries exist (`kdna.json` + `payload.kdnab` + `signature.kdsig`); forbidden source entries do not exist as top-level ZIP entries
+2. For source trees: required files exist (`KDNA_Core.json` + `KDNA_Patterns.json`)
 2. Every JSON file has a `meta` object with all required fields
 3. Required top-level fields exist in each file
 4. All `id` fields are unique within the domain
