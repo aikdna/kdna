@@ -774,7 +774,9 @@ Every `.kdna` container MUST include a `kdna.json` at the archive root. This fil
 }
 ```
 
-**Required fields:** `format`, `format_version`, `spec_version`, `name`, `version`, `judgment_version`, `description`, `author`, `license`, `status`, `quality_badge`, `access`, `languages`, `default_language`, `source_mode`.
+**Required fields:** `format`, `format_version`, `spec_version`, `name`, `version`, `judgment_version`, `description`, `author`, `license`, `status`, `quality_badge`, `access`, `languages`, `default_language`.
+
+**Strongly recommended:** `source_mode`. Assets without `source_mode` default to `"blank"` in conforming validators.
 
 **Optional fields:** `core_insight`, `keywords`, `file_count`, `risk_level`, `privacy_level`, `asset_type`, `created`, `updated`, `content_digest`, `signature`, `fitness_for_purpose`, `creator`, `lineage`.
 
