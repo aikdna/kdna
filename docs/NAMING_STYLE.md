@@ -31,7 +31,7 @@ The public display name may use spaces or hyphens. The protocol identity should 
 
 Rules:
 
-- Prefer snake_case for `domain_id` and scoped package names until a registry migration is planned.
+- Prefer snake_case for `domain_id` and scoped package names.
 - Prefer hyphenated GitHub repository names, for example `kdna-agent-safety`.
 - Do not mix `KDNAStudio`, `KDNaStudio`, and `Authoring environment` in public copy. Use `KDNA Studio Compatible` when referring to the authoring standard.
 - Treat `KDA` as a misspelling, not an alias.

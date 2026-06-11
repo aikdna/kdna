@@ -18,10 +18,10 @@ kdna doctor --json     # Machine-readable output
 Verifies that KDNA is correctly integrated with each AI agent on the system. Outputs:
 
 ```
-KDNA Doctor v0.9.0
+KDNA Doctor
 
-  CLI:     @aikdna/kdna-cli v0.9.0  (/usr/local/bin/kdna)
-  Core:    @aikdna/kdna-core v0.2.3
+CLI: @aikdna/kdna-cli (/usr/local/bin/kdna)
+  Core:    @aikdna/kdna-core
   Data:    ~/.kdna/
 
   Agents:

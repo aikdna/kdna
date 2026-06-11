@@ -11,7 +11,7 @@ KDNA layers open-source protocol and commercial assets. Here is what is free, wh
 | Validator (kdna-lint, kdna-validate) | Apache 2.0 | Anyone can check domain quality |
 | CLI (kdna) | Apache 2.0 | Anyone can install and use |
 | Loader library | Apache 2.0 | Anyone can integrate KDNA into agents |
-| Skills (kdna-loader, kdna-create) | Apache 2.0 | Anyone can load KDNA into their agent |
+| Skills (kdna-loader) | Apache 2.0 | Anyone can load KDNA into their agent |
 | Basic & experimental domains | CC BY 4.0 | Lower the barrier to entry |
 | Benchmark cases | CC BY 4.0 | Community can contribute and verify |
 

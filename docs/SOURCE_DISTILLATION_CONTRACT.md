@@ -151,7 +151,7 @@ Source Evidence registers content provided by the user for analysis. Evidence is
   "privacy_level": "private",
   "import_scope": "local_only",
   "registered_at": "2026-05-31T10:00:00Z",
-  "registered_by": "kdna-studio-cli v2.0.0"
+  "registered_by": "kdna-studio-cli v0.2.0"
 }
 ```
 
@@ -188,7 +188,7 @@ Distillation Candidates are AI-proposed judgment elements extracted from Source 
   "sensitive_inference_check": "passed",
   "proposed_at": "2026-05-31T10:05:00Z",
   "proposed_by": {
-    "tool": "kdna-studio-cli v2.0.0",
+    "tool": "kdna-studio-cli v0.2.0",
     "model": "claude-sonnet-4-20250514"
   }
 }

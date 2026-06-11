@@ -1,6 +1,6 @@
 {
   "version": "0.1",
-  "root": "~/.agents/Kdna",
+  "root": "~/.kdna/packages",
   "domains": [
     {
       "id": "communication_expert",
