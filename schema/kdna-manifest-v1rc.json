@@ -18,7 +18,8 @@
     "quality_badge",
     "access",
     "languages",
-    "default_language"
+    "default_language",
+    "source_mode"
   ],
   "properties": {
     "format": {
@@ -167,7 +168,7 @@
         "expert_reviewed",
         "production_ready"
       ],
-      "description": "SPEC \u00a73.3.2: untested=<3 evals, tested=3-9 evals, validated=10-29 evals, expert_reviewed=30+ evals"
+      "description": "SPEC §3.3.2: untested=0 evals, tested=10-29 evals, validated=30+ evals, expert_reviewed=30+ evals + external expert sign-off, production_ready=validated + deployment evidence"
     },
     "access": {
       "type": "string",
@@ -194,6 +195,12 @@
     "default_language": {
       "type": "string",
       "description": "Default language for agent loading when none specified."
+    },
+    "source_mode": {
+      "type": "string",
+      "enum": ["blank", "kdna_asset", "source_folder"],
+      "description": "How this domain was originally created. blank = created from scratch in Studio; kdna_asset = forked from existing .kdna; source_folder = migrated from legacy JSON source folder. Assets with source_mode: source_folder MUST be treated as untrusted until re-locked through a Studio-compatible pipeline.",
+      "default": "blank"
     },
     "i18n_level": {
       "type": "string",

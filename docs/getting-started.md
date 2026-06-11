@@ -2,94 +2,75 @@
 
 > [中文版](./getting-started.zh.md)
 
-How to install KDNA, create your first domain, and use it with an agent.
+KDNA has two roles: **consumer** (use existing domains) and **creator** (author your own). This guide covers both.
 
-## 1. Install the Loader Skill
+---
 
-The `kdna-loader` skill tells your agent how to find and apply KDNA.
+## Consumer Path: Use KDNA Domains
 
-```bash
-mkdir -p ~/.agents/skills/kdna-loader
-cp skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
-```
-
-## 2. Set Up Your KDNA Library
+### 1. Install the CLI
 
 ```bash
-mkdir -p ~/.agents/Kdna
+npm install -g @aikdna/kdna-cli
+kdna setup
 ```
 
-Add domains from the canonical [kdna-registry](https://github.com/aikdna/kdna-registry) or create your own.
+This installs the `kdna` command and the `kdna-loader` skill for your AI agent.
 
-## 3. Create Your First Domain
-
-Start from the template:
+### 2. Install a Domain
 
 ```bash
-cp -r templates/minimal-domain ~/.agents/Kdna/my_domain
+kdna install @aikdna/writing
 ```
 
-Edit the two JSON files:
-
-- `KDNA_Core.json` — axioms, ontology, frameworks, causal structure, stances
-- `KDNA_Patterns.json` — terminology, banned terms, misunderstandings, self-checks
-
-Fill in the placeholders. Keep it short at first — 2-3 axioms, 2-3 concepts, 2-3 misunderstandings.
-
-## 4. Validate
+Or browse available domains:
 
 ```bash
-npx kdna dev validate ~/.agents/Kdna/my_domain
+kdna list --available
 ```
 
-Fix any errors before using the domain.
+### 3. Use It
 
-## 5. Add to the Registry (Optional)
+Your agent will automatically discover installed KDNA domains via `kdna-loader`. When a user asks about a domain-related task, the agent loads the domain silently and applies its judgment. The user sees better judgment, not KDNA internals.
 
-Create or edit `~/.agents/Kdna/registry.json`:
+---
 
-```json
-{
-  "version": "1.0-rc",
-  "root": "~/.agents/Kdna",
-  "domains": [
-    {
-      "id": "my_domain",
-      "name": "My Domain",
-      "path": "my_domain",
-      "status": "local",
-      "description": "What this domain covers.",
-      "triggers": ["keyword1", "keyword2"]
-    }
-  ]
-}
+## Creator Path: Author a KDNA Domain
+
+**There is exactly one trusted creation path for KDNA assets:**
+
+```bash
+npm install -g @aikdna/kdna-studio-cli
+kdna-studio create my-domain
 ```
 
-The `triggers` field helps the agent discover which domain to load based on the user's question.
+This creates a Studio project (`studio.project.json`) — the canonical authoring workspace.
 
-## 6. Use It
+### Authoring Workflow
 
-When your agent has the `kdna-loader` skill installed and a user asks about your domain, the agent will:
+1. **Create** a Studio project: `kdna-studio create my-domain`
+2. **Add cards** (judgment cards for axioms, ontology, misunderstandings): `kdna-studio card add`
+3. **Lock** cards when they are ready: `kdna-studio lock --all`
+4. **Compile** into a `.kdna` asset: `kdna-studio compile`
+5. **Export** a trusted `.kdna` file: `kdna-studio export`
 
-1. Search `~/.agents/Kdna/` for matching domains
-2. Load `KDNA_Core.json` and `KDNA_Patterns.json`
-3. Load optional files based on the user's task
-4. Apply domain axioms, terminology, and self-checks before responding
+### What is NOT a trusted creation path
 
-The user sees a domain-shaped answer — not a summary of KDNA.
+- `kdna dev scaffold` — Creates non-canonical dev source directories for experimentation only
+- `kdna dev pack` — Builds dev-only non-trusted bundles; not eligible for quality badges
+- Manual JSON editing — Valid for early prototyping but does not produce trusted assets
 
-## 7. When to Expand
+### For open-source domain contributors
 
-Start with Core + Patterns. Use the domain for a while. Then add files when:
+Domain repos use dev source directories for Git collaboration and CI validation. To validate a dev source directory:
 
-| Add | When |
-|---|---|
-| `KDNA_Scenarios.json` | You notice the agent misclassifies situations |
-| `KDNA_Cases.json` | You need reusable examples |
-| `KDNA_Reasoning.json` | Users frequently ask "why" questions |
-| `KDNA_Evolution.json` | You need to track skill progression |
+```bash
+kdna dev validate .
+```
 
-**Do not write all six files at once.** Let usage reveal what's missing.
+Trusted `.kdna` assets are then compiled and published via `kdna-studio`.
+
+---
 
 ## What KDNA Does Not Do
 
