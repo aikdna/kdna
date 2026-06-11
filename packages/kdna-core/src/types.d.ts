@@ -204,7 +204,7 @@ export interface KDNAFileDataMap {
 
 export interface KDNAManifest {
   format: 'kdna';
-  format_version: '1.0';
+  format_version: '2.0';
   spec_version: string;
   name: string;
   version: string;
