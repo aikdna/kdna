@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in KDNA tooling (kdna-cli, kdna-core, kdna-studio, kdna-registry, kdna-website, or kdna-vscode), please report it privately.
+If you discover a security vulnerability in KDNA tooling (kdna-cli, kdna-core, kdna-studio-cli, kdna-studio-core, kdna-registry, kdna-website, or kdna-vscode), please report it privately.
 
 **Do not open a public issue.**
 
