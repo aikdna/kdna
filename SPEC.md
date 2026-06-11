@@ -239,25 +239,31 @@ A `.kdna` asset MUST include a `kdna.json` manifest with the following REQUIRED 
 ```json
 {
   "format": "kdna",
-  "format_version": "1.0",
-  "spec_version": "1.0-rc",
+  "format_version": "2.0",
+  "spec_version": "2.0",
   "name": "<domain-id>",
   "version": "<semver>",
   "judgment_version": "<semver>",
   "status": "draft | experimental | stable | deprecated",
   "quality_badge": "untested | tested | validated | expert_reviewed | production_ready",
-  "access": "open | licensed | runtime",
+  "access": "public | licensed | remote",
   "languages": ["<BCP 47>"],
   "default_language": "<BCP 47>",
   "author": { "name": "...", "id": "..." },
   "license": { "type": "...", "url": "..." },
-  "description": "..."
+  "description": "...",
+  "container": {
+    "type": "kdna-container-v2",
+    "payload": "payload.kdnab",
+    "payload_encoding": "cbor"
+  }
 }
 ```
 
 **Rules:**
-- `spec_version` is REQUIRED. It declares which KDNA specification version this asset conforms to. `kdna_spec` is not part of v1.0 and MUST be rejected by conforming tools.
-- `format` MUST be `"kdna"` and `format_version` MUST be `"1.0"` for v1.0 `.kdna` containers.
+- `spec_version` is REQUIRED. It declares which KDNA specification version this asset conforms to. `kdna_spec` is rejected.
+- `format` MUST be `"kdna"` and `format_version` MUST be `"2.0"`.
+- `container.type` MUST be `"kdna-container-v2"`. `container.payload` MUST be `"payload.kdnab"`.
 - `judgment_version` is REQUIRED. It tracks the version of the domain's judgment content (axioms, ontology, misunderstandings). It MUST be incremented when any judgment-relevant content changes. It MAY differ from `version` which tracks packaging or metadata changes.
 - `status` and `quality_badge` are independent. See §3.3.2.
 - Domains claiming `quality_badge` of `tested` or higher MUST include:
@@ -581,7 +587,7 @@ KDNA domains follow [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATC
 
 A domain at `v0.2.0` with only Core+Patterns is less mature than `v0.4.0` with Core+Patterns+Scenarios+Cases. The version number reflects structural evolution, not functional superiority. Two domains at different versions MAY both be valid for their respective scopes.
 
-The SPEC version (`spec_version` in manifest) indicates which version of this specification the domain conforms to (e.g., `1.0-rc`). This is independent of the domain's own version number.
+The SPEC version (`spec_version` in manifest) indicates which version of this specification the domain conforms to (e.g., `2.0`). This is independent of the domain's own version number.
 
 ## 13. Domain Composition and Clusters
 
@@ -735,8 +741,8 @@ Every `.kdna` container MUST include a `kdna.json` at the archive root. This fil
 ```json
 {
   "format": "kdna",
-  "format_version": "1.0",
-  "spec_version": "1.0-rc",
+  "format_version": "2.0",
+  "spec_version": "2.0",
   "name": "@aikdna/writing",
   "version": "0.7.2",
   "judgment_version": "2026.05",
