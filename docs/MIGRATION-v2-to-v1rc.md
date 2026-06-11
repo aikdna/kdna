@@ -1,6 +1,13 @@
 # Migration Guide: v2.0 → v1.0-rc
 
 > **Audience:** Domain authors migrating from pre-v1.0 KDNA formats to the v1.0-rc specification.
+>
+> **Breaking changes summary (v1.0-rc):**
+> - `evidence_type` changed from `string` to `array` — wrap existing values
+> - Quality badge thresholds raised: tested ≥10 (was ≥3), validated ≥30 (was ≥10)
+> - `source_mode` is strongly recommended (defaults to `"blank"` if absent)
+> - Merged single-file JSON format is rejected
+> - `kdna_spec` and singular `language` are rejected
 
 ---
 

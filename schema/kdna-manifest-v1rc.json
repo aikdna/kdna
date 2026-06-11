@@ -18,8 +18,7 @@
     "quality_badge",
     "access",
     "languages",
-    "default_language",
-    "source_mode"
+    "default_language"
   ],
   "properties": {
     "format": {
