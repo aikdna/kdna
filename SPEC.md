@@ -14,8 +14,8 @@ KDNA (Knowledge DNA) is a structured asset format for encoding domain judgment f
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.
 
 - **Domain:** A specific area of expertise with recurring judgment patterns (e.g., sales, management, code review).
-- **KDNA Asset:** A `.kdna` file representing one portable, installable, verifiable, and loadable domain judgment asset.
-- **Internal Domain Tree:** The structured files contained inside a `.kdna` asset, such as `kdna.json`, `KDNA_Core.json`, and `KDNA_Patterns.json`. This tree is an implementation detail, not the canonical user-facing object.
+- **KDNA Asset:** A `.kdna` file representing one portable, installable, verifiable, and loadable domain judgment asset. A valid KDNA asset MUST contain `payload.kdnab` (CBOR-encoded judgment). It MUST NOT contain `KDNA_Core.json`, `KDNA_Patterns.json`, `KDNA_Scenarios.json`, `KDNA_Cases.json`, `KDNA_Reasoning.json`, or `KDNA_Evolution.json` as top-level ZIP entries. Those files belong to the source tree only.
+- **Internal Domain Tree:** The content encoded inside `payload.kdnab`. This is not human-readable directly; consumption requires KDNA-compatible tooling. The source tree (KDNA_Core.json etc.) is the authoring format, never distributed as an asset.
 - **Dev Source Directory:** An optional authoring workspace used to build a `.kdna` asset. Source directories are non-canonical and MUST NOT be treated as installed runtime domains.
 - **Loader:** Software that reads KDNA files and formats them for agent consumption.
 - **Validator:** Software that checks KDNA files for structural compliance.
@@ -42,7 +42,7 @@ KDNA is a *judgment structure format*, not a general content format. The followi
 
 **Invariant (MUST NOT change across versions):**
 - A KDNA domain is represented by one `.kdna` asset containing at most 6 standard KDNA judgment files; supporting entries such as `kdna.json`, `README.md`, `LICENSE`, `signature.json`, `evals/`, `examples/`, and `reports/` do not count toward this limit
-- Minimum valid domain = `KDNA_Core.json` + `KDNA_Patterns.json`
+- Minimum valid domain = `KDNA_Core.json` + `KDNA_Patterns.json` in the SOURCE TREE. In the distribution asset, the minimum is `kdna.json` + `payload.kdnab` + `signature.kdsig`.
 - Each file MUST contain a `meta` object with `version`, `domain`, `created`, `purpose`, `load_condition`
 - Axioms MUST have `one_sentence`, `full_statement`, and `why`
 - Misunderstandings MUST have `key_distinction`
@@ -215,7 +215,7 @@ Every `.kdna` asset and registry entry MUST use a consistent three-field system 
 |-------|-----------------|---------|
 | `status` | `draft` \| `experimental` \| `stable` \| `deprecated` | Maturity of the domain's structure and content. `draft` = early work in progress; `experimental` = complete but not yet tested in practice; `stable` = structure frozen, content mature; `deprecated` = superseded by another domain. |
 | `quality_badge` | `untested` \| `tested` \| `validated` \| `expert_reviewed` \| `production_ready` | Evidence level for the domain's judgment quality. `untested` = passes schema validation only; `tested` = >= 10 eval cases with manual verification; `validated` = >= 30 eval cases with automated judgment scoring; `expert_reviewed` = externally reviewed by a domain expert; `production_ready` = validated + real-world deployment evidence. |
-| `access` | `open` \| `licensed` \| `runtime` | How the domain is distributed. `open` = plaintext, freely available; `licensed` = encrypted, requires local license; `runtime` = not distributed, server-side API only. |
+| `access` | `public` \| `licensed` \| `remote` | How the domain is distributed. `public` = freely usable by any KDNA-compatible runtime; `licensed` = encrypted, requires local license; `remote` = not distributed, consumed through API/MCP. |
 
 **Rules:**
 - `status` and `quality_badge` are independent. A domain MAY be `stable` but `untested` (mature structure, no eval evidence), or `experimental` but `validated` (new domain with thorough testing).
@@ -752,7 +752,7 @@ Every `.kdna` container MUST include a `kdna.json` at the archive root. This fil
   },
   "status": "experimental",
   "quality_badge": "tested",
-  "access": "open",
+  "access": "public",
   "languages": ["en", "zh-CN"],
   "default_language": "en",
   "keywords": ["writing", "editing", "editorial"],
