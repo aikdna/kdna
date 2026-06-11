@@ -214,7 +214,7 @@ Every `.kdna` asset and registry entry MUST use a consistent three-field system 
 | Field | Permitted Values | Meaning |
 |-------|-----------------|---------|
 | `status` | `draft` \| `experimental` \| `stable` \| `deprecated` | Maturity of the domain's structure and content. `draft` = early work in progress; `experimental` = complete but not yet tested in practice; `stable` = structure frozen, content mature; `deprecated` = superseded by another domain. |
-| `quality_badge` | `untested` \| `tested` \| `validated` \| `expert_reviewed` \| `production_ready` | Evidence level for the domain's judgment quality. `untested` = passes schema validation only; `tested` = has eval cases with manual verification; `validated` >= 10 eval cases with automated judgment scoring; `expert_reviewed` = externally reviewed by a domain expert; `production_ready` = validated + real-world deployment evidence. |
+| `quality_badge` | `untested` \| `tested` \| `validated` \| `expert_reviewed` \| `production_ready` | Evidence level for the domain's judgment quality. `untested` = passes schema validation only; `tested` = >= 10 eval cases with manual verification; `validated` = >= 30 eval cases with automated judgment scoring; `expert_reviewed` = externally reviewed by a domain expert; `production_ready` = validated + real-world deployment evidence. |
 | `access` | `open` \| `licensed` \| `runtime` | How the domain is distributed. `open` = plaintext, freely available; `licensed` = encrypted, requires local license; `runtime` = not distributed, server-side API only. |
 
 **Rules:**
@@ -228,10 +228,10 @@ Every `.kdna` asset and registry entry MUST use a consistent three-field system 
 | Badge | Minimum Eval Cases | Automated Scoring |
 |-------|-------------------|-------------------|
 | `untested` | 0 | N/A |
-| `tested` | >= 3 | Manual verification |
-| `validated` | >= 10 | `kdna verify --judgment` passes |
-| `expert_reviewed` | >= 10 | External expert sign-off |
-| `production_ready` | >= 10 | Deployment metrics + judgment improvement evidence |
+| `tested` | >= 10 | Manual verification |
+| `validated` | >= 30 | `kdna verify --judgment` passes |
+| `expert_reviewed` | >= 30 | External expert sign-off |
+| `production_ready` | >= 30 | Deployment metrics + judgment improvement evidence |
 
 ### 3.4 Manifest
 
@@ -262,7 +262,7 @@ A `.kdna` asset MUST include a `kdna.json` manifest with the following REQUIRED 
 - `judgment_version` is REQUIRED. It tracks the version of the domain's judgment content (axioms, ontology, misunderstandings). It MUST be incremented when any judgment-relevant content changes. It MAY differ from `version` which tracks packaging or metadata changes.
 - `status` and `quality_badge` are independent. See §3.3.2.
 - Domains claiming `quality_badge` of `tested` or higher MUST include:
-  - An `evals/` directory with at least 4 case files (core, boundary, failure, excluded scenarios)
+  - An `evals/` directory with at least 10 case files (core, boundary, failure, excluded scenarios)
   - A README.md with explicit boundary declaration (Scope + Out-of-Scope, or v2.1 Four Questions format)
 
 ## 4. Shared Root Structure
@@ -531,9 +531,9 @@ A validator SHOULD also verify that the `domain` field in `meta` is consistent a
 
 A conforming evaluator MUST test behavioral quality via the `evals/` directory:
 
-- Every domain claiming `quality_badge` of `tested` or higher MUST include an `evals/` directory with at least 4 case files
+- Every domain claiming `quality_badge` of `tested` or higher MUST include an `evals/` directory with at least 10 case files
 - Each eval case MUST include: `id`, `domain`, `input`, `expected_classification`, `expected_axioms`, `output_rubric`
-- The 4 minimum cases SHOULD cover: core scenario (normal application), boundary scenario (domain does not apply), failure scenario (misunderstanding triggered), excluded scenario (edge case)
+- The 10 minimum cases SHOULD cover multiple: core scenarios (normal application), boundary scenarios (domain does not apply), failure scenarios (misunderstanding triggered), excluded scenarios (edge cases)
 - A conforming evaluator SHOULD also test:
   - Loaded vs. unloaded response quality difference
   - Misunderstanding detection rate
@@ -774,7 +774,9 @@ Every `.kdna` container MUST include a `kdna.json` at the archive root. This fil
 }
 ```
 
-**Required fields:** `format`, `format_version`, `spec_version`, `name`, `version`, `judgment_version`, `description`, `author`, `license`, `status`, `quality_badge`, `access`, `languages`, `default_language`, `source_mode`.
+**Required fields:** `format`, `format_version`, `spec_version`, `name`, `version`, `judgment_version`, `description`, `author`, `license`, `status`, `quality_badge`, `access`, `languages`, `default_language`.
+
+**Strongly recommended:** `source_mode`. Assets without `source_mode` default to `"blank"` in conforming validators.
 
 **Optional fields:** `core_insight`, `keywords`, `file_count`, `risk_level`, `privacy_level`, `asset_type`, `created`, `updated`, `content_digest`, `signature`, `fitness_for_purpose`, `creator`, `lineage`.
 
@@ -916,7 +918,7 @@ Persistent extraction MUST NOT be required for loading. A runtime MAY create int
 | `kdna load @aikdna/writing` | Load the installed `.kdna` asset directly into agent context |
 | `kdna load writing.kdna` | Load a local `.kdna` asset directly into agent context |
 | `kdna compare writing.kdna --input "..."` | Compare with/without a local `.kdna` asset |
-| `kdna dev pack ./writing-source` | Build a dev-only, non-trusted diagnostic bundle from a non-canonical source directory |
+| `kdna dev pack ./writing-source` | [DEPRECATED] Build a dev-only, non-trusted diagnostic bundle from a non-canonical source directory. Use `kdna-studio compile/export` for trusted assets. |
 | `kdna dev unpack writing.kdna` | Unpack into a dev source directory for inspection or editing |
 
 ### 14.9 Platform Recognition
@@ -1088,5 +1090,5 @@ A conforming validator MUST verify:
 - [Semantic Versioning](https://semver.org/) — Version numbering
 - [SPDX License List](https://spdx.org/licenses/) — License identifiers
 - JSON Schema files: `schema/KDNA_*.schema.json`
-- CLI tools: `kdna dev validate`, `kdna dev pack`, `kdna compare`
+- CLI tools: `kdna dev validate`, `kdna dev pack` (deprecated, use `kdna-studio`), `kdna compare`
 - Registry: `registry/domains.json`

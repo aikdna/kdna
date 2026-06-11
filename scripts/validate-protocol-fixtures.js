@@ -38,7 +38,6 @@ function checkNoForbiddenFields(obj, rel, stack = []) {
 
 function checkManifestSchema() {
   const schema = readJson('schema/kdna-manifest-v1rc.json');
-  const packagedSchema = readJson('packages/kdna-core/schema/kdna-manifest-v1rc.json');
   if (!schema) return;
   if (schema.properties && hasOwn(schema.properties, 'language')) {
     errors.push('schema/kdna-manifest-v1rc.json: properties.language must not exist in v1.0-rc');
@@ -49,11 +48,7 @@ function checkManifestSchema() {
   if (!schema.required?.includes('default_language') || !schema.required?.includes('languages')) {
     errors.push('schema/kdna-manifest-v1rc.json: default_language and languages must be required');
   }
-  if (packagedSchema && JSON.stringify(packagedSchema) !== JSON.stringify(schema)) {
-    errors.push(
-      'packages/kdna-core/schema/kdna-manifest-v1rc.json: must match schema/kdna-manifest-v1rc.json',
-    );
-  }
+  // packages/kdna-core/schema/ was removed — schema/ is the single source of truth.
 }
 
 function checkRegistryFixture() {

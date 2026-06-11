@@ -2,7 +2,7 @@
 
 KDNA Governance Console 是组织用于批准、发布、回滚和审计判断更新的界面。
 
-[KDNA Studio](./kdna-studio-principles.zh.md) 生产判断资产，而 Governance Console 治理其组织生命周期。它确保自我改进型 Agent 不会漂移——不是因为禁止 Agent 学习，而是因为每次判断更新都是可见的、经过审核的、被刻意批准的。
+[KDNA Studio CLI](https://github.com/aikdna/kdna-studio-cli) 生产判断资产，而 Governance Console 治理其组织生命周期。它确保自我改进型 Agent 不会漂移——不是因为禁止 Agent 学习，而是因为每次判断更新都是可见的、经过审核的、被刻意批准的。
 
 ---
 

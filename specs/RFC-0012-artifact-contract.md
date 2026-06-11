@@ -1,4 +1,4 @@
-# RFC-0009: KDNA Artifact Contract
+# RFC-0012: KDNA Artifact Contract
 
 **Status:** Draft  
 **Proposed:** 2026-06-08  

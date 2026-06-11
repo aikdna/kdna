@@ -1,5 +1,7 @@
 # First Domain Walkthrough — Writing Judgment
 
+> This is an end-to-end walkthrough. For a shorter guide on creating your first domain, see [Your First Domain](./first-domain.md).
+
 This walkthrough takes you through a complete KDNA workflow. You'll see a domain judgment package go from a file on disk to a visible change in how an AI agent reasons.
 
 **Goal**: Understand what a KDNA domain is, not by reading about it, but by seeing it work.
@@ -69,7 +71,7 @@ kdna setup
 kdna install @aikdna/writing
 ```
 
-This downloads and stores the `.kdna` asset under `~/.kdna/packages/@aikdna/writing/<version>/writing.kdna`, then records it in `~/.kdna/index.db`. The CLI verifies its SHA-256 hash and Ed25519 signature before accepting it.
+This downloads and stores the `.kdna` asset under `~/.kdna/packages/@aikdna/writing/<version>/writing.kdna`, then records it in `~/.kdna/index.json`. The CLI verifies its SHA-256 hash and Ed25519 signature before accepting it.
 
 ---
 

@@ -20,9 +20,9 @@ KDNA v1.0-rc has five public paths:
 | --- | --- | --- |
 | AI user | [5-minute guide](./docs/5-minute-guide.md) | See with/without KDNA judgment difference. |
 | Domain expert | [First domain walkthrough](./docs/first-domain-walkthrough.md) | Create and verify a first `.kdna` asset. |
-| Developer | [CLI JSON contract](./docs/cli-json-contract.md) | Load and verify KDNA with stable machine output. |
-| Agent builder | [Agent integration kit](./docs/agent-integration-kit.md) | Show loaded-domain trace in an agent runtime. |
-| Registry operator | [Private registry demo](./examples/private-registry/README.md) | Run a registry that fails closed on trust errors. |
+| Developer | [CLI reference](https://github.com/aikdna/kdna-cli) | Load and verify KDNA with the runtime CLI. |
+| Agent builder | [kdna-skills](https://github.com/aikdna/kdna-skills) | Integrate KDNA loading into an agent runtime. |
+| Registry operator | [Registry repo](https://github.com/aikdna/kdna-registry) | Run a registry that fails closed on trust errors. |
 
 Current public release status: [State of KDNA](./STATE_OF_KDNA.md).
 
@@ -186,7 +186,7 @@ In a [5-model agent_safety mini benchmark](./benchmarks/BENCHMARK_SUMMARY.md), K
 
 **Average: +7.4 over Best Prompt, +29.0 over No KDNA.**
 
-[Full report](./benchmarks/BENCHMARK_SUMMARY.md) · [Raw outputs](./benchmarks/raw/agent_safety/) · [Runner](./benchmarks/eval-agent-safety.mjs) · [Limitations](./benchmarks/BENCHMARK_SUMMARY.md#7-limitations--next-steps)
+[Full report](./benchmarks/BENCHMARK_SUMMARY.md) · [Runner](./benchmarks/eval-agent-safety.mjs) · [Limitations](./benchmarks/BENCHMARK_SUMMARY.md#7-limitations--next-steps)
 
 ---
 

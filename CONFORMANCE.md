@@ -47,7 +47,7 @@ An implementation is NOT KDNA-compatible if it:
 - Ignores `asset_digest` or signature metadata
 - Writes decrypted licensed entries to persistent disk
 - Silently blends multiple domains without attribution
-- Uses legacy quality badge names (`basic`, `expert-reviewed`, `production-ready`)
+- Uses legacy quality badge names (`basic`, `pro`, `reference`) or non-standard variants (`expert-reviewed` with hyphen, `production-ready` with hyphen — correct names use underscores: `expert_reviewed`, `production_ready`)
 
 ## Fixtures Tested
 

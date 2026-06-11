@@ -6,7 +6,7 @@ KDNA is not a document for agents to read aloud. It is a cognitive layer that qu
 
 ### Install ≠ Load
 
-Installing a KDNA domain stores a `.kdna` asset under `~/.kdna/packages/` and records it in `~/.kdna/index.db`. Install does **not** mean it will be loaded on every request. Assets are passive data on disk. The agent decides per-task whether any domain should be loaded.
+Installing a KDNA domain stores a `.kdna` asset under `~/.kdna/packages/` and records it in `~/.kdna/index.json`. Install does **not** mean it will be loaded on every request. Assets are passive data on disk. The agent decides per-task whether any domain should be loaded.
 
 A user with 50 installed KDNAs is not paying 50 × loading cost per
 request. The agent only:
