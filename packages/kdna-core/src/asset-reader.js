@@ -1,18 +1,28 @@
 /**
  * KDNA Asset Reader — direct .kdna container access.
  *
- * This module intentionally uses only Node.js built-ins. It reads ZIP central
- * directory records directly so runtimes can inspect, verify, and load .kdna
- * assets without persistent extraction to a domain directory.
+ * Supports KDNA Container v2 (payload.kdnab via CBOR).
+ * V1 plaintext containers (KDNA_Core.json etc. as ZIP entries) are rejected.
  */
 
 const fs = require('fs');
 const crypto = require('crypto');
 const zlib = require('zlib');
+const cbor = require('cbor-x');
 const { loadDomainFromFiles, formatContext } = require('./loader');
 
 const STANDARD_ENTRIES = [
   'kdna.json',
+  'payload.kdnab',
+  'KDNA_Core.json',
+  'KDNA_Patterns.json',
+  'KDNA_Scenarios.json',
+  'KDNA_Cases.json',
+  'KDNA_Reasoning.json',
+  'KDNA_Evolution.json',
+];
+
+const V1_ENTRIES = [
   'KDNA_Core.json',
   'KDNA_Patterns.json',
   'KDNA_Scenarios.json',
@@ -373,6 +383,22 @@ function readManifest(asset) {
 function readDataMapSync(asset, entries = STANDARD_ENTRIES, options = {}) {
   const dataMap = {};
   const manifest = readManifest(asset);
+
+  // ── KDNA Container v2: decode CBOR payload ──
+  if (asset.entries.has('payload.kdnab')) {
+    const payloadBuf = asset.readEntry('payload.kdnab');
+    const payload = cbor.decode(payloadBuf);
+    if (payload && payload.judgment) {
+      if (payload.judgment.core) dataMap['KDNA_Core.json'] = payload.judgment.core;
+      if (payload.judgment.patterns) dataMap['KDNA_Patterns.json'] = payload.judgment.patterns;
+      if (payload.judgment.scenarios) dataMap['KDNA_Scenarios.json'] = payload.judgment.scenarios;
+      if (payload.judgment.cases) dataMap['KDNA_Cases.json'] = payload.judgment.cases;
+      if (payload.judgment.reasoning) dataMap['KDNA_Reasoning.json'] = payload.judgment.reasoning;
+      if (payload.judgment.evolution) dataMap['KDNA_Evolution.json'] = payload.judgment.evolution;
+    }
+    return dataMap;
+  }
+
   const encrypted = encryptedEntries(manifest).filter((entryName) => entries.includes(entryName));
   if (encrypted.length && typeof options.decryptEntry !== 'function') {
     throw new Error(`encrypted entries require decryptEntry hook: ${encrypted.join(', ')}`);
