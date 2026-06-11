@@ -160,7 +160,7 @@ benchmarks/raw/agent_safety/
 
 ```bash
 git clone https://github.com/aikdna/kdna.git
-cd KDNA
+cd kdna
 
 # Set API key in ../.env (line must contain 'sk-or-v1' for OpenRouter)
 # Or: key=<your-minimax-key> (line must contain 'sk-api-')

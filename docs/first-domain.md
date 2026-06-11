@@ -1,5 +1,7 @@
 # Your First Domain
 
+> Short guide. For a detailed end-to-end walkthrough, see [First Domain Walkthrough](./first-domain-walkthrough.md).
+
 Build a working KDNA domain in 10 minutes and see how it changes agent judgment.
 
 ## Step 1: Install

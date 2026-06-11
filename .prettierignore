@@ -5,3 +5,4 @@ examples/
 schema/
 python-sdk/.venv/
 packages/
+benchmarks/raw/

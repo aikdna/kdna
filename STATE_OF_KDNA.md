@@ -16,7 +16,7 @@ KDNA is the open judgment asset protocol for AI agents. It is not another prompt
 
 ## Release-Candidate, Not Final
 
-- CLI JSON outputs are now documented in [docs/cli-json-contract.md](docs/cli-json-contract.md). v1.0-rc requires additive-only field changes unless a new contract version is declared.
+- CLI JSON outputs are documented in the [kdna-cli](https://github.com/aikdna/kdna-cli) repository. v1.0-rc requires additive-only field changes unless a new contract version is declared.
 - Conformance is strong enough for asset-loader compatibility claims, but the golden corpus still needs more third-party implementation runs.
 - Registry trust failure tests exist under `tests/registry-trust/` and pass locally with hermetic `HOME/KDNA_HOME`.
 - The public registry release preflight passes, including remote asset digest checks for installable assets.
@@ -26,7 +26,7 @@ KDNA is the open judgment asset protocol for AI agents. It is not another prompt
 ## Evidence-Gated
 
 - `validated` quality badges require at least 30 eval cases, automated scoring, raw outputs, rubric, benchmark report, and limitations.
-- The first validated candidates are `@aikdna/writing`, `@aikdna/prompt_diagnosis`, and `@aikdna/agent_safety`; all three source repos now have 30 eval cases, but signed release assets still need to be republished before registry `test_count` can claim 30. They also need raw model outputs and completed automated scoring artifacts. The evidence contract is in [docs/reference-domain-benchmark-runbook.md](docs/reference-domain-benchmark-runbook.md).
+- The first validated candidates are `@aikdna/writing`, `@aikdna/prompt_diagnosis`, and `@aikdna/agent_safety`; all three source repos now have 30 eval cases, but signed release assets still need to be republished before registry `test_count` can claim 30. They also need raw model outputs and completed automated scoring artifacts. The evidence contract is defined in the [registry policy](./docs/registry-policy.md) and [quality badge evidence gate](./specs/quality-badge-evidence-gate.md).
 - Existing early benchmark evidence should be described as early evidence until those gates pass.
 - External contributor readiness is not complete until a non-maintainer completes fork, install, conformance, registry-entry draft, and PR.
 
@@ -58,4 +58,4 @@ These should not be presented as v1.0-rc launch requirements:
 
 Do not expand the universe before v1.0-rc. Freeze, prove, and make the public path reproducible.
 
-Current audit: [Public Confidence Audit 2026-06-03](docs/PUBLIC_CONFIDENCE_AUDIT_2026-06-03.md).
+Current audit: [Public Confidence Audit](./STATE_OF_KDNA.md) (this document).

@@ -2,7 +2,7 @@
 
 **Status:** Draft  
 **Proposed:** 2026-06-08  
-**Related:** SPEC v1.0-rc, RFC-0009 (Artifact Contract), RFC-0010 (Fidelity Protocol), kdna-cli trace system
+**Related:** SPEC v1.0-rc, RFC-0012 (Artifact Contract), RFC-0010 (Fidelity Protocol), kdna-cli trace system
 
 ---
 
@@ -37,7 +37,7 @@ Evidence Trace
 │   └── agent_info, input_hash, output_hash
 │
 ├── Artifact Links (new)
-│   └── artifact_refs[] → RFC-0009 ArtifactEnvelope
+│   └── artifact_refs[] → RFC-0012 ArtifactEnvelope
 │
 ├── Quality Links (new)
 │   └── quality_report_refs[] → Quality Report / Fidelity Report
@@ -53,7 +53,7 @@ Evidence Trace
 
 ### 2.2 Trace Chain: Linking pipeline stages
 
-In a multi-stage pipeline (per RFC-0009), each stage produces its own trace. Traces are linked via `parent_trace_id`:
+In a multi-stage pipeline (per RFC-0012), each stage produces its own trace. Traces are linked via `parent_trace_id`:
 
 ```
 Route Trace (trace_type: route)

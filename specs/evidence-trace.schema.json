@@ -22,7 +22,7 @@
     },
     "session_id": {
       "type": "string",
-      "description": "Groups traces across a multi-stage pipeline run. Shared by all traces in the same Run (per RFC-0009)."
+      "description": "Groups traces across a multi-stage pipeline run. Shared by all traces in the same Run (per RFC-0012)."
     },
     "trace_type": {
       "type": "string",
@@ -221,7 +221,7 @@
     },
     "artifact_refs": {
       "type": "array",
-      "description": "Artifacts produced during this trace's generation. Links to RFC-0009 ArtifactEnvelope.",
+      "description": "Artifacts produced during this trace's generation. Links to RFC-0012 ArtifactEnvelope.",
       "items": {
         "type": "object",
         "required": ["artifact_id", "artifact_type"],
@@ -300,8 +300,8 @@
         "environment": { "type": "string", "enum": ["dev", "staging", "production"] },
         "engine": { "type": "string", "description": "Engine that produced this trace." },
         "engine_version": { "type": "string" },
-        "pipeline_run_id": { "type": "string", "description": "RFC-0009 Run ID." },
-        "stage_id": { "type": "string", "description": "RFC-0009 Stage ID within the pipeline." }
+        "pipeline_run_id": { "type": "string", "description": "RFC-0012 Run ID." },
+        "stage_id": { "type": "string", "description": "RFC-0012 Stage ID within the pipeline." }
       }
     }
   }

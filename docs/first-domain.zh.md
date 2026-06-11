@@ -1,5 +1,7 @@
 # 你的第一个 KDNA 领域
 
+> 简明指南。详细端到端教程见 [First Domain Walkthrough](./first-domain-walkthrough.md)（英文）。
+
 10 分钟内构建一个可工作的 KDNA 领域，并看到它如何改变 Agent 的判断。
 
 ## 第一步：安装
