@@ -186,7 +186,7 @@ KDNA should not be used to pretend that all judgment can be reduced to rules. It
 
 ### 3.1 Definition
 
-KDNA is an open, file-based protocol for encoding domain judgment as structured, verifiable cognition assets. A KDNA domain is represented, distributed, installed, verified, and loaded as a `.kdna` asset file. Internally, that asset contains a small standard domain tree of JSON entries. The internal tree describes the principles, concepts, boundaries, misunderstandings, scenarios, reasoning patterns, risk models, examples, and self-checks that guide judgment in a specific domain.
+KDNA is an open protocol for encoding domain judgment as structured, verifiable judgment assets. A KDNA domain is represented, distributed, installed, verified, and loaded as a `.kdna` asset file. Internally, that asset contains a payload of encoded judgment modules. The payload describes the principles, concepts, boundaries, misunderstandings, scenarios, reasoning patterns, risk models, examples, and self-checks that guide judgment in a specific domain.
 
 A domain does not try to store all information. It does not try to replace an expert. It captures the judgment structures that experts repeatedly use when deciding:
 

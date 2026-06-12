@@ -3,6 +3,11 @@
 This document defines how `.kdna` assets identify themselves to operating
 systems, HTTP clients, registries, and loaders.
 
+The media type identifies the outer transport container, not the KDNA judgment
+payload format. A conforming KDNA v2 asset requires `payload.kdnab`,
+`signature.kdsig`, manifest validation, and conforming runtime loading — the
+`+zip` suffix reflects the outer package structure only.
+
 ## Current Media Type
 
 The current recommended media type is:
@@ -15,10 +20,11 @@ Rationale:
 
 - KDNA is controlled by the AiKDNA project, so the vendor tree is the right
   public-registration path before any standards-tree submission.
-- `.kdna` is a ZIP container, so the registered `+zip` structured syntax suffix
-  makes the underlying container explicit to generic tooling.
+- `.kdna` uses a ZIP outer package for transport compatibility, so the
+  registered `+zip` structured syntax suffix makes the container structure
+  explicit to generic tooling.
 - `application/x-kdna` uses an unregistered `x-` prefix and is not part of the
-  KDNA v1.0 protocol.
+  KDNA protocol.
 
 ## Rejected Values
 
@@ -26,13 +32,13 @@ Rationale:
 application/x-kdna
 ```
 
-Conforming v1.0 tools MUST reject this value in registry metadata, HTTP
+Conforming tools MUST reject this value in registry metadata, HTTP
 responses, CLI package metadata, operating system integration files, and `.kdna`
 root `mimetype` entries.
 
 ## ZIP Identification
 
-Every v1.0-compatible `.kdna` asset MUST include a root `mimetype` entry with
+Every conforming `.kdna` asset MUST include a root `mimetype` entry with
 exactly this content and no trailing newline:
 
 ```text
@@ -45,10 +51,14 @@ without compression. Loaders MUST inspect both `mimetype` and `kdna.json`; a
 
 ## Future Registration Path
 
-1. Use `application/vnd.aikdna.kdna+zip` for v1.0.
-2. Prepare an IANA vendor-tree registration once the v1.0 format is frozen.
+1. Use `application/vnd.aikdna.kdna+zip` for the current protocol version.
+2. Prepare an IANA vendor-tree registration once the format is frozen.
 3. Consider a standards-tree type only after independent implementations and a
    standards body or RFC path exist.
+
+The `+zip` suffix is part of the registered media type and identifies the outer
+container. It does not imply that conforming consumption is possible with
+generic ZIP tools.
 
 ## Security Considerations
 

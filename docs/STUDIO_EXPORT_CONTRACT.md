@@ -1,12 +1,11 @@
 # Studio Export Contract
 
 Studio Export is the asset build step that turns a Human-Locked Studio project
-into an immutable `.kdna` asset. It is not a JSON save operation.
+into an immutable `.kdna` asset.
 
-A `.kdna` asset is not created by writing JSON files. It is compiled by a
-Studio-compatible authoring pipeline that performs human confirmation,
-validation, canonicalization, identity generation, digest computation, signing,
-optional encryption, and provenance recording.
+A `.kdna` asset is compiled by a Studio-compatible authoring pipeline that
+performs human confirmation, validation, canonicalization, identity generation,
+digest computation, signing, optional encryption, and provenance recording.
 
 **Hard boundary:** Optional encryption, when supported, MUST be represented as
 protected entries inside the `.kdna` container (RFC-0008). App-private encrypted
@@ -40,8 +39,9 @@ The `.kdna` container MUST include:
 ```text
 mimetype
 kdna.json
-KDNA_Core.json
-KDNA_Patterns.json
+payload.kdnab
+signature.kdsig
+build-receipt.json
 ```
 
 It SHOULD include:
@@ -56,11 +56,26 @@ reports/provenance-report.json
 reports/quality-gate-report.json
 reports/human-lock-report.json
 reports/eval-report.json
-signature.json
 ```
 
-Optional judgment entries include `KDNA_Scenarios.json`, `KDNA_Cases.json`,
-`KDNA_Reasoning.json`, and `KDNA_Evolution.json`.
+## Forbidden Distribution Entries
+
+The following entries are authoring workspace build inputs and MUST NOT appear
+as top-level entries in a distribution `.kdna` asset:
+
+```text
+KDNA_Core.json
+KDNA_Patterns.json
+KDNA_Scenarios.json
+KDNA_Cases.json
+KDNA_Reasoning.json
+KDNA_Evolution.json
+```
+
+These judgment modules are encoded inside `payload.kdnab` (see
+[container.md](../specs/container.md)). Their presence as top-level ZIP entries
+indicates a legacy v1 plaintext container and MUST be rejected by conforming
+runtimes.
 
 App-specific optional entries include `KDNA_Runtime_Report.json` (Studio/registry
 runtime report) and any additional evaluation artifacts placed under `evals/` or

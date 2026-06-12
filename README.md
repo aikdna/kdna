@@ -39,7 +39,7 @@ Prompt changes what AI says. RAG changes what AI can access. Tools change what A
 
 ## KDNA in 30 seconds
 
-KDNA is a file-based judgment framework that AI agents can load as a domain reference. It is not human judgment itself — like a .doc carries a portion of knowledge, a .kdna encodes a bounded set of domain-specific principles, boundaries, standards, and taste.
+KDNA is an open protocol for packaging human judgment as verifiable runtime assets for AI agents. It is not human judgment itself — like a .doc carries a portion of knowledge, a .kdna encodes a bounded set of domain-specific principles, boundaries, standards, and taste.
 
 It does not make an agent role-play an expert. It gives the agent an explicit framework to work within.
 
@@ -103,10 +103,9 @@ KDNA v1.0-rc defined how judgment is encoded. **Phase 2** defines how judgment f
 
 > **Phase 2 architecture:** [docs/phase2-architecture.md](./docs/phase2-architecture.md) — integration matrix, data flow, and RFC status tracking.
 
-A `.kdna` asset is not created by writing JSON files. It is compiled by a
-Studio-compatible authoring pipeline that performs human confirmation,
-validation, canonicalization, identity generation, digest computation, signing,
-optional encryption, and provenance recording.
+A `.kdna` asset is compiled by a Studio-compatible authoring pipeline that
+performs human confirmation, validation, canonicalization, identity generation,
+digest computation, signing, optional encryption, and provenance recording.
 
 ## The KDNA Stack
 
@@ -369,7 +368,7 @@ KDNA is the judgment reference layer. It does not replace these mechanisms — i
 <details>
 <summary>Does a .kdna file contain a person's full judgment?</summary>
 
-No. A .kdna file contains a bounded judgment framework. Just as a .doc contains only a portion of someone's knowledge, a .kdna file contains a portion of the principles, boundaries, standards, and taste that a person or team chooses to encode. Multiple .kdna files can form a judgment asset library — but no single file claims to capture a person's complete judgment ability.
+No. A .kdna file contains a bounded judgment framework — the principles, boundaries, standards, and taste that a person or team chooses to encode. Multiple .kdna files can form a judgment asset library — but no single file claims to capture a person's complete judgment ability.
 </details>
 
 <details>

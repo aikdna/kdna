@@ -7,7 +7,7 @@
 
 ## Abstract
 
-KDNA (Knowledge DNA) is a structured asset format for encoding domain judgment for AI agents. A `.kdna` asset represents one scoped judgment domain; complex agent work MAY route and compose multiple `.kdna` assets into KDNA Clusters. This specification defines the `.kdna` asset format, internal file tree, validation rules, loading behavior, and conformance requirements for KDNA domains and their composition layer.
+KDNA (Knowledge DNA) is a structured asset format for encoding domain judgment for AI agents. A `.kdna` asset represents one scoped judgment domain; complex agent work MAY route and compose multiple `.kdna` assets into KDNA Clusters. This specification defines the `.kdna` asset container, judgment payload, validation rules, loading behavior, and conformance requirements for KDNA domains and their composition layer.
 
 ## Terminology
 
@@ -41,8 +41,8 @@ KDNA is NOT designed for:
 KDNA is a *judgment structure format*, not a general content format. The following boundaries are defined to prevent format dilution:
 
 **Invariant (MUST NOT change across versions):**
-- A KDNA domain is represented by one `.kdna` asset containing at most 6 standard KDNA judgment files; supporting entries such as `kdna.json`, `README.md`, `LICENSE`, `signature.json`, `evals/`, `examples/`, and `reports/` do not count toward this limit
-- Minimum valid domain = `KDNA_Core.json` + `KDNA_Patterns.json`
+- A KDNA domain is compiled from up to six standard judgment modules. In a distribution asset, those modules are encoded inside `payload.kdnab`; they MUST NOT appear as top-level asset entries. Supporting entries such as `kdna.json`, `README.md`, `LICENSE`, `signature.json`, `evals/`, `examples/`, and `reports/` do not count toward this limit.
+- Minimum valid distribution asset = `kdna.json` + `payload.kdnab` + `signature.kdsig`
 - Each file MUST contain a `meta` object with `version`, `domain`, `created`, `purpose`, `load_condition`
 - Axioms MUST have `one_sentence`, `full_statement`, and `why`
 - Misunderstandings MUST have `key_distinction`
@@ -949,10 +949,9 @@ registry metadata, HTTP responses, and OS integration files. See
 
 Domain authors MAY work in directories. Users and agents MUST consume `.kdna` assets. The `.kdna` asset is the real object; the directory is a temporary source representation.
 
-A `.kdna` asset is not created by writing JSON files. It is compiled by a
-Studio-compatible authoring pipeline that performs human confirmation,
-validation, canonicalization, identity generation, digest computation, signing,
-optional encryption, and provenance recording.
+A `.kdna` asset is compiled by a Studio-compatible authoring pipeline that
+performs human confirmation, validation, canonicalization, identity generation,
+digest computation, signing, optional encryption, and provenance recording.
 
 ---
 

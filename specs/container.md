@@ -5,9 +5,16 @@
 
 ## 1. Design Principle
 
-V1 format used a ZIP container with plaintext JSON entries. This meant any generic `unzip` + JSON parser could fully consume KDNA judgment. The `.kdna` file was a renamed ZIP archive, not a true asset format.
+KDNA Container v2 defines the distribution form of a KDNA judgment asset.
+It separates public metadata, signed judgment payload, provenance, and runtime
+loading requirements. A conforming KDNA runtime performs a conforming load:
+verify the asset, decode the judgment payload, validate the structure, and
+emit agent-ready judgment context.
 
-KDNA Container fixes this. The `.kdna` file remains a ZIP container for transport compatibility, but internal judgment content is encoded in a binary payload that requires a KDNA-compatible decoder. Generic tools can inspect metadata but cannot consume judgment.
+The `.kdna` file uses a ZIP outer package for transport compatibility, but
+internal judgment content is encoded in a binary payload (`payload.kdnab`) that
+requires a KDNA-compatible decoder. Generic archive tools may inspect the outer
+package and public metadata. They do not perform a conforming KDNA load.
 
 **KDNA Container does not:**
 - Provide DRM or copy protection
@@ -24,19 +31,19 @@ KDNA Container fixes this. The `.kdna` file remains a ZIP container for transpor
 ## 2. Three-Layer Architecture
 
 ```
-Source Tree (authoring)     →    Asset Container (distribution)    →    Runtime Capsule (consumption)
-─────────────────────            ────────────────────────              ──────────────────────────
-KDNA_Core.json                  domain.kdna                          kdna.context.capsule
-KDNA_Patterns.json              ├── mimetype                         Agent never sees raw JSON
-KDNA_Scenarios.json             ├── kdna.json          ← metadata    
-KDNA_Cases.json                 ├── kdna.index.json    ← index       
-KDNA_Reasoning.json             ├── payload.kdnab      ← judgment    
-KDNA_Evolution.json             ├── signature.kdsig                  
-kdna.json                       └── build-receipt.json               
+Authoring Workspace         →    Distribution Asset         →    Runtime Capsule
+─────────────────               ────────────────────            ─────────────────
+structured build inputs          domain.kdna                   kdna.context.capsule
++ evidence                        ├── mimetype                  Agent never sees
++ Human Lock records              ├── kdna.json      ← manifest  raw build inputs
+                                  ├── kdna.index.json ← index
+                                  ├── payload.kdnab   ← judgment
+                                  ├── signature.kdsig
+                                  └── build-receipt.json
 ```
 
-- **Source Tree**: JSON files for human authoring, Git diff, and review. Never distributed as an asset.
-- **Asset Container**: `.kdna` file for registry distribution, installation, and verification. Judgment is encoded in `payload.kdnab`.
+- **Authoring Workspace**: Structured build inputs, evidence, and Human Lock records. Never distributed as an asset.
+- **Distribution Asset**: `.kdna` file for registry distribution, installation, and verification. Judgment is encoded in `payload.kdnab`.
 - **Runtime Capsule**: Structured output from `kdna load` for agent consumption. Agents MUST NOT read raw asset internals.
 
 ## 3. Container Structure

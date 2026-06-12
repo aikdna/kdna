@@ -43,24 +43,24 @@ The `.kdna` asset is the judgment source. The route result decides whether and h
 
 ### 1. KDNA Asset
 
-Canonical source: [SPEC.md](../SPEC.md)
+Canonical source: [SPEC.md](../SPEC.md) · [Container v2](../specs/container.md)
 
-A KDNA asset is a `.kdna` container containing the standard internal KDNA files:
+A KDNA distribution asset is a v2 `.kdna` container. Its mandatory entries are:
 
-- `KDNA_Core.json`
-- `KDNA_Patterns.json`
-- `KDNA_Scenarios.json`
-- `KDNA_Cases.json`
-- `KDNA_Reasoning.json`
-- `KDNA_Evolution.json`
+- `kdna.json` — public manifest and metadata
+- `payload.kdnab` — CBOR-encoded judgment payload
+- `signature.kdsig` — Ed25519 signature
+- `build-receipt.json` — build provenance
 
-Minimum valid asset:
+The six standard judgment modules (Core, Patterns, Scenarios, Cases, Reasoning,
+Evolution) are encoded inside `payload.kdnab`. They MUST NOT appear as top-level
+asset entries in a distribution `.kdna`. Their presence indicates a legacy v1
+plaintext container and MUST be rejected.
 
-- `KDNA_Core.json`
-- `KDNA_Patterns.json`
-- `kdna.json`
-
-Apps must treat the six KDNA files as internal judgment content. Product metadata, UI state, install metadata, or workflow configuration must not be written into the asset after installation; use external indices, traces, or sidecars.
+Apps must treat the encoded judgment payload as the canonical judgment content.
+Product metadata, UI state, install metadata, or workflow configuration must not
+be written into the asset after installation; use external indices, traces, or
+sidecars.
 
 ### 2. Route Result
 
