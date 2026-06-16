@@ -154,7 +154,7 @@ $ echo $?
 - RFC-0013: `specs/RFC-0013-judgment-asset-lifecycle.md`
 - RFC-0013 §4: same file, "New Top-Level Principle: Anti-Monolithic Domain"
 - RFC-0013 §9 #2 and #5: same file, "Acceptance Criteria"
-- Work plan: `Kdna内部思考/KDNA 协议升级工作计划 2026-06-16.md` §4.2 PR-2
+- Work plan: internal work plan, 2026-06-16 (not in repo; lives in the maintainer's personal internal-thinking space) §4.2 PR-2
 - kdna-cli PR-2: https://github.com/aikdna/kdna-cli/pull/10
 - kdna-cli commit: `bb64821` (squash of cherry-picked `b87b53f`)
 - kdna PR-1 (PR-1 schema baseline): https://github.com/aikdna/kdna/pull/86
