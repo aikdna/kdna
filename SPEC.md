@@ -103,6 +103,35 @@ A domain author SHOULD populate all components that are relevant to the domain's
 
 KDNA does not claim to exhaust human judgment. It provides a structured method for approximating repeatable judgment patterns: principles, concept distinctions, signals, boundaries, risks, cases, and evaluation. Some judgment remains implicit, situational, and the ultimate responsibility of the human operator.
 
+### 1.6.3. Anti-Monolithic Domain Principle
+
+A single KDNA domain SHOULD encode one bounded, testable, comparable judgment question. If a domain requires multiple unrelated judgment questions, the author MUST split it into multiple domains and compose them via cluster. A KDNA is not a knowledge base, encyclopedia, or comprehensive reference for a professional field. It is a judgment asset.
+
+**Companion rule (authoring-time gate, enforced by `kdna dev validate --anti-monolithic`):**
+
+If a domain's `KDNA_Core.json` exceeds 6 primary axioms **and** contains 3 or more `frameworks` **and** spans more than 2 distinct user-facing judgment questions, the author MUST either:
+
+- (a) split into sub-domains and reference them via cluster, or
+- (b) justify the monolithic structure in a `module_manifest.json` with a `decomposition_rationale` of at least 30 characters and obtain a maintainer sign-off recorded in the TC.
+
+The `decomposition_rationale` MUST explain why the domain's multiple parts cannot be loaded, evaluated, and evolved independently. A short placeholder ("todo", "later", "TBD") does not count as a substantive sign-off and is treated as missing.
+
+**Lint behavior (per RFC-0013 §4):**
+
+- **Default** (`kdna dev validate --anti-monolithic`): WARNING. The lint does not block CI. The maintainer sees the warning and either acts on it or formally records a sign-off.
+- **Strict** (`kdna dev validate --anti-monolithic --strict`): ERROR. Used by `kdna publish --official-preflight` and similar gates. A domain cannot be officially published while this rule is triggered without a sign-off.
+- **Soft warning** (when thresholds are exceeded but a substantive `decomposition_rationale` is present): a soft warning names the recorded sign-off so it stays visible in CI logs without false-positive blocking. Reviewers should still periodically re-evaluate whether the rationale still holds.
+
+**Examples (good vs bad, per RFC-0013 §4):**
+
+| Bad | Good |
+|-----|------|
+| `@aikdna/business` (covers strategy, ops, finance, sales, HR, legal) | `@aikdna/price_objection_diagnosis` + `@aikdna/landing_page_trust` + `@aikdna/meeting_decision_quality` |
+| `@aikdna/writing` (covers blog, academic, marketing, technical, fiction) | `@aikdna/blog_intro_hook` + `@aikdna/academic_methodology_passive_voice` + `@aikdna/landing_copy_above_fold` |
+| `atomspeak` as a single 800-line `KDNA_Core.json` | `atomspeak` (single question) + sub-domain `state_quadrant` only if independently loadable; otherwise `internal_module` |
+
+This principle is enforced by lint, not by prose. The canonical implementation lives in `aikdna/kdna-cli` (`src/cmds/anti-monolithic.js`); the principle text originates in RFC-0013 §4.
+
 ## 1.7. Judgment Update Governance
 
 KDNA domains encode judgment standards. When a self-improving agent learns from work, not all learning is equal. This section defines which updates agents MAY apply automatically and which MUST receive Human Judgment Lock.
