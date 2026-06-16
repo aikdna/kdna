@@ -25,6 +25,10 @@
     "release:preflight": "node scripts/release-preflight.js",
     "test:core-smoke": "node scripts/core-smoke.js",
     "test:ecosystem-lock": "node scripts/ecosystem-version-lock.js --strict",
+    "v1:validate": "node scripts/v1-validate.mjs",
+    "v1:inspect": "node scripts/v1-inspect.mjs",
+    "v1:pack": "node scripts/v1-pack.mjs",
+    "v1:unpack": "node scripts/v1-unpack.mjs",
     "pretest": "node scripts/core-smoke.js"
   },
   "license": "Apache-2.0",

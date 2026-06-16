@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/schema/checksums.schema.json",
+  "title": "KDNA Checksums v1",
+  "description": "Per-entry digests for a .kdna container. Stored as checksums.json at the container root.",
+  "type": "object",
+  "required": ["algorithm"],
+  "additionalProperties": true,
+  "properties": {
+    "algorithm": {
+      "type": "string",
+      "description": "Hash algorithm. Phase 1 uses sha256.",
+      "enum": ["sha256", "sha512", "blake2b-256"]
+    },
+    "manifest_digest": {
+      "type": "string",
+      "description": "Digest of the kdna.json entry.",
+      "pattern": "^[a-z0-9-]+:.+$"
+    },
+    "payload_digest": {
+      "type": "string",
+      "description": "Digest of the payload.kdnab entry.",
+      "pattern": "^[a-z0-9-]+:.+$"
+    },
+    "asset_digest": {
+      "type": "string",
+      "description": "Digest of the whole container (per-entry digests combined deterministically).",
+      "pattern": "^[a-z0-9-]+:.+$"
+    },
+    "entries": {
+      "type": "object",
+      "description": "Per-entry digests, keyed by entry name within the container.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["algorithm", "value"],
+        "properties": {
+          "algorithm": { "type": "string" },
+          "value": { "type": "string" }
+        }
+      }
+    }
+  }
+}
