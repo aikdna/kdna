@@ -1,0 +1,37 @@
+{
+  "tc_id": "tc_code_review_0_8_2026_06_14",
+  "domain_id": "@aikdna/code_review",
+  "tc_status": "locked",
+  "locked_at": "2026-06-14T00:00:00Z",
+  "locked_by": "code_review_maintainer",
+  "highest_question": "在代码审查中,如何判断一个 PR 反映的是局部 bug、架构边界问题,还是作者对系统约束的根本性误解?",
+  "core_insight": "代码审查失败时,真正缺失的不是找出更多问题,而是判断这次提交在哪一层出错,以及这一层是否还值得继续打补丁。",
+  "in_scope": [
+    "区分 PR 反映的判断层级:局部 / 架构 / 约束误解",
+    "识别 rubber-stamp 风险(审查者走流程不思考)",
+    "在不可逆变更前提供 safety guard",
+    "对作者能力边界给出尊重的反馈"
+  ],
+  "out_of_scope": [
+    "提供具体代码实现建议",
+    "替代自动化测试或 CI 检查",
+    "对个人工程师能力做长期评价",
+    "判断代码风格(交给 lint)"
+  ],
+  "highest_axiom_protected": "审查者必须先判断 PR 处于哪一层,再决定如何响应;永远不要在没分层的情况下直接给修改建议。",
+  "forbidden_simplifications": [
+    "把判断问题改写为'代码好不好'的二元评分",
+    "用术语清单(security / performance / style)代替判断动作",
+    "把'尊重的反馈'等同于'礼貌的批评'"
+  ],
+  "renamed_terms": [
+    { "old": "bug_finder", "new": "judgment_layer_diagnoser", "effective_from": "0.8.0" },
+    { "old": "code_reviewer", "new": "judgment_layer_diagnoser", "effective_from": "0.8.0" }
+  ],
+  "anti_drift_rules": [
+    "禁止把核心判断改写为风格审查",
+    "禁止把'判断层级'等同于'bug 严重程度'",
+    "禁止为追求简洁而删除 safety guard 风险边界"
+  ],
+  "judgment_authority_holder": "code_review_maintainer"
+}

@@ -1,0 +1,65 @@
+{
+  "sag_id": "sag_code_review_2026_06_16",
+  "domain_id": "@aikdna/code_review",
+  "version_intent": "0.8.0-draft.1",
+  "sources": [
+    {
+      "id": "code_review_docs_0_7",
+      "type": "published_work",
+      "authority": "historical_baseline",
+      "status": "stable_but_superseded",
+      "can_override": false,
+      "scope": "full_kb",
+      "notes": "Published knowledge base for the 0.7.x series. Stable for backward compat, not the highest source."
+    },
+    {
+      "id": "rfcs_internal_drafts",
+      "type": "unpublished_draft",
+      "authority": "thought_mine",
+      "status": "active",
+      "can_override": false,
+      "scope": "evaluation_methods"
+    },
+    {
+      "id": "code_review_charter_0_8",
+      "type": "human_locked_charter",
+      "authority": "current_highest",
+      "status": "active",
+      "can_override": true,
+      "scope": "axioms_and_ontology",
+      "notes": "Author-locked charter for the 0.8.x series. Carries override authority."
+    },
+    {
+      "id": "author_oral_2026_06_14",
+      "type": "author_confirmation",
+      "authority": "current_highest",
+      "status": "active",
+      "can_override": true,
+      "scope": "open_questions"
+    }
+  ],
+  "precedence_order": [
+    "author_oral_2026_06_14",
+    "code_review_charter_0_8",
+    "rfcs_internal_drafts",
+    "code_review_docs_0_7"
+  ],
+  "conflict_policies": [
+    {
+      "when": "published_work_conflicts_with_human_locked_charter",
+      "resolution": "charter_overrides",
+      "record_required": true,
+      "record_target": "candidate_cards.jsonl.conflict_resolution"
+    },
+    {
+      "when": "draft_terminology_diverges_from_charter",
+      "resolution": "charter_overrides_and_record_rename",
+      "record_required": true,
+      "record_target": "evolution.term_renames"
+    }
+  ],
+  "sensitivity": {
+    "sources_contain_pii": false,
+    "author_consent_on_file": true
+  }
+}
