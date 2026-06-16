@@ -129,6 +129,6 @@ this as the maintainer sign-off for keeping a domain monolithic.
 - RFC-0013 (design contract): `specs/RFC-0013-judgment-asset-lifecycle.md`
 - RFC-0013 §9 acceptance criteria (amended): now requires simple official
   domain for first smoke test, atomspeak deferred to PR-5
-- Work plan: `Kdna内部思考/KDNA 协议升级工作计划 2026-06-16.md` §4.2 PR-1
+- Work plan: internal work plan, 2026-06-16 (not in repo; lives in the maintainer's personal internal-thinking space) §4.2 PR-1
 - RFC-0013 audit note: `docs/audits/2026-06-16-rfc-0013-audit-note.md`
 - Existing schema validation pattern: `scripts/validate-app-schemas.js`

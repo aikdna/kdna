@@ -121,10 +121,16 @@ and `KDNA_Patterns.json` and emits synthesized `source_authority.json`,
 starts at `tc_status: "synthesized"` and is promoted to
 `tc_status: "locked"` only by an explicit `lock_tc_with_rationale`
 call with a real `locked_by` and a non-empty `rationale`. The
-resulting TC, with the synthesized SAG, passes the PR-3 strict
-compile, producing a v2 container that is **byte-for-byte
-equivalent** to the PR-4 explicit-fixture container (verified by
-`test_B4_load_contract_matches_pr4`).
+rationale is **not** carried in the locked TC JSON file itself
+(because the PR-1 TC schema has `additionalProperties: false`); it
+is returned by the helper separately and lives in the caller's
+context. The resulting TC, with the synthesized SAG, passes the
+PR-3 strict compile, producing a v2 container whose compiled file
+set is **identical** to the PR-4 explicit-fixture container
+(set equality of compiled file names; byte-equal content is **not**
+asserted). This is verified by
+`test_B4_load_contract_matches_pr4` in
+`kdna-lab/tests/test_rfc0013_migration_synthesis.py`.
 
 ### 3.5 Runtime payload does not leak full SAG/TC/IMM
 
@@ -153,10 +159,10 @@ governed the domain at that point in the lifecycle.
 
 ### 3.7 The implementation is round-trippable
 
-The four `aikdna/kdna` PRs (#86, #87, #88, plus the docs-correct
-PR for the tiny path fix in RFC-0014) plus the three PRs in
-`kdna-cli`, `kdna-studio-core`, and `kdna-lab` together form a
-coherent chain:
+The four `aikdna/kdna` PRs (#86 PR-1, #87 PR-2a, #88 Phase 2,
+#89 evidence pack + tiny RFC-0014 path fix) plus the three PRs in
+`kdna-cli` (#10), `kdna-studio-core` (#3), and `kdna-lab` (#3 + #4)
+together form a coherent chain:
 
 - PR-1 schemas → PR-3 gates (read them) → PR-4 explicit smoke
   → PR-4b synthesis migration → Phase 2 RFC-0014/0015 Drafts.
@@ -259,13 +265,14 @@ are **not** blockers for the implementation series but they
 are real follow-up work.
 
 1. **Tiny docs fix: RFC-0014 Related links path** — RFC-0014's
-   `Related` section currently lists
+   `Related` section originally listed
    `specs/source_authority.schema.json`,
    `specs/truth_charter.schema.json`,
    `specs/module_manifest.schema.json`. The actual paths are
-   `schema/source_authority.schema.json` etc. A tiny docs PR will
-   correct this. (No spec content change; no schema change; no
-   gate change.)
+   `schema/source_authority.schema.json` etc. **Done in PR #89**
+   (alongside the evidence pack itself). RFC-0014 now correctly
+   references `schema/...`. (No spec content change; no schema
+   change; no gate change.)
 
 2. **PR-5 atomspeak smoke** — book-derived domain exercise. Per
    work plan §4.2 PR-4 boundary, deferred to PR-5 after PR-1~4
@@ -370,6 +377,6 @@ Specifically:
 
 ### Work plan and audit
 
-- Work plan: `Kdna内部思考/KDNA 协议升级工作计划 2026-06-16.md`
+- Work plan: internal work plan, 2026-06-16 (not in repo; lives in the maintainer's personal internal-thinking space)
 - RFC-0013 audit note (PR-1 + §1.6 cleanup): `docs/audits/2026-06-16-rfc-0013-audit-note.md`
 - RFC status: [`docs/rfc-status.md`](https://github.com/aikdna/kdna/blob/main/docs/rfc-status.md)

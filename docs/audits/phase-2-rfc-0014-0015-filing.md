@@ -12,7 +12,7 @@
 This PR files **two Draft RFCs** in the `aikdna/kdna` meta repo:
 
 - `specs/RFC-0014-kdna-card-v2.md` — KDNA Card Spec v2
-- `specs/RFC-015-runtime-trace-v2.md` — Runtime Trace Spec v2
+- `specs/RFC-0015-runtime-trace-v2.md` — Runtime Trace Spec v2
 
 These companion RFCs were declared in RFC-0013 §7:
 
@@ -153,7 +153,7 @@ None of these are in this PR.
 - RFC-0013 §7: declares RFC-0014 / RFC-0015 as companion Drafts
 - RFC-0013 §9: acceptance criteria, now all covered after this PR
 - PR-1 to PR-4b: implementation evidence (see §"Dependency evidence")
-- Work plan: `Kdna内部思考/KDNA 协议升级工作计划 2026-06-16.md` §4.3
+- Work plan: internal work plan, 2026-06-16 (not in repo; lives in the maintainer's personal internal-thinking space) §4.3
 - aikdna/kdna-lab PR-4 audit note: `docs/audits/pr-4-acceptance.md`
 - aikdna/kdna-lab PR-4b audit note: `docs/audits/pr-4b-acceptance.md`
 - aikdna/kdna-studio-core PR-3 audit note: `docs/audits/pr-3-acceptance.md` (PR-2 debt)
