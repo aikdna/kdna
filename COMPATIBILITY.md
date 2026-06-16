@@ -23,7 +23,7 @@ A domain asset is KDNA-compatible if:
 A tool or platform is KDNA-compatible if:
 
 1. It can load and apply at minimum `KDNA_Core.json` and `KDNA_Patterns.json`
-2. It respects the `access` field (`open`, `licensed`, `runtime`) declared in `kdna.json`
+2. It respects the `access` field (`public`, `licensed`, `remote`) declared in `kdna.json`
 3. It does not silently ignore required fields (e.g., `does_not_apply_when`, `failure_risk`)
 4. If it modifies domain content, it must preserve Human Lock requirements for judgment-class fields (see [human-lock.md](./specs/human-lock.md))
 5. It declares which SPEC version(s) it supports

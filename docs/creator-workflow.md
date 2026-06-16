@@ -281,7 +281,7 @@ kdna publish ./dist/your-domain.kdna \
   "version": "0.1.0",
   "spec_version": "1.0",
   "status": "experimental",
-  "access": "open",
+  "access": "public",
   "asset_url": "https://github.com/yourname/kdna-<domain-id>/releases/download/v0.1.0/<domain-id>-0.1.0.kdna",
   "asset_digest": "sha256:<由 publish 命令算出>",
   "signature": "<Ed25519 签名>",
