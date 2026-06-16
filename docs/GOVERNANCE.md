@@ -132,3 +132,139 @@ Security vulnerabilities: See [SECURITY.md](./SECURITY.md)
 Governance proposals: Open an issue in [aikdna/kdna](https://github.com/aikdna/kdna/issues)
 
 Registry moderation requests: Open an issue in [aikdna/kdna-registry](https://github.com/aikdna/kdna-registry/issues)
+
+## 9. Public documentation rules
+
+Public-facing documentation in this repository (`docs/`, `specs/`,
+`README.md`, `README.zh.md`, and public audit notes under
+`docs/audits/`) is read by external contributors, downstream
+consumers, and the open-source community. It MUST describe only
+public facts: published RFCs, merged PRs, public commit hashes on
+the remote, public issues, and accepted governance decisions.
+
+This section is the canonical rule. It is enforced by the
+pre-merge grep checklist at the end.
+
+### 9.1 What public documentation MUST NOT include
+
+Public-facing documentation MUST NOT include:
+
+- Internal file paths outside the repository (for example, paths
+  under a maintainer's local thinking space, private notes, or
+  any other private directory).
+- Private workspace paths or local machine paths (for example,
+  `/Users/<name>/...` or any other absolute path that reveals
+  the maintainer's local environment).
+- Internal work-plan section references (for example,
+  `Per the work plan §4.2 PR-3 boundary` or any other reference
+  to a private planning document's section numbering).
+- Internal planning document names, by file or by category.
+- Internal review document names, or finding numbers tied to
+  those documents (for example, references to a private
+  reverse-audit or upgrade-recommendations document, or
+  references to specific gaps / findings / items / F-numbers
+  defined only in those private documents).
+- Private conversation instructions or agent directives, in any
+  language, including direct quotes from maintainer or agent
+  instructions.
+- Personal names, personal book titles, or personal authoring
+  narratives in marketing, whitepaper, or audit documents,
+  unless they are already public metadata and necessary for
+  attribution.
+- Maintainer team identity in audit notes, unless already public
+  and necessary (use `the project maintainer` or `a single
+  maintainer`).
+- Local-only commit hashes that are not on the public remote.
+- Local backup tag names.
+- Unpublished roadmap decisions that are not already accepted
+  into an RFC, an open issue, or a merged PR.
+
+### 9.2 What public documentation SHOULD use
+
+Public-facing documentation SHOULD use:
+
+- Public RFC references (for example, `RFC-0013 §9 #4`).
+- Public PR references (for example, `PR-1 / PR-2 / PR-3 /
+  PR-4 / PR-4b` and the actual public PR number).
+- Public commit hashes on the remote (for example, the merge
+  commit SHA visible via `git log origin/main`).
+- Public issue links.
+- Neutral phrases such as:
+  - `RFC-0013 implementation scope`
+  - `RFC-0013 implementation boundary`
+  - `the RFC-0013 PR-N scope`
+  - `follow-up PR`
+  - `external review pending`
+  - `public status remains Draft`
+  - `public-facing status policy`
+  - `the public status policy`
+
+### 9.3 Examples
+
+**Bad (must not appear in public docs):**
+
+- `Work plan: Kdna内部思考/KDNA 协议升级工作计划 2026-06-16.md §4.2`
+- `Per the user's instruction`
+- `KDNA_STUDIO_CORE_PATH=/Users/AI/K/OPEN/kdna-studio-core`
+- `backup-before-reset` (a local backup tag, not pushed to origin)
+- `single maintainer (AhaSparkCoach / AIBUBB技术团队)`
+- `不要在外部审计前再引入复杂 book-derived 变量` (a directive
+  from a private conversation)
+- `atomspeak-kdna-v4.0` (a private version string on a public
+  reference domain)
+- `the反审计 file's 缺口三` (a reference to a private review
+  document's finding number)
+
+**Good (preferred public-facing wording):**
+
+- `RFC-0013 implementation scope: PR-3 SAG/TC compile gates`
+- `Per the public status policy`
+- `KDNA_STUDIO_CORE_PATH=/path/to/kdna-studio-core`
+- `a local backup tag (not pushed to origin)`
+- `single maintainer`
+- `Complex book-derived domain testing is deferred to a follow-up PR.`
+- `atomspeak` (without a private version string)
+- `an internal review's third finding` (a generic reference,
+  not a private document name or finding number)
+
+### 9.4 Required pre-merge grep checklist
+
+Before merging any PR that adds or modifies public-facing
+documentation, the contributor MUST run the following grep from
+the repository root and paste the output in the PR description:
+
+```bash
+grep -RIn \
+  -e "Kdna内部思考" \
+  -e "KDNA 协议升级工作计划" \
+  -e "Per the user's instruction" \
+  -e "用户指令" \
+  -e "等你指令" \
+  -e "不要在外部审计前" \
+  -e "/Users/AI/K" \
+  -e "AhaSparkCoach" \
+  -e "AIBUBB" \
+  -e "work plan" \
+  -e "Work plan" \
+  -e "反审计" \
+  -e "升级建议" \
+  -e "backup-before-reset" \
+  docs specs README.md README.zh.md 2>/dev/null
+```
+
+Notes on the checklist:
+
+- A non-empty grep result does not automatically block the PR.
+  Each hit MUST be either removed or explicitly justified as a
+  false positive in the PR description.
+- Public concept names (for example, `WorkPack` the KDNA
+  concept, or "WorkPack implementation") are not hits against
+  the `work plan` keyword and are allowed.
+- Synthetic example paths (for example, `/Users/me/.kdna` or
+  `/Users/alice/writing-samples/`) in clearly-marked template
+  or example code are allowed when they are obviously
+  synthetic. Real local paths (for example,
+  `/Users/<maintainer>/<project>/...`) are not.
+- A contributor who is uncertain whether a hit is a false
+  positive SHOULD default to rewording rather than rely on
+  the "obvious" exception.
