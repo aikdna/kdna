@@ -21,7 +21,7 @@ The Runtime Capsule is the ONLY format agents should consume KDNA judgment in. A
     "verified": true,
     "issuer": "ed25519:abc123..."
   },
-  "access": "public",
+  "access": "open",
   "risk_level": "R1",
   "profile": "compact",
   "context": {

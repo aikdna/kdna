@@ -97,7 +97,7 @@ The manifest remains plaintext JSON inside the container. It MUST NOT contain an
   "license": { "type": "CC-BY-4.0" },
   "status": "stable",
   "quality_badge": "tested",
-  "access": "public",
+  "access": "open",
   "languages": ["zh-CN"],
   "default_language": "zh-CN",
   "source_mode": "blank",
