@@ -282,7 +282,7 @@ What it DOES provide:
 - ✅ Tamper-evident packages (signature verification)
 - ✅ Leak accountability when runtime watermarking is enabled
 - ✅ Managed revocation through entitlement sync
-- ✅ Clear separation of open / licensed / runtime modes
+- ✅ Clear separation of public / licensed / remote modes
 - ✅ License keys excluded from audit logs and traces
 
 ---
@@ -310,5 +310,5 @@ What it DOES provide:
 | `kdna-cli/src/cmds/license.js` | Activation, sync, status, local entitlement checks |
 | `kdna-cli/src/verify.js` | Direct `.kdna` verification with optional decrypt hook |
 | `specs/kdna-entitlement-api.md` | Activation, sync, revoke, offline grace, and audit API contract |
-| `specs/kdna-access-modes.md` | Defines open / licensed / runtime (crypto protocol references this) |
+| `specs/kdna-access-modes.md` | Defines public / licensed / remote (crypto protocol references this) |
 | `specs/kdna-license.md` | KCL-1.0 legal terms (crypto protocol provides technical enforcement) |

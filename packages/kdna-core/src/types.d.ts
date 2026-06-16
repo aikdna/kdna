@@ -211,7 +211,7 @@ export interface KDNAManifest {
   judgment_version: string;
   status: 'draft' | 'experimental' | 'stable' | 'deprecated' | 'staging';
   quality_badge: 'untested' | 'tested' | 'validated' | 'expert_reviewed' | 'production_ready';
-  access: 'open' | 'licensed' | 'runtime';
+  access: 'public' | 'licensed' | 'remote';
   language?: string;
   default_language: string;
   languages: string[];

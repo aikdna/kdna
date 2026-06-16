@@ -63,7 +63,7 @@ identity card of the domain.
   "updated": "2026-05-17",
   "description": "Domain cognition for high-trust sales judgment.",
   "keywords": ["sales", "trust", "negotiation", "b2b"],
-  "access": "open",
+  "access": "public",
   "author": {
     "name": "Zhang Ling",
     "id": "zhangling",
@@ -100,7 +100,7 @@ identity card of the domain.
 | `updated` | No | Last update date (ISO 8601). |
 | `description` | Yes | One-sentence domain description. |
 | `keywords` | No | Array of search keywords. |
-| `access` | Yes | Access mode: `"open"`, `"licensed"`, `"runtime"`. |
+| `access` | Yes | Access mode: `"public"`, `"licensed"`, `"remote"`. |
 | `author` | Yes | Creator identity object. |
 | `license` | Yes | License declaration object. |
 | `status` | No | Maturity: `"draft"`, `"experimental"`, `"stable"`, `"deprecated"`, `"staging"`. |

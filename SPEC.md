@@ -565,7 +565,7 @@ KDNA MUST NOT replace these systems. It provides a judgment layer that operates 
 ## 11. Security Considerations
 
 - KDNA files are JSON, not executable code. They MUST NOT contain active scripts.
-- Domains using `licensed` or `runtime` access modes MUST be protected by the Runtime layer.
+- Domains using `licensed` or `remote` access modes MUST be protected by the Runtime layer.
 - The `kdna.json` manifest MUST NOT contain secrets or API keys.
 - Loaders SHOULD validate JSON before parsing to prevent injection.
 
@@ -853,8 +853,8 @@ A `.kdna` container MAY be signed using Ed25519. Registry-published assets MUST 
     "signature": "ed25519:<hex-signature>"
   }
   ```
-- Signature verification is REQUIRED for every registry-installed asset, including `access: open`.
-- Signature verification is REQUIRED for domains with `access: licensed` or `access: runtime`.
+- Signature verification is REQUIRED for every registry-installed asset, including `access: public`.
+- Signature verification is REQUIRED for domains with `access: licensed` or `access: remote`.
 - Unsigned local `.kdna` files MAY be loaded only as untrusted local files.
 
 ### 14.6.2 Publish Audit

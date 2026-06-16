@@ -25,7 +25,7 @@ const WORK_PACK_SCHEMA = {
     version: { type: 'string', pattern: '^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.]+)?(\\+[a-zA-Z0-9.]+)?$' },
     description: { type: 'string', maxLength: 280 },
     status: { type: 'string', enum: ['draft', 'experimental', 'stable', 'deprecated'] },
-    access: { type: 'string', enum: ['open', 'licensed', 'runtime', 'enterprise', 'partner'], default: 'open' },
+    access: { type: 'string', enum: ['public', 'licensed', 'remote', 'enterprise', 'partner'], default: 'public' },
     license: { type: 'string', default: 'Apache-2.0' },
     kdna: {
       type: 'object',
@@ -179,7 +179,7 @@ function inspectWorkPack(manifest, rootDir) {
     version: manifest.version,
     description: manifest.description,
     status: manifest.status,
-    access: manifest.access || 'open',
+    access: manifest.access || 'public',
     license: manifest.license || 'Apache-2.0',
     format_version: manifest.format_version,
     kdna: {

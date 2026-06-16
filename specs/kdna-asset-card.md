@@ -105,7 +105,7 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
     "asset_url": "https://github.com/aikdna/kdna-domain/releases/download/v0.7.5/domain.kdna",
     "repo": "https://github.com/aikdna/kdna-domain",
     "runtime_endpoint": null,
-    "access_mode": "open | licensed | runtime"
+    "access_mode": "public | licensed | remote"
   },
 
   "support": {
@@ -213,7 +213,7 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
 | `asset_url` | Yes (installable) | Direct `.kdna` asset download URL. |
 | `repo` | Yes | Source repository URL. |
 | `runtime_endpoint` | No | Runtime API endpoint (for runtime-mode domains). |
-| `access_mode` | Yes | open, licensed, or runtime. |
+| `access_mode` | Yes | public, licensed, or remote. |
 
 ### 3.9 Support Block
 
@@ -246,7 +246,7 @@ The Asset Card is a **superset** of the registry entry. Every field in the regis
 - `technical.spec_version`, `technical.languages`, `technical.default_language`, `technical.risk_level`, `technical.access_mode`, `technical.repo`
 - `support.contact`
 
-### Required for Commercial Assets (KCL-1.0 / licensed / runtime)
+### Required for Commercial Assets (KCL-1.0 / licensed / remote)
 - All required fields above, plus:
 - `creator.pubkey`
 - `license.url`
@@ -278,8 +278,8 @@ The CLI `kdna publish` will validate Asset Card completeness before accepting a 
 A conforming Asset Card validator MUST enforce:
 
 1. All required fields (by access mode and quality badge level) are present and non-empty.
-2. `access_mode` is one of `open`, `licensed`, `runtime`.
-3. For `licensed` or `runtime` assets, `license.url` points to the canonical KCL-1.0 URL.
+2. `access_mode` is one of `public`, `licensed`, `remote`.
+3. For `licensed` or `remote` assets, `license.url` points to the canonical KCL-1.0 URL.
 4. `quality_badge` is one of `untested`, `tested`, `validated`, `expert_reviewed`, `production_ready`.
 5. `sample_inputs` array has at least 2 entries, each with `scenario`, `without_kdna`, and `with_kdna`.
 6. `audience.who_should_not_use` is not empty — every asset must declare its non-audience.

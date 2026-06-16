@@ -54,7 +54,7 @@ registered KDNA domains.
       "repo": "https://github.com/aikdna/kdna-writing",
       "spec_version": "1.0-rc",
       "status": "experimental",
-      "access": "open",
+      "access": "public",
       "default_language": "en",
       "languages": ["en"],
       "author": {
@@ -85,7 +85,7 @@ registered KDNA domains.
 | `repo` | Yes | Source repository URL. |
 | `spec_version` | Yes | KDNA spec version the domain conforms to. |
 | `status` | Yes | Maturity: `draft`, `experimental`, `stable`, `deprecated`, `staging`. |
-| `access` | Yes | Access mode: `open`, `licensed`, `runtime`. |
+| `access` | Yes | Access mode: `public`, `licensed`, `remote`. |
 | `language` | Yes | Array of language codes. |
 | `author` | Yes | Creator identity. |
 | `license` | Yes | License information. |
