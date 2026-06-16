@@ -8,13 +8,17 @@
  *   - mimetype as the first entry, stored uncompressed
  *   - kdna.json, payload.kdnab, checksums.json (if present)
  *   - any signatures/ and attachments/ subdirectories
+ *   - all ZIP entry timestamps fixed to 1980-01-01 (ZIP epoch), so
+ *     packing the same source directory twice produces byte-identical
+ *     output. This is a Phase 1 baseline requirement: later phases
+ *     will derive digests and signatures from the container bytes, so
+ *     non-determinism in the packer would invalidate those primitives.
  *
  * Output defaults to <source-dir>/../<basename>.kdna
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
-import { createGzip } from 'node:zlib';
 import zlib from 'node:zlib';
 
 // Minimal ZIP writer. We avoid external dependencies so this script runs
@@ -41,10 +45,14 @@ function crc32(buf) {
   return (c ^ 0xffffffff) >>> 0;
 }
 
-function dosTime(d = new Date()) {
-  const t = ((d.getHours() & 0x1f) << 11) | ((d.getMinutes() & 0x3f) << 5) | ((Math.floor(d.getSeconds() / 2)) & 0x1f);
-  const dd = (((d.getFullYear() - 1980) & 0x7f) << 9) | (((d.getMonth() + 1) & 0xf) << 5) | (d.getDate() & 0x1f);
-  return { time: t, date: dd };
+// Fixed DOS timestamp. ZIP stores MS-DOS-style date/time fields per entry;
+// using a clock-derived value here would make the same source directory
+// produce different bytes on every pack. Phase 1 requires deterministic
+// output, so every entry uses the ZIP epoch (1980-01-01 00:00:00).
+// Encoded as: time=0 (midnight), date=1 (1 Jan 1980).
+const DOS_EPOCH = Object.freeze({ time: 0, date: 1 });
+function dosTime() {
+  return DOS_EPOCH;
 }
 
 function buildEntry(nameBytes, data, method) {

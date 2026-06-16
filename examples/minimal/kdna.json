@@ -25,6 +25,11 @@
   "language": "en",
   "license": "Apache-2.0",
   "keywords": ["example", "minimal", "phase-1"],
+  "lineage": {
+    "type": "original",
+    "fork_of": null,
+    "derived_from": null
+  },
   "load_contract": {
     "default_profile": "compact",
     "profiles": {

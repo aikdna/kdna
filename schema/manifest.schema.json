@@ -121,14 +121,47 @@
     "keywords": { "type": "array", "items": { "type": "string" } },
     "domain_field": { "type": "array", "items": { "type": "string" } },
     "lineage": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["asset_uid"],
-        "properties": {
-          "asset_uid": { "type": "string" },
-          "version": { "type": "string" },
-          "relationship": { "type": "string" }
+      "type": "object",
+      "description": "Provenance object describing how this asset relates to other assets. Phase 1 keeps this a single object (not an array) to avoid the unstable multi-source shape; future phases may add a separate `sources` or `references` field if multi-parent derivation becomes a real requirement.",
+      "required": ["type"],
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "original",
+            "fork",
+            "adaptation",
+            "translation",
+            "private_variant",
+            "organization_variant",
+            "course_variant"
+          ]
+        },
+        "fork_of": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string" },
+            {
+              "type": "object",
+              "required": ["asset_uid"],
+              "properties": {
+                "asset_uid": { "type": "string" },
+                "version": { "type": "string" }
+              }
+            }
+          ]
+        },
+        "derived_from": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } },
+            {
+              "type": "object",
+              "additionalProperties": true
+            }
+          ]
         }
       }
     },

@@ -45,20 +45,6 @@ The manifest is a single JSON object at the root of the container, stored as `kd
 
 ## `payload` object
 
-```json
-{
-  "path": "payload.kdnab",
-  "encoding": "json",
-  "encrypted": false
-}
-```
-
-- `path` is the entry name within the container (always `payload.kdnab` in v1).
-- `encoding` is `json` or `cbor`.
-- `encrypted` is a boolean. In Phase 1, only `false` is exercised; the encrypted case is defined in a later phase.
-
-## Optional fields
-
 | Field | Type | Description |
 | --- | --- | --- |
 | `summary` | string | One-paragraph description. |
@@ -68,13 +54,33 @@ The manifest is a single JSON object at the root of the container, stored as `kd
 | `license` | string or object | SPDX identifier (e.g. `Apache-2.0`) or `{type, url}`. |
 | `keywords` | array | Free-form keywords. |
 | `domain_field` | array | Domain categories. |
-| `lineage` | array | List of `{asset_uid, version, relationship}` records describing parent assets. |
+| `lineage` | object | Provenance object describing how this asset relates to other assets. See `lineage` shape below. |
 | `digests` | object | Per-entry digests. Alternative to a separate `checksums.json`. |
 | `signatures` | array | Signature references (each entry has `role`, `path`, `algorithm`, `key_id`). |
 | `encryption` | object | Encryption envelope metadata (reserved for later phases). |
 | `load_contract` | object | The runtime load contract. See `load-contract.md`. |
 | `scope` | object | Scope metadata: `summary`, `keywords`, `domain_field`, etc. |
 | `evidence_claims` | object | Author-declared evidence claims. **Descriptive only in Phase 1.** Not validated by the format. |
+
+## `lineage` object (Phase 1 shape)
+
+Phase 1 records lineage as a **single object**, not an array. This keeps the format stable; future phases may add a separate `sources` or `references` field for multi-parent derivation rather than overloading `lineage`.
+
+```json
+{
+  "type": "original",
+  "fork_of": null,
+  "derived_from": null
+}
+```
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `type` | enum | One of `original`, `fork`, `adaptation`, `translation`, `private_variant`, `organization_variant`, `course_variant`. |
+| `fork_of` | null, string, or `{asset_uid, version?}` | If `type` is `fork`, the asset this one was forked from. |
+| `derived_from` | null, string, array of strings, or object | The judgment lineage (Phase 1: descriptive only). |
+
+Phase 1 **does not** implement fork/adapt behaviour. The `type` enum covers the categories so that callers can route, but the runtime does not enforce any particular derivation policy. The shape is frozen; multi-source derivation will land in a later phase under a separate field, not by mutating `lineage` into an array.
 
 ## Minimal example
 
@@ -101,6 +107,11 @@ The manifest is a single JSON object at the root of the container, stored as `kd
     "path": "payload.kdnab",
     "encoding": "json",
     "encrypted": false
+  },
+  "lineage": {
+    "type": "original",
+    "fork_of": null,
+    "derived_from": null
   }
 }
 ```
