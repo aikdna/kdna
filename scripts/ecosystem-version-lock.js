@@ -66,8 +66,11 @@ function findConsumers(reposRoot) {
     const pkgPath = path.join(reposRoot, entry, 'package.json');
     if (!fs.existsSync(pkgPath)) continue;
     let pkg;
-    try { pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8')); }
-    catch (_) { continue; }
+    try {
+      pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+    } catch (_) {
+      continue;
+    }
     if (!pkg.dependencies && !pkg.devDependencies) continue;
     for (const aikdna of SCAN_PACKAGES) {
       const dep = (pkg.dependencies || {})[aikdna] || (pkg.devDependencies || {})[aikdna];
@@ -92,7 +95,9 @@ function main() {
       })();
 
   if (!baseline || !baseline.semver) {
-    console.error('ecosystem-version-lock: cannot determine baseline version (set KDNA_CORE_BASELINE or run from kdna monorepo)');
+    console.error(
+      'ecosystem-version-lock: cannot determine baseline version (set KDNA_CORE_BASELINE or run from kdna monorepo)',
+    );
     process.exit(2);
   }
 
