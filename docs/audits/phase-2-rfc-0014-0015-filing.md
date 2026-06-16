@@ -21,16 +21,16 @@ These companion RFCs were declared in RFC-0013 §7:
 > Card Spec v2.0, RFC-0015 — Runtime Trace Spec v2.
 
 This PR **only files the drafts**. It does not implement Card v2 or
-Trace v2 in code. Per work plan §4.3 Phase 2, RFC-0014 and
+Trace v2 in code. Per the RFC-0013 Phase 2 scope, RFC-0014 and
 RFC-0015 are scope-limited to **detail-schema only**.
 
 ## Why these RFCs can be filed now
 
-The work plan §4.2 PR-4 boundary states:
+The RFC-0013 PR-4 boundary states:
 
 > PR-4 must verify the lifecycle. PR-4b must close §9 #7. RFC-0014
 > and RFC-0015 are filed separately and must wait for PR-1~4b
-> implementation feedback per the work plan §4.3.
+> implementation feedback per the RFC-0013 Phase 2 scope.
 
 PR-1 through PR-4b are now merged:
 - **PR-1** (aikdna/kdna #86) — three authoring-time schemas
@@ -72,7 +72,7 @@ implementation series is technically complete.
 
 ## What this PR does NOT do (intentional)
 
-Per work plan §4.3 Phase 2 boundary, this PR only files drafts:
+Per the RFC-0013 Phase 2 scope, this PR only files drafts:
 
 - ❌ **No implementation of Card v2.** RFC-0014 is a detail-schema
   proposal; the kdna-studio-core release that emits the v2 fields
@@ -121,17 +121,17 @@ The `docs/rfc-status.md` change includes a note:
 > `Implemented` here. The public status remains `Draft` until
 > external review and approval ratifies the implementation.
 
-Per the user's instruction:
+Per the public status policy:
 
-> 即使 #6 完成，也建议对外口径保持保守：
-> "RFC-0013 implementation acceptance criteria are now covered;
-> external approval / final status update pending."
+> The public-facing status remains conservative: RFC-0013
+> implementation acceptance criteria are technically covered;
+> final status promotion requires external review.
 
 The status note in `docs/rfc-status.md` matches this wording.
 
 ## What happens next (NOT in this PR)
 
-A future Phase 3 (work plan §4.4) may file implementation RFCs for
+A future Phase 3 may file implementation RFCs for
 Card v2 and Trace v2 in kdna-studio-core, and may file a Phase 2/3
 RFC for the at-home / production-policy RFCs (k-dna registry trust,
 marketplace, etc.). PR-5 (atomspeak) is also a separate workstream.
@@ -153,7 +153,7 @@ None of these are in this PR.
 - RFC-0013 §7: declares RFC-0014 / RFC-0015 as companion Drafts
 - RFC-0013 §9: acceptance criteria, now all covered after this PR
 - PR-1 to PR-4b: implementation evidence (see §"Dependency evidence")
-- Work plan: internal work plan, 2026-06-16 (not in repo; lives in the maintainer's personal internal-thinking space) §4.3
+- RFC-0013 implementation scope: Phase 2 RFC-0014 / RFC-0015 filing
 - aikdna/kdna-lab PR-4 audit note: `docs/audits/pr-4-acceptance.md`
 - aikdna/kdna-lab PR-4b audit note: `docs/audits/pr-4b-acceptance.md`
 - aikdna/kdna-studio-core PR-3 audit note: `docs/audits/pr-3-acceptance.md` (PR-2 debt)

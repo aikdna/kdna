@@ -31,7 +31,7 @@ Not covered (still pending):
 |------|------|-------|
 | #3 | kdna-studio-core gates | PR-3 |
 | #4 | kdna-lab smoke on simple official domain | PR-4 |
-| #6 | RFC-0014 / RFC-0015 filed | Phase 2 (deferred per work plan) |
+| #6 | RFC-0014 / RFC-0015 filed | Phase 2 (deferred per the RFC-0013 implementation scope) |
 | #7 | real legacy domain migration | PR-4 |
 
 ## SPEC §1.6.3 change summary
@@ -154,7 +154,7 @@ $ echo $?
 - RFC-0013: `specs/RFC-0013-judgment-asset-lifecycle.md`
 - RFC-0013 §4: same file, "New Top-Level Principle: Anti-Monolithic Domain"
 - RFC-0013 §9 #2 and #5: same file, "Acceptance Criteria"
-- Work plan: internal work plan, 2026-06-16 (not in repo; lives in the maintainer's personal internal-thinking space) §4.2 PR-2
+- RFC-0013 implementation scope: PR-2 anti-monolithic CLI lint
 - kdna-cli PR-2: https://github.com/aikdna/kdna-cli/pull/10
 - kdna-cli commit: `bb64821` (squash of cherry-picked `b87b53f`)
 - kdna PR-1 (PR-1 schema baseline): https://github.com/aikdna/kdna/pull/86

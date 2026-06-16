@@ -126,11 +126,11 @@ This principle is enforced in the KDNA authoring toolchain through the Human Loc
 
 ## 2. Origin: From a Book to a Judgment Protocol
 
-KDNA began with a concrete authoring problem. Zhang Ling, the author of *Minimal Communication*, initially was not trying to design a protocol. He was trying to structure the underlying judgment behind his own book: which principles were non-negotiable, which conceptual distinctions had to be preserved, which expressions appeared reasonable but led communication into misunderstanding, and which questions had to be checked before finalizing an answer.
+KDNA began with a concrete authoring problem. The original author was not trying to design a protocol. They were trying to structure the underlying judgment behind a specific body of writing: which principles were non-negotiable, which conceptual distinctions had to be preserved, which expressions appeared reasonable but led communication into misunderstanding, and which questions had to be checked before finalizing an answer.
 
 That process exposed a broader problem. A book can record knowledge. A course can teach methods. A prompt can describe a task. But the judgment accumulated by an expert over years — how they classify situations, detect misunderstandings, preserve boundaries, weigh risks, and decide what counts as done right — rarely has a stable representation.
 
-The early goal was not merely to make an AI system know what *Minimal Communication* said. It was to make the judgment structure behind the work loadable, inspectable, and usable when an agent faced concrete communication, writing, or content problems.
+The early goal was not merely to make an AI system know what a specific body of writing said. It was to make the judgment structure behind the work loadable, inspectable, and usable when an agent faced concrete communication, writing, or content problems.
 
 KDNA emerged from that process. What began as an attempt to structure one author’s domain judgment became a more general question: how can the implicit judgment of experts, teams, and organizations be encoded as an open format that AI agents can load, humans can inspect, tools can validate, and multiple systems can compose?
 
