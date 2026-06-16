@@ -592,7 +592,7 @@ This RFC is considered **Accepted → Implemented** when all of the following ar
 1. All three new schema files (`source_authority`, `truth_charter`, `module_manifest`) are merged in `aikdna/kdna/schema/`.
 2. `kdna dev validate --anti-monolithic` exists and passes CI on the meta repo's own example domains.
 3. `kdna-studio-core` rejects (with a clear error) any `compile()` call where the source workspace has a TC with `tc_status: "synthesized"` and a SAG with no `current_highest` source **and** the caller passes `--strict-authority`.
-4. `kdna-lab` smoke test compiles the atomspeak example with explicit SAG/TC, runs 5 trace events, and verifies `sag_version` and `tc_status` appear in the trace output.
+4. `kdna-lab` smoke test compiles a **simple official legacy domain** (e.g., `@aikdna/code_review` or `@aikdna/prompt_diagnosis`) with synthesized or explicit SAG/TC, runs 5 trace events, and verifies `sag_version` and `tc_status` appear in the trace output. A book-derived atomspeak smoke test is **deferred to a follow-up PR (proposed: PR-5 after PR-1~4 stable)**.
 5. `SPEC.md` §1.6 contains the Anti-Monolithic Domain Principle verbatim.
 6. RFC-0014 and RFC-0015 are filed as separate Draft RFCs.
 7. A migration run on a real legacy domain (e.g., `@aikdna/code_review`) successfully synthesizes default SAG/TC and produces a valid `.kdna` identical in shape to the pre-RFC build.
