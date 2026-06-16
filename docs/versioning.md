@@ -37,7 +37,7 @@ Did you remove or fundamentally redefine what the domain judges?
 | Change framework `steps` array | Yes | **MINOR** |
 | Remove an axiom | Yes | **MAJOR** |
 | Change domain scope (narrowing or broadening) | Yes | **MAJOR** |
-| Change `access` mode (open → licensed/runtime) | Yes | **MAJOR** |
+| Change `access` mode (public → licensed/remote) | Yes | **MAJOR** |
 
 ## Where Version Appears
 

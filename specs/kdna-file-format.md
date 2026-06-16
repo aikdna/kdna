@@ -81,7 +81,7 @@ does not have a separate metadata header — it is transparent ZIP.
   "version": "0.1.0",
   "judgment_version": "2026.05",
   "status": "experimental",
-  "access": "open",
+  "access": "public",
   "languages": ["en"],
   "default_language": "en",
   "author": { "name": "...", "id": "..." },
