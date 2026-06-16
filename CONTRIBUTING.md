@@ -14,6 +14,8 @@ KDNA is an open judgment protocol. Contributions can be:
 2. Read [State of KDNA](./STATE_OF_KDNA.md) — what's stable, what's not
 3. Check [open issues](https://github.com/aikdna/kdna/issues) — especially `good-first-kdna`
 
+Public documentation contributions (RFCs, specs, audit notes) must follow the [Public Documentation Rules](./docs/GOVERNANCE.md#9-public-documentation-rules) in GOVERNANCE.md.
+
 ## Quick Path
 
 ```bash
