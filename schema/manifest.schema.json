@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/schema/manifest.schema.json",
+  "title": "KDNA Manifest v1",
+  "description": "Schema for kdna.json, the public metadata layer of a .kdna container.",
+  "type": "object",
+  "required": [
+    "kdna_version",
+    "asset_id",
+    "asset_uid",
+    "asset_type",
+    "title",
+    "version",
+    "judgment_version",
+    "created_at",
+    "updated_at",
+    "creator",
+    "compatibility",
+    "payload"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "kdna_version": {
+      "type": "string",
+      "description": "KDNA Core version this manifest conforms to.",
+      "const": "1.0"
+    },
+    "asset_id": {
+      "type": "string",
+      "description": "Human-readable identifier with format namespace prefix (e.g. kdna:example:foo).",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*(:[a-zA-Z0-9_.-]+)+$"
+    },
+    "asset_uid": {
+      "type": "string",
+      "description": "Globally unique identifier. URN form recommended.",
+      "format": "uri"
+    },
+    "asset_type": {
+      "type": "string",
+      "enum": ["domain", "cluster", "tool", "sample", "fixture"],
+      "description": "What kind of asset this is. Container format is the same; the value tells callers how to interpret the payload."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Short, human-readable title."
+    },
+    "version": {
+      "type": "string",
+      "description": "Release version of this .kdna file (semver).",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([+-].+)?$"
+    },
+    "judgment_version": {
+      "type": "string",
+      "description": "Semantic version of the encoded judgment system.",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([+-].+)?$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the asset was first created (ISO 8601)."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this release of the asset was produced (ISO 8601)."
+    },
+    "creator": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "id": { "type": "string" }
+      },
+      "description": "Who produced the asset. Provenance only; not a trust claim."
+    },
+    "compatibility": {
+      "type": "object",
+      "required": ["min_loader_version", "profile"],
+      "additionalProperties": true,
+      "properties": {
+        "min_loader_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([+-].+)?$"
+        },
+        "profile": {
+          "type": "string",
+          "description": "Payload profile identifier (e.g. judgment-profile-v1).",
+          "const": "judgment-profile-v1"
+        }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "required": ["path", "encoding", "encrypted"],
+      "additionalProperties": true,
+      "properties": {
+        "path": { "type": "string", "const": "payload.kdnab" },
+        "encoding": { "type": "string", "enum": ["json", "cbor"] },
+        "encrypted": { "type": "boolean" }
+      }
+    },
+    "summary": { "type": "string" },
+    "description": { "type": "string" },
+    "language": { "type": "string" },
+    "languages": { "type": "array", "items": { "type": "string" } },
+    "license": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": { "type": "string" },
+            "url": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "keywords": { "type": "array", "items": { "type": "string" } },
+    "domain_field": { "type": "array", "items": { "type": "string" } },
+    "lineage": {
+      "type": "object",
+      "description": "Provenance object describing how this asset relates to other assets. Phase 1 keeps this a single object (not an array) to avoid the unstable multi-source shape; future phases may add a separate `sources` or `references` field if multi-parent derivation becomes a real requirement.",
+      "required": ["type"],
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "original",
+            "fork",
+            "adaptation",
+            "translation",
+            "private_variant",
+            "organization_variant",
+            "course_variant"
+          ]
+        },
+        "fork_of": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string" },
+            {
+              "type": "object",
+              "required": ["asset_uid"],
+              "properties": {
+                "asset_uid": { "type": "string" },
+                "version": { "type": "string" }
+              }
+            }
+          ]
+        },
+        "derived_from": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } },
+            {
+              "type": "object",
+              "additionalProperties": true
+            }
+          ]
+        }
+      }
+    },
+    "digests": {
+      "type": "object",
+      "description": "Per-entry digests. Alternative to a separate checksums.json.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["algorithm", "value"],
+        "properties": {
+          "algorithm": { "type": "string" },
+          "value": { "type": "string" }
+        }
+      }
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "path", "algorithm"],
+        "properties": {
+          "role": { "type": "string" },
+          "path": { "type": "string" },
+          "algorithm": { "type": "string" },
+          "key_id": { "type": "string" }
+        }
+      }
+    },
+    "encryption": { "type": "object" },
+    "load_contract": { "$ref": "load-contract.schema.json" },
+    "scope": { "type": "object" },
+    "evidence_claims": { "type": "object" }
+  }
+}
