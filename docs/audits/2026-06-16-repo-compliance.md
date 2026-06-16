@@ -5,14 +5,14 @@ Audit evidence captured at 2026-06-16T02:07:53Z.
 Re-run:
 
 ```bash
-bash scripts/scan-repo-compliance.sh /Users/AI/K/OPEN
+bash scripts/scan-repo-compliance.sh /path/to/local-workspace
 ```
 
 ## Matrix
 
 ```
 === KDNA 仓库合规扫描 ===
-Root: /Users/AI/K/OPEN
+Root: /path/to/local-workspace
 Date (UTC): 2026-06-16T02:07:53Z
 Repos: 26
 
@@ -56,7 +56,7 @@ test_domain                      | yes     yes     yes  yes  yes    yes  yes   y
 - GIT: .gitignore present
 - HEAD-SHA: git rev-parse --short HEAD (last commit on current branch)
 
-Log written to: /Users/AI/K/OPEN/.compliance-scan-20260616.log
+Log written to: /path/to/local-workspace/.compliance-scan-20260616.log
 ```
 
 ## Summary

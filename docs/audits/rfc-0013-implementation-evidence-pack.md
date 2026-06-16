@@ -179,19 +179,19 @@ ending, but they are real limits on what the series claims.
 
 | Gap | Why it's not done | Where it's tracked |
 |-----|-------------------|---------------------|
-| No `atomspeak` / book-derived domain smoke yet | The first smoke is on a simple official domain; atomspeak needs PR-3 gates stable + book-derived inputs (multiple TC versions, charter drift). Deferred to PR-5 per work plan §4.2 PR-4 boundary. | RFC-0013 §9 #4 (amended), PR-4 audit note, PR-4b audit note |
+| No `atomspeak` / book-derived domain smoke yet | The first smoke is on a simple official domain; atomspeak needs PR-3 gates stable + book-derived inputs (multiple TC versions, charter drift). Deferred to PR-5 per the RFC-0013 PR-4 boundary. | RFC-0013 §9 #4 (amended), PR-4 audit note, PR-4b audit note |
 | No Anti-Monolithic question-count heuristic yet | The CLI in PR-2 implements structural thresholds (axiom count + framework count + module_manifest sign-off). The third SPEC condition ("spans more than 2 distinct user-facing judgment questions") requires a separate RFC (suggested: RFC-0022). | PR-2 audit note, PR-3 audit note (`gates.md`), PR-3 §"PR-2 semantic debt" |
 | No Card v2 implementation yet | RFC-0014 is filed as Draft; kdna-studio-core has not yet been updated to emit the v2 Card fields. | RFC-0014 §8 (Acceptance Criteria) |
 | No Trace v2 implementation yet | RFC-0015 is filed as Draft; kdna-studio-core and kdna-lab have not yet been updated to emit the v2 lifecycle trace. | RFC-0015 §8 (Acceptance Criteria) |
-| No marketplace / enterprise / privacy / WorkPack implementation | All four are RFC-0013 §10 Non-Goals. WorkPack lives in `kdna-workpack`; marketplace / enterprise / privacy are explicit `out_of_scope` per the work plan and per RFC-0013 §10. | RFC-0013 §10 |
-| No independent review submissions on any of the 7 PRs | All 7 PRs were admin-merged by a single maintainer. Review submissions are empty. This is consistent with the work plan §1 governance rule ("不要在外部审计前再引入复杂 book-derived 变量") and the recommended external wording, but it is a real limit. | This audit pack §5 |
+| No marketplace / enterprise / privacy / WorkPack implementation | All four are RFC-0013 §10 Non-Goals. WorkPack lives in `kdna-workpack`; marketplace / enterprise / privacy are explicit `out_of_scope` per RFC-0013 §10. | RFC-0013 §10 |
+| No independent review submissions on any of the 7 PRs | All 7 PRs were admin-merged by a single maintainer. Review submissions are empty. This is consistent with the public-facing status policy (complex book-derived domain testing is deferred to a follow-up PR) and the recommended external wording, but it is a real limit. | This audit pack §5 |
 | No remote CI workflow runs on most repos | `aikdna/kdna-cli` and `aikdna/kdna-lab` have no CI workflow configured for the relevant branches. `aikdna/kdna-studio-core` and `aikdna/kdna` have workflows but they did not run on the implementation PRs as expected. The validation signal is **local-only** (pytest, node --test, ajv schema validation). | This audit pack §5 |
 | `kdna-studio-core` 11 pre-existing test failures remain out of scope | The 11 failures in `core.test.js`, `e2e.test.js`, `milestone3.test.js` are about `KDNA_Core.json` vs `payload.kdnab` test expectations and predate PR-3. Fixing them is a separate test-suite migration PR. | PR-3 audit note, PR-4b audit note |
 
 A reviewer can decide whether any of these gaps should block
 promotion of RFC-0013 from `Draft` to `Accepted` or `Implemented`.
-The recommended stance in the work plan is **no**: these are
-follow-up work, not preconditions for the lifecycle itself.
+The recommended stance is **no**: these are follow-up work, not
+preconditions for the lifecycle itself.
 
 ---
 
@@ -227,7 +227,7 @@ That is:
 - 0 PR comments (no `issue_comment` events on any of the 7 PRs).
 
 This is consistent with the implementation being done by a
-**single maintainer** (AhaSparkCoach / AIBUBB技术团队) before
+**single maintainer** before
 external review. The PR descriptions explicitly state
 `no review submissions; admin merge only` in their reviewer
 notes sections.
@@ -275,7 +275,7 @@ are real follow-up work.
    change; no gate change.)
 
 2. **PR-5 atomspeak smoke** — book-derived domain exercise. Per
-   work plan §4.2 PR-4 boundary, deferred to PR-5 after PR-1~4
+   the RFC-0013 PR-4 boundary, deferred to PR-5 after PR-1~4
    stable. PR-5 is **not** in this audit pack's scope.
 
 3. **PR-2 question-count heuristic** — Anti-Monolithic CLI's
@@ -375,8 +375,8 @@ Specifically:
 - RFC-0014: [`specs/RFC-0014-kdna-card-v2.md`](https://github.com/aikdna/kdna/blob/main/specs/RFC-0014-kdna-card-v2.md)
 - RFC-0015: [`specs/RFC-0015-runtime-trace-v2.md`](https://github.com/aikdna/kdna/blob/main/specs/RFC-0015-runtime-trace-v2.md)
 
-### Work plan and audit
+### Audit notes and references
 
-- Work plan: internal work plan, 2026-06-16 (not in repo; lives in the maintainer's personal internal-thinking space)
-- RFC-0013 audit note (PR-1 + §1.6 cleanup): `docs/audits/2026-06-16-rfc-0013-audit-note.md`
+- RFC-0013 implementation scope: PR-1 through PR-4b plus the Phase 2 filing of RFC-0014 / RFC-0015. See the per-PR audit notes linked in §8.
+- RFC-0013 audit note (pre-series state): `docs/audits/2026-06-16-rfc-0013-audit-note.md`
 - RFC status: [`docs/rfc-status.md`](https://github.com/aikdna/kdna/blob/main/docs/rfc-status.md)

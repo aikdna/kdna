@@ -56,7 +56,7 @@ This is substantial infrastructure. The problem is not absence of pieces but abs
 
 ### 1.2 What the current protocol still exposes
 
-Three concrete gaps, surfaced by the `atomspeak-kdna-v4.0` book-derived distillation pressure test (see `KDNA协议反审计_从极简沟通书稿到KDNA实践_v0.1.md`):
+Three concrete gaps, surfaced by a book-derived distillation pressure test (the `atomspeak` reference domain, evaluated against the current protocol):
 
 1. **No Source Authority Graph.** A book-derived domain has multiple sources (2.0 published, 3.0 draft, 4.0 truth charter, author oral confirmation, prior KDNA) with non-equal authority. The Source Distillation Contract records evidence but does not declare which source wins a conflict.
 
@@ -301,7 +301,7 @@ This RFC introduces three new object types. All three live in **authoring-time s
 - if a part can be loaded, evaluated, and evolved on its own → `sub_domain` (and the parent domain may reference it via cluster)
 - if a part is non-judgmental data (e.g., a term dictionary) → `reference` and SHOULD NOT carry axioms
 
-This rule is the answer to the反审计 file's 缺口三 ("Internal Module / Sub-domain / Cluster boundary"). It makes the four-layer model explicit:
+This rule is the answer to an internal review's third finding ("Internal Module / Sub-domain / Cluster boundary"). It makes the four-layer model explicit:
 
 ```
 internal_module  <  sub_domain  <  cluster  <  workpack
@@ -413,7 +413,7 @@ Existing domains do not break. They simply do not benefit from SAG/TC/IMM until 
 | No `truth_charter.json` | TC is generated at S7 by extracting `highest_question` from `KDNA_Core.json` and synthesizing `in_scope` / `out_of_scope` from `KDNA_Patterns.json.misunderstandings[].key_distinction` and `boundaries[].rule`. TC's `renamed_terms` are mirrored into `KDNA_Patterns.json.terminology.banned_terms` and `terminology.standard_terms`. Marked `tc_status: "synthesized"`, not `"locked"`. |
 | No `module_manifest.json` | Default IMM: all content mapped to `internal_module`, `loadable_via: "full_profile_only"`. |
 
-**For the atomspeak-kdna-v4.0 book-derived distillation (the test case):**
+**For the atomspeak book-derived distillation (the test case):**
 
 - Author writes `source_authority.json` and `truth_charter.json` explicitly.
 - SAG declares `book_2_0` (historical baseline), `draft_3_0` (thought mine), `charter_4_0` (current highest), `author_oral_*` (current highest for open questions).
@@ -433,8 +433,8 @@ Existing domains do not break. They simply do not benefit from SAG/TC/IMM until 
 
 This RFC is the **总纲**. Two companion detail specs are required for implementation. They are NOT this RFC and will be filed separately:
 
-- **RFC-0014 — KDNA Card Spec v2.0.** Extends `docs/KDNA_CARD_SPEC.md` (already shipped) to include SAG and TC summaries, plus the new `axiom_tier` field (primary / supporting / boundary / training / ethical) per the反审计 file's 缺口四.
-- **RFC-0015 — Runtime Trace Spec v2.** Extends `docs/kdna-trace.md` (Implemented) to record SAG/TC/IMM version of the loaded asset and the lock status of any judgment that triggered a boundary or self-check. Adds `apply` event separate from `load` (F17 from 升级建议, but scoped narrowly to trace schema, not a separate concept).
+- **RFC-0014 — KDNA Card Spec v2.0.** Extends `docs/KDNA_CARD_SPEC.md` (already shipped) to include SAG and TC summaries, plus the new `axiom_tier` field (primary / supporting / boundary / training / ethical) per an internal review's fourth finding.
+- **RFC-0015 — Runtime Trace Spec v2.** Extends `docs/kdna-trace.md` (Implemented) to record SAG/TC/IMM version of the loaded asset and the lock status of any judgment that triggered a boundary or self-check. Adds `apply` event separate from `load` (an item flagged in the internal review's recommendations, but scoped narrowly to trace schema, not a separate concept).
 
 These companion RFCs are scoped to **detail schema only**. They do not re-litigate the lifecycle architecture, the WorkPack boundary, or the anti-monolithic principle.
 
@@ -623,7 +623,7 @@ If any of these are later required, they will be filed as **separate RFCs** with
 
 The June 11 registry v4.0.0 release proved the V2 container is stable. The June 12 meta-repo docs upgrade proved the public expression of v2 is converged. The authoring side is now the open gap.
 
-The反审计 file (500 lines, 2026-06-14) demonstrates that the *current* protocol can compile a complex book-derived domain, but only with manual workarounds for SAG, TC, and the internal-module boundary. The 18-finding 升级建议 (1778 lines, 2026-06-14) lists 18 possible next steps but does not prioritize them against existing infrastructure.
+An internal reverse-audit (~500 lines, 2026-06-14, not in repo) demonstrates that the *current* protocol can compile a complex book-derived domain, but only with manual workarounds for SAG, TC, and the internal-module boundary. A separate internal review of recommendations (~1778 lines, 2026-06-14, not in repo) lists 18 possible next steps but does not prioritize them against existing infrastructure.
 
 This RFC is the **最小可实施 subset** of those 18 findings: the 5 that have no working alternative in the current protocol (SAG, TC, IMM, Anti-Monolithic, integration into existing trace/lock/conflict) and the 1 boundary statement (WorkPack is application, not Core) that prevents scope inflation.
 
@@ -635,4 +635,4 @@ If this RFC is accepted and implemented, the next 30 days produce:
 - A complex thought system has a `truth_charter.json` that an agent can read at authoring time to prevent drift.
 - The WorkPack team has a clean architectural rule (Core vs Application) and can keep moving without re-architecting.
 
-If the next 30 days do not include this RFC, the same gaps remain, and the 614 升级建议 keeps growing.
+If the next 30 days do not include this RFC, the same gaps remain, and the internal review's recommendations continue to grow.

@@ -28,7 +28,7 @@ PR-2, PR-3, PR-4 respectively).
 
 These examples use `@aikdna/code_review` (a simple official legacy domain) as
 the first test case, aligned with RFC-0013 §9 acceptance criteria #4 (amended
-2026-06-16) and the work plan's PR-1 through PR-4 strategy.
+2026-06-16) and the RFC-0013 PR-1 through PR-4 strategy.
 
 ### Validation tooling (1)
 
@@ -43,7 +43,7 @@ to `package.json` scripts.
 
 ## Acceptance criteria
 
-From the work plan §4.2 PR-1:
+From the RFC-0013 PR-1 scope:
 
 - [x] 3 schema files in `schema/` using JSON Schema Draft 2020-12
 - [x] 3 example files in `examples/` that pass schema validation
@@ -80,7 +80,7 @@ RFC-0013 schema validation: all checks passed
 
 ## Files NOT changed in this PR
 
-Per the work plan §4.2 PR-1 scope:
+Per the RFC-0013 PR-1 scope:
 
 - ❌ No changes to `SPEC.md` (Anti-Monolithic Domain principle is in RFC-0013 §4 but is implemented in PR-2 as the lint)
 - ❌ No changes to any existing `examples/communication/`, `examples/writing_basic/`, etc. kdna.json (those are v1 demo data; RFC-0013 §6 migration path will handle them in a later PR)
@@ -118,7 +118,7 @@ this as the maintainer sign-off for keeping a domain monolithic.
 ## Governance
 
 - This PR is the first commit in the RFC-0013 implementation series.
-- Per the work plan §10.1 governance rules, SPEC/RFC/schema changes
+- Per the standard governance rules, SPEC/RFC/schema changes
   normally go through a PR review. This commit is being prepared as
   a single PR-shaped commit to make review easier.
 - The next commit on this branch should be the PR-1 PR description
@@ -129,6 +129,6 @@ this as the maintainer sign-off for keeping a domain monolithic.
 - RFC-0013 (design contract): `specs/RFC-0013-judgment-asset-lifecycle.md`
 - RFC-0013 §9 acceptance criteria (amended): now requires simple official
   domain for first smoke test, atomspeak deferred to PR-5
-- Work plan: internal work plan, 2026-06-16 (not in repo; lives in the maintainer's personal internal-thinking space) §4.2 PR-1
+- RFC-0013 implementation scope: PR-1 schema baseline
 - RFC-0013 audit note: `docs/audits/2026-06-16-rfc-0013-audit-note.md`
 - Existing schema validation pattern: `scripts/validate-app-schemas.js`
