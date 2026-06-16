@@ -17,6 +17,8 @@
 | RFC-0009 | Artifact Contract | **Implemented** | `specs/artifact-envelope.schema.json`, `specs/stage-definition.schema.json`, `@aikdna/kdna-artifact-engine` |
 | RFC-0010 | Fidelity Protocol | **Implemented** | `specs/fidelity-result.schema.json`, `@aikdna/kdna-fidelity-core` |
 | RFC-0011 | Product Runtime | **Accepted** | `specs/product-runtime.schema.json`, `examples/product-runtime/` |
+| RFC-0012 | Artifact Envelope (output artifact) | **Draft** | `specs/RFC-0012-artifact-contract.md` (companion to RFC-0009; output-side envelope) |
+| RFC-0013 | Judgment Asset Lifecycle | **Draft** | `specs/RFC-0013-judgment-asset-lifecycle.md` (this RFC) |
 
 ## Lifecycle Rules
 
@@ -26,10 +28,12 @@
 4. After ≥30 days in production without breaking changes, promoted to **Stable**.
 5. Superseded RFCs are marked **Deprecated** with a link to the replacement.
 
-## Current State (2026-06-08)
+## Current State (2026-06-16)
 
 ```
-RFC-0009 Artifact Contract    ████████████░░░░  Implemented
-RFC-0010 Fidelity Protocol    ████████████░░░░  Implemented
-RFC-0011 Product Runtime      ████████░░░░░░░░  Accepted
+RFC-0009 Artifact Contract     ████████████░░░░  Implemented
+RFC-0010 Fidelity Protocol     ████████████░░░░  Implemented
+RFC-0011 Product Runtime       ████████░░░░░░░░  Accepted
+RFC-0012 Artifact Envelope     ██░░░░░░░░░░░░░░  Draft
+RFC-0013 Judgment Asset Life.  █░░░░░░░░░░░░░░░  Draft
 ```

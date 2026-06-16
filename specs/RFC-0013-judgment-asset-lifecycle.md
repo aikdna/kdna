@@ -410,7 +410,7 @@ Existing domains do not break. They simply do not benefit from SAG/TC/IMM until 
 | Stage | Migration |
 |-------|-----------|
 | No `source_authority.json` | Default SAG generated at S7 with one source: `kdna-core@<version>`, `authority: derived`, `precedence: [kdna-core@<version>]`. This is the floor and is **non-breaking**. |
-| No `truth_charter.json` | TC is generated at S7 by extracting `highest_question` from `KDNA_Core.json` and synthesizing `in_scope` / `out_of_scope` from `intake` and `risk_model`. Marked `tc_status: "synthesized"`, not `"locked"`. |
+| No `truth_charter.json` | TC is generated at S7 by extracting `highest_question` from `KDNA_Core.json` and synthesizing `in_scope` / `out_of_scope` from `KDNA_Patterns.json.misunderstandings[].key_distinction` and `boundaries[].rule`. TC's `renamed_terms` are mirrored into `KDNA_Patterns.json.terminology.banned_terms` and `terminology.standard_terms`. Marked `tc_status: "synthesized"`, not `"locked"`. |
 | No `module_manifest.json` | Default IMM: all content mapped to `internal_module`, `loadable_via: "full_profile_only"`. |
 
 **For the atomspeak-kdna-v4.0 book-derived distillation (the test case):**
