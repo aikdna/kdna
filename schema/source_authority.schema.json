@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schema/source_authority.json",
+  "title": "KDNA Source Authority Graph (SAG)",
+  "description": "Declares, per source, its type, authority level, scope, and conflict-resolution precedence. Authoring-time only; never enters runtime .kdna container. See RFC-0013 §3.1.",
+  "type": "object",
+  "required": [
+    "sag_id",
+    "domain_id",
+    "version_intent",
+    "sources",
+    "precedence_order"
+  ],
+  "properties": {
+    "sag_id": {
+      "type": "string",
+      "description": "Stable identifier for this SAG instance, e.g., sag_<domain>_<yyyy_mm_dd>."
+    },
+    "domain_id": {
+      "type": "string",
+      "pattern": "^@[a-z0-9_-]+/[a-z0-9_-]+$",
+      "description": "The KDNA domain this SAG belongs to, e.g., @aikdna/writing."
+    },
+    "version_intent": {
+      "type": "string",
+      "description": "The target domain version this SAG is intended for, e.g., 4.0.0-draft.1."
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "description": "All sources that contributed to or constrain the current judgment. At least one source is required.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "authority",
+          "status",
+          "can_override",
+          "scope"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for this source within the SAG, referenced by precedence_order and conflict_policies."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "published_work",
+              "unpublished_draft",
+              "human_locked_charter",
+              "author_confirmation",
+              "case_study",
+              "industry_standard",
+              "research_finding"
+            ],
+            "description": "Kind of source. human_locked_charter and author_confirmation carry the highest semantic weight."
+          },
+          "authority": {
+            "type": "string",
+            "enum": [
+              "historical_baseline",
+              "thought_mine",
+              "current_highest",
+              "exemplar_case",
+              "deprecated"
+            ],
+            "description": "Authority level per RFC-0013 §3.1. current_highest is override-capable; deprecated must not be used as positive evidence."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "stable_but_superseded",
+              "deprecated"
+            ],
+            "description": "Lifecycle status of this source. stable_but_superseded means it remains referenced but is not the highest."
+          },
+          "can_override": {
+            "type": "boolean",
+            "description": "Whether this source can override lower-authority sources in conflict resolution. Only current_highest sources should set this to true."
+          },
+          "scope": {
+            "type": "string",
+            "description": "Which part of the domain this source constrains, e.g., full_book, axioms_and_ontology, open_questions, terminology. Free-form string is allowed because domains differ."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Optional human-readable notes about this source."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "precedence_order": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Ordered list of source.id values, highest precedence first. When two sources conflict, the earlier entry wins. Every entry MUST match a source.id in 'sources'.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "conflict_policies": {
+      "type": "array",
+      "description": "Optional explicit policies for known conflict patterns. Each policy is a rule that the S5 Human Lock gate can verify.",
+      "items": {
+        "type": "object",
+        "required": [
+          "when",
+          "resolution"
+        ],
+        "properties": {
+          "when": {
+            "type": "string",
+            "description": "Description of the conflict pattern, e.g., published_work_conflicts_with_human_locked_charter."
+          },
+          "resolution": {
+            "type": "string",
+            "description": "How to resolve the conflict, e.g., charter_overrides, charter_overrides_and_record_rename, surface_to_human."
+          },
+          "record_required": {
+            "type": "boolean",
+            "description": "Whether the resolution must be recorded in a designated location for audit."
+          },
+          "record_target": {
+            "type": "string",
+            "description": "Where the resolution record is written, e.g., candidate_cards.jsonl.conflict_resolution."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "sensitivity": {
+      "type": "object",
+      "description": "Optional sensitivity metadata. Does not gate schema validation but is read by PR-3 Studio gates.",
+      "properties": {
+        "sources_contain_pii": {
+          "type": "boolean"
+        },
+        "author_consent_on_file": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

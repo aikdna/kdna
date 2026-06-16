@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schema/module_manifest.json",
+  "title": "KDNA Internal Module Manifest (IMM)",
+  "description": "Declares, within a single domain package, which parts are independently loadable (sub_domain), which are internal tools (internal_module), and which are pure data (reference). Authoring-time only; never enters runtime .kdna container. See RFC-0013 §3.3.",
+  "type": "object",
+  "required": [
+    "domain_id",
+    "modules"
+  ],
+  "properties": {
+    "domain_id": {
+      "type": "string",
+      "pattern": "^@[a-z0-9_-]+/[a-z0-9_-]+$",
+      "description": "The KDNA domain this manifest belongs to."
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "description": "All modules in this domain. At least one module required.",
+      "items": {
+        "type": "object",
+        "required": [
+          "module_id",
+          "module_type",
+          "independent_asset"
+        ],
+        "properties": {
+          "module_id": {
+            "type": "string",
+            "description": "Unique identifier for this module within the domain."
+          },
+          "module_type": {
+            "type": "string",
+            "enum": [
+              "internal_module",
+              "sub_domain",
+              "reference"
+            ],
+            "description": "Per RFC-0013 §3.3: internal_module = in-domain, not independently loadable; sub_domain = independently loadable as its own .kdna; reference = pure data, not judgment."
+          },
+          "independent_asset": {
+            "type": "boolean",
+            "description": "Whether this module is independently loadable and publishable. MUST be true iff module_type is sub_domain; MUST be false if module_type is internal_module or reference."
+          },
+          "maps_to": {
+            "type": "string",
+            "description": "Where in KDNA_Core.json / KDNA_Patterns.json this module is realized, e.g., KDNA_Core.json.frameworks[core_principles]. Optional for reference modules."
+          },
+          "loadable_via": {
+            "type": "string",
+            "enum": [
+              "index",
+              "compact",
+              "scenario",
+              "full"
+            ],
+            "description": "Which load profile (per specs/load-profiles.md) can load this module. full = all six files. Required for internal_module and sub_domain. Forbidden for reference (reference modules are never loaded as judgment)."
+          },
+          "decomposition_rationale": {
+            "type": "string",
+            "description": "Optional human-readable explanation of why a domain was kept monolithic rather than split. Read by PR-2 Anti-Monolithic lint as the maintainer sign-off for the Anti-Monolithic Domain principle."
+          }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "module_type": { "const": "sub_domain" } }, "required": ["module_type"] },
+            "then": {
+              "properties": { "independent_asset": { "const": true } },
+              "required": ["module_id", "module_type", "independent_asset", "loadable_via"]
+            }
+          },
+          {
+            "if": { "properties": { "module_type": { "const": "internal_module" } }, "required": ["module_type"] },
+            "then": {
+              "properties": { "independent_asset": { "const": false } },
+              "required": ["module_id", "module_type", "independent_asset", "loadable_via", "maps_to"]
+            }
+          },
+          {
+            "if": { "properties": { "module_type": { "const": "reference" } }, "required": ["module_type"] },
+            "then": {
+              "properties": { "independent_asset": { "const": false } }
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
