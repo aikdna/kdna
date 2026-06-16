@@ -7,9 +7,9 @@
 **Related:**
 - RFC-0013 (`specs/RFC-0013-judgment-asset-lifecycle.md`) — the lifecycle that introduces SAG, TC, IMM
 - `docs/KDNA_CARD_SPEC.md` — KDNA Card Spec v1 (shipped, **not replaced** by this RFC)
-- `specs/source_authority.schema.json` (PR-1, aikdna/kdna #86)
-- `specs/truth_charter.schema.json` (PR-1)
-- `specs/module_manifest.schema.json` (PR-1)
+- `schema/source_authority.schema.json` (PR-1, aikdna/kdna #86)
+- `schema/truth_charter.schema.json` (PR-1)
+- `schema/module_manifest.schema.json` (PR-1)
 - aikdna/kdna-lab PR #3 (PR-4 lifecycle smoke)
 - aikdna/kdna-lab PR #4 (PR-4b default synthesis migration)
 
