@@ -20,14 +20,14 @@ commercial asset layer. They determine:
 
 | Mode | Human-readable | Full content to Agent | Redistribution | Runtime required |
 |------|:---:|:---:|:---:|:---:|
-| `open` | Yes | Yes | Yes (per license) | No |
+| `public` | Yes | Yes | Yes (per license) | No |
 | `licensed` | No | No | No | Yes |
-| `runtime` | No | No | No | Yes |
+| `remote` | No | No | No | Yes |
 
 ### 2.1 Open Mode
 
 ```yaml
-access: "open"
+access: "public"
 ```
 
 **Description:** Public, human-readable KDNA. The full content is visible and
@@ -82,7 +82,7 @@ but full content is still delivered to the authorized Agent.
 ### 2.3 Runtime Mode
 
 ```yaml
-access: "runtime"
+access: "remote"
 ```
 
 **Description:** Protected commercial KDNA. The Agent NEVER receives the full
@@ -172,17 +172,17 @@ Access mode is declared in the KDNA file or manifest:
 **In .kdna (YAML):**
 ```yaml
 meta:
-  access: "open"
+  access: "public"
 ```
 
 **In kdna.json (JSON):**
 ```json
 {
-  "access": "open"
+  "access": "public"
 }
 ```
 
-Runtime mode is declared in registry metadata and/or the server-side `.kdna` manifest with `access: "runtime"`.
+Runtime mode is declared in registry metadata and/or the server-side `.kdna` manifest with `access: "remote"`.
 
 ## 5. Mode Transition
 
@@ -190,18 +190,18 @@ Creators may change access modes:
 
 | From | To | Requires |
 |------|----|----------|
-| `open` → `licensed` | New major version. Notify existing users. |
-| `open` → `runtime` | New major version. Requires Runtime infrastructure. |
-| `licensed` → `runtime` | Version upgrade. May require re-licensing. |
-| `licensed` → `open` | Always allowed. Community release. |
-| `runtime` → `licensed` | Architecture change. Requires creator decision. |
+| `public` → `licensed` | New major version. Notify existing users. |
+| `public` → `remote` | New major version. Requires Runtime infrastructure. |
+| `licensed` → `remote` | Version upgrade. May require re-licensing. |
+| `licensed` → `public` | Always allowed. Community release. |
+| `remote` → `licensed` | Architecture change. Requires creator decision. |
 
-Once content has been published under `open` mode, it cannot be retroactively
+Once content has been published under `public` mode, it cannot be retroactively
 locked. Choose mode before first publication.
 
 ## 6. Agent Compatibility
 
-| Agent Capability | `open` | `licensed` | `runtime` |
+| Agent Capability | `public` | `licensed` | `remote` |
 |------------------|:------:|:----------:|:---------:|
 | Offline use | Yes | Yes (after activation) | No |
 | Full context awareness | Yes | Yes | No (projection only) |
@@ -226,4 +226,4 @@ The choice of mode should balance:
 - `kdna-package-format.md` — Defines `access` in `kdna.json` manifests
 - `kdna-license.md` — Defines legal terms that complement access modes
 - `kdna-entitlement-api.md` — Defines activation, sync, revocation, offline grace, and license audit events
-- KDNA Runtime — Technical implementation of `runtime` projection mode
+- KDNA Runtime — Technical implementation of `remote` projection mode

@@ -258,7 +258,7 @@ function lintDomain(dataMap) {
  */
 const VALID_STATUS = new Set(['draft', 'experimental', 'stable', 'deprecated', 'staging']);
 const VALID_BADGE = new Set(['untested', 'tested', 'validated', 'expert_reviewed', 'production_ready']);
-const VALID_ACCESS = new Set(['open', 'licensed', 'runtime']);
+const VALID_ACCESS = new Set(['public', 'licensed', 'remote']);
 const VALID_RISK = new Set(['R0', 'R1', 'R2', 'R3']);
 const VALID_I18N = new Set(['L0', 'L1', 'L2', 'L3']);
 const VALID_PRIVACY = new Set(['public', 'private', 'sensitive', 'regulated']);

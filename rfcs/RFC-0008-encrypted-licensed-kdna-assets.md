@@ -11,7 +11,7 @@ policy.
 
 ## Motivation
 
-KDNA supports open, licensed, and runtime access modes. Licensed assets need a
+KDNA supports public, licensed, and remote access modes. Licensed assets need a
 single interoperable container profile so that Studio exporters, CLI verifiers,
 registries, and runtimes agree on what is encrypted, what stays public, how
 digests and signatures are computed, and how licenses unlock protected

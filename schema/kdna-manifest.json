@@ -172,11 +172,11 @@
     "access": {
       "type": "string",
       "enum": [
-        "open",
+        "public",
         "licensed",
-        "runtime"
+        "remote"
       ],
-      "description": "Distribution mode. open = plaintext, freely available. licensed = encrypted, requires local license. runtime = not distributed, server-side API only."
+      "description": "Distribution mode. public = plaintext, freely available to any KDNA-compatible runtime. licensed = encrypted, requires local license. remote = not distributed, consumed through API/MCP."
     },
     "languages": {
       "type": "array",

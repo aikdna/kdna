@@ -32,7 +32,7 @@
     },
     "access": {
       "type": "string",
-      "enum": ["open", "licensed", "runtime"]
+      "enum": ["public", "licensed", "remote"]
     },
     "domains": {
       "type": "array",
