@@ -1,0 +1,32 @@
+{
+  "domain_id": "@aikdna/code_review",
+  "modules": [
+    {
+      "module_id": "judgment_layer_diagnoser",
+      "module_type": "internal_module",
+      "independent_asset": false,
+      "maps_to": "KDNA_Core.json.frameworks[judgment_layer_diagnoser]",
+      "loadable_via": "scenario"
+    },
+    {
+      "module_id": "rubber_stamp_detector",
+      "module_type": "internal_module",
+      "independent_asset": false,
+      "maps_to": "KDNA_Patterns.json.misunderstandings[rubber_stamp_as_neutral]",
+      "loadable_via": "scenario"
+    },
+    {
+      "module_id": "safety_guard_signals",
+      "module_type": "internal_module",
+      "independent_asset": false,
+      "maps_to": "KDNA_Patterns.json.risk_model",
+      "loadable_via": "compact"
+    },
+    {
+      "module_id": "term_dictionary",
+      "module_type": "reference",
+      "independent_asset": false,
+      "maps_to": "KDNA_Patterns.json.terminology"
+    }
+  ]
+}

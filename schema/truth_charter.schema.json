@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schema/truth_charter.json",
+  "title": "KDNA Truth Charter (TC)",
+  "description": "Locks, in authoring-time, what this judgment system is and is not before any candidate judgment is generated. Authoring-time only; never enters runtime .kdna container. See RFC-0013 §3.2.",
+  "type": "object",
+  "required": [
+    "tc_id",
+    "domain_id",
+    "tc_status",
+    "highest_question",
+    "core_insight",
+    "in_scope",
+    "out_of_scope",
+    "highest_axiom_protected",
+    "forbidden_simplifications",
+    "renamed_terms",
+    "anti_drift_rules",
+    "judgment_authority_holder"
+  ],
+  "properties": {
+    "tc_id": {
+      "type": "string",
+      "description": "Stable identifier for this TC instance, e.g., tc_<domain>_<version>_<yyyy_mm_dd>."
+    },
+    "domain_id": {
+      "type": "string",
+      "pattern": "^@[a-z0-9_-]+/[a-z0-9_-]+$",
+      "description": "The KDNA domain this TC belongs to."
+    },
+    "tc_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "synthesized",
+        "locked",
+        "deprecated"
+      ],
+      "description": "TC lifecycle status. 'locked' is required for S6 compile under --strict-authority. 'synthesized' is what kdna build produces for legacy domains without an explicit TC."
+    },
+    "locked_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of when this TC was last locked. Required when tc_status is 'locked'."
+    },
+    "locked_by": {
+      "type": "string",
+      "description": "Human identifier of the person who locked this TC. Required when tc_status is 'locked'."
+    },
+    "highest_question": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The single highest judgment question this domain is designed to answer. Used to align candidate generation in S4."
+    },
+    "core_insight": {
+      "type": "string",
+      "minLength": 1,
+      "description": "One-sentence statement of what the domain's judgment system actually does. Used as a drift-prevention floor."
+    },
+    "in_scope": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Specific judgment questions this domain does answer. At least one entry required."
+    },
+    "out_of_scope": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Specific judgment questions this domain explicitly does NOT answer. At least one entry required."
+    },
+    "highest_axiom_protected": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The single protected axiom (often the core insight rephrased as an actionable principle). TC drift detection will check that this is not silently rewritten."
+    },
+    "forbidden_simplifications": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Patterns that LOOK like the domain's insight but actually drift the judgment. The TC gate checks that candidate axioms do not match these patterns."
+    },
+    "renamed_terms": {
+      "type": "array",
+      "description": "Term migrations that must be reflected in KDNA_Patterns.json.terminology. Each entry pairs the old term with the new term and the version effective_from. PR-3 gate uses this to warn on drift.",
+      "items": {
+        "type": "object",
+        "required": ["old", "new", "effective_from"],
+        "properties": {
+          "old": { "type": "string" },
+          "new": { "type": "string" },
+          "effective_from": { "type": "string", "description": "Domain version where the rename takes effect, e.g., 4.0.0" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "anti_drift_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Author-confirmed rules that prevent semantic drift of the domain. These are read by the S5 Human Lock gate."
+    },
+    "judgment_authority_holder": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier (typically an author human id) who holds final judgment authority over this domain. Required for any judgment update."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "tc_status": { "const": "locked" } },
+        "required": ["tc_status"]
+      },
+      "then": {
+        "required": [
+          "tc_id",
+          "domain_id",
+          "tc_status",
+          "locked_at",
+          "locked_by",
+          "highest_question",
+          "core_insight",
+          "in_scope",
+          "out_of_scope",
+          "highest_axiom_protected",
+          "forbidden_simplifications",
+          "renamed_terms",
+          "anti_drift_rules",
+          "judgment_authority_holder"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

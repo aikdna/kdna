@@ -14,6 +14,7 @@
     "audit:public-confidence": "node scripts/audit-public-confidence.js",
     "validate:app-schemas": "node scripts/validate-app-schemas.js",
     "validate:protocol-fixtures": "node scripts/validate-protocol-fixtures.js",
+    "validate:rfc0013-schemas": "node scripts/validate-rfc0013-schemas.js",
     "test": "npm --workspace @aikdna/kdna-core test && npm --workspace @aikdna/kdna-eval test",
     "conformance": "node conformance/run.mjs",
     "conformance:phase2": "node conformance/run.mjs --profile phase2-protocol",
