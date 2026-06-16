@@ -18,7 +18,9 @@
 | RFC-0010 | Fidelity Protocol | **Implemented** | `specs/fidelity-result.schema.json`, `@aikdna/kdna-fidelity-core` |
 | RFC-0011 | Product Runtime | **Accepted** | `specs/product-runtime.schema.json`, `examples/product-runtime/` |
 | RFC-0012 | Artifact Envelope (output artifact) | **Draft** | `specs/RFC-0012-artifact-contract.md` (companion to RFC-0009; output-side envelope) |
-| RFC-0013 | Judgment Asset Lifecycle | **Draft** | `specs/RFC-0013-judgment-asset-lifecycle.md` (this RFC) |
+| RFC-0013 | Judgment Asset Lifecycle | **Draft** | `specs/RFC-0013-judgment-asset-lifecycle.md` (companion RFCs RFC-0014 / RFC-0015 now also filed) |
+| RFC-0014 | KDNA Card Spec v2 | **Draft** | `specs/RFC-0014-kdna-card-v2.md` (companion to RFC-0013; field-level extension, not implementation) |
+| RFC-0015 | Runtime Trace Spec v2 | **Draft** | `specs/RFC-0015-runtime-trace-v2.md` (companion to RFC-0013; field-level extension, not implementation) |
 
 ## Lifecycle Rules
 
@@ -35,5 +37,17 @@ RFC-0009 Artifact Contract     ████████████░░░░ 
 RFC-0010 Fidelity Protocol     ████████████░░░░  Implemented
 RFC-0011 Product Runtime       ████████░░░░░░░░  Accepted
 RFC-0012 Artifact Envelope     ██░░░░░░░░░░░░░░  Draft
-RFC-0013 Judgment Asset Life.  █░░░░░░░░░░░░░░░  Draft
+RFC-0013 Judgment Asset Life.  █░░░░░░░░░░░░░░░  Draft (companion RFCs filed; see note)
+RFC-0014 Card v2                █░░░░░░░░░░░░░░░  Draft
+RFC-0015 Trace v2              █░░░░░░░░░░░░░░░  Draft
 ```
+
+> **Note on RFC-0013 status (2026-06-16):** RFC-0013 §9 acceptance
+> criteria are now **technically covered** by the implementation
+> series (PR-1 / PR-2 / PR-2a / PR-3 / PR-4 / PR-4b), plus the
+> filing of RFC-0014 and RFC-0015 (this update). However, RFC-0013
+> is **not** promoted to `Accepted` or `Implemented` here. The
+> public status remains `Draft` until external review and approval
+> ratifies the implementation. The accurate external wording is:
+> *"RFC-0013 implementation acceptance criteria are now covered;
+> external approval / final status update pending."*
