@@ -23,7 +23,9 @@
     "smoke:installed-domains": "bash scripts/smoke-installed-domains.sh",
     "check:pack": "node scripts/check-pack-contents.js",
     "release:preflight": "node scripts/release-preflight.js",
-    "pretest": "npm install --ignore-scripts"
+    "test:core-smoke": "node scripts/core-smoke.js",
+    "test:ecosystem-lock": "node scripts/ecosystem-version-lock.js --strict",
+    "pretest": "node scripts/core-smoke.js"
   },
   "license": "Apache-2.0",
   "repository": {

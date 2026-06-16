@@ -10,6 +10,24 @@ const { loadDomainFromFiles, formatContext } = require('./loader');
 
 const KDNA_MEDIA_TYPE = 'application/vnd.aikdna.kdna+zip';
 
+// Standard KDNA domain data entries — kept in lockstep with loader.FILE_MAP.
+// Asset reader pre-loads these so callers don't have to enumerate entry names.
+// NOTE: kdna.json / manifest.json are read separately via readManifest(); do not
+// add them here. KDNA_Cluster is intentionally omitted — its schema exists but
+// is not yet wired into the loader contract.
+const STANDARD_ENTRIES = Object.freeze([
+  'KDNA_Core.json',
+  'KDNA_Patterns.json',
+  'KDNA_Scenarios.json',
+  'KDNA_Cases.json',
+  'KDNA_Reasoning.json',
+  'KDNA_Evolution.json',
+]);
+
+// Matches any entry that holds JSON content (used to canonicalize the entry
+// before hashing/signing so digests are stable across re-serialization).
+const JSON_ENTRY_RE = /\.json$/i;
+
 function sha256Hex(buf) {
   return crypto.createHash('sha256').update(buf).digest('hex');
 }
