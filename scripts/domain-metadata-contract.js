@@ -42,17 +42,25 @@ const path = require('path');
 
 const REPOS_ROOT = process.env.KDNA_REPOS_ROOT || path.resolve(__dirname, '..', '..');
 
-const VALID_QUALITY = new Set(['untested', 'tested', 'validated', 'expert_reviewed', 'production_ready']);
+const VALID_QUALITY = new Set([
+  'untested',
+  'tested',
+  'validated',
+  'expert_reviewed',
+  'production_ready',
+]);
 const VALID_RISK = new Set(['R0', 'R1', 'R2', 'R3']);
 const VALID_I18N = new Set(['L0', 'L1', 'L2', 'L3']);
 
-const REQUIRED_FOR_ALL = [
-  'name', 'spec_version', 'quality_badge',
-];
+const REQUIRED_FOR_ALL = ['name', 'spec_version', 'quality_badge'];
 // Experimental (quality_badge=untested) can skip these.
 const REQUIRED_NON_EXPERIMENTAL = [
-  'risk_level', 'default_language', 'languages', 'i18n_level',
-  'signature', 'content_digest',
+  'risk_level',
+  'default_language',
+  'languages',
+  'i18n_level',
+  'signature',
+  'content_digest',
 ];
 
 function flag(sev, repo, msg) {
@@ -70,17 +78,29 @@ function checkOne(repoName, kdna) {
     }
   }
   if (kdna.quality_badge && !VALID_QUALITY.has(kdna.quality_badge)) {
-    findings.push(flag('FAIL', repoName, `quality_badge "${kdna.quality_badge}" not in ${[...VALID_QUALITY].join('|')}`));
+    findings.push(
+      flag(
+        'FAIL',
+        repoName,
+        `quality_badge "${kdna.quality_badge}" not in ${[...VALID_QUALITY].join('|')}`,
+      ),
+    );
   }
   if (kdna.risk_level && !VALID_RISK.has(kdna.risk_level)) {
-    findings.push(flag('FAIL', repoName, `risk_level "${kdna.risk_level}" not in ${[...VALID_RISK].join('|')}`));
+    findings.push(
+      flag('FAIL', repoName, `risk_level "${kdna.risk_level}" not in ${[...VALID_RISK].join('|')}`),
+    );
   }
   if (kdna.i18n_level && !VALID_I18N.has(kdna.i18n_level)) {
-    findings.push(flag('FAIL', repoName, `i18n_level "${kdna.i18n_level}" not in ${[...VALID_I18N].join('|')}`));
+    findings.push(
+      flag('FAIL', repoName, `i18n_level "${kdna.i18n_level}" not in ${[...VALID_I18N].join('|')}`),
+    );
   }
   if (kdna.languages && Array.isArray(kdna.languages) && kdna.default_language) {
     if (!kdna.languages.includes(kdna.default_language)) {
-      findings.push(flag('FAIL', repoName, `default_language "${kdna.default_language}" not in languages []`));
+      findings.push(
+        flag('FAIL', repoName, `default_language "${kdna.default_language}" not in languages []`),
+      );
     }
   }
   if (!kdna.author) {
@@ -96,9 +116,21 @@ function checkOne(repoName, kdna) {
     if (typeof pubkeyStr !== 'string') {
       findings.push(flag('FAIL', repoName, `author.pubkey missing`));
     } else if (/^placeholder-/.test(pubkeyStr)) {
-      findings.push(flag('FAIL', repoName, `author.pubkey is a placeholder ("${pubkeyStr}") — must be replaced before registry promotion`));
+      findings.push(
+        flag(
+          'FAIL',
+          repoName,
+          `author.pubkey is a placeholder ("${pubkeyStr}") — must be replaced before registry promotion`,
+        ),
+      );
     } else if (!/^ed25519:[0-9a-f]{64}$/.test(pubkeyStr)) {
-      findings.push(flag('FAIL', repoName, `author.pubkey must be ed25519:<64 hex> (got: ${pubkeyStr.slice(0, 20)}...)`));
+      findings.push(
+        flag(
+          'FAIL',
+          repoName,
+          `author.pubkey must be ed25519:<64 hex> (got: ${pubkeyStr.slice(0, 20)}...)`,
+        ),
+      );
     }
   }
   if (!kdna.license) {
@@ -111,12 +143,20 @@ function checkOne(repoName, kdna) {
       // Different fields have different shape expectations.
       if (f === 'languages') {
         if (!Array.isArray(v) || v.length === 0) {
-          findings.push(flag('FAIL', repoName, `quality_badge=${kdna.quality_badge} requires non-empty languages array`));
+          findings.push(
+            flag(
+              'FAIL',
+              repoName,
+              `quality_badge=${kdna.quality_badge} requires non-empty languages array`,
+            ),
+          );
         }
         continue;
       }
       if (typeof v !== 'string' || v.length === 0) {
-        findings.push(flag('FAIL', repoName, `quality_badge=${kdna.quality_badge} requires ${f} field`));
+        findings.push(
+          flag('FAIL', repoName, `quality_badge=${kdna.quality_badge} requires ${f} field`),
+        );
         continue;
       }
       if (f === 'signature' && !/^ed25519:[0-9a-f]{128}$/.test(v)) {
@@ -130,7 +170,13 @@ function checkOne(repoName, kdna) {
   // Experimental-specific guidance: untested should be EXPLICIT and not
   // secretly hiding a tested entry.
   if (kdna.quality_badge === 'untested' && kdna.signature) {
-    findings.push(flag('INFO', repoName, `untested but has signature — consider bumping to tested if evals pass`));
+    findings.push(
+      flag(
+        'INFO',
+        repoName,
+        `untested but has signature — consider bumping to tested if evals pass`,
+      ),
+    );
   }
   return findings;
 }
@@ -152,8 +198,9 @@ function main() {
     const kdnaPath = path.join(repoPath, 'kdna.json');
     if (!fs.existsSync(kdnaPath)) continue; // not a domain repo
     let kdna;
-    try { kdna = JSON.parse(fs.readFileSync(kdnaPath, 'utf8')); }
-    catch (e) {
+    try {
+      kdna = JSON.parse(fs.readFileSync(kdnaPath, 'utf8'));
+    } catch (e) {
       allFindings.push(flag('FAIL', entry, `kdna.json is not valid JSON: ${e.message}`));
       continue;
     }
@@ -172,7 +219,7 @@ function main() {
     else console.warn(`${sev} ${f.repo}: ${f.msg}`);
   }
 
-  const fails = allFindings.filter(f => f.sev === 'FAIL').length;
+  const fails = allFindings.filter((f) => f.sev === 'FAIL').length;
   if (fails > 0) {
     console.error(`\ndomain-metadata-contract: ${fails} failure(s)`);
     process.exit(1);
