@@ -1,0 +1,35 @@
+name: core-smoke
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# PR-1: enforce that @aikdna/kdna-core can be required without throwing and
+# that its public exports (especially STANDARD_ENTRIES) are intact. Catches
+# regressions like the missing-STANDARD_ENTRIES and JSON_ENTRY_RE bugs.
+jobs:
+  smoke:
+    name: core-smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install workspace deps
+        run: npm ci
+      - name: Run core-smoke
+        run: npm run test:core-smoke
+      - name: Run full kdna-core test suite
+        run: npm --workspace @aikdna/kdna-core test
+      - name: Run kdna-eval test suite
+        run: npm --workspace @aikdna/kdna-eval test
+      - name: Cross-repo ecosystem-version-lock (PR-8)
+        env:
+          KDNA_REPOS_ROOT: ${{ github.workspace }}/..
+        run: npm run test:ecosystem-lock
