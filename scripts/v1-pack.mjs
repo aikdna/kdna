@@ -60,17 +60,17 @@ function buildEntry(nameBytes, data, method) {
   const crc = crc32(data);
   const { time, date } = dosTime();
   const local = Buffer.alloc(30 + nameBytes.length);
-  local.writeUInt32LE(0x04034b50, 0);   // local file header signature
-  local.writeUInt16LE(20, 4);            // version needed
-  local.writeUInt16LE(0, 6);             // flags
-  local.writeUInt16LE(method, 8);        // method (0=stored, 8=deflate)
+  local.writeUInt32LE(0x04034b50, 0); // local file header signature
+  local.writeUInt16LE(20, 4); // version needed
+  local.writeUInt16LE(0, 6); // flags
+  local.writeUInt16LE(method, 8); // method (0=stored, 8=deflate)
   local.writeUInt16LE(time, 10);
   local.writeUInt16LE(date, 12);
   local.writeUInt32LE(crc, 14);
   local.writeUInt32LE(compressed.length, 18);
-  local.writeUInt32LE(data.length, 22);  // uncompressed size
+  local.writeUInt32LE(data.length, 22); // uncompressed size
   local.writeUInt16LE(nameBytes.length, 26);
-  local.writeUInt16LE(0, 28);            // extra length
+  local.writeUInt16LE(0, 28); // extra length
   nameBytes.copy(local, 30);
   return { local, compressed, crc, time, date };
 }
@@ -78,8 +78,8 @@ function buildEntry(nameBytes, data, method) {
 function buildCentral(entry, nameBytes) {
   const c = Buffer.alloc(46 + nameBytes.length);
   c.writeUInt32LE(0x02014b50, 0);
-  c.writeUInt16LE(20, 4);            // version made by
-  c.writeUInt16LE(20, 6);            // version needed
+  c.writeUInt16LE(20, 4); // version made by
+  c.writeUInt16LE(20, 6); // version needed
   c.writeUInt16LE(0, 8);
   c.writeUInt16LE(entry.method || 0, 10);
   c.writeUInt16LE(entry.time, 12);
@@ -137,7 +137,13 @@ const outputPath = process.argv[3] || path.join(path.dirname(abs), `${path.basen
 // Collect entries in a deterministic order. mimetype MUST be first.
 const collected = listEntries(abs);
 const idx = new Map(collected.map((e) => [e.rel, e]));
-const order = ['mimetype', ...collected.map((e) => e.rel).filter((n) => n !== 'mimetype').sort()];
+const order = [
+  'mimetype',
+  ...collected
+    .map((e) => e.rel)
+    .filter((n) => n !== 'mimetype')
+    .sort(),
+];
 
 const localChunks = [];
 const centralChunks = [];
@@ -151,7 +157,20 @@ for (const rel of order) {
   const method = rel === 'mimetype' ? 0 : 8;
   const built = buildEntry(nameBytes, data, method);
   localChunks.push(built.local, built.compressed);
-  centralChunks.push(buildCentral({ method, crc: built.crc, time: built.time, date: built.date, compressed: built.compressed, dataLength: data.length, offset }, nameBytes));
+  centralChunks.push(
+    buildCentral(
+      {
+        method,
+        crc: built.crc,
+        time: built.time,
+        date: built.date,
+        compressed: built.compressed,
+        dataLength: data.length,
+        offset,
+      },
+      nameBytes,
+    ),
+  );
   offset += built.local.length + built.compressed.length;
 }
 

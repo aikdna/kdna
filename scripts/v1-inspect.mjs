@@ -40,6 +40,8 @@ const out = {
   payload: manifest.payload ? manifest.payload.path : null,
   payload_encrypted: manifest.payload ? manifest.payload.encrypted : null,
   profile: manifest.compatibility ? manifest.compatibility.profile : null,
-  load_contract_default_profile: manifest.load_contract ? manifest.load_contract.default_profile : null,
+  load_contract_default_profile: manifest.load_contract
+    ? manifest.load_contract.default_profile
+    : null,
 };
 console.log(JSON.stringify(out, null, 2));

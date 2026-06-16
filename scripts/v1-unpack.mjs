@@ -33,7 +33,10 @@ const data = fs.readFileSync(abs);
 // Locate EOCD (search from the end).
 let eocdOff = -1;
 for (let i = data.length - 22; i >= 0 && i >= data.length - 65557; i--) {
-  if (data.readUInt32LE(i) === 0x06054b50) { eocdOff = i; break; }
+  if (data.readUInt32LE(i) === 0x06054b50) {
+    eocdOff = i;
+    break;
+  }
 }
 if (eocdOff < 0) {
   console.error('No EOCD record found; not a valid ZIP/.kdna file');
@@ -62,7 +65,8 @@ for (let i = 0; i < totalEntries; i++) {
   p += 46 + nameLen + extraLen + commentLen;
 }
 
-const outputDir = process.argv[3] || path.join(path.dirname(abs), path.basename(abs, '.kdna') + '_unpacked');
+const outputDir =
+  process.argv[3] || path.join(path.dirname(abs), path.basename(abs, '.kdna') + '_unpacked');
 fs.mkdirSync(outputDir, { recursive: true });
 
 for (const e of entries) {
