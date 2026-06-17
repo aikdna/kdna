@@ -1,5 +1,13 @@
 # State of KDNA
 
+> ⚠️ **Historical snapshot. This document is dated 2026-06-09 and does not represent the current KDNA Core positioning.**
+>
+> Current positioning is documented in `README.md`, `README.zh.md`, `docs/core/definition.md`, and `docs/core/principles.md`. Several of the references and assumptions below (e.g. registry, marketplace, quality badge) are out of scope for KDNA Core v1 and are tracked separately. Do not use this document as a source of current public narrative.
+>
+> ⚠️ **历史状态快照。本文件日期为 2026-06-09,不代表当前 KDNA Core 定位。**
+>
+> 当前定位以 `README.md`、`README.zh.md`、`docs/core/definition.md`、`docs/core/principles.md` 为准。文中涉及的 registry / marketplace / quality badge 等表述,已不在 KDNA Core v1 范围之内,另作处理。本文件不应作为当前公开叙事的来源。
+
 Date: 2026-06-09
 
 KDNA is the open judgment asset protocol for AI agents. It is not another prompt format. A `.kdna` asset is a verifiable, signed, inspectable domain judgment asset that an agent can load before it acts.
@@ -26,7 +34,7 @@ KDNA is the open judgment asset protocol for AI agents. It is not another prompt
 ## Evidence-Gated
 
 - `validated` quality badges require at least 30 eval cases, automated scoring, raw outputs, rubric, benchmark report, and limitations.
-- The first validated candidates are `@aikdna/writing`, `@aikdna/prompt_diagnosis`, and `@aikdna/agent_safety`; all three source repos now have 30 eval cases, but signed release assets still need to be republished before registry `test_count` can claim 30. They also need raw model outputs and completed automated scoring artifacts. The evidence contract is defined in the [registry policy](./docs/registry-policy.md) and [quality badge evidence gate](./specs/quality-badge-evidence-gate.md).
+- The first validated candidates are `@aikdna/writing`, `@aikdna/prompt_diagnosis`, and `@aikdna/agent_safety`; all three source repos now have 30 eval cases, but signed release assets still need to be republished before registry `test_count` can claim 30. They also need raw model outputs and completed automated scoring artifacts. The evidence contract is defined in the [legacy registry policy](./docs/archive/legacy-registry-policy.md) and [quality badge evidence gate](./specs/quality-badge-evidence-gate.md).
 - Existing early benchmark evidence should be described as early evidence until those gates pass.
 - External contributor readiness is not complete until a non-maintainer completes fork, install, conformance, registry-entry draft, and PR.
 
