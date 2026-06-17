@@ -1,22 +1,24 @@
-# KDNA — 面向 AI 系统的开放判断协议
+# KDNA
 
-> [aikdna.com](https://aikdna.com) — 官方网站 . [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli)
+> **KDNA Core 是 KDNA 官方判断资产格式与运行时加载契约。**
 
-**KDNA 是面向 AI 系统的开放判断协议。**
+> `.kdna` 资产通过 KDNA 官方工具链创建、检查、保护、加载和消费。第三方产品可以通过 KDNA 官方 SDK、CLI、Loader 或 API 接入 KDNA。
 
-它把经过人类治理的领域判断，转化为 Agent 可加载、可追踪、可验证、可进化的可携带结构资产。
+> KDNA Core 内容中立，不评价判断内容好坏，不提供官方内容推荐、交易、评级或信任背书。
 
-Prompt 改变表达。RAG 扩展信息获取。Skill/工具扩展行动能力。  
-**KDNA 加载领域判断。**
+> 官方网站: [aikdna.com](https://aikdna.com) · [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli)
 
-KDNA 不是让 Agent 扮演专家，而是让 Agent 在一套明确的判断系统中工作。
+KDNA Core 把经过人类治理的领域判断，转化为 Agent 可加载、可追踪、可验证、可进化的可携带结构资产。
 
-KDNA 不是提示词库，不是知识库，也不是操作手册。它是一种结构化方式，封装一个领域的判断层：公理、术语边界、常见误解、场景信号、推理链条和能力演进。
+Prompt 改变表达。RAG 扩展信息获取。Skill / 工具扩展行动能力。  
+**KDNA Core 加载领域判断。**
 
-> **本仓库仅定义 KDNA 协议、Schema、校验规则与治理方式。**  
-> 具体领域的 KDNA 应放在[独立仓库](#领域仓库)中，符合收录标准后进入官方 [kdna-registry](https://github.com/aikdna/kdna-registry)。
-> 安装 KDNA 到你的 Agent，使用 [kdna-skills](https://github.com/aikdna/kdna-skills)。  
-> 添加领域到注册表的标准详见 [docs/registry-policy.md](./docs/registry-policy.md)。
+KDNA Core 不是让 Agent 扮演专家，而是让 Agent 在一套明确的判断系统中工作。
+
+KDNA Core 不是提示词库，不是知识库，也不是操作手册。它是一种结构化方式，封装一个领域的判断层:公理、术语边界、常见误解、场景信号、推理链条和能力演进。
+
+> 本仓库定义 KDNA Core 格式、Schema、运行时加载契约与官方工具链核心实现。
+> KDNA 官方工具链由本仓库及配套仓库共同发布。第三方产品通过官方 SDK、CLI、Loader 或 API 接入 KDNA。
 
 ## 为什么现在需要 KDNA
 
@@ -30,15 +32,19 @@ KDNA 不是提示词库，不是知识库，也不是操作手册。它是一种
 
 每个领域都有专家级的判断模式，目前只存在于资深从业者的头脑中。KDNA 是一种把这些模式提取出来、编码为可机器验证的结构、作为判断参照层加载到 Agent 中的格式——独立于 Prompt，独立于知识库，独立于工具。
 
-## KDNA 三层体系
+## KDNA Core 与官方工具链
 
-AIKDNA = 生态/品牌  
-KDNA Protocol = 开放判断协议  
-KDNA Domain Asset = 可携带的领域判断资产
+KDNA Core 是本仓库定义的官方判断资产格式与运行时加载契约。
+`.kdna` 资产的创建、加载、消费、验证、保护都由 KDNA 官方工具链负责。
 
-**协议优先。产品是参考实现。**
+| 工具链组件 | 角色 | 仓库 |
+|---|---|---|
+| **KDNA Studio** | 人类判断资产创作环境 | [aikdna/kdna-studio-core](https://github.com/aikdna/kdna-studio-core) |
+| **KDNA CLI** | 官方命令行入口（inspect / validate / pack / unpack / load） | 本仓库 + [aikdna/kdna-cli](https://github.com/aikdna/kdna-cli) |
+| **KDNA Loader** | 官方运行时 loader，集成到 Agent | [aikdna/kdna-skills](https://github.com/aikdna/kdna-skills) |
+| **KDNA SDK** | 官方可嵌入库，供第一方集成 | 本仓库 `packages/kdna-core/` |
 
-KDNA Protocol 是开放协议。KDNA CLI 是参考工具。兼容 KDNA 的客户端可以用于加载、使用和对比领域判断；兼容 KDNA 的作者工具可以用于创建、锁定和导出领域资产。第三方应用可以实现同样的运行时协议。
+第三方产品通过官方 SDK、CLI、Loader 或 API 接入 KDNA,而不独立实现 KDNA 工具链。
 
 ## 为什么需要 KDNA
 
@@ -195,7 +201,7 @@ kdna verify dist/my_expertise.kdna --judgment
 kdna publish dist/my_expertise.kdna
 ```
 
-可信 `.kdna` 不是通过手写 JSON 或 CLI 打包创建的，而是由兼容 Studio 的创建管线编译生成。VS Code 和 `kdna dev` 命令只用于开发源工作区的诊断。
+由 KDNA Studio 编译产出的 `.kdna` 是 KDNA 官方工具链的最终产物。VS Code 和 `kdna dev` 命令只用于开发源工作区的诊断。
 
 ## 规范
 
@@ -211,7 +217,7 @@ node examples/minimal-agent/agent.js
 
 ## 领域仓库
 
-领域认知包存放在独立仓库中。官方机器可读索引见 [aikdna/kdna-registry](https://github.com/aikdna/kdna-registry)。
+领域认知包存放在独立仓库中。KDNA Core 不维护官方目录、不定义收录标准；第三方按需引用各领域仓库即可。
 
 | 领域 | 仓库 | 状态 |
 |---|---|---|
@@ -222,9 +228,9 @@ node examples/minimal-agent/agent.js
 | Open-source Project | [kdna-open_source_project](https://github.com/aikdna/kdna-open_source_project) | experimental |
 | Content Strategy | [kdna-content_strategy](https://github.com/aikdna/kdna-content_strategy) | experimental |
 
-### 参考示例
+### 演示样例
 
-`examples/` 目录包含最小参考实现，用于测试校验器和说明规范。这些 **不是** 官方领域目录——它们是规范示例。
+`examples/` 目录包含最小演示样例，用于测试校验器和说明规范。这些 **不是** 官方领域目录——它们是规范示例。
 
 | 示例 | 用途 |
 |---------|---------|
@@ -240,7 +246,7 @@ node examples/minimal-agent/agent.js
 | [docs/getting-started.zh.md](./docs/getting-started.zh.md) | 安装、创建和使用 KDNA |
 | [docs/evaluation.zh.md](./docs/evaluation.zh.md) | 如何检验 KDNA 是否改善了判断力 |
 | [docs/meta-cognition.zh.md](./docs/meta-cognition.zh.md) | 何时用 KDNA、冲突仲裁、领域组合 |
-| [docs/registry-policy.zh.md](./docs/registry-policy.zh.md) | 领域收录标准 |
+| [docs/archive/legacy-registry-policy.zh.md](./docs/archive/legacy-registry-policy.zh.md) | 历史 KDNA 收录标准（已废弃,仅作存档） |
 | [docs/kdna-in-chinese.md](./docs/kdna-in-chinese.md) | 中文 KDNA 编写指南 |
 
 ## 工具
@@ -254,7 +260,7 @@ node examples/minimal-agent/agent.js
 - [README.zh.md](./README.zh.md) — 中文 README（当前页面）
 - [docs/getting-started.zh.md](./docs/getting-started.zh.md) — 快速上手指南
 - [docs/kdna-in-chinese.md](./docs/kdna-in-chinese.md) — 中文 KDNA 编写指南
-- [docs/registry-policy.zh.md](./docs/registry-policy.zh.md) — 注册表收录标准
+- [docs/archive/legacy-registry-policy.zh.md](./docs/archive/legacy-registry-policy.zh.md) — 历史 KDNA 收录标准（已废弃,仅作存档）
 - [docs/i18n.md](./docs/i18n.md) — KDNA 国际化策略
 
 ## 许可
