@@ -2,10 +2,10 @@
 
 | Tool | Role | Status | Can run today | Command | Known limitation | Next action |
 |---|---|---|---|---|---|---|
-| **kdna inspect** | Official v1 inspection | beta (local-only) | yes | `node packages/kdna/bin/kdna.js inspect <path>` | Not in global CLI v0.21.1 | Publish v1-aware CLI |
-| **kdna validate** | Official v1 validation | beta (local-only) | yes | `node packages/kdna/bin/kdna.js validate <path>` | Not in global CLI | Publish v1-aware CLI |
-| **kdna pack** | Official deterministic pack | beta (local-only) | yes | `node packages/kdna/bin/kdna.js pack <src> <out>` | Not in global CLI | Publish v1-aware CLI |
-| **kdna unpack** | Official unpack | beta (local-only) | yes | `node packages/kdna/bin/kdna.js unpack <in> <out>` | Not in global CLI | Publish v1-aware CLI |
+| **kdna inspect** | Official v1 inspection | available in global CLI (@0.22.0) | yes | `kdna inspect <path>` | | |
+| **kdna validate** | Official v1 validation | available in global CLI (@0.22.0) | yes | `kdna validate <path>` | | |
+| **kdna pack** | Official deterministic pack | available in global CLI (@0.22.0) | yes | `kdna pack <src> <out>` | | |
+| **kdna unpack** | Official unpack | available in global CLI (@0.22.0) | yes | `kdna unpack <in> <out>` | | |
 | **kdna setup** | Agent setup | beta | yes | `kdna setup` (global) | Legacy agent adapter; v1 not wired | Update loader for v1 |
 | **kdna doctor** | System health check | beta | yes | `kdna doctor --agents` (global) | Legacy CLI surface | Update for v1 |
 | **kdna list** | Installed domains | beta | yes | `kdna list` (global) | Shows legacy v2 domain list | Update for v1 |
