@@ -1,5 +1,7 @@
 # Runtime Load Contract
 
+> For the normative profile definitions, see [Load Profiles](./load-profiles.md).
+
 The **load contract** is a manifest block that tells a loader **how** it may read the asset. It does not tell the loader **whether** to read it, or what to do with the result — those are runtime policy decisions.
 
 The load contract lives under `manifest.load_contract`. The schema is part of [`schema/manifest.schema.json`](../../schema/manifest.schema.json).

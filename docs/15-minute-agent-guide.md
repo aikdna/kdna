@@ -73,10 +73,8 @@ message rather than a stack trace. See [Current limitations](#current-limitation
 
 ## Current limitations
 
-- **Agent runtime loading is beta.** `kdna load` may not yet support v1 `.kdna`
-  containers produced by `kdna pack`. The `kdna load` command was originally
-  designed for legacy v2 domain assets installed via `kdna install`. Full v1
-  load-contract support is in development.
+- **Agent runtime loading is available for v1.** `kdna load` supports v1 `.kdna`
+  containers produced by `kdna pack` as of @aikdna/kdna-cli@0.23.0.
 - **`kdna compare`** requires a provider API key (ANTHROPIC_API_KEY,
   OPENAI_API_KEY, or equivalent). It is not required for the basic path.
 - **Agent support varies by platform.** The `kdna-loader` skill adapter is
