@@ -1,6 +1,6 @@
 # KDNA File Format (v1)
 
-A `.kdna` file is a **ZIP-compatible container** with a fixed entry layout. The format is normative; any tool claiming to produce or consume KDNA v1 assets MUST follow this layout.
+A `.kdna` file is a **ZIP-compatible container** with a fixed entry layout. The format is normative; the official KDNA toolchain produces and consumes KDNA v1 assets and follows this layout. Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
 
 ## Container layout
 
@@ -40,7 +40,7 @@ example.kdna
 2. `mimetype` MUST be the first entry and MUST be stored uncompressed.
 3. `kdna.json` MUST be UTF-8 JSON without BOM.
 4. `payload.kdnab` MUST be either UTF-8 JSON (`.json` content) or CBOR. The manifest's `payload.encoding` field declares which.
-5. The container MUST be deterministic given the same input entries: a producer and a verifier that independently pack the same logical asset MUST produce byte-identical containers when the same digest algorithm is used. Tools that do not achieve this are non-conformant.
+5. The container MUST be deterministic given the same input entries: a producer and a verifier that independently pack the same logical asset MUST produce byte-identical containers when the same digest algorithm is used. The official KDNA toolchain guarantees this for v1; assets that depend on non-deterministic packing are non-conformant.
 6. Encryption is per-entry, not whole-container. In Phase 1, only the plaintext case is exercised. The schema for encrypted entries is reserved for Phase 3.
 
 ## Anti-patterns
