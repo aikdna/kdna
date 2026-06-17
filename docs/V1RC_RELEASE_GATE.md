@@ -1,5 +1,7 @@
 # KDNA v1.0-rc Release Gate
 
+> ⚠️ **Historical snapshot.** This document describes the pre-v1 KDNA release gate and is out of scope for KDNA Core v1. KDNA Core v1 is the official KDNA judgment-asset format and runtime loading contract. Current docs: README.md, docs/core/definition.md, docs/core/principles.md.
+
 This release gate applies to the open protocol and tooling only. Applications
 and already-published assets follow the protocol after the tools are released.
 
