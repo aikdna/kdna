@@ -29,7 +29,7 @@ example.kdna
 
 | Entry | Required | Notes |
 | --- | --- | --- |
-| `checksums.json` | recommended | Per-entry digests. See `checksums.md`. |
+| `checksums.json` | recommended | Per-entry digests. `validate` and `load` verify declared SHA-256 digests against actual entry content. A mismatch fails validation and blocks loading. See `docs/core/load-profiles.md` for the load contract. |
 | `signatures/` | optional | One or more signature files. Each file is named `<role>.sig` (e.g. `author.sig`, `publisher.sig`, `auditor.sig`). The signature is over a specific subset of entries; the manifest's `signatures` block records which subset. |
 | `attachments/` | optional | Supplementary files referenced from the payload. Each attachment has a path under `attachments/`. |
 | `locales/<lang>/` | optional | Localized strings. Phase 1 does not define a schema for these; localization metadata in the manifest's `scope.language` is sufficient for routing. |
