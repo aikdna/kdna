@@ -26,7 +26,7 @@
 |---|---|---|---|---|
 | demo minimal | `kdna demo minimal <dir>` | no | no | Creates a v1 fixture from the npm package |
 | inspect | `kdna inspect <path>` | no | no | v1 source dir or .kdna container |
-| validate | `kdna validate <path>` | no | no | schema + format + payload + checksums + load-contract |
+| validate | `kdna validate <path>` | no | no | schema + format + payload + checksums (digest verified) + load-contract |
 | pack | `kdna pack <src> <out>` | no | no | Deterministic ZIP |
 | unpack | `kdna unpack <in> <out>` | no | no | Extract .kdna container |
 
