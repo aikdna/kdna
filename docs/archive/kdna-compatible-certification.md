@@ -1,5 +1,15 @@
 # KDNA-Compatible Certification
 
+HISTORICAL / ARCHIVED DOCUMENT.
+
+This document does not represent the current KDNA Core v1 positioning.
+KDNA Core v1 is the official KDNA judgment-asset format and runtime loading
+contract. KDNA Core v1 does not define a public registry, marketplace,
+recommendation system, content ranking, official quality badge, or
+certification program. This file is preserved for traceability of the
+pre-v1 approach.
+
+
 KDNA-compatible means an implementation follows the asset-first KDNA contract:
 `.kdna` is the canonical cognition asset, validation is reproducible, and
 runtime loading does not require users to unpack or edit internal entries.
