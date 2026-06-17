@@ -1,6 +1,12 @@
-# 注册表收录标准
+# 注册表收录标准（历史）
 
-> [English](./registry-policy.md)
+> ⚠️ **历史 / 已废弃。** 本文件是旧版 KDNA 注册表策略。KDNA Core v1 不再定义 registry、marketplace 或 quality-badge 系统,官方 `kdna-registry` 仓库已不在 KDNA Core 范围。本文件仅作存档。
+>
+> 当前 KDNA Core 定位:`README.md`、`README.zh.md`、`docs/core/definition.md`、`docs/core/principles.md`。
+>
+> English:[./legacy-registry-policy.md](./legacy-registry-policy.md)
+>
+> ⚠️ **Historical / deprecated.** This document is the legacy KDNA registry policy. KDNA Core v1 no longer defines a registry, marketplace, or quality-badge system, and the canonical `kdna-registry` repository is out of scope for KDNA Core. This file is kept for reference only.
 
 本文档定义了领域 KDNA 仓库被列入官方 [kdna-registry](https://github.com/aikdna/kdna-registry) 必须满足的条件。
 

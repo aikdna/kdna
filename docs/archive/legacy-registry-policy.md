@@ -1,6 +1,12 @@
-# Registry Policy
+# Registry Policy (Historical)
 
-> [中文版](./registry-policy.zh.md)
+> ⚠️ **Historical / deprecated.** This document is the legacy KDNA registry policy. KDNA Core v1 no longer defines a registry, marketplace, or quality-badge system, and the canonical `kdna-registry` repository is out of scope for KDNA Core. This file is kept for reference only.
+>
+> Current KDNA Core positioning: `README.md`, `README.zh.md`, `docs/core/definition.md`, `docs/core/principles.md`.
+>
+> 中文版:[./legacy-registry-policy.zh.md](./legacy-registry-policy.zh.md)
+>
+> ⚠️ **历史 / 已废弃。** 本文件是旧版 KDNA 注册表策略。KDNA Core v1 不再定义 registry、marketplace 或 quality-badge 系统,官方 `kdna-registry` 仓库已不在 KDNA Core 范围。本文件仅作存档。
 
 This document defines the criteria a domain KDNA repository must meet to be listed in the canonical [kdna-registry](https://github.com/aikdna/kdna-registry).
 
