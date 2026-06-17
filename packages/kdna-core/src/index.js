@@ -10,6 +10,7 @@ const assetReader = require('./asset-reader');
 const cryptoProfile = require('./crypto-profile');
 const publicApi = require('./public-api');
 const workpackPure = require('./workpack-pure');
+const v1 = require('./v1');
 
 module.exports = {
   ...publicApi,
@@ -21,4 +22,5 @@ module.exports = {
   ...assetReader,
   ...cryptoProfile,
   ...workpackPure,
+  ...v1,
 };
