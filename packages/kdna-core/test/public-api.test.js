@@ -110,7 +110,7 @@ function writeFixture() {
   return assetPath;
 }
 
-test.skip('stable public API inspects, validates, loads, renders, and matches .kdna assets', { todo: 'v2 fixture migration (format_version 1.0→2.0, multi-file→payload.kdnab)' }, async () => {
+test.skip('stable public API inspects, validates, loads, renders, and matches .kdna assets', { todo: 'v2 legacy — v1 equivalent covered in tests/cli-v1/' }, async () => {
   const assetPath = writeFixture();
 
   const inspected = await inspectKDNA(assetPath);

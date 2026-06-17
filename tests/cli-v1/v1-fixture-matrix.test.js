@@ -13,7 +13,13 @@ const crypto = require('node:crypto');
 const cliBin = path.join(__dirname, '..', '..', 'packages', 'kdna', 'bin', 'kdna.js');
 const minimalSource = path.join(__dirname, '..', '..', 'examples', 'minimal');
 const fixturesDir = path.join(__dirname, '..', '..', 'fixtures', 'v1');
-const FORBIDDEN = ['trusted', 'recommended', 'high_quality', 'officially_approved', 'quality_badge'];
+const FORBIDDEN = [
+  'trusted',
+  'recommended',
+  'high_quality',
+  'officially_approved',
+  'quality_badge',
+];
 
 function run(args) {
   return spawnSync(process.execPath, [cliBin, ...args], {

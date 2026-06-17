@@ -107,7 +107,7 @@ function json(value) {
   return JSON.stringify(value, null, 2);
 }
 
-test.skip('asset reader opens, verifies, and loads a .kdna asset without extraction', { todo: 'v2 fixture migration (format_version 1.0→2.0, multi-file→payload.kdnab)' }, async () => {
+test.skip('asset reader opens, verifies, and loads a .kdna asset without extraction', { todo: 'v2 legacy — v1 equivalent covered in tests/cli-v1/v1-fixture-matrix.test.js and tests/cli-v1/v1-global-cli.test.js' }, async () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-asset-'));
   const assetPath = path.join(tmp, 'writing.kdna');
   fs.writeFileSync(
@@ -254,7 +254,7 @@ test('asset verification rejects deprecated kdna_spec manifests', async () => {
   assert.ok(verify.errors.includes('kdna.json: kdna_spec is not allowed. Use spec_version.'));
 });
 
-test.skip('asset reader decrypts licensed entries only through an in-memory hook', { todo: 'v2 fixture migration (format_version 1.0→2.0, multi-file→payload.kdnab)' }, async () => {
+test.skip('asset reader decrypts licensed entries only through an in-memory hook', { todo: 'Phase 3 encryption — gated until after conformance recovery and load-contract stabilization' }, async () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-licensed-'));
   const assetPath = path.join(tmp, 'writing-pro.kdna');
   const core = {
@@ -348,7 +348,7 @@ test.skip('asset reader decrypts licensed entries only through an in-memory hook
   assert.equal(wrongVerify.ok, false);
 });
 
-test.skip('cross-language fixture: decrypts shared test_licensed_entry.kdna from Swift', { todo: 'v2 fixture migration (format_version 1.0→2.0, multi-file→payload.kdnab)' }, async () => {
+test.skip('cross-language fixture: decrypts shared test_licensed_entry.kdna from Swift', { todo: 'Phase 3 encryption — gated until after conformance recovery and load-contract stabilization' }, async () => {
   const fixturePath = path.resolve(__dirname, '../../../fixtures/test_licensed_entry.kdna');
   const expectedCorePath = path.resolve(__dirname, '../../../fixtures/expected/KDNA_Core.json');
 
@@ -488,7 +488,7 @@ test('protected entry wrong password fails', () => {
   }, /integrity check failed|AES-256-KW unwrap/);
 });
 
-test.skip('protected .kdna asset loads and decrypts with password hook', { todo: 'v2 fixture migration (format_version 1.0→2.0, multi-file→payload.kdnab)' }, async () => {
+test.skip('protected .kdna asset loads and decrypts with password hook', { todo: 'Phase 3 encryption — gated until after conformance recovery and load-contract stabilization' }, async () => {
   const {
     createKdnaAssetReader,
     createPasswordDecryptEntry,
@@ -575,7 +575,7 @@ test.skip('protected .kdna asset loads and decrypts with password hook', { todo:
   );
 });
 
-test.skip('cross-language fixture: decrypts shared test_protected_entry.kdna from Swift', { todo: 'v2 fixture migration (format_version 1.0→2.0, multi-file→payload.kdnab)' }, async () => {
+test.skip('cross-language fixture: decrypts shared test_protected_entry.kdna from Swift', { todo: 'Phase 3 encryption — gated until after conformance recovery and load-contract stabilization' }, async () => {
   const fixturePath = path.resolve(__dirname, '../../../fixtures/test_protected_entry.kdna');
   const expectedCorePath = path.resolve(__dirname, '../../../fixtures/expected/KDNA_Core_protected.json');
   const expectedPatternsPath = path.resolve(__dirname, '../../../fixtures/expected/KDNA_Patterns_protected.json');
