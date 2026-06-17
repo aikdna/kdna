@@ -1,6 +1,6 @@
 {
   "algorithm": "sha256",
-  "manifest_digest": "sha256:deadbeef",
-  "payload_digest": "sha256:placeholder",
+  "manifest_digest": "sha256:fae062dbca0eb8878eaf28eabeed732a6827443056eb66fb27f3961307630af7",
+  "payload_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "asset_digest": "sha256:placeholder"
 }
