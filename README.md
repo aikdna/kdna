@@ -14,6 +14,19 @@
 
 [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
+## Try KDNA Core v1 in 5 minutes
+
+No registry. No API key. No agent. No monorepo clone.
+
+```bash
+npm install -g @aikdna/kdna-cli
+kdna demo minimal ./minimal
+kdna validate ./minimal
+kdna pack ./minimal ./minimal.kdna
+```
+
+→ [Full 5-minute guide](./docs/try-kdna.md)
+
 ## What is a KDNA file?
 
 A `.kdna` file is a single, portable container that holds:
