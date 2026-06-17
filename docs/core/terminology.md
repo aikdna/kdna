@@ -6,7 +6,7 @@ Phase 1 baseline vocabulary. Each term is defined in 1–3 sentences. Some terms
 
 **KDNA Core** — the official KDNA judgment-asset format and runtime loading contract defined in this repository. Includes the manifest schema, payload profile schemas, checksums schema, and load contract.
 
-**Official KDNA toolchain** — the SDK, CLI, Loader, and API through which `.kdna` assets are created, inspected, protected, loaded, and consumed. Third parties do not implement KDNA independently; they integrate through the official toolchain. (See principle 9 in `principles.md`.)
+**Official KDNA toolchain** — the SDK, CLI, Loader, and API through which `.kdna` assets are created, inspected, protected, loaded, and consumed. Third-party products integrate KDNA through the official SDK, CLI, Loader, or API. (See principle 9 in `principles.md`.)
 
 **.kdna** — the standardized container file. A single `.kdna` file holds a manifest, a payload, optional signatures, optional attachments, and an optional checksums file, all in a ZIP-compatible container with a `mimetype` entry.
 
@@ -50,5 +50,5 @@ The following are **not** KDNA Core concepts and are explicitly out of scope:
 - **Trust / Verified / Recommended** — runtime policy decisions
 - **Quality Badge / Ranking** — evaluative claims, not format properties
 - **Official / Certified / Approved** — endorsement claims, not format properties
-- **Reference implementation** — there is one official toolchain, not a public format that any party is invited to re-implement
+- **Reference implementation** — KDNA Core has one official toolchain
 - **Third-party implementation** — third parties integrate through the official SDK, CLI, Loader, or API

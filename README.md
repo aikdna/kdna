@@ -4,7 +4,7 @@
 >
 > **KDNA Core 是 KDNA 官方判断资产格式与运行时加载契约。**
 
-> `.kdna` assets are created, inspected, protected, loaded, and consumed through the **official KDNA toolchain**. Third parties integrate through the official SDK, CLI, Loader, or API — they do not implement KDNA independently.
+> `.kdna` assets are created, inspected, protected, loaded, and consumed through the **official KDNA toolchain**. Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
 >
 > `.kdna` 资产通过 **KDNA 官方工具链** 创建、检查、保护、加载和消费。第三方产品通过 KDNA 官方 SDK、CLI、Loader 或 API 接入 KDNA,而不独立实现。
 
@@ -41,7 +41,7 @@ KDNA Core is the **format authority**. It defines:
 - the **version chain metadata** (lineage, judgment version, compatibility)
 - the **runtime loading contract** (load profiles, decryption requirements, token hints)
 
-KDNA Core is also the **toolchain authority**. Production, validation, loading, and consumption of `.kdna` files happen through the official KDNA toolchain. The format is documented publicly so that every `.kdna` file is verifiable; the toolchain is canonical so that the verification is meaningful.
+KDNA Core is also the **toolchain authority**. Production, validation, loading, and consumption of `.kdna` files happen through the official KDNA toolchain.
 
 ## What KDNA Core does not define
 
@@ -56,7 +56,7 @@ KDNA Core is **content-neutral**. It does not define:
 
 These are concerns of **external** platforms and policies. KDNA Core supplies the verifiable primitives and the official toolchain; everything else is out of scope.
 
-KDNA Core also does not invite **independent re-implementation**. The format is public so files are verifiable; the toolchain is canonical so verification is meaningful. Third parties integrate through the official SDK, CLI, Loader, or API.
+Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
 
 ## Official KDNA toolchain
 
@@ -69,7 +69,7 @@ The official KDNA toolchain is published from this repo and its companion packag
 | **KDNA Loader** | Official runtime loader for AI agents | `packages/kdna-core/` + `@aikdna/kdna-cli` |
 | **KDNA SDK** | Embeddable library for first-party integrations | `packages/kdna-core/` |
 
-Third-party products integrate KDNA through the official SDK, CLI, Loader, or API. They do not implement the KDNA file format independently.
+Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
 
 ## Examples
 
