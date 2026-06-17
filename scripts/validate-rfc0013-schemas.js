@@ -71,13 +71,17 @@ try {
     failures += 1;
     console.error(`FAIL SAG precedence_order references unknown source ids: ${missing.join(', ')}`);
   } else {
-    console.log(`OK   SAG precedence_order entries all reference valid source ids (${sag.precedence_order.length} entries)`);
+    console.log(
+      `OK   SAG precedence_order entries all reference valid source ids (${sag.precedence_order.length} entries)`,
+    );
   }
   // current_highest sources should be can_override=true
   for (const src of sag.sources) {
     if (src.authority === 'current_highest' && src.can_override !== true) {
       failures += 1;
-      console.error(`FAIL SAG source ${src.id}: authority=current_highest but can_override != true`);
+      console.error(
+        `FAIL SAG source ${src.id}: authority=current_highest but can_override != true`,
+      );
     }
     if (src.authority === 'deprecated' && src.status !== 'deprecated') {
       failures += 1;

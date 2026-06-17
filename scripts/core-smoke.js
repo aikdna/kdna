@@ -27,7 +27,14 @@ function check(name, fn) {
 }
 
 // 1. Load from monorepo source (the development path).
-const monorepoSource = path.join(__dirname, '..', 'packages', 'kdna-core', 'src', 'asset-reader.js');
+const monorepoSource = path.join(
+  __dirname,
+  '..',
+  'packages',
+  'kdna-core',
+  'src',
+  'asset-reader.js',
+);
 if (fs.existsSync(monorepoSource)) {
   console.log('core-smoke: monorepo source path');
   const reader = require(monorepoSource);
@@ -61,11 +68,16 @@ if (fs.existsSync(monorepoSource)) {
   check('loadProfileSync does not throw JSON_ENTRY_RE ReferenceError', () => {
     const asset = {
       entries: new Map([
-        ['kdna.json', Buffer.from(JSON.stringify({ name: 'smoke', version: '0.0.1', spec_version: '1' }))],
+        [
+          'kdna.json',
+          Buffer.from(JSON.stringify({ name: 'smoke', version: '0.0.1', spec_version: '1' })),
+        ],
         ['KDNA_Core.json', Buffer.from('{}')],
         ['KDNA_Patterns.json', Buffer.from('{}')],
       ]),
-      readEntry(name) { return this.entries.get(name); },
+      readEntry(name) {
+        return this.entries.get(name);
+      },
       asset_digest: 'sha256:deadbeef',
     };
     const result = reader.createKdnaAssetReader().loadProfileSync(asset, 'index');
