@@ -1,6 +1,6 @@
 # Start Here
 
-KDNA is an open protocol that gives AI agents **human-defined judgment standards** — not more prompts, not more tools, not more training data.
+KDNA Core is the **official KDNA judgment-asset format and runtime loading contract**. `.kdna` assets are created, inspected, loaded, and consumed through the **official KDNA toolchain** (the official SDK, CLI, Loader, and API). Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
 
 In 5 minutes, you can see an AI agent diagnose problems differently with KDNA loaded.
 
@@ -61,27 +61,33 @@ Tools let AI **act**. KDNA helps AI **judge**.
 
 ## Repository Map
 
-| Repo | Role | Tier |
-|------|------|------|
-| [kdna](https://github.com/aikdna/kdna) | Protocol, SPEC, conformance, docs | 0 — Core |
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | Runtime CLI: install, verify, load, compare | 0 — Core |
-| [kdna-skills](https://github.com/aikdna/kdna-skills) | Agent loader adapters | 0 — Core |
-| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI: create, lock, compile, export | 0 — Core |
-| [kdna-registry](https://github.com/aikdna/kdna-registry) | Trust catalog, quality badges, signatures | 0 — Core |
-| [kdna-lab](https://github.com/aikdna/kdna-lab) | Benchmark runner, eval cases, evidence | 1 — Evidence |
-| [kdna-workpack](https://github.com/aikdna/kdna-workpack) | KDNA + Skills + Gates → runnable Work Packs | 1 — Evidence |
-| [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety) | Flagship domain: safety judgment | 2 — Reference |
-| [kdna-code_review](https://github.com/aikdna/kdna-code_review) | Flagship domain: code review judgment | 2 — Reference |
-| [kdna-writing](https://github.com/aikdna/kdna-writing) | Demo domain: writing diagnosis | 2 — Reference |
-| [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) | Demo domain: prompt root-cause analysis | 2 — Reference |
+KDNA Core is the **official KDNA judgment-asset format and runtime loading contract**. The following are the active official toolchain components:
+
+| Repo | Role |
+|------|------|
+| [kdna](https://github.com/aikdna/kdna) | Official KDNA Core spec, toolchain entry, schemas, docs |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | Official runtime CLI: inspect, validate, pack, unpack, load |
+| [kdna-core](https://github.com/aikdna/kdna) | Official loader SDK (packages/kdna-core/) |
+| [kdna-skills](https://github.com/aikdna/kdna-skills) | Official agent loader adapter |
+
+Legacy / experimental repos (not KDNA Core active path):
+
+| Repo | Role |
+|------|------|
+| [kdna-registry](https://github.com/aikdna/kdna-registry) | Legacy registry experiment (archived; KDNA Core v1 has no registry) |
+| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI; legacy Studio-compatible pipeline |
+| [kdna-lab](https://github.com/aikdna/kdna-lab) | Experimental pressure-test infrastructure |
+| [kdna-workpack](https://github.com/aikdna/kdna-workpack) | Work Pack experimental format |
+
+Domain repos (reference judgment examples): [kdna-writing](https://github.com/aikdna/kdna-writing), [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety), [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis), and several others.
 
 ---
 
 ## Current State
 
-KDNA is at **v1.0-rc** (Release Candidate). What's stable and what's not is documented in [State of KDNA](../STATE_OF_KDNA.md).
+KDNA Core v1 (`kdna_version: "1.0"`) is the **official KDNA judgment-asset format**. The format and the official toolchain are versioned together.
 
-**Stable for v1.0-rc:** `.kdna` format, CLI JSON contract, conformance suite, agent integration, Phase 2 protocol artifacts.
+Current KDNA Core positioning is documented in [`README.md`](../README.md), [`README.zh.md`](../README.zh.md), [`docs/core/definition.md`](./core/definition.md), and [`docs/core/principles.md`](./core/principles.md).
 
 **Not stable / not claimed:** Marketplace, paid domains, enterprise governance, OCI distribution, more official domains.
 

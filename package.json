@@ -2,7 +2,7 @@
   "name": "@aikdna/kdna-monorepo",
   "version": "0.7.0",
   "private": true,
-  "description": "KDNA protocol specification, core library, and domain registry.",
+  "description": "KDNA Core — official KDNA judgment-asset format, runtime loading contract, and official toolchain.",
   "type": "commonjs",
   "scripts": {
     "lint": "eslint packages/kdna-core/src/",
