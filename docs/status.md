@@ -25,13 +25,13 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 
 ## What is beta
 
-- **`kdna inspect`** — inspect v1 source dir or v1 `.kdna` container (local shim: `node packages/kdna/bin/kdna.js`)
+- **`kdna inspect`** — inspect v1 source dir or v1 `.kdna` container (available via `npm install -g @aikdna/kdna-cli@0.22.0`)
 - **`kdna validate`** — validate v1 source dir or v1 `.kdna` container (schema + format + payload + checksums + load-contract)
 - **`kdna pack`** — deterministic ZIP pack (mimetype first, STORED; same input → same SHA-256, verified as `3f0ba461...`)
 - **`kdna unpack`** — unpack `.kdna` container, refuse path traversal
 - **32 CLI tests** — all pass (inspect, validate, pack, unpack, edge cases)
 
-Known limitation: the v1 route is currently only available from the monorepo (`node packages/kdna/bin/kdna.js`), not from the globally installed `kdna` binary (`npm install -g @aikdna/kdna-cli` v0.21.1). The global binary is the legacy upstream CLI and does not have v1 awareness. Publishing the v1-aware shim is a next-phase task.
+**Resolved in v0.22.0**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.22.0` now includes the full v1 inspect/validate/pack/unpack route.
 
 ## What is experimental
 
@@ -52,22 +52,22 @@ Known limitation: the v1 route is currently only available from the monorepo (`n
 
 ## Recommended first-run path
 
-For developers who want to try KDNA Core v1:
+```bash
+npm install -g @aikdna/kdna-cli@0.22.0
+kdna --help
+kdna inspect examples/minimal
+kdna validate examples/minimal
+kdna pack examples/minimal /tmp/out.kdna
+kdna unpack /tmp/out.kdna /tmp/out-dir
+kdna validate /tmp/out-dir
+```
+
+For developers who want to contribute from source:
 
 ```bash
-# Clone the monorepo
 git clone https://github.com/aikdna/kdna.git
 cd kdna
 npm ci
-
-# Run v1 commands (local shim)
-node packages/kdna/bin/kdna.js inspect examples/minimal
-node packages/kdna/bin/kdna.js validate examples/minimal
-node packages/kdna/bin/kdna.js pack examples/minimal /tmp/out.kdna
-node packages/kdna/bin/kdna.js unpack /tmp/out.kdna /tmp/out-dir
-node packages/kdna/bin/kdna.js validate /tmp/out-dir
-
-# Run the test suite
 npm test
 ```
 
@@ -75,7 +75,8 @@ For the legacy 5-minute walkthrough (old CLI surface), see [5-minute-guide.md](.
 
 ## Known limitations
 
-1. **Global CLI gap**: the globally installed `kdna` (`npm install -g @aikdna/kdna-cli` v0.21.1) does not include the v1 route. The v1 inspect/validate/pack/unpack commands work from the monorepo's local shim only.
+1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.22.0**. ✓
+2. **Core extraction pending**: the v1 format logic lives in `packages/kdna/src/v1-cli.js` (707 lines) and `aikdna/kdna-cli/src/v1-cli.js` (duplicated). Both should be merged into `@aikdna/kdna-core` (PR-99 in the Sovereignty Baseline plan).
 2. **Core extraction pending**: the v1 format logic lives in `packages/kdna/src/v1-cli.js` (707 lines) and should be moved to `@aikdna/kdna-core` (PR-99 in the Sovereignty Baseline plan).
 3. **6 skipped tests**: kdna-core fixture tests skipped in PR-95 (v1→v2 fixture migration debt). Marked for recovery in PR-100.
 4. **Conformance failure**: `kdna.json.format_version: "1.0"` vs expected `"2.0"` in the conformance runner. Same fixture debt.
