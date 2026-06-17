@@ -36,7 +36,7 @@
 |---|---|---|---|---|
 | setup | `kdna setup` | no | no | Agent detection and loader install |
 | doctor | `kdna doctor --agents` | no | no | System health check |
-| load | `kdna load <file> --as=prompt` | no | no | Current limitation: v1 .kdna containers not yet supported by kdna load |
+| load | `kdna load <file> --as=prompt` | no | no | Current (v1 supported in kdna-cli@0.23.0) |
 | compare | `kdna compare <name> --input "..."` | yes (legacy) | yes | Requires provider API key |
 | kdna-studio | `kdna-studio create <name>` | no | no | Authoring CLI, beta |
 | kdna-loader | installed by setup | no | no | Agent adapter, beta |
