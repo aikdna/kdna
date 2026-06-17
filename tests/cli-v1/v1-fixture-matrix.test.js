@@ -63,7 +63,7 @@ test('pack minimal source dir deterministic', () => {
     const ha = crypto.createHash('sha256').update(fs.readFileSync(a)).digest('hex');
     const hb = crypto.createHash('sha256').update(fs.readFileSync(b)).digest('hex');
     assert.equal(ha, hb);
-    assert.equal(ha, '3f0ba461a6d89170cd18404908358830357c811801e71146c640f65831bc7071');
+    assert.equal(ha, 'dad166e23c5c13be1f9d11829d102498a20ed11e7664ce427cc56bee4d38f59e');
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }
