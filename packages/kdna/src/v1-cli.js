@@ -2,11 +2,16 @@
  * v1-cli.js — KDNA Core v1 inspect / validate / pack / unpack for the
  * kdna monorepo CLI shim.
  *
+ * KDNA Core is the official KDNA judgment-asset format and runtime
+ * loading contract. .kdna assets are created, inspected, packed,
+ * unpacked, and validated through the official KDNA toolchain. This
+ * module is the v1 component of that toolchain.
+ *
  * The KDNA Core v1 file format is documented in docs/core/file-format.md.
  * This module is the shared implementation that:
  *
  *   - packages/kdna/bin/kdna.js uses as a v1-aware router
- *   - scripts/v1-*.mjs delegate to (via child_process) so the reference
+ *   - scripts/v1-*.mjs delegate to (via child_process) so the legacy
  *     scripts and the official CLI cannot drift
  *
  * Hard rules from the format spec:
@@ -22,6 +27,10 @@
  * Output language must stay content-neutral. We never say "trusted",
  * "recommended", "high_quality", or "officially_approved". We say
  * "format_valid", "schema_valid", "payload_valid", "compatible", etc.
+ *
+ * Toolchain sovereignty: third parties do not implement KDNA
+ * independently. They integrate through the official KDNA SDK, CLI,
+ * Loader, or API.
  */
 
 'use strict';
@@ -153,7 +162,7 @@ function detectContainerFormat(absPath) {
 // ─── ZIP I/O ────────────────────────────────────────────────────────────
 
 /**
- * Minimal ZIP reader. Returns a list of entries:
+ * Minimal ZIP container entry lister. Returns a list of entries:
  *   { name, method, compressedSize, uncompressedSize, localOffset, data }
  * `data` is already decompressed. Throws on unsupported methods or
  * truncated input.

@@ -4,11 +4,13 @@ Phase 1 baseline vocabulary. Each term is defined in 1–3 sentences. Some terms
 
 ## Format concepts
 
-**KDNA Core** — the file format and runtime loading contract defined in this repository. Includes the manifest schema, payload profile schemas, checksums schema, and load contract.
+**KDNA Core** — the official KDNA judgment-asset format and runtime loading contract defined in this repository. Includes the manifest schema, payload profile schemas, checksums schema, and load contract.
+
+**Official KDNA toolchain** — the SDK, CLI, Loader, and API through which `.kdna` assets are created, inspected, protected, loaded, and consumed. Third parties do not implement KDNA independently; they integrate through the official toolchain. (See principle 9 in `principles.md`.)
 
 **.kdna** — the standardized container file. A single `.kdna` file holds a manifest, a payload, optional signatures, optional attachments, and an optional checksums file, all in a ZIP-compatible container with a `mimetype` entry.
 
-**Manifest** — the public metadata layer of a `.kdna` file. Stored as `kdna.json` at the root of the container. Always plaintext so that tools can identify and route the file even if the payload is encrypted.
+**Manifest** — the public metadata layer of a `.kdna` file. Stored as `kdna.json` at the root of the container. Always plaintext so that the official toolchain can identify and route the file even if the payload is encrypted.
 
 **Payload** — the actual judgment data. Stored as `payload.kdnab` at the root of the container. May be plaintext or selectively encrypted. The structure of the payload is defined by a **payload profile** (e.g. `judgment-profile-v1`).
 
@@ -20,7 +22,7 @@ Phase 1 baseline vocabulary. Each term is defined in 1–3 sentences. Some terms
 
 **Judgment Version** — a semantic version for the **encoded judgment**, separate from the **asset release version**. An asset's `version` is its release tag; its `judgment_version` describes the version of the underlying judgment system it represents. Two assets with the same `judgment_version` are semantically equivalent for matching purposes.
 
-**Lineage** — the chain of parent assets that this asset descends from. Recorded as a list of asset UIDs in the manifest. Lineage does not imply trust, endorsement, or licensing; it is a fact about provenance.
+**Lineage** — the chain of parent assets that this asset descends from. Recorded as an object in the manifest. Lineage does not imply trust, endorsement, or licensing; it is a fact about provenance.
 
 **Digest** — a cryptographic hash of an entry, used for integrity checks. The default algorithm in Phase 1 is SHA-256. Digests may be recorded in the checksums file or in the manifest's `digests` block.
 
@@ -28,7 +30,7 @@ Phase 1 baseline vocabulary. Each term is defined in 1–3 sentences. Some terms
 
 ## Runtime concepts
 
-**Load Contract** — the manifest block that describes how a loader may read the asset. Includes the default profile, a set of named profiles (`index`, `compact`, `scenario`, `full`), per-profile flags (`requires_decryption`, `max_tokens_hint`, `selection`), and an `intended_for` list.
+**Load Contract** — the manifest block that describes how the official KDNA loader may read the asset. Includes the default profile, a set of named profiles (`index`, `compact`, `scenario`, `full`), per-profile flags (`requires_decryption`, `max_tokens_hint`, `selection`), and an `intended_for` list.
 
 **Load Profile** — a named reading strategy. `index` reads only metadata; `compact` reads the default judgment summary; `scenario` reads only triggered sections for a given input; `full` reads the entire payload for audit, editing, or deep reasoning.
 
@@ -48,3 +50,5 @@ The following are **not** KDNA Core concepts and are explicitly out of scope:
 - **Trust / Verified / Recommended** — runtime policy decisions
 - **Quality Badge / Ranking** — evaluative claims, not format properties
 - **Official / Certified / Approved** — endorsement claims, not format properties
+- **Reference implementation** — there is one official toolchain, not a public format that any party is invited to re-implement
+- **Third-party implementation** — third parties integrate through the official SDK, CLI, Loader, or API

@@ -1,6 +1,6 @@
 # KDNA Manifest (`kdna.json`)
 
-The manifest is the **public metadata layer** of a `.kdna` file. It is always plaintext so that tools can identify, route, and version-check an asset even when the payload is encrypted.
+The manifest is the **public metadata layer** of a `.kdna` file. It is always plaintext so that the official KDNA toolchain can identify, route, and version-check an asset even when the payload is encrypted.
 
 The manifest is a single JSON object at the root of the container, stored as `kdna.json`. The authoritative schema is [`schema/manifest.schema.json`](../../schema/manifest.schema.json).
 
