@@ -19,3 +19,34 @@
 | **kdna-core-swift** | Swift runtime | legacy | partial | SwiftPM | "KDNA Protocol" legacy framing in code | Re-author for v1 |
 | **kdna-lab** | Pressure-test infra | experimental | partial | scripts | Experimental infrastructure; not v1 Core surface | No change needed |
 | **kdna-registry** | Registry | legacy | no | not applicable | Marked as legacy experiment; KDNA Core v1 has no registry | Formal archival |
+
+## Current (try first)
+
+| Tool | Command | Requires registry | Requires API key | Notes |
+|---|---|---|---|---|
+| demo minimal | `kdna demo minimal <dir>` | no | no | Creates a v1 fixture from the npm package |
+| inspect | `kdna inspect <path>` | no | no | v1 source dir or .kdna container |
+| validate | `kdna validate <path>` | no | no | schema + format + payload + checksums + load-contract |
+| pack | `kdna pack <src> <out>` | no | no | Deterministic ZIP |
+| unpack | `kdna unpack <in> <out>` | no | no | Extract .kdna container |
+
+## Beta
+
+| Tool | Command | Requires registry | Requires API key | Notes |
+|---|---|---|---|---|
+| setup | `kdna setup` | no | no | Agent detection and loader install |
+| doctor | `kdna doctor --agents` | no | no | System health check |
+| load | `kdna load <file> --as=prompt` | no | no | Current limitation: v1 .kdna containers not yet supported by kdna load |
+| compare | `kdna compare <name> --input "..."` | yes (legacy) | yes | Requires provider API key |
+| kdna-studio | `kdna-studio create <name>` | no | no | Authoring CLI, beta |
+| kdna-loader | installed by setup | no | no | Agent adapter, beta |
+
+## Legacy / experimental (not Core v1 first-run)
+
+| Tool | Command | Notes |
+|---|---|---|
+| registry | `kdna install/remove/update/list/search` | Legacy kdna-registry experiment; not Core v1 active path |
+| badge | `kdna badge compute` | Pre-v1 quality badge system |
+| workpack | `kdna workpack ...` | Experimental workflow format |
+| license | `kdna license ...` | Pre-v1 licensed asset flow |
+| protect | `kdna protect/unlock/recover` | Pre-v1 protected asset flow (RFC-0009) |
