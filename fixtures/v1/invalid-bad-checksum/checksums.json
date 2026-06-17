@@ -1,0 +1,6 @@
+{
+  "algorithm": "sha256",
+  "manifest_digest": "sha256:deadbeef",
+  "payload_digest": "sha256:placeholder",
+  "asset_digest": "sha256:placeholder"
+}

@@ -43,9 +43,16 @@ if (shouldRouteV1(args)) {
   require('@aikdna/kdna-cli/src/cli.js');
 }
 
+function getFlag(args, name) {
+  const eq = args.find((a) => a.startsWith(name + '='));
+  if (eq) return eq.split('=')[1];
+  const idx = args.indexOf(name);
+  return idx >= 0 ? args[idx + 1] : null;
+}
+
 function shouldRouteV1(args) {
   const cmd = args[0];
-  if (cmd !== 'inspect' && cmd !== 'validate' && cmd !== 'pack' && cmd !== 'unpack') {
+  if (cmd !== 'inspect' && cmd !== 'validate' && cmd !== 'pack' && cmd !== 'unpack' && cmd !== 'load') {
     return false;
   }
   // Find the first non-flag argument (the input path).
@@ -98,6 +105,18 @@ function routeV1(args) {
       const r = v1.unpack(input, out);
       console.log(`Unpacked: ${r.outputDir}`);
       console.log(`Entries: ${r.entries.length} (${r.entries.join(', ')})`);
+      return;
+    }
+    if (cmd === 'load') {
+      const profile = getFlag(args, '--profile') || 'compact';
+      const as = getFlag(args, '--as') || 'json';
+      const { loadV1 } = require('../../kdna-core/src/v1');
+      const r = loadV1(input, { profile, as });
+      if (as === 'prompt') {
+        process.stdout.write(r.text + '\n');
+      } else {
+        console.log(JSON.stringify(r, null, 2));
+      }
       return;
     }
   } catch (e) {

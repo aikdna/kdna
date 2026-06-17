@@ -1,0 +1,42 @@
+{
+  "kdna_version": "1.0",
+  "asset_id": "kdna:example:atomspeak-core",
+  "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+  "asset_type": "domain",
+  "title": "Atomspeak Core",
+  "version": "1.0.0",
+  "judgment_version": "1.0.0",
+  "created_at": "2026-06-16T00:00:00Z",
+  "updated_at": "2026-06-16T00:00:00Z",
+  "creator": {
+    "name": "Example Author",
+    "id": "example-author"
+  },
+  "compatibility": {
+    "min_loader_version": "1.0.0",
+    "profile": "judgment-profile-v1"
+  },
+  "payload": {
+    "path": "payload.kdnab",
+    "encoding": "json",
+    "encrypted": false
+  },
+  "summary": "Phase 1 minimal example. The smallest valid KDNA v1 asset.",
+  "language": "en",
+  "license": "Apache-2.0",
+  "keywords": ["example", "minimal", "phase-1"],
+  "lineage": {
+    "type": "original",
+    "fork_of": null,
+    "derived_from": null
+  },
+  "load_contract": {
+    "default_profile": "compact",
+    "profiles": {
+      "index": { "requires_decryption": false, "max_tokens_hint": 200 },
+      "compact": { "requires_decryption": false, "max_tokens_hint": 500 },
+      "scenario": { "requires_decryption": false, "selection": "triggered_sections_only" },
+      "full": { "requires_decryption": false, "intended_for": ["audit", "reference"] }
+    }
+  }
+}
