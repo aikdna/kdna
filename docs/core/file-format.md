@@ -1,6 +1,6 @@
 # KDNA File Format (v1)
 
-A `.kdna` file is a **ZIP-compatible container** with a fixed entry layout. The format is normative; the official KDNA toolchain produces and consumes KDNA v1 assets and follows this layout. Any third party integrating KDNA does so through the official SDK, CLI, Loader, or API — they do not implement the layout independently.
+A `.kdna` file is a **ZIP-compatible container** with a fixed entry layout. The format is normative; the official KDNA toolchain produces and consumes KDNA v1 assets and follows this layout. Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
 
 ## Container layout
 

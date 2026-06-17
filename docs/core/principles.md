@@ -42,11 +42,9 @@ A loader that ignores decryption errors, ignores signature mismatches, or silent
 
 ## 9. Toolchain sovereignty
 
-KDNA Core is the **official KDNA judgment-asset format**. `.kdna` assets are created, inspected, protected, loaded, and consumed through the **official KDNA toolchain** (the official SDK, CLI, Loader, and API). Third parties do not implement KDNA independently — they integrate through the official toolchain.
+KDNA Core is the **official KDNA judgment-asset format**. `.kdna` assets are created, inspected, protected, loaded, and consumed through the **official KDNA toolchain** (the official SDK, CLI, Loader, and API). Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
 
-KDNA Core 是 KDNA **官方**判断资产格式。第三方产品通过 KDNA **官方** SDK、CLI、Loader 或 API **接入** KDNA,而不独立实现 KDNA 工具链。
-
-This is not a claim of technical impossibility. The `.kdna` format is a ZIP container with JSON entries, so it is technically open at the byte level. The format is documented precisely so that the file is verifiable. But the **path of production, validation, loading, and consumption** is canonical: it goes through the official toolchain. The format being open at the byte level is what makes the verification possible; the toolchain being canonical is what makes the verification meaningful.
+KDNA Core 是 KDNA **官方**判断资产格式。`.kdna` 资产通过 KDNA **官方**工具链创建、检查、保护、加载和消费。第三方产品通过 KDNA **官方** SDK、CLI、Loader 或 API **接入** KDNA,而不独立实现 KDNA 工具链。
 
 ---
 

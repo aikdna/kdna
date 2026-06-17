@@ -2,7 +2,7 @@
 
 **KDNA Core is the official KDNA judgment-asset format and runtime loading contract.**
 
-`.kdna` assets are created, inspected, protected, loaded, and consumed through the official KDNA toolchain. Third parties integrate through the official SDK, CLI, Loader, or API — they do not implement KDNA independently.
+`.kdna` assets are created, inspected, protected, loaded, and consumed through the official KDNA toolchain. Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
 
 KDNA Core defines how judgment assets are:
 
@@ -57,4 +57,4 @@ KDNA Core does **not** define:
 | Where to find assets | An **external** platform (out of scope) |
 | Whether to recommend an asset | An **external** platform (out of scope) |
 
-KDNA Core is the **verifiable primitive** that makes all of the above possible. It is not the policy layer. Toolchain sovereignty is part of what makes the primitive trustworthy: there is one official implementation, not a public format that any party is invited to re-implement.
+KDNA Core is the **verifiable primitive** that makes all of the above possible. It is not the policy layer. The format is documented publicly so files are verifiable; the official toolchain is canonical so the verification is meaningful.

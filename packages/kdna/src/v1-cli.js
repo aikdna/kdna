@@ -28,8 +28,7 @@
  * "recommended", "high_quality", or "officially_approved". We say
  * "format_valid", "schema_valid", "payload_valid", "compatible", etc.
  *
- * Toolchain sovereignty: third parties do not implement KDNA
- * independently. They integrate through the official KDNA SDK, CLI,
+ * Third-party products integrate KDNA through the official SDK, CLI,
  * Loader, or API.
  */
 

@@ -25,10 +25,8 @@
  * through to the upstream @aikdna/kdna-cli, which keeps its existing
  * behavior (including its "use kdna dev …" error for directory ops).
  *
- * Toolchain sovereignty: this shim is part of the official KDNA
- * toolchain. The upstream @aikdna/kdna-cli handles the legacy v2
- * surface. Third parties integrate through the official SDK, CLI,
- * Loader, or API — they do not implement KDNA independently.
+ * Third-party products integrate KDNA through the official SDK, CLI,
+ * Loader, or API.
  */
 
 'use strict';
