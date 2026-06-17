@@ -34,8 +34,12 @@ function checkSwift(repoName, repoPath) {
   const branchRe = /\.branch\(\s*"(main|master|HEAD)"\s*\)/g;
   let m;
   while ((m = branchRe.exec(src)) !== null) {
-    flag('FAIL', repoName, 'Package.swift',
-      `floating branch dependency .branch("${m[1]}") — pin to exact tag instead`);
+    flag(
+      'FAIL',
+      repoName,
+      'Package.swift',
+      `floating branch dependency .branch("${m[1]}") — pin to exact tag instead`,
+    );
   }
   // Match .revision("") without value, or .branch() with empty string
   if (/\.branch\(\s*""\s*\)/.test(src)) {
@@ -47,17 +51,28 @@ function checkJsScripts(repoName, repoPath) {
   const pkgPath = path.join(repoPath, 'package.json');
   if (!fs.existsSync(pkgPath)) return;
   let pkg;
-  try { pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8')); }
-  catch (_) { return; }
+  try {
+    pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+  } catch (_) {
+    return;
+  }
   if (!pkg.scripts) return;
   for (const [name, cmd] of Object.entries(pkg.scripts)) {
     if (/^(pre|post)?test/.test(name) && /npm install/.test(cmd)) {
-      flag('WARN', repoName, 'package.json',
-        `script "${name}" runs "npm install" — prefer explicit "npm ci" in CI`);
+      flag(
+        'WARN',
+        repoName,
+        'package.json',
+        `script "${name}" runs "npm install" — prefer explicit "npm ci" in CI`,
+      );
     }
     if (name === 'pretest' && /--ignore-scripts/.test(cmd)) {
-      flag('WARN', repoName, 'package.json',
-        `pretest runs "npm install --ignore-scripts" — hides lockfile drift; remove`);
+      flag(
+        'WARN',
+        repoName,
+        'package.json',
+        `pretest runs "npm install --ignore-scripts" — hides lockfile drift; remove`,
+      );
     }
   }
 }
@@ -74,8 +89,12 @@ function checkPyproject(repoName, repoPath) {
     if (op === '>=' && !src.includes(`<=`)) {
       // No upper bound is fine for libs but risky for crypto. Flag for crypto-adjacent names.
       if (/(crypto|hash|kdf|cipher|aes|argon|bcrypt|scrypt|nacl)/i.test(name)) {
-        flag('WARN', repoName, 'pyproject.toml',
-          `crypto-related dep "${name}${op}${ver}" has no upper bound`);
+        flag(
+          'WARN',
+          repoName,
+          'pyproject.toml',
+          `crypto-related dep "${name}${op}${ver}" has no upper bound`,
+        );
       }
     }
   }
@@ -105,9 +124,11 @@ function main() {
     console.log(`${tag} ${f.repo}/${f.file}: ${f.msg}`);
   }
 
-  const failures = findings.filter(f => f.severity === 'FAIL');
+  const failures = findings.filter((f) => f.severity === 'FAIL');
   if (failures.length > 0) {
-    console.error(`\ndep-lock-audit: ${failures.length} critical, ${findings.length - failures.length} warnings`);
+    console.error(
+      `\ndep-lock-audit: ${failures.length} critical, ${findings.length - failures.length} warnings`,
+    );
     process.exit(1);
   }
   console.log(`\ndep-lock-audit: ${findings.length} warning(s), no criticals`);
