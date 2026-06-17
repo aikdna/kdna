@@ -110,7 +110,9 @@ function routeV1(args) {
     if (cmd === 'load') {
       const profile = getFlag(args, '--profile') || 'compact';
       const as = getFlag(args, '--as') || 'json';
-      const { loadV1 } = require('../../kdna-core/src/v1');
+      // In the monorepo, @aikdna/kdna-core resolves to the workspace-linked
+      // packages/kdna-core which has loadV1 at 0.10.0.
+      const { loadV1 } = require('@aikdna/kdna-core');
       const r = loadV1(input, { profile, as });
       if (as === 'prompt') {
         process.stdout.write(r.text + '\n');
