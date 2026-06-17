@@ -4,9 +4,8 @@ Compatibility package for the KDNA command line tools.
 
 KDNA Core is the official KDNA judgment-asset format and runtime loading
 contract. .kdna assets are created, inspected, packed, unpacked, and
-validated through the official KDNA toolchain. Third parties integrate
-through the official SDK, CLI, Loader, or API — they do not implement
-KDNA independently.
+validated through the official KDNA toolchain. Third-party products
+integrate KDNA through the official SDK, CLI, Loader, or API.
 
 This package is part of the official toolchain. The `bin/kdna.js` shim
 is the v1-aware entry point of that toolchain; it dispatches v1 source
