@@ -53,9 +53,9 @@ whether the configuration is consistent.
 kdna load ./minimal.kdna --as=prompt
 ```
 
-This emits the judgment asset in a form that the agent can read. If `kdna load`
-does not yet support v1 `.kdna` containers, the output will be a clear
-message rather than a stack trace. See [Current limitations](#current-limitations).
+This emits the judgment asset in a form that the agent can read.
+See the [current limitations](#current-limitations) for the status of
+v1 load-contract support.
 
 ## What works today
 
