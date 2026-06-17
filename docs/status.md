@@ -80,7 +80,7 @@ For the legacy 5-minute walkthrough (old CLI surface), see [5-minute-guide.md](.
 3. **6 skipped tests**: kdna-core fixture tests skipped in PR-95 (v1→v2 fixture migration debt). Marked for recovery in PR-100.
 4. **Conformance failure**: `kdna.json.format_version: "1.0"` vs expected `"2.0"` in the conformance runner. Same fixture debt.
 5. **kdnACLI help text**: the legacy global CLI help still references `dev validate` / `dev pack` / `dev unpack` (non-canonical dev source utilities), not the v1 route.
-6. **npm @aikdna/kdna-studio-core/@aikdna/kdna-studio-cli**: descriptions still say "trusted .kdna assets" — flagged, fix pending in the P1 batch.
+6. **npm descriptions**: resolved in v0.22.x / v0.3.3 / v1.5.2 — all "trusted .kdna" references removed. ✓
 
 ## Next phase
 
