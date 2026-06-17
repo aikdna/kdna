@@ -1,4 +1,4 @@
-name: Protocol Fixture Registry Validate
+name: Legacy fixture validate (registry/domains.json)
 
 on:
   pull_request:
