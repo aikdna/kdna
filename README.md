@@ -1,12 +1,16 @@
 # KDNA
 
-> **KDNA is an open judgment-asset file format for packaging, encrypting, versioning, and loading human-authored judgment systems into AI systems.**
+> **KDNA Core is the official KDNA judgment-asset format and runtime loading contract.**
 >
-> **KDNA 是一种开放的判断资产文件格式，用于把人类编写的判断体系封装、加密、版本化，并加载到 AI 系统中使用。**
+> **KDNA Core 是 KDNA 官方判断资产格式与运行时加载契约。**
+
+> `.kdna` assets are created, inspected, protected, loaded, and consumed through the **official KDNA toolchain**. Third parties integrate through the official SDK, CLI, Loader, or API — they do not implement KDNA independently.
+>
+> `.kdna` 资产通过 **KDNA 官方工具链** 创建、检查、保护、加载和消费。第三方产品通过 KDNA 官方 SDK、CLI、Loader 或 API 接入 KDNA,而不独立实现。
 
 > New to KDNA? → [Start Here](./docs/start-here.md)
 >
-> This repo defines the **KDNA Core** file format and runtime loading contract. Tools, content, and distribution are external.
+> This repo defines **KDNA Core** — the file format, schemas, and runtime loading contract. The official KDNA toolchain is published from this repo and its companion packages.
 
 [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
@@ -19,15 +23,15 @@ A `.kdna` file is a single, portable container that holds:
 - optional **encryption envelope metadata** — to mark encrypted entries
 - optional **signatures** — author / publisher attestations over the payload
 - **version and lineage information** — for traceability across releases
-- a **runtime load contract** — describes how loaders may read the asset
+- a **runtime load contract** — describes how the official KDNA loader may read the asset
 - optional **attachments** — supplementary files referenced from the payload
 - an optional **checksums file** — per-entry digests for integrity checks
 
-`.kdna` files are produced by authors using a tool (e.g. KDNA Studio) and consumed by AI runtimes (e.g. KDNA Loader, KDNA CLI) or viewers (e.g. KDNA Viewer). The format itself is content-neutral — KDNA Core does not say what judgment is "good" or which assets are "trusted".
+`.kdna` files are produced by authors through the official KDNA toolchain and consumed by the official KDNA loader. The format itself is content-neutral — KDNA Core does not say what judgment is "good" or which assets are "trusted".
 
 ## What KDNA Core defines
 
-KDNA Core is the format authority. It defines:
+KDNA Core is the **format authority**. It defines:
 
 - the **file format** (container layout, mimetype, required entries)
 - the **manifest schema** (`kdna.json` shape and required fields)
@@ -36,6 +40,8 @@ KDNA Core is the format authority. It defines:
 - the **signature and digest metadata** (signature references, digest algorithm)
 - the **version chain metadata** (lineage, judgment version, compatibility)
 - the **runtime loading contract** (load profiles, decryption requirements, token hints)
+
+KDNA Core is also the **toolchain authority**. Production, validation, loading, and consumption of `.kdna` files happen through the official KDNA toolchain. The format is documented publicly so that every `.kdna` file is verifiable; the toolchain is canonical so that the verification is meaningful.
 
 ## What KDNA Core does not define
 
@@ -48,18 +54,22 @@ KDNA Core is **content-neutral**. It does not define:
 - **runtime policy** — what a loader should do with an asset at runtime (block, allow, warn)
 - **content governance** — moderation, takedown, ranking, certification
 
-These are concerns of **external** platforms and policies. KDNA Core supplies the verifiable primitives; everything else is out of scope.
+These are concerns of **external** platforms and policies. KDNA Core supplies the verifiable primitives and the official toolchain; everything else is out of scope.
 
-## Tools
+KDNA Core also does not invite **independent re-implementation**. The format is public so files are verifiable; the toolchain is canonical so verification is meaningful. Third parties integrate through the official SDK, CLI, Loader, or API.
 
-The KDNA format is implemented by external, independent tools. Phase 1 only requires a minimal CLI closed loop on the v1 format.
+## Official KDNA toolchain
 
-| Tool | Role | Repo |
+The official KDNA toolchain is published from this repo and its companion packages. The KDNA Core format and the official toolchain are versioned together; deviations between the spec and the official implementation are bugs.
+
+| Component | Role | Source |
 | --- | --- | --- |
-| **KDNA Studio** | Authoring environment for human judgment | aikdna/kdna-studio-core |
-| **KDNA CLI** | Runtime control plane: inspect, validate, pack, unpack, load | aikdna/kdna-cli |
-| **KDNA Loader SDK** | Embeddable runtime loader for AI agents | aikdna/kdna-core |
-| **KDNA Viewer** | Read-only inspection and rendering of `.kdna` files | (see [docs/tools/](./docs/tools/)) |
+| **KDNA Core spec** | Format, schemas, runtime loading contract | this repo |
+| **KDNA CLI** | Official command-line entry: `inspect`, `validate`, `pack`, `unpack`, `load` | this repo + `@aikdna/kdna-cli` |
+| **KDNA Loader** | Official runtime loader for AI agents | `packages/kdna-core/` + `@aikdna/kdna-cli` |
+| **KDNA SDK** | Embeddable library for first-party integrations | `packages/kdna-core/` |
+
+Third-party products integrate KDNA through the official SDK, CLI, Loader, or API. They do not implement the KDNA file format independently.
 
 ## Examples
 
