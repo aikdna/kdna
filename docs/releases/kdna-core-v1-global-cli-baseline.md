@@ -55,6 +55,6 @@ KDNA Core is content-neutral and does not evaluate content quality, recommend as
 
 ## Docs
 
-- Current status: [docs/status.md](./status.md)
-- Tool status matrix: [docs/tool-status-matrix.md](./tool-status-matrix.md)
-- 5-minute guide: [docs/5-minute-guide.md](./5-minute-guide.md)
+- Current status: [docs/status.md](../status.md)
+- Tool status matrix: [docs/tool-status-matrix.md](../tool-status-matrix.md)
+- 5-minute guide: [docs/try-kdna.md](../try-kdna.md)
