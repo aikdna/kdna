@@ -37,6 +37,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const zlib = require('node:zlib');
+const crypto = require('node:crypto');
 
 const MIMETYPE_V1 = 'application/vnd.kdna.asset';
 const MIMETYPE_V2 = 'application/vnd.aikdna.kdna+zip';
@@ -431,7 +432,7 @@ function buildInspectOutput(v1) {
     load_contract_default_profile: m.load_contract ? m.load_contract.default_profile : null,
   };
   if (m.signatures !== undefined) out.signature_count = Array.isArray(m.signatures) ? m.signatures.length : 0;
-  if (v1.map.checksums) out.checksums_present = true;
+  if (v1.map['checksums.json']) out.checksums_present = true;
   return out;
 }
 
@@ -498,10 +499,10 @@ function runValidate(v1) {
   }
 
   // checksums gate — checksums.json against checksums.schema.json
-  if (v1.map.checksums) {
+  if (v1.map['checksums.json']) {
     let checks;
     try {
-      checks = JSON.parse(v1.map.checksums.toString('utf8'));
+      checks = JSON.parse(v1.map['checksums.json'].toString('utf8'));
     } catch (e) {
       result.checksums_valid = false;
       problems.push(`checksums: not valid JSON (${e.message})`);
@@ -511,6 +512,10 @@ function runValidate(v1) {
       for (const err of validators.checksums.errors) {
         problems.push(`checksums: ${err.instancePath || '<root>'} ${err.message}`);
       }
+    }
+    // Digest matching verification — compute actual hashes and compare.
+    if (checks) {
+      result.checksums_valid = verifyDigests(checks, v1.map, problems, result);
     }
   }
 
@@ -530,6 +535,38 @@ function runValidate(v1) {
   }
 
   return finalizeValidate(result, problems);
+}
+
+function verifyDigests(checksums, map, problems, result) {
+  const algo = checksums.algorithm || 'sha256';
+  if (algo !== 'sha256') {
+    problems.push(`checksums: unsupported digest algorithm ${algo} (supported: sha256)`);
+    result.checksums_valid = false;
+    return;
+  }
+  const entryMap = {
+    manifest_digest: 'kdna.json',
+    payload_digest: 'payload.kdnab',
+  };
+  let stillValid = true;
+  for (const [digestKey, entryName] of Object.entries(entryMap)) {
+    const declared = checksums[digestKey];
+    if (!declared) continue;
+    if (!map[entryName]) {
+      problems.push(`checksums: ${digestKey} references missing entry ${entryName}`);
+      stillValid = false;
+      continue;
+    }
+    const entryBytes = map[entryName];
+    const actual = crypto.createHash('sha256').update(entryBytes).digest('hex');
+    const expected = declared.replace(/^sha256:/, '');
+    if (actual !== expected) {
+      problems.push(`checksums: ${digestKey} mismatch (declared ${expected.slice(0, 8)}..., actual ${actual.slice(0, 8)}...)`);
+      stillValid = false;
+    }
+  }
+  if (!stillValid) result.checksums_valid = false;
+  return stillValid;
 }
 
 function finalizeValidate(result, problems) {
@@ -733,6 +770,26 @@ function loadV1(inputPath, opts = {}) {
     const err = new Error('payload is encrypted and cannot be decrypted without a key');
     err.code = 'requires_decryption';
     throw err;
+  }
+
+  // Digest verification — refuse to load if checksums.json is present and digests mismatch.
+  if (v1.map['checksums.json']) {
+    try {
+      const checks = JSON.parse(v1.map['checksums.json'].toString('utf8'));
+      const problems = [];
+      const ok = verifyDigests(checks, v1.map, problems, {});
+      if (!ok) {
+        const err = new Error(`checksum verification failed: ${problems.join('; ')}`);
+        err.code = 'checksum_mismatch';
+        throw err;
+      }
+    } catch (e) {
+      if (e.code === 'checksum_mismatch') throw e;
+      // Invalid JSON — already caught by validate, but still refuse to load.
+      const err = new Error(`checksums.json is not valid: ${e.message}`);
+      err.code = 'checksum_parse_error';
+      throw err;
+    }
   }
 
   const result = { status: 'loaded', profile, asset_id: m.asset_id, title: m.title };
