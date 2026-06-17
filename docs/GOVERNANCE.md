@@ -207,16 +207,16 @@ Public-facing documentation SHOULD use:
 
 **Bad (must not appear in public docs):**
 
-- `Work plan: Kdna内部思考/KDNA 协议升级工作计划 2026-06-16.md §4.2`
+- `Work plan: private-planning-folder/private-upgrade-plan.md §4.2`
 - `Per the user's instruction`
-- `KDNA_STUDIO_CORE_PATH=/Users/AI/K/OPEN/kdna-studio-core`
-- `backup-before-reset` (a local backup tag, not pushed to origin)
-- `single maintainer (AhaSparkCoach / AIBUBB技术团队)`
-- `不要在外部审计前再引入复杂 book-derived 变量` (a directive
+- `KDNA_STUDIO_CORE_PATH=/Users/example/private-workspace/kdna-studio-core`
+- `local-backup-tag-not-pushed` (a local backup tag, not pushed to origin)
+- `single maintainer (private-maintainer / private-team)`
+- `A private conversation directive: defer complex book-derived variables` (a directive
   from a private conversation)
-- `atomspeak-kdna-v4.0` (a private version string on a public
+- `private-domain-version-string` (a private version string on a public
   reference domain)
-- `the反审计 file's 缺口三` (a reference to a private review
+- `private-review-doc finding #3` (a reference to a private review
   document's finding number)
 
 **Good (preferred public-facing wording):**
@@ -239,20 +239,18 @@ the repository root and paste the output in the PR description:
 
 ```bash
 grep -RIn \
-  -e "Kdna内部思考" \
-  -e "KDNA 协议升级工作计划" \
+  -e "private-planning-folder" \
+  -e "private-upgrade-plan" \
   -e "Per the user's instruction" \
   -e "用户指令" \
   -e "等你指令" \
-  -e "不要在外部审计前" \
-  -e "/Users/AI/K" \
-  -e "AhaSparkCoach" \
-  -e "AIBUBB" \
-  -e "work plan" \
-  -e "Work plan" \
-  -e "反审计" \
-  -e "升级建议" \
-  -e "backup-before-reset" \
+  -e "A private conversation directive" \
+  -e "/Users/example/private-workspace" \
+  -e "private-maintainer" \
+  -e "private-team" \
+  -e "review-evasion" \
+  -e "upgrade-suggestion" \
+  -e "local-backup-tag-not-pushed" \
   docs specs README.md README.zh.md 2>/dev/null
 ```
 

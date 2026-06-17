@@ -46,11 +46,22 @@ No hits of:
 - emotional / self-justifying language in active docs
 - AI-assistant traces in active user-facing text
 
-## P3 status: PASS
+## P3 status: CONDITIONAL PASS after syntheticization
 
-All active public surfaces are free of internal language, private
-paths, emotional expression, and AI-assistant traces. The few
-hits are all in files that already carry historical snapshot
-banners (docs/GOVERNANCE.md) or are false-positives (product
-feature descriptions, sensor scenario descriptions, technical
-terms).
+The v4 cleanup (2026-06-17) replaced all real internal terms in active
+public docs (docs/GOVERNANCE.md §9.3-9.4) with synthetic placeholders.
+Previously, the section exposed 8 real internal terms (maintainer names,
+private file paths, project codenames, upgrade-plan file names) in
+"Bad examples" and grep checklists. These are now synthetic.
+
+Remaining: historical files (RFC-0013, audit notes, implementation
+evidence pack) still contain neutralized-but-real references to
+internal processes like "direct push", "local backup tag", and
+"maintainer review notes". These are preserved in historical
+snapshots with banners.
+
+Scanner pattern examples use synthetic placeholders only:
+`private-planning-folder`, `private-upgrade-plan.md`,
+`/Users/example/private-workspace`, `private-maintainer`,
+`private-team`, `local-backup-tag-not-pushed`,
+`private-review-doc`, `private-domain-version-string`.
