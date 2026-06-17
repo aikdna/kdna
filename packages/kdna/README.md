@@ -2,7 +2,18 @@
 
 Compatibility package for the KDNA command line tools.
 
-The canonical package is:
+KDNA Core is the official KDNA judgment-asset format and runtime loading
+contract. .kdna assets are created, inspected, packed, unpacked, and
+validated through the official KDNA toolchain. Third parties integrate
+through the official SDK, CLI, Loader, or API — they do not implement
+KDNA independently.
+
+This package is part of the official toolchain. The `bin/kdna.js` shim
+is the v1-aware entry point of that toolchain; it dispatches v1 source
+directories and v1 `.kdna` containers to the in-repo v1 implementation,
+and falls through to the legacy v2 surface for everything else.
+
+The legacy install path is:
 
 ```bash
 npm install -g @aikdna/kdna-cli
@@ -48,4 +59,5 @@ npm run kdna:unpack   -- /tmp/out.kdna /tmp/out-unpacked
 The v1 route is content-neutral. Output never claims that an asset is
 "trusted", "recommended", "high_quality", or "officially approved". It
 reports format, schema, payload, checksums, and load-contract validity
-only.
+only. Format-valid does not mean content-good; that is a runtime policy
+decision owned by the caller.

@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 /**
- * v1-pack.mjs — reference wrapper around the official kdna CLI for
- * KDNA Core v1 source-directory packing.
+ * v1-pack.mjs — dev alias for the official kdna CLI's v1 pack route.
  *
  * Usage: node scripts/v1-pack.mjs <source-dir> [output-path]
  *
  * This script is a thin shim that delegates to the official CLI
- * (`packages/kdna/bin/kdna.js pack`) so the reference scripts and
- * the official entry point share one implementation and cannot drift.
+ * (`packages/kdna/bin/kdna.js pack`) so the legacy alias and the
+ * official entry point share one implementation and cannot drift.
+ *
+ * KDNA Core is the official KDNA judgment-asset format and runtime
+ * loading contract. .kdna assets are created, inspected, packed,
+ * unpacked, and validated through the official KDNA toolchain.
  *
  * Output: a deterministic ZIP-compatible .kdna container with mimetype
  * as the first entry (uncompressed). Packing the same source directory

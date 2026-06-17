@@ -2,6 +2,11 @@
 /**
  * kdna — KDNA CLI shim with KDNA Core v1 route awareness.
  *
+ * KDNA Core is the official KDNA judgment-asset format and runtime
+ * loading contract. .kdna assets are created, inspected, packed,
+ * unpacked, and validated through the official KDNA toolchain. This
+ * shim is the v1-aware entry point of that toolchain.
+ *
  * Routing rules:
  *
  *   inspect  <path>      v1 source dir or v1 .kdna container → v1 logic
@@ -20,10 +25,10 @@
  * through to the upstream @aikdna/kdna-cli, which keeps its existing
  * behavior (including its "use kdna dev …" error for directory ops).
  *
- * The upstream CLI is the canonical v0.20.x runtime control plane.
- * This shim only adds v1 detection so the v1 file format — a thin,
- * content-neutral asset format defined in docs/core/ — is reachable
- * from the `kdna` entry point that npm packages expose.
+ * Toolchain sovereignty: this shim is part of the official KDNA
+ * toolchain. The upstream @aikdna/kdna-cli handles the legacy v2
+ * surface. Third parties integrate through the official SDK, CLI,
+ * Loader, or API — they do not implement KDNA independently.
  */
 
 'use strict';
