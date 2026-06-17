@@ -60,7 +60,7 @@ In Phase 1, all profiles have `requires_decryption: false` because the example a
 
 ## Loader behaviour
 
-When a loader opens a `.kdna` file, it MUST:
+When the official KDNA loader opens a `.kdna` file, it MUST:
 
 1. Read the manifest.
 2. If `load_contract` is present, use the profile named in `default_profile` (or the caller-requested profile if different) to determine the reading strategy.

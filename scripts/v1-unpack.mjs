@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 /**
- * v1-unpack.mjs — reference wrapper around the official kdna CLI for
- * KDNA Core v1 container unpacking.
+ * v1-unpack.mjs — dev alias for the official kdna CLI's v1 unpack route.
  *
  * Usage: node scripts/v1-unpack.mjs <input.kdna> [output-dir]
  *
  * This script is a thin shim that delegates to the official CLI
- * (`packages/kdna/bin/kdna.js unpack`) so the reference scripts and
- * the official entry point share one implementation and cannot drift.
+ * (`packages/kdna/bin/kdna.js unpack`) so the legacy alias and the
+ * official entry point share one implementation and cannot drift.
+ *
+ * KDNA Core is the official KDNA judgment-asset format and runtime
+ * loading contract. .kdna assets are created, inspected, packed,
+ * unpacked, and validated through the official KDNA toolchain.
  *
  * Reads the ZIP central directory, extracts every entry, and refuses to
  * write outside the destination. Does NOT auto-execute any entry.
