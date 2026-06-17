@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 /**
- * v1-validate.mjs — reference wrapper around the official kdna CLI for
- * KDNA Core v1 source-directory validation.
+ * v1-validate.mjs — dev alias for the official kdna CLI's v1 validate route.
  *
  * Usage: node scripts/v1-validate.mjs <source-dir>
  *
  * This script is a thin shim that delegates to the official CLI
- * (`packages/kdna/bin/kdna.js validate`) so the reference scripts and
- * the official entry point share one implementation and cannot drift.
+ * (`packages/kdna/bin/kdna.js validate`) so the legacy alias and the
+ * official entry point share one implementation and cannot drift.
+ *
+ * KDNA Core is the official KDNA judgment-asset format and runtime
+ * loading contract. .kdna assets are created, inspected, packed,
+ * unpacked, and validated through the official KDNA toolchain.
  *
  * Exits 0 on success, non-zero on any validation failure.
  */
