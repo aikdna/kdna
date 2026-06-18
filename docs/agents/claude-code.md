@@ -5,39 +5,39 @@
 ```bash
 npm install -g @aikdna/kdna-cli
 kdna setup
-kdna install @aikdna/writing
 kdna doctor --agents
+```
+
+## Prepare a v1 Asset
+
+```bash
+kdna demo minimal ./minimal
+kdna pack ./minimal ./minimal.kdna
+kdna validate ./minimal.kdna
+kdna load ./minimal.kdna --profile=compact --as=prompt
+```
+
+For a real domain, use a v1 artifact such as `writing-v1.kdna` and validate it
+before loading:
+
+```bash
+kdna validate ./writing-v1.kdna
+kdna load ./writing-v1.kdna --profile=compact --as=prompt
 ```
 
 ## Verify It Works
 
-Ask Claude Code a writing review task:
+Ask Claude Code a task where the loaded domain should matter:
 
-```
-"Review this blog post for structural quality."
-```
-
-Claude should:
-1. Detect `@aikdna/writing` applies
-2. Load the domain silently
-3. Diagnose argument structure (not language)
-4. Use preferred terms (not banned ones)
-5. Run self-checks before responding
-
-You should **never** see "According to KDNA axiom..." in the response. The judgment is applied silently.
-
-## Check Installation
-
-```bash
-kdna doctor --agents
+```text
+Review this blog post for structural quality.
 ```
 
-Expected output:
-```
-Claude Code: detected — kdna-loader installed (v2026.05)
-```
+Claude Code should apply the loaded judgment silently. You should not see
+"According to KDNA axiom..." in the response; KDNA is context for judgment,
+not text to quote back.
 
-## Manual Installation
+## Manual Loader Installation
 
 If `kdna setup` doesn't detect Claude Code:
 
@@ -46,19 +46,11 @@ mkdir -p ~/.claude/skills/kdna-loader
 cp ~/.kdna/skills/kdna-loader/SKILL.md ~/.claude/skills/kdna-loader/SKILL.md
 ```
 
-## Install More Domains
-
-```bash
-kdna list --available
-kdna install code_review
-kdna install agent_safety
-```
-
 ## Common Issues
 
 | Symptom | Fix |
-|---------|-----|
-| "KDNA not loaded" | Run `kdna setup` again |
-| "No domains found" | Run `kdna install @aikdna/writing` |
+|---|---|
+| "KDNA not loaded" | Run `kdna setup` again, then load a local `.kdna` file with `kdna load` |
+| "No assets found" | Validate and pass an explicit local `.kdna` path |
 | "Skill outdated" | `kdna setup --force` to reinstall |
 | Claude Code not detected | Install Claude Code, then `kdna setup --claude` |

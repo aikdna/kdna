@@ -1,5 +1,11 @@
 # Studio Export Example
 
+> Historical pre-v1 Studio export example. Current KDNA Core v1 export uses
+> `mimetype`, `kdna.json`, `payload.kdnab`, and `checksums.json`, validated by
+> `kdna validate` and loaded by `kdna load`. Signature, encryption, quality
+> badge, registry, and certification concepts in this example are not current
+> Core v1 launch requirements.
+
 This directory shows a complete Studio Export output for an example domain `my_domain`, demonstrating what a Studio-compatible compiler produces.
 
 ## What You're Looking At
@@ -11,9 +17,8 @@ Studio Export is not a JSON save operation. It is an **asset build step** that t
 3. Canonicalization
 4. Identity generation
 5. Digest computation
-6. Signing
-7. Optional encryption
-8. Provenance recording
+6. Checksum generation
+7. Provenance recording where available
 
 ## Output Files
 
@@ -49,8 +54,8 @@ Records the build event. Contains: asset path, `asset_uid`, `project_uid`, `buil
   },
   "signature": {
     "signed": true,
-    "algorithm": "Ed25519",
-    "key_fingerprint": "ed25519:43d22af8..."
+    "algorithm": "future-gated",
+    "key_fingerprint": "future-gated"
   },
   "encryption": {
     "encrypted": false,
@@ -69,7 +74,7 @@ Records the full authoring provenance chain: who authored, who reviewed, compile
   "author": {
     "name": "Domain Expert",
     "id": "expert_001",
-    "pubkey": "ed25519:43d22af8..."
+    "pubkey": "future-gated"
   },
   "source_evidence": {
     "materials_count": 12,
@@ -88,7 +93,7 @@ Records the full authoring provenance chain: who authored, who reviewed, compile
     "version": "1.4.2"
   },
   "signing": {
-    "algorithm": "Ed25519",
+    "algorithm": "future-gated",
     "timestamp": "2026-05-27T14:30:00Z",
     "canonical_payload_digest": "sha256:b2c3d4e5..."
   }
@@ -113,7 +118,7 @@ Records the quality gate checks that passed before export.
     { "gate": "mimetype_exact", "passed": true, "mimetype": "application/vnd.aikdna.kdna+zip" },
     { "gate": "min_evals", "passed": true, "eval_count": 15, "required": 10 }
   ],
-  "quality_badge_eligible": "tested"
+  "v1_validation_target": "overall_valid=true"
 }
 ```
 
@@ -181,9 +186,9 @@ Records evaluation results: what was tested, what passed, what failed.
 
 **The `.kdna` asset is the canonical artifact.** The reports in this directory are evidence that the asset was built correctly — they are not the asset itself. A third party should be able to:
 
-1. Verify `my_domain.kdna` independently (structure, signature, digest)
+1. Verify `my_domain.kdna` independently (format, schema, payload, checksums, load contract)
 2. Cross-reference the reports to confirm the build pipeline was followed
-3. Trust the quality badge claim because the evidence is public
+3. Decide fitness for purpose using their own review process
 
 ## Non-Canonical Authoring
 
@@ -195,7 +200,9 @@ kdna dev scaffold my_experiment
 kdna dev validate my_experiment
 ```
 
-However, dev source directories **cannot receive trusted quality badges**. Only Studio-compiled assets with Human Lock evidence and the full report set can claim `tested` or above.
+However, dev source directories are not themselves the current v1 runtime
+artifact. Export a `.kdna` container through Studio and verify it with
+`kdna validate` before using it as an agent/runtime input.
 
 ## See Also
 

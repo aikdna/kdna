@@ -2,7 +2,8 @@
 
 > Short guide. For a detailed end-to-end walkthrough, see [First Domain Walkthrough](./first-domain-walkthrough.md).
 
-Build a working KDNA domain in 10 minutes and see how it changes agent judgment.
+Build a working KDNA Core v1 judgment asset in 10 minutes and see how it can be
+validated and loaded.
 
 ## Step 1: Install
 
@@ -13,10 +14,12 @@ npm i -g @aikdna/kdna-cli
 ## Step 2: Create a Dev Source Workspace
 
 ```bash
-kdna dev scaffold my-domain
+kdna demo minimal ./my-domain
 ```
 
-This scaffolds a non-canonical dev source workspace with placeholder axioms, concepts, stances, and self-checks. Use An authoring environment for Human Lock, compile, and export when you need a trusted `.kdna` asset.
+This creates a minimal v1 source directory with `mimetype`, `kdna.json`,
+`payload.kdnab`, and `checksums.json`. For real authoring, use the Studio CLI
+producer path in [30-minute-authoring-guide.md](./30-minute-authoring-guide.md).
 
 ## Step 3: Inspect
 
@@ -24,47 +27,40 @@ This scaffolds a non-canonical dev source workspace with placeholder axioms, con
 kdna inspect ./my-domain
 ```
 
-You'll see: 1 axiom, 1 ontology concept, 1 framework, 2 stances, 2 banned terms, 2 self-checks.
+You'll see the asset ID, title, version, payload path, and load profiles.
 
-## Step 4: Understand the Judgment Structure
-
-Open `KDNA_Core.json`. Notice:
-
-- **Axioms** are not vague advice. They are specific, testable principles. Example: "Clarity is the writer's only obligation."
-- **Ontology** defines what concepts mean and their boundaries. Example: "Cognitive load is mental effort, not dumbing down."
-- **Stances** declare the domain's default posture. Example: "Writing serves understanding, not intellectual display."
-
-Open `KDNA_Patterns.json`. Notice:
-
-- **Banned terms** include words like `"obviously"` — each with an explanation of why it misleads and what to use instead.
-- **Misunderstandings** capture wrong assumptions. Example: "Good writing needs complex vocabulary" — this is false.
-- **Self-checks** are yes/no questions the agent asks itself before responding.
-
-## Step 5: See the Difference
-
-**Without KDNA** — if you ask an agent to "review this blog post," it gives generic editing advice.
-
-**With writing KDNA loaded** — the same agent:
-
-1. Checks whether each paragraph serves a single clear idea
-2. Flags sentences that use banned terms like "obviously" or "clearly"
-3. Asks: "Can every sentence be understood by the target reader on first reading?"
-4. Suggests deletion more than rewriting — because the domain's stance is "every sentence must earn its place"
-
-This is the core shift: **KDNA changes what the agent notices, not just what words it uses.**
-
-## Step 6: Create Your Own Domain
+## Step 4: Pack and Validate
 
 ```bash
-kdna dev scaffold my-domain
+kdna pack ./my-domain ./my-domain.kdna
+kdna validate ./my-domain.kdna
 ```
 
-Edit `KDNA_Core.json` — write 2-3 axioms for your domain. Then:
+Validation should return `overall_valid: true`.
+
+## Step 5: Load the Judgment Context
 
 ```bash
-kdna publish --check ./my-domain
-kdna dev validate ./my-domain
-kdna verify ./my-domain
+kdna load ./my-domain.kdna --profile=compact --as=prompt
+```
+
+This emits agent-readable context. For real domains such as writing, this
+context changes what the agent notices: argument structure, boundaries,
+failure modes, and self-checks.
+
+## Step 6: Create Your Own Formal Domain
+
+```bash
+npm install -g @aikdna/kdna-studio-cli
+kdna-studio create my-domain --name @yourscope/my-domain
+```
+
+After adding and locking your judgment material, export to v1:
+
+```bash
+kdna-studio migrate ./my-domain --format v1 --out ./my-domain.kdna
+kdna validate ./my-domain.kdna
+kdna load ./my-domain.kdna --profile=compact --as=prompt
 ```
 
 **Next step:** [Loader Behavior](/en/docs/loader-behavior) — understand how agents should use KDNA.

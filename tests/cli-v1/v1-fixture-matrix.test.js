@@ -9,6 +9,7 @@ const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const { buildChecksumsV1 } = require('../../packages/kdna-core/src/v1');
 
 const cliBin = path.join(__dirname, '..', '..', 'packages', 'kdna', 'bin', 'kdna.js');
 const minimalSource = path.join(__dirname, '..', '..', 'examples', 'minimal');
@@ -51,6 +52,30 @@ test('validate minimal source dir', () => {
   assert.equal(out.format_valid, true);
   assert.equal(out.schema_valid, true);
   assert.equal(out.payload_valid, true);
+});
+
+test('buildChecksumsV1 generates digests accepted by validate', () => {
+  const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdnA-checksums-'));
+  try {
+    fs.cpSync(minimalSource, tmp, { recursive: true });
+    fs.writeFileSync(path.join(tmp, 'checksums.json'), JSON.stringify(buildChecksumsV1(tmp), null, 2));
+    const r = run(['validate', tmp]);
+    assert.equal(r.status, 0, r.stderr);
+    const out = JSON.parse(r.stdout);
+    assert.equal(out.overall_valid, true);
+    assert.equal(out.checksums_valid, true);
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+});
+
+test('v1 ESM entry exports the shared checksum helper', () => {
+  const r = spawnSync(
+    process.execPath,
+    ['--input-type=module', '-e', "import { buildChecksumsV1 } from './packages/kdna-core/src/v1/index.mjs'; if (typeof buildChecksumsV1 !== 'function') process.exit(1);"],
+    { cwd: path.join(__dirname, '..', '..'), encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
+  );
+  assert.equal(r.status, 0, r.stderr);
 });
 
 test('pack minimal source dir deterministic', () => {
@@ -112,6 +137,34 @@ test('load compact profile as prompt is content-neutral', () => {
   assert.ok(r.stdout.includes('Highest question'));
   for (const t of FORBIDDEN) {
     assert.ok(!r.stdout.includes(t), `forbidden term "${t}" in prompt output`);
+  }
+});
+
+test('load compact profile as prompt renders object patterns readably', () => {
+  const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdnA-patterns-'));
+  try {
+    fs.writeFileSync(path.join(tmp, 'mimetype'), fs.readFileSync(path.join(minimalSource, 'mimetype')));
+    fs.writeFileSync(path.join(tmp, 'kdna.json'), fs.readFileSync(path.join(minimalSource, 'kdna.json')));
+    const payload = JSON.parse(fs.readFileSync(path.join(minimalSource, 'payload.kdnab'), 'utf8'));
+    payload.core.boundaries = [
+      { type: 'stance_boundary', stance: 'Structure first, wording second.' },
+      { type: 'ontology_boundary', one_sentence: 'Evidence density', boundary: 'Specific evidence, not data dumping.' },
+    ];
+    payload.patterns = [
+      { type: 'term', term: 'structural claim', definition: 'A claim that changes the reader judgment.' },
+      { type: 'misunderstanding', wrong: 'Smooth wording means strong thinking.', correct: 'Smooth wording can hide weak structure.' },
+    ];
+    fs.writeFileSync(path.join(tmp, 'payload.kdnab'), JSON.stringify(payload, null, 2));
+
+    const r = run(['load', tmp, '--profile=compact', '--as=prompt']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.ok(!r.stdout.includes('[object Object]'));
+    assert.ok(r.stdout.includes('Structure first, wording second.'));
+    assert.ok(r.stdout.includes('Evidence density: Specific evidence, not data dumping.'));
+    assert.ok(r.stdout.includes('structural claim: A claim that changes the reader judgment.'));
+    assert.ok(r.stdout.includes('Smooth wording means strong thinking. -> Smooth wording can hide weak structure.'));
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
   }
 });
 

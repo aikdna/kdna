@@ -1,201 +1,169 @@
 # First Domain Walkthrough — Writing Judgment
 
-> This is an end-to-end walkthrough. For a shorter guide on creating your first domain, see [Your First Domain](./first-domain.md).
+> This walkthrough uses the current KDNA Core v1 path: local `.kdna` files,
+> `kdna validate`, and `kdna load`. It does not depend on a public registry,
+> marketplace, signature system, or quality badge.
 
-This walkthrough takes you through a complete KDNA workflow. You'll see a domain judgment package go from a file on disk to a visible change in how an AI agent reasons.
+## Goal
 
-**Goal**: Understand what a KDNA domain is, not by reading about it, but by seeing it work.
+See how a real KDNA judgment asset changes what an agent notices.
 
----
-
-## 1. This is a weak prompt
-
-Suppose you ask an AI agent:
-
-> "Help me improve this product launch post."
-
-Without KDNA, a typical AI response:
-
-> "Try shorter sentences. Make the headline catchier. Add more enthusiasm. Here's a rewritten version..."
-
-The agent defaults to **language-level fixes** — stronger verbs, better transitions, punchier phrases. It treats all writing problems as prose problems.
-
-But most writing problems aren't prose problems. They're structural: no real argument, no cognitive hook, no evidence density, no stakes for the reader.
-
-**The agent polished the surface because it had no judgment reference telling it to look deeper.**
+The example domain is `@aikdna/writing`, which teaches an agent to diagnose
+writing at the argument and structure level before it reaches for surface
+editing.
 
 ---
 
-## 2. This is a KDNA domain asset
+## 1. The problem without KDNA
 
-The `@aikdna/writing` domain encodes editorial judgment as a structured asset. Here's what's inside:
+Ask an AI agent:
 
-### KDNA_Core.json — Axioms (what to believe)
-
-```
-"Axiom: Most writing problems are structural and argument-level, not language-level."
-  → Applies when: user asks for content feedback or review
-  → Does NOT apply when: user explicitly asks only for grammar/line-level polish
-  → Failure risk: Refusing to fix sentences when the user genuinely just wants smoother prose
+```text
+Help me improve this product launch post.
 ```
 
-### KDNA_Patterns.json — Boundaries (what to avoid)
+Without a judgment asset, many agents default to language-level advice:
 
-```
-Banned term: "polish the language"
-  → Why: Defaults diagnosis to surface fixes. Signals the agent missed the root cause.
-  → Replace with: "identify the structural problem first"
+- make the headline catchier
+- shorten sentences
+- add more energy
+- improve transitions
 
-Banned term: "make it more engaging"
-  → Why: Non-diagnosis. Must name specifically what prevents engagement.
-```
+That may be useful, but it often misses the deeper issue: weak argument,
+unclear stakes, missing evidence, or no reason for the reader to care.
 
-### Self-checks (what to verify before answering)
-
-```
-After writing feedback, verify:
-1. Did I classify this as a structural or language-level problem?
-2. Did I avoid banned terms?
-3. Did I provide a specific diagnosis (not generic advice)?
-4. Is the reasoning traceable back to an axiom?
-5. Did I check for failure risks (e.g., over-applying to reference docs)?
-```
+KDNA gives the agent a portable judgment structure for deciding what kind of
+problem it is looking at.
 
 ---
 
-## 3. Install the domain
+## 2. Install the CLI
 
 ```bash
 npm install -g @aikdna/kdna-cli
+```
+
+---
+
+## 3. Get a v1 writing asset
+
+If you are working from the `kdna-writing` repository after the v1 flagship
+artifact has been accepted, use the checked-in v1 container:
+
+```bash
+cd kdna-writing
+kdna validate ./dist/writing-v1.kdna
+```
+
+If you are testing the toolchain from source, export the current source through
+Studio CLI:
+
+```bash
+npm install -g @aikdna/kdna-studio-cli
+kdna-studio migrate ./kdna-writing --format v1 --out ./writing-v1.kdna
+kdna validate ./writing-v1.kdna
+```
+
+Expected validation result:
+
+```json
+{
+  "format_valid": true,
+  "schema_valid": true,
+  "payload_valid": true,
+  "checksums_valid": true,
+  "load_contract_valid": true,
+  "overall_valid": true,
+  "problems": []
+}
+```
+
+---
+
+## 4. Load compact judgment context
+
+```bash
+kdna load ./writing-v1.kdna --profile=compact --as=prompt
+```
+
+The compact profile emits the agent-readable judgment context. It should
+include the writing domain's core axioms and boundary checks, for example:
+
+- writing problems are often structural, not merely language-level
+- identify the argument gap before polishing prose
+- avoid generic feedback that cannot be traced to a diagnosis
+- run self-checks before returning a final review
+
+The output is not meant to be quoted back to the user. It is context the agent
+uses while producing its answer.
+
+---
+
+## 5. Load full JSON for inspection
+
+```bash
+kdna load ./writing-v1.kdna --profile=full --as=json
+```
+
+The full profile is for inspection, testing, and tool integration. It should
+retain the richer payload structure:
+
+- `core.axioms`
+- `core.boundaries`
+- `patterns`
+- `scenarios`
+- `cases`
+- `reasoning.self_checks`
+- `reasoning.failure_modes`
+- `evolution`
+
+This is the proof that the v1 asset is not only a minimal fixture. It carries
+real domain judgment.
+
+---
+
+## 6. Use it with an agent
+
+Install the loader skill for your local agent:
+
+```bash
 kdna setup
-kdna install @aikdna/writing
+kdna doctor --agents
 ```
 
-This downloads and stores the `.kdna` asset under `~/.kdna/packages/@aikdna/writing/<version>/writing.kdna`, then records it in `~/.kdna/index.json`. The CLI verifies its SHA-256 hash and Ed25519 signature before accepting it.
-
----
-
-## 4. Verify the domain
+Then provide the compact profile to the agent runtime or use the loader skill
+where supported:
 
 ```bash
-kdna verify @aikdna/writing --judgment
+kdna load ./writing-v1.kdna --profile=compact --as=prompt
 ```
 
-What this checks:
-- **Structure**: All required files present, JSON valid, schema compliant
-- **Trust**: Cryptographic signature matches, provenance chain intact
-- **Judgment**: Governance fields present (risk_level, human_lock, applies_when)
+Ask the same review task again:
 
-Expected output:
-
-```
-✓ structure   KDNA_Core.json
-✓ structure   KDNA_Patterns.json
-✓ structure   KDNA_Scenarios.json
-✓ trust       Ed25519 signature verified
-✓ judgment    governance fields complete
-✓ judgment    risk level: medium
-✓ judgment    human lock: ALL judgment fields locked
-
-Result: PASSED (3/3 layers)
+```text
+Review this launch post for structural quality.
 ```
 
----
+With the writing judgment loaded, the agent should focus on:
 
-## 5. Compare judgment — with vs. without KDNA
-
-```bash
-kdna compare @aikdna/writing --input "help me improve this product launch post"
-```
-
-This sends the same input to an LLM twice — once without KDNA, once with KDNA loaded — and diffs the reasoning paths.
-
-**Sample comparison output:**
-
-```
-┌─ Without KDNA ────────────────────────────────────────────────────┐
-│ Diagnosis: Language-level polishing needed                        │
-│ Suggestions:                                                      │
-│   • "Shorten paragraphs for better readability"                   │
-│   • "Use more energetic language"                                 │
-│   • "Add power words to the headline"                             │
-│ Banned terms used: "more engaging" ✓ (flagged)                    │
-│ Self-checks: 1/5 passed                                           │
-└────────────────────────────────────────────────────────────────────┘
-
-┌─ With KDNA (@aikdna/writing) ─────────────────────────────────────┐
-│ Diagnosis: Structural writing problem                             │
-│ Classification: Structural void — no central argument             │
-│ Axioms applied:                                                   │
-│   • axiom_problem_not_prose: problem is structural, not language  │
-│   • axiom_judgment_pressure: content exerts zero judgment pressure│
-│   • axiom_hook_before_structure: no cognitive hook present        │
-│ Suggestions:                                                      │
-│   • "What is the one claim you want readers to disagree with?"    │
-│   • "The opening paragraph defines the product but doesn't create │
-│      a gap between reader's current knowledge and the revelation"  │
-│   • "Add a specificity anchor — a concrete user scenario with     │
-│      real numbers before listing features"                        │
-│ Banned terms avoided: ✓                                           │
-│ Self-checks: 5/5 passed                                           │
-└────────────────────────────────────────────────────────────────────┘
-```
-
-**The agent didn't get better at writing. It got better at judging what kind of problem this is.**
-
----
-
-## 7. See the judgment trace
-
-```bash
-kdna trace --since 7d --domain @aikdna/writing
-```
-
-Every time an agent loads a KDNA domain, the loader records:
-- Which domain was loaded
-- What task was being performed
-- Which axioms were activated
-- What self-checks were run (passed/failed)
-- Whether banned terms were flagged
-
-This is the audit trail — proof that judgment was applied, not just assumed.
-
----
-
-## 8. Submit feedback (closing the loop)
-
-If the agent's judgment was wrong:
-
-```bash
-kdna compare @aikdna/writing --report-md > report.md
-# Review the report, file an issue on the domain repo:
-# https://github.com/aikdna/kdna-writing/issues/new
-```
-
-Domain authors review feedback, update axioms or patterns, bump the version, and re-publish. The domain evolves through real use — not through speculation.
-
----
-
-## 9. Update the domain
-
-```bash
-kdna update @aikdna/writing        # Get the latest version
-kdna diff @aikdna/writing@1.0-rc @aikdna/writing@1.1.0  # See what changed
-```
-
-The judgment-level diff shows exactly which axioms, boundaries, or self-checks were modified — so you always know what your agent is now judging differently.
+- whether the post has a real claim
+- whether the opening creates a cognitive gap
+- whether evidence supports the claim
+- whether the advice is structural or only stylistic
+- whether the response passes the domain self-checks
 
 ---
 
 ## Summary
 
-| Step | Command | What happened |
-|------|---------|---------------|
-| Install | `kdna install @aikdna/writing` | Domain loaded from registry with cryptographic verification |
-| Verify | `kdna verify @aikdna/writing --judgment` | Structure, trust, and judgment layers checked |
-| Compare | `kdna compare @aikdna/writing --input "..."` | Same input, two judgment paths — the delta is visible |
-| Trace | `kdna trace` | Audit trail of what axioms were applied |
-| Feedback | file an issue | Domain improves through real use |
-| Update | `kdna update` + `kdna diff` | See exactly what judgment changed |
+| Step | Command | What it proves |
+|---|---|---|
+| Export or locate asset | `kdna-studio migrate ... --format v1` or `dist/writing-v1.kdna` | A real source asset can become a v1 container |
+| Validate | `kdna validate writing-v1.kdna` | Format, schema, payload, checksums, and load contract pass |
+| Compact load | `kdna load --profile=compact --as=prompt` | Agent-readable judgment context exists |
+| Full load | `kdna load --profile=full --as=json` | Rich payload structure is preserved |
+| Agent setup | `kdna setup` | The loader skill can connect local assets to supported agents |
 
-**A KDNA domain is not a prompt. It's not a knowledge base. It's a portable, verifiable, traceable judgment asset that tells an AI agent how to reason about a specific domain — and proves that it did.**
+A KDNA domain is not a prompt or a knowledge base. It is a portable judgment
+asset that an agent can validate, load, and apply when the task calls for that
+domain's judgment.
