@@ -43,9 +43,18 @@ KDNA judgment asset.
 
 ## Step 3: Add judgment material
 
-Open the project and add your domain judgment: axioms, terminology, common
-misunderstandings, and self-checks. The Studio CLI guides you through
-structured interviews and evidence import.
+Add at least one locked judgment card. This minimal example creates one axiom
+with applicability boundaries:
+
+```bash
+kdna-studio card add my_expertise axiom \
+  --field one_sentence="KDNA assets preserve judgment before style." \
+  --field full_statement="A KDNA asset must preserve boundaries, self-checks, and failure modes before presentation polish." \
+  --field why="Without boundaries, a KDNA asset becomes a prompt template instead of reusable judgment." \
+  --field applies_when="teaching KDNA to a new user" \
+  --field does_not_apply_when="only demonstrating CLI syntax" \
+  --field failure_risk="Users may copy the format without preserving judgment."
+```
 
 A minimal valid `.kdna` payload contains:
 - A `highest_question` — what single question does this judgment answer?
@@ -55,6 +64,10 @@ A minimal valid `.kdna` payload contains:
 ## Step 4: Lock your judgment
 
 ```bash
+kdna-studio card list my_expertise
+kdna-studio card approve my_expertise <card-id> \
+  --by your-id \
+  --statement "I confirm this judgment for v1 export."
 kdna-studio lock my_expertise
 ```
 
@@ -64,26 +77,27 @@ responsibility for.
 ## Step 5: Compile and export
 
 ```bash
-kdna-studio export my_expertise --out dist/my_expertise.kdna
+kdna-studio export my_expertise --format v1 --out dist/my_expertise.kdna
 ```
 
 This produces a `.kdna` container with `mimetype`, `kdna.json`,
-`payload.kdnab`, and optional `checksums.json`.
+`payload.kdnab`, and `checksums.json`.
 
 ## Step 6: Validate with the official CLI
 
 ```bash
 kdna inspect dist/my_expertise.kdna
 kdna validate dist/my_expertise.kdna
-kdna pack dist/ dist/my_expertise.kdna
+kdna load dist/my_expertise.kdna --profile=compact --as=prompt
 ```
 
-If you authored from a source directory, you can also validate the source
-directly before export:
+If you are migrating an existing KDNA source folder or a Studio project, use
+the migration command:
 
 ```bash
-kdna validate my_expertise/
-kdna pack my_expertise/ my_expertise.kdna
+kdna-studio migrate my_expertise --format v1 --out dist/my_expertise.kdna \
+  --by your-id \
+  --statement "I confirm this migration for v1 export."
 ```
 
 ## Current limitations

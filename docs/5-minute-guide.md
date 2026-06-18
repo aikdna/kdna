@@ -64,7 +64,15 @@ Use Studio CLI for the producer path:
 ```bash
 npm install -g @aikdna/kdna-studio-cli
 kdna-studio create my_expertise --name @yourscope/my_expertise
-kdna-studio migrate ./my_expertise --format v1 --out ./my_expertise.kdna
+kdna-studio card add my_expertise axiom \
+  --field one_sentence="KDNA assets preserve judgment before style." \
+  --field full_statement="A KDNA asset must preserve boundaries, self-checks, and failure modes before presentation polish." \
+  --field why="Without boundaries, a KDNA asset becomes a prompt template instead of reusable judgment." \
+  --field applies_when="teaching KDNA to a new user" \
+  --field does_not_apply_when="only demonstrating CLI syntax" \
+  --field failure_risk="Users may copy the format without preserving judgment."
+kdna-studio card approve my_expertise <card-id> --by your-id --statement "I confirm this judgment for v1 export."
+kdna-studio export my_expertise --format v1 --out ./my_expertise.kdna
 kdna validate ./my_expertise.kdna
 kdna load ./my_expertise.kdna --profile=compact --as=prompt
 ```

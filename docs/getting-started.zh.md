@@ -70,10 +70,29 @@ npm install -g @aikdna/kdna-studio-cli
 kdna-studio create my_domain --name @yourscope/my_domain
 ```
 
-如果你已有 KDNA 源目录或旧格式项目，可通过 Studio CLI 迁移为 v1：
+添加并确认至少一张判断卡：
 
 ```bash
-kdna-studio migrate ./my_domain --format v1 --out ./my_domain.kdna
+kdna-studio card add my_domain axiom \
+  --field one_sentence="KDNA assets preserve judgment before style." \
+  --field full_statement="A KDNA asset must preserve boundaries, self-checks, and failure modes before presentation polish." \
+  --field why="Without boundaries, a KDNA asset becomes a prompt template instead of reusable judgment." \
+  --field applies_when="teaching KDNA to a new user" \
+  --field does_not_apply_when="only demonstrating CLI syntax" \
+  --field failure_risk="Users may copy the format without preserving judgment."
+kdna-studio card approve my_domain <card-id> \
+  --by your-id \
+  --statement "I confirm this judgment for v1 export."
+kdna-studio lock my_domain
+kdna-studio export my_domain --format v1 --out ./my_domain.kdna
+```
+
+如果你已有 KDNA 源目录或旧格式项目，也可以通过 Studio CLI 迁移为 v1：
+
+```bash
+kdna-studio migrate ./my_domain --format v1 --out ./my_domain.kdna \
+  --by your-id \
+  --statement "I confirm this migration for v1 export."
 ```
 
 ### 3. 校验并加载

@@ -41,17 +41,17 @@ Your agent will automatically discover installed KDNA domains via `kdna-loader`.
 
 ```bash
 npm install -g @aikdna/kdna-studio-cli
-kdna-studio create my-domain
+kdna-studio create my-domain --name @yourscope/my-domain
 ```
 
 This creates a Studio project (`studio.project.json`) — the canonical authoring workspace.
 
 ### Authoring Workflow
 
-1. **Create** a Studio project: `kdna-studio create my-domain`
-2. **Add cards** (judgment cards for axioms, ontology, misunderstandings): `kdna-studio card add`
-3. **Lock** cards when they are ready: `kdna-studio lock --all`
-4. **Export** a v1 `.kdna` asset: `kdna-studio migrate <source> --format v1 --out dist/my-domain.kdna`
+1. **Create** a Studio project: `kdna-studio create my-domain --name @yourscope/my-domain`
+2. **Add cards**: `kdna-studio card add my-domain axiom --field key=value`
+3. **Approve and lock** cards: `kdna-studio card approve my-domain <card-id> --by <id> --statement <text>` then `kdna-studio lock my-domain`
+4. **Export** a v1 `.kdna` asset: `kdna-studio export my-domain --format v1 --out dist/my-domain.kdna`
 5. **Validate/load** with the runtime CLI: `kdna validate dist/my-domain.kdna` and `kdna load dist/my-domain.kdna --profile=compact --as=prompt`
 
 ### What is NOT the current official v1 creation path
@@ -68,8 +68,9 @@ Domain repos use dev source directories for Git collaboration and CI validation.
 kdna dev validate .
 ```
 
-Launch-grade `.kdna` assets are exported with `kdna-studio migrate --format v1`
-and validated with `kdna validate`.
+Launch-grade `.kdna` assets are exported from Studio projects with
+`kdna-studio export --format v1`. Existing source folders can be migrated with
+`kdna-studio migrate --format v1`. Both outputs must pass `kdna validate`.
 
 ---
 
