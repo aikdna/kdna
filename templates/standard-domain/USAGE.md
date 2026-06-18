@@ -43,17 +43,15 @@ kdna identity init
 # 6. Verify quality
 kdna verify ./.
 
-# 7. Publish
+# 7. Export and verify the local v1 asset
 KDNA_IDENTITY_DIR=~/.kdna/identity-official \
-  kdna publish ./. \
-    --release-tag v0.1.0 \
-    --repo yourname/kdna-<your_domain_id>
+  kdna validate ./dist/your-domain.kdna
 
-# 8. Open PR to kdna-registry with the patch JSON the command printed
+kdna load ./dist/your-domain.kdna --profile=compact --as=prompt
 ```
 
 ## Standard vs minimal-domain
 
 `minimal-domain/` is the **bare-minimum** template — 2 files, no v2.1 fields, no evals. Use it only for fast experimentation or learning.
 
-`standard-domain/` is the **registry-ready** template. Any domain meant to be published to the registry should start here and aim for `kdna verify --judgment` ≥ 80% before publishing.
+`standard-domain/` is the richer authoring template for domains that need evidence, limitations, and repeatable validation. Core v1 distribution is local `.kdna` export plus `kdna validate` / `kdna load` evidence, not a central registry submission.

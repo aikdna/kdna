@@ -217,12 +217,9 @@ node examples/minimal-agent/agent.js
 
 | 领域 | 仓库 | 状态 |
 |---|---|---|
-| Writing | [kdna-writing](https://github.com/aikdna/kdna-writing) | experimental |
-| Knowledge Management | [kdna-knowledge_management](https://github.com/aikdna/kdna-knowledge_management) | experimental |
-| Prompt Diagnosis | [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) | experimental |
-| Agent Safety Judgment | [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety) | experimental |
-| Open-source Project | [kdna-open_source_project](https://github.com/aikdna/kdna-open_source_project) | experimental |
-| Content Strategy | [kdna-content_strategy](https://github.com/aikdna/kdna-content_strategy) | experimental |
+| Writing | [kdna-writing](https://github.com/aikdna/kdna-writing) | v1 flagship |
+| Prompt Diagnosis | [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) | v1 flagship |
+| Agent Safety Judgment | [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety) | v1 flagship |
 
 ### 演示样例
 
