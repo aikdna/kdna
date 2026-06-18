@@ -40,14 +40,15 @@ kdna doctor --agents
 # → Claude Code: detected, kdna-loader installed
 ```
 
-## Two Flagship Domains
+## Public Flagship Domains
 
 | Domain | What it changes |
 |--------|----------------|
-| **[@aikdna/agent_safety](https://github.com/aikdna/kdna-agent_safety)** | AI agent judges whether an action is safe before executing — checks irreversibility, authorization, backup, and recommends before destructive actions |
-| **[@aikdna/code_review](https://github.com/aikdna/kdna-code_review)** | AI code review judges by failure mode, not style — every review comment must name the specific failure mode and verify the fix addresses the root condition |
+| **[@aikdna/writing](https://github.com/aikdna/kdna-writing)** | Writing diagnosis judges argument, reader, contrast, and evidence before polishing language |
+| **[@aikdna/agent_safety](https://github.com/aikdna/kdna-agent_safety)** | AI agent judges whether an action is safe before executing — checks irreversibility, authorization, backup, and destructive-action boundaries |
+| **[@aikdna/prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis)** | Prompt diagnosis judges ambiguity, missing constraints, and failure modes before execution |
 
-Both have 30+ eval cases, benchmark reports, and known limitations.
+These are the current public v1 flagship assets.
 
 ## What KDNA Is (and Isn't)
 
@@ -72,16 +73,18 @@ KDNA Core is the **official KDNA judgment-asset format and runtime loading contr
 | [kdna-core](https://github.com/aikdna/kdna) | Official loader SDK (packages/kdna-core/) |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Official agent loader adapter |
 
-Legacy / experimental repos (not KDNA Core active path):
+Integration and future ecosystem repos:
 
 | Repo | Role |
 |------|------|
-| [kdna-registry](https://github.com/aikdna/kdna-registry) | Legacy registry experiment (archived; KDNA Core v1 has no registry) |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI for exporting v1 `.kdna` assets |
-| [kdna-lab](https://github.com/aikdna/kdna-lab) | Experimental pressure-test infrastructure |
-| [kdna-workpack](https://github.com/aikdna/kdna-workpack) | Work Pack experimental format |
+| [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Swift runtime foundation for Apple-platform KDNA integration |
+| [kdna-app-shared](https://github.com/aikdna/kdna-app-shared) | Shared app integration layer for KDNA-aware Apple and desktop experiences |
+| [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Native Swift authoring foundation for Apple platforms |
+| [kdna-vscode](https://github.com/aikdna/kdna-vscode) | Editor integration for KDNA source workspaces |
+| [kdna-workpack](https://github.com/aikdna/kdna-workpack) | Future workflow packaging layer above Core v1 assets |
 
-Domain repos (reference judgment examples): [kdna-writing](https://github.com/aikdna/kdna-writing), [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety), [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis), and several others.
+Domain repos (current public v1 flagship assets): [kdna-writing](https://github.com/aikdna/kdna-writing), [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety), and [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis).
 
 ---
 

@@ -8,7 +8,7 @@
 - **Deterministic pack** — same source packed twice produces byte-identical output (SHA-256 verified).
 - **Content-neutral validation** — output reports format/schema/payload/checksums/load-contract status only. No trust / recommendation / quality-badge claims.
 - **Official toolchain wording** — public docs, website, sub-repo READMEs, package metadata, and npm descriptions aligned with KDNA Core v1 sovereignty.
-- **Legacy surface marked** — kdna-registry is a legacy experiment; quality-badge system is out of scope for KDNA Core v1.
+- **Legacy surface removed from the active path** — registry and quality-badge systems are out of scope for KDNA Core v1.
 
 ## Try it now
 
@@ -37,7 +37,7 @@ All steps pass from a clean environment. No monorepo clone. No API key. No regis
 
 The following are **not** part of KDNA Core v1 active path:
 
-- kdna-registry (marked as legacy experiment)
+- Registry surface
 - Quality-badge system (untested / tested / validated / expert_reviewed / production_ready)
 - Marketplace / public registry framing
 - KDNAChat / KDNAStudio as named product surfaces
