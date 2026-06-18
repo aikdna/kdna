@@ -1,32 +1,41 @@
 # Studio Export → v1 Container E2E Status — June 2026
 
-## Verdict: BLOCKED
+## Verdict: PASS (beta)
 
-Studio (`kdna-studio migrate`) produces v2-format containers. The v1 Core format
-(minimal manifest schema, JSON-encoded payload, v1 mimetype, checksums.json)
-is not yet produced by Studio.
+`kdna-studio migrate --format v1` produces KDNA Core v1 containers that pass
+`kdna validate` and `kdna load --profile=compact --as=prompt`.
 
-## What works
+## E2E chain verified
 
-- kdna-cli v0.25.0: v1 pack/validate/load ✓
-- @aikdna/kdna-core 0.11.0: digest matching ✓
-- kdna-studio migrate: produces v2 .kdna containers (paylod.kdnab is CBOR, not
-  JSON; manifest is v2 schema, not v1)
-
-## Minimal proof (v1 path without Studio)
-
-```bash
-# Use a v1 source directory (the examples/minimal fixture)
-kdna pack examples/minimal /tmp/minimal.kdna
-kdna validate /tmp/minimal.kdna    # all gates pass, digest verified
-kdna load /tmp/minimal.kdna --profile=compact --as=prompt   # clean text
+```
+kdna-studio create project
+  → Add judgment cards (axioms)
+kdna-studio migrate project --format v1 --out asset.kdna
+  → @aikdna/kdna-core@0.11.0 pack + validate passes
+kdna validate asset.kdna
+  → format_valid: true, payload_valid: true, checksums_valid: true
+kdna load asset.kdna --profile=compact --as=prompt
+  → Agent-readable judgment text
 ```
 
-This proves the **consumer side** (CLI → validate → load) is complete.
-The **producer side** (Studio export) is pending.
+## Implementation
 
-## Next
+- `kdna-studio-cli/bin/kdna-studio.js` — v1 path added to `cmdMigrate`
+- v1 export skips v2 compile gate and calls `@aikdna/kdna-core` directly
+- Manifest: v2 project metadata → v1 manifest.schema.json fields
+- Payload: locked axiom cards → JSON (not CBOR)
+- Packaging: official `core.pack` (deterministic ZIP + checksums.json)
+- Validation: official `core.validate` (format + schema + payload + checksums + load-contract)
 
-`kdna-studio migrate --format v1` as a planned feature. Until then, the
-official CLI path (`kdna pack` from a v1 source directory) is the current
-v1 container creation path.
+## What's NOT included in v1 export
+
+- quality_badge, Human Lock status, risk levels (not part of v1 manifest)
+- legacy reports (KDNA_CARD, quality-gate-report, provenance-report, etc.)
+- CBOR-encoded payload (v1 uses JSON)
+- v2 mimetype (v1 uses `application/vnd.kdna.asset`)
+
+## Limitation
+
+- JSON-schema validation requires `ajv` in the consumer environment.
+  When unavailable, schema_valid degrades gracefully (false with a clear message).
+  Format, payload, checksums, and load-contract validation are independent.
