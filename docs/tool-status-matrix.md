@@ -38,7 +38,7 @@
 | doctor | `kdna doctor --agents` | no | no | System health check |
 | load | `kdna load <file> --as=prompt` | no | no | Current (v1 supported in kdna-cli@0.23.0) |
 | compare | `kdna compare <name> --input "..."` | yes (legacy) | yes | Requires provider API key |
-| kdna-studio | `kdna-studio create <name>` | no | no | Authoring CLI, beta |
+| kdna-studio | `kdna-studio migrate <dir> --format v1 --out <file.kdna>` | no | no | Authoring CLI; v1 export via @aikdna/kdna-core (beta) |
 | kdna-loader | installed by setup | no | no | Agent adapter, beta |
 
 ## Legacy / experimental (not Core v1 first-run)
