@@ -15,16 +15,11 @@ A minimal KDNA domain for writing judgment. Helps AI agents apply expert writing
 - **Misunderstandings:** complexity vs precision, editing vs proofreading, length vs authority
 - **Self-Checks (4):** first-reading clarity, paragraph focus, word economy, skeptical reader test
 
-## Install
+## Current Status
 
-```bash
-# via npm CLI
-npm i -g @aikdna/kdna
-kdna install writing-basic
-
-# via kdna-skills installer
-curl -fsSL https://raw.githubusercontent.com/aikdna/kdna-skills/main/install.sh | bash
-```
+This is a legacy example source directory. It is useful for reading the shape
+of older writing-domain material, but it is not the current KDNA Core v1
+first-run path.
 
 ## Usage
 
@@ -61,6 +56,5 @@ Whether a piece of writing is clear, reader-focused, and structurally coherent â
 ### 4. How do I use it?
 
 ```bash
-kdna install github:aikdna/kdna-writing_basic
 kdna dev validate .
 ```

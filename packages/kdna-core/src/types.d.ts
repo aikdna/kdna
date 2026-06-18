@@ -484,6 +484,35 @@ export function matchDomain(input: string, candidates: Array<KDNAAssetInput | KD
 export function matchDomainSync(input: string, candidates: Array<KDNAAssetInput | KDNAInspectResult>, options?: KdnaDecryptOptions): KDNAMatchResult[];
 export function composeKDNA(inputs: KDNAAssetInput[], options?: { input?: string; profile?: 'compact' | 'scenario' | 'full' | string; separator?: string } & KdnaDecryptOptions): Promise<KDNAComposeResult>;
 
+// KDNA Core v1 — source directory / container API
+export const MIMETYPE: string;
+export const MIMETYPE_V1: string;
+export const MIMETYPE_V2: string;
+export const V1_REQUIRED_DIR_ENTRIES: string[];
+
+export interface KDNAV1ChecksumEntry {
+  algorithm: 'sha256';
+  value: string;
+}
+
+export interface KDNAV1Checksums {
+  algorithm: 'sha256';
+  manifest_digest: string;
+  payload_digest: string;
+  asset_digest: string;
+  entries: Record<string, KDNAV1ChecksumEntry>;
+}
+
+export function isV1SourceDir(inputPath: string): boolean;
+export function detectContainerFormat(inputPath: string): 'v1' | 'v2' | null;
+export function inspect(inputPath: string, options?: Record<string, any>): Record<string, any>;
+export function validate(inputPath: string, options?: Record<string, any>): Record<string, any>;
+export function buildChecksumsV1(sourceDir: string): KDNAV1Checksums;
+export function pack(sourceDir: string, outputPath: string): void;
+export function unpack(inputPath: string, outputDir: string): void;
+export function loadV1(inputPath: string, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): Record<string, any>;
+export const FORBIDDEN_OUTPUT_TERMS: readonly string[];
+
 // Lint
 export function lintDomain(dataMap: KDNAFileDataMap): LintResult;
 

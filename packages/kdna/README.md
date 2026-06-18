@@ -9,7 +9,7 @@ integrate KDNA through the official SDK, CLI, Loader, or API.
 
 This package is part of the official toolchain. The `bin/kdna.js` shim
 is the v1-aware entry point of that toolchain; it dispatches v1 source
-directories and v1 `.kdna` containers to the in-repo v1 implementation,
+directories and v1 `.kdna` containers to shared `@aikdna/kdna-core/v1`,
 and falls through to the legacy v2 surface for everything else.
 
 The legacy install path is:
@@ -27,8 +27,8 @@ The `bin/kdna.js` shim in this package adds a KDNA Core v1 route on top of
 the upstream `@aikdna/kdna-cli`. When the input is a v1 source directory
 (`mimetype` + `kdna.json` + `payload.kdnab`) or a v1 `.kdna` container
 (ZIP with `mimetype` first, content `application/vnd.kdna.asset`), the
-shim dispatches to a local v1 implementation in `src/v1-cli.js`. Anything
-else falls through to the upstream CLI unchanged.
+shim dispatches to shared `@aikdna/kdna-core/v1`. Anything else falls
+through to the upstream CLI unchanged.
 
 Usage:
 

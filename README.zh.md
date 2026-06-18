@@ -129,13 +129,11 @@ KDNA_Patterns.json
 
 ```bash
 npm install -g @aikdna/kdna-cli
-kdna setup
-kdna install @aikdna/writing
-kdna verify @aikdna/writing --judgment
-kdna compare @aikdna/writing --input "帮我改进这篇文章"
+kdna validate ./dist/writing-v1.kdna
+kdna load ./dist/writing-v1.kdna --profile=compact --as=prompt
 ```
 
-你的 Agent 现在加载了一个领域判断资产。最后一条命令会把同一个输入发送给 LLM 两次——加载 KDNA 和不加载——让你直接看到判断路径的区别。
+你会看到这份 `.kdna` 的 compact profile：公理、边界、自检、失败模式和 patterns 都会被渲染成 Agent 可读的判断上下文。
 
 ```bash
 # 检查一切是否正常
@@ -181,13 +179,11 @@ kdna setup
 npm i -g @aikdna/kdna-cli
 kdna setup
 
-# 2. 装一个领域（asset_digest + 签名验证）
-kdna install @aikdna/writing
-# 装到 ~/.kdna/packages/@aikdna/writing/0.7.2/writing-0.7.2.kdna
+# 2. 校验一个本地 v1 .kdna
+kdna validate ./dist/writing-v1.kdna
 
-# 3. 检查
-kdna list
-kdna verify @aikdna/writing --judgment
+# 3. 加载为 Agent prompt
+kdna load ./dist/writing-v1.kdna --profile=compact --as=prompt
 ```
 
 要创建自己的领域：
@@ -196,12 +192,12 @@ kdna verify @aikdna/writing --judgment
 npm install -g @aikdna/kdna-studio-cli
 kdna-studio create my_expertise --name @yourscope/my_expertise
 # 导入材料、生成判断卡片，并由人类确认 Human Lock
-kdna-studio export my_expertise --out dist/my_expertise.kdna --sign
-kdna verify dist/my_expertise.kdna --judgment
-kdna publish dist/my_expertise.kdna
+kdna-studio migrate ./my_expertise --format v1 --out dist/my_expertise.kdna --name @yourscope/my_expertise --by your-id --statement "confirmed for v1 export"
+kdna validate dist/my_expertise.kdna
+kdna load dist/my_expertise.kdna --profile=compact --as=prompt
 ```
 
-由 KDNA Studio 编译产出的 `.kdna` 是 KDNA 官方工具链的最终产物。VS Code 和 `kdna dev` 命令只用于开发源工作区的诊断。
+由 KDNA Studio CLI 导出的 v1 `.kdna` 是当前 KDNA 官方工具链的最终产物。VS Code 和 `kdna dev` 命令只用于开发源工作区的诊断。签名、加密和私有资产是后续 gated 阶段，不是当前 Core v1 基线。
 
 ## 规范
 

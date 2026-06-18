@@ -24,11 +24,13 @@ In 5 minutes, you can see an AI agent diagnose problems differently with KDNA lo
 ```bash
 npm install -g @aikdna/kdna-cli
 kdna setup
-kdna install @aikdna/writing --yes
-kdna compare @aikdna/writing --input "Review this article: 'Our product is the best. Customers love it. Get yours today.'"
+kdna validate ./dist/writing-v1.kdna
+kdna load ./dist/writing-v1.kdna --profile=compact --as=prompt
 ```
 
-You'll see the same model respond differently — with KDNA, it diagnoses **structural problems** (no argument, no evidence, no cognitive hook) instead of suggesting surface-level fixes.
+You'll see the loaded compact prompt include writing judgment boundaries:
+structural diagnosis, evidence density, hook priority, self-checks, and
+failure modes.
 
 ```bash
 # Verify everything is working
@@ -75,7 +77,7 @@ Legacy / experimental repos (not KDNA Core active path):
 | Repo | Role |
 |------|------|
 | [kdna-registry](https://github.com/aikdna/kdna-registry) | Legacy registry experiment (archived; KDNA Core v1 has no registry) |
-| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI; legacy Studio-compatible pipeline |
+| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI for exporting v1 `.kdna` assets |
 | [kdna-lab](https://github.com/aikdna/kdna-lab) | Experimental pressure-test infrastructure |
 | [kdna-workpack](https://github.com/aikdna/kdna-workpack) | Work Pack experimental format |
 

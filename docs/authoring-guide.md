@@ -1,6 +1,6 @@
 # KDNA Authoring Guide
 
-> **For trusted KDNA assets, use [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli).** The dev source workflow below is for experimentation and CI validation of open-source domain repos. Dev source directories are non-canonical and do not produce trusted assets.
+> **For formal KDNA Core v1 assets, use [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli).** The dev source workflow below is for experimentation and CI validation of open-source domain repos. Dev source directories are non-canonical and do not by themselves prove a shippable v1 asset.
 
 ## Quick Start (Dev Source — for experimentation)
 
@@ -10,7 +10,7 @@
 4. Validate: `npx kdna dev validate <your-domain-folder>`
 5. Test: `kdna verify <your-domain-folder>`
 
-> **To produce a trusted `.kdna` asset:** create a Studio project with `kdna-studio create`, lock cards, compile, and export. See [getting-started.md](./getting-started.md).
+> **To produce a v1 `.kdna` asset:** create or migrate a Studio project, export with `--format v1`, then run `kdna validate` and `kdna load`. See [getting-started.md](./getting-started.md).
 
 ---
 
@@ -83,7 +83,7 @@ If you write KDNA JSON from scratch, you MUST use these exact field names. The l
 | `brief` / `bad_pattern` / `master_pattern` (on cases) | `title` / `what_happened` / `structural_pattern` |
 | `capability_layers` (on evolution) | `stages` |
 
-For dev source experiments, start from `kdna dev scaffold <name>` or `kdna cluster init <name>` so field names stay consistent. This creates a non-canonical workspace only. Trusted `.kdna` assets must be Human Locked and compiled/exported by An authoring environment or a Studio-compatible compiler.
+For dev source experiments, start from `kdna dev scaffold <name>` or `kdna cluster init <name>` so field names stay consistent. This creates a non-canonical workspace only. Formal v1 `.kdna` assets should be exported through the Studio toolchain and validated with the official CLI.
 
 ---
 

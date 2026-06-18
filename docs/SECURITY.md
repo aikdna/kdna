@@ -2,7 +2,10 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in KDNA tooling (kdna-cli, kdna-core, kdna-studio-cli, kdna-studio-core, kdna-registry, kdna-website, or kdna-vscode), please report it privately.
+If you discover a security vulnerability in KDNA tooling (`kdna-cli`,
+`kdna-core`, `kdna-studio-cli`, `kdna-studio-core`, `kdna-website`,
+`kdna-skills`, MCP integrations, or related developer tools), please report it
+privately.
 
 **Do not open a public issue.**
 
@@ -12,15 +15,18 @@ Response time: within 72 hours.
 
 ## Scope
 
-This policy covers the KDNA tooling and infrastructure. Domain judgment content (.kdna files) is governed by the [KDNA Safety Framework](./SAFETY.md) and [Risk Policy](./RISK_POLICY.md).
+This policy covers the KDNA tooling and infrastructure. Domain judgment content
+inside `.kdna` files is a content and deployment responsibility; structural
+validity does not imply content fitness for every use.
 
 ## Supported Versions
 
 | Tool | Version | Support |
 |------|---------|:-------:|
-| @aikdna/kdna-cli | >=0.16.0 | Active |
-| @aikdna/kdna-core | >=0.3.0 | Active |
-| @aikdna/kdna-studio-core | >=1.0.0 | Active |
+| @aikdna/kdna-cli | >=0.25.0 | Active |
+| @aikdna/kdna-core | >=0.11.1 | Active |
+| @aikdna/kdna-studio-cli | >=0.5.2 | Active |
+| @aikdna/kdna-studio-core | >=1.5.3 | Active |
 
 ## Responsible Disclosure
 
@@ -32,14 +38,19 @@ This policy covers the KDNA tooling and infrastructure. Domain judgment content 
 
 ## Out of Scope
 
-- Domain content quality (handled by Governance and Quality Gates)
-- Third-party domains not distributed through the official registry
+- Domain content quality, professional endorsement, or fitness for a specific
+  use case
+- Third-party `.kdna` files or source projects not maintained by the KDNA
+  project
 - Social engineering attacks
 - Physical security issues
 
 ## Supply Chain: cbor-extract Prebuilt Binaries
 
-KDNA v2 depends on `cbor-x` which optionally uses `cbor-extract` — a Node.js native addon with prebuilt binaries for darwin-arm64, darwin-x64, linux-arm, linux-arm64, linux-x64, and win32-x64. These binaries are fetched at install time from npm.
+Some legacy KDNA packages depended on `cbor-x`, which optionally uses
+`cbor-extract` — a Node.js native addon with prebuilt binaries for darwin-arm64,
+darwin-x64, linux-arm, linux-arm64, linux-x64, and win32-x64. These binaries
+may be fetched at install time from npm when legacy paths are used.
 
 **Mitigations:**
 - `cbor-x` falls back to pure JavaScript decode when `cbor-extract` is unavailable
