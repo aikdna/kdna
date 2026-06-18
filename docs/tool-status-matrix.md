@@ -18,7 +18,7 @@
 | **kdna-vscode** | VS Code extension | legacy | partial | VS Code marketplace | Legacy workspace tools; not canonical asset creator | Re-author for v1 |
 | **kdna-core-swift** | Swift runtime | legacy | partial | SwiftPM | "KDNA Protocol" legacy framing in code | Re-author for v1 |
 | **kdna-lab** | Pressure-test infra | experimental | partial | scripts | Experimental infrastructure; not v1 Core surface | No change needed |
-| **kdna-registry** | Registry | legacy | no | not applicable | Marked as legacy experiment; KDNA Core v1 has no registry | Formal archival |
+| **registry** | Registry | removed from active public surface | no | not applicable | KDNA Core v1 has no registry; use local v1 `.kdna` files | Keep archived references historical only |
 
 ## Current (try first)
 
@@ -45,7 +45,7 @@
 
 | Tool | Command | Notes |
 |---|---|---|
-| registry | `kdna install/remove/update/list/search` | Legacy kdna-registry experiment; not Core v1 active path |
+| registry | `kdna install/remove/update/list/search` | Legacy compatibility surface only; not Core v1 active path |
 | badge | `kdna badge compute` | Pre-v1 quality badge system |
 | workpack | `kdna workpack ...` | Experimental workflow format |
 | license | `kdna license ...` | Pre-v1 licensed asset flow |

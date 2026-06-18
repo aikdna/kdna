@@ -35,9 +35,9 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 
 ## What is experimental
 
-- **kdna install** / registry install — legacy path via `kdna-registry`; registry is a legacy experiment, marked as not active KDNA Core v1 path
+- **kdna install** / registry install — legacy compatibility path; the public registry is not part of KDNA Core v1
 - **kdna compare** — comparison requires a provider key; not yet documented in the v1 guide
-- **kdna setup** — agent setup (codex, claude-code, opencode, cursor); works but the `kdna-loader` skill is the legacy skill adapter, not yet updated for v1
+- **kdna setup** — agent setup (codex, claude-code, opencode, cursor); skills/MCP now use the v1 local asset loading path, while setup UX remains a post-baseline hardening surface
 - **kdna-studio** — v1 export hardening is published through
   `@aikdna/kdna-studio-cli@0.5.2` and
   `@aikdna/kdna-studio-core@1.5.3`; npm-registry clean-install verification
@@ -48,7 +48,7 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 
 ## What is legacy
 
-- **kdna-registry** — marked as legacy experiment (kdna-registry README banner); KDNA Core v1 has no registry
+- **Registry surface** — removed from the active public path; KDNA Core v1 has no registry
 - **Quality-badge system** — legacy (untested / tested / validated / expert_reviewed / production_ready); not part of v1 Core
 - **Human Lock** — legacy authoring concept; not part of v1 Core format
 - **KDNAChat / KDNAStudio** — legacy product names; not active v1 Core surfaces
