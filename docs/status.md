@@ -25,13 +25,13 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 
 ## What is beta
 
-- **`kdna inspect`** — inspect v1 source dir or v1 `.kdna` container (available via `npm install -g @aikdna/kdna-cli@0.22.0`)
+- **`kdna inspect`** — inspect v1 source dir or v1 `.kdna` container (available via `npm install -g @aikdna/kdna-cli@0.25.0`)
 - **`kdna validate`** — validate v1 source dir or v1 `.kdna` container (schema + format + payload + checksums + load-contract)
 - **`kdna pack`** — deterministic ZIP pack (mimetype first, STORED; same input → same SHA-256, verified as `3f0ba461...`)
 - **`kdna unpack`** — unpack `.kdna` container, refuse path traversal
 - **32 CLI tests** — all pass (inspect, validate, pack, unpack, edge cases)
 
-**Resolved in v0.22.0**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.22.0` now includes the full v1 inspect/validate/pack/unpack route.
+**Resolved in 0.25.0**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.25.0` now includes the full v1 inspect/validate/pack/unpack route.
 
 ## What is experimental
 
@@ -53,7 +53,7 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 ## Recommended first-run path
 
 ```bash
-npm install -g @aikdna/kdna-cli@0.22.0
+npm install -g @aikdna/kdna-cli@0.25.0
 kdna --help
 kdna inspect examples/minimal
 kdna validate examples/minimal
@@ -75,7 +75,7 @@ For the legacy 5-minute walkthrough (old CLI surface), see [5-minute-guide.md](.
 
 ## Known limitations
 
-1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.22.0**. ✓
+1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.25.0**. ✓
 2. **Core extraction pending**: the v1 format logic lives in `packages/kdna/src/v1-cli.js` (707 lines) and `aikdna/kdna-cli/src/v1-cli.js` (duplicated). Both should be merged into `@aikdna/kdna-core` (PR-99 in the Sovereignty Baseline plan).
 3. **6 skipped tests**: kdna-core fixture tests skipped in PR-95 (v1→v2 fixture migration debt). Marked for recovery in PR-100.
 4. **Conformance failure**: `kdna.json.format_version: "1.0"` vs expected `"2.0"` in the conformance runner. Same fixture debt.
