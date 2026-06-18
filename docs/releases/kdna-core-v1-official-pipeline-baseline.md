@@ -47,14 +47,14 @@ Current hardening proof shows:
 - local tarball clean-install proof passes with:
   - `@aikdna/kdna-core@0.11.1`
   - `@aikdna/kdna-studio-core@1.5.3`
-  - `@aikdna/kdna-studio-cli@0.5.2`
-  - `@aikdna/kdna-cli@0.25.0`
+  - `@aikdna/kdna-studio-cli@0.5.3`
+  - `@aikdna/kdna-cli@0.25.1`
 - npm registry clean-install proof passes in `/private/tmp/kdna-registry-proof`
   with:
   - `@aikdna/kdna-core@0.11.1`
-  - `@aikdna/kdna-cli@0.25.0`
+  - `@aikdna/kdna-cli@0.25.1`
   - `@aikdna/kdna-studio-core@1.5.3`
-  - `@aikdna/kdna-studio-cli@0.5.2`
+  - `@aikdna/kdna-studio-cli@0.5.3`
   - `@aikdna/kdna@0.9.0`
 - registry proof full-profile counts:
   - `writing`: 35 source cards, 4 axioms, 10 boundaries, 17 patterns, 2 scenarios, 2 cases, 5 self-checks, 3 failure modes, 3 evolution stages
@@ -124,9 +124,9 @@ Current status: resolved in the hardening and registry-proof reports:
 | Package | Version | Role |
 |---|---|---|
 | @aikdna/kdna-core | 0.11.1 | Official shared core |
-| @aikdna/kdna-cli | 0.25.0 | Official CLI |
+| @aikdna/kdna-cli | 0.25.1 | Official CLI |
 | @aikdna/kdna-studio-core | 1.5.3 | Studio authoring core |
-| @aikdna/kdna-studio-cli | 0.5.2 | Official authoring CLI |
+| @aikdna/kdna-studio-cli | 0.5.3 | Official authoring CLI |
 | @aikdna/kdna | 0.9.0 | Compatibility package |
 
 ## Completed capabilities
@@ -143,7 +143,7 @@ Current status: resolved in the hardening and registry-proof reports:
 - Compatibility package extraction completed locally:
   - `packages/kdna/src/v1-cli.js` removed
   - `packages/kdna/bin/kdna.js` routes v1 through shared `@aikdna/kdna-core/v1`
-  - `packages/kdna/package.json` depends on `@aikdna/kdna-cli@^0.25.0` and `@aikdna/kdna-core@^0.11.1`
+  - `packages/kdna/package.json` depends on `@aikdna/kdna-cli@^0.25.1` and `@aikdna/kdna-core@^0.11.1`
 - 55 cli-v1 tests (all pass)
 - Clean install CLI smoke (overall_valid=true)
 

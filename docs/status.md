@@ -25,13 +25,13 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 
 ## What is beta
 
-- **`kdna inspect`** — inspect v1 source dir or v1 `.kdna` container (available via `npm install -g @aikdna/kdna-cli@0.25.0`)
+- **`kdna inspect`** — inspect v1 source dir or v1 `.kdna` container (available via `npm install -g @aikdna/kdna-cli@0.25.1`)
 - **`kdna validate`** — validate v1 source dir or v1 `.kdna` container (schema + format + payload + checksums + load-contract)
 - **`kdna pack`** — deterministic ZIP pack (mimetype first, STORED; same input → same SHA-256, verified as `3f0ba461...`)
 - **`kdna unpack`** — unpack `.kdna` container, refuse path traversal
 - **32 CLI tests** — all pass (inspect, validate, pack, unpack, edge cases)
 
-**Resolved in 0.25.0**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.25.0` now includes the full v1 inspect/validate/pack/unpack route.
+**Resolved in 0.25.1**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.25.1` now includes the full v1 inspect/validate/pack/unpack route.
 
 ## What is experimental
 
@@ -39,7 +39,7 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 - **kdna compare** — comparison requires a provider key; not yet documented in the v1 guide
 - **kdna setup** — agent setup (codex, claude-code, opencode, cursor); skills/MCP now use the v1 local asset loading path, while setup UX remains a post-baseline hardening surface
 - **kdna-studio** — v1 export hardening is published through
-  `@aikdna/kdna-studio-cli@0.5.2` and
+  `@aikdna/kdna-studio-cli@0.5.3` and
   `@aikdna/kdna-studio-core@1.5.3`; npm-registry clean-install verification
   passes for the three flagship source assets. Public flagship release still
   requires final fidelity report acceptance and README/release artifact work.
@@ -57,7 +57,7 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 ## Recommended first-run path
 
 ```bash
-npm install -g @aikdna/kdna-cli@0.25.0
+npm install -g @aikdna/kdna-cli@0.25.1
 kdna --help
 kdna inspect examples/minimal
 kdna validate examples/minimal
@@ -79,7 +79,7 @@ For the legacy 5-minute walkthrough (old CLI surface), see [5-minute-guide.md](.
 
 ## Known limitations
 
-1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.25.0**. ✓
+1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.25.1**. ✓
 2. **Core extraction — published**: the compatibility package now routes v1 through shared `@aikdna/kdna-core/v1`; duplicate `packages/kdna/src/v1-cli.js` has been removed. Published in `@aikdna/kdna@0.9.0` with `@aikdna/kdna-core@^0.11.1`.
 3. **6 skipped tests**: kdna-core fixture tests skipped in PR-95 (v1→v2 fixture migration debt). Marked for recovery in PR-100.
 4. **Conformance failure**: `kdna.json.format_version: "1.0"` vs expected `"2.0"` in the conformance runner. Same fixture debt.
