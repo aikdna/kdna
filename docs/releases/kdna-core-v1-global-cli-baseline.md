@@ -2,7 +2,7 @@
 
 ## What is new
 
-- **@aikdna/kdna-cli@0.22.2** published to npm.
+- **@aikdna/kdna-cli@0.25.0** published to npm.
 - **Global CLI v1 route**: `kdna inspect`, `kdna validate`, `kdna pack`, `kdna unpack` — available from `npm install -g @aikdna/kdna-cli`.
 - **`kdna demo minimal <dir>`** — offline first-run fixture. No monorepo clone needed. No registry. No network beyond npm install.
 - **Deterministic pack** — same source packed twice produces byte-identical output (SHA-256 verified).
@@ -13,7 +13,7 @@
 ## Try it now
 
 ```bash
-npm install -g @aikdna/kdna-cli@0.22.2
+npm install -g @aikdna/kdna-cli@0.25.0
 kdna demo minimal ./minimal
 kdna inspect ./minimal
 kdna validate ./minimal
