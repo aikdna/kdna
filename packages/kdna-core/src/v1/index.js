@@ -580,6 +580,42 @@ function finalizeValidate(result, problems) {
   return result;
 }
 
+function digestEntry(sourceDir, entry) {
+  const entryPath = path.join(sourceDir, entry);
+  if (!fs.existsSync(entryPath)) {
+    throw new Error(`cannot build checksums: missing required entry ${entry}`);
+  }
+  const bytes = fs.readFileSync(entryPath);
+  return {
+    algorithm: 'sha256',
+    value: crypto.createHash('sha256').update(bytes).digest('hex'),
+  };
+}
+
+function buildChecksumsV1(sourceDir) {
+  const absSrc = path.resolve(sourceDir);
+  if (!fs.existsSync(absSrc) || !fs.statSync(absSrc).isDirectory()) {
+    throw new Error(`not a directory: ${absSrc}`);
+  }
+
+  const entries = {
+    'kdna.json': digestEntry(absSrc, 'kdna.json'),
+    'payload.kdnab': digestEntry(absSrc, 'payload.kdnab'),
+  };
+  const combined = Object.keys(entries)
+    .sort()
+    .map((name) => `${name}:${entries[name].value}`)
+    .join('\n');
+
+  return {
+    algorithm: 'sha256',
+    manifest_digest: `sha256:${entries['kdna.json'].value}`,
+    payload_digest: `sha256:${entries['payload.kdnab'].value}`,
+    asset_digest: `sha256:${crypto.createHash('sha256').update(combined).digest('hex')}`,
+    entries,
+  };
+}
+
 // ─── pack ──────────────────────────────────────────────────────────────
 
 /**
@@ -745,6 +781,7 @@ module.exports = {
   readV1Layout,
   inspect,
   validate,
+  buildChecksumsV1,
   pack,
   unpack,
   loadV1,
@@ -752,6 +789,35 @@ module.exports = {
 };
 
 // ─── loadV1 — v1 runtime loading / load contract ──────────────────────
+
+function renderPromptItem(item) {
+  if (item === undefined || item === null) return '';
+  if (typeof item === 'string') return item;
+  if (typeof item !== 'object') return String(item);
+
+  if (item.type === 'axiom_applicability' && item.one_sentence) {
+    const parts = [item.one_sentence];
+    if (Array.isArray(item.does_not_apply_when) && item.does_not_apply_when.length) {
+      parts.push(`does not apply when: ${item.does_not_apply_when.slice(0, 2).join('; ')}`);
+    }
+    if (item.failure_risk) parts.push(`failure risk: ${item.failure_risk}`);
+    return parts.join(' — ');
+  }
+  if (item.boundary && item.one_sentence) return `${item.one_sentence}: ${item.boundary}`;
+  if (item.stance) return item.stance;
+  if (item.statement) return item.statement;
+  if (item.term && item.definition) return `${item.term}: ${item.definition}`;
+  if (item.term && item.why) return `${item.term}: ${item.why}`;
+  if (item.wrong && item.correct) return `${item.wrong} -> ${item.correct}`;
+  if (item.mode && item.correct) return `${item.mode} -> ${item.correct}`;
+  if (item.name && item.description) return `${item.name}: ${item.description}`;
+  if (item.name) return item.name;
+  if (item.one_sentence) return item.one_sentence;
+  if (item.essence) return item.essence;
+  if (item.question) return item.question;
+  if (item.id) return item.id;
+  return JSON.stringify(item);
+}
 
 function loadV1(inputPath, opts = {}) {
   const v1 = readV1Layout(path.resolve(inputPath));
@@ -820,11 +886,11 @@ function loadV1(inputPath, opts = {}) {
     text += 'Profile: ' + result.profile + '\n';
     if (result.max_tokens_hint) text += 'Max tokens hint: ' + result.max_tokens_hint + '\n';
     if (c.highest_question) text += 'Highest question:\n' + c.highest_question + '\n';
-    if (c.axioms && c.axioms.length) text += 'Axioms:\n' + c.axioms.map((a) => '- ' + (typeof a === 'string' ? a : JSON.stringify(a))).join('\n') + '\n';
-    if (c.boundaries && c.boundaries.length) text += 'Boundaries:\n' + c.boundaries.map((b) => '- ' + (typeof b === 'string' ? b : JSON.stringify(b))).join('\n') + '\n';
-    if (c.self_checks && c.self_checks.length) text += 'Self-checks:\n' + c.self_checks.map((s) => '- ' + (typeof s === 'string' ? s : JSON.stringify(s))).join('\n') + '\n';
-    if (c.failure_modes && c.failure_modes.length) text += 'Failure modes:\n' + c.failure_modes.map((f) => '- ' + (f.mode || f)).join('\n') + '\n';
-    if (c.patterns && c.patterns.length) text += 'Patterns:\n' + c.patterns.map((p) => '- ' + (p.name || p)).join('\n') + '\n';
+    if (c.axioms && c.axioms.length) text += 'Axioms:\n' + c.axioms.map((a) => '- ' + renderPromptItem(a)).join('\n') + '\n';
+    if (c.boundaries && c.boundaries.length) text += 'Boundaries:\n' + c.boundaries.map((b) => '- ' + renderPromptItem(b)).join('\n') + '\n';
+    if (c.self_checks && c.self_checks.length) text += 'Self-checks:\n' + c.self_checks.map((s) => '- ' + renderPromptItem(s)).join('\n') + '\n';
+    if (c.failure_modes && c.failure_modes.length) text += 'Failure modes:\n' + c.failure_modes.map((f) => '- ' + renderPromptItem(f)).join('\n') + '\n';
+    if (c.patterns && c.patterns.length) text += 'Patterns:\n' + c.patterns.map((p) => '- ' + renderPromptItem(p)).join('\n') + '\n';
     if (c.note) text += 'Note: ' + c.note + '\n';
     return { status: result.status, profile: result.profile, text: text.trim() };
   }

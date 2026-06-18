@@ -1,5 +1,9 @@
 # KDNA Registry Trust Failure Tests — v1.0-rc
 
+> Historical pre-v1 registry test suite. KDNA Core v1 does not require a public
+> registry or install-time signature path. This folder is retained for
+> compatibility research and regression history.
+
 Tests that KDNA correctly rejects untrustworthy `.kdna` assets. All 5 scenarios use v1.0-rc hard-fail assertions — the test FAILS if the CLI accepts an untrusted asset, not just documents the behavior.
 
 ## Status: 5/5 v1.0-rc hard-fail assertions passing
@@ -23,7 +27,7 @@ KDNA is only as trustworthy as its rejection of untrusted assets. An asset that 
 | # | Scenario | What went wrong | Expected CLI behavior |
 |---|----------|----------------|----------------------|
 | 1 | **Digest mismatch** | `asset_digest` in registry doesn't match the downloaded `.kdna` file hash | `kdna install` exits non-zero; `kdna verify` fails trust layer |
-| 2 | **Signature invalid** | Ed25519 signature in `kdna.json` doesn't verify against the author's public key | `kdna install` exits TRUST_FAILED (3); `kdna verify --judgment` reports invalid signature |
+| 2 | **Signature invalid** | Historical Ed25519 signature fixture | Legacy install exits TRUST_FAILED (3); legacy verify reports invalid signature |
 | 3 | **Missing signature (trusted scope)** | Asset from `@aikdna` scope has no signature | `kdna install` exits TRUST_FAILED; trust scopes require signatures |
 | 4 | **Revoked key** | Asset signed with a key listed in `revoked_pubkeys` | `kdna install` exits TRUST_FAILED (3); key known to be compromised |
 
@@ -89,6 +93,6 @@ Both are required for a complete implementation:
 
 ## See Also
 
-- [Registry Trust Model](https://github.com/aikdna/kdna-registry/blob/main/TRUST_MODEL.md)
+- [Legacy Registry Trust Model](https://github.com/aikdna/kdna-registry/blob/main/TRUST_MODEL.md)
 - [CONFORMANCE.md](../../CONFORMANCE.md)
 - [V1RC_RELEASE_BOARD.md](../../docs/V1RC_RELEASE_BOARD.md) — Epic 3

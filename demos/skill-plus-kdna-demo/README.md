@@ -10,18 +10,23 @@ KDNA can execute the right steps while judging the situation too generically.
 
 ## Run
 
-Install the CLI and a reference asset:
+Install the CLI and prepare a local v1 asset:
 
 ```bash
 npm i -g @aikdna/kdna-cli
-kdna install @aikdna/writing
+kdna demo minimal ./minimal
+kdna pack ./minimal ./minimal.kdna
+kdna validate ./minimal.kdna
 ```
 
-Then compare:
+Then load the compact prompt context:
 
 ```bash
-kdna compare @aikdna/writing --input "$(cat sample-input.md)" --report-md diff-report.md
+kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
+
+For a real writing demo, use `writing-v1.kdna` from the v1 flagship artifact
+once that artifact is accepted in the `kdna-writing` repository.
 
 ## Files
 

@@ -6,7 +6,7 @@ KDNA has two roles: **consumer** (use existing domains) and **creator** (author 
 
 ---
 
-## Consumer Path: Use KDNA Domains
+## Consumer Path: Use Local v1 KDNA Assets
 
 ### 1. Install the CLI
 
@@ -17,16 +17,16 @@ kdna setup
 
 This installs the `kdna` command and the `kdna-loader` skill for your AI agent.
 
-### 2. Install a Domain
+### 2. Validate a Local Asset
 
 ```bash
-kdna install @aikdna/writing
+kdna validate ./dist/writing-v1.kdna
 ```
 
-Or browse available domains:
+Then load it into an agent prompt:
 
 ```bash
-kdna list --available
+kdna load ./dist/writing-v1.kdna --profile=compact --as=prompt
 ```
 
 ### 3. Use It
@@ -37,7 +37,7 @@ Your agent will automatically discover installed KDNA domains via `kdna-loader`.
 
 ## Creator Path: Author a KDNA Domain
 
-**There is exactly one trusted creation path for KDNA assets:**
+**The current official creation path for v1 `.kdna` assets is Studio CLI:**
 
 ```bash
 npm install -g @aikdna/kdna-studio-cli
@@ -51,14 +51,14 @@ This creates a Studio project (`studio.project.json`) — the canonical authorin
 1. **Create** a Studio project: `kdna-studio create my-domain`
 2. **Add cards** (judgment cards for axioms, ontology, misunderstandings): `kdna-studio card add`
 3. **Lock** cards when they are ready: `kdna-studio lock --all`
-4. **Compile** into a `.kdna` asset: `kdna-studio compile`
-5. **Export** a trusted `.kdna` file: `kdna-studio export`
+4. **Export** a v1 `.kdna` asset: `kdna-studio migrate <source> --format v1 --out dist/my-domain.kdna`
+5. **Validate/load** with the runtime CLI: `kdna validate dist/my-domain.kdna` and `kdna load dist/my-domain.kdna --profile=compact --as=prompt`
 
-### What is NOT a trusted creation path
+### What is NOT the current official v1 creation path
 
 - `kdna dev scaffold` — Creates non-canonical dev source directories for experimentation only
-- `kdna dev pack` — Builds dev-only non-trusted bundles; not eligible for quality badges
-- Manual JSON editing — Valid for early prototyping but does not produce trusted assets
+- `kdna dev pack` — Builds dev-only bundles; not the official Studio v1 export path
+- Manual JSON editing — Valid for early prototyping but does not produce official v1 Studio exports
 
 ### For open-source domain contributors
 
@@ -68,7 +68,8 @@ Domain repos use dev source directories for Git collaboration and CI validation.
 kdna dev validate .
 ```
 
-Trusted `.kdna` assets are then compiled and published via `kdna-studio`.
+Launch-grade `.kdna` assets are exported with `kdna-studio migrate --format v1`
+and validated with `kdna validate`.
 
 ---
 

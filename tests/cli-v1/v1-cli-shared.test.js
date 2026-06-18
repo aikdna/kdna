@@ -1,5 +1,5 @@
 /**
- * v1-cli-shared.test.js — direct unit tests for packages/kdna/src/v1-cli.js
+ * v1-cli-shared.test.js — direct unit tests for shared @aikdna/kdna-core v1.
  *
  * Covers the routing + format-detection + pack/unpack logic that the
  * bin/kdna.js shim depends on. The subprocess tests (driving the actual
@@ -15,7 +15,7 @@ const os = require('node:os');
 const path = require('node:path');
 const crypto = require('node:crypto');
 
-const v1 = require('../../packages/kdna/src/v1-cli');
+const v1 = require('../../packages/kdna-core/src/v1');
 const { MIMETYPE_V1, MIMETYPE_V2, FORBIDDEN_OUTPUT_TERMS } = v1;
 
 const repoRoot = path.resolve(__dirname, '..', '..');
@@ -307,8 +307,7 @@ test('unpack: refuses to write outside the destination (path traversal)', () => 
       localHeader.writeUInt16LE(0, 8); // STORED
       localHeader.writeUInt16LE(0, 10);
       localHeader.writeUInt16LE(1, 12);
-      const crc = require('../../packages/kdna/src/v1-cli');
-      // Recompute CRC via direct table — keep the import local.
+      // Recompute CRC via direct table.
       const t = (() => {
         const tt = new Uint32Array(256);
         for (let n = 0; n < 256; n++) {

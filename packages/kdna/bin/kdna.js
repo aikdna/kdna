@@ -61,14 +61,23 @@ function shouldRouteV1(args) {
   const input = positional[0];
   const abs = path.resolve(input);
   try {
-    return require('../src/v1-cli').isV1SourceDir(abs) || require('../src/v1-cli').detectContainerFormat(abs) === 'v1';
+    const v1 = loadCoreV1();
+    return v1.isV1SourceDir(abs) || v1.detectContainerFormat(abs) === 'v1';
   } catch {
     return false;
   }
 }
 
+function loadCoreV1() {
+  try {
+    return require('@aikdna/kdna-core/v1');
+  } catch (_) {
+    return require('../../kdna-core/src/v1');
+  }
+}
+
 function routeV1(args) {
-  const v1 = require('../src/v1-cli');
+  const v1 = loadCoreV1();
   const cmd = args[0];
   const jsonMode = args.includes('--json');
   const positional = args.slice(1).filter((a) => !a.startsWith('--'));
@@ -110,10 +119,7 @@ function routeV1(args) {
     if (cmd === 'load') {
       const profile = getFlag(args, '--profile') || 'compact';
       const as = getFlag(args, '--as') || 'json';
-      // In the monorepo, @aikdna/kdna-core resolves to the workspace-linked
-      // packages/kdna-core which has loadV1 at 0.10.0.
-      const { loadV1 } = require('@aikdna/kdna-core');
-      const r = loadV1(input, { profile, as });
+      const r = v1.loadV1(input, { profile, as });
       if (as === 'prompt') {
         process.stdout.write(r.text + '\n');
       } else {

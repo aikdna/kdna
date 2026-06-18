@@ -38,7 +38,11 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 - **kdna install** / registry install — legacy path via `kdna-registry`; registry is a legacy experiment, marked as not active KDNA Core v1 path
 - **kdna compare** — comparison requires a provider key; not yet documented in the v1 guide
 - **kdna setup** — agent setup (codex, claude-code, opencode, cursor); works but the `kdna-loader` skill is the legacy skill adapter, not yet updated for v1
-- **kdna-studio** — authoring CLI (legacy Studio-compatible pipeline); not yet updated for v1 Core
+- **kdna-studio** — v1 export hardening is published through
+  `@aikdna/kdna-studio-cli@0.5.2` and
+  `@aikdna/kdna-studio-core@1.5.3`; npm-registry clean-install verification
+  passes for the three flagship source assets. Public flagship release still
+  requires final fidelity report acceptance and README/release artifact work.
 - **kdna-vscode** — VS Code extension (legacy workspace tools); not yet updated for v1 Core
 - **Work Pack** — experimental workflow packaging; not v1 Core mainline
 
@@ -76,7 +80,7 @@ For the legacy 5-minute walkthrough (old CLI surface), see [5-minute-guide.md](.
 ## Known limitations
 
 1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.25.0**. ✓
-2. **Core extraction pending**: the v1 format logic lives in `packages/kdna/src/v1-cli.js` (707 lines) and `aikdna/kdna-cli/src/v1-cli.js` (duplicated). Both should be merged into `@aikdna/kdna-core` (PR-99 in the Sovereignty Baseline plan).
+2. **Core extraction — published**: the compatibility package now routes v1 through shared `@aikdna/kdna-core/v1`; duplicate `packages/kdna/src/v1-cli.js` has been removed. Published in `@aikdna/kdna@0.9.0` with `@aikdna/kdna-core@^0.11.1`.
 3. **6 skipped tests**: kdna-core fixture tests skipped in PR-95 (v1→v2 fixture migration debt). Marked for recovery in PR-100.
 4. **Conformance failure**: `kdna.json.format_version: "1.0"` vs expected `"2.0"` in the conformance runner. Same fixture debt.
 5. **kdnACLI help text**: the legacy global CLI help still references `dev validate` / `dev pack` / `dev unpack` (non-canonical dev source utilities), not the v1 route.
@@ -84,6 +88,6 @@ For the legacy 5-minute walkthrough (old CLI surface), see [5-minute-guide.md](.
 
 ## Next phase
 
-KDNA Core Sovereignty Baseline → KDNA Toolchain Usability & First-Run Proof.
+KDNA v1 Official Pipeline Closure.
 
-Priority: merge P1 sub-repo PRs → publish v1-aware CLI → Core extraction → conformance recovery → encryption/signature.
+Priority: update flagship PASS fidelity reports → prove MCP/skills v1 consumption from published packages → reconcile website/public docs → reconcile issues and release artifacts. Encryption/signature remain gated.
