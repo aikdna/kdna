@@ -76,7 +76,7 @@ const cases = [
       entitlement: { profile: 'local_receipt', offline: true, revocable: true },
     },
     options: { entitlement: { status: 'active' } },
-    cli_args: null,
+    cli_args: ['--entitlement-status', 'active'],
   },
   {
     id: 'expired-entitlement',
@@ -87,7 +87,7 @@ const cases = [
       entitlement: { profile: 'local_receipt', offline: true, revocable: true },
     },
     options: { entitlement: { status: 'expired' } },
-    cli_args: null,
+    cli_args: ['--entitlement-status', 'expired'],
   },
   {
     id: 'revoked-entitlement',
@@ -98,7 +98,7 @@ const cases = [
       entitlement: { profile: 'local_receipt', offline: true, revocable: true },
     },
     options: { entitlement: { status: 'revoked' } },
-    cli_args: null,
+    cli_args: ['--entitlement-status', 'revoked'],
   },
   {
     id: 'offline-grace-active',
@@ -109,7 +109,7 @@ const cases = [
       entitlement: { profile: 'local_receipt', offline: true, revocable: true },
     },
     options: { entitlement: { status: 'offline_grace' } },
-    cli_args: null,
+    cli_args: ['--entitlement-status', 'offline_grace'],
   },
   {
     id: 'account-required',

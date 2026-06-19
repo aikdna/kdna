@@ -104,7 +104,16 @@ function routeV1(args) {
       process.exit(result.overall_valid ? 0 : 1);
     }
     if (cmd === 'plan-load') {
-      const plan = v1.planLoad(input, { hasPassword: args.includes('--has-password') });
+      const entitlementStatus = getFlag(args, '--entitlement-status');
+      const allowedEntitlementStatuses = new Set(['active', 'expired', 'revoked', 'offline_grace']);
+      if (entitlementStatus && !allowedEntitlementStatuses.has(entitlementStatus)) {
+        console.error('Invalid --entitlement-status. Use active, expired, revoked, or offline_grace.');
+        process.exit(2);
+      }
+      const plan = v1.planLoad(input, {
+        hasPassword: args.includes('--has-password'),
+        entitlement: entitlementStatus ? { status: entitlementStatus } : undefined,
+      });
       console.log(JSON.stringify(plan, null, 2));
       process.exit(plan.state === 'invalid' ? 1 : 0);
     }
