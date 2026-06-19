@@ -1,0 +1,139 @@
+{
+  "schema": "https://github.com/aikdna/kdna/conformance/authorization/cases.schema.json",
+  "generated_by": "scripts/generate-authorization-conformance.mjs",
+  "note": "Goldens normalize source.path to <fixture:name> so they are stable across machines.",
+  "cases": [
+    {
+      "id": "public-valid",
+      "description": "Public v1 asset loads immediately through a minimal projection.",
+      "fixture": "public-valid",
+      "options": {},
+      "cli_args": [],
+      "golden": "goldens/public-valid.loadplan.json"
+    },
+    {
+      "id": "password-missing",
+      "description": "Licensed password asset requires a password before load.",
+      "fixture": "password-missing",
+      "options": {},
+      "cli_args": [],
+      "golden": "goldens/password-missing.loadplan.json"
+    },
+    {
+      "id": "password-valid",
+      "description": "Licensed password asset is ready once Core receives a password credential.",
+      "fixture": "password-valid",
+      "options": {
+        "hasPassword": true
+      },
+      "cli_args": [
+        "--has-password"
+      ],
+      "golden": "goldens/password-valid.loadplan.json"
+    },
+    {
+      "id": "receipt-missing",
+      "description": "Local receipt asset requires an installed receipt before load.",
+      "fixture": "receipt-missing",
+      "options": {},
+      "cli_args": [],
+      "golden": "goldens/receipt-missing.loadplan.json"
+    },
+    {
+      "id": "receipt-valid",
+      "description": "Local receipt asset is ready when external entitlement state is active.",
+      "fixture": "receipt-valid",
+      "options": {
+        "entitlement": {
+          "status": "active"
+        }
+      },
+      "cli_args": null,
+      "golden": "goldens/receipt-valid.loadplan.json"
+    },
+    {
+      "id": "expired-entitlement",
+      "description": "Expired entitlement fails closed and asks the consumer to sync.",
+      "fixture": "expired-entitlement",
+      "options": {
+        "entitlement": {
+          "status": "expired"
+        }
+      },
+      "cli_args": null,
+      "golden": "goldens/expired-entitlement.loadplan.json"
+    },
+    {
+      "id": "revoked-entitlement",
+      "description": "Revoked entitlement fails closed.",
+      "fixture": "revoked-entitlement",
+      "options": {
+        "entitlement": {
+          "status": "revoked"
+        }
+      },
+      "cli_args": null,
+      "golden": "goldens/revoked-entitlement.loadplan.json"
+    },
+    {
+      "id": "offline-grace-active",
+      "description": "Offline grace can load but returns a warning issue.",
+      "fixture": "offline-grace-active",
+      "options": {
+        "entitlement": {
+          "status": "offline_grace"
+        }
+      },
+      "cli_args": null,
+      "golden": "goldens/offline-grace-active.loadplan.json"
+    },
+    {
+      "id": "account-required",
+      "description": "Account entitlement requires sign-in or activation.",
+      "fixture": "account-required",
+      "options": {},
+      "cli_args": [],
+      "golden": "goldens/account-required.loadplan.json"
+    },
+    {
+      "id": "org-required",
+      "description": "Organization entitlement requires organization authorization.",
+      "fixture": "org-required",
+      "options": {},
+      "cli_args": [],
+      "golden": "goldens/org-required.loadplan.json"
+    },
+    {
+      "id": "remote-recognized-not-loaded",
+      "description": "Remote asset is recognized but not locally loaded.",
+      "fixture": "remote-recognized-not-loaded",
+      "options": {},
+      "cli_args": [],
+      "golden": "goldens/remote-recognized-not-loaded.loadplan.json"
+    },
+    {
+      "id": "tampered-payload",
+      "description": "Payload digest mismatch fails closed with an integrity issue.",
+      "fixture": "tampered-payload",
+      "options": {},
+      "cli_args": [],
+      "golden": "goldens/tampered-payload.loadplan.json"
+    },
+    {
+      "id": "unknown-access",
+      "description": "Unknown access mode fails closed.",
+      "fixture": "unknown-access",
+      "options": {},
+      "cli_args": [],
+      "golden": "goldens/unknown-access.loadplan.json"
+    },
+    {
+      "id": "unknown-entitlement-profile",
+      "description": "Unknown entitlement profile fails closed.",
+      "fixture": "unknown-entitlement-profile",
+      "options": {},
+      "cli_args": [],
+      "golden": "goldens/unknown-entitlement-profile.loadplan.json"
+    }
+  ]
+}

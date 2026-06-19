@@ -1,0 +1,36 @@
+{
+  "kdna_version": "1.0",
+  "asset": {
+    "asset_id": "kdna:conformance:authorization:offline-grace-active",
+    "asset_uid": "urn:uuid:6f66666c-696e-452d-8772-6163652d6163",
+    "title": "Authorization Fixture: offline-grace-active",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0"
+  },
+  "access": "licensed",
+  "access_alias": null,
+  "entitlement_profile": "local_receipt",
+  "state": "offline_grace",
+  "required_action": "sync",
+  "can_load_now": true,
+  "projection_policy": "minimal",
+  "checks": {
+    "format_valid": true,
+    "schema_valid": true,
+    "payload_valid": true,
+    "checksums_valid": true,
+    "load_contract_valid": true,
+    "overall_valid": true
+  },
+  "issues": [
+    {
+      "code": "KDNA_AUTH_OFFLINE_GRACE_ACTIVE",
+      "severity": "warning",
+      "message": "The entitlement can load during offline grace but must sync before grace expires."
+    }
+  ],
+  "source": {
+    "kind": "dir",
+    "path": "<fixture:offline-grace-active>"
+  }
+}

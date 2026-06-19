@@ -18,6 +18,7 @@
     "test": "npm --workspace @aikdna/kdna-core test && npm --workspace @aikdna/kdna-eval test && node --test tests/cli-v1/*.test.js",
     "conformance": "node conformance/run.mjs",
     "conformance:phase2": "node conformance/run.mjs --profile phase2-protocol",
+    "conformance:authorization:update": "node scripts/generate-authorization-conformance.mjs",
     "certify:asset-loader": "node conformance/run.mjs --profile asset-loader",
     "test:registry-trust": "node tests/registry-trust/run.mjs",
     "smoke:installed-domains": "bash scripts/smoke-installed-domains.sh",

@@ -45,22 +45,22 @@ The `.kdna` asset is the judgment source. The route result decides whether and h
 
 Canonical source: [SPEC.md](../SPEC.md)
 
-A KDNA asset is a `.kdna` container containing the standard internal KDNA files:
+A runtime KDNA asset is a `.kdna` container containing the canonical KDNA Core
+v1 runtime entries:
 
-- `KDNA_Core.json`
-- `KDNA_Patterns.json`
-- `KDNA_Scenarios.json`
-- `KDNA_Cases.json`
-- `KDNA_Reasoning.json`
-- `KDNA_Evolution.json`
-
-Minimum valid asset:
-
-- `KDNA_Core.json`
-- `KDNA_Patterns.json`
+- `mimetype`
 - `kdna.json`
+- `payload.kdnab`
+- `checksums.json`
 
-Apps must treat the six KDNA files as internal judgment content. Product metadata, UI state, install metadata, or workflow configuration must not be written into the asset after installation; use external indices, traces, or sidecars.
+Studio compile output and legacy source trees may contain authoring entries such
+as `KDNA_Core.json`, `KDNA_Patterns.json`, and reports. Those are not top-level
+runtime distribution entries. Apps must treat `payload.kdnab` as the runtime
+judgment payload and must request a LoadPlan before loading or projecting it.
+
+Product metadata, UI state, install metadata, or workflow configuration must
+not be written into the asset after installation; use external indices, traces,
+or sidecars.
 
 ### 2. Route Result
 

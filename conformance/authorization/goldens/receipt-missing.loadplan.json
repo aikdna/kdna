@@ -1,0 +1,36 @@
+{
+  "kdna_version": "1.0",
+  "asset": {
+    "asset_id": "kdna:conformance:authorization:receipt-missing",
+    "asset_uid": "urn:uuid:72656365-6970-442d-8d69-7373696e6700",
+    "title": "Authorization Fixture: receipt-missing",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0"
+  },
+  "access": "licensed",
+  "access_alias": null,
+  "entitlement_profile": "local_receipt",
+  "state": "needs_license",
+  "required_action": "install_receipt",
+  "can_load_now": false,
+  "projection_policy": "none",
+  "checks": {
+    "format_valid": true,
+    "schema_valid": true,
+    "payload_valid": true,
+    "checksums_valid": true,
+    "load_contract_valid": true,
+    "overall_valid": true
+  },
+  "issues": [
+    {
+      "code": "KDNA_AUTH_ENTITLEMENT_REQUIRED",
+      "severity": "blocking",
+      "message": "A valid entitlement is required before this asset can be loaded."
+    }
+  ],
+  "source": {
+    "kind": "dir",
+    "path": "<fixture:receipt-missing>"
+  }
+}

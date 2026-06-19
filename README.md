@@ -56,6 +56,16 @@ KDNA Core is the **format authority**. It defines:
 
 KDNA Core is also the **toolchain authority**. Production, validation, loading, and consumption of `.kdna` files happen through the official KDNA toolchain.
 
+## Authorization And Native Apps
+
+Protected, licensed, remote, and native-app loading behavior is specified here:
+
+- [Authorization contract](./specs/kdna-authorization-contract.md)
+- [LoadPlan schema](./specs/kdna-loadplan.schema.json)
+- [Runtime projection](./specs/kdna-runtime-projection.md)
+- [Import security](./specs/kdna-import-security.md)
+- [Apple native runtime integration](./docs/apple-native-runtime-integration.md)
+
 ## What KDNA Core does not define
 
 KDNA Core is **content-neutral**. It does not define:

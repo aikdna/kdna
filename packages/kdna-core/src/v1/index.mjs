@@ -9,6 +9,7 @@ export const detectContainerFormat = v1.detectContainerFormat;
 export const readV1Layout = v1.readV1Layout;
 export const inspect = v1.inspect;
 export const validate = v1.validate;
+export const planLoad = v1.planLoad;
 export const buildChecksumsV1 = v1.buildChecksumsV1;
 export const pack = v1.pack;
 export const unpack = v1.unpack;
