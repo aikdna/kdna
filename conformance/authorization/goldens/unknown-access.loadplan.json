@@ -1,0 +1,36 @@
+{
+  "kdna_version": "1.0",
+  "asset": {
+    "asset_id": "kdna:conformance:authorization:unknown-access",
+    "asset_uid": "urn:uuid:756e6b6e-6f77-4e2d-8163-636573730000",
+    "title": "Authorization Fixture: unknown-access",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0"
+  },
+  "access": null,
+  "access_alias": null,
+  "entitlement_profile": null,
+  "state": "invalid",
+  "required_action": "block",
+  "can_load_now": false,
+  "projection_policy": "none",
+  "checks": {
+    "format_valid": true,
+    "schema_valid": true,
+    "payload_valid": true,
+    "checksums_valid": true,
+    "load_contract_valid": true,
+    "overall_valid": true
+  },
+  "issues": [
+    {
+      "code": "KDNA_ACCESS_MODE_UNKNOWN",
+      "severity": "blocking",
+      "message": "Unknown access value \"subscription\"."
+    }
+  ],
+  "source": {
+    "kind": "dir",
+    "path": "<fixture:unknown-access>"
+  }
+}

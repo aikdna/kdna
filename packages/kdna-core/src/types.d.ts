@@ -507,6 +507,56 @@ export function isV1SourceDir(inputPath: string): boolean;
 export function detectContainerFormat(inputPath: string): 'v1' | 'v2' | null;
 export function inspect(inputPath: string, options?: Record<string, any>): Record<string, any>;
 export function validate(inputPath: string, options?: Record<string, any>): Record<string, any>;
+export interface KDNAV1LoadPlanIssue {
+  code: string;
+  severity: 'info' | 'warning' | 'blocking' | string;
+  message: string;
+}
+export interface KDNAV1LoadPlan {
+  kdna_version: string | null;
+  asset: {
+    asset_id: string | null;
+    asset_uid: string | null;
+    title: string | null;
+    version: string | null;
+    judgment_version: string | null;
+  };
+  access: 'public' | 'licensed' | 'remote' | string | null;
+  access_alias: string | null;
+  entitlement_profile: string | null;
+  state:
+    | 'ready'
+    | 'needs_password'
+    | 'needs_license'
+    | 'needs_account'
+    | 'needs_org_auth'
+    | 'needs_runtime'
+    | 'offline_grace'
+    | 'expired'
+    | 'revoked'
+    | 'invalid'
+    | string;
+  required_action:
+    | 'none'
+    | 'load'
+    | 'enter_password'
+    | 'install_receipt'
+    | 'sign_in_or_activate'
+    | 'sync'
+    | 'connect_runtime'
+    | 'migrate_legacy'
+    | 'block'
+    | string;
+  can_load_now: boolean;
+  projection_policy: 'minimal' | 'remote' | 'none' | string;
+  checks: Record<string, boolean>;
+  issues: KDNAV1LoadPlanIssue[];
+  source: {
+    kind: 'dir' | 'file' | string | null;
+    path: string;
+  };
+}
+export function planLoad(inputPath: string, options?: { password?: string; hasPassword?: boolean; entitlement?: Record<string, any> }): KDNAV1LoadPlan;
 export function buildChecksumsV1(sourceDir: string): KDNAV1Checksums;
 export function pack(sourceDir: string, outputPath: string): void;
 export function unpack(inputPath: string, outputDir: string): void;

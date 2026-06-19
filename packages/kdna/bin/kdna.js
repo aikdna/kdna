@@ -9,14 +9,16 @@
  *
  * Routing rules:
  *
- *   inspect  <path>      v1 source dir or v1 .kdna container → v1 logic
- *                        anything else                            → upstream
- *   validate <path>      v1 source dir or v1 .kdna container → v1 logic
- *                        anything else                            → upstream
- *   pack     <src> <out> v1 source dir                            → v1 logic
- *                        anything else                            → upstream
- *   unpack   <in>  <out> v1 .kdna container                       → v1 logic
- *                        anything else                            → upstream
+ *   inspect   <path>      v1 source dir or v1 .kdna container → v1 logic
+ *                         anything else                            → upstream
+ *   validate  <path>      v1 source dir or v1 .kdna container → v1 logic
+ *                         anything else                            → upstream
+ *   plan-load <path>      v1 source dir or v1 .kdna container → v1 logic
+ *                         anything else                            → upstream
+ *   pack      <src> <out> v1 source dir                            → v1 logic
+ *                         anything else                            → upstream
+ *   unpack    <in>  <out> v1 .kdna container                       → v1 logic
+ *                         anything else                            → upstream
  *
  *   <anything else>                                              → upstream
  *
@@ -52,7 +54,14 @@ function getFlag(args, name) {
 
 function shouldRouteV1(args) {
   const cmd = args[0];
-  if (cmd !== 'inspect' && cmd !== 'validate' && cmd !== 'pack' && cmd !== 'unpack' && cmd !== 'load') {
+  if (
+    cmd !== 'inspect' &&
+    cmd !== 'validate' &&
+    cmd !== 'plan-load' &&
+    cmd !== 'pack' &&
+    cmd !== 'unpack' &&
+    cmd !== 'load'
+  ) {
     return false;
   }
   // Find the first non-flag argument (the input path).
@@ -93,6 +102,11 @@ function routeV1(args) {
       const result = v1.validate(input);
       console.log(JSON.stringify(result, null, 2));
       process.exit(result.overall_valid ? 0 : 1);
+    }
+    if (cmd === 'plan-load') {
+      const plan = v1.planLoad(input, { hasPassword: args.includes('--has-password') });
+      console.log(JSON.stringify(plan, null, 2));
+      process.exit(plan.state === 'invalid' ? 1 : 0);
     }
     if (cmd === 'pack') {
       const out = positional[1];

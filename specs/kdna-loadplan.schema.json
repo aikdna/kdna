@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/specs/kdna-loadplan.schema.json",
+  "title": "KDNA LoadPlan Schema Alias",
+  "description": "Compatibility entrypoint for the canonical KDNA LoadPlan schema. The canonical schema lives at ../schema/load-plan.schema.json.",
+  "$ref": "../schema/load-plan.schema.json"
+}

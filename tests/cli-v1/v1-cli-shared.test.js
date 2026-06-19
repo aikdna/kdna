@@ -14,12 +14,17 @@ const fsp = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const Ajv = require('ajv/dist/2020.js');
 
 const v1 = require('../../packages/kdna-core/src/v1');
 const { MIMETYPE_V1, MIMETYPE_V2, FORBIDDEN_OUTPUT_TERMS } = v1;
 
 const repoRoot = path.resolve(__dirname, '..', '..');
 const exampleMinimal = path.join(repoRoot, 'examples', 'minimal');
+const loadPlanSchema = JSON.parse(
+  fs.readFileSync(path.join(repoRoot, 'packages', 'kdna-core', 'schema', 'load-plan.schema.json'), 'utf8'),
+);
+const validateLoadPlanSchema = new Ajv({ allErrors: true, strict: false }).compile(loadPlanSchema);
 
 function makeTmp(prefix) {
   return fs.mkdtempSync(path.join(os.tmpdir(), prefix));
@@ -34,6 +39,17 @@ function copyMinimal(dest) {
   // it for the deterministic-packing test, otherwise the placeholder
   // digests are fine but the file is still allowed.
   return dest;
+}
+
+function mutateManifest(dir, mutator) {
+  const manifestPath = path.join(dir, 'kdna.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  mutator(manifest);
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  fs.writeFileSync(
+    path.join(dir, 'checksums.json'),
+    JSON.stringify(v1.buildChecksumsV1(dir), null, 2),
+  );
 }
 
 function assertForbiddenTermsAbsent(obj) {
@@ -51,6 +67,14 @@ function assertForbiddenTermsAbsent(obj) {
   }
   walk(obj);
   assert.equal(seen.size, 0, `forbidden terms in output: ${[...seen].join(', ')}`);
+}
+
+function assertValidLoadPlan(plan) {
+  assert.equal(
+    validateLoadPlanSchema(plan),
+    true,
+    JSON.stringify(validateLoadPlanSchema.errors, null, 2),
+  );
 }
 
 test('isV1SourceDir: true for examples/minimal', () => {
@@ -158,6 +182,207 @@ test('validate: examples/minimal reports all gates valid', () => {
   assert.equal(out.load_contract_valid, true);
   assert.equal(out.overall_valid, true);
   assert.deepEqual(out.problems, []);
+});
+
+test('planLoad: public v1 asset is ready for minimal projection', () => {
+  const plan = v1.planLoad(exampleMinimal);
+  assertValidLoadPlan(plan);
+  assert.equal(plan.access, 'public');
+  assert.equal(plan.state, 'ready');
+  assert.equal(plan.required_action, 'load');
+  assert.equal(plan.can_load_now, true);
+  assert.equal(plan.projection_policy, 'minimal');
+  assert.deepEqual(plan.issues, []);
+});
+
+test('planLoad: password licensed asset requires password before load', () => {
+  const dir = makeTmp('kdna-v1-plan-password-');
+  try {
+    copyMinimal(dir);
+    mutateManifest(dir, (manifest) => {
+      manifest.access = 'licensed';
+      manifest.entitlement = { profile: 'password', offline: true, revocable: false };
+      manifest.encryption = {
+        profile: 'kdna-password-protected-v1',
+        encrypted_entries: ['payload.kdnab'],
+      };
+      manifest.payload.encrypted = true;
+    });
+
+    const plan = v1.planLoad(dir);
+    assertValidLoadPlan(plan);
+    assert.equal(plan.access, 'licensed');
+    assert.equal(plan.entitlement_profile, 'password');
+    assert.equal(plan.state, 'needs_password');
+    assert.equal(plan.required_action, 'enter_password');
+    assert.equal(plan.can_load_now, false);
+    assert.equal(plan.issues[0].code, 'KDNA_AUTH_PASSWORD_REQUIRED');
+
+    const unlockedPlan = v1.planLoad(dir, { hasPassword: true });
+    assertValidLoadPlan(unlockedPlan);
+    assert.equal(unlockedPlan.state, 'ready');
+    assert.equal(unlockedPlan.required_action, 'load');
+    assert.equal(unlockedPlan.can_load_now, true);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('planLoad: licensed receipt entitlement maps to stable states and actions', () => {
+  const dir = makeTmp('kdna-v1-plan-receipt-');
+  try {
+    copyMinimal(dir);
+    mutateManifest(dir, (manifest) => {
+      manifest.access = 'licensed';
+      manifest.entitlement = { profile: 'local_receipt', offline: true, revocable: true };
+    });
+
+    const missingPlan = v1.planLoad(dir);
+    assertValidLoadPlan(missingPlan);
+    assert.equal(missingPlan.state, 'needs_license');
+    assert.equal(missingPlan.required_action, 'install_receipt');
+    assert.equal(missingPlan.can_load_now, false);
+    assert.equal(missingPlan.issues[0].code, 'KDNA_AUTH_ENTITLEMENT_REQUIRED');
+
+    const activePlan = v1.planLoad(dir, { entitlement: { status: 'active' } });
+    assertValidLoadPlan(activePlan);
+    assert.equal(activePlan.state, 'ready');
+    assert.equal(activePlan.required_action, 'load');
+    assert.equal(activePlan.can_load_now, true);
+
+    const expiredPlan = v1.planLoad(dir, { entitlement: { status: 'expired' } });
+    assertValidLoadPlan(expiredPlan);
+    assert.equal(expiredPlan.state, 'expired');
+    assert.equal(expiredPlan.required_action, 'sync');
+    assert.equal(expiredPlan.can_load_now, false);
+    assert.equal(expiredPlan.issues[0].code, 'KDNA_AUTH_EXPIRED');
+
+    const revokedPlan = v1.planLoad(dir, { entitlement: { status: 'revoked' } });
+    assertValidLoadPlan(revokedPlan);
+    assert.equal(revokedPlan.state, 'revoked');
+    assert.equal(revokedPlan.required_action, 'block');
+    assert.equal(revokedPlan.can_load_now, false);
+    assert.equal(revokedPlan.issues[0].code, 'KDNA_AUTH_REVOKED');
+
+    const gracePlan = v1.planLoad(dir, { entitlement: { status: 'offline_grace' } });
+    assertValidLoadPlan(gracePlan);
+    assert.equal(gracePlan.state, 'offline_grace');
+    assert.equal(gracePlan.required_action, 'sync');
+    assert.equal(gracePlan.can_load_now, true);
+    assert.equal(gracePlan.issues[0].code, 'KDNA_AUTH_OFFLINE_GRACE_ACTIVE');
+    assert.equal(gracePlan.issues[0].severity, 'warning');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('planLoad: account and org entitlements require activation before load', () => {
+  const cases = [
+    ['account', 'needs_account', 'KDNA_AUTH_ACCOUNT_REQUIRED'],
+    ['org', 'needs_org_auth', 'KDNA_AUTH_ORG_REQUIRED'],
+  ];
+  for (const [profile, state, issueCode] of cases) {
+    const dir = makeTmp(`kdna-v1-plan-${profile}-`);
+    try {
+      copyMinimal(dir);
+      mutateManifest(dir, (manifest) => {
+        manifest.access = 'licensed';
+        manifest.entitlement = { profile, offline: false, revocable: true };
+      });
+
+      const plan = v1.planLoad(dir);
+      assertValidLoadPlan(plan);
+      assert.equal(plan.entitlement_profile, profile);
+      assert.equal(plan.state, state);
+      assert.equal(plan.required_action, 'sign_in_or_activate');
+      assert.equal(plan.can_load_now, false);
+      assert.equal(plan.issues[0].code, issueCode);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  }
+});
+
+test('planLoad: unknown entitlement profile fails closed', () => {
+  const dir = makeTmp('kdna-v1-plan-unknown-entitlement-');
+  try {
+    copyMinimal(dir);
+    mutateManifest(dir, (manifest) => {
+      manifest.access = 'licensed';
+      manifest.entitlement = { profile: 'coupon_code', offline: false, revocable: true };
+    });
+
+    const plan = v1.planLoad(dir);
+    assertValidLoadPlan(plan);
+    assert.equal(plan.state, 'invalid');
+    assert.equal(plan.required_action, 'block');
+    assert.equal(plan.can_load_now, false);
+    assert.equal(plan.issues[0].code, 'KDNA_ENTITLEMENT_PROFILE_UNKNOWN');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('planLoad: remote asset requires runtime and does not load locally', () => {
+  const dir = makeTmp('kdna-v1-plan-remote-');
+  try {
+    copyMinimal(dir);
+    mutateManifest(dir, (manifest) => {
+      manifest.access = 'remote';
+      manifest.runtime = { endpoint: 'https://runtime.example.test/v1/project' };
+    });
+
+    const plan = v1.planLoad(dir);
+    assertValidLoadPlan(plan);
+    assert.equal(plan.access, 'remote');
+    assert.equal(plan.state, 'needs_runtime');
+    assert.equal(plan.required_action, 'connect_runtime');
+    assert.equal(plan.can_load_now, false);
+    assert.equal(plan.projection_policy, 'remote');
+    assert.equal(plan.issues[0].code, 'KDNA_AUTH_REMOTE_RUNTIME_REQUIRED');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('planLoad: unknown access fails closed with a schema-valid plan', () => {
+  const dir = makeTmp('kdna-v1-plan-unknown-access-');
+  try {
+    copyMinimal(dir);
+    mutateManifest(dir, (manifest) => {
+      manifest.access = 'subscription';
+    });
+
+    const plan = v1.planLoad(dir);
+    assertValidLoadPlan(plan);
+    assert.equal(plan.access, null);
+    assert.equal(plan.state, 'invalid');
+    assert.equal(plan.required_action, 'block');
+    assert.equal(plan.issues[0].code, 'KDNA_ACCESS_MODE_UNKNOWN');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('planLoad: checksum mismatch returns invalid with blocking issue', () => {
+  const dir = makeTmp('kdna-v1-plan-invalid-');
+  try {
+    copyMinimal(dir);
+    const checksumsPath = path.join(dir, 'checksums.json');
+    const checksums = JSON.parse(fs.readFileSync(checksumsPath, 'utf8'));
+    checksums.payload_digest = 'sha256:0000000000000000000000000000000000000000000000000000000000000000';
+    fs.writeFileSync(checksumsPath, JSON.stringify(checksums, null, 2));
+
+    const plan = v1.planLoad(dir);
+    assertValidLoadPlan(plan);
+    assert.equal(plan.state, 'invalid');
+    assert.equal(plan.required_action, 'block');
+    assert.equal(plan.can_load_now, false);
+    assert.equal(plan.checks.checksums_valid, false);
+    assert.ok(plan.issues.some((issue) => issue.code === 'KDNA_INTEGRITY_DIGEST_FAILED'));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 test('validate: missing mimetype is reported as format_valid=false', () => {

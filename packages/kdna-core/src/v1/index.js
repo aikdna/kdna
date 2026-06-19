@@ -750,6 +750,330 @@ function validate(inputPath, opts = {}) {
   return runValidate(v1);
 }
 
+function normalizeAccess(access) {
+  const value = access || 'public';
+  if (value === 'open') return { access: 'public', alias: value };
+  if (value === 'protected') return { access: 'licensed', alias: value };
+  if (value === 'runtime') return { access: 'remote', alias: value };
+  return { access: value, alias: null };
+}
+
+function inferEntitlementProfile(manifest) {
+  if (manifest.entitlement && typeof manifest.entitlement.profile === 'string') {
+    return manifest.entitlement.profile;
+  }
+  if (manifest.encryption && manifest.encryption.profile === 'kdna-password-protected-v1') {
+    return 'password';
+  }
+  if (manifest.access === 'protected') return 'password';
+  return null;
+}
+
+function buildLoadPlanIssue(code, severity, message) {
+  return { code, severity, message };
+}
+
+function validationProblemCode(problem) {
+  if (/checksums?:/i.test(problem)) return 'KDNA_INTEGRITY_DIGEST_FAILED';
+  if (/signature/i.test(problem)) return 'KDNA_INTEGRITY_SIGNATURE_FAILED';
+  if (/payload:/i.test(problem)) return 'KDNA_FORMAT_INVALID';
+  if (/manifest:/i.test(problem)) return 'KDNA_FORMAT_INVALID';
+  if (/load_contract:/i.test(problem)) return 'KDNA_FORMAT_INVALID';
+  return 'KDNA_FORMAT_INVALID';
+}
+
+function finalizeLoadPlan(plan) {
+  assertNoForbiddenTerms(plan);
+  return plan;
+}
+
+function baseLoadPlan(inputPath, v1, validation) {
+  const manifest = v1.manifest;
+  const accessInfo = normalizeAccess(manifest.access);
+  const entitlementProfile = inferEntitlementProfile(manifest);
+  const asset = {
+    asset_id: manifest.asset_id || null,
+    asset_uid: manifest.asset_uid || null,
+    title: manifest.title || null,
+    version: manifest.version || null,
+    judgment_version: manifest.judgment_version || null,
+  };
+
+  const plan = {
+    kdna_version: manifest.kdna_version || null,
+    asset,
+    access: accessInfo.access,
+    access_alias: accessInfo.alias,
+    entitlement_profile: entitlementProfile,
+    state: 'invalid',
+    required_action: 'block',
+    can_load_now: false,
+    projection_policy: 'none',
+    checks: {
+      format_valid: validation.format_valid,
+      schema_valid: validation.schema_valid,
+      payload_valid: validation.payload_valid,
+      checksums_valid: validation.checksums_valid,
+      load_contract_valid: validation.load_contract_valid,
+      overall_valid: validation.overall_valid,
+    },
+    issues: [],
+    source: {
+      kind: v1.kind,
+      path: path.resolve(inputPath),
+    },
+  };
+
+  if (accessInfo.alias) {
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_AUTH_ACCESS_ALIAS',
+      'info',
+      `Access value "${accessInfo.alias}" is treated as "${accessInfo.access}".`,
+    ));
+  }
+
+  return plan;
+}
+
+/**
+ * Plan a KDNA v1 runtime load without decrypting or emitting judgment content.
+ * Product consumers such as Chat should render authorization UI from this
+ * result instead of parsing manifest fields directly.
+ */
+function planLoad(inputPath, opts = {}) {
+  let v1;
+  try {
+    v1 = readV1Layout(path.resolve(inputPath));
+  } catch (e) {
+    return finalizeLoadPlan({
+      kdna_version: null,
+      asset: {
+        asset_id: null,
+        asset_uid: null,
+        title: null,
+        version: null,
+        judgment_version: null,
+      },
+      access: null,
+      access_alias: null,
+      entitlement_profile: null,
+      state: 'invalid',
+      required_action: 'block',
+      can_load_now: false,
+      projection_policy: 'none',
+      checks: {
+        format_valid: false,
+        schema_valid: false,
+        payload_valid: false,
+        checksums_valid: false,
+        load_contract_valid: false,
+        overall_valid: false,
+      },
+      issues: [
+        buildLoadPlanIssue('KDNA_FORMAT_INVALID', 'blocking', e.message),
+      ],
+      source: {
+        kind: null,
+        path: path.resolve(inputPath),
+      },
+    });
+  }
+
+  const validation = runValidate(v1);
+  const plan = baseLoadPlan(inputPath, v1, validation);
+
+  if (!validation.overall_valid) {
+    plan.state = 'invalid';
+    plan.required_action = 'block';
+    plan.can_load_now = false;
+    plan.projection_policy = 'none';
+    for (const problem of validation.problems) {
+      plan.issues.push(buildLoadPlanIssue(validationProblemCode(problem), 'blocking', problem));
+    }
+    return finalizeLoadPlan(plan);
+  }
+
+  const manifest = v1.manifest;
+  const payloadDeclaredEncrypted =
+    manifest.payload && manifest.payload.encrypted === true;
+  const encryptedEntries = Array.isArray(manifest.encryption && manifest.encryption.encrypted_entries)
+    ? manifest.encryption.encrypted_entries
+    : [];
+  const hasEncryptedPayload = payloadDeclaredEncrypted || encryptedEntries.length > 0;
+
+  if (!['public', 'licensed', 'remote'].includes(plan.access)) {
+    const unknownAccess = plan.access;
+    plan.access = null;
+    plan.state = 'invalid';
+    plan.required_action = 'block';
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_ACCESS_MODE_UNKNOWN',
+      'blocking',
+      `Unknown access value "${unknownAccess}".`,
+    ));
+    return finalizeLoadPlan(plan);
+  }
+
+  if (plan.access === 'remote') {
+    plan.state = 'needs_runtime';
+    plan.required_action = 'connect_runtime';
+    plan.can_load_now = false;
+    plan.projection_policy = 'remote';
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_AUTH_REMOTE_RUNTIME_REQUIRED',
+      'blocking',
+      'Remote assets require a runtime projection endpoint.',
+    ));
+    return finalizeLoadPlan(plan);
+  }
+
+  if (plan.access === 'licensed') {
+    const knownProfiles = new Set([
+      'password',
+      'local_receipt',
+      'account',
+      'org',
+      'purchase_receipt',
+      'device_bound',
+    ]);
+    if (plan.entitlement_profile && !knownProfiles.has(plan.entitlement_profile)) {
+      plan.state = 'invalid';
+      plan.required_action = 'block';
+      plan.can_load_now = false;
+      plan.projection_policy = 'none';
+      plan.issues.push(buildLoadPlanIssue(
+        'KDNA_ENTITLEMENT_PROFILE_UNKNOWN',
+        'blocking',
+        `Unknown entitlement profile "${plan.entitlement_profile}".`,
+      ));
+      return finalizeLoadPlan(plan);
+    }
+
+    if (plan.entitlement_profile === 'password') {
+      if (opts.password || opts.hasPassword === true) {
+        plan.state = 'ready';
+        plan.required_action = 'load';
+        plan.can_load_now = true;
+        plan.projection_policy = 'minimal';
+      } else {
+        plan.state = 'needs_password';
+        plan.required_action = 'enter_password';
+        plan.can_load_now = false;
+        plan.projection_policy = 'none';
+        plan.issues.push(buildLoadPlanIssue(
+          'KDNA_AUTH_PASSWORD_REQUIRED',
+          'blocking',
+          'A password is required before this asset can be loaded.',
+        ));
+      }
+      return finalizeLoadPlan(plan);
+    }
+
+    if (plan.entitlement_profile === 'account') {
+      plan.state = 'needs_account';
+      plan.required_action = 'sign_in_or_activate';
+      plan.can_load_now = false;
+      plan.projection_policy = 'none';
+      plan.issues.push(buildLoadPlanIssue(
+        'KDNA_AUTH_ACCOUNT_REQUIRED',
+        'blocking',
+        'Account authorization is required before this asset can be loaded.',
+      ));
+      return finalizeLoadPlan(plan);
+    }
+
+    if (plan.entitlement_profile === 'org') {
+      plan.state = 'needs_org_auth';
+      plan.required_action = 'sign_in_or_activate';
+      plan.can_load_now = false;
+      plan.projection_policy = 'none';
+      plan.issues.push(buildLoadPlanIssue(
+        'KDNA_AUTH_ORG_REQUIRED',
+        'blocking',
+        'Organization authorization is required before this asset can be loaded.',
+      ));
+      return finalizeLoadPlan(plan);
+    }
+
+    if (opts.entitlement && opts.entitlement.status === 'active') {
+      plan.state = 'ready';
+      plan.required_action = 'load';
+      plan.can_load_now = true;
+      plan.projection_policy = 'minimal';
+      return finalizeLoadPlan(plan);
+    }
+
+    if (opts.entitlement && opts.entitlement.status === 'expired') {
+      plan.state = 'expired';
+      plan.required_action = 'sync';
+      plan.can_load_now = false;
+      plan.projection_policy = 'none';
+      plan.issues.push(buildLoadPlanIssue(
+        'KDNA_AUTH_EXPIRED',
+        'blocking',
+        'The entitlement is expired.',
+      ));
+      return finalizeLoadPlan(plan);
+    }
+
+    if (opts.entitlement && opts.entitlement.status === 'revoked') {
+      plan.state = 'revoked';
+      plan.required_action = 'block';
+      plan.can_load_now = false;
+      plan.projection_policy = 'none';
+      plan.issues.push(buildLoadPlanIssue(
+        'KDNA_AUTH_REVOKED',
+        'blocking',
+        'The entitlement has been revoked.',
+      ));
+      return finalizeLoadPlan(plan);
+    }
+
+    if (opts.entitlement && opts.entitlement.status === 'offline_grace') {
+      plan.state = 'offline_grace';
+      plan.required_action = 'sync';
+      plan.can_load_now = true;
+      plan.projection_policy = 'minimal';
+      plan.issues.push(buildLoadPlanIssue(
+        'KDNA_AUTH_OFFLINE_GRACE_ACTIVE',
+        'warning',
+        'The entitlement can load during offline grace but must sync before grace expires.',
+      ));
+      return finalizeLoadPlan(plan);
+    }
+
+    plan.state = 'needs_license';
+    plan.required_action = plan.entitlement_profile === 'local_receipt' ? 'install_receipt' : 'sign_in_or_activate';
+    plan.can_load_now = false;
+    plan.projection_policy = 'none';
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_AUTH_ENTITLEMENT_REQUIRED',
+      'blocking',
+      'A valid entitlement is required before this asset can be loaded.',
+    ));
+    return finalizeLoadPlan(plan);
+  }
+
+  if (hasEncryptedPayload) {
+    plan.state = 'invalid';
+    plan.required_action = 'block';
+    plan.can_load_now = false;
+    plan.projection_policy = 'none';
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_CRYPTO_PROFILE_UNSUPPORTED',
+      'blocking',
+      'Encrypted entries require licensed access.',
+    ));
+    return finalizeLoadPlan(plan);
+  }
+
+  plan.state = 'ready';
+  plan.required_action = 'load';
+  plan.can_load_now = true;
+  plan.projection_policy = 'minimal';
+  return finalizeLoadPlan(plan);
+}
+
 function assertNoForbiddenTerms(obj) {
   const seen = new Set();
   function walk(o) {
@@ -781,6 +1105,7 @@ module.exports = {
   readV1Layout,
   inspect,
   validate,
+  planLoad,
   buildChecksumsV1,
   pack,
   unpack,

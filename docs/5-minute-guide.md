@@ -6,7 +6,7 @@
 ## Step 1: Install the CLI
 
 ```bash
-npm install -g @aikdna/kdna-cli
+npm install -g @aikdna/kdna-cli @aikdna/kdna-studio-cli
 ```
 
 ## Step 2: Create a local v1 asset
@@ -46,23 +46,11 @@ kdna load ./minimal.kdna --profile=compact --as=prompt
 
 This prints agent-readable judgment context.
 
-## Step 5: Install the loader skill
-
-```bash
-kdna setup
-kdna doctor --agents
-```
-
-The `kdna-loader` skill teaches supported agents how to discover and load
-local `.kdna` assets. Assets are files; they are not installed as separate
-skills.
-
 ## Author your own asset
 
 Use Studio CLI for the producer path:
 
 ```bash
-npm install -g @aikdna/kdna-studio-cli
 kdna-studio create my_expertise --name @yourscope/my_expertise
 kdna-studio card add my_expertise axiom \
   --field one_sentence="KDNA assets preserve judgment before style." \

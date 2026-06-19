@@ -2,75 +2,103 @@
 
 > [中文版](./getting-started.zh.md)
 
-KDNA has two roles: **consumer** (use existing domains) and **creator** (author your own). This guide covers both.
+KDNA Core v1 has one verified path: create scoped `.kdna` assets locally through Studio CLI, validate them with the runtime CLI, and load them into agent context. No registry, no marketplace, no quality badges.
 
 ---
 
-## Consumer Path: Use Local v1 KDNA Assets
-
-### 1. Install the CLI
+## Install the toolchain
 
 ```bash
-npm install -g @aikdna/kdna-cli
-kdna setup
+npm install -g @aikdna/kdna-cli @aikdna/kdna-studio-cli
 ```
 
-This installs the `kdna` command and the `kdna-loader` skill for your AI agent.
-
-### 2. Validate a Local Asset
-
-```bash
-kdna validate ./dist/writing-v1.kdna
-```
-
-Then load it into an agent prompt:
-
-```bash
-kdna load ./dist/writing-v1.kdna --profile=compact --as=prompt
-```
-
-### 3. Use It
-
-Your agent will automatically discover installed KDNA domains via `kdna-loader`. When a user asks about a domain-related task, the agent loads the domain silently and applies its judgment. The user sees better judgment, not KDNA internals.
+Two commands are now available:
+- `kdna` — runtime CLI: inspect, validate, pack, unpack, load
+- `kdna-studio` — authoring CLI: create projects, add cards, export assets
 
 ---
 
-## Creator Path: Author a KDNA Domain
-
-**The current official creation path for v1 `.kdna` assets is Studio CLI:**
+## Create a .kdna asset
 
 ```bash
-npm install -g @aikdna/kdna-studio-cli
 kdna-studio create my-domain --name @yourscope/my-domain
 ```
 
 This creates a Studio project (`studio.project.json`) — the canonical authoring workspace.
 
-### Authoring Workflow
+### Add judgment material
 
-1. **Create** a Studio project: `kdna-studio create my-domain --name @yourscope/my-domain`
-2. **Add cards**: `kdna-studio card add my-domain axiom --field key=value`
-3. **Approve and lock** cards: `kdna-studio card approve my-domain <card-id> --by <id> --statement <text>` then `kdna-studio lock my-domain`
-4. **Export** a v1 `.kdna` asset: `kdna-studio export my-domain --format v1 --out dist/my-domain.kdna`
-5. **Validate/load** with the runtime CLI: `kdna validate dist/my-domain.kdna` and `kdna load dist/my-domain.kdna --profile=compact --as=prompt`
+```bash
+kdna-studio card add my-domain axiom \
+  --field one_sentence="KDNA assets preserve judgment before style." \
+  --field full_statement="A KDNA asset must preserve boundaries, self-checks, and failure modes before presentation polish." \
+  --field why="Without boundaries, a KDNA asset becomes a prompt template instead of reusable judgment." \
+  --field applies_when="teaching KDNA to a new user" \
+  --field does_not_apply_when="only demonstrating CLI syntax" \
+  --field failure_risk="Users may copy the format without preserving judgment."
+```
 
-### What is NOT the current official v1 creation path
+### Approve and export
+
+```bash
+kdna-studio card approve my-domain <card-id> --by <your-id> --statement "I confirm this judgment for v1 export."
+kdna-studio export my-domain --format v1 --out dist/my-domain.kdna
+```
+
+---
+
+## Validate
+
+```bash
+kdna validate dist/my-domain.kdna
+```
+
+Expected result:
+
+```json
+{
+  "format_valid": true,
+  "schema_valid": true,
+  "payload_valid": true,
+  "checksums_valid": true,
+  "load_contract_valid": true,
+  "overall_valid": true,
+  "problems": []
+}
+```
+
+---
+
+## Load into agent context
+
+```bash
+kdna load dist/my-domain.kdna --profile=compact --as=prompt
+```
+
+This emits agent-readable judgment context. The agent references the judgment structure silently — users see better answers, not KDNA internals.
+
+---
+
+## Try without authoring
+
+If you just want to see the toolchain work without creating your own domain:
+
+```bash
+kdna demo minimal ./minimal
+kdna pack ./minimal ./minimal.kdna
+kdna validate ./minimal.kdna
+kdna load ./minimal.kdna --profile=compact --as=prompt
+```
+
+---
+
+## What is NOT the current official path
 
 - `kdna dev scaffold` — Creates non-canonical dev source directories for experimentation only
 - `kdna dev pack` — Builds dev-only bundles; not the official Studio v1 export path
 - Manual JSON editing — Valid for early prototyping but does not produce official v1 Studio exports
-
-### For open-source domain contributors
-
-Domain repos use dev source directories for Git collaboration and CI validation. To validate a dev source directory:
-
-```bash
-kdna dev validate .
-```
-
-Launch-grade `.kdna` assets are exported from Studio projects with
-`kdna-studio export --format v1`. Existing source folders can be migrated with
-`kdna-studio migrate --format v1`. Both outputs must pass `kdna validate`.
+- `kdna setup` — Legacy agent auto-detection; not part of the current v1 verify/load path
+- Registry-based install (`kdna install <domain>`) — Legacy path; Core v1 does not define a public registry
 
 ---
 

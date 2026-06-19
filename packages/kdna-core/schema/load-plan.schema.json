@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/schema/load-plan.schema.json",
+  "title": "KDNA LoadPlan v1",
+  "description": "Machine-readable pre-load authorization and runtime planning result for KDNA Core v1 assets.",
+  "type": "object",
+  "required": [
+    "kdna_version",
+    "asset",
+    "access",
+    "access_alias",
+    "entitlement_profile",
+    "state",
+    "required_action",
+    "can_load_now",
+    "projection_policy",
+    "checks",
+    "issues",
+    "source"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kdna_version": { "type": ["string", "null"] },
+    "asset": {
+      "type": "object",
+      "required": ["asset_id", "asset_uid", "title", "version", "judgment_version"],
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": { "type": ["string", "null"] },
+        "asset_uid": { "type": ["string", "null"] },
+        "title": { "type": ["string", "null"] },
+        "version": { "type": ["string", "null"] },
+        "judgment_version": { "type": ["string", "null"] }
+      }
+    },
+    "access": {
+      "type": ["string", "null"],
+      "enum": ["public", "licensed", "remote", null]
+    },
+    "access_alias": { "type": ["string", "null"] },
+    "entitlement_profile": { "type": ["string", "null"] },
+    "state": {
+      "type": "string",
+      "enum": [
+        "ready",
+        "needs_password",
+        "needs_license",
+        "needs_account",
+        "needs_org_auth",
+        "needs_runtime",
+        "offline_grace",
+        "expired",
+        "revoked",
+        "invalid"
+      ]
+    },
+    "required_action": {
+      "type": "string",
+      "enum": [
+        "none",
+        "load",
+        "enter_password",
+        "install_receipt",
+        "sign_in_or_activate",
+        "sync",
+        "connect_runtime",
+        "migrate_legacy",
+        "block"
+      ]
+    },
+    "can_load_now": { "type": "boolean" },
+    "projection_policy": {
+      "type": "string",
+      "enum": ["minimal", "remote", "none"]
+    },
+    "checks": {
+      "type": "object",
+      "required": [
+        "format_valid",
+        "schema_valid",
+        "payload_valid",
+        "checksums_valid",
+        "load_contract_valid",
+        "overall_valid"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "format_valid": { "type": "boolean" },
+        "schema_valid": { "type": "boolean" },
+        "payload_valid": { "type": "boolean" },
+        "checksums_valid": { "type": "boolean" },
+        "load_contract_valid": { "type": "boolean" },
+        "overall_valid": { "type": "boolean" }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "severity", "message"],
+        "additionalProperties": false,
+        "properties": {
+          "code": { "type": "string", "pattern": "^KDNA_[A-Z0-9_]+$" },
+          "severity": { "type": "string", "enum": ["info", "warning", "blocking"] },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["kind", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "type": ["string", "null"], "enum": ["dir", "file", null] },
+        "path": { "type": "string" }
+      }
+    }
+  }
+}
