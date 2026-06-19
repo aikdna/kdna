@@ -124,19 +124,14 @@ real domain judgment.
 
 ## 6. Use it with an agent
 
-Install the loader skill for your local agent:
-
-```bash
-kdna setup
-kdna doctor --agents
-```
-
-Then provide the compact profile to the agent runtime or use the loader skill
-where supported:
+Provide the compact profile to the agent runtime:
 
 ```bash
 kdna load ./writing-v1.kdna --profile=compact --as=prompt
 ```
+
+For supported agents, the `kdna-loader` skill in [kdna-skills](https://github.com/aikdna/kdna-skills)
+provides automatic discovery of local `.kdna` assets.
 
 Ask the same review task again:
 
@@ -162,7 +157,6 @@ With the writing judgment loaded, the agent should focus on:
 | Validate | `kdna validate writing-v1.kdna` | Format, schema, payload, checksums, and load contract pass |
 | Compact load | `kdna load --profile=compact --as=prompt` | Agent-readable judgment context exists |
 | Full load | `kdna load --profile=full --as=json` | Rich payload structure is preserved |
-| Agent setup | `kdna setup` | The loader skill can connect local assets to supported agents |
 
 A KDNA domain is not a prompt or a knowledge base. It is a portable judgment
 asset that an agent can validate, load, and apply when the task calls for that

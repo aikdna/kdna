@@ -67,6 +67,18 @@ test('cli: kdna validate examples/minimal reports overall_valid=true', () => {
   assert.deepEqual(out.problems, []);
 });
 
+test('cli: kdna plan-load examples/minimal returns a ready LoadPlan', () => {
+  const r = runCli(['plan-load', exampleMinimal]);
+  assert.equal(r.status, 0, `stdout=${r.stdout}\nstderr=${r.stderr}`);
+  const out = JSON.parse(r.stdout);
+  assert.equal(out.access, 'public');
+  assert.equal(out.state, 'ready');
+  assert.equal(out.required_action, 'load');
+  assert.equal(out.can_load_now, true);
+  assert.equal(out.projection_policy, 'minimal');
+  assert.equal(out.asset.asset_id, 'kdna:example:atomspeak-core');
+});
+
 test('cli: kdna pack examples/minimal produces a deterministic container', () => {
   const a = tmpFile('pack-a.kdna');
   const b = tmpFile('pack-b.kdna');

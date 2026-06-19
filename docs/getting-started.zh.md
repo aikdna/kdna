@@ -2,75 +2,31 @@
 
 > [English](./getting-started.md)
 
-KDNA 有两个核心角色：
-
-- **消费者**：校验、加载已有 `.kdna` 判断资产，让 Agent 使用其中的判断结构。
-- **创作者**：用 Studio 工具链创建、迁移、导出正式的 v1 `.kdna` 判断资产。
-
-KDNA Core v1 不依赖公开 registry。当前官方路径是本地 `.kdna` 文件：
-
-```text
-Studio / source
-→ v1 .kdna container
-→ kdna validate
-→ kdna load --profile=compact --as=prompt
-→ Agent context
-```
+KDNA Core v1 有一条已验证路径：通过 Studio CLI 在本地创建有边界的 `.kdna` 资产，用运行时 CLI 校验，并加载进 Agent 上下文。不依赖 registry、marketplace 或 quality badge。
 
 ---
 
-## 消费者路径：使用已有 `.kdna`
-
-### 1. 安装 CLI
+## 安装工具链
 
 ```bash
-npm install -g @aikdna/kdna-cli
+npm install -g @aikdna/kdna-cli @aikdna/kdna-studio-cli
 ```
 
-### 2. 创建并校验一个本地 v1 示例
-
-```bash
-kdna demo minimal ./minimal
-kdna pack ./minimal ./minimal.kdna
-kdna validate ./minimal.kdna
-```
-
-成功时 `overall_valid` 应为 `true`，并且 format、schema、payload、checksums、load contract 都通过。
-
-### 3. 加载为 Agent 可读上下文
-
-```bash
-kdna load ./minimal.kdna --profile=compact --as=prompt
-```
-
-这会输出 Agent 可直接读取的判断上下文。KDNA 不要求 Agent 在回答中引用“KDNA 说了什么”；它的作用是改变 Agent 判断任务的方式。
-
-### 4. 安装 Agent Loader
-
-```bash
-kdna setup
-kdna doctor --agents
-```
-
-`kdna setup` 会把 `kdna-loader` skill 安装到支持的 Agent 目录中。Loader 的当前职责是发现、校验、加载本地 `.kdna` 判断资产；它不把 registry 当成 v1 的必要路径。
+现在有两个命令可用：
+- `kdna` — 运行时 CLI：inspect、validate、pack、unpack、load
+- `kdna-studio` — 创作 CLI：create project、add cards、export assets
 
 ---
 
-## 创作者路径：创建正式 v1 资产
-
-### 1. 安装 Studio CLI
-
-```bash
-npm install -g @aikdna/kdna-studio-cli
-```
-
-### 2. 创建或迁移 Studio 项目
+## 创建 .kdna 资产
 
 ```bash
 kdna-studio create my_domain --name @yourscope/my_domain
 ```
 
-添加并确认至少一张判断卡：
+这会创建一个 Studio 项目（`studio.project.json`）——正式的创作工作区。
+
+### 添加判断材料
 
 ```bash
 kdna-studio card add my_domain axiom \
@@ -80,35 +36,69 @@ kdna-studio card add my_domain axiom \
   --field applies_when="teaching KDNA to a new user" \
   --field does_not_apply_when="only demonstrating CLI syntax" \
   --field failure_risk="Users may copy the format without preserving judgment."
-kdna-studio card approve my_domain <card-id> \
-  --by your-id \
-  --statement "I confirm this judgment for v1 export."
-kdna-studio lock my_domain
-kdna-studio export my_domain --format v1 --out ./my_domain.kdna
 ```
 
-如果你已有 KDNA 源目录或旧格式项目，也可以通过 Studio CLI 迁移为 v1：
+### 确认并导出
 
 ```bash
-kdna-studio migrate ./my_domain --format v1 --out ./my_domain.kdna \
-  --by your-id \
-  --statement "I confirm this migration for v1 export."
+kdna-studio card approve my_domain <card-id> --by <your-id> --statement "I confirm this judgment for v1 export."
+kdna-studio export my_domain --format v1 --out dist/my_domain.kdna
 ```
 
-### 3. 校验并加载
+---
+
+## 校验
 
 ```bash
-kdna validate ./my_domain.kdna
-kdna load ./my_domain.kdna --profile=compact --as=prompt
-kdna load ./my_domain.kdna --profile=full --as=json
+kdna validate dist/my_domain.kdna
 ```
 
-正式 v1 资产应包含：
+预期结果：
 
-- `mimetype`
-- `kdna.json`
-- `payload.kdnab`
-- `checksums.json`
+```json
+{
+  "format_valid": true,
+  "schema_valid": true,
+  "payload_valid": true,
+  "checksums_valid": true,
+  "load_contract_valid": true,
+  "overall_valid": true,
+  "problems": []
+}
+```
+
+---
+
+## 加载进 Agent 上下文
+
+```bash
+kdna load dist/my_domain.kdna --profile=compact --as=prompt
+```
+
+这会输出 Agent 可读的判断上下文。Agent 静默引用判断结构——用户看到更好的回答，而非 KDNA 内部细节。
+
+---
+
+## 不想创建只想试用
+
+如果只想看工具链跑通，不需要创建自己的领域：
+
+```bash
+kdna demo minimal ./minimal
+kdna pack ./minimal ./minimal.kdna
+kdna validate ./minimal.kdna
+kdna load ./minimal.kdna --profile=compact --as=prompt
+```
+
+---
+
+## 不是当前官方路径的操作
+
+- `kdna dev scaffold` — 创建非正式 dev source 目录，仅用于实验
+- `kdna dev pack` — 构建 dev-only 打包；不是官方 Studio v1 导出路径
+- 手动编辑 JSON — 可用于早期原型，但不产出正式 v1 Studio 导出
+- `kdna setup` — 旧版 Agent 自动检测；不在当前 v1 verify/load 路径中
+- 基于 registry 的安装（`kdna install <domain>`）— 旧版路径；Core v1 不定义公开 registry
 
 ---
 
@@ -118,14 +108,12 @@ kdna load ./my_domain.kdna --profile=full --as=json
 - `kdna validate` 证明结构、schema、payload、checksum、load contract 是否成立。
 - `kdna load` 把资产渲染成 Agent 可消费的上下文。
 - KDNA Core v1 不定义 quality badge、内容评级、官方推荐、marketplace 或公开 registry。
-- encryption / signature / private asset loading 是后续阶段，不能替代当前 v1 文件链路验收。
 
 ---
 
 ## KDNA 不是什么
 
 KDNA 是判断层，不是：
-
 - 提示词库
 - 知识库
 - 工具 API

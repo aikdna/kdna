@@ -1,0 +1,31 @@
+{
+  "profile": "judgment-profile-v1",
+  "core": {
+    "highest_question": "What does this minimal example demonstrate?",
+    "axioms": [
+      {
+        "id": "a1",
+        "one_sentence": "The minimal payload is the smallest shape that passes the schema."
+      }
+    ],
+    "boundaries": [],
+    "risk_model": {}
+  },
+  "patterns": [],
+  "scenarios": [],
+  "cases": [],
+  "reasoning": {
+    "self_checks": [],
+    "failure_modes": []
+  },
+  "evolution": {
+    "changelog": [
+      {
+        "version": "1.0.0",
+        "date": "2026-06-16",
+        "changes": "Initial Phase 1 example."
+      }
+    ],
+    "version_notes": []
+  }
+}

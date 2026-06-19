@@ -35,36 +35,41 @@ status, encryption profile, and build time.
 
 ## Required Container Entries
 
-The `.kdna` container MUST include:
+The runtime `.kdna` container MUST include only the canonical KDNA Core v1
+runtime entries:
 
 ```text
 mimetype
 kdna.json
-KDNA_Core.json
-KDNA_Patterns.json
+payload.kdnab
+checksums.json
 ```
 
-It SHOULD include:
+Top-level authoring/source entries MUST NOT be emitted in the runtime
+container:
 
 ```text
 KDNA_CARD.json
-README.md
-LICENSE
-evals/
+KDNA_Core.json
+KDNA_Patterns.json
+KDNA_Scenarios.json
+KDNA_Cases.json
+KDNA_Reasoning.json
+KDNA_Evolution.json
 reports/build-report.json
 reports/provenance-report.json
 reports/quality-gate-report.json
 reports/human-lock-report.json
 reports/eval-report.json
-signature.json
+source_cards
 ```
 
-Optional judgment entries include `KDNA_Scenarios.json`, `KDNA_Cases.json`,
-`KDNA_Reasoning.json`, and `KDNA_Evolution.json`.
+These entries may exist in Studio project state, authoring compile output, or
+sidecar evidence files, but not as top-level runtime distribution entries.
 
-App-specific optional entries include `KDNA_Runtime_Report.json` (Studio/registry
-runtime report) and any additional evaluation artifacts placed under `evals/` or
-`reports/` that conforming runtimes may ignore.
+External reports SHOULD be written next to the `.kdna` file as sidecars, as
+shown in the External Output section. Signatures use the canonical signature
+contract and MUST NOT be represented by ad hoc app-private envelopes.
 
 ## Export Gates
 

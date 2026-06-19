@@ -1,0 +1,30 @@
+{
+  "kdna_version": "1.0",
+  "asset": {
+    "asset_id": "kdna:conformance:authorization:public-valid",
+    "asset_uid": "urn:uuid:7075626c-6963-4d76-816c-696400000000",
+    "title": "Authorization Fixture: public-valid",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0"
+  },
+  "access": "public",
+  "access_alias": null,
+  "entitlement_profile": null,
+  "state": "ready",
+  "required_action": "load",
+  "can_load_now": true,
+  "projection_policy": "minimal",
+  "checks": {
+    "format_valid": true,
+    "schema_valid": true,
+    "payload_valid": true,
+    "checksums_valid": true,
+    "load_contract_valid": true,
+    "overall_valid": true
+  },
+  "issues": [],
+  "source": {
+    "kind": "dir",
+    "path": "<fixture:public-valid>"
+  }
+}
