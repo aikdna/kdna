@@ -48,7 +48,10 @@
           "status": "active"
         }
       },
-      "cli_args": null,
+      "cli_args": [
+        "--entitlement-status",
+        "active"
+      ],
       "golden": "goldens/receipt-valid.loadplan.json"
     },
     {
@@ -60,7 +63,10 @@
           "status": "expired"
         }
       },
-      "cli_args": null,
+      "cli_args": [
+        "--entitlement-status",
+        "expired"
+      ],
       "golden": "goldens/expired-entitlement.loadplan.json"
     },
     {
@@ -72,7 +78,10 @@
           "status": "revoked"
         }
       },
-      "cli_args": null,
+      "cli_args": [
+        "--entitlement-status",
+        "revoked"
+      ],
       "golden": "goldens/revoked-entitlement.loadplan.json"
     },
     {
@@ -84,7 +93,10 @@
           "status": "offline_grace"
         }
       },
-      "cli_args": null,
+      "cli_args": [
+        "--entitlement-status",
+        "offline_grace"
+      ],
       "golden": "goldens/offline-grace-active.loadplan.json"
     },
     {
