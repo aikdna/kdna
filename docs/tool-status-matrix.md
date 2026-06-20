@@ -17,7 +17,7 @@
 | **kdna-studio-cli** | Authoring CLI | beta | yes | `kdna-studio export <project> --format v1 --out <file.kdna>` | Authoring UX is still CLI-first | Keep user-path smokes green |
 | **kdna-loader** | Agent adapter | beta | yes | setup-installed | Agent support varies by platform | Keep v1 local asset examples current |
 | **kdna-vscode** | VS Code extension | legacy | partial | VS Code marketplace | Legacy workspace tools; not canonical asset creator | Re-author for v1 |
-| **kdna-core-swift** | Swift runtime | legacy | partial | SwiftPM | "KDNA Protocol" legacy framing in code | Re-author for v1 |
+| **kdna-core-swift** | Swift runtime | beta | partial | SwiftPM | Complete JS parity is not claimed until fixed Core v1 conformance fixtures prove it | Keep conformance fixtures pinned |
 | **kdna-lab** | Pressure-test infra | experimental | partial | scripts | Experimental infrastructure; not v1 Core surface | No change needed |
 | **registry** | Registry | removed from active public surface | no | not applicable | KDNA Core v1 has no registry; use local v1 `.kdna` files | Keep archived references historical only |
 
