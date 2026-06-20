@@ -2,9 +2,10 @@
 
 This directory contains protocol fixtures and integration demos for the KDNA specification.
 
-These examples are not the official domain registry and should not be treated as the canonical source for domain assets. Official public domains live in standalone repositories under `aikdna/` and are listed in the canonical registry:
-
-https://github.com/aikdna/kdna-registry
+These examples are not a public asset registry, catalog, marketplace, ranking
+system, certification system, or download surface for user-facing KDNA files.
+They are local protocol fixtures for developers who need small files while
+working on the specification and tooling.
 
 Use examples here only for:
 
@@ -13,4 +14,6 @@ Use examples here only for:
 - testing CLI behavior
 - showing minimal package shapes
 
-Do not add new official domain assets directly under this directory. Create a standalone `kdna-<domain>` repository and add it to `kdna-registry` after it passes validation.
+Do not add public example releases directly under this directory. Public
+examples should be released as packaged `.kdna` files with checksum, usage
+commands, boundaries, and release metadata.

@@ -59,12 +59,12 @@ You may **not** use the KDNA Marks in the following ways:
 - ❌ Using KDNA Marks as part of a paid product's primary branding
 - ❌ Implying KDNA endorsement of a commercial product or service
 
-### 4. Domain Asset Naming
+### 4. KDNA File And Tool Naming
 
-Domain assets that are compatible with KDNA should use clear naming:
+KDNA-compatible files and tools should use clear naming:
 
 - ✅ `@yourorg/writing-kdna` — clear attribution, KDNA reference
-- ✅ `@aikdna/writing` — official domain
+- ✅ `writing-style.kdna` — clear file purpose
 - ❌ `@yourorg/kdna-official-writing` — misleading
 - ❌ `@yourorg/KDNA-Writing-Standard` — implies official status
 

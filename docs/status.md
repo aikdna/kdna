@@ -95,10 +95,10 @@ For the legacy 5-minute walkthrough (old CLI surface), see [5-minute-guide.md](.
 
 1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.26.6**. ✓
 2. **Core extraction — published**: the compatibility package now routes v1 through shared `@aikdna/kdna-core/v1`; duplicate `packages/kdna/src/v1-cli.js` has been removed. Published in `@aikdna/kdna@0.9.0` with `@aikdna/kdna-core@^0.11.1`.
-3. **6 skipped tests**: kdna-core fixture tests skipped in PR-95 (v1→v2 fixture migration debt). Marked for recovery in PR-100.
-4. **Conformance failure**: `kdna.json.format_version: "1.0"` vs expected `"2.0"` in the conformance runner. Same fixture debt.
-5. **Legacy CLI surfaces**: compatibility commands remain behind `kdna help legacy`; public first-run docs use local `.kdna` files with `validate`, `plan-load`, and `load`.
-6. **npm descriptions**: resolved in v0.22.x / v0.3.3 / v1.5.2 — all "trusted .kdna" references removed. ✓
+3. **Legacy CLI surfaces**: compatibility commands remain behind `kdna help legacy`; public first-run docs use local `.kdna` files with `validate`, `plan-load`, and `load`.
+4. **Out-of-scope launch claims**: protected assets, remote runtime, paid authorization, public registry, marketplace distribution, and quality ranking are not part of the current stable baseline.
+5. **Cross-implementation parity**: JS Core is the public first-run path. Swift remains beta until parity is proven against fixed Core v1 fixtures.
+6. **Release evidence**: npm packages are published and installable; stronger provenance, SBOM, and attestation chains remain post-baseline release hardening.
 
 ## Next phase
 
