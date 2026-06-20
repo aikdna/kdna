@@ -51,6 +51,7 @@ kdna-studio export my_domain --format v1 --out dist/my_domain.kdna
 
 ```bash
 kdna validate dist/my_domain.kdna
+kdna plan-load dist/my_domain.kdna
 ```
 
 预期结果：
@@ -87,6 +88,7 @@ kdna load dist/my_domain.kdna --profile=compact --as=prompt
 kdna demo minimal ./minimal
 kdna pack ./minimal ./minimal.kdna
 kdna validate ./minimal.kdna
+kdna plan-load ./minimal.kdna
 kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
 
