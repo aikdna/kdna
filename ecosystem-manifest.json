@@ -21,7 +21,7 @@
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "bfe45c226d06372a0236f2adc10f87f1f0673066",
+      "conformance_commit": "b8e50765b3959cd73e933a0134b238f7fa7a1736",
       "known_limitations": [
         "licensed and remote assets are recognized by LoadPlan but are not stable runtime loading modes",
         "Swift parity and ecosystem-wide release evidence are not complete"
@@ -39,7 +39,7 @@
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "688a979e148c610937a1b79f4d3e63ca3e2e1c58",
+      "conformance_commit": "552b73d60808846f72fc7bd6e0ff69f157000ac5",
       "known_limitations": [
         "protected, remote, registry, publish, and commercial authorization flows are not stable baseline claims"
       ],
@@ -105,7 +105,7 @@
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "bfe45c226d06372a0236f2adc10f87f1f0673066",
+      "conformance_commit": "b8e50765b3959cd73e933a0134b238f7fa7a1736",
       "known_limitations": [
         "JS/Swift parity must be proven against a fixed protocol commit before stable claims"
       ],
