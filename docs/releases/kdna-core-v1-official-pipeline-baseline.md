@@ -3,13 +3,13 @@
 ## Status: CLOSURE CANDIDATE (Studio producer npm-registry proof passed)
 
 The CLI consumer path is complete. The Studio producer path now passes all v1
-validation gates on the three flagship source assets from public npm packages,
+validation gates on the legacy three-source proof set from public npm packages,
 including `schema_valid`, `payload_valid`, `checksums_valid`, and
 `load_contract_valid`.
 
 This is still a closure candidate, not the final public-launch declaration,
-because website/docs, MCP package evidence, issue reconciliation, and final
-flagship release artifacts still need cross-repo closure.
+because website/docs, MCP package evidence, issue reconciliation, KDNA-X
+propagation material, and final proof artifacts still need cross-repo closure.
 
 ## What passes (CLI consumer path)
 
@@ -61,12 +61,13 @@ Current hardening proof shows:
   - `agent_safety`: 29 source cards, 3 axioms, 8 boundaries, 14 patterns, 2 scenarios, 1 case, 5 self-checks, 2 failure modes, 3 evolution stages
   - `prompt_diagnosis`: 30 source cards, 3 axioms, 8 boundaries, 15 patterns, 2 scenarios, 1 case, 5 self-checks, 2 failure modes, 3 evolution stages
 
-See `docs/audits/flagship-v1-migration-hardening-verification.md`.
+See the historical proof-set audit files under `docs/audits/` for the detailed
+migration evidence.
 
 Remaining before launch:
 
 - website and public README reconciliation
-- flagship README/release artifact acceptance
+- proof-set README/release artifact acceptance
 - issue reconciliation
 
 ### Historical pre-hardening blocker details
@@ -107,17 +108,17 @@ Core checksum helper.
 
 **Blocker 4: real-asset fidelity failure (pre-hardening)**
 
-The three flagship domains could be forced through the old Studio v1 export
+The legacy three-source proof set could be forced through the old Studio v1 export
 path, but the resulting payloads retain only about 10-11% of authored card
 content and lose manifest metadata.
 
 Current status: resolved in the hardening and registry-proof reports:
 
-- `docs/audits/flagship-v1-migration-hardening-verification.md`
-- `docs/audits/flagship-v1-migration-blocker-summary.md`
-- `docs/audits/flagship-writing-v1-migration-fidelity.md`
-- `docs/audits/flagship-agent-safety-v1-migration-fidelity.md`
-- `docs/audits/flagship-prompt-diagnosis-v1-migration-fidelity.md`
+- historical proof-set hardening verification
+- historical proof-set blocker summary
+- historical writing migration fidelity report
+- historical agent-safety migration fidelity report
+- historical prompt-diagnosis migration fidelity report
 
 ## Current version matrix
 

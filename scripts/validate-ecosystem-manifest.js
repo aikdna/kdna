@@ -136,7 +136,7 @@ for (const component of manifest.components) {
     if (shouldCheckReferenceWorkflow && fs.existsSync(workflowPath)) {
       const workflow = fs.readFileSync(workflowPath, 'utf8');
       if (!workflow.includes('@aikdna/kdna-cli@0.26.1')) {
-        fail(component, 'reference asset CI must pin @aikdna/kdna-cli@0.26.1');
+        fail(component, 'legacy proof asset CI must pin @aikdna/kdna-cli@0.26.1');
       }
       for (const command of [
         `kdna validate ${component.artifact_path}`,
@@ -144,7 +144,7 @@ for (const component of manifest.components) {
         `kdna load ${component.artifact_path}`,
       ]) {
         if (!workflow.includes(command)) {
-          fail(component, `reference asset CI missing "${command}"`);
+          fail(component, `legacy proof asset CI missing "${command}"`);
         }
       }
     }

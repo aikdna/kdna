@@ -182,7 +182,7 @@ run(
   },
 );
 
-section('Reference Asset Release Artifacts');
+section('Legacy Proof Asset Release Artifacts');
 const kdnaBin = path.join(repoRoot, 'packages', 'kdna', 'bin', 'kdna.js');
 for (const component of referenceAssetComponents()) {
   const assetRoot = componentPath(component.repository);

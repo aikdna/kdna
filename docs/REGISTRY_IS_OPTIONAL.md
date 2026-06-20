@@ -30,7 +30,7 @@ All distribution channels are equal peers:
 | **Local file** | `kdna load ./my-domain.kdna` |
 | **URL** | `kdna install https://example.com/domain.kdna` |
 | **Custom registry** | `kdna install --registry https://my-registry.com/domains.json my-domain` |
-| **Official reference source** | `kdna install --source reference my-domain` |
+| **Team-maintained source** | `kdna install --source team my-domain` |
 | **Private repository** | Direct file distribution within an organization |
 
 ## Historical Note

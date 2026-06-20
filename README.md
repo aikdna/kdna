@@ -97,7 +97,7 @@ The official KDNA toolchain is published from this repo and its companion packag
 See:
 
 - [`examples/minimal/`](./examples/minimal/) — the smallest valid `.kdna` source layout
-- [`samples/`](./samples/) — additional reference assets
+- [`samples/`](./samples/) — larger sample KDNA layouts
 - [`fixtures/`](./fixtures/) — conformance and test fixtures
 
 ## Repository layout
@@ -112,7 +112,7 @@ kdna/
 │   ├── examples/         # Example asset catalog
 │   └── guides/           # How-to guides
 ├── examples/             # Reference `.kdna` source layouts
-├── samples/              # Larger reference assets
+├── samples/              # Larger sample KDNA layouts
 ├── fixtures/             # Conformance test fixtures
 ├── conformance/          # Conformance test runner
 ├── rfcs/                 # Accepted and proposed RFCs

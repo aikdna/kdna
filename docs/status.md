@@ -41,8 +41,8 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 - **kdna-studio** — v1 export hardening is published through
   `@aikdna/kdna-studio-cli@0.5.3` and
   `@aikdna/kdna-studio-core@1.5.3`; npm-registry clean-install verification
-  passes for the three flagship source assets. Public flagship release still
-  requires final fidelity report acceptance and README/release artifact work.
+  passes for the legacy three-source proof set. Public propagation should
+  center on KDNA-X, not on a three-domain primary narrative.
 - **kdna-vscode** — VS Code extension (legacy workspace tools); not yet updated for v1 Core
 - **Work Pack** — experimental workflow packaging; not v1 Core mainline
 
@@ -90,4 +90,4 @@ For the legacy 5-minute walkthrough (old CLI surface), see [5-minute-guide.md](.
 
 KDNA v1 Official Pipeline Closure.
 
-Priority: update flagship PASS fidelity reports → prove MCP/skills v1 consumption from published packages → reconcile website/public docs → reconcile issues and release artifacts. Encryption/signature remain gated.
+Priority: finish proof-set acceptance → prove MCP/skills v1 consumption from published packages → reconcile website/public docs → reconcile issues and release artifacts → prepare the KDNA-X propagation set. Encryption/signature remain gated.
