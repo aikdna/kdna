@@ -39,7 +39,7 @@
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "552b73d60808846f72fc7bd6e0ff69f157000ac5",
+      "conformance_commit": "eeeec052547d4732aa6493eb2bf7da7fb89459f3",
       "known_limitations": [
         "protected, remote, registry, publish, and commercial authorization flows are not stable baseline claims"
       ],
