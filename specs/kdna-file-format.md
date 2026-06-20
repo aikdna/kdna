@@ -113,7 +113,7 @@ does not have a separate metadata header — it is transparent ZIP.
 ```
 create    →  Authoring environment / kdna studio scaffold   Studio-compatible authoring
 validate  →  kdna dev validate <folder>           Check dev source structure
-bundle    →  kdna dev pack <folder>               Dev-only non-trusted bundle
+bundle    →  kdna dev pack <folder>               Dev-only diagnostic bundle
 inspect   →  kdna inspect <file.kdna>   Read container metadata + stats
 unpack    →  kdna dev unpack <file.kdna>    .kdna → folder (debugging only)
 install   →  kdna install <file.kdna>   Install container to local registry
@@ -121,9 +121,11 @@ install   →  kdna install <file.kdna>   Install container to local registry
 
 ### 7.1 `kdna dev pack`
 
-Creates a dev-only `.kdna` bundle from a valid source folder. This command does
-not create a trusted KDNA asset. To create a canonical trusted `.kdna`, use a
-Studio-compatible compile/export pipeline.
+Creates a dev-only diagnostic `.kdna` bundle from a valid source folder. This
+command creates a packaged file for validation, loading tests, and debugging;
+it does not create provenance, signature, quality, or endorsement claims. For
+Studio-compatible release evidence, use a Studio compile/export pipeline and
+then run `kdna validate` and `kdna plan-load` on the packaged `.kdna`.
 
 The command:
 

@@ -45,11 +45,15 @@ npm install -g @aikdna/kdna-cli @aikdna/kdna-studio-cli
 kdna-studio create my_domain --name @yourscope/my_domain
 kdna-studio export my_domain --format v1 --out dist/my_domain.kdna
 kdna validate dist/my_domain.kdna
+kdna plan-load dist/my_domain.kdna
 kdna load dist/my_domain.kdna --profile=compact --as=prompt
 ```
 
-`kdna` MUST NOT create trusted KDNA assets. `kdna-studio` is the command-line
-authoring entry for trusted creation.
+`kdna` is the runtime and developer CLI for local `.kdna` files. `kdna-studio`
+is the command-line authoring entry for Studio-compatible projects and optional
+review/provenance evidence. Trust, Human Lock, signatures, and quality claims
+are separate metadata layers; they are not KDNA Core v1 format-validity
+requirements.
 
 ## Domain Repository Names
 

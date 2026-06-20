@@ -1,10 +1,10 @@
 # Judgment Systems
 
-## Why Human-Led KDNA Matters When LLMs Are Already Intelligent
+## Why Explicit Judgment Assets Matter When LLMs Are Already Intelligent
 
 KDNA is based on a simple but important belief:
 
-**As LLMs become more capable, human judgment does not become less important. It becomes more important to make human judgment explicit, portable, verifiable, and usable by AI agents.**
+**As LLMs become more capable, explicit judgment does not become less important. It becomes more important to make judgment structures portable, verifiable, bounded, and usable by AI agents.**
 
 KDNA does not exist because LLMs lack intelligence. Modern LLMs already contain broad knowledge, reasoning ability, pattern recognition, and implicit judgment. Future models may become far stronger.
 
@@ -12,7 +12,9 @@ The question is not whether an LLM can judge. The deeper question is:
 
 **Whose judgment should the AI use, under what context, with what boundaries, and with what accountability?**
 
-KDNA is an open protocol for turning human-led judgment systems into AI-usable assets.
+KDNA is an open protocol for turning scoped judgment systems into AI-usable
+`.kdna` files. Those judgment systems may originate from humans, teams, agents,
+tools, or hybrid workflows.
 
 ---
 
@@ -88,13 +90,13 @@ A judgment system asset should be: explicit, inspectable, portable, verifiable, 
 
 KDNA should not be generated as arbitrary JSON by an AI system and treated as authoritative.
 
-AI can help create KDNA by extracting candidate principles, finding repeated patterns, detecting contradictions, asking clarifying questions, generating examples, proposing self-checks, and building test cases. But AI-generated candidates are not yet KDNA judgment. They become KDNA only after human review, confirmation, and accountability.
+AI can help create KDNA by extracting candidate principles, finding repeated patterns, detecting contradictions, asking clarifying questions, generating examples, proposing self-checks, and building test cases. Humans, agents, and tools can create `.kdna` files through the official toolchain.
 
-The principle is:
+The current protocol boundary is:
 
-> **AI can propose. Human must confirm. Only human-locked judgment can become KDNA.**
+> A packaged `.kdna` file is valid at the format layer when it passes protocol validation. Human review, Human Lock, signatures, evaluation reports, and quality labels are separate provenance and trust layers.
 
-This is important because KDNA is not just content. It is a judgment reference that may influence how an AI agent classifies situations, rejects options, applies boundaries, and produces outputs. If no human is accountable for the judgment, the KDNA domain should not be treated as a trusted judgment system asset.
+This is important because KDNA is not just content. It is a judgment reference that may influence how an AI agent classifies situations, rejects options, applies boundaries, and produces outputs. If no accountable provenance exists, the `.kdna` file may still be format-valid, but it should not be treated as human-confirmed, signed, evaluated, or officially recommended.
 
 ---
 
