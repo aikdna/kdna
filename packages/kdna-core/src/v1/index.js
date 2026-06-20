@@ -1374,6 +1374,12 @@ function loadV1(inputPath, opts = {}) {
   return loadAuthorized(inputPath, opts);
 }
 
+function normalizeTextList(value) {
+  if (Array.isArray(value)) return value.filter((item) => typeof item === 'string' && item.trim()).map((item) => item.trim());
+  if (typeof value === 'string' && value.trim()) return [value.trim()];
+  return [];
+}
+
 function normalizeCompactAxiom(axiom) {
   if (typeof axiom === 'string') {
     return {
@@ -1393,8 +1399,8 @@ function normalizeCompactAxiom(axiom) {
     id: axiom.id || null,
     statement,
     one_sentence: axiom.one_sentence || statement,
-    applies_when: Array.isArray(axiom.applies_when) ? axiom.applies_when : [],
-    does_not_apply_when: Array.isArray(axiom.does_not_apply_when) ? axiom.does_not_apply_when : [],
+    applies_when: normalizeTextList(axiom.applies_when),
+    does_not_apply_when: normalizeTextList(axiom.does_not_apply_when),
     failure_risk: axiom.failure_risk || null,
   };
 }
