@@ -31,9 +31,7 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 - **`kdna pack`** — deterministic ZIP pack (mimetype first, STORED; same input → same SHA-256, verified as `3f0ba461...`)
 - **`kdna unpack`** — unpack `.kdna` container, refuse path traversal
 - **CLI v1 route tests and smoke checks** — pass for inspect, validate, LoadPlan, load refusal, pack, unpack, and source/container edge cases
-- **Public beta narrative** — READMEs, website, and current public docs describe
-  local packaged `.kdna` files, release cards, and beta boundaries. This is a
-  propagation boundary, not a claim that the full ecosystem is stable.
+- **Public beta narrative** — READMEs, website, and current public docs describe local packaged `.kdna` files, release cards, and beta boundaries. This is a propagation boundary, not a claim that the full ecosystem is stable.
 
 **Resolved in 0.26.x**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.26.9` now includes the full v1 inspect/validate/plan-load/pack/unpack/load route for public local assets.
 
@@ -42,11 +40,7 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 - **kdna install** / registry install — legacy compatibility path; the public registry is not part of KDNA Core v1
 - **kdna compare** — comparison requires a provider key; not yet documented in the v1 guide
 - **kdna setup** — agent setup (codex, claude-code, opencode, cursor); skills/MCP now use the v1 local asset loading path, while setup UX remains a post-baseline hardening surface
-- **kdna-studio** — v1 authoring/export is published through
-  `@aikdna/kdna-studio-cli@0.5.8` and
-  `@aikdna/kdna-studio-core@1.5.7`; public propagation should center on
-  packaged `.kdna` examples, not source JSON directories, registry entries, or
-  a fixed three-domain primary narrative.
+- **kdna-studio** — v1 authoring/export is published through `@aikdna/kdna-studio-cli@0.5.8` and `@aikdna/kdna-studio-core@1.5.7`; public propagation should center on packaged `.kdna` examples, not source JSON directories, registry entries, or a fixed three-domain primary narrative.
 - **kdna-vscode** — VS Code extension (legacy workspace tools); not yet updated for v1 Core
 - **Work Pack** — experimental workflow packaging; not v1 Core mainline
 
