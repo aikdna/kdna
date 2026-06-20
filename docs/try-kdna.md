@@ -47,7 +47,7 @@ and `npm install -g @aikdna/kdna-cli`.
 ## What KDNA Core v1 is
 
 KDNA Core is the **official KDNA judgment-asset format and runtime loading
-contract**. `.kdna` assets are created, inspected, protected, loaded, and
+contract**. `.kdna` assets are created, inspected, validated, planned, loaded, and
 consumed through the **official KDNA toolchain**. Third-party products
 integrate KDNA through the official SDK, CLI, Loader, or API.
 

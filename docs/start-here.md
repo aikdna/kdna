@@ -67,7 +67,7 @@ kdna load dist/my-domain.kdna --profile=compact --as=prompt
 | Structured axioms, boundaries, self-checks | A RAG / knowledge base |
 | Version-controlled, verifiable | A workflow engine |
 | Cross-agent portable | Model fine-tuning |
-| Human-confirmed judgment cards | A `.cursorrules` replacement |
+| Scoped judgment structures with optional provenance | A `.cursorrules` replacement |
 
 Tools let AI **act**. KDNA helps AI **judge**.
 

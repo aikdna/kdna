@@ -160,4 +160,4 @@ i18n.applyLocaleOverlay(domain, overlay);          // → localized domain
 i18n.computeI18nCoverage(project);                 // → coverage score per locale
 ```
 
-Quality gate rule: official domains must achieve ≥ L1 in en + zh-CN.
+Quality gate rule: public example `.kdna` releases should achieve ≥ L1 in en + zh-CN.
