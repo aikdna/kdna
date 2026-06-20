@@ -16,12 +16,12 @@
       "local_path": ".",
       "npm_package": "@aikdna/kdna-core",
       "package_json": "packages/kdna-core/package.json",
-      "current_version": "0.12.0",
+      "current_version": "0.12.1",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "b8e50765b3959cd73e933a0134b238f7fa7a1736",
+      "conformance_commit": "799e5268c5cc59d91a043797e8dda0ac58d8a55c",
       "known_limitations": [
         "licensed and remote assets are recognized by LoadPlan but are not stable runtime loading modes",
         "Swift parity and ecosystem-wide release evidence are not complete"
@@ -34,12 +34,12 @@
       "local_path": "../kdna-cli",
       "npm_package": "@aikdna/kdna-cli",
       "package_json": "../kdna-cli/package.json",
-      "current_version": "0.26.1",
+      "current_version": "0.26.2",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "eeeec052547d4732aa6493eb2bf7da7fb89459f3",
+      "conformance_commit": "8f7a907e7de7a9267ddae2c330efaa3195666ef6",
       "known_limitations": [
         "protected, remote, registry, publish, and commercial authorization flows are not stable baseline claims"
       ],
@@ -51,12 +51,12 @@
       "local_path": "../kdna-skills",
       "npm_package": "@aikdna/kdna-mcp-server",
       "package_json": "../kdna-skills/mcp-server/package.json",
-      "current_version": "0.2.0",
+      "current_version": "0.2.1",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "c0d59cb4165b60471c4baff038dc3386bdad238c",
+      "conformance_commit": "d288ce8a6a2f5254f723b3500a404565411647d2",
       "known_limitations": [
         "MCP is a programmatic bridge and must not be marketed as a complete authorization runtime"
       ],
@@ -139,7 +139,7 @@
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "d747c3c10a1fe7908ba8c695dc52c49698d03799",
+      "conformance_commit": "a9bf73fea0dd15105062714fdaf5b80c28a10b48",
       "known_limitations": [
         "website copy must be generated or checked against this manifest before scale-up propagation"
       ],
