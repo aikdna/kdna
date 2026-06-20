@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-core",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "KDNA core library — load, validate, lint, and render KDNA domain judgment assets. Supports KDNA Container format (payload.kdnab via CBOR).",
   "type": "commonjs",
   "main": "src/index.js",
