@@ -31,7 +31,7 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 - **`kdna load`** — render allowed public local `.kdna` assets into agent-readable context
 - **`kdna pack`** — deterministic ZIP pack (mimetype first, STORED; same input → same SHA-256, verified as `3f0ba461...`)
 - **`kdna unpack`** — unpack `.kdna` container, refuse path traversal
-- **32 CLI tests** — all pass (inspect, validate, pack, unpack, edge cases)
+- **CLI v1 route tests and smoke checks** — pass for inspect, validate, LoadPlan, load refusal, pack, unpack, and source/container edge cases
 
 **Resolved in 0.26.x**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.26.8` now includes the full v1 inspect/validate/plan-load/pack/unpack/load route for public local assets.
 
