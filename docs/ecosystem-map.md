@@ -38,13 +38,16 @@ If you've found one KDNA repository and are wondering which others exist and wha
 
 > **Historical note:** Layer 2 previously listed individual GitHub repositories as example entry points. KDNA public examples are now distributed exclusively as packaged `.kdna` files. The repositories listed below are legacy proof assets and developer/audit sources. They are not the public asset distribution surface. For current `.kdna` downloads, see the official examples page.
 
-| Repository | Package | Domain | Quality | Status |
-|------------|---------|--------|---------|--------|
-| [kdna-writing](https://github.com/aikdna/kdna-writing) | `@aikdna/writing` | Writing diagnosis | tested | Legacy proof |
-| [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) | `@aikdna/prompt_diagnosis` | Prompt quality | tested | Legacy proof |
-| [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety) | `@aikdna/agent_safety` | Agent safety gates | tested | Legacy proof |
-| [kdna-code_review](https://github.com/aikdna/kdna-code_review) | `@aikdna/code_review` | Behavior-first code review | tested | Legacy proof |
-| [kdna-authoring](https://github.com/aikdna/kdna-authoring) | `@aikdna/kdna_authoring` | KDNA authoring guidance | tested | Legacy proof |
+| Example file | Domain | Status |
+|------------|--------|--------|
+| `writing-v1.kdna` | Writing diagnosis | Public `.kdna` example |
+| `prompt-diagnosis-v1.kdna` | Prompt quality | Public `.kdna` example |
+| `agent-safety-v1.kdna` | Agent safety gates | Public `.kdna` example |
+
+Legacy proof repositories may exist privately for audit and provenance, but
+they are not public entry points. Public users should download `.kdna` files
+from the official examples page, then run `kdna validate`, `kdna plan-load`,
+and `kdna load`.
 
 ## Layer 3 — Runtime & Protocol Tools
 

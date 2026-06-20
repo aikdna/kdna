@@ -129,9 +129,9 @@ KDNA_Patterns.json
 
 ```bash
 npm install -g @aikdna/kdna-cli
-kdna validate ./dist/writing-v1.kdna
-kdna plan-load ./dist/writing-v1.kdna
-kdna load ./dist/writing-v1.kdna --profile=compact --as=prompt
+kdna validate <asset>.kdna
+kdna plan-load <asset>.kdna
+kdna load <asset>.kdna --profile=compact --as=prompt
 ```
 
 你会看到这份 `.kdna` 的 compact profile：公理、边界、自检、失败模式和 patterns 都会被渲染成 Agent 可读的判断上下文。
@@ -181,13 +181,13 @@ npm i -g @aikdna/kdna-cli
 kdna setup
 
 # 2. 校验一个本地 v1 .kdna
-kdna validate ./dist/writing-v1.kdna
+kdna validate <asset>.kdna
 
 # 3. 规划加载
-kdna plan-load ./dist/writing-v1.kdna
+kdna plan-load <asset>.kdna
 
 # 4. 加载为 Agent prompt
-kdna load ./dist/writing-v1.kdna --profile=compact --as=prompt
+kdna load <asset>.kdna --profile=compact --as=prompt
 ```
 
 要创建自己的领域：

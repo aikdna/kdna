@@ -88,6 +88,7 @@ This produces a `.kdna` container with `mimetype`, `kdna.json`,
 ```bash
 kdna inspect dist/my_expertise.kdna
 kdna validate dist/my_expertise.kdna
+kdna plan-load dist/my_expertise.kdna
 kdna load dist/my_expertise.kdna --profile=compact --as=prompt
 ```
 
