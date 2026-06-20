@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-cli
-          ref: 688a979e148c610937a1b79f4d3e63ca3e2e1c58
+          ref: 552b73d60808846f72fc7bd6e0ff69f157000ac5
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@v6
         with:
@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-core-swift
-          ref: a20816fc595ab0f19998b0509a26cf24c6a991d9
+          ref: 9510987f31d7d59b146ebc56cb96e00c3bfdbe5d
           path: .ecosystem-repos/kdna-core-swift
       - uses: actions/checkout@v6
         with:
@@ -93,7 +93,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-cli
-          ref: 688a979e148c610937a1b79f4d3e63ca3e2e1c58
+          ref: 552b73d60808846f72fc7bd6e0ff69f157000ac5
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@v6
         with:
@@ -113,7 +113,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-core-swift
-          ref: a20816fc595ab0f19998b0509a26cf24c6a991d9
+          ref: 9510987f31d7d59b146ebc56cb96e00c3bfdbe5d
           path: .ecosystem-repos/kdna-core-swift
       - uses: actions/checkout@v6
         with:
