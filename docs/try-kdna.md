@@ -8,6 +8,9 @@ kdna demo minimal ./minimal
 kdna inspect ./minimal
 kdna validate ./minimal
 kdna pack ./minimal ./minimal.kdna
+kdna validate ./minimal.kdna
+kdna plan-load ./minimal.kdna
+kdna load ./minimal.kdna --profile=compact --as=prompt
 kdna unpack ./minimal.kdna ./minimal-unpacked
 kdna validate ./minimal-unpacked
 ```
@@ -21,14 +24,16 @@ kdna validate ./minimal-unpacked
    load-contract are all valid.
 5. **Packed** it deterministically — the same source packed twice produces
    byte-identical output.
-6. **Unpacked** it — extracted to a directory.
-7. **Re-validated** the unpacked result — it still passes.
+6. **Planned loading** — confirmed the LoadPlan allows this public local asset.
+7. **Loaded** it — rendered compact judgment context for an agent.
+8. **Unpacked** it — extracted to a directory.
+9. **Re-validated** the unpacked result — it still passes.
 
 ## What this proves
 
 KDNA Core v1 is a **working judgment-asset format** with a
 **published global CLI**. You can create, inspect, validate,
-pack, and unpack `.kdna` assets from any machine with Node.js
+pack, plan, load, and unpack `.kdna` assets from any machine with Node.js
 and `npm install -g @aikdna/kdna-cli`.
 
 ## What's next

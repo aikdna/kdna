@@ -26,7 +26,7 @@ Human Lock is a metadata record embedded in KDNA source files. It documents:
 
 Human Lock is recommended for:
 
-1. **Public KDNA-X entries or other public releases** where human confirmation is claimed
+1. **Public `.kdna` examples or other public releases** where human confirmation is claimed
 2. **Enterprise policy domains** where accountability is required
 3. **High-risk judgment domains** (medical, legal, financial, safety)
 4. **Published assets** where the author wants to signal provenance

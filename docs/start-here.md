@@ -25,6 +25,7 @@ npm install -g @aikdna/kdna-cli
 kdna demo minimal ./minimal
 kdna pack ./minimal ./minimal.kdna
 kdna validate ./minimal.kdna
+kdna plan-load ./minimal.kdna
 kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
 
@@ -52,6 +53,7 @@ kdna-studio create my-domain --name @yourscope/my-domain
 kdna-studio card add my-domain axiom --field one_sentence="Your judgment here"
 kdna-studio export my-domain --format v1 --out dist/my-domain.kdna
 kdna validate dist/my-domain.kdna
+kdna plan-load dist/my-domain.kdna
 kdna load dist/my-domain.kdna --profile=compact --as=prompt
 ```
 

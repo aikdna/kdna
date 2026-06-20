@@ -107,7 +107,7 @@ LLM Wiki 将文档转化为知识。KDNA 将专业知识转化为判断力。
 
 ## 文件体系
 
-一个完整的 KDNA 领域最多包含六个文件：
+一个 `.kdna` 文件内部最多包含六类标准判断条目。作者工具或 `unpack` 可以把这些条目展开为 JSON 视图，但公开消费和运行时加载的主对象始终是打包后的 `.kdna` 文件：
 
 ```text
 KDNA_Core.json        # 公理、本体、框架、核心因果结构、立场
@@ -118,7 +118,7 @@ KDNA_Reasoning.json   # 推理链：结论 → 逻辑 → 实践后果
 KDNA_Evolution.json   # 成长阶段、能力层次、可测量指标
 ```
 
-最小有效 KDNA 领域：
+最小有效 `.kdna` 判断 payload：
 
 ```text
 KDNA_Core.json
@@ -130,6 +130,7 @@ KDNA_Patterns.json
 ```bash
 npm install -g @aikdna/kdna-cli
 kdna validate ./dist/writing-v1.kdna
+kdna plan-load ./dist/writing-v1.kdna
 kdna load ./dist/writing-v1.kdna --profile=compact --as=prompt
 ```
 
@@ -182,7 +183,10 @@ kdna setup
 # 2. 校验一个本地 v1 .kdna
 kdna validate ./dist/writing-v1.kdna
 
-# 3. 加载为 Agent prompt
+# 3. 规划加载
+kdna plan-load ./dist/writing-v1.kdna
+
+# 4. 加载为 Agent prompt
 kdna load ./dist/writing-v1.kdna --profile=compact --as=prompt
 ```
 
@@ -194,6 +198,7 @@ kdna-studio create my_expertise --name @yourscope/my_expertise
 # 导入材料、生成判断卡片，并由人类确认 Human Lock
 kdna-studio migrate ./my_expertise --format v1 --out dist/my_expertise.kdna --name @yourscope/my_expertise --by your-id --statement "confirmed for v1 export"
 kdna validate dist/my_expertise.kdna
+kdna plan-load dist/my_expertise.kdna
 kdna load dist/my_expertise.kdna --profile=compact --as=prompt
 ```
 
