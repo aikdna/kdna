@@ -47,7 +47,7 @@ npm install -g @aikdna/kdna-cli
 
 ## 3. Get a v1 writing asset
 
-If you are working from the `kdna-writing` repository after the v1 flagship
+If you are working from the `kdna-writing` repository after the v1 writing proof
 artifact has been accepted, use the checked-in v1 container:
 
 ```bash

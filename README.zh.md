@@ -217,9 +217,9 @@ node examples/minimal-agent/agent.js
 
 | 领域 | 仓库 | 状态 |
 |---|---|---|
-| Writing | [kdna-writing](https://github.com/aikdna/kdna-writing) | v1 reference asset |
-| Prompt Diagnosis | [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) | v1 reference asset |
-| Agent Safety Judgment | [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety) | v1 reference asset |
+| Writing | [kdna-writing](https://github.com/aikdna/kdna-writing) | v1 legacy proof asset |
+| Prompt Diagnosis | [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) | v1 legacy proof asset |
+| Agent Safety Judgment | [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety) | v1 legacy proof asset |
 
 ### 演示样例
 

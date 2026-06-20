@@ -306,7 +306,7 @@ Implementation of the S1–S5 phases (§7) may begin **only when every condition
 | # | Condition | Owner | Verification artifact |
 |---|---|---|---|
 | G1 | Studio v1 export end-to-end passes (public v1, round-trip through Core loader). | Studio lead | CI green; one recorded terminal session of `kdna load` on a Studio-exported v1. |
-| G2 | At least one real flagship asset (e.g. a `@aikdna/*` domain) is migrated to the v1 manifest shape. | Domain owner | The flagship asset loads via `kdna load` and produces an identical L2/L3 score to its pre-migration version. |
+| G2 | At least one real public KDNA from KDNA-X or another validated public set is migrated to the v1 manifest shape. | Domain owner | The KDNA loads via `kdna load` and produces an equivalent judgment result to its pre-migration version. |
 | G3 | Core / CLI / Studio versions are aligned to a single release line. | Release lead | A published version matrix entry where all three components carry the same minor version. |
 | G4 | Digest matching is shipped and announced (not just implemented). | Core lead | Release notes for the digest feature exist and a Core v1 `validate` / `loadV1` walkthrough is published. The future `kdna verify` command is **not** part of this gate condition. |
 | G5 | All open issues from the previous reconciliation pass are closed or explicitly deferred with a recorded reason. | Owner | Issue board snapshot. |
@@ -326,7 +326,7 @@ Phases are sequential. Each phase produces a verifiable artifact and a status ob
 - **Scope:** Sign and verify `kdna.json` only. No entry-level encryption.
 - **Goal:** Prove the digest → signature → checksums pipeline (§2.6 steps 1–5) end-to-end on a public asset.
 - **Out of scope:** Encryption, key distribution, Studio UI for signing, registry policy on signatures.
-- **Exit criteria:** `kdna sign` and `kdna verify` work on a public flagship; loader returns the full status object (four booleans + `signature_status`); CLI output obeys §3.2.
+- **Exit criteria:** `kdna sign` and `kdna verify` work on a real public KDNA; loader returns the full status object (four booleans + `signature_status`); CLI output obeys §3.2.
 
 ### Phase S2 — Encrypted payload envelope
 
