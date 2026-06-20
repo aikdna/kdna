@@ -818,9 +818,9 @@ KDNA's roadmap is organized into six phases, reflecting the protocol's evolution
   - Reasoning + Evolution + manifest/version matrix.
 - Unify `status`, `quality_badge`, and `access` fields.
 
-### Phase 2: Reference Domains
+### Phase 2: KDNA-X Public Domains
 
-- Strengthen the official reference set:
+- Strengthen the public KDNA-X set:
   - kdna_authoring;
   - agent_safety;
   - prompt_diagnosis;

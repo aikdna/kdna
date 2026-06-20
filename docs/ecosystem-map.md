@@ -34,7 +34,7 @@ If you've found one KDNA repository and are wondering which others exist and wha
 | └ `packages/kdna-eval` | `@aikdna/kdna-eval` | Scoring primitives: condition matching, dimension scoring | [package](https://github.com/aikdna/kdna/tree/main/packages/kdna-eval) |
 | └ `conformance/` | — | Loader/validator/runtime compatibility tests | [conformance](https://github.com/aikdna/kdna/tree/main/conformance) |
 
-## Layer 2 — Domain Content (Reference Assets)
+## Layer 2 — Domain Content (KDNA-X and Proof Assets)
 
 These are `.kdna` judgment domain assets. Each is a separate repository containing a signed, versioned domain package.
 

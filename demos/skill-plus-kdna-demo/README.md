@@ -25,8 +25,8 @@ Then load the compact prompt context:
 kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
 
-For a real writing demo, use `writing-v1.kdna` from the v1 flagship artifact
-once that artifact is accepted in the `kdna-writing` repository.
+For a real writing demo, use `writing-v1.kdna` from the legacy writing proof
+artifact once that artifact is accepted in the `kdna-writing` repository.
 
 ## Files
 

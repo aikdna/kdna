@@ -1,8 +1,8 @@
 # KDNA Domain Quality Baseline
 
-> ⚠️ **Historical document. Not active guidance.** For current KDNA Core positioning, see README, SPEC.md, and docs/KDNA_CONFORMANCE_LEVELS.md. The "official domain" concept referenced below has been replaced by "reference asset" — all `.kdna` assets that pass `kdna validate` are equal peers.
+> ⚠️ **Historical document. Not active guidance.** For current KDNA Core positioning, see README, SPEC.md, docs/KDNA_CONFORMANCE_LEVELS.md, and docs/KDNA_X_PROPAGATION_SET.md. The "official domain" concept referenced below has been replaced by KDNA-X public entries and legacy proof assets — all `.kdna` assets that pass `kdna validate` are equal peers.
 
-Every KDNA domain published as a reference asset should meet a minimum quality standard. This document defines the baseline and explains how to use `kdna-writing` as the reference implementation.
+Every KDNA domain published as a public KDNA-X entry should meet a minimum quality standard. This historical document explains how earlier work used `kdna-writing` as a proof example.
 
 ## The Four Questions
 
@@ -39,7 +39,7 @@ KDNA domains advance through quality levels based on evidence:
 
 ## Domain Checklist
 
-When publishing a new reference asset, verify:
+When publishing a new public KDNA entry, verify:
 
 ### Content Quality
 
@@ -74,9 +74,9 @@ When publishing a new reference asset, verify:
 - [ ] Version follows SemVer
 - [ ] `judgment_version` declared
 
-## kdna-writing as the Gold Standard
+## kdna-writing as a Historical Proof Example
 
-[kdna-writing](https://github.com/aikdna/kdna-writing) is the reference implementation. Every new reference asset should be compared against it:
+[kdna-writing](https://github.com/aikdna/kdna-writing) was the original proof example. New public KDNA-X entries should use its evidence expectations where useful, without treating it as a ranked standard:
 
 | Aspect | kdna-writing |
 |--------|-------------|
