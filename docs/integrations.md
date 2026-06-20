@@ -46,6 +46,7 @@ the runtime supports the loader:
 
 ```bash
 kdna validate ./writing-v1.kdna
+kdna plan-load ./writing-v1.kdna
 kdna load ./writing-v1.kdna --profile=compact --as=prompt
 ```
 
@@ -68,6 +69,8 @@ npm install -g @aikdna/kdna-cli
 kdna demo minimal ./minimal
 kdna pack ./minimal ./minimal.kdna
 kdna validate ./minimal.kdna
+kdna plan-load ./minimal.kdna
+kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
 
 Then install the `kdna-loader` skill for your agent from [kdna-skills](https://github.com/aikdna/kdna-skills).

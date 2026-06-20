@@ -51,6 +51,7 @@ kdna-studio export my-domain --format v1 --out dist/my-domain.kdna
 
 ```bash
 kdna validate dist/my-domain.kdna
+kdna plan-load dist/my-domain.kdna
 ```
 
 Expected result:
@@ -87,6 +88,7 @@ If you just want to see the toolchain work without creating your own domain:
 kdna demo minimal ./minimal
 kdna pack ./minimal ./minimal.kdna
 kdna validate ./minimal.kdna
+kdna plan-load ./minimal.kdna
 kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
 

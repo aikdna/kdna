@@ -21,6 +21,7 @@ npm install -g @aikdna/kdna-cli
 
 ```bash
 kdna validate ./minimal.kdna
+kdna plan-load ./minimal.kdna
 ```
 
 Expected result:
