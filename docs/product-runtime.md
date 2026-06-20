@@ -288,15 +288,15 @@ A `product-runtime.json` manifest bundles all six phases into one deployable con
 
 ## 4. Integration with KDNA Governance
 
-### 4.1 Human Judgment Lock boundary
+### 4.1 Judgment Update Boundary
 
-The Product Runtime observes user behavior and adjusts **operational** parameters (tone, detail level, domain selection, pacing). It MUST NOT adjust **judgment** parameters (axioms, boundaries, risk models, value order). Judgment changes still flow through Human Judgment Lock per KDNA SPEC §1.7.
+The Product Runtime observes user behavior and adjusts **operational** parameters (tone, detail level, domain selection, pacing). It MUST NOT silently adjust **judgment** parameters (axioms, boundaries, risk models, value order). Judgment changes require an explicit provenance path. Human Lock is one such path when human confirmation is claimed; it is not a universal format-validity requirement.
 
 | Class | Auto-apply in Product Runtime? | Example |
 |-------|-------------------------------|---------|
 | **Operational** | Yes | Tone adjustment, domain rotation, delivery time |
 | **Evidence** | Record only | User emotion signals, feedback scores, completion rates |
-| **Judgment** | **No** — requires Human Lock | Axiom revision, boundary change, risk threshold update |
+| **Judgment** | **No** — requires explicit provenance/review path | Axiom revision, boundary change, risk threshold update |
 
 ### 4.2 Trace integration
 
