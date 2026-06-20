@@ -23,7 +23,7 @@ validity does not imply content fitness for every use.
 
 | Tool | Version | Support |
 |------|---------|:-------:|
-| @aikdna/kdna-cli | >=0.26.6 | Active |
+| @aikdna/kdna-cli | >=0.26.7 | Active |
 | @aikdna/kdna-core | >=0.11.1 | Active |
 | @aikdna/kdna-studio-cli | >=0.5.3 | Active |
 | @aikdna/kdna-studio-core | >=1.5.3 | Active |
