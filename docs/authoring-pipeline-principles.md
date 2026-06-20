@@ -16,7 +16,9 @@ the authoring pipeline makes this explicit in its workflow:
 - The author speaks their judgment.
 - The AI asks clarifying questions and generates counterexamples.
 - The author refines, rejects, or confirms.
-- Only after Human Judgment Lock does the judgment enter the formal domain.
+- Only after provenance is explicit should judgment enter a reviewed release.
+  Human Judgment Lock is one optional provenance signal, not a universal Core
+  format-validity requirement.
 
 The Studio does not replace human expertise. It makes expertise extraction structured, efficient, and reproducible.
 
@@ -47,19 +49,21 @@ Within the Studio, AI plays four helper roles:
 
 At no point does AI decide what the judgment should be.
 
-### 4. Human Judgment Lock before export
+### 4. Provenance before reviewed export
 
-The Studio enforces a strict lock before any judgment enters a formal domain file:
+The Studio can enforce a strict review workflow before judgment enters a
+reviewed release file:
 
 1. Judgment articulated (interview or manual entry)
 2. AI-assisted challenge (counterexamples generated)
 3. Human review and refinement
-4. Human Judgment Lock (author explicitly confirms)
+4. Provenance record, with optional Human Judgment Lock when human confirmation is claimed
 5. Structural validation
 6. Behavioral validation (Test Lab)
 7. Version bump, signature, and export
 
-This lock ensures that every axiom, boundary, and value in a `.kdna` file has passed through human confirmation.
+This provenance ensures that every axiom, boundary, and value in a reviewed
+`.kdna` release has an explicit authoring and review status.
 
 ### 5. The Studio produces governed assets
 

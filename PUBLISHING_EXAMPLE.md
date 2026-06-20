@@ -26,11 +26,13 @@ kdna verify dist/my-domain-0.1.0.kdna --json
 node conformance/run.mjs --profile asset
 ```
 
-The asset must pass structure checks. Registry publication also requires trust metadata.
+The asset must pass structure checks. A public example release also needs a
+release card with SHA256, usage commands, before/after evidence, boundaries,
+known limitations, and provenance metadata.
 
-## 3. Prepare Registry Entry
+## 3. Prepare Release Card
 
-Add an entry to `registry/domains.json` or to your private registry:
+Prepare public release metadata for the packaged `.kdna` file:
 
 ```json
 {
@@ -80,4 +82,3 @@ Include:
 - Result of local verification commands.
 
 For `quality_badge: "validated"`, include at least 30 eval cases, automated scoring, raw outputs, rubric, benchmark report, and limitations.
-
