@@ -1,51 +1,49 @@
 # KDNA Version Matrix
 
-This document explains the relationship between the four version numbers you will encounter in the KDNA ecosystem.
+This document explains the version numbers you will encounter in the current
+KDNA public beta ecosystem.
 
-## Four Version Axes
+## Version Axes
 
 | Axis | Location | Example | What it means |
 |------|----------|---------|---------------|
 | **SPEC version** | `SPEC.md` title | `v1.0-rc` | The version of the KDNA protocol specification. Determines file format, required fields, and validation rules. |
-| **CLI version** | `npm @aikdna/kdna-cli` | `v0.19.x` | The version of the command-line tool. Independent of SPEC version. |
-| **Core library version** | `npm @aikdna/kdna-core` | `v0.7.x` | The version of the zero-dependency validation and formatting library. |
-| **Studio Core version** | `npm @aikdna/kdna-studio-core` | `v1.4.x` | The version of the authoring kernel library. |
-| **Studio CLI version** | `npm @aikdna/kdna-studio-cli` | `v0.2.x` | The version of the command-line authoring entry. Independent of runtime CLI version. |
-| **Domain version** | Each domain's `kdna.json` | `v0.7.x` | The version of an individual domain's content. Follows SemVer (MAJOR.MINOR.PATCH). |
+| **CLI version** | `npm @aikdna/kdna-cli` | `v0.26.9` | The version of the runtime command-line tool. Independent of SPEC version. |
+| **Core library version** | `npm @aikdna/kdna-core` | `v0.12.2` | The version of the Core validation, LoadPlan, and loading library. |
+| **Studio Core version** | `npm @aikdna/kdna-studio-core` | `v1.5.7` | The version of the authoring kernel library. |
+| **Studio CLI version** | `npm @aikdna/kdna-studio-cli` | `v0.5.8` | The version of the command-line authoring entry. Independent of runtime CLI version. |
+| **MCP server version** | `npm @aikdna/kdna-mcp-server` | `v0.2.3` | The version of the MCP adapter package. Source lives in `aikdna/kdna-skills/mcp-server`. |
+| **Asset version** | Each `.kdna` manifest | `v0.1.0` | The version of an individual judgment asset's content. Follows SemVer. |
 
 ## Compatibility Rules
 
-- A domain with `spec_version: "1.0-rc"` in its manifest MUST conform to SPEC v1.0-rc.
-- A CLI at v0.7.x can validate domains targeting SPEC v1.0-rc.
-- The core library version is independent — v0.2.3 implements SPEC v1.0-rc validation.
-- Domain version increments reflect content changes, not spec changes:
+- A `.kdna` asset with `spec_version: "1.0-rc"` in its manifest MUST conform
+  to SPEC v1.0-rc.
+- CLI and Core versions are package versions; they do not change the asset
+  content version.
+- Asset version increments reflect judgment-content changes, not package
+  releases:
   - **PATCH** (`0.7.1` → `0.7.2`): Content refinement without structural change.
   - **MINOR** (`0.7.x` → `0.8.0`): New judgment structures added; no breaking changes.
   - **MAJOR** (`0.x.0` → `1.0.0`): Breaking changes to existing judgment logic.
 
-## Three-Field System Versions
+## Public Beta Status Layers
 
-| `status` | Meaning | Who changes it |
-|----------|---------|---------------|
-| `draft` | Early work in progress. Structure may change dramatically. | Domain author |
-| `experimental` | Complete structure, not yet tested in practice. | Domain author |
-| `stable` | Structure frozen, content mature. | Domain author |
-| `deprecated` | Superseded. `replaced_by` MUST be set. | Registry maintainer |
+| Layer | Meaning |
+|---|---|
+| **Format-valid** | The packaged `.kdna` file passes `kdna validate`. This says the structure, schema, payload, checksums, and load contract are valid. |
+| **Loadable now** | `kdna plan-load` returns `can_load_now: true`; only then should `kdna load` emit judgment context. |
+| **Release-card described** | The public asset has filename, version, digest, use commands, applies/does-not-apply boundaries, known limitations, and trust metadata. |
+| **Human-confirmed** | Optional provenance: a human reviewed or approved the asset. This is not required for format validity. |
+| **Signed / encrypted / licensed / registry-listed** | Future or optional trust/distribution layers. They are not part of the current public beta baseline. |
 
-| `quality_badge` | Minimum Evidence | Who assigns it |
-|-----------------|-----------------|----------------|
-| `untested` | Passes `kdna dev validate` (schema + lint). No eval cases. | Self-declared |
-| `tested` | >= 10 standardized eval cases conforming to `schema/eval.schema.json`. | Self-declared, machine-verified |
-| `validated` | >= 30 eval cases + blind review + raw outputs + benchmark report. | Self-declared, machine-verified |
-| `expert_reviewed` | `validated` + at least one external domain expert review, reviewer identity public. | External expert |
-| `production_ready` | `expert_reviewed` + real-world usage data from at least one independent deployment + multi-model stability evidence. | Registry maintainer |
+`kdna validate` does not mean the asset is high quality, officially
+recommended, safe for every use case, or certified by KDNA. Trust, quality,
+authorship, and distribution status are separate layers.
 
-## Historical Migrations
+## Historical Terms
 
-| Old Value | New Mapping | Reason |
-|-----------|-------------|--------|
-| `status: basic` | `status: stable` + `quality_badge: tested` | "basic" conflated maturity and quality. |
-| `status: pro` | `status: stable` + `quality_badge: tested` | "pro" was a marketing label, not a maturity level. |
-| `status: reference` | `status: stable` + `quality_badge: validated` or `expert_reviewed` | "reference" mixed pedagogical intent with quality. |
-| `quality_badge: experimental` | `quality_badge: untested` | More honest about evidence level. |
-| `quality_badge: production` | `quality_badge: production_ready` | Explicit, unambiguous naming. |
+Older registry, marketplace, and `quality_badge` terminology may still appear
+in historical design or audit documents. It is not the current Core v1 public
+beta path. New public examples should use packaged `.kdna` files plus release
+cards, not registry badge claims.

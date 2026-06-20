@@ -41,13 +41,16 @@ Did you remove or fundamentally redefine what the domain judges?
 
 ## Where Version Appears
 
-A single version bump must update ALL of these:
+A public `.kdna` release should update these surfaces:
 
-1. **`kdna.json`** → `"version": "0.2.0"`
-2. **Every KDNA JSON file meta** → `"version": "1.0-rc"` (spec version, not package version — see below)
-3. **`CHANGELOG.md`** → New version entry
-4. **`package.json`** (if npm package) → `"version": "0.2.0"`
-5. **Registry** → Update `domains.json` entry when published
+1. **`.kdna` manifest** → `"version": "0.2.0"`
+2. **Release card** → filename, version, SHA-256 digest, commands, boundaries,
+   known limitations, and trust metadata
+3. **`CHANGELOG.md` or release notes** → New version entry
+4. **Package metadata** → only if the asset is distributed through an npm
+   package or another package manager
+
+Registry metadata is not part of the current KDNA Core v1 public beta path.
 
 ## Package Version vs Spec Version
 
@@ -69,16 +72,9 @@ Every version change that affects judgment (MINOR + MAJOR) MUST be re-evaluated:
 kdna compare --before examples/my_domain_v1 --after examples/my_domain_v2
 ```
 
-The `evaluation_history` in `domains.json` tracks this:
-```json
-{
-  "version": "0.2.0",
-  "eval_score": 85,
-  "test_count": 4,
-  "evaluated_at": "2026-06-01T00:00:00Z",
-  "change_from_previous": "+5 (added AX-003)"
-}
-```
+If you claim a public asset is evaluated, publish the evaluation report and
+reproducible evidence next to the release card. Do not use `evaluated` unless
+the evidence is available to users.
 
 If a version change DEGRADES judgment, do not release — fix the regression first.
 
@@ -88,9 +84,11 @@ Before bumping and publishing:
 
 - [ ] All files reference the correct `meta.version` (spec version)
 - [ ] `kdna.json` `version` matches the new package version
-- [ ] `kdna-lint` and `kdna-validate` pass
+- [ ] `kdna validate <asset.kdna>` passes
+- [ ] `kdna plan-load <asset.kdna>` returns the expected loading plan
 - [ ] `CHANGELOG.md` has an entry for this version
-- [ ] If MINOR or MAJOR: re-run benchmark and record `evaluation_history`
+- [ ] Release card includes SHA-256, use commands, boundaries, and known limitations
+- [ ] If MINOR or MAJOR: re-run benchmark or evaluation and publish the report if you claim evaluated status
 - [ ] If MAJOR: notify existing users of breaking change
 - [ ] No regression compared to previous version
 

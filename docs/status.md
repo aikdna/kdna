@@ -21,7 +21,6 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 - **Checksums** — per-entry SHA-256 / SHA-512 / BLAKE2b-256
 - **Runtime trace vocabulary** (`docs/core/trace.md`)
 - **Content-neutral output boundary** — `trusted` / `recommended` / `high_quality` / `officially_approved` / `quality_badge` never emitted
-- **Public narrative** — READMEs, docs/core/, website P0 pages, cross-repo audit
 
 ## What is beta
 
@@ -32,6 +31,9 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 - **`kdna pack`** — deterministic ZIP pack (mimetype first, STORED; same input → same SHA-256, verified as `3f0ba461...`)
 - **`kdna unpack`** — unpack `.kdna` container, refuse path traversal
 - **CLI v1 route tests and smoke checks** — pass for inspect, validate, LoadPlan, load refusal, pack, unpack, and source/container edge cases
+- **Public beta narrative** — READMEs, website, and current public docs describe
+  local packaged `.kdna` files, release cards, and beta boundaries. This is a
+  propagation boundary, not a claim that the full ecosystem is stable.
 
 **Resolved in 0.26.x**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.26.9` now includes the full v1 inspect/validate/plan-load/pack/unpack/load route for public local assets.
 
