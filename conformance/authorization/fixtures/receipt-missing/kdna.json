@@ -24,11 +24,7 @@
   "summary": "Phase 1 minimal example. The smallest valid KDNA v1 asset.",
   "language": "en",
   "license": "Apache-2.0",
-  "keywords": [
-    "authorization",
-    "conformance",
-    "receipt-missing"
-  ],
+  "keywords": ["authorization", "conformance", "receipt-missing"],
   "lineage": {
     "type": "original",
     "fork_of": null,
@@ -51,10 +47,7 @@
       },
       "full": {
         "requires_decryption": false,
-        "intended_for": [
-          "audit",
-          "reference"
-        ]
+        "intended_for": ["audit", "reference"]
       }
     }
   },

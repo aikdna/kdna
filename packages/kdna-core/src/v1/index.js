@@ -43,6 +43,29 @@ const MIMETYPE_V1 = 'application/vnd.kdna.asset';
 const MIMETYPE_V2 = 'application/vnd.aikdna.kdna+zip';
 const V1_REQUIRED_DIR_ENTRIES = ['mimetype', 'kdna.json', 'payload.kdnab'];
 const V1_OPTIONAL_DIR_ENTRIES = ['checksums.json', 'signatures', 'attachments'];
+const V1_ALLOWED_TOP_LEVEL_ENTRIES = new Set([
+  ...V1_REQUIRED_DIR_ENTRIES,
+  ...V1_OPTIONAL_DIR_ENTRIES,
+]);
+const V1_FORBIDDEN_LEGACY_TOP_LEVEL = new Set([
+  'KDNA_Core.json',
+  'KDNA_Patterns.json',
+  'KDNA_Scenarios.json',
+  'KDNA_Cases.json',
+  'KDNA_Reasoning.json',
+  'KDNA_Evolution.json',
+]);
+
+const DEFAULT_CONTAINER_LIMITS = Object.freeze({
+  maxContainerBytes: 25 * 1024 * 1024,
+  maxEntries: 128,
+  maxEntryBytes: 5 * 1024 * 1024,
+  maxTotalUncompressedBytes: 12 * 1024 * 1024,
+  maxCompressionRatio: 100,
+  maxJsonDepth: 64,
+  maxJsonArrayLength: 10000,
+  maxJsonStringLength: 1024 * 1024,
+});
 
 // Words that must never appear in v1 CLI output as positive claims.
 // Schema-valid, signature-valid, compatible — those are fine.
@@ -141,15 +164,15 @@ function detectContainerFormat(absPath) {
   fs.closeSync(fd);
   if (head[0] !== 0x50 || head[1] !== 0x4b) return null;
 
-  // Read the first entry's name + content. We re-use listZipEntries.
-  let entries;
+  // Read only the first central-directory entry. Dangerous later entries
+  // must not make detection fall through to a less strict legacy route;
+  // readV1Layout/validate will reject them with the secure container reader.
+  let first;
   try {
-    entries = listZipEntries(absPath);
+    first = readFirstZipEntry(absPath);
   } catch {
     return null;
   }
-  if (entries.length === 0) return null;
-  const first = entries[0];
   if (first.name !== 'mimetype') return null;
   // The mimetype entry must be STORED (method 0).
   if (first.method !== 0) return null;
@@ -167,8 +190,13 @@ function detectContainerFormat(absPath) {
  * `data` is already decompressed. Throws on unsupported methods or
  * truncated input.
  */
-function listZipEntries(absPath) {
+function listZipEntries(absPath, opts = {}) {
+  const secure = opts.secure !== false;
+  const limits = { ...DEFAULT_CONTAINER_LIMITS, ...(opts.limits || {}) };
   const buf = fs.readFileSync(absPath);
+  if (secure && buf.length > limits.maxContainerBytes) {
+    throw new Error(`container exceeds maximum size (${limits.maxContainerBytes} bytes)`);
+  }
 
   // Locate EOCD — search backwards within the 64KiB comment window.
   let eocdOff = -1;
@@ -183,8 +211,13 @@ function listZipEntries(absPath) {
 
   const totalEntries = buf.readUInt16LE(eocdOff + 10);
   const cdOffset = buf.readUInt32LE(eocdOff + 16);
+  if (secure && totalEntries > limits.maxEntries) {
+    throw new Error(`container has too many entries (${totalEntries} > ${limits.maxEntries})`);
+  }
 
   const entries = [];
+  const seenNames = new Set();
+  let totalUncompressed = 0;
   let p = cdOffset;
   for (let i = 0; i < totalEntries; i++) {
     if (buf.readUInt32LE(p) !== 0x02014b50) {
@@ -196,8 +229,30 @@ function listZipEntries(absPath) {
     const nameLen = buf.readUInt16LE(p + 28);
     const extraLen = buf.readUInt16LE(p + 30);
     const commentLen = buf.readUInt16LE(p + 32);
+    const externalAttributes = buf.readUInt32LE(p + 38);
     const localOff = buf.readUInt32LE(p + 42);
     const name = buf.slice(p + 46, p + 46 + nameLen).toString('utf8');
+    const normalizedName = secure ? normalizeContainerEntryName(name) : name;
+
+    if (secure) {
+      validateContainerEntryMetadata({
+        name,
+        normalizedName,
+        method,
+        compressedSize: compSize,
+        uncompressedSize: uncompSize,
+        externalAttributes,
+        seenNames,
+        limits,
+      });
+      totalUncompressed += uncompSize;
+      if (totalUncompressed > limits.maxTotalUncompressedBytes) {
+        throw new Error(
+          `container uncompressed content exceeds maximum (${limits.maxTotalUncompressedBytes} bytes)`,
+        );
+      }
+      seenNames.add(normalizedName);
+    }
 
     if (buf.readUInt32LE(localOff) !== 0x04034b50) {
       throw new Error(`bad local-file-header for entry ${name}`);
@@ -211,18 +266,122 @@ function listZipEntries(absPath) {
     if (method === 0) data = comp;
     else if (method === 8) data = zlib.inflateRawSync(comp);
     else throw new Error(`unsupported compression method ${method} for ${name}`);
+    if (secure && data.length !== uncompSize) {
+      throw new Error(`entry size mismatch for ${normalizedName}`);
+    }
 
     entries.push({
-      name,
+      name: secure ? normalizedName : name,
       method,
       compressedSize: compSize,
       uncompressedSize: uncompSize,
       localOffset: localOff,
+      externalAttributes,
       data,
     });
     p += 46 + nameLen + extraLen + commentLen;
   }
   return entries;
+}
+
+function readFirstZipEntry(absPath) {
+  const buf = fs.readFileSync(absPath);
+  let eocdOff = -1;
+  const minStart = Math.max(0, buf.length - 65557);
+  for (let i = buf.length - 22; i >= minStart; i--) {
+    if (buf.readUInt32LE(i) === 0x06054b50) {
+      eocdOff = i;
+      break;
+    }
+  }
+  if (eocdOff < 0) throw new Error('not a ZIP/.kdna container (no EOCD)');
+  const totalEntries = buf.readUInt16LE(eocdOff + 10);
+  if (totalEntries === 0) throw new Error('empty ZIP/.kdna container');
+  const cdOffset = buf.readUInt32LE(eocdOff + 16);
+  if (buf.readUInt32LE(cdOffset) !== 0x02014b50) {
+    throw new Error(`bad central-directory entry at offset ${cdOffset}`);
+  }
+  const method = buf.readUInt16LE(cdOffset + 10);
+  const compSize = buf.readUInt32LE(cdOffset + 20);
+  const uncompSize = buf.readUInt32LE(cdOffset + 24);
+  const nameLen = buf.readUInt16LE(cdOffset + 28);
+  const extraLen = buf.readUInt16LE(cdOffset + 30);
+  const localOff = buf.readUInt32LE(cdOffset + 42);
+  const name = buf.slice(cdOffset + 46, cdOffset + 46 + nameLen).toString('utf8');
+  if (buf.readUInt32LE(localOff) !== 0x04034b50) {
+    throw new Error(`bad local-file-header for entry ${name}`);
+  }
+  const lNameLen = buf.readUInt16LE(localOff + 26);
+  const lExtraLen = buf.readUInt16LE(localOff + 28);
+  const compStart = localOff + 30 + lNameLen + lExtraLen;
+  const comp = buf.slice(compStart, compStart + compSize);
+  const data = method === 0 ? comp : method === 8 ? zlib.inflateRawSync(comp) : Buffer.alloc(0);
+  return { name, method, compressedSize: compSize, uncompressedSize: uncompSize, localOffset: localOff, extraLen, data };
+}
+
+function normalizeContainerEntryName(name) {
+  if (typeof name !== 'string' || name.length === 0) {
+    throw new Error('container entry has an empty name');
+  }
+  const normalized = name.normalize('NFC');
+  if (normalized !== name) {
+    throw new Error(`container entry uses a non-canonical Unicode name: ${name}`);
+  }
+  if (normalized.includes('\\')) {
+    throw new Error(`container entry uses backslash path separators: ${name}`);
+  }
+  if (normalized.startsWith('/') || /^[A-Za-z]:\//.test(normalized)) {
+    throw new Error(`container entry uses an absolute path: ${name}`);
+  }
+  const parts = normalized.split('/');
+  if (parts.some((part) => part === '' || part === '.' || part === '..')) {
+    throw new Error(`container entry uses an unsafe relative path: ${name}`);
+  }
+  return normalized;
+}
+
+function validateContainerEntryMetadata(entry) {
+  const {
+    name,
+    normalizedName,
+    method,
+    compressedSize,
+    uncompressedSize,
+    externalAttributes,
+    seenNames,
+    limits,
+  } = entry;
+
+  if (seenNames.has(normalizedName)) {
+    throw new Error(`container has duplicate entry: ${normalizedName}`);
+  }
+  const topLevel = normalizedName.split('/')[0];
+  if (!V1_ALLOWED_TOP_LEVEL_ENTRIES.has(topLevel)) {
+    if (V1_FORBIDDEN_LEGACY_TOP_LEVEL.has(topLevel)) {
+      throw new Error(`container includes forbidden top-level source entry: ${topLevel}`);
+    }
+    throw new Error(`container includes unsupported top-level entry: ${topLevel}`);
+  }
+  if ((topLevel === 'signatures' || topLevel === 'attachments') && normalizedName === topLevel) {
+    throw new Error(`container directory entry is not supported: ${name}`);
+  }
+  if (method !== 0 && method !== 8) {
+    throw new Error(`unsupported compression method ${method} for ${normalizedName}`);
+  }
+  if (uncompressedSize > limits.maxEntryBytes) {
+    throw new Error(`container entry ${normalizedName} exceeds maximum size (${limits.maxEntryBytes} bytes)`);
+  }
+  if (compressedSize > 0 && uncompressedSize / compressedSize > limits.maxCompressionRatio) {
+    throw new Error(`container entry ${normalizedName} exceeds maximum compression ratio`);
+  }
+
+  const mode = externalAttributes >>> 16;
+  const type = mode & 0o170000;
+  const symlink = type === 0o120000;
+  const deviceOrSpecial = type === 0o020000 || type === 0o060000 || type === 0o010000 || type === 0o140000;
+  if (symlink || deviceOrSpecial) {
+    throw new Error(`container entry ${normalizedName} has unsupported file attributes`);
+  }
 }
 
 /**
@@ -330,11 +489,11 @@ function readV1Layout(absPath) {
   let stat;
   try {
     stat = fs.statSync(absPath);
-  } catch (e) {
+  } catch {
     throw new Error(`path not found: ${absPath}`);
   }
 
-  let map = {};
+  const map = {};
   let entries = null; // ZIP entries if container
   let kind = null; // 'dir' | 'file'
 
@@ -344,6 +503,9 @@ function readV1Layout(absPath) {
       const full = path.join(absPath, f);
       if (!fs.existsSync(full)) {
         throw new Error(`not a KDNA v1 source dir: missing ${f}`);
+      }
+      if (fs.lstatSync(full).isSymbolicLink()) {
+        throw new Error(`not a KDNA v1 source dir: ${f} must not be a symlink`);
       }
     }
     for (const f of [...V1_REQUIRED_DIR_ENTRIES, ...V1_OPTIONAL_DIR_ENTRIES]) {
@@ -399,7 +561,7 @@ function readV1Layout(absPath) {
   // docs/core/manifest.md / schema/manifest.schema.json.)
   let manifest;
   try {
-    manifest = JSON.parse(map['kdna.json'].toString('utf8'));
+    manifest = parseJsonEntry('kdna.json', map['kdna.json']);
   } catch (e) {
     throw new Error(`kdna.json is not valid JSON: ${e.message}`);
   }
@@ -408,6 +570,43 @@ function readV1Layout(absPath) {
   }
 
   return { kind, map, manifest, entries };
+}
+
+function parseJsonEntry(name, bytes, opts = {}) {
+  if (!Buffer.isBuffer(bytes)) {
+    throw new Error(`${name} is not a file entry`);
+  }
+  const limits = { ...DEFAULT_CONTAINER_LIMITS, ...(opts.limits || {}) };
+  if (bytes.length > limits.maxEntryBytes) {
+    throw new Error(`${name} exceeds maximum size (${limits.maxEntryBytes} bytes)`);
+  }
+  const parsed = JSON.parse(bytes.toString('utf8'));
+  assertJsonWithinLimits(parsed, name, limits);
+  return parsed;
+}
+
+function assertJsonWithinLimits(value, name, limits) {
+  function walk(node, depth) {
+    if (depth > limits.maxJsonDepth) {
+      throw new Error(`${name} exceeds maximum JSON depth (${limits.maxJsonDepth})`);
+    }
+    if (typeof node === 'string') {
+      if (node.length > limits.maxJsonStringLength) {
+        throw new Error(`${name} contains a string exceeding ${limits.maxJsonStringLength} characters`);
+      }
+      return;
+    }
+    if (node === null || typeof node !== 'object') return;
+    if (Array.isArray(node)) {
+      if (node.length > limits.maxJsonArrayLength) {
+        throw new Error(`${name} contains an array exceeding ${limits.maxJsonArrayLength} items`);
+      }
+      for (const item of node) walk(item, depth + 1);
+      return;
+    }
+    for (const child of Object.values(node)) walk(child, depth + 1);
+  }
+  walk(value, 0);
 }
 
 // ─── inspect ───────────────────────────────────────────────────────────
@@ -485,7 +684,7 @@ function runValidate(v1) {
   // payload gate — payload.kdnab against payload-profile-v1.schema.json
   let payload;
   try {
-    payload = JSON.parse(v1.map['payload.kdnab'].toString('utf8'));
+    payload = parseJsonEntry('payload.kdnab', v1.map['payload.kdnab']);
   } catch (e) {
     result.payload_valid = false;
     problems.push(`payload: not valid JSON (${e.message})`);
@@ -502,7 +701,7 @@ function runValidate(v1) {
   if (v1.map['checksums.json']) {
     let checks;
     try {
-      checks = JSON.parse(v1.map['checksums.json'].toString('utf8'));
+      checks = parseJsonEntry('checksums.json', v1.map['checksums.json']);
     } catch (e) {
       result.checksums_valid = false;
       problems.push(`checksums: not valid JSON (${e.message})`);
@@ -737,7 +936,7 @@ function unpack(inputPath, outputDir) {
 
 // ─── Public router entry points ────────────────────────────────────────
 
-function inspect(inputPath, opts = {}) {
+function inspect(inputPath, _opts = {}) {
   const v1 = readV1Layout(path.resolve(inputPath));
   const out = buildInspectOutput(v1);
   // Guard against accidental forbidden wording in any future field additions.
@@ -745,7 +944,7 @@ function inspect(inputPath, opts = {}) {
   return out;
 }
 
-function validate(inputPath, opts = {}) {
+function validate(inputPath, _opts = {}) {
   const v1 = readV1Layout(path.resolve(inputPath));
   return runValidate(v1);
 }
@@ -951,6 +1150,13 @@ function planLoad(inputPath, opts = {}) {
 
     if (plan.entitlement_profile === 'password') {
       if (opts.password || opts.hasPassword === true) {
+        if (opts.hasPassword === true && !opts.password) {
+          plan.issues.push(buildLoadPlanIssue(
+            'KDNA_AUTH_PASSWORD_DIAGNOSTIC',
+            'info',
+            'hasPassword is a diagnostic credential-presence signal only; it does not verify the password.',
+          ));
+        }
         plan.state = 'ready';
         plan.required_action = 'load';
         plan.can_load_now = true;
@@ -1106,6 +1312,7 @@ module.exports = {
   inspect,
   validate,
   planLoad,
+  loadAuthorized,
   buildChecksumsV1,
   pack,
   unpack,
@@ -1122,6 +1329,9 @@ function renderPromptItem(item) {
 
   if (item.type === 'axiom_applicability' && item.one_sentence) {
     const parts = [item.one_sentence];
+    if (Array.isArray(item.applies_when) && item.applies_when.length) {
+      parts.push(`applies when: ${item.applies_when.slice(0, 2).join('; ')}`);
+    }
     if (Array.isArray(item.does_not_apply_when) && item.does_not_apply_when.length) {
       parts.push(`does not apply when: ${item.does_not_apply_when.slice(0, 2).join('; ')}`);
     }
@@ -1144,7 +1354,52 @@ function renderPromptItem(item) {
   return JSON.stringify(item);
 }
 
+function loadAuthorized(inputPath, opts = {}) {
+  const plan = planLoad(inputPath, opts);
+  if (plan.can_load_now !== true) {
+    const issueCodes = Array.isArray(plan.issues)
+      ? plan.issues.map((issue) => issue.code).filter(Boolean)
+      : [];
+    const err = new Error(
+      `LoadPlan denied loading: state=${plan.state || 'invalid'} required_action=${plan.required_action || 'block'}`,
+    );
+    err.code = issueCodes[0] || 'KDNA_LOAD_NOT_AUTHORIZED';
+    err.plan = plan;
+    throw err;
+  }
+  return loadV1Unsafe(inputPath, opts);
+}
+
 function loadV1(inputPath, opts = {}) {
+  return loadAuthorized(inputPath, opts);
+}
+
+function normalizeCompactAxiom(axiom) {
+  if (typeof axiom === 'string') {
+    return {
+      type: 'axiom_applicability',
+      statement: axiom,
+      one_sentence: axiom,
+      applies_when: [],
+      does_not_apply_when: [],
+      failure_risk: null,
+    };
+  }
+  if (!axiom || typeof axiom !== 'object') return null;
+  const statement = axiom.statement || axiom.one_sentence || axiom.full_statement || axiom.id || null;
+  if (!statement) return null;
+  return {
+    type: 'axiom_applicability',
+    id: axiom.id || null,
+    statement,
+    one_sentence: axiom.one_sentence || statement,
+    applies_when: Array.isArray(axiom.applies_when) ? axiom.applies_when : [],
+    does_not_apply_when: Array.isArray(axiom.does_not_apply_when) ? axiom.does_not_apply_when : [],
+    failure_risk: axiom.failure_risk || null,
+  };
+}
+
+function loadV1Unsafe(inputPath, opts = {}) {
   const v1 = readV1Layout(path.resolve(inputPath));
   const m = v1.manifest;
   const profile = opts.profile || (m.load_contract ? m.load_contract.default_profile : 'compact') || 'compact';
@@ -1152,7 +1407,7 @@ function loadV1(inputPath, opts = {}) {
 
   let payload;
   try {
-    payload = JSON.parse(v1.map['payload.kdnab'].toString('utf8'));
+    payload = parseJsonEntry('payload.kdnab', v1.map['payload.kdnab']);
   } catch (e) {
     throw new Error(`payload.kdnab is not valid JSON: ${e.message}`);
   }
@@ -1166,7 +1421,7 @@ function loadV1(inputPath, opts = {}) {
   // Digest verification — refuse to load if checksums.json is present and digests mismatch.
   if (v1.map['checksums.json']) {
     try {
-      const checks = JSON.parse(v1.map['checksums.json'].toString('utf8'));
+      const checks = parseJsonEntry('checksums.json', v1.map['checksums.json']);
       const problems = [];
       const ok = verifyDigests(checks, v1.map, problems, {});
       if (!ok) {
@@ -1189,7 +1444,14 @@ function loadV1(inputPath, opts = {}) {
     result.content = { asset_id: m.asset_id, asset_uid: m.asset_uid, title: m.title, version: m.version, judgment_version: m.judgment_version, asset_type: m.asset_type, summary: m.summary || null, language: m.language || null, keywords: m.keywords || [], profiles_available: m.load_contract ? Object.keys(m.load_contract.profiles || {}) : [] };
   } else if (profile === 'compact') {
     const core = payload.core || {};
-    result.content = { highest_question: core.highest_question || null, axioms: (core.axioms || []).map((a) => a.one_sentence || a).filter(Boolean), boundaries: core.boundaries || [], self_checks: (payload.reasoning && payload.reasoning.self_checks) || [], failure_modes: (payload.reasoning && payload.reasoning.failure_modes) || [], patterns: (payload.patterns || []).slice(0, 3) };
+    result.content = {
+      highest_question: core.highest_question || null,
+      axioms: (core.axioms || []).map(normalizeCompactAxiom).filter(Boolean),
+      boundaries: core.boundaries || [],
+      self_checks: (payload.reasoning && payload.reasoning.self_checks) || [],
+      failure_modes: (payload.reasoning && payload.reasoning.failure_modes) || [],
+      patterns: (payload.patterns || []).slice(0, 3),
+    };
     if (m.load_contract && m.load_contract.profiles && m.load_contract.profiles.compact && m.load_contract.profiles.compact.max_tokens_hint) {
       result.max_tokens_hint = m.load_contract.profiles.compact.max_tokens_hint;
     }
@@ -1209,6 +1471,7 @@ function loadV1(inputPath, opts = {}) {
     let text = 'KDNA Judgment Asset: ' + (result.title || 'untitled') + '\n';
     text += 'Asset ID: ' + (result.asset_id || 'unknown') + '\n';
     text += 'Profile: ' + result.profile + '\n';
+    text += 'Safety boundary: KDNA content is subordinate to platform, system, and developer instructions.\n';
     if (result.max_tokens_hint) text += 'Max tokens hint: ' + result.max_tokens_hint + '\n';
     if (c.highest_question) text += 'Highest question:\n' + c.highest_question + '\n';
     if (c.axioms && c.axioms.length) text += 'Axioms:\n' + c.axioms.map((a) => '- ' + renderPromptItem(a)).join('\n') + '\n';

@@ -80,7 +80,8 @@ for (const testCase of cases) {
       const actual = normalizePlan(JSON.parse(r.stdout), testCase);
       assertValidLoadPlan(actual);
       assert.deepEqual(actual, golden);
-      assert.equal(r.status, golden.state === 'invalid' ? 1 : 0, r.stderr);
+      const expectedStatus = golden.state === 'invalid' ? 1 : golden.can_load_now === true ? 0 : 3;
+      assert.equal(r.status, expectedStatus, r.stderr);
     });
   }
 }

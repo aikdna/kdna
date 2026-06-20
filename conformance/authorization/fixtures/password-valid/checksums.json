@@ -1,12 +1,12 @@
 {
   "algorithm": "sha256",
-  "manifest_digest": "sha256:d7a24723588e84076f6ad6990103a57b28111d90b3310a64bcb96538c1cbf53c",
+  "manifest_digest": "sha256:8615c4a25b21cb8fe8394792a4f890b9421958a6122faa905fb51fe8844b2599",
   "payload_digest": "sha256:593109dd2aaf3fcc7ab9f352d5cd4476596ab9db5850175824e0619796088caf",
-  "asset_digest": "sha256:115266fa70530a7dd17551311385296fe768ed99de0f0cc74121bb49d58763fb",
+  "asset_digest": "sha256:4e1e1a7afbf2eebb5c2ed4a82a84603779e2aa18f6c58e6a3a42c3e54871061a",
   "entries": {
     "kdna.json": {
       "algorithm": "sha256",
-      "value": "d7a24723588e84076f6ad6990103a57b28111d90b3310a64bcb96538c1cbf53c"
+      "value": "8615c4a25b21cb8fe8394792a4f890b9421958a6122faa905fb51fe8844b2599"
     },
     "payload.kdnab": {
       "algorithm": "sha256",

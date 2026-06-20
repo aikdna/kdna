@@ -11,6 +11,7 @@ const checks = [
   ['npm', ['--prefix', 'examples/typescript-agent', 'ci']],
   ['npm', ['--prefix', 'examples/typescript-agent', 'test']],
   ['npm', ['run', 'check:pack']],
+  ['npm', ['run', 'release:evidence']],
   ['git', ['diff', '--check']],
 ];
 
