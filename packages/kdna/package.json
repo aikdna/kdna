@@ -38,7 +38,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@aikdna/kdna-cli": "^0.26.1",
+    "@aikdna/kdna-cli": "^0.26.2",
     "@aikdna/kdna-core": "^0.12.1"
   }
 }
