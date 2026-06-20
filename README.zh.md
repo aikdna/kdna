@@ -216,15 +216,19 @@ node examples/minimal-agent/agent.js
 
 同一个用户输入，加载不同的 KDNA 领域，产生完全不同的认知分析。不需要 LLM——纯粹的判断路径对比。
 
-## 领域仓库
+## 示例资产
 
-领域认知包存放在独立仓库中。KDNA Core 不维护官方目录、不定义收录标准；第三方按需引用各领域仓库即可。
+KDNA 的公开示例以打包的 `.kdna` 文件形式分发，不通过 GitHub 仓库作为入口。
 
-| 领域 | 仓库 | 状态 |
-|---|---|---|
-| Writing | [kdna-writing](https://github.com/aikdna/kdna-writing) | v1 legacy proof asset |
-| Prompt Diagnosis | [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) | v1 legacy proof asset |
-| Agent Safety Judgment | [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety) | v1 legacy proof asset |
+下载 `.kdna` 文件后：
+
+```bash
+kdna validate <asset>.kdna
+kdna plan-load <asset>.kdna
+kdna load <asset>.kdna --profile=compact --as=prompt
+```
+
+公开示例资产的下载入口见官方网站 examples 页面。
 
 ### 演示样例
 
