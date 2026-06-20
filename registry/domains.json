@@ -1,6 +1,8 @@
 {
+  "_deprecated": true,
+  "_deprecation_note": "This registry file is a historical artifact for CLI/validator development reference only. KDNA Core v1 does not define a canonical registry. Domain discovery is local-first: any .kdna file that passes kdna validate is a valid asset. The data below is stale and may not reflect current repo state.",
   "registry_version": "1.0-rc",
-  "updated": "2026-05-21T00:00:00Z",
+  "updated": "2026-06-20T00:00:00Z",
   "domains": [
     {
       "id": "decision_state",
@@ -267,7 +269,7 @@
       "version": "0.1.0",
       "repo": "https://github.com/aikdna/kdna-code_review",
       "spec_version": "1.0-rc",
-      "status": "stable",
+      "status": "experimental",
       "access": "public",
       "author": {
         "name": "KDNA Team",
