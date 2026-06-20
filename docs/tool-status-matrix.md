@@ -2,12 +2,12 @@
 
 | Tool | Role | Status | Can run today | Command | Known limitation | Next action |
 |---|---|---|---|---|---|---|
-| **kdna inspect** | Official v1 inspection | available in global CLI (@0.26.8) | yes | `kdna inspect <file.kdna>` | | |
-| **kdna validate** | Official v1 validation | available in global CLI (@0.26.8) | yes | `kdna validate <file.kdna>` | | |
-| **kdna plan-load** | Official LoadPlan check | available in global CLI (@0.26.8) | yes | `kdna plan-load <file.kdna>` | | |
-| **kdna load** | Runtime loading | available in global CLI (@0.26.8) | yes | `kdna load <file.kdna> --profile=compact --as=prompt` | | |
-| **kdna pack** | Official deterministic pack | available in global CLI (@0.26.8) | yes | `kdna pack <dev-source> <out.kdna>` | Creator/debug workflow, not public consumption | |
-| **kdna unpack** | Official unpack | available in global CLI (@0.26.8) | yes | `kdna unpack <file.kdna> <out>` | Editing/debug view, not a separate public asset | |
+| **kdna inspect** | Official v1 inspection | available in global CLI (@0.26.9) | yes | `kdna inspect <file.kdna>` | | |
+| **kdna validate** | Official v1 validation | available in global CLI (@0.26.9) | yes | `kdna validate <file.kdna>` | | |
+| **kdna plan-load** | Official LoadPlan check | available in global CLI (@0.26.9) | yes | `kdna plan-load <file.kdna>` | | |
+| **kdna load** | Runtime loading | available in global CLI (@0.26.9) | yes | `kdna load <file.kdna> --profile=compact --as=prompt` | | |
+| **kdna pack** | Official deterministic pack | available in global CLI (@0.26.9) | yes | `kdna pack <dev-source> <out.kdna>` | Creator/debug workflow, not public consumption | |
+| **kdna unpack** | Official unpack | available in global CLI (@0.26.9) | yes | `kdna unpack <file.kdna> <out>` | Editing/debug view, not a separate public asset | |
 | **kdna setup** | Agent setup | beta | yes | `kdna setup` (global) | Agent-specific install behavior varies | Harden per-agent setup smokes |
 | **kdna doctor** | System health check | beta | yes | `kdna doctor --agents` (global) | Agent-specific detection varies | Harden per-agent diagnostics |
 | **kdna list** | Installed domains | beta | yes | `kdna list` (global) | Shows legacy v2 domain list | Update for v1 |

@@ -505,8 +505,8 @@ test('loadV1: compact profile preserves Human Lock boundary fields', () => {
       {
         id: 'evidence_first',
         one_sentence: 'Prefer specific evidence over broad claims',
-        applies_when: ['reviewing factual claims'],
-        does_not_apply_when: ['writing fictional copy'],
+        applies_when: 'reviewing factual claims',
+        does_not_apply_when: 'writing fictional copy',
         failure_risk: 'The agent may overfit to unsupported generalities.',
       },
     ];
