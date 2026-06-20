@@ -116,13 +116,19 @@ A judgment system asset is not a knowledge base (which stores information) or a 
 
 This concept is explored in detail in [Judgment Systems](judgment-systems.md).
 
-### 1.6 Human-Led, AI-Assisted
+### 1.6 Human, Agent, and Tool-Assisted Authoring
 
-KDNA domains may be assisted by AI, but they must be human-led. AI can help extract candidate principles, identify contradictions, generate test cases, and suggest structure. But domain judgment becomes KDNA only after human review, confirmation, and accountability.
+KDNA assets may be created by humans, agents, tools, or hybrid workflows through
+the official toolchain. AI can help extract candidate principles, identify
+contradictions, generate test cases, and suggest structure.
 
-> **AI can propose. Human must confirm. Only human-locked judgment can become KDNA.**
+At the format layer, a packaged `.kdna` file is valid when it passes protocol
+validation. Human review, Human Lock, signatures, quality claims, and release
+evidence are separate provenance and trust layers.
 
-This principle is enforced in the KDNA authoring toolchain through the Human Lock mechanism: judgment-class cards (axioms, boundaries, risks) must be explicitly locked by a human before they can be compiled into a KDNA domain. Changes to locked content are detected via cryptographic fingerprint and require re-lock.
+Studio-compatible authoring tools may require review approval before exporting
+their own project workspaces. That is Studio workflow policy, not a universal
+KDNA Core v1 format-validity requirement.
 
 ---
 
@@ -734,15 +740,24 @@ KDNA has moved from concept to a working protocol ecosystem with early evidence.
 
 The `kdna route` command implements a 5-Gate 7-State domain router (Intent Gate → Negative Match → Domain Fit → Trust Gate → Ambiguity Gate). Output conforms to `specs/route-result.schema.json`. The router's first principle: "No KDNA is better than wrong KDNA" — skipping is the default, loading requires positive fit evidence.
 
-### 14.4 Human Lock Gate
+### 14.4 Studio Review and Provenance
 
-Human Lock has moved from specification to working code at two enforcement points:
-- **Studio Gate**: integrated into `exportProject()` — blocks export if judgment-class cards are not properly locked. 4 rules: must be locked, must have Human Lock record, must confirm `applies_when`/`does_not_apply_when`/`failure_risk` reviewed, fingerprint change detection for post-lock modifications. 16 tests.
-- **Runtime Gate**: `kdna dev pack` remains a dev-only diagnostic bundle path, while `kdna publish` accepts existing Studio-compiled `.kdna` assets and checks authoring provenance for trusted quality claims.
+Studio-compatible authoring tools can record review approval, Human Lock,
+signatures, and release evidence as provenance signals. Current Studio export
+uses reviewed cards as release evidence before producing a runtime `.kdna`
+container.
 
-### 14.5 Reference Domains
+The runtime Core v1 path remains separate: a public local `.kdna` asset is
+consumed through `kdna validate`, `kdna plan-load`, and `kdna load` only when
+the LoadPlan allows loading. Registry publishing, protected assets, and trust
+claims are not part of the current stable launch baseline.
 
-The public registry may retain experimental and yanked entries for transparency, but the official install surface is a focused reference set: kdna_authoring, agent_safety, prompt_diagnosis, code_review, and writing. Together they demonstrate authoring, safety, prompt diagnosis, code review, and writing judgment across the core install, verify, and load flow. Commercial pro domains (writing-pro, speaking-pro, management-pro, silver-age-pro) are in staging.
+### 14.5 Reference Examples
+
+Public examples should be packaged `.kdna` files with checksums, release cards,
+usage commands, boundaries, and trust metadata. They demonstrate the format and
+toolchain; they are not a registry, ranking system, marketplace, or official
+content-quality authority.
 
 ### 14.6 Reference Applications
 

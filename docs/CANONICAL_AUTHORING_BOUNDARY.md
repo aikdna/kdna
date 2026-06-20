@@ -8,31 +8,32 @@ validation, canonicalization, identity generation, digest computation, optional
 Human Lock, optional signing, optional encryption, and provenance recording.
 
 A conforming `.kdna` asset MAY NOT be created by directly packaging arbitrary
-source directories and presenting the result as trusted. A `.kdna` asset is
-format-valid when it passes `kdna validate`; a trusted `.kdna` asset also needs
-provenance and whichever trust signals it claims, such as conformance metadata,
-Human Lock evidence, compiler metadata, signatures, eval evidence, or an asset
-digest.
+source directories and presenting the result as carrying provenance, signature,
+quality, or endorsement claims. A `.kdna` asset is format-valid when it passes
+`kdna validate`; provenance and trust signals are separate layers, such as
+conformance metadata, Human Lock evidence, compiler metadata, signatures, eval
+evidence, or an asset digest.
 
 Dev source directories are non-canonical workspaces for authoring tools, Git
-review, diagnostics, and debugging. They MUST NOT be treated as installable or
-registry-trusted assets unless they have been exported to a validated `.kdna`
-container and accompanied by the required trust evidence for the claim being
-made.
+review, diagnostics, and debugging. They MUST NOT be treated as public runtime
+assets unless they have been exported to a validated `.kdna` container. They
+must also be accompanied by the required provenance evidence for any trust,
+signature, quality, or endorsement claim being made.
 
 ## Ecosystem Roles
 
-Studio creates and compiles KDNA.
+Studio creates, reviews, compiles, and exports `.kdna` files.
 
-CLI verifies and runs KDNA.
+CLI inspects, validates, plan-loads, packs/unpacks, and loads local `.kdna` files.
 
-Registry distributes trusted KDNA.
+Registry, if present, is an optional distribution surface and not a Core v1
+format-validity or trust authority.
 
 Agents load and use KDNA.
 
-## Trusted Creation Flow
+## Release-Evidence Creation Flow
 
-One trusted path for a `.kdna` asset is:
+One path for a `.kdna` asset with release evidence is:
 
 1. Import materials.
 2. Extract judgment candidates.
@@ -42,8 +43,8 @@ One trusted path for a `.kdna` asset is:
 6. Studio-compatible compiler output.
 7. `.kdna` asset export with identity, canonicalization, digests, signing,
    optional encryption, and authoring provenance.
-8. CLI verification.
-9. Optional signature and registry publication.
+8. CLI validation and LoadPlan.
+9. Optional signature and optional distribution.
 10. Agent loading and post-validation.
 
 AI agents, humans, tools, and hybrid workflows may create KDNA. Human judgment

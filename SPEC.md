@@ -889,7 +889,7 @@ Signing is an **optional enhancement** to `.kdna` assets. A `.kdna` container MA
 
 ### 14.6.2 Publish Audit
 
-Registry entries for trusted assets SHOULD include a  block:
+Registry entries for release-evidence assets SHOULD include a  block:
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -954,7 +954,7 @@ Persistent extraction MUST NOT be required for loading. A runtime MAY create int
 | `kdna load @aikdna/writing` | Load the installed `.kdna` asset directly into agent context |
 | `kdna load writing.kdna` | Load a local `.kdna` asset directly into agent context |
 | `kdna compare writing.kdna --input "..."` | Compare with/without a local `.kdna` asset |
-| `kdna dev pack ./writing-source` | Build a dev-only non-trusted diagnostic bundle from a non-canonical source directory. For trusted assets, use `kdna-studio migrate`. |
+| `kdna dev pack ./writing-source` | Build a dev-only diagnostic bundle from a non-canonical source directory. For release-evidence authoring, use `kdna-studio migrate`. |
 | `kdna dev unpack writing.kdna` | Unpack into a dev source directory for inspection or editing |
 
 ### 14.9 Platform Recognition

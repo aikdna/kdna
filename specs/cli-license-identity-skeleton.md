@@ -67,8 +67,9 @@ Output (json):
 
 ### 3.1 `kdna publish <file.kdna>`
 
-Publish an existing Studio-compiled `.kdna` asset. `kdna publish` does not
-create trusted assets from arbitrary source directories.
+Publish an existing Studio-compiled `.kdna` asset through the legacy publish
+surface. `kdna publish` does not create provenance, signature, quality, or
+endorsement claims from arbitrary source directories.
 
 ```
 kdna publish ./dist/my-domain.kdna

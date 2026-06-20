@@ -1,54 +1,65 @@
-# Dev Source vs Studio Project: Current State
+# Dev Source vs Studio Project: Historical State
 
-> **Status:** v1.0-rc transparency note  
-> **Updated:** 2026-06-11
+> **Status:** Historical transparency note, not current public launch guidance.
+> Current guidance: the public asset is a packaged `.kdna` file. Dev source
+> directories and Studio project workspaces are authoring/editing views, not the
+> default public consumption unit.
+> **Updated:** 2026-06-20
 
 ## The Gap
 
 KDNA defines two authoring formats:
 
-| Format | SPEC Status | Actual Usage | Trust Level |
-|--------|------------|-------------|-------------|
-| **Dev Source Directory** | Non-canonical (SPEC §1 line 19) | **12+ open-source domain repos** use this as their sole format | Dev-only, non-trusted |
-| **Studio Project** (`studio.project.json`) | Canonical authoring workspace (SPEC §15) | **0 instances** in the open-source ecosystem | Required for trusted assets |
+| Format | Current Role | Public Consumption Role |
+|--------|--------------|-------------------------|
+| **Dev Source Directory** | Creator/debug workspace | Not a public `.kdna` asset |
+| **Studio Project** (`studio.project.json`) | Studio-compatible authoring workspace | Not a public `.kdna` asset |
+| **Packaged `.kdna` file** | Runtime distribution container | Public asset and loading unit |
 
 ## Why This Gap Exists
 
-The Studio project format was introduced in v1.0-rc as the canonical authoring workspace. At the time of writing:
+The Studio project format was introduced in v1.0-rc as a canonical
+Studio-compatible authoring workspace. At the time of the original note:
 
-1. **`kdna-studio-cli` (v0.2.0)** is the only tool that creates Studio projects
-2. **All 12+ open-source domain repos** were authored before Studio existed and use dev source directories
+1. **`kdna-studio-cli` (v0.2.0)** was the only tool that created Studio projects
+2. Several early domain repos were authored before Studio existed and used dev source directories
 3. **No migration tool** exists to convert dev source → Studio project while preserving all content (only axioms are currently imported via `--from-folder`)
 
 ## What This Means for Contributors
 
-### Contributing to existing domains
-The primary authoring format for open-source domains is still the dev source directory. Contributors should:
+### Contributing to existing examples
+For creator/debug workspaces, contributors may:
 - Edit `KDNA_Core.json`, `KDNA_Patterns.json`, etc. directly
 - Validate with `kdna dev validate .`
-- The maintainer handles Studio compilation for trusted releases
+- Export a packaged `.kdna` file before public consumption
 
 ### Creating new domains
 - **Prototype/experiment**: `kdna dev scaffold <name>` → edit JSON files
-- **Trusted release**: `kdna-studio create <name>` → card add → lock → compile → export
+- **Studio export**: `kdna-studio create <name>` → card add → approve/review → export
 
 ## Migration (one command)
 
 ```bash
-kdna-studio migrate ./my-domain --out ./my-domain.kdna --name @scope/my-domain --by "your-id" --statement "reviewed all axioms" --sign
+kdna-studio migrate ./my-domain --out ./my-domain.kdna --name @scope/my-domain --by "your-id" --statement "reviewed scope and boundaries"
+kdna validate ./my-domain.kdna
+kdna plan-load ./my-domain.kdna
 ```
 
-This single command:
+This flow:
 1. Imports ALL content from the dev source directory (axioms, ontology, stances, frameworks, terminology, misunderstandings, self-checks, scenarios, cases, reasoning, evolution)
 2. Preserves manifest metadata (version, languages, description, judgment_version)
-3. Auto-approves and Human Locks all cards
-4. Compiles a trusted `.kdna` asset
-5. Exports it to the specified output file
+3. Records Studio review/provenance metadata when supplied
+4. Exports a packaged `.kdna` file
+5. Validates and plans the output through the Core v1 runtime path
 
-No separate create/approve/lock/compile/export steps needed.
+No separate source-directory distribution step is needed.
 
 ## Honesty Note
 
-We acknowledge that the canonical authoring path (Studio) currently has zero adoption in the open-source domain ecosystem. This document exists to prevent the confusion that arises when users read the SPEC saying "use Studio" but find no Studio projects anywhere in the ecosystem.
+The original version of this note documented a temporary v1.0-rc mismatch
+between early source workspaces and Studio-compatible projects. Current public
+guidance is simpler: users consume packaged `.kdna` files; creators may use dev
+source directories, Studio projects, or compatible tools to produce them.
 
-The `kdna-studio migrate` command closes this gap. Both formats are valid authoring paths.
+Both dev source workspaces and Studio projects are valid authoring/editing
+views. Neither is the default public asset; the packaged `.kdna` file is.
