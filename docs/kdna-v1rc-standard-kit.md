@@ -68,5 +68,5 @@ instead of forcing them to infer the standard from scattered repository files.
 ## Current Release-Candidate Boundary
 
 This kit defines the open protocol and compatibility surface. It does not claim
-that every official domain is validated or production-ready. Domain quality is
+that every public example `.kdna` file is validated or production-ready. Content quality is
 governed separately by the registry badge evidence gates.
