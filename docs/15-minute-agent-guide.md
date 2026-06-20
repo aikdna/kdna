@@ -80,7 +80,7 @@ and can load judgment on demand.
 ## Current limitations
 
 - **Agent runtime loading is available for v1.** `kdna load` supports v1 `.kdna`
-  containers produced by `kdna pack` as of @aikdna/kdna-cli@0.26.7.
+  containers produced by `kdna pack` as of @aikdna/kdna-cli@0.26.8.
 - **Agent support varies by platform.** The `kdna-loader` skill adapter supports
   discovery of local `.kdna` files. Agent-specific integration quality varies
   by agent runtime.

@@ -33,7 +33,7 @@ Every domain entering the registry MUST declare its risk level (R0–R3). High-r
 
 ### 5. Provenance Is Required
 
-Every .kdna container MUST carry provenance metadata: who created it, with which tool, from which evidence, when, and with which content fingerprint. Unsigned .kdna is untrusted.
+Every .kdna container SHOULD carry provenance metadata: who created it, with which tool, from which evidence, when, and with which content fingerprint. Unsigned `.kdna` files can still be valid at the format layer, but they must be presented as unsigned and unevaluated unless separate evidence says otherwise.
 
 ## High-Risk Domain Policy
 

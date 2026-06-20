@@ -15,7 +15,7 @@ KDNA is the open judgment asset protocol for AI agents. It is not another prompt
 ## Stable For v1.0-rc
 
 - `.kdna` is the canonical installed, verified, loaded, and distributed asset.
-- Dev source directories are authoring workspaces, not trusted runtime objects.
+- Dev source directories are authoring workspaces, not public runtime assets.
 - v1.0-rc manifests use `format`, `format_version`, `spec_version`, `languages`, and root `mimetype: application/vnd.aikdna.kdna+zip`.
 - `kdna_spec`, singular `language`, and `application/x-kdna` are rejected by the conformance and trust test paths.
 - The JS core can inspect, validate, load, render, digest-check, and decrypt open, licensed, and protected fixture assets.
