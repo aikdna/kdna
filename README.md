@@ -4,9 +4,9 @@
 >
 > **KDNA Core 是 KDNA 官方判断资产格式与运行时加载契约。**
 
-> `.kdna` assets are created, inspected, protected, loaded, and consumed through the **official KDNA toolchain**. Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
+> The recommended way to create, inspect, protect, load, and consume `.kdna` assets is through the **official KDNA toolchain**. Third-party products SHOULD integrate KDNA through the official SDK, CLI, Loader, or API. Agents MAY create `.kdna` files through the official SDK — format validity is determined by `kdna validate`, not by author identity.
 >
-> `.kdna` 资产通过 **KDNA 官方工具链** 创建、检查、保护、加载和消费。第三方产品通过 KDNA 官方 SDK、CLI、Loader 或 API 接入 KDNA,而不独立实现。
+> 推荐通过 **KDNA 官方工具链** 创建、检查、保护、加载和消费 `.kdna` 资产。第三方产品应通过 KDNA 官方 SDK、CLI、Loader 或 API 接入 KDNA。Agent 可通过官方 SDK 创建 `.kdna` 文件——格式合法性由 `kdna validate` 决定，不由作者身份决定。
 
 > New to KDNA? → [Start Here](./docs/start-here.md)
 >
@@ -40,7 +40,7 @@ A `.kdna` file is a single, portable container that holds:
 - optional **attachments** — supplementary files referenced from the payload
 - an optional **checksums file** — per-entry digests for integrity checks
 
-`.kdna` files are produced by authors through the official KDNA toolchain and consumed by the official KDNA loader. The format itself is content-neutral — KDNA Core does not say what judgment is "good" or which assets are "trusted".
+`.kdna` files are produced by authors through the KDNA toolchain and consumed by the KDNA loader. The format itself is content-neutral — KDNA Core does not say what judgment is "good" or which assets are "trusted". Agents can create `.kdna` files through the official SDK; any file that passes `kdna validate` is a valid KDNA asset.
 
 ## What KDNA Core defines
 
@@ -54,7 +54,7 @@ KDNA Core is the **format authority**. It defines:
 - the **version chain metadata** (lineage, judgment version, compatibility)
 - the **runtime loading contract** (load profiles, decryption requirements, token hints)
 
-KDNA Core is also the **toolchain authority**. Production, validation, loading, and consumption of `.kdna` files happen through the official KDNA toolchain.
+KDNA Core is also the **toolchain reference**. The recommended way to produce, validate, load, and consume `.kdna` files is through the official KDNA toolchain.
 
 ## Authorization And Native Apps
 
@@ -77,9 +77,9 @@ KDNA Core is **content-neutral**. It does not define:
 - **runtime policy** — what a loader should do with an asset at runtime (block, allow, warn)
 - **content governance** — moderation, takedown, ranking, certification
 
-These are concerns of **external** platforms and policies. KDNA Core supplies the verifiable primitives and the official toolchain; everything else is out of scope.
+These are concerns of **external** platforms and policies. KDNA Core supplies the verifiable primitives and the official toolchain (as a reference implementation); everything else is out of scope.
 
-Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
+The recommended integration path is through the official SDK, CLI, Loader, or API. Third-party compatible implementations that pass the official validator are equally valid.
 
 ## Official KDNA toolchain
 
@@ -90,9 +90,7 @@ The official KDNA toolchain is published from this repo and its companion packag
 | **KDNA Core spec** | Format, schemas, runtime loading contract | this repo |
 | **KDNA CLI** | Official command-line entry: `inspect`, `validate`, `pack`, `unpack`, `load` | this repo + `@aikdna/kdna-cli` |
 | **KDNA Loader** | Official runtime loader for AI agents | `packages/kdna-core/` + `@aikdna/kdna-cli` |
-| **KDNA SDK** | Embeddable library for first-party integrations | `packages/kdna-core/` |
-
-Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
+| **KDNA SDK** | Embeddable library for integrations | `packages/kdna-core/` |
 
 ## Examples
 
