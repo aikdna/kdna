@@ -6,24 +6,15 @@ This guide shows how to use the official KDNA Studio toolchain to create
 your own `.kdna` judgment asset — starting from scratch and ending with a
 validated, packable asset.
 
-## What is stable today
+## Current status
 
-- KDNA Core v1 file format (`.kdna` container, `mimetype`, `kdna.json`,
-  `payload.kdnab`, `checksums.json`)
-- `kdna inspect` / `kdna validate` / `kdna pack` / `kdna unpack`
-- Deterministic pack (same source → same SHA-256)
-- Content-neutral validation (no trust or quality-badge claims)
-
-## What is beta
-
-- **Studio authoring CLI** — the `kdna-studio` command is part of the
-  official KDNA toolchain but the authoring path is still beta. Commands
-  may change between releases.
-- **Agent loading** — `kdna load` and agent integration are beta.
-- **Provenance signals** — Human Lock, signatures, and release evidence are
-  optional trust metadata. They are useful for public, enterprise, or
-  high-risk assets, but they are not KDNA Core v1 format-validity
-  requirements.
+| Layer | Status | What it means |
+|---|---|---|
+| KDNA Core v1 file format | stable | `.kdna` container, `mimetype`, `kdna.json`, `payload.kdnab`, and `checksums.json` are the current local asset baseline. |
+| Runtime CLI | beta-ready | `kdna inspect`, `kdna validate`, `kdna plan-load`, `kdna load`, `kdna pack`, and `kdna unpack` work for local v1 assets. |
+| Studio authoring CLI | beta | `kdna-studio` is the official authoring path, but commands and UX may still change between beta releases. |
+| Agent / MCP loading | preview | Loader and MCP paths use the same LoadPlan-first contract, but agent-specific integration quality varies by runtime. |
+| Trust layers | future / gated | Human Lock, signatures, release evidence, paid authorization, registry distribution, and quality certification are optional or future layers, not KDNA Core v1 format-validity requirements. |
 
 ## Step 1: Install the Studio CLI
 
@@ -61,7 +52,7 @@ A minimal valid `.kdna` payload contains:
 - One or more `axioms` — the core principles
 - Optional: `patterns`, `scenarios`, `cases`, `reasoning`, `evolution`
 
-## Step 4: Review and approve for release evidence
+## Step 4: Review and optionally approve for release evidence
 
 ```bash
 kdna-studio card list my_expertise
@@ -105,10 +96,10 @@ kdna-studio migrate my_expertise --format v1 --out dist/my_expertise.kdna \
 
 - **Authoring path is beta.** The `kdna-studio` CLI is part of the official
   KDNA toolchain but the authoring surface is still evolving.
-- **Formal .kdna assets** are created through the official KDNA Studio
-  toolchain. Third-party authoring tools integrate through the official
-  Studio SDK or CLI — not through independent reimplementation of the `.kdna`
-  format.
+- **Official authoring path.** Public beta examples should be exported through
+  the official KDNA Studio toolchain. Third-party authoring tools should
+  integrate through the official Studio SDK or CLI so the output remains a
+  standard packaged `.kdna` file.
 - **No quality badges or registry.** KDNA Core v1 does not define a
   quality-badge system, content ranking, or public registry. A validated
   `.kdna` file is structurally correct; it does not carry a trust or quality
