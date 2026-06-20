@@ -20,7 +20,7 @@ Core, Studio, agent adapters, KDNA Work, and future runtimes.
 KDNA should not try to make files uncopyable.
 
 KDNA should keep `.kdna` portable while making protected judgment content usable
-only through authorized official runtime paths:
+only through authorized runtime paths:
 
 > portable asset + verifiable identity + encrypted payload + signed entitlement + governed runtime
 
