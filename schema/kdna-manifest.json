@@ -43,8 +43,8 @@
       "pattern": "^@[a-z][a-z0-9-]*/[a-z][a-z0-9_]*$",
       "description": "Scoped domain identifier. Format: @scope/name. scope matches the GitHub org. name uses snake_case.",
       "examples": [
-        "@aikdna/writing",
-        "@aikdna/agent_safety"
+        "@example/writing-style",
+        "@example/code-review"
       ]
     },
     "version": {
