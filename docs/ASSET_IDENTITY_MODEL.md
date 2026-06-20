@@ -4,7 +4,7 @@ KDNA asset identity separates semantic domain identity, Studio project identity,
 build identity, and byte-level integrity.
 
 Studio-compatible exporters generate these fields. Users and agents should not
-hand-fill them for trusted assets.
+hand-fill them for release-reviewed assets.
 
 ## Required Fields
 

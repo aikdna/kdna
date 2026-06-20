@@ -45,9 +45,9 @@
         "kind": "axiom",
         "id": "AX-human-lock-required",
         "domain": "@aikdna/kdna_authoring",
-        "summary": "Only human-locked judgment can compile into KDNA.",
+        "summary": "Human Lock evidence is required only when a reviewed export claims human confirmation.",
         "evidence": "Export includes judgment-class cards.",
-        "result": "Export proceeded only after Human Lock checks passed."
+        "result": "Reviewed export proceeded only after its declared Human Lock checks passed."
       },
       {
         "kind": "framework",

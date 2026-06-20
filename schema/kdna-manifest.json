@@ -330,7 +330,7 @@
     },
     "authoring": {
       "type": "object",
-      "description": "Studio-compatible authoring provenance. Required for trusted quality claims.",
+      "description": "Studio-compatible authoring provenance. Required for reviewed quality claims.",
       "required": [
         "created_by"
       ],
@@ -353,7 +353,7 @@
         },
         "conformance": {
           "type": "object",
-          "description": "Validation evidence for trusted quality claims. Any tool may produce trusted assets if it passes the official conformance validator.",
+          "description": "Validation evidence for reviewed quality claims. Any tool may produce release-reviewed assets if it passes the official conformance validator.",
           "required": [
             "passed",
             "spec_version"

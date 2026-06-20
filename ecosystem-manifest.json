@@ -34,7 +34,7 @@
       "local_path": "../kdna-cli",
       "npm_package": "@aikdna/kdna-cli",
       "package_json": "../kdna-cli/package.json",
-      "current_version": "0.26.7",
+      "current_version": "0.26.8",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
