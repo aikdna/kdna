@@ -18,16 +18,10 @@ const path = require('path');
 const OPEN_SOURCE = path.resolve(__dirname, '..', '..');
 
 const DOMAIN_DIRS = [
-  'kdna-agent_safety',
-  'kdna-animation',
+  // kdna-writing, kdna-prompt_diagnosis, kdna-agent_safety — repos deleted, artifacts in kdna-x
   'kdna-authoring',
   'kdna-code_review',
-  'kdna-content_strategy',
-  'kdna-decision_state',
-  'kdna-knowledge_management',
   'kdna-open_source_project',
-  'kdna-prompt_diagnosis',
-  'kdna-writing',
 ];
 
 // ─── canonical values ───────────────────────────────────────────
