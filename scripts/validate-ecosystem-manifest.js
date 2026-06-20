@@ -105,6 +105,10 @@ for (const component of manifest.components) {
     }
   }
 
+  if (component.lifecycle === 'Removed') {
+    continue;
+  }
+
   if (component.artifact_path && localPath) {
     const artifactPath = path.join(localPath, component.artifact_path);
     if (!fs.existsSync(artifactPath)) {
