@@ -51,7 +51,7 @@
       "local_path": "../kdna-skills",
       "npm_package": "@aikdna/kdna-mcp-server",
       "package_json": "../kdna-skills/mcp-server/package.json",
-      "current_version": "0.2.2",
+      "current_version": "0.2.3",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],

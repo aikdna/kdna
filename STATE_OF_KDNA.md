@@ -59,7 +59,7 @@ These should not be presented as v1.0-rc launch requirements:
 - Enterprise governance console.
 - OCI distribution.
 - Registry federation.
-- More official domains.
+- More public example `.kdna` files.
 - Native app feature expansion.
 
 ## Current Release Rule
