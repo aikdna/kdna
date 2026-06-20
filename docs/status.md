@@ -6,7 +6,7 @@
 
 KDNA Core is the **official KDNA judgment-asset format and runtime loading contract**.
 
-`.kdna` assets are created, inspected, protected, loaded, and consumed through the **official KDNA toolchain**.
+`.kdna` assets are created, inspected, validated, planned, loaded, and consumed through the **official KDNA toolchain**.
 
 Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
 
@@ -25,24 +25,24 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 
 ## What is beta
 
-- **`kdna inspect`** — inspect v1 source dir or v1 `.kdna` container (available via `npm install -g @aikdna/kdna-cli@0.26.3`)
-- **`kdna validate`** — validate v1 source dir or v1 `.kdna` container (schema + format + payload + checksums + load-contract)
+- **`kdna inspect`** — inspect local v1 `.kdna` containers, with dev source support for creator/debug workflows (available via `npm install -g @aikdna/kdna-cli@0.26.6`)
+- **`kdna validate`** — validate local v1 `.kdna` containers, with dev source support for creator/debug workflows (schema + format + payload + checksums + load-contract)
 - **`kdna plan-load`** — return the Core LoadPlan before runtime loading
 - **`kdna load`** — render allowed public local `.kdna` assets into agent-readable context
 - **`kdna pack`** — deterministic ZIP pack (mimetype first, STORED; same input → same SHA-256, verified as `3f0ba461...`)
 - **`kdna unpack`** — unpack `.kdna` container, refuse path traversal
 - **32 CLI tests** — all pass (inspect, validate, pack, unpack, edge cases)
 
-**Resolved in 0.26.x**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.26.3` now includes the full v1 inspect/validate/plan-load/pack/unpack/load route for public local assets.
+**Resolved in 0.26.x**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.26.6` now includes the full v1 inspect/validate/plan-load/pack/unpack/load route for public local assets.
 
 ## What is experimental
 
 - **kdna install** / registry install — legacy compatibility path; the public registry is not part of KDNA Core v1
 - **kdna compare** — comparison requires a provider key; not yet documented in the v1 guide
 - **kdna setup** — agent setup (codex, claude-code, opencode, cursor); skills/MCP now use the v1 local asset loading path, while setup UX remains a post-baseline hardening surface
-- **kdna-studio** — v1 export hardening is published through
-  `@aikdna/kdna-studio-cli@0.5.5` and
-  `@aikdna/kdna-studio-core@1.5.4`; public propagation should center on
+- **kdna-studio** — v1 authoring/export is published through
+  `@aikdna/kdna-studio-cli@0.5.7` and
+  `@aikdna/kdna-studio-core@1.5.6`; public propagation should center on
   packaged `.kdna` examples, not source JSON directories, registry entries, or
   a fixed three-domain primary narrative.
 - **kdna-vscode** — VS Code extension (legacy workspace tools); not yet updated for v1 Core
@@ -52,23 +52,32 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 
 - **Registry surface** — removed from the active public path; KDNA Core v1 has no registry
 - **Quality-badge system** — legacy (untested / tested / validated / expert_reviewed / production_ready); not part of v1 Core
-- **Human Lock** — legacy authoring concept; not part of v1 Core format
+- **Human Lock** — optional Studio provenance/trust metadata; not part of v1 Core format validity
 - **KDNAChat / KDNAStudio** — legacy product names; not active v1 Core surfaces
 - **KDNA Viewer** — legacy concept, deleted from docs/
 
 ## Recommended first-run path
 
 ```bash
-npm install -g @aikdna/kdna-cli@0.26.3
+npm install -g @aikdna/kdna-cli@0.26.6
 kdna --help
-kdna inspect examples/minimal
-kdna validate examples/minimal
-kdna pack examples/minimal /tmp/out.kdna
+kdna demo minimal /tmp/minimal-source
+kdna pack /tmp/minimal-source /tmp/minimal.kdna
+kdna inspect /tmp/minimal.kdna
+kdna validate /tmp/minimal.kdna
+kdna plan-load /tmp/minimal.kdna
+kdna load /tmp/minimal.kdna --profile=compact --as=prompt
+```
+
+Creator/debug source workflows remain available, but they are not the public
+asset consumption model:
+
+```bash
+kdna dev scaffold my_domain
+kdna dev pack my_domain --out /tmp/out.kdna
 kdna validate /tmp/out.kdna
 kdna plan-load /tmp/out.kdna
-kdna load /tmp/out.kdna --profile=compact --as=prompt
 kdna unpack /tmp/out.kdna /tmp/out-dir
-kdna validate /tmp/out-dir
 ```
 
 For developers who want to contribute from source:
@@ -84,11 +93,11 @@ For the legacy 5-minute walkthrough (old CLI surface), see [5-minute-guide.md](.
 
 ## Known limitations
 
-1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.26.3**. ✓
+1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.26.6**. ✓
 2. **Core extraction — published**: the compatibility package now routes v1 through shared `@aikdna/kdna-core/v1`; duplicate `packages/kdna/src/v1-cli.js` has been removed. Published in `@aikdna/kdna@0.9.0` with `@aikdna/kdna-core@^0.11.1`.
 3. **6 skipped tests**: kdna-core fixture tests skipped in PR-95 (v1→v2 fixture migration debt). Marked for recovery in PR-100.
 4. **Conformance failure**: `kdna.json.format_version: "1.0"` vs expected `"2.0"` in the conformance runner. Same fixture debt.
-5. **kdnACLI help text**: the legacy global CLI help still references `dev validate` / `dev pack` / `dev unpack` (non-canonical dev source utilities), not the v1 route.
+5. **Legacy CLI surfaces**: compatibility commands remain behind `kdna help legacy`; public first-run docs use local `.kdna` files with `validate`, `plan-load`, and `load`.
 6. **npm descriptions**: resolved in v0.22.x / v0.3.3 / v1.5.2 — all "trusted .kdna" references removed. ✓
 
 ## Next phase

@@ -34,7 +34,7 @@
       "local_path": "../kdna-cli",
       "npm_package": "@aikdna/kdna-cli",
       "package_json": "../kdna-cli/package.json",
-      "current_version": "0.26.3",
+      "current_version": "0.26.6",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
@@ -68,14 +68,14 @@
       "local_path": "../kdna-studio-core",
       "npm_package": "@aikdna/kdna-studio-core",
       "package_json": "../kdna-studio-core/package.json",
-      "current_version": "1.5.4",
+      "current_version": "1.5.6",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "conformance_commit": "4eb27fa11476cf4e79a3ea3591391d2c138c2470",
       "known_limitations": [
-        "Studio export is beta and depends on Core projection preserving Human Lock boundaries"
+        "Studio export is beta and treats review, Human Lock, signatures, and release evidence as optional provenance layers"
       ],
       "recommended_entrypoint": "Studio project compile/export v1 followed by Core validate and plan-load",
       "legacy_replacement": null
@@ -85,7 +85,7 @@
       "local_path": "../kdna-studio-cli",
       "npm_package": "@aikdna/kdna-studio-cli",
       "package_json": "../kdna-studio-cli/package.json",
-      "current_version": "0.5.5",
+      "current_version": "0.5.7",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
