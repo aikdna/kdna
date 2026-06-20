@@ -90,4 +90,4 @@ The merged single-file JSON format is rejected in v1.0-rc. Conforming tools MUST
 7. [ ] Ensure all `id` values are globally unique across files
 8. [ ] Add `signature` and `authoring` fields if badge >= tested
 9. [ ] Run `kdna dev validate .` to catch structural issues
-10. [ ] Compile via `kdna-studio compile` for trusted assets
+10. [ ] Compile via `kdna-studio compile` for release-reviewed assets

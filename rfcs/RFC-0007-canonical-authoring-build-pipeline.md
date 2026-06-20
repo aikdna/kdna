@@ -45,12 +45,13 @@ assets.
 11. The exporter MUST compute `asset_digest` over the complete `.kdna` file
     bytes and record it outside the container, such as in a registry entry,
     receipt, or lockfile.
-12. The exporter MUST sign the canonical payload for assets that claim trusted
-    quality, registry promotion, licensed access, or runtime access.
+12. The exporter MUST sign the canonical payload for assets that claim reviewed
+    quality, registry promotion, licensed access, or remote runtime access.
 13. The exporter MAY encrypt protected internal entries for licensed assets,
     but encryption MUST follow RFC-0008.
 14. The exporter MUST emit an immutable `.kdna` asset and a local build receipt.
-15. Runtime CLI tools MUST NOT promote dev source bundles as trusted assets.
+15. Runtime CLI tools MUST NOT promote dev source bundles as release-reviewed
+    public assets.
 
 ## Required Build Artifacts
 
@@ -80,15 +81,16 @@ The `.kdna` container SHOULD include:
 ## Role Boundaries
 
 Studio creates and compiles KDNA. CLI verifies, installs, loads, compares, and
-publishes existing `.kdna` assets. Registry distributes trusted assets and
-enforces trust gates. Agents load and use KDNA; they do not create final
-trusted assets.
+publishes existing `.kdna` assets. Registry is an optional distribution layer
+for assets with declared provenance evidence. Agents may create `.kdna` assets
+through the official toolchain; reviewed publishing claims require their own
+evidence.
 
 ## Compatibility Impact
 
 Existing manually authored source directories may remain useful as dev source
 workspaces. They MAY be schema-valid and MAY be bundled for diagnostics, but
-they MUST NOT be treated as registry-trusted assets unless compiled by a
+they MUST NOT be treated as release-reviewed public assets unless compiled by a
 Studio-compatible compiler.
 
 ## Conformance Requirements

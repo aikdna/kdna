@@ -218,8 +218,9 @@ A dev source directory can be bundled to a single dev-only `.kdna` file:
 kdna dev pack ./sales --output sales.kdna
 ```
 
-This bundle is not a registry-trusted asset. Manual unpack/edit/repack
-invalidates trust.
+This bundle is a developer diagnostic package, not a release-reviewed public
+asset. Manual unpack/edit/repack invalidates any previous signature or
+provenance evidence unless the result is rebuilt and released as a new `.kdna`.
 
 ### .kdna → Dev Source Directory
 

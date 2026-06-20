@@ -119,7 +119,7 @@ kdna identity show
 ```bash
 kdna publish ./dist/my_domain.kdna
 # 1. Reads an existing .kdna asset
-# 2. Checks authoring provenance for trusted quality claims
+# 2. Checks authoring provenance for reviewed quality claims
 # 3. Computes asset/content digests
 # 4. Outputs registry patch JSON
 ```

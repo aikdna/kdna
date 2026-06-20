@@ -50,7 +50,7 @@ One path for a `.kdna` asset with release evidence is:
 AI agents, humans, tools, and hybrid workflows may create KDNA. Human judgment
 must confirm the content only when the asset claims human confirmation or a
 trust level that requires it. The CLI must verify before load. Registries may
-distribute trusted assets with auditable provenance, but registry listing is not
+distribute release-reviewed assets with auditable provenance, but registry listing is not
 a format-validity requirement.
 
 ## Authoring Provenance
@@ -85,7 +85,7 @@ higher quality MUST include authoring provenance and conformance evidence:
 `created_by` is provenance metadata, not an allowlist. Compatibility is
 established by validation and conformance evidence, for example
 `authoring.conformance.passed: true`. Manual or experimental sources may exist,
-but they cannot claim a trusted quality badge without the required evidence.
+but they cannot claim a reviewed quality badge without the required evidence.
 Schema validation proves structure only. It does not prove judgment quality.
 
 ## Quality Badge Binding

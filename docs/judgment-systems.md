@@ -172,7 +172,7 @@ No. A knowledge base stores information. KDNA encodes how information should be 
 No. A skill packages a repeatable procedure. KDNA packages the judgment system that guides whether the procedure is appropriate and what quality standard should be applied.
 
 **"Can an LLM generate KDNA automatically?"**
-An LLM can assist in drafting KDNA. But KDNA should not be considered trusted until a human reviews and confirms the judgment.
+Yes. Humans, agents, tools, or hybrid workflows can draft `.kdna` assets through the official toolchain. Human review and Human Lock are optional provenance signals for reviewed publishing; they are not format-validity requirements.
 
 **"If LLMs become very smart, why not just ask the model?"**
 You can. But asking the model does not give you a portable, inspectable, versioned, composable, licensable, human-accountable judgment system.

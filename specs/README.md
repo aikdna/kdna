@@ -35,7 +35,7 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 | # | Document | What it covers |
 |---|----------|---------------|
 | 9 | `quality-badge-evidence-gate.md` | Quality badge evidence requirements and CI gate rules |
-| 10 | `human-lock.md` | Human Lock protocol for trusted asset creation |
+| 10 | `human-lock.md` | Optional Human Lock provenance protocol |
 | 11 | `human-lock-gate-design.md` | Human Lock gate design specification |
 | 12 | `fidelity-protocol.md` | RFC-0010: KDNA Fidelity Protocol — measuring judgment transfer |
 | 13 | `fidelity-result.schema.json` | Schema for fidelity measurement results |

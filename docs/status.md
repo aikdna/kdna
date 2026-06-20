@@ -25,7 +25,7 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 
 ## What is beta
 
-- **`kdna inspect`** — inspect local v1 `.kdna` containers, with dev source support for creator/debug workflows (available via `npm install -g @aikdna/kdna-cli@0.26.7`)
+- **`kdna inspect`** — inspect local v1 `.kdna` containers, with dev source support for creator/debug workflows (available via `npm install -g @aikdna/kdna-cli@0.26.8`)
 - **`kdna validate`** — validate local v1 `.kdna` containers, with dev source support for creator/debug workflows (schema + format + payload + checksums + load-contract)
 - **`kdna plan-load`** — return the Core LoadPlan before runtime loading
 - **`kdna load`** — render allowed public local `.kdna` assets into agent-readable context
@@ -33,7 +33,7 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 - **`kdna unpack`** — unpack `.kdna` container, refuse path traversal
 - **32 CLI tests** — all pass (inspect, validate, pack, unpack, edge cases)
 
-**Resolved in 0.26.x**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.26.7` now includes the full v1 inspect/validate/plan-load/pack/unpack/load route for public local assets.
+**Resolved in 0.26.x**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.26.8` now includes the full v1 inspect/validate/plan-load/pack/unpack/load route for public local assets.
 
 ## What is experimental
 
@@ -59,7 +59,7 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 ## Recommended first-run path
 
 ```bash
-npm install -g @aikdna/kdna-cli@0.26.7
+npm install -g @aikdna/kdna-cli@0.26.8
 kdna --help
 kdna demo minimal /tmp/minimal-source
 kdna pack /tmp/minimal-source /tmp/minimal.kdna
@@ -93,7 +93,7 @@ For the legacy 5-minute walkthrough (old CLI surface), see [5-minute-guide.md](.
 
 ## Known limitations
 
-1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.26.7**. ✓
+1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.26.8**. ✓
 2. **Core extraction — published**: the compatibility package now routes v1 through shared `@aikdna/kdna-core/v1`; duplicate `packages/kdna/src/v1-cli.js` has been removed. Published in `@aikdna/kdna@0.9.0` with `@aikdna/kdna-core@^0.11.1`.
 3. **Legacy CLI surfaces**: compatibility commands remain behind `kdna help legacy`; public first-run docs use local `.kdna` files with `validate`, `plan-load`, and `load`.
 4. **Out-of-scope launch claims**: protected assets, remote runtime, paid authorization, public registry, marketplace distribution, and quality ranking are not part of the current stable baseline.

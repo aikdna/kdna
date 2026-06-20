@@ -63,11 +63,15 @@ With leadership_decisions.kdna:
 
 The agent didn't get better at giving advice. It got better at *diagnosing what kind of problem this is*.
 
-## Human Lock: Why KDNA Is Not an AI Generator
+## Provenance: Why KDNA Is Not Just Generation
 
-AI can propose judgment candidates. AI can interview experts. AI can run comparison tests. But **AI cannot confirm judgment**.
+AI can draft judgment candidates, interview experts, and run comparison tests.
+Humans, agents, tools, or hybrid workflows can create `.kdna` assets through the
+official toolchain.
 
-Every judgment card entering a compiled KDNA domain must pass Human Lock — a deliberate, per-card confirmation by the human author. There is no "Generate Domain" button. Draft cards are silently excluded from compiled output. Only locked cards enter the KDNA.
+Human review and Human Lock are optional provenance signals for assets that
+claim human confirmation or reviewed publishing status. They are not format
+validity requirements for every `.kdna` file.
 
 ## Governance, Not Disclaimers
 
