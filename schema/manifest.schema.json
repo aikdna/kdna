@@ -71,7 +71,12 @@
       "additionalProperties": true,
       "properties": {
         "name": { "type": "string", "minLength": 1 },
-        "id": { "type": "string" }
+        "id": { "type": "string" },
+        "creator_type": {
+          "type": "string",
+          "enum": ["human", "agent", "tool", "organization"],
+          "description": "Kind of creator identity represented by this record."
+        }
       },
       "description": "Who produced the asset. Provenance only; not a trust claim."
     },

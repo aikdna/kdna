@@ -799,6 +799,7 @@ Every `.kdna` container MUST include a `kdna.json` at the archive root. This fil
   "source_mode": "blank",
   "creator": {
     "creator_id": "kdna:creator:ed25519:8f3a...",
+    "creator_type": "human",
     "display_name": "Zhang Ling",
     "public_key": "-----BEGIN PUBLIC KEY-----...",
     "verified": false
@@ -827,20 +828,21 @@ The `name` field follows the format `@scope/domain-name`. This is a structural n
 | `"kdna_asset"` | Forked or adapted from an existing `.kdna` asset |
 | `"source_folder"` | Migrated from a legacy JSON source folder |
 
-Assets with `source_mode: "kdna_asset"` SHOULD include a `lineage` record documenting the parent asset. Assets with `source_mode: "source_folder"` MUST be treated as untrusted until re-locked through a Studio-compatible pipeline.
+Assets with `source_mode: "kdna_asset"` SHOULD include a `lineage` record documenting the parent asset. Assets with `source_mode: "source_folder"` SHOULD record migration provenance. Human Lock MAY be used when human confirmation is required, but it is not a format-validity requirement.
 
 #### 14.4.2 Creator Identity
 
-`creator` records the local creator identity of the human who authored this domain:
+`creator` records the local creator, agent, tool, or organization identity associated with this asset:
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `creator_id` | string | Unique creator identifier: `"kdna:creator:ed25519:<fingerprint>"` |
-| `display_name` | string | Human-readable name |
-| `public_key` | string | Ed25519 public key (PEM) |
+| `creator_type` | string | `"human"`, `"agent"`, `"tool"`, or `"organization"` |
+| `display_name` | string | Human-readable name for the creator, agent, tool, or organization |
+| `public_key` | string | Ed25519 public key (PEM), when the creator identity is key-bound |
 | `verified` | boolean | Whether this identity is bound to a verified account |
 
-The creator identity is generated locally and does not require registration. The `creator_id` is derived from the SHA-256 fingerprint of the creator's Ed25519 public key.
+The creator identity is generated locally and does not require registration. When a public key is present, the `creator_id` SHOULD be derived from the SHA-256 fingerprint of the Ed25519 public key.
 
 #### 14.4.3 Lineage
 
@@ -854,7 +856,7 @@ The creator identity is generated locally and does not require registration. The
 | `parent_version` | string | Version of the parent at time of fork |
 | `parent_asset_digest` | string | Digest of the parent .kdna asset |
 
-Trust is NOT inherited through lineage. Forked or adapted assets MUST go through their own Human Lock and export pipeline. Imported domain folders (migrated) MUST be re-locked before export.
+Trust is NOT inherited through lineage. Forked, adapted, or migrated assets SHOULD record their own provenance and MAY go through Human Lock when human confirmation is required. Assets without Human Lock remain structurally valid, but consumers SHOULD treat them as unconfirmed unless another trust signal applies.
 
 ### 14.5 Digest
 
@@ -1025,7 +1027,9 @@ These metadata files are informational and do NOT alter the domain's judgment co
 
 ### 15.4 No Parallel Dialect
 
-Studio Core MUST NOT create a parallel KDNA dialect. The canonical domain structure defined in this specification (§7) is the sole authority. Studio Core is an authoring tool, not a spec extension.
+Studio Core MUST NOT create a parallel KDNA dialect. This specification defines the KDNA Container v1 contract and the default Judgment Profile v1. Studio Core is an authoring tool, not a spec extension. Future payload profiles MUST be introduced through an explicit RFC and remain compatible with the container, manifest, digest, entitlement, and LoadPlan rules defined here.
+
+See [`rfcs/RFC-0016-container-profile-split.md`](./rfcs/RFC-0016-container-profile-split.md) for the active split plan between the container contract and Judgment Profile v1.
 
 ---
 
