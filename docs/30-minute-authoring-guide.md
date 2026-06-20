@@ -20,10 +20,10 @@ validated, packable asset.
   official KDNA toolchain but the authoring path is still beta. Commands
   may change between releases.
 - **Agent loading** — `kdna load` and agent integration are beta.
-- **Human Lock** — the pre-v1 authoring model (Human Lock / judgment cards /
-  Studio-compatible compiler) is legacy and not part of KDNA Core v1.
-  Formal `.kdna` assets are created through the official KDNA Studio
-  toolchain.
+- **Provenance signals** — Human Lock, signatures, and release evidence are
+  optional trust metadata. They are useful for public, enterprise, or
+  high-risk assets, but they are not KDNA Core v1 format-validity
+  requirements.
 
 ## Step 1: Install the Studio CLI
 
@@ -43,7 +43,7 @@ KDNA judgment asset.
 
 ## Step 3: Add judgment material
 
-Add at least one locked judgment card. This minimal example creates one axiom
+Add at least one judgment card. This minimal example creates one axiom
 with applicability boundaries:
 
 ```bash
@@ -61,18 +61,18 @@ A minimal valid `.kdna` payload contains:
 - One or more `axioms` — the core principles
 - Optional: `patterns`, `scenarios`, `cases`, `reasoning`, `evolution`
 
-## Step 4: Lock your judgment
+## Step 4: Review and approve for release evidence
 
 ```bash
 kdna-studio card list my_expertise
 kdna-studio card approve my_expertise <card-id> \
   --by your-id \
   --statement "I confirm this judgment for v1 export."
-kdna-studio lock my_expertise
 ```
 
-Review and confirm the judgment cards you as the human author are taking
-responsibility for.
+Review and optionally approve the judgment cards when you want explicit
+release evidence. Human Lock is a provenance signal, not a format-validity
+requirement.
 
 ## Step 5: Compile and export
 

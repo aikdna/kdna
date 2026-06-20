@@ -96,8 +96,8 @@ kdna load ./minimal.kdna --profile=compact --as=prompt
 
 ## What is NOT the current official path
 
-- `kdna dev scaffold` — Creates non-canonical dev source directories for experimentation only
-- `kdna dev pack` — Builds dev-only bundles; not the official Studio v1 export path
+- `kdna dev scaffold` — Experimental creator utility; not the public consumption path
+- `kdna dev pack` — Experimental creator utility; not the official Studio v1 export path
 - Manual JSON editing — Valid for early prototyping but does not produce official v1 Studio exports
 - `kdna setup` — Legacy agent auto-detection; not part of the current v1 verify/load path
 - Registry-based install (`kdna install <domain>`) — Legacy path; Core v1 does not define a public registry

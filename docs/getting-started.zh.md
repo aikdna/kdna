@@ -96,8 +96,8 @@ kdna load ./minimal.kdna --profile=compact --as=prompt
 
 ## 不是当前官方路径的操作
 
-- `kdna dev scaffold` — 创建非正式 dev source 目录，仅用于实验
-- `kdna dev pack` — 构建 dev-only 打包；不是官方 Studio v1 导出路径
+- `kdna dev scaffold` — 实验性创作者工具；不是公共消费路径
+- `kdna dev pack` — 实验性创作者工具；不是官方 Studio v1 导出路径
 - 手动编辑 JSON — 可用于早期原型，但不产出正式 v1 Studio 导出
 - `kdna setup` — 旧版 Agent 自动检测；不在当前 v1 verify/load 路径中
 - 基于 registry 的安装（`kdna install <domain>`）— 旧版路径；Core v1 不定义公开 registry
