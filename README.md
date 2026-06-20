@@ -23,6 +23,9 @@ npm install -g @aikdna/kdna-cli
 kdna demo minimal ./minimal
 kdna validate ./minimal
 kdna pack ./minimal ./minimal.kdna
+kdna validate ./minimal.kdna
+kdna plan-load ./minimal.kdna
+kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
 
 → [Full 5-minute guide](./docs/try-kdna.md)
@@ -96,7 +99,7 @@ The official KDNA toolchain is published from this repo and its companion packag
 
 See:
 
-- [`examples/minimal/`](./examples/minimal/) — the smallest valid `.kdna` source layout
+- [`examples/minimal/`](./examples/minimal/) — the smallest valid authoring source layout for producing a `.kdna` file
 - [`samples/`](./samples/) — larger sample KDNA layouts
 - [`fixtures/`](./fixtures/) — conformance and test fixtures
 
@@ -109,9 +112,9 @@ kdna/
 ├── docs/                 # Spec, architecture, guides
 │   ├── core/             # Phase 1: format baseline docs
 │   ├── tools/            # Per-tool documentation
-│   ├── examples/         # Example asset catalog
+│   ├── examples/         # Example guides
 │   └── guides/           # How-to guides
-├── examples/             # Reference `.kdna` source layouts
+├── examples/             # Authoring source layouts used to produce `.kdna` files
 ├── samples/              # Larger sample KDNA layouts
 ├── fixtures/             # Conformance test fixtures
 ├── conformance/          # Conformance test runner

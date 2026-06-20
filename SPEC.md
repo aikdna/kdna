@@ -1067,7 +1067,7 @@ Every domain MUST declare its language configuration in `kdna.json`:
 | L3 | L2 + full overlays for all 6 KDNA files |
 | L4 | L3 + locale-specific eval cases |
 
-Public KDNA-X entries or other public KDNA releases published through the official toolchain SHOULD achieve at least L1 in en + zh-CN as a quality practice. This is a publishing recommendation, not a format-validity requirement.
+Public `.kdna` examples published by the KDNA team or other public KDNA releases SHOULD achieve at least L1 in en + zh-CN as a quality practice. This is a publishing recommendation, not a format-validity requirement.
 
 ### 16.4 Locale Directory Structure
 

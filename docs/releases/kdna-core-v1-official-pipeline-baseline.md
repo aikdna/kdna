@@ -8,8 +8,8 @@ including `schema_valid`, `payload_valid`, `checksums_valid`, and
 `load_contract_valid`.
 
 This is still a closure candidate, not the final public-launch declaration,
-because website/docs, MCP package evidence, issue reconciliation, KDNA-X
-propagation material, and final proof artifacts still need cross-repo closure.
+because website/docs, MCP package evidence, issue reconciliation, public example
+planning, and final proof artifacts still need cross-repo closure.
 
 ## What passes (CLI consumer path)
 
