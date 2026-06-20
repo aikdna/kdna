@@ -4,6 +4,10 @@ Version: 0.1
 Status: Draft
 Based on: `KDNA/specs/human-lock.md` (SPEC)
 
+> Current boundary: this gate applies to Studio/review workflows that claim
+> Human Lock or human confirmation. It does not make Human Lock a universal
+> KDNA Core format-validity or creation requirement.
+
 ## 1. Objective
 
 Transform the Human Judgment Lock from a documented principle into an enforceable gate across three enforcement points:

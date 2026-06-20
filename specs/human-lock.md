@@ -1,5 +1,11 @@
 # Human Judgment Lock
 
+> Current boundary: Human Judgment Lock is optional governance provenance for
+> reviewed or human-confirmed workflows. It is not a KDNA Core format-validity
+> requirement for every `.kdna` file. Plain `.kdna` files may be valid without
+> Human Lock; trust, authorship, review status, and distribution status are
+> separate layers.
+
 The Human Judgment Lock is the protocol mechanism that ensures judgment updates in KDNA domains are explicitly approved by a human before they take effect.
 
 It is the operational guarantee behind the principle:

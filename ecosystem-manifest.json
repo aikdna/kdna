@@ -158,7 +158,7 @@
       "supported_entitlement_profiles": [],
       "conformance_commit": "814aa266328f5fa18f3894080bc0d0f4cc5673ee",
       "known_limitations": [
-        "Repository deleted. Public replacement is a packaged .kdna file with release card and checksum; KDNA-X remains an internal production workspace."
+        "Repository deleted. Public replacement is a packaged .kdna file with release card and checksum."
       ],
       "recommended_entrypoint": "Download writing-v1.kdna from official examples page",
       "legacy_replacement": "packaged .kdna example release"
@@ -175,7 +175,7 @@
       "supported_entitlement_profiles": [],
       "conformance_commit": "57764bdf97d574f8a986c2bd14f5f70f1ea82f7c",
       "known_limitations": [
-        "Repository deleted. Public replacement is a packaged .kdna file with release card and checksum; KDNA-X remains an internal production workspace."
+        "Repository deleted. Public replacement is a packaged .kdna file with release card and checksum."
       ],
       "recommended_entrypoint": "Download prompt_diagnosis-v1.kdna from official examples page",
       "legacy_replacement": "packaged .kdna example release"
@@ -192,7 +192,7 @@
       "supported_entitlement_profiles": [],
       "conformance_commit": "86f02f16ef9c167b415609dad1da6723b1448ed6",
       "known_limitations": [
-        "Repository deleted. Public replacement is a packaged .kdna file with release card and checksum; KDNA-X remains an internal production workspace."
+        "Repository deleted. Public replacement is a packaged .kdna file with release card and checksum."
       ],
       "recommended_entrypoint": "Download agent_safety-v1.kdna from official examples page",
       "legacy_replacement": "packaged .kdna example release"
