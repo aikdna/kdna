@@ -6,6 +6,8 @@
 **Website:** https://aikdna.com  
 **GitHub:** https://github.com/aikdna/kdna
 
+> **Historical note:** This white paper captures the broader KDNA vision before the Core v1 launch boundary was narrowed. Current Core v1 public positioning is: packaged `.kdna` files, local validation, LoadPlan planning, and local loading through the official toolchain. Registry, marketplace, paid authorization, remote runtime, signatures, encryption, and quality badges are not part of the current stable launch baseline.
+
 ---
 
 ## Abstract
@@ -22,7 +24,7 @@ KDNA does not claim that judgment has never existed in AI systems. Its contribut
 
 KDNA stands for **Knowledge DNA**. The name does not treat knowledge as a static collection of content, but as a structure that can be expressed, inherited, and evolved. The "K" refers to structured domain cognition — the judgment system behind how knowledge is selected, interpreted, rejected, and applied — not to stored information in the narrow sense. In biological systems, DNA is not the organism itself, nor any single behavior; it is an underlying code that allows stable traits to be preserved, expressed, copied, and changed over time. KDNA uses this metaphor for domain judgment: the most valuable part of expertise is often not isolated knowledge, but the recurring judgment structure behind it — how experts draw distinctions, recognize situations, weigh risks, preserve boundaries, form taste, avoid misunderstandings, and decide what counts as done well. KDNA gives this implicit structure a readable, verifiable, composable, and transmissible form.
 
-The specification is open, the reference toolchain is published under Apache 2.0, and an early public registry of open-access domains is available. KDNA does not replace prompts, knowledge bases, skills, MCP, tools, retrieval, evaluation, workflows, or fine-tuning. It gives them a clearer judgment reference.
+The specification is open and the reference toolchain is published under Apache 2.0. Current Core v1 usage centers on local packaged `.kdna` files that can be validated, planned, and loaded through the official toolchain. KDNA does not replace prompts, knowledge bases, skills, MCP, tools, retrieval, evaluation, workflows, or fine-tuning. It gives them a clearer judgment reference.
 
 ---
 
@@ -818,9 +820,9 @@ KDNA's roadmap is organized into six phases, reflecting the protocol's evolution
   - Reasoning + Evolution + manifest/version matrix.
 - Unify `status`, `quality_badge`, and `access` fields.
 
-### Phase 2: KDNA-X Public Domains
+### Phase 2: Public `.kdna` Examples
 
-- Strengthen the public KDNA-X set:
+- Publish packaged `.kdna` examples that demonstrate the format and toolchain:
   - kdna_authoring;
   - agent_safety;
   - prompt_diagnosis;
@@ -829,7 +831,7 @@ KDNA's roadmap is organized into six phases, reflecting the protocol's evolution
 - Ensure each has a complete six-file package.
 - Add at least 10 evals per domain.
 - Make `kdna verify --judgment` and `kdna compare` produce meaningful evidence.
-- Use reference domains to validate that the protocol is executable, not merely conceptual.
+- Use examples to validate that the protocol is executable, not merely conceptual. Examples demonstrate usage; they are not a registry, marketplace, ranking, certification, or universal recommendation.
 
 ### Phase 3: Composition and Clusters
 

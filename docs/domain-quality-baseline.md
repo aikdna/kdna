@@ -1,8 +1,8 @@
 # KDNA Domain Quality Baseline
 
-> ⚠️ **Historical document. Not active guidance.** For current KDNA Core positioning, see README, SPEC.md, docs/KDNA_CONFORMANCE_LEVELS.md, and docs/KDNA_X_PROPAGATION_SET.md. The "official domain" concept referenced below has been replaced by KDNA-X public entries and legacy proof assets — all `.kdna` assets that pass `kdna validate` are equal peers.
+> ⚠️ **Historical document. Not active guidance.** For current KDNA Core positioning, see README, SPEC.md, docs/KDNA_CONFORMANCE_LEVELS.md, and docs/PUBLIC_KDNA_EXAMPLES.md. The "official domain" concept referenced below has been replaced by public `.kdna` examples and legacy proof assets. Any `.kdna` file that passes `kdna validate` is valid at the format layer; trust, quality, authorship, evaluation, and distribution status are separate layers.
 
-Every KDNA domain published as a public KDNA-X entry should meet a minimum quality standard. This historical document explains how earlier work used `kdna-writing` as a proof example.
+Every KDNA domain published as a public `.kdna` example should meet a minimum evidence standard. This historical document explains how earlier work used `kdna-writing` as a proof example.
 
 ## The Four Questions
 
@@ -76,7 +76,7 @@ When publishing a new public KDNA entry, verify:
 
 ## kdna-writing as a Historical Proof Example
 
-[kdna-writing](https://github.com/aikdna/kdna-writing) was the original proof example. New public KDNA-X entries should use its evidence expectations where useful, without treating it as a ranked standard:
+[kdna-writing](https://github.com/aikdna/kdna-writing) was the original proof example. New public `.kdna` examples can use its evidence expectations where useful, without treating it as a ranked standard:
 
 | Aspect | kdna-writing |
 |--------|-------------|
