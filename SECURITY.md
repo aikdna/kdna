@@ -21,7 +21,7 @@ We actively support the latest release for security updates.
 | KDNA Protocol | Latest tagged release |
 | kdna-cli | Latest minor release |
 | kdna-studio-cli | Latest minor release |
-| Official domains | Registry-listed current versions |
+| Public examples | Packaged `.kdna` release cards when published |
 
 Older versions may receive critical security patches on a case-by-case basis.
 

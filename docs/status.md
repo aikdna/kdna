@@ -41,8 +41,8 @@ KDNA Core is content-neutral. It does not evaluate content quality, recommend as
 - **kdna compare** — comparison requires a provider key; not yet documented in the v1 guide
 - **kdna setup** — agent setup (codex, claude-code, opencode, cursor); skills/MCP now use the v1 local asset loading path, while setup UX remains a post-baseline hardening surface
 - **kdna-studio** — v1 authoring/export is published through
-  `@aikdna/kdna-studio-cli@0.5.7` and
-  `@aikdna/kdna-studio-core@1.5.6`; public propagation should center on
+  `@aikdna/kdna-studio-cli@0.5.8` and
+  `@aikdna/kdna-studio-core@1.5.7`; public propagation should center on
   packaged `.kdna` examples, not source JSON directories, registry entries, or
   a fixed three-domain primary narrative.
 - **kdna-vscode** — VS Code extension (legacy workspace tools); not yet updated for v1 Core
