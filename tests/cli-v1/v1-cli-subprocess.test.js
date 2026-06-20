@@ -15,6 +15,7 @@ const { execFileSync, spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const v1 = require('../../packages/kdna-core/src/v1');
 
 const repoRoot = path.resolve(__dirname, '..', '..');
 const cliBin = path.join(repoRoot, 'packages', 'kdna', 'bin', 'kdna.js');
@@ -67,6 +68,40 @@ test('cli: kdna validate examples/minimal reports overall_valid=true', () => {
   assert.deepEqual(out.problems, []);
 });
 
+test('cli: kdna validate --runtime exits 3 when LoadPlan cannot load now', () => {
+  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-v1-validate-runtime-'));
+  const secret = 'VALIDATE_RUNTIME_SECRET_SHOULD_NOT_LEAK';
+  try {
+    for (const name of fs.readdirSync(exampleMinimal)) {
+      fs.copyFileSync(path.join(exampleMinimal, name), path.join(dir, name));
+    }
+    const manifestPath = path.join(dir, 'kdna.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    manifest.access = 'remote';
+    manifest.runtime = { endpoint: 'https://runtime.example.test/v1/project' };
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+    const payloadPath = path.join(dir, 'payload.kdnab');
+    const payload = JSON.parse(fs.readFileSync(payloadPath, 'utf8'));
+    payload.core.axioms = [{ id: 'secret', one_sentence: secret }];
+    fs.writeFileSync(payloadPath, JSON.stringify(payload, null, 2));
+    fs.writeFileSync(
+      path.join(dir, 'checksums.json'),
+      JSON.stringify(v1.buildChecksumsV1(dir), null, 2),
+    );
+
+    const r = runCli(['validate', dir, '--runtime']);
+    assert.equal(r.status, 3, `stdout=${r.stdout}\nstderr=${r.stderr}`);
+    const out = JSON.parse(r.stdout);
+    assert.equal(out.overall_valid, true);
+    assert.equal(out.runtime_load_plan.state, 'needs_runtime');
+    assert.equal(out.runtime_load_plan.can_load_now, false);
+    assert.ok(!r.stdout.includes(secret));
+    assert.ok(!r.stderr.includes(secret));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('cli: kdna plan-load examples/minimal returns a ready LoadPlan', () => {
   const r = runCli(['plan-load', exampleMinimal]);
   assert.equal(r.status, 0, `stdout=${r.stdout}\nstderr=${r.stderr}`);
@@ -77,6 +112,32 @@ test('cli: kdna plan-load examples/minimal returns a ready LoadPlan', () => {
   assert.equal(out.can_load_now, true);
   assert.equal(out.projection_policy, 'minimal');
   assert.equal(out.asset.asset_id, 'kdna:example:atomspeak-core');
+});
+
+test('cli: kdna plan-load returns 3 when the plan is valid but cannot load now', () => {
+  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-v1-plan-exit-'));
+  try {
+    for (const name of fs.readdirSync(exampleMinimal)) {
+      fs.copyFileSync(path.join(exampleMinimal, name), path.join(dir, name));
+    }
+    const manifestPath = path.join(dir, 'kdna.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    manifest.access = 'remote';
+    manifest.runtime = { endpoint: 'https://runtime.example.test/v1/project' };
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+    fs.writeFileSync(
+      path.join(dir, 'checksums.json'),
+      JSON.stringify(v1.buildChecksumsV1(dir), null, 2),
+    );
+
+    const r = runCli(['plan-load', dir]);
+    assert.equal(r.status, 3, `stdout=${r.stdout}\nstderr=${r.stderr}`);
+    const out = JSON.parse(r.stdout);
+    assert.equal(out.state, 'needs_runtime');
+    assert.equal(out.can_load_now, false);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 test('cli: kdna pack examples/minimal produces a deterministic container', () => {

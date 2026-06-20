@@ -135,7 +135,7 @@ function minimalEntries(overrides = {}) {
     mimetype: 'application/vnd.aikdna.kdna+zip',
     'kdna.json': json({
       format: 'kdna',
-      format_version: '1.0',
+      format_version: '2.0',
       spec_version: '1.0-rc',
       name: '@example/minimal',
       version: '0.1.0',
@@ -265,7 +265,7 @@ const TEST_LICENSE_KEY = 'KDNA-TEST-LICENSE-VECTOR-2026';
 function licensedManifest() {
   return {
     format: 'kdna',
-    format_version: '1.0',
+    format_version: '2.0',
     spec_version: '1.0-rc',
     name: '@example/licensed',
     version: '0.1.0',
@@ -443,7 +443,7 @@ const TEST_PROTECTED_PASSWORD = 'KDNA-TEST-VECTOR-2026';
 function protectedManifest() {
   return {
     format: 'kdna',
-    format_version: '1.0',
+    format_version: '2.0',
     spec_version: '1.0-rc',
     name: '@example/protected',
     version: '0.1.0',

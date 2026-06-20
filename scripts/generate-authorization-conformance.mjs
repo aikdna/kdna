@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
+import { execFileSync } from 'node:child_process';
 
 const require = createRequire(import.meta.url);
 const v1 = require('../packages/kdna-core/src/v1');
@@ -12,6 +13,7 @@ const authRoot = path.join(repoRoot, 'conformance', 'authorization');
 const fixturesRoot = path.join(authRoot, 'fixtures');
 const goldensRoot = path.join(authRoot, 'goldens');
 const casesPath = path.join(authRoot, 'cases.json');
+const prettierBin = path.join(repoRoot, 'node_modules', 'prettier', 'bin', 'prettier.cjs');
 
 const json = (value) => JSON.stringify(value, null, 2) + '\n';
 
@@ -193,6 +195,11 @@ function mergeManifest(base, patch) {
   return next;
 }
 
+function formatJsonFiles(files) {
+  if (!fs.existsSync(prettierBin)) return;
+  execFileSync(process.execPath, [prettierBin, '--write', ...files], { stdio: 'ignore' });
+}
+
 function writeFixture(testCase) {
   const fixtureDir = path.join(fixturesRoot, testCase.fixture);
   copyMinimalFixture(fixtureDir);
@@ -208,6 +215,7 @@ function writeFixture(testCase) {
     keywords: ['authorization', 'conformance', testCase.id],
   });
   fs.writeFileSync(manifestPath, json(updated));
+  formatJsonFiles([manifestPath]);
   fs.writeFileSync(path.join(fixtureDir, 'checksums.json'), json(v1.buildChecksumsV1(fixtureDir)));
 
   if (testCase.tamperPayloadAfterChecksums) {
@@ -235,6 +243,13 @@ function normalizePlan(plan, testCase) {
   };
 }
 
+function formatGeneratedJson(caseIndex) {
+  formatJsonFiles([
+    casesPath,
+    ...caseIndex.map((testCase) => path.join(goldensRoot, `${testCase.id}.loadplan.json`)),
+  ]);
+}
+
 ensureDir(fixturesRoot);
 ensureDir(goldensRoot);
 
@@ -252,11 +267,16 @@ const caseIndex = cases.map((testCase) => {
   };
 });
 
-fs.writeFileSync(casesPath, json({
-  schema: 'https://github.com/aikdna/kdna/conformance/authorization/cases.schema.json',
-  generated_by: 'scripts/generate-authorization-conformance.mjs',
-  note: 'Goldens normalize source.path to <fixture:name> so they are stable across machines.',
-  cases: caseIndex,
-}));
+fs.writeFileSync(
+  casesPath,
+  json({
+    schema: 'https://github.com/aikdna/kdna/conformance/authorization/cases.schema.json',
+    generated_by: 'scripts/generate-authorization-conformance.mjs',
+    note: 'Goldens normalize source.path to <fixture:name> so they are stable across machines.',
+    cases: caseIndex,
+  }),
+);
+
+formatGeneratedJson(caseIndex);
 
 console.log(`authorization conformance fixtures: ${caseIndex.length}`);

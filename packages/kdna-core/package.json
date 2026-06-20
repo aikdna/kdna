@@ -21,12 +21,15 @@
   },
   "types": "src/types.d.ts",
   "scripts": {
-    "test": "node --test test/*.test.js && node -e \"const m = require('./src/index.js'); console.log('kdna-core exports:', Object.keys(m).join(', '));\""
+    "test": "node --test test/*.test.js && node -e \"const m = require('./src/index.js'); console.log('kdna-core exports:', Object.keys(m).join(', '));\"",
+    "prepublishOnly": "npm --prefix ../.. run ecosystem-gate"
   },
   "files": [
     "src/",
     "schema/",
-    "README.md"
+    "README.md",
+    "LICENSE",
+    "NOTICE"
   ],
   "keywords": [
     "kdna",

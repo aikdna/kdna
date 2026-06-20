@@ -3,6 +3,9 @@
 .npmrc
 *.log
 node_modules/
+.npm-cache/
+.ecosystem-repos/
+release-evidence/
 npm-debug.log*
 *.tgz
 conformance/fixtures/generated/*

@@ -22,7 +22,10 @@ const { MIMETYPE_V1, MIMETYPE_V2, FORBIDDEN_OUTPUT_TERMS } = v1;
 const repoRoot = path.resolve(__dirname, '..', '..');
 const exampleMinimal = path.join(repoRoot, 'examples', 'minimal');
 const loadPlanSchema = JSON.parse(
-  fs.readFileSync(path.join(repoRoot, 'packages', 'kdna-core', 'schema', 'load-plan.schema.json'), 'utf8'),
+  fs.readFileSync(
+    path.join(repoRoot, 'packages', 'kdna-core', 'schema', 'load-plan.schema.json'),
+    'utf8',
+  ),
 );
 const validateLoadPlanSchema = new Ajv({ allErrors: true, strict: false }).compile(loadPlanSchema);
 
@@ -50,6 +53,84 @@ function mutateManifest(dir, mutator) {
     path.join(dir, 'checksums.json'),
     JSON.stringify(v1.buildChecksumsV1(dir), null, 2),
   );
+}
+
+function testCrc32(buf) {
+  const table = (() => {
+    const out = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) {
+      let c = n;
+      for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+      out[n] = c >>> 0;
+    }
+    return out;
+  })();
+  let c = 0xffffffff;
+  for (let i = 0; i < buf.length; i++) c = table[(c ^ buf[i]) & 0xff] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+
+function writeTestZip(outputPath, entries) {
+  const locals = [];
+  const central = [];
+  let offset = 0;
+  for (const entry of entries) {
+    const nameBytes = Buffer.from(entry.name, 'utf8');
+    const data = Buffer.isBuffer(entry.data) ? entry.data : Buffer.from(String(entry.data), 'utf8');
+    const crc = testCrc32(data);
+    const localHeader = Buffer.alloc(30);
+    localHeader.writeUInt32LE(0x04034b50, 0);
+    localHeader.writeUInt16LE(20, 4);
+    localHeader.writeUInt16LE(0, 6);
+    localHeader.writeUInt16LE(0, 8);
+    localHeader.writeUInt16LE(0, 10);
+    localHeader.writeUInt16LE(1, 12);
+    localHeader.writeUInt32LE(crc, 14);
+    localHeader.writeUInt32LE(data.length, 18);
+    localHeader.writeUInt32LE(data.length, 22);
+    localHeader.writeUInt16LE(nameBytes.length, 26);
+    localHeader.writeUInt16LE(0, 28);
+    locals.push(localHeader, nameBytes, data);
+
+    const cd = Buffer.alloc(46);
+    cd.writeUInt32LE(0x02014b50, 0);
+    cd.writeUInt16LE(20, 4);
+    cd.writeUInt16LE(20, 6);
+    cd.writeUInt16LE(0, 8);
+    cd.writeUInt16LE(0, 10);
+    cd.writeUInt16LE(0, 12);
+    cd.writeUInt16LE(1, 14);
+    cd.writeUInt32LE(crc, 16);
+    cd.writeUInt32LE(data.length, 20);
+    cd.writeUInt32LE(data.length, 24);
+    cd.writeUInt16LE(nameBytes.length, 28);
+    cd.writeUInt16LE(0, 30);
+    cd.writeUInt16LE(0, 32);
+    cd.writeUInt16LE(0, 34);
+    cd.writeUInt16LE(0, 36);
+    cd.writeUInt32LE((entry.externalAttributes || 0) >>> 0, 38);
+    cd.writeUInt32LE(offset, 42);
+    central.push(cd, nameBytes);
+    offset += localHeader.length + nameBytes.length + data.length;
+  }
+  const cdOffset = offset;
+  const cdSize = central.reduce((sum, chunk) => sum + chunk.length, 0);
+  const eocd = Buffer.alloc(22);
+  eocd.writeUInt32LE(0x06054b50, 0);
+  eocd.writeUInt16LE(0, 4);
+  eocd.writeUInt16LE(0, 6);
+  eocd.writeUInt16LE(entries.length, 8);
+  eocd.writeUInt16LE(entries.length, 10);
+  eocd.writeUInt32LE(cdSize, 12);
+  eocd.writeUInt32LE(cdOffset, 16);
+  eocd.writeUInt16LE(0, 20);
+  fs.writeFileSync(outputPath, Buffer.concat([...locals, ...central, eocd]));
+}
+
+function validContainerEntries(sourceDir) {
+  return ['mimetype', 'kdna.json', 'payload.kdnab', 'checksums.json']
+    .filter((name) => fs.existsSync(path.join(sourceDir, name)))
+    .map((name) => ({ name, data: fs.readFileSync(path.join(sourceDir, name)) }));
 }
 
 function assertForbiddenTermsAbsent(obj) {
@@ -223,6 +304,8 @@ test('planLoad: password licensed asset requires password before load', () => {
     assert.equal(unlockedPlan.state, 'ready');
     assert.equal(unlockedPlan.required_action, 'load');
     assert.equal(unlockedPlan.can_load_now, true);
+    assert.equal(unlockedPlan.issues[0].code, 'KDNA_AUTH_PASSWORD_DIAGNOSTIC');
+    assert.equal(unlockedPlan.issues[0].severity, 'info');
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -345,6 +428,114 @@ test('planLoad: remote asset requires runtime and does not load locally', () => 
   }
 });
 
+test('loadV1: rejected LoadPlan states do not leak judgment payload', () => {
+  const secret = 'SECRET_PAYLOAD_SHOULD_NOT_LEAK';
+  const cases = [
+    [
+      'remote',
+      (manifest) => {
+        manifest.access = 'remote';
+      },
+    ],
+    [
+      'needs_license',
+      (manifest) => {
+        manifest.access = 'licensed';
+        manifest.entitlement = { profile: 'local_receipt', offline: true, revocable: true };
+      },
+    ],
+    [
+      'expired',
+      (manifest) => {
+        manifest.access = 'licensed';
+        manifest.entitlement = { profile: 'local_receipt', offline: true, revocable: true };
+      },
+      { entitlement: { status: 'expired' } },
+    ],
+    [
+      'revoked',
+      (manifest) => {
+        manifest.access = 'licensed';
+        manifest.entitlement = { profile: 'local_receipt', offline: true, revocable: true };
+      },
+      { entitlement: { status: 'revoked' } },
+    ],
+    [
+      'unknown_access',
+      (manifest) => {
+        manifest.access = 'subscription';
+      },
+    ],
+  ];
+
+  for (const [label, mutate, loadOptions = {}] of cases) {
+    const dir = makeTmp(`kdna-v1-load-denied-${label}-`);
+    try {
+      copyMinimal(dir);
+      const payloadPath = path.join(dir, 'payload.kdnab');
+      const payload = JSON.parse(fs.readFileSync(payloadPath, 'utf8'));
+      payload.core.axioms = [{ id: 'secret', one_sentence: secret }];
+      fs.writeFileSync(payloadPath, JSON.stringify(payload, null, 2));
+      mutateManifest(dir, mutate);
+
+      assert.throws(
+        () => v1.loadV1(dir, { profile: 'compact', as: 'prompt', ...loadOptions }),
+        (error) => {
+          assert.ok(!String(error.message).includes(secret), `${label} leaked payload in error`);
+          assert.ok(
+            !JSON.stringify(error.plan || {}).includes(secret),
+            `${label} leaked payload in plan`,
+          );
+          return true;
+        },
+      );
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  }
+});
+
+test('loadV1: compact profile preserves Human Lock boundary fields', () => {
+  const dir = makeTmp('kdna-v1-human-lock-projection-');
+  try {
+    copyMinimal(dir);
+    const payloadPath = path.join(dir, 'payload.kdnab');
+    const payload = JSON.parse(fs.readFileSync(payloadPath, 'utf8'));
+    payload.core.axioms = [
+      {
+        id: 'evidence_first',
+        one_sentence: 'Prefer specific evidence over broad claims',
+        applies_when: ['reviewing factual claims'],
+        does_not_apply_when: ['writing fictional copy'],
+        failure_risk: 'The agent may overfit to unsupported generalities.',
+      },
+    ];
+    fs.writeFileSync(payloadPath, JSON.stringify(payload, null, 2));
+    fs.writeFileSync(
+      path.join(dir, 'checksums.json'),
+      JSON.stringify(v1.buildChecksumsV1(dir), null, 2),
+    );
+
+    const loaded = v1.loadV1(dir, { profile: 'compact', as: 'json' });
+    assert.deepEqual(loaded.content.axioms[0], {
+      type: 'axiom_applicability',
+      id: 'evidence_first',
+      statement: 'Prefer specific evidence over broad claims',
+      one_sentence: 'Prefer specific evidence over broad claims',
+      applies_when: ['reviewing factual claims'],
+      does_not_apply_when: ['writing fictional copy'],
+      failure_risk: 'The agent may overfit to unsupported generalities.',
+    });
+
+    const prompt = v1.loadV1(dir, { profile: 'compact', as: 'prompt' }).text;
+    assert.match(prompt, /applies when: reviewing factual claims/);
+    assert.match(prompt, /does not apply when: writing fictional copy/);
+    assert.match(prompt, /failure risk: The agent may overfit/);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('planLoad: unknown access fails closed with a schema-valid plan', () => {
   const dir = makeTmp('kdna-v1-plan-unknown-access-');
   try {
@@ -370,7 +561,8 @@ test('planLoad: checksum mismatch returns invalid with blocking issue', () => {
     copyMinimal(dir);
     const checksumsPath = path.join(dir, 'checksums.json');
     const checksums = JSON.parse(fs.readFileSync(checksumsPath, 'utf8'));
-    checksums.payload_digest = 'sha256:0000000000000000000000000000000000000000000000000000000000000000';
+    checksums.payload_digest =
+      'sha256:0000000000000000000000000000000000000000000000000000000000000000';
     fs.writeFileSync(checksumsPath, JSON.stringify(checksums, null, 2));
 
     const plan = v1.planLoad(dir);
@@ -595,7 +787,79 @@ test('unpack: refuses to write outside the destination (path traversal)', () => 
     fs.writeFileSync(evil, Buffer.concat([...locals, ...central, eocd]));
 
     const outDir = path.join(dir, 'out');
-    assert.throws(() => v1.unpack(evil, outDir), /refusing to write outside target/i);
+    assert.throws(
+      () => v1.unpack(evil, outDir),
+      /unsafe relative path|refusing to write outside target/i,
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('malicious containers fail consistently before judgment payload output', () => {
+  const dir = makeTmp('kdna-v1-malicious-fixtures-');
+  const secret = 'SECRET_CONTAINER_PAYLOAD_SHOULD_NOT_LEAK';
+  try {
+    const src = path.join(dir, 'src');
+    copyMinimal(src);
+    const payloadPath = path.join(src, 'payload.kdnab');
+    const payload = JSON.parse(fs.readFileSync(payloadPath, 'utf8'));
+    payload.core.axioms = [{ id: 'secret', one_sentence: secret }];
+    fs.writeFileSync(payloadPath, JSON.stringify(payload, null, 2));
+    fs.writeFileSync(
+      path.join(src, 'checksums.json'),
+      JSON.stringify(v1.buildChecksumsV1(src), null, 2),
+    );
+    const baseEntries = validContainerEntries(src);
+    const fixtures = [
+      [
+        'traversal',
+        [...baseEntries, { name: '../outside.txt', data: 'x' }],
+        /unsafe relative path/,
+      ],
+      ['absolute', [...baseEntries, { name: '/tmp/absolute.txt', data: 'x' }], /absolute path/],
+      ['duplicate', [...baseEntries, { name: 'kdna.json', data: '{}' }], /duplicate entry/],
+      [
+        'forbidden-top-level',
+        [...baseEntries, { name: 'KDNA_Core.json', data: '{}' }],
+        /forbidden top-level/,
+      ],
+      [
+        'symlink',
+        [
+          ...baseEntries,
+          { name: 'attachments/link', data: 'target', externalAttributes: (0o120777 << 16) >>> 0 },
+        ],
+        /unsupported file attributes/,
+      ],
+    ];
+
+    for (const [label, entries, pattern] of fixtures) {
+      const file = path.join(dir, `${label}.kdna`);
+      writeTestZip(file, entries);
+      assert.equal(v1.detectContainerFormat(file), 'v1', `${label} should still route to v1`);
+      assert.throws(() => v1.validate(file), pattern, `${label} validate`);
+      const plan = v1.planLoad(file);
+      assert.equal(plan.can_load_now, false, `${label} plan-load`);
+      assert.equal(plan.state, 'invalid', `${label} plan-load state`);
+      assert.ok(!JSON.stringify(plan).includes(secret), `${label} leaked payload in plan`);
+      assert.throws(
+        () => v1.loadV1(file, { profile: 'compact', as: 'prompt' }),
+        (error) => {
+          assert.ok(
+            !String(error.message).includes(secret),
+            `${label} leaked payload in load error`,
+          );
+          return true;
+        },
+        `${label} load`,
+      );
+      assert.throws(
+        () => v1.unpack(file, path.join(dir, `${label}-out`)),
+        pattern,
+        `${label} unpack`,
+      );
+    }
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

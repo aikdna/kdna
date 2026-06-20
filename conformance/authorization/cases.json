@@ -26,9 +26,7 @@
       "options": {
         "hasPassword": true
       },
-      "cli_args": [
-        "--has-password"
-      ],
+      "cli_args": ["--has-password"],
       "golden": "goldens/password-valid.loadplan.json"
     },
     {
@@ -48,10 +46,7 @@
           "status": "active"
         }
       },
-      "cli_args": [
-        "--entitlement-status",
-        "active"
-      ],
+      "cli_args": ["--entitlement-status", "active"],
       "golden": "goldens/receipt-valid.loadplan.json"
     },
     {
@@ -63,10 +58,7 @@
           "status": "expired"
         }
       },
-      "cli_args": [
-        "--entitlement-status",
-        "expired"
-      ],
+      "cli_args": ["--entitlement-status", "expired"],
       "golden": "goldens/expired-entitlement.loadplan.json"
     },
     {
@@ -78,10 +70,7 @@
           "status": "revoked"
         }
       },
-      "cli_args": [
-        "--entitlement-status",
-        "revoked"
-      ],
+      "cli_args": ["--entitlement-status", "revoked"],
       "golden": "goldens/revoked-entitlement.loadplan.json"
     },
     {
@@ -93,10 +82,7 @@
           "status": "offline_grace"
         }
       },
-      "cli_args": [
-        "--entitlement-status",
-        "offline_grace"
-      ],
+      "cli_args": ["--entitlement-status", "offline_grace"],
       "golden": "goldens/offline-grace-active.loadplan.json"
     },
     {

@@ -8,19 +8,74 @@ on:
 jobs:
   publish-core:
     if: startsWith(github.ref_name, 'kdna-core-v') || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     permissions:
       contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-cli
+          ref: 688a979e148c610937a1b79f4d3e63ca3e2e1c58
+          path: .ecosystem-repos/kdna-cli
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-skills
+          ref: c0d59cb4165b60471c4baff038dc3386bdad238c
+          path: .ecosystem-repos/kdna-skills
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-studio-core
+          ref: 4eb27fa11476cf4e79a3ea3591391d2c138c2470
+          path: .ecosystem-repos/kdna-studio-core
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-studio-cli
+          ref: e2674e3cf8093d6656d51015a4658e32b1992916
+          path: .ecosystem-repos/kdna-studio-cli
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-core-swift
+          ref: a20816fc595ab0f19998b0509a26cf24c6a991d9
+          path: .ecosystem-repos/kdna-core-swift
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-website
+          ref: d747c3c10a1fe7908ba8c695dc52c49698d03799
+          path: .ecosystem-repos/kdna-website
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-vscode
+          ref: 810d06e77721614c3b014c9ecdd4a29ab0298454
+          path: .ecosystem-repos/kdna-vscode
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-writing
+          ref: 814aa266328f5fa18f3894080bc0d0f4cc5673ee
+          path: .ecosystem-repos/kdna-writing
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-prompt_diagnosis
+          ref: 57764bdf97d574f8a986c2bd14f5f70f1ea82f7c
+          path: .ecosystem-repos/kdna-prompt_diagnosis
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-agent_safety
+          ref: 86f02f16ef9c167b415609dad1da6723b1448ed6
+          path: .ecosystem-repos/kdna-agent_safety
       - uses: actions/setup-node@v6
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
-      - run: npm --workspace @aikdna/kdna-core test
+      - run: npm run ecosystem-gate
       - run: npm run conformance
+      - run: npm run release:evidence -- --package=core
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kdna-core-release-evidence
+          path: release-evidence/
       - name: Publish @aikdna/kdna-core
         run: npm publish --provenance --access public
         working-directory: packages/kdna-core
@@ -29,18 +84,73 @@ jobs:
 
   publish-compat:
     if: startsWith(github.ref_name, 'kdna-v')
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     permissions:
       contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-cli
+          ref: 688a979e148c610937a1b79f4d3e63ca3e2e1c58
+          path: .ecosystem-repos/kdna-cli
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-skills
+          ref: c0d59cb4165b60471c4baff038dc3386bdad238c
+          path: .ecosystem-repos/kdna-skills
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-studio-core
+          ref: 4eb27fa11476cf4e79a3ea3591391d2c138c2470
+          path: .ecosystem-repos/kdna-studio-core
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-studio-cli
+          ref: e2674e3cf8093d6656d51015a4658e32b1992916
+          path: .ecosystem-repos/kdna-studio-cli
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-core-swift
+          ref: a20816fc595ab0f19998b0509a26cf24c6a991d9
+          path: .ecosystem-repos/kdna-core-swift
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-website
+          ref: d747c3c10a1fe7908ba8c695dc52c49698d03799
+          path: .ecosystem-repos/kdna-website
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-vscode
+          ref: 810d06e77721614c3b014c9ecdd4a29ab0298454
+          path: .ecosystem-repos/kdna-vscode
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-writing
+          ref: 814aa266328f5fa18f3894080bc0d0f4cc5673ee
+          path: .ecosystem-repos/kdna-writing
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-prompt_diagnosis
+          ref: 57764bdf97d574f8a986c2bd14f5f70f1ea82f7c
+          path: .ecosystem-repos/kdna-prompt_diagnosis
+      - uses: actions/checkout@v6
+        with:
+          repository: aikdna/kdna-agent_safety
+          ref: 86f02f16ef9c167b415609dad1da6723b1448ed6
+          path: .ecosystem-repos/kdna-agent_safety
       - uses: actions/setup-node@v6
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
-      - run: npm --workspace @aikdna/kdna test
+      - run: npm run ecosystem-gate
+      - run: npm run release:evidence -- --package=compat
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kdna-compat-release-evidence
+          path: release-evidence/
       - name: Publish @aikdna/kdna compatibility package
         run: npm publish --provenance --access public
         working-directory: packages/kdna
@@ -63,6 +173,11 @@ jobs:
         working-directory: examples/typescript-agent
       - run: npm test
         working-directory: examples/typescript-agent
+      - run: npm run release:evidence -- --package=agent
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kdna-agent-release-evidence
+          path: release-evidence/
       - name: Publish @aikdna/agent
         run: npm publish --provenance --access public
         working-directory: examples/typescript-agent

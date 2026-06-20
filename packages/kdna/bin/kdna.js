@@ -99,9 +99,26 @@ function routeV1(args) {
       return;
     }
     if (cmd === 'validate') {
+      const runtimeMode = args.includes('--runtime');
       const result = v1.validate(input);
+      if (runtimeMode) {
+        const entitlementStatus = getFlag(args, '--entitlement-status');
+        const allowedEntitlementStatuses = new Set(['active', 'expired', 'revoked', 'offline_grace']);
+        if (entitlementStatus && !allowedEntitlementStatuses.has(entitlementStatus)) {
+          console.error('Invalid --entitlement-status. Use active, expired, revoked, or offline_grace.');
+          process.exit(2);
+        }
+        result.runtime_load_plan = v1.planLoad(input, {
+          hasPassword: args.includes('--has-password'),
+          entitlement: entitlementStatus ? { status: entitlementStatus } : undefined,
+        });
+      }
       console.log(JSON.stringify(result, null, 2));
-      process.exit(result.overall_valid ? 0 : 1);
+      if (!result.overall_valid) process.exit(1);
+      if (runtimeMode && result.runtime_load_plan && result.runtime_load_plan.can_load_now !== true) {
+        process.exit(result.runtime_load_plan.state === 'invalid' ? 1 : 3);
+      }
+      process.exit(0);
     }
     if (cmd === 'plan-load') {
       const entitlementStatus = getFlag(args, '--entitlement-status');
@@ -115,7 +132,7 @@ function routeV1(args) {
         entitlement: entitlementStatus ? { status: entitlementStatus } : undefined,
       });
       console.log(JSON.stringify(plan, null, 2));
-      process.exit(plan.state === 'invalid' ? 1 : 0);
+      process.exit(plan.state === 'invalid' ? 1 : plan.can_load_now === true ? 0 : 3);
     }
     if (cmd === 'pack') {
       const out = positional[1];
@@ -142,7 +159,7 @@ function routeV1(args) {
     if (cmd === 'load') {
       const profile = getFlag(args, '--profile') || 'compact';
       const as = getFlag(args, '--as') || 'json';
-      const r = v1.loadV1(input, { profile, as });
+      const r = v1.loadAuthorized(input, { profile, as });
       if (as === 'prompt') {
         process.stdout.write(r.text + '\n');
       } else {
