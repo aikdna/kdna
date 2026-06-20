@@ -68,7 +68,7 @@
       "local_path": "../kdna-studio-core",
       "npm_package": "@aikdna/kdna-studio-core",
       "package_json": "../kdna-studio-core/package.json",
-      "current_version": "1.5.6",
+      "current_version": "1.5.7",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
@@ -85,7 +85,7 @@
       "local_path": "../kdna-studio-cli",
       "npm_package": "@aikdna/kdna-studio-cli",
       "package_json": "../kdna-studio-cli/package.json",
-      "current_version": "0.5.7",
+      "current_version": "0.5.8",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
@@ -158,11 +158,10 @@
       "supported_entitlement_profiles": [],
       "conformance_commit": "814aa266328f5fa18f3894080bc0d0f4cc5673ee",
       "known_limitations": [
-        "Repository deleted. .kdna artifact migrated to kdna-x/dist/writing-v1.kdna. Public distribution through examples page / Releases."
+        "Repository deleted. Public replacement is a packaged .kdna file with release card and checksum; KDNA-X remains an internal production workspace."
       ],
       "recommended_entrypoint": "Download writing-v1.kdna from official examples page",
-      "legacy_replacement": "kdna-x",
-      "artifact_path": "dist/writing-v1.kdna"
+      "legacy_replacement": "packaged .kdna example release"
     },
     {
       "repository": "aikdna/kdna-prompt_diagnosis",
@@ -176,11 +175,10 @@
       "supported_entitlement_profiles": [],
       "conformance_commit": "57764bdf97d574f8a986c2bd14f5f70f1ea82f7c",
       "known_limitations": [
-        "Repository deleted. .kdna artifact migrated to kdna-x/dist/prompt_diagnosis-v1.kdna. Public distribution through examples page / Releases."
+        "Repository deleted. Public replacement is a packaged .kdna file with release card and checksum; KDNA-X remains an internal production workspace."
       ],
       "recommended_entrypoint": "Download prompt_diagnosis-v1.kdna from official examples page",
-      "legacy_replacement": "kdna-x",
-      "artifact_path": "dist/prompt_diagnosis-v1.kdna"
+      "legacy_replacement": "packaged .kdna example release"
     },
     {
       "repository": "aikdna/kdna-agent_safety",
@@ -194,11 +192,10 @@
       "supported_entitlement_profiles": [],
       "conformance_commit": "86f02f16ef9c167b415609dad1da6723b1448ed6",
       "known_limitations": [
-        "Repository deleted. .kdna artifact migrated to kdna-x/dist/agent_safety-v1.kdna. Public distribution through examples page / Releases."
+        "Repository deleted. Public replacement is a packaged .kdna file with release card and checksum; KDNA-X remains an internal production workspace."
       ],
       "recommended_entrypoint": "Download agent_safety-v1.kdna from official examples page",
-      "legacy_replacement": "kdna-x",
-      "artifact_path": "dist/agent_safety-v1.kdna"
+      "legacy_replacement": "packaged .kdna example release"
     },
     {
       "repository": "aikdna/kdna-releases",

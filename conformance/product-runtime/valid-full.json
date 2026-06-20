@@ -78,7 +78,8 @@
         "params": { "level": "basic" }
       }
     ],
-    "human_lock_required": true
+    "human_lock_required": false,
+    "human_lock_policy": "optional_provenance"
   },
   "trace": {
     "enabled": true,
