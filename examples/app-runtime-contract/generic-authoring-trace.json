@@ -18,8 +18,8 @@
   },
   "triggered_axioms": [
     {
-      "id": "AX-human-lock-required",
-      "statement": "AI may propose judgment candidates, but humans must confirm judgment before compilation."
+      "id": "AX-human-lock-optional",
+      "statement": "Humans, agents, and tools may create KDNA; Human Lock is optional provenance for reviewed releases."
     }
   ],
   "triggered_frameworks": [

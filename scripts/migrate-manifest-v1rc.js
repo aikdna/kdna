@@ -18,7 +18,8 @@ const path = require('path');
 const OPEN_SOURCE = path.resolve(__dirname, '..', '..');
 
 const DOMAIN_DIRS = [
-  // kdna-writing, kdna-prompt_diagnosis, kdna-agent_safety — repos deleted, artifacts in kdna-x
+  // Legacy example source repos were removed from the public distribution surface.
+  // Public examples should be distributed as packaged .kdna files with release cards.
   'kdna-authoring',
   'kdna-code_review',
   'kdna-open_source_project',
