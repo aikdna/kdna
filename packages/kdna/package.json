@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "KDNA toolkit compatibility package. Use @aikdna/kdna-cli for the canonical CLI.",
   "type": "commonjs",
   "bin": {
@@ -38,7 +38,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@aikdna/kdna-cli": "^0.26.2",
-    "@aikdna/kdna-core": "^0.12.1"
+    "@aikdna/kdna-cli": "^0.26.9",
+    "@aikdna/kdna-core": "^0.12.2"
   }
 }
