@@ -49,21 +49,7 @@ jobs:
           repository: aikdna/kdna-vscode
           ref: 810d06e77721614c3b014c9ecdd4a29ab0298454
           path: .ecosystem-repos/kdna-vscode
-      - uses: actions/checkout@v6
-        with:
-          repository: aikdna/kdna-writing
-          ref: 814aa266328f5fa18f3894080bc0d0f4cc5673ee
-          path: .ecosystem-repos/kdna-writing
-      - uses: actions/checkout@v6
-        with:
-          repository: aikdna/kdna-prompt_diagnosis
-          ref: 57764bdf97d574f8a986c2bd14f5f70f1ea82f7c
-          path: .ecosystem-repos/kdna-prompt_diagnosis
-      - uses: actions/checkout@v6
-        with:
-          repository: aikdna/kdna-agent_safety
-          ref: 86f02f16ef9c167b415609dad1da6723b1448ed6
-          path: .ecosystem-repos/kdna-agent_safety
+# kdna-writing, kdna-prompt_diagnosis, kdna-agent_safety repos deleted — artifacts migrated to kdna-x
       - uses: actions/setup-node@v6
         with:
           node-version: 22
@@ -125,21 +111,7 @@ jobs:
           repository: aikdna/kdna-vscode
           ref: 810d06e77721614c3b014c9ecdd4a29ab0298454
           path: .ecosystem-repos/kdna-vscode
-      - uses: actions/checkout@v6
-        with:
-          repository: aikdna/kdna-writing
-          ref: 814aa266328f5fa18f3894080bc0d0f4cc5673ee
-          path: .ecosystem-repos/kdna-writing
-      - uses: actions/checkout@v6
-        with:
-          repository: aikdna/kdna-prompt_diagnosis
-          ref: 57764bdf97d574f8a986c2bd14f5f70f1ea82f7c
-          path: .ecosystem-repos/kdna-prompt_diagnosis
-      - uses: actions/checkout@v6
-        with:
-          repository: aikdna/kdna-agent_safety
-          ref: 86f02f16ef9c167b415609dad1da6723b1448ed6
-          path: .ecosystem-repos/kdna-agent_safety
+# kdna-writing, kdna-prompt_diagnosis, kdna-agent_safety repos deleted — artifacts migrated to kdna-x
       - uses: actions/setup-node@v6
         with:
           node-version: 22
