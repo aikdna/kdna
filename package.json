@@ -15,7 +15,7 @@
     "validate:app-schemas": "node scripts/validate-app-schemas.js",
     "validate:protocol-fixtures": "node scripts/validate-protocol-fixtures.js",
     "validate:rfc0013-schemas": "node scripts/validate-rfc0013-schemas.js",
-    "test": "npm --workspace @aikdna/kdna-core test && npm --workspace @aikdna/kdna-eval test && node --test tests/cli-v1/*.test.js",
+    "test": "npm --workspace @aikdna/kdna-core test && npm --workspace @aikdna/kdna-eval test && node scripts/run-node-tests.js tests/cli-v1/*.test.js",
     "conformance": "node conformance/run.mjs",
     "conformance:phase2": "node conformance/run.mjs --profile phase2-protocol",
     "conformance:authorization:update": "node scripts/generate-authorization-conformance.mjs",
@@ -38,7 +38,7 @@
     "kdna:validate": "node packages/kdna/bin/kdna.js validate",
     "kdna:pack": "node packages/kdna/bin/kdna.js pack",
     "kdna:unpack": "node packages/kdna/bin/kdna.js unpack",
-    "test:cli-v1": "node --test tests/cli-v1/*.test.js",
+    "test:cli-v1": "node scripts/run-node-tests.js tests/cli-v1/*.test.js",
     "pretest": "node scripts/core-smoke.js"
   },
   "license": "Apache-2.0",
