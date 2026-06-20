@@ -1,14 +1,14 @@
 # First Domain Walkthrough — Writing Judgment
 
-> This walkthrough uses the current KDNA Core v1 path: local `.kdna` files,
-> `kdna validate`, and `kdna load`. It does not depend on a public registry,
-> marketplace, signature system, or quality badge.
+> This walkthrough uses the current KDNA Core v1 path: download a `.kdna` file,
+> validate it, plan-load it, and load it into an agent. It does not depend on a
+> public registry, marketplace, signature system, quality badge, or source repository.
 
 ## Goal
 
 See how a real KDNA judgment asset changes what an agent notices.
 
-The example domain is `@aikdna/writing`, which teaches an agent to diagnose
+The example asset is `writing-v1.kdna`, which teaches an agent to diagnose
 writing at the argument and structure level before it reaches for surface
 editing.
 
@@ -45,23 +45,13 @@ npm install -g @aikdna/kdna-cli
 
 ---
 
-## 3. Get a v1 writing asset
+## 3. Download and validate a `.kdna` asset
 
-If you are working from the `kdna-writing` repository after the v1 writing proof
-artifact has been accepted, use the checked-in v1 container:
-
-```bash
-cd kdna-writing
-kdna validate ./dist/writing-v1.kdna
-```
-
-If you are testing the toolchain from source, export the current source through
-Studio CLI:
+Download `writing-v1.kdna` from the official examples page, then:
 
 ```bash
-npm install -g @aikdna/kdna-studio-cli
-kdna-studio migrate ./kdna-writing --format v1 --out ./writing-v1.kdna
 kdna validate ./writing-v1.kdna
+kdna plan-load ./writing-v1.kdna
 ```
 
 Expected validation result:
@@ -78,6 +68,8 @@ Expected validation result:
 }
 ```
 
+No repo clone. No source JSON directory. No Studio migration. Just a `.kdna` file.
+
 ---
 
 ## 4. Load compact judgment context
@@ -87,7 +79,7 @@ kdna load ./writing-v1.kdna --profile=compact --as=prompt
 ```
 
 The compact profile emits the agent-readable judgment context. It should
-include the writing domain's core axioms and boundary checks, for example:
+include the writing domain's core axioms and boundary checks:
 
 - writing problems are often structural, not merely language-level
 - identify the argument gap before polishing prose
@@ -117,8 +109,8 @@ retain the richer payload structure:
 - `reasoning.failure_modes`
 - `evolution`
 
-This is the proof that the v1 asset is not only a minimal fixture. It carries
-real domain judgment.
+This is the proof that the v1 asset carries real domain judgment — not a
+minimal fixture.
 
 ---
 
@@ -153,11 +145,11 @@ With the writing judgment loaded, the agent should focus on:
 
 | Step | Command | What it proves |
 |---|---|---|
-| Export or locate asset | `kdna-studio migrate ... --format v1` or `dist/writing-v1.kdna` | A real source asset can become a v1 container |
+| Download | Get `writing-v1.kdna` from examples page | Public asset is a `.kdna` file, not a repo |
 | Validate | `kdna validate writing-v1.kdna` | Format, schema, payload, checksums, and load contract pass |
+| Plan-load | `kdna plan-load writing-v1.kdna` | Asset is ready for agent loading |
 | Compact load | `kdna load --profile=compact --as=prompt` | Agent-readable judgment context exists |
 | Full load | `kdna load --profile=full --as=json` | Rich payload structure is preserved |
 
-A KDNA domain is not a prompt or a knowledge base. It is a portable judgment
-asset that an agent can validate, load, and apply when the task calls for that
-domain's judgment.
+A KDNA domain is not a prompt, a knowledge base, or a GitHub repository. It is a
+portable `.kdna` judgment asset that an agent can download, validate, and load.
