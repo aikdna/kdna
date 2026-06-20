@@ -34,21 +34,17 @@ If you've found one KDNA repository and are wondering which others exist and wha
 | └ `packages/kdna-eval` | `@aikdna/kdna-eval` | Scoring primitives: condition matching, dimension scoring | [package](https://github.com/aikdna/kdna/tree/main/packages/kdna-eval) |
 | └ `conformance/` | — | Loader/validator/runtime compatibility tests | [conformance](https://github.com/aikdna/kdna/tree/main/conformance) |
 
-## Layer 2 — Public `.kdna` Examples and Proof Assets
+## Layer 2 — Public `.kdna` Examples
 
-These are `.kdna` judgment assets and historical proof repositories. A public example demonstrates the format and toolchain; it is not a registry listing, marketplace entry, content certification, ranking, or universal recommendation.
+> **Historical note:** Layer 2 previously listed individual GitHub repositories as example entry points. KDNA public examples are now distributed exclusively as packaged `.kdna` files. The repositories listed below are legacy proof assets and developer/audit sources. They are not the public asset distribution surface. For current `.kdna` downloads, see the official examples page.
 
 | Repository | Package | Domain | Quality | Status |
 |------------|---------|--------|---------|--------|
-| [kdna-writing](https://github.com/aikdna/kdna-writing) | `@aikdna/writing` | Writing diagnosis | tested | Active |
-| [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) | `@aikdna/prompt_diagnosis` | Prompt quality | tested | Active |
-| [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety) | `@aikdna/agent_safety` | Agent safety gates | tested | Active |
-| [kdna-code_review](https://github.com/aikdna/kdna-code_review) | `@aikdna/code_review` | Behavior-first code review | tested | Active |
-| [kdna-authoring](https://github.com/aikdna/kdna-authoring) | `@aikdna/kdna_authoring` | KDNA authoring guidance | tested | Active |
-| [kdna-requirement_alignment](https://github.com/aikdna/kdna-requirement_alignment) | `@aikdna/requirement_alignment` | Requirement alignment | untested | Experimental |
-| [sketchnote-style](https://github.com/aikdna/sketchnote-style) | — | Visual sketchnote style | untested | Experimental |
-
-> **Note:** GitHub repository names with underscores (`kdna-agent_safety`) are being migrated to hyphens (`kdna-agent-safety`). See [ECOSYSTEM_NAMING.md](./ECOSYSTEM_NAMING.md).
+| [kdna-writing](https://github.com/aikdna/kdna-writing) | `@aikdna/writing` | Writing diagnosis | tested | Legacy proof |
+| [kdna-prompt_diagnosis](https://github.com/aikdna/kdna-prompt_diagnosis) | `@aikdna/prompt_diagnosis` | Prompt quality | tested | Legacy proof |
+| [kdna-agent_safety](https://github.com/aikdna/kdna-agent_safety) | `@aikdna/agent_safety` | Agent safety gates | tested | Legacy proof |
+| [kdna-code_review](https://github.com/aikdna/kdna-code_review) | `@aikdna/code_review` | Behavior-first code review | tested | Legacy proof |
+| [kdna-authoring](https://github.com/aikdna/kdna-authoring) | `@aikdna/kdna_authoring` | KDNA authoring guidance | tested | Legacy proof |
 
 ## Layer 3 — Runtime & Protocol Tools
 
@@ -86,7 +82,7 @@ runtimes. Third-party apps can implement the same runtime contract — see
 
 ### I want to install KDNA domains for my AI agent
 ```
-npm install -g @aikdna/kdna-cli  →  kdna setup  →  kdna install @aikdna/writing
+npm install -g @aikdna/kdna-cli  →  download .kdna file  →  kdna validate <asset>.kdna  →  kdna load <asset>.kdna
 ```
 See: [5-minute guide](./5-minute-guide.md) · [integrations](./integrations.md)
 
