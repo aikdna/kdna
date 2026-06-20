@@ -2,20 +2,23 @@
 
 KDNA assets are not ordinary JSON packages.
 
-A `.kdna` asset is not created by writing JSON files. It is compiled by a
-Studio-compatible authoring pipeline that performs human confirmation,
-validation, canonicalization, identity generation, digest computation, signing,
-optional encryption, and provenance recording.
+A `.kdna` asset is a validated container, not an arbitrary JSON dump. The
+recommended authoring path uses a KDNA-compatible pipeline that can perform
+validation, canonicalization, identity generation, digest computation, optional
+Human Lock, optional signing, optional encryption, and provenance recording.
 
 A conforming `.kdna` asset MAY NOT be created by directly packaging arbitrary
-source directories and presenting the result as trusted. A trusted `.kdna` asset
-MUST be compiled by a KDNA-compatible authoring pipeline that records
-provenance, Human Lock evidence, compiler metadata, and an asset digest.
+source directories and presenting the result as trusted. A `.kdna` asset is
+format-valid when it passes `kdna validate`; a trusted `.kdna` asset also needs
+provenance and whichever trust signals it claims, such as conformance metadata,
+Human Lock evidence, compiler metadata, signatures, eval evidence, or an asset
+digest.
 
 Dev source directories are non-canonical workspaces for authoring tools, Git
-review, diagnostics, and debugging. They MUST NOT be treated as installable,
-publishable, or registry-trusted assets unless they have been compiled by an
-authorized Studio-compatible compiler.
+review, diagnostics, and debugging. They MUST NOT be treated as installable or
+registry-trusted assets unless they have been exported to a validated `.kdna`
+container and accompanied by the required trust evidence for the claim being
+made.
 
 ## Ecosystem Roles
 
@@ -29,28 +32,30 @@ Agents load and use KDNA.
 
 ## Trusted Creation Flow
 
-The trusted path for a `.kdna` asset is:
+One trusted path for a `.kdna` asset is:
 
 1. Import materials.
 2. Extract judgment candidates.
 3. Generate judgment cards.
-4. Human review and confirmation.
-5. Human Lock.
+4. Optional human review and confirmation.
+5. Optional Human Lock when human confirmation is claimed.
 6. Studio-compatible compiler output.
 7. `.kdna` asset export with identity, canonicalization, digests, signing,
    optional encryption, and authoring provenance.
 8. CLI verification.
-9. Signature and registry publication.
+9. Optional signature and registry publication.
 10. Agent loading and post-validation.
 
-AI may propose judgment content. Human judgment must confirm it. Studio must
-compile it. The CLI must verify and run it. The registry must distribute trusted
-assets with auditable provenance.
+AI agents, humans, tools, and hybrid workflows may create KDNA. Human judgment
+must confirm the content only when the asset claims human confirmation or a
+trust level that requires it. The CLI must verify before load. Registries may
+distribute trusted assets with auditable provenance, but registry listing is not
+a format-validity requirement.
 
 ## Authoring Provenance
 
 `kdna.json` SHOULD include an `authoring` object. Assets that claim `tested` or
-higher quality MUST include Studio-compatible authoring provenance:
+higher quality MUST include authoring provenance and conformance evidence:
 
 ```json
 {
@@ -76,17 +81,11 @@ higher quality MUST include Studio-compatible authoring provenance:
 }
 ```
 
-Allowed `created_by` values:
-
-- `kdna-studio`
-- `kdna-studio-cli`
-- `kdna-studio-sdk`
-- `third-party-studio-compatible`
-- `manual-dev-source`
-
-`manual-dev-source` may exist for experimentation, but it cannot receive a
-trusted registry badge. Schema validation proves structure only. It does not
-prove judgment quality.
+`created_by` is provenance metadata, not an allowlist. Compatibility is
+established by validation and conformance evidence, for example
+`authoring.conformance.passed: true`. Manual or experimental sources may exist,
+but they cannot claim a trusted quality badge without the required evidence.
+Schema validation proves structure only. It does not prove judgment quality.
 
 ## Quality Badge Binding
 

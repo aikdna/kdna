@@ -202,7 +202,7 @@
         "kdna_asset",
         "source_folder"
       ],
-      "description": "How this domain was originally created. blank = created from scratch in Studio; kdna_asset = forked from existing .kdna; source_folder = migrated from legacy JSON source folder. Assets with source_mode: source_folder MUST be treated as untrusted until re-locked through a Studio-compatible pipeline.",
+      "description": "How this domain was originally created. blank = created from scratch; kdna_asset = forked from existing .kdna; source_folder = migrated from a legacy JSON source folder. Assets with source_mode: source_folder SHOULD record migration provenance. Human Lock is optional unless a specific trust claim requires it.",
       "default": "blank"
     },
     "i18n_level": {
@@ -292,6 +292,42 @@
       },
       "additionalProperties": false
     },
+    "creator": {
+      "type": "object",
+      "description": "Optional local creator, agent, tool, or organization identity associated with this asset. Provenance only; not a trust claim.",
+      "required": [
+        "creator_id"
+      ],
+      "properties": {
+        "creator_id": {
+          "type": "string",
+          "description": "Local creator identifier. Key-bound identities SHOULD use kdna:creator:ed25519:<fingerprint>."
+        },
+        "creator_type": {
+          "type": "string",
+          "enum": [
+            "human",
+            "agent",
+            "tool",
+            "organization"
+          ],
+          "description": "Kind of creator identity represented by this record."
+        },
+        "display_name": {
+          "type": "string",
+          "description": "Human-readable creator, agent, tool, or organization name."
+        },
+        "public_key": {
+          "type": "string",
+          "description": "Optional Ed25519 public key for key-bound creator identity."
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "Whether this identity is bound to a verified account or trust provider."
+        }
+      },
+      "additionalProperties": false
+    },
     "authoring": {
       "type": "object",
       "description": "Studio-compatible authoring provenance. Required for trusted quality claims.",
@@ -301,13 +337,7 @@
       "properties": {
         "created_by": {
           "type": "string",
-          "enum": [
-            "kdna-studio",
-            "kdna-studio-cli",
-            "kdna-studio-sdk",
-            "third-party-studio-compatible",
-            "manual-dev-source"
-          ]
+          "description": "Authoring source identifier. This is provenance metadata, not an allowlist; compatibility is established by conformance validation."
         },
         "authoring_tool": {
           "type": "string"
@@ -320,6 +350,33 @@
         },
         "compiler_version": {
           "type": "string"
+        },
+        "conformance": {
+          "type": "object",
+          "description": "Validation evidence for trusted quality claims. Any tool may produce trusted assets if it passes the official conformance validator.",
+          "required": [
+            "passed",
+            "spec_version"
+          ],
+          "properties": {
+            "passed": {
+              "type": "boolean"
+            },
+            "spec_version": {
+              "type": "string"
+            },
+            "validator": {
+              "type": "string"
+            },
+            "validator_version": {
+              "type": "string"
+            },
+            "checked_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "additionalProperties": false
         },
         "asset_uid": {
           "type": "string"
@@ -431,17 +488,17 @@
               "compiler",
               "compiler_version",
               "compiled_at",
+              "conformance",
               "human_confirmed",
               "human_lock_count"
             ],
             "properties": {
-              "created_by": {
-                "enum": [
-                  "kdna-studio",
-                  "kdna-studio-cli",
-                  "kdna-studio-sdk",
-                  "third-party-studio-compatible"
-                ]
+              "conformance": {
+                "properties": {
+                  "passed": {
+                    "const": true
+                  }
+                }
               },
               "human_confirmed": {
                 "const": true
