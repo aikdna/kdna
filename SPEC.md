@@ -548,7 +548,7 @@ The agent SHOULD NOT announce KDNA loading in normal responses. The agent MUST N
 
 A conforming validator MUST check:
 
-1. For distribution assets: required container entries exist (`kdna.json` + `payload.kdnab` + `signature.kdsig`); forbidden source entries do not exist as top-level ZIP entries
+1. For distribution assets: required container entries exist (`kdna.json` + `payload.kdnab`); forbidden source entries do not exist as top-level ZIP entries
 2. For source trees: required files exist (`KDNA_Core.json` + `KDNA_Patterns.json`)
 2. Every JSON file has a `meta` object with all required fields
 3. Required top-level fields exist in each file
