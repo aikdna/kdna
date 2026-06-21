@@ -52,27 +52,35 @@ const compact = loadAuthorized('./asset.kdna', {
 ## Supported Runtime Flow
 
 ```text
-v1 source directory
-→ buildChecksumsV1
-→ pack
+.kdna file
 → validate
 → planLoad
 → loadAuthorized
 → agent/runtime context
 ```
 
-## v1 Source Directory
+For authoring and test fixtures, `pack()` can turn a local working folder into
+a `.kdna` file before validation:
 
-A v1 source directory contains:
+```text
+local working folder
+→ pack
+→ .kdna file
+→ validate
+→ planLoad
+→ loadAuthorized
+```
+
+## v1 Container
+
+A v1 `.kdna` container contains:
 
 - `mimetype`
 - `kdna.json`
 - `payload.kdnab`
 - `checksums.json`
 
-## v1 Container
-
-A v1 `.kdna` container is a zip package of the same files. `validate()` checks:
+`validate()` checks:
 
 - format
 - manifest schema

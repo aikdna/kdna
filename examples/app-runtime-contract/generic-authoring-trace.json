@@ -42,6 +42,6 @@
     "confidence": "medium",
     "missing_elements": ["external expert review", "larger eval set"],
     "recommended_action": "Export as experimental, not stable.",
-    "reasoning_summary": "The Studio flow can export the asset, but the quality badge should remain bounded by available evidence."
+    "reasoning_summary": "The Studio flow can export the asset, but any release label should remain bounded by available evidence."
   }
 }

@@ -2,14 +2,15 @@
 
 **Domain:** @aikdna/writing v0.7.3  
 **What changes:** Not "better words." Different judgment path — diagnose structure before language.  
-**Time to run:** 2 minutes.
+**Status:** Legacy behavior transcript. Current public beta usage starts from a local packaged `.kdna` file.
 
-## Quick Run
+## Current Public Beta Path
 
 ```bash
-kdna install @aikdna/writing
-kdna verify @aikdna/writing --judgment
-kdna compare @aikdna/writing --input "help me improve this product launch post: 'AI is transforming our industry. Our product uses AI to help you work faster. Get it now.'"
+kdna pack ../examples/writing_basic ./writing-basic.kdna
+kdna validate ./writing-basic.kdna
+kdna plan-load ./writing-basic.kdna
+kdna load ./writing-basic.kdna --profile=compact --as=prompt
 ```
 
 ## What KDNA Injects Into the Agent
@@ -127,17 +128,8 @@ From the [KDNA benchmark](../benchmarks/BENCHMARK_SUMMARY.md) (5 models, agent_s
 ## Try It Yourself
 
 ```bash
-# Install
-kdna install @aikdna/writing
-
-# Inspect what KDNA injects
-kdna load @aikdna/writing
-
-# Compare with and without KDNA (requires API key)
-kdna compare @aikdna/writing --input "help me improve this post about..."
-kdna compare @aikdna/writing --input "..." --report-md
-
-# Try different inputs
-kdna compare @aikdna/writing --input "review my article opening"
-kdna compare @aikdna/writing --input "why isn't this blog post getting reads"
+kdna pack ../examples/writing_basic ./writing-basic.kdna
+kdna validate ./writing-basic.kdna
+kdna plan-load ./writing-basic.kdna
+kdna load ./writing-basic.kdna --profile=compact --as=prompt
 ```

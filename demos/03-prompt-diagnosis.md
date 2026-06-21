@@ -2,14 +2,14 @@
 
 **Domain:** @aikdna/prompt_diagnosis v0.7.6  
 **What changes:** Instead of "add a role, be more specific, use chain of thought," the agent diagnoses WHY the prompt failed — task mixing, goal ambiguity, or context gap.  
-**Time to run:** 2 minutes.
+**Status:** Legacy behavior transcript. Current public beta usage starts from a local packaged `.kdna` file.
 
-## Quick Run
+## Current Public Beta Path
 
 ```bash
-kdna install @aikdna/prompt_diagnosis
-kdna verify @aikdna/prompt_diagnosis --judgment
-kdna compare @aikdna/prompt_diagnosis --input "my prompt asking the model to plan a campaign, evaluate risks, pick the best option, and write the launch announcement is giving me generic answers"
+kdna validate <asset>.kdna
+kdna plan-load <asset>.kdna
+kdna load <asset>.kdna --profile=compact --as=prompt
 ```
 
 ## What KDNA Injects Into the Agent
@@ -123,14 +123,7 @@ Self-checks:
 ## Try It Yourself
 
 ```bash
-# Install
-kdna install @aikdna/prompt_diagnosis
-
-# Inspect what KDNA injects
-kdna load @aikdna/prompt_diagnosis
-
-# Compare (requires API key)
-kdna compare @aikdna/prompt_diagnosis --input "my multi-step prompt gives generic output"
-kdna compare @aikdna/prompt_diagnosis --input "the model outputs perfect format but wrong substance"
-kdna compare @aikdna/prompt_diagnosis --input "I keep adding instructions but the output doesn't improve"
+kdna validate <asset>.kdna
+kdna plan-load <asset>.kdna
+kdna load <asset>.kdna --profile=compact --as=prompt
 ```
