@@ -23,8 +23,6 @@ In 5 minutes, you can create a local `.kdna` file and render agent-ready judgmen
 ```bash
 npm install -g @aikdna/kdna-cli
 kdna demo minimal ./minimal
-kdna inspect ./minimal
-kdna validate ./minimal
 kdna pack ./minimal ./minimal.kdna
 kdna validate ./minimal.kdna
 kdna plan-load ./minimal.kdna
