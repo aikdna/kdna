@@ -560,6 +560,7 @@ export function planLoad(inputPath: string, options?: { password?: string; hasPa
 export function buildChecksumsV1(sourceDir: string): KDNAV1Checksums;
 export function pack(sourceDir: string, outputPath: string): void;
 export function unpack(inputPath: string, outputDir: string): void;
+export function loadAuthorized(inputPath: string, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): Record<string, any>;
 export function loadV1(inputPath: string, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): Record<string, any>;
 export const FORBIDDEN_OUTPUT_TERMS: readonly string[];
 

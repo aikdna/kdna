@@ -12,7 +12,7 @@ is the v1-aware entry point of that toolchain; it dispatches v1 source
 directories and v1 `.kdna` containers to shared `@aikdna/kdna-core/v1`,
 and falls through to the legacy v2 surface for everything else.
 
-The legacy install path is:
+The compatibility install path is:
 
 ```bash
 npm install -g @aikdna/kdna-cli
