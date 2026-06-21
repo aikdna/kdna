@@ -8,10 +8,10 @@ KDNA public beta ecosystem.
 | Axis | Location | Example | What it means |
 |------|----------|---------|---------------|
 | **SPEC version** | `SPEC.md` title | `Core v1` | The version of the KDNA protocol specification. Determines file format, required fields, and validation rules. |
-| **CLI version** | `npm @aikdna/kdna-cli` | `v0.26.10` | The version of the runtime command-line tool. Independent of SPEC version. |
-| **Core library version** | `npm @aikdna/kdna-core` | `v0.12.3` | The version of the Core validation, LoadPlan, and loading library. |
+| **CLI version** | `npm @aikdna/kdna-cli` | `v0.26.12` | The version of the runtime command-line tool. Independent of SPEC version. |
+| **Core library version** | `npm @aikdna/kdna-core` | `v0.12.5` | The version of the Core validation, LoadPlan, and loading library. |
 | **Studio Core version** | `npm @aikdna/kdna-studio-core` | `v1.5.8` | The version of the authoring kernel library. |
-| **Studio CLI version** | `npm @aikdna/kdna-studio-cli` | `v0.5.9` | The version of the command-line authoring entry. Independent of runtime CLI version. |
+| **Studio CLI version** | `npm @aikdna/kdna-studio-cli` | `v0.5.11` | The version of the command-line authoring entry. Independent of runtime CLI version. |
 | **MCP server version** | `npm @aikdna/kdna-mcp-server` | `v0.2.4` | The version of the MCP adapter package. Source lives in `aikdna/kdna-skills/mcp-server`. |
 | **Asset version** | Each `.kdna` manifest | `v0.1.0` | The version of an individual judgment asset's content. Follows SemVer. |
 

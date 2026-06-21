@@ -45,10 +45,15 @@ All agents can use the same local `.kdna` files. Validate once, load wherever
 the runtime supports the loader:
 
 ```bash
-kdna validate ./writing-v1.kdna
-kdna plan-load ./writing-v1.kdna
-kdna load ./writing-v1.kdna --profile=compact --as=prompt
+kdna demo minimal ./minimal
+kdna pack ./minimal ./minimal.kdna
+kdna validate ./minimal.kdna
+kdna plan-load ./minimal.kdna
+kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
+
+When public example assets are released, use their packaged `.kdna` file and
+release card in place of `minimal.kdna`.
 
 If your agent uses a different default path, create a symlink:
 

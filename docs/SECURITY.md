@@ -23,9 +23,9 @@ validity does not imply content fitness for every use.
 
 | Tool | Version | Support |
 |------|---------|:-------:|
-| @aikdna/kdna-cli | >=0.26.10 | Active |
-| @aikdna/kdna-core | >=0.12.3 | Active |
-| @aikdna/kdna-studio-cli | >=0.5.9 | Active |
+| @aikdna/kdna-cli | >=0.26.12 | Active |
+| @aikdna/kdna-core | >=0.12.5 | Active |
+| @aikdna/kdna-studio-cli | >=0.5.11 | Active |
 | @aikdna/kdna-studio-core | >=1.5.8 | Active |
 
 ## Responsible Disclosure

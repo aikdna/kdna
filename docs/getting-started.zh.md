@@ -41,8 +41,8 @@ kdna-studio card add my_domain axiom \
 ### 确认并导出
 
 ```bash
-kdna-studio card approve my_domain <card-id> --by <your-id> --statement "I confirm this judgment for v1 export."
-kdna-studio export my_domain --format v1 --out dist/my_domain.kdna
+kdna-studio card approve my_domain --all --by your-id --statement "I confirm this judgment for v1 export."
+kdna-studio export my_domain --format v1 --out ./my_domain.kdna
 ```
 
 ---
@@ -50,8 +50,8 @@ kdna-studio export my_domain --format v1 --out dist/my_domain.kdna
 ## 校验
 
 ```bash
-kdna validate dist/my_domain.kdna
-kdna plan-load dist/my_domain.kdna
+kdna validate ./my_domain.kdna
+kdna plan-load ./my_domain.kdna
 ```
 
 预期结果：
@@ -73,7 +73,7 @@ kdna plan-load dist/my_domain.kdna
 ## 加载进 Agent 上下文
 
 ```bash
-kdna load dist/my_domain.kdna --profile=compact --as=prompt
+kdna load ./my_domain.kdna --profile=compact --as=prompt
 ```
 
 这会输出 Agent 可读的判断上下文。Agent 静默引用判断结构——用户看到更好的回答，而非 KDNA 内部细节。

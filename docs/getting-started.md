@@ -41,8 +41,8 @@ kdna-studio card add my-domain axiom \
 ### Approve and export
 
 ```bash
-kdna-studio card approve my-domain <card-id> --by <your-id> --statement "I confirm this judgment for v1 export."
-kdna-studio export my-domain --format v1 --out dist/my-domain.kdna
+kdna-studio card approve my-domain --all --by your-id --statement "I confirm this judgment for v1 export."
+kdna-studio export my-domain --format v1 --out ./my-domain.kdna
 ```
 
 ---
@@ -50,8 +50,8 @@ kdna-studio export my-domain --format v1 --out dist/my-domain.kdna
 ## Validate
 
 ```bash
-kdna validate dist/my-domain.kdna
-kdna plan-load dist/my-domain.kdna
+kdna validate ./my-domain.kdna
+kdna plan-load ./my-domain.kdna
 ```
 
 Expected result:
@@ -73,7 +73,7 @@ Expected result:
 ## Load into agent context
 
 ```bash
-kdna load dist/my-domain.kdna --profile=compact --as=prompt
+kdna load ./my-domain.kdna --profile=compact --as=prompt
 ```
 
 This emits agent-readable judgment context. The agent references the judgment structure silently — users see better answers, not KDNA internals.

@@ -398,9 +398,10 @@ kdna-studio candidate accept my_domain <id>          # Accept candidate
 kdna-studio candidate reject my_domain <id>          # Reject candidate
 kdna-studio candidate override my_domain <id>        # Override scope_fit=false gate
 kdna-studio candidate promote my_domain             # Promote accepted+scope_fit candidates
-kdna-studio lock my_domain                           # Apply Human Judgment Lock
-kdna-studio export my_domain --out dist/my_domain.kdna --sign
-                                                     # Compile → .kdna + provenance receipt
+kdna-studio card approve my_domain --all --by your-id --statement "I confirm this judgment for v1 export."
+                                                     # Attach Studio release evidence
+kdna-studio export my_domain --format v1 --out ./my_domain.kdna
+                                                     # Compile → packaged .kdna
 ```
 
 ### With kdna-studio-core (JS/npm)
