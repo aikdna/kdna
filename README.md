@@ -39,7 +39,7 @@ A `.kdna` file is a single, portable container that holds:
 - optional **attachments** — supplementary files referenced from the payload
 - an optional **checksums file** — per-entry digests for integrity checks
 
-`.kdna` files are produced by authors through the KDNA toolchain and consumed by the KDNA loader. The format itself is content-neutral — KDNA Core does not say what judgment is "good" or which assets are "trusted". Agents can create `.kdna` files through the official SDK; any file that passes `kdna validate` is a valid KDNA asset.
+`.kdna` files are produced by authors through the KDNA toolchain and consumed by the KDNA loader. The format itself is content-neutral — KDNA Core does not rank judgment quality or endorse specific assets. Agents can create `.kdna` files through the official SDK; any file that passes `kdna validate` is a valid KDNA asset.
 
 ## What KDNA Core defines
 
@@ -72,7 +72,7 @@ KDNA Core is **content-neutral**. It does not define:
 - **content quality** — what judgment is correct, complete, or high-value
 - **author trust** — whether an author is credible or endorsed
 - **official recommendations** — which assets should be used in production
-- **distribution** — registries, marketplaces, stores, public listings
+- **distribution** — how third parties host, list, recommend, or sell assets
 - **runtime policy** — what a loader should do with an asset at runtime (block, allow, warn)
 - **content governance** — moderation, takedown, ranking, certification
 
