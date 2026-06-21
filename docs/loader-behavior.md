@@ -4,17 +4,16 @@ KDNA is not a document for agents to read aloud. It is a cognitive layer that qu
 
 ## Two Core Principles
 
-### Install ≠ Load
+### Available ≠ Loaded
 
-Installing a KDNA domain stores a `.kdna` asset under `~/.kdna/packages/` and records it in `~/.kdna/index.json`. Install does **not** mean it will be loaded on every request. Assets are passive data on disk. The agent decides per-task whether any domain should be loaded.
+Keeping a `.kdna` file on disk does **not** mean it will be loaded on every request. Assets are passive local files until a loader plans and authorizes a specific load. The agent decides per task whether any KDNA asset should be considered.
 
-A user with 50 installed KDNAs is not paying 50 × loading cost per
-request. The agent only:
-1. Discovers what's installed through `kdna available --json`
-2. Reads CLI-provided candidate metadata
-3. Loads at most ONE `.kdna` asset's `KDNA_Core.json` + `KDNA_Patterns.json` per task
+A user with 50 local KDNA files is not paying 50 x loading cost per request. The loader only:
+1. Reads local candidate metadata through the official KDNA toolchain
+2. Runs `kdna plan-load` or the equivalent SDK/MCP planning API
+3. Loads at most one authorized `.kdna` asset profile per task, usually `compact`
 
-If no domain genuinely fits the task, the agent loads nothing and
+If no asset genuinely fits the task, the agent loads nothing and
 answers as a normal agent.
 
 ### Silent Judgment
@@ -25,7 +24,7 @@ The user should see a domain-shaped answer. They should never see "According to 
 
 ## Loading Sequence
 
-When the agent has decided KDNA applies and selected a domain, it follows this sequence:
+When the agent has decided KDNA applies and selected a loadable asset, it follows this sequence:
 
 ### 1. Internalize Axioms and Stances
 
@@ -49,7 +48,7 @@ Before final output, the agent runs every self-check item. If any self-check fai
 
 ### 6. Deliver a Domain-Shaped Answer
 
-The response uses the domain's frameworks, terminology, and judgment — without quoting KDNA, without listing rules, without saying "this domain says..."
+The response uses the asset's frameworks, terminology, and judgment — without quoting KDNA, without listing rules, without saying "this asset says..."
 
 ## What Agents Must Never Do
 
@@ -84,9 +83,9 @@ Self-checks: 5/6 passed. Failed: SC-003 (urgency bias check)
 | Situation | Agent Behavior |
 |-----------|---------------|
 | No KDNA files | Continue without KDNA. Do not fabricate. |
-| Required files missing | Report which files. Minimum: Core + Patterns. |
-| JSON parse error | Report the file. Continue with valid files. |
-| Domain boundary conflict | The domain disqualifies itself. Do not force-load. |
+| Invalid or missing container entry | Report the validation or LoadPlan problem. Do not emit payload context. |
+| Payload parse error | Report the load failure. Do not emit partial judgment context. |
+| Applicability boundary conflict | The asset disqualifies itself. Do not force-load. |
 
 ## Quality Boundary
 
