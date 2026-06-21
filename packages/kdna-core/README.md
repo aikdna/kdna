@@ -1,10 +1,10 @@
 # @aikdna/kdna-core
 
-Core library for KDNA judgment assets.
+Core library for local `.kdna` judgment assets.
 
-KDNA Core v1 defines the official `.kdna` source/container contract used by
-the CLI, Studio export, skills, MCP integrations, and downstream agent
-runtimes.
+KDNA Core v1 defines the `.kdna` file format, schemas, secure container
+reader, LoadPlan contract, and runtime projection helpers used by the CLI,
+Studio export, skills, MCP integrations, and downstream agent runtimes.
 
 ## Installation
 
@@ -26,9 +26,10 @@ Use the `./v1` entrypoint for current KDNA Core v1 tooling:
 const {
   inspect,
   validate,
+  planLoad,
+  loadAuthorized,
   pack,
   unpack,
-  loadV1,
   buildChecksumsV1
 } = require('@aikdna/kdna-core/v1');
 
@@ -37,7 +38,12 @@ if (!validation.overall_valid) {
   throw new Error(validation.problems.join('\n'));
 }
 
-const compact = loadV1('./asset.kdna', {
+const plan = planLoad('./asset.kdna');
+if (plan.can_load_now !== true) {
+  throw new Error(`Asset is not loadable yet: ${plan.required_action}`);
+}
+
+const compact = loadAuthorized('./asset.kdna', {
   profile: 'compact',
   as: 'prompt'
 });
@@ -50,7 +56,8 @@ v1 source directory
 → buildChecksumsV1
 → pack
 → validate
-→ loadV1
+→ planLoad
+→ loadAuthorized
 → agent/runtime context
 ```
 
@@ -75,7 +82,7 @@ A v1 `.kdna` container is a zip package of the same files. `validate()` checks:
 
 ## Load Profiles
 
-`loadV1()` supports:
+`loadAuthorized()` supports:
 
 - `index`
 - `compact`
@@ -89,15 +96,14 @@ Output formats:
 
 ## Boundary
 
-KDNA Core v1 is content-neutral. It does not recommend assets, assign quality
-badges, run a marketplace, or define a public registry. Future signature,
-encryption, licensing, and entitlement work is gated outside the current v1
-baseline.
+KDNA Core v1 is content-neutral. It validates file structure and loadability;
+it does not rank judgment quality or endorse specific assets.
 
 ## Legacy API
 
 The package root still exports compatibility APIs for older KDNA paths. New
-tooling should prefer `@aikdna/kdna-core/v1`.
+tooling should prefer `@aikdna/kdna-core/v1` and the `planLoad` /
+`loadAuthorized` path.
 
 ## License
 
