@@ -2,7 +2,7 @@
 
 > [English](./getting-started.md)
 
-KDNA Core v1 有一条已验证路径：通过 Studio CLI 在本地创建有边界的 `.kdna` 资产，用运行时 CLI 校验，并加载进 Agent 上下文。不依赖 registry、marketplace 或 quality badge。
+KDNA Core v1 有一条已验证路径：通过 Studio CLI 在本地创建有边界的 `.kdna` 资产，用运行时 CLI 校验，规划加载，并加载进 Agent 上下文。
 
 ---
 
@@ -96,11 +96,11 @@ kdna load ./minimal.kdna --profile=compact --as=prompt
 
 ## 不是当前官方路径的操作
 
-- `kdna dev scaffold` — 实验性创作者工具；不是公共消费路径
-- `kdna dev pack` — 实验性创作者工具；不是官方 Studio v1 导出路径
-- 手动编辑 JSON — 可用于早期原型，但不产出正式 v1 Studio 导出
-- `kdna setup` — 旧版 Agent 自动检测；不在当前 v1 verify/load 路径中
-- 基于 registry 的安装（`kdna install <domain>`）— 旧版路径；Core v1 不定义公开 registry
+- `kdna dev scaffold` — 面向高级工作流的实验性创作者工具
+- `kdna dev pack` — 实验性创作者工具；推荐的创作路径是 Studio 导出
+- 手动编辑 JSON — 可用于早期原型；面向发布的资产应优先走 Studio 导出
+- `kdna setup` — Agent 适配器安装；基础 validate / plan-load / load 路径不需要它
+- `kdna install <domain>` — 不属于当前本地 packaged `.kdna` 路径
 
 ---
 
@@ -109,7 +109,7 @@ kdna load ./minimal.kdna --profile=compact --as=prompt
 - KDNA Core v1 定义文件格式、校验、打包、解包和加载契约。
 - `kdna validate` 证明结构、schema、payload、checksum、load contract 是否成立。
 - `kdna load` 把资产渲染成 Agent 可消费的上下文。
-- KDNA Core v1 不定义 quality badge、内容评级、官方推荐、marketplace 或公开 registry。
+- KDNA Core v1 不评价内容质量，不做官方推荐，也不替调用方决定运行时策略。
 
 ---
 

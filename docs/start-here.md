@@ -1,8 +1,8 @@
 # Start Here
 
-KDNA Core is the **official KDNA judgment-asset format and runtime loading contract**. `.kdna` assets are created, inspected, loaded, and consumed through the **official KDNA toolchain** (the official SDK, CLI, Loader, and API). Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
+KDNA is an open file format for packaging scoped judgment and loading it into AI agents. `.kdna` assets are created, inspected, validated, planned, loaded, and consumed through the official KDNA toolchain.
 
-In 5 minutes, you can see an AI agent diagnose problems differently with KDNA loaded.
+In 5 minutes, you can create a local `.kdna` file and render agent-ready judgment context.
 
 ---
 
@@ -23,6 +23,8 @@ In 5 minutes, you can see an AI agent diagnose problems differently with KDNA lo
 ```bash
 npm install -g @aikdna/kdna-cli
 kdna demo minimal ./minimal
+kdna inspect ./minimal
+kdna validate ./minimal
 kdna pack ./minimal ./minimal.kdna
 kdna validate ./minimal.kdna
 kdna plan-load ./minimal.kdna
@@ -88,9 +90,9 @@ KDNA Core is the **official KDNA judgment-asset format and runtime loading contr
 
 ## Current State
 
-KDNA Core v1 is the **official KDNA judgment-asset format**. The format and the official toolchain are versioned together.
-
-**Not stable / not claimed:** Registry, marketplace, paid domains, quality badges, enterprise governance, OCI distribution.
+KDNA Core v1 is in public beta for local packaged `.kdna` creation,
+validation, LoadPlan diagnostics, and loading. See [Status](./status.md) for
+the full beta / preview / future boundary.
 
 ---
 

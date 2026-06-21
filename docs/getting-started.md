@@ -2,7 +2,7 @@
 
 > [中文版](./getting-started.zh.md)
 
-KDNA Core v1 has one verified path: create scoped `.kdna` assets locally through Studio CLI, validate them with the runtime CLI, and load them into agent context. No registry, no marketplace, no quality badges.
+KDNA Core v1 has one verified path: create a scoped `.kdna` asset locally through Studio CLI, validate it with the runtime CLI, plan loading, and load it into agent context.
 
 ---
 
@@ -96,11 +96,11 @@ kdna load ./minimal.kdna --profile=compact --as=prompt
 
 ## What is NOT the current official path
 
-- `kdna dev scaffold` — Experimental creator utility; not the public consumption path
-- `kdna dev pack` — Experimental creator utility; not the official Studio v1 export path
-- Manual JSON editing — Valid for early prototyping but does not produce official v1 Studio exports
-- `kdna setup` — Legacy agent auto-detection; not part of the current v1 verify/load path
-- Registry-based install (`kdna install <domain>`) — Legacy path; Core v1 does not define a public registry
+- `kdna dev scaffold` — Experimental creator utility for advanced workflows
+- `kdna dev pack` — Experimental creator utility; Studio export is the recommended authoring path
+- Manual JSON editing — Useful for early prototyping, but Studio export is the recommended path for release-ready assets
+- `kdna setup` — Agent adapter setup; not required for the basic validate / plan-load / load path
+- `kdna install <domain>` — Not part of the current local packaged `.kdna` path
 
 ---
 

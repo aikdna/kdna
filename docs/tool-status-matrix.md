@@ -11,7 +11,7 @@
 | **kdna setup** | Agent setup | beta | yes | `kdna setup` (global) | Agent-specific install behavior varies | Harden per-agent setup smokes |
 | **kdna doctor** | System health check | beta | yes | `kdna doctor --agents` (global) | Agent-specific detection varies | Harden per-agent diagnostics |
 | **kdna list** | Installed domains | beta | yes | `kdna list` (global) | Shows legacy v2 domain list | Update for v1 |
-| **kdna install** | Asset install | legacy | partial | `kdna install <name>` (global) | Depends on legacy registry | Add local-path install |
+| **kdna install** | Asset install | legacy | partial | `kdna install <name>` (global) | Not part of the current local packaged `.kdna` path | Re-author for local packaged assets |
 | **kdna verify** | Structure verification | beta | yes | `kdna verify <name>` (global) | Legacy v2 verify pipeline | Update for v1 schema |
 | **kdna compare** | Demo comparison | beta | partial | `kdna compare <name> --input "..."` (global) | Requires provider API key | Document key requirement |
 | **kdna-studio-cli** | Authoring CLI | beta | yes | `kdna-studio export <project> --format v1 --out <file.kdna>` | Authoring UX is still CLI-first | Keep user-path smokes green |
@@ -19,7 +19,6 @@
 | **kdna-vscode** | VS Code extension | legacy | partial | VS Code marketplace | Legacy workspace tools; not canonical asset creator | Re-author for v1 |
 | **kdna-core-swift** | Swift runtime | beta | partial | SwiftPM | Complete JS parity is not claimed until fixed Core v1 conformance fixtures prove it | Keep conformance fixtures pinned |
 | **kdna-lab** | Pressure-test infra | experimental | partial | scripts | Experimental infrastructure; not v1 Core surface | No change needed |
-| **registry** | Registry | removed from active public surface | no | not applicable | KDNA Core v1 has no registry; use local v1 `.kdna` files | Keep archived references historical only |
 
 ## Current (try first)
 
@@ -39,7 +38,7 @@
 |---|---|---|---|---|
 | setup | `kdna setup` | no | no | Agent detection and loader install |
 | doctor | `kdna doctor --agents` | no | no | System health check |
-| compare | `kdna compare <name> --input "..."` | yes (legacy) | yes | Requires provider API key |
+| compare | `kdna compare <name> --input "..."` | no | yes | Requires provider API key |
 | kdna-studio | `kdna-studio export <project> --format v1 --out <file.kdna>` | no | no | Authoring CLI; v1 export via @aikdna/kdna-core (beta) |
 | kdna-loader | installed by setup | no | no | Agent adapter, beta |
 

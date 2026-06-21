@@ -92,7 +92,6 @@ function checkWebsite() {
   for (const [label, text] of [
     ['website product', product],
     ['website ecosystem', ecosystem],
-    ['website registry endpoint', index],
     ['website registry data', registry],
   ]) {
     requireText(label, text, 'plan-load');
@@ -109,6 +108,16 @@ function checkWebsite() {
       'must not imply registry or marketplace is part of the current stable baseline',
     );
   }
+
+  requireText('website retired registry route', index, 'url.pathname === "/registry/domains.json"');
+  requireText('website retired registry route', index, 'url.pathname === "/registry/publish"');
+  requireText('website retired registry route', index, 'return notFound();');
+  rejectText(
+    'website retired registry route',
+    index,
+    /registry_disabled|registry_publish_disabled|registry endpoint|publish endpoint/i,
+    'retired registry routes should not explain the old registry surface',
+  );
 
   const publicDocsCheck = path.join(websiteRoot, 'scripts', 'check-public-docs.mjs');
   if (!fs.existsSync(publicDocsCheck)) {

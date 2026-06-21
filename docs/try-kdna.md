@@ -1,6 +1,6 @@
 # Try KDNA Core v1 in 5 Minutes
 
-No registry. No API key. No agent. No monorepo clone.
+Create a local `.kdna` file, validate it, and render agent-ready judgment context from your terminal.
 
 ```bash
 npm install -g @aikdna/kdna-cli
@@ -18,7 +18,7 @@ kdna validate ./minimal-unpacked
 ## What you just did
 
 1. **Installed** the official KDNA CLI.
-2. **Created** a minimal KDNA Core v1 demo fixture (no network, no registry).
+2. **Created** a minimal KDNA Core v1 demo fixture locally.
 3. **Inspected** it — saw the asset ID, title, version, payload metadata.
 4. **Validated** it — confirmed format, schema, payload, checksums, and
    load-contract are all valid.
@@ -46,10 +46,9 @@ and `npm install -g @aikdna/kdna-cli`.
 
 ## What KDNA Core v1 is
 
-KDNA Core is the **official KDNA judgment-asset format and runtime loading
-contract**. `.kdna` assets are created, inspected, validated, planned, loaded, and
-consumed through the **official KDNA toolchain**. Third-party products
-integrate KDNA through the official SDK, CLI, Loader, or API.
+KDNA is an open file format for packaging scoped judgment and loading it into
+AI agents. `.kdna` assets are created, inspected, validated, planned, loaded,
+and consumed through the official KDNA toolchain.
 
 KDNA Core is content-neutral. It does not evaluate content quality,
 recommend assets, operate a marketplace, or define a public registry.
