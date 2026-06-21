@@ -1,14 +1,14 @@
 # KDNA RFC Index
 
 KDNA is an open protocol. Protocol-level changes should be proposed as RFCs
-before they affect the asset format, Registry trust model, runtime contract, or
-quality governance.
+before they affect the asset format, optional distribution, runtime contract, or
+evaluation governance.
 
 Current initial RFC set:
 
 - [RFC-0001: KDNA Asset Format](./RFC-0001-kdna-asset-format.md)
-- [RFC-0002: Registry Trust Model](./RFC-0002-registry-trust-model.md)
-- [RFC-0003: Domain Quality Badges](./RFC-0003-domain-quality-badges.md)
+- [RFC-0002: Optional Distribution Trust Model](./RFC-0002-registry-trust-model.md)
+- RFC-0003: Evaluation Evidence
 - [RFC-0004: Runtime Loading Contract](./RFC-0004-runtime-loading-contract.md)
 - [RFC-0005: Composition Policy](./RFC-0005-composition-policy.md)
 - [RFC-0006: Provenance, Signing, and Transparency](./RFC-0006-provenance-signing-transparency.md)

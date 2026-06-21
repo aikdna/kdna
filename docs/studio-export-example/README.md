@@ -190,9 +190,11 @@ Records evaluation results: what was tested, what passed, what failed.
 2. Cross-reference the reports to confirm the build pipeline was followed
 3. Decide fitness for purpose using their own review process
 
-## Non-Canonical Authoring
+## Project-View Authoring
 
-A developer may experiment by editing JSON files directly. This is called "dev source authoring" and is supported for experimentation only:
+A developer may experiment by expanding a `.kdna` file into an editable
+project view. This is an authoring/debugging view of the asset, not the public
+runtime artifact:
 
 ```bash
 kdna dev scaffold my_experiment
@@ -200,7 +202,7 @@ kdna dev scaffold my_experiment
 kdna dev validate my_experiment
 ```
 
-However, dev source directories are not themselves the current v1 runtime
+However, expanded project views are not themselves the current v1 runtime
 artifact. Export a `.kdna` container through Studio and verify it with
 `kdna validate` before using it as an agent/runtime input.
 

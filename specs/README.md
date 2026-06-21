@@ -2,9 +2,9 @@
 
 > Historical/spec-work area. The current KDNA Core v1 launch path is documented
 > in `docs/start-here.md`, `docs/try-kdna.md`, `docs/core/file-format.md`, and
-> `docs/core/load-profiles.md`. Registry, quality-badge, license, entitlement,
-> and crypto documents in this folder are not active Core v1 launch contracts
-> unless a current release document explicitly promotes them.
+> `docs/core/load-profiles.md`. Older distribution, evaluation, license,
+> entitlement, and crypto documents in this folder are not active Core v1
+> launch contracts unless a current release document explicitly promotes them.
 
 Supplementary specification documents for the KDNA protocol.
 
@@ -21,11 +21,11 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 | 3 | `package-profiles.md` | Dev source vs .kdna asset profiles and conversion |
 | 4 | `load-profiles.md` | Loading behavior specifications for different agent runtimes |
 
-### Legacy / Future Distribution Work
+### Archived Distribution Work
 
 | # | Document | What it covers |
 |---|----------|---------------|
-| 5 | `kdna-registry.md` | Pre-v1 registry index format (`domains.json`) and API |
+| 5 | `kdna-registry.md` | Pre-v1 distribution index format (`domains.json`) and API |
 | 6 | `kdna-access-modes.md` | Access control: public / licensed / remote |
 | 7 | `kdna-license.md` | KDNA Commercial License (KCL) terms |
 | 8 | `LICENSE-KCL-1.0.md` | KCL 1.0 full license text |
@@ -34,7 +34,7 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 
 | # | Document | What it covers |
 |---|----------|---------------|
-| 9 | `quality-badge-evidence-gate.md` | Quality badge evidence requirements and CI gate rules |
+| 9 | Archived evaluation gate spec | Evaluation evidence requirements and CI gate rules |
 | 10 | `human-lock.md` | Optional Human Lock provenance protocol |
 | 11 | `human-lock-gate-design.md` | Human Lock gate design specification |
 | 12 | `fidelity-protocol.md` | RFC-0010: KDNA Fidelity Protocol — measuring judgment transfer |
