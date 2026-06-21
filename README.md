@@ -17,7 +17,6 @@ Create a local `.kdna` file, validate it, and render agent-ready judgment contex
 ```bash
 npm install -g @aikdna/kdna-cli
 kdna demo minimal ./minimal
-kdna validate ./minimal
 kdna pack ./minimal ./minimal.kdna
 kdna validate ./minimal.kdna
 kdna plan-load ./minimal.kdna

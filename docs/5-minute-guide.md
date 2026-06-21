@@ -9,8 +9,6 @@ This page is kept as a stable link. The current first-run guide is:
 ```bash
 npm install -g @aikdna/kdna-cli
 kdna demo minimal ./minimal
-kdna inspect ./minimal
-kdna validate ./minimal
 kdna pack ./minimal ./minimal.kdna
 kdna validate ./minimal.kdna
 kdna plan-load ./minimal.kdna
