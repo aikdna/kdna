@@ -1,5 +1,10 @@
 # KDNA Roadmap
 
+> Historical roadmap snapshot. This file records an earlier ecosystem plan and
+> is not the current public beta launch truth. Current status is documented in
+> `README.md`, `README.zh.md`, `docs/status.md`, and
+> `ecosystem-manifest.json`.
+
 ## Phase 1: Protocol and Runtime Foundation ✅
 
 - ✅ SPEC v1.0-rc — six standard files, JSON Schemas, validation rules

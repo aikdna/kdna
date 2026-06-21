@@ -1,5 +1,8 @@
 # RFC-0011: KDNA Product Runtime — Long-running Coaching & Delivery Pattern
 
+> Draft product-runtime RFC. This is not part of the current Core v1 public
+> beta baseline and should not be read as shipped app/runtime capability.
+
 **Status:** Draft  
 **Proposed:** 2026-06-08  
 **Authors:** KDNA Maintainers  

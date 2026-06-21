@@ -1,5 +1,8 @@
 # KDNA v1.0-rc Standard Kit
 
+> Historical release-candidate kit. Current Core v1 public beta guidance lives
+> in `README.md`, `SPEC.md`, `docs/status.md`, and `docs/try-kdna.md`.
+
 KDNA v1.0-rc is the asset-first release candidate for the open judgment asset
 layer. The goal of this kit is to give implementers one canonical entry point
 instead of forcing them to infer the standard from scattered repository files.

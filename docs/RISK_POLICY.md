@@ -1,5 +1,10 @@
 # KDNA Risk Policy
 
+> Historical pre-v1 risk-policy draft. The registry and review-gate rules below
+> are not current Core v1 format-validity requirements. Current public beta
+> loading starts from local packaged `.kdna` files and caller-owned runtime
+> policy.
+
 ## Risk Levels
 
 Every KDNA domain MUST declare a risk level. This determines what review, testing, and warnings are required before the domain can enter the public registry.

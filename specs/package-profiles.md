@@ -1,5 +1,11 @@
 # KDNA Asset Profiles
 
+> Historical pre-v1 distribution-profile draft. Current KDNA Core v1 public
+> beta is the local packaged `.kdna` container with LoadPlan-first loading.
+> Registry publication, quality badges, paid authorization, hosted runtime, and
+> production signature trust in this draft are not current Core v1
+> format-validity requirements.
+
 Version: 0.1
 Status: Draft
 Canonical: `specs/package-profiles.md`

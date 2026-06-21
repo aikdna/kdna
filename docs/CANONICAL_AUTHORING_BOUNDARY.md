@@ -26,8 +26,8 @@ Studio creates, reviews, compiles, and exports `.kdna` files.
 
 CLI inspects, validates, plan-loads, packs/unpacks, and loads local `.kdna` files.
 
-Registry, if present, is an optional distribution surface and not a Core v1
-format-validity or trust authority.
+Hosted discovery surfaces, if present, are optional distribution surfaces and
+not Core v1 format-validity or trust authorities.
 
 Agents load and use KDNA.
 
@@ -47,11 +47,11 @@ One path for a `.kdna` asset with release evidence is:
 9. Optional signature and optional distribution.
 10. Agent loading and post-validation.
 
-AI agents, humans, tools, and hybrid workflows may create KDNA. Human judgment
+AI agents, humans, tools, and hybrid workflows may create KDNA. Human review
 must confirm the content only when the asset claims human confirmation or a
-trust level that requires it. The CLI must verify before load. Registries may
-distribute release-reviewed assets with auditable provenance, but registry listing is not
-a format-validity requirement.
+trust level that requires it. The CLI must verify before load. Hosted discovery
+or distribution surfaces may list release-reviewed assets with auditable
+provenance, but listing is not a format-validity requirement.
 
 ## Authoring Provenance
 
@@ -70,7 +70,7 @@ higher quality MUST include authoring provenance and conformance evidence:
     "asset_uid": "018f8f2d-...",
     "build_id": "build_...",
     "domain_id": "writing",
-    "registry_name": "@aikdna/writing",
+    "asset_name": "writing-editor",
     "content_digest": "sha256:...",
     "studio_project_digest": "sha256-...",
     "human_lock_required": false,
@@ -86,10 +86,10 @@ higher quality MUST include authoring provenance and conformance evidence:
 `created_by` is provenance metadata, not an allowlist. Compatibility is
 established by validation and conformance evidence, for example
 `authoring.conformance.passed: true`. Manual or experimental sources may exist,
-but they cannot claim a reviewed quality badge without the required evidence.
+but they cannot claim reviewed quality or release-evidence status without the required evidence.
 Schema validation proves structure only. It does not prove judgment quality.
 
-## Quality Badge Binding
+## Release Evidence Binding
 
 | Source evidence | Highest allowed quality |
 | --- | --- |

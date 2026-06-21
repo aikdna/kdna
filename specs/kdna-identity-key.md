@@ -1,5 +1,10 @@
 # KDNA Identity Key Specification v0.1
 
+> Historical pre-v1 identity-key draft. Current public beta `.kdna` files do
+> not require identity keys, registry trust metadata, or signatures for format
+> validity. Treat this file as an archived design note until a current trust
+> RFC supersedes it.
+
 ## 1. Purpose
 
 KDNA Identity Keys provide cryptographic proof of authorship for published

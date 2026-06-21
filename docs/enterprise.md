@@ -1,5 +1,12 @@
 # KDNA Enterprise Deployment Guide
 
+> Historical pre-v1 deployment guide. It describes private registry,
+> self-signed-domain, and enterprise key-management ideas from the earlier
+> distribution model. KDNA Core v1 public beta supports local packaged `.kdna`
+> files through `validate` → `plan-load` → `load`; registry, paid
+> authorization, hosted distribution, and production signature trust are not
+> current Core v1 launch requirements.
+
 This guide covers deploying KDNA in environments where the public registry is inaccessible or insufficient — private registries, self-signed domains, air-gapped installations, and enterprise key management.
 
 ## 1. Private Registry

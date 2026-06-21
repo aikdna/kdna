@@ -1,5 +1,8 @@
 # KDNA Governance Console
 
+> Historical/product-layer concept. This is not part of the current Core v1
+> public beta baseline and does not define `.kdna` format validity or loading.
+
 The KDNA Governance Console is the organizational interface for approving, publishing, rolling back, and auditing judgment updates.
 
 While [KDNA Studio CLI](https://github.com/aikdna/kdna-studio-cli) produces judgment assets, the Governance Console governs their organizational lifecycle. It ensures that self-improving agents cannot drift — not because agents are forbidden from learning, but because every judgment update is visible, reviewed, and deliberately approved.
