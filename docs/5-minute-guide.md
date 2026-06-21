@@ -1,72 +1,21 @@
-# KDNA 5-Minute Developer Guide
+# KDNA 5-Minute Guide
 
-> Current Core v1 path. No registry, no marketplace, no signature requirement,
-> no quality badge.
+This page is kept as a stable link. The current first-run guide is:
 
-## Step 1: Install the CLI
+→ [Try KDNA Core v1 in 5 Minutes](./try-kdna.md)
 
-```bash
-npm install -g @aikdna/kdna-cli @aikdna/kdna-studio-cli
-```
-
-## Step 2: Create a local v1 asset
+## Current 5-Minute Path
 
 ```bash
+npm install -g @aikdna/kdna-cli
 kdna demo minimal ./minimal
 kdna inspect ./minimal
 kdna validate ./minimal
-```
-
-## Step 3: Pack and validate the container
-
-```bash
 kdna pack ./minimal ./minimal.kdna
 kdna validate ./minimal.kdna
-```
-
-Expected result:
-
-```json
-{
-  "format_valid": true,
-  "schema_valid": true,
-  "payload_valid": true,
-  "checksums_valid": true,
-  "load_contract_valid": true,
-  "overall_valid": true,
-  "problems": []
-}
-```
-
-## Step 4: Load for an agent
-
-```bash
+kdna plan-load ./minimal.kdna
 kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
 
-This prints agent-readable judgment context.
-
-## Author your own asset
-
-Use Studio CLI for the producer path:
-
-```bash
-kdna-studio create my_expertise --name @yourscope/my_expertise
-kdna-studio card add my_expertise axiom \
-  --field one_sentence="KDNA assets preserve judgment before style." \
-  --field full_statement="A KDNA asset must preserve boundaries, self-checks, and failure modes before presentation polish." \
-  --field why="Without boundaries, a KDNA asset becomes a prompt template instead of reusable judgment." \
-  --field applies_when="teaching KDNA to a new user" \
-  --field does_not_apply_when="only demonstrating CLI syntax" \
-  --field failure_risk="Users may copy the format without preserving judgment."
-kdna-studio card approve my_expertise <card-id> --by your-id --statement "I confirm this judgment for v1 export."
-kdna-studio export my_expertise --format v1 --out ./my_expertise.kdna
-kdna validate ./my_expertise.kdna
-kdna load ./my_expertise.kdna --profile=compact --as=prompt
-```
-
-For the broader walkthrough, see:
-
-- [Try KDNA Core v1 in 5 Minutes](./try-kdna.md)
-- [Load KDNA into your AI agent in 15 minutes](./15-minute-agent-guide.md)
-- [Create your first KDNA judgment asset in 30 minutes](./30-minute-authoring-guide.md)
+This creates a local `.kdna` file, validates it, confirms the LoadPlan, and
+renders compact judgment context for an AI agent.

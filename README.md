@@ -1,12 +1,8 @@
 # KDNA
 
-> **KDNA Core is the official KDNA judgment-asset format and runtime loading contract.**
->
-> **KDNA Core 是 KDNA 官方判断资产格式与运行时加载契约。**
+> **KDNA is an open file format for packaging scoped judgment and loading it into AI agents.**
 
-> The recommended way to create, inspect, protect, load, and consume `.kdna` assets is through the **official KDNA toolchain**. Third-party products SHOULD integrate KDNA through the official SDK, CLI, Loader, or API. Agents MAY create `.kdna` files through the official SDK — format validity is determined by `kdna validate`, not by author identity.
->
-> 推荐通过 **KDNA 官方工具链** 创建、检查、保护、加载和消费 `.kdna` 资产。第三方产品应通过 KDNA 官方 SDK、CLI、Loader 或 API 接入 KDNA。Agent 可通过官方 SDK 创建 `.kdna` 文件——格式合法性由 `kdna validate` 决定，不由作者身份决定。
+Use the official KDNA toolchain to create, inspect, validate, plan-load, and load `.kdna` files. Agents and third-party tools can create `.kdna` files through the official SDK or CLI; format validity is determined by `kdna validate`, not by author identity.
 
 > New to KDNA? → [Start Here](./docs/start-here.md)
 >
@@ -16,7 +12,7 @@
 
 ## Try KDNA Core v1 in 5 minutes
 
-No registry. No API key. No agent. No monorepo clone.
+Create a local `.kdna` file, validate it, and render agent-ready judgment context from your terminal.
 
 ```bash
 npm install -g @aikdna/kdna-cli
@@ -100,7 +96,6 @@ The official KDNA toolchain is published from this repo and its companion packag
 See:
 
 - [`examples/minimal/`](./examples/minimal/) — the smallest valid authoring source layout for producing a `.kdna` file
-- [`samples/`](./samples/) — larger sample KDNA layouts
 - [`fixtures/`](./fixtures/) — conformance and test fixtures
 
 ## Repository layout
@@ -115,7 +110,6 @@ kdna/
 │   ├── examples/         # Example guides
 │   └── guides/           # How-to guides
 ├── examples/             # Authoring source layouts used to produce `.kdna` files
-├── samples/              # Larger sample KDNA layouts
 ├── fixtures/             # Conformance test fixtures
 ├── conformance/          # Conformance test runner
 ├── rfcs/                 # Accepted and proposed RFCs
