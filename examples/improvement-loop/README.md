@@ -63,7 +63,7 @@ The structured governance object:
 - Reviewer counterexamples: "What if someone 👍es without reading?" → addressed by requiring documented protocol
 - Status: **accepted**
 
-### 4. Human Judgment Lock
+### 4. Human Review Record
 
 Recorded inside the improvement proposal:
 
@@ -81,7 +81,7 @@ Recorded inside the improvement proposal:
 
 ## The Result
 
-After the lock, the domain author updates `KDNA_Core.json`:
+After the review record, the domain author updates `KDNA_Core.json`:
 
 **Before (v0.7.5):**
 
@@ -112,12 +112,15 @@ After the lock, the domain author updates `KDNA_Core.json`:
 }
 ```
 
-A new eval case is added for async emoji commitment scenarios.
+A new eval case is added for async emoji commitment scenarios. The updated
+source is exported as a new `.kdna` asset and checked with the current local
+runtime path:
 
-`kdna verify --judgment` passes.
-`kdna compare --from 0.7.5 --to 0.7.6` shows the boundary refinement with zero regressions.
-
-The domain is signed and published as v0.7.6.
+```bash
+kdna validate decision-state-v0.7.6.kdna
+kdna plan-load decision-state-v0.7.6.kdna
+kdna load decision-state-v0.7.6.kdna --profile=compact --as=prompt
+```
 
 ---
 
@@ -144,10 +147,10 @@ Agent work (async review classification)
     → Failure Classification: Judgment Error (axiom boundary too narrow)
     → Improvement Proposal (prop_ds_20260516_001)
     → Human Review (zhangling, with counterexample stress test)
-    → Human Judgment Lock (lock_ds_20260516_001)
-    → New Domain Version (0.7.5 → 0.7.6)
+    → Human Review Record (lock_ds_20260516_001)
+    → New .kdna Version (0.7.5 → 0.7.6)
     → Regression Test (old evals pass + new async eval added)
-    → Deployment (published to registry)
+    → Release Evidence (checksum + load evidence)
 ```
 
 ---
@@ -160,4 +163,5 @@ Agent work (async review classification)
 | `outcome-record.json` | `specs/outcome-record-schema.json` | What actually happened |
 | `improvement-proposal.json` | `specs/improvement-proposal-schema.json` | Structured change request |
 
-The Human Judgment Lock is embedded in the improvement proposal under `human_lock`.
+The review record is embedded in the improvement proposal under `human_lock`
+for this historical fixture shape.
