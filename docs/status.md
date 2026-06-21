@@ -40,7 +40,7 @@ KDNA Core is content-neutral. It validates file structure, integrity, and loadin
 - **kdna install** — legacy compatibility path; not part of the local packaged `.kdna` first-run route
 - **kdna compare** — comparison requires a provider key; not yet documented in the v1 guide
 - **kdna setup** — agent setup (codex, claude-code, opencode, cursor); skills/MCP now use the v1 local asset loading path, while setup UX remains a post-baseline hardening surface
-- **kdna-studio** — v1 authoring/export is published through `@aikdna/kdna-studio-cli@0.5.9` and `@aikdna/kdna-studio-core@1.5.8`; public propagation should center on packaged `.kdna` examples, not source JSON directories or a fixed three-domain primary narrative.
+- **kdna-studio** — v1 authoring/export is published through `@aikdna/kdna-studio-cli@0.5.9` and `@aikdna/kdna-studio-core@1.5.8`; public propagation should center on packaged `.kdna` examples with release-card evidence.
 - **kdna-vscode** — VS Code extension (legacy workspace tools); not yet updated for v1 Core
 - **Work Pack** — experimental workflow packaging; not v1 Core mainline
 
@@ -65,16 +65,9 @@ kdna plan-load /tmp/minimal.kdna
 kdna load /tmp/minimal.kdna --profile=compact --as=prompt
 ```
 
-Creator/debug source workflows remain available, but they are not the public
-asset consumption model:
-
-```bash
-kdna dev scaffold my_domain
-kdna dev pack my_domain --out /tmp/out.kdna
-kdna validate /tmp/out.kdna
-kdna plan-load /tmp/out.kdna
-kdna unpack /tmp/out.kdna /tmp/out-dir
-```
+Advanced creator/debug source workflows remain available for contributors and
+tool authors. Public consumption should start from packaged `.kdna` files and
+the `validate` → `plan-load` → `load` path above.
 
 For developers who want to contribute from source:
 
