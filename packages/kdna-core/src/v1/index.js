@@ -747,6 +747,7 @@ function verifyDigests(checksums, map, problems, result) {
     manifest_digest: 'kdna.json',
     payload_digest: 'payload.kdnab',
   };
+  const entryDigests = {};
   let stillValid = true;
   for (const [digestKey, entryName] of Object.entries(entryMap)) {
     const declared = checksums[digestKey];
@@ -758,10 +759,31 @@ function verifyDigests(checksums, map, problems, result) {
     }
     const entryBytes = map[entryName];
     const actual = crypto.createHash('sha256').update(entryBytes).digest('hex');
+    entryDigests[entryName] = actual;
     const expected = declared.replace(/^sha256:/, '');
     if (actual !== expected) {
       problems.push(`checksums: ${digestKey} mismatch (declared ${expected.slice(0, 8)}..., actual ${actual.slice(0, 8)}...)`);
       stillValid = false;
+    }
+  }
+  if (checksums.asset_digest) {
+    const expectedAssetDigest = checksums.asset_digest.replace(/^sha256:/, '');
+    const missingAssetInputs = ['kdna.json', 'payload.kdnab'].filter((entryName) => !entryDigests[entryName]);
+    if (missingAssetInputs.length) {
+      problems.push(`checksums: asset_digest cannot be verified without ${missingAssetInputs.join(', ')}`);
+      stillValid = false;
+    } else {
+      const combined = Object.keys(entryDigests)
+        .sort()
+        .map((name) => `${name}:${entryDigests[name]}`)
+        .join('\n');
+      const actualAssetDigest = crypto.createHash('sha256').update(combined).digest('hex');
+      if (actualAssetDigest !== expectedAssetDigest) {
+        problems.push(
+          `checksums: asset_digest mismatch (declared ${expectedAssetDigest.slice(0, 8)}..., actual ${actualAssetDigest.slice(0, 8)}...)`,
+        );
+        stillValid = false;
+      }
     }
   }
   if (!stillValid) result.checksums_valid = false;
@@ -986,6 +1008,25 @@ function finalizeLoadPlan(plan) {
   return plan;
 }
 
+function inputFingerprint(inputPath, v1) {
+  const absPath = path.resolve(inputPath);
+  if (v1.kind === 'file') {
+    return `sha256:${crypto.createHash('sha256').update(fs.readFileSync(absPath)).digest('hex')}`;
+  }
+
+  const hash = crypto.createHash('sha256');
+  for (const name of Object.keys(v1.map).sort()) {
+    const bytes = v1.map[name];
+    hash.update(name);
+    hash.update('\0');
+    hash.update(String(bytes.length));
+    hash.update('\0');
+    hash.update(bytes);
+    hash.update('\0');
+  }
+  return `sha256:${hash.digest('hex')}`;
+}
+
 function baseLoadPlan(inputPath, v1, validation) {
   const manifest = v1.manifest;
   const accessInfo = normalizeAccess(manifest.access);
@@ -1008,6 +1049,7 @@ function baseLoadPlan(inputPath, v1, validation) {
     required_action: 'block',
     can_load_now: false,
     projection_policy: 'none',
+    input_fingerprint: inputFingerprint(inputPath, v1),
     checks: {
       format_valid: validation.format_valid,
       schema_valid: validation.schema_valid,
@@ -1060,6 +1102,7 @@ function planLoad(inputPath, opts = {}) {
       required_action: 'block',
       can_load_now: false,
       projection_policy: 'none',
+      input_fingerprint: null,
       checks: {
         format_valid: false,
         schema_valid: false,

@@ -16,7 +16,7 @@
       "local_path": ".",
       "npm_package": "@aikdna/kdna-core",
       "package_json": "packages/kdna-core/package.json",
-      "current_version": "0.12.3",
+      "current_version": "0.12.5",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
@@ -34,7 +34,7 @@
       "local_path": "../kdna-cli",
       "npm_package": "@aikdna/kdna-cli",
       "package_json": "../kdna-cli/package.json",
-      "current_version": "0.26.10",
+      "current_version": "0.26.12",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
@@ -85,7 +85,7 @@
       "local_path": "../kdna-studio-cli",
       "npm_package": "@aikdna/kdna-studio-cli",
       "package_json": "../kdna-studio-cli/package.json",
-      "current_version": "0.5.9",
+      "current_version": "0.5.11",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
@@ -158,9 +158,9 @@
       "supported_entitlement_profiles": [],
       "conformance_commit": "814aa266328f5fa18f3894080bc0d0f4cc5673ee",
       "known_limitations": [
-        "Repository deleted. Public replacement is a packaged .kdna file with release card and checksum."
+        "Repository deleted. No packaged public replacement is released yet. Future replacement must be a .kdna file with release card and checksum."
       ],
-      "recommended_entrypoint": "Download writing-v1.kdna from official examples page",
+      "recommended_entrypoint": "Use the local demo path until an approved packaged .kdna release card exists",
       "legacy_replacement": "packaged .kdna example release"
     },
     {
@@ -175,9 +175,9 @@
       "supported_entitlement_profiles": [],
       "conformance_commit": "57764bdf97d574f8a986c2bd14f5f70f1ea82f7c",
       "known_limitations": [
-        "Repository deleted. Public replacement is a packaged .kdna file with release card and checksum."
+        "Repository deleted. No packaged public replacement is released yet. Future replacement must be a .kdna file with release card and checksum."
       ],
-      "recommended_entrypoint": "Download prompt_diagnosis-v1.kdna from official examples page",
+      "recommended_entrypoint": "Use the local demo path until an approved packaged .kdna release card exists",
       "legacy_replacement": "packaged .kdna example release"
     },
     {
@@ -192,9 +192,9 @@
       "supported_entitlement_profiles": [],
       "conformance_commit": "86f02f16ef9c167b415609dad1da6723b1448ed6",
       "known_limitations": [
-        "Repository deleted. Public replacement is a packaged .kdna file with release card and checksum."
+        "Repository deleted. No packaged public replacement is released yet. Future replacement must be a .kdna file with release card and checksum."
       ],
-      "recommended_entrypoint": "Download agent_safety-v1.kdna from official examples page",
+      "recommended_entrypoint": "Use the local demo path until an approved packaged .kdna release card exists",
       "legacy_replacement": "packaged .kdna example release"
     },
     {

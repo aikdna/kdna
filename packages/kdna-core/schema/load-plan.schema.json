@@ -14,6 +14,7 @@
     "required_action",
     "can_load_now",
     "projection_policy",
+    "input_fingerprint",
     "checks",
     "issues",
     "source"
@@ -72,6 +73,10 @@
     "projection_policy": {
       "type": "string",
       "enum": ["minimal", "remote", "none"]
+    },
+    "input_fingerprint": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[a-f0-9]{64}$"
     },
     "checks": {
       "type": "object",

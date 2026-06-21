@@ -31,10 +31,15 @@ KDNA 通过一个 `kdna-loader` skill 集成到主流 AI 编程 Agent 中。KDNA
 所有 Agent 可以使用同一批本地 `.kdna` 文件。先校验，再在支持 loader 的运行时中加载：
 
 ```bash
-kdna validate ./writing-v1.kdna
-kdna plan-load ./writing-v1.kdna
-kdna load ./writing-v1.kdna --profile=compact --as=prompt
+kdna demo minimal ./minimal
+kdna pack ./minimal ./minimal.kdna
+kdna validate ./minimal.kdna
+kdna plan-load ./minimal.kdna
+kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
+
+公开示例资产发布后，用对应 release card 中的 packaged `.kdna` 文件替换
+`minimal.kdna`。
 
 如果你的 Agent 使用不同路径，创建软链接：
 

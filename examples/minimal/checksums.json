@@ -2,5 +2,15 @@
   "algorithm": "sha256",
   "manifest_digest": "sha256:fae062dbca0eb8878eaf28eabeed732a6827443056eb66fb27f3961307630af7",
   "payload_digest": "sha256:593109dd2aaf3fcc7ab9f352d5cd4476596ab9db5850175824e0619796088caf",
-  "asset_digest": "sha256:placeholder"
+  "asset_digest": "sha256:7a37bff3864ec50326b320021604ae71a41255deb1f990eff7ebfbf3b59020ae",
+  "entries": {
+    "kdna.json": {
+      "algorithm": "sha256",
+      "value": "fae062dbca0eb8878eaf28eabeed732a6827443056eb66fb27f3961307630af7"
+    },
+    "payload.kdnab": {
+      "algorithm": "sha256",
+      "value": "593109dd2aaf3fcc7ab9f352d5cd4476596ab9db5850175824e0619796088caf"
+    }
+  }
 }

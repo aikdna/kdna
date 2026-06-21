@@ -38,9 +38,6 @@ function copyMinimal(dest) {
   for (const f of fs.readdirSync(exampleMinimal)) {
     fs.copyFileSync(path.join(exampleMinimal, f), path.join(dest, f));
   }
-  // The repo example has checksums.json with placeholder digests. Drop
-  // it for the deterministic-packing test, otherwise the placeholder
-  // digests are fine but the file is still allowed.
   return dest;
 }
 
@@ -273,6 +270,7 @@ test('planLoad: public v1 asset is ready for minimal projection', () => {
   assert.equal(plan.required_action, 'load');
   assert.equal(plan.can_load_now, true);
   assert.equal(plan.projection_policy, 'minimal');
+  assert.match(plan.input_fingerprint, /^sha256:[a-f0-9]{64}$/);
   assert.deepEqual(plan.issues, []);
 });
 
@@ -562,6 +560,46 @@ test('planLoad: checksum mismatch returns invalid with blocking issue', () => {
     const checksumsPath = path.join(dir, 'checksums.json');
     const checksums = JSON.parse(fs.readFileSync(checksumsPath, 'utf8'));
     checksums.payload_digest =
+      'sha256:0000000000000000000000000000000000000000000000000000000000000000';
+    fs.writeFileSync(checksumsPath, JSON.stringify(checksums, null, 2));
+
+    const plan = v1.planLoad(dir);
+    assertValidLoadPlan(plan);
+    assert.equal(plan.state, 'invalid');
+    assert.equal(plan.required_action, 'block');
+    assert.equal(plan.can_load_now, false);
+    assert.equal(plan.checks.checksums_valid, false);
+    assert.ok(plan.issues.some((issue) => issue.code === 'KDNA_INTEGRITY_DIGEST_FAILED'));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('validate: placeholder asset_digest is rejected', () => {
+  const dir = makeTmp('kdna-v1-placeholder-digest-');
+  try {
+    copyMinimal(dir);
+    const checksumsPath = path.join(dir, 'checksums.json');
+    const checksums = JSON.parse(fs.readFileSync(checksumsPath, 'utf8'));
+    checksums.asset_digest = 'sha256:placeholder';
+    fs.writeFileSync(checksumsPath, JSON.stringify(checksums, null, 2));
+
+    const out = v1.validate(dir);
+    assert.equal(out.overall_valid, false);
+    assert.equal(out.checksums_valid, false);
+    assert.ok(out.problems.some((problem) => problem.startsWith('checksums: /asset_digest')));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('planLoad: asset_digest mismatch returns invalid with blocking issue', () => {
+  const dir = makeTmp('kdna-v1-plan-asset-digest-invalid-');
+  try {
+    copyMinimal(dir);
+    const checksumsPath = path.join(dir, 'checksums.json');
+    const checksums = JSON.parse(fs.readFileSync(checksumsPath, 'utf8'));
+    checksums.asset_digest =
       'sha256:0000000000000000000000000000000000000000000000000000000000000000';
     fs.writeFileSync(checksumsPath, JSON.stringify(checksums, null, 2));
 

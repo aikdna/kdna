@@ -36,18 +36,20 @@ If you've found one KDNA repository and are wondering which others exist and wha
 
 ## Layer 2 — Public `.kdna` Examples
 
-> **Historical note:** Layer 2 previously listed individual GitHub repositories as example entry points. KDNA public examples are now distributed exclusively as packaged `.kdna` files. The repositories listed below are legacy proof assets and developer/audit sources. They are not the public asset distribution surface. For current `.kdna` downloads, see the official examples page.
+> **Historical note:** Layer 2 previously listed individual GitHub repositories
+> and pre-v1 example names as public entry points. KDNA public examples must now
+> be distributed as packaged `.kdna` files with release cards. The historical
+> examples listed below are not current downloads.
 
 | Example file | Domain | Status |
 |------------|--------|--------|
-| `writing-v1.kdna` | Writing diagnosis | Public `.kdna` example |
-| `prompt-diagnosis-v1.kdna` | Prompt quality | Public `.kdna` example |
-| `agent-safety-v1.kdna` | Agent safety gates | Public `.kdna` example |
+| `writing-v1.kdna` | Writing diagnosis | Historical name; not currently released |
+| `prompt-diagnosis-v1.kdna` | Prompt quality | Historical name; not currently released |
+| `agent-safety-v1.kdna` | Agent safety gates | Historical name; not currently released |
 
 Legacy proof repositories may exist privately for audit and provenance, but
-they are not public entry points. Public users should download `.kdna` files
-from the official examples page, then run `kdna validate`, `kdna plan-load`,
-and `kdna load`.
+they are not public entry points. Until approved example release cards exist,
+public users should start with the local demo path in [try-kdna](./try-kdna.md).
 
 ## Layer 3 — Runtime & Protocol Tools
 

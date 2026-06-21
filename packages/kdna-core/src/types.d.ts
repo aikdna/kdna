@@ -549,6 +549,7 @@ export interface KDNAV1LoadPlan {
     | string;
   can_load_now: boolean;
   projection_policy: 'minimal' | 'remote' | 'none' | string;
+  input_fingerprint: string | null;
   checks: Record<string, boolean>;
   issues: KDNAV1LoadPlanIssue[];
   source: {
