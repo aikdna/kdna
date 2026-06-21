@@ -3,7 +3,7 @@
 Load canonical KDNA `.kdna` cognition assets in Python.
 
 The SDK is asset-first: public integration code should open `.kdna` files
-directly. Dev source directories are supported only for authoring and debugging
+directly. Expanded project views are supported only for authoring and debugging
 tools.
 
 ## Install
