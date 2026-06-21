@@ -24,11 +24,10 @@ A KDNA domain encoding the expert judgment patterns of high-trust, diagnosis-fir
 ## Validation
 
 ```bash
-# Lint
-npx kdna dev validate examples/sales
-
-# Schema validation (requires ajv)
-npx kdna dev validate --schema examples/sales
+kdna pack . ./sales.kdna
+kdna validate ./sales.kdna
+kdna plan-load ./sales.kdna
+kdna load ./sales.kdna --profile=compact --as=prompt
 ```
 
 ## Four Questions
@@ -54,6 +53,8 @@ Whether a sales interaction is diagnosis-first and trust-building — or pitch-f
 ### 4. How do I use it?
 
 ```bash
-kdna install github:aikdna/kdna-sales
-kdna dev validate .
+kdna pack . ./sales.kdna
+kdna validate ./sales.kdna
+kdna plan-load ./sales.kdna
+kdna load ./sales.kdna --profile=compact --as=prompt
 ```

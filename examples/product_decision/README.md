@@ -42,7 +42,10 @@
 ## 验证
 
 ```bash
-npx kdna dev validate .
+kdna pack . ./product-decision.kdna
+kdna validate ./product-decision.kdna
+kdna plan-load ./product-decision.kdna
+kdna load ./product-decision.kdna --profile=compact --as=prompt
 ```
 
 ## Four Questions
@@ -68,6 +71,8 @@ Whether a product decision (feature, priority, scope) is reversible, user-value-
 ### 4. How do I use it?
 
 ```bash
-kdna install github:aikdna/kdna-product_decision
-kdna dev validate .
+kdna pack . ./product-decision.kdna
+kdna validate ./product-decision.kdna
+kdna plan-load ./product-decision.kdna
+kdna load ./product-decision.kdna --profile=compact --as=prompt
 ```

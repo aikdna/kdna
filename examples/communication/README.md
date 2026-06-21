@@ -5,7 +5,10 @@ A minimal example domain for communication coaching.
 Run:
 
 ```bash
-npx kdna dev validate .
+kdna pack . ./communication.kdna
+kdna validate ./communication.kdna
+kdna plan-load ./communication.kdna
+kdna load ./communication.kdna --profile=compact --as=prompt
 ```
 
 ## Four Questions
@@ -31,6 +34,8 @@ Whether a message is clear, listener-focused, and actionable — or verbose, sel
 ### 4. How do I use it?
 
 ```bash
-kdna install github:aikdna/kdna-communication
-kdna dev validate .
+kdna pack . ./communication.kdna
+kdna validate ./communication.kdna
+kdna plan-load ./communication.kdna
+kdna load ./communication.kdna --profile=compact --as=prompt
 ```

@@ -16,7 +16,7 @@ async function main() {
   // 1. Load a KDNA domain
   const domain = loadDomain("./domains/decision_state", { mode: "all" });
   if (!domain) {
-    console.error("Domain not found. Run: kdna install decision_state");
+    console.error("Domain not found. Provide an expanded project view or load a packaged .kdna file through the current CLI path.");
     process.exit(1);
   }
 

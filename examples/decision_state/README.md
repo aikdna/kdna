@@ -41,8 +41,10 @@ Whether a meeting, discussion, or planning session has produced an actionable de
 ### 4. How do I use it?
 
 ```bash
-kdna install github:aikdna/kdna-decision_state
-kdna dev validate .
+kdna pack . ./decision-state.kdna
+kdna validate ./decision-state.kdna
+kdna plan-load ./decision-state.kdna
+kdna load ./decision-state.kdna --profile=compact --as=prompt
 ```
 
 ## License
