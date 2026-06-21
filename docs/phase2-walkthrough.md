@@ -1,5 +1,9 @@
 # From KDNA to Trusted Artifact in 60 Minutes
 
+> Historical Phase 2 walkthrough. It covers artifact/fidelity/trust ideas that
+> are outside the current Core v1 public beta first-run path. Start with
+> `docs/try-kdna.md` for current local `.kdna` usage.
+
 > **Audience:** Developers who want to understand and integrate KDNA Phase 2.
 > **Prerequisites:** Node.js 22+, `npm install -g @aikdna/kdna-cli`
 > **Goal:** Run the full protocol chain — load, generate, validate, measure — and understand where to hook in your own code.

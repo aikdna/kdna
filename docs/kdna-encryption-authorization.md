@@ -1,5 +1,10 @@
 # KDNA Encryption & Authorization — Design Specification
 
+> Draft security/product-layer design. Current Core v1 public beta focuses on
+> local packaged `.kdna` validation, LoadPlan, and loading. Production
+> encryption, paid authorization, hosted distribution, and signature trust are
+> not current launch requirements.
+
 > **Status:** Design specification with CLI/core MVP implemented. Licensed `.kdna` uses the `kdna-licensed-entry-v1` encrypted-entry profile. License activation, sync, revocation, offline grace, and audit events are defined in [KDNA Entitlement API](../specs/kdna-entitlement-api.md). See [KCL-1.0](../specs/LICENSE-KCL-1.0.md) for the canonical commercial license.
 
 ## Overview

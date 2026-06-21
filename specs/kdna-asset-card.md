@@ -1,5 +1,9 @@
 # KDNA Asset Card Specification
 
+> Draft release-card concept. Current public examples should use `.kdna` files
+> plus release cards as descriptive evidence; this file does not define a
+> registry listing, marketplace listing, or official certification system.
+
 Version: 0.1
 Status: Draft
 Canonical: `KDNA/specs/kdna-asset-card.md`

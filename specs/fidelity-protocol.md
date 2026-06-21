@@ -1,5 +1,8 @@
 # RFC-0010: KDNA Fidelity Protocol
 
+> Draft evaluation RFC. Fidelity results may become release evidence, but they
+> are not part of Core v1 format validity or the current first-run path.
+
 **Status:** Draft  
 **Proposed:** 2026-06-08  
 **Authors:** KDNA Maintainers  

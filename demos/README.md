@@ -35,12 +35,14 @@ Each demo demonstrates:
 
 ## Reproducibility
 
-All demos use domains from the public registry.
-Install and run:
+These demos are behavior transcripts that show the judgment difference before
+and after loading KDNA. The current public beta runtime path starts from a local
+packaged `.kdna` file:
 
 ```bash
-npm i -g @aikdna/kdna
-kdna install sales
-kdna install management
+npm i -g @aikdna/kdna-cli
+kdna validate <asset>.kdna
+kdna plan-load <asset>.kdna
+kdna load <asset>.kdna --profile=compact --as=prompt
 bash scripts/demo-agent-integration.sh
 ```
