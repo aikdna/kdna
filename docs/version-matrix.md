@@ -35,15 +35,14 @@ KDNA public beta ecosystem.
 | **Loadable now** | `kdna plan-load` returns `can_load_now: true`; only then should `kdna load` emit judgment context. |
 | **Release-card described** | The public asset has filename, version, digest, use commands, applies/does-not-apply boundaries, known limitations, and trust metadata. |
 | **Human-confirmed** | Optional provenance: a human reviewed or approved the asset. This is not required for format validity. |
-| **Signed / encrypted / licensed / registry-listed** | Future or optional trust/distribution layers. They are not part of the current public beta baseline. |
+| **Signed / encrypted / licensed / hosted-listed** | Future or optional trust/distribution layers. They are not part of the current public beta baseline. |
 
 `kdna validate` does not mean the asset is high quality, officially
 recommended, safe for every use case, or certified by KDNA. Trust, quality,
 authorship, and distribution status are separate layers.
 
-## Historical Terms
+## Public Examples
 
-Older registry, marketplace, and `quality_badge` terminology may still appear
-in historical design or audit documents. It is not the current Core v1 public
-beta path. New public examples should use packaged `.kdna` files plus release
-cards, not registry badge claims.
+New public examples should use packaged `.kdna` files plus release cards. A
+release card can describe evidence, provenance, limits, and publisher-managed
+quality claims without making Core validation a content endorsement.
