@@ -15,20 +15,22 @@ A minimal KDNA domain for speaking and presentation judgment. Helps AI agents ap
 - **Misunderstandings:** slides vs argument, nervousness vs preparation, coverage vs retention
 - **Self-Checks (4):** one-sentence message, 60-second hook, signal-to-noise, single takeaway recall
 
-## Install
-
-```bash
-npm i -g @aikdna/kdna
-kdna install speaking-basic
-```
-
 ## Usage
 
-Load `speaking_basic/KDNA_Core.json` + `speaking_basic/KDNA_Patterns.json` before preparing any talk, presentation, or pitch.
+This is a legacy source example. To use it in the current Core v1 path, package
+it as a `.kdna` file, validate it, plan loading, then load the compact profile:
+
+```bash
+kdna pack . ./speaking-basic.kdna
+kdna validate ./speaking-basic.kdna
+kdna plan-load ./speaking-basic.kdna
+kdna load ./speaking-basic.kdna --profile=compact --as=prompt
+```
 
 ## Status
 
-**Stable** — Core + Patterns validated. Suitable for general presentation judgment.
+**Legacy source example** — useful for reading the judgment shape. A packaged
+`.kdna` file is the runtime artifact.
 
 ## License
 
@@ -57,6 +59,7 @@ Whether a talk, presentation, or speech is audience-focused, single-messaged, an
 ### 4. How do I use it?
 
 ```bash
-kdna install github:aikdna/kdna-speaking_basic
-kdna dev validate .
+kdna validate ./speaking-basic.kdna
+kdna plan-load ./speaking-basic.kdna
+kdna load ./speaking-basic.kdna --profile=compact --as=prompt
 ```

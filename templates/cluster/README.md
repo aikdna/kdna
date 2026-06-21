@@ -1,10 +1,12 @@
 # Cluster: example_cluster
 
-A KDNA cluster packs multiple related domains into a single loadable unit.
+A KDNA cluster project view groups multiple related domains before packaging.
+The public runtime asset is the exported `.kdna` container, not this folder.
 
 ## Structure
 
-Each sub-domain is a folder inside the cluster root. Every sub-domain follows the standard 6-file KDNA structure:
+Each sub-domain is a folder inside the cluster root. Every sub-domain follows
+the expanded project-view structure:
 
 ```
 example_cluster/
@@ -29,4 +31,6 @@ This copies `templates/cluster/` and `templates/minimal-domain/` into a new dire
 
 ## Adding sub-domains
 
-Run `kdna dev scaffold <cluster>/<sub_domain>` inside the cluster root (or copy `templates/minimal-domain/`).
+Copy `templates/minimal-domain/` into the cluster root and rename the folder
+for the new sub-domain. Export and validate a packaged `.kdna` before using it
+as runtime input.
