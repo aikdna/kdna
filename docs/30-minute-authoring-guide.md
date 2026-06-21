@@ -14,7 +14,7 @@ validated, packable asset.
 | Runtime CLI | beta-ready | `kdna inspect`, `kdna validate`, `kdna plan-load`, `kdna load`, `kdna pack`, and `kdna unpack` work for local v1 assets. |
 | Studio authoring CLI | beta | `kdna-studio` is the official authoring path, but commands and UX may still change between beta releases. |
 | Agent / MCP loading | preview | Loader and MCP paths use the same LoadPlan-first contract, but agent-specific integration quality varies by runtime. |
-| Trust layers | future / gated | Human Lock, signatures, release evidence, paid authorization, registry distribution, and quality certification are optional or future layers, not KDNA Core v1 format-validity requirements. |
+| Trust layers | future / gated | Human Lock, signatures, release evidence, paid authorization, hosted distribution, and evaluation reports are optional or future layers, not KDNA Core v1 format-validity requirements. |
 
 ## Step 1: Install the Studio CLI
 
@@ -100,9 +100,8 @@ kdna-studio migrate my_expertise --format v1 --out dist/my_expertise.kdna \
   the official KDNA Studio toolchain. Third-party authoring tools should
   integrate through the official Studio SDK or CLI so the output remains a
   standard packaged `.kdna` file.
-- **No quality badges or registry.** KDNA Core v1 does not define a
-  quality-badge system, content ranking, or public registry. A validated
-  `.kdna` file is structurally correct; it does not carry a trust or quality
+- **Validation is structural.** A validated `.kdna` file is structurally
+  correct; it does not automatically carry a trust, quality, or distribution
   endorsement.
 
 ## Next

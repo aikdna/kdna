@@ -1,8 +1,7 @@
 # First Domain Walkthrough — Writing Judgment
 
 > This walkthrough uses the current KDNA Core v1 path: download a `.kdna` file,
-> validate it, plan-load it, and load it into an agent. It does not depend on a
-> public registry, marketplace, signature system, quality badge, or source repository.
+> validate it, plan-load it, and load it into an agent.
 
 ## Goal
 
@@ -68,7 +67,8 @@ Expected validation result:
 }
 ```
 
-No repo clone. No source JSON directory. No Studio migration. Just a `.kdna` file.
+Start from the packaged `.kdna` file. Use source folders only when you are
+authoring, auditing, or intentionally unpacking the file for editing.
 
 ---
 

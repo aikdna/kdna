@@ -69,7 +69,7 @@ and can load judgment on demand.
 
 | Feature | Status | Notes |
 |---|---|---|
-| `kdna demo minimal` | stable | Creates a v1 fixture, no registry needed |
+| `kdna demo minimal` | stable | Creates a local v1 fixture |
 | `kdna inspect` | stable | Reads v1 source dirs and .kdna containers |
 | `kdna validate` | stable | Schema + format + payload + checksums + load-contract |
 | `kdna pack` | stable | Deterministic ZIP (same input → same SHA-256) |
