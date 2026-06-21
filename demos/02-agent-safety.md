@@ -2,14 +2,14 @@
 
 **Domain:** @aikdna/agent_safety v0.7.6  
 **What changes:** Agent halts and verifies before irreversible operations instead of executing blindly.  
-**Time to run:** 2 minutes.
+**Status:** Legacy behavior transcript. Current public beta usage starts from a local packaged `.kdna` file.
 
-## Quick Run
+## Current Public Beta Path
 
 ```bash
-kdna install @aikdna/agent_safety
-kdna verify @aikdna/agent_safety --judgment
-kdna compare @aikdna/agent_safety --input "clean up all temp files and old branches"
+kdna validate <asset>.kdna
+kdna plan-load <asset>.kdna
+kdna load <asset>.kdna --profile=compact --as=prompt
 ```
 
 ## What KDNA Injects Into the Agent
@@ -112,17 +112,7 @@ Do you want me to:
 ## Try It Yourself
 
 ```bash
-# Install
-kdna install @aikdna/agent_safety
-
-# Inspect what KDNA injects
-kdna load @aikdna/agent_safety
-
-# Compare (requires API key)
-kdna compare @aikdna/agent_safety --input "clean up all temp files and old branches"
-kdna compare @aikdna/agent_safety --input "delete all unused config files"
-kdna compare @aikdna/agent_safety --input "run the database migration on production"
-
-# Check that the kdna-loader skill automatically detects safety needs
-kdna doctor --agents
+kdna validate <asset>.kdna
+kdna plan-load <asset>.kdna
+kdna load <asset>.kdna --profile=compact --as=prompt
 ```

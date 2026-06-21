@@ -25,11 +25,10 @@ A KDNA domain encoding expert management judgment: diagnosing upstream system co
 ## Validation
 
 ```bash
-# Lint
-npx kdna dev validate examples/management
-
-# Schema validation (requires ajv)
-npx kdna dev validate --schema examples/management
+kdna pack . ./management.kdna
+kdna validate ./management.kdna
+kdna plan-load ./management.kdna
+kdna load ./management.kdna --profile=compact --as=prompt
 ```
 
 ## Four Questions
@@ -55,6 +54,8 @@ Whether a manager's diagnosis, intervention, or delegation decision addresses th
 ### 4. How do I use it?
 
 ```bash
-kdna install github:aikdna/kdna-management
-kdna dev validate .
+kdna pack . ./management.kdna
+kdna validate ./management.kdna
+kdna plan-load ./management.kdna
+kdna load ./management.kdna --profile=compact --as=prompt
 ```

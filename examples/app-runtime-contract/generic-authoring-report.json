@@ -81,7 +81,7 @@
   "comparison": null,
   "final_judgment": {
     "verdict": "EXPORT_AS_EXPERIMENTAL",
-    "summary": "The domain may be exported, but its quality badge must not exceed available evidence.",
+    "summary": "The domain may be exported, but its release label must not exceed available evidence.",
     "confidence": "medium",
     "recommended_next_action": "Add eval cases and expert review before claiming stable quality."
   },

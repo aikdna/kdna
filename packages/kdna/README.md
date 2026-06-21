@@ -8,9 +8,9 @@ validated through the official KDNA toolchain. Third-party products
 integrate KDNA through the official SDK, CLI, Loader, or API.
 
 This package is part of the official toolchain. The `bin/kdna.js` shim
-is the v1-aware entry point of that toolchain; it dispatches v1 source
-directories and v1 `.kdna` containers to shared `@aikdna/kdna-core/v1`,
-and falls through to the legacy v2 surface for everything else.
+is the v1-aware entry point of that toolchain; it dispatches packaged v1
+`.kdna` containers to shared `@aikdna/kdna-core/v1`, and keeps compatibility
+handling for older local working folders and legacy surfaces.
 
 The compatibility install path is:
 
@@ -24,20 +24,19 @@ This package remains available so older installation instructions using
 ## KDNA Core v1 route
 
 The `bin/kdna.js` shim in this package adds a KDNA Core v1 route on top of
-the upstream `@aikdna/kdna-cli`. When the input is a v1 source directory
-(`mimetype` + `kdna.json` + `payload.kdnab`) or a v1 `.kdna` container
-(ZIP with `mimetype` first, content `application/vnd.kdna.asset`), the
-shim dispatches to shared `@aikdna/kdna-core/v1`. Anything else falls
-through to the upstream CLI unchanged.
+the upstream `@aikdna/kdna-cli`. The public runtime path starts from a packaged
+v1 `.kdna` container (ZIP with `mimetype` first, content
+`application/vnd.kdna.asset`). Local working folders are accepted for
+compatibility and packaging workflows, but they are not the public runtime
+asset.
 
 Usage:
 
 ```bash
-# v1 source directory
-kdna inspect  examples/minimal
-kdna validate examples/minimal
-kdna pack     examples/minimal /tmp/out.kdna
-kdna unpack   /tmp/out.kdna /tmp/out-unpacked
+kdna pack      examples/minimal /tmp/out.kdna
+kdna validate  /tmp/out.kdna
+kdna plan-load /tmp/out.kdna
+kdna load      /tmp/out.kdna --profile=compact --as=prompt
 ```
 
 The local invocation in this monorepo is:
@@ -49,10 +48,8 @@ node packages/kdna/bin/kdna.js <command> <args>
 Or via the npm scripts in the repo root:
 
 ```bash
-npm run kdna:inspect  -- examples/minimal
-npm run kdna:validate -- examples/minimal
 npm run kdna:pack     -- examples/minimal /tmp/out.kdna
-npm run kdna:unpack   -- /tmp/out.kdna /tmp/out-unpacked
+npm run kdna:validate -- /tmp/out.kdna
 ```
 
 The v1 route is content-neutral. Output never claims that an asset is

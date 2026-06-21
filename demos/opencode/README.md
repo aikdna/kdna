@@ -17,11 +17,13 @@ Key elements injected into the agent's reasoning frame:
 ## Reproduce
 
 ```bash
-# 1. Install KDNA
-npm i -g @aikdna/kdna
+# 1. Install KDNA CLI
+npm i -g @aikdna/kdna-cli
 
-# 2. Install domain
-kdna install sales
+# 2. Prepare a local .kdna asset
+kdna pack ../../examples/sales ./sales.kdna
+kdna validate ./sales.kdna
+kdna plan-load ./sales.kdna
 
 # 3. Install skills for OpenCode
 curl -fsSL https://raw.githubusercontent.com/aikdna/kdna-skills/main/install.sh | bash
