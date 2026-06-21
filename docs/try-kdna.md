@@ -50,5 +50,5 @@ KDNA is an open file format for packaging scoped judgment and loading it into
 AI agents. `.kdna` assets are created, inspected, validated, planned, loaded,
 and consumed through the official KDNA toolchain.
 
-KDNA Core is content-neutral. It does not evaluate content quality,
-recommend assets, operate a marketplace, or define a public registry.
+KDNA Core is content-neutral. It validates file structure and loading contracts;
+publishers and callers decide content quality, distribution, and runtime policy.
