@@ -94,13 +94,11 @@ kdna load ./minimal.kdna --profile=compact --as=prompt
 
 ---
 
-## 不是当前官方路径的操作
+## 高级工作流
 
-- `kdna dev scaffold` — 面向高级工作流的实验性创作者工具
-- `kdna dev pack` — 实验性创作者工具；推荐的创作路径是 Studio 导出
-- 手动编辑 JSON — 可用于早期原型；面向发布的资产应优先走 Studio 导出
-- `kdna setup` — Agent 适配器安装；基础 validate / plan-load / load 路径不需要它
-- `kdna install <domain>` — 不属于当前本地 packaged `.kdna` 路径
+当前 public beta 的基础路径刻意保持很小：创建或生成 packaged `.kdna`
+文件，校验，规划加载，然后加载。高级创作者命令、Agent 适配器命令和
+legacy 兼容命令统一记录在 [status.md](./status.md)。
 
 ---
 

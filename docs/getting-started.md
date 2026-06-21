@@ -94,13 +94,12 @@ kdna load ./minimal.kdna --profile=compact --as=prompt
 
 ---
 
-## What is NOT the current official path
+## Advanced workflows
 
-- `kdna dev scaffold` — Experimental creator utility for advanced workflows
-- `kdna dev pack` — Experimental creator utility; Studio export is the recommended authoring path
-- Manual JSON editing — Useful for early prototyping, but Studio export is the recommended path for release-ready assets
-- `kdna setup` — Agent adapter setup; not required for the basic validate / plan-load / load path
-- `kdna install <domain>` — Not part of the current local packaged `.kdna` path
+The basic public beta path is intentionally small: create or generate a
+packaged `.kdna` file, validate it, plan loading, and load it. Advanced creator,
+adapter, and legacy compatibility commands are tracked in
+[status.md](./status.md).
 
 ---
 
