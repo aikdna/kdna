@@ -24,7 +24,7 @@ KDNA Core is content-neutral. It validates file structure, integrity, and loadin
 
 ## What is beta
 
-- **`kdna inspect`** — inspect local v1 `.kdna` containers, with dev source support for creator/debug workflows (available via `npm install -g @aikdna/kdna-cli@0.26.10`)
+- **`kdna inspect`** — inspect local v1 `.kdna` containers, with dev source support for creator/debug workflows (available via `npm install -g @aikdna/kdna-cli@0.26.12`)
 - **`kdna validate`** — validate local v1 `.kdna` containers, with dev source support for creator/debug workflows (schema + format + payload + checksums + load-contract)
 - **`kdna plan-load`** — return the Core LoadPlan before runtime loading
 - **`kdna load`** — render allowed public local `.kdna` assets into agent-readable context
@@ -33,14 +33,14 @@ KDNA Core is content-neutral. It validates file structure, integrity, and loadin
 - **CLI v1 route tests and smoke checks** — pass for inspect, validate, LoadPlan, load refusal, pack, unpack, and source/container edge cases
 - **Public beta narrative** — READMEs, website, and current public docs describe local packaged `.kdna` files, release cards, and beta boundaries. This is a propagation boundary, not a claim that the full ecosystem is stable.
 
-**Resolved in 0.26.x**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.26.10` now includes the full v1 inspect/validate/plan-load/pack/unpack/load route for public local assets.
+**Resolved in 0.26.x**: the global CLI gap (previously the v1 route was only available from the monorepo). `npm install -g @aikdna/kdna-cli@0.26.12` now includes the full v1 inspect/validate/plan-load/pack/unpack/load route for public local assets.
 
 ## What is experimental
 
 - **kdna install** — legacy compatibility path; not part of the local packaged `.kdna` first-run route
 - **kdna compare** — comparison requires a provider key; not yet documented in the v1 guide
 - **kdna setup** — agent setup (codex, claude-code, opencode, cursor); skills/MCP now use the v1 local asset loading path, while setup UX remains a post-baseline hardening surface
-- **kdna-studio** — v1 authoring/export is published through `@aikdna/kdna-studio-cli@0.5.9` and `@aikdna/kdna-studio-core@1.5.8`; public propagation should center on packaged `.kdna` examples with release-card evidence.
+- **kdna-studio** — v1 authoring/export is published through `@aikdna/kdna-studio-cli@0.5.11` and `@aikdna/kdna-studio-core@1.5.8`; public propagation should center on packaged `.kdna` examples with release-card evidence.
 - **kdna-vscode** — VS Code extension (legacy workspace tools); not yet updated for v1 Core
 - **Work Pack** — experimental workflow packaging; not v1 Core mainline
 
@@ -55,7 +55,7 @@ KDNA Core is content-neutral. It validates file structure, integrity, and loadin
 ## Recommended first-run path
 
 ```bash
-npm install -g @aikdna/kdna-cli@0.26.10
+npm install -g @aikdna/kdna-cli@0.26.12
 kdna --help
 kdna demo minimal /tmp/minimal-source
 kdna pack /tmp/minimal-source /tmp/minimal.kdna
@@ -82,8 +82,8 @@ For the compact first-run walkthrough, see [5-minute-guide.md](./5-minute-guide.
 
 ## Known limitations
 
-1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.26.10**. ✓
-2. **Core extraction — published**: the compatibility package now routes v1 through shared `@aikdna/kdna-core/v1`; duplicate `packages/kdna/src/v1-cli.js` has been removed. Current public beta package line is `@aikdna/kdna@0.10.3` with `@aikdna/kdna-core@0.12.3`.
+1. **Global CLI v1 route — resolved in @aikdna/kdna-cli@0.26.12**. ✓
+2. **Core extraction — published**: the compatibility package now routes v1 through shared `@aikdna/kdna-core/v1`; duplicate `packages/kdna/src/v1-cli.js` has been removed. Current public beta package line is `@aikdna/kdna@0.10.3` with `@aikdna/kdna-core@0.12.5`.
 3. **Legacy CLI surfaces**: compatibility commands remain behind `kdna help legacy`; public first-run docs use local `.kdna` files with `validate`, `plan-load`, and `load`.
 4. **Out-of-scope launch claims**: protected assets, remote runtime, paid authorization, hosted distribution, commercial asset distribution, and quality ranking are not part of the current stable baseline.
 5. **Cross-implementation parity**: JS Core is the public first-run path. Swift remains beta until parity is proven against fixed Core v1 fixtures.

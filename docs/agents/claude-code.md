@@ -14,16 +14,12 @@ kdna doctor --agents
 kdna demo minimal ./minimal
 kdna pack ./minimal ./minimal.kdna
 kdna validate ./minimal.kdna
+kdna plan-load ./minimal.kdna
 kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
 
-For a real domain, use a v1 artifact such as `writing-v1.kdna` and validate it
-before loading:
-
-```bash
-kdna validate ./writing-v1.kdna
-kdna load ./writing-v1.kdna --profile=compact --as=prompt
-```
+For a public example domain, start from its packaged `.kdna` file and release
+card. Validate and plan-load that file before loading it into the agent.
 
 ## Verify It Works
 

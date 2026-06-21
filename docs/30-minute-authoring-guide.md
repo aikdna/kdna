@@ -52,23 +52,23 @@ A minimal valid `.kdna` payload contains:
 - One or more `axioms` — the core principles
 - Optional: `patterns`, `scenarios`, `cases`, `reasoning`, `evolution`
 
-## Step 4: Review and optionally approve for release evidence
+## Step 4: Review and approve for Studio export
 
 ```bash
 kdna-studio card list my_expertise
-kdna-studio card approve my_expertise <card-id> \
+kdna-studio card approve my_expertise --all \
   --by your-id \
   --statement "I confirm this judgment for v1 export."
 ```
 
-Review and optionally approve the judgment cards when you want explicit
-release evidence. Human Lock is a provenance signal, not a format-validity
-requirement.
+The current Studio CLI export workflow requires approved cards so the exported
+file carries explicit release evidence. That approval is Studio provenance; it
+does not make Human Lock a KDNA Core format-validity requirement.
 
 ## Step 5: Compile and export
 
 ```bash
-kdna-studio export my_expertise --format v1 --out dist/my_expertise.kdna
+kdna-studio export my_expertise --format v1 --out ./my_expertise.kdna
 ```
 
 This produces a `.kdna` container with `mimetype`, `kdna.json`,
@@ -77,17 +77,17 @@ This produces a `.kdna` container with `mimetype`, `kdna.json`,
 ## Step 6: Validate with the official CLI
 
 ```bash
-kdna inspect dist/my_expertise.kdna
-kdna validate dist/my_expertise.kdna
-kdna plan-load dist/my_expertise.kdna
-kdna load dist/my_expertise.kdna --profile=compact --as=prompt
+kdna inspect ./my_expertise.kdna
+kdna validate ./my_expertise.kdna
+kdna plan-load ./my_expertise.kdna
+kdna load ./my_expertise.kdna --profile=compact --as=prompt
 ```
 
 If you are migrating an existing KDNA source folder or a Studio project, use
 the migration command:
 
 ```bash
-kdna-studio migrate my_expertise --format v1 --out dist/my_expertise.kdna \
+kdna-studio migrate my_expertise --format v1 --out ./my_expertise.kdna \
   --by your-id \
   --statement "I confirm this migration for v1 export."
 ```

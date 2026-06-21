@@ -6,26 +6,33 @@
   "type": "object",
   "required": ["algorithm"],
   "additionalProperties": true,
+  "$defs": {
+    "sha256Digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "sha256Value": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
   "properties": {
     "algorithm": {
       "type": "string",
       "description": "Hash algorithm. Phase 1 uses sha256.",
-      "enum": ["sha256", "sha512", "blake2b-256"]
+      "const": "sha256"
     },
     "manifest_digest": {
-      "type": "string",
       "description": "Digest of the kdna.json entry.",
-      "pattern": "^[a-z0-9-]+:.+$"
+      "$ref": "#/$defs/sha256Digest"
     },
     "payload_digest": {
-      "type": "string",
       "description": "Digest of the payload.kdnab entry.",
-      "pattern": "^[a-z0-9-]+:.+$"
+      "$ref": "#/$defs/sha256Digest"
     },
     "asset_digest": {
-      "type": "string",
       "description": "Digest of the whole container (per-entry digests combined deterministically).",
-      "pattern": "^[a-z0-9-]+:.+$"
+      "$ref": "#/$defs/sha256Digest"
     },
     "entries": {
       "type": "object",
@@ -34,8 +41,8 @@
         "type": "object",
         "required": ["algorithm", "value"],
         "properties": {
-          "algorithm": { "type": "string" },
-          "value": { "type": "string" }
+          "algorithm": { "const": "sha256" },
+          "value": { "$ref": "#/$defs/sha256Value" }
         }
       }
     }

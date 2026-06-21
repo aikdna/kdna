@@ -2,27 +2,26 @@
 
 ## What is new
 
-- **@aikdna/kdna-cli@0.25.1** published to npm.
+- **@aikdna/kdna-cli@0.26.12** published to npm.
 - **Global CLI v1 route**: `kdna inspect`, `kdna validate`, `kdna pack`, `kdna unpack` — available from `npm install -g @aikdna/kdna-cli`.
-- **`kdna demo minimal <dir>`** — offline first-run fixture. No monorepo clone needed. No registry. No network beyond npm install.
+- **`kdna demo minimal <dir>`** — local first-run fixture for creating a packaged `.kdna` file from the terminal.
 - **Deterministic pack** — same source packed twice produces byte-identical output (SHA-256 verified).
 - **Content-neutral validation** — output reports format/schema/payload/checksums/load-contract status only. No trust / recommendation / quality-badge claims.
 - **Official toolchain wording** — public docs, website, sub-repo READMEs, package metadata, and npm descriptions aligned with KDNA Core v1 sovereignty.
-- **Legacy surface removed from the active path** — registry and quality-badge systems are out of scope for KDNA Core v1.
+- **Public first-run surface** — starts with one local `.kdna` file, then validate, plan-load, and load.
 
 ## Try it now
 
 ```bash
-npm install -g @aikdna/kdna-cli@0.25.1
+npm install -g @aikdna/kdna-cli@0.26.12
 kdna demo minimal ./minimal
-kdna inspect ./minimal
-kdna validate ./minimal
 kdna pack ./minimal ./minimal.kdna
-kdna unpack ./minimal.kdna ./out
-kdna validate ./out
+kdna validate ./minimal.kdna
+kdna plan-load ./minimal.kdna
+kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
 
-All steps pass from a clean environment. No monorepo clone. No API key. No registry.
+All steps should pass from a clean environment with Node.js and npm.
 
 ## What is still beta
 
