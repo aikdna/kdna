@@ -4,17 +4,24 @@
 
 [![KDNA Spec](https://img.shields.io/badge/KDNA-v1.0-4c1)](https://github.com/aikdna/kdna)
 
+> This README is for an expanded authoring project view. The public runtime
+> asset is the packaged `.kdna` file exported from this project, not the source
+> folder itself.
+
 **[Domain Title]** — [one-sentence description, same as kdna.json.description]
 
 ## Core Insight
 
 [one-sentence core insight, same as kdna.json.core_insight]
 
-## Install
+## Export and load
 
 ```bash
-kdna install @yourscope/your_domain_id
-kdna verify @yourscope/your_domain_id      # structure + trust + judgment
+mkdir -p dist
+kdna pack . ./dist/your-domain.kdna
+kdna validate ./dist/your-domain.kdna
+kdna plan-load ./dist/your-domain.kdna
+kdna load ./dist/your-domain.kdna --profile=compact --as=prompt
 ```
 
 ## The Four Questions (v2.1 governance)

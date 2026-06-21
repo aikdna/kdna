@@ -15,20 +15,22 @@ A minimal KDNA domain for management judgment. Helps AI agents apply expert mana
 - **Misunderstandings:** motivation vs obstacles, feedback-as-event vs feedback-as-system, doing-it-yourself vs building-capacity
 - **Self-Checks (4):** upstream diagnosis, restating expectations, gap description, owner-action-deadline
 
-## Install
-
-```bash
-npm i -g @aikdna/kdna
-kdna install management-basic
-```
-
 ## Usage
 
-Load `management_basic/KDNA_Core.json` + `management_basic/KDNA_Patterns.json` before any management coaching, team diagnosis, or delegation advice.
+This is a legacy source example. To use it in the current Core v1 path, package
+it as a `.kdna` file, validate it, plan loading, then load the compact profile:
+
+```bash
+kdna pack . ./management-basic.kdna
+kdna validate ./management-basic.kdna
+kdna plan-load ./management-basic.kdna
+kdna load ./management-basic.kdna --profile=compact --as=prompt
+```
 
 ## Status
 
-**Stable** — Core + Patterns validated. Suitable for general management judgment.
+**Legacy source example** — useful for reading the judgment shape. A packaged
+`.kdna` file is the runtime artifact.
 
 ## License
 
@@ -56,6 +58,7 @@ Whether a manager's diagnosis, intervention, or delegation decision addresses th
 ### 4. How do I use it?
 
 ```bash
-kdna install github:aikdna/kdna-management_basic
-kdna dev validate .
+kdna validate ./management-basic.kdna
+kdna plan-load ./management-basic.kdna
+kdna load ./management-basic.kdna --profile=compact --as=prompt
 ```

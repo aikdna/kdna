@@ -197,9 +197,9 @@ project view. This is an authoring/debugging view of the asset, not the public
 runtime artifact:
 
 ```bash
-kdna dev scaffold my_experiment
-# Edit files in my_experiment/
-kdna dev validate my_experiment
+kdna unpack my_domain.kdna ./my_experiment
+# Inspect or edit the expanded project view in ./my_experiment/
+kdna validate ./my_experiment
 ```
 
 However, expanded project views are not themselves the current v1 runtime

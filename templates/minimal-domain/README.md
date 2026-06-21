@@ -1,6 +1,11 @@
 # Minimal Domain Template
 
-The smallest valid KDNA domain: `KDNA_Core.json` + `KDNA_Patterns.json` + `kdna.json`.
+This is an expanded authoring project-view template. It is useful for learning,
+experimentation, and tooling tests. The public runtime asset is the packaged
+`.kdna` file exported from a compatible toolchain, not this folder.
+
+The smallest authoring project view contains `KDNA_Core.json`,
+`KDNA_Patterns.json`, and `kdna.json`.
 
 ## Purpose
 
@@ -32,9 +37,12 @@ This template demonstrates the minimum viable KDNA domain structure. Use it as a
 ```bash
 # Copy this template and customize
 cp -r templates/minimal-domain domains/my-domain
-# Edit KDNA_Core.json, KDNA_Patterns.json, and kdna.json
+# Edit the project-view JSON files and kdna.json
 # Add evaluation cases to evals/
-kdna dev validate .
+kdna validate .
+kdna pack . ./my-domain.kdna
+kdna validate ./my-domain.kdna
+kdna plan-load ./my-domain.kdna
 ```
 
 ## License

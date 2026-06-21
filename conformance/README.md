@@ -7,8 +7,8 @@ historical compatibility testing; they are not the current Core v1 launch path.
 Conformance means:
 
 - `.kdna` is the canonical asset object.
-- The loader reads `kdna.json`, `KDNA_Core.json`, and `KDNA_Patterns.json`
-  directly from the asset container.
+- The loader reads `kdna.json`, verifies `payload.kdnab`, checks digests, and
+  emits only authorized runtime projections after LoadPlan allows loading.
 - Validation rejects missing required entries, malformed manifest metadata,
   duplicate IDs, invalid self-checks, unresolved references, and digest
   mismatches.
