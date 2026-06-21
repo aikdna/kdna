@@ -14,7 +14,7 @@ validated, packable asset.
 | Runtime CLI | beta-ready | `kdna inspect`, `kdna validate`, `kdna plan-load`, `kdna load`, `kdna pack`, and `kdna unpack` work for local v1 assets. |
 | Studio authoring CLI | beta | `kdna-studio` is the official authoring path, but commands and UX may still change between beta releases. |
 | Agent / MCP loading | preview | Loader and MCP paths use the same LoadPlan-first contract, but agent-specific integration quality varies by runtime. |
-| Trust layers | future / gated | Human Lock, signatures, release evidence, paid authorization, hosted distribution, and evaluation reports are optional or future layers, not KDNA Core v1 format-validity requirements. |
+| Trust layers | planned / optional | Human Lock, signatures, release evidence, paid authorization, hosted distribution, and evaluation reports are optional or planned layers, not KDNA Core v1 format-validity requirements. |
 
 ## Step 1: Install the Studio CLI
 

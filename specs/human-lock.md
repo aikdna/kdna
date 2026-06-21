@@ -6,7 +6,9 @@
 > Human Lock; trust, authorship, review status, and distribution status are
 > separate layers.
 
-The Human Judgment Lock is the protocol mechanism that ensures judgment updates in KDNA domains are explicitly approved by a human before they take effect.
+Human Judgment Lock is a provenance mechanism for workflows that claim
+human-reviewed governance. It records that judgment updates were explicitly
+approved by a human before those updates were treated as reviewed content.
 
 It is the operational guarantee behind the principle:
 
@@ -16,23 +18,33 @@ It is the operational guarantee behind the principle:
 
 ## Three Classes of Updates
 
-When an agent or system proposes a change to a KDNA-loaded environment, the change falls into one of three classes:
+When an agent or system proposes a change inside a Human-Locked workflow, the
+change falls into one of three classes:
 
 | Class | Can Agent Auto-Apply? | Examples | Governance Requirement |
 |-------|----------------------|----------|------------------------|
 | **Operational** | Yes | Tool call parameters, API formats, preferred output formatting, project-specific commands, user preference memory | None. May be logged for audit. |
 | **Evidence** | Record automatically; do not auto-apply | New outcome records, eval failures, trace anomalies, user feedback | Recorded as evidence. Becomes input to proposals. |
-| **Judgment** | **No** | Axioms, value order, judgment role, boundaries, risk model, does_not_apply_when, failure_risk, composition policy | **Must receive Human Judgment Lock.** |
+| **Judgment** | **No, if the workflow claims Human Lock or human-reviewed governance** | Axioms, value order, judgment role, boundaries, risk model, does_not_apply_when, failure_risk, composition policy | **Must receive Human Judgment Lock before retaining that claim.** |
 
-Only Judgment-class updates require Human Judgment Lock. This distinction is what prevents agents from drifting while still allowing them to learn operationally.
+Only Judgment-class updates require Human Judgment Lock inside workflows that
+claim Human Lock or human-reviewed governance. Plain agent-authored, tool-authored,
+or experimental `.kdna` files remain format-valid when they pass `kdna validate`;
+they simply must not claim inherited Human Lock, human confirmation, signature,
+or reviewed-trust status without the matching evidence.
 
 ---
 
 ## Fields Requiring Human Judgment Lock
 
-The following fields in a KDNA domain MUST NOT be modified without a recorded Human Judgment Lock.
+For assets or projects that claim Human Lock, the following fields in a KDNA
+domain MUST NOT be modified without a recorded Human Judgment Lock.
 
-> **Core fields** (required by [SPEC §1.7.2](../SPEC.md#172-fields-requiring-human-judgment-lock)) are marked with ★. Extended fields (recommended but not mandated by SPEC) are marked with ○. Validators MUST enforce ★ fields; they SHOULD enforce ○ fields for production domains.
+> **Core fields for Human-Locked workflows** are marked with ★. Extended fields
+> (recommended but not mandated for all assets) are marked with ○. Tools that
+> validate Human-Lock claims MUST enforce ★ fields for that claim; general
+> `kdna validate` checks format validity and does not require every valid asset
+> to contain Human Lock records.
 
 ### KDNA_Core.json
 - ★ `axioms` — any add, remove, or revise
@@ -188,7 +200,8 @@ Emergency overrides are audit events. They should be rare.
 
 ## Relation to Improvement Proposals
 
-The Human Judgment Lock is the final step in the improvement proposal lifecycle:
+For workflows that claim Human Lock, the Human Judgment Lock is the final step
+in the improvement proposal lifecycle:
 
 ```
 Proposal Created
@@ -200,17 +213,21 @@ Proposal Created
     → If deferred: proposal remains open pending more evidence
 ```
 
-A proposal without a lock is not governed. A lock without a proposal is an emergency or direct edit.
+A proposal without a lock is not governed under the Human-Locked workflow. A
+lock without a proposal is an emergency or direct edit.
 
 ---
 
 ## Summary
 
-The Human Judgment Lock is the keystone of KDNA's governance model. It ensures that:
+Human Judgment Lock is the keystone of KDNA workflows that claim human-reviewed
+governance. It ensures that:
 
 - Agents can learn operationally without restriction
 - Evidence is recorded automatically without blocking
-- Judgment updates are always human-approved, versioned, and auditable
+- Judgment updates that retain the Human-Locked claim are human-approved,
+  versioned, and auditable
 - Organizations retain control over what "better" means
 
-Without the lock, self-improvement becomes drift. With the lock, self-improvement becomes evolution.
+Without this provenance layer, a workflow must not claim human-reviewed
+governance. With it, self-improvement can remain auditable.

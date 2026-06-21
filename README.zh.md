@@ -195,7 +195,7 @@ kdna load <asset>.kdna --profile=compact --as=prompt
 ```bash
 npm install -g @aikdna/kdna-studio-cli
 kdna-studio create my_expertise --name @yourscope/my_expertise
-# 导入材料、生成判断卡片，并由人类确认 Human Lock
+# 导入材料、生成判断卡片；需要发布证据时可加入人工确认记录
 kdna-studio migrate ./my_expertise --format v1 --out dist/my_expertise.kdna --name @yourscope/my_expertise --by your-id --statement "confirmed for v1 export"
 kdna validate dist/my_expertise.kdna
 kdna plan-load dist/my_expertise.kdna
@@ -206,7 +206,7 @@ kdna load dist/my_expertise.kdna --profile=compact --as=prompt
 
 ## 规范
 
-完整 v1.0-rc 规范见 [SPEC.md](./SPEC.md)。
+完整 Core v1 规范见 [SPEC.md](./SPEC.md)。
 
 ### 试试 Demo
 
@@ -244,7 +244,7 @@ kdna load <asset>.kdna --profile=compact --as=prompt
 
 | 文档 | 说明 |
 |---|---|
-| [SPEC.md](./SPEC.md) | 协议规范 v1.0-rc |
+| [SPEC.md](./SPEC.md) | Core v1 协议规范 |
 | [docs/getting-started.zh.md](./docs/getting-started.zh.md) | 安装、创建和使用 KDNA |
 | [docs/evaluation.zh.md](./docs/evaluation.zh.md) | 如何检验 KDNA 是否改善了判断力 |
 | [docs/meta-cognition.zh.md](./docs/meta-cognition.zh.md) | 何时用 KDNA、冲突仲裁、领域组合 |

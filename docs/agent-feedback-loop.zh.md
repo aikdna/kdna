@@ -1,5 +1,8 @@
 # Agent 反馈闭环
 
+> 历史性的 v1 前治理流程。当前 Core v1 public beta 不要求 registry 发布,
+> 也不把 Human Lock 作为 `.kdna` 格式有效性的前提。本文件仅作为受审阅演化流程的设计记录。
+
 KDNA 加载的 Agent 如何将现实世界经验转化为受治理的判断演化。
 
 本文档描述了从 Agent 执行到域更新的完整管道。它是 [Human-Governed Self-Improving Agents](./human-governed-self-improvement.zh.md) 概念文档的操作对应物。

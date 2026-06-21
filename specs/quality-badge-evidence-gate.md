@@ -1,5 +1,8 @@
 # KDNA Quality Badge Evidence Gate
 
+> Historical pre-v1 quality-badge draft. Current Core v1 does not define an
+> official quality-badge, ranking, marketplace, or registry endorsement system.
+
 Version: 0.1
 Status: Draft
 Depends on: kdna-asset-card.md, benchmark design docs, registry SCHEMA.md v2.3
