@@ -85,7 +85,7 @@ npm ci
 npm test
 ```
 
-For the legacy 5-minute walkthrough (old CLI surface), see [5-minute-guide.md](./5-minute-guide.md).
+For the compact first-run walkthrough, see [5-minute-guide.md](./5-minute-guide.md).
 
 ## Known limitations
 
