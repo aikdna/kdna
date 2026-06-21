@@ -1,6 +1,8 @@
 # standard-domain template
 
-This is the v2.1 reference template for a new KDNA domain. Copy this folder, fill in the bracketed placeholders, and publish.
+This is an expanded authoring project-view template for a new KDNA domain.
+Copy this folder, fill in the bracketed placeholders, then export a packaged
+`.kdna` file before distribution or runtime use.
 
 ## What this template includes
 
@@ -44,8 +46,10 @@ kdna identity init
 kdna verify ./.
 
 # 7. Export and verify the local v1 asset
-KDNA_IDENTITY_DIR=~/.kdna/identity-official \
-  kdna validate ./dist/your-domain.kdna
+mkdir -p dist
+kdna pack . ./dist/your-domain.kdna
+kdna validate ./dist/your-domain.kdna
+kdna plan-load ./dist/your-domain.kdna
 
 kdna load ./dist/your-domain.kdna --profile=compact --as=prompt
 ```
@@ -54,4 +58,4 @@ kdna load ./dist/your-domain.kdna --profile=compact --as=prompt
 
 `minimal-domain/` is the **bare-minimum** template — 2 files, no v2.1 fields, no evals. Use it only for fast experimentation or learning.
 
-`standard-domain/` is the richer authoring template for domains that need evidence, limitations, and repeatable validation. Core v1 distribution is local `.kdna` export plus `kdna validate` / `kdna load` evidence, not a central registry submission.
+`standard-domain/` is the richer authoring template for domains that need evidence, limitations, and repeatable validation. Core v1 distribution is local `.kdna` export plus `kdna validate` / `kdna plan-load` / `kdna load` evidence.

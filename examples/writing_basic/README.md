@@ -23,11 +23,20 @@ first-run path.
 
 ## Usage
 
-Load `writing_basic/KDNA_Core.json` + `writing_basic/KDNA_Patterns.json` before any writing or editing task.
+This is a legacy source example. To use it in the current Core v1 path, package
+it as a `.kdna` file, validate it, plan loading, then load the compact profile:
+
+```bash
+kdna pack . ./writing-basic.kdna
+kdna validate ./writing-basic.kdna
+kdna plan-load ./writing-basic.kdna
+kdna load ./writing-basic.kdna --profile=compact --as=prompt
+```
 
 ## Status
 
-**Stable** — Core + Patterns validated. Suitable for general writing judgment.
+**Legacy source example** — useful for reading the judgment shape. A packaged
+`.kdna` file is the runtime artifact.
 
 ## License
 
@@ -56,5 +65,7 @@ Whether a piece of writing is clear, reader-focused, and structurally coherent �
 ### 4. How do I use it?
 
 ```bash
-kdna dev validate .
+kdna validate ./writing-basic.kdna
+kdna plan-load ./writing-basic.kdna
+kdna load ./writing-basic.kdna --profile=compact --as=prompt
 ```

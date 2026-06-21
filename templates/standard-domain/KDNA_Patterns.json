@@ -4,7 +4,7 @@
     "domain": "your_domain_id",
     "created": "YYYY-MM-DD",
     "purpose": "Common misdiagnoses and self-checks for <domain>.",
-    "load_condition": "Always load with KDNA_Core.json."
+    "load_condition": "Package with the same judgment payload and load only when the asset LoadPlan allows it."
   },
   "terminology": {
     "standard_terms": [

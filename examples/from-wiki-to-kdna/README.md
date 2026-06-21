@@ -4,7 +4,8 @@ This directory demonstrates the recommended pipeline from LLM Wiki to KDNA:
 
 ```
 wiki/     →   raw materials (Markdown knowledge pages)
-kdna/     →   extracted cognition (KDNA_Core.json + KDNA_Patterns.json)
+kdna/     →   expanded project view for extracted judgment
+*.kdna    →   packaged runtime asset
 ```
 
 ## The Wiki (Upstream)
@@ -15,12 +16,15 @@ These pages describe what code review is, how to classify feedback, and what min
 
 ## The KDNA (Downstream)
 
-The `kdna/` directory contains the extracted judgment layer:
+The `kdna/` directory contains an expanded project view of the extracted
+judgment layer:
 
 - `KDNA_Core.json` — Axioms, ontology, frameworks, core causal structure, and stances
 - `KDNA_Patterns.json` — Standard terms, banned terms, common misunderstandings, and self-checks
 
-These files encode how a code review expert thinks, not what the team knows about code review.
+These files encode how a code review expert thinks, not what the team knows
+about code review. They are intermediate authoring material; the runtime object
+is a packaged `.kdna` file.
 
 ## What Changed During Extraction
 
@@ -49,5 +53,8 @@ The KDNA is not a summary of the Wiki. It is a transformation:
 ## Validation
 
 ```bash
-npx kdna dev validate kdna
+kdna pack kdna ./code-review-from-wiki.kdna
+kdna validate ./code-review-from-wiki.kdna
+kdna plan-load ./code-review-from-wiki.kdna
+kdna load ./code-review-from-wiki.kdna --profile=compact --as=prompt
 ```
