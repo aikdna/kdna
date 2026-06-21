@@ -105,25 +105,19 @@ LLM Wiki 将文档转化为知识。KDNA 将专业知识转化为判断力。
 > LLM Wiki turns documents into knowledge.  
 > KDNA turns expertise into judgment.
 
-## 文件体系
+## 文件模型
 
-一个 `.kdna` 文件内部最多包含六类标准判断条目。作者工具或 `unpack` 可以把这些条目展开为 JSON 视图，但公开消费和运行时加载的主对象始终是打包后的 `.kdna` 文件：
-
-```text
-KDNA_Core.json        # 公理、本体、框架、核心因果结构、立场
-KDNA_Patterns.json    # 术语、禁用词、常见误解、自查清单
-KDNA_Scenarios.json   # 场景触发信号和行动导向
-KDNA_Cases.json       # 展示结构而非脚本的完整案例
-KDNA_Reasoning.json   # 推理链：结论 → 逻辑 → 实践后果
-KDNA_Evolution.json   # 成长阶段、能力层次、可测量指标
-```
-
-最小有效 `.kdna` 判断 payload：
+KDNA 的公共资产是一个打包后的 `.kdna` 文件。作者工具、检查工具或 `unpack` 可以把它展开成可查看、可编辑的结构化视图，但公开消费和运行时加载的主对象始终是 `.kdna` 文件本身。
 
 ```text
-KDNA_Core.json
-KDNA_Patterns.json
+example.kdna
+├── mimetype
+├── kdna.json       # manifest、身份、版本、access mode、load contract
+├── payload.kdnab   # 结构化判断 payload
+└── checksums.json  # 完整性摘要
 ```
+
+判断 payload 可以包含公理、适用边界、不适用边界、失败风险、术语、常见误解、自检和场景信号等结构。用户不需要直接面对内部 JSON 文件；需要检查或二次创作时，应通过官方工具链 inspect / unpack / fork / export。
 
 ## 快速开始
 
@@ -147,13 +141,7 @@ kdna doctor --agents
 git clone https://github.com/aikdna/kdna.git
 cd kdna
 npm install
-npm run lint:examples
-```
-
-校验一个领域：
-
-```bash
-npx kdna dev validate examples/decision_state
+npm run validate:examples
 ```
 
 ## 安装到你的 Agent
