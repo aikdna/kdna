@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.13.3 (2026-06-22)
+- Fix: index profile includes max_tokens_hint
+- Fix: compact profile falls back to full_statement for TBD placeholders
+
+# Changelog
+
 Packages: `@aikdna/kdna-core`
 
 ## v0.13.2 (2026-06-21)
