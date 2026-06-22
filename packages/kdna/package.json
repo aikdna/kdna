@@ -1,7 +1,7 @@
 {
   "name": "@aikdna/kdna",
   "version": "0.10.4",
-  "description": "KDNA toolkit compatibility package. The kdna CLI binary has moved to @aikdna/kdna-cli — use npm install -g @aikdna/kdna-cli.",
+  "description": "KDNA toolkit compatibility package. The kdna CLI binary has moved to @aikdna/kdna-cli \u2014 use npm install -g @aikdna/kdna-cli.",
   "type": "commonjs",
   "bin": {
     "kdna-lint": "bin/kdna-lint.js",

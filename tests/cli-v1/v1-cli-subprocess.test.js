@@ -252,21 +252,18 @@ test('cli: kdna validate on a directory with lineage as array exits non-zero', (
   }
 });
 
-test('cli: kdna inspect on a v2 .kdna container is NOT routed to v1 (legacy preserved)', () => {
-  // The conformance fixture is a v2 .kdna container. It must reach
-  // the upstream CLI, not the v1 inspector. The upstream `inspect`
-  // prints a JSON envelope with v2-specific fields, which the v1
-  // inspector would never produce.
+test('cli: v2 .kdna container is rejected with a clear message (no silent pass)', () => {
+  // kdna-cli >=0.27.0 no longer supports legacy/v2 containers.
+  // The shim must catch this and report a clear error — not silently
+  // return empty output, not crash, not produce misleading JSON.
   const v2Fixture = path.join(repoRoot, 'fixtures', 'test_conformance.kdna');
   if (!fs.existsSync(v2Fixture)) return; // optional in some checkouts
   const r = runCli(['inspect', v2Fixture, '--json']);
-  // We don't assert the exact upstream output — it varies across
-  // versions. We only assert that the upstream CLI was reached: the
-  // v1 inspector never emits the `name` field at the top level, and
-  // v2 outputs always do.
-  const out = JSON.parse(r.stdout);
-  assert.ok(out.name, 'upstream CLI must have produced the v2 envelope');
-  assert.ok(!('asset_uid' in out), 'v2 envelope does not expose v1 asset_uid');
+  assert.notEqual(r.status, 0, 'v2 container must be rejected');
+  assert.ok(
+    r.stderr.includes('legacy') || r.stderr.includes('v1') || r.stderr.includes('unsupported') || r.stderr.includes('Unsupported'),
+    `v2 rejection message must be descriptive, got: ${r.stderr}`,
+  );
 });
 
 test('cli: a non-v1 directory does NOT trigger the v1 route (no false positive)', () => {
@@ -293,18 +290,13 @@ test('cli: a non-v1 directory does NOT trigger the v1 route (no false positive)'
   }
 });
 
-test('cli: legacy .kdna path is NOT routed to v1 (legacy kdna-inspect still works)', () => {
-  // When the input is a v2 .kdna file, the shim should fall through
-  // to the upstream kdna-cli, not the v1 inspector. The v1 inspector
-  // would refuse it because the mimetype would be v2.
+test('cli: v2 container inspect exits non-zero with descriptive error', () => {
+  // kdna-cli >=0.27.0 rejects legacy/v2 containers. Verify the shim
+  // propagates this rejection correctly (non-zero exit, descriptive
+  // message) rather than crashing or returning empty output.
   const v2Fixture = path.join(repoRoot, 'fixtures', 'test_conformance.kdna');
   if (!fs.existsSync(v2Fixture)) return;
   const r = runCli(['inspect', v2Fixture, '--json']);
-  // If the shim had routed this to v1, it would have exited non-zero
-  // with a "not a KDNA v1 container" error. Upstream produces a
-  // well-formed v2 envelope (with `name` at the top level) instead.
-  assert.equal(r.status, 0, `expected upstream success, got: ${r.stderr}`);
-  const out = JSON.parse(r.stdout);
-  assert.ok(out.name, 'upstream CLI must have produced the v2 envelope');
-  assert.equal(out.format, 'kdna-zip');
+  assert.notEqual(r.status, 0, 'v2 container inspect must exit non-zero');
+  assert.ok(r.stderr.length > 0, 'rejection must produce an error message');
 });
