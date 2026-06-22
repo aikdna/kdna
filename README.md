@@ -119,6 +119,17 @@ kdna/
 
 This repository follows [SemVer 2.0](https://semver.org/) for the KDNA Core specification. The current target is `kdna_version: "1.0"` (Phase 1 baseline). Breaking changes to the manifest schema or payload profile require a major version bump and an RFC.
 
+## Ecosystem
+
+| Repo | Package | Purpose |
+|------|---------|---------|
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | `@aikdna/kdna-cli` | Core v1 runtime CLI |
+| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | `@aikdna/kdna-studio-cli` | AI-powered authoring CLI |
+| [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | `@aikdna/kdna-studio-core` | Studio SDK for creators |
+| [kdna-skills](https://github.com/aikdna/kdna-skills) | — | AI agent skill loader |
+| [kdna-assets](https://github.com/aikdna/kdna-assets) | — | Public asset releases |
+| [kdna-website](https://aikdna.com) | — | Documentation & gallery |
+
 ## License
 
 Apache 2.0. See [LICENSE](./LICENSE).
