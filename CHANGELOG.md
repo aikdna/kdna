@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.13.2
+
+**2026-06-22**
+
+- Moved ajv + ajv-formats to dependencies for self-contained install path.
+
+## 0.13.1
+
+**2026-06-22**
+
+- loadV1 reports profile_available and available_profiles, no silent scenario fallback.
+
+## 0.13.0
+
+**2026-06-22**
+
+- planLoad returns structured input_fingerprint with entitlement state diagnostics.
+
+---
+
 ## 0.9.0 — Phase 2: Judgment-Driven Artifacts and Products
 
 **2026-06-08**
@@ -42,26 +62,6 @@ Phase 2 extends KDNA from "judgment asset protocol" to "judgment-driven artifact
 ---
 
 Historical note: 0.10.x–0.12.x were pre-v1-GA cleanup releases. Full human-readable release notes resume from 0.13.0.
-
-## 0.13.2
-
-**2026-06-22**
-
-- Moved ajv + ajv-formats to dependencies for self-contained install path.
-
-## 0.13.1
-
-**2026-06-22**
-
-- loadV1 reports profile_available and available_profiles, no silent scenario fallback.
-
-## 0.13.0
-
-**2026-06-22**
-
-- planLoad returns structured input_fingerprint with entitlement state diagnostics.
-
----
 
 ## 0.7.0 — v1.0-rc: Open Judgment Protocol
 
