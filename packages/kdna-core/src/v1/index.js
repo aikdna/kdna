@@ -1510,11 +1510,12 @@ function normalizeCompactAxiom(axiom) {
   if (!axiom || typeof axiom !== 'object') return null;
   const statement = axiom.statement || axiom.one_sentence || axiom.full_statement || axiom.id || null;
   if (!statement) return null;
+  const oneSentence = (axiom.one_sentence && !String(axiom.one_sentence).startsWith('<TBD')) ? axiom.one_sentence : (typeof axiom.full_statement === 'string' && axiom.full_statement.length > 0 ? axiom.full_statement.substring(0, 120) + (axiom.full_statement.length > 120 ? '…' : '') : statement);
   return {
     type: 'axiom_applicability',
     id: axiom.id || null,
     statement,
-    one_sentence: axiom.one_sentence || statement,
+    one_sentence: oneSentence,
     applies_when: normalizeTextList(axiom.applies_when),
     does_not_apply_when: normalizeTextList(axiom.does_not_apply_when),
     failure_risk: axiom.failure_risk || null,
@@ -1585,7 +1586,11 @@ function loadV1Unsafe(inputPath, opts = {}) {
   };
 
   if (profile === 'index') {
-    result.content = { asset_id: m.asset_id, asset_uid: m.asset_uid, title: m.title, version: m.version, judgment_version: m.judgment_version, asset_type: m.asset_type, summary: m.summary || null, language: m.language || null, keywords: m.keywords || [], profiles_available: m.load_contract ? Object.keys(m.load_contract.profiles || {}) : [] };
+    let maxTokensHint = undefined;
+    if (m.load_contract && m.load_contract.profiles && m.load_contract.profiles.compact && m.load_contract.profiles.compact.max_tokens_hint) {
+      maxTokensHint = m.load_contract.profiles.compact.max_tokens_hint;
+    }
+    result.content = { asset_id: m.asset_id, asset_uid: m.asset_uid, title: m.title, version: m.version, judgment_version: m.judgment_version, asset_type: m.asset_type, summary: m.summary || null, language: m.language || null, keywords: m.keywords || [], profiles_available: m.load_contract ? Object.keys(m.load_contract.profiles || {}) : [], max_tokens_hint: maxTokensHint };
   } else if (profile === 'compact') {
     const core = payload.core || {};
     result.content = {
