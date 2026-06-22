@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-core",
-  "version": "0.12.5",
+  "version": "0.13.2",
   "description": "KDNA Core library for validating, planning, and loading local .kdna judgment assets.",
   "type": "commonjs",
   "main": "src/index.js",
@@ -58,6 +58,8 @@
   },
   "dependencies": {
     "@noble/hashes": "^1.8.0",
-    "cbor-x": "^1.6.4"
+    "cbor-x": "^1.6.4",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
   }
 }

@@ -670,7 +670,7 @@ function runValidate(v1) {
   if (!validators) {
     result.schema_valid = false;
     problems.push(
-      'schema: ajv not available (install ajv + ajv-formats in the consumer env to enable JSON-Schema validation)',
+      'schema: ajv not available. KDNA Core v1 requires ajv and ajv-formats for JSON-Schema validation. Run: npm install ajv ajv-formats (or: npm install -g ajv ajv-formats for global CLI users)',
     );
     return finalizeValidate(result, problems);
   }
@@ -1008,7 +1008,7 @@ function finalizeLoadPlan(plan) {
   return plan;
 }
 
-function inputFingerprint(inputPath, v1) {
+function computeSourceFingerprint(inputPath, v1) {
   const absPath = path.resolve(inputPath);
   if (v1.kind === 'file') {
     return `sha256:${crypto.createHash('sha256').update(fs.readFileSync(absPath)).digest('hex')}`;
@@ -1027,7 +1027,20 @@ function inputFingerprint(inputPath, v1) {
   return `sha256:${hash.digest('hex')}`;
 }
 
-function baseLoadPlan(inputPath, v1, validation) {
+function inputFingerprint(inputPath, v1, opts = {}) {
+  const allowedEntitlement = new Set(['active', 'expired', 'revoked', 'offline_grace']);
+  const entitlementInput = (
+    opts.entitlement && allowedEntitlement.has(opts.entitlement.status)
+  ) ? opts.entitlement.status : null;
+
+  return {
+    has_password_input: opts.hasPassword === true,
+    entitlement_input: entitlementInput,
+    source_fingerprint: computeSourceFingerprint(inputPath, v1),
+  };
+}
+
+function baseLoadPlan(inputPath, v1, validation, opts = {}) {
   const manifest = v1.manifest;
   const accessInfo = normalizeAccess(manifest.access);
   const entitlementProfile = inferEntitlementProfile(manifest);
@@ -1049,7 +1062,7 @@ function baseLoadPlan(inputPath, v1, validation) {
     required_action: 'block',
     can_load_now: false,
     projection_policy: 'none',
-    input_fingerprint: inputFingerprint(inputPath, v1),
+    input_fingerprint: inputFingerprint(inputPath, v1, opts),
     checks: {
       format_valid: validation.format_valid,
       schema_valid: validation.schema_valid,
@@ -1122,7 +1135,7 @@ function planLoad(inputPath, opts = {}) {
   }
 
   const validation = runValidate(v1);
-  const plan = baseLoadPlan(inputPath, v1, validation);
+  const plan = baseLoadPlan(inputPath, v1, validation, opts);
 
   if (!validation.overall_valid) {
     plan.state = 'invalid';
@@ -1253,8 +1266,8 @@ function planLoad(inputPath, opts = {}) {
     }
 
     if (opts.entitlement && opts.entitlement.status === 'expired') {
-      plan.state = 'expired';
-      plan.required_action = 'sync';
+      plan.state = 'expired_grace';
+      plan.required_action = 'renew_entitlement';
       plan.can_load_now = false;
       plan.projection_policy = 'none';
       plan.issues.push(buildLoadPlanIssue(
@@ -1266,8 +1279,8 @@ function planLoad(inputPath, opts = {}) {
     }
 
     if (opts.entitlement && opts.entitlement.status === 'revoked') {
-      plan.state = 'revoked';
-      plan.required_action = 'block';
+      plan.state = 'denied';
+      plan.required_action = 'contact_issuer';
       plan.can_load_now = false;
       plan.projection_policy = 'none';
       plan.issues.push(buildLoadPlanIssue(
@@ -1314,6 +1327,66 @@ function planLoad(inputPath, opts = {}) {
       'Encrypted entries require licensed access.',
     ));
     return finalizeLoadPlan(plan);
+  }
+
+  if (opts.entitlement && opts.entitlement.status === 'expired') {
+    plan.state = 'expired_grace';
+    plan.required_action = 'renew_entitlement';
+    plan.can_load_now = false;
+    plan.projection_policy = 'none';
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_AUTH_EXPIRED',
+      'blocking',
+      'The entitlement is expired.',
+    ));
+    return finalizeLoadPlan(plan);
+  }
+
+  if (opts.entitlement && opts.entitlement.status === 'revoked') {
+    plan.state = 'denied';
+    plan.required_action = 'contact_issuer';
+    plan.can_load_now = false;
+    plan.projection_policy = 'none';
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_AUTH_REVOKED',
+      'blocking',
+      'The entitlement has been revoked.',
+    ));
+    return finalizeLoadPlan(plan);
+  }
+
+  if (opts.entitlement && opts.entitlement.status === 'offline_grace') {
+    plan.state = 'offline_grace';
+    plan.required_action = 'sync';
+    plan.can_load_now = true;
+    plan.projection_policy = 'minimal';
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_AUTH_OFFLINE_GRACE_ACTIVE',
+      'warning',
+      'The entitlement can load during offline grace but must sync before grace expires.',
+    ));
+    return finalizeLoadPlan(plan);
+  }
+
+  if (opts.entitlement && opts.entitlement.status === 'active') {
+    plan.state = 'ready';
+    plan.required_action = 'load';
+    plan.can_load_now = true;
+    plan.projection_policy = 'minimal';
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_AUTH_ACTIVE_DIAGNOSTIC',
+      'info',
+      'Entitlement active diagnostic signal acknowledged.',
+    ));
+    return finalizeLoadPlan(plan);
+  }
+
+  if (opts.hasPassword === true && !opts.password) {
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_AUTH_PASSWORD_DIAGNOSTIC',
+      'info',
+      'hasPassword is a diagnostic credential-presence signal only; it does not verify the password.',
+    ));
   }
 
   plan.state = 'ready';
@@ -1487,7 +1560,29 @@ function loadV1Unsafe(inputPath, opts = {}) {
     }
   }
 
-  const result = { status: 'loaded', profile, asset_id: m.asset_id, title: m.title };
+  function availableProfiles() {
+    const profiles = [];
+    const core = payload.core || {};
+    const hasJudgment = (core.axioms && core.axioms.length > 0)
+      || (core.boundaries && core.boundaries.length > 0)
+      || (payload.patterns && payload.patterns.length > 0)
+      || (payload.reasoning && ((payload.reasoning.self_checks && payload.reasoning.self_checks.length > 0) || (payload.reasoning.failure_modes && payload.reasoning.failure_modes.length > 0)));
+    profiles.push('index');
+    if (hasJudgment) profiles.push('compact');
+    if (payload.scenarios && payload.scenarios.length > 0) profiles.push('scenario');
+    profiles.push('full');
+    return profiles;
+  }
+
+  const profiles = availableProfiles();
+  const result = {
+    status: 'loaded',
+    profile,
+    profile_available: profiles.includes(profile),
+    available_profiles: profiles,
+    asset_id: m.asset_id,
+    title: m.title,
+  };
 
   if (profile === 'index') {
     result.content = { asset_id: m.asset_id, asset_uid: m.asset_uid, title: m.title, version: m.version, judgment_version: m.judgment_version, asset_type: m.asset_type, summary: m.summary || null, language: m.language || null, keywords: m.keywords || [], profiles_available: m.load_contract ? Object.keys(m.load_contract.profiles || {}) : [] };
@@ -1505,9 +1600,10 @@ function loadV1Unsafe(inputPath, opts = {}) {
       result.max_tokens_hint = m.load_contract.profiles.compact.max_tokens_hint;
     }
   } else if (profile === 'scenario') {
-    result.content = { note: 'scenario profile: no scenarios present in minimal example, returning compact fallback' };
     if (payload.scenarios && payload.scenarios.length > 0) {
       result.content = { scenarios: payload.scenarios };
+    } else {
+      result.content = null;
     }
   } else if (profile === 'full') {
     result.content = { manifest: m, payload };
@@ -1517,6 +1613,15 @@ function loadV1Unsafe(inputPath, opts = {}) {
 
   if (as === 'prompt') {
     const c = result.content;
+    if (c === null) {
+      return {
+        status: result.status,
+        profile: result.profile,
+        profile_available: false,
+        available_profiles: result.available_profiles,
+        text: `KDNA Judgment Asset: ${result.title || 'untitled'}\nAsset ID: ${result.asset_id || 'unknown'}\nProfile: ${result.profile}\n\nProfile "${result.profile}" is not available for this asset. Available profiles: ${result.available_profiles.join(', ')}`,
+      };
+    }
     let text = 'KDNA Judgment Asset: ' + (result.title || 'untitled') + '\n';
     text += 'Asset ID: ' + (result.asset_id || 'unknown') + '\n';
     text += 'Profile: ' + result.profile + '\n';

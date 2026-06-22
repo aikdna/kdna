@@ -1,97 +1,44 @@
 # Contributing to KDNA
 
-KDNA is an open judgment protocol. Contributions can be:
+## Issues
 
-- **Eval cases** — test whether a domain's judgment actually transfers
-- **Domain proposals** — new judgment domains (start as experimental)
-- **Bug reports** — CLI, loader, conformance, or schema issues
-- **Docs / tutorials** — make the public path clearer
-- **Agent integrations** — adapters for new agent runtimes
+Open an issue at the repository. Include:
+- `kdna version` output
+- OS and shell
+- Minimal reproduction steps
+- Expected vs actual behavior
 
-## Before You Start
+If proposing a feature, tag with `[RFC]` and describe the problem before the solution.
 
-1. Read [Start Here](./docs/start-here.md)
-2. Read [State of KDNA](./STATE_OF_KDNA.md) — what's stable, what's not
-3. Check [open issues](https://github.com/aikdna/kdna/issues) — especially `good-first-kdna`
+## Pull Requests
 
-Public documentation contributions (RFCs, specs, audit notes) must follow the [Public Documentation Rules](./docs/GOVERNANCE.md#9-public-documentation-rules) in GOVERNANCE.md.
+1. Fork and branch from `main`.
+2. Keep PRs focused — one logical change per PR.
+3. All commits must be signed off: `git commit -s`
+4. Use the PR template. Title format: `area: what changed`.
+5. Verify before opening:
+   - `npm test` passes
+   - `npm run lint` passes (if available)
+   - `kdna validate` works against a test .kdna file
+   - For CLI changes: verify `kdna --help` output is correct
+   - For asset changes: include SHA256 and validation output
 
-## Quick Path
+PRs that fail any verification command will be reviewed with requested changes.
 
-```bash
-git clone https://github.com/aikdna/kdna.git
-cd kdna
-npm ci
-npm test                 # 16 kdna-core tests + 31 kdna-eval tests
-npm run conformance       # .kdna asset conformance
-npm run conformance:phase2 # Phase 2 protocol conformance
-```
+## Developer Certificate of Origin (DCO)
 
-All tests must pass before submitting a PR.
+All commits must include a `Signed-off-by:` line. Use `git commit -s` to add it automatically.
 
-## What Goes Where
+This certifies that you wrote the code or have the right to submit it under the project's license (Apache-2.0). No CLA is required.
 
-| If you're contributing... | Go to this repo |
-|---------------------------|----------------|
-| Protocol spec, schemas, conformance | `aikdna/kdna` (this repo) |
-| CLI features or fixes | `aikdna/kdna-cli` |
-| Agent loader adapters | `aikdna/kdna-skills` |
-| Domain authoring tools | `aikdna/kdna-studio-cli` |
-| Registry, trust gates | `aikdna/kdna-registry` |
-| Eval cases, benchmark runner | `aikdna/kdna-lab` |
-| Work Pack definitions | `aikdna/kdna-workpack` |
-| New domain | `aikdna/kdna-<domain>` |
+## ANTI-PATTERNS
 
-## PR Requirements
+Do **not** attempt to restore, shim, or reference any of these removed surfaces:
+- `legacy` — deleted in 0.27.0 hard cutover
+- `v2` — never existed; do not create
+- `registry` — deferred to future RFC (see decisions/0003)
+- `install` — no distribution in v1 Core GA
+- `help-legacy` — deleted alongside legacy surface
+- `setup` / `verify` — removed commands; use `kdna create` and `kdna validate`
 
-Every PR must include:
-
-- [ ] **What changed** — one sentence summary
-- [ ] **Which repo layer** — protocol / CLI / schema / docs / domain
-- [ ] **Tests added** — for code changes
-- [ ] **Docs updated** — if behavior, schema, or command output changes
-- [ ] **Changelog-worthy** — if yes, note what to add
-- [ ] **Breaking change** — if yes, migration path documented
-
-For protocol/schema changes: conformance fixtures must be updated.
-For CLI changes: help text, README, and JSON contract must be updated.
-For domain changes: evals, limitations, and version must be updated.
-
-## Issue Labels
-
-| Label | Meaning |
-|-------|---------|
-| `area:protocol` | SPEC, schemas, conformance |
-| `area:cli` | kdna-cli runtime commands |
-| `area:skills` | Agent loader adapters |
-| `area:studio` | Authoring tools |
-| `area:registry` | Trust catalog, distribution |
-| `area:lab` | Benchmarks, eval infrastructure |
-| `area:domain` | Domain judgment assets |
-| `area:docs` | Documentation, tutorials |
-| `type:bug` | Something is broken |
-| `type:feature` | New capability |
-| `type:eval-case` | New or improved eval case |
-| `type:docs` | Documentation improvement |
-| `priority:p0` | Blocking release or user activation |
-| `priority:p1` | Important, not blocking |
-| `priority:p2` | Nice to have |
-| `good-first-kdna` | Suitable for new contributors |
-
-## Review Process
-
-1. Open an issue first for anything larger than a typo fix
-2. PRs are reviewed within one week
-3. Protocol/schema PRs require 1 maintainer approval
-4. Domain PRs require evidence (eval cases, before/after)
-
-## Code of Conduct
-
-See [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
-
-## License
-
-- Code: Apache-2.0
-- Documentation and examples: CC-BY-4.0
-
-By contributing, you agree that your contributions will be licensed under these terms.
+If your PR touches any of the above, it will be rejected. Read `decisions/` for rationale.

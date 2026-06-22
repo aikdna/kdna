@@ -41,6 +41,26 @@ Phase 2 extends KDNA from "judgment asset protocol" to "judgment-driven artifact
 
 ---
 
+## 0.13.2
+
+**2026-06-22**
+
+- Moved ajv + ajv-formats to dependencies for self-contained install path.
+
+## 0.13.1
+
+**2026-06-22**
+
+- loadV1 reports profile_available and available_profiles, no silent scenario fallback.
+
+## 0.13.0
+
+**2026-06-22**
+
+- planLoad returns structured input_fingerprint with entitlement state diagnostics.
+
+---
+
 ## 0.7.0 — v1.0-rc: Open Judgment Protocol
 
 **2026-05-13**

@@ -1,53 +1,72 @@
 # KDNA Tool Status Matrix — June 2026
 
-| Tool | Role | Status | Can run today | Command | Known limitation | Next action |
-|---|---|---|---|---|---|---|
-| **kdna inspect** | Official v1 inspection | available in global CLI (@0.26.12) | yes | `kdna inspect <file.kdna>` | | |
-| **kdna validate** | Official v1 validation | available in global CLI (@0.26.12) | yes | `kdna validate <file.kdna>` | | |
-| **kdna plan-load** | Official LoadPlan check | available in global CLI (@0.26.12) | yes | `kdna plan-load <file.kdna>` | | |
-| **kdna load** | Runtime loading | available in global CLI (@0.26.12) | yes | `kdna load <file.kdna> --profile=compact --as=prompt` | | |
-| **kdna pack** | Official deterministic pack | available in global CLI (@0.26.12) | yes | `kdna pack <dev-source> <out.kdna>` | Creator/debug workflow, not public consumption | |
-| **kdna unpack** | Official unpack | available in global CLI (@0.26.12) | yes | `kdna unpack <file.kdna> <out>` | Editing/debug view, not a separate public asset | |
-| **kdna setup** | Agent setup | beta | yes | `kdna setup` (global) | Agent-specific install behavior varies | Harden per-agent setup smokes |
-| **kdna doctor** | System health check | beta | yes | `kdna doctor --agents` (global) | Agent-specific detection varies | Harden per-agent diagnostics |
-| **kdna list** | Installed domains | beta | yes | `kdna list` (global) | Shows legacy v2 domain list | Update for v1 |
-| **kdna install** | Asset install | legacy | partial | `kdna install <name>` (global) | Not part of the current local packaged `.kdna` path | Re-author for local packaged assets |
-| **kdna verify** | Structure verification | beta | yes | `kdna verify <name>` (global) | Legacy v2 verify pipeline | Update for v1 schema |
-| **kdna compare** | Demo comparison | beta | partial | `kdna compare <name> --input "..."` (global) | Requires provider API key | Document key requirement |
-| **kdna-studio-cli** | Authoring CLI | beta | yes | `kdna-studio export <project> --format v1 --out <file.kdna>` | Authoring UX is still CLI-first | Keep user-path smokes green |
-| **kdna-loader** | Agent adapter | beta | yes | setup-installed | Agent support varies by platform | Keep v1 local asset examples current |
-| **kdna-vscode** | VS Code extension | legacy | partial | VS Code extension page | Legacy workspace tools; not canonical asset creator | Re-author for v1 |
-| **kdna-core-swift** | Swift runtime | beta | partial | SwiftPM | Complete JS parity is not claimed until fixed Core v1 conformance fixtures prove it | Keep conformance fixtures pinned |
-| **kdna-lab** | Pressure-test infra | experimental | partial | scripts | Experimental infrastructure; not v1 Core surface | No change needed |
+## v1 Core GA (stable)
 
-## Current (try first)
+| Tool | Role | Status | Command |
+|---|---|---|---|
+| **kdna inspect** | v1 container inspection | GA | `kdna inspect <file.kdna>` |
+| **kdna validate** | v1 format/schema/payload/checksum/load-contract validation | GA | `kdna validate <file.kdna>` |
+| **kdna plan-load** | LoadPlan generation with entitlement diagnostics | GA | `kdna plan-load <file.kdna>` |
+| **kdna load** | Runtime loading into agent-readable context | GA | `kdna load <file.kdna> --profile=compact --as=prompt` |
+| **kdna pack** | Deterministic ZIP pack | GA | `kdna pack <dev-source> <out.kdna>` |
+| **kdna unpack** | Container extraction | GA | `kdna unpack <file.kdna> <out>` |
+| **kdna demo minimal** | Minimal v1 fixture creation | GA | `kdna demo minimal <dir>` |
 
-| Tool | Command | Works locally | Requires API key | Notes |
-|---|---|---|---|---|
-| demo minimal | `kdna demo minimal <dir>` | yes | no | Creates a v1 fixture from the npm package |
-| inspect | `kdna inspect <file.kdna>` | yes | no | Inspect a packaged v1 `.kdna` file |
-| validate | `kdna validate <file.kdna>` | yes | no | schema + format + payload + checksums (digest verified) + load-contract |
-| plan-load | `kdna plan-load <file.kdna>` | yes | no | Decide whether the file can be loaded before context is emitted |
-| load | `kdna load <file.kdna> --as=prompt` | yes | no | Render loadable public local `.kdna` files |
-| pack | `kdna pack <dev-source> <out.kdna>` | yes | no | Creator/debug workflow |
-| unpack | `kdna unpack <file.kdna> <out>` | yes | no | Editing/debug view of a packaged file |
+Published: `@aikdna/kdna-cli@0.27.2`, `@aikdna/kdna-core@0.13.1`
 
-## Beta
+## Studio (GA)
 
-| Tool | Command | Works locally | Requires API key | Notes |
-|---|---|---|---|---|
-| setup | `kdna setup` | yes | no | Agent detection and loader install |
-| doctor | `kdna doctor --agents` | yes | no | System health check |
-| compare | `kdna compare <name> --input "..."` | partial | yes | Requires provider API key |
-| kdna-studio | `kdna-studio export <project> --format v1 --out <file.kdna>` | yes | no | Authoring CLI; v1 export via @aikdna/kdna-core (beta) |
-| kdna-loader | installed by setup | yes | no | Agent adapter, beta |
+| Tool | Role | Status | Command |
+|---|---|---|---|
+| **kdna-studio create** | Studio project creation | GA | `kdna-studio create <dir> --name <name> [--author <name>]` |
+| **kdna-studio card add** | Add judgment card (strict by default) | GA | `kdna-studio card add <project> axiom --field k=v ...` |
+| **kdna-studio card approve** | Human Lock and approve cards | GA | `kdna-studio card approve <project> --all --by <id> --statement <text>` |
+| **kdna-studio card update** | Update draft card fields | GA | `kdna-studio card update <project> <card-id> --field k=v` |
+| **kdna-studio card remove** | Remove draft card | GA | `kdna-studio card remove <project> <card-id>` |
+| **kdna-studio card unlock** | Reverse card approval | GA | `kdna-studio card unlock <project> <card-id> --by <id> --statement <text>` |
+| **kdna-studio export** | v1 container export | GA | `kdna-studio export <project> --format v1 --out <file.kdna>` |
 
-## Legacy / experimental (not Core v1 first-run)
+Published: `@aikdna/kdna-studio-cli@0.6.0`, `@aikdna/kdna-studio-core@1.5.8`
 
-| Tool | Command | Notes |
+## Experimental / in development
+
+| Tool | Status | Notes |
 |---|---|---|
-| install/search | `kdna install/remove/update/list/search` | Legacy compatibility surface only; not Core v1 active path |
-| evidence labels | `kdna badge compute` | Pre-v1 label experiment |
-| workpack | `kdna workpack ...` | Experimental workflow format |
-| license | `kdna license ...` | Pre-v1 licensed asset flow |
-| protect | `kdna protect/unlock/recover` | Pre-v1 protected asset flow (RFC-0009) |
+| **kdna-studio** (AI features) | experimental | distill, interview, feynman — requires LLM provider config |
+| **kdna-vscode** | experimental | Not yet updated for v1 Core |
+| **kdna-loader** | beta | Agent adapter skill; functional, UX hardening deferred |
+| **kdna-core-swift** | beta | Swift runtime; JS parity not yet proven |
+
+## Removed in v1 Core 0.27.0
+
+The following legacy v0.7 command surfaces were removed in the hard cutover and are no longer available:
+
+| Surface | Notes |
+|---|---|
+| `kdna help legacy` | Legacy help shim removed |
+| `kdna setup` | Agent setup removed from CLI surface |
+| `kdna install / remove / update / info` | Registry install removed |
+| `kdna list / search` | Domain listing removed |
+| `kdna registry` | Registry management removed |
+| `kdna verify` | Legacy 3-layer verification removed |
+| `kdna compare / diff` | Provider-key-dependent comparison removed |
+| `kdna doctor / trace / history` | Diagnostics removed |
+| `kdna publish` | Registry publish removed |
+| `kdna identity` | Ed25519 key management removed from CLI |
+| `kdna license` | License management removed |
+| `kdna protect / unlock / recover` | Protected asset surface removed |
+| `kdna workpack` | Work Pack CLI removed |
+| `kdna cluster` | Cluster composition removed |
+| `kdna governance / proposal / review / evolution / regression` | Governance surface removed |
+| `kdna dev` | Dev source utilities removed (use v1 pack/validate/unpack directly) |
+
+Future systems (distribution, signing, encryption, entitlement, remote runtime) may return through new RFCs and separate packages. They are not part of v1 Core GA.
+
+## Deferred (future RFCs)
+
+- Registry / asset discovery / distribution
+- Signing / encryption / protected assets (RFC-0009)
+- Entitlement / commercial authorization
+- Remote runtime / hosted loading
+- Work Pack assembly
+- Quality badges and content ranking
