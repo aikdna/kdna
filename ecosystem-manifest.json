@@ -16,7 +16,7 @@
       "local_path": ".",
       "npm_package": "@aikdna/kdna-core",
       "package_json": "packages/kdna-core/package.json",
-      "current_version": "0.13.2",
+      "current_version": "0.13.3",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": [
@@ -36,7 +36,7 @@
       "local_path": "../kdna-cli",
       "npm_package": "@aikdna/kdna-cli",
       "package_json": "../kdna-cli/package.json",
-      "current_version": "0.27.4",
+      "current_version": "0.27.6",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": [
@@ -74,7 +74,7 @@
       "local_path": "../kdna-studio-core",
       "npm_package": "@aikdna/kdna-studio-core",
       "package_json": "../kdna-studio-core/package.json",
-      "current_version": "1.5.10",
+      "current_version": "1.5.12",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": [
@@ -93,7 +93,7 @@
       "local_path": "../kdna-studio-cli",
       "npm_package": "@aikdna/kdna-studio-cli",
       "package_json": "../kdna-studio-cli/package.json",
-      "current_version": "0.6.3",
+      "current_version": "0.6.5",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": [
