@@ -14,6 +14,11 @@
   "required_action": "install_receipt",
   "can_load_now": false,
   "projection_policy": "none",
+  "input_fingerprint": {
+    "has_password_input": false,
+    "entitlement_input": null,
+    "source_fingerprint": "sha256:d42040bdad6556dc423c053e1a3fa80396fb102e39f223061176e7e46671818e"
+  },
   "checks": {
     "format_valid": true,
     "schema_valid": true,

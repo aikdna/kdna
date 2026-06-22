@@ -270,7 +270,8 @@ test('planLoad: public v1 asset is ready for minimal projection', () => {
   assert.equal(plan.required_action, 'load');
   assert.equal(plan.can_load_now, true);
   assert.equal(plan.projection_policy, 'minimal');
-  assert.match(plan.input_fingerprint, /^sha256:[a-f0-9]{64}$/);
+  assert.ok(typeof plan.input_fingerprint === 'object' && plan.input_fingerprint !== null);
+  assert.match(plan.input_fingerprint.source_fingerprint, /^sha256:[a-f0-9]{64}$/);
   assert.deepEqual(plan.issues, []);
 });
 
@@ -333,15 +334,15 @@ test('planLoad: licensed receipt entitlement maps to stable states and actions',
 
     const expiredPlan = v1.planLoad(dir, { entitlement: { status: 'expired' } });
     assertValidLoadPlan(expiredPlan);
-    assert.equal(expiredPlan.state, 'expired');
-    assert.equal(expiredPlan.required_action, 'sync');
+    assert.equal(expiredPlan.state, 'expired_grace');
+    assert.equal(expiredPlan.required_action, 'renew_entitlement');
     assert.equal(expiredPlan.can_load_now, false);
     assert.equal(expiredPlan.issues[0].code, 'KDNA_AUTH_EXPIRED');
 
     const revokedPlan = v1.planLoad(dir, { entitlement: { status: 'revoked' } });
     assertValidLoadPlan(revokedPlan);
-    assert.equal(revokedPlan.state, 'revoked');
-    assert.equal(revokedPlan.required_action, 'block');
+    assert.equal(revokedPlan.state, 'denied');
+    assert.equal(revokedPlan.required_action, 'contact_issuer');
     assert.equal(revokedPlan.can_load_now, false);
     assert.equal(revokedPlan.issues[0].code, 'KDNA_AUTH_REVOKED');
 

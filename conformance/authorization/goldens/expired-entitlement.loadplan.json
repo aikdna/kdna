@@ -10,10 +10,15 @@
   "access": "licensed",
   "access_alias": null,
   "entitlement_profile": "local_receipt",
-  "state": "expired",
-  "required_action": "sync",
+  "state": "expired_grace",
+  "required_action": "renew_entitlement",
   "can_load_now": false,
   "projection_policy": "none",
+  "input_fingerprint": {
+    "has_password_input": false,
+    "entitlement_input": "expired",
+    "source_fingerprint": "sha256:3826315090aa7c9b375d7436015dfe5424f79d746a10b62e6663a146d47d0cce"
+  },
   "checks": {
     "format_valid": true,
     "schema_valid": true,

@@ -14,6 +14,11 @@
   "required_action": "load",
   "can_load_now": true,
   "projection_policy": "minimal",
+  "input_fingerprint": {
+    "has_password_input": false,
+    "entitlement_input": "active",
+    "source_fingerprint": "sha256:a88649e8aed9291f43f6266a77ceccbb76502a1328708adffbec24b1bdc2747f"
+  },
   "checks": {
     "format_valid": true,
     "schema_valid": true,

@@ -14,10 +14,10 @@
     "required_action",
     "can_load_now",
     "projection_policy",
-    "input_fingerprint",
     "checks",
     "issues",
-    "source"
+    "source",
+    "input_fingerprint"
   ],
   "additionalProperties": false,
   "properties": {
@@ -51,7 +51,9 @@
         "needs_runtime",
         "offline_grace",
         "expired",
+        "expired_grace",
         "revoked",
+        "denied",
         "invalid"
       ]
     },
@@ -66,6 +68,8 @@
         "sync",
         "connect_runtime",
         "migrate_legacy",
+        "renew_entitlement",
+        "contact_issuer",
         "block"
       ]
     },
@@ -73,10 +77,6 @@
     "projection_policy": {
       "type": "string",
       "enum": ["minimal", "remote", "none"]
-    },
-    "input_fingerprint": {
-      "type": ["string", "null"],
-      "pattern": "^sha256:[a-f0-9]{64}$"
     },
     "checks": {
       "type": "object",
@@ -109,6 +109,16 @@
           "severity": { "type": "string", "enum": ["info", "warning", "blocking"] },
           "message": { "type": "string" }
         }
+      }
+    },
+    "input_fingerprint": {
+      "type": ["object", "null"],
+      "required": ["source_fingerprint", "has_password_input", "entitlement_input"],
+      "additionalProperties": false,
+      "properties": {
+        "source_fingerprint": { "type": ["string", "null"] },
+        "has_password_input": { "type": "boolean" },
+        "entitlement_input": { "type": ["string", "null"] }
       }
     },
     "source": {
