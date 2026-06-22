@@ -20,7 +20,7 @@ KDNA Core is content-neutral. It validates file structure, integrity, and loadin
 - **Load contract** — `index` / `compact` / `scenario` / `full` profiles
 - **Checksums** — per-entry SHA-256 / SHA-512 / BLAKE2b-256
 - **Content-neutral output boundary** — Core validation does not emit recommendation, endorsement, or quality-ranking claims
-- **`kdna inspect`** — inspect local v1 `.kdna` containers (available via `npm install -g @aikdna/kdna-cli@0.27.2`)
+- **`kdna inspect`** — inspect local v1 `.kdna` containers (available via `npm install -g @aikdna/kdna-cli@0.27.6`)
 - **`kdna validate`** — validate local v1 `.kdna` containers (schema + format + payload + checksums + load-contract)
 - **`kdna plan-load`** — return the Core LoadPlan before runtime loading, with structured `input_fingerprint` and entitlement state diagnostics
 - **`kdna load`** — render v1 `.kdna` assets into agent-readable context (`--profile=index|compact|scenario|full`, `--as=json|prompt`)
@@ -28,14 +28,14 @@ KDNA Core is content-neutral. It validates file structure, integrity, and loadin
 - **`kdna unpack`** — unpack `.kdna` container, refuse path traversal
 - **`kdna demo minimal`** — create a minimal v1 fixture for first-run testing
 - **CLI tests** — 30 tests pass for inspect, validate, LoadPlan, load, pack, unpack, and contract shape
-- **Studio CLI** — v1 authoring/export published through `@aikdna/kdna-studio-cli@0.6.0` and `@aikdna/kdna-studio-core@1.5.8`
+- **Studio CLI** — v1 authoring/export published through `@aikdna/kdna-studio-cli@0.6.5` and `@aikdna/kdna-studio-core@1.5.12`
 
 All stable commands are available in the public v1 Core CLI surface. `kdna --help` shows the complete v1 Core command surface.
 
 ## Recommended first-run path
 
 ```bash
-npm install -g @aikdna/kdna-cli@0.27.2
+npm install -g @aikdna/kdna-cli@0.27.6
 kdna --help
 kdna demo minimal /tmp/minimal-source
 kdna pack /tmp/minimal-source /tmp/minimal.kdna
@@ -47,7 +47,7 @@ kdna load /tmp/minimal.kdna --profile=compact --as=prompt
 Studio authoring path:
 
 ```bash
-npm install -g @aikdna/kdna-studio-cli@0.6.0
+npm install -g @aikdna/kdna-studio-cli@0.6.5
 kdna-studio create ./school --name @test/school --author "Your Name"
 kdna-studio card add ./school axiom --field one_sentence="..." [all 8 required fields]
 kdna-studio card approve ./school --all --by me --statement "I confirm."
@@ -82,7 +82,7 @@ These were removed from the v1 Core CLI. Future systems such as distribution, si
 
 ## What is experimental / in development
 
-- **kdna-studio** — v1 authoring/export is stable (0.6.0); advanced AI authoring features (distill, interview, feynman) are experimental
+- **kdna-studio** — v1 authoring/export is stable (0.6.5); advanced AI authoring features (distill, interview, feynman) are experimental
 - **kdna-vscode** — VS Code extension (legacy workspace tools); not yet updated for v1 Core
 - **kdna-loader** — agent adapter skill; functional for supported agents, UX hardening deferred
 - **kdna-core-swift** — Swift runtime; beta until parity proven against fixed Core v1 conformance fixtures

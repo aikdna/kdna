@@ -12,7 +12,7 @@
 | **kdna unpack** | Container extraction | GA | `kdna unpack <file.kdna> <out>` |
 | **kdna demo minimal** | Minimal v1 fixture creation | GA | `kdna demo minimal <dir>` |
 
-Published: `@aikdna/kdna-cli@0.27.2`, `@aikdna/kdna-core@0.13.1`
+Published: `@aikdna/kdna-cli@0.27.6`, `@aikdna/kdna-core@0.13.3`
 
 ## Studio (GA)
 
@@ -26,7 +26,7 @@ Published: `@aikdna/kdna-cli@0.27.2`, `@aikdna/kdna-core@0.13.1`
 | **kdna-studio card unlock** | Reverse card approval | GA | `kdna-studio card unlock <project> <card-id> --by <id> --statement <text>` |
 | **kdna-studio export** | v1 container export | GA | `kdna-studio export <project> --format v1 --out <file.kdna>` |
 
-Published: `@aikdna/kdna-studio-cli@0.6.0`, `@aikdna/kdna-studio-core@1.5.8`
+Published: `@aikdna/kdna-studio-cli@0.6.5`, `@aikdna/kdna-studio-core@1.5.12`
 
 ## Experimental / in development
 
