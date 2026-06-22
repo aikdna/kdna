@@ -23,3 +23,6 @@
 
 ## Limitations updated?
 <!-- If domain scope, known limitations, or caveats changed -->
+
+## DCO
+- [ ] All commits signed off: `git commit -s`

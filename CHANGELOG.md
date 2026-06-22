@@ -41,6 +41,8 @@ Phase 2 extends KDNA from "judgment asset protocol" to "judgment-driven artifact
 
 ---
 
+Historical note: 0.10.x–0.12.x were pre-v1-GA cleanup releases. Full human-readable release notes resume from 0.13.0.
+
 ## 0.13.2
 
 **2026-06-22**
