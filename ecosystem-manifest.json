@@ -253,5 +253,6 @@
       "recommended_entrypoint": "local public .kdna assets through Core/CLI",
       "legacy_replacement": "local public asset workflow"
     }
-  ]
+  ],
+  "repositories": []
 }
