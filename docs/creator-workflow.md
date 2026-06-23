@@ -24,7 +24,7 @@
 | 这个域帮助 AI 判断什么？ | 必须是一个具体的判断问题，不是泛领域。例："判断会议是否真的形成了决策" ✅；"管理" ❌ |
 | 谁需要这个判断？ | 必须能说出具体人群。例："用 Obsidian 但发现笔记越存越多的知识工作者" ✅；"所有人" ❌ |
 | 错误判断的代价是什么？ | AI 在这个域里最常见的错误是什么？错了会怎样？ |
-| 和现有域是否有重叠？ | 检查 registry。如果是同一判断问题的新角度，标注关系。如果是已有域的弱化版，不要建。 |
+| 和现有域是否有重叠？ | 检查 kdna-x 资产库。如果是同一判断问题的新角度，标注关系。如果是已有域的弱化版，不要建。 |
 
 ### 0.2 Scope / Out-of-Scope 模板
 
@@ -235,7 +235,7 @@ kdna-<domain-id>/
 ## Install
 
 \`\`\`bash
-kdna install @aikdna/<domain-id>
+kdna load @aikdna/<domain-id> --profile=compact --as=prompt
 \`\`\`
 
 ## Scope
@@ -265,72 +265,17 @@ kdna dev validate .
 CC BY 4.0
 ```
 
-### 5.4 注册到 Registry（v3.0 schema）
+### 5.4 Distribution
 
-**首选**：用 Studio-compatible compiler 先完成 Human Lock、compile/export，再用 publish 命令上传已有 `.kdna` 并生成 patch：
-
-```bash
-# 设置 identity（首次）
-kdna identity init
-
-# 发布已有 .kdna：上传 GitHub Release、输出 registry patch
-kdna publish ./dist/your-domain.kdna \
-  --release-tag v0.1.0 \
-  --repo yourname/kdna-<domain-id>
-```
-
-命令输出末尾会打印一段 JSON patch，复制到 `kdna-registry/domains.json` 的 `domains` 数组里。字段示例：
-
-```json
-{
-  "name": "@yourname/<domain-id>",
-  "type": "domain",
-  "version": "0.1.0",
-  "spec_version": "1.0",
-  "status": "experimental",
-  "access": "public",
-  "asset_url": "https://github.com/yourname/kdna-<domain-id>/releases/download/v0.1.0/<domain-id>-0.1.0.kdna",
-  "asset_digest": "sha256:<由 publish 命令算出>",
-  "signature": "<Ed25519 签名>",
-  "release_status": "published_signed",
-  "repo": "https://github.com/yourname/kdna-<domain-id>",
-  "author": { "name": "Your Name", "id": "your-id", "pubkey": "ed25519:<你的指纹>" },
-  "license": { "type": "CC-BY-4.0" },
-  "description": "<one-line>",
-  "core_insight": "<one-line>",
-  "keywords": [...],
-  "domain_field": [...],
-  "judgment_patterns": [...],
-  "file_count": <number>,
-  "deprecated": false,
-  "yanked": false,
-  "replaced_by": null,
-  "created": "<YYYY-MM-DD>",
-  "updated": "<YYYY-MM-DD>"
-}
-```
-
-注意：第一次提交 `@yourname/*` 还需在 `domains.json` 的 `scopes` 段加入你的 scope：
-
-```json
-"scopes": {
-  "@yourname": {
-    "type": "community",
-    "trust_pubkey": "ed25519:<你的指纹>",
-    "verified": false
-  }
-}
-```
-
-运行验证脚本确认：
+The current distribution path is:
 
 ```bash
-cd kdna-registry
-node scripts/validate-registry.js          # offline checks
-node scripts/validate-registry.js --remote # check asset_url + asset_digest
+kdna pack ./source-dir ./your-domain.kdna
+kdna validate ./your-domain.kdna
 ```
 
-提 PR 到 `aikdna/kdna-registry`，通过后用户即可 `kdna install @yourname/<domain-id>`。
+Share the `.kdna` file directly, or publish to a GitHub Release. For curated
+public assets, see [kdna-x](https://github.com/aikdna/kdna-x).
 
 ### 5.5 更新网站 Domains 页
 
@@ -352,7 +297,7 @@ git push -u origin main
 |------|------|------|
 | `kdna-validate` 报 Scenarios schema 错 | `action_template` 写成了 string | 改为 `string[]` |
 | `kdna-validate` 报 Scenarios schema 错 | `replace` 写成了 string | 改为 `[{avoid, use}]` |
-| registry `file_count` 不一致 | 补了可选文件但没更新 registry | 同步 `kdna.json` 和 `registry/domains.json` |
+| file_count 不一致 | 补了可选文件但没更新 manifest | 同步 `kdna.json` 的 `file_count` |
 | 公理太泛 | 没有具体行为改变 | 重写：添加具体的判断反转 |
 | 误解是稻草人 | 选了没人会信的"错误" | 换成一个真实 Agent 会犯的错误 |
 | 自检太通用 | "Is this helpful?" | 写成域内特有的诊断问题 |

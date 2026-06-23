@@ -12,7 +12,7 @@
 |---|------|-------|--------|------------|
 | 1 | Protocol Freeze | — | ⬜ | SPEC audit, MUST/SHOULD consistency, non-negotiable rule CI enforcement |
 | 2 | Core/CLI Compatibility | — | ⬜ | verify/load/compare output stability, exit codes, JSON contract |
-| 3 | Registry Trust Verification | — | ⬜ | yanked/revoked/digest-mismatch/expired-snapshot test coverage |
+| 3 | Trust Verification | — | ⬜ | Historical — registry not in Core GA |
 | 4 | Reference Domain Evidence | — | ⬜ | writing/prompt_diagnosis/agent_safety → validated (30+ evals) |
 | 5 | Agent Integration Kit | — | ⬜ | Codex/Claude Code/OpenCode/Cursor smoke test, MCP conformance |
 | 6 | External Contributor Path | — | ⬜ | fork→PR guide, issue templates, conformance badge, COMPATIBILITY.md |

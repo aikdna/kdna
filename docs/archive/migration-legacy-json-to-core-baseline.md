@@ -1,6 +1,8 @@
-# Migration Guide: v2.0 → v1.0-rc
+# Migration Guide: Legacy JSON → Core 2026.06 Baseline
 
-> **Audience:** Domain authors migrating from pre-v1.0 KDNA formats to the v1.0-rc specification.
+> **Status: Historical.** This document describes migration from pre-Core formats to the current KDNA Core 2026.06 Baseline. It does not define current version naming. See [version-taxonomy.md](../version-taxonomy.md) for the canonical scheme.
+>
+> **Audience:** Domain authors migrating from pre-Core KDNA formats (legacy JSON / legacy registry assets) to the current specification baseline.
 >
 > **Breaking changes summary (v1.0-rc):**
 > - `evidence_type` changed from `string` to `array` — wrap existing values

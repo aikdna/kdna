@@ -39,6 +39,10 @@ const path = require('node:path');
 const zlib = require('node:zlib');
 const crypto = require('node:crypto');
 
+// MIME type constants: these are wire-level container format discriminators.
+// CURRENT (KDNA Asset Container): MIMETYPE_V1 represents the current format.
+// NEXT (future container draft): MIMETYPE_V2 is rejected by the current CLI.
+// The V1/V2 suffix is a legacy wire naming convention. See docs/version-taxonomy.md.
 const MIMETYPE_V1 = 'application/vnd.kdna.asset';
 const MIMETYPE_V2 = 'application/vnd.aikdna.kdna+zip';
 const V1_REQUIRED_DIR_ENTRIES = ['mimetype', 'kdna.json', 'payload.kdnab'];

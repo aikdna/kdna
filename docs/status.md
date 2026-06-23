@@ -1,10 +1,11 @@
 # KDNA Core Status — June 2026
 
 > Current status page. For historical perspective, see [STATE_OF_KDNA.md](./STATE_OF_KDNA.md) (historical snapshot, dated 2026-06-09).
+> **Version naming**: See [version-taxonomy.md](./version-taxonomy.md). "Core GA" refers to the KDNA Core 2026.06 Baseline, not legacy formats.
 
 ## Current positioning
 
-KDNA v1 Core GA is released. It is the **official KDNA judgment-asset format and runtime loading contract**.
+KDNA Core GA is released. It is the **official KDNA judgment-asset format and runtime loading contract**.
 
 `.kdna` assets are created, inspected, validated, planned, loaded, and consumed through the **official KDNA toolchain**.
 
