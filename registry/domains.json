@@ -183,49 +183,6 @@
       "privacy_level": "public"
     },
     {
-      "id": "kdna_authoring",
-      "name": "@aikdna/kdna_authoring",
-      "version": "0.1.0",
-      "repo": "https://github.com/aikdna/kdna-authoring",
-      "spec_version": "1.0-rc",
-      "status": "experimental",
-      "access": "public",
-      "author": {
-        "name": "KDNA Team",
-        "id": "kdna-team"
-      },
-      "license": {
-        "type": "CC-BY-4.0"
-      },
-      "keywords": [
-        "kdna authoring",
-        "meta-cognition",
-        "expert interview",
-        "quality audit"
-      ],
-      "description": "Meta-cognition \u2014 teach agents how to author high-quality KDNA through interview-first authoring and quality auditing.",
-      "core_insight": "KDNA encodes judgment, not information. Expert distinctions extracted through interview are the only valid raw material.",
-      "domain_field": [
-        "meta-cognition"
-      ],
-      "judgment_patterns": [
-        "boundary-detection"
-      ],
-      "file_count": 6,
-      "created": "2026-05-20",
-      "updated": "2026-05-20",
-      "test_count": 0,
-      "quality_badge": "untested",
-      "display_name": "KDNA Authoring",
-      "default_language": "en",
-      "languages": [
-        "en"
-      ],
-      "type": "domain",
-      "asset_type": "domain_judgment",
-      "privacy_level": "public"
-    },
-    {
       "id": "open_source_project",
       "name": "@aikdna/open_source_project",
       "version": "0.1.0",

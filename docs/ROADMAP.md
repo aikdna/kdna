@@ -13,7 +13,6 @@
 - ✅ `kdna-registry` — domain catalog with signatures, quality badges, risk levels, CI validation
 - ✅ `kdna-skills` — agent loader skill with 7-state routing
 - ✅ `kdna-vscode` — VS Code extension (validate, preview, dev-source diagnostics)
-- ✅ Legacy proof assets: `kdna_authoring`, `agent_safety`, `prompt_diagnosis`, `code_review`, `writing`
 - ✅ Benchmark infrastructure: 5-model mini benchmark with Best Prompt control, 150 raw outputs
 - ✅ Human Judgment Lock: protocol specification + Studio Gate + CLI Gate (4 rules, fingerprint detection)
 - ✅ Runtime routing: `kdna route`, 5-Gate 7-State router, route-result schema

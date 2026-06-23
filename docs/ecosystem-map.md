@@ -18,7 +18,6 @@ If you've found one KDNA repository and are wondering which others exist and wha
 ├──────────────────────────────────────────────────────────────┤
 │ LAYER 2 — Domain Content                                     │
 │ agent_safety · writing · code_review · prompt_diagnosis      │
-│ kdna_authoring · requirement_alignment · sketchnote-style    │
 ├──────────────────────────────────────────────────────────────┤
 │ LAYER 1 — Protocol Definition                                │
 │ kdna (SPEC · schemas · conformance · governance)             │
