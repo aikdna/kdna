@@ -1,15 +1,13 @@
-# KDNA Container
-**Version:** 2.0
-**Version:** 2.0  
-**Status:** Draft  
+# KDNA Asset Container
+**Status:** Current (GA) — supersedes legacy plaintext ZIP
 
 ## 1. Design Principle
 
-V1 format used a ZIP container with plaintext JSON entries. This meant any generic `unzip` + JSON parser could fully consume KDNA judgment. The `.kdna` file was a renamed ZIP archive, not a true asset format.
+The legacy plaintext ZIP format placed `KDNA_Core.json`, `KDNA_Patterns.json`, and other source-tree files directly in the ZIP archive. This meant any generic `unzip` + JSON parser could fully consume KDNA judgment without going through the LoadPlan authorization layer.
 
-KDNA Container fixes this. The `.kdna` file remains a ZIP container for transport compatibility, but internal judgment content is encoded in a binary payload that requires a KDNA-compatible decoder. Generic tools can inspect metadata but cannot consume judgment.
+The KDNA Asset Container fixes this. The `.kdna` file remains a ZIP container for transport compatibility, but all judgment content is encoded in a single CBOR binary payload (`payload.kdnab`) that requires a KDNA-compatible decoder. Generic tools can inspect the manifest (`kdna.json`) but cannot consume judgment content without going through the `plan-load` → `load` path.
 
-**KDNA Container does not:**
+**The KDNA Asset Container does not:**
 - Provide DRM or copy protection
 - Require encryption keys for open access
 - Prevent third-party compatible implementations

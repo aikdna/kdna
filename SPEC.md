@@ -1,6 +1,6 @@
-# KDNA Specification v1.0-rc
+# KDNA Core Specification — 2026.06 Baseline
 
-**Status:** Release Candidate  
+**Status:** Current (GA)  
 **Previous:** v0.4 (superseded)  
 **Editors:** KDNA Team  
 **Repository:** https://github.com/aikdna/kdna
@@ -19,7 +19,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 - **Dev Source Directory:** An optional authoring workspace used to build a `.kdna` asset. Source directories are non-canonical and MUST NOT be treated as installed runtime domains.
 - **Loader:** Software that reads KDNA files and formats them for agent consumption.
 - **Validator:** Software that checks KDNA files for structural compliance.
-- **Registry:** A machine-readable index of available KDNA domains.
+- **Registry:** (Historical) A machine-readable index of KDNA domains. Not part of the current Core specification. See decisions/0003.
 
 ## 1. Scope
 
@@ -245,7 +245,7 @@ If a domain omits optional files, it SHOULD document the reason in its README. A
 
 #### 3.3.2 Three-Field System
 
-Every `.kdna` asset and registry entry MUST use a consistent three-field system to separate maturity, quality, and access:
+Every `.kdna` asset MUST use a consistent three-field system to separate maturity, quality, and access:
 
 | Field | Permitted Values | Meaning |
 |-------|-----------------|---------|
@@ -255,7 +255,7 @@ Every `.kdna` asset and registry entry MUST use a consistent three-field system 
 
 **Rules:**
 - `status` and `quality_badge` are independent. A domain MAY be `stable` but `untested` (mature structure, no eval evidence), or `experimental` but `validated` (new domain with thorough testing).
-- `quality_badge` SHOULD be stored in both the domain's `kdna.json` manifest AND the registry entry. Self-declared badges MUST be verifiable via `kdna verify --judgment`.
+- `quality_badge` SHOULD be stored in the domain's `kdna.json` manifest. Self-declared badges MUST be verifiable via `kdna validate`.
 - `deprecated` domains MUST set `replaced_by` to the successor domain name.
 - The old values `basic`, `pro`, and `reference` are retired. Previously `reference` domains SHOULD migrate to `status: stable` + `quality_badge: validated` or `expert_reviewed`.
 
@@ -747,24 +747,18 @@ A `.kdna` file:
 
 ### 14.3 Required Contents
 
-A valid `.kdna` container MUST contain:
+A valid `.kdna` KDNA Asset Container MUST contain:
 
 | File | Required | Description |
 |------|----------|-------------|
-| `mimetype` | REQUIRED | Fixed media type marker. Content MUST be `application/vnd.aikdna.kdna+zip` with no trailing newline. |
+| `mimetype` | REQUIRED | Fixed media type marker. Content MUST be `application/vnd.kdna.asset` with no trailing newline. |
 | `kdna.json` | REQUIRED | Container manifest (see §14.4) |
-| `KDNA_Core.json` | REQUIRED | Domain core: axioms, ontology, frameworks, stances |
-| `KDNA_Patterns.json` | REQUIRED | Domain patterns: terminology, misunderstandings, self-checks |
-| `KDNA_Scenarios.json` | OPTIONAL | Scenario signals and action triggers |
-| `KDNA_Cases.json` | OPTIONAL | Full cases demonstrating judgment application |
-| `KDNA_Reasoning.json` | OPTIONAL | Reasoning chains from principle to action |
-| `KDNA_Evolution.json` | OPTIONAL | Growth stages, capability layers, measurement |
-| `README.md` | OPTIONAL | Human-readable domain documentation |
-| `LICENSE` | OPTIONAL | License text file |
-| `evals/` | OPTIONAL | Evaluation test cases directory |
-| `signature.json` | RECOMMENDED | Ed25519 signature covering content (see §14.7) |
+| `payload.kdnab` | REQUIRED | CBOR-encoded judgment payload containing all domain content (axioms, patterns, cases, scenarios, reasoning, evolution) |
+| `checksums.json` | OPTIONAL | Per-entry hash integrity records |
 
-A container MUST NOT contain more than 6 KDNA JSON files (Core, Patterns, Scenarios, Cases, Reasoning, Evolution). Additional files such as `kdna.json`, `README.md`, `LICENSE`, `signature.json`, and `evals/` are not counted toward this limit.
+Optional entries MAY include `signatures/` and `attachments/` subdirectories.
+
+A `.kdna` asset MUST NOT contain `KDNA_Core.json`, `KDNA_Patterns.json`, `KDNA_Scenarios.json`, `KDNA_Cases.json`, `KDNA_Reasoning.json`, or `KDNA_Evolution.json` as top-level ZIP entries. Those files belong to the source tree only (see §3.2). Containers with source tree files at the top level MUST be rejected as legacy plaintext ZIP format.
 
 The `mimetype` entry MUST be located at the ZIP root. Writers SHOULD store it as
 the first ZIP entry and SHOULD NOT compress it. Loaders MUST check both
@@ -774,6 +768,11 @@ an archive as a valid KDNA asset.
 ### 14.4 Container Manifest (`kdna.json`)
 
 Every `.kdna` container MUST include a `kdna.json` at the archive root. This file declares the container's identity, version, and verification metadata.
+
+> **Note on `format_version` and `spec_version`**: These are wire-level discriminators
+> for container format detection and validation routing. Their current values (`"2.0"`)
+> are legacy wire constants and do NOT represent a "KDNA v2" product generation.
+> See [version-taxonomy.md](docs/version-taxonomy.md) for the canonical naming scheme.
 
 ```json
 {
@@ -868,7 +867,7 @@ Trust is NOT inherited through lineage. Forked, adapted, or migrated assets SHOU
 
 ### 14.5 Digest
 
-- **Asset digest:** `asset_digest` is the SHA-256 hash of the complete `.kdna` file bytes. It MUST be recorded outside the container, such as in the registry entry, local receipt, or lockfile.
+- **Asset digest:** `asset_digest` is the SHA-256 hash of the complete `.kdna` file bytes. It MUST be recorded outside the container, such as in a local receipt or lockfile.
 - **Content digest:** `content_digest` is the canonical SHA-256 hash of the internal content tree. The content tree includes all non-directory ZIP entries except `signature.json`, `.DS_Store`, `build-receipt.json`, `reports/*`, and local installation metadata. Reports and build receipts are build evidence, not judgment content — they are not part of the content digest. If stored in `kdna.json`, the `content_digest` field itself (and other self-referencing digest fields) are excluded from its own digest calculation.
 - Registries MUST use `asset_digest` for every installable `.kdna` asset and MAY also publish `content_digest`.
 - Installers MUST verify `asset_digest` before registration.
@@ -895,73 +894,28 @@ Signing is an **optional enhancement** to `.kdna` assets. A `.kdna` container MA
 - An unsigned `.kdna` file is a **valid KDNA asset**. Signature presence is a trust-layer enhancement, not a format-validity requirement.
 - A specific registry or platform MAY require signatures for assets listed there; such requirements are registry policy, not KDNA Core format rules.
 
-### 14.6.2 Publish Audit
-
-Registry entries for release-evidence assets SHOULD include a  block:
-
-| Field | Type | Description |
-|-------|------|-------------|
-|  | string | Identity of the publisher |
-|  | string | ISO 8601 timestamp of publication |
-|  | string | Tool chain used (e.g. "kdna-studio-cli v0.2.0 + kdna-studio-core v1.4.2") |
-|  | string | Human-readable note about what changed |
-
-### 14.6.1 Registry Trust Metadata
-
-Conforming public registries MUST publish trust metadata alongside domain entries:
-
-```json
-{
-  "schema_version": "3.0",
-  "registry_version": "3.0.0",
-  "updated": "ISO-8601 timestamp",
-  "trust": {
-    "model": "kdna-registry-v1",
-    "root": { "threshold": 1, "keys": [] },
-    "targets": { "threshold": 1, "delegated_scopes": ["@aikdna"] },
-    "snapshot": {
-      "registry_version": "3.0.0",
-      "generated_at": "ISO-8601 timestamp",
-      "expires_at": "ISO-8601 timestamp"
-    },
-    "timestamp": {
-      "generated_at": "ISO-8601 timestamp",
-      "expires_at": "ISO-8601 timestamp"
-    },
-    "revocations": []
-  }
-}
-```
-
-Installers MUST reject registries whose `snapshot.expires_at` or `timestamp.expires_at` is expired. Installers MUST reject assets matched by a registry revocation entry. Revocation entries SHOULD include `name`, `version`, `asset_digest`, `reason`, and `revoked_at`.
-
 ### 14.7 Install and Load Behavior
 
-When a `.kdna` file is installed via `kdna install`:
+Loading a `.kdna` asset for agent consumption follows this path:
 
-1. Verify registry trust metadata.
-2. Verify asset digest.
-3. Verify signature for registry-installed assets.
-4. Store the original `.kdna` file as an immutable local asset.
-5. Write a local `receipt.json` containing source, `asset_digest`, `content_digest`, signature status, access mode, and install time.
-6. Register the asset in the local package index.
-7. Load runtime content from the `.kdna` asset.
+1. `kdna validate <file.kdna>` — structural and schema validation
+2. `kdna plan-load <file.kdna>` — returns a LoadPlan with authorization diagnostics
+3. `kdna load <file.kdna> --profile=compact --as=prompt` — renders judgment content for agent injection
 
-Installation metadata MUST be stored outside the container, for example in a local index and receipt. Installers MUST NOT rewrite `kdna.json` inside the container to stamp `_source`, install time, or registry metadata.
-
-Persistent extraction MUST NOT be required for loading. A runtime MAY create internal temporary caches, but those caches are rebuildable, hidden implementation artifacts and MUST NOT become the trust source.
+The LoadPlan MUST return `can_load_now: true` before loading proceeds.
+The runtime MAY cache load results internally, but caches are rebuildable and
+MUST NOT become the trust source.
 
 ### 14.8 CLI Operations on Containers
 
 | Command | Operation |
 |---------|-----------|
-| `kdna install @aikdna/writing` | Download from registry, verify, store, and register a `.kdna` asset |
-| `kdna install writing.kdna` | Install from a local `.kdna` asset |
-| `kdna inspect writing.kdna` | Display container metadata without persistent extraction |
-| `kdna verify writing.kdna` | Verify checksum, structure, judgment, and signature without persistent extraction |
-| `kdna load @aikdna/writing` | Load the installed `.kdna` asset directly into agent context |
-| `kdna load writing.kdna` | Load a local `.kdna` asset directly into agent context |
-| `kdna compare writing.kdna --input "..."` | Compare with/without a local `.kdna` asset |
+| `kdna validate <file.kdna>` | Structural and schema validation |
+| `kdna inspect <file.kdna>` | Display container metadata |
+| `kdna plan-load <file.kdna>` | Return LoadPlan with authorization diagnostics |
+| `kdna load <file.kdna> --profile=compact --as=prompt` | Render judgment content for agent injection |
+| `kdna pack <source-dir> <output.kdna>` | Build a `.kdna` asset from a source tree |
+| `kdna unpack <file.kdna> <output-dir>` | Extract a `.kdna` asset for inspection |
 | `kdna dev pack ./writing-source` | Build a dev-only diagnostic bundle from a non-canonical source directory. For release-evidence authoring, use `kdna-studio migrate`. |
 | `kdna dev unpack writing.kdna` | Unpack into a dev source directory for inspection or editing |
 
@@ -1105,23 +1059,7 @@ Locale overlays translate text fields only. They reference canonical IDs and MUS
 }
 ```
 
-### 16.6 Registry Declaration
-
-Registry entries for localized domains MUST include:
-
-```json
-{
-  "languages": ["en", "zh-CN"],
-  "default_language": "en",
-  "i18n_level": "L2",
-  "localized": {
-    "en": { "display_name": "...", "description": "..." },
-    "zh-CN": { "display_name": "...", "description": "..." }
-  }
-}
-```
-
-### 16.7 Validation
+### 16.6 Validation
 
 A conforming validator MUST verify:
 1. Declared `languages` match actual `locales/` directories
@@ -1138,6 +1076,4 @@ A conforming validator MUST verify:
 - [Semantic Versioning](https://semver.org/) — Version numbering
 - [SPDX License List](https://spdx.org/licenses/) — License identifiers
 - JSON Schema files: `schema/KDNA_*.schema.json`
-- CLI tools: `kdna dev validate`, `kdna dev pack`, `kdna compare`, `kdna-studio migrate`
-- Registry metadata, when used, is an optional discovery/distribution layer and
-  not the authority for Core format validity.
+- CLI tools: `kdna validate`, `kdna inspect`, `kdna plan-load`, `kdna load`, `kdna pack`, `kdna unpack`
