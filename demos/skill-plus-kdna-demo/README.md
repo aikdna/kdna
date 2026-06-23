@@ -25,8 +25,9 @@ Then load the compact prompt context:
 kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
 
-For a real writing demo, use `writing-v1.kdna` from the legacy writing proof
-artifact once that artifact is accepted in the `kdna-writing` repository.
+For a real domain demo, use `kdna-x` assets from the
+[kdna-x](https://github.com/aikdna/kdna-x) repository (viral-topic-selection,
+title-attraction, short-video-script, etc.).
 
 ## Files
 
