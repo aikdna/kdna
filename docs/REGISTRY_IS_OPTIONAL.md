@@ -1,5 +1,9 @@
 # Registry Is Optional
 
+> **Status: Historical.** Registry is not part of KDNA Core GA.
+> See [decisions/0003](../decisions/0003-no-registry-in-v1-core-ga.md).
+> The current distribution path is direct `.kdna` file sharing or [kdna-x](https://github.com/aikdna/kdna-x).
+
 This document defines the relationship between KDNA format validity and domain registries.
 
 ## Core Principle

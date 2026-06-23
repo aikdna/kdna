@@ -1,5 +1,8 @@
 # Studio Export Contract
 
+> **Status: Historical.** Pre-Core authoring contract. For current export path, see
+> [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli).
+
 Studio Export is the asset build step that turns a Human-Locked Studio project
 into an immutable `.kdna` asset. It is not a JSON save operation.
 

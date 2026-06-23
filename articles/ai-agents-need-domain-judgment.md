@@ -77,7 +77,7 @@ validity requirements for every `.kdna` file.
 
 Because KDNA influences agent judgment — and judgment influences behavior — the ecosystem is designed around governance.
 
-Every KDNA domain declares: risk level (R0–R3), intended use, out-of-scope boundaries, known limitations, and author responsibility. High-risk domains require expert review. R3 domains are not permitted in the public registry without special review.
+Every KDNA domain declares: risk level (R0–R3), intended use, out-of-scope boundaries, known limitations, and author responsibility. High-risk domains require expert review.
 
 ## The Ecosystem
 
@@ -86,15 +86,16 @@ Every KDNA domain declares: risk level (R0–R3), intended use, out-of-scope bou
 | **KDNA Protocol** | Open standard for domain judgment assets |
 | **kdna-cli** | Install, validate, verify, pack, load |
 | **KDNA Studio Core** | Open-source authoring kernel |
-| **Registry** | Trusted distribution with signatures and provenance |
+| **KDNA Studio Core** | Open-source authoring kernel |
 
 ## Start Small
 
 ```bash
 npm install -g @aikdna/kdna-cli
-kdna setup
-kdna install @aikdna/writing
-kdna compare @aikdna/writing --input "help me improve this post"
+kdna demo minimal ./hello
+kdna pack ./hello ./hello.kdna
+kdna validate ./hello.kdna
+kdna load ./hello.kdna --profile=compact --as=prompt
 ```
 
 ---
