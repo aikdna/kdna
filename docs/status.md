@@ -13,7 +13,7 @@ Third-party products integrate KDNA through the official SDK, CLI, Loader, or AP
 
 KDNA Core is content-neutral. It validates file structure, integrity, and loading contracts; publishers and callers decide content quality, distribution, and runtime policy.
 
-## What is stable (v1 Core GA)
+## What is stable (Core GA)
 
 - **`.kdna` file format** — container layout, mimetype, required entries
 - **Manifest schema** (`schema/manifest.schema.json`) — `kdna.json` shape
@@ -29,9 +29,9 @@ KDNA Core is content-neutral. It validates file structure, integrity, and loadin
 - **`kdna unpack`** — unpack `.kdna` container, refuse path traversal
 - **`kdna demo minimal`** — create a minimal v1 fixture for first-run testing
 - **CLI tests** — 30 tests pass for inspect, validate, LoadPlan, load, pack, unpack, and contract shape
-- **Studio CLI** — v1 authoring/export published through `@aikdna/kdna-studio-cli@0.6.5` and `@aikdna/kdna-studio-core@1.5.12`
+- **Studio CLI** — Core GA authoring/export published through `@aikdna/kdna-studio-cli@0.6.5` and `@aikdna/kdna-studio-core@1.5.12`
 
-All stable commands are available in the public v1 Core CLI surface. `kdna --help` shows the complete v1 Core command surface.
+All stable commands are available in the public Core GA CLI surface. `kdna --help` shows the complete Core GA command surface.
 
 ## Recommended first-run path
 
@@ -56,9 +56,9 @@ kdna-studio export ./school --format v1 --out ./school.kdna
 kdna validate ./school.kdna
 ```
 
-## Removed in v1 Core 0.27.0
+## Removed in Core CLI 0.27.0
 
-The following legacy v0.7 command surfaces were removed in the hard cutover to v1 Core GA (`@aikdna/kdna-cli@0.27.0`):
+The following legacy v0.7 command surfaces were removed in the hard cutover to Core GA (`@aikdna/kdna-cli@0.27.0`):
 
 - `kdna help legacy`
 - `kdna setup`
@@ -79,12 +79,12 @@ The following legacy v0.7 command surfaces were removed in the hard cutover to v
 - `kdna dev`
 - All legacy subcommands (badge, test, changelog, etc.)
 
-These were removed from the v1 Core CLI. Future systems such as distribution, signing, encryption, entitlement, remote runtime, diagnostics, and workpacks may return only through new RFCs and separate packages. They are not part of the current v1 Core GA release.
+These were removed from the Core GA CLI. Future systems such as distribution, signing, encryption, entitlement, remote runtime, diagnostics, and workpacks may return only through new RFCs and separate packages. They are not part of the current Core GA release.
 
 ## What is experimental / in development
 
-- **kdna-studio** — v1 authoring/export is stable (0.6.5); advanced AI authoring features (distill, interview, feynman) are experimental
-- **kdna-vscode** — VS Code extension (legacy workspace tools); not yet updated for v1 Core
+- **kdna-studio** — Core GA authoring/export is stable (0.6.5); advanced AI authoring features (distill, interview, feynman) are experimental
+- **kdna-vscode** — VS Code extension (legacy workspace tools); not yet updated for Core GA
 - **kdna-loader** — agent adapter skill; functional for supported agents, UX hardening deferred
 - **kdna-core-swift** — Swift runtime; beta until parity proven against fixed Core v1 conformance fixtures
 - **kdna-lab** — pressure-test infrastructure; experimental
@@ -100,7 +100,7 @@ These were removed from the v1 Core CLI. Future systems such as distribution, si
 
 ## Known limitations
 
-1. **v2 / legacy registry containers** — old registry-distributed v2 `.kdna` assets are not supported by the v1 Core CLI. Users with legacy assets must re-export through current Studio v1 tooling. The CLI emits a clear "Unsupported legacy/registry container" error for v2 inputs.
+1. **Legacy registry containers** — old registry-distributed `.kdna` assets are not supported by the Core GA CLI. Users with legacy assets must re-export through current Studio Core GA tooling. The CLI emits a clear "Unsupported legacy/registry container" error for legacy inputs.
 2. **Cross-implementation parity** — JS Core is the public first-run path. Swift remains beta until parity is proven.
 3. **Release evidence** — npm packages are published and installable; stronger provenance, SBOM, and attestation chains remain post-baseline release hardening.
 4. **Real judgment demo** — the `kdna demo minimal` fixture proves format validity but does not demonstrate judgment value. A real-judgment demo asset is planned for the next work package (#18).
