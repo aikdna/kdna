@@ -34,7 +34,7 @@ kdna.json                       └── build-receipt.json
 ```
 
 - **Source Tree**: JSON files for human authoring, Git diff, and review. Never distributed as an asset.
-- **Asset Container**: `.kdna` file for registry distribution, installation, and verification. Judgment is encoded in `payload.kdnab`.
+- **Asset Container**: `.kdna` file for distribution, local receipt, transfer, verification, and runtime loading. Judgment is encoded in `payload.kdnab`.
 - **Runtime Capsule**: Structured output from `kdna load` for agent consumption. Agents MUST NOT read raw asset internals.
 
 ## 3. Container Structure
@@ -58,7 +58,7 @@ kdna.json                       └── build-receipt.json
 
 ### 3.3 Forbidden Entries
 
-The following entries MUST NOT exist in a v2 `.kdna` asset. Their presence indicates a V1 plaintext (removed) container and the asset MUST be rejected.
+The following entries MUST NOT exist in a current KDNA Asset Container. Their presence indicates a legacy plaintext ZIP container and the asset MUST be rejected.
 
 - `KDNA_Core.json`
 - `KDNA_Patterns.json`
@@ -67,7 +67,7 @@ The following entries MUST NOT exist in a v2 `.kdna` asset. Their presence indic
 - `KDNA_Reasoning.json`
 - `KDNA_Evolution.json`
 
-## 4. kdna.json Manifest (v2)
+## 4. kdna.json Manifest
 
 The manifest remains plaintext JSON inside the container. It MUST NOT contain any judgment content.
 
@@ -119,8 +119,8 @@ The manifest remains plaintext JSON inside the container. It MUST NOT contain an
 
 ### 4.1 Manifest Constraints
 
-- `format_version` MUST be `"2.0"` for v2 containers
-- `container.type` MUST be `"kdna-container-v2"`
+- `format_version` MUST be `"2.0"` as the current wire discriminator for KDNA Asset Container
+- `container.type` MUST be `"kdna-container-v2"` (legacy wire value)
 - `container.payload` MUST be `"payload.kdnab"`
 - `container.payload_digest` MUST be the SHA-256 of the encoded payload bytes
 - The manifest MUST NOT contain `axioms`, `ontology`, `frameworks`, `core_structure`, `stances`, `terminology`, `misunderstandings`, `self_check`, `scenes`, `cases`, `reasoning_chains`, `stages`, or any other judgment content fields
@@ -249,7 +249,7 @@ kdna dev decode domain.kdna --reveal
 
 A conforming loader MUST reject:
 
-1. **V1 plaintext (removed) container**: If `KDNA_Core.json` or any v1 judgment entry exists in the ZIP → `ERR_LEGACY_PLAINTEXT_CONTAINER`
+1. **Legacy plaintext ZIP container**: If `KDNA_Core.json` or any source-tree judgment entry exists in the ZIP → `ERR_LEGACY_PLAINTEXT_CONTAINER`
 2. **Missing payload**: If `payload.kdnab` is absent → `ERR_MISSING_PAYLOAD`
 3. **Digest mismatch**: If `container.payload_digest` does not match SHA-256 of decoded payload → `ERR_PAYLOAD_DIGEST_MISMATCH`
 4. **Schema violation**: If decoded judgment fails schema validation → `ERR_SCHEMA_VALIDATION_FAILED`
@@ -259,7 +259,7 @@ A conforming loader MUST reject:
 
 ## 9. Migration from v1
 
-V1 plaintext (removed) `.kdna` files are not valid assets. To migrate:
+Legacy plaintext ZIP `.kdna` files are not valid assets. To migrate:
 
 ```bash
 # From source tree (recommended):
@@ -267,14 +267,14 @@ kdna-studio migrate ./source-dir --out domain.kdna
 
 # From v1 .kdna (recovery):
 kdna dev unpack old-domain.kdna            # extract to source tree
-kdna-studio migrate ./extracted --out domain.kdna  # rebuild as v2
+kdna-studio migrate ./extracted --out domain.kdna  # rebuild as KDNA Asset Container
 ```
 
 ## 10. Reference Implementation Requirements
 
 All KDNA-compatible implementations MUST:
 
-- Reject V1 plaintext (removed) containers
+- Reject legacy plaintext ZIP containers
 - Decode `payload.kdnab` via CBOR
 - Emit context capsules (not raw JSON) from the default load path
 - Verify signatures and digests before serving content
@@ -284,4 +284,4 @@ All KDNA-compatible implementations MUST:
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 2.0 | 2026-06-11 | Initial v2 specification. Removes V1 plaintext (removed) JSON entries. Introduces CBOR-encoded payload. Mandates capsule output. |
+| 2.0 | 2026-06-11 | Initial KDNA Asset Container specification. Replaces legacy plaintext ZIP entries with CBOR-encoded payload. |

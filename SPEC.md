@@ -823,7 +823,7 @@ Every `.kdna` container MUST include a `kdna.json` at the archive root. This fil
 
 **Optional fields:** `core_insight`, `keywords`, `file_count`, `risk_level`, `privacy_level`, `asset_type`, `created`, `updated`, `content_digest`, `signature`, `fitness_for_purpose`, `creator`, `lineage`.
 
-The `name` field follows the format `@scope/domain-name`. This is a structural naming convention; it does not require registration in any registry. The `kdna_spec` field is not part of v1.0 and MUST be rejected.
+The `name` field follows the format `@scope/domain-name`. This is a structural naming convention; it does not require registration in any system. The `kdna_spec` field is not part of the current Core specification and MUST be rejected.
 
 #### 14.4.1 Source Mode
 
@@ -870,7 +870,7 @@ Trust is NOT inherited through lineage. Forked, adapted, or migrated assets SHOU
 - **Asset digest:** `asset_digest` is the SHA-256 hash of the complete `.kdna` file bytes. It MUST be recorded outside the container, such as in a local receipt or lockfile.
 - **Content digest:** `content_digest` is the canonical SHA-256 hash of the internal content tree. The content tree includes all non-directory ZIP entries except `signature.json`, `.DS_Store`, `build-receipt.json`, `reports/*`, and local installation metadata. Reports and build receipts are build evidence, not judgment content — they are not part of the content digest. If stored in `kdna.json`, the `content_digest` field itself (and other self-referencing digest fields) are excluded from its own digest calculation.
 - Registries MUST use `asset_digest` for every installable `.kdna` asset and MAY also publish `content_digest`.
-- Installers MUST verify `asset_digest` before registration.
+- Consumers that rely on local receipts or lockfiles MUST verify `asset_digest` before trusting the asset.
 - Digest verification MUST fail closed: any mismatch prevents installation.
 
 The complete asset digest MUST NOT be embedded as a self-referential `container_sha256` field inside `kdna.json`.
@@ -892,7 +892,7 @@ Signing is an **optional enhancement** to `.kdna` assets. A `.kdna` container MA
   }
   ```
 - An unsigned `.kdna` file is a **valid KDNA asset**. Signature presence is a trust-layer enhancement, not a format-validity requirement.
-- A specific registry or platform MAY require signatures for assets listed there; such requirements are registry policy, not KDNA Core format rules.
+- A specific platform, organization, or runtime policy MAY require signatures for assets listed there; such requirements are platform policy, not KDNA Core format rules.
 
 ### 14.7 Install and Load Behavior
 
@@ -930,7 +930,7 @@ For operating system-level recognition of `.kdna` files:
 | **Linux** | MIME type `application/vnd.aikdna.kdna+zip`. Desktop file association. |
 
 The recommended media type is `application/vnd.aikdna.kdna+zip`.
-`application/x-kdna` is not a KDNA v1.0 media type and MUST be rejected in
+`application/x-kdna` is not a KDNA Core media type and MUST be rejected in
 registry metadata, HTTP responses, and OS integration files. See
 [`docs/MEDIA_TYPE.md`](./docs/MEDIA_TYPE.md).
 
