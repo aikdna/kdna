@@ -297,7 +297,7 @@ git push -u origin main
 |------|------|------|
 | `kdna-validate` 报 Scenarios schema 错 | `action_template` 写成了 string | 改为 `string[]` |
 | `kdna-validate` 报 Scenarios schema 错 | `replace` 写成了 string | 改为 `[{avoid, use}]` |
-| registry `file_count` 不一致 | 补了可选文件但没更新 registry | 同步 `kdna.json` 和 `registry/domains.json` |
+| file_count 不一致 | 补了可选文件但没更新 manifest | 同步 `kdna.json` 的 `file_count` |
 | 公理太泛 | 没有具体行为改变 | 重写：添加具体的判断反转 |
 | 误解是稻草人 | 选了没人会信的"错误" | 换成一个真实 Agent 会犯的错误 |
 | 自检太通用 | "Is this helpful?" | 写成域内特有的诊断问题 |

@@ -86,7 +86,6 @@ Every KDNA domain declares: risk level (R0–R3), intended use, out-of-scope bou
 | **KDNA Protocol** | Open standard for domain judgment assets |
 | **kdna-cli** | Install, validate, verify, pack, load |
 | **KDNA Studio Core** | Open-source authoring kernel |
-| **KDNA Studio Core** | Open-source authoring kernel |
 
 ## Start Small
 
