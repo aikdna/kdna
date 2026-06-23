@@ -19,11 +19,21 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": ["decision", "meeting", "discussion", "commitment", "execution"],
-      "description": "Judge whether a meeting or discussion produced an actionable decision — or just discussion.",
+      "keywords": [
+        "decision",
+        "meeting",
+        "discussion",
+        "commitment",
+        "execution"
+      ],
+      "description": "Judge whether a meeting or discussion produced an actionable decision \u2014 or just discussion.",
       "core_insight": "Discussion is not decision. Broad agreement is not commitment.",
-      "domain_field": ["collaboration"],
-      "judgment_patterns": ["classification"],
+      "domain_field": [
+        "collaboration"
+      ],
+      "judgment_patterns": [
+        "classification"
+      ],
       "file_count": 6,
       "kdna_file_count": 6,
       "created": "2026-05-19",
@@ -32,73 +42,9 @@
       "quality_badge": "tested",
       "display_name": "Decision State",
       "default_language": "en",
-      "languages": ["en"],
-      "type": "domain",
-      "asset_type": "domain_judgment",
-      "privacy_level": "public"
-    },
-    {
-      "id": "agent_safety",
-      "name": "@aikdna/agent_safety",
-      "version": "0.1.0",
-      "repo": "https://github.com/aikdna/kdna-agent_safety",
-      "spec_version": "1.0-rc",
-      "status": "experimental",
-      "access": "public",
-      "author": {
-        "name": "KDNA Team",
-        "id": "kdna-team"
-      },
-      "license": {
-        "type": "CC-BY-4.0"
-      },
-      "keywords": ["agent safety", "irreversible", "authorization", "safety gate", "sandbox"],
-      "description": "Halt before irreversible actions — verify authorization, backup, and reversibility.",
-      "core_insight": "Tools make agents capable. Safety judgment makes agents cautious before irreversible action.",
-      "domain_field": ["agent-safety"],
-      "judgment_patterns": ["safety-gate"],
-      "file_count": 6,
-      "kdna_file_count": 6,
-      "created": "2026-05-20",
-      "updated": "2026-05-20",
-      "test_count": 0,
-      "quality_badge": "untested",
-      "display_name": "Agent Safety",
-      "default_language": "en",
-      "languages": ["en"],
-      "type": "domain",
-      "asset_type": "domain_judgment",
-      "privacy_level": "public"
-    },
-    {
-      "id": "writing",
-      "name": "@aikdna/writing",
-      "version": "0.1.0",
-      "repo": "https://github.com/aikdna/kdna-writing",
-      "spec_version": "1.0-rc",
-      "status": "experimental",
-      "access": "public",
-      "author": {
-        "name": "KDNA Team",
-        "id": "kdna-team"
-      },
-      "license": {
-        "type": "CC-BY-4.0"
-      },
-      "keywords": ["writing", "editing", "argument", "structure", "clarity"],
-      "description": "Diagnose whether content has a real argument, a cognitive hook, and evidence density — not just language polish.",
-      "core_insight": "Most writing problems are structural and argument-level, not language-level.",
-      "domain_field": ["content-creation"],
-      "judgment_patterns": ["quality-assessment"],
-      "file_count": 6,
-      "kdna_file_count": 6,
-      "created": "2026-05-20",
-      "updated": "2026-05-22",
-      "test_count": 10,
-      "quality_badge": "tested",
-      "display_name": "Writing",
-      "default_language": "en",
-      "languages": ["en"],
+      "languages": [
+        "en"
+      ],
       "type": "domain",
       "asset_type": "domain_judgment",
       "privacy_level": "public"
@@ -118,11 +64,21 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": ["content strategy", "topic selection", "editorial", "marketing", "creator"],
-      "description": "Evaluate topic worthiness — specific audience, cognitive contrast, discussability, and comprehension barrier.",
+      "keywords": [
+        "content strategy",
+        "topic selection",
+        "editorial",
+        "marketing",
+        "creator"
+      ],
+      "description": "Evaluate topic worthiness \u2014 specific audience, cognitive contrast, discussability, and comprehension barrier.",
       "core_insight": "Ideas are cheap. Worthiness is rare. Filter topics by who they are for and what assumption they challenge.",
-      "domain_field": ["content-creation"],
-      "judgment_patterns": ["quality-assessment"],
+      "domain_field": [
+        "content-creation"
+      ],
+      "judgment_patterns": [
+        "quality-assessment"
+      ],
       "file_count": 6,
       "created": "2026-05-20",
       "updated": "2026-05-20",
@@ -130,7 +86,9 @@
       "quality_badge": "untested",
       "display_name": "Content Strategy",
       "default_language": "en",
-      "languages": ["en"],
+      "languages": [
+        "en"
+      ],
       "type": "domain",
       "asset_type": "domain_judgment",
       "privacy_level": "public"
@@ -150,11 +108,22 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": ["prompt", "diagnosis", "failure mode", "task mixing", "goal ambiguity"],
-      "description": "Diagnose why a prompt failed — root cause is task mixing, goal ambiguity, or context gap — not just format issues.",
+      "keywords": [
+        "prompt",
+        "diagnosis",
+        "failure mode",
+        "task mixing",
+        "goal ambiguity"
+      ],
+      "description": "Diagnose why a prompt failed \u2014 root cause is task mixing, goal ambiguity, or context gap \u2014 not just format issues.",
       "core_insight": "Most prompt failures are task mixing and goal ambiguity, not missing format elements.",
-      "domain_field": ["content-creation"],
-      "judgment_patterns": ["classification", "value-diagnosis"],
+      "domain_field": [
+        "content-creation"
+      ],
+      "judgment_patterns": [
+        "classification",
+        "value-diagnosis"
+      ],
       "file_count": 6,
       "created": "2026-05-20",
       "updated": "2026-05-22",
@@ -162,7 +131,9 @@
       "quality_badge": "tested",
       "display_name": "Prompt Diagnosis",
       "default_language": "en",
-      "languages": ["en"],
+      "languages": [
+        "en"
+      ],
       "type": "domain",
       "asset_type": "domain_judgment",
       "privacy_level": "public"
@@ -182,11 +153,21 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": ["knowledge", "curation", "verification", "boundary", "taxonomy"],
-      "description": "Distinguish knowledge assets from raw material — knowledge needs proposition, boundary, counter-example, and evolution record.",
+      "keywords": [
+        "knowledge",
+        "curation",
+        "verification",
+        "boundary",
+        "taxonomy"
+      ],
+      "description": "Distinguish knowledge assets from raw material \u2014 knowledge needs proposition, boundary, counter-example, and evolution record.",
       "core_insight": "Most 'knowledge bases' are raw material collections. Knowledge requires testing, not just saving.",
-      "domain_field": ["knowledge-management"],
-      "judgment_patterns": ["boundary-detection"],
+      "domain_field": [
+        "knowledge-management"
+      ],
+      "judgment_patterns": [
+        "boundary-detection"
+      ],
       "file_count": 6,
       "created": "2026-05-20",
       "updated": "2026-05-20",
@@ -194,7 +175,9 @@
       "quality_badge": "untested",
       "display_name": "Knowledge Management",
       "default_language": "en",
-      "languages": ["en"],
+      "languages": [
+        "en"
+      ],
       "type": "domain",
       "asset_type": "domain_judgment",
       "privacy_level": "public"
@@ -214,11 +197,20 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": ["kdna authoring", "meta-cognition", "expert interview", "quality audit"],
-      "description": "Meta-cognition — teach agents how to author high-quality KDNA through interview-first authoring and quality auditing.",
+      "keywords": [
+        "kdna authoring",
+        "meta-cognition",
+        "expert interview",
+        "quality audit"
+      ],
+      "description": "Meta-cognition \u2014 teach agents how to author high-quality KDNA through interview-first authoring and quality auditing.",
       "core_insight": "KDNA encodes judgment, not information. Expert distinctions extracted through interview are the only valid raw material.",
-      "domain_field": ["meta-cognition"],
-      "judgment_patterns": ["boundary-detection"],
+      "domain_field": [
+        "meta-cognition"
+      ],
+      "judgment_patterns": [
+        "boundary-detection"
+      ],
       "file_count": 6,
       "created": "2026-05-20",
       "updated": "2026-05-20",
@@ -226,7 +218,9 @@
       "quality_badge": "untested",
       "display_name": "KDNA Authoring",
       "default_language": "en",
-      "languages": ["en"],
+      "languages": [
+        "en"
+      ],
       "type": "domain",
       "asset_type": "domain_judgment",
       "privacy_level": "public"
@@ -246,11 +240,21 @@
       "license": {
         "type": "CC-BY-4.0"
       },
-      "keywords": ["open source", "adoption", "value proposition", "community", "onboarding"],
-      "description": "Diagnose why a project isn't gaining adoption — root cause is value-entry clarity, not documentation or feature gaps.",
+      "keywords": [
+        "open source",
+        "adoption",
+        "value proposition",
+        "community",
+        "onboarding"
+      ],
+      "description": "Diagnose why a project isn't gaining adoption \u2014 root cause is value-entry clarity, not documentation or feature gaps.",
       "core_insight": "Adoption failure is a value-entry problem: visitors cannot determine the problem and alternative in 30 seconds.",
-      "domain_field": ["collaboration"],
-      "judgment_patterns": ["value-diagnosis"],
+      "domain_field": [
+        "collaboration"
+      ],
+      "judgment_patterns": [
+        "value-diagnosis"
+      ],
       "file_count": 6,
       "created": "2026-05-20",
       "updated": "2026-05-20",
@@ -258,40 +262,9 @@
       "quality_badge": "untested",
       "display_name": "Open Source Project",
       "default_language": "en",
-      "languages": ["en"],
-      "type": "domain",
-      "asset_type": "domain_judgment",
-      "privacy_level": "public"
-    },
-    {
-      "id": "code_review",
-      "name": "@aikdna/code_review",
-      "version": "0.1.0",
-      "repo": "https://github.com/aikdna/kdna-code_review",
-      "spec_version": "1.0-rc",
-      "status": "experimental",
-      "access": "public",
-      "author": {
-        "name": "KDNA Team",
-        "id": "kdna-team"
-      },
-      "license": {
-        "type": "CC-BY-4.0"
-      },
-      "keywords": ["code review", "pull request", "software engineering", "review quality"],
-      "description": "Reference domain for code review judgment — behavior-first review, comment classification, and anti-rubber-stamp principles.",
-      "core_insight": "Every review comment that requests a change must cite a specific failure mode.",
-      "domain_field": ["software-engineering"],
-      "judgment_patterns": ["quality-assessment"],
-      "file_count": 6,
-      "created": "2026-05-21",
-      "updated": "2026-05-22",
-      "test_count": 0,
-      "quality_badge": "untested",
-      "kdna_file_count": 6,
-      "display_name": "Code Review",
-      "default_language": "en",
-      "languages": ["en"],
+      "languages": [
+        "en"
+      ],
       "type": "domain",
       "asset_type": "domain_judgment",
       "privacy_level": "public"
