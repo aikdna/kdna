@@ -1,5 +1,8 @@
 # Cluster: example_cluster
 
+> **Status: Design / Experimental** — Not part of KDNA Core v1 GA.
+> For current stable usage, use single `.kdna` assets.
+
 A KDNA cluster project view groups multiple related domains before packaging.
 The public runtime asset is the exported `.kdna` container, not this folder.
 
