@@ -1683,23 +1683,24 @@ function loadV1Unsafe(inputPath, opts = {}) {
     result.content = { asset_id: m.asset_id, asset_uid: m.asset_uid, title: m.title, version: m.version, judgment_version: m.judgment_version, asset_type: m.asset_type, summary: m.summary || null, language: m.language || null, keywords: m.keywords || [], profiles_available: m.load_contract ? Object.keys(m.load_contract.profiles || {}) : [], max_tokens_hint: maxTokensHint };
   } else if (profile === 'compact') {
     const core = payload.core || {};
+    const normalizeList = (items) => (items || []).map((item) => {
+      if (typeof item === 'string') return { type: 'text', text: item };
+      if (item && typeof item === 'object') return item;
+      return null;
+    }).filter(Boolean);
     result.content = {
       highest_question: core.highest_question || null,
       axioms: (core.axioms || []).map(normalizeCompactAxiom).filter(Boolean),
-      boundaries: core.boundaries || [],
-      self_checks: (payload.reasoning && payload.reasoning.self_checks) || [],
-      failure_modes: (payload.reasoning && payload.reasoning.failure_modes) || [],
-      patterns: (payload.patterns || []).slice(0, 3),
+      boundaries: normalizeList(core.boundaries),
+      self_checks: normalizeList(payload.reasoning && payload.reasoning.self_checks),
+      failure_modes: normalizeList(payload.reasoning && payload.reasoning.failure_modes),
+      patterns: normalizeList(payload.patterns).slice(0, 3),
     };
     if (m.load_contract && m.load_contract.profiles && m.load_contract.profiles.compact && m.load_contract.profiles.compact.max_tokens_hint) {
       result.max_tokens_hint = m.load_contract.profiles.compact.max_tokens_hint;
     }
   } else if (profile === 'scenario') {
-    if (payload.scenarios && payload.scenarios.length > 0) {
-      result.content = { scenarios: payload.scenarios };
-    } else {
-      result.content = null;
-    }
+    result.content = { scenarios: payload.scenarios || [] };
   } else if (profile === 'full') {
     result.content = { manifest: m, payload };
   } else {
@@ -1708,13 +1709,13 @@ function loadV1Unsafe(inputPath, opts = {}) {
 
   if (as === 'prompt') {
     const c = result.content;
-    if (c === null) {
+    if (!c || (c.scenarios && c.scenarios.length === 0 && !c.highest_question && !(c.axioms && c.axioms.length) && !(c.boundaries && c.boundaries.length))) {
       return {
         status: result.status,
         profile: result.profile,
-        profile_available: false,
+        profile_available: result.profile_available,
         available_profiles: result.available_profiles,
-        text: `KDNA Judgment Asset: ${result.title || 'untitled'}\nAsset ID: ${result.asset_id || 'unknown'}\nProfile: ${result.profile}\n\nProfile "${result.profile}" is not available for this asset. Available profiles: ${result.available_profiles.join(', ')}`,
+        text: `KDNA Judgment Asset: ${result.title || 'untitled'}\nAsset ID: ${result.asset_id || 'unknown'}\nProfile: ${result.profile}\n\nNo content available for this profile. Available profiles: ${result.available_profiles.join(', ')}`,
       };
     }
     let text = 'KDNA Judgment Asset: ' + (result.title || 'untitled') + '\n';
