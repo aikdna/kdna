@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.14.0 (2026-06-25)
+- B1: unified container dispatcher (readAsset — v1/v2/ dir → CanonicalAssetModel)
+- B4: loadAuthorized decryption orchestration (opts.password, opts.decryptEntry)
+- B4: encrypted payload detection in runValidate (backward compatible)
+- B8: cross-language golden vectors (test-vectors/golden-vectors.js — 8/8)
+- Wave 4: canonical conformance (conformance/canonical-conformance.mjs — 13/13)
+- Wave 2.5: clear deprecated registry/domains.json private entries
+- Wave 3a: CQ-T2/T3 symmetric compact rendering, scenario null consistency
+- Add: engines.node >=18.0.0
+
 ## v0.13.3 (2026-06-22)
 - Fix: index profile includes max_tokens_hint
 - Fix: compact profile falls back to full_statement for TBD placeholders
