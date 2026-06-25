@@ -690,6 +690,7 @@ function runValidate(v1) {
   }
 
   // payload gate — payload.kdnab against payload-profile-v1.schema.json
+  // For actually encrypted payloads (envelopes), skip schema validation.
   let payload;
   try {
     payload = parseJsonEntry('payload.kdnab', v1.map['payload.kdnab']);
@@ -698,7 +699,26 @@ function runValidate(v1) {
     problems.push(`payload: not valid JSON (${e.message})`);
     return finalizeValidate(result, problems);
   }
-  if (!validators.payload(payload)) {
+
+  const isEncryptedPayload = payload.profile
+    && payload.ciphertext
+    && (v1.manifest.payload?.encrypted || v1.manifest.encryption?.encrypted_entries?.includes('payload.kdnab'));
+
+  if (isEncryptedPayload) {
+    // Encrypted payload — verify it's a proper encryption envelope, not plaintext.
+    const encProfile = v1.manifest.encryption?.profile;
+    if (encProfile && payload.profile !== encProfile) {
+      result.payload_valid = false;
+      problems.push(`payload: encrypted envelope profile ${payload.profile || 'unknown'} does not match manifest encryption profile ${encProfile}`);
+    }
+    const hasKeyMaterial = !!payload.wrapped_key || (Array.isArray(payload.key_slots) && payload.key_slots.length > 0);
+    if (!payload.profile || !payload.ciphertext || !hasKeyMaterial) {
+      result.payload_valid = false;
+      problems.push('payload: encrypted envelope missing required fields (profile/ciphertext/key material)');
+    }
+    // Encrypted payload passes payload gate if envelope is structurally valid.
+  } else if (!validators.payload(payload)) {
+    // Plaintext payload — full schema validation.
     result.payload_valid = false;
     for (const err of validators.payload.errors) {
       problems.push(`payload: ${err.instancePath || '<root>'} ${err.message}`);
@@ -1568,7 +1588,7 @@ function loadV1Unsafe(inputPath, opts = {}) {
     throw new Error(`payload.kdnab is not valid JSON: ${e.message}`);
   }
 
-  if (payload.encrypted === true) {
+  if (payload.profile && payload.ciphertext && (m.payload?.encrypted || m.encryption?.encrypted_entries?.includes('payload.kdnab'))) {
     // B4: Attempt decryption when password or decrypt hook is available.
     if (opts.decryptEntry) {
       // Consumer-provided decrypt hook (e.g., licensed entry key)
