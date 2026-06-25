@@ -13,8 +13,8 @@
   replaced** by this RFC)
 - `specs/judgment-trace-schema.json` (existing)
 - `specs/evidence-trace.schema.json` (existing)
-- the E2E test the E2E test the E2E test the E2E test lab (private) PR (PR-4 lifecycle smoke)
-- the E2E test the E2E test the E2E test the E2E test lab (private) PR (PR-4b default synthesis migration)
+- the E2E test lab (private) PR (PR-4 lifecycle smoke)
+- the E2E test lab (private) PR (PR-4b default synthesis migration)
 
 ---
 
@@ -308,7 +308,7 @@ This RFC is considered **Accepted → Implemented** when:
 - v1 evidence-trace schema: `specs/evidence-trace.schema.json`
 - PR-1 (schemas): aikdna/kdna #86
 - PR-3 (gates): aikdna/kdna-studio-core #3
-- PR-4 (lifecycle smoke): the E2E test the E2E test the E2E test the E2E test lab (private) PR
-- PR-4b (default synthesis): the E2E test the E2E test the E2E test the E2E test lab (private) PR
-- the E2E test the E2E test the E2E test the E2E test lab (private) PR-4 audit note: `see the corresponding acceptance note (private)`
-- the E2E test the E2E test the E2E test the E2E test lab (private) PR-4b audit note: `see the corresponding acceptance note (private)`
+- PR-4 (lifecycle smoke): the E2E test lab (private) PR
+- PR-4b (default synthesis): the E2E test lab (private) PR
+- the E2E test lab (private) PR-4 audit note: `see the corresponding acceptance note (private)`
+- the E2E test lab (private) PR-4b audit note: `see the corresponding acceptance note (private)`
