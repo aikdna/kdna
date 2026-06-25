@@ -25,7 +25,7 @@ npm install \
   @aikdna/kdna-studio-cli@0.5.2 \
   @aikdna/kdna@0.9.0
 
-./node_modules/.bin/kdna-studio migrate /Users/AI/K/OPEN/kdna-writing \
+./node_modules/.bin/kdna-studio migrate <workdir>/kdna-writing \
   --format v1 \
   --out /private/tmp/kdna-registry-proof/out/writing.kdna \
   --name @aikdna/writing \

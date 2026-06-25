@@ -19,7 +19,7 @@ failure modes, and derived boundaries.
 ## Toolchain
 
 ```bash
-./node_modules/.bin/kdna-studio migrate /Users/AI/K/OPEN/kdna-agent_safety \
+./node_modules/.bin/kdna-studio migrate <workdir>/kdna-agent_safety \
   --format v1 \
   --out /private/tmp/kdna-registry-proof/out/agent_safety.kdna \
   --name @aikdna/agent_safety \

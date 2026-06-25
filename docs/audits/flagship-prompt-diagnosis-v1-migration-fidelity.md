@@ -19,7 +19,7 @@ runtime use.
 ## Toolchain
 
 ```bash
-./node_modules/.bin/kdna-studio migrate /Users/AI/K/OPEN/kdna-prompt_diagnosis \
+./node_modules/.bin/kdna-studio migrate <workdir>/kdna-prompt_diagnosis \
   --format v1 \
   --out /private/tmp/kdna-registry-proof/out/prompt_diagnosis.kdna \
   --name @aikdna/prompt_diagnosis \

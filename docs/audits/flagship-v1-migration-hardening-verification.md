@@ -58,46 +58,46 @@ Remaining launch work:
 ## Commands Run
 
 ```bash
-node /Users/AI/K/OPEN/kdna-studio-cli/bin/kdna-studio.js migrate \
-  /Users/AI/K/OPEN/kdna-writing \
+node <workdir>/kdna-studio-cli/bin/kdna-studio.js migrate \
+  <workdir>/kdna-writing \
   --out /tmp/kdna-v1-flagships/writing.kdna \
   --name @aikdna/writing \
   --by kdna-team \
   --statement "v1 flagship migration verification" \
   --format v1
 
-node /Users/AI/K/OPEN/kdna-studio-cli/bin/kdna-studio.js migrate \
-  /Users/AI/K/OPEN/kdna-prompt_diagnosis \
+node <workdir>/kdna-studio-cli/bin/kdna-studio.js migrate \
+  <workdir>/kdna-prompt_diagnosis \
   --out /tmp/kdna-v1-flagships/prompt_diagnosis.kdna \
   --name @aikdna/prompt_diagnosis \
   --by kdna-team \
   --statement "v1 flagship migration verification" \
   --format v1
 
-node /Users/AI/K/OPEN/kdna-studio-cli/bin/kdna-studio.js migrate \
-  /Users/AI/K/OPEN/kdna-agent_safety \
+node <workdir>/kdna-studio-cli/bin/kdna-studio.js migrate \
+  <workdir>/kdna-agent_safety \
   --out /tmp/kdna-v1-flagships/agent_safety.kdna \
   --name @aikdna/agent_safety \
   --by kdna-team \
   --statement "v1 flagship migration verification" \
   --format v1
 
-node /Users/AI/K/OPEN/kdna-cli/src/cli.js validate /tmp/kdna-v1-flagships/<asset>.kdna
+node <workdir>/kdna-cli/src/cli.js validate /tmp/kdna-v1-flagships/<asset>.kdna
 ```
 
 Additional local verification after prompt-render hardening:
 
 ```bash
 npm test
-# in /Users/AI/K/OPEN/kdna-studio-cli
+# in <workdir>/kdna-studio-cli
 # 18/18 pass
 
 npm test
-# in /Users/AI/K/OPEN/kdna-studio-core
+# in <workdir>/kdna-studio-core
 # 128/128 pass
 
 npm test
-# in /Users/AI/K/OPEN/kdna
+# in <workdir>/kdna
 # core smoke, kdna-core, kdna-eval, and cli-v1 all pass
 ```
 
@@ -136,21 +136,21 @@ npm install \
   @aikdna/kdna-studio-cli@0.5.2 \
   @aikdna/kdna@0.9.0
 
-./node_modules/.bin/kdna-studio migrate /Users/AI/K/OPEN/kdna-writing \
+./node_modules/.bin/kdna-studio migrate <workdir>/kdna-writing \
   --format v1 \
   --out /private/tmp/kdna-registry-proof/out/writing.kdna \
   --name @aikdna/writing \
   --by aikdna-maintainers \
   --statement registry-clean-install-proof
 
-./node_modules/.bin/kdna-studio migrate /Users/AI/K/OPEN/kdna-agent_safety \
+./node_modules/.bin/kdna-studio migrate <workdir>/kdna-agent_safety \
   --format v1 \
   --out /private/tmp/kdna-registry-proof/out/agent_safety.kdna \
   --name @aikdna/agent_safety \
   --by aikdna-maintainers \
   --statement registry-clean-install-proof
 
-./node_modules/.bin/kdna-studio migrate /Users/AI/K/OPEN/kdna-prompt_diagnosis \
+./node_modules/.bin/kdna-studio migrate <workdir>/kdna-prompt_diagnosis \
   --format v1 \
   --out /private/tmp/kdna-registry-proof/out/prompt_diagnosis.kdna \
   --name @aikdna/prompt_diagnosis \
