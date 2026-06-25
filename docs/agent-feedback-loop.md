@@ -50,7 +50,7 @@ A production agent SHOULD generate a Judgment Trace for every KDNA-influenced de
 
 A trace records which KDNA rules were triggered during judgment.
 
-**Schema:** [`specs/judgment-trace-schema.json`](./judgment-trace-schema.json)
+**Schema:** [`specs/judgment-trace-schema.json`](../specs/judgment-trace-schema.json)
 
 **Key fields:**
 - `trace_id`: unique identifier
@@ -100,7 +100,7 @@ When multiple domains are loaded (cluster mode), the trace MUST include:
 
 After the agent acts, reality produces an outcome. The Outcome Record compares the judgment's prediction against what actually happened.
 
-**Schema:** [`specs/outcome-record-schema.json`](./outcome-record-schema.json)
+**Schema:** [`specs/outcome-record-schema.json`](../specs/outcome-record-schema.json)
 
 **Key fields:**
 - `judgment_reference.trace_id`: links back to the trace

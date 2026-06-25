@@ -27,4 +27,4 @@ Older versions may receive critical security patches on a case-by-case basis.
 
 ## Security Model
 
-For the KDNA Protocol security architecture, see [GOVERNANCE.md](./GOVERNANCE.md).
+For the KDNA Protocol security architecture, see [GOVERNANCE.md](./docs/GOVERNANCE.md).
