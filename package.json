@@ -17,6 +17,7 @@
     "validate:rfc0013-schemas": "node scripts/validate-rfc0013-schemas.js",
     "test": "npm --workspace @aikdna/kdna-core test && npm --workspace @aikdna/kdna-eval test && node scripts/run-node-tests.js tests/cli-v1/*.test.js",
     "conformance": "node conformance/run.mjs",
+    "conformance:canonical": "node --test conformance/canonical-conformance.mjs",
     "conformance:phase2": "node conformance/run.mjs --profile phase2-protocol",
     "conformance:authorization:update": "node scripts/generate-authorization-conformance.mjs",
     "certify:asset-loader": "node conformance/run.mjs --profile asset-loader",
