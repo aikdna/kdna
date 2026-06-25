@@ -141,7 +141,9 @@
         "depends on old @aikdna/kdna-core and is not part of the shipped v1 runtime baseline"
       ],
       "recommended_entrypoint": "Use CLI and Studio CLI for current v1 workflows",
-      "legacy_replacement": "@aikdna/kdna-cli"
+      "legacy_replacement": "@aikdna/kdna-cli",
+      "_deprecated_at": "2026-06-25",
+      "_deprecation_note": "Never published to VS Code Marketplace. Repository archived."
     },
     {
       "repository": "aikdna/kdna-website",
