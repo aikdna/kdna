@@ -19,9 +19,7 @@
       "current_version": "0.13.3",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": [
-        "public"
-      ],
+      "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "conformance_commit": "799e5268c5cc59d91a043797e8dda0ac58d8a55c",
       "known_limitations": [
@@ -39,9 +37,7 @@
       "current_version": "0.27.6",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": [
-        "public"
-      ],
+      "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "conformance_commit": "8f7a907e7de7a9267ddae2c330efaa3195666ef6",
       "known_limitations": [
@@ -58,9 +54,7 @@
       "current_version": "0.2.4",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": [
-        "public"
-      ],
+      "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "conformance_commit": "d288ce8a6a2f5254f723b3500a404565411647d2",
       "known_limitations": [
@@ -77,9 +71,7 @@
       "current_version": "1.5.12",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": [
-        "public"
-      ],
+      "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "conformance_commit": "4eb27fa11476cf4e79a3ea3591391d2c138c2470",
       "known_limitations": [
@@ -96,14 +88,10 @@
       "current_version": "0.6.5",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": [
-        "public"
-      ],
+      "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "conformance_commit": "e2674e3cf8093d6656d51015a4658e32b1992916",
-      "known_limitations": [
-        "author happy path is available for public local assets only"
-      ],
+      "known_limitations": ["author happy path is available for public local assets only"],
       "recommended_entrypoint": "kdna-studio create/add/approve/export v1",
       "legacy_replacement": null
     },
@@ -115,9 +103,7 @@
       "current_version": null,
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": [
-        "public"
-      ],
+      "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "conformance_commit": "b8e50765b3959cd73e933a0134b238f7fa7a1736",
       "known_limitations": [
@@ -151,9 +137,7 @@
       "current_version": null,
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": [
-        "public"
-      ],
+      "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "conformance_commit": "a9bf73fea0dd15105062714fdaf5b80c28a10b48",
       "known_limitations": [
@@ -170,9 +154,7 @@
       "current_version": "0.7.3",
       "lifecycle": "Removed",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": [
-        "public"
-      ],
+      "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "conformance_commit": "814aa266328f5fa18f3894080bc0d0f4cc5673ee",
       "known_limitations": [
@@ -189,9 +171,7 @@
       "current_version": "0.7.6",
       "lifecycle": "Removed",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": [
-        "public"
-      ],
+      "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "conformance_commit": "57764bdf97d574f8a986c2bd14f5f70f1ea82f7c",
       "known_limitations": [
@@ -208,9 +188,7 @@
       "current_version": "0.7.6",
       "lifecycle": "Removed",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": [
-        "public"
-      ],
+      "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "conformance_commit": "86f02f16ef9c167b415609dad1da6723b1448ed6",
       "known_limitations": [
@@ -247,9 +225,7 @@
       "supported_access_modes": [],
       "supported_entitlement_profiles": [],
       "conformance_commit": null,
-      "known_limitations": [
-        "not part of the current stable public runtime baseline"
-      ],
+      "known_limitations": ["not part of the current stable public runtime baseline"],
       "recommended_entrypoint": "local public .kdna assets through Core/CLI",
       "legacy_replacement": "local public asset workflow"
     }

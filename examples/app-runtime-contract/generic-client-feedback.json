@@ -1,0 +1,8 @@
+{
+  "feedback_version": "1.0",
+  "event_id": "generic-client-feedback-001",
+  "timestamp": "2026-06-25T00:00:00Z",
+  "trace_id": "generic-client-trace-001",
+  "user_rating": 4,
+  "comment": "Example feedback for conformance testing."
+}

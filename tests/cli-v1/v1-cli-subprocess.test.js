@@ -261,7 +261,10 @@ test('cli: v2 .kdna container is rejected with a clear message (no silent pass)'
   const r = runCli(['inspect', v2Fixture, '--json']);
   assert.notEqual(r.status, 0, 'v2 container must be rejected');
   assert.ok(
-    r.stderr.includes('legacy') || r.stderr.includes('v1') || r.stderr.includes('unsupported') || r.stderr.includes('Unsupported'),
+    r.stderr.includes('legacy') ||
+      r.stderr.includes('v1') ||
+      r.stderr.includes('unsupported') ||
+      r.stderr.includes('Unsupported'),
     `v2 rejection message must be descriptive, got: ${r.stderr}`,
   );
 });

@@ -2,7 +2,7 @@
   "name": "@aikdna/kdna-monorepo",
   "version": "0.7.0",
   "private": true,
-  "description": "KDNA Core \u2014 official KDNA judgment-asset format, runtime loading contract, and official toolchain.",
+  "description": "KDNA Core — official KDNA judgment-asset format, runtime loading contract, and official toolchain.",
   "type": "commonjs",
   "scripts": {
     "lint": "eslint packages/kdna-core/src/",
