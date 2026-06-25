@@ -76,8 +76,14 @@ function checkRegistryFixture() {
   const registry = readJson('registry/domains.json');
   if (!registry) return;
   const domains = registry.domains;
-  if (!Array.isArray(domains) || domains.length === 0) {
-    errors.push('registry/domains.json: domains must be a non-empty array');
+  if (!Array.isArray(domains)) {
+    errors.push('registry/domains.json: domains must be an array');
+    return;
+  }
+  // https://github.com/aikdna/kdna/issues/132 — Wave 2.5 cleared deprecated domain entries.
+  // The file is a historical artifact; empty domains array is acceptable.
+  if (domains.length === 0) {
+    console.log('registry/domains.json: domains array empty (deprecated registry — Wave 2.5)');
     return;
   }
 

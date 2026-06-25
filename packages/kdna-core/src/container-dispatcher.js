@@ -4,7 +4,6 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 
-const { v1 } = require('../v1/index.js');
 const { createKdnaAssetReader } = require('../asset-reader.js');
 
 const MIMETYPE_V1 = 'application/vnd.kdna.asset';
@@ -97,7 +96,7 @@ function detectFormat(absPath) {
 
   // Read the mimetype from the first entry (central directory first entry)
   const eocdOffset = findEocd(buf);
-  const cdOffset = buf.readUInt32LE(eocdOffset + 16);
+  let cdOffset = buf.readUInt32LE(eocdOffset + 16);
   const cdEntryCount = buf.readUInt16LE(eocdOffset + 10);
 
   for (let i = 0; i < cdEntryCount; i++) {
@@ -158,7 +157,7 @@ function findEocd(buf) {
 /**
  * Read a source directory into CanonicalAssetModel.
  */
-function readSourceDirectory(absPath, opts) {
+function readSourceDirectory(absPath, _opts) {
   const mimetypePath = path.join(absPath, 'mimetype');
   const manifestPath = path.join(absPath, 'kdna.json');
   const payloadPath = path.join(absPath, 'payload.kdnab');
@@ -219,7 +218,7 @@ function readSourceDirectory(absPath, opts) {
 /**
  * Read a Container v1 (.kdna with v1 mimetype) into CanonicalAssetModel.
  */
-function readV1Container(absPath, opts) {
+function readV1Container(absPath, _opts) {
   // Delegate to the existing v1 layout reader for validation
   const v1Layout = require('../v1/index.js').readV1Layout(absPath);
 
@@ -246,7 +245,7 @@ function readV1Container(absPath, opts) {
  * Read a Canonical Container (v2 mimetype) into CanonicalAssetModel.
  * Uses the existing KdnaAssetReader for ZIP parsing.
  */
-function readV2Container(absPath, opts) {
+function readV2Container(absPath, _opts) {
   const reader = createKdnaAssetReader();
   const asset = reader.openSync(absPath);
 

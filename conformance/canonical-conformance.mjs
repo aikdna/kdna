@@ -24,17 +24,31 @@ test.after(() => {
   if (WORKDIR) fs.rmSync(WORKDIR, { recursive: true, force: true });
 });
 
-function sha256(data) { return crypto.createHash('sha256').update(data).digest('hex'); }
-function fixtureDir(name) { const d = path.join(WORKDIR, name); fs.mkdirSync(d, { recursive: true }); return d; }
+function sha256(data) {
+  return crypto.createHash('sha256').update(data).digest('hex');
+}
+function fixtureDir(name) {
+  const d = path.join(WORKDIR, name);
+  fs.mkdirSync(d, { recursive: true });
+  return d;
+}
 
 function buildFixture(name, manifestOverrides = {}, payloadOverrides = {}) {
   const dir = fixtureDir(name);
   const manifest = {
-    format: 'kdna', format_version: '2.0', spec_version: '2.0',
-    kdna_version: '1.0', asset_id: `kdna:c:${name}`, asset_uid: `kdna:c:${name}@1.0.0`,
-    asset_type: 'domain', name: `@c/${name}`, title: `Conformance ${name}`,
-    version: '1.0.0', judgment_version: '1.0.0',
-    created_at: '2026-06-25T00:00:00Z', updated_at: '2026-06-25T00:00:00Z',
+    format: 'kdna',
+    format_version: '2.0',
+    spec_version: '2.0',
+    kdna_version: '1.0',
+    asset_id: `kdna:c:${name}`,
+    asset_uid: `kdna:c:${name}@1.0.0`,
+    asset_type: 'domain',
+    name: `@c/${name}`,
+    title: `Conformance ${name}`,
+    version: '1.0.0',
+    judgment_version: '1.0.0',
+    created_at: '2026-06-25T00:00:00Z',
+    updated_at: '2026-06-25T00:00:00Z',
     creator: { name: 'C', id: 'c' },
     compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
     payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false },
@@ -43,8 +57,23 @@ function buildFixture(name, manifestOverrides = {}, payloadOverrides = {}) {
   };
   const payload = {
     profile: 'judgment-profile-v1',
-    core: { highest_question: 'Conformance test.', axioms: [{ id: 'c-001', one_sentence: 'Test axiom.', full_statement: 'For conformance.', applies_when: ['testing'], does_not_apply_when: [], failure_risk: 'None.' }], boundaries: [{ type: 'scope', text: 'Testing only.' }] },
-    patterns: [{ type: 'term', term: 'conformance', definition: 'Protocol compliance verification.' }],
+    core: {
+      highest_question: 'Conformance test.',
+      axioms: [
+        {
+          id: 'c-001',
+          one_sentence: 'Test axiom.',
+          full_statement: 'For conformance.',
+          applies_when: ['testing'],
+          does_not_apply_when: [],
+          failure_risk: 'None.',
+        },
+      ],
+      boundaries: [{ type: 'scope', text: 'Testing only.' }],
+    },
+    patterns: [
+      { type: 'term', term: 'conformance', definition: 'Protocol compliance verification.' },
+    ],
     ...payloadOverrides,
   };
   fs.writeFileSync(path.join(dir, 'mimetype'), 'application/vnd.kdna.asset');
@@ -77,8 +106,43 @@ test('canonical container: ZIP with required entries', () => {
 
 test('canonical container: deterministic output', () => {
   const dir = fixtureDir('det');
-  const manifest = { format: 'kdna', format_version: '2.0', spec_version: '2.0', kdna_version: '1.0', asset_id: 'kdna:c:det', asset_uid: 'kdna:c:det@1.0.0', asset_type: 'domain', name: '@c/det', title: 'Det', version: '1.0.0', judgment_version: '1.0.0', created_at: '2026-06-25T00:00:00Z', updated_at: '2026-06-25T00:00:00Z', creator: { name: 'C', id: 'c' }, compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' }, payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false }, access: 'public' };
-  const payload = { profile: 'judgment-profile-v1', core: { highest_question: 'X', axioms: [{ id: 'x', one_sentence: 'x', full_statement: 'x', applies_when: ['x'], does_not_apply_when: [], failure_risk: 'x' }], boundaries: [] }, patterns: [] };
+  const manifest = {
+    format: 'kdna',
+    format_version: '2.0',
+    spec_version: '2.0',
+    kdna_version: '1.0',
+    asset_id: 'kdna:c:det',
+    asset_uid: 'kdna:c:det@1.0.0',
+    asset_type: 'domain',
+    name: '@c/det',
+    title: 'Det',
+    version: '1.0.0',
+    judgment_version: '1.0.0',
+    created_at: '2026-06-25T00:00:00Z',
+    updated_at: '2026-06-25T00:00:00Z',
+    creator: { name: 'C', id: 'c' },
+    compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
+    payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false },
+    access: 'public',
+  };
+  const payload = {
+    profile: 'judgment-profile-v1',
+    core: {
+      highest_question: 'X',
+      axioms: [
+        {
+          id: 'x',
+          one_sentence: 'x',
+          full_statement: 'x',
+          applies_when: ['x'],
+          does_not_apply_when: [],
+          failure_risk: 'x',
+        },
+      ],
+      boundaries: [],
+    },
+    patterns: [],
+  };
   fs.writeFileSync(path.join(dir, 'mimetype'), 'application/vnd.kdna.asset');
   fs.writeFileSync(path.join(dir, 'kdna.json'), JSON.stringify(manifest));
   fs.writeFileSync(path.join(dir, 'payload.kdnab'), JSON.stringify(payload));
@@ -86,7 +150,10 @@ test('canonical container: deterministic output', () => {
   fs.writeFileSync(path.join(dir, 'checksums.json'), JSON.stringify(csd));
   core.pack(dir, path.join(WORKDIR, 'det1.kdna'));
   core.pack(dir, path.join(WORKDIR, 'det2.kdna'));
-  assert.equal(sha256(fs.readFileSync(path.join(WORKDIR, 'det1.kdna'))), sha256(fs.readFileSync(path.join(WORKDIR, 'det2.kdna'))));
+  assert.equal(
+    sha256(fs.readFileSync(path.join(WORKDIR, 'det1.kdna'))),
+    sha256(fs.readFileSync(path.join(WORKDIR, 'det2.kdna'))),
+  );
 });
 
 test('protocol: validate returns overall_valid=true', () => {
@@ -109,11 +176,17 @@ test('protocol: planLoad public → ready', () => {
 
 test('access: licensed/password → needs_password', () => {
   const f = buildFixture('pwd', {
-    access: 'licensed', entitlement: { profile: 'password' },
+    access: 'licensed',
+    entitlement: { profile: 'password' },
     encryption: { profile: 'kdna-password-protected-v1', encrypted_entries: ['payload.kdnab'] },
     payload: { path: 'payload.kdnab', encoding: 'json', encrypted: true },
   });
-  const envelope = core.encryptProtectedEntry(JSON.stringify(f.payload), { entryName: 'payload.kdnab', manifest: { name: '@c/pwd', version: '1.0.0' }, password: 'test', recoveryCode: core.generateRecoveryCode() });
+  const envelope = core.encryptProtectedEntry(JSON.stringify(f.payload), {
+    entryName: 'payload.kdnab',
+    manifest: { name: '@c/pwd', version: '1.0.0' },
+    password: 'test',
+    recoveryCode: core.generateRecoveryCode(),
+  });
   fs.writeFileSync(path.join(f.dir, 'payload.kdnab'), JSON.stringify(envelope));
   const checksums = core.buildChecksumsV1(f.dir);
   fs.writeFileSync(path.join(f.dir, 'checksums.json'), JSON.stringify(checksums));
@@ -152,7 +225,10 @@ test('negative: corrupt manifest JSON fails validate', () => {
   try {
     v = core.validate(f.kdna);
   } catch (e) {
-    assert.ok(e.message.includes('JSON') || e.message.includes('invalid'), `expected JSON error: ${e.message}`);
+    assert.ok(
+      e.message.includes('JSON') || e.message.includes('invalid'),
+      `expected JSON error: ${e.message}`,
+    );
     return;
   }
   assert.equal(v.overall_valid, false);

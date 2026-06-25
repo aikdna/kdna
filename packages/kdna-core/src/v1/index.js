@@ -39,7 +39,7 @@ const path = require('node:path');
 const zlib = require('node:zlib');
 const crypto = require('node:crypto');
 
-const { readAsset, MIMETYPE_V1: DISPATCHER_MIMETYPE_V1, MIMETYPE_V2: DISPATCHER_MIMETYPE_V2 } = (() => {
+const { readAsset } = (() => {
   try {
     return require('../container-dispatcher.js');
   } catch {
