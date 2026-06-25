@@ -39,10 +39,14 @@ const path = require('node:path');
 const zlib = require('node:zlib');
 const crypto = require('node:crypto');
 
-// MIME type constants: these are wire-level container format discriminators.
-// CURRENT (KDNA Asset Container): MIMETYPE_V1 represents the current format.
-// NEXT (future container draft): MIMETYPE_V2 is rejected by the current CLI.
-// The V1/V2 suffix is a legacy wire naming convention. See docs/version-taxonomy.md.
+const { readAsset, MIMETYPE_V1: DISPATCHER_MIMETYPE_V1, MIMETYPE_V2: DISPATCHER_MIMETYPE_V2 } = (() => {
+  try {
+    return require('../container-dispatcher.js');
+  } catch {
+    return { readAsset: null, MIMETYPE_V1: null, MIMETYPE_V2: null };
+  }
+})();
+
 const MIMETYPE_V1 = 'application/vnd.kdna.asset';
 const MIMETYPE_V2 = 'application/vnd.aikdna.kdna+zip';
 const V1_REQUIRED_DIR_ENTRIES = ['mimetype', 'kdna.json', 'payload.kdnab'];
@@ -686,6 +690,7 @@ function runValidate(v1) {
   }
 
   // payload gate — payload.kdnab against payload-profile-v1.schema.json
+  // For actually encrypted payloads (envelopes), skip schema validation.
   let payload;
   try {
     payload = parseJsonEntry('payload.kdnab', v1.map['payload.kdnab']);
@@ -694,7 +699,26 @@ function runValidate(v1) {
     problems.push(`payload: not valid JSON (${e.message})`);
     return finalizeValidate(result, problems);
   }
-  if (!validators.payload(payload)) {
+
+  const isEncryptedPayload = payload.profile
+    && payload.ciphertext
+    && (v1.manifest.payload?.encrypted || v1.manifest.encryption?.encrypted_entries?.includes('payload.kdnab'));
+
+  if (isEncryptedPayload) {
+    // Encrypted payload — verify it's a proper encryption envelope, not plaintext.
+    const encProfile = v1.manifest.encryption?.profile;
+    if (encProfile && payload.profile !== encProfile) {
+      result.payload_valid = false;
+      problems.push(`payload: encrypted envelope profile ${payload.profile || 'unknown'} does not match manifest encryption profile ${encProfile}`);
+    }
+    const hasKeyMaterial = !!payload.wrapped_key || (Array.isArray(payload.key_slots) && payload.key_slots.length > 0);
+    if (!payload.profile || !payload.ciphertext || !hasKeyMaterial) {
+      result.payload_valid = false;
+      problems.push('payload: encrypted envelope missing required fields (profile/ciphertext/key material)');
+    }
+    // Encrypted payload passes payload gate if envelope is structurally valid.
+  } else if (!validators.payload(payload)) {
+    // Plaintext payload — full schema validation.
     result.payload_valid = false;
     for (const err of validators.payload.errors) {
       problems.push(`payload: ${err.instancePath || '<root>'} ${err.message}`);
@@ -1093,6 +1117,23 @@ function baseLoadPlan(inputPath, v1, validation, opts = {}) {
   return plan;
 }
 
+// ─── B1: Unified container model → legacy v1 layout ─────────────────────
+
+function canonicalToV1Layout(asset) {
+  const map = {};
+  if (asset.entries) {
+    for (const [name, buf] of asset.entries) {
+      map[name] = buf;
+    }
+  }
+  return {
+    kind: asset.sourceKind,
+    map,
+    manifest: asset.manifest,
+    entries: Object.keys(map),
+  };
+}
+
 /**
  * Plan a KDNA v1 runtime load without decrypting or emitting judgment content.
  * Product consumers such as Chat should render authorization UI from this
@@ -1100,42 +1141,49 @@ function baseLoadPlan(inputPath, v1, validation, opts = {}) {
  */
 function planLoad(inputPath, opts = {}) {
   let v1;
-  try {
-    v1 = readV1Layout(path.resolve(inputPath));
-  } catch (e) {
-    return finalizeLoadPlan({
-      kdna_version: null,
-      asset: {
-        asset_id: null,
-        asset_uid: null,
-        title: null,
-        version: null,
-        judgment_version: null,
-      },
-      access: null,
-      access_alias: null,
-      entitlement_profile: null,
-      state: 'invalid',
-      required_action: 'block',
-      can_load_now: false,
-      projection_policy: 'none',
-      input_fingerprint: null,
-      checks: {
-        format_valid: false,
-        schema_valid: false,
-        payload_valid: false,
-        checksums_valid: false,
-        load_contract_valid: false,
-        overall_valid: false,
-      },
-      issues: [
-        buildLoadPlanIssue('KDNA_FORMAT_INVALID', 'blocking', e.message),
-      ],
-      source: {
-        kind: null,
-        path: path.resolve(inputPath),
-      },
-    });
+
+  // Try the unified container dispatcher first (handles v1 dirs, v1 containers, v2 containers)
+  if (readAsset !== null) {
+    try {
+      const asset = readAsset(path.resolve(inputPath));
+      v1 = canonicalToV1Layout(asset);
+    } catch (e) {
+      // If dispatcher fails, fall back to legacy readV1Layout for backward compat
+      if (e.code === 'KDNA_FORMAT_UNKNOWN' || e.code === 'KDNA_PATH_NOT_FOUND') {
+        // let the legacy path handle it
+      } else {
+        return finalizeLoadPlan({
+          kdna_version: null,
+          asset: { asset_id: null, asset_uid: null, title: null, version: null, judgment_version: null },
+          access: null, access_alias: null, entitlement_profile: null,
+          state: 'invalid', required_action: 'block', can_load_now: false, projection_policy: 'none',
+          input_fingerprint: null,
+          checks: { format_valid: false, schema_valid: false, payload_valid: false, checksums_valid: false, load_contract_valid: false, overall_valid: false },
+          issues: [buildLoadPlanIssue(
+            e.code === 'KDNA_FORMAT_UNKNOWN' ? 'KDNA_FORMAT_UNKNOWN' : 'KDNA_FORMAT_INVALID',
+            'blocking', e.message,
+          )],
+          source: { kind: null, path: path.resolve(inputPath) },
+        });
+      }
+    }
+  }
+
+  if (!v1) {
+    try {
+      v1 = readV1Layout(path.resolve(inputPath));
+    } catch (e) {
+      return finalizeLoadPlan({
+        kdna_version: null,
+        asset: { asset_id: null, asset_uid: null, title: null, version: null, judgment_version: null },
+        access: null, access_alias: null, entitlement_profile: null,
+        state: 'invalid', required_action: 'block', can_load_now: false, projection_policy: 'none',
+        input_fingerprint: null,
+        checks: { format_valid: false, schema_valid: false, payload_valid: false, checksums_valid: false, load_contract_valid: false, overall_valid: false },
+        issues: [buildLoadPlanIssue('KDNA_FORMAT_INVALID', 'blocking', e.message)],
+        source: { kind: null, path: path.resolve(inputPath) },
+      });
+    }
   }
 
   const validation = runValidate(v1);
@@ -1534,15 +1582,53 @@ function loadV1Unsafe(inputPath, opts = {}) {
 
   let payload;
   try {
-    payload = parseJsonEntry('payload.kdnab', v1.map['payload.kdnab']);
+    const rawPayload = v1.map['payload.kdnab'];
+    payload = parseJsonEntry('payload.kdnab', rawPayload);
   } catch (e) {
     throw new Error(`payload.kdnab is not valid JSON: ${e.message}`);
   }
 
-  if (payload.encrypted === true || (v1.map.mimetype && v1.map.mimetype.includes('encrypted'))) {
-    const err = new Error('payload is encrypted and cannot be decrypted without a key');
-    err.code = 'requires_decryption';
-    throw err;
+  if (payload.profile && payload.ciphertext && (m.payload?.encrypted || m.encryption?.encrypted_entries?.includes('payload.kdnab'))) {
+    // B4: Attempt decryption when password or decrypt hook is available.
+    if (opts.decryptEntry) {
+      // Consumer-provided decrypt hook (e.g., licensed entry key)
+      try {
+        const decrypted = opts.decryptEntry({
+          asset: { entries: v1.map, manifest: m },
+          manifest: m,
+          entryName: 'payload.kdnab',
+          ciphertext: v1.map['payload.kdnab'],
+        });
+        const decryptedBuf = typeof decrypted === 'string'
+          ? Buffer.from(decrypted, 'utf8')
+          : Buffer.from(decrypted);
+        payload = parseJsonEntry('payload.kdnab', decryptedBuf);
+      } catch (e) {
+        const err = new Error(`Decryption failed: ${e.message}`);
+        err.code = 'KDNA_DECRYPT_FAILED';
+        throw err;
+      }
+    } else if (opts.password) {
+      // Password-based decryption via kdna-password-protected-v1 profile
+      try {
+        const { decryptProtectedEntry } = require('../crypto-profile.js');
+        const encryptedEnvelope = v1.map['payload.kdnab'].toString('utf8');
+        const decryptedBuf = decryptProtectedEntry(encryptedEnvelope, {
+          entryName: 'payload.kdnab',
+          manifest: m,
+          password: opts.password,
+        });
+        payload = parseJsonEntry('payload.kdnab', decryptedBuf);
+      } catch (e) {
+        const err = new Error(`Decryption failed with provided password: ${e.message}`);
+        err.code = 'KDNA_DECRYPT_FAILED';
+        throw err;
+      }
+    } else {
+      const err = new Error('payload is encrypted and cannot be decrypted without a password or license key');
+      err.code = 'KDNA_AUTH_PASSWORD_REQUIRED';
+      throw err;
+    }
   }
 
   // Digest verification — refuse to load if checksums.json is present and digests mismatch.
@@ -1597,23 +1683,24 @@ function loadV1Unsafe(inputPath, opts = {}) {
     result.content = { asset_id: m.asset_id, asset_uid: m.asset_uid, title: m.title, version: m.version, judgment_version: m.judgment_version, asset_type: m.asset_type, summary: m.summary || null, language: m.language || null, keywords: m.keywords || [], profiles_available: m.load_contract ? Object.keys(m.load_contract.profiles || {}) : [], max_tokens_hint: maxTokensHint };
   } else if (profile === 'compact') {
     const core = payload.core || {};
+    const normalizeList = (items) => (items || []).map((item) => {
+      if (typeof item === 'string') return { type: 'text', text: item };
+      if (item && typeof item === 'object') return item;
+      return null;
+    }).filter(Boolean);
     result.content = {
       highest_question: core.highest_question || null,
       axioms: (core.axioms || []).map(normalizeCompactAxiom).filter(Boolean),
-      boundaries: core.boundaries || [],
-      self_checks: (payload.reasoning && payload.reasoning.self_checks) || [],
-      failure_modes: (payload.reasoning && payload.reasoning.failure_modes) || [],
-      patterns: (payload.patterns || []).slice(0, 3),
+      boundaries: normalizeList(core.boundaries),
+      self_checks: normalizeList(payload.reasoning && payload.reasoning.self_checks),
+      failure_modes: normalizeList(payload.reasoning && payload.reasoning.failure_modes),
+      patterns: normalizeList(payload.patterns).slice(0, 3),
     };
     if (m.load_contract && m.load_contract.profiles && m.load_contract.profiles.compact && m.load_contract.profiles.compact.max_tokens_hint) {
       result.max_tokens_hint = m.load_contract.profiles.compact.max_tokens_hint;
     }
   } else if (profile === 'scenario') {
-    if (payload.scenarios && payload.scenarios.length > 0) {
-      result.content = { scenarios: payload.scenarios };
-    } else {
-      result.content = null;
-    }
+    result.content = { scenarios: payload.scenarios || [] };
   } else if (profile === 'full') {
     result.content = { manifest: m, payload };
   } else {
@@ -1622,13 +1709,13 @@ function loadV1Unsafe(inputPath, opts = {}) {
 
   if (as === 'prompt') {
     const c = result.content;
-    if (c === null) {
+    if (!c || (c.scenarios && c.scenarios.length === 0 && !c.highest_question && !(c.axioms && c.axioms.length) && !(c.boundaries && c.boundaries.length))) {
       return {
         status: result.status,
         profile: result.profile,
-        profile_available: false,
+        profile_available: result.profile_available,
         available_profiles: result.available_profiles,
-        text: `KDNA Judgment Asset: ${result.title || 'untitled'}\nAsset ID: ${result.asset_id || 'unknown'}\nProfile: ${result.profile}\n\nProfile "${result.profile}" is not available for this asset. Available profiles: ${result.available_profiles.join(', ')}`,
+        text: `KDNA Judgment Asset: ${result.title || 'untitled'}\nAsset ID: ${result.asset_id || 'unknown'}\nProfile: ${result.profile}\n\nNo content available for this profile. Available profiles: ${result.available_profiles.join(', ')}`,
       };
     }
     let text = 'KDNA Judgment Asset: ' + (result.title || 'untitled') + '\n';

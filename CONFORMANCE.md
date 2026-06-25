@@ -1,6 +1,6 @@
 # KDNA Conformance — Quick Reference
 
-For detailed certification levels, see [KDNA-Compatible Certification](./docs/kdna-compatible-certification.md).
+For detailed certification levels, see [KDNA-Compatible Certification](./docs/archive/kdna-compatible-certification.md).
 
 ## What Conformance Means
 

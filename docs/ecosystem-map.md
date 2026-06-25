@@ -18,6 +18,7 @@ If you've found one KDNA repository and are wondering which others exist and wha
 ├──────────────────────────────────────────────────────────────┤
 │ LAYER 2 — Domain Content                                     │
 │ agent_safety · writing · code_review · prompt_diagnosis      │
+│ kdna_authoring · requirement_alignment · sketchnote-style    │
 ├──────────────────────────────────────────────────────────────┤
 │ LAYER 1 — Protocol Definition                                │
 │ kdna (SPEC · schemas · conformance · governance)             │
@@ -106,7 +107,7 @@ See: [kdna-core](https://github.com/aikdna/kdna/tree/main/packages/kdna-core) ·
 ```
 node conformance/run.mjs --profile loader
 ```
-See: [v1rc standard kit](./kdna-v1rc-standard-kit.md) · [conformance](./kdna-compatible-certification.md)
+See: [v1rc standard kit](./kdna-v1rc-standard-kit.md) · [conformance](./archive/kdna-compatible-certification.md)
 
 ### I want to deploy KDNA in my enterprise
 See: [enterprise guide](./enterprise.md)
