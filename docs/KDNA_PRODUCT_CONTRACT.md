@@ -159,7 +159,7 @@ When a domain is indexed in the registry:
 {
   "name": "@aikdna/writing",
   "version": "0.7.2",
-  "asset_url": "https://github.com/aikdna/kdna-writing/releases/download/v0.7.2/writing-0.7.2.kdna",
+  "asset_url": "https://github.com/aikdna/<historical>/releases/download/v0.7.2/writing-0.7.2.kdna",
   "asset_digest": "sha256:<hex>",
   "signature": "ed25519:hex",
   "quality_badge": "tested",

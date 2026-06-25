@@ -8,6 +8,19 @@ Before tagging `v0.9.0`, every item on this list must be checked. This is not a 
 
 ---
 
+## 0. Pre-release Gate (mandatory, run before tagging)
+
+These four checks must all pass before the version bump. They exist to prevent the same class of issue recurring every release.
+
+- [ ] `node scripts/check-public-surface.mjs` — 0 findings (no private repo references, no leaked local paths, no full commit hashes, no internal code names in public docs)
+- [ ] `node scripts/schema-drift-check.mjs` — bundled `@aikdna/kdna-core` workpack schema matches the canonical `kdna-workpack/specs/work-pack.schema.json` (T13 followup; required once that script is in place)
+- [ ] `npm test` (incl. conformance) — all green
+- [ ] Cross-repo commit sync — `git log -1 --format=%H` of `kdna-cli` and `kdna-studio-cli` is reflected in the ecosystem-manifest `conformance_commit` field for the matching repo
+
+If any item fails, **stop** and address it before continuing to section 1.
+
+---
+
 ## 1. Main CI — All Jobs Green
 
 - [x] `validate.yml` — **lint** job passes (CI green)

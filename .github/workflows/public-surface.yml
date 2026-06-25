@@ -1,0 +1,25 @@
+name: public-surface
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'specs/**'
+      - 'showcase/**'
+      - 'CHANGELOG.md'
+      - 'README.md'
+      - 'README.zh.md'
+      - 'ecosystem-manifest.json'
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run public-surface check
+        run: node scripts/check-public-surface.mjs

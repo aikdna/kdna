@@ -17,7 +17,7 @@ Every domain README must answer these four questions:
 
 | Requirement | Minimum | Reference (kdna-writing) |
 |-------------|---------|---------------------------|
-| **README** | Answers four questions | [kdna-writing README](https://github.com/aikdna/kdna-writing) |
+| **README** | Answers four questions | [kdna-writing README](https://github.com/aikdna/<historical>) |
 | **Evals** | At least 10 test cases | `kdna-writing/evals/` — 10 cases |
 | **Demo** | Before/after comparison | `kdna-writing/demo/` |
 | **kdna.json** | Complete manifest with all metadata | `kdna-writing/kdna.json` |
@@ -76,7 +76,7 @@ When publishing a new public KDNA entry, verify:
 
 ## kdna-writing as a Historical Proof Example
 
-[kdna-writing](https://github.com/aikdna/kdna-writing) was the original proof example. New public `.kdna` examples can use its evidence expectations where useful, without treating it as a ranked standard:
+[kdna-writing](https://github.com/aikdna/<historical>) was the original proof example. New public `.kdna` examples can use its evidence expectations where useful, without treating it as a ranked standard:
 
 | Aspect | kdna-writing |
 |--------|-------------|

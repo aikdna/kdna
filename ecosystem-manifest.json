@@ -163,7 +163,7 @@
       "legacy_replacement": null
     },
     {
-      "repository": "aikdna/kdna-writing",
+      "repository": "aikdna/<historical>",
       "local_path": null,
       "npm_package": null,
       "package_json": null,
@@ -182,7 +182,7 @@
       "legacy_replacement": "packaged .kdna example release"
     },
     {
-      "repository": "aikdna/kdna-prompt_diagnosis",
+      "repository": "aikdna/<historical>",
       "local_path": null,
       "npm_package": null,
       "package_json": null,
@@ -201,7 +201,7 @@
       "legacy_replacement": "packaged .kdna example release"
     },
     {
-      "repository": "aikdna/kdna-agent_safety",
+      "repository": "aikdna/<historical>",
       "local_path": null,
       "npm_package": null,
       "package_json": null,
@@ -220,7 +220,7 @@
        "legacy_replacement": "packaged .kdna example release"
     },
     {
-      "repository": "aikdna/kdna-registry",
+      "repository": "aikdna/<historical>",
       "local_path": null,
       "npm_package": null,
       "package_json": null,

@@ -14,7 +14,7 @@ instead of forcing them to infer the standard from scattered repository files.
 | Protocol overview | [`SPEC.md`](../SPEC.md) |
 | Asset format | [`rfcs/RFC-0001-kdna-asset-format.md`](../rfcs/RFC-0001-kdna-asset-format.md) |
 | Registry trust model | [`rfcs/RFC-0002-registry-trust-model.md`](../rfcs/RFC-0002-registry-trust-model.md) |
-| Public registry trust operations | [`kdna-registry/TRUST_MODEL.md`](https://github.com/aikdna/kdna-registry/blob/main/TRUST_MODEL.md) |
+| Public registry trust operations | [`kdna-registry/TRUST_MODEL.md`](https://github.com/aikdna/<historical>/blob/main/TRUST_MODEL.md) |
 | Quality badges | [`rfcs/RFC-0003-domain-quality-badges.md`](../rfcs/RFC-0003-domain-quality-badges.md), [`docs/domain-quality-baseline.md`](./domain-quality-baseline.md) |
 | Runtime loading contract | [`rfcs/RFC-0004-runtime-loading-contract.md`](../rfcs/RFC-0004-runtime-loading-contract.md), [`docs/app-runtime-contract.md`](./app-runtime-contract.md) |
 | Composition policy | [`rfcs/RFC-0005-composition-policy.md`](../rfcs/RFC-0005-composition-policy.md) |

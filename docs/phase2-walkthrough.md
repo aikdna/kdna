@@ -303,7 +303,7 @@ cp conformance/product-runtime/valid-minimal.json my-product/product-runtime.jso
 ### If you want to run the registry trust gate
 
 ```bash
-git clone https://github.com/aikdna/kdna-registry
+git clone https://github.com/aikdna/<historical>
 cd kdna-registry
 node scripts/check-domain-trust-gate.js --domain @aikdna/writing
 ```
@@ -320,7 +320,7 @@ node scripts/check-domain-trust-gate.js --domain @aikdna/writing
 | See all Phase 2 architecture | [Phase 2 Architecture](./phase2-architecture.md) |
 | Run the conformance suite | [Conformance README](../conformance/README.md) |
 | Check release readiness | [RELEASE_CHECKLIST_0.9.0.md](../RELEASE_CHECKLIST_0.9.0.md) |
-| Explore available domains | [kdna-registry](https://github.com/aikdna/kdna-registry) |
+| Explore available domains | [kdna-registry](https://github.com/aikdna/<historical>) |
 
 ---
 

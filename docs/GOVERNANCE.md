@@ -135,7 +135,7 @@ Security vulnerabilities: See [SECURITY.md](./SECURITY.md)
 
 Governance proposals: Open an issue in [aikdna/kdna](https://github.com/aikdna/kdna/issues)
 
-Registry moderation requests: Open an issue in [aikdna/kdna-registry](https://github.com/aikdna/kdna-registry/issues)
+Registry moderation requests: Open an issue in [aikdna/<historical>](https://github.com/aikdna/<historical>/issues)
 
 ## 9. Public documentation rules
 

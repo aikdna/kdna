@@ -79,7 +79,7 @@ identity card of the domain.
   "status": "experimental",
   "registry": {
     "id": "writing",
-    "repo": "https://github.com/aikdna/kdna-writing"
+    "repo": "https://github.com/aikdna/<historical>"
   }
 }
 ```

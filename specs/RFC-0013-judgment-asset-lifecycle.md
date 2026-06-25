@@ -453,7 +453,7 @@ These companion RFCs are scoped to **detail schema only**. They do not re-litiga
 | SAG/TC gate at lock | `aikdna/kdna-studio-core` | compile() | Verify TC locked + SAG has `current_highest` source before accepting judgment update |
 | SAG/TC migration | `aikdna/kdna-cli` | `kdna build` | Auto-synthesize default SAG/TC for legacy domains at build time |
 | Provenance report | `aikdna/kdna` (meta) | `specs/evidence-trace.schema.json` | Extend with optional `sag_summary` and `tc_summary` blocks |
-| Registry | `aikdna/kdna-registry` | RFC-0002 / `specs/kdna-registry.md` | **No change.** Registry continues to accept `.kdna` files; provenance summaries are advisory |
+| Registry | `aikdna/<historical>` | RFC-0002 / `specs/kdna-registry.md` | **No change.** Registry continues to accept `.kdna` files; provenance summaries are advisory |
 | Trace v2 | `aikdna/kdna-cli` | `docs/kdna-trace.md` | `kdna trace` v2 emits `sag_version` and `tc_status` per loaded asset (companion RFC-0015) |
 | Lab | `aikdna/kdna-lab` | E2E demo, benchmark runner | Add `kdna-lab` smoke test: "compile a domain with explicit SAG/TC; verify lint passes; load and trace records TC version" |
 | WorkPack | `aikdna/kdna-workpack` | (separate) | **No change.** Application protocol family. |
@@ -571,7 +571,7 @@ NEW FILES
   tests/sag-tc-roundtrip.test.ts
 ```
 
-**`aikdna/kdna-registry`:**
+**`aikdna/<historical>`:**
 
 ```
 NO CHANGES (registry continues to accept .kdna; SAG/TC summaries are provenance-side)

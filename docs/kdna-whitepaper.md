@@ -731,7 +731,7 @@ KDNA has moved from concept to a working protocol ecosystem with early evidence.
 | `@aikdna/kdna-studio-cli` | aikdna/kdna-studio-cli | CLI: `kdna-studio` create, import, cards, lock, compile, export |
 | kdna-core-swift | aikdna/kdna-core-swift | Native Swift runtime: load, validate, route (7-state), compose, trust verify |
 | kdna-studio-swift | aikdna/kdna-studio-swift | Native Swift authoring: project, cards, Human Lock, compile, export |
-| kdna-registry | aikdna/kdna-registry | Domain catalog with signatures, quality badges, risk levels, CI validation |
+| kdna-registry | aikdna/<historical> | Domain catalog with signatures, quality badges, risk levels, CI validation |
 | kdna-vscode | aikdna/kdna-vscode | VS Code extension: validate, preview, dev-source diagnostics, configurable scan depth |
 | kdna-skills | aikdna/kdna-skills | Agent loader skill with 7-state routing ("No KDNA is better than wrong KDNA") |
 | kdna-runtime | (private) | Server-side projection engine with Judgment Guard, rate limiting, signed licenses |
