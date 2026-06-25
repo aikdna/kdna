@@ -38,9 +38,9 @@ PR-1 through PR-4b are now merged:
 - **PR-2a** (aikdna/kdna #87) — SPEC §1.6.3 Anti-Monolithic
   principle
 - **PR-3** (aikdna/kdna-studio-core #3) — SAG/TC compile gates
-- **PR-4** (lab PR) — lifecycle smoke on a simple
+- **PR-4** (the E2E test the E2E test the E2E test the E2E test lab (private) PR) — lifecycle smoke on a simple
   official legacy domain
-- **PR-4b** (lab PR) — default SAG/TC synthesis
+- **PR-4b** (the E2E test the E2E test the E2E test the E2E test lab (private) PR) — default SAG/TC synthesis
   migration smoke
 
 PR-4 and PR-4b together produced the implementation feedback
@@ -62,7 +62,7 @@ that RFC-0014 and RFC-0015 build on:
 | #1 | All three new schema files merged in `aikdna/kdna/schema/` | ✅ | PR-1 (#86) |
 | #2 | `kdna dev validate --anti-monolithic` exists | ✅ | PR-2 (#10) |
 | #3 | kdna-studio-core rejects (with clear error) on `strict-authority` violations | ✅ | PR-3 (#3) |
-| #4 | lab smoke (private) test on a simple official legacy domain | ✅ | PR-4 (#3) |
+| #4 | the E2E test lab (private) smoke test on a simple official legacy domain | ✅ | PR-4 (#3) |
 | #5 | SPEC §1.6 contains the Anti-Monolithic Domain Principle verbatim | ✅ | PR-2a (#87) |
 | #6 | RFC-0014 and RFC-0015 are filed as separate Draft RFCs | ✅ | **this PR** |
 | #7 | Migration run synthesizes default SAG/TC and produces valid `.kdna` | ✅ | PR-4b (#4) |
@@ -78,11 +78,11 @@ Per the RFC-0013 Phase 2 scope, this PR only files drafts:
   proposal; the kdna-studio-core release that emits the v2 fields
   is a follow-up.
 - ❌ **No implementation of Trace v2.** RFC-0015 is a detail-schema
-  proposal; the kdna-studio-core and lab (private) releases that emit
+  proposal; the kdna-studio-core and the E2E test lab (private) releases that emit
   and consume the v2 lifecycle events are follow-ups.
 - ❌ **No runtime payload changes.**
 - ❌ **No schema changes** (the existing PR-1 schemas are unchanged).
-- ❌ **No changes to kdna-cli / kdna-studio-core / lab (private).**
+- ❌ **No changes to kdna-cli / kdna-studio-core / the E2E test lab (private).**
 - ❌ **No atomspeak / book-derived domain smoke** (deferred to PR-5).
 - ❌ **No fix of kdna-studio-core's 11 pre-existing test failures**
   (out of scope for the RFC-0013 series; see PR-3 audit note).
@@ -107,8 +107,8 @@ Per the RFC-0013 Phase 2 scope, this PR only files drafts:
 | #10 | aikdna/kdna-cli | `see PR-2 acceptance` | PR-2: Anti-Monolithic CLI lint. PR-2 debt (question-count heuristic) is referenced in RFC-0014 §6. |
 | #87 | aikdna/kdna | `see PR-2a acceptance` | PR-2a: SPEC §1.6.3 Anti-Monolithic principle. RFC-0014 §6 references the principle. |
 | #3 | aikdna/kdna-studio-core | `see PR-3 acceptance` | PR-3: SAG/TC compile gates. RFC-0014 / RFC-0015 §2 boundary is derived from the PR-3 compile-time separation. |
-| #3 | lab (private) | `see PR-4 acceptance` | PR-4: lifecycle smoke. RFC-0015 §1 motivation is derived from the 11 PR-4 events. |
-| #4 | lab (private) | `see PR-4b acceptance` | PR-4b: default synthesis migration. RFC-0014 §6 + RFC-0015 §3.2 migration fields are derived from PR-4b's outputs. |
+| #3 | the E2E test lab (private) | `see PR-4 acceptance` | PR-4: lifecycle smoke. RFC-0015 §1 motivation is derived from the 11 PR-4 events. |
+| #4 | the E2E test lab (private) | `see PR-4b acceptance` | PR-4b: default synthesis migration. RFC-0014 §6 + RFC-0015 §3.2 migration fields are derived from PR-4b's outputs. |
 
 ## On the public RFC-0013 status
 
@@ -154,7 +154,7 @@ None of these are in this PR.
 - RFC-0013 §9: acceptance criteria, now all covered after this PR
 - PR-1 to PR-4b: implementation evidence (see §"Dependency evidence")
 - RFC-0013 implementation scope: Phase 2 RFC-0014 / RFC-0015 filing
-- lab (private) PR-4 audit note: `docs/audits/pr-4-acceptance.md`
-- lab (private) PR-4b audit note: `docs/audits/pr-4b-acceptance.md`
+- the E2E test lab (private) PR-4 audit note: `docs/audits/pr-4-acceptance.md`
+- the E2E test lab (private) PR-4b audit note: `docs/audits/pr-4b-acceptance.md`
 - aikdna/kdna-studio-core PR-3 audit note: `docs/audits/pr-3-acceptance.md` (PR-2 debt)
 - aikdna/kdna PR-2a audit note: `docs/audits/pr-2-acceptance.md`

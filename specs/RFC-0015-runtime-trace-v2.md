@@ -13,8 +13,8 @@
   replaced** by this RFC)
 - `specs/judgment-trace-schema.json` (existing)
 - `specs/evidence-trace.schema.json` (existing)
-- the E2E test lab PR (PR-4 lifecycle smoke)
-- the E2E test lab PR (PR-4b default synthesis migration)
+- the E2E test the E2E test the E2E test the E2E test lab (private) PR (PR-4 lifecycle smoke)
+- the E2E test the E2E test the E2E test the E2E test lab (private) PR (PR-4b default synthesis migration)
 
 ---
 
@@ -267,7 +267,7 @@ This RFC explicitly does **not**:
 - ❌ Modify `docs/kdna-trace.md` (v1). v1 remains valid.
 - ❌ Modify `specs/judgment-trace-schema.json`. v1 judgment-call
   trace schema remains valid.
-- ❌ Modify the lab (private) trace checker (`lab_trace_check.py (private)`).
+- ❌ Modify the the E2E test lab (private) trace checker (`lab_trace_check.py (private)`).
   The checker is for v1 traces; v2 checker is a follow-up.
 - ❌ Define an enterprise audit log. Enterprise audit is
   Governance track; v2 only adds per-event status fields.
@@ -289,7 +289,7 @@ This RFC is considered **Accepted → Implemented** when:
 2. A consumer (follow-up PR) can read the v2 events using only
    the v2 minimum field set.
 3. The `migration_mode` / `synthesis_status` / `lock_status` /
-   `runtime_payload_leaked` fields are exercised by a lab (private)
+   `runtime_payload_leaked` fields are exercised by a the E2E test lab (private)
    smoke (PR-4b already produces them).
 4. v1 trace command (`docs/kdna-trace.md`) and v1 judgment-trace
    schema (`specs/judgment-trace-schema.json`) are **unchanged**
@@ -308,7 +308,7 @@ This RFC is considered **Accepted → Implemented** when:
 - v1 evidence-trace schema: `specs/evidence-trace.schema.json`
 - PR-1 (schemas): aikdna/kdna #86
 - PR-3 (gates): aikdna/kdna-studio-core #3
-- PR-4 (lifecycle smoke): the E2E test lab PR
-- PR-4b (default synthesis): the E2E test lab PR
-- the E2E test lab PR-4 audit note: `see the corresponding acceptance note (private)`
-- the E2E test lab PR-4b audit note: `see the corresponding acceptance note (private)`
+- PR-4 (lifecycle smoke): the E2E test the E2E test the E2E test the E2E test lab (private) PR
+- PR-4b (default synthesis): the E2E test the E2E test the E2E test the E2E test lab (private) PR
+- the E2E test the E2E test the E2E test the E2E test lab (private) PR-4 audit note: `see the corresponding acceptance note (private)`
+- the E2E test the E2E test the E2E test the E2E test lab (private) PR-4b audit note: `see the corresponding acceptance note (private)`

@@ -61,7 +61,7 @@ registered KDNA domains.
     {
       "name": "@aikdna/writing",
       "version": "0.1.0",
-      "repo": "https://github.com/aikdna/<historical>",
+      "repo": "(private)
       "spec_version": "1.0-rc",
       "status": "experimental",
       "access": "public",
@@ -229,7 +229,7 @@ License:     CC-BY-4.0
 Description: Domain cognition for high-trust writing judgment.
 Core:        Price objections are certainty deficits, not price problems.
 Files:       6 (KDNA_Core, KDNA_Patterns, Scenarios, Cases, Reasoning, Evolution)
-Repo:        https://github.com/aikdna/<historical>
+Repo:        (private)
 ```
 
 ### 5.3 List

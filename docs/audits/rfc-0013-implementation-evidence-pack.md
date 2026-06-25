@@ -58,13 +58,13 @@ in `docs/rfc-status.md` until external review ratifies it.
 
 | # | Item | Status | PR | Repo | Commit |
 |---|------|--------|------|------|--------|
-| #1 | All three new schema files merged in `aikdna/kdna/schema/` | ✅ | [#86](https://github.com/aikdna/kdna/pull/86) | aikdna/kdna | [`see PR-1 acceptance`](https://github.com/aikdna/kdna/commit/see PR-1 acceptance) |
-| #2 | `kdna dev validate --anti-monolithic` exists and runs | ✅ | [#10](https://github.com/aikdna/kdna-cli/pull/10) | aikdna/kdna-cli | [`see PR-2 acceptance`](https://github.com/aikdna/kdna-cli/commit/see PR-2 acceptance) |
-| #3 | kdna-studio-core rejects (with clear error) on `strict-authority` violations | ✅ | [#3](https://github.com/aikdna/kdna-studio-core/pull/3) | aikdna/kdna-studio-core | [`see PR-3 acceptance`](https://github.com/aikdna/kdna-studio-core/commit/see PR-3 acceptance) |
-| #4 | lab smoke (private) test on a simple official legacy domain, runs trace events, verifies `sag_version` and `tc_status` in trace output | ✅ | [#3](https://github.com/lab PR) | lab (private) | [`see PR-4 acceptance`](https://github.com/lab (private)) |
-| #5 | `SPEC.md` §1.6 contains the Anti-Monolithic Domain Principle verbatim | ✅ | [#87](https://github.com/aikdna/kdna/pull/87) | aikdna/kdna | [`see PR-2a acceptance`](https://github.com/aikdna/kdna/commit/see PR-2a acceptance) |
-| #6 | RFC-0014 and RFC-0015 are filed as separate Draft RFCs | ✅ | [#88](https://github.com/aikdna/kdna/pull/88) | aikdna/kdna | [`see Phase 2 filing`](https://github.com/aikdna/kdna/commit/see Phase 2 filing) |
-| #7 | Migration run synthesizes default SAG/TC and produces valid `.kdna` identical in shape to the pre-RFC build | ✅ | [#4](https://github.com/lab PR) | lab (private) | [`see PR-4b acceptance`](https://github.com/lab (private)) |
+| #1 | All three new schema files merged in `aikdna/kdna/schema/` | ✅ | [#86](https://github.com/aikdna/kdna/pull/86) | aikdna/kdna | `see PR-1 acceptance` |
+| #2 | `kdna dev validate --anti-monolithic` exists and runs | ✅ | [#10](https://github.com/aikdna/kdna-cli/pull/10) | aikdna/kdna-cli | `see PR-2 acceptance` |
+| #3 | kdna-studio-core rejects (with clear error) on `strict-authority` violations | ✅ | [#3](https://github.com/aikdna/kdna-studio-core/pull/3) | aikdna/kdna-studio-core | `see PR-3 acceptance` |
+| #4 | the E2E test lab (private) smoke test on a simple official legacy domain, runs trace events, verifies `sag_version` and `tc_status` in trace output | ✅ | (private PR #3) | the E2E test lab (private) | `see PR-4 acceptance` |
+| #5 | `SPEC.md` §1.6 contains the Anti-Monolithic Domain Principle verbatim | ✅ | [#87](https://github.com/aikdna/kdna/pull/87) | aikdna/kdna | `see PR-2a acceptance` |
+| #6 | RFC-0014 and RFC-0015 are filed as separate Draft RFCs | ✅ | [#88](https://github.com/aikdna/kdna/pull/88) | aikdna/kdna | `see Phase 2 filing` |
+| #7 | Migration run synthesizes default SAG/TC and produces valid `.kdna` identical in shape to the pre-RFC build | ✅ | (private PR #4) | the E2E test lab (private) | `see PR-4b acceptance` |
 
 **Coverage:** 7/7 acceptance criteria are now technically covered.
 
@@ -77,7 +77,7 @@ in `docs/rfc-status.md` until external review ratifies it.
 PR-1 (`see PR-1 acceptance`) added the three authoring-time object schemas
 under `aikdna/kdna/schema/`. PR-1 was not used in isolation:
 
-- The fixtures in `lab (private)/examples/sag-tc-roundtrip/code_review/`
+- The fixtures in `the E2E test lab (private)/examples/sag-tc-roundtrip/code_review/`
   satisfy all three schemas.
 - The PR-4b migration helper in `kdna_lab/rfc0013_migration.py`
   emits objects that pass `jsonschema` validation against the
@@ -161,7 +161,7 @@ governed the domain at that point in the lifecycle.
 
 The four `aikdna/kdna` PRs (#86 PR-1, #87 PR-2a, #88 Phase 2,
 #89 evidence pack + tiny RFC-0014 path fix) plus the three PRs in
-`kdna-cli` (#10), `kdna-studio-core` (#3), and `lab (private)` (#3 + #4)
+`kdna-cli` (#10), `kdna-studio-core` (#3), and `the E2E test lab (private)` (#3 + #4)
 together form a coherent chain:
 
 - PR-1 schemas → PR-3 gates (read them) → PR-4 explicit smoke
@@ -182,10 +182,10 @@ ending, but they are real limits on what the series claims.
 | No `atomspeak` / book-derived domain smoke yet | The first smoke is on a simple official domain; atomspeak needs PR-3 gates stable + book-derived inputs (multiple TC versions, charter drift). Deferred to PR-5 per the RFC-0013 PR-4 boundary. | RFC-0013 §9 #4 (amended), PR-4 audit note, PR-4b audit note |
 | No Anti-Monolithic question-count heuristic yet | The CLI in PR-2 implements structural thresholds (axiom count + framework count + module_manifest sign-off). The third SPEC condition ("spans more than 2 distinct user-facing judgment questions") requires a separate RFC (suggested: RFC-0022). | PR-2 audit note, PR-3 audit note (`gates.md`), PR-3 §"PR-2 semantic debt" |
 | No Card v2 implementation yet | RFC-0014 is filed as Draft; kdna-studio-core has not yet been updated to emit the v2 Card fields. | RFC-0014 §8 (Acceptance Criteria) |
-| No Trace v2 implementation yet | RFC-0015 is filed as Draft; kdna-studio-core and lab (private) have not yet been updated to emit the v2 lifecycle trace. | RFC-0015 §8 (Acceptance Criteria) |
+| No Trace v2 implementation yet | RFC-0015 is filed as Draft; kdna-studio-core and the E2E test lab (private) have not yet been updated to emit the v2 lifecycle trace. | RFC-0015 §8 (Acceptance Criteria) |
 | No marketplace / enterprise / privacy / WorkPack implementation | All four are RFC-0013 §10 Non-Goals. WorkPack lives in `kdna-workpack`; marketplace / enterprise / privacy are explicit `out_of_scope` per RFC-0013 §10. | RFC-0013 §10 |
 | No independent review submissions on any of the 7 PRs | All 7 PRs were admin-merged by a single maintainer. Review submissions are empty. This is consistent with the public-facing status policy (complex book-derived domain testing is deferred to a follow-up PR) and the recommended external wording, but it is a real limit. | This audit pack §5 |
-| No remote CI workflow runs on most repos | `aikdna/kdna-cli` and `lab (private)` have no CI workflow configured for the relevant branches. `aikdna/kdna-studio-core` and `aikdna/kdna` have workflows but they did not run on the implementation PRs as expected. The validation signal is **local-only** (pytest, node --test, ajv schema validation). | This audit pack §5 |
+| No remote CI workflow runs on most repos | `aikdna/kdna-cli` and `the E2E test lab (private)` have no CI workflow configured for the relevant branches. `aikdna/kdna-studio-core` and `aikdna/kdna` have workflows but they did not run on the implementation PRs as expected. The validation signal is **local-only** (pytest, node --test, ajv schema validation). | This audit pack §5 |
 | `kdna-studio-core` 11 pre-existing test failures remain out of scope | The 11 failures in `core.test.js`, `e2e.test.js`, `milestone3.test.js` are about `KDNA_Core.json` vs `payload.kdnab` test expectations and predate PR-3. Fixing them is a separate test-suite migration PR. | PR-3 audit note, PR-4b audit note |
 
 A reviewer can decide whether any of these gaps should block
@@ -244,7 +244,7 @@ before any further status promotion.
 | aikdna/kdna | Yes, but did not run on PR-1 / PR-2a / Phase 2 PRs as expected. Local `grep` checks are the only signal. |
 | aikdna/kdna-cli | No CI workflow configured for the relevant branch. Local `node --test` is the only signal. |
 | aikdna/kdna-studio-core | Workflow exists; the PR-3 commit was admin-merged. The 11 pre-existing test failures in this repo are out of scope (see §4). |
-| lab (private) | No CI workflow configured for the relevant branch. Local `pytest` + Node smoke is the only signal. |
+| the E2E test lab (private) | No CI workflow configured for the relevant branch. Local `pytest` + Node smoke is the only signal. |
 
 The PR descriptions explicitly state
 `no workflow runs; local validation only` where applicable. The
@@ -293,7 +293,7 @@ are real follow-up work.
    emits Card v2 fields. RFC-0014 is filed as Draft; acceptance
    criteria for the implementation RFC are in RFC-0014 §8.
 
-6. **RFC-0015 implementation** — kdna-studio-core and lab (private)
+6. **RFC-0015 implementation** — kdna-studio-core and the E2E test lab (private)
    releases that emit and consume the v2 lifecycle trace. RFC-0015
    is filed as Draft; acceptance criteria are in RFC-0015 §8.
 
@@ -361,13 +361,13 @@ Specifically:
 
 | PR | Repo | Commit | Audit note |
 |----|------|--------|-------------|
-| [#86](https://github.com/aikdna/kdna/pull/86) | aikdna/kdna | [`see PR-1 acceptance`](https://github.com/aikdna/kdna/commit/see PR-1 acceptance) | — |
-| [#10](https://github.com/aikdna/kdna-cli/pull/10) | aikdna/kdna-cli | [`see PR-2 acceptance`](https://github.com/aikdna/kdna-cli/commit/see PR-2 acceptance) | (in PR body) |
-| [#87](https://github.com/aikdna/kdna/pull/87) | aikdna/kdna | [`see PR-2a acceptance`](https://github.com/aikdna/kdna/commit/see PR-2a acceptance) | [`docs/audits/pr-2-acceptance.md`](https://github.com/aikdna/kdna/blob/main/docs/audits/pr-2-acceptance.md) |
-| [#3](https://github.com/aikdna/kdna-studio-core/pull/3) | aikdna/kdna-studio-core | [`see PR-3 acceptance`](https://github.com/aikdna/kdna-studio-core/commit/see PR-3 acceptance) | [`docs/audits/pr-3-acceptance.md`](https://github.com/aikdna/kdna-studio-core/blob/main/docs/audits/pr-3-acceptance.md) |
-| [#3](https://github.com/lab PR) | lab (private) | [`see PR-4 acceptance`](https://github.com/lab (private)) | [`docs/audits/pr-4-acceptance.md`](https://github.com/lab acceptance note (private)) |
-| [#4](https://github.com/lab PR) | lab (private) | [`see PR-4b acceptance`](https://github.com/lab (private)) | [`docs/audits/pr-4b-acceptance.md`](https://github.com/lab acceptance note (private)) |
-| [#88](https://github.com/aikdna/kdna/pull/88) | aikdna/kdna | [`see Phase 2 filing`](https://github.com/aikdna/kdna/commit/see Phase 2 filing) | [`docs/audits/phase-2-rfc-0014-0015-filing.md`](https://github.com/aikdna/kdna/blob/main/docs/audits/phase-2-rfc-0014-0015-filing.md) |
+| [#86](https://github.com/aikdna/kdna/pull/86) | aikdna/kdna | `see PR-1 acceptance` | — |
+| [#10](https://github.com/aikdna/kdna-cli/pull/10) | aikdna/kdna-cli | `see PR-2 acceptance` | (in PR body) |
+| [#87](https://github.com/aikdna/kdna/pull/87) | aikdna/kdna | `see PR-2a acceptance` | [`docs/audits/pr-2-acceptance.md`](https://github.com/aikdna/kdna/blob/main/docs/audits/pr-2-acceptance.md) |
+| [#3](https://github.com/aikdna/kdna-studio-core/pull/3) | aikdna/kdna-studio-core | `see PR-3 acceptance` | [`docs/audits/pr-3-acceptance.md`](https://github.com/aikdna/kdna-studio-core/blob/main/docs/audits/pr-3-acceptance.md) |
+| (private PR #3) | the E2E test lab (private) | `see PR-4 acceptance` | `docs/audits/pr-4-acceptance.md` |
+| (private PR #4) | the E2E test lab (private) | `see PR-4b acceptance` | `docs/audits/pr-4b-acceptance.md` |
+| [#88](https://github.com/aikdna/kdna/pull/88) | aikdna/kdna | `see Phase 2 filing` | [`docs/audits/phase-2-rfc-0014-0015-filing.md`](https://github.com/aikdna/kdna/blob/main/docs/audits/phase-2-rfc-0014-0015-filing.md) |
 
 ### RFCs
 

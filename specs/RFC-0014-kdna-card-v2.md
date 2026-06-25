@@ -10,8 +10,8 @@
 - `schema/source_authority.schema.json` (PR-1, aikdna/kdna #86)
 - `schema/truth_charter.schema.json` (PR-1)
 - `schema/module_manifest.schema.json` (PR-1)
-- the E2E test lab PR (PR-4 lifecycle smoke)
-- the E2E test lab PR (PR-4b default synthesis migration)
+- the E2E test the E2E test the E2E test the E2E test lab (private) PR (PR-4 lifecycle smoke)
+- the E2E test the E2E test the E2E test the E2E test lab (private) PR (PR-4b default synthesis migration)
 
 ---
 
@@ -362,7 +362,7 @@ This RFC is considered **Accepted → Implemented** when:
 - v1 Card Spec: `docs/KDNA_CARD_SPEC.md`
 - PR-1 (schemas): aikdna/kdna #86
 - PR-3 (gates): aikdna/kdna-studio-core #3
-- PR-4 (lifecycle smoke): the E2E test lab PR
-- PR-4b (default synthesis): the E2E test lab PR
-- the E2E test lab PR-4 audit note: `see the corresponding acceptance note (private)`
-- the E2E test lab PR-4b audit note: `see the corresponding acceptance note (private)`
+- PR-4 (lifecycle smoke): the E2E test the E2E test the E2E test the E2E test lab (private) PR
+- PR-4b (default synthesis): the E2E test the E2E test the E2E test the E2E test lab (private) PR
+- the E2E test the E2E test the E2E test the E2E test lab (private) PR-4 audit note: `see the corresponding acceptance note (private)`
+- the E2E test the E2E test the E2E test the E2E test lab (private) PR-4b audit note: `see the corresponding acceptance note (private)`

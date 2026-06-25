@@ -8,7 +8,7 @@
 - Node.js 22+
 - kdna CLI installed globally: `npm install -g @aikdna/kdna-cli`
 - Domain installed: `kdna install @aikdna/<domain> --yes`
-- API key in `../.env` (relative to lab (private) root):
+- API key in `../.env` (relative to the E2E test lab (private) root):
   ```
   OPENROUTER_API_KEY=sk-or-v1-...
   ```
@@ -17,7 +17,7 @@
 ## Quick Start
 
 ```bash
-cd lab (private)
+cd the E2E test lab (private)
 
 # Dry run (validate everything, no API calls)
 node runners/run_domain_benchmark.mjs --domain "@aikdna/writing" --dry-run
@@ -93,7 +93,7 @@ After running benchmarks for a domain:
 4. [ ] Add to domain's `kdna.json`:
    ```json
    "evals_url": "https://github.com/aikdna/kdna-<domain>/tree/main/evals",
-   "benchmark_report_url": "https://github.com/the E2E test lab/blob/main/outputs/benchmarks/<domain>/benchmark-report.md",
+   "benchmark_report_url": "(private)
    "known_limitations_url": "https://github.com/aikdna/kdna-<domain>/blob/main/docs/known-limitations.md"
    ```
 5. [ ] Republish domain with: `kdna publish @aikdna/<domain>`

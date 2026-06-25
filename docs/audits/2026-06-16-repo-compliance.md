@@ -30,7 +30,7 @@ kdna-core-swift                  | yes     yes     yes  yes  yes    yes  yes   y
 kdna-decision_state              | yes     yes     yes  yes  NO     yes  yes   yes | 5ae7***     
 kdna-for-agent-skills            | yes     yes     yes  yes  NO     yes  yes   yes | 9fe0***     
 kdna-knowledge_management        | yes     yes     yes  yes  NO     yes  yes   yes | f83a***     
-lab (private)                         | yes     yes     yes  NO   yes    yes  yes   yes | see repo compliance     
+the E2E test lab (private)                         | yes     yes     yes  NO   yes    yes  yes   yes | see repo compliance     
 kdna-open_source_project         | yes     yes     yes  yes  NO     yes  yes   yes | c511***     
 kdna-prompt_diagnosis            | yes     yes     yes  yes  yes    yes  yes   yes | see repo compliance     
 kdna-registry                    | yes     yes     yes  yes  yes    yes  yes   yes | see repo compliance     

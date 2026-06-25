@@ -46,7 +46,7 @@ RFC-0015 Trace v2              █░░░░░░░░░░░░░░░ 
 > **Implemented** based on technical acceptance coverage and
 > remote audit; not yet `Stable`. The reference implementation is
 > shipped across four repositories (kdna, kdna-cli,
-> kdna-studio-core, lab (private)); §9 acceptance criteria are 7/7
+> kdna-studio-core, the E2E test lab (private)); §9 acceptance criteria are 7/7
 > technically covered; the evidence pack and governance rule
 > are in place. Follow-up work remains for atomspeak
 > (PR-5), Card v2 implementation (RFC-0014), Trace v2
