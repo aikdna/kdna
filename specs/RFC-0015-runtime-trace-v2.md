@@ -13,8 +13,8 @@
   replaced** by this RFC)
 - `specs/judgment-trace-schema.json` (existing)
 - `specs/evidence-trace.schema.json` (existing)
-- aikdna/kdna-lab PR #3 (PR-4 lifecycle smoke)
-- aikdna/kdna-lab PR #4 (PR-4b default synthesis migration)
+- the E2E test lab PR (PR-4 lifecycle smoke)
+- the E2E test lab PR (PR-4b default synthesis migration)
 
 ---
 
@@ -214,7 +214,7 @@ able to:
 
 The existing `docs/kdna-trace.md` v1 reader does not need to
 change to support v2. v2 readers are a separate concern (a
-follow-up RFC will likely propose a `kdna-lab-trace` reader that
+follow-up RFC will likely propose a `lab-trace` reader that
 emits v2 lifecycle events).
 
 ---
@@ -228,7 +228,7 @@ toolchain:
   `docs/kdna-trace.md`). Records which KDNA domains were loaded by
   which agent for which task.
 - v2: the compile / load / lifecycle pipeline (kdna-studio-core
-  compile, kdna-lab smoke). Records which lifecycle stages
+  compile, lab smoke). Records which lifecycle stages
   occurred and which SAG/TC version was governing each.
 
 The two streams are **independent**: a domain can have v1 events
@@ -251,7 +251,7 @@ specific fields (`migration_mode`, `synthesis_status`,
 formalized in this RFC.
 
 A future kdna-studio-core release that adopts this RFC will emit
-the same v2 fields. A future kdna-lab smoke that adopts this RFC
+the same v2 fields. A future lab smoke that adopts this RFC
 will assert the same v2 fields. Until those future releases
 land, PR-4 and PR-4b remain the only producers and consumers of
 v2 events.
@@ -267,7 +267,7 @@ This RFC explicitly does **not**:
 - ❌ Modify `docs/kdna-trace.md` (v1). v1 remains valid.
 - ❌ Modify `specs/judgment-trace-schema.json`. v1 judgment-call
   trace schema remains valid.
-- ❌ Modify the kdna-lab trace checker (`kdna_lab/trace_check.py`).
+- ❌ Modify the lab (private) trace checker (`lab_trace_check.py (private)`).
   The checker is for v1 traces; v2 checker is a follow-up.
 - ❌ Define an enterprise audit log. Enterprise audit is
   Governance track; v2 only adds per-event status fields.
@@ -289,7 +289,7 @@ This RFC is considered **Accepted → Implemented** when:
 2. A consumer (follow-up PR) can read the v2 events using only
    the v2 minimum field set.
 3. The `migration_mode` / `synthesis_status` / `lock_status` /
-   `runtime_payload_leaked` fields are exercised by a kdna-lab
+   `runtime_payload_leaked` fields are exercised by a lab (private)
    smoke (PR-4b already produces them).
 4. v1 trace command (`docs/kdna-trace.md`) and v1 judgment-trace
    schema (`specs/judgment-trace-schema.json`) are **unchanged**
@@ -308,7 +308,7 @@ This RFC is considered **Accepted → Implemented** when:
 - v1 evidence-trace schema: `specs/evidence-trace.schema.json`
 - PR-1 (schemas): aikdna/kdna #86
 - PR-3 (gates): aikdna/kdna-studio-core #3
-- PR-4 (lifecycle smoke): aikdna/kdna-lab #3
-- PR-4b (default synthesis): aikdna/kdna-lab #4
-- aikdna/kdna-lab PR-4 audit note: `docs/audits/pr-4-acceptance.md`
-- aikdna/kdna-lab PR-4b audit note: `docs/audits/pr-4b-acceptance.md`
+- PR-4 (lifecycle smoke): the E2E test lab PR
+- PR-4b (default synthesis): the E2E test lab PR
+- the E2E test lab PR-4 audit note: `see the corresponding acceptance note (private)`
+- the E2E test lab PR-4b audit note: `see the corresponding acceptance note (private)`

@@ -30,7 +30,7 @@ Not covered (still pending):
 | §9 # | Item | Owner |
 |------|------|-------|
 | #3 | kdna-studio-core gates | PR-3 |
-| #4 | kdna-lab smoke on simple official domain | PR-4 |
+| #4 | lab smoke (private) on simple official domain | PR-4 |
 | #6 | RFC-0014 / RFC-0015 filed | Phase 2 (deferred per the RFC-0013 implementation scope) |
 | #7 | real legacy domain migration | PR-4 |
 

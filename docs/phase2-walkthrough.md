@@ -30,8 +30,8 @@ Every step produces **schema-valid JSON** that you can inspect, validate, and bu
 
 ```bash
 npm install -g @aikdna/kdna-cli
-git clone https://github.com/aikdna/kdna-lab
-cd kdna-lab/examples/e2e-coaching
+git clone https://github.com/the E2E test lab
+cd lab (private)/examples/e2e-coaching
 node demo.mjs
 ```
 

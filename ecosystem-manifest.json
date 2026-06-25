@@ -167,57 +167,60 @@
       "local_path": null,
       "npm_package": null,
       "package_json": null,
-      "current_version": "0.7.3",
+      "current_version": null,
       "lifecycle": "Removed",
       "supported_kdna_version": "1.0",
       "supported_access_modes": [
         "public"
       ],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "814aa266328f5fa18f3894080bc0d0f4cc5673ee",
+      "conformance_commit": null,
       "known_limitations": [
-        "Repository deleted. No packaged public replacement is released yet. Future replacement must be a .kdna file with release card and checksum."
+        "Pre-v1 entry; removed/legacy as of 2026-06-25. See release notes for current runtime baseline."
       ],
-      "recommended_entrypoint": "Use the local demo path until an approved packaged .kdna release card exists",
-      "legacy_replacement": "packaged .kdna example release"
+      "recommended_entrypoint": "See current Core v1 release notes",
+      "legacy_replacement": null,
+      "_historical": true
     },
     {
       "repository": "aikdna/kdna-prompt_diagnosis",
       "local_path": null,
       "npm_package": null,
       "package_json": null,
-      "current_version": "0.7.6",
+      "current_version": null,
       "lifecycle": "Removed",
       "supported_kdna_version": "1.0",
       "supported_access_modes": [
         "public"
       ],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "57764bdf97d574f8a986c2bd14f5f70f1ea82f7c",
+      "conformance_commit": null,
       "known_limitations": [
-        "Repository deleted. No packaged public replacement is released yet. Future replacement must be a .kdna file with release card and checksum."
+        "Pre-v1 entry; removed/legacy as of 2026-06-25. See release notes for current runtime baseline."
       ],
-      "recommended_entrypoint": "Use the local demo path until an approved packaged .kdna release card exists",
-      "legacy_replacement": "packaged .kdna example release"
+      "recommended_entrypoint": "See current Core v1 release notes",
+      "legacy_replacement": null,
+      "_historical": true
     },
     {
       "repository": "aikdna/kdna-agent_safety",
       "local_path": null,
       "npm_package": null,
       "package_json": null,
-      "current_version": "0.7.6",
+      "current_version": null,
       "lifecycle": "Removed",
       "supported_kdna_version": "1.0",
       "supported_access_modes": [
         "public"
       ],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "86f02f16ef9c167b415609dad1da6723b1448ed6",
+      "conformance_commit": null,
       "known_limitations": [
-        "Repository deleted. No packaged public replacement is released yet. Future replacement must be a .kdna file with release card and checksum."
+        "Pre-v1 entry; removed/legacy as of 2026-06-25. See release notes for current runtime baseline."
       ],
-      "recommended_entrypoint": "Use the local demo path until an approved packaged .kdna release card exists",
-       "legacy_replacement": "packaged .kdna example release"
+      "recommended_entrypoint": "See current Core v1 release notes",
+      "legacy_replacement": null,
+      "_historical": true
     },
     {
       "repository": "aikdna/kdna-registry",
@@ -231,10 +234,11 @@
       "supported_entitlement_profiles": [],
       "conformance_commit": null,
       "known_limitations": [
-        "not part of the current stable public runtime baseline"
+        "Pre-v1 entry; removed/legacy as of 2026-06-25. See release notes for current runtime baseline."
       ],
-      "recommended_entrypoint": "local public .kdna assets through Core/CLI",
-      "legacy_replacement": "local public asset workflow"
+      "recommended_entrypoint": "See current Core v1 release notes",
+      "legacy_replacement": null,
+      "_historical": true
     }
   ],
   "repositories": []

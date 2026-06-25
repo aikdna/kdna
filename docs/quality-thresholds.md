@@ -1,7 +1,7 @@
 # KDNA Quality Thresholds
 
 > **Status: Historical.** This document describes pre-Core quality evaluation processes.
-> For current asset creation, see [kdna-x](https://github.com/aikdna/kdna-x).
+> For current asset creation, see the official asset library (release notes).
 
 Not every structurally valid KDNA domain deserves publication. This document defines what quality means at each level — and what evidence is required to advance.
 

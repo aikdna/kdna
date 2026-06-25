@@ -49,7 +49,7 @@ jobs:
           repository: aikdna/kdna-vscode
           ref: 810d06e77721614c3b014c9ecdd4a29ab0298454
           path: .ecosystem-repos/kdna-vscode
-# kdna-writing, kdna-prompt_diagnosis, kdna-agent_safety repos deleted — artifacts migrated to kdna-x
+# Legacy domain asset repos were removed; their artifacts are republished through the canonical release flow.
       - uses: actions/setup-node@v6
         with:
           node-version: 22
@@ -111,7 +111,7 @@ jobs:
           repository: aikdna/kdna-vscode
           ref: 810d06e77721614c3b014c9ecdd4a29ab0298454
           path: .ecosystem-repos/kdna-vscode
-# kdna-writing, kdna-prompt_diagnosis, kdna-agent_safety repos deleted — artifacts migrated to kdna-x
+# Legacy domain asset repos were removed; their artifacts are republished through the canonical release flow.
       - uses: actions/setup-node@v6
         with:
           node-version: 22

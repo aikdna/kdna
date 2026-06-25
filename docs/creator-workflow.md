@@ -24,7 +24,7 @@
 | 这个域帮助 AI 判断什么？ | 必须是一个具体的判断问题，不是泛领域。例："判断会议是否真的形成了决策" ✅；"管理" ❌ |
 | 谁需要这个判断？ | 必须能说出具体人群。例："用 Obsidian 但发现笔记越存越多的知识工作者" ✅；"所有人" ❌ |
 | 错误判断的代价是什么？ | AI 在这个域里最常见的错误是什么？错了会怎样？ |
-| 和现有域是否有重叠？ | 检查 kdna-x 资产库。如果是同一判断问题的新角度，标注关系。如果是已有域的弱化版，不要建。 |
+| 和现有域是否有重叠？ | 检查官方资产库。如果是同一判断问题的新角度，标注关系。如果是已有域的弱化版，不要建。 |
 
 ### 0.2 Scope / Out-of-Scope 模板
 
@@ -275,7 +275,7 @@ kdna validate ./your-domain.kdna
 ```
 
 Share the `.kdna` file directly, or publish to a GitHub Release. For curated
-public assets, see [kdna-x](https://github.com/aikdna/kdna-x).
+public assets, see the official asset library (release notes).
 
 ### 5.5 更新网站 Domains 页
 

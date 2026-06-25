@@ -10,8 +10,8 @@
 - `schema/source_authority.schema.json` (PR-1, aikdna/kdna #86)
 - `schema/truth_charter.schema.json` (PR-1)
 - `schema/module_manifest.schema.json` (PR-1)
-- aikdna/kdna-lab PR #3 (PR-4 lifecycle smoke)
-- aikdna/kdna-lab PR #4 (PR-4b default synthesis migration)
+- the E2E test lab PR (PR-4 lifecycle smoke)
+- the E2E test lab PR (PR-4b default synthesis migration)
 
 ---
 
@@ -297,7 +297,7 @@ fields are required when their authoring-time objects exist.
 
 ## 6. Relationship to PR-4b
 
-PR-4b (`docs/audits/pr-4b-acceptance.md`) is the closing piece of
+PR-4b (`see the corresponding acceptance note (private)`) is the closing piece of
 RFC-0013 §9 #7. RFC-0014 builds on PR-4b's findings:
 
 - The `migration_status: "synthesized_then_human_locked"` value is
@@ -347,7 +347,7 @@ This RFC is considered **Accepted → Implemented** when:
 2. The v2 fields are documented in `docs/KDNA_CARD_SPEC.md` (or its
    successor).
 3. The `migration_status: "synthesized_then_human_locked"` value
-   is exercised by a kdna-lab smoke (PR-4b already produces it).
+   is exercised by a lab smoke (PR-4b already produces it).
 4. The Card schema validates against a JSON Schema Draft 2020-12
    document.
 5. A consumer reading only the v2 fields can answer the questions
@@ -362,7 +362,7 @@ This RFC is considered **Accepted → Implemented** when:
 - v1 Card Spec: `docs/KDNA_CARD_SPEC.md`
 - PR-1 (schemas): aikdna/kdna #86
 - PR-3 (gates): aikdna/kdna-studio-core #3
-- PR-4 (lifecycle smoke): aikdna/kdna-lab #3
-- PR-4b (default synthesis): aikdna/kdna-lab #4
-- aikdna/kdna-lab PR-4 audit note: `docs/audits/pr-4-acceptance.md`
-- aikdna/kdna-lab PR-4b audit note: `docs/audits/pr-4b-acceptance.md`
+- PR-4 (lifecycle smoke): the E2E test lab PR
+- PR-4b (default synthesis): the E2E test lab PR
+- the E2E test lab PR-4 audit note: `see the corresponding acceptance note (private)`
+- the E2E test lab PR-4b audit note: `see the corresponding acceptance note (private)`

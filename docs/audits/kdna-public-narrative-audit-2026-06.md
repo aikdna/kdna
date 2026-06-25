@@ -222,7 +222,7 @@ heavily tied to the registry / marketplace framing.
 | `rfcs/RFC-0001-work-pack-specification.md` | Old RFC body. | P2 | Mark as "RFC, accepted pre-v1; v1 Core positioning supersedes". |
 | `package.json` | "trust" / "registry" in description. | P1 | Update. |
 
-### 3.10 aikdna/kdna-lab
+### 3.10 lab (private)
 
 The lab is the experimental / pressure-test infrastructure. It is
 allowed to use "evidence" framing because that's what a test lab does,
@@ -272,7 +272,7 @@ The PR-100 (fixture / conformance recovery) work will cover them.
 | aikdna/kdna-vscode | 1 | 1 | 0 | 0 | 2 | PR-98d |
 | aikdna/kdna-skills | 0 | 1 | 1 | 0 | 2 | PR-98d |
 | aikdna/kdna-workpack | 0 | 2 | 1 | 0 | 3 | PR-98d |
-| aikdna/kdna-lab | 0 | 1 | 1 | 0 | 2 | PR-98c |
+| lab (private) | 0 | 1 | 1 | 0 | 2 | PR-98c |
 | aikdna/kdna-core-swift | 0 | 0 | 1 | 0 | 1 | PR-98d |
 | aikdna/kdna-studio-swift | 0 | 0 | 0 | 1 | 1 | after kdna-core-swift fix |
 | Domain repos (~12) | 0 | 0 | 12 | 3 | 15 | PR-100 |
@@ -286,7 +286,7 @@ follow-up PRs by repo group, **not** into a single big PR.
 
 | PR | Scope | Repos | Estimated effort |
 |---|---|---|---|
-| PR-98c | website + registry + main-repo deep docs | `kdna-website`, `kdna-registry`, `kdna` (deep docs), `kdna-lab`, `kdna` (CHANGELOG / RELEASE_CHECKLIST / rfcs/ marked historical) | Large. Mark `kdna-registry` repo as legacy / archived. Re-author website content. |
+| PR-98c | website + registry + main-repo deep docs | `kdna-website`, `kdna-registry`, `kdna` (deep docs), `lab (private)`, `kdna` (CHANGELOG / RELEASE_CHECKLIST / rfcs/ marked historical) | Large. Mark `kdna-registry` repo as legacy / archived. Re-author website content. |
 | PR-98d | CLI / Core / Studio / VSCode / Skills / Workpack | `kdna-cli`, `kdna-studio-core`, `kdna-studio-cli`, `kdna-vscode`, `kdna-skills`, `kdna-workpack`, `kdna-core-swift` | Large. Re-author READMEs. Audit code surfaces. |
 | PR-98e | domain repos + remaining ecosystem repos | `kdna-writing`, `kdna-agent_safety`, `kdna-prompt_diagnosis`, `kdna-content_strategy`, `kdna-decision_state`, `kdna-knowledge_management`, `kdna-open_source_project`, `kdna-requirement_alignment`, `kdna-animations`, `kdna-authoring`, `kdna-code_review`, `kdna-app-shared`, `kdna-for-agent-skills`, `kdna-releases` | Medium. Mostly archival / light rewording. Heavy data-shape changes belong in PR-100, not here. |
 

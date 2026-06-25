@@ -6,14 +6,14 @@
 
 This report supersedes the pre-hardening failure report that recorded the old
 Studio v1 export retaining only axiom one-liners. Current evidence comes from
-public npm packages installed in `/private/tmp/kdna-registry-proof`.
+public npm packages installed in `/tmp/kdna-registry-proof`.
 
 ## Asset
 
 - Source repo: `kdna-writing`
 - Source package name: `@aikdna/writing`
 - v1 asset ID: `kdna:aikdna:writing`
-- Output container: `/private/tmp/kdna-registry-proof/out/writing.kdna`
+- Output container: `/tmp/kdna-registry-proof/out/writing.kdna`
 
 ## Toolchain
 
@@ -25,9 +25,9 @@ npm install \
   @aikdna/kdna-studio-cli@0.5.2 \
   @aikdna/kdna@0.9.0
 
-./node_modules/.bin/kdna-studio migrate /Users/AI/K/OPEN/kdna-writing \
+./node_modules/.bin/kdna-studio migrate <workdir>/kdna-writing \
   --format v1 \
-  --out /private/tmp/kdna-registry-proof/out/writing.kdna \
+  --out /tmp/kdna-registry-proof/out/writing.kdna \
   --name @aikdna/writing \
   --by aikdna-maintainers \
   --statement registry-clean-install-proof
@@ -35,7 +35,7 @@ npm install \
 
 ## Validation
 
-`kdna validate /private/tmp/kdna-registry-proof/out/writing.kdna` returned:
+`kdna validate /tmp/kdna-registry-proof/out/writing.kdna` returned:
 
 ```json
 {

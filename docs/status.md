@@ -87,7 +87,7 @@ These were removed from the Core GA CLI. Future systems such as distribution, si
 - **kdna-vscode** — VS Code extension (legacy workspace tools); not yet updated for Core GA
 - **kdna-loader** — agent adapter skill; functional for supported agents, UX hardening deferred
 - **kdna-core-swift** — Swift runtime; beta until parity proven against fixed Core v1 conformance fixtures
-- **kdna-lab** — pressure-test infrastructure; experimental
+- **lab (private)** — pressure-test infrastructure; experimental
 
 ## Deferred (future RFCs)
 

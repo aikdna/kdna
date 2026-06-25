@@ -18,7 +18,7 @@
 | RFC-0010 | Fidelity Protocol | **Implemented** | `specs/fidelity-result.schema.json`, `@aikdna/kdna-fidelity-core` |
 | RFC-0011 | Product Runtime | **Accepted** | `specs/product-runtime.schema.json`, `examples/product-runtime/` |
 | RFC-0012 | Artifact Envelope (output artifact) | **Draft** | `specs/RFC-0012-artifact-contract.md` (companion to RFC-0009; output-side envelope) |
-| RFC-0013 | Judgment Asset Lifecycle | **Implemented** | `schema/source_authority.schema.json` + `schema/truth_charter.schema.json` + `schema/module_manifest.schema.json` (PR-1, aikdna/kdna #86); `SPEC.md` §1.6.3 Anti-Monolithic (PR-2a, aikdna/kdna #87); `aikdna/kdna-cli` Anti-Monolithic CLI lint (PR-2, #10); `aikdna/kdna-studio-core` SAG/TC compile gates (PR-3, #3); `aikdna/kdna-lab` lifecycle smoke (PR-4, #3) + default-synthesis migration smoke (PR-4b, #4); companion Drafts `specs/RFC-0014-kdna-card-v2.md` + `specs/RFC-0015-runtime-trace-v2.md` (Phase 2, aikdna/kdna #88); evidence pack `docs/audits/rfc-0013-implementation-evidence-pack.md` |
+| RFC-0013 | Judgment Asset Lifecycle | **Implemented** | `schema/source_authority.schema.json` + `schema/truth_charter.schema.json` + `schema/module_manifest.schema.json` (PR-1, aikdna/kdna #86); `SPEC.md` §1.6.3 Anti-Monolithic (PR-2a, aikdna/kdna #87); `aikdna/kdna-cli` Anti-Monolithic CLI lint (PR-2, #10); `aikdna/kdna-studio-core` SAG/TC compile gates (PR-3, #3); `the E2E test lab` lifecycle smoke (PR-4, #3) + default-synthesis migration smoke (PR-4b, #4); companion Drafts `specs/RFC-0014-kdna-card-v2.md` + `specs/RFC-0015-runtime-trace-v2.md` (Phase 2, aikdna/kdna #88); evidence pack `docs/audits/rfc-0013-implementation-evidence-pack.md` |
 | RFC-0014 | KDNA Card Spec v2 | **Draft** | `specs/RFC-0014-kdna-card-v2.md` (companion to RFC-0013; field-level extension, not implementation) |
 | RFC-0015 | Runtime Trace Spec v2 | **Draft** | `specs/RFC-0015-runtime-trace-v2.md` (companion to RFC-0013; field-level extension, not implementation) |
 
@@ -46,7 +46,7 @@ RFC-0015 Trace v2              █░░░░░░░░░░░░░░░ 
 > **Implemented** based on technical acceptance coverage and
 > remote audit; not yet `Stable`. The reference implementation is
 > shipped across four repositories (kdna, kdna-cli,
-> kdna-studio-core, kdna-lab); §9 acceptance criteria are 7/7
+> kdna-studio-core, lab (private)); §9 acceptance criteria are 7/7
 > technically covered; the evidence pack and governance rule
 > are in place. Follow-up work remains for atomspeak
 > (PR-5), Card v2 implementation (RFC-0014), Trace v2
