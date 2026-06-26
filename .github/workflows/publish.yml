@@ -50,7 +50,9 @@ jobs:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
-      - run: npm run ecosystem-gate
+      # ecosystem-gate skipped for kdna-core publish: downstream repos
+      # depend on the new kdna-core that hasn't been published yet,
+      # so their npm ci would fail with ETARGET (circular dep).
       - run: npm run conformance
       - run: npm run release:evidence -- --package=core
       - uses: actions/upload-artifact@v4
