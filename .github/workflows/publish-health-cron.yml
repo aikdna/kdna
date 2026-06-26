@@ -1,0 +1,99 @@
+# publish-health-cron.yml — Daily drift check for the npm pipeline.
+#
+# Verifies that for every tracked package, four fields agree:
+#   1. main HEAD version (from package.json on main)
+#   2. latest git tag (e.g. v0.28.6)
+#   3. npm latest version (from registry.npmjs.org)
+#   4. GitHub Release existence (for the npm-latest version)
+#
+# Delegates the actual work to scripts/ecosystem-version-lock.js (which
+# already enforces cross-repo version consistency in the kdna monorepo)
+# and scripts/validate-public-truth.js (which validates ecosystem manifest
+# + public/private boundaries).
+#
+# On drift detection, fails the job so a notification can be wired up
+# (e.g. via the repository's notification settings / Slack webhook).
+
+name: publish-health-cron
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # Daily 09:00 UTC
+  workflow_dispatch:        # Manual trigger
+
+jobs:
+  drift-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # need full history for tag/branch resolution
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ecosystem version lock check
+        id: lock
+        run: node scripts/ecosystem-version-lock.js
+        continue-on-error: true
+
+      - name: Run validate-public-truth
+        id: truth
+        run: node scripts/validate-public-truth.js
+        continue-on-error: true
+
+      - name: Run publish-health (cross-repo 4-package check)
+        id: cross
+        # The script lives in the kdna monorepo scripts/ folder; this is
+        # a re-implementation of the audit script in /Users/AI/K/OPEN/scripts/
+        # but kept in-tree so it has access to npm + gh CLIs.
+        run: |
+          PACKAGES=(
+            "kdna-cli:kdna-cli:package.json"
+            "kdna-studio-cli:kdna-studio-cli:package.json"
+            "kdna-studio-core:kdna-studio-core:package.json"
+            "kdna-core:kdna:packages/kdna-core/package.json"
+          )
+          DRIFT=0
+          echo "| package | main | tag | npm | release | drift |"
+          echo "| --- | --- | --- | --- | --- | --- |"
+          for entry in "${PACKAGES[@]}"; do
+            IFS=':' read -r pkg repo path <<< "$entry"
+            main_v=$(gh api "repos/aikdna/$repo/contents/$path" --jq '.content' 2>/dev/null \
+              | base64 -d 2>/dev/null \
+              | python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])' 2>/dev/null)
+            tag_v=$(git ls-remote --tags "https://github.com/aikdna/$repo.git" 2>/dev/null \
+              | awk -F'/' '/refs\/tags\/v/ {print $NF}' | sort -V | tail -1)
+            npm_v=$(npm view "@aikdna/$pkg" version 2>/dev/null)
+            rel_exists=$(gh release view "v$npm_v" --repo "aikdna/$repo" >/dev/null 2>&1 && echo "yes" || echo "no")
+            tag_stripped="${tag_v#v}"
+            drift="ok"
+            [ "$main_v" != "$tag_stripped" ] || [ "$tag_stripped" != "$npm_v" ] || [ "$rel_exists" = "no" ] && drift="DRIFT" && DRIFT=$((DRIFT+1))
+            echo "| $pkg | $main_v | $tag_v | $npm_v | $rel_exists | $drift |"
+          done
+          echo "## publish-health drift report" >> $GITHUB_STEP_SUMMARY
+          echo "Drift count: $DRIFT" >> $GITHUB_STEP_SUMMARY
+          [ "$DRIFT" -gt 0 ] && exit 1
+        continue-on-error: true
+
+      - name: Summarize results
+        if: always()
+        run: |
+          echo "## publish-health-cron results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ecosystem-version-lock: ${{ steps.lock.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "- validate-public-truth: ${{ steps.truth.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "- cross-package check: ${{ steps.cross.outcome }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail if any check failed
+        if: steps.lock.outcome == 'failure' || steps.truth.outcome == 'failure' || steps.cross.outcome == 'failure'
+        run: |
+          echo "::error::One or more drift checks failed. See summary."
+          exit 1
