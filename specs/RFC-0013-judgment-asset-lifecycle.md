@@ -80,7 +80,7 @@ This is the correct window to consolidate the authoring side of the protocol, **
 To prevent scope inflation, the following are explicitly **out of scope** for KDNA Core and tracked elsewhere:
 
 - **WorkPack protocol** — Application protocol family. Lives in `kdna-workpack` repository, evolves under its own RFC track. This RFC does not extend, replace, or compete with it.
-- **Marketplace / Registry commercial layer** — Tracked under `RFC-0002` (Registry Trust Model) and `specs/kdna-registry.md` extensions.
+- **Marketplace / Registry commercial layer** — Tracked under `RFC-0002` (Registry Trust Model). Out of scope for KDNA Core.
 - **Enterprise judgment system** — Governance layers, organization override policies. Not KDNA Core.
 - **Privacy mode** — Source evidence portability, training-use opt-in. Not KDNA Core.
 - **Owner scope classification** (personal / team / organization / field) — Registry concern.
@@ -453,9 +453,9 @@ These companion RFCs are scoped to **detail schema only**. They do not re-litiga
 | SAG/TC gate at lock | `aikdna/kdna-studio-core` | compile() | Verify TC locked + SAG has `current_highest` source before accepting judgment update |
 | SAG/TC migration | `aikdna/kdna-cli` | `kdna build` | Auto-synthesize default SAG/TC for legacy domains at build time |
 | Provenance report | `aikdna/kdna` (meta) | `specs/evidence-trace.schema.json` | Extend with optional `sag_summary` and `tc_summary` blocks |
-| Registry | `aikdna/kdna-registry` | RFC-0002 / `specs/kdna-registry.md` | **No change.** Registry continues to accept `.kdna` files; provenance summaries are advisory |
+| Registry | (out of scope, RFC-0002) | RFC-0002 | **No change.** Registry continues to accept `.kdna` files; provenance summaries are advisory |
 | Trace v2 | `aikdna/kdna-cli` | `docs/kdna-trace.md` | `kdna trace` v2 emits `sag_version` and `tc_status` per loaded asset (companion RFC-0015) |
-| Lab | `aikdna/kdna-lab` | E2E demo, benchmark runner | Add `kdna-lab` smoke test: "compile a domain with explicit SAG/TC; verify lint passes; load and trace records TC version" |
+| Lab | internal e2e test farm | E2E demo, benchmark runner | Add internal smoke test: "compile a domain with explicit SAG/TC; verify lint passes; load and trace records TC version" |
 | WorkPack | `aikdna/kdna-workpack` | (separate) | **No change.** Application protocol family. |
 
 **The boundary at LAYER C is enforceable in CI.** A new `kdna ci` check (in kdna-cli) verifies, for any `.kdna` produced by `kdna build`:
@@ -483,10 +483,10 @@ schema/module_manifest.schema.json
 | `kdna build --auto-migrate` (synthesize SAG/TC for legacy domains) | kdna-cli | No (default off) | S |
 | `kdna inspect <file>` surfaces SAG/TC summary from provenance | kdna-cli | No | S |
 | `kdna-studio-core` compile() verifies TC locked + SAG `current_highest` | kdna-studio-core | No (gates existing compile) | M |
-| `kdna-lab` smoke test for SAG/TC round-trip | kdna-lab | No | S |
+| Internal smoke test for SAG/TC round-trip | internal e2e test farm | No | S |
 | `kdna-trace` v2 records `sag_version` + `tc_status` (companion RFC-0015) | kdna-cli | No (additive) | M |
 
-**S = 1 day, M = 1 week.** Total estimated effort for this RFC and its companions: 1 maintainer-week of focused work, distributed over kdna-cli, kdna-studio-core, kdna-lab, and the meta repo. Schema and docs are the bulk.
+**S = 1 day, M = 1 week.** Total estimated effort for this RFC and its companions: 1 maintainer-week of focused work, distributed over kdna-cli, kdna-studio-core, internal e2e test farms, and the meta repo. Schema and docs are the bulk.
 
 ### 8.4 Spec Updates to Existing Documents
 
@@ -559,7 +559,7 @@ MODIFIED FILES
   CHANGELOG.md
 ```
 
-**`aikdna/kdna-lab`:**
+**Internal e2e test farm (was `aikdna/kdna-lab`, private):**
 
 ```
 NEW FILES
@@ -571,7 +571,7 @@ NEW FILES
   tests/sag-tc-roundtrip.test.ts
 ```
 
-**`aikdna/kdna-registry`:**
+**Registry (out of scope, was `aikdna/kdna-registry`):**
 
 ```
 NO CHANGES (registry continues to accept .kdna; SAG/TC summaries are provenance-side)
@@ -592,7 +592,7 @@ This RFC is considered **Accepted → Implemented** when all of the following ar
 1. All three new schema files (`source_authority`, `truth_charter`, `module_manifest`) are merged in `aikdna/kdna/schema/`.
 2. `kdna dev validate --anti-monolithic` exists and passes CI on the meta repo's own example domains.
 3. `kdna-studio-core` rejects (with a clear error) any `compile()` call where the source workspace has a TC with `tc_status: "synthesized"` and a SAG with no `current_highest` source **and** the caller passes `--strict-authority`.
-4. `kdna-lab` smoke test compiles a **simple official legacy domain** (e.g., `@aikdna/code_review` or `@aikdna/prompt_diagnosis`) with synthesized or explicit SAG/TC, runs 5 trace events, and verifies `sag_version` and `tc_status` appear in the trace output. A book-derived atomspeak smoke test is **deferred to a follow-up PR (proposed: PR-5 after PR-1~4 stable)**.
+4. Internal smoke test compiles a **simple official legacy domain** with synthesized or explicit SAG/TC, runs 5 trace events, and verifies `sag_version` and `tc_status` appear in the trace output. A book-derived atomspeak smoke test is **deferred to a follow-up PR (proposed: PR-5 after PR-1~4 stable)**.
 5. `SPEC.md` §1.6 contains the Anti-Monolithic Domain Principle verbatim.
 6. RFC-0014 and RFC-0015 are filed as separate Draft RFCs.
 7. A migration run on a real legacy domain (e.g., `@aikdna/code_review`) successfully synthesizes default SAG/TC and produces a valid `.kdna` identical in shape to the pre-RFC build.
@@ -606,7 +606,7 @@ The following are explicitly **not** introduced by this RFC and remain tracked o
 | Out of scope | Where it lives |
 |--------------|----------------|
 | WorkPack protocol extensions | `kdna-workpack` repository, separate RFC track |
-| Marketplace / commercial licensing | RFC-0002 (Registry Trust Model), `specs/kdna-registry.md` |
+| Marketplace / commercial licensing | RFC-0002 (Registry Trust Model) |
 | Enterprise judgment system (governance layers, org override) | Future RFC, separate from KDNA Core |
 | Privacy mode (source portability, training opt-in) | Future RFC, separate from KDNA Core |
 | Owner scope (personal / team / organization / field) | Registry-level concern, not Core |

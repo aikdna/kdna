@@ -181,4 +181,4 @@ If a badge is contested:
 
 ---
 
-*This specification operationalizes the quality badge system defined in kdna-registry/SCHEMA.md and is enforced by CI checks in kdna-registry/.github/workflows/.*
+*This specification operationalizes the quality badge system (historical: kdna-registry/SCHEMA.md) and is enforced by registry-side CI checks.*

@@ -25,7 +25,7 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 
 | # | Document | What it covers |
 |---|----------|---------------|
-| 5 | `kdna-registry.md` | Pre-v1 distribution index format (`domains.json`) and API |
+| 5 | (archived) `kdna-registry.md` | Pre-v1 distribution index format (`domains.json`) and API. **Registry is out of scope for KDNA Core v1** — see `specs/archive/kdna-registry.md` for historical context. |
 | 6 | `kdna-access-modes.md` | Access control: public / licensed / remote |
 | 7 | `kdna-license.md` | KDNA Commercial License (KCL) terms |
 | 8 | `LICENSE-KCL-1.0.md` | KCL 1.0 full license text |

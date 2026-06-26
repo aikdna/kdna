@@ -12,9 +12,8 @@ and already-published assets follow the protocol after the tools are released.
 3. In `aikdna/kdna-cli`, refresh dependencies against published
    `@aikdna/kdna-core@^0.7.2`; only then bump the CLI package metadata.
 4. Publish `@aikdna/kdna-cli`.
-5. ~~Merge `aikdna/kdna-registry` metadata/tooling validation updates.~~ (Historical — registry removed)
-6. ~~Repack and resign registry assets with the new CLI.~~ (Historical)
-7. Run `npm run validate:remote` in `kdna-registry` after assets are republished.
+5. ~~Merge `aikdna/kdna-registry` metadata/tooling validation updates.~~ (Historical — registry out of scope for KDNA Core v1)6. ~~Repack and resign registry assets with the new CLI.~~ (Historical)
+7. ~~Run `npm run validate:remote` in `kdna-registry` after assets are republished.~~ (Historical — registry out of scope for KDNA Core v1)
 
 ## Required Checks
 
