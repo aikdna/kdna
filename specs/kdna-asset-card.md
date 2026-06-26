@@ -199,7 +199,7 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
 | `raw_outputs_url` | No | URL to raw model outputs. |
 | `failure_cases_published` | No | Whether failure cases are publicly accessible. |
 | `model_versions_tested` | No | Models used in benchmarking. |
-| `evaluation_history` | No | Historical evaluation records (see kdna-registry.md §3.1). |
+| `evaluation_history` | No | Historical evaluation records. Registry usage of this field is out of scope for KDNA Core; see `specs/archive/kdna-registry.md` for historical context. |
 
 ### 3.8 Technical Block
 

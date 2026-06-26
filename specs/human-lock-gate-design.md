@@ -110,7 +110,7 @@ To prevent false positives from key ordering:
 
 ### 3.3 Registry CI Gate
 
-**Location**: `kdna-registry/.github/workflows/validate.yml` (to be created)
+**Location**: registry-side `.github/workflows/validate.yml` (to be created; registry is out of scope for KDNA Core)
 
 **Behavior**:
 1. On PR that modifies a domain's KDNA files:

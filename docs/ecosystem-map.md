@@ -74,7 +74,7 @@ public users should start with the local demo path in [try-kdna](./try-kdna.md).
 
 | Repository | Role | For |
 |------------|------|-----|
-| [kdna-registry](https://github.com/aikdna/kdna-registry) | Canonical static catalog (`domains.json`), trust model, schema v3 | Registry operators |
+| (out of scope) kdna-registry | Canonical static catalog (`domains.json`), trust model, schema v3 — registry is out of scope for KDNA Core v1 | Registry operators (external) |
 
 ## Layer 4 — Applications
 
@@ -137,4 +137,4 @@ See [ECOSYSTEM_NAMING.md](./ECOSYSTEM_NAMING.md) for the full naming policy.
 | `@aikdna/kdna-studio-core` | 1.4.2 | Authoring kernel |
 | `@aikdna/kdna-studio-cli` | 0.2.0 | Authoring CLI |
 | `kdna-core-swift` | main | Swift runtime |
-| Registry schema | 3.0 | [SCHEMA.md](https://github.com/aikdna/kdna-registry/blob/main/SCHEMA.md) |
+| Registry schema (out of scope) | 3.0 | Historical: [SCHEMA.md](https://github.com/aikdna/kdna-registry/blob/main/SCHEMA.md) (note: this repo is not part of the public KDNA Core) |

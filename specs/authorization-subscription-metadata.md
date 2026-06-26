@@ -140,4 +140,4 @@ The Asset Card's `subscription` block (see kdna-asset-card.md §3.5) is a subset
 
 ---
 
-*This specification extends kdna-asset-card.md and kdna-registry/SCHEMA.md v2.3.*
+*This specification extends kdna-asset-card.md and the historical registry SCHEMA.md (v2.3).*
