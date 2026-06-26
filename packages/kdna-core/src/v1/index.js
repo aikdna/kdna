@@ -1014,6 +1014,9 @@ function inferEntitlementProfile(manifest) {
   if (manifest.encryption && manifest.encryption.profile === 'kdna-password-protected-v1') {
     return 'password';
   }
+  if (manifest.encryption && manifest.encryption.profile === 'kdna-password-protected-v1-scrypt') {
+    return 'password';
+  }
   if (manifest.access === 'protected') return 'password';
   return null;
 }
@@ -1609,11 +1612,20 @@ function loadV1Unsafe(inputPath, opts = {}) {
         throw err;
       }
     } else if (opts.password) {
-      // Password-based decryption via kdna-password-protected-v1 profile
+      // Password-based decryption via kdna-password-protected-v1*
+      // profiles. Detects Argon2id vs scrypt from the envelope profile.
       try {
-        const { decryptProtectedEntry } = require('../crypto-profile.js');
+        const {
+          decryptProtectedEntry,
+          decryptProtectedEntryScrypt,
+          PASSWORD_PROTECTED_SCRYPT_PROFILE,
+        } = require('../crypto-profile.js');
         const encryptedEnvelope = v1.map['payload.kdnab'].toString('utf8');
-        const decryptedBuf = decryptProtectedEntry(encryptedEnvelope, {
+        const envelope = JSON.parse(encryptedEnvelope);
+        const decryptFn = (envelope.profile === PASSWORD_PROTECTED_SCRYPT_PROFILE)
+          ? decryptProtectedEntryScrypt
+          : decryptProtectedEntry;
+        const decryptedBuf = decryptFn(encryptedEnvelope, {
           entryName: 'payload.kdnab',
           manifest: m,
           password: opts.password,

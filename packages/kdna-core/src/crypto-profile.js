@@ -420,6 +420,121 @@ function createRecoveryDecryptEntry(options = {}) {
     decryptProtectedEntry(ciphertext, { entryName, manifest, recoveryCode });
 }
 
+// ── B2: scrypt-based password profile (v0.1 write profile) ─────────
+// Uses Node built-in crypto.scryptSync — zero additional dependencies.
+// v0.2 will promote the Argon2id profile (above) as the default write
+// profile; this scrypt profile will remain a read-only legacy profile.
+
+const PASSWORD_PROTECTED_SCRYPT_PROFILE = 'kdna-password-protected-v1-scrypt';
+const SCRYPT_KDF = 'scrypt-sha256';
+
+function derivePasswordKeyScrypt(password, params = {}) {
+  const { salt, N = 32768, r = 8, p = 1 } = params;
+  if (!salt) throw new Error('salt is required for scrypt KDF');
+  const saltBuf = decodeBase64(salt, 'salt');
+  const passwordBuf = toBuffer(password, 'password');
+  // N=32768, r=8, p=1 → 32 MiB memory. Default maxmem is 32 MiB exactly;
+  // bump to 64 MiB to avoid boundary rejection on some Node versions.
+  return crypto.scryptSync(passwordBuf, saltBuf, 32, { N, r, p, maxmem: 64 * 1024 * 1024 });
+}
+
+/**
+ * Encrypt a protected entry using the scrypt-based password profile.
+ *
+ * 1. Generate random CEK (32 bytes)
+ * 2. Derive KEK from password via scrypt-sha256
+ * 3. Encrypt content with CEK (AES-256-GCM)
+ * 4. Wrap CEK with KEK (AES-256-KW)
+ * 5. Store wrapped_key in envelope (single password slot, no recovery)
+ */
+function encryptProtectedEntryScrypt(plaintext, options = {}) {
+  const { entryName, manifest = {}, password } = options;
+  if (!entryName) throw new Error('entryName is required');
+  if (!password) throw new Error('password is required for scrypt encryption');
+
+  const cek = generateCEK();
+
+  // Password slot
+  const salt = crypto.randomBytes(16);
+  const passwordKey = derivePasswordKeyScrypt(password, { salt: salt.toString('base64') });
+  const passwordWrappedKey = wrapCEK(cek, passwordKey);
+
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv('aes-256-gcm', cek, iv);
+  cipher.setAAD(encryptedEntryAad(entryName, manifest, PASSWORD_PROTECTED_SCRYPT_PROFILE));
+  const ciphertext = Buffer.concat([cipher.update(toBuffer(plaintext, 'plaintext')), cipher.final()]);
+
+  return {
+    profile: PASSWORD_PROTECTED_SCRYPT_PROFILE,
+    alg: ALG,
+    kdf: SCRYPT_KDF,
+    key_wrapping: RFC_KEY_WRAPPING,
+    scrypt_params: {
+      N: 32768,
+      r: 8,
+      p: 1,
+      salt: salt.toString('base64'),
+    },
+    key_slots: [
+      {
+        slot: 'password',
+        wrap: RFC_KEY_WRAPPING,
+        wrapped_key: passwordWrappedKey.toString('base64'),
+      },
+    ],
+    iv: iv.toString('base64'),
+    tag: cipher.getAuthTag().toString('base64'),
+    ciphertext: ciphertext.toString('base64'),
+  };
+}
+
+/**
+ * Decrypt a protected entry encoded with the scrypt-based password profile.
+ *
+ * 1. Derive KEK from password via scrypt-sha256
+ * 2. Unwrap CEK from password slot's wrapped_key (AES-256-KW)
+ * 3. Decrypt content with CEK (AES-256-GCM)
+ */
+function decryptProtectedEntryScrypt(envelopeValue, options = {}) {
+  const { entryName, manifest = {}, password } = options;
+  if (!entryName) throw new Error('entryName is required');
+  if (!password) throw new Error('password is required for scrypt decryption');
+
+  const envelope = normalizeEnvelope(envelopeValue);
+  if (envelope.profile !== PASSWORD_PROTECTED_SCRYPT_PROFILE) {
+    throw new Error(
+      `unsupported encrypted entry profile: ${envelope.profile || 'unknown'} (expected ${PASSWORD_PROTECTED_SCRYPT_PROFILE})`,
+    );
+  }
+  if (envelope.alg !== ALG) throw new Error(`unsupported encrypted entry alg: ${envelope.alg}`);
+  if (envelope.kdf !== SCRYPT_KDF) throw new Error(`unsupported encrypted entry kdf: ${envelope.kdf}`);
+  if (envelope.key_wrapping !== RFC_KEY_WRAPPING) {
+    throw new Error(`unsupported encrypted entry key_wrapping: ${envelope.key_wrapping}`);
+  }
+
+  const passwordKey = derivePasswordKeyScrypt(password, {
+    salt: envelope.scrypt_params.salt,
+  });
+  const passwordSlot = envelope.key_slots.find((s) => s.slot === 'password');
+  if (!passwordSlot) throw new Error('password slot missing from envelope');
+
+  const cek = unwrapCEK(decodeBase64(passwordSlot.wrapped_key, 'wrapped_key'), passwordKey);
+
+  const decipher = crypto.createDecipheriv('aes-256-gcm', cek, decodeBase64(envelope.iv, 'iv'));
+  decipher.setAAD(encryptedEntryAad(entryName, manifest, PASSWORD_PROTECTED_SCRYPT_PROFILE));
+  decipher.setAuthTag(decodeBase64(envelope.tag, 'tag'));
+  return Buffer.concat([
+    decipher.update(decodeBase64(envelope.ciphertext, 'ciphertext')),
+    decipher.final(),
+  ]);
+}
+
+function createPasswordDecryptEntryScrypt(options = {}) {
+  const { password } = options;
+  return ({ entryName, ciphertext, manifest }) =>
+    decryptProtectedEntryScrypt(ciphertext, { entryName, manifest, password });
+}
+
 // ── Legacy / experimental profile (pre-RFC, backward compat) ───────
 
 function deriveLicensedEntryKeyLegacy(options = {}) {
@@ -504,11 +619,13 @@ module.exports = {
   LICENSED_ENTRY_PROFILE,
   LICENSED_EXPERIMENTAL_PROFILE,
   PASSWORD_PROTECTED_PROFILE,
+  PASSWORD_PROTECTED_SCRYPT_PROFILE,
   ALG,
   RFC_KDF,
   RFC_KEY_WRAPPING,
   LEGACY_KDF,
   PASSWORD_KDF,
+  SCRYPT_KDF,
 
   // RFC-0008 compliant
   deriveWrappingKey,
@@ -518,7 +635,7 @@ module.exports = {
   encryptLicensedEntryV1,
   decryptLicensedEntryV1,
 
-  // RFC-0009 compliant
+  // RFC-0009 compliant (Argon2id)
   derivePasswordKey,
   generateRecoveryCode,
   decodeRecoveryCode,
@@ -526,6 +643,12 @@ module.exports = {
   decryptProtectedEntry,
   createPasswordDecryptEntry,
   createRecoveryDecryptEntry,
+
+  // B2 scrypt password profile (v0.1 write profile)
+  derivePasswordKeyScrypt,
+  encryptProtectedEntryScrypt,
+  decryptProtectedEntryScrypt,
+  createPasswordDecryptEntryScrypt,
 
   // Legacy
   deriveLicensedEntryKey: deriveLicensedEntryKeyLegacy,
