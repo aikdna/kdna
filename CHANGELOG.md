@@ -39,8 +39,8 @@ Phase 2 extends KDNA from "judgment asset protocol" to "judgment-driven artifact
 
 ### Infrastructure
 
-- **WorkPack Pipeline** — Multi-stage orchestration manifest for kdna-workpack. DAG dependencies, parallel execution, artifact flow between stages, per-stage KDNA overrides, human review gates. ([kdna-workpack#1](https://github.com/aikdna/kdna-workpack/pull/1))
-- **Registry Fidelity Gate** — Fidelity evidence as a requirement for validated+ quality badges. Trust gate enforces score ≥ 0.70, public report URL, calibration validity, and positive blind delta. ([kdna-registry#4](https://github.com/aikdna/kdna-registry/pull/4))
+- **WorkPack Pipeline** — Multi-stage orchestration manifest for kdna-workpack. DAG dependencies, parallel execution, artifact flow between stages, per-stage KDNA overrides, human review gates. (See WorkPack Pipeline docs.)
+- **Registry Fidelity Gate** — Fidelity evidence as a requirement for validated+ quality badges. Trust gate enforces score ≥ 0.70, public report URL, calibration validity, and positive blind delta. (Note: registry is out of scope for KDNA Core v1; this gate is currently informational only.)
 
 ### CLI
 
@@ -49,7 +49,7 @@ Phase 2 extends KDNA from "judgment asset protocol" to "judgment-driven artifact
 
 ### Demo & Docs
 
-- **E2E Coaching Demo** — Zero-dependency Node.js demo showing full protocol chain: KDNA load → 3-stage pipeline → ArtifactEnvelope → fidelity measure → FidelityResult. Per-axiom transfer levels with CI95 confidence intervals. ([kdna-lab#2](https://github.com/aikdna/kdna-lab/pull/2))
+- **E2E Coaching Demo** — Zero-dependency Node.js demo showing full protocol chain: KDNA load → 3-stage pipeline → ArtifactEnvelope → fidelity measure → FidelityResult. Per-axiom transfer levels with CI95 confidence intervals. (See demos/skill-plus-kdna-demo in this repo.)
 - **Phase 2 Architecture** — Integration matrix, data flow diagram, and non-goals for all seven components. ([#74](https://github.com/aikdna/kdna/pull/74))
 - **RFC Status Tracking** — Five-level lifecycle: Draft → Accepted → Implemented → Stable → Deprecated. ([#74](https://github.com/aikdna/kdna/pull/74))
 
