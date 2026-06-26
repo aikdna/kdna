@@ -41,11 +41,6 @@ jobs:
           path: .ecosystem-repos/kdna-core-swift
       - uses: actions/checkout@v6
         with:
-          repository: aikdna/kdna-website
-          ref: 6e2479b742d98f66a5f662e5910fdd4824d6e2eb
-          path: .ecosystem-repos/kdna-website
-      - uses: actions/checkout@v6
-        with:
           repository: aikdna/kdna-vscode
           ref: 4791d1a50c75b82e4a6e21ca190c3c0f27e39d84
           path: .ecosystem-repos/kdna-vscode
@@ -101,11 +96,6 @@ jobs:
           repository: aikdna/kdna-core-swift
           ref: 8dc36bdbc35e3b84161d3a90e32a10d49c6425c1
           path: .ecosystem-repos/kdna-core-swift
-      - uses: actions/checkout@v6
-        with:
-          repository: aikdna/kdna-website
-          ref: 6e2479b742d98f66a5f662e5910fdd4824d6e2eb
-          path: .ecosystem-repos/kdna-website
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-vscode
