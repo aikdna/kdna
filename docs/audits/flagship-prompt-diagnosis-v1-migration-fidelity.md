@@ -14,14 +14,14 @@ runtime use.
 - Source repo: `kdna-prompt_diagnosis`
 - Source package name: `@aikdna/prompt_diagnosis`
 - v1 asset ID: `kdna:aikdna:prompt_diagnosis`
-- Output container: `/private/tmp/kdna-registry-proof/out/prompt_diagnosis.kdna`
+- Output container: `/tmp/kdna-registry-proof/out/prompt_diagnosis.kdna`
 
 ## Toolchain
 
 ```bash
-./node_modules/.bin/kdna-studio migrate /Users/AI/K/OPEN/kdna-prompt_diagnosis \
+./node_modules/.bin/kdna-studio migrate <workdir>/kdna-prompt_diagnosis \
   --format v1 \
-  --out /private/tmp/kdna-registry-proof/out/prompt_diagnosis.kdna \
+  --out /tmp/kdna-registry-proof/out/prompt_diagnosis.kdna \
   --name @aikdna/prompt_diagnosis \
   --by aikdna-maintainers \
   --statement registry-clean-install-proof
@@ -37,7 +37,7 @@ Public npm packages used:
 
 ## Validation
 
-`kdna validate /private/tmp/kdna-registry-proof/out/prompt_diagnosis.kdna`
+`kdna validate /tmp/kdna-registry-proof/out/prompt_diagnosis.kdna`
 returned:
 
 ```json

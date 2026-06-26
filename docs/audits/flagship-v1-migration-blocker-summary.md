@@ -25,7 +25,7 @@ Studio v1 export path, but they are no longer the current launch verdict.
 - `@aikdna/kdna-studio-cli@0.5.2`
 - `@aikdna/kdna@0.9.0`
 
-Proof directory: `/private/tmp/kdna-registry-proof`
+Proof directory: `/tmp/kdna-registry-proof`
 
 ## Current Flagship Results
 
