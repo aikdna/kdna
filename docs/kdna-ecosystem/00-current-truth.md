@@ -26,6 +26,3 @@
 ## Remaining P1
 
 - B5: 旧 run.mjs → canonical-conformance (kdna)
-- 6 commands not wired to cli.js (protect/unlock/recover/available/match/install)
-- cmdCluster off-by-one (args[1] → args[0])
-- lint: agent.js licenseActivation undefined + cli.js no-fallthrough ×9
