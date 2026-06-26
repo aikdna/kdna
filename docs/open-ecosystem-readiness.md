@@ -8,7 +8,7 @@ verify, publish, and contribute without relying on private project knowledge.
 
 - `@aikdna/kdna-core` exposes stable public asset APIs.
 - Conformance tests exist for loaders and validators.
-- Registry publishing flow is documented for third-party creators.
+- (Registry is out of scope for KDNA Core v1; see 00-current-truth.md.)
 
 ## P1 Readiness Gates
 
@@ -23,5 +23,5 @@ An external developer can:
 
 1. Load and inspect a `.kdna` asset with `kdna-core`.
 2. Run conformance tests to check compatibility.
-3. Publish an asset through the Registry process.
+3. (Registry is out of scope; see 00-current-truth.md. Local asset creation via `kdna demo` / `kdna pack` / `kdna-studio-cli` is the supported path.)
 4. Connect KDNA to an agent through MCP or a loader skill.
