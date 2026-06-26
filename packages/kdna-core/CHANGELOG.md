@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.15.0 (2026-06-27)
+- B2: scrypt password profile `kdna-password-protected-v1-scrypt` (ADR-007)
+  - encryptProtectedEntryScrypt / decryptProtectedEntryScrypt (zero new deps, Node crypto.scryptSync)
+  - AES-256-GCM + AES-256-KW envelope encryption, same CEK model as RFC-0008
+  - scrypt N=32768 r=8 p=1, 32B KEK, 16B random salt
+  - planLoad inferEntitlementProfile detects scrypt profile
+  - decrypt dispatch routes Argon2id vs scrypt by envelope profile field
+  - recovery slot deferred to v0.2; v0.1: single password slot
+- B5: conformance:canonical npm script (threshold #8)
+
 ## v0.14.0 (2026-06-25)
 - B1: unified container dispatcher (readAsset — v1/v2/ dir → CanonicalAssetModel)
 - B4: loadAuthorized decryption orchestration (opts.password, opts.decryptEntry)
