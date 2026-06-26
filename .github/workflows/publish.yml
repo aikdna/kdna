@@ -17,37 +17,37 @@ jobs:
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-cli
-          ref: eeeec052547d4732aa6493eb2bf7da7fb89459f3
+          ref: a44a26c0bdfe0eb5ff21ecac5ec01baaa7355f26
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-skills
-          ref: c0d59cb4165b60471c4baff038dc3386bdad238c
+          ref: 6a0e087da3f34c6ae3e9adcd8022d43f278ba59a
           path: .ecosystem-repos/kdna-skills
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-studio-core
-          ref: 4eb27fa11476cf4e79a3ea3591391d2c138c2470
+          ref: 8cfa807bd108260a25aa9ee43b765095d0aaf63a
           path: .ecosystem-repos/kdna-studio-core
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-studio-cli
-          ref: e2674e3cf8093d6656d51015a4658e32b1992916
+          ref: 48ffc13451c8afbe0fafa6f21466ab6bdab213fd
           path: .ecosystem-repos/kdna-studio-cli
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-core-swift
-          ref: 9510987f31d7d59b146ebc56cb96e00c3bfdbe5d
+          ref: 8dc36bdbc35e3b84161d3a90e32a10d49c6425c1
           path: .ecosystem-repos/kdna-core-swift
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-website
-          ref: d747c3c10a1fe7908ba8c695dc52c49698d03799
+          ref: 6e2479b742d98f66a5f662e5910fdd4824d6e2eb
           path: .ecosystem-repos/kdna-website
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-vscode
-          ref: 810d06e77721614c3b014c9ecdd4a29ab0298454
+          ref: 4791d1a50c75b82e4a6e21ca190c3c0f27e39d84
           path: .ecosystem-repos/kdna-vscode
 # kdna-writing, kdna-prompt_diagnosis, kdna-agent_safety repos deleted — artifacts migrated to kdna-x
       - uses: actions/setup-node@v6
@@ -79,37 +79,37 @@ jobs:
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-cli
-          ref: eeeec052547d4732aa6493eb2bf7da7fb89459f3
+          ref: a44a26c0bdfe0eb5ff21ecac5ec01baaa7355f26
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-skills
-          ref: c0d59cb4165b60471c4baff038dc3386bdad238c
+          ref: 6a0e087da3f34c6ae3e9adcd8022d43f278ba59a
           path: .ecosystem-repos/kdna-skills
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-studio-core
-          ref: 4eb27fa11476cf4e79a3ea3591391d2c138c2470
+          ref: 8cfa807bd108260a25aa9ee43b765095d0aaf63a
           path: .ecosystem-repos/kdna-studio-core
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-studio-cli
-          ref: e2674e3cf8093d6656d51015a4658e32b1992916
+          ref: 48ffc13451c8afbe0fafa6f21466ab6bdab213fd
           path: .ecosystem-repos/kdna-studio-cli
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-core-swift
-          ref: 9510987f31d7d59b146ebc56cb96e00c3bfdbe5d
+          ref: 8dc36bdbc35e3b84161d3a90e32a10d49c6425c1
           path: .ecosystem-repos/kdna-core-swift
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-website
-          ref: d747c3c10a1fe7908ba8c695dc52c49698d03799
+          ref: 6e2479b742d98f66a5f662e5910fdd4824d6e2eb
           path: .ecosystem-repos/kdna-website
       - uses: actions/checkout@v6
         with:
           repository: aikdna/kdna-vscode
-          ref: 810d06e77721614c3b014c9ecdd4a29ab0298454
+          ref: 4791d1a50c75b82e4a6e21ca190c3c0f27e39d84
           path: .ecosystem-repos/kdna-vscode
 # kdna-writing, kdna-prompt_diagnosis, kdna-agent_safety repos deleted — artifacts migrated to kdna-x
       - uses: actions/setup-node@v6
