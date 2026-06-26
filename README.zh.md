@@ -190,11 +190,11 @@ kdna plan-load dist/my_expertise.kdna
 kdna load dist/my_expertise.kdna --profile=compact --as=prompt
 ```
 
-由 KDNA Studio CLI 导出的 v1 `.kdna` 是当前 KDNA 官方工具链的最终产物。VS Code 和 `kdna dev` 命令只用于开发源工作区的诊断。签名、加密和私有资产是后续 gated 阶段，不是当前 Core v1 基线。
+由 KDNA Studio CLI 导出的 v1 `.kdna` 是当前 KDNA 官方工具链的最终产物。VS Code 和 `kdna dev` 命令只用于开发源工作区的诊断。签名、加密和私有资产是后续 gated 阶段，不是当前 KDNA Core v1 基线。
 
 ## 规范
 
-完整 Core v1 规范见 [SPEC.md](./SPEC.md)。
+完整 KDNA Core v1 规范见 [SPEC.md](./SPEC.md)。
 
 ### 试试 Demo
 
@@ -232,7 +232,7 @@ kdna load <asset>.kdna --profile=compact --as=prompt
 
 | 文档 | 说明 |
 |---|---|
-| [SPEC.md](./SPEC.md) | Core v1 协议规范 |
+| [SPEC.md](./SPEC.md) | KDNA Core v1 协议规范 |
 | [docs/getting-started.zh.md](./docs/getting-started.zh.md) | 安装、创建和使用 KDNA |
 | [docs/evaluation.zh.md](./docs/evaluation.zh.md) | 如何检验 KDNA 是否改善了判断力 |
 | [docs/meta-cognition.zh.md](./docs/meta-cognition.zh.md) | 何时用 KDNA、冲突仲裁、领域组合 |
