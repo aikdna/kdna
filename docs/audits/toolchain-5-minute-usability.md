@@ -7,7 +7,7 @@ Status: CONDITIONAL PASS (kdnACLI install works; v1 route requires monorepo)
 
 - macOS, Node.js v22
 - Global `kdna` at `/opt/homebrew/bin/kdna` → @aikdna/kdna-cli v0.21.1
-- Local monorepo at `/Users/AI/K/OPEN/kdna`
+- Local monorepo at `<workdir>/kdna`
 
 ## Command-by-command
 

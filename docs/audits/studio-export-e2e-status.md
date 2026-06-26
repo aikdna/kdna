@@ -54,9 +54,9 @@ kdna load asset.kdna --profile=compact --as=prompt
 - `kdna-studio-cli npm test`: 18/18 pass.
 - `kdna-studio-core npm test`: 128/128 pass.
 - `kdna npm test`: pass.
-- Local tarball clean install in `/private/tmp/kdna-clean-proof-2` passes for:
+- Local tarball clean install in `/tmp/kdna-clean-proof-2` passes for:
   `writing`, `agent_safety`, and `prompt_diagnosis`.
-- npm registry clean install in `/private/tmp/kdna-registry-proof` passes with:
+- npm registry clean install in `/tmp/kdna-registry-proof` passes with:
   - `@aikdna/kdna-core@0.11.1`
   - `@aikdna/kdna-cli@0.25.0`
   - `@aikdna/kdna-studio-core@1.5.3`

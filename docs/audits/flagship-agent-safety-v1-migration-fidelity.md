@@ -14,14 +14,14 @@ failure modes, and derived boundaries.
 - Source repo: `kdna-agent_safety`
 - Source package name: `@aikdna/agent_safety`
 - v1 asset ID: `kdna:aikdna:agent_safety`
-- Output container: `/private/tmp/kdna-registry-proof/out/agent_safety.kdna`
+- Output container: `/tmp/kdna-registry-proof/out/agent_safety.kdna`
 
 ## Toolchain
 
 ```bash
-./node_modules/.bin/kdna-studio migrate /Users/AI/K/OPEN/kdna-agent_safety \
+./node_modules/.bin/kdna-studio migrate <workdir>/kdna-agent_safety \
   --format v1 \
-  --out /private/tmp/kdna-registry-proof/out/agent_safety.kdna \
+  --out /tmp/kdna-registry-proof/out/agent_safety.kdna \
   --name @aikdna/agent_safety \
   --by aikdna-maintainers \
   --statement registry-clean-install-proof
@@ -37,7 +37,7 @@ Public npm packages used:
 
 ## Validation
 
-`kdna validate /private/tmp/kdna-registry-proof/out/agent_safety.kdna` returned:
+`kdna validate /tmp/kdna-registry-proof/out/agent_safety.kdna` returned:
 
 ```json
 {

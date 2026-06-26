@@ -49,7 +49,7 @@ Current hardening proof shows:
   - `@aikdna/kdna-studio-core@1.5.3`
   - `@aikdna/kdna-studio-cli@0.5.3`
   - `@aikdna/kdna-cli@0.25.1`
-- npm registry clean-install proof passes in `/private/tmp/kdna-registry-proof`
+- npm registry clean-install proof passes in `/tmp/kdna-registry-proof`
   with:
   - `@aikdna/kdna-core@0.11.1`
   - `@aikdna/kdna-cli@0.25.1`
