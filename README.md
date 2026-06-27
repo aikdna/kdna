@@ -32,7 +32,7 @@ A `.kdna` file is a single, portable container that holds:
 - a **public manifest** (`kdna.json`) — the asset's identity and metadata
 - a **judgment payload** (`payload.kdnab`) — the actual structured judgment data
 - optional **encryption envelope metadata** — to mark encrypted entries
-- optional **signatures** — author / publisher attestations over the payload *(not yet implemented)*
+- optional **signatures** (`signature.kdsig`) — author / publisher attestations over the payload (OPTIONAL until 2027-Q1, REQUIRED after; see SPEC §3.2)
 - **version and lineage information** — for traceability across releases
 - a **runtime load contract** — describes how the official KDNA loader may read the asset
 - optional **attachments** — supplementary files referenced from the payload
@@ -48,7 +48,7 @@ KDNA Core is the **format authority**. It defines:
 - the **manifest schema** (`kdna.json` shape and required fields)
 - the **payload profile schema** (e.g. `judgment-profile-v1`)
 - the **encryption envelope metadata** (which entries are encrypted, key references)
-- the **signature and digest metadata** (digest algorithm; signatures defined but not yet implemented)
+- the **signature and digest metadata** (digest algorithm; signature metadata is reserved in v1 layout, OPTIONAL until 2027-Q1, REQUIRED after)
 - the **version chain metadata** (lineage, judgment version, compatibility)
 - the **runtime loading contract** (load profiles, decryption requirements, token hints)
 

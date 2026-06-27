@@ -109,7 +109,7 @@ LAYER B — JUDGMENT AUTHORING   (authoring-time, internal to domain)
   S6  Compile Domain KDNA       →  KDNA_Core.json + KDNA_Patterns.json + ...
 
 LAYER C — ASSET & DISTRIBUTION (build-time, distributable)
-  S7  Pack .kdna                →  kdna.json + payload.kdnab + signature.kdsig
+  S7  Pack .kdna                →  kdna.json + payload.kdnab + [signature.kdsig until 2027-Q1]
   S8  Publish to Registry       →  registry entry + KDNA_CARD.json
 
 LAYER D — RUNTIME & EVOLUTION  (consumer-time, per-task)
@@ -374,7 +374,7 @@ This RFC does not introduce new runtime objects. It clarifies which authoring-ti
                     ▼
                 S7 Pack      ◄────  kdna.json
                     │                payload.kdnab (CBOR v2)
-                    │                signature.kdsig
+                    │                signature.kdsig  (OPTIONAL until 2027-Q1, REQUIRED after)
                     │                KDNA_CARD.json (KDNA_CARD_SPEC)
                     │                KDNA_ProvenanceReport.json (sag + tc summary)
                     ▼

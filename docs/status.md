@@ -56,31 +56,6 @@ kdna-studio export ./school --format v1 --out ./school.kdna
 kdna validate ./school.kdna
 ```
 
-## Removed in Core CLI 0.27.0
-
-The following legacy v0.7 command surfaces were removed in the hard cutover to Core GA (`@aikdna/kdna-cli@0.27.0`):
-
-- `kdna help legacy`
-- `kdna setup`
-- `kdna install`
-- `kdna remove / update / info`
-- `kdna list / search`
-- `kdna registry`
-- `kdna verify`
-- `kdna compare / diff`
-- `kdna doctor / trace / history`
-- `kdna publish`
-- `kdna identity`
-- `kdna license`
-- `kdna protect / unlock / recover`
-- `kdna workpack`
-- `kdna cluster`
-- `kdna governance / proposal / review / evolution / regression`
-- `kdna dev`
-- All legacy subcommands (badge, test, changelog, etc.)
-
-These were removed from the Core GA CLI. Future systems such as distribution, signing, encryption, entitlement, remote runtime, diagnostics, and workpacks may return only through new RFCs and separate packages. They are not part of the current Core GA release.
-
 ## What is experimental / in development
 
 - **kdna-studio** — Core GA authoring/export is stable (0.6.5); advanced AI authoring features (distill, interview, feynman) are experimental

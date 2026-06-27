@@ -41,13 +41,15 @@ kdna.json                       └── build-receipt.json
 
 ### 3.1 Required Entries
 
-| Entry | Encoding | Description |
-|-------|----------|-------------|
-| `mimetype` | ASCII text | `application/vnd.aikdna.kdna+zip` |
-| `kdna.json` | UTF-8 JSON | Public manifest and metadata. MUST NOT contain judgment content (axioms, ontology, patterns, etc.) |
-| `payload.kdnab` | CBOR (RFC 8949) | Encoded judgment payload. Contains all domain judgment data. |
-| `signature.kdsig` | UTF-8 JSON | Ed25519 signature over canonical payload digest |
-| `build-receipt.json` | UTF-8 JSON | Build provenance, compiler metadata, content digest |
+| Entry | Encoding | Description | Status |
+|-------|----------|-------------|--------|
+| `mimetype` | ASCII text | `application/vnd.aikdna.kdna+zip` | REQUIRED |
+| `kdna.json` | UTF-8 JSON | Public manifest and metadata. MUST NOT contain judgment content (axioms, ontology, patterns, etc.) | REQUIRED |
+| `payload.kdnab` | CBOR (RFC 8949) | Encoded judgment payload. Contains all domain judgment data. | REQUIRED |
+| `signature.kdsig` | UTF-8 JSON | Ed25519 signature over canonical payload digest | **OPTIONAL until 2027-Q1; REQUIRED after** |
+| `build-receipt.json` | UTF-8 JSON | Build provenance, compiler metadata, content digest | REQUIRED |
+
+> **Status note (2026-06-27):** `signature.kdsig` is reserved by the v1 container layout but **OPTIONAL** in current implementations. The hard cutover date for making it REQUIRED is **2027-Q1** (end of March 2027). See SPEC §3.2.
 
 ### 3.2 Optional Entries
 

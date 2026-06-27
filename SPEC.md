@@ -211,11 +211,13 @@ A `.kdna` asset MUST include a `kdna.json` manifest at the archive root.
 
 A conforming distribution `.kdna` asset MUST include:
 
-| Entry | Description |
-|-------|-------------|
-| `kdna.json` | Public manifest and metadata (no judgment content) |
-| `payload.kdnab` | CBOR-encoded judgment payload (all domain content) |
-| `signature.kdsig` | Ed25519 signature over canonical payload digest |
+| Entry | Description | Status |
+|-------|-------------|--------|
+| `kdna.json` | Public manifest and metadata (no judgment content) | REQUIRED |
+| `payload.kdnab` | CBOR-encoded judgment payload (all domain content) | REQUIRED |
+| `signature.kdsig` | Ed25519 signature over canonical payload digest | **OPTIONAL until 2027-Q1; REQUIRED after** |
+
+> **Status note (2026-06-27):** The `signature.kdsig` entry is reserved by the v1 container layout but is **OPTIONAL** in current implementations. Ed25519 signing infrastructure is in place (`@aikdna/kdna-core` identity module), but signature generation and verification across the publish → install → load chain is not yet integrated into the official toolchain. The hard cutover date for making `signature.kdsig` REQUIRED is **2027-Q1** (end of March 2027). Assets distributed before that date remain conformant without `signature.kdsig`; assets distributed on or after 2027-Q1 MUST include it. This is a normative deadline — extensions are not granted by silence.
 
 A `.kdna` asset MUST NOT include `KDNA_Core.json`, `KDNA_Patterns.json`, `KDNA_Scenarios.json`, `KDNA_Cases.json`, `KDNA_Reasoning.json`, or `KDNA_Evolution.json` as top-level ZIP entries. Those files belong to the source tree only.
 
