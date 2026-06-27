@@ -11,7 +11,7 @@ jobs:
       - run: npm test
 
   public-surface:
-    name: public-surface check (REDACTED / private-name leak)
+    name: public-surface check (private-name leak)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
