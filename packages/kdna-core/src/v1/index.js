@@ -1509,6 +1509,30 @@ function renderPromptItem(item) {
     if (item.failure_risk) parts.push(`failure risk: ${item.failure_risk}`);
     return parts.join(' — ');
   }
+  // Boundary card: kdna-studio writes { id, scope, out_of_scope,
+  // acceptable_exceptions }. Render the scope/out-of-scope rule
+  // instead of falling through to the UUID `id` (which was the
+  // v0.15.0 behavior and made boundaries unreadable in
+  // `kdna load --as=prompt`).
+  if (
+    item.type === 'boundary' ||
+    (item.scope !== undefined && item.out_of_scope !== undefined)
+  ) {
+    const parts = [];
+    if (item.scope) parts.push(`in scope: ${sanitizePrompt(item.scope)}`);
+    if (item.out_of_scope) parts.push(`out of scope: ${sanitizePrompt(item.out_of_scope)}`);
+    if (Array.isArray(item.acceptable_exceptions) && item.acceptable_exceptions.length) {
+      parts.push(`exceptions: ${item.acceptable_exceptions.map(sanitizePrompt).join('; ')}`);
+    }
+    if (parts.length === 0) {
+      // Boundary card with empty scope/out_of_scope: surface as
+      // "(boundary card with empty scope)" instead of falling through
+      // to the UUID `id`. The author should fill in scope/out_of_scope
+      // before publishing.
+      return '(boundary card with empty scope)';
+    }
+    return parts.join('; ');
+  }
   if (item.boundary && item.one_sentence) return `${item.one_sentence}: ${item.boundary}`;
   if (item.stance) return item.stance;
   if (item.statement) return item.statement;
@@ -1521,8 +1545,16 @@ function renderPromptItem(item) {
   if (item.one_sentence) return item.one_sentence;
   if (item.essence) return item.essence;
   if (item.question) return item.question;
-  if (item.id) return item.id;
-  return JSON.stringify(item);
+  // Last-resort fall-through. Returning the id (e.g. "bo_xxxx-...") makes
+  // the output unreadable; prefer a note that the card is unrecognized.
+  return `(unrendered card: ${item.type || 'unknown'})`;
+}
+
+function sanitizePrompt(s) {
+  if (s === undefined || s === null) return '';
+  if (typeof s === 'string') return s;
+  if (Array.isArray(s)) return s.map(sanitizePrompt).join('; ');
+  return String(s);
 }
 
 function loadAuthorized(inputPath, opts = {}) {

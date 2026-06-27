@@ -38,7 +38,7 @@ Phase 2 extends KDNA from "how to encode judgment" to "how judgment flows into p
 ├──────────────────────────────────────────────────────────┤
 │                  INFRASTRUCTURE LAYER                     │
 │                                                          │
-│  Evidence Trace              kdna-workpack Pipeline      │
+│  Evidence Trace              WorkPack Pipeline (future)   │
 │  ┌──────────────────────┐   ┌────────────────────────┐  │
 │  │ Unified trace chain  │   │ Pipeline manifest       │  │
 │  │ artifact_refs        │   │ Staged composition      │  │
