@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.15.3 (2026-06-27)
+- Fix (PC-2, real): `renderPromptItem` now actually ships the
+  boundary card branch. The previous v0.15.2 release (ee20c5e)
+  bumped package.json and added a CHANGELOG entry but did NOT
+  include the source change to `src/v1/index.js`. This release
+  re-bundles the fix that landed in 46047fb (PC-1/PC-4 cleanup).
+  Verified end-to-end: `kdna-studio card add boundary` with
+  non-empty `scope` + `out_of_scope` → `kdna load` now prints
+  `in scope: X; out of scope: Y` instead of the UUID `id`.
+
 ## v0.15.2 (2026-06-27)
 - Fix (PC-2): `renderPromptItem` now renders boundary cards as
   `in scope: X; out of scope: Y; exceptions: ...` instead of
