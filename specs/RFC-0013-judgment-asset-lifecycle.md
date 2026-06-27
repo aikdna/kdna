@@ -1,11 +1,13 @@
 # RFC-0013: KDNA Judgment Asset Lifecycle
 
+> **Public-distribution note (2026-06-27)**: This RFC is published for protocol review. It uses a private application as a worked example throughout. Readers should mentally substitute any official public domain from `OPEN/kdna-assets/` (e.g., `agent-project-context` or `agent-completion-adjudication`) for the example domain. The protocol mechanics, schemas, and field names are normative; the example application identity is illustrative only.
+
 **Status:** Draft
 **Proposed:** 2026-06-16
 **Authors:** KDNA Maintainers
 **Supersedes:** (none)
 **Related:**
-- KDNA SPEC v1.0-rc §1.6 (Judgment Model), §1.7 (Update Governance), §3 (Asset)
+- KDNA SPEC v0.7 §1.6 (Judgment Model), §1.7 (Update Governance), §3 (Asset)
 - `docs/SOURCE_DISTILLATION_CONTRACT.md` v0.2 (Five-Layer Object Model)
 - `docs/KDNA_CARD_SPEC.md` (Card metadata, already shipped)
 - `specs/human-lock.md` (Three Classes of Updates)

@@ -65,6 +65,8 @@ Historical note: 0.10.x–0.12.x were pre-v1-GA cleanup releases. Full human-rea
 
 ## 0.7.0 — v1.0-rc: Open Judgment Protocol
 
+> **Supersession note (2026-06-27)**: The 0.7.0 release was tagged "v1.0-rc" at the time (2026-05-13). The v0.7 line was subsequently re-anchored to the @aikdna/* npm scope with registry v2.0 (2026-05-22). The "v1.0-rc" label below is historical; current docs use the 0.7.x numbering.
+
 **2026-05-13**
 
 Initial public release of the KDNA Protocol v1.0-rc. Core specification, CLI runtime, domain assets, agent integrations, and registry infrastructure.

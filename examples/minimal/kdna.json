@@ -1,9 +1,9 @@
 {
   "kdna_version": "1.0",
-  "asset_id": "kdna:example:atomspeak-core",
+  "asset_id": "kdna:example:agent-project-context",
   "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
   "asset_type": "domain",
-  "title": "Atomspeak Core",
+  "title": "Agent Project Context",
   "version": "1.0.0",
   "judgment_version": "1.0.0",
   "created_at": "2026-06-16T00:00:00Z",

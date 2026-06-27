@@ -32,7 +32,7 @@ in all active public documents, code comments, and specifications.
 | `V1 format` | Identical string means both current Core and removed plaintext | `legacy plaintext ZIP` |
 | `Container v2` | Suggests a release generation, not a container format | `KDNA Asset Container` |
 | `Core v1` | Without "GA" qualifier, reads as a version number | `Core GA` |
-| `v1 Core GA` | OK in context, but prefer `Core GA` alone | `Core GA` |
+| `v1 Core GA` | Superseded — pre-v0.7 label; v0.7 (2026-05-22) is the current stable line | `Core GA` or `v0.7` |
 
 ## Mapping: Old → New
 

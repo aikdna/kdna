@@ -40,7 +40,7 @@ test('inspect minimal source dir', () => {
   assert.equal(r.status, 0, r.stderr);
   const out = JSON.parse(r.stdout);
   assert.equal(out.kdna_version, '1.0');
-  assert.equal(out.asset_id, 'kdna:example:atomspeak-core');
+  assert.equal(out.asset_id, 'kdna:example:agent-project-context');
   for (const t of FORBIDDEN) assert.ok(!Object.prototype.hasOwnProperty.call(out, t));
 });
 

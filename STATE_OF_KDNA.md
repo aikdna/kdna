@@ -10,9 +10,11 @@
 
 Date: 2026-06-09
 
+> **Supersession note (2026-06-27)**: This document was written for the v1.0-rc phase. As of the v0.7 launch (2026-05-22), the v0.7 release superseded the v1.0-rc label. The technical content below (canonical format, authoring vs runtime, manifest fields) remains valid; the "v1.0-rc" terminology is historical.
+
 KDNA is the open judgment asset protocol for AI agents. It is not another prompt format. A `.kdna` asset is a verifiable, signed, inspectable domain judgment asset that an agent can load before it acts.
 
-## Stable For v1.0-rc
+## Stable For v0.7 (supersedes v1.0-rc)
 
 - `.kdna` is the canonical installed, verified, loaded, and distributed asset.
 - Dev source directories are authoring workspaces, not public runtime assets.

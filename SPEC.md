@@ -128,7 +128,7 @@ The `decomposition_rationale` MUST explain why the domain's multiple parts canno
 |-----|------|
 | `@aikdna/business` (covers strategy, ops, finance, sales, HR, legal) | `@aikdna/price_objection_diagnosis` + `@aikdna/landing_page_trust` + `@aikdna/meeting_decision_quality` |
 | `@aikdna/writing` (covers blog, academic, marketing, technical, fiction) | `@aikdna/blog_intro_hook` + `@aikdna/academic_methodology_passive_voice` + `@aikdna/landing_copy_above_fold` |
-| `atomspeak` as a single 800-line `KDNA_Core.json` | `atomspeak` (single question) + sub-domain `state_quadrant` only if independently loadable; otherwise `internal_module` |
+| `agent-project-context` as a single 800-line `KDNA_Core.json` | `agent-project-context` (single question) + sub-domain `project_phase` only if independently loadable; otherwise `internal_module` |
 
 This principle is enforced by lint, not by prose. The canonical implementation lives in `aikdna/kdna-cli` (`src/cmds/anti-monolithic.js`); the principle text originates in RFC-0013 §4.
 

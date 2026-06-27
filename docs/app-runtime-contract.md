@@ -227,9 +227,9 @@ This is why the contract belongs in the open protocol layer rather than inside o
 
 Executable examples live in [examples/app-runtime-contract](../examples/app-runtime-contract/):
 
-- `kdnachat-*.json` shows a conversation route, trace, and report.
-- `kdnastudio-*.json` shows an authoring/export governance route, trace, and report.
-- `kdnawork-*.json` shows an agent work session route, trace, and report.
+- `chat-runtime-*.json` shows a conversation route, trace, and report.
+- `studio-runtime-*.json` shows an authoring/export governance route, trace, and report.
+- `work-runtime-*.json` shows an agent work session route, trace, and report.
 
 Run:
 

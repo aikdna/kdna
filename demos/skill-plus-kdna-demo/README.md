@@ -25,9 +25,10 @@ Then load the compact prompt context:
 kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
 
-For a real domain demo, use `kdna-x` assets from the
-[kdna-x](https://github.com/aikdna/kdna-x) repository (viral-topic-selection,
-title-attraction, short-video-script, etc.).
+For a real domain demo, use official assets from
+[`kdna-assets`](https://github.com/aikdna/kdna-assets) (viral-topic-selection,
+title-attraction, short-video-script, agent-project-context,
+agent-completion-adjudication, etc.).
 
 ## Files
 

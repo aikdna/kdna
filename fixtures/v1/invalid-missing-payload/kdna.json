@@ -1,6 +1,6 @@
 {
   "kdna_version": "1.0",
-  "asset_id": "kdna:example:atomspeak-core",
+  "asset_id": "kdna:example:invalid-missing-payload",
   "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
   "asset_type": "domain",
   "title": "Atomspeak Core",

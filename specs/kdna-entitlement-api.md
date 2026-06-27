@@ -93,7 +93,7 @@ Required fields:
 | `domain` | Yes | Scoped asset name, for example `@scope/name`. |
 | `license_key` | Yes | Secret activation key. Never log this field. |
 | `machine_fingerprint` | Yes for machine-bound licenses | Client device fingerprint. |
-| `client` | Yes | Calling client, for example `kdna-cli`, `kdnachat`, `kdnastudio`. |
+| `client` | Yes | Calling client, for example `kdna-cli`, `kdna-studio-cli`, `kdna-vscode`, or any third-party consumer of the protocol. |
 
 Optional fields are for account/device management and analytics. Servers MUST
 ignore unknown fields for forward compatibility.

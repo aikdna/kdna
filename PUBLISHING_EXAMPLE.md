@@ -1,6 +1,6 @@
 # Publishing Example
 
-This is the public v1.0-rc path from Studio export to registry PR.
+This is the public release path from Studio export to registry PR (v0.7+; the earlier v1.0-rc label is superseded).
 
 ## 1. Export A Trusted Asset
 

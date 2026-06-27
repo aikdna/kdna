@@ -1,6 +1,6 @@
 # KDNA Tool Status Matrix — June 2026
 
-## v1 Core GA (stable)
+## Core GA (v0.7, stable as of 2026-05-22)
 
 | Tool | Role | Status | Command |
 |---|---|---|---|

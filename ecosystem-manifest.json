@@ -16,7 +16,7 @@
       "local_path": ".",
       "npm_package": "@aikdna/kdna-core",
       "package_json": "packages/kdna-core/package.json",
-      "current_version": "0.13.3",
+      "current_version": "0.15.0",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": [
@@ -36,7 +36,7 @@
       "local_path": "../kdna-cli",
       "npm_package": "@aikdna/kdna-cli",
       "package_json": "../kdna-cli/package.json",
-      "current_version": "0.27.6",
+      "current_version": "0.28.7",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": [
@@ -74,7 +74,7 @@
       "local_path": "../kdna-studio-core",
       "npm_package": "@aikdna/kdna-studio-core",
       "package_json": "../kdna-studio-core/package.json",
-      "current_version": "1.5.12",
+      "current_version": "1.7.0",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": [
@@ -93,7 +93,7 @@
       "local_path": "../kdna-studio-cli",
       "npm_package": "@aikdna/kdna-studio-cli",
       "package_json": "../kdna-studio-cli/package.json",
-      "current_version": "0.6.5",
+      "current_version": "0.8.0",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": [
@@ -144,18 +144,18 @@
       "legacy_replacement": "@aikdna/kdna-cli"
     },
     {
-      "repository": "aikdna/kdna-website",
-      "local_path": "../kdna-website",
+      "_note": "2026-06-27: This entry is intentionally redacted. A private commercial site exists but is not part of the public ecosystem manifest. Repository name, paths, version, and commit hash have been removed. Public consumers should treat this as 'not applicable to public discovery'.",
+      "repository": "REDACTED-private-site",
       "npm_package": null,
-      "package_json": "../kdna-website/package.json",
       "current_version": null,
-      "lifecycle": "Beta",
+      "lifecycle": "Legacy",
       "supported_kdna_version": "1.0",
       "supported_access_modes": [
-        "public"
+        "private"
       ],
+      "_redaction_note": "2026-06-27: local_path, package_json, and conformance_commit redacted. kdna-website is a private commercial repo and must not appear with filesystem paths or internal commit hashes in any public artifact.",
       "supported_entitlement_profiles": [],
-      "conformance_commit": "a9bf73fea0dd15105062714fdaf5b80c28a10b48",
+      "conformance_commit": null,
       "known_limitations": [
         "website copy must be generated or checked against this manifest before scale-up propagation"
       ],

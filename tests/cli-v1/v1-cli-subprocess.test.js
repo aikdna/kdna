@@ -45,8 +45,8 @@ test('cli: kdna inspect examples/minimal returns a content-neutral JSON manifest
   assert.equal(r.status, 0, `stdout=${r.stdout}\nstderr=${r.stderr}`);
   const out = JSON.parse(r.stdout);
   assert.equal(out.kdna_version, '1.0');
-  assert.equal(out.asset_id, 'kdna:example:atomspeak-core');
-  assert.equal(out.title, 'Atomspeak Core');
+  assert.equal(out.asset_id, 'kdna:example:agent-project-context');
+  assert.equal(out.title, 'Agent Project Context');
   assert.equal(out.payload, 'payload.kdnab');
   assert.equal(out.payload_encrypted, false);
   assert.equal(out.profile, 'judgment-profile-v1');
@@ -111,7 +111,7 @@ test('cli: kdna plan-load examples/minimal returns a ready LoadPlan', () => {
   assert.equal(out.required_action, 'load');
   assert.equal(out.can_load_now, true);
   assert.equal(out.projection_policy, 'minimal');
-  assert.equal(out.asset.asset_id, 'kdna:example:atomspeak-core');
+  assert.equal(out.asset.asset_id, 'kdna:example:agent-project-context');
 });
 
 test('cli: kdna plan-load returns 3 when the plan is valid but cannot load now', () => {

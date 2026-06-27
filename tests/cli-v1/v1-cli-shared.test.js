@@ -222,8 +222,8 @@ test('detectContainerFormat: returns null for a non-zip file', () => {
 test('inspect: examples/minimal returns the documented fields', () => {
   const out = v1.inspect(exampleMinimal);
   assert.equal(out.kdna_version, '1.0');
-  assert.equal(out.asset_id, 'kdna:example:atomspeak-core');
-  assert.equal(out.title, 'Atomspeak Core');
+  assert.equal(out.asset_id, 'kdna:example:agent-project-context');
+  assert.equal(out.title, 'Agent Project Context');
   assert.equal(out.version, '1.0.0');
   assert.equal(out.payload, 'payload.kdnab');
   assert.equal(out.payload_encrypted, false);

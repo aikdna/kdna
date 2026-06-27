@@ -327,8 +327,9 @@ This RFC explicitly does **not**:
   is Governance track; v2 only adds flat status fields.
 - ❌ Define WorkPack-specific fields. WorkPack is Application
   track.
-- ❌ Define atomspeak-specific fields. Atomspeak PR-5 is a
-  follow-up; v2 should not be atomspeak-specific.
+- ❌ Define application-specific fields. Private-application
+  follow-ups (e.g., domain-specific track work) are out of
+  scope; v2 should remain application-neutral.
 - ❌ Define a new schema version of the Card. v2 is additive; v1
   Cards remain valid.
 - ❌ Embed full SAG/TC/IMM in the Card. See §2. The full objects
