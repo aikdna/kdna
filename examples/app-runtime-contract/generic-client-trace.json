@@ -1,7 +1,10 @@
 {
   "trace_version": "1.0",
   "trace_id": "generic-client-trace-001",
+  "domain_id": "@aikdna/example",
+  "mode": "enforce",
   "timestamp": "2026-06-25T00:00:00Z",
+  "agent": "app",
   "loaded_package": {
     "domain": "@aikdna/example",
     "version": "1.0.0"

@@ -26,12 +26,12 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
 const ALLOWLIST_PATHS = new Set([
-  'scripts/check-public-surface.mjs',  // self (contains scanned strings)
-  'scripts/validate-public-truth.js',  // sibling check; references kdna-website in comments + lookup
-  'CHANGELOG.md',                       // historical references
+  'scripts/check-public-surface.mjs', // self (contains scanned strings)
+  'scripts/validate-public-truth.js', // sibling check; references kdna-website in comments + lookup
+  'CHANGELOG.md', // historical references
   'specs/RFC-0012-artifact-contract.md', // references kdna-workpack (public) and kdna-lab fixtures
   'specs/RFC-0013-judgment-asset-lifecycle.md', // uses atomspeak as worked example
-  'specs/RFC-0017-kdna-card-v2.md',     // references kdna-lab PRs as audit anchors
+  'specs/RFC-0017-kdna-card-v2.md', // references kdna-lab PRs as audit anchors
   // PR notes and audit packs are audit-internal; they predate the
   // structural-deletion policy and reference the historical private-repo
   // names. They live under docs/audits/ and docs/rfc-status.md.
@@ -42,13 +42,11 @@ const ALLOWLIST_PATHS = new Set([
 const REDACTED_PATTERN = /\bREDACTED\b/;
 const FORBIDDEN_PATTERNS = [
   { name: 'aikdna/kdna-website', pattern: /\baikdna\/kdna-website\b|kdna-website\b/ },
-  { name: 'atomspeak',            pattern: /\batomspeak\b|@atomspeak\b/ },
+  { name: 'atomspeak', pattern: /\batomspeak\b|@atomspeak\b/ },
 ];
 
 function listTrackedFiles() {
-  return execFileSync('git', ['ls-files'], { encoding: 'utf8' })
-    .split('\n')
-    .filter(Boolean);
+  return execFileSync('git', ['ls-files'], { encoding: 'utf8' }).split('\n').filter(Boolean);
 }
 
 function isAllowlisted(relPath) {
@@ -98,7 +96,9 @@ for (const rel of files) {
 }
 
 if (allFailures.length > 0) {
-  console.error(`public-surface check failed: ${allFailures.length} violation(s) across ${scanned} files\n`);
+  console.error(
+    `public-surface check failed: ${allFailures.length} violation(s) across ${scanned} files\n`,
+  );
   for (const f of allFailures) {
     console.error(`  ${f.file}`);
     console.error(`    rule: ${f.rule}`);
@@ -107,7 +107,9 @@ if (allFailures.length > 0) {
   console.error('Remediation:');
   console.error('  - REDACTED literals: remove the field/line/node from the schema entirely.');
   console.error('  - forbidden names:  move references to an allowlisted path (specs/RFC-*,');
-  console.error('                       docs/audits/, docs/rfc-status.md, CHANGELOG.md) or delete.');
+  console.error(
+    '                       docs/audits/, docs/rfc-status.md, CHANGELOG.md) or delete.',
+  );
   console.error('  - To update the forbidden-name set, edit scripts/check-public-surface.mjs.');
   process.exit(1);
 }
