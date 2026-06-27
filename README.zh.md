@@ -198,11 +198,16 @@ kdna load dist/my_expertise.kdna --profile=compact --as=prompt
 
 ### 试试 Demo
 
+> **2026-06-27 cleanup**: The `minimal-agent` demo previously referenced `sales` and `management` KDNA domains, which were removed in commit `3bdbb0f` (2026-06-23). The demo path is no longer runnable as written.
+
 ```bash
-node examples/minimal-agent/agent.js
+# Demonstrations available:
+# - examples/from-wiki-to-kdna — Wiki → KDNA pipeline
+# - examples/decision_state — domain loader fixture
+# - examples/app-runtime-contract — report/trace fixtures
 ```
 
-同一个用户输入，加载不同的 KDNA 领域，产生完全不同的认知分析。不需要 LLM——纯粹的判断路径对比。
+要试 KDNA 的最小路径，用 `examples/decision_state/` 或 `examples/from-wiki-to-kdna/`。
 
 ## 示例资产
 
@@ -225,8 +230,8 @@ kdna load <asset>.kdna --profile=compact --as=prompt
 | 示例 | 用途 |
 |---------|---------|
 | [decision_state](./examples/decision_state) | 校验器测试的最小领域夹具 |
-| [minimal-agent](./examples/minimal-agent) | 加载多个 KDNA 领域的 Demo Agent |
 | [from-wiki-to-kdna](./examples/from-wiki-to-kdna) | LLM Wiki 到 KDNA 的流水线演示 |
+| [app-runtime-contract](./examples/app-runtime-contract) | Report / trace / feedback fixtures |
 
 ### 核心文档
 
