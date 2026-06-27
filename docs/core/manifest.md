@@ -9,7 +9,7 @@ The manifest is a single JSON object at the root of the container, stored as `kd
 | Field | Type | Description |
 | --- | --- | --- |
 | `kdna_version` | string | The KDNA Core version this manifest conforms to. Phase 1 uses `"1.0"`. |
-| `asset_id` | string | A human-readable identifier with a `kdna_version` prefix (e.g. `kdna:example:atomspeak-core`). Not globally unique by itself. |
+| `asset_id` | string | A human-readable identifier with a `kdna_version` prefix (e.g. `kdna:example:writing-core`). Not globally unique by itself. |
 | `asset_uid` | string (URI) | A globally unique identifier, conventionally a `urn:uuid:...`. Required in v1 to disambiguate assets that share a name. |
 | `asset_type` | enum | One of `domain`, `cluster`, `tool`, `sample`, `fixture`. The container format is the same; the value tells callers how to interpret the payload. |
 | `title` | string | A short, human-readable title. |
@@ -87,7 +87,7 @@ Phase 1 **does not** implement fork/adapt behaviour. The `type` enum covers the 
 ```json
 {
   "kdna_version": "1.0",
-  "asset_id": "kdna:example:atomspeak-core",
+  "asset_id": "kdna:example:writing-core",
   "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
   "asset_type": "domain",
   "title": "Atomspeak Core",

@@ -61,6 +61,16 @@ function packageVersion(repository) {
 }
 
 function checkWebsite() {
+  // The aikdna/kdna-website component was structurally removed from
+  // ecosystem-manifest.json on 2026-06-27 (it is a private commercial
+  // repo and must not appear in the public manifest). The website
+  // itself is maintained by the marketing side; its public-surface
+  // consistency is enforced by check-public-docs.mjs inside that repo,
+  // not by this script. If the manifest is ever re-introduced with a
+  // kdna-website entry, that entry must point at a publicly checkable
+  // path. Until then, skip.
+  const website = component('aikdna/kdna-website');
+  if (!website) return;
   const websiteRoot = componentPath('aikdna/kdna-website');
   if (!websiteRoot) {
     fail('aikdna/kdna-website', 'website local_path is not available');

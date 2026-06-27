@@ -144,25 +144,6 @@
       "legacy_replacement": "@aikdna/kdna-cli"
     },
     {
-      "_note": "2026-06-27: This entry is intentionally redacted. A private commercial site exists but is not part of the public ecosystem manifest. Repository name, paths, version, and commit hash have been removed. Public consumers should treat this as 'not applicable to public discovery'.",
-      "repository": "REDACTED-private-site",
-      "npm_package": null,
-      "current_version": null,
-      "lifecycle": "Legacy",
-      "supported_kdna_version": "1.0",
-      "supported_access_modes": [
-        "private"
-      ],
-      "_redaction_note": "2026-06-27: local_path, package_json, and conformance_commit redacted. kdna-website is a private commercial repo and must not appear with filesystem paths or internal commit hashes in any public artifact.",
-      "supported_entitlement_profiles": [],
-      "conformance_commit": null,
-      "known_limitations": [
-        "website copy must be generated or checked against this manifest before scale-up propagation"
-      ],
-      "recommended_entrypoint": "render status/version/tool matrices from ecosystem-manifest.json",
-      "legacy_replacement": null
-    },
-    {
       "repository": "aikdna/kdna-writing",
       "local_path": null,
       "npm_package": null,

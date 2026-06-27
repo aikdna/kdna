@@ -9,3 +9,13 @@ jobs:
         with: { node-version: 22 }
       - run: npm ci
       - run: npm test
+
+  public-surface:
+    name: public-surface check (REDACTED / private-name leak)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Run check-public-surface
+        run: node scripts/check-public-surface.mjs

@@ -3,8 +3,8 @@
 ## Reporting a Vulnerability
 
 If you discover a security vulnerability in KDNA tooling (`kdna-cli`,
-`kdna-core`, `kdna-studio-cli`, `kdna-studio-core`, `kdna-website`,
-`kdna-skills`, MCP integrations, or related developer tools), please report it
+`kdna-core`, `kdna-studio-cli`, `kdna-studio-core`, `kdna-skills`,
+MCP integrations, or related developer tools), please report it
 privately.
 
 **Do not open a public issue.**

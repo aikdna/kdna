@@ -128,7 +128,6 @@ This repository follows [SemVer 2.0](https://semver.org/) for the KDNA Core spec
 | [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | `@aikdna/kdna-studio-core` | Studio SDK for creators |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | — | AI agent skill loader |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | — | Public asset releases |
-| [aikdna.com](https://aikdna.com) | — | Marketing site (this README is not generated from it; the website source is maintained separately) |
 
 ## License
 

@@ -37,7 +37,7 @@ judgment content — only identity and metadata.
 
 ```json
 {
-  "asset_id": "kdna:example:atomspeak-core",
+  "asset_id": "kdna:example:writing-core",
   "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
   "title": "Atomspeak Core",
   "version": "1.0.0",
@@ -67,7 +67,7 @@ and failure modes.
 
 ```
 KDNA Judgment Asset: Atomspeak Core
-Asset ID: kdna:example:atomspeak-core
+Asset ID: kdna:example:writing-core
 Profile: compact
 Max tokens hint: 500
 Highest question: What does this minimal example demonstrate?

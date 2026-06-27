@@ -6,7 +6,7 @@
 
 ## 范围
 
-本策略覆盖 KDNA 工具体系（kdna-cli、kdna-core、kdna-studio、kdna-registry、kdna-website、kdna-vscode）。领域判断内容的安全由 KDNA 安全框架和风险政策管理。
+本策略覆盖 KDNA 工具体系（kdna-cli、kdna-core、kdna-studio、kdna-registry、kdna-vscode）。领域判断内容的安全由 KDNA 安全框架和风险政策管理。
 
 ## 支持的版本
 

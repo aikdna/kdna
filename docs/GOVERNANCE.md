@@ -227,7 +227,6 @@ Public-facing documentation SHOULD use:
 - `a local backup tag (not pushed to origin)`
 - `single maintainer`
 - `Complex book-derived domain testing is deferred to a follow-up PR.`
-- `atomspeak` (without a private version string)
 - `an internal review's third finding` (a generic reference,
   not a private document name or finding number)
 
