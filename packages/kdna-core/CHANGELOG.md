@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.15.1 (2026-06-27)
+- Fix: package.json `files` array now includes `CHANGELOG.md`. The
+  v0.15.0 tarball was published without the changelog, leaving
+  consumers with no way to read release notes from `npm install`.
+  Adding it now is a no-op for code but resolves the docs gap.
+
 ## v0.15.0 (2026-06-27)
 - B2: scrypt password profile `kdna-password-protected-v1-scrypt` (ADR-007)
   - encryptProtectedEntryScrypt / decryptProtectedEntryScrypt (zero new deps, Node crypto.scryptSync)
