@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.15.2 (2026-06-27)
+- Fix (PC-2): `renderPromptItem` now renders boundary cards as
+  `in scope: X; out of scope: Y; exceptions: ...` instead of
+  falling through to the UUID `id`. The previous behavior made
+  boundaries unreadable in `kdna load --as=prompt` output. Empty
+  boundaries now surface as "(boundary card with empty scope)"
+  rather than the UUID, so authors can spot missing content.
+- Fix (safety): the last-resort fall-through when no field
+  matches returns `(unrendered card: <type>)` instead of the
+  UUID `id`, so any unrecognized card shape is visible.
+
 ## v0.15.1 (2026-06-27)
 - Fix: package.json `files` array now includes `CHANGELOG.md`. The
   v0.15.0 tarball was published without the changelog, leaving
