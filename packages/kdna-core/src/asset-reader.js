@@ -204,6 +204,14 @@ function buildContentDigest(asset) {
 }
 
 function manifestForSignature(manifest, { stripDigestFields = true } = {}) {
+  // Mirrors manifestForDigest above. The two must agree on every field
+  // they strip, or the signing and digest paths will hash different
+  // representations of the same manifest and verifiers will report a
+  // mismatch on otherwise-valid assets.
+  //
+  // Bug: prior version omitted the `authoring.content_digest` strip
+  // that manifestForDigest performs, so the signing payload included
+  // a digest field that the digest payload did not.
   const copy = { ...(manifest || {}) };
   delete copy.signature;
   delete copy._source;
@@ -211,6 +219,11 @@ function manifestForSignature(manifest, { stripDigestFields = true } = {}) {
     delete copy.asset_digest;
     delete copy.container_sha256;
     delete copy.content_digest;
+    if (copy.authoring && typeof copy.authoring === 'object') {
+      const auth = { ...copy.authoring };
+      delete auth.content_digest;
+      copy.authoring = auth;
+    }
   }
   return copy;
 }

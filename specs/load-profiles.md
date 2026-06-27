@@ -7,7 +7,7 @@ Load profiles define how much of a domain's content is injected into an agent's 
 | Level | Profile | Includes | Use Case |
 |-------|---------|----------|----------|
 | L1 | **index** | manifest (name, description, keywords, trigger_signals) | Domain selection — which domains match this task? |
-| L2 | **compact** | highest_question, axioms (one_sentence only), risk_model, self_checks | Lightweight judgment — domain participates but doesn't dominate context |
+| L2 | **compact** | highest_question, axioms (one_sentence only), risk_model, self_check | Lightweight judgment — domain participates but doesn't dominate context |
 | L3 | **scenario** | relevant scenarios, recommended frameworks, risk_model for current task | Task-specific — domain activates only for a specific situation type |
 | L4 | **full** | All 6 files (Core + Patterns + Scenarios + Cases + Reasoning + Evolution) | Full participation — domain is highly relevant or task is high-risk |
 

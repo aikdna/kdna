@@ -9,10 +9,12 @@ The canonical content tree includes every non-directory ZIP entry except:
 
 - `signature.json`
 - `.DS_Store`
+- `build-receipt.json`
+- any entry under `reports/`
 - local installation metadata
 
 The root `mimetype` entry is included. `README.md`, `LICENSE`, `evals/`,
-examples, reports, and other published evidence files are included when present.
+examples, and other published evidence files are included when present.
 
 ## Entry Ordering
 
@@ -35,6 +37,7 @@ For `kdna.json`, the following fields are removed before hashing:
 - `asset_digest`
 - `container_sha256`
 - `content_digest`
+- `authoring.content_digest` (recursive strip)
 - local `_source`
 
 ## Content Digest

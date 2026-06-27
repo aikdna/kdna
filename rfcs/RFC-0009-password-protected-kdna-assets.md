@@ -223,7 +223,7 @@ A recovered asset is therefore **unsigned but structurally valid**. Re-signing a
 Same as RFC-0008:
 
 - `mimetype`, `kdna.json`, `README.md`, `LICENSE`, `KDNA_CARD.json`, `signature.json`, and public reports MUST remain plaintext.
-- `KDNA_Core.json`, `KDNA_Patterns.json`, and optional judgment entries MAY be encrypted.
+- `payload.kdnab` (the v1 unified judgment payload) and optional judgment entries MAY be encrypted.
 - Encrypted entries MUST be declared in `kdna.json` under `encryption.encrypted_entries`.
 
 ## Security Considerations
