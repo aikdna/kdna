@@ -32,7 +32,7 @@ jobs:
           fetch-depth: 0  # need full history for tag/branch resolution
 
       - name: Install Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
 
