@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.15.5 (2026-06-28)
+
+Phase 12 audit follow-up. Closes 3 issues filed against this
+repo (#145, #146, #147).
+
+- **#145** The `compilePatterns` output for `misunderstanding`
+  cards was already preserved (the v1 round-trip fix in 0.15.4
+  carried `failure_risk` / `applies_when` / `does_not_apply_when`).
+  The audit confirmed the fix is in place. No code change required;
+  this entry documents the verification.
+- **#146** `cardsFromV1Payload` (in the studio-cli consumer) now
+  infers a `type` for `payload.patterns` entries that omit it,
+  by inspecting the field set. Misunderstandings (which have
+  `wrong` + `correct`), terms (have `term` + `definition`),
+  banned terms, patterns, and aesthetics are now all picked up.
+  Truly unclassifiable entries are logged and skipped, never
+  silently dropped. The fix lives in the consumer
+  (`@aikdna/kdna-studio-cli` 0.8.6) rather than here.
+- **#147** `buildSigningPayload` now excludes `build-receipt.json`
+  and any entry under `reports/`, matching `buildContentDigest`.
+  The prior omission meant a producer that signed with this code
+  and a verifier that digested with `buildContentDigest` would
+  compute two different byte strings and the signature would fail
+  to verify. The exclusion set is now a single source of truth.
+  `docs/CANONICALIZATION.md` updated to spell out the rule and
+  warn producers/verifiers that any new exclusion MUST be added
+  to both paths in the same change.
+
 ## v0.15.4 (2026-06-28)
 
 Audit follow-ups (2026-06-28 round-trip verification). This release
