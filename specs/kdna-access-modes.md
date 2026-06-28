@@ -226,4 +226,8 @@ The choice of mode should balance:
 - `kdna-package-format.md` — Defines `access` in `kdna.json` manifests
 - `kdna-license.md` — Defines legal terms that complement access modes
 - `kdna-entitlement-api.md` — Defines activation, sync, revocation, offline grace, and license audit events
-- KDNA Runtime — Technical implementation of `remote` projection mode
+- `kdna-runtime-projection.md` — Defines the projection request/response contract for `remote` mode
+- `../docs/REMOTE_MODE.md` — **Remote mode design spec**: self-hosting invariant,
+  deployment models (self-hosted / KDNA hosted service / third-party), and
+  design contracts for the projection server and activation server reference
+  implementations
