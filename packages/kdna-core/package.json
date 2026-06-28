@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-core",
-  "version": "0.15.7",
+  "version": "0.15.8",
   "description": "KDNA Core library for validating, planning, and loading local .kdna judgment assets.",
   "engines": {
     "node": ">=18.0.0"

@@ -1844,18 +1844,36 @@ function loadV1Unsafe(inputPath, opts = {}) {
     throw new Error(`unknown load profile: ${profile}`);
   }
 
-  if (opts.resolvedDependencies && opts.resolvedDependencies.length > 0) {
+   if (opts.resolvedDependencies && opts.resolvedDependencies.length > 0) {
     result.resolved_dependencies = opts.resolvedDependencies.map(dep => {
       const depLoaded = loadV1Unsafe(dep.path, { ...opts, resolvedDependencies: [] });
+      // RAG namespace (Story 11): scoped identifier for namespace isolation.
+      // Format: name@version (or just name when version is absent).
+      const ragNamespace = dep.name
+        ? (dep.version ? `${dep.name}@${dep.version}` : dep.name)
+        : null;
       return {
         name: dep.name,
         version: dep.version,
         path: dep.path,
+        rag_namespace: ragNamespace,
         status: depLoaded.status,
         profile: depLoaded.profile,
         content: depLoaded.content
       };
     });
+
+    // RAG isolation policy (Story 11): consumers MUST NOT mix content
+    // across namespaces without explicit permission. cross_namespace_blocked
+    // is the default; a consumer may opt in to cross-namespace access by
+    // setting its own policy, but Core never does it silently.
+    result.rag_isolation_policy = {
+      default: 'fenced',
+      cross_namespace_blocked: true,
+      namespaces: result.resolved_dependencies
+        .map(d => d.rag_namespace)
+        .filter(Boolean),
+    };
   }
 
   if (as === 'prompt') {
@@ -1887,7 +1905,13 @@ function loadV1Unsafe(inputPath, opts = {}) {
       for (const dep of opts.resolvedDependencies) {
         const depLoaded = loadV1Unsafe(dep.path, { ...opts, resolvedDependencies: [] });
         if (depLoaded.text) {
-          textOut += '\n\n---\n\n' + depLoaded.text;
+          // Namespace header (Story 11): each component section is prefixed
+          // with [NAMESPACE: id] so consumers can isolate RAG content per source.
+          const ns = dep.name
+            ? (dep.version ? `${dep.name}@${dep.version}` : dep.name)
+            : null;
+          const nsHeader = ns ? `[NAMESPACE: ${ns}]\n` : '';
+          textOut += '\n\n---\n\n' + nsHeader + depLoaded.text;
         }
       }
     }

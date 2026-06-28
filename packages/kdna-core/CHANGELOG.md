@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.15.8 (2026-06-28)
+
+Story 11 — RAG namespace isolation (RFC #148 v2.x Phase 3).
+
+- **`rag_namespace`** field added to each entry in `resolved_dependencies`.
+  Format: `name@version` (or bare `name` when version is absent). Provides a
+  stable scoped identifier for per-component namespace isolation.
+- **`rag_isolation_policy`** object added to load output when
+  `resolved_dependencies` is non-empty:
+  `{ default: "fenced", cross_namespace_blocked: true, namespaces: [...] }`.
+  Consumers MUST NOT mix content across namespaces without explicit permission.
+- **`--as=prompt` namespace header**: each component section in multi-asset
+  prompt output is now prefixed with `[NAMESPACE: name@version]` so RAG
+  systems can attribute and isolate content per source component (per SPEC
+  §13.8 source attribution).
+- No breaking changes to existing single-asset load output or to
+  `resolved_dependencies` shape (fields are additive only).
+
 ## v0.15.7 (2026-06-28)
 
 Story 6 — dependencies runtime. Supports semver-matching local/registry dependency resolution and topological sort-based loading order.
