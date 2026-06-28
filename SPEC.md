@@ -608,6 +608,25 @@ KDNA MUST NOT replace these systems. It provides a judgment layer that operates 
 - The `kdna.json` manifest MUST NOT contain secrets or API keys.
 - Loaders SHOULD validate JSON before parsing to prevent injection.
 
+### 11.1 Encryption profile layering
+
+Encrypted KDNA assets use one of three profile IDs. Each profile is
+independent and MUST NOT silently cross-migrate. The non-collapse
+invariant (RFC-0018 R4.3) applies to all three.
+
+| Profile ID | RFC | Algorithm | KDF | Required support |
+|------------|-----|-----------|-----|------------------|
+| `kdna-licensed-entry-v1` | RFC-0008 | AES-256-GCM, AES-256-KW | HKDF-SHA256 | Mandatory (compat path) |
+| `kdna-password-protected-v1` | RFC-0009 | AES-256-GCM, AES-256-KW | Argon2id | Optional (compat path) |
+| `kdna-envelope-aead-v1` | **RFC-0018** (frozen 2026-06-28) | AES-256-GCM, AES-256-KW | `scrypt-sha256-v1` (mandatory) or `argon2id-v1` (optional v2, Node.js only) | Mandatory for new exports |
+
+The `kdna-envelope-aead-v1` profile is the canonical target for new
+product-facing exports. Test vectors are at
+`conformance/kdna-envelope-aead-v1/`. A Swift port that does not
+implement Argon2id MUST either fall back to the next slot's
+`scrypt-sha256-v1` KDF or fail with `KDNA_KDF_UNSUPPORTED` (RFC-0018
+R6). There is no silent fall-through.
+
 ## 12. Version Policy
 
 - KDNA v1.0 tools implement the v1.0 schema and media type.

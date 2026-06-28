@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/schema/kdna-envelope-aead-v1.schema.json",
+  "title": "KDNA Envelope AEAD v1",
+  "description": "JSON Schema for the kdna-envelope-aead-v1 envelope (RFC-0018). Defines the shape, required fields, and the per-slot kdf_profile contract. The on-the-wire canonical form is CBOR (RFC 8949, deterministic encoding); this schema describes the JSON presentation form used in test vectors and developer tooling. The two forms MUST be byte-equivalent under CBOR canonical encoding.",
+  "type": "object",
+  "required": [
+    "profile",
+    "alg",
+    "key_wrapping",
+    "kdf_profile",
+    "key_slots",
+    "iv",
+    "tag",
+    "ciphertext"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "profile": {
+      "type": "string",
+      "const": "kdna-envelope-aead-v1",
+      "description": "Profile identifier. MUST be the literal string 'kdna-envelope-aead-v1'. Any other value triggers KDNA_ENVELOPE_PROFILE_UNSUPPORTED."
+    },
+    "alg": {
+      "type": "string",
+      "const": "AES-256-GCM",
+      "description": "AEAD algorithm. Frozen to AES-256-GCM. Future AEADs require a new profile ID (the non-collapse invariant)."
+    },
+    "key_wrapping": {
+      "type": "string",
+      "const": "AES-256-KW",
+      "description": "CEK wrapping algorithm per RFC 3394. Frozen to AES-256-KW."
+    },
+    "kdf_profile": {
+      "type": "string",
+      "enum": ["scrypt-sha256-v1", "argon2id-v1"],
+      "description": "KDF profile for the primary (first) key slot. MUST match the first entry's key_slots[].kdf_profile. Per-slot kdf_profile is the contract; this top-level field is a convenience copy. Readers MUST use the per-slot value, not this top-level field."
+    },
+    "key_slots": {
+      "type": "array",
+      "minItems": 1,
+      "description": "At least one key slot. Each slot describes one way to unwrap the CEK. The CEK is wrapped once and the same wrapped bytes are referenced by every slot.",
+      "items": { "$ref": "#/$defs/key_slot" }
+    },
+    "iv": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+      "description": "Base64 of the 12-byte (96-bit) AES-GCM nonce. MUST be unique per (CEK, slot) pair. GCM nonce reuse with the same key is catastrophic."
+    },
+    "tag": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+      "description": "Base64 of the 16-byte AES-GCM authentication tag. A reader MUST verify this tag against the AAD constructed per RFC-0018 R5."
+    },
+    "ciphertext": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+      "description": "Base64 of the encrypted payload. Variable length; GCM is a stream cipher so no padding."
+    }
+  },
+  "$defs": {
+    "key_slot": {
+      "type": "object",
+      "required": [
+        "slot",
+        "kdf_profile",
+        "kdf_params",
+        "wrap",
+        "wrapped_key"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "slot": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Opaque slot name for human readability (e.g. 'password', 'recovery', 'account-grant-1'). The contract is in kdf_profile and kdf_params, not in this string."
+        },
+        "kdf_profile": {
+          "type": "string",
+          "enum": ["scrypt-sha256-v1", "argon2id-v1"],
+          "description": "KDF profile for this slot. Readers MUST use this value, not the envelope-level kdf_profile. The non-collapse invariant requires a reader to fail with KDNA_KDF_UNSUPPORTED if this value is not supported AND no other slot offers a supported KDF."
+        },
+    "kdf_params": {
+      "type": "object",
+      "description": "KDF-specific parameters. The shape depends on the slot's kdf_profile (scrypt-sha256-v1 needs N/r/p/salt; argon2id-v1 needs t/m/p/salt). The application layer MUST verify that the params match the kdf_profile; this schema accepts both shapes and lets the consumer pick.",
+      "anyOf": [
+        { "$ref": "#/$defs/scrypt_params" },
+        { "$ref": "#/$defs/argon2_params" }
+      ]
+    },
+        "wrap": {
+          "type": "string",
+          "const": "AES-256-KW",
+          "description": "Key-wrapping algorithm for the CEK. Frozen to AES-256-KW."
+        },
+        "wrapped_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+          "description": "Base64 of the 40-byte AES-256-KW output for a 32-byte CEK. Same bytes across all slots of the same envelope."
+        }
+      }
+    },
+    "scrypt_params": {
+      "type": "object",
+      "required": ["N", "r", "p", "salt"],
+      "additionalProperties": false,
+      "properties": {
+        "N": {
+          "type": "integer",
+          "minimum": 16384,
+          "maximum": 1048576,
+          "description": "scrypt cost parameter. RFC-0018 freezes N=32768 for v1; this range allows future minor upward adjustments under the same profile ID."
+        },
+        "r": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32,
+          "description": "scrypt block size. RFC-0018 freezes r=8 for v1."
+        },
+        "p": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16,
+          "description": "scrypt parallelization. RFC-0018 freezes p=1 for v1."
+        },
+        "salt": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+          "description": "Base64 of the 16-byte (128-bit) random salt. MUST be unique per slot."
+        }
+      }
+    },
+    "argon2_params": {
+      "type": "object",
+      "required": ["t", "m", "p", "dkLen", "salt"],
+      "additionalProperties": false,
+      "properties": {
+        "t": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16,
+          "description": "Argon2id time cost. RFC-0018 freezes t=3 for v1."
+        },
+        "m": {
+          "type": "integer",
+          "minimum": 65536,
+          "description": "Argon2id memory cost in KiB. RFC-0018 freezes m=65536 (64 MiB) for v1. A reader that sees m below 65536 MUST reject with KDNA_KDF_PARAMS_INVALID."
+        },
+        "p": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16,
+          "description": "Argon2id parallelism (lanes). RFC-0018 freezes p=4 for v1."
+        },
+        "dkLen": {
+          "type": "integer",
+          "minimum": 16,
+          "maximum": 64,
+          "description": "Argon2id output length in bytes. RFC-0018 freezes dkLen=32 for v1."
+        },
+        "salt": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+          "description": "Base64 of the 16-byte (128-bit) random salt. MUST be unique per slot."
+        }
+      }
+    }
+  }
+}
