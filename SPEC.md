@@ -692,6 +692,10 @@ Conflict types include: `value_conflict`, `term_conflict`, `risk_conflict`, `sta
 
 Resolution strategies: `surface` (expose to user), `priority_wins` (follow priority order), `risk_wins` (safety domain overrides), `block` (refuse to proceed), `ask_user`.
 
+For the per-card-type conflict rules that apply when composing a Bundle,
+see `docs/CONFLICT_RESOLUTION.md`. That document is the design contract
+for `kdna validate --bundle` (RFC #148 Phase 1, Story 4).
+
 ### 13.6 Load Profiles
 
 To prevent token budget explosion with large clusters, domains MAY declare load profiles:
