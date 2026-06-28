@@ -235,9 +235,18 @@ function canonicalJsonEntry(entryName, entryBuf, options = {}) {
 }
 
 function buildSigningPayload(asset, options = {}) {
+  // Bug (#147): the prior version only excluded `.DS_Store` and
+  // `signature.json`, while `buildContentDigest` above also excludes
+  // `build-receipt.json` and any entry under `reports/`. A producer
+  // that signed with this code and a verifier that digested the
+  // asset with `buildContentDigest` would compute two different
+  // byte strings and the signature would fail to verify. The fix
+  // mirrors `buildContentDigest`'s exclusion set exactly.
   const parts = [];
   for (const entryName of [...asset.entries.keys()].sort()) {
     if (entryName === '.DS_Store' || entryName === 'signature.json') continue;
+    if (entryName === 'build-receipt.json') continue;
+    if (entryName.startsWith('reports/')) continue;
     const entryBuf = asset.readEntry(entryName);
     let payloadBuf = entryBuf;
     if (JSON_ENTRY_RE.test(entryName)) {

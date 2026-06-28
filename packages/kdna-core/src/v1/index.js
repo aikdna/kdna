@@ -1540,11 +1540,25 @@ function renderPromptItem(item) {
   if (item.term && item.why) return `${item.term}: ${item.why}`;
   if (item.wrong && item.correct) return `${item.wrong} -> ${item.correct}`;
   if (item.mode && item.correct) return `${item.mode} -> ${item.correct}`;
+  // Failure-mode entries from audit fixtures carry `mode` and `correct`
+  // but may be one-sided (only `mode`, only `correct`, only `why`).
+  // Fall through to a single-side render so the prompt never has
+  // `(unrendered card: ...)` for a card that has at least one
+  // populated judgment field. Bug (#61).
+  if (item.mode) return `failure mode: ${item.mode}`;
+  if (item.correct) return `correct: ${item.correct}`;
+  if (item.key_distinction) return item.key_distinction;
+  if (item.why) return `because: ${item.why}`;
   if (item.name && item.description) return `${item.name}: ${item.description}`;
   if (item.name) return item.name;
   if (item.one_sentence) return item.one_sentence;
   if (item.essence) return item.essence;
   if (item.question) return item.question;
+  // Self-check entries are sometimes stored as plain strings, sometimes
+  // as { question: "..." } objects, sometimes as { one_sentence: "..." }.
+  // The buildPayload path emits `one_sentence` for self_check, so
+  // try that before the last-resort fall-through. Bug (#61).
+  if (item.text) return item.text;
   // Last-resort fall-through. Returning the id (e.g. "bo_xxxx-...") makes
   // the output unreadable; prefer a note that the card is unrecognized.
   return `(unrendered card: ${item.type || 'unknown'})`;

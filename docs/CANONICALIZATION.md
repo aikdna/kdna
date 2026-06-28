@@ -58,10 +58,19 @@ Entry lines are joined with `\n`.
 
 ## Signing Payload
 
-The Ed25519 signing payload is the same joined entry-line string used as the
-input to `content_digest`. Self-referential digest fields are stripped before
-signing and verification. Conforming verifiers MUST reject signatures that do
-not verify against this payload.
+The Ed25519 signing payload is **the same** joined entry-line string used as
+the input to `content_digest` (same exclusion set: `signature.json`,
+`.DS_Store`, `build-receipt.json`, `reports/*`). Self-referential digest
+fields are stripped before signing and verification. Conforming verifiers
+MUST reject signatures that do not verify against this payload.
+
+Producers and verifiers MUST agree on the exclusion set. A producer that
+omits `build-receipt.json` from the digest but signs the same file (or
+vice versa) would compute two different byte strings and the signature
+would fail to verify. The reference implementation in
+`packages/kdna-core/src/asset-reader.js` keeps `buildContentDigest` and
+`buildSigningPayload` aligned; any new exclusion MUST be added to both
+paths in the same change.
 
 ## Non-Goals
 
