@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.15.7 (2026-06-28)
+
+Story 6 — dependencies runtime. Supports semver-matching local/registry dependency resolution and topological sort-based loading order.
+
+- **Dependencies manifest schema support**: Explicitly declared `"dependencies"` as a first-class manifest property.
+- **Topological Sorting Resolver**: Added a robust, pure post-order DFS topological sorter with circular cycle, missing dependency, and version range mismatch checks.
+- **Topological Prompt Composition**: Enabled recursive, multi-domain prompt composition and flat topological JSON return inside `loadAuthorized`.
+
+
 ## v0.15.6 (2026-06-28)
 
 Story 5 — Bundle payload type. Bumps KDNA manifest format schema to v2, introduces bundle-profile-v1 payload profile, and starts KDNA v1 format deprecation window.

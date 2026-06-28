@@ -195,6 +195,12 @@
         }
       }
     },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
     "encryption": { "type": "object" },
     "load_contract": { "$ref": "load-contract.schema.json" },
     "scope": { "type": "object" },

@@ -1241,6 +1241,46 @@ function planLoad(inputPath, opts = {}) {
   }
 
   const manifest = v1.manifest;
+
+  // Resolve dependencies if declared (Story 6)
+  const resolvedDeps = [];
+  if (manifest.dependencies && typeof manifest.dependencies === 'object' && Object.keys(manifest.dependencies).length > 0) {
+    if (typeof opts.resolveAsset === 'function') {
+      try {
+        const resolved = resolveDependencies(manifest, opts.resolveAsset);
+        resolvedDeps.push(...resolved);
+      } catch (err) {
+        plan.state = 'invalid';
+        plan.required_action = 'block';
+        plan.can_load_now = false;
+        plan.issues.push(buildLoadPlanIssue(
+          'KDNA_DEPENDENCY_RESOLUTION_FAILED',
+          'blocking',
+          err.message
+        ));
+        return finalizeLoadPlan(plan);
+      }
+    } else {
+      plan.state = 'invalid';
+      plan.required_action = 'block';
+      plan.can_load_now = false;
+      plan.issues.push(buildLoadPlanIssue(
+        'KDNA_DEPENDENCY_RESOLVER_MISSING',
+        'blocking',
+        'Asset has dependencies but no dependency resolver callback was provided.'
+      ));
+      return finalizeLoadPlan(plan);
+    }
+  }
+
+  if (resolvedDeps.length > 0) {
+    plan.resolved_dependencies = resolvedDeps.map(dep => ({
+      name: dep.name,
+      version: dep.version,
+      path: dep.path
+    }));
+  }
+
   const payloadDeclaredEncrypted =
     manifest.payload && manifest.payload.encrypted === true;
   const encryptedEntries = Array.isArray(manifest.encryption && manifest.encryption.encrypted_entries)
@@ -1622,7 +1662,8 @@ function loadAuthorized(inputPath, opts = {}) {
     err.plan = plan;
     throw err;
   }
-  return loadV1Unsafe(inputPath, opts);
+  const mergedOpts = { ...opts, resolvedDependencies: plan.resolved_dependencies };
+  return loadV1Unsafe(inputPath, mergedOpts);
 }
 
 function loadV1(inputPath, opts = {}) {
@@ -1803,6 +1844,20 @@ function loadV1Unsafe(inputPath, opts = {}) {
     throw new Error(`unknown load profile: ${profile}`);
   }
 
+  if (opts.resolvedDependencies && opts.resolvedDependencies.length > 0) {
+    result.resolved_dependencies = opts.resolvedDependencies.map(dep => {
+      const depLoaded = loadV1Unsafe(dep.path, { ...opts, resolvedDependencies: [] });
+      return {
+        name: dep.name,
+        version: dep.version,
+        path: dep.path,
+        status: depLoaded.status,
+        profile: depLoaded.profile,
+        content: depLoaded.content
+      };
+    });
+  }
+
   if (as === 'prompt') {
     const c = result.content;
     if (!c || (c.scenarios && c.scenarios.length === 0 && !c.highest_question && !(c.axioms && c.axioms.length) && !(c.boundaries && c.boundaries.length))) {
@@ -1826,8 +1881,135 @@ function loadV1Unsafe(inputPath, opts = {}) {
     if (c.failure_modes && c.failure_modes.length) text += 'Failure modes:\n' + c.failure_modes.map((f) => '- ' + renderPromptItem(f)).join('\n') + '\n';
     if (c.patterns && c.patterns.length) text += 'Patterns:\n' + c.patterns.map((p) => '- ' + renderPromptItem(p)).join('\n') + '\n';
     if (c.note) text += 'Note: ' + c.note + '\n';
-    return { status: result.status, profile: result.profile, text: text.trim() };
+    
+    let textOut = text.trim();
+    if (opts.resolvedDependencies && opts.resolvedDependencies.length > 0) {
+      for (const dep of opts.resolvedDependencies) {
+        const depLoaded = loadV1Unsafe(dep.path, { ...opts, resolvedDependencies: [] });
+        if (depLoaded.text) {
+          textOut += '\n\n---\n\n' + depLoaded.text;
+        }
+      }
+    }
+    return { status: result.status, profile: result.profile, text: textOut };
   }
 
   return result;
+}
+
+// ─── Semver & Dependency Resolution (Story 6) ─────────────────────────
+
+function parseSemver(v) {
+  if (!v) return null;
+  const match = v.trim().match(/^v?([0-9]+)\.([0-9]+)\.([0-9]+)(?:-[a-zA-Z0-9.]+)?/);
+  if (!match) return null;
+  return {
+    major: parseInt(match[1], 10),
+    minor: parseInt(match[2], 10),
+    patch: parseInt(match[3], 10)
+  };
+}
+
+function compareSemver(v1, v2) {
+  const p1 = parseSemver(v1);
+  const p2 = parseSemver(v2);
+  if (!p1 || !p2) return 0;
+  if (p1.major !== p2.major) return p1.major - p2.major;
+  if (p1.minor !== p2.minor) return p1.minor - p2.minor;
+  return p1.patch - p2.patch;
+}
+
+function satisfies(version, range) {
+  if (!range || range === '*' || range.trim() === '') return true;
+  const r = range.trim();
+  
+  // Specific version comparison (e.g. "1.2.3")
+  if (/^[0-9]/.test(r)) {
+    return compareSemver(version, r) === 0;
+  }
+  
+  // ^ range comparison (e.g. "^1.2.3")
+  if (r.startsWith('^')) {
+    const min = r.slice(1);
+    const parsedMin = parseSemver(min);
+    if (!parsedMin) return false;
+    const parsedVer = parseSemver(version);
+    if (!parsedVer) return false;
+    // same major, and version >= min
+    if (parsedVer.major !== parsedMin.major) return false;
+    return compareSemver(version, min) >= 0;
+  }
+  
+  // ~ range comparison (e.g. "~1.2.3")
+  if (r.startsWith('~')) {
+    const min = r.slice(1);
+    const parsedMin = parseSemver(min);
+    if (!parsedMin) return false;
+    const parsedVer = parseSemver(version);
+    if (!parsedVer) return false;
+    // same major, same minor, and version >= min
+    if (parsedVer.major !== parsedMin.major || parsedVer.minor !== parsedMin.minor) return false;
+    return compareSemver(version, min) >= 0;
+  }
+  
+  // Custom ranges like ">=1.0.0 <2.0.0"
+  if (r.includes(' ')) {
+    const parts = r.split(/\s+/);
+    return parts.every(part => satisfies(version, part));
+  }
+  
+  if (r.startsWith('>=')) {
+    return compareSemver(version, r.slice(2)) >= 0;
+  }
+  if (r.startsWith('>')) {
+    return compareSemver(version, r.slice(1)) > 0;
+  }
+  if (r.startsWith('<=')) {
+    return compareSemver(version, r.slice(2)) <= 0;
+  }
+  if (r.startsWith('<')) {
+    return compareSemver(version, r.slice(1)) < 0;
+  }
+  
+  return false;
+}
+
+function resolveDependencies(manifest, resolveAssetCallback, seen = new Set(), stack = []) {
+  const resolved = [];
+  const deps = manifest.dependencies || {};
+  
+  for (const [name, range] of Object.entries(deps)) {
+    if (stack.includes(name)) {
+      throw new Error(`Circular dependency detected: ${stack.join(' -> ')} -> ${name}`);
+    }
+    
+    if (seen.has(name)) continue;
+    
+    // Resolve the dependency using the callback
+    const depAsset = resolveAssetCallback(name);
+    if (!depAsset) {
+      throw new Error(`Dependency not satisfied: "${name}" matching "${range}" is not installed.`);
+    }
+    
+    // Check if the resolved version satisfies the range
+    if (!satisfies(depAsset.version, range)) {
+      throw new Error(`Dependency mismatch: installed "${name}" version "${depAsset.version}" does not satisfy range "${range}".`);
+    }
+    
+    // Recurse
+    stack.push(name);
+    const subResolved = resolveDependencies(depAsset.manifest, resolveAssetCallback, seen, stack);
+    stack.pop();
+    
+    resolved.push(...subResolved);
+    resolved.push({
+      name,
+      version: depAsset.version,
+      path: depAsset.path,
+      manifest: depAsset.manifest
+    });
+    seen.add(name);
+  }
+  
+  return resolved;
 }
