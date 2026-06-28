@@ -125,6 +125,9 @@ function loadSchemas() {
   const payloadSchema = JSON.parse(
     fs.readFileSync(path.join(schemaDir, 'payload-profile-v1.schema.json'), 'utf8'),
   );
+  const bundlePayloadSchema = JSON.parse(
+    fs.readFileSync(path.join(schemaDir, 'bundle-profile-v1.schema.json'), 'utf8'),
+  );
   const checksumsSchema = JSON.parse(
     fs.readFileSync(path.join(schemaDir, 'checksums.schema.json'), 'utf8'),
   );
@@ -138,6 +141,7 @@ function loadSchemas() {
   _validators = {
     manifest: ajv.compile(manifestSchema),
     payload: ajv.compile(payloadSchema),
+    bundlePayload: ajv.compile(bundlePayloadSchema),
     checksums: ajv.compile(checksumsSchema),
   };
   return _validators;
@@ -157,6 +161,20 @@ function isV1SourceDir(absPath) {
   }
   const mime = fs.readFileSync(path.join(absPath, 'mimetype'), 'utf8');
   return mime === MIMETYPE_V1;
+}
+
+/**
+ * Detect whether a directory is a v2 source layout.
+ * Required entries: mimetype, kdna.json, payload.kdnab.
+ * mimetype content must equal "application/vnd.aikdna.kdna+zip".
+ */
+function isV2SourceDir(absPath) {
+  if (!fs.existsSync(absPath) || !fs.statSync(absPath).isDirectory()) return false;
+  for (const f of V1_REQUIRED_DIR_ENTRIES) {
+    if (!fs.existsSync(path.join(absPath, f))) return false;
+  }
+  const mime = fs.readFileSync(path.join(absPath, 'mimetype'), 'utf8');
+  return mime === MIMETYPE_V2;
 }
 
 /**
@@ -559,9 +577,9 @@ function readV1Layout(absPath) {
 
   // mimetype content must equal the literal v1 media type.
   const mime = map.mimetype.toString('utf8');
-  if (mime !== MIMETYPE_V1) {
+  if (mime !== MIMETYPE_V1 && mime !== MIMETYPE_V2) {
     throw new Error(
-      `not a KDNA v1 layout: mimetype is "${mime}", expected "${MIMETYPE_V1}"`,
+      `not a KDNA layout: mimetype is "${mime}", expected "${MIMETYPE_V1}" or "${MIMETYPE_V2}"`,
     );
   }
 
@@ -668,9 +686,12 @@ function runValidate(v1) {
       problems.push(`format: missing required entry ${f}`);
     }
   }
-  if (v1.map.mimetype && v1.map.mimetype.toString('utf8') !== MIMETYPE_V1) {
-    result.format_valid = false;
-    problems.push(`format: mimetype is not ${MIMETYPE_V1}`);
+  if (v1.map.mimetype) {
+    const mimeStr = v1.map.mimetype.toString('utf8');
+    if (mimeStr !== MIMETYPE_V1 && mimeStr !== MIMETYPE_V2) {
+      result.format_valid = false;
+      problems.push(`format: mimetype is not ${MIMETYPE_V1} or ${MIMETYPE_V2}`);
+    }
   }
 
   // schema gate — kdna.json against manifest.schema.json
@@ -717,11 +738,15 @@ function runValidate(v1) {
       problems.push('payload: encrypted envelope missing required fields (profile/ciphertext/key material)');
     }
     // Encrypted payload passes payload gate if envelope is structurally valid.
-  } else if (!validators.payload(payload)) {
+  } else {
     // Plaintext payload — full schema validation.
-    result.payload_valid = false;
-    for (const err of validators.payload.errors) {
-      problems.push(`payload: ${err.instancePath || '<root>'} ${err.message}`);
+    const isBundleProfile = v1.manifest.compatibility?.profile === 'bundle-profile-v1' || v1.manifest.asset_type === 'bundle';
+    const payloadValidator = isBundleProfile ? validators.bundlePayload : validators.payload;
+    if (!payloadValidator(payload)) {
+      result.payload_valid = false;
+      for (const err of payloadValidator.errors) {
+        problems.push(`payload: ${err.instancePath || '<root>'} ${err.message}`);
+      }
     }
   }
 
@@ -958,14 +983,15 @@ function unpack(inputPath, outputDir) {
   const entries = listZipEntries(absIn);
   // Sanity: v1 container must have mimetype as first entry with the v1 media type.
   if (entries.length === 0 || entries[0].name !== 'mimetype') {
-    throw new Error('not a KDNA v1 container: first entry is not mimetype');
+    throw new Error('not a KDNA container: first entry is not mimetype');
   }
   if (entries[0].method !== 0) {
-    throw new Error('not a KDNA v1 container: mimetype must be uncompressed');
+    throw new Error('not a KDNA container: mimetype must be uncompressed');
   }
-  if (entries[0].data.toString('utf8') !== MIMETYPE_V1) {
+  const mime = entries[0].data.toString('utf8');
+  if (mime !== MIMETYPE_V1 && mime !== MIMETYPE_V2) {
     throw new Error(
-      `not a KDNA v1 container: mimetype is "${entries[0].data.toString('utf8')}", expected "${MIMETYPE_V1}"`,
+      `not a KDNA container: mimetype is "${mime}", expected "${MIMETYPE_V1}" or "${MIMETYPE_V2}"`,
     );
   }
   const absOut = path.resolve(outputDir);
@@ -1127,6 +1153,17 @@ function canonicalToV1Layout(asset) {
   if (asset.entries) {
     for (const [name, buf] of asset.entries) {
       map[name] = buf;
+    }
+  } else {
+    map['mimetype'] = Buffer.from(asset.mimetype || '', 'utf8');
+    if (asset.manifest) {
+      map['kdna.json'] = Buffer.from(JSON.stringify(asset.manifest), 'utf8');
+    }
+    if (asset.payloadRaw) {
+      map['payload.kdnab'] = asset.payloadRaw;
+    }
+    if (asset.checksums) {
+      map['checksums.json'] = Buffer.from(JSON.stringify(asset.checksums), 'utf8');
     }
   }
   return {
@@ -1478,6 +1515,7 @@ module.exports = {
   MIMETYPE_V2,
   V1_REQUIRED_DIR_ENTRIES,
   isV1SourceDir,
+  isV2SourceDir,
   detectContainerFormat,
   readV1Layout,
   inspect,

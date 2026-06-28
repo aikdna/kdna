@@ -269,6 +269,7 @@ const VALID_ASSET_TYPE = new Set([
   'team_policy',
   'creator_style',
   'risk_guard',
+  'bundle',
 ]);
 
 const MANIFEST_REQUIRED = [

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/aikdna/kdna/schema/manifest.schema.json",
-  "title": "KDNA Manifest v1",
+  "title": "KDNA Manifest v2",
   "description": "Schema for kdna.json, the public metadata layer of a .kdna container.",
   "type": "object",
   "required": [
@@ -23,7 +23,7 @@
     "kdna_version": {
       "type": "string",
       "description": "KDNA Core version this manifest conforms to.",
-      "const": "1.0"
+      "enum": ["1.0", "2.0"]
     },
     "asset_id": {
       "type": "string",
@@ -37,7 +37,7 @@
     },
     "asset_type": {
       "type": "string",
-      "enum": ["domain", "cluster", "tool", "sample", "fixture"],
+      "enum": ["domain", "cluster", "tool", "sample", "fixture", "bundle"],
       "description": "What kind of asset this is. Container format is the same; the value tells callers how to interpret the payload."
     },
     "title": {
@@ -92,7 +92,7 @@
         "profile": {
           "type": "string",
           "description": "Payload profile identifier (e.g. judgment-profile-v1).",
-          "const": "judgment-profile-v1"
+          "enum": ["judgment-profile-v1", "bundle-profile-v1"]
         }
       }
     },

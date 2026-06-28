@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.15.6 (2026-06-28)
+
+Story 5 — Bundle payload type. Bumps KDNA manifest format schema to v2, introduces bundle-profile-v1 payload profile, and starts KDNA v1 format deprecation window.
+
+- **Bundle asset_type support:** added `"bundle"` to `asset_type` enum and `VALID_ASSET_TYPE` check.
+- **V2 Schema support:** bumped manifest schema version to v2.0, supporting `kdna_version` as `"2.0"`.
+- **Bundle profile support:** added `bundle-profile-v1` payload profile and validator.
+
+
 ## v0.15.5 (2026-06-28)
 
 Phase 12 audit follow-up. Closes 3 issues filed against this
