@@ -1273,6 +1273,55 @@ function planLoad(inputPath, opts = {}) {
     }
   }
 
+  // Resolve extends chain if declared (Story 12)
+  // 'extends' is single-inheritance: child overrides parent's cards with same ID.
+  // Distinct from 'dependencies' (peer composition).
+  if (manifest.extends) {
+    const extendsDecl = manifest.extends;
+    const extendsName = typeof extendsDecl === 'string'
+      ? extendsDecl.replace(/@[^@]+$/, '') || extendsDecl  // strip @version for resolver key
+      : extendsDecl.name;
+    const extendsVersion = typeof extendsDecl === 'string'
+      ? (extendsDecl.match(/@([^@]+)$/) || [])[1] || '*'
+      : (extendsDecl.version || '*');
+
+    if (typeof opts.resolveAsset === 'function') {
+      try {
+        const baseAsset = opts.resolveAsset(extendsName);
+        if (!baseAsset) {
+          plan.issues.push(buildLoadPlanIssue(
+            'KDNA_EXTENDS_NOT_FOUND',
+            'warning',
+            `Base asset "${extendsName}" declared in 'extends' could not be resolved. Inheritance chain incomplete.`
+          ));
+        } else if (baseAsset.manifest && !satisfies(baseAsset.version, extendsVersion)) {
+          plan.issues.push(buildLoadPlanIssue(
+            'KDNA_EXTENDS_VERSION_MISMATCH',
+            'warning',
+            `Base asset "${extendsName}@${baseAsset.version}" does not satisfy extends range "${extendsVersion}".`
+          ));
+        } else if (baseAsset.path) {
+          plan.extends_chain = [
+            { name: extendsName, version: baseAsset.version || extendsVersion, path: baseAsset.path },
+          ];
+        }
+      } catch (err) {
+        plan.issues.push(buildLoadPlanIssue(
+          'KDNA_EXTENDS_RESOLUTION_FAILED',
+          'warning',
+          `extends resolution failed: ${err.message}`
+        ));
+      }
+    } else {
+      // No resolver: extends chain unresolvable — warn, don't block
+      plan.issues.push(buildLoadPlanIssue(
+        'KDNA_EXTENDS_RESOLVER_MISSING',
+        'warning',
+        `Asset declares 'extends: ${JSON.stringify(manifest.extends)}' but no resolver was provided. Inheritance chain will not be applied.`
+      ));
+    }
+  }
+
   if (resolvedDeps.length > 0) {
     plan.resolved_dependencies = resolvedDeps.map(dep => ({
       name: dep.name,
@@ -1662,7 +1711,12 @@ function loadAuthorized(inputPath, opts = {}) {
     err.plan = plan;
     throw err;
   }
-  const mergedOpts = { ...opts, resolvedDependencies: plan.resolved_dependencies };
+  const mergedOpts = {
+    ...opts,
+    resolvedDependencies: plan.resolved_dependencies,
+    // Pass extends_chain from plan to loadV1Unsafe so inheritance is applied (Story 12)
+    extendsChain: plan.extends_chain || [],
+  };
   return loadV1Unsafe(inputPath, mergedOpts);
 }
 
@@ -1844,6 +1898,54 @@ function loadV1Unsafe(inputPath, opts = {}) {
     throw new Error(`unknown load profile: ${profile}`);
   }
 
+  // Asset inheritance (Story 12): if the manifest declares 'extends' and
+  // the plan resolved an extends_chain, load the base asset and merge its
+  // content with the child's content. Child cards with the same ID override
+  // the parent's; parent cards not overridden are inherited.
+  if (opts.extendsChain && opts.extendsChain.length > 0 && result.content) {
+    try {
+      const base = opts.extendsChain[0];
+      const baseLoaded = loadV1Unsafe(base.path, {
+        ...opts,
+        resolvedDependencies: [],
+        extendsChain: [],
+      });
+      if (baseLoaded && baseLoaded.content) {
+        const bc = baseLoaded.content;
+        const cc = result.content;
+        // Merge axioms: child overrides by id; parent axioms not in child are added
+        if (bc.axioms || cc.axioms) {
+          const childIds = new Set((cc.axioms || []).map((a) => a.id).filter(Boolean));
+          const inheritedAxioms = (bc.axioms || []).filter((a) => a.id && !childIds.has(a.id));
+          cc.axioms = [...inheritedAxioms, ...(cc.axioms || [])];
+        }
+        // Merge boundaries: child overrides by scope text; parent not overridden are inherited
+        if (bc.boundaries || cc.boundaries) {
+          const childScopes = new Set(
+            (cc.boundaries || []).map((b) => (b.scope || '').toLowerCase().trim()),
+          );
+          const inheritedBoundaries = (bc.boundaries || []).filter(
+            (b) => !childScopes.has((b.scope || '').toLowerCase().trim()),
+          );
+          cc.boundaries = [...inheritedBoundaries, ...(cc.boundaries || [])];
+        }
+        // Inherit highest_question from parent if child doesn't declare one
+        if (!cc.highest_question && bc.highest_question) {
+          cc.highest_question = bc.highest_question;
+        }
+        result.extends_chain = opts.extendsChain.map((e) => ({
+          name: e.name,
+          version: e.version,
+          path: e.path,
+        }));
+        result.inheritance_applied = true;
+      }
+    } catch (_) {
+      // extends merge is best-effort — never block load
+      result.inheritance_applied = false;
+    }
+  }
+
    if (opts.resolvedDependencies && opts.resolvedDependencies.length > 0) {
     result.resolved_dependencies = opts.resolvedDependencies.map(dep => {
       const depLoaded = loadV1Unsafe(dep.path, { ...opts, resolvedDependencies: [] });
@@ -1901,7 +2003,7 @@ function loadV1Unsafe(inputPath, opts = {}) {
     if (c.note) text += 'Note: ' + c.note + '\n';
     
     let textOut = text.trim();
-    if (opts.resolvedDependencies && opts.resolvedDependencies.length > 0) {
+   if (opts.resolvedDependencies && opts.resolvedDependencies.length > 0) {
       for (const dep of opts.resolvedDependencies) {
         const depLoaded = loadV1Unsafe(dep.path, { ...opts, resolvedDependencies: [] });
         if (depLoaded.text) {

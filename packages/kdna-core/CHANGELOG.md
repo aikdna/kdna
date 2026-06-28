@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.15.9 (2026-06-28)
+
+Story 12 — Asset inheritance (`extends` field, RFC #148 v2.x Phase 3).
+
+- **`extends` field in `manifest.schema.json`**: assets may declare
+  `extends: "@scope/name@^1.0.0"` (string) or `extends: { name, version }`
+  (object). Distinct from `dependencies` (peer composition): `extends`
+  creates a single-inheritance hierarchy where the child specialises the parent.
+- **`planLoad` extends resolution**: when a `resolveAsset` callback is provided
+  and the manifest declares `extends`, `planLoad` resolves the base asset and
+  records `extends_chain` in the plan output. Non-blocking — missing base
+  emits a WARNING issue, not a blocking error.
+- **`loadAuthorized` passes `extends_chain`** from the plan to `loadV1Unsafe`
+  so the inheritance merge is applied at load time.
+- **`loadV1Unsafe` inheritance merge**: when `extendsChain` is non-empty, the
+  base asset's content is loaded and merged with the child's content. Merge
+  rules: child axioms override parent axioms with the same `id`; parent axioms
+  not in child are inherited; same for boundaries (by `scope` text);
+  `highest_question` falls back to parent if child omits it. Non-blocking.
+- **`result.extends_chain`** and **`result.inheritance_applied`** fields added
+  to load output when inheritance is applied.
+- Blocks Story 13 (trust levels) per Section 6 sequencing.
+
 ## v0.15.8 (2026-06-28)
 
 Story 11 — RAG namespace isolation (RFC #148 v2.x Phase 3).
