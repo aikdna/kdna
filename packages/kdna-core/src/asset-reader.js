@@ -311,28 +311,42 @@ function verifyHumanLockSignatures(coreData, manifest, errors, warnings) {
     // Skip if no public key available (unsigned assets are valid)
     return;
   }
-  const axioms = coreData?.axioms || [];
-  if (!Array.isArray(axioms) || axioms.length === 0) return;
+
+  // All card-type arrays in KDNA_Core.json that may carry human_lock.
+  // Ordered by how they appear in the compiled payload (compileCore in
+  // kdna-studio-core/src/compile/index.js).
+  const CORE_CARD_ARRAYS = [
+    ['axioms', 'axiom'],
+    ['ontology', 'ontology'],
+    ['frameworks', 'framework'],
+    ['boundaries', 'boundary'],
+    ['risks', 'risk'],
+    ['stances', 'stance'],
+  ];
 
   let verified = 0, missing = 0, invalid = 0;
-  for (const ax of axioms) {
-    const hl = ax.human_lock;
-    if (!hl || !hl.signature) {
-      // Only warn for locked cards without signature
-      if (ax.status === 'locked' || ax.status === 'tested' || ax.status === 'published') {
-        missing++;
+  for (const [arrayName, _cardType] of CORE_CARD_ARRAYS) {
+    const cards = coreData?.[arrayName];
+    if (!Array.isArray(cards) || cards.length === 0) continue;
+
+    for (const card of cards) {
+      const hl = card.human_lock;
+      if (!hl || !hl.signature) {
+        if (card.status === 'locked' || card.status === 'tested' || card.status === 'published') {
+          missing++;
+        }
+        continue;
       }
-      continue;
-    }
-    try {
-      const payload = [ax.id, hl.statement || '', hl.judgment_fingerprint || ''].join('\n');
-      const sig = Buffer.from(String(hl.signature).replace(/^ed25519:/, ''), 'hex');
-      const key = crypto.createPublicKey(publicKeyPEM);
-      const ok = crypto.verify(null, Buffer.from(payload), key, sig);
-      if (ok) { verified++; }
-      else { invalid++; }
-    } catch {
-      invalid++;
+      try {
+        const payload = [card.id, hl.statement || '', hl.judgment_fingerprint || ''].join('\n');
+        const sig = Buffer.from(String(hl.signature).replace(/^ed25519:/, ''), 'hex');
+        const key = crypto.createPublicKey(publicKeyPEM);
+        const ok = crypto.verify(null, Buffer.from(payload), key, sig);
+        if (ok) { verified++; }
+        else { invalid++; }
+      } catch {
+        invalid++;
+      }
     }
   }
 
