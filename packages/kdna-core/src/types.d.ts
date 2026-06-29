@@ -504,6 +504,7 @@ export interface KDNAV1Checksums {
 }
 
 export function isV1SourceDir(inputPath: string): boolean;
+export function isV2SourceDir(inputPath: string): boolean;
 export function detectContainerFormat(inputPath: string): 'v1' | 'v2' | null;
 export function inspect(inputPath: string, options?: Record<string, any>): Record<string, any>;
 export function validate(inputPath: string, options?: Record<string, any>): Record<string, any>;

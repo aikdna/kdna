@@ -125,6 +125,9 @@ function loadSchemas() {
   const payloadSchema = JSON.parse(
     fs.readFileSync(path.join(schemaDir, 'payload-profile-v1.schema.json'), 'utf8'),
   );
+  const bundlePayloadSchema = JSON.parse(
+    fs.readFileSync(path.join(schemaDir, 'bundle-profile-v1.schema.json'), 'utf8'),
+  );
   const checksumsSchema = JSON.parse(
     fs.readFileSync(path.join(schemaDir, 'checksums.schema.json'), 'utf8'),
   );
@@ -138,6 +141,7 @@ function loadSchemas() {
   _validators = {
     manifest: ajv.compile(manifestSchema),
     payload: ajv.compile(payloadSchema),
+    bundlePayload: ajv.compile(bundlePayloadSchema),
     checksums: ajv.compile(checksumsSchema),
   };
   return _validators;
@@ -157,6 +161,20 @@ function isV1SourceDir(absPath) {
   }
   const mime = fs.readFileSync(path.join(absPath, 'mimetype'), 'utf8');
   return mime === MIMETYPE_V1;
+}
+
+/**
+ * Detect whether a directory is a v2 source layout.
+ * Required entries: mimetype, kdna.json, payload.kdnab.
+ * mimetype content must equal "application/vnd.aikdna.kdna+zip".
+ */
+function isV2SourceDir(absPath) {
+  if (!fs.existsSync(absPath) || !fs.statSync(absPath).isDirectory()) return false;
+  for (const f of V1_REQUIRED_DIR_ENTRIES) {
+    if (!fs.existsSync(path.join(absPath, f))) return false;
+  }
+  const mime = fs.readFileSync(path.join(absPath, 'mimetype'), 'utf8');
+  return mime === MIMETYPE_V2;
 }
 
 /**
@@ -559,9 +577,9 @@ function readV1Layout(absPath) {
 
   // mimetype content must equal the literal v1 media type.
   const mime = map.mimetype.toString('utf8');
-  if (mime !== MIMETYPE_V1) {
+  if (mime !== MIMETYPE_V1 && mime !== MIMETYPE_V2) {
     throw new Error(
-      `not a KDNA v1 layout: mimetype is "${mime}", expected "${MIMETYPE_V1}"`,
+      `not a KDNA layout: mimetype is "${mime}", expected "${MIMETYPE_V1}" or "${MIMETYPE_V2}"`,
     );
   }
 
@@ -668,9 +686,12 @@ function runValidate(v1) {
       problems.push(`format: missing required entry ${f}`);
     }
   }
-  if (v1.map.mimetype && v1.map.mimetype.toString('utf8') !== MIMETYPE_V1) {
-    result.format_valid = false;
-    problems.push(`format: mimetype is not ${MIMETYPE_V1}`);
+  if (v1.map.mimetype) {
+    const mimeStr = v1.map.mimetype.toString('utf8');
+    if (mimeStr !== MIMETYPE_V1 && mimeStr !== MIMETYPE_V2) {
+      result.format_valid = false;
+      problems.push(`format: mimetype is not ${MIMETYPE_V1} or ${MIMETYPE_V2}`);
+    }
   }
 
   // schema gate — kdna.json against manifest.schema.json
@@ -717,11 +738,15 @@ function runValidate(v1) {
       problems.push('payload: encrypted envelope missing required fields (profile/ciphertext/key material)');
     }
     // Encrypted payload passes payload gate if envelope is structurally valid.
-  } else if (!validators.payload(payload)) {
+  } else {
     // Plaintext payload — full schema validation.
-    result.payload_valid = false;
-    for (const err of validators.payload.errors) {
-      problems.push(`payload: ${err.instancePath || '<root>'} ${err.message}`);
+    const isBundleProfile = v1.manifest.compatibility?.profile === 'bundle-profile-v1' || v1.manifest.asset_type === 'bundle';
+    const payloadValidator = isBundleProfile ? validators.bundlePayload : validators.payload;
+    if (!payloadValidator(payload)) {
+      result.payload_valid = false;
+      for (const err of payloadValidator.errors) {
+        problems.push(`payload: ${err.instancePath || '<root>'} ${err.message}`);
+      }
     }
   }
 
@@ -958,14 +983,15 @@ function unpack(inputPath, outputDir) {
   const entries = listZipEntries(absIn);
   // Sanity: v1 container must have mimetype as first entry with the v1 media type.
   if (entries.length === 0 || entries[0].name !== 'mimetype') {
-    throw new Error('not a KDNA v1 container: first entry is not mimetype');
+    throw new Error('not a KDNA container: first entry is not mimetype');
   }
   if (entries[0].method !== 0) {
-    throw new Error('not a KDNA v1 container: mimetype must be uncompressed');
+    throw new Error('not a KDNA container: mimetype must be uncompressed');
   }
-  if (entries[0].data.toString('utf8') !== MIMETYPE_V1) {
+  const mime = entries[0].data.toString('utf8');
+  if (mime !== MIMETYPE_V1 && mime !== MIMETYPE_V2) {
     throw new Error(
-      `not a KDNA v1 container: mimetype is "${entries[0].data.toString('utf8')}", expected "${MIMETYPE_V1}"`,
+      `not a KDNA container: mimetype is "${mime}", expected "${MIMETYPE_V1}" or "${MIMETYPE_V2}"`,
     );
   }
   const absOut = path.resolve(outputDir);
@@ -1128,6 +1154,17 @@ function canonicalToV1Layout(asset) {
     for (const [name, buf] of asset.entries) {
       map[name] = buf;
     }
+  } else {
+    map['mimetype'] = Buffer.from(asset.mimetype || '', 'utf8');
+    if (asset.manifest) {
+      map['kdna.json'] = Buffer.from(JSON.stringify(asset.manifest), 'utf8');
+    }
+    if (asset.payloadRaw) {
+      map['payload.kdnab'] = asset.payloadRaw;
+    }
+    if (asset.checksums) {
+      map['checksums.json'] = Buffer.from(JSON.stringify(asset.checksums), 'utf8');
+    }
   }
   return {
     kind: asset.sourceKind,
@@ -1204,6 +1241,95 @@ function planLoad(inputPath, opts = {}) {
   }
 
   const manifest = v1.manifest;
+
+  // Resolve dependencies if declared (Story 6)
+  const resolvedDeps = [];
+  if (manifest.dependencies && typeof manifest.dependencies === 'object' && Object.keys(manifest.dependencies).length > 0) {
+    if (typeof opts.resolveAsset === 'function') {
+      try {
+        const resolved = resolveDependencies(manifest, opts.resolveAsset);
+        resolvedDeps.push(...resolved);
+      } catch (err) {
+        plan.state = 'invalid';
+        plan.required_action = 'block';
+        plan.can_load_now = false;
+        plan.issues.push(buildLoadPlanIssue(
+          'KDNA_DEPENDENCY_RESOLUTION_FAILED',
+          'blocking',
+          err.message
+        ));
+        return finalizeLoadPlan(plan);
+      }
+    } else {
+      plan.state = 'invalid';
+      plan.required_action = 'block';
+      plan.can_load_now = false;
+      plan.issues.push(buildLoadPlanIssue(
+        'KDNA_DEPENDENCY_RESOLVER_MISSING',
+        'blocking',
+        'Asset has dependencies but no dependency resolver callback was provided.'
+      ));
+      return finalizeLoadPlan(plan);
+    }
+  }
+
+  // Resolve extends chain if declared (Story 12)
+  // 'extends' is single-inheritance: child overrides parent's cards with same ID.
+  // Distinct from 'dependencies' (peer composition).
+  if (manifest.extends) {
+    const extendsDecl = manifest.extends;
+    const extendsName = typeof extendsDecl === 'string'
+      ? extendsDecl.replace(/@[^@]+$/, '') || extendsDecl  // strip @version for resolver key
+      : extendsDecl.name;
+    const extendsVersion = typeof extendsDecl === 'string'
+      ? (extendsDecl.match(/@([^@]+)$/) || [])[1] || '*'
+      : (extendsDecl.version || '*');
+
+    if (typeof opts.resolveAsset === 'function') {
+      try {
+        const baseAsset = opts.resolveAsset(extendsName);
+        if (!baseAsset) {
+          plan.issues.push(buildLoadPlanIssue(
+            'KDNA_EXTENDS_NOT_FOUND',
+            'warning',
+            `Base asset "${extendsName}" declared in 'extends' could not be resolved. Inheritance chain incomplete.`
+          ));
+        } else if (baseAsset.manifest && !satisfies(baseAsset.version, extendsVersion)) {
+          plan.issues.push(buildLoadPlanIssue(
+            'KDNA_EXTENDS_VERSION_MISMATCH',
+            'warning',
+            `Base asset "${extendsName}@${baseAsset.version}" does not satisfy extends range "${extendsVersion}".`
+          ));
+        } else if (baseAsset.path) {
+          plan.extends_chain = [
+            { name: extendsName, version: baseAsset.version || extendsVersion, path: baseAsset.path },
+          ];
+        }
+      } catch (err) {
+        plan.issues.push(buildLoadPlanIssue(
+          'KDNA_EXTENDS_RESOLUTION_FAILED',
+          'warning',
+          `extends resolution failed: ${err.message}`
+        ));
+      }
+    } else {
+      // No resolver: extends chain unresolvable — warn, don't block
+      plan.issues.push(buildLoadPlanIssue(
+        'KDNA_EXTENDS_RESOLVER_MISSING',
+        'warning',
+        `Asset declares 'extends: ${JSON.stringify(manifest.extends)}' but no resolver was provided. Inheritance chain will not be applied.`
+      ));
+    }
+  }
+
+  if (resolvedDeps.length > 0) {
+    plan.resolved_dependencies = resolvedDeps.map(dep => ({
+      name: dep.name,
+      version: dep.version,
+      path: dep.path
+    }));
+  }
+
   const payloadDeclaredEncrypted =
     manifest.payload && manifest.payload.encrypted === true;
   const encryptedEntries = Array.isArray(manifest.encryption && manifest.encryption.encrypted_entries)
@@ -1478,6 +1604,7 @@ module.exports = {
   MIMETYPE_V2,
   V1_REQUIRED_DIR_ENTRIES,
   isV1SourceDir,
+  isV2SourceDir,
   detectContainerFormat,
   readV1Layout,
   inspect,
@@ -1584,7 +1711,13 @@ function loadAuthorized(inputPath, opts = {}) {
     err.plan = plan;
     throw err;
   }
-  return loadV1Unsafe(inputPath, opts);
+  const mergedOpts = {
+    ...opts,
+    resolvedDependencies: plan.resolved_dependencies,
+    // Pass extends_chain from plan to loadV1Unsafe so inheritance is applied (Story 12)
+    extendsChain: plan.extends_chain || [],
+  };
+  return loadV1Unsafe(inputPath, mergedOpts);
 }
 
 function loadV1(inputPath, opts = {}) {
@@ -1765,6 +1898,86 @@ function loadV1Unsafe(inputPath, opts = {}) {
     throw new Error(`unknown load profile: ${profile}`);
   }
 
+  // Asset inheritance (Story 12): if the manifest declares 'extends' and
+  // the plan resolved an extends_chain, load the base asset and merge its
+  // content with the child's content. Child cards with the same ID override
+  // the parent's; parent cards not overridden are inherited.
+  if (opts.extendsChain && opts.extendsChain.length > 0 && result.content) {
+    try {
+      const base = opts.extendsChain[0];
+      const baseLoaded = loadV1Unsafe(base.path, {
+        ...opts,
+        resolvedDependencies: [],
+        extendsChain: [],
+      });
+      if (baseLoaded && baseLoaded.content) {
+        const bc = baseLoaded.content;
+        const cc = result.content;
+        // Merge axioms: child overrides by id; parent axioms not in child are added
+        if (bc.axioms || cc.axioms) {
+          const childIds = new Set((cc.axioms || []).map((a) => a.id).filter(Boolean));
+          const inheritedAxioms = (bc.axioms || []).filter((a) => a.id && !childIds.has(a.id));
+          cc.axioms = [...inheritedAxioms, ...(cc.axioms || [])];
+        }
+        // Merge boundaries: child overrides by scope text; parent not overridden are inherited
+        if (bc.boundaries || cc.boundaries) {
+          const childScopes = new Set(
+            (cc.boundaries || []).map((b) => (b.scope || '').toLowerCase().trim()),
+          );
+          const inheritedBoundaries = (bc.boundaries || []).filter(
+            (b) => !childScopes.has((b.scope || '').toLowerCase().trim()),
+          );
+          cc.boundaries = [...inheritedBoundaries, ...(cc.boundaries || [])];
+        }
+        // Inherit highest_question from parent if child doesn't declare one
+        if (!cc.highest_question && bc.highest_question) {
+          cc.highest_question = bc.highest_question;
+        }
+        result.extends_chain = opts.extendsChain.map((e) => ({
+          name: e.name,
+          version: e.version,
+          path: e.path,
+        }));
+        result.inheritance_applied = true;
+      }
+    } catch (_) {
+      // extends merge is best-effort — never block load
+      result.inheritance_applied = false;
+    }
+  }
+
+   if (opts.resolvedDependencies && opts.resolvedDependencies.length > 0) {
+    result.resolved_dependencies = opts.resolvedDependencies.map(dep => {
+      const depLoaded = loadV1Unsafe(dep.path, { ...opts, resolvedDependencies: [] });
+      // RAG namespace (Story 11): scoped identifier for namespace isolation.
+      // Format: name@version (or just name when version is absent).
+      const ragNamespace = dep.name
+        ? (dep.version ? `${dep.name}@${dep.version}` : dep.name)
+        : null;
+      return {
+        name: dep.name,
+        version: dep.version,
+        path: dep.path,
+        rag_namespace: ragNamespace,
+        status: depLoaded.status,
+        profile: depLoaded.profile,
+        content: depLoaded.content
+      };
+    });
+
+    // RAG isolation policy (Story 11): consumers MUST NOT mix content
+    // across namespaces without explicit permission. cross_namespace_blocked
+    // is the default; a consumer may opt in to cross-namespace access by
+    // setting its own policy, but Core never does it silently.
+    result.rag_isolation_policy = {
+      default: 'fenced',
+      cross_namespace_blocked: true,
+      namespaces: result.resolved_dependencies
+        .map(d => d.rag_namespace)
+        .filter(Boolean),
+    };
+  }
+
   if (as === 'prompt') {
     const c = result.content;
     if (!c || (c.scenarios && c.scenarios.length === 0 && !c.highest_question && !(c.axioms && c.axioms.length) && !(c.boundaries && c.boundaries.length))) {
@@ -1788,8 +2001,141 @@ function loadV1Unsafe(inputPath, opts = {}) {
     if (c.failure_modes && c.failure_modes.length) text += 'Failure modes:\n' + c.failure_modes.map((f) => '- ' + renderPromptItem(f)).join('\n') + '\n';
     if (c.patterns && c.patterns.length) text += 'Patterns:\n' + c.patterns.map((p) => '- ' + renderPromptItem(p)).join('\n') + '\n';
     if (c.note) text += 'Note: ' + c.note + '\n';
-    return { status: result.status, profile: result.profile, text: text.trim() };
+    
+    let textOut = text.trim();
+   if (opts.resolvedDependencies && opts.resolvedDependencies.length > 0) {
+      for (const dep of opts.resolvedDependencies) {
+        const depLoaded = loadV1Unsafe(dep.path, { ...opts, resolvedDependencies: [] });
+        if (depLoaded.text) {
+          // Namespace header (Story 11): each component section is prefixed
+          // with [NAMESPACE: id] so consumers can isolate RAG content per source.
+          const ns = dep.name
+            ? (dep.version ? `${dep.name}@${dep.version}` : dep.name)
+            : null;
+          const nsHeader = ns ? `[NAMESPACE: ${ns}]\n` : '';
+          textOut += '\n\n---\n\n' + nsHeader + depLoaded.text;
+        }
+      }
+    }
+    return { status: result.status, profile: result.profile, text: textOut };
   }
 
   return result;
+}
+
+// ─── Semver & Dependency Resolution (Story 6) ─────────────────────────
+
+function parseSemver(v) {
+  if (!v) return null;
+  const match = v.trim().match(/^v?([0-9]+)\.([0-9]+)\.([0-9]+)(?:-[a-zA-Z0-9.]+)?/);
+  if (!match) return null;
+  return {
+    major: parseInt(match[1], 10),
+    minor: parseInt(match[2], 10),
+    patch: parseInt(match[3], 10)
+  };
+}
+
+function compareSemver(v1, v2) {
+  const p1 = parseSemver(v1);
+  const p2 = parseSemver(v2);
+  if (!p1 || !p2) return 0;
+  if (p1.major !== p2.major) return p1.major - p2.major;
+  if (p1.minor !== p2.minor) return p1.minor - p2.minor;
+  return p1.patch - p2.patch;
+}
+
+function satisfies(version, range) {
+  if (!range || range === '*' || range.trim() === '') return true;
+  const r = range.trim();
+  
+  // Specific version comparison (e.g. "1.2.3")
+  if (/^[0-9]/.test(r)) {
+    return compareSemver(version, r) === 0;
+  }
+  
+  // ^ range comparison (e.g. "^1.2.3")
+  if (r.startsWith('^')) {
+    const min = r.slice(1);
+    const parsedMin = parseSemver(min);
+    if (!parsedMin) return false;
+    const parsedVer = parseSemver(version);
+    if (!parsedVer) return false;
+    // same major, and version >= min
+    if (parsedVer.major !== parsedMin.major) return false;
+    return compareSemver(version, min) >= 0;
+  }
+  
+  // ~ range comparison (e.g. "~1.2.3")
+  if (r.startsWith('~')) {
+    const min = r.slice(1);
+    const parsedMin = parseSemver(min);
+    if (!parsedMin) return false;
+    const parsedVer = parseSemver(version);
+    if (!parsedVer) return false;
+    // same major, same minor, and version >= min
+    if (parsedVer.major !== parsedMin.major || parsedVer.minor !== parsedMin.minor) return false;
+    return compareSemver(version, min) >= 0;
+  }
+  
+  // Custom ranges like ">=1.0.0 <2.0.0"
+  if (r.includes(' ')) {
+    const parts = r.split(/\s+/);
+    return parts.every(part => satisfies(version, part));
+  }
+  
+  if (r.startsWith('>=')) {
+    return compareSemver(version, r.slice(2)) >= 0;
+  }
+  if (r.startsWith('>')) {
+    return compareSemver(version, r.slice(1)) > 0;
+  }
+  if (r.startsWith('<=')) {
+    return compareSemver(version, r.slice(2)) <= 0;
+  }
+  if (r.startsWith('<')) {
+    return compareSemver(version, r.slice(1)) < 0;
+  }
+  
+  return false;
+}
+
+function resolveDependencies(manifest, resolveAssetCallback, seen = new Set(), stack = []) {
+  const resolved = [];
+  const deps = manifest.dependencies || {};
+  
+  for (const [name, range] of Object.entries(deps)) {
+    if (stack.includes(name)) {
+      throw new Error(`Circular dependency detected: ${stack.join(' -> ')} -> ${name}`);
+    }
+    
+    if (seen.has(name)) continue;
+    
+    // Resolve the dependency using the callback
+    const depAsset = resolveAssetCallback(name);
+    if (!depAsset) {
+      throw new Error(`Dependency not satisfied: "${name}" matching "${range}" is not installed.`);
+    }
+    
+    // Check if the resolved version satisfies the range
+    if (!satisfies(depAsset.version, range)) {
+      throw new Error(`Dependency mismatch: installed "${name}" version "${depAsset.version}" does not satisfy range "${range}".`);
+    }
+    
+    // Recurse
+    stack.push(name);
+    const subResolved = resolveDependencies(depAsset.manifest, resolveAssetCallback, seen, stack);
+    stack.pop();
+    
+    resolved.push(...subResolved);
+    resolved.push({
+      name,
+      version: depAsset.version,
+      path: depAsset.path,
+      manifest: depAsset.manifest
+    });
+    seen.add(name);
+  }
+  
+  return resolved;
 }

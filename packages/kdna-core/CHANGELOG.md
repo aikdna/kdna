@@ -1,5 +1,64 @@
 # Changelog
 
+## v0.15.9 (2026-06-28)
+
+Story 12 — Asset inheritance (`extends` field, RFC #148 v2.x Phase 3).
+
+- **`extends` field in `manifest.schema.json`**: assets may declare
+  `extends: "@scope/name@^1.0.0"` (string) or `extends: { name, version }`
+  (object). Distinct from `dependencies` (peer composition): `extends`
+  creates a single-inheritance hierarchy where the child specialises the parent.
+- **`planLoad` extends resolution**: when a `resolveAsset` callback is provided
+  and the manifest declares `extends`, `planLoad` resolves the base asset and
+  records `extends_chain` in the plan output. Non-blocking — missing base
+  emits a WARNING issue, not a blocking error.
+- **`loadAuthorized` passes `extends_chain`** from the plan to `loadV1Unsafe`
+  so the inheritance merge is applied at load time.
+- **`loadV1Unsafe` inheritance merge**: when `extendsChain` is non-empty, the
+  base asset's content is loaded and merged with the child's content. Merge
+  rules: child axioms override parent axioms with the same `id`; parent axioms
+  not in child are inherited; same for boundaries (by `scope` text);
+  `highest_question` falls back to parent if child omits it. Non-blocking.
+- **`result.extends_chain`** and **`result.inheritance_applied`** fields added
+  to load output when inheritance is applied.
+- Blocks Story 13 (trust levels) per Section 6 sequencing.
+
+## v0.15.8 (2026-06-28)
+
+Story 11 — RAG namespace isolation (RFC #148 v2.x Phase 3).
+
+- **`rag_namespace`** field added to each entry in `resolved_dependencies`.
+  Format: `name@version` (or bare `name` when version is absent). Provides a
+  stable scoped identifier for per-component namespace isolation.
+- **`rag_isolation_policy`** object added to load output when
+  `resolved_dependencies` is non-empty:
+  `{ default: "fenced", cross_namespace_blocked: true, namespaces: [...] }`.
+  Consumers MUST NOT mix content across namespaces without explicit permission.
+- **`--as=prompt` namespace header**: each component section in multi-asset
+  prompt output is now prefixed with `[NAMESPACE: name@version]` so RAG
+  systems can attribute and isolate content per source component (per SPEC
+  §13.8 source attribution).
+- No breaking changes to existing single-asset load output or to
+  `resolved_dependencies` shape (fields are additive only).
+
+## v0.15.7 (2026-06-28)
+
+Story 6 — dependencies runtime. Supports semver-matching local/registry dependency resolution and topological sort-based loading order.
+
+- **Dependencies manifest schema support**: Explicitly declared `"dependencies"` as a first-class manifest property.
+- **Topological Sorting Resolver**: Added a robust, pure post-order DFS topological sorter with circular cycle, missing dependency, and version range mismatch checks.
+- **Topological Prompt Composition**: Enabled recursive, multi-domain prompt composition and flat topological JSON return inside `loadAuthorized`.
+
+
+## v0.15.6 (2026-06-28)
+
+Story 5 — Bundle payload type. Bumps KDNA manifest format schema to v2, introduces bundle-profile-v1 payload profile, and starts KDNA v1 format deprecation window.
+
+- **Bundle asset_type support:** added `"bundle"` to `asset_type` enum and `VALID_ASSET_TYPE` check.
+- **V2 Schema support:** bumped manifest schema version to v2.0, supporting `kdna_version` as `"2.0"`.
+- **Bundle profile support:** added `bundle-profile-v1` payload profile and validator.
+
+
 ## v0.15.5 (2026-06-28)
 
 Phase 12 audit follow-up. Closes 3 issues filed against this
