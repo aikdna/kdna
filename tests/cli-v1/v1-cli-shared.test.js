@@ -636,7 +636,7 @@ test('validate: missing mimetype is reported as format_valid=false', () => {
 test('validate: invalid mimetype is reported as format error', () => {
   const dir = makeTmp('kdna-v1-bad-');
   try {
-    fs.writeFileSync(path.join(dir, 'mimetype'), 'application/vnd.aikdna.kdna+zip');
+    fs.writeFileSync(path.join(dir, 'mimetype'), 'application/x-invalid-mimetype');
     fs.writeFileSync(path.join(dir, 'kdna.json'), JSON.stringify({ kdna_version: '1.0' }));
     fs.writeFileSync(
       path.join(dir, 'payload.kdnab'),
@@ -645,7 +645,7 @@ test('validate: invalid mimetype is reported as format error', () => {
         core: { highest_question: 'q', axioms: [] },
       }),
     );
-    assert.throws(() => v1.validate(dir), /not a KDNA v1 layout/);
+    assert.throws(() => v1.validate(dir), /not a KDNA layout/);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
