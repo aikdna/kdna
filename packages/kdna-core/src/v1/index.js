@@ -1616,6 +1616,12 @@ module.exports = {
   unpack,
   loadV1,
   FORBIDDEN_OUTPUT_TERMS,
+  // Semver utilities (Story 6 / Story 13) — exported so consumers
+  // (e.g. kdna-cli) can use the canonical implementation instead of
+  // duplicating it.
+  parseSemver,
+  compareSemver,
+  satisfies,
 };
 
 // ─── loadV1 — v1 runtime loading / load contract ──────────────────────
