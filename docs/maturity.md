@@ -1,6 +1,6 @@
 # KDNA Maturity Disclosure
 
-> **Current status: Beta** — last updated 2026-06-27.
+> **Current status: Beta** — last updated 2026-06-30.
 > The README top-line maturity badge links here. Update both together.
 
 ## What "Beta" means for KDNA
@@ -34,8 +34,7 @@ KDNA is an open file format for packaging scoped judgment. The project has reach
   but a hosted registry is not part of the public baseline yet. The
   KDNA Studio `publish --check` quality gate exists; a hosted registry
   is post-v1.0.
-- **Remote runtime** — there is no hosted load endpoint in v1.0. All
-  loading is local (`kdna load <file.kdna>`).
+- **Remote runtime** — `kdna load --remote-server <url>` is available for self-hosted projection servers. There is no AIKDNA-hosted load endpoint; all production use requires your own `@aikdna/kdna-remote-server` instance or direct local loading.
 - **Paid authorization** — `kdna-licensed-entry-v1` KDF profile is
   defined and tested, but the commercial license-generation / delivery
   flow is not part of the public baseline.

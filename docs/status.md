@@ -60,7 +60,7 @@ kdna validate ./school.kdna
 
  - **kdna-studio** — Core GA authoring/export is stable (0.8.9); advanced AI authoring features (distill, interview, feynman) are experimental
 - **kdna-vscode** — VS Code extension — archived as of 2026-06-25; use kdna-cli for validate, plan-load, pack/unpack
-- **kdna-loader** — agent adapter skill; functional for supported agents, UX hardening deferred
+- **kdna-loader** — official agent adapter skill; stable, supports OpenCode/Codex/Claude Code/Cursor/Gemini via `kdna setup`
 - **kdna-core-swift** — Swift runtime; beta until parity proven against fixed Core v1 conformance fixtures
 - **kdna-lab** — pressure-test infrastructure; experimental
 

@@ -16,7 +16,7 @@ Use the official KDNA toolchain to create, inspect, validate, plan-load, and loa
 
 [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE) [![Maturity: Beta — format stable, toolchain tested, pre-1.0 features evolving](https://img.shields.io/badge/maturity-Beta-blueviolet)](#maturity)
 
-> **Maturity: Beta** — the `.kdna` v1 file format and core runtime contract are stable, the official toolchain (`kdna-cli`, `kdna-studio-cli`, `kdna-studio-core`) is published to npm and tested end-to-end, but v1.x features (signatures, registry, remote runtime, paid authorization) are still landing. Expect breaking changes before v1.0 GA. Suitable for production use of public assets; treat licensed/encrypted assets as a v1.0+ commitment. See [`docs/maturity.md`](./docs/maturity.md) for the full disclosure.
+> **Maturity: Beta** — the `.kdna` v1 file format, core runtime, signing, revocation, and remote runtime are stable and tested. Registry, paid authorization, and native app distribution are not yet shipped. Expect additive changes before v1.0 GA; breaking format changes require an RFC. Suitable for production use of public assets. See [`docs/maturity.md`](./docs/maturity.md) for the full disclosure.
 
 ## See KDNA in action — then create your own
 
