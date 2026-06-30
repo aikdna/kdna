@@ -37,24 +37,25 @@ All 21 planned stories have shipped:
 
 ## What comes next
 
-The next phase focuses on three areas:
+The next phase focuses on four areas:
 
-### 1. More public assets (creator onboarding)
+### 1. More public assets (the real bottleneck)
 
-The protocol is done. The bottleneck for adoption is the number of
-high-quality public `.kdna` assets that demonstrate value to new users.
-We are looking for domain experts who want to package their judgment into
-a KDNA asset. Read the [30-minute authoring guide](./30-minute-authoring-guide.md)
-to get started.
+A protocol without content is an empty container. The bottleneck is not more protocol features — it's high-quality `.kdna` assets that demonstrate what judgment-in-a-file actually feels like.
 
-### 2. Swift runtime parity
+We are looking for domain experts who want to package their judgment. If you have a domain where you consistently apply specific principles, boundaries, and standards that a generalist wouldn't have — that's exactly what KDNA is designed for. Read the [30-minute authoring guide](./30-minute-authoring-guide.md).
 
-`kdna-core-swift` currently covers core loading and validation. The newer
-features — Bundle loading, RAG namespacing, asset inheritance, Ed25519
-signing, revocation — need Swift implementations to unlock native app
-integration at the full feature level.
+### 2. Applications built on KDNA
 
-### 3. Test coverage and reliability
+`.kdna` assets are not only for personal agent configuration — they are the judgment layer that applications can build on top of. When an application's core reasoning is a versioned `.kdna` asset, upgrading the asset improves every user's output on the same day. This is KDNA as infrastructure, not just as personal tooling.
+
+Applications in this direction are in development. The protocol is ready. The toolchain is ready.
+
+### 3. Native app experience
+
+The current path is CLI + MCP. Native app experiences for loading, comparing, and authoring `.kdna` assets are in development. Swift runtime parity (`kdna-core-swift`) is a prerequisite for full native integration.
+
+### 4. Test coverage and reliability
 
 `@aikdna/kdna-cli` has 190 tests but several high-complexity command
 modules (agent, cluster, compare, diff) lack unit tests. Good first
