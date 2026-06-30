@@ -1,8 +1,10 @@
 # Start Here
 
-KDNA is an open file format for packaging scoped judgment and loading it into AI agents. `.kdna` assets are created, inspected, validated, planned, loaded, and consumed through the official KDNA toolchain.
+**Skills give agents hands. KDNA gives them judgment.**
 
-In 5 minutes, you can create a local `.kdna` file and render agent-ready judgment context.
+KDNA is an open file format and protocol for packaging domain judgment and loading it into AI agents — portable, verifiable, and yours.
+
+In 5 minutes, you can load a real judgment asset into your agent context and see the difference.
 
 ---
 
@@ -10,10 +12,10 @@ In 5 minutes, you can create a local `.kdna` file and render agent-ready judgmen
 
 | I want to... | Start here | Time |
 |-------------|-----------|------|
-| **See KDNA work** | [5-Minute Quick Start](#5-minute-quick-start) | 5 min |
+| **See KDNA work with a real asset** | [5-Minute Quick Start](#5-minute-quick-start) | 5 min |
 | **Create my own KDNA** | [30-Minute Authoring Guide](./30-minute-authoring-guide.md) | 30 min |
 | **Load KDNA into my AI agent** | [15-Minute Agent Guide](./15-minute-agent-guide.md) | 15 min |
-| **Understand the protocol** | [Phase 2 Walkthrough](./phase2-walkthrough.md) | 60 min |
+| **Understand the protocol** | [KDNA and the AI Stack](./kdna-and-ai-stack.md) | 15 min |
 | **Contribute** | [CONTRIBUTING.md](../CONTRIBUTING.md) | 5 min |
 
 ---
@@ -22,14 +24,13 @@ In 5 minutes, you can create a local `.kdna` file and render agent-ready judgmen
 
 ```bash
 npm install -g @aikdna/kdna-cli
-kdna demo minimal ./minimal
-kdna pack ./minimal ./minimal.kdna
-kdna validate ./minimal.kdna
-kdna plan-load ./minimal.kdna
-kdna load ./minimal.kdna --profile=compact --as=prompt
-```
 
-You'll see the loaded compact prompt include judgment boundaries.
+# Load a real judgment asset — see what changes
+curl -LO https://github.com/aikdna/kdna-assets/releases/download/agent-project-context-v0.1.2/agent-project-context-v0.1.2.kdna
+kdna validate agent-project-context-v0.1.2.kdna
+kdna plan-load agent-project-context-v0.1.2.kdna
+kdna load    agent-project-context-v0.1.2.kdna --profile=compact --as=prompt
+```
 
 Expected validation result:
 

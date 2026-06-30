@@ -1,6 +1,8 @@
 # KDNA
 
-> **KDNA is an open file format for packaging scoped judgment and loading it into AI agents.**
+> **Skills give agents hands. KDNA gives them judgment.**
+>
+> KDNA is an open file format and protocol for packaging domain judgment and loading it into AI agents — portable, verifiable, and yours.
 
 Use the official KDNA toolchain to create, inspect, validate, plan-load, and load `.kdna` files. Agents and third-party tools can create `.kdna` files through the official SDK or CLI; format validity is determined by `kdna validate`, not by author identity.
 
@@ -16,20 +18,25 @@ Use the official KDNA toolchain to create, inspect, validate, plan-load, and loa
 
 > **Maturity: Beta** — the `.kdna` v1 file format and core runtime contract are stable, the official toolchain (`kdna-cli`, `kdna-studio-cli`, `kdna-studio-core`) is published to npm and tested end-to-end, but v1.x features (signatures, registry, remote runtime, paid authorization) are still landing. Expect breaking changes before v1.0 GA. Suitable for production use of public assets; treat licensed/encrypted assets as a v1.0+ commitment. See [`docs/maturity.md`](./docs/maturity.md) for the full disclosure.
 
-## Try KDNA Core v1 in 5 minutes
+## See KDNA in action — then create your own
 
-Create a local `.kdna` file, validate it, and render agent-ready judgment context from your terminal.
+First, load a real judgment asset and see what changes. Then create your own.
 
 ```bash
 npm install -g @aikdna/kdna-cli
+
+# Step 1: load a real judgment asset — see the difference
+curl -LO https://github.com/aikdna/kdna-assets/releases/download/agent-project-context-v0.1.2/agent-project-context-v0.1.2.kdna
+kdna validate agent-project-context-v0.1.2.kdna
+kdna load    agent-project-context-v0.1.2.kdna --profile=compact --as=prompt
+
+# Step 2: create your own minimal asset from scratch
 kdna demo minimal ./minimal
-kdna pack ./minimal ./minimal.kdna
-kdna validate ./minimal.kdna
-kdna plan-load ./minimal.kdna
-kdna load ./minimal.kdna --profile=compact --as=prompt
+kdna pack   ./minimal ./minimal.kdna
+kdna load   ./minimal.kdna --profile=compact --as=prompt
 ```
 
-→ [Full 5-minute guide](./docs/try-kdna.md)
+→ [Full 5-minute guide](./docs/try-kdna.md) · [Official judgment assets](https://github.com/aikdna/kdna-assets)
 
 ## What is a KDNA file?
 
