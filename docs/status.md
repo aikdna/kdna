@@ -29,7 +29,7 @@ KDNA Core is content-neutral. It validates file structure, integrity, and loadin
 - **`kdna unpack`** — unpack `.kdna` container, refuse path traversal
 - **`kdna demo minimal`** — create a minimal v1 fixture for first-run testing
 - **CLI tests** — 30 tests pass for inspect, validate, LoadPlan, load, pack, unpack, and contract shape
-- **Studio CLI** — Core GA authoring/export published through `@aikdna/kdna-studio-cli@0.6.5` and `@aikdna/kdna-studio-core@1.5.12`
+ - **Studio CLI** — Core GA authoring/export published through `@aikdna/kdna-studio-cli@0.8.9` and `@aikdna/kdna-studio-core@1.7.7`
 
 All stable commands are available in the public Core GA CLI surface. `kdna --help` shows the complete Core GA command surface.
 
@@ -48,7 +48,7 @@ kdna load /tmp/minimal.kdna --profile=compact --as=prompt
 Studio authoring path:
 
 ```bash
-npm install -g @aikdna/kdna-studio-cli@0.6.5
+npm install -g @aikdna/kdna-studio-cli@0.8.9
 kdna-studio create ./school --name @test/school --author "Your Name"
 kdna-studio card add ./school axiom --field one_sentence="..." [all 8 required fields]
 kdna-studio card approve ./school --all --by me --statement "I confirm."
@@ -58,7 +58,7 @@ kdna validate ./school.kdna
 
 ## What is experimental / in development
 
-- **kdna-studio** — Core GA authoring/export is stable (0.6.5); advanced AI authoring features (distill, interview, feynman) are experimental
+ - **kdna-studio** — Core GA authoring/export is stable (0.8.9); advanced AI authoring features (distill, interview, feynman) are experimental
 - **kdna-vscode** — VS Code extension (legacy workspace tools); not yet updated for Core GA
 - **kdna-loader** — agent adapter skill; functional for supported agents, UX hardening deferred
 - **kdna-core-swift** — Swift runtime; beta until parity proven against fixed Core v1 conformance fixtures
