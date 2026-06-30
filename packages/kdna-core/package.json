@@ -62,7 +62,7 @@
     }
   },
   "dependencies": {
-    "@noble/hashes": "^1.8.0",
+    "@noble/hashes": "^2.2.0",
     "cbor-x": "^1.6.4",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1"
