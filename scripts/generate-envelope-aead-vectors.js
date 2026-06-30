@@ -129,9 +129,10 @@ function buildEnvelope({ kdf_profile, password, salt, iv, plaintext, aad, cek, k
       {
         slot: 'password',
         kdf_profile,
-        kdf_params: kdf_profile === 'scrypt-sha256-v1'
-          ? { ...SCRYPT_PARAMS, salt: salt.toString('base64') }
-          : { ...ARGON2_PARAMS, salt: salt.toString('base64') },
+        kdf_params:
+          kdf_profile === 'scrypt-sha256-v1'
+            ? { ...SCRYPT_PARAMS, salt: salt.toString('base64') }
+            : { ...ARGON2_PARAMS, salt: salt.toString('base64') },
         wrap: KEY_WRAPPING,
         wrapped_key: wrappedKey.toString('base64'),
       },
@@ -166,7 +167,13 @@ function vector1() {
   const kek = deriveKekScrypt(password, salt);
   const envelope = buildEnvelope({
     kdf_profile: 'scrypt-sha256-v1',
-    password, salt, iv, plaintext, aad, cek, kek,
+    password,
+    salt,
+    iv,
+    plaintext,
+    aad,
+    cek,
+    kek,
   });
   const scryptParams = { ...SCRYPT_PARAMS, salt: salt.toString('base64') };
   return {
@@ -206,26 +213,45 @@ function vector2() {
   const assetUid = 'urn:uuid:33333333-3333-4333-8333-333333333333';
   const assetDigest = 'sha256:4444444444444444444444444444444444444444444444444444444444444444';
   const aadEntry1 = buildAad({
-    asset_uid: assetUid, asset_digest: assetDigest,
-    entry_path: 'KDNA_Core.json', access_mode: 'licensed', entitlement_profile: 'password',
+    asset_uid: assetUid,
+    asset_digest: assetDigest,
+    entry_path: 'KDNA_Core.json',
+    access_mode: 'licensed',
+    entitlement_profile: 'password',
   });
   const aadEntry2 = buildAad({
-    asset_uid: assetUid, asset_digest: assetDigest,
-    entry_path: 'KDNA_Patterns.json', access_mode: 'licensed', entitlement_profile: 'password',
+    asset_uid: assetUid,
+    asset_digest: assetDigest,
+    entry_path: 'KDNA_Patterns.json',
+    access_mode: 'licensed',
+    entitlement_profile: 'password',
   });
   const kek = deriveKekScrypt(password, salt);
   const envelope1 = buildEnvelope({
     kdf_profile: 'scrypt-sha256-v1',
-    password, salt, iv, plaintext, aad: aadEntry1, cek, kek,
+    password,
+    salt,
+    iv,
+    plaintext,
+    aad: aadEntry1,
+    cek,
+    kek,
   });
   const envelope2 = buildEnvelope({
     kdf_profile: 'scrypt-sha256-v1',
-    password, salt, iv, plaintext, aad: aadEntry2, cek, kek,
+    password,
+    salt,
+    iv,
+    plaintext,
+    aad: aadEntry2,
+    cek,
+    kek,
   });
   const scryptParams = { ...SCRYPT_PARAMS, salt: salt.toString('base64') };
   return {
     id: 'kdna-envelope-aead-v1-vector-02-scrypt-multi-entry-aad',
-    description: 'scrypt-sha256-v1: same CEK + IV + plaintext under two different AADs (entry_path differs). The two ciphertexts MUST differ because AAD is part of the GCM input. A reader MUST reject if AAD does not match.',
+    description:
+      'scrypt-sha256-v1: same CEK + IV + plaintext under two different AADs (entry_path differs). The two ciphertexts MUST differ because AAD is part of the GCM input. A reader MUST reject if AAD does not match.',
     inputs: {
       password,
       salt: salt.toString('base64'),
@@ -275,12 +301,19 @@ function vector3() {
   const kek = deriveKekArgon2id(password, salt);
   const envelope = buildEnvelope({
     kdf_profile: 'argon2id-v1',
-    password, salt, iv, plaintext, aad, cek, kek,
+    password,
+    salt,
+    iv,
+    plaintext,
+    aad,
+    cek,
+    kek,
   });
   const argon2Params = { ...ARGON2_PARAMS, salt: salt.toString('base64') };
   return {
     id: 'kdna-envelope-aead-v1-vector-03-argon2id-basic',
-    description: 'argon2id-v1: basic round-trip with the optional v2 KDF. Node.js implementations only; Swift port MUST either fallback to scrypt-sha256-v1 or refuse to load with KDNA_KDF_UNSUPPORTED.',
+    description:
+      'argon2id-v1: basic round-trip with the optional v2 KDF. Node.js implementations only; Swift port MUST either fallback to scrypt-sha256-v1 or refuse to load with KDNA_KDF_UNSUPPORTED.',
     inputs: {
       password,
       salt: salt.toString('base64'),
@@ -316,7 +349,9 @@ for (const v of vectors) {
     console.log(`  tag_entry_1:        ${v.expected.envelope_entry_1.tag}`);
     console.log(`  tag_entry_2:        ${v.expected.envelope_entry_2.tag}`);
     console.log(`  ciphertext_entry_1_eq_entry_2: ${v.expected.ciphertext_entry_1_eq_entry_2}`);
-    console.log(`  (GCM invariant: same CEK+IV+plaintext → same ciphertext; AAD affects TAG, not ciphertext)`);
+    console.log(
+      `  (GCM invariant: same CEK+IV+plaintext → same ciphertext; AAD affects TAG, not ciphertext)`,
+    );
   } else {
     console.log(`  ciphertext: ${v.expected.envelope.ciphertext}`);
     console.log(`  tag:        ${v.expected.envelope.tag}`);

@@ -64,33 +64,34 @@ try {
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const vectorsDir = path.join(root, 'kdna-envelope-aead-v1');
-const schemaPath = path.join(
-  root, '..', 'specs', 'kdna-envelope-aead-v1.schema.json',
-);
+const schemaPath = path.join(root, '..', 'specs', 'kdna-envelope-aead-v1.schema.json');
 
 // ── KDF implementations (mirror kdna-core crypto-profile.js) ───────
 
 function deriveKekScrypt(password, params) {
   const { N, r, p, salt } = params;
-  return crypto.scryptSync(
-    Buffer.from(password, 'utf8'),
-    Buffer.from(salt, 'base64'),
-    32,
-    { N, r, p, maxmem: 128 * 1024 * 1024 },
-  );
+  return crypto.scryptSync(Buffer.from(password, 'utf8'), Buffer.from(salt, 'base64'), 32, {
+    N,
+    r,
+    p,
+    maxmem: 128 * 1024 * 1024,
+  });
 }
 
 function deriveKekArgon2id(password, params) {
   if (!argon2id) {
     throw new Error(
       'argon2id vector cannot run: @noble/hashes not installed. ' +
-      'Install with `npm install @noble/hashes` to enable vector 03.',
+        'Install with `npm install @noble/hashes` to enable vector 03.',
     );
   }
   const { t, m, p, salt, dkLen = 32 } = params;
   return Buffer.from(
     argon2id(Buffer.from(password, 'utf8'), Buffer.from(salt, 'base64'), {
-      t, m, p, dkLen,
+      t,
+      m,
+      p,
+      dkLen,
     }),
   );
 }
@@ -148,11 +149,7 @@ function unwrapAndDecrypt(envelope, kek, aad) {
   // wrapped CEK bytes per RFC-0018 R3.)
   const slot = envelope.key_slots[0];
   const cek = aesKwUnwrap(kek, Buffer.from(slot.wrapped_key, 'base64'));
-  const decipher = crypto.createDecipheriv(
-    'aes-256-gcm',
-    cek,
-    Buffer.from(envelope.iv, 'base64'),
-  );
+  const decipher = crypto.createDecipheriv('aes-256-gcm', cek, Buffer.from(envelope.iv, 'base64'));
   decipher.setAAD(aad);
   decipher.setAuthTag(Buffer.from(envelope.tag, 'base64'));
   return {
@@ -257,11 +254,7 @@ function checkScryptMultiEntryAad() {
   // Cross-AAD swap must fail GCM auth.
   let swapRejected = false;
   try {
-    unwrapAndDecrypt(
-      v.expected.envelope_entry_1,
-      kek,
-      Buffer.from(v.inputs.aad_entry_2, 'utf8'),
-    );
+    unwrapAndDecrypt(v.expected.envelope_entry_1, kek, Buffer.from(v.inputs.aad_entry_2, 'utf8'));
   } catch (e) {
     swapRejected = true;
   }
@@ -354,7 +347,5 @@ export function runKdnaEnvelopeAeadV1Conformance() {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const results = runKdnaEnvelopeAeadV1Conformance();
   for (const r of results) console.log(`  PASS ${r}`);
-  console.log(
-    `KDNA envelope-aead-v1 conformance passed (3 vectors, 1 schema)`,
-  );
+  console.log(`KDNA envelope-aead-v1 conformance passed (3 vectors, 1 schema)`);
 }
