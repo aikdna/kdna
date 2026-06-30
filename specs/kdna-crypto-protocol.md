@@ -297,7 +297,8 @@ What it DOES provide:
 | P3 | `kdna license activate` and `kdna license sync` | CLI MVP implemented |
 | P4 | Entitlement revoke/admin API | Specified |
 | P5 | Runtime projection and watermark service | Future server implementation |
-| P6 | TUF-like registry trust roles | Future trust-layer implementation |
+| P6 | ~~TUF-like registry trust roles~~ | **CANCELLED 2026-06-28** (see `roadmap-2026.md` Section 5.5; Story 19 / Ed25519 per-author identity replaces this) |
+| P7 | `kdna-envelope-aead-v1` canonical envelope profile (RFC-0018) | **Spec frozen 2026-06-28 (Story 17). 3 test vectors in `conformance/kdna-envelope-aead-v1/`. Implementation in Story 24.** |
 
 ---
 

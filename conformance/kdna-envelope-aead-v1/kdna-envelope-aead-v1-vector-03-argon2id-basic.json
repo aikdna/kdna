@@ -1,0 +1,54 @@
+{
+  "id": "kdna-envelope-aead-v1-vector-03-argon2id-basic",
+  "description": "argon2id-v1: basic round-trip with the optional v2 KDF. Node.js implementations only; Swift port MUST either fallback to scrypt-sha256-v1 or refuse to load with KDNA_KDF_UNSUPPORTED.",
+  "inputs": {
+    "password": "kdna-envelope-test-vector-3-password",
+    "salt": "MDEyMzQ1Njc4OTo7PD0+Pw==",
+    "iv": "MTIzNDU2Nzg5Ojs8",
+    "cek": "wcLDxMXGx8jJysvMzc7P0OHi4+Tl5ufo6err7O3u7/A=",
+    "plaintext": "Hello, KDNA envelope v1 (argon2id-v1 basic).",
+    "aad": "kdna-envelope-aead-v1\nurn:uuid:55555555-5555-4555-8555-555555555555\nsha256:6666666666666666666666666666666666666666666666666666666666666666\nKDNA_Core.json\nlicensed\npassword",
+    "aad_lines": [
+      "kdna-envelope-aead-v1",
+      "urn:uuid:55555555-5555-4555-8555-555555555555",
+      "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "KDNA_Core.json",
+      "licensed",
+      "password"
+    ],
+    "argon2_params": {
+      "t": 3,
+      "m": 65536,
+      "p": 4,
+      "dkLen": 32,
+      "salt": "MDEyMzQ1Njc4OTo7PD0+Pw=="
+    }
+  },
+  "expected": {
+    "kek": "aD79p99ivfRhBUe/xcUmrf972jiDw0rOEfxn7RYFvlk=",
+    "envelope": {
+      "profile": "kdna-envelope-aead-v1",
+      "alg": "AES-256-GCM",
+      "key_wrapping": "AES-256-KW",
+      "kdf_profile": "argon2id-v1",
+      "key_slots": [
+        {
+          "slot": "password",
+          "kdf_profile": "argon2id-v1",
+          "kdf_params": {
+            "t": 3,
+            "m": 65536,
+            "p": 4,
+            "dkLen": 32,
+            "salt": "MDEyMzQ1Njc4OTo7PD0+Pw=="
+          },
+          "wrap": "AES-256-KW",
+          "wrapped_key": "fqQ7PJcp7FdnUKPvAAgCdTGkEREdyltBZwKFEbN+E/o0aTgQwMXDZA=="
+        }
+      ],
+      "iv": "MTIzNDU2Nzg5Ojs8",
+      "tag": "MvhEXDkY9M3lqlHvazijlQ==",
+      "ciphertext": "R9XD0cxAAcIN5YPdnmYXf1HoMtP0nZxD9k/3RI9ZYq4Pf2Zzyi233Q847Yg="
+    }
+  }
+}
