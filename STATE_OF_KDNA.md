@@ -1,12 +1,13 @@
 # State of KDNA
 
-> ⚠️ **Historical snapshot. This document is dated 2026-06-09 and does not represent the current KDNA Core positioning.**
+> 📋 **Historical reference — 2026-06-09.** This document describes KDNA as it stood in early June 2026. For the current state, see:
+> - [README.md](./README.md) — what KDNA is today
+> - [SPEC.md](./SPEC.md) — the current protocol specification
+> - For the latest development status, see the [GitHub Releases](https://github.com/aikdna/kdna/releases) page.
 >
-> Current positioning is documented in `README.md`, `README.zh.md`, `docs/core/definition.md`, and `docs/core/principles.md`. Several of the references and assumptions below (e.g. registry, marketplace, quality badge) are out of scope for KDNA Core v1 and are tracked separately. Do not use this document as a source of current public narrative.
+> Some concepts referenced below (registry, marketplace, quality badge) were removed from KDNA Core v1 scope after this document was written.
 >
-> ⚠️ **历史状态快照。本文件日期为 2026-06-09,不代表当前 KDNA Core 定位。**
->
-> 当前定位以 `README.md`、`README.zh.md`、`docs/core/definition.md`、`docs/core/principles.md` 为准。文中涉及的 registry / marketplace / quality badge 等表述,已不在 KDNA Core v1 范围之内,另作处理。本文件不应作为当前公开叙事的来源。
+> 📋 **历史参考 — 2026-06-09。** 当前状态请参见 README.md、SPEC.md 及 GitHub Releases 页面。
 
 Date: 2026-06-09
 
