@@ -6,6 +6,8 @@ Use the official KDNA toolchain to create, inspect, validate, plan-load, and loa
 
 > New to KDNA? → [Start Here](./docs/start-here.md)
 >
+> Why KDNA instead of a system prompt? → [Why KDNA](./docs/why-kdna.md) · [KDNA and the AI Stack](./docs/kdna-and-ai-stack.md)
+>
 > Roadmap and contribution guide → [Public Roadmap](./docs/public-roadmap.md)
 >
 > This repo defines **KDNA Core** — the file format, schemas, and runtime loading contract. The official KDNA toolchain is published from this repo and its companion packages.
