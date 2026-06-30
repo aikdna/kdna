@@ -1,9 +1,11 @@
 # KDNA Roadmap
 
-> Historical roadmap snapshot. This file records an earlier ecosystem plan and
-> is not the current public beta launch truth. Current status is documented in
-> `README.md`, `README.zh.md`, `docs/status.md`, and
-> `ecosystem-manifest.json`.
+> **This file is a historical snapshot** (pre-v1 ecosystem plan, dated 2026-05).
+> The current active roadmap is **[docs/public-roadmap.md](./public-roadmap.md)**.
+>
+> The sections below record the four-layer protocol stack approach, including registry /
+> marketplace / quality-badge layers that are **out of scope for KDNA Core v1**.
+> Preserved for traceability. Not active guidance.
 
 ## Phase 1: Protocol and Runtime Foundation ✅
 
