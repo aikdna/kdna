@@ -21,7 +21,7 @@ KDNA Core is content-neutral. It validates file structure, integrity, and loadin
 - **Load contract** — `index` / `compact` / `scenario` / `full` profiles
 - **Checksums** — per-entry SHA-256 / SHA-512 / BLAKE2b-256
 - **Content-neutral output boundary** — Core validation does not emit recommendation, endorsement, or quality-ranking claims
-- **`kdna inspect`** — inspect local v1 `.kdna` containers (available via `npm install -g @aikdna/kdna-cli@0.28.30`)
+- **`kdna inspect`** — inspect local v1 `.kdna` containers (available via `npm install -g @aikdna/kdna-cli@0.28.31`)
 - **`kdna validate`** — validate local v1 `.kdna` containers (schema + format + payload + checksums + load-contract)
 - **`kdna plan-load`** — return the Core LoadPlan before runtime loading, with structured `input_fingerprint` and entitlement state diagnostics
 - **`kdna load`** — render v1 `.kdna` assets into agent-readable context (`--profile=index|compact|scenario|full`, `--as=json|prompt`)
@@ -36,7 +36,7 @@ All stable commands are available in the public Core GA CLI surface. `kdna --hel
 ## Recommended first-run path
 
 ```bash
-npm install -g @aikdna/kdna-cli@0.28.30
+npm install -g @aikdna/kdna-cli@0.28.31
 kdna --help
 kdna demo minimal /tmp/minimal-source
 kdna pack /tmp/minimal-source /tmp/minimal.kdna

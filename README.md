@@ -6,6 +6,8 @@ Use the official KDNA toolchain to create, inspect, validate, plan-load, and loa
 
 > New to KDNA? → [Start Here](./docs/start-here.md)
 >
+> Roadmap and contribution guide → [Public Roadmap](./docs/public-roadmap.md)
+>
 > This repo defines **KDNA Core** — the file format, schemas, and runtime loading contract. The official KDNA toolchain is published from this repo and its companion packages.
 
 [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE) [![Maturity: Beta — format stable, toolchain tested, pre-1.0 features evolving](https://img.shields.io/badge/maturity-Beta-blueviolet)](#maturity)
