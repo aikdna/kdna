@@ -1,5 +1,21 @@
 # Changelog
 
+
+## v0.15.10 (2026-06-30)
+
+**API**: export `parseSemver`, `compareSemver`, `satisfies` from public module.
+
+These semver utilities were already used internally by kdna-core (Story 6 dependency
+resolution) but were not part of the public API. Exporting them allows consumers
+(e.g. `@aikdna/kdna-cli`) to use the canonical implementation rather than maintaining
+a parallel copy.
+
+- **`parseSemver(v)`** — parse a semver string into `{major, minor, patch}` or `null`
+- **`compareSemver(a, b)`** — compare two version strings, returns `< 0 | 0 | > 0`
+- **`satisfies(version, range)`** — test a version against a range (`^`, `~`, `>=`, etc.)
+
+No breaking changes. Purely additive.
+
 ## v0.15.9 (2026-06-28)
 
 Story 12 — Asset inheritance (`extends` field, RFC #148 v2.x Phase 3).

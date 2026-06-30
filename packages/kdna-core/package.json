@@ -1,70 +1,70 @@
 {
-  "name": "@aikdna/kdna-core",
-  "version": "0.15.9",
-  "description": "KDNA Core library for validating, planning, and loading local .kdna judgment assets.",
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "type": "commonjs",
-  "main": "src/index.js",
-  "module": "src/index.mjs",
-  "exports": {
-    ".": {
-      "import": "./src/index.mjs",
-      "require": "./src/index.js",
-      "types": "./src/types.d.ts"
+    "name": "@aikdna/kdna-core",
+    "version": "0.15.10",
+    "description": "KDNA Core library for validating, planning, and loading local .kdna judgment assets.",
+    "engines": {
+        "node": ">=18.0.0"
     },
-    "./package.json": "./package.json",
-    "./schema/*": "./schema/*",
-    "./v1": {
-      "import": "./src/v1/index.mjs",
-      "require": "./src/v1/index.js",
-      "types": "./src/types.d.ts"
-    }
-  },
-  "types": "src/types.d.ts",
-  "scripts": {
-    "test": "node ../../scripts/run-node-tests.js test/*.test.js && node -e \"const m = require('./src/index.js'); console.log('kdna-core exports:', Object.keys(m).join(', '));\"",
-    "prepublishOnly": "npm run release:check",
-    "release:check": "node scripts/check-release-readiness.js"
-  },
-  "files": [
-    "src/",
-    "schema/",
-    "README.md",
-    "CHANGELOG.md",
-    "LICENSE",
-    "NOTICE"
-  ],
-  "keywords": [
-    "kdna",
-    "kdna-core",
-    "ai-agent",
-    "judgment-assets"
-  ],
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/aikdna/kdna.git",
-    "directory": "packages/kdna-core"
-  },
-  "homepage": "https://aikdna.com",
-  "peerDependencies": {
-    "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1"
-  },
-  "peerDependenciesMeta": {
-    "ajv": {
-      "optional": true
+    "type": "commonjs",
+    "main": "src/index.js",
+    "module": "src/index.mjs",
+    "exports": {
+        ".": {
+            "import": "./src/index.mjs",
+            "require": "./src/index.js",
+            "types": "./src/types.d.ts"
+        },
+        "./package.json": "./package.json",
+        "./schema/*": "./schema/*",
+        "./v1": {
+            "import": "./src/v1/index.mjs",
+            "require": "./src/v1/index.js",
+            "types": "./src/types.d.ts"
+        }
     },
-    "ajv-formats": {
-      "optional": true
+    "types": "src/types.d.ts",
+    "scripts": {
+        "test": "node ../../scripts/run-node-tests.js test/*.test.js && node -e \"const m = require('./src/index.js'); console.log('kdna-core exports:', Object.keys(m).join(', '));\"",
+        "prepublishOnly": "npm run release:check",
+        "release:check": "node scripts/check-release-readiness.js"
+    },
+    "files": [
+        "src/",
+        "schema/",
+        "README.md",
+        "CHANGELOG.md",
+        "LICENSE",
+        "NOTICE"
+    ],
+    "keywords": [
+        "kdna",
+        "kdna-core",
+        "ai-agent",
+        "judgment-assets"
+    ],
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/aikdna/kdna.git",
+        "directory": "packages/kdna-core"
+    },
+    "homepage": "https://aikdna.com",
+    "peerDependencies": {
+        "ajv": "^8.17.1",
+        "ajv-formats": "^3.0.1"
+    },
+    "peerDependenciesMeta": {
+        "ajv": {
+            "optional": true
+        },
+        "ajv-formats": {
+            "optional": true
+        }
+    },
+    "dependencies": {
+        "@noble/hashes": "^1.8.0",
+        "cbor-x": "^1.6.4",
+        "ajv": "^8.20.0",
+        "ajv-formats": "^3.0.1"
     }
-  },
-  "dependencies": {
-    "@noble/hashes": "^1.8.0",
-    "cbor-x": "^1.6.4",
-    "ajv": "^8.20.0",
-    "ajv-formats": "^3.0.1"
-  }
 }
