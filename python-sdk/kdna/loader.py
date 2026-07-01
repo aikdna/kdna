@@ -8,7 +8,6 @@ directly from the `.kdna` container and does not persistently extract the asset.
 
 import hashlib
 import json
-import os
 import zipfile
 from pathlib import Path
 from typing import Optional, Dict, Any, List
@@ -20,6 +19,8 @@ OPTIONAL_FILES = [
     "KDNA_Reasoning.json",
     "KDNA_Evolution.json",
 ]
+PAYLOAD_ENTRY = "payload.kdnab"
+ALLOWED_MODES = {"minimum", "all", "auto"}
 
 
 class KDNAAssetError(ValueError):
@@ -43,6 +44,16 @@ def _read_zip_json(zf: zipfile.ZipFile, entry_name: str) -> Optional[Dict[str, A
         raise KDNAAssetError(f"Invalid JSON entry {entry_name}: {exc}") from exc
 
 
+def _asset_digest(path: Path) -> str:
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _validate_mode(mode: str) -> None:
+    if mode not in ALLOWED_MODES:
+        allowed = ", ".join(sorted(ALLOWED_MODES))
+        raise KDNAAssetError(f"Invalid load mode {mode!r}; expected one of: {allowed}")
+
+
 def verify_digest(asset_path: str, expected_digest: str) -> Dict[str, Any]:
     """
     Verify a `.kdna` whole-file digest.
@@ -58,7 +69,7 @@ def verify_digest(asset_path: str, expected_digest: str) -> Dict[str, Any]:
     if not path.is_file():
         raise KDNAAssetError(f"Asset not found: {asset_path}")
 
-    actual = "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    actual = _asset_digest(path)
     expected = expected_digest if expected_digest.startswith("sha256:") else f"sha256:{expected_digest}"
     return {
         "ok": actual == expected,
@@ -80,13 +91,23 @@ def inspect_kdna(asset_path: str) -> Dict[str, Any]:
     if path.suffix != ".kdna":
         raise KDNAAssetError(f"Expected a .kdna asset, got: {asset_path}")
 
-    with zipfile.ZipFile(path, "r") as zf:
-        entries = sorted(name for name in zf.namelist() if not name.endswith("/"))
-        manifest = _read_zip_json(zf, "kdna.json")
-        if not manifest:
-            raise KDNAAssetError("Missing required entry: kdna.json")
+    try:
+        with zipfile.ZipFile(path, "r") as zf:
+            entries = sorted(name for name in zf.namelist() if not name.endswith("/"))
+            manifest = _read_zip_json(zf, "kdna.json")
+            if not manifest:
+                raise KDNAAssetError("Missing required entry: kdna.json")
 
-    missing = [name for name in ["kdna.json", *CORE_FILES] if name not in entries]
+            payload = _read_zip_json(zf, PAYLOAD_ENTRY) if PAYLOAD_ENTRY in entries else None
+    except zipfile.BadZipFile as exc:
+        raise KDNAAssetError(f"Invalid .kdna ZIP container: {exc}") from exc
+
+    if PAYLOAD_ENTRY in entries:
+        required_entries = ["kdna.json", PAYLOAD_ENTRY]
+    else:
+        required_entries = ["kdna.json", *CORE_FILES]
+
+    missing = [name for name in required_entries if name not in entries]
     return {
         "name": manifest.get("name"),
         "version": manifest.get("version"),
@@ -94,10 +115,11 @@ def inspect_kdna(asset_path: str) -> Dict[str, Any]:
         "status": manifest.get("status"),
         "quality_badge": manifest.get("quality_badge"),
         "risk_level": manifest.get("risk_level"),
+        "payload_profile": payload.get("profile") if payload else None,
         "entries": entries,
-        "required_entries": ["kdna.json", *CORE_FILES],
+        "required_entries": required_entries,
         "missing_required_entries": missing,
-        "asset_digest": "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest(),
+        "asset_digest": _asset_digest(path),
         "manifest": manifest,
     }
 
@@ -115,6 +137,7 @@ def open_kdna(asset_path: str, mode: str = "minimum") -> Dict[str, Any]:
         Dict with `manifest`, `core`, `patterns`, optional entries, and
         `asset_info`.
     """
+    _validate_mode(mode)
     info = inspect_kdna(asset_path)
     if info["missing_required_entries"]:
         missing = ", ".join(info["missing_required_entries"])
@@ -122,8 +145,20 @@ def open_kdna(asset_path: str, mode: str = "minimum") -> Dict[str, Any]:
 
     result: Dict[str, Any] = {"manifest": info["manifest"], "asset_info": info}
     with zipfile.ZipFile(asset_path, "r") as zf:
-        result["core"] = _read_zip_json(zf, "KDNA_Core.json")
-        result["patterns"] = _read_zip_json(zf, "KDNA_Patterns.json")
+        payload = _read_zip_json(zf, PAYLOAD_ENTRY)
+        if payload:
+            result["payload_profile"] = payload.get("profile")
+            result["core"] = payload.get("core") or {}
+            result["patterns"] = payload.get("patterns") or []
+
+            if mode in ("all", "auto"):
+                for key in ("scenarios", "cases", "reasoning", "evolution"):
+                    if payload.get(key):
+                        result[key] = payload[key]
+            return result
+
+        result["core"] = _read_zip_json(zf, "KDNA_Core.json") or {}
+        result["patterns"] = _read_zip_json(zf, "KDNA_Patterns.json") or {}
 
         if mode in ("all", "auto"):
             for fname in OPTIONAL_FILES:
@@ -147,6 +182,7 @@ def load_dev_source(source_dir: str, mode: str = "minimum") -> Optional[Dict[str
     Returns:
         Dict with 'core' and 'patterns' keys, or None if invalid.
     """
+    _validate_mode(mode)
     dpath = Path(source_dir)
     if not dpath.is_dir():
         return None

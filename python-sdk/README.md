@@ -12,12 +12,21 @@ tools.
 pip install kdna
 ```
 
+For local development from this repository:
+
+```bash
+cd python-sdk
+python -m pip install -e ".[dev]"
+python -m pytest
+```
+
 ## Quickstart
 
 ```python
 from kdna import open_kdna, inspect_kdna, verify_digest, format_context
 
-# Inspect and load a canonical asset without persistent extraction
+# Inspect and load a canonical asset without persistent extraction.
+# The SDK supports both legacy entry-based assets and v1 payload.kdnab assets.
 info = inspect_kdna("./writing.kdna")
 domain = open_kdna("./writing.kdna", mode="all")
 
@@ -66,6 +75,7 @@ Open a canonical `.kdna` asset directly.
 - `asset_path`: Path to the `.kdna` file
 - `mode`: `"minimum"`, `"all"`, or `"auto"`
 - Returns: `dict` with `manifest`, `core`, `patterns`, optional entries, and `asset_info`
+- Supports both legacy `KDNA_*.json` ZIP entries and v1 `payload.kdnab` assets.
 
 ### `inspect_kdna(asset_path)`
 
