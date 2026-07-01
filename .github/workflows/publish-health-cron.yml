@@ -85,7 +85,7 @@ jobs:
           done
           echo "## publish-health drift report" >> $GITHUB_STEP_SUMMARY
           echo "Drift count: $DRIFT" >> $GITHUB_STEP_SUMMARY
-          [ "$DRIFT" -gt 0 ] && exit 1
+          if [ "$DRIFT" -gt 0 ]; then exit 1; fi
         continue-on-error: true
 
       - name: Summarize results
