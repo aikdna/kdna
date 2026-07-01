@@ -66,13 +66,15 @@ jobs:
           echo "| --- | --- | --- | --- | --- | --- |"
           for entry in "${PACKAGES[@]}"; do
             IFS=':' read -r pkg repo path tag_prefix <<< "$entry"
-            main_v=$(gh api "repos/aikdna/$repo/contents/$path" --jq '.content' 2>/dev/null \
-              | base64 -d 2>/dev/null \
+            # Use curl + raw.githubusercontent.com (no auth needed for public repos)
+            main_v=$(curl -sS "https://raw.githubusercontent.com/aikdna/${repo}/main/${path}" 2>/dev/null \
               | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["version"])' 2>/dev/null || echo "")
             tag_v=$(git ls-remote --tags "https://github.com/aikdna/$repo.git" 2>/dev/null \
               | awk -F'/' -v prefix="refs/tags/${tag_prefix}" '$0 ~ prefix {print $NF}' | sort -V | tail -1 || echo "")
             npm_v=$(npm view "@aikdna/$pkg" version 2>/dev/null || echo "")
-            rel_exists=$(gh release view "${tag_prefix}${npm_v}" --repo "aikdna/$repo" >/dev/null 2>&1 && echo "yes" || echo "no")
+            release_tag="${tag_prefix}${npm_v}"
+            rel_http=$(curl -sS -o /dev/null -w "%{http_code}" "https://api.github.com/repos/aikdna/${repo}/releases/tags/${release_tag}" 2>/dev/null)
+            rel_exists=$([ "$rel_http" = "200" ] && echo "yes" || echo "no")
             tag_stripped="${tag_v#${tag_prefix}}"
             drift="ok"
             if [ -z "$main_v" ] || [ -z "$npm_v" ] || [ "$main_v" != "$tag_stripped" ] || [ "$tag_stripped" != "$npm_v" ] || [ "$rel_exists" = "no" ]; then
