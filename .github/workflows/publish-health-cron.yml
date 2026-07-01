@@ -75,7 +75,10 @@ jobs:
             rel_exists=$(gh release view "${tag_prefix}${npm_v}" --repo "aikdna/$repo" >/dev/null 2>&1 && echo "yes" || echo "no")
             tag_stripped="${tag_v#${tag_prefix}}"
             drift="ok"
-            [ "$main_v" != "$tag_stripped" ] || [ "$tag_stripped" != "$npm_v" ] || [ "$rel_exists" = "no" ] && drift="DRIFT" && DRIFT=$((DRIFT+1))
+            if [ "$main_v" != "$tag_stripped" ] || [ "$tag_stripped" != "$npm_v" ] || [ "$rel_exists" = "no" ]; then
+              drift="DRIFT"
+              DRIFT=$((DRIFT+1))
+            fi
             echo "| $pkg | $main_v | ${tag_prefix}${tag_stripped} | $npm_v | $rel_exists | $drift |"
           done
           echo "## publish-health drift report" >> $GITHUB_STEP_SUMMARY
