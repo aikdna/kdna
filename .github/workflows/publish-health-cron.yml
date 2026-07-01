@@ -68,18 +68,18 @@ jobs:
             IFS=':' read -r pkg repo path tag_prefix <<< "$entry"
             main_v=$(gh api "repos/aikdna/$repo/contents/$path" --jq '.content' 2>/dev/null \
               | base64 -d 2>/dev/null \
-              | python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])' 2>/dev/null)
+              | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["version"])' 2>/dev/null || echo "")
             tag_v=$(git ls-remote --tags "https://github.com/aikdna/$repo.git" 2>/dev/null \
-              | awk -F'/' -v prefix="refs/tags/${tag_prefix}" '$0 ~ prefix {print $NF}' | sort -V | tail -1)
-            npm_v=$(npm view "@aikdna/$pkg" version 2>/dev/null)
+              | awk -F'/' -v prefix="refs/tags/${tag_prefix}" '$0 ~ prefix {print $NF}' | sort -V | tail -1 || echo "")
+            npm_v=$(npm view "@aikdna/$pkg" version 2>/dev/null || echo "")
             rel_exists=$(gh release view "${tag_prefix}${npm_v}" --repo "aikdna/$repo" >/dev/null 2>&1 && echo "yes" || echo "no")
             tag_stripped="${tag_v#${tag_prefix}}"
             drift="ok"
-            if [ "$main_v" != "$tag_stripped" ] || [ "$tag_stripped" != "$npm_v" ] || [ "$rel_exists" = "no" ]; then
+            if [ -z "$main_v" ] || [ -z "$npm_v" ] || [ "$main_v" != "$tag_stripped" ] || [ "$tag_stripped" != "$npm_v" ] || [ "$rel_exists" = "no" ]; then
               drift="DRIFT"
               DRIFT=$((DRIFT+1))
             fi
-            echo "| $pkg | $main_v | ${tag_prefix}${tag_stripped} | $npm_v | $rel_exists | $drift |"
+            echo "| $pkg | ${main_v:-?} | ${tag_prefix}${tag_stripped:-?} | ${npm_v:-?} | $rel_exists | $drift |"
           done
           echo "## publish-health drift report" >> $GITHUB_STEP_SUMMARY
           echo "Drift count: $DRIFT" >> $GITHUB_STEP_SUMMARY
