@@ -56,27 +56,27 @@ jobs:
         # but kept in-tree so it has access to npm + gh CLIs.
         run: |
           PACKAGES=(
-            "kdna-cli:kdna-cli:package.json"
-            "kdna-studio-cli:kdna-studio-cli:package.json"
-            "kdna-studio-core:kdna-studio-core:package.json"
-            "kdna-core:kdna:packages/kdna-core/package.json"
+            "kdna-cli:kdna-cli:package.json:v"
+            "kdna-studio-cli:kdna-studio-cli:package.json:v"
+            "kdna-studio-core:kdna-studio-core:package.json:v"
+            "kdna-core:kdna:packages/kdna-core/package.json:kdna-core-v"
           )
           DRIFT=0
           echo "| package | main | tag | npm | release | drift |"
           echo "| --- | --- | --- | --- | --- | --- |"
           for entry in "${PACKAGES[@]}"; do
-            IFS=':' read -r pkg repo path <<< "$entry"
+            IFS=':' read -r pkg repo path tag_prefix <<< "$entry"
             main_v=$(gh api "repos/aikdna/$repo/contents/$path" --jq '.content' 2>/dev/null \
               | base64 -d 2>/dev/null \
               | python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])' 2>/dev/null)
             tag_v=$(git ls-remote --tags "https://github.com/aikdna/$repo.git" 2>/dev/null \
-              | awk -F'/' '/refs\/tags\/v/ {print $NF}' | sort -V | tail -1)
+              | awk -F'/' -v prefix="refs/tags/${tag_prefix}" '$0 ~ prefix {print $NF}' | sort -V | tail -1)
             npm_v=$(npm view "@aikdna/$pkg" version 2>/dev/null)
-            rel_exists=$(gh release view "v$npm_v" --repo "aikdna/$repo" >/dev/null 2>&1 && echo "yes" || echo "no")
-            tag_stripped="${tag_v#v}"
+            rel_exists=$(gh release view "${tag_prefix}${npm_v}" --repo "aikdna/$repo" >/dev/null 2>&1 && echo "yes" || echo "no")
+            tag_stripped="${tag_v#${tag_prefix}}"
             drift="ok"
             [ "$main_v" != "$tag_stripped" ] || [ "$tag_stripped" != "$npm_v" ] || [ "$rel_exists" = "no" ] && drift="DRIFT" && DRIFT=$((DRIFT+1))
-            echo "| $pkg | $main_v | $tag_v | $npm_v | $rel_exists | $drift |"
+            echo "| $pkg | $main_v | ${tag_prefix}${tag_stripped} | $npm_v | $rel_exists | $drift |"
           done
           echo "## publish-health drift report" >> $GITHUB_STEP_SUMMARY
           echo "Drift count: $DRIFT" >> $GITHUB_STEP_SUMMARY
