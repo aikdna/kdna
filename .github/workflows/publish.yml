@@ -13,35 +13,35 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0  # all tags needed for release:check (prepublishOnly)
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-cli
           ref: a44a26c0bdfe0eb5ff21ecac5ec01baaa7355f26
           path: .ecosystem-repos/kdna-cli
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-skills
           ref: 6a0e087da3f34c6ae3e9adcd8022d43f278ba59a
           path: .ecosystem-repos/kdna-skills
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-studio-core
           ref: 8cfa807bd108260a25aa9ee43b765095d0aaf63a
           path: .ecosystem-repos/kdna-studio-core
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-studio-cli
           ref: 48ffc13451c8afbe0fafa6f21466ab6bdab213fd
           path: .ecosystem-repos/kdna-studio-cli
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-core-swift
           ref: 8dc36bdbc35e3b84161d3a90e32a10d49c6425c1
           path: .ecosystem-repos/kdna-core-swift
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-vscode
           ref: 4791d1a50c75b82e4a6e21ca190c3c0f27e39d84
@@ -74,33 +74,33 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-cli
           ref: a44a26c0bdfe0eb5ff21ecac5ec01baaa7355f26
           path: .ecosystem-repos/kdna-cli
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-skills
           ref: 6a0e087da3f34c6ae3e9adcd8022d43f278ba59a
           path: .ecosystem-repos/kdna-skills
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-studio-core
           ref: 8cfa807bd108260a25aa9ee43b765095d0aaf63a
           path: .ecosystem-repos/kdna-studio-core
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-studio-cli
           ref: 48ffc13451c8afbe0fafa6f21466ab6bdab213fd
           path: .ecosystem-repos/kdna-studio-cli
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-core-swift
           ref: 8dc36bdbc35e3b84161d3a90e32a10d49c6425c1
           path: .ecosystem-repos/kdna-core-swift
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-vscode
           ref: 4791d1a50c75b82e4a6e21ca190c3c0f27e39d84
@@ -130,7 +130,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           node-version: 22
