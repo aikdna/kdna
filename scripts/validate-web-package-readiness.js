@@ -125,6 +125,16 @@ const packages = [
         files: ['README.md', 'docs/getting-started.md'],
         patterns: ['releases/latest/download'],
       },
+      {
+        files: [
+          'README.md',
+          'CONTRIBUTING.md',
+          'NOTICE',
+          'templates/nextjs/package.json',
+          'templates/nextjs-pages/package.json',
+        ],
+        patterns: ['@aikdna/kdna-web-client'],
+      },
     ],
   },
 ];

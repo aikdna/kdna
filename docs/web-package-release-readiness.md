@@ -17,8 +17,11 @@ bounded semver ranges so maintainers can reproduce user reports. The server
 adapter must also keep its `@aikdna/kdna-core` peer range aligned with the
 current Core v1 runtime API used by the web package milestone. React package
 peers must stay limited to the actual React runtime dependencies instead of
-forcing sibling KDNA packages that are connected through endpoint props. The gate also
-blocks known MVP-boundary regressions, such as scaffolder templates
+forcing sibling KDNA packages that are connected through endpoint props. The
+scaffolder templates must also install only the KDNA packages they import at
+runtime; the current Next.js templates should not install
+`@aikdna/kdna-web-client` just because it exists as a sibling package. The gate
+also blocks known MVP-boundary regressions, such as scaffolder templates
 reintroducing unsupported remote-server configuration before that capability
 exists in `kdna-web-server`, or scaffolder metadata advertising templates that
 do not exist yet. Example `.kdna` downloads should use explicit release tags,
