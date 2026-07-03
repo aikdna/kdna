@@ -169,9 +169,6 @@ function checkWorkPackStructure(manifest, rootDir) {
  */
 function inspectWorkPack(manifest, rootDir) {
   const kdnaMode = manifest.kdna?.mode || 'unknown';
-  const kdnaCount =
-    kdnaMode === 'single' ? 1 : (manifest.kdna?.assets || []).length;
-
   const structure = checkWorkPackStructure(manifest, rootDir);
 
   return {
@@ -240,7 +237,8 @@ function _lazyAjv() {
     return _ajvInstance;
   } catch (e) {
     throw new Error(
-      'ajv is required for Work Pack validation. Install: npm install ajv ajv-formats'
+      'ajv is required for Work Pack validation. Install: npm install ajv ajv-formats',
+      { cause: e },
     );
   }
 }

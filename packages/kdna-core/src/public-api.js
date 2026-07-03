@@ -110,7 +110,7 @@ async function validateKDNA(input, options = {}) {
   const reader = readerFrom(options);
   const asset = await asAsset(input, { ...options, reader });
   const assetResult = await reader.verify(asset, options);
-  let dataMap = null;
+  let dataMap;
   let lintResult = { errors: [], warnings: [] };
   let schemaResult = { errors: [], warnings: [] };
   let crossFileResult = { errors: [], warnings: [] };
