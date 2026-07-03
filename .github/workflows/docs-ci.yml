@@ -7,12 +7,14 @@ on:
     paths:
       - 'docs/**'
       - 'scripts/docs-ci.js'
+      - 'scripts/check-publish-drift.js'
       - '.github/workflows/docs-ci.yml'
   pull_request:
     branches: [main]
     paths:
       - 'docs/**'
       - 'scripts/docs-ci.js'
+      - 'scripts/check-publish-drift.js'
       - '.github/workflows/docs-ci.yml'
 
 jobs:
@@ -25,3 +27,5 @@ jobs:
           node-version: 22
       - name: Run docs evidence checks
         run: node scripts/docs-ci.js
+      - name: Run npm publish drift check
+        run: node scripts/check-publish-drift.js
