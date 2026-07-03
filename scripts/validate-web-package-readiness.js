@@ -44,12 +44,7 @@ const packages = [
     repo: 'kdna-react',
     packageName: '@aikdna/kdna-react',
     scripts: ['ci', 'test', 'build'],
-    files: [
-      'package-lock.json',
-      'scripts/build.js',
-      'src/index.js',
-      'tests/react.test.js',
-    ],
+    files: ['package-lock.json', 'scripts/build.js', 'src/index.js', 'tests/react.test.js'],
     exports: ['.'],
     peerDependencies: ['react', 'react-dom'],
   },
