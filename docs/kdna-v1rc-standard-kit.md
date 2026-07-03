@@ -30,7 +30,7 @@ instead of forcing them to infer the standard from scattered repository files.
 | Conformance | [`conformance/README.md`](../conformance/README.md) |
 | Compatibility policy | [`COMPATIBILITY.md`](../COMPATIBILITY.md) |
 | Trademark and naming | [`TRADEMARK.md`](../TRADEMARK.md) |
-| Certification levels | [`docs/kdna-compatible-certification.md`](./kdna-compatible-certification.md) |
+| Certification levels | [`docs/archive/kdna-compatible-certification.md`](./archive/kdna-compatible-certification.md) |
 | Governance | [`docs/GOVERNANCE.md`](./GOVERNANCE.md) |
 | Release gate | [`docs/V1RC_RELEASE_GATE.md`](./V1RC_RELEASE_GATE.md) |
 

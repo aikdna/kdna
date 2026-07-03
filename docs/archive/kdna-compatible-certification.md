@@ -17,7 +17,7 @@ runtime loading does not require users to unpack or edit internal entries.
 This document defines the public compatibility levels. It is a technical
 compatibility program, not a trademark license by itself. Use of `Certified
 KDNA`, `Official KDNA`, or AIKDNA marks is governed by
-[`TRADEMARK.md`](../TRADEMARK.md).
+[`TRADEMARK.md`](../../TRADEMARK.md).
 
 ## Levels
 

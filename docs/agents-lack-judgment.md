@@ -110,7 +110,8 @@ The full score is harder because KDNA-loaded agents are more conservative — th
 
 **In judgment, being conservative is better than being wrong.**
 
-The benchmark is fully reproducible: [benchmarks/decision-state-comparison-report.md](../benchmarks/decision-state-comparison-report.md)
+The benchmark summary is historical public narrative evidence. The detailed
+benchmark artifact is not part of the current public beta repository.
 
 ## The Six Layers, Properly Defined
 
@@ -151,4 +152,4 @@ The answer starts with encoding judgment.
 
 ---
 
-*KDNA (Knowledge DNA) is an open format for encoding domain judgment for AI agents. See [github.com/aikdna/kdna](https://github.com/aikdna/kdna) for the specification, reference implementations, and reproducible benchmarks.*
+*KDNA (Knowledge DNA) is an open format for encoding domain judgment for AI agents. See [github.com/aikdna/kdna](https://github.com/aikdna/kdna) for the specification and reference implementations.*

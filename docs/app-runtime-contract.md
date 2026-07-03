@@ -244,6 +244,6 @@ The examples are intentionally different product scenarios. The validator checks
 - [KDNA Specification](../SPEC.md)
 - [Runtime Routing](./runtime-routing.md)
 - [KDNA Trace](./kdna-trace.md)
-- [Registry CI](./kdna-registry-ci.md)
+- [Registry CI](./archive/kdna-registry-ci.md)
 - [KDNA Studio CLI](https://github.com/aikdna/kdna-studio-cli)
 - [KDNA and AI Stack](./kdna-and-ai-stack.md)
