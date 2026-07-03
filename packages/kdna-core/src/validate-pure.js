@@ -59,7 +59,10 @@ function validateDomainSchema(dataMap, schemaMap) {
     const ajvInstance = new ajv({ allErrors: true, strict: false });
     if (addFormats) addFormats(ajvInstance);
     try {
-      ajvInstance.addMetaSchema(require('ajv/dist/refs/json-schema-2020-12.json'));
+      // Use eval('require') to avoid webpack static analysis trying to
+      // resolve this JSON file at build time (it is only needed at runtime).
+      const _require = eval('require');
+      ajvInstance.addMetaSchema(_require('ajv/dist/refs/json-schema-2020-12.json'));
     } catch {
       /* meta-schema already available or not needed */
     }

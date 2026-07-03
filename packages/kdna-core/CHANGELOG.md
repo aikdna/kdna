@@ -12,6 +12,8 @@ published package layout.
   KDNA schemas in the host application directory.
 - Adds regression coverage for loading a v1 source asset through the dispatcher
   from the package `src/` layout and for validating from a non-repository cwd.
+- Fix webpack bundler warning: use `eval('require')` for ajv meta-schema import
+  so webpack does not try to statically resolve the JSON file at build time.
 
 No public API changes.
 
