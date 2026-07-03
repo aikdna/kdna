@@ -9,12 +9,12 @@ kdna-web-server -> kdna-web-client -> kdna-react -> create-kdna-web-app
 Before these packages are published, the public ecosystem must prove that each
 repository has real implementation files, tests, package locks, exported
 entrypoints, generated-template smoke scripts, and a package-level
-`npm run ci` command. It also checks that local README links point to files
-that exist and are included in the npm package `files` list, so published
-package documentation does not point users at missing local docs. Package and
-template dependency ranges must not use `latest`; generated projects need
-bounded semver ranges so maintainers can reproduce user reports. The server
-adapter must also keep its `@aikdna/kdna-core` peer range aligned with the
+`npm run ci` command. It also checks that local links in packaged markdown files
+point to files that exist and are included in the npm package `files` list, so
+published package documentation does not point users at missing local docs.
+Package and template dependency ranges must not use `latest`; generated
+projects need bounded semver ranges so maintainers can reproduce user reports.
+The server adapter must also keep its `@aikdna/kdna-core` peer range aligned with the
 current Core v1 runtime API used by the web package milestone. React package
 peers must stay limited to the actual React runtime dependencies instead of
 forcing sibling KDNA packages that are connected through endpoint props. The

@@ -205,6 +205,26 @@ function localMarkdownLinks(markdown) {
   return links;
 }
 
+function listMarkdownFiles(root) {
+  const files = [];
+  const ignoredDirs = new Set(['.git', 'node_modules']);
+
+  function visit(dir) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (ignoredDirs.has(entry.name)) continue;
+      const absPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        visit(absPath);
+      } else if (entry.isFile() && entry.name.endsWith('.md')) {
+        files.push(normalizePackagePath(path.relative(root, absPath)));
+      }
+    }
+  }
+
+  visit(root);
+  return files.sort();
+}
+
 function packageFilesInclude(pkg, relPath) {
   const normalizedPath = normalizePackagePath(relPath);
   if (normalizedPath === 'package.json') return true;
@@ -218,6 +238,12 @@ function packageFilesInclude(pkg, relPath) {
     if (normalizedPath === normalizedEntry) return true;
   }
   return false;
+}
+
+function resolveLocalMarkdownLink(sourceRelPath, target) {
+  const withoutFragment = target.split('#')[0].split('?')[0];
+  if (!withoutFragment) return null;
+  return normalizePackagePath(path.posix.join(path.posix.dirname(sourceRelPath), withoutFragment));
 }
 
 function exportedPath(pkg, key) {
@@ -287,18 +313,24 @@ for (const spec of packages) {
     if (exists(root, file)) fail(spec.repo, `forbidden file present: ${file}`);
   }
 
-  if (exists(root, 'README.md')) {
-    for (const target of localMarkdownLinks(readText(root, 'README.md'))) {
-      if (target.includes('..')) {
-        fail(spec.repo, `README.md links outside package root: ${target}`);
+  for (const markdownFile of listMarkdownFiles(root)) {
+    if (!packageFilesInclude(pkg, markdownFile)) continue;
+    for (const target of localMarkdownLinks(readText(root, markdownFile))) {
+      const resolvedTarget = resolveLocalMarkdownLink(markdownFile, target);
+      if (!resolvedTarget) continue;
+      if (resolvedTarget === '..' || resolvedTarget.startsWith('../')) {
+        fail(spec.repo, `${markdownFile} links outside package root: ${target}`);
         continue;
       }
-      if (!exists(root, target)) {
-        fail(spec.repo, `README.md links to missing local file: ${target}`);
+      if (!exists(root, resolvedTarget)) {
+        fail(spec.repo, `${markdownFile} links to missing local file: ${target}`);
         continue;
       }
-      if (!packageFilesInclude(pkg, target)) {
-        fail(spec.repo, `README.md links to local file omitted from package files: ${target}`);
+      if (!packageFilesInclude(pkg, resolvedTarget)) {
+        fail(
+          spec.repo,
+          `${markdownFile} links to local file omitted from package files: ${target}`,
+        );
       }
     }
   }
