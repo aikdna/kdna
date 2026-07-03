@@ -9,14 +9,14 @@
     "Future",
     "Draft Normative"
   ],
-  "baseline_statement": "KDNA Core v1 public local .kdna assets are beta. Protected assets, remote runtime, registry, signing, encryption, paid authorization, and full cross-implementation parity are not stable baseline claims.",
+  "baseline_statement": "KDNA Core v1 public local .kdna assets are beta. Web packages are experimental until PR #1 in each web repository is merged and packages are published. Protected assets, remote runtime, registry, signing, encryption, paid authorization, and full cross-implementation parity are not stable baseline claims.",
   "components": [
     {
       "repository": "aikdna/kdna",
       "local_path": ".",
       "npm_package": "@aikdna/kdna-core",
       "package_json": "packages/kdna-core/package.json",
-      "current_version": "0.15.0",
+      "current_version": "0.15.10",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
@@ -34,7 +34,7 @@
       "local_path": "../kdna-cli",
       "npm_package": "@aikdna/kdna-cli",
       "package_json": "../kdna-cli/package.json",
-      "current_version": "0.28.9",
+      "current_version": "0.28.34",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
@@ -68,7 +68,7 @@
       "local_path": "../kdna-studio-core",
       "npm_package": "@aikdna/kdna-studio-core",
       "package_json": "../kdna-studio-core/package.json",
-      "current_version": "1.7.0",
+      "current_version": "1.7.8",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
@@ -85,7 +85,7 @@
       "local_path": "../kdna-studio-cli",
       "npm_package": "@aikdna/kdna-studio-cli",
       "package_json": "../kdna-studio-cli/package.json",
-      "current_version": "0.8.1",
+      "current_version": "0.8.10",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
@@ -93,6 +93,116 @@
       "conformance_commit": "e2674e3cf8093d6656d51015a4658e32b1992916",
       "known_limitations": ["author happy path is available for public local assets only"],
       "recommended_entrypoint": "kdna-studio create/add/approve/export v1",
+      "legacy_replacement": null
+    },
+    {
+      "repository": "aikdna/kdna-activation-server",
+      "local_path": "../kdna-activation-server",
+      "npm_package": "@aikdna/kdna-activation-server",
+      "package_json": "../kdna-activation-server/package.json",
+      "current_version": "0.1.0",
+      "lifecycle": "Experimental",
+      "supported_kdna_version": "1.0",
+      "supported_access_modes": ["licensed"],
+      "supported_entitlement_profiles": ["license_key"],
+      "conformance_commit": null,
+      "known_limitations": [
+        "self-hosted support surface only; not an AIKDNA-hosted activation service",
+        "paid distribution and commercial delivery flows are not part of the public Core v1 baseline"
+      ],
+      "recommended_entrypoint": "self-host only after reviewing specs/kdna-authorization-contract.md",
+      "legacy_replacement": null
+    },
+    {
+      "repository": "aikdna/kdna-remote-server",
+      "local_path": "../kdna-remote-server",
+      "npm_package": "@aikdna/kdna-remote-server",
+      "package_json": "../kdna-remote-server/package.json",
+      "current_version": "0.1.0",
+      "lifecycle": "Experimental",
+      "supported_kdna_version": "1.0",
+      "supported_access_modes": ["remote"],
+      "supported_entitlement_profiles": [],
+      "conformance_commit": null,
+      "known_limitations": [
+        "self-hosted projection server only; there is no AIKDNA-hosted remote loading service",
+        "remote-mode interoperability is not yet a stable baseline claim"
+      ],
+      "recommended_entrypoint": "kdna load <asset> --remote-server <self-hosted-url> --profile=compact --as=prompt",
+      "legacy_replacement": null
+    },
+    {
+      "repository": "aikdna/kdna-web-server",
+      "local_path": "../kdna-web-server",
+      "npm_package": "@aikdna/kdna-web-server",
+      "package_json": "../kdna-web-server/package.json",
+      "current_version": "0.1.0",
+      "lifecycle": "Experimental",
+      "supported_kdna_version": "1.0",
+      "supported_access_modes": ["public"],
+      "supported_entitlement_profiles": [],
+      "conformance_commit": null,
+      "known_limitations": [
+        "not published to npm as of 2026-07-03",
+        "MVP implementation is in PR #1 and should not be treated as a stable runtime surface before merge and release",
+        "server-side Studio export, remote forwarding, CORS helpers, and durable Cloudflare/R2 storage are not implemented in the web-server MVP"
+      ],
+      "recommended_entrypoint": "wait for package publication, then mount the server adapter and run npm run ci",
+      "legacy_replacement": null
+    },
+    {
+      "repository": "aikdna/kdna-web-client",
+      "local_path": "../kdna-web-client",
+      "npm_package": "@aikdna/kdna-web-client",
+      "package_json": "../kdna-web-client/package.json",
+      "current_version": "0.1.0",
+      "lifecycle": "Experimental",
+      "supported_kdna_version": "1.0",
+      "supported_access_modes": ["public"],
+      "supported_entitlement_profiles": [],
+      "conformance_commit": null,
+      "known_limitations": [
+        "not published to npm as of 2026-07-03",
+        "browser utilities must never perform KDNA decryption; server-side loading remains required"
+      ],
+      "recommended_entrypoint": "wait for package publication, then use readKDNAMetadata plus server-side plan-load/load",
+      "legacy_replacement": null
+    },
+    {
+      "repository": "aikdna/kdna-react",
+      "local_path": "../kdna-react",
+      "npm_package": "@aikdna/kdna-react",
+      "package_json": "../kdna-react/package.json",
+      "current_version": "0.1.0",
+      "lifecycle": "Experimental",
+      "supported_kdna_version": "1.0",
+      "supported_access_modes": ["public"],
+      "supported_entitlement_profiles": [],
+      "conformance_commit": null,
+      "known_limitations": [
+        "not published to npm as of 2026-07-03",
+        "React components depend on the web server contract and should be released after web-server and web-client"
+      ],
+      "recommended_entrypoint": "wait for package publication, then use endpoint-backed hooks/components",
+      "legacy_replacement": null
+    },
+    {
+      "repository": "aikdna/create-kdna-web-app",
+      "local_path": "../create-kdna-web-app",
+      "npm_package": "create-kdna-web-app",
+      "package_json": "../create-kdna-web-app/package.json",
+      "current_version": "0.1.0",
+      "lifecycle": "Experimental",
+      "supported_kdna_version": "1.0",
+      "supported_access_modes": ["public"],
+      "supported_entitlement_profiles": [],
+      "conformance_commit": null,
+      "known_limitations": [
+        "not published to npm as of 2026-07-03",
+        "generated-app smoke tests should run only after the sibling web packages are published",
+        "generated templates target the public upload/inspect/plan-load/load flow only; remote-mode web forwarding is not wired"
+      ],
+      "recommended_entrypoint": "npx create-kdna-web-app <app> after coordinated web package publication",
       "legacy_replacement": null
     },
     {

@@ -521,7 +521,7 @@ function readV1Layout(absPath) {
 
   const map = {};
   let entries = null; // ZIP entries if container
-  let kind = null; // 'dir' | 'file'
+  let kind; // 'dir' | 'file'
 
   if (stat.isDirectory()) {
     kind = 'dir';
@@ -589,7 +589,7 @@ function readV1Layout(absPath) {
   try {
     manifest = parseJsonEntry('kdna.json', map['kdna.json']);
   } catch (e) {
-    throw new Error(`kdna.json is not valid JSON: ${e.message}`);
+    throw new Error(`kdna.json is not valid JSON: ${e.message}`, { cause: e });
   }
   if (manifest.lineage !== undefined && Array.isArray(manifest.lineage)) {
     throw new Error('kdna.json.lineage must be an object, not an array');
@@ -1773,7 +1773,7 @@ function loadV1Unsafe(inputPath, opts = {}) {
     const rawPayload = v1.map['payload.kdnab'];
     payload = parseJsonEntry('payload.kdnab', rawPayload);
   } catch (e) {
-    throw new Error(`payload.kdnab is not valid JSON: ${e.message}`);
+    throw new Error(`payload.kdnab is not valid JSON: ${e.message}`, { cause: e });
   }
 
   if (payload.profile && payload.ciphertext && (m.payload?.encrypted || m.encryption?.encrypted_entries?.includes('payload.kdnab'))) {
@@ -1946,7 +1946,7 @@ function loadV1Unsafe(inputPath, opts = {}) {
         }));
         result.inheritance_applied = true;
       }
-    } catch (_) {
+    } catch {
       // extends merge is best-effort — never block load
       result.inheritance_applied = false;
     }
