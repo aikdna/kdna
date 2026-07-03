@@ -1,16 +1,19 @@
 name: Docs CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
       - 'docs/**'
       - 'scripts/docs-ci.js'
+      - '.github/workflows/docs-ci.yml'
   pull_request:
     branches: [main]
     paths:
       - 'docs/**'
       - 'scripts/docs-ci.js'
+      - '.github/workflows/docs-ci.yml'
 
 jobs:
   docs-check:
