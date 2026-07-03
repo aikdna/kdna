@@ -19,7 +19,9 @@ reintroducing unsupported remote-server configuration before that capability
 exists in `kdna-web-server`, or scaffolder metadata advertising templates that
 do not exist yet. Example `.kdna` downloads should use explicit release tags,
 not `releases/latest/download`, so first-run docs do not drift when new assets
-are released.
+are released. The React MVP must also avoid exporting placeholder authoring
+components or helpers for server endpoints that intentionally return `501` in
+the current `kdna-web-server` milestone.
 
 Run from `aikdna/kdna`:
 

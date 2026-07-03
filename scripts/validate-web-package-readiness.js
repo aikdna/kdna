@@ -51,6 +51,21 @@ const packages = [
     exports: ['.'],
     peerDependencies: ['react', 'react-dom'],
     packageJsonFiles: ['package.json'],
+    forbiddenFiles: ['docs/components/KDNACreatorWizard.md', 'docs/components/KDNAExportButton.md'],
+    forbiddenText: [
+      {
+        files: ['README.md', 'src/index.js'],
+        patterns: ['KDNACreatorWizard', 'data-kdna-creator-wizard'],
+      },
+      {
+        files: ['README.md', 'src/index.js'],
+        patterns: ['KDNAExportButton'],
+      },
+      {
+        files: ['README.md'],
+        patterns: ['/export'],
+      },
+    ],
   },
   {
     repo: 'create-kdna-web-app',
@@ -234,6 +249,10 @@ for (const spec of packages) {
 
   for (const file of spec.files || []) {
     if (!exists(root, file)) fail(spec.repo, `missing file: ${file}`);
+  }
+
+  for (const file of spec.forbiddenFiles || []) {
+    if (exists(root, file)) fail(spec.repo, `forbidden file present: ${file}`);
   }
 
   if (exists(root, 'README.md')) {
