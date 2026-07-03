@@ -44,13 +44,13 @@ KDNA is an open file format for packaging scoped judgment. The project has reach
 - **Cross-language parity** — `@aikdna/kdna-core` (JS) is the public
   first-run path. `kdna-core-swift` and `kdna-studio-swift` are
   beta until parity is proven against fixed Core v1 conformance
-  fixtures (see `PRIVATE/STATUS/open/kdna-core-swift.md`).
+  fixtures published through the public Swift repositories.
 
 ### Not part of the public baseline
 
 - Internal test infrastructure (`aikdna/kdna-lab`) is referenced by
   some RFCs as audit anchors but is a private repo.
-- Any path under `PRIVATE/` is internal-only. Do not publish to GitHub.
+- Internal-only workspace paths must not appear in public docs.
 
 ## Release cadence
 

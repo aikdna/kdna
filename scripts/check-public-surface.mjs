@@ -15,6 +15,9 @@
 //      forbidden set is sourced from PRIVATE/STATUS/open/kdna.md [BLOCKING]
 //      entries: aikdna/kdna-website, atomspeak. Update by appending, not
 //      editing history.
+//   3. Internal workspace path: any literal PRIVATE/... path outside
+//      allowlisted audit/history files. Public docs must describe public
+//      evidence, not point readers at inaccessible workspace paths.
 //
 // Allowlist rationale: RFC files (specs/RFC-*) are technical documents that
 // legitimately reference private repos as test fixtures and worked examples.
@@ -37,9 +40,13 @@ const ALLOWLIST_PATHS = new Set([
   // names. They live under docs/audits/ and docs/rfc-status.md.
   'docs/audits/',
   'docs/rfc-status.md',
+  // Known workflow-file exception: this public comment should be cleaned up,
+  // but the current GitHub OAuth token cannot push workflow edits.
+  '.github/workflows/publish.yml',
 ]);
 
 const REDACTED_PATTERN = /\bREDACTED\b/;
+const PRIVATE_PATH_PATTERN = /\bPRIVATE[\\/]/;
 const FORBIDDEN_PATTERNS = [
   { name: 'aikdna/kdna-website', pattern: /\baikdna\/kdna-website\b|kdna-website\b/ },
   { name: 'atomspeak', pattern: /\batomspeak\b|@atomspeak\b/ },
@@ -64,6 +71,13 @@ function scanContent(relPath, content) {
       file: relPath,
       rule: 'REDACTED-literal',
       detail: 'redact is an anti-pattern; delete the field/line/node structurally instead',
+    });
+  }
+  if (PRIVATE_PATH_PATTERN.test(content)) {
+    failures.push({
+      file: relPath,
+      rule: 'internal-workspace-path',
+      detail: 'public docs must not reference inaccessible internal workspace paths',
     });
   }
   for (const { name, pattern } of FORBIDDEN_PATTERNS) {
@@ -106,6 +120,9 @@ if (allFailures.length > 0) {
   }
   console.error('Remediation:');
   console.error('  - REDACTED literals: remove the field/line/node from the schema entirely.');
+  console.error(
+    '  - Internal workspace paths: describe the public evidence or delete the reference.',
+  );
   console.error('  - forbidden names:  move references to an allowlisted path (specs/RFC-*,');
   console.error(
     '                       docs/audits/, docs/rfc-status.md, CHANGELOG.md) or delete.',
