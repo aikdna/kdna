@@ -64,7 +64,10 @@ publication, and a real generated-app smoke test:
 - `create-kdna-web-app`
 
 Until that happens, treat the web package READMEs as implementation targets, not
-published stable surfaces.
+published stable surfaces. The current web server MVP is intentionally narrow:
+upload/inspect/plan-load/load plus activation proxying. Server-side Studio
+export, remote forwarding, CORS policy helpers, and durable Cloudflare/R2
+storage remain future web-package work.
 
 ### 2. More public assets
 

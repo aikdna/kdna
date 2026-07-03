@@ -31,7 +31,10 @@
 
 - Web packages are public repositories but are not published to npm as of
   2026-07-03. Treat their README promises as implementation targets until PR #1
-  in each web repository is merged and packages are published.
+  in each web repository is merged and packages are published. The current
+  server MVP covers upload/inspect/plan-load/load and activation proxying only;
+  server-side Studio export, remote forwarding, CORS policy helpers, and durable
+  Cloudflare/R2 storage are not shipped web-package capabilities yet.
 - Remote runtime and activation server are self-hostable support surfaces, not
   an AIKDNA-hosted loading or licensing service.
 - Swift runtime and Studio Swift are beta/support surfaces until parity is
@@ -58,7 +61,8 @@
 - B5: 旧 run.mjs → canonical-conformance (kdna)
 - Web package release path: merge PR #1 in `kdna-web-server`,
   `kdna-web-client`, `kdna-react`, and `create-kdna-web-app`, publish packages,
-  then run a generated-app smoke test against published versions.
+  then run a generated-app smoke test against published versions. Keep the
+  central `npm run validate:web-packages` gate green before publishing.
 - Public truth drift: keep this file, `docs/public-roadmap.md`,
   `ecosystem-manifest.json`, website copy, and package READMEs aligned whenever
   versions or maturity claims change.
