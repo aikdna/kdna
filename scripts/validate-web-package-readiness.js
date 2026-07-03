@@ -53,6 +53,7 @@ const packages = [
     files: ['package-lock.json', 'scripts/build.js', 'src/index.js', 'tests/react.test.js'],
     exports: ['.'],
     peerDependencies: ['react', 'react-dom'],
+    forbiddenPeerDependencies: ['@aikdna/kdna-web-client', '@aikdna/kdna-web-server'],
     packageJsonFiles: ['package.json'],
     forbiddenFiles: ['docs/components/KDNACreatorWizard.md', 'docs/components/KDNAExportButton.md'],
     forbiddenText: [
