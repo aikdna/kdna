@@ -31,6 +31,7 @@ const packages = [
       '@aikdna/kdna-core': '^0.15.10',
     },
     packageJsonFiles: ['package.json'],
+    requiredPackageFiles: ['SECURITY.md'],
   },
   {
     repo: 'kdna-web-client',
@@ -45,6 +46,7 @@ const packages = [
     ],
     exports: ['.'],
     packageJsonFiles: ['package.json'],
+    requiredPackageFiles: ['SECURITY.md'],
     forbiddenText: [
       {
         files: ['README.md', 'docs/security-model.md', 'CONTRIBUTING.md'],
@@ -96,6 +98,10 @@ const packages = [
     files: [
       'package-lock.json',
       'bin/create-kdna-web-app.js',
+      'docs/getting-started.md',
+      'docs/template-checklist.md',
+      'docs/templates.md',
+      'SECURITY.md',
       'src/scaffold.js',
       'tests/scaffold.test.js',
       'templates/nextjs/package.json',
@@ -120,6 +126,12 @@ const packages = [
       'templates/nextjs/package.json',
       'templates/nextjs-pages/package.json',
       'templates/express/package.json',
+    ],
+    requiredPackageFiles: [
+      'docs/getting-started.md',
+      'docs/template-checklist.md',
+      'docs/templates.md',
+      'SECURITY.md',
     ],
     forbiddenText: [
       {
@@ -307,6 +319,12 @@ for (const spec of packages) {
 
   for (const file of spec.files || []) {
     if (!exists(root, file)) fail(spec.repo, `missing file: ${file}`);
+  }
+
+  for (const file of spec.requiredPackageFiles || []) {
+    if (!packageFilesInclude(pkg, file)) {
+      fail(spec.repo, `required package file omitted from package files: ${file}`);
+    }
   }
 
   for (const file of spec.forbiddenFiles || []) {

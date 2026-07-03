@@ -14,23 +14,24 @@ point to files that exist and are included in the npm package `files` list, so
 published package documentation does not point users at missing local docs.
 Package and template dependency ranges must not use `latest`; generated
 projects need bounded semver ranges so maintainers can reproduce user reports.
-The server adapter must also keep its `@aikdna/kdna-core` peer range aligned with the
-current Core v1 runtime API used by the web package milestone. React package
+The server adapter must also keep its `@aikdna/kdna-core` peer range aligned
+with the current Core v1 runtime API used by the web package milestone. React package
 peers must stay limited to the actual React runtime dependencies instead of
 forcing sibling KDNA packages that are connected through endpoint props. The
 browser client must keep its credential guidance aligned with the server
 contract: passwords and signed entitlements can be sent once to `/load`, while
 raw license keys belong on activation endpoints and must not be documented as
-load credentials. The
-scaffolder templates must also install only the KDNA packages they import at
+load credentials. The scaffolder templates must also install only the KDNA packages they import at
 runtime; the current Next.js templates should not install
 `@aikdna/kdna-web-client` just because it exists as a sibling package. The gate
 also blocks known MVP-boundary regressions, such as scaffolder templates
 reintroducing unsupported remote-server configuration before that capability
 exists in `kdna-web-server`, or scaffolder metadata advertising templates that
-do not exist yet. Example `.kdna` downloads should use explicit release tags,
-not `releases/latest/download`, so first-run docs do not drift when new assets
-are released. The React MVP must also avoid exporting placeholder authoring
+do not exist yet. The scaffolder package must include its public docs and
+security policy so contribution and template guidance do not disappear from the
+npm tarball. Example `.kdna` downloads should use explicit release tags, not
+`releases/latest/download`, so first-run docs do not drift when new assets are
+released. The React MVP must also avoid exporting placeholder authoring
 components or helpers for server endpoints that intentionally return `501` in
 the current `kdna-web-server` milestone, and its maintenance docs must not
 describe `@aikdna/kdna-web-client` as an internal dependency boundary while the
