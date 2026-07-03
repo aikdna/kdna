@@ -91,6 +91,16 @@ const FORBIDDEN_OUTPUT_TERMS = Object.freeze([
 let _ajv = null;
 let _validators = null;
 
+function loadPackagedSchemas() {
+  return {
+    manifestSchema: require('../../schema/manifest.schema.json'),
+    payloadSchema: require('../../schema/payload-profile-v1.schema.json'),
+    bundlePayloadSchema: require('../../schema/bundle-profile-v1.schema.json'),
+    checksumsSchema: require('../../schema/checksums.schema.json'),
+    loadContractSchema: require('../../schema/load-contract.schema.json'),
+  };
+}
+
 function getRepoRoot() {
   // Walk up from this file to find the repo root (where schema/ lives).
   // Works whether this module is loaded from packages/kdna/src/ or
@@ -106,6 +116,26 @@ function getRepoRoot() {
   return process.cwd();
 }
 
+function loadSchemasFromDisk() {
+  const repoRoot = getRepoRoot();
+  const schemaDir = path.join(repoRoot, 'schema');
+  return {
+    manifestSchema: JSON.parse(fs.readFileSync(path.join(schemaDir, 'manifest.schema.json'), 'utf8')),
+    payloadSchema: JSON.parse(
+      fs.readFileSync(path.join(schemaDir, 'payload-profile-v1.schema.json'), 'utf8'),
+    ),
+    bundlePayloadSchema: JSON.parse(
+      fs.readFileSync(path.join(schemaDir, 'bundle-profile-v1.schema.json'), 'utf8'),
+    ),
+    checksumsSchema: JSON.parse(
+      fs.readFileSync(path.join(schemaDir, 'checksums.schema.json'), 'utf8'),
+    ),
+    loadContractSchema: JSON.parse(
+      fs.readFileSync(path.join(schemaDir, 'load-contract.schema.json'), 'utf8'),
+    ),
+  };
+}
+
 function loadSchemas() {
   if (_validators) return _validators;
   let Ajv;
@@ -119,21 +149,13 @@ function loadSchemas() {
     // to structural checks (no JSON-schema enforcement).
     return null;
   }
-  const repoRoot = getRepoRoot();
-  const schemaDir = path.join(repoRoot, 'schema');
-  const manifestSchema = JSON.parse(fs.readFileSync(path.join(schemaDir, 'manifest.schema.json'), 'utf8'));
-  const payloadSchema = JSON.parse(
-    fs.readFileSync(path.join(schemaDir, 'payload-profile-v1.schema.json'), 'utf8'),
-  );
-  const bundlePayloadSchema = JSON.parse(
-    fs.readFileSync(path.join(schemaDir, 'bundle-profile-v1.schema.json'), 'utf8'),
-  );
-  const checksumsSchema = JSON.parse(
-    fs.readFileSync(path.join(schemaDir, 'checksums.schema.json'), 'utf8'),
-  );
-  const loadContractSchema = JSON.parse(
-    fs.readFileSync(path.join(schemaDir, 'load-contract.schema.json'), 'utf8'),
-  );
+  let schemas;
+  try {
+    schemas = loadPackagedSchemas();
+  } catch {
+    schemas = loadSchemasFromDisk();
+  }
+  const { manifestSchema, payloadSchema, bundlePayloadSchema, checksumsSchema, loadContractSchema } = schemas;
   const ajv = new Ajv({ allErrors: true, strict: false });
   addFormats(ajv);
   ajv.addSchema(loadContractSchema, 'load-contract.schema.json');

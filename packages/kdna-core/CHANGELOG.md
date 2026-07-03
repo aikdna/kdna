@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.15.11 (2026-07-03)
+
+**Fix**: repair Core v1 container dispatcher module resolution in the
+published package layout.
+
+- Corrects internal `src/container-dispatcher.js` imports so the dispatcher can
+  load sibling `asset-reader` and `v1` modules after npm packaging.
+- Loads v1 JSON schemas through package-relative static imports before falling
+  back to disk discovery, so bundled server environments do not look for
+  KDNA schemas in the host application directory.
+- Adds regression coverage for loading a v1 source asset through the dispatcher
+  from the package `src/` layout and for validating from a non-repository cwd.
+
+No public API changes.
 
 ## v0.15.10 (2026-06-30)
 
