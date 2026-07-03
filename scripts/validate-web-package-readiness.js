@@ -26,6 +26,7 @@ const packages = [
       'tests/server.test.js',
     ],
     exports: ['.', './nextjs', './express', './cloudflare'],
+    forbiddenPeerDependencies: ['@aikdna/kdna-studio-core'],
   },
   {
     repo: 'kdna-web-client',
@@ -58,19 +59,36 @@ const packages = [
       'src/scaffold.js',
       'tests/scaffold.test.js',
       'templates/nextjs/package.json',
+      'templates/nextjs/.env.local.example',
       'templates/nextjs/app/api/kdna/[...route]/route.js',
       'templates/nextjs/app/page.jsx',
       'templates/nextjs/scripts/smoke.mjs',
       'templates/nextjs-pages/package.json',
+      'templates/nextjs-pages/.env.local.example',
       'templates/nextjs-pages/pages/api/kdna/[...route].js',
       'templates/nextjs-pages/pages/index.jsx',
       'templates/nextjs-pages/scripts/smoke.mjs',
       'templates/express/package.json',
+      'templates/express/.env.example',
       'templates/express/src/server.js',
       'templates/express/public/index.html',
       'templates/express/scripts/smoke.mjs',
     ],
     bins: ['create-kdna-web-app'],
+    forbiddenText: [
+      {
+        files: [
+          'README.md',
+          'templates/nextjs/.env.local.example',
+          'templates/nextjs/app/api/kdna/[...route]/route.js',
+          'templates/nextjs-pages/.env.local.example',
+          'templates/nextjs-pages/pages/api/kdna/[...route].js',
+          'templates/express/.env.example',
+          'templates/express/src/server.js',
+        ],
+        patterns: ['KDNA_REMOTE_URL', 'remoteServerUrl'],
+      },
+    ],
   },
 ];
 
@@ -86,6 +104,10 @@ function readJson(filePath) {
 
 function exists(root, relPath) {
   return fs.existsSync(path.join(root, relPath));
+}
+
+function readText(root, relPath) {
+  return fs.readFileSync(path.join(root, relPath), 'utf8');
 }
 
 function exportedPath(pkg, key) {
@@ -148,6 +170,22 @@ for (const spec of packages) {
   for (const depName of spec.peerDependencies || []) {
     if (!pkg.peerDependencies || !pkg.peerDependencies[depName]) {
       fail(spec.repo, `missing peer dependency: ${depName}`);
+    }
+  }
+
+  for (const depName of spec.forbiddenPeerDependencies || []) {
+    if (pkg.peerDependencies && pkg.peerDependencies[depName]) {
+      fail(spec.repo, `forbidden peer dependency present: ${depName}`);
+    }
+  }
+
+  for (const rule of spec.forbiddenText || []) {
+    for (const file of rule.files || []) {
+      if (!exists(root, file)) continue;
+      const text = readText(root, file);
+      for (const pattern of rule.patterns || []) {
+        if (text.includes(pattern)) fail(spec.repo, `${file} contains forbidden text: ${pattern}`);
+      }
     }
   }
 }
