@@ -1,6 +1,6 @@
 # KDNA Core Status — June 2026
 
-> Current status page. For historical perspective, see [STATE_OF_KDNA.md](./STATE_OF_KDNA.md) (historical snapshot, dated 2026-06-09).
+> Current status page. For historical perspective, see [STATE_OF_KDNA.md](../STATE_OF_KDNA.md) (historical snapshot, dated 2026-06-09).
 > **Version naming**: See [version-taxonomy.md](./version-taxonomy.md). "Core GA" refers to the KDNA Core 2026.06 Baseline, not legacy formats.
 
 ## Current positioning

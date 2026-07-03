@@ -2,7 +2,7 @@
 
 **Version:** 1.0  
 **Status:** Draft  
-**Depends on:** [KDNA Container v2](./container-v2.md)
+**Depends on:** [KDNA Asset Container](./container.md)
 
 ## 1. Purpose
 

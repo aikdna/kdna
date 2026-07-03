@@ -49,7 +49,7 @@ Agent 接收输入，加载一个或多个 KDNA 域，并产生判断。
 
 追踪记录了判断过程中触发了哪些 KDNA 规则。
 
-**Schema：** [`specs/judgment-trace-schema.json`](./judgment-trace-schema.json)
+**Schema：** [`specs/judgment-trace-schema.json`](../specs/judgment-trace-schema.json)
 
 **关键字段：**
 - `trace_id`：唯一标识符
@@ -99,7 +99,7 @@ Agent 接收输入，加载一个或多个 KDNA 域，并产生判断。
 
 Agent 行动后，现实产生结果。结果记录将判断的预测与实际发生的情况进行比较。
 
-**Schema：** [`specs/outcome-record-schema.json`](./outcome-record-schema.json)
+**Schema：** [`specs/outcome-record-schema.json`](../specs/outcome-record-schema.json)
 
 **关键字段：**
 - `judgment_reference.trace_id`：链接回追踪

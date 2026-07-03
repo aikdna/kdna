@@ -1,6 +1,8 @@
 # KDNA Compare Report — Design Specification
 
-> **Status:** Implemented. `kdna compare` available in `@aikdna/kdna-cli`. Benchmark infrastructure exists with 5-model results at [benchmarks/](../benchmarks/).
+> **Status:** Implemented. `kdna compare` available in `@aikdna/kdna-cli`.
+> Historical benchmark artifacts are not part of the current public beta
+> repository.
 
 ## Overview
 
