@@ -17,7 +17,9 @@ bounded semver ranges so maintainers can reproduce user reports. The gate also
 blocks known MVP-boundary regressions, such as scaffolder templates
 reintroducing unsupported remote-server configuration before that capability
 exists in `kdna-web-server`, or scaffolder metadata advertising templates that
-do not exist yet.
+do not exist yet. Example `.kdna` downloads should use explicit release tags,
+not `releases/latest/download`, so first-run docs do not drift when new assets
+are released.
 
 Run from `aikdna/kdna`:
 

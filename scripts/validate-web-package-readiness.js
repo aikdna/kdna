@@ -102,6 +102,10 @@ const packages = [
         files: ['package.json', 'README.md'],
         patterns: ['bare Node.js'],
       },
+      {
+        files: ['README.md', 'docs/getting-started.md'],
+        patterns: ['releases/latest/download'],
+      },
     ],
   },
 ];
