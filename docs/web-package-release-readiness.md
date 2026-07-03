@@ -28,7 +28,9 @@ do not exist yet. Example `.kdna` downloads should use explicit release tags,
 not `releases/latest/download`, so first-run docs do not drift when new assets
 are released. The React MVP must also avoid exporting placeholder authoring
 components or helpers for server endpoints that intentionally return `501` in
-the current `kdna-web-server` milestone.
+the current `kdna-web-server` milestone, and its maintenance docs must not
+describe `@aikdna/kdna-web-client` as an internal dependency boundary while the
+package calls compatible server endpoints directly.
 
 Run from `aikdna/kdna`:
 

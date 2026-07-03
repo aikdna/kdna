@@ -69,6 +69,14 @@ const packages = [
         files: ['README.md'],
         patterns: ['/export'],
       },
+      {
+        files: ['NOTICE', 'CONTRIBUTING.md'],
+        patterns: [
+          'builds on @aikdna/kdna-web-client',
+          'wrappers over `@aikdna/kdna-web-client`',
+          'asset creation',
+        ],
+      },
     ],
   },
   {
