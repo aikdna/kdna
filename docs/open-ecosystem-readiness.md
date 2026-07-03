@@ -16,6 +16,9 @@ verify, publish, and contribute without relying on private project knowledge.
 - Reference domains publish limitations, evals, and benchmark evidence.
 - Skill + KDNA demo explains judgment-layer separation.
 - RFC index defines protocol participation path.
+- Web package path is implemented, published, and smoke-tested end to end:
+  `kdna-web-server` -> `kdna-web-client` -> `kdna-react` ->
+  `create-kdna-web-app`.
 
 ## Completion Criteria
 
@@ -25,3 +28,6 @@ An external developer can:
 2. Run conformance tests to check compatibility.
 3. (Registry is out of scope; see 00-current-truth.md. Local asset creation via `kdna demo` / `kdna pack` / `kdna-studio-cli` is the supported path.)
 4. Connect KDNA to an agent through MCP or a loader skill.
+5. Scaffold a KDNA web application from published packages and complete an
+   upload -> inspect -> plan-load -> load flow without private workspace
+   knowledge.
