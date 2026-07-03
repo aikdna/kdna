@@ -28,6 +28,7 @@
     "ecosystem-gate": "node scripts/ecosystem-gate.js",
     "validate:ecosystem-manifest": "node scripts/validate-ecosystem-manifest.js",
     "validate:public-truth": "node scripts/validate-public-truth.js",
+    "validate:web-packages": "node scripts/validate-web-package-readiness.js",
     "release:evidence": "node scripts/generate-release-evidence.js",
     "release:preflight": "node scripts/release-preflight.js",
     "test:core-smoke": "node scripts/core-smoke.js",
