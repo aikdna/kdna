@@ -70,10 +70,11 @@ const packages = [
         patterns: ['/export'],
       },
       {
-        files: ['NOTICE', 'CONTRIBUTING.md'],
+        files: ['NOTICE', 'CONTRIBUTING.md', 'SECURITY.md'],
         patterns: [
           'builds on @aikdna/kdna-web-client',
           'wrappers over `@aikdna/kdna-web-client`',
+          'wraps web-client/server adapter state',
           'asset creation',
         ],
       },

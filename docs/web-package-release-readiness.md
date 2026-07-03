@@ -30,7 +30,8 @@ are released. The React MVP must also avoid exporting placeholder authoring
 components or helpers for server endpoints that intentionally return `501` in
 the current `kdna-web-server` milestone, and its maintenance docs must not
 describe `@aikdna/kdna-web-client` as an internal dependency boundary while the
-package calls compatible server endpoints directly.
+package calls compatible server endpoints directly. This includes the security
+model, because vulnerability triage depends on the documented package boundary.
 
 Run from `aikdna/kdna`:
 
