@@ -110,6 +110,51 @@ function readText(root, relPath) {
   return fs.readFileSync(path.join(root, relPath), 'utf8');
 }
 
+function normalizePackagePath(relPath) {
+  return path.posix
+    .normalize(relPath.replace(/\\/g, '/').replace(/^\.\//, ''))
+    .replace(/^\.\//, '');
+}
+
+function localMarkdownLinks(markdown) {
+  const links = [];
+  const markdownLinkPattern = /!?\[[^\]]+\]\(([^)\s]+)(?:\s+['"][^'"]*['"])?\)/g;
+  for (const match of markdown.matchAll(markdownLinkPattern)) {
+    const target = match[1].trim();
+    if (
+      !target ||
+      target.startsWith('#') ||
+      target.startsWith('http://') ||
+      target.startsWith('https://') ||
+      target.startsWith('mailto:') ||
+      target.startsWith('tel:') ||
+      target.startsWith('/')
+    ) {
+      continue;
+    }
+
+    const withoutFragment = target.split('#')[0].split('?')[0];
+    if (!withoutFragment) continue;
+    links.push(normalizePackagePath(withoutFragment));
+  }
+  return links;
+}
+
+function packageFilesInclude(pkg, relPath) {
+  const normalizedPath = normalizePackagePath(relPath);
+  if (normalizedPath === 'package.json') return true;
+
+  for (const entry of pkg.files || []) {
+    const normalizedEntry = normalizePackagePath(entry);
+    if (normalizedEntry.endsWith('/')) {
+      if (normalizedPath.startsWith(normalizedEntry)) return true;
+      continue;
+    }
+    if (normalizedPath === normalizedEntry) return true;
+  }
+  return false;
+}
+
 function exportedPath(pkg, key) {
   const target = pkg.exports && pkg.exports[key];
   if (typeof target === 'string') return target;
@@ -145,6 +190,22 @@ for (const spec of packages) {
 
   for (const file of spec.files || []) {
     if (!exists(root, file)) fail(spec.repo, `missing file: ${file}`);
+  }
+
+  if (exists(root, 'README.md')) {
+    for (const target of localMarkdownLinks(readText(root, 'README.md'))) {
+      if (target.includes('..')) {
+        fail(spec.repo, `README.md links outside package root: ${target}`);
+        continue;
+      }
+      if (!exists(root, target)) {
+        fail(spec.repo, `README.md links to missing local file: ${target}`);
+        continue;
+      }
+      if (!packageFilesInclude(pkg, target)) {
+        fail(spec.repo, `README.md links to local file omitted from package files: ${target}`);
+      }
+    }
   }
 
   for (const key of spec.exports || []) {

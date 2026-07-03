@@ -9,9 +9,12 @@ kdna-web-server -> kdna-web-client -> kdna-react -> create-kdna-web-app
 Before these packages are published, the public ecosystem must prove that each
 repository has real implementation files, tests, package locks, exported
 entrypoints, generated-template smoke scripts, and a package-level
-`npm run ci` command. The gate also blocks known MVP-boundary regressions,
-such as scaffolder templates reintroducing unsupported remote-server
-configuration before that capability exists in `kdna-web-server`.
+`npm run ci` command. It also checks that local README links point to files
+that exist and are included in the npm package `files` list, so published
+package documentation does not point users at missing local docs. The gate also
+blocks known MVP-boundary regressions, such as scaffolder templates
+reintroducing unsupported remote-server configuration before that capability
+exists in `kdna-web-server`.
 
 Run from `aikdna/kdna`:
 
