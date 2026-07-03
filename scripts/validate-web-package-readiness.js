@@ -27,6 +27,7 @@ const packages = [
     ],
     exports: ['.', './nextjs', './express', './cloudflare'],
     forbiddenPeerDependencies: ['@aikdna/kdna-studio-core'],
+    packageJsonFiles: ['package.json'],
   },
   {
     repo: 'kdna-web-client',
@@ -40,6 +41,7 @@ const packages = [
       'tests/client.test.js',
     ],
     exports: ['.'],
+    packageJsonFiles: ['package.json'],
   },
   {
     repo: 'kdna-react',
@@ -48,6 +50,7 @@ const packages = [
     files: ['package-lock.json', 'scripts/build.js', 'src/index.js', 'tests/react.test.js'],
     exports: ['.'],
     peerDependencies: ['react', 'react-dom'],
+    packageJsonFiles: ['package.json'],
   },
   {
     repo: 'create-kdna-web-app',
@@ -75,6 +78,12 @@ const packages = [
       'templates/express/scripts/smoke.mjs',
     ],
     bins: ['create-kdna-web-app'],
+    packageJsonFiles: [
+      'package.json',
+      'templates/nextjs/package.json',
+      'templates/nextjs-pages/package.json',
+      'templates/express/package.json',
+    ],
     forbiddenText: [
       {
         files: [
@@ -164,6 +173,28 @@ function exportedPath(pkg, key) {
   return null;
 }
 
+function dependencySections(pkg) {
+  return [
+    ['dependencies', pkg.dependencies],
+    ['devDependencies', pkg.devDependencies],
+    ['peerDependencies', pkg.peerDependencies],
+    ['optionalDependencies', pkg.optionalDependencies],
+  ];
+}
+
+function checkPackageDependencyRanges(repo, root, relPath) {
+  if (!exists(root, relPath)) return;
+  const pkg = readJson(path.join(root, relPath));
+  for (const [sectionName, section] of dependencySections(pkg)) {
+    if (!section || typeof section !== 'object') continue;
+    for (const [depName, range] of Object.entries(section)) {
+      if (range === 'latest') {
+        fail(repo, `${relPath} ${sectionName}.${depName} uses floating range: latest`);
+      }
+    }
+  }
+}
+
 for (const spec of packages) {
   const root = path.join(reposRoot, spec.repo);
   if (!fs.existsSync(root)) {
@@ -180,6 +211,10 @@ for (const spec of packages) {
   const pkg = readJson(packagePath);
   if (pkg.name !== spec.packageName) {
     fail(spec.repo, `package name mismatch: expected ${spec.packageName}, got ${pkg.name}`);
+  }
+
+  for (const relPath of spec.packageJsonFiles || ['package.json']) {
+    checkPackageDependencyRanges(spec.repo, root, relPath);
   }
 
   for (const scriptName of spec.scripts || []) {

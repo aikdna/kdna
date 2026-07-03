@@ -11,7 +11,9 @@ repository has real implementation files, tests, package locks, exported
 entrypoints, generated-template smoke scripts, and a package-level
 `npm run ci` command. It also checks that local README links point to files
 that exist and are included in the npm package `files` list, so published
-package documentation does not point users at missing local docs. The gate also
+package documentation does not point users at missing local docs. Package and
+template dependency ranges must not use `latest`; generated projects need
+bounded semver ranges so maintainers can reproduce user reports. The gate also
 blocks known MVP-boundary regressions, such as scaffolder templates
 reintroducing unsupported remote-server configuration before that capability
 exists in `kdna-web-server`.
