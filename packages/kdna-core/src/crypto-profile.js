@@ -102,7 +102,6 @@ function hkdfSha256(ikm, salt = null, info = '', length = 32) {
 
 // ── AES-256-KW (RFC 3394) ─────────────────────────────────────────
 
-const AES_BLOCK = 16;
 const KW_IV = Buffer.from('a6a6a6a6a6a6a6a6', 'hex'); // RFC 3394 default IV
 
 function aesWrap(key, plaintext) {
