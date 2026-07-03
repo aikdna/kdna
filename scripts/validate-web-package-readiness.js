@@ -45,6 +45,15 @@ const packages = [
     ],
     exports: ['.'],
     packageJsonFiles: ['package.json'],
+    forbiddenText: [
+      {
+        files: ['README.md', 'docs/security-model.md', 'CONTRIBUTING.md'],
+        patterns: [
+          'Passwords and license keys are arguments',
+          'must not accept, store, or transmit passwords or',
+        ],
+      },
+    ],
   },
   {
     repo: 'kdna-react',

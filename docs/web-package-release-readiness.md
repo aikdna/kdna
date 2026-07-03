@@ -18,6 +18,10 @@ adapter must also keep its `@aikdna/kdna-core` peer range aligned with the
 current Core v1 runtime API used by the web package milestone. React package
 peers must stay limited to the actual React runtime dependencies instead of
 forcing sibling KDNA packages that are connected through endpoint props. The
+browser client must keep its credential guidance aligned with the server
+contract: passwords and signed entitlements can be sent once to `/load`, while
+raw license keys belong on activation endpoints and must not be documented as
+load credentials. The
 scaffolder templates must also install only the KDNA packages they import at
 runtime; the current Next.js templates should not install
 `@aikdna/kdna-web-client` just because it exists as a sibling package. The gate
