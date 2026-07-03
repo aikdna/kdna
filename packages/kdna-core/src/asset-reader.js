@@ -47,7 +47,7 @@ function parseJson(buf, entryName) {
   try {
     return JSON.parse(Buffer.isBuffer(buf) ? buf.toString('utf8') : String(buf));
   } catch (e) {
-    throw new Error(`${entryName}: invalid JSON: ${e.message}`);
+    throw new Error(`${entryName}: invalid JSON: ${e.message}`, { cause: e });
   }
 }
 
@@ -325,7 +325,7 @@ function verifyHumanLockSignatures(coreData, manifest, errors, warnings) {
   ];
 
   let verified = 0, missing = 0, invalid = 0;
-  for (const [arrayName, _cardType] of CORE_CARD_ARRAYS) {
+  for (const [arrayName] of CORE_CARD_ARRAYS) {
     const cards = coreData?.[arrayName];
     if (!Array.isArray(cards) || cards.length === 0) continue;
 
