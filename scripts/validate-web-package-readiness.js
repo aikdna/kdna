@@ -27,6 +27,9 @@ const packages = [
     ],
     exports: ['.', './nextjs', './express', './cloudflare'],
     forbiddenPeerDependencies: ['@aikdna/kdna-studio-core'],
+    exactPeerDependencies: {
+      '@aikdna/kdna-core': '^0.15.10',
+    },
     packageJsonFiles: ['package.json'],
   },
   {
@@ -294,6 +297,16 @@ for (const spec of packages) {
   for (const depName of spec.peerDependencies || []) {
     if (!pkg.peerDependencies || !pkg.peerDependencies[depName]) {
       fail(spec.repo, `missing peer dependency: ${depName}`);
+    }
+  }
+
+  for (const [depName, expectedRange] of Object.entries(spec.exactPeerDependencies || {})) {
+    const actualRange = pkg.peerDependencies && pkg.peerDependencies[depName];
+    if (actualRange !== expectedRange) {
+      fail(
+        spec.repo,
+        `peer dependency ${depName} must be ${expectedRange}, got ${actualRange || 'missing'}`,
+      );
     }
   }
 
