@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 
-const { createKdnaAssetReader } = require('../asset-reader.js');
+const { createKdnaAssetReader } = require('./asset-reader.js');
 
 const MIMETYPE_V1 = 'application/vnd.kdna.asset';
 const MIMETYPE_V2 = 'application/vnd.aikdna.kdna+zip';
@@ -220,7 +220,7 @@ function readSourceDirectory(absPath, _opts) {
  */
 function readV1Container(absPath, _opts) {
   // Delegate to the existing v1 layout reader for validation
-  const v1Layout = require('../v1/index.js').readV1Layout(absPath);
+  const v1Layout = require('./v1/index.js').readV1Layout(absPath);
 
   const containerBuf = fs.readFileSync(absPath);
   const assetDigest = crypto.createHash('sha256').update(containerBuf).digest();
