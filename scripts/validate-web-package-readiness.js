@@ -87,6 +87,7 @@ const packages = [
     forbiddenText: [
       {
         files: [
+          'package.json',
           'README.md',
           'templates/nextjs/.env.local.example',
           'templates/nextjs/app/api/kdna/[...route]/route.js',
@@ -96,6 +97,10 @@ const packages = [
           'templates/express/src/server.js',
         ],
         patterns: ['KDNA_REMOTE_URL', 'remoteServerUrl'],
+      },
+      {
+        files: ['package.json', 'README.md'],
+        patterns: ['bare Node.js'],
       },
     ],
   },

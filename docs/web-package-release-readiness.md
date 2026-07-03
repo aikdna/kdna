@@ -16,7 +16,8 @@ template dependency ranges must not use `latest`; generated projects need
 bounded semver ranges so maintainers can reproduce user reports. The gate also
 blocks known MVP-boundary regressions, such as scaffolder templates
 reintroducing unsupported remote-server configuration before that capability
-exists in `kdna-web-server`.
+exists in `kdna-web-server`, or scaffolder metadata advertising templates that
+do not exist yet.
 
 Run from `aikdna/kdna`:
 
