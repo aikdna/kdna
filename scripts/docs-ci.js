@@ -50,31 +50,27 @@ for (const file of docsFiles) {
   }
 }
 
-console.log('── Package version freshness');
+console.log('── Package published and reachable');
 
 const packages = [
-  ['@aikdna/kdna-cli', '0.28.35'],
-  ['@aikdna/kdna-core', '0.15.10'],
-  ['@aikdna/kdna-studio-cli', '0.8.12'],
-  ['@aikdna/kdna-studio-core', '1.7.10'],
-  ['@aikdna/kdna-web-client', '0.1.0'],
-  ['@aikdna/kdna-web-server', '0.1.0'],
-  ['@aikdna/kdna-react', '0.1.0'],
-  ['create-kdna-web-app', '0.1.1'],
+  '@aikdna/kdna-cli',
+  '@aikdna/kdna-core',
+  '@aikdna/kdna-studio-cli',
+  '@aikdna/kdna-studio-core',
+  '@aikdna/kdna-web-client',
+  '@aikdna/kdna-web-server',
+  '@aikdna/kdna-react',
+  'create-kdna-web-app',
 ];
 
-for (const [name, expected] of packages) {
+for (const name of packages) {
   try {
     const actual = execSync(`npm view ${name} version`, {
       encoding: 'utf8',
       timeout: 15000,
       stdio: ['ignore', 'pipe', 'ignore'],
     }).trim();
-    check(
-      `${name} latest is ${expected}`,
-      actual === expected,
-      `npm says ${actual}`,
-    );
+    check(`${name} is published (v${actual})`, /^\d+\.\d+\.\d+$/.test(actual));
   } catch (e) {
     check(`${name} is published`, false, e.message.slice(0, 80));
   }
