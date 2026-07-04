@@ -17,7 +17,7 @@
 | `@aikdna/kdna-web-server` | 0.1.1 | 0.1.1 | Experimental server-side web adapter |
 | `@aikdna/kdna-web-client` | 0.1.1 | 0.1.1 | Experimental browser-safe web utilities |
 | `@aikdna/kdna-react` | 0.1.1 | 0.1.1 | Experimental React hooks and components |
-| `create-kdna-web-app` | 0.1.1 | 0.1.1 | Experimental KDNA web app scaffolder |
+| `create-kdna-web-app` | 0.1.2 | 0.1.2 | Experimental KDNA web app scaffolder |
 
 ## Stable Baseline
 

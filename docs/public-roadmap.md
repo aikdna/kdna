@@ -43,7 +43,7 @@ cross-language parity are not part of the stable public baseline.
 - **`@aikdna/kdna-web-server` v0.1.1** - experimental server-side web adapter
 - **`@aikdna/kdna-web-client` v0.1.1** - experimental browser-safe web utilities
 - **`@aikdna/kdna-react` v0.1.1** - experimental React hooks and components
-- **`create-kdna-web-app` v0.1.1** - experimental KDNA web app scaffolder
+- **`create-kdna-web-app` v0.1.2** - experimental KDNA web app scaffolder
 - **Public assets**: see `aikdna/kdna-assets` `assets.json` and GitHub Releases
 
 ## What comes next
