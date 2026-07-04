@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -11,6 +11,18 @@ const fixturesDir = path.join(__dirname, 'fixtures');
 const registryDir = path.join(__dirname, 'registry-mocks');
 fs.mkdirSync(fixturesDir, { recursive: true });
 fs.mkdirSync(registryDir, { recursive: true });
+
+function runKdna(args, options = {}) {
+  return execFileSync('kdna', args, {
+    encoding: 'utf8',
+    stdio: 'pipe',
+    ...options,
+    env: {
+      ...process.env,
+      ...(options.env || {}),
+    },
+  });
+}
 
 function u16(n) {
   const b = Buffer.alloc(2);
@@ -185,14 +197,12 @@ const yankedPath = path.join(registryDir, 'yanked-domains.json');
 fs.writeFileSync(yankedPath, json(yankedRegistry));
 
 try {
-  execSync(`KDNA_REGISTRY_URL=file://${yankedPath} kdna registry refresh`, {
-    encoding: 'utf8',
-    stdio: 'pipe',
+  runKdna(['registry', 'refresh'], {
+    env: { KDNA_REGISTRY_URL: `file://${yankedPath}` },
     timeout: 10000,
   });
-  execSync(`KDNA_REGISTRY_URL=file://${yankedPath} kdna install @trust-e2e/minimal`, {
-    encoding: 'utf8',
-    stdio: 'pipe',
+  runKdna(['install', '@trust-e2e/minimal'], {
+    env: { KDNA_REGISTRY_URL: `file://${yankedPath}` },
     timeout: 15000,
   });
   console.log('  ✗ FAIL: kdna install should have rejected yanked domain');
@@ -221,14 +231,12 @@ const expiredPath = path.join(registryDir, 'expired-domains.json');
 fs.writeFileSync(expiredPath, json(expiredRegistry));
 
 try {
-  execSync(`KDNA_REGISTRY_URL=file://${expiredPath} kdna registry refresh`, {
-    encoding: 'utf8',
-    stdio: 'pipe',
+  runKdna(['registry', 'refresh'], {
+    env: { KDNA_REGISTRY_URL: `file://${expiredPath}` },
     timeout: 10000,
   });
-  execSync(`KDNA_REGISTRY_URL=file://${expiredPath} kdna install @trust-e2e/minimal`, {
-    encoding: 'utf8',
-    stdio: 'pipe',
+  runKdna(['install', '@trust-e2e/minimal'], {
+    env: { KDNA_REGISTRY_URL: `file://${expiredPath}` },
     timeout: 15000,
   });
   console.log('  ✗ FAIL: v1.0-rc requires expired registry snapshots to be rejected');
@@ -260,14 +268,12 @@ const noTrustPath = path.join(registryDir, 'no-trust-pubkey-domains.json');
 fs.writeFileSync(noTrustPath, json(noTrustRegistry));
 
 try {
-  execSync(`KDNA_REGISTRY_URL=file://${noTrustPath} kdna registry refresh`, {
-    encoding: 'utf8',
-    stdio: 'pipe',
+  runKdna(['registry', 'refresh'], {
+    env: { KDNA_REGISTRY_URL: `file://${noTrustPath}` },
     timeout: 10000,
   });
-  execSync(`KDNA_REGISTRY_URL=file://${noTrustPath} kdna install @untrusted-e2e/no-trust`, {
-    encoding: 'utf8',
-    stdio: 'pipe',
+  runKdna(['install', '@untrusted-e2e/no-trust'], {
+    env: { KDNA_REGISTRY_URL: `file://${noTrustPath}` },
     timeout: 15000,
   });
   console.log('  ✗ FAIL: v1.0-rc requires scoped domains without trust_pubkey to be rejected');
@@ -285,11 +291,7 @@ try {
 console.log('\n=== Test 4: Digest Mismatch (Local Install) ===');
 
 try {
-  execSync(`kdna verify ${tamperedPath}`, {
-    encoding: 'utf8',
-    stdio: 'pipe',
-    timeout: 10000,
-  });
+  runKdna(['verify', tamperedPath], { timeout: 10000 });
   console.log('  ✗ FAIL: v1.0-rc requires digest mismatch to be rejected at verify level');
   process.exitCode = 1;
 } catch (e) {
@@ -349,11 +351,7 @@ const badMimePath = path.join(fixturesDir, 'trust-e2e-bad-mime.kdna');
 fs.writeFileSync(badMimePath, badMimeAsset);
 
 try {
-  execSync(`kdna verify ${badMimePath} --json`, {
-    encoding: 'utf8',
-    stdio: 'pipe',
-    timeout: 10000,
-  });
+  runKdna(['verify', badMimePath, '--json'], { timeout: 10000 });
   console.log('  ✗ FAIL: v1.0-rc requires application/x-kdna mimetype to be rejected');
   console.log('  v1.0-rc non-negotiable: root mimetype MUST be application/vnd.aikdna.kdna+zip');
   process.exitCode = 1;
