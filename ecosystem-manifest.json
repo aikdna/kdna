@@ -190,7 +190,7 @@
       "local_path": "../create-kdna-web-app",
       "npm_package": "create-kdna-web-app",
       "package_json": "../create-kdna-web-app/package.json",
-      "current_version": "0.1.1",
+      "current_version": "0.1.2",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
