@@ -1,8 +1,8 @@
 # KDNA Tool Status Matrix
 
-> Last updated: 2026-06-30. Matches `@aikdna/kdna-cli@0.28.32`.
+> Last updated: 2026-07-04. Matches `@aikdna/kdna-cli@0.28.35`.
 
-## Runtime CLI (`@aikdna/kdna-cli@0.28.32`)
+## Runtime CLI (`@aikdna/kdna-cli@0.28.35`)
 
 | Command | Purpose | Status |
 |---|---|---|
@@ -27,7 +27,7 @@
 | `kdna doctor [--agents]` | Installation health check | GA |
 | `kdna setup` | First-time setup wizard | GA |
 
-## Studio (`@aikdna/kdna-studio-cli@0.8.9`)
+## Studio (`@aikdna/kdna-studio-cli@0.8.12`)
 
 | Command | Purpose | Status |
 |---|---|---|

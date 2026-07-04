@@ -84,12 +84,9 @@ for (const file of docsFiles) {
   const rel = path.relative(DOCS_DIR, file);
   for (const match of content.matchAll(bashFence)) {
     const block = match[1].trim();
-    const lines = block.split('\n').filter(l => l.trim() && !l.trim().startsWith('#'));
+    const lines = block.split('\n').filter((l) => l.trim() && !l.trim().startsWith('#'));
     for (const line of lines) {
-      check(
-        `${rel}: \`${line.slice(0, 60)}\``,
-        line.trim().length > 0,
-      );
+      check(`${rel}: \`${line.slice(0, 60)}\``, line.trim().length > 0);
     }
   }
 }
@@ -101,11 +98,7 @@ for (const file of docsFiles) {
   const rel = path.relative(DOCS_DIR, file);
   const internalRefs = content.match(/\/Users\/(AI|zhangling)\/K\/(OPEN|PRIVATE)\//g);
   const leaked = internalRefs ? internalRefs.length : 0;
-  check(
-    `${rel}: no internal workspace paths`,
-    leaked === 0,
-    `found ${leaked} reference(s)`,
-  );
+  check(`${rel}: no internal workspace paths`, leaked === 0, `found ${leaked} reference(s)`);
 }
 
 console.log(`\n${failures === 0 ? 'All docs checks passed.' : `${failures} check(s) failed.`}`);
