@@ -1,23 +1,23 @@
 # Current Truth (live)
 
-> Last updated: 2026-07-03. This file records the public ecosystem truth that
+> Last updated: 2026-07-04. This file records the public ecosystem truth that
 > should constrain README, roadmap, website, and package claims.
 
 ## Versions
 
 | Component | npm latest | source version | public state |
 |---|---:|---:|---|
-| `@aikdna/kdna-core` | 0.15.10 | 0.15.10 | Beta runtime baseline for local public `.kdna` assets |
-| `@aikdna/kdna-cli` | 0.28.34 | 0.28.34 | Beta CLI baseline for validate / inspect / plan-load / load |
-| `@aikdna/kdna-studio-core` | 1.7.9 | 1.7.8 | Beta authoring SDK; npm is ahead of local source checkout |
-| `@aikdna/kdna-studio-cli` | 0.8.11 | 0.8.10 | Beta authoring CLI; npm is ahead of local source checkout |
+| `@aikdna/kdna-core` | 0.15.11 | 0.15.11 | Beta runtime baseline for local public `.kdna` assets |
+| `@aikdna/kdna-cli` | 0.28.35 | 0.28.35 | Beta CLI baseline for validate / inspect / plan-load / load |
+| `@aikdna/kdna-studio-core` | 1.7.10 | 1.7.10 | Beta authoring SDK |
+| `@aikdna/kdna-studio-cli` | 0.8.12 | 0.8.12 | Beta authoring CLI |
 | `@aikdna/kdna-mcp-server` | 0.2.4 | 0.2.4 | Experimental MCP bridge |
 | `@aikdna/kdna-activation-server` | 0.1.0 | 0.1.0 | Experimental self-hosted licensed-mode support |
 | `@aikdna/kdna-remote-server` | 0.1.0 | 0.1.0 | Experimental self-hosted remote projection support |
-| `@aikdna/kdna-web-server` | not published | 0.1.0 | Experimental public repo; MVP implementation in PR #1 |
-| `@aikdna/kdna-web-client` | not published | 0.1.0 | Experimental public repo; MVP implementation in PR #1 |
-| `@aikdna/kdna-react` | not published | 0.1.0 | Experimental public repo; MVP implementation in PR #1 |
-| `create-kdna-web-app` | not published | 0.1.0 | Experimental public repo; MVP implementation in PR #1 |
+| `@aikdna/kdna-web-server` | 0.1.1 | 0.1.1 | Experimental server-side web adapter |
+| `@aikdna/kdna-web-client` | 0.1.1 | 0.1.1 | Experimental browser-safe web utilities |
+| `@aikdna/kdna-react` | 0.1.1 | 0.1.1 | Experimental React hooks and components |
+| `create-kdna-web-app` | 0.1.1 | 0.1.1 | Experimental KDNA web app scaffolder |
 
 ## Stable Baseline
 
@@ -29,12 +29,12 @@
 
 ## Experimental / Not Yet Stable Baseline
 
-- Web packages are public repositories but are not published to npm as of
-  2026-07-03. Treat their README promises as implementation targets until PR #1
-  in each web repository is merged and packages are published. The current
-  server MVP covers upload/inspect/plan-load/load and activation proxying only;
-  server-side Studio export, remote forwarding, CORS policy helpers, and durable
-  Cloudflare/R2 storage are not shipped web-package capabilities yet.
+- Web packages are public repositories and published npm packages as of
+  2026-07-04. Treat them as experimental integration surfaces, not stable
+  hosted-platform claims. The current server MVP covers upload/inspect/plan-load/load
+  and activation proxying only; server-side Studio export, remote forwarding,
+  CORS policy helpers, and durable Cloudflare/R2 storage are not shipped
+  web-package capabilities yet.
 - Remote runtime and activation server are self-hostable support surfaces, not
   an AIKDNA-hosted loading or licensing service.
 - Swift runtime and Studio Swift are beta/support surfaces until parity is
@@ -59,10 +59,10 @@
 ## Remaining P1
 
 - B5: 旧 run.mjs → canonical-conformance (kdna)
-- Web package release path: merge PR #1 in `kdna-web-server`,
-  `kdna-web-client`, `kdna-react`, and `create-kdna-web-app`, publish packages,
-  then run a generated-app smoke test against published versions. Keep the
-  central `npm run validate:web-packages` gate green before publishing.
+- Web package maintenance path: keep `kdna-web-server`, `kdna-web-client`,
+  `kdna-react`, and `create-kdna-web-app` source versions aligned with npm
+  latest, keep the central `npm run validate:web-packages` gate green, and
+  preserve generated-app smoke evidence for scaffolder releases.
 - Public truth drift: keep this file, `docs/public-roadmap.md`,
   `ecosystem-manifest.json`, website copy, and package READMEs aligned whenever
   versions or maturity claims change.

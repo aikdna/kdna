@@ -1,6 +1,6 @@
 # KDNA Public Roadmap
 
-> Last updated: 2026-07-03. This is the public-facing roadmap summary.
+> Last updated: 2026-07-04. This is the public-facing roadmap summary.
 > Detailed sprint planning is internal.
 
 ## Where we are
@@ -29,64 +29,68 @@ cross-language parity are not part of the stable public baseline.
 | **Context budget** | Beta | Token cost reporting in `plan-load` output |
 | **Studio authoring** | Beta | `kdna-studio create`, `import`, `distill`, `card`, `export` |
 | **Agent integration** | Beta | `kdna-loader` skill for OpenCode, Codex, Claude Code, Cursor |
-| **Web packages** | Experimental | Public repos exist; MVP implementation PRs are open; npm packages are not published yet |
+| **Web packages** | Experimental | Public repos and npm packages are published; generated-app smoke path is verified |
 
 ## What's available now
 
-- **`@aikdna/kdna-cli` v0.28.34** - runtime CLI
-- **`@aikdna/kdna-core` v0.15.10** - embeddable JS runtime library
-- **`@aikdna/kdna-studio-cli` v0.8.11** - authoring CLI on npm
-- **`@aikdna/kdna-studio-core` v1.7.9** - authoring SDK on npm
+- **`@aikdna/kdna-cli` v0.28.35** - runtime CLI
+- **`@aikdna/kdna-core` v0.15.11** - embeddable JS runtime library
+- **`@aikdna/kdna-studio-cli` v0.8.12** - authoring CLI on npm
+- **`@aikdna/kdna-studio-core` v1.7.10** - authoring SDK on npm
 - **`@aikdna/kdna-mcp-server` v0.2.4** - experimental MCP bridge
 - **`@aikdna/kdna-remote-server` v0.1.0** - experimental self-hostable projection server
 - **`@aikdna/kdna-activation-server` v0.1.0** - experimental self-hostable activation server
+- **`@aikdna/kdna-web-server` v0.1.1** - experimental server-side web adapter
+- **`@aikdna/kdna-web-client` v0.1.1** - experimental browser-safe web utilities
+- **`@aikdna/kdna-react` v0.1.1** - experimental React hooks and components
+- **`create-kdna-web-app` v0.1.1** - experimental KDNA web app scaffolder
 - **Public assets**: see `aikdna/kdna-assets` `assets.json` and GitHub Releases
-
-Not yet published to npm as of 2026-07-03:
-
-- `@aikdna/kdna-web-server`
-- `@aikdna/kdna-web-client`
-- `@aikdna/kdna-react`
-- `create-kdna-web-app`
 
 ## What comes next
 
 The next phase focuses on four areas:
 
-### 1. Web package release path
+### 1. Maintenance-mode baseline
 
-The four public web package repositories currently need PR #1 merged, package
-publication, and a real generated-app smoke test:
+The open-source layer is moving from expansion to maintenance. See
+[Open Source Maintenance Baseline](./open-source-maintenance-baseline.md) for
+the accepted contribution types, stable/beta/experimental boundaries, rejected
+Core v1 scope, and minimum release evidence matrix.
+
+### 2. Web package maintenance path
+
+The four public web package repositories are published and source/npm versions
+are aligned:
 
 - `kdna-web-server`
 - `kdna-web-client`
 - `kdna-react`
 - `create-kdna-web-app`
 
-Until that happens, treat the web package READMEs as implementation targets, not
-published stable surfaces. The current web server MVP is intentionally narrow:
-upload/inspect/plan-load/load plus activation proxying. Server-side Studio
-export, remote forwarding, CORS policy helpers, and durable Cloudflare/R2
-storage remain future web-package work.
+Treat them as experimental integration surfaces, not a stable hosted platform.
+The current web server MVP is intentionally narrow: upload/inspect/plan-load/load
+plus activation proxying. Server-side Studio export, remote forwarding, CORS
+policy helpers, and durable Cloudflare/R2 storage remain future web-package
+work.
 
-### 2. More public assets
+### 3. More public assets
 
 A protocol without content is an empty container. The bottleneck is not more protocol features — it's high-quality `.kdna` assets that demonstrate what judgment-in-a-file actually feels like.
 
 We are looking for domain experts who want to package their judgment. If you have a domain where you consistently apply specific principles, boundaries, and standards that a generalist wouldn't have — that's exactly what KDNA is designed for. Read the [30-minute authoring guide](./30-minute-authoring-guide.md).
 
-### 3. Applications built on KDNA
+### 4. Applications built on KDNA
 
 `.kdna` assets are not only for personal agent configuration — they are the judgment layer that applications can build on top of. When an application's core reasoning is a versioned `.kdna` asset, upgrading the asset improves every user's output on the same day. This is KDNA as infrastructure, not just as personal tooling.
 
 Applications in this direction are in development. The local public asset path
-is ready; web adapters are the next open integration surface.
+is ready; web adapters are available as experimental integration surfaces.
 
-### 4. Native app experience
+### 5. Native app experience
 
 The current path is CLI + MCP. Native app experiences for loading, comparing, and authoring `.kdna` assets are in development. Swift runtime parity (`kdna-core-swift`) is a prerequisite for full native integration.
 
-### 5. Test coverage and reliability
+### 6. Test coverage and reliability
 
 `@aikdna/kdna-cli` has more than 200 tests but several high-complexity command
 modules (agent, cluster, compare, diff) lack unit tests. Good first

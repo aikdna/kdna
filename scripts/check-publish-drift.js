@@ -58,7 +58,11 @@ for (const { repo, pkg } of PACKAGES) {
   }
 
   if (!repoVersion) {
-    check(`${pkg}: published (v${npmVersion})`, /^\d+\.\d+\.\d+$/.test(npmVersion), 'repo not cloned, only npm checked');
+    check(
+      `${pkg}: published (v${npmVersion})`,
+      /^\d+\.\d+\.\d+$/.test(npmVersion),
+      'repo not cloned, only npm checked',
+    );
     continue;
   }
 
@@ -69,5 +73,7 @@ for (const { repo, pkg } of PACKAGES) {
   );
 }
 
-console.log(`\n${failures === 0 ? 'No drift — all packages aligned.' : `${failures} package(s) drifted.`}`);
+console.log(
+  `\n${failures === 0 ? 'No drift — all packages aligned.' : `${failures} package(s) drifted.`}`,
+);
 process.exit(failures === 0 ? 0 : 1);
