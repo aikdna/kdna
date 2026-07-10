@@ -1,4 +1,8 @@
-# KDNA Core v1 Pipeline Closure Status — June 2026
+# KDNA Core v1 Pipeline Closure Status — June 2026 (Archived)
+
+> **Archived release record.** This page describes a past milestone and is not
+> current protocol, release, or support guidance. Use [GitHub Releases](https://github.com/aikdna/kdna/releases),
+> [current status](../status.md), and package release notes for current facts.
 
 ## Status: CLOSURE CANDIDATE (Studio producer npm-registry proof passed)
 

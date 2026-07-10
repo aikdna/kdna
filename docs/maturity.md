@@ -1,6 +1,6 @@
 # KDNA Maturity Disclosure
 
-> **Current status: Beta** — last updated 2026-06-30.
+> **Current status: Beta** — last updated 2026-07-10.
 > The README top-line maturity badge links here. Update both together.
 
 ## What "Beta" means for KDNA
@@ -38,9 +38,11 @@ KDNA is an open file format for packaging scoped judgment. The project has reach
 - **Paid authorization** — `kdna-licensed-entry-v1` KDF profile is
   defined and tested, but the commercial license-generation / delivery
   flow is not part of the public baseline.
-- **Card v2 / Product Runtime / Cluster / WorkPack** — these are RFCs
-  accepted in 2026-Q2; runtime support is landing but the
-  interop surface is not yet "one year of no breaking changes".
+- **Consumption runtime** — route, compose, project, replay, and sidecar
+  review tools are available as beta integration surfaces. Their policy and
+  sidecar schemas can evolve independently from the `.kdna` file format.
+- **Card v2 / Product Runtime / WorkPack** — these features may evolve before
+  their interoperability guarantees are finalized.
 - **Cross-language parity** — `@aikdna/kdna-core` (JS) is the public
   first-run path. `kdna-core-swift` and `kdna-studio-swift` are
   beta until parity is proven against fixed Core v1 conformance
@@ -48,18 +50,16 @@ KDNA is an open file format for packaging scoped judgment. The project has reach
 
 ### Not part of the public baseline
 
-- Internal test infrastructure (`aikdna/kdna-lab`) is referenced by
-  some RFCs as audit anchors but is a private repo.
-- Internal-only workspace paths must not appear in public docs.
+- A hosted registry, marketplace, or universal asset recommendation service.
+- A guarantee that any asset or composition improves every model or task.
 
 ## Release cadence
 
 - `kdna-core` follows a **feature-versioned** 1.x line (Card v2, Product
   Runtime, B2 scrypt) within the same major. Confirm with maintainers
   before publishing breaking changes within 1.x.
-- `kdna-cli` follows a **0.x daily-release** line. 0.28.8 was the first
-  release in 2026-Q2; expect 0.29.x, 0.30.x, ... until CLI surface
-  stabilizes.
+- `kdna-cli` follows semantic versioning within its pre-1.0 line. Pin a
+  version in production integrations and review release notes before upgrades.
 - `kdna-studio-cli` and `kdna-studio-core` are 0.x and 1.x respectively
   for the same reason.
 - Each release is gated by CHANGELOG entry, npm provenance, and
@@ -70,8 +70,9 @@ KDNA is an open file format for packaging scoped judgment. The project has reach
 
 If you are integrating KDNA into a production agent system:
 
-- **Public assets from `aikdna/kdna-assets`** — safe today.
-- **Custom assets authored by your team** — safe today, but pin the
+- **Public assets from `aikdna/kdna-assets`** — validate the release file and
+  apply an integration policy appropriate to your use case.
+- **Custom assets authored by your team** — validate and pin the
   toolchain version (`@aikdna/kdna-cli@<pinned>`,
   `@aikdna/kdna-studio-cli@<pinned>`) and read the CHANGELOG before
   bumping.

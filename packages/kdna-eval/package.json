@@ -1,7 +1,7 @@
 {
   "name": "@aikdna/kdna-eval",
-  "version": "0.1.0",
-  "description": "KDNA runtime scoring primitives — configurable condition matching, dimension scoring, and multi-domain weighted evaluation.",
+  "version": "0.2.0",
+  "description": "KDNA consumption evaluation framework — configurable scoring, multi-gate gating, replay regression, and cost tracking.",
   "type": "commonjs",
   "main": "src/index.js",
   "module": "src/index.mjs",
@@ -19,6 +19,36 @@
     "./route": {
       "import": "./src/route.mjs",
       "require": "./src/route.js",
+      "types": "./src/types.d.ts"
+    },
+    "./replay": {
+      "import": "./src/replay.mjs",
+      "require": "./src/replay.js",
+      "types": "./src/types.d.ts"
+    },
+    "./gates": {
+      "import": "./src/gates.mjs",
+      "require": "./src/gates.js",
+      "types": "./src/types.d.ts"
+    },
+    "./cost": {
+      "import": "./src/cost.mjs",
+      "require": "./src/cost.js",
+      "types": "./src/types.d.ts"
+    },
+    "./consume": {
+      "import": "./src/consume.mjs",
+      "require": "./src/consume.js",
+      "types": "./src/types.d.ts"
+    },
+    "./route-card": {
+      "import": "./src/route-card.mjs",
+      "require": "./src/route-card.js",
+      "types": "./src/types.d.ts"
+    },
+    "./consumer-index": {
+      "import": "./src/consumer-index.mjs",
+      "require": "./src/consumer-index.js",
       "types": "./src/types.d.ts"
     },
     "./package.json": "./package.json"

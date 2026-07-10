@@ -53,6 +53,12 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 | 20 | `outcome-record-schema.json` | Schema for recording whether a judgment was correct in hindsight |
 | 21 | `product-runtime.schema.json` | Schema for KDNA Product Runtime data |
 
+## Consumption extensions
+
+The Core format remains independent from consumption policy. See
+[`docs/consumption-runtime.md`](../docs/consumption-runtime.md) for the public
+sidecar boundary and the reference runtime workflow.
+
 ### Crypto & Identity
 
 | # | Document | What it covers |

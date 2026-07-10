@@ -1,4 +1,8 @@
-# KDNA Core v1 Global CLI Baseline — June 2026
+# KDNA Core v1 Global CLI Baseline — June 2026 (Archived)
+
+> **Archived release record.** This page describes a past CLI baseline. For
+> current installation and command behavior, use the [CLI README](https://github.com/aikdna/kdna-cli#readme),
+> [current status](../status.md), and GitHub Releases.
 
 ## What is new
 
