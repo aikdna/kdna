@@ -1,7 +1,7 @@
 # KDNA Core Status — July 2026
 
 > Current status page. For historical perspective, see [STATE_OF_KDNA.md](../STATE_OF_KDNA.md) (historical snapshot, dated 2026-06-09).
-> **Version naming**: See [version-taxonomy.md](./version-taxonomy.md). "Core GA" refers to the KDNA Core 2026.06 Baseline, not legacy formats.
+> **Version naming**: See [version-taxonomy.md](./version-taxonomy.md). "Core baseline" refers to the KDNA Core 2026.06 Baseline, not legacy formats.
 
 ## Current positioning
 
@@ -36,7 +36,7 @@ KDNA Core is content-neutral. It validates file structure, integrity, and loadin
   sidecar output
 - **CLI verification** — released commands are covered by the CLI test suite;
   consult the package release notes for version-specific test evidence
-- **Studio CLI** — Core GA authoring/export published through `@aikdna/kdna-studio-cli@0.8.12` and `@aikdna/kdna-studio-core@1.7.10`
+- **Studio CLI** — stable authoring/export published through `@aikdna/kdna-studio-cli@0.8.12` and `@aikdna/kdna-studio-core@1.7.10`
 
 The public CLI surface is discoverable through `kdna --help`. Compatibility and
 maturity may vary by command; use the tool status matrix and release notes for
@@ -70,7 +70,7 @@ kdna validate ./school.kdna
 
 ## Experimental or evolving surfaces
 
-- **kdna-studio** — Core GA authoring/export is stable (0.8.12); advanced AI authoring features (distill, interview, feynman) are experimental
+- **kdna-studio** — stable authoring/export is stable (0.8.12); advanced AI authoring features (distill, interview, feynman) are experimental
 - **kdna-vscode** — VS Code extension — archived as of 2026-06-25; use kdna-cli for validate, plan-load, pack/unpack
 - **kdna-loader** — official agent adapter skill; stable, supports OpenCode/Codex/Claude Code/Cursor/Gemini via `kdna setup`
 - **kdna-core-swift** — Swift runtime; beta until parity proven against fixed Core v1 conformance fixtures
@@ -86,7 +86,7 @@ kdna validate ./school.kdna
 
 ## Known limitations
 
-1. **Legacy registry containers** — old registry-distributed `.kdna` assets are not supported by the Core GA CLI. Users with legacy assets must re-export through current Studio Core GA tooling. The CLI emits a clear "Unsupported legacy/registry container" error for legacy inputs.
+1. **Legacy registry containers** — old registry-distributed `.kdna` assets are not supported by the Core baseline CLI. Users with legacy assets must re-export through the current Studio baseline tooling. The CLI emits a clear "Unsupported legacy/registry container" error for legacy inputs.
 2. **Cross-implementation parity** — JS Core is the public first-run path. Swift remains beta until parity is proven.
 3. **Release evidence** — npm packages are published and installable; stronger provenance, SBOM, and attestation chains remain post-baseline release hardening.
 4. **Minimal demo scope** — `kdna demo minimal` proves format validity. Use a
