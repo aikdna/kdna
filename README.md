@@ -10,6 +10,8 @@ Use the official KDNA toolchain to create, inspect, validate, plan-load, and loa
 >
 > Why KDNA instead of a system prompt? → [Why KDNA](./docs/why-kdna.md) · [KDNA and the AI Stack](./docs/kdna-and-ai-stack.md)
 >
+> Building a consumption runtime? → [Consumption Runtime](./docs/consumption-runtime.md)
+>
 > Roadmap and contribution guide → [Public Roadmap](./docs/public-roadmap.md)
 >
 > This repo defines **KDNA Core** — the file format, schemas, and runtime loading contract. The official KDNA toolchain is published from this repo and its companion packages.
@@ -88,6 +90,12 @@ KDNA Core is **content-neutral**. It does not define:
 - **runtime policy** — what a loader should do with an asset at runtime (block, allow, warn)
 - **content governance** — moderation, takedown, ranking, certification
 
+KDNA Core also does not make an experimental routing or composition decision
+part of the asset format. Applications may exchange route cards, consumer
+indexes, traces, and evaluation evidence as versioned sidecars. Those
+artifacts describe how an asset was considered for a task; they do not change
+the asset's judgment payload or make a recommendation on behalf of KDNA Core.
+
 These are concerns of **external** platforms and policies. KDNA Core supplies the verifiable primitives and the official toolchain (as a reference implementation); everything else is out of scope.
 
 The recommended integration path is through the official SDK, CLI, Loader, or API. Third-party compatible implementations that pass the official validator are equally valid.
@@ -102,6 +110,7 @@ The official KDNA toolchain is published from this repo and its companion packag
 | **KDNA CLI** | Official command-line entry: `inspect`, `validate`, `pack`, `unpack`, `load` | this repo + `@aikdna/kdna-cli` |
 | **KDNA Loader** | Official runtime loader for AI agents | `packages/kdna-core/` + `@aikdna/kdna-cli` |
 | **KDNA SDK** | Embeddable library for integrations | `packages/kdna-core/` |
+| **KDNA Eval** | Replay, budget, and consumption-evaluation primitives | `packages/kdna-eval/` |
 
 ## Examples
 

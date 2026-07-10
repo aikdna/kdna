@@ -89,8 +89,10 @@ KDNA Core is the **official KDNA judgment-asset format and runtime loading contr
 |------|------|
 | [kdna](https://github.com/aikdna/kdna) | Official KDNA Core spec, toolchain entry, schemas, docs |
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | Official runtime CLI: inspect, validate, pack, unpack, load |
+| [kdna-eval](https://github.com/aikdna/kdna/tree/main/packages/kdna-eval) | Replay, budget, and consumption-evaluation primitives |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI for creating and exporting v1 `.kdna` assets |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Official agent loader adapter |
+| [kdna-assets](https://github.com/aikdna/kdna-assets) | Public release files, checksums, and evidence manifests |
 
 ---
 
@@ -99,6 +101,11 @@ KDNA Core is the **official KDNA judgment-asset format and runtime loading contr
 KDNA Core v1 is in public beta for local packaged `.kdna` creation,
 validation, LoadPlan diagnostics, and loading. See [Status](./status.md) for
 the full beta / preview / future boundary.
+
+For applications that need task-aware asset selection, start with the
+[Consumption Runtime guide](./consumption-runtime.md). It explains route,
+bounded composition, projections, traces, and evaluation without changing the
+`.kdna` file format.
 
 ---
 

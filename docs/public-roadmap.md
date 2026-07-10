@@ -1,7 +1,6 @@
 # KDNA Public Roadmap
 
-> Last updated: 2026-07-04. This is the public-facing roadmap summary.
-> Detailed sprint planning is internal.
+> Last updated: 2026-07-10. This is the public-facing roadmap summary.
 
 ## Where we are
 
@@ -27,13 +26,15 @@ cross-language parity are not part of the stable public baseline.
 | **RAG namespacing** | Beta | `rag_namespace` isolation per Bundle component |
 | **Audit logging** | Beta | Local audit trail for load events |
 | **Context budget** | Beta | Token cost reporting in `plan-load` output |
+| **Consumption runtime** | Beta | Traced route, bounded compose, packaged-asset projection, and replay evaluation |
 | **Studio authoring** | Beta | `kdna-studio create`, `import`, `distill`, `card`, `export` |
 | **Agent integration** | Beta | `kdna-loader` skill for OpenCode, Codex, Claude Code, Cursor |
 | **Web packages** | Experimental | Public repos and npm packages are published; generated-app smoke path is verified |
 
 ## What's available now
 
-- **`@aikdna/kdna-cli` v0.28.35** - runtime CLI
+- **`@aikdna/kdna-cli` v0.29.0** - runtime CLI
+- **`@aikdna/kdna-eval` v0.2.0** - consumption evaluation primitives
 - **`@aikdna/kdna-core` v0.15.11** - embeddable JS runtime library
 - **`@aikdna/kdna-studio-cli` v0.8.12** - authoring CLI on npm
 - **`@aikdna/kdna-studio-core` v1.7.10** - authoring SDK on npm
@@ -50,12 +51,11 @@ cross-language parity are not part of the stable public baseline.
 
 The next phase focuses on four areas:
 
-### 1. Maintenance-mode baseline
+### 1. Runtime reliability and documentation
 
-The open-source layer is moving from expansion to maintenance. See
-[Open Source Maintenance Baseline](./open-source-maintenance-baseline.md) for
-the accepted contribution types, stable/beta/experimental boundaries, rejected
-Core v1 scope, and minimum release evidence matrix.
+The next priority is a dependable public runtime path: clear command contracts,
+reproducible fixtures, release evidence, and documentation that distinguishes
+stable file-format behavior from beta consumption policy.
 
 ### 2. Web package maintenance path
 
@@ -92,9 +92,8 @@ The current path is CLI + MCP. Native app experiences for loading, comparing, an
 
 ### 6. Test coverage and reliability
 
-`@aikdna/kdna-cli` has more than 200 tests but several high-complexity command
-modules (agent, cluster, compare, diff) lack unit tests. Good first
-issues are available for contributors — see [open issues](https://github.com/aikdna/kdna-cli/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22).
+Contributors can strengthen fixture coverage, compatibility checks, and
+cross-language conformance. Browse [open issues](https://github.com/aikdna/kdna-cli/issues?q=is%3Aissue+is%3Aopen) for current work.
 
 ## What is not planned
 

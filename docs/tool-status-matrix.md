@@ -1,8 +1,8 @@
 # KDNA Tool Status Matrix
 
-> Last updated: 2026-07-04. Matches `@aikdna/kdna-cli@0.28.35`.
+> Last updated: 2026-07-10. Matches `@aikdna/kdna-cli@0.29.0`.
 
-## Runtime CLI (`@aikdna/kdna-cli@0.28.35`)
+## Runtime CLI (`@aikdna/kdna-cli@0.29.0`)
 
 | Command | Purpose | Status |
 |---|---|---|
@@ -23,6 +23,13 @@
 | `kdna revoke <sig.kdsig>` | Issue signed revocation | GA |
 | `kdna revocation-status <sig.kdsig>` | Check revocation status | GA |
 | `kdna load --remote-server <url>` | Load `access:remote` assets via server | GA |
+| `kdna route <asset-path>` | Select a primary framework and emit a trace | Beta |
+| `kdna compose <asset-path>` | Compose a primary with bounded advisors | Beta |
+| `kdna project <asset-path>` | Render a packaged asset as a task-safe projection | Beta |
+| `kdna eval-consumption <asset-path>` | Evaluate a consumption policy with replay and gates | Beta |
+| `kdna compose-review-workbook` | Generate a review workbook from diagnostics | Beta |
+| `kdna validate-compose-decisions` | Validate a decision ledger against fixture evidence | Beta |
+| `kdna apply-reviewed-compose-decisions` | Create disabled candidate sidecar entries | Beta |
 | `kdna workpack <init\|validate\|plan\|run\|report>` | WorkPack pipeline | Experimental |
 | `kdna doctor [--agents]` | Installation health check | GA |
 | `kdna setup` | First-time setup wizard | GA |
@@ -62,4 +69,4 @@
 |---|---|
 | `kdna-vscode` | Archived 2026-06-25. Use `kdna-cli` for validate/plan-load/pack/unpack. |
 | Legacy `kdna install <url>` | Was registry-based install, removed in 0.27.0. Current `kdna install` installs local files. |
-| `kdna registry` | Registry distribution deferred to future RFC. |
+| `kdna registry` | Registry distribution is not part of the current local-file path. |

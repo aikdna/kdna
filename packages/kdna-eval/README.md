@@ -10,6 +10,42 @@ This package is **generic infrastructure** — it contains no built-in domains,
 personas, or product-specific defaults. Those belong in the consuming
 application.
 
+## Consumption evaluation
+
+`@aikdna/kdna-eval` also provides primitives for evaluating how an application
+uses KDNA assets. These APIs help a runtime keep task selection, composition,
+projection, cost, quality, and promotion decisions visible and testable.
+
+| Module | Purpose |
+| --- | --- |
+| `./replay` | Run and compare named replay modes. |
+| `./gates` | Combine independent runtime gates into one report. |
+| `./cost` | Track context budgets and asset counts. |
+| `./consume` | Reference route, compose, projection, quality, and promotion gates. |
+| `./route-card` | Load and apply route-card sidecars. |
+| `./consumer-index` | Load consumer-index sidecars with explicit enablement checks. |
+
+These modules do not rank assets or certify their content. They provide
+building blocks for a consuming application to apply its own policy and to
+record the evidence behind that policy.
+
+### Example
+
+```js
+const { createConsumptionRunner } = require("@aikdna/kdna-eval/consume");
+
+const runtime = createConsumptionRunner({
+  policies: myPolicies,
+  budgetProfile: "interactive",
+});
+
+const route = runtime.route(asset, { task: "review" });
+const cost = runtime.cost(asset, { advisors: [] });
+```
+
+For the command-line workflow, see the
+[KDNA CLI Consumption Runtime guide](https://github.com/aikdna/kdna-cli/blob/main/docs/consumption-runtime.md).
+
 ## Quick Start
 
 ```js

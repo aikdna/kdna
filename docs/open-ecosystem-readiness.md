@@ -29,5 +29,5 @@ An external developer can:
 3. (Registry is out of scope; see 00-current-truth.md. Local asset creation via `kdna demo` / `kdna pack` / `kdna-studio-cli` is the supported path.)
 4. Connect KDNA to an agent through MCP or a loader skill.
 5. Scaffold a KDNA web application from published packages and complete an
-   upload -> inspect -> plan-load -> load flow without private workspace
-   knowledge.
+   upload -> inspect -> plan-load -> load flow using only published
+   documentation.
