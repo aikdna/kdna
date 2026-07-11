@@ -1,0 +1,57 @@
+{
+  "plan_version": "0.9.0",
+  "plan_id": "plan_c7e3a1b9f2d40856",
+  "mode": "single",
+  "asset_ref": {
+    "asset_id": "dev-change-risk-v0.1.0.kdna",
+    "version": "0.1.0",
+    "digest": "sha256:a3a5633a9bd0aa130fb2d1b808bf12eec2cf91c8b94f29b6b7b4fba8e69bfaa8",
+    "access": "public"
+  },
+  "task": {
+    "summary": "Evaluate deploy risk for auth hotfix on Friday 16:30",
+    "task_family": "deploy_risk_assessment",
+    "input_hash": "sha256:e3cff53f130499b835f10139f1663c28"
+  },
+  "load_plan_ref": {
+    "plan_id": "plan_c7e3a1b9f2d40856",
+    "status": "ready"
+  },
+  "applicability": {
+    "decision": "applies",
+    "confidence": "high",
+    "matched_signals": ["deploy_decision", "change_risk", "outside_normal_window"],
+    "boundary_check": {
+      "in_scope": true,
+      "warnings": ["task involves auth middleware"],
+      "not_applicable_reasons": []
+    },
+    "load_condition_met": true
+  },
+  "projection_ref": {
+    "shape": "compact",
+    "content_digest": "sha256:704460df44d100b0ef9ed16bfbfbf82104cec9628920489f0db239d777c7f66c"
+  },
+  "budget": {
+    "profile": "code-review",
+    "max_tokens": 1200,
+    "max_chars": 3500,
+    "max_assets": 3,
+    "assets_consumed": 1
+  },
+  "runner": {
+    "type": "registered",
+    "runner_id": "claude-code-agent",
+    "adapter_version": "0.1.0"
+  },
+  "evidence_refs": [],
+  "trace_policy": {
+    "emit": ["decision", "cost", "projection", "provenance", "result"],
+    "storage": "ephemeral",
+    "retention_hours": 0
+  },
+  "expected_outcome": {
+    "result_shape": "answer-pattern",
+    "required_fields": ["answer", "reasoning", "sources", "confidence", "alternatives"]
+  }
+}

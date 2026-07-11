@@ -51,6 +51,16 @@
       "require": "./src/consumer-index.js",
       "types": "./src/types.d.ts"
     },
+    "./assay": {
+      "import": "./src/assay.mjs",
+      "require": "./src/assay.js",
+      "types": "./src/types.d.ts"
+    },
+    "./cluster-assay": {
+      "import": "./src/cluster-assay.mjs",
+      "require": "./src/cluster-assay.js",
+      "types": "./src/types.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "types": "src/types.d.ts",

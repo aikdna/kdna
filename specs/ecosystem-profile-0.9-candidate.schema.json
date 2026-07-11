@@ -1,0 +1,358 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schemas/ecosystem-profile-0.9-candidate.schema.json",
+  "title": "KDNA Ecosystem Profile 0.9 Candidate",
+  "description": "Cross-repository bill of materials for Ecosystem Profile 0.9. Defines the contract surface, compatibility matrix, and conformance requirements that all repositories in the KDNA ecosystem must satisfy.",
+  "type": "object",
+  "required": ["profile", "profile_version", "contracts", "repositories", "compatibility_matrix"],
+  "properties": {
+    "profile": {
+      "type": "string",
+      "const": "ecosystem-profile",
+      "description": "Discriminant for ecosystem profile manifests."
+    },
+    "profile_version": {
+      "type": "string",
+      "const": "0.9.0"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["candidate", "stable"],
+      "description": "0.9 is candidate. 1.0 will be stable."
+    },
+    "based_on": {
+      "type": "object",
+      "description": "References the completion roadmap this profile implements.",
+      "properties": {
+        "roadmap": { "type": "string", "const": "KDNA_ECOSYSTEM_COMPLETION_ROADMAP.md" },
+        "roadmap_version": { "type": "string" },
+        "phase": { "type": "string", "const": "Phase 1" }
+      }
+    },
+
+    "contracts": {
+      "type": "object",
+      "description": "Candidate contracts defined by this profile.",
+      "required": ["consumption_plan", "judgment_trace", "evidence_claim", "cluster_manifest"],
+      "properties": {
+        "consumption_plan": {
+          "type": "object",
+          "properties": {
+            "schema": { "type": "string", "const": "specs/consumption-plan-candidate-0.9.schema.json" },
+            "version": { "type": "string", "const": "0.9.0" },
+            "status": { "type": "string", "const": "candidate" },
+            "description": { "type": "string" }
+          }
+        },
+        "judgment_trace": {
+          "type": "object",
+          "properties": {
+            "schema": { "type": "string", "const": "specs/judgment-trace-candidate-0.9.schema.json" },
+            "version": { "type": "string", "const": "0.9.0" },
+            "status": { "type": "string", "const": "candidate" },
+            "description": { "type": "string" }
+          }
+        },
+        "evidence_claim": {
+          "type": "object",
+          "properties": {
+            "schema": { "type": "string", "const": "specs/evidence-claim-candidate-0.9.schema.json" },
+            "version": { "type": "string", "const": "0.9.0" },
+            "status": { "type": "string", "const": "candidate" },
+            "description": { "type": "string" }
+          }
+        },
+        "cluster_manifest": {
+          "type": "object",
+          "properties": {
+            "schema": { "type": "string", "const": "specs/cluster-manifest-candidate-0.9.schema.json" },
+            "version": { "type": "string", "const": "0.9.0" },
+            "status": { "type": "string", "const": "candidate" },
+            "description": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "object_taxonomy": {
+      "type": "object",
+      "description": "Canonical object taxonomy with maturity targets. All repositories in compliance must use these terms with these definitions.",
+      "properties": {
+        "asset": {
+          "type": "object",
+          "properties": {
+            "definition": { "type": "string", "const": "One standalone, bounded KDNA judgment asset in .kdna container format." },
+            "distribution_form": { "type": "string", "const": ".kdna" },
+            "maturity_target": { "type": "string", "const": "Stable (Core v1)" },
+            "default_product_path": { "type": "boolean", "const": true }
+          }
+        },
+        "cluster": {
+          "type": "object",
+          "properties": {
+            "definition": { "type": "string", "const": "References multiple independently qualified KDNA Assets and defines explicit collaboration policy. Filename: kdna.cluster.json." },
+            "distribution_form": { "type": "string", "const": "kdna.cluster.json sidecar" },
+            "maturity_target": { "type": "string", "const": "Candidate 0.9 → Stable after Cluster Assay gates" },
+            "default_product_path": { "type": "boolean", "const": false },
+            "default_visibility": { "type": "string", "const": "off / advanced" }
+          }
+        },
+        "bundle": {
+          "type": "object",
+          "properties": {
+            "definition": { "type": "string", "const": "Fixed packaging/distribution of components loaded as one unit. v2 packaging format." },
+            "distribution_form": { "type": "string", "const": "Bundle container/manifest" },
+            "maturity_target": { "type": "string", "const": "Compatibility and specialist use — not the default path" }
+          }
+        },
+        "collection": {
+          "type": "object",
+          "properties": {
+            "definition": { "type": "string", "const": "Discovery and catalog grouping only. No execution semantics." },
+            "distribution_form": { "type": "string", "const": "Index/catalog metadata" },
+            "maturity_target": { "type": "string", "const": "Informational — no stability guarantee" }
+          }
+        },
+        "work_pack": {
+          "type": "object",
+          "properties": {
+            "definition": { "type": "string", "const": "KDNA/Cluster + Skill + workflow + tools + output/review contract." },
+            "distribution_form": { "type": "string", "const": "Work Pack directory/package" },
+            "maturity_target": { "type": "string", "const": "Experimental until execution gates pass" }
+          }
+        },
+        "consumption_plan": {
+          "type": "object",
+          "properties": {
+            "definition": { "type": "string", "const": "Pre-execution plan for one KDNA use. Deterministic, no model call. Records intent." },
+            "distribution_form": { "type": "string", "const": "Runtime JSON object" },
+            "maturity_target": { "type": "string", "const": "Candidate 0.9 → Stable after parity gates" }
+          }
+        },
+        "judgment_trace": {
+          "type": "object",
+          "properties": {
+            "definition": { "type": "string", "const": "Records what actually happened during KDNA use. Always references plan_id. Records execution facts, not quality interpretation." },
+            "distribution_form": { "type": "string", "const": "Runtime JSON object" },
+            "maturity_target": { "type": "string", "const": "Candidate 0.9 → Stable after replay gates" }
+          }
+        },
+        "evidence_claim": {
+          "type": "object",
+          "properties": {
+            "definition": { "type": "string", "const": "A bounded claim about judgment quality backed by identifiable evidence. Separate from Trace." },
+            "distribution_form": { "type": "string", "const": "Sidecar/report" },
+            "maturity_target": { "type": "string", "const": "Candidate 0.9 → Stable after external validation" }
+          }
+        }
+      }
+    },
+
+    "asset_maturity_model": {
+      "type": "object",
+      "description": "Asset classification levels with required evidence.",
+      "properties": {
+        "conformance_asset": {
+          "type": "object",
+          "properties": {
+            "required_evidence": { "type": "string", "const": "Core validation and loader fixture pass." },
+            "implies": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "benchmark_asset": {
+          "type": "object",
+          "properties": {
+            "required_evidence": { "type": "string", "const": "Named benchmark role and reproducible tasks." },
+            "implies": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "reference_asset": {
+          "type": "object",
+          "properties": {
+            "required_evidence": { "type": "string", "const": "Public-safe authoring explanation and boundary examples." },
+            "implies": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "behavior_evaluated_asset": {
+          "type": "object",
+          "properties": {
+            "required_evidence": { "type": "string", "const": "Controlled baseline comparison and regression report. Asset Assay thresholds in Section 7.1 of the roadmap." },
+            "implies": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "field_validated_asset": {
+          "type": "object",
+          "properties": {
+            "required_evidence": { "type": "string", "const": "Real users, real tasks, documented limitations. Phase 8 field validation thresholds." },
+            "implies": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "production_asset": {
+          "type": "object",
+          "properties": {
+            "required_evidence": { "type": "string", "const": "All structural, behavioral, trust, UX, and maintenance gates passed." },
+            "implies": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+
+    "repositories": {
+      "type": "object",
+      "description": "Repository responsibilities and required contracts for Profile 0.9.",
+      "patternProperties": {
+        "^open/kdna$": { "type": "object" },
+        "^open/kdna-cli$": { "type": "object" },
+        "^open/kdna/packages/kdna-eval$": { "type": "object" },
+        "^open/.*$": { "type": "object" }
+      }
+    },
+
+    "compatibility_matrix": {
+      "type": "object",
+      "description": "Which implementations consume which contracts.",
+      "required": ["implementations", "contracts_tested"],
+      "properties": {
+        "implementations": {
+          "type": "object",
+          "properties": {
+            "js_core": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } },
+            "swift_core": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } },
+            "cli": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } },
+            "web_client": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } },
+            "web_server": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } },
+            "react": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } },
+            "skills": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } }
+          }
+        },
+        "contracts_tested": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "contract": { "type": "string" },
+              "implementations_tested": { "type": "array", "items": { "type": "string" } },
+              "fixture_count": { "type": "integer" },
+              "last_verified": { "type": "string", "format": "date" }
+            }
+          }
+        }
+      }
+    },
+
+    "command_semantics": {
+      "type": "object",
+      "description": "Final public command model for Profile 0.9. Distinguishes planning from execution.",
+      "properties": {
+        "plan_use": {
+          "type": "object",
+          "properties": {
+            "syntax": { "type": "string", "const": "kdna plan-use <asset.kdna|kdna.cluster.json> --task \"...\"" },
+            "deterministic": { "type": "boolean", "const": true },
+            "model_call": { "type": "boolean", "const": false },
+            "output": { "type": "string", "const": "ConsumptionPlan JSON" }
+          }
+        },
+        "use": {
+          "type": "object",
+          "properties": {
+            "syntax": { "type": "string", "const": "kdna use <asset.kdna|kdna.cluster.json> --task \"...\" --runner <registered-runner>" },
+            "deterministic": { "type": "boolean", "const": false },
+            "model_call": { "type": "boolean", "const": true },
+            "output": { "type": "string", "const": "Runner result + Trace" }
+          }
+        },
+        "eval_asset": {
+          "type": "object",
+          "properties": {
+            "syntax": { "type": "string", "const": "kdna eval asset <asset.kdna> --fixtures <dir> --as json" },
+            "output": { "type": "string", "const": "EvidenceClaim" }
+          }
+        },
+        "eval_cluster": {
+          "type": "object",
+          "properties": {
+            "syntax": { "type": "string", "const": "kdna eval cluster <kdna.cluster.json> --fixtures <dir> --as json" },
+            "output": { "type": "string", "const": "EvidenceClaim" }
+          }
+        }
+      }
+    },
+
+    "command_compatibility": {
+      "type": "object",
+      "description": "Classification of existing commands against the 0.9 surface.",
+      "properties": {
+        "stable": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Commands guaranteed stable through 1.0."
+        },
+        "advanced": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Commands available but may change semantics. Not required for default path."
+        },
+        "compatibility_only": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Legacy aliases. Present only for migration. May be removed in next major version."
+        },
+        "experimental": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Commands under active development. No stability guarantee."
+        },
+        "removed_in_1_0": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Commands that will be removed when Profile 1.0 ships."
+        }
+      }
+    },
+
+    "conformance": {
+      "type": "object",
+      "description": "Conformance requirements all implementations must satisfy.",
+      "properties": {
+        "positive_fixtures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "fixture_id": { "type": "string" },
+              "description": { "type": "string" },
+              "contracts_tested": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "negative_fixtures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "fixture_id": { "type": "string" },
+              "description": { "type": "string" },
+              "expected_issue_code": { "type": "string" },
+              "contract": { "type": "string" }
+            }
+          }
+        },
+        "evaluation_standard": {
+          "type": "object",
+          "properties": {
+            "positive_validate_rate": { "type": "string", "const": "100%" },
+            "negative_fail_with_code": { "type": "string", "const": "100%" },
+            "core_v1_backward_compat": { "type": "string", "const": "100% existing fixtures unchanged" },
+            "round_trip_no_loss": { "type": "string", "const": "candidate plan and trace round-trip without semantic field loss" },
+            "unknown_optional_forward_compat": { "type": "string", "const": "unknown optional fields do not break older readers" },
+            "unknown_required_fail_closed": { "type": "string", "const": "required unknown enum/state values fail closed" },
+            "no_cluster_in_core": { "type": "string", "const": "no candidate schema forces experimental Cluster metadata into .kdna Core" }
+          }
+        }
+      }
+    }
+  },
+
+  "additionalProperties": false
+}

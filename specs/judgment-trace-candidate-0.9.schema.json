@@ -1,0 +1,301 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schemas/judgment-trace-candidate-0.9.schema.json",
+  "title": "KDNA JudgmentTrace 0.9 Candidate",
+  "description": "Candidate trace contract recording what actually happened during one KDNA use. Always references plan_id. Records execution facts; quality interpretation belongs in EvidenceClaim.",
+  "type": "object",
+  "required": ["trace_version", "trace_id", "plan_id", "mode", "timestamp", "execution"],
+  "properties": {
+    "trace_version": {
+      "type": "string",
+      "const": "0.9.0"
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^trace_[0-9a-f]{16}$"
+    },
+    "plan_id": {
+      "type": "string",
+      "description": "The ConsumptionPlan this trace records execution of."
+    },
+    "parent_trace_id": {
+      "type": "string",
+      "description": "When this trace revises a previous trace (e.g., human review overrides judgment), references the parent. Null for original traces."
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["single", "cluster"]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this trace was finalized."
+    },
+
+    "asset_identity": {
+      "description": "Single-asset identity. Required when mode=single.",
+      "type": "object",
+      "required": ["asset_id", "version", "digest", "digest_verified"],
+      "properties": {
+        "asset_id": { "type": "string" },
+        "version": { "type": "string" },
+        "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "digest_verified": { "type": "boolean" },
+        "signature_verified": { "type": ["boolean", "null"] },
+        "revocation_status": { "type": "string", "enum": ["not_revoked", "revoked", "unknown"] },
+        "authorization": { "type": "string" },
+        "projection_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      },
+      "additionalProperties": true
+    },
+
+    "assets_loaded": {
+      "type": "array",
+      "description": "Cluster-mode per-asset identity and contribution. Required when mode=cluster.",
+      "items": {
+        "type": "object",
+        "required": ["asset_id", "version", "digest", "role", "digest_verified"],
+        "properties": {
+          "asset_id": { "type": "string" },
+          "version": { "type": "string" },
+          "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+          "role": { "type": "string", "enum": ["primary", "advisor", "constraint", "critic"] },
+          "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+          "digest_verified": { "type": "boolean" },
+          "authorization": { "type": "string" },
+          "projection_digest": { "type": "string" },
+          "contribution_hypothesis": { "type": "string" },
+          "contribution_fulfilled": { "type": "boolean" },
+          "failure_reason": {
+            "type": "string",
+            "description": "Populated when an asset was selected but could not be loaded or executed."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "cluster_identity": {
+      "type": "object",
+      "description": "Cluster manifest identity. Present when mode=cluster.",
+      "properties": {
+        "cluster_id": { "type": "string" },
+        "version": { "type": "string" },
+        "manifest_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      }
+    },
+
+    "applicability_actual": {
+      "type": "object",
+      "properties": {
+        "decision": {
+          "type": "string",
+          "enum": ["applies", "does_not_apply", "ask", "blocked"]
+        },
+        "confidence": { "type": "string", "enum": ["high", "medium", "low", "none"] },
+        "boundary_respected": { "type": "boolean" },
+        "deviated_from_plan": { "type": "boolean" }
+      }
+    },
+
+    "selection_actual": {
+      "type": "object",
+      "description": "Cluster-mode actual selection. Deviations from plan are flagged.",
+      "properties": {
+        "primary": { "type": "string" },
+        "advisors": { "type": "array", "items": { "type": "string" } },
+        "rejected": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "asset_id": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          }
+        },
+        "deviated_from_plan": { "type": "boolean" },
+        "deviation_reasons": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "projection_actual": {
+      "type": "object",
+      "properties": {
+        "shape": { "type": "string", "enum": ["answer-pattern", "compact", "scenario", "full"] },
+        "content_digest": { "type": "string" },
+        "shape_deviated_from_plan": { "type": "boolean" }
+      }
+    },
+
+    "execution": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["completed", "blocked", "cancelled", "timed_out", "runner_error", "partial"],
+          "description": "completed = runner finished normally. blocked = prevented before execution (LoadPlan/auth/entitlement). cancelled = user cancelled. timed_out = execution exceeded deadline. runner_error = runner crashed or returned invalid result. partial = some assets executed, some failed (cluster only)."
+        },
+        "runner_id": { "type": "string" },
+        "runner_version": { "type": "string" },
+        "model": { "type": "string" },
+        "started_at": { "type": "string", "format": "date-time" },
+        "completed_at": { "type": "string", "format": "date-time" },
+        "duration_ms": { "type": "integer" },
+        "attempts": { "type": "integer", "minimum": 1, "description": "Number of runner attempts (1 = first try succeeded)" },
+        "deadline_ms": { "type": "integer", "description": "Configured execution deadline." },
+        "cancel_reason": { "type": "string", "description": "Populated when status=cancelled." }
+      },
+      "additionalProperties": false
+    },
+
+    "result_ref": {
+      "type": "object",
+      "description": "Reference to the runner result. Result content is stored separately, referenced by hash.",
+      "properties": {
+        "result_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "result_shape": { "type": "string" },
+        "answer_summary": { "type": "string", "maxLength": 200 },
+        "result_stored": { "type": "boolean", "description": "Whether the full result is retrievable." }
+      }
+    },
+
+    "conflicts": {
+      "type": "array",
+      "description": "Conflicts detected during execution.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["value_conflict", "term_conflict", "stance_conflict", "recommendation_conflict", "framework_conflict"]
+          },
+          "assets": { "type": "array", "items": { "type": "string" } },
+          "primary_says": { "type": "string" },
+          "advisor_says": { "type": "string" },
+          "resolution": {
+            "type": "string",
+            "enum": ["surfaced", "priority_wins", "risk_wins", "blocked", "asked_user", "unresolved"]
+          },
+          "resolved_by": { "type": "string", "enum": ["human", "policy", "auto", null] }
+        }
+      }
+    },
+
+    "cost": {
+      "type": "object",
+      "properties": {
+        "tokens_used": { "type": "integer" },
+        "chars_consumed": { "type": "integer" },
+        "assets_loaded": { "type": "integer" },
+        "model_calls": { "type": "integer" },
+        "budget_profile": { "type": "string" },
+        "over_budget": { "type": "boolean" },
+        "over_budget_reason": { "type": "string" }
+      }
+    },
+
+    "evaluation": {
+      "type": "object",
+      "description": "In-execution evaluation signals. Not a quality assessment — that belongs in EvidenceClaim.",
+      "properties": {
+        "self_checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "check_id": { "type": "string" },
+              "passed": { "type": "boolean" },
+              "detail": { "type": "string" }
+            }
+          }
+        },
+        "violations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "enum": ["banned_term_used", "boundary_crossed", "risk_triggered", "self_check_failed"] },
+              "severity": { "type": "string", "enum": ["error", "warning", "info"] },
+              "description": { "type": "string" },
+              "asset_id": { "type": "string" }
+            }
+          }
+        },
+        "banned_terms_detected": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "source_attribution": {
+      "type": "array",
+      "description": "Per-asset attribution of which axioms were triggered.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "asset_id": { "type": "string" },
+          "axioms_triggered": { "type": "integer" },
+          "transfer_depth": {
+            "type": "object",
+            "properties": {
+              "operationalized": { "type": "integer" },
+              "referenced": { "type": "integer" },
+              "mentioned": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "plan_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "policy_hash": { "type": ["string", "null"] },
+        "consumer_index_version": { "type": ["string", "null"] },
+        "cluster_manifest_digest": { "type": "string" },
+        "route_card_version": { "type": ["string", "null"] }
+      }
+    },
+
+    "errors": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "environment": { "type": "string" },
+        "trace_schema": { "type": "string" },
+        "session_id": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+
+  "allOf": [
+    {
+      "if": { "properties": { "mode": { "const": "single" } } },
+      "then": { "required": ["asset_identity"] }
+    },
+    {
+      "if": { "properties": { "mode": { "const": "cluster" } } },
+      "then": { "required": ["cluster_identity", "assets_loaded", "selection_actual"] }
+    },
+    {
+      "if": { "properties": { "execution": { "properties": { "status": { "const": "completed" } } } } },
+      "then": { "required": ["result_ref"] }
+    }
+  ],
+
+  "additionalProperties": true
+}

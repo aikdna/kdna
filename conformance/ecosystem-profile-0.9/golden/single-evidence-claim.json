@@ -1,0 +1,68 @@
+{
+  "evidence_version": "0.9.0",
+  "claim_id": "claim_e9f8d7c6b5a41230",
+  "trace_id": "trace_d8f4b2c1a39607e5",
+  "plan_id": "plan_c7e3a1b9f2d40856",
+  "claim_type": "single_use_behavioral",
+  "asset_ref": {
+    "asset_id": "dev-change-risk-v0.1.0.kdna",
+    "version": "0.1.0",
+    "digest": "sha256:5b758a7b72d430384ba451a7535b0503e2ef2c7d49da4cc67ab39a31ad9e7fd5"
+  },
+  "scope": {
+    "task_family": "deploy_risk_assessment",
+    "task_hash": "sha256:c1f531e4747d92fe120b04b4dfa52fe2",
+    "model": "claude-sonnet-5",
+    "runtime": "kdna-cli 0.29.0 + kdna-core 0.15.11",
+    "dataset_fingerprint": "single-use — no comparison arm",
+    "evaluator": "deterministic"
+  },
+  "judgment_quality": {
+    "axiom_coverage": {
+      "triggered": 3,
+      "available": 8,
+      "coverage_ratio": 0.375
+    },
+    "transfer_depth": {
+      "operationalized": 3,
+      "referenced": 0,
+      "mentioned": 0
+    },
+    "self_checks_passed": [true, false],
+    "banned_terms_avoided": true,
+    "boundary_respected": true
+  },
+  "comparison_arms": {
+    "primary_only": null,
+    "no_kdna": null,
+    "bounded_compose": null,
+    "wrong_advisor": null,
+    "irrelevant_advisor": null,
+    "budget_waste": null,
+    "adversarial": null
+  },
+  "marginal_value": {
+    "baseline_score": null,
+    "target_score": null,
+    "delta": null,
+    "threshold_met": null,
+    "threshold_name": "+0.5 mean vs no-KDNA or -30% critical errors",
+    "evidence_produced": false
+  },
+  "limitations": [
+    "Single run — no comparison arm (no-KDNA, best-prompt, wrong-KDNA)",
+    "Not a controlled assay — this is a usage trace, not a benchmark evaluation",
+    "Self-check SC-2 failed (rollback plan review not confirmed)"
+  ],
+  "classification": {
+    "level": "usage_evidence",
+    "not_behavior_evaluated": true,
+    "not_field_validated": true,
+    "not_production": true,
+    "load_ready_only": false
+  },
+  "provenance": {
+    "generated_by": "kdna-cli asset-evidence",
+    "generated_at": "2026-07-11T16:35:15Z"
+  }
+}

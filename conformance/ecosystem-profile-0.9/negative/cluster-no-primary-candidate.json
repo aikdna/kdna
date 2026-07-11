@@ -1,0 +1,28 @@
+{
+  "format": "kdna-cluster",
+  "format_version": "0.9.0",
+  "cluster_id": "@aikdna/test-cluster",
+  "name": "Test Cluster No Primary",
+  "version": "0.1.0",
+  "type": "horizontal",
+  "domains": [
+    {
+      "id": "@aikdna/domain-one",
+      "version": "^0.1.0",
+      "role": "advisor",
+      "required": false,
+      "contribution_hypothesis_template": "Provides domain-one advice."
+    },
+    {
+      "id": "@aikdna/domain-two",
+      "version": "^0.1.0",
+      "role": "advisor",
+      "required": false,
+      "contribution_hypothesis_template": "Provides domain-two advice."
+    }
+  ],
+  "composition": {
+    "strategy": "signal_based",
+    "conflict_policy": "surface"
+  }
+}

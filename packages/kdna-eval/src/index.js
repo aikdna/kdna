@@ -6,4 +6,6 @@ module.exports = {
   ...require("./consume"),
   ...require("./route-card"),
   ...require("./consumer-index"),
+  ...require("./assay"),
+  ...require("./cluster-assay"),
 };

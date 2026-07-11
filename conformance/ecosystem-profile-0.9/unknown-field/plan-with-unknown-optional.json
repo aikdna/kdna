@@ -1,0 +1,36 @@
+{
+  "_description": "Consumption plan with an unknown optional field. Must NOT break validation — forward compatibility. Expected: valid.",
+  "plan_version": "0.9.0",
+  "plan_id": "plan_c7e3a1b9f2d40856",
+  "mode": "single",
+  "asset_ref": {
+    "asset_id": "dev-change-risk-v0.1.0.kdna",
+    "version": "0.1.0",
+    "digest": "sha256:5b63d80a924ad4f8d21eb38b9287323735e777b0d85e91351390955ada1673dd"
+  },
+  "task": {
+    "summary": "test task",
+    "input_hash": "sha256:46b6c4e5074203220b01423bda9ae40a"
+  },
+  "load_plan_ref": {
+    "plan_id": "plan_c7e3a1b9f2d40856",
+    "status": "ready"
+  },
+  "applicability": {
+    "decision": "applies"
+  },
+  "projection_ref": {},
+  "budget": {
+    "profile": "interactive"
+  },
+  "trace_policy": {
+    "emit": ["result"],
+    "storage": "ephemeral"
+  },
+  "future_field_added_in_1_0": {
+    "nested_value": "should not break validation",
+    "another_nested": {
+      "deep": true
+    }
+  }
+}

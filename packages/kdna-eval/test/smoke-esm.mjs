@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { createEvaluator, evaluateCandidates, createReplayEngine, createMultiGateRunner, createCostTracker } from "../src/index.mjs";
+import { createEvaluator, evaluateCandidates, createReplayEngine, createMultiGateRunner, createCostTracker, createAssayProfile, createFixture, validateFixtureSet, scoreJudgment } from "../src/index.mjs";
 import { loadFlatDomains } from "../src/loader.mjs";
 import { resolveDomains } from "../src/route.mjs";
 
@@ -31,5 +31,15 @@ const tracker = createCostTracker("interactive");
 tracker.trackAsset({ tokens: 100, chars: 50 });
 const costReport = tracker.getCostReport();
 assert.equal(costReport.consumed.tokens, 100);
+
+// Smoke test assay module
+const profile = createAssayProfile({ assetId: 'smoke-test.kdna' });
+assert.equal(profile.profile_version, '0.9.0');
+const fixture = createFixture({ category: 'positive_target', task: 'smoke test task' });
+assert.equal(fixture.category, 'positive_target');
+const validation = validateFixtureSet([fixture], profile);
+assert.equal(validation.valid, false); // insufficient count
+const scored = scoreJudgment({ answer: 'test answer' }, { answer: 'test answer' });
+assert.ok(scored.score >= 3);
 
 console.log("ESM smoke: all exports OK");

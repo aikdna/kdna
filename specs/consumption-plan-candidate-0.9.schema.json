@@ -1,0 +1,349 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schemas/consumption-plan-candidate-0.9.schema.json",
+  "title": "KDNA ConsumptionPlan 0.9 Candidate",
+  "description": "Candidate pre-execution plan for one KDNA use. Determined before any model call. mode=single or mode=cluster. The plan records intent; the Trace records observed execution.",
+  "type": "object",
+  "required": ["plan_version", "plan_id", "mode", "task", "load_plan_ref", "applicability", "projection_ref", "budget", "trace_policy"],
+  "properties": {
+    "plan_version": {
+      "type": "string",
+      "const": "0.9.0",
+      "description": "ConsumptionPlan candidate schema version."
+    },
+    "plan_id": {
+      "type": "string",
+      "pattern": "^plan_[0-9a-f]{16}$",
+      "description": "Unique plan identifier. Deterministic for same (asset, task, context) tuple."
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["single", "cluster"],
+      "description": "Execution mode. Set once per plan and immutable."
+    },
+
+    "asset_ref": {
+      "type": "object",
+      "description": "Required when mode=single. The asset to be consumed.",
+      "required": ["asset_id", "version", "digest"],
+      "properties": {
+        "asset_id": { "type": "string" },
+        "version": { "type": "string" },
+        "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "access": { "type": "string", "enum": ["public", "licensed", "remote"] }
+      },
+      "additionalProperties": false
+    },
+
+    "cluster_ref": {
+      "type": "object",
+      "description": "Required when mode=cluster. The cluster manifest that governs composition.",
+      "required": ["cluster_id", "version", "manifest_digest"],
+      "properties": {
+        "cluster_id": { "type": "string" },
+        "version": { "type": "string" },
+        "manifest_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+
+    "task": {
+      "type": "object",
+      "required": ["summary", "input_hash"],
+      "properties": {
+        "summary": { "type": "string", "maxLength": 500 },
+        "task_family": { "type": "string" },
+        "input_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{16,128}$" },
+        "context": { "type": "object", "description": "Optional additional context" }
+      },
+      "additionalProperties": true
+    },
+
+    "load_plan_ref": {
+      "type": "object",
+      "required": ["plan_id", "status"],
+      "properties": {
+        "plan_id": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["ready", "blocked", "remote_unreachable", "integrity_unknown",
+                   "digest_mismatch", "revoked", "expired", "unauthorized",
+                   "format_invalid", "unknown_access_mode"]
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": { "type": "string" },
+              "message": { "type": "string" },
+              "blocking": { "type": "boolean" }
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "applicability": {
+      "type": "object",
+      "required": ["decision"],
+      "properties": {
+        "decision": {
+          "type": "string",
+          "enum": ["applies", "does_not_apply", "ask", "blocked"],
+          "description": "Whether the asset/cluster applies to this task."
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "none"]
+        },
+        "matched_signals": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "boundary_check": {
+          "type": "object",
+          "properties": {
+            "in_scope": { "type": "boolean" },
+            "warnings": { "type": "array", "items": { "type": "string" } },
+            "not_applicable_reasons": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "load_condition_met": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+
+    "projection_ref": {
+      "type": "object",
+      "properties": {
+        "shape": {
+          "type": "string",
+          "enum": ["answer-pattern", "compact", "scenario", "full"]
+        },
+        "content_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "description": "Deterministic hash of projection content for (asset, shape, task_family)."
+        },
+        "inline": {
+          "type": "boolean",
+          "description": "true = projection content embedded in plan. false = reference only.",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "budget": {
+      "type": "object",
+      "required": ["profile"],
+      "properties": {
+        "profile": {
+          "type": "string",
+          "enum": ["interactive", "code-review", "offline-audit"]
+        },
+        "max_tokens": { "type": "integer", "minimum": 0 },
+        "max_chars": { "type": "integer", "minimum": 0 },
+        "max_assets": { "type": "integer", "minimum": 1 },
+        "assets_consumed": { "type": "integer", "minimum": 0, "description": "Number of assets selected (1 for single, 1+N for cluster)" }
+      },
+      "additionalProperties": false
+    },
+
+    "runner": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "const": "registered" },
+        "runner_id": { "type": "string" },
+        "adapter_version": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "evidence_refs": {
+      "type": "array",
+      "description": "References to previous Evidence Claims or Traces relevant to this plan.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ref_type": { "type": "string", "enum": ["evidence_claim", "trace", "result"] },
+          "ref_id": { "type": "string" },
+          "digest": { "type": "string" }
+        }
+      }
+    },
+
+    "trace_policy": {
+      "type": "object",
+      "required": ["emit", "storage"],
+      "properties": {
+        "emit": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["decision", "cost", "projection", "provenance", "result", "self_checks", "axioms_triggered"] }
+        },
+        "storage": {
+          "type": "string",
+          "enum": ["ephemeral", "session", "persistent"]
+        },
+        "retention_hours": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "0 = no retention guarantee. Only meaningful when storage=pollistent."
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "expected_outcome": {
+      "type": "object",
+      "description": "What shape the result should take. Runner must validate result against this.",
+      "properties": {
+        "result_shape": { "type": "string", "enum": ["answer-pattern", "compact", "scenario", "full"] },
+        "required_fields": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "primary_required": { "type": "boolean" },
+        "advisor_optional": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+
+    "selection": {
+      "type": "object",
+      "description": "Cluster-mode selection. Present only when mode=cluster.",
+      "required": ["primary"],
+      "properties": {
+        "primary": {
+          "type": "object",
+          "required": ["asset_id", "version", "digest", "role"],
+          "properties": {
+            "asset_id": { "type": "string" },
+            "version": { "type": "string" },
+            "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+            "role": { "type": "string", "const": "primary" },
+            "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+            "selection_reason": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "advisors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["asset_id", "version", "digest", "role", "contribution_hypothesis"],
+            "properties": {
+              "asset_id": { "type": "string" },
+              "version": { "type": "string" },
+              "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+              "role": { "type": "string", "const": "advisor" },
+              "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+              "contribution_hypothesis": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Mandatory distinct contribution this advisor provides beyond the primary."
+              },
+              "accepted": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "rejected": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["asset_id", "role", "rejection_reason"],
+            "properties": {
+              "asset_id": { "type": "string" },
+              "version": { "type": "string" },
+              "role": { "type": "string" },
+              "rejection_reason": { "type": "string" },
+              "rejection_policy": { "type": "string", "enum": ["exclude_non_matching", "budget_limit", "duplicate_coverage", "no_contribution_hypothesis", "entitlement_failed", "version_superseded"] }
+            },
+            "additionalProperties": false
+          }
+        },
+        "conflicts_detected": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "assets": { "type": "array", "items": { "type": "string" } },
+              "description": { "type": "string" },
+              "severity": { "type": "string", "enum": ["error", "warn"] }
+            }
+          }
+        },
+        "budget_check": {
+          "type": "object",
+          "properties": {
+            "assets_selected": { "type": "integer" },
+            "max_assets": { "type": "integer" },
+            "within_budget": { "type": "boolean" }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "conflicts": {
+      "type": "array",
+      "description": "Conflicts surfaced during plan. Cluster mode only.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "assets": { "type": "array", "items": { "type": "string" } },
+          "description": { "type": "string" },
+          "resolution": { "type": "string", "enum": ["surfaced", "priority_wins", "risk_wins", "blocked", "ask_user", "unresolved"] }
+        }
+      }
+    },
+
+    "composition_policy_ref": {
+      "type": "object",
+      "description": "Cluster composition policy. Present only when mode=cluster.",
+      "properties": {
+        "strategy": { "type": "string", "enum": ["fixed", "signal_based", "staged", "overlay", "user_confirmed"] },
+        "conflict_policy": { "type": "string", "enum": ["surface", "priority", "block", "ask_user"] },
+        "priority_order": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "degradation_policy": {
+      "type": "object",
+      "description": "What happens when assets fail. Cluster mode only.",
+      "properties": {
+        "primary_unavailable": { "type": "string", "enum": ["block"] },
+        "required_advisor_unavailable": { "type": "string", "enum": ["block", "continue_with_warning"] },
+        "optional_advisor_unavailable": { "type": "string", "enum": ["continue_with_warning"] },
+        "budget_exceeded": { "type": "string", "enum": ["block", "warn", "degrade"] }
+      }
+    },
+
+    "metadata": {
+      "type": "object",
+      "description": "Extensible metadata.",
+      "properties": {
+        "environment": { "type": "string", "enum": ["development", "staging", "production"] },
+        "plan_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      }
+    }
+  },
+
+  "allOf": [
+    {
+      "if": { "properties": { "mode": { "const": "single" } } },
+      "then": { "required": ["asset_ref"] }
+    },
+    {
+      "if": { "properties": { "mode": { "const": "cluster" } } },
+      "then": { "required": ["cluster_ref", "selection", "composition_policy_ref"] }
+    }
+  ],
+
+  "additionalProperties": true
+}

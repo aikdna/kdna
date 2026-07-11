@@ -1,0 +1,20 @@
+{
+  "name": "example_cluster",
+  "version": "0.1.0",
+  "purpose": "Test cluster for migration verification.",
+  "packages": [
+    { "id": "domain_one", "role": "primary", "use_when": ["deploy", "rollback", "production"] },
+    { "id": "domain_two", "role": "advisor", "use_when": ["api", "endpoint", "REST"] },
+    { "id": "domain_three", "role": "constraint", "use_when": ["auth", "security"] },
+    { "id": "domain_four", "role": "critic", "use_when": ["review"] }
+  ],
+  "composition_rules": [
+    "Rule 1: deploy risk takes priority over API design concerns.",
+    "Rule 2: security constraints override all other judgments."
+  ],
+  "routing_questions": [
+    "Does this task involve a production deploy?",
+    "Is a new API endpoint being introduced?",
+    "Does the change touch authentication or authorization?"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "format": "kdna-cluster",
+  "format_version": "0.9.0",
+  "cluster_id": "@aikdna/test-cluster",
+  "name": "Test Cluster Advisor No Hypothesis",
+  "version": "0.1.0",
+  "type": "vertical",
+  "domains": [
+    {
+      "id": "@aikdna/domain-one",
+      "version": "^0.1.0",
+      "role": "primary-candidate",
+      "required": true,
+      "load_condition": "Applies to all tasks."
+    },
+    {
+      "id": "@aikdna/domain-two",
+      "version": "^0.1.0",
+      "role": "advisor",
+      "required": false
+    }
+  ],
+  "composition": {
+    "strategy": "fixed",
+    "conflict_policy": "surface"
+  }
+}

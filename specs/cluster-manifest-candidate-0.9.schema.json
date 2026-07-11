@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schemas/cluster-manifest-candidate-0.9.schema.json",
+  "title": "KDNA Cluster Manifest 0.9 Candidate",
+  "description": "Canonical candidate schema for kdna.cluster.json — the single Cluster format that replaces legacy packages-based, Schema B domains-based, and consume.js route/compose definitions. Defines a composable judgment system of independently qualified KDNA assets with explicit selection, conflict, budget, trace, and evaluation rules.",
+  "type": "object",
+  "required": ["format", "format_version", "cluster_id", "name", "version", "domains", "composition"],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "kdna-cluster",
+      "description": "Discriminant: this is a KDNA Cluster manifest, not a Bundle, Collection, or Work Pack."
+    },
+    "format_version": {
+      "type": "string",
+      "const": "0.9.0"
+    },
+    "cluster_id": {
+      "type": "string",
+      "description": "Fully qualified cluster identifier, e.g., @aikdna/launch-decision."
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable cluster name."
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version of this cluster manifest."
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "What judgment system this cluster provides."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["horizontal", "vertical", "governance"],
+      "description": "Cluster type. horizontal = peers in same domain. vertical = layered (primary + specialists). governance = oversight + execution."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "schema_valid", "assets_resolved", "route_evaluated", "compose_evaluated",
+               "holdout_passed", "human_reviewed", "field_validated", "production"],
+      "default": "draft"
+    },
+    "access": {
+      "type": "string",
+      "enum": ["public", "licensed", "remote"],
+      "default": "public"
+    },
+
+    "domains": {
+      "type": "array",
+      "minItems": 2,
+      "description": "Referenced KDNA assets. Must be independently loadable. At least one must be primary-candidate.",
+      "items": {
+        "type": "object",
+        "required": ["id", "version", "role", "required"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Fully qualified domain/asset name, e.g., @aikdna/dev-change-risk."
+          },
+          "version": {
+            "type": "string",
+            "description": "Semver range, e.g., ^0.1.0."
+          },
+          "digest": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "description": "Optional pinned digest. If present, only this exact version is accepted."
+          },
+          "role": {
+            "type": "string",
+            "enum": ["primary-candidate", "advisor", "constraint", "critic"],
+            "description": "primary-candidate = eligible for primary selection. advisor = provides distinct domain knowledge. constraint = hard boundary (experimental in 0.9). critic = post-hoc evaluation (experimental in 0.9)."
+          },
+          "required": {
+            "type": "boolean",
+            "description": "If true, the cluster plan is blocked when this asset cannot load or authorize."
+          },
+          "load_condition": {
+            "type": "string",
+            "description": "Human-readable condition for when this asset should activate."
+          },
+          "contribution_hypothesis_template": {
+            "type": "string",
+            "description": "Template for the advisor's contribution hypothesis. Required for advisor role. Must reference task-specific aspects the primary does not cover."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "composition": {
+      "type": "object",
+      "required": ["strategy", "conflict_policy"],
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["signal_based", "fixed", "staged", "user_confirmed"],
+          "description": "How assets are selected for composition. signal_based = classify task signals against domain triggers. fixed = always use the same primary+advisors. staged = multi-round. user_confirmed = ask user before finalizing."
+        },
+        "max_active_domains": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Hard maximum assets to include. Includes primary."
+        },
+        "default_primary": {
+          "type": "string",
+          "description": "Optional. Default primary when signal-based selection cannot determine."
+        },
+        "conflict_policy": {
+          "type": "string",
+          "enum": ["surface", "priority", "block", "ask_user"],
+          "description": "How to handle inter-asset conflicts."
+        },
+        "priority_order": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ordered list of asset IDs, highest priority first. Used for tie-breaking and conflict resolution."
+        },
+        "primary_selection": {
+          "type": "string",
+          "enum": ["exactly_one", "user_selects", "highest_match"],
+          "default": "exactly_one",
+          "description": "How to select the primary from primary-candidate domains."
+        },
+        "advisor_selection": {
+          "type": "string",
+          "enum": ["contribution_hypothesis_required", "all_matching", "manual_only"],
+          "default": "contribution_hypothesis_required",
+          "description": "How to filter advisor candidates."
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "budget": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "type": "string",
+          "enum": ["interactive", "code-review", "offline-audit"],
+          "default": "interactive"
+        },
+        "max_tokens": { "type": "integer", "minimum": 0 },
+        "max_chars": { "type": "integer", "minimum": 0 },
+        "max_assets": { "type": "integer", "minimum": 1 },
+        "enforcement": {
+          "type": "string",
+          "enum": ["hard", "warn"],
+          "default": "hard",
+          "description": "hard = block when over budget. warn = continue but flag."
+        }
+      }
+    },
+
+    "degradation_policy": {
+      "type": "object",
+      "description": "What happens when assets fail.",
+      "properties": {
+        "primary_unavailable": { "type": "string", "const": "block" },
+        "required_advisor_unavailable": {
+          "type": "string",
+          "enum": ["block", "continue_with_warning"],
+          "default": "block"
+        },
+        "optional_advisor_unavailable": {
+          "type": "string",
+          "enum": ["continue_with_warning"],
+          "default": "continue_with_warning"
+        },
+        "budget_exceeded": {
+          "type": "string",
+          "enum": ["block", "warn", "degrade"],
+          "default": "block"
+        }
+      }
+    },
+
+    "relationships": {
+      "type": "array",
+      "description": "Known relationships between assets in this cluster.",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "type"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["depends_on", "constrains", "overrides", "blocks", "informs", "extends", "refines", "conflicts_with", "evaluates"]
+          },
+          "description": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "evaluation": {
+      "type": "object",
+      "description": "Cluster-level evaluation requirements. Only populated after cluster is behavior-evaluated.",
+      "properties": {
+        "eval_dataset_ref": { "type": "string" },
+        "minimum_primary_selection_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "minimum_advisor_contribution_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "required_comparison_arms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["primary_only", "bounded_compose", "wrong_advisor", "irrelevant_advisor",
+                     "budget_waste", "adversarial", "no_kdna"]
+          }
+        },
+        "replay_suites": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["repair", "holdout", "fresh", "candidate-sealed", "new-sealed"]
+          }
+        }
+      }
+    },
+
+    "experimental": {
+      "type": "object",
+      "description": "Experimental extensions. Fields here may change or be removed without notice. Nothing in experimental may be required for basic cluster operation.",
+      "properties": {
+        "constraint_roles": {
+          "type": "array",
+          "description": "Experimental constraint role configurations.",
+          "items": { "type": "object" }
+        },
+        "critic_roles": {
+          "type": "array",
+          "description": "Experimental critic role configurations.",
+          "items": { "type": "object" }
+        },
+        "work_pack_integration": {
+          "type": "object",
+          "description": "Experimental Work Pack integration. Do not copy Cluster policy into Work Pack."
+        }
+      },
+      "additionalProperties": true
+    },
+
+    "migration": {
+      "type": "object",
+      "description": "Migration metadata. Populated when this manifest was auto-migrated from a legacy format.",
+      "properties": {
+        "migrated_from": {
+          "type": "string",
+          "enum": ["legacy-packages", "schema-b-domains", "consume-js", null]
+        },
+        "migration_date": { "type": "string", "format": "date" },
+        "migration_report_ref": { "type": "string" },
+        "manual_decisions_required": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "semantic_loss_warnings": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  },
+
+  "additionalProperties": false
+}
