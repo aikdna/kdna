@@ -10,6 +10,7 @@ const {
   createBaselineArm,
   createAllBaselineArms,
   scoreJudgment,
+  runAssay,
   detectContamination,
   evaluateNonApplicable,
   classifyAsset,
@@ -166,6 +167,41 @@ it('scores poor judgment (missing answer)', () => {
   const score = scoreJudgment({}, { answer: 'expected' });
   assert.strictEqual(score.score, 1);
   assert.strictEqual(score.dimensions.classification, 1);
+});
+
+it('uses preregistered blind score when an observation provides score_5pt', () => {
+  const score = scoreJudgment({ answer: 'Observed answer', score_5pt: 4.7 }, {});
+  assert.strictEqual(score.score, 4.7);
+  assert.ok(score.notes.some(note => note.includes('observed blind score')));
+});
+
+it('behavioral gate accepts a 30% critical-error reduction when mean scores tie', async () => {
+  const profile = createAssayProfile({
+    assetId: 'critical-error-test',
+    thresholds: {
+      positive_target_min_count: 0,
+      non_applicable_min_count: 0,
+      adjacent_ambiguous_min_count: 0,
+      high_risk_failure_min_count: 0,
+      regression_min_count: 0,
+      holdout_required: false,
+      non_applicable_accuracy_min: 0,
+      regression_pass_required: false,
+    },
+  });
+  const fixtures = [createFixture({ category: 'positive_target', task: 'test', expected: {} })];
+  const assay = await runAssay({
+    profile,
+    fixtures,
+    runner: async (_fixture, arm) => ({
+      answer: 'Same mean quality',
+      score_5pt: 3,
+      critical_errors: arm.arm === 'no_kdna' ? 2 : 0,
+    }),
+  });
+  assert.strictEqual(assay.threshold_results.blind_improvement.pass, true);
+  assert.strictEqual(assay.threshold_results.blind_improvement.detail.mean_improvement, 0);
+  assert.strictEqual(assay.threshold_results.blind_improvement.detail.critical_error_reduction_pct, 100);
 });
 
 it('scores judgment with 5 operationalized axioms', () => {

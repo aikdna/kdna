@@ -1,53 +1,65 @@
-# Enterprise KDNA Pilot
+# Team and Organization Pilot
 
-A framework for organizations to encode internal expert judgment into private KDNA packages.
+Organizations are one KDNA use case, not the definition of KDNA. This guide
+tests whether an explicit judgment asset survives model changes and improves a
+specific, bounded decision context.
 
-## Why Enterprise KDNA
+## Choose a Bounded Judgment
 
-Your company has SOPs. But SOPs encode procedures — what to do, in what order.
+Select one recurring situation where experienced people make a meaningfully
+different distinction from a generalist. Avoid organization-wide scope.
 
-KDNA encodes expert judgment — how to decide what kind of situation this is before acting.
+Examples include escalation judgment, design review standards, incident risk,
+editorial taste, or deciding when a workflow must stop for human review.
 
-| SOPs answer | KDNA answers |
-|---|---|
-| How to process a customer complaint | Is this a service failure, a product defect, or an expectation gap? |
-| How to review a candidate | Is the gap in skill, fit, or our interview process? |
-| How to run a project retrospective | Was the delay a planning failure, a dependency failure, or a scope creep failure? |
+## Create One Asset First
 
-## Pilot Structure
+Use the public Studio toolchain to create a scoped asset. Human review and
+Evidence are optional unless the organization wants to make a corresponding
+claim.
 
-### Phase 1: Discovery (Week 1-2)
-- Identify 2-3 high-frequency judgment scenarios where expert judgment differs from novice judgment
-- Collect 5-10 real examples of each scenario
-- Document the expert's diagnostic process: what signals they notice, what questions they ask first
+```bash
+npm install -g @aikdna/kdna-studio-cli @aikdna/kdna-cli
+kdna-studio create ./pilot --name @example/pilot
+kdna-studio export ./pilot --out ./pilot.kdna
+kdna validate ./pilot.kdna
+kdna plan-load ./pilot.kdna
+kdna load ./pilot.kdna --profile=compact --as=prompt
+```
 
-### Phase 2: Encoding (Week 3-4)
-- For each scenario, create a minimal KDNA package (Core + Patterns)
-- Write axioms: the 2-3 principles that guide expert judgment in this scenario
-- Write misunderstandings: what novices typically get wrong
-- Write self-checks: the yes/no questions the expert asks themselves before deciding
-- Validate with `kdna dev validate`
+Start with a single asset. Use a Cluster only when the task genuinely needs
+multiple scoped judgment assets under explicit roles.
 
-### Phase 3: Testing (Week 5-6)
-- Create 5-10 before/after test cases per package
-- Compare agent output without KDNA vs with KDNA
-- Score using `kdna verify`
-- Iterate based on expert review of agent outputs
+## Test the Judgment, Not the Vocabulary
 
-### Phase 4: Integration (Week 7-8)
-- Deploy packages to team agent runtime
-- Train team on how to invoke KDNA-loaded judgment
-- Establish update cadence (monthly review of new cases)
-- Optionally organize packages into a cluster for complex scenarios
+Use real tasks and compare:
 
-## Private Infrastructure
+1. the same model without KDNA;
+2. the same model with the asset;
+3. a different model with the same asset;
+4. non-applicable tasks, where the asset should skip, block, or ask.
 
-Enterprise KDNA packages are private assets. They can be:
-- Stored in private GitHub repositories
-- Loaded from local directories on team machines
-- Served through KDNA Runtime with license verification
-- Organized into internal clusters for cross-functional judgment
+Review the actual decision, boundary use, error type, and consistency. A model
+repeating asset terminology is not proof of useful judgment transfer.
 
-## Contact
+The optional evaluation path is:
 
-For enterprise pilot inquiries: team@aikdna.com
+```text
+validate → plan-load → load/project → eval/replay → expert review
+```
+
+## Access and Deployment
+
+- Use `public` when content secrecy is not required.
+- Evaluate the release-specific `licensed` lifecycle before relying on local
+  encrypted distribution.
+- Treat remote and activation servers as self-hostable experimental reference
+  implementations unless their release notes state otherwise.
+- Do not depend on a private registry or AIKDNA-hosted service.
+
+## Exit Criteria
+
+A pilot is informative when it has a pinned asset, reproducible tasks, a
+baseline, model-swap results, non-applicable cases, observed failures, and a
+rollback path. It does not need to prove universal quality or become an
+AIKDNA-published reference asset.

@@ -108,6 +108,17 @@ it('trust gate fails with unverified primary', () => {
   assert.strictEqual(g.pass, false);
 });
 
+it('trust gate is not_run when observed load evidence is absent', () => {
+  const g = trustGate(null);
+  assert.strictEqual(g.pass, null);
+  assert.strictEqual(g.details.status, 'not_run');
+});
+
+it('trust gate fails when execution observed zero loaded assets', () => {
+  const g = trustGate([]);
+  assert.strictEqual(g.pass, false);
+});
+
 it('product gate passes with complete manifest', () => {
   const g = productGate({}, CANONICAL_MANIFEST);
   assert.strictEqual(g.pass, true);
@@ -147,6 +158,10 @@ it('runs full cluster assay with valid plan', () => {
   assert.ok(result.gates.product);
   assert.strictEqual(result.cluster_id, '@aikdna/launch-decision');
   assert.strictEqual(result.fixture_count, 1);
+  assert.strictEqual(result.verdict.overall, 'fail');
+  assert.strictEqual(result.verdict.all_passed, false);
+  assert.ok(result.verdict.incomplete_gates.includes('behavioral'));
+  assert.ok(result.verdict.incomplete_gates.includes('trust'));
 });
 
 // ── Advisor Relation Ledger ───────────────────────────────────────────

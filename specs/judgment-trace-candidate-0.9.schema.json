@@ -35,16 +35,23 @@
     "asset_identity": {
       "description": "Single-asset identity. Required when mode=single.",
       "type": "object",
-      "required": ["asset_id", "version", "digest", "digest_verified"],
+      "required": ["asset_id", "version", "digest_verified"],
       "properties": {
         "asset_id": { "type": "string" },
         "version": { "type": "string" },
-        "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "digest": {
+          "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }]
+        },
         "digest_verified": { "type": "boolean" },
         "signature_verified": { "type": ["boolean", "null"] },
-        "revocation_status": { "type": "string", "enum": ["not_revoked", "revoked", "unknown"] },
+        "revocation_status": {
+          "type": ["string", "null"],
+          "enum": ["not_revoked", "revoked", "unknown", null]
+        },
         "authorization": { "type": "string" },
-        "projection_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+        "projection_digest": {
+          "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }]
+        }
       },
       "additionalProperties": true
     },
@@ -102,7 +109,7 @@
       "type": "object",
       "description": "Cluster-mode actual selection. Deviations from plan are flagged.",
       "properties": {
-        "primary": { "type": "string" },
+        "primary": { "type": ["string", "null"] },
         "advisors": { "type": "array", "items": { "type": "string" } },
         "rejected": {
           "type": "array",
@@ -110,7 +117,7 @@
             "type": "object",
             "properties": {
               "asset_id": { "type": "string" },
-              "reason": { "type": "string" }
+              "reason": { "type": ["string", "null"] }
             }
           }
         },
@@ -139,11 +146,15 @@
         },
         "runner_id": { "type": "string" },
         "runner_version": { "type": "string" },
-        "model": { "type": "string" },
+        "model": { "type": ["string", "null"] },
         "started_at": { "type": "string", "format": "date-time" },
         "completed_at": { "type": "string", "format": "date-time" },
         "duration_ms": { "type": "integer" },
-        "attempts": { "type": "integer", "minimum": 1, "description": "Number of runner attempts (1 = first try succeeded)" },
+        "attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of runner attempts (1 = first try succeeded)"
+        },
         "deadline_ms": { "type": "integer", "description": "Configured execution deadline." },
         "cancel_reason": { "type": "string", "description": "Populated when status=cancelled." }
       },
@@ -157,7 +168,10 @@
         "result_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
         "result_shape": { "type": "string" },
         "answer_summary": { "type": "string", "maxLength": 200 },
-        "result_stored": { "type": "boolean", "description": "Whether the full result is retrievable." }
+        "result_stored": {
+          "type": "boolean",
+          "description": "Whether the full result is retrievable."
+        }
       }
     },
 
@@ -169,14 +183,27 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["value_conflict", "term_conflict", "stance_conflict", "recommendation_conflict", "framework_conflict"]
+            "enum": [
+              "value_conflict",
+              "term_conflict",
+              "stance_conflict",
+              "recommendation_conflict",
+              "framework_conflict"
+            ]
           },
           "assets": { "type": "array", "items": { "type": "string" } },
           "primary_says": { "type": "string" },
           "advisor_says": { "type": "string" },
           "resolution": {
             "type": "string",
-            "enum": ["surfaced", "priority_wins", "risk_wins", "blocked", "asked_user", "unresolved"]
+            "enum": [
+              "surfaced",
+              "priority_wins",
+              "risk_wins",
+              "blocked",
+              "asked_user",
+              "unresolved"
+            ]
           },
           "resolved_by": { "type": "string", "enum": ["human", "policy", "auto", null] }
         }
@@ -216,7 +243,15 @@
           "items": {
             "type": "object",
             "properties": {
-              "type": { "type": "string", "enum": ["banned_term_used", "boundary_crossed", "risk_triggered", "self_check_failed"] },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "banned_term_used",
+                  "boundary_crossed",
+                  "risk_triggered",
+                  "self_check_failed"
+                ]
+              },
               "severity": { "type": "string", "enum": ["error", "warning", "info"] },
               "description": { "type": "string" },
               "asset_id": { "type": "string" }
@@ -253,10 +288,10 @@
     "provenance": {
       "type": "object",
       "properties": {
-        "plan_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "plan_digest": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" },
         "policy_hash": { "type": ["string", "null"] },
         "consumer_index_version": { "type": ["string", "null"] },
-        "cluster_manifest_digest": { "type": "string" },
+        "cluster_manifest_digest": { "type": ["string", "null"] },
         "route_card_version": { "type": ["string", "null"] }
       }
     },
@@ -292,7 +327,9 @@
       "then": { "required": ["cluster_identity", "assets_loaded", "selection_actual"] }
     },
     {
-      "if": { "properties": { "execution": { "properties": { "status": { "const": "completed" } } } } },
+      "if": {
+        "properties": { "execution": { "properties": { "status": { "const": "completed" } } } }
+      },
       "then": { "required": ["result_ref"] }
     }
   ],

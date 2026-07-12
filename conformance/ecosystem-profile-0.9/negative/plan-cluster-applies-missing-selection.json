@@ -1,0 +1,39 @@
+{
+  "plan_version": "0.9.0",
+  "plan_id": "plan_0000000000000002",
+  "mode": "cluster",
+  "cluster_ref": {
+    "cluster_id": "@aikdna/launch-decision",
+    "version": "0.1.0",
+    "manifest_digest": "sha256:a26a95d6dc23d6d91a212e87b2b96ad6644b078dc7f92e499386645844f9ad23"
+  },
+  "task": {
+    "summary": "Deploy the API change",
+    "input_hash": "sha256:0000000000000002"
+  },
+  "load_plan_ref": {
+    "plan_id": "plan_0000000000000002",
+    "status": "ready"
+  },
+  "applicability": {
+    "decision": "applies",
+    "confidence": "high"
+  },
+  "projection_ref": {
+    "shape": "compact",
+    "content_digest": "sha256:d5ab8a56350b20dfc0e9be82290c14ac20c8f52faef37549454ab9f70aef9336"
+  },
+  "budget": {
+    "profile": "interactive",
+    "max_assets": 3,
+    "assets_consumed": 1
+  },
+  "trace_policy": {
+    "emit": ["decision", "cost"],
+    "storage": "ephemeral"
+  },
+  "composition_policy_ref": {
+    "strategy": "signal_based",
+    "conflict_policy": "surface"
+  }
+}

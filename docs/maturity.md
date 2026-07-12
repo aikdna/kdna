@@ -1,94 +1,65 @@
 # KDNA Maturity Disclosure
 
-> **Current status: Beta** — last updated 2026-07-10.
-> The README top-line maturity badge links here. Update both together.
+> **Current product maturity: Beta.** This page separates protocol validity,
+> implementation maturity, and optional asset evidence.
 
-## What "Beta" means for KDNA
+## What Beta Means
 
-KDNA is an open file format for packaging scoped judgment. The project has reached a point where the **core format and runtime contract are stable** and the **official toolchain is published to npm and tested end-to-end**, but v1.x features are still landing. Specifically:
+The KDNA Asset Container and local public-asset path are stable enough for
+integration and conformance testing. Other layers mature independently. A
+stable container does not make every runtime, adapter, server, or asset
+production-ready.
 
-### Stable today (you can rely on these)
+| Surface | Maturity |
+|---|---|
+| Asset container, manifest, CBOR payload, checksums | Stable baseline |
+| Local public `validate → plan-load → load` | Stable baseline |
+| Runtime Capsule contract | Stable baseline in the JS reference path |
+| Studio authoring/export | Beta |
+| Single-asset task-aware runtime | Beta |
+| Cluster runtime and Cluster Assay | Beta |
+| Signing and revocation | Beta |
+| Licensed access and encrypted lifecycle | Candidate; confirm release-specific conformance |
+| Remote access protocol | Candidate |
+| Remote and activation reference servers | Experimental and self-hosted |
+| Swift, React, and Web parity | Beta / experimental by repository |
 
-- **`.kdna` v1 file format** — container layout, mimetype, required entries,
-  payload profile schema. Backed by `schema/manifest.schema.json` and
-  `schema/payload-profile-v1.schema.json` in this repo.
-- **Runtime loading contract** — `kdna plan-load` + `kdna load`, with
-  `index` / `compact` / `scenario` / `full` profiles. Apps MUST NOT infer
-  load permission from raw manifest fields.
-- **Encryption envelope** — `kdna-password-protected-v1-scrypt` (B2 scrypt)
-  is the canonical password-protected envelope as of `kdna-core@0.15.0`
-  (2026-06-27). The legacy Argon2id profile (`kdna-password-protected-v1`)
-  is deprecated but still loadable.
-- **Official toolchain on npm** — `@aikdna/kdna-cli`, `@aikdna/kdna-core`,
-  `@aikdna/kdna-studio-cli`, `@aikdna/kdna-studio-core`. Each is published
-  with CHANGELOG entry, npm provenance, and CI gate.
-- **Conformance suite** — `conformance/canonical-conformance.mjs` is the
-  authoritative test for the v1 format and contract.
+## Four Things That Must Not Be Collapsed
 
-### Pre-1.0 features (expect breaking changes before v1.0 GA)
+1. **Format validity** — the asset follows the KDNA container and schema.
+2. **Integrity and provenance** — bytes, digests, and optional signatures agree.
+3. **Behavior evidence** — an optional evaluation observed a result.
+4. **Product readiness** — a specific application or deployment accepts the
+   operational risk.
 
-- **Signature envelope** — `signature.kdsig` is **OPTIONAL until 2027-Q1**
-  (SPEC §3.2). The hard cutover for REQUIRED is end of March 2027. Until
-  then, assets distributed without `signature.kdsig` remain conformant.
-- **Registry / signed publication** — the canonical registry schema is v2.0
-  but a hosted registry is not part of the public baseline yet. The
-  KDNA Studio `publish --check` quality gate exists; a hosted registry
-  is post-v1.0.
-- **Remote runtime** — `kdna load --remote-server <url>` is available for self-hosted projection servers. There is no AIKDNA-hosted load endpoint; all production use requires your own `@aikdna/kdna-remote-server` instance or direct local loading.
-- **Paid authorization** — `kdna-licensed-entry-v1` KDF profile is
-  defined and tested, but the commercial license-generation / delivery
-  flow is not part of the public baseline.
-- **Consumption runtime** — route, compose, project, replay, and sidecar
-  review tools are available as beta integration surfaces. Their policy and
-  sidecar schemas can evolve independently from the `.kdna` file format.
-- **Card v2 / Product Runtime / WorkPack** — these features may evolve before
-  their interoperability guarantees are finalized.
-- **Cross-language parity** — `@aikdna/kdna-core` (JS) is the public
-  first-run path. `kdna-core-swift` and `kdna-studio-swift` are
-  beta until parity is proven against fixed Core v1 conformance
-  fixtures published through the public Swift repositories.
+Passing one layer does not imply the others. KDNA Core never converts these
+facts into a judgment that the content is correct, high-quality, or officially
+recommended.
 
-### Not part of the public baseline
+## Asset Creation and Publication
 
-- A hosted registry, marketplace, or universal asset recommendation service.
-- A guarantee that any asset or composition improves every model or task.
+Anyone can create, package, publish, modify, and distribute a KDNA asset
+through the public protocol and toolchain. Evidence, review, signature,
+registry listing, or AIKDNA approval are not creation requirements.
 
-## Release cadence
+Authors choose whether an asset is public, licensed, or remote. Consumers
+choose which authors, evidence, signatures, and policies they require.
 
-- `kdna-core` follows a **feature-versioned** 1.x line (Card v2, Product
-  Runtime, B2 scrypt) within the same major. Confirm with maintainers
-  before publishing breaking changes within 1.x.
-- `kdna-cli` follows semantic versioning within its pre-1.0 line. Pin a
-  version in production integrations and review release notes before upgrades.
-- `kdna-studio-cli` and `kdna-studio-core` are 0.x and 1.x respectively
-  for the same reason.
-- Each release is gated by CHANGELOG entry, npm provenance, and
-  CI pass. Past that gate, anything that touches the runtime contract
-  is a v1.0 candidate.
+## Package Versions and the Asset Format
 
-## How to use this disclosure
+Toolchain packages use their own release versions. Those package versions are
+not separate KDNA product formats. Active user documentation describes one
+current KDNA Asset Container; schema and protocol documents carry the technical
+compatibility identifiers needed by implementations.
 
-If you are integrating KDNA into a production agent system:
+## Not in the Public Baseline
 
-- **Public assets from `aikdna/kdna-assets`** — validate the release file and
-  apply an integration policy appropriate to your use case.
-- **Custom assets authored by your team** — validate and pin the
-  toolchain version (`@aikdna/kdna-cli@<pinned>`,
-  `@aikdna/kdna-studio-cli@<pinned>`) and read the CHANGELOG before
-  bumping.
-- **Self-published assets to others** — wait for v1.0 GA. The signature
-  envelope is OPTIONAL today; if you want attestable provenance now,
-  layer it on top of KDNA's existing encryption envelope (see RFC-0009).
+- an AIKDNA-hosted registry or universal discovery service;
+- a marketplace, billing service, or mandatory commercial platform;
+- an AIKDNA-hosted remote loading endpoint;
+- universal content ranking, certification, or recommendation;
+- a guarantee that an asset improves every model or task;
+- a complete memory, learning, evaluation, or deployment platform.
 
-## How to report issues
-
-- **Format, schema, or contract ambiguity** — open an issue on
-  [aikdna/kdna](https://github.com/aikdna/kdna/issues).
-- **CLI / Studio / Core bugs** — open on the corresponding repo.
-- **Security** — see `SECURITY.md` for the private disclosure channel.
-
-## Update policy
-
-This document is updated whenever the maturity badge in the README
-changes. If you see a discrepancy between the two, the badge is
-authoritative and this file is out of date — open an issue.
+For a specific package, use its release notes and CI evidence. For product
+boundaries, see [Core Narrative and Boundaries](./core-narrative-and-boundaries.md).

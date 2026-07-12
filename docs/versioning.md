@@ -50,7 +50,7 @@ A public `.kdna` release should update these surfaces:
 4. **Package metadata** → only if the asset is distributed through an npm
    package or another package manager
 
-Registry metadata is not part of the current KDNA Core v1 public beta path.
+Registry metadata is not part of the current KDNA public baseline.
 
 ## Package Version vs Spec Version
 

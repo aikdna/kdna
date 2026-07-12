@@ -18,7 +18,7 @@
   },
   "payload": {
     "path": "payload.kdnab",
-    "encoding": "json",
+    "encoding": "cbor",
     "encrypted": false
   },
   "summary": "Phase 1 minimal example. The smallest valid KDNA v1 asset.",
@@ -33,10 +33,22 @@
   "load_contract": {
     "default_profile": "compact",
     "profiles": {
-      "index": { "requires_decryption": false, "max_tokens_hint": 200 },
-      "compact": { "requires_decryption": false, "max_tokens_hint": 500 },
-      "scenario": { "requires_decryption": false, "selection": "triggered_sections_only" },
-      "full": { "requires_decryption": false, "intended_for": ["audit", "reference"] }
+      "index": {
+        "requires_decryption": false,
+        "max_tokens_hint": 200
+      },
+      "compact": {
+        "requires_decryption": false,
+        "max_tokens_hint": 500
+      },
+      "scenario": {
+        "requires_decryption": false,
+        "selection": "triggered_sections_only"
+      },
+      "full": {
+        "requires_decryption": false,
+        "intended_for": ["audit", "reference"]
+      }
     }
   }
 }

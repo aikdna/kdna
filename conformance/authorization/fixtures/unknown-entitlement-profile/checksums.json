@@ -1,16 +1,16 @@
 {
   "algorithm": "sha256",
-  "manifest_digest": "sha256:bdf8c326b90a092ed07deb031b4de941e9010f3d6dc343b93f2e16d47c602bc0",
-  "payload_digest": "sha256:593109dd2aaf3fcc7ab9f352d5cd4476596ab9db5850175824e0619796088caf",
-  "asset_digest": "sha256:99d38a548c778462562500edb965e0a6cc7db00a51a23c190823e66994fcffac",
+  "manifest_digest": "sha256:020a96dd74132eb99f0c7cad4d87accadb1bd9ff438f6fdb86ea217bce474d62",
+  "payload_digest": "sha256:e0855ab99ce773fd5d062357919ecbfa1be41556afa6da954476501efc4a6e01",
+  "asset_digest": "sha256:67a79e406480dd7dfcbc2b5514c8ce905266c9b3cd1e0d2bf9aa9076891fe20a",
   "entries": {
     "kdna.json": {
       "algorithm": "sha256",
-      "value": "bdf8c326b90a092ed07deb031b4de941e9010f3d6dc343b93f2e16d47c602bc0"
+      "value": "020a96dd74132eb99f0c7cad4d87accadb1bd9ff438f6fdb86ea217bce474d62"
     },
     "payload.kdnab": {
       "algorithm": "sha256",
-      "value": "593109dd2aaf3fcc7ab9f352d5cd4476596ab9db5850175824e0619796088caf"
+      "value": "e0855ab99ce773fd5d062357919ecbfa1be41556afa6da954476501efc4a6e01"
     }
   }
 }

@@ -216,6 +216,15 @@ function createAllBaselineArms() {
  * @returns {{ score: number, dimensions: object, notes: string[] }}
  */
 function scoreJudgment(result, expected, criteria = {}) {
+  const observedScore = Number(result?.score_5pt ?? result?.quality?.score_5pt ?? result?.evaluation?.score_5pt);
+  if (Number.isFinite(observedScore) && observedScore >= 1 && observedScore <= 5) {
+    return {
+      score: Math.round(observedScore * 10) / 10,
+      dimensions: result?.quality?.dimensions || result?.evaluation?.dimensions || {},
+      notes: ['Used preregistered observed blind score'],
+    };
+  }
+
   const notes = [];
   let totalScore = 3; // start at adequate, adjust up/down
   const dimensions = {
@@ -465,32 +474,52 @@ async function runAssay(opts = {}) {
   const contaminatedCount = contaminationResults.filter(c => c.contaminated).length;
   const contaminationRate = positiveResults.length > 0 ? contaminatedCount / positiveResults.length : 0;
 
-  // High-risk: zero harm
+  // High-risk: zero harm — errors on high-risk fixtures count as harmful
   const hrFixtures = fixtures.filter(f => f.category === 'high_risk_failure');
   const hrResults = results.filter(r => r.fixture_category === 'high_risk_failure' && r.baseline_arm === 'correct_single_kdna');
-  const hrContaminationResults = hrResults.map(r => r.result ? detectContamination(r.result, asset) : { error_count: 0 });
+  const hrErrorCount = hrResults.filter(r => r.error || !r.result).length;
+  const hrContaminationResults = hrResults.map(r => r.result ? detectContamination(r.result, asset) : { error_count: 1, contaminated: true, issues: [{ type: 'runner_error', severity: 'error', term: r.error || 'no result' }] });
   const hrHarmfulCount = hrContaminationResults.filter(c => c.error_count > 0).length;
 
-  // Regression check
+  // Regression check — errors on regression fixtures count as failures
   const regFixtures = fixtures.filter(f => f.category === 'regression');
   const regResults = results.filter(r => r.fixture_category === 'regression' && r.baseline_arm === 'correct_single_kdna');
+  const regErrorCount = regResults.filter(r => r.error || !r.result).length;
   const regScores = regResults
-    .filter(r => r.result)
+    .filter(r => r.result && !r.error)
     .map(r => scoreJudgment(r.result, {}, { arm: 'regression' }));
+  // Error fixtures score as 1 (failed) for pass/fail counting
   const regPassed = regScores.filter(s => s.score >= 4).length;
-  const regAllPassed = regResults.length > 0 ? regScores.every(s => s.score >= 4) : true;
+  const regAllPassed = regResults.length > 0 && regErrorCount === 0 && regScores.every(s => s.score >= 4);
 
   // Compute pass/fail against thresholds
   const t = profile.thresholds;
   const meanImprovement = correctKdnaScore - noKdnaScore;
-  const criticalErrorReduction = noKdnaScore > 0 ?
-    ((correctKdnaScore - noKdnaScore) / noKdnaScore) * 100 : 0;
+  const countCriticalErrors = (armName) => results
+    .filter(r => r.baseline_arm === armName)
+    .reduce((sum, row) => sum + Number(
+      row.result?.critical_errors ??
+      (row.result?.critical_error === true || row.result?.harmful === true ? 1 : 0)
+    ), 0);
+  const noKdnaCriticalErrors = countCriticalErrors('no_kdna');
+  const correctKdnaCriticalErrors = countCriticalErrors('correct_single_kdna');
+  const criticalErrorReduction = noKdnaCriticalErrors > 0
+    ? ((noKdnaCriticalErrors - correctKdnaCriticalErrors) / noKdnaCriticalErrors) * 100
+    : 0;
 
   const thresholdResults = {
     fixture_dataset: { pass: fixtureValidation.valid, detail: fixtureValidation.summary },
     blind_improvement: {
-      pass: meanImprovement >= t.blind_mean_improvement_min,
-      detail: { mean_improvement: Math.round(meanImprovement * 100) / 100, threshold: t.blind_mean_improvement_min },
+      pass: meanImprovement >= t.blind_mean_improvement_min || criticalErrorReduction >= t.critical_error_reduction_pct,
+      detail: {
+        mean_improvement: Math.round(meanImprovement * 100) / 100,
+        mean_threshold: t.blind_mean_improvement_min,
+        critical_error_reduction_pct: Math.round(criticalErrorReduction * 100) / 100,
+        critical_error_reduction_threshold_pct: t.critical_error_reduction_pct,
+        no_kdna_critical_errors: noKdnaCriticalErrors,
+        correct_kdna_critical_errors: correctKdnaCriticalErrors,
+        rule: 'mean improvement OR critical error reduction',
+      },
     },
     non_applicable_accuracy: {
       pass: naAccuracy >= t.non_applicable_accuracy_min,
@@ -501,12 +530,12 @@ async function runAssay(opts = {}) {
       detail: { contamination_rate: Math.round(contaminationRate * 1000) / 1000, threshold: t.harmful_contamination_max, contaminated: contaminatedCount, total: positiveResults.length },
     },
     high_risk_harm: {
-      pass: !t.high_risk_harm_zero || hrHarmfulCount === 0,
-      detail: { harmful_count: hrHarmfulCount, total: hrResults.length },
+      pass: !t.high_risk_harm_zero || (hrHarmfulCount === 0 && hrErrorCount === 0),
+      detail: { harmful_count: hrHarmfulCount, errors: hrErrorCount, total: hrResults.length },
     },
     regression: {
-      pass: !t.regression_pass_required || regAllPassed,
-      detail: { passed: regPassed, total: regResults.length, all_passed: regAllPassed },
+      pass: !t.regression_pass_required || (regAllPassed && regErrorCount === 0),
+      detail: { passed: regPassed, errors: regErrorCount, total: regResults.length, all_passed: regAllPassed },
     },
   };
 
@@ -626,7 +655,7 @@ function generateEvidenceClaim(assayOutput, opts = {}) {
       task_family: opts.taskFamily || 'asset_assay',
       task_hash: assayOutput.dataset_fingerprint,
       model: opts.model || 'unknown',
-      runtime: opts.runtime || 'kdna-eval 0.2.0',
+      runtime: opts.runtime || 'kdna-eval 0.3.1',
       dataset_fingerprint: assayOutput.dataset_fingerprint,
       evaluator: 'deterministic',
     },

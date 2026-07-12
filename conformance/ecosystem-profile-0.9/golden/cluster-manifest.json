@@ -39,7 +39,11 @@
     "strategy": "signal_based",
     "max_active_domains": 3,
     "conflict_policy": "surface",
-    "priority_order": ["@aikdna/dev-change-risk", "@aikdna/dev-api-design-judgment", "@aikdna/creator-brand-positioning"],
+    "priority_order": [
+      "@aikdna/dev-change-risk",
+      "@aikdna/dev-api-design-judgment",
+      "@aikdna/creator-brand-positioning"
+    ],
     "primary_selection": "exactly_one",
     "advisor_selection": "contribution_hypothesis_required"
   },
@@ -66,6 +70,14 @@
   ],
   "evaluation": {
     "replay_suites": ["repair", "holdout", "fresh", "candidate-sealed", "new-sealed"],
-    "required_comparison_arms": ["primary_only", "bounded_compose", "wrong_advisor", "irrelevant_advisor", "budget_waste", "adversarial", "no_kdna"]
+    "required_comparison_arms": [
+      "primary_only",
+      "bounded_compose",
+      "wrong_advisor",
+      "irrelevant_advisor",
+      "budget_waste",
+      "adversarial",
+      "no_kdna"
+    ]
   }
 }

@@ -38,7 +38,10 @@
         "consumption_plan": {
           "type": "object",
           "properties": {
-            "schema": { "type": "string", "const": "specs/consumption-plan-candidate-0.9.schema.json" },
+            "schema": {
+              "type": "string",
+              "const": "specs/consumption-plan-candidate-0.9.schema.json"
+            },
             "version": { "type": "string", "const": "0.9.0" },
             "status": { "type": "string", "const": "candidate" },
             "description": { "type": "string" }
@@ -47,7 +50,10 @@
         "judgment_trace": {
           "type": "object",
           "properties": {
-            "schema": { "type": "string", "const": "specs/judgment-trace-candidate-0.9.schema.json" },
+            "schema": {
+              "type": "string",
+              "const": "specs/judgment-trace-candidate-0.9.schema.json"
+            },
             "version": { "type": "string", "const": "0.9.0" },
             "status": { "type": "string", "const": "candidate" },
             "description": { "type": "string" }
@@ -56,7 +62,10 @@
         "evidence_claim": {
           "type": "object",
           "properties": {
-            "schema": { "type": "string", "const": "specs/evidence-claim-candidate-0.9.schema.json" },
+            "schema": {
+              "type": "string",
+              "const": "specs/evidence-claim-candidate-0.9.schema.json"
+            },
             "version": { "type": "string", "const": "0.9.0" },
             "status": { "type": "string", "const": "candidate" },
             "description": { "type": "string" }
@@ -65,7 +74,10 @@
         "cluster_manifest": {
           "type": "object",
           "properties": {
-            "schema": { "type": "string", "const": "specs/cluster-manifest-candidate-0.9.schema.json" },
+            "schema": {
+              "type": "string",
+              "const": "specs/cluster-manifest-candidate-0.9.schema.json"
+            },
             "version": { "type": "string", "const": "0.9.0" },
             "status": { "type": "string", "const": "candidate" },
             "description": { "type": "string" }
@@ -81,7 +93,10 @@
         "asset": {
           "type": "object",
           "properties": {
-            "definition": { "type": "string", "const": "One standalone, bounded KDNA judgment asset in .kdna container format." },
+            "definition": {
+              "type": "string",
+              "const": "One standalone, bounded KDNA judgment asset in .kdna container format."
+            },
             "distribution_form": { "type": "string", "const": ".kdna" },
             "maturity_target": { "type": "string", "const": "Stable (Core v1)" },
             "default_product_path": { "type": "boolean", "const": true }
@@ -90,9 +105,15 @@
         "cluster": {
           "type": "object",
           "properties": {
-            "definition": { "type": "string", "const": "References multiple independently qualified KDNA Assets and defines explicit collaboration policy. Filename: kdna.cluster.json." },
+            "definition": {
+              "type": "string",
+              "const": "References multiple independently qualified KDNA Assets and defines explicit collaboration policy. Filename: kdna.cluster.json."
+            },
             "distribution_form": { "type": "string", "const": "kdna.cluster.json sidecar" },
-            "maturity_target": { "type": "string", "const": "Candidate 0.9 → Stable after Cluster Assay gates" },
+            "maturity_target": {
+              "type": "string",
+              "const": "Candidate 0.9 → Stable after Cluster Assay gates"
+            },
             "default_product_path": { "type": "boolean", "const": false },
             "default_visibility": { "type": "string", "const": "off / advanced" }
           }
@@ -100,49 +121,85 @@
         "bundle": {
           "type": "object",
           "properties": {
-            "definition": { "type": "string", "const": "Fixed packaging/distribution of components loaded as one unit. v2 packaging format." },
+            "definition": {
+              "type": "string",
+              "const": "Fixed packaging/distribution of components loaded as one unit. v2 packaging format."
+            },
             "distribution_form": { "type": "string", "const": "Bundle container/manifest" },
-            "maturity_target": { "type": "string", "const": "Compatibility and specialist use — not the default path" }
+            "maturity_target": {
+              "type": "string",
+              "const": "Compatibility and specialist use — not the default path"
+            }
           }
         },
         "collection": {
           "type": "object",
           "properties": {
-            "definition": { "type": "string", "const": "Discovery and catalog grouping only. No execution semantics." },
+            "definition": {
+              "type": "string",
+              "const": "Discovery and catalog grouping only. No execution semantics."
+            },
             "distribution_form": { "type": "string", "const": "Index/catalog metadata" },
-            "maturity_target": { "type": "string", "const": "Informational — no stability guarantee" }
+            "maturity_target": {
+              "type": "string",
+              "const": "Informational — no stability guarantee"
+            }
           }
         },
         "work_pack": {
           "type": "object",
           "properties": {
-            "definition": { "type": "string", "const": "KDNA/Cluster + Skill + workflow + tools + output/review contract." },
+            "definition": {
+              "type": "string",
+              "const": "KDNA/Cluster + Skill + workflow + tools + output/review contract."
+            },
             "distribution_form": { "type": "string", "const": "Work Pack directory/package" },
-            "maturity_target": { "type": "string", "const": "Experimental until execution gates pass" }
+            "maturity_target": {
+              "type": "string",
+              "const": "Experimental until execution gates pass"
+            }
           }
         },
         "consumption_plan": {
           "type": "object",
           "properties": {
-            "definition": { "type": "string", "const": "Pre-execution plan for one KDNA use. Deterministic, no model call. Records intent." },
+            "definition": {
+              "type": "string",
+              "const": "Pre-execution plan for one KDNA use. Deterministic, no model call. Records intent."
+            },
             "distribution_form": { "type": "string", "const": "Runtime JSON object" },
-            "maturity_target": { "type": "string", "const": "Candidate 0.9 → Stable after parity gates" }
+            "maturity_target": {
+              "type": "string",
+              "const": "Candidate 0.9 → Stable after parity gates"
+            }
           }
         },
         "judgment_trace": {
           "type": "object",
           "properties": {
-            "definition": { "type": "string", "const": "Records what actually happened during KDNA use. Always references plan_id. Records execution facts, not quality interpretation." },
+            "definition": {
+              "type": "string",
+              "const": "Records what actually happened during KDNA use. Always references plan_id. Records execution facts, not quality interpretation."
+            },
             "distribution_form": { "type": "string", "const": "Runtime JSON object" },
-            "maturity_target": { "type": "string", "const": "Candidate 0.9 → Stable after replay gates" }
+            "maturity_target": {
+              "type": "string",
+              "const": "Candidate 0.9 → Stable after replay gates"
+            }
           }
         },
         "evidence_claim": {
           "type": "object",
           "properties": {
-            "definition": { "type": "string", "const": "A bounded claim about judgment quality backed by identifiable evidence. Separate from Trace." },
+            "definition": {
+              "type": "string",
+              "const": "A bounded claim about judgment quality backed by identifiable evidence. Separate from Trace."
+            },
             "distribution_form": { "type": "string", "const": "Sidecar/report" },
-            "maturity_target": { "type": "string", "const": "Candidate 0.9 → Stable after external validation" }
+            "maturity_target": {
+              "type": "string",
+              "const": "Candidate 0.9 → Stable after external validation"
+            }
           }
         }
       }
@@ -155,42 +212,60 @@
         "conformance_asset": {
           "type": "object",
           "properties": {
-            "required_evidence": { "type": "string", "const": "Core validation and loader fixture pass." },
+            "required_evidence": {
+              "type": "string",
+              "const": "Core validation and loader fixture pass."
+            },
             "implies": { "type": "array", "items": { "type": "string" } }
           }
         },
         "benchmark_asset": {
           "type": "object",
           "properties": {
-            "required_evidence": { "type": "string", "const": "Named benchmark role and reproducible tasks." },
+            "required_evidence": {
+              "type": "string",
+              "const": "Named benchmark role and reproducible tasks."
+            },
             "implies": { "type": "array", "items": { "type": "string" } }
           }
         },
         "reference_asset": {
           "type": "object",
           "properties": {
-            "required_evidence": { "type": "string", "const": "Public-safe authoring explanation and boundary examples." },
+            "required_evidence": {
+              "type": "string",
+              "const": "Public-safe authoring explanation and boundary examples."
+            },
             "implies": { "type": "array", "items": { "type": "string" } }
           }
         },
         "behavior_evaluated_asset": {
           "type": "object",
           "properties": {
-            "required_evidence": { "type": "string", "const": "Controlled baseline comparison and regression report. Asset Assay thresholds in Section 7.1 of the roadmap." },
+            "required_evidence": {
+              "type": "string",
+              "const": "Controlled baseline comparison and regression report. Asset Assay thresholds in Section 7.1 of the roadmap."
+            },
             "implies": { "type": "array", "items": { "type": "string" } }
           }
         },
         "field_validated_asset": {
           "type": "object",
           "properties": {
-            "required_evidence": { "type": "string", "const": "Real users, real tasks, documented limitations. Phase 8 field validation thresholds." },
+            "required_evidence": {
+              "type": "string",
+              "const": "Real users, real tasks, documented limitations. Phase 8 field validation thresholds."
+            },
             "implies": { "type": "array", "items": { "type": "string" } }
           }
         },
         "production_asset": {
           "type": "object",
           "properties": {
-            "required_evidence": { "type": "string", "const": "All structural, behavioral, trust, UX, and maintenance gates passed." },
+            "required_evidence": {
+              "type": "string",
+              "const": "All structural, behavioral, trust, UX, and maintenance gates passed."
+            },
             "implies": { "type": "array", "items": { "type": "string" } }
           }
         }
@@ -216,13 +291,55 @@
         "implementations": {
           "type": "object",
           "properties": {
-            "js_core": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } },
-            "swift_core": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } },
-            "cli": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } },
-            "web_client": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } },
-            "web_server": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } },
-            "react": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } },
-            "skills": { "type": "object", "properties": { "version": { "type": "string" }, "contracts": { "type": "array", "items": { "type": "string" } } } }
+            "js_core": {
+              "type": "object",
+              "properties": {
+                "version": { "type": "string" },
+                "contracts": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            "swift_core": {
+              "type": "object",
+              "properties": {
+                "version": { "type": "string" },
+                "contracts": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            "cli": {
+              "type": "object",
+              "properties": {
+                "version": { "type": "string" },
+                "contracts": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            "web_client": {
+              "type": "object",
+              "properties": {
+                "version": { "type": "string" },
+                "contracts": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            "web_server": {
+              "type": "object",
+              "properties": {
+                "version": { "type": "string" },
+                "contracts": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            "react": {
+              "type": "object",
+              "properties": {
+                "version": { "type": "string" },
+                "contracts": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            "skills": {
+              "type": "object",
+              "properties": {
+                "version": { "type": "string" },
+                "contracts": { "type": "array", "items": { "type": "string" } }
+              }
+            }
           }
         },
         "contracts_tested": {
@@ -247,7 +364,10 @@
         "plan_use": {
           "type": "object",
           "properties": {
-            "syntax": { "type": "string", "const": "kdna plan-use <asset.kdna|kdna.cluster.json> --task \"...\"" },
+            "syntax": {
+              "type": "string",
+              "const": "kdna plan-use <asset.kdna|kdna.cluster.json> --task \"...\""
+            },
             "deterministic": { "type": "boolean", "const": true },
             "model_call": { "type": "boolean", "const": false },
             "output": { "type": "string", "const": "ConsumptionPlan JSON" }
@@ -256,7 +376,10 @@
         "use": {
           "type": "object",
           "properties": {
-            "syntax": { "type": "string", "const": "kdna use <asset.kdna|kdna.cluster.json> --task \"...\" --runner <registered-runner>" },
+            "syntax": {
+              "type": "string",
+              "const": "kdna use <asset.kdna|kdna.cluster.json> --task \"...\" --runner <registered-runner>"
+            },
             "deterministic": { "type": "boolean", "const": false },
             "model_call": { "type": "boolean", "const": true },
             "output": { "type": "string", "const": "Runner result + Trace" }
@@ -265,14 +388,20 @@
         "eval_asset": {
           "type": "object",
           "properties": {
-            "syntax": { "type": "string", "const": "kdna eval asset <asset.kdna> --fixtures <dir> --as json" },
+            "syntax": {
+              "type": "string",
+              "const": "kdna eval asset <asset.kdna> --fixtures <dir> --as json"
+            },
             "output": { "type": "string", "const": "EvidenceClaim" }
           }
         },
         "eval_cluster": {
           "type": "object",
           "properties": {
-            "syntax": { "type": "string", "const": "kdna eval cluster <kdna.cluster.json> --fixtures <dir> --as json" },
+            "syntax": {
+              "type": "string",
+              "const": "kdna eval cluster <kdna.cluster.json> --fixtures <dir> --as json"
+            },
             "output": { "type": "string", "const": "EvidenceClaim" }
           }
         }
@@ -343,11 +472,26 @@
           "properties": {
             "positive_validate_rate": { "type": "string", "const": "100%" },
             "negative_fail_with_code": { "type": "string", "const": "100%" },
-            "core_v1_backward_compat": { "type": "string", "const": "100% existing fixtures unchanged" },
-            "round_trip_no_loss": { "type": "string", "const": "candidate plan and trace round-trip without semantic field loss" },
-            "unknown_optional_forward_compat": { "type": "string", "const": "unknown optional fields do not break older readers" },
-            "unknown_required_fail_closed": { "type": "string", "const": "required unknown enum/state values fail closed" },
-            "no_cluster_in_core": { "type": "string", "const": "no candidate schema forces experimental Cluster metadata into .kdna Core" }
+            "core_v1_backward_compat": {
+              "type": "string",
+              "const": "100% existing fixtures unchanged"
+            },
+            "round_trip_no_loss": {
+              "type": "string",
+              "const": "candidate plan and trace round-trip without semantic field loss"
+            },
+            "unknown_optional_forward_compat": {
+              "type": "string",
+              "const": "unknown optional fields do not break older readers"
+            },
+            "unknown_required_fail_closed": {
+              "type": "string",
+              "const": "required unknown enum/state values fail closed"
+            },
+            "no_cluster_in_core": {
+              "type": "string",
+              "const": "no candidate schema forces experimental Cluster metadata into .kdna Core"
+            }
           }
         }
       }

@@ -74,12 +74,12 @@
     {
       "asset_id": "dev-change-risk-v0.1.0.kdna",
       "axioms_triggered": 2,
-      "transfer_depth": {"operationalized": 2, "referenced": 0, "mentioned": 0}
+      "transfer_depth": { "operationalized": 2, "referenced": 0, "mentioned": 0 }
     },
     {
       "asset_id": "dev-api-design-judgment-v0.1.0.kdna",
       "axioms_triggered": 1,
-      "transfer_depth": {"operationalized": 1, "referenced": 0, "mentioned": 0}
+      "transfer_depth": { "operationalized": 1, "referenced": 0, "mentioned": 0 }
     }
   ],
   "provenance": {

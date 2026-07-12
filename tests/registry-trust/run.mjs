@@ -102,11 +102,9 @@ const json = (v) => JSON.stringify(v, null, 2);
 
 // Build a valid .kdna asset to use as download target for mock registries
 const validAssetZip = makeZip({
-  mimetype: 'application/vnd.aikdna.kdna+zip',
+  mimetype: 'application/vnd.kdna.asset',
   'kdna.json': json({
-    format: 'kdna',
-    format_version: '1.0',
-    spec_version: '1.0-rc',
+    kdna_version: '1.0',
     name: '@trust-e2e/minimal',
     version: '0.1.0',
     judgment_version: '2026.06',
@@ -353,7 +351,7 @@ fs.writeFileSync(badMimePath, badMimeAsset);
 try {
   runKdna(['verify', badMimePath, '--json'], { timeout: 10000 });
   console.log('  ✗ FAIL: v1.0-rc requires application/x-kdna mimetype to be rejected');
-  console.log('  v1.0-rc non-negotiable: root mimetype MUST be application/vnd.aikdna.kdna+zip');
+  console.log('  v1.0-rc non-negotiable: root mimetype MUST be application/vnd.kdna.asset');
   process.exitCode = 1;
 } catch (e) {
   const code = e.status ?? 1;

@@ -18,9 +18,7 @@
     "profile": "interactive"
   },
   "trace_policy": {
-    "emit": [
-      "result"
-    ],
+    "emit": ["result"],
     "storage": "ephemeral"
   }
 }

@@ -38,7 +38,7 @@ status, encryption profile, and build time.
 
 ## Required Container Entries
 
-The runtime `.kdna` container MUST include only the canonical KDNA Core v1
+The runtime `.kdna` container MUST include only the canonical KDNA
 runtime entries:
 
 ```text

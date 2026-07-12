@@ -49,18 +49,19 @@ or workflow steps.
 A Work Pack is a **future concept** (design phase). It would define a multi-step
 agent task with role bindings, review gates, and KDNA domain dependencies.
 
-**Is Work Pack available now?** No. Work Pack is not part of KDNA Core v1 GA.
+**Is Work Pack available now?** Treat Work Pack as an evolving application-layer concept, not part of KDNA format validity.
 Do not use it in production. See [tool-status-matrix.md](tool-status-matrix.md).
 
 ---
 
 ## What is a Cluster?
 
-A Cluster is a **future concept** (experimental). It would compose multiple KDNA
-domains into a single judgment system with routing rules.
+A Cluster is the **explicit advanced multi-asset path**. It coordinates
+multiple scoped KDNA assets under roles, routing, conflict, budget, and trace
+controls.
 
-**Is Cluster available now?** No. Cluster is not part of KDNA Core v1 GA.
-For current stable usage, use a single `.kdna` asset.
+**Is Cluster available now?** The CLI Cluster runtime is beta. Use a single
+asset by default; choose Cluster only when the task truly needs multiple assets.
 
 ---
 

@@ -1,8 +1,12 @@
-# KDNA Core Specification — 2026.06 Baseline
+# KDNA Core Specification — 2026.07
 
-**Status:** Current (GA)  
-**Previous:** v0.4 (superseded)  
-**Editors:** KDNA Team  
+**Status:** Current (GA)
+**Format:** KDNA Asset — `.kdna` file, `application/vnd.kdna.asset`, CBOR-encoded
+`payload.kdnab` (RFC 8949). See `packages/kdna-core/src/v1/index.js` for the
+reference packer and validator.
+
+**Previous:** v0.4 (superseded)
+**Editors:** KDNA Team
 **Repository:** https://github.com/aikdna/kdna
 
 ## Abstract
@@ -14,7 +18,7 @@ KDNA (Knowledge DNA) is a structured asset format for encoding domain judgment f
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.
 
 - **Domain:** A specific area of expertise with recurring judgment patterns (e.g., sales, management, code review).
-- **KDNA Asset:** A `.kdna` file representing one portable, installable, verifiable, and loadable domain judgment asset. A valid KDNA asset MUST contain `payload.kdnab` (CBOR-encoded judgment). It MUST NOT contain `KDNA_Core.json`, `KDNA_Patterns.json`, `KDNA_Scenarios.json`, `KDNA_Cases.json`, `KDNA_Reasoning.json`, or `KDNA_Evolution.json` as top-level ZIP entries. Those files belong to the source tree only.
+- **KDNA Asset:** A `.kdna` file representing one portable, installable, verifiable, and loadable domain judgment asset. A valid KDNA asset MUST contain `payload.kdnab` (encoded judgment). It MUST NOT contain `KDNA_Core.json`, `KDNA_Patterns.json`, `KDNA_Scenarios.json`, `KDNA_Cases.json`, `KDNA_Reasoning.json`, or `KDNA_Evolution.json` as top-level ZIP entries. Those files belong to the source tree only.
 - **Internal Domain Tree:** The content encoded inside `payload.kdnab`. This is not human-readable directly; consumption requires KDNA-compatible tooling. The source tree (KDNA_Core.json etc.) is the authoring format, never distributed as an asset.
 - **Dev Source Directory:** An optional authoring workspace used to build a `.kdna` asset. Source directories are non-canonical and MUST NOT be treated as installed runtime domains.
 - **Loader:** Software that reads KDNA files and formats them for agent consumption.
@@ -38,11 +42,18 @@ KDNA is NOT designed for:
 
 ## 1.5. Boundaries and Extension
 
-KDNA is a *judgment structure format*, not a general content format. The following boundaries are defined to prevent format dilution:
+KDNA is a *judgment structure format*, not a general content format. The following boundaries are defined to prevent format dilution.
+
+**Critical distinction: Source Tree versus Distribution Asset.** The Source Tree
+(`KDNA_Core.json`, `KDNA_Patterns.json`, etc.) is an authoring workspace. The
+`.kdna` Distribution Asset contains `kdna.json` + `payload.kdnab` (CBOR-encoded judgment). Source-tree file
+names below refer to the logical structure inside `payload.kdnab`, not to ZIP
+entries in the distribution container. See
+[Container Specification](specs/container.md) for the wire format.
 
 **Invariant (MUST NOT change across versions):**
-- A KDNA domain is represented by one `.kdna` asset containing at most 6 standard KDNA judgment files; supporting entries such as `kdna.json`, `README.md`, `LICENSE`, `signature.json`, `evals/`, `examples/`, and `reports/` do not count toward this limit
-- Minimum valid domain = `KDNA_Core.json` + `KDNA_Patterns.json` in the SOURCE TREE. In the distribution asset, the minimum is `kdna.json` + `payload.kdnab`.
+- A `.kdna` distribution asset MUST contain `kdna.json` + `payload.kdnab`. It MUST NOT contain `KDNA_Core.json`, `KDNA_Patterns.json`, or other source-tree JSON files as top-level ZIP entries.
+- In the Source Tree, the minimum valid domain is `KDNA_Core.json` + `KDNA_Patterns.json`.
 - Each file MUST contain a `meta` object with `version`, `domain`, `created`, `purpose`, `load_condition`
 - Axioms MUST have `one_sentence`, `full_statement`, and `why`
 - Misunderstandings MUST have `key_distinction`
@@ -79,7 +90,11 @@ A **judgment** in KDNA is a domain-specific process that includes:
 
 ### 1.6.1. Thirteen Judgment Components
 
-The following table maps each component to its meaning and its location within the internal tree of a `.kdna` asset:
+The following table maps each component to its meaning and its location within
+the internal domain tree encoded inside `payload.kdnab`. The "KDNA File" column
+refers to logical file names within the CBOR payload, not to ZIP entries in the
+distribution container. See [Container Specification](specs/container.md) for
+the wire format.
 
 | Component | Meaning | KDNA File | Field |
 |-----------|---------|-----------|-------|
@@ -203,7 +218,10 @@ Implementations MAY conform at one of three levels:
 
 A KDNA domain MUST be represented, distributed, installed, verified, and loaded as a `.kdna` container.
 
-The internal tree of a `.kdna` container is encoded in `payload.kdnab` (CBOR). Source trees (KDNA_Core.json, KDNA_Patterns.json, etc.) are authoring workspaces only and MUST NOT appear as top-level entries in a distribution `.kdna` asset. See `specs/container.md`.
+The internal tree of a `.kdna` container is encoded in `payload.kdnab` (JSON in
+CBOR-encoded). Source trees (KDNA_Core.json,
+KDNA_Patterns.json, etc.) are authoring workspaces only and MUST NOT appear as
+top-level entries in a distribution `.kdna` asset. See `specs/container.md`.
 
 A `.kdna` asset MUST include a `kdna.json` manifest at the archive root.
 
@@ -214,10 +232,10 @@ A conforming distribution `.kdna` asset MUST include:
 | Entry | Description | Status |
 |-------|-------------|--------|
 | `kdna.json` | Public manifest and metadata (no judgment content) | REQUIRED |
-| `payload.kdnab` | CBOR-encoded judgment payload (all domain content) | REQUIRED |
+| `payload.kdnab` | Encoded judgment payload, all domain content (CBOR) | REQUIRED |
 | `signature.kdsig` | Ed25519 signature over canonical payload digest | **OPTIONAL until 2027-Q1; REQUIRED after** |
 
-> **Status note (2026-06-27):** The `signature.kdsig` entry is reserved by the v1 container layout but is **OPTIONAL** in current implementations. Ed25519 signing infrastructure is in place (`@aikdna/kdna-core` identity module), but signature generation and verification across the publish → install → load chain is not yet integrated into the official toolchain. The hard cutover date for making `signature.kdsig` REQUIRED is **2027-Q1** (end of March 2027). Assets distributed before that date remain conformant without `signature.kdsig`; assets distributed on or after 2027-Q1 MUST include it. This is a normative deadline — extensions are not granted by silence.
+> **Status note (2026-06-27):** The `signature.kdsig` entry is reserved by the container layout but is **OPTIONAL** in current implementations. Ed25519 signing infrastructure is in place (`@aikdna/kdna-core` identity module), but signature generation and verification across the publish → install → load chain is not yet integrated into the official toolchain. The hard cutover date for making `signature.kdsig` REQUIRED is **2027-Q1** (end of March 2027). Assets distributed before that date remain conformant without `signature.kdsig`; assets distributed on or after 2027-Q1 MUST include it. This is a normative deadline — extensions are not granted by silence.
 
 A `.kdna` asset MUST NOT include `KDNA_Core.json`, `KDNA_Patterns.json`, `KDNA_Scenarios.json`, `KDNA_Cases.json`, `KDNA_Reasoning.json`, or `KDNA_Evolution.json` as top-level ZIP entries. Those files belong to the source tree only.
 
@@ -245,69 +263,38 @@ Each optional file MAY be legitimately absent when the domain's judgment surface
 
 If a domain omits optional files, it SHOULD document the reason in its README. A domain reviewer or tool consumer who sees "2/6 files" MUST NOT assume incompleteness without reading the domain's rationale for omission.
 
-#### 3.3.2 Three-Field System
+#### 3.3.2 Separate Validity, Access, And Optional Evidence
 
-Every `.kdna` asset MUST use a consistent three-field system to separate maturity, quality, and access:
+KDNA does not collapse format validity, author-declared access, evidence, and
+consumer trust into one badge.
 
-| Field | Permitted Values | Meaning |
-|-------|-----------------|---------|
-| `status` | `draft` \| `experimental` \| `stable` \| `deprecated` | Maturity of the domain's structure and content. `draft` = early work in progress; `experimental` = complete but not yet tested in practice; `stable` = structure frozen, content mature; `deprecated` = superseded by another domain. |
-| `quality_badge` | `untested` \| `tested` \| `validated` \| `expert_reviewed` \| `production_ready` | Evidence level for the domain's judgment quality. `untested` = passes schema validation only; `tested` = >= 10 eval cases with manual verification; `validated` = >= 30 eval cases with automated judgment scoring; `expert_reviewed` = externally reviewed by a domain expert; `production_ready` = validated + real-world deployment evidence. |
-| `access` | `public` \| `licensed` \| `remote` | How the domain is distributed. `public` = freely usable by any KDNA-compatible runtime; `licensed` = encrypted, requires local license; `remote` = not distributed, consumed through API/MCP. |
+| Dimension | Meaning | Format-validity effect |
+|-----------|---------|------------------------|
+| Format validity | Schema, CBOR, container, digest, and authorization contract | Required |
+| `access` | Author chooses `public`, `licensed`, or `remote` | Determines consumption path, not quality |
+| Evidence claims | Optional statements about observed behavior or review | None unless the author makes that claim |
+| Consumer trust | Whether a caller chooses to rely on the asset | Decided by the caller, never Core |
 
-**Rules:**
-- `status` and `quality_badge` are independent. A domain MAY be `stable` but `untested` (mature structure, no eval evidence), or `experimental` but `validated` (new domain with thorough testing).
-- `quality_badge` SHOULD be stored in the domain's `kdna.json` manifest. Self-declared badges MUST be verifiable via `kdna validate`.
-- `deprecated` domains MUST set `replaced_by` to the successor domain name.
-- The old values `basic`, `pro`, and `reference` are retired. Previously `reference` domains SHOULD migrate to `status: stable` + `quality_badge: validated` or `expert_reviewed`.
-
-**Minimum eval requirements by badge:**
-
-| Badge | Minimum Eval Cases | Automated Scoring |
-|-------|-------------------|-------------------|
-| `untested` | 0 | N/A |
-| `tested` | >= 10 | Manual verification |
-| `validated` | >= 30 | `kdna verify --judgment` passes |
-| `expert_reviewed` | >= 30 | External expert sign-off |
-| `production_ready` | >= 30 | Deployment metrics + judgment improvement evidence |
+An asset without behavioral evaluation, field validation, expert review, or a
+quality label remains a valid KDNA asset. Core MUST NOT issue or verify a
+`quality_badge`, rank content, or decide that an author's judgment is good.
+Catalogs and applications MAY display bounded evidence facts, but those facts
+are separate from the container protocol and from permission to create.
 
 ### 3.4 Manifest
 
-A `.kdna` asset MUST include a `kdna.json` manifest with the following REQUIRED fields:
+A `.kdna` distribution asset MUST include the single `kdna.json` manifest
+defined normatively in §14.4 and `schema/manifest.schema.json`. There is no
+second source-tree manifest dialect.
 
-```json
-{
-  "format": "kdna",
-  "format_version": "2.0",
-  "spec_version": "2.0",
-  "name": "<domain-id>",
-  "version": "<semver>",
-  "judgment_version": "<semver>",
-  "status": "draft | experimental | stable | deprecated",
-  "quality_badge": "untested | tested | validated | expert_reviewed | production_ready",
-  "access": "public | licensed | remote",
-  "languages": ["<BCP 47>"],
-  "default_language": "<BCP 47>",
-  "author": { "name": "...", "id": "..." },
-  "license": { "type": "...", "url": "..." },
-  "description": "...",
-  "container": {
-    "type": "kdna-container-v2",
-    "payload": "payload.kdnab",
-    "payload_encoding": "cbor"
-  }
-}
-```
+The required identity fields are `kdna_version`, `asset_id`, `asset_uid`,
+`asset_type`, `title`, `version`, `judgment_version`, `created_at`,
+`updated_at`, `creator`, `compatibility`, and `payload`. The payload entry is
+always `payload.kdnab` with `encoding: "cbor"`.
 
-**Rules:**
-- `spec_version` is REQUIRED. It declares which KDNA specification version this asset conforms to. `kdna_spec` is rejected.
-- `format` MUST be `"kdna"` and `format_version` MUST be `"2.0"`.
-- `container.type` MUST be `"kdna-container-v2"`. `container.payload` MUST be `"payload.kdnab"`.
-- `judgment_version` is REQUIRED. It tracks the version of the domain's judgment content (axioms, ontology, misunderstandings). It MUST be incremented when any judgment-relevant content changes. It MAY differ from `version` which tracks packaging or metadata changes.
-- `status` and `quality_badge` are independent. See §3.3.2.
-- Domains claiming `quality_badge` of `tested` or higher MUST include:
-  - An `evals/` directory with at least 10 case files (core, boundary, failure, excluded scenarios)
-  - A README.md with explicit boundary declaration (Scope + Out-of-Scope, or v2.1 Four Questions format)
+Top-level `format_version`, `spec_version`, `quality_badge`, and `container`
+are not current protocol discriminators. Optional evidence claims describe
+only what the author has chosen to claim and do not affect format validity.
 
 ## 4. Shared Root Structure
 
@@ -535,11 +522,11 @@ Multiple conditions MAY be true simultaneously.
 
 ### 8.2 Domain Selection
 
-When multiple domains are available, the loader SHOULD:
-1. Match user input keywords against domain `kdna.json` keywords
-2. Prefer `stable` > `experimental` > `draft` status
-3. Load one domain as leader, others as constraints
-4. NOT load a domain if its boundary declaration conflicts with the task
+Single-asset loading is the default and MUST NOT silently route across other
+assets. When a caller explicitly enables a Cluster, the Cluster runtime MAY
+match task signals, select a primary asset and bounded advisors, and apply
+declared conflict/budget policy. Core MUST NOT rank assets by content quality
+or infer that a maturity label makes one author's judgment superior.
 
 ### 8.3 Response Protocol
 
@@ -572,22 +559,15 @@ A conforming validator MUST check:
 
 A validator SHOULD also verify that the `domain` field in `meta` is consistent across all files.
 
-### 9.2 Behavioral Validation
+### 9.2 Optional Behavioral Evidence
 
-A conforming evaluator MUST test behavioral quality via the `evals/` directory:
-
-- Every domain claiming `quality_badge` of `tested` or higher MUST include an `evals/` directory with at least 10 case files
-- Each eval case MUST include: `id`, `domain`, `input`, `expected_classification`, `expected_axioms`, `output_rubric`
-- The 10 minimum cases SHOULD cover multiple: core scenarios (normal application), boundary scenarios (domain does not apply), failure scenarios (misunderstanding triggered), excluded scenarios (edge cases)
-- A conforming evaluator SHOULD also test:
-  - Loaded vs. unloaded response quality difference
-  - Misunderstanding detection rate
-  - Terminology consistency (preferred terms used, banned terms avoided)
-  - Scenario trigger accuracy
-  - Self-check pass rate
-  - Axiom alignment in reasoning
-
-The evaluation output MUST include a score and specific evidence for each dimension.
+Asset Assay, Cluster Assay, and field evaluation are optional evidence layers,
+not container conformance requirements. Authors and consumers MAY compare
+loaded and unloaded behavior, boundary handling, contamination, routing,
+terminology, or task outcomes. Any published claim MUST identify its method,
+fixtures, holdout boundary, and result; failure of an optional assay blocks
+only that claim, never the right to create or distribute a structurally valid
+asset.
 
 ## 10. Compatibility
 
@@ -629,8 +609,8 @@ R6). There is no silent fall-through.
 
 ## 12. Version Policy
 
-- KDNA v1.0 tools implement the v1.0 schema and media type.
-- Pre-v1.0 aliases and package layouts are not part of the open protocol.
+- KDNA tools implement the KDNA schema and media type.
+- Pre-GA aliases and package layouts are not part of the open protocol.
 - Loaders MUST reject manifest fields that are not defined by the active schema.
 
 ### 12.1 Domain Version Semantics
@@ -645,7 +625,10 @@ KDNA domains follow [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATC
 
 A domain at `v0.2.0` with only Core+Patterns is less mature than `v0.4.0` with Core+Patterns+Scenarios+Cases. The version number reflects structural evolution, not functional superiority. Two domains at different versions MAY both be valid for their respective scopes.
 
-The SPEC version (`spec_version` in manifest) indicates which version of this specification the domain conforms to (e.g., `2.0`). This is independent of the domain's own version number.
+The container contract is selected only by `kdna_version`. Top-level
+`spec_version` is not a current manifest field. Subsystems such as evidence or
+conformance reports MAY version their own schemas without creating another
+KDNA asset format.
 
 ## 13. Domain Composition and Clusters
 
@@ -654,12 +637,15 @@ KDNA domains MAY be composed into clusters to handle multi-faceted judgment task
 ### 13.1 Conceptual Model
 
 ```
-Judgment Atom    = Domain (single KDNA package, 2–6 files)
-Judgment Cluster = Composable system of domains with composition policy
-Judgment System  = Enterprise-level governance over one or more clusters
+Judgment Asset   = One independently loadable .kdna asset
+Judgment Cluster = Explicit manifest referencing multiple .kdna assets
+Judgment System  = Caller-owned use of one or more assets or Clusters
 ```
 
-A domain encodes the judgment of a single expert or domain. A cluster encodes how multiple domains interact. A judgment system encodes organizational governance over clusters — who maintains what, what overrides what, and how conflicts are resolved.
+An asset encodes one bounded judgment system. A Cluster defines how multiple
+independently valid and independently authorized assets are selected and
+composed. Single-asset use is the foundational/default path; Cluster use is an
+explicit advanced path. Neither replaces the other.
 
 ### 13.2 Cluster Types
 
@@ -790,61 +776,59 @@ an archive as a valid KDNA asset.
 
 Every `.kdna` container MUST include a `kdna.json` at the archive root. This file declares the container's identity, version, and verification metadata.
 
-> **Note on `format_version` and `spec_version`**: These are wire-level discriminators
-> for container format detection and validation routing. Their current values (`"2.0"`)
-> are legacy wire constants and do NOT represent a "KDNA v2" product generation.
-> See [version-taxonomy.md](docs/version-taxonomy.md) for the canonical naming scheme.
+`kdna_version` is the sole container wire discriminator. Its current and only
+accepted value is `"1.0"`. Top-level `format_version` and `spec_version` are
+removed legacy fields and MUST NOT be emitted. See
+[version-taxonomy.md](docs/version-taxonomy.md).
 
 ```json
 {
-  "format": "kdna",
-  "format_version": "2.0",
-  "spec_version": "2.0",
-  "name": "@aikdna/writing",
-  "version": "0.7.2",
-  "judgment_version": "2026.05",
-  "description": "Editorial writing judgment — diagnose whether content has a real argument, a cognitive hook, and evidence density.",
-  "core_insight": "Most writing problems are structural and argument-level, not language-level.",
-  "author": {
-    "name": "KDNA Team",
-    "id": "kdna-team",
-    "pubkey": "ed25519:43d22af8f0e189b6fd42bfaab710f52f4bc5f0ae3f5e04719a1a1d9ce9760fbe"
-  },
-  "license": {
-    "type": "CC-BY-4.0"
-  },
-  "status": "experimental",
-  "quality_badge": "tested",
-  "access": "public",
-  "languages": ["en", "zh-CN"],
-  "default_language": "en",
-  "keywords": ["writing", "editing", "editorial"],
-  "file_count": 6,
-  "created": "2026-05-01",
-  "updated": "2026-05-15",
-  "content_digest": "sha256:abc123...",
-  "signature": "ed25519:def456...",
-  "source_mode": "blank",
+  "kdna_version": "1.0",
+  "asset_id": "kdna:example:writing",
+  "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+  "asset_type": "domain",
+  "title": "Editorial Writing Judgment",
+  "version": "1.0.0",
+  "judgment_version": "1.0.0",
+  "created_at": "2026-07-01T00:00:00.000Z",
+  "updated_at": "2026-07-01T00:00:00.000Z",
   "creator": {
-    "creator_id": "kdna:creator:ed25519:8f3a...",
-    "creator_type": "human",
-    "display_name": "Zhang Ling",
-    "public_key": "-----BEGIN PUBLIC KEY-----...",
-    "verified": false
+    "name": "Example Author",
+    "id": "example-author"
   },
+  "compatibility": {
+    "min_loader_version": "0.15.12",
+    "profile": "judgment-profile-v1"
+  },
+  "payload": {
+    "path": "payload.kdnab",
+    "encoding": "cbor",
+    "encrypted": false
+  },
+  "access": "public",
   "lineage": {
     "type": "original"
   }
 }
 ```
 
-**Required fields:** `format`, `format_version`, `spec_version`, `name`, `version`, `judgment_version`, `description`, `author`, `license`, `status`, `quality_badge`, `access`, `languages`, `default_language`.
+**Required fields:** `kdna_version`, `asset_id`, `asset_uid`, `asset_type`,
+`title`, `version`, `judgment_version`, `created_at`, `updated_at`, `creator`,
+`compatibility`, and `payload`.
 
-**Strongly recommended:** `source_mode`. Assets without `source_mode` default to `"blank"` in conforming validators.
+`payload.path` MUST be `payload.kdnab`, `payload.encoding` MUST be `cbor`, and
+`payload.encrypted` records whether the entry contains a supported encryption
+envelope.
 
-**Optional fields:** `core_insight`, `keywords`, `file_count`, `risk_level`, `privacy_level`, `asset_type`, `created`, `updated`, `content_digest`, `signature`, `fitness_for_purpose`, `creator`, `lineage`.
+**Optional fields:** `summary`, `description`, `language`, `languages`,
+`license`, `keywords`, `domain_field`, `lineage`, `digests`, `signatures`,
+`dependencies`, `encryption`, `load_contract`, `scope`, and `evidence_claims`.
+`access` declares `public`, `licensed`, or `remote` consumption behavior.
 
-The `name` field follows the format `@scope/domain-name`. This is a structural naming convention; it does not require registration in any system. The `kdna_spec` field is not part of the current Core specification and MUST be rejected.
+`asset_id` is human-readable and does not require registration in a central
+namespace. `asset_uid` supplies globally unique identity. `kdna_spec`,
+top-level `format_version`, and top-level `spec_version` are not part of the
+current manifest contract.
 
 #### 14.4.1 Source Mode
 
@@ -864,13 +848,12 @@ Assets with `source_mode: "kdna_asset"` SHOULD include a `lineage` record docume
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `creator_id` | string | Unique creator identifier: `"kdna:creator:ed25519:<fingerprint>"` |
-| `creator_type` | string | `"human"`, `"agent"`, `"tool"`, or `"organization"` |
-| `display_name` | string | Human-readable name for the creator, agent, tool, or organization |
-| `public_key` | string | Ed25519 public key (PEM), when the creator identity is key-bound |
-| `verified` | boolean | Whether this identity is bound to a verified account |
+| `name` | string | Required human-readable creator, Agent, tool, or organization name |
+| `id` | string | Optional creator-controlled identifier |
 
-The creator identity is generated locally and does not require registration. When a public key is present, the `creator_id` SHOULD be derived from the SHA-256 fingerprint of the Ed25519 public key.
+Creator metadata does not require registration and is not a quality or trust
+claim. Key-bound provenance belongs to the signature mechanism; a signature
+proves that a key signed bytes, not that the content is correct or endorsed.
 
 #### 14.4.3 Lineage
 
@@ -878,7 +861,7 @@ The creator identity is generated locally and does not require registration. Whe
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `type` | string | `"original"`, `"fork"`, `"adapt"`, or `"migrated"` |
+| `type` | string | `"original"`, `"fork"`, `"adaptation"`, `"translation"`, `"private_variant"`, `"organization_variant"`, or `"course_variant"` |
 | `parent_name` | string | Name of the parent KDNA asset |
 | `parent_asset_uid` | string | Asset UID of the parent |
 | `parent_version` | string | Version of the parent at time of fork |
@@ -948,9 +931,9 @@ For operating system-level recognition of `.kdna` files:
 |----------|-----------|
 | **macOS** | UTType: `com.aikdna.kdna` (or `public.kdna`). Registered by a KDNA-compatible client Mac App. Double-click opens in a KDNA-compatible client for inspection and installation. |
 | **Windows** | File extension association with a KDNA-compatible client or CLI. |
-| **Linux** | MIME type `application/vnd.aikdna.kdna+zip`. Desktop file association. |
+| **Linux** | MIME type `application/vnd.kdna.asset`. Desktop file association. |
 
-The recommended media type is `application/vnd.aikdna.kdna+zip`.
+The recommended media type is `application/vnd.kdna.asset`.
 `application/x-kdna` is not a KDNA Core media type and MUST be rejected in
 registry metadata, HTTP responses, and OS integration files. See
 [`docs/MEDIA_TYPE.md`](./docs/MEDIA_TYPE.md).
@@ -966,7 +949,9 @@ registry metadata, HTTP responses, and OS integration files. See
 | **Immutable** | No | Yes (once published) |
 | **Directly Loadable** | No | Yes |
 
-Domain authors MAY work in directories. Users and agents MUST consume `.kdna` assets. The `.kdna` asset is the real object; the directory is a temporary source representation.
+Domain authors MAY work in directories. Users install `.kdna` assets; Agents
+consume the authorized Runtime Capsule emitted by the loader. The `.kdna` file
+is the distribution object, while the directory is an authoring representation.
 
 A `.kdna` asset can be created through multiple paths. The recommended path is the official Studio-compatible pipeline, which can include human confirmation, validation, canonicalization, identity generation, digest computation, optional signing, optional encryption, and provenance recording. A `.kdna` file created directly by an agent through the official SDK and validated by `kdna validate` is equally valid.
 
@@ -981,12 +966,15 @@ A `.kdna` asset is a **structurally valid file container**. Multiple creation pa
 | Path | Description |
 |---|---|
 | **Official toolchain** | Studio Core / CLI / MCP / SDK — recommended creation and validation path |
-| **Agent-authored** | AI agent creates `.kdna` via SDK or by generating spec-compliant JSON, validated by `kdna validate` |
+| **Agent-authored** | An AI Agent invokes the official SDK, CLI, Loader API, or a complete compatible producer to create and validate `.kdna` |
 | **Human-authored** | Domain expert authors source files manually or via Studio, validated by official toolchain |
 | **Hybrid** | Agent proposes judgment content; human reviews and confirms; toolchain validates |
-| **Third-party compatible** | Any tool that produces a spec-compliant `.kdna` file and passes official validator |
+| **Third-party compatible** | A tool that implements the complete producer contract and passes official conformance and validation |
 
-A `.kdna` file is valid if it passes `kdna validate` — regardless of creation path, author identity, signature presence, or Human Lock status.
+A `.kdna` file is format-valid when it passes `kdna validate`, regardless of
+author identity, signature presence, optional evidence, or Human Lock status.
+Creation remains toolchain-mediated: Agents MUST NOT treat hand-written ZIP or
+CBOR assembly as the normal authoring path.
 
 ### 15.2 Recommended Creation: Official Toolchain
 
@@ -996,7 +984,9 @@ The official KDNA toolchain (Studio Core + CLI + SDK) is the **recommended** cre
 - Compilation, digest computation, and provenance metadata
 - Optional Human Lock, signing, and encryption
 
-Agent and third-party tools SHOULD use the official SDK or CLI to validate their output. Direct JSON hand-assembly is a valid dev path but is error-prone without validation.
+Agent and third-party tools SHOULD use the official SDK or CLI. Developer
+inspection may expose source representations, but normal creation and
+consumption MUST preserve the container, authorization, and Capsule contracts.
 
 ### 15.3 Official Toolchain Metadata
 
@@ -1010,7 +1000,7 @@ These metadata files are informational and do NOT alter the domain's judgment co
 
 ### 15.4 No Parallel Dialect
 
-Studio Core MUST NOT create a parallel KDNA dialect. This specification defines the KDNA Container v1 contract and the default Judgment Profile v1. Studio Core is an authoring tool, not a spec extension. Future payload profiles MUST be introduced through an explicit RFC and remain compatible with the container, manifest, digest, entitlement, and LoadPlan rules defined here.
+Studio Core MUST NOT create a parallel KDNA dialect. This specification defines the KDNA Container contract and the default Judgment Profile v1. Studio Core is an authoring tool, not a spec extension. Future payload profiles MUST be introduced through an explicit RFC and remain compatible with the container, manifest, digest, entitlement, and LoadPlan rules defined here.
 
 See [`rfcs/RFC-0016-container-profile-split.md`](./rfcs/RFC-0016-container-profile-split.md) for the active split plan between the container contract and Judgment Profile v1.
 

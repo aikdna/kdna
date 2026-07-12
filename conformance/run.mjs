@@ -2,43 +2,26 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
-
-const require = createRequire(import.meta.url);
-const {
-  inspectKDNA,
-  loadKDNA,
-  renderForAgent,
-  validateKDNA,
-  verifyDigest,
-  encryptLicensedEntry,
-  createLicensedDecryptEntry,
-  encryptProtectedEntry,
-  createPasswordDecryptEntry,
-} = require('../packages/kdna-core/src');
 
 import { runPhase2Conformance } from './phase2-protocol.mjs';
 
+const require = createRequire(import.meta.url);
+const core = require('../packages/kdna-core/src');
+const cbor = require('cbor-x');
+
 const args = process.argv.slice(2);
+
 function argValue(name, fallback = null) {
-  const prefixed = `${name}=`;
-  const inline = args.find((arg) => arg.startsWith(prefixed));
-  if (inline) return inline.slice(prefixed.length);
+  const inline = args.find((arg) => arg.startsWith(`${name}=`));
+  if (inline) return inline.slice(name.length + 1);
   const index = args.indexOf(name);
-  if (index >= 0 && args[index + 1]) return args[index + 1];
-  return fallback;
+  return index >= 0 && args[index + 1] ? args[index + 1] : fallback;
 }
 
 const profile = argValue('--profile', 'asset-loader');
-const allowedProfiles = new Set([
-  'asset',
-  'loader',
-  'runtime',
-  'registry',
-  'asset-loader',
-  'phase2-protocol',
-]);
+const allowedProfiles = new Set(['asset', 'loader', 'runtime', 'asset-loader', 'phase2-protocol']);
+
 if (!allowedProfiles.has(profile)) {
   console.error(`Unknown conformance profile: ${profile}`);
   console.error(`Allowed profiles: ${Array.from(allowedProfiles).join(', ')}`);
@@ -50,550 +33,137 @@ if (profile === 'phase2-protocol') {
   process.exit(0);
 }
 
-const root = path.dirname(fileURLToPath(import.meta.url));
-const generated = path.join(root, 'fixtures', 'generated');
-fs.mkdirSync(generated, { recursive: true });
+const workdir = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-conformance-'));
 
-function u16(n) {
-  const b = Buffer.alloc(2);
-  b.writeUInt16LE(n);
-  return b;
-}
-
-function u32(n) {
-  const b = Buffer.alloc(4);
-  b.writeUInt32LE(n);
-  return b;
-}
-
-function makeZip(entries) {
-  const localParts = [];
-  const centralParts = [];
-  let offset = 0;
-  for (const [name, value] of Object.entries(entries)) {
-    const nameBuf = Buffer.from(name);
-    const data = Buffer.from(value);
-    const local = Buffer.concat([
-      u32(0x04034b50),
-      u16(20),
-      u16(0),
-      u16(0),
-      u16(0),
-      u16(0),
-      u32(0),
-      u32(data.length),
-      u32(data.length),
-      u16(nameBuf.length),
-      u16(0),
-      nameBuf,
-      data,
-    ]);
-    localParts.push(local);
-    centralParts.push(
-      Buffer.concat([
-        u32(0x02014b50),
-        u16(20),
-        u16(20),
-        u16(0),
-        u16(0),
-        u16(0),
-        u16(0),
-        u32(0),
-        u32(data.length),
-        u32(data.length),
-        u16(nameBuf.length),
-        u16(0),
-        u16(0),
-        u16(0),
-        u16(0),
-        u32(0),
-        u32(offset),
-        nameBuf,
-      ]),
-    );
-    offset += local.length;
-  }
-  const central = Buffer.concat(centralParts);
-  const local = Buffer.concat(localParts);
-  const eocd = Buffer.concat([
-    u32(0x06054b50),
-    u16(0),
-    u16(0),
-    u16(centralParts.length),
-    u16(centralParts.length),
-    u32(central.length),
-    u32(local.length),
-    u16(0),
-  ]);
-  return Buffer.concat([local, central, eocd]);
-}
-
-const json = (value) => JSON.stringify(value, null, 2);
-
-function minimalEntries(overrides = {}) {
+function manifest(overrides = {}) {
   return {
-    mimetype: 'application/vnd.aikdna.kdna+zip',
-    'kdna.json': json({
-      format: 'kdna',
-      format_version: '2.0',
-      spec_version: '1.0-rc',
-      name: '@example/minimal',
-      version: '0.1.0',
-      judgment_version: '2026.05',
-      access: 'open',
-      status: 'experimental',
-      description: 'Minimal conformance asset.',
-      author: { name: 'KDNA Conformance', id: 'conformance' },
-      license: { type: 'CC0-1.0' },
-      languages: ['en'],
-      default_language: 'en',
-      keywords: ['minimal', 'conformance'],
-      quality_badge: 'untested',
-      risk_level: 'R0',
-      ...(overrides.manifest || {}),
-    }),
-    'KDNA_Core.json': json({
-      meta: {
-        domain: 'minimal',
-        version: '0.1.0',
-        created: '2026-05-27',
-        purpose: 'Conformance minimal fixture.',
-        load_condition: 'always',
-        ...(overrides.coreMeta || {}),
-      },
-      stances: ['Treat .kdna as the canonical asset.'],
+    kdna_version: '1.0',
+    asset_id: 'kdna:conformance:single-format',
+    asset_uid: 'urn:uuid:00000000-0000-4000-8000-000000000001',
+    asset_type: 'fixture',
+    name: '@example/single-format',
+    title: 'Single-format conformance fixture',
+    version: '1.0.0',
+    judgment_version: '1.0.0',
+    created_at: '2026-07-01T00:00:00.000Z',
+    updated_at: '2026-07-01T00:00:00.000Z',
+    creator: { name: 'KDNA Conformance', id: 'conformance' },
+    compatibility: { min_loader_version: '0.15.12', profile: 'judgment-profile-v1' },
+    payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
+    access: 'public',
+    ...overrides,
+  };
+}
+
+function payload() {
+  return {
+    profile: 'judgment-profile-v1',
+    core: {
+      highest_question: 'Does this asset prove the single-format lifecycle?',
       axioms: [
         {
-          id: overrides.duplicateId ? 'same' : 'ax_minimal',
-          one_sentence: 'Minimal domains must still express a concrete judgment.',
+          id: 'ax_conformance',
+          one_sentence: 'A conforming asset loads only through the authorized runtime.',
           full_statement:
-            'Even the smallest KDNA asset must contain a concrete, inspectable judgment.',
-          why: 'Conformance needs a stable load/render target.',
+            'The container, LoadPlan, and Runtime Capsule form one consumption contract.',
+          applies_when: ['validating KDNA runtime conformance'],
+          does_not_apply_when: ['evaluating whether encoded judgment is good'],
+          failure_risk: 'Raw payload access can bypass authorization boundaries.',
         },
-        ...(overrides.duplicateId
-          ? [
-              {
-                id: 'same',
-                one_sentence: 'Duplicate IDs must fail.',
-                full_statement: 'Duplicate IDs must fail.',
-                why: 'References need stable identifiers.',
-              },
-            ]
-          : []),
       ],
-      ontology: [],
-      frameworks: [],
-      core_structure: [],
-    }),
-    'KDNA_Patterns.json': json({
-      meta: {
-        domain: overrides.badMeta ? 'other' : 'minimal',
-        version: '0.1.0',
-        created: '2026-05-27',
-        purpose: 'Conformance pattern fixture.',
-        load_condition: 'always',
-      },
-      terminology: { standard_terms: [], banned_terms: [] },
-      misunderstandings: [],
-      self_check: [
-        overrides.badSelfCheck ? 'Be accurate and helpful' : 'Did I preserve the asset boundary?',
-      ],
-    }),
+      boundaries: [{ type: 'scope', text: 'Protocol conformance only.' }],
+    },
+    patterns: [],
+    scenarios: [],
+    cases: [],
+    reasoning: {},
+    evolution: {},
   };
 }
 
-function writeAsset(name, entries) {
-  const assetPath = path.join(generated, name);
-  fs.writeFileSync(assetPath, makeZip(entries));
-  return assetPath;
+function writeSource(name, { manifestOverrides = {}, rawPayload = null } = {}) {
+  const dir = path.join(workdir, name);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'mimetype'), 'application/vnd.kdna.asset');
+  fs.writeFileSync(
+    path.join(dir, 'kdna.json'),
+    `${JSON.stringify(manifest(manifestOverrides), null, 2)}\n`,
+  );
+  fs.writeFileSync(
+    path.join(dir, 'payload.kdnab'),
+    rawPayload === null ? cbor.encode(payload()) : rawPayload,
+  );
+  fs.writeFileSync(
+    path.join(dir, 'checksums.json'),
+    `${JSON.stringify(core.buildChecksums(dir), null, 2)}\n`,
+  );
+  return dir;
 }
 
-function omit(entries, key) {
-  const copy = { ...entries };
-  delete copy[key];
-  return copy;
-}
-
-function withManifest(entries, patch) {
-  const copy = { ...entries };
-  const manifest = JSON.parse(copy['kdna.json']);
-  copy['kdna.json'] = json({ ...manifest, ...patch });
-  return copy;
-}
-
-const fixtures = {
-  minimal: writeAsset('valid-minimal-domain.kdna', minimalEntries()),
-  full: writeAsset('valid-full-domain.kdna', {
-    ...minimalEntries(),
-    'KDNA_Scenarios.json': json({
-      meta: {
-        domain: 'minimal',
-        version: '0.1.0',
-        created: '2026-05-27',
-        purpose: 'optional fixture',
-        load_condition: 'on signal',
-      },
-      scenarios: [],
-    }),
-  }),
-  missingCore: writeAsset('invalid-missing-core.kdna', omit(minimalEntries(), 'KDNA_Core.json')),
-  missingPatterns: writeAsset(
-    'invalid-missing-patterns.kdna',
-    omit(minimalEntries(), 'KDNA_Patterns.json'),
-  ),
-  duplicateId: writeAsset('invalid-duplicate-id.kdna', minimalEntries({ duplicateId: true })),
-  badMeta: writeAsset('invalid-bad-meta.kdna', minimalEntries({ badMeta: true })),
-  missingMimetype: writeAsset('invalid-missing-mimetype.kdna', omit(minimalEntries(), 'mimetype')),
-  disallowedKdnaSpec: writeAsset(
-    'invalid-disallowed-kdna-spec.kdna',
-    withManifest(minimalEntries(), { kdna_spec: '1.0-rc' }),
-  ),
-  disallowedLanguage: writeAsset(
-    'invalid-disallowed-language.kdna',
-    withManifest(minimalEntries(), { language: 'en' }),
-  ),
-  badSelfCheck: writeAsset(
-    'invalid-non-yes-no-self-check.kdna',
-    minimalEntries({ badSelfCheck: true }),
-  ),
-};
-
-// ── Licensed fixtures (RFC-0008) ───────────────────────────────────
-
-const TEST_LICENSE_KEY = 'KDNA-TEST-LICENSE-VECTOR-2026';
-
-function licensedManifest() {
-  return {
-    format: 'kdna',
-    format_version: '2.0',
-    spec_version: '1.0-rc',
-    name: '@example/licensed',
-    version: '0.1.0',
-    judgment_version: '2026.05',
-    access: 'licensed',
-    status: 'experimental',
-    description: 'Licensed conformance asset.',
-    author: { name: 'KDNA Conformance', id: 'conformance' },
-    license: { type: 'KCL-1.0' },
-    languages: ['en'],
-    default_language: 'en',
-    keywords: ['licensed', 'conformance'],
-    quality_badge: 'untested',
-    risk_level: 'R0',
-    encryption: {
-      profile: 'kdna-licensed-entry-v1',
-      encrypted_entries: ['KDNA_Core.json'],
-    },
-  };
-}
-
-const licensedCorePlaintext = json({
-  meta: {
-    domain: 'licensed',
-    version: '0.1.0',
-    created: '2026-05-27',
-    purpose: 'Conformance licensed fixture.',
-    load_condition: 'always',
-  },
-  stances: ['Licensed judgment stays protected.'],
-  axioms: [
-    {
-      id: 'ax_licensed',
-      one_sentence: 'Protected judgment loads in memory.',
-      full_statement: 'Protected judgment loads in memory.',
-      why: 'Assets can be licensed.',
-    },
-  ],
-  ontology: [],
-  frameworks: [],
-  core_structure: [],
-});
-
-const licensedPatternsPlaintext = json({
-  meta: {
-    domain: 'licensed',
-    version: '0.1.0',
-    created: '2026-05-27',
-    purpose: 'Conformance pattern fixture.',
-    load_condition: 'always',
-  },
-  terminology: { standard_terms: [], banned_terms: [] },
-  misunderstandings: [],
-  self_check: ['Did decryption stay in memory?'],
-});
-
-const manifestLicensed = licensedManifest();
-
-const licensedCoreEncrypted = json(
-  encryptLicensedEntry(licensedCorePlaintext, {
-    entryName: 'KDNA_Core.json',
-    manifest: manifestLicensed,
-    licenseKey: TEST_LICENSE_KEY,
-  }),
-);
-
-fixtures.licensedValid = writeAsset('valid-licensed-domain.kdna', {
-  mimetype: 'application/vnd.aikdna.kdna+zip',
-  'kdna.json': json(manifestLicensed),
-  'KDNA_Core.json': licensedCoreEncrypted,
-  'KDNA_Patterns.json': licensedPatternsPlaintext,
-});
-
-// Tamper with ciphertext: decode base64, flip first byte, re-encode
-const tamperedEnvelope = JSON.parse(licensedCoreEncrypted);
-const tamperedCipher = Buffer.from(tamperedEnvelope.ciphertext, 'base64');
-tamperedCipher[0] ^= 0xff;
-tamperedEnvelope.ciphertext = tamperedCipher.toString('base64');
-
-fixtures.licensedTampered = writeAsset('invalid-licensed-tampered-ciphertext.kdna', {
-  mimetype: 'application/vnd.aikdna.kdna+zip',
-  'kdna.json': json(manifestLicensed),
-  'KDNA_Core.json': json(tamperedEnvelope),
-  'KDNA_Patterns.json': licensedPatternsPlaintext,
-});
-
-// App-private envelope (non-canonical extension)
-fixtures.appPrivateEnvelope = (() => {
-  const assetPath = path.join(generated, 'invalid-app-private-envelope.kdnasealed');
-  fs.writeFileSync(assetPath, Buffer.from('NOT_A_KDNA_ASSET'));
-  return assetPath;
-})();
-
-const inspect = await inspectKDNA(fixtures.minimal, { verify: true });
-const expectedInspect = JSON.parse(
-  fs.readFileSync(path.join(root, 'fixtures', 'expected', 'minimal-inspect.json'), 'utf8'),
-);
-assert.equal(inspect.name, expectedInspect.name);
-assert.equal(inspect.version, expectedInspect.version);
-assert.equal(inspect.access, expectedInspect.access);
-assert.equal(inspect.quality_badge, expectedInspect.quality_badge);
-assert.equal(inspect.risk_level, expectedInspect.risk_level);
-for (const entry of expectedInspect.required_entries)
-  assert.ok(inspect.entries.includes(entry), `${entry} missing`);
-
-const validation = await validateKDNA(fixtures.minimal);
-assert.equal(validation.ok, true, validation.errors.join('\n'));
-
-const loaded = await loadKDNA(fixtures.full, { profile: 'full' });
-assert.equal(loaded.domain.core.meta.domain, 'minimal');
-assert.ok(loaded.domain.scenarios);
-
-const prompt = await renderForAgent(fixtures.minimal);
-const expectedPrompt = fs
-  .readFileSync(path.join(root, 'fixtures', 'expected', 'minimal-prompt-output.txt'), 'utf8')
-  .trim();
-for (const line of expectedPrompt.split('\n'))
-  assert.match(prompt, new RegExp(line.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-
-const digest = await verifyDigest(fixtures.minimal, inspect.asset_digest);
-assert.equal(digest.ok, true);
-
-for (const [name, assetPath] of Object.entries({
-  missingCore: fixtures.missingCore,
-  missingPatterns: fixtures.missingPatterns,
-  duplicateId: fixtures.duplicateId,
-  badMeta: fixtures.badMeta,
-  missingMimetype: fixtures.missingMimetype,
-  disallowedKdnaSpec: fixtures.disallowedKdnaSpec,
-  disallowedLanguage: fixtures.disallowedLanguage,
-})) {
-  const result = await validateKDNA(assetPath);
-  assert.equal(result.ok, false, `${name} should fail`);
-}
-
-const weakSelfCheck = await validateKDNA(fixtures.badSelfCheck);
-assert.equal(weakSelfCheck.ok, true);
-assert.match(weakSelfCheck.warnings.join('\n'), /yes\/no/i);
-
-// Licensed entry tests (RFC-0008)
-const licensedDecrypt = createLicensedDecryptEntry({ licenseKey: TEST_LICENSE_KEY });
-
-const licensedValidation = await validateKDNA(fixtures.licensedValid, {
-  requireDecryption: true,
-  decryptEntry: licensedDecrypt,
-});
-assert.equal(licensedValidation.ok, true, licensedValidation.errors.join('\n'));
-
-const licensedLoaded = await loadKDNA(fixtures.licensedValid, {
-  profile: 'compact',
-  decryptEntry: licensedDecrypt,
-});
-assert.equal(licensedLoaded.domain.core.meta.domain, 'licensed');
-assert.ok(licensedLoaded.context.includes('Protected judgment loads in memory'));
-
-const licensedNoHook = await validateKDNA(fixtures.licensedValid, { requireDecryption: true });
-assert.equal(licensedNoHook.ok, false, 'licensed asset without hook must fail');
-
-const wrongDecrypt = createLicensedDecryptEntry({ licenseKey: 'WRONG-KEY' });
-const licensedWrongKey = await validateKDNA(fixtures.licensedValid, {
-  requireDecryption: true,
-  decryptEntry: wrongDecrypt,
-});
-assert.equal(licensedWrongKey.ok, false, 'licensed asset with wrong key must fail');
-
-const licensedTampered = await validateKDNA(fixtures.licensedTampered, {
-  requireDecryption: true,
-  decryptEntry: licensedDecrypt,
-});
-assert.equal(licensedTampered.ok, false, 'tampered ciphertext must fail integrity check');
-
-// Protected entry tests (RFC-0009)
-const TEST_PROTECTED_PASSWORD = 'KDNA-TEST-VECTOR-2026';
-
-function protectedManifest() {
-  return {
-    format: 'kdna',
-    format_version: '2.0',
-    spec_version: '1.0-rc',
-    name: '@example/protected',
-    version: '0.1.0',
-    judgment_version: '2026.05',
-    access: 'protected',
-    status: 'experimental',
-    description: 'Protected conformance asset.',
-    author: { name: 'KDNA Conformance', id: 'conformance' },
-    languages: ['en'],
-    default_language: 'en',
-    keywords: ['protected', 'conformance'],
-    quality_badge: 'untested',
-    risk_level: 'R0',
-    encryption: {
-      profile: 'kdna-password-protected-v1',
-      encrypted_entries: ['KDNA_Core.json'],
-    },
-  };
-}
-
-const protectedCorePlaintext = json({
-  meta: {
-    domain: 'protected',
-    version: '0.1.0',
-    created: '2026-06-02',
-    purpose: 'Conformance protected fixture.',
-    load_condition: 'always',
-  },
-  stances: ['Password-protected judgment stays protected.'],
-  axioms: [
-    {
-      id: 'ax_protected',
-      one_sentence: 'Password decryption works.',
-      full_statement: 'Password decryption works across languages.',
-      why: 'RFC-0009 interoperability.',
-    },
-  ],
-  ontology: [],
-  frameworks: [],
-  core_structure: [],
-});
-
-const protectedPatternsPlaintext = json({
-  meta: {
-    domain: 'protected',
-    version: '0.1.0',
-    created: '2026-06-02',
-    purpose: 'Conformance pattern fixture.',
-    load_condition: 'always',
-  },
-  terminology: { standard_terms: [], banned_terms: [] },
-  misunderstandings: [],
-  self_check: ['Did password decryption succeed?'],
-});
-
-const manifestProtected = protectedManifest();
-
-const protectedCoreEncrypted = json(
-  encryptProtectedEntry(protectedCorePlaintext, {
-    entryName: 'KDNA_Core.json',
-    manifest: manifestProtected,
-    password: TEST_PROTECTED_PASSWORD,
-  }),
-);
-
-fixtures.protectedValid = writeAsset('valid-protected-domain.kdna', {
-  mimetype: 'application/vnd.aikdna.kdna+zip',
-  'kdna.json': json(manifestProtected),
-  'KDNA_Core.json': protectedCoreEncrypted,
-  'KDNA_Patterns.json': protectedPatternsPlaintext,
-});
-
-// Tamper with protected ciphertext
-const tamperedProtectedEnvelope = JSON.parse(protectedCoreEncrypted);
-const tamperedProtectedCipher = Buffer.from(tamperedProtectedEnvelope.ciphertext, 'base64');
-tamperedProtectedCipher[0] ^= 0xff;
-tamperedProtectedEnvelope.ciphertext = tamperedProtectedCipher.toString('base64');
-
-fixtures.protectedTampered = writeAsset('invalid-protected-tampered-ciphertext.kdna', {
-  mimetype: 'application/vnd.aikdna.kdna+zip',
-  'kdna.json': json(manifestProtected),
-  'KDNA_Core.json': json(tamperedProtectedEnvelope),
-  'KDNA_Patterns.json': protectedPatternsPlaintext,
-});
-
-// Protected entry tests (RFC-0009)
-const protectedDecrypt = createPasswordDecryptEntry({ password: TEST_PROTECTED_PASSWORD });
-
-const protectedValidation = await validateKDNA(fixtures.protectedValid, {
-  requireDecryption: true,
-  decryptEntry: protectedDecrypt,
-});
-assert.equal(protectedValidation.ok, true, protectedValidation.errors.join('\n'));
-
-const protectedLoaded = await loadKDNA(fixtures.protectedValid, {
-  profile: 'compact',
-  decryptEntry: protectedDecrypt,
-});
-assert.equal(protectedLoaded.domain.core.meta.domain, 'protected');
-assert.ok(protectedLoaded.context.includes('Password decryption works'));
-
-const protectedNoHook = await validateKDNA(fixtures.protectedValid, { requireDecryption: true });
-assert.equal(protectedNoHook.ok, false, 'protected asset without hook must fail');
-
-const wrongProtectedDecrypt = createPasswordDecryptEntry({ password: 'wrong-password' });
-const protectedWrongPassword = await validateKDNA(fixtures.protectedValid, {
-  requireDecryption: true,
-  decryptEntry: wrongProtectedDecrypt,
-});
-assert.equal(protectedWrongPassword.ok, false, 'protected asset with wrong password must fail');
-
-const protectedTamperedResult = await validateKDNA(fixtures.protectedTampered, {
-  requireDecryption: true,
-  decryptEntry: protectedDecrypt,
-});
-assert.equal(
-  protectedTamperedResult.ok,
-  false,
-  'tampered protected ciphertext must fail integrity check',
-);
-
-// App-private envelope rejection
-let appPrivateRejected = false;
 try {
-  await inspectKDNA(fixtures.appPrivateEnvelope);
-} catch {
-  appPrivateRejected = true;
+  const source = writeSource('valid');
+  const asset = path.join(workdir, 'valid.kdna');
+  core.pack(source, asset);
+
+  const inspected = core.inspect(asset);
+  assert.equal(inspected.asset_id, 'kdna:conformance:single-format');
+  assert.equal(inspected.kdna_version, '1.0');
+
+  const validation = core.validate(asset);
+  assert.equal(validation.overall_valid, true, validation.problems.join('\n'));
+
+  const plan = core.planLoad(asset);
+  assert.equal(plan.access, 'public');
+  assert.equal(plan.state, 'ready');
+  assert.equal(plan.can_load_now, true);
+
+  const capsule = core.loadAuthorized(asset, { profile: 'compact', as: 'json' });
+  assert.equal(capsule.type, 'kdna.context.capsule');
+  assert.equal(capsule.domain, '@example/single-format');
+
+  const jsonPayloadSource = writeSource('json-payload', {
+    rawPayload: Buffer.from(JSON.stringify(payload())),
+  });
+  const jsonPayloadAsset = path.join(workdir, 'json-payload.kdna');
+  core.pack(jsonPayloadSource, jsonPayloadAsset);
+  const jsonPayloadValidation = core.validate(jsonPayloadAsset);
+  assert.equal(jsonPayloadValidation.payload_valid, false, 'JSON payload bytes must be rejected');
+
+  const wrongVersionSource = writeSource('wrong-version', {
+    manifestOverrides: { kdna_version: '2.0' },
+  });
+  const wrongVersionAsset = path.join(workdir, 'wrong-version.kdna');
+  core.pack(wrongVersionSource, wrongVersionAsset);
+  const wrongVersionValidation = core.validate(wrongVersionAsset);
+  assert.equal(wrongVersionValidation.schema_valid, false, 'unknown kdna_version must fail');
+
+  const forbiddenSource = writeSource('forbidden-source');
+  fs.writeFileSync(path.join(forbiddenSource, 'KDNA_Core.json'), '{}');
+  assert.throws(
+    () => core.pack(forbiddenSource, path.join(workdir, 'forbidden.kdna')),
+    /forbidden top-level source entry/,
+  );
+
+  fs.writeFileSync(
+    path.join(os.tmpdir(), 'kdna-conformance-last-run.json'),
+    `${JSON.stringify(
+      {
+        ok: true,
+        profile,
+        certification_level: {
+          asset: 'KDNA Asset Compatible',
+          loader: 'KDNA Loader Compatible',
+          runtime: 'KDNA Runtime Compatible',
+          'asset-loader': 'KDNA Asset + Loader Compatible',
+        }[profile],
+        contract: 'single-format-cbor-loadplan-capsule',
+      },
+      null,
+      2,
+    )}\n`,
+  );
+
+  console.log(`KDNA conformance suite passed (${profile})`);
+} finally {
+  fs.rmSync(workdir, { recursive: true, force: true });
 }
-assert.equal(appPrivateRejected, true, 'app-private envelope must be rejected');
-
-fs.writeFileSync(
-  path.join(os.tmpdir(), 'kdna-conformance-last-run.json'),
-  JSON.stringify(
-    {
-      ok: true,
-      profile,
-      certification_level: {
-        asset: 'KDNA Asset Compatible',
-        loader: 'KDNA Loader Compatible',
-        runtime: 'KDNA Runtime Compatible',
-        registry: 'KDNA Registry Compatible',
-        'asset-loader': 'KDNA Asset + Loader Compatible',
-        'phase2-protocol': 'KDNA Phase 2 Protocol Compatible',
-      }[profile],
-      generated,
-      fixtures: Object.keys(fixtures),
-    },
-    null,
-    2,
-  ),
-);
-
-console.log(`KDNA conformance suite passed (${profile})`);

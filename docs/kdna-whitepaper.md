@@ -1,5 +1,12 @@
 # KDNA: An Open Protocol for Domain Judgment in AI Agents
 
+> **Archived historical document.** This paper describes an earlier product
+> model and is not a current specification or usage guide. Read
+> [Core Narrative and Boundaries](./core-narrative-and-boundaries.md),
+> [Status](./status.md), and [Start Here](./start-here.md) instead. Historical
+> registry, quality, source-tree, and maturity claims below are preserved only
+> for project history.
+
 *Making Expert Judgment Explicit, Portable, Verifiable, Composable, and Reusable*
 
 **White Paper v1.2 — May 2026**  

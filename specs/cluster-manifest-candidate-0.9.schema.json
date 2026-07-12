@@ -4,7 +4,15 @@
   "title": "KDNA Cluster Manifest 0.9 Candidate",
   "description": "Canonical candidate schema for kdna.cluster.json — the single Cluster format that replaces legacy packages-based, Schema B domains-based, and consume.js route/compose definitions. Defines a composable judgment system of independently qualified KDNA assets with explicit selection, conflict, budget, trace, and evaluation rules.",
   "type": "object",
-  "required": ["format", "format_version", "cluster_id", "name", "version", "domains", "composition"],
+  "required": [
+    "format",
+    "format_version",
+    "cluster_id",
+    "name",
+    "version",
+    "domains",
+    "composition"
+  ],
   "properties": {
     "format": {
       "type": "string",
@@ -39,8 +47,17 @@
     },
     "status": {
       "type": "string",
-      "enum": ["draft", "schema_valid", "assets_resolved", "route_evaluated", "compose_evaluated",
-               "holdout_passed", "human_reviewed", "field_validated", "production"],
+      "enum": [
+        "draft",
+        "schema_valid",
+        "assets_resolved",
+        "route_evaluated",
+        "compose_evaluated",
+        "holdout_passed",
+        "human_reviewed",
+        "field_validated",
+        "production"
+      ],
       "default": "draft"
     },
     "access": {
@@ -190,7 +207,17 @@
           "to": { "type": "string" },
           "type": {
             "type": "string",
-            "enum": ["depends_on", "constrains", "overrides", "blocks", "informs", "extends", "refines", "conflicts_with", "evaluates"]
+            "enum": [
+              "depends_on",
+              "constrains",
+              "overrides",
+              "blocks",
+              "informs",
+              "extends",
+              "refines",
+              "conflicts_with",
+              "evaluates"
+            ]
           },
           "description": { "type": "string" }
         },
@@ -209,8 +236,15 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["primary_only", "bounded_compose", "wrong_advisor", "irrelevant_advisor",
-                     "budget_waste", "adversarial", "no_kdna"]
+            "enum": [
+              "primary_only",
+              "bounded_compose",
+              "wrong_advisor",
+              "irrelevant_advisor",
+              "budget_waste",
+              "adversarial",
+              "no_kdna"
+            ]
           }
         },
         "replay_suites": {

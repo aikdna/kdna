@@ -1,10 +1,9 @@
 # @aikdna/kdna-core
 
-Core library for local `.kdna` judgment assets.
-
-KDNA Core v1 defines the `.kdna` file format, schemas, secure container
-reader, LoadPlan contract, and runtime projection helpers used by the CLI,
-Studio export, skills, MCP integrations, and downstream agent runtimes.
+Core library for `.kdna` judgment assets. It implements the single KDNA Asset
+Container, strict-CBOR payload decoding, validation, LoadPlan authorization,
+and Runtime Capsule projection used by the CLI, Studio, skills, MCP
+integrations, and downstream Agent runtimes.
 
 ## Installation
 
@@ -18,9 +17,10 @@ If you need full JSON Schema validation through Ajv, also install:
 npm install ajv ajv-formats
 ```
 
-## KDNA Core v1 API
+## Public API
 
-Use the `./v1` entrypoint for current KDNA Core v1 tooling:
+Use the package root. Version-qualified entrypoints and API names are not part
+of the public contract.
 
 ```js
 const {
@@ -30,8 +30,8 @@ const {
   loadAuthorized,
   pack,
   unpack,
-  buildChecksumsV1
-} = require('@aikdna/kdna-core/v1');
+  buildChecksums
+} = require('@aikdna/kdna-core');
 
 const validation = validate('./asset.kdna');
 if (!validation.overall_valid) {
@@ -43,10 +43,14 @@ if (plan.can_load_now !== true) {
   throw new Error(`Asset is not loadable yet: ${plan.required_action}`);
 }
 
-const compact = loadAuthorized('./asset.kdna', {
+const capsule = loadAuthorized('./asset.kdna', {
   profile: 'compact',
-  as: 'prompt'
+  as: 'json'
 });
+
+if (capsule.type !== 'kdna.context.capsule') {
+  throw new Error('Expected a Runtime Capsule');
+}
 ```
 
 ## Supported Runtime Flow
@@ -56,7 +60,8 @@ const compact = loadAuthorized('./asset.kdna', {
 → validate
 → planLoad
 → loadAuthorized
-→ agent/runtime context
+→ Runtime Capsule
+→ Agent/runtime context
 ```
 
 For authoring and test fixtures, `pack()` can turn a local working folder into
@@ -71,9 +76,9 @@ local working folder
 → loadAuthorized
 ```
 
-## v1 Container
+## KDNA Asset Container
 
-A v1 `.kdna` container contains:
+A `.kdna` asset contains:
 
 - `mimetype`
 - `kdna.json`
@@ -87,6 +92,10 @@ A v1 `.kdna` container contains:
 - payload parseability
 - checksum consistency
 - load-profile contract
+
+`payload.kdnab` is CBOR. A password-protected or licensed asset stores a CBOR
+encryption envelope in the same entry; authorized plaintext is decrypted in
+memory and projected into the Runtime Capsule.
 
 ## Load Profiles
 
@@ -104,14 +113,8 @@ Output formats:
 
 ## Boundary
 
-KDNA Core v1 is content-neutral. It validates file structure and loadability;
+KDNA Core is content-neutral. It validates file structure and loadability;
 it does not rank judgment quality or endorse specific assets.
-
-## Legacy API
-
-The package root still exports compatibility APIs for older KDNA paths. New
-tooling should prefer `@aikdna/kdna-core/v1` and the `planLoad` /
-`loadAuthorized` path.
 
 ## License
 

@@ -4,7 +4,17 @@
   "title": "KDNA ConsumptionPlan 0.9 Candidate",
   "description": "Candidate pre-execution plan for one KDNA use. Determined before any model call. mode=single or mode=cluster. The plan records intent; the Trace records observed execution.",
   "type": "object",
-  "required": ["plan_version", "plan_id", "mode", "task", "load_plan_ref", "applicability", "projection_ref", "budget", "trace_policy"],
+  "required": [
+    "plan_version",
+    "plan_id",
+    "mode",
+    "task",
+    "load_plan_ref",
+    "applicability",
+    "projection_ref",
+    "budget",
+    "trace_policy"
+  ],
   "properties": {
     "plan_version": {
       "type": "string",
@@ -25,11 +35,13 @@
     "asset_ref": {
       "type": "object",
       "description": "Required when mode=single. The asset to be consumed.",
-      "required": ["asset_id", "version", "digest"],
+      "required": ["asset_id", "version"],
       "properties": {
         "asset_id": { "type": "string" },
         "version": { "type": "string" },
-        "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "digest": {
+          "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }]
+        },
         "access": { "type": "string", "enum": ["public", "licensed", "remote"] }
       },
       "additionalProperties": false
@@ -66,9 +78,18 @@
         "plan_id": { "type": "string" },
         "status": {
           "type": "string",
-          "enum": ["ready", "blocked", "remote_unreachable", "integrity_unknown",
-                   "digest_mismatch", "revoked", "expired", "unauthorized",
-                   "format_invalid", "unknown_access_mode"]
+          "enum": [
+            "ready",
+            "blocked",
+            "remote_unreachable",
+            "integrity_unknown",
+            "digest_mismatch",
+            "revoked",
+            "expired",
+            "unauthorized",
+            "format_invalid",
+            "unknown_access_mode"
+          ]
         },
         "issues": {
           "type": "array",
@@ -147,13 +168,17 @@
         "max_tokens": { "type": "integer", "minimum": 0 },
         "max_chars": { "type": "integer", "minimum": 0 },
         "max_assets": { "type": "integer", "minimum": 1 },
-        "assets_consumed": { "type": "integer", "minimum": 0, "description": "Number of assets selected (1 for single, 1+N for cluster)" }
+        "assets_consumed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of assets selected (1 for single, 1+N for cluster)"
+        }
       },
       "additionalProperties": false
     },
 
     "runner": {
-      "type": "object",
+      "type": ["object", "null"],
       "properties": {
         "type": { "type": "string", "const": "registered" },
         "runner_id": { "type": "string" },
@@ -181,7 +206,18 @@
       "properties": {
         "emit": {
           "type": "array",
-          "items": { "type": "string", "enum": ["decision", "cost", "projection", "provenance", "result", "self_checks", "axioms_triggered"] }
+          "items": {
+            "type": "string",
+            "enum": [
+              "decision",
+              "cost",
+              "projection",
+              "provenance",
+              "result",
+              "self_checks",
+              "axioms_triggered"
+            ]
+          }
         },
         "storage": {
           "type": "string",
@@ -200,7 +236,10 @@
       "type": "object",
       "description": "What shape the result should take. Runner must validate result against this.",
       "properties": {
-        "result_shape": { "type": "string", "enum": ["answer-pattern", "compact", "scenario", "full"] },
+        "result_shape": {
+          "type": "string",
+          "enum": ["answer-pattern", "compact", "scenario", "full"]
+        },
         "required_fields": {
           "type": "array",
           "items": { "type": "string" }
@@ -260,7 +299,17 @@
               "version": { "type": "string" },
               "role": { "type": "string" },
               "rejection_reason": { "type": "string" },
-              "rejection_policy": { "type": "string", "enum": ["exclude_non_matching", "budget_limit", "duplicate_coverage", "no_contribution_hypothesis", "entitlement_failed", "version_superseded"] }
+              "rejection_policy": {
+                "type": "string",
+                "enum": [
+                  "exclude_non_matching",
+                  "budget_limit",
+                  "duplicate_coverage",
+                  "no_contribution_hypothesis",
+                  "entitlement_failed",
+                  "version_superseded"
+                ]
+              }
             },
             "additionalProperties": false
           }
@@ -298,7 +347,10 @@
           "type": { "type": "string" },
           "assets": { "type": "array", "items": { "type": "string" } },
           "description": { "type": "string" },
-          "resolution": { "type": "string", "enum": ["surfaced", "priority_wins", "risk_wins", "blocked", "ask_user", "unresolved"] }
+          "resolution": {
+            "type": "string",
+            "enum": ["surfaced", "priority_wins", "risk_wins", "blocked", "ask_user", "unresolved"]
+          }
         }
       }
     },
@@ -307,8 +359,14 @@
       "type": "object",
       "description": "Cluster composition policy. Present only when mode=cluster.",
       "properties": {
-        "strategy": { "type": "string", "enum": ["fixed", "signal_based", "staged", "overlay", "user_confirmed"] },
-        "conflict_policy": { "type": "string", "enum": ["surface", "priority", "block", "ask_user"] },
+        "strategy": {
+          "type": "string",
+          "enum": ["fixed", "signal_based", "staged", "overlay", "user_confirmed"]
+        },
+        "conflict_policy": {
+          "type": "string",
+          "enum": ["surface", "priority", "block", "ask_user"]
+        },
         "priority_order": { "type": "array", "items": { "type": "string" } }
       }
     },
@@ -318,7 +376,10 @@
       "description": "What happens when assets fail. Cluster mode only.",
       "properties": {
         "primary_unavailable": { "type": "string", "enum": ["block"] },
-        "required_advisor_unavailable": { "type": "string", "enum": ["block", "continue_with_warning"] },
+        "required_advisor_unavailable": {
+          "type": "string",
+          "enum": ["block", "continue_with_warning"]
+        },
         "optional_advisor_unavailable": { "type": "string", "enum": ["continue_with_warning"] },
         "budget_exceeded": { "type": "string", "enum": ["block", "warn", "degrade"] }
       }
@@ -341,7 +402,20 @@
     },
     {
       "if": { "properties": { "mode": { "const": "cluster" } } },
-      "then": { "required": ["cluster_ref", "selection", "composition_policy_ref"] }
+      "then": { "required": ["cluster_ref", "composition_policy_ref"] }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": { "const": "cluster" },
+          "applicability": {
+            "properties": { "decision": { "const": "applies" } },
+            "required": ["decision"]
+          }
+        },
+        "required": ["mode", "applicability"]
+      },
+      "then": { "required": ["selection"] }
     }
   ],
 

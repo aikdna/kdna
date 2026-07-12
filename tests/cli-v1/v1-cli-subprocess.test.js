@@ -15,7 +15,13 @@ const { execFileSync, spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const cbor = require('cbor-x');
 const v1 = require('../../packages/kdna-core/src/v1');
+
+function readPayload(p) {
+  const buf = fs.readFileSync(p);
+  return cbor.decode(buf);
+}
 
 const repoRoot = path.resolve(__dirname, '..', '..');
 const cliBin = path.join(repoRoot, 'packages', 'kdna', 'bin', 'kdna.js');
@@ -81,12 +87,12 @@ test('cli: kdna validate --runtime exits 3 when LoadPlan cannot load now', () =>
     manifest.runtime = { endpoint: 'https://runtime.example.test/v1/project' };
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
     const payloadPath = path.join(dir, 'payload.kdnab');
-    const payload = JSON.parse(fs.readFileSync(payloadPath, 'utf8'));
+    const payload = readPayload(payloadPath);
     payload.core.axioms = [{ id: 'secret', one_sentence: secret }];
-    fs.writeFileSync(payloadPath, JSON.stringify(payload, null, 2));
+    fs.writeFileSync(payloadPath, cbor.encode(payload));
     fs.writeFileSync(
       path.join(dir, 'checksums.json'),
-      JSON.stringify(v1.buildChecksumsV1(dir), null, 2),
+      JSON.stringify(v1.buildChecksums(dir), null, 2),
     );
 
     const r = runCli(['validate', dir, '--runtime']);
@@ -127,7 +133,7 @@ test('cli: kdna plan-load returns 3 when the plan is valid but cannot load now',
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
     fs.writeFileSync(
       path.join(dir, 'checksums.json'),
-      JSON.stringify(v1.buildChecksumsV1(dir), null, 2),
+      JSON.stringify(v1.buildChecksums(dir), null, 2),
     );
 
     const r = runCli(['plan-load', dir]);
@@ -191,10 +197,10 @@ test('cli: kdna validate on a directory missing mimetype exits non-zero', () => 
   }
 });
 
-test('cli: kdna validate on a directory with the v2 mimetype exits non-zero', () => {
-  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-v1-v2mime-'));
+test('cli: kdna validate on a directory with a non-KDNA mimetype exits non-zero', () => {
+  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-v1-badmime-'));
   try {
-    fs.writeFileSync(path.join(dir, 'mimetype'), 'application/vnd.aikdna.kdna+zip');
+    fs.writeFileSync(path.join(dir, 'mimetype'), 'application/octet-stream');
     fs.writeFileSync(path.join(dir, 'kdna.json'), JSON.stringify({ kdna_version: '1.0' }));
     fs.writeFileSync(
       path.join(dir, 'payload.kdnab'),
@@ -204,7 +210,6 @@ test('cli: kdna validate on a directory with the v2 mimetype exits non-zero', ()
       }),
     );
     const r = runCli(['validate', dir]);
-    // v1 router must not pass a v2-mimetype directory.
     assert.notEqual(r.status, 0, `expected non-zero exit, got: ${r.stdout}`);
     assert.ok(
       !/overall_valid.*true/.test(r.stdout + r.stderr),
@@ -252,21 +257,23 @@ test('cli: kdna validate on a directory with lineage as array exits non-zero', (
   }
 });
 
-test('cli: v2 .kdna container is rejected with a clear message (no silent pass)', () => {
-  // kdna-cli >=0.27.0 no longer supports legacy/v2 containers.
-  // The shim must catch this and report a clear error — not silently
-  // return empty output, not crash, not produce misleading JSON.
-  const v2Fixture = path.join(repoRoot, 'fixtures', 'test_conformance.kdna');
-  if (!fs.existsSync(v2Fixture)) return; // optional in some checkouts
-  const r = runCli(['inspect', v2Fixture, '--json']);
-  assert.notEqual(r.status, 0, 'v2 container must be rejected');
-  assert.ok(
-    r.stderr.includes('legacy') ||
-      r.stderr.includes('v1') ||
-      r.stderr.includes('unsupported') ||
-      r.stderr.includes('Unsupported'),
-    `v2 rejection message must be descriptive, got: ${r.stderr}`,
-  );
+test('cli: non-KDNA .kdna container is rejected with a clear message (no silent pass)', () => {
+  const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-nkdna-'));
+  try {
+    const file = path.join(tmp, 'not-kdna.kdna');
+    fs.writeFileSync(file, Buffer.from('PK\x03\x04' + '\0'.repeat(26) + 'hello', 'binary'));
+    const r = runCli(['inspect', file, '--json']);
+    assert.notEqual(r.status, 0, 'non-KDNA container must be rejected');
+    assert.ok(
+      r.stderr.includes('Unknown') ||
+        r.stderr.includes('unsupported') ||
+        r.stderr.includes('not a') ||
+        r.stderr.includes('Not a'),
+      `rejection message must be descriptive, got: ${r.stderr}`,
+    );
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
 });
 
 test('cli: a non-v1 directory does NOT trigger the v1 route (no false positive)', () => {
@@ -293,13 +300,15 @@ test('cli: a non-v1 directory does NOT trigger the v1 route (no false positive)'
   }
 });
 
-test('cli: v2 container inspect exits non-zero with descriptive error', () => {
-  // kdna-cli >=0.27.0 rejects legacy/v2 containers. Verify the shim
-  // propagates this rejection correctly (non-zero exit, descriptive
-  // message) rather than crashing or returning empty output.
-  const v2Fixture = path.join(repoRoot, 'fixtures', 'test_conformance.kdna');
-  if (!fs.existsSync(v2Fixture)) return;
-  const r = runCli(['inspect', v2Fixture, '--json']);
-  assert.notEqual(r.status, 0, 'v2 container inspect must exit non-zero');
-  assert.ok(r.stderr.length > 0, 'rejection must produce an error message');
+test('cli: non-KDNA ZIP container inspect exits non-zero with descriptive error', () => {
+  const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-nkdna-'));
+  try {
+    const file = path.join(tmp, 'not-kdna.kdna');
+    fs.writeFileSync(file, Buffer.from('PK\x03\x04' + '\0'.repeat(26) + 'hello', 'binary'));
+    const r = runCli(['inspect', file, '--json']);
+    assert.notEqual(r.status, 0, 'non-KDNA container inspect must exit non-zero');
+    assert.ok(r.stderr.length > 0, 'rejection must produce an error message');
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
 });

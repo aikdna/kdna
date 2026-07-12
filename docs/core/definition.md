@@ -1,8 +1,11 @@
 # KDNA Core Definition
 
-**KDNA Core is the official KDNA judgment-asset format and runtime loading contract.**
+**KDNA Core is the canonical public judgment-asset protocol and runtime loading contract.**
 
-`.kdna` assets are created, inspected, protected, loaded, and consumed through the official KDNA toolchain. Third-party products integrate KDNA through the official SDK, CLI, Loader, or API.
+Anyone can create `.kdna` assets through the public protocol and toolchain.
+Compatible Agent runtimes use the official SDK, CLI, Loader, or API, or
+independently implement the complete LoadPlan, authorization, integrity, and
+Runtime Capsule contracts.
 
 KDNA Core defines how judgment assets are:
 
@@ -29,9 +32,9 @@ KDNA Core does **not** define:
 
 ---
 
-**KDNA Core 是 KDNA 官方判断资产格式与运行时加载契约。**
+**KDNA Core 是公开、规范的判断资产协议与运行时加载契约。**
 
-`.kdna` 资产通过 KDNA 官方工具链创建、检查、保护、加载和消费。第三方产品通过 KDNA 官方 SDK、CLI、Loader 或 API 接入 KDNA,而不独立实现。
+任何人都可以通过公开协议和工具链创建 `.kdna`。第三方 Agent 运行时可以使用官方 SDK、CLI、Loader 或 API，也可以独立完整实现 LoadPlan、授权、完整性校验和 Runtime Capsule 契约。
 
 它定义判断资产如何被创建、保存、封装、加密、解密、签名、识别、版本化、追踪、加载和被工具使用。
 
@@ -53,8 +56,10 @@ KDNA Core does **not** define:
 | What judgment to encode | The **author** |
 | Which assets to use | The **caller** (agent / application) |
 | Whether to trust a signature | The **caller** |
-| How a third party integrates KDNA | The **official SDK / CLI / Loader / API** |
+| How a third party integrates KDNA | Official tooling, or a complete compatible implementation of the runtime contract |
 | Where to find assets | An **external** platform (out of scope) |
 | Whether to recommend an asset | An **external** platform (out of scope) |
 
-KDNA Core is the **verifiable primitive** that makes all of the above possible. It is not the policy layer. The format is documented publicly so files are verifiable; the official toolchain is canonical so the verification is meaningful.
+KDNA Core is the **verifiable primitive** that makes all of the above possible.
+It is not the policy layer. “Verifiable” means format, integrity, provenance,
+authorization, and optional evidence facts — never content truth or quality.

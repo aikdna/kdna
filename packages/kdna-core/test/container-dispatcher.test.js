@@ -12,7 +12,7 @@ test('container dispatcher loads sibling modules from packaged src layout', () =
   const asset = readAsset(path.join(repoRoot, 'examples', 'minimal'));
 
   assert.equal(asset.sourceKind, 'dir');
-  assert.equal(asset.format, 'v1-dir');
+  assert.equal(asset.format, 'dir');
   assert.equal(asset.mimetype, 'application/vnd.kdna.asset');
   assert.equal(asset.manifest.asset_id, 'kdna:example:agent-project-context');
   assert.equal(asset.manifest.title, 'Agent Project Context');

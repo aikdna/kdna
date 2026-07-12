@@ -17,7 +17,7 @@ in all active public documents, code comments, and specifications.
 | Asset content version | `asset version` | "asset version 1.2.0" |
 | npm package version | `package version` | "`@aikdna/kdna-core` package version 0.13.3" |
 | Specification baseline | `specification baseline` | "The 2026.06 specification baseline" |
-| Wire format fields | Wire field, annotated as legacy | "The `format_version` wire field is a legacy container discriminator" |
+| Wire format field | `kdna_version` | "The manifest carries `kdna_version: \"1.0\"`" |
 | Source tree | `source tree` / `dev source directory` | "The source tree contains `KDNA_Core.json` for authoring only" |
 | Distribution asset | `.kdna` asset / `distribution asset` | "A `.kdna` distribution asset never contains source tree files" |
 
@@ -45,20 +45,20 @@ in all active public documents, code comments, and specifications.
 | `KDNA Container Version 2.0` | `KDNA Asset Container` |
 | `v1 container` (current) | `KDNA Asset Container` |
 | `v2 container` (future) | Future asset container (draft) |
-| `kdna_version` | Wire field — see Wire Fields below |
-| `format_version` | Wire field — see Wire Fields below |
-| `spec_version` | Wire field — see Wire Fields below |
+| `kdna_version` | Current wire field — see Wire Fields below |
+| top-level `format_version` | Removed legacy field; do not emit |
+| top-level `spec_version` | Removed legacy field; do not emit |
 
 ## Wire Fields
 
-The following JSON fields in `kdna.json` are **wire-level discriminators**, not public
-version labels. They exist for container format detection and validation routing:
+`kdna.json` has one container wire discriminator. Historical top-level fields
+are rejected rather than treated as parallel formats:
 
 | Field | Purpose | Current Value | Public Meaning |
 |-------|---------|---------------|----------------|
-| `format_version` | Container format discriminator | `"2.0"` | Legacy wire value. Does NOT mean "KDNA v2". Indicates the Asset Container format. |
-| `spec_version` | Specification baseline this asset conforms to | `"2.0"` | Legacy wire value. Indicates conformance to the 2026.06 baseline. |
-| `kdna_version` | (deprecated, use `spec_version`) | N/A | Legacy field from pre-Core era. Rejected by current validator. |
+| `kdna_version` | KDNA Asset Container discriminator | `"1.0"` | Current and only accepted wire value. It is not a product marketing version. |
+| top-level `format_version` | Removed legacy discriminator | none | MUST NOT be emitted; does not select another supported format. |
+| top-level `spec_version` | Removed legacy discriminator | none | MUST NOT be emitted; evidence subobjects may separately version their own schemas. |
 
 **Do not reference these wire field values in public documentation as product version labels.**
 

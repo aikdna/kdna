@@ -40,7 +40,7 @@ Prepare public release metadata for the packaged `.kdna` file:
   "version": "0.1.0",
   "status": "experimental",
   "description": "Scoped judgment for a specific domain.",
-  "media_type": "application/vnd.aikdna.kdna+zip",
+  "media_type": "application/vnd.kdna.asset",
   "asset_url": "https://github.com/example/kdna-my-domain/releases/download/v0.1.0/my-domain-0.1.0.kdna",
   "asset_digest": "sha256:...",
   "signature": "ed25519:...",

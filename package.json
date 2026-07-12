@@ -11,7 +11,7 @@
     "lint:examples": "node scripts/validate-examples.js",
     "validate:examples": "node scripts/validate-examples.js",
     "validate:runtime-contract": "node scripts/validate-runtime-contract.js",
-    "audit:public-confidence": "node scripts/audit-public-confidence.js",
+    "audit:public-confidence": "node scripts/check-public-surface.mjs",
     "validate:app-schemas": "node scripts/validate-app-schemas.js",
     "validate:protocol-fixtures": "node scripts/validate-protocol-fixtures.js",
     "validate:rfc0013-schemas": "node scripts/validate-rfc0013-schemas.js",

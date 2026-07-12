@@ -14,7 +14,6 @@ const core = require('../');
 
 const TEST_PASSWORD = 'KDNA-GOLDEN-VECTOR-PASSWORD-2026';
 const MANIFEST = {
-  format: 'kdna', format_version: '2.0', spec_version: '2.0',
   kdna_version: '1.0', asset_id: 'kdna:test:golden', asset_uid: 'kdna:test:golden@1.0.0',
   asset_type: 'domain', name: '@test/golden', title: 'Golden Vector Test',
   version: '1.0.0', judgment_version: '1.0.0',

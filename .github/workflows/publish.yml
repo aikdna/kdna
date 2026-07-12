@@ -67,6 +67,35 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+  publish-eval:
+    if: startsWith(github.ref_name, 'kdna-eval-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm --workspace @aikdna/kdna-eval test
+      - run: npm --workspace @aikdna/kdna-eval run typecheck
+      - name: Publish @aikdna/kdna-eval
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "@aikdna/kdna-eval@$VERSION" version >/dev/null 2>&1; then
+            echo "@aikdna/kdna-eval@$VERSION is already published; skipping."
+            exit 0
+          fi
+          npm publish --provenance --access public
+        working-directory: packages/kdna-eval
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
   publish-compat:
     if: startsWith(github.ref_name, 'kdna-v')
     runs-on: macos-latest

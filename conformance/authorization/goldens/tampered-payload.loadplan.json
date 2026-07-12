@@ -17,7 +17,7 @@
   "input_fingerprint": {
     "has_password_input": false,
     "entitlement_input": null,
-    "source_fingerprint": "sha256:7aae0dd13648aa58a2564df44b1c81ebde7363066bfabefec1c74ce33d727075"
+    "source_fingerprint": "sha256:70c6f7684ea88068dd97c27b7151bbea69e5bff9a54b929065f78587aec56d8e"
   },
   "checks": {
     "format_valid": true,
@@ -31,12 +31,12 @@
     {
       "code": "KDNA_INTEGRITY_DIGEST_FAILED",
       "severity": "blocking",
-      "message": "checksums: payload_digest mismatch (declared 593109dd..., actual 6c5ebbf0...)"
+      "message": "checksums: payload_digest mismatch (declared e0855ab9..., actual f68760d8...)"
     },
     {
       "code": "KDNA_INTEGRITY_DIGEST_FAILED",
       "severity": "blocking",
-      "message": "checksums: asset_digest mismatch (declared 25eec8c1..., actual 5ff0ff90...)"
+      "message": "checksums: asset_digest mismatch (declared ef06906d..., actual 7c9b95fd...)"
     }
   ],
   "source": {

@@ -1,6 +1,6 @@
 # KDNA Agent 集成
 
-KDNA 通过一个 `kdna-loader` skill 集成到主流 AI 编程 Agent 中。KDNA Core v1 资产是本地 `.kdna` 文件，可以按任务需要被校验、规划加载和加载；它们不是单独注册的 skill。
+KDNA 通过一个 `kdna-loader` 适配 skill 集成到主流 AI 编程 Agent。本地 `.kdna` 资产通过 CLI 校验、规划和加载；不同领域是资产，不是分别注册的 skill。
 
 ## 支持的 Agent
 

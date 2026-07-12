@@ -33,7 +33,11 @@ function getAjv() {
 const SCHEMAS = {
   'consumption-plan': {
     schemaPath: resolve(SPECS_DIR, 'consumption-plan-candidate-0.9.schema.json'),
-    fixtures: ['single-consumption-plan.json', 'cluster-consumption-plan.json'],
+    fixtures: [
+      'single-consumption-plan.json',
+      'cluster-consumption-plan.json',
+      'cluster-blocked-plan.json',
+    ],
   },
   'judgment-trace': {
     schemaPath: resolve(SPECS_DIR, 'judgment-trace-candidate-0.9.schema.json'),
@@ -53,19 +57,44 @@ const NEGATIVE_DIR = resolve(__dirname, 'negative');
 const UNKNOWN_FIELD_DIR = resolve(__dirname, 'unknown-field');
 const GOLDEN_DIR = resolve(__dirname, 'golden');
 
-const NEGATIVE_FIXTURES = readdirSync(NEGATIVE_DIR).filter(f => f.endsWith('.json'));
-const UNKNOWN_FIXTURES = readdirSync(UNKNOWN_FIELD_DIR).filter(f => f.endsWith('.json'));
+const NEGATIVE_FIXTURES = readdirSync(NEGATIVE_DIR).filter((f) => f.endsWith('.json'));
+const UNKNOWN_FIXTURES = readdirSync(UNKNOWN_FIELD_DIR).filter((f) => f.endsWith('.json'));
 
 // ── Expected issue codes for each negative fixture ──────────────────
 const NEGATIVE_ISSUES = {
-  'plan-missing-plan-version.json': { contract: 'consumption-plan', issue: 'MISSING_REQUIRED_FIELD' },
-  'plan-single-missing-asset-ref.json': { contract: 'consumption-plan', issue: 'MISSING_CONDITIONAL_REQUIRED' },
-  'plan-cluster-missing-cluster-ref.json': { contract: 'consumption-plan', issue: 'MISSING_CONDITIONAL_REQUIRED' },
+  'plan-missing-plan-version.json': {
+    contract: 'consumption-plan',
+    issue: 'MISSING_REQUIRED_FIELD',
+  },
+  'plan-single-missing-asset-ref.json': {
+    contract: 'consumption-plan',
+    issue: 'MISSING_CONDITIONAL_REQUIRED',
+  },
+  'plan-cluster-missing-cluster-ref.json': {
+    contract: 'consumption-plan',
+    issue: 'MISSING_CONDITIONAL_REQUIRED',
+  },
+  'plan-cluster-applies-missing-selection.json': {
+    contract: 'consumption-plan',
+    issue: 'MISSING_CONDITIONAL_REQUIRED',
+  },
   'trace-missing-plan-id.json': { contract: 'judgment-trace', issue: 'MISSING_REQUIRED_FIELD' },
-  'trace-cluster-missing-assets-loaded.json': { contract: 'judgment-trace', issue: 'MISSING_CONDITIONAL_REQUIRED' },
-  'evidence-missing-classification.json': { contract: 'evidence-claim', issue: 'MISSING_REQUIRED_FIELD' },
-  'cluster-no-primary-candidate.json': { contract: 'cluster-manifest', issue: 'NO_PRIMARY_CANDIDATE' },
-  'cluster-advisor-missing-hypothesis.json': { contract: 'cluster-manifest', issue: 'MISSING_ADVISOR_HYPOTHESIS' },
+  'trace-cluster-missing-assets-loaded.json': {
+    contract: 'judgment-trace',
+    issue: 'MISSING_CONDITIONAL_REQUIRED',
+  },
+  'evidence-missing-classification.json': {
+    contract: 'evidence-claim',
+    issue: 'MISSING_REQUIRED_FIELD',
+  },
+  'cluster-no-primary-candidate.json': {
+    contract: 'cluster-manifest',
+    issue: 'NO_PRIMARY_CANDIDATE',
+  },
+  'cluster-advisor-missing-hypothesis.json': {
+    contract: 'cluster-manifest',
+    issue: 'MISSING_ADVISOR_HYPOTHESIS',
+  },
 };
 function readJson(filePath) {
   return JSON.parse(readFileSync(filePath, 'utf8'));
@@ -80,9 +109,7 @@ function validateAgainstSchema(schema, data, schemaName) {
   const valid = ajv.validate(cleanSchema, data);
   return {
     valid,
-    errors: (ajv.errors || []).map(e =>
-      `${e.instancePath || '/'}: ${e.message} (${e.keyword})`
-    )
+    errors: (ajv.errors || []).map((e) => `${e.instancePath || '/'}: ${e.message} (${e.keyword})`),
   };
 }
 
@@ -115,7 +142,7 @@ for (const [contractName, config] of Object.entries(SCHEMAS)) {
       totalPassed++;
     } else {
       console.log(`    ✗ ${fixtureName}:`);
-      errors.forEach(e => console.log(`      - ${e}`));
+      errors.forEach((e) => console.log(`      - ${e}`));
       totalFailed++;
       failures.push({ contract: contractName, fixture: fixtureName, errors });
     }
@@ -123,7 +150,10 @@ for (const [contractName, config] of Object.entries(SCHEMAS)) {
 }
 
 // 2. Negative fixtures — must fail with expected issue code
-const SEMANTIC_INVARIANT_FIXTURES = ['cluster-no-primary-candidate.json', 'cluster-advisor-missing-hypothesis.json'];
+const SEMANTIC_INVARIANT_FIXTURES = [
+  'cluster-no-primary-candidate.json',
+  'cluster-advisor-missing-hypothesis.json',
+];
 console.log('\n--- Negative Fixtures ---');
 for (const negFile of NEGATIVE_FIXTURES) {
   // Cluster semantic invariants handled in section 4
@@ -145,44 +175,57 @@ for (const negFile of NEGATIVE_FIXTURES) {
 
   if (!valid) {
     const errorText = errors.join('; ');
-    const hasRequired = errorText.includes('must have required property') || errorText.includes("required");
+    const hasRequired =
+      errorText.includes('must have required property') || errorText.includes('required');
     const hasPattern = errorText.includes('must match pattern');
-    const hasEnum = errorText.includes('must be equal to constant') || errorText.includes('must match a schema in anyOf') || errorText.includes('must match "then" schema');
+    const hasEnum =
+      errorText.includes('must be equal to constant') ||
+      errorText.includes('must match a schema in anyOf') ||
+      errorText.includes('must match "then" schema');
     const hasAdditional = errorText.includes('must NOT have additional properties');
     const hasType = errorText.includes('must be');
 
     const categoryMatches =
-      (expectedIssue === 'MISSING_REQUIRED_FIELD' && (hasRequired))
-      || (expectedIssue === 'MISSING_CONDITIONAL_REQUIRED' && (hasRequired || hasEnum || hasPattern))
-      || (expectedIssue === 'NO_PRIMARY_CANDIDATE' && (hasEnum || hasRequired))
-      || (expectedIssue === 'MISSING_ADVISOR_HYPOTHESIS' && (hasRequired || hasAdditional));
+      (expectedIssue === 'MISSING_REQUIRED_FIELD' && hasRequired) ||
+      (expectedIssue === 'MISSING_CONDITIONAL_REQUIRED' &&
+        (hasRequired || hasEnum || hasPattern)) ||
+      (expectedIssue === 'NO_PRIMARY_CANDIDATE' && (hasEnum || hasRequired)) ||
+      (expectedIssue === 'MISSING_ADVISOR_HYPOTHESIS' && (hasRequired || hasAdditional));
 
     if (categoryMatches) {
       console.log(`    ✓ ${negFile} → rejected with expected category (${expectedIssue})`);
-      if (verbose) errors.forEach(e => console.log(`      error: ${e}`));
+      if (verbose) errors.forEach((e) => console.log(`      error: ${e}`));
       totalPassed++;
     } else {
-      console.log(`    ✗ ${negFile} → rejected but wrong category. Expected: ${expectedIssue}. Got: ${errorText.substring(0, 200)}`);
+      console.log(
+        `    ✗ ${negFile} → rejected but wrong category. Expected: ${expectedIssue}. Got: ${errorText.substring(0, 200)}`,
+      );
       totalFailed++;
       failures.push({ contract: contractName, fixture: negFile, expectedIssue, errors });
     }
   } else {
-    console.log(`    ✗ ${negFile} → unexpectedly PASSED validation. Should have failed with: ${expectedIssue}`);
+    console.log(
+      `    ✗ ${negFile} → unexpectedly PASSED validation. Should have failed with: ${expectedIssue}`,
+    );
     totalFailed++;
-    failures.push({ contract: contractName, fixture: negFile, error: `Should have failed: ${expectedIssue}` });
+    failures.push({
+      contract: contractName,
+      fixture: negFile,
+      error: `Should have failed: ${expectedIssue}`,
+    });
   }
 }
 
 // 3. Unknown optional field fixtures — must pass (forward compatibility)
 console.log('\n--- Unknown Optional Field Fixtures (Forward Compatibility) ---');
 const unknownSchemaMap = {
-  'plan': 'consumption-plan',
-  'trace': 'judgment-trace',
+  plan: 'consumption-plan',
+  trace: 'judgment-trace',
 };
 for (const ufFile of UNKNOWN_FIXTURES) {
   const ufPath = resolve(UNKNOWN_FIELD_DIR, ufFile);
   const data = readJson(ufPath);
-  const prefix = Object.keys(unknownSchemaMap).find(p => ufFile.startsWith(p));
+  const prefix = Object.keys(unknownSchemaMap).find((p) => ufFile.startsWith(p));
   const contractName = unknownSchemaMap[prefix];
   if (!contractName || !SCHEMAS[contractName]) {
     console.log(`  ? ${ufFile}: cannot determine contract`);
@@ -196,15 +239,23 @@ for (const ufFile of UNKNOWN_FIXTURES) {
     totalPassed++;
   } else {
     console.log(`    ✗ ${ufFile} → REJECTED — breaks forward compatibility:`);
-    errors.forEach(e => console.log(`      - ${e}`));
+    errors.forEach((e) => console.log(`      - ${e}`));
     totalFailed++;
-    failures.push({ contract: contractName, fixture: ufFile, error: 'Forward-compat broken', errors });
+    failures.push({
+      contract: contractName,
+      fixture: ufFile,
+      error: 'Forward-compat broken',
+      errors,
+    });
   }
 }
 
 // 4. Cluster manifest semantic invariants (beyond pure schema)
 console.log('\n--- Cluster Manifest Semantic Invariants ---');
-for (const negFile of ['cluster-no-primary-candidate.json', 'cluster-advisor-missing-hypothesis.json']) {
+for (const negFile of [
+  'cluster-no-primary-candidate.json',
+  'cluster-advisor-missing-hypothesis.json',
+]) {
   const negPath = resolve(NEGATIVE_DIR, negFile);
   if (!existsSync(negPath)) continue;
   const data = readJson(negPath);
@@ -214,14 +265,14 @@ for (const negFile of ['cluster-no-primary-candidate.json', 'cluster-advisor-mis
   let invariantErrors = [];
 
   if (negFile === 'cluster-no-primary-candidate.json') {
-    const hasPrimary = (data.domains || []).some(d => d.role === 'primary-candidate');
+    const hasPrimary = (data.domains || []).some((d) => d.role === 'primary-candidate');
     if (!hasPrimary) {
       invariantErrors.push('Cluster must have at least one domain with role=primary-candidate');
     }
   }
 
   if (negFile === 'cluster-advisor-missing-hypothesis.json') {
-    const advisors = (data.domains || []).filter(d => d.role === 'advisor');
+    const advisors = (data.domains || []).filter((d) => d.role === 'advisor');
     for (const a of advisors) {
       if (!a.contribution_hypothesis_template) {
         invariantErrors.push(`Advisor "${a.id}" is missing contribution_hypothesis_template`);
@@ -231,12 +282,18 @@ for (const negFile of ['cluster-no-primary-candidate.json', 'cluster-advisor-mis
 
   if (invariantErrors.length > 0) {
     console.log(`    ✓ ${negFile} → failed semantic invariants (${expected.issue})`);
-    if (verbose) invariantErrors.forEach(e => console.log(`      error: ${e}`));
+    if (verbose) invariantErrors.forEach((e) => console.log(`      error: ${e}`));
     totalPassed++;
   } else {
-    console.log(`    ✗ ${negFile} → passed schema but should have failed invariant: ${expected.issue}`);
+    console.log(
+      `    ✗ ${negFile} → passed schema but should have failed invariant: ${expected.issue}`,
+    );
     totalFailed++;
-    failures.push({ contract: expected.contract, fixture: negFile, error: 'Semantic invariant not enforced' });
+    failures.push({
+      contract: expected.contract,
+      fixture: negFile,
+      error: 'Semantic invariant not enforced',
+    });
   }
 }
 
@@ -247,8 +304,10 @@ console.log(`  Failed: ${totalFailed}`);
 
 if (failures.length > 0) {
   console.log(`\n  Failures:`);
-  failures.forEach(f => {
-    console.log(`  - [${f.contract}] ${f.fixture}: ${f.error || f.errors?.join('; ')?.substring(0, 200)}`);
+  failures.forEach((f) => {
+    console.log(
+      `  - [${f.contract}] ${f.fixture}: ${f.error || f.errors?.join('; ')?.substring(0, 200)}`,
+    );
   });
 }
 

@@ -2,7 +2,9 @@
 
 > [中文版](./getting-started.zh.md)
 
-KDNA Core v1 has one verified path: create a scoped `.kdna` asset locally through Studio CLI, validate it with the runtime CLI, plan loading, and load it into agent context.
+KDNA has one default verified path: create a scoped `.kdna` asset through
+Studio CLI, validate it with the runtime CLI, plan authorization and readiness,
+then load a Runtime Capsule for the Agent.
 
 ---
 

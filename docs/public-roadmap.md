@@ -1,118 +1,81 @@
 # KDNA Public Roadmap
 
-> Last updated: 2026-07-10. This is the public-facing roadmap summary.
+> Public direction, not an internal delivery schedule. Only released and
+> reproducible behavior is described as current capability.
 
-## Where we are
+## Where KDNA Is Now
 
-The KDNA Core v1 local public asset path is the current public baseline. The
-protocol, CLI, Core runtime, and Studio authoring tools are usable today for
-creating, validating, planning, and loading local public `.kdna` assets.
+KDNA has one current asset model and two complementary use paths:
 
-Do not read this as a claim that every support surface is stable. Hosted
-registry, marketplace, paid distribution, AIKDNA-hosted loading, and broad
-cross-language parity are not part of the stable public baseline.
+- **Single asset** — the atomic, foundational, default path.
+- **Cluster** — the explicit advanced path for coordinating multiple assets.
 
-| Layer | Status | What shipped |
-|---|---|---|
-| **File format** | Stable | Container layout, manifest schema, payload profile v1, checksums |
-| **Runtime loading** | Stable | `kdna load`, `kdna validate`, `kdna plan-load`, `kdna pack`, `kdna unpack` |
-| **Identity & trust** | Beta | Ed25519 signing, signature verification, trust levels, deprecation signaling |
-| **Revocation** | Beta | Signed revocation records, revocation status checks, cross-key attack resistance |
-| **Watermarking** | Beta | Payload-level HMAC tracing for licensed and remote assets |
-| **Composition** | Beta | Bundle payload type, dependency runtime, topological ordering, conflict analysis |
-| **Remote runtime** | Experimental | Self-hostable remote projection server, CLI remote-mode client |
-| **Activation server** | Experimental | Self-hostable activation server for licensed asset entitlements |
-| **Asset inheritance** | Beta | `extends` field, axiom / boundary merge semantics |
-| **RAG namespacing** | Beta | `rag_namespace` isolation per Bundle component |
-| **Audit logging** | Beta | Local audit trail for load events |
-| **Context budget** | Beta | Token cost reporting in `plan-load` output |
-| **Consumption runtime** | Beta | Traced route, bounded compose, packaged-asset projection, and replay evaluation |
-| **Studio authoring** | Beta | `kdna-studio create`, `import`, `distill`, `card`, `export` |
-| **Agent integration** | Beta | `kdna-loader` skill for OpenCode, Codex, Claude Code, Cursor |
-| **Web packages** | Experimental | Public repos and npm packages are published; generated-app smoke path is verified |
+Anyone can create assets. The protocol and toolchain do not approve authors or
+judge content quality. AIKDNA-published assets are reference material, not the
+ecosystem's exclusive content source.
 
-## What's available now
+The current stable baseline is local public-asset creation and consumption:
 
-- **`@aikdna/kdna-cli` v0.29.0** - runtime CLI
-- **`@aikdna/kdna-eval` v0.2.0** - consumption evaluation primitives
-- **`@aikdna/kdna-core` v0.15.11** - embeddable JS runtime library
-- **`@aikdna/kdna-studio-cli` v0.8.12** - authoring CLI on npm
-- **`@aikdna/kdna-studio-core` v1.7.10** - authoring SDK on npm
-- **`@aikdna/kdna-mcp-server` v0.2.4** - experimental MCP bridge
-- **`@aikdna/kdna-remote-server` v0.1.0** - experimental self-hostable projection server
-- **`@aikdna/kdna-activation-server` v0.1.0** - experimental self-hostable activation server
-- **`@aikdna/kdna-web-server` v0.1.1** - experimental server-side web adapter
-- **`@aikdna/kdna-web-client` v0.1.1** - experimental browser-safe web utilities
-- **`@aikdna/kdna-react` v0.1.1** - experimental React hooks and components
-- **`create-kdna-web-app` v0.1.2** - experimental KDNA web app scaffolder
-- **Public assets**: see `aikdna/kdna-assets` `assets.json` and GitHub Releases
+```text
+author → .kdna → validate → LoadPlan → load/project → Runtime Capsule → Agent
+```
 
-## What comes next
+Licensed and remote access contracts exist, with maturity disclosed separately
+from the container and public-asset path.
 
-The next phase focuses on four areas:
+## Current Priorities
 
-### 1. Runtime reliability and documentation
+### 1. Runtime and security closure
 
-The next priority is a dependable public runtime path: clear command contracts,
-reproducible fixtures, release evidence, and documentation that distinguishes
-stable file-format behavior from beta consumption policy.
+- keep one container, one payload contract, and one Agent interface;
+- prove public, licensed, and remote behavior with reproducible fixtures;
+- preserve in-memory-only handling for decrypted licensed content;
+- fail closed on malformed, unauthorized, or unverifiable input.
 
-### 2. Web package maintenance path
+### 2. Author experience
 
-The four public web package repositories are published and source/npm versions
-are aligned:
+- make the first independent asset easy to create without private knowledge;
+- keep review and Evidence optional unless an author makes a corresponding
+  claim;
+- preserve scope boundaries so one asset remains understandable and reusable.
 
-- `kdna-web-server`
-- `kdna-web-client`
-- `kdna-react`
-- `create-kdna-web-app`
+### 3. Single asset and Cluster together
 
-Treat them as experimental integration surfaces, not a stable hosted platform.
-The current web server MVP is intentionally narrow: upload/inspect/plan-load/load
-plus activation proxying. Server-side Studio export, remote forwarding, CORS
-policy helpers, and durable Cloudflare/R2 storage remain future web-package
-work.
+- keep all default commands usable with one asset and no hidden Router;
+- keep Cluster explicit, role-based, conflict-aware, and independently
+  testable;
+- report routing quality separately from answer quality.
 
-### 3. More public assets
+### 4. Cross-runtime compatibility
 
-A protocol without content is an empty container. The bottleneck is not more protocol features — it's high-quality `.kdna` assets that demonstrate what judgment-in-a-file actually feels like.
+- maintain shared fixtures across JS, Swift, React, Web, and Agent adapters;
+- require compatible runtimes to implement LoadPlan, authorization, integrity
+  verification, and Runtime Capsule output;
+- test Codex, Claude Code, and OpenCode through the same public toolchain.
 
-We are looking for domain experts who want to package their judgment. If you have a domain where you consistently apply specific principles, boundaries, and standards that a generalist wouldn't have — that's exactly what KDNA is designed for. Read the [30-minute authoring guide](./30-minute-authoring-guide.md).
+### 5. An author-led ecosystem
 
-### 4. Applications built on KDNA
+- publish minimal, encrypted, remote, and Cluster reference examples;
+- document self-publication without an official registry dependency;
+- make author identity, version, compatibility, and optional evidence legible;
+- let independent creators and applications choose their own distribution and
+  business models.
 
-`.kdna` assets are not only for personal agent configuration — they are the judgment layer that applications can build on top of. When an application's core reasoning is a versioned `.kdna` asset, upgrading the asset improves every user's output on the same day. This is KDNA as infrastructure, not just as personal tooling.
+## What KDNA Core Is Not Building
 
-Applications in this direction are in development. The local public asset path
-is ready; web adapters are available as experimental integration surfaces.
+- a content judge or truth authority;
+- an official-only authoring system;
+- a mandatory registry, marketplace, or hosted service;
+- a universal asset ranking or recommendation engine;
+- a replacement for RAG, memory, skills, workflows, evaluation, or
+  fine-tuning;
+- one giant asset that replaces scoped assets and explicit Cluster composition.
 
-### 5. Native app experience
+## How to Contribute
 
-The current path is CLI + MCP. Native app experiences for loading, comparing, and authoring `.kdna` assets are in development. Swift runtime parity (`kdna-core-swift`) is a prerequisite for full native integration.
-
-### 6. Test coverage and reliability
-
-Contributors can strengthen fixture coverage, compatibility checks, and
-cross-language conformance. Browse [open issues](https://github.com/aikdna/kdna-cli/issues?q=is%3Aissue+is%3Aopen) for current work.
-
-## What is not planned
-
-KDNA Core is **not** building:
-
-- A public registry or marketplace
-- Content ranking, certification, or quality badges
-- A paid distribution platform
-- OCI / container registry distribution
-- A hosted loading service
-
-These are concerns for external platforms. KDNA Core provides the
-open format, the official toolchain, and the self-hosting primitives.
-Everything else is out of scope.
-
-## How to contribute
-
-- **File a bug or feature request**: [aikdna/kdna](https://github.com/aikdna/kdna/issues) or [aikdna/kdna-cli](https://github.com/aikdna/kdna-cli/issues)
-- **Contribute a KDNA asset**: [aikdna/kdna-assets](https://github.com/aikdna/kdna-assets) — open an issue describing the domain
-- **Add a test**: pick a `good first issue` in [kdna-cli](https://github.com/aikdna/kdna-cli/issues?q=label%3A%22good+first+issue%22) or [kdna](https://github.com/aikdna/kdna/issues?q=label%3A%22good+first+issue%22)
-- **Port to another language**: the conformance suite is in `aikdna/kdna/conformance/`. A port is valid if it passes all test vectors.
-- **Discuss**: [GitHub Discussions](https://github.com/aikdna/kdna/discussions)
+- Create an asset: [30-Minute Authoring Guide](./30-minute-authoring-guide.md)
+- Integrate a runtime: [Consumption Runtime](./consumption-runtime.md)
+- Add conformance coverage: [`conformance/`](../conformance/)
+- Publish a reference asset: [aikdna/kdna-assets](https://github.com/aikdna/kdna-assets)
+- Report protocol or implementation ambiguity through the relevant public
+  repository issue tracker.

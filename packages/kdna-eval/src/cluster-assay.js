@@ -168,7 +168,10 @@ function economicsGate(plan, executionCost) {
  * Trust gate — are all assets authorized and verified?
  */
 function trustGate(assetsLoaded) {
-  if (!assetsLoaded || !assetsLoaded.length) {
+  if (assetsLoaded == null) {
+    return { pass: null, score: 0, issues: ['Trust evidence not provided'], details: { status: 'not_run' } };
+  }
+  if (!assetsLoaded.length) {
     return { pass: false, score: 0, issues: ['No assets loaded'], details: {} };
   }
 
@@ -247,20 +250,19 @@ function runClusterAssay(opts = {}) {
   const structural = structuralGate(plan);
 
   // Behavioral gate
-  const primaryOnly = comparisonArms.find(a => a.arm === 'primary_only') || {};
-  const boundedCompose = comparisonArms.find(a => a.arm === 'bounded_compose') || {};
+  const primaryOnly = comparisonArms.find(a => a.arm === 'primary_only') || null;
+  const boundedCompose = comparisonArms.find(a => a.arm === 'bounded_compose') || null;
   const behavioral = behavioralGate(boundedCompose, primaryOnly);
 
   // Economics gate
   const economics = economicsGate(plan, executionCost);
 
-  // Trust gate
-  const trust = trustGate(plan?.assets_loaded ||
-    (plan?.selection ? [
-      plan.selection.primary ? { asset_id: plan.selection.primary.asset_id, role: 'primary', digest_verified: true, authorization: 'public' } : null,
-      ...(plan.selection.advisors || []).map(a => ({ asset_id: a.asset_id, role: 'advisor', digest_verified: true, authorization: 'public' })),
-    ].filter(Boolean) : [])
-  );
+  // Trust gate — asset-loading evidence is required for evaluation.
+  // Plan selection alone is NOT trust evidence. The gate returns null
+  // (not evaluated) when no observed trust data is available.
+  const trust = (plan?.assets_loaded?.length || opts?.assetsLoaded?.length)
+    ? trustGate(opts.assetsLoaded || plan.assets_loaded)
+    : trustGate(null);
 
   // Product gate
   const product = productGate(plan, manifest);
@@ -278,7 +280,8 @@ function runClusterAssay(opts = {}) {
   });
 
   const gates = { structural, behavioral, economics, trust, product };
-  const allPassed = Object.values(gates).every(g => g.pass !== false);
+  // Promotion is fail-closed: a hard gate that was not run is not a pass.
+  const allPassed = Object.values(gates).every(g => g.pass === true);
   const blocked = Object.values(gates).filter(g => g.pass === false).length;
   const passed = Object.values(gates).filter(g => g.pass === true).length;
   const notRun = Object.values(gates).filter(g => g.pass === null).length;
@@ -299,6 +302,7 @@ function runClusterAssay(opts = {}) {
       not_run: notRun,
       all_passed: allPassed,
       failed_gates: Object.entries(gates).filter(([, g]) => g.pass === false).map(([name]) => name),
+      incomplete_gates: Object.entries(gates).filter(([, g]) => g.pass === null).map(([name]) => name),
     },
     marginal_value: {
       primary_only_score: primaryOnly?.mean_score || null,

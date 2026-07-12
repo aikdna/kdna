@@ -51,8 +51,8 @@
   },
   "evaluation": {
     "self_checks": [
-      {"check_id": "SC-1", "passed": true, "detail": "Auth change confirmed"},
-      {"check_id": "SC-2", "passed": false, "detail": "Rollback plan review pending"}
+      { "check_id": "SC-1", "passed": true, "detail": "Auth change confirmed" },
+      { "check_id": "SC-2", "passed": false, "detail": "Rollback plan review pending" }
     ],
     "violations": [],
     "banned_terms_detected": []
@@ -63,9 +63,7 @@
     "consumer_index_version": null
   },
   "errors": [],
-  "warnings": [
-    "Deploy decision is CONDITIONAL — do not proceed until SC-2 conditions are met"
-  ],
+  "warnings": ["Deploy decision is CONDITIONAL — do not proceed until SC-2 conditions are met"],
   "metadata": {
     "environment": "development",
     "trace_schema": "0.9.0"

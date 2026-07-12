@@ -8,7 +8,7 @@ const zlib = require('zlib');
 const cbor = require('cbor-x');
 const { loadDomainFromFiles, formatContext } = require('./loader');
 
-const KDNA_MEDIA_TYPE = 'application/vnd.aikdna.kdna+zip';
+const KDNA_MEDIA_TYPE = 'application/vnd.kdna.asset';
 
 // Standard KDNA domain data entries — kept in lockstep with loader.FILE_MAP.
 // Asset reader pre-loads these so callers don't have to enumerate entry names.
@@ -363,19 +363,18 @@ function verifyHumanLockSignatures(coreData, manifest, errors, warnings) {
 
 function validateManifestIdentity(manifest, errors, _warnings) {
   if (manifest.kdna_spec) {
-    errors.push('kdna.json: kdna_spec is not allowed. Use spec_version.');
+    errors.push('kdna.json: kdna_spec is not allowed. Use kdna_version.');
   }
   if (manifest.format && manifest.format !== 'kdna') {
     errors.push(`kdna.json.format: invalid value "${manifest.format}". Expected "kdna".`);
   }
-  if (manifest.format_version && manifest.format_version !== '2.0') {
+  if (!manifest.kdna_version) {
+    errors.push('kdna.json: missing required field "kdna_version"');
+  } else if (manifest.kdna_version !== '1.0') {
     errors.push(
-      `kdna.json.format_version: invalid value "${manifest.format_version}". Expected "2.0".`,
+      `kdna.json.kdna_version: invalid value "${manifest.kdna_version}". Expected "1.0".`,
     );
   }
-  if (!manifest.spec_version) errors.push('kdna.json: missing required field "spec_version"');
-  if (!manifest.format) errors.push('kdna.json: missing required field "format"');
-  if (!manifest.format_version) errors.push('kdna.json: missing required field "format_version"');
   if (manifest.language) {
     errors.push('kdna.json: language is not allowed. Use default_language and languages.');
   }
@@ -624,10 +623,7 @@ function createKdnaAssetReader() {
 
       if (!asset.entries.has('kdna.json')) errors.push('required entry missing: kdna.json');
       verifyMediaType(asset, errors);
-      if (!asset.entries.has('KDNA_Core.json')) errors.push('required entry missing: KDNA_Core.json');
-      if (!asset.entries.has('KDNA_Patterns.json')) {
-        errors.push('required entry missing: KDNA_Patterns.json');
-      }
+      if (!asset.entries.has('payload.kdnab')) errors.push('required entry missing: payload.kdnab');
 
       const content_digest = buildContentDigest(asset);
       const asset_digest = asset.asset_digest;

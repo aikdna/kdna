@@ -10,11 +10,11 @@ validated, packable asset.
 
 | Layer | Status | What it means |
 |---|---|---|
-| KDNA Core v1 file format | stable | `.kdna` container, `mimetype`, `kdna.json`, `payload.kdnab`, and `checksums.json` are the current local asset baseline. |
-| Runtime CLI | beta-ready | `kdna inspect`, `kdna validate`, `kdna plan-load`, `kdna load`, `kdna pack`, and `kdna unpack` work for local v1 assets. |
+| KDNA Asset Container | stable | `.kdna` container, `mimetype`, `kdna.json`, `payload.kdnab`, and `checksums.json` are the current local asset baseline. |
+| Runtime CLI | beta-ready | `kdna inspect`, `kdna validate`, `kdna plan-load`, `kdna load`, `kdna pack`, and `kdna unpack` work for local assets. |
 | Studio authoring CLI | beta | `kdna-studio` is the official authoring path, but commands and UX may still change between beta releases. |
 | Agent / MCP loading | preview | Loader and MCP paths use the same LoadPlan-first contract, but agent-specific integration quality varies by runtime. |
-| Trust layers | planned / optional | Human Lock, signatures, release evidence, paid authorization, hosted distribution, and evaluation reports are optional or planned layers, not KDNA Core v1 format-validity requirements. |
+| Evidence and provenance layers | optional / independently versioned | Human Lock, signatures, release evidence, authorization, and evaluation reports do not decide KDNA format validity. |
 
 ## Step 1: Install the Studio CLI
 
@@ -109,4 +109,4 @@ kdna-studio migrate my_expertise --format v1 --out ./my_expertise.kdna \
 - Return to the [5-minute path](./try-kdna.md) to validate your asset.
 - See [15-minute agent guide](./15-minute-agent-guide.md) to load the
   authoring output into your AI agent.
-- See [docs/status.md](./status.md) for the current KDNA Core v1 status.
+- See [docs/status.md](./status.md) for current product-layer maturity.

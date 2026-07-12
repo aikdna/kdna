@@ -13,11 +13,17 @@ const fs = require('node:fs');
 const fsp = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
+const cbor = require('cbor-x');
+
+function readPayload(p) {
+  const buf = fs.readFileSync(p);
+  return cbor.decode(buf);
+}
 const crypto = require('node:crypto');
 const Ajv = require('ajv/dist/2020.js');
 
 const v1 = require('../../packages/kdna-core/src/v1');
-const { MIMETYPE_V1, MIMETYPE_V2, FORBIDDEN_OUTPUT_TERMS } = v1;
+const { MIMETYPE, FORBIDDEN_OUTPUT_TERMS } = v1;
 
 const repoRoot = path.resolve(__dirname, '..', '..');
 const exampleMinimal = path.join(repoRoot, 'examples', 'minimal');
@@ -48,7 +54,7 @@ function mutateManifest(dir, mutator) {
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
   fs.writeFileSync(
     path.join(dir, 'checksums.json'),
-    JSON.stringify(v1.buildChecksumsV1(dir), null, 2),
+    JSON.stringify(v1.buildChecksums(dir), null, 2),
   );
 }
 
@@ -155,58 +161,68 @@ function assertValidLoadPlan(plan) {
   );
 }
 
-test('isV1SourceDir: true for examples/minimal', () => {
-  assert.equal(v1.isV1SourceDir(exampleMinimal), true);
+test('isKdnaSourceDir: true for examples/minimal', () => {
+  assert.equal(v1.isKdnaSourceDir(exampleMinimal), true);
 });
 
-test('isV1SourceDir: false for a non-existent path', () => {
+test('isKdnaSourceDir: false for a non-existent path', () => {
   assert.equal(
-    v1.isV1SourceDir(path.join(os.tmpdir(), 'definitely-not-a-dir-xyz' + Date.now())),
+    v1.isKdnaSourceDir(path.join(os.tmpdir(), 'definitely-not-a-dir-xyz' + Date.now())),
     false,
   );
 });
 
-test('isV1SourceDir: false for a directory missing mimetype', () => {
+test('isKdnaSourceDir: false for a directory missing mimetype', () => {
   const dir = makeTmp('kdna-v1-');
   try {
     fs.writeFileSync(path.join(dir, 'kdna.json'), '{}');
     fs.writeFileSync(path.join(dir, 'payload.kdnab'), '{}');
-    assert.equal(v1.isV1SourceDir(dir), false);
+    assert.equal(v1.isKdnaSourceDir(dir), false);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 
-test('isV1SourceDir: false for a directory with wrong mimetype', () => {
+test('isKdnaSourceDir: false for a directory with wrong mimetype', () => {
   const dir = makeTmp('kdna-v1-');
   try {
-    fs.writeFileSync(path.join(dir, 'mimetype'), MIMETYPE_V2);
+    fs.writeFileSync(path.join(dir, 'mimetype'), 'application/octet-stream');
     fs.writeFileSync(path.join(dir, 'kdna.json'), '{}');
     fs.writeFileSync(path.join(dir, 'payload.kdnab'), '{}');
-    assert.equal(v1.isV1SourceDir(dir), false);
+    assert.equal(v1.isKdnaSourceDir(dir), false);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 
-test('detectContainerFormat: returns "v1" for a packed v1 .kdna', () => {
+test('detectContainerFormat: returns "kdna" for a packed .kdna', () => {
   const dir = makeTmp('kdna-v1-pack-');
   const outFile = path.join(dir, 'packed.kdna');
   try {
     copyMinimal(path.join(dir, 'src'));
     v1.pack(path.join(dir, 'src'), outFile);
-    assert.equal(v1.detectContainerFormat(outFile), 'v1');
+    assert.equal(v1.detectContainerFormat(outFile), 'kdna');
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 
-test('detectContainerFormat: returns "v2" for a v2 .kdna', () => {
-  // conformance fixture is a v2 .kdna container
-  const v2File = path.join(repoRoot, 'fixtures', 'test_conformance.kdna');
-  if (fs.existsSync(v2File)) {
-    assert.equal(v1.detectContainerFormat(v2File), 'v2');
+test('detectContainerFormat: returns "kdna" for a .kdna container', () => {
+  const kdnaFile = path.join(repoRoot, 'examples', 'minimal.kdna');
+  if (!fs.existsSync(kdnaFile)) {
+    // pack the minimal example on demand
+    const dir = makeTmp('kdna-pack-');
+    try {
+      const src = path.join(repoRoot, 'examples', 'minimal');
+      const out = path.join(dir, 'minimal.kdna');
+      v1.pack(src, out);
+      assert.equal(v1.detectContainerFormat(out), 'kdna');
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+    return;
   }
+  assert.equal(v1.detectContainerFormat(kdnaFile), 'kdna');
 });
 
 test('detectContainerFormat: returns null for a non-zip file', () => {
@@ -472,13 +488,13 @@ test('loadV1: rejected LoadPlan states do not leak judgment payload', () => {
     try {
       copyMinimal(dir);
       const payloadPath = path.join(dir, 'payload.kdnab');
-      const payload = JSON.parse(fs.readFileSync(payloadPath, 'utf8'));
+      const payload = readPayload(payloadPath);
       payload.core.axioms = [{ id: 'secret', one_sentence: secret }];
-      fs.writeFileSync(payloadPath, JSON.stringify(payload, null, 2));
+      fs.writeFileSync(payloadPath, cbor.encode(payload));
       mutateManifest(dir, mutate);
 
       assert.throws(
-        () => v1.loadV1(dir, { profile: 'compact', as: 'prompt', ...loadOptions }),
+        () => v1.load(dir, { profile: 'compact', as: 'prompt', ...loadOptions }),
         (error) => {
           assert.ok(!String(error.message).includes(secret), `${label} leaked payload in error`);
           assert.ok(
@@ -499,7 +515,7 @@ test('loadV1: compact profile preserves Human Lock boundary fields', () => {
   try {
     copyMinimal(dir);
     const payloadPath = path.join(dir, 'payload.kdnab');
-    const payload = JSON.parse(fs.readFileSync(payloadPath, 'utf8'));
+    const payload = readPayload(payloadPath);
     payload.core.axioms = [
       {
         id: 'evidence_first',
@@ -509,14 +525,15 @@ test('loadV1: compact profile preserves Human Lock boundary fields', () => {
         failure_risk: 'The agent may overfit to unsupported generalities.',
       },
     ];
-    fs.writeFileSync(payloadPath, JSON.stringify(payload, null, 2));
+    fs.writeFileSync(payloadPath, cbor.encode(payload));
     fs.writeFileSync(
       path.join(dir, 'checksums.json'),
-      JSON.stringify(v1.buildChecksumsV1(dir), null, 2),
+      JSON.stringify(v1.buildChecksums(dir), null, 2),
     );
 
-    const loaded = v1.loadV1(dir, { profile: 'compact', as: 'json' });
-    assert.deepEqual(loaded.content.axioms[0], {
+    const loaded = v1.load(dir, { profile: 'compact', as: 'json' });
+    assert.equal(loaded.type, 'kdna.context.capsule');
+    assert.deepEqual(loaded.context.axioms[0], {
       type: 'axiom_applicability',
       id: 'evidence_first',
       statement: 'Prefer specific evidence over broad claims',
@@ -526,7 +543,7 @@ test('loadV1: compact profile preserves Human Lock boundary fields', () => {
       failure_risk: 'The agent may overfit to unsupported generalities.',
     });
 
-    const prompt = v1.loadV1(dir, { profile: 'compact', as: 'prompt' }).text;
+    const prompt = v1.load(dir, { profile: 'compact', as: 'prompt' }).text;
     assert.match(prompt, /applies when: reviewing factual claims/);
     assert.match(prompt, /does not apply when: writing fictional copy/);
     assert.match(prompt, /failure risk: The agent may overfit/);
@@ -692,9 +709,9 @@ test('pack: output has mimetype as the first entry, STORED', () => {
     const out = path.join(dir, 'out.kdna');
     v1.pack(src, out);
     const r = v1.detectContainerFormat(out);
-    assert.equal(r, 'v1');
+    assert.equal(r, 'kdna');
     // The container must round-trip through readV1Layout.
-    const v = v1.readV1Layout(out);
+    const v = v1.readLayout(out);
     assert.equal(v.kind, 'file');
     assert.ok(v.map.mimetype);
   } finally {
@@ -705,7 +722,7 @@ test('pack: output has mimetype as the first entry, STORED', () => {
 test('pack: refuses to pack a directory missing a required entry', () => {
   const dir = makeTmp('kdna-v1-badpack-');
   try {
-    fs.writeFileSync(path.join(dir, 'mimetype'), MIMETYPE_V1);
+    fs.writeFileSync(path.join(dir, 'mimetype'), MIMETYPE);
     fs.writeFileSync(path.join(dir, 'kdna.json'), '{}');
     // missing payload.kdnab
     assert.throws(() => v1.pack(dir, path.join(dir, 'out.kdna')), /missing required entry/);
@@ -721,7 +738,7 @@ test('pack: skips junk files like .DS_Store', () => {
     fs.writeFileSync(path.join(dir, 'src', '.DS_Store'), 'mac junk');
     const out = path.join(dir, 'out.kdna');
     v1.pack(path.join(dir, 'src'), out);
-    const v = v1.readV1Layout(out);
+    const v = v1.readLayout(out);
     const names = Object.keys(v.map);
     assert.ok(!names.includes('.DS_Store'), 'no .DS_Store in the container');
   } finally {
@@ -740,7 +757,7 @@ test('unpack: extracts a packed .kdna and the result validates', () => {
     const r = v1.unpack(packed, outDir);
     assert.equal(r.outputDir, outDir);
     // The unpacked directory must itself be a valid v1 source dir.
-    assert.equal(v1.isV1SourceDir(outDir), true);
+    assert.equal(v1.isKdnaSourceDir(outDir), true);
     const result = v1.validate(outDir);
     assert.equal(result.overall_valid, true);
   } finally {
@@ -783,7 +800,7 @@ test('unpack: refuses to write outside the destination (path traversal)', () => 
       localHeader.writeUInt16LE(nameBytes.length, 26);
       entries.push({ localHeader, nameBytes, data, offset: 0 });
     }
-    pushEntry('mimetype', Buffer.from(MIMETYPE_V1, 'utf8'));
+    pushEntry('mimetype', Buffer.from(MIMETYPE, 'utf8'));
     pushEntry('../escape.txt', Buffer.from('pwned', 'utf8'));
 
     // Build the ZIP with central directory.
@@ -842,12 +859,12 @@ test('malicious containers fail consistently before judgment payload output', ()
     const src = path.join(dir, 'src');
     copyMinimal(src);
     const payloadPath = path.join(src, 'payload.kdnab');
-    const payload = JSON.parse(fs.readFileSync(payloadPath, 'utf8'));
+    const payload = readPayload(payloadPath);
     payload.core.axioms = [{ id: 'secret', one_sentence: secret }];
-    fs.writeFileSync(payloadPath, JSON.stringify(payload, null, 2));
+    fs.writeFileSync(payloadPath, cbor.encode(payload));
     fs.writeFileSync(
       path.join(src, 'checksums.json'),
-      JSON.stringify(v1.buildChecksumsV1(src), null, 2),
+      JSON.stringify(v1.buildChecksums(src), null, 2),
     );
     const baseEntries = validContainerEntries(src);
     const fixtures = [
@@ -876,14 +893,14 @@ test('malicious containers fail consistently before judgment payload output', ()
     for (const [label, entries, pattern] of fixtures) {
       const file = path.join(dir, `${label}.kdna`);
       writeTestZip(file, entries);
-      assert.equal(v1.detectContainerFormat(file), 'v1', `${label} should still route to v1`);
+      assert.equal(v1.detectContainerFormat(file), 'kdna', `${label} should still route to kdna`);
       assert.throws(() => v1.validate(file), pattern, `${label} validate`);
       const plan = v1.planLoad(file);
       assert.equal(plan.can_load_now, false, `${label} plan-load`);
       assert.equal(plan.state, 'invalid', `${label} plan-load state`);
       assert.ok(!JSON.stringify(plan).includes(secret), `${label} leaked payload in plan`);
       assert.throws(
-        () => v1.loadV1(file, { profile: 'compact', as: 'prompt' }),
+        () => v1.load(file, { profile: 'compact', as: 'prompt' }),
         (error) => {
           assert.ok(
             !String(error.message).includes(secret),
@@ -907,10 +924,10 @@ test('malicious containers fail consistently before judgment payload output', ()
 test('readV1Layout: rejects a v1 source with a missing required entry', async () => {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'kdna-v1-missing-'));
   try {
-    await fsp.writeFile(path.join(dir, 'mimetype'), MIMETYPE_V1);
+    await fsp.writeFile(path.join(dir, 'mimetype'), MIMETYPE);
     await fsp.writeFile(path.join(dir, 'kdna.json'), JSON.stringify({ kdna_version: '1.0' }));
     // missing payload.kdnab
-    assert.throws(() => v1.readV1Layout(dir), /missing payload\.kdnab/);
+    assert.throws(() => v1.readLayout(dir), /missing payload\.kdnab/);
   } finally {
     await fsp.rm(dir, { recursive: true, force: true });
   }

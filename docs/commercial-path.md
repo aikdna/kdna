@@ -1,36 +1,43 @@
-# Commercial Path
+# Building Commercial Services on KDNA
 
-KDNA layers open-source protocol and commercial assets. Here is what is free, what is paid, and why.
+KDNA is an open judgment-asset protocol. Commercial products may be built on
+top of it, but no commercial service is required to create, publish, load, or
+use a valid KDNA asset.
 
-## What Is Open Source
+## Open Protocol
 
-| Component | License | Why |
-|-----------|---------|-----|
-| KDNA format specification | Apache 2.0 | Standard must be free to adopt |
-| JSON schemas | Apache 2.0 | Anyone can validate KDNA files |
-| Validator (kdna-lint, kdna-validate) | Apache 2.0 | Anyone can check domain quality |
-| CLI (kdna) | Apache 2.0 | Anyone can install and use |
-| Loader library | Apache 2.0 | Anyone can integrate KDNA into agents |
-| Skills (kdna-loader) | Apache 2.0 | Anyone can load KDNA into their agent |
-| Basic & experimental domains | CC BY 4.0 | Lower the barrier to entry |
-| Benchmark cases | CC BY 4.0 | Community can contribute and verify |
+The public specification, schemas, Core SDK, CLI, authoring tools, loaders, and
+conformance fixtures provide the shared foundation. Format validity is
+independent of who authored an asset and whether money changes hands.
 
-## What Can Be Commercial
+## Author-Controlled Assets
 
-| Component | Model | Why |
-|-----------|-------|-----|
-| Pro domains (Writing, Speaking, etc.) | Paid license (KCL) | Expert judgment is the asset |
-| KDNA Runtime | Paid / Hosted | Task projection, license, watermark |
-| Enterprise private KDNA | Consulting + License | Encode internal expertise |
-| Creator certification | Certification fee | Quality assurance for buyers |
-| Hosted registry | Subscription | Discovery, versioning, analytics |
+An author may publish an asset under terms they choose, subject to applicable
+law and the license they attach. KDNA Core does not certify the author's
+expertise, determine content quality, or set a business model.
 
-## Why This Split
+## Access Models
 
-The protocol must be open for KDNA to become a standard — like HTML, Markdown, or npm. If the format were proprietary, no one would build on it.
+| Access | Asset boundary | Possible use |
+|---|---|---|
+| `public` | Content has no secrecy; Agent consumption still uses Capsule | Open reference assets, community releases, freely distributed work |
+| `licensed` | Judgment payload is encrypted; authorized projection is loaded in memory | Paid assets, memberships, organization-controlled distribution |
+| `remote` | Full judgment payload stays on the author's or deployer's server | Hosted task projection, sensitive organizational judgment |
 
-The assets can be commercial because the value is not in the format — it is in the expert's judgment structure. This is how open-source ecosystems have always worked: the platform is free, the content is monetizable.
+The author chooses the access mode. The toolchain enforces declared access and
+authorization facts; it does not judge the asset's content.
 
-## Current Status
+## Services the Ecosystem May Build
 
-We are in Phase 4: building evidence that KDNA improves agent judgment. Commercial assets (Pro domains, Runtime) exist in private repositories and will be released when the evidence base is strong enough.
+Independent creators and companies may offer authoring help, hosting,
+distribution, discovery, evaluation, integration, licensing, support, or
+domain-specific applications. These are products built on KDNA, not required
+parts of KDNA Core and not evidence that AIKDNA endorses their content.
+
+## Current Public Availability
+
+The public baseline includes the protocol, local toolchain, self-publication,
+and self-hostable reference components. AIKDNA-hosted marketplace, billing,
+registry, certification, and remote loading are not current public services.
+Check each package's release notes before relying on licensed or remote flows
+in production.

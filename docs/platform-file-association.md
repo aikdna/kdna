@@ -35,7 +35,7 @@ Register a custom UTType for `.kdna` files:
       </array>
       <key>public.mime-type</key>
       <array>
-        <string>application/vnd.aikdna.kdna+zip</string>
+        <string>application/vnd.kdna.asset</string>
       </array>
     </dict>
   </dict>
@@ -134,7 +134,7 @@ When a KDNA-compatible client is installed or updated:
 Register with IANA (informational):
 
 ```
-MIME type: application/vnd.aikdna.kdna+zip
+MIME type: application/vnd.kdna.asset
 Extension: .kdna
 Description: KDNA Domain Cognition Package
 ```

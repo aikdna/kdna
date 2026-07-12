@@ -115,7 +115,7 @@ Records the quality gate checks that passed before export.
     { "gate": "unique_ids", "passed": true, "total_ids": 42, "duplicates": 0 },
     { "gate": "language_consistency", "passed": true, "languages": ["en"] },
     { "gate": "version_present", "passed": true, "version": "0.1.0", "judgment_version": "2026.05" },
-    { "gate": "mimetype_exact", "passed": true, "mimetype": "application/vnd.aikdna.kdna+zip" },
+    { "gate": "mimetype_exact", "passed": true, "mimetype": "application/vnd.kdna.asset" },
     { "gate": "min_evals", "passed": true, "eval_count": 15, "required": 10 }
   ],
   "v1_validation_target": "overall_valid=true"

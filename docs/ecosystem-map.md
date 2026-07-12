@@ -1,8 +1,11 @@
 # KDNA Ecosystem Map
 
-> ⚠️ **Historical snapshot.** This document describes the pre-v1 KDNA ecosystem map, including a four-layer protocol stack with **registry / marketplace / quality-badge / human-lock** layers that are **out of scope for KDNA Core v1**. KDNA Core v1 is the **official KDNA judgment-asset format and runtime loading contract**. Current KDNA Core positioning is documented in `README.md`, `README.zh.md`, `docs/core/definition.md`, and `docs/core/principles.md`. The official KDNA toolchain (SDK, CLI, Loader, API) is the active production path. This file is preserved for traceability of the prior approach and is **not active guidance**.
+> **Archived historical snapshot.** This page preserves an earlier ecosystem
+> map and version matrix. It is not active guidance. Start with
+> [Start Here](./start-here.md), [Status](./status.md), and
+> [Core Narrative and Boundaries](./core-narrative-and-boundaries.md).
 >
-> ⚠️ **历史快照。** 本文件描述 v1 之前的 KDNA 生态地图,其中包含的四层协议栈(含 registry / marketplace / quality-badge / human-lock)已 **不在 KDNA Core v1 范围**。KDNA Core v1 是 **KDNA 官方判断资产格式与运行时加载契约**。当前 KDNA Core 定位以 `README.md`、`README.zh.md`、`docs/core/definition.md`、`docs/core/principles.md` 为准。KDNA 官方工具链(SDK、CLI、Loader、API)是当前生产路径。本文件仅作历史轨迹保留,**不是 active guidance**。
+> **历史归档快照。** 本页保留早期生态地图与版本矩阵，不是当前使用指南。请改读[从这里开始](./start-here.md)、[当前状态](./status.md)和[核心叙事与边界](./core-narrative-and-boundaries.md)。
 
 If you've found one KDNA repository and are wondering which others exist and what they do — this is the map.
 
@@ -47,9 +50,9 @@ If you've found one KDNA repository and are wondering which others exist and wha
 | `prompt-diagnosis-v1.kdna` | Prompt quality | Historical name; not currently released |
 | `agent-safety-v1.kdna` | Agent safety gates | Historical name; not currently released |
 
-Legacy proof repositories may exist privately for audit and provenance, but
-they are not public entry points. Until approved example release cards exist,
-public users should start with the local demo path in [try-kdna](./try-kdna.md).
+Historical proof projects are not public entry points. Public users should
+start with the packaged reference assets or the local demo path in
+[try-kdna](./try-kdna.md).
 
 ## Layer 3 — Runtime & Protocol Tools
 
@@ -107,13 +110,13 @@ See: [kdna-core](https://github.com/aikdna/kdna/tree/main/packages/kdna-core) ·
 ```
 node conformance/run.mjs --profile loader
 ```
-See: [v1rc standard kit](./kdna-v1rc-standard-kit.md) · [conformance](./archive/kdna-compatible-certification.md)
+See: [Core Narrative and Boundaries](./core-narrative-and-boundaries.md) · [conformance](../conformance/)
 
-### I want to deploy KDNA in my enterprise
-See: [enterprise guide](./enterprise.md)
+### I want to test KDNA with my team or organization
+See: [team and organization pilot](./enterprise-pilot.md)
 
 ### I want to understand the protocol specification
-See: [SPEC.md](../SPEC.md) · [v1rc standard kit](./kdna-v1rc-standard-kit.md)
+See: [SPEC.md](../SPEC.md) · [Core Narrative and Boundaries](./core-narrative-and-boundaries.md)
 
 ### I want to contribute to KDNA itself
 See: [CONTRIBUTING.md](../CONTRIBUTING.md) · [GOVERNANCE.md](./GOVERNANCE.md) · [ROADMAP.md](./ROADMAP.md)

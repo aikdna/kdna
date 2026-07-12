@@ -23,7 +23,7 @@ runtime packages from each defining their own `.kdna` authorization behavior.
 
 ## Runtime Container Requirement
 
-Native Studio export MUST produce the KDNA Core v1 runtime shape:
+Native Studio export MUST produce the current KDNA runtime shape:
 
 ```text
 mimetype
@@ -67,7 +67,7 @@ schemas. It MUST NOT become a second protocol source.
 The expected implementation direction is:
 
 - JS Core and CLI expose `plan-load` and authorization conformance fixtures.
-- `kdna-core-swift` exposes `KDNARuntime.planLoad` for KDNA Core v1 source
+- `kdna-core-swift` exposes `KDNARuntime.planLoad` for KDNA source
   directories and packed `.kdna` runtime containers.
 - `kdna-core-swift` exposes `KDNARuntime.loadWithCredential` and
   `KDNAJudgmentProjection` for authorized minimal runtime projection.

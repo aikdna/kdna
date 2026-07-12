@@ -2,7 +2,7 @@
 
 This page is kept as a stable link. The current first-run guide is:
 
-→ [Try KDNA Core v1 in 5 Minutes](./try-kdna.md)
+→ [Try KDNA in 5 Minutes](./try-kdna.md)
 
 ## Current 5-Minute Path
 

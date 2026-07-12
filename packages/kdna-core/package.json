@@ -1,6 +1,6 @@
 {
     "name": "@aikdna/kdna-core",
-    "version": "0.15.11",
+    "version": "0.15.12",
     "description": "KDNA Core library for validating, planning, and loading local .kdna judgment assets.",
     "engines": {
         "node": ">=18.0.0"
@@ -15,12 +15,7 @@
             "types": "./src/types.d.ts"
         },
         "./package.json": "./package.json",
-        "./schema/*": "./schema/*",
-        "./v1": {
-            "import": "./src/v1/index.mjs",
-            "require": "./src/v1/index.js",
-            "types": "./src/types.d.ts"
-        }
+        "./schema/*": "./schema/*"
     },
     "types": "src/types.d.ts",
     "scripts": {

@@ -2,7 +2,7 @@
 
 > [English](./getting-started.md)
 
-KDNA Core v1 有一条已验证路径：通过 Studio CLI 在本地创建有边界的 `.kdna` 资产，用运行时 CLI 校验，规划加载，并加载进 Agent 上下文。
+KDNA 有一条默认已验证路径：通过 Studio CLI 创建范围明确的 `.kdna` 资产，用运行时 CLI 校验，规划授权与就绪状态，再为 Agent 加载 Runtime Capsule。
 
 ---
 
@@ -104,10 +104,10 @@ legacy 兼容命令统一记录在 [status.md](./status.md)。
 
 ## 当前边界
 
-- KDNA Core v1 定义文件格式、校验、打包、解包和加载契约。
+- KDNA Core 定义文件格式、校验、打包、解包和加载契约。
 - `kdna validate` 证明结构、schema、payload、checksum、load contract 是否成立。
 - `kdna load` 把资产渲染成 Agent 可消费的上下文。
-- KDNA Core v1 不评价内容质量，不做官方推荐，也不替调用方决定运行时策略。
+- KDNA Core 不评价内容质量，不做官方推荐，也不替调用方决定运行时策略。
 
 ---
 

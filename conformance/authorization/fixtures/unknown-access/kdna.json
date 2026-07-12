@@ -18,7 +18,7 @@
   },
   "payload": {
     "path": "payload.kdnab",
-    "encoding": "json",
+    "encoding": "cbor",
     "encrypted": false
   },
   "summary": "Phase 1 minimal example. The smallest valid KDNA v1 asset.",

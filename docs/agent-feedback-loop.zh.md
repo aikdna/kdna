@@ -1,11 +1,10 @@
 # Agent 反馈闭环
 
-> 历史性的 v1 前治理流程。当前 Core v1 public beta 不要求 registry 发布,
-> 也不把 Human Lock 作为 `.kdna` 格式有效性的前提。本文件仅作为受审阅演化流程的设计记录。
+> **历史设计草案。请勿把下文命令当作当前 CLI 指南。** KDNA 提供可选判断、Trace 和 Evidence 原语；Outcome、记忆、审批、评测和部署由应用负责。请改读 [KDNA 与学习闭环](./kdna-and-ai-stack.zh.md#11-kdna-与学习闭环)。
 
 KDNA 加载的 Agent 如何将现实世界经验转化为受治理的判断演化。
 
-本文档描述了从 Agent 执行到域更新的完整管道。它是 [Human-Governed Self-Improving Agents](./human-governed-self-improvement.zh.md) 概念文档的操作对应物。
+本文档归档了一种从 Agent 执行到受审阅资产更新的应用流程示例，不代表 KDNA 提供完整学习平台。
 
 ---
 

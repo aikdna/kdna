@@ -6,6 +6,7 @@ import { execFileSync } from 'node:child_process';
 
 const require = createRequire(import.meta.url);
 const v1 = require('../packages/kdna-core/src/v1');
+const cbor = require('cbor-x');
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const exampleMinimal = path.join(repoRoot, 'examples', 'minimal');
@@ -216,13 +217,13 @@ function writeFixture(testCase) {
   });
   fs.writeFileSync(manifestPath, json(updated));
   formatJsonFiles([manifestPath]);
-  fs.writeFileSync(path.join(fixtureDir, 'checksums.json'), json(v1.buildChecksumsV1(fixtureDir)));
+  fs.writeFileSync(path.join(fixtureDir, 'checksums.json'), json(v1.buildChecksums(fixtureDir)));
 
   if (testCase.tamperPayloadAfterChecksums) {
     const payloadPath = path.join(fixtureDir, 'payload.kdnab');
-    const payload = JSON.parse(fs.readFileSync(payloadPath, 'utf8'));
+    const payload = cbor.decode(fs.readFileSync(payloadPath));
     payload.core.highest_question = `${payload.core.highest_question} (tampered)`;
-    fs.writeFileSync(payloadPath, json(payload));
+    fs.writeFileSync(payloadPath, cbor.encode(payload));
   }
 
   return fixtureDir;

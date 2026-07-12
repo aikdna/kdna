@@ -5,20 +5,19 @@ systems, HTTP clients, registries, and loaders.
 
 ## Current Media Type
 
-The current recommended media type is:
+The current KDNA media type is:
 
 ```text
-application/vnd.aikdna.kdna+zip
+application/vnd.kdna.asset
 ```
 
 Rationale:
 
-- KDNA is controlled by the AiKDNA project, so the vendor tree is the right
-  public-registration path before any standards-tree submission.
-- `.kdna` is a ZIP container, so the registered `+zip` structured syntax suffix
-  makes the underlying container explicit to generic tooling.
+- KDNA assets are self-contained judgment payloads, not generic ZIP archives.
+- The `+zip` structured syntax suffix is intentionally omitted because the
+  container format is an implementation detail of the KDNA Asset Container.
 - `application/x-kdna` uses an unregistered `x-` prefix and is not part of the
-  KDNA v1.0 protocol.
+  KDNA 1.0 protocol.
 
 ## Rejected Values
 
@@ -26,17 +25,17 @@ Rationale:
 application/x-kdna
 ```
 
-Conforming v1.0 tools MUST reject this value in registry metadata, HTTP
+Conforming tools MUST reject this value in registry metadata, HTTP
 responses, CLI package metadata, operating system integration files, and `.kdna`
 root `mimetype` entries.
 
 ## ZIP Identification
 
-Every v1.0-compatible `.kdna` asset MUST include a root `mimetype` entry with
-exactly this content and no trailing newline:
+Every `.kdna` asset MUST include a root `mimetype` entry with exactly this
+content and no trailing newline:
 
 ```text
-application/vnd.aikdna.kdna+zip
+application/vnd.kdna.asset
 ```
 
 Writers SHOULD place `mimetype` as the first ZIP entry and SHOULD store it
@@ -45,8 +44,8 @@ without compression. Loaders MUST inspect both `mimetype` and `kdna.json`; a
 
 ## Future Registration Path
 
-1. Use `application/vnd.aikdna.kdna+zip` for v1.0.
-2. Prepare an IANA vendor-tree registration once the v1.0 format is frozen.
+1. Use `application/vnd.kdna.asset` for KDNA 1.0.
+2. Prepare an IANA vendor-tree registration once the 1.0 format is frozen.
 3. Consider a standards-tree type only after independent implementations and a
    standards body or RFC path exist.
 

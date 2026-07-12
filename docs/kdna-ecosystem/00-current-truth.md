@@ -1,53 +1,48 @@
-# Current Truth (live)
+# Public Ecosystem Truth
 
-> Last updated: 2026-07-10. This file records the public ecosystem truth that
-> should constrain README, roadmap, website, and package claims.
+> This page contains durable public constraints. Package versions and fresh
+> test counts belong in release notes and CI, not in this file.
 
-## Versions
+## Product Truth
 
-| Component | npm latest | source version | public state |
-|---|---:|---:|---|
-| `@aikdna/kdna-core` | 0.15.11 | 0.15.11 | Beta runtime baseline for local public `.kdna` assets |
-| `@aikdna/kdna-cli` | 0.29.0 | 0.29.0 | Beta CLI baseline for validate / inspect / plan-load / load / route / compose / project |
-| `@aikdna/kdna-studio-core` | 1.7.10 | 1.7.10 | Beta authoring SDK |
-| `@aikdna/kdna-studio-cli` | 0.8.12 | 0.8.12 | Beta authoring CLI |
-| `@aikdna/kdna-mcp-server` | 0.2.4 | 0.2.4 | Experimental MCP bridge |
-| `@aikdna/kdna-activation-server` | 0.1.0 | 0.1.0 | Experimental self-hosted licensed-mode support |
-| `@aikdna/kdna-remote-server` | 0.1.0 | 0.1.0 | Experimental self-hosted remote projection support |
-| `@aikdna/kdna-web-server` | 0.1.1 | 0.1.1 | Experimental server-side web adapter |
-| `@aikdna/kdna-web-client` | 0.1.1 | 0.1.1 | Experimental browser-safe web utilities |
-| `@aikdna/kdna-react` | 0.1.1 | 0.1.1 | Experimental React hooks and components |
-| `create-kdna-web-app` | 0.1.2 | 0.1.2 | Experimental KDNA web app scaffolder |
+- KDNA is an open judgment-asset protocol.
+- Anyone, any Agent, or any tool can create and publish a `.kdna` asset through
+  the public protocol and toolchain.
+- KDNA Core validates format, integrity, provenance, and authorization facts;
+  it does not judge content correctness, usefulness, expertise, or quality.
+- There is one current KDNA Asset Container and one compatible Agent interface:
+  LoadPlan, authorization, integrity checks, and Runtime Capsule.
+- A single asset is the atomic and default path.
+- Cluster is the explicit advanced path for multiple assets; it does not
+  replace or silently alter single-asset loading.
+- public, licensed, and remote are author-declared access modes, not content
+  rankings.
+- Evidence is optional and supports specific observed claims; it is not a
+  creation, validation, or loading requirement.
+- AIKDNA-published assets are reference assets, not official judgments.
 
-## Stable Baseline
+## Maturity Truth
 
-- KDNA Core v1 local public `.kdna` assets are the current public baseline.
-- `kdna validate`, `kdna inspect`, `kdna plan-load`, and `kdna load
-  --profile=compact --as=prompt` are the recommended first-run path.
-- KDNA Core remains content-neutral: format validity does not imply content
-  endorsement, ranking, or quality certification.
+- The KDNA Asset Container and local public-asset runtime are the stable public
+  baseline.
+- Studio authoring, task-aware consumption, Cluster, signing, and revocation
+  are beta surfaces.
+- Licensed and remote contracts mature independently from the public container
+  path; check release-specific conformance before production use.
+- Remote and activation servers are experimental self-hostable reference
+  implementations, not AIKDNA-hosted services.
+- JS Core is the reference implementation. Swift, React, Web, and Agent
+  adapters must prove parity against shared fixtures.
 
-## Experimental / Not Yet Stable Baseline
+## Not Public Baseline Claims
 
-- Web packages are public repositories and published npm packages as of
-  2026-07-04. Treat them as experimental integration surfaces, not stable
-  hosted-platform claims. The current server MVP covers upload/inspect/plan-load/load
-  and activation proxying only; server-side Studio export, remote forwarding,
-  CORS policy helpers, and durable Cloudflare/R2 storage are not shipped
-  web-package capabilities yet.
-- Remote runtime and activation server are self-hostable support surfaces, not
-  an AIKDNA-hosted loading or licensing service.
-- Swift runtime and Studio Swift are beta/support surfaces until parity is
-  proven against fixed Core v1 conformance fixtures.
-- Hosted registry, marketplace, content ranking, and paid distribution remain
-  out of scope for KDNA Core v1.
+- hosted registry or marketplace;
+- billing or paid distribution platform;
+- AIKDNA-hosted remote loading or activation;
+- universal asset certification, ranking, or recommendation;
+- complete data, memory, learning, evaluation, or deployment infrastructure;
+- guaranteed behavior improvement for every model or task.
 
-## Maintenance expectations
-
-- Web package maintenance path: keep `kdna-web-server`, `kdna-web-client`,
-  `kdna-react`, and `create-kdna-web-app` source versions aligned with npm
-  latest, keep the central `npm run validate:web-packages` gate green, and
-  preserve generated-app smoke evidence for scaffolder releases.
-- Keep this file, `docs/public-roadmap.md`,
-  `ecosystem-manifest.json`, website copy, and package READMEs aligned whenever
-  versions or maturity claims change.
+Keep this file, [Status](../status.md), [Maturity](../maturity.md),
+[Public Roadmap](../public-roadmap.md), package READMEs, and website copy
+semantically aligned.

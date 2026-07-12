@@ -1,6 +1,13 @@
 # RFC-0008: Encrypted and Licensed KDNA Assets
 
-Status: active
+Status: superseded — active compatibility-only. The encryption profile name
+`kdna-licensed-entry-v1`, the core algorithm choices (AES-256-GCM,
+HKDF-SHA256), and the fail-closed entitlement state diagram remain the basis of
+the current container-level licensed-entry implementation. The per-entry
+encryption model and source-tree file targets described in the body of this RFC
+are superseded by the [Container spec](../specs/container.md) and unified
+`payload.kdnab` envelope AEAD
+([conformance](../conformance/kdna-envelope-aead-v1.mjs)).
 
 ## Summary
 

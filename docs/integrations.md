@@ -1,6 +1,8 @@
 # KDNA Agent Integrations
 
-KDNA integrates with major AI coding agents through a single skill: `kdna-loader`. KDNA Core v1 assets are local `.kdna` files that can be validated and loaded on demand — they are not registered as separate skills.
+KDNA integrates with major AI coding agents through one adapter skill:
+`kdna-loader`. KDNA assets are local `.kdna` files validated, planned, and
+loaded through the CLI; domains are assets, not separate skills.
 
 ## Supported Agents
 

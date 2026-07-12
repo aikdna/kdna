@@ -39,7 +39,7 @@ assets.
 8. The compiler MUST generate build provenance and expose it in `kdna.json`
    under `authoring`.
 9. The exporter MUST include the root `mimetype` entry with the exact content
-   `application/vnd.aikdna.kdna+zip`.
+   `application/vnd.kdna.asset`.
 10. The exporter MUST canonicalize internal content before computing
     `content_digest`.
 11. The exporter MUST compute `asset_digest` over the complete `.kdna` file
