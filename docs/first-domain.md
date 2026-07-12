@@ -2,7 +2,7 @@
 
 > Short guide. For a detailed end-to-end walkthrough, see [First Domain Walkthrough](./first-domain-walkthrough.md).
 
-Build a working KDNA Core v1 judgment asset in 10 minutes and see how it can be
+Build a working KDNA judgment asset in 10 minutes and see how it can be
 validated and loaded.
 
 ## Step 1: Install

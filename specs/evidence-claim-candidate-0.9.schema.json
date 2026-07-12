@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.com/schemas/evidence-claim-candidate-0.9.schema.json",
+  "title": "KDNA EvidenceClaim 0.9 Candidate",
+  "description": "Candidate evidence contract. A bounded claim about judgment quality backed by identifiable evidence. Separate from Trace: Trace records execution facts; EvidenceClaim interprets quality. References trace_id and plan_id; does not duplicate trace content.",
+  "type": "object",
+  "required": ["evidence_version", "claim_id", "trace_id", "claim_type", "scope", "classification"],
+  "properties": {
+    "evidence_version": {
+      "type": "string",
+      "const": "0.9.0"
+    },
+    "claim_id": {
+      "type": "string",
+      "pattern": "^claim_[0-9a-f]{16}$"
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "The trace this claim evaluates."
+    },
+    "plan_id": {
+      "type": "string",
+      "description": "The plan the trace executed."
+    },
+
+    "claim_type": {
+      "type": "string",
+      "enum": [
+        "single_use_behavioral",
+        "cluster_use_behavioral",
+        "aggregate",
+        "load_failure",
+        "regression",
+        "comparison_assay",
+        "field_validation"
+      ],
+      "description": "What kind of evidence claim this is."
+    },
+
+    "asset_ref": {
+      "type": "object",
+      "description": "Asset under evaluation. For single-mode claims.",
+      "properties": {
+        "asset_id": { "type": "string" },
+        "version": { "type": "string" },
+        "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      }
+    },
+
+    "cluster_ref": {
+      "type": "object",
+      "description": "Cluster under evaluation. For cluster-mode claims.",
+      "properties": {
+        "cluster_id": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+
+    "scope": {
+      "type": "object",
+      "required": ["task_family", "task_hash", "model", "runtime", "dataset_fingerprint"],
+      "properties": {
+        "task_family": { "type": "string" },
+        "task_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{16,128}$" },
+        "model": { "type": "string" },
+        "runtime": { "type": "string" },
+        "dataset_fingerprint": {
+          "type": "string",
+          "description": "Identifies the dataset this claim is based on. 'single-use — no comparison arm' for one-off traces. A structured fingerprint for controlled assays."
+        },
+        "evaluator": {
+          "type": "string",
+          "enum": ["model_judge", "human_reviewer", "deterministic", "hybrid"],
+          "description": "Who or what produced the quality assessment."
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "judgment_quality": {
+      "type": "object",
+      "description": "Quality signals from this execution. Fields vary by claim_type.",
+      "properties": {
+        "axiom_coverage": {
+          "type": "object",
+          "properties": {
+            "triggered": { "type": "integer" },
+            "available": { "type": "integer" },
+            "coverage_ratio": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "transfer_depth": {
+          "type": "object",
+          "properties": {
+            "operationalized": { "type": "integer" },
+            "referenced": { "type": "integer" },
+            "mentioned": { "type": "integer" }
+          }
+        },
+        "self_checks_passed": {
+          "type": "array",
+          "items": { "type": "boolean" }
+        },
+        "banned_terms_avoided": { "type": "boolean" },
+        "boundary_respected": { "type": "boolean" }
+      }
+    },
+
+    "component_assets": {
+      "type": "array",
+      "description": "Per-component classification. Cluster claims only.",
+      "items": {
+        "type": "object",
+        "required": ["asset_id", "role", "classification"],
+        "properties": {
+          "asset_id": { "type": "string" },
+          "role": { "type": "string" },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "conformance_asset",
+              "benchmark_asset",
+              "reference_asset",
+              "behavior_evaluated_asset",
+              "field_validated_asset",
+              "production_asset"
+            ]
+          },
+          "behavior_evaluated": { "type": "boolean" },
+          "evidence_ref": { "type": ["string", "null"] }
+        }
+      }
+    },
+
+    "cluster_quality": {
+      "type": "object",
+      "description": "Cluster-specific quality metrics.",
+      "properties": {
+        "primary_selection_correct": { "type": "boolean" },
+        "advisor_inclusion_justified": { "type": "boolean" },
+        "advisor_contribution_distinct": { "type": "boolean" },
+        "irrelevant_asset_rejected": { "type": "boolean" },
+        "conflicts_detected": { "type": "integer" },
+        "conflicts_blocked": { "type": "integer" },
+        "budget_compliance": { "type": "boolean" },
+        "budget_violation": { "type": "string" }
+      }
+    },
+
+    "comparison_arms": {
+      "type": "object",
+      "description": "Comparison arm results. All arms are null-able — null means 'not yet run.' For an aggregate assay claim, these are populated with per-arm scores.",
+      "properties": {
+        "primary_only": {
+          "type": ["object", "null"],
+          "properties": {
+            "score": { "type": "number" },
+            "critical_errors": { "type": "integer" },
+            "status": { "type": "string", "enum": ["not_run", "running", "completed", "failed"] }
+          }
+        },
+        "no_kdna": {
+          "type": ["object", "null"],
+          "properties": {
+            "score": { "type": "number" },
+            "critical_errors": { "type": "integer" },
+            "status": { "type": "string", "enum": ["not_run", "running", "completed", "failed"] }
+          }
+        },
+        "bounded_compose": {
+          "type": ["object", "null"],
+          "properties": {
+            "score": { "type": "number" },
+            "critical_errors": { "type": "integer" },
+            "status": { "type": "string", "enum": ["not_run", "running", "completed", "failed"] }
+          }
+        },
+        "wrong_advisor": {
+          "type": ["object", "null"],
+          "properties": {
+            "score": { "type": "number" },
+            "critical_errors": { "type": "integer" },
+            "status": { "type": "string", "enum": ["not_run", "running", "completed", "failed"] }
+          }
+        },
+        "irrelevant_advisor": {
+          "type": ["object", "null"],
+          "properties": {
+            "score": { "type": "number" },
+            "critical_errors": { "type": "integer" },
+            "status": { "type": "string", "enum": ["not_run", "running", "completed", "failed"] }
+          }
+        },
+        "budget_waste": {
+          "type": ["object", "null"],
+          "properties": {
+            "score": { "type": "number" },
+            "critical_errors": { "type": "integer" },
+            "status": { "type": "string", "enum": ["not_run", "running", "completed", "failed"] }
+          }
+        },
+        "adversarial": {
+          "type": ["object", "null"],
+          "properties": {
+            "score": { "type": "number" },
+            "critical_errors": { "type": "integer" },
+            "status": { "type": "string", "enum": ["not_run", "running", "completed", "failed"] }
+          }
+        }
+      }
+    },
+
+    "marginal_value": {
+      "type": "object",
+      "description": "Evidence that the asset or cluster adds value over simpler baselines. Null fields = not yet measured. Populated after controlled assay.",
+      "properties": {
+        "baseline_score": { "type": ["number", "null"] },
+        "target_score": { "type": ["number", "null"] },
+        "delta": { "type": ["number", "null"] },
+        "threshold_met": { "type": ["boolean", "null"] },
+        "threshold_name": { "type": "string" },
+        "evidence_produced": { "type": "boolean" }
+      }
+    },
+
+    "limitations": {
+      "type": "array",
+      "description": "Honest statements about what this claim does NOT prove.",
+      "items": { "type": "string" }
+    },
+
+    "classification": {
+      "type": "object",
+      "required": ["level"],
+      "description": "What maturity level this evidence supports. Multiple flags can be true — e.g., a behavior_evaluated asset is also load_ready. But a load_ready asset is NOT behavior_evaluated.",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": [
+            "load_ready",
+            "usage_evidence",
+            "cluster_usage_evidence",
+            "behavior_evaluated",
+            "field_validated",
+            "production_candidate"
+          ]
+        },
+        "not_behavior_evaluated": {
+          "type": "boolean",
+          "description": "Explicit flag: this claim does NOT prove behavioral improvement."
+        },
+        "not_field_validated": {
+          "type": "boolean",
+          "description": "Explicit flag: this claim does NOT prove real-user field value."
+        },
+        "not_production": {
+          "type": "boolean",
+          "description": "Explicit flag: this claim does NOT prove product readiness."
+        },
+        "load_ready_only": {
+          "type": "boolean",
+          "description": "Asset validates and loads but has no behavioral evidence."
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "generated_by": { "type": "string" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "claim_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      }
+    }
+  },
+
+  "additionalProperties": true
+}

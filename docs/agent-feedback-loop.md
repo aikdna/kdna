@@ -1,12 +1,14 @@
 # Agent Feedback Loop
 
-> Historical pre-v1 governance workflow. Current Core v1 public beta does not
-> require registry publication or Human Lock for `.kdna` format validity.
-> Treat this file as an archived design pattern for reviewed evolution flows.
+> **Archived design sketch. Do not use the commands below as current CLI
+> guidance.** KDNA supplies optional judgment, trace, and evidence primitives;
+> applications own outcomes, memory, approval, evaluation, and deployment.
+> See [KDNA and the Learning Loop](./kdna-and-ai-stack.md#12-kdna-and-the-learning-loop).
 
 How a KDNA-loaded agent turns real-world experience into governed judgment evolution.
 
-This document describes the complete pipeline from agent execution to domain update. It is the operational counterpart to the [Human-Governed Self-Improving Agents](./human-governed-self-improvement.md) concept document.
+This archived document sketches one possible application pipeline from Agent
+execution to a reviewed asset update. It is not a complete KDNA platform.
 
 ---
 

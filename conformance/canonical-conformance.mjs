@@ -13,6 +13,7 @@ import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
 const _require = createRequire(import.meta.url);
 const core = _require('../packages/kdna-core/src/index.js');
+const cbor = _require('cbor-x');
 
 let WORKDIR;
 
@@ -36,9 +37,6 @@ function fixtureDir(name) {
 function buildFixture(name, manifestOverrides = {}, payloadOverrides = {}) {
   const dir = fixtureDir(name);
   const manifest = {
-    format: 'kdna',
-    format_version: '2.0',
-    spec_version: '2.0',
     kdna_version: '1.0',
     asset_id: `kdna:c:${name}`,
     asset_uid: `kdna:c:${name}@1.0.0`,
@@ -51,7 +49,7 @@ function buildFixture(name, manifestOverrides = {}, payloadOverrides = {}) {
     updated_at: '2026-06-25T00:00:00Z',
     creator: { name: 'C', id: 'c' },
     compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
-    payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false },
+    payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
     access: 'public',
     ...manifestOverrides,
   };
@@ -78,9 +76,9 @@ function buildFixture(name, manifestOverrides = {}, payloadOverrides = {}) {
   };
   fs.writeFileSync(path.join(dir, 'mimetype'), 'application/vnd.kdna.asset');
   fs.writeFileSync(path.join(dir, 'kdna.json'), JSON.stringify(manifest, null, 2));
-  fs.writeFileSync(path.join(dir, 'payload.kdnab'), JSON.stringify(payload, null, 2));
+  fs.writeFileSync(path.join(dir, 'payload.kdnab'), cbor.encode(payload));
   // Generate checksums before packing
-  const cs = core.buildChecksumsV1(dir);
+  const cs = core.buildChecksums(dir);
   fs.writeFileSync(path.join(dir, 'checksums.json'), JSON.stringify(cs, null, 2));
   const kdna = path.join(WORKDIR, `${name}.kdna`);
   core.pack(dir, kdna);
@@ -107,9 +105,6 @@ test('canonical container: ZIP with required entries', () => {
 test('canonical container: deterministic output', () => {
   const dir = fixtureDir('det');
   const manifest = {
-    format: 'kdna',
-    format_version: '2.0',
-    spec_version: '2.0',
     kdna_version: '1.0',
     asset_id: 'kdna:c:det',
     asset_uid: 'kdna:c:det@1.0.0',
@@ -122,7 +117,7 @@ test('canonical container: deterministic output', () => {
     updated_at: '2026-06-25T00:00:00Z',
     creator: { name: 'C', id: 'c' },
     compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
-    payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false },
+    payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
     access: 'public',
   };
   const payload = {
@@ -145,8 +140,8 @@ test('canonical container: deterministic output', () => {
   };
   fs.writeFileSync(path.join(dir, 'mimetype'), 'application/vnd.kdna.asset');
   fs.writeFileSync(path.join(dir, 'kdna.json'), JSON.stringify(manifest));
-  fs.writeFileSync(path.join(dir, 'payload.kdnab'), JSON.stringify(payload));
-  const csd = core.buildChecksumsV1(dir);
+  fs.writeFileSync(path.join(dir, 'payload.kdnab'), cbor.encode(payload));
+  const csd = core.buildChecksums(dir);
   fs.writeFileSync(path.join(dir, 'checksums.json'), JSON.stringify(csd));
   core.pack(dir, path.join(WORKDIR, 'det1.kdna'));
   core.pack(dir, path.join(WORKDIR, 'det2.kdna'));
@@ -175,20 +170,25 @@ test('protocol: planLoad public → ready', () => {
 // ═══════════════════════════════════════════════════════════════════════
 
 test('access: licensed/password → needs_password', () => {
-  const f = buildFixture('pwd', {
+  const f = buildFixture('pwd');
+  const pwdManifest = {
+    ...f.manifest,
     access: 'licensed',
     entitlement: { profile: 'password' },
     encryption: { profile: 'kdna-password-protected-v1', encrypted_entries: ['payload.kdnab'] },
-    payload: { path: 'payload.kdnab', encoding: 'json', encrypted: true },
-  });
-  const envelope = core.encryptProtectedEntry(JSON.stringify(f.payload), {
+    payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: true },
+  };
+  // Overwrite manifest with licensed config
+  fs.writeFileSync(path.join(f.dir, 'kdna.json'), JSON.stringify(pwdManifest, null, 2));
+  const plaintext = cbor.encode(f.payload);
+  const envelope = core.encryptProtectedEntry(plaintext, {
     entryName: 'payload.kdnab',
     manifest: { name: '@c/pwd', version: '1.0.0' },
     password: 'test',
     recoveryCode: core.generateRecoveryCode(),
   });
-  fs.writeFileSync(path.join(f.dir, 'payload.kdnab'), JSON.stringify(envelope));
-  const checksums = core.buildChecksumsV1(f.dir);
+  fs.writeFileSync(path.join(f.dir, 'payload.kdnab'), cbor.encode(envelope));
+  const checksums = core.buildChecksums(f.dir);
   fs.writeFileSync(path.join(f.dir, 'checksums.json'), JSON.stringify(checksums));
   core.pack(f.dir, f.kdna);
   const plan = core.planLoad(f.kdna);
@@ -240,24 +240,93 @@ test('negative: wrong mimetype rejected at pack time', () => {
   assert.throws(() => core.pack(f.dir, f.kdna));
 });
 
-test('negative: source tree entries present in container', () => {
+test('negative: source tree entries are rejected at pack time', () => {
   const f = buildFixture('source-tree');
   fs.writeFileSync(path.join(f.dir, 'KDNA_Core.json'), JSON.stringify({ meta: {}, axioms: [] }));
-  core.pack(f.dir, f.kdna);
-  // The container entries include legacy source tree files — validate should still pass
-  // because v1 validates payload structure, not container entry policy.
-  // Policy enforcement belongs to the container reader (listZipEntries), not validate().
-  const reader = core.createKdnaAssetReader();
-  const asset = reader.openSync(f.kdna);
-  const names = reader.listEntriesSync(asset);
-  assert.ok(names.includes('KDNA_Core.json'), 'legacy entry present in container');
-  // Future: container policy should reject this, but for now it's accepted
+  assert.throws(
+    () => core.pack(f.dir, f.kdna),
+    /forbidden top-level source entry: KDNA_Core\.json/,
+  );
 });
 
 test('negative: unknown access value → invalid LoadPlan', () => {
   const f = buildFixture('bad-access', { access: 'premium' });
   const plan = core.planLoad(f.kdna);
   assert.equal(plan.state, 'invalid');
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// CBOR-only enforcement
+// ═══════════════════════════════════════════════════════════════════════
+
+test('negative: encoding=json manifest is rejected', () => {
+  const dir = fixtureDir('bad-enc');
+  fs.writeFileSync(path.join(dir, 'mimetype'), 'application/vnd.kdna.asset');
+  fs.writeFileSync(
+    path.join(dir, 'kdna.json'),
+    JSON.stringify({
+      kdna_version: '1.0',
+      asset_id: 'kdna:c:bad-enc',
+      asset_uid: 'u',
+      asset_type: 'domain',
+      title: 'X',
+      version: '1.0.0',
+      judgment_version: '1.0.0',
+      created_at: '2026-01-01T00:00:00Z',
+      updated_at: '2026-01-01T00:00:00Z',
+      creator: { name: 'T' },
+      payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false },
+      compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
+    }),
+  );
+  const p = {
+    profile: 'judgment-profile-v1',
+    core: { highest_question: 'Q', axioms: [{ id: 'a1', one_sentence: 'Test.' }] },
+  };
+  fs.writeFileSync(path.join(dir, 'payload.kdnab'), cbor.encode(p));
+  const cs = core.buildChecksums(dir);
+  fs.writeFileSync(path.join(dir, 'checksums.json'), JSON.stringify(cs));
+  const kdna = path.join(WORKDIR, 'bad-enc.kdna');
+  core.pack(dir, kdna);
+  const v = core.validate(kdna);
+  assert.equal(v.schema_valid, false, 'encoding=json must be rejected by schema');
+});
+
+test('negative: JSON payload disguised as CBOR is rejected', () => {
+  const dir = fixtureDir('bad-payload');
+  fs.writeFileSync(path.join(dir, 'mimetype'), 'application/vnd.kdna.asset');
+  fs.writeFileSync(
+    path.join(dir, 'kdna.json'),
+    JSON.stringify({
+      kdna_version: '1.0',
+      asset_id: 'kdna:c:bad-payload',
+      asset_uid: 'u',
+      asset_type: 'domain',
+      title: 'X',
+      version: '1.0.0',
+      judgment_version: '1.0.0',
+      created_at: '2026-01-01T00:00:00Z',
+      updated_at: '2026-01-01T00:00:00Z',
+      creator: { name: 'T' },
+      payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
+      compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
+    }),
+  );
+  const p = {
+    profile: 'judgment-profile-v1',
+    core: { highest_question: 'Q', axioms: [{ id: 'a1', one_sentence: 'Test.' }] },
+  };
+  fs.writeFileSync(path.join(dir, 'payload.kdnab'), JSON.stringify(p));
+  const cs = core.buildChecksums(dir);
+  fs.writeFileSync(path.join(dir, 'checksums.json'), JSON.stringify(cs));
+  const kdna = path.join(WORKDIR, 'bad-payload.kdna');
+  core.pack(dir, kdna);
+  const v = core.validate(kdna);
+  assert.equal(
+    v.payload_valid,
+    false,
+    'JSON payload must be rejected even when manifest says cbor',
+  );
 });
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -269,8 +338,8 @@ test('integration: pack → validate → load', () => {
   assert.equal(core.validate(f.kdna).overall_valid, true);
   assert.equal(core.planLoad(f.kdna).can_load_now, true);
   const r = core.loadAuthorized(f.kdna, { profile: 'index', as: 'json' });
-  assert.equal(r.status, 'loaded');
-  assert.equal(r.asset_id, 'kdna:c:integ');
+  assert.equal(r.type, 'kdna.context.capsule');
+  assert.equal(r.domain, '@c/integ');
 });
 
 test('integration: pack → unpack → validate', () => {

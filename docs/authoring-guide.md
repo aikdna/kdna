@@ -1,6 +1,6 @@
 # KDNA Authoring Guide
 
-> **For formal KDNA Core v1 assets, use [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli).** The dev source workflow below is for experimentation and CI validation of open-source domain repos. Dev source directories are non-canonical and do not by themselves prove a shippable v1 asset.
+> **For distributable KDNA assets, use [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli).** The dev source workflow below is for experimentation and CI validation. Dev source directories are authoring views and do not by themselves constitute a shippable `.kdna` asset.
 
 ## Quick Start (Dev Source — for experimentation)
 

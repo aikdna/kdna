@@ -27,7 +27,7 @@ example.kdna
 | --- | --- | --- | --- |
 | `mimetype` | yes | UTF-8 plaintext | MUST be the literal string `application/vnd.kdna.asset` (no trailing newline). MUST be the first entry in the ZIP central directory so it can be read without parsing the full manifest. |
 | `kdna.json` | yes | UTF-8 JSON | The manifest. See `manifest.md`. |
-| `payload.kdnab` | yes | binary (CBOR or JSON) | The judgment payload. See `payload-profile.md`. May be plaintext or encrypted as a unit. The current Core GA supports plaintext public payloads; encrypted payload handling is reserved for future authorization profiles. |
+| `payload.kdnab` | yes | CBOR | The judgment payload or a CBOR encryption envelope. See `payload-profile.md`. Licensed/password assets are decrypted in memory by the authorized loader. |
 
 ## Optional entries
 
@@ -43,9 +43,11 @@ example.kdna
 1. The container MUST be a valid ZIP archive.
 2. `mimetype` MUST be the first entry and MUST be stored uncompressed.
 3. `kdna.json` MUST be UTF-8 JSON without BOM.
-4. `payload.kdnab` MUST be either UTF-8 JSON (`.json` content) or CBOR. The manifest's `payload.encoding` field declares which.
+4. `payload.kdnab` MUST be CBOR and `payload.encoding` MUST be `"cbor"`. JSON payload bytes are non-conformant.
 5. The container MUST be deterministic given the same input entries: a producer and a verifier that independently pack the same logical asset MUST produce byte-identical containers when the same digest algorithm is used. The official KDNA toolchain guarantees this for Core GA; assets that depend on non-deterministic packing are non-conformant.
-6. Encryption is per-entry, not whole-container. The current Core GA supports plaintext public payloads; the schema for encrypted entries is reserved for future authorization profiles.
+6. Encryption is per-entry, not whole-container. For a protected payload,
+   `payload.kdnab` contains the supported CBOR envelope; decryption occurs only
+   after LoadPlan authorization and plaintext is not written to disk.
 
 ## Anti-patterns
 
@@ -56,4 +58,7 @@ example.kdna
 
 ## Versioning
 
-The container format version is recorded in the manifest as `format_version` (wire field — see [version-taxonomy.md](../version-taxonomy.md)). A loader encountering an unknown `format_version` SHOULD treat the asset as `version_incompatible` per the trace vocabulary and refuse to load it.
+The container wire discriminator is `kdna_version`, whose current and only
+accepted value is `"1.0"` (see [version-taxonomy.md](../version-taxonomy.md)).
+`format_version` and `spec_version` are not current manifest fields. A loader
+encountering an unknown `kdna_version` MUST refuse to load the asset.

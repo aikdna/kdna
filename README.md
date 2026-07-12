@@ -2,11 +2,21 @@
 
 > **Skills give agents hands. KDNA gives them judgment.**
 >
-> KDNA is an open file format and protocol for packaging domain judgment and loading it into AI agents — portable, verifiable, and yours.
+> KDNA is an open judgment-asset protocol. It lets individuals, creators,
+> professionals, teams, organizations, Agents, and tools turn judgment, taste,
+> values, standards, boundaries, stance, and personality into portable `.kdna`
+> assets that can be used across models and runtimes.
 
-Use the official KDNA toolchain to create, inspect, validate, plan-load, and load `.kdna` files. Agents and third-party tools can create `.kdna` files through the official SDK or CLI; format validity is determined by `kdna validate`, not by author identity.
+Anyone can create a KDNA asset. KDNA Core validates structure, integrity,
+provenance, and authorization facts; it does not decide whether the judgment is
+true, good, expert, or worthy of publication. Creation and compatible Agent
+consumption use the KDNA toolchain contract: `inspect → plan-load →
+authorization → load/project → Runtime Capsule`. Directly unpacking or decoding
+asset internals is not a compatible Agent consumption path.
 
 > New to KDNA? → [Start Here](./docs/start-here.md)
+>
+> What IS KDNA, fundamentally? → [Core Narrative and Boundaries](./docs/core-narrative-and-boundaries.md)
 >
 > Why KDNA instead of a system prompt? → [Why KDNA](./docs/why-kdna.md) · [KDNA and the AI Stack](./docs/kdna-and-ai-stack.md)
 >
@@ -18,7 +28,12 @@ Use the official KDNA toolchain to create, inspect, validate, plan-load, and loa
 
 [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE) [![Maturity: Beta — format stable, toolchain tested, pre-1.0 features evolving](https://img.shields.io/badge/maturity-Beta-blueviolet)](#maturity)
 
-> **Maturity: Beta** — the `.kdna` v1 file format, core runtime, signing, revocation, and remote runtime are stable and tested. Registry, paid authorization, and native app distribution are not yet shipped. Expect additive changes before v1.0 GA; breaking format changes require an RFC. Suitable for production use of public assets. See [`docs/maturity.md`](./docs/maturity.md) for the full disclosure.
+> **Maturity: Beta** — the current KDNA Asset Container and the local public-asset
+> path are the stable public baseline. Licensed and remote access have public
+> protocol contracts and evolving reference implementations; check release
+> notes before production use. Hosted marketplace, billing, and AIKDNA-hosted
+> loading are not part of the public baseline. See
+> [`docs/maturity.md`](./docs/maturity.md).
 
 ## See KDNA in action — then create your own
 
@@ -38,7 +53,7 @@ kdna pack   ./minimal ./minimal.kdna
 kdna load   ./minimal.kdna --profile=compact --as=prompt
 ```
 
-→ [Full 5-minute guide](./docs/try-kdna.md) · [Official judgment assets](https://github.com/aikdna/kdna-assets)
+→ [Full 5-minute guide](./docs/try-kdna.md) · [AIKDNA-published reference assets](https://github.com/aikdna/kdna-assets)
 
 ## What is a KDNA file?
 
@@ -46,8 +61,8 @@ A `.kdna` file is a single, portable container that holds:
 
 - a **public manifest** (`kdna.json`) — the asset's identity and metadata
 - a **judgment payload** (`payload.kdnab`) — the actual structured judgment data
-- optional **encryption envelope metadata** — to mark encrypted entries
-- optional **signatures** (`signature.kdsig`) — author / publisher attestations over the payload (OPTIONAL until 2027-Q1, REQUIRED after; see SPEC §3.2)
+- optional **encryption for licensed entries** — encrypted judgment payload with in-memory-only decryption (current in JS Core/CLI); optional watermarking (future)
+- optional **signatures** (`signature.kdsig`) — integrity and provenance attestations, not content endorsement
 - **version and lineage information** — for traceability across releases
 - a **runtime load contract** — describes how the official KDNA loader may read the asset
 - optional **attachments** — supplementary files referenced from the payload
@@ -61,9 +76,9 @@ KDNA Core is the **format authority**. It defines:
 
 - the **file format** (container layout, mimetype, required entries)
 - the **manifest schema** (`kdna.json` shape and required fields)
-- the **payload profile schema** (e.g. `judgment-profile-v1`)
-- the **encryption envelope metadata** (which entries are encrypted, key references)
-- the **signature and digest metadata** (digest algorithm; signature metadata is reserved in v1 layout, OPTIONAL until 2027-Q1, REQUIRED after)
+- the **current payload profile schema**
+- the **encryption profile** for licensed entries (AEAD envelope over `payload.kdnab`)
+- the **signature and digest metadata** used for integrity and provenance
 - the **version chain metadata** (lineage, judgment version, compatibility)
 - the **runtime loading contract** (load profiles, decryption requirements, token hints)
 
@@ -98,7 +113,10 @@ the asset's judgment payload or make a recommendation on behalf of KDNA Core.
 
 These are concerns of **external** platforms and policies. KDNA Core supplies the verifiable primitives and the official toolchain (as a reference implementation); everything else is out of scope.
 
-The recommended integration path is through the official SDK, CLI, Loader, or API. Third-party compatible implementations that pass the official validator are equally valid.
+The recommended integration path is through the official SDK, CLI, Loader, or
+API. Third-party runtimes are compatible when they implement the LoadPlan,
+authorization, integrity-verification, and Runtime Capsule contracts. Passing
+format validation alone does not make a raw decoder an Agent runtime.
 
 ## Official KDNA toolchain
 
@@ -126,7 +144,7 @@ kdna/
 ├── packages/             # kdna-core (loader), kdna-eval (scoring harness)
 ├── schema/               # JSON Schemas for manifest, payload profile, checksums, ...
 ├── docs/                 # Spec, architecture, guides
-│   ├── core/             # Phase 1: format baseline docs
+│   ├── core/             # Core format and runtime-contract docs
 │   ├── tools/            # Per-tool documentation
 │   ├── examples/         # Example guides
 │   └── guides/           # How-to guides
@@ -139,13 +157,17 @@ kdna/
 
 ## Versioning
 
-This repository follows [SemVer 2.0](https://semver.org/) for the KDNA Core specification. The current target is `kdna_version: "1.0"` (Phase 1 baseline). Breaking changes to the manifest schema or payload profile require a major version bump and an RFC.
+Toolchain packages follow [SemVer 2.0](https://semver.org/). Package versions
+are release identifiers, not competing KDNA product formats. There is one
+current KDNA Asset Container; technical compatibility identifiers such as
+`kdna_version` are defined by the schemas and specification. Breaking protocol
+changes require an RFC and an explicit migration path.
 
 ## Ecosystem
 
 | Repo | Package | Purpose |
 |------|---------|---------|
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | `@aikdna/kdna-cli` | KDNA Core v1 runtime CLI |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | `@aikdna/kdna-cli` | KDNA runtime CLI |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | `@aikdna/kdna-studio-cli` | AI-powered authoring CLI |
 | [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | `@aikdna/kdna-studio-core` | Studio SDK for creators |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | — | AI agent skill loader |

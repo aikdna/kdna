@@ -1,0 +1,24 @@
+{
+  "plan_version": "0.9.0",
+  "plan_id": "plan_c7e3a1b9f2d40856",
+  "mode": "single",
+  "task": {
+    "summary": "test without asset ref",
+    "input_hash": "sha256:abc123"
+  },
+  "load_plan_ref": {
+    "plan_id": "plan_c7e3a1b9f2d40856",
+    "status": "ready"
+  },
+  "applicability": {
+    "decision": "applies"
+  },
+  "projection_ref": {},
+  "budget": {
+    "profile": "interactive"
+  },
+  "trace_policy": {
+    "emit": ["result"],
+    "storage": "ephemeral"
+  }
+}

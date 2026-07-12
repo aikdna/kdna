@@ -1,0 +1,15 @@
+{
+  "trace_version": "0.9.0",
+  "trace_id": "trace_e6f5d4c3b2109876",
+  "plan_id": "plan_d5e4f3a2b1098765",
+  "mode": "cluster",
+  "timestamp": "2026-07-11T14:00:25Z",
+  "cluster_identity": {
+    "cluster_id": "@aikdna/launch-decision",
+    "version": "0.1.0",
+    "manifest_digest": "sha256:abcd1234efgh5678"
+  },
+  "execution": {
+    "status": "completed"
+  }
+}

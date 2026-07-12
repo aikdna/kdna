@@ -1,0 +1,83 @@
+{
+  "format": "kdna-cluster",
+  "format_version": "0.9.0",
+  "cluster_id": "@aikdna/launch-decision",
+  "name": "Launch Decision Cluster",
+  "version": "0.1.0",
+  "description": "Coordinates deploy-risk and API-design judgments for product launch decisions.",
+  "type": "vertical",
+  "status": "draft",
+  "access": "public",
+  "domains": [
+    {
+      "id": "@aikdna/dev-change-risk",
+      "version": "^0.1.0",
+      "digest": "sha256:003fe23077366e6adf06ad300b7a266c23b38ccc29ae5b43c0e479df86d44650",
+      "role": "primary-candidate",
+      "required": true,
+      "load_condition": "Task involves a deploy, rollback, or production change decision."
+    },
+    {
+      "id": "@aikdna/dev-api-design-judgment",
+      "version": "^0.1.0",
+      "digest": "sha256:a09ad75db930a71dde727c682548d6ff1ea99f1574e835bc1ee2874bd15939a7",
+      "role": "advisor",
+      "required": false,
+      "load_condition": "Task introduces or modifies a public API surface.",
+      "contribution_hypothesis_template": "API surface introduces a design dimension beyond deploy risk."
+    },
+    {
+      "id": "@aikdna/creator-brand-positioning",
+      "version": "^0.1.0",
+      "role": "advisor",
+      "required": false,
+      "load_condition": "Task involves brand, content, or audience positioning decisions.",
+      "contribution_hypothesis_template": "Brand alignment dimension beyond technical deploy risk."
+    }
+  ],
+  "composition": {
+    "strategy": "signal_based",
+    "max_active_domains": 3,
+    "conflict_policy": "surface",
+    "priority_order": [
+      "@aikdna/dev-change-risk",
+      "@aikdna/dev-api-design-judgment",
+      "@aikdna/creator-brand-positioning"
+    ],
+    "primary_selection": "exactly_one",
+    "advisor_selection": "contribution_hypothesis_required"
+  },
+  "budget": {
+    "profile": "interactive",
+    "max_tokens": 800,
+    "max_chars": 2500,
+    "max_assets": 3,
+    "enforcement": "hard"
+  },
+  "degradation_policy": {
+    "primary_unavailable": "block",
+    "required_advisor_unavailable": "block",
+    "optional_advisor_unavailable": "continue_with_warning",
+    "budget_exceeded": "block"
+  },
+  "relationships": [
+    {
+      "from": "@aikdna/dev-change-risk",
+      "to": "@aikdna/dev-api-design-judgment",
+      "type": "informs",
+      "description": "Deploy risk assessment informs whether API design concerns are blocking or advisory."
+    }
+  ],
+  "evaluation": {
+    "replay_suites": ["repair", "holdout", "fresh", "candidate-sealed", "new-sealed"],
+    "required_comparison_arms": [
+      "primary_only",
+      "bounded_compose",
+      "wrong_advisor",
+      "irrelevant_advisor",
+      "budget_waste",
+      "adversarial",
+      "no_kdna"
+    ]
+  }
+}

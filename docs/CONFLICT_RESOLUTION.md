@@ -1,8 +1,8 @@
 # KDNA Bundle Conflict Resolution Specification
 
-**Status:** Proposed — v0.1 (RFC #148 Phase 1 design contract)
-**Implements:** RFC #148 §3, roadmap-2026.md Story 4
-**Used by:** `kdna validate --bundle` (Story 9), `composition.policy.json`
+**Status:** Active design note for the current CLI conflict analyzer
+**Related:** RFC #148 §3, `composition.policy.json`
+**Used by:** `kdna validate --bundle` and explicit multi-asset tooling
 
 ---
 
@@ -12,7 +12,7 @@ This document defines how card-level conflicts are detected and resolved when
 two or more KDNA components are composed into a Bundle. It is the design
 contract for:
 
-- `kdna validate --bundle` static analysis warnings (Story 9)
+- `kdna validate --bundle` static analysis warnings
 - The Bundle manifest `priority` field semantics
 - Runtime consumers that load a Bundle and encounter conflicting guidance
 
@@ -219,13 +219,12 @@ summary object alongside the per-conflict `errors[]`, `warnings[]`, and
 
 ---
 
-## Implementation Note for Story 9
+## Implementation Note
 
-This document is the design contract for Story 9 (validate conflict warnings).
 Implementors MUST:
 
 1. Parse the bundle manifest's `components[]` and load each component's card
-   catalog via the existing `cardsFromV1Payload` path.
+   catalog through the current CBOR payload reader.
 2. For each card type in the Per-Card-Type table, apply the Conflict Trigger
    check across all component pairs.
 3. Apply the domain-level field checks (`worldview`, `value_order`,
@@ -234,13 +233,13 @@ Implementors MUST:
    Format defined above.
 5. Exit with the appropriate code per the Severity Definitions table.
 
-The stub introduced by Story 3 (`kdna validate --bundle`) accepts a minimal
-bundle shape and validates component resolution. Story 9 adds the conflict
-analysis defined here on top of that stub.
+`kdna validate --bundle` accepts the supported bundle shape, validates
+component resolution, and applies the conflict analysis defined here.
 
 ---
 
 ## Changelog
 
-- 2026-06-28 v0.1: Initial spec. Implements RFC #148 §3 design contract.
-  Story 4 of roadmap-2026.md Section 5.1.
+- 2026-06-28: Initial RFC #148 §3 design contract.
+- 2026-07: Removed internal delivery references and aligned the note with the
+  current CLI surface.

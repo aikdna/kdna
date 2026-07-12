@@ -50,7 +50,7 @@ This flow:
 2. Preserves manifest metadata (version, languages, description, judgment_version)
 3. Records Studio review/provenance metadata when supplied
 4. Exports a packaged `.kdna` file
-5. Validates and plans the output through the Core v1 runtime path
+5. Validates and plans the output through the current KDNA runtime path
 
 No separate source-directory distribution step is needed.
 

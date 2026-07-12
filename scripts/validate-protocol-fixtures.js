@@ -41,35 +41,28 @@ function checkNoForbiddenFields(obj, rel, stack = []) {
 }
 
 function checkManifestSchema() {
-  // Legacy boundary: the v1-rc protocol gate originally pointed at
-  // schema/kdna-manifest-v1rc.json. That file was removed in commit
-  // 6053b75 ("chore: remove all v1 compatibility — v2 is the only
-  // format") when the project migrated to the v2 container format.
-  // The migrated source of truth is schema/kdna-manifest.json: the
-  // v1-rc rules this gate checks (no `language` property; requires
-  // `spec_version`, `default_language`, `languages`) still hold for
-  // it because the registry/domains.json fixture continues to use
-  // spec_version: "1.0-rc" per specs/enum-tables.md.
+  // Single-format boundary: schema/kdna-manifest.json is the canonical
+  // kdna.json schema. It must require kdna_version: "1.0" and must not
+  // require the superseded format/format_version/spec_version fields.
   const schemaRel = 'schema/kdna-manifest.json';
   if (!fs.existsSync(path.join(root, schemaRel))) {
-    // If the schema is ever retired, skip with a clear log line rather
-    // than fail. This treats a missing schema as a deprecated legacy
-    // boundary, not a broken build.
-    console.log(`[skip] ${schemaRel} not found; v1-rc manifest schema check retired.`);
+    console.log(`[skip] ${schemaRel} not found; manifest schema check retired.`);
     return;
   }
   const schema = readJson(schemaRel);
   if (!schema) return;
   if (schema.properties && hasOwn(schema.properties, 'language')) {
-    errors.push(`${schemaRel}: properties.language must not exist in v1.0-rc`);
+    errors.push(`${schemaRel}: properties.language must not exist in v1.0`);
   }
-  if (!schema.required?.includes('spec_version')) {
-    errors.push(`${schemaRel}: spec_version must be required`);
+  if (!schema.required?.includes('kdna_version')) {
+    errors.push(`${schemaRel}: kdna_version must be required`);
+  }
+  if (schema.required?.includes('format_version')) {
+    errors.push(`${schemaRel}: format_version must not be required`);
   }
   if (!schema.required?.includes('default_language') || !schema.required?.includes('languages')) {
     errors.push(`${schemaRel}: default_language and languages must be required`);
   }
-  // packages/kdna-core/schema/ was removed — schema/ is the single source of truth.
 }
 
 function checkRegistryFixture() {

@@ -203,9 +203,7 @@ export interface KDNAFileDataMap {
 }
 
 export interface KDNAManifest {
-  format: 'kdna';
-  format_version: '2.0';
-  spec_version: string;
+  kdna_version: '1.0';
   name: string;
   version: string;
   judgment_version: string;
@@ -484,36 +482,33 @@ export function matchDomain(input: string, candidates: Array<KDNAAssetInput | KD
 export function matchDomainSync(input: string, candidates: Array<KDNAAssetInput | KDNAInspectResult>, options?: KdnaDecryptOptions): KDNAMatchResult[];
 export function composeKDNA(inputs: KDNAAssetInput[], options?: { input?: string; profile?: 'compact' | 'scenario' | 'full' | string; separator?: string } & KdnaDecryptOptions): Promise<KDNAComposeResult>;
 
-// KDNA Core v1 — source directory / container API
+// KDNA Core — source directory / container API
 export const MIMETYPE: string;
-export const MIMETYPE_V1: string;
-export const MIMETYPE_V2: string;
-export const V1_REQUIRED_DIR_ENTRIES: string[];
+export const REQUIRED_DIR_ENTRIES: string[];
 
-export interface KDNAV1ChecksumEntry {
+export interface KDNAChecksumEntry {
   algorithm: 'sha256';
   value: string;
 }
 
-export interface KDNAV1Checksums {
+export interface KDNAChecksums {
   algorithm: 'sha256';
   manifest_digest: string;
   payload_digest: string;
   asset_digest: string;
-  entries: Record<string, KDNAV1ChecksumEntry>;
+  entries: Record<string, KDNAChecksumEntry>;
 }
 
-export function isV1SourceDir(inputPath: string): boolean;
-export function isV2SourceDir(inputPath: string): boolean;
-export function detectContainerFormat(inputPath: string): 'v1' | 'v2' | null;
+export function isKdnaSourceDir(inputPath: string): boolean;
+export function detectContainerFormat(inputPath: string): 'kdna' | null;
 export function inspect(inputPath: string, options?: Record<string, any>): Record<string, any>;
 export function validate(inputPath: string, options?: Record<string, any>): Record<string, any>;
-export interface KDNAV1LoadPlanIssue {
+export interface KDNALoadPlanIssue {
   code: string;
   severity: 'info' | 'warning' | 'blocking' | string;
   message: string;
 }
-export interface KDNAV1LoadPlan {
+export interface KDNALoadPlan {
   kdna_version: string | null;
   asset: {
     asset_id: string | null;
@@ -552,18 +547,19 @@ export interface KDNAV1LoadPlan {
   projection_policy: 'minimal' | 'remote' | 'none' | string;
   input_fingerprint: string | null;
   checks: Record<string, boolean>;
-  issues: KDNAV1LoadPlanIssue[];
+  issues: KDNALoadPlanIssue[];
   source: {
     kind: 'dir' | 'file' | string | null;
     path: string;
   };
 }
-export function planLoad(inputPath: string, options?: { password?: string; hasPassword?: boolean; entitlement?: Record<string, any> }): KDNAV1LoadPlan;
-export function buildChecksumsV1(sourceDir: string): KDNAV1Checksums;
+export function planLoad(inputPath: string, options?: { password?: string; hasPassword?: boolean; entitlement?: Record<string, any> }): KDNALoadPlan;
+export function buildChecksums(sourceDir: string): KDNAChecksums;
 export function pack(sourceDir: string, outputPath: string): void;
 export function unpack(inputPath: string, outputDir: string): void;
 export function loadAuthorized(inputPath: string, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): Record<string, any>;
-export function loadV1(inputPath: string, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): Record<string, any>;
+export function load(inputPath: string, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): Record<string, any>;
+export function loadAsset(inputPath: string, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): Record<string, any>;
 export const FORBIDDEN_OUTPUT_TERMS: readonly string[];
 
 // Lint

@@ -15,7 +15,7 @@ published package documentation does not point users at missing local docs.
 Package and template dependency ranges must not use `latest`; generated
 projects need bounded semver ranges so maintainers can reproduce user reports.
 The server adapter must also keep its `@aikdna/kdna-core` peer range aligned
-with the current Core v1 runtime API used by the web package milestone. React package
+with the current KDNA runtime API used by the web package milestone. React package
 peers must stay limited to the actual React runtime dependencies instead of
 forcing sibling KDNA packages that are connected through endpoint props. The
 browser client must keep its credential guidance aligned with the server

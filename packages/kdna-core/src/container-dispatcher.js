@@ -4,45 +4,25 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 
-const { createKdnaAssetReader } = require('./asset-reader.js');
-
-const MIMETYPE_V1 = 'application/vnd.kdna.asset';
-const MIMETYPE_V2 = 'application/vnd.aikdna.kdna+zip';
+const MIMETYPE = 'application/vnd.kdna.asset';
 
 /**
- * CanonicalAssetModel — the single internal representation of any KDNA asset,
- * regardless of whether it came from a source directory, Container v1,
- * or Canonical Distribution Container (Container v2 / SPEC 2.0).
- *
- * All downstream code (planLoad, loadAuthorized, decrypt, loadV1Unsafe)
- * operates on this model. No consumer should check container format directly.
+ * CanonicalAssetModel — the single internal representation of a KDNA asset,
+ * regardless of source (directory or .kdna container).
  *
  * @typedef {object} CanonicalAssetModel
- * @property {'dir'|'file'} sourceKind       — original input type
- * @property {string}       sourcePath       — resolved absolute path
- * @property {string}       format           — 'v1-dir' | 'v1-container' | 'v2-container'
- * @property {string}       mimetype         — normalized mimetype
+ * @property {'dir'|'file'} sourceKind
+ * @property {string}       sourcePath
+ * @property {string}       format           — 'dir' | 'kdna'
+ * @property {string}       mimetype
  * @property {object}       manifest         — parsed kdna.json
- * @property {Buffer}       payloadRaw       — raw payload.kdnab bytes (CBOR/JSON)
- * @property {object|null}  checksums        — parsed checksums.json, or null
- * @property {Buffer|null}  assetDigest      — SHA-256 of entire container (file only)
- * @property {Buffer|null}  containerBuffer  — full container bytes (for ZIP inputs, may be null for dirs)
- * @property {Map<string, Buffer>|null} entries — raw entry map (for v1 dir layout; null for v2/container)
+ * @property {Buffer}       payloadRaw       — raw payload.kdnab bytes
+ * @property {object|null}  checksums
+ * @property {Buffer|null}  assetDigest
+ * @property {Buffer|null}  containerBuffer
+ * @property {Map<string, Buffer>|null} entries
  */
 
-/**
- * Read any KDNA asset into a CanonicalAssetModel.
- *
- * Handles:
- *   - Source directories (mimetype + kdna.json + payload.kdnab on disk)
- *   - Container v1 (.kdna ZIP with application/vnd.kdna.asset mimetype)
- *   - Canonical containers (.kdna ZIP with application/vnd.aikdna.kdna+zip mimetype)
- *
- * @param {string} inputPath - absolute path to asset file or directory
- * @param {object} [opts]
- * @param {object} [opts.limits] - container size/entry limits
- * @returns {CanonicalAssetModel}
- */
 function readAsset(inputPath, opts = {}) {
   const absPath = path.resolve(inputPath);
   const stat = fs.statSync(absPath);
@@ -59,11 +39,8 @@ function readAsset(inputPath, opts = {}) {
   }
 
   const format = detectFormat(absPath);
-  if (format === 'v1-container') {
-    return readV1Container(absPath, opts);
-  }
-  if (format === 'v2-container') {
-    return readV2Container(absPath, opts);
+  if (format === 'kdna') {
+    return readKdnaContainer(absPath, opts);
   }
 
   throw Object.assign(
@@ -72,10 +49,6 @@ function readAsset(inputPath, opts = {}) {
   );
 }
 
-/**
- * Detect the container format of a .kdna file.
- * Returns 'v1-container', 'v2-container', or throws.
- */
 function detectFormat(absPath) {
   const buf = fs.readFileSync(absPath);
   if (buf.length < 4) {
@@ -85,7 +58,6 @@ function detectFormat(absPath) {
     );
   }
 
-  // Must be a ZIP (PK signature)
   const sig = buf.readUInt32LE(0);
   if (sig !== 0x04034b50) {
     throw Object.assign(
@@ -94,7 +66,6 @@ function detectFormat(absPath) {
     );
   }
 
-  // Read the mimetype from the first entry (central directory first entry)
   const eocdOffset = findEocd(buf);
   let cdOffset = buf.readUInt32LE(eocdOffset + 16);
   const cdEntryCount = buf.readUInt16LE(eocdOffset + 10);
@@ -126,8 +97,7 @@ function detectFormat(absPath) {
     const compressedSize = buf.readUInt32LE(entryOffset + 20);
     const mime = buf.toString('utf8', dataOffset, dataOffset + compressedSize).trim();
 
-    if (mime === MIMETYPE_V1) return 'v1-container';
-    if (mime === MIMETYPE_V2) return 'v2-container';
+    if (mime === MIMETYPE) return 'kdna';
 
     throw Object.assign(
       new Error(`Unknown KDNA mimetype: ${mime}`),
@@ -154,9 +124,6 @@ function findEocd(buf) {
   );
 }
 
-/**
- * Read a source directory into CanonicalAssetModel.
- */
 function readSourceDirectory(absPath, _opts) {
   const mimetypePath = path.join(absPath, 'mimetype');
   const manifestPath = path.join(absPath, 'kdna.json');
@@ -171,7 +138,7 @@ function readSourceDirectory(absPath, _opts) {
   }
 
   const mimetype = fs.readFileSync(mimetypePath, 'utf8').trim();
-  if (![MIMETYPE_V1, MIMETYPE_V2].includes(mimetype)) {
+  if (mimetype !== MIMETYPE) {
     throw Object.assign(
       new Error(`Unknown mimetype in source directory: ${mimetype}`),
       { code: 'KDNA_FORMAT_UNKNOWN' },
@@ -204,7 +171,7 @@ function readSourceDirectory(absPath, _opts) {
   return {
     sourceKind: 'dir',
     sourcePath: absPath,
-    format: 'v1-dir',
+    format: 'dir',
     mimetype,
     manifest,
     payloadRaw,
@@ -215,21 +182,16 @@ function readSourceDirectory(absPath, _opts) {
   };
 }
 
-/**
- * Read a Container v1 (.kdna with v1 mimetype) into CanonicalAssetModel.
- */
-function readV1Container(absPath, _opts) {
-  // Delegate to the existing v1 layout reader for validation
-  const v1Layout = require('./v1/index.js').readV1Layout(absPath);
-
+function readKdnaContainer(absPath, _opts) {
+  const v1Layout = require('./v1/index.js').readLayout(absPath);
   const containerBuf = fs.readFileSync(absPath);
   const assetDigest = crypto.createHash('sha256').update(containerBuf).digest();
 
   return {
     sourceKind: 'file',
     sourcePath: absPath,
-    format: 'v1-container',
-    mimetype: MIMETYPE_V1,
+    format: 'kdna',
+    mimetype: MIMETYPE,
     manifest: v1Layout.manifest,
     payloadRaw: v1Layout.map['payload.kdnab'] || null,
     checksums: v1Layout.map['checksums.json']
@@ -241,58 +203,18 @@ function readV1Container(absPath, _opts) {
   };
 }
 
-/**
- * Read a Canonical Container (v2 mimetype) into CanonicalAssetModel.
- * Uses the existing KdnaAssetReader for ZIP parsing.
- */
-function readV2Container(absPath, _opts) {
-  const reader = createKdnaAssetReader();
-  const asset = reader.openSync(absPath);
-
-  const manifest = reader.readManifestSync(asset);
-  const payloadRaw = reader.readEntrySync(asset, 'payload.kdnab');
-  const checksums = (() => {
-    try {
-      const raw = reader.readEntrySync(asset, 'checksums.json');
-      return raw ? JSON.parse(raw.toString('utf8')) : null;
-    } catch {
-      return null;
-    }
-  })();
-
-  return {
-    sourceKind: 'file',
-    sourcePath: absPath,
-    format: 'v2-container',
-    mimetype: MIMETYPE_V2,
-    manifest,
-    payloadRaw,
-    checksums,
-    assetDigest: Buffer.from(asset.asset_digest.replace(/^sha256:/, ''), 'hex'),
-    containerBuffer: fs.readFileSync(absPath),
-    entries: null, // v2 uses lazy reads, not pre-loaded map
-  };
-}
-
-/**
- * Extract the mimetype from a CanonicalAssetModel.
- */
 function getMimetype(asset) {
   return asset.mimetype;
 }
 
-/**
- * Determine if a CanonicalAssetModel represents a source directory.
- */
-function isSourceDirectory(asset) {
+function isKdnaSourceDirectory(asset) {
   return asset.sourceKind === 'dir';
 }
 
 module.exports = {
-  MIMETYPE_V1,
-  MIMETYPE_V2,
+  MIMETYPE,
   readAsset,
   detectFormat,
   getMimetype,
-  isSourceDirectory,
+  isKdnaSourceDirectory,
 };

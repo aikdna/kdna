@@ -196,4 +196,6 @@ the authoring pipeline exists because human judgment is the scarce resource in t
 
 The Studio does not replace human judgment. It makes human judgment **articulable, challengeable, testable, and transferable** across the agent ecosystem.
 
-Studio produces the assets. Governance Console governs their lifecycle. CLI powers both. Together they form the complete infrastructure for human-governed self-improving agents.
+Studio authors assets and the CLI operates them. Applications may add
+governance, memory, outcomes, evaluation, and deployment policy around these
+primitives; KDNA does not claim to provide that complete infrastructure.

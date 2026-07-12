@@ -13,17 +13,16 @@ const {
 } = require('../src');
 
 // ──────────────────────────────────────────────────────────────────────
-// V1→V2 MIGRATION DEBT — tests that construct fixtures with
-// `format_version: "1.0"` and separate KDNA_Core.json + KDNA_Patterns.json
-// entries. The implementation was migrated to v2 container format in
-// commit 6053b75 ("chore: remove all v1 compatibility — v2 is the only
-// format"). Fixing these requires rewriting every fixture to use
-// `payload.kdnab` (CBOR-encoded judgment data) with `format_version: "2.0"`.
-// This is a targeted task deferred to a dedicated v2 fixture alignment PR.
+// LEGACY FIXTURE DEBT — tests that construct fixtures with separate
+// KDNA_Core.json + KDNA_Patterns.json entries instead of the single-format
+// `payload.kdnab` (CBOR-encoded judgment data). These fixtures predate the
+// Round 4A/4B single-format contract (`kdna_version: "1.0"`,
+// `application/vnd.kdna.asset`). Rewriting them requires migrating every
+// skipped fixture to the current container layout.
 //
 // The 5 affected tests are marked with `test.skip()` so that `npm test`
-// exits zero on CI. The test bodies are preserved for reference during
-// the v2 migration.
+// exits zero on CI. The test bodies are preserved for reference during the
+// single-format fixture alignment pass.
 // ──────────────────────────────────────────────────────────────────────
 
 function u16(n) {
@@ -113,11 +112,10 @@ test.skip('asset reader opens, verifies, and loads a .kdna asset without extract
   fs.writeFileSync(
     assetPath,
     makeZip({
-      mimetype: 'application/vnd.aikdna.kdna+zip',
+      mimetype: 'application/vnd.kdna.asset',
       'kdna.json': json({
         format: 'kdna',
-        format_version: '1.0',
-        spec_version: '1.0-rc',
+        kdna_version: '1.0',
         name: '@aikdna/writing',
         version: '0.1.0',
         judgment_version: '2026.05',
@@ -179,8 +177,7 @@ test('asset verification rejects archives without the KDNA mimetype marker', asy
     makeZip({
       'kdna.json': json({
         format: 'kdna',
-        format_version: '1.0',
-        spec_version: '1.0-rc',
+        kdna_version: '1.0',
         name: '@aikdna/legacy',
         version: '0.1.0',
         judgment_version: '2026.05',
@@ -219,7 +216,7 @@ test('asset verification rejects deprecated kdna_spec manifests', async () => {
   fs.writeFileSync(
     assetPath,
     makeZip({
-      mimetype: 'application/vnd.aikdna.kdna+zip',
+      mimetype: 'application/vnd.kdna.asset',
       'kdna.json': json({
         kdna_spec: '1.0-rc',
         name: '@aikdna/legacy',
@@ -243,7 +240,7 @@ test('asset verification rejects deprecated kdna_spec manifests', async () => {
       'KDNA_Patterns.json': json({
         meta: { domain: 'legacy', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
         misunderstandings: [{ id: 'm1', wrong: 'Two spec fields are harmless.', correct: 'One field is canonical.', key_distinction: 'interop', why: 'Schema drift breaks loaders.' }],
-        self_check: ['Did I use spec_version?'],
+        self_check: ['Did I use the correct version field?'],
       }),
     }),
   );
@@ -251,7 +248,7 @@ test('asset verification rejects deprecated kdna_spec manifests', async () => {
   const reader = createKdnaAssetReader();
   const verify = await reader.verify(await reader.open(assetPath));
   assert.equal(verify.ok, false);
-  assert.ok(verify.errors.includes('kdna.json: kdna_spec is not allowed. Use spec_version.'));
+  assert.ok(verify.errors.includes('kdna.json: kdna_spec is not allowed. Use kdna_version.'));
 });
 
 test.skip('asset reader decrypts licensed entries only through an in-memory hook', { todo: 'Phase 3 encryption — gated until after conformance recovery and load-contract stabilization' }, async () => {
@@ -270,8 +267,7 @@ test.skip('asset reader decrypts licensed entries only through an in-memory hook
   };
   const manifest = {
     format: 'kdna',
-    format_version: '1.0',
-    spec_version: '1.0-rc',
+    kdna_version: '1.0',
     name: '@aikdna/writing_pro',
     version: '0.1.0',
     judgment_version: '2026.05',
@@ -293,7 +289,7 @@ test.skip('asset reader decrypts licensed entries only through an in-memory hook
   fs.writeFileSync(
     assetPath,
     makeZip({
-      mimetype: 'application/vnd.aikdna.kdna+zip',
+      mimetype: 'application/vnd.kdna.asset',
       'kdna.json': json(manifest),
       'KDNA_Core.json': json(
         encryptLicensedEntry(json(core), {
@@ -498,8 +494,7 @@ test.skip('protected .kdna asset loads and decrypts with password hook', { todo:
   const password = 'KDNA-Test-Vector-2026';
   const manifest = {
     format: 'kdna',
-    format_version: '1.0',
-    spec_version: '1.0-rc',
+    kdna_version: '1.0',
     name: '@test/protected',
     version: '0.1.0',
     judgment_version: '2026.05',
@@ -537,7 +532,7 @@ test.skip('protected .kdna asset loads and decrypts with password hook', { todo:
   fs.writeFileSync(
     assetPath,
     makeZip({
-      mimetype: 'application/vnd.aikdna.kdna+zip',
+      mimetype: 'application/vnd.kdna.asset',
       'kdna.json': json(manifest),
       'KDNA_Core.json': json(
         encryptProtectedEntry(json(core), {
@@ -605,8 +600,7 @@ test('protected entry decrypt fails with tampered ciphertext', async () => {
   const password = 'KDNA-Test-Vector-2026';
   const manifest = {
     format: 'kdna',
-    format_version: '1.0',
-    spec_version: '1.0-rc',
+    kdna_version: '1.0',
     name: '@test/protected',
     version: '0.1.0',
     judgment_version: '2026.05',

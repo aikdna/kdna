@@ -38,24 +38,24 @@ const fs = require('node:fs');
 const path = require('node:path');
 const zlib = require('node:zlib');
 const crypto = require('node:crypto');
+const cbor = require('cbor-x');
 
 const { readAsset } = (() => {
   try {
     return require('../container-dispatcher.js');
   } catch {
-    return { readAsset: null, MIMETYPE_V1: null, MIMETYPE_V2: null };
+    return { readAsset: null };
   }
 })();
 
-const MIMETYPE_V1 = 'application/vnd.kdna.asset';
-const MIMETYPE_V2 = 'application/vnd.aikdna.kdna+zip';
-const V1_REQUIRED_DIR_ENTRIES = ['mimetype', 'kdna.json', 'payload.kdnab'];
-const V1_OPTIONAL_DIR_ENTRIES = ['checksums.json', 'signatures', 'attachments'];
-const V1_ALLOWED_TOP_LEVEL_ENTRIES = new Set([
-  ...V1_REQUIRED_DIR_ENTRIES,
-  ...V1_OPTIONAL_DIR_ENTRIES,
+const MIMETYPE = 'application/vnd.kdna.asset';
+const REQUIRED_DIR_ENTRIES = ['mimetype', 'kdna.json', 'payload.kdnab'];
+const OPTIONAL_DIR_ENTRIES = ['checksums.json', 'signatures', 'attachments'];
+const ALLOWED_TOP_LEVEL_ENTRIES = new Set([
+  ...REQUIRED_DIR_ENTRIES,
+  ...OPTIONAL_DIR_ENTRIES,
 ]);
-const V1_FORBIDDEN_LEGACY_TOP_LEVEL = new Set([
+const FORBIDDEN_LEGACY_TOP_LEVEL = new Set([
   'KDNA_Core.json',
   'KDNA_Patterns.json',
   'KDNA_Scenarios.json',
@@ -63,6 +63,12 @@ const V1_FORBIDDEN_LEGACY_TOP_LEVEL = new Set([
   'KDNA_Reasoning.json',
   'KDNA_Evolution.json',
 ]);
+
+// Legacy aliases — prefer the unversioned names above
+const V1_REQUIRED_DIR_ENTRIES = REQUIRED_DIR_ENTRIES;
+const V1_OPTIONAL_DIR_ENTRIES = OPTIONAL_DIR_ENTRIES;
+const V1_ALLOWED_TOP_LEVEL_ENTRIES = ALLOWED_TOP_LEVEL_ENTRIES;
+const V1_FORBIDDEN_LEGACY_TOP_LEVEL = FORBIDDEN_LEGACY_TOP_LEVEL;
 
 const DEFAULT_CONTAINER_LIMITS = Object.freeze({
   maxContainerBytes: 25 * 1024 * 1024,
@@ -176,45 +182,28 @@ function loadSchemas() {
  * Required entries: mimetype, kdna.json, payload.kdnab.
  * mimetype content must equal "application/vnd.kdna.asset".
  */
-function isV1SourceDir(absPath) {
+function isKdnaSourceDir(absPath) {
   if (!fs.existsSync(absPath) || !fs.statSync(absPath).isDirectory()) return false;
   for (const f of V1_REQUIRED_DIR_ENTRIES) {
     if (!fs.existsSync(path.join(absPath, f))) return false;
   }
   const mime = fs.readFileSync(path.join(absPath, 'mimetype'), 'utf8');
-  return mime === MIMETYPE_V1;
+  return mime === MIMETYPE;
 }
 
 /**
- * Detect whether a directory is a v2 source layout.
- * Required entries: mimetype, kdna.json, payload.kdnab.
- * mimetype content must equal "application/vnd.aikdna.kdna+zip".
- */
-function isV2SourceDir(absPath) {
-  if (!fs.existsSync(absPath) || !fs.statSync(absPath).isDirectory()) return false;
-  for (const f of V1_REQUIRED_DIR_ENTRIES) {
-    if (!fs.existsSync(path.join(absPath, f))) return false;
-  }
-  const mime = fs.readFileSync(path.join(absPath, 'mimetype'), 'utf8');
-  return mime === MIMETYPE_V2;
-}
-
 /**
- * Detect whether a file is a v1 .kdna container.
- * Returns 'v1' | 'v2' | null. null = not a .kdna file or unreadable.
+ * Detect whether a file is a .kdna container.
+ * Returns 'kdna' | null. null = not a .kdna file or unreadable.
  */
 function detectContainerFormat(absPath) {
   if (!fs.existsSync(absPath) || !fs.statSync(absPath).isFile()) return null;
-  // Quick header check: must look like a ZIP.
   const fd = fs.openSync(absPath, 'r');
   const head = Buffer.alloc(4);
   fs.readSync(fd, head, 0, 4, 0);
   fs.closeSync(fd);
   if (head[0] !== 0x50 || head[1] !== 0x4b) return null;
 
-  // Read only the first central-directory entry. Dangerous later entries
-  // must not make detection fall through to a less strict legacy route;
-  // readV1Layout/validate will reject them with the secure container reader.
   let first;
   try {
     first = readFirstZipEntry(absPath);
@@ -222,12 +211,9 @@ function detectContainerFormat(absPath) {
     return null;
   }
   if (first.name !== 'mimetype') return null;
-  // The mimetype entry must be STORED (method 0).
   if (first.method !== 0) return null;
   const mime = first.method === 0 ? first.data.toString('utf8') : '';
-  if (mime === MIMETYPE_V1) return 'v1';
-  if (mime === MIMETYPE_V2) return 'v2';
-  return null;
+  return (mime === MIMETYPE) ? 'kdna' : null;
 }
 
 // ─── ZIP I/O ────────────────────────────────────────────────────────────
@@ -599,9 +585,9 @@ function readV1Layout(absPath) {
 
   // mimetype content must equal the literal v1 media type.
   const mime = map.mimetype.toString('utf8');
-  if (mime !== MIMETYPE_V1 && mime !== MIMETYPE_V2) {
+  if (mime !== MIMETYPE) {
     throw new Error(
-      `not a KDNA layout: mimetype is "${mime}", expected "${MIMETYPE_V1}" or "${MIMETYPE_V2}"`,
+      `not a KDNA layout: mimetype is "${mime}", expected "${MIMETYPE}"`,
     );
   }
 
@@ -657,6 +643,24 @@ function assertJsonWithinLimits(value, name, limits) {
   walk(value, 0);
 }
 
+function parsePayloadEntry(name, bytes, opts = {}) {
+  if (!Buffer.isBuffer(bytes)) {
+    throw new Error(`${name} is not a file entry`);
+  }
+  const limits = { ...DEFAULT_CONTAINER_LIMITS, ...(opts.limits || {}) };
+  if (bytes.length > limits.maxEntryBytes) {
+    throw new Error(`${name} exceeds maximum size (${limits.maxEntryBytes} bytes)`);
+  }
+  let parsed;
+  try {
+    parsed = cbor.decode(bytes);
+  } catch {
+    throw new Error(`${name}: not valid CBOR. payload.kdnab must be CBOR-encoded (kdna_version 1.0).`);
+  }
+  assertJsonWithinLimits(parsed, name, limits);
+  return parsed;
+}
+
 // ─── inspect ───────────────────────────────────────────────────────────
 
 /**
@@ -710,9 +714,9 @@ function runValidate(v1) {
   }
   if (v1.map.mimetype) {
     const mimeStr = v1.map.mimetype.toString('utf8');
-    if (mimeStr !== MIMETYPE_V1 && mimeStr !== MIMETYPE_V2) {
+    if (mimeStr !== MIMETYPE) {
       result.format_valid = false;
-      problems.push(`format: mimetype is not ${MIMETYPE_V1} or ${MIMETYPE_V2}`);
+      problems.push(`format: mimetype is not ${MIMETYPE}`);
     }
   }
 
@@ -736,10 +740,10 @@ function runValidate(v1) {
   // For actually encrypted payloads (envelopes), skip schema validation.
   let payload;
   try {
-    payload = parseJsonEntry('payload.kdnab', v1.map['payload.kdnab']);
+    payload = parsePayloadEntry("payload.kdnab", v1.map['payload.kdnab']);
   } catch (e) {
     result.payload_valid = false;
-    problems.push(`payload: not valid JSON (${e.message})`);
+    problems.push(`payload: not valid KDNA payload (${e.message})`);
     return finalizeValidate(result, problems);
   }
 
@@ -931,12 +935,22 @@ function pack(sourceDir, outputPath) {
     }
   }
   const mime = fs.readFileSync(path.join(absSrc, 'mimetype'), 'utf8');
-  if (mime !== MIMETYPE_V1) {
-    throw new Error(`cannot pack: mimetype is "${mime}", expected "${MIMETYPE_V1}"`);
+  if (mime !== MIMETYPE) {
+    throw new Error(`cannot pack: mimetype is "${mime}", expected "${MIMETYPE}"`);
   }
 
   // Collect deterministically; mimetype is forced first.
   const collected = listSourceDir(absSrc);
+  for (const entry of collected) {
+    const normalizedName = normalizeContainerEntryName(entry.rel);
+    const topLevel = normalizedName.split('/')[0];
+    if (!ALLOWED_TOP_LEVEL_ENTRIES.has(topLevel)) {
+      if (FORBIDDEN_LEGACY_TOP_LEVEL.has(topLevel)) {
+        throw new Error(`cannot pack forbidden top-level source entry: ${topLevel}`);
+      }
+      throw new Error(`cannot pack unsupported top-level entry: ${topLevel}`);
+    }
+  }
   const order = ['mimetype', ...collected.map((e) => e.rel).filter((n) => n !== 'mimetype')];
 
   // Build the ZIP body.
@@ -946,7 +960,7 @@ function pack(sourceDir, outputPath) {
   for (const rel of order) {
     let data;
     if (rel === 'mimetype') {
-      data = Buffer.from(MIMETYPE_V1, 'utf8');
+      data = Buffer.from(MIMETYPE, 'utf8');
     } else {
       const found = collected.find((e) => e.rel === rel);
       if (!found) continue;
@@ -1011,9 +1025,9 @@ function unpack(inputPath, outputDir) {
     throw new Error('not a KDNA container: mimetype must be uncompressed');
   }
   const mime = entries[0].data.toString('utf8');
-  if (mime !== MIMETYPE_V1 && mime !== MIMETYPE_V2) {
+  if (mime !== MIMETYPE) {
     throw new Error(
-      `not a KDNA container: mimetype is "${mime}", expected "${MIMETYPE_V1}" or "${MIMETYPE_V2}"`,
+      `not a KDNA container: mimetype is "${mime}", expected "${MIMETYPE}"`,
     );
   }
   const absOut = path.resolve(outputDir);
@@ -1621,26 +1635,22 @@ function assertNoForbiddenTerms(obj) {
 }
 
 module.exports = {
-  MIMETYPE: MIMETYPE_V1,
-  MIMETYPE_V1,
-  MIMETYPE_V2,
-  V1_REQUIRED_DIR_ENTRIES,
-  isV1SourceDir,
-  isV2SourceDir,
+  MIMETYPE,
+  REQUIRED_DIR_ENTRIES,
+  isKdnaSourceDir,
   detectContainerFormat,
-  readV1Layout,
+  readLayout: readV1Layout,
   inspect,
   validate,
   planLoad,
   loadAuthorized,
-  buildChecksumsV1,
+  buildChecksums: buildChecksumsV1,
   pack,
   unpack,
-  loadV1,
+  load: loadV1,
+  loadAsset: loadV1,
+  buildCapsule,
   FORBIDDEN_OUTPUT_TERMS,
-  // Semver utilities (Story 6 / Story 13) — exported so consumers
-  // (e.g. kdna-cli) can use the canonical implementation instead of
-  // duplicating it.
   parseSemver,
   compareSemver,
   satisfies,
@@ -1742,8 +1752,11 @@ function loadAuthorized(inputPath, opts = {}) {
   const mergedOpts = {
     ...opts,
     resolvedDependencies: plan.resolved_dependencies,
-    // Pass extends_chain from plan to loadV1Unsafe so inheritance is applied (Story 12)
     extendsChain: plan.extends_chain || [],
+    _validation: {
+      schema_valid: plan.checks && plan.checks.overall_valid === true,
+      signature_valid: plan.signature_valid === true,
+    },
   };
   return loadV1Unsafe(inputPath, mergedOpts);
 }
@@ -1793,9 +1806,9 @@ function loadV1Unsafe(inputPath, opts = {}) {
   let payload;
   try {
     const rawPayload = v1.map['payload.kdnab'];
-    payload = parseJsonEntry('payload.kdnab', rawPayload);
+    payload = parsePayloadEntry("payload.kdnab", rawPayload);
   } catch (e) {
-    throw new Error(`payload.kdnab is not valid JSON: ${e.message}`, { cause: e });
+    throw new Error(`payload.kdnab is not valid KDNA payload: ${e.message}`, { cause: e });
   }
 
   if (payload.profile && payload.ciphertext && (m.payload?.encrypted || m.encryption?.encrypted_entries?.includes('payload.kdnab'))) {
@@ -1812,7 +1825,7 @@ function loadV1Unsafe(inputPath, opts = {}) {
         const decryptedBuf = typeof decrypted === 'string'
           ? Buffer.from(decrypted, 'utf8')
           : Buffer.from(decrypted);
-        payload = parseJsonEntry('payload.kdnab', decryptedBuf);
+        payload = parsePayloadEntry('payload.kdnab', decryptedBuf);
       } catch (e) {
         const err = new Error(`Decryption failed: ${e.message}`);
         err.code = 'KDNA_DECRYPT_FAILED';
@@ -1827,8 +1840,10 @@ function loadV1Unsafe(inputPath, opts = {}) {
           decryptProtectedEntryScrypt,
           PASSWORD_PROTECTED_SCRYPT_PROFILE,
         } = require('../crypto-profile.js');
-        const encryptedEnvelope = v1.map['payload.kdnab'].toString('utf8');
-        const envelope = JSON.parse(encryptedEnvelope);
+        const encryptedEnvelope = v1.map['payload.kdnab'];
+        let envelope;
+        try { envelope = cbor.decode(Buffer.isBuffer(encryptedEnvelope) ? encryptedEnvelope : Buffer.from(encryptedEnvelope)); }
+        catch { throw new Error('Cannot decode encrypted envelope: payload.kdnab must be CBOR-encoded (kdna_version 1.0)'); }
         const decryptFn = (envelope.profile === PASSWORD_PROTECTED_SCRYPT_PROFILE)
           ? decryptProtectedEntryScrypt
           : decryptProtectedEntry;
@@ -1837,7 +1852,7 @@ function loadV1Unsafe(inputPath, opts = {}) {
           manifest: m,
           password: opts.password,
         });
-        payload = parseJsonEntry('payload.kdnab', decryptedBuf);
+        payload = parsePayloadEntry('payload.kdnab', decryptedBuf);
       } catch (e) {
         const err = new Error(`Decryption failed with provided password: ${e.message}`);
         err.code = 'KDNA_DECRYPT_FAILED';
@@ -1938,8 +1953,9 @@ function loadV1Unsafe(inputPath, opts = {}) {
         resolvedDependencies: [],
         extendsChain: [],
       });
-      if (baseLoaded && baseLoaded.content) {
-        const bc = baseLoaded.content;
+      const baseContent = baseLoaded && (baseLoaded.content || baseLoaded.context);
+      if (baseContent) {
+        const bc = baseContent;
         const cc = result.content;
         // Merge axioms: child overrides by id; parent axioms not in child are added
         if (bc.axioms || cc.axioms) {
@@ -2048,7 +2064,63 @@ function loadV1Unsafe(inputPath, opts = {}) {
     return { status: result.status, profile: result.profile, text: textOut };
   }
 
+  if (as === 'prompt') {
+    return result;
+  }
+
+  return wrapAsCapsule(result, v1, profile, opts);
+}
+
+function wrapAsCapsule(result, v1, profile, opts) {
+  if (opts.as === 'json') {
+    return buildCapsule(result, v1, profile, opts);
+  }
   return result;
+}
+
+function buildCapsule(loadResult, v1, profile, opts = {}) {
+  const m = v1.manifest;
+  const val = opts._validation || {};
+  const assetDigest = v1.assetDigest || (v1.map && v1.map['checksums.json']
+    ? (() => {
+        try {
+          const checks = JSON.parse(v1.map['checksums.json'].toString('utf8'));
+          return checks.asset_digest || null;
+        } catch { return null; }
+      })()
+    : null);
+
+  const pubkey = (m.creator && m.creator.pubkey) || (m.author && m.author.pubkey) || null;
+  const sigVerified = val.signature_valid === true;
+  const capsule = {
+    type: 'kdna.context.capsule',
+    version: '1.0',
+    domain: m.name || m.asset_id || null,
+    judgment_version: m.judgment_version || null,
+    asset_digest: assetDigest,
+    signature: pubkey
+      ? { state: sigVerified ? 'verified' : 'not_checked', issuer: pubkey }
+      : { state: 'absent' },
+    access: m.access || 'public',
+    risk_level: m.risk_level || null,
+    profile: loadResult.profile,
+    context: loadResult.content || {},
+    trace: {
+      payload_encoding: (m.payload && m.payload.encoding) || 'cbor',
+      loaded_by: 'kdna-core',
+      loaded_at: new Date().toISOString(),
+      schema_valid: val.schema_valid === true,
+      signature_state: sigVerified ? 'verified' : (pubkey ? 'not_checked' : 'absent'),
+      profile: profile,
+    },
+  };
+
+  if (loadResult.extends_chain) capsule.extends_chain = loadResult.extends_chain;
+  if (loadResult.inheritance_applied !== undefined) capsule.inheritance_applied = loadResult.inheritance_applied;
+  if (loadResult.resolved_dependencies) capsule.resolved_dependencies = loadResult.resolved_dependencies;
+  if (loadResult.rag_isolation_policy) capsule.rag_isolation_policy = loadResult.rag_isolation_policy;
+
+  return capsule;
 }
 
 // ─── Semver & Dependency Resolution (Story 6) ─────────────────────────

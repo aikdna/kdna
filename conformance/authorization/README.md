@@ -13,10 +13,10 @@ The goal is cross-implementation parity:
 | `password-missing` | pass | planned | pass | planned |
 | `password-valid` | pass | planned | pass | planned |
 | `receipt-missing` | pass | planned | pass | planned |
-| `receipt-valid` | pass | planned | not in CLI shim | planned |
-| `expired-entitlement` | pass | planned | not in CLI shim | planned |
-| `revoked-entitlement` | pass | planned | not in CLI shim | planned |
-| `offline-grace-active` | pass | planned | not in CLI shim | planned |
+| `receipt-valid` | pass | planned | pass | planned |
+| `expired-entitlement` | pass | planned | pass | planned |
+| `revoked-entitlement` | pass | planned | pass | planned |
+| `offline-grace-active` | pass | planned | pass | planned |
 | `account-required` | pass | planned | pass | planned |
 | `org-required` | pass | planned | pass | planned |
 | `remote-recognized-not-loaded` | pass | planned | pass | planned |

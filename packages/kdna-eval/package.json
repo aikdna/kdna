@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-eval",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "description": "KDNA consumption evaluation framework — configurable scoring, multi-gate gating, replay regression, and cost tracking.",
   "type": "commonjs",
   "main": "src/index.js",
@@ -51,15 +51,28 @@
       "require": "./src/consumer-index.js",
       "types": "./src/types.d.ts"
     },
+    "./assay": {
+      "import": "./src/assay.mjs",
+      "require": "./src/assay.js",
+      "types": "./src/types.d.ts"
+    },
+    "./cluster-assay": {
+      "import": "./src/cluster-assay.mjs",
+      "require": "./src/cluster-assay.js",
+      "types": "./src/types.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "types": "src/types.d.ts",
   "scripts": {
-    "test": "node test/test-wrapper.js"
+    "test": "node test/test-wrapper.js",
+    "typecheck": "tsc --noEmit --strict --skipLibCheck false --lib es2022 src/types.d.ts",
+    "prepublishOnly": "npm test && npm run typecheck"
   },
   "files": [
     "src/",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "keywords": [
     "kdna",
@@ -68,6 +81,9 @@
     "dimension",
     "judgment"
   ],
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

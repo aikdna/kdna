@@ -5,27 +5,26 @@
  * KDNA Core is the official KDNA judgment-asset format and runtime
  * loading contract. .kdna assets are created, inspected, packed,
  * unpacked, and validated through the official KDNA toolchain. This
- * shim is the v1-aware entry point of that toolchain.
+ * shim is the KDNA-aware entry point of that toolchain.
  *
  * Routing rules:
  *
- *   inspect   <path>      v1 source dir or v1 .kdna container → v1 logic
+ *   inspect   <path>      KDNA source dir or .kdna container → Core logic
  *                         anything else                            → upstream
- *   validate  <path>      v1 source dir or v1 .kdna container → v1 logic
+ *   validate  <path>      KDNA source dir or .kdna container → Core logic
  *                         anything else                            → upstream
- *   plan-load <path>      v1 source dir or v1 .kdna container → v1 logic
+ *   plan-load <path>      KDNA source dir or .kdna container → Core logic
  *                         anything else                            → upstream
- *   pack      <src> <out> v1 source dir                            → v1 logic
+ *   pack      <src> <out> KDNA source dir                            → Core logic
  *                         anything else                            → upstream
- *   unpack    <in>  <out> v1 .kdna container                       → v1 logic
+ *   unpack    <in>  <out> .kdna container                            → Core logic
  *                         anything else                            → upstream
  *
  *   <anything else>                                              → upstream
  *
- * v2 (legacy `application/vnd.aikdna.kdna+zip`) and arbitrary
- * non-v1 inputs are deliberately NOT routed to v1 logic. They fall
+ * Non-KDNA inputs are deliberately NOT routed to Core logic. They fall
  * through to the upstream @aikdna/kdna-cli, which keeps its existing
- * behavior (including its "use kdna dev …" error for directory ops).
+ * behavior.
  *
  * Third-party products integrate KDNA through the official SDK, CLI,
  * Loader, or API.
@@ -33,6 +32,7 @@
 
 'use strict';
 
+const fs = require('node:fs');
 const path = require('node:path');
 
 const args = process.argv.slice(2);
@@ -71,15 +71,19 @@ function shouldRouteV1(args) {
   const abs = path.resolve(input);
   try {
     const v1 = loadCoreV1();
-    return v1.isV1SourceDir(abs) || v1.detectContainerFormat(abs) === 'v1';
+    return v1.isKdnaSourceDir(abs) || v1.detectContainerFormat(abs) === 'kdna';
   } catch {
     return false;
   }
 }
 
 function loadCoreV1() {
+  const workspaceCore = path.resolve(__dirname, '..', '..', 'kdna-core', 'src', 'index.js');
+  if (fs.existsSync(workspaceCore)) {
+    return require(workspaceCore);
+  }
   try {
-    return require('@aikdna/kdna-core/v1');
+    return require('@aikdna/kdna-core');
   } catch (_) {
     return require('../../kdna-core/src/v1');
   }
@@ -170,7 +174,7 @@ function routeV1(args) {
   } catch (e) {
     // Content-neutral error: never decorate with trust / recommended /
     // high_quality / officially_approved.
-    console.error(`v1 ${cmd} failed: ${e.message}`);
+    console.error(`kdna ${cmd} failed: ${e.message}`);
     process.exit(1);
   }
 }

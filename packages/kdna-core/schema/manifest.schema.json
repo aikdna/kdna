@@ -22,8 +22,8 @@
   "properties": {
     "kdna_version": {
       "type": "string",
-      "description": "KDNA Core version this manifest conforms to.",
-      "enum": ["1.0", "2.0"]
+      "description": "KDNA Asset Container wire discriminator.",
+      "enum": ["1.0"]
     },
     "asset_id": {
       "type": "string",
@@ -102,7 +102,7 @@
       "additionalProperties": true,
       "properties": {
         "path": { "type": "string", "const": "payload.kdnab" },
-        "encoding": { "type": "string", "enum": ["json", "cbor"] },
+        "encoding": { "type": "string", "enum": ["cbor"] },
         "encrypted": { "type": "boolean" }
       }
     },

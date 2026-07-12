@@ -1,58 +1,88 @@
 # Why KDNA?
 
-AI agents are becoming better at using tools, retrieving documents, and following workflows. But many failures still come from weak judgment rather than missing information.
+General-purpose models already contain broad knowledge and useful default
+judgment. But a model's defaults are not necessarily the judgment of the
+person, creator, professional, team, or organization using it.
 
-A model may know many facts about a domain and still make poor decisions because it lacks:
-
-- the domain's starting assumptions
-- the difference between central and peripheral ideas
-- the terms that should not be used and why
-- the predictable traps that distort judgment in this domain
-- the scenario signals that change what matters
-- the reasoning path from principle to action
-
-KDNA packages these elements into a structured, inspectable, and reusable `.kdna` file.
+KDNA exists so that judgment can be made explicit, carried across models, and
+used through a consistent runtime contract.
 
 ## The Judgment Layer
 
-KDNA does not retrieve documents. It does not execute tools. It does not replace memory. It does not replace skills.
+Facts answer *what is known*. Memory answers *what happened before*. Skills and
+workflows answer *how to act*. Evaluation answers *whether an observed result
+met a chosen test*.
 
-Instead, it shapes **how the agent interprets and uses all of the above.**
+KDNA carries a different kind of asset:
 
-Consider the difference:
+- what matters most;
+- which distinctions must not be blurred;
+- what should block action;
+- which trade-offs and values govern a choice;
+- what good work looks like to this author or group;
+- when the judgment does not apply.
 
-| Without KDNA | With KDNA loaded |
-|---|---|
-| Agent applies generic writing heuristics to every piece of content | Agent applies the specific judgment principles for *this content type* |
-| Agent marks a task "done" when it has produced output | Agent checks the four explicit completion criteria before claiming done |
-| Agent adds lines to AGENTS.md when asked | Agent runs the CARRY/RELOCATE/DROP/CONVERT classification before adding any line |
+KDNA does not replace data governance, memory, private compute, RAG,
+evaluation infrastructure, fine-tuning, skills, or workflows. It gives those
+systems an explicit judgment reference.
 
-## The Minimum Useful Difference
+## Whose Judgment?
 
-A KDNA asset is useful only if the loaded agent **behaves differently** from an unloaded agent in judgment quality.
+KDNA is not limited to institutions or credentialed experts.
 
-If the only difference is that the agent repeats special vocabulary, the KDNA is not working.
+- An individual can preserve preferences, values, boundaries, and ways of
+  choosing.
+- A creator can preserve taste, voice, editorial standards, and what they
+  refuse to make.
+- A professional can package diagnostic distinctions, risk thresholds, and
+  methods of trade-off.
+- A team or organization can version shared operating standards without
+  baking them into one model or application.
+- An Agent or tool can create a KDNA asset through the same public protocol;
+  author identity does not determine format validity.
 
-The test: take a task that sits squarely inside the domain. Would a domain expert answer it differently from a generalist? If no — the KDNA is not capturing real domain judgment. If yes — the KDNA should produce the domain-expert pattern, not the generalist pattern.
+Anyone can create and publish a KDNA asset. KDNA Core does not decide whether
+its judgment is true, good, expert, or useful. Optional evidence can describe
+what an asset has been observed to do; it is not a creation license.
 
-## What KDNA is not
+## One Asset and Multiple Assets
 
-KDNA is not:
-- a system prompt template — it is a portable format that any compliant loader can read
-- a fine-tuned model — the judgment is explicit and inspectable, not baked into weights
-- a knowledge base — it does not store facts; it encodes judgment standards
-- a skill or tool — it does not perform actions; it shapes the standards applied to actions
+A single KDNA asset is the atomic, default path: one scoped judgment asset is
+created, validated, authorized, and loaded for a task.
 
-For the full comparison across all AI stack components, see
-[KDNA and the AI Stack](./kdna-and-ai-stack.md).
+A KDNA Cluster is the explicit advanced path: multiple assets can be assigned
+roles, routed, checked for conflicts, and coordinated around one task. Cluster
+does not replace the single-asset model, and the single-asset path does not
+silently invoke Cluster routing.
 
-## Try it in 5 minutes
+## Open Creation, Contracted Consumption
+
+Open protocol does not mean raw consumption. Authors use the KDNA toolchain to
+create and package assets. Compatible Agent runtimes follow:
+
+```text
+inspect → LoadPlan → authorization → load/project → Runtime Capsule → Agent
+```
+
+Direct ZIP extraction, CBOR decoding, or raw payload parsing is a developer
+inspection path, not a compatible Agent consumption path. This distinction is
+what allows the same asset model to support public, licensed, and remote access.
+
+## What “Verifiable” Means
+
+KDNA can verify format, integrity, provenance, authorization state, and
+optional evidence claims. It does not verify that a judgment is true or that
+an author should be trusted. Consumers choose which assets and evidence fit
+their own context.
+
+## Try It
 
 ```bash
 npm install -g @aikdna/kdna-cli
 curl -LO https://github.com/aikdna/kdna-assets/releases/download/agent-project-context-v0.1.2/agent-project-context-v0.1.2.kdna
 kdna validate agent-project-context-v0.1.2.kdna
-kdna load    agent-project-context-v0.1.2.kdna --profile=compact --as=prompt
+kdna plan-load agent-project-context-v0.1.2.kdna
+kdna load agent-project-context-v0.1.2.kdna --profile=compact --as=prompt
 ```
 
-→ [Start Here](./start-here.md) · [Public Roadmap](./public-roadmap.md) · [kdna-assets](https://github.com/aikdna/kdna-assets)
+→ [Start Here](./start-here.md) · [KDNA and the AI Stack](./kdna-and-ai-stack.md) · [Core Narrative and Boundaries](./core-narrative-and-boundaries.md)

@@ -56,11 +56,12 @@ npm run release:preflight
 
 ## Non-Negotiable v1.0 Rules
 
-- Manifest uses `format`, `format_version`, and `spec_version`.
+- Manifest uses `kdna_version: "1.0"`.
+- `format`, `format_version`, and `spec_version` are not protocol discriminators.
 - `kdna_spec` is invalid.
 - Singular `language` is invalid.
 - Root `mimetype` is required and must be
-  `application/vnd.aikdna.kdna+zip`.
+  `application/vnd.kdna.asset`.
 - `application/x-kdna` is invalid.
 - Signatures use the v1.0 canonical content-tree payload only.
 - Registry installable entries must declare `media_type`,

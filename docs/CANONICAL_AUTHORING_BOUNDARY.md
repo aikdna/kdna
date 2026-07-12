@@ -27,7 +27,7 @@ Studio creates, reviews, compiles, and exports `.kdna` files.
 CLI inspects, validates, plan-loads, packs/unpacks, and loads local `.kdna` files.
 
 Hosted discovery surfaces, if present, are optional distribution surfaces and
-not Core v1 format-validity or trust authorities.
+not KDNA format-validity or trust authorities.
 
 Agents load and use KDNA.
 

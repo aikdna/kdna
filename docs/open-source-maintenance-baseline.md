@@ -27,9 +27,9 @@ Maintenance-mode PRs should fit one or more of these categories:
 - Small compatibility updates that preserve the public local asset path.
 - Release evidence refreshes for packages, assets, and integration surfaces.
 
-## Out Of Scope For Core v1
+## Out of Scope for KDNA Core
 
-These areas should not expand the Core v1 open-source surface unless a later
+These areas should not expand the KDNA Core surface unless an accepted
 RFC changes the boundary:
 
 - Public registry or marketplace.

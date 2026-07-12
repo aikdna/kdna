@@ -6,12 +6,12 @@ A valid `.kdna` asset proves structural conformance and loadability. It does
 not prove that the encoded judgment is universally correct, safe for every
 context, professionally endorsed, or appropriate for a user's situation.
 
-## Current Core v1 Layers
+## Current Verification Layers
 
 | Layer | Verifies | Does not verify |
 |---|---|---|
-| Format | The container has the required v1 files and metadata | Whether the judgment is good |
-| Schema | `kdna.json` and payload shape satisfy the v1 contract | Whether the author is an expert |
+| Format | The container has the required files and metadata | Whether the judgment is good |
+| Schema | `kdna.json` and payload shape satisfy the current contract | Whether the author is an expert |
 | Payload | The payload is parseable and loadable | Whether the payload should be used |
 | Checksums | Declared digests match the current bytes | Author identity or content quality |
 | Load contract | The asset can be rendered through supported profiles | Fitness for every context |

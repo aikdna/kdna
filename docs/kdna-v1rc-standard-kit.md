@@ -55,8 +55,8 @@ instead of forcing them to infer the standard from scattered repository files.
     and authoring provenance gates.
 12. KDNA-compatible claims must pass the relevant conformance profile.
 13. v1.0 assets must include root `mimetype` with
-    `application/vnd.aikdna.kdna+zip`.
-14. v1.0 manifests use `spec_version`; `kdna_spec` is not part of the protocol.
+    `application/vnd.kdna.asset`.
+14. v1.0 manifests use `kdna_version: "1.0"`; `kdna_spec` is not part of the protocol.
 
 ## Implementer Path
 

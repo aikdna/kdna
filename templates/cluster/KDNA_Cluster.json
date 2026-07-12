@@ -1,25 +1,48 @@
 {
-  "name": "example_cluster",
+  "format": "kdna-cluster",
+  "format_version": "0.9.0",
+  "cluster_id": "@aikdna/example_cluster",
+  "name": "Example Cluster",
   "version": "0.1.0",
-  "purpose": "Describe what judgment this cluster provides in one paragraph.",
-  "packages": [
+  "description": "[TODO: Describe what judgment system this cluster provides.]",
+  "type": "vertical",
+  "status": "draft",
+  "access": "public",
+  "domains": [
     {
-      "id": "sub_domain_one",
-      "role": "primary",
-      "use_when": ["Task matches this sub-domain's scope"]
+      "id": "@aikdna/sub_domain_one",
+      "version": "^0.1.0",
+      "role": "primary-candidate",
+      "required": true,
+      "load_condition": "[TODO: Task condition for primary domain activation]"
     },
     {
-      "id": "sub_domain_two",
-      "role": "primary",
-      "use_when": ["Task matches this sub-domain's scope"]
+      "id": "@aikdna/sub_domain_two",
+      "version": "^0.1.0",
+      "role": "advisor",
+      "required": false,
+      "load_condition": "[TODO: Task condition for advisor activation]",
+      "contribution_hypothesis_template": "[TODO: What distinct dimension does this advisor add beyond the primary?]"
     }
   ],
-  "composition_rules": [
-    "Rule 1: when these domains conflict, this principle takes priority.",
-    "Rule 2: domain-specific guidance overrides generic advice."
-  ],
-  "routing_questions": [
-    "Question 1 that determines which sub-domain to load.",
-    "Question 2 that determines which sub-domain to load."
-  ]
+  "composition": {
+    "strategy": "signal_based",
+    "max_active_domains": 3,
+    "conflict_policy": "surface",
+    "priority_order": ["@aikdna/sub_domain_one", "@aikdna/sub_domain_two"],
+    "primary_selection": "exactly_one",
+    "advisor_selection": "contribution_hypothesis_required"
+  },
+  "budget": {
+    "profile": "interactive",
+    "max_tokens": 800,
+    "max_assets": 3,
+    "enforcement": "hard"
+  },
+  "degradation_policy": {
+    "primary_unavailable": "block",
+    "required_advisor_unavailable": "block",
+    "optional_advisor_unavailable": "continue_with_warning",
+    "budget_exceeded": "block"
+  }
 }

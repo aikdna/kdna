@@ -1,6 +1,6 @@
 # RFC-0018: KDNA Canonical Envelope Profile — `kdna-envelope-aead-v1`
 
-Status: **accepted** (frozen for implementation as of 2026-06-28; Story 17).
+Status: **accepted**.
 
 ## Summary
 
@@ -374,11 +374,9 @@ A conforming implementation SHOULD:
   fields are independent). The current answer is "no — explicit
   `kdf_profile` is the contract". A future profile revision
   could relax this if the ergonomics get in the way.
-- The CBOR canonical encoding form for the envelope is not
-  yet frozen as a separate RFC. The conformance vectors
-  today are JSON-only. Story 24 (Argon2id binding + envelope
-  implementation) is expected to freeze the CBOR form and
-  add a CBOR round-trip vector. Until then, implementations
-  MAY use JSON internally; the on-the-wire form is
-  implementation-defined, but the envelope SHAPE is fixed by
-  this RFC.
+- The envelope object is represented by the profile fields defined here. In
+  the current KDNA Asset Container, `payload.kdnab` is CBOR and an encrypted
+  envelope stored in that entry is CBOR-encoded. Implementations MUST NOT use a
+  JSON fallback for that container entry. Conformance vectors may express
+  expected object fields in JSON for readability; that does not change the
+  container wire encoding.

@@ -1,0 +1,71 @@
+{
+  "trace_version": "0.9.0",
+  "trace_id": "trace_d8f4b2c1a39607e5",
+  "plan_id": "plan_c7e3a1b9f2d40856",
+  "mode": "single",
+  "timestamp": "2026-07-11T16:35:12Z",
+  "asset_identity": {
+    "asset_id": "dev-change-risk-v0.1.0.kdna",
+    "version": "0.1.0",
+    "digest": "sha256:4fabf0f035664d0b3921f53cd724cd5f417f36e2b8c2837aebaa2469f87ecdc2",
+    "digest_verified": true,
+    "signature_verified": null,
+    "revocation_status": "not_revoked",
+    "authorization": "public — no authorization required",
+    "projection_digest": "sha256:067cf9f345ab38d5e63ead894de9e2e81800222196b3634b542dbc784372764c"
+  },
+  "applicability_actual": {
+    "decision": "applies",
+    "confidence": "high",
+    "boundary_respected": true,
+    "deviated_from_plan": false
+  },
+  "projection_actual": {
+    "shape": "compact",
+    "content_digest": "sha256:80cf407f2031550ae230bcf005dae5f5cfd1ded51ed67519b2dad77d62fc302c",
+    "shape_deviated_from_plan": false
+  },
+  "execution": {
+    "status": "completed",
+    "runner_id": "claude-code-agent",
+    "runner_version": "0.1.0",
+    "model": "claude-sonnet-5",
+    "started_at": "2026-07-11T16:35:00Z",
+    "completed_at": "2026-07-11T16:35:12Z",
+    "duration_ms": 12000,
+    "attempts": 1
+  },
+  "result_ref": {
+    "result_hash": "sha256:59eb8ada77620e96b426fa8e61adee5044246a4e656ec91dd3bed7efec60e64e",
+    "result_shape": "answer-pattern",
+    "answer_summary": "Deploy now with rollback plan and monitoring — conditional on three pre-deploy checks",
+    "result_stored": true
+  },
+  "cost": {
+    "tokens_used": 940,
+    "chars_consumed": 4200,
+    "assets_loaded": 1,
+    "model_calls": 1,
+    "budget_profile": "code-review",
+    "over_budget": false
+  },
+  "evaluation": {
+    "self_checks": [
+      { "check_id": "SC-1", "passed": true, "detail": "Auth change confirmed" },
+      { "check_id": "SC-2", "passed": false, "detail": "Rollback plan review pending" }
+    ],
+    "violations": [],
+    "banned_terms_detected": []
+  },
+  "provenance": {
+    "plan_digest": "sha256:dfeaa6419230efe69c51e8bebb9102cdd84e4874aa9bcfa6446a33c8077b05c0",
+    "policy_hash": null,
+    "consumer_index_version": null
+  },
+  "errors": [],
+  "warnings": ["Deploy decision is CONDITIONAL — do not proceed until SC-2 conditions are met"],
+  "metadata": {
+    "environment": "development",
+    "trace_schema": "0.9.0"
+  }
+}

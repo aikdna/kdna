@@ -1,0 +1,24 @@
+{
+  "plan_version": "0.9.0",
+  "plan_id": "plan_d5e4f3a2b1098765",
+  "mode": "cluster",
+  "task": {
+    "summary": "cluster plan without cluster ref",
+    "input_hash": "sha256:abc123"
+  },
+  "load_plan_ref": {
+    "plan_id": "plan_d5e4f3a2b1098765",
+    "status": "ready"
+  },
+  "applicability": {
+    "decision": "applies"
+  },
+  "projection_ref": {},
+  "budget": {
+    "profile": "interactive"
+  },
+  "trace_policy": {
+    "emit": ["result"],
+    "storage": "ephemeral"
+  }
+}

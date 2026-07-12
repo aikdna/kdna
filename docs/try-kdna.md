@@ -1,10 +1,11 @@
-# Try KDNA Core v1 in 5 Minutes
+# Try KDNA in 5 Minutes
 
 Two paths. Pick one — or run both.
 
 ## Path A: See real judgment in action (recommended first)
 
-Download an official judgment asset, validate it, and load it into your agent context.
+Download an AIKDNA-published reference asset, validate it, and load a
+toolchain-produced projection.
 
 ```bash
 npm install -g @aikdna/kdna-cli
@@ -22,7 +23,10 @@ kdna plan-load agent-project-context-v0.1.2.kdna
 kdna load agent-project-context-v0.1.2.kdna --profile=compact --as=prompt
 ```
 
-**What you'll see:** 5 domain axioms with explicit applies_when / does_not_apply_when / failure_risk fields, 6 self-checks, and 5 real cases. Copy the output into your AI agent's context — it will now judge every line of an AGENTS.md file against a structured framework (CARRY / RELOCATE / DROP / CONVERT) instead of defaulting to "looks good."
+**What you'll see:** a profile-selected judgment projection produced by the
+KDNA loader. Use it through a compatible Agent integration, then compare the
+result with the same task without KDNA. Repeating asset vocabulary is not
+proof; look for changed distinctions, boundaries, and decisions.
 
 This is what KDNA does: the agent's reasoning shifts, not its tone.
 
@@ -45,10 +49,10 @@ This proves the format works end-to-end. The output will be minimal — one plac
 
 - **Load into your AI agent**: [15-minute agent guide](./15-minute-agent-guide.md)
 - **Create your own domain**: [30-minute authoring guide](./30-minute-authoring-guide.md)
-- **Official judgment assets**: [kdna-assets](https://github.com/aikdna/kdna-assets)
+- **AIKDNA-published reference assets**: [kdna-assets](https://github.com/aikdna/kdna-assets)
 - **Current status**: [docs/status.md](./status.md)
 
-## What KDNA Core v1 is
+## What KDNA Is
 
 KDNA is an open file format for packaging domain judgment and loading it into AI agents. `.kdna` assets are created, inspected, validated, planned, loaded, and consumed through the official KDNA toolchain.
 

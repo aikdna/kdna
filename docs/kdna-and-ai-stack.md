@@ -190,7 +190,28 @@ A mature system may use both: fine-tuning for general behavior, KDNA for explici
 
 ---
 
-## 12. How They Work Together
+## 12. KDNA and the Learning Loop
+
+KDNA can participate in a human-governed learning loop, but it is not the
+whole loop.
+
+| Layer | Responsibility |
+|---|---|
+| Data / RAG | What information is available |
+| Memory / Trace | What happened |
+| Evaluation | What observed result met a chosen test |
+| Fine-tuning | What is changed inside model weights |
+| KDNA | What judgment standard is applied and how that asset is versioned and governed |
+
+Outcomes, permissions, deployment policy, memory retention, and approval roles
+remain runtime or application responsibilities. KDNA provides judgment-asset,
+provenance, versioning, and optional evidence primitives that such a loop can
+use. It does not make an Agent self-improving by itself and cannot make drift
+impossible.
+
+---
+
+## 13. How They Work Together
 
 KDNA works best when it complements the rest of the stack.
 
@@ -226,7 +247,7 @@ For reusable work, a Work Pack can combine a KDNA or KDNA Cluster with skills, t
 
 ---
 
-## 13. Common Misunderstandings
+## 14. Common Misunderstandings
 
 **"Is KDNA just a better prompt?"** No. A prompt is a task instruction. KDNA is a structured, domain-scoped judgment system that can be validated, versioned, composed, distributed, and reused.
 
@@ -246,7 +267,7 @@ For reusable work, a Work Pack can combine a KDNA or KDNA Cluster with skills, t
 
 ---
 
-## 14. Final Principle
+## 15. Final Principle
 
 KDNA is not trying to replace the AI stack. It is trying to make the judgment layer explicit.
 

@@ -9,7 +9,13 @@ const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
-const { buildChecksumsV1 } = require('../../packages/kdna-core/src/v1');
+const cbor = require('cbor-x');
+const { buildChecksums } = require('../../packages/kdna-core/src/v1');
+
+function readPayload(p) {
+  const buf = fs.readFileSync(p);
+  return cbor.decode(buf);
+}
 
 const cliBin = path.join(__dirname, '..', '..', 'packages', 'kdna', 'bin', 'kdna.js');
 const minimalSource = path.join(__dirname, '..', '..', 'examples', 'minimal');
@@ -54,13 +60,13 @@ test('validate minimal source dir', () => {
   assert.equal(out.payload_valid, true);
 });
 
-test('buildChecksumsV1 generates digests accepted by validate', () => {
+test('buildChecksums generates digests accepted by validate', () => {
   const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdnA-checksums-'));
   try {
     fs.cpSync(minimalSource, tmp, { recursive: true });
     fs.writeFileSync(
       path.join(tmp, 'checksums.json'),
-      JSON.stringify(buildChecksumsV1(tmp), null, 2),
+      JSON.stringify(buildChecksums(tmp), null, 2),
     );
     const r = run(['validate', tmp]);
     assert.equal(r.status, 0, r.stderr);
@@ -78,7 +84,7 @@ test('v1 ESM entry exports the shared checksum helper', () => {
     [
       '--input-type=module',
       '-e',
-      "import { buildChecksumsV1 } from './packages/kdna-core/src/v1/index.mjs'; if (typeof buildChecksumsV1 !== 'function') process.exit(1);",
+      "import { buildChecksums } from './packages/kdna-core/src/v1/index.mjs'; if (typeof buildChecksums !== 'function') process.exit(1);",
     ],
     { cwd: path.join(__dirname, '..', '..'), encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
   );
@@ -123,8 +129,8 @@ test('load index profile as json', () => {
   assert.equal(r.status, 0, r.stderr);
   const out = JSON.parse(r.stdout);
   assert.equal(out.profile, 'index');
-  assert.ok(out.content.asset_id);
-  assert.ok(out.content.profiles_available);
+  assert.ok(out.context.asset_id);
+  assert.ok(out.context.profiles_available);
 });
 
 test('load compact profile as json', () => {
@@ -132,8 +138,8 @@ test('load compact profile as json', () => {
   assert.equal(r.status, 0, r.stderr);
   const out = JSON.parse(r.stdout);
   assert.equal(out.profile, 'compact');
-  assert.ok(out.content.highest_question);
-  assert.ok(out.content.axioms.length > 0);
+  assert.ok(out.context.highest_question);
+  assert.ok(out.context.axioms.length > 0);
 });
 
 test('load compact profile as prompt is content-neutral', () => {
@@ -162,7 +168,7 @@ test('load compact profile as prompt renders object patterns readably', () => {
       path.join(tmp, 'kdna.json'),
       fs.readFileSync(path.join(minimalSource, 'kdna.json')),
     );
-    const payload = JSON.parse(fs.readFileSync(path.join(minimalSource, 'payload.kdnab'), 'utf8'));
+    const payload = readPayload(path.join(minimalSource, 'payload.kdnab'));
     payload.core.boundaries = [
       { type: 'stance_boundary', stance: 'Structure first, wording second.' },
       {
@@ -183,7 +189,7 @@ test('load compact profile as prompt renders object patterns readably', () => {
         correct: 'Smooth wording can hide weak structure.',
       },
     ];
-    fs.writeFileSync(path.join(tmp, 'payload.kdnab'), JSON.stringify(payload, null, 2));
+    fs.writeFileSync(path.join(tmp, 'payload.kdnab'), cbor.encode(payload));
 
     const r = run(['load', tmp, '--profile=compact', '--as=prompt']);
     assert.equal(r.status, 0, r.stderr);
@@ -215,8 +221,8 @@ test('load full profile as json', () => {
   assert.equal(r.status, 0, r.stderr);
   const out = JSON.parse(r.stdout);
   assert.equal(out.profile, 'full');
-  assert.ok(out.content.manifest);
-  assert.ok(out.content.payload);
+  assert.ok(out.context.manifest);
+  assert.ok(out.context.payload);
 });
 
 // ── Positive: container round-trip ────────────────────────────────

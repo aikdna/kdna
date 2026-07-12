@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const cbor = require('cbor-x');
 
 let argon2id;
 try {
@@ -56,11 +57,13 @@ function decodeBase64(value, label) {
 
 function normalizeEnvelope(value) {
   if (Buffer.isBuffer(value) || value instanceof Uint8Array) {
-    return JSON.parse(Buffer.from(value).toString('utf8'));
+    try { return cbor.decode(Buffer.from(value)); } catch { /* fall through */ }
   }
-  if (typeof value === 'string') return JSON.parse(value);
+  if (typeof value === 'string') {
+    try { return cbor.decode(Buffer.from(value, 'utf8')); } catch { /* fall through */ }
+  }
   if (value && typeof value === 'object') return value;
-  throw new Error('encrypted entry envelope must be JSON');
+  throw new Error('encrypted entry envelope must be CBOR (kdna_version 1.0)');
 }
 
 function encryptedEntryAad(entryName, manifest = {}, profile = LICENSED_ENTRY_PROFILE) {

@@ -1,5 +1,38 @@
 # Changelog
 
+## v0.15.12 (2026-07-12)
+
+**Single-format refactor + CBOR wire contract + Runtime Capsule.**
+
+### Breaking changes
+
+- `MIMETYPE_V1`, `MIMETYPE_V2`, `MIMETYPE_LEGACY`, `isV1SourceDir`, `isV2SourceDir`
+  removed from public API. Use `MIMETYPE`, `isKdnaSourceDir`, `detectContainerFormat`.
+- `detectContainerFormat` returns only `"kdna"` or `null`.
+- `kdna_version: "2.0"` is no longer accepted. Only `"1.0"`.
+- `payload.encoding` accepts only `"cbor"`. JSON payload bytes are rejected;
+  there is no production JSON fallback.
+- Version-qualified public APIs (`V1_REQUIRED_DIR_ENTRIES`, `readV1Layout`,
+  `buildChecksumsV1`, `loadV1`, and the `./v1` export) are removed. Use the
+  unversioned APIs below.
+- `kdna load --as=json` now returns Runtime Capsule format
+  (`type: "kdna.context.capsule"`) instead of raw `{status, content}`.
+
+### Added
+
+- `REQUIRED_DIR_ENTRIES`, `readLayout`, `buildChecksums`, `load`, and
+  `loadAsset` are the sole public container/loading APIs.
+- `buildCapsule(loadResult, v1, profile, opts)` — wraps load output as
+  `kdna.context.capsule` per `specs/runtime-capsule.md`.
+- `parsePayloadEntry` — strict CBOR decoding for `payload.kdnab`.
+
+### Fixes
+
+- Producer/consumer encoding alignment: `dev-pack.js`, `studio.js` write CBOR;
+  validation and loading decode CBOR, including encrypted envelopes.
+- `loadV1Unsafe` extends/deps processing occurs before Capsule wrapping (Story 12 fix).
+- All test fixtures converted to CBOR; golden files regenerated.
+
 ## v0.15.11 (2026-07-03)
 
 **Fix**: repair Core v1 container dispatcher module resolution in the

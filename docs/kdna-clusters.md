@@ -1,8 +1,9 @@
 # KDNA Clusters
 
-> **Status: Design / Experimental** — Not part of KDNA Core v1 GA.
-> For current stable usage, use single `.kdna` assets with `kdna validate` / `kdna plan-load` / `kdna load`.
-> See [tool-status-matrix.md](tool-status-matrix.md) for GA capabilities.
+> **Status: Beta advanced path.** A single `.kdna` asset remains the foundation
+> and default. Cluster is an explicit multi-asset runtime for tasks that truly
+> need multiple scoped judgment assets; it does not replace or silently alter
+> single-asset loading. See [Status](./status.md).
 
 A KDNA Cluster is a composable judgment system: multiple scoped KDNA domain assets working together under defined roles and route policy to handle complex tasks.
 

@@ -55,7 +55,7 @@
 
 ## Phase 4.5: Open Protocol Standardization (Next)
 
-- ⬜ Vendor-tree media type registration for `application/vnd.aikdna.kdna+zip`
+- ⬜ Vendor-tree media type registration for `application/vnd.kdna.asset`
 - ⬜ Third-party conformance reports for asset loaders and registries
 - ⬜ Personal KDNA and privacy-level fields promoted from proposal to schema
 - ⬜ Registry federation model for official, community, private, and local registries

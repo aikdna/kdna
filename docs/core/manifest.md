@@ -8,9 +8,9 @@ The manifest is a single JSON object at the root of the container, stored as `kd
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `kdna_version` | string | The KDNA Core version this manifest conforms to. Phase 1 uses `"1.0"`. |
-| `asset_id` | string | A human-readable identifier with a `kdna_version` prefix (e.g. `kdna:example:writing-core`). Not globally unique by itself. |
-| `asset_uid` | string (URI) | A globally unique identifier, conventionally a `urn:uuid:...`. Required in v1 to disambiguate assets that share a name. |
+| `kdna_version` | string | KDNA Asset Container wire discriminator. The current and only accepted value is `"1.0"`. |
+| `asset_id` | string | A human-readable identifier (e.g. `kdna:example:writing-core`). Not globally unique by itself. |
+| `asset_uid` | string (URI) | A globally unique identifier, conventionally a `urn:uuid:...`. Required to disambiguate assets that share a name. |
 | `asset_type` | enum | One of `domain`, `cluster`, `tool`, `sample`, `fixture`. The container format is the same; the value tells callers how to interpret the payload. |
 | `title` | string | A short, human-readable title. |
 | `version` | semver | The release version of this `.kdna` file. Distinct from `judgment_version`. |
@@ -47,24 +47,20 @@ The manifest is a single JSON object at the root of the container, stored as `kd
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `summary` | string | One-paragraph description. |
-| `description` | string | Longer description. |
-| `language` | string | BCP-47 primary language code. |
-| `languages` | array | Supported languages. |
-| `license` | string or object | SPDX identifier (e.g. `Apache-2.0`) or `{type, url}`. |
-| `keywords` | array | Free-form keywords. |
-| `domain_field` | array | Domain categories. |
-| `lineage` | object | Provenance object describing how this asset relates to other assets. See `lineage` shape below. |
-| `digests` | object | Per-entry digests. Alternative to a separate `checksums.json`. |
-| `signatures` | array | Signature references (each entry has `role`, `path`, `algorithm`, `key_id`). |
-| `encryption` | object | Encryption envelope metadata (reserved for later phases). |
-| `load_contract` | object | The runtime load contract. See `load-contract.md`. |
-| `scope` | object | Scope metadata: `summary`, `keywords`, `domain_field`, etc. |
-| `evidence_claims` | object | Author-declared evidence claims. **Descriptive only in Phase 1.** Not validated by the format. |
+| `path` | string | MUST be `payload.kdnab`. |
+| `encoding` | string | MUST be `cbor`. JSON payload bytes are rejected. |
+| `encrypted` | boolean | Whether `payload.kdnab` contains an encrypted CBOR envelope. |
 
-## `lineage` object (Phase 1 shape)
+Optional top-level metadata includes `summary`, `description`, `language`,
+`languages`, `license`, `keywords`, `domain_field`, `lineage`, `digests`,
+`signatures`, `dependencies`, `encryption`, `load_contract`, `scope`, and
+`evidence_claims`. Evidence claims are descriptive and optional; they do not
+affect format validity or grant official approval.
 
-Phase 1 records lineage as a **single object**, not an array. This keeps the format stable; future phases may add a separate `sources` or `references` field for multi-parent derivation rather than overloading `lineage`.
+## `lineage` object
+
+Lineage is a **single object**, not an array. Multi-parent references should use
+a separate future field rather than overloading `lineage`.
 
 ```json
 {
@@ -105,7 +101,7 @@ Phase 1 **does not** implement fork/adapt behaviour. The `type` enum covers the 
   },
   "payload": {
     "path": "payload.kdnab",
-    "encoding": "json",
+    "encoding": "cbor",
     "encrypted": false
   },
   "lineage": {
@@ -118,4 +114,4 @@ Phase 1 **does not** implement fork/adapt behaviour. The `type` enum covers the 
 
 ## Why `asset_uid` is required
 
-A previous design used `asset_id` alone. That made the identifier namespace central: every producer had to coordinate with everyone else to avoid collisions. The v1 manifest requires `asset_uid` (a URN) so that the unique identity is **intrinsic** to the asset, not delegated to a global naming authority. `asset_id` is retained for human readability, but `asset_uid` is the only field the runtime uses for identity.
+A previous design used `asset_id` alone. That made the identifier namespace central: every producer had to coordinate with everyone else to avoid collisions. The manifest requires `asset_uid` (a URN) so that the unique identity is **intrinsic** to the asset, not delegated to a global naming authority. `asset_id` is retained for human readability, but `asset_uid` is the only field the runtime uses for identity.

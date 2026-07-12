@@ -1,7 +1,7 @@
-# KDNA Core v1 Load Profiles
+# KDNA Load Profiles
 
 The **load profiles** (`index`, `compact`, `scenario`, `full`) are the
-official KDNA Core v1 **runtime loading contract**. They define exactly
+official KDNA **runtime loading contract**. They define exactly
 what a loader returns when asked to read a `.kdna` asset at a given
 profile level. Every official KDNA toolchain component — CLI, skills
 loader, Studio, SDK — MUST follow this contract.
@@ -10,7 +10,7 @@ The profiles are named in the manifest's `load_contract` block:
 `manifest.load_contract.profiles`. The default profile is
 `manifest.load_contract.default_profile`, conventionally `compact`.
 
-The official implementation is `@aikdna/kdna-core.loadV1()`.
+The official implementation is `@aikdna/kdna-core.loadAuthorized()`.
 Third-party products integrate KDNA through the official SDK, CLI,
 Loader, or API — they do not implement loading independently.
 
@@ -143,16 +143,16 @@ Every profile output MUST be content-neutral. The loader MUST NOT:
 - Emit `trusted`, `recommended`, `high_quality`, `officially_approved`,
   or `quality_badge` as positive claims
 
-The official implementation (`@aikdna/kdna-core.loadV1`) enforces this
+The official implementation (`@aikdna/kdna-core.loadAuthorized`) enforces this
 via `FORBIDDEN_OUTPUT_TERMS`.
 
 ## 7. Extension
 
 - **Future phases** may add more profiles. New profiles MUST be additive
   and MUST NOT change the semantics of existing profiles.
-- **Encrypted profiles** (Phase 3+) will use `requires_decryption: true`.
-  A loader encountering an encrypted profile MUST refuse without a key
-  and emit a `requires_decryption` trace status.
-- **Custom profiles** are not part of the v1 contract. If an asset
+- **Encrypted profiles** use `requires_decryption: true`. The loader MUST
+  obtain authorization, decrypt only in memory, and emit a Runtime Capsule;
+  without the required credential it returns a non-loadable LoadPlan.
+- **Custom profiles** are not part of the current runtime contract. If an asset
   declares a profile not in `{index, compact, scenario, full}`, the
   loader MUST reject it with a clear error.

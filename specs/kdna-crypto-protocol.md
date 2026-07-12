@@ -1,4 +1,4 @@
-# KDNA Crypto Protocol v0.1
+# KDNA Crypto Protocol
 
 ## Status: CLI/Core MVP implemented for licensed encrypted entries; runtime watermarking remains a server-side design.
 
@@ -14,11 +14,12 @@ Every KDNA domain declares one of three access modes. The mode determines the cr
 
 | Mode | Distribution | At Rest | At Load | Revocable | Watermark |
 |------|:-----------:|:-------:|:-------:|:---------:|:---------:|
-| `open` | Plaintext .kdna | Plaintext | Direct read | No | Optional |
+| `public` | Plaintext .kdna | Plaintext | Authorized local projection | No | Optional |
 | `licensed` | Licensed .kdna | Encrypted entries | Local in-memory decrypt with license key | Yes | Required |
-| `runtime` | Never distributed | Server-side only | API projection | Yes | Required |
+| `remote` | Never distributed | Server-side only | API projection | Yes | Required |
 
-**Open mode** requires no cryptography. This document focuses on `licensed` and `runtime`.
+**Public mode** requires no secrecy but Agent consumption still goes through
+LoadPlan and Runtime Capsule. This document focuses on `licensed` and `remote`.
 
 ---
 
@@ -55,17 +56,17 @@ licensed .kdna asset
   offline licensed loading, but MUST NOT be printed, logged, included in audit
   events, or embedded in `.kdna` assets.
 
-### 2.3 Registry and Author Signing Keys
+### 2.3 Author and Publisher Signing Keys
 
 - **Type:** Ed25519.
-- **Purpose:** Sign published asset metadata and verify registry trust
-  metadata.
-- **Trust source:** Registry entries include digest and signature fields. The
-  `.kdna` file is the signed object; extracted files are not a trust source.
+- **Purpose:** Bind published asset bytes and metadata to a signing key.
+- **Trust source:** The `.kdna` file and its detached/declared signature are the
+  signed object. A catalog may repeat digest/signature metadata, but Core does
+  not turn catalog presence or a valid signature into content endorsement.
 
 ---
 
-## 3. Publishing Flow (Author → Registry)
+## 3. Publishing Flow (Author → Distribution Channel)
 
 ```
 Author creates source workspace
@@ -73,45 +74,54 @@ Author creates source workspace
 kdna publish --access licensed --output ./dist/domain.kdna
     ↓
 1. Publisher validates source workspace
-2. Publisher encrypts protected KDNA entries as `kdna-licensed-entry-v1`
+2. Publisher encrypts `payload.kdnab` with a supported CBOR envelope
 3. Publisher writes plaintext `kdna.json` manifest for discovery
 4. Publisher computes asset digest over the `.kdna` file
 5. Publisher computes canonical content digest over internal entries
 6. Publisher signs published metadata with the author identity
     ↓
-Asset published to registry:
+Asset distributed through any author-chosen channel:
   silver-care.kdna
   ├── kdna.json              (plaintext manifest, signed)
-  ├── KDNA_Core.json         (encrypted-entry envelope)
-  ├── KDNA_Patterns.json     (encrypted-entry envelope)
-  └── KDNA_CARD.json         (optional plaintext public card)
+  ├── payload.kdnab          (CBOR encryption envelope)
+  ├── checksums.json         (optional integrity records)
+  └── signatures/            (optional provenance signatures)
 ```
 
 ### 3.1 Package Manifest
 
 ```json
 {
-  "format": "kdna",
-  "format_version": "1.0",
-  "spec_version": "1.0-rc",
-  "domain": "silver-care",
+  "kdna_version": "1.0",
+  "asset_id": "kdna:example:silver-care",
+  "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+  "asset_type": "domain",
+  "title": "Silver Care",
   "version": "1.0.0",
-  "access": "licensed",
-  "content_digest": "sha256:abc123...",
-  "encryption": {
-    "profile": "kdna-licensed-entry-v1",
-    "encrypted_entries": [
-      "KDNA_Core.json",
-      "KDNA_Patterns.json"
-    ]
+  "judgment_version": "1.0.0",
+  "created_at": "2026-07-01T00:00:00.000Z",
+  "updated_at": "2026-07-01T00:00:00.000Z",
+  "creator": { "name": "Example Author" },
+  "compatibility": {
+    "min_loader_version": "0.15.12",
+    "profile": "judgment-profile-v1"
   },
-  "signature": "ed25519:def456..."
+  "payload": {
+    "path": "payload.kdnab",
+    "encoding": "cbor",
+    "encrypted": true
+  },
+  "access": "licensed",
+  "encryption": {
+    "profile": "kdna-envelope-aead-v1",
+    "encrypted_entries": ["payload.kdnab"]
+  }
 }
 ```
 
 ---
 
-## 4. Purchase Flow (Buyer → Registry → Local)
+## 4. Purchase Flow (Buyer → Distribution/Entitlement Service → Local)
 
 ```
 Buyer installs and activates:
@@ -157,8 +167,9 @@ Agent triggers: kdna load @scope/silver-care
    machine binding matches, and offline grace is valid
 4. Runtime derives decrypt hook from license_key + machine_fingerprint
 5. Runtime decrypts protected entries in memory only
-6. Runtime loads the requested profile into agent context
-7. Runtime logs audit metadata without license_key or decrypted content
+6. Runtime projects the requested profile into a Runtime Capsule
+7. Agent receives the Capsule, never the raw payload or encryption envelope
+8. Runtime logs audit metadata without license_key or decrypted content
     ↓
 Plaintext KDNA NEVER touches disk.
 ```
@@ -195,9 +206,9 @@ required for the CLI/Core encrypted-entry MVP.
 | Mode | Watermark Content | Injection Point |
 |------|------------------|----------------|
 | `licensed` | buyer_id + license_id + timestamp | Encoded in response text (zero-width marker) |
-| `runtime` | buyer_id + call_id + timestamp | Encoded in API response |
+| `remote` | buyer_id + call_id + timestamp | Encoded in API response |
 
-If a watermarked response appears publicly, Registry can:
+If a watermarked response appears publicly, an author or entitlement operator can:
 1. Extract watermark → identify buyer
 2. Issue warning
 3. Revoke license if repeated
@@ -207,17 +218,18 @@ or license identifier may be traceable in authorized projections or responses.
 
 ---
 
-## 8. Licensed .kdna Format
+## 8. Licensed `.kdna` Format
 
-The licensed `.kdna` file keeps the single asset extension. Protected entries are JSON envelopes encrypted under `kdna-licensed-entry-v1`:
+The licensed `.kdna` file keeps the single asset extension and the same
+container shape. `payload.kdnab` is a CBOR envelope under a supported profile:
 
 ```
 silver-care-1.0.0.kdna
-├── kdna.json              (manifest)
-├── KDNA_Core.json         (encrypted-entry envelope)
-├── KDNA_Patterns.json     (encrypted-entry envelope)
-├── watermark.profile.json  (watermark configuration)
-└── signature.json          (detached signatures)
+├── mimetype               (plaintext media type)
+├── kdna.json              (plaintext manifest)
+├── payload.kdnab          (CBOR encrypted-entry envelope)
+├── checksums.json         (optional integrity records)
+└── signatures/            (optional provenance signatures)
 ```
 
 The `.kdna` asset is a ZIP container. Publishers SHOULD use stable entry order
@@ -255,15 +267,17 @@ Encrypts the private key with a user-provided passphrase (age encryption).
 kdna identity rotate
 ```
 
-Generates a new publisher key pair. Existing published assets remain signed by
-the old key and continue to verify through registry trust metadata until the
-registry rotates or revokes that key.
+Generates a new publisher key pair. Existing assets remain bound to the old
+key. Whether a caller continues to trust or revokes that key is caller-owned
+policy, not a Core endorsement.
 
 ---
 
 ## 10. Security Assumptions
 
-1. **Registry trust metadata is trusted** — a compromised registry signing key can publish malicious metadata. Mitigation: threshold signing and key rotation in the trust layer.
+1. **Distribution metadata is not content trust** — a compromised catalog or
+   publisher key can distribute misleading metadata. Callers verify bytes and
+   signatures and apply their own key policy; Core does not endorse content.
 2. **License keys are bearer secrets** — if leaked, a license may be abused until revoked or re-bound. Mitigation: machine binding, short offline leases, sync, and audit.
 3. **Plaintext exists in agent context** — any agent that uses local licensed KDNA can receive plaintext fragments in context. This is unavoidable. The defense is activation, projection, audit, and licensing, not absolute prevention.
 4. **Offline use is policy-controlled** — `licensed` mode works offline only until `offline_valid_until`. This is a business decision, not a crypto limitation.
@@ -297,8 +311,8 @@ What it DOES provide:
 | P3 | `kdna license activate` and `kdna license sync` | CLI MVP implemented |
 | P4 | Entitlement revoke/admin API | Specified |
 | P5 | Runtime projection and watermark service | Future server implementation |
-| P6 | ~~TUF-like registry trust roles~~ | **CANCELLED 2026-06-28** (see `roadmap-2026.md` Section 5.5; Story 19 / Ed25519 per-author identity replaces this) |
-| P7 | `kdna-envelope-aead-v1` canonical envelope profile (RFC-0018) | **Spec frozen 2026-06-28 (Story 17). 3 test vectors in `conformance/kdna-envelope-aead-v1/`. Implementation in Story 24.** |
+| P6 | ~~TUF-like registry trust roles~~ | **Cancelled.** Per-author Ed25519 identity replaces registry-owned trust roles. |
+| P7 | `kdna-envelope-aead-v1` canonical envelope profile (RFC-0018) | **Accepted.** Test vectors live in `conformance/kdna-envelope-aead-v1/`; release-specific implementation maturity is tracked in public status and release notes. |
 
 ---
 

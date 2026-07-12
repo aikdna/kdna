@@ -1,31 +1,36 @@
 {
-  "format": "kdna",
-  "format_version": "1.0",
-  "spec_version": "1.0-rc",
+  "kdna_version": "1.0",
   "name": "@aikdna/example_domain",
+  "asset_id": "kdna:example:minimal",
+  "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+  "asset_type": "domain",
+  "title": "Example minimal domain",
   "version": "0.1.0",
   "judgment_version": "0.1.0",
   "languages": ["en"],
   "default_language": "en",
-  "created": "YYYY-MM-DD",
-  "updated": "YYYY-MM-DD",
+  "created_at": "2026-01-01T00:00:00Z",
+  "updated_at": "2026-01-01T00:00:00Z",
   "description": "[TODO: describe what judgment this domain improves in one sentence]",
-  "core_insight": "[TODO: one-sentence insight that captures the domain's core judgment principle]",
   "keywords": ["[TODO: add relevant keywords]"],
-  "access": "open",
+  "access": "public",
   "status": "experimental",
   "quality_badge": "untested",
-  "author": {
+  "creator": {
     "name": "Your Name",
     "id": "your-id"
   },
   "license": {
-    "type": "CC-BY-4.0",
-    "commercial": false,
-    "allow_agent_use": true,
-    "allow_redistribution": true,
-    "allow_training": true
+    "type": "CC-BY-4.0"
   },
-  "file_count": 3,
+  "compatibility": {
+    "min_loader_version": "1.0.0",
+    "profile": "judgment-profile-v1"
+  },
+  "payload": {
+    "path": "payload.kdnab",
+    "encoding": "cbor",
+    "encrypted": false
+  },
   "risk_level": "R0"
 }

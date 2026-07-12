@@ -34,7 +34,7 @@
 #### 1.2 — Non-Negotiable Rules CI Enforcement
 - [ ] `format` (not `kdna_spec`) — CI rejects manifests with `kdna_spec`
 - [ ] `languages` (not singular `language`) — CI rejects singular field
-- [ ] `mimetype: application/vnd.aikdna.kdna+zip` — CI rejects `application/x-kdna`
+- [ ] `mimetype: application/vnd.kdna.asset` — CI rejects `application/x-kdna`
 - [ ] `spec_version: "1.0-rc"` — CI warns on unknown spec_version
 - [ ] Signatures use v1.0 canonical content-tree payload only
 

@@ -21,6 +21,7 @@ const REPOS_ROOT = path.resolve(__dirname, '..', '..');
 
 const PACKAGES = [
   { repo: 'kdna/packages/kdna-core', pkg: '@aikdna/kdna-core' },
+  { repo: 'kdna/packages/kdna-eval', pkg: '@aikdna/kdna-eval' },
   { repo: 'kdna-cli', pkg: '@aikdna/kdna-cli' },
   { repo: 'kdna-studio-cli', pkg: '@aikdna/kdna-studio-cli' },
   { repo: 'kdna-studio-core', pkg: '@aikdna/kdna-studio-core' },
@@ -29,6 +30,18 @@ const PACKAGES = [
   { repo: 'kdna-react', pkg: '@aikdna/kdna-react' },
   { repo: 'create-kdna-web-app', pkg: 'create-kdna-web-app' },
 ];
+
+function compareSemver(a, b) {
+  const left = String(a).split('.').map(Number);
+  const right = String(b).split('.').map(Number);
+  if (left.length !== 3 || right.length !== 3 || [...left, ...right].some(Number.isNaN)) {
+    return null;
+  }
+  for (let index = 0; index < 3; index++) {
+    if (left[index] !== right[index]) return left[index] > right[index] ? 1 : -1;
+  }
+  return 0;
+}
 
 console.log('── npm publish drift check\n');
 
@@ -66,10 +79,27 @@ for (const { repo, pkg } of PACKAGES) {
     continue;
   }
 
+  const comparison = compareSemver(repoVersion, npmVersion);
+  if (comparison === 0) {
+    check(`${pkg} repo=${repoVersion} npm=${npmVersion}`, true);
+    continue;
+  }
+
+  if (comparison === 1) {
+    const changelogPath = path.join(repoPath, 'CHANGELOG.md');
+    const changelog = fs.existsSync(changelogPath) ? fs.readFileSync(changelogPath, 'utf8') : '';
+    check(
+      `${pkg} repo=${repoVersion} npm=${npmVersion} (pending release)`,
+      changelog.includes(repoVersion),
+      `forward version requires a CHANGELOG entry for ${repoVersion}`,
+    );
+    continue;
+  }
+
   check(
     `${pkg} repo=${repoVersion} npm=${npmVersion}`,
-    repoVersion === npmVersion,
-    `drift detected`,
+    false,
+    comparison === -1 ? 'repository version is behind npm' : 'invalid semver',
   );
 }
 

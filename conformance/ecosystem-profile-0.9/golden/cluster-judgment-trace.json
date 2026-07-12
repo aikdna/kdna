@@ -1,0 +1,100 @@
+{
+  "trace_version": "0.9.0",
+  "trace_id": "trace_e6f5d4c3b2109876",
+  "plan_id": "plan_d5e4f3a2b1098765",
+  "mode": "cluster",
+  "timestamp": "2026-07-11T14:00:25Z",
+  "cluster_identity": {
+    "cluster_id": "@aikdna/launch-decision",
+    "version": "0.1.0",
+    "manifest_digest": "sha256:246a12d4657cd7df421c7c562fd05111bdbadee619afdc95673e47b175a20420"
+  },
+  "assets_loaded": [
+    {
+      "asset_id": "dev-change-risk-v0.1.0.kdna",
+      "version": "0.1.0",
+      "digest": "sha256:cbd990c5d42252d92a04a61d75450af81453d7624926ded698f333436447664b",
+      "role": "primary",
+      "weight": 1.0,
+      "digest_verified": true,
+      "authorization": "public",
+      "projection_digest": "sha256:8c874379fc418baee41ac0101559dfccce041a781565fd9c1def2a5bddc0aa73"
+    },
+    {
+      "asset_id": "dev-api-design-judgment-v0.1.0.kdna",
+      "version": "0.1.0",
+      "digest": "sha256:58f60a267fcc94f818719698c1642643494f41e9fd12f87e010deca99f05f743",
+      "role": "advisor",
+      "weight": 0.6,
+      "digest_verified": true,
+      "authorization": "public",
+      "projection_digest": "sha256:d1f6c838200d8d5c8d3018c34d205d5ca5a27f97cfecfe18d3ed9d00bc2f7e67",
+      "contribution_hypothesis": "PATCH /api/v2/notifications/preferences — API design review",
+      "contribution_fulfilled": true
+    }
+  ],
+  "selection_actual": {
+    "primary": "dev-change-risk-v0.1.0.kdna",
+    "advisors": ["dev-api-design-judgment-v0.1.0.kdna"],
+    "rejected": [
+      {
+        "asset_id": "creator-brand-positioning-v0.1.0.kdna",
+        "reason": "no brand/content signals"
+      }
+    ],
+    "deviated_from_plan": false
+  },
+  "execution": {
+    "status": "completed",
+    "runner_id": "claude-code-agent",
+    "runner_version": "0.1.0",
+    "model": "claude-sonnet-5",
+    "started_at": "2026-07-11T14:00:00Z",
+    "completed_at": "2026-07-11T14:00:25Z",
+    "duration_ms": 25000,
+    "attempts": 1
+  },
+  "result_ref": {
+    "result_hash": "sha256:89b7c0c2d18f58cbba637f8f8f5833bb0d08aa4c896e5c6f2677865df890ca78",
+    "result_shape": "answer-pattern",
+    "answer_summary": "Proceed with Tuesday launch — conditional on PATCH idempotency review",
+    "result_stored": true
+  },
+  "conflicts": [],
+  "cost": {
+    "tokens_used": 1450,
+    "chars_consumed": 3800,
+    "assets_loaded": 2,
+    "model_calls": 2,
+    "budget_profile": "interactive",
+    "over_budget": true,
+    "over_budget_reason": "tokens_used (1450) exceeds interactive max_tokens (800)"
+  },
+  "source_attribution": [
+    {
+      "asset_id": "dev-change-risk-v0.1.0.kdna",
+      "axioms_triggered": 2,
+      "transfer_depth": { "operationalized": 2, "referenced": 0, "mentioned": 0 }
+    },
+    {
+      "asset_id": "dev-api-design-judgment-v0.1.0.kdna",
+      "axioms_triggered": 1,
+      "transfer_depth": { "operationalized": 1, "referenced": 0, "mentioned": 0 }
+    }
+  ],
+  "provenance": {
+    "plan_digest": "sha256:5bb71cc7f261181ca1473633257f484ed8ba4ea0e19708828f25ec862153ad19",
+    "policy_hash": null,
+    "consumer_index_version": null,
+    "cluster_manifest_digest": "sha256:8cd0eeb2096c6e6b6b2c5c5e4b36ba8c0ce6246878046af082f0c8e8a08ed8ec"
+  },
+  "errors": [],
+  "warnings": [
+    "Budget exceeded: tokens_used=1450 > max_tokens=800. Cluster should use code-review budget profile for multi-asset execution.",
+    "PATCH idempotency gap identified — tracked as launch checklist item"
+  ],
+  "metadata": {
+    "environment": "development",
+    "trace_schema": "0.9.0"
+  }
+}

@@ -1,8 +1,8 @@
 # KDNA Crypto Profiles
 
-Status: **Active** as of 2026-06-28 (Story 17). The `kdna-envelope-aead-v1`
+Status: **Active.** The `kdna-envelope-aead-v1`
 profile ID and its two KDF sub-profiles (`scrypt-sha256-v1` mandatory,
-`argon2id-v1` optional v2) are frozen; see RFC-0018 for the normative
+`argon2id-v1` optional compatibility KDF) are frozen; see RFC-0018 for the normative
 contract. Predecessor profiles (`kdna-licensed-entry-v1` from RFC-0008,
 `kdna-password-protected-v1` from RFC-0009) remain in their own distinct
 profile IDs and continue to be supported.
@@ -35,7 +35,7 @@ New product-facing exports SHOULD converge on the canonical envelope profile
 
 ## 3. Canonical Envelope Profile — `kdna-envelope-aead-v1`
 
-**Frozen 2026-06-28 (Story 17, RFC-0018).** Three test vectors are
+**Accepted by RFC-0018.** Three test vectors are
 published at `conformance/kdna-envelope-aead-v1/` and the conformance
 runner `conformance/kdna-envelope-aead-v1.mjs` re-derives them.
 
@@ -168,5 +168,5 @@ Test vector coverage (per RFC-0018 R9):
 - tampered ciphertext;
 - wrong password;
 - unsupported profile fail-closed;
-- JS Core and Swift Core parity (Swift parity is a Story 24 deliverable;
-  the runner today validates JS Core).
+- JS Core and Swift Core parity (the current runner validates JS Core; Swift
+  parity requires published shared-fixture evidence).

@@ -55,6 +55,7 @@ console.log('── Package published and reachable');
 const packages = [
   '@aikdna/kdna-cli',
   '@aikdna/kdna-core',
+  '@aikdna/kdna-eval',
   '@aikdna/kdna-studio-cli',
   '@aikdna/kdna-studio-core',
   '@aikdna/kdna-web-client',

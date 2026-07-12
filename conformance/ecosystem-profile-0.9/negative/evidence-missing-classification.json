@@ -1,0 +1,14 @@
+{
+  "evidence_version": "0.9.0",
+  "claim_id": "claim_e9f8d7c6b5a41230",
+  "trace_id": "trace_d8f4b2c1a39607e5",
+  "claim_type": "single_use_behavioral",
+  "scope": {
+    "task_family": "deploy_risk_assessment",
+    "task_hash": "sha256:b7d3f5a1c9e2486071",
+    "model": "claude-sonnet-5",
+    "runtime": "kdna-cli 0.29.0",
+    "dataset_fingerprint": "single-use",
+    "evaluator": "deterministic"
+  }
+}

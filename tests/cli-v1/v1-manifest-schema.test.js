@@ -16,9 +16,7 @@ const validateManifest = ajv.compile(manifestSchema);
 function trustedManifest(overrides = {}) {
   const { authoring: authoringOverrides = {}, creator: creatorOverrides = {}, ...rest } = overrides;
   return {
-    format: 'kdna',
-    format_version: '2.0',
-    spec_version: '2.0',
+    kdna_version: '1.0',
     name: '@example/code_review',
     version: '0.1.0',
     judgment_version: '2026.06',
@@ -49,7 +47,7 @@ function trustedManifest(overrides = {}) {
       compiled_at: '2026-06-20T00:00:00.000Z',
       conformance: {
         passed: true,
-        spec_version: '2.0',
+        spec_version: '1.0-rc',
         validator: '@aikdna/kdna-conformance',
       },
       human_confirmed: true,

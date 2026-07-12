@@ -217,7 +217,22 @@ const results = evaluator.score(candidates, [
 ]);
 ```
 
-## Version 0.2.0 New Capabilities
+## Version 0.3.1 Assay Contracts
+
+Version 0.3.1 adds fail-closed Asset and Cluster Assay behavior exported from both the package
+root and `@aikdna/kdna-eval/cluster-assay`:
+
+- structural gate — qualified primary and bounded advisor selection;
+- behavioral gate — at least `+0.30` over primary-only;
+- economics gate — asset count and execution budget;
+- trust gate — observed authorization and digest verification only;
+- product gate — operable, non-placeholder Cluster definition.
+
+All five gates are fail-closed. A gate with missing evidence is `not_run` and
+cannot produce a passing promotion verdict. Plan selection is not accepted as
+proof that an asset was loaded.
+
+## Version 0.2.0 Capabilities
 
 - **Replay Engine** (`replay.js`): Five-mode replay for regression detection
 - **Multi-Gate Runner** (`gates.js`): Pluggable gate composition with pass/fail aggregation

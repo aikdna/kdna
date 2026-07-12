@@ -1,59 +1,52 @@
-# 企业试点指南
+# 团队与组织试点
 
-如何在一个真实组织中部署 KDNA，评估其对 Agent 判断质量的影响。
+组织是 KDNA 的一种使用场景，不是 KDNA 的定义。本指南用于验证：一份明确的判断资产能否跨模型保留，并改善一个边界清晰的决策情境。
 
-## 试点目标
+## 先选择一个清晰判断
 
-企业试点的目的不是"工具上线"，而是回答一个问题：
+选择一种高频情境：有经验的人会作出与通用模型明显不同的区分。不要从“全组织所有 Agent”开始。
 
-> KDNA 是否让我们的 Agent 在特定领域内判断得更准确、更一致？
+例如：升级判断、设计评审标准、事故风险、编辑品味，或工作流何时必须停下来交给人。
 
-## 试点框架
+## 先创建单个资产
 
-### 第 1 周：选择试点领域
+使用公开 Studio 工具链创建范围明确的资产。Human Review 和 Evidence 是可选层；只有组织希望发布相应声明时才需要。
 
-- 选一个判断错误成本高、但频率适中的领域
-- 好例子：客户工单分类、合同条款审查、技术方案评估
-- 坏例子：全公司所有 Agent 的所有对话（范围太大，无法测量）
+```bash
+npm install -g @aikdna/kdna-studio-cli @aikdna/kdna-cli
+kdna-studio create ./pilot --name @example/pilot
+kdna-studio export ./pilot --out ./pilot.kdna
+kdna validate ./pilot.kdna
+kdna plan-load ./pilot.kdna
+kdna load ./pilot.kdna --profile=compact --as=prompt
+```
 
-### 第 2 周：创建或适配 KDNA
+默认从单资产开始。只有任务确实需要多个范围清晰的判断资产和显式角色时，才使用 Cluster。
 
-- 如果公开 KDNA 接近需求，直接使用并记录初始印象
-- 如果需要内部知识，创建一个内部 KDNA（不必公开发布）
-- 至少定义 3 条公理、3 个概念边界、5 条自检
+## 测判断，不测术语复述
 
-### 第 3-4 周：A/B 测试
+使用真实任务比较：
 
-对同一类型的任务，随机分配：
-- A 组：Agent 无 KDNA（基线）
-- B 组：Agent 加载 KDNA
+1. 同一模型、不加载 KDNA；
+2. 同一模型、加载该资产；
+3. 更换模型、加载同一资产；
+4. 不适用任务，资产应跳过、阻止或询问。
 
-每组的评判标准：
-- 判断准确性（领域专家评审）
-- 判断一致性（相同输入是否产生相同判断）
-- 错误类型（是漏判还是误判）
+评审实际决策、边界使用、错误类型和一致性。模型复述资产术语，不等于判断已经迁移。
 
-### 第 5 周：结果评估
+可选评测路径：
 
-- 如果 KDNA 组显著优于基线 → 扩大试点范围
-- 如果无明显差异 → KDNA 需要修订或领域选择不对
-- 如果 KDNA 组更差 → KDNA 的公理可能有误，需要专家重新审阅
+```text
+validate → plan-load → load/project → eval/replay → 专家评审
+```
 
-## 企业私有 KDNA
+## 访问与部署
 
-企业内部 KDNA 不需要公开发布。它可以：
+- 内容不需要保密时使用 `public`；
+- 依赖本地加密分发前，应验证对应 release 的完整 `licensed` 生命周期；
+- remote 和 activation server 默认视为可自托管的实验性参考实现；
+- 不依赖私有 registry 或 AIKDNA 托管服务。
 
-- 包含专有业务流程知识
-- 反映公司特定的判断标准
-- 存储在私有仓库中
-- 通过私有 registry 安装：在 `~/.kdna/config.json` 加 `registries: { "@company": "https://registry.company.com" }`，然后 `kdna install @company/private-kdna`
-- 开发期可用 `kdna dev pack ./your-domain-source --output ./dist` 生成仅供诊断的 dev-only bundle；可信 `.kdna` 必须由 Studio-compatible compiler 或 Studio-compatible compiler 编译导出后再安装
+## 退出标准
 
-## 回滚策略
-
-如果 KDNA 产生负面效果：
-1. 从 Agent 配置中移除 KDNA 加载指令
-2. Agent 回到基线行为
-3. KDNA 本身不受影响，可以修订后重新部署
-
-KDNA 是 Agent 的"判断插件"——可以随时加载或卸载，不影响 Agent 的其他能力。
+一个有信息价值的试点应包含：固定资产版本、可复现任务、基线、模型切换结果、不适用用例、已观察失败和回滚方式。它不需要证明普遍正确，也不需要成为“官方资产”。

@@ -1,0 +1,30 @@
+{
+  "_description": "Trace with unknown optional fields. Must NOT break validation. Expected: valid.",
+  "trace_version": "0.9.0",
+  "trace_id": "trace_d8f4b2c1a39607e5",
+  "plan_id": "plan_c7e3a1b9f2d40856",
+  "mode": "single",
+  "timestamp": "2026-07-11T16:35:12Z",
+  "asset_identity": {
+    "asset_id": "dev-change-risk-v0.1.0.kdna",
+    "version": "0.1.0",
+    "digest": "sha256:cecfae7101e555766f251ffce08e58c187226b88775a51d3f65d31dfa307d875",
+    "digest_verified": true
+  },
+  "execution": {
+    "status": "completed"
+  },
+  "result_ref": {
+    "result_hash": "sha256:b19b9c1b0aa12d8de3d3bc5bc6cd069e0123456789abcdef0123456789abcdef",
+    "result_shape": "answer-pattern",
+    "answer_summary": "test result",
+    "result_stored": true
+  },
+  "future_execution_metrics": {
+    "gpu_time_ms": 4200,
+    "cache_hit": false
+  },
+  "future_audit_trail": {
+    "auditor_id": "future-audit-system-v2"
+  }
+}

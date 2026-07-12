@@ -273,13 +273,13 @@ const VALID_ASSET_TYPE = new Set([
 ]);
 
 const MANIFEST_REQUIRED = [
-  'format', 'format_version', 'spec_version', 'name', 'version',
+  'kdna_version', 'name', 'version',
   'judgment_version', 'description', 'author', 'license', 'status',
   'quality_badge', 'access', 'languages', 'default_language',
 ];
 
 /**
- * Validate a kdna.json manifest against the canonical v1.0-rc schema.
+ * Validate a kdna.json manifest against the canonical KDNA Asset format.
  *
  * @param {Object} manifest — parsed kdna.json
  * @returns {{ errors: string[], warnings: string[] }}
@@ -296,7 +296,7 @@ function validateManifest(manifest) {
   // 1. Check disallowed pre-v1.0 manifest aliases
   if ('kdna_spec' in manifest) {
     errors.push(
-      'kdna.json: kdna_spec is not allowed. Use spec_version.',
+      'kdna.json: kdna_spec is not allowed. Use kdna_version.',
     );
   }
   if ('language' in manifest) {
@@ -319,9 +319,11 @@ function validateManifest(manifest) {
   if (manifest.format && manifest.format !== 'kdna') {
     errors.push(`kdna.json.format: invalid value "${manifest.format}". Expected "kdna".`);
   }
-  if (manifest.format_version && manifest.format_version !== '2.0') {
+  if (!manifest.kdna_version) {
+    errors.push('kdna.json: missing required field "kdna_version"');
+  } else if (manifest.kdna_version !== '1.0') {
     errors.push(
-      `kdna.json.format_version: invalid value "${manifest.format_version}". Expected "2.0".`,
+      `kdna.json.kdna_version: invalid value "${manifest.kdna_version}". Expected "1.0".`,
     );
   }
   if (manifest.status && !VALID_STATUS.has(manifest.status)) {
@@ -394,14 +396,7 @@ function validateManifest(manifest) {
     errors.push('kdna.json.license: missing "type"');
   }
 
-  // 9. Validate spec_version value
-  if (manifest.spec_version && manifest.spec_version !== '1.0-rc') {
-    warnings.push(
-      `kdna.json.spec_version: non-standard value "${manifest.spec_version}". Expected "1.0-rc".`,
-    );
-  }
-
-  // 10. Validate version format
+  // 9. Validate version format
   if (manifest.version && !/^\d+\.\d+\.\d+/.test(manifest.version)) {
     warnings.push(
       `kdna.json.version: non-semver format "${manifest.version}". Expected MAJOR.MINOR.PATCH.`,

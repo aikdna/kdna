@@ -5,9 +5,7 @@
   "description": "Canonical JSON Schema for the kdna.json manifest inside a .kdna asset internal domain tree or dev source workspace. This is the single source of truth: CLI, Registry, Studio, and compatible loaders MUST validate against this schema.",
   "type": "object",
   "required": [
-    "format",
-    "format_version",
-    "spec_version",
+    "kdna_version",
     "name",
     "version",
     "judgment_version",
@@ -21,22 +19,10 @@
     "default_language"
   ],
   "properties": {
-    "format": {
+    "kdna_version": {
       "type": "string",
-      "const": "kdna",
-      "description": "KDNA container format marker."
-    },
-    "format_version": {
-      "type": "string",
-      "const": "2.0",
-      "description": "KDNA container manifest format version."
-    },
-    "spec_version": {
-      "type": "string",
-      "description": "KDNA SPEC version this asset conforms to. Required.",
-      "examples": [
-        "2.0"
-      ]
+      "const": "1.0",
+      "description": "KDNA asset protocol version."
     },
     "name": {
       "type": "string",

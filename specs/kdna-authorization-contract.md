@@ -1,6 +1,7 @@
 # KDNA Authorization Contract
 
-Status: Draft  
+Status: Candidate — normative for the implemented JS Core/CLI subset.
+Swift Core and Chat implementations are pending.
 Normative: Yes  
 Related schema: `../schema/load-plan.schema.json`  
 Related specs: `kdna-crypto-profiles.md`, `kdna-secret-store.md`,
@@ -43,12 +44,12 @@ permission and decryption material.
 
 | Profile | Status | Meaning |
 |---|---|---|
-| `password` | v0.1 target | User passphrase unlocks a protected local asset. |
-| `local_receipt` | v0.1 skeleton | Signed local receipt authorizes loading. |
-| `account` | future | Account entitlement service authorizes loading. |
-| `org` | future | Organization or SSO claims authorize loading. |
-| `purchase_receipt` | future | Third-party purchase receipt is exchanged for entitlement. |
-| `device_bound` | future | Receipt/key grant is bound to a device keypair. |
+| `password` | Implemented (JS Core/CLI) | User passphrase unlocks a protected local asset. |
+| `local_receipt` | Implemented (JS Core; CLI delegates to Core) | Signed local receipt authorizes loading. |
+| `account` | Future | Account entitlement service authorizes loading. |
+| `org` | Future | Organization or SSO claims authorize loading. |
+| `purchase_receipt` | Future | Third-party purchase receipt is exchanged for entitlement. |
+| `device_bound` | Future | Receipt/key grant is bound to a device keypair. |
 
 Unknown entitlement profiles MUST fail closed with
 `KDNA_ENTITLEMENT_PROFILE_UNKNOWN`.

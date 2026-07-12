@@ -1,5 +1,11 @@
 # Human-Governed Self-Improving Agents
 
+> **Archived concept essay.** KDNA can provide judgment-asset, provenance,
+> versioning, and optional evidence primitives to a human-governed learning
+> loop. It does not make an Agent self-improving, prevent drift by itself, or
+> provide the loop's memory, outcomes, permissions, evaluation, and deployment
+> infrastructure. See [KDNA and the AI Stack](./kdna-and-ai-stack.md#12-kdna-and-the-learning-loop).
+
 > Agent can learn from work. But judgment updates require governance.
 
 Self-improving agents are coming. They will record feedback, adjust strategies, optimize tool calls, and modify their own behavior. This is not hypothetical — it is the dominant trajectory of agent architecture.
@@ -116,7 +122,9 @@ The following SHOULD be recorded automatically but treated as evidence, not as a
 | Failure modes accumulate | Failure modes are explicitly tracked and addressed |
 | Organization loses understanding of why agent acts | Organization retains full audit trail |
 
-KDNA is designed to make evolution possible and drift impossible.
+KDNA is designed to make judgment evolution explicit and reviewable. It cannot
+make drift impossible without application-owned memory, outcomes, permissions,
+evaluation, and deployment controls.
 
 ---
 
@@ -167,7 +175,7 @@ A domain that is explicit about its boundaries is a domain that can be safely im
 
 Self-improving agents are inevitable. Self-improving agents without judgment governance are dangerous.
 
-KDNA makes agents self-improving *and* human-governed by:
+KDNA can support a human-governed learning loop by:
 
 1. Separating operational learning from judgment updates
 2. Requiring Human Judgment Lock for all changes to axioms, values, boundaries, and risk models

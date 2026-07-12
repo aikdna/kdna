@@ -2,7 +2,9 @@
 
 **Skills give agents hands. KDNA gives them judgment.**
 
-KDNA is an open file format and protocol for packaging domain judgment and loading it into AI agents — portable, verifiable, and yours.
+KDNA is an open judgment-asset protocol. Anyone can create a `.kdna` asset;
+compatible Agent consumption goes through the KDNA toolchain, authorization,
+and Runtime Capsule contract.
 
 In 5 minutes, you can load a real judgment asset into your agent context and see the difference.
 
@@ -14,7 +16,12 @@ In 5 minutes, you can load a real judgment asset into your agent context and see
 |-------------|-----------|------|
 | **See KDNA work with a real asset** | [5-Minute Quick Start](#5-minute-quick-start) | 5 min |
 | **Create my own KDNA** | [30-Minute Authoring Guide](./30-minute-authoring-guide.md) | 30 min |
+| **Preserve personal judgment or preferences** | [Why KDNA](./why-kdna.md#whose-judgment) | 10 min |
+| **Package professional expertise or creative taste** | [Why KDNA](./why-kdna.md#whose-judgment) | 10 min |
+| **Build a team judgment asset** | [Enterprise Pilot](./enterprise-pilot.md) | 20 min |
 | **Load KDNA into my AI agent** | [15-Minute Agent Guide](./15-minute-agent-guide.md) | 15 min |
+| **Use multiple assets as a Cluster** | [Consumption Runtime](./consumption-runtime.md) | 20 min |
+| **Evaluate an asset** | [Maturity and evidence](./maturity.md) | 10 min |
 | **Understand the protocol** | [KDNA and the AI Stack](./kdna-and-ai-stack.md) | 15 min |
 | **Contribute** | [CONTRIBUTING.md](../CONTRIBUTING.md) | 5 min |
 
@@ -58,8 +65,8 @@ kdna-studio card add my-domain axiom \
   --field applies_when="teaching KDNA to a new user" \
   --field does_not_apply_when="only demonstrating CLI syntax" \
   --field failure_risk="Users may copy the format without preserving judgment."
-kdna-studio card approve my-domain --all --by your-id --statement "I confirm this judgment for v1 export."
-kdna-studio export my-domain --format v1 --out ./my-domain.kdna
+kdna-studio card approve my-domain --all --by your-id --statement "I confirm this judgment for export."
+kdna-studio export my-domain --out ./my-domain.kdna
 kdna validate ./my-domain.kdna
 kdna plan-load ./my-domain.kdna
 kdna load ./my-domain.kdna --profile=compact --as=prompt
@@ -90,7 +97,7 @@ KDNA Core is the **official KDNA judgment-asset format and runtime loading contr
 | [kdna](https://github.com/aikdna/kdna) | Official KDNA Core spec, toolchain entry, schemas, docs |
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | Official runtime CLI: inspect, validate, pack, unpack, load |
 | [kdna-eval](https://github.com/aikdna/kdna/tree/main/packages/kdna-eval) | Replay, budget, and consumption-evaluation primitives |
-| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI for creating and exporting v1 `.kdna` assets |
+| [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI for creating and exporting `.kdna` assets |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Official agent loader adapter |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | Public release files, checksums, and evidence manifests |
 
@@ -98,9 +105,13 @@ KDNA Core is the **official KDNA judgment-asset format and runtime loading contr
 
 ## Current State
 
-KDNA Core v1 is in public beta for local packaged `.kdna` creation,
-validation, LoadPlan diagnostics, and loading. See [Status](./status.md) for
-the full beta / preview / future boundary.
+The current KDNA Asset Container and local public-asset path are in public beta
+for packaged `.kdna` creation, validation, LoadPlan diagnostics, and loading.
+See [Status](./status.md) for the stable / beta / experimental boundary.
+
+A single KDNA asset is the foundation and default consumption path. A KDNA
+Cluster is an explicit advanced path for coordinating multiple assets around a
+task. The two paths coexist; Cluster does not replace the single-asset model.
 
 For applications that need task-aware asset selection, start with the
 [Consumption Runtime guide](./consumption-runtime.md). It explains route,

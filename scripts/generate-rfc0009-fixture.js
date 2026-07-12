@@ -149,9 +149,7 @@ const patterns = {
 };
 
 const manifest = {
-  format: 'kdna',
-  format_version: '1.0',
-  spec_version: '1.0-rc',
+  kdna_version: '1.0',
   name: '@aikdna/protected_test',
   version: '0.1.0',
   judgment_version: '2026.06',
@@ -189,7 +187,7 @@ const patternsEnvelope = encryptProtectedEntry(Buffer.from(json(patterns), 'utf8
 // ─── Assemble ZIP ──────────────────────────────────────────────────
 
 const zipBuffer = buildZip({
-  mimetype: 'application/vnd.aikdna.kdna+zip',
+  mimetype: 'application/vnd.kdna.asset',
   'kdna.json': json(manifest),
   'KDNA_Core.json': json(coreEnvelope),
   'KDNA_Patterns.json': json(patternsEnvelope),

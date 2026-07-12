@@ -12,6 +12,28 @@ export {
 
 export { lintDomain } from './lint-pure.js';
 
+export {
+  MIMETYPE,
+  REQUIRED_DIR_ENTRIES,
+  isKdnaSourceDir,
+  detectContainerFormat,
+  readLayout,
+  inspect,
+  validate,
+  planLoad,
+  loadAuthorized,
+  buildChecksums,
+  pack,
+  unpack,
+  load,
+  loadAsset,
+  buildCapsule,
+  FORBIDDEN_OUTPUT_TERMS,
+  parseSemver,
+  compareSemver,
+  satisfies,
+} from './v1/index.js';
+
 export { validateDomainSchema, validateCrossFile } from './validate-pure.js';
 
 export { renderPreviewHTML, escHtml, renderCard } from './render.js';

@@ -60,6 +60,7 @@ jobs:
             "kdna-studio-cli:kdna-studio-cli:package.json:v"
             "kdna-studio-core:kdna-studio-core:package.json:v"
             "kdna-core:kdna:packages/kdna-core/package.json:kdna-core-v"
+            "kdna-eval:kdna:packages/kdna-eval/package.json:kdna-eval-v"
           )
           DRIFT=0
           echo "| package | main | tag | npm | release | drift |"

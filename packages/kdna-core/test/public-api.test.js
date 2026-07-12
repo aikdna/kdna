@@ -1,14 +1,7 @@
-// ──────────────────────────────────────────────────────────────────────
-// V1→V2 MIGRATION DEBT — the `writeFixture()` helper constructs a
-// fixture with `format_version: "1.0"` and separate KDNA_Core.json +
-// KDNA_Patterns.json entries. The implementation was migrated to v2
-// container format in commit 6053b75 ("chore: remove all v1 compatibility
-// — v2 is the only format"). Fixing this requires rewriting the fixture
-// to use `payload.kdnab` (CBOR-encoded judgment data) with
-// `format_version: "2.0"`. Deferred to a dedicated v2 fixture alignment
-// PR. The affected test is marked `test.skip()`; the body is preserved
-// for reference.
-// ──────────────────────────────────────────────────────────────────────
+// public-api.test.js — stable public API surface tests.
+// The `writeFixture()` helper constructs a simple .kdna fixture with
+// separate KDNA_Core.json + KDNA_Patterns.json entries for direct reader
+// verification. The fixture is skipped pending payload.kdnab alignment.
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
@@ -73,15 +66,13 @@ function writeFixture() {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-public-api-'));
   const assetPath = path.join(tmp, 'writing.kdna');
   fs.writeFileSync(assetPath, makeZip({
-    mimetype: 'application/vnd.aikdna.kdna+zip',
+    mimetype: 'application/vnd.kdna.asset',
     'kdna.json': json({
-      format: 'kdna',
-      format_version: '1.0',
-      spec_version: '1.0-rc',
+      kdna_version: '1.0',
       name: '@aikdna/writing',
       version: '0.1.0',
       judgment_version: '2026.05',
-      access: 'open',
+      access: 'public',
       status: 'experimental',
       description: 'Writing judgment asset',
       author: { name: 'Test', id: 'test' },
