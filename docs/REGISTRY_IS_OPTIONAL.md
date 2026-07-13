@@ -1,6 +1,6 @@
 # Registry Is Optional
 
-> **Status: Historical.** Registry is not part of KDNA Core GA.
+> **Status: Historical.** Registry is not part of the current KDNA Core protocol.
 > See [decisions/0003](../decisions/0003-no-registry-in-v1-core-ga.md).
 > The current distribution path is direct `.kdna` file sharing via GitHub Releases (see `OPEN/kdna-assets/` for the public distribution model).
 

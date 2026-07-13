@@ -23,8 +23,7 @@ function component(repository) {
 function componentPath(repository) {
   const entry = component(repository);
   if (!entry || !entry.local_path) return null;
-  const localPath = path.resolve(repoRoot, entry.local_path);
-  if (fs.existsSync(localPath)) return localPath;
+  if (entry.local_path === '.') return repoRoot;
 
   const repoName = repository.split('/').pop();
   const envRoot = process.env.KDNA_ECOSYSTEM_REPOS_ROOT;
@@ -32,6 +31,9 @@ function componentPath(repository) {
     const envPath = path.resolve(envRoot, repoName);
     if (fs.existsSync(envPath)) return envPath;
   }
+
+  const localPath = path.resolve(repoRoot, entry.local_path);
+  if (fs.existsSync(localPath)) return localPath;
 
   const ciPath = path.join(repoRoot, '.ecosystem-repos', repoName);
   if (fs.existsSync(ciPath)) return ciPath;

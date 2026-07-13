@@ -31,8 +31,7 @@ function fail(component, message) {
 
 function componentPath(component) {
   if (!component.local_path) return null;
-  const localPath = path.resolve(repoRoot, component.local_path);
-  if (fs.existsSync(localPath)) return localPath;
+  if (component.local_path === '.') return repoRoot;
 
   const repoName = component.repository.split('/').pop();
   const envRoot = process.env.KDNA_ECOSYSTEM_REPOS_ROOT;
@@ -41,10 +40,30 @@ function componentPath(component) {
     if (fs.existsSync(envPath)) return envPath;
   }
 
+  const localPath = path.resolve(repoRoot, component.local_path);
+  if (fs.existsSync(localPath)) return localPath;
+
   const ciPath = path.join(repoRoot, '.ecosystem-repos', repoName);
   if (fs.existsSync(ciPath)) return ciPath;
 
   return null;
+}
+
+function componentPackagePath(component) {
+  if (!component.package_json) return null;
+  const localRoot = componentPath(component);
+  if (localRoot && component.local_path) {
+    const relativePackagePath = path.relative(component.local_path, component.package_json);
+    if (relativePackagePath.startsWith('..') || path.isAbsolute(relativePackagePath)) {
+      fail(component, `package_json escapes component root: ${component.package_json}`);
+      return null;
+    }
+    const localPackagePath = path.join(localRoot, relativePackagePath);
+    if (fs.existsSync(localPackagePath)) return localPackagePath;
+  }
+
+  const declaredPath = path.resolve(repoRoot, component.package_json);
+  return fs.existsSync(declaredPath) ? declaredPath : null;
 }
 
 if (!Array.isArray(manifest.components) || manifest.components.length === 0) {
@@ -72,8 +91,8 @@ for (const component of manifest.components) {
   }
 
   if (component.package_json) {
-    const pkgPath = path.resolve(repoRoot, component.package_json);
-    if (fs.existsSync(pkgPath)) {
+    const pkgPath = componentPackagePath(component);
+    if (pkgPath) {
       const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
       if (component.npm_package && pkg.name !== component.npm_package) {
         fail(
