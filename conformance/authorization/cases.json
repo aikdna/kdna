@@ -5,7 +5,7 @@
   "cases": [
     {
       "id": "public-valid",
-      "description": "Public v1 asset loads immediately through a minimal projection.",
+      "description": "Public packaged asset loads immediately through a minimal projection.",
       "fixture": "public-valid",
       "options": {},
       "cli_args": [],

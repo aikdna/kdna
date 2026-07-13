@@ -1,8 +1,13 @@
 # Private Asset Security Gate — Design
 
-> **Status:** Gate design (pre-implementation). No code is defined in this document.
+> **Status:** Superseded historical gate design. Do not use as implementation guidance.
 > **Audience:** Owner + downstream implementation agents (Core / CLI / Studio).
 > **Scope boundary:** This document covers the **entry gate** for adding signature and encryption handling to `.kdna` private assets. It does **not** redesign the existing `kdna-licensed-entry-v1` profile (see [kdna-encryption-authorization.md](../kdna-encryption-authorization.md)) and it does **not** introduce any authorization, entitlement, billing, registry scoring, or content-quality concepts.
+
+> Signature, encryption, LoadPlan, authorization, and Runtime Capsule behavior
+> has since shipped under the single-container contract. For current behavior,
+> use SPEC.md and `docs/kdna-encryption-authorization.md`. Commands and gates
+> below are retained only as design history.
 
 ---
 

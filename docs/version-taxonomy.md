@@ -10,7 +10,7 @@ in all active public documents, code comments, and specifications.
 
 | Layer | Canonical Name | Examples |
 |-------|---------------|----------|
-| Core release generation | `KDNA Core 2026.06` or `Core GA` | "KDNA Core 2026.06 Baseline is the current stable release" |
+| Core implementation | `KDNA Core` | "KDNA Core implements the open protocol" |
 | Asset container format | `KDNA Asset Container` | "The KDNA Asset Container uses `kdna.json` + `payload.kdnab`" |
 | Legacy plaintext ZIP | `legacy plaintext ZIP` | "Legacy plaintext ZIP containers placed `KDNA_Core.json` directly in the archive" |
 | Legacy registry asset | `legacy registry asset` | "Legacy registry assets used `kdna_spec` and registry-based distribution" |
@@ -25,14 +25,14 @@ in all active public documents, code comments, and specifications.
 
 | Forbidden | Reason | Use Instead |
 |-----------|--------|-------------|
-| `v1` | Ambiguous: could mean Core GA, legacy plaintext, or something else | `Core GA` or `legacy plaintext ZIP` |
+| `v1` | Ambiguous: could mean the Core implementation, legacy plaintext, or something else | `KDNA Core` or `legacy plaintext ZIP` |
 | `v2` | Ambiguous: could mean asset container, legacy registry, or future spec | `KDNA Asset Container` or `legacy registry asset` |
-| `v1.0-rc` | Historical label, conflicts with current Core GA | `Core GA` or `2026.06 Baseline` |
+| `v1.0-rc` | Historical label, not a current product generation | `KDNA Core` or an explicitly historical release label |
 | `v2.0` | Chronologically inverted (legacy v2.0 predates Core v1) | `legacy registry asset` or `KDNA Asset Container` |
 | `V1 format` | Identical string means both current Core and removed plaintext | `legacy plaintext ZIP` |
 | `Container v2` | Suggests a release generation, not a container format | `KDNA Asset Container` |
-| `Core v1` | Without "GA" qualifier, reads as a version number | `Core GA` |
-| `v1 Core GA` | Superseded — pre-v0.7 label; v0.7 (2026-05-22) is the current stable line | `Core GA` or `v0.7` |
+| `Core v1` | Presents an obsolete user-facing generation | `KDNA Core` |
+| `v1 Core GA` | Presents an obsolete user-facing generation | `KDNA Core` |
 
 ## Mapping: Old → New
 
@@ -40,8 +40,8 @@ in all active public documents, code comments, and specifications.
 |----------|----------------------|
 | `V1 plaintext (removed)` | `legacy plaintext ZIP` |
 | `v2.0 / Legacy` | `legacy registry asset` |
-| `KDNA Core v1 GA` | `Core GA` or `KDNA Core 2026.06 Baseline` |
-| `KDNA Specification v1.0-rc` | `KDNA Core Specification — 2026.06 Baseline` |
+| `KDNA Core v1 GA` | `KDNA Core` |
+| `KDNA Specification v1.0-rc` | `KDNA Core specification` |
 | `KDNA Container Version 2.0` | `KDNA Asset Container` |
 | `v1 container` (current) | `KDNA Asset Container` |
 | `v2 container` (future) | Future asset container (draft) |

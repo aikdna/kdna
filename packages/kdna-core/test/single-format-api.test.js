@@ -37,6 +37,30 @@ test('Core root exports single-format public API', () => {
   assert.equal(core.isSourceDir, undefined, 'isSourceDir alias must not be exported');
 });
 
+test('Core runtime API rejects source directories and accepts packaged assets', () => {
+  const repoRoot = path.resolve(__dirname, '..', '..', '..');
+  const source = path.join(repoRoot, 'examples', 'minimal');
+  const plan = core.planLoad(source);
+  assert.equal(plan.state, 'invalid');
+  assert.equal(plan.can_load_now, false);
+  assert.equal(plan.issues[0].code, 'KDNA_ASSET_FILE_REQUIRED');
+
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-runtime-file-'));
+  try {
+    const assetPath = path.join(tmp, 'minimal.kdna');
+    v1.pack(source, assetPath);
+    const packagedPlan = core.planLoad(assetPath);
+    assert.equal(packagedPlan.state, 'ready');
+    assert.equal(
+      packagedPlan.input_fingerprint.source_fingerprint,
+      v1.planLoad(source).input_fingerprint.source_fingerprint,
+      'source fingerprint is stable across source and packaged transports',
+    );
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+});
+
 test('v1 entry exports single-format public API', () => {
   assert.equal(v1.MIMETYPE, 'application/vnd.kdna.asset');
   assert.equal(typeof v1.isKdnaSourceDir, 'function');

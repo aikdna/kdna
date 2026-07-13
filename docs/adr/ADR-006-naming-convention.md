@@ -1,8 +1,13 @@
 # ADR-006: Naming Convention for "Core" / "v1" / "GA" References
 
-- **Status**: accepted
+- **Status**: superseded by `docs/version-taxonomy.md`
 - **Date**: 2026-06-26
 - **Deciders**: KDNA Core team
+
+> **Historical decision record.** The product-generation naming below is no
+> longer current guidance. Public documentation now says `KDNA Core` and `KDNA
+> Asset Container`, without presenting user-facing V1/V2/V3 generations. Wire
+> fields and npm package versions remain independently versioned.
 
 ## Context
 

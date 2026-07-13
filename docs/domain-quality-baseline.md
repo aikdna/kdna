@@ -86,7 +86,7 @@ When publishing a new public KDNA entry, verify:
 | Stances | 3 (each with applies_when / does_not_apply_when) |
 | Standard terms | 4 with definitions |
 | Banned terms | 3 (each with why + replace_with) |
-| Misunderstandings | 3 with full v2.1 governance fields |
+| Misunderstandings | 3 with the historical governance fields |
 | Self-checks | 5 yes/no questions |
 | Scenes | 2 with sub-scenarios |
 | Cases | Documented |

@@ -20,12 +20,29 @@ function check(label, fn) {
 
 console.log(`Release readiness check: ${name}@${version}\n`);
 
+check('worktree is clean', () => {
+  const out = execSync('git status --porcelain', { encoding: 'utf8' }).trim();
+  if (out) throw new Error('tracked or untracked release inputs are not committed');
+});
+
 check('git tag exists', () => {
   const coreOut = execSync(`git tag -l "${coreTag}"`, { encoding: 'utf8' }).trim();
   const simpleOut = execSync(`git tag -l "${simpleTag}"`, { encoding: 'utf8' }).trim();
   if (!coreOut && !simpleOut) {
     throw new Error(
       `Neither tag ${coreTag} nor ${simpleTag} found. Run: git tag ${coreTag} && git push origin ${coreTag}`,
+    );
+  }
+});
+
+check('version tag points to HEAD', () => {
+  const head = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+  const coreOut = execSync(`git tag -l "${coreTag}"`, { encoding: 'utf8' }).trim();
+  const releaseTag = coreOut ? coreTag : simpleTag;
+  const tagged = execSync(`git rev-list -n 1 "${releaseTag}"`, { encoding: 'utf8' }).trim();
+  if (head !== tagged) {
+    throw new Error(
+      `${releaseTag} points to ${tagged.slice(0, 12)}, not HEAD ${head.slice(0, 12)}`,
     );
   }
 });

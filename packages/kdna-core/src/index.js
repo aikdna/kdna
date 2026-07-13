@@ -11,6 +11,7 @@ const cryptoProfile = require('./crypto-profile');
 const publicApi = require('./public-api');
 const workpackPure = require('./workpack-pure');
 const v1 = require('./v1');
+const runtimeApi = require('./runtime-api');
 
 module.exports = {
   ...publicApi,
@@ -23,4 +24,5 @@ module.exports = {
   ...cryptoProfile,
   ...workpackPure,
   ...v1,
+  ...runtimeApi,
 };

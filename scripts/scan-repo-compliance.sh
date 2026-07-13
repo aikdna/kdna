@@ -1,11 +1,12 @@
 #!/bin/bash
 # scripts/scan-repo-compliance.sh
 # Reproducible 28 KDNA 仓库 compliance scan
-# 用法: bash scripts/scan-repo-compliance.sh /Users/AI/K/OPEN
+# 用法: bash scripts/scan-repo-compliance.sh <public-repositories-root>
 # 输出: stdout + 写到 .compliance-scan-YYYYMMDD.log
 
 set -u
-ROOT="${1:-/Users/AI/K/OPEN}"
+ROOT="${1:-}"
+[ -n "$ROOT" ] || { echo "Usage: $0 <public-repositories-root>"; exit 2; }
 LOG=".compliance-scan-$(date -u +%Y%m%d).log"
 cd "$ROOT" || { echo "ERROR: $ROOT not found"; exit 2; }
 

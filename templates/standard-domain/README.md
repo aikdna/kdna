@@ -2,7 +2,7 @@
 
 # [Your domain name]
 
-[![KDNA Spec](https://img.shields.io/badge/KDNA-v1.0-4c1)](https://github.com/aikdna/kdna)
+[![KDNA Spec](https://img.shields.io/badge/KDNA-open_protocol-4c1)](https://github.com/aikdna/kdna)
 
 > This README is for an expanded authoring project view. The public runtime
 > asset is the packaged `.kdna` file exported from this project, not the source
@@ -18,15 +18,17 @@
 
 ```bash
 mkdir -p dist
-kdna pack . ./dist/your-domain.kdna
+kdna-studio create ../your-domain-studio --from-folder . --name @yourscope/your-domain
+kdna-studio export ../your-domain-studio --out ./dist/your-domain.kdna
 kdna validate ./dist/your-domain.kdna
 kdna plan-load ./dist/your-domain.kdna
 kdna load ./dist/your-domain.kdna --profile=compact --as=prompt
 ```
 
-## The Four Questions (v2.1 governance)
+## Optional evidence questions
 
-Every KDNA must answer four questions. Here are this domain's answers.
+These questions can document authorship, scope, evidence, and limitations.
+They do not determine whether the asset may be created or loaded.
 
 ### 1. Where does it come from?
 
@@ -44,10 +46,9 @@ This KDNA helps agents [specific judgment] in:
 
 ### 3. How is it verified?
 
-- `kdna verify @yourscope/your_domain_id --judgment` — checks v2.1 governance fields
-- `kdna compare @yourscope/your_domain_id --input "<task>"` — runs with/without KDNA on a real LLM and shows the reasoning-trajectory diff
-- `evals/` directory contains 10 cases: 3 core + 3 boundary + 3 failure + 1 excluded
-- `demo/` directory holds rendered before/after comparisons. Regenerate with `ANTHROPIC_API_KEY=... node scripts/build-demo.js`
+- `evals/` contains optional author-declared cases: 3 core + 3 boundary + 3 failure + 1 excluded
+- [Describe any evidence or review process you actually performed]
+- Format validity is checked separately with `kdna validate` after Studio export
 
 ### 4. When does it NOT apply?
 
@@ -71,7 +72,7 @@ If any of the above is true, the agent should decline to load this domain.
 
 | File | Purpose |
 |------|---------|
-| `KDNA_Core.json` | Axioms (with v2.1 boundaries), ontology, frameworks, causal structure, stances |
+| `KDNA_Core.json` | Axioms (with optional boundaries), ontology, frameworks, causal structure, stances |
 | `KDNA_Patterns.json` | Terminology, banned terms, misunderstandings (with v2.1 boundaries), self-checks |
 | `evals/` | Test cases for `kdna compare` and quality scoring |
 | `kdna.json` | Domain manifest (name, version, judgment_version, signature) |

@@ -11,6 +11,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 const Ajv = require('ajv/dist/2020.js');
 
@@ -55,6 +56,17 @@ function runCli(args) {
   });
 }
 
+function withPackedFixture(fixturePath, fn) {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-auth-conformance-'));
+  const assetPath = path.join(tmp, 'fixture.kdna');
+  try {
+    v1.pack(fixturePath, assetPath);
+    return fn(assetPath);
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+}
+
 test('authorization conformance: cases index matches schema', () => {
   assert.equal(
     validateCasesSchema(caseIndex),
@@ -67,21 +79,26 @@ for (const testCase of cases) {
   test(`authorization conformance: JS Core matches ${testCase.id}`, () => {
     const fixturePath = path.join(authRoot, 'fixtures', testCase.fixture);
     const golden = JSON.parse(fs.readFileSync(path.join(authRoot, testCase.golden), 'utf8'));
-    const actual = normalizePlan(v1.planLoad(fixturePath, testCase.options), testCase);
-    assertValidLoadPlan(actual);
-    assert.deepEqual(actual, golden);
+    withPackedFixture(fixturePath, (assetPath) => {
+      const actual = normalizePlan(v1.planLoad(assetPath, testCase.options), testCase);
+      assertValidLoadPlan(actual);
+      assert.deepEqual(actual, golden);
+    });
   });
 
   if (Array.isArray(testCase.cli_args)) {
     test(`authorization conformance: CLI matches ${testCase.id}`, () => {
       const fixturePath = path.join(authRoot, 'fixtures', testCase.fixture);
       const golden = JSON.parse(fs.readFileSync(path.join(authRoot, testCase.golden), 'utf8'));
-      const r = runCli(['plan-load', fixturePath, ...testCase.cli_args]);
-      const actual = normalizePlan(JSON.parse(r.stdout), testCase);
-      assertValidLoadPlan(actual);
-      assert.deepEqual(actual, golden);
-      const expectedStatus = golden.state === 'invalid' ? 1 : golden.can_load_now === true ? 0 : 3;
-      assert.equal(r.status, expectedStatus, r.stderr);
+      withPackedFixture(fixturePath, (assetPath) => {
+        const r = runCli(['plan-load', assetPath, ...testCase.cli_args]);
+        const actual = normalizePlan(JSON.parse(r.stdout), testCase);
+        assertValidLoadPlan(actual);
+        assert.deepEqual(actual, golden);
+        const expectedStatus =
+          golden.state === 'invalid' ? 1 : golden.can_load_now === true ? 0 : 3;
+        assert.equal(r.status, expectedStatus, r.stderr);
+      });
     });
   }
 }

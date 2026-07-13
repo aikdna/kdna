@@ -17,7 +17,7 @@ npm i -g @aikdna/kdna-cli
 kdna demo minimal ./my-domain
 ```
 
-This creates a minimal v1 source directory with `mimetype`, `kdna.json`,
+This creates a minimal authoring source directory with `mimetype`, `kdna.json`,
 `payload.kdnab`, and `checksums.json`. For real authoring, use the Studio CLI
 producer path in [30-minute-authoring-guide.md](./30-minute-authoring-guide.md).
 

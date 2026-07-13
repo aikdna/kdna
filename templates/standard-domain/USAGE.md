@@ -42,12 +42,12 @@ kdna identity init
 
 # 5. Fill out evals/ — 10 real cases
 
-# 6. Verify quality
-kdna verify ./.
+# 6. Optionally review and customize the declared cases in evals/
 
-# 7. Export and verify the local v1 asset
+# 7. Import the expanded project view into Studio and export one asset
 mkdir -p dist
-kdna pack . ./dist/your-domain.kdna
+kdna-studio create ../your-domain-studio --from-folder . --name @yourscope/your-domain
+kdna-studio export ../your-domain-studio --out ./dist/your-domain.kdna
 kdna validate ./dist/your-domain.kdna
 kdna plan-load ./dist/your-domain.kdna
 

@@ -40,7 +40,7 @@
     }
   ],
   "source": {
-    "kind": "dir",
+    "kind": "file",
     "path": "<fixture:tampered-payload>"
   }
 }

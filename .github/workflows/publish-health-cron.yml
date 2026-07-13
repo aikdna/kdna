@@ -51,9 +51,8 @@ jobs:
 
       - name: Run publish-health (cross-repo 4-package check)
         id: cross
-        # The script lives in the kdna monorepo scripts/ folder; this is
-        # a re-implementation of the audit script in /Users/AI/K/OPEN/scripts/
-        # but kept in-tree so it has access to npm + gh CLIs.
+        # Keep the public package/release audit in-tree so CI can run it with
+        # npm and GitHub CLI access.
         run: |
           PACKAGES=(
             "kdna-cli:kdna-cli:package.json:v"

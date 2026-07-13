@@ -10,12 +10,10 @@
 //      remediation is structural deletion: remove the field/line/node entirely
 //      (and re-allowlist the consuming schema if a placeholder is genuinely
 //      needed).
-//   2. Forbidden name: any occurrence of a known private repo name or private
-//      domain example outside allowlisted paths. As of 2026-06-27 the
-//      forbidden set is sourced from PRIVATE/STATUS/open/kdna.md [BLOCKING]
-//      entries: aikdna/kdna-website, atomspeak. Update by appending, not
-//      editing history.
-//   3. Internal workspace path: any literal PRIVATE/... path outside
+//   2. Forbidden name: any occurrence of a non-public repository or internal
+//      domain example outside allowlisted paths. Keep this public-safe list in
+//      the script and update it when repository visibility changes.
+//   3. Internal workspace path: any literal internal coordination path outside
 //      allowlisted audit/history files. Public docs must describe public
 //      evidence, not point readers at inaccessible workspace paths.
 //
@@ -40,13 +38,10 @@ const ALLOWLIST_PATHS = new Set([
   // names. They live under docs/audits/ and docs/rfc-status.md.
   'docs/audits/',
   'docs/rfc-status.md',
-  // Known workflow-file exception: this public comment should be cleaned up,
-  // but the current GitHub OAuth token cannot push workflow edits.
-  '.github/workflows/publish.yml',
 ]);
 
 const REDACTED_PATTERN = /\bREDACTED\b/;
-const PRIVATE_PATH_PATTERN = /\bPRIVATE[\\/]/;
+const PRIVATE_PATH_PATTERN = new RegExp(`\\b${'PRIVATE'}[\\\\/]`);
 const FORBIDDEN_PATTERNS = [
   { name: 'aikdna/kdna-website', pattern: /\baikdna\/kdna-website\b|kdna-website\b/ },
   { name: 'atomspeak', pattern: /\batomspeak\b|@atomspeak\b/ },

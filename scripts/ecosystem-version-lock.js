@@ -15,8 +15,8 @@
  *   - KDNA_CORE_BASELINE env var, OR
  *   - packages/kdna-core/package.json (the monorepo source of truth)
  *
- * Repos to scan are read from KDNA_REPOS_ROOT (defaults to parent of
- * kdna monorepo, i.e. /Users/AI/K/OPEN). Each subdirectory is treated
+ * Repos to scan are read from KDNA_REPOS_ROOT (defaults to the parent of
+ * the kdna monorepo). Each subdirectory is treated
  * as a consumer if it has a package.json declaring a @aikdna/* dep.
  *
  * Usage:
