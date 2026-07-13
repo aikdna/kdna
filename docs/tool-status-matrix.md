@@ -34,7 +34,7 @@
 | `kdna doctor [--agents]` | Installation health check | GA |
 | `kdna setup` | First-time setup wizard | GA |
 
-## Studio (`@aikdna/kdna-studio-cli@0.8.15`)
+## Studio (`@aikdna/kdna-studio-cli@0.8.16`)
 
 | Command | Purpose | Status |
 |---|---|---|
