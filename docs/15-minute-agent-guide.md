@@ -69,8 +69,8 @@ and can load judgment on demand.
 
 | Feature | Status | Notes |
 |---|---|---|
-| `kdna demo minimal` | stable | Creates a local v1 fixture |
-| `kdna inspect` | stable | Reads v1 source dirs and .kdna containers |
+| `kdna demo minimal` | stable | Creates a local fixture for the current format |
+| `kdna inspect` | stable | Reads current source dirs and `.kdna` containers |
 | `kdna validate` | stable | Schema + format + payload + checksums + load-contract |
 | `kdna pack` | stable | Deterministic ZIP (same input → same SHA-256) |
 | `kdna unpack` | stable | Extract .kdna container |
@@ -79,8 +79,8 @@ and can load judgment on demand.
 
 ## Current limitations
 
-- **Agent runtime loading is available for v1.** `kdna load` supports v1 `.kdna`
-  containers produced by the current `kdna pack` command. Pin a released CLI
+- **Agent runtime loading is available for the current format.** `kdna load`
+  supports `.kdna` containers produced by the current `kdna pack` command. Pin a released CLI
   version when you need reproducible automation.
 - **Agent support varies by platform.** The `kdna-loader` skill adapter supports
   discovery of local `.kdna` files. Agent-specific integration quality varies

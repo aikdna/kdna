@@ -69,5 +69,5 @@ kdna load ./minimal.kdna --profile=compact --as=prompt
 ## 什么不会作为 skill 安装
 
 - KDNA 领域本身。领域是 `.kdna` 资产，通过 CLI/Core 路径按需发现和加载。
-- 领域创建器。正式 v1 `.kdna` 创建优先使用 Studio CLI；其它高级创作/调试工具不属于基础加载路径。
+- 领域创建器。正式的 packaged `.kdna` 创建优先使用 Studio CLI；其它高级创作/调试工具不属于基础加载路径。
 - 每项目强制加载配置。旧 `.kdna/config.json` 机制已移出主路径，因为它会让资产在用户没有请求的任务中被强制加载。
