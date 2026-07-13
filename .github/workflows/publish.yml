@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-studio-cli
-          ref: 96acd1dba717b924196fc1e2d255376107a25ce8
+          ref: da1b50eeb57ccc44c353f27434043939b279e53c
           path: .ecosystem-repos/kdna-studio-cli
       - uses: actions/checkout@v7
         with:
@@ -122,7 +122,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-studio-cli
-          ref: 96acd1dba717b924196fc1e2d255376107a25ce8
+          ref: da1b50eeb57ccc44c353f27434043939b279e53c
           path: .ecosystem-repos/kdna-studio-cli
       - uses: actions/checkout@v7
         with:
