@@ -4,7 +4,7 @@ Status: Draft Normative
 
 ## Summary
 
-KDNA Core v1 currently defines both:
+KDNA Core currently defines both:
 
 - the `.kdna` container contract; and
 - the default judgment payload shape used by current tools.
@@ -61,7 +61,7 @@ Judgment Profile v1 owns:
 
 - A `.kdna` file is format-valid when it satisfies the container spec and its
   declared payload profile schema.
-- Judgment Profile v1 remains the default profile for current Core v1 tooling.
+- Judgment Profile v1 remains the default profile for current KDNA Core tooling.
 - Future profiles must declare their profile id in manifest compatibility or
   load-contract metadata.
 - Loaders must reject unknown mandatory profile semantics before payload
@@ -83,7 +83,7 @@ Judgment Profile v1 owns:
 
 ## Non-Goals
 
-- This RFC does not change KDNA Core v1 runtime behavior today.
+- This RFC does not change KDNA Core runtime behavior today.
 - This RFC does not add a new payload profile.
 - This RFC does not weaken LoadPlan, checksum, or safe-container requirements.
 

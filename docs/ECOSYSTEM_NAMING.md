@@ -50,8 +50,8 @@ kdna-studio card add my_domain axiom \
   --field applies_when="teaching KDNA to a new user" \
   --field does_not_apply_when="only demonstrating CLI syntax" \
   --field failure_risk="Users may copy the format without preserving judgment."
-kdna-studio card approve my_domain --all --by your-id --statement "I confirm this judgment for v1 export."
-kdna-studio export my_domain --format v1 --out ./my_domain.kdna
+kdna-studio card approve my_domain --all --by your-id --statement "I confirm this judgment for export."
+kdna-studio export my_domain --out ./my_domain.kdna
 kdna validate ./my_domain.kdna
 kdna plan-load ./my_domain.kdna
 kdna load ./my_domain.kdna --profile=compact --as=prompt
@@ -60,7 +60,7 @@ kdna load ./my_domain.kdna --profile=compact --as=prompt
 `kdna` is the runtime and developer CLI for local `.kdna` files. `kdna-studio`
 is the command-line authoring entry for Studio-compatible projects and optional
 review/provenance evidence. Trust, Human Lock, signatures, and quality claims
-are separate metadata layers; they are not KDNA Core v1 format-validity
+are separate metadata layers; they are not KDNA Core format-validity
 requirements.
 
 ## Domain Repository Names

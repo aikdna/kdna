@@ -39,7 +39,7 @@ All distribution channels are equal peers:
 
 ## Historical Note
 
-The `kdna/registry/` directory in the main KDNA repository is a **deprecated historical artifact**. It was used for early CLI/validator development and does not represent the current v1 architecture. Current KDNA Core v1 uses local-first asset loading without a required registry.
+The `kdna/registry/` directory in the main KDNA repository is a **deprecated historical artifact**. It was used for early CLI/validator development and does not represent the current v1 architecture. Current KDNA Core uses local-first asset loading without a required registry.
 
 ## Registry Conformance (For Registry Implementers)
 

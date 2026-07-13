@@ -102,5 +102,47 @@ for (const file of docsFiles) {
   check(`${rel}: no internal workspace paths`, leaked === 0, `found ${leaked} reference(s)`);
 }
 
+console.log('── Active single-format vocabulary');
+
+const publicDocRoots = [
+  path.resolve(__dirname, '..', 'README.md'),
+  path.resolve(__dirname, '..', 'README.zh.md'),
+  path.resolve(__dirname, '..', 'SPEC.md'),
+  path.resolve(__dirname, '..', 'docs'),
+  path.resolve(__dirname, '..', 'specs'),
+  path.resolve(__dirname, '..', 'rfcs'),
+  path.resolve(__dirname, '..', 'templates'),
+];
+const historicalSegments = new Set(['archive', 'adr', 'audits', 'design', 'releases']);
+const driftPatterns = [
+  { label: 'removed Studio format flag', regex: /--format(?:=|\s+)v1\b/g },
+  { label: 'removed container generation', regex: /\bcontainer-v2\b|\bContainer v2\b/g },
+  { label: 'removed product generation name', regex: /\bKDNA Core v1\b|\bCore v1\b/g },
+  { label: 'removed media type', regex: /application\/vnd\.aikdna\.kdna\+zip/g },
+];
+
+function activeMarkdownFiles(root) {
+  const stat = fs.statSync(root);
+  if (stat.isFile()) return [root];
+  return walkDocs(root).filter((file) => {
+    const parts = path.relative(root, file).split(path.sep);
+    if (parts.some((part) => historicalSegments.has(part))) return false;
+    const base = path.basename(file);
+    return base !== 'version-taxonomy.md' && !base.startsWith('V1RC_');
+  });
+}
+
+for (const root of publicDocRoots) {
+  for (const file of activeMarkdownFiles(root)) {
+    const content = fs.readFileSync(file, 'utf8');
+    const rel = path.relative(path.resolve(__dirname, '..'), file);
+    for (const pattern of driftPatterns) {
+      pattern.regex.lastIndex = 0;
+      const matches = content.match(pattern.regex) || [];
+      check(`${rel}: no ${pattern.label}`, matches.length === 0, `found ${matches.length}`);
+    }
+  }
+}
+
 console.log(`\n${failures === 0 ? 'All docs checks passed.' : `${failures} check(s) failed.`}`);
 process.exit(failures === 0 ? 0 : 1);

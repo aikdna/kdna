@@ -41,8 +41,8 @@ kdna-studio card add my_domain axiom \
 ### 确认并导出
 
 ```bash
-kdna-studio card approve my_domain --all --by your-id --statement "I confirm this judgment for v1 export."
-kdna-studio export my_domain --format v1 --out ./my_domain.kdna
+kdna-studio card approve my_domain --all --by your-id --statement "I confirm this judgment for export."
+kdna-studio export my_domain --out ./my_domain.kdna
 ```
 
 ---

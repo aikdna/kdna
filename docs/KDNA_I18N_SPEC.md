@@ -78,7 +78,7 @@ Overlays translate text fields only. They reference canonical IDs and NEVER chan
 {
   "locale": "zh-CN",
   "base": "en",
-  "spec_version": "1.0-rc",
+  "overlay_version": "1.0",
   "translations": {
     "axiom_problem_not_prose.one_sentence": "大多数写作问题不是语言问题，而是结构和观点层面的问题。",
     "axiom_problem_not_prose.full_statement": "当审查内容时，Agent 必须首先诊断问题是结构性的（缺少论点、引子薄弱、证据不足）还是表层的（措辞、语法、流畅度）。用语言润色处理结构性问题是最常见的写作诊断失败。",

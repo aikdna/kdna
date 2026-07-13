@@ -1,10 +1,10 @@
 # Studio Export Example
 
-> Historical pre-v1 Studio export example. Current KDNA Core v1 export uses
+> Historical pre-v1 Studio export example. Current KDNA Core export uses
 > `mimetype`, `kdna.json`, `payload.kdnab`, and `checksums.json`, validated by
 > `kdna validate` and loaded by `kdna load`. Signature, encryption, quality
 > badge, registry, and certification concepts in this example are not current
-> Core v1 launch requirements.
+> KDNA Core launch requirements.
 
 This directory shows a complete Studio Export output for an example domain `my_domain`, demonstrating what a Studio-compatible compiler produces.
 

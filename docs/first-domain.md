@@ -58,7 +58,7 @@ kdna-studio create my-domain --name @yourscope/my-domain
 After adding and locking your judgment material, export to v1:
 
 ```bash
-kdna-studio migrate ./my-domain --format v1 --out ./my-domain.kdna
+kdna-studio migrate ./my-domain --out ./my-domain.kdna
 kdna validate ./my-domain.kdna
 kdna load ./my-domain.kdna --profile=compact --as=prompt
 ```

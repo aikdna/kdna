@@ -97,7 +97,7 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
   },
 
   "technical": {
-    "spec_version": "1.0-rc",
+    "kdna_version": "1.0",
     "judgment_version": "2026.05",
     "file_count": 6,
     "languages": ["en", "zh-CN"],
@@ -205,7 +205,7 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `spec_version` | Yes | KDNA spec version the domain conforms to. |
+| `kdna_version` | Yes | KDNA Asset Container wire value reported by the asset. |
 | `judgment_version` | No | YYYY.MM version tracking judgment revisions. |
 | `file_count` | No | Number of KDNA JSON files. |
 | `languages` | Yes | Supported BCP 47 language tags. |
@@ -247,7 +247,7 @@ The Asset Card is a **superset** of the registry entry. Every field in the regis
 - `audience.who_should_use`, `audience.who_should_not_use`
 - `judgment_style.summary`, `judgment_style.tone`, `judgment_style.strengths`, `judgment_style.limitations`, `judgment_style.sample_inputs`
 - `license.type`, `license.commercial`, `license.allow_agent_use`
-- `technical.spec_version`, `technical.languages`, `technical.default_language`, `technical.risk_level`, `technical.access_mode`, `technical.repo`
+- `technical.kdna_version`, `technical.languages`, `technical.default_language`, `technical.risk_level`, `technical.access_mode`, `technical.repo`
 - `support.contact`
 
 ### Required for Commercial Assets (KCL-1.0 / licensed / remote)

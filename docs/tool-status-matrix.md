@@ -1,8 +1,8 @@
 # KDNA Tool Status Matrix
 
-> Last updated: 2026-07-10. Matches `@aikdna/kdna-cli@0.29.0`.
+> Last updated: 2026-07-13. Matches `@aikdna/kdna-cli@0.30.0`.
 
-## Runtime CLI (`@aikdna/kdna-cli@0.29.0`)
+## Runtime CLI (`@aikdna/kdna-cli@0.30.0`)
 
 | Command | Purpose | Status |
 |---|---|---|
@@ -12,7 +12,7 @@
 | `kdna load <path> --profile=... --as=...` | Render judgment context | GA |
 | `kdna pack <dir> <out.kdna>` | Deterministic ZIP pack | GA |
 | `kdna unpack <file.kdna> <dir>` | Unpack container | GA |
-| `kdna demo minimal <dir>` | Create minimal v1 fixture | GA |
+| `kdna demo minimal <dir>` | Create a minimal current-format fixture | GA |
 | `kdna install <file.kdna>` | Install to local asset store | GA |
 | `kdna list` | List installed assets | GA |
 | `kdna remove <name>` | Remove installed asset | GA |
@@ -34,17 +34,17 @@
 | `kdna doctor [--agents]` | Installation health check | GA |
 | `kdna setup` | First-time setup wizard | GA |
 
-## Studio (`@aikdna/kdna-studio-cli@0.8.12`)
+## Studio (`@aikdna/kdna-studio-cli@0.8.14`)
 
 | Command | Purpose | Status |
 |---|---|---|
 | `kdna-studio create <dir> --name <name>` | Create Studio project | GA |
 | `kdna-studio card add <project> <type> --field k=v` | Add judgment card | GA |
-| `kdna-studio card approve <project> --all --by <id> --statement <text>` | Human Lock | GA |
+| `kdna-studio card approve <project> --all --by <id> --statement <text>` | Record optional author-review provenance | GA |
 | `kdna-studio card list <project>` | List cards | GA |
 | `kdna-studio card update / remove` | Edit cards | GA |
-| `kdna-studio export <project> --format v1 --out <file.kdna>` | Export to `.kdna` | GA |
-| `kdna-studio migrate <dir> --format v1 --out <file.kdna>` | Migrate existing source | GA |
+| `kdna-studio export <project> --out <file.kdna>` | Export to `.kdna` | GA |
+| `kdna-studio migrate <dir> --out <file.kdna>` | Migrate existing source | GA |
 | `kdna-studio llm config` | Configure LLM provider | GA |
 | `kdna-studio distill / interview / feynman` | AI-assisted authoring | Experimental |
 

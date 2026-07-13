@@ -4,7 +4,7 @@
 > The current active roadmap is **[docs/public-roadmap.md](./public-roadmap.md)**.
 >
 > The sections below record the four-layer protocol stack approach, including registry /
-> marketplace / quality-badge layers that are **out of scope for KDNA Core v1**.
+> marketplace / quality-badge layers that are **out of scope for KDNA Core**.
 > Preserved for traceability. Not active guidance.
 
 ## Phase 1: Protocol and Runtime Foundation ✅

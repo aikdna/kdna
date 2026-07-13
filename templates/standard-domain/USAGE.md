@@ -58,4 +58,4 @@ kdna load ./dist/your-domain.kdna --profile=compact --as=prompt
 
 `minimal-domain/` is the **bare-minimum** template — 2 files, no v2.1 fields, no evals. Use it only for fast experimentation or learning.
 
-`standard-domain/` is the richer authoring template for domains that need evidence, limitations, and repeatable validation. Core v1 distribution is local `.kdna` export plus `kdna validate` / `kdna plan-load` / `kdna load` evidence.
+`standard-domain/` is the richer authoring template for domains that need evidence, limitations, and repeatable validation. KDNA distribution is local `.kdna` export plus `kdna validate` / `kdna plan-load` / `kdna load` evidence.

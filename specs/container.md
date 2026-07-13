@@ -1,248 +1,192 @@
 # KDNA Asset Container
 
-**Status:** Current (GA)
+**Status:** Current
 
-## 1. Design Principle
+## 1. Purpose
 
-The `.kdna` file is a ZIP container for transport compatibility, but judgment content is encoded in a single CBOR binary payload (`payload.kdnab`) that requires a KDNA-compatible decoder. Generic tools can inspect the manifest (`kdna.json`) but cannot consume judgment content without going through the `plan-load` → `load` path.
+A `.kdna` file is the portable unit of identity, distribution, verification,
+authorization, and loading for one KDNA asset. It is transported as a ZIP
+container, but its judgment is a CBOR payload and is not an ordinary set of
+JSON files.
 
-**The KDNA Asset Container does not:**
-- Provide DRM or copy protection
-- Require encryption keys for `public` access
-- Prevent third-party compatible implementations
-- Hide the format specification
+Generic ZIP tools may reveal public metadata. Agents and applications MUST NOT
+consume judgment by unpacking the file. They request a LoadPlan from KDNA Core
+and, when `can_load_now` is true, consume the Runtime Capsule returned by Core.
 
-**The KDNA Container does:**
-- Establish format sovereignty — `.kdna` is a dedicated asset format, not a renamed ZIP
-- Require KDNA-compatible tooling for consumption
-- Separate metadata (readable by anyone) from judgment payload (requires decoder)
-- Enable signature verification and schema validation as mandatory loading steps
+This container contract is content-neutral. It does not decide whether an
+asset's judgment, taste, values, standards, or personality are good or true.
 
-## 2. Three-Layer Architecture
+## 2. One Authoring-to-Consumption Path
 
-```
-Source Tree (authoring)     →    Asset Container (distribution)    →    Runtime Capsule (consumption)
-─────────────────────            ────────────────────────              ──────────────────────────
-KDNA_Core.json                  domain.kdna                          kdna.context.capsule
-KDNA_Patterns.json              ├── mimetype                         Agent never sees raw internals
-KDNA_Scenarios.json             ├── kdna.json          ← metadata
-KDNA_Cases.json                 ├── kdna.index.json    ← index
-KDNA_Reasoning.json             ├── payload.kdnab      ← judgment (CBOR)
-KDNA_Evolution.json             ├── signature.kdsig
-kdna.json                       └── build-receipt.json
+```text
+Studio project / dev source
+        ↓ compile and export
+KDNA Asset Container (.kdna)
+        ↓ Core plan-load and load
+Runtime Capsule
+        ↓
+Agent or application
 ```
 
-- **Source Tree**: JSON files for human authoring, Git diff, and review. Never distributed as an asset.
-- **Asset Container**: `.kdna` file for distribution, local receipt, transfer, verification, and runtime loading. Judgment is CBOR-encoded in `payload.kdnab`.
-- **Runtime Capsule**: Structured output from `kdna load` for agent consumption. Agents MUST NOT read raw asset internals.
+- Authoring source files are editable development inputs, never distribution
+  entries.
+- The `.kdna` file is the canonical installed asset.
+- The Runtime Capsule is the only Agent-facing judgment representation.
 
-## 3. Container Structure
+## 3. Container Entries
 
-### 3.1 Required Entries
+### 3.1 Required
 
-| Entry | Encoding | Description | Status |
-|-------|----------|-------------|--------|
-| `mimetype` | ASCII text | `application/vnd.kdna.asset` (no trailing newline) | REQUIRED |
-| `kdna.json` | UTF-8 JSON | Public manifest and metadata. MUST NOT contain judgment content (axioms, ontology, patterns, etc.) | REQUIRED |
-| `payload.kdnab` | CBOR (RFC 8949) | Encoded judgment payload. Contains all domain judgment data. | REQUIRED |
-| `signature.kdsig` | UTF-8 JSON | Ed25519 signature over canonical payload digest | OPTIONAL until 2027-Q1; REQUIRED after |
-| `build-receipt.json` | UTF-8 JSON | Build provenance, compiler metadata, content digest | REQUIRED |
+| Entry | Encoding | Meaning |
+|---|---|---|
+| `mimetype` | ASCII | Exactly `application/vnd.kdna.asset`, without a trailing newline |
+| `kdna.json` | UTF-8 JSON | Public identity, compatibility, access, and payload metadata |
+| `payload.kdnab` | CBOR | Judgment payload, or a CBOR encrypted envelope when declared encrypted |
 
-> **Signature status note (2026-06-27):** `signature.kdsig` is reserved by the container layout but OPTIONAL in current implementations. The hard cutover date for making it REQUIRED is 2027-Q1. See SPEC §3.2.
+### 3.2 Optional
 
-### 3.2 Optional Entries
+| Entry | Encoding | Meaning |
+|---|---|---|
+| `checksums.json` | UTF-8 JSON | Digests over the distributed bytes; official writers emit it |
+| `signatures/` | implementation-defined signed records | Optional provenance and integrity signatures |
+| `attachments/` | binary | Optional assets governed by the manifest and loader policy |
 
-| Entry | Encoding | Description |
-|-------|----------|-------------|
-| `kdna.index.json` | UTF-8 JSON | Pre-computed routing index. Never contains full judgment. |
-| `README.md` | UTF-8 text | Human-readable domain description |
+No optional entry may become an alternate judgment payload.
 
-### 3.3 Forbidden Entries
+### 3.3 Forbidden top-level source entries
 
-The following entries MUST NOT exist in a KDNA Asset Container:
+`KDNA_Core.json`, `KDNA_Patterns.json`, `KDNA_Scenarios.json`,
+`KDNA_Cases.json`, `KDNA_Reasoning.json`, and `KDNA_Evolution.json` belong to
+authoring source only. A distribution container containing any of them at the
+top level MUST be rejected.
 
-- `KDNA_Core.json`
-- `KDNA_Patterns.json`
-- `KDNA_Scenarios.json`
-- `KDNA_Cases.json`
-- `KDNA_Reasoning.json`
-- `KDNA_Evolution.json`
+## 4. Runtime Manifest
 
-Their presence indicates a legacy plaintext ZIP container and the asset MUST be rejected.
-
-## 4. kdna.json Manifest
-
-The manifest remains plaintext JSON inside the container. It MUST NOT contain any judgment content.
+The authoritative schema is [`../schema/manifest.schema.json`](../schema/manifest.schema.json).
+A minimal public manifest has this shape:
 
 ```json
 {
-  "format": "kdna",
   "kdna_version": "1.0",
-  "name": "@scope/domain",
+  "asset_id": "kdna:example:editorial_judgment",
+  "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+  "asset_type": "domain",
+  "title": "Editorial Judgment",
   "version": "1.0.0",
-  "judgment_version": "2026.07",
-  "asset_id": "@scope/domain",
-  "description": "What judgment this domain improves",
-  "author": { "name": "...", "id": "..." },
-  "license": { "type": "CC-BY-4.0" },
-  "status": "stable",
+  "judgment_version": "1.0.0",
+  "created_at": "2026-07-13T00:00:00Z",
+  "updated_at": "2026-07-13T00:00:00Z",
+  "creator": {
+    "name": "Example Author",
+    "id": "example-author"
+  },
+  "compatibility": {
+    "min_loader_version": "1.0.0",
+    "profile": "judgment-profile-v1"
+  },
+  "payload": {
+    "path": "payload.kdnab",
+    "encoding": "cbor",
+    "encrypted": false,
+    "digest": "sha256:..."
+  },
   "access": "public",
-  "languages": ["zh-CN"],
-  "default_language": "zh-CN",
-  "source_mode": "blank",
-  "risk_level": "R1",
-  "keywords": ["communication", "judgment"],
-  "container": {
-    "type": "kdna-container",
-    "payload": "payload.kdnab",
-    "payload_encoding": "cbor",
-    "payload_digest": "sha256:abc123..."
-  },
-  "signature": "ed25519:...",
-  "authoring": {
-    "created_by": "kdna-studio-cli",
-    "compiler": "@aikdna/kdna-studio-core",
-    "compiler_version": "1.4.2",
-    "human_confirmed": true,
-    "human_lock_count": 14,
-    "compiled_at": "2026-06-11T10:00:00Z"
-  },
-  "runtime": {
-    "min_runtime_version": "0.3.0",
-    "load_contract": "context-capsule-v1"
+  "summary": "Judgment for reviewing editorial decisions.",
+  "language": "en",
+  "license": "Apache-2.0",
+  "keywords": ["editorial", "review"],
+  "lineage": { "type": "original" },
+  "load_contract": {
+    "default_profile": "compact",
+    "profiles": {
+      "index": { "requires_decryption": false },
+      "compact": { "requires_decryption": false },
+      "scenario": { "requires_decryption": false },
+      "full": { "requires_decryption": false }
+    }
   }
 }
 ```
 
-### 4.1 Manifest Constraints
+`kdna_version` is the sole container wire discriminator. Its current accepted
+value is `"1.0"`; it is not a product-generation or marketing label. Removed
+top-level `format_version` and `spec_version` fields do not select alternate
+formats and MUST NOT be emitted.
 
-- `kdna_version` MUST be present (current value: `"1.0"`)
-- `container.type` MUST be `"kdna-container"`
-- `container.payload` MUST be `"payload.kdnab"`
-- `container.payload_digest` MUST be the SHA-256 of the encoded CBOR payload bytes
-- The manifest MUST NOT contain `axioms`, `ontology`, `frameworks`, `core_structure`, `stances`, `terminology`, `misunderstandings`, `self_check`, `scenes`, `cases`, `reasoning_chains`, `stages`, or any other judgment content fields
+The manifest MUST NOT contain judgment content such as axioms, patterns,
+boundaries, cases, or self-checks.
 
-## 5. payload.kdnab Format
+## 5. CBOR Payload
 
-### 5.1 Envelope
+For an unencrypted judgment asset, `payload.kdnab` is a CBOR map matching
+[`../schema/payload-profile-v1.schema.json`](../schema/payload-profile-v1.schema.json):
 
-The payload is a single CBOR map:
-
-```
-CBOR Map {
-  "kind": "kdna.payload" (string)
-  "payload_version": "1.0" (string)
-  "domain": {
-    "name": "@scope/name" (string)
-    "version": "1.0.0" (string)
-  }
-  "judgment": {
-    "core": { ... }            // KDNA_Core.json content
-    "patterns": { ... }        // KDNA_Patterns.json content
-    "scenarios": { ... }       // KDNA_Scenarios.json content (optional)
-    "cases": { ... }           // KDNA_Cases.json content (optional)
-    "reasoning": { ... }       // KDNA_Reasoning.json content (optional)
-    "evolution": { ... }       // KDNA_Evolution.json content (optional)
-  }
-  "profiles": {
-    "compact": { ... }         // Pre-rendered compact context
-    "full": { ... }            // Pre-rendered full context
-  }
-  "integrity": {
-    "source_tree_digest": "sha256:..." (string)
-  }
-}
-```
-
-### 5.2 Encoding Rules
-
-- MUST use CBOR (RFC 8949) encoding
-- JSON field names are preserved as-is (no binary key shortening)
-- String values use UTF-8
-- The `profiles` section MAY contain pre-rendered context for performance, but the canonical source is `judgment`
-
-### 5.3 CBOR Libraries
-
-| Language | Library |
-|----------|---------|
-| JavaScript/Node.js | `cbor-x` |
-| Python | `cbor2` |
-| Swift | `SwiftCBOR` |
-| Rust | `ciborium` |
-| Go | `fxamacker/cbor` |
-
-## 6. Loading Behavior
-
-### 6.1 kdna load
-
-```
-1. Open .kdna ZIP container
-2. Read kdna.json manifest
-3. Verify mimetype = "application/vnd.kdna.asset"
-4. REJECT if KDNA_Core.json or any source-tree judgment entry is present
-5. Decode payload.kdnab via CBOR
-6. Verify payload_digest matches manifest
-7. Verify Ed25519 signature (if present)
-8. Run schema validation against judgment content
-9. Select load profile (compact/full)
-10. Emit Context Capsule
-```
-
-### 6.2 Context Capsule
-
-`kdna load` emits a structured capsule, not raw JSON. The default output format:
-
-```json
+```text
 {
-  "type": "kdna.context.capsule",
-  "version": "1.0",
-  "domain": "@scope/name",
-  "asset_digest": "sha256:...",
-  "signature": {
-    "verified": true,
-    "issuer": "ed25519:..."
+  profile: "judgment-profile-v1",
+  core: {
+    highest_question: string,
+    axioms: array,
+    boundaries?: array,
+    risk_model?: object
   },
-  "profile": "compact",
-  "context": "...",
-  "trace": {
-    "format": "kdna-container",
-    "payload_encoding": "cbor",
-    "loaded_by": "kdna-cli",
-    "loaded_at": "2026-06-11T10:00:00Z"
-  }
+  patterns?: array,
+  scenarios?: array,
+  cases?: array,
+  reasoning?: object,
+  evolution?: object
 }
 ```
 
-Agents MUST consume capsules. Raw payload decode is only available via:
+Writers MUST encode this map as CBOR. Readers MUST NOT guess JSON when CBOR
+decoding fails.
+
+## 6. Encryption and Authorization
+
+When `payload.encrypted` is true, `payload.kdnab` contains a CBOR encrypted
+envelope declared by `encryption.profile`; it does not contain plaintext
+judgment. Core evaluates the manifest and external entitlement state, returns a
+LoadPlan, decrypts only after authorization, and keeps plaintext in memory.
+
+Applications and Agents MUST NOT implement authorization by inspecting the
+manifest themselves. They MUST NOT persist decrypted payloads, include them in
+logs, or bypass Core with generic ZIP/CBOR code.
+
+## 7. Loading Sequence
+
+1. Open the `.kdna` container through KDNA Core.
+2. Verify the required entries and exact media type.
+3. Reject forbidden source-tree entries.
+4. Validate `kdna.json` and its access vocabulary.
+5. Verify `checksums.json` when present.
+6. Produce a LoadPlan and stop if `can_load_now` is false.
+7. Decode or authorize and decrypt `payload.kdnab` in memory.
+8. Validate the decoded payload profile.
+9. Select `index`, `compact`, `scenario`, or `full` context.
+10. Emit a Runtime Capsule with honest validation and signature state.
+
+Raw payload inspection is a developer-only operation:
 
 ```bash
-kdna dev decode domain.kdna --reveal
+kdna dev decode asset.kdna --reveal
 ```
 
-## 7. Rejection Rules
+It is not an Agent consumption path.
 
-A conforming loader MUST reject:
+## 8. Rejection Rules
 
-1. **Legacy ZIP container**: If `KDNA_Core.json` or any source-tree judgment entry exists in the ZIP
-2. **Missing payload**: If `payload.kdnab` is absent
-3. **Digest mismatch**: If `container.payload_digest` does not match SHA-256 of decoded payload
-4. **Schema violation**: If decoded judgment fails schema validation
-5. **Signature invalid**: If Ed25519 signature verification fails
-6. **Yanked**: If manifest `yanked` is true
+A conforming loader rejects at least:
 
-## 8. Reference Implementation Requirements
+- wrong or missing `mimetype`;
+- missing `kdna.json` or `payload.kdnab`;
+- a legacy top-level source-tree entry;
+- a manifest that does not match the current schema;
+- non-CBOR payload or encrypted-envelope bytes;
+- unsupported access, entitlement, payload, or crypto profiles;
+- declared digest mismatch;
+- invalid signatures when signature verification is requested or required;
+- failure to authorize or decrypt an encrypted asset.
 
-All KDNA-compatible implementations MUST:
-
-- Reject legacy plaintext ZIP containers (those containing source-tree JSON entries)
-- Decode `payload.kdnab` via CBOR
-- Emit context capsules (not raw JSON) from the default load path
-- Verify signatures and digests before serving content
-- Expose raw payload decode only through dev/debug APIs
-
-## 9. Version History
-
-| Date | Changes |
-|------|---------|
-| 2026-07 | Single-format specification. CBOR payload via `application/vnd.kdna.asset`. |
-| 2026-06 | Initial specification. |
+KDNA has one current distribution format. Historical formats may be handled by
+explicit migration tools, never by silently treating them as equivalent
+runtime assets.

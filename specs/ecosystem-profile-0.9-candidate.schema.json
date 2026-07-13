@@ -98,7 +98,7 @@
               "const": "One standalone, bounded KDNA judgment asset in .kdna container format."
             },
             "distribution_form": { "type": "string", "const": ".kdna" },
-            "maturity_target": { "type": "string", "const": "Stable (Core v1)" },
+            "maturity_target": { "type": "string", "const": "Stable (KDNA Core)" },
             "default_product_path": { "type": "boolean", "const": true }
           }
         },

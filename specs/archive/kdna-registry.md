@@ -2,9 +2,9 @@
 
 HISTORICAL / ARCHIVED DOCUMENT.
 
-This document does not represent the current KDNA Core v1 positioning.
-KDNA Core v1 is the official KDNA judgment-asset format and runtime loading
-contract. KDNA Core v1 does not define a public registry, marketplace,
+This document does not represent the current KDNA Core positioning.
+KDNA Core is the official KDNA judgment-asset format and runtime loading
+contract. KDNA Core does not define a public registry, marketplace,
 recommendation system, content ranking, official quality badge, or
 certification program. This file is preserved for traceability of the
 pre-v1 approach.

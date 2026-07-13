@@ -1,6 +1,6 @@
 # KDNA Quality Badge Evidence Gate
 
-> Historical pre-v1 quality-badge draft. Current Core v1 does not define an
+> Historical pre-v1 quality-badge draft. Current KDNA Core does not define an
 > official quality-badge, ranking, marketplace, or registry endorsement system.
 
 Version: 0.1

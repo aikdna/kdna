@@ -68,15 +68,15 @@
 
 ## 6. Field Naming Canon
 
-### spec_version
+### kdna_version
 
 | Context | Canonical Field | Rejected |
 |---------|----------------|------------|
-| Domain asset `kdna.json` | `spec_version: "1.0-rc"` | `kdna_spec` |
-| `.kdna` container manifest | `spec_version: "1.0-rc"` | `kdna_spec` |
+| Dev source `kdna.json` | `kdna_version: "1.0"` | `format_version`, `spec_version`, `kdna_spec` |
+| `.kdna` runtime manifest | `kdna_version: "1.0"` | `format_version`, `spec_version`, `kdna_spec` |
 
-**Rule:** v1.0-compatible manifests use `spec_version`. `kdna_spec` is outside
-the v1.0 protocol and MUST be rejected.
+**Rule:** Current manifests use the single `kdna_version` wire field. Removed
+fields do not select alternate formats and MUST be rejected.
 
 ### version vs judgment_version
 

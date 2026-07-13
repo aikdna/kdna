@@ -13,7 +13,7 @@
 **Website:** https://aikdna.com  
 **GitHub:** https://github.com/aikdna/kdna
 
-> **Historical note:** This white paper captures the broader KDNA vision before the Core v1 launch boundary was narrowed. Current Core v1 public positioning is: packaged `.kdna` files, local validation, LoadPlan planning, and local loading through the official toolchain. Registry, marketplace, paid authorization, remote runtime, signatures, encryption, and quality badges are not part of the current stable launch baseline.
+> **Historical note:** This white paper captures the broader KDNA vision before the KDNA Core launch boundary was narrowed. Current KDNA Core public positioning is: packaged `.kdna` files, local validation, LoadPlan planning, and local loading through the official toolchain. Registry, marketplace, paid authorization, remote runtime, signatures, encryption, and quality badges are not part of the current stable launch baseline.
 
 ---
 
@@ -31,7 +31,7 @@ KDNA does not claim that judgment has never existed in AI systems. Its contribut
 
 KDNA stands for **Knowledge DNA**. The name does not treat knowledge as a static collection of content, but as a structure that can be expressed, inherited, and evolved. The "K" refers to structured domain cognition — the judgment system behind how knowledge is selected, interpreted, rejected, and applied — not to stored information in the narrow sense. In biological systems, DNA is not the organism itself, nor any single behavior; it is an underlying code that allows stable traits to be preserved, expressed, copied, and changed over time. KDNA uses this metaphor for domain judgment: the most valuable part of expertise is often not isolated knowledge, but the recurring judgment structure behind it — how experts draw distinctions, recognize situations, weigh risks, preserve boundaries, form taste, avoid misunderstandings, and decide what counts as done well. KDNA gives this implicit structure a readable, verifiable, composable, and transmissible form.
 
-The specification is open and the reference toolchain is published under Apache 2.0. Current Core v1 usage centers on local packaged `.kdna` files that can be validated, planned, and loaded through the official toolchain. KDNA does not replace prompts, knowledge bases, skills, MCP, tools, retrieval, evaluation, workflows, or fine-tuning. It gives them a clearer judgment reference.
+The specification is open and the reference toolchain is published under Apache 2.0. Current KDNA Core usage centers on local packaged `.kdna` files that can be validated, planned, and loaded through the official toolchain. KDNA does not replace prompts, knowledge bases, skills, MCP, tools, retrieval, evaluation, workflows, or fine-tuning. It gives them a clearer judgment reference.
 
 ---
 
@@ -135,7 +135,7 @@ evidence are separate provenance and trust layers.
 
 Studio-compatible authoring tools may require review approval before exporting
 their own project workspaces. That is Studio workflow policy, not a universal
-KDNA Core v1 format-validity requirement.
+KDNA Core format-validity requirement.
 
 ---
 
@@ -754,7 +754,7 @@ signatures, and release evidence as provenance signals. Current Studio export
 uses reviewed cards as release evidence before producing a runtime `.kdna`
 container.
 
-The runtime Core v1 path remains separate: a public local `.kdna` asset is
+The runtime KDNA Core path remains separate: a public local `.kdna` asset is
 consumed through `kdna validate`, `kdna plan-load`, and `kdna load` only when
 the LoadPlan allows loading. Registry publishing, protected assets, and trust
 claims are not part of the current stable launch baseline.

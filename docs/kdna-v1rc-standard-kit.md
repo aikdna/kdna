@@ -1,6 +1,6 @@
 # KDNA v1.0-rc Standard Kit
 
-> Historical release-candidate kit. Current Core v1 public beta guidance lives
+> Historical release-candidate kit. Current KDNA Core public beta guidance lives
 > in `README.md`, `SPEC.md`, `docs/status.md`, and `docs/try-kdna.md`.
 
 KDNA v1.0-rc is the asset-first release candidate for the open judgment asset
