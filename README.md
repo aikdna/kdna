@@ -37,23 +37,26 @@ asset internals is not a compatible Agent consumption path.
 
 ## See KDNA in action — then create your own
 
-First, load a real judgment asset and see what changes. Then create your own.
+Generate a current-format demonstration locally, load its Runtime Capsule, and
+then replace the demonstration judgment with your own.
 
 ```bash
 npm install -g @aikdna/kdna-cli
 
-# Step 1: load a real judgment asset — see the difference
-curl -LO https://github.com/aikdna/kdna-assets/releases/download/agent-project-context-v0.1.2/agent-project-context-v0.1.2.kdna
-kdna validate agent-project-context-v0.1.2.kdna
-kdna load    agent-project-context-v0.1.2.kdna --profile=compact --as=prompt
+# Step 1: generate and package a current demonstration asset
+kdna demo judgment ./judgment
+kdna pack ./judgment ./judgment.kdna
 
-# Step 2: create your own minimal asset from scratch
-kdna demo minimal ./minimal
-kdna pack   ./minimal ./minimal.kdna
-kdna load   ./minimal.kdna --profile=compact --as=prompt
+# Step 2: verify the loading contract and receive a Runtime Capsule
+kdna validate ./judgment.kdna --runtime
+kdna plan-load ./judgment.kdna --json
+kdna load ./judgment.kdna --profile=compact --as=json
 ```
 
-→ [Full 5-minute guide](./docs/try-kdna.md) · [AIKDNA-published reference assets](https://github.com/aikdna/kdna-assets)
+The AIKDNA asset repository is a historical archive of pre-CBOR demonstrations;
+it is not the current onboarding path or an official content catalog.
+
+→ [Full 5-minute guide](./docs/try-kdna.md) · [Historical reference archive](https://github.com/aikdna/kdna-assets)
 
 ## What is a KDNA file?
 

@@ -6,7 +6,8 @@ KDNA is an open judgment-asset protocol. Anyone can create a `.kdna` asset;
 compatible Agent consumption goes through the KDNA toolchain, authorization,
 and Runtime Capsule contract.
 
-In 5 minutes, you can load a real judgment asset into your agent context and see the difference.
+In 5 minutes, you can generate a current demonstration asset, validate it, and
+load its Runtime Capsule into an Agent context.
 
 ---
 
@@ -14,7 +15,7 @@ In 5 minutes, you can load a real judgment asset into your agent context and see
 
 | I want to... | Start here | Time |
 |-------------|-----------|------|
-| **See KDNA work with a real asset** | [5-Minute Quick Start](#5-minute-quick-start) | 5 min |
+| **See the current KDNA lifecycle** | [5-Minute Quick Start](#5-minute-quick-start) | 5 min |
 | **Create my own KDNA** | [30-Minute Authoring Guide](./30-minute-authoring-guide.md) | 30 min |
 | **Preserve personal judgment or preferences** | [Why KDNA](./why-kdna.md#whose-judgment) | 10 min |
 | **Package professional expertise or creative taste** | [Why KDNA](./why-kdna.md#whose-judgment) | 10 min |
@@ -32,11 +33,12 @@ In 5 minutes, you can load a real judgment asset into your agent context and see
 ```bash
 npm install -g @aikdna/kdna-cli
 
-# Load a real judgment asset — see what changes
-curl -LO https://github.com/aikdna/kdna-assets/releases/download/agent-project-context-v0.1.2/agent-project-context-v0.1.2.kdna
-kdna validate agent-project-context-v0.1.2.kdna
-kdna plan-load agent-project-context-v0.1.2.kdna
-kdna load    agent-project-context-v0.1.2.kdna --profile=compact --as=prompt
+# Generate, package, validate, and load one current-format asset
+kdna demo judgment ./judgment
+kdna pack ./judgment ./judgment.kdna
+kdna validate ./judgment.kdna --runtime
+kdna plan-load ./judgment.kdna --json
+kdna load ./judgment.kdna --profile=compact --as=json
 ```
 
 Expected validation result:
@@ -99,7 +101,7 @@ KDNA Core is the **official KDNA judgment-asset format and runtime loading contr
 | [kdna-eval](https://github.com/aikdna/kdna/tree/main/packages/kdna-eval) | Replay, budget, and consumption-evaluation primitives |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI for creating and exporting `.kdna` assets |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Official agent loader adapter |
-| [kdna-assets](https://github.com/aikdna/kdna-assets) | Public release files, checksums, and evidence manifests |
+| [kdna-assets](https://github.com/aikdna/kdna-assets) | Historical AIKDNA demonstration archive; not the current onboarding path |
 
 ---
 

@@ -1,6 +1,6 @@
-"""
-KDNA Context Formatter — Format loaded domain into agent-readable context.
-"""
+"""Formatting helpers for developer source and Runtime Capsules."""
+
+import json
 
 from typing import Dict, Any, List
 
@@ -17,6 +17,9 @@ def format_context(domain: Dict[str, Any]) -> str:
     """
     if not domain:
         return ""
+
+    if domain.get("type") == "kdna.context.capsule":
+        return json.dumps(domain, ensure_ascii=False, indent=2)
 
     parts = []
     core = domain.get("core") or {}

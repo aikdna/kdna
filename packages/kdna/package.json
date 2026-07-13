@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "description": "KDNA toolkit compatibility package. The kdna CLI binary has moved to @aikdna/kdna-cli \u2014 use npm install -g @aikdna/kdna-cli.",
   "type": "commonjs",
   "bin": {
@@ -37,7 +37,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@aikdna/kdna-cli": "^0.27.0",
-    "@aikdna/kdna-core": "^0.13.0"
+    "@aikdna/kdna-cli": "^0.30.3",
+    "@aikdna/kdna-core": "^0.15.12"
   }
 }

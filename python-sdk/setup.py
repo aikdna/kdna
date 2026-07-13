@@ -5,10 +5,10 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="kdna",
-    version="0.4.0",
+    version="0.5.0",
     author="Knowledge DNA",
     author_email="hello@aikdna.com",
-    description="KDNA Python SDK — Load canonical .kdna cognition assets for AI agents",
+    description="KDNA Python adapter — load .kdna assets through the official CLI",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/aikdna/kdna",

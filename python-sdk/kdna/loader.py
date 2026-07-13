@@ -1,16 +1,21 @@
-"""
-KDNA Loader — Load canonical `.kdna` assets in Python.
+"""KDNA Python adapter.
 
-The public entry point is `open_kdna()`. It reads the internal JSON entries
-directly from the `.kdna` container and does not persistently extract the asset.
-`load_dev_source()` remains available only for developer authoring workspaces.
+This module never opens a ``.kdna`` container itself. It delegates inspection,
+LoadPlan evaluation, authorization, and loading to the installed KDNA CLI and
+returns the Runtime Capsule emitted by Core.
+
+``load_dev_source`` remains a developer-only helper for loose authoring source;
+it is not an Agent consumption path.
 """
 
 import hashlib
 import json
-import zipfile
+import os
+import shlex
+import subprocess
 from pathlib import Path
 from typing import Optional, Dict, Any, List
+
 
 CORE_FILES = ["KDNA_Core.json", "KDNA_Patterns.json"]
 OPTIONAL_FILES = [
@@ -19,29 +24,19 @@ OPTIONAL_FILES = [
     "KDNA_Reasoning.json",
     "KDNA_Evolution.json",
 ]
-PAYLOAD_ENTRY = "payload.kdnab"
 ALLOWED_MODES = {"minimum", "all", "auto"}
+MODE_TO_PROFILE = {"minimum": "compact", "all": "full", "auto": "compact"}
 
 
 class KDNAAssetError(ValueError):
-    """Raised when a `.kdna` asset cannot be opened or verified."""
+    """Raised when the official KDNA toolchain rejects an asset operation."""
 
 
 def _load_json(path: Path) -> Optional[Dict[str, Any]]:
     if not path.exists():
         return None
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def _read_zip_json(zf: zipfile.ZipFile, entry_name: str) -> Optional[Dict[str, Any]]:
-    try:
-        with zf.open(entry_name) as entry:
-            return json.loads(entry.read().decode("utf-8"))
-    except KeyError:
-        return None
-    except (json.JSONDecodeError, UnicodeDecodeError, zipfile.BadZipFile) as exc:
-        raise KDNAAssetError(f"Invalid JSON entry {entry_name}: {exc}") from exc
+    with open(path, "r", encoding="utf-8") as file:
+        return json.load(file)
 
 
 def _asset_digest(path: Path) -> str:
@@ -54,17 +49,38 @@ def _validate_mode(mode: str) -> None:
         raise KDNAAssetError(f"Invalid load mode {mode!r}; expected one of: {allowed}")
 
 
+def _run_cli(arguments: List[str]) -> Dict[str, Any]:
+    command = shlex.split(os.environ.get("KDNA_CLI", "kdna"))
+    if not command:
+        raise KDNAAssetError("KDNA_CLI is empty")
+    try:
+        completed = subprocess.run(
+            [*command, *arguments],
+            check=False,
+            capture_output=True,
+            encoding="utf-8",
+        )
+    except FileNotFoundError as exc:
+        raise KDNAAssetError(
+            "KDNA CLI not found. Install it with: npm install -g @aikdna/kdna-cli"
+        ) from exc
+
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip()
+        raise KDNAAssetError(
+            f"KDNA toolchain command failed (exit {completed.returncode}): {detail}"
+        )
+    try:
+        value = json.loads(completed.stdout)
+    except json.JSONDecodeError as exc:
+        raise KDNAAssetError("KDNA toolchain did not return JSON") from exc
+    if not isinstance(value, dict):
+        raise KDNAAssetError("KDNA toolchain returned an unexpected JSON value")
+    return value
+
+
 def verify_digest(asset_path: str, expected_digest: str) -> Dict[str, Any]:
-    """
-    Verify a `.kdna` whole-file digest.
-
-    Args:
-        asset_path: Path to a canonical `.kdna` asset.
-        expected_digest: `sha256:<hex>` or bare hex digest.
-
-    Returns:
-        Dict with `ok`, `actual_digest`, and `expected_digest`.
-    """
+    """Verify the digest of the opaque ``.kdna`` file bytes."""
     path = Path(asset_path)
     if not path.is_file():
         raise KDNAAssetError(f"Asset not found: {asset_path}")
@@ -79,144 +95,59 @@ def verify_digest(asset_path: str, expected_digest: str) -> Dict[str, Any]:
 
 
 def inspect_kdna(asset_path: str) -> Dict[str, Any]:
-    """
-    Inspect a canonical `.kdna` asset without extracting it.
-
-    Returns manifest metadata, entry names, required-entry status, and
-    whole-file asset digest.
-    """
-    path = Path(asset_path)
-    if not path.is_file():
-        raise KDNAAssetError(f"Asset not found: {asset_path}")
-    if path.suffix != ".kdna":
-        raise KDNAAssetError(f"Expected a .kdna asset, got: {asset_path}")
-
-    try:
-        with zipfile.ZipFile(path, "r") as zf:
-            entries = sorted(name for name in zf.namelist() if not name.endswith("/"))
-            manifest = _read_zip_json(zf, "kdna.json")
-            if not manifest:
-                raise KDNAAssetError("Missing required entry: kdna.json")
-
-            payload = _read_zip_json(zf, PAYLOAD_ENTRY) if PAYLOAD_ENTRY in entries else None
-    except zipfile.BadZipFile as exc:
-        raise KDNAAssetError(f"Invalid .kdna ZIP container: {exc}") from exc
-
-    if PAYLOAD_ENTRY in entries:
-        required_entries = ["kdna.json", PAYLOAD_ENTRY]
-    else:
-        required_entries = ["kdna.json", *CORE_FILES]
-
-    missing = [name for name in required_entries if name not in entries]
-    return {
-        "name": manifest.get("name"),
-        "version": manifest.get("version"),
-        "access": manifest.get("access"),
-        "status": manifest.get("status"),
-        "quality_badge": manifest.get("quality_badge"),
-        "risk_level": manifest.get("risk_level"),
-        "payload_profile": payload.get("profile") if payload else None,
-        "entries": entries,
-        "required_entries": required_entries,
-        "missing_required_entries": missing,
-        "asset_digest": _asset_digest(path),
-        "manifest": manifest,
-    }
+    """Return public metadata through ``kdna inspect``."""
+    return _run_cli(["inspect", asset_path, "--json"])
 
 
 def open_kdna(asset_path: str, mode: str = "minimum") -> Dict[str, Any]:
-    """
-    Open a canonical `.kdna` asset directly.
+    """Plan and load an asset through Core, returning a Runtime Capsule.
 
-    Args:
-        asset_path: Path to a `.kdna` file.
-        mode: 'minimum' (Core + Patterns only), 'all' (all standard entries),
-              or 'auto' (currently equivalent to all available standard entries).
-
-    Returns:
-        Dict with `manifest`, `core`, `patterns`, optional entries, and
-        `asset_info`.
+    ``minimum`` selects the compact Capsule profile, ``all`` selects the full
+    developer/application profile, and ``auto`` selects compact. Applications
+    needing password, receipt, account, organization, or remote authorization
+    should invoke the corresponding CLI/API authorization flow explicitly.
     """
     _validate_mode(mode)
-    info = inspect_kdna(asset_path)
-    if info["missing_required_entries"]:
-        missing = ", ".join(info["missing_required_entries"])
-        raise KDNAAssetError(f"Missing required entries: {missing}")
+    plan = _run_cli(["plan-load", asset_path, "--json"])
+    if plan.get("can_load_now") is not True:
+        state = plan.get("state", "unknown")
+        action = plan.get("required_action", "unknown")
+        raise KDNAAssetError(
+            f"KDNA LoadPlan does not permit loading (state={state}, required_action={action})"
+        )
 
-    result: Dict[str, Any] = {"manifest": info["manifest"], "asset_info": info}
-    with zipfile.ZipFile(asset_path, "r") as zf:
-        payload = _read_zip_json(zf, PAYLOAD_ENTRY)
-        if payload:
-            result["payload_profile"] = payload.get("profile")
-            result["core"] = payload.get("core") or {}
-            result["patterns"] = payload.get("patterns") or []
-
-            if mode in ("all", "auto"):
-                for key in ("scenarios", "cases", "reasoning", "evolution"):
-                    if payload.get(key):
-                        result[key] = payload[key]
-            return result
-
-        result["core"] = _read_zip_json(zf, "KDNA_Core.json") or {}
-        result["patterns"] = _read_zip_json(zf, "KDNA_Patterns.json") or {}
-
-        if mode in ("all", "auto"):
-            for fname in OPTIONAL_FILES:
-                data = _read_zip_json(zf, fname)
-                if data:
-                    key = fname.replace("KDNA_", "").replace(".json", "").lower()
-                    result[key] = data
-
-    return result
+    capsule = _run_cli(
+        ["load", asset_path, f"--profile={MODE_TO_PROFILE[mode]}", "--as=json"]
+    )
+    if capsule.get("type") != "kdna.context.capsule":
+        raise KDNAAssetError("KDNA Core did not return a Runtime Capsule")
+    return capsule
 
 
 def load_dev_source(source_dir: str, mode: str = "minimum") -> Optional[Dict[str, Any]]:
-    """
-    Load a non-canonical KDNA dev source workspace.
-
-    Args:
-        source_dir: Path to the dev source directory.
-        mode: 'minimum' (Core + Patterns only), 'all' (all files),
-              or 'auto' (load optional files based on input signals).
-
-    Returns:
-        Dict with 'core' and 'patterns' keys, or None if invalid.
-    """
+    """Load a loose developer source workspace, never a distribution asset."""
     _validate_mode(mode)
-    dpath = Path(source_dir)
-    if not dpath.is_dir():
+    directory = Path(source_dir)
+    if not directory.is_dir():
         return None
 
-    core = _load_json(dpath / "KDNA_Core.json")
-    patterns = _load_json(dpath / "KDNA_Patterns.json")
-
+    core = _load_json(directory / "KDNA_Core.json")
+    patterns = _load_json(directory / "KDNA_Patterns.json")
     if not core or not patterns:
         return None
 
     result = {"core": core, "patterns": patterns}
-
-    if mode == "all":
-        for fname in OPTIONAL_FILES:
-            data = _load_json(dpath / fname)
+    if mode in ("all", "auto"):
+        for filename in OPTIONAL_FILES:
+            data = _load_json(directory / filename)
             if data:
-                key = fname.replace("KDNA_", "").replace(".json", "").lower()
+                key = filename.replace("KDNA_", "").replace(".json", "").lower()
                 result[key] = data
-    elif mode == "auto":
-        # Auto-load based on simple heuristics
-        for fname in OPTIONAL_FILES:
-            data = _load_json(dpath / fname)
-            if data:
-                key = fname.replace("KDNA_", "").replace(".json", "").lower()
-                result[key] = data
-
     return result
 
 
 def classify_input(text: str) -> List[str]:
-    """
-    Simple keyword-based classification of input text.
-    Returns list of detected signal types.
-    """
+    """Return simple scenario/reasoning/case/evolution routing signals."""
     text_lower = text.lower()
     signals = []
 
@@ -237,13 +168,13 @@ def classify_input(text: str) -> List[str]:
         "演变", "进化", "改进", "成熟",
     ]
 
-    if any(s in text_lower for s in scenario_signals):
+    if any(signal in text_lower for signal in scenario_signals):
         signals.append("scenario")
-    if any(s in text_lower for s in reasoning_signals):
+    if any(signal in text_lower for signal in reasoning_signals):
         signals.append("reasoning")
-    if any(s in text_lower for s in case_signals):
+    if any(signal in text_lower for signal in case_signals):
         signals.append("case")
-    if any(s in text_lower for s in evolution_signals):
+    if any(signal in text_lower for signal in evolution_signals):
         signals.append("evolution")
 
     return signals

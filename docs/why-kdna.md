@@ -79,10 +79,11 @@ their own context.
 
 ```bash
 npm install -g @aikdna/kdna-cli
-curl -LO https://github.com/aikdna/kdna-assets/releases/download/agent-project-context-v0.1.2/agent-project-context-v0.1.2.kdna
-kdna validate agent-project-context-v0.1.2.kdna
-kdna plan-load agent-project-context-v0.1.2.kdna
-kdna load agent-project-context-v0.1.2.kdna --profile=compact --as=prompt
+kdna demo judgment ./judgment
+kdna pack ./judgment ./judgment.kdna
+kdna validate ./judgment.kdna --runtime
+kdna plan-load ./judgment.kdna --json
+kdna load ./judgment.kdna --profile=compact --as=json
 ```
 
 → [Start Here](./start-here.md) · [KDNA and the AI Stack](./kdna-and-ai-stack.md) · [Core Narrative and Boundaries](./core-narrative-and-boundaries.md)

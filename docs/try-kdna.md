@@ -1,32 +1,26 @@
 # Try KDNA in 5 Minutes
 
-Two paths. Pick one — or run both.
+Two paths. Start with the verified lifecycle, then author your own judgment.
 
-## Path A: See real judgment in action (recommended first)
+## Path A: Verify the current lifecycle (recommended first)
 
-Download an AIKDNA-published reference asset, validate it, and load a
-toolchain-produced projection.
+Generate an asset with the installed CLI, validate it, and load a
+toolchain-produced Runtime Capsule.
 
 ```bash
 npm install -g @aikdna/kdna-cli
 
-# Download the agent:project_context judgment asset
-curl -LO https://github.com/aikdna/kdna-assets/releases/download/agent-project-context-v0.1.2/agent-project-context-v0.1.2.kdna
-
-# Validate format, schema, payload, and checksums
-kdna validate agent-project-context-v0.1.2.kdna
-
-# Check load readiness
-kdna plan-load agent-project-context-v0.1.2.kdna
-
-# Load judgment context for your agent
-kdna load agent-project-context-v0.1.2.kdna --profile=compact --as=prompt
+kdna demo judgment ./judgment
+kdna pack ./judgment ./judgment.kdna
+kdna validate ./judgment.kdna --runtime
+kdna plan-load ./judgment.kdna --json
+kdna load ./judgment.kdna --profile=compact --as=json
 ```
 
-**What you'll see:** a profile-selected judgment projection produced by the
-KDNA loader. Use it through a compatible Agent integration, then compare the
-result with the same task without KDNA. Repeating asset vocabulary is not
-proof; look for changed distinctions, boundaries, and decisions.
+**What you'll see:** a profile-selected Runtime Capsule produced by the KDNA
+loader. Use it through a compatible Agent integration, then compare the result
+with the same task without KDNA. Repeating asset vocabulary is not proof; look
+for changed distinctions, boundaries, and decisions.
 
 This is what KDNA does: the agent's reasoning shifts, not its tone.
 
@@ -49,7 +43,7 @@ This proves the format works end-to-end. The output will be minimal — one plac
 
 - **Load into your AI agent**: [15-minute agent guide](./15-minute-agent-guide.md)
 - **Create your own domain**: [30-minute authoring guide](./30-minute-authoring-guide.md)
-- **AIKDNA-published reference assets**: [kdna-assets](https://github.com/aikdna/kdna-assets)
+- **Historical AIKDNA demonstrations**: [kdna-assets](https://github.com/aikdna/kdna-assets) (archived; not current-format onboarding assets)
 - **Current status**: [docs/status.md](./status.md)
 
 ## What KDNA Is
