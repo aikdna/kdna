@@ -1,7 +1,7 @@
 # KDNA Authorization Contract
 
-Status: Candidate — normative for the implemented JS Core/CLI subset.
-Swift Core and Chat implementations are pending.
+Status: Candidate — normative for the implemented JS Core/CLI/Swift subset.
+Chat implementation is pending.
 Normative: Yes  
 Related schema: `../schema/load-plan.schema.json`  
 Related specs: `kdna-crypto-profiles.md`, `kdna-secret-store.md`,
@@ -46,10 +46,10 @@ permission and decryption material.
 |---|---|---|
 | `password` | Implemented (JS Core/CLI) | User passphrase unlocks a protected local asset. |
 | `local_receipt` | Implemented (JS Core; CLI delegates to Core) | Signed local receipt authorizes loading. |
-| `account` | Future | Account entitlement service authorizes loading. |
+| `account` | Implemented (JS Core/CLI/Swift) | Account service authorizes a device-bound external key grant under RFC-0019. |
 | `org` | Future | Organization or SSO claims authorize loading. |
 | `purchase_receipt` | Future | Third-party purchase receipt is exchanged for entitlement. |
-| `device_bound` | Future | Receipt/key grant is bound to a device keypair. |
+| `device_bound` | Superseded as a standalone profile | Device binding is a required mechanism of the RFC-0019 `account` flow, not a password fallback or separate entitlement identity. |
 
 Unknown entitlement profiles MUST fail closed with
 `KDNA_ENTITLEMENT_PROFILE_UNKNOWN`.
@@ -108,6 +108,11 @@ Minimum required actions:
 Current JS Core may expose a narrower v0.1 subset while the full schema is
 expanded. It MUST remain fail-closed for states it cannot evaluate.
 
+For RFC-0019 account assets, a plain object that claims `status: active` is not
+authorization. Only a grant whose signature, time bounds, account, device,
+asset identity, version, digest, encrypted entry, and key wrapping have been
+verified by Core can move a LoadPlan to `ready` or `offline_grace`.
+
 ## 6. Stable Issue Codes
 
 Implementations MUST use stable issue codes for localization, diagnostics, and
@@ -158,6 +163,11 @@ Entitlement records SHOULD include:
 
 Entitlement secrets MUST NOT be logged, included in traces, exported reports,
 screenshots, or debug diagnostics.
+
+An external grant MUST NOT contain the issuer root or the asset CEK. Core MUST
+unwrap the CEK only in memory, zeroize it when the authorization session is
+disposed, and return only a Runtime Capsule to Agent-facing consumers. The
+account flow MUST NOT fall back to the password profile.
 
 ## 8. Revocation
 

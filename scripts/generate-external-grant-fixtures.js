@@ -1,0 +1,168 @@
+#!/usr/bin/env node
+
+/** Generates deterministic, public test-only RFC-0019 fixtures. */
+
+const crypto = require('node:crypto');
+const fs = require('node:fs');
+const path = require('node:path');
+const cbor = require('cbor-x');
+const core = require('../packages/kdna-core/src');
+
+const outDir = path.join(__dirname, '..', 'conformance', 'kdna-external-grant-v1');
+const negativeDir = path.join(outDir, 'negative');
+
+function privateKeyFromSeed(type, seedByte) {
+  const oid = type === 'ed25519' ? '2b6570' : '2b656e';
+  const prefix = Buffer.from(`302e02010030050603${oid}04220420`, 'hex');
+  return crypto.createPrivateKey({
+    key: Buffer.concat([prefix, Buffer.alloc(32, seedByte)]),
+    format: 'der',
+    type: 'pkcs8',
+  });
+}
+
+function keyPair(type, seedByte) {
+  const privateKey = privateKeyFromSeed(type, seedByte);
+  return { privateKey, publicKey: crypto.createPublicKey(privateKey) };
+}
+
+function write(name, value) {
+  fs.writeFileSync(path.join(outDir, name), `${JSON.stringify(value, null, 2)}\n`);
+}
+
+function writeNegative(name, value) {
+  fs.writeFileSync(path.join(negativeDir, name), `${JSON.stringify(value, null, 2)}\n`);
+}
+
+fs.mkdirSync(negativeDir, { recursive: true });
+
+const manifest = {
+  kdna_version: '1.0',
+  asset_id: 'kdna:fixture:external-grant',
+  asset_uid: 'urn:uuid:00190000-0000-4000-8000-000000000001',
+  name: '@fixture/external-grant',
+  asset_type: 'fixture',
+  title: 'External Grant Fixture',
+  version: '1.0.0',
+  judgment_version: '1.0.0',
+  created_at: '2026-07-13T00:00:00Z',
+  updated_at: '2026-07-13T00:00:00Z',
+  creator: { name: 'KDNA Conformance' },
+  compatibility: { min_loader_version: '0.16.0', profile: 'judgment-profile-v1' },
+  payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: true },
+  access: 'licensed',
+  entitlement: { profile: 'account', offline: true, revocable: true },
+  encryption: {
+    profile: core.EXTERNAL_ENVELOPE_PROFILE,
+    encrypted_entries: ['payload.kdnab'],
+    key_grant_profile: core.EXTERNAL_GRANT_PROFILE,
+  },
+};
+const plaintext = Buffer.from(
+  cbor.encode({
+    profile: 'judgment-profile-v1',
+    core: { highest_question: 'Can this device decrypt?', axioms: [] },
+  }),
+);
+const root = Buffer.alloc(32, 0x19);
+const deviceAgreement = keyPair('x25519', 0x21);
+const deviceSigning = keyPair('ed25519', 0x22);
+const ephemeral = keyPair('x25519', 0x23);
+const issuerSigning = keyPair('ed25519', 0x24);
+const agreementPublic = deviceAgreement.publicKey.export({ format: 'jwk' }).x;
+const agreementPrivate = deviceAgreement.privateKey.export({ format: 'jwk' }).d;
+const deviceSigningPublic = deviceSigning.publicKey.export({ format: 'jwk' }).x;
+const issuerSigningPublic = issuerSigning.publicKey.export({ format: 'jwk' }).x;
+const envelope = core.encryptExternalGrantEntry(plaintext, {
+  manifest,
+  issuerRootKey: root,
+  keyRef: 'assetkey:fixture:external-grant:1.0.0',
+  issuerKeyId: 'fixture-asset-root-v1',
+  iv: Buffer.alloc(12, 0x25),
+});
+const encodedEnvelope = core.encodeExternalEnvelope(envelope);
+const manifestBytes = Buffer.from(JSON.stringify(manifest));
+const entries = {
+  'kdna.json': crypto.createHash('sha256').update(manifestBytes).digest('hex'),
+  'payload.kdnab': crypto.createHash('sha256').update(encodedEnvelope).digest('hex'),
+};
+const combined = Object.keys(entries)
+  .sort()
+  .map((name) => `${name}:${entries[name]}`)
+  .join('\n');
+const checksums = {
+  algorithm: 'sha256',
+  manifest_digest: `sha256:${entries['kdna.json']}`,
+  payload_digest: `sha256:${entries['payload.kdnab']}`,
+  asset_digest: `sha256:${crypto.createHash('sha256').update(combined).digest('hex')}`,
+  entries: Object.fromEntries(
+    Object.entries(entries).map(([name, value]) => [name, { algorithm: 'sha256', value }]),
+  ),
+};
+
+function makeGrant(overrides = {}) {
+  return core.createExternalKeyGrant({
+    issuerRootKey: root,
+    issuerSigningPrivateKey: issuerSigning.privateKey,
+    signingKeyId: 'fixture-grant-signing-v1',
+    issuer: 'https://fixture.invalid',
+    entitlementId: 'ent_fixture_01',
+    accountId: 'acct_fixture_01',
+    deviceId: 'dev_fixture_01',
+    devicePublicKey: `x25519:${agreementPublic}`,
+    deviceSigningPublicKey: `ed25519:${deviceSigningPublic}`,
+    manifest,
+    envelope,
+    assetDigest: checksums.asset_digest,
+    issuedAt: new Date('2026-07-13T00:00:00Z'),
+    refreshAfter: new Date('2026-07-14T00:00:00Z'),
+    offlineGraceUntil: new Date('2026-07-20T00:00:00Z'),
+    expiresAt: new Date('2026-07-21T00:00:00Z'),
+    grantId: overrides.grantId || 'grt_fixture_01',
+    status: overrides.status || 'active',
+    ephemeralKeyPair: ephemeral,
+    wrapSalt: Buffer.alloc(16, overrides.saltByte || 0x26),
+  });
+}
+
+const grant = makeGrant();
+write('golden.json', {
+  note: 'All key material in this fixture is deterministic and test-only.',
+  manifest,
+  plaintext_cbor: plaintext.toString('base64url'),
+  envelope,
+  envelope_cbor: encodedEnvelope.toString('base64url'),
+  checksums,
+  grant,
+  test_keys: {
+    issuer_root: root.toString('base64url'),
+    issuer_signing_public_key: `ed25519:${issuerSigningPublic}`,
+    device_agreement_public_key: `x25519:${agreementPublic}`,
+    device_agreement_private_key: `x25519:${agreementPrivate}`,
+    device_signing_public_key: `ed25519:${deviceSigningPublic}`,
+  },
+});
+
+writeNegative('tampered-signature.json', {
+  expected_error: 'KDNA_GRANT_SIGNATURE_INVALID',
+  grant: { ...grant, account_id: 'acct_tampered' },
+});
+writeNegative('revoked.json', {
+  expected_error: 'KDNA_GRANT_REVOKED',
+  grant: makeGrant({ status: 'revoked', grantId: 'grt_fixture_revoked', saltByte: 0x27 }),
+});
+writeNegative('asset-version-mismatch.json', {
+  expected_error: 'KDNA_GRANT_ASSET_MISMATCH',
+  manifest: { ...manifest, version: '1.0.1' },
+  grant,
+});
+writeNegative('asset-digest-mismatch.json', {
+  expected_error: 'KDNA_GRANT_DIGEST_MISMATCH',
+  checksums: { ...checksums, asset_digest: `sha256:${'0'.repeat(64)}` },
+  grant,
+});
+writeNegative('device-mismatch.json', {
+  expected_error: 'KDNA_GRANT_DEVICE_MISMATCH',
+  expected_device_id: 'dev_other',
+  grant,
+});

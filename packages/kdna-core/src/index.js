@@ -8,6 +8,7 @@ const render = require('./render');
 const compose = require('./compose');
 const assetReader = require('./asset-reader');
 const cryptoProfile = require('./crypto-profile');
+const externalKeyGrant = require('./external-key-grant');
 const publicApi = require('./public-api');
 const workpackPure = require('./workpack-pure');
 const v1 = require('./v1');
@@ -22,6 +23,7 @@ module.exports = {
   ...compose,
   ...assetReader,
   ...cryptoProfile,
+  ...externalKeyGrant,
   ...workpackPure,
   ...v1,
   ...runtimeApi,

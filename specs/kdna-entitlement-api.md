@@ -1,7 +1,7 @@
 # KDNA Entitlement API
 
-Version: 0.1
-Status: Draft / CLI MVP implemented
+Version: 0.2
+Status: Draft / legacy receipt and RFC-0019 account-device subsets implemented
 
 This specification defines the production contract for activating, syncing,
 revoking, and auditing licensed KDNA assets.
@@ -33,6 +33,11 @@ outside the asset, for example:
 ~/.kdna/licenses/<scope-name>.json
 ```
 
+The legacy receipt contract below remains supported for existing license-key
+assets. Account/device encrypted assets use the separate RFC-0019 external key
+grant flow in Section 11. The two flows are not wire-compatible, and account
+assets MUST NOT silently fall back to the legacy password/receipt profile.
+
 ## 2. Security Rules
 
 Clients and servers MUST follow these rules:
@@ -61,6 +66,12 @@ kdna license install <license.json>
 
 `--server <url>` is an exact activation or sync endpoint URL. For local testing,
 the CLI MAY also accept a `file://` entitlement fixture.
+
+For RFC-0019 account/device assets, the preferred activation command opens the
+issuer's browser flow and keeps device private keys in the platform
+SecretStore. A headless client may read a one-time activation credential from
+standard input. It MUST NOT accept that credential as an ordinary command-line
+argument.
 
 ## 4. Activation Request
 
@@ -169,6 +180,12 @@ Local fixture files MAY contain:
 | `offline_grace_days` | Yes if online check required | Number of days after successful sync before fail-closed. |
 | `allowed_agents` | Recommended | Agent/client allowlist. |
 | `activation_server` | Recommended | Endpoint used for future activation refresh. |
+
+For `kdna-key-grant-v1`, clients persist the highest verified
+`status_version` and greatest verified wall-clock value in their platform
+SecretStore. A lower status version or material clock rollback fails closed;
+removing the local entitlement is the only supported reset before a new device
+activation.
 | `sync_server` | Recommended | Endpoint used for entitlement sync. |
 
 If `require_online_check` is missing in a production response, clients SHOULD
@@ -411,3 +428,37 @@ kdna license sync @aikdna/writing_pro \
   --server https://license.example.com/v1/entitlements/sync
 ```
 
+## 13. Account/Device External Key Grant
+
+An account/device issuer exposes a device authorization flow under its versioned
+API namespace:
+
+```text
+POST device-activations
+→ user verifies the displayed code in a signed-in browser
+→ POST device-activations/{id}/poll with a signed device proof
+→ signed kdna-key-grant-v1
+```
+
+Subsequent synchronization uses a server challenge and a signed proof from the
+same device signing key. A successful response returns a replacement signed
+grant. A revoked account, entitlement, device, expired challenge, device-limit
+violation, or mismatched proof MUST fail closed.
+
+The grant and encrypted asset contracts are defined by RFC-0019 and:
+
+- `kdna-key-grant-v1.schema.json`;
+- `kdna-envelope-external-grant-v1.schema.json`;
+- `../conformance/kdna-external-grant-v1/`.
+
+The issuer derives the asset CEK only inside its trusted key boundary and wraps
+it to the requesting device's public agreement key. The CEK MUST NOT be stored
+in the asset, entitlement database, object metadata, audit event, log, or
+Trace. The client stores device private keys and the current grant in a secure
+SecretStore; public status metadata may contain only identifiers, public keys,
+time bounds, and secret references.
+
+Core verifies the signed grant and every account/device/asset binding before it
+unwraps in memory. Revoked, expired, tampered, digest-mismatched,
+version-mismatched, or device-mismatched grants MUST fail closed. Agent-facing
+integrations receive only the Runtime Capsule.

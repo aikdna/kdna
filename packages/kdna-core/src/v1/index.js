@@ -37,6 +37,11 @@ const path = require('node:path');
 const zlib = require('node:zlib');
 const crypto = require('node:crypto');
 const cbor = require('cbor-x');
+const {
+  EXTERNAL_ENVELOPE_PROFILE,
+  validateExternalEnvelope,
+  isVerifiedExternalEntitlement,
+} = require('../external-key-grant');
 
 const { readAsset } = (() => {
   try {
@@ -756,7 +761,16 @@ function runValidate(v1) {
       result.payload_valid = false;
       problems.push(`payload: encrypted envelope profile ${payload.profile || 'unknown'} does not match manifest encryption profile ${encProfile}`);
     }
-    const hasKeyMaterial = !!payload.wrapped_key || (Array.isArray(payload.key_slots) && payload.key_slots.length > 0);
+    let hasKeyMaterial = !!payload.wrapped_key || (Array.isArray(payload.key_slots) && payload.key_slots.length > 0);
+    if (payload.profile === EXTERNAL_ENVELOPE_PROFILE) {
+      try {
+        validateExternalEnvelope(payload);
+        hasKeyMaterial = true;
+      } catch (error) {
+        result.payload_valid = false;
+        problems.push(`payload: ${error.message}`);
+      }
+    }
     if (!payload.profile || !payload.ciphertext || !hasKeyMaterial) {
       result.payload_valid = false;
       problems.push('payload: encrypted envelope missing required fields (profile/ciphertext/key material)');
@@ -1276,6 +1290,36 @@ function planLoad(inputPath, opts = {}) {
 
   const manifest = v1.manifest;
 
+  function externalEntitlementMatchesCurrentAsset(entitlement) {
+    if (!isVerifiedExternalEntitlement(entitlement) || !entitlement.asset) return false;
+    let checksums;
+    try {
+      checksums = v1.map['checksums.json']
+        ? parseJsonEntry('checksums.json', v1.map['checksums.json'])
+        : null;
+    } catch {
+      return false;
+    }
+    return entitlement.asset.asset_id === (manifest.asset_id || manifest.name)
+      && entitlement.asset.asset_uid === manifest.asset_uid
+      && entitlement.asset.version === manifest.version
+      && entitlement.asset.digest === checksums?.asset_digest
+      && entitlement.asset.entry_path === manifest.payload?.path;
+  }
+
+  function rejectExternalEntitlementMismatch() {
+    plan.state = 'invalid';
+    plan.required_action = 'block';
+    plan.can_load_now = false;
+    plan.projection_policy = 'none';
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_GRANT_ASSET_MISMATCH',
+      'blocking',
+      'The verified account/device grant is bound to a different asset, version, digest, or encrypted entry.',
+    ));
+    return finalizeLoadPlan(plan);
+  }
+
   // Resolve dependencies if declared (Story 6)
   const resolvedDeps = [];
   if (manifest.dependencies && typeof manifest.dependencies === 'object' && Object.keys(manifest.dependencies).length > 0) {
@@ -1447,6 +1491,23 @@ function planLoad(inputPath, opts = {}) {
     }
 
     if (plan.entitlement_profile === 'account') {
+      if (isVerifiedExternalEntitlement(opts.entitlement)) {
+        if (!externalEntitlementMatchesCurrentAsset(opts.entitlement)) {
+          return rejectExternalEntitlementMismatch();
+        }
+        plan.state = opts.entitlement.status === 'offline_grace' ? 'offline_grace' : 'ready';
+        plan.required_action = opts.entitlement.status === 'offline_grace' ? 'sync' : 'load';
+        plan.can_load_now = true;
+        plan.projection_policy = 'minimal';
+        if (opts.entitlement.status === 'offline_grace') {
+          plan.issues.push(buildLoadPlanIssue(
+            'KDNA_AUTH_OFFLINE_GRACE_ACTIVE',
+            'warning',
+            'The verified device grant can load offline but must sync before grace expires.',
+          ));
+        }
+        return finalizeLoadPlan(plan);
+      }
       plan.state = 'needs_account';
       plan.required_action = 'sign_in_or_activate';
       plan.can_load_now = false;
@@ -1460,6 +1521,16 @@ function planLoad(inputPath, opts = {}) {
     }
 
     if (plan.entitlement_profile === 'org') {
+      if (isVerifiedExternalEntitlement(opts.entitlement)) {
+        if (!externalEntitlementMatchesCurrentAsset(opts.entitlement)) {
+          return rejectExternalEntitlementMismatch();
+        }
+        plan.state = opts.entitlement.status === 'offline_grace' ? 'offline_grace' : 'ready';
+        plan.required_action = opts.entitlement.status === 'offline_grace' ? 'sync' : 'load';
+        plan.can_load_now = true;
+        plan.projection_policy = 'minimal';
+        return finalizeLoadPlan(plan);
+      }
       plan.state = 'needs_org_auth';
       plan.required_action = 'sign_in_or_activate';
       plan.can_load_now = false;
@@ -1826,7 +1897,7 @@ function loadV1Unsafe(inputPath, opts = {}) {
         payload = parsePayloadEntry('payload.kdnab', decryptedBuf);
       } catch (e) {
         const err = new Error(`Decryption failed: ${e.message}`);
-        err.code = 'KDNA_DECRYPT_FAILED';
+        err.code = e.code || 'KDNA_DECRYPT_FAILED';
         throw err;
       }
     } else if (opts.password) {
@@ -1857,8 +1928,13 @@ function loadV1Unsafe(inputPath, opts = {}) {
         throw err;
       }
     } else {
-      const err = new Error('payload is encrypted and cannot be decrypted without a password or license key');
-      err.code = 'KDNA_AUTH_PASSWORD_REQUIRED';
+      const isExternal = payload.profile === EXTERNAL_ENVELOPE_PROFILE;
+      const err = new Error(
+        isExternal
+          ? 'payload requires a verified account/device external key grant'
+          : 'payload is encrypted and cannot be decrypted without an authorized credential',
+      );
+      err.code = isExternal ? 'KDNA_AUTH_ACCOUNT_REQUIRED' : 'KDNA_AUTH_PASSWORD_REQUIRED';
       throw err;
     }
   }

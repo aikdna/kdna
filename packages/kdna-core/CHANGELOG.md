@@ -1,7 +1,15 @@
 # Changelog
 
-## Unreleased
+## v0.16.0 (2026-07-13)
 
+### Added
+
+- RFC-0019 external account/device key grants, schemas, deterministic golden
+  and negative fixtures, and JS/Swift parity vectors.
+- JS Core helpers for external envelope encryption, per-device grant issuance,
+  signature/binding verification, in-memory decryption, and explicit zeroization.
+- LoadPlan accepts only a runtime-verified external entitlement for account/org
+  assets; structurally similar status objects no longer authorize loading.
 - Reject authoring source directories at the public runtime API boundary;
   `planLoad`, `load`, `loadAsset`, and `loadAuthorized` now require a packaged
   `.kdna` file, including resolver-provided dependencies.
@@ -12,6 +20,12 @@
   assumptions from protocol documentation and public audit scripts.
 - Make release readiness fail for dirty inputs or when the selected version
   tag does not point to the current commit.
+
+### Security
+
+- Account/device envelopes never fall back to the password profile.
+- Revoked, expired, tampered, digest/version/account/device mismatches fail
+  closed before Runtime Capsule projection.
 
 ## v0.15.12 (2026-07-12)
 

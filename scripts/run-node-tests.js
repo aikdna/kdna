@@ -31,6 +31,15 @@ if (files.length === 0) {
 
 const result = spawnSync(process.execPath, ['--test', ...files], {
   stdio: 'inherit',
+  env: {
+    ...process.env,
+    NODE_OPTIONS: [
+      process.env.NODE_OPTIONS,
+      `--require=${path.join(__dirname, 'use-workspace-core.js')}`,
+    ]
+      .filter(Boolean)
+      .join(' '),
+  },
 });
 
 process.exit(result.status === null ? 1 : result.status);

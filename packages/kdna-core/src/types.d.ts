@@ -414,6 +414,165 @@ export function createLicensedDecryptEntry(options: {
   machineFingerprint: string;
 }): NonNullable<KdnaDecryptOptions['decryptEntry']>;
 
+export const EXTERNAL_ENVELOPE_PROFILE: 'kdna-envelope-external-grant-v1';
+export const EXTERNAL_GRANT_PROFILE: 'kdna-key-grant-v1';
+
+export class KDNAExternalGrantError extends Error {
+  code: string;
+}
+
+export interface KDNAExternalGrantEnvelope {
+  profile: 'kdna-envelope-external-grant-v1';
+  alg: 'A256GCM';
+  cek_derivation: 'HKDF-SHA256';
+  key_ref: string;
+  issuer_key_id: string;
+  entry_path: string;
+  plaintext_digest: string;
+  iv: string;
+  tag: string;
+  ciphertext: string;
+}
+
+export interface KDNAExternalKeyGrant {
+  profile: 'kdna-key-grant-v1';
+  grant_id: string;
+  issuer: string;
+  signing_key_id: string;
+  entitlement_id: string;
+  account_id: string;
+  device_id: string;
+  device_public_key: string;
+  device_signing_public_key: string;
+  asset: {
+    asset_id: string;
+    asset_uid: string;
+    version: string;
+    digest: string;
+    entry_path: string;
+    ciphertext_digest: string;
+    key_ref: string;
+    issuer_key_id: string;
+  };
+  issued_at: string;
+  refresh_after: string;
+  offline_grace_until: string;
+  expires_at: string;
+  status: 'active' | 'revoked' | 'expired';
+  status_version: number;
+  wrap: {
+    alg: 'X25519-HKDF-SHA256+A256KW';
+    ephemeral_public_key: string;
+    salt: string;
+    wrapped_cek: string;
+  };
+  signature: string;
+}
+
+export interface KDNADeviceKeyPairs {
+  agreement: { public_key: string; private_key: string };
+  signing: { public_key: string; private_key: string };
+}
+
+/** Runtime-branded by authorizeExternalKeyGrant; a structurally similar object is not accepted. */
+export interface KDNAVerifiedExternalEntitlement {
+  readonly status: 'active' | 'offline_grace';
+  readonly profile: 'kdna-key-grant-v1';
+  readonly grant_id: string;
+  readonly entitlement_id: string;
+  readonly account_id: string;
+  readonly device_id: string;
+  readonly refresh_after: string;
+  readonly offline_grace_until: string;
+  readonly expires_at: string;
+  readonly asset: {
+    readonly asset_id: string;
+    readonly asset_uid: string;
+    readonly version: string;
+    readonly digest: string;
+    readonly entry_path: string;
+    readonly ciphertext_digest: string;
+    readonly key_ref: string;
+    readonly issuer_key_id: string;
+  };
+}
+
+export interface KDNAExternalAuthorization {
+  entitlement: KDNAVerifiedExternalEntitlement;
+  decryptEntry: NonNullable<KdnaDecryptOptions['decryptEntry']>;
+  dispose(): void;
+}
+
+export function canonicalJson(value: unknown): string;
+export function grantSigningPayload(grant: Omit<KDNAExternalKeyGrant, 'signature'> | KDNAExternalKeyGrant): Uint8Array;
+export function validateExternalEnvelope(value: unknown): KDNAExternalGrantEnvelope;
+export function validateExternalKeyGrant(value: unknown): KDNAExternalKeyGrant;
+export function externalEnvelopeAad(options: {
+  manifest: KDNAManifest;
+  entryName: string;
+  plaintextDigest: string;
+  keyRef: string;
+  issuerKeyId: string;
+}): Uint8Array;
+export function deriveExternalAssetCek(options: {
+  issuerRootKey: string | Uint8Array;
+  manifest: KDNAManifest;
+  entryName: string;
+  plaintextDigest: string;
+  keyRef: string;
+  issuerKeyId: string;
+}): Uint8Array;
+export function encodeExternalEnvelope(value: KDNAExternalGrantEnvelope): Uint8Array;
+export function decodeExternalEnvelope(value: KDNAExternalGrantEnvelope | Uint8Array): KDNAExternalGrantEnvelope;
+export function encryptExternalGrantEntry(plaintext: string | Uint8Array, options: {
+  manifest: KDNAManifest;
+  entryName?: string;
+  issuerRootKey: string | Uint8Array;
+  keyRef: string;
+  issuerKeyId: string;
+  iv?: Uint8Array;
+}): KDNAExternalGrantEnvelope;
+export function generateDeviceKeyPairs(): KDNADeviceKeyPairs;
+export function createExternalKeyGrant(options: {
+  issuerRootKey: string | Uint8Array;
+  issuerSigningPrivateKey: unknown;
+  signingKeyId: string;
+  issuer: string;
+  entitlementId: string;
+  accountId: string;
+  deviceId: string;
+  devicePublicKey: string;
+  deviceSigningPublicKey: string;
+  manifest: KDNAManifest;
+  envelope: KDNAExternalGrantEnvelope | Uint8Array;
+  assetDigest: string;
+  status?: 'active' | 'revoked' | 'expired';
+  statusVersion?: number;
+  issuedAt?: Date | string;
+  refreshAfter?: Date | string;
+  offlineGraceUntil?: Date | string;
+  expiresAt?: Date | string;
+  grantId?: string;
+  ephemeralKeyPair?: unknown;
+  wrapSalt?: Uint8Array;
+}): KDNAExternalKeyGrant;
+export function authorizeExternalKeyGrant(options: {
+  grant: KDNAExternalKeyGrant;
+  issuerPublicKeys: Map<string, unknown> | Record<string, unknown>;
+  manifest: KDNAManifest;
+  checksums: KDNAChecksums;
+  envelope: KDNAExternalGrantEnvelope | Uint8Array;
+  deviceAgreementKey: KDNADeviceKeyPairs['agreement'] | unknown;
+  expectedAccountId: string;
+  expectedDeviceId: string;
+  expectedDeviceSigningPublicKey: string;
+  minimumStatusVersion?: number;
+  now?: Date | string;
+  networkAvailable?: boolean;
+  allowOffline?: boolean;
+}): KDNAExternalAuthorization;
+export function isVerifiedExternalEntitlement(value: unknown): value is KDNAVerifiedExternalEntitlement;
+
 // Stable public API — preferred entry points for third-party integrations.
 export type KDNAAssetInput = string | Uint8Array | KdnaAsset;
 
@@ -553,7 +712,7 @@ export interface KDNALoadPlan {
     path: string;
   };
 }
-export function planLoad(inputPath: string, options?: { password?: string; hasPassword?: boolean; entitlement?: Record<string, any> }): KDNALoadPlan;
+export function planLoad(inputPath: string, options?: { password?: string; hasPassword?: boolean; entitlement?: KDNAVerifiedExternalEntitlement | Record<string, any> }): KDNALoadPlan;
 export function buildChecksums(sourceDir: string): KDNAChecksums;
 export function pack(sourceDir: string, outputPath: string): void;
 export function unpack(inputPath: string, outputDir: string): void;
