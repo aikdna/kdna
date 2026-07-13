@@ -1,8 +1,8 @@
 # KDNA Tool Status Matrix
 
-> Last updated: 2026-07-13. Matches `@aikdna/kdna-cli@0.30.0`.
+> Last updated: 2026-07-13. Matches `@aikdna/kdna-cli@0.30.3`.
 
-## Runtime CLI (`@aikdna/kdna-cli@0.30.0`)
+## Runtime CLI (`@aikdna/kdna-cli@0.30.3`)
 
 | Command | Purpose | Status |
 |---|---|---|
@@ -12,7 +12,7 @@
 | `kdna load <path> --profile=... --as=...` | Render judgment context | GA |
 | `kdna pack <dir> <out.kdna>` | Deterministic ZIP pack | GA |
 | `kdna unpack <file.kdna> <dir>` | Unpack container | GA |
-| `kdna demo minimal <dir>` | Create a minimal current-format fixture | GA |
+| `kdna demo judgment <dir>` | Create a current-format judgment demonstration | GA |
 | `kdna install <file.kdna>` | Install to local asset store | GA |
 | `kdna list` | List installed assets | GA |
 | `kdna remove <name>` | Remove installed asset | GA |
@@ -34,7 +34,7 @@
 | `kdna doctor [--agents]` | Installation health check | GA |
 | `kdna setup` | First-time setup wizard | GA |
 
-## Studio (`@aikdna/kdna-studio-cli@0.8.14`)
+## Studio (`@aikdna/kdna-studio-cli@0.8.15`)
 
 | Command | Purpose | Status |
 |---|---|---|

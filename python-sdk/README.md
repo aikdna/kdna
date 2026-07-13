@@ -1,109 +1,49 @@
-# KDNA Python SDK
+# KDNA Python Adapter
 
-Load canonical KDNA `.kdna` cognition assets in Python.
+This source-only adapter lets Python applications use the official KDNA
+toolchain without opening `.kdna` containers themselves.
 
-The SDK is asset-first: public integration code should open `.kdna` files
-directly. Expanded project views are supported only for authoring and debugging
-tools.
+It delegates to `@aikdna/kdna-cli` for:
 
-## Install
-
-```bash
-pip install kdna
+```text
+inspect → LoadPlan → authorization → load → Runtime Capsule
 ```
 
-For local development from this repository:
+It never unzips an asset or decodes `payload.kdnab`. `open_kdna()` returns the
+Runtime Capsule produced by KDNA Core.
+
+## Install for local development
 
 ```bash
+npm install -g @aikdna/kdna-cli
 cd python-sdk
 python -m pip install -e ".[dev]"
 python -m pytest
 ```
 
-## Quickstart
+This directory is not currently published as an official PyPI distribution.
+Use the npm CLI/Core packages for the stable public runtime. The Python adapter
+is a source-level integration preview until a separate signed release pipeline
+exists.
+
+## Use
 
 ```python
-from kdna import open_kdna, inspect_kdna, verify_digest, format_context
+from kdna import inspect_kdna, open_kdna
 
-# Inspect and load a canonical asset without persistent extraction.
-# The SDK supports both legacy entry-based assets and v1 payload.kdnab assets.
-info = inspect_kdna("./writing.kdna")
-domain = open_kdna("./writing.kdna", mode="all")
-
-# Format for agent context
-context = format_context(domain)
-print(context)
+metadata = inspect_kdna("./writing.kdna")
+capsule = open_kdna("./writing.kdna", mode="minimum")
+assert capsule["type"] == "kdna.context.capsule"
 ```
 
-## Load Modes
+Modes map to Core profiles:
 
-```python
-# Minimum: Core + Patterns only
-domain = open_kdna("./writing.kdna", mode="minimum")
+- `minimum` → `compact`
+- `all` → `full`
+- `auto` → `compact`
 
-# All: load all 6 files
-domain = open_kdna("./writing.kdna", mode="all")
+The adapter fails closed when LoadPlan says `can_load_now: false`. Applications
+that support licensed, account, organization, or remote assets must use the
+corresponding authorization flow rather than bypassing it.
 
-# Auto: load based on input signals
-domain = open_kdna("./writing.kdna", mode="auto")
-```
-
-## Use with LLM
-
-```python
-from kdna import open_kdna, format_context
-import openai
-
-domain = open_kdna("./writing.kdna")
-context = format_context(domain)
-
-response = openai.ChatCompletion.create(
-    model="gpt-4",
-    messages=[
-        {"role": "system", "content": f"You are a sales expert. Use this judgment framework:\n\n{context}"},
-        {"role": "user", "content": "The client says our price is too high. What should I do?"}
-    ]
-)
-```
-
-## API
-
-### `open_kdna(asset_path, mode="minimum")`
-
-Open a canonical `.kdna` asset directly.
-
-- `asset_path`: Path to the `.kdna` file
-- `mode`: `"minimum"`, `"all"`, or `"auto"`
-- Returns: `dict` with `manifest`, `core`, `patterns`, optional entries, and `asset_info`
-- Supports both legacy `KDNA_*.json` ZIP entries and v1 `payload.kdnab` assets.
-
-### `inspect_kdna(asset_path)`
-
-Inspect manifest metadata, internal entries, required-entry status, and
-whole-file `asset_digest` without extracting the asset.
-
-### `verify_digest(asset_path, expected_digest)`
-
-Verify a `.kdna` asset against a `sha256:<hex>` digest.
-
-### `load_dev_source(source_dir, mode="minimum")`
-
-Developer-only helper for non-canonical source workspaces.
-
-- `source_dir`: Path to the dev source folder
-- `mode`: `"minimum"`, `"all"`, or `"auto"`
-- Returns: `dict` with `core`, `patterns`, and optional files
-
-### `format_context(domain)`
-
-Format a loaded domain into agent-readable text.
-
-- `domain`: Result from `open_kdna()` or `load_dev_source()`
-- Returns: Formatted context string
-
-### `classify_input(text)`
-
-Classify input text to detect scenario/reasoning/case/evolution signals.
-
-- `text`: Input string
-- Returns: List of detected signal types
+Set `KDNA_CLI` only when development or testing needs a non-global CLI command.
