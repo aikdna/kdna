@@ -112,11 +112,9 @@ test('cli: kdna validate --runtime exits 3 when LoadPlan cannot load now', () =>
 
 test('cli: kdna plan-load rejects an authoring source directory', () => {
   const r = runCli(['plan-load', exampleMinimal]);
-  assert.equal(r.status, 1, `stdout=${r.stdout}\nstderr=${r.stderr}`);
-  const out = JSON.parse(r.stdout);
-  assert.equal(out.state, 'invalid');
-  assert.equal(out.can_load_now, false);
-  assert.equal(out.issues[0].code, 'KDNA_ASSET_FILE_REQUIRED');
+  assert.equal(r.status, 2, `stdout=${r.stdout}\nstderr=${r.stderr}`);
+  assert.equal(r.stdout, '');
+  assert.match(r.stderr, /requires a packaged \.kdna asset file or installed package name/);
 });
 
 test('cli: kdna plan-load accepts a packaged .kdna asset', () => {
