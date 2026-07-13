@@ -39,7 +39,7 @@ judgment content — only identity and metadata.
 {
   "asset_id": "kdna:example:writing-core",
   "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
-  "title": "Atomspeak Core",
+  "title": "Editorial Review",
   "version": "1.0.0",
   "profiles_available": ["index", "compact", "scenario", "full"]
 }
@@ -66,7 +66,7 @@ and failure modes.
 **Example output** (`--as=prompt`):
 
 ```
-KDNA Judgment Asset: Atomspeak Core
+KDNA Judgment Asset: Editorial Review
 Asset ID: kdna:example:writing-core
 Profile: compact
 Max tokens hint: 500

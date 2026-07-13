@@ -1,11 +1,11 @@
 # KDNA
 
-> **Skills give agents hands. KDNA gives them judgment.**
+> **KDNA gives reusable judgment its own identity and lifecycle.**
 >
-> KDNA is an open judgment-asset protocol. It lets individuals, creators,
-> professionals, teams, organizations, Agents, and tools turn judgment, taste,
-> values, standards, boundaries, stance, and personality into portable `.kdna`
-> assets that can be used across models and runtimes.
+> KDNA is an open judgment-asset format and protocol. Individuals, teams,
+> Agents, and tools can create bounded judgment assets whose versions,
+> provenance, access, projections, and evidence can be managed independently
+> from any one Prompt, Skill, model, or application.
 
 Anyone can create a KDNA asset. KDNA Core validates structure, integrity,
 provenance, and authorization facts; it does not decide whether the judgment is
@@ -53,10 +53,12 @@ kdna plan-load ./judgment.kdna --json
 kdna load ./judgment.kdna --profile=compact --as=json
 ```
 
-The AIKDNA asset repository is a historical archive of pre-CBOR demonstrations;
-it is not the current onboarding path or an official content catalog.
+The AIKDNA asset repository currently displays two current-format technical
+reference assets and zero Clusters. Listing is not an endorsement or a claim of
+behavioral value, and the local demonstration above remains the recommended
+first-run path.
 
-→ [Full 5-minute guide](./docs/try-kdna.md) · [Historical reference archive](https://github.com/aikdna/kdna-assets)
+→ [Full 5-minute guide](./docs/try-kdna.md) · [Public reference display](https://github.com/aikdna/kdna-assets)
 
 ## What is a KDNA file?
 

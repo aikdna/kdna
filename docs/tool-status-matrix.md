@@ -59,11 +59,8 @@
 
 ## Native Apps
 
-| App | Status |
-|---|---|
-| KDNAChat (macOS) | In development |
-| KDNaStudio (macOS) | In development |
-| KDNAChat iOS / KDNaStudio iOS | Early development |
+Application products have independent release and maturity lifecycles. Their
+private development status is not part of the open protocol's tool matrix.
 
 ## Archived / Removed
 

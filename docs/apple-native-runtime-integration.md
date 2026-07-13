@@ -7,9 +7,10 @@ Normative source: `specs/kdna-authorization-contract.md`,
 
 ## Purpose
 
-This document is the execution contract for native Apple apps and Swift
-packages. It prevents KDNAChat, KDNA Studio, `kdna-app-shared`, and Swift
-runtime packages from each defining their own `.kdna` authorization behavior.
+This document is the execution contract for native Apple host applications and
+Swift packages. It prevents consumer apps, authoring apps, `kdna-app-shared`,
+and Swift runtime packages from each defining their own `.kdna` authorization
+behavior.
 
 ## Package Roles
 
@@ -18,8 +19,8 @@ runtime packages from each defining their own `.kdna` authorization behavior.
 | `kdna-core-swift` | Swift runtime implementation: validate, inspect, plan, authorize, project. | Product UI state or Studio authoring rules. |
 | `kdna-studio-swift` | Swift authoring kernel: project, cards, compile, runtime export. | Chat load behavior or app-private `.kdna` formats. |
 | `kdna-app-shared` | Shared app presentation/adapters after Core exposes stable types. | Access values, entitlement profiles, LoadPlan states, crypto profiles. |
-| KDNAChat | Consumer app: import local `.kdna`, render LoadPlan, request credentials, load projections. | Manifest-based authorization decisions. |
-| KDNA Studio app | Producer app: call Studio export and validate through Core. | Runtime container variants that Core/CLI cannot inspect. |
+| Native consumer app | Import local `.kdna`, render LoadPlan, request credentials, load projections. | Manifest-based authorization decisions. |
+| Native authoring app | Call Studio export and validate through Core. | Runtime container variants that Core/CLI cannot inspect. |
 
 ## Runtime Container Requirement
 
@@ -36,9 +37,9 @@ Top-level authoring/source entries such as `KDNA_Core.json`,
 `KDNA_Patterns.json`, reports, and `source_cards` MUST NOT be emitted as
 runtime distribution entries.
 
-## Chat Consumption Flow
+## Native Consumer Flow
 
-KDNAChat MUST follow this sequence:
+A native consumer app MUST follow this sequence:
 
 1. Import or reference a local `.kdna` file.
 2. Ask Swift Core for a LoadPlan.
@@ -47,7 +48,7 @@ KDNAChat MUST follow this sequence:
 5. Ask Swift Core to load an authorized runtime projection.
 6. Pass only the projection to the model context.
 
-KDNAChat MUST NOT infer `ready`, `needs_password`, `needs_license`,
+A native consumer app MUST NOT infer `ready`, `needs_password`, `needs_license`,
 `expired`, `revoked`, or `invalid` from raw manifest fields.
 
 ## Shared App Layer
@@ -73,15 +74,15 @@ The expected implementation direction is:
   `KDNAJudgmentProjection` for authorized minimal runtime projection.
 - `kdna-studio-core`, `kdna-studio-cli`, and `kdna-studio-swift` export runtime
   containers using the canonical four-entry shape.
-- KDNAChat should next replace app-side authorization parsing with Swift Core
-  LoadPlan rendering.
+- Native consumer apps should replace app-side authorization parsing with Swift
+  Core LoadPlan rendering.
 
 ## Remaining Native Work
 
 Before a native Chat/Studio release claims authorization compatibility:
 
 1. `kdna-app-shared` should add LoadPlan and projection presentation types.
-2. KDNAChat should import `.kdna` through Swift Core, not raw ZIP parsing.
-3. KDNAChat should render LoadPlan states and pass only
+2. Native consumer apps should import `.kdna` through Swift Core, not raw ZIP parsing.
+3. Native consumer apps should render LoadPlan states and pass only
    `KDNAJudgmentProjection` content to model context.
-4. KDNA Studio should validate exported assets with Swift Core and CLI.
+4. Native authoring apps should validate exported assets with Swift Core and CLI.

@@ -17,27 +17,15 @@
 //      allowlisted audit/history files. Public docs must describe public
 //      evidence, not point readers at inaccessible workspace paths.
 //
-// Allowlist rationale: RFC files (specs/RFC-*) are technical documents that
-// legitimately reference private repos as test fixtures and worked examples.
-// CHANGELOG.md is historical and may mention names that have since been
-// redacted. This script itself contains the strings it scans for, so it
-// self-exempts.
+// Historical, audit, fixture, and test files are still public surface. They are
+// scanned under the same privacy policy as current documentation. This script
+// contains the strings it scans for, so it self-exempts.
 
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
 const ALLOWLIST_PATHS = new Set([
   'scripts/check-public-surface.mjs', // self (contains scanned strings)
-  'scripts/validate-public-truth.js', // sibling check; references kdna-website in comments + lookup
-  'CHANGELOG.md', // historical references
-  'specs/RFC-0012-artifact-contract.md', // references kdna-workpack (public) and kdna-lab fixtures
-  'specs/RFC-0013-judgment-asset-lifecycle.md', // uses atomspeak as worked example
-  'specs/RFC-0017-kdna-card-v2.md', // references kdna-lab PRs as audit anchors
-  // PR notes and audit packs are audit-internal; they predate the
-  // structural-deletion policy and reference the historical private-repo
-  // names. They live under docs/audits/ and docs/rfc-status.md.
-  'docs/audits/',
-  'docs/rfc-status.md',
 ]);
 
 const REDACTED_PATTERN = /\bREDACTED\b/;
@@ -45,6 +33,9 @@ const PRIVATE_PATH_PATTERN = new RegExp(`\\b${'PRIVATE'}[\\\\/]`);
 const FORBIDDEN_PATTERNS = [
   { name: 'aikdna/kdna-website', pattern: /\baikdna\/kdna-website\b|kdna-website\b/ },
   { name: 'atomspeak', pattern: /\batomspeak\b|@atomspeak\b/ },
+  { name: 'private consumer app', pattern: /\bKDNAChat\b/i },
+  { name: 'private scheduled product', pattern: /\bCoachLettersAI\b|\bgvjl\b/i },
+  { name: 'private pipeline codename', pattern: /\bxplan\b/i },
 ];
 
 function listTrackedFiles() {
@@ -118,10 +109,7 @@ if (allFailures.length > 0) {
   console.error(
     '  - Internal workspace paths: describe the public evidence or delete the reference.',
   );
-  console.error('  - forbidden names:  move references to an allowlisted path (specs/RFC-*,');
-  console.error(
-    '                       docs/audits/, docs/rfc-status.md, CHANGELOG.md) or delete.',
-  );
+  console.error('  - Forbidden names: replace with a public-safe generic example or delete.');
   console.error('  - To update the forbidden-name set, edit scripts/check-public-surface.mjs.');
   process.exit(1);
 }

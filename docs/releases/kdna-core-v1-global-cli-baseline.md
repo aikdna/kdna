@@ -43,7 +43,7 @@ The following are **not** part of KDNA Core v1 active path:
 - Registry surface
 - Quality-badge system (untested / tested / validated / expert_reviewed / production_ready)
 - Marketplace / public registry framing
-- KDNAChat / KDNAStudio as named product surfaces
+- private applications as named public product surfaces
 - KDNA Viewer (deleted from docs)
 
 ## Current positioning

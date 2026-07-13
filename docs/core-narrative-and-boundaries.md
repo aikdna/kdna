@@ -8,11 +8,12 @@ the KDNA open protocol. Protocol implementers should read this document alongsid
 
 ## 1. One-Sentence Definition
 
-> KDNA is an open judgment-asset protocol. Anyone, any Agent, or any tool can
-> create a `.kdna` asset containing judgment, taste, values, standards, stance,
-> and personality. KDNA Core does not judge whether content is correct, good, or
-> worthy of existence. Assets are created, validated, authorized, loaded, and
-> projected through the KDNA toolchain and consumed by Agents across runtimes.
+> KDNA is an open judgment-asset format and protocol that gives reusable,
+> bounded judgment an independent identity and lifecycle. People, teams,
+> Agents, and tools can create assets whose judgment, versions, provenance,
+> access, projections, and evidence are managed independently from any one
+> Prompt, Skill, model, or application. KDNA Core validates the protocol; it
+> does not judge whether the content is correct, good, or worthy of existence.
 
 ## 2. Ten Immutable Boundaries
 
@@ -159,13 +160,13 @@ MUST NOT redefine:
 ### 2.10 Protocol Versioning
 
 The KDNA Core protocol version refers to the logical specification, not the wire
-format. The current logical specification is **Core GA**. The current wire
+format. The current public protocol and toolchain are **Beta**. The current wire
 container format is the **KDNA Asset Container** (`kdna_version: "1.0"`,
-`application/vnd.kdna.asset`), which implements the Core GA logical model.
+`application/vnd.kdna.asset`), which implements the current Core logical model.
 
 | Layer | Current Version | Meaning |
 |---|---|---|
-| Protocol (logical) | Core GA | What KDNA assets are, how they load |
+| Protocol (logical) | Beta | What KDNA assets are, how they load |
 | Container (wire) | `kdna_version: "1.0"` | KDNA Asset Container encoding |
 | Capsule (agent interface) | `kdna.context.capsule` v1.0 | What Agents receive |
 
@@ -314,4 +315,3 @@ validated MUST be four distinct concepts. Registry inclusion MUST NOT imply any
 of the others.
 
 ---
-

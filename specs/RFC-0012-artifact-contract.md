@@ -32,7 +32,8 @@ When an agent or engine generates a course, a daily letter, or an assessment rep
 
 ### 1.2 What happens in practice
 
-In the xplan course-engine pipeline (13 stages, 12 artifact types), every stage produces structured outputs. But without a standard envelope:
+In a multi-stage course-generation pipeline, every stage produces structured
+outputs. But without a standard envelope:
 
 - Each artifact type invents its own identity and metadata format
 - Quality results are stored inconsistently
@@ -417,7 +418,7 @@ The App Runtime Contract defines: `KDNA Asset → Route Result → Judgment Trac
 - Merge `artifact-envelope.schema.json` and `stage-definition.schema.json` into kdna spec
 - Add reference from kdna-workpack docs
 
-### Phase 2b: xplan adoption
+### Phase 2b: host-application adoption
 - Wrap all 12 course-engine artifact types in ArtifactEnvelope
 - Convert course-engine 13-stage config to StageDefinition array
 - Run a full pipeline with envelope-wrapped artifacts and verify trace linkage
@@ -440,7 +441,10 @@ The App Runtime Contract defines: `KDNA Asset → Route Result → Judgment Trac
 
 3. Should `source_kdna[].role` use the same 5-role enum as Cluster SPEC §13.3 (`primary`, `advisor`, `risk_guard`, `style_and_trust`, `evaluator`) or the simpler 3-role enum from WorkPack (`primary`, `constraint`, `fallback`)? Recommendation: use the 6-role Cluster enum for richer semantics.
 
-4. Where should business-specific artifact schemas live? In their engine repositories (xplan, daily-letter-engine), in a shared artifact-schema registry, or linked from the Artifact Contract spec? Recommendation: engine repositories first, aggregated registry later.
+4. Where should business-specific artifact schemas live? In their host engine
+repositories, in a shared artifact-schema registry, or linked from the Artifact
+Contract spec? Recommendation: engine repositories first, aggregated registry
+later.
 
 ---
 
