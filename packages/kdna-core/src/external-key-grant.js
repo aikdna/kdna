@@ -458,7 +458,7 @@ function authorizeExternalKeyGrant(options = {}) {
   let cek;
   try {
     cek = aesUnwrap(kek, decodeB64url(grant.wrap.wrapped_cek, 'wrapped CEK', 40));
-  } catch (error) {
+  } catch {
     fail('KDNA_GRANT_DEVICE_MISMATCH', 'device could not unwrap the external key grant');
   } finally {
     shared.fill(0);

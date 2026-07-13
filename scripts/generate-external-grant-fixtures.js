@@ -58,10 +58,12 @@ const manifest = {
     key_grant_profile: core.EXTERNAL_GRANT_PROFILE,
   },
 };
-const plaintext = Buffer.from(cbor.encode({
-  profile: 'judgment-profile-v1',
-  core: { highest_question: 'Can this device decrypt?', axioms: [] },
-}));
+const plaintext = Buffer.from(
+  cbor.encode({
+    profile: 'judgment-profile-v1',
+    core: { highest_question: 'Can this device decrypt?', axioms: [] },
+  }),
+);
 const root = Buffer.alloc(32, 0x19);
 const deviceAgreement = keyPair('x25519', 0x21);
 const deviceSigning = keyPair('ed25519', 0x22);
@@ -84,13 +86,18 @@ const entries = {
   'kdna.json': crypto.createHash('sha256').update(manifestBytes).digest('hex'),
   'payload.kdnab': crypto.createHash('sha256').update(encodedEnvelope).digest('hex'),
 };
-const combined = Object.keys(entries).sort().map((name) => `${name}:${entries[name]}`).join('\n');
+const combined = Object.keys(entries)
+  .sort()
+  .map((name) => `${name}:${entries[name]}`)
+  .join('\n');
 const checksums = {
   algorithm: 'sha256',
   manifest_digest: `sha256:${entries['kdna.json']}`,
   payload_digest: `sha256:${entries['payload.kdnab']}`,
   asset_digest: `sha256:${crypto.createHash('sha256').update(combined).digest('hex')}`,
-  entries: Object.fromEntries(Object.entries(entries).map(([name, value]) => [name, { algorithm: 'sha256', value }])),
+  entries: Object.fromEntries(
+    Object.entries(entries).map(([name, value]) => [name, { algorithm: 'sha256', value }]),
+  ),
 };
 
 function makeGrant(overrides = {}) {

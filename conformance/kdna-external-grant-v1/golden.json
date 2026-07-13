@@ -31,9 +31,7 @@
     },
     "encryption": {
       "profile": "kdna-envelope-external-grant-v1",
-      "encrypted_entries": [
-        "payload.kdnab"
-      ],
+      "encrypted_entries": ["payload.kdnab"],
       "key_grant_profile": "kdna-key-grant-v1"
     }
   },

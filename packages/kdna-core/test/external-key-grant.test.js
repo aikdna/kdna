@@ -14,16 +14,16 @@ function fixture() {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-external-grant-'));
   const manifest = {
     kdna_version: '1.0',
-    asset_id: 'kdna:atomspeak:minimal-communication',
+    asset_id: 'kdna:fixture:external-grant',
     asset_uid: 'urn:uuid:18a3b84e-d8a9-4e22-b486-3d15132d389e',
-    name: '@atomspeak/minimal-communication',
+    name: '@fixture/external-grant',
     asset_type: 'domain',
-    title: 'AtomSpeak Minimal Communication',
-    version: '3.0.0',
-    judgment_version: '3.0.0',
+    title: 'External Grant Fixture',
+    version: '1.0.0',
+    judgment_version: '1.0.0',
     created_at: '2026-07-13T00:00:00Z',
     updated_at: '2026-07-13T00:00:00Z',
-    creator: { name: 'AtomSpeak' },
+    creator: { name: 'Fixture Publisher' },
     compatibility: { min_loader_version: '0.16.0', profile: 'judgment-profile-v1' },
     payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: true },
     access: 'licensed',
@@ -52,8 +52,8 @@ function fixture() {
     manifest,
     entryName: 'payload.kdnab',
     issuerRootKey: issuerRoot,
-    keyRef: 'assetkey:atomspeak:minimal-communication:3.0.0',
-    issuerKeyId: 'atomspeak-asset-root-test-v1',
+    keyRef: 'assetkey:fixture:external-grant:1.0.0',
+    issuerKeyId: 'fixture-asset-root-test-v1',
     iv: Buffer.alloc(12, 0x24),
   });
   const encodedEnvelope = core.encodeExternalEnvelope(envelope);
@@ -69,8 +69,8 @@ function fixture() {
   const grant = core.createExternalKeyGrant({
     issuerRootKey: issuerRoot,
     issuerSigningPrivateKey: signing.privateKey,
-    signingKeyId: 'atomspeak-grant-test-v1',
-    issuer: 'https://atomspeak.com',
+    signingKeyId: 'fixture-grant-test-v1',
+    issuer: 'https://issuer.example',
     entitlementId: 'ent_test_01',
     accountId: 'acct_test_01',
     deviceId: 'dev_test_01',
@@ -96,7 +96,7 @@ function fixture() {
     device,
     grant,
     signing,
-    issuerPublicKeys: { 'atomspeak-grant-test-v1': `ed25519:${signingPublic.x}` },
+    issuerPublicKeys: { 'fixture-grant-test-v1': `ed25519:${signingPublic.x}` },
   };
 }
 
@@ -190,8 +190,8 @@ test('invalid time windows and status rollback fail closed', () => {
       () => core.createExternalKeyGrant({
         issuerRootKey: f.issuerRoot,
         issuerSigningPrivateKey: f.signing.privateKey,
-        signingKeyId: 'atomspeak-grant-test-v1',
-        issuer: 'https://atomspeak.com',
+        signingKeyId: 'fixture-grant-test-v1',
+        issuer: 'https://issuer.example',
         entitlementId: 'ent_test_01',
         accountId: 'acct_test_01',
         deviceId: 'dev_test_01',
@@ -218,8 +218,8 @@ test('tampered, revoked, digest, version, and device mismatches fail closed', ()
     const revokedGrant = core.createExternalKeyGrant({
       issuerRootKey: f.issuerRoot,
       issuerSigningPrivateKey: f.signing.privateKey,
-      signingKeyId: 'atomspeak-grant-test-v1',
-      issuer: 'https://atomspeak.com',
+      signingKeyId: 'fixture-grant-test-v1',
+      issuer: 'https://issuer.example',
       entitlementId: 'ent_test_01',
       accountId: 'acct_test_01',
       deviceId: 'dev_test_01',
@@ -252,7 +252,7 @@ test('tampered, revoked, digest, version, and device mismatches fail closed', ()
       },
       {
         expected: 'KDNA_GRANT_ASSET_MISMATCH',
-        overrides: { manifest: { ...f.manifest, version: '3.0.1' } },
+        overrides: { manifest: { ...f.manifest, version: '1.0.1' } },
       },
       {
         expected: 'KDNA_GRANT_DEVICE_MISMATCH',

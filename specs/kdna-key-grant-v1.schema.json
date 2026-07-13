@@ -5,10 +5,24 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "profile", "grant_id", "issuer", "signing_key_id", "entitlement_id",
-    "account_id", "device_id", "device_public_key", "device_signing_public_key",
-    "asset", "issued_at", "refresh_after", "offline_grace_until", "expires_at",
-    "status", "status_version", "wrap", "signature"
+    "profile",
+    "grant_id",
+    "issuer",
+    "signing_key_id",
+    "entitlement_id",
+    "account_id",
+    "device_id",
+    "device_public_key",
+    "device_signing_public_key",
+    "asset",
+    "issued_at",
+    "refresh_after",
+    "offline_grace_until",
+    "expires_at",
+    "status",
+    "status_version",
+    "wrap",
+    "signature"
   ],
   "properties": {
     "profile": { "const": "kdna-key-grant-v1" },
@@ -24,8 +38,14 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "asset_id", "asset_uid", "version", "digest", "entry_path",
-        "ciphertext_digest", "key_ref", "issuer_key_id"
+        "asset_id",
+        "asset_uid",
+        "version",
+        "digest",
+        "entry_path",
+        "ciphertext_digest",
+        "key_ref",
+        "issuer_key_id"
       ],
       "properties": {
         "asset_id": { "type": "string", "minLength": 1, "maxLength": 256 },
