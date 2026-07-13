@@ -1294,7 +1294,7 @@ function planLoad(inputPath, opts = {}) {
 
   function externalEntitlementMatchesCurrentAsset(entitlement) {
     if (!isVerifiedExternalEntitlement(entitlement) || !entitlement.asset) return false;
-    let checksums = null;
+    let checksums;
     try {
       checksums = v1.map['checksums.json']
         ? parseJsonEntry('checksums.json', v1.map['checksums.json'])
