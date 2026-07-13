@@ -35,12 +35,15 @@ This template demonstrates the minimum viable KDNA domain structure. Use it as a
 ### 4. How do I use it?
 
 ```bash
-# Copy this template and customize
+# Copy this expanded project view and customize
 cp -r templates/minimal-domain domains/my-domain
 # Edit the project-view JSON files and kdna.json
 # Add evaluation cases to evals/
-kdna validate .
-kdna pack . ./my-domain.kdna
+
+# Import the expanded project view into Studio, then export one .kdna asset
+kdna-studio create ../my-domain-studio --from-folder . --name @yourscope/my-domain
+kdna-studio export ../my-domain-studio --out ./my-domain.kdna
+
 kdna validate ./my-domain.kdna
 kdna plan-load ./my-domain.kdna
 ```

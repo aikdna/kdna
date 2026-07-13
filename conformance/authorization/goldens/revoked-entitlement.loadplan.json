@@ -17,7 +17,7 @@
   "input_fingerprint": {
     "has_password_input": false,
     "entitlement_input": "revoked",
-    "source_fingerprint": "sha256:90e21f1c1469c245c3279480ad095af5c0afa8a77d41b84097c110a51e50dcdf"
+    "source_fingerprint": "sha256:befdb9465b1d9469a6a2dba74c980a71560e0b390707334cdea0c2067ad85573"
   },
   "checks": {
     "format_valid": true,
@@ -35,7 +35,7 @@
     }
   ],
   "source": {
-    "kind": "dir",
+    "kind": "file",
     "path": "<fixture:revoked-entitlement>"
   }
 }

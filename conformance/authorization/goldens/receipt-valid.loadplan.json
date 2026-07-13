@@ -17,7 +17,7 @@
   "input_fingerprint": {
     "has_password_input": false,
     "entitlement_input": "active",
-    "source_fingerprint": "sha256:2776e8cbdea3fe253dffb36035c1bc4efce0d1ce3cb74083b77343bddafb8b5b"
+    "source_fingerprint": "sha256:8fbc87bbc60a6edf0c631479adf1c109cb246d0cabc58b4bc5db88cab99401c5"
   },
   "checks": {
     "format_valid": true,
@@ -29,7 +29,7 @@
   },
   "issues": [],
   "source": {
-    "kind": "dir",
+    "kind": "file",
     "path": "<fixture:receipt-valid>"
   }
 }

@@ -17,7 +17,7 @@
   "input_fingerprint": {
     "has_password_input": false,
     "entitlement_input": null,
-    "source_fingerprint": "sha256:d7a34d3617c992376be4354ab63a82b97ee46708a92576f2be088b996244dace"
+    "source_fingerprint": "sha256:7750d552c91001cbbf7b1a97588599891ec78dc52f1988eba4a2f1954d44a095"
   },
   "checks": {
     "format_valid": true,
@@ -35,7 +35,7 @@
     }
   ],
   "source": {
-    "kind": "dir",
+    "kind": "file",
     "path": "<fixture:unknown-access>"
   }
 }

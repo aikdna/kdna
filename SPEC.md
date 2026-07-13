@@ -218,8 +218,8 @@ Implementations MAY conform at one of three levels:
 
 A KDNA domain MUST be represented, distributed, installed, verified, and loaded as a `.kdna` container.
 
-The internal tree of a `.kdna` container is encoded in `payload.kdnab` (JSON in
-CBOR-encoded). Source trees (KDNA_Core.json,
+The judgment payload of a `.kdna` container is encoded as strict CBOR in
+`payload.kdnab`. Source trees (`KDNA_Core.json`,
 KDNA_Patterns.json, etc.) are authoring workspaces only and MUST NOT appear as
 top-level entries in a distribution `.kdna` asset. See `specs/container.md`.
 

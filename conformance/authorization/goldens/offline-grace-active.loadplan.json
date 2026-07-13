@@ -17,7 +17,7 @@
   "input_fingerprint": {
     "has_password_input": false,
     "entitlement_input": "offline_grace",
-    "source_fingerprint": "sha256:5b45a3e3121eecf98c267746d3046c8ed638ae3cc2f61497b88d9877a403b3dd"
+    "source_fingerprint": "sha256:0013d680f13cab37cfcf0e1b8b05201bfa424ac138a39335a584e0b2c7b5382b"
   },
   "checks": {
     "format_valid": true,
@@ -35,7 +35,7 @@
     }
   ],
   "source": {
-    "kind": "dir",
+    "kind": "file",
     "path": "<fixture:offline-grace-active>"
   }
 }

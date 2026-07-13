@@ -17,7 +17,7 @@
   "input_fingerprint": {
     "has_password_input": false,
     "entitlement_input": null,
-    "source_fingerprint": "sha256:8a7f15ab8f78ba42446520ce5d5b7f2f71ac7e115bf1a3e0bf8d6ce1d1795c5b"
+    "source_fingerprint": "sha256:974becec97d801d5395dcc6e3705f98e3e362b2600348dfb500d43e2f1c80d85"
   },
   "checks": {
     "format_valid": true,
@@ -35,7 +35,7 @@
     }
   ],
   "source": {
-    "kind": "dir",
+    "kind": "file",
     "path": "<fixture:remote-recognized-not-loaded>"
   }
 }

@@ -1,8 +1,8 @@
 # Archived Registry Fixture
 
 This directory is retained only for CLI/validator development fixtures from the
-pre-v1 registry experiment. It is not a public asset catalog and is not part of
-the KDNA Core v1 public beta path.
+historical registry experiment. It is not a public asset catalog and is not
+part of the current KDNA Core path.
 
 Rules:
 - Do not add public domains here.

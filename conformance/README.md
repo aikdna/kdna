@@ -2,7 +2,8 @@
 
 This suite lets third-party loaders, validators, and adapters prove that they
 implement the asset-first KDNA contract. Some legacy profiles remain for
-historical compatibility testing; they are not the current Core v1 launch path.
+historical compatibility testing; they are not part of the current conformance
+path.
 
 Conformance means:
 
@@ -42,7 +43,7 @@ Profiles are intentionally explicit:
 | `loader` | Implementation can validate, load, render, and digest-check assets. |
 | `asset-loader` | Combined asset + loader compatibility for SDKs and adapters. |
 | `runtime` | Runtime follows asset-first loading behavior. |
-| `registry` | Legacy registry implementation profile; not part of the current Core v1 launch path. |
+| `registry` | Legacy registry implementation profile; not part of the current conformance path. |
 | `phase2-protocol` | Implementation validates all Phase 2 RFC schema fixtures (artifact-envelope, fidelity-result, product-runtime, stage-definition). |
 
 Passing this suite is a technical compatibility signal. It is not a content

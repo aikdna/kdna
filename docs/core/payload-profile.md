@@ -143,7 +143,7 @@ This is the **smallest** payload that conforms to the schema. The conformance su
 
 ## Why `judgment-profile-v1` is explicit
 
-A previous design allowed the payload to be any JSON object. That forced every loader to learn a custom schema for every asset, and made the "what is a valid judgment asset?" question impossible to answer statically. By pinning a single profile in Phase 1, the format gains a **conformance target**: a tool can claim to be a "KDNA v1 loader" and validate against this profile. Future profiles will be additive; the `profile` field is the version pin.
+A previous design allowed the payload to be any JSON object. That forced every loader to learn a custom schema for every asset, and made the "what is a valid judgment asset?" question impossible to answer statically. By pinning a single profile, the format gains a **conformance target**: a tool can claim to be a conforming KDNA loader and validate against this profile. The `profile` field is a wire-level schema discriminator, not a user-facing container generation.
 
 ## What this profile does NOT define
 

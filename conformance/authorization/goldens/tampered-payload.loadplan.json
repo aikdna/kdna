@@ -17,7 +17,7 @@
   "input_fingerprint": {
     "has_password_input": false,
     "entitlement_input": null,
-    "source_fingerprint": "sha256:70c6f7684ea88068dd97c27b7151bbea69e5bff9a54b929065f78587aec56d8e"
+    "source_fingerprint": "sha256:dfb2ebd306101688d72bdd9cd4fa5e9c332eeb9614cb0c16185858033b166863"
   },
   "checks": {
     "format_valid": true,
@@ -40,7 +40,7 @@
     }
   ],
   "source": {
-    "kind": "dir",
+    "kind": "file",
     "path": "<fixture:tampered-payload>"
   }
 }

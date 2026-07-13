@@ -17,7 +17,7 @@
   "input_fingerprint": {
     "has_password_input": false,
     "entitlement_input": null,
-    "source_fingerprint": "sha256:90c01e50ee62764511cde607272a98074efe05ba292e62fa1e791c72403f4c06"
+    "source_fingerprint": "sha256:df8909f5bdcfcf9a60e77c21ff1f298c91e1f3aa79b99bd35162cd1e4b01c33d"
   },
   "checks": {
     "format_valid": true,
@@ -29,7 +29,7 @@
   },
   "issues": [],
   "source": {
-    "kind": "dir",
+    "kind": "file",
     "path": "<fixture:public-valid>"
   }
 }

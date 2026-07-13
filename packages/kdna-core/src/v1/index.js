@@ -1,17 +1,15 @@
 /**
- * v1-cli.js — KDNA Core v1 inspect / validate / pack / unpack for the
- * kdna monorepo CLI shim.
+ * KDNA Asset Container inspect / validate / pack / unpack implementation.
  *
  * KDNA Core is the official KDNA judgment-asset format and runtime
  * loading contract. .kdna assets are created, inspected, packed,
  * unpacked, and validated through the official KDNA toolchain. This
- * module is the v1 component of that toolchain.
  *
- * The KDNA Core v1 file format is documented in docs/core/file-format.md.
+ * The KDNA Asset Container is documented in docs/core/file-format.md.
  * This module is the shared implementation that:
  *
- *   - packages/kdna/bin/kdna.js uses as a v1-aware router
- *   - scripts/v1-*.mjs delegate to (via child_process) so the legacy
+ *   - packages/kdna/bin/kdna.js uses as its container router
+ *   - compatibility scripts delegate to it so historical tooling
  *     scripts and the official CLI cannot drift
  *
  * Hard rules from the format spec:
@@ -178,7 +176,7 @@ function loadSchemas() {
 // ─── Format detection ──────────────────────────────────────────────────
 
 /**
- * Detect whether a directory is a v1 source layout.
+ * Detect whether a directory is a KDNA authoring source layout.
  * Required entries: mimetype, kdna.json, payload.kdnab.
  * mimetype content must equal "application/vnd.kdna.asset".
  */
@@ -536,10 +534,10 @@ function readV1Layout(absPath) {
     for (const f of V1_REQUIRED_DIR_ENTRIES) {
       const full = path.join(absPath, f);
       if (!fs.existsSync(full)) {
-        throw new Error(`not a KDNA v1 source dir: missing ${f}`);
+        throw new Error(`not a KDNA authoring source directory: missing ${f}`);
       }
       if (fs.lstatSync(full).isSymbolicLink()) {
-        throw new Error(`not a KDNA v1 source dir: ${f} must not be a symlink`);
+        throw new Error(`not a KDNA authoring source directory: ${f} must not be a symlink`);
       }
     }
     for (const f of [...V1_REQUIRED_DIR_ENTRIES, ...V1_OPTIONAL_DIR_ENTRIES]) {
@@ -557,10 +555,10 @@ function readV1Layout(absPath) {
     kind = 'file';
     entries = listZipEntries(absPath);
     if (entries.length === 0 || entries[0].name !== 'mimetype') {
-      throw new Error('not a KDNA v1 container: first entry is not mimetype');
+      throw new Error('not a KDNA Asset Container: first entry is not mimetype');
     }
     if (entries[0].method !== 0) {
-      throw new Error('not a KDNA v1 container: mimetype must be uncompressed');
+      throw new Error('not a KDNA Asset Container: mimetype must be uncompressed');
     }
     for (const e of entries) {
       // We only need the well-known entries; signatures/ attachments/ etc.
@@ -576,7 +574,7 @@ function readV1Layout(absPath) {
     }
     for (const f of V1_REQUIRED_DIR_ENTRIES) {
       if (!map[f]) {
-        throw new Error(`not a KDNA v1 container: missing ${f}`);
+        throw new Error(`not a KDNA Asset Container: missing ${f}`);
       }
     }
   } else {
@@ -725,7 +723,7 @@ function runValidate(v1) {
   if (!validators) {
     result.schema_valid = false;
     problems.push(
-      'schema: ajv not available. KDNA Core v1 requires ajv and ajv-formats for JSON-Schema validation. Run: npm install ajv ajv-formats (or: npm install -g ajv ajv-formats for global CLI users)',
+      'schema: KDNA Core requires ajv and ajv-formats for JSON-Schema validation. Run: npm install ajv ajv-formats (or: npm install -g ajv ajv-formats for global CLI users)',
     );
     return finalizeValidate(result, problems);
   }
@@ -919,7 +917,7 @@ function buildChecksumsV1(sourceDir) {
 // ─── pack ──────────────────────────────────────────────────────────────
 
 /**
- * Pack a v1 source directory into a .kdna container. Output is
+ * Pack an authoring source directory into a .kdna asset. Output is
  * deterministic: the same source directory packed twice produces
  * byte-identical output (fixed DOS timestamps, fixed entry order,
  * mimetype first).
@@ -1017,7 +1015,7 @@ function unpack(inputPath, outputDir) {
     throw new Error(`not a file: ${absIn}`);
   }
   const entries = listZipEntries(absIn);
-  // Sanity: v1 container must have mimetype as first entry with the v1 media type.
+  // Sanity: the asset must have mimetype as its first, uncompressed entry.
   if (entries.length === 0 || entries[0].name !== 'mimetype') {
     throw new Error('not a KDNA container: first entry is not mimetype');
   }
@@ -1211,14 +1209,15 @@ function canonicalToV1Layout(asset) {
 }
 
 /**
- * Plan a KDNA v1 runtime load without decrypting or emitting judgment content.
+ * Plan a KDNA runtime load without decrypting or emitting judgment content.
  * Product consumers such as Chat should render authorization UI from this
  * result instead of parsing manifest fields directly.
  */
 function planLoad(inputPath, opts = {}) {
   let v1;
 
-  // Try the unified container dispatcher first (handles v1 dirs, v1 containers, v2 containers)
+  // Try the unified container dispatcher first; the internal compatibility
+  // reader below remains available only for authoring and migration tooling.
   if (readAsset !== null) {
     try {
       const asset = readAsset(path.resolve(inputPath));

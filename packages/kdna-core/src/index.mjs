@@ -20,19 +20,21 @@ export {
   readLayout,
   inspect,
   validate,
-  planLoad,
-  loadAuthorized,
   buildChecksums,
   pack,
   unpack,
-  load,
-  loadAsset,
   buildCapsule,
   FORBIDDEN_OUTPUT_TERMS,
   parseSemver,
   compareSemver,
   satisfies,
 } from './v1/index.js';
+
+import runtimeApi from './runtime-api.js';
+export const planLoad = runtimeApi.planLoad;
+export const loadAuthorized = runtimeApi.loadAuthorized;
+export const load = runtimeApi.load;
+export const loadAsset = runtimeApi.loadAsset;
 
 export { validateDomainSchema, validateCrossFile } from './validate-pure.js';
 

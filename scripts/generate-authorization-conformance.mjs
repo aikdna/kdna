@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
@@ -22,7 +23,7 @@ const cases = [
   {
     id: 'public-valid',
     fixture: 'public-valid',
-    description: 'Public v1 asset loads immediately through a minimal projection.',
+    description: 'Public packaged asset loads immediately through a minimal projection.',
     manifest: { access: 'public' },
     options: {},
     cli_args: [],
@@ -256,7 +257,11 @@ ensureDir(goldensRoot);
 
 const caseIndex = cases.map((testCase) => {
   const fixtureDir = writeFixture(testCase);
-  const plan = normalizePlan(v1.planLoad(fixtureDir, testCase.options), testCase);
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-auth-golden-'));
+  const assetPath = path.join(tempRoot, `${testCase.fixture}.kdna`);
+  v1.pack(fixtureDir, assetPath);
+  const plan = normalizePlan(v1.planLoad(assetPath, testCase.options), testCase);
+  fs.rmSync(tempRoot, { recursive: true, force: true });
   fs.writeFileSync(path.join(goldensRoot, `${testCase.id}.loadplan.json`), json(plan));
   return {
     id: testCase.id,
