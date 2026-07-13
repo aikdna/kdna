@@ -123,6 +123,8 @@ test('external grant decrypts only after signed account/device authorization', (
   try {
     const session = authorize(f);
     assert.equal(session.entitlement.status, 'active');
+    assert.equal(Object.isFrozen(session.entitlement), true);
+    assert.equal(Object.isFrozen(session.entitlement.asset), true);
     assert.deepEqual(
       session.decryptEntry({
         entryName: 'payload.kdnab',
@@ -149,6 +151,37 @@ test('external grant decrypts only after signed account/device authorization', (
     session.dispose();
   } finally {
     fs.rmSync(f.tmp, { recursive: true, force: true });
+  }
+});
+
+test('a verified entitlement cannot make a different asset plan ready', () => {
+  const f = fixture();
+  const other = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-external-other-'));
+  try {
+    for (const name of fs.readdirSync(f.tmp)) {
+      fs.copyFileSync(path.join(f.tmp, name), path.join(other, name));
+    }
+    const manifestPath = path.join(other, 'kdna.json');
+    const otherManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    otherManifest.asset_id = 'kdna:fixture:different-external-grant';
+    otherManifest.asset_uid = 'urn:uuid:18a3b84e-d8a9-4e22-b486-3d15132d3999';
+    otherManifest.name = '@fixture/different-external-grant';
+    otherManifest.version = '2.0.0';
+    fs.writeFileSync(manifestPath, JSON.stringify(otherManifest));
+    fs.writeFileSync(
+      path.join(other, 'checksums.json'),
+      JSON.stringify(core.buildChecksums(other)),
+    );
+
+    const session = authorize(f);
+    const plan = core.planLoad(other, { entitlement: session.entitlement });
+    assert.equal(plan.state, 'invalid');
+    assert.equal(plan.can_load_now, false);
+    assert.ok(plan.issues.some((issue) => issue.code === 'KDNA_GRANT_ASSET_MISMATCH'));
+    session.dispose();
+  } finally {
+    fs.rmSync(f.tmp, { recursive: true, force: true });
+    fs.rmSync(other, { recursive: true, force: true });
   }
 });
 

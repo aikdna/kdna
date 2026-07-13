@@ -485,6 +485,16 @@ export interface KDNAVerifiedExternalEntitlement {
   readonly refresh_after: string;
   readonly offline_grace_until: string;
   readonly expires_at: string;
+  readonly asset: {
+    readonly asset_id: string;
+    readonly asset_uid: string;
+    readonly version: string;
+    readonly digest: string;
+    readonly entry_path: string;
+    readonly ciphertext_digest: string;
+    readonly key_ref: string;
+    readonly issuer_key_id: string;
+  };
 }
 
 export interface KDNAExternalAuthorization {

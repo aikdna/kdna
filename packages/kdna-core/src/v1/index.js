@@ -1292,6 +1292,36 @@ function planLoad(inputPath, opts = {}) {
 
   const manifest = v1.manifest;
 
+  function externalEntitlementMatchesCurrentAsset(entitlement) {
+    if (!isVerifiedExternalEntitlement(entitlement) || !entitlement.asset) return false;
+    let checksums = null;
+    try {
+      checksums = v1.map['checksums.json']
+        ? parseJsonEntry('checksums.json', v1.map['checksums.json'])
+        : null;
+    } catch {
+      return false;
+    }
+    return entitlement.asset.asset_id === (manifest.asset_id || manifest.name)
+      && entitlement.asset.asset_uid === manifest.asset_uid
+      && entitlement.asset.version === manifest.version
+      && entitlement.asset.digest === checksums?.asset_digest
+      && entitlement.asset.entry_path === manifest.payload?.path;
+  }
+
+  function rejectExternalEntitlementMismatch() {
+    plan.state = 'invalid';
+    plan.required_action = 'block';
+    plan.can_load_now = false;
+    plan.projection_policy = 'none';
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_GRANT_ASSET_MISMATCH',
+      'blocking',
+      'The verified account/device grant is bound to a different asset, version, digest, or encrypted entry.',
+    ));
+    return finalizeLoadPlan(plan);
+  }
+
   // Resolve dependencies if declared (Story 6)
   const resolvedDeps = [];
   if (manifest.dependencies && typeof manifest.dependencies === 'object' && Object.keys(manifest.dependencies).length > 0) {
@@ -1464,6 +1494,9 @@ function planLoad(inputPath, opts = {}) {
 
     if (plan.entitlement_profile === 'account') {
       if (isVerifiedExternalEntitlement(opts.entitlement)) {
+        if (!externalEntitlementMatchesCurrentAsset(opts.entitlement)) {
+          return rejectExternalEntitlementMismatch();
+        }
         plan.state = opts.entitlement.status === 'offline_grace' ? 'offline_grace' : 'ready';
         plan.required_action = opts.entitlement.status === 'offline_grace' ? 'sync' : 'load';
         plan.can_load_now = true;
@@ -1491,6 +1524,9 @@ function planLoad(inputPath, opts = {}) {
 
     if (plan.entitlement_profile === 'org') {
       if (isVerifiedExternalEntitlement(opts.entitlement)) {
+        if (!externalEntitlementMatchesCurrentAsset(opts.entitlement)) {
+          return rejectExternalEntitlementMismatch();
+        }
         plan.state = opts.entitlement.status === 'offline_grace' ? 'offline_grace' : 'ready';
         plan.required_action = opts.entitlement.status === 'offline_grace' ? 'sync' : 'load';
         plan.can_load_now = true;

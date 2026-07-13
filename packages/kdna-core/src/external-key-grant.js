@@ -465,7 +465,17 @@ function authorizeExternalKeyGrant(options = {}) {
     kek.fill(0);
   }
 
-  const entitlement = {
+  const assetBinding = Object.freeze({
+    asset_id: grant.asset.asset_id,
+    asset_uid: grant.asset.asset_uid,
+    version: grant.asset.version,
+    digest: grant.asset.digest,
+    entry_path: grant.asset.entry_path,
+    ciphertext_digest: grant.asset.ciphertext_digest,
+    key_ref: grant.asset.key_ref,
+    issuer_key_id: grant.asset.issuer_key_id,
+  });
+  const entitlement = Object.freeze({
     status: state,
     profile: EXTERNAL_GRANT_PROFILE,
     grant_id: grant.grant_id,
@@ -475,7 +485,8 @@ function authorizeExternalKeyGrant(options = {}) {
     refresh_after: grant.refresh_after,
     offline_grace_until: grant.offline_grace_until,
     expires_at: grant.expires_at,
-  };
+    asset: assetBinding,
+  });
   verifiedEntitlements.add(entitlement);
 
   const decryptEntry = ({ entryName, ciphertext, manifest: runtimeManifest }) => {
