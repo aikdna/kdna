@@ -49,7 +49,13 @@ test('Core runtime API rejects source directories and accepts packaged assets', 
   try {
     const assetPath = path.join(tmp, 'minimal.kdna');
     v1.pack(source, assetPath);
-    assert.equal(core.planLoad(assetPath).state, 'ready');
+    const packagedPlan = core.planLoad(assetPath);
+    assert.equal(packagedPlan.state, 'ready');
+    assert.equal(
+      packagedPlan.input_fingerprint.source_fingerprint,
+      v1.planLoad(source).input_fingerprint.source_fingerprint,
+      'source fingerprint is stable across source and packaged transports',
+    );
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }

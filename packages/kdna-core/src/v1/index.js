@@ -1099,12 +1099,11 @@ function finalizeLoadPlan(plan) {
   return plan;
 }
 
-function computeSourceFingerprint(inputPath, v1) {
-  const absPath = path.resolve(inputPath);
-  if (v1.kind === 'file') {
-    return `sha256:${crypto.createHash('sha256').update(fs.readFileSync(absPath)).digest('hex')}`;
-  }
-
+function computeSourceFingerprint(_inputPath, v1) {
+  // Fingerprint the logical entries, not the transport ZIP bytes. DEFLATE
+  // output can differ between zlib versions and operating systems even when
+  // every uncompressed KDNA entry is identical. LoadPlan conformance must be
+  // stable across JS, Swift, CI runners, and repackaging transports.
   const hash = crypto.createHash('sha256');
   for (const name of Object.keys(v1.map).sort()) {
     const bytes = v1.map[name];
