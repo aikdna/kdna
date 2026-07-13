@@ -641,7 +641,7 @@ export function matchDomain(input: string, candidates: Array<KDNAAssetInput | KD
 export function matchDomainSync(input: string, candidates: Array<KDNAAssetInput | KDNAInspectResult>, options?: KdnaDecryptOptions): KDNAMatchResult[];
 export function composeKDNA(inputs: KDNAAssetInput[], options?: { input?: string; profile?: 'compact' | 'scenario' | 'full' | string; separator?: string } & KdnaDecryptOptions): Promise<KDNAComposeResult>;
 
-// KDNA Core — source directory / container API
+// KDNA Core — authoring source and packaged runtime API
 export const MIMETYPE: string;
 export const REQUIRED_DIR_ENTRIES: string[];
 

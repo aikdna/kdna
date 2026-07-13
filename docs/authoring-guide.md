@@ -83,7 +83,7 @@ If you write KDNA JSON from scratch, you MUST use these exact field names. The l
 | `brief` / `bad_pattern` / `master_pattern` (on cases) | `title` / `what_happened` / `structural_pattern` |
 | `capability_layers` (on evolution) | `stages` |
 
-For dev source experiments, start from `kdna dev scaffold <name>` or `kdna cluster init <name>` so field names stay consistent. This creates a non-canonical workspace only. A formal `.kdna` asset is valid when it is exported to the v1 container format and passes `kdna validate`; the Studio toolchain is the recommended authoring path, not the only valid creation path.
+For dev source experiments, start from `kdna dev scaffold <name>` or `kdna cluster init <name>` so field names stay consistent. This creates a non-canonical workspace only. A formal asset exists when it is exported to the KDNA Asset Container and passes `kdna validate`; the Studio toolchain is one authoring path, not a creation gate.
 
 ---
 

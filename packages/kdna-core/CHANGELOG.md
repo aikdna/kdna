@@ -10,6 +10,16 @@
   signature/binding verification, in-memory decryption, and explicit zeroization.
 - LoadPlan accepts only a runtime-verified external entitlement for account/org
   assets; structurally similar status objects no longer authorize loading.
+- Reject authoring source directories at the public runtime API boundary;
+  `planLoad`, `load`, `loadAsset`, and `loadAuthorized` now require a packaged
+  `.kdna` file, including resolver-provided dependencies.
+- Regenerate authorization conformance fixtures from packaged assets and keep
+  source directories available only to authoring operations such as inspect,
+  validate, pack, and unpack.
+- Remove stale public format-generation wording and local coordination-path
+  assumptions from protocol documentation and public audit scripts.
+- Make release readiness fail for dirty inputs or when the selected version
+  tag does not point to the current commit.
 
 ### Security
 

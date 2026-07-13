@@ -1,8 +1,14 @@
 # ADR-003: Canonical Distribution Container
 
-- **Status**: accepted
+- **Status**: superseded by the current single-container specification
 - **Date**: 2026-06-25
 - **Deciders**: KDNA Core team
+
+> **Historical decision record.** This ADR captures the consolidation work that
+> removed the former multi-format implementation. It is not current format
+> guidance. There is one user-facing KDNA Asset Container. See
+> [SPEC.md](../../SPEC.md), [file-format.md](../core/file-format.md), and
+> [version-taxonomy.md](../version-taxonomy.md).
 
 ## Context
 

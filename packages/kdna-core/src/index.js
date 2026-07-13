@@ -12,6 +12,7 @@ const externalKeyGrant = require('./external-key-grant');
 const publicApi = require('./public-api');
 const workpackPure = require('./workpack-pure');
 const v1 = require('./v1');
+const runtimeApi = require('./runtime-api');
 
 module.exports = {
   ...publicApi,
@@ -25,4 +26,5 @@ module.exports = {
   ...externalKeyGrant,
   ...workpackPure,
   ...v1,
+  ...runtimeApi,
 };

@@ -12,6 +12,9 @@ const NOW = new Date('2026-07-13T00:00:00Z');
 
 function fixture() {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-external-grant-'));
+  const source = path.join(tmp, 'source');
+  const assetFile = path.join(tmp, 'external-grant.kdna');
+  fs.mkdirSync(source, { recursive: true });
   const manifest = {
     kdna_version: '1.0',
     asset_id: 'kdna:fixture:external-grant',
@@ -57,11 +60,12 @@ function fixture() {
     iv: Buffer.alloc(12, 0x24),
   });
   const encodedEnvelope = core.encodeExternalEnvelope(envelope);
-  fs.writeFileSync(path.join(tmp, 'mimetype'), core.MIMETYPE);
-  fs.writeFileSync(path.join(tmp, 'kdna.json'), JSON.stringify(manifest));
-  fs.writeFileSync(path.join(tmp, 'payload.kdnab'), encodedEnvelope);
-  const checksums = core.buildChecksums(tmp);
-  fs.writeFileSync(path.join(tmp, 'checksums.json'), JSON.stringify(checksums));
+  fs.writeFileSync(path.join(source, 'mimetype'), core.MIMETYPE);
+  fs.writeFileSync(path.join(source, 'kdna.json'), JSON.stringify(manifest));
+  fs.writeFileSync(path.join(source, 'payload.kdnab'), encodedEnvelope);
+  const checksums = core.buildChecksums(source);
+  fs.writeFileSync(path.join(source, 'checksums.json'), JSON.stringify(checksums));
+  core.pack(source, assetFile);
 
   const device = core.generateDeviceKeyPairs();
   const signing = crypto.generateKeyPairSync('ed25519');
@@ -87,6 +91,8 @@ function fixture() {
   });
   return {
     tmp,
+    source,
+    assetFile,
     manifest,
     plaintext,
     envelope,
@@ -134,11 +140,11 @@ test('external grant decrypts only after signed account/device authorization', (
       f.plaintext,
     );
 
-    const plan = core.planLoad(f.tmp, { entitlement: session.entitlement });
+    const plan = core.planLoad(f.assetFile, { entitlement: session.entitlement });
     assert.equal(plan.state, 'ready');
     assert.equal(plan.can_load_now, true);
 
-    const capsule = core.loadAuthorized(f.tmp, {
+    const capsule = core.loadAuthorized(f.assetFile, {
       profile: 'compact',
       as: 'json',
       entitlement: session.entitlement,
@@ -158,8 +164,8 @@ test('a verified entitlement cannot make a different asset plan ready', () => {
   const f = fixture();
   const other = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-external-other-'));
   try {
-    for (const name of fs.readdirSync(f.tmp)) {
-      fs.copyFileSync(path.join(f.tmp, name), path.join(other, name));
+    for (const name of fs.readdirSync(f.source)) {
+      fs.copyFileSync(path.join(f.source, name), path.join(other, name));
     }
     const manifestPath = path.join(other, 'kdna.json');
     const otherManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
@@ -173,8 +179,10 @@ test('a verified entitlement cannot make a different asset plan ready', () => {
       JSON.stringify(core.buildChecksums(other)),
     );
 
+    const otherAsset = path.join(other, 'different-external-grant.kdna');
+    core.pack(other, otherAsset);
     const session = authorize(f);
-    const plan = core.planLoad(other, { entitlement: session.entitlement });
+    const plan = core.planLoad(otherAsset, { entitlement: session.entitlement });
     assert.equal(plan.state, 'invalid');
     assert.equal(plan.can_load_now, false);
     assert.ok(plan.issues.some((issue) => issue.code === 'KDNA_GRANT_ASSET_MISMATCH'));
@@ -188,7 +196,7 @@ test('a verified entitlement cannot make a different asset plan ready', () => {
 test('plain active status cannot authorize an account asset', () => {
   const f = fixture();
   try {
-    const plan = core.planLoad(f.tmp, { entitlement: { status: 'active' } });
+    const plan = core.planLoad(f.assetFile, { entitlement: { status: 'active' } });
     assert.equal(plan.state, 'needs_account');
     assert.equal(plan.can_load_now, false);
   } finally {
@@ -201,7 +209,10 @@ test('offline grace is explicit and hard expiry fails closed', () => {
   try {
     const offline = authorize(f, { now: new Date('2026-07-16T00:00:00Z') });
     assert.equal(offline.entitlement.status, 'offline_grace');
-    assert.equal(core.planLoad(f.tmp, { entitlement: offline.entitlement }).state, 'offline_grace');
+    assert.equal(
+      core.planLoad(f.assetFile, { entitlement: offline.entitlement }).state,
+      'offline_grace',
+    );
     offline.dispose();
     assert.throws(
       () => authorize(f, { now: new Date('2026-07-22T00:00:00Z') }),

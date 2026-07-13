@@ -94,8 +94,10 @@ test('cli: kdna validate --runtime exits 3 when LoadPlan cannot load now', () =>
       path.join(dir, 'checksums.json'),
       JSON.stringify(v1.buildChecksums(dir), null, 2),
     );
+    const assetPath = path.join(dir, 'remote.kdna');
+    v1.pack(dir, assetPath);
 
-    const r = runCli(['validate', dir, '--runtime']);
+    const r = runCli(['validate', assetPath, '--runtime']);
     assert.equal(r.status, 3, `stdout=${r.stdout}\nstderr=${r.stderr}`);
     const out = JSON.parse(r.stdout);
     assert.equal(out.overall_valid, true);
@@ -108,8 +110,19 @@ test('cli: kdna validate --runtime exits 3 when LoadPlan cannot load now', () =>
   }
 });
 
-test('cli: kdna plan-load examples/minimal returns a ready LoadPlan', () => {
+test('cli: kdna plan-load rejects an authoring source directory', () => {
   const r = runCli(['plan-load', exampleMinimal]);
+  assert.equal(r.status, 1, `stdout=${r.stdout}\nstderr=${r.stderr}`);
+  const out = JSON.parse(r.stdout);
+  assert.equal(out.state, 'invalid');
+  assert.equal(out.can_load_now, false);
+  assert.equal(out.issues[0].code, 'KDNA_ASSET_FILE_REQUIRED');
+});
+
+test('cli: kdna plan-load accepts a packaged .kdna asset', () => {
+  const assetPath = tmpFile('minimal.kdna');
+  v1.pack(exampleMinimal, assetPath);
+  const r = runCli(['plan-load', assetPath]);
   assert.equal(r.status, 0, `stdout=${r.stdout}\nstderr=${r.stderr}`);
   const out = JSON.parse(r.stdout);
   assert.equal(out.access, 'public');
@@ -135,8 +148,10 @@ test('cli: kdna plan-load returns 3 when the plan is valid but cannot load now',
       path.join(dir, 'checksums.json'),
       JSON.stringify(v1.buildChecksums(dir), null, 2),
     );
+    const assetPath = path.join(dir, 'remote.kdna');
+    v1.pack(dir, assetPath);
 
-    const r = runCli(['plan-load', dir]);
+    const r = runCli(['plan-load', assetPath]);
     assert.equal(r.status, 3, `stdout=${r.stdout}\nstderr=${r.stderr}`);
     const out = JSON.parse(r.stdout);
     assert.equal(out.state, 'needs_runtime');

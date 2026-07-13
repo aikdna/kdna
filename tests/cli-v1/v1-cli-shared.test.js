@@ -552,6 +552,35 @@ test('loadV1: compact profile preserves Human Lock boundary fields', () => {
   }
 });
 
+test('load: compact profile preserves canonical reasoning.self_check entries', () => {
+  const dir = makeTmp('kdna-self-check-projection-');
+  try {
+    copyMinimal(dir);
+    const payloadPath = path.join(dir, 'payload.kdnab');
+    const payload = readPayload(payloadPath);
+    payload.reasoning = {
+      ...(payload.reasoning || {}),
+      self_check: [
+        'Did I preserve the judgment boundary?',
+        { type: 'question', text: 'Did I avoid inventing human provenance?' },
+      ],
+    };
+    fs.writeFileSync(payloadPath, cbor.encode(payload));
+    fs.writeFileSync(
+      path.join(dir, 'checksums.json'),
+      JSON.stringify(v1.buildChecksums(dir), null, 2),
+    );
+
+    const loaded = v1.load(dir, { profile: 'compact', as: 'json' });
+    assert.deepEqual(loaded.context.self_checks, [
+      { type: 'text', text: 'Did I preserve the judgment boundary?' },
+      { type: 'question', text: 'Did I avoid inventing human provenance?' },
+    ]);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('planLoad: unknown access fails closed with a schema-valid plan', () => {
   const dir = makeTmp('kdna-v1-plan-unknown-access-');
   try {

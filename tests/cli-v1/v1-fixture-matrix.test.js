@@ -3,14 +3,14 @@
  *
  * Covers: source dir, container, load profiles, invalid cases, content-neutrality.
  */
-const { test } = require('node:test');
+const { after, test } = require('node:test');
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const cbor = require('cbor-x');
-const { buildChecksums } = require('../../packages/kdna-core/src/v1');
+const { buildChecksums, pack } = require('../../packages/kdna-core/src/v1');
 
 function readPayload(p) {
   const buf = fs.readFileSync(p);
@@ -19,6 +19,10 @@ function readPayload(p) {
 
 const cliBin = path.join(__dirname, '..', '..', 'packages', 'kdna', 'bin', 'kdna.js');
 const minimalSource = path.join(__dirname, '..', '..', 'examples', 'minimal');
+const runtimeTmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-fixture-runtime-'));
+const minimalAsset = path.join(runtimeTmp, 'minimal.kdna');
+pack(minimalSource, minimalAsset);
+after(() => fs.rmSync(runtimeTmp, { recursive: true, force: true }));
 const fixturesDir = path.join(__dirname, '..', '..', 'fixtures', 'v1');
 const FORBIDDEN = [
   'trusted',
@@ -125,7 +129,7 @@ test('unpack + revalidate', () => {
 // ── Positive: load profiles ───────────────────────────────────────
 
 test('load index profile as json', () => {
-  const r = run(['load', minimalSource, '--profile=index', '--as=json']);
+  const r = run(['load', minimalAsset, '--profile=index', '--as=json']);
   assert.equal(r.status, 0, r.stderr);
   const out = JSON.parse(r.stdout);
   assert.equal(out.profile, 'index');
@@ -134,7 +138,7 @@ test('load index profile as json', () => {
 });
 
 test('load compact profile as json', () => {
-  const r = run(['load', minimalSource, '--profile=compact', '--as=json']);
+  const r = run(['load', minimalAsset, '--profile=compact', '--as=json']);
   assert.equal(r.status, 0, r.stderr);
   const out = JSON.parse(r.stdout);
   assert.equal(out.profile, 'compact');
@@ -143,7 +147,7 @@ test('load compact profile as json', () => {
 });
 
 test('load compact profile as prompt is content-neutral', () => {
-  const r = run(['load', minimalSource, '--profile=compact', '--as=prompt']);
+  const r = run(['load', minimalAsset, '--profile=compact', '--as=prompt']);
   assert.equal(r.status, 0, r.stderr);
   assert.ok(r.stdout.includes('KDNA Judgment Asset'));
   assert.ok(
@@ -191,7 +195,9 @@ test('load compact profile as prompt renders object patterns readably', () => {
     ];
     fs.writeFileSync(path.join(tmp, 'payload.kdnab'), cbor.encode(payload));
 
-    const r = run(['load', tmp, '--profile=compact', '--as=prompt']);
+    const assetPath = path.join(tmp, 'patterns.kdna');
+    pack(tmp, assetPath);
+    const r = run(['load', assetPath, '--profile=compact', '--as=prompt']);
     assert.equal(r.status, 0, r.stderr);
     assert.ok(!r.stdout.includes('[object Object]'));
     assert.ok(r.stdout.includes('Structure first, wording second.'));
@@ -208,7 +214,7 @@ test('load compact profile as prompt renders object patterns readably', () => {
 });
 
 test('load scenario profile falls back to compact', () => {
-  const r = run(['load', minimalSource, '--profile=scenario', '--as=json']);
+  const r = run(['load', minimalAsset, '--profile=scenario', '--as=json']);
   assert.equal(r.status, 0, r.stderr);
   const out = JSON.parse(r.stdout);
   assert.equal(out.profile, 'scenario');
@@ -217,7 +223,7 @@ test('load scenario profile falls back to compact', () => {
 });
 
 test('load full profile as json', () => {
-  const r = run(['load', minimalSource, '--profile=full', '--as=json']);
+  const r = run(['load', minimalAsset, '--profile=full', '--as=json']);
   assert.equal(r.status, 0, r.stderr);
   const out = JSON.parse(r.stdout);
   assert.equal(out.profile, 'full');
@@ -301,7 +307,7 @@ test('load: missing payload gives clear error', () => {
 
 for (const profile of ['index', 'compact', 'scenario', 'full']) {
   test(`load ${profile} profile: no forbidden terms in json output`, () => {
-    const r = run(['load', minimalSource, `--profile=${profile}`, '--as=json']);
+    const r = run(['load', minimalAsset, `--profile=${profile}`, '--as=json']);
     assert.equal(r.status, 0, r.stderr);
     const merged = r.stdout + r.stderr;
     for (const t of FORBIDDEN) {
@@ -313,7 +319,7 @@ for (const profile of ['index', 'compact', 'scenario', 'full']) {
 // ── Unknown profile ────────────────────────────────────────────────
 
 test('load: unknown profile gives clear error', () => {
-  const r = run(['load', minimalSource, '--profile=nonexistent', '--as=json']);
+  const r = run(['load', minimalAsset, '--profile=nonexistent', '--as=json']);
   assert.notEqual(r.status, 0);
   assert.match(r.stderr || r.stdout, /unknown/i);
 });

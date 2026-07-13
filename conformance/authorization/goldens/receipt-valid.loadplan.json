@@ -29,7 +29,7 @@
   },
   "issues": [],
   "source": {
-    "kind": "dir",
+    "kind": "file",
     "path": "<fixture:receipt-valid>"
   }
 }

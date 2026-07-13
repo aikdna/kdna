@@ -1,6 +1,8 @@
 # KDNA v1.0-rc Public Confidence Release
 
-> ⚠️ **Historical snapshot.** This document describes the pre-v1 KDNA release board and is out of scope for KDNA Core v1. KDNA Core v1 is the official KDNA judgment-asset format and runtime loading contract. Current docs: README.md, docs/core/definition.md, docs/core/principles.md.
+> ⚠️ **Historical snapshot.** This obsolete release board does not describe the
+> current KDNA Core or the single KDNA Asset Container. Current docs:
+> README.md, docs/core/definition.md, and docs/core/principles.md.
 
 > **Milestone:** v1.0-rc  
 > **Target:** External developers can integrate, verify, publish, and contribute to KDNA — without reading internal docs or asking the maintainer.  

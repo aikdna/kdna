@@ -1,6 +1,6 @@
 {
   "_deprecated": true,
-  "_deprecation_note": "This registry file is a historical artifact. Domain entries have been removed as part of Wave 2.5 private-repo leak cleanup (2026-06-25). KDNA Core v1 does not define a canonical registry. Domain discovery is local-first: any .kdna file that passes kdna validate is a valid asset.",
+  "_deprecation_note": "This registry file is a historical artifact. Domain entries have been removed. KDNA Core does not define a canonical registry. Domain discovery is local-first: any .kdna file that passes kdna validate is a valid asset.",
   "registry_version": "1.0-rc",
   "updated": "2026-06-25T00:00:00Z",
   "domains": []

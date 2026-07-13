@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/aikdna/kdna/schema/load-plan.schema.json",
   "title": "KDNA LoadPlan v1",
-  "description": "Machine-readable pre-load authorization and runtime planning result for KDNA Core v1 assets.",
+  "description": "Machine-readable pre-load authorization and runtime planning result for packaged KDNA assets.",
   "type": "object",
   "required": [
     "kdna_version",
