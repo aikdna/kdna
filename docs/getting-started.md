@@ -35,9 +35,11 @@ kdna-studio card add my-domain axiom \
   --field one_sentence="KDNA assets preserve judgment before style." \
   --field full_statement="A KDNA asset must preserve boundaries, self-checks, and failure modes before presentation polish." \
   --field why="Without boundaries, a KDNA asset becomes a prompt template instead of reusable judgment." \
-  --field applies_when="teaching KDNA to a new user" \
-  --field does_not_apply_when="only demonstrating CLI syntax" \
-  --field failure_risk="Users may copy the format without preserving judgment."
+  --field applies_when='["teaching KDNA to a new user"]' \
+  --field does_not_apply_when='["only demonstrating CLI syntax"]' \
+  --field failure_risk="Users may copy the format without preserving judgment." \
+  --field confidence="high" \
+  --field evidence_type="practice"
 ```
 
 ### Approve and export
