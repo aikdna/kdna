@@ -3,7 +3,6 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { spawnSync } = require('node:child_process');
 
 const repoRoot = path.resolve(__dirname, '..');
 const manifest = JSON.parse(
@@ -49,103 +48,9 @@ function readJson(filePath) {
   return JSON.parse(readText(filePath));
 }
 
-function requireText(label, text, expected) {
-  if (!text.includes(expected)) fail(label, `missing "${expected}"`);
-}
-
-function rejectText(label, text, pattern, reason) {
-  if (pattern.test(text)) fail(label, reason);
-}
-
 function packageVersion(repository) {
   const entry = component(repository);
   return entry && entry.current_version;
-}
-
-function checkWebsite() {
-  // The aikdna/kdna-website component was structurally removed from
-  // ecosystem-manifest.json on 2026-06-27 (it is a private commercial
-  // repo and must not appear in the public manifest). The website
-  // itself is maintained by the marketing side; its public-surface
-  // consistency is enforced by check-public-docs.mjs inside that repo,
-  // not by this script. If the manifest is ever re-introduced with a
-  // kdna-website entry, that entry must point at a publicly checkable
-  // path. Until then, skip.
-  const website = component('aikdna/kdna-website');
-  if (!website) return;
-  const websiteRoot = componentPath('aikdna/kdna-website');
-  if (!websiteRoot) {
-    fail('aikdna/kdna-website', 'website local_path is not available');
-    return;
-  }
-
-  const productPath = path.join(websiteRoot, 'src', 'pages', 'product.js');
-  const ecosystemPath = path.join(websiteRoot, 'src', 'pages', 'ecosystem.js');
-  const indexPath = path.join(websiteRoot, 'src', 'index.js');
-  const registryPath = path.join(websiteRoot, 'src', 'registry-data.js');
-
-  const product = readText(productPath);
-  const ecosystem = readText(ecosystemPath);
-  const index = readText(indexPath);
-  const registry = readText(registryPath);
-
-  requireText('website product', product, `@aikdna/kdna-cli@${packageVersion('aikdna/kdna-cli')}`);
-  requireText(
-    'website product',
-    product,
-    `@aikdna/kdna-mcp-server@${packageVersion('aikdna/kdna-skills')}`,
-  );
-  requireText(
-    'website product',
-    product,
-    `@aikdna/kdna-studio-cli@${packageVersion('aikdna/kdna-studio-cli')}`,
-  );
-
-  for (const [label, text] of [
-    ['website product', product],
-    ['website ecosystem', ecosystem],
-    ['website registry data', registry],
-  ]) {
-    requireText(label, text, 'plan-load');
-    rejectText(
-      label,
-      text,
-      /@aikdna\/kdna-cli@0\.25\.[01]|@aikdna\/kdna-mcp-server@0\.1\.0|@aikdna\/kdna-studio-cli@0\.5\.[23]/,
-      'contains stale public package version',
-    );
-    rejectText(
-      label,
-      text,
-      /registry marketplace|marketplace registry/i,
-      'must not imply registry or marketplace is part of the current stable baseline',
-    );
-  }
-
-  requireText('website retired registry route', index, 'url.pathname === "/registry/domains.json"');
-  requireText('website retired registry route', index, 'url.pathname === "/registry/publish"');
-  requireText('website retired registry route', index, 'return notFound();');
-  rejectText(
-    'website retired registry route',
-    index,
-    /registry_disabled|registry_publish_disabled|registry endpoint|publish endpoint/i,
-    'retired registry routes should not explain the old registry surface',
-  );
-
-  const publicDocsCheck = path.join(websiteRoot, 'scripts', 'check-public-docs.mjs');
-  if (!fs.existsSync(publicDocsCheck)) {
-    fail('website public docs', 'missing scripts/check-public-docs.mjs');
-  } else {
-    const result = spawnSync(process.execPath, [publicDocsCheck], {
-      cwd: websiteRoot,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
-    if (result.status !== 0) {
-      if (result.stdout) process.stdout.write(result.stdout);
-      if (result.stderr) process.stderr.write(result.stderr);
-      fail('website public docs', `check-public-docs exited ${result.status}`);
-    }
-  }
 }
 
 function checkVSCodeBoundary() {
@@ -172,7 +77,6 @@ function checkVSCodeBoundary() {
   }
 }
 
-checkWebsite();
 checkVSCodeBoundary();
 
 if (failures.length > 0) {

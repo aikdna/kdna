@@ -185,11 +185,11 @@ Product Runtime ──→ Deliver ──→ Observe ──→ Adapt
 |-----------|----------|----------|-------------|
 | Artifact Contract | KDNA SPEC | ArtifactEnvelope, StageDefinition | SDK, Pipeline, Product Runtime |
 | Fidelity Protocol | Artifact Contract, KDNA Trace | FidelityResult | Registry, Product Runtime |
-| artifact-engine SDK | Artifact Contract | Typed API, Zod schemas | Pipeline, xplan |
+| artifact-engine SDK | Artifact Contract | Typed API, Zod schemas | Pipeline, downstream consumer runtimes |
 | fidelity-core SDK | Fidelity Protocol | Pure functions | Pipeline, assay, CLI |
 | Evidence Trace | KDNA Trace, Artifact Contract | Unified trace records | All components |
-| WorkPack Pipeline | WorkPack, Artifact Contract | Staged execution | Product Runtime, xplan |
-| Product Runtime | Pipeline, Artifact Contract, Fidelity Protocol | Long-running delivery | CoachLettersAI, gvjl |
+| WorkPack Pipeline | WorkPack, Artifact Contract | Staged execution | Product Runtime, downstream consumer runtimes |
+| Product Runtime | Pipeline, Artifact Contract, Fidelity Protocol | Long-running delivery | Scheduled host application |
 
 ---
 

@@ -86,7 +86,7 @@ Phase 1 **does not** implement fork/adapt behaviour. The `type` enum covers the 
   "asset_id": "kdna:example:writing-core",
   "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
   "asset_type": "domain",
-  "title": "Atomspeak Core",
+  "title": "Editorial Review",
   "version": "1.0.0",
   "judgment_version": "1.0.0",
   "created_at": "2026-06-16T00:00:00Z",

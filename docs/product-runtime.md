@@ -24,10 +24,10 @@ This RFC defines the **Product Runtime Pattern**: a protocol contract for schedu
 
 | Runtime Mode | Cycle | Example | KDNA Contract |
 |-------------|-------|---------|---------------|
-| **Chat** | Request → Load KDNA → Response | KDNAChat, agent conversation | `kdna route` + `kdna load` |
+| **Chat** | Request → Load KDNA → Response | Consumer app, agent conversation | `kdna route` + `kdna load` |
 | **Pipeline** | Stage 1 → Stage 2 → ... → Stage N → Finalize | Course generation | WorkPack Pipeline + RFC-0012 |
 | **Agent** | Observe → Decide → Act → Observe → ... | Codex, Claude Code | kdna-loader skill |
-| **Product** | Schedule → Select → Generate → Deliver → **Observe → Adapt** → Schedule → ... | CoachLettersAI, daily coaching | **This RFC** |
+| **Product** | Schedule → Select → Generate → Deliver → **Observe → Adapt** → Schedule → ... | Scheduled coaching application | **This RFC** |
 
 ### 1.2 What makes Product Runtime different
 
@@ -37,9 +37,11 @@ This RFC defines the **Product Runtime Pattern**: a protocol contract for schedu
 - **Adaptive:** User response to artifact N informs artifact N+1
 - **Governed:** KDNA judgment governs WHAT to select, HOW to generate, and WHEN to adapt
 
-### 1.3 Real example: CoachLettersAI
+### 1.3 Example: scheduled coaching application
 
-A daily coaching app: every morning, the system selects a coaching KDNA domain (conflict, EQ, expression, intimacy), generates a personalized daily letter and micro-practice, delivers it via notification, observes the user's reply, extracts observations, and uses them to improve tomorrow's letter.
+A daily coaching application can select a relevant coaching judgment asset,
+generate a personalized letter and practice, deliver it, observe the user's
+reply, and use bounded observations to inform the next cycle.
 
 This is not a chatbot. It is a product loop governed by KDNA judgment.
 
@@ -339,7 +341,7 @@ Long-running products are the strongest test of fidelity: does judgment consiste
 
 ## 7. Implementation Notes
 
-A reference implementation (e.g. CoachLettersAI / gvjl) would implement:
+A reference host application would implement:
 
 1. **Scheduler** — reads `schedule` from manifest, triggers cycles
 2. **Selector** — reads `selection` from manifest, runs `kdna route` for domain matching

@@ -11,9 +11,9 @@ This strategy explains how KDNA should protect, authorize, distribute, revoke,
 and commercially use `.kdna` judgment assets without turning Chat, Studio, CLI,
 or any other product into a separate protocol source.
 
-The immediate product pressure comes from KDNAChat, but Chat is only the first
-consumer runtime. The authorization model must be shared by Core, CLI, Swift
-Core, Studio, agent adapters, KDNA Work, and future runtimes.
+The immediate product pressure comes from consumer applications, but any one
+application is only one runtime. The authorization model must be shared by
+Core, CLI, Swift Core, Studio, Agent adapters, and future runtimes.
 
 ## Thesis
 
