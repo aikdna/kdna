@@ -34,12 +34,12 @@
       "local_path": "../kdna-cli",
       "npm_package": "@aikdna/kdna-cli",
       "package_json": "../kdna-cli/package.json",
-      "current_version": "0.30.3",
+      "current_version": "0.30.4",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed", "remote"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "a93bf44c314c985a5951a1ee593c7c5114a2823e",
+      "conformance_commit": "d8ca264ee3c5a0eed2b11c78c79e67d1a4609411",
       "known_limitations": [
         "hosted registry, marketplace, and commercial distribution are not part of the local CLI baseline"
       ],

@@ -12,6 +12,10 @@ depend on `@aikdna/kdna-core` and install `@aikdna/kdna-cli` directly. KDNA has
 one current Asset Container and the compatibility package does not introduce a
 second format or runtime route.
 
+`kdna-validate` is a compatibility alias for `kdna validate` and accepts both
+current packaged `.kdna` assets and authoring source directories. It delegates
+to `@aikdna/kdna-cli`; it does not use the removed source-only validator.
+
 The compatibility install path is:
 
 ```bash

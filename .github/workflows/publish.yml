@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-cli
-          ref: a93bf44c314c985a5951a1ee593c7c5114a2823e
+          ref: d8ca264ee3c5a0eed2b11c78c79e67d1a4609411
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@v7
         with:
@@ -107,7 +107,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: aikdna/kdna-cli
-          ref: a93bf44c314c985a5951a1ee593c7c5114a2823e
+          ref: d8ca264ee3c5a0eed2b11c78c79e67d1a4609411
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@v7
         with:
