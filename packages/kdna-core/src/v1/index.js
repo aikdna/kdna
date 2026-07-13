@@ -1889,7 +1889,7 @@ function loadV1Unsafe(inputPath, opts = {}) {
     const hasJudgment = (core.axioms && core.axioms.length > 0)
       || (core.boundaries && core.boundaries.length > 0)
       || (payload.patterns && payload.patterns.length > 0)
-      || (payload.reasoning && ((payload.reasoning.self_checks && payload.reasoning.self_checks.length > 0) || (payload.reasoning.failure_modes && payload.reasoning.failure_modes.length > 0)));
+      || (payload.reasoning && ((payload.reasoning.self_check && payload.reasoning.self_check.length > 0) || (payload.reasoning.failure_modes && payload.reasoning.failure_modes.length > 0)));
     profiles.push('index');
     if (hasJudgment) profiles.push('compact');
     if (payload.scenarios && payload.scenarios.length > 0) profiles.push('scenario');
@@ -1924,7 +1924,11 @@ function loadV1Unsafe(inputPath, opts = {}) {
       highest_question: core.highest_question || null,
       axioms: (core.axioms || []).map(normalizeCompactAxiom).filter(Boolean),
       boundaries: normalizeList(core.boundaries),
-      self_checks: normalizeList(payload.reasoning && payload.reasoning.self_checks),
+      // The canonical payload field is singular (`reasoning.self_check`).
+      // Runtime Capsule uses plural (`context.self_checks`) as its projection
+      // field. Reading the plural name from the payload silently discarded
+      // every Studio-authored self-check.
+      self_checks: normalizeList(payload.reasoning && payload.reasoning.self_check),
       failure_modes: normalizeList(payload.reasoning && payload.reasoning.failure_modes),
       patterns: normalizeList(payload.patterns).slice(0, 3),
     };
