@@ -69,12 +69,6 @@
     "prettier": "^3.9.4"
   },
   "overrides": {
-    "@aikdna/kdna-cli": {
-      "@aikdna/kdna-core": "0.16.0"
-    },
-    "@aikdna/kdna": {
-      "@aikdna/kdna-core": "0.16.0"
-    },
     "esbuild": "0.28.1",
     "js-yaml": "4.2.0"
   }
