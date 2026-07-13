@@ -97,6 +97,18 @@ A `.kdna` asset contains:
 encryption envelope in the same entry; authorized plaintext is decrypted in
 memory and projected into the Runtime Capsule.
 
+### Account/device external grants
+
+RFC-0019 licensed assets can keep the encrypted container publicly available
+while an issuer grants independent account/device access. `authorizeExternalKeyGrant()`
+verifies the issuer signature, lease, revocation state, account, device, asset
+UID/version/digest, and encrypted entry before returning a branded entitlement
+and in-memory decrypt hook. A plain `{status: "active"}` object is not accepted.
+
+Device private keys belong in the platform SecretStore. The returned session
+must be disposed after loading; Agent-facing callers should receive only the
+Runtime Capsule. Account grants never fall back to the password profile.
+
 ## Load Profiles
 
 `loadAuthorized()` supports:

@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- RFC-0019 external account/device key grants, schemas, deterministic golden
+  and negative fixtures, and JS/Swift parity vectors.
+- JS Core helpers for external envelope encryption, per-device grant issuance,
+  signature/binding verification, in-memory decryption, and explicit zeroization.
+- LoadPlan accepts only a runtime-verified external entitlement for account/org
+  assets; structurally similar status objects no longer authorize loading.
+
+### Security
+
+- Account/device envelopes never fall back to the password profile.
+- Revoked, expired, tampered, digest/version/account/device mismatches fail
+  closed before Runtime Capsule projection.
+
 ## v0.15.12 (2026-07-12)
 
 **Single-format refactor + CBOR wire contract + Runtime Capsule.**
