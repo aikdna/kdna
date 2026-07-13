@@ -1,8 +1,8 @@
 # KDNA Tool Status Matrix
 
-> Last updated: 2026-07-13. Matches `@aikdna/kdna-cli@0.30.3`.
+> Last updated: 2026-07-13. Matches `@aikdna/kdna-cli@0.30.4`.
 
-## Runtime CLI (`@aikdna/kdna-cli@0.30.3`)
+## Runtime CLI (`@aikdna/kdna-cli@0.30.4`)
 
 | Command | Purpose | Status |
 |---|---|---|
