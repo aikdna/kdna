@@ -38,7 +38,7 @@ cat > my-registry/domains.json << 'EOF'
     {
       "name": "@mycorp/internal_review",
       "version": "0.1.0",
-      "spec_version": "1.0-rc",
+      "kdna_version": "1.0",
       "status": "validated",
       "access": "licensed",
       "file_count": 6,

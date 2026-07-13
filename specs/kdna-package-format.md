@@ -1,239 +1,39 @@
-# KDNA Dev Source Directory Format
+# KDNA Dev Source Directory
 
-Version: 0.2
-Status: Superseded by asset-first `.kdna` model
+**Status:** Authoring input; not a distribution format
 
-## 1. Purpose
+A Studio-compatible authoring tool may use a source directory containing
+human-editable files such as:
 
-This document now describes the dev source directory used by authoring tools.
-It is not the canonical asset format. The canonical KDNA object for distribution,
-installation, verification, licensing, and loading is the `.kdna` file.
-
-A dev source directory can be:
-- A **directory** on disk for development and review
-- Bundled into a **dev-only `.kdna` file** with `kdna dev pack`
-
-Trusted `.kdna` assets must be created by a Studio-compatible pipeline or a
-compiler that records authoring provenance, Human Lock evidence, compiler
-metadata, and asset digest.
-
-## 2. Directory Structure
-
-```
-<domain-name>/
-├── kdna.json                  # Package manifest (required)
-├── KDNA_Core.json             # Core cognition (required)
-├── KDNA_Patterns.json         # Language patterns (required)
-├── KDNA_Scenarios.json        # Scenarios (optional)
-├── KDNA_Cases.json            # Cases (optional)
-├── KDNA_Reasoning.json        # Reasoning chains (optional)
-├── KDNA_Evolution.json        # Evolution stages (optional)
-├── README.md                  # Human-readable introduction
-├── README.zh.md               # Chinese version (optional)
-├── CHANGELOG.md               # Version history (recommended)
-├── tests/                     # Quality tests (recommended)
-│   ├── before-after.json
-│   ├── expected-diagnosis.json
-│   └── loader-cases.json
-└── i18n/                      # Localized versions (optional)
-    ├── zh-CN/
-    │   ├── KDNA_Core.json
-    │   └── KDNA_Patterns.json
-    └── ja/
-        ├── KDNA_Core.json
-        └── KDNA_Patterns.json
+```text
+kdna.json
+KDNA_Core.json
+KDNA_Patterns.json
+KDNA_Scenarios.json   (optional)
+KDNA_Cases.json       (optional)
+KDNA_Reasoning.json   (optional)
+KDNA_Evolution.json   (optional)
 ```
 
-## 3. Package Manifest: kdna.json
+This directory exists for editing, review, diffing, and migration. It is not an
+installed KDNA asset and MUST NOT be distributed by merely zipping these files.
 
-Every dev source directory MUST contain a `kdna.json` at the root. This is the machine-readable
-identity card of the domain.
+The source manifest uses `kdna_version: "1.0"`; removed top-level
+`format_version`, `spec_version`, and `kdna_spec` fields MUST NOT be emitted.
+Authoring tools may record provenance, optional Human Lock records, and build
+metadata, but none of those records is permission to create an asset or a claim
+that the judgment is true or good.
 
-```json
-{
-  "format": "kdna",
-  "format_version": "1.0",
-  "spec_version": "1.0-rc",
-  "name": "sales",
-  "version": "0.1.0",
-  "judgment_version": "2026.05",
-  "languages": ["en", "zh-CN"],
-  "default_language": "en",
-  "created": "2026-05-13",
-  "updated": "2026-05-17",
-  "description": "Domain cognition for high-trust sales judgment.",
-  "keywords": ["sales", "trust", "negotiation", "b2b"],
-  "access": "public",
-  "author": {
-    "name": "Zhang Ling",
-    "id": "zhangling",
-    "url": "https://aikdna.com"
-  },
-  "license": {
-    "type": "CC-BY-4.0",
-    "url": "https://creativecommons.org/licenses/by/4.0/",
-    "allow_agent_use": true,
-    "allow_redistribution": true,
-    "allow_training": false
-  },
-  "status": "experimental",
-  "registry": {
-    "id": "writing",
-    "repo": "https://github.com/aikdna/kdna-writing"
-  }
-}
+The only user-facing export is the
+[KDNA Asset Container](./container.md):
+
+```text
+mimetype
+kdna.json
+payload.kdnab
+checksums.json   (emitted by official writers)
 ```
 
-### Manifest Fields
-
-| Field | Required | Description |
-|-------|----------|-------------|
-| `format` | Yes | MUST be `"kdna"`. |
-| `format_version` | Yes | MUST be `"1.0"`. |
-| `spec_version` | Yes | KDNA spec version. MUST be `"1.0-rc"`. |
-| `name` | Yes | Domain identifier. Lowercase snake_case: `^[a-z][a-z0-9_]*$`. |
-| `version` | Yes | Semantic version (`MAJOR.MINOR.PATCH`). |
-| `judgment_version` | Yes | Version of judgment content. |
-| `languages` | Yes | All supported language codes. |
-| `default_language` | Yes | Default language code. |
-| `created` | Yes | Creation date (ISO 8601: `YYYY-MM-DD`). |
-| `updated` | No | Last update date (ISO 8601). |
-| `description` | Yes | One-sentence domain description. |
-| `keywords` | No | Array of search keywords. |
-| `access` | Yes | Access mode: `"public"`, `"licensed"`, `"remote"`. |
-| `author` | Yes | Creator identity object. |
-| `license` | Yes | License declaration object. |
-| `status` | No | Maturity: `"draft"`, `"experimental"`, `"stable"`, `"deprecated"`, `"staging"`. |
-| `registry` | No | Registry metadata for discovery. |
-| `compatibility` | No | Agent compatibility info. |
-| `dependencies` | No | Array of KDNA domain dependencies. |
-
-### Status Values
-
-| Value | Meaning |
-|-------|---------|
-| `draft` | Early work in progress. Not ready for use. |
-| `experimental` | Work in progress. May change significantly. |
-| `stable` | Full domain with cases, tests, and documentation. |
-| `deprecated` | Superseded or no longer recommended. |
-| `staging` | Non-public pre-release for commercial or private review. |
-
-Legacy values `basic` and `pro` are retired. Use `quality_badge` for evidence
-level and `access` for commercial/runtime mode.
-
-## 4. File Requirements
-
-### Required Files (always)
-
-- `KDNA_Core.json` — Valid against `KDNA_Core.schema.json`
-- `KDNA_Patterns.json` — Valid against `KDNA_Patterns.schema.json`
-- `kdna.json` — Valid package manifest
-
-### Optional Files
-
-- `KDNA_Scenarios.json` — Valid against `KDNA_Scenarios.schema.json`
-- `KDNA_Cases.json` — Valid against `KDNA_Cases.schema.json`
-- `KDNA_Reasoning.json` — Valid against `KDNA_Reasoning.schema.json`
-- `KDNA_Evolution.json` — Valid against `KDNA_Evolution.schema.json`
-
-### Recommended Files
-
-- `README.md` — Human-readable domain introduction
-- `CHANGELOG.md` — Version history following Keep a Changelog
-- `tests/before-after.json` — Quality comparison cases
-
-## 5. Distribution Formats
-
-### Development: Directory
-
-For development, the source form is simply a directory following the structure above.
-The directory name should match the `name` field in `kdna.json`.
-
-```
-sales/
-├── kdna.json
-├── KDNA_Core.json
-├── KDNA_Patterns.json
-├── ...
-```
-
-### Distribution: Tarball
-
-For distribution via registry, the directory is built into a `.kdna` asset:
-
-```
-sales-0.1.0.kdna
-```
-
-The asset filename convention is: `<name>-<version>.kdna`
-
-### Licensed Asset
-
-For commercial KDNA, selected entries are encrypted inside the same `.kdna` asset:
-
-```
-sales-pro-2.0.0.kdna
-```
-
-Licensed assets require license activation and in-memory decryption. See `kdna-access-modes.md`.
-
-## 6. Validation Requirements
-
-A valid dev source directory MUST pass:
-
-1. **Manifest exists:** `kdna.json` at package root
-2. **Required files:** `KDNA_Core.json` + `KDNA_Patterns.json`
-3. **Schema validation:** Each JSON file validates against its schema
-4. **Structural lint:** Meta fields, unique IDs, cross-file references
-5. **Manifest consistency:** `name` in manifest matches domain names in KDNA files
-6. **Version consistency:** All KDNA file meta versions match
-7. **Addressable:** No more than 6 JSON files in root (excluding kdna.json)
-
-## 7. CLI Commands
-
-```bash
-# Validate a dev source directory
-kdna dev validate ./sales
-
-# Build a directory into a .kdna asset
-kdna dev pack ./sales
-
-# Unpack a .kdna asset back into a dev directory
-kdna dev unpack sales-0.1.0.kdna
-
-# Install from registry
-kdna install sales
-
-# Inspect asset metadata
-kdna inspect sales-0.1.0.kdna
-```
-
-## 8. Conversion
-
-### Dev Source Directory → .kdna
-
-A dev source directory can be bundled to a single dev-only `.kdna` file:
-
-```bash
-kdna dev pack ./sales --output sales.kdna
-```
-
-This bundle is a developer diagnostic package, not a release-reviewed public
-asset. Manual unpack/edit/repack invalidates any previous signature or
-provenance evidence unless the result is rebuilt and released as a new `.kdna`.
-
-### .kdna → Dev Source Directory
-
-A `.kdna` file can be expanded into a dev source directory:
-
-```bash
-kdna dev unpack sales.kdna --output ./sales
-```
-
-## 9. Schema Compatibility
-
-The KDNA JSON files within a dev source directory use the same schema as the existing
-KDNA specification (SPEC.md v0.4). The `kdna.json` manifest is new in v0.2.
-
-When a dev source directory follows both the existing SPEC.md and this spec,
-it is considered a **v0.2-compatible KDNA domain asset**.
+Use a Studio-compatible exporter for normal creation and migration. `kdna dev`
+commands are explicit diagnostics and do not convert a source directory into a
+second canonical asset form.

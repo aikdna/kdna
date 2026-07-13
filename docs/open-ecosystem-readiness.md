@@ -8,7 +8,7 @@ verify, publish, and contribute without relying on private project knowledge.
 
 - `@aikdna/kdna-core` exposes stable public asset APIs.
 - Conformance tests exist for loaders and validators.
-- (Registry is out of scope for KDNA Core v1; see 00-current-truth.md.)
+- (Registry is out of scope for KDNA Core; see 00-current-truth.md.)
 
 ## P1 Readiness Gates
 

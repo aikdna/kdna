@@ -1,6 +1,6 @@
 # KDNA Safety Framework
 
-> ⚠️ **Historical snapshot.** This document describes the pre-v1 KDNA safety framework (Human Lock / quality gates / registry review / R0-R3 risk levels) and is out of scope for KDNA Core v1. KDNA Core v1 is the official KDNA judgment-asset format and runtime loading contract. Runtime safety is defined by the official KDNA toolchain's trace vocabulary (version_incompatible, failed_to_parse, failed_to_decrypt, signature_invalid, blocked_by_runtime_policy) and by caller-owned runtime policy. Current docs: README.md, docs/core/definition.md, docs/core/principles.md.
+> ⚠️ **Historical snapshot.** This document describes the pre-v1 KDNA safety framework (Human Lock / quality gates / registry review / R0-R3 risk levels) and is out of scope for KDNA Core. KDNA Core is the official KDNA judgment-asset format and runtime loading contract. Runtime safety is defined by the official KDNA toolchain's trace vocabulary (version_incompatible, failed_to_parse, failed_to_decrypt, signature_invalid, blocked_by_runtime_policy) and by caller-owned runtime policy. Current docs: README.md, docs/core/definition.md, docs/core/principles.md.
 
 KDNA is not an execution tool, but it can influence agent judgment.
 Judgment influences behavior. Behavior has consequences.

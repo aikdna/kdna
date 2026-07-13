@@ -2,10 +2,10 @@
 
 > Historical pre-v1 authoring workflow. This document is retained as process
 > history for domain design. The current public beta authoring path is:
-> `kdna-studio ... --format v1 --out asset.kdna`, then `kdna validate`,
+> `kdna-studio ... --out asset.kdna`, then `kdna validate`,
 > `kdna plan-load`, and `kdna load` on the packaged `.kdna` file. Registry,
 > publish commands, Human Lock requirements, and quality promotion in this file
-> are not KDNA Core v1 format-validity requirements.
+> are not KDNA Core format-validity requirements.
 
 > 从零到发布 — 创建高质量 KDNA 领域的完整流程
 

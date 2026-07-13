@@ -1,97 +1,121 @@
 # KDNA Runtime Capsule
 
-**Version:** 1.0  
-**Status:** Draft  
-**Depends on:** [KDNA Asset Container](./container.md)
+**Status:** Implemented contract
+**Depends on:** [KDNA Asset Container](./container.md) and [KDNA Authorization Contract](./kdna-authorization-contract.md)
 
 ## 1. Purpose
 
-The Runtime Capsule is the ONLY format agents should consume KDNA judgment in. Agents MUST NOT read raw asset internals (JSON files, CBOR payloads, or ZIP entries). The capsule is a verified, validated, profile-selected context object emitted by `kdna load`.
+The Runtime Capsule is the only KDNA judgment representation intended for
+Agents. An Agent MUST NOT read ZIP entries, decode `payload.kdnab`, or interpret
+authorization metadata directly. Core performs validation, authorization,
+optional in-memory decryption, and profile selection before it emits a Capsule.
 
-## 2. Capsule Structure
+A Capsule does not say that an asset is true, good, recommended, or officially
+approved. It reports which asset context was loaded and what technical checks
+were actually completed.
+
+## 2. Structure
 
 ```json
 {
   "type": "kdna.context.capsule",
   "version": "1.0",
-  "domain": "@scope/name",
-  "judgment_version": "2026.06",
-  "asset_digest": "sha256:abc123...",
+  "domain": "kdna:example:editorial_judgment",
+  "judgment_version": "1.0.0",
+  "asset_digest": "sha256:...",
   "signature": {
-    "verified": true,
-    "issuer": "ed25519:abc123..."
+    "state": "absent"
   },
   "access": "public",
-  "risk_level": "R1",
+  "risk_level": null,
   "profile": "compact",
   "context": {
-    "system_preamble": "You are applying judgment from @scope/name. ...",
+    "highest_question": "What editorial decision should be made?",
     "axioms": [
-      "one_sentence statement 1",
-      "one_sentence statement 2"
+      {
+        "type": "axiom_applicability",
+        "id": "a1",
+        "statement": "Prefer clarity over ornament.",
+        "one_sentence": "Prefer clarity over ornament.",
+        "applies_when": [],
+        "does_not_apply_when": [],
+        "failure_risk": null
+      }
     ],
-    "value_order": ["value1", "value2"],
-    "ontology": ["concept: definition"],
-    "terminology": {
-      "preferred": ["term → definition"],
-      "banned": ["term → replacement (reason)"]
-    },
-    "misunderstandings": ["wrong belief → correct understanding"],
-    "self_check": ["question 1?", "question 2?"],
-    "boundaries": ["domain applies when ...", "domain does NOT apply when ..."]
+    "boundaries": [],
+    "self_checks": [],
+    "failure_modes": [],
+    "patterns": []
   },
   "trace": {
-    "format": "container-v2",
     "payload_encoding": "cbor",
-    "loaded_by": "kdna-cli v0.20.0",
-    "loaded_at": "2026-06-11T10:00:00Z",
+    "loaded_by": "kdna-core",
+    "loaded_at": "2026-07-13T00:00:00Z",
     "schema_valid": true,
-    "signature_valid": true
+    "signature_state": "absent",
+    "profile": "compact"
   }
 }
 ```
 
+### Signature state
+
+`signature.state` and `trace.signature_state` use honest facts:
+
+- `verified`: a conforming verifier actually checked the signature;
+- `not_checked`: signature metadata exists, but this load did not verify it;
+- `absent`: the asset has no signature metadata.
+
+Field presence alone MUST NOT produce `verified`.
+
 ## 3. Load Profiles
 
-| Profile | Description | Use Case |
-|---------|-------------|----------|
-| `compact` | One-line axioms, key terms, core boundaries, critical self-checks. ~500-1500 tokens. | Default agent loading. |
-| `full` | Full axiom statements, complete ontology, all terminology, all misunderstandings, all self-checks. | Deep domain analysis. |
-| `index` | Metadata only: name, version, description, keywords, applies_when, does_not_apply_when. Zero judgment content. | Domain discovery (`kdna available`, `kdna match`). |
+| Profile | Context | Intended use |
+|---|---|---|
+| `index` | Public identity and discovery metadata; no judgment | discovery and routing |
+| `compact` | Highest question, applicability-aware axioms, boundaries, self-checks, failure modes, and a bounded pattern set | default Agent judgment loading |
+| `scenario` | Scenario cards | situation-specific loading |
+| `full` | Authorized manifest and decoded payload | audit, migration, and deep inspection through trusted applications |
 
-## 4. Agent Contract
+The requested profile MUST control the emitted context shape. Implementations
+MUST NOT label one context shape as another profile.
 
-Agents loading KDNA via this capsule agree to:
+## 4. Consumer Rules
 
-1. **Adopt axioms as reasoning frame** — reason from them, not around them
-2. **Honor boundaries** — apply axioms only when `applies_when` matches and `does_not_apply_when` does not
-3. **Pre-check failure risks** — before output, verify the response does not commit warned failures
-4. **Use preferred terminology** — substitute banned terms with preferred ones
-5. **Run self-checks** — before final output, answer all self-check questions
-6. **Never cite KDNA to user** — the user sees better judgment, not KDNA internals
+A consuming Agent or application must:
 
-## 5. Capsule vs Raw Payload
+1. obtain the Capsule from Core or an official toolchain adapter;
+2. respect the asset's applicability and boundary fields;
+3. use the loaded axioms and patterns as judgment context, not as truth claims;
+4. run relevant self-checks and account for declared failure risks;
+5. keep technical validity, signature state, evidence, maturity, and content
+   quality as separate concepts;
+6. avoid logging or persisting decrypted full context from licensed assets.
 
-| | Context Capsule | Raw Payload |
-|---|----------------|-------------|
-| **Access** | `kdna load` | `kdna dev decode --reveal` |
-| **Intended for** | Agents | Developers, debuggers |
-| **Format** | Structured JSON with context fields | CBOR-decoded judgment map |
-| **Signature verified** | Yes | Optional |
-| **Schema validated** | Yes | Optional |
-| **Profile selected** | Yes | No (full content) |
+Single-asset loading is the default foundation. Cluster execution composes
+multiple authorized asset Capsules through the explicit Cluster runtime; it
+does not replace or weaken the single-asset contract.
 
-## 6. CLI Commands
+## 5. Capsule vs Developer Decode
+
+| | Runtime Capsule | Developer decode |
+|---|---|---|
+| Entry point | `kdna load` | `kdna dev decode --reveal` |
+| Intended caller | Agent or application | developer/debugger |
+| Authorization | LoadPlan-gated | explicit developer operation, still policy-gated |
+| Output | profile-selected context plus trace | decoded payload for inspection |
+| Normal production use | yes | no |
+
+## 6. CLI Examples
 
 ```bash
-# Agent consumption (capsule):
-kdna load @scope/name                    # compact profile
-kdna load @scope/name --profile full     # full profile
+# Agent-facing Capsule
+kdna load asset.kdna
+kdna load asset.kdna --profile scenario
 
-# Dev/debug (raw payload):
-kdna dev decode domain.kdna --reveal     # full decoded payload
+# Discovery without judgment
+kdna load asset.kdna --profile index
 
-# Discovery (index only, no judgment):
-kdna available --json                    # index-level metadata
-kdna match "user's task description"     # routing from index
+# Explicit developer inspection; never an Agent shortcut
+kdna dev decode asset.kdna --reveal
 ```

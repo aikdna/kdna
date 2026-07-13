@@ -1,9 +1,9 @@
 # KDNA Specifications
 
-> Historical/spec-work area. The current KDNA Core v1 launch path is documented
+> Historical/spec-work area. The current KDNA Core launch path is documented
 > in `docs/start-here.md`, `docs/try-kdna.md`, `docs/core/file-format.md`, and
 > `docs/core/load-profiles.md`. Older distribution, evaluation, license,
-> entitlement, and crypto documents in this folder are not active Core v1
+> entitlement, and crypto documents in this folder are not active KDNA Core
 > launch contracts unless a current release document explicitly promotes them.
 
 Supplementary specification documents for the KDNA protocol.
@@ -25,7 +25,7 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 
 | # | Document | What it covers |
 |---|----------|---------------|
-| 5 | (archived) `kdna-registry.md` | Pre-v1 distribution index format (`domains.json`) and API. **Registry is out of scope for KDNA Core v1** — see `specs/archive/kdna-registry.md` for historical context. |
+| 5 | (archived) `kdna-registry.md` | Pre-v1 distribution index format (`domains.json`) and API. **Registry is out of scope for KDNA Core** — see `specs/archive/kdna-registry.md` for historical context. |
 | 6 | `kdna-access-modes.md` | Access control: public / licensed / remote |
 | 7 | `kdna-license.md` | KDNA Commercial License (KCL) terms |
 | 8 | `LICENSE-KCL-1.0.md` | KCL 1.0 full license text |

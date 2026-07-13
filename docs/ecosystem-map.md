@@ -77,7 +77,7 @@ start with the packaged reference assets or the local demo path in
 
 | Repository | Role | For |
 |------------|------|-----|
-| (out of scope) kdna-registry | Canonical static catalog (`domains.json`), trust model, schema v3 — registry is out of scope for KDNA Core v1 | Registry operators (external) |
+| (out of scope) kdna-registry | Canonical static catalog (`domains.json`), trust model, schema v3 — registry is out of scope for KDNA Core | Registry operators (external) |
 
 ## Layer 4 — Applications
 

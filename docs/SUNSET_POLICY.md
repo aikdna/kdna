@@ -16,7 +16,7 @@ KDNA's deprecation policy ensures that users are never caught between a document
 | Item | Status | Replacement |
 |------|--------|-------------|
 | `kdna init <name>` | Deprecated | `kdna-studio create` (trusted) or `kdna dev scaffold` (dev-only) |
-| `kdna_spec` field | Rejected | Use `spec_version` |
+| `kdna_spec` field | Rejected | Use `kdna_version` in current manifests |
 | singular `language` field | Rejected | Use `languages` array |
 | Merged single-file JSON | Rejected | ZIP container format |
 | Dev source directories (as runtime) | Non-canonical | `.kdna` assets in `~/.kdna/packages/` |

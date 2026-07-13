@@ -25,7 +25,7 @@ A conforming importer MUST:
 
 ## 3. Runtime Entry Checks
 
-For current KDNA Core v1 public launch assets, the baseline entries are:
+For current KDNA Core public launch assets, the baseline entries are:
 
 - `mimetype`
 - `kdna.json`

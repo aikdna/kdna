@@ -1,6 +1,6 @@
 # KDNA Encryption & Authorization — Design Specification
 
-> Draft security/product-layer design. Current Core v1 public beta focuses on
+> Draft security/product-layer design. Current KDNA Core public beta focuses on
 > local packaged `.kdna` validation, LoadPlan, and loading. Production
 > encryption, paid authorization, hosted distribution, and signature trust are
 > not current launch requirements.

@@ -58,7 +58,7 @@ A minimal valid `.kdna` payload contains:
 kdna-studio card list my_expertise
 kdna-studio card approve my_expertise --all \
   --by your-id \
-  --statement "I confirm this judgment for v1 export."
+  --statement "I confirm this judgment for export."
 ```
 
 The current Studio CLI export workflow requires approved cards so the exported
@@ -68,7 +68,7 @@ does not make Human Lock a KDNA Core format-validity requirement.
 ## Step 5: Compile and export
 
 ```bash
-kdna-studio export my_expertise --format v1 --out ./my_expertise.kdna
+kdna-studio export my_expertise --out ./my_expertise.kdna
 ```
 
 This produces a `.kdna` container with `mimetype`, `kdna.json`,
@@ -87,9 +87,9 @@ If you are migrating an existing KDNA source folder or a Studio project, use
 the migration command:
 
 ```bash
-kdna-studio migrate my_expertise --format v1 --out ./my_expertise.kdna \
+kdna-studio migrate my_expertise --out ./my_expertise.kdna \
   --by your-id \
-  --statement "I confirm this migration for v1 export."
+  --statement "I confirm this migration for export."
 ```
 
 ## Current limitations

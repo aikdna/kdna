@@ -28,7 +28,7 @@ adapters from inventing separate authorization semantics.
 
 ## Current Baseline
 
-Current public KDNA Core v1 launch assets use:
+Current public KDNA Core launch assets use:
 
 ```text
 mimetype
