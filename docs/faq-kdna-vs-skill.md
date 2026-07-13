@@ -134,22 +134,26 @@ check if the query is safe; if the user asks for PII, refuse."
 
 ---
 
-## Current GA capabilities
+## Current shipped capabilities
 
-| Command | Status |
-|---------|--------|
-| `kdna inspect` | GA |
-| `kdna validate` | GA |
-| `kdna plan-load` | GA |
-| `kdna load --profile=compact --as=prompt` | GA |
-| `kdna pack` | GA |
-| `kdna unpack` | GA |
-| `kdna demo minimal` | GA |
-| `kdna lint` | GA |
-| `kdna workpack` | GA |
+`Released` means the command is shipped; the overall protocol and toolchain
+remain Beta.
 
-Commands to **not** use: `kdna available`, `kdna match`, `--as=json`, `--as=raw`,
-`kdna load @scope/name`. These are legacy or removed.
+| Surface | Availability |
+|---|---|
+| `kdna inspect` | Released |
+| `kdna validate` | Released |
+| `kdna plan-load` | Released |
+| `kdna load --profile=compact --as=prompt` | Released |
+| `kdna pack` | Released |
+| `kdna unpack` | Released |
+| `kdna demo minimal` | Released |
+| `kdna lint` | Released |
+| `kdna workpack` | Experimental |
+
+Use `kdna plan-load` before `kdna load`. Local package references are supported
+after installation; source directories remain authoring inputs and runtime
+loading requires a packaged `.kdna` file.
 
 ---
 

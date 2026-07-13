@@ -44,7 +44,7 @@ example.kdna
 2. `mimetype` MUST be the first entry and MUST be stored uncompressed.
 3. `kdna.json` MUST be UTF-8 JSON without BOM.
 4. `payload.kdnab` MUST be CBOR and `payload.encoding` MUST be `"cbor"`. JSON payload bytes are non-conformant.
-5. The container MUST be deterministic given the same input entries: a producer and a verifier that independently pack the same logical asset MUST produce byte-identical containers when the same digest algorithm is used. The official KDNA toolchain guarantees this for Core GA; assets that depend on non-deterministic packing are non-conformant.
+5. The container MUST be deterministic given the same input entries: a producer and a verifier that independently pack the same logical asset MUST produce byte-identical containers when the same digest algorithm is used. The current official toolchain guarantees this for the Asset Container; assets that depend on non-deterministic packing are non-conformant.
 6. Encryption is per-entry, not whole-container. For a protected payload,
    `payload.kdnab` contains the supported CBOR envelope; decryption occurs only
    after LoadPlan authorization and plaintext is not written to disk.
@@ -53,7 +53,7 @@ example.kdna
 
 - ❌ Wrapping the whole `.kdna` in another container (`.tar.gz.kdna`, `.zip.kdna`). The `.kdna` file IS the container.
 - ❌ Storing the manifest as a non-root path (`/manifests/v1/kdna.json`). The manifest is always at the root of the container.
-- ❌ Embedding the payload as multiple separate files (`KDNA_Core.json`, `KDNA_Patterns.json`, ...). The current Core GA collapses the payload into a single `payload.kdnab`. The multi-file layout is a legacy plaintext ZIP shape and is not part of the current format.
+- ❌ Embedding the payload as multiple separate files (`KDNA_Core.json`, `KDNA_Patterns.json`, ...). The current Asset Container stores the payload in a single `payload.kdnab`. The multi-file layout is a legacy plaintext ZIP shape and is not part of the current format.
 - ❌ Storing executable code (`.js`, `.py`, `.wasm`) inside the container that the loader is expected to execute. KDNA Core is data-only; any execution semantics belong to runtime extensions defined outside this spec.
 
 ## Versioning

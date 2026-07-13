@@ -49,29 +49,36 @@ jobs:
         run: node scripts/validate-public-truth.js
         continue-on-error: true
 
-      - name: Run publish-health (cross-repo 4-package check)
+      - name: Run publish-health (all tracked npm packages)
         id: cross
         # Keep the public package/release audit in-tree so CI can run it with
         # npm and GitHub CLI access.
         run: |
           PACKAGES=(
-            "kdna-cli:kdna-cli:package.json:v"
-            "kdna-studio-cli:kdna-studio-cli:package.json:v"
-            "kdna-studio-core:kdna-studio-core:package.json:v"
-            "kdna-core:kdna:packages/kdna-core/package.json:kdna-core-v"
-            "kdna-eval:kdna:packages/kdna-eval/package.json:kdna-eval-v"
+            "kdna-cli:kdna-cli:package.json:v:@aikdna/kdna-cli"
+            "kdna-mcp-server:kdna-skills:mcp-server/package.json:v:@aikdna/kdna-mcp-server"
+            "kdna-studio-cli:kdna-studio-cli:package.json:v:@aikdna/kdna-studio-cli"
+            "kdna-studio-core:kdna-studio-core:package.json:v:@aikdna/kdna-studio-core"
+            "kdna-activation-server:kdna-activation-server:package.json:v:@aikdna/kdna-activation-server"
+            "kdna-remote-server:kdna-remote-server:package.json:v:@aikdna/kdna-remote-server"
+            "kdna-web-server:kdna-web-server:package.json:v:@aikdna/kdna-web-server"
+            "kdna-web-client:kdna-web-client:package.json:v:@aikdna/kdna-web-client"
+            "kdna-react:kdna-react:package.json:v:@aikdna/kdna-react"
+            "create-kdna-web-app:create-kdna-web-app:package.json:v:create-kdna-web-app"
+            "kdna-core:kdna:packages/kdna-core/package.json:kdna-core-v:@aikdna/kdna-core"
+            "kdna-eval:kdna:packages/kdna-eval/package.json:kdna-eval-v:@aikdna/kdna-eval"
           )
           DRIFT=0
           echo "| package | main | tag | npm | release | drift |"
           echo "| --- | --- | --- | --- | --- | --- |"
           for entry in "${PACKAGES[@]}"; do
-            IFS=':' read -r pkg repo path tag_prefix <<< "$entry"
+            IFS=':' read -r pkg repo package_path tag_prefix npm_spec <<< "$entry"
             # Use curl + raw.githubusercontent.com (no auth needed for public repos)
-            main_v=$(curl -sS "https://raw.githubusercontent.com/aikdna/${repo}/main/${path}" 2>/dev/null \
+            main_v=$(curl -sS "https://raw.githubusercontent.com/aikdna/${repo}/main/${package_path}" 2>/dev/null \
               | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["version"])' 2>/dev/null || echo "")
             tag_v=$(git ls-remote --tags "https://github.com/aikdna/$repo.git" 2>/dev/null \
-              | awk -F'/' -v prefix="refs/tags/${tag_prefix}" '$0 ~ prefix {print $NF}' | sort -V | tail -1 || echo "")
-            npm_v=$(npm view "@aikdna/$pkg" version 2>/dev/null || echo "")
+              | awk -F'/' -v prefix="refs/tags/${tag_prefix}" '$0 ~ prefix && $NF !~ /\^\{\}$/ {print $NF}' | sort -V | tail -1 || echo "")
+            npm_v=$(npm view "$npm_spec" version 2>/dev/null || echo "")
             release_tag="${tag_prefix}${npm_v}"
             rel_http=$(curl -sS -o /dev/null -w "%{http_code}" "https://api.github.com/repos/aikdna/${repo}/releases/tags/${release_tag}" 2>/dev/null)
             rel_exists=$([ "$rel_http" = "200" ] && echo "yes" || echo "no")
