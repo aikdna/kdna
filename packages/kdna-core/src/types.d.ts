@@ -635,7 +635,7 @@ export interface KDNARuntimeCapsule {
   version: '1.0';
   domain: string | null;
   judgment_version: string | null;
-  asset_digest: string | null;
+  asset_digest: string;
   signature: { state: 'verified' | 'not_checked' | 'absent'; issuer?: string };
   access: string;
   risk_level: string | null;
@@ -715,6 +715,7 @@ export interface KDNARuntimeCapsuleV2 {
   };
   compatibility?: {
     capsule_1_domain?: string;
+    capsule_1_access?: 'open' | 'protected' | 'runtime';
     capsule_1_extensions?: KDNACapsule1Extensions;
   };
 }

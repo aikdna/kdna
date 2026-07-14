@@ -145,6 +145,64 @@ test('non-minimal Capsule 1 extensions survive build and adapter parity exactly'
   assert.equal(validators.capsule2(capsule2), true, JSON.stringify(validators.capsule2.errors));
 });
 
+test('all frozen Capsule 1 access aliases survive adapter parity without changing Capsule 2 access', () => {
+  const reader = core.createKdnaAssetReader();
+  const asset = reader.openSync(GOLDEN_BYTES);
+  const baseManifest = reader.readManifestSync(asset);
+  const digests = core.computeDigestEvidence(GOLDEN_BYTES);
+  const base = core.loadAuthorized(GOLDEN_BYTES, { profile: 'compact', as: 'json' });
+  base.trace.loaded_at = golden.loaded_at;
+
+  for (const [alias, canonical] of [
+    ['open', 'public'],
+    ['protected', 'licensed'],
+    ['runtime', 'remote'],
+  ]) {
+    const direct = structuredClone(base);
+    direct.access = alias;
+    const manifest = { ...baseManifest, access: alias };
+    const capsule2 = core.buildCapsuleV2({
+      capsule1: direct,
+      manifest,
+      digests,
+      inputKind: 'packaged_bytes',
+      loadedAt: golden.loaded_at,
+    });
+
+    assert.equal(capsule2.access, canonical);
+    assert.equal(capsule2.compatibility.capsule_1_access, alias);
+    assert.deepEqual(core.adaptCapsuleV2ToV1(capsule2), direct);
+  }
+});
+
+test('an asset without checksums still emits Capsule 1 E and has exact adapter parity', () => {
+  const fixture = withModifiedSource(() => {});
+  try {
+    fs.rmSync(path.join(fixture.source, 'checksums.json'));
+    core.pack(fixture.source, fixture.assetPath);
+    const bytes = fs.readFileSync(fixture.assetPath);
+    const reader = core.createKdnaAssetReader();
+    const asset = reader.openSync(bytes);
+    const expectedE = core.computeRuntimeEntrySetDigest(
+      asset.readEntry('kdna.json'),
+      asset.readEntry('payload.kdnab'),
+    );
+    const direct = core.loadAuthorized(bytes, { profile: 'compact', as: 'json' });
+    direct.trace.loaded_at = golden.loaded_at;
+    const capsule2 = core.loadCapsuleV2(bytes, {
+      loadedAt: golden.loaded_at,
+      profile: 'compact',
+    });
+
+    assert.equal(direct.asset_digest, expectedE);
+    assert.equal(capsule2.digests.runtime_entry_set.value, expectedE);
+    assert.equal(capsule2.digests.runtime_entry_set.comparison.state, 'not_compared');
+    assert.deepEqual(core.adaptCapsuleV2ToV1(capsule2), direct);
+  } finally {
+    fixture.cleanup();
+  }
+});
+
 test('C entry paths use UTF-8 byte order while JCS object keys retain UTF-16 order', () => {
   const bmpName = '\uE000.txt';
   const astralName = '\u{10000}.txt';
@@ -444,6 +502,36 @@ test('public Capsule 2 builder and adapter reject incomplete success invariants'
     () => core.adaptCapsuleV2ToV1(capsule2),
     (error) => error.code === 'KDNA_CAPSULE_ADAPTER_INPUT_INVALID',
   );
+});
+
+test('Capsule 2 builder rejects Capsule 1 values unrelated to manifest identity, access, or E', () => {
+  const reader = core.createKdnaAssetReader();
+  const asset = reader.openSync(GOLDEN_BYTES);
+  const manifest = reader.readManifestSync(asset);
+  const digests = core.computeDigestEvidence(GOLDEN_BYTES);
+  const direct = core.loadAuthorized(GOLDEN_BYTES, { profile: 'compact', as: 'json' });
+  direct.trace.loaded_at = golden.loaded_at;
+  const build = (candidate) => core.buildCapsuleV2({
+    capsule1: candidate,
+    manifest,
+    digests,
+    inputKind: 'packaged_bytes',
+    loadedAt: golden.loaded_at,
+  });
+
+  for (const mutate of [
+    (capsule) => { capsule.domain = '@wrong/domain'; },
+    (capsule) => { capsule.judgment_version = '9.9.9'; },
+    (capsule) => { capsule.asset_digest = `sha256:${'0'.repeat(64)}`; },
+    (capsule) => { capsule.access = 'licensed'; },
+  ]) {
+    const candidate = structuredClone(direct);
+    mutate(candidate);
+    assert.throws(
+      () => build(candidate),
+      (error) => error.code === 'KDNA_CAPSULE_2_BUILD_INVALID',
+    );
+  }
 });
 
 test('Capsule 2 rejects authoring directories before projection', () => {

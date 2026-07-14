@@ -120,6 +120,7 @@
       "additionalProperties": false,
       "properties": {
         "capsule_1_domain": { "type": "string", "minLength": 1 },
+        "capsule_1_access": { "enum": ["open", "protected", "runtime"] },
         "capsule_1_extensions": { "$ref": "#/$defs/capsule1Extensions" }
       }
     },

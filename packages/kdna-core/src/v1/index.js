@@ -992,11 +992,10 @@ function verifyDigests(checksums, map, problems, result) {
       problems.push(`checksums: ${digestLabel} cannot be verified without ${missingAssetInputs.join(', ')}`);
       stillValid = false;
     } else {
-      const combined = Object.keys(entryDigests)
-        .sort()
-        .map((name) => `${name}:${entryDigests[name]}`)
-        .join('\n');
-      const actualEntrySetDigest = crypto.createHash('sha256').update(combined).digest('hex');
+      const actualEntrySetDigest = computeRuntimeEntrySetDigest(
+        map['kdna.json'],
+        map['payload.kdnab'],
+      ).slice('sha256:'.length);
       if (actualEntrySetDigest !== expectedEntrySetDigest) {
         problems.push(
           `checksums: ${digestLabel} mismatch (declared ${expectedEntrySetDigest.slice(0, 8)}..., actual ${actualEntrySetDigest.slice(0, 8)}...)`,
@@ -1032,6 +1031,28 @@ function digestEntry(sourceDir, entry) {
   };
 }
 
+function computeRuntimeEntrySetDigest(manifestBytes, payloadBytes) {
+  if (
+    (!Buffer.isBuffer(manifestBytes) && !(manifestBytes instanceof Uint8Array))
+    || (!Buffer.isBuffer(payloadBytes) && !(payloadBytes instanceof Uint8Array))
+  ) {
+    const error = new Error(
+      'E requires raw uncompressed kdna.json and payload.kdnab bytes.',
+    );
+    error.code = 'KDNA_DIGEST_INPUT_INVALID';
+    throw error;
+  }
+  const entries = {
+    'kdna.json': crypto.createHash('sha256').update(manifestBytes).digest('hex'),
+    'payload.kdnab': crypto.createHash('sha256').update(payloadBytes).digest('hex'),
+  };
+  const combined = Object.keys(entries)
+    .sort()
+    .map((name) => `${name}:${entries[name]}`)
+    .join('\n');
+  return `sha256:${crypto.createHash('sha256').update(combined).digest('hex')}`;
+}
+
 function buildChecksumsV1(sourceDir) {
   const absSrc = path.resolve(sourceDir);
   if (!fs.existsSync(absSrc) || !fs.statSync(absSrc).isDirectory()) {
@@ -1042,12 +1063,10 @@ function buildChecksumsV1(sourceDir) {
     'kdna.json': digestEntry(absSrc, 'kdna.json'),
     'payload.kdnab': digestEntry(absSrc, 'payload.kdnab'),
   };
-  const combined = Object.keys(entries)
-    .sort()
-    .map((name) => `${name}:${entries[name].value}`)
-    .join('\n');
-
-  const entrySetDigest = `sha256:${crypto.createHash('sha256').update(combined).digest('hex')}`;
+  const entrySetDigest = computeRuntimeEntrySetDigest(
+    fs.readFileSync(path.join(absSrc, 'kdna.json')),
+    fs.readFileSync(path.join(absSrc, 'payload.kdnab')),
+  );
   return {
     digest_profile: 'kdna-runtime-entry-set-v1',
     covered_entries: ['kdna.json', 'payload.kdnab'],
@@ -1864,6 +1883,7 @@ module.exports = {
   planLoad,
   loadAuthorized,
   buildChecksums: buildChecksumsV1,
+  computeRuntimeEntrySetDigest,
   pack,
   unpack,
   load: loadV1,
@@ -2385,14 +2405,10 @@ function wrapAsCapsule(result, v1, profile, opts) {
 function buildCapsule(loadResult, v1, profile, opts = {}) {
   const m = v1.manifest;
   const val = opts._validation || {};
-  const assetDigest = v1.map && v1.map['checksums.json']
-    ? (() => {
-        try {
-          const checks = JSON.parse(v1.map['checksums.json'].toString('utf8'));
-          return checks.entry_set_digest || checks.asset_digest || null;
-        } catch { return null; }
-      })()
-    : null;
+  const assetDigest = computeRuntimeEntrySetDigest(
+    v1.map && v1.map['kdna.json'],
+    v1.map && v1.map['payload.kdnab'],
+  );
 
   const pubkey = (m.creator && m.creator.pubkey) || (m.author && m.author.pubkey) || null;
   const sigVerified = val.signature_valid === true;

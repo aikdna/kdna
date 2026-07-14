@@ -85,12 +85,19 @@ const legacyCapsule = adaptCapsuleV2ToV1(capsule2);
 
 An A, C, or E mismatch is returned as evidence by `computeDigestEvidence()`
 and blocks `loadCapsuleV2()` with a digest-specific error. The adapter always
-maps E to Capsule 1 `asset_digest`; it never substitutes A or C.
+maps E to Capsule 1 `asset_digest`; it never substitutes A or C. Core computes
+E from the raw Runtime manifest and payload bytes even when `checksums.json` is
+absent, in which case E is reported as `not_compared`.
 Internal manifest/checksum declarations are checked before independent
 expected values, so a receipt match cannot conceal a bad declaration or
 conflicting digest alias. The adapter also preserves the four frozen Capsule 1
 inheritance/dependency/RAG extension fields through
 `compatibility.capsule_1_extensions` without giving them Capsule 2 authority.
+It preserves only the legacy access aliases `open`, `protected`, and `runtime`
+through `compatibility.capsule_1_access`; Capsule 2 itself always uses
+`public`, `licensed`, or `remote`. The public builder rejects a Capsule 1 value
+whose domain, judgment version, access, or E does not match the supplied
+manifest and digest evidence.
 
 ## Supported Runtime Flow
 

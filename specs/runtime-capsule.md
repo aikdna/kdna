@@ -74,7 +74,10 @@ were actually completed.
 
 Capsule 1 `asset_digest` is permanently the runtime entry-set digest E
 (`kdna-runtime-entry-set-v1`). It is not the SHA-256 of the final `.kdna`
-file. This historical name is frozen for compatibility.
+file. This historical name is frozen for compatibility. Runtime Core computes
+E directly from the raw `kdna.json` and `payload.kdnab` bytes even when the
+optional `checksums.json` entry is absent; checksum declarations only determine
+whether the observation is `matched` or `not_compared`.
 
 ### Signature state
 
@@ -114,6 +117,11 @@ Capsule 2 identity is `asset.asset_id`. A distinct historical Capsule 1
 solely for the deterministic v2-to-v1 adapter and has no Capsule 2 identity or
 routing authority.
 
+Capsule 2 access is always one of `public`, `licensed`, or `remote`. The frozen
+Capsule 1 aliases `open`, `protected`, and `runtime` may appear only as
+`compatibility.capsule_1_access`, so the adapter can reproduce the exact
+Capsule 1 value. Other access values are never stored there.
+
 Capsule 1 may also carry the frozen extension fields `extends_chain`,
 `inheritance_applied`, `resolved_dependencies`, and `rag_isolation_policy`.
 Capsule 2 carries those values unchanged under
@@ -128,7 +136,9 @@ receipt, and Trace integration are later protocol phases.
 Core exposes Capsule 2 only through the explicit `loadCapsuleV2()` API. The
 existing `loadAuthorized()` route continues to emit the frozen Capsule 1.
 Source directories cannot emit Capsule 2 because they have no final byte-stream
-identity A.
+identity A. The public Capsule 2 builder fails closed unless its Capsule 1
+input agrees with the supplied Runtime manifest on domain, judgment version,
+and access, and with digest evidence on E.
 
 ## 4. Load Profiles
 

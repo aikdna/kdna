@@ -10,6 +10,7 @@ export const validate = v1.validate;
 export const planLoad = v1.planLoad;
 export const loadAuthorized = v1.loadAuthorized;
 export const buildChecksums = v1.buildChecksums;
+export const computeRuntimeEntrySetDigest = v1.computeRuntimeEntrySetDigest;
 export const pack = v1.pack;
 export const unpack = v1.unpack;
 export const load = v1.load;

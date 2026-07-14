@@ -47,6 +47,7 @@ const CAPSULE_1_EXTENSION_KEYS = Object.freeze([
   'resolved_dependencies',
   'rag_isolation_policy',
 ]);
+const CAPSULE_1_ACCESS_ALIASES = new Set(['open', 'protected', 'runtime']);
 
 let validators;
 
@@ -108,22 +109,6 @@ function computeAssetDigest(assetBytes) {
     fail('KDNA_DIGEST_INPUT_INVALID', 'A requires final packaged asset bytes.');
   }
   return sha256Digest(assetBytes);
-}
-
-function computeRuntimeEntrySetDigest(manifestBytes, payloadBytes) {
-  if (
-    (!Buffer.isBuffer(manifestBytes) && !(manifestBytes instanceof Uint8Array)) ||
-    (!Buffer.isBuffer(payloadBytes) && !(payloadBytes instanceof Uint8Array))
-  ) {
-    fail(
-      'KDNA_DIGEST_INPUT_INVALID',
-      'E requires raw uncompressed kdna.json and payload.kdnab bytes.',
-    );
-  }
-  const manifest = sha256Digest(manifestBytes).slice('sha256:'.length);
-  const payload = sha256Digest(payloadBytes).slice('sha256:'.length);
-  const joined = `kdna.json:${manifest}\npayload.kdnab:${payload}`;
-  return sha256Digest(Buffer.from(joined, 'utf8'));
 }
 
 function readJsonEntry(asset, entryName) {
@@ -243,7 +228,7 @@ function computeDigestEvidenceFromBytes(assetBytes, options = {}) {
   const checksums = readJsonEntry(asset, 'checksums.json');
   const assetDigest = computeAssetDigest(bytes);
   const contentDigest = reader.contentDigestSync(asset);
-  const entrySetDigest = computeRuntimeEntrySetDigest(
+  const entrySetDigest = v1.computeRuntimeEntrySetDigest(
     asset.readEntry('kdna.json'),
     asset.readEntry('payload.kdnab'),
   );
@@ -503,6 +488,37 @@ function buildCapsuleV2({ capsule1, manifest, digests, inputKind, loadedAt } = {
   }
   assertSuccessfulDigestEvidence(digests);
 
+  const expectedDomain = manifest.name || manifest.asset_id;
+  if (capsule1.domain !== expectedDomain) {
+    fail(
+      'KDNA_CAPSULE_2_BUILD_INVALID',
+      'Capsule 1 domain does not match the Runtime manifest identity.',
+      { capsule_1: capsule1.domain, manifest: expectedDomain },
+    );
+  }
+  if (capsule1.judgment_version !== manifest.judgment_version) {
+    fail(
+      'KDNA_CAPSULE_2_BUILD_INVALID',
+      'Capsule 1 judgment_version does not match the Runtime manifest.',
+      { capsule_1: capsule1.judgment_version, manifest: manifest.judgment_version },
+    );
+  }
+  const expectedAccess = manifest.access || 'public';
+  if (capsule1.access !== expectedAccess) {
+    fail(
+      'KDNA_CAPSULE_2_BUILD_INVALID',
+      'Capsule 1 access does not match the Runtime manifest.',
+      { capsule_1: capsule1.access, manifest: expectedAccess },
+    );
+  }
+  if (capsule1.asset_digest !== digests.runtime_entry_set.value) {
+    fail(
+      'KDNA_CAPSULE_2_BUILD_INVALID',
+      'Capsule 1 asset_digest does not match Runtime entry-set digest E.',
+      { capsule_1: capsule1.asset_digest, runtime_entry_set: digests.runtime_entry_set.value },
+    );
+  }
+
   const timestamp = loadedAt || capsule1.trace?.loaded_at;
   if (typeof timestamp !== 'string' || Number.isNaN(Date.parse(timestamp))) {
     fail('KDNA_CAPSULE_2_BUILD_INVALID', 'Capsule 2 loaded_at must be an ISO date-time string.');
@@ -542,6 +558,9 @@ function buildCapsuleV2({ capsule1, manifest, digests, inputKind, loadedAt } = {
   if (capsule1.domain && capsule1.domain !== manifest.asset_id) {
     compatibility.capsule_1_domain = capsule1.domain;
   }
+  if (CAPSULE_1_ACCESS_ALIASES.has(capsule1.access)) {
+    compatibility.capsule_1_access = capsule1.access;
+  }
   const capsule1Extensions = {};
   for (const key of CAPSULE_1_EXTENSION_KEYS) {
     if (Object.prototype.hasOwnProperty.call(capsule1, key)) {
@@ -575,7 +594,7 @@ function adaptCapsuleV2ToV1(capsule) {
     judgment_version: capsule.asset.judgment_version,
     asset_digest: capsule.digests.runtime_entry_set.value,
     signature: capsule.signature,
-    access: capsule.access,
+    access: capsule.compatibility?.capsule_1_access || capsule.access,
     risk_level: capsule.risk_level,
     profile: capsule.profile,
     context: capsule.context,
@@ -647,6 +666,6 @@ module.exports = {
   computeAssetDigest,
   computeCapsuleDeliveryDigest,
   computeDigestEvidence,
-  computeRuntimeEntrySetDigest,
+  computeRuntimeEntrySetDigest: v1.computeRuntimeEntrySetDigest,
   loadCapsuleV2,
 };
