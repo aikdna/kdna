@@ -1,7 +1,7 @@
 {
   "cases": [
     {
-      "name": "plan-missing-required-nullable-asset-uid",
+      "name": "plan-missing-required-asset-uid",
       "base": "plan",
       "operation": "remove",
       "path": "/asset_ref/asset_uid",
@@ -27,6 +27,24 @@
       "expected_code": "KDNA_ASSET_FILE_REQUIRED"
     },
     {
+      "name": "plan-capsule-1-acceptance-is-forbidden",
+      "base": "plan",
+      "operation": "replace",
+      "path": "/projection_request/accepted_capsule_versions",
+      "value": ["1.0"],
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "plan-host-1-acceptance-is-forbidden",
+      "base": "plan",
+      "operation": "replace",
+      "path": "/host_request/accepted_protocols",
+      "value": ["kdna.agent-host/1"],
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
       "name": "plan-generic-digest-is-forbidden",
       "base": "plan",
       "operation": "add",
@@ -36,15 +54,10 @@
       "expected_code": "SCHEMA_INVALID"
     },
     {
-      "name": "plan-a-cannot-use-a-content-declaration-source",
+      "name": "plan-expected-digest-requires-comparison",
       "base": "plan",
-      "operation": "replace",
-      "path": "/asset_ref/expected_digests/asset",
-      "value": {
-        "value": "sha256:936afdde43ff207fa7570cf1524f36d89ad2b6b95f0a5811ba0d985878121d6e",
-        "basis": "kdna-container-bytes-v1",
-        "source": "kdna.json.content_digest"
-      },
+      "operation": "remove",
+      "path": "/asset_ref/expected_digests/asset/comparison",
       "expected_phase": "schema",
       "expected_code": "SCHEMA_INVALID"
     },
@@ -67,39 +80,21 @@
       "expected_code": "SCHEMA_INVALID"
     },
     {
-      "name": "request-missing-required-nullable-task-family",
+      "name": "request-missing-plan-reference",
       "base": "request",
       "operation": "remove",
-      "path": "/task/task_family",
+      "path": "/plan_ref",
       "expected_phase": "schema",
       "expected_code": "SCHEMA_INVALID"
     },
     {
-      "name": "request-present-null-nonnullable-digest-profile",
+      "name": "request-plan-reference-mismatch",
       "base": "request",
       "operation": "replace",
-      "path": "/runtime_contract/capsule_digest_profile",
-      "value": null,
-      "expected_phase": "schema",
-      "expected_code": "SCHEMA_INVALID"
-    },
-    {
-      "name": "request-capsule-delivery-digest-tamper",
-      "base": "request",
-      "operation": "replace",
-      "path": "/runtime_contract/capsule_delivery_digest",
+      "path": "/plan_ref/plan_digest",
       "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
       "expected_phase": "semantic",
-      "expected_code": "KDNA_CAPSULE_DELIVERY_DIGEST_MISMATCH"
-    },
-    {
-      "name": "request-asset-correlation-mismatch",
-      "base": "request",
-      "operation": "replace",
-      "path": "/asset/asset_id",
-      "value": "kdna:example:different-asset",
-      "expected_phase": "semantic",
-      "expected_code": "KDNA_HOST_ASSET_ID_MISMATCH"
+      "expected_code": "KDNA_HOST_PLAN_REF_MISMATCH"
     },
     {
       "name": "request-task-must-correlate-with-plan",
@@ -111,20 +106,74 @@
       "expected_code": "KDNA_HOST_TASK_MISMATCH"
     },
     {
+      "name": "request-full-asset-reference-must-correlate",
+      "base": "request",
+      "operation": "replace",
+      "path": "/asset/judgment_version",
+      "value": "9.9.9",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_HOST_ASSET_REF_MISMATCH"
+    },
+    {
+      "name": "request-capsule-access-must-correlate",
+      "base": "request",
+      "operation": "replace",
+      "path": "/capsule/access",
+      "value": "licensed",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_HOST_ASSET_REF_MISMATCH"
+    },
+    {
+      "name": "request-projection-profile-must-correlate",
+      "base": "request",
+      "operation": "replace",
+      "path": "/projection_contract/profile",
+      "value": "full",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_HOST_PROJECTION_CONTRACT_MISMATCH"
+    },
+    {
+      "name": "request-budget-must-correlate",
+      "base": "request",
+      "operation": "replace",
+      "path": "/budget/max_projection_chars",
+      "value": 11999,
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_HOST_BUDGET_MISMATCH"
+    },
+    {
+      "name": "request-expected-digest-must-correlate",
+      "base": "request",
+      "operation": "replace",
+      "path": "/asset/expected_digests/asset/value",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_HOST_ASSET_REF_MISMATCH"
+    },
+    {
+      "name": "request-capsule-evidence-must-match-plan-expectation",
+      "base": "request",
+      "operation": "replace",
+      "path": "/capsule/digests/asset/value",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_HOST_DIGEST_EXPECTATION_MISMATCH"
+    },
+    {
+      "name": "request-capsule-delivery-digest-tamper",
+      "base": "request",
+      "operation": "replace",
+      "path": "/runtime_contract/capsule_delivery_digest",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_CAPSULE_DELIVERY_DIGEST_MISMATCH"
+    },
+    {
       "name": "receipt-completed-requires-outcome",
       "base": "receipt",
       "operation": "replace",
       "path": "/outcome",
       "value": null,
-      "expected_phase": "schema",
-      "expected_code": "SCHEMA_INVALID"
-    },
-    {
-      "name": "receipt-noncompleted-forbids-outcome",
-      "base": "receipt",
-      "operation": "replace",
-      "path": "/runtime_receipt/provider_execution_status",
-      "value": "failed",
       "expected_phase": "schema",
       "expected_code": "SCHEMA_INVALID"
     },
@@ -138,13 +187,13 @@
       "expected_code": "KDNA_HOST_CAPSULE_DELIVERY_DIGEST_MISMATCH"
     },
     {
-      "name": "receipt-request-correlation-mismatch",
+      "name": "receipt-usage-must-correlate",
       "base": "receipt",
       "operation": "replace",
-      "path": "/request_id",
-      "value": "host_fedcba9876543210fedcba98",
+      "path": "/outcome/usage",
+      "value": { "tokens_used": 10, "model_calls": 1 },
       "expected_phase": "semantic",
-      "expected_code": "KDNA_HOST_REQUEST_ID_MISMATCH"
+      "expected_code": "KDNA_HOST_USAGE_MISMATCH"
     },
     {
       "name": "trace-cannot-claim-semantic-consumption",
@@ -156,57 +205,49 @@
       "expected_code": "SCHEMA_INVALID"
     },
     {
-      "name": "trace-generic-digest-verified-is-forbidden",
+      "name": "completed-trace-cannot-carry-a-digest-mismatch",
       "base": "trace",
-      "operation": "add",
-      "path": "/digest_verified",
-      "value": true,
+      "operation": "replace",
+      "path": "/digest_evidence/asset/comparison/state",
+      "value": "mismatched",
       "expected_phase": "schema",
       "expected_code": "SCHEMA_INVALID"
     },
     {
-      "name": "completed-trace-cannot-carry-a-mismatch",
+      "name": "trace-host-capability-copy-must-match",
       "base": "trace",
       "operation": "replace",
-      "path": "/digest_evidence/asset",
-      "value": {
-        "value": "sha256:936afdde43ff207fa7570cf1524f36d89ad2b6b95f0a5811ba0d985878121d6e",
-        "basis": "kdna-container-bytes-v1",
-        "comparison": {
-          "state": "mismatched",
-          "against": "external_expected",
-          "expected": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-          "source": "install_receipt"
-        }
-      },
-      "expected_phase": "schema",
-      "expected_code": "SCHEMA_INVALID"
+      "path": "/runtime_contract/host_capabilities/host_protocols",
+      "value": ["kdna.agent-host/2"],
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_TRACE_NEGOTIATION_EVIDENCE_MISMATCH"
     },
     {
-      "name": "trace-a-evidence-must-match-delivered-capsule",
+      "name": "trace-core-offer-copy-must-match",
       "base": "trace",
       "operation": "replace",
-      "path": "/digest_evidence/asset/value",
+      "path": "/runtime_contract/core_capsule_versions",
+      "value": ["2.0"],
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_TRACE_NEGOTIATION_EVIDENCE_MISMATCH"
+    },
+    {
+      "name": "trace-budget-actual-cannot-be-forged",
+      "base": "trace",
+      "operation": "replace",
+      "path": "/budget/actual/projection_chars",
+      "value": 1,
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_TRACE_BUDGET_MISMATCH"
+    },
+    {
+      "name": "trace-result-digest-must-correlate",
+      "base": "trace",
+      "operation": "replace",
+      "path": "/result_ref/result_digest",
       "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
       "expected_phase": "semantic",
-      "expected_code": "KDNA_TRACE_DIGEST_EVIDENCE_MISMATCH"
-    },
-    {
-      "name": "trace-missing-required-nullable-parent-id",
-      "base": "trace",
-      "operation": "remove",
-      "path": "/parent_trace_id",
-      "expected_phase": "schema",
-      "expected_code": "SCHEMA_INVALID"
-    },
-    {
-      "name": "trace-p-cross-document-mismatch",
-      "base": "trace",
-      "operation": "replace",
-      "path": "/capsule_delivery_evidence/host_echoed",
-      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-      "expected_phase": "semantic",
-      "expected_code": "KDNA_TRACE_CAPSULE_DELIVERY_DIGEST_MISMATCH"
+      "expected_code": "KDNA_TRACE_RESULT_DIGEST_MISMATCH"
     }
   ]
 }

@@ -48,7 +48,7 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 | --- | ------------------------------- | ----------------------------------------------------------------- |
 | 16  | `RFC-0012-artifact-contract.md` | RFC-0012: KDNA Artifact Contract — ArtifactEnvelope specification |
 | 17  | `artifact-envelope.schema.json` | Schema for artifact envelopes                                     |
-| 18  | `judgment-trace-schema.json`    | Schema for recording what KDNA triggered during a judgment        |
+| 18  | `judgment-trace-schema.json`    | Deprecated 0.1 domain-authoring compatibility trace; not Plan 1.0 authority |
 | 19  | `judgment-report-schema.json`   | Schema for human-readable reports generated from a judgment trace |
 | 20  | `outcome-record-schema.json`    | Schema for recording whether a judgment was correct in hindsight  |
 | 21  | `product-runtime.schema.json`   | Schema for KDNA Product Runtime data                              |

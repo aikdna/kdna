@@ -99,8 +99,9 @@ still record the eventual comparison honestly.
 ### 2.3 Capsule profile versus result shape
 
 `projection_request.profile` selects the Runtime Capsule projection.
-`result_request.shape` describes the requested Host result and may be `null`.
-The two vocabularies are separate and MUST NOT be substituted for one another.
+`result_request.shape` is the required Host result shape and is exactly
+`structured_judgment` in Plan 1.0. The two vocabularies are separate and MUST
+NOT be substituted for one another.
 
 ## 3. Presence and null semantics
 
@@ -140,43 +141,49 @@ assumed to support current features. The Runner synthesizes exactly:
 }
 ```
 
-### 4.1 Orthogonal model, restricted first matrix
+### 4.1 Orthogonal descriptor, one Plan 1 pair
 
-Protocol and Capsule versions are separate capability dimensions. The first
-execution contract intentionally supports only two pairs:
+Protocol and Capsule versions remain separate capability dimensions. The
+capability schema validates those arrays independently and does not encode
+semantic coupling or imply their cartesian product. The Plan 1 verifier
+supports exactly one execution pair:
 
-| Host protocol | Delivered Capsule | State |
+| Host protocol | Delivered Capsule | Plan 1 state |
 | --- | --- | --- |
-| `kdna.agent-host/2` | `2.0` | supported; Host validates Capsule 2 and P |
-| `kdna.agent-host/1` | `1.0` | supported legacy path |
-| `kdna.agent-host/2` | `1.0` | blocked in this contract revision |
-| `kdna.agent-host/1` | `2.0` | blocked in this contract revision |
+| `kdna.agent-host/2` | `2.0` | supported when P profile support is registered |
+| `kdna.agent-host/1` | `1.0` | not a Plan 1 pair; remains the default Plan 0.9 compatibility path |
+| `kdna.agent-host/2` | `1.0` | blocked |
+| `kdna.agent-host/1` | `2.0` | blocked |
 
-The separation is retained so a future contract can add a pair without
-renaming either dimension. Implementations MUST NOT treat the cartesian
-product as supported today.
+Plan 1 therefore fixes `accepted_capsule_versions` to `["2.0"]` and
+`accepted_protocols` to `["kdna.agent-host/2"]`. A descriptor may advertise
+additional orthogonal capabilities, but they cannot change this selection.
+`legacy_assumption` describes only the Plan 0.9 compatibility boundary and
+can never authorize Plan 1 execution.
 
 ### 4.2 Selection algorithm
 
-1. Validate the Plan and recompute its plan digest.
-2. Obtain Core-supported Capsule versions and a Host capability descriptor.
-3. Intersect Plan, Core, and Host Capsule versions by exact string.
-4. Intersect Plan and Host protocols by exact string.
-5. Evaluate supported pairs in Plan Capsule preference order. For a Capsule
-   version, choose the highest compatible protocol: Host 2 before Host 1.
-6. Select only a pair permitted by the matrix above.
-7. If there is no Capsule intersection, block with
+1. Validate the Plan, recompute its plan digest, and compare that digest with
+   the independently accepted Plan reference supplied by the caller.
+2. Obtain Core-supported Capsule versions and the complete Host capability
+   descriptor before projection.
+3. Require Plan, Core, and Host to contain Capsule `2.0`.
+4. Require Plan and Host to contain `kdna.agent-host/2`.
+5. Require a `registered_descriptor` that advertises
+   `kdna-capsule-jcs-v1`.
+6. Select exactly Capsule `2.0` plus Agent Host `2`.
+7. If Capsule `2.0` is unavailable, block with
    `KDNA_CAPSULE_VERSION_UNSUPPORTED`.
-8. If there is no protocol intersection, block with
+8. If Agent Host `2` is unavailable, block with
    `KDNA_HOST_PROTOCOL_UNSUPPORTED`.
-9. If intersections exist but no allowed pair exists, block with
+9. If both version dimensions are present but the descriptor basis or P
+   profile cannot establish the verifiable pair, block with
    `KDNA_HOST_CAPSULE_PAIR_UNSUPPORTED`.
 
-No step may silently add Plan acceptance for Capsule 1 or Host 1. A Plan that
-accepts only Capsule 2 blocks against a legacy Host. If a Plan explicitly
-accepts Capsule 1 and Host 1, a deterministic Capsule 2-to-1 adapter may be
-used and must be named `kdna-capsule-2-to-1/v1` in Trace. The delivery P is
-then calculated over the actual delivered Capsule 1.
+No step may silently add acceptance for Capsule 1 or Host 1, and Plan 1 has no
+adapter or fallback field. Core constructs Capsule 2 directly. Capsule 1,
+Host 1, and existing Capsule 2-to-1 compatibility code remain outside this
+formal execution contract and continue under the unchanged Plan 0.9 default.
 
 ## 5. Agent Host 2 boundary
 
@@ -186,14 +193,23 @@ provider or model, the receiving Host boundary MUST:
 1. parse one JSON request and validate it against
    `agent-host-2-request.schema.json`;
 2. validate the embedded Capsule against `runtime-capsule-2.schema.json`;
-3. require equality among `authority.asset_id`, `asset.asset_id`, and
-   `capsule.asset.asset_id`;
-4. require `runtime_contract.capsule_version == capsule.version == "2.0"`;
-5. recompute P over the exact embedded Capsule with
+3. require the request `plan_ref` ID, profile, and digest to equal the
+   independently validated Plan reference;
+4. require the exact Plan task, projection contract, result contract, budget,
+   constraints, authority, and full asset identity in the request;
+5. require equality of asset ID, UID, version, judgment version, and access
+   across Plan, request, Capsule, and later Trace;
+6. for every non-null expected A/C/E record, require its value, basis, source,
+   and comparison to match the named Capsule evidence; a coordinated rewrite
+   cannot replace the independently accepted Plan digest;
+7. require `runtime_contract.capsule_version == capsule.version == "2.0"`;
+8. require the Capsule projection profile and digest-evidence profile to equal
+   the Plan and request projection contract;
+9. recompute P over the exact embedded Capsule with
    `kdna-capsule-jcs-v1`;
-6. compare recomputed P with
+10. compare recomputed P with
    `runtime_contract.capsule_delivery_digest`;
-7. reject the request before provider execution if any check fails.
+11. reject the request before provider execution if any check fails.
 
 Schema validation alone cannot prove equality or recompute a digest. These are
 mandatory semantic validation steps.
@@ -223,9 +239,10 @@ The sender-claimed, Host-recomputed, and echoed P values must all be equal.
 A structurally valid receipt with unequal values is semantically invalid.
 Receipt validation must also correlate the root `request_id` to the request.
 
-`outcome` is present as a non-null result if and only if
-`provider_execution_status` is `completed`. For `failed`, `cancelled`,
-`timed_out`, or `not_started`, `outcome` is required and must be `null`.
+`outcome` has the single requested `structured_judgment` shape and is present
+as a non-null result if and only if
+`provider_execution_status` is `completed`. For `failed`, `cancelled`, or
+`timed_out`, `outcome` is required and must be `null`.
 Capsule schema failure, identity mismatch, or P mismatch occurs before this
 accepted runtime boundary and MUST NOT produce a conforming success
 `runtime_receipt`. The transport may return a separately specified correlated
@@ -236,6 +253,25 @@ not mislabel it as an accepted receipt.
 equality cannot upgrade it. Model identity is either a non-empty
 Host-reported value with basis `host_reported`, or `null` with basis
 `not_observed`; the protocol never invents a model name.
+
+### 5.2 Budget evidence
+
+The request copies the Plan limits exactly. A Runner MUST enforce projection
+and task limits before Host invocation and reject an over-limit request.
+JudgmentTrace records the same limits and these actual facts:
+
+- `projection_chars`: Unicode scalar/code-point count of the exact RFC 8785
+  JCS serialization of the delivered Capsule 2, or `null` before projection;
+- `task_chars`: Unicode scalar/code-point count of the exact RFC 8785 JCS
+  serialization of the Plan task;
+- `elapsed_ms`: monotonic elapsed milliseconds from execution-boundary start;
+- tokens and model calls: exact Host-reported integers, or `null` with
+  `not_observed`; they are never estimated.
+
+Every comparison state is derived from those actuals and the copied limits.
+A Trace with rewritten actuals, a false `within_limit`, or an execution path
+that crossed an enforceable limit is invalid. `timed_out` requires
+`elapsed_ms > deadline_ms` and an `exceeded` elapsed comparison.
 
 ## 6. JudgmentTrace 1.0
 
@@ -255,6 +291,24 @@ The Trace always records:
 - delivery, semantic consumption, provider execution, conformance, and model
   identity as separate facts;
 - structured errors and nullable result evidence.
+
+The five terminal states are mutually exclusive and bidirectionally bound to
+their receipt, execution, error, and result facts:
+
+| Trace terminal | Host receipt status | Execution | Result | Errors |
+| --- | --- | --- | --- | --- |
+| `execution_completed` | `completed` with non-null outcome | `completed` | required | empty |
+| `blocked` | no accepted receipt | `not_started` | null | at least one |
+| `execution_failed` | `failed`, null outcome | `failed` | null | at least one |
+| `cancelled` | `cancelled`, null outcome | `cancelled` | null | at least one |
+| `timed_out` | `timed_out`, null outcome | `timed_out` | null | at least one |
+
+For every Host-reached terminal, Trace copies the complete Plan offers, Core
+offers, observed Host descriptor and basis, selected pair, asset identity,
+projection, request ID, receipt, P evidence, result evidence, and budget
+evidence. The verifier checks selected-member containment and re-runs the
+selection algorithm; copying mutually consistent but unobserved replacements
+is not sufficient.
 
 For P:
 
@@ -297,13 +351,20 @@ Public fixtures and the executable verifier live in
 cross-document semantic checks:
 
 - plan-digest recomputation and self-reference exclusion;
-- exact negotiation and the supported-pair matrix;
+- exact Plan 1 negotiation with no legacy fallback;
 - Capsule 2 schema/identity correlation;
 - request P recomputation;
 - correlated receipt P equality;
 - Trace-to-Plan/request/receipt correlation;
 - missing versus present-null behavior;
-- source-directory and silent-downgrade rejection.
+- five terminal iff state checks, budget derivation, source-directory
+  rejection through the real Core entry, and coordinated-tamper rejection.
+
+The object-level verifier assumes input has already passed a duplicate-key
+rejecting JSON parser. JavaScript `JSON.parse` overwrites duplicate member
+names before an object verifier can observe them, so `run.mjs` does not claim
+to detect duplicate keys in raw JSON text. Implementations MUST reject them at
+the parser boundary before schema or semantic validation.
 
 Passing the schema without passing these semantic checks is not protocol
 conformance.

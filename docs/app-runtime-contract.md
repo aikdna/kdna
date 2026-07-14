@@ -82,12 +82,17 @@ Apps must respect these actions:
 
 Apps must preserve the route status and candidate reasons in logs or trace artifacts. This is how KDNA proves that it avoided wrong-domain loading, not just that it loaded a domain.
 
-### 3. Judgment Trace
+### 3. Legacy app judgment trace
 
-Canonical source: [kdna-trace.md](./kdna-trace.md)  
-Schema: [judgment-trace-schema.json](../specs/judgment-trace-schema.json)
+Historical guidance: [kdna-trace.md](./kdna-trace.md)
 
-A judgment trace records what KDNA influenced during a task. It is not a generic execution log.
+Deprecated compatibility schema: [judgment-trace-schema.json](../specs/judgment-trace-schema.json)
+
+Plan 1 execution authority: [JudgmentTrace 1.0](../specs/judgment-trace-1.schema.json)
+
+This legacy app trace records an application's claimed influence during a
+task. It is not a generic execution log and is not valid ConsumptionPlan 1.0
+execution evidence.
 
 Apps should record:
 
@@ -101,7 +106,9 @@ Apps should record:
 - generated judgment or final classification
 - source attribution for every triggered judgment element
 
-Apps must not claim a trace proves correctness. A trace proves inspectability: what was loaded, why it was loaded, and which judgment structures influenced the result.
+Apps must not claim this trace proves correctness or observed semantic
+consumption. New Capsule 2 / Host 2 execution paths must use the strict Plan 1
+request, receipt, and JudgmentTrace 1.0 contract.
 
 ### 4. Judgment Report
 

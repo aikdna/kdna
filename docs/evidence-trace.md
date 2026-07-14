@@ -137,12 +137,19 @@ When a fidelity measurement runs (RFC-0010), it produces its own Evidence Trace:
 
 ## 4. Backward Compatibility
 
-The Evidence Trace extends — but does not replace — the existing judgment-trace-schema.json:
+The Evidence Trace extends — but does not rewrite — historical domain-authoring
+traces:
 
-- `judgment-trace-schema.json` v0.1.0 remains the canonical domain-authoring trace schema
+- `judgment-trace-schema.json` v0.1.0 is a deprecated compatibility schema for
+  historical domain-authoring records
 - `evidence-trace.schema.json` v1.0.0 is the product-grade extended schema
+- `judgment-trace-1.schema.json` is the sole authority for ConsumptionPlan 1.0
+  Capsule 2 / Host 2 terminal execution evidence
 - Any valid v0.1.0 judgment trace can be embedded in an evidence trace by adding the missing required fields
 - The runtime `recordTrace()` can continue emitting v0.1.0-shaped entries; consumers that support v1.0.0 can enrich them
+
+These three shapes are not interchangeable. Historical records remain
+immutable evidence; new Plan 1 execution evidence uses JudgmentTrace 1.0.
 
 ---
 

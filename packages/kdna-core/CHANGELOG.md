@@ -14,9 +14,10 @@
   extension fields through the one-way Capsule 2 compatibility member.
 - Define strict opt-in ConsumptionPlan 1.0, Agent Host 2, capability, runtime
   receipt, and authoritative JudgmentTrace 1.0 schemas. Add committed
-  negotiation, plan/P recomputation, source-directory block, required-null,
-  and cross-document tamper conformance vectors. Runtime defaults remain
-  Plan 0.9, Capsule 1, and Host 1.
+  negotiation, plan/P recomputation, five-terminal Trace, exact-budget,
+  source-directory block, required-null, and cross-document tamper conformance
+  vectors. Plan 1 formally supports only Capsule 2 plus Host 2 and has no
+  downgrade or adapter; runtime defaults remain Plan 0.9, Capsule 1, and Host 1.
 
 ### Changed
 

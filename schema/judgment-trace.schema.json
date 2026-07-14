@@ -1,8 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aikdna.com/schema/judgment-trace.schema.json",
-  "title": "KDNA Judgment Trace",
-  "description": "Canonical judgment trace format shared across all KDNA products (Chat, Work, CLI, Studio). Trace proves inspectability, not correctness.",
+  "title": "KDNA Legacy App Judgment Trace",
+  "description": "Deprecated compatibility schema for existing app-runtime examples. It is non-authoritative for ConsumptionPlan 1.0 and is not interchangeable with specs/judgment-trace-1.schema.json.",
+  "$comment": "New execution evidence must use the authoritative JudgmentTrace 1.0 schema. Keep this file only for existing app compatibility.",
+  "deprecated": true,
   "type": "object",
   "required": ["trace_id", "domain_id", "mode", "timestamp", "agent"],
   "properties": {

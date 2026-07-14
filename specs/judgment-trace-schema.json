@@ -1,8 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "https://aikdna.com/specs/judgment-trace-schema.json",
-  "title": "KDNA Judgment Trace",
-  "description": "Schema for capturing a transparent, inspectable record of which KDNA-loaded rules were triggered during agent judgment.",
+  "title": "KDNA Legacy Domain-Authoring Judgment Trace 0.1",
+  "description": "Deprecated compatibility schema for historical domain-authoring traces. It is non-authoritative for ConsumptionPlan 1.0 and is not interchangeable with judgment-trace-1.schema.json.",
+  "$comment": "New execution evidence must use the authoritative JudgmentTrace 1.0 schema. Historical 0.1 records remain valid evidence and must not be rewritten.",
+  "deprecated": true,
   "type": "object",
   "required": ["trace_version", "timestamp", "loaded_package", "generated_judgment"],
   "properties": {

@@ -1,13 +1,10 @@
 {
-  "supported_pairs": [
-    ["kdna.agent-host/2", "2.0"],
-    ["kdna.agent-host/1", "1.0"]
-  ],
+  "supported_pairs": [["kdna.agent-host/2", "2.0"]],
   "cases": [
     {
       "name": "registered-host-2-selects-capsule-2",
-      "plan_capsule_versions": ["2.0", "1.0"],
-      "plan_host_protocols": ["kdna.agent-host/2", "kdna.agent-host/1"],
+      "plan_capsule_versions": ["2.0"],
+      "plan_host_protocols": ["kdna.agent-host/2"],
       "core_capsule_versions": ["2.0", "1.0"],
       "capabilities": {
         "type": "kdna.agent-host.capabilities",
@@ -17,106 +14,36 @@
         "capsule_versions": ["2.0", "1.0"],
         "capsule_digest_profiles": ["kdna-capsule-jcs-v1"]
       },
-      "source_capsule_version": "2.0",
       "expected": {
         "state": "selected",
         "capsule_version": "2.0",
         "host_protocol": "kdna.agent-host/2",
-        "adapter": null,
         "issue_code": null
       }
     },
     {
-      "name": "descriptorless-host-is-explicit-legacy-assumption",
-      "plan_capsule_versions": ["2.0", "1.0"],
-      "plan_host_protocols": ["kdna.agent-host/2", "kdna.agent-host/1"],
-      "core_capsule_versions": ["2.0", "1.0"],
-      "capabilities": {
-        "type": "kdna.agent-host.capabilities",
-        "version": "1.0",
-        "capability_basis": "legacy_assumption",
-        "host_protocols": ["kdna.agent-host/1"],
-        "capsule_versions": ["1.0"],
-        "capsule_digest_profiles": []
-      },
-      "source_capsule_version": "2.0",
-      "expected": {
-        "state": "selected",
-        "capsule_version": "1.0",
-        "host_protocol": "kdna.agent-host/1",
-        "adapter": "kdna-capsule-2-to-1/v1",
-        "issue_code": null
-      }
-    },
-    {
-      "name": "capsule-2-only-plan-never-silently-downgrades",
+      "name": "orthogonal-offers-do-not-change-the-plan-1-selection",
       "plan_capsule_versions": ["2.0"],
-      "plan_host_protocols": ["kdna.agent-host/2", "kdna.agent-host/1"],
-      "core_capsule_versions": ["2.0", "1.0"],
-      "capabilities": {
-        "type": "kdna.agent-host.capabilities",
-        "version": "1.0",
-        "capability_basis": "legacy_assumption",
-        "host_protocols": ["kdna.agent-host/1"],
-        "capsule_versions": ["1.0"],
-        "capsule_digest_profiles": []
-      },
-      "source_capsule_version": "2.0",
-      "expected": {
-        "state": "blocked",
-        "capsule_version": null,
-        "host_protocol": null,
-        "adapter": null,
-        "issue_code": "KDNA_CAPSULE_VERSION_UNSUPPORTED"
-      }
-    },
-    {
-      "name": "non-matrix-pair-fails-closed",
-      "plan_capsule_versions": ["2.0"],
-      "plan_host_protocols": ["kdna.agent-host/1"],
-      "core_capsule_versions": ["2.0", "1.0"],
+      "plan_host_protocols": ["kdna.agent-host/2"],
+      "core_capsule_versions": ["1.0", "2.0"],
       "capabilities": {
         "type": "kdna.agent-host.capabilities",
         "version": "1.0",
         "capability_basis": "registered_descriptor",
-        "host_protocols": ["kdna.agent-host/2", "kdna.agent-host/1"],
-        "capsule_versions": ["2.0", "1.0"],
+        "host_protocols": ["kdna.agent-host/1", "kdna.agent-host/2"],
+        "capsule_versions": ["1.0", "2.0"],
         "capsule_digest_profiles": ["kdna-capsule-jcs-v1"]
       },
-      "source_capsule_version": "2.0",
-      "expected": {
-        "state": "blocked",
-        "capsule_version": null,
-        "host_protocol": null,
-        "adapter": null,
-        "issue_code": "KDNA_HOST_CAPSULE_PAIR_UNSUPPORTED"
-      }
-    },
-    {
-      "name": "capsule-1-plan-selects-host-1-even-when-host-2-is-offered",
-      "plan_capsule_versions": ["1.0"],
-      "plan_host_protocols": ["kdna.agent-host/2", "kdna.agent-host/1"],
-      "core_capsule_versions": ["2.0", "1.0"],
-      "capabilities": {
-        "type": "kdna.agent-host.capabilities",
-        "version": "1.0",
-        "capability_basis": "registered_descriptor",
-        "host_protocols": ["kdna.agent-host/2", "kdna.agent-host/1"],
-        "capsule_versions": ["2.0", "1.0"],
-        "capsule_digest_profiles": ["kdna-capsule-jcs-v1"]
-      },
-      "source_capsule_version": "1.0",
       "expected": {
         "state": "selected",
-        "capsule_version": "1.0",
-        "host_protocol": "kdna.agent-host/1",
-        "adapter": null,
+        "capsule_version": "2.0",
+        "host_protocol": "kdna.agent-host/2",
         "issue_code": null
       }
     },
     {
-      "name": "missing-host-protocol-intersection-blocks",
-      "plan_capsule_versions": ["1.0"],
+      "name": "legacy-assumption-is-not-a-plan-1-execution-contract",
+      "plan_capsule_versions": ["2.0"],
       "plan_host_protocols": ["kdna.agent-host/2"],
       "core_capsule_versions": ["2.0", "1.0"],
       "capabilities": {
@@ -127,13 +54,71 @@
         "capsule_versions": ["1.0"],
         "capsule_digest_profiles": []
       },
-      "source_capsule_version": "1.0",
       "expected": {
         "state": "blocked",
         "capsule_version": null,
         "host_protocol": null,
-        "adapter": null,
+        "issue_code": "KDNA_CAPSULE_VERSION_UNSUPPORTED"
+      }
+    },
+    {
+      "name": "missing-capsule-2-offer-blocks",
+      "plan_capsule_versions": ["2.0"],
+      "plan_host_protocols": ["kdna.agent-host/2"],
+      "core_capsule_versions": ["2.0"],
+      "capabilities": {
+        "type": "kdna.agent-host.capabilities",
+        "version": "1.0",
+        "capability_basis": "registered_descriptor",
+        "host_protocols": ["kdna.agent-host/2"],
+        "capsule_versions": ["1.0"],
+        "capsule_digest_profiles": ["kdna-capsule-jcs-v1"]
+      },
+      "expected": {
+        "state": "blocked",
+        "capsule_version": null,
+        "host_protocol": null,
+        "issue_code": "KDNA_CAPSULE_VERSION_UNSUPPORTED"
+      }
+    },
+    {
+      "name": "missing-host-2-offer-blocks",
+      "plan_capsule_versions": ["2.0"],
+      "plan_host_protocols": ["kdna.agent-host/2"],
+      "core_capsule_versions": ["2.0"],
+      "capabilities": {
+        "type": "kdna.agent-host.capabilities",
+        "version": "1.0",
+        "capability_basis": "registered_descriptor",
+        "host_protocols": ["kdna.agent-host/1"],
+        "capsule_versions": ["2.0"],
+        "capsule_digest_profiles": ["kdna-capsule-jcs-v1"]
+      },
+      "expected": {
+        "state": "blocked",
+        "capsule_version": null,
+        "host_protocol": null,
         "issue_code": "KDNA_HOST_PROTOCOL_UNSUPPORTED"
+      }
+    },
+    {
+      "name": "missing-p-profile-blocks-the-supported-pair",
+      "plan_capsule_versions": ["2.0"],
+      "plan_host_protocols": ["kdna.agent-host/2"],
+      "core_capsule_versions": ["2.0"],
+      "capabilities": {
+        "type": "kdna.agent-host.capabilities",
+        "version": "1.0",
+        "capability_basis": "registered_descriptor",
+        "host_protocols": ["kdna.agent-host/2"],
+        "capsule_versions": ["2.0"],
+        "capsule_digest_profiles": []
+      },
+      "expected": {
+        "state": "blocked",
+        "capsule_version": null,
+        "host_protocol": null,
+        "issue_code": "KDNA_HOST_CAPSULE_PAIR_UNSUPPORTED"
       }
     }
   ]

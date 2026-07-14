@@ -17,6 +17,11 @@ const requiredCoreFiles = [
   'schema/digest-evidence.schema.json',
   'schema/runtime-capsule-1.schema.json',
   'schema/runtime-capsule-2.schema.json',
+  'schema/consumption-plan-1.schema.json',
+  'schema/agent-host-capabilities-1.schema.json',
+  'schema/agent-host-2-request.schema.json',
+  'schema/agent-host-2-receipt.schema.json',
+  'schema/judgment-trace-1.schema.json',
 ];
 const requiredCompatFiles = [
   'bin/kdna.js',
