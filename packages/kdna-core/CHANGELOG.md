@@ -18,6 +18,10 @@
   source-directory block, required-null, and cross-document tamper conformance
   vectors. Plan 1 formally supports only Capsule 2 plus Host 2 and has no
   downgrade or adapter; runtime defaults remain Plan 0.9, Capsule 1, and Host 1.
+- Bind Trace elapsed evidence to the correlated Host receipt, make
+  unobserved finite limits propagate to an honest `not_observed` overall
+  comparison, and record Host-side P mismatch as a correlated pre-execution
+  rejection instead of an impossible terminal state.
 
 ### Changed
 

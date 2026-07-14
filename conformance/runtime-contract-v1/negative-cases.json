@@ -196,6 +196,14 @@
       "expected_code": "KDNA_HOST_USAGE_MISMATCH"
     },
     {
+      "name": "receipt-elapsed-observation-is-required",
+      "base": "receipt",
+      "operation": "remove",
+      "path": "/runtime_receipt/usage/elapsed_ms",
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
       "name": "trace-cannot-claim-semantic-consumption",
       "base": "trace",
       "operation": "replace",
@@ -239,6 +247,15 @@
       "value": 1,
       "expected_phase": "semantic",
       "expected_code": "KDNA_TRACE_BUDGET_MISMATCH"
+    },
+    {
+      "name": "trace-elapsed-value-must-match-its-basis",
+      "base": "trace",
+      "operation": "replace",
+      "path": "/budget/actual/elapsed_basis",
+      "value": "not_observed",
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
     },
     {
       "name": "trace-result-digest-must-correlate",

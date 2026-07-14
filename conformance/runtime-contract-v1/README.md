@@ -7,11 +7,14 @@ These fixtures exercise the strict opt-in Capsule 2 execution boundary:
 - the single formal `/2 + Capsule 2` Plan 1 pair, with no adapter or fallback;
 - Host 2 request Plan/task/full-asset/projection/result/budget correlation and
   P recomputation;
-- correlated `runtime_receipt` P echo and provider outcome invariants;
+- correlated `runtime_receipt` P echo, fail-closed P mismatch, and provider
+  outcome invariants;
 - all five JudgmentTrace 1.0 terminal states;
-- exact character, elapsed, token, and model-call budget evidence;
+- exact character budgets plus receipt-backed elapsed, token, and model-call
+  evidence; non-null limits with unobserved actuals cannot claim
+  `within_limit`;
 - required-null versus missing and present-null versus non-null behavior;
-- real Core source-directory rejection and seven audit-specific reproductions;
+- real Core source-directory rejection and twelve audit-specific reproductions;
 - rejection of generic digest fields, legacy downgrade, semantic-consumption
   claims, coordinated substitution, and cross-document tampering.
 
@@ -25,7 +28,7 @@ node conformance/runtime-contract-v1/run.mjs
 Plan and result digests are committed constants; the verifier recomputes them
 without rewriting the fixture. `negative-cases.json` contains deterministic
 JSON Pointer mutations so each rejected value stays reviewable without
-duplicating the full Capsule. `audit-negative-cases.json` freezes the seven
+duplicating the full Capsule. `audit-negative-cases.json` freezes the twelve
 audit-specific attack or inconsistency reproductions.
 
 Schema success alone is insufficient. The verifier also performs equality,

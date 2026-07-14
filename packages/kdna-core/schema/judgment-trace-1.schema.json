@@ -140,7 +140,9 @@
           "budget": {
             "properties": {
               "comparison": {
-                "properties": { "overall": { "const": "within_limit" } }
+                "properties": {
+                  "overall": { "enum": ["within_limit", "not_observed"] }
+                }
               }
             }
           },
@@ -163,13 +165,39 @@
           },
           "capsule_delivery_evidence": {
             "properties": {
-              "host_boundary_comparison": { "enum": ["not_delivered", "unavailable"] }
+              "host_boundary_comparison": {
+                "enum": ["mismatched", "not_delivered", "not_observed", "unavailable"]
+              }
             }
           },
-          "host_receipt": { "type": "null" },
+          "host_receipt": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "allOf": [
+                  {
+                    "$ref": "https://github.com/aikdna/kdna/specs/agent-host-2-receipt.schema.json"
+                  },
+                  {
+                    "properties": {
+                      "runtime_receipt": {
+                        "properties": {
+                          "capsule_delivery_comparison": { "const": "mismatched" },
+                          "provider_execution_status": { "const": "not_started" }
+                        }
+                      },
+                      "outcome": { "type": "null" }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
           "execution": {
             "properties": {
-              "delivery_status": { "const": "not_delivered" },
+              "delivery_status": {
+                "enum": ["not_delivered", "rejected_before_execution"]
+              },
               "execution_status": { "const": "not_started" }
             }
           },
@@ -445,7 +473,7 @@
           "enum": ["2.0", null]
         },
         "host_boundary_comparison": {
-          "enum": ["matched", "mismatched", "not_delivered", "unavailable"]
+          "enum": ["matched", "mismatched", "not_delivered", "not_observed", "unavailable"]
         },
         "request_id": {
           "oneOf": [{ "type": "string", "pattern": "^host_[0-9a-f]{24}$" }, { "type": "null" }]
@@ -463,6 +491,38 @@
               "sender_computed": { "const": true },
               "host_recomputed": { "$ref": "#/$defs/sha256" },
               "host_echoed": { "$ref": "#/$defs/sha256" },
+              "delivered_capsule_version": { "const": "2.0" },
+              "request_id": { "type": "string", "pattern": "^host_[0-9a-f]{24}$" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "host_boundary_comparison": { "const": "mismatched" } },
+            "required": ["host_boundary_comparison"]
+          },
+          "then": {
+            "properties": {
+              "observed": { "$ref": "#/$defs/sha256" },
+              "sender_computed": { "const": true },
+              "host_recomputed": { "$ref": "#/$defs/sha256" },
+              "host_echoed": { "$ref": "#/$defs/sha256" },
+              "delivered_capsule_version": { "const": "2.0" },
+              "request_id": { "type": "string", "pattern": "^host_[0-9a-f]{24}$" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "host_boundary_comparison": { "const": "not_observed" } },
+            "required": ["host_boundary_comparison"]
+          },
+          "then": {
+            "properties": {
+              "observed": { "$ref": "#/$defs/sha256" },
+              "sender_computed": { "const": true },
+              "host_recomputed": { "type": "null" },
+              "host_echoed": { "type": "null" },
               "delivered_capsule_version": { "const": "2.0" },
               "request_id": { "type": "string", "pattern": "^host_[0-9a-f]{24}$" }
             }
@@ -526,7 +586,9 @@
       ],
       "additionalProperties": false,
       "properties": {
-        "delivery_status": { "enum": ["correlated_response", "not_delivered"] },
+        "delivery_status": {
+          "enum": ["correlated_response", "rejected_before_execution", "not_delivered"]
+        },
         "semantic_consumption": { "$ref": "#/$defs/semanticConsumption" },
         "execution_status": {
           "enum": ["completed", "not_started", "failed", "cancelled", "timed_out"]
@@ -581,6 +643,7 @@
         "projection_chars",
         "task_chars",
         "elapsed_ms",
+        "elapsed_basis",
         "tokens_used",
         "model_calls",
         "usage_basis"
@@ -591,7 +654,10 @@
           "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }]
         },
         "task_chars": { "type": "integer", "minimum": 0 },
-        "elapsed_ms": { "type": "integer", "minimum": 0 },
+        "elapsed_ms": {
+          "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }]
+        },
+        "elapsed_basis": { "enum": ["host_monotonic", "not_observed"] },
         "tokens_used": {
           "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }]
         },
@@ -601,6 +667,16 @@
         "usage_basis": { "enum": ["host_reported", "not_observed"] }
       },
       "allOf": [
+        {
+          "if": {
+            "properties": { "elapsed_basis": { "const": "host_monotonic" } },
+            "required": ["elapsed_basis"]
+          },
+          "then": {
+            "properties": { "elapsed_ms": { "type": "integer", "minimum": 0 } }
+          },
+          "else": { "properties": { "elapsed_ms": { "type": "null" } } }
+        },
         {
           "if": {
             "properties": { "usage_basis": { "const": "host_reported" } },
@@ -635,7 +711,7 @@
       "properties": {
         "projection_chars": { "enum": ["within_limit", "exceeded", "not_observed"] },
         "task_chars": { "enum": ["within_limit", "exceeded"] },
-        "elapsed_ms": { "enum": ["within_limit", "exceeded"] },
+        "elapsed_ms": { "enum": ["within_limit", "exceeded", "not_observed"] },
         "tokens_used": {
           "enum": ["within_limit", "exceeded", "not_limited", "not_observed"]
         },

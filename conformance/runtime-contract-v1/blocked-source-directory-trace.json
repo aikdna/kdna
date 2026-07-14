@@ -108,7 +108,8 @@
     "actual": {
       "projection_chars": null,
       "task_chars": 105,
-      "elapsed_ms": 0,
+      "elapsed_ms": null,
+      "elapsed_basis": "not_observed",
       "tokens_used": null,
       "model_calls": null,
       "usage_basis": "not_observed"
@@ -116,10 +117,10 @@
     "comparison": {
       "projection_chars": "not_observed",
       "task_chars": "within_limit",
-      "elapsed_ms": "within_limit",
-      "tokens_used": "not_observed",
-      "model_calls": "not_observed",
-      "overall": "within_limit"
+      "elapsed_ms": "not_observed",
+      "tokens_used": "not_limited",
+      "model_calls": "not_limited",
+      "overall": "not_observed"
     }
   },
   "result_ref": null,

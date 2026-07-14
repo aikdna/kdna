@@ -20,6 +20,8 @@ const golden = readJson('golden.json');
 const positiveTraces = [
   readJson('trace-execution-completed.json'),
   readJson('blocked-source-directory-trace.json'),
+  createHostMismatchTrace(),
+  createHostPNotObservedTrace(),
   readJson('trace-execution-failed.json'),
   readJson('trace-cancelled.json'),
   readJson('trace-timed-out.json'),
@@ -61,6 +63,62 @@ function readJson(name) {
 
 function clone(value) {
   return structuredClone(value);
+}
+
+function createHostMismatchTrace() {
+  const trace = structuredClone(golden.trace);
+  const mismatched = `sha256:${'0'.repeat(64)}`;
+  trace.trace_id = 'trace_fedcba9876543210';
+  trace.overall_status = 'blocked';
+  trace.capsule_delivery_evidence.host_recomputed = mismatched;
+  trace.capsule_delivery_evidence.host_echoed = mismatched;
+  trace.capsule_delivery_evidence.host_boundary_comparison = 'mismatched';
+  trace.host_receipt.runtime_receipt.host_recomputed_capsule_delivery_digest = mismatched;
+  trace.host_receipt.runtime_receipt.echoed_capsule_delivery_digest = mismatched;
+  trace.host_receipt.runtime_receipt.capsule_delivery_comparison = 'mismatched';
+  trace.host_receipt.runtime_receipt.provider_execution_status = 'not_started';
+  trace.host_receipt.runtime_receipt.usage = {
+    elapsed_ms: 50,
+    elapsed_basis: 'host_monotonic',
+    tokens_used: null,
+    model_calls: null,
+    basis: 'not_observed',
+  };
+  trace.host_receipt.outcome = null;
+  trace.execution.delivery_status = 'rejected_before_execution';
+  trace.execution.execution_status = 'not_started';
+  trace.budget.actual.elapsed_ms = 50;
+  trace.budget.actual.elapsed_basis = 'host_monotonic';
+  trace.result_ref = null;
+  trace.errors = [
+    {
+      code: 'KDNA_CAPSULE_DELIVERY_DIGEST_MISMATCH',
+      message: 'Host recomputed P did not match the sender-declared P.',
+      phase: 'delivery',
+    },
+  ];
+  return trace;
+}
+
+function createHostPNotObservedTrace() {
+  const trace = createHostMismatchTrace();
+  trace.trace_id = 'trace_0011223344556677';
+  trace.capsule_delivery_evidence.host_recomputed = null;
+  trace.capsule_delivery_evidence.host_echoed = null;
+  trace.capsule_delivery_evidence.host_boundary_comparison = 'not_observed';
+  trace.host_receipt = null;
+  trace.budget.actual.elapsed_ms = null;
+  trace.budget.actual.elapsed_basis = 'not_observed';
+  trace.budget.comparison.elapsed_ms = 'not_observed';
+  trace.budget.comparison.overall = 'not_observed';
+  trace.errors = [
+    {
+      code: 'KDNA_HOST_P_EVIDENCE_NOT_OBSERVED',
+      message: 'The Host did not return independently correlated P comparison evidence.',
+      phase: 'delivery',
+    },
+  ];
+  return trace;
 }
 
 function equalJson(left, right) {
@@ -249,8 +307,24 @@ function validateReceiptSemantics(receipt, request) {
   const recomputedP = digestJcs(request.capsule);
   if (
     runtimeReceipt.sender_capsule_delivery_digest !== senderP ||
-    runtimeReceipt.host_recomputed_capsule_delivery_digest !== recomputedP ||
-    runtimeReceipt.echoed_capsule_delivery_digest !== recomputedP
+    runtimeReceipt.echoed_capsule_delivery_digest !==
+      runtimeReceipt.host_recomputed_capsule_delivery_digest
+  ) {
+    return 'KDNA_HOST_CAPSULE_DELIVERY_DIGEST_MISMATCH';
+  }
+
+  if (runtimeReceipt.capsule_delivery_comparison === 'mismatched') {
+    if (
+      runtimeReceipt.host_recomputed_capsule_delivery_digest === senderP ||
+      runtimeReceipt.provider_execution_status !== 'not_started' ||
+      receipt.outcome !== null
+    ) {
+      return 'KDNA_HOST_CAPSULE_DELIVERY_DIGEST_MISMATCH';
+    }
+  } else if (
+    runtimeReceipt.capsule_delivery_comparison !== 'matched' ||
+    runtimeReceipt.provider_execution_status === 'not_started' ||
+    runtimeReceipt.host_recomputed_capsule_delivery_digest !== recomputedP
   ) {
     return 'KDNA_HOST_CAPSULE_DELIVERY_DIGEST_MISMATCH';
   }
@@ -283,15 +357,17 @@ function validateReceiptSemantics(receipt, request) {
 }
 
 function compareObserved(value, limit, unobserved = 'not_observed') {
-  if (value === null) return unobserved;
   if (limit === null) return 'not_limited';
+  if (value === null) return unobserved;
   return value <= limit ? 'within_limit' : 'exceeded';
 }
 
-function expectedBudgetEvidence(plan, request, receipt, trace) {
+function expectedBudgetEvidence(plan, request, receipt) {
   const projectionChars = request === null ? null : jcsCharacterCount(request.capsule);
   const taskChars = jcsCharacterCount(plan.task);
   const usage = receipt?.runtime_receipt.usage ?? {
+    elapsed_ms: null,
+    elapsed_basis: 'not_observed',
     tokens_used: null,
     model_calls: null,
     basis: 'not_observed',
@@ -299,7 +375,8 @@ function expectedBudgetEvidence(plan, request, receipt, trace) {
   const actual = {
     projection_chars: projectionChars,
     task_chars: taskChars,
-    elapsed_ms: trace.budget.actual.elapsed_ms,
+    elapsed_ms: usage.elapsed_ms,
+    elapsed_basis: usage.elapsed_basis,
     tokens_used: usage.tokens_used,
     model_calls: usage.model_calls,
     usage_basis: usage.basis,
@@ -311,7 +388,12 @@ function expectedBudgetEvidence(plan, request, receipt, trace) {
     tokens_used: compareObserved(usage.tokens_used, plan.budget.max_tokens),
     model_calls: compareObserved(usage.model_calls, plan.budget.max_model_calls),
   };
-  comparison.overall = Object.values(comparison).includes('exceeded') ? 'exceeded' : 'within_limit';
+  const dimensionStates = Object.values(comparison);
+  comparison.overall = dimensionStates.includes('exceeded')
+    ? 'exceeded'
+    : dimensionStates.includes('not_observed')
+      ? 'not_observed'
+      : 'within_limit';
   return { limits: plan.budget, actual, comparison };
 }
 
@@ -325,9 +407,7 @@ function validateTerminalState(trace, receipt) {
 
   if (trace.overall_status === 'blocked') {
     if (
-      trace.host_receipt !== null ||
       trace.result_ref !== null ||
-      trace.execution.delivery_status !== 'not_delivered' ||
       trace.execution.execution_status !== 'not_started' ||
       trace.errors.length < 1
     ) {
@@ -386,7 +466,7 @@ function validateTraceSemantics(
   if (!equalJson(trace.budget.limits, plan.budget)) return 'KDNA_TRACE_BUDGET_MISMATCH';
 
   if (trace.overall_status === 'blocked') {
-    if (receipt !== null || trace.host_receipt !== null) {
+    if (!equalJson(trace.host_receipt, receipt)) {
       return 'KDNA_TRACE_TERMINAL_STATE_MISMATCH';
     }
     if (request !== null) {
@@ -416,21 +496,53 @@ function validateTraceSemantics(
       }
       const p = request.runtime_contract.capsule_delivery_digest;
       const delivery = trace.capsule_delivery_evidence;
-      if (
-        delivery.observed !== p ||
-        delivery.sender_computed !== true ||
+      const projectionMismatch =
+        trace.projection_actual.profile !== request.projection_contract.profile ||
+        trace.projection_actual.capsule_delivery_digest !== p ||
+        trace.projection_actual.profile_deviated_from_plan !== false;
+      if (delivery.observed !== p || delivery.sender_computed !== true || projectionMismatch) {
+        return 'KDNA_TRACE_UNDELIVERED_HOST_EVIDENCE';
+      }
+
+      if (delivery.host_boundary_comparison === 'mismatched') {
+        if (
+          receipt === null ||
+          validateReceiptSemantics(receipt, request) !== null ||
+          receipt.runtime_receipt.capsule_delivery_comparison !== 'mismatched' ||
+          delivery.host_recomputed !==
+            receipt.runtime_receipt.host_recomputed_capsule_delivery_digest ||
+          delivery.host_echoed !== receipt.runtime_receipt.echoed_capsule_delivery_digest ||
+          delivery.host_recomputed === p ||
+          delivery.delivered_capsule_version !== '2.0' ||
+          delivery.request_id !== request.request_id ||
+          trace.execution.delivery_status !== 'rejected_before_execution'
+        ) {
+          return 'KDNA_TRACE_CAPSULE_DELIVERY_DIGEST_MISMATCH';
+        }
+      } else if (delivery.host_boundary_comparison === 'not_observed') {
+        if (
+          receipt !== null ||
+          delivery.host_recomputed !== null ||
+          delivery.host_echoed !== null ||
+          delivery.delivered_capsule_version !== '2.0' ||
+          delivery.request_id !== request.request_id ||
+          trace.execution.delivery_status !== 'rejected_before_execution'
+        ) {
+          return 'KDNA_TRACE_UNDELIVERED_HOST_EVIDENCE';
+        }
+      } else if (
+        receipt !== null ||
         delivery.host_recomputed !== null ||
         delivery.host_echoed !== null ||
         delivery.delivered_capsule_version !== null ||
         delivery.host_boundary_comparison !== 'not_delivered' ||
         delivery.request_id !== null ||
-        trace.projection_actual.profile !== request.projection_contract.profile ||
-        trace.projection_actual.capsule_delivery_digest !== p ||
-        trace.projection_actual.profile_deviated_from_plan !== false
+        trace.execution.delivery_status !== 'not_delivered'
       ) {
         return 'KDNA_TRACE_UNDELIVERED_HOST_EVIDENCE';
       }
-      const expectedBudget = expectedBudgetEvidence(plan, request, null, trace);
+
+      const expectedBudget = expectedBudgetEvidence(plan, request, receipt);
       if (!equalJson(trace.budget, expectedBudget)) return 'KDNA_TRACE_BUDGET_MISMATCH';
       return validateTerminalState(trace, null);
     }
@@ -470,7 +582,10 @@ function validateTraceSemantics(
         return 'KDNA_TRACE_NEGOTIATION_EVIDENCE_MISMATCH';
       }
     }
-    const expectedBudget = expectedBudgetEvidence(plan, null, null, trace);
+    if (receipt !== null || trace.execution.delivery_status !== 'not_delivered') {
+      return 'KDNA_TRACE_UNDELIVERED_HOST_EVIDENCE';
+    }
+    const expectedBudget = expectedBudgetEvidence(plan, null, null);
     if (!equalJson(trace.budget, expectedBudget)) return 'KDNA_TRACE_BUDGET_MISMATCH';
     return validateTerminalState(trace, null);
   }
@@ -516,6 +631,7 @@ function validateTraceSemantics(
   const runtimeReceipt = receipt.runtime_receipt;
   if (
     delivery.observed !== p ||
+    delivery.host_boundary_comparison !== 'matched' ||
     delivery.host_recomputed !== runtimeReceipt.host_recomputed_capsule_delivery_digest ||
     delivery.host_recomputed !== p ||
     delivery.host_echoed !== runtimeReceipt.echoed_capsule_delivery_digest ||
@@ -536,7 +652,7 @@ function validateTraceSemantics(
     return 'KDNA_TRACE_EXECUTION_EVIDENCE_MISMATCH';
   }
 
-  const expectedBudget = expectedBudgetEvidence(plan, request, receipt, trace);
+  const expectedBudget = expectedBudgetEvidence(plan, request, receipt);
   if (!equalJson(trace.budget, expectedBudget)) return 'KDNA_TRACE_BUDGET_MISMATCH';
   if (trace.overall_status !== 'timed_out' && expectedBudget.comparison.overall === 'exceeded') {
     return 'KDNA_TRACE_BUDGET_LIMIT_VIOLATION';
@@ -615,15 +731,45 @@ function validateGoldens() {
     assertSchema(`JudgmentTrace 1.0 ${trace.overall_status}`, validators.trace, trace);
   }
 
+  for (const trace of positiveTraces.filter((value) => value.overall_status !== 'blocked')) {
+    const invalid = clone(trace);
+    invalid.capsule_delivery_evidence.host_boundary_comparison = 'mismatched';
+    assert.equal(
+      validators.trace(invalid),
+      false,
+      `${trace.overall_status} must reject P mismatched outside the blocked terminal`,
+    );
+  }
+
+  const limitedPlan = clone(golden.plan);
+  const limitedRequest = clone(golden.request);
+  const limitedTrace = clone(golden.trace);
+  limitedPlan.budget.max_tokens = 1;
+  limitedPlan.integrity.plan_digest = computePlanDigest(limitedPlan);
+  limitedRequest.plan_ref.plan_digest = limitedPlan.integrity.plan_digest;
+  limitedRequest.budget.max_tokens = 1;
+  limitedTrace.plan_ref.plan_digest = limitedPlan.integrity.plan_digest;
+  limitedTrace.budget.limits.max_tokens = 1;
+  limitedTrace.budget.comparison.tokens_used = 'not_observed';
+  limitedTrace.budget.comparison.overall = 'not_observed';
+  assertSchema('finite unobserved token limit Trace', validators.trace, limitedTrace);
+  assert.equal(
+    validateTraceSemantics(limitedTrace, limitedPlan, limitedRequest, golden.receipt),
+    null,
+    'a finite unobserved limit must remain explicitly not_observed',
+  );
+
   assert.equal(validatePlanSemantics(golden.plan, golden.plan.integrity.plan_digest), null);
   assert.equal(validateRequestSemantics(golden.request), null);
   assert.equal(validateReceiptSemantics(golden.receipt, golden.request), null);
 
   for (const trace of positiveTraces) {
-    const isBlocked = trace.overall_status === 'blocked';
-    const receipt = isBlocked ? null : trace.host_receipt;
+    const isSourceBlocked =
+      trace.overall_status === 'blocked' &&
+      trace.capsule_delivery_evidence.host_boundary_comparison === 'unavailable';
+    const receipt = trace.host_receipt;
     assert.equal(
-      validateTraceSemantics(trace, golden.plan, isBlocked ? null : golden.request, receipt),
+      validateTraceSemantics(trace, golden.plan, isSourceBlocked ? null : golden.request, receipt),
       null,
       trace.overall_status,
     );
@@ -738,6 +884,41 @@ function validateAuditNegativeVectors() {
       trace.budget.comparison.projection_chars = 'exceeded';
       trace.budget.comparison.overall = 'exceeded';
       return validateTraceSemantics(trace, plan, request, golden.receipt);
+    },
+    'trace-elapsed-self-rewrite'() {
+      const trace = clone(golden.trace);
+      trace.budget.actual.elapsed_ms = 1;
+      trace.budget.comparison.elapsed_ms = 'within_limit';
+      trace.budget.comparison.overall = 'within_limit';
+      return validateTraceSemantics(trace, golden.plan, golden.request, golden.receipt);
+    },
+    'finite-token-limit-unobserved-overall'() {
+      const plan = clone(golden.plan);
+      const request = clone(golden.request);
+      const trace = clone(golden.trace);
+      plan.budget.max_tokens = 1;
+      plan.integrity.plan_digest = computePlanDigest(plan);
+      request.plan_ref.plan_digest = plan.integrity.plan_digest;
+      request.budget.max_tokens = 1;
+      trace.plan_ref.plan_digest = plan.integrity.plan_digest;
+      trace.budget.limits.max_tokens = 1;
+      trace.budget.comparison.tokens_used = 'not_observed';
+      trace.budget.comparison.overall = 'within_limit';
+      return validateTraceSemantics(trace, plan, request, golden.receipt);
+    },
+    'p-mismatch-provider-execution'() {
+      const trace = createHostMismatchTrace();
+      trace.host_receipt.runtime_receipt.provider_execution_status = 'completed';
+      return validators.trace(trace) ? null : 'SCHEMA_INVALID';
+    },
+    'p-mismatch-equal-values'() {
+      const trace = createHostMismatchTrace();
+      const p = golden.request.runtime_contract.capsule_delivery_digest;
+      trace.capsule_delivery_evidence.host_recomputed = p;
+      trace.capsule_delivery_evidence.host_echoed = p;
+      trace.host_receipt.runtime_receipt.host_recomputed_capsule_delivery_digest = p;
+      trace.host_receipt.runtime_receipt.echoed_capsule_delivery_digest = p;
+      return validateTraceSemantics(trace, golden.plan, golden.request, trace.host_receipt);
     },
   };
 

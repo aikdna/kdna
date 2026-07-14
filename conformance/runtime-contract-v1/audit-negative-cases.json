@@ -39,6 +39,26 @@
       "name": "audit-8-completed-execution-cannot-cross-a-projection-limit",
       "scenario": "completed-over-projection-budget",
       "expected_code": "KDNA_TRACE_BUDGET_LIMIT_VIOLATION"
+    },
+    {
+      "name": "audit-9-trace-elapsed-cannot-self-authenticate",
+      "scenario": "trace-elapsed-self-rewrite",
+      "expected_code": "KDNA_TRACE_BUDGET_MISMATCH"
+    },
+    {
+      "name": "audit-10-unobserved-finite-token-limit-cannot-be-within-limit",
+      "scenario": "finite-token-limit-unobserved-overall",
+      "expected_code": "KDNA_TRACE_BUDGET_MISMATCH"
+    },
+    {
+      "name": "audit-11-p-mismatch-cannot-claim-provider-execution",
+      "scenario": "p-mismatch-provider-execution",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "audit-12-p-mismatch-values-must-actually-differ",
+      "scenario": "p-mismatch-equal-values",
+      "expected_code": "KDNA_TRACE_CAPSULE_DELIVERY_DIGEST_MISMATCH"
     }
   ]
 }

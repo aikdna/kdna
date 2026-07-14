@@ -221,7 +221,7 @@ inside the Host request.
 
 ### 5.1 Correlated response and `runtime_receipt`
 
-A Host 2 success boundary returns one object conforming to
+A Host 2 boundary returns one correlated object conforming to
 `agent-host-2-receipt.schema.json`. Its root `protocol` and `request_id` echo
 the request. The required `runtime_receipt` records:
 
@@ -230,29 +230,32 @@ the request. The required `runtime_receipt` records:
 - the sender-claimed P;
 - the Host-recomputed P;
 - the echoed P;
-- `capsule_delivery_comparison: matched`;
+- a `matched` or `mismatched` Capsule-delivery comparison;
 - passed Capsule schema validation and matched asset identity correlation;
 - provider execution status;
 - conservative semantic-consumption and model-identity facts.
 
-The sender-claimed, Host-recomputed, and echoed P values must all be equal.
-A structurally valid receipt with unequal values is semantically invalid.
-Receipt validation must also correlate the root `request_id` to the request.
+For `matched`, the sender-claimed, Host-recomputed, and echoed P values must
+all be equal. For `mismatched`, sender P must differ from Host-recomputed P,
+Host echo must equal the recomputed value, and
+`provider_execution_status` must be `not_started`. Receipt validation must
+also correlate the root `request_id` to the request. Equality and inequality
+are semantic checks in addition to schema validation.
 
 `outcome` has the single requested `structured_judgment` shape and is present
 as a non-null result if and only if
 `provider_execution_status` is `completed`. For `failed`, `cancelled`, or
-`timed_out`, `outcome` is required and must be `null`.
-Capsule schema failure, identity mismatch, or P mismatch occurs before this
-accepted runtime boundary and MUST NOT produce a conforming success
-`runtime_receipt`. The transport may return a separately specified correlated
-error envelope; this contract records that failure in JudgmentTrace and does
-not mislabel it as an accepted receipt.
+`timed_out`, or `not_started`, `outcome` is required and must be `null`.
+A P mismatch produces the formal correlated rejection receipt above and a
+`blocked` JudgmentTrace; it is never an accepted runtime receipt. Capsule
+schema failure or identity mismatch still occurs before this receipt boundary
+and may use a separately specified correlated transport error.
 
 `semantic_consumption` is fixed to `not_observed` with a `null` basis. P
 equality cannot upgrade it. Model identity is either a non-empty
 Host-reported value with basis `host_reported`, or `null` with basis
-`not_observed`; the protocol never invents a model name.
+`not_observed`; the protocol never invents a model name. Every Host receipt
+also records `usage.elapsed_ms` with `elapsed_basis: host_monotonic`.
 
 ### 5.2 Budget evidence
 
@@ -264,14 +267,20 @@ JudgmentTrace records the same limits and these actual facts:
   JCS serialization of the delivered Capsule 2, or `null` before projection;
 - `task_chars`: Unicode scalar/code-point count of the exact RFC 8785 JCS
   serialization of the Plan task;
-- `elapsed_ms`: monotonic elapsed milliseconds from execution-boundary start;
+- `elapsed_ms`: the exact `usage.elapsed_ms` copied from the correlated Host
+  receipt, with `elapsed_basis: host_monotonic`; without a receipt both are
+  `null` / `not_observed` and the Trace is not an independent timing source;
 - tokens and model calls: exact Host-reported integers, or `null` with
   `not_observed`; they are never estimated.
 
 Every comparison state is derived from those actuals and the copied limits.
-A Trace with rewritten actuals, a false `within_limit`, or an execution path
-that crossed an enforceable limit is invalid. `timed_out` requires
-`elapsed_ms > deadline_ms` and an `exceeded` elapsed comparison.
+A dimension with a `null` limit is `not_limited`. A dimension with a non-null
+limit but a `null` actual is `not_observed`. Overall comparison is `exceeded`
+if any limited dimension exceeded, otherwise `not_observed` if any limited
+dimension was not observed, and otherwise `within_limit`. A Trace with
+rewritten actuals, a false `within_limit`, or an execution path that crossed
+an enforceable limit is invalid. `timed_out` requires the independently
+reported `elapsed_ms > deadline_ms` and an `exceeded` elapsed comparison.
 
 ## 6. JudgmentTrace 1.0
 
@@ -287,7 +296,8 @@ The Trace always records:
 - negotiation selection or a blocking issue code;
 - named A/C/E digest evidence with comparison facts;
 - named P delivery evidence;
-- the exact Host 2 correlated response receipt when one was accepted;
+- the exact Host 2 correlated response receipt when one was returned,
+  distinguishing matched acceptance from mismatched pre-execution rejection;
 - delivery, semantic consumption, provider execution, conformance, and model
   identity as separate facts;
 - structured errors and nullable result evidence.
@@ -298,7 +308,7 @@ their receipt, execution, error, and result facts:
 | Trace terminal | Host receipt status | Execution | Result | Errors |
 | --- | --- | --- | --- | --- |
 | `execution_completed` | `completed` with non-null outcome | `completed` | required | empty |
-| `blocked` | no accepted receipt | `not_started` | null | at least one |
+| `blocked` | null, or `mismatched` with `not_started` | `not_started` | null | at least one |
 | `execution_failed` | `failed`, null outcome | `failed` | null | at least one |
 | `cancelled` | `cancelled`, null outcome | `cancelled` | null | at least one |
 | `timed_out` | `timed_out`, null outcome | `timed_out` | null | at least one |
@@ -314,10 +324,13 @@ For P:
 
 - `matched` requires sender-observed, Host-recomputed, and Host-echoed P plus
   a correlated request ID;
-- `mismatched` records the three observed values and causes failure before
-  provider execution;
+- `mismatched` requires sender P, unequal Host-recomputed P, the Host echo of
+  that recomputed value, Capsule `2.0`, and a correlated request ID; it causes
+  `rejected_before_execution` and a `blocked` Trace;
 - `not_delivered` permits a sender-computed P but has no Host P or request ID;
-- `not_observed` is used for a delivery path that has no P echo evidence;
+- `not_observed` requires sender P, Capsule `2.0`, and a correlated request ID,
+  but both Host P values are null; it also fails closed as `blocked` because
+  the mandatory Host comparison evidence was not observed;
 - `unavailable` requires all P values to be `null`.
 
 A completed Trace requires matched Plan integrity, successful A/C/E evidence
@@ -354,10 +367,11 @@ cross-document semantic checks:
 - exact Plan 1 negotiation with no legacy fallback;
 - Capsule 2 schema/identity correlation;
 - request P recomputation;
-- correlated receipt P equality;
+- correlated receipt P equality or fail-closed P-mismatch rejection;
 - Trace-to-Plan/request/receipt correlation;
 - missing versus present-null behavior;
-- five terminal iff state checks, budget derivation, source-directory
+- five terminal iff state checks, independent receipt-backed budget
+  derivation, source-directory
   rejection through the real Core entry, and coordinated-tamper rejection.
 
 The object-level verifier assumes input has already passed a duplicate-key

@@ -107,6 +107,8 @@
         "basis": "not_observed"
       },
       "usage": {
+        "elapsed_ms": 1200,
+        "elapsed_basis": "host_monotonic",
         "tokens_used": null,
         "model_calls": null,
         "basis": "not_observed"
@@ -139,6 +141,7 @@
       "projection_chars": 1982,
       "task_chars": 105,
       "elapsed_ms": 1200,
+      "elapsed_basis": "host_monotonic",
       "tokens_used": null,
       "model_calls": null,
       "usage_basis": "not_observed"
@@ -147,8 +150,8 @@
       "projection_chars": "within_limit",
       "task_chars": "within_limit",
       "elapsed_ms": "within_limit",
-      "tokens_used": "not_observed",
-      "model_calls": "not_observed",
+      "tokens_used": "not_limited",
+      "model_calls": "not_limited",
       "overall": "within_limit"
     }
   },
