@@ -34,12 +34,12 @@
       "local_path": "../kdna-cli",
       "npm_package": "@aikdna/kdna-cli",
       "package_json": "../kdna-cli/package.json",
-      "current_version": "0.31.1",
+      "current_version": "0.32.0",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed", "remote"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "e6f5f581bab59fa1bc0b7f663d02f8c54763b949",
+      "conformance_commit": "135f8840a181234dae1a536f95caf41587e5a789",
       "known_limitations": [
         "hosted registry, marketplace, and commercial distribution are not part of the local CLI baseline"
       ],
@@ -136,12 +136,12 @@
       "local_path": "../kdna-web-server",
       "npm_package": "@aikdna/kdna-web-server",
       "package_json": "../kdna-web-server/package.json",
-      "current_version": "0.2.2",
+      "current_version": "0.2.3",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "9fcda70e70edba9a51a0684e366c3ef25fee4b60",
+      "conformance_commit": "e99bf65ec95101a2bc9a7bed1e85f597db001486",
       "known_limitations": [
         "published to npm as an experimental integration surface, not a stable hosted-platform claim",
         "server-side Studio export, remote forwarding, CORS helpers, and durable Cloudflare/R2 storage are not implemented in the web-server MVP"

@@ -12,6 +12,14 @@ const packageRoot = path.resolve(__dirname, '..');
 const repoRoot = path.resolve(packageRoot, '..', '..');
 const validator = path.join(packageRoot, 'bin', 'kdna-validate.js');
 
+test('compatibility dependencies pin the released runtime pair exactly', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf8'));
+  assert.deepEqual(pkg.dependencies, {
+    '@aikdna/kdna-cli': '0.32.0',
+    '@aikdna/kdna-core': '0.17.0',
+  });
+});
+
 test('kdna-validate delegates packaged assets to the current CLI', () => {
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-compat-validate-'));
   const asset = path.join(temp, 'minimal.kdna');
