@@ -17,6 +17,21 @@
     }
   },
   "properties": {
+    "digest_profile": {
+      "const": "kdna-runtime-entry-set-v1",
+      "description": "Algorithm and coverage profile for entry_set_digest."
+    },
+    "covered_entries": {
+      "type": "array",
+      "description": "Ordered entries covered by kdna-runtime-entry-set-v1.",
+      "prefixItems": [
+        { "const": "kdna.json" },
+        { "const": "payload.kdnab" }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
     "algorithm": {
       "type": "string",
       "description": "Hash algorithm. Phase 1 uses sha256.",
@@ -31,7 +46,12 @@
       "$ref": "#/$defs/sha256Digest"
     },
     "asset_digest": {
-      "description": "Digest of the whole container (per-entry digests combined deterministically).",
+      "deprecated": true,
+      "description": "Deprecated v1 alias of entry_set_digest. This is not the final .kdna file digest.",
+      "$ref": "#/$defs/sha256Digest"
+    },
+    "entry_set_digest": {
+      "description": "Digest of the protected runtime entry set, combined deterministically from kdna.json and payload.kdnab entry digests.",
       "$ref": "#/$defs/sha256Digest"
     },
     "entries": {

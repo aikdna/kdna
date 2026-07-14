@@ -23,6 +23,8 @@ const { validateManifest } = require('../src/lint-pure.js');
 const { createKdnaAssetReader } = require('../src/asset-reader.js');
 const packagedManifestSchema = require('../schema/manifest.schema.json');
 const authoritativeManifestSchema = require('../../../schema/manifest.schema.json');
+const packagedChecksumsSchema = require('../schema/checksums.schema.json');
+const authoritativeChecksumsSchema = require('../../../schema/checksums.schema.json');
 
 test('Core root exports single-format public API', () => {
   assert.equal(typeof core.MIMETYPE, 'string', 'MIMETYPE exported');
@@ -186,6 +188,10 @@ test('packaged manifest schema exposes only the single wire contract', () => {
 
 test('authoritative and packaged Runtime manifest schemas stay identical', () => {
   assert.deepEqual(packagedManifestSchema, authoritativeManifestSchema);
+});
+
+test('authoritative and packaged checksum schemas stay identical', () => {
+  assert.deepEqual(packagedChecksumsSchema, authoritativeChecksumsSchema);
 });
 
 test('Runtime manifest creator provenance is optional for validate and load', () => {

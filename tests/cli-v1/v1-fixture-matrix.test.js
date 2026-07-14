@@ -10,7 +10,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const cbor = require('cbor-x');
-const { buildChecksums, pack } = require('../../packages/kdna-core/src/v1');
+const { buildChecksums, pack, readLayout, validate } = require('../../packages/kdna-core/src/v1');
 
 function readPayload(p) {
   const buf = fs.readFileSync(p);
@@ -68,10 +68,11 @@ test('buildChecksums generates digests accepted by validate', () => {
   const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdnA-checksums-'));
   try {
     fs.cpSync(minimalSource, tmp, { recursive: true });
-    fs.writeFileSync(
-      path.join(tmp, 'checksums.json'),
-      JSON.stringify(buildChecksums(tmp), null, 2),
-    );
+    const checksums = buildChecksums(tmp);
+    assert.equal(checksums.digest_profile, 'kdna-runtime-entry-set-v1');
+    assert.deepEqual(checksums.covered_entries, ['kdna.json', 'payload.kdnab']);
+    assert.equal(checksums.entry_set_digest, checksums.asset_digest);
+    fs.writeFileSync(path.join(tmp, 'checksums.json'), JSON.stringify(checksums, null, 2));
     const r = run(['validate', tmp]);
     assert.equal(r.status, 0, r.stderr);
     const out = JSON.parse(r.stdout);
@@ -80,6 +81,64 @@ test('buildChecksums generates digests accepted by validate', () => {
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }
+});
+
+test('checksum digest metadata fails closed for unknown profiles or coverage', () => {
+  for (const mutation of [
+    (checksums) => {
+      checksums.digest_profile = 'unknown-entry-set-v1';
+    },
+    (checksums) => {
+      checksums.covered_entries = ['payload.kdnab', 'kdna.json'];
+    },
+    (checksums) => {
+      delete checksums.covered_entries;
+    },
+  ]) {
+    const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-digest-profile-'));
+    try {
+      fs.cpSync(minimalSource, tmp, { recursive: true });
+      const checksums = buildChecksums(tmp);
+      mutation(checksums);
+      fs.writeFileSync(path.join(tmp, 'checksums.json'), JSON.stringify(checksums, null, 2));
+      const result = validate(tmp);
+      assert.equal(result.checksums_valid, false, result.problems.join('; '));
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  }
+});
+
+test('checksum aliases fail closed when entry_set_digest disagrees with asset_digest', () => {
+  const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-entry-set-alias-'));
+  try {
+    fs.cpSync(minimalSource, tmp, { recursive: true });
+    const checksums = buildChecksums(tmp);
+    checksums.entry_set_digest = `sha256:${'0'.repeat(64)}`;
+    fs.writeFileSync(path.join(tmp, 'checksums.json'), JSON.stringify(checksums, null, 2));
+
+    const result = validate(tmp);
+    assert.equal(result.checksums_valid, false);
+    assert.ok(
+      result.problems.includes(
+        'checksums: entry_set_digest does not match deprecated asset_digest alias',
+      ),
+      result.problems.join('; '),
+    );
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+});
+
+test('file layout exposes final container digest separately from entry-set digest', () => {
+  const layout = readLayout(minimalAsset);
+  const expectedContainerDigest =
+    'sha256:' + crypto.createHash('sha256').update(fs.readFileSync(minimalAsset)).digest('hex');
+  const checksums = JSON.parse(layout.map['checksums.json'].toString('utf8'));
+
+  assert.equal(layout.containerDigest, expectedContainerDigest);
+  assert.notEqual(layout.containerDigest, checksums.asset_digest);
+  assert.equal(readLayout(minimalSource).containerDigest, null);
 });
 
 test('v1 ESM entry exports the shared checksum helper', () => {

@@ -651,11 +651,15 @@ export interface KDNAChecksumEntry {
 }
 
 export interface KDNAChecksums {
+  digest_profile?: 'kdna-runtime-entry-set-v1';
+  covered_entries?: ['kdna.json', 'payload.kdnab'];
   algorithm: 'sha256';
-  manifest_digest: string;
-  payload_digest: string;
-  asset_digest: string;
-  entries: Record<string, KDNAChecksumEntry>;
+  manifest_digest?: string;
+  payload_digest?: string;
+  entry_set_digest?: string;
+  /** @deprecated Use entry_set_digest. This is not the final .kdna file digest. */
+  asset_digest?: string;
+  entries?: Record<string, KDNAChecksumEntry>;
 }
 
 export function isKdnaSourceDir(inputPath: string): boolean;

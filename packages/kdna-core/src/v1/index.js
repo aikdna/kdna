@@ -606,7 +606,11 @@ function readV1Layout(absPath) {
     throw new Error('kdna.json.lineage must be an object, not an array');
   }
 
-  return { kind, map, manifest, entries };
+  const containerDigest = kind === 'file'
+    ? `sha256:${crypto.createHash('sha256').update(fs.readFileSync(absPath)).digest('hex')}`
+    : null;
+
+  return { kind, map, manifest, entries, containerDigest };
 }
 
 function parseJsonEntry(name, bytes, opts = {}) {
@@ -828,6 +832,26 @@ function runValidate(v1) {
 }
 
 function verifyDigests(checksums, map, problems, result) {
+  const digestMetadataPresent =
+    checksums.digest_profile !== undefined || checksums.covered_entries !== undefined;
+  if (digestMetadataPresent) {
+    if (checksums.digest_profile !== 'kdna-runtime-entry-set-v1') {
+      problems.push('checksums: unsupported digest_profile (expected kdna-runtime-entry-set-v1)');
+      result.checksums_valid = false;
+      return false;
+    }
+    const coveredEntries = checksums.covered_entries;
+    if (
+      !Array.isArray(coveredEntries)
+      || coveredEntries.length !== 2
+      || coveredEntries[0] !== 'kdna.json'
+      || coveredEntries[1] !== 'payload.kdnab'
+    ) {
+      problems.push('checksums: covered_entries does not match kdna-runtime-entry-set-v1');
+      result.checksums_valid = false;
+      return false;
+    }
+  }
   const algo = checksums.algorithm || 'sha256';
   if (algo !== 'sha256') {
     problems.push(`checksums: unsupported digest algorithm ${algo} (supported: sha256)`);
@@ -857,21 +881,31 @@ function verifyDigests(checksums, map, problems, result) {
       stillValid = false;
     }
   }
-  if (checksums.asset_digest) {
-    const expectedAssetDigest = checksums.asset_digest.replace(/^sha256:/, '');
+  if (
+    checksums.entry_set_digest
+    && checksums.asset_digest
+    && checksums.entry_set_digest !== checksums.asset_digest
+  ) {
+    problems.push('checksums: entry_set_digest does not match deprecated asset_digest alias');
+    stillValid = false;
+  }
+  const declaredEntrySetDigest = checksums.entry_set_digest || checksums.asset_digest;
+  if (declaredEntrySetDigest) {
+    const digestLabel = checksums.entry_set_digest ? 'entry_set_digest' : 'asset_digest';
+    const expectedEntrySetDigest = declaredEntrySetDigest.replace(/^sha256:/, '');
     const missingAssetInputs = ['kdna.json', 'payload.kdnab'].filter((entryName) => !entryDigests[entryName]);
     if (missingAssetInputs.length) {
-      problems.push(`checksums: asset_digest cannot be verified without ${missingAssetInputs.join(', ')}`);
+      problems.push(`checksums: ${digestLabel} cannot be verified without ${missingAssetInputs.join(', ')}`);
       stillValid = false;
     } else {
       const combined = Object.keys(entryDigests)
         .sort()
         .map((name) => `${name}:${entryDigests[name]}`)
         .join('\n');
-      const actualAssetDigest = crypto.createHash('sha256').update(combined).digest('hex');
-      if (actualAssetDigest !== expectedAssetDigest) {
+      const actualEntrySetDigest = crypto.createHash('sha256').update(combined).digest('hex');
+      if (actualEntrySetDigest !== expectedEntrySetDigest) {
         problems.push(
-          `checksums: asset_digest mismatch (declared ${expectedAssetDigest.slice(0, 8)}..., actual ${actualAssetDigest.slice(0, 8)}...)`,
+          `checksums: ${digestLabel} mismatch (declared ${expectedEntrySetDigest.slice(0, 8)}..., actual ${actualEntrySetDigest.slice(0, 8)}...)`,
         );
         stillValid = false;
       }
@@ -919,11 +953,15 @@ function buildChecksumsV1(sourceDir) {
     .map((name) => `${name}:${entries[name].value}`)
     .join('\n');
 
+  const entrySetDigest = `sha256:${crypto.createHash('sha256').update(combined).digest('hex')}`;
   return {
+    digest_profile: 'kdna-runtime-entry-set-v1',
+    covered_entries: ['kdna.json', 'payload.kdnab'],
     algorithm: 'sha256',
     manifest_digest: `sha256:${entries['kdna.json'].value}`,
     payload_digest: `sha256:${entries['payload.kdnab'].value}`,
-    asset_digest: `sha256:${crypto.createHash('sha256').update(combined).digest('hex')}`,
+    entry_set_digest: entrySetDigest,
+    asset_digest: entrySetDigest,
     entries,
   };
 }
@@ -1218,6 +1256,7 @@ function canonicalToV1Layout(asset) {
     map,
     manifest: asset.manifest,
     entries: Object.keys(map),
+    containerDigest: asset.containerDigest || null,
   };
 }
 

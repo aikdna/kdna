@@ -18,7 +18,8 @@ const MIMETYPE = 'application/vnd.kdna.asset';
  * @property {object}       manifest         — parsed kdna.json
  * @property {Buffer}       payloadRaw       — raw payload.kdnab bytes
  * @property {object|null}  checksums
- * @property {Buffer|null}  assetDigest
+ * @property {Buffer|null}  assetDigest      — legacy internal name for final container bytes
+ * @property {string|null}  containerDigest  — tagged SHA-256 of final container bytes
  * @property {Buffer|null}  containerBuffer
  * @property {Map<string, Buffer>|null} entries
  */
@@ -177,6 +178,7 @@ function readSourceDirectory(absPath, _opts) {
     payloadRaw,
     checksums,
     assetDigest: null,
+    containerDigest: null,
     containerBuffer: null,
     entries,
   };
@@ -198,6 +200,7 @@ function readKdnaContainer(absPath, _opts) {
       ? (() => { try { return JSON.parse(v1Layout.map['checksums.json'].toString('utf8')); } catch { return null; } })()
       : null,
     assetDigest,
+    containerDigest: `sha256:${assetDigest.toString('hex')}`,
     containerBuffer: containerBuf,
     entries: new Map(Object.entries(v1Layout.map)),
   };
