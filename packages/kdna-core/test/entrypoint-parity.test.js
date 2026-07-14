@@ -23,18 +23,29 @@ function runTsc(args) {
 
 function representativeTypesSource(importSpecifier) {
   return [
-    `import { ALG, EXTERNAL_AAD_PROFILE, WORK_PACK_SCHEMA, KDNAManifest, KDNAWorkPackManifest, encryptLicensedEntryV1, decryptLicensedEntryV1, validateWorkPackManifest, inspectWorkPack, externalEnvelopeAad } from ${JSON.stringify(importSpecifier)};`,
+    `import { ALG, EXTERNAL_AAD_PROFILE, WORK_PACK_SCHEMA, KDNAManifest, KDNAWorkPackManifest, LicensedEntryLegacyEnvelope, encryptLicensedEntryV1, decryptLicensedEntryV1, decryptLicensedEntry, encryptProtectedEntry, validateWorkPackManifest, inspectWorkPack, externalEnvelopeAad } from ${JSON.stringify(importSpecifier)};`,
     "const algorithm: 'AES-256-GCM' = ALG;",
     "const aadProfile: 'kdna-external-asset-cek-v1' = EXTERNAL_AAD_PROFILE;",
     'declare const manifest: KDNAManifest;',
     "const envelope = encryptLicensedEntryV1('judgment', { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
     "const plaintext: Uint8Array = decryptLicensedEntryV1(envelope, { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
+    "const unifiedV1: Uint8Array = decryptLicensedEntry(envelope, { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
+    "const protectedEnvelope = encryptProtectedEntry('judgment', { entryName: 'payload.kdnab', manifest, password: 'password' });",
+    "const kdfName: 'Argon2id' = protectedEnvelope.password_kdf.name;",
+    'declare const legacyEnvelope: LicensedEntryLegacyEnvelope;',
+    "const legacyPlaintext: Uint8Array = decryptLicensedEntry(legacyEnvelope, { entryName: 'payload.kdnab', manifest, licenseKey: 'license', machineFingerprint: 'machine' });",
+    '// @ts-expect-error legacy envelopes require machineFingerprint',
+    "decryptLicensedEntry(legacyEnvelope, { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
+    'declare const unifiedBytes: Uint8Array;',
+    "const unifiedPlaintext: Uint8Array = decryptLicensedEntry(unifiedBytes, { entryName: 'payload.kdnab', manifest, licenseKey: 'license', machineFingerprint: 'machine' });",
+    '// @ts-expect-error raw unified input may be legacy and requires machineFingerprint',
+    "decryptLicensedEntry(unifiedBytes, { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
     "const workpack: KDNAWorkPackManifest = { format: 'kdna-workpack', format_version: '0.1', name: 'example', version: '1.0.0', description: 'test', status: 'draft', kdna: { mode: 'single', asset: { name: 'asset', version: '1.0.0', role: 'primary' } } };",
     'const validation: boolean = validateWorkPackManifest(workpack).valid;',
     "const summary: string = inspectWorkPack(workpack, '.').name;",
     "const aad: Uint8Array = externalEnvelopeAad({ manifest, entryName: 'payload.kdnab', plaintextDigest: 'sha256:00', keyRef: 'key', issuerKeyId: 'issuer' });",
     'const schemaTitle: unknown = WORK_PACK_SCHEMA.title;',
-    'console.log(algorithm, aadProfile, plaintext, validation, summary, aad, schemaTitle);',
+    'console.log(algorithm, aadProfile, plaintext, unifiedV1, protectedEnvelope, kdfName, legacyPlaintext, unifiedPlaintext, validation, summary, aad, schemaTitle);',
   ].join('\n');
 }
 

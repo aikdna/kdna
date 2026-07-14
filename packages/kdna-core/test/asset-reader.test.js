@@ -408,7 +408,14 @@ test('protected entry encrypts and decrypts with password (RFC-0009)', () => {
   assert.equal(envelope.key_slots.length, 2);
   assert.equal(envelope.key_slots[0].slot, 'password');
   assert.equal(envelope.key_slots[1].slot, 'recovery');
-  assert.ok(envelope.password_kdf.salt);
+  assert.deepEqual(Object.keys(envelope.password_kdf).sort(), [
+    'iterations', 'memory_kib', 'name', 'parallelism', 'salt',
+  ]);
+  assert.equal(envelope.password_kdf.name, 'Argon2id');
+  assert.match(envelope.password_kdf.salt, /^[A-Za-z0-9+/]+={0,2}$/);
+  assert.equal(envelope.password_kdf.memory_kib, 65536);
+  assert.equal(envelope.password_kdf.iterations, 3);
+  assert.equal(envelope.password_kdf.parallelism, 4);
 
   const decrypted = decryptProtectedEntry(envelope, {
     entryName: 'KDNA_Core.json',

@@ -9,8 +9,9 @@ const path = require('node:path');
 const {
   installPackedCoreOffline,
   representativeTypesSource,
-  runNpm,
+  runNpmWithCache,
   runTsc,
+  withTempNpmCache,
 } = require('./package-test-helpers');
 
 const core = require('../src');
@@ -440,12 +441,30 @@ test('all 15 candidate exports are symmetric across CJS, ESM, and declarations',
     assert.equal(typeof esm[name], type, `ESM ${name}`);
     assert.match(declarations, new RegExp(`(?:function|class|const) ${name}\\b`));
   }
-  const dryRun = JSON.parse(
-    runNpm(['pack', '--dry-run', '--json'], {
-      cwd: PACKAGE_ROOT,
-      encoding: 'utf8',
-    }),
-  )[0];
+  const cacheProbe = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-cache-probe-'));
+  const fakeHome = path.join(cacheProbe, 'home');
+  const forbiddenUserCache = path.join(fakeHome, '.npm');
+  fs.mkdirSync(fakeHome, { recursive: true });
+  let dryRun;
+  try {
+    dryRun = withTempNpmCache((cache) => JSON.parse(runNpmWithCache(
+      ['pack', '--dry-run', '--json'],
+      cache,
+      {
+        cwd: PACKAGE_ROOT,
+        encoding: 'utf8',
+        env: {
+          HOME: fakeHome,
+          USERPROFILE: fakeHome,
+          npm_config_cache: forbiddenUserCache,
+          NPM_CONFIG_CACHE: forbiddenUserCache,
+        },
+      },
+    ))[0]);
+    assert.equal(fs.existsSync(forbiddenUserCache), false, 'npm must not write the user cache');
+  } finally {
+    fs.rmSync(cacheProbe, { recursive: true, force: true });
+  }
   const files = new Set(dryRun.files.map((file) => file.path));
   assert.equal(files.has('src/execution-contract-v1.js'), true);
   for (const schema of [

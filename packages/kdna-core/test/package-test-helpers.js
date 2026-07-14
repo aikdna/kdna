@@ -2,6 +2,7 @@
 
 const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 
 const PACKAGE_ROOT = path.resolve(__dirname, '..');
@@ -16,7 +17,15 @@ function findNpmCli() {
     path.join(path.dirname(executable), 'node_modules', 'npm', 'bin', 'npm-cli.js'),
     path.join(path.dirname(executable), '..', 'lib', 'node_modules', 'npm', 'bin', 'npm-cli.js'),
     path.join(path.dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js'),
-    path.join(path.dirname(process.execPath), '..', 'lib', 'node_modules', 'npm', 'bin', 'npm-cli.js'),
+    path.join(
+      path.dirname(process.execPath),
+      '..',
+      'lib',
+      'node_modules',
+      'npm',
+      'bin',
+      'npm-cli.js',
+    ),
   ].filter(Boolean);
   const found = candidates.find((candidate) => fs.existsSync(candidate));
   if (!found) {
@@ -30,6 +39,54 @@ function runNpm(args, options = {}) {
     ...options,
     env: { ...process.env, ...options.env },
   });
+}
+
+function isWithin(candidate, root) {
+  const relative = path.relative(root, candidate);
+  return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
+}
+
+function assertIsolatedNpmCache(cacheDirectory, environment = process.env) {
+  if (!path.isAbsolute(cacheDirectory)) {
+    throw new Error('test npm cache must be an absolute path');
+  }
+  const homeDirectories = new Set(
+    [os.homedir(), environment.HOME, environment.USERPROFILE]
+      .filter(Boolean)
+      .map((home) => path.resolve(home)),
+  );
+  const forbiddenCaches = [...homeDirectories].map((home) => path.join(home, '.npm'));
+  if (environment.LOCALAPPDATA) {
+    forbiddenCaches.push(path.resolve(environment.LOCALAPPDATA, 'npm-cache'));
+  }
+  const resolved = path.resolve(cacheDirectory);
+  if (forbiddenCaches.some((forbidden) => isWithin(resolved, forbidden))) {
+    throw new Error(`test npm cache must not use a user cache: ${resolved}`);
+  }
+  return resolved;
+}
+
+function runNpmWithCache(args, cacheDirectory, options = {}) {
+  const environment = { ...process.env, ...options.env };
+  const cache = assertIsolatedNpmCache(path.resolve(cacheDirectory), environment);
+  fs.mkdirSync(cache, { recursive: true });
+  return runNpm([...args, '--cache', cache], {
+    ...options,
+    env: {
+      ...environment,
+      npm_config_cache: cache,
+      NPM_CONFIG_CACHE: cache,
+    },
+  });
+}
+
+function withTempNpmCache(callback) {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-npm-cache-'));
+  try {
+    return callback(path.join(root, 'cache'));
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 }
 
 function runTsc(args, options = {}) {
@@ -87,10 +144,11 @@ function installedDependencyClosure(rootPackageDirectory) {
   return packages;
 }
 
-function packPackage(packageDirectory, destination) {
+function packPackage(packageDirectory, destination, cache) {
   const packed = JSON.parse(
-    runNpm(
+    runNpmWithCache(
       ['pack', '--json', '--ignore-scripts', '--pack-destination', destination],
+      cache,
       { cwd: packageDirectory, encoding: 'utf8' },
     ),
   )[0];
@@ -102,11 +160,11 @@ function installPackedCoreOffline(tempDirectory) {
   const cache = path.join(tempDirectory, 'empty-npm-cache');
   fs.mkdirSync(artifacts, { recursive: true });
 
-  const coreTarball = packPackage(PACKAGE_ROOT, artifacts);
+  const coreTarball = packPackage(PACKAGE_ROOT, artifacts, cache);
   const localDependencies = {};
   for (const directory of installedDependencyClosure(PACKAGE_ROOT)) {
     const manifest = JSON.parse(fs.readFileSync(path.join(directory, 'package.json'), 'utf8'));
-    const tarball = packPackage(directory, artifacts);
+    const tarball = packPackage(directory, artifacts, cache);
     const spec = `file:./${path.relative(tempDirectory, tarball).split(path.sep).join('/')}`;
     if (localDependencies[manifest.name] && localDependencies[manifest.name] !== spec) {
       throw new Error(`offline dependency closure has multiple ${manifest.name} versions`);
@@ -129,35 +187,38 @@ function installPackedCoreOffline(tempDirectory) {
       },
     }),
   );
-  runNpm(
-    [
-      'install',
-      '--offline',
-      '--ignore-scripts',
-      '--no-audit',
-      '--no-fund',
-      '--cache',
-      cache,
-    ],
-    { cwd: tempDirectory, stdio: 'pipe' },
-  );
+  runNpmWithCache(['install', '--offline', '--ignore-scripts', '--no-audit', '--no-fund'], cache, {
+    cwd: tempDirectory,
+    stdio: 'pipe',
+  });
   return { coreTarball, cache };
 }
 
 function representativeTypesSource(importSpecifier) {
   return [
-    `import { ALG, EXTERNAL_AAD_PROFILE, WORK_PACK_SCHEMA, KDNAManifest, KDNAWorkPackManifest, encryptLicensedEntryV1, decryptLicensedEntryV1, validateWorkPackManifest, inspectWorkPack, externalEnvelopeAad } from ${JSON.stringify(importSpecifier)};`,
+    `import { ALG, EXTERNAL_AAD_PROFILE, WORK_PACK_SCHEMA, KDNAManifest, KDNAWorkPackManifest, LicensedEntryLegacyEnvelope, encryptLicensedEntryV1, decryptLicensedEntryV1, decryptLicensedEntry, encryptProtectedEntry, validateWorkPackManifest, inspectWorkPack, externalEnvelopeAad } from ${JSON.stringify(importSpecifier)};`,
     "const algorithm: 'AES-256-GCM' = ALG;",
     "const aadProfile: 'kdna-external-asset-cek-v1' = EXTERNAL_AAD_PROFILE;",
     'declare const manifest: KDNAManifest;',
     "const envelope = encryptLicensedEntryV1('judgment', { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
     "const plaintext: Uint8Array = decryptLicensedEntryV1(envelope, { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
+    "const unifiedV1: Uint8Array = decryptLicensedEntry(envelope, { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
+    "const protectedEnvelope = encryptProtectedEntry('judgment', { entryName: 'payload.kdnab', manifest, password: 'password' });",
+    "const kdfName: 'Argon2id' = protectedEnvelope.password_kdf.name;",
+    'declare const legacyEnvelope: LicensedEntryLegacyEnvelope;',
+    "const legacyPlaintext: Uint8Array = decryptLicensedEntry(legacyEnvelope, { entryName: 'payload.kdnab', manifest, licenseKey: 'license', machineFingerprint: 'machine' });",
+    '// @ts-expect-error legacy envelopes require machineFingerprint',
+    "decryptLicensedEntry(legacyEnvelope, { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
+    'declare const unifiedBytes: Uint8Array;',
+    "const unifiedPlaintext: Uint8Array = decryptLicensedEntry(unifiedBytes, { entryName: 'payload.kdnab', manifest, licenseKey: 'license', machineFingerprint: 'machine' });",
+    '// @ts-expect-error raw unified input may be legacy and requires machineFingerprint',
+    "decryptLicensedEntry(unifiedBytes, { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
     "const workpack: KDNAWorkPackManifest = { format: 'kdna-workpack', format_version: '0.1', name: 'example', version: '1.0.0', description: 'test', status: 'draft', kdna: { mode: 'single', asset: { name: 'asset', version: '1.0.0', role: 'primary' } } };",
     'const validation: boolean = validateWorkPackManifest(workpack).valid;',
     "const summary: string = inspectWorkPack(workpack, '.').name;",
     "const aad: Uint8Array = externalEnvelopeAad({ manifest, entryName: 'payload.kdnab', plaintextDigest: 'sha256:00', keyRef: 'key', issuerKeyId: 'issuer' });",
     'const schemaTitle: unknown = WORK_PACK_SCHEMA.title;',
-    'console.log(algorithm, aadProfile, plaintext, validation, summary, aad, schemaTitle);',
+    'console.log(algorithm, aadProfile, plaintext, unifiedV1, protectedEnvelope, kdfName, legacyPlaintext, unifiedPlaintext, validation, summary, aad, schemaTitle);',
   ].join('\n');
 }
 
@@ -166,6 +227,7 @@ module.exports = {
   REPO_ROOT,
   installPackedCoreOffline,
   representativeTypesSource,
-  runNpm,
+  runNpmWithCache,
   runTsc,
+  withTempNpmCache,
 };

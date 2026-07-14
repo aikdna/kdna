@@ -423,6 +423,14 @@ export interface KDNAPasswordKdfParams {
   parallelism?: number;
 }
 
+export interface KDNAPasswordKdfDescriptor {
+  name: 'Argon2id';
+  salt: string;
+  memory_kib: number;
+  iterations: number;
+  parallelism: number;
+}
+
 export interface KDNAScryptKdfParams {
   salt: string;
   N?: number;
@@ -435,7 +443,7 @@ export interface KDNAProtectedEntryEnvelope {
   alg: 'AES-256-GCM';
   kdf: 'Argon2id';
   key_wrapping: 'AES-256-KW';
-  password_kdf: Required<KDNAPasswordKdfParams>;
+  password_kdf: KDNAPasswordKdfDescriptor;
   key_slots: Array<{
     slot: 'password' | 'recovery';
     wrap: 'AES-256-KW';
@@ -570,8 +578,20 @@ export function encryptLicensedEntry(
 ): LicensedEntryEnvelope;
 
 export function decryptLicensedEntry(
+  envelope: LicensedEntryEnvelope,
+  options: KDNALicensedEntryOptions,
+): Uint8Array;
+export function decryptLicensedEntry(
+  envelope: LicensedEntryLegacyEnvelope,
+  options: KDNALicensedEntryLegacyOptions,
+): Uint8Array;
+export function decryptLicensedEntry(
+  envelope: KDNACryptoInput,
+  options: KDNALicensedEntryLegacyOptions,
+): Uint8Array;
+export function decryptLicensedEntry(
   envelope: KDNACryptoInput | LicensedEntryEnvelope | LicensedEntryLegacyEnvelope,
-  options: KDNALicensedEntryOptions & { machineFingerprint?: string },
+  options: KDNALicensedEntryLegacyOptions,
 ): Uint8Array;
 
 export function createLicensedDecryptEntry(options: {

@@ -62,6 +62,9 @@
   public value, including the crypto, external-grant, Work Pack, composition,
   container, and semver helpers. Permanent source and packed-install checks now
   block entrypoint drift.
+- Model the complete Argon2id password-KDF descriptor and require a machine
+  fingerprint when the unified decrypt API receives a legacy or profile-unknown
+  envelope. Package tests now isolate every npm operation from the user cache.
 - Require a non-null independently trusted Plan digest throughout the strict
   Plan 1 / Host 2 chain, snapshot hostile validation contexts without invoking
   accessors, and keep pre-Host budget enforcement unavailable as a public
