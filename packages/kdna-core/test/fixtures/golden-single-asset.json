@@ -1,0 +1,114 @@
+{
+  "contract_id": "kdna.golden-single-asset/1",
+  "manifest": {
+    "kdna_version": "1.0",
+    "asset_id": "kdna:fixture:release-decision-golden",
+    "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000401",
+    "asset_type": "domain",
+    "title": "Golden Release Decision",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0",
+    "created_at": "2026-07-14T00:00:00Z",
+    "updated_at": "2026-07-14T00:00:00Z",
+    "creator": {
+      "name": "KDNA Protocol Test Fixture",
+      "id": "synthetic_protocol_fixture"
+    },
+    "compatibility": {
+      "min_loader_version": "0.16.0",
+      "profile": "judgment-profile-v1"
+    },
+    "payload": {
+      "path": "payload.kdnab",
+      "encoding": "cbor",
+      "encrypted": false
+    },
+    "access": "public",
+    "summary": "Synthetic Golden fixture for KDNA value-preservation tests.",
+    "language": "en",
+    "license": "Apache-2.0",
+    "keywords": ["synthetic", "release-decision", "golden"],
+    "load_contract": {
+      "default_profile": "compact",
+      "profiles": {
+        "index": {
+          "requires_decryption": false,
+          "max_tokens_hint": 200
+        },
+        "compact": {
+          "requires_decryption": false,
+          "max_tokens_hint": 800
+        },
+        "scenario": {
+          "requires_decryption": false,
+          "selection": "triggered_sections_only"
+        },
+        "full": {
+          "requires_decryption": false,
+          "intended_for": ["audit", "reference"]
+        }
+      }
+    }
+  },
+  "payload": {
+    "profile": "judgment-profile-v1",
+    "core": {
+      "highest_question": "Which rollout choice preserves the safest verified recovery path?",
+      "worldview": [
+        "The asset supplies a scoped release-decision prior, not operational facts.",
+        "Observed test, incident, and rollback evidence remains authoritative."
+      ],
+      "value_order": [
+        "prevent unrecoverable user harm",
+        "preserve a verified rollback path",
+        "reduce release delay"
+      ],
+      "judgment_role": {
+        "acts_as": "a scoped release-decision authority",
+        "does_not_act_as": [
+          "an operational fact source",
+          "an automated deployment controller"
+        ],
+        "responsibility": "Order qualitative rollout tradeoffs after observed facts are supplied."
+      },
+      "axioms": [
+        {
+          "id": "ax_reversible_rollout",
+          "one_sentence": "Prefer a reversible limited rollout when recovery evidence is incomplete.",
+          "full_statement": "When required checks have passed but rollback evidence remains incomplete, choose the smallest reversible rollout that can produce the missing evidence.",
+          "why": "Without this rule, rollout speed can outrank a verified recovery path.",
+          "confidence": "high",
+          "applies_when": [
+            "choosing rollout scope after required checks pass"
+          ],
+          "does_not_apply_when": [
+            "determining whether required checks actually passed"
+          ],
+          "failure_risk": "The release may expand before its recovery path is verified."
+        }
+      ],
+      "boundaries": [
+        {
+          "id": "bd_observed_release_facts",
+          "scope": "qualitative rollout tradeoffs after release facts are supplied",
+          "out_of_scope": "inventing test results, incident state, or rollback evidence",
+          "acceptable_exceptions": []
+        }
+      ],
+      "risk_model": {}
+    },
+    "patterns": [],
+    "scenarios": [],
+    "cases": [],
+    "reasoning": {
+      "self_check": [
+        "Did I preserve the verified recovery path without inventing release facts?"
+      ],
+      "failure_modes": []
+    },
+    "evolution": {
+      "changelog": [],
+      "version_notes": []
+    }
+  }
+}

@@ -49,16 +49,19 @@ judgment content — only identity and metadata.
 
 **Purpose**: the **default profile for Agent invocation**. Supplies the
 minimum judgment surface that a loader needs to apply the domain's
-reasoning frame: the highest question, axioms, boundaries, self-checks,
-and failure modes.
+reasoning frame: the highest question, scoped worldview, value order,
+judgment role, axioms, boundaries, self-checks, and failure modes.
 
 **Suitable as an Agent prompt**: yes. This is the recommended default.
 
 **Output fields**:
 - `highest_question` — from `payload.core`
+- `worldview` — from `payload.core.worldview`, preserving every declared string
+- `value_order` — from `payload.core.value_order`, preserving declared order
+- `judgment_role` — from `payload.core.judgment_role`, preserving its declared shape
 - `axioms` — from `payload.core.axioms` (one-sentence form if available)
 - `boundaries` — from `payload.core.boundaries`
-- `self_checks` — from `payload.reasoning.self_checks`
+- `self_checks` — Runtime Capsule projection of `payload.reasoning.self_check`
 - `failure_modes` — from `payload.reasoning.failure_modes`
 - `patterns` — from `payload.patterns` (first 3, truncated)
 - Default max_tokens_hint from `load_contract.profiles.compact.max_tokens_hint`
