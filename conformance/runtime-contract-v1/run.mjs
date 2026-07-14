@@ -200,6 +200,54 @@ function validateGoldens() {
     'budget builder must reproduce golden',
   );
 
+  const preHostPlan = clone(golden.plan);
+  preHostPlan.budget.max_projection_chars = 1;
+  preHostPlan.integrity.plan_digest = core.computeConsumptionPlanDigestV1(preHostPlan);
+  const preHostContext = baseContext({
+    plan: preHostPlan,
+    trustedPlanDigest: preHostPlan.integrity.plan_digest,
+  });
+  assert.throws(
+    () =>
+      core.buildAgentHost2RequestV1(
+        { request_id: golden.request.request_id, capsule: golden.request.capsule },
+        preHostContext,
+      ),
+    (error) => error?.code === 'KDNA_HOST_BUDGET_LIMIT_EXCEEDED',
+  );
+  const preHostTrace = core.buildPreHostBudgetBlockedTraceV1(
+    {
+      trace_id: 'trace_abcdef0123456789',
+      timestamp: '2026-07-15T00:00:00.500Z',
+      capsule: golden.request.capsule,
+    },
+    preHostContext,
+  );
+  assert.equal(preHostTrace.capsule_delivery_evidence.host_boundary_comparison, 'not_delivered');
+  assert.equal(preHostTrace.capsule_delivery_evidence.request_id, null);
+  assert.equal(preHostTrace.host_receipt, null);
+  assert.equal(preHostTrace.execution.execution_status, 'not_started');
+  assert.equal(preHostTrace.budget.comparison.projection_chars, 'exceeded');
+  assertValid(
+    'pre-Host budget-blocked Trace',
+    core.validatePreHostBudgetBlockedTraceV1(preHostTrace, {
+      ...preHostContext,
+      capsule: golden.request.capsule,
+    }),
+  );
+  assert.throws(
+    () =>
+      core.buildPreHostBudgetBlockedTraceV1(
+        {
+          trace_id: 'trace_abcdef0123456789',
+          timestamp: '2026-07-15T00:00:00.500Z',
+          capsule: golden.request.capsule,
+        },
+        baseContext(),
+      ),
+    (error) => error?.code === 'KDNA_PRE_HOST_BUDGET_NOT_EXCEEDED',
+  );
+
   for (const trace of positiveTraces) {
     const context = contextForTrace(trace);
     assertValid(trace.overall_status, core.validateJudgmentTraceV1(trace, context));

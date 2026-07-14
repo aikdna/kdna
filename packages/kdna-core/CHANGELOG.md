@@ -25,6 +25,9 @@
 - Expose the strict opt-in ConsumptionPlan 1, Agent Host 2, budget-evidence,
   and JudgmentTrace 1 builders and validators from CJS, ESM, and TypeScript.
   The conformance runner now consumes this single packaged implementation.
+- Add a dedicated pre-Host budget-blocked Trace builder and validator. They
+  preserve projected A/C/E/P, profile, and exact character evidence without
+  exposing an over-budget Host request; calls within budget fail closed.
 - Add a bounded raw execution-contract JSON parser that rejects duplicate
   decoded keys, invalid UTF-8 and Unicode, BOMs, hostile-key prototype
   mutation, non-finite numbers, and trailing or non-RFC JSON input before

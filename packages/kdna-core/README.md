@@ -95,6 +95,8 @@ const {
   parseExecutionContractJsonV1,
   buildConsumptionPlanV1,
   buildAgentHost2RequestV1,
+  buildPreHostBudgetBlockedTraceV1,
+  validatePreHostBudgetBlockedTraceV1,
   validateAgentHost2ReceiptV1,
   buildJudgmentTraceV1,
 } = require('@aikdna/kdna-core');
@@ -137,6 +139,33 @@ const trace = buildJudgmentTraceV1(traceInput, {
 When no receipt exists, Trace construction requires the caller to state the
 trusted observation explicitly as `not_delivered` or `not_observed`; request
 existence alone is not treated as delivery evidence.
+
+If Capsule projection succeeded but the exact projection or task character
+count exceeds the Plan budget, `buildAgentHost2RequestV1()` fails closed and
+must not be bypassed. Use the dedicated evidence-only terminal instead:
+
+```js
+const blockedTrace = buildPreHostBudgetBlockedTraceV1(
+  {
+    trace_id: 'trace_0123456789abcdef',
+    timestamp: new Date().toISOString(),
+    capsule: capsule2,
+  },
+  executionContext,
+);
+
+const blockedValidation = validatePreHostBudgetBlockedTraceV1(blockedTrace, {
+  ...executionContext,
+  capsule: capsule2,
+});
+if (!blockedValidation.valid) throw new Error(blockedValidation.code);
+```
+
+This API returns only a `blocked` / `not_delivered` Trace with a fixed budget
+error. It retains A/C/E, sender P, projection profile, exact character actuals,
+and `exceeded` comparison, but it never exposes an over-budget Host request or
+a request ID. Calling it when neither projection nor task is over budget is an
+error.
 
 `parseExecutionContractJsonV1()` is the raw protocol boundary. It rejects
 duplicate decoded object keys, invalid UTF-8, BOMs, non-scalar Unicode,

@@ -1212,6 +1212,11 @@ export interface KDNAJudgmentTraceContextV1 extends KDNAHost2ValidationContextV1
   trustedDeliveryObservation: 'host_receipt' | 'not_delivered' | 'not_observed';
 }
 
+export interface KDNAPreHostBudgetBlockedTraceContextV1
+  extends KDNAHost2ValidationContextV1 {
+  capsule: KDNARuntimeCapsuleV2;
+}
+
 export const PLAN_DIGEST_PROFILE: 'kdna-consumption-plan-jcs-v1';
 export const HOST_PROTOCOL: 'kdna.agent-host/2';
 export const DEFAULT_CORE_CAPSULE_VERSIONS: readonly ['2.0', '1.0'];
@@ -1263,6 +1268,20 @@ export function deriveBudgetEvidenceV1(
     receipt: KDNAAgentHost2ReceiptV1 | null;
   },
 ): KDNABudgetEvidenceV1;
+export function buildPreHostBudgetBlockedTraceV1(
+  input: {
+    trace_id: string;
+    timestamp: string;
+    capsule: KDNARuntimeCapsuleV2;
+    parent_trace_id?: string | null;
+    warnings?: string[];
+  },
+  context: KDNAHost2ValidationContextV1,
+): KDNAJudgmentTraceV1;
+export function validatePreHostBudgetBlockedTraceV1(
+  trace: unknown,
+  context: KDNAPreHostBudgetBlockedTraceContextV1,
+): KDNAExecutionContractValidationResult;
 export function buildJudgmentTraceV1(
   input: {
     trace_id: string;

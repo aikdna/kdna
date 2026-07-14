@@ -22,6 +22,12 @@ const CAPSULE_VERSION = '2.0';
 const DEFAULT_CORE_CAPSULE_VERSIONS = Object.freeze(['2.0', '1.0']);
 const JSON_MAX_BYTES = 2 * 1024 * 1024;
 const JSON_MAX_DEPTH = 64;
+const PRE_HOST_INTERNAL_REQUEST_ID = 'host_000000000000000000000000';
+const PRE_HOST_BUDGET_ERROR = Object.freeze({
+  code: 'KDNA_HOST_BUDGET_LIMIT_EXCEEDED',
+  message: 'Pre-Host projection or task budget exceeded.',
+  phase: 'budget',
+});
 
 let validators;
 
@@ -194,6 +200,50 @@ function snapshotContext(context, keys) {
       'Validation context could not be safely snapshotted.',
       { cause: error && typeof error.message === 'string' ? error.message : String(error) },
     );
+  }
+}
+
+function snapshotPublicInput(input, requiredKeys, optionalKeys = []) {
+  try {
+    if (
+      input === null ||
+      typeof input !== 'object' ||
+      Array.isArray(input) ||
+      Object.getPrototypeOf(input) !== Object.prototype
+    ) {
+      return invalid('KDNA_INPUT_INVALID', 'Builder input must be a plain object.');
+    }
+    const descriptors = Object.getOwnPropertyDescriptors(input);
+    const allowedKeys = new Set([...requiredKeys, ...optionalKeys]);
+    if (
+      Reflect.ownKeys(descriptors).some(
+        (key) =>
+          typeof key !== 'string' ||
+          !allowedKeys.has(key) ||
+          !descriptors[key].enumerable ||
+          !Object.prototype.hasOwnProperty.call(descriptors[key], 'value'),
+      )
+    ) {
+      return invalid(
+        'KDNA_INPUT_INVALID',
+        'Builder input must contain only declared enumerable data properties.',
+      );
+    }
+    const snapshot = {};
+    for (const key of requiredKeys) {
+      if (!descriptors[key]) {
+        return invalid('KDNA_INPUT_INVALID', `Builder input must explicitly provide ${key}.`);
+      }
+      snapshot[key] = snapshotJsonValue(descriptors[key].value);
+    }
+    for (const key of optionalKeys) {
+      if (descriptors[key]) snapshot[key] = snapshotJsonValue(descriptors[key].value);
+    }
+    return ok(snapshot);
+  } catch (error) {
+    return invalid('KDNA_INPUT_INVALID', 'Builder input could not be safely snapshotted.', {
+      cause: error && typeof error.message === 'string' ? error.message : String(error),
+    });
   }
 }
 
@@ -794,6 +844,36 @@ function validateAgentHost2RequestV1(request, context) {
   }
 }
 
+function assembleAgentHost2RequestV1(input, plan) {
+  return {
+    protocol: HOST_PROTOCOL,
+    request_id: input.request_id,
+    plan_ref: {
+      plan_id: plan.plan_id,
+      plan_digest_profile: plan.integrity.profile,
+      plan_digest: plan.integrity.plan_digest,
+    },
+    runtime_contract: {
+      capsule_version: CAPSULE_VERSION,
+      capsule_digest_profile: CAPSULE_DELIVERY_PROFILE,
+      capsule_delivery_digest: computeCapsuleDeliveryDigest(input.capsule),
+    },
+    projection_contract: {
+      profile: plan.projection_request.profile,
+      required_digest_profile: plan.projection_request.required_digest_profile,
+      require_packaged_asset: plan.projection_request.require_packaged_asset,
+    },
+    result_contract: clone(plan.result_request),
+    budget: clone(plan.budget),
+    constraints: clone(plan.constraints),
+    phase: 'single_judgment',
+    task: clone(plan.task),
+    authority: { asset_id: plan.asset_ref.asset_id, role: 'primary', final_decision: true },
+    asset: { ...clone(plan.asset_ref), role: 'primary' },
+    capsule: clone(input.capsule),
+  };
+}
+
 function buildAgentHost2RequestV1(input, context) {
   const contextResult = snapshotContext(context, [
     'plan',
@@ -802,6 +882,8 @@ function buildAgentHost2RequestV1(input, context) {
     'coreCapsuleVersions',
   ]);
   throwInvalid(contextResult);
+  const inputResult = snapshotPublicInput(input, ['request_id', 'capsule']);
+  throwInvalid(inputResult);
   const safeContext = contextResult.value;
   const planResult = validateConsumptionPlanV1(safeContext.plan, {
     trustedPlanDigest: safeContext.trustedPlanDigest,
@@ -817,33 +899,7 @@ function buildAgentHost2RequestV1(input, context) {
   }
   let request;
   try {
-    request = {
-      protocol: HOST_PROTOCOL,
-      request_id: input.request_id,
-      plan_ref: {
-        plan_id: plan.plan_id,
-        plan_digest_profile: plan.integrity.profile,
-        plan_digest: plan.integrity.plan_digest,
-      },
-      runtime_contract: {
-        capsule_version: CAPSULE_VERSION,
-        capsule_digest_profile: CAPSULE_DELIVERY_PROFILE,
-        capsule_delivery_digest: computeCapsuleDeliveryDigest(input.capsule),
-      },
-      projection_contract: {
-        profile: plan.projection_request.profile,
-        required_digest_profile: plan.projection_request.required_digest_profile,
-        require_packaged_asset: plan.projection_request.require_packaged_asset,
-      },
-      result_contract: clone(plan.result_request),
-      budget: clone(plan.budget),
-      constraints: clone(plan.constraints),
-      phase: 'single_judgment',
-      task: clone(plan.task),
-      authority: { asset_id: plan.asset_ref.asset_id, role: 'primary', final_decision: true },
-      asset: { ...clone(plan.asset_ref), role: 'primary' },
-      capsule: clone(input.capsule),
-    };
+    request = assembleAgentHost2RequestV1(inputResult.value, plan);
   } catch {
     throw new KDNAExecutionContractError(
       'KDNA_HOST_REQUEST_INPUT_INVALID',
@@ -1023,6 +1079,150 @@ function deriveBudgetEvidenceV1(plan, context) {
     safeContext.receipt = receiptResult.value;
   }
   return expectedBudgetEvidence(safePlan, safeContext.request, safeContext.receipt);
+}
+
+function preparePreHostBudgetBlockedV1(capsule, safeContext) {
+  const planResult = validateConsumptionPlanV1(safeContext.plan, {
+    trustedPlanDigest: safeContext.trustedPlanDigest,
+  });
+  if (!planResult.valid) return planResult;
+  const plan = planResult.value;
+  const negotiation = negotiateExecutionPairV1(plan, safeContext);
+  if (negotiation.state !== 'selected') {
+    return invalid(
+      negotiation.issue_code,
+      'Pre-Host budget evidence requires a selected strict execution pair.',
+    );
+  }
+
+  let projectedCandidate;
+  try {
+    projectedCandidate = assembleAgentHost2RequestV1(
+      { request_id: PRE_HOST_INTERNAL_REQUEST_ID, capsule },
+      plan,
+    );
+  } catch (error) {
+    return invalid('KDNA_HOST_REQUEST_INPUT_INVALID', 'Projected Capsule input is invalid.', {
+      cause: error && typeof error.message === 'string' ? error.message : String(error),
+    });
+  }
+  const schemaResult = validateSchema('request', projectedCandidate);
+  if (!schemaResult.valid) return schemaResult;
+  projectedCandidate = schemaResult.value;
+  const requestCode = validateRequestSemantics(projectedCandidate, plan, false);
+  if (requestCode !== null) {
+    return invalid(
+      requestCode,
+      'Projected Capsule does not correlate with the independently validated Plan.',
+    );
+  }
+  const budget = expectedBudgetEvidence(plan, projectedCandidate, null);
+  if (
+    budget.comparison.projection_chars !== 'exceeded' &&
+    budget.comparison.task_chars !== 'exceeded'
+  ) {
+    return invalid(
+      'KDNA_PRE_HOST_BUDGET_NOT_EXCEEDED',
+      'Pre-Host blocked Trace construction requires an exceeded projection or task limit.',
+    );
+  }
+  return ok({ plan, projectedCandidate, budget });
+}
+
+/**
+ * Build the only supported Trace 1 path for a successfully projected Capsule
+ * that exceeds an enforce-before-Host projection or task limit. This function
+ * never exposes the internal request-shaped correlation candidate and cannot
+ * produce a deliverable Agent Host 2 request.
+ */
+function buildPreHostBudgetBlockedTraceV1(input, context) {
+  const inputResult = snapshotPublicInput(
+    input,
+    ['trace_id', 'timestamp', 'capsule'],
+    ['parent_trace_id', 'warnings'],
+  );
+  throwInvalid(inputResult);
+  const contextResult = snapshotContext(context, [
+    'plan',
+    'trustedPlanDigest',
+    'capabilities',
+    'coreCapsuleVersions',
+  ]);
+  throwInvalid(contextResult);
+  const safeInput = inputResult.value;
+  const safeContext = contextResult.value;
+  const prepared = preparePreHostBudgetBlockedV1(safeInput.capsule, safeContext);
+  throwInvalid(prepared);
+
+  return buildJudgmentTraceV1(
+    {
+      trace_id: safeInput.trace_id,
+      timestamp: safeInput.timestamp,
+      parent_trace_id: safeInput.parent_trace_id ?? null,
+      overall_status: 'blocked',
+      errors: [clone(PRE_HOST_BUDGET_ERROR)],
+      warnings: safeInput.warnings || [],
+    },
+    {
+      ...safeContext,
+      plan: prepared.value.plan,
+      request: prepared.value.projectedCandidate,
+      receipt: null,
+      trustedDeliveryObservation: 'not_delivered',
+    },
+  );
+}
+
+/**
+ * Validate a pre-Host budget-blocked Trace against the original Capsule and
+ * independent Plan/Host capability facts without requiring callers to
+ * construct or retain an over-budget request object.
+ */
+function validatePreHostBudgetBlockedTraceV1(trace, context) {
+  const contextResult = snapshotContext(context, [
+    'plan',
+    'trustedPlanDigest',
+    'capabilities',
+    'coreCapsuleVersions',
+    'capsule',
+  ]);
+  if (!contextResult.valid) return contextResult;
+  const safeContext = contextResult.value;
+  const prepared = preparePreHostBudgetBlockedV1(safeContext.capsule, safeContext);
+  if (!prepared.valid) return prepared;
+  const traceResult = validateJudgmentTraceV1(trace, {
+    ...safeContext,
+    plan: prepared.value.plan,
+    request: prepared.value.projectedCandidate,
+    receipt: null,
+    trustedDeliveryObservation: 'not_delivered',
+  });
+  if (!traceResult.valid) return traceResult;
+  const safeTrace = traceResult.value;
+  if (
+    safeTrace.overall_status !== 'blocked' ||
+    safeTrace.host_receipt !== null ||
+    safeTrace.execution.delivery_status !== 'not_delivered' ||
+    safeTrace.execution.execution_status !== 'not_started' ||
+    !equalJson(safeTrace.execution.semantic_consumption, {
+      state: 'not_observed',
+      basis: null,
+    }) ||
+    !equalJson(safeTrace.execution.model_identity, {
+      value: null,
+      basis: 'not_observed',
+    }) ||
+    safeTrace.budget.comparison.overall !== 'exceeded' ||
+    (safeTrace.budget.comparison.projection_chars !== 'exceeded' &&
+      safeTrace.budget.comparison.task_chars !== 'exceeded') ||
+    !equalJson(safeTrace.errors, [PRE_HOST_BUDGET_ERROR])
+  ) {
+    return invalid(
+      'KDNA_TRACE_PRE_HOST_BUDGET_MISMATCH',
+      'Trace is not an authentic pre-Host budget-blocked terminal.',
+    );
+  }
+  return ok(safeTrace);
 }
 
 function withoutExpectedDigests(asset) {
@@ -1643,6 +1843,8 @@ module.exports = {
   validateAgentHost2RequestV1,
   validateAgentHost2ReceiptV1,
   deriveBudgetEvidenceV1,
+  buildPreHostBudgetBlockedTraceV1,
+  validatePreHostBudgetBlockedTraceV1,
   buildJudgmentTraceV1,
   validateJudgmentTraceV1,
 };

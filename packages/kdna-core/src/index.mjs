@@ -105,6 +105,10 @@ export const buildAgentHost2RequestV1 = executionContractV1.buildAgentHost2Reque
 export const validateAgentHost2RequestV1 = executionContractV1.validateAgentHost2RequestV1;
 export const validateAgentHost2ReceiptV1 = executionContractV1.validateAgentHost2ReceiptV1;
 export const deriveBudgetEvidenceV1 = executionContractV1.deriveBudgetEvidenceV1;
+export const buildPreHostBudgetBlockedTraceV1 =
+  executionContractV1.buildPreHostBudgetBlockedTraceV1;
+export const validatePreHostBudgetBlockedTraceV1 =
+  executionContractV1.validatePreHostBudgetBlockedTraceV1;
 export const buildJudgmentTraceV1 = executionContractV1.buildJudgmentTraceV1;
 export const validateJudgmentTraceV1 = executionContractV1.validateJudgmentTraceV1;
 

@@ -278,6 +278,226 @@ test('public Host 2 request validation cannot disable pre-Host budget enforcemen
   assert.equal(result.code, 'KDNA_HOST_BUDGET_LIMIT_EXCEEDED');
 });
 
+test('pre-Host budget block preserves projected A/C/E/P and exact exceeded evidence without a request', () => {
+  const capsule = structuredClone(golden.request.capsule);
+  const projectionChars = [...core.canonicalizeJcs(capsule)].length;
+  const plan = structuredClone(golden.plan);
+  plan.budget.max_projection_chars = projectionChars - 1;
+  plan.integrity.plan_digest = core.computeConsumptionPlanDigestV1(plan);
+  const executionContext = context({
+    plan,
+    trustedPlanDigest: plan.integrity.plan_digest,
+  });
+
+  assertCode('KDNA_HOST_BUDGET_LIMIT_EXCEEDED', () =>
+    core.buildAgentHost2RequestV1(
+      { request_id: golden.request.request_id, capsule },
+      executionContext,
+    ),
+  );
+
+  const trace = core.buildPreHostBudgetBlockedTraceV1(
+    {
+      trace_id: 'trace_abcdef0123456789',
+      timestamp: '2026-07-15T00:00:00.500Z',
+      capsule,
+    },
+    executionContext,
+  );
+  const p = core.computeCapsuleDeliveryDigest(capsule);
+  assert.equal(Object.hasOwn(trace, 'request'), false);
+  assert.equal(Object.hasOwn(trace, 'capsule'), false);
+  assert.deepEqual(trace.digest_evidence, capsule.digests);
+  assert.deepEqual(trace.projection_actual, {
+    profile: plan.projection_request.profile,
+    capsule_delivery_digest: p,
+    profile_deviated_from_plan: false,
+  });
+  assert.deepEqual(trace.capsule_delivery_evidence, {
+    basis: 'kdna-capsule-jcs-v1',
+    observed: p,
+    sender_computed: true,
+    host_recomputed: null,
+    host_echoed: null,
+    delivered_capsule_version: null,
+    host_boundary_comparison: 'not_delivered',
+    request_id: null,
+  });
+  assert.equal(trace.budget.actual.projection_chars, projectionChars);
+  assert.equal(trace.budget.actual.elapsed_ms, null);
+  assert.equal(trace.budget.actual.elapsed_basis, 'not_observed');
+  assert.equal(trace.budget.actual.tokens_used, null);
+  assert.equal(trace.budget.actual.model_calls, null);
+  assert.equal(trace.budget.actual.usage_basis, 'not_observed');
+  assert.equal(trace.budget.comparison.projection_chars, 'exceeded');
+  assert.equal(trace.budget.comparison.overall, 'exceeded');
+  assert.equal(trace.host_receipt, null);
+  assert.equal(trace.execution.delivery_status, 'not_delivered');
+  assert.equal(trace.execution.execution_status, 'not_started');
+  assert.deepEqual(trace.execution.semantic_consumption, { state: 'not_observed', basis: null });
+  assert.deepEqual(trace.execution.model_identity, { value: null, basis: 'not_observed' });
+  assert.equal(trace.overall_status, 'blocked');
+  assert.deepEqual(trace.errors, [
+    {
+      code: 'KDNA_HOST_BUDGET_LIMIT_EXCEEDED',
+      message: 'Pre-Host projection or task budget exceeded.',
+      phase: 'budget',
+    },
+  ]);
+  assert.equal(
+    core.validatePreHostBudgetBlockedTraceV1(trace, {
+      ...executionContext,
+      capsule,
+    }).valid,
+    true,
+  );
+
+  const replacementCapsule = structuredClone(capsule);
+  replacementCapsule.context.highest_question = 'A different independently supplied Capsule.';
+  assert.equal(
+    core.validatePreHostBudgetBlockedTraceV1(trace, {
+      ...executionContext,
+      capsule: replacementCapsule,
+    }).valid,
+    false,
+  );
+
+  const tamperCases = [
+    ['P', (value) => (value.capsule_delivery_evidence.observed = `sha256:${'0'.repeat(64)}`)],
+    ['projection actual', (value) => (value.budget.actual.projection_chars -= 1)],
+    ['task actual', (value) => (value.budget.actual.task_chars -= 1)],
+    ['model calls', (value) => (value.budget.actual.model_calls = 0)],
+    ['A', (value) => (value.digest_evidence.asset.value = `sha256:${'0'.repeat(64)}`)],
+    ['profile', (value) => (value.projection_actual.profile = 'full')],
+    [
+      'model identity',
+      (value) => (value.execution.model_identity = { value: 'invented', basis: 'host_reported' }),
+    ],
+    [
+      'delivery state',
+      (value) => (value.capsule_delivery_evidence.host_boundary_comparison = 'unavailable'),
+    ],
+  ];
+  for (const [label, mutate] of tamperCases) {
+    const tampered = structuredClone(trace);
+    mutate(tampered);
+    assert.equal(
+      core.validatePreHostBudgetBlockedTraceV1(tampered, {
+        ...executionContext,
+        capsule,
+      }).valid,
+      false,
+      label,
+    );
+  }
+});
+
+test('pre-Host budget block supports task overflow but cannot be used within limits', () => {
+  const capsule = structuredClone(golden.request.capsule);
+  assertCode('KDNA_PRE_HOST_BUDGET_NOT_EXCEEDED', () =>
+    core.buildPreHostBudgetBlockedTraceV1(
+      {
+        trace_id: 'trace_abcdef0123456789',
+        timestamp: '2026-07-15T00:00:00.500Z',
+        capsule,
+      },
+      context(),
+    ),
+  );
+  assert.equal(
+    core.validatePreHostBudgetBlockedTraceV1(golden.trace, {
+      ...context(),
+      capsule,
+    }).code,
+    'KDNA_PRE_HOST_BUDGET_NOT_EXCEEDED',
+  );
+
+  const plan = structuredClone(golden.plan);
+  plan.budget.max_task_chars = 1;
+  plan.integrity.plan_digest = core.computeConsumptionPlanDigestV1(plan);
+  const executionContext = context({
+    plan,
+    trustedPlanDigest: plan.integrity.plan_digest,
+  });
+  const trace = core.buildPreHostBudgetBlockedTraceV1(
+    {
+      trace_id: 'trace_0123456789abcdef',
+      timestamp: '2026-07-15T00:00:00.500Z',
+      capsule,
+    },
+    executionContext,
+  );
+  assert.equal(trace.budget.comparison.task_chars, 'exceeded');
+  assert.equal(trace.budget.comparison.projection_chars, 'within_limit');
+  assert.equal(
+    core.validatePreHostBudgetBlockedTraceV1(trace, {
+      ...executionContext,
+      capsule,
+    }).valid,
+    true,
+  );
+
+  const forged = structuredClone(trace);
+  forged.errors = [{ code: 'OTHER', message: 'Not a budget error.', phase: 'budget' }];
+  assert.equal(
+    core.validatePreHostBudgetBlockedTraceV1(forged, {
+      ...executionContext,
+      capsule,
+    }).code,
+    'KDNA_TRACE_PRE_HOST_BUDGET_MISMATCH',
+  );
+  assertCode('KDNA_INPUT_INVALID', () =>
+    core.buildPreHostBudgetBlockedTraceV1(
+      {
+        trace_id: 'trace_0123456789abcdef',
+        timestamp: '2026-07-15T00:00:00.500Z',
+        capsule,
+        errors: [{ code: 'OTHER', message: 'Caller error.', phase: 'budget' }],
+      },
+      executionContext,
+    ),
+  );
+});
+
+test('pre-Host budget block rejects mismatched Capsules and hostile builder inputs', () => {
+  const plan = structuredClone(golden.plan);
+  plan.budget.max_projection_chars = 1;
+  plan.integrity.plan_digest = core.computeConsumptionPlanDigestV1(plan);
+  const executionContext = context({
+    plan,
+    trustedPlanDigest: plan.integrity.plan_digest,
+  });
+  const mismatchedCapsule = structuredClone(golden.request.capsule);
+  mismatchedCapsule.profile = 'full';
+  assertCode('KDNA_HOST_PROJECTION_CONTRACT_MISMATCH', () =>
+    core.buildPreHostBudgetBlockedTraceV1(
+      {
+        trace_id: 'trace_abcdef0123456789',
+        timestamp: '2026-07-15T00:00:00.500Z',
+        capsule: mismatchedCapsule,
+      },
+      executionContext,
+    ),
+  );
+
+  let getterRuns = 0;
+  const hostileInput = {
+    trace_id: 'trace_abcdef0123456789',
+    timestamp: '2026-07-15T00:00:00.500Z',
+  };
+  Object.defineProperty(hostileInput, 'capsule', {
+    enumerable: true,
+    get() {
+      getterRuns += 1;
+      return golden.request.capsule;
+    },
+  });
+  assertCode('KDNA_INPUT_INVALID', () =>
+    core.buildPreHostBudgetBlockedTraceV1(hostileInput, executionContext),
+  );
+  assert.equal(getterRuns, 0);
+});
+
 test('matched Host receipt requires sender, Host, echo, and actual Capsule P to agree', () => {
   const request = structuredClone(golden.request);
   const receipt = structuredClone(golden.receipt);
@@ -415,7 +635,7 @@ test('object validators fail closed with stable codes instead of leaking TypeErr
   );
 });
 
-test('all 15 candidate exports are symmetric across CJS, ESM, and declarations', async () => {
+test('all 17 candidate exports are symmetric across CJS, ESM, and declarations', async () => {
   const esm = await import('../src/index.mjs');
   const exports = {
     KDNAExecutionContractError: 'function',
@@ -431,11 +651,13 @@ test('all 15 candidate exports are symmetric across CJS, ESM, and declarations',
     validateAgentHost2RequestV1: 'function',
     validateAgentHost2ReceiptV1: 'function',
     deriveBudgetEvidenceV1: 'function',
+    buildPreHostBudgetBlockedTraceV1: 'function',
+    validatePreHostBudgetBlockedTraceV1: 'function',
     buildJudgmentTraceV1: 'function',
     validateJudgmentTraceV1: 'function',
   };
   const declarations = fs.readFileSync(path.join(PACKAGE_ROOT, 'src', 'types.d.ts'), 'utf8');
-  assert.equal(Object.keys(exports).length, 15);
+  assert.equal(Object.keys(exports).length, 17);
   for (const [name, type] of Object.entries(exports)) {
     assert.equal(typeof core[name], type, `CJS ${name}`);
     assert.equal(typeof esm[name], type, `ESM ${name}`);
@@ -484,16 +706,22 @@ test('TypeScript declarations compile for Plan 1 and Host 2 public calls', () =>
     fs.writeFileSync(
       path.join(tmp, 'check.ts'),
       [
-        "import { parseExecutionContractJsonV1, validateConsumptionPlanV1, KDNAConsumptionPlanV1, KDNAJudgmentTraceV1, KDNAExecutionPairContextV1 } from '../..';",
+        "import { parseExecutionContractJsonV1, validateConsumptionPlanV1, buildPreHostBudgetBlockedTraceV1, validatePreHostBudgetBlockedTraceV1, KDNAConsumptionPlanV1, KDNAJudgmentTraceV1, KDNAExecutionPairContextV1, KDNAHost2ValidationContextV1, KDNARuntimeCapsuleV2 } from '../..';",
         'const value = parseExecutionContractJsonV1("{}");',
         'declare const plan: KDNAConsumptionPlanV1;',
         'declare const trace: KDNAJudgmentTraceV1;',
         'declare const executionContext: KDNAExecutionPairContextV1;',
+        'declare const hostContext: KDNAHost2ValidationContextV1;',
+        'declare const capsule: KDNARuntimeCapsuleV2;',
         'const result = validateConsumptionPlanV1(plan, { trustedPlanDigest: plan.integrity.plan_digest });',
+        "const blocked = buildPreHostBudgetBlockedTraceV1({ trace_id: 'trace_0123456789abcdef', timestamp: '2026-07-15T00:00:00.000Z', capsule }, hostContext);",
+        'const blockedValidation = validatePreHostBudgetBlockedTraceV1(blocked, { ...hostContext, capsule });',
+        '// @ts-expect-error caller errors cannot replace the canonical budget error',
+        "buildPreHostBudgetBlockedTraceV1({ trace_id: 'trace_0123456789abcdef', timestamp: '2026-07-15T00:00:00.000Z', capsule, errors: [] }, hostContext);",
         'const selected: "2.0" | null = trace.runtime_contract.selected_capsule_version;',
         'const delivery: "matched" | "mismatched" | "not_delivered" | "not_observed" | "unavailable" = trace.capsule_delivery_evidence.host_boundary_comparison;',
         'const versions: readonly string[] = executionContext.coreCapsuleVersions;',
-        'if (!result.valid) console.log(result.code, value, selected, delivery, versions);',
+        'if (!result.valid) console.log(result.code, value, blockedValidation, selected, delivery, versions);',
       ].join('\n'),
     );
     runTsc([
@@ -539,6 +767,14 @@ test('npm pack cold install validates Plan 1, entrypoints, and types while offli
       'const result = core.validateConsumptionPlanV1(golden.plan, { trustedPlanDigest: golden.plan.integrity.plan_digest });',
       "if (!result.valid) throw new Error(result.code);",
       "if (core.computeConsumptionPlanDigestV1(golden.plan) !== golden.plan.integrity.plan_digest) throw new Error('digest mismatch');",
+      'const limitedPlan = structuredClone(golden.plan);',
+      'limitedPlan.budget.max_projection_chars = 1;',
+      'limitedPlan.integrity.plan_digest = core.computeConsumptionPlanDigestV1(limitedPlan);',
+      "const executionContext = { plan: limitedPlan, trustedPlanDigest: limitedPlan.integrity.plan_digest, capabilities: golden.capabilities, coreCapsuleVersions: ['2.0', '1.0'] };",
+      "const blocked = core.buildPreHostBudgetBlockedTraceV1({ trace_id: 'trace_0123456789abcdef', timestamp: '2026-07-15T00:00:00.000Z', capsule: golden.request.capsule }, executionContext);",
+      "if (blocked.budget.comparison.projection_chars !== 'exceeded' || blocked.capsule_delivery_evidence.request_id !== null || blocked.host_receipt !== null) throw new Error('packed pre-Host budget evidence mismatch');",
+      'const blockedResult = core.validatePreHostBudgetBlockedTraceV1(blocked, { ...executionContext, capsule: golden.request.capsule });',
+      "if (!blockedResult.valid) throw new Error(blockedResult.code);",
       "import('@aikdna/kdna-core').then((esm) => {",
       "  const cjsNames = Object.keys(core).sort();",
       "  const esmNames = Object.keys(esm).filter((name) => name !== 'default').sort();",

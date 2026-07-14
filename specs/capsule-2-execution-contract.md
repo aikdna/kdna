@@ -264,7 +264,9 @@ and task limits before Host invocation and reject an over-limit request.
 JudgmentTrace records the same limits and these actual facts:
 
 - `projection_chars`: Unicode scalar/code-point count of the exact RFC 8785
-  JCS serialization of the delivered Capsule 2, or `null` before projection;
+  JCS serialization of the projected Capsule 2, whether it was delivered or
+  retained only as sender-side evidence after a pre-Host budget block; it is
+  `null` only when projection did not occur;
 - `task_chars`: Unicode scalar/code-point count of the exact RFC 8785 JCS
   serialization of the Plan task;
 - `elapsed_ms`: the exact `usage.elapsed_ms` copied from the correlated Host
@@ -281,6 +283,14 @@ dimension was not observed, and otherwise `within_limit`. A Trace with
 rewritten actuals, a false `within_limit`, or an execution path that crossed
 an enforceable limit is invalid. `timed_out` requires the independently
 reported `elapsed_ms > deadline_ms` and an `exceeded` elapsed comparison.
+
+If projection succeeds but `projection_chars` or the already-known
+`task_chars` exceeds its Plan limit, the Runner MUST NOT invoke the Host. The
+terminal `blocked` Trace MUST retain the projected Capsule's A/C/E, the
+sender-computed P, projection profile, exact character actuals, and derived
+`exceeded` comparison. It uses `not_delivered`, a null request ID and Host
+receipt, and `not_started` provider execution. This evidence-only terminal is
+not a deliverable Host 2 request.
 
 ## 6. JudgmentTrace 1.0
 
