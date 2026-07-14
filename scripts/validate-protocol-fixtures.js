@@ -63,7 +63,14 @@ function checkManifestSchema() {
   if (schema.required?.includes('creator')) {
     errors.push(`${schemaRel}: creator provenance must remain optional`);
   }
-  for (const field of ['asset_id', 'asset_uid', 'asset_type', 'title', 'compatibility', 'payload']) {
+  for (const field of [
+    'asset_id',
+    'asset_uid',
+    'asset_type',
+    'title',
+    'compatibility',
+    'payload',
+  ]) {
     if (!schema.required?.includes(field)) errors.push(`${schemaRel}: ${field} must be required`);
   }
 }
