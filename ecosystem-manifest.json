@@ -16,12 +16,12 @@
       "local_path": ".",
       "npm_package": "@aikdna/kdna-core",
       "package_json": "packages/kdna-core/package.json",
-      "current_version": "0.17.0",
+      "current_version": "0.18.0",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed", "remote"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "59ab8f1b9d05573346ddb5c485625219c331c82a",
+      "conformance_commit": "9e129adece8400586bff005c47b3e7a29d78a671",
       "known_limitations": [
         "hosted remote loading and activation are self-hosted reference surfaces, not an AIKDNA-hosted service",
         "behavioral value remains an optional per-asset evidence claim"

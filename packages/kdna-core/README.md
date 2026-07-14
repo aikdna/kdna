@@ -83,12 +83,13 @@ const deliveryDigest = computeCapsuleDeliveryDigest(capsule2);
 const legacyCapsule = adaptCapsuleV2ToV1(capsule2);
 ```
 
-ConsumptionPlan 1, Agent Host 2, and JudgmentTrace 1 are **Unreleased 0.18
-candidate APIs**. They are present on the source-tree candidate but are not a
-claim about the currently published `0.17` package. These contracts remain
-strictly opt-in. Their builders derive protocol-owned members, while every
-verifier receives a non-null trusted Plan digest and independently observed
-capabilities, request, receipt, and delivery state as explicit context:
+ConsumptionPlan 1, Agent Host 2, and JudgmentTrace 1 are opt-in APIs in
+`@aikdna/kdna-core@0.18.0`. Plan 1 accepts only Capsule 2 plus Host 2: it has no
+downgrade or legacy adapter. The default Runtime path remains Capsule 1,
+ConsumptionPlan 0.9, and Agent Host 1. The opt-in builders derive
+protocol-owned members, while every verifier receives a non-null trusted Plan
+digest and independently observed capabilities, request, receipt, and delivery
+state as explicit context:
 
 ```js
 const {
