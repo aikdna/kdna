@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/aikdna/kdna/schema/manifest.schema.json",
-  "title": "KDNA Manifest v2",
-  "description": "Schema for kdna.json, the public metadata layer of a .kdna container.",
+  "title": "KDNA Manifest",
+  "description": "Schema for kdna.json, the public metadata layer of a .kdna container (kdna_version 1.0).",
   "type": "object",
   "required": [
     "kdna_version",
@@ -14,7 +14,6 @@
     "judgment_version",
     "created_at",
     "updated_at",
-    "creator",
     "compatibility",
     "payload"
   ],
@@ -22,7 +21,7 @@
   "properties": {
     "kdna_version": {
       "type": "string",
-      "description": "KDNA Asset Container wire discriminator.",
+      "description": "KDNA container version this manifest conforms to.",
       "enum": ["1.0"]
     },
     "asset_id": {
@@ -78,7 +77,7 @@
           "description": "Kind of creator identity represented by this record."
         }
       },
-      "description": "Who produced the asset. Provenance only; not a trust claim."
+      "description": "Optional record of who produced the asset. Provenance only; not a trust claim. Omit it when creator provenance is unavailable rather than inventing an identity."
     },
     "compatibility": {
       "type": "object",

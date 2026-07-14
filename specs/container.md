@@ -76,10 +76,6 @@ A minimal public manifest has this shape:
   "judgment_version": "1.0.0",
   "created_at": "2026-07-13T00:00:00Z",
   "updated_at": "2026-07-13T00:00:00Z",
-  "creator": {
-    "name": "Example Author",
-    "id": "example-author"
-  },
   "compatibility": {
     "min_loader_version": "1.0.0",
     "profile": "judgment-profile-v1"
@@ -107,6 +103,12 @@ A minimal public manifest has this shape:
   }
 }
 ```
+
+`creator` is optional Runtime provenance, not an authorship requirement or a
+trust claim. If present, it MUST contain a non-empty `name`. If provenance is
+not available, producers omit the block; they MUST NOT invent placeholder
+identities such as `"Anonymous"` or `"Unknown"`. Authoring-source identity
+requirements are defined separately and do not change this container rule.
 
 `kdna_version` is the sole container wire discriminator. Its current accepted
 value is `"1.0"`; it is not a product-generation or marketing label. Removed

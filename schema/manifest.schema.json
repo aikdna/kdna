@@ -14,7 +14,6 @@
     "judgment_version",
     "created_at",
     "updated_at",
-    "creator",
     "compatibility",
     "payload"
   ],
@@ -78,7 +77,7 @@
           "description": "Kind of creator identity represented by this record."
         }
       },
-      "description": "Who produced the asset. Provenance only; not a trust claim."
+      "description": "Optional record of who produced the asset. Provenance only; not a trust claim. Omit it when creator provenance is unavailable rather than inventing an identity."
     },
     "compatibility": {
       "type": "object",
@@ -200,6 +199,24 @@
       "additionalProperties": {
         "type": "string"
       }
+    },
+    "extends": {
+      "description": "Asset inheritance declaration (Story 12). This asset inherits judgment content from the named base asset. Distinct from 'dependencies' (peer composition): 'extends' creates a single-inheritance hierarchy where the child specialises the parent. The child's cards override the parent's cards with the same ID; parent cards not overridden are inherited. Format: '@scope/name@semver-range' string, or an object with 'name' and optional 'version' fields.",
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Scoped asset name with optional version, e.g. '@aikdna/sales@^1.0.0'."
+        },
+        {
+          "type": "object",
+          "required": ["name"],
+          "additionalProperties": false,
+          "properties": {
+            "name":    { "type": "string", "description": "Scoped asset name, e.g. '@aikdna/sales'." },
+            "version": { "type": "string", "description": "Semver range, e.g. '^1.0.0'. Defaults to '*' if absent." }
+          }
+        }
+      ]
     },
     "encryption": { "type": "object" },
     "load_contract": { "$ref": "load-contract.schema.json" },

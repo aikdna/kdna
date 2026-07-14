@@ -22,6 +22,7 @@ const LEGACY_MIMETYPE = ['application/vnd', 'aikdna', 'kdna+zip'].join('.');
 const { validateManifest } = require('../src/lint-pure.js');
 const { createKdnaAssetReader } = require('../src/asset-reader.js');
 const packagedManifestSchema = require('../schema/manifest.schema.json');
+const authoritativeManifestSchema = require('../../../schema/manifest.schema.json');
 
 test('Core root exports single-format public API', () => {
   assert.equal(typeof core.MIMETYPE, 'string', 'MIMETYPE exported');
@@ -181,6 +182,72 @@ test('packaged manifest schema exposes only the single wire contract', () => {
   assert.deepEqual(packagedManifestSchema.properties.payload.properties.encoding.enum, ['cbor']);
   assert.equal(packagedManifestSchema.properties.format_version, undefined);
   assert.equal(packagedManifestSchema.properties.spec_version, undefined);
+});
+
+test('authoritative and packaged Runtime manifest schemas stay identical', () => {
+  assert.deepEqual(packagedManifestSchema, authoritativeManifestSchema);
+});
+
+test('Runtime manifest creator provenance is optional for validate and load', () => {
+  const repoRoot = path.resolve(__dirname, '..', '..', '..');
+  const sourceFixture = path.join(repoRoot, 'examples', 'minimal');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-optional-creator-'));
+  try {
+    const source = path.join(tmp, 'source');
+    fs.cpSync(sourceFixture, source, { recursive: true });
+    const manifestPath = path.join(source, 'kdna.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    delete manifest.creator;
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+    fs.writeFileSync(
+      path.join(source, 'checksums.json'),
+      JSON.stringify(v1.buildChecksums(source), null, 2),
+    );
+
+    const assetPath = path.join(tmp, 'no-creator.kdna');
+    v1.pack(source, assetPath);
+    const validation = core.validate(assetPath);
+    assert.equal(validation.overall_valid, true, validation.problems.join('; '));
+
+    const capsule = core.load(assetPath, { profile: 'compact', as: 'json' });
+    assert.equal(capsule.type, 'kdna.context.capsule');
+    assert.equal(capsule.domain, manifest.asset_id);
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+});
+
+test('Runtime manifest rejects an explicitly empty creator name', () => {
+  const repoRoot = path.resolve(__dirname, '..', '..', '..');
+  const sourceFixture = path.join(repoRoot, 'examples', 'minimal');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-empty-creator-'));
+  try {
+    const source = path.join(tmp, 'source');
+    fs.cpSync(sourceFixture, source, { recursive: true });
+    const manifestPath = path.join(source, 'kdna.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    manifest.creator = { name: '' };
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+    fs.writeFileSync(
+      path.join(source, 'checksums.json'),
+      JSON.stringify(v1.buildChecksums(source), null, 2),
+    );
+
+    const assetPath = path.join(tmp, 'empty-creator.kdna');
+    v1.pack(source, assetPath);
+    const validation = core.validate(assetPath);
+    assert.equal(validation.overall_valid, false);
+    assert.equal(validation.schema_valid, false);
+    assert.ok(
+      validation.problems.some(
+        (problem) => problem.includes('/creator/name') && problem.includes('fewer than 1'),
+      ),
+      validation.problems.join('; '),
+    );
+    assert.throws(() => core.load(assetPath), /LoadPlan denied loading/);
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
 });
 
 test('asset reader verifySync enforces kdna_version and current mimetype', () => {

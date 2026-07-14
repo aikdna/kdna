@@ -248,7 +248,10 @@ Otherwise, stay silent about the loading mechanics.
 
 - Not a list of available KDNA domains (those are installed `.kdna` assets, discovered on demand)
 - Not a registry browser (use `kdna list --available` CLI)
-- Not a domain creator. Agents may draft judgment proposals or candidate cards, but trusted `.kdna` assets require Human Lock and Studio-compatible compile/export.
+- Not an authoring workflow. Agents may create assets through official authoring
+  and compile/export tools; this loader skill only discovers and consumes the
+  resulting `.kdna` files. Human Lock is optional provenance or an explicit
+  representation claim, not a prerequisite for a valid or loadable asset.
 - Not an auto-loader that runs on every request — you decide per
   request whether the task needs KDNA at all
 

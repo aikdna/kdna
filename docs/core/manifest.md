@@ -17,11 +17,10 @@ The manifest is a single JSON object at the root of the container, stored as `kd
 | `judgment_version` | semver | The semantic version of the **encoded judgment system**. Two assets with the same `judgment_version` are semantically equivalent for matching. |
 | `created_at` | ISO 8601 | When the asset was first created. |
 | `updated_at` | ISO 8601 | When this release of the asset was produced. |
-| `creator` | object | Who produced the asset. See below. |
 | `compatibility` | object | Loader-version requirements and payload profile identifier. |
 | `payload` | object | Path, encoding, and encryption status of the payload entry. |
 
-## `creator` object
+## Optional `creator` object
 
 ```json
 {
@@ -30,7 +29,15 @@ The manifest is a single JSON object at the root of the container, stored as `kd
 }
 ```
 
-`creator.name` is the only required field. `creator.id` is optional. The `creator` block does NOT include a trust claim, an endorsement, or a verification status. The presence of a `creator` block is a fact about provenance, not a statement about reliability.
+The entire `creator` block is optional Runtime provenance. When the block is
+present, `creator.name` is required and must be non-empty; `creator.id` is
+optional. The block does NOT include a trust claim, an endorsement, or a
+verification status. Its presence records provenance, not reliability.
+
+When creator provenance is unavailable, omit `creator`. Do not synthesize
+placeholder identities such as `"Anonymous"` or `"Unknown"` merely to satisfy
+metadata. Authoring-source identity requirements are a separate contract from
+this Runtime container manifest.
 
 ## `compatibility` object
 
@@ -51,11 +58,11 @@ The manifest is a single JSON object at the root of the container, stored as `kd
 | `encoding` | string | MUST be `cbor`. JSON payload bytes are rejected. |
 | `encrypted` | boolean | Whether `payload.kdnab` contains an encrypted CBOR envelope. |
 
-Optional top-level metadata includes `summary`, `description`, `language`,
-`languages`, `license`, `keywords`, `domain_field`, `lineage`, `digests`,
-`signatures`, `dependencies`, `encryption`, `load_contract`, `scope`, and
-`evidence_claims`. Evidence claims are descriptive and optional; they do not
-affect format validity or grant official approval.
+Optional top-level metadata includes `creator`, `summary`, `description`,
+`language`, `languages`, `license`, `keywords`, `domain_field`, `lineage`,
+`digests`, `signatures`, `dependencies`, `encryption`, `load_contract`,
+`scope`, and `evidence_claims`. Evidence claims are descriptive and optional;
+they do not affect format validity or grant official approval.
 
 ## `lineage` object
 
@@ -91,10 +98,6 @@ Phase 1 **does not** implement fork/adapt behaviour. The `type` enum covers the 
   "judgment_version": "1.0.0",
   "created_at": "2026-06-16T00:00:00Z",
   "updated_at": "2026-06-16T00:00:00Z",
-  "creator": {
-    "name": "Example Author",
-    "id": "optional-author-id"
-  },
   "compatibility": {
     "min_loader_version": "1.0.0",
     "profile": "judgment-profile-v1"
