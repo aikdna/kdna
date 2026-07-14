@@ -14,6 +14,7 @@ const workpackPure = require('./workpack-pure');
 const v1 = require('./v1');
 const runtimeApi = require('./runtime-api');
 const capsuleV2 = require('./capsule-v2');
+const executionContractV1 = require('./execution-contract-v1');
 
 module.exports = {
   ...publicApi,
@@ -29,4 +30,5 @@ module.exports = {
   ...v1,
   ...runtimeApi,
   ...capsuleV2,
+  ...executionContractV1,
 };

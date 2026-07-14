@@ -57,6 +57,7 @@ import cryptoProfile from './crypto-profile.js';
 import externalKeyGrant from './external-key-grant.js';
 import publicApi from './public-api.js';
 import capsuleV2 from './capsule-v2.js';
+import executionContractV1 from './execution-contract-v1.js';
 
 export const openKDNA = publicApi.openKDNA;
 export const openKDNASync = publicApi.openKDNASync;
@@ -89,6 +90,22 @@ export const computeCapsuleDeliveryDigest = capsuleV2.computeCapsuleDeliveryDige
 export const buildCapsuleV2 = capsuleV2.buildCapsuleV2;
 export const loadCapsuleV2 = capsuleV2.loadCapsuleV2;
 export const adaptCapsuleV2ToV1 = capsuleV2.adaptCapsuleV2ToV1;
+
+export const KDNAExecutionContractError = executionContractV1.KDNAExecutionContractError;
+export const PLAN_DIGEST_PROFILE = executionContractV1.PLAN_DIGEST_PROFILE;
+export const HOST_PROTOCOL = executionContractV1.HOST_PROTOCOL;
+export const DEFAULT_CORE_CAPSULE_VERSIONS = executionContractV1.DEFAULT_CORE_CAPSULE_VERSIONS;
+export const parseExecutionContractJsonV1 = executionContractV1.parseExecutionContractJsonV1;
+export const computeConsumptionPlanDigestV1 = executionContractV1.computeConsumptionPlanDigestV1;
+export const buildConsumptionPlanV1 = executionContractV1.buildConsumptionPlanV1;
+export const validateConsumptionPlanV1 = executionContractV1.validateConsumptionPlanV1;
+export const negotiateExecutionPairV1 = executionContractV1.negotiateExecutionPairV1;
+export const buildAgentHost2RequestV1 = executionContractV1.buildAgentHost2RequestV1;
+export const validateAgentHost2RequestV1 = executionContractV1.validateAgentHost2RequestV1;
+export const validateAgentHost2ReceiptV1 = executionContractV1.validateAgentHost2ReceiptV1;
+export const deriveBudgetEvidenceV1 = executionContractV1.deriveBudgetEvidenceV1;
+export const buildJudgmentTraceV1 = executionContractV1.buildJudgmentTraceV1;
+export const validateJudgmentTraceV1 = executionContractV1.validateJudgmentTraceV1;
 
 export const STANDARD_ENTRIES = assetReader.STANDARD_ENTRIES;
 export const createKdnaAssetReader = assetReader.createKdnaAssetReader;

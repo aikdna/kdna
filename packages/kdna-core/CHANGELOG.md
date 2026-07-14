@@ -22,6 +22,13 @@
   unobserved finite limits propagate to an honest `not_observed` overall
   comparison, and record Host-side P mismatch as a correlated pre-execution
   rejection instead of an impossible terminal state.
+- Expose the strict opt-in ConsumptionPlan 1, Agent Host 2, budget-evidence,
+  and JudgmentTrace 1 builders and validators from CJS, ESM, and TypeScript.
+  The conformance runner now consumes this single packaged implementation.
+- Add a bounded raw execution-contract JSON parser that rejects duplicate
+  decoded keys, invalid UTF-8 and Unicode, BOMs, hostile-key prototype
+  mutation, non-finite numbers, and trailing or non-RFC JSON input before
+  Host 2 object validation.
 
 ### Changed
 

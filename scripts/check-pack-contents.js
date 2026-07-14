@@ -12,6 +12,7 @@ const defaultNpmCache = path.join(os.tmpdir(), 'kdna-npm-cache');
 const requiredCoreFiles = [
   'src/asset-reader.js',
   'src/capsule-v2.js',
+  'src/execution-contract-v1.js',
   'src/index.js',
   'src/types.d.ts',
   'schema/digest-evidence.schema.json',

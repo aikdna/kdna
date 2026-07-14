@@ -83,6 +83,64 @@ const deliveryDigest = computeCapsuleDeliveryDigest(capsule2);
 const legacyCapsule = adaptCapsuleV2ToV1(capsule2);
 ```
 
+ConsumptionPlan 1, Agent Host 2, and JudgmentTrace 1 are also strict opt-in
+contracts. Their builders derive protocol-owned members, while every verifier
+receives the trusted Plan digest and independently observed capabilities,
+request, and receipt as explicit context:
+
+```js
+const {
+  parseExecutionContractJsonV1,
+  buildConsumptionPlanV1,
+  buildAgentHost2RequestV1,
+  validateAgentHost2ReceiptV1,
+  buildJudgmentTraceV1,
+} = require('@aikdna/kdna-core');
+
+const plan = buildConsumptionPlanV1({
+  plan_id: 'plan_0123456789abcdef',
+  created_at: new Date().toISOString(),
+  task,
+  asset_ref,
+  projection_profile: 'compact',
+  budget,
+  constraints: { enforce_before_host: true, reject_on_exceed: true },
+  trace_policy: { emit: true, storage: 'session' },
+});
+
+const executionContext = {
+  plan,
+  trustedPlanDigest: plan.integrity.plan_digest,
+  capabilities: observedHostCapabilities,
+  coreCapsuleVersions: ['2.0', '1.0'],
+};
+const request = buildAgentHost2RequestV1(
+  { request_id: 'host_0123456789abcdef01234567', capsule: capsule2 },
+  executionContext,
+);
+
+// Parse raw Host JSON before object-level Schema/correlation validation.
+const receipt = parseExecutionContractJsonV1(rawReceiptBytes);
+const receiptValidation = validateAgentHost2ReceiptV1(receipt, { request });
+if (!receiptValidation.valid) throw new Error(receiptValidation.code);
+
+const trace = buildJudgmentTraceV1(traceInput, {
+  ...executionContext,
+  request,
+  receipt,
+});
+```
+
+`parseExecutionContractJsonV1()` is the raw protocol boundary. It rejects
+duplicate decoded object keys, invalid UTF-8, BOMs, non-scalar Unicode,
+non-finite numbers, trailing input, and non-RFC JSON grammar before an object
+validator runs. Its default limits are 2 MiB and 64 nested containers;
+`maxBytes` and `maxDepth` may only tighten those limits. Error
+`code_unit_offset` details are UTF-16 code-unit indexes, not UTF-8 byte
+offsets. Parsed object validators cannot reconstruct overwritten duplicate
+keys, invalid original bytes, or a stripped BOM, so Host adapters must not use
+plain `JSON.parse()` for untrusted protocol messages.
+
 An A, C, or E mismatch is returned as evidence by `computeDigestEvidence()`
 and blocks `loadCapsuleV2()` with a digest-specific error. The adapter always
 maps E to Capsule 1 `asset_digest`; it never substitutes A or C. Core computes
