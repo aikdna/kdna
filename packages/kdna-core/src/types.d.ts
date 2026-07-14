@@ -382,16 +382,94 @@ export interface KdnaDecryptOptions {
 
 export function createKdnaAssetReader(): KdnaAssetReader;
 
-export const LICENSED_ENTRY_PROFILE: string;
+export const LICENSED_ENTRY_PROFILE: 'kdna-licensed-entry-v1';
+export const LICENSED_EXPERIMENTAL_PROFILE: 'kdna-licensed-entry-experimental';
+export const PASSWORD_PROTECTED_PROFILE: 'kdna-password-protected-v1';
+export const PASSWORD_PROTECTED_SCRYPT_PROFILE: 'kdna-password-protected-v1-scrypt';
+export const ALG: 'AES-256-GCM';
+export const RFC_KDF: 'HKDF-SHA256';
+export const RFC_KEY_WRAPPING: 'AES-256-KW';
+export const LEGACY_KDF: 'scrypt-sha256';
+export const PASSWORD_KDF: 'Argon2id';
+export const SCRYPT_KDF: 'scrypt-sha256';
+
+export type KDNACryptoInput = string | Uint8Array;
 
 export interface LicensedEntryEnvelope {
-  profile: string;
+  profile: 'kdna-licensed-entry-v1';
+  alg: 'AES-256-GCM';
+  kdf: 'HKDF-SHA256';
+  key_wrapping: 'AES-256-KW';
+  wrapped_key: string;
+  iv: string;
+  tag: string;
+  ciphertext: string;
+}
+
+export interface LicensedEntryLegacyEnvelope {
+  profile: 'kdna-licensed-entry-experimental';
   alg: 'AES-256-GCM';
   kdf: 'scrypt-sha256';
   salt: string;
   iv: string;
   tag: string;
   ciphertext: string;
+}
+
+export interface KDNAPasswordKdfParams {
+  salt: string;
+  memory_kib?: number;
+  iterations?: number;
+  parallelism?: number;
+}
+
+export interface KDNAScryptKdfParams {
+  salt: string;
+  N?: number;
+  r?: number;
+  p?: number;
+}
+
+export interface KDNAProtectedEntryEnvelope {
+  profile: 'kdna-password-protected-v1';
+  alg: 'AES-256-GCM';
+  kdf: 'Argon2id';
+  key_wrapping: 'AES-256-KW';
+  password_kdf: Required<KDNAPasswordKdfParams>;
+  key_slots: Array<{
+    slot: 'password' | 'recovery';
+    wrap: 'AES-256-KW';
+    wrapped_key: string;
+  }>;
+  iv: string;
+  tag: string;
+  ciphertext: string;
+}
+
+export interface KDNAScryptProtectedEntryEnvelope {
+  profile: 'kdna-password-protected-v1-scrypt';
+  alg: 'AES-256-GCM';
+  kdf: 'scrypt-sha256';
+  key_wrapping: 'AES-256-KW';
+  scrypt_params: Required<KDNAScryptKdfParams>;
+  key_slots: Array<{
+    slot: 'password';
+    wrap: 'AES-256-KW';
+    wrapped_key: string;
+  }>;
+  iv: string;
+  tag: string;
+  ciphertext: string;
+}
+
+export interface KDNALicensedEntryOptions {
+  entryName: string;
+  manifest?: KDNAManifest;
+  licenseKey: KDNACryptoInput;
+}
+
+export interface KDNALicensedEntryLegacyOptions extends KDNALicensedEntryOptions {
+  machineFingerprint: string;
 }
 
 export function deriveLicensedEntryKey(options: {
@@ -401,33 +479,110 @@ export function deriveLicensedEntryKey(options: {
   keyLength?: number;
 }): Uint8Array;
 
-export function encryptLicensedEntry(
-  plaintext: string | Uint8Array,
+export function hkdfSha256(
+  ikm: KDNACryptoInput,
+  salt?: Uint8Array | null,
+  info?: KDNACryptoInput,
+  length?: number,
+): Uint8Array;
+export function aesWrap(key: Uint8Array, plaintext: Uint8Array): Uint8Array;
+export function aesUnwrap(key: Uint8Array, ciphertext: Uint8Array): Uint8Array;
+export function deriveWrappingKey(licenseKey: KDNACryptoInput, info?: KDNACryptoInput): Uint8Array;
+export function generateCEK(): Uint8Array;
+export function wrapCEK(cek: Uint8Array, wrappingKey: Uint8Array): Uint8Array;
+export function unwrapCEK(wrappedCek: Uint8Array, wrappingKey: Uint8Array): Uint8Array;
+
+export function encryptLicensedEntryV1(
+  plaintext: KDNACryptoInput,
+  options: KDNALicensedEntryOptions,
+): LicensedEntryEnvelope;
+export function decryptLicensedEntryV1(
+  envelope: KDNACryptoInput | LicensedEntryEnvelope,
+  options: KDNALicensedEntryOptions,
+): Uint8Array;
+export function derivePasswordKey(
+  password: KDNACryptoInput,
+  params: KDNAPasswordKdfParams,
+): Uint8Array;
+export function generateRecoveryCode(): string;
+export function decodeRecoveryCode(code: string): Uint8Array;
+export function encryptProtectedEntry(
+  plaintext: KDNACryptoInput,
   options: {
     entryName: string;
     manifest?: KDNAManifest;
-    licenseKey: string;
-    machineFingerprint: string;
+    password: KDNACryptoInput;
+    includeRecovery?: boolean;
+    recoveryCode?: string;
   },
+): KDNAProtectedEntryEnvelope;
+export function decryptProtectedEntry(
+  envelope: KDNACryptoInput | KDNAProtectedEntryEnvelope,
+  options: {
+    entryName: string;
+    manifest?: KDNAManifest;
+  } & (
+    | { password: KDNACryptoInput; recoveryCode?: string }
+    | { password?: undefined; recoveryCode: string }
+  ),
+): Uint8Array;
+export function createPasswordDecryptEntry(options: {
+  password: KDNACryptoInput;
+}): NonNullable<KdnaDecryptOptions['decryptEntry']>;
+export function createRecoveryDecryptEntry(options: {
+  recoveryCode: string;
+}): NonNullable<KdnaDecryptOptions['decryptEntry']>;
+export function derivePasswordKeyScrypt(
+  password: KDNACryptoInput,
+  params: KDNAScryptKdfParams,
+): Uint8Array;
+export function encryptProtectedEntryScrypt(
+  plaintext: KDNACryptoInput,
+  options: {
+    entryName: string;
+    manifest?: KDNAManifest;
+    password: KDNACryptoInput;
+  },
+): KDNAScryptProtectedEntryEnvelope;
+export function decryptProtectedEntryScrypt(
+  envelope: KDNACryptoInput | KDNAScryptProtectedEntryEnvelope,
+  options: {
+    entryName: string;
+    manifest?: KDNAManifest;
+    password: KDNACryptoInput;
+  },
+): Uint8Array;
+export function createPasswordDecryptEntryScrypt(options: {
+  password: KDNACryptoInput;
+}): NonNullable<KdnaDecryptOptions['decryptEntry']>;
+export function encryptLicensedEntryLegacy(
+  plaintext: KDNACryptoInput,
+  options: KDNALicensedEntryLegacyOptions,
+): LicensedEntryLegacyEnvelope;
+export function decryptLicensedEntryLegacy(
+  envelope: KDNACryptoInput | LicensedEntryLegacyEnvelope,
+  options: KDNALicensedEntryLegacyOptions,
+): Uint8Array;
+
+export function encryptLicensedEntry(
+  plaintext: string | Uint8Array,
+  options: KDNALicensedEntryOptions,
 ): LicensedEntryEnvelope;
 
 export function decryptLicensedEntry(
-  envelope: string | Uint8Array | LicensedEntryEnvelope,
-  options: {
-    entryName: string;
-    manifest?: KDNAManifest;
-    licenseKey: string;
-    machineFingerprint: string;
-  },
+  envelope: KDNACryptoInput | LicensedEntryEnvelope | LicensedEntryLegacyEnvelope,
+  options: KDNALicensedEntryOptions & { machineFingerprint?: string },
 ): Uint8Array;
 
 export function createLicensedDecryptEntry(options: {
-  licenseKey: string;
-  machineFingerprint: string;
+  licenseKey: KDNACryptoInput;
+  machineFingerprint?: string;
 }): NonNullable<KdnaDecryptOptions['decryptEntry']>;
 
 export const EXTERNAL_ENVELOPE_PROFILE: 'kdna-envelope-external-grant-v1';
 export const EXTERNAL_GRANT_PROFILE: 'kdna-key-grant-v1';
+export const EXTERNAL_AAD_PROFILE: 'kdna-external-asset-cek-v1';
+export const DEVICE_KEK_PROFILE: 'kdna-device-grant-kek-v1';
 
 export class KDNAExternalGrantError extends Error {
   code: string;
@@ -784,12 +939,7 @@ export function loadCapsuleV2(
 export function adaptCapsuleV2ToV1(capsule: KDNARuntimeCapsuleV2): KDNARuntimeCapsule;
 
 export type KDNAJsonValue =
-  | null
-  | boolean
-  | number
-  | string
-  | KDNAJsonValue[]
-  | { [key: string]: KDNAJsonValue };
+  null | boolean | number | string | KDNAJsonValue[] | { [key: string]: KDNAJsonValue };
 
 export interface KDNAExecutionContractValidationError {
   code: string;
@@ -967,7 +1117,8 @@ export interface KDNAJudgmentTraceV1 {
   };
   parent_trace_id: string | null;
   timestamp: string;
-  overall_status: 'execution_completed' | 'blocked' | 'execution_failed' | 'cancelled' | 'timed_out';
+  overall_status:
+    'execution_completed' | 'blocked' | 'execution_failed' | 'cancelled' | 'timed_out';
   runtime_contract: {
     plan_capsule_versions: ['2.0'];
     core_capsule_versions: Array<'2.0' | '1.0'>;
@@ -998,11 +1149,7 @@ export interface KDNAJudgmentTraceV1 {
     host_echoed: string | null;
     delivered_capsule_version: '2.0' | null;
     host_boundary_comparison:
-      | 'matched'
-      | 'mismatched'
-      | 'not_delivered'
-      | 'not_observed'
-      | 'unavailable';
+      'matched' | 'mismatched' | 'not_delivered' | 'not_observed' | 'unavailable';
     request_id: string | null;
   };
   projection_actual: {
@@ -1238,6 +1385,23 @@ export function composeKDNA(
 export const MIMETYPE: string;
 export const REQUIRED_DIR_ENTRIES: string[];
 
+export interface KDNALayoutEntry {
+  name: string;
+  data: Uint8Array;
+  method: number;
+  [key: string]: unknown;
+}
+
+export interface KDNALayout {
+  kind: 'dir' | 'file' | 'memory';
+  map: Record<string, Uint8Array | null>;
+  manifest: KDNAManifest;
+  entries: KDNALayoutEntry[] | null;
+  containerDigest: string | null;
+}
+
+export function readLayout(inputPath: string): KDNALayout;
+
 export interface KDNAChecksumEntry {
   algorithm: 'sha256';
   value: string;
@@ -1347,10 +1511,37 @@ export function loadAsset(
     as?: 'json' | 'prompt' | string;
   },
 ): KDNARuntimeCapsule | Record<string, any>;
+export function buildCapsule(
+  loadResult: {
+    profile: string;
+    content?: Record<string, unknown>;
+    extends_chain?: unknown[];
+    inheritance_applied?: boolean;
+    resolved_dependencies?: unknown[];
+    rag_isolation_policy?: Record<string, unknown>;
+    [key: string]: unknown;
+  },
+  layout: KDNALayout,
+  profile: string,
+  options?: {
+    _validation?: { schema_valid?: boolean; signature_valid?: boolean | null };
+  },
+): KDNARuntimeCapsule;
 export const FORBIDDEN_OUTPUT_TERMS: readonly string[];
+
+export interface KDNASemver {
+  major: number;
+  minor: number;
+  patch: number;
+}
+
+export function parseSemver(version: string): KDNASemver | null;
+export function compareSemver(left: string, right: string): number;
+export function satisfies(version: string, range: string): boolean;
 
 // Lint
 export function lintDomain(dataMap: KDNAFileDataMap): LintResult;
+export function validateManifest(manifest: unknown): LintResult;
 
 // Validate
 export function validateDomainSchema(
@@ -1381,3 +1572,198 @@ export function loadAndCompose(
   dataMaps: KDNAFileDataMap[],
   options?: LoadOptions & { separator?: string },
 ): { domains: LoadedDomain[]; context: string; activeIndices: number[] };
+
+export interface KDNAComposableAxiom {
+  id: string;
+  one_sentence: string;
+  applies_when?: string[];
+  does_not_apply_when?: string[];
+  failure_risk?: string;
+}
+
+export interface KDNAComposableDomain {
+  id: string;
+  name?: string;
+  role?: string;
+  required?: boolean;
+  core: {
+    meta?: { domain?: string };
+    axioms?: KDNAComposableAxiom[];
+    stances?: Array<string | { stance: string }>;
+    trigger_signals?: string[];
+    negative_signals?: string[];
+    [key: string]: unknown;
+  };
+  patterns?: {
+    misunderstandings?: Array<{
+      id: string;
+      wrong: string;
+      correct: string;
+      failure_risk?: string;
+    }>;
+    terminology?: {
+      banned_terms?: Array<string | { term: string; replace_with?: string }>;
+    };
+    self_check?: Array<string | { question: string }>;
+    [key: string]: unknown;
+  };
+}
+
+export interface KDNAAttribution {
+  domain: string;
+  type: 'axiom' | 'misunderstanding' | 'banned_term' | 'self_check';
+  index: number;
+  id?: string;
+  term?: string;
+}
+
+export function composeContextWithAttribution(
+  domains: KDNAComposableDomain[],
+  options?: { separator?: string },
+): { context: string; attributionMap: Record<string, KDNAAttribution> };
+
+export interface KDNADomainSelection {
+  id: string;
+  name?: string;
+  role?: string;
+  reason: 'required' | 'signal_match' | 'blocked by does_not_apply_when' | 'no signal match';
+}
+
+export function classifySignalsAcrossDomains(
+  input: string,
+  domainEntries: KDNAComposableDomain[],
+): { selected: KDNADomainSelection[]; excluded: KDNADomainSelection[] };
+
+export interface KDNAClusterManifest {
+  domains?: Array<{ id: string; role?: string; required?: boolean }>;
+  [key: string]: unknown;
+}
+
+export interface KDNALoadedClusterDomain extends KDNAComposableDomain {
+  name: string;
+  role: string;
+  required: boolean;
+  patterns: NonNullable<KDNAComposableDomain['patterns']>;
+}
+
+export function loadCluster(
+  clusterManifestPath: string,
+  domainLoader: (domainId: string) => {
+    core: KDNAComposableDomain['core'];
+    patterns: NonNullable<KDNAComposableDomain['patterns']>;
+  } | null,
+): { manifest: KDNAClusterManifest; domains: KDNALoadedClusterDomain[]; errors: string[] };
+
+export interface KDNADomainConflict {
+  type: 'term_conflict' | 'stance_conflict';
+  domains: string[];
+  description: string;
+}
+
+export function detectDomainConflicts(domains: KDNAComposableDomain[]): KDNADomainConflict[];
+
+export function generateClusterTrace(input: {
+  input: string;
+  loadedDomains: Array<{ id?: string; name?: string }>;
+  activeDomains: Array<{ id?: string; name?: string }>;
+  conflicts: KDNADomainConflict[];
+}): {
+  input: string;
+  timestamp: string;
+  loaded_domains: string[];
+  active_domains: string[];
+  active_count: number;
+  domains_excluded: number;
+  conflicts: KDNADomainConflict[];
+};
+
+export interface KDNAWorkPackAssetRef {
+  name: string;
+  version: string;
+  digest?: string;
+  role: 'primary' | 'constraint' | 'fallback';
+}
+
+export interface KDNAWorkPackSkill {
+  name: string;
+  type?: string;
+  required?: boolean;
+  mcp_server?: string | null;
+  fallback?: string | null;
+}
+
+export interface KDNAWorkPackManifest {
+  format: 'kdna-workpack';
+  format_version: string;
+  name: string;
+  version: string;
+  description: string;
+  status: 'draft' | 'experimental' | 'stable' | 'deprecated';
+  access?: 'public' | 'licensed' | 'remote' | 'enterprise' | 'partner';
+  license?: string;
+  kdna:
+    | { mode: 'single'; asset: KDNAWorkPackAssetRef }
+    | { mode: 'cluster'; assets: KDNAWorkPackAssetRef[] };
+  skills?: KDNAWorkPackSkill[];
+  templates?: { task?: string; output?: string };
+  review_gates?: string[];
+  risk_policy?: string;
+  trace_policy?: string;
+  evals?: string;
+}
+
+export interface KDNAWorkPackValidationResult {
+  valid: boolean;
+  errors: string[];
+}
+
+export interface KDNAWorkPackValidator {
+  (manifest: KDNAWorkPackManifest): boolean;
+  errors?: Array<{ instancePath?: string; message?: string }> | null;
+}
+
+export interface KDNAWorkPackAjv {
+  compile(schema: unknown): KDNAWorkPackValidator;
+}
+
+export const WORK_PACK_SCHEMA: Readonly<Record<string, unknown>>;
+export function validateWorkPackManifest(
+  manifest: KDNAWorkPackManifest,
+  options?: { ajv?: KDNAWorkPackAjv },
+): KDNAWorkPackValidationResult;
+export function checkWorkPackStructure(
+  manifest: KDNAWorkPackManifest,
+  rootDir: string,
+): { complete: boolean; missing: string[] };
+export function inspectWorkPack(
+  manifest: KDNAWorkPackManifest,
+  rootDir: string,
+): {
+  name: string;
+  version: string;
+  description: string;
+  status: KDNAWorkPackManifest['status'];
+  access: NonNullable<KDNAWorkPackManifest['access']>;
+  license: string;
+  format_version: string;
+  kdna: {
+    mode: 'single' | 'cluster';
+    assets: Array<Pick<KDNAWorkPackAssetRef, 'name' | 'version' | 'role'>>;
+  };
+  skills: Array<{
+    name: string;
+    type: string;
+    required: boolean;
+    fallback: string | null;
+  }>;
+  templates: { task: string | null; output: string | null } | null;
+  review_gates: number;
+  has_risk_policy: boolean;
+  has_trace_policy: boolean;
+  has_evals: boolean;
+  structural_complete: boolean;
+  missing_files: string[];
+};
+export function loadWorkPack(
+  dirPath: string,
+): { manifest: unknown; error: null } | { manifest: null; error: string };

@@ -58,6 +58,10 @@
 
 ### Fixed
 
+- Make the ESM root and TypeScript declarations expose every existing CJS
+  public value, including the crypto, external-grant, Work Pack, composition,
+  container, and semver helpers. Permanent source and packed-install checks now
+  block entrypoint drift.
 - Require a non-null independently trusted Plan digest throughout the strict
   Plan 1 / Host 2 chain, snapshot hostile validation contexts without invoking
   accessors, and keep pre-Host budget enforcement unavailable as a public
