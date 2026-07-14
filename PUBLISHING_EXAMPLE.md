@@ -1,6 +1,9 @@
-# Publishing Example
+# Historical Registry Publishing Example
 
-This is the public release path from Studio export to registry PR (v0.7+; the earlier v1.0-rc label is superseded).
+> **Status: Historical.** This document preserves the superseded registry-PR
+> workflow. Registry distribution and install-time registry trust are not KDNA
+> Core surfaces. Current assets are distributed as `.kdna` files and validated
+> with the current Core and conformance commands.
 
 ## 1. Export A Trusted Asset
 
@@ -58,10 +61,11 @@ Do not publish registry entries that point to raw dev directories.
 
 ```bash
 npm run conformance
-node tests/registry-trust/run.mjs
+npm test
 ```
 
-The registry must fail closed for:
+An external registry implementation owns its own end-to-end tests and should
+fail closed for:
 
 - digest mismatch
 - yanked asset
@@ -71,6 +75,9 @@ The registry must fail closed for:
 - invalid media type
 
 ## 5. Open PR
+
+This section applies only to an independently operated registry. It is not a
+KDNA Core release step.
 
 Include:
 

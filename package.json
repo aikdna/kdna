@@ -26,7 +26,6 @@
     "conformance:cluster-manifest": "node conformance/ecosystem-profile-0.9/run.mjs --contract cluster-manifest",
     "conformance:evidence-claim": "node conformance/ecosystem-profile-0.9/run.mjs --contract evidence-claim",
     "certify:asset-loader": "node conformance/run.mjs --profile asset-loader",
-    "test:registry-trust": "node tests/registry-trust/run.mjs",
     "smoke:installed-domains": "bash scripts/smoke-installed-domains.sh",
     "check:pack": "node scripts/check-pack-contents.js",
     "ecosystem-gate": "node scripts/ecosystem-gate.js",
