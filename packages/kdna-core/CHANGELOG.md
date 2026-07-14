@@ -10,6 +10,8 @@
   Runtime load entry points continue to emit frozen Capsule 1 values.
 - Accept independent expected A/C/E values through `expectedDigests` and block
   Capsule 2 emission with digest-specific mismatch codes.
+- Preserve the four frozen Capsule 1 inheritance, dependency, and RAG
+  extension fields through the one-way Capsule 2 compatibility member.
 
 ### Changed
 
@@ -39,6 +41,11 @@
 
 ### Fixed
 
+- Check internal C/E declarations and canonical/legacy alias agreement before
+  independent expected values, so external matches cannot hide conflicting
+  asset declarations.
+- Validate public Capsule 2 builder and adapter inputs and outputs against the
+  packaged schemas and cross-field success invariants.
 - Sort canonical content-tree and signing entry paths by UTF-8 bytes while
   retaining the existing UTF-16 JSON object-key order. U+E000/U+10000 vectors
   freeze the distinction.

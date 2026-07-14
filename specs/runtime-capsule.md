@@ -105,11 +105,21 @@ named honestly as `checksums.json.asset_digest` or
 Independent expected A/C/E values use `external_expected`; mismatches block
 with `KDNA_ASSET_DIGEST_MISMATCH`, `KDNA_CONTENT_DIGEST_MISMATCH`, or
 `KDNA_RUNTIME_ENTRY_SET_DIGEST_MISMATCH`, respectively.
+Internal C and E declarations are checked before any independent expectation.
+An external match cannot hide a mismatched manifest declaration, checksum
+declaration, or conflicting canonical/legacy aliases.
 
 Capsule 2 identity is `asset.asset_id`. A distinct historical Capsule 1
 `domain` may appear only as `compatibility.capsule_1_domain`; that member exists
 solely for the deterministic v2-to-v1 adapter and has no Capsule 2 identity or
 routing authority.
+
+Capsule 1 may also carry the frozen extension fields `extends_chain`,
+`inheritance_applied`, `resolved_dependencies`, and `rag_isolation_policy`.
+Capsule 2 carries those values unchanged under
+`compatibility.capsule_1_extensions` solely so the one-way adapter can
+reproduce the exact Capsule 1 value. They have no Capsule 2 identity, routing,
+digest, or trust authority.
 
 P (`kdna-capsule-jcs-v1`) is SHA-256 over RFC 8785 JCS bytes of the exact
 delivered Capsule. P is never embedded in the Capsule it hashes. Host request,

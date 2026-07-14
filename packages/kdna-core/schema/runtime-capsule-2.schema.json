@@ -116,10 +116,23 @@
     "compatibility": {
       "description": "Adapter-only values with no Capsule 2 identity or routing authority.",
       "type": "object",
-      "required": ["capsule_1_domain"],
+      "minProperties": 1,
       "additionalProperties": false,
       "properties": {
-        "capsule_1_domain": { "type": "string", "minLength": 1 }
+        "capsule_1_domain": { "type": "string", "minLength": 1 },
+        "capsule_1_extensions": { "$ref": "#/$defs/capsule1Extensions" }
+      }
+    },
+    "capsule1Extensions": {
+      "description": "Frozen Capsule 1 extension values carried only for exact one-way adapter parity.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "extends_chain": { "type": "array" },
+        "inheritance_applied": { "type": "boolean" },
+        "resolved_dependencies": { "type": "array" },
+        "rag_isolation_policy": { "type": "object" }
       }
     }
   }

@@ -100,6 +100,51 @@ test('explicit Capsule 2 remains opt-in and its adapter equals the direct frozen
   assert.notEqual(direct.asset_digest, capsule2.digests.asset.value);
 });
 
+test('non-minimal Capsule 1 extensions survive build and adapter parity exactly', () => {
+  const direct = core.loadAuthorized(GOLDEN_BYTES, { profile: 'compact', as: 'json' });
+  direct.trace.loaded_at = golden.loaded_at;
+  direct.extends_chain = [
+    { name: '@example/base', version: '1.2.3', path: '/fixtures/base.kdna' },
+  ];
+  direct.inheritance_applied = true;
+  direct.resolved_dependencies = [
+    {
+      name: '@example/reference',
+      version: '2.0.0',
+      path: '/fixtures/reference.kdna',
+      rag_namespace: '@example/reference@2.0.0',
+      status: 'loaded',
+      profile: 'compact',
+      content: { axioms: [{ id: 'dep-1', one_sentence: 'Dependency judgment.' }] },
+    },
+  ];
+  direct.rag_isolation_policy = {
+    default: 'fenced',
+    cross_namespace_blocked: true,
+    namespaces: ['@example/reference@2.0.0'],
+  };
+
+  const reader = core.createKdnaAssetReader();
+  const asset = reader.openSync(GOLDEN_BYTES);
+  const capsule2 = core.buildCapsuleV2({
+    capsule1: direct,
+    manifest: reader.readManifestSync(asset),
+    digests: core.computeDigestEvidence(GOLDEN_BYTES),
+    inputKind: 'packaged_bytes',
+    loadedAt: golden.loaded_at,
+  });
+  const validators = schemaValidators();
+
+  assert.deepEqual(capsule2.compatibility.capsule_1_extensions, {
+    extends_chain: direct.extends_chain,
+    inheritance_applied: direct.inheritance_applied,
+    resolved_dependencies: direct.resolved_dependencies,
+    rag_isolation_policy: direct.rag_isolation_policy,
+  });
+  assert.deepEqual(core.adaptCapsuleV2ToV1(capsule2), direct);
+  assert.equal(validators.capsule2(capsule2), true, JSON.stringify(validators.capsule2.errors));
+});
+
 test('C entry paths use UTF-8 byte order while JCS object keys retain UTF-16 order', () => {
   const bmpName = '\uE000.txt';
   const astralName = '\u{10000}.txt';
@@ -150,6 +195,20 @@ test('JCS rejects non-finite numbers, invalid Unicode, cyclic values, and non-JS
   );
 });
 
+test('JCS follows the RFC 8785 number and string serialization examples', () => {
+  assert.equal(
+    core.canonicalizeJcs({
+      numbers: [333333333.33333329, 1e30, 4.5, 2e-3, 1e-27],
+      literals: [null, true, false],
+    }),
+    '{"literals":[null,true,false],"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27]}',
+  );
+  assert.equal(
+    core.canonicalizeJcs({ string: '\u000f\n"\\€' }),
+    '{"string":"\\u000f\\n\\"\\\\€"}',
+  );
+});
+
 test('external A/C/E mismatches remain evidence and fail with stable blocking codes', () => {
   const wrong = `sha256:${'0'.repeat(64)}`;
   const validators = schemaValidators();
@@ -170,6 +229,106 @@ test('external A/C/E mismatches remain evidence and fail with stable blocking co
       (error) => error.code === code,
     );
   }
+});
+
+test('correct external C cannot hide a wrong internal C declaration', () => {
+  const wrong = `sha256:${'0'.repeat(64)}`;
+  const fixture = withModifiedSource((source) => {
+    const manifestPath = path.join(source, 'kdna.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    manifest.content_digest = wrong;
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  });
+  try {
+    const observed = core.computeDigestEvidence(fixture.assetPath);
+    const expectedDigests = {
+      content: { value: observed.content.value, source: 'install_receipt' },
+    };
+    const evidence = core.computeDigestEvidence(fixture.assetPath, { expectedDigests });
+    assert.equal(evidence.content.comparison.state, 'mismatched');
+    assert.equal(evidence.content.comparison.against, 'manifest_declaration');
+    assert.throws(
+      () => core.loadCapsuleV2(fixture.assetPath, { expectedDigests }),
+      (error) => error.code === 'KDNA_CONTENT_DIGEST_MISMATCH',
+    );
+  } finally {
+    fixture.cleanup();
+  }
+});
+
+test('conflicting top-level and authoring C declarations fail closed', () => {
+  const fixture = withModifiedSource((source) => {
+    const manifestPath = path.join(source, 'kdna.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    manifest.content_digest = `sha256:${'0'.repeat(64)}`;
+    manifest.authoring = {
+      ...(manifest.authoring || {}),
+      content_digest: `sha256:${'1'.repeat(64)}`,
+    };
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  });
+  try {
+    assert.throws(
+      () => core.computeDigestEvidence(fixture.assetPath),
+      (error) => error.code === 'KDNA_CONTENT_DIGEST_DECLARATION_CONFLICT',
+    );
+  } finally {
+    fixture.cleanup();
+  }
+});
+
+test('correct external E cannot hide a wrong checksum declaration or alias conflict', () => {
+  const wrong = `sha256:${'0'.repeat(64)}`;
+  const fixture = withModifiedSource(() => {});
+  try {
+    const checksumPath = path.join(fixture.source, 'checksums.json');
+    const checksums = JSON.parse(fs.readFileSync(checksumPath, 'utf8'));
+    checksums.entry_set_digest = wrong;
+    checksums.asset_digest = wrong;
+    fs.writeFileSync(checksumPath, JSON.stringify(checksums, null, 2));
+    core.pack(fixture.source, fixture.assetPath);
+
+    const observed = core.computeDigestEvidence(fixture.assetPath);
+    const expectedDigests = {
+      runtime_entry_set: {
+        value: observed.runtime_entry_set.value,
+        source: 'install_receipt',
+      },
+    };
+    const evidence = core.computeDigestEvidence(fixture.assetPath, { expectedDigests });
+    assert.equal(evidence.runtime_entry_set.comparison.state, 'mismatched');
+    assert.equal(evidence.runtime_entry_set.comparison.against, 'checksum_declaration');
+    assert.throws(
+      () => core.loadCapsuleV2(fixture.assetPath, { expectedDigests }),
+      (error) => error.code === 'KDNA_CAPSULE_2_ASSET_INVALID',
+    );
+
+    checksums.entry_set_digest = observed.runtime_entry_set.value;
+    checksums.asset_digest = wrong;
+    fs.writeFileSync(checksumPath, JSON.stringify(checksums, null, 2));
+    core.pack(fixture.source, fixture.assetPath);
+    assert.throws(
+      () => core.computeDigestEvidence(fixture.assetPath, { expectedDigests }),
+      (error) => error.code === 'KDNA_RUNTIME_ENTRY_SET_DIGEST_DECLARATION_CONFLICT',
+    );
+  } finally {
+    fixture.cleanup();
+  }
+});
+
+test('external digest expectations reject internal declaration source labels', () => {
+  const evidence = core.computeDigestEvidence(GOLDEN_BYTES);
+  assert.throws(
+    () => core.computeDigestEvidence(GOLDEN_BYTES, {
+      expectedDigests: {
+        asset: {
+          value: evidence.asset.value,
+          source: 'kdna.json.content_digest',
+        },
+      },
+    }),
+    (error) => error.code === 'KDNA_DIGEST_EXPECTATION_INVALID',
+  );
 });
 
 test('successful Capsule 2 schema rejects mismatched/unavailable evidence and v1 digest fields', () => {
@@ -245,6 +404,46 @@ test('compatibility.capsule_1_domain preserves only a distinct legacy v1 domain'
   } finally {
     fixture.cleanup();
   }
+});
+
+test('public Capsule 2 builder and adapter reject incomplete success invariants', () => {
+  const reader = core.createKdnaAssetReader();
+  const asset = reader.openSync(GOLDEN_BYTES);
+  const manifest = reader.readManifestSync(asset);
+  const digests = core.computeDigestEvidence(GOLDEN_BYTES);
+  const direct = core.loadAuthorized(GOLDEN_BYTES, { profile: 'compact', as: 'json' });
+  direct.trace.loaded_at = golden.loaded_at;
+  const build = (candidate) => core.buildCapsuleV2({
+    capsule1: candidate,
+    manifest,
+    digests,
+    inputKind: 'packaged_bytes',
+    loadedAt: golden.loaded_at,
+  });
+
+  for (const mutate of [
+    (capsule) => { capsule.trace.schema_valid = false; },
+    (capsule) => { capsule.trace.signature_state = 'not_checked'; },
+    (capsule) => { capsule.profile = 'unknown'; },
+    (capsule) => { capsule.access = 'secret'; },
+  ]) {
+    const candidate = structuredClone(direct);
+    mutate(candidate);
+    assert.throws(
+      () => build(candidate),
+      (error) => error.code === 'KDNA_CAPSULE_2_BUILD_INVALID',
+    );
+  }
+
+  const capsule2 = core.loadCapsuleV2(GOLDEN_BYTES, {
+    loadedAt: golden.loaded_at,
+    profile: 'compact',
+  });
+  capsule2.trace.signature_state = 'not_checked';
+  assert.throws(
+    () => core.adaptCapsuleV2ToV1(capsule2),
+    (error) => error.code === 'KDNA_CAPSULE_ADAPTER_INPUT_INVALID',
+  );
 });
 
 test('Capsule 2 rejects authoring directories before projection', () => {

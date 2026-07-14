@@ -86,6 +86,11 @@ const legacyCapsule = adaptCapsuleV2ToV1(capsule2);
 An A, C, or E mismatch is returned as evidence by `computeDigestEvidence()`
 and blocks `loadCapsuleV2()` with a digest-specific error. The adapter always
 maps E to Capsule 1 `asset_digest`; it never substitutes A or C.
+Internal manifest/checksum declarations are checked before independent
+expected values, so a receipt match cannot conceal a bad declaration or
+conflicting digest alias. The adapter also preserves the four frozen Capsule 1
+inheritance/dependency/RAG extension fields through
+`compatibility.capsule_1_extensions` without giving them Capsule 2 authority.
 
 ## Supported Runtime Flow
 

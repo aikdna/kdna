@@ -3,8 +3,14 @@
 const crypto = require('node:crypto');
 const fs = require('node:fs');
 
+const Ajv2020 = require('ajv/dist/2020');
+const addFormats = require('ajv-formats');
+
 const { createKdnaAssetReader } = require('./asset-reader');
 const v1 = require('./v1');
+const digestEvidenceSchema = require('../schema/digest-evidence.schema.json');
+const capsule1Schema = require('../schema/runtime-capsule-1.schema.json');
+const capsule2Schema = require('../schema/runtime-capsule-2.schema.json');
 
 const SHA256_RE = /^sha256:[0-9a-f]{64}$/;
 const DIGEST_PROFILE = 'kdna-capsule-digests-v1';
@@ -19,6 +25,12 @@ const COMPARISON_SOURCES = new Set([
   'checksums.json.entry_set_digest',
   'checksums.json.asset_digest',
 ]);
+const EXTERNAL_COMPARISON_SOURCES = new Set([
+  'caller',
+  'registry',
+  'install_receipt',
+  'lockfile',
+]);
 const COMPARISON_TARGETS = new Set([
   'external_expected',
   'manifest_declaration',
@@ -29,6 +41,26 @@ const BASIS = Object.freeze({
   content: 'kdna-content-tree-v1',
   runtime_entry_set: 'kdna-runtime-entry-set-v1',
 });
+const CAPSULE_1_EXTENSION_KEYS = Object.freeze([
+  'extends_chain',
+  'inheritance_applied',
+  'resolved_dependencies',
+  'rag_isolation_policy',
+]);
+
+let validators;
+
+function schemaValidators() {
+  if (validators) return validators;
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
+  ajv.addSchema(digestEvidenceSchema);
+  validators = {
+    capsule1: ajv.compile(capsule1Schema),
+    capsule2: ajv.compile(capsule2Schema),
+  };
+  return validators;
+}
 
 function fail(code, message, details) {
   const error = new Error(message);
@@ -103,7 +135,11 @@ function readJsonEntry(asset, entryName) {
   }
 }
 
-function normalizeExpectedDigest(expected, defaultSource) {
+function normalizeExpectedDigest(
+  expected,
+  defaultSource,
+  allowedSources = EXTERNAL_COMPARISON_SOURCES,
+) {
   if (expected == null) return null;
   const normalized =
     typeof expected === 'string' ? { value: expected, source: defaultSource } : expected;
@@ -112,7 +148,7 @@ function normalizeExpectedDigest(expected, defaultSource) {
     typeof normalized !== 'object' ||
     !SHA256_RE.test(normalized.value || '') ||
     typeof normalized.source !== 'string' ||
-    !COMPARISON_SOURCES.has(normalized.source)
+    !allowedSources.has(normalized.source)
   ) {
     fail(
       'KDNA_DIGEST_EXPECTATION_INVALID',
@@ -120,6 +156,14 @@ function normalizeExpectedDigest(expected, defaultSource) {
     );
   }
   return { value: normalized.value, source: normalized.source };
+}
+
+function normalizeDeclaredDigest(value, source) {
+  return normalizeExpectedDigest(
+    { value, source },
+    source,
+    new Set([source]),
+  );
 }
 
 function comparison(observed, expected, against) {
@@ -135,42 +179,51 @@ function comparison(observed, expected, against) {
 }
 
 function declaredContentDigest(manifest) {
-  if (manifest && manifest.content_digest !== undefined) {
-    return normalizeExpectedDigest(
-      { value: manifest.content_digest, source: 'kdna.json.content_digest' },
-      'kdna.json.content_digest',
+  const topLevel = manifest && manifest.content_digest !== undefined
+    ? normalizeDeclaredDigest(manifest.content_digest, 'kdna.json.content_digest')
+    : null;
+  const authoring = manifest?.authoring?.content_digest !== undefined
+    ? normalizeDeclaredDigest(
+        manifest.authoring.content_digest,
+        'kdna.json.authoring.content_digest',
+      )
+    : null;
+  if (topLevel && authoring && topLevel.value !== authoring.value) {
+    fail(
+      'KDNA_CONTENT_DIGEST_DECLARATION_CONFLICT',
+      'kdna.json content_digest conflicts with authoring.content_digest.',
+      { top_level: topLevel.value, authoring: authoring.value },
     );
   }
-  if (manifest && manifest.authoring && manifest.authoring.content_digest !== undefined) {
-    return normalizeExpectedDigest(
-      {
-        value: manifest.authoring.content_digest,
-        source: 'kdna.json.authoring.content_digest',
-      },
-      'kdna.json.authoring.content_digest',
-    );
-  }
-  return null;
+  return topLevel || authoring;
 }
 
 function declaredEntrySetDigest(checksums) {
   if (!checksums) return null;
-  if (checksums.entry_set_digest !== undefined) {
-    return normalizeExpectedDigest(
-      {
-        value: checksums.entry_set_digest,
-        source: 'checksums.json.entry_set_digest',
-      },
-      'checksums.json.entry_set_digest',
+  const canonical = checksums.entry_set_digest !== undefined
+    ? normalizeDeclaredDigest(
+        checksums.entry_set_digest,
+        'checksums.json.entry_set_digest',
+      )
+    : null;
+  const legacy = checksums.asset_digest !== undefined
+    ? normalizeDeclaredDigest(checksums.asset_digest, 'checksums.json.asset_digest')
+    : null;
+  if (canonical && legacy && canonical.value !== legacy.value) {
+    fail(
+      'KDNA_RUNTIME_ENTRY_SET_DIGEST_DECLARATION_CONFLICT',
+      'checksums.json entry_set_digest conflicts with deprecated asset_digest.',
+      { entry_set_digest: canonical.value, asset_digest: legacy.value },
     );
   }
-  if (checksums.asset_digest !== undefined) {
-    return normalizeExpectedDigest(
-      { value: checksums.asset_digest, source: 'checksums.json.asset_digest' },
-      'checksums.json.asset_digest',
-    );
-  }
-  return null;
+  return canonical || legacy;
+}
+
+function comparisonWithDeclarationPriority(observed, declared, external, declarationTarget) {
+  const declarationComparison = comparison(observed, declared, declarationTarget);
+  if (declarationComparison.state === 'mismatched') return declarationComparison;
+  if (external) return comparison(observed, external, 'external_expected');
+  return declarationComparison;
 }
 
 function computeDigestEvidenceFromBytes(assetBytes, options = {}) {
@@ -201,8 +254,8 @@ function computeDigestEvidenceFromBytes(assetBytes, options = {}) {
   );
   const externalContent = normalizeExpectedDigest(externalExpected.content, 'caller');
   const externalEntrySet = normalizeExpectedDigest(externalExpected.runtime_entry_set, 'caller');
-  const expectedContent = externalContent || declaredContentDigest(manifest);
-  const expectedEntrySet = externalEntrySet || declaredEntrySetDigest(checksums);
+  const declaredContent = declaredContentDigest(manifest);
+  const declaredEntrySet = declaredEntrySetDigest(checksums);
 
   return {
     profile: DIGEST_PROFILE,
@@ -214,19 +267,21 @@ function computeDigestEvidenceFromBytes(assetBytes, options = {}) {
     content: {
       value: contentDigest,
       basis: BASIS.content,
-      comparison: comparison(
+      comparison: comparisonWithDeclarationPriority(
         contentDigest,
-        expectedContent,
-        externalContent ? 'external_expected' : 'manifest_declaration',
+        declaredContent,
+        externalContent,
+        'manifest_declaration',
       ),
     },
     runtime_entry_set: {
       value: entrySetDigest,
       basis: BASIS.runtime_entry_set,
-      comparison: comparison(
+      comparison: comparisonWithDeclarationPriority(
         entrySetDigest,
-        expectedEntrySet,
-        externalEntrySet ? 'external_expected' : 'checksum_declaration',
+        declaredEntrySet,
+        externalEntrySet,
+        'checksum_declaration',
       ),
     },
   };
@@ -319,6 +374,55 @@ function computeCapsuleDeliveryDigest(capsule) {
   return sha256Digest(Buffer.from(canonicalizeJcs(capsule), 'utf8'));
 }
 
+function schemaErrorDetails(validator) {
+  return JSON.parse(JSON.stringify(validator.errors || []));
+}
+
+function assertJsonValue(value, code, label) {
+  try {
+    canonicalizeJcs(value);
+  } catch (error) {
+    fail(code, `${label} is not an RFC 8785 JSON value: ${error.message}`, {
+      cause_code: error.code || null,
+    });
+  }
+}
+
+function assertCapsule1Success(capsule, code = 'KDNA_CAPSULE_2_BUILD_INVALID') {
+  assertJsonValue(capsule, code, 'Capsule 1');
+  const validator = schemaValidators().capsule1;
+  if (!validator(capsule)) {
+    fail(code, 'Capsule 1 does not satisfy the frozen schema.', schemaErrorDetails(validator));
+  }
+  if (capsule.trace.schema_valid !== true) {
+    fail(code, 'Capsule 1 schema_valid must be true before building Capsule 2.');
+  }
+  if (capsule.signature.state !== capsule.trace.signature_state) {
+    fail(code, 'Capsule 1 signature state conflicts with its trace.');
+  }
+  if (capsule.profile !== capsule.trace.profile) {
+    fail(code, 'Capsule 1 profile conflicts with its trace.');
+  }
+  if (!['public', 'licensed', 'remote'].includes(capsule2Access(capsule.access))) {
+    fail(code, `Capsule 1 access is not a supported Runtime value: ${capsule.access}.`);
+  }
+}
+
+function assertCapsule2Success(capsule, code = 'KDNA_CAPSULE_ADAPTER_INPUT_INVALID') {
+  assertJsonValue(capsule, code, 'Capsule 2');
+  const validator = schemaValidators().capsule2;
+  if (!validator(capsule)) {
+    fail(code, 'Capsule 2 does not satisfy the successful Runtime schema.', schemaErrorDetails(validator));
+  }
+  assertSuccessfulDigestEvidence(capsule.digests);
+  if (capsule.signature.state !== capsule.trace.signature_state) {
+    fail(code, 'Capsule 2 signature state conflicts with its trace.');
+  }
+  if (capsule.profile !== capsule.trace.profile) {
+    fail(code, 'Capsule 2 profile conflicts with its trace.');
+  }
+}
+
 function assertSuccessfulDigestEvidence(digests) {
   if (!digests || digests.profile !== DIGEST_PROFILE) {
     fail('KDNA_CAPSULE_2_DIGEST_EVIDENCE_INVALID', 'Capsule 2 digest evidence is missing.');
@@ -385,6 +489,7 @@ function buildCapsuleV2({ capsule1, manifest, digests, inputKind, loadedAt } = {
       'Capsule 2 builder requires a frozen Capsule 1 projection.',
     );
   }
+  assertCapsule1Success(capsule1);
   if (!manifest || typeof manifest !== 'object') {
     fail('KDNA_CAPSULE_2_BUILD_INVALID', 'Capsule 2 builder requires the Runtime manifest.');
   }
@@ -433,10 +538,24 @@ function buildCapsuleV2({ capsule1, manifest, digests, inputKind, loadedAt } = {
   // Capsule 2 identity is always manifest.asset_id. A distinct legacy name is
   // carried only so the one-way v2 -> v1 adapter can reproduce the frozen v1
   // `domain` value. It has no routing or identity authority in Capsule 2.
+  const compatibility = {};
   if (capsule1.domain && capsule1.domain !== manifest.asset_id) {
-    capsule.compatibility = { capsule_1_domain: capsule1.domain };
+    compatibility.capsule_1_domain = capsule1.domain;
+  }
+  const capsule1Extensions = {};
+  for (const key of CAPSULE_1_EXTENSION_KEYS) {
+    if (Object.prototype.hasOwnProperty.call(capsule1, key)) {
+      capsule1Extensions[key] = capsule1[key];
+    }
+  }
+  if (Object.keys(capsule1Extensions).length > 0) {
+    compatibility.capsule_1_extensions = capsule1Extensions;
+  }
+  if (Object.keys(compatibility).length > 0) {
+    capsule.compatibility = compatibility;
   }
 
+  assertCapsule2Success(capsule, 'KDNA_CAPSULE_2_BUILD_INVALID');
   return capsule;
 }
 
@@ -444,12 +563,12 @@ function adaptCapsuleV2ToV1(capsule) {
   if (!capsule || capsule.type !== 'kdna.context.capsule' || capsule.version !== '2.0') {
     fail('KDNA_CAPSULE_ADAPTER_INPUT_INVALID', 'The adapter requires a Runtime Capsule 2 value.');
   }
-  assertSuccessfulDigestEvidence(capsule.digests);
+  assertCapsule2Success(capsule);
   const domain = capsule.compatibility?.capsule_1_domain || capsule.asset?.asset_id;
   if (typeof domain !== 'string' || domain.length === 0) {
     fail('KDNA_CAPSULE_ADAPTER_INPUT_INVALID', 'Capsule 2 has no Capsule 1 domain mapping.');
   }
-  return {
+  const capsule1 = {
     type: 'kdna.context.capsule',
     version: '1.0',
     domain,
@@ -469,6 +588,16 @@ function adaptCapsuleV2ToV1(capsule) {
       profile: capsule.trace.profile,
     },
   };
+  const capsule1Extensions = capsule.compatibility?.capsule_1_extensions;
+  if (capsule1Extensions) {
+    for (const key of CAPSULE_1_EXTENSION_KEYS) {
+      if (Object.prototype.hasOwnProperty.call(capsule1Extensions, key)) {
+        capsule1[key] = capsule1Extensions[key];
+      }
+    }
+  }
+  assertCapsule1Success(capsule1, 'KDNA_CAPSULE_ADAPTER_OUTPUT_INVALID');
+  return capsule1;
 }
 
 function loadCapsuleV2(input, options = {}) {

@@ -642,7 +642,18 @@ export interface KDNARuntimeCapsule {
   profile: string;
   context: Record<string, any>;
   trace: Record<string, any>;
+  extends_chain?: Array<Record<string, any>>;
+  inheritance_applied?: boolean;
+  resolved_dependencies?: Array<Record<string, any>>;
+  rag_isolation_policy?: Record<string, any>;
   [key: string]: any;
+}
+
+export interface KDNACapsule1Extensions {
+  extends_chain?: Array<Record<string, any>>;
+  inheritance_applied?: boolean;
+  resolved_dependencies?: Array<Record<string, any>>;
+  rag_isolation_policy?: Record<string, any>;
 }
 
 export type KDNADigestComparisonState = 'matched' | 'mismatched' | 'not_compared' | 'unavailable';
@@ -702,7 +713,10 @@ export interface KDNARuntimeCapsuleV2 {
     signature_state: 'verified' | 'not_checked' | 'absent';
     profile: 'index' | 'compact' | 'scenario' | 'full';
   };
-  compatibility?: { capsule_1_domain: string };
+  compatibility?: {
+    capsule_1_domain?: string;
+    capsule_1_extensions?: KDNACapsule1Extensions;
+  };
 }
 
 export const DIGEST_PROFILE: 'kdna-capsule-digests-v1';
