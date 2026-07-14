@@ -517,6 +517,11 @@ test('npm pack cold install validates Plan 1, entrypoints, and types while offli
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-cold-'));
   try {
     installPackedCoreOffline(tmp);
+    assert.equal(fs.existsSync(path.join(tmp, 'install-cache')), false);
+    assert.equal(
+      fs.readdirSync(tmp).some((name) => name.startsWith('pack-cache-')),
+      false,
+    );
     fs.writeFileSync(
       path.join(tmp, 'golden.json'),
       JSON.stringify(golden),

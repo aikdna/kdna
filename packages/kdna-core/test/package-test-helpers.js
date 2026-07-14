@@ -157,19 +157,26 @@ function packPackage(packageDirectory, destination, cache) {
 
 function installPackedCoreOffline(tempDirectory) {
   const artifacts = path.join(tempDirectory, 'artifacts');
-  const cache = path.join(tempDirectory, 'empty-npm-cache');
+  const packCacheRoot = fs.mkdtempSync(path.join(tempDirectory, 'pack-cache-'));
+  const packCache = path.join(packCacheRoot, 'cache');
+  const installCache = path.join(tempDirectory, 'install-cache');
   fs.mkdirSync(artifacts, { recursive: true });
 
-  const coreTarball = packPackage(PACKAGE_ROOT, artifacts, cache);
+  let coreTarball;
   const localDependencies = {};
-  for (const directory of installedDependencyClosure(PACKAGE_ROOT)) {
-    const manifest = JSON.parse(fs.readFileSync(path.join(directory, 'package.json'), 'utf8'));
-    const tarball = packPackage(directory, artifacts, cache);
-    const spec = `file:./${path.relative(tempDirectory, tarball).split(path.sep).join('/')}`;
-    if (localDependencies[manifest.name] && localDependencies[manifest.name] !== spec) {
-      throw new Error(`offline dependency closure has multiple ${manifest.name} versions`);
+  try {
+    coreTarball = packPackage(PACKAGE_ROOT, artifacts, packCache);
+    for (const directory of installedDependencyClosure(PACKAGE_ROOT)) {
+      const manifest = JSON.parse(fs.readFileSync(path.join(directory, 'package.json'), 'utf8'));
+      const tarball = packPackage(directory, artifacts, packCache);
+      const spec = `file:./${path.relative(tempDirectory, tarball).split(path.sep).join('/')}`;
+      if (localDependencies[manifest.name] && localDependencies[manifest.name] !== spec) {
+        throw new Error(`offline dependency closure has multiple ${manifest.name} versions`);
+      }
+      localDependencies[manifest.name] = spec;
     }
-    localDependencies[manifest.name] = spec;
+  } finally {
+    fs.rmSync(packCacheRoot, { recursive: true, force: true });
   }
 
   fs.writeFileSync(
@@ -187,11 +194,22 @@ function installPackedCoreOffline(tempDirectory) {
       },
     }),
   );
-  runNpmWithCache(['install', '--offline', '--ignore-scripts', '--no-audit', '--no-fund'], cache, {
-    cwd: tempDirectory,
-    stdio: 'pipe',
-  });
-  return { coreTarball, cache };
+  try {
+    if (fs.existsSync(installCache)) {
+      throw new Error('offline install cache must not exist before the first install');
+    }
+    runNpmWithCache(
+      ['install', '--offline', '--ignore-scripts', '--no-audit', '--no-fund'],
+      installCache,
+      {
+        cwd: tempDirectory,
+        stdio: 'pipe',
+      },
+    );
+  } finally {
+    fs.rmSync(installCache, { recursive: true, force: true });
+  }
+  return { coreTarball };
 }
 
 function representativeTypesSource(importSpecifier) {
