@@ -1,7 +1,14 @@
 # KDNA Runtime Capsule
 
-**Status:** Implemented contract
+**Status:** Capsule 1 implemented; Capsule 2 available as an explicit Core
+opt-in contract
 **Depends on:** [KDNA Asset Container](./container.md) and [KDNA Authorization Contract](./kdna-authorization-contract.md)
+
+Formal schemas:
+
+- [Runtime Capsule 1](./runtime-capsule-1.schema.json)
+- [Runtime Capsule 2](./runtime-capsule-2.schema.json)
+- [Digest Evidence](./digest-evidence.schema.json)
 
 ## 1. Purpose
 
@@ -14,7 +21,7 @@ A Capsule does not say that an asset is true, good, recommended, or officially
 approved. It reports which asset context was loaded and what technical checks
 were actually completed.
 
-## 2. Structure
+## 2. Capsule 1 frozen structure
 
 ```json
 {
@@ -31,9 +38,7 @@ were actually completed.
   "profile": "compact",
   "context": {
     "highest_question": "What editorial decision should be made?",
-    "worldview": [
-      "Observed task facts remain authoritative."
-    ],
+    "worldview": ["Observed task facts remain authoritative."],
     "value_order": ["prevent irreversible harm", "preserve reversibility"],
     "judgment_role": {
       "acts_as": "a scoped editorial authority",
@@ -67,6 +72,10 @@ were actually completed.
 }
 ```
 
+Capsule 1 `asset_digest` is permanently the runtime entry-set digest E
+(`kdna-runtime-entry-set-v1`). It is not the SHA-256 of the final `.kdna`
+file. This historical name is frozen for compatibility.
+
 ### Signature state
 
 `signature.state` and `trace.signature_state` use honest facts:
@@ -77,19 +86,53 @@ were actually completed.
 
 Field presence alone MUST NOT produce `verified`.
 
-## 3. Load Profiles
+## 3. Capsule 2 opt-in structure
 
-| Profile | Context | Intended use |
-|---|---|---|
-| `index` | Public identity and discovery metadata; no judgment | discovery and routing |
-| `compact` | Highest question, scoped worldview, ordered values, judgment role, applicability-aware axioms, boundaries, self-checks, failure modes, and a bounded pattern set | default Agent judgment loading |
-| `scenario` | Scenario cards | situation-specific loading |
-| `full` | Authorized manifest and decoded payload | audit, migration, and deep inspection through trusted applications |
+Capsule 2 removes the ambiguous top-level digest and carries three explicitly
+named observations:
+
+| Member                      | Basis                       | Meaning                                       |
+| --------------------------- | --------------------------- | --------------------------------------------- |
+| `digests.asset`             | `kdna-container-bytes-v1`   | A: SHA-256 of exact final `.kdna` bytes       |
+| `digests.content`           | `kdna-content-tree-v1`      | C: canonical distributed content tree         |
+| `digests.runtime_entry_set` | `kdna-runtime-entry-set-v1` | E: raw Runtime manifest and payload entry set |
+
+Each member records its observed value and a factual comparison. A successful
+Capsule 2 contains only `matched` or `not_compared`; a mismatch is evidence for
+a blocked load and MUST NOT produce a Capsule. Legacy declaration sources are
+named honestly as `checksums.json.asset_digest` or
+`kdna.json.authoring.content_digest` rather than relabeled as current fields.
+Independent expected A/C/E values use `external_expected`; mismatches block
+with `KDNA_ASSET_DIGEST_MISMATCH`, `KDNA_CONTENT_DIGEST_MISMATCH`, or
+`KDNA_RUNTIME_ENTRY_SET_DIGEST_MISMATCH`, respectively.
+
+Capsule 2 identity is `asset.asset_id`. A distinct historical Capsule 1
+`domain` may appear only as `compatibility.capsule_1_domain`; that member exists
+solely for the deterministic v2-to-v1 adapter and has no Capsule 2 identity or
+routing authority.
+
+P (`kdna-capsule-jcs-v1`) is SHA-256 over RFC 8785 JCS bytes of the exact
+delivered Capsule. P is never embedded in the Capsule it hashes. Host request,
+receipt, and Trace integration are later protocol phases.
+
+Core exposes Capsule 2 only through the explicit `loadCapsuleV2()` API. The
+existing `loadAuthorized()` route continues to emit the frozen Capsule 1.
+Source directories cannot emit Capsule 2 because they have no final byte-stream
+identity A.
+
+## 4. Load Profiles
+
+| Profile    | Context                                                                                                                                                          | Intended use                                                       |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `index`    | Public identity and discovery metadata; no judgment                                                                                                              | discovery and routing                                              |
+| `compact`  | Highest question, scoped worldview, ordered values, judgment role, applicability-aware axioms, boundaries, self-checks, failure modes, and a bounded pattern set | default Agent judgment loading                                     |
+| `scenario` | Scenario cards                                                                                                                                                   | situation-specific loading                                         |
+| `full`     | Authorized manifest and decoded payload                                                                                                                          | audit, migration, and deep inspection through trusted applications |
 
 The requested profile MUST control the emitted context shape. Implementations
 MUST NOT label one context shape as another profile.
 
-## 4. Consumer Rules
+## 5. Consumer Rules
 
 A consuming Agent or application must:
 
@@ -107,17 +150,17 @@ Single-asset loading is the default foundation. Cluster execution composes
 multiple authorized asset Capsules through the explicit Cluster runtime; it
 does not replace or weaken the single-asset contract.
 
-## 5. Capsule vs Developer Decode
+## 6. Capsule vs Developer Decode
 
-| | Runtime Capsule | Developer decode |
-|---|---|---|
-| Entry point | `kdna load` | `kdna dev decode --reveal` |
-| Intended caller | Agent or application | developer/debugger |
-| Authorization | LoadPlan-gated | explicit developer operation, still policy-gated |
-| Output | profile-selected context plus trace | decoded payload for inspection |
-| Normal production use | yes | no |
+|                       | Runtime Capsule                     | Developer decode                                 |
+| --------------------- | ----------------------------------- | ------------------------------------------------ |
+| Entry point           | `kdna load`                         | `kdna dev decode --reveal`                       |
+| Intended caller       | Agent or application                | developer/debugger                               |
+| Authorization         | LoadPlan-gated                      | explicit developer operation, still policy-gated |
+| Output                | profile-selected context plus trace | decoded payload for inspection                   |
+| Normal production use | yes                                 | no                                               |
 
-## 6. CLI Examples
+## 7. CLI Examples
 
 ```bash
 # Agent-facing Capsule

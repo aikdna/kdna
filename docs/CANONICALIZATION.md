@@ -19,14 +19,17 @@ examples, and other published evidence files are included when present.
 ## Entry Ordering
 
 Entries are sorted by UTF-8 path bytes in ascending lexicographic order before
-hashing. ZIP central-directory order and compression method do not affect
-`content_digest` or signature payloads.
+hashing. This is a byte comparison, not JavaScript's default UTF-16 string
+ordering. For example, a path beginning with U+E000 sorts before a path
+beginning with U+10000. ZIP central-directory order and compression method do
+not affect `content_digest` or signature payloads.
 
 ## JSON Canonicalization
 
 JSON entries are parsed and serialized with:
 
-- object keys sorted lexicographically at every level
+- object keys sorted by UTF-16 code units at every level (the existing
+  ECMAScript-compatible JSON key order; distinct from entry-path ordering)
 - array order preserved
 - no insignificant whitespace
 - normal JSON string escaping as produced by `JSON.stringify`
@@ -76,3 +79,6 @@ paths in the same change.
 
 Canonicalization does not prove judgment quality. It proves that all verifiers
 are hashing and signing the same bytes.
+
+Runtime Capsule delivery uses a separate RFC 8785 JCS profile named
+`kdna-capsule-jcs-v1`. Its digest is P and is not the asset content digest C.

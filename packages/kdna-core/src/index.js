@@ -13,6 +13,7 @@ const publicApi = require('./public-api');
 const workpackPure = require('./workpack-pure');
 const v1 = require('./v1');
 const runtimeApi = require('./runtime-api');
+const capsuleV2 = require('./capsule-v2');
 
 module.exports = {
   ...publicApi,
@@ -27,4 +28,5 @@ module.exports = {
   ...workpackPure,
   ...v1,
   ...runtimeApi,
+  ...capsuleV2,
 };

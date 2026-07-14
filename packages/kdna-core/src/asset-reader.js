@@ -41,6 +41,14 @@ function stableStringify(value) {
   return JSON.stringify(value);
 }
 
+function compareEntryNamesByUtf8(left, right) {
+  return Buffer.compare(Buffer.from(left, 'utf8'), Buffer.from(right, 'utf8'));
+}
+
+function sortedEntryNames(entries) {
+  return [...entries.keys()].sort(compareEntryNamesByUtf8);
+}
+
 function parseJson(buf, entryName) {
   try {
     return JSON.parse(Buffer.isBuffer(buf) ? buf.toString('utf8') : String(buf));
@@ -197,7 +205,7 @@ function manifestForDigest(manifest) {
 function buildContentDigest(asset) {
   const parts = [];
   const excluded = new Set(['.DS_Store', 'signature.json', 'build-receipt.json']);
-  for (const entryName of [...asset.entries.keys()].sort()) {
+  for (const entryName of sortedEntryNames(asset.entries)) {
     if (excluded.has(entryName)) continue;
     if (entryName.startsWith('reports/')) continue;
     const entryBuf = asset.readEntry(entryName);
@@ -252,7 +260,7 @@ function buildSigningPayload(asset, options = {}) {
   // byte strings and the signature would fail to verify. The fix
   // mirrors `buildContentDigest`'s exclusion set exactly.
   const parts = [];
-  for (const entryName of [...asset.entries.keys()].sort()) {
+  for (const entryName of sortedEntryNames(asset.entries)) {
     if (entryName === '.DS_Store' || entryName === 'signature.json') continue;
     if (entryName === 'build-receipt.json') continue;
     if (entryName.startsWith('reports/')) continue;
@@ -333,7 +341,9 @@ function verifyHumanLockSignatures(coreData, manifest, errors, warnings) {
     ['stances', 'stance'],
   ];
 
-  let verified = 0, missing = 0, invalid = 0;
+  let verified = 0,
+    missing = 0,
+    invalid = 0;
   for (const [arrayName] of CORE_CARD_ARRAYS) {
     const cards = coreData?.[arrayName];
     if (!Array.isArray(cards) || cards.length === 0) continue;
@@ -351,8 +361,11 @@ function verifyHumanLockSignatures(coreData, manifest, errors, warnings) {
         const sig = Buffer.from(String(hl.signature).replace(/^ed25519:/, ''), 'hex');
         const key = crypto.createPublicKey(publicKeyPEM);
         const ok = crypto.verify(null, Buffer.from(payload), key, sig);
-        if (ok) { verified++; }
-        else { invalid++; }
+        if (ok) {
+          verified++;
+        } else {
+          invalid++;
+        }
       } catch {
         invalid++;
       }
@@ -360,7 +373,9 @@ function verifyHumanLockSignatures(coreData, manifest, errors, warnings) {
   }
 
   if (invalid > 0) {
-    errors.push(`${invalid} Human Lock signature(s) failed verification — judgment may have been altered`);
+    errors.push(
+      `${invalid} Human Lock signature(s) failed verification — judgment may have been altered`,
+    );
   }
   if (missing > 0) {
     warnings.push(`${missing} locked card(s) have no Human Lock signature`);
@@ -457,7 +472,9 @@ function verifySync(asset, options = {}) {
     errors.push(`asset digest mismatch: expected ${options.asset_digest}, got ${asset_digest}`);
   }
   if (options.content_digest && options.content_digest !== content_digest) {
-    errors.push(`content digest mismatch: expected ${options.content_digest}, got ${content_digest}`);
+    errors.push(
+      `content digest mismatch: expected ${options.content_digest}, got ${content_digest}`,
+    );
   }
 
   let manifest = null;
@@ -557,7 +574,13 @@ function createKdnaAssetReader() {
       if (!asset.entries.has(entryName)) return null;
       const manifest =
         entryName === 'kdna.json' ? null : parseJson(asset.readEntry('kdna.json'), 'kdna.json');
-      const buf = maybeDecryptEntrySync(asset, manifest, entryName, asset.readEntry(entryName), options);
+      const buf = maybeDecryptEntrySync(
+        asset,
+        manifest,
+        entryName,
+        asset.readEntry(entryName),
+        options,
+      );
       return parseJson(buf, entryName);
     },
 

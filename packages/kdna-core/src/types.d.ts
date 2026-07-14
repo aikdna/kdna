@@ -159,12 +159,7 @@ export interface KDNAEvolution {
 }
 
 export type KDNADomainFile =
-  | KDNACore
-  | KDNAPatterns
-  | KDNAScenarios
-  | KDNACases
-  | KDNAReasoning
-  | KDNAEvolution;
+  KDNACore | KDNAPatterns | KDNAScenarios | KDNACases | KDNAReasoning | KDNAEvolution;
 
 export interface LoadedDomain {
   core: KDNACore;
@@ -269,9 +264,15 @@ export function loadCorePatternsFromData(
   patternsData: KDNAPatterns,
 ): { core: KDNACore; patterns: KDNAPatterns } | null;
 
-export function loadDomainFromData(dataMap: KDNADataMap, options?: LoadOptions): LoadedDomain | null;
+export function loadDomainFromData(
+  dataMap: KDNADataMap,
+  options?: LoadOptions,
+): LoadedDomain | null;
 
-export function loadDomainFromFiles(fileDataMap: KDNAFileDataMap, options?: LoadOptions): LoadedDomain | null;
+export function loadDomainFromFiles(
+  fileDataMap: KDNAFileDataMap,
+  options?: LoadOptions,
+): LoadedDomain | null;
 
 export function classifyInput(text: string): string[];
 
@@ -335,17 +336,9 @@ export interface KdnaAssetReader {
   readManifestSync(asset: KdnaAsset): KDNAManifest;
   readManifest(asset: KdnaAsset): Promise<KDNAManifest>;
   /** @deprecated Current payload.kdnab is not projected into legacy source files. */
-  readDataMapSync(
-    asset: KdnaAsset,
-    entries?: string[],
-    options?: KdnaDecryptOptions,
-  ): never;
+  readDataMapSync(asset: KdnaAsset, entries?: string[], options?: KdnaDecryptOptions): never;
   /** @deprecated Current payload.kdnab is not projected into legacy source files. */
-  readDataMap(
-    asset: KdnaAsset,
-    entries?: string[],
-    options?: KdnaDecryptOptions,
-  ): Promise<never>;
+  readDataMap(asset: KdnaAsset, entries?: string[], options?: KdnaDecryptOptions): Promise<never>;
   contentDigestSync(asset: KdnaAsset): string;
   contentDigest(asset: KdnaAsset): Promise<string>;
   verifySync(
@@ -523,7 +516,9 @@ export interface KDNAExternalAuthorization {
 }
 
 export function canonicalJson(value: unknown): string;
-export function grantSigningPayload(grant: Omit<KDNAExternalKeyGrant, 'signature'> | KDNAExternalKeyGrant): Uint8Array;
+export function grantSigningPayload(
+  grant: Omit<KDNAExternalKeyGrant, 'signature'> | KDNAExternalKeyGrant,
+): Uint8Array;
 export function validateExternalEnvelope(value: unknown): KDNAExternalGrantEnvelope;
 export function validateExternalKeyGrant(value: unknown): KDNAExternalKeyGrant;
 export function externalEnvelopeAad(options: {
@@ -542,15 +537,20 @@ export function deriveExternalAssetCek(options: {
   issuerKeyId: string;
 }): Uint8Array;
 export function encodeExternalEnvelope(value: KDNAExternalGrantEnvelope): Uint8Array;
-export function decodeExternalEnvelope(value: KDNAExternalGrantEnvelope | Uint8Array): KDNAExternalGrantEnvelope;
-export function encryptExternalGrantEntry(plaintext: string | Uint8Array, options: {
-  manifest: KDNAManifest;
-  entryName?: string;
-  issuerRootKey: string | Uint8Array;
-  keyRef: string;
-  issuerKeyId: string;
-  iv?: Uint8Array;
-}): KDNAExternalGrantEnvelope;
+export function decodeExternalEnvelope(
+  value: KDNAExternalGrantEnvelope | Uint8Array,
+): KDNAExternalGrantEnvelope;
+export function encryptExternalGrantEntry(
+  plaintext: string | Uint8Array,
+  options: {
+    manifest: KDNAManifest;
+    entryName?: string;
+    issuerRootKey: string | Uint8Array;
+    keyRef: string;
+    issuerKeyId: string;
+    iv?: Uint8Array;
+  },
+): KDNAExternalGrantEnvelope;
 export function generateDeviceKeyPairs(): KDNADeviceKeyPairs;
 export function createExternalKeyGrant(options: {
   issuerRootKey: string | Uint8Array;
@@ -590,7 +590,9 @@ export function authorizeExternalKeyGrant(options: {
   networkAvailable?: boolean;
   allowOffline?: boolean;
 }): KDNAExternalAuthorization;
-export function isVerifiedExternalEntitlement(value: unknown): value is KDNAVerifiedExternalEntitlement;
+export function isVerifiedExternalEntitlement(
+  value: unknown,
+): value is KDNAVerifiedExternalEntitlement;
 
 // Stable public API — preferred entry points for third-party integrations.
 export type KDNAAssetInput = string | Uint8Array | KdnaAsset;
@@ -643,6 +645,129 @@ export interface KDNARuntimeCapsule {
   [key: string]: any;
 }
 
+export type KDNADigestComparisonState = 'matched' | 'mismatched' | 'not_compared' | 'unavailable';
+
+export type KDNADigestComparisonSource =
+  | 'caller'
+  | 'registry'
+  | 'install_receipt'
+  | 'lockfile'
+  | 'kdna.json.content_digest'
+  | 'kdna.json.authoring.content_digest'
+  | 'checksums.json.entry_set_digest'
+  | 'checksums.json.asset_digest';
+
+export interface KDNADigestComparison {
+  state: KDNADigestComparisonState;
+  against: 'external_expected' | 'manifest_declaration' | 'checksum_declaration' | null;
+  expected: string | null;
+  source: KDNADigestComparisonSource | null;
+}
+
+export interface KDNADigestValue {
+  value: string | null;
+  basis: string;
+  comparison: KDNADigestComparison;
+}
+
+export interface KDNADigestEvidence {
+  profile: 'kdna-capsule-digests-v1';
+  asset: KDNADigestValue;
+  content: KDNADigestValue;
+  runtime_entry_set: KDNADigestValue;
+}
+
+export interface KDNARuntimeCapsuleV2 {
+  type: 'kdna.context.capsule';
+  version: '2.0';
+  asset: {
+    asset_id: string;
+    asset_uid: string;
+    version: string;
+    judgment_version: string;
+  };
+  digests: KDNADigestEvidence;
+  signature: { state: 'verified' | 'not_checked' | 'absent'; issuer?: string };
+  access: 'public' | 'licensed' | 'remote';
+  risk_level: string | null;
+  profile: 'index' | 'compact' | 'scenario' | 'full';
+  context: Record<string, any>;
+  trace: {
+    payload_encoding: 'cbor';
+    loaded_by: 'kdna-core';
+    loaded_at: string;
+    input_kind: 'packaged_file' | 'packaged_bytes';
+    runtime_eligible: true;
+    schema_valid: true;
+    signature_state: 'verified' | 'not_checked' | 'absent';
+    profile: 'index' | 'compact' | 'scenario' | 'full';
+  };
+  compatibility?: { capsule_1_domain: string };
+}
+
+export const DIGEST_PROFILE: 'kdna-capsule-digests-v1';
+export const CAPSULE_DIGEST_PROFILE: 'kdna-capsule-jcs-v1';
+export const BASIS: Readonly<{
+  asset: 'kdna-container-bytes-v1';
+  content: 'kdna-content-tree-v1';
+  runtime_entry_set: 'kdna-runtime-entry-set-v1';
+}>;
+export function computeAssetDigest(assetBytes: Uint8Array): string;
+export function computeRuntimeEntrySetDigest(
+  manifestBytes: Uint8Array,
+  payloadBytes: Uint8Array,
+): string;
+export function computeDigestEvidence(
+  input: string | Uint8Array,
+  options?: {
+    expectedDigests?: Partial<
+      Record<
+        'asset' | 'content' | 'runtime_entry_set',
+        | string
+        | {
+            value: string;
+            source: 'caller' | 'registry' | 'install_receipt' | 'lockfile';
+          }
+      >
+    >;
+    /** @deprecated Use expectedDigests.asset. */
+    expectedAssetDigest?:
+      string | { value: string; source: 'caller' | 'registry' | 'install_receipt' | 'lockfile' };
+  },
+): KDNADigestEvidence;
+export function canonicalizeJcs(value: unknown): string;
+export function computeCapsuleDeliveryDigest(
+  capsule: KDNARuntimeCapsuleV2 | Record<string, any>,
+): string;
+export function buildCapsuleV2(input: {
+  capsule1: KDNARuntimeCapsule;
+  manifest: KDNAManifest;
+  digests: KDNADigestEvidence;
+  inputKind: 'packaged_file' | 'packaged_bytes';
+  loadedAt?: string;
+}): KDNARuntimeCapsuleV2;
+export function loadCapsuleV2(
+  input: string | Uint8Array,
+  options?: {
+    profile?: 'index' | 'compact' | 'scenario' | 'full';
+    loadedAt?: string;
+    expectedDigests?: Partial<
+      Record<
+        'asset' | 'content' | 'runtime_entry_set',
+        | string
+        | {
+            value: string;
+            source: 'caller' | 'registry' | 'install_receipt' | 'lockfile';
+          }
+      >
+    >;
+    /** @deprecated Use expectedDigests.asset. */
+    expectedAssetDigest?:
+      string | { value: string; source: 'caller' | 'registry' | 'install_receipt' | 'lockfile' };
+  } & KdnaDecryptOptions,
+): KDNARuntimeCapsuleV2;
+export function adaptCapsuleV2ToV1(capsule: KDNARuntimeCapsuleV2): KDNARuntimeCapsule;
+
 export interface KDNAMatchResult extends KDNAInspectResult {
   score: number;
   matched: string[];
@@ -661,27 +786,108 @@ export interface KDNAComposeResult {
 
 export function openKDNA(input: KDNAAssetInput): Promise<KdnaAsset>;
 export function openKDNASync(input: KDNAAssetInput): KdnaAsset;
-export function inspectKDNA(input: KDNAAssetInput, options?: { verify?: boolean } & KdnaDecryptOptions): Promise<KDNAInspectResult>;
-export function inspectKDNASync(input: KDNAAssetInput, options?: { verify?: boolean } & KdnaDecryptOptions): KDNAInspectResult;
-export function loadKDNA(input: KDNAAssetInput, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string } & KdnaDecryptOptions): Promise<KDNARuntimeCapsule | Record<string, any>>;
-export function loadKDNASync(input: KDNAAssetInput, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string } & KdnaDecryptOptions): KDNARuntimeCapsule | Record<string, any>;
-export function validateKDNA(input: KDNAAssetInput, options?: Record<string, any>): Promise<KDNAValidationReport>;
-export function validateKDNASync(input: KDNAAssetInput, options?: Record<string, any>): KDNAValidationReport;
-export function renderForAgent(input: KDNAAssetInput, options?: { profile?: 'compact' | 'scenario' | 'full' | string; input?: string } & KdnaDecryptOptions): Promise<string>;
-export function renderForAgentSync(input: KDNAAssetInput, options?: { profile?: 'compact' | 'scenario' | 'full' | string; input?: string } & KdnaDecryptOptions): string;
-export function verifyAsset(input: KDNAAssetInput, options?: { asset_digest?: string; content_digest?: string; requireSignature?: boolean; requireDecryption?: boolean } & KdnaDecryptOptions): Promise<KdnaAssetVerifyResult>;
-export function verifyAssetSync(input: KDNAAssetInput, options?: { asset_digest?: string; content_digest?: string; requireSignature?: boolean; requireDecryption?: boolean } & KdnaDecryptOptions): KdnaAssetVerifyResult;
-export function verifyDigest(input: KDNAAssetInput, expectedDigest: string, options?: KdnaDecryptOptions): Promise<KdnaAssetVerifyResult>;
-export function verifyDigestSync(input: KDNAAssetInput, expectedDigest: string, options?: KdnaDecryptOptions): KdnaAssetVerifyResult;
-export function verifySignature(input: KDNAAssetInput, options?: KdnaDecryptOptions): Promise<KdnaAssetVerifyResult>;
-export function verifySignatureSync(input: KDNAAssetInput, options?: KdnaDecryptOptions): KdnaAssetVerifyResult;
-export function matchDomain(input: string, candidates: Array<KDNAAssetInput | KDNAInspectResult>, options?: KdnaDecryptOptions): Promise<KDNAMatchResult[]>;
-export function matchDomainSync(input: string, candidates: Array<KDNAAssetInput | KDNAInspectResult>, options?: KdnaDecryptOptions): KDNAMatchResult[];
+export function inspectKDNA(
+  input: KDNAAssetInput,
+  options?: { verify?: boolean } & KdnaDecryptOptions,
+): Promise<KDNAInspectResult>;
+export function inspectKDNASync(
+  input: KDNAAssetInput,
+  options?: { verify?: boolean } & KdnaDecryptOptions,
+): KDNAInspectResult;
+export function loadKDNA(
+  input: KDNAAssetInput,
+  options?: {
+    profile?: 'index' | 'compact' | 'scenario' | 'full' | string;
+    as?: 'json' | 'prompt' | string;
+  } & KdnaDecryptOptions,
+): Promise<KDNARuntimeCapsule | Record<string, any>>;
+export function loadKDNASync(
+  input: KDNAAssetInput,
+  options?: {
+    profile?: 'index' | 'compact' | 'scenario' | 'full' | string;
+    as?: 'json' | 'prompt' | string;
+  } & KdnaDecryptOptions,
+): KDNARuntimeCapsule | Record<string, any>;
+export function validateKDNA(
+  input: KDNAAssetInput,
+  options?: Record<string, any>,
+): Promise<KDNAValidationReport>;
+export function validateKDNASync(
+  input: KDNAAssetInput,
+  options?: Record<string, any>,
+): KDNAValidationReport;
+export function renderForAgent(
+  input: KDNAAssetInput,
+  options?: {
+    profile?: 'compact' | 'scenario' | 'full' | string;
+    input?: string;
+  } & KdnaDecryptOptions,
+): Promise<string>;
+export function renderForAgentSync(
+  input: KDNAAssetInput,
+  options?: {
+    profile?: 'compact' | 'scenario' | 'full' | string;
+    input?: string;
+  } & KdnaDecryptOptions,
+): string;
+export function verifyAsset(
+  input: KDNAAssetInput,
+  options?: {
+    asset_digest?: string;
+    content_digest?: string;
+    requireSignature?: boolean;
+    requireDecryption?: boolean;
+  } & KdnaDecryptOptions,
+): Promise<KdnaAssetVerifyResult>;
+export function verifyAssetSync(
+  input: KDNAAssetInput,
+  options?: {
+    asset_digest?: string;
+    content_digest?: string;
+    requireSignature?: boolean;
+    requireDecryption?: boolean;
+  } & KdnaDecryptOptions,
+): KdnaAssetVerifyResult;
+export function verifyDigest(
+  input: KDNAAssetInput,
+  expectedDigest: string,
+  options?: KdnaDecryptOptions,
+): Promise<KdnaAssetVerifyResult>;
+export function verifyDigestSync(
+  input: KDNAAssetInput,
+  expectedDigest: string,
+  options?: KdnaDecryptOptions,
+): KdnaAssetVerifyResult;
+export function verifySignature(
+  input: KDNAAssetInput,
+  options?: KdnaDecryptOptions,
+): Promise<KdnaAssetVerifyResult>;
+export function verifySignatureSync(
+  input: KDNAAssetInput,
+  options?: KdnaDecryptOptions,
+): KdnaAssetVerifyResult;
+export function matchDomain(
+  input: string,
+  candidates: Array<KDNAAssetInput | KDNAInspectResult>,
+  options?: KdnaDecryptOptions,
+): Promise<KDNAMatchResult[]>;
+export function matchDomainSync(
+  input: string,
+  candidates: Array<KDNAAssetInput | KDNAInspectResult>,
+  options?: KdnaDecryptOptions,
+): KDNAMatchResult[];
 /**
  * @deprecated Current Cluster/Capsule composition semantics are not yet
  * defined. This function rejects with KDNA_COMPOSE_PROTOCOL_UNAVAILABLE.
  */
-export function composeKDNA(inputs: KDNAAssetInput[], options?: { input?: string; profile?: 'compact' | 'scenario' | 'full' | string; separator?: string } & KdnaDecryptOptions): Promise<never>;
+export function composeKDNA(
+  inputs: KDNAAssetInput[],
+  options?: {
+    input?: string;
+    profile?: 'compact' | 'scenario' | 'full' | string;
+    separator?: string;
+  } & KdnaDecryptOptions,
+): Promise<never>;
 
 // KDNA Core — authoring source and packaged runtime API
 export const MIMETYPE: string;
@@ -706,8 +912,14 @@ export interface KDNAChecksums {
 
 export function isKdnaSourceDir(inputPath: string): boolean;
 export function detectContainerFormat(inputPath: string): 'kdna' | null;
-export function inspect(input: string | Uint8Array, options?: Record<string, any>): Record<string, any>;
-export function validate(input: string | Uint8Array, options?: Record<string, any>): KDNAValidationReport;
+export function inspect(
+  input: string | Uint8Array,
+  options?: Record<string, any>,
+): Record<string, any>;
+export function validate(
+  input: string | Uint8Array,
+  options?: Record<string, any>,
+): KDNAValidationReport;
 export interface KDNALoadPlanIssue {
   code: string;
   severity: 'info' | 'warning' | 'blocking' | string;
@@ -758,20 +970,48 @@ export interface KDNALoadPlan {
     path: string | null;
   };
 }
-export function planLoad(input: string | Uint8Array, options?: { password?: string; hasPassword?: boolean; entitlement?: KDNAVerifiedExternalEntitlement | Record<string, any> }): KDNALoadPlan;
+export function planLoad(
+  input: string | Uint8Array,
+  options?: {
+    password?: string;
+    hasPassword?: boolean;
+    entitlement?: KDNAVerifiedExternalEntitlement | Record<string, any>;
+  },
+): KDNALoadPlan;
 export function buildChecksums(sourceDir: string): KDNAChecksums;
 export function pack(sourceDir: string, outputPath: string): void;
 export function unpack(inputPath: string, outputDir: string): void;
-export function loadAuthorized(input: string | Uint8Array, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): KDNARuntimeCapsule | Record<string, any>;
-export function load(input: string | Uint8Array, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): KDNARuntimeCapsule | Record<string, any>;
-export function loadAsset(input: string | Uint8Array, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): KDNARuntimeCapsule | Record<string, any>;
+export function loadAuthorized(
+  input: string | Uint8Array,
+  options?: {
+    profile?: 'index' | 'compact' | 'scenario' | 'full' | string;
+    as?: 'json' | 'prompt' | string;
+  },
+): KDNARuntimeCapsule | Record<string, any>;
+export function load(
+  input: string | Uint8Array,
+  options?: {
+    profile?: 'index' | 'compact' | 'scenario' | 'full' | string;
+    as?: 'json' | 'prompt' | string;
+  },
+): KDNARuntimeCapsule | Record<string, any>;
+export function loadAsset(
+  input: string | Uint8Array,
+  options?: {
+    profile?: 'index' | 'compact' | 'scenario' | 'full' | string;
+    as?: 'json' | 'prompt' | string;
+  },
+): KDNARuntimeCapsule | Record<string, any>;
 export const FORBIDDEN_OUTPUT_TERMS: readonly string[];
 
 // Lint
 export function lintDomain(dataMap: KDNAFileDataMap): LintResult;
 
 // Validate
-export function validateDomainSchema(dataMap: KDNAFileDataMap, schemaMap?: Record<string, any>): ValidationResult;
+export function validateDomainSchema(
+  dataMap: KDNAFileDataMap,
+  schemaMap?: Record<string, any>,
+): ValidationResult;
 export function validateCrossFile(dataMap: KDNAFileDataMap): ValidationResult;
 
 // Render
@@ -781,6 +1021,18 @@ export function renderCard(title: string, count: number | undefined, items: stri
 
 // Compose
 export function composeContext(domains: LoadedDomain[], options?: { separator?: string }): string;
-export function classifySignals(input: string, domains: Array<{ id: string; core: { trigger_signals?: string[] } }>): number[];
-export function composeChecks(domains: Array<{ id: string; core: { meta: { domain: string } }; patterns: { self_check: string[] } }>): string[];
-export function loadAndCompose(dataMaps: KDNAFileDataMap[], options?: LoadOptions & { separator?: string }): { domains: LoadedDomain[]; context: string; activeIndices: number[] };
+export function classifySignals(
+  input: string,
+  domains: Array<{ id: string; core: { trigger_signals?: string[] } }>,
+): number[];
+export function composeChecks(
+  domains: Array<{
+    id: string;
+    core: { meta: { domain: string } };
+    patterns: { self_check: string[] };
+  }>,
+): string[];
+export function loadAndCompose(
+  dataMaps: KDNAFileDataMap[],
+  options?: LoadOptions & { separator?: string },
+): { domains: LoadedDomain[]; context: string; activeIndices: number[] };

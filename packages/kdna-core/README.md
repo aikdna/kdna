@@ -28,9 +28,13 @@ const {
   validate,
   planLoad,
   loadAuthorized,
+  loadCapsuleV2,
+  computeDigestEvidence,
+  computeCapsuleDeliveryDigest,
+  adaptCapsuleV2ToV1,
   pack,
   unpack,
-  buildChecksums
+  buildChecksums,
 } = require('@aikdna/kdna-core');
 
 const validation = validate('./asset.kdna');
@@ -45,13 +49,43 @@ if (plan.can_load_now !== true) {
 
 const capsule = loadAuthorized('./asset.kdna', {
   profile: 'compact',
-  as: 'json'
+  as: 'json',
 });
 
 if (capsule.type !== 'kdna.context.capsule') {
   throw new Error('Expected a Runtime Capsule');
 }
 ```
+
+Capsule 2 is opt-in. It exposes A/C/E under distinct digest members while the
+default Runtime API remains on the frozen Capsule 1 contract:
+
+```js
+const expectedA = {
+  value: 'sha256:<64 lowercase hex>',
+  source: 'install_receipt',
+};
+
+const evidence = computeDigestEvidence('./asset.kdna', {
+  expectedDigests: {
+    asset: expectedA,
+  },
+});
+
+const capsule2 = loadCapsuleV2('./asset.kdna', {
+  profile: 'compact',
+  expectedDigests: {
+    asset: expectedA,
+  },
+});
+
+const deliveryDigest = computeCapsuleDeliveryDigest(capsule2);
+const legacyCapsule = adaptCapsuleV2ToV1(capsule2);
+```
+
+An A, C, or E mismatch is returned as evidence by `computeDigestEvidence()`
+and blocks `loadCapsuleV2()` with a digest-specific error. The adapter always
+maps E to Capsule 1 `asset_digest`; it never substitutes A or C.
 
 ## Supported Runtime Flow
 

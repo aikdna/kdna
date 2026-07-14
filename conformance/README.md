@@ -5,6 +5,10 @@ implement the asset-first KDNA contract. Some legacy profiles remain for
 historical compatibility testing; they are not part of the current conformance
 path.
 
+Capsule 2 A/C/E/P goldens live in `capsule-v2/`. Run them with
+`npm run conformance:capsule-v2`; they freeze the opt-in Core primitives and do
+not change the default Capsule 1 Runtime route.
+
 Conformance means:
 
 - `.kdna` is the canonical asset object.

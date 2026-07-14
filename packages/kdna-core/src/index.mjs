@@ -40,12 +40,23 @@ export { validateDomainSchema, validateCrossFile } from './validate-pure.js';
 
 export { renderPreviewHTML, escHtml, renderCard } from './render.js';
 
-export { composeContext, composeContextWithAttribution, classifySignals, classifySignalsAcrossDomains, composeChecks, loadAndCompose, loadCluster, detectDomainConflicts, generateClusterTrace } from './compose.js';
+export {
+  composeContext,
+  composeContextWithAttribution,
+  classifySignals,
+  classifySignalsAcrossDomains,
+  composeChecks,
+  loadAndCompose,
+  loadCluster,
+  detectDomainConflicts,
+  generateClusterTrace,
+} from './compose.js';
 
 import assetReader from './asset-reader.js';
 import cryptoProfile from './crypto-profile.js';
 import externalKeyGrant from './external-key-grant.js';
 import publicApi from './public-api.js';
+import capsuleV2 from './capsule-v2.js';
 
 export const openKDNA = publicApi.openKDNA;
 export const openKDNASync = publicApi.openKDNASync;
@@ -66,6 +77,18 @@ export const verifySignatureSync = publicApi.verifySignatureSync;
 export const matchDomain = publicApi.matchDomain;
 export const matchDomainSync = publicApi.matchDomainSync;
 export const composeKDNA = publicApi.composeKDNA;
+
+export const DIGEST_PROFILE = capsuleV2.DIGEST_PROFILE;
+export const CAPSULE_DIGEST_PROFILE = capsuleV2.CAPSULE_DIGEST_PROFILE;
+export const BASIS = capsuleV2.BASIS;
+export const computeAssetDigest = capsuleV2.computeAssetDigest;
+export const computeRuntimeEntrySetDigest = capsuleV2.computeRuntimeEntrySetDigest;
+export const computeDigestEvidence = capsuleV2.computeDigestEvidence;
+export const canonicalizeJcs = capsuleV2.canonicalizeJcs;
+export const computeCapsuleDeliveryDigest = capsuleV2.computeCapsuleDeliveryDigest;
+export const buildCapsuleV2 = capsuleV2.buildCapsuleV2;
+export const loadCapsuleV2 = capsuleV2.loadCapsuleV2;
+export const adaptCapsuleV2ToV1 = capsuleV2.adaptCapsuleV2ToV1;
 
 export const STANDARD_ENTRIES = assetReader.STANDARD_ENTRIES;
 export const createKdnaAssetReader = assetReader.createKdnaAssetReader;
