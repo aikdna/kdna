@@ -31,11 +31,14 @@ JSON Pointer mutations so each rejected value stays reviewable without
 duplicating the full Capsule. `audit-negative-cases.json` freezes the twelve
 audit-specific attack or inconsistency reproductions.
 
-Schema success alone is insufficient. The verifier also performs equality,
-digest recomputation, request/receipt correlation, and negotiation checks that
-JSON Schema cannot express.
+Schema success alone is insufficient. The conformance runner is now a pure
+consumer of the `@aikdna/kdna-core` public execution-contract API. The package
+performs equality, digest recomputation, request/receipt correlation, and
+negotiation checks that JSON Schema cannot express; the runner contains no
+second semantic implementation.
 
-The verifier operates on already-parsed JavaScript objects. It therefore
-assumes a duplicate-key rejecting JSON parser has run first and does not claim
-that `JSON.parse` can detect overwritten duplicate member names. Raw protocol
-inputs MUST reject duplicate keys before object-level validation.
+All committed fixture files enter through
+`parseExecutionContractJsonV1()`, the duplicate-key rejecting raw JSON
+boundary. Host adapters MUST use that boundary (or an equivalent strict
+parser) before object-level validation. Plain `JSON.parse()` overwrites
+duplicate member names and is not a compatible Host 2 input boundary.
