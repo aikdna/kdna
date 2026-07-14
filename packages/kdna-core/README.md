@@ -83,10 +83,12 @@ const deliveryDigest = computeCapsuleDeliveryDigest(capsule2);
 const legacyCapsule = adaptCapsuleV2ToV1(capsule2);
 ```
 
-ConsumptionPlan 1, Agent Host 2, and JudgmentTrace 1 are also strict opt-in
-contracts. Their builders derive protocol-owned members, while every verifier
-receives the trusted Plan digest and independently observed capabilities,
-request, and receipt as explicit context:
+ConsumptionPlan 1, Agent Host 2, and JudgmentTrace 1 are **Unreleased 0.18
+candidate APIs**. They are present on the source-tree candidate but are not a
+claim about the currently published `0.17` package. These contracts remain
+strictly opt-in. Their builders derive protocol-owned members, while every
+verifier receives a non-null trusted Plan digest and independently observed
+capabilities, request, receipt, and delivery state as explicit context:
 
 ```js
 const {
@@ -128,8 +130,13 @@ const trace = buildJudgmentTraceV1(traceInput, {
   ...executionContext,
   request,
   receipt,
+  trustedDeliveryObservation: 'host_receipt',
 });
 ```
+
+When no receipt exists, Trace construction requires the caller to state the
+trusted observation explicitly as `not_delivered` or `not_observed`; request
+existence alone is not treated as delivery evidence.
 
 `parseExecutionContractJsonV1()` is the raw protocol boundary. It rejects
 duplicate decoded object keys, invalid UTF-8, BOMs, non-scalar Unicode,

@@ -22,6 +22,7 @@ function context(overrides = {}) {
     coreCapsuleVersions: ['2.0', '1.0'],
     request: golden.request,
     receipt: golden.receipt,
+    trustedDeliveryObservation: 'host_receipt',
     ...overrides,
   };
 }
@@ -211,6 +212,176 @@ test('builders reproduce goldens without mutating independent inputs', () => {
   assert.equal(core.canonicalizeJcs(trace), core.canonicalizeJcs(golden.trace));
 });
 
+test('every strict Plan 1 chain requires a non-null matching trusted Plan digest', () => {
+  const wrongDigest = `sha256:${'0'.repeat(64)}`;
+  for (const [trustedPlanDigest, expectedCode] of [
+    [null, 'KDNA_VALIDATION_CONTEXT_INVALID'],
+    ['not-a-digest', 'KDNA_VALIDATION_CONTEXT_INVALID'],
+    [wrongDigest, 'KDNA_TRUSTED_PLAN_DIGEST_MISMATCH'],
+  ]) {
+    assert.equal(
+      core.validateConsumptionPlanV1(golden.plan, { trustedPlanDigest }).code,
+      expectedCode,
+    );
+    assert.equal(
+      core.negotiateExecutionPairV1(golden.plan, {
+        trustedPlanDigest,
+        capabilities: golden.capabilities,
+        coreCapsuleVersions: ['2.0', '1.0'],
+      }).issue_code,
+      expectedCode,
+    );
+    assert.equal(
+      core.validateAgentHost2RequestV1(
+        golden.request,
+        context({ trustedPlanDigest }),
+      ).code,
+      expectedCode,
+    );
+    assert.equal(
+      core.validateJudgmentTraceV1(golden.trace, context({ trustedPlanDigest })).code,
+      expectedCode,
+    );
+    assertCode(expectedCode, () =>
+      core.deriveBudgetEvidenceV1(golden.plan, {
+        trustedPlanDigest,
+        request: golden.request,
+        receipt: golden.receipt,
+      }),
+    );
+  }
+});
+
+test('public Host 2 request validation cannot disable pre-Host budget enforcement', () => {
+  const plan = structuredClone(golden.plan);
+  plan.budget.max_projection_chars = 1;
+  plan.integrity.plan_digest = core.computeConsumptionPlanDigestV1(plan);
+  const request = structuredClone(golden.request);
+  request.plan_ref.plan_digest = plan.integrity.plan_digest;
+  request.budget.max_projection_chars = 1;
+  const result = core.validateAgentHost2RequestV1(
+    request,
+    context({
+      plan,
+      trustedPlanDigest: plan.integrity.plan_digest,
+      request,
+    }),
+    { enforceBudget: false },
+  );
+  assert.equal(result.code, 'KDNA_HOST_BUDGET_LIMIT_EXCEEDED');
+});
+
+test('matched Host receipt requires sender, Host, echo, and actual Capsule P to agree', () => {
+  const request = structuredClone(golden.request);
+  const receipt = structuredClone(golden.receipt);
+  const forgedSenderP = `sha256:${'0'.repeat(64)}`;
+  request.runtime_contract.capsule_delivery_digest = forgedSenderP;
+  receipt.runtime_receipt.sender_capsule_delivery_digest = forgedSenderP;
+  assert.equal(
+    core.validateAgentHost2ReceiptV1(receipt, { request }).code,
+    'KDNA_HOST_CAPSULE_DELIVERY_DIGEST_MISMATCH',
+  );
+});
+
+test('Trace builder distinguishes explicit not-delivered and not-observed evidence', () => {
+  const errors = [
+    {
+      code: 'KDNA_HOST_RESPONSE_UNAVAILABLE',
+      message: 'The Host response was unavailable.',
+      phase: 'delivery',
+    },
+  ];
+  const notDeliveredContext = context({
+    receipt: null,
+    trustedDeliveryObservation: 'not_delivered',
+  });
+  const notDelivered = core.buildJudgmentTraceV1(
+    {
+      trace_id: 'trace_4444444444444444',
+      timestamp: '2026-07-15T00:00:00.500Z',
+      overall_status: 'blocked',
+      errors,
+    },
+    notDeliveredContext,
+  );
+  assert.equal(notDelivered.capsule_delivery_evidence.host_boundary_comparison, 'not_delivered');
+  assert.equal(notDelivered.capsule_delivery_evidence.delivered_capsule_version, null);
+  assert.equal(notDelivered.capsule_delivery_evidence.request_id, null);
+  assert.equal(notDelivered.execution.delivery_status, 'not_delivered');
+  assert.equal(core.validateJudgmentTraceV1(notDelivered, notDeliveredContext).valid, true);
+
+  const notObservedContext = context({
+    receipt: null,
+    trustedDeliveryObservation: 'not_observed',
+  });
+  const notObserved = core.buildJudgmentTraceV1(
+    {
+      trace_id: 'trace_5555555555555555',
+      timestamp: '2026-07-15T00:00:00.500Z',
+      overall_status: 'blocked',
+      errors,
+    },
+    notObservedContext,
+  );
+  assert.equal(notObserved.capsule_delivery_evidence.host_boundary_comparison, 'not_observed');
+  assert.equal(notObserved.capsule_delivery_evidence.delivered_capsule_version, '2.0');
+  assert.equal(notObserved.capsule_delivery_evidence.request_id, golden.request.request_id);
+  assert.equal(notObserved.execution.delivery_status, 'rejected_before_execution');
+  assert.equal(core.validateJudgmentTraceV1(notObserved, notObservedContext).valid, true);
+});
+
+test('object validators snapshot context and reject getters or custom prototypes', () => {
+  let getterRuns = 0;
+  const planContext = {};
+  Object.defineProperty(planContext, 'trustedPlanDigest', {
+    enumerable: true,
+    get() {
+      getterRuns += 1;
+      return golden.plan.integrity.plan_digest;
+    },
+  });
+  assert.equal(
+    core.validateConsumptionPlanV1(golden.plan, planContext).code,
+    'KDNA_VALIDATION_CONTEXT_INVALID',
+  );
+
+  const requestContext = Object.assign(Object.create({ hostile: true }), context());
+  assert.equal(
+    core.validateAgentHost2RequestV1(golden.request, requestContext).code,
+    'KDNA_VALIDATION_CONTEXT_INVALID',
+  );
+
+  const receiptContext = {};
+  Object.defineProperty(receiptContext, 'request', {
+    enumerable: true,
+    get() {
+      getterRuns += 1;
+      return golden.request;
+    },
+  });
+  assert.equal(
+    core.validateAgentHost2ReceiptV1(golden.receipt, receiptContext).code,
+    'KDNA_VALIDATION_CONTEXT_INVALID',
+  );
+
+  const traceContext = context();
+  const hostileCapabilities = structuredClone(golden.capabilities);
+  delete hostileCapabilities.host_protocols;
+  Object.defineProperty(hostileCapabilities, 'host_protocols', {
+    enumerable: true,
+    get() {
+      getterRuns += 1;
+      return ['kdna.agent-host/2'];
+    },
+  });
+  traceContext.capabilities = hostileCapabilities;
+  assert.equal(
+    core.validateJudgmentTraceV1(golden.trace, traceContext).code,
+    'KDNA_VALIDATION_CONTEXT_INVALID',
+  );
+  assert.equal(getterRuns, 0);
+});
+
 test('object validators fail closed with stable codes instead of leaking TypeError', () => {
   const cyclic = {};
   cyclic.self = cyclic;
@@ -237,26 +408,31 @@ test('object validators fail closed with stable codes instead of leaking TypeErr
   );
 });
 
-test('CJS, ESM, declarations, and packed files expose the execution contract API', async () => {
+test('all 15 candidate exports are symmetric across CJS, ESM, and declarations', async () => {
   const esm = await import('../src/index.mjs');
-  const names = [
-    'parseExecutionContractJsonV1',
-    'computeConsumptionPlanDigestV1',
-    'buildConsumptionPlanV1',
-    'validateConsumptionPlanV1',
-    'negotiateExecutionPairV1',
-    'buildAgentHost2RequestV1',
-    'validateAgentHost2RequestV1',
-    'validateAgentHost2ReceiptV1',
-    'deriveBudgetEvidenceV1',
-    'buildJudgmentTraceV1',
-    'validateJudgmentTraceV1',
-  ];
+  const exports = {
+    KDNAExecutionContractError: 'function',
+    PLAN_DIGEST_PROFILE: 'string',
+    HOST_PROTOCOL: 'string',
+    DEFAULT_CORE_CAPSULE_VERSIONS: 'object',
+    parseExecutionContractJsonV1: 'function',
+    computeConsumptionPlanDigestV1: 'function',
+    buildConsumptionPlanV1: 'function',
+    validateConsumptionPlanV1: 'function',
+    negotiateExecutionPairV1: 'function',
+    buildAgentHost2RequestV1: 'function',
+    validateAgentHost2RequestV1: 'function',
+    validateAgentHost2ReceiptV1: 'function',
+    deriveBudgetEvidenceV1: 'function',
+    buildJudgmentTraceV1: 'function',
+    validateJudgmentTraceV1: 'function',
+  };
   const declarations = fs.readFileSync(path.join(PACKAGE_ROOT, 'src', 'types.d.ts'), 'utf8');
-  for (const name of names) {
-    assert.equal(typeof core[name], 'function', `CJS ${name}`);
-    assert.equal(typeof esm[name], 'function', `ESM ${name}`);
-    assert.match(declarations, new RegExp(`function ${name}\\b`));
+  assert.equal(Object.keys(exports).length, 15);
+  for (const [name, type] of Object.entries(exports)) {
+    assert.equal(typeof core[name], type, `CJS ${name}`);
+    assert.equal(typeof esm[name], type, `ESM ${name}`);
+    assert.match(declarations, new RegExp(`(?:function|class|const) ${name}\\b`));
   }
   const dryRun = JSON.parse(
     execFileSync('npm', ['pack', '--dry-run', '--json'], {
@@ -283,11 +459,16 @@ test('TypeScript declarations compile for Plan 1 and Host 2 public calls', () =>
     fs.writeFileSync(
       path.join(tmp, 'check.ts'),
       [
-        `import { parseExecutionContractJsonV1, validateConsumptionPlanV1, KDNAConsumptionPlanV1 } from ${JSON.stringify(PACKAGE_ROOT)};`,
+        `import { parseExecutionContractJsonV1, validateConsumptionPlanV1, KDNAConsumptionPlanV1, KDNAJudgmentTraceV1, KDNAExecutionPairContextV1 } from ${JSON.stringify(PACKAGE_ROOT)};`,
         'const value = parseExecutionContractJsonV1("{}");',
         'declare const plan: KDNAConsumptionPlanV1;',
-        'const result = validateConsumptionPlanV1(plan, { trustedPlanDigest: null });',
-        'if (!result.valid) console.log(result.code, value);',
+        'declare const trace: KDNAJudgmentTraceV1;',
+        'declare const executionContext: KDNAExecutionPairContextV1;',
+        'const result = validateConsumptionPlanV1(plan, { trustedPlanDigest: plan.integrity.plan_digest });',
+        'const selected: "2.0" | null = trace.runtime_contract.selected_capsule_version;',
+        'const delivery: "matched" | "mismatched" | "not_delivered" | "not_observed" | "unavailable" = trace.capsule_delivery_evidence.host_boundary_comparison;',
+        'const versions: readonly string[] = executionContext.coreCapsuleVersions;',
+        'if (!result.valid) console.log(result.code, value, selected, delivery, versions);',
       ].join('\n'),
     );
     execFileSync(path.join(REPO_ROOT, 'node_modules', '.bin', 'tsc'), [

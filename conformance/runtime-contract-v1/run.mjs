@@ -37,6 +37,7 @@ function baseContext(overrides = {}) {
     coreCapsuleVersions: CORE_VERSIONS,
     request: golden.request,
     receipt: golden.receipt,
+    trustedDeliveryObservation: 'host_receipt',
     ...overrides,
   };
 }
@@ -105,7 +106,7 @@ function createHostPNotObservedTrace() {
         },
       ],
     },
-    baseContext({ receipt: null }),
+    baseContext({ receipt: null, trustedDeliveryObservation: 'not_observed' }),
   );
 }
 
@@ -131,6 +132,11 @@ function contextForTrace(trace) {
   return baseContext({
     request: sourceBlocked ? null : golden.request,
     receipt: trace.host_receipt,
+    trustedDeliveryObservation: trace.host_receipt
+      ? 'host_receipt'
+      : trace.capsule_delivery_evidence.host_boundary_comparison === 'not_observed'
+        ? 'not_observed'
+        : 'not_delivered',
   });
 }
 

@@ -104,11 +104,15 @@ function jcsCharacterCount(value) {
   return [...canonicalizeJcs(value)].length;
 }
 
+function snapshotJsonValue(value) {
+  return parseExecutionContractJsonV1(canonicalizeJcs(value));
+}
+
 function validateSchema(kind, value) {
   const validator = schemaValidators()[kind];
   try {
-    canonicalizeJcs(value);
-    if (validator(value)) return ok();
+    const snapshot = snapshotJsonValue(value);
+    if (validator(snapshot)) return ok(snapshot);
     const details = clone(validator.errors || []);
     if (
       kind === 'plan' &&
@@ -126,9 +130,9 @@ function validateSchema(kind, value) {
     }
     if (
       kind === 'trace' &&
-      value &&
-      value.overall_status === 'execution_completed' &&
-      value.budget?.comparison?.overall === 'exceeded'
+      snapshot &&
+      snapshot.overall_status === 'execution_completed' &&
+      snapshot.budget?.comparison?.overall === 'exceeded'
     ) {
       return invalid(
         'KDNA_TRACE_BUDGET_LIMIT_VIOLATION',
@@ -144,19 +148,53 @@ function validateSchema(kind, value) {
   }
 }
 
-function requireContext(context, keys) {
-  if (context === null || typeof context !== 'object' || Array.isArray(context)) {
-    return invalid('KDNA_VALIDATION_CONTEXT_INVALID', 'Validation context must be an object.');
-  }
-  for (const key of keys) {
-    if (!Object.prototype.hasOwnProperty.call(context, key)) {
+function snapshotContext(context, keys) {
+  try {
+    if (
+      context === null ||
+      typeof context !== 'object' ||
+      Array.isArray(context) ||
+      Object.getPrototypeOf(context) !== Object.prototype
+    ) {
       return invalid(
         'KDNA_VALIDATION_CONTEXT_INVALID',
-        `Validation context must explicitly provide ${key}.`,
+        'Validation context must be a plain object.',
       );
     }
+    const descriptors = Object.getOwnPropertyDescriptors(context);
+    if (
+      Reflect.ownKeys(descriptors).some(
+        (key) =>
+          typeof key !== 'string' ||
+          !descriptors[key].enumerable ||
+          !Object.prototype.hasOwnProperty.call(descriptors[key], 'value'),
+      )
+    ) {
+      return invalid(
+        'KDNA_VALIDATION_CONTEXT_INVALID',
+        'Validation context must contain only enumerable data properties.',
+      );
+    }
+
+    const snapshot = {};
+    for (const key of keys) {
+      const descriptor = descriptors[key];
+      if (!descriptor) {
+        return invalid(
+          'KDNA_VALIDATION_CONTEXT_INVALID',
+          `Validation context must explicitly provide ${key}.`,
+        );
+      }
+      snapshot[key] = snapshotJsonValue(descriptor.value);
+    }
+    return ok(snapshot);
+  } catch (error) {
+    return invalid(
+      'KDNA_VALIDATION_CONTEXT_INVALID',
+      'Validation context could not be safely snapshotted.',
+      { cause: error && typeof error.message === 'string' ? error.message : String(error) },
+    );
   }
-  return ok();
 }
 
 /**
@@ -498,22 +536,23 @@ function validatePlanSemantics(plan, trustedPlanDigest) {
 }
 
 function validateConsumptionPlanV1(plan, context) {
-  const contextResult = requireContext(context, ['trustedPlanDigest']);
+  const contextResult = snapshotContext(context, ['trustedPlanDigest']);
   if (!contextResult.valid) return contextResult;
+  const safeContext = contextResult.value;
   const schemaResult = validateSchema('plan', plan);
   if (!schemaResult.valid) return schemaResult;
+  const safePlan = schemaResult.value;
   if (
-    context.trustedPlanDigest !== null &&
-    (typeof context.trustedPlanDigest !== 'string' ||
-      !/^sha256:[0-9a-f]{64}$/.test(context.trustedPlanDigest))
+    typeof safeContext.trustedPlanDigest !== 'string' ||
+    !/^sha256:[0-9a-f]{64}$/.test(safeContext.trustedPlanDigest)
   ) {
     return invalid(
       'KDNA_VALIDATION_CONTEXT_INVALID',
-      'trustedPlanDigest must be null or a lowercase sha256 digest.',
+      'trustedPlanDigest must be a non-null lowercase sha256 digest.',
     );
   }
-  const code = validatePlanSemantics(plan, context.trustedPlanDigest);
-  return code ? invalid(code, 'ConsumptionPlan integrity correlation failed.') : ok();
+  const code = validatePlanSemantics(safePlan, safeContext.trustedPlanDigest);
+  return code ? invalid(code, 'ConsumptionPlan integrity correlation failed.') : ok(safePlan);
 }
 
 function buildConsumptionPlanV1(input) {
@@ -565,39 +604,42 @@ function blocked(issueCode) {
 }
 
 function negotiateExecutionPairV1(plan, context) {
-  const contextResult = requireContext(context, [
+  const contextResult = snapshotContext(context, [
     'trustedPlanDigest',
     'capabilities',
     'coreCapsuleVersions',
   ]);
   if (!contextResult.valid) return blocked(contextResult.code);
+  const safeContext = contextResult.value;
   const planResult = validateConsumptionPlanV1(plan, {
-    trustedPlanDigest: context.trustedPlanDigest,
+    trustedPlanDigest: safeContext.trustedPlanDigest,
   });
   if (!planResult.valid) return blocked(planResult.code);
-  const capabilitiesResult = validateSchema('capabilities', context.capabilities);
+  const safePlan = planResult.value;
+  const capabilitiesResult = validateSchema('capabilities', safeContext.capabilities);
   if (!capabilitiesResult.valid) return blocked(capabilitiesResult.code);
+  const safeCapabilities = capabilitiesResult.value;
   if (
-    !Array.isArray(context.coreCapsuleVersions) ||
-    context.coreCapsuleVersions.some((value) => typeof value !== 'string')
+    !Array.isArray(safeContext.coreCapsuleVersions) ||
+    safeContext.coreCapsuleVersions.some((value) => typeof value !== 'string')
   ) {
     return blocked('KDNA_VALIDATION_CONTEXT_INVALID');
   }
 
   const hasCapsule =
-    plan.projection_request.accepted_capsule_versions.includes(CAPSULE_VERSION) &&
-    context.coreCapsuleVersions.includes(CAPSULE_VERSION) &&
-    context.capabilities.capsule_versions.includes(CAPSULE_VERSION);
+    safePlan.projection_request.accepted_capsule_versions.includes(CAPSULE_VERSION) &&
+    safeContext.coreCapsuleVersions.includes(CAPSULE_VERSION) &&
+    safeCapabilities.capsule_versions.includes(CAPSULE_VERSION);
   if (!hasCapsule) return blocked('KDNA_CAPSULE_VERSION_UNSUPPORTED');
 
   const hasProtocol =
-    plan.host_request.accepted_protocols.includes(HOST_PROTOCOL) &&
-    context.capabilities.host_protocols.includes(HOST_PROTOCOL);
+    safePlan.host_request.accepted_protocols.includes(HOST_PROTOCOL) &&
+    safeCapabilities.host_protocols.includes(HOST_PROTOCOL);
   if (!hasProtocol) return blocked('KDNA_HOST_PROTOCOL_UNSUPPORTED');
 
   const hasVerifiablePair =
-    context.capabilities.capability_basis === 'registered_descriptor' &&
-    context.capabilities.capsule_digest_profiles.includes(CAPSULE_DELIVERY_PROFILE);
+    safeCapabilities.capability_basis === 'registered_descriptor' &&
+    safeCapabilities.capsule_digest_profiles.includes(CAPSULE_DELIVERY_PROFILE);
   if (!hasVerifiablePair) return blocked('KDNA_HOST_CAPSULE_PAIR_UNSUPPORTED');
 
   return {
@@ -721,27 +763,30 @@ function validateRequestSemantics(request, plan, enforceBudget = true) {
   return null;
 }
 
-function validateAgentHost2RequestV1(request, context, options = {}) {
-  const contextResult = requireContext(context, [
+function validateAgentHost2RequestV1(request, context) {
+  const contextResult = snapshotContext(context, [
     'plan',
     'trustedPlanDigest',
     'capabilities',
     'coreCapsuleVersions',
   ]);
   if (!contextResult.valid) return contextResult;
+  const safeContext = contextResult.value;
   const schemaResult = validateSchema('request', request);
   if (!schemaResult.valid) return schemaResult;
-  const planResult = validateConsumptionPlanV1(context.plan, {
-    trustedPlanDigest: context.trustedPlanDigest,
+  const safeRequest = schemaResult.value;
+  const planResult = validateConsumptionPlanV1(safeContext.plan, {
+    trustedPlanDigest: safeContext.trustedPlanDigest,
   });
   if (!planResult.valid) return planResult;
-  const negotiation = negotiateExecutionPairV1(context.plan, context);
+  const safePlan = planResult.value;
+  const negotiation = negotiateExecutionPairV1(safePlan, safeContext);
   if (negotiation.state !== 'selected') {
     return invalid(negotiation.issue_code, 'No strict ConsumptionPlan 1 / Host 2 pair was selected.');
   }
   try {
-    const code = validateRequestSemantics(request, context.plan, options.enforceBudget !== false);
-    return code ? invalid(code, 'Agent Host 2 request correlation failed.') : ok();
+    const code = validateRequestSemantics(safeRequest, safePlan, true);
+    return code ? invalid(code, 'Agent Host 2 request correlation failed.') : ok(safeRequest);
   } catch (error) {
     return invalid('KDNA_INPUT_INVALID', 'Agent Host 2 request is not a safe JSON value.', {
       cause: error && typeof error.message === 'string' ? error.message : String(error),
@@ -750,14 +795,20 @@ function validateAgentHost2RequestV1(request, context, options = {}) {
 }
 
 function buildAgentHost2RequestV1(input, context) {
-  const contextResult = requireContext(context, [
+  const contextResult = snapshotContext(context, [
     'plan',
     'trustedPlanDigest',
     'capabilities',
     'coreCapsuleVersions',
   ]);
   throwInvalid(contextResult);
-  const negotiation = negotiateExecutionPairV1(context.plan, context);
+  const safeContext = contextResult.value;
+  const planResult = validateConsumptionPlanV1(safeContext.plan, {
+    trustedPlanDigest: safeContext.trustedPlanDigest,
+  });
+  throwInvalid(planResult);
+  const plan = planResult.value;
+  const negotiation = negotiateExecutionPairV1(plan, safeContext);
   if (negotiation.state !== 'selected') {
     throw new KDNAExecutionContractError(
       negotiation.issue_code,
@@ -766,7 +817,6 @@ function buildAgentHost2RequestV1(input, context) {
   }
   let request;
   try {
-    const plan = context.plan;
     request = {
       protocol: HOST_PROTOCOL,
       request_id: input.request_id,
@@ -800,7 +850,7 @@ function buildAgentHost2RequestV1(input, context) {
       'Cannot build Agent Host 2 request from the supplied input.',
     );
   }
-  const result = validateAgentHost2RequestV1(request, context);
+  const result = validateAgentHost2RequestV1(request, { ...safeContext, plan });
   throwInvalid(result);
   return request;
 }
@@ -831,6 +881,8 @@ function validateReceiptSemantics(receipt, request) {
   } else if (
     runtimeReceipt.capsule_delivery_comparison !== 'matched' ||
     runtimeReceipt.provider_execution_status === 'not_started' ||
+    senderP !== recomputedP ||
+    runtimeReceipt.host_recomputed_capsule_delivery_digest !== senderP ||
     runtimeReceipt.host_recomputed_capsule_delivery_digest !== recomputedP
   ) {
     return 'KDNA_HOST_CAPSULE_DELIVERY_DIGEST_MISMATCH';
@@ -864,11 +916,13 @@ function validateReceiptSemantics(receipt, request) {
 }
 
 function validateAgentHost2ReceiptV1(receipt, context) {
-  const contextResult = requireContext(context, ['request']);
+  const contextResult = snapshotContext(context, ['request']);
   if (!contextResult.valid) return contextResult;
+  const safeContext = contextResult.value;
   const schemaResult = validateSchema('receipt', receipt);
   if (!schemaResult.valid) return schemaResult;
-  const requestSchemaResult = validateSchema('request', context.request);
+  const safeReceipt = schemaResult.value;
+  const requestSchemaResult = validateSchema('request', safeContext.request);
   if (!requestSchemaResult.valid) {
     return invalid(
       'KDNA_VALIDATION_CONTEXT_INVALID',
@@ -876,9 +930,10 @@ function validateAgentHost2ReceiptV1(receipt, context) {
       requestSchemaResult.errors,
     );
   }
+  const safeRequest = requestSchemaResult.value;
   try {
-    const code = validateReceiptSemantics(receipt, context.request);
-    return code ? invalid(code, 'Agent Host 2 receipt correlation failed.') : ok();
+    const code = validateReceiptSemantics(safeReceipt, safeRequest);
+    return code ? invalid(code, 'Agent Host 2 receipt correlation failed.') : ok(safeReceipt);
   } catch (error) {
     return invalid('KDNA_INPUT_INVALID', 'Agent Host 2 receipt is not a safe JSON value.', {
       cause: error && typeof error.message === 'string' ? error.message : String(error),
@@ -928,14 +983,16 @@ function expectedBudgetEvidence(plan, request, receipt) {
 }
 
 function deriveBudgetEvidenceV1(plan, context) {
-  const contextResult = requireContext(context, ['trustedPlanDigest', 'request', 'receipt']);
+  const contextResult = snapshotContext(context, ['trustedPlanDigest', 'request', 'receipt']);
   throwInvalid(contextResult);
+  const safeContext = contextResult.value;
   const planResult = validateConsumptionPlanV1(plan, {
-    trustedPlanDigest: context.trustedPlanDigest,
+    trustedPlanDigest: safeContext.trustedPlanDigest,
   });
   throwInvalid(planResult);
-  if (context.request !== null) {
-    const requestResult = validateSchema('request', context.request);
+  const safePlan = planResult.value;
+  if (safeContext.request !== null) {
+    const requestResult = validateSchema('request', safeContext.request);
     if (!requestResult.valid) {
       throw new KDNAExecutionContractError(
         'KDNA_VALIDATION_CONTEXT_INVALID',
@@ -943,7 +1000,8 @@ function deriveBudgetEvidenceV1(plan, context) {
         requestResult.errors,
       );
     }
-    const requestCode = validateRequestSemantics(context.request, plan, false);
+    safeContext.request = requestResult.value;
+    const requestCode = validateRequestSemantics(safeContext.request, safePlan, false);
     if (requestCode !== null) {
       throw new KDNAExecutionContractError(
         requestCode,
@@ -951,19 +1009,20 @@ function deriveBudgetEvidenceV1(plan, context) {
       );
     }
   }
-  if (context.receipt !== null) {
-    if (context.request === null) {
+  if (safeContext.receipt !== null) {
+    if (safeContext.request === null) {
       throw new KDNAExecutionContractError(
         'KDNA_VALIDATION_CONTEXT_INVALID',
         'Budget derivation cannot use a receipt without its independent request.',
       );
     }
-    const receiptResult = validateAgentHost2ReceiptV1(context.receipt, {
-      request: context.request,
+    const receiptResult = validateAgentHost2ReceiptV1(safeContext.receipt, {
+      request: safeContext.request,
     });
     throwInvalid(receiptResult);
+    safeContext.receipt = receiptResult.value;
   }
-  return expectedBudgetEvidence(plan, context.request, context.receipt);
+  return expectedBudgetEvidence(safePlan, safeContext.request, safeContext.receipt);
 }
 
 function withoutExpectedDigests(asset) {
@@ -1024,7 +1083,44 @@ function validateTerminalState(trace, receipt) {
   return null;
 }
 
-function validateTraceSemantics(trace, plan, request, receipt, capabilities, coreCapsuleVersions) {
+function validateTrustedDeliveryObservation(context) {
+  const observation = context.trustedDeliveryObservation;
+  if (!['host_receipt', 'not_delivered', 'not_observed'].includes(observation)) {
+    return invalid(
+      'KDNA_VALIDATION_CONTEXT_INVALID',
+      'trustedDeliveryObservation must be host_receipt, not_delivered, or not_observed.',
+    );
+  }
+  if (context.receipt !== null && observation !== 'host_receipt') {
+    return invalid(
+      'KDNA_VALIDATION_CONTEXT_INVALID',
+      'A correlated Host receipt requires trustedDeliveryObservation=host_receipt.',
+    );
+  }
+  if (context.receipt === null && observation === 'host_receipt') {
+    return invalid(
+      'KDNA_VALIDATION_CONTEXT_INVALID',
+      'trustedDeliveryObservation=host_receipt requires an independent receipt.',
+    );
+  }
+  if (context.request === null && observation !== 'not_delivered') {
+    return invalid(
+      'KDNA_VALIDATION_CONTEXT_INVALID',
+      'Without a Host request the trusted delivery observation must be not_delivered.',
+    );
+  }
+  return ok(observation);
+}
+
+function validateTraceSemantics(
+  trace,
+  plan,
+  request,
+  receipt,
+  capabilities,
+  coreCapsuleVersions,
+  trustedDeliveryObservation,
+) {
   if (
     trace.plan_ref.plan_id !== plan.plan_id ||
     trace.plan_ref.plan_digest_profile !== plan.integrity.profile ||
@@ -1086,6 +1182,7 @@ function validateTraceSemantics(trace, plan, request, receipt, capabilities, cor
 
       if (delivery.host_boundary_comparison === 'mismatched') {
         if (
+          trustedDeliveryObservation !== 'host_receipt' ||
           receipt === null ||
           validateReceiptSemantics(receipt, request) !== null ||
           receipt.runtime_receipt.capsule_delivery_comparison !== 'mismatched' ||
@@ -1101,6 +1198,7 @@ function validateTraceSemantics(trace, plan, request, receipt, capabilities, cor
         }
       } else if (delivery.host_boundary_comparison === 'not_observed') {
         if (
+          trustedDeliveryObservation !== 'not_observed' ||
           receipt !== null ||
           delivery.host_recomputed !== null ||
           delivery.host_echoed !== null ||
@@ -1110,16 +1208,21 @@ function validateTraceSemantics(trace, plan, request, receipt, capabilities, cor
         ) {
           return 'KDNA_TRACE_UNDELIVERED_HOST_EVIDENCE';
         }
-      } else if (
-        receipt !== null ||
-        delivery.host_recomputed !== null ||
-        delivery.host_echoed !== null ||
-        delivery.delivered_capsule_version !== null ||
-        delivery.host_boundary_comparison !== 'not_delivered' ||
-        delivery.request_id !== null ||
-        trace.execution.delivery_status !== 'not_delivered'
-      ) {
-        return 'KDNA_TRACE_UNDELIVERED_HOST_EVIDENCE';
+      } else {
+        if (trustedDeliveryObservation !== 'not_delivered') {
+          return 'KDNA_TRACE_DELIVERY_OBSERVATION_MISMATCH';
+        }
+        if (
+          receipt !== null ||
+          delivery.host_recomputed !== null ||
+          delivery.host_echoed !== null ||
+          delivery.delivered_capsule_version !== null ||
+          delivery.host_boundary_comparison !== 'not_delivered' ||
+          delivery.request_id !== null ||
+          trace.execution.delivery_status !== 'not_delivered'
+        ) {
+          return 'KDNA_TRACE_UNDELIVERED_HOST_EVIDENCE';
+        }
       }
 
       const expectedBudget = expectedBudgetEvidence(plan, request, receipt);
@@ -1128,6 +1231,7 @@ function validateTraceSemantics(trace, plan, request, receipt, capabilities, cor
     }
 
     if (
+      trustedDeliveryObservation !== 'not_delivered' ||
       runtime.selected_capsule_version !== null ||
       runtime.selected_host_protocol !== null ||
       !['not_started', 'blocked'].includes(runtime.negotiation_state) ||
@@ -1169,7 +1273,13 @@ function validateTraceSemantics(trace, plan, request, receipt, capabilities, cor
     return validateTerminalState(trace, null);
   }
 
-  if (request === null || receipt === null) return 'KDNA_TRACE_TERMINAL_STATE_MISMATCH';
+  if (
+    request === null ||
+    receipt === null ||
+    trustedDeliveryObservation !== 'host_receipt'
+  ) {
+    return 'KDNA_TRACE_TERMINAL_STATE_MISMATCH';
+  }
 
   const requestError = validateRequestSemantics(request, plan);
   if (requestError === 'KDNA_HOST_BUDGET_LIMIT_EXCEEDED') {
@@ -1254,22 +1364,28 @@ function validateTraceSemantics(trace, plan, request, receipt, capabilities, cor
 }
 
 function validateJudgmentTraceV1(trace, context) {
-  const contextResult = requireContext(context, [
+  const contextResult = snapshotContext(context, [
     'plan',
     'trustedPlanDigest',
     'capabilities',
     'coreCapsuleVersions',
     'request',
     'receipt',
+    'trustedDeliveryObservation',
   ]);
   if (!contextResult.valid) return contextResult;
+  const safeContext = contextResult.value;
+  const observationResult = validateTrustedDeliveryObservation(safeContext);
+  if (!observationResult.valid) return observationResult;
   const schemaResult = validateSchema('trace', trace);
   if (!schemaResult.valid) return schemaResult;
-  const planResult = validateConsumptionPlanV1(context.plan, {
-    trustedPlanDigest: context.trustedPlanDigest,
+  const safeTrace = schemaResult.value;
+  const planResult = validateConsumptionPlanV1(safeContext.plan, {
+    trustedPlanDigest: safeContext.trustedPlanDigest,
   });
   if (!planResult.valid) return planResult;
-  const capabilitiesResult = validateSchema('capabilities', context.capabilities);
+  safeContext.plan = planResult.value;
+  const capabilitiesResult = validateSchema('capabilities', safeContext.capabilities);
   if (!capabilitiesResult.valid) {
     return invalid(
       'KDNA_VALIDATION_CONTEXT_INVALID',
@@ -1277,8 +1393,9 @@ function validateJudgmentTraceV1(trace, context) {
       capabilitiesResult.errors,
     );
   }
-  if (context.request !== null) {
-    const requestSchemaResult = validateSchema('request', context.request);
+  safeContext.capabilities = capabilitiesResult.value;
+  if (safeContext.request !== null) {
+    const requestSchemaResult = validateSchema('request', safeContext.request);
     if (!requestSchemaResult.valid) {
       return invalid(
         'KDNA_VALIDATION_CONTEXT_INVALID',
@@ -1286,16 +1403,17 @@ function validateJudgmentTraceV1(trace, context) {
         requestSchemaResult.errors,
       );
     }
+    safeContext.request = requestSchemaResult.value;
   }
-  if (context.receipt !== null) {
-    if (context.request === null) {
+  if (safeContext.receipt !== null) {
+    if (safeContext.request === null) {
       return invalid(
         'KDNA_VALIDATION_CONTEXT_INVALID',
         'Trace validation cannot correlate a receipt without its independent request.',
       );
     }
-    const receiptResult = validateAgentHost2ReceiptV1(context.receipt, {
-      request: context.request,
+    const receiptResult = validateAgentHost2ReceiptV1(safeContext.receipt, {
+      request: safeContext.request,
     });
     if (!receiptResult.valid) {
       if (receiptResult.code === 'KDNA_HOST_CAPSULE_DELIVERY_DIGEST_MISMATCH') {
@@ -1311,17 +1429,19 @@ function validateJudgmentTraceV1(trace, context) {
         receiptResult.errors,
       );
     }
+    safeContext.receipt = receiptResult.value;
   }
   try {
     const code = validateTraceSemantics(
-      trace,
-      context.plan,
-      context.request,
-      context.receipt,
-      context.capabilities,
-      context.coreCapsuleVersions,
+      safeTrace,
+      safeContext.plan,
+      safeContext.request,
+      safeContext.receipt,
+      safeContext.capabilities,
+      safeContext.coreCapsuleVersions,
+      safeContext.trustedDeliveryObservation,
     );
-    return code ? invalid(code, 'JudgmentTrace correlation failed.') : ok();
+    return code ? invalid(code, 'JudgmentTrace correlation failed.') : ok(safeTrace);
   } catch (error) {
     return invalid('KDNA_INPUT_INVALID', 'JudgmentTrace is not a safe JSON value.', {
       cause: error && typeof error.message === 'string' ? error.message : String(error),
@@ -1330,21 +1450,25 @@ function validateJudgmentTraceV1(trace, context) {
 }
 
 function buildJudgmentTraceV1(input, context) {
-  const contextResult = requireContext(context, [
+  const contextResult = snapshotContext(context, [
     'plan',
     'trustedPlanDigest',
     'capabilities',
     'coreCapsuleVersions',
     'request',
     'receipt',
+    'trustedDeliveryObservation',
   ]);
   throwInvalid(contextResult);
-  const planResult = validateConsumptionPlanV1(context.plan, {
-    trustedPlanDigest: context.trustedPlanDigest,
+  const safeContext = contextResult.value;
+  throwInvalid(validateTrustedDeliveryObservation(safeContext));
+  const planResult = validateConsumptionPlanV1(safeContext.plan, {
+    trustedPlanDigest: safeContext.trustedPlanDigest,
   });
   throwInvalid(planResult);
+  safeContext.plan = planResult.value;
 
-  const capabilitiesResult = validateSchema('capabilities', context.capabilities);
+  const capabilitiesResult = validateSchema('capabilities', safeContext.capabilities);
   if (!capabilitiesResult.valid) {
     throw new KDNAExecutionContractError(
       'KDNA_VALIDATION_CONTEXT_INVALID',
@@ -1352,35 +1476,61 @@ function buildJudgmentTraceV1(input, context) {
       capabilitiesResult.errors,
     );
   }
-  if (context.request !== null) {
-    const requestResult = validateAgentHost2RequestV1(context.request, context, {
-      enforceBudget: false,
-    });
-    throwInvalid(requestResult);
+  safeContext.capabilities = capabilitiesResult.value;
+  if (safeContext.request !== null) {
+    const requestResult = validateSchema('request', safeContext.request);
+    if (!requestResult.valid) {
+      throw new KDNAExecutionContractError(
+        'KDNA_VALIDATION_CONTEXT_INVALID',
+        'Trace construction requires a schema-valid independent Host request.',
+        requestResult.errors,
+      );
+    }
+    safeContext.request = requestResult.value;
+    const requestCode = validateRequestSemantics(
+      safeContext.request,
+      safeContext.plan,
+      false,
+    );
+    if (requestCode !== null) {
+      throw new KDNAExecutionContractError(
+        requestCode,
+        'Trace construction requires an independently correlated Host request.',
+      );
+    }
+    const negotiation = negotiateExecutionPairV1(safeContext.plan, safeContext);
+    if (negotiation.state !== 'selected') {
+      throw new KDNAExecutionContractError(
+        negotiation.issue_code,
+        'Trace construction requires a selected strict execution pair.',
+      );
+    }
   }
-  if (context.receipt !== null) {
-    if (context.request === null) {
+  if (safeContext.receipt !== null) {
+    if (safeContext.request === null) {
       throw new KDNAExecutionContractError(
         'KDNA_VALIDATION_CONTEXT_INVALID',
         'Trace construction cannot use a receipt without its independent request.',
       );
     }
-    const receiptResult = validateAgentHost2ReceiptV1(context.receipt, {
-      request: context.request,
+    const receiptResult = validateAgentHost2ReceiptV1(safeContext.receipt, {
+      request: safeContext.request,
     });
     throwInvalid(receiptResult);
+    safeContext.receipt = receiptResult.value;
   }
 
-  const plan = context.plan;
-  const request = context.request;
-  const receipt = context.receipt;
-  const negotiation = negotiateExecutionPairV1(plan, context);
+  const plan = safeContext.plan;
+  const request = safeContext.request;
+  const receipt = safeContext.receipt;
+  const observation = safeContext.trustedDeliveryObservation;
+  const negotiation = negotiateExecutionPairV1(plan, safeContext);
   const hasRequest = request !== null;
   const hasReceipt = receipt !== null;
   const comparison = hasReceipt
     ? receipt.runtime_receipt.capsule_delivery_comparison
     : hasRequest
-      ? 'not_observed'
+      ? observation
       : 'unavailable';
   const p = hasRequest ? request.runtime_contract.capsule_delivery_digest : null;
   const matched = comparison === 'matched';
@@ -1402,9 +1552,9 @@ function buildJudgmentTraceV1(input, context) {
       overall_status: input.overall_status,
       runtime_contract: {
         plan_capsule_versions: clone(plan.projection_request.accepted_capsule_versions),
-        core_capsule_versions: clone(context.coreCapsuleVersions),
+        core_capsule_versions: clone(safeContext.coreCapsuleVersions),
         plan_host_protocols: clone(plan.host_request.accepted_protocols),
-        host_capabilities: clone(context.capabilities),
+        host_capabilities: clone(safeContext.capabilities),
         negotiation_state: hasRequest
           ? 'selected'
           : negotiation.state === 'selected'
@@ -1426,9 +1576,10 @@ function buildJudgmentTraceV1(input, context) {
         host_echoed: hasReceipt
           ? receipt.runtime_receipt.echoed_capsule_delivery_digest
           : null,
-        delivered_capsule_version: hasRequest ? CAPSULE_VERSION : null,
+        delivered_capsule_version:
+          hasReceipt || observation === 'not_observed' ? CAPSULE_VERSION : null,
         host_boundary_comparison: comparison,
-        request_id: hasRequest ? request.request_id : null,
+        request_id: hasReceipt || observation === 'not_observed' ? request.request_id : null,
       },
       projection_actual: {
         profile: hasRequest ? request.projection_contract.profile : null,
@@ -1439,7 +1590,7 @@ function buildJudgmentTraceV1(input, context) {
       execution: {
         delivery_status: matched
           ? 'correlated_response'
-          : hasRequest
+          : hasReceipt || observation === 'not_observed'
             ? 'rejected_before_execution'
             : 'not_delivered',
         semantic_consumption: matched
@@ -1473,7 +1624,7 @@ function buildJudgmentTraceV1(input, context) {
     );
   }
 
-  const result = validateJudgmentTraceV1(trace, context);
+  const result = validateJudgmentTraceV1(trace, safeContext);
   throwInvalid(result);
   return trace;
 }

@@ -58,6 +58,14 @@
 
 ### Fixed
 
+- Require a non-null independently trusted Plan digest throughout the strict
+  Plan 1 / Host 2 chain, snapshot hostile validation contexts without invoking
+  accessors, and keep pre-Host budget enforcement unavailable as a public
+  bypass option.
+- Require matched Host receipts to correlate sender, Host-recomputed, echoed,
+  and actual Capsule delivery digests. Trace construction now requires an
+  explicit trusted delivery observation when no receipt exists, distinguishing
+  `not_delivered` from `not_observed` without inferring either from a request.
 - Check internal C/E declarations and canonical/legacy alias agreement before
   independent expected values, so external matches cannot hide conflicting
   asset declarations.

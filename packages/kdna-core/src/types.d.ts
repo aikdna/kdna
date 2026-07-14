@@ -940,28 +940,99 @@ export interface KDNABudgetEvidenceV1 {
     usage_basis: 'host_reported' | 'not_observed';
   };
   comparison: {
-    projection_chars: string;
-    task_chars: string;
-    elapsed_ms: string;
-    tokens_used: string;
-    model_calls: string;
+    projection_chars: 'within_limit' | 'exceeded' | 'not_observed';
+    task_chars: 'within_limit' | 'exceeded';
+    elapsed_ms: 'within_limit' | 'exceeded' | 'not_observed';
+    tokens_used: 'within_limit' | 'exceeded' | 'not_limited' | 'not_observed';
+    model_calls: 'within_limit' | 'exceeded' | 'not_limited' | 'not_observed';
     overall: 'within_limit' | 'exceeded' | 'not_observed';
   };
 }
 
-export interface KDNAJudgmentTraceV1 extends Record<string, unknown> {
+export interface KDNAJudgmentTraceIssueV1 {
+  code: string;
+  message: string;
+  phase: 'plan' | 'negotiation' | 'load' | 'budget' | 'delivery' | 'host' | 'execution';
+}
+
+export interface KDNAJudgmentTraceV1 {
   type: 'kdna.judgment.trace';
   trace_version: '1.0.0';
   trace_id: string;
+  plan_ref: {
+    plan_id: string;
+    plan_digest_profile: 'kdna-consumption-plan-jcs-v1';
+    plan_digest: string;
+    comparison: 'matched';
+  };
+  parent_trace_id: string | null;
+  timestamp: string;
   overall_status: 'execution_completed' | 'blocked' | 'execution_failed' | 'cancelled' | 'timed_out';
+  runtime_contract: {
+    plan_capsule_versions: ['2.0'];
+    core_capsule_versions: Array<'2.0' | '1.0'>;
+    plan_host_protocols: ['kdna.agent-host/2'];
+    host_capabilities: KDNAAgentHostCapabilitiesV1;
+    negotiation_state: 'selected' | 'blocked' | 'not_started';
+    selected_capsule_version: '2.0' | null;
+    selected_host_protocol: 'kdna.agent-host/2' | null;
+    issue_code:
+      | 'KDNA_CAPSULE_VERSION_UNSUPPORTED'
+      | 'KDNA_HOST_PROTOCOL_UNSUPPORTED'
+      | 'KDNA_HOST_CAPSULE_PAIR_UNSUPPORTED'
+      | null;
+  };
+  asset_identity: {
+    asset_id: string;
+    asset_uid: string;
+    version: string;
+    judgment_version: string;
+    access: 'public' | 'licensed' | 'remote';
+  };
+  digest_evidence: KDNADigestEvidence;
+  capsule_delivery_evidence: {
+    basis: 'kdna-capsule-jcs-v1';
+    observed: string | null;
+    sender_computed: boolean;
+    host_recomputed: string | null;
+    host_echoed: string | null;
+    delivered_capsule_version: '2.0' | null;
+    host_boundary_comparison:
+      | 'matched'
+      | 'mismatched'
+      | 'not_delivered'
+      | 'not_observed'
+      | 'unavailable';
+    request_id: string | null;
+  };
+  projection_actual: {
+    profile: 'index' | 'compact' | 'scenario' | 'full' | null;
+    capsule_delivery_digest: string | null;
+    profile_deviated_from_plan: boolean | null;
+  };
   host_receipt: KDNAAgentHost2ReceiptV1 | null;
+  execution: {
+    delivery_status: 'correlated_response' | 'rejected_before_execution' | 'not_delivered';
+    semantic_consumption: { state: 'not_observed'; basis: null };
+    execution_status: 'completed' | 'not_started' | 'failed' | 'cancelled' | 'timed_out';
+    conformance_status: 'not_evaluated';
+    model_identity: { value: string | null; basis: 'host_reported' | 'not_observed' };
+  };
   budget: KDNABudgetEvidenceV1;
+  result_ref: {
+    shape: 'structured_judgment';
+    result_digest: string;
+    basis: 'kdna-result-jcs-v1';
+    stored: boolean;
+  } | null;
+  errors: KDNAJudgmentTraceIssueV1[];
+  warnings: string[];
 }
 
 export interface KDNAExecutionPairContextV1 {
-  trustedPlanDigest: string | null;
+  trustedPlanDigest: string;
   capabilities: KDNAAgentHostCapabilitiesV1;
-  coreCapsuleVersions: string[];
+  coreCapsuleVersions: readonly string[];
 }
 
 export interface KDNAHost2ValidationContextV1 extends KDNAExecutionPairContextV1 {
@@ -971,6 +1042,7 @@ export interface KDNAHost2ValidationContextV1 extends KDNAExecutionPairContextV1
 export interface KDNAJudgmentTraceContextV1 extends KDNAHost2ValidationContextV1 {
   request: KDNAAgentHost2RequestV1 | null;
   receipt: KDNAAgentHost2ReceiptV1 | null;
+  trustedDeliveryObservation: 'host_receipt' | 'not_delivered' | 'not_observed';
 }
 
 export const PLAN_DIGEST_PROFILE: 'kdna-consumption-plan-jcs-v1';
@@ -993,7 +1065,7 @@ export function buildConsumptionPlanV1(input: {
 }): KDNAConsumptionPlanV1;
 export function validateConsumptionPlanV1(
   plan: unknown,
-  context: { trustedPlanDigest: string | null },
+  context: { trustedPlanDigest: string },
 ): KDNAExecutionContractValidationResult;
 export function negotiateExecutionPairV1(
   plan: KDNAConsumptionPlanV1,
@@ -1011,7 +1083,6 @@ export function buildAgentHost2RequestV1(
 export function validateAgentHost2RequestV1(
   request: unknown,
   context: KDNAHost2ValidationContextV1,
-  options?: { enforceBudget?: boolean },
 ): KDNAExecutionContractValidationResult;
 export function validateAgentHost2ReceiptV1(
   receipt: unknown,
@@ -1020,7 +1091,7 @@ export function validateAgentHost2ReceiptV1(
 export function deriveBudgetEvidenceV1(
   plan: KDNAConsumptionPlanV1,
   context: {
-    trustedPlanDigest: string | null;
+    trustedPlanDigest: string;
     request: KDNAAgentHost2RequestV1 | null;
     receipt: KDNAAgentHost2ReceiptV1 | null;
   },
@@ -1032,7 +1103,7 @@ export function buildJudgmentTraceV1(
     overall_status: KDNAJudgmentTraceV1['overall_status'];
     parent_trace_id?: string | null;
     result_stored?: boolean;
-    errors?: Array<{ code: string; message: string; phase: string }>;
+    errors?: KDNAJudgmentTraceIssueV1[];
     warnings?: string[];
   },
   context: KDNAJudgmentTraceContextV1,
