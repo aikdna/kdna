@@ -64,9 +64,11 @@
 - Restrict Core publication to canonical `kdna-core-v*` published-release
   events, require the exact version tag to identify the workflow commit, and
   make already-published versions idempotent only when registry `gitHead` and
-  artifact integrity match the current release evidence. Missing registry
-  identity or a different artifact now fails closed instead of being treated
-  as a successful duplicate.
+  artifact integrity and SHA-1 shasum match the current release evidence. Only
+  npm's structured, exact-version `No match found` response is treated as an
+  unpublished version; missing packages, authorization/registry errors,
+  missing identity, malformed digests, or a different artifact fail closed
+  instead of being treated as a successful duplicate.
 - Report an unavailable GitHub Release lookup as an explicit non-gating
   `SKIP`, rather than wrapping the skipped observation in a misleading
   readiness `PASS`. Remove unused downstream repository checkouts from the

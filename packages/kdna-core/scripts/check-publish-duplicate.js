@@ -38,6 +38,14 @@ function validateSha(value, label) {
   return sha;
 }
 
+function validateShasum(value, label) {
+  const shasum = requireNonEmptyString(value, label);
+  if (!/^[0-9a-f]{40}$/u.test(shasum)) {
+    throw new Error(`${label} must be a lowercase 40-character hexadecimal SHA-1`);
+  }
+  return shasum;
+}
+
 function loadLocalEvidence({ evidenceRoot, packageManifest, githubSha }) {
   const pack = readJson(path.join(evidenceRoot, 'core.npm-pack.json'), 'Core npm-pack evidence');
   const manifest = readJson(
@@ -54,6 +62,7 @@ function loadLocalEvidence({ evidenceRoot, packageManifest, githubSha }) {
     );
   }
   requireNonEmptyString(pack.integrity, 'Core npm-pack evidence integrity');
+  const packShasum = validateShasum(pack.shasum, 'Core npm-pack evidence shasum');
 
   if (manifest.source_repository !== 'aikdna/kdna') {
     throw new Error(
@@ -75,11 +84,15 @@ function loadLocalEvidence({ evidenceRoot, packageManifest, githubSha }) {
     ? manifest.artifacts.find((artifact) => artifact && artifact.label === 'core')
     : null;
   if (!manifestCore) throw new Error('release artifact manifest has no Core artifact');
+  const manifestShasum = validateShasum(
+    manifestCore.shasum,
+    'release artifact manifest Core shasum',
+  );
   if (
     manifestCore.package_name !== pack.package_name ||
     manifestCore.version !== pack.version ||
     manifestCore.integrity !== pack.integrity ||
-    manifestCore.shasum !== pack.shasum
+    manifestShasum !== packShasum
   ) {
     throw new Error('Core npm-pack evidence does not match the release artifact manifest');
   }
@@ -89,7 +102,7 @@ function loadLocalEvidence({ evidenceRoot, packageManifest, githubSha }) {
     version: expectedVersion,
     githubSha: expectedSha,
     integrity: pack.integrity,
-    shasum: pack.shasum || null,
+    shasum: packShasum,
   };
 }
 
@@ -121,13 +134,35 @@ function decidePublication({ local, registry }) {
   if (registryIntegrity !== local.integrity) {
     throw new Error('registry dist.integrity does not match this run\'s Core npm-pack evidence');
   }
-  if (local.shasum && registry.dist.shasum && registry.dist.shasum !== local.shasum) {
+  const registryShasum = validateShasum(
+    registry.dist && registry.dist.shasum,
+    'registry dist.shasum',
+  );
+  if (registryShasum !== local.shasum) {
     throw new Error('registry dist.shasum does not match this run\'s Core npm-pack evidence');
   }
   return {
     publishRequired: false,
     message: `${local.name}@${local.version} already exists with the same commit and artifact; skipping publication.`,
   };
+}
+
+function parseJsonDocument(source) {
+  if (typeof source !== 'string' || !source.trim()) return null;
+  try {
+    return JSON.parse(source.trim());
+  } catch {
+    return null;
+  }
+}
+
+function exactVersionFromSpec(spec) {
+  const separator = spec.lastIndexOf('@');
+  const version = separator > 0 ? spec.slice(separator + 1) : '';
+  if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u.test(version)) {
+    throw new Error(`npm view spec must select one exact version: ${spec}`);
+  }
+  return version;
 }
 
 function parseRegistryResult(result, spec) {
@@ -152,7 +187,19 @@ function parseRegistryResult(result, spec) {
   }
 
   const diagnostic = `${stdout}\n${stderr}`;
-  if (/\bE404\b/u.test(diagnostic)) return null;
+  // `npm view --json` emits a complete structured error document on stdout.
+  // Stderr is diagnostic-only: accepting JSON fragments from it would let a
+  // proxy, authorization failure, or injected message masquerade as absence.
+  const structuredError = parseJsonDocument(stdout);
+  const requestedVersion = exactVersionFromSpec(spec);
+  if (
+    structuredError &&
+    structuredError.error &&
+    structuredError.error.code === 'E404' &&
+    structuredError.error.summary === `No match found for version ${requestedVersion}`
+  ) {
+    return null;
+  }
   throw new Error(
     `npm view failed for ${spec} with exit ${result.status === null ? 'unknown' : result.status}: ${diagnostic || 'no diagnostic output'}`,
   );

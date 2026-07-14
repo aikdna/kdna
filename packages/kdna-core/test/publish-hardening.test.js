@@ -119,6 +119,34 @@ test('duplicate publication guard fails closed on missing or mismatched identity
       }),
     /registry dist\.integrity must be a non-empty string/u,
   );
+  assert.throws(
+    () =>
+      decidePublication({
+        local: localArtifact(),
+        registry: registryArtifact({ dist: { integrity: INTEGRITY } }),
+      }),
+    /registry dist\.shasum must be a non-empty string/u,
+  );
+  assert.throws(
+    () =>
+      decidePublication({
+        local: localArtifact(),
+        registry: registryArtifact({
+          dist: { integrity: INTEGRITY, shasum: SHASUM.toUpperCase() },
+        }),
+      }),
+    /lowercase 40-character hexadecimal SHA-1/u,
+  );
+  assert.throws(
+    () =>
+      decidePublication({
+        local: localArtifact(),
+        registry: registryArtifact({
+          dist: { integrity: INTEGRITY, shasum: OTHER_SHA },
+        }),
+      }),
+    /dist\.shasum does not match/u,
+  );
 });
 
 test('duplicate publication guard binds npm-pack evidence to clean workflow commit', () => {
@@ -155,19 +183,196 @@ test('duplicate publication guard binds npm-pack evidence to clean workflow comm
         }),
       /dirty worktree/u,
     );
+
+    writeEvidence(tempDirectory, { pack: { shasum: undefined } });
+    assert.throws(
+      () =>
+        loadLocalEvidence({
+          evidenceRoot: tempDirectory,
+          packageManifest: { name: '@aikdna/kdna-core', version: '0.18.0' },
+          githubSha: FULL_SHA,
+        }),
+      /Core npm-pack evidence shasum must be a non-empty string/u,
+    );
+
+    writeEvidence(tempDirectory, { pack: { shasum: SHASUM.toUpperCase() } });
+    assert.throws(
+      () =>
+        loadLocalEvidence({
+          evidenceRoot: tempDirectory,
+          packageManifest: { name: '@aikdna/kdna-core', version: '0.18.0' },
+          githubSha: FULL_SHA,
+        }),
+      /Core npm-pack evidence shasum must be a lowercase 40-character/u,
+    );
+
+    writeEvidence(tempDirectory, { manifestArtifact: { shasum: undefined } });
+    assert.throws(
+      () =>
+        loadLocalEvidence({
+          evidenceRoot: tempDirectory,
+          packageManifest: { name: '@aikdna/kdna-core', version: '0.18.0' },
+          githubSha: FULL_SHA,
+        }),
+      /release artifact manifest Core shasum must be a non-empty string/u,
+    );
+
+    writeEvidence(tempDirectory, {
+      manifestArtifact: { shasum: SHASUM.toUpperCase() },
+    });
+    assert.throws(
+      () =>
+        loadLocalEvidence({
+          evidenceRoot: tempDirectory,
+          packageManifest: { name: '@aikdna/kdna-core', version: '0.18.0' },
+          githubSha: FULL_SHA,
+        }),
+      /release artifact manifest Core shasum must be a lowercase 40-character/u,
+    );
+
+    writeEvidence(tempDirectory, { manifestArtifact: { shasum: OTHER_SHA } });
+    assert.throws(
+      () =>
+        loadLocalEvidence({
+          evidenceRoot: tempDirectory,
+          packageManifest: { name: '@aikdna/kdna-core', version: '0.18.0' },
+          githubSha: FULL_SHA,
+        }),
+      /does not match the release artifact manifest/u,
+    );
   } finally {
     fs.rmSync(tempDirectory, { recursive: true, force: true });
   }
 });
 
-test('npm registry lookup distinguishes an absent version from registry failure', () => {
+test('npm registry lookup accepts only a structured exact-version miss', () => {
   assert.equal(
     parseRegistryResult(
-      { status: 1, stdout: '', stderr: 'npm error code E404\nnpm error 404 Not Found' },
+      {
+        status: 1,
+        stdout: JSON.stringify({
+          error: {
+            code: 'E404',
+            summary: 'No match found for version 0.18.0',
+            detail: 'known package, exact version absent',
+          },
+        }),
+        stderr: 'npm error code E404',
+      },
       '@aikdna/kdna-core@0.18.0',
     ),
     null,
   );
+});
+
+test('npm registry lookup fails closed for package absence and E404 injection', () => {
+  assert.throws(
+    () =>
+      parseRegistryResult(
+        {
+          status: 1,
+          stdout: JSON.stringify({
+            error: {
+              code: 'E404',
+              summary: 'Not Found - GET https://registry.npmjs.org/@aikdna%2fmissing - Not found',
+              detail: 'package does not exist',
+            },
+          }),
+          stderr: 'npm error code E404',
+        },
+        '@aikdna/missing@0.18.0',
+      ),
+    /npm view failed/u,
+  );
+  const exactMissingJson = JSON.stringify({
+    error: {
+      code: 'E404',
+      summary: 'No match found for version 0.18.0',
+      detail: 'known package, exact version absent',
+    },
+  });
+  assert.throws(
+    () =>
+      parseRegistryResult(
+        {
+          status: 1,
+          stdout: '',
+          stderr: `proxy diagnostic\n${exactMissingJson}`,
+        },
+        '@aikdna/kdna-core@0.18.0',
+      ),
+    /npm view failed/u,
+  );
+  assert.throws(
+    () =>
+      parseRegistryResult(
+        { status: 1, stdout: `npm prefix\n${exactMissingJson}`, stderr: '' },
+        '@aikdna/kdna-core@0.18.0',
+      ),
+    /npm view failed/u,
+  );
+  assert.throws(
+    () =>
+      parseRegistryResult(
+        { status: 1, stdout: `${exactMissingJson}\nnpm suffix`, stderr: '' },
+        '@aikdna/kdna-core@0.18.0',
+      ),
+    /npm view failed/u,
+  );
+  assert.throws(
+    () =>
+      parseRegistryResult(
+        {
+          status: 1,
+          stdout: '',
+          stderr:
+            'proxy outage injected E404: No match found for version 0.18.0 without structured npm JSON',
+        },
+        '@aikdna/kdna-core@0.18.0',
+      ),
+    /npm view failed/u,
+  );
+  assert.throws(
+    () =>
+      parseRegistryResult(
+        {
+          status: 1,
+          stdout: JSON.stringify({
+            error: {
+              code: 'E404',
+              summary: 'No match found for version 9.9.9',
+              detail: 'different exact version',
+            },
+          }),
+          stderr: '',
+        },
+        '@aikdna/kdna-core@0.18.0',
+      ),
+    /npm view failed/u,
+  );
+});
+
+test('npm registry lookup fails closed for authorization and outage errors', () => {
+  for (const code of ['E401', 'E403']) {
+    assert.throws(
+      () =>
+        parseRegistryResult(
+          {
+            status: 1,
+            stdout: JSON.stringify({
+              error: {
+                code,
+                summary: 'No match found for version 0.18.0',
+                detail: 'authorization error containing misleading E404 text',
+              },
+            }),
+            stderr: `npm error code ${code}`,
+          },
+          '@aikdna/kdna-core@0.18.0',
+        ),
+      /npm view failed/u,
+    );
+  }
   assert.throws(
     () =>
       parseRegistryResult(
