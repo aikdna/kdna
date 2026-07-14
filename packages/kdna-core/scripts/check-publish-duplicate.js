@@ -182,9 +182,12 @@ function parseArguments(argv) {
   const result = { evidenceRoot: DEFAULT_EVIDENCE_ROOT, githubOutput: null };
   for (const argument of argv) {
     if (argument.startsWith('--evidence-root=')) {
-      result.evidenceRoot = path.resolve(argument.slice('--evidence-root='.length));
+      const value = argument.slice('--evidence-root='.length);
+      if (!value) throw new Error('--evidence-root requires a path');
+      result.evidenceRoot = path.resolve(value);
     } else if (argument.startsWith('--github-output=')) {
       result.githubOutput = argument.slice('--github-output='.length);
+      if (!result.githubOutput) throw new Error('--github-output requires a path');
     } else {
       throw new Error(`unknown argument: ${argument}`);
     }
@@ -194,6 +197,9 @@ function parseArguments(argv) {
 
 function main() {
   const options = parseArguments(process.argv.slice(2));
+  if (process.env.GITHUB_ACTIONS === 'true' && !options.githubOutput) {
+    throw new Error('--github-output is required in GitHub Actions');
+  }
   const packageManifest = readJson(path.join(PACKAGE_ROOT, 'package.json'), 'Core package manifest');
   const local = loadLocalEvidence({
     evidenceRoot: options.evidenceRoot,

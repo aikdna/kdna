@@ -35,6 +35,15 @@ function assertCanonicalTagExists({ expectedTag, listedTag }) {
   }
 }
 
+function assertCanonicalWorkflowRef({ expectedTag, githubRef }) {
+  const expectedRef = `refs/tags/${expectedTag}`;
+  if (githubRef !== expectedRef) {
+    throw new Error(
+      `GITHUB_REF ${githubRef || '<missing>'} does not exactly match package version tag ${expectedRef}`,
+    );
+  }
+}
+
 function assertTagCommit({ expectedTag, taggedCommit, headCommit, githubSha }) {
   if (taggedCommit !== headCommit) {
     throw new Error(
@@ -94,6 +103,14 @@ function main() {
     assertCanonicalTagExists({ expectedTag: coreTag, listedTag });
   });
 
+  if (process.env.GITHUB_ACTIONS === 'true' || process.env.GITHUB_REF) {
+    check('workflow ref exactly matches the package version tag', () => {
+      assertCanonicalWorkflowRef({ expectedTag: coreTag, githubRef: process.env.GITHUB_REF });
+    });
+  } else {
+    console.log('  SKIP workflow release-ref gate: not running in GitHub Actions');
+  }
+
   check('canonical version tag points to the workflow commit', () => {
     const headCommit = run('git', ['rev-parse', 'HEAD']);
     const taggedCommit = run('git', ['rev-list', '-n', '1', coreTag]);
@@ -131,6 +148,7 @@ if (require.main === module) main();
 
 module.exports = {
   assertCanonicalTagExists,
+  assertCanonicalWorkflowRef,
   assertTagCommit,
   canonicalCoreTag,
   normalizeCommandOutput,

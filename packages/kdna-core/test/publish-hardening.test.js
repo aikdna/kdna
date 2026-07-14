@@ -9,11 +9,13 @@ const path = require('node:path');
 const {
   decidePublication,
   loadLocalEvidence,
+  parseArguments,
   parseRegistryResult,
   writeGithubOutput,
 } = require('../scripts/check-publish-duplicate');
 const {
   assertCanonicalTagExists,
+  assertCanonicalWorkflowRef,
   assertTagCommit,
   canonicalCoreTag,
   normalizeCommandOutput,
@@ -188,6 +190,11 @@ test('publication guard writes an explicit GitHub Actions decision', () => {
   }
 });
 
+test('publication guard rejects empty workflow output paths', () => {
+  assert.throws(() => parseArguments(['--github-output=']), /requires a path/u);
+  assert.throws(() => parseArguments(['--evidence-root=']), /requires a path/u);
+});
+
 test('release readiness accepts only the canonical Core version tag', () => {
   const expectedTag = canonicalCoreTag('0.18.0');
   assert.equal(expectedTag, 'kdna-core-v0.18.0');
@@ -197,6 +204,28 @@ test('release readiness accepts only the canonical Core version tag', () => {
     /Canonical tag kdna-core-v0\.18\.0 not found/u,
   );
   assert.throws(() => canonicalCoreTag('v0.18.0'), /invalid Core package version/u);
+});
+
+test('release readiness requires the workflow tag suffix to equal the package version', () => {
+  assert.doesNotThrow(() =>
+    assertCanonicalWorkflowRef({
+      expectedTag: 'kdna-core-v0.18.0',
+      githubRef: 'refs/tags/kdna-core-v0.18.0',
+    }),
+  );
+  assert.throws(
+    () =>
+      assertCanonicalWorkflowRef({
+        expectedTag: 'kdna-core-v0.18.0',
+        githubRef: 'refs/tags/kdna-core-v0.18.0-recovery',
+      }),
+    /does not exactly match package version tag/u,
+  );
+  assert.throws(
+    () =>
+      assertCanonicalWorkflowRef({ expectedTag: 'kdna-core-v0.18.0', githubRef: null }),
+    /GITHUB_REF <missing>/u,
+  );
 });
 
 test('release readiness binds canonical tag, HEAD, and GITHUB_SHA', () => {
