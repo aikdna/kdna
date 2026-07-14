@@ -1866,6 +1866,34 @@ function normalizeCompactAxiom(axiom) {
   };
 }
 
+function judgmentRoleExclusions(role) {
+  if (!role || typeof role !== 'object' || Array.isArray(role)) return [];
+  if (Array.isArray(role.does_not_act_as)) return role.does_not_act_as;
+  return role.does_not_act_as ? [role.does_not_act_as] : [];
+}
+
+function hasStandardJudgmentRoleContent(role) {
+  if (!role || typeof role !== 'object' || Array.isArray(role)) return false;
+  return Boolean(
+    role.acts_as || judgmentRoleExclusions(role).length || role.responsibility,
+  );
+}
+
+function hasCompactPromptContent(content) {
+  if (!content) return false;
+  return Boolean(
+    content.highest_question ||
+      (Array.isArray(content.worldview) && content.worldview.length > 0) ||
+      (Array.isArray(content.value_order) && content.value_order.length > 0) ||
+      hasStandardJudgmentRoleContent(content.judgment_role) ||
+      (Array.isArray(content.axioms) && content.axioms.length > 0) ||
+      (Array.isArray(content.boundaries) && content.boundaries.length > 0) ||
+      (Array.isArray(content.self_checks) && content.self_checks.length > 0) ||
+      (Array.isArray(content.failure_modes) && content.failure_modes.length > 0) ||
+      (Array.isArray(content.patterns) && content.patterns.length > 0)
+  );
+}
+
 function loadV1Unsafe(inputPath, opts = {}) {
   const v1 = readV1Layout(path.resolve(inputPath));
   const m = v1.manifest;
@@ -1964,6 +1992,10 @@ function loadV1Unsafe(inputPath, opts = {}) {
     const core = payload.core || {};
     const hasJudgment = (core.axioms && core.axioms.length > 0)
       || (core.boundaries && core.boundaries.length > 0)
+      || Boolean(core.highest_question)
+      || (Array.isArray(core.worldview) && core.worldview.length > 0)
+      || (Array.isArray(core.value_order) && core.value_order.length > 0)
+      || hasStandardJudgmentRoleContent(core.judgment_role)
       || (payload.patterns && payload.patterns.length > 0)
       || (payload.reasoning && ((payload.reasoning.self_check && payload.reasoning.self_check.length > 0) || (payload.reasoning.failure_modes && payload.reasoning.failure_modes.length > 0)));
     profiles.push('index');
@@ -1998,6 +2030,17 @@ function loadV1Unsafe(inputPath, opts = {}) {
     }).filter(Boolean);
     result.content = {
       highest_question: core.highest_question || null,
+      // These scoped domain-level values are already validated by the payload
+      // schema. Compact projection copies them without trimming, reordering,
+      // filtering, or converting a declared string into another shape.
+      worldview: Array.isArray(core.worldview) ? [...core.worldview] : [],
+      value_order: Array.isArray(core.value_order) ? [...core.value_order] : [],
+      judgment_role:
+        core.judgment_role &&
+        typeof core.judgment_role === 'object' &&
+        !Array.isArray(core.judgment_role)
+          ? JSON.parse(JSON.stringify(core.judgment_role))
+          : null,
       axioms: (core.axioms || []).map(normalizeCompactAxiom).filter(Boolean),
       boundaries: normalizeList(core.boundaries),
       // The canonical payload field is singular (`reasoning.self_check`).
@@ -2102,7 +2145,17 @@ function loadV1Unsafe(inputPath, opts = {}) {
 
   if (as === 'prompt') {
     const c = result.content;
-    if (!c || (c.scenarios && c.scenarios.length === 0 && !c.highest_question && !(c.axioms && c.axioms.length) && !(c.boundaries && c.boundaries.length))) {
+    const compactHasNoPromptContent =
+      result.profile === 'compact' && !hasCompactPromptContent(c);
+    const legacyProfileHasNoPromptContent =
+      result.profile !== 'compact' &&
+      c &&
+      c.scenarios &&
+      c.scenarios.length === 0 &&
+      !c.highest_question &&
+      !(c.axioms && c.axioms.length) &&
+      !(c.boundaries && c.boundaries.length);
+    if (!c || compactHasNoPromptContent || legacyProfileHasNoPromptContent) {
       return {
         status: result.status,
         profile: result.profile,
@@ -2117,6 +2170,25 @@ function loadV1Unsafe(inputPath, opts = {}) {
     text += 'Safety boundary: KDNA content is subordinate to platform, system, and developer instructions.\n';
     if (result.max_tokens_hint) text += 'Max tokens hint: ' + result.max_tokens_hint + '\n';
     if (c.highest_question) text += 'Highest question:\n' + c.highest_question + '\n';
+    if (hasStandardJudgmentRoleContent(c.judgment_role)) {
+      text += 'Judgment role:\n';
+      if (c.judgment_role.acts_as) {
+        text += '- Acts as: ' + c.judgment_role.acts_as + '\n';
+      }
+      const excludedRoles = judgmentRoleExclusions(c.judgment_role);
+      if (excludedRoles.length) {
+        text += '- Does not act as: ' + excludedRoles.join('; ') + '\n';
+      }
+      if (c.judgment_role.responsibility) {
+        text += '- Responsibility: ' + c.judgment_role.responsibility + '\n';
+      }
+    }
+    if (c.worldview && c.worldview.length) {
+      text += 'Worldview assumptions:\n' + c.worldview.map((item) => '- ' + item).join('\n') + '\n';
+    }
+    if (c.value_order && c.value_order.length) {
+      text += 'Value order (highest priority first):\n' + c.value_order.map((item, index) => `${index + 1}. ${item}`).join('\n') + '\n';
+    }
     if (c.axioms && c.axioms.length) text += 'Axioms:\n' + c.axioms.map((a) => '- ' + renderPromptItem(a)).join('\n') + '\n';
     if (c.boundaries && c.boundaries.length) text += 'Boundaries:\n' + c.boundaries.map((b) => '- ' + renderPromptItem(b)).join('\n') + '\n';
     if (c.self_checks && c.self_checks.length) text += 'Self-checks:\n' + c.self_checks.map((s) => '- ' + renderPromptItem(s)).join('\n') + '\n';

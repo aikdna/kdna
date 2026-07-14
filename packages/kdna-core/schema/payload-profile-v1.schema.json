@@ -21,6 +21,31 @@
           "type": "string",
           "description": "The single most important question this judgment system answers."
         },
+        "worldview": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Scoped assumptions used at qualitative judgment forks; not general facts or deterministic policy."
+        },
+        "value_order": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ordered qualitative priorities, highest priority first."
+        },
+        "judgment_role": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "acts_as": { "type": "string" },
+            "does_not_act_as": {
+              "oneOf": [
+                { "type": "string" },
+                { "type": "array", "items": { "type": "string" } }
+              ]
+            },
+            "responsibility": { "type": "string" }
+          },
+          "description": "The authority this asset exercises and the responsibilities explicitly outside it."
+        },
         "axioms": {
           "type": "array",
           "description": "The list of axioms. Phase 1 accepts an empty array."

@@ -31,6 +31,15 @@ were actually completed.
   "profile": "compact",
   "context": {
     "highest_question": "What editorial decision should be made?",
+    "worldview": [
+      "Observed task facts remain authoritative."
+    ],
+    "value_order": ["prevent irreversible harm", "preserve reversibility"],
+    "judgment_role": {
+      "acts_as": "a scoped editorial authority",
+      "does_not_act_as": ["a fact source", "a policy engine"],
+      "responsibility": "Resolve qualitative editorial tradeoffs."
+    },
     "axioms": [
       {
         "type": "axiom_applicability",
@@ -73,7 +82,7 @@ Field presence alone MUST NOT produce `verified`.
 | Profile | Context | Intended use |
 |---|---|---|
 | `index` | Public identity and discovery metadata; no judgment | discovery and routing |
-| `compact` | Highest question, applicability-aware axioms, boundaries, self-checks, failure modes, and a bounded pattern set | default Agent judgment loading |
+| `compact` | Highest question, scoped worldview, ordered values, judgment role, applicability-aware axioms, boundaries, self-checks, failure modes, and a bounded pattern set | default Agent judgment loading |
 | `scenario` | Scenario cards | situation-specific loading |
 | `full` | Authorized manifest and decoded payload | audit, migration, and deep inspection through trusted applications |
 
@@ -87,10 +96,12 @@ A consuming Agent or application must:
 1. obtain the Capsule from Core or an official toolchain adapter;
 2. respect the asset's applicability and boundary fields;
 3. use the loaded axioms and patterns as judgment context, not as truth claims;
-4. run relevant self-checks and account for declared failure risks;
-5. keep technical validity, signature state, evidence, maturity, and content
+4. treat `worldview`, `value_order`, and `judgment_role` as scoped judgment
+   context, not as general facts, hard policy, or a replacement for model capability;
+5. run relevant self-checks and account for declared failure risks;
+6. keep technical validity, signature state, evidence, maturity, and content
    quality as separate concepts;
-6. avoid logging or persisting decrypted full context from licensed assets.
+7. avoid logging or persisting decrypted full context from licensed assets.
 
 Single-asset loading is the default foundation. Cluster execution composes
 multiple authorized asset Capsules through the explicit Cluster runtime; it

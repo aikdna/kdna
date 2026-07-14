@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Structurally validate optional payload `worldview`, ordered `value_order`,
+  and `judgment_role`, then preserve their declared values in the compact
+  Runtime Capsule instead of silently dropping them. Compact prompt projection
+  renders worldview, value order, and the standard role fields `acts_as`,
+  `does_not_act_as`, and `responsibility`; role extension fields remain
+  available in the JSON Capsule without an unsupported prompt claim.
+- Add a synthetic Golden Single-Asset Core fixture. It proves schema,
+  validation, content-neutral inspect, and exact compact projection only; it
+  does not claim author quality, task applicability, model consumption, or
+  conformance.
+
 ## v0.16.0 (2026-07-13)
 
 ### Added

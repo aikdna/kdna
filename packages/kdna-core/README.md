@@ -64,6 +64,12 @@ if (capsule.type !== 'kdna.context.capsule') {
 → Agent/runtime context
 ```
 
+The default compact Capsule preserves the asset's scoped judgment context:
+`highest_question`, `worldview`, ordered `value_order`, `judgment_role`,
+applicability-aware axioms, boundaries, self-checks, failure modes, and a
+bounded pattern set. Core copies the three optional scoped fields without
+trimming, reordering, or treating them as facts, policy, or quality evidence.
+
 For authoring and test fixtures, `pack()` can turn a local working folder into
 a `.kdna` file before validation:
 

@@ -23,6 +23,9 @@ A `judgment-profile-v1` payload is a single JSON object with the following secti
 ```json
 {
   "highest_question": "",
+  "worldview": [],
+  "value_order": [],
+  "judgment_role": {},
   "axioms": [],
   "boundaries": [],
   "risk_model": {}
@@ -30,6 +33,9 @@ A `judgment-profile-v1` payload is a single JSON object with the following secti
 ```
 
 - `highest_question` (string, required): the single most important question this judgment system answers. Producers SHOULD populate it. Phase 1 does not enforce non-empty.
+- `worldview` (array of strings, optional): scoped assumptions used for qualitative tradeoffs; these are not general facts.
+- `value_order` (ordered array of strings, optional): qualitative priorities in descending order. This is not a deterministic policy table.
+- `judgment_role` (object, optional): what authority the asset acts as, what it does not act as, and its responsibility.
 - `axioms` (array, required): the list of axioms. Phase 1 accepts an empty array.
 - `boundaries` (array, optional): explicit out-of-scope statements.
 - `risk_model` (object, optional): structural risk metadata.
@@ -79,6 +85,13 @@ This is the **smallest** payload that conforms to the schema. The conformance su
   "profile": "judgment-profile-v1",
   "core": {
     "highest_question": "What is the central question this judgment system answers?",
+    "worldview": ["A scoped assumption used for this domain's tradeoffs."],
+    "value_order": ["first priority", "second priority"],
+    "judgment_role": {
+      "acts_as": "a scoped judgment authority",
+      "does_not_act_as": ["a fact source", "a policy engine"],
+      "responsibility": "Resolve qualitative tradeoffs inside the declared scope."
+    },
     "axioms": [
       {
         "id": "a1",
