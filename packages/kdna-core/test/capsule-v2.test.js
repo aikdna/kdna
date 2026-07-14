@@ -175,6 +175,26 @@ test('all frozen Capsule 1 access aliases survive adapter parity without changin
   }
 });
 
+test('adapter rejects Capsule 1 access aliases paired with the wrong canonical access', () => {
+  for (const [canonical, alias] of [
+    ['public', 'protected'],
+    ['licensed', 'runtime'],
+    ['remote', 'open'],
+  ]) {
+    const candidate = structuredClone(golden.capsule_2);
+    candidate.access = canonical;
+    candidate.compatibility = {
+      ...(candidate.compatibility || {}),
+      capsule_1_access: alias,
+    };
+
+    assert.throws(
+      () => core.adaptCapsuleV2ToV1(candidate),
+      (error) => error.code === 'KDNA_CAPSULE_ADAPTER_INPUT_INVALID',
+    );
+  }
+});
+
 test('an asset without checksums still emits Capsule 1 E and has exact adapter parity', () => {
   const fixture = withModifiedSource(() => {});
   try {

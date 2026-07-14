@@ -95,7 +95,9 @@ inheritance/dependency/RAG extension fields through
 `compatibility.capsule_1_extensions` without giving them Capsule 2 authority.
 It preserves only the legacy access aliases `open`, `protected`, and `runtime`
 through `compatibility.capsule_1_access`; Capsule 2 itself always uses
-`public`, `licensed`, or `remote`. The public builder rejects a Capsule 1 value
+`public`, `licensed`, or `remote`. These values must map exactly as
+`open`/`public`, `protected`/`licensed`, and `runtime`/`remote`; the builder and
+adapter reject any mismatched pair. The public builder rejects a Capsule 1 value
 whose domain, judgment version, access, or E does not match the supplied
 manifest and digest evidence.
 

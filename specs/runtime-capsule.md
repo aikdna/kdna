@@ -120,7 +120,9 @@ routing authority.
 Capsule 2 access is always one of `public`, `licensed`, or `remote`. The frozen
 Capsule 1 aliases `open`, `protected`, and `runtime` may appear only as
 `compatibility.capsule_1_access`, so the adapter can reproduce the exact
-Capsule 1 value. Other access values are never stored there.
+Capsule 1 value. The only valid pairs are `open` with `public`, `protected`
+with `licensed`, and `runtime` with `remote`; a mismatched pair is an invalid
+Capsule 2. Other access values are never stored there.
 
 Capsule 1 may also carry the frozen extension fields `extends_chain`,
 `inheritance_applied`, `resolved_dependencies`, and `rag_isolation_policy`.

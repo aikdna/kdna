@@ -47,7 +47,11 @@ const CAPSULE_1_EXTENSION_KEYS = Object.freeze([
   'resolved_dependencies',
   'rag_isolation_policy',
 ]);
-const CAPSULE_1_ACCESS_ALIASES = new Set(['open', 'protected', 'runtime']);
+const CAPSULE_1_ACCESS_MAP = Object.freeze({
+  open: 'public',
+  protected: 'licensed',
+  runtime: 'remote',
+});
 
 let validators;
 
@@ -406,6 +410,18 @@ function assertCapsule2Success(capsule, code = 'KDNA_CAPSULE_ADAPTER_INPUT_INVAL
   if (capsule.profile !== capsule.trace.profile) {
     fail(code, 'Capsule 2 profile conflicts with its trace.');
   }
+  const capsule1Access = capsule.compatibility?.capsule_1_access;
+  if (capsule1Access && CAPSULE_1_ACCESS_MAP[capsule1Access] !== capsule.access) {
+    fail(
+      code,
+      'Capsule 1 compatibility access does not map to Capsule 2 access.',
+      {
+        capsule_1_access: capsule1Access,
+        expected_capsule_2_access: CAPSULE_1_ACCESS_MAP[capsule1Access],
+        capsule_2_access: capsule.access,
+      },
+    );
+  }
 }
 
 function assertSuccessfulDigestEvidence(digests) {
@@ -558,7 +574,7 @@ function buildCapsuleV2({ capsule1, manifest, digests, inputKind, loadedAt } = {
   if (capsule1.domain && capsule1.domain !== manifest.asset_id) {
     compatibility.capsule_1_domain = capsule1.domain;
   }
-  if (CAPSULE_1_ACCESS_ALIASES.has(capsule1.access)) {
+  if (CAPSULE_1_ACCESS_MAP[capsule1.access]) {
     compatibility.capsule_1_access = capsule1.access;
   }
   const capsule1Extensions = {};

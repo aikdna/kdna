@@ -47,7 +47,9 @@
 - Validate public Capsule 2 builder and adapter inputs and outputs against the
   packaged schemas and cross-field success invariants.
 - Preserve only the frozen Capsule 1 access aliases `open`, `protected`, and
-  `runtime` for exact adapter parity while keeping Capsule 2 access canonical.
+  `runtime` for exact adapter parity while keeping Capsule 2 access canonical;
+  fail closed if compatibility metadata pairs an alias with the wrong
+  canonical access.
 - Compute Capsule 1 E directly from Runtime manifest and payload bytes when
   checksums are absent, share the same pure E implementation across checksum
   build/verify and both Capsule generations, and reject Capsule 1 builder
