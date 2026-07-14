@@ -1,8 +1,8 @@
 # Capsule 2 Execution Contract
 
-**Status:** opt-in protocol contract  
+**Status:** opt-in protocol contract
 **Contract versions:** ConsumptionPlan 1.0, Agent Host capability descriptor
-1.0, Agent Host 2, JudgmentTrace 1.0  
+1.0, Agent Host 2, JudgmentTrace 1.0
 **Default compatibility path:** ConsumptionPlan 0.9, Runtime Capsule 1, Agent
 Host 1
 
