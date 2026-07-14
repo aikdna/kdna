@@ -5,9 +5,14 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const repoRoot = path.resolve(__dirname, '..');
-const manifestPath = path.join(repoRoot, 'ecosystem-manifest.json');
+// The override exists so regression tests can exercise the real validator
+// against an isolated manifest without rewriting the canonical file.
+const manifestPath = process.env.KDNA_ECOSYSTEM_MANIFEST_PATH
+  ? path.resolve(process.env.KDNA_ECOSYSTEM_MANIFEST_PATH)
+  : path.join(repoRoot, 'ecosystem-manifest.json');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const allowedLifecycle = new Set(manifest.lifecycle_terms || []);
+const liveLifecycle = new Set(['Stable', 'Beta', 'Experimental']);
 const requiredFields = [
   'repository',
   'npm_package',
@@ -110,6 +115,28 @@ for (const component of manifest.components) {
   }
 
   const localPath = componentPath(component);
+
+  // A live component without a package or release artifact has no external
+  // evidence surface for this validator to inspect. In that case, a real Git
+  // checkout is the minimum verification anchor. Do not silently count a
+  // missing repository as a passing ecosystem component.
+  const hasPackageEvidence = Boolean(
+    component.npm_package && component.package_json && component.current_version,
+  );
+  const hasArtifactEvidence = Boolean(component.artifact_path && component.current_version);
+  if (liveLifecycle.has(component.lifecycle) && !hasPackageEvidence && !hasArtifactEvidence) {
+    if (!localPath) {
+      fail(
+        component,
+        'live component has no package/artifact evidence and its repository checkout is unavailable',
+      );
+    } else if (!fs.existsSync(path.join(localPath, '.git'))) {
+      fail(
+        component,
+        'live component has no package/artifact evidence and local_path is not a Git checkout',
+      );
+    }
+  }
 
   if (component.repository === 'aikdna/kdna-core-swift' && localPath) {
     const workflowPath = path.join(localPath, '.github', 'workflows', 'ci.yml');
