@@ -651,6 +651,23 @@ function readInputLayout(input) {
   return readV1Layout(path.resolve(input));
 }
 
+function snapshotPackagedInput(input) {
+  if (Buffer.isBuffer(input) || input instanceof Uint8Array) {
+    return Buffer.from(input);
+  }
+  if (typeof input !== 'string') return input;
+  const resolved = path.resolve(input);
+  let stat;
+  try {
+    stat = fs.statSync(resolved);
+  } catch {
+    return input;
+  }
+  // Authoring directories remain available to inspect/validate. Runtime
+  // wrappers reject them; this helper only freezes packaged-file loads.
+  return stat.isFile() ? fs.readFileSync(resolved) : input;
+}
+
 function inputSource(input, kind) {
   return {
     kind,
@@ -895,6 +912,23 @@ function verifyDigests(checksums, map, problems, result) {
   const digestMetadataPresent =
     checksums.digest_profile !== undefined || checksums.covered_entries !== undefined;
   if (digestMetadataPresent) {
+    const requiredDigestFields = [
+      'digest_profile',
+      'covered_entries',
+      'manifest_digest',
+      'payload_digest',
+      'entry_set_digest',
+    ];
+    const missingDigestFields = requiredDigestFields.filter(
+      (field) => checksums[field] === undefined,
+    );
+    if (missingDigestFields.length) {
+      problems.push(
+        `checksums: kdna-runtime-entry-set-v1 metadata requires ${missingDigestFields.join(', ')}`,
+      );
+      result.checksums_valid = false;
+      return false;
+    }
     if (checksums.digest_profile !== 'kdna-runtime-entry-set-v1') {
       problems.push('checksums: unsupported digest_profile (expected kdna-runtime-entry-set-v1)');
       result.checksums_valid = false;
@@ -1922,7 +1956,11 @@ function sanitizePrompt(s) {
 }
 
 function loadAuthorized(inputPath, opts = {}) {
-  const plan = planLoad(inputPath, opts);
+  // A packaged path is read exactly once. Authorization and projection must
+  // operate on the same immutable byte snapshot even if the path changes
+  // while this synchronous call is in progress.
+  const inputSnapshot = snapshotPackagedInput(inputPath);
+  const plan = planLoad(inputSnapshot, opts);
   if (plan.can_load_now !== true) {
     const issueCodes = Array.isArray(plan.issues)
       ? plan.issues.map((issue) => issue.code).filter(Boolean)
@@ -1943,7 +1981,7 @@ function loadAuthorized(inputPath, opts = {}) {
       signature_valid: plan.signature_valid === true,
     },
   };
-  return loadV1Unsafe(inputPath, mergedOpts);
+  return loadV1Unsafe(inputSnapshot, mergedOpts);
 }
 
 function loadV1(inputPath, opts = {}) {
@@ -2334,7 +2372,7 @@ function loadV1Unsafe(inputPath, opts = {}) {
     return result;
   }
 
-  return wrapAsCapsule(result, v1, profile, opts);
+  return wrapAsCapsule(result, v1, profile, { ...opts, as });
 }
 
 function wrapAsCapsule(result, v1, profile, opts) {
@@ -2347,14 +2385,14 @@ function wrapAsCapsule(result, v1, profile, opts) {
 function buildCapsule(loadResult, v1, profile, opts = {}) {
   const m = v1.manifest;
   const val = opts._validation || {};
-  const assetDigest = v1.assetDigest || (v1.map && v1.map['checksums.json']
+  const assetDigest = v1.map && v1.map['checksums.json']
     ? (() => {
         try {
           const checks = JSON.parse(v1.map['checksums.json'].toString('utf8'));
-          return checks.asset_digest || null;
+          return checks.entry_set_digest || checks.asset_digest || null;
         } catch { return null; }
       })()
-    : null);
+    : null;
 
   const pubkey = (m.creator && m.creator.pubkey) || (m.author && m.author.pubkey) || null;
   const sigVerified = val.signature_valid === true;

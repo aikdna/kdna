@@ -11,12 +11,6 @@ const fs = require('fs');
 const { createKdnaAssetReader } = require('./asset-reader');
 const v1 = require('./v1');
 const runtimeApi = require('./runtime-api');
-const {
-  composeContextWithAttribution,
-  detectDomainConflicts,
-  classifySignalsAcrossDomains,
-  generateClusterTrace,
-} = require('./compose');
 
 function readerFrom(options = {}) {
   return options.reader || createKdnaAssetReader();
@@ -193,38 +187,13 @@ function matchDomainSync(input, candidates, options = {}) {
 }
 
 async function composeKDNA(inputs, options = {}) {
-  const loaded = [];
-  for (const input of inputs || []) {
-    const profile = await loadKDNA(input, { ...options, profile: options.profile || 'compact', context: false });
-    if (profile.domain) {
-      loaded.push({
-        id: profile.manifest.name || profile.domain.core?.meta?.domain,
-        name: profile.manifest.name || profile.domain.core?.meta?.domain,
-        manifest: profile.manifest,
-        ...profile.domain,
-      });
-    }
-  }
-  const { selected, excluded } = classifySignalsAcrossDomains(options.input || '', loaded);
-  const selectedIds = new Set(selected.map((d) => d.id));
-  const activeDomains = options.input ? loaded.filter((d) => selectedIds.has(d.id)) : loaded;
-  const conflicts = detectDomainConflicts(activeDomains);
-  const { context, attributionMap } = composeContextWithAttribution(activeDomains, options);
-  return {
-    domains: loaded,
-    activeDomains,
-    selected,
-    excluded,
-    conflicts,
-    context,
-    attributionMap,
-    trace: generateClusterTrace({
-      input: options.input || '',
-      loadedDomains: loaded,
-      activeDomains,
-      conflicts,
-    }),
-  };
+  void inputs;
+  void options;
+  const error = new Error(
+    'composeKDNA is unavailable until the current Cluster/Capsule composition protocol is defined.',
+  );
+  error.code = 'KDNA_COMPOSE_PROTOCOL_UNAVAILABLE';
+  throw error;
 }
 
 module.exports = {

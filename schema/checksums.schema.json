@@ -16,6 +16,25 @@
       "pattern": "^[a-f0-9]{64}$"
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "anyOf": [
+          { "required": ["digest_profile"] },
+          { "required": ["covered_entries"] }
+        ]
+      },
+      "then": {
+        "required": [
+          "digest_profile",
+          "covered_entries",
+          "manifest_digest",
+          "payload_digest",
+          "entry_set_digest"
+        ]
+      }
+    }
+  ],
   "properties": {
     "digest_profile": {
       "const": "kdna-runtime-entry-set-v1",

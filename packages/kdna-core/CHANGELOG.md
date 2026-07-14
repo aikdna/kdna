@@ -15,6 +15,13 @@
 - Accept `.kdna` bytes in memory across current inspect, validate, LoadPlan,
   and load paths. Buffer verification does not extract or materialize the
   asset on disk.
+- Read packaged file paths once at load entry so LoadPlan authorization and
+  Runtime Capsule projection use the same immutable bytes. The default load
+  result is a Runtime Capsule, matching explicit `as: "json"`.
+- Make `composeKDNA` fail closed with
+  `KDNA_COMPOSE_PROTOCOL_UNAVAILABLE` until current Cluster/Capsule
+  composition semantics are defined; it no longer returns a misleading empty
+  composition.
 - Identify `schema/manifest.schema.json` as the sole Runtime manifest schema.
   The older `schema/kdna-manifest.json` remains only for explicit legacy-source
   migration. Runtime `language` remains valid and `creator` provenance remains

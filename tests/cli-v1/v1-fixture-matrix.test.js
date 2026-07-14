@@ -10,7 +10,13 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const cbor = require('cbor-x');
-const { buildChecksums, pack, readLayout, validate } = require('../../packages/kdna-core/src/v1');
+const {
+  buildChecksums,
+  loadAuthorized,
+  pack,
+  readLayout,
+  validate,
+} = require('../../packages/kdna-core/src/v1');
 
 function readPayload(p) {
   const buf = fs.readFileSync(p);
@@ -94,6 +100,16 @@ test('checksum digest metadata fails closed for unknown profiles or coverage', (
     (checksums) => {
       delete checksums.covered_entries;
     },
+    (checksums) => {
+      delete checksums.manifest_digest;
+    },
+    (checksums) => {
+      delete checksums.payload_digest;
+    },
+    (checksums) => {
+      delete checksums.entry_set_digest;
+      delete checksums.asset_digest;
+    },
   ]) {
     const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-digest-profile-'));
     try {
@@ -106,6 +122,26 @@ test('checksum digest metadata fails closed for unknown profiles or coverage', (
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }
+  }
+});
+
+test('canonical entry_set_digest alone supplies frozen Capsule 1 E', () => {
+  const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-entry-set-capsule-'));
+  try {
+    fs.cpSync(minimalSource, tmp, { recursive: true });
+    const checksums = buildChecksums(tmp);
+    const expectedEntrySetDigest = checksums.entry_set_digest;
+    delete checksums.asset_digest;
+    fs.writeFileSync(path.join(tmp, 'checksums.json'), JSON.stringify(checksums, null, 2));
+
+    const assetPath = path.join(tmp, 'canonical-only.kdna');
+    pack(tmp, assetPath);
+    const validation = validate(assetPath);
+    assert.equal(validation.overall_valid, true, validation.problems.join('; '));
+    const capsule = loadAuthorized(assetPath, { as: 'json' });
+    assert.equal(capsule.asset_digest, expectedEntrySetDigest);
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
   }
 });
 

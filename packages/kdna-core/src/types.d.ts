@@ -677,7 +677,11 @@ export function verifySignature(input: KDNAAssetInput, options?: KdnaDecryptOpti
 export function verifySignatureSync(input: KDNAAssetInput, options?: KdnaDecryptOptions): KdnaAssetVerifyResult;
 export function matchDomain(input: string, candidates: Array<KDNAAssetInput | KDNAInspectResult>, options?: KdnaDecryptOptions): Promise<KDNAMatchResult[]>;
 export function matchDomainSync(input: string, candidates: Array<KDNAAssetInput | KDNAInspectResult>, options?: KdnaDecryptOptions): KDNAMatchResult[];
-export function composeKDNA(inputs: KDNAAssetInput[], options?: { input?: string; profile?: 'compact' | 'scenario' | 'full' | string; separator?: string } & KdnaDecryptOptions): Promise<KDNAComposeResult>;
+/**
+ * @deprecated Current Cluster/Capsule composition semantics are not yet
+ * defined. This function rejects with KDNA_COMPOSE_PROTOCOL_UNAVAILABLE.
+ */
+export function composeKDNA(inputs: KDNAAssetInput[], options?: { input?: string; profile?: 'compact' | 'scenario' | 'full' | string; separator?: string } & KdnaDecryptOptions): Promise<never>;
 
 // KDNA Core — authoring source and packaged runtime API
 export const MIMETYPE: string;

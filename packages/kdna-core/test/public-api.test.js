@@ -92,8 +92,10 @@ test('stable APIs converge on current inspect, five-gate validate, Capsule load,
 
     const loadedSync = core.loadKDNASync(fixture.assetPath, { profile: 'compact', as: 'json' });
     const loaded = await core.loadKDNA(fixture.assetPath, { profile: 'compact', as: 'json' });
+    const loadedByDefault = core.loadKDNASync(fixture.assetPath);
     assert.equal(loadedSync.type, 'kdna.context.capsule');
     assert.equal(loaded.type, 'kdna.context.capsule');
+    assert.equal(loadedByDefault.type, 'kdna.context.capsule');
     assert.equal(loaded.domain, loadedSync.domain);
     assert.deepEqual(loaded.context, loadedSync.context);
 
@@ -188,6 +190,69 @@ test('path, Buffer, Uint8Array, and opened-asset inputs have current API parity 
       fs.readFileSync = originalReadFile;
     }
     assert.equal(assetReads, 2, 'stable and direct inspect must each use one byte snapshot');
+  } finally {
+    fixture.cleanup();
+  }
+});
+
+test('packaged load entry points authorize and project one immutable file snapshot', () => {
+  const publicAsset = withAsset((source) => updateManifest(source, (manifest) => {
+    manifest.asset_id = 'kdna:test:snapshot-public';
+    manifest.title = 'Snapshot public';
+    manifest.access = 'public';
+    delete manifest.entitlement;
+  }));
+  const licensedAsset = withAsset((source) => updateManifest(source, (manifest) => {
+    manifest.asset_id = 'kdna:test:snapshot-licensed';
+    manifest.title = 'Snapshot licensed';
+    manifest.access = 'licensed';
+    manifest.entitlement = { profile: 'account' };
+  }));
+  const originalReadFile = fs.readFileSync;
+  const publicBytes = originalReadFile(publicAsset.assetPath);
+  const licensedBytes = originalReadFile(licensedAsset.assetPath);
+  const loaders = [
+    ['stable', (input) => core.loadKDNASync(input, { as: 'json' })],
+    ['runtime', (input) => core.loadAuthorized(input, { as: 'json' })],
+    ['v1', (input) => v1.loadAuthorized(input, { as: 'json' })],
+  ];
+
+  try {
+    assert.equal(core.planLoad(licensedAsset.assetPath).can_load_now, false);
+    for (const [name, load] of loaders) {
+      fs.writeFileSync(publicAsset.assetPath, publicBytes);
+      let reads = 0;
+      fs.readFileSync = function mutateAfterSnapshot(file, ...args) {
+        const bytes = originalReadFile.call(this, file, ...args);
+        if (path.resolve(String(file)) === path.resolve(publicAsset.assetPath)) {
+          reads += 1;
+          if (reads === 1) fs.writeFileSync(publicAsset.assetPath, licensedBytes);
+        }
+        return bytes;
+      };
+      try {
+        const capsule = load(publicAsset.assetPath);
+        assert.equal(capsule.domain, 'kdna:test:snapshot-public', name);
+        assert.equal(capsule.access, 'public', name);
+        assert.equal(reads, 1, `${name} must read the packaged path once`);
+      } finally {
+        fs.readFileSync = originalReadFile;
+      }
+    }
+  } finally {
+    fs.readFileSync = originalReadFile;
+    publicAsset.cleanup();
+    licensedAsset.cleanup();
+  }
+});
+
+test('composeKDNA fails closed until Cluster/Capsule composition is defined', async () => {
+  const fixture = withAsset();
+  try {
+    await assert.rejects(
+      core.composeKDNA([fixture.assetPath]),
+      (error) => error.code === 'KDNA_COMPOSE_PROTOCOL_UNAVAILABLE',
+    );
   } finally {
     fixture.cleanup();
   }
@@ -310,6 +375,7 @@ test('CJS, ESM, and declarations expose the same stable API names', async () => 
     'openKDNA', 'openKDNASync', 'inspectKDNA', 'inspectKDNASync',
     'loadKDNA', 'loadKDNASync', 'validateKDNA', 'validateKDNASync',
     'renderForAgent', 'renderForAgentSync', 'verifyAsset', 'verifyAssetSync',
+    'composeKDNA',
   ];
   for (const name of stableNames) {
     assert.equal(typeof core[name], 'function', `CJS ${name}`);

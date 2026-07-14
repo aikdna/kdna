@@ -68,18 +68,17 @@ function planLoad(inputPath, options = {}) {
 }
 
 function loadAuthorized(inputPath, options = {}) {
-  const plan = planLoad(inputPath, options);
-  if (plan.can_load_now !== true) {
-    const issueCodes = Array.isArray(plan.issues)
-      ? plan.issues.map((issue) => issue.code).filter(Boolean)
-      : [];
+  if (isDirectory(inputPath)) {
+    const plan = invalidDirectoryPlan(inputPath);
     const error = new Error(
       `LoadPlan denied loading: state=${plan.state || 'invalid'} required_action=${plan.required_action || 'block'}`,
     );
-    error.code = issueCodes[0] || 'KDNA_LOAD_NOT_AUTHORIZED';
+    error.code = 'KDNA_ASSET_FILE_REQUIRED';
     error.plan = plan;
     throw error;
   }
+  // v1.loadAuthorized snapshots packaged paths once and uses that same Buffer
+  // for its LoadPlan, authorization decision, and Runtime Capsule projection.
   return v1.loadAuthorized(inputPath, guardResolver(options));
 }
 
