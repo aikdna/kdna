@@ -9,6 +9,7 @@ Formal schemas:
 - [Runtime Capsule 1](./runtime-capsule-1.schema.json)
 - [Runtime Capsule 2](./runtime-capsule-2.schema.json)
 - [Digest Evidence](./digest-evidence.schema.json)
+- [Capsule 2 Execution Contract](./capsule-2-execution-contract.md)
 
 ## 1. Purpose
 
@@ -132,8 +133,10 @@ reproduce the exact Capsule 1 value. They have no Capsule 2 identity, routing,
 digest, or trust authority.
 
 P (`kdna-capsule-jcs-v1`) is SHA-256 over RFC 8785 JCS bytes of the exact
-delivered Capsule. P is never embedded in the Capsule it hashes. Host request,
-receipt, and Trace integration are later protocol phases.
+delivered Capsule. P is never embedded in the Capsule it hashes. Its opt-in
+Host request, correlated receipt, and JudgmentTrace 1.0 integration are
+defined by the Capsule 2 Execution Contract; existing Runtime defaults remain
+Capsule 1, Plan 0.9, and Host 1.
 
 Core exposes Capsule 2 only through the explicit `loadCapsuleV2()` API. The
 existing `loadAuthorized()` route continues to emit the frozen Capsule 1.

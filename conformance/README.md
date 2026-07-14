@@ -9,6 +9,13 @@ Capsule 2 A/C/E/P goldens live in `capsule-v2/`. Run them with
 `npm run conformance:capsule-v2`; they freeze the opt-in Core primitives and do
 not change the default Capsule 1 Runtime route.
 
+The strict opt-in Plan 1.0 / Host 2 / JudgmentTrace 1.0 boundary lives in
+`runtime-contract-v1/`. Run it with
+`npm run conformance:runtime-contract-v1`. It checks schemas plus plan/P
+recomputation, negotiation, receipt correlation, source-directory rejection,
+and negative vectors. It does not flip the Plan 0.9 / Capsule 1 / Host 1
+defaults.
+
 Conformance means:
 
 - `.kdna` is the canonical asset object.

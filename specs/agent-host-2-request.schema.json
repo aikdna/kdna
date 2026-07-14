@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/specs/agent-host-2-request.schema.json",
+  "title": "KDNA Agent Host 2 Request",
+  "description": "Strict Host 2 request carrying one exact Runtime Capsule 2 and its detached JCS delivery digest P.",
+  "type": "object",
+  "required": [
+    "protocol",
+    "request_id",
+    "runtime_contract",
+    "phase",
+    "task",
+    "authority",
+    "asset",
+    "capsule"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "protocol": { "const": "kdna.agent-host/2" },
+    "request_id": { "type": "string", "pattern": "^host_[0-9a-f]{24}$" },
+    "runtime_contract": { "$ref": "#/$defs/runtimeContract" },
+    "phase": { "const": "single_judgment" },
+    "task": { "$ref": "#/$defs/task" },
+    "authority": { "$ref": "#/$defs/authority" },
+    "asset": { "$ref": "#/$defs/asset" },
+    "capsule": {
+      "$ref": "https://github.com/aikdna/kdna/specs/runtime-capsule-2.schema.json"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "assetId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*(:[a-zA-Z0-9_.-]+)+$"
+    },
+    "runtimeContract": {
+      "type": "object",
+      "required": ["capsule_version", "capsule_digest_profile", "capsule_delivery_digest"],
+      "additionalProperties": false,
+      "properties": {
+        "capsule_version": { "const": "2.0" },
+        "capsule_digest_profile": { "const": "kdna-capsule-jcs-v1" },
+        "capsule_delivery_digest": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "task": {
+      "type": "object",
+      "required": ["summary", "task_family", "context"],
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "task_family": { "type": ["string", "null"], "minLength": 1 },
+        "context": true
+      }
+    },
+    "authority": {
+      "type": "object",
+      "required": ["asset_id", "role", "final_decision"],
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": { "$ref": "#/$defs/assetId" },
+        "role": { "const": "primary" },
+        "final_decision": { "const": true }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "required": ["asset_id", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": { "$ref": "#/$defs/assetId" },
+        "role": { "const": "primary" }
+      }
+    }
+  }
+}

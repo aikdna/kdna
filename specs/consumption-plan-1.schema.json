@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/specs/consumption-plan-1.schema.json",
+  "title": "KDNA ConsumptionPlan 1.0",
+  "description": "Strict opt-in single-asset execution plan for negotiated Runtime Capsule delivery. ConsumptionPlan 0.9 remains the default contract.",
+  "type": "object",
+  "required": [
+    "type",
+    "plan_version",
+    "plan_id",
+    "created_at",
+    "mode",
+    "task",
+    "asset_ref",
+    "projection_request",
+    "host_request",
+    "result_request",
+    "budget",
+    "trace_policy",
+    "integrity"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "const": "kdna.consumption.plan" },
+    "plan_version": { "const": "1.0.0" },
+    "plan_id": { "type": "string", "pattern": "^plan_[0-9a-f]{16}$" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "mode": { "const": "single" },
+    "task": { "$ref": "#/$defs/task" },
+    "asset_ref": { "$ref": "#/$defs/assetRef" },
+    "projection_request": { "$ref": "#/$defs/projectionRequest" },
+    "host_request": { "$ref": "#/$defs/hostRequest" },
+    "result_request": { "$ref": "#/$defs/resultRequest" },
+    "budget": { "$ref": "#/$defs/budget" },
+    "trace_policy": { "$ref": "#/$defs/tracePolicy" },
+    "integrity": { "$ref": "#/$defs/integrity" }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([+-].+)?$"
+    },
+    "assetId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*(:[a-zA-Z0-9_.-]+)+$"
+    },
+    "task": {
+      "type": "object",
+      "required": ["summary", "task_family", "context"],
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "task_family": { "type": ["string", "null"], "minLength": 1 },
+        "context": true
+      }
+    },
+    "expectedDigest": {
+      "type": "object",
+      "required": ["value", "basis", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "$ref": "#/$defs/sha256" },
+        "basis": { "type": "string" },
+        "source": {
+          "enum": [
+            "caller",
+            "registry",
+            "install_receipt",
+            "lockfile",
+            "kdna.json.content_digest",
+            "checksums.json.entry_set_digest"
+          ]
+        }
+      }
+    },
+    "assetRef": {
+      "type": "object",
+      "required": ["asset_id", "asset_uid", "version", "access", "expected_digests"],
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": { "$ref": "#/$defs/assetId" },
+        "asset_uid": {
+          "oneOf": [{ "type": "string", "format": "uri" }, { "type": "null" }]
+        },
+        "version": { "$ref": "#/$defs/semver" },
+        "access": {
+          "type": ["string", "null"],
+          "enum": ["public", "licensed", "remote", null]
+        },
+        "expected_digests": {
+          "type": "object",
+          "required": ["asset", "content", "runtime_entry_set"],
+          "additionalProperties": false,
+          "properties": {
+            "asset": {
+              "oneOf": [
+                {
+                  "allOf": [
+                    { "$ref": "#/$defs/expectedDigest" },
+                    {
+                      "properties": {
+                        "basis": { "const": "kdna-container-bytes-v1" },
+                        "source": {
+                          "enum": ["caller", "registry", "install_receipt", "lockfile"]
+                        }
+                      }
+                    }
+                  ]
+                },
+                { "type": "null" }
+              ]
+            },
+            "content": {
+              "oneOf": [
+                {
+                  "allOf": [
+                    { "$ref": "#/$defs/expectedDigest" },
+                    {
+                      "properties": {
+                        "basis": { "const": "kdna-content-tree-v1" },
+                        "source": {
+                          "enum": [
+                            "caller",
+                            "registry",
+                            "install_receipt",
+                            "lockfile",
+                            "kdna.json.content_digest"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                { "type": "null" }
+              ]
+            },
+            "runtime_entry_set": {
+              "oneOf": [
+                {
+                  "allOf": [
+                    { "$ref": "#/$defs/expectedDigest" },
+                    {
+                      "properties": {
+                        "basis": { "const": "kdna-runtime-entry-set-v1" },
+                        "source": {
+                          "enum": [
+                            "caller",
+                            "registry",
+                            "install_receipt",
+                            "lockfile",
+                            "checksums.json.entry_set_digest"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                { "type": "null" }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "projectionRequest": {
+      "type": "object",
+      "required": [
+        "profile",
+        "accepted_capsule_versions",
+        "required_digest_profile",
+        "require_packaged_asset"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "profile": { "enum": ["index", "compact", "scenario", "full"] },
+        "accepted_capsule_versions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["2.0", "1.0"] }
+        },
+        "required_digest_profile": { "const": "kdna-capsule-digests-v1" },
+        "require_packaged_asset": { "const": true }
+      }
+    },
+    "hostRequest": {
+      "type": "object",
+      "required": ["accepted_protocols"],
+      "additionalProperties": false,
+      "properties": {
+        "accepted_protocols": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["kdna.agent-host/2", "kdna.agent-host/1"] }
+        }
+      }
+    },
+    "resultRequest": {
+      "type": "object",
+      "required": ["shape"],
+      "additionalProperties": false,
+      "properties": {
+        "shape": {
+          "type": ["string", "null"],
+          "enum": ["answer-pattern", "structured-judgment", "text", null]
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "required": ["max_projection_chars", "max_projection_tokens", "deadline_ms"],
+      "additionalProperties": false,
+      "properties": {
+        "max_projection_chars": {
+          "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }]
+        },
+        "max_projection_tokens": {
+          "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }]
+        },
+        "deadline_ms": {
+          "oneOf": [{ "type": "integer", "minimum": 1 }, { "type": "null" }]
+        }
+      }
+    },
+    "tracePolicy": {
+      "type": "object",
+      "required": ["emit", "storage"],
+      "additionalProperties": false,
+      "properties": {
+        "emit": { "const": true },
+        "storage": { "enum": ["ephemeral", "session", "persistent"] }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "required": ["profile", "plan_digest"],
+      "additionalProperties": false,
+      "properties": {
+        "profile": { "const": "kdna-consumption-plan-jcs-v1" },
+        "plan_digest": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

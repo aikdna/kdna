@@ -12,6 +12,11 @@
   Capsule 2 emission with digest-specific mismatch codes.
 - Preserve the four frozen Capsule 1 inheritance, dependency, and RAG
   extension fields through the one-way Capsule 2 compatibility member.
+- Define strict opt-in ConsumptionPlan 1.0, Agent Host 2, capability, runtime
+  receipt, and authoritative JudgmentTrace 1.0 schemas. Add committed
+  negotiation, plan/P recomputation, source-directory block, required-null,
+  and cross-document tamper conformance vectors. Runtime defaults remain
+  Plan 0.9, Capsule 1, and Host 1.
 
 ### Changed
 

@@ -1,0 +1,98 @@
+{
+  "type": "kdna.judgment.trace",
+  "trace_version": "1.0.0",
+  "trace_id": "trace_fedcba9876543210",
+  "plan_id": "plan_0123456789abcdef",
+  "parent_trace_id": null,
+  "timestamp": "2026-07-15T00:00:00.500Z",
+  "overall_status": "blocked",
+  "plan_integrity": {
+    "profile": "kdna-consumption-plan-jcs-v1",
+    "plan_digest": "sha256:fd71954993941a83398da5b5a7b527b39db3c2a1b43bed66655b6b0e72c8a658",
+    "comparison": "matched"
+  },
+  "runtime_contract": {
+    "plan_capsule_versions": ["2.0", "1.0"],
+    "core_capsule_versions": ["2.0", "1.0"],
+    "host_capsule_versions": [],
+    "plan_host_protocols": ["kdna.agent-host/2", "kdna.agent-host/1"],
+    "host_protocols": [],
+    "capability_basis": "not_observed",
+    "negotiation_state": "not_started",
+    "source_capsule_version": null,
+    "selected_capsule_version": null,
+    "selected_host_protocol": null,
+    "adapter": null,
+    "issue_code": null
+  },
+  "asset_identity": {
+    "asset_id": "kdna:example:agent-project-context",
+    "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+    "version": "1.0.0"
+  },
+  "digest_evidence": {
+    "profile": "kdna-capsule-digests-v1",
+    "asset": {
+      "value": null,
+      "basis": "kdna-container-bytes-v1",
+      "comparison": {
+        "state": "unavailable",
+        "against": null,
+        "expected": null,
+        "source": null
+      }
+    },
+    "content": {
+      "value": null,
+      "basis": "kdna-content-tree-v1",
+      "comparison": {
+        "state": "unavailable",
+        "against": null,
+        "expected": null,
+        "source": null
+      }
+    },
+    "runtime_entry_set": {
+      "value": null,
+      "basis": "kdna-runtime-entry-set-v1",
+      "comparison": {
+        "state": "unavailable",
+        "against": null,
+        "expected": null,
+        "source": null
+      }
+    }
+  },
+  "capsule_delivery_evidence": {
+    "basis": "kdna-capsule-jcs-v1",
+    "observed": null,
+    "sender_computed": false,
+    "host_recomputed": null,
+    "host_echoed": null,
+    "delivered_capsule_version": null,
+    "host_boundary_comparison": "unavailable",
+    "request_id": null
+  },
+  "projection_actual": {
+    "profile": null,
+    "capsule_delivery_digest": null,
+    "profile_deviated_from_plan": null
+  },
+  "host_receipt": null,
+  "execution": {
+    "delivery_status": "not_delivered",
+    "semantic_consumption": { "state": "not_observed", "basis": null },
+    "execution_status": "not_started",
+    "conformance_status": "not_evaluated",
+    "model_identity": { "value": null, "basis": "not_observed" }
+  },
+  "result_ref": null,
+  "errors": [
+    {
+      "code": "KDNA_ASSET_FILE_REQUIRED",
+      "message": "Runtime execution requires a packaged .kdna asset, not a source directory.",
+      "phase": "load"
+    }
+  ],
+  "warnings": []
+}

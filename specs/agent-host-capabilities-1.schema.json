@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/specs/agent-host-capabilities-1.schema.json",
+  "title": "KDNA Agent Host Capability Descriptor 1.0",
+  "description": "Capabilities observed before Capsule selection. Protocol and Capsule versions are modeled independently; the execution contract applies a separate supported-pair matrix.",
+  "type": "object",
+  "required": [
+    "type",
+    "version",
+    "capability_basis",
+    "host_protocols",
+    "capsule_versions",
+    "capsule_digest_profiles"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "const": "kdna.agent-host.capabilities" },
+    "version": { "const": "1.0" },
+    "capability_basis": {
+      "enum": ["registered_descriptor", "legacy_assumption"]
+    },
+    "host_protocols": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["kdna.agent-host/2", "kdna.agent-host/1"] }
+    },
+    "capsule_versions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["2.0", "1.0"] }
+    },
+    "capsule_digest_profiles": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "const": "kdna-capsule-jcs-v1" }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "capability_basis": { "const": "legacy_assumption" } },
+        "required": ["capability_basis"]
+      },
+      "then": {
+        "properties": {
+          "host_protocols": {
+            "prefixItems": [{ "const": "kdna.agent-host/1" }],
+            "minItems": 1,
+            "maxItems": 1
+          },
+          "capsule_versions": {
+            "prefixItems": [{ "const": "1.0" }],
+            "minItems": 1,
+            "maxItems": 1
+          },
+          "capsule_digest_profiles": { "maxItems": 0 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "host_protocols": { "contains": { "const": "kdna.agent-host/2" } }
+        },
+        "required": ["host_protocols"]
+      },
+      "then": {
+        "properties": {
+          "capability_basis": { "const": "registered_descriptor" },
+          "capsule_versions": { "contains": { "const": "2.0" } },
+          "capsule_digest_profiles": {
+            "contains": { "const": "kdna-capsule-jcs-v1" }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "capsule_versions": { "contains": { "const": "2.0" } }
+        },
+        "required": ["capsule_versions"]
+      },
+      "then": {
+        "properties": {
+          "host_protocols": { "contains": { "const": "kdna.agent-host/2" } },
+          "capsule_digest_profiles": {
+            "contains": { "const": "kdna-capsule-jcs-v1" }
+          }
+        }
+      }
+    }
+  ]
+}

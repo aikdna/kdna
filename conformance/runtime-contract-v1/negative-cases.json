@@ -1,0 +1,212 @@
+{
+  "cases": [
+    {
+      "name": "plan-missing-required-nullable-asset-uid",
+      "base": "plan",
+      "operation": "remove",
+      "path": "/asset_ref/asset_uid",
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "plan-present-null-nonnullable-version",
+      "base": "plan",
+      "operation": "replace",
+      "path": "/asset_ref/version",
+      "value": null,
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "plan-source-directory-runtime-not-permitted",
+      "base": "plan",
+      "operation": "replace",
+      "path": "/projection_request/require_packaged_asset",
+      "value": false,
+      "expected_phase": "schema",
+      "expected_code": "KDNA_ASSET_FILE_REQUIRED"
+    },
+    {
+      "name": "plan-generic-digest-is-forbidden",
+      "base": "plan",
+      "operation": "add",
+      "path": "/asset_ref/digest",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "plan-a-cannot-use-a-content-declaration-source",
+      "base": "plan",
+      "operation": "replace",
+      "path": "/asset_ref/expected_digests/asset",
+      "value": {
+        "value": "sha256:936afdde43ff207fa7570cf1524f36d89ad2b6b95f0a5811ba0d985878121d6e",
+        "basis": "kdna-container-bytes-v1",
+        "source": "kdna.json.content_digest"
+      },
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "plan-integrity-tamper-is-semantic-failure",
+      "base": "plan",
+      "operation": "replace",
+      "path": "/task/summary",
+      "value": "Tampered after the plan digest was computed.",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_PLAN_DIGEST_MISMATCH"
+    },
+    {
+      "name": "capability-basis-present-null-is-invalid",
+      "base": "capabilities",
+      "operation": "replace",
+      "path": "/capability_basis",
+      "value": null,
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "request-missing-required-nullable-task-family",
+      "base": "request",
+      "operation": "remove",
+      "path": "/task/task_family",
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "request-present-null-nonnullable-digest-profile",
+      "base": "request",
+      "operation": "replace",
+      "path": "/runtime_contract/capsule_digest_profile",
+      "value": null,
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "request-capsule-delivery-digest-tamper",
+      "base": "request",
+      "operation": "replace",
+      "path": "/runtime_contract/capsule_delivery_digest",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_CAPSULE_DELIVERY_DIGEST_MISMATCH"
+    },
+    {
+      "name": "request-asset-correlation-mismatch",
+      "base": "request",
+      "operation": "replace",
+      "path": "/asset/asset_id",
+      "value": "kdna:example:different-asset",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_HOST_ASSET_ID_MISMATCH"
+    },
+    {
+      "name": "request-task-must-correlate-with-plan",
+      "base": "request",
+      "operation": "replace",
+      "path": "/task/summary",
+      "value": "A different task was substituted after planning.",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_HOST_TASK_MISMATCH"
+    },
+    {
+      "name": "receipt-completed-requires-outcome",
+      "base": "receipt",
+      "operation": "replace",
+      "path": "/outcome",
+      "value": null,
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "receipt-noncompleted-forbids-outcome",
+      "base": "receipt",
+      "operation": "replace",
+      "path": "/runtime_receipt/provider_execution_status",
+      "value": "failed",
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "receipt-host-recomputed-p-mismatch",
+      "base": "receipt",
+      "operation": "replace",
+      "path": "/runtime_receipt/host_recomputed_capsule_delivery_digest",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_HOST_CAPSULE_DELIVERY_DIGEST_MISMATCH"
+    },
+    {
+      "name": "receipt-request-correlation-mismatch",
+      "base": "receipt",
+      "operation": "replace",
+      "path": "/request_id",
+      "value": "host_fedcba9876543210fedcba98",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_HOST_REQUEST_ID_MISMATCH"
+    },
+    {
+      "name": "trace-cannot-claim-semantic-consumption",
+      "base": "trace",
+      "operation": "replace",
+      "path": "/execution/semantic_consumption/state",
+      "value": "observed",
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "trace-generic-digest-verified-is-forbidden",
+      "base": "trace",
+      "operation": "add",
+      "path": "/digest_verified",
+      "value": true,
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "completed-trace-cannot-carry-a-mismatch",
+      "base": "trace",
+      "operation": "replace",
+      "path": "/digest_evidence/asset",
+      "value": {
+        "value": "sha256:936afdde43ff207fa7570cf1524f36d89ad2b6b95f0a5811ba0d985878121d6e",
+        "basis": "kdna-container-bytes-v1",
+        "comparison": {
+          "state": "mismatched",
+          "against": "external_expected",
+          "expected": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+          "source": "install_receipt"
+        }
+      },
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "trace-a-evidence-must-match-delivered-capsule",
+      "base": "trace",
+      "operation": "replace",
+      "path": "/digest_evidence/asset/value",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_TRACE_DIGEST_EVIDENCE_MISMATCH"
+    },
+    {
+      "name": "trace-missing-required-nullable-parent-id",
+      "base": "trace",
+      "operation": "remove",
+      "path": "/parent_trace_id",
+      "expected_phase": "schema",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "trace-p-cross-document-mismatch",
+      "base": "trace",
+      "operation": "replace",
+      "path": "/capsule_delivery_evidence/host_echoed",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_phase": "semantic",
+      "expected_code": "KDNA_TRACE_CAPSULE_DELIVERY_DIGEST_MISMATCH"
+    }
+  ]
+}
