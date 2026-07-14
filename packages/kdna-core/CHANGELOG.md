@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## v0.17.0 (2026-07-14)
 
-### Fixed
+### Added
 
 - Structurally validate optional payload `worldview`, ordered `value_order`,
   and `judgment_role`, then preserve their declared values in the compact
@@ -14,6 +14,24 @@
   validation, content-neutral inspect, and exact compact projection only; it
   does not claim author quality, task applicability, model consumption, or
   conformance.
+
+### Changed
+
+- Make Runtime `creator` provenance optional. When it is declared,
+  `creator.name` remains required and non-empty; when provenance is unavailable,
+  producers omit the block instead of inventing an anonymous or `Unknown`
+  identity. This does not weaken authoring-source identity rules or turn
+  provenance into a trust claim.
+- Keep canonical and packaged Runtime manifest/payload schemas aligned with the
+  creator and scoped-judgment contracts.
+
+### Fixed
+
+- Make ecosystem truth validation fail closed when a live component has
+  neither package/artifact evidence nor a verifiable repository checkout,
+  instead of silently accepting missing external evidence.
+- Derive web-package readiness expectations from the declared current Core
+  version rather than a stale hard-coded release number.
 
 ## v0.16.0 (2026-07-13)
 
