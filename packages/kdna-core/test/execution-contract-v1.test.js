@@ -6,6 +6,12 @@ const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const {
+  installPackedCoreOffline,
+  representativeTypesSource,
+  runNpm,
+  runTsc,
+} = require('./package-test-helpers');
 
 const core = require('../src');
 const PACKAGE_ROOT = path.resolve(__dirname, '..');
@@ -435,7 +441,7 @@ test('all 15 candidate exports are symmetric across CJS, ESM, and declarations',
     assert.match(declarations, new RegExp(`(?:function|class|const) ${name}\\b`));
   }
   const dryRun = JSON.parse(
-    execFileSync('npm', ['pack', '--dry-run', '--json'], {
+    runNpm(['pack', '--dry-run', '--json'], {
       cwd: PACKAGE_ROOT,
       encoding: 'utf8',
     }),
@@ -454,12 +460,12 @@ test('all 15 candidate exports are symmetric across CJS, ESM, and declarations',
 });
 
 test('TypeScript declarations compile for Plan 1 and Host 2 public calls', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-types-'));
+  const tmp = fs.mkdtempSync(path.join(PACKAGE_ROOT, 'test', 'tmp-execution-types-'));
   try {
     fs.writeFileSync(
       path.join(tmp, 'check.ts'),
       [
-        `import { parseExecutionContractJsonV1, validateConsumptionPlanV1, KDNAConsumptionPlanV1, KDNAJudgmentTraceV1, KDNAExecutionPairContextV1 } from ${JSON.stringify(PACKAGE_ROOT)};`,
+        "import { parseExecutionContractJsonV1, validateConsumptionPlanV1, KDNAConsumptionPlanV1, KDNAJudgmentTraceV1, KDNAExecutionPairContextV1 } from '../..';",
         'const value = parseExecutionContractJsonV1("{}");',
         'declare const plan: KDNAConsumptionPlanV1;',
         'declare const trace: KDNAJudgmentTraceV1;',
@@ -471,7 +477,7 @@ test('TypeScript declarations compile for Plan 1 and Host 2 public calls', () =>
         'if (!result.valid) console.log(result.code, value, selected, delivery, versions);',
       ].join('\n'),
     );
-    execFileSync(path.join(REPO_ROOT, 'node_modules', '.bin', 'tsc'), [
+    runTsc([
       '--noEmit',
       '--strict',
       '--skipLibCheck',
@@ -488,30 +494,16 @@ test('TypeScript declarations compile for Plan 1 and Host 2 public calls', () =>
   }
 });
 
-test('npm pack cold install validates Plan 1 with packaged schemas while offline', { timeout: 120000 }, () => {
+test('npm pack cold install validates Plan 1, entrypoints, and types while offline', { timeout: 120000 }, () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-cold-'));
   try {
-    const packOutput = JSON.parse(
-      execFileSync('npm', ['pack', '--json', '--pack-destination', tmp], {
-        cwd: PACKAGE_ROOT,
-        encoding: 'utf8',
-      }),
-    )[0];
-    const tarball = path.join(tmp, packOutput.filename);
-    fs.writeFileSync(
-      path.join(tmp, 'package.json'),
-      JSON.stringify({ private: true, name: 'kdna-core-cold-install', version: '1.0.0' }),
-    );
-    execFileSync(
-      'npm',
-      ['install', '--offline', '--ignore-scripts', '--no-audit', '--no-fund', tarball],
-      { cwd: tmp, stdio: 'pipe' },
-    );
+    installPackedCoreOffline(tmp);
     fs.writeFileSync(
       path.join(tmp, 'golden.json'),
       JSON.stringify(golden),
     );
     const verify = [
+      "const assert = require('node:assert/strict');",
       "const fs = require('node:fs');",
       "const core = require('@aikdna/kdna-core');",
       "const raw = fs.readFileSync('golden.json');",
@@ -519,8 +511,36 @@ test('npm pack cold install validates Plan 1 with packaged schemas while offline
       'const result = core.validateConsumptionPlanV1(golden.plan, { trustedPlanDigest: golden.plan.integrity.plan_digest });',
       "if (!result.valid) throw new Error(result.code);",
       "if (core.computeConsumptionPlanDigestV1(golden.plan) !== golden.plan.integrity.plan_digest) throw new Error('digest mismatch');",
+      "import('@aikdna/kdna-core').then((esm) => {",
+      "  const cjsNames = Object.keys(core).sort();",
+      "  const esmNames = Object.keys(esm).filter((name) => name !== 'default').sort();",
+      "  if (JSON.stringify(cjsNames) !== JSON.stringify(esmNames)) throw new Error('installed CJS/ESM names differ');",
+      "  for (const name of cjsNames) {",
+      "    if (typeof core[name] === 'function') {",
+      "      assert.equal(typeof esm[name], 'function', `installed export type differs: ${name}`);",
+      "      assert.equal(esm[name].name, core[name].name, `installed export name differs: ${name}`);",
+      "      assert.equal(esm[name].length, core[name].length, `installed export arity differs: ${name}`);",
+      "      assert.equal(Function.prototype.toString.call(esm[name]), Function.prototype.toString.call(core[name]), `installed export implementation differs: ${name}`);",
+      '    } else {',
+      "      assert.deepStrictEqual(esm[name], core[name], `installed export differs: ${name}`);",
+      '    }',
+      '  }',
+      '}).catch((error) => { console.error(error); process.exitCode = 1; });',
     ].join('\n');
     execFileSync(process.execPath, ['-e', verify], { cwd: tmp, stdio: 'pipe' });
+    const checkPath = path.join(tmp, 'check.ts');
+    fs.writeFileSync(checkPath, representativeTypesSource('@aikdna/kdna-core'));
+    runTsc([
+      '--noEmit',
+      '--strict',
+      '--moduleResolution',
+      'node16',
+      '--module',
+      'node16',
+      '--target',
+      'es2022',
+      checkPath,
+    ], { cwd: tmp, stdio: 'pipe' });
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }
