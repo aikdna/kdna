@@ -522,6 +522,10 @@ test('npm pack cold install validates Plan 1, entrypoints, and types while offli
       fs.readdirSync(tmp).some((name) => name.startsWith('pack-cache-')),
       false,
     );
+    assert.equal(
+      fs.readdirSync(tmp).some((name) => name.startsWith('dependency-staging-')),
+      false,
+    );
     fs.writeFileSync(
       path.join(tmp, 'golden.json'),
       JSON.stringify(golden),

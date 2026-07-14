@@ -155,10 +155,32 @@ function packPackage(packageDirectory, destination, cache) {
   return path.join(destination, packed.filename);
 }
 
+function stageDependencyForPacking(packageDirectory, stagingRoot, index) {
+  const stagingDirectory = path.join(stagingRoot, `dependency-${index}`);
+  fs.cpSync(packageDirectory, stagingDirectory, {
+    recursive: true,
+    dereference: false,
+    verbatimSymlinks: true,
+    filter(source) {
+      const relative = path.relative(packageDirectory, source);
+      return relative !== 'node_modules' && !relative.startsWith(`node_modules${path.sep}`);
+    },
+  });
+
+  const manifestPath = path.join(stagingDirectory, 'package.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  delete manifest.scripts;
+  fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+  return stagingDirectory;
+}
+
 function installPackedCoreOffline(tempDirectory) {
   const artifacts = path.join(tempDirectory, 'artifacts');
   const packCacheRoot = fs.mkdtempSync(path.join(tempDirectory, 'pack-cache-'));
   const packCache = path.join(packCacheRoot, 'cache');
+  const dependencyStagingRoot = fs.mkdtempSync(
+    path.join(tempDirectory, 'dependency-staging-'),
+  );
   const installCache = path.join(tempDirectory, 'install-cache');
   fs.mkdirSync(artifacts, { recursive: true });
 
@@ -166,9 +188,14 @@ function installPackedCoreOffline(tempDirectory) {
   const localDependencies = {};
   try {
     coreTarball = packPackage(PACKAGE_ROOT, artifacts, packCache);
-    for (const directory of installedDependencyClosure(PACKAGE_ROOT)) {
+    for (const [index, directory] of installedDependencyClosure(PACKAGE_ROOT).entries()) {
       const manifest = JSON.parse(fs.readFileSync(path.join(directory, 'package.json'), 'utf8'));
-      const tarball = packPackage(directory, artifacts, packCache);
+      const stagedDirectory = stageDependencyForPacking(
+        directory,
+        dependencyStagingRoot,
+        index,
+      );
+      const tarball = packPackage(stagedDirectory, artifacts, packCache);
       const spec = `file:./${path.relative(tempDirectory, tarball).split(path.sep).join('/')}`;
       if (localDependencies[manifest.name] && localDependencies[manifest.name] !== spec) {
         throw new Error(`offline dependency closure has multiple ${manifest.name} versions`);
@@ -177,6 +204,7 @@ function installPackedCoreOffline(tempDirectory) {
     }
   } finally {
     fs.rmSync(packCacheRoot, { recursive: true, force: true });
+    fs.rmSync(dependencyStagingRoot, { recursive: true, force: true });
   }
 
   fs.writeFileSync(

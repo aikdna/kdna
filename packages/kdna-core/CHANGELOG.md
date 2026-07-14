@@ -66,6 +66,9 @@
   fingerprint when the unified decrypt API receives a legacy or profile-unknown
   envelope. Package tests now isolate every npm operation from the user cache
   and keep pack caches separate from a provably empty offline-install cache.
+  Third-party dependency fixtures are packed from script-free temporary copies,
+  so package-manager lifecycle behavior cannot introduce network or build-tool
+  dependencies into the offline release gate.
 - Require a non-null independently trusted Plan digest throughout the strict
   Plan 1 / Host 2 chain, snapshot hostile validation contexts without invoking
   accessors, and keep pre-Host budget enforcement unavailable as a public
