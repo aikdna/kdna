@@ -228,9 +228,13 @@ function detectContainerFormat(absPath) {
  * truncated input.
  */
 function listZipEntries(absPath, opts = {}) {
+  return listZipEntriesFromBuffer(fs.readFileSync(absPath), opts);
+}
+
+function listZipEntriesFromBuffer(input, opts = {}) {
   const secure = opts.secure !== false;
   const limits = { ...DEFAULT_CONTAINER_LIMITS, ...(opts.limits || {}) };
-  const buf = fs.readFileSync(absPath);
+  const buf = Buffer.isBuffer(input) ? input : Buffer.from(input);
   if (secure && buf.length > limits.maxContainerBytes) {
     throw new Error(`container exceeds maximum size (${limits.maxContainerBytes} bytes)`);
   }
@@ -533,6 +537,7 @@ function readV1Layout(absPath) {
   const map = {};
   let entries = null; // ZIP entries if container
   let kind; // 'dir' | 'file'
+  let containerBytes = null;
 
   if (stat.isDirectory()) {
     kind = 'dir';
@@ -558,13 +563,10 @@ function readV1Layout(absPath) {
     }
   } else if (stat.isFile()) {
     kind = 'file';
-    entries = listZipEntries(absPath);
-    if (entries.length === 0 || entries[0].name !== 'mimetype') {
-      throw new Error('not a KDNA Asset Container: first entry is not mimetype');
-    }
-    if (entries[0].method !== 0) {
-      throw new Error('not a KDNA Asset Container: mimetype must be uncompressed');
-    }
+    // Open once so parsing and the whole-file digest come from the same
+    // immutable snapshot, without a path-level TOCTOU window.
+    containerBytes = fs.readFileSync(absPath);
+    entries = listZipEntriesFromBuffer(containerBytes);
     for (const e of entries) {
       // We only need the well-known entries; signatures/ attachments/ etc.
       // are passed through unchanged by the loader but not parsed here.
@@ -577,25 +579,36 @@ function readV1Layout(absPath) {
         map[e.name] = e.data;
       }
     }
-    for (const f of V1_REQUIRED_DIR_ENTRIES) {
-      if (!map[f]) {
-        throw new Error(`not a KDNA Asset Container: missing ${f}`);
-      }
-    }
   } else {
     throw new Error(`not a file or directory: ${absPath}`);
   }
 
-  // mimetype content must equal the literal v1 media type.
-  const mime = map.mimetype.toString('utf8');
-  if (mime !== MIMETYPE) {
-    throw new Error(
-      `not a KDNA layout: mimetype is "${mime}", expected "${MIMETYPE}"`,
-    );
+  const containerDigest = kind === 'file'
+    ? `sha256:${crypto.createHash('sha256').update(containerBytes).digest('hex')}`
+    : null;
+
+  return finalizeV1Layout({ kind, map, entries, containerDigest });
+}
+
+function finalizeV1Layout({ kind, map, entries, containerDigest }) {
+  if (kind !== 'dir' && (!entries || entries.length === 0 || entries[0].name !== 'mimetype')) {
+    throw new Error('not a KDNA Asset Container: first entry is not mimetype');
+  }
+  if (kind !== 'dir' && entries[0].method !== 0) {
+    throw new Error('not a KDNA Asset Container: mimetype must be uncompressed');
+  }
+  for (const required of V1_REQUIRED_DIR_ENTRIES) {
+    if (!map[required]) {
+      const source = kind === 'dir' ? 'KDNA authoring source directory' : 'KDNA Asset Container';
+      throw new Error(`not a ${source}: missing ${required}`);
+    }
   }
 
-  // Lineage must be a single object, not an array. (Format rule from
-  // docs/core/manifest.md / schema/manifest.schema.json.)
+  const mime = map.mimetype.toString('utf8');
+  if (mime !== MIMETYPE) {
+    throw new Error(`not a KDNA layout: mimetype is "${mime}", expected "${MIMETYPE}"`);
+  }
+
   let manifest;
   try {
     manifest = parseJsonEntry('kdna.json', map['kdna.json']);
@@ -606,11 +619,43 @@ function readV1Layout(absPath) {
     throw new Error('kdna.json.lineage must be an object, not an array');
   }
 
-  const containerDigest = kind === 'file'
-    ? `sha256:${crypto.createHash('sha256').update(fs.readFileSync(absPath)).digest('hex')}`
-    : null;
-
   return { kind, map, manifest, entries, containerDigest };
+}
+
+function readV1LayoutBytes(input) {
+  const bytes = Buffer.isBuffer(input) ? input : Buffer.from(input);
+  const entries = listZipEntriesFromBuffer(bytes);
+  const map = {};
+  for (const entry of entries) {
+    if (
+      entry.name === 'mimetype' ||
+      entry.name === 'kdna.json' ||
+      entry.name === 'payload.kdnab' ||
+      entry.name === 'checksums.json'
+    ) {
+      map[entry.name] = entry.data;
+    }
+  }
+  return finalizeV1Layout({
+    kind: 'memory',
+    map,
+    entries,
+    containerDigest: `sha256:${crypto.createHash('sha256').update(bytes).digest('hex')}`,
+  });
+}
+
+function readInputLayout(input) {
+  if (Buffer.isBuffer(input) || input instanceof Uint8Array) {
+    return readV1LayoutBytes(input);
+  }
+  return readV1Layout(path.resolve(input));
+}
+
+function inputSource(input, kind) {
+  return {
+    kind,
+    path: typeof input === 'string' ? path.resolve(input) : null,
+  };
 }
 
 function parseJsonEntry(name, bytes, opts = {}) {
@@ -740,6 +785,21 @@ function runValidate(v1) {
     result.schema_valid = false;
     for (const err of validators.manifest.errors) {
       problems.push(`manifest: ${err.instancePath || '<root>'} ${err.message}`);
+    }
+  }
+
+  // Known pre-1.0 aliases are not extension fields. Rejecting them here keeps
+  // the current v1 validator as the single manifest authority while allowing
+  // genuinely namespaced/forward-compatible manifest extensions.
+  const removedAliases = {
+    kdna_spec: 'kdna_version',
+    format_version: 'kdna_version',
+    spec_version: 'kdna_version',
+  };
+  for (const [field, replacement] of Object.entries(removedAliases)) {
+    if (Object.prototype.hasOwnProperty.call(v1.manifest, field)) {
+      result.schema_valid = false;
+      problems.push(`kdna.json: ${field} is not allowed. Use ${replacement}.`);
     }
   }
 
@@ -1099,7 +1159,7 @@ function unpack(inputPath, outputDir) {
 // ─── Public router entry points ────────────────────────────────────────
 
 function inspect(inputPath, _opts = {}) {
-  const v1 = readV1Layout(path.resolve(inputPath));
+  const v1 = readInputLayout(inputPath);
   const out = buildInspectOutput(v1);
   // Guard against accidental forbidden wording in any future field additions.
   assertNoForbiddenTerms(out);
@@ -1107,7 +1167,7 @@ function inspect(inputPath, _opts = {}) {
 }
 
 function validate(inputPath, _opts = {}) {
-  const v1 = readV1Layout(path.resolve(inputPath));
+  const v1 = readInputLayout(inputPath);
   return runValidate(v1);
 }
 
@@ -1216,7 +1276,7 @@ function baseLoadPlan(inputPath, v1, validation, opts = {}) {
     issues: [],
     source: {
       kind: v1.kind,
-      path: path.resolve(inputPath),
+      path: typeof inputPath === 'string' ? path.resolve(inputPath) : null,
     },
   };
 
@@ -1268,9 +1328,26 @@ function canonicalToV1Layout(asset) {
 function planLoad(inputPath, opts = {}) {
   let v1;
 
+  if (Buffer.isBuffer(inputPath) || inputPath instanceof Uint8Array) {
+    try {
+      v1 = readInputLayout(inputPath);
+    } catch (e) {
+      return finalizeLoadPlan({
+        kdna_version: null,
+        asset: { asset_id: null, asset_uid: null, title: null, version: null, judgment_version: null },
+        access: null, access_alias: null, entitlement_profile: null,
+        state: 'invalid', required_action: 'block', can_load_now: false, projection_policy: 'none',
+        input_fingerprint: null,
+        checks: { format_valid: false, schema_valid: false, payload_valid: false, checksums_valid: false, load_contract_valid: false, overall_valid: false },
+        issues: [buildLoadPlanIssue('KDNA_FORMAT_INVALID', 'blocking', e.message)],
+        source: inputSource(inputPath, 'memory'),
+      });
+    }
+  }
+
   // Try the unified container dispatcher first; the internal compatibility
   // reader below remains available only for authoring and migration tooling.
-  if (readAsset !== null) {
+  if (!v1 && readAsset !== null) {
     try {
       const asset = readAsset(path.resolve(inputPath));
       v1 = canonicalToV1Layout(asset);
@@ -1290,7 +1367,7 @@ function planLoad(inputPath, opts = {}) {
             e.code === 'KDNA_FORMAT_UNKNOWN' ? 'KDNA_FORMAT_UNKNOWN' : 'KDNA_FORMAT_INVALID',
             'blocking', e.message,
           )],
-          source: { kind: null, path: path.resolve(inputPath) },
+          source: inputSource(inputPath, null),
         });
       }
     }
@@ -1298,7 +1375,7 @@ function planLoad(inputPath, opts = {}) {
 
   if (!v1) {
     try {
-      v1 = readV1Layout(path.resolve(inputPath));
+      v1 = readInputLayout(inputPath);
     } catch (e) {
       return finalizeLoadPlan({
         kdna_version: null,
@@ -1308,7 +1385,7 @@ function planLoad(inputPath, opts = {}) {
         input_fingerprint: null,
         checks: { format_valid: false, schema_valid: false, payload_valid: false, checksums_valid: false, load_contract_valid: false, overall_valid: false },
         issues: [buildLoadPlanIssue('KDNA_FORMAT_INVALID', 'blocking', e.message)],
-        source: { kind: null, path: path.resolve(inputPath) },
+        source: inputSource(inputPath, null),
       });
     }
   }
@@ -1934,7 +2011,7 @@ function hasCompactPromptContent(content) {
 }
 
 function loadV1Unsafe(inputPath, opts = {}) {
-  const v1 = readV1Layout(path.resolve(inputPath));
+  const v1 = readInputLayout(inputPath);
   const m = v1.manifest;
   const profile = opts.profile || (m.load_contract ? m.load_contract.default_profile : 'compact') || 'compact';
   const as = opts.as || 'json';

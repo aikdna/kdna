@@ -204,26 +204,52 @@ export interface KDNAFileDataMap {
 
 export interface KDNAManifest {
   kdna_version: '1.0';
-  name: string;
+  asset_id: string;
+  asset_uid: string;
+  asset_type: 'domain' | 'cluster' | 'tool' | 'sample' | 'fixture' | 'bundle';
+  title: string;
   version: string;
   judgment_version: string;
-  status: 'draft' | 'experimental' | 'stable' | 'deprecated' | 'staging';
-  quality_badge: 'untested' | 'tested' | 'validated' | 'expert_reviewed' | 'production_ready';
-  access: 'public' | 'licensed' | 'remote';
+  created_at: string;
+  updated_at: string;
+  compatibility: {
+    min_loader_version: string;
+    profile: 'judgment-profile-v1' | 'bundle-profile-v1';
+    [key: string]: any;
+  };
+  payload: {
+    path: 'payload.kdnab';
+    encoding: 'cbor';
+    encrypted: boolean;
+    [key: string]: any;
+  };
+  creator?: {
+    name: string;
+    id?: string;
+    creator_type?: 'human' | 'agent' | 'tool' | 'organization';
+    pubkey?: string;
+    [key: string]: any;
+  };
+  access?: 'public' | 'licensed' | 'remote';
   language?: string;
-  default_language: string;
-  languages: string[];
-  author: { name: string; id?: string; pubkey?: string; public_key_pem?: string };
-  license: { type: string; url?: string };
-  description: string;
+  languages?: string[];
+  license?: string | { type: string; url?: string };
+  summary?: string;
+  description?: string;
   keywords?: string[];
+  load_contract?: Record<string, any>;
   encryption?: {
     profile?: string;
     encrypted_entries?: string[];
     [key: string]: any;
   };
+  /** @deprecated Legacy source/signature compatibility only. */
+  name?: string;
+  /** @deprecated Legacy source/signature compatibility only. */
+  author?: { name: string; id?: string; pubkey?: string; public_key_pem?: string };
   content_digest?: string;
   signature?: string;
+  [key: string]: any;
 }
 
 export interface LintResult {
@@ -254,6 +280,7 @@ export function formatContext(domain: LoadedDomain): string;
 export const FILE_MAP: Record<string, string>;
 
 // Asset reader — direct .kdna API
+/** @deprecated Legacy source-tree entry names. Current Runtime assets use payload.kdnab. */
 export const STANDARD_ENTRIES: string[];
 
 export interface KdnaAsset {
@@ -307,16 +334,18 @@ export interface KdnaAssetReader {
   readJson(asset: KdnaAsset, entryName: string, options?: KdnaDecryptOptions): Promise<any>;
   readManifestSync(asset: KdnaAsset): KDNAManifest;
   readManifest(asset: KdnaAsset): Promise<KDNAManifest>;
+  /** @deprecated Current payload.kdnab is not projected into legacy source files. */
   readDataMapSync(
     asset: KdnaAsset,
     entries?: string[],
     options?: KdnaDecryptOptions,
-  ): KDNAFileDataMap;
+  ): never;
+  /** @deprecated Current payload.kdnab is not projected into legacy source files. */
   readDataMap(
     asset: KdnaAsset,
     entries?: string[],
     options?: KdnaDecryptOptions,
-  ): Promise<KDNAFileDataMap>;
+  ): Promise<never>;
   contentDigestSync(asset: KdnaAsset): string;
   contentDigest(asset: KdnaAsset): Promise<string>;
   verifySync(
@@ -339,24 +368,14 @@ export interface KdnaAssetReader {
   ): Promise<KdnaAssetVerifyResult>;
   loadProfileSync(
     asset: KdnaAsset,
-    profile: 'index',
-    options?: { input?: string; context?: boolean } & KdnaDecryptOptions,
-  ): KdnaAssetIndexProfile;
-  loadProfileSync(
-    asset: KdnaAsset,
-    profile?: 'compact' | 'scenario' | 'full' | string,
-    options?: { input?: string; context?: boolean } & KdnaDecryptOptions,
-  ): KdnaAssetLoadProfile;
+    profile?: 'index' | 'compact' | 'scenario' | 'full' | string,
+    options?: { as?: 'json' | 'prompt' | string } & KdnaDecryptOptions,
+  ): KDNARuntimeCapsule | Record<string, any>;
   loadProfile(
     asset: KdnaAsset,
-    profile: 'index',
-    options?: { input?: string; context?: boolean } & KdnaDecryptOptions,
-  ): Promise<KdnaAssetIndexProfile>;
-  loadProfile(
-    asset: KdnaAsset,
-    profile?: 'compact' | 'scenario' | 'full' | string,
-    options?: { input?: string; context?: boolean } & KdnaDecryptOptions,
-  ): Promise<KdnaAssetLoadProfile>;
+    profile?: 'index' | 'compact' | 'scenario' | 'full' | string,
+    options?: { as?: 'json' | 'prompt' | string } & KdnaDecryptOptions,
+  ): Promise<KDNARuntimeCapsule | Record<string, any>>;
 }
 
 export interface KdnaDecryptOptions {
@@ -577,14 +596,18 @@ export function isVerifiedExternalEntitlement(value: unknown): value is KDNAVeri
 export type KDNAAssetInput = string | Uint8Array | KdnaAsset;
 
 export interface KDNAInspectResult {
-  name: string | null;
+  kdna_version: string | null;
+  asset_id: string | null;
+  asset_uid: string | null;
+  asset_type: string | null;
+  title: string | null;
   version: string | null;
   judgment_version: string | null;
-  access: string;
-  status: string | null;
-  quality_badge: string | null;
-  risk_level: string | null;
-  keywords: string[];
+  payload: string | null;
+  payload_encrypted: boolean | null;
+  profile: string | null;
+  load_contract_default_profile: string | null;
+  checksums_present?: boolean;
   entries: string[];
   asset_digest: string;
   content_digest: string;
@@ -596,13 +619,28 @@ export interface KDNAInspectResult {
 }
 
 export interface KDNAValidationReport {
-  ok: boolean;
-  errors: string[];
-  warnings: string[];
-  asset: KdnaAssetVerifyResult;
-  lint: LintResult;
-  schema: ValidationResult;
-  cross_file: ValidationResult;
+  format_valid: boolean;
+  schema_valid: boolean;
+  payload_valid: boolean;
+  checksums_valid: boolean;
+  load_contract_valid: boolean;
+  overall_valid: boolean;
+  problems: string[];
+}
+
+export interface KDNARuntimeCapsule {
+  type: 'kdna.context.capsule';
+  version: '1.0';
+  domain: string | null;
+  judgment_version: string | null;
+  asset_digest: string | null;
+  signature: { state: 'verified' | 'not_checked' | 'absent'; issuer?: string };
+  access: string;
+  risk_level: string | null;
+  profile: string;
+  context: Record<string, any>;
+  trace: Record<string, any>;
+  [key: string]: any;
 }
 
 export interface KDNAMatchResult extends KDNAInspectResult {
@@ -625,10 +663,10 @@ export function openKDNA(input: KDNAAssetInput): Promise<KdnaAsset>;
 export function openKDNASync(input: KDNAAssetInput): KdnaAsset;
 export function inspectKDNA(input: KDNAAssetInput, options?: { verify?: boolean } & KdnaDecryptOptions): Promise<KDNAInspectResult>;
 export function inspectKDNASync(input: KDNAAssetInput, options?: { verify?: boolean } & KdnaDecryptOptions): KDNAInspectResult;
-export function loadKDNA(input: KDNAAssetInput, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; input?: string; context?: boolean } & KdnaDecryptOptions): Promise<KdnaAssetIndexProfile | KdnaAssetLoadProfile>;
-export function loadKDNASync(input: KDNAAssetInput, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; input?: string; context?: boolean } & KdnaDecryptOptions): KdnaAssetIndexProfile | KdnaAssetLoadProfile;
-export function validateKDNA(input: KDNAAssetInput, options?: { schemas?: Record<string, any>; requireSignature?: boolean; requireDecryption?: boolean } & KdnaDecryptOptions): Promise<KDNAValidationReport>;
-export function validateKDNASync(input: KDNAAssetInput, options?: { schemas?: Record<string, any>; requireSignature?: boolean; requireDecryption?: boolean } & KdnaDecryptOptions): KDNAValidationReport;
+export function loadKDNA(input: KDNAAssetInput, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string } & KdnaDecryptOptions): Promise<KDNARuntimeCapsule | Record<string, any>>;
+export function loadKDNASync(input: KDNAAssetInput, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string } & KdnaDecryptOptions): KDNARuntimeCapsule | Record<string, any>;
+export function validateKDNA(input: KDNAAssetInput, options?: Record<string, any>): Promise<KDNAValidationReport>;
+export function validateKDNASync(input: KDNAAssetInput, options?: Record<string, any>): KDNAValidationReport;
 export function renderForAgent(input: KDNAAssetInput, options?: { profile?: 'compact' | 'scenario' | 'full' | string; input?: string } & KdnaDecryptOptions): Promise<string>;
 export function renderForAgentSync(input: KDNAAssetInput, options?: { profile?: 'compact' | 'scenario' | 'full' | string; input?: string } & KdnaDecryptOptions): string;
 export function verifyAsset(input: KDNAAssetInput, options?: { asset_digest?: string; content_digest?: string; requireSignature?: boolean; requireDecryption?: boolean } & KdnaDecryptOptions): Promise<KdnaAssetVerifyResult>;
@@ -664,8 +702,8 @@ export interface KDNAChecksums {
 
 export function isKdnaSourceDir(inputPath: string): boolean;
 export function detectContainerFormat(inputPath: string): 'kdna' | null;
-export function inspect(inputPath: string, options?: Record<string, any>): Record<string, any>;
-export function validate(inputPath: string, options?: Record<string, any>): Record<string, any>;
+export function inspect(input: string | Uint8Array, options?: Record<string, any>): Record<string, any>;
+export function validate(input: string | Uint8Array, options?: Record<string, any>): KDNAValidationReport;
 export interface KDNALoadPlanIssue {
   code: string;
   severity: 'info' | 'warning' | 'blocking' | string;
@@ -712,17 +750,17 @@ export interface KDNALoadPlan {
   checks: Record<string, boolean>;
   issues: KDNALoadPlanIssue[];
   source: {
-    kind: 'dir' | 'file' | string | null;
-    path: string;
+    kind: 'dir' | 'file' | 'memory' | string | null;
+    path: string | null;
   };
 }
-export function planLoad(inputPath: string, options?: { password?: string; hasPassword?: boolean; entitlement?: KDNAVerifiedExternalEntitlement | Record<string, any> }): KDNALoadPlan;
+export function planLoad(input: string | Uint8Array, options?: { password?: string; hasPassword?: boolean; entitlement?: KDNAVerifiedExternalEntitlement | Record<string, any> }): KDNALoadPlan;
 export function buildChecksums(sourceDir: string): KDNAChecksums;
 export function pack(sourceDir: string, outputPath: string): void;
 export function unpack(inputPath: string, outputDir: string): void;
-export function loadAuthorized(inputPath: string, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): Record<string, any>;
-export function load(inputPath: string, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): Record<string, any>;
-export function loadAsset(inputPath: string, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): Record<string, any>;
+export function loadAuthorized(input: string | Uint8Array, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): KDNARuntimeCapsule | Record<string, any>;
+export function load(input: string | Uint8Array, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): KDNARuntimeCapsule | Record<string, any>;
+export function loadAsset(input: string | Uint8Array, options?: { profile?: 'index' | 'compact' | 'scenario' | 'full' | string; as?: 'json' | 'prompt' | string }): KDNARuntimeCapsule | Record<string, any>;
 export const FORBIDDEN_OUTPUT_TERMS: readonly string[];
 
 // Lint

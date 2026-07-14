@@ -289,7 +289,8 @@ second source-tree manifest dialect.
 
 The required identity fields are `kdna_version`, `asset_id`, `asset_uid`,
 `asset_type`, `title`, `version`, `judgment_version`, `created_at`,
-`updated_at`, `creator`, `compatibility`, and `payload`. The payload entry is
+`updated_at`, `compatibility`, and `payload`. Optional `creator` provenance does
+not gate Runtime validity; when present, its `name` must be non-empty. The payload entry is
 always `payload.kdnab` with `encoding: "cbor"`.
 
 Top-level `format_version`, `spec_version`, `quality_badge`, and `container`
@@ -813,15 +814,15 @@ removed legacy fields and MUST NOT be emitted. See
 ```
 
 **Required fields:** `kdna_version`, `asset_id`, `asset_uid`, `asset_type`,
-`title`, `version`, `judgment_version`, `created_at`, `updated_at`, `creator`,
+`title`, `version`, `judgment_version`, `created_at`, `updated_at`,
 `compatibility`, and `payload`.
 
 `payload.path` MUST be `payload.kdnab`, `payload.encoding` MUST be `cbor`, and
 `payload.encrypted` records whether the entry contains a supported encryption
 envelope.
 
-**Optional fields:** `summary`, `description`, `language`, `languages`,
-`license`, `keywords`, `domain_field`, `lineage`, `digests`, `signatures`,
+**Optional fields:** `creator`, `summary`, `description`, `language`,
+`languages`, `license`, `keywords`, `domain_field`, `lineage`, `digests`, `signatures`,
 `dependencies`, `encryption`, `load_contract`, `scope`, and `evidence_claims`.
 `access` declares `public`, `licensed`, or `remote` consumption behavior.
 

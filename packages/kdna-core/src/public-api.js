@@ -1,16 +1,16 @@
 /**
- * Stable public API for third-party KDNA integrations.
+ * Compatibility names for the stable current KDNA Runtime API.
  *
- * Lower-level modules remain exported for advanced runtimes, but external
- * adapters should prefer these names. They encode the asset-first contract:
- * callers pass .kdna files or bytes, and no persistent directory extraction is
- * required.
+ * These names previously implemented a second legacy source-tree validator and
+ * loader. They now route to the same current inspect/validate/LoadPlan/Capsule
+ * implementation as the unversioned package API. No current payload is
+ * reverse-projected into KDNA_Core.json or KDNA_Patterns.json.
  */
 
+const fs = require('fs');
 const { createKdnaAssetReader } = require('./asset-reader');
-const { lintDomain } = require('./lint-pure');
-const { validateCrossFile, validateDomainSchema } = require('./validate-pure');
-const { formatContext } = require('./loader');
+const v1 = require('./v1');
+const runtimeApi = require('./runtime-api');
 const {
   composeContextWithAttribution,
   detectDomainConflicts,
@@ -24,6 +24,18 @@ function readerFrom(options = {}) {
 
 function isAsset(value) {
   return value && typeof value === 'object' && value.entries instanceof Map && typeof value.readEntry === 'function';
+}
+
+const ASSET_SOURCE_BYTES = Symbol.for('@aikdna/kdna-core.asset-source-bytes');
+
+function canonicalBytes(input) {
+  if (Buffer.isBuffer(input)) return input;
+  if (input instanceof Uint8Array) return Buffer.from(input);
+  if (typeof input === 'string') return fs.readFileSync(input);
+  if (isAsset(input) && Buffer.isBuffer(input[ASSET_SOURCE_BYTES])) {
+    return input[ASSET_SOURCE_BYTES];
+  }
+  throw new Error('KDNA operation expects a .kdna path, Buffer, Uint8Array, or asset opened by openKDNA');
 }
 
 async function asAsset(input, options = {}) {
@@ -47,156 +59,69 @@ function openKDNASync(input, options = {}) {
 async function inspectKDNA(input, options = {}) {
   const reader = readerFrom(options);
   const asset = await asAsset(input, { ...options, reader });
-  const profile = await reader.loadProfile(asset, 'index', options);
+  const current = v1.inspect(canonicalBytes(asset), options);
+  const manifest = await reader.readManifest(asset);
+  const entries = await reader.listEntries(asset);
+  const contentDigest = await reader.contentDigest(asset);
   const verification = options.verify === false ? null : await reader.verify(asset, options);
   return {
-    name: profile.name,
-    version: profile.version,
-    judgment_version: profile.judgment_version,
-    access: profile.manifest.access || 'open',
-    status: profile.manifest.status || null,
-    quality_badge: profile.manifest.quality_badge || null,
-    risk_level: profile.manifest.risk_level || null,
-    keywords: profile.keywords,
-    entries: profile.entries,
-    asset_digest: profile.asset_digest,
-    content_digest: profile.content_digest,
+    ...current,
+    entries,
+    asset_digest: asset.asset_digest,
+    content_digest: contentDigest,
     signature_valid: verification ? verification.signature_valid : null,
     ok: verification ? verification.ok : null,
     errors: verification ? verification.errors : [],
     warnings: verification ? verification.warnings : [],
-    manifest: profile.manifest,
+    manifest,
   };
 }
 
 function inspectKDNASync(input, options = {}) {
   const reader = readerFrom(options);
   const asset = asAssetSync(input, { ...options, reader });
-  const profile = reader.loadProfileSync(asset, 'index', options);
+  const current = v1.inspect(canonicalBytes(asset), options);
+  const manifest = reader.readManifestSync(asset);
+  const entries = reader.listEntriesSync(asset);
+  const contentDigest = reader.contentDigestSync(asset);
   const verification = options.verify === false ? null : reader.verifySync(asset, options);
   return {
-    name: profile.name,
-    version: profile.version,
-    judgment_version: profile.judgment_version,
-    access: profile.manifest.access || 'open',
-    status: profile.manifest.status || null,
-    quality_badge: profile.manifest.quality_badge || null,
-    risk_level: profile.manifest.risk_level || null,
-    keywords: profile.keywords,
-    entries: profile.entries,
-    asset_digest: profile.asset_digest,
-    content_digest: profile.content_digest,
+    ...current,
+    entries,
+    asset_digest: asset.asset_digest,
+    content_digest: contentDigest,
     signature_valid: verification ? verification.signature_valid : null,
     ok: verification ? verification.ok : null,
     errors: verification ? verification.errors : [],
     warnings: verification ? verification.warnings : [],
-    manifest: profile.manifest,
+    manifest,
   };
 }
 
 async function loadKDNA(input, options = {}) {
-  const reader = readerFrom(options);
-  const asset = await asAsset(input, { ...options, reader });
-  return reader.loadProfile(asset, options.profile || 'compact', options);
+  return runtimeApi.loadAuthorized(isAsset(input) ? canonicalBytes(input) : input, options);
 }
 
 function loadKDNASync(input, options = {}) {
-  const reader = readerFrom(options);
-  const asset = asAssetSync(input, { ...options, reader });
-  return reader.loadProfileSync(asset, options.profile || 'compact', options);
+  return runtimeApi.loadAuthorized(isAsset(input) ? canonicalBytes(input) : input, options);
 }
 
 async function validateKDNA(input, options = {}) {
-  const reader = readerFrom(options);
-  const asset = await asAsset(input, { ...options, reader });
-  const assetResult = await reader.verify(asset, options);
-  let dataMap;
-  let lintResult = { errors: [], warnings: [] };
-  let schemaResult = { errors: [], warnings: [] };
-  let crossFileResult = { errors: [], warnings: [] };
-
-  try {
-    dataMap = await reader.readDataMap(asset, undefined, options);
-    lintResult = lintDomain(dataMap);
-    schemaResult = validateDomainSchema(dataMap, options.schemas || {});
-    crossFileResult = validateCrossFile(dataMap);
-  } catch (e) {
-    lintResult.errors.push(e.message);
-  }
-
-  const errors = [
-    ...assetResult.errors,
-    ...lintResult.errors,
-    ...schemaResult.errors,
-    ...crossFileResult.errors,
-  ];
-  const warnings = [
-    ...assetResult.warnings,
-    ...lintResult.warnings,
-    ...schemaResult.warnings,
-    ...crossFileResult.warnings,
-  ];
-  return {
-    ok: errors.length === 0,
-    errors,
-    warnings,
-    asset: assetResult,
-    lint: lintResult,
-    schema: schemaResult,
-    cross_file: crossFileResult,
-  };
+  return v1.validate(isAsset(input) ? canonicalBytes(input) : input, options);
 }
 
 function validateKDNASync(input, options = {}) {
-  const reader = readerFrom(options);
-  const asset = asAssetSync(input, { ...options, reader });
-  const assetResult = reader.verifySync(asset, options);
-  let lintResult = { errors: [], warnings: [] };
-  let schemaResult = { errors: [], warnings: [] };
-  let crossFileResult = { errors: [], warnings: [] };
-
-  try {
-    const dataMap = reader.readDataMapSync(asset, undefined, options);
-    lintResult = lintDomain(dataMap);
-    schemaResult = validateDomainSchema(dataMap, options.schemas || {});
-    crossFileResult = validateCrossFile(dataMap);
-  } catch (e) {
-    lintResult.errors.push(e.message);
-  }
-
-  const errors = [
-    ...assetResult.errors,
-    ...lintResult.errors,
-    ...schemaResult.errors,
-    ...crossFileResult.errors,
-  ];
-  const warnings = [
-    ...assetResult.warnings,
-    ...lintResult.warnings,
-    ...schemaResult.warnings,
-    ...crossFileResult.warnings,
-  ];
-  return {
-    ok: errors.length === 0,
-    errors,
-    warnings,
-    asset: assetResult,
-    lint: lintResult,
-    schema: schemaResult,
-    cross_file: crossFileResult,
-  };
+  return v1.validate(isAsset(input) ? canonicalBytes(input) : input, options);
 }
 
 async function renderForAgent(input, options = {}) {
-  const loaded = await loadKDNA(input, options);
-  if (loaded.context != null) return loaded.context;
-  return loaded.domain ? formatContext(loaded.domain) : '';
+  const loaded = await loadKDNA(input, { ...options, as: 'prompt' });
+  return loaded && typeof loaded.text === 'string' ? loaded.text : '';
 }
 
 function renderForAgentSync(input, options = {}) {
-  const loaded = loadKDNASync(input, options);
-  if (loaded.context != null) return loaded.context;
-  return loaded.domain ? formatContext(loaded.domain) : '';
+  const loaded = loadKDNASync(input, { ...options, as: 'prompt' });
+  return loaded && typeof loaded.text === 'string' ? loaded.text : '';
 }
 
 async function verifyAsset(input, options = {}) {
@@ -230,8 +155,10 @@ function verifySignatureSync(input, options = {}) {
 function scoreMatch(input, info) {
   const haystack = String(input || '').toLowerCase();
   const terms = [
-    info.name,
-    ...(info.keywords || []),
+    info.asset_id,
+    info.title,
+    ...(info.keywords || info.manifest?.keywords || []),
+    info.summary || info.manifest?.summary,
     info.manifest?.description,
     info.manifest?.core_insight,
   ]
@@ -250,7 +177,7 @@ async function matchDomain(input, candidates, options = {}) {
     const match = scoreMatch(input, info);
     if (match.score > 0) results.push({ ...info, score: match.score, matched: match.matched });
   }
-  return results.sort((a, b) => b.score - a.score || String(a.name).localeCompare(String(b.name)));
+  return results.sort((a, b) => b.score - a.score || String(a.asset_id).localeCompare(String(b.asset_id)));
 }
 
 function matchDomainSync(input, candidates, options = {}) {
@@ -262,7 +189,7 @@ function matchDomainSync(input, candidates, options = {}) {
     const match = scoreMatch(input, info);
     if (match.score > 0) results.push({ ...info, score: match.score, matched: match.matched });
   }
-  return results.sort((a, b) => b.score - a.score || String(a.name).localeCompare(String(b.name)));
+  return results.sort((a, b) => b.score - a.score || String(a.asset_id).localeCompare(String(b.asset_id)));
 }
 
 async function composeKDNA(inputs, options = {}) {

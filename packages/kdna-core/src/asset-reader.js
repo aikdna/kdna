@@ -6,15 +6,13 @@ const fs = require('fs');
 const crypto = require('crypto');
 const zlib = require('zlib');
 const cbor = require('cbor-x');
-const { loadDomainFromFiles, formatContext } = require('./loader');
 
 const KDNA_MEDIA_TYPE = 'application/vnd.kdna.asset';
+const ASSET_SOURCE_BYTES = Symbol.for('@aikdna/kdna-core.asset-source-bytes');
 
-// Standard KDNA domain data entries — kept in lockstep with loader.FILE_MAP.
-// Asset reader pre-loads these so callers don't have to enumerate entry names.
-// NOTE: kdna.json / manifest.json are read separately via readManifest(); do not
-// add them here. KDNA_Cluster is intentionally omitted — its schema exists but
-// is not yet wired into the loader contract.
+// Deprecated legacy authoring source entry names. Current Runtime assets carry
+// judgment only in payload.kdnab and never expose these as distribution entries.
+// Kept for source-migration callers; loadProfile does not use this list.
 const STANDARD_ENTRIES = Object.freeze([
   'KDNA_Core.json',
   'KDNA_Patterns.json',
@@ -49,6 +47,17 @@ function parseJson(buf, entryName) {
   } catch (e) {
     throw new Error(`${entryName}: invalid JSON: ${e.message}`, { cause: e });
   }
+}
+
+function validateDecodedEntry(buf, entryName) {
+  if (entryName === 'payload.kdnab') {
+    try {
+      return cbor.decode(buf);
+    } catch (e) {
+      throw new Error(`${entryName}: invalid CBOR: ${e.message}`, { cause: e });
+    }
+  }
+  return parseJson(buf, entryName);
 }
 
 function encryptedEntries(manifest) {
@@ -361,29 +370,10 @@ function verifyHumanLockSignatures(coreData, manifest, errors, warnings) {
   }
 }
 
-function validateManifestIdentity(manifest, errors, _warnings) {
-  if (manifest.kdna_spec) {
-    errors.push('kdna.json: kdna_spec is not allowed. Use kdna_version.');
-  }
-  if (manifest.format && manifest.format !== 'kdna') {
-    errors.push(`kdna.json.format: invalid value "${manifest.format}". Expected "kdna".`);
-  }
-  if (!manifest.kdna_version) {
-    errors.push('kdna.json: missing required field "kdna_version"');
-  } else if (manifest.kdna_version !== '1.0') {
-    errors.push(
-      `kdna.json.kdna_version: invalid value "${manifest.kdna_version}". Expected "1.0".`,
-    );
-  }
-  if (manifest.language) {
-    errors.push('kdna.json: language is not allowed. Use default_language and languages.');
-  }
-}
-
 function openAsset(input) {
   const { buffer, path } = normalizeInput(input);
   const entries = parseZipEntries(buffer);
-  return {
+  const asset = {
     path,
     size: buffer.length,
     asset_digest: `sha256:${sha256Hex(buffer)}`,
@@ -394,6 +384,29 @@ function openAsset(input) {
       return readZipEntry(buffer, entry);
     },
   };
+  Object.defineProperty(asset, ASSET_SOURCE_BYTES, {
+    value: buffer,
+    enumerable: false,
+    writable: false,
+  });
+  return asset;
+}
+
+function validateCurrentContainer(asset) {
+  const bytes = asset[ASSET_SOURCE_BYTES];
+  if (!Buffer.isBuffer(bytes)) {
+    throw new Error('Current KDNA validation requires the original .kdna container bytes');
+  }
+  return require('./v1').validate(bytes);
+}
+
+function appendCurrentValidationErrors(asset, errors) {
+  try {
+    const validation = validateCurrentContainer(asset);
+    if (!validation.overall_valid) errors.push(...validation.problems);
+  } catch (e) {
+    errors.push(e.message);
+  }
 }
 
 function listEntries(asset) {
@@ -409,36 +422,30 @@ function readManifest(asset) {
   return parseJson(asset.readEntry('kdna.json'), 'kdna.json');
 }
 
-function readDataMapSync(asset, options = {}) {
-  const dataMap = {};
-  const manifest = readManifest(asset);
-
+function readDataMapSync(asset, _options = {}) {
   if (asset.entries.has('payload.kdnab')) {
-    const payloadBuf = asset.readEntry('payload.kdnab');
-    const payload = cbor.decode(payloadBuf);
-    if (payload && payload.judgment) {
-      if (payload.judgment.core) dataMap['KDNA_Core.json'] = payload.judgment.core;
-      if (payload.judgment.patterns) dataMap['KDNA_Patterns.json'] = payload.judgment.patterns;
-      if (payload.judgment.scenarios) dataMap['KDNA_Scenarios.json'] = payload.judgment.scenarios;
-      if (payload.judgment.cases) dataMap['KDNA_Cases.json'] = payload.judgment.cases;
-      if (payload.judgment.reasoning) dataMap['KDNA_Reasoning.json'] = payload.judgment.reasoning;
-      if (payload.judgment.evolution) dataMap['KDNA_Evolution.json'] = payload.judgment.evolution;
-    }
-
-    const encrypted = encryptedEntries(manifest);
-    if (encrypted.length && typeof options.decryptEntry !== 'function') {
-      throw new Error(`encrypted entries require decryptEntry hook: ${encrypted.join(', ')}`);
-    }
-    return dataMap;
+    const error = new Error(
+      'readDataMap is a legacy source-tree API and does not project current payload.kdnab into KDNA_Core.json/KDNA_Patterns.json. Use loadProfile or loadAuthorized.',
+    );
+    error.code = 'KDNA_LEGACY_DATA_MAP_UNSUPPORTED';
+    throw error;
   }
 
-  throw new Error('Not a KDNA asset: missing payload.kdnab');
+  const error = new Error('Not a current KDNA asset: missing payload.kdnab');
+  error.code = 'KDNA_FORMAT_INVALID';
+  throw error;
 }
 
 function verifySync(asset, options = {}) {
   const errors = [];
   const warnings = [];
   const entries = listEntries(asset);
+
+  // The current v1 implementation is the sole authority for container,
+  // manifest, CBOR payload, checksum, and load-contract validity. The reader
+  // adds transport identity and legacy signature hooks; it must not maintain a
+  // second manifest or payload dialect.
+  appendCurrentValidationErrors(asset, errors);
 
   if (!asset.entries.has('kdna.json')) errors.push('required entry missing: kdna.json');
   verifyMediaType(asset, errors);
@@ -458,7 +465,6 @@ function verifySync(asset, options = {}) {
   if (asset.entries.has('kdna.json')) {
     try {
       manifest = readManifest(asset);
-      validateManifestIdentity(manifest, errors, warnings);
       const encrypted = encryptedEntries(manifest);
       if (encrypted.length) {
         warnings.push(`encrypted entries present: ${encrypted.join(', ')}`);
@@ -479,7 +485,7 @@ function verifySync(asset, options = {}) {
                 asset.readEntry(entryName),
                 options,
               );
-              parseJson(decrypted, entryName);
+              validateDecodedEntry(decrypted, entryName);
             } catch (e) {
               errors.push(e.message);
             }
@@ -516,29 +522,15 @@ function verifySync(asset, options = {}) {
 }
 
 function loadProfileSync(asset, profile = 'compact', options = {}) {
-  const manifest = readManifest(asset);
-  if (profile === 'index') {
-    return {
-      profile,
-      manifest,
-      asset_digest: asset.asset_digest,
-      content_digest: buildContentDigest(asset),
-      entries: listEntries(asset),
-      name: manifest.name || manifest.asset_id || null,
-      version: manifest.version || null,
-      judgment_version: manifest.judgment_version || null,
-      keywords: manifest.keywords || [],
-    };
+  const bytes = asset[ASSET_SOURCE_BYTES];
+  if (!Buffer.isBuffer(bytes)) {
+    throw new Error('loadProfile requires the original .kdna container bytes');
   }
-  const dataMap = readDataMapSync(asset, STANDARD_ENTRIES, options);
-  const mode = profile === 'full' ? 'all' : profile === 'scenario' ? 'auto' : 'minimum';
-  const domain = loadDomainFromFiles(dataMap, { mode, input: options.input || '' });
-  return {
+  return require('./runtime-api').loadAuthorized(bytes, {
+    ...options,
     profile,
-    manifest,
-    domain,
-    context: options.context === false || !domain ? null : formatContext(domain),
-  };
+    as: options.as || 'json',
+  });
 }
 
 function createKdnaAssetReader() {
@@ -591,21 +583,8 @@ function createKdnaAssetReader() {
 
     readDataMapSync,
 
-    async readDataMap(asset, entries = STANDARD_ENTRIES, options = {}) {
-      const dataMap = {};
-      const manifest = await this.readManifest(asset);
-      for (const entryName of entries) {
-        if (!asset.entries.has(entryName)) continue;
-        const buf = await maybeDecryptEntry(
-          asset,
-          manifest,
-          entryName,
-          asset.readEntry(entryName),
-          options,
-        );
-        dataMap[entryName] = parseJson(buf, entryName);
-      }
-      return dataMap;
+    async readDataMap(asset, _entries = STANDARD_ENTRIES, options = {}) {
+      return readDataMapSync(asset, options);
     },
 
     contentDigestSync: buildContentDigest,
@@ -620,6 +599,8 @@ function createKdnaAssetReader() {
       const errors = [];
       const warnings = [];
       const entries = [...asset.entries.keys()].sort();
+
+      appendCurrentValidationErrors(asset, errors);
 
       if (!asset.entries.has('kdna.json')) errors.push('required entry missing: kdna.json');
       verifyMediaType(asset, errors);
@@ -641,7 +622,6 @@ function createKdnaAssetReader() {
       if (asset.entries.has('kdna.json')) {
         try {
           manifest = parseJson(asset.readEntry('kdna.json'), 'kdna.json');
-          validateManifestIdentity(manifest, errors, warnings);
           const encrypted = encryptedEntries(manifest);
           if (encrypted.length) {
             warnings.push(`encrypted entries present: ${encrypted.join(', ')}`);
@@ -662,7 +642,7 @@ function createKdnaAssetReader() {
                     asset.readEntry(entryName),
                     options,
                   );
-                  parseJson(decrypted, entryName);
+                  validateDecodedEntry(decrypted, entryName);
                 } catch (e) {
                   errors.push(e.message);
                 }
@@ -692,30 +672,7 @@ function createKdnaAssetReader() {
     loadProfileSync,
 
     async loadProfile(asset, profile = 'compact', options = {}) {
-      const manifest = await this.readManifest(asset);
-      if (profile === 'index') {
-        return {
-          profile,
-          manifest,
-          asset_digest: asset.asset_digest,
-          content_digest: buildContentDigest(asset),
-          entries: await this.listEntries(asset),
-          name: manifest.name || manifest.asset_id || null,
-          version: manifest.version || null,
-          judgment_version: manifest.judgment_version || null,
-          keywords: manifest.keywords || [],
-        };
-      }
-
-      const dataMap = await this.readDataMap(asset, STANDARD_ENTRIES, options);
-      const mode = profile === 'full' ? 'all' : profile === 'scenario' ? 'auto' : 'minimum';
-      const domain = loadDomainFromFiles(dataMap, { mode, input: options.input || '' });
-      return {
-        profile,
-        manifest,
-        domain,
-        context: options.context === false || !domain ? null : formatContext(domain),
-      };
+      return loadProfileSync(asset, profile, options);
     },
   };
 }

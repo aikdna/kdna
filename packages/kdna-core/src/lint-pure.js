@@ -253,8 +253,8 @@ function lintDomain(dataMap) {
 }
 
 /**
- * Canonical enum tables for manifest validation.
- * Single source of truth — keep in sync with schema/kdna-manifest-v1rc.json and specs/enum-tables.md.
+ * Legacy authoring-source enum tables for migration validation.
+ * These do not define the current Runtime manifest contract.
  */
 const VALID_STATUS = new Set(['draft', 'experimental', 'stable', 'deprecated', 'staging']);
 const VALID_BADGE = new Set(['untested', 'tested', 'validated', 'expert_reviewed', 'production_ready']);
@@ -279,7 +279,10 @@ const MANIFEST_REQUIRED = [
 ];
 
 /**
- * Validate a kdna.json manifest against the canonical KDNA Asset format.
+ * Validate a legacy authoring-source kdna.json manifest.
+ *
+ * This function is retained for explicit source migration. Current Runtime
+ * containers are validated against schema/manifest.schema.json by v1.validate.
  *
  * @param {Object} manifest — parsed kdna.json
  * @returns {{ errors: string[], warnings: string[] }}

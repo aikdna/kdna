@@ -41,18 +41,18 @@ function checkNoForbiddenFields(obj, rel, stack = []) {
 }
 
 function checkManifestSchema() {
-  // Single-format boundary: schema/kdna-manifest.json is the canonical
-  // kdna.json schema. It must require kdna_version: "1.0" and must not
-  // require the superseded format/format_version/spec_version fields.
-  const schemaRel = 'schema/kdna-manifest.json';
+  // Single-format boundary: schema/manifest.schema.json is the authoritative
+  // Runtime kdna.json schema. schema/kdna-manifest.json is a legacy authoring
+  // schema and must never decide Runtime acceptance.
+  const schemaRel = 'schema/manifest.schema.json';
   if (!fs.existsSync(path.join(root, schemaRel))) {
     console.log(`[skip] ${schemaRel} not found; manifest schema check retired.`);
     return;
   }
   const schema = readJson(schemaRel);
   if (!schema) return;
-  if (schema.properties && hasOwn(schema.properties, 'language')) {
-    errors.push(`${schemaRel}: properties.language must not exist in v1.0`);
+  if (!schema.properties || !hasOwn(schema.properties, 'language')) {
+    errors.push(`${schemaRel}: properties.language must remain available`);
   }
   if (!schema.required?.includes('kdna_version')) {
     errors.push(`${schemaRel}: kdna_version must be required`);
@@ -60,8 +60,11 @@ function checkManifestSchema() {
   if (schema.required?.includes('format_version')) {
     errors.push(`${schemaRel}: format_version must not be required`);
   }
-  if (!schema.required?.includes('default_language') || !schema.required?.includes('languages')) {
-    errors.push(`${schemaRel}: default_language and languages must be required`);
+  if (schema.required?.includes('creator')) {
+    errors.push(`${schemaRel}: creator provenance must remain optional`);
+  }
+  for (const field of ['asset_id', 'asset_uid', 'asset_type', 'title', 'compatibility', 'payload']) {
+    if (!schema.required?.includes(field)) errors.push(`${schemaRel}: ${field} must be required`);
   }
 }
 

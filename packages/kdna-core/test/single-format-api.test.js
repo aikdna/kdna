@@ -5,7 +5,7 @@
  *   - exports MIMETYPE, isKdnaSourceDir, detectContainerFormat
  *   - does NOT export old v1/v2 split names
  *   - detectContainerFormat returns 'kdna' for current assets and null for others
- *   - manifest validators enforce kdna_version === '1.0'
+ *   - current Runtime schema and explicit legacy-source validation remain separate
  */
 'use strict';
 
@@ -14,6 +14,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
+const cbor = require('cbor-x');
 
 const core = require('../src/index.js');
 const v1 = require('../src/v1/index.js');
@@ -123,7 +124,7 @@ test('detectContainerFormat returns kdna for current asset and null for others',
   }
 });
 
-test('manifest validators enforce kdna_version 1.0', () => {
+test('legacy authoring-source manifest validator remains explicit and enforces its own version gate', () => {
   const valid = {
     kdna_version: '1.0',
     name: '@test/x',
@@ -273,7 +274,7 @@ test('asset reader verifySync enforces kdna_version and current mimetype', () =>
       updated_at: '2026-01-01T00:00:00Z',
       creator: { name: 'Test' },
       compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
-      payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false },
+      payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
       access: 'public',
     };
     const payload = { profile: 'judgment-profile-v1', core: { highest_question: 'q', axioms: [] } };
@@ -281,7 +282,7 @@ test('asset reader verifySync enforces kdna_version and current mimetype', () =>
     const files = {
       mimetype: Buffer.from('application/vnd.kdna.asset', 'utf8'),
       'kdna.json': Buffer.from(JSON.stringify(manifest), 'utf8'),
-      'payload.kdnab': Buffer.from(JSON.stringify(payload), 'utf8'),
+      'payload.kdnab': cbor.encode(payload),
     };
     const order = ['mimetype', 'kdna.json', 'payload.kdnab'];
 

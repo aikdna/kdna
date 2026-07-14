@@ -14,6 +14,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
 let failures = 0;
 function check(name, fn) {
@@ -62,27 +63,33 @@ if (fs.existsSync(monorepoSource)) {
     }
   });
 
-  // Exercise the JSON_ENTRY_RE code path that the require() test cannot reach.
-  // This is the second half of the "core is usable" guarantee — it catches
-  // ReferenceErrors that hide inside functions called only at runtime.
-  check('loadProfileSync does not throw JSON_ENTRY_RE ReferenceError', () => {
-    const asset = {
-      entries: new Map([
-        [
-          'kdna.json',
-          Buffer.from(JSON.stringify({ name: 'smoke', version: '0.0.1', spec_version: '1' })),
-        ],
-        ['KDNA_Core.json', Buffer.from('{}')],
-        ['KDNA_Patterns.json', Buffer.from('{}')],
-      ]),
-      readEntry(name) {
-        return this.entries.get(name);
-      },
-      asset_digest: 'sha256:deadbeef',
-    };
-    const result = reader.createKdnaAssetReader().loadProfileSync(asset, 'index');
-    if (!result || !result.content_digest) {
-      throw new Error('loadProfileSync did not produce a content_digest');
+  // Exercise the real current container path. A fabricated entries Map is not
+  // a Runtime asset and must not be accepted as a substitute for original
+  // container bytes.
+  check('loadProfileSync returns a Runtime Capsule for current .kdna bytes', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-smoke-'));
+    try {
+      const coreRoot = path.join(__dirname, '..', 'packages', 'kdna-core');
+      const v1 = require(path.join(coreRoot, 'src', 'v1', 'index.js'));
+      const source = path.join(__dirname, '..', 'examples', 'minimal');
+      const assetPath = path.join(tmp, 'smoke.kdna');
+      v1.pack(source, assetPath);
+      const bytes = fs.readFileSync(assetPath);
+      const asset = reader.createKdnaAssetReader().openSync(bytes);
+      const result = reader.createKdnaAssetReader().loadProfileSync(asset, 'compact');
+      if (!result || result.type !== 'kdna.context.capsule') {
+        throw new Error('loadProfileSync did not return a Runtime Capsule');
+      }
+
+      let rejected = false;
+      try {
+        reader.createKdnaAssetReader().openSync(bytes.subarray(0, bytes.length - 22));
+      } catch {
+        rejected = true;
+      }
+      if (!rejected) throw new Error('truncated current asset was not rejected');
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
     }
   });
 

@@ -1,5 +1,37 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Converge the compatibility names `inspectKDNA`, `validateKDNA`, and
+  `loadKDNA` on the current unversioned Runtime implementation. Validation now
+  returns the current five format/schema/payload/checksum/load-contract gates,
+  and loading returns a Runtime Capsule; the old source-tree validation and
+  `{domain, context}` result shapes are no longer synthesized for current
+  assets.
+- Make CJS, ESM, and TypeScript declarations expose the same compatibility
+  names and current return contracts.
+- Accept `.kdna` bytes in memory across current inspect, validate, LoadPlan,
+  and load paths. Buffer verification does not extract or materialize the
+  asset on disk.
+- Identify `schema/manifest.schema.json` as the sole Runtime manifest schema.
+  The older `schema/kdna-manifest.json` remains only for explicit legacy-source
+  migration. Runtime `language` remains valid and `creator` provenance remains
+  optional, while an explicitly declared creator still requires a non-empty
+  name.
+
+### Fixed
+
+- Make stable verification fail closed on malformed CBOR, invalid current
+  manifests, checksum mismatches, and forbidden legacy plaintext containers,
+  while preserving whole-file `asset_digest`, canonical `content_digest`, and
+  existing expected-digest/signature hooks.
+- Make direct `createKdnaAssetReader().loadProfile*` return the current Runtime
+  Capsule instead of silently returning `domain: null`; legacy `readDataMap*`
+  now fails explicitly rather than pretending current payloads are old source
+  files.
+
 ## v0.17.0 (2026-07-14)
 
 ### Added

@@ -210,7 +210,7 @@ test('asset verification rejects archives without the KDNA mimetype marker', asy
   assert.ok(verify.errors.includes('required entry missing: mimetype'));
 });
 
-test('asset verification rejects deprecated kdna_spec manifests', async () => {
+test('asset verification rejects deprecated plaintext source containers', async () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-kdna-spec-'));
   const assetPath = path.join(tmp, 'legacy.kdna');
   fs.writeFileSync(
@@ -248,7 +248,7 @@ test('asset verification rejects deprecated kdna_spec manifests', async () => {
   const reader = createKdnaAssetReader();
   const verify = await reader.verify(await reader.open(assetPath));
   assert.equal(verify.ok, false);
-  assert.ok(verify.errors.includes('kdna.json: kdna_spec is not allowed. Use kdna_version.'));
+  assert.ok(verify.errors.some((error) => /forbidden top-level source entry|missing payload\.kdnab/.test(error)));
 });
 
 test.skip('asset reader decrypts licensed entries only through an in-memory hook', { todo: 'Phase 3 encryption — gated until after conformance recovery and load-contract stabilization' }, async () => {

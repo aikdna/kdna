@@ -1,8 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aikdna.com/schema/kdna-manifest.json",
-  "title": "KDNA Domain Manifest (kdna.json)",
-  "description": "Canonical JSON Schema for the kdna.json manifest inside a .kdna asset internal domain tree or dev source workspace. This is the single source of truth: CLI, Registry, Studio, and compatible loaders MUST validate against this schema.",
+  "title": "Legacy KDNA Authoring Source Manifest",
+  "description": "Deprecated schema for pre-Asset-Container authoring source trees. It is not the Runtime kdna.json authority and MUST NOT decide whether a current .kdna container is valid. Current Runtime consumers use schema/manifest.schema.json.",
+  "deprecated": true,
   "type": "object",
   "required": [
     "kdna_version",

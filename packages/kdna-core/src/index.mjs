@@ -45,6 +45,27 @@ export { composeContext, composeContextWithAttribution, classifySignals, classif
 import assetReader from './asset-reader.js';
 import cryptoProfile from './crypto-profile.js';
 import externalKeyGrant from './external-key-grant.js';
+import publicApi from './public-api.js';
+
+export const openKDNA = publicApi.openKDNA;
+export const openKDNASync = publicApi.openKDNASync;
+export const inspectKDNA = publicApi.inspectKDNA;
+export const inspectKDNASync = publicApi.inspectKDNASync;
+export const loadKDNA = publicApi.loadKDNA;
+export const loadKDNASync = publicApi.loadKDNASync;
+export const validateKDNA = publicApi.validateKDNA;
+export const validateKDNASync = publicApi.validateKDNASync;
+export const renderForAgent = publicApi.renderForAgent;
+export const renderForAgentSync = publicApi.renderForAgentSync;
+export const verifyAsset = publicApi.verifyAsset;
+export const verifyAssetSync = publicApi.verifyAssetSync;
+export const verifyDigest = publicApi.verifyDigest;
+export const verifyDigestSync = publicApi.verifyDigestSync;
+export const verifySignature = publicApi.verifySignature;
+export const verifySignatureSync = publicApi.verifySignatureSync;
+export const matchDomain = publicApi.matchDomain;
+export const matchDomainSync = publicApi.matchDomainSync;
+export const composeKDNA = publicApi.composeKDNA;
 
 export const STANDARD_ENTRIES = assetReader.STANDARD_ENTRIES;
 export const createKdnaAssetReader = assetReader.createKdnaAssetReader;

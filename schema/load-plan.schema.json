@@ -126,8 +126,8 @@
       "required": ["kind", "path"],
       "additionalProperties": false,
       "properties": {
-        "kind": { "type": ["string", "null"], "enum": ["dir", "file", null] },
-        "path": { "type": "string" }
+        "kind": { "type": ["string", "null"], "enum": ["dir", "file", "memory", null] },
+        "path": { "type": ["string", "null"] }
       }
     }
   }

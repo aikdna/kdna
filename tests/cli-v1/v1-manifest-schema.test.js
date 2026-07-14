@@ -7,67 +7,70 @@ const addFormats = require('ajv-formats');
 
 const repoRoot = path.resolve(__dirname, '..', '..');
 const manifestSchema = JSON.parse(
-  fs.readFileSync(path.join(repoRoot, 'schema', 'kdna-manifest.json'), 'utf8'),
+  fs.readFileSync(path.join(repoRoot, 'schema', 'manifest.schema.json'), 'utf8'),
+);
+const loadContractSchema = JSON.parse(
+  fs.readFileSync(path.join(repoRoot, 'schema', 'load-contract.schema.json'), 'utf8'),
 );
 const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
+ajv.addSchema(loadContractSchema, 'load-contract.schema.json');
 const validateManifest = ajv.compile(manifestSchema);
 
-function trustedManifest(overrides = {}) {
-  const { authoring: authoringOverrides = {}, creator: creatorOverrides = {}, ...rest } = overrides;
+function runtimeManifest(overrides = {}) {
   return {
     kdna_version: '1.0',
-    name: '@example/code_review',
-    version: '0.1.0',
-    judgment_version: '2026.06',
-    description: 'Review code behavior and regression risk before style preferences.',
-    author: {
-      name: 'Example',
-      id: 'example',
-      pubkey: `ed25519:${'a'.repeat(64)}`,
+    asset_id: 'kdna:example:code-review',
+    asset_uid: 'urn:uuid:00000000-0000-4000-8000-000000000001',
+    asset_type: 'domain',
+    title: 'Code Review',
+    version: '1.0.0',
+    judgment_version: '1.0.0',
+    created_at: '2026-07-15T00:00:00Z',
+    updated_at: '2026-07-15T00:00:00Z',
+    compatibility: {
+      min_loader_version: '0.17.0',
+      profile: 'judgment-profile-v1',
     },
-    creator: {
-      creator_id: 'kdna:creator:agent:example',
-      creator_type: 'agent',
-      display_name: 'Example Agent',
-      verified: false,
-      ...creatorOverrides,
-    },
-    license: { type: 'CC-BY-4.0' },
-    status: 'experimental',
-    quality_badge: 'tested',
+    payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
     access: 'public',
-    languages: ['en'],
-    default_language: 'en',
-    signature: `ed25519:${'b'.repeat(128)}`,
-    authoring: {
-      created_by: 'independent-example-exporter',
-      compiler: '@example/kdna-exporter',
-      compiler_version: '1.0.0',
-      compiled_at: '2026-06-20T00:00:00.000Z',
-      conformance: {
-        passed: true,
-        spec_version: '1.0-rc',
-        validator: '@aikdna/kdna-conformance',
-      },
-      human_confirmed: true,
-      human_lock_count: 1,
-      ...authoringOverrides,
-    },
-    ...rest,
+    language: 'en',
+    ...overrides,
   };
 }
 
-test('manifest schema accepts non-whitelisted authoring source with conformance evidence', () => {
-  const manifest = trustedManifest();
+test('authoritative Runtime manifest schema accepts language and omitted creator provenance', () => {
+  const manifest = runtimeManifest();
   assert.equal(validateManifest(manifest), true, JSON.stringify(validateManifest.errors, null, 2));
 });
 
-test('manifest schema rejects trusted quality claims without conformance evidence', () => {
-  const manifest = trustedManifest({ authoring: { conformance: undefined } });
+test('authoritative Runtime manifest schema rejects an explicitly empty creator name', () => {
+  const manifest = runtimeManifest({ creator: { name: '' } });
   assert.equal(validateManifest(manifest), false);
   assert.ok(
-    validateManifest.errors.some((error) => error.instancePath.includes('/authoring')),
+    validateManifest.errors.some((error) => error.instancePath === '/creator/name'),
+    JSON.stringify(validateManifest.errors, null, 2),
+  );
+});
+
+test('legacy source manifest dialect is not accepted as a Runtime manifest', () => {
+  const manifest = {
+    kdna_version: '1.0',
+    name: '@example/code_review',
+    version: '1.0.0',
+    judgment_version: '1.0.0',
+    description: 'Legacy authoring source manifest.',
+    author: { name: 'Example', id: 'example' },
+    license: { type: 'CC-BY-4.0' },
+    status: 'experimental',
+    quality_badge: 'untested',
+    access: 'public',
+    languages: ['en'],
+    default_language: 'en',
+  };
+  assert.equal(validateManifest(manifest), false);
+  assert.ok(
+    validateManifest.errors.some((error) => error.keyword === 'required'),
     JSON.stringify(validateManifest.errors, null, 2),
   );
 });
