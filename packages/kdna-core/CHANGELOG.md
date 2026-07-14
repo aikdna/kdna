@@ -61,6 +61,16 @@
 
 ### Fixed
 
+- Restrict Core publication to canonical `kdna-core-v*` published-release
+  events, require the exact version tag to identify the workflow commit, and
+  make already-published versions idempotent only when registry `gitHead` and
+  artifact integrity match the current release evidence. Missing registry
+  identity or a different artifact now fails closed instead of being treated
+  as a successful duplicate.
+- Report an unavailable GitHub Release lookup as an explicit non-gating
+  `SKIP`, rather than wrapping the skipped observation in a misleading
+  readiness `PASS`. Remove unused downstream repository checkouts from the
+  Core publish job.
 - Make the ESM root and TypeScript declarations expose every existing CJS
   public value, including the crypto, external-grant, Work Pack, composition,
   container, and semver helpers. Permanent source and packed-install checks now

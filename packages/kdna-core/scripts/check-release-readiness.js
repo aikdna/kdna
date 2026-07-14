@@ -1,88 +1,138 @@
 #!/usr/bin/env node
 'use strict';
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
 
-const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
-const version = pkg.version;
-const name = pkg.name;
-// publish.yml publish-core gate requires kdna-core-v* tag prefix.
-// release:check accepts either v0.15.0 or kdna-core-v0.15.0 format.
-const coreTag = `kdna-core-v${version}`;
-const simpleTag = `v${version}`;
-const failures = [];
+const { execFileSync } = require('node:child_process');
+const fs = require('node:fs');
+const path = require('node:path');
 
-function check(label, fn) {
-  try { fn(); console.log(`  PASS ${label}`); }
-  catch (e) { failures.push(`${label}: ${e.message}`); console.error(`  FAIL ${label}: ${e.message}`); }
+const PACKAGE_ROOT = path.resolve(__dirname, '..');
+
+function normalizeCommandOutput(output) {
+  return typeof output === 'string' ? output.trim() : '';
 }
 
-console.log(`Release readiness check: ${name}@${version}\n`);
+function run(command, args, options = {}) {
+  const output = execFileSync(command, args, {
+    cwd: path.resolve(PACKAGE_ROOT, '..', '..'),
+    encoding: 'utf8',
+    ...options,
+  });
+  return normalizeCommandOutput(output);
+}
 
-check('worktree is clean', () => {
-  const out = execSync('git status --porcelain', { encoding: 'utf8' }).trim();
-  if (out) throw new Error('tracked or untracked release inputs are not committed');
-});
+function canonicalCoreTag(version) {
+  if (typeof version !== 'string' || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u.test(version)) {
+    throw new Error(`invalid Core package version: ${version || '<missing>'}`);
+  }
+  return `kdna-core-v${version}`;
+}
 
-check('git tag exists', () => {
-  const coreOut = execSync(`git tag -l "${coreTag}"`, { encoding: 'utf8' }).trim();
-  const simpleOut = execSync(`git tag -l "${simpleTag}"`, { encoding: 'utf8' }).trim();
-  if (!coreOut && !simpleOut) {
+function assertCanonicalTagExists({ expectedTag, listedTag }) {
+  if (listedTag !== expectedTag) {
     throw new Error(
-      `Neither tag ${coreTag} nor ${simpleTag} found. Run: git tag ${coreTag} && git push origin ${coreTag}`,
+      `Canonical tag ${expectedTag} not found. Run: git tag ${expectedTag} && git push origin ${expectedTag}`,
     );
   }
-});
+}
 
-check('version tag points to HEAD', () => {
-  const head = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
-  const coreOut = execSync(`git tag -l "${coreTag}"`, { encoding: 'utf8' }).trim();
-  const releaseTag = coreOut ? coreTag : simpleTag;
-  const tagged = execSync(`git rev-list -n 1 "${releaseTag}"`, { encoding: 'utf8' }).trim();
-  if (head !== tagged) {
+function assertTagCommit({ expectedTag, taggedCommit, headCommit, githubSha }) {
+  if (taggedCommit !== headCommit) {
     throw new Error(
-      `${releaseTag} points to ${tagged.slice(0, 12)}, not HEAD ${head.slice(0, 12)}`,
+      `${expectedTag} points to ${taggedCommit.slice(0, 12)}, not HEAD ${headCommit.slice(0, 12)}`,
     );
   }
-});
-
-check('GitHub Release exists', () => {
-  // gh CLI may not be authenticated in CI (workflow_dispatch runs on
-  // main branch, not on a release tag). The git tag check above is
-  // sufficient for CI; the release check is a convenience for local dev.
-  try {
-    // Check if gh is available and authenticated
-    execSync('gh auth status', { stdio: 'ignore' });
-  } catch {
-    console.log('  WARN gh not authenticated; skipping GitHub Release check (non-blocking)');
-    return;
+  if (githubSha !== null && githubSha !== headCommit) {
+    throw new Error(
+      `GITHUB_SHA ${githubSha.slice(0, 12)} does not match tagged HEAD ${headCommit.slice(0, 12)}`,
+    );
   }
-  const repo = pkg.repository.directory
-    ? pkg.repository.url.match(/github\.com\/([^/]+\/[^.]+)/)[1]
-    : pkg.repository.url.match(/github\.com\/([^/]+\/[^.]+)/)[1];
+}
+
+function observeGithubRelease({ coreTag, repo, runGh, log = console.log }) {
   try {
-    execSync(`gh release view ${coreTag} --repo ${repo}`, { stdio: 'ignore' });
+    runGh(['auth', 'status']);
   } catch {
+    log(`  SKIP GitHub Release observation for ${coreTag}: gh is not authenticated (not a publish gate)`);
+    return 'skipped';
+  }
+  try {
+    runGh(['release', 'view', coreTag, '--repo', repo]);
+    log(`  OBSERVED GitHub Release ${coreTag}`);
+    return 'observed';
+  } catch {
+    log(`  SKIP GitHub Release observation for ${coreTag}: release not found (not a publish gate)`);
+    return 'skipped';
+  }
+}
+
+function main() {
+  const pkg = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, 'package.json'), 'utf8'));
+  const version = pkg.version;
+  const name = pkg.name;
+  const coreTag = canonicalCoreTag(version);
+  const failures = [];
+
+  function check(label, fn) {
     try {
-      execSync(`gh release view ${simpleTag} --repo ${repo}`, { stdio: 'ignore' });
-    } catch {
-      console.log(`  WARN No GitHub release found for ${coreTag} or ${simpleTag} (non-blocking)`);
+      fn();
+      console.log(`  PASS ${label}`);
+    } catch (error) {
+      failures.push(`${label}: ${error.message}`);
+      console.error(`  FAIL ${label}: ${error.message}`);
     }
   }
-});
 
-check('CHANGELOG has version entry', () => {
-  const changelog = fs.readFileSync(path.join(__dirname, '..', 'CHANGELOG.md'), 'utf8');
-  if (!changelog.includes(version)) throw new Error(`CHANGELOG.md missing entry for ${version}`);
-});
+  console.log(`Release readiness check: ${name}@${version}\n`);
 
-check('package.json version matches tag', () => {
-  if (!coreTag.endsWith(version)) throw new Error(`tag ${coreTag} does not match version ${version}`);
-});
+  check('worktree is clean', () => {
+    const status = run('git', ['status', '--porcelain']);
+    if (status) throw new Error('tracked or untracked release inputs are not committed');
+  });
 
-if (failures.length > 0) {
-  console.error(`\n${failures.length} check(s) failed. Fix before publishing.`);
-  process.exit(1);
+  check(`canonical tag ${coreTag} exists`, () => {
+    const listedTag = run('git', ['tag', '--list', coreTag]);
+    assertCanonicalTagExists({ expectedTag: coreTag, listedTag });
+  });
+
+  check('canonical version tag points to the workflow commit', () => {
+    const headCommit = run('git', ['rev-parse', 'HEAD']);
+    const taggedCommit = run('git', ['rev-list', '-n', '1', coreTag]);
+    const githubSha = process.env.GITHUB_SHA || null;
+    if (process.env.GITHUB_ACTIONS === 'true' && githubSha === null) {
+      throw new Error('GITHUB_SHA is required in GitHub Actions');
+    }
+    if (githubSha !== null && !/^[0-9a-f]{40}$/u.test(githubSha)) {
+      throw new Error('GITHUB_SHA must be a full lowercase 40-character commit SHA');
+    }
+    assertTagCommit({ expectedTag: coreTag, taggedCommit, headCommit, githubSha });
+  });
+
+  check('CHANGELOG has version entry', () => {
+    const changelog = fs.readFileSync(path.join(PACKAGE_ROOT, 'CHANGELOG.md'), 'utf8');
+    if (!changelog.includes(version)) throw new Error(`CHANGELOG.md missing entry for ${version}`);
+  });
+
+  const repositoryMatch = pkg.repository.url.match(/github\.com\/([^/]+\/[^.]+)/u);
+  observeGithubRelease({
+    coreTag,
+    repo: repositoryMatch ? repositoryMatch[1] : 'aikdna/kdna',
+    runGh: (args) => run('gh', args, { stdio: 'ignore' }),
+  });
+
+  if (failures.length > 0) {
+    console.error(`\n${failures.length} required check(s) failed. Fix before publishing.`);
+    process.exitCode = 1;
+    return;
+  }
+  console.log('\nAll required checks passed. Ready to publish.');
 }
-console.log('\nAll checks passed. Ready to publish.');
+
+if (require.main === module) main();
+
+module.exports = {
+  assertCanonicalTagExists,
+  assertTagCommit,
+  canonicalCoreTag,
+  normalizeCommandOutput,
+  observeGithubRelease,
+};
