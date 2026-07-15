@@ -2205,7 +2205,7 @@ function loadV1Unsafe(inputPath, opts = {}) {
     const preserveDeclaredList = (items) => (
       Array.isArray(items)
         ? items.map((item) => (
-          typeof item === 'string' ? item : structuredClone(item)
+          typeof item === 'string' ? item : globalThis.structuredClone(item)
         ))
         : []
     );
