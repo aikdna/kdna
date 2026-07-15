@@ -16,11 +16,32 @@ const core = compatRequire('@aikdna/kdna-core');
 const cliPackageRoot = path.dirname(compatRequire.resolve('@aikdna/kdna-cli/package.json'));
 const COMPAT_CORE_LOCK_PATH = 'packages/kdna/node_modules/@aikdna/kdna-core';
 const CLI_CORE_LOCK_PATH = 'node_modules/@aikdna/kdna-cli/node_modules/@aikdna/kdna-core';
-const RELEASED_CORE_INTEGRITY =
-  'sha512-2z8cJX+L39QdtwPoBI4tM0e5o5K7GOBliMeF60Ja3Uv6smJYBLRMSts1sIO/7ECGyk46HCOOs82VvVvLsGPBUQ==';
+const RELEASED_CORE_LOCK_METADATA = {
+  version: '0.18.0',
+  resolved: 'https://registry.npmjs.org/@aikdna/kdna-core/-/kdna-core-0.18.0.tgz',
+  integrity:
+    'sha512-2z8cJX+L39QdtwPoBI4tM0e5o5K7GOBliMeF60Ja3Uv6smJYBLRMSts1sIO/7ECGyk46HCOOs82VvVvLsGPBUQ==',
+  license: 'Apache-2.0',
+  dependencies: {
+    '@noble/hashes': '^1.8.0',
+    ajv: '^8.20.0',
+    'ajv-formats': '^3.0.1',
+    'cbor-x': '^1.6.4',
+  },
+  engines: { node: '>=18.0.0' },
+  peerDependencies: {
+    ajv: '^8.17.1',
+    'ajv-formats': '^3.0.1',
+  },
+  peerDependenciesMeta: {
+    ajv: { optional: true },
+    'ajv-formats': { optional: true },
+  },
+};
 const PACKABLE_FIXTURE_FILES = ['mimetype', 'kdna.json', 'checksums.json', 'payload.kdnab'];
+const EXPECTED_PACKABLE_FIXTURE_COUNT = 2;
 
-function assertReleasedCorePair(lock, expectedVersion = '0.18.0') {
+function assertReleasedCorePair(lock) {
   const compatibilityCore = lock.packages[COMPAT_CORE_LOCK_PATH];
   const cliCore = lock.packages[CLI_CORE_LOCK_PATH];
   assert.ok(compatibilityCore, `missing ${COMPAT_CORE_LOCK_PATH}`);
@@ -30,22 +51,13 @@ function assertReleasedCorePair(lock, expectedVersion = '0.18.0') {
     [COMPAT_CORE_LOCK_PATH, compatibilityCore],
     [CLI_CORE_LOCK_PATH, cliCore],
   ]) {
-    assert.equal(node.version, expectedVersion, `${location} version must match the toolchain`);
-    assert.equal(
-      node.resolved,
-      `https://registry.npmjs.org/@aikdna/kdna-core/-/kdna-core-${expectedVersion}.tgz`,
-      `${location} must resolve the released Core tarball`,
-    );
-    assert.equal(
-      node.integrity,
-      RELEASED_CORE_INTEGRITY,
-      `${location} must bind the released Core integrity`,
+    assert.deepEqual(
+      node,
+      RELEASED_CORE_LOCK_METADATA,
+      `${location} must match the complete released Core metadata`,
     );
   }
 
-  assert.equal(cliCore.version, compatibilityCore.version, 'nested Core versions must match');
-  assert.equal(cliCore.resolved, compatibilityCore.resolved, 'nested Core tarballs must match');
-  assert.equal(cliCore.integrity, compatibilityCore.integrity, 'nested Core integrity must match');
   assert.deepEqual(cliCore, compatibilityCore, 'nested Core lock metadata must match exactly');
 
   assert.deepEqual(lock.packages['node_modules/@aikdna/kdna-core'], {
@@ -56,24 +68,27 @@ function assertReleasedCorePair(lock, expectedVersion = '0.18.0') {
 }
 
 function discoverPackableFixtures(fixturesRoot) {
-  const candidates = fs
+  const directories = fs
     .readdirSync(fixturesRoot, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => path.join(fixturesRoot, entry.name))
-    .filter((directory) =>
-      PACKABLE_FIXTURE_FILES.every((file) => {
-        try {
-          return fs.statSync(path.join(directory, file)).isFile();
-        } catch (error) {
-          if (error.code === 'ENOENT') return false;
-          throw error;
-        }
-      }),
-    )
     .sort();
 
-  assert.ok(candidates.length > 0, `no exact packable fixture found in ${fixturesRoot}`);
-  return candidates;
+  assert.equal(
+    directories.length,
+    EXPECTED_PACKABLE_FIXTURE_COUNT,
+    `${fixturesRoot} must contain exactly ${EXPECTED_PACKABLE_FIXTURE_COUNT} fixture directories`,
+  );
+  for (const directory of directories) {
+    for (const file of PACKABLE_FIXTURE_FILES) {
+      assert.equal(
+        fs.lstatSync(path.join(directory, file)).isFile(),
+        true,
+        `${path.join(directory, file)} must be a regular file`,
+      );
+    }
+  }
+  return directories;
 }
 
 test('compatibility manifest pins one released toolchain without claiming the current CLI binary', () => {
@@ -134,6 +149,27 @@ test('released Core pair gate fails closed on nested lock drift', async (t) => {
         candidate.packages[CLI_CORE_LOCK_PATH].integrity = 'sha512-shared-forgery';
       },
     ],
+    [
+      'shared forged license',
+      (candidate) => {
+        candidate.packages[COMPAT_CORE_LOCK_PATH].license = 'forged';
+        candidate.packages[CLI_CORE_LOCK_PATH].license = 'forged';
+      },
+    ],
+    [
+      'shared forged dependencies',
+      (candidate) => {
+        candidate.packages[COMPAT_CORE_LOCK_PATH].dependencies.ajv = '^0.0.0';
+        candidate.packages[CLI_CORE_LOCK_PATH].dependencies.ajv = '^0.0.0';
+      },
+    ],
+    [
+      'shared forged engines',
+      (candidate) => {
+        candidate.packages[COMPAT_CORE_LOCK_PATH].engines.node = '>=999';
+        candidate.packages[CLI_CORE_LOCK_PATH].engines.node = '>=999';
+      },
+    ],
   ]) {
     await t.test(name, () => {
       const drifted = structuredClone(lock);
@@ -143,10 +179,34 @@ test('released Core pair gate fails closed on nested lock drift', async (t) => {
   }
 });
 
-test('packable CLI fixture discovery fails closed without an exact candidate', (t) => {
-  const emptyFixtures = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-compat-empty-fixtures-'));
-  t.after(() => fs.rmSync(emptyFixtures, { force: true, recursive: true }));
-  assert.throws(() => discoverPackableFixtures(emptyFixtures), /no exact packable fixture/u);
+test('packable CLI fixture inventory fails closed on directory or file drift', async (t) => {
+  const fixturesRoot = path.join(cliPackageRoot, 'fixtures');
+  const fixtureNames = discoverPackableFixtures(fixturesRoot).map((fixture) => path.basename(fixture));
+
+  for (const [name, mutate] of [
+    [
+      'deleted directory',
+      (candidate) =>
+        fs.rmSync(path.join(candidate, fixtureNames[0]), { force: true, recursive: true }),
+    ],
+    [
+      'missing payload',
+      (candidate) => fs.rmSync(path.join(candidate, fixtureNames[0], 'payload.kdnab')),
+    ],
+    [
+      'added directory',
+      (candidate) => fs.mkdirSync(path.join(candidate, 'unexpected-fixture')),
+    ],
+  ]) {
+    await t.test(name, (t) => {
+      const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-compat-fixtures-'));
+      t.after(() => fs.rmSync(temp, { force: true, recursive: true }));
+      const candidate = path.join(temp, 'fixtures');
+      fs.cpSync(fixturesRoot, candidate, { recursive: true });
+      mutate(candidate);
+      assert.throws(() => discoverPackableFixtures(candidate));
+    });
+  }
 });
 
 test('kdna-validate delegates released CLI fixtures through the paired toolchain', (t) => {
