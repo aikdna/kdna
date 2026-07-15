@@ -76,6 +76,7 @@ test('container fixture generator is byte-stable and preserves each negative int
   const first = run();
   assert.equal(first.status, 0, first.stderr);
   const firstHashes = generatedHashes(root);
+  assert.deepEqual(firstHashes, generatedHashes(repoRoot));
   const second = run();
   assert.equal(second.status, 0, second.stderr);
   assert.deepEqual(generatedHashes(root), firstHashes);

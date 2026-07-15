@@ -51,8 +51,12 @@ coordinates belong inside `kdna.json`; they MUST NOT be embedded in filenames.
 
 ## Enforcement
 
-The post-cutover audit scans every tracked path and text file, plus dry-run and
-actual npm package contents. It has no blanket exclusions for RFCs, changelogs,
-archives, or migration material. Exact third-party syntax may be allowed only
-with a path, token, owner, and reason; KDNA-owned generation names are never
-allowlisted.
+The post-cutover audit scans raw path and file bytes across every tracked file,
+plus dry-run and actual npm package contents. It also inspects bounded `.kdna`
+ZIP entries and npm tarball entries in memory, without extracting archives to
+disk. A hash-bound public authority covers every retired KDNA-owned token from
+the cutover; the gate has no runtime dependency on private migration data.
+
+There are no blanket exclusions for RFCs, changelogs, archives, or migration
+material. Exact third-party syntax may be allowed only with a path, token,
+owner, and reason; KDNA-owned generation names are never allowlisted.

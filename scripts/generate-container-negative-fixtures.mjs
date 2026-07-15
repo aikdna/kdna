@@ -6,6 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+import { format } from 'prettier';
 
 const require = createRequire(import.meta.url);
 const cbor = require('cbor-x');
@@ -16,6 +17,10 @@ const LICENSE_KEY = 'KDNA-TEST-LICENSE-VECTOR-2026';
 
 function json(value) {
   return `${JSON.stringify(value, null, 2)}\n`;
+}
+
+async function formattedJson(value) {
+  return format(JSON.stringify(value), { parser: 'json' });
 }
 
 function licensedManifest() {
@@ -76,7 +81,7 @@ function deterministicLicensedEnvelope(plaintext, manifest) {
   };
 }
 
-function generateContainerFixtures(root = SCRIPT_ROOT) {
+async function generateContainerFixtures(root = SCRIPT_ROOT) {
   const canonicalPayload = fs.readFileSync(path.join(root, 'examples', 'minimal', 'payload.kdnab'));
   const decoded = cbor.decode(canonicalPayload);
   if (decoded?.profile !== 'kdna.payload.judgment' || decoded?.profile_version !== '0.1.0') {
@@ -92,7 +97,7 @@ function generateContainerFixtures(root = SCRIPT_ROOT) {
   const deliberateMismatch = '0'.repeat(64);
   badChecksums.payload_digest = `sha256:${deliberateMismatch}`;
   badChecksums.entries['payload.kdnab'].value = deliberateMismatch;
-  fs.writeFileSync(path.join(badChecksumRoot, 'checksums.json'), json(badChecksums));
+  fs.writeFileSync(path.join(badChecksumRoot, 'checksums.json'), await formattedJson(badChecksums));
 
   const manifest = licensedManifest();
   const envelope = deterministicLicensedEnvelope(canonicalPayload, manifest);
@@ -131,7 +136,7 @@ function rootFromArgs(args) {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  generateContainerFixtures(rootFromArgs(process.argv.slice(2)));
+  await generateContainerFixtures(rootFromArgs(process.argv.slice(2)));
   console.log('Container negative and licensed fixtures regenerated');
 }
 
