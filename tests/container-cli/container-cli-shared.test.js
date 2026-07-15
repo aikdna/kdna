@@ -677,7 +677,7 @@ test('validate: lineage as array is rejected (Phase 1 rule)', () => {
   }
 });
 
-test('pack: produces a deterministic container (same input → same SHA-256)', () => {
+test('pack: is byte-reproducible for repeated runs in one pinned toolchain', () => {
   const dir = makeTmp('kdna-container-det-');
   try {
     const src = path.join(dir, 'src');

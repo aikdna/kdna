@@ -20,7 +20,10 @@
  *   - the source directory must contain mimetype, kdna.json, payload.kdnab
  *   - checksums.json and signatures/ are optional
  *   - lineage must be a single object (not an array)
- *   - pack output must be deterministic: same input → same SHA-256
+ *   - pack output is reproducible within one pinned toolchain/compressor;
+ *     DEFLATE bytes may differ across compressors, zlib versions, or systems
+ *   - entry_set_digest/source_fingerprint identify logical entries; A binds
+ *     the exact immutable package bytes
  *
  * Output language must stay content-neutral. We never say "trusted",
  * "recommended", "high_quality", or "officially_approved". We say
@@ -1075,10 +1078,12 @@ function buildChecksums(sourceDir) {
 // ─── pack ──────────────────────────────────────────────────────────────
 
 /**
- * Pack an authoring source directory into a .kdna asset. Output is
- * deterministic: the same source directory packed twice produces
- * byte-identical output (fixed DOS timestamps, fixed entry order,
- * mimetype first).
+ * Pack an authoring source directory into a .kdna asset. With one pinned
+ * packer toolchain and compressor, output is byte-reproducible (fixed DOS
+ * timestamps, fixed entry order, mimetype first). DEFLATE output may differ
+ * across compressors, zlib versions, or systems. entry_set_digest and
+ * source_fingerprint identify the logical entries; A binds the exact immutable
+ * package bytes.
  */
 function pack(sourceDir, outputPath) {
   const absSrc = path.resolve(sourceDir);

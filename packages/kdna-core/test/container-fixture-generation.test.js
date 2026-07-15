@@ -7,6 +7,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { test } = require('node:test');
+const { pathToFileURL } = require('node:url');
 const cbor = require('cbor-x');
 
 const core = require('../src');
@@ -15,6 +16,22 @@ const container = require('../src/container');
 const repoRoot = path.resolve(__dirname, '..', '..', '..');
 const generator = path.join(repoRoot, 'scripts', 'generate-container-negative-fixtures.mjs');
 const licenseKey = 'KDNA-TEST-LICENSE-VECTOR-2026';
+const licensedFixtureSha256 = 'd785725fc2b53cad5c3627ddc91ae737ab58502224e64dca8896ac818c4e9790';
+const licensedFixtureEntries = ['mimetype', 'checksums.json', 'kdna.json', 'payload.kdnab'];
+
+const crc32Table = Array.from({ length: 256 }, (_, index) => {
+  let value = index;
+  for (let bit = 0; bit < 8; bit += 1) {
+    value = (value & 1) === 1 ? 0xedb88320 ^ (value >>> 1) : value >>> 1;
+  }
+  return value >>> 0;
+});
+
+function crc32(bytes) {
+  let value = 0xffffffff;
+  for (const byte of bytes) value = crc32Table[(value ^ byte) & 0xff] ^ (value >>> 8);
+  return (value ^ 0xffffffff) >>> 0;
+}
 
 function sha256(filePath) {
   return createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
@@ -40,8 +57,116 @@ function validationChecks(validation) {
   };
 }
 
+function readZipMetadata(filePath) {
+  const bytes = fs.readFileSync(filePath);
+  let endOffset = -1;
+  for (let offset = bytes.length - 22; offset >= Math.max(0, bytes.length - 65_557); offset -= 1) {
+    if (bytes.readUInt32LE(offset) === 0x06054b50) {
+      endOffset = offset;
+      break;
+    }
+  }
+  assert.notEqual(endOffset, -1, 'ZIP end record must exist');
+  const end = {
+    disk: bytes.readUInt16LE(endOffset + 4),
+    centralDisk: bytes.readUInt16LE(endOffset + 6),
+    diskEntries: bytes.readUInt16LE(endOffset + 8),
+    entries: bytes.readUInt16LE(endOffset + 10),
+    centralSize: bytes.readUInt32LE(endOffset + 12),
+    centralOffset: bytes.readUInt32LE(endOffset + 16),
+    commentLength: bytes.readUInt16LE(endOffset + 20),
+  };
+  assert.equal(endOffset + 22 + end.commentLength, bytes.length);
+  assert.equal(end.centralOffset + end.centralSize, endOffset);
+
+  const entries = [];
+  let cursor = end.centralOffset;
+  for (let index = 0; index < end.entries; index += 1) {
+    assert.equal(bytes.readUInt32LE(cursor), 0x02014b50);
+    const nameLength = bytes.readUInt16LE(cursor + 28);
+    const extraLength = bytes.readUInt16LE(cursor + 30);
+    const commentLength = bytes.readUInt16LE(cursor + 32);
+    const nameBytes = bytes.subarray(cursor + 46, cursor + 46 + nameLength);
+    const localOffset = bytes.readUInt32LE(cursor + 42);
+    assert.equal(bytes.readUInt32LE(localOffset), 0x04034b50);
+    const localNameLength = bytes.readUInt16LE(localOffset + 26);
+    const localExtraLength = bytes.readUInt16LE(localOffset + 28);
+    const dataStart = localOffset + 30 + localNameLength + localExtraLength;
+    const compressedSize = bytes.readUInt32LE(cursor + 20);
+    entries.push({
+      name: nameBytes.toString('utf8'),
+      nameBytes: Buffer.from(nameBytes),
+      madeBy: bytes.readUInt16LE(cursor + 4),
+      needed: bytes.readUInt16LE(cursor + 6),
+      flags: bytes.readUInt16LE(cursor + 8),
+      method: bytes.readUInt16LE(cursor + 10),
+      time: bytes.readUInt16LE(cursor + 12),
+      date: bytes.readUInt16LE(cursor + 14),
+      crc: bytes.readUInt32LE(cursor + 16),
+      compressedSize,
+      uncompressedSize: bytes.readUInt32LE(cursor + 24),
+      extraLength,
+      commentLength,
+      startDisk: bytes.readUInt16LE(cursor + 34),
+      internalAttributes: bytes.readUInt16LE(cursor + 36),
+      externalAttributes: bytes.readUInt32LE(cursor + 38),
+      localOffset,
+      local: {
+        needed: bytes.readUInt16LE(localOffset + 4),
+        flags: bytes.readUInt16LE(localOffset + 6),
+        method: bytes.readUInt16LE(localOffset + 8),
+        time: bytes.readUInt16LE(localOffset + 10),
+        date: bytes.readUInt16LE(localOffset + 12),
+        crc: bytes.readUInt32LE(localOffset + 14),
+        compressedSize: bytes.readUInt32LE(localOffset + 18),
+        uncompressedSize: bytes.readUInt32LE(localOffset + 22),
+        nameLength: localNameLength,
+        extraLength: localExtraLength,
+        nameBytes: Buffer.from(
+          bytes.subarray(localOffset + 30, localOffset + 30 + localNameLength),
+        ),
+      },
+      data: Buffer.from(bytes.subarray(dataStart, dataStart + compressedSize)),
+      localEnd: dataStart + compressedSize,
+    });
+    cursor += 46 + nameLength + extraLength + commentLength;
+  }
+  assert.equal(cursor, endOffset);
+  return { bytes, end, entries };
+}
+
+function prepareFixtureRoot(root) {
+  for (const relativePath of [
+    'examples/minimal',
+    'fixtures/container/invalid-bad-checksum',
+    'fixtures/container/invalid-missing-manifest',
+  ]) {
+    fs.cpSync(path.join(repoRoot, relativePath), path.join(root, relativePath), {
+      recursive: true,
+    });
+  }
+}
+
+function changeTreeMetadata(root) {
+  const timestamp = new Date('2040-12-31T23:59:58Z');
+  const visit = (entryPath) => {
+    const stat = fs.lstatSync(entryPath);
+    fs.utimesSync(entryPath, timestamp, timestamp);
+    if (stat.isDirectory()) {
+      for (const entry of fs.readdirSync(entryPath)) visit(path.join(entryPath, entry));
+    } else if (process.platform !== 'win32') {
+      fs.chmodSync(entryPath, 0o600);
+    }
+  };
+  visit(root);
+}
+
 test('licensed interoperability fixture uses the current encrypted payload contract', () => {
   const fixture = path.join(repoRoot, 'fixtures', 'test_licensed_entry.kdna');
+  assert.equal(sha256(fixture), licensedFixtureSha256);
+  const validation = container.validate(fixture);
+  assert.equal(validation.overall_valid, true);
+  assert.deepEqual(validation.problems, []);
   const reader = core.createKdnaAssetReader();
   const asset = reader.openSync(fixture);
   const manifest = reader.readManifestSync(asset);
@@ -59,12 +184,170 @@ test('licensed interoperability fixture uses the current encrypted payload contr
     'payload.kdnab',
   ]);
 
-  const plaintext = core.decryptLicensedEntry(
-    reader.readEntrySync(asset, manifest.payload.path),
-    { entryName: manifest.payload.path, manifest, licenseKey },
-  );
+  const decryptEntry = ({ ciphertext, entryName, manifest: runtimeManifest }) =>
+    core.decryptLicensedEntry(ciphertext, {
+      entryName,
+      manifest: runtimeManifest,
+      licenseKey,
+    });
+  const verification = reader.verifySync(asset, { requireDecryption: true, decryptEntry });
+  assert.equal(verification.ok, true, verification.errors.join('; '));
+  const plaintext = decryptEntry({
+    ciphertext: reader.readEntrySync(asset, manifest.payload.path),
+    entryName: manifest.payload.path,
+    manifest,
+  });
   const canonical = fs.readFileSync(path.join(repoRoot, 'examples', 'minimal', 'payload.kdnab'));
   assert.deepEqual(cbor.decode(plaintext), cbor.decode(canonical));
+});
+
+test('licensed fixture ZIP bytes and local or central metadata are platform-independent', () => {
+  const fixture = path.join(repoRoot, 'fixtures', 'test_licensed_entry.kdna');
+  const archive = readZipMetadata(fixture);
+  assert.deepEqual(archive.end, {
+    disk: 0,
+    centralDisk: 0,
+    diskEntries: 4,
+    entries: 4,
+    centralSize: 228,
+    centralOffset: 2643,
+    commentLength: 0,
+  });
+  assert.deepEqual(
+    archive.entries.map((entry) => entry.name),
+    licensedFixtureEntries,
+  );
+  let expectedOffset = 0;
+  for (const entry of archive.entries) {
+    assert.equal(entry.localOffset, expectedOffset);
+    assert.deepEqual(
+      {
+        madeBy: entry.madeBy,
+        needed: entry.needed,
+        flags: entry.flags,
+        method: entry.method,
+        time: entry.time,
+        date: entry.date,
+        extraLength: entry.extraLength,
+        commentLength: entry.commentLength,
+        startDisk: entry.startDisk,
+        internalAttributes: entry.internalAttributes,
+        externalAttributes: entry.externalAttributes,
+      },
+      {
+        madeBy: 788,
+        needed: 20,
+        flags: 0x0800,
+        method: 0,
+        time: 0,
+        date: 1,
+        extraLength: 0,
+        commentLength: 0,
+        startDisk: 0,
+        internalAttributes: 0,
+        externalAttributes: (0o100644 * 0x10000) >>> 0,
+      },
+    );
+    assert.deepEqual(entry.local, {
+      needed: 20,
+      flags: 0x0800,
+      method: 0,
+      time: 0,
+      date: 1,
+      crc: entry.crc,
+      compressedSize: entry.uncompressedSize,
+      uncompressedSize: entry.uncompressedSize,
+      nameLength: entry.nameBytes.length,
+      extraLength: 0,
+      nameBytes: entry.nameBytes,
+    });
+    assert.equal(entry.compressedSize, entry.uncompressedSize);
+    assert.equal(entry.data.length, entry.uncompressedSize);
+    assert.equal(entry.crc, crc32(entry.data));
+    expectedOffset = entry.localEnd;
+  }
+  assert.equal(expectedOffset, archive.end.centralOffset);
+});
+
+test('public packer preserves logical identity while binding new transport bytes', (t) => {
+  const fixture = path.join(repoRoot, 'fixtures', 'test_licensed_entry.kdna');
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-licensed-pack-smoke-'));
+  t.after(() => fs.rmSync(temporary, { recursive: true, force: true }));
+  const source = path.join(temporary, 'source');
+  const repacked = path.join(temporary, 'repacked.kdna');
+  container.unpack(fixture, source);
+  container.pack(source, repacked);
+
+  const validation = container.validate(repacked);
+  assert.equal(validation.overall_valid, true);
+  assert.deepEqual(validation.problems, []);
+
+  const reader = core.createKdnaAssetReader();
+  const decryptEntry = ({ ciphertext, entryName, manifest }) =>
+    core.decryptLicensedEntry(ciphertext, { entryName, manifest, licenseKey });
+  const originalAsset = reader.openSync(fixture);
+  const repackedAsset = reader.openSync(repacked);
+  const originalVerification = reader.verifySync(originalAsset, {
+    requireDecryption: true,
+    decryptEntry,
+  });
+  const repackedVerification = reader.verifySync(repackedAsset, {
+    requireDecryption: true,
+    decryptEntry,
+  });
+  assert.equal(originalVerification.ok, true, originalVerification.errors.join('; '));
+  assert.equal(repackedVerification.ok, true, repackedVerification.errors.join('; '));
+  assert.equal(repackedVerification.content_digest, originalVerification.content_digest);
+  assert.notEqual(repackedVerification.asset_digest, originalVerification.asset_digest);
+  const originalChecksums = JSON.parse(
+    reader.readEntrySync(originalAsset, 'checksums.json').toString('utf8'),
+  );
+  const repackedChecksums = JSON.parse(
+    reader.readEntrySync(repackedAsset, 'checksums.json').toString('utf8'),
+  );
+  assert.equal(repackedChecksums.entry_set_digest, originalChecksums.entry_set_digest);
+
+  const originalPlan = container.planLoad(fixture);
+  const repackedPlan = container.planLoad(repacked);
+  assert.equal(
+    repackedPlan.input_fingerprint.source_fingerprint,
+    originalPlan.input_fingerprint.source_fingerprint,
+  );
+  assert.notEqual(
+    container.readLayout(repacked).containerDigest,
+    container.readLayout(fixture).containerDigest,
+  );
+
+  const manifest = reader.readManifestSync(repackedAsset);
+  const plaintext = decryptEntry({
+    ciphertext: reader.readEntrySync(repackedAsset, manifest.payload.path),
+    entryName: manifest.payload.path,
+    manifest,
+  });
+  const canonical = fs.readFileSync(path.join(repoRoot, 'examples', 'minimal', 'payload.kdnab'));
+  assert.deepEqual(cbor.decode(plaintext), cbor.decode(canonical));
+});
+
+test('packaging contract distinguishes logical identity from transport bytes', () => {
+  const formatDoc = fs.readFileSync(path.join(repoRoot, 'docs', 'core', 'file-format.md'), 'utf8');
+  const agentGuide = fs.readFileSync(path.join(repoRoot, 'docs', '15-minute-agent-guide.md'), 'utf8');
+  const containerSource = fs.readFileSync(
+    path.join(repoRoot, 'packages', 'kdna-core', 'src', 'container', 'index.js'),
+    'utf8',
+  );
+  for (const text of [formatDoc, agentGuide, containerSource]) {
+    assert.match(text, /pinned (?:packer )?toolchain/u);
+    assert.match(text, /DEFLATE/u);
+  }
+  for (const text of [formatDoc, containerSource]) {
+    assert.match(text, /entry_set_digest/u);
+    assert.match(text, /source_fingerprint/u);
+    assert.match(text, /exact immutable (?:package\s+)?bytes/u);
+  }
+  const publicClaims = `${formatDoc}\n${agentGuide}\n${containerSource}`;
+  assert.doesNotMatch(publicClaims, /Equal logical entries produce equal package bytes/u);
+  assert.doesNotMatch(publicClaims, /same input → same SHA-256/u);
+  assert.doesNotMatch(publicClaims, /same source directory packed twice produces\s+\* byte-identical output/u);
 });
 
 test('bad-checksum fixture has one current-contract digest failure and no structural failures', () => {
@@ -149,17 +432,14 @@ test('missing-manifest fixture carries an independently valid current payload', 
 
 test('container fixture generator is byte-stable and preserves each negative intent', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-container-fixtures-'));
-  t.after(() => fs.rmSync(root, { force: true, recursive: true }));
-
-  for (const relativePath of [
-    'examples/minimal',
-    'fixtures/container/invalid-bad-checksum',
-    'fixtures/container/invalid-missing-manifest',
-  ]) {
-    fs.cpSync(path.join(repoRoot, relativePath), path.join(root, relativePath), {
-      recursive: true,
-    });
-  }
+  const alternateRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-container-platform-'));
+  t.after(() => {
+    fs.rmSync(root, { force: true, recursive: true });
+    fs.rmSync(alternateRoot, { force: true, recursive: true });
+  });
+  prepareFixtureRoot(root);
+  prepareFixtureRoot(alternateRoot);
+  changeTreeMetadata(alternateRoot);
 
   const run = () =>
     spawnSync(process.execPath, [generator, '--root', root], {
@@ -172,6 +452,21 @@ test('container fixture generator is byte-stable and preserves each negative int
   const second = run();
   assert.equal(second.status, 0, second.stderr);
   assert.deepEqual(generatedHashes(root), firstHashes);
+
+  const platformSimulation = spawnSync(
+    process.execPath,
+    [
+      '--input-type=module',
+      '-e',
+      `process.umask(0o077); const { generateContainerFixtures } = await import(${JSON.stringify(pathToFileURL(generator).href)}); await generateContainerFixtures(${JSON.stringify(alternateRoot)});`,
+    ],
+    {
+      encoding: 'utf8',
+      env: { ...process.env, TZ: 'Pacific/Kiritimati' },
+    },
+  );
+  assert.equal(platformSimulation.status, 0, platformSimulation.stderr);
+  assert.deepEqual(generatedHashes(alternateRoot), firstHashes);
 
   const badRoot = path.join(root, 'fixtures', 'container', 'invalid-bad-checksum');
   const badChecksums = JSON.parse(fs.readFileSync(path.join(badRoot, 'checksums.json'), 'utf8'));

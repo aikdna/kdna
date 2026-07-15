@@ -72,7 +72,7 @@ and can load judgment on demand.
 | `kdna demo minimal` | stable | Creates a local fixture for the current format |
 | `kdna inspect` | stable | Reads current source dirs and `.kdna` containers |
 | `kdna validate` | stable | Schema + format + payload + checksums + load-contract |
-| `kdna pack` | stable | Deterministic ZIP (same input → same SHA-256) |
+| `kdna pack` | stable | Reproducible ZIP with a pinned packer toolchain; DEFLATE bytes may differ across compressors |
 | `kdna unpack` | stable | Extract .kdna container |
 | `kdna load --as=prompt` | available | Emits agent-readable judgment context |
 | `kdna load --profile=compact` | available | Compact judgment profile for token efficiency |

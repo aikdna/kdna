@@ -24,9 +24,15 @@ paths, duplicate entries, and the wrong mimetype.
 ## Deterministic packaging
 
 The reference packer writes entries in canonical order with stable ZIP
-metadata. Equal logical entries produce equal package bytes. Package identity
-is SHA-256 over the final immutable bytes; it is distinct from the runtime
-entry-set digest inside `checksums.json`.
+metadata. With one pinned packer toolchain and compressor, the same source is
+byte-reproducible. DEFLATE output is not portable across compressor or zlib
+versions, so equivalent logical entries may have different transport bytes and
+therefore different A/package digests.
+
+Logical entry identity is represented by `checksums.json.entry_set_digest` and
+the LoadPlan `source_fingerprint`. A still binds the exact immutable package
+bytes that were authorized or delivered; it must never be substituted with a
+logical-entry digest.
 
 ## Runtime rule
 

@@ -14,6 +14,104 @@ const core = require('../packages/kdna-core/src');
 
 const SCRIPT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const LICENSE_KEY = 'KDNA-TEST-LICENSE-VECTOR-2026';
+const LICENSED_FIXTURE_ENTRIES = Object.freeze([
+  'mimetype',
+  'checksums.json',
+  'kdna.json',
+  'payload.kdnab',
+]);
+const ZIP_VERSION_NEEDED = 20;
+const ZIP_VERSION_MADE_BY = (3 << 8) | ZIP_VERSION_NEEDED;
+const ZIP_UTF8_FLAG = 0x0800;
+const ZIP_STORED_METHOD = 0;
+const ZIP_DOS_TIME = 0;
+const ZIP_DOS_DATE = 1;
+const ZIP_REGULAR_0644 = (0o100644 * 0x10000) >>> 0;
+
+// This fixture is hash-pinned across operating systems. Core pack intentionally
+// uses DEFLATE for general assets, but zlib output bytes can vary by platform
+// version. The restricted fixture writer stores four exact entries and owns
+// every ZIP metadata field so compression libraries and filesystem metadata
+// cannot change the interoperability vector.
+
+const CRC32_TABLE = Array.from({ length: 256 }, (_, index) => {
+  let value = index;
+  for (let bit = 0; bit < 8; bit += 1) {
+    value = (value & 1) === 1 ? 0xedb88320 ^ (value >>> 1) : value >>> 1;
+  }
+  return value >>> 0;
+});
+
+function crc32(bytes) {
+  let value = 0xffffffff;
+  for (const byte of bytes) value = CRC32_TABLE[(value ^ byte) & 0xff] ^ (value >>> 8);
+  return (value ^ 0xffffffff) >>> 0;
+}
+
+function buildDeterministicLicensedFixtureZip(entries) {
+  const keys = Object.keys(entries).sort();
+  if (JSON.stringify(keys) !== JSON.stringify([...LICENSED_FIXTURE_ENTRIES].sort())) {
+    throw new Error('licensed fixture ZIP entries are not exact');
+  }
+  const localParts = [];
+  const centralParts = [];
+  let offset = 0;
+  for (const name of LICENSED_FIXTURE_ENTRIES) {
+    const data = entries[name];
+    if (!Buffer.isBuffer(data)) throw new Error(`licensed fixture entry is not bytes: ${name}`);
+    const nameBytes = Buffer.from(name, 'utf8');
+    const checksum = crc32(data);
+    const local = Buffer.alloc(30 + nameBytes.length);
+    local.writeUInt32LE(0x04034b50, 0);
+    local.writeUInt16LE(ZIP_VERSION_NEEDED, 4);
+    local.writeUInt16LE(ZIP_UTF8_FLAG, 6);
+    local.writeUInt16LE(ZIP_STORED_METHOD, 8);
+    local.writeUInt16LE(ZIP_DOS_TIME, 10);
+    local.writeUInt16LE(ZIP_DOS_DATE, 12);
+    local.writeUInt32LE(checksum, 14);
+    local.writeUInt32LE(data.length, 18);
+    local.writeUInt32LE(data.length, 22);
+    local.writeUInt16LE(nameBytes.length, 26);
+    local.writeUInt16LE(0, 28);
+    nameBytes.copy(local, 30);
+    localParts.push(local, data);
+
+    const central = Buffer.alloc(46 + nameBytes.length);
+    central.writeUInt32LE(0x02014b50, 0);
+    central.writeUInt16LE(ZIP_VERSION_MADE_BY, 4);
+    central.writeUInt16LE(ZIP_VERSION_NEEDED, 6);
+    central.writeUInt16LE(ZIP_UTF8_FLAG, 8);
+    central.writeUInt16LE(ZIP_STORED_METHOD, 10);
+    central.writeUInt16LE(ZIP_DOS_TIME, 12);
+    central.writeUInt16LE(ZIP_DOS_DATE, 14);
+    central.writeUInt32LE(checksum, 16);
+    central.writeUInt32LE(data.length, 20);
+    central.writeUInt32LE(data.length, 24);
+    central.writeUInt16LE(nameBytes.length, 28);
+    central.writeUInt16LE(0, 30);
+    central.writeUInt16LE(0, 32);
+    central.writeUInt16LE(0, 34);
+    central.writeUInt16LE(0, 36);
+    central.writeUInt32LE(ZIP_REGULAR_0644, 38);
+    central.writeUInt32LE(offset, 42);
+    nameBytes.copy(central, 46);
+    centralParts.push(central);
+    offset += local.length + data.length;
+  }
+
+  const centralOffset = offset;
+  const centralSize = centralParts.reduce((total, entry) => total + entry.length, 0);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(0, 4);
+  end.writeUInt16LE(0, 6);
+  end.writeUInt16LE(LICENSED_FIXTURE_ENTRIES.length, 8);
+  end.writeUInt16LE(LICENSED_FIXTURE_ENTRIES.length, 10);
+  end.writeUInt32LE(centralSize, 12);
+  end.writeUInt32LE(centralOffset, 16);
+  end.writeUInt16LE(0, 20);
+  return Buffer.concat([...localParts, ...centralParts, end]);
+}
 
 function json(value) {
   return `${JSON.stringify(value, null, 2)}\n`;
@@ -108,7 +206,17 @@ async function generateContainerFixtures(root = SCRIPT_ROOT) {
     fs.writeFileSync(path.join(source, 'payload.kdnab'), cbor.encode(envelope));
     fs.writeFileSync(path.join(source, 'checksums.json'), json(core.buildChecksums(source)));
     const destination = path.join(root, 'fixtures', 'test_licensed_entry.kdna');
-    core.pack(source, destination);
+    fs.writeFileSync(
+      destination,
+      buildDeterministicLicensedFixtureZip(
+        Object.fromEntries(
+          LICENSED_FIXTURE_ENTRIES.map((entry) => [
+            entry,
+            fs.readFileSync(path.join(source, entry)),
+          ]),
+        ),
+      ),
+    );
 
     const reader = core.createKdnaAssetReader();
     const asset = reader.openSync(destination);
