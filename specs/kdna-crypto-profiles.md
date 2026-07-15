@@ -76,7 +76,7 @@ For `kdna.envelope.aead`, the password slot's KDF is selected by
 - `scrypt-sha256` — mandatory, every conforming implementation MUST support
   it. N=32768, r=8, p=1, 16-byte salt, 32-byte KEK. Node.js's built-in
   `crypto.scryptSync` is sufficient.
-- `argon2id` — optional v2, Node.js implementations SHOULD support it.
+- `argon2id` — optional profile, Node.js implementations SHOULD support it.
   t=3, m=65536, p=4, 16-byte salt, 32-byte KEK. The Swift port does not
   have a native binding and follows RFC-0018 R6 (fallback to next slot
   or `KDNA_KDF_UNSUPPORTED`).

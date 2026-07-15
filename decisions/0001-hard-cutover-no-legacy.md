@@ -20,7 +20,7 @@ them against the current schema and `kdna create` workflow.
 ## Rationale
 
 A shim would have been worse than a clean break. The legacy schema differed structurally — not just
-cosmetically — from the v1 schema. Any translation layer would have been lossy, would have introduced
+cosmetically — from the current schema. Any translation layer would have been lossy, would have introduced
 ambiguous edge cases, and would have become a permanent maintenance tax. A hard cutover forces
 one-time migration cost instead of indefinite dual-surface cost.
 
@@ -32,4 +32,4 @@ surface to use.
 
 - Old `.kdna` files must be manually re-authored.
 - No `legacy` string appears anywhere in the codebase, CLI, or docs.
-- The `v1` prefix is implicit — everything is v1, so we don't label it.
+- The container responsibility has no generation prefix; the canonical contract is identified by its explicit schema and profile coordinates.

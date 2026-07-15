@@ -7,7 +7,7 @@
 
 ## Context
 
-B2 (encrypted v1 export) is the current P0 ship-blocker. `kdna-studio-cli` 0.7.0 accepts `--password` but fails early with a "not yet implemented" message. The consumer-side decryption path already exists in `kdna-core` (`decryptProtectedEntry`, `planLoad` states `needs_password`/`enter_password`). The producer side needs to be implemented.
+B2 (encrypted export) is the current P0 ship-blocker. `kdna-studio-cli` 0.7.0 accepts `--password` but fails early with a "not yet implemented" message. The consumer-side decryption path already exists in `kdna-core` (`decryptProtectedEntry`, `planLoad` states `needs_password`/`enter_password`). The producer side needs to be implemented.
 
 RFC-0009 specifies Argon2id as the password KDF. ADR-005 requires no new encryption profiles until existing profiles are frozen and covered by cross-language test vectors. However, ADR-005 lists `kdna.encryption.password` as "Implemented" in JS Core — that implementation uses `@noble/hashes` (Argon2id), which introduces a native dependency risk for CI and end-user installs.
 
@@ -101,7 +101,7 @@ Same envelope structure as `kdna.encryption.password`:
 - `kdna.encryption.password.scrypt` is added to `crypto-profile.js` (new `encryptProtectedEntryScrypt` / `decryptProtectedEntryScrypt`).
 - `kdna-studio-cli` `--password` flag is replaced from stub → real encryption call.
 - `kdna-studio-core` `compile/index.js` recognizes password profile and sets correct `encryption` metadata.
-- `kdna-core` `v1/index.js` `inferEntitlementProfile()` gains detection of `kdna.encryption.password.scrypt`.
+- `kdna-core` container authority `inferEntitlementProfile()` gains detection of `kdna.encryption.password.scrypt`.
 - e2e test replaces the "exits 2" stub test with round-trip + fail-closed tests.
 - ADR-005's profile inventory should be updated to list `kdna.encryption.password.scrypt` as the 0.1 write profile and `kdna.encryption.password` (Argon2id) as read-only until 0.2.
 - No new npm dependencies are required.
@@ -111,7 +111,7 @@ Same envelope structure as `kdna.encryption.password`:
 | # | Task | Repo | Est. |
 |---|---|---|---|
 | 1 | Add scrypt profile to `crypto-profile.js` | kdna-core | 2h |
-| 2 | Update `v1/index.js` planLoad to detect scrypt profile | kdna-core | 0.5h |
+| 2 | Update the container authority planLoad to detect scrypt profile | kdna-core | 0.5h |
 | 3 | Wire `--password` → `encryptProtectedEntryScrypt` in studio-cli | kdna-studio-cli | 1.5h |
 | 4 | Update studio-core compile for scrypt profile | kdna-studio-core | 1h |
 | 5 | Update studio-core export-runtime `payload.encrypted` | kdna-studio-core | 0.5h |

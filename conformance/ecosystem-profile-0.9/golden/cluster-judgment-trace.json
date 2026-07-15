@@ -29,7 +29,7 @@
       "digest_verified": true,
       "authorization": "public",
       "projection_digest": "sha256:d1f6c838200d8d5c8d3018c34d205d5ca5a27f97cfecfe18d3ed9d00bc2f7e67",
-      "contribution_hypothesis": "PATCH /api/v2/notifications/preferences — API design review",
+      "contribution_hypothesis": "PATCH /api/notifications/preferences — API design review",
       "contribution_fulfilled": true
     }
   ],

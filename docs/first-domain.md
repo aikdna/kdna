@@ -55,7 +55,7 @@ npm install -g @aikdna/kdna-studio-cli
 kdna-studio create my-domain --name @yourscope/my-domain
 ```
 
-After adding and locking your judgment material, export to v1:
+After adding and locking your judgment material, export the packaged asset:
 
 ```bash
 kdna-studio migrate ./my-domain --out ./my-domain.kdna

@@ -228,7 +228,7 @@
       "package_json": "../kdna-vscode/package.json",
       "current_version": "0.1.0",
       "lifecycle": "Legacy",
-      "supported_kdna_version": "pre-v1",
+      "supported_kdna_version": "pre-cutover",
       "supported_access_modes": [],
       "supported_entitlement_profiles": [],
       "conformance_commit": "c0d885ba8222b6dccad87ec67f7d82fcc1283107",

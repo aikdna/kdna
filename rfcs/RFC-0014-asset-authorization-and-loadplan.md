@@ -38,7 +38,7 @@ checksums.json
 ```
 
 Future security phases may add signature and encryption metadata. Those phases
-must not silently redefine the current v1 baseline.
+must not silently redefine the current baseline.
 
 ## LoadPlan Requirement
 

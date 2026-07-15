@@ -288,7 +288,7 @@ To produce trustworthy fidelity results, a measurement run MUST satisfy:
 ### Phase 3: CLI Integration
 - `kdna fidelity measure <artifact> --domain <name>` — run fidelity measurement
 - `kdna fidelity report <run_id>` — display fidelity report
-- `kdna fidelity compare <domain>@v1 <domain>@v2` — compare fidelity across domain versions
+- `kdna fidelity compare <domain>@0.1.0 <domain>@0.2.0` — compare fidelity across domain versions
 
 ### Phase 4: Registry Integration
 - Fidelity results as registry-linked artifacts
@@ -397,7 +397,7 @@ To produce trustworthy fidelity results, a measurement run MUST satisfy:
 
 3. Should fidelity be measured per-artifact or per-domain-version? Current design supports both: per-artifact (measure a specific generated output) and per-domain-version (aggregate across multiple artifacts). Per-artifact is more actionable; per-version is more suitable for badge/registry purposes.
 
-4. Should the Fidelity Protocol define a minimum evaluator model capability level? Not in v1. The protocol is model-agnostic. However, measurement quality warnings should flag when the evaluator model is low-capability or same as generator.
+4. Should the Fidelity Protocol define a minimum evaluator model capability level? Not in the current contract. The protocol is model-agnostic. However, measurement quality warnings should flag when the evaluator model is low-capability or same as generator.
 
 5. How should fidelity handle KDNA clusters (multiple domains composed)? Each domain in the cluster gets its own per-axiom transfer measurement. Cross-domain interactions (conflicts, overrides) may produce fidelity effects not captured by single-domain measurement. Cluster fidelity is a separate, more complex measurement that should be addressed in a future RFC.
 

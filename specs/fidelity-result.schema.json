@@ -15,7 +15,7 @@
   "properties": {
     "fidelity_id": {
       "type": "string",
-      "description": "Unique fidelity run identifier (UUID v4)."
+      "description": "Unique fidelity run identifier (UUID version 4)."
     },
     "protocol_version": {
       "type": "string",

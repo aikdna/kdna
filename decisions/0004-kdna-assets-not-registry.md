@@ -5,7 +5,7 @@
 
 ## Context
 
-When v1 Core GA shipped without a registry (Decision 0003), the question became: where do
+When Core reached general availability without a registry, the question became: where do
 example `.kdna` files and shared assets live? The `kdna-assets` repository was created, but
 its role needed precise definition to prevent it from becoming an accidental registry.
 

@@ -137,7 +137,7 @@ projections rather than the complete KDNA payload.
 ## Open Questions
 
 - Which exact envelope encryption profile becomes canonical after the current
-  v1 public toolchain is sealed?
+  current public toolchain is sealed?
 - Should the default entitlement server be part of AIKDNA's public
   infrastructure or only a reference implementation?
 - What are the default offline grace periods for consumer, subscription, and

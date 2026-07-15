@@ -1,6 +1,6 @@
 # KDNA Risk Policy
 
-> Historical pre-v1 risk-policy draft. The registry and review-gate rules below
+> Historical pre-cutover risk-policy draft. The registry and review-gate rules below
 > are not current KDNA Core format-validity requirements. Current public beta
 > loading starts from local packaged `.kdna` files and caller-owned runtime
 > policy.

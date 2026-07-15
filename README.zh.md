@@ -243,7 +243,6 @@ kdna load <asset>.kdna --profile=compact --as=prompt
 | [docs/getting-started.zh.md](./docs/getting-started.zh.md) | 安装、创建和使用 KDNA |
 | [docs/evaluation.zh.md](./docs/evaluation.zh.md) | 如何检验 KDNA 是否改善了判断力 |
 | [docs/meta-cognition.zh.md](./docs/meta-cognition.zh.md) | 何时用 KDNA、冲突仲裁、领域组合 |
-| [docs/archive/legacy-registry-policy.zh.md](./docs/archive/legacy-registry-policy.zh.md) | 历史 KDNA 收录标准（已废弃,仅作存档） |
 | [docs/kdna-in-chinese.md](./docs/kdna-in-chinese.md) | 中文 KDNA 编写指南 |
 
 ## 工具
@@ -257,7 +256,6 @@ kdna load <asset>.kdna --profile=compact --as=prompt
 - [README.zh.md](./README.zh.md) — 中文 README（当前页面）
 - [docs/getting-started.zh.md](./docs/getting-started.zh.md) — 快速上手指南
 - [docs/kdna-in-chinese.md](./docs/kdna-in-chinese.md) — 中文 KDNA 编写指南
-- [docs/archive/legacy-registry-policy.zh.md](./docs/archive/legacy-registry-policy.zh.md) — 历史 KDNA 收录标准（已废弃,仅作存档）
 - [docs/i18n.md](./docs/i18n.md) — KDNA 国际化策略
 
 ## 许可

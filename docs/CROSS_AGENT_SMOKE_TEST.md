@@ -105,4 +105,3 @@ kill $PID
 
 - [KDNA Skills README](https://github.com/aikdna/kdna-skills) — Agent loader and MCP server docs
 - [Integrations documentation](https://github.com/aikdna/kdna/blob/main/docs/integrations.md)
-- [V1RC_RELEASE_BOARD.md](../docs/V1RC_RELEASE_BOARD.md) — Epic 5

@@ -1,6 +1,8 @@
 # KDNA Conformance — Quick Reference
 
-For detailed certification levels, see [KDNA-Compatible Certification](./docs/archive/kdna-compatible-certification.md).
+Conformance claims are bounded by the executable profile and evidence named in
+the report. Passing one profile does not create a global quality or trust
+level.
 
 ## What Conformance Means
 

@@ -8,7 +8,7 @@ kdna setup
 kdna doctor --agents
 ```
 
-## Prepare a v1 Asset
+## Prepare a Packaged Asset
 
 ```bash
 kdna demo minimal ./minimal

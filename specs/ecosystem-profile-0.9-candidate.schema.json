@@ -123,7 +123,7 @@
           "properties": {
             "definition": {
               "type": "string",
-              "const": "Fixed packaging/distribution of components loaded as one unit. v2 packaging format."
+              "const": "Fixed packaging and distribution of components loaded as one unit by the bundle-container contract."
             },
             "distribution_form": { "type": "string", "const": "Bundle container/manifest" },
             "maturity_target": {
@@ -472,7 +472,7 @@
           "properties": {
             "positive_validate_rate": { "type": "string", "const": "100%" },
             "negative_fail_with_code": { "type": "string", "const": "100%" },
-            "core_v1_backward_compat": {
+            "core_backward_compat": {
               "type": "string",
               "const": "100% existing fixtures unchanged"
             },

@@ -27,7 +27,7 @@ lockfiles, logs, and security reports.
 
 ## Experimental / Integration Path
 
-These are not part of the current v1 verified path:
+These are not part of the current verified path:
 
 | Layer | Repository | Package | Status |
 | --- | --- | --- | --- |
@@ -38,7 +38,7 @@ These are not part of the current v1 verified path:
 
 ## CLI Boundary
 
-The v1 verified path:
+The verified path:
 
 ```bash
 npm install -g @aikdna/kdna-cli @aikdna/kdna-studio-cli

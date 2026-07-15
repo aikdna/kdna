@@ -16,16 +16,15 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 
 | #   | Document                 | What it covers                                                                                            |
 | --- | ------------------------ | --------------------------------------------------------------------------------------------------------- |
-| 1   | `kdna-file-format.md`    | The `.kdna` ZIP container format (1.0-rc). The single-file JSON format is REJECTED and must not be used. |
+| 1   | `container.md`           | The current `.kdna` container contract. The single-file JSON format is rejected.                       |
 | 2   | `kdna-package-format.md` | Dev source directory format (SUPERSEDED by asset-first .kdna model). Retained for reference.              |
 | 3   | `package-profiles.md`    | Dev source vs .kdna asset profiles and conversion                                                         |
 | 4   | `load-profiles.md`       | Loading behavior specifications for different agent runtimes                                              |
 
-### Archived Distribution Work
+### Distribution and Access
 
 | #   | Document                      | What it covers                                                                                                                                                       |
 | --- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 5   | (archived) `kdna-registry.md` | Pre-v1 distribution index format (`domains.json`) and API. **Registry is out of scope for KDNA Core** — see `specs/archive/kdna-registry.md` for historical context. |
 | 6   | `kdna-access-modes.md`        | Access control: public / licensed / remote                                                                                                                           |
 | 7   | `kdna-license.md`             | KDNA Commercial License (KCL) terms                                                                                                                                  |
 | 8   | `LICENSE-KCL-1.0.md`          | KCL 1.0 full license text                                                                                                                                            |
@@ -73,7 +72,6 @@ sidecar boundary and the reference runtime workflow.
 | #   | Document                  | What it covers                                                                        |
 | --- | ------------------------- | ------------------------------------------------------------------------------------- |
 | 32  | `kdna-crypto-protocol.md` | Cryptographic infrastructure for .kdna encryption, signing, licensing, and revocation |
-| 33  | `kdna-identity-key.md`    | Identity key generation, backup, rotation, and license binding                        |
 | 34  | `kdna-entitlement-api.md` | Activation, sync, revocation, offline grace, and license audit API contract           |
 
 ### Authoring & Tooling

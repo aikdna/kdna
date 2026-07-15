@@ -3,7 +3,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const v1 = require('../packages/kdna-core/src/container');
+const container = require('../packages/kdna-core/src/container');
 
 const repoRoot = path.resolve(__dirname, '..');
 const examplesRoot = path.join(repoRoot, 'examples');
@@ -28,9 +28,9 @@ function walk(dir, visitor) {
   }
 }
 
-function validateV1Example(dir) {
+function validateContainerExample(dir) {
   checked += 1;
-  const result = v1.validate(dir);
+  const result = container.validate(dir);
   if (!result.overall_valid) {
     fail(path.relative(repoRoot, dir), result.problems.join('; '));
   }
@@ -57,16 +57,16 @@ function validateLegacyExample(dir) {
   }
 }
 
-const v1Dirs = new Set();
+const containerDirs = new Set();
 const legacyDirs = new Set();
 
 walk(examplesRoot, (file) => {
   const base = path.basename(file);
-  if (base === 'mimetype') v1Dirs.add(path.dirname(file));
+  if (base === 'mimetype') containerDirs.add(path.dirname(file));
   if (base === 'KDNA_Core.json') legacyDirs.add(path.dirname(file));
 });
 
-for (const dir of [...v1Dirs].sort()) validateV1Example(dir);
+for (const dir of [...containerDirs].sort()) validateContainerExample(dir);
 for (const dir of [...legacyDirs].sort()) validateLegacyExample(dir);
 
 if (checked === 0) {

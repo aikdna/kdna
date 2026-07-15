@@ -13,7 +13,7 @@
     },
     "trace_id": {
       "type": "string",
-      "description": "Unique identifier for this trace. UUID v4 recommended."
+      "description": "Unique identifier for this trace. UUID version 4 recommended."
     },
     "timestamp": {
       "type": "string",

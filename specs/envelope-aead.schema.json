@@ -105,19 +105,19 @@
           "type": "integer",
           "minimum": 16384,
           "maximum": 1048576,
-          "description": "scrypt cost parameter. RFC-0018 freezes N=32768 for v1; this range allows future minor upward adjustments under the same profile ID."
+          "description": "scrypt cost parameter. RFC-0018 freezes N=32768 for the current scrypt profile; this range allows future minor upward adjustments under the same profile ID."
         },
         "r": {
           "type": "integer",
           "minimum": 1,
           "maximum": 32,
-          "description": "scrypt block size. RFC-0018 freezes r=8 for v1."
+          "description": "scrypt block size. RFC-0018 freezes r=8 for the current scrypt profile."
         },
         "p": {
           "type": "integer",
           "minimum": 1,
           "maximum": 16,
-          "description": "scrypt parallelization. RFC-0018 freezes p=1 for v1."
+          "description": "scrypt parallelization. RFC-0018 freezes p=1 for the current scrypt profile."
         },
         "salt": {
           "type": "string",
@@ -135,24 +135,24 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 16,
-          "description": "Argon2id time cost. RFC-0018 freezes t=3 for v1."
+          "description": "Argon2id time cost. RFC-0018 freezes t=3 for the Argon2id profile."
         },
         "m": {
           "type": "integer",
           "minimum": 65536,
-          "description": "Argon2id memory cost in KiB. RFC-0018 freezes m=65536 (64 MiB) for v1. A reader that sees m below 65536 MUST reject with KDNA_KDF_PARAMS_INVALID."
+          "description": "Argon2id memory cost in KiB. RFC-0018 freezes m=65536 (64 MiB) for the Argon2id profile. A reader that sees m below 65536 MUST reject with KDNA_KDF_PARAMS_INVALID."
         },
         "p": {
           "type": "integer",
           "minimum": 1,
           "maximum": 16,
-          "description": "Argon2id parallelism (lanes). RFC-0018 freezes p=4 for v1."
+          "description": "Argon2id parallelism (lanes). RFC-0018 freezes p=4 for the Argon2id profile."
         },
         "dkLen": {
           "type": "integer",
           "minimum": 16,
           "maximum": 64,
-          "description": "Argon2id output length in bytes. RFC-0018 freezes dkLen=32 for v1."
+          "description": "Argon2id output length in bytes. RFC-0018 freezes dkLen=32 for the Argon2id profile."
         },
         "salt": {
           "type": "string",

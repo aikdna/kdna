@@ -1,6 +1,6 @@
 # KDNA Roadmap
 
-> **This file is a historical snapshot** (pre-v1 ecosystem plan, dated 2026-05).
+> **This file is a historical snapshot** (pre-cutover ecosystem plan, dated 2026-05).
 > The current active roadmap is **[docs/public-roadmap.md](./public-roadmap.md)**.
 >
 > The sections below record the four-layer protocol stack approach, including registry /

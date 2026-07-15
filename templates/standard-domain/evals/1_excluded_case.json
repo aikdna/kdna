@@ -1,5 +1,5 @@
 {
-  "$schema": "https://aikdna.com/schemas/eval-cases-v1.json",
+  "$schema": "https://aikdna.com/schemas/eval-cases.json",
   "domain": "@yourscope/your_domain_id",
   "category": "excluded",
   "purpose": "Case where your KDNA should NOT be loaded at all. The loader skill should detect the mismatch.",

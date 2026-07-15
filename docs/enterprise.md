@@ -226,7 +226,7 @@ kdna identity export --out ~/backup/mycorp-identity.backup
 
 ```bash
 # 1. Generate new key pair
-kdna identity init --org "MyCorp-v2"
+kdna identity init --org "MyCorp-current"
 
 # 2. Re-sign all domains with new key
 kdna publish ./dist/my_domain_1.kdna
@@ -302,7 +302,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: '20'
       - run: npm install -g @aikdna/kdna-cli

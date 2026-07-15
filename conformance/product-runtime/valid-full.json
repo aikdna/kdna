@@ -27,7 +27,7 @@
     "engine": "wellness-engine",
     "engine_version": "0.2.0",
     "artifact_type": "wellness_checkin",
-    "template": "wellness-checkin-v2",
+    "template": "wellness-checkin",
     "quality_gates": [
       { "gate_type": "schema_validation", "blocking": true },
       { "gate_type": "kdna_compliance", "blocking": true },
@@ -39,7 +39,7 @@
   },
   "delivery": {
     "type": "push_notification",
-    "template": "wellness-push-v2",
+    "template": "wellness-push",
     "metadata": {
       "priority": "high",
       "category": "wellness"

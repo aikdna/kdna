@@ -223,7 +223,7 @@ A recovered asset is therefore **unsigned but structurally valid**. Re-signing a
 Same as RFC-0008:
 
 - `mimetype`, `kdna.json`, `README.md`, `LICENSE`, `KDNA_CARD.json`, `signature.json`, and public reports MUST remain plaintext.
-- `payload.kdnab` (the v1 unified judgment payload) and optional judgment entries MAY be encrypted.
+- `payload.kdnab` (the canonical unified judgment payload) and optional judgment entries MAY be encrypted.
 - Encrypted entries MUST be declared in `kdna.json` under `encryption.encrypted_entries`.
 
 ## Security Considerations
@@ -320,5 +320,5 @@ Implementations MUST reject with a distinct error when:
 ## Open Questions
 
 - Whether to mandate a minimum password entropy metric in the UI specification.
-- Whether to define a future `kdna-password-protected-v2` using `XChaCha20-Poly1305`.
+- Whether to define a future password-protection profile using `XChaCha20-Poly1305`.
 - Whether registry entries for `access: "protected"` assets should still publish `asset_digest` and quality badges in the same way as open assets (recommended: yes, because metadata is plaintext).

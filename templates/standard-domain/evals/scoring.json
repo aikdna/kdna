@@ -1,5 +1,5 @@
 {
-  "$schema": "https://aikdna.com/schemas/eval-scoring-v1.json",
+  "$schema": "https://aikdna.com/schemas/eval-scoring.json",
   "domain": "@yourscope/your_domain_id",
   "scoring_framework": "D1-D8",
   "purpose": "How to score whether loading your KDNA actually changes the agent's reasoning trajectory.",

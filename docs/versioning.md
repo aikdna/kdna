@@ -69,7 +69,7 @@ Every version change that affects judgment (MINOR + MAJOR) MUST be re-evaluated:
 
 ```bash
 # Before release, compare old vs new
-kdna compare --before examples/my_domain_v1 --after examples/my_domain_v2
+kdna compare --before examples/my_domain_0.1.0 --after examples/my_domain_0.2.0
 ```
 
 If you claim a public asset is evaluated, publish the evaluation report and

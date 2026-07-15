@@ -8,7 +8,7 @@ The load contract lives under `manifest.load_contract`. The schema is part of [`
 
 ## Load profiles
 
-A load profile is a named reading strategy. The v1 contract defines four:
+A load profile is a named reading strategy. The current contract defines four:
 
 | Profile | Purpose | Typical use |
 | --- | --- | --- |

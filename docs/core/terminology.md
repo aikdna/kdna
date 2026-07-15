@@ -18,7 +18,7 @@ Phase 1 baseline vocabulary. Each term is defined in 1–3 sentences. Some terms
 
 **Asset ID** — a human-readable identifier for an asset, e.g. `kdna:example:writing-core`. The `kdna_version` prefix in the manifest (`kdna:`) is the format namespace; the rest is the producer's choice. Asset IDs are NOT globally unique by themselves; they are namespaced.
 
-**Asset UID** — a globally unique identifier, e.g. `urn:uuid:00000000-0000-4000-8000-000000000001`. Required in v1 manifests to disambiguate assets that share a name.
+**Asset UID** — a globally unique identifier, e.g. `urn:uuid:00000000-0000-4000-8000-000000000001`. Required in current manifests to disambiguate assets that share a name.
 
 **Judgment Version** — a semantic version for the **encoded judgment**, separate from the **asset release version**. An asset's `version` is its release tag; its `judgment_version` describes the version of the underlying judgment system it represents. Two assets with the same `judgment_version` are semantically equivalent for matching purposes.
 

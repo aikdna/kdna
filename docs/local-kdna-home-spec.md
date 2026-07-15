@@ -28,7 +28,7 @@ KDNA's canonical installed object is a `.kdna` asset. Products MUST NOT treat ex
 │   └── animation.json
 │
 ├── registry/                    # Local registry cache
-│   ├── domains.json             # Cached registry v3 index + trust metadata
+│   ├── domains.json             # Cached registry index + trust metadata
 │   └── manifests/               # Individual registry manifests
 │
 ├── traces/                      # Judgment traces
@@ -59,7 +59,7 @@ KDNA's canonical installed object is a `.kdna` asset. Products MUST NOT treat ex
 - `packages/` contains the real installed assets.
 - `index.json` records installed asset names, versions, local asset paths, and receipt paths.
 - `receipt.json` records install source, `asset_digest`, `content_digest`, signature status, access mode, install time, and local asset path.
-- `registry/domains.json` records registry v3 trust metadata, including snapshot expiry, timestamp expiry, and revocations.
+- `registry/domains.json` records registry trust metadata, including snapshot expiry, timestamp expiry, and revocations.
 - `cache/` MAY contain temporary extracted files, but cache contents are not canonical and may be deleted.
 - `domains/` is not part of the runtime model.
 - Installers MUST NOT rewrite `kdna.json` inside an installed `.kdna` asset.

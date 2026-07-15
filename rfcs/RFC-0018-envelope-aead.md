@@ -23,7 +23,7 @@ an explicit `kdf_profile` field on each key slot:
 | `kdf_profile`        | KDF             | Implementations  | Required support |
 |----------------------|-----------------|------------------|------------------|
 | `scrypt-sha256`   | scrypt-sha256   | Node.js, Swift   | **Mandatory**    |
-| `argon2id`       | Argon2id        | Node.js only     | Optional v2      |
+| `argon2id`       | Argon2id        | Node.js only     | Optional profile |
 
 The two profile IDs are **never collapsed**: a reader that does
 not support the declared `kdf_profile` MUST fail closed (see
@@ -156,7 +156,7 @@ is sufficient.
 The `kdf_params` object MUST include `t`, `m`, `p`, and
 `salt` (base64). Other fields are ignored.
 
-**Optional v2 support.** Implementations MAY support
+**Optional Argon2id support.** Implementations MAY support
 `argon2id`; those that do MUST verify that `m` is at least
 64 MiB. The Swift port does not have a native Argon2id
 binding and MUST follow R6.
@@ -364,13 +364,13 @@ A conforming implementation SHOULD:
   r=8, p=1 is the lowest setting the Node.js implementation
   accepts without a `maxmem` override. Future profile
   revisions may raise this; the change requires a new
-  `kdf_profile` value (e.g. `scrypt-sha256-v2`) and the
+  `kdf_profile` value (for example, `scrypt-sha256-high-memory`) and the
   non-collapse invariant still applies.
 
 ## Open Questions
 
 - Whether AES-256-GCM should be paired with ChaCha20-Poly1305
-  in a future v2 of the envelope profile. The current answer
+  in a future envelope profile. The current answer
   is "no — one AEAD per profile freeze; new AEADs get a new
   profile ID". This is the same non-collapse shape.
 - Whether `kdf_profile` should ever be inferred from the

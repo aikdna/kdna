@@ -1,6 +1,6 @@
 # KDNA Architecture
 
-> Historical pre-v1 architecture snapshot. Current KDNA Core public beta is the
+> Historical pre-cutover architecture snapshot. Current KDNA Core public beta is the
 > local packaged `.kdna` file format plus LoadPlan-first loading through the
 > official toolchain. Registry, marketplace, quality-badge, and mandatory
 > Human Lock layers below are not current KDNA Core launch requirements.

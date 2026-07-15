@@ -1,5 +1,5 @@
 {
-  "$schema": "https://aikdna.com/schemas/eval-cases-v1.json",
+  "$schema": "https://aikdna.com/schemas/eval-cases.json",
   "domain": "@yourscope/your_domain_id",
   "category": "failure",
   "purpose": "Cases where loading your KDNA produces a WORSE response than not loading it. Each case should cite the failure_risk declared by your domain.",

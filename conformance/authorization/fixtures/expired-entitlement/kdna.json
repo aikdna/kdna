@@ -21,7 +21,7 @@
     "encoding": "cbor",
     "encrypted": false
   },
-  "summary": "Phase 1 minimal example. The smallest valid KDNA v1 asset.",
+  "summary": "Minimal packaged example. The smallest valid KDNA asset.",
   "language": "en",
   "license": "Apache-2.0",
   "keywords": ["authorization", "conformance", "expired-entitlement"],

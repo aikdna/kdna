@@ -10,7 +10,7 @@ KDNA can execute the right steps while judging the situation too generically.
 
 ## Run
 
-Install the CLI and prepare a local v1 asset:
+Install the CLI and prepare a local packaged asset:
 
 ```bash
 npm i -g @aikdna/kdna-cli

@@ -40,15 +40,13 @@ If you've found one KDNA repository and are wondering which others exist and wha
 ## Layer 2 — Public `.kdna` Examples
 
 > **Historical note:** Layer 2 previously listed individual GitHub repositories
-> and pre-v1 example names as public entry points. KDNA public examples must now
+> and pre-cutover example names as public entry points. KDNA public examples must now
 > be distributed as packaged `.kdna` files with release cards. The historical
 > examples listed below are not current downloads.
 
-| Example file | Domain | Status |
-|------------|--------|--------|
-| `writing-v1.kdna` | Writing diagnosis | Historical name; not currently released |
-| `prompt-diagnosis-v1.kdna` | Prompt quality | Historical name; not currently released |
-| `agent-safety-v1.kdna` | Agent safety gates | Historical name; not currently released |
+Those generation-named example files were never current downloads and are no
+longer listed. Public assets use responsibility names plus explicit manifest
+and release-card coordinates.
 
 Historical proof projects are not public entry points. Public users should
 start with the packaged reference assets or the local demo path in
@@ -77,7 +75,7 @@ start with the packaged reference assets or the local demo path in
 
 | Repository | Role | For |
 |------------|------|-----|
-| (out of scope) kdna-registry | Canonical static catalog (`domains.json`), trust model, schema v3 — registry is out of scope for KDNA Core | Registry operators (external) |
+| (out of scope) kdna-registry | Canonical static catalog (`domains.json`), trust model, registry schema — registry is out of scope for KDNA Core | Registry operators (external) |
 
 ## Layer 4 — Applications
 
@@ -130,14 +128,11 @@ See: [CONTRIBUTING.md](../CONTRIBUTING.md) · [GOVERNANCE.md](./GOVERNANCE.md) �
 
 See [ECOSYSTEM_NAMING.md](./ECOSYSTEM_NAMING.md) for the full naming policy.
 
-## Version Matrix
+## Compatibility Authorities
 
-| Component | Current | Notes |
-|-----------|---------|-------|
-| SPEC | 1.0-rc | [kdna-v1rc-standard-kit.md](./kdna-v1rc-standard-kit.md) |
-| `@aikdna/kdna-core` | 0.7.2 | JS runtime core |
-| `@aikdna/kdna-cli` | 0.19.x | Reference CLI |
-| `@aikdna/kdna-studio-core` | 1.4.2 | Authoring kernel |
-| `@aikdna/kdna-studio-cli` | 0.2.0 | Authoring CLI |
-| `kdna-core-swift` | main | Swift runtime |
-| Registry schema (out of scope) | 3.0 | Historical: [SCHEMA.md](https://github.com/aikdna/kdna-registry/blob/main/SCHEMA.md) (note: this repo is not part of the public KDNA Core) |
+| Responsibility | Authority |
+|---|---|
+| Protocol and Runtime contract | [`SPEC.md`](../SPEC.md) and canonical schemas |
+| Package release | Each package's `package.json` and release evidence |
+| Cross-package compatibility | [`version-matrix.md`](./version-matrix.md) |
+| Registry or discovery service | Optional and outside KDNA Core validity |

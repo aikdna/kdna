@@ -1,5 +1,5 @@
 {
-  "$schema": "https://aikdna.com/schemas/eval-cases-v1.json",
+  "$schema": "https://aikdna.com/schemas/eval-cases.json",
   "domain": "@yourscope/your_domain_id",
   "category": "core",
   "purpose": "Cases the domain MUST handle correctly. Loading should clearly change the agent's response from generic to domain-specific.",

@@ -87,8 +87,7 @@ Generated at `$TMPDIR/kdna-conformance-last-run.json`:
 
 > This implementation has passed KDNA Loader compatibility tests.
 > No official certification has been granted.
-> This report is self-certified per the KDNA Compatible Certification policy.
-> See: https://github.com/aikdna/kdna/blob/main/docs/kdna-compatible-certification.md
+> This report is a bounded self-attestation for the commands and evidence above.
 
 ---
 

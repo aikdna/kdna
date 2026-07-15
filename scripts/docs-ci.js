@@ -113,23 +113,14 @@ const publicDocRoots = [
   path.resolve(__dirname, '..', 'rfcs'),
   path.resolve(__dirname, '..', 'templates'),
 ];
-const historicalSegments = new Set(['archive', 'adr', 'audits', 'design', 'releases']);
 const driftPatterns = [
-  { label: 'removed Studio format flag', regex: /--format(?:=|\s+)v1\b/g },
-  { label: 'removed container generation', regex: /\bcontainer-v2\b|\bContainer v2\b/g },
-  { label: 'removed product generation name', regex: /\bKDNA Core v1\b|\bCore v1\b/g },
   { label: 'removed media type', regex: /application\/vnd\.aikdna\.kdna\+zip/g },
 ];
 
 function activeMarkdownFiles(root) {
   const stat = fs.statSync(root);
   if (stat.isFile()) return [root];
-  return walkDocs(root).filter((file) => {
-    const parts = path.relative(root, file).split(path.sep);
-    if (parts.some((part) => historicalSegments.has(part))) return false;
-    const base = path.basename(file);
-    return base !== 'version-taxonomy.md' && !base.startsWith('V1RC_');
-  });
+  return walkDocs(root);
 }
 
 for (const root of publicDocRoots) {

@@ -33,7 +33,7 @@ For current KDNA Core public launch assets, the baseline entries are:
 - `checksums.json`
 
 Future Phase S security profiles may add signature and encryption entries. They
-MUST NOT silently redefine the current v1 baseline.
+MUST NOT silently redefine the current baseline.
 
 Top-level source-tree entries such as `KDNA_Core.json` and
 `KDNA_Patterns.json` MUST NOT be treated as conforming runtime distribution

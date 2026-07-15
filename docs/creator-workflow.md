@@ -1,6 +1,6 @@
 # KDNA Creator Workflow
 
-> Historical pre-v1 authoring workflow. This document is retained as process
+> Historical pre-cutover authoring workflow. This document is retained as process
 > history for domain design. The current public beta authoring path is:
 > `kdna-studio ... --out asset.kdna`, then `kdna validate`,
 > `kdna plan-load`, and `kdna load` on the packaged `.kdna` file. Registry,

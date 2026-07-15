@@ -10,8 +10,8 @@ KDNA Core surface.
 | RFC-0011 | Product Runtime | Accepted proposal | It does not change the canonical `.kdna` container. |
 | RFC-0012 | Artifact Envelope | Draft | Not a current Core requirement. |
 | RFC-0013 | Judgment Asset Lifecycle | Withdrawn | Archived; no Core fields or behavior were adopted. |
-| RFC-0014 | KDNA Card v2 | Withdrawn | Archived; no Card v2 fields were adopted. |
-| RFC-0015 | Runtime Trace v2 | Withdrawn | Archived; use the maintained trace schema and documentation. |
+| RFC-0014 | KDNA Card extension | Withdrawn | Archived; no proposed Card extension fields were adopted. |
+| RFC-0015 | Runtime Trace extension | Withdrawn | Archived; use the maintained trace schema and documentation. |
 
 The canonical protocol is [SPEC.md](../SPEC.md). Runtime behavior is described
 by released package documentation. A draft RFC never establishes a compatibility

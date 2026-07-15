@@ -40,7 +40,7 @@ Phase 2 extends KDNA from "judgment asset protocol" to "judgment-driven artifact
 ### Infrastructure
 
 - **WorkPack Pipeline** — Multi-stage orchestration manifest for kdna-workpack. DAG dependencies, parallel execution, artifact flow between stages, per-stage KDNA overrides, human review gates. (See WorkPack Pipeline docs.)
-- **Registry Fidelity Gate** — Fidelity evidence as a requirement for validated+ quality badges. Trust gate enforces score ≥ 0.70, public report URL, calibration validity, and positive blind delta. (Note: registry is out of scope for KDNA Core v1; this gate is currently informational only.)
+- **Registry Fidelity Gate** — Fidelity evidence as a requirement for validated+ quality badges. Trust gate enforces score ≥ 0.70, public report URL, calibration validity, and positive blind delta. (Note: registry is out of scope for KDNA Core; this gate is currently informational only.)
 
 ### CLI
 
@@ -61,7 +61,7 @@ Phase 2 extends KDNA from "judgment asset protocol" to "judgment-driven artifact
 
 ---
 
-Historical note: 0.10.x–0.12.x were pre-v1-GA cleanup releases. Full human-readable release notes resume from 0.13.0.
+Historical note: 0.10.x–0.12.x were pre-general-availability cleanup releases. Full human-readable release notes resume from 0.13.0.
 
 ## 0.7.0 — 1.0-rc: Open Judgment Protocol
 

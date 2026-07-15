@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/aikdna/kdna/schema/checksums.schema.json",
-  "title": "KDNA Checksums v1",
+  "title": "KDNA Checksums",
   "description": "Per-entry digests for a .kdna container. Stored as checksums.json at the container root.",
   "type": "object",
   "required": ["algorithm"],

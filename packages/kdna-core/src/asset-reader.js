@@ -456,7 +456,7 @@ function verifySync(asset, options = {}) {
   const warnings = [];
   const entries = listEntries(asset);
 
-  // The current v1 implementation is the sole authority for container,
+  // The current implementation is the sole authority for container,
   // manifest, CBOR payload, checksum, and load-contract validity. The reader
   // adds transport identity and legacy signature hooks; it must not maintain a
   // second manifest or payload dialect.

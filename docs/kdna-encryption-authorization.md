@@ -128,7 +128,7 @@ For `access: runtime` domains, KDNA files never leave the server:
 ### Runtime API
 
 ```
-POST /v1/project
+POST /project
 {
   "domain": "@aikdna/enterprise_sales",
   "task": { "type": "sales_diagnosis", "input": "..." },
@@ -171,7 +171,7 @@ Organizations can host private registries with their own signing keys:
       "trust_pubkey": "ed25519:my-corp-key-fingerprint",
       "registry_url": "https://registry.mycorp.internal/domains.json",
       "verified": true,
-      "license_server": "https://license.mycorp.internal/v1/verify"
+      "license_server": "https://license.mycorp.internal/verify"
     }
   }
 }

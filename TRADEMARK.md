@@ -99,7 +99,9 @@ The KDNA logo may **not** be used:
 
 ## Official Certification
 
-Official KDNA certification and the right to use "Certified KDNA" or "Official KDNA" marks is granted through the registry governance process. See [GOVERNANCE.md](./docs/GOVERNANCE.md) and [the legacy registry policy](./docs/archive/legacy-registry-policy.md).
+Format validity or a conformance-test result does not grant the right to use
+"Certified KDNA" or "Official KDNA" marks. Mark permissions are governed
+separately from the protocol; see [GOVERNANCE.md](./docs/GOVERNANCE.md).
 
 ---
 

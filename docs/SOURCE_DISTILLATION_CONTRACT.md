@@ -290,7 +290,7 @@ Each distillation-produced .kdna MUST be accompanied by a provenance receipt. Th
 
 ```json
 {
-  "receipt_id": "pr_20260531_writing_style_v0.1.0",
+  "receipt_id": "pr_20260531_writing_style_0.1.0",
   "kdna_asset": "@alice/writing_style 0.1.0",
   "asset_digest": "sha256:def456...",
   "authoring_path": "distillation_first",
