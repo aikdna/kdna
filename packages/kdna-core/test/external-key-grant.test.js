@@ -55,7 +55,7 @@ function fixture() {
     updated_at: '2026-07-13T00:00:00Z',
     creator: { name: 'Fixture Publisher' },
     compatibility: {
-      min_loader_version: '0.18.1',
+      min_loader_version: '0.19.0',
       profile: 'kdna.payload.judgment',
       profile_version: '0.1.0',
     },
@@ -191,6 +191,67 @@ test('external grant decrypts only after signed account/device authorization', (
     assert.equal(JSON.stringify(capsule).includes('wrapped_cek'), false);
     session.dispose();
   } finally {
+    fs.rmSync(f.tmp, { recursive: true, force: true });
+  }
+});
+
+test('verified external grant cannot bypass malformed encryption declarations', () => {
+  const f = fixture();
+  const session = authorize(f);
+  const cases = [
+    ['missing', (manifest) => { delete manifest.encryption; }],
+    [
+      'unrelated-entry',
+      (manifest) => { manifest.encryption.encrypted_entries = ['other.bin']; },
+    ],
+    [
+      'additional-entry',
+      (manifest) => {
+        manifest.encryption.encrypted_entries = ['payload.kdnab', 'other.bin'];
+      },
+    ],
+  ];
+
+  try {
+    for (const [name, mutate] of cases) {
+      const source = path.join(f.tmp, `source-${name}`);
+      const assetFile = path.join(f.tmp, `${name}.kdna`);
+      fs.mkdirSync(source);
+      for (const entry of fs.readdirSync(f.source)) {
+        fs.copyFileSync(path.join(f.source, entry), path.join(source, entry));
+      }
+      const manifestPath = path.join(source, 'kdna.json');
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      mutate(manifest);
+      fs.writeFileSync(manifestPath, JSON.stringify(manifest));
+      fs.writeFileSync(
+        path.join(source, 'checksums.json'),
+        JSON.stringify(core.buildChecksums(source)),
+      );
+      core.pack(source, assetFile);
+
+      const validation = core.validate(assetFile);
+      assert.equal(validation.schema_valid, false, name);
+      assert.equal(validation.overall_valid, false, name);
+      const plan = core.planLoad(assetFile, { entitlement: session.entitlement });
+      assert.equal(plan.state, 'invalid', name);
+      assert.ok(
+        plan.issues.some((issue) => issue.code === 'KDNA_FORMAT_INVALID'),
+        `${name}: ${JSON.stringify(plan.issues)}`,
+      );
+      assert.throws(
+        () => core.loadAuthorized(assetFile, {
+          profile: 'compact',
+          as: 'json',
+          entitlement: session.entitlement,
+          decryptEntry: session.decryptEntry,
+        }),
+        /LoadPlan denied loading/u,
+        name,
+      );
+    }
+  } finally {
+    session.dispose();
     fs.rmSync(f.tmp, { recursive: true, force: true });
   }
 });

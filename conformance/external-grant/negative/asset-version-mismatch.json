@@ -14,7 +14,7 @@
       "name": "KDNA Conformance"
     },
     "compatibility": {
-      "min_loader_version": "0.18.1",
+      "min_loader_version": "0.19.0",
       "profile": "kdna.payload.judgment",
       "profile_version": "0.1.0"
     },
@@ -51,7 +51,7 @@
       "asset_id": "kdna:fixture:external-grant",
       "asset_uid": "urn:uuid:00190000-0000-4000-8000-000000000001",
       "version": "1.0.0",
-      "digest": "sha256:6ac42efa0cbce8137e545a1d1a28900a3293a8a200587398bdcd6fac3ea45db1",
+      "digest": "sha256:53bb4b8b694369e0e16f76c9f72070537141632ef6b6266aeb379adc0e0e67f6",
       "entry_path": "payload.kdnab",
       "ciphertext_digest": "sha256:54be3615c32682f0c86ec2aafb51d982cbf51db8e468a122bf04a9a0994ecfd4",
       "key_ref": "assetkey:fixture:external-grant:1.0.0",
@@ -69,6 +69,6 @@
       "salt": "JiYmJiYmJiYmJiYmJiYmJg",
       "wrapped_cek": "Rg-WDt_wdWY7Q9D_Cwdn0B4akh5b57CDAyihh0SbtYeo6P2vUYW7ig"
     },
-    "signature": "ed25519:otgwX2JMtayGeIhF1wWvW419wFVZL5ze2bENTJ_47oa5tOJ2m0jJ36hIaVQ4qMgBGwBZdIFDObEOsqqBgrK2Dg"
+    "signature": "ed25519:uHeDs7VNSU8JyGygfFKUg-amGrC4QpWWoeFfJG8vNqf15leVRG3dkKsUEuc9Pao1vF091o2oRl_ou1tGGVfSBA"
   }
 }

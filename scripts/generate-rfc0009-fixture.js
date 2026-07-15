@@ -5,6 +5,7 @@
 'use strict';
 
 const crypto = require('node:crypto');
+const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
@@ -61,7 +62,7 @@ const manifest = {
   created_at: '2026-06-02T00:00:00Z',
   updated_at: '2026-06-02T00:00:00Z',
   compatibility: {
-    min_loader_version: '0.18.1',
+    min_loader_version: '0.19.0',
     profile: 'kdna.payload.judgment',
     profile_version: '0.1.0',
   },
@@ -164,6 +165,17 @@ try {
   fs.writeFileSync(path.join(EXPECTED_DIR, 'payload_protected.json'), json(payload));
   fs.writeFileSync(path.join(EXPECTED_DIR, 'manifest_protected.json'), json(manifest));
   fs.writeFileSync(path.join(EXPECTED_DIR, 'envelope_protected.json'), json(envelope));
+  execFileSync(
+    process.execPath,
+    [
+      require.resolve('prettier/bin/prettier.cjs'),
+      '--write',
+      path.join(EXPECTED_DIR, 'payload_protected.json'),
+      path.join(EXPECTED_DIR, 'manifest_protected.json'),
+      path.join(EXPECTED_DIR, 'envelope_protected.json'),
+    ],
+    { stdio: 'ignore' },
+  );
 } finally {
   fs.rmSync(source, { recursive: true, force: true });
 }

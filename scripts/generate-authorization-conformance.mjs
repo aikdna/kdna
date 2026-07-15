@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -6,6 +7,7 @@ import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 
 const require = createRequire(import.meta.url);
+const core = require('../packages/kdna-core/src');
 const container = require('../packages/kdna-core/src/container');
 const cbor = require('cbor-x');
 
@@ -16,6 +18,7 @@ const fixturesRoot = path.join(authRoot, 'fixtures');
 const goldensRoot = path.join(authRoot, 'goldens');
 const casesPath = path.join(authRoot, 'cases.json');
 const prettierBin = path.join(repoRoot, 'node_modules', 'prettier', 'bin', 'prettier.cjs');
+const fixturePassword = 'KDNA-AUTHORIZATION-CONFORMANCE-2026';
 
 const json = (value) => JSON.stringify(value, null, 2) + '\n';
 
@@ -204,6 +207,55 @@ function formatJsonFiles(files) {
   execFileSync(process.execPath, [prettierBin, '--write', ...files], { stdio: 'ignore' });
 }
 
+function deterministicBytes(label, length) {
+  return crypto.createHash('sha256').update(label, 'utf8').digest().subarray(0, length);
+}
+
+function passwordEnvelope(plaintext, manifest, caseId) {
+  const cek = deterministicBytes(`authorization:${caseId}:cek`, 32);
+  const salt = deterministicBytes(`authorization:${caseId}:salt`, 16);
+  const iv = deterministicBytes(`authorization:${caseId}:iv`, 12);
+  const passwordKdf = {
+    name: core.PASSWORD_KDF,
+    salt: salt.toString('base64'),
+    memory_kib: 65536,
+    iterations: 3,
+    parallelism: 4,
+  };
+  const passwordKey = core.derivePasswordKey(fixturePassword, passwordKdf);
+  const aad = Buffer.from(
+    [
+      core.PASSWORD_PROTECTED_PROFILE,
+      core.ENCRYPTION_PROFILE_VERSION,
+      manifest.asset_id,
+      manifest.version,
+      manifest.payload.path,
+    ].join('\n'),
+    'utf8',
+  );
+  const cipher = crypto.createCipheriv('aes-256-gcm', cek, iv);
+  cipher.setAAD(aad);
+  const ciphertext = Buffer.concat([cipher.update(plaintext), cipher.final()]);
+  return {
+    profile: core.PASSWORD_PROTECTED_PROFILE,
+    profile_version: core.ENCRYPTION_PROFILE_VERSION,
+    alg: core.ALG,
+    kdf: core.PASSWORD_KDF,
+    key_wrapping: core.RFC_KEY_WRAPPING,
+    password_kdf: passwordKdf,
+    key_slots: [
+      {
+        slot: 'password',
+        wrap: core.RFC_KEY_WRAPPING,
+        wrapped_key: core.aesWrap(passwordKey, cek).toString('base64'),
+      },
+    ],
+    iv: iv.toString('base64'),
+    tag: cipher.getAuthTag().toString('base64'),
+    ciphertext: ciphertext.toString('base64'),
+  };
+}
+
 function writeFixture(testCase) {
   const fixtureDir = path.join(fixturesRoot, testCase.fixture);
   copyMinimalFixture(fixtureDir);
@@ -220,6 +272,11 @@ function writeFixture(testCase) {
   });
   fs.writeFileSync(manifestPath, json(updated));
   formatJsonFiles([manifestPath]);
+  if (updated.payload.encrypted === true) {
+    const payloadPath = path.join(fixtureDir, updated.payload.path);
+    const plaintext = fs.readFileSync(payloadPath);
+    fs.writeFileSync(payloadPath, cbor.encode(passwordEnvelope(plaintext, updated, testCase.id)));
+  }
   const checksumsPath = path.join(fixtureDir, 'checksums.json');
   fs.writeFileSync(checksumsPath, json(container.buildChecksums(fixtureDir)));
   formatJsonFiles([checksumsPath]);

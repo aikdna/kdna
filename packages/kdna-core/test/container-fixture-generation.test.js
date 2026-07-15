@@ -16,7 +16,7 @@ const container = require('../src/container');
 const repoRoot = path.resolve(__dirname, '..', '..', '..');
 const generator = path.join(repoRoot, 'scripts', 'generate-container-negative-fixtures.mjs');
 const licenseKey = 'KDNA-TEST-LICENSE-VECTOR-2026';
-const licensedFixtureSha256 = 'd785725fc2b53cad5c3627ddc91ae737ab58502224e64dca8896ac818c4e9790';
+const licensedFixtureSha256 = '662ec25e0481eac3bf22be875dd2b2e46b70d0152f056b42c5d522bdbf54a4b8';
 const licensedFixtureEntries = ['mimetype', 'checksums.json', 'kdna.json', 'payload.kdnab'];
 
 const crc32Table = Array.from({ length: 256 }, (_, index) => {
@@ -204,11 +204,36 @@ test('licensed interoperability fixture uses the current encrypted payload contr
 test('manifest encryption profile coordinates fail closed before decryption', () => {
   const fixture = path.join(repoRoot, 'fixtures', 'test_protected_entry.kdna');
   const cases = [
-    ['missing profile_version', (manifest) => { delete manifest.encryption.profile_version; }],
-    ['unsupported profile_version', (manifest) => { manifest.encryption.profile_version = '9.9.9'; }],
+    [
+      'missing encryption declaration',
+      (manifest) => { delete manifest.encryption; },
+      /encryption/u,
+    ],
+    [
+      'missing profile_version',
+      (manifest) => { delete manifest.encryption.profile_version; },
+      /profile_version/u,
+    ],
+    [
+      'unsupported profile_version',
+      (manifest) => { manifest.encryption.profile_version = '9.9.9'; },
+      /profile_version/u,
+    ],
+    [
+      'encrypted_entries names an unrelated entry',
+      (manifest) => { manifest.encryption.encrypted_entries = ['other.bin']; },
+      /encrypted_entries|payload\.kdnab/u,
+    ],
+    [
+      'encrypted_entries adds an unrelated entry',
+      (manifest) => {
+        manifest.encryption.encrypted_entries = ['payload.kdnab', 'other.bin'];
+      },
+      /encrypted_entries|payload\.kdnab/u,
+    ],
   ];
 
-  for (const [name, mutate] of cases) {
+  for (const [name, mutate, problemPattern] of cases) {
     const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-encryption-coordinate-'));
     const source = path.join(temporary, 'source');
     const asset = path.join(temporary, 'mutated.kdna');
@@ -227,7 +252,69 @@ test('manifest encryption profile coordinates fail closed before decryption', ()
       const validation = container.validate(asset);
       assert.equal(validation.schema_valid, false, name);
       assert.equal(validation.overall_valid, false, name);
-      assert.match(validation.problems.join('; '), /profile_version/u, name);
+      assert.match(validation.problems.join('; '), problemPattern, name);
+      assert.throws(
+        () => core.loadAuthorized(asset, {
+          profile: 'compact',
+          as: 'json',
+          password: 'KDNA-TEST-VECTOR-2026',
+        }),
+        /LoadPlan denied loading/u,
+        name,
+      );
+    } finally {
+      fs.rmSync(temporary, { recursive: true, force: true });
+    }
+  }
+});
+
+test('manifest declaration and encrypted payload bytes must agree in both directions', () => {
+  const fixture = path.join(repoRoot, 'fixtures', 'test_protected_entry.kdna');
+  const plaintextPayload = fs.readFileSync(
+    path.join(repoRoot, 'examples', 'minimal', 'payload.kdnab'),
+  );
+  const cases = [
+    [
+      'declared encryption with plaintext payload',
+      () => plaintextPayload,
+      () => {},
+      /not an encrypted envelope/u,
+    ],
+    [
+      'encrypted envelope with all declarations removed',
+      (source) => fs.readFileSync(path.join(source, 'payload.kdnab')),
+      (manifest) => {
+        manifest.payload.encrypted = false;
+        delete manifest.encryption;
+      },
+      /missing its manifest encryption declaration|must be equal to constant/u,
+    ],
+  ];
+
+  for (const [name, payloadBytes, mutateManifest, problemPattern] of cases) {
+    const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-encryption-agreement-'));
+    const source = path.join(temporary, 'source');
+    const asset = path.join(temporary, 'mutated.kdna');
+    try {
+      container.unpack(fixture, source);
+      const manifestPath = path.join(source, 'kdna.json');
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      mutateManifest(manifest);
+      fs.writeFileSync(manifestPath, JSON.stringify(manifest));
+      fs.writeFileSync(
+        path.join(source, 'payload.kdnab'),
+        typeof payloadBytes === 'function' ? payloadBytes(source) : payloadBytes,
+      );
+      fs.writeFileSync(
+        path.join(source, 'checksums.json'),
+        JSON.stringify(core.buildChecksums(source)),
+      );
+      container.pack(source, asset);
+
+      const validation = container.validate(asset);
+      assert.equal(validation.payload_valid, false, name);
+      assert.equal(validation.overall_valid, false, name);
+      assert.match(validation.problems.join('; '), problemPattern, name);
       assert.throws(
         () => core.loadAuthorized(asset, {
           profile: 'compact',

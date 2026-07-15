@@ -48,7 +48,7 @@ function buildFixture(name, manifestOverrides = {}, payloadOverrides = {}) {
     updated_at: '2026-06-25T00:00:00Z',
     creator: { name: 'C', id: 'c' },
     compatibility: {
-      min_loader_version: '0.18.1',
+      min_loader_version: '0.19.0',
       profile: 'kdna.payload.judgment',
       profile_version: '0.1.0',
     },
@@ -120,7 +120,7 @@ test('canonical container: deterministic output', () => {
     updated_at: '2026-06-25T00:00:00Z',
     creator: { name: 'C', id: 'c' },
     compatibility: {
-      min_loader_version: '0.18.1',
+      min_loader_version: '0.19.0',
       profile: 'kdna.payload.judgment',
       profile_version: '0.1.0',
     },
@@ -287,7 +287,7 @@ test('negative: encoding=json manifest is rejected', () => {
       creator: { name: 'T' },
       payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false },
       compatibility: {
-        min_loader_version: '0.18.1',
+        min_loader_version: '0.19.0',
         profile: 'kdna.payload.judgment',
         profile_version: '0.1.0',
       },
@@ -325,7 +325,7 @@ test('negative: JSON payload disguised as CBOR is rejected', () => {
       creator: { name: 'T' },
       payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
       compatibility: {
-        min_loader_version: '0.18.1',
+        min_loader_version: '0.19.0',
         profile: 'kdna.payload.judgment',
         profile_version: '0.1.0',
       },

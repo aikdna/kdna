@@ -48,7 +48,7 @@ function manifest(overrides = {}) {
     updated_at: '2026-07-01T00:00:00.000Z',
     creator: { name: 'KDNA Conformance', id: 'conformance' },
     compatibility: {
-      min_loader_version: '0.18.1',
+      min_loader_version: '0.19.0',
       profile: 'kdna.payload.judgment',
       profile_version: '0.1.0',
     },

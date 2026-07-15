@@ -1,12 +1,15 @@
 # Changelog
 
-## 0.18.1 (2026-07-15)
+## 0.19.0 (2026-07-16)
 
 ### Fixed
 
 - Require the manifest encryption profile and compatibility coordinate to
   identify a supported contract, and reject a missing, unknown, or
   envelope-mismatched `profile_version` before decryption.
+- Bind encrypted payloads to a required manifest encryption declaration and
+  the sole supported `payload.kdnab` entry instead of accepting a missing or
+  unrelated encrypted-entry list.
 - Keep the canonical JudgmentTrace schema's blocked Runtime negotiation codes
   identical to the Runtime implementation, TypeScript declarations, and
   conformance fixtures.

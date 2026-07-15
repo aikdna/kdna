@@ -22,6 +22,7 @@ function readPayload(p) {
 const crypto = require('node:crypto');
 const Ajv = require('ajv/dist/2020.js');
 
+const core = require('../../packages/kdna-core/src');
 const container = require('../../packages/kdna-core/src/container');
 const { MIMETYPE, FORBIDDEN_OUTPUT_TERMS } = container;
 
@@ -305,6 +306,19 @@ test('planLoad: password licensed asset requires password before load', () => {
       };
       manifest.payload.encrypted = true;
     });
+    const manifest = JSON.parse(fs.readFileSync(path.join(dir, 'kdna.json'), 'utf8'));
+    const payloadPath = path.join(dir, manifest.payload.path);
+    const envelope = core.encryptProtectedEntry(fs.readFileSync(payloadPath), {
+      entryName: manifest.payload.path,
+      manifest,
+      password: 'authorization-test-password',
+      includeRecovery: false,
+    });
+    fs.writeFileSync(payloadPath, cbor.encode(envelope));
+    fs.writeFileSync(
+      path.join(dir, 'checksums.json'),
+      JSON.stringify(container.buildChecksums(dir), null, 2),
+    );
 
     const plan = container.planLoad(dir);
     assertValidLoadPlan(plan);

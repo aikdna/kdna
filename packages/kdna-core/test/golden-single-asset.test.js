@@ -32,6 +32,7 @@ const GOLDEN_PAYLOAD_PATH = path.resolve(
   'golden-single-asset-payload.kdnab',
 );
 const REPO_ROOT = path.resolve(__dirname, '..', '..', '..');
+const AUTHORIZATION_FIXTURE_PASSWORD = 'KDNA-AUTHORIZATION-CONFORMANCE-2026';
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -283,9 +284,19 @@ test('committed cross-language payload fixtures use only the canonical self-chec
     'fixtures',
   );
   for (const name of fs.readdirSync(authorizationRoot).sort()) {
+    const fixtureRoot = path.join(authorizationRoot, name);
+    const manifest = JSON.parse(fs.readFileSync(path.join(fixtureRoot, 'kdna.json'), 'utf8'));
+    let encoded = fs.readFileSync(path.join(fixtureRoot, manifest.payload.path));
+    if (manifest.payload.encrypted === true) {
+      encoded = core.decryptProtectedEntry(cbor.decode(encoded), {
+        entryName: manifest.payload.path,
+        manifest,
+        password: AUTHORIZATION_FIXTURE_PASSWORD,
+      });
+    }
     fixturePayloads.push([
       `authorization/${name}/payload.kdnab`,
-      fs.readFileSync(path.join(authorizationRoot, name, 'payload.kdnab')),
+      encoded,
     ]);
   }
 

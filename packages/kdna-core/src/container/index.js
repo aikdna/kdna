@@ -828,14 +828,38 @@ function runValidate(layout) {
     return finalizeValidate(result, problems);
   }
 
-  const isEncryptedPayload = payload.profile
-    && payload.ciphertext
-    && (layout.manifest.payload?.encrypted || layout.manifest.encryption?.encrypted_entries?.includes('payload.kdnab'));
+  const payloadIsEncryptedEnvelope = Boolean(payload.profile && payload.ciphertext);
+  const manifestDeclaresEncryptedPayload = Boolean(
+    layout.manifest.payload?.encrypted
+    || layout.manifest.encryption?.encrypted_entries?.includes('payload.kdnab'),
+  );
+  if (manifestDeclaresEncryptedPayload && !payloadIsEncryptedEnvelope) {
+    result.payload_valid = false;
+    problems.push('payload: manifest declares encryption but payload.kdnab is not an encrypted envelope');
+  }
+  if (payloadIsEncryptedEnvelope && !manifestDeclaresEncryptedPayload) {
+    result.payload_valid = false;
+    problems.push('payload: encrypted envelope is missing its manifest encryption declaration');
+  }
+  const isEncryptedPayload = payloadIsEncryptedEnvelope && manifestDeclaresEncryptedPayload;
 
   if (isEncryptedPayload) {
     // Encrypted payload — verify it's a proper encryption envelope, not plaintext.
     const encProfile = layout.manifest.encryption?.profile;
     const encProfileVersion = layout.manifest.encryption?.profile_version;
+    const encryptedEntries = layout.manifest.encryption?.encrypted_entries;
+    if (!layout.manifest.encryption) {
+      result.payload_valid = false;
+      problems.push('payload: encrypted payload requires a manifest encryption declaration');
+    }
+    if (
+      !Array.isArray(encryptedEntries)
+      || encryptedEntries.length !== 1
+      || encryptedEntries[0] !== 'payload.kdnab'
+    ) {
+      result.payload_valid = false;
+      problems.push('payload: manifest encrypted_entries must declare only payload.kdnab');
+    }
     if (encProfile && payload.profile !== encProfile) {
       result.payload_valid = false;
       problems.push(`payload: encrypted envelope profile ${payload.profile || 'unknown'} does not match manifest encryption profile ${encProfile}`);

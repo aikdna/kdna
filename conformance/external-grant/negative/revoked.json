@@ -15,7 +15,7 @@
       "asset_id": "kdna:fixture:external-grant",
       "asset_uid": "urn:uuid:00190000-0000-4000-8000-000000000001",
       "version": "1.0.0",
-      "digest": "sha256:6ac42efa0cbce8137e545a1d1a28900a3293a8a200587398bdcd6fac3ea45db1",
+      "digest": "sha256:53bb4b8b694369e0e16f76c9f72070537141632ef6b6266aeb379adc0e0e67f6",
       "entry_path": "payload.kdnab",
       "ciphertext_digest": "sha256:54be3615c32682f0c86ec2aafb51d982cbf51db8e468a122bf04a9a0994ecfd4",
       "key_ref": "assetkey:fixture:external-grant:1.0.0",
@@ -33,6 +33,6 @@
       "salt": "JycnJycnJycnJycnJycnJw",
       "wrapped_cek": "WzAfgZ9qZdC19WcN9D9yX4M3MER9AkitAuHrXSXgJGoX5iUZb2ehDw"
     },
-    "signature": "ed25519:FPargRrzF_QtoUnZlr3SvasJSSijLkvt2Qi8XVRQ3GdrrD6XeHcVZvQnCaNp0KIY8pgBWtDRxn4kgjdvHcQMDw"
+    "signature": "ed25519:ZnfoSYmqQlc8549TiA4czlnu24y8bwejEfDsZwE3lOjo4rMiY47yTh2gEiDwOdIoCqFP7ISXdoyNdnY3hPtQAg"
   }
 }

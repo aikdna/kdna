@@ -64,7 +64,7 @@ function assertReleasedCorePair(lock) {
     resolved: 'packages/kdna-core',
     link: true,
   });
-  assert.equal(lock.packages['packages/kdna-core'].version, '0.18.1');
+  assert.equal(lock.packages['packages/kdna-core'].version, '0.19.0');
 }
 
 function discoverPackableFixtures(fixturesRoot) {
