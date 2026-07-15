@@ -8,8 +8,13 @@ const { test } = require('node:test');
 
 const { checks, runChecks } = require('../../scripts/release-preflight');
 const {
+  INVALID_RUNTIME_MANIFEST_FIXTURES,
+  LOAD_CONTRACT_SCHEMA,
   MANIFEST_SCHEMA,
+  PACKAGED_LOAD_CONTRACT_SCHEMA,
   PACKAGED_MANIFEST_SCHEMA,
+  RUNTIME_MANIFEST_FIXTURES,
+  discoverRuntimeManifestInventory,
   validateProtocolFixtures,
 } = require('../../scripts/validate-protocol-fixtures');
 const { validateRuntimeContract } = require('../../scripts/validate-runtime-contract');
@@ -34,12 +39,70 @@ function copyRuntimeExamples(t) {
 
 function copyProtocolFixtures(t) {
   const root = temporaryDirectory(t);
-  for (const relativePath of [MANIFEST_SCHEMA, PACKAGED_MANIFEST_SCHEMA, 'registry/domains.json']) {
+  const files = new Set([
+    MANIFEST_SCHEMA,
+    PACKAGED_MANIFEST_SCHEMA,
+    LOAD_CONTRACT_SCHEMA,
+    PACKAGED_LOAD_CONTRACT_SCHEMA,
+    'registry/domains.json',
+    ...RUNTIME_MANIFEST_FIXTURES,
+    ...INVALID_RUNTIME_MANIFEST_FIXTURES,
+  ]);
+  for (const relativePath of files) {
     const target = path.join(root, relativePath);
     fs.mkdirSync(path.dirname(target), { recursive: true });
     fs.copyFileSync(path.join(repoRoot, relativePath), target);
   }
   return root;
+}
+
+function mutateJson(filePath, mutate) {
+  const value = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  mutate(value);
+  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+function runtimeFailuresAfter(t, kind, mutate) {
+  const exampleDir = copyRuntimeExamples(t);
+  const filePath = path.join(exampleDir, `generic-client-${kind}.json`);
+  mutateJson(filePath, mutate);
+  return validateRuntimeContract({ exampleDir, logger: quietLogger });
+}
+
+function corePublishJob(workflow) {
+  const match = /^  publish-core:\n([\s\S]*?)(?=^  [a-z0-9-]+:|(?![\s\S]))/mu.exec(workflow);
+  assert.ok(match, 'missing publish-core job');
+  return match[0];
+}
+
+function assertCorePublishValidatorOrder(workflow) {
+  const job = corePublishJob(workflow);
+  const protocolMatches = [...job.matchAll(/npm run validate:protocol-fixtures/gu)];
+  const runtimeMatches = [...job.matchAll(/npm run validate:runtime-contract/gu)];
+  assert.equal(
+    protocolMatches.length,
+    1,
+    'Core publish must run the protocol fixture validator once',
+  );
+  assert.equal(
+    runtimeMatches.length,
+    1,
+    'Core publish must run the Runtime contract validator once',
+  );
+
+  const install = job.indexOf('run: npm ci');
+  const protocol = protocolMatches[0].index;
+  const runtime = runtimeMatches[0].index;
+  const evidence = job.indexOf('run: npm run release:evidence');
+  const guard = job.indexOf('run: npm --workspace @aikdna/kdna-core run publish:guard');
+  const publicationMatches = [...job.matchAll(/run: npm publish --provenance --access public/gu)];
+  assert.equal(publicationMatches.length, 1, 'Core publish must have one publication primitive');
+  const publication = publicationMatches[0].index;
+  assert.ok(protocol > install, 'protocol fixtures must run after the clean install');
+  assert.ok(runtime > protocol, 'Runtime contract validation must follow manifest validation');
+  assert.ok(evidence > runtime, 'release evidence must follow both validators');
+  assert.ok(guard > evidence, 'the duplicate-publication guard must follow release evidence');
+  assert.ok(publication > guard, 'publication must follow validators, evidence, and its guard');
 }
 
 test('runtime contract validator accepts all three current trace/report/feedback triples', () => {
@@ -70,14 +133,17 @@ test('runtime contract validator rejects a legacy trace shape', (t) => {
   assert.ok(failures.some((failure) => failure.includes('must NOT have additional properties')));
 });
 
-test('runtime contract validator rejects a schema-valid but cross-linked wrong route', (t) => {
-  const exampleDir = copyRuntimeExamples(t);
-  const reportPath = path.join(exampleDir, 'generic-client-report.json');
-  const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
-  report.route_decision.selected_domain = 'kdna:example:different-asset';
-  fs.writeFileSync(reportPath, JSON.stringify(report));
+test('runtime cross-links reject mismatched feedback version', (t) => {
+  const failures = runtimeFailuresAfter(t, 'feedback', (feedback) => {
+    feedback.domain_version = '9.9.9';
+  });
+  assert.ok(failures.some((failure) => failure.includes('domain_version 9.9.9 does not match')));
+});
 
-  const failures = validateRuntimeContract({ exampleDir, logger: quietLogger });
+test('runtime cross-links reject a wrong selected asset', (t) => {
+  const failures = runtimeFailuresAfter(t, 'report', (report) => {
+    report.route_decision.selected_domain = 'kdna:example:different-asset';
+  });
   assert.ok(
     failures.some((failure) =>
       failure.includes('selected_domain kdna:example:different-asset does not match trace asset'),
@@ -85,7 +151,96 @@ test('runtime contract validator rejects a schema-valid but cross-linked wrong r
   );
 });
 
-test('protocol fixture validator accepts authoritative Runtime manifest parity', () => {
+test('runtime cross-links reject extra unobserved assets', (t) => {
+  const failures = runtimeFailuresAfter(t, 'report', (report) => {
+    report.loaded_domains.push({ ...report.loaded_domains[0], name: 'kdna:example:unobserved' });
+  });
+  assert.ok(failures.some((failure) => failure.includes('requires exactly one loaded domain')));
+});
+
+test('runtime cross-links reject selected or loaded domains on every non-load route', async (t) => {
+  for (const [status, action] of [
+    ['SKIP_WEAK_FIT', 'skip'],
+    ['ASK_AMBIGUOUS_DOMAIN', 'ask'],
+    ['BLOCK_TRUST_FAILED', 'block'],
+  ]) {
+    await t.test(action, () => {
+      const failures = runtimeFailuresAfter(t, 'report', (report) => {
+        report.route_decision.status = status;
+        report.route_decision.action = action;
+      });
+      assert.ok(
+        failures.some((failure) => failure.includes(`${action} route must set selected_domain`)),
+      );
+      assert.ok(failures.some((failure) => failure.includes(`${action} route must not report`)));
+    });
+  }
+});
+
+test('runtime cross-links require explicit null selected_domain for non-load routes', (t) => {
+  const failures = runtimeFailuresAfter(t, 'report', (report) => {
+    report.route_decision.status = 'SKIP_WEAK_FIT';
+    report.route_decision.action = 'skip';
+    delete report.route_decision.selected_domain;
+    report.loaded_domains = [];
+  });
+  assert.ok(failures.some((failure) => failure.includes('must set selected_domain to null')));
+});
+
+test('runtime cross-links reject status and action combinations that disagree', (t) => {
+  const failures = runtimeFailuresAfter(t, 'report', (report) => {
+    report.route_decision.status = 'SKIP_WEAK_FIT';
+    report.route_decision.action = 'load';
+  });
+  assert.ok(failures.some((failure) => failure.includes('does not match status SKIP_WEAK_FIT')));
+});
+
+test('runtime cross-links bind every loaded identity and delivery field', async (t) => {
+  for (const [field, value] of [
+    ['name', 'kdna:example:wrong'],
+    ['version', '9.9.9'],
+    ['judgment_version', '9.9.9'],
+    ['access', 'licensed'],
+    ['status', 'not_observed'],
+  ]) {
+    await t.test(field, () => {
+      const failures = runtimeFailuresAfter(t, 'report', (report) => {
+        report.loaded_domains[0][field] = value;
+      });
+      assert.ok(
+        failures.some((failure) => failure.includes(`loaded_domains[0].${field}`)),
+        `${field} must be cross-checked`,
+      );
+    });
+  }
+});
+
+test('runtime cross-links reject invented quality, risk, or source evidence', async (t) => {
+  for (const [field, value] of [
+    ['quality_badge', 'verified'],
+    ['risk_level', 'low'],
+    ['source', 'registry'],
+  ]) {
+    await t.test(field, () => {
+      const failures = runtimeFailuresAfter(t, 'report', (report) => {
+        report.loaded_domains[0][field] = value;
+      });
+      assert.ok(failures.some((failure) => failure.includes(`${field} must remain null`)));
+    });
+  }
+});
+
+test('protocol fixture validator accepts the exact authoritative Runtime manifest inventory', () => {
+  assert.equal(RUNTIME_MANIFEST_FIXTURES.length, 18);
+  assert.equal(INVALID_RUNTIME_MANIFEST_FIXTURES.length, 2);
+  assert.equal(
+    new Set([...RUNTIME_MANIFEST_FIXTURES, ...INVALID_RUNTIME_MANIFEST_FIXTURES]).size,
+    20,
+  );
+  assert.deepEqual(
+    discoverRuntimeManifestInventory(),
+    [...RUNTIME_MANIFEST_FIXTURES, ...INVALID_RUNTIME_MANIFEST_FIXTURES].sort(),
+  );
   assert.deepEqual(validateProtocolFixtures({ logger: quietLogger }), []);
 });
 
@@ -107,13 +262,78 @@ test('protocol fixture validator rejects the removed kdna_version contract', (t)
   assert.ok(errors.some((error) => error.includes('format_version must be required')));
 });
 
-test('protocol fixture validator rejects packaged manifest schema drift', (t) => {
+test('protocol fixture validator rejects a schema that AJV cannot compile', (t) => {
   const root = copyProtocolFixtures(t);
-  const packagedPath = path.join(root, PACKAGED_MANIFEST_SCHEMA);
-  fs.appendFileSync(packagedPath, '\n');
+  for (const relativePath of [MANIFEST_SCHEMA, PACKAGED_MANIFEST_SCHEMA]) {
+    mutateJson(path.join(root, relativePath), (schema) => {
+      schema.type = 'not-a-json-schema-type';
+    });
+  }
+  const errors = validateProtocolFixtures({ root, logger: quietLogger });
+  assert.ok(errors.some((error) => error.includes('unable to compile')));
+});
+
+test('protocol fixture validator rejects a schema-invalid authoritative fixture', (t) => {
+  const root = copyProtocolFixtures(t);
+  const fixture = RUNTIME_MANIFEST_FIXTURES[0];
+  mutateJson(path.join(root, fixture), (manifest) => {
+    manifest.format_version = '9.9.9';
+  });
+  const errors = validateProtocolFixtures({ root, logger: quietLogger });
+  assert.ok(errors.some((error) => error.includes(`${fixture}: invalid against`)));
+});
+
+test('protocol fixture validator fails closed when a listed fixture is missing', (t) => {
+  const root = copyProtocolFixtures(t);
+  const fixture = RUNTIME_MANIFEST_FIXTURES[0];
+  fs.rmSync(path.join(root, fixture));
+  const errors = validateProtocolFixtures({ root, logger: quietLogger });
+  assert.ok(errors.some((error) => error.includes(`${fixture}: unable to read`)));
+});
+
+test('protocol fixture validator fails closed on fixture read errors', (t) => {
+  const root = copyProtocolFixtures(t);
+  const denied = path.join(root, RUNTIME_MANIFEST_FIXTURES[0]);
+  const errors = validateProtocolFixtures({
+    root,
+    logger: quietLogger,
+    readFile(filePath) {
+      if (filePath === denied) throw new Error('EACCES: permission denied');
+      return fs.readFileSync(filePath);
+    },
+  });
+  assert.ok(errors.some((error) => error.includes('EACCES: permission denied')));
+});
+
+test('protocol fixture inventory rejects an unclassified Runtime manifest', (t) => {
+  const root = copyProtocolFixtures(t);
+  const unclassified = 'templates/unclassified-domain/kdna.json';
+  const target = path.join(root, unclassified);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.copyFileSync(path.join(root, RUNTIME_MANIFEST_FIXTURES[0]), target);
 
   const errors = validateProtocolFixtures({ root, logger: quietLogger });
-  assert.ok(errors.some((error) => error.includes('must be byte-for-byte identical')));
+  assert.ok(errors.some((error) => error.includes(`unclassified fixture ${unclassified}`)));
+});
+
+test('protocol fixture validator requires every declared negative to remain invalid', (t) => {
+  const root = copyProtocolFixtures(t);
+  const negative = INVALID_RUNTIME_MANIFEST_FIXTURES[0];
+  fs.copyFileSync(path.join(root, RUNTIME_MANIFEST_FIXTURES[0]), path.join(root, negative));
+
+  const errors = validateProtocolFixtures({ root, logger: quietLogger });
+  assert.ok(errors.some((error) => error.includes(`${negative}: must be rejected`)));
+});
+
+test('protocol fixture validator rejects packaged manifest or dependency drift', async (t) => {
+  for (const relativePath of [PACKAGED_MANIFEST_SCHEMA, PACKAGED_LOAD_CONTRACT_SCHEMA]) {
+    await t.test(relativePath, () => {
+      const root = copyProtocolFixtures(t);
+      fs.appendFileSync(path.join(root, relativePath), '\n');
+      const errors = validateProtocolFixtures({ root, logger: quietLogger });
+      assert.ok(errors.some((error) => error.includes('must be byte-for-byte identical')));
+    });
+  }
 });
 
 test('release preflight retains both current protocol validators', () => {
@@ -137,4 +357,38 @@ test('release preflight retains both current protocol validators', () => {
     validationChecks,
   );
   assert.ok(calls.every(({ options }) => options.stdio === 'inherit'));
+});
+
+test('Core publication cannot bypass either validator or reorder it after evidence', () => {
+  const workflowPath = path.join(repoRoot, '.github', 'workflows', 'publish.yml');
+  const workflow = fs.readFileSync(workflowPath, 'utf8');
+  assert.doesNotThrow(() => assertCorePublishValidatorOrder(workflow));
+
+  for (const command of [
+    'npm run validate:protocol-fixtures',
+    'npm run validate:runtime-contract',
+  ]) {
+    assert.throws(
+      () => assertCorePublishValidatorOrder(workflow.replace(command, 'npm run omitted-gate')),
+      /must run/u,
+    );
+  }
+
+  const reordered = workflow
+    .replace('        run: npm run validate:runtime-contract\n', '')
+    .replace(
+      '      - name: Publish @aikdna/kdna-core\n',
+      '      - name: Publish @aikdna/kdna-core\n        run: npm run validate:runtime-contract\n',
+    );
+  assert.throws(() => assertCorePublishValidatorOrder(reordered), /release evidence must follow/u);
+
+  const injectedPublish = workflow.replace(
+    '      - name: Validate authoritative Runtime manifest fixtures\n',
+    '      - run: npm publish --provenance --access public\n' +
+      '      - name: Validate authoritative Runtime manifest fixtures\n',
+  );
+  assert.throws(
+    () => assertCorePublishValidatorOrder(injectedPublish),
+    /one publication primitive/u,
+  );
 });

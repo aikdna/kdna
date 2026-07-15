@@ -24,6 +24,10 @@ jobs:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
+      - name: Validate authoritative Runtime manifest fixtures
+        run: npm run validate:protocol-fixtures
+      - name: Validate published Runtime contract surfaces
+        run: npm run validate:runtime-contract
       - name: Verify canonical Core release tag
         run: npm --workspace @aikdna/kdna-core run release:check
       # ecosystem-gate skipped for kdna-core publish: downstream repos

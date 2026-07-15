@@ -5,7 +5,7 @@
   "asset_type": "domain",
   "title": "Example standard domain",
   "version": "0.1.0",
-  "judgment_version": "2026.06",
+  "judgment_version": "0.1.0",
   "status": "experimental",
   "access": "public",
   "languages": ["en"],

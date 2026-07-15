@@ -4,13 +4,18 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { compileSchema } = require('./validate-app-schemas');
+const {
+  compileSchema,
+  judgmentTraceSchemas,
+  publishedDependencySchemas,
+  validateJudgmentTraceAuthority,
+} = require('./validate-app-schemas');
 
 const ROOT = path.resolve(__dirname, '..');
 const EXAMPLE_DIR = path.join(ROOT, 'examples', 'app-runtime-contract');
 const PREFIXES = ['generic-client', 'generic-authoring', 'generic-workbench'];
 const SCHEMAS = {
-  trace: 'schema/judgment-trace.schema.json',
+  trace: judgmentTraceSchemas.published,
   report: 'specs/judgment-report-schema.json',
   feedback: 'schema/feedback-event.schema.json',
 };
@@ -32,16 +37,29 @@ function validateRuntimeContract(options = {}) {
   const exampleDir = options.exampleDir || EXAMPLE_DIR;
   const logger = options.logger || console;
   const failures = [];
-  const validators = {
-    trace: compileSchema(SCHEMAS.trace),
-    report: compileSchema(SCHEMAS.report),
-    feedback: compileSchema(SCHEMAS.feedback),
-  };
 
   function fail(filePath, message) {
     const relativePath = path.relative(ROOT, filePath);
     failures.push(`${relativePath}: ${message}`);
     logger.error(`FAIL ${relativePath}: ${message}`);
+  }
+
+  for (const authorityError of validateJudgmentTraceAuthority()) {
+    failures.push(authorityError);
+    logger.error(`FAIL ${authorityError}`);
+  }
+
+  let validators;
+  try {
+    validators = {
+      trace: compileSchema(SCHEMAS.trace, { dependencySchemas: publishedDependencySchemas }),
+      report: compileSchema(SCHEMAS.report),
+      feedback: compileSchema(SCHEMAS.feedback),
+    };
+  } catch (compileError) {
+    failures.push(`authoritative Runtime schemas: unable to compile: ${compileError.message}`);
+    logger.error(`FAIL authoritative Runtime schemas: unable to compile: ${compileError.message}`);
+    return failures;
   }
 
   function readJson(filePath) {
@@ -60,7 +78,7 @@ function validateRuntimeContract(options = {}) {
     return false;
   }
 
-  function validateRouteSemantics(tracePath, reportPath, feedbackPath, trace, report, feedback) {
+  function validateRouteSemantics(reportPath, feedbackPath, trace, report, feedback) {
     const route = report.route_decision || {};
     const expectedAction = STATUS_TO_ACTION[route.status];
     if (!expectedAction) {
@@ -83,42 +101,52 @@ function validateRuntimeContract(options = {}) {
         `domain_id ${feedback.domain_id} does not match trace asset ${asset.asset_id}`,
       );
     }
+    if (feedback.domain_version !== asset.version) {
+      fail(
+        feedbackPath,
+        `domain_version ${feedback.domain_version} does not match trace asset version ${asset.version}`,
+      );
+    }
 
     const loadedDomains = Array.isArray(report.loaded_domains) ? report.loaded_domains : [];
     if (route.action === 'load') {
-      if (trace.overall_status === 'blocked') {
-        fail(tracePath, 'a load route cannot link to a blocked JudgmentTrace');
-      }
-      if (trace.runtime_contract?.negotiation_state !== 'selected') {
-        fail(tracePath, 'a load route requires selected Runtime negotiation');
-      }
       if (route.selected_domain !== asset.asset_id) {
         fail(
           reportPath,
           `selected_domain ${route.selected_domain} does not match trace asset ${asset.asset_id}`,
         );
       }
-      if (
-        !loadedDomains.some(
-          (domain) => domain.name === asset.asset_id && domain.version === asset.version,
-        )
-      ) {
-        fail(
-          reportPath,
-          `loaded_domains does not include trace asset ${asset.asset_id}@${asset.version}`,
-        );
+      if (loadedDomains.length !== 1) {
+        fail(reportPath, `a single-asset load route requires exactly one loaded domain`);
+      } else {
+        const loaded = loadedDomains[0];
+        const expectedObservedFields = {
+          name: asset.asset_id,
+          version: asset.version,
+          judgment_version: asset.judgment_version,
+          access: asset.access,
+          status: trace.capsule_delivery_evidence?.host_boundary_comparison,
+        };
+        for (const [field, expected] of Object.entries(expectedObservedFields)) {
+          if (loaded[field] !== expected) {
+            fail(
+              reportPath,
+              `loaded_domains[0].${field} ${loaded[field]} does not match trace evidence ${expected}`,
+            );
+          }
+        }
+        for (const field of ['quality_badge', 'risk_level', 'source']) {
+          if (loaded[field] != null) {
+            fail(reportPath, `loaded_domains[0].${field} must remain null when not observed`);
+          }
+        }
       }
-    }
-
-    if (route.action === 'block') {
-      if (trace.overall_status !== 'blocked') {
-        fail(tracePath, 'a block route requires a blocked JudgmentTrace');
-      }
-      if (route.selected_domain != null) {
-        fail(reportPath, 'a block route must not select a domain');
+    } else {
+      if (route.selected_domain !== null) {
+        fail(reportPath, `${route.action} route must set selected_domain to null`);
       }
       if (loadedDomains.length !== 0) {
-        fail(reportPath, 'a block route must not report loaded domains');
+        fail(reportPath, `${route.action} route must not report loaded domains`);
       }
     }
   }
@@ -147,7 +175,6 @@ function validateRuntimeContract(options = {}) {
 
     if (documentsValid) {
       validateRouteSemantics(
-        paths.trace,
         paths.report,
         paths.feedback,
         documents.trace,

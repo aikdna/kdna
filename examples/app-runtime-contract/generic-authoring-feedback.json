@@ -2,6 +2,7 @@
   "event_id": "generic-authoring-feedback-001",
   "source": "app",
   "domain_id": "kdna:example:agent-project-context",
+  "domain_version": "1.0.0",
   "trace_id": "trace_3333333333333333",
   "user_feedback": {
     "type": "useful_judgment",

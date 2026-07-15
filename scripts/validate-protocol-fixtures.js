@@ -4,10 +4,88 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const JsonSchema2020 = require('ajv/dist/2020');
+const addFormats = require('ajv-formats');
 
 const ROOT = path.resolve(__dirname, '..');
 const MANIFEST_SCHEMA = 'schema/manifest.schema.json';
 const PACKAGED_MANIFEST_SCHEMA = 'packages/kdna-core/schema/manifest.schema.json';
+const LOAD_CONTRACT_SCHEMA = 'schema/load-contract.schema.json';
+const PACKAGED_LOAD_CONTRACT_SCHEMA = 'packages/kdna-core/schema/load-contract.schema.json';
+
+const AUTHORIZATION_FIXTURES = [
+  'account-required',
+  'expired-entitlement',
+  'offline-grace-active',
+  'org-required',
+  'password-missing',
+  'password-valid',
+  'public-valid',
+  'receipt-missing',
+  'receipt-valid',
+  'remote-recognized-not-loaded',
+  'revoked-entitlement',
+  'tampered-payload',
+  'unknown-entitlement-profile',
+].map((name) => `conformance/authorization/fixtures/${name}/kdna.json`);
+
+const RUNTIME_MANIFEST_FIXTURES = [
+  ...AUTHORIZATION_FIXTURES,
+  'examples/minimal/kdna.json',
+  'templates/minimal-domain/kdna.json',
+  'templates/standard-domain/kdna.json',
+  'fixtures/expected/manifest_protected.json',
+  'fixtures/container/invalid-bad-checksum/kdna.json',
+];
+
+const INVALID_RUNTIME_MANIFEST_FIXTURES = [
+  'conformance/authorization/fixtures/unknown-access/kdna.json',
+  'fixtures/container/invalid-missing-payload/kdna.json',
+];
+
+const MANIFEST_SCHEMA_SURFACES = [
+  {
+    name: 'authoritative root Runtime manifest',
+    schema: MANIFEST_SCHEMA,
+    dependency: LOAD_CONTRACT_SCHEMA,
+  },
+  {
+    name: 'published Core Runtime manifest',
+    schema: PACKAGED_MANIFEST_SCHEMA,
+    dependency: PACKAGED_LOAD_CONTRACT_SCHEMA,
+  },
+];
+
+function discoverRuntimeManifestInventory(root = ROOT) {
+  const discovered = [];
+  const scopedDirectories = [
+    'conformance/authorization/fixtures',
+    'templates',
+    'fixtures/container',
+  ];
+  for (const relativeDirectory of scopedDirectories) {
+    const directory = path.join(root, relativeDirectory);
+    const pending = [directory];
+    while (pending.length > 0) {
+      const current = pending.pop();
+      for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+        const absolute = path.join(current, entry.name);
+        if (entry.isDirectory()) {
+          pending.push(absolute);
+        } else if (entry.isFile() && entry.name === 'kdna.json') {
+          discovered.push(path.relative(root, absolute).split(path.sep).join('/'));
+        }
+      }
+    }
+  }
+  for (const relativePath of [
+    'examples/minimal/kdna.json',
+    'fixtures/expected/manifest_protected.json',
+  ]) {
+    if (fs.existsSync(path.join(root, relativePath))) discovered.push(relativePath);
+  }
+  return discovered.sort();
+}
 
 function hasOwn(object, key) {
   return Object.prototype.hasOwnProperty.call(object || {}, key);
@@ -16,17 +94,32 @@ function hasOwn(object, key) {
 function validateProtocolFixtures(options = {}) {
   const root = options.root || ROOT;
   const logger = options.logger || console;
+  const readFile = options.readFile || fs.readFileSync;
+  const runtimeFixtures = options.runtimeFixtures || RUNTIME_MANIFEST_FIXTURES;
+  const invalidRuntimeFixtures =
+    options.invalidRuntimeFixtures || INVALID_RUNTIME_MANIFEST_FIXTURES;
   const errors = [];
 
   function error(message) {
     errors.push(message);
   }
 
-  function readJson(relativePath) {
+  function readBytes(relativePath) {
     try {
-      return JSON.parse(fs.readFileSync(path.join(root, relativePath), 'utf8'));
+      return readFile(path.join(root, relativePath));
     } catch (readError) {
-      error(`${relativePath}: ${readError.message}`);
+      error(`${relativePath}: unable to read: ${readError.message}`);
+      return null;
+    }
+  }
+
+  function readJson(relativePath) {
+    const bytes = readBytes(relativePath);
+    if (!bytes) return null;
+    try {
+      return JSON.parse(bytes.toString('utf8'));
+    } catch (parseError) {
+      error(`${relativePath}: invalid JSON: ${parseError.message}`);
       return null;
     }
   }
@@ -50,17 +143,37 @@ function validateProtocolFixtures(options = {}) {
     }
   }
 
-  function checkManifestSchema() {
-    const schema = readJson(MANIFEST_SCHEMA);
-    const packagedSchema = readJson(PACKAGED_MANIFEST_SCHEMA);
-    if (!schema || !packagedSchema) return;
-
-    const rootBytes = fs.readFileSync(path.join(root, MANIFEST_SCHEMA));
-    const packagedBytes = fs.readFileSync(path.join(root, PACKAGED_MANIFEST_SCHEMA));
-    if (!rootBytes.equals(packagedBytes)) {
-      error(`${PACKAGED_MANIFEST_SCHEMA}: must be byte-for-byte identical to ${MANIFEST_SCHEMA}`);
+  function requireByteParity(canonical, mirror) {
+    const canonicalBytes = readBytes(canonical);
+    const mirrorBytes = readBytes(mirror);
+    if (canonicalBytes && mirrorBytes && !canonicalBytes.equals(mirrorBytes)) {
+      error(`${mirror}: must be byte-for-byte identical to ${canonical}`);
     }
+  }
 
+  function compileManifestSurface(surface) {
+    const schema = readJson(surface.schema);
+    const dependency = readJson(surface.dependency);
+    if (!schema || !dependency) return null;
+    try {
+      const ajv = new JsonSchema2020({ allErrors: true, strict: false, loadSchema: undefined });
+      addFormats(ajv);
+      ajv.addSchema(dependency);
+      return ajv.compile(schema);
+    } catch (compileError) {
+      error(`${surface.schema}: unable to compile ${surface.name}: ${compileError.message}`);
+      return null;
+    }
+  }
+
+  function formatSchemaErrors(validate) {
+    return (validate.errors || [])
+      .map((schemaError) => `${schemaError.instancePath || '/'} ${schemaError.message}`)
+      .join('; ');
+  }
+
+  function checkManifestSchemaContract(schema) {
+    if (!schema) return;
     if (schema.$id !== 'https://github.com/aikdna/kdna/schema/manifest.schema.json') {
       error(`${MANIFEST_SCHEMA}: unexpected authoritative $id`);
     }
@@ -108,6 +221,47 @@ function validateProtocolFixtures(options = {}) {
     }
   }
 
+  function checkRuntimeFixtures(validators) {
+    for (const relativePath of runtimeFixtures) {
+      const fixture = readJson(relativePath);
+      if (!fixture) continue;
+      for (const { surface, validate } of validators) {
+        if (!validate(fixture)) {
+          error(
+            `${relativePath}: invalid against ${surface.name}: ${formatSchemaErrors(validate)}`,
+          );
+        }
+      }
+    }
+
+    for (const relativePath of invalidRuntimeFixtures) {
+      const fixture = readJson(relativePath);
+      if (!fixture) continue;
+      for (const { surface, validate } of validators) {
+        if (validate(fixture)) {
+          error(`${relativePath}: must be rejected by ${surface.name}`);
+        }
+      }
+    }
+  }
+
+  function checkRuntimeFixtureInventory() {
+    let discovered;
+    try {
+      discovered = discoverRuntimeManifestInventory(root);
+    } catch (inventoryError) {
+      error(`Runtime manifest inventory: unable to enumerate: ${inventoryError.message}`);
+      return;
+    }
+    const declared = [...runtimeFixtures, ...invalidRuntimeFixtures].sort();
+    for (const relativePath of discovered.filter((file) => !declared.includes(file))) {
+      error(`Runtime manifest inventory: unclassified fixture ${relativePath}`);
+    }
+    for (const relativePath of declared.filter((file) => !discovered.includes(file))) {
+      error(`Runtime manifest inventory: listed fixture is missing ${relativePath}`);
+    }
+  }
+
   function checkRegistryFixture() {
     const registry = readJson('registry/domains.json');
     if (!registry) return;
@@ -138,7 +292,17 @@ function validateProtocolFixtures(options = {}) {
     });
   }
 
-  checkManifestSchema();
+  requireByteParity(MANIFEST_SCHEMA, PACKAGED_MANIFEST_SCHEMA);
+  requireByteParity(LOAD_CONTRACT_SCHEMA, PACKAGED_LOAD_CONTRACT_SCHEMA);
+  checkManifestSchemaContract(readJson(MANIFEST_SCHEMA));
+  checkRuntimeFixtureInventory();
+
+  const validators = MANIFEST_SCHEMA_SURFACES.map((surface) => ({
+    surface,
+    validate: compileManifestSurface(surface),
+  })).filter(({ validate }) => validate);
+  if (validators.length === MANIFEST_SCHEMA_SURFACES.length) checkRuntimeFixtures(validators);
+
   checkRegistryFixture();
   return errors;
 }
@@ -150,13 +314,22 @@ function main() {
     process.exitCode = 1;
     return;
   }
-  console.log('Protocol fixtures valid');
+  console.log(
+    `Protocol fixtures valid: ${RUNTIME_MANIFEST_FIXTURES.length} Runtime manifests, ` +
+      `${INVALID_RUNTIME_MANIFEST_FIXTURES.length} negative manifests`,
+  );
 }
 
 if (require.main === module) main();
 
 module.exports = {
+  discoverRuntimeManifestInventory,
+  INVALID_RUNTIME_MANIFEST_FIXTURES,
+  LOAD_CONTRACT_SCHEMA,
   MANIFEST_SCHEMA,
+  MANIFEST_SCHEMA_SURFACES,
+  PACKAGED_LOAD_CONTRACT_SCHEMA,
   PACKAGED_MANIFEST_SCHEMA,
+  RUNTIME_MANIFEST_FIXTURES,
   validateProtocolFixtures,
 };
