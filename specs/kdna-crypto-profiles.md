@@ -1,12 +1,13 @@
 # KDNA Crypto Profiles
 
-Status: **Active.** The `kdna.envelope.aead`
-profile ID and its two KDF sub-profiles (`scrypt-sha256` mandatory,
-`argon2id` optional compatibility KDF) are frozen; see RFC-0018 for the normative
-contract. Predecessor profiles (`kdna.encryption.licensed-entry` from RFC-0008,
-`kdna.encryption.password` from RFC-0009) remain in their own distinct
-profile IDs and continue to be supported.
-Normative: Yes after profile IDs and test vectors are frozen  
+Status: **Pre-release candidate.** The `kdna.envelope.aead` profile ID,
+`profile_version: 0.1.0`, and its two unversioned KDF tokens
+(`scrypt-sha256` mandatory, `argon2id` optional) form the candidate for the
+first public wire contract; see RFC-0018. They are not yet a published stable
+compatibility promise. Predecessor profiles (`kdna.encryption.licensed-entry`
+from RFC-0008, `kdna.encryption.password` from RFC-0009) remain in their own
+distinct profile IDs and continue to be supported.
+Normative: Candidate; becomes normative at the first stable publication
 Related specs: `kdna-authorization-contract.md`, `kdna-secret-store.md`,
 `kdna-import-security.md`, `RFC-0018-envelope-aead.md`
 
@@ -30,14 +31,15 @@ protected assets. New product exports SHOULD NOT target it; use
 `kdna.envelope.aead` instead.
 
 New product-facing exports SHOULD converge on the canonical envelope profile
-(RFC-0018) after the profile is frozen and test vectors exist. As of
-2026-06-28 this convergence is recommended and feasible.
+candidate in RFC-0018. The repository's test vectors prove deterministic
+pre-release interoperability; they do not by themselves publish a stable wire
+coordinate.
 
 ## 3. Canonical Envelope Profile — `kdna.envelope.aead`
 
-**Accepted by RFC-0018.** Three test vectors are
-published at `conformance/envelope-aead/` and the conformance
-runner `conformance/envelope-aead.mjs` re-derives them.
+**Pre-release candidate in RFC-0018.** Three test vectors are committed at
+`conformance/envelope-aead/`, and the conformance runner
+`conformance/envelope-aead.mjs` re-derives them.
 
 Profile ID: `kdna.envelope.aead`
 
@@ -88,7 +90,7 @@ Chat MUST NOT log or persist passwords.
 Encrypted payload entries MUST use authenticated encryption. Decryption MUST
 fail if ciphertext or associated metadata is modified.
 
-For `kdna.envelope.aead`, the AEAD is frozen to `AES-256-GCM` with
+For the `kdna.envelope.aead` candidate, the AEAD is fixed to `AES-256-GCM` with
 12-byte IV, 16-byte tag, and the eight-line AAD format documented in
 RFC-0018 R5.
 

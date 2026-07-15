@@ -70,7 +70,7 @@ Define the metadata schema for commercial KDNA assets that enables:
 ```
 1. User: kdna install @scope/domain-pro
 2. User: kdna license activate @scope/domain-pro --key KDNA-LIC-XXXX --server <activate-url>
-3. CLI: POST /entitlements/activate { license_key, domain, machine_fingerprint, client }
+3. CLI: POST /v1/entitlements/activate { license_key, domain, machine_fingerprint, client }
 4. Server: Validate key, check expiration, check agent/device limits, return activation object
 5. CLI: Stores activation metadata outside the asset in ~/.kdna/licenses/
 6. Agent: On load, checks activation status, revocation, machine binding, and offline grace before decrypting entries in memory
@@ -80,7 +80,7 @@ Define the metadata schema for commercial KDNA assets that enables:
 
 ```
 1. User: kdna install @scope/domain-pro --runtime
-2. CLI: POST /subscription/activate { domain_id, user_id }
+2. CLI: POST /v1/subscription/activate { domain_id, user_id }
 3. Server: Create subscription, return runtime_endpoint + API key
 4. CLI: Store runtime config in ~/.kdna/runtime/
 5. Agent: On task, POST runtime_endpoint/project { task, context }

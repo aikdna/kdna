@@ -67,7 +67,9 @@
   "scripts": {
     "test": "node test/test-wrapper.js",
     "typecheck": "tsc --noEmit --strict --skipLibCheck false --lib es2022 src/types.d.ts",
-    "prepublishOnly": "npm test && npm run typecheck"
+    "release:check": "node ../../scripts/check-post-cutover-naming.mjs && node ../../scripts/check-scoped-release-readiness.mjs --package=packages/kdna-eval --scope=eval --label=eval",
+    "release:evidence:check": "node ../../scripts/check-scoped-release-readiness.mjs --package=packages/kdna-eval --scope=eval --label=eval --evidence=release-evidence/artifact-manifest.json",
+    "prepublishOnly": "npm run release:check && npm run release:evidence:check && npm test && npm run typecheck"
   },
   "files": [
     "src/",

@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import test from 'node:test';
 
 import {
+  allowlistAuthorityDigest,
+  assertAllowlistAuthority,
   collectCandidates,
+  discoverPackageRoots,
   parseAllowlist,
   scanRecords,
   validateAllowlist,
@@ -12,9 +16,9 @@ import {
 
 const prefix = String.fromCharCode(118);
 const ownedGeneration = ['KDNA Core ', prefix, '7'].join('');
-const actionToken = ['actions/checkout@', prefix, '7'].join('');
+const authorityPath = 'scripts/post-cutover-naming-allowlist.json';
 
-function authority(path = '.github/workflows/ci.yml', token = actionToken) {
+function authority(path = 'docs/forged-exception.md', token = ownedGeneration) {
   return [
     {
       path,
@@ -25,42 +29,53 @@ function authority(path = '.github/workflows/ci.yml', token = actionToken) {
   ];
 }
 
-test('stable coordinates and RFC identifiers are not generation candidates', () => {
-  const legal = 'format_version 0.1.0; package 18.2.1; RFC-0018';
+test('stable coordinates and domain or third-party versions are not generation candidates', () => {
+  const legal =
+    'format_version 0.1.0; package 18.2.1; RFC-0018; API v2; Node v22; model v3; actions/checkout@v7; riscv64';
   assert.deepEqual(collectCandidates(legal), []);
 });
 
 test('KDNA-owned generation prose, identifiers, paths, and tags fail', () => {
-  const identifier = ['buildRuntimeCapsule', 'V', '2'].join('');
+  const identifiers = [
+    ['buildRuntimeCapsule', 'V', '2'].join(''),
+    ...['Capsule', 'Runtime', 'Host', 'KDNA', 'kdna'].map((name) => [name, 'V', '2'].join('')),
+  ];
   const ownedTag = ['kdna-core-', prefix, '${version}'].join('');
   const records = [
     {
-      path: ['docs/release-', prefix, '7.md'].join(''),
+      path: ['docs/core-', prefix, '7.md'].join(''),
       surface: 'tracked',
-      text: `${ownedGeneration}\n${identifier}\n${ownedTag}`,
+      text: `${ownedGeneration}\n${identifiers.join('\n')}\n${ownedTag}`,
     },
   ];
-  assert.ok(scanRecords(records, []).length >= 4);
+  const tokens = scanRecords(records, []).map((violation) => violation.token);
+  for (const identifier of identifiers) assert.ok(tokens.includes(identifier));
+  assert.ok(tokens.includes(ownedGeneration));
 });
 
-test('an exact third-party exception covers only its path and token span', () => {
-  const records = [
-    {
-      path: '.github/workflows/ci.yml',
-      surface: 'tracked',
-      text: `uses: ${actionToken}`,
-    },
+test('release-candidate suffixes without a separator remain generation candidates', () => {
+  const candidates = [
+    ['Runtime ', prefix, '7', 'rc1'].join(''),
+    ['KDNA Core ', prefix.toUpperCase(), '7', 'RC_RELEASE'].join(''),
   ];
-  assert.deepEqual(scanRecords(records, authority()), []);
-
-  const driftedPath = [{ ...records[0], path: '.github/workflows/other.yml' }];
-  assert.notDeepEqual(scanRecords(driftedPath, authority()), []);
-
-  const masquerade = [{ ...records[0], text: `uses: ${actionToken}\n${ownedGeneration}` }];
-  assert.notDeepEqual(scanRecords(masquerade, authority()), []);
+  for (const candidate of candidates) {
+    assert.equal(collectCandidates(candidate)[0].token, candidate);
+  }
 });
 
 test('allowlist rejects field drift, weak reasons, stale paths, and stale tokens', () => {
+  assert.throws(
+    () =>
+      parseAllowlist(
+        JSON.stringify({
+          schema: 'kdna.post-cutover-naming-allowlist',
+          schema_version: '0.1.0',
+          exceptions: [],
+          trusted: true,
+        }),
+      ),
+    /manifest fields are not exact/u,
+  );
   assert.throws(
     () =>
       parseAllowlist(
@@ -83,33 +98,81 @@ test('allowlist rejects field drift, weak reasons, stale paths, and stale tokens
       ),
     /not specific enough/u,
   );
+  assert.throws(
+    () =>
+      parseAllowlist(
+        JSON.stringify({
+          schema: 'kdna.post-cutover-naming-allowlist',
+          schema_version: '0.1.0',
+          exceptions: [{ ...authority()[0], owner: 'AIKDNA maintainers' }],
+        }),
+      ),
+    /cannot be owned by KDNA/u,
+  );
   const tracked = [
     {
-      path: '.github/workflows/ci.yml',
+      path: 'docs/forged-exception.md',
       surface: 'tracked',
-      text: `uses: ${actionToken}`,
+      text: ownedGeneration,
     },
   ];
   assert.throws(
-    () => validateAllowlist(authority('.github/workflows/moved.yml'), tracked),
+    () => validateAllowlist(authority('docs/moved-exception.md'), tracked),
     /must name one tracked file/u,
   );
   assert.throws(
-    () =>
-      validateAllowlist(authority(undefined, ['actions/checkout@', prefix, '8'].join('')), tracked),
+    () => validateAllowlist(authority(undefined, ['KDNA Core ', prefix, '8'].join('')), tracked),
     /stale/u,
   );
 });
 
-test('a generation token injected only into a packed tarball surface fails', () => {
-  const records = [
-    {
-      path: 'packages/kdna-core/README.md',
-      surface: 'packed-tarball',
-      text: ownedGeneration,
-    },
-  ];
+test('allowlist rejects self exceptions', () => {
+  const self = authority(authorityPath)[0];
+  const tracked = [{ path: authorityPath, surface: 'tracked', text: self.token }];
+  assert.throws(() => validateAllowlist([self], tracked), /self exception/u);
+});
+
+test('allowlist full-tuple authority rejects additions, removals, and modifications', () => {
+  const manifest = JSON.parse(
+    fs.readFileSync(new URL('./post-cutover-naming-allowlist.json', import.meta.url), 'utf8'),
+  );
+  assert.doesNotThrow(() => parseAllowlist(JSON.stringify(manifest)));
+
+  const forged = authority()[0];
+  const candidate = structuredClone(manifest);
+  candidate.exceptions.push(forged);
+  assert.throws(() => parseAllowlist(JSON.stringify(candidate)), /authority digest mismatch/u);
+
+  const fixture = [forged];
+  const fixtureDigest = allowlistAuthorityDigest(fixture);
+  for (const mutation of [
+    [],
+    [{ ...forged, owner: 'Modified Third Party' }],
+    [...fixture, { ...forged, path: 'docs/second-forged-exception.md' }],
+  ]) {
+    assert.throws(
+      () => assertAllowlistAuthority(mutation, fixtureDigest),
+      /authority digest mismatch/u,
+    );
+  }
+});
+
+test('a generation token injected only into any publishable tarball surface fails', () => {
+  const roots = discoverPackageRoots();
+  assert.deepEqual(roots, [
+    'examples/typescript-agent',
+    'packages/artifact-engine',
+    'packages/fidelity-core',
+    'packages/kdna',
+    'packages/kdna-core',
+    'packages/kdna-eval',
+  ]);
+  const records = roots.map((root) => ({
+    path: `${root}/README.md`,
+    surface: 'packed-tarball',
+    text: ownedGeneration,
+  }));
   const violations = scanRecords(records, []);
-  assert.equal(violations.length, 1);
+  assert.equal(violations.length, roots.length);
   assert.ok(violations.every((violation) => violation.surface === 'packed-tarball'));
 });

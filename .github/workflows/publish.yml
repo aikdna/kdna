@@ -51,17 +51,33 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    env:
+      RELEASE_EVENT_ACTION: ${{ github.event.action }}
+      RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+      RELEASE_IS_DRAFT: ${{ github.event.release.draft }}
+      RELEASE_IS_PRERELEASE: ${{ github.event.release.prerelease }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           fetch-depth: 0
+          fetch-tags: true
+          ref: ${{ github.event.release.tag_name }}
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
+      - name: Verify exact eval tag and source commit
+        run: npm --workspace @aikdna/kdna-eval run release:check
       - run: npm --workspace @aikdna/kdna-eval test
       - run: npm --workspace @aikdna/kdna-eval run typecheck
+      - run: npm run release:evidence -- --package=eval
+      - name: Verify eval release evidence
+        run: npm --workspace @aikdna/kdna-eval run release:evidence:check
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: kdna-eval-release-evidence
+          path: release-evidence/
       - name: Publish @aikdna/kdna-eval
         run: |
           VERSION=$(node -p "require('./package.json').version")
@@ -207,17 +223,32 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    env:
+      RELEASE_EVENT_ACTION: ${{ github.event.action }}
+      RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+      RELEASE_IS_DRAFT: ${{ github.event.release.draft }}
+      RELEASE_IS_PRERELEASE: ${{ github.event.release.prerelease }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          ref: ${{ github.event.release.tag_name }}
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
         working-directory: examples/typescript-agent
+      - name: Verify exact agent tag and source commit
+        run: npm run release:check
+        working-directory: examples/typescript-agent
       - run: npm test
         working-directory: examples/typescript-agent
       - run: npm run release:evidence -- --package=agent
+      - name: Verify agent release evidence
+        run: npm run release:evidence:check
+        working-directory: examples/typescript-agent
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: kdna-agent-release-evidence

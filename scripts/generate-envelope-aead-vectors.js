@@ -202,7 +202,8 @@ function vector1() {
 // ── Vector 2: scrypt-sha256 multi-entry AAD ──────────────────────
 // Proves that the AAD binding to <entry_path> prevents ciphertext
 // swapping across entries: encrypting the same plaintext under
-// different entry paths produces different ciphertexts.
+// different entry paths produces identical GCM ciphertext bytes but
+// different authentication tags, so cross-entry substitution fails.
 
 function vector2() {
   const password = 'kdna-envelope-test-vector-2-password';

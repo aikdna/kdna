@@ -16,7 +16,7 @@
   "properties": {
     "artifact_id": {
       "type": "string",
-      "description": "Unique artifact identifier (UUID version 4 or content-hash URN). Stable across reprocessing — the same logical artifact retains the same ID."
+      "description": "Unique artifact identifier (UUID v4 or content-hash URN). Stable across reprocessing — the same logical artifact retains the same ID."
     },
     "artifact_type": {
       "type": "string",

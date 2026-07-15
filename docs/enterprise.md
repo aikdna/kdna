@@ -226,7 +226,7 @@ kdna identity export --out ~/backup/mycorp-identity.backup
 
 ```bash
 # 1. Generate new key pair
-kdna identity init --org "MyCorp-current"
+kdna identity init --org "MyCorp-v2"
 
 # 2. Re-sign all domains with new key
 kdna publish ./dist/my_domain_1.kdna

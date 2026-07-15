@@ -160,7 +160,7 @@ Activate a commercial license for a domain.
 ```
 kdna license activate @aikdna/writing-pro \
   --key KDNA-LIC-XXXX-YYYY-ZZZZ \
-  --server https://license.example.com/entitlements/activate
+  --server https://license.example.com/v1/entitlements/activate
 
 Output:
   License activated: @aikdna/writing-pro
@@ -182,7 +182,7 @@ through the entitlement API. The license key is not passed to `kdna install`.
 kdna install @aikdna/writing-pro
 kdna license activate @aikdna/writing-pro \
   --key KDNA-LIC-XXXX-YYYY-ZZZZ \
-  --server https://license.example.com/entitlements/activate
+  --server https://license.example.com/v1/entitlements/activate
 
 Behavior:
 1. Fetch domain metadata from registry

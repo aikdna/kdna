@@ -138,7 +138,7 @@ MUST NOT be written to logs, traces, reports, caches, or temporary files.
 ## 6. Runtime projection
 
 An authorized JSON load emits the sole public Runtime Capsule defined by
-[`schema/runtime-capsule.schema.json`](schema/runtime-capsule.schema.json). Its
+[`specs/runtime-capsule.schema.json`](specs/runtime-capsule.schema.json). Its
 contract coordinate is `0.1.0` and its type is `kdna.runtime-capsule`.
 
 The Capsule preserves:

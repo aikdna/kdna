@@ -21,6 +21,11 @@ const knownPackages = {
     path: path.join(repoRoot, 'packages', 'kdna'),
     publish_command: 'npm publish --provenance --access public',
   },
+  eval: {
+    label: 'eval',
+    path: path.join(repoRoot, 'packages', 'kdna-eval'),
+    publish_command: 'npm publish --provenance --access public',
+  },
   agent: {
     label: 'agent',
     path: path.join(repoRoot, 'examples', 'typescript-agent'),

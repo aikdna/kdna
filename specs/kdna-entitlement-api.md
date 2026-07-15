@@ -78,7 +78,7 @@ argument.
 The activation endpoint SHOULD be:
 
 ```http
-POST /entitlements/activate
+POST /v1/entitlements/activate
 Content-Type: application/json
 ```
 
@@ -129,8 +129,8 @@ A successful response returns an activation object:
   "require_online_check": true,
   "offline_grace_days": 7,
   "allowed_agents": ["claude_code", "codex", "opencode"],
-  "activation_server": "https://license.example.com/entitlements/activate",
-  "sync_server": "https://license.example.com/entitlements/sync"
+  "activation_server": "https://license.example.com/v1/entitlements/activate",
+  "sync_server": "https://license.example.com/v1/entitlements/sync"
 }
 ```
 
@@ -214,7 +214,7 @@ Rules:
 The sync endpoint SHOULD be:
 
 ```http
-POST /entitlements/sync
+POST /v1/entitlements/sync
 Content-Type: application/json
 ```
 
@@ -293,7 +293,7 @@ This endpoint is for entitlement servers, marketplaces, or enterprise admin
 systems. It is not called by ordinary KDNA clients.
 
 ```http
-POST /entitlements/revoke
+POST /v1/entitlements/revoke
 Content-Type: application/json
 Authorization: Bearer <admin-token>
 ```
@@ -351,7 +351,7 @@ Example:
   "offline_grace_days": 7,
   "last_checked_at": "2026-05-27T00:00:00.000Z",
   "offline_valid_until": "2026-06-03T00:00:00.000Z",
-  "activation_server": "https://license.example.com/entitlements/activate"
+  "activation_server": "https://license.example.com/v1/entitlements/activate"
 }
 ```
 
@@ -422,10 +422,10 @@ URL, such as:
 ```bash
 kdna license activate @aikdna/writing_pro \
   --key KDNA-LIC-... \
-  --server https://license.example.com/entitlements/activate
+  --server https://license.example.com/v1/entitlements/activate
 
 kdna license sync @aikdna/writing_pro \
-  --server https://license.example.com/entitlements/sync
+  --server https://license.example.com/v1/entitlements/sync
 ```
 
 ## 13. Account/Device External Key Grant

@@ -1,14 +1,24 @@
 # RFC-0018: KDNA Canonical Envelope Profile — `kdna.envelope.aead`
 
-Status: **accepted**.
+Status: **draft — pre-release candidate**.
+
+This document is the candidate for KDNA's first public envelope wire contract;
+it has not yet been published as a stable compatibility promise. Repository
+fixtures and implementation bytes produced before that publication are
+pre-release evidence, not public compatibility coordinates.
 
 ## Summary
 
-This RFC freezes the **canonical envelope encryption profile**
-`kdna.envelope.aead` for KDNA assets. The profile is the
-mandatory target for new product-facing exports and is the spec
-that future implementations (Node.js, Swift, Rust, others) must
-converge on.
+This RFC defines the pre-release candidate for the **canonical envelope
+encryption profile** `kdna.envelope.aead` for KDNA assets. It is the intended
+target for new product-facing exports and the contract that implementations
+(Node.js, Swift, Rust, others) are expected to converge on before the first
+stable publication.
+
+The KDF tokens remain unversioned: `scrypt-sha256` and `argon2id`. Wire
+evolution is represented separately by `profile_version`, whose first public
+candidate is `0.1.0`. No alternate generation-suffixed KDF token or
+compatibility shim is part of this candidate.
 
 The profile is a **true envelope encryption** scheme: a random
 content encryption key (CEK) encrypts each protected entry; the
@@ -37,7 +47,7 @@ KDNA needs a single canonical envelope profile that:
   RFCs.
 - A future implementation (Node.js, Swift, Rust, Go, browser
   WebCrypto, etc.) can implement in one place and have a
-  frozen test vector to verify against.
+  deterministic candidate test vector to verify against.
 - Existing `kdna.encryption.licensed-entry` (RFC-0008) and
   `kdna.encryption.password` (RFC-0009) assets keep working
   through their own profile IDs.
@@ -54,16 +64,19 @@ The protocol must support both:
 
 Without a single canonical profile, every new release has to
 re-litigate the AES mode, the KDF choice, the AAD format, and
-the key slot shape. This RFC freezes all of them.
+the key slot shape. This candidate fixes all of them for pre-release
+conformance; stable compatibility begins only when the profile is published.
 
 ## Normative Rules
 
 ### R1 — Profile ID and declaration
 
-Every envelope object MUST carry a `profile` field with the
-literal string `kdna.envelope.aead`. Any other value is
-rejected with `KDNA_ENVELOPE_PROFILE_UNSUPPORTED`. The error
-MUST name the unsupported value and the supported value.
+Every envelope object MUST carry a `profile` field with the literal string
+`kdna.envelope.aead` and a `profile_version` field with the literal string
+`0.1.0`. Any other profile value is rejected with
+`KDNA_ENVELOPE_PROFILE_UNSUPPORTED`; any other profile version is rejected
+with `KDNA_ENVELOPE_VERSION_UNSUPPORTED`. The error MUST name the unsupported
+value and the supported value.
 
 ### R2 — Envelope shape
 
@@ -73,6 +86,7 @@ fields are required unless marked optional.
 | Field          | Type   | Required | Description |
 |----------------|--------|----------|-------------|
 | `profile`      | string | yes      | MUST be `kdna.envelope.aead`. |
+| `profile_version` | string | yes   | MUST be `0.1.0`; this coordinate evolves independently from KDF tokens. |
 | `alg`          | string | yes      | MUST be `AES-256-GCM`. |
 | `key_wrapping` | string | yes      | MUST be `AES-256-KW` (RFC 3394). |
 | `kdf_profile`  | string | yes      | One of `scrypt-sha256` or `argon2id`. See R4. |

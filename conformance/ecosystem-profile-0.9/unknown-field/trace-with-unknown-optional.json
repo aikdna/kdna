@@ -25,6 +25,6 @@
     "cache_hit": false
   },
   "future_audit_trail": {
-    "auditor_id": "future-audit-system"
+    "auditor_id": "future-audit-system-v2"
   }
 }

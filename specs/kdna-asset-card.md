@@ -87,7 +87,7 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
     "eval_score": 96.7,
     "test_count": 30,
     "benchmark_count": 2,
-    "latest_benchmark_id": "decision-state-benchmark-current",
+    "latest_benchmark_id": "decision-state-benchmark-v2",
     "latest_benchmark_date": "2026-05-19",
     "comparison_report_url": "https://github.com/aikdna/kdna/blob/main/benchmarks/decision-state-comparison-report.md",
     "raw_outputs_url": "https://github.com/aikdna/kdna/tree/main/benchmarks/raw",

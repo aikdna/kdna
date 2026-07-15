@@ -15,7 +15,7 @@ A **trace status** is a value that a loader emits to describe the outcome of a r
 | `failed_to_parse` | The container or its entries could not be parsed. The asset is malformed or the container is corrupted. |
 | `failed_to_decrypt` | A required decryption failed. The key was provided but the operation did not succeed. |
 | `signature_invalid` | A signature was present but did not verify against its declared payload and key. The asset MAY still be loaded, but the caller is responsible for deciding whether the signature matters. |
-| `version_incompatible` | The asset's `compatibility.min_loader_version` is higher than the loader's version, or the manifest's `kdna_version` is not understood. |
+| `version_incompatible` | The asset's `compatibility.min_loader_version` is higher than the loader's version, or the manifest's `format_version` is not understood. |
 
 ## Status semantics
 

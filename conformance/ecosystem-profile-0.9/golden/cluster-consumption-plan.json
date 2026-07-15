@@ -8,7 +8,7 @@
     "manifest_digest": "sha256:a26a95d6dc23d6d91a212e87b2b96ad6644b078dc7f92e499386645844f9ad23"
   },
   "task": {
-    "summary": "Launch the notification preferences API to all users on Tuesday 10:00",
+    "summary": "Launch notification preferences API v2 to all users on Tuesday 10:00",
     "task_family": "launch_decision",
     "input_hash": "sha256:e0d391af4a2d737777af842aaff45236"
   },
@@ -62,7 +62,7 @@
         "digest": "sha256:577ca19ff32d1a427e4f4741af85af464a601674f708354bec15c1b2a88c4fb6",
         "role": "advisor",
         "weight": 0.6,
-        "contribution_hypothesis": "PATCH /api/notifications/preferences — API design review: is PATCH the right verb? Does the endpoint structure follow our conventions?",
+        "contribution_hypothesis": "PATCH /api/v2/notifications/preferences — API design review: is PATCH the right verb? Does /v2 path structure follow our conventions?",
         "accepted": true
       }
     ],

@@ -22,7 +22,9 @@
     "build": "tsc",
     "demo": "npm run build && node dist/demo.js",
     "test": "npm run build && node dist/demo.js >/dev/null",
-    "prepublishOnly": "npm run build"
+    "release:check": "node ../../scripts/check-post-cutover-naming.mjs && node ../../scripts/check-scoped-release-readiness.mjs --package=examples/typescript-agent --scope=agent --label=agent",
+    "release:evidence:check": "node ../../scripts/check-scoped-release-readiness.mjs --package=examples/typescript-agent --scope=agent --label=agent --evidence=release-evidence/artifact-manifest.json",
+    "prepublishOnly": "npm run release:check && npm run release:evidence:check && npm run build"
   },
   "dependencies": {
     "@aikdna/kdna-core": "^0.12.3"

@@ -4,18 +4,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: { node-version: 22 }
       - run: npm ci
+      - name: Enforce protocol naming and scoped release gates
+        run: npm run test:post-cutover && npm run test:release-scopes && npm run audit:post-cutover
       - run: npm test
 
   public-surface:
     name: public-surface check (private-name leak)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: { node-version: 22 }
       - name: Run check-public-surface
         run: node scripts/check-public-surface.mjs

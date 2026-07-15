@@ -312,7 +312,7 @@ What it DOES provide:
 | P4 | Entitlement revoke/admin API | Specified |
 | P5 | Runtime projection and watermark service | Future server implementation |
 | P6 | ~~TUF-like registry trust roles~~ | **Cancelled.** Per-author Ed25519 identity replaces registry-owned trust roles. |
-| P7 | `kdna.envelope.aead` canonical envelope profile (RFC-0018) | **Accepted.** Test vectors live in `conformance/envelope-aead/`; release-specific implementation maturity is tracked in public status and release notes. |
+| P7 | `kdna.envelope.aead` canonical envelope profile (RFC-0018) | **Pre-release candidate.** Deterministic test vectors live in `conformance/envelope-aead/`; stable compatibility begins only at the first public profile release. |
 
 ---
 

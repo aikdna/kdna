@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { TextDecoder } from 'node:util';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -10,23 +11,29 @@ import { fileURLToPath } from 'node:url';
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, '..');
 const ALLOWLIST_PATH = path.join(SCRIPT_DIR, 'post-cutover-naming-allowlist.json');
+const ALLOWLIST_RELATIVE_PATH = path.relative(ROOT, ALLOWLIST_PATH).split(path.sep).join('/');
+const ALLOWLIST_AUTHORITY_DIGEST =
+  '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945';
 const VERSION_PREFIX = String.fromCharCode(118);
 const VERSION_PREFIX_UPPER = VERSION_PREFIX.toUpperCase();
 const UTF8 = new TextDecoder('utf-8', { fatal: true });
-const PACKAGE_ROOTS = Object.freeze(['packages/kdna-core', 'packages/kdna']);
+
+function coordinateTailPattern() {
+  return '[0-9]+(?:\\.[0-9]+){0,2}(?:(?:[rR][cC][0-9]*)(?:[-_][A-Za-z][A-Za-z0-9._-]*)?|[-_][A-Za-z][A-Za-z0-9._-]*)?';
+}
 
 function versionPattern() {
-  return `${VERSION_PREFIX}[0-9]+(?:\\.[0-9]+){0,2}(?:[-_][A-Za-z][A-Za-z0-9._-]*)?`;
+  return `${VERSION_PREFIX}${coordinateTailPattern()}`;
 }
 
 function candidateRules() {
-  const prefix = `[${VERSION_PREFIX}${VERSION_PREFIX_UPPER}]`;
+  const coordinate = `[${VERSION_PREFIX}${VERSION_PREFIX_UPPER}]${coordinateTailPattern()}`;
   return [
     {
-      name: 'generation-coordinate',
+      name: 'owned-responsibility-generation',
       regex: new RegExp(
-        `(?<![A-Za-z0-9])${prefix}[0-9]+(?:\\.[0-9]+){0,2}(?:[-_][A-Za-z][A-Za-z0-9._-]*)?(?![A-Za-z0-9])`,
-        'gu',
+        `\\b(?:KDNA(?:\\s+Core)?|Core|Container|Capsule|Runtime|ConsumptionPlan|JudgmentTrace|Agent\\s+Host|Host|Trace|Schema|Payload|Envelope|Cluster|Assay|Studio)[\\s/_-]+${coordinate}(?![A-Za-z0-9])`,
+        'giu',
       ),
     },
     {
@@ -37,18 +44,14 @@ function candidateRules() {
       ),
     },
     {
-      name: 'owned-noun-generation',
-      regex:
-        /\b(?:KDNA|Core|Container|Capsule|Profile|Runtime|ConsumptionPlan|JudgmentTrace|Agent Host|Host|Trace|Schema|Payload|Envelope|Cluster|Assay|Studio|API)\s+[0-9]+(?![0-9.-])/gu,
-    },
-    {
       name: 'owned-identifier-generation',
       regex:
         /\b(?:[a-z][A-Za-z0-9_]*(?:Capsule|Plan|Host|Trace|Core|KDNA|Container|Profile|Schema|Payload|Envelope|Cluster|Runtime)V[0-9]+|[A-Z][A-Z0-9_]*_V[0-9]+)\b/gu,
     },
     {
-      name: 'foreign-identifier-candidate',
-      regex: /\b[A-Z]?[a-z]+v[0-9]+\b/gu,
+      name: 'owned-suffix-generation',
+      regex:
+        /\b(?:KDNA|Core|Container|Capsule|Profile|Runtime|ConsumptionPlan|JudgmentTrace|AgentHost|Host|Trace|Schema|Payload|Envelope|Cluster|Assay|Studio)V[0-9]+\b/giu,
     },
   ];
 }
@@ -68,6 +71,23 @@ function git(args) {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
   });
+}
+
+function discoverPackageRoots() {
+  return git(['ls-files', '-z', ':(glob)**/package.json'])
+    .split('\0')
+    .filter(Boolean)
+    .filter((packagePath) => packagePath !== 'package.json')
+    .filter((packagePath) => {
+      const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, packagePath), 'utf8'));
+      return (
+        manifest.private !== true &&
+        typeof manifest.name === 'string' &&
+        typeof manifest.version === 'string'
+      );
+    })
+    .map((packagePath) => path.posix.dirname(packagePath))
+    .sort();
 }
 
 function trackedRecords() {
@@ -142,7 +162,7 @@ function actualPackRecords(packageRoot, destination, report) {
 
 function packageRecords() {
   const records = [];
-  for (const packageRoot of PACKAGE_ROOTS) {
+  for (const packageRoot of discoverPackageRoots()) {
     const destination = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-naming-pack-'));
     try {
       const dryRun = runPack(packageRoot, destination, true);
@@ -160,6 +180,10 @@ function parseAllowlist(text) {
   const parsed = JSON.parse(text);
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
     throw new Error('naming allowlist must be an object');
+  }
+  const manifestKeys = Object.keys(parsed).sort();
+  if (JSON.stringify(manifestKeys) !== JSON.stringify(['exceptions', 'schema', 'schema_version'])) {
+    throw new Error('naming allowlist manifest fields are not exact');
   }
   if (parsed.schema !== 'kdna.post-cutover-naming-allowlist' || parsed.schema_version !== '0.1.0') {
     throw new Error('naming allowlist schema coordinate is invalid');
@@ -181,6 +205,12 @@ function parseAllowlist(text) {
     if (entry.reason.length < 16) {
       throw new Error(`allowlist entry ${index} reason is not specific enough`);
     }
+    if (!/third-party/iu.test(entry.reason)) {
+      throw new Error(`allowlist entry ${index} reason must identify a third-party coordinate`);
+    }
+    if (/\b(?:AI)?KDNA\b/iu.test(entry.owner)) {
+      throw new Error(`allowlist entry ${index} cannot be owned by KDNA`);
+    }
     if (path.isAbsolute(entry.path) || entry.path.split('/').includes('..')) {
       throw new Error(`allowlist entry ${index} path must be repository-relative`);
     }
@@ -188,7 +218,22 @@ function parseAllowlist(text) {
     if (seen.has(identity)) throw new Error(`duplicate allowlist entry for ${entry.path}`);
     seen.add(identity);
   }
+  assertAllowlistAuthority(parsed.exceptions, ALLOWLIST_AUTHORITY_DIGEST);
   return parsed.exceptions;
+}
+
+function allowlistAuthorityDigest(exceptions) {
+  const tuples = exceptions
+    .map(({ path: entryPath, token, owner, reason }) => [entryPath, token, owner, reason])
+    .sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)));
+  return createHash('sha256').update(JSON.stringify(tuples)).digest('hex');
+}
+
+function assertAllowlistAuthority(exceptions, expectedDigest) {
+  const authorityDigest = allowlistAuthorityDigest(exceptions);
+  if (authorityDigest !== expectedDigest) {
+    throw new Error(`naming allowlist authority digest mismatch: ${authorityDigest}`);
+  }
 }
 
 function matchingSpans(text, token) {
@@ -242,6 +287,9 @@ function collectCandidates(value, rules = candidateRules()) {
 function validateAllowlist(allowlist, records) {
   const rules = candidateRules();
   for (const entry of allowlist) {
+    if (entry.path === ALLOWLIST_RELATIVE_PATH) {
+      throw new Error('allowlist cannot contain a self exception');
+    }
     const matchingRecords = records.filter((record) => record.path === entry.path);
     if (matchingRecords.length !== 1) {
       throw new Error(`allowlist path must name one tracked file: ${entry.path}`);
@@ -332,8 +380,11 @@ function main() {
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
 
 export {
+  allowlistAuthorityDigest,
+  assertAllowlistAuthority,
   collectCandidates,
   deduplicateViolations,
+  discoverPackageRoots,
   parseAllowlist,
   scanRecords,
   validateAllowlist,
