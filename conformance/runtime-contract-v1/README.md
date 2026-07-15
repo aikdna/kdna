@@ -24,10 +24,22 @@ Run:
 node conformance/runtime-contract-v1/run.mjs
 ```
 
-`golden.json` reuses the committed Capsule 2 A/C/E/P vector. Its expected
-Plan and result digests are committed constants; the verifier recomputes them
-without rewriting the fixture. `negative-cases.json` contains deterministic
-JSON Pointer mutations so each rejected value stays reviewable without
+The committed Plan, request, receipts, and traces are derived from the
+authoritative Capsule conformance bytes. Check reproducibility without writing,
+or explicitly rebuild the derived files:
+
+```bash
+npm run conformance:runtime-contract:check
+npm run conformance:runtime-contract:update
+```
+
+The generator loads the official packaged bytes, records A/C/E with explicit
+matched or not-compared evidence, builds the Plan and request through the public
+Core API, constructs independently validated Host receipts, and builds every
+committed terminal trace through the public trace API. The verifier independently
+reloads the official bytes and rejects lineage drift; it recomputes Plan,
+delivery, and result digests without rewriting fixtures. `negative-cases.json`
+contains deterministic JSON Pointer mutations so each rejected value stays reviewable without
 duplicating the full Capsule. `audit-negative-cases.json` freezes the twelve
 audit-specific attack or inconsistency reproductions.
 

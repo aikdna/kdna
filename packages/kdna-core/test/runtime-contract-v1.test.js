@@ -35,6 +35,16 @@ test('ConsumptionPlan 1.0, Host 2, and JudgmentTrace 1.0 conformance vectors pas
   assert.match(output, /Runtime contract v1 valid/);
 });
 
+test('runtime-contract fixtures reproduce from the authoritative Capsule bytes', () => {
+  const output = execFileSync(
+    process.execPath,
+    [path.join(ROOT, 'scripts', 'generate-runtime-contract-fixtures.mjs')],
+    { cwd: ROOT, encoding: 'utf8' },
+  );
+
+  assert.match(output, /fixtures match authoritative Capsule bytes/);
+});
+
 test('published runtime-contract schemas are byte-for-byte canonical copies', () => {
   for (const file of schemaFiles) {
     assert.equal(

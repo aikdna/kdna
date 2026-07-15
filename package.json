@@ -20,6 +20,8 @@
     "conformance:canonical": "node --test conformance/canonical-conformance.mjs",
     "conformance:capsule-v2": "node --test packages/kdna-core/test/capsule-v2.test.js",
     "conformance:runtime-contract-v1": "node conformance/runtime-contract-v1/run.mjs",
+    "conformance:runtime-contract:check": "node scripts/generate-runtime-contract-fixtures.mjs",
+    "conformance:runtime-contract:update": "node scripts/generate-runtime-contract-fixtures.mjs --write",
     "conformance:phase2": "node conformance/run.mjs --profile phase2-protocol",
     "conformance:envelope-aead": "node conformance/kdna-envelope-aead-v1.mjs",
     "conformance:authorization:update": "node scripts/generate-authorization-conformance.mjs",

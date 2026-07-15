@@ -17,7 +17,7 @@ function readJson(name) {
 }
 
 function clone(value) {
-  return structuredClone(value);
+  return globalThis.structuredClone(value);
 }
 
 function equalJson(left, right) {
@@ -28,6 +28,39 @@ const golden = readJson('golden.json');
 const negotiationVectors = readJson('negotiation-cases.json');
 const negativeVectors = readJson('negative-cases.json');
 const auditNegativeVectors = readJson('audit-negative-cases.json');
+
+function assertAuthoritativeCapsuleLineage() {
+  const capsuleRoot = path.join(ROOT, 'conformance', 'capsule-v2');
+  const capsuleGolden = core.parseExecutionContractJsonV1(
+    fs.readFileSync(path.join(capsuleRoot, 'golden.json')),
+  );
+  const capsuleBytes = Buffer.from(
+    fs.readFileSync(path.join(capsuleRoot, capsuleGolden.fixture), 'utf8').trim(),
+    'base64',
+  );
+  const capsule = core.loadCapsuleV2(capsuleBytes, {
+    loadedAt: capsuleGolden.loaded_at,
+    profile: 'compact',
+    expectedDigests: {
+      asset: { value: capsuleGolden.expected.asset, source: 'install_receipt' },
+    },
+  });
+  assert.ok(
+    equalJson(capsule, golden.request.capsule),
+    'runtime request Capsule must reproduce from authoritative Capsule bytes',
+  );
+  for (const name of ['asset', 'content', 'runtime_entry_set']) {
+    const evidence = capsule.digests[name];
+    const expected = golden.plan.asset_ref.expected_digests[name];
+    assert.equal(evidence.value, capsuleGolden.expected[name], `${name} authoritative digest`);
+    assert.deepEqual(expected, {
+      value: evidence.value,
+      basis: evidence.basis,
+      source: evidence.comparison.state === 'matched' ? evidence.comparison.source : 'caller',
+      comparison: evidence.comparison.state,
+    });
+  }
+}
 
 function baseContext(overrides = {}) {
   return {
@@ -163,6 +196,7 @@ function applyMutation(input, vector) {
 }
 
 function validateGoldens() {
+  assertAuthoritativeCapsuleLineage();
   assertValid(
     'ConsumptionPlan 1.0',
     core.validateConsumptionPlanV1(golden.plan, {
