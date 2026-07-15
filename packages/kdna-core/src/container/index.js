@@ -829,9 +829,10 @@ function runValidate(layout) {
   }
 
   const payloadIsEncryptedEnvelope = Boolean(payload.profile && payload.ciphertext);
+  const encryptedEntries = layout.manifest.encryption?.encrypted_entries;
   const manifestDeclaresEncryptedPayload = Boolean(
     layout.manifest.payload?.encrypted
-    || layout.manifest.encryption?.encrypted_entries?.includes('payload.kdnab'),
+    || (Array.isArray(encryptedEntries) && encryptedEntries.includes('payload.kdnab')),
   );
   if (manifestDeclaresEncryptedPayload && !payloadIsEncryptedEnvelope) {
     result.payload_valid = false;
@@ -847,7 +848,6 @@ function runValidate(layout) {
     // Encrypted payload — verify it's a proper encryption envelope, not plaintext.
     const encProfile = layout.manifest.encryption?.profile;
     const encProfileVersion = layout.manifest.encryption?.profile_version;
-    const encryptedEntries = layout.manifest.encryption?.encrypted_entries;
     if (!layout.manifest.encryption) {
       result.payload_valid = false;
       problems.push('payload: encrypted payload requires a manifest encryption declaration');

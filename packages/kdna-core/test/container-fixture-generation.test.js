@@ -289,6 +289,24 @@ test('manifest declaration and encrypted payload bytes must agree in both direct
       },
       /missing its manifest encryption declaration|must be equal to constant/u,
     ],
+    [
+      'encrypted envelope with object encrypted_entries',
+      (source) => fs.readFileSync(path.join(source, 'payload.kdnab')),
+      (manifest) => {
+        manifest.payload.encrypted = false;
+        manifest.encryption.encrypted_entries = { entry: 'payload.kdnab' };
+      },
+      /encrypted_entries must be array|missing its manifest encryption declaration/u,
+    ],
+    [
+      'encrypted envelope with numeric encrypted_entries',
+      (source) => fs.readFileSync(path.join(source, 'payload.kdnab')),
+      (manifest) => {
+        manifest.payload.encrypted = false;
+        manifest.encryption.encrypted_entries = 7;
+      },
+      /encrypted_entries must be array|missing its manifest encryption declaration/u,
+    ],
   ];
 
   for (const [name, payloadBytes, mutateManifest, problemPattern] of cases) {
