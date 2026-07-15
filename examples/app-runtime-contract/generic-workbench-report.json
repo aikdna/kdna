@@ -1,5 +1,5 @@
 {
-  "report_version": "1.0",
+  "report_version": "0.1.0",
   "report_id": "generic-workbench-report-001",
   "created_at": "2026-07-15T00:00:02Z",
   "trace_id": "trace_2222222222222222",
@@ -9,11 +9,11 @@
   "route_decision": {
     "status": "LOAD_STRONG_FIT",
     "action": "load",
-    "selected_domain": "@aikdna/example"
+    "selected_domain": "kdna:example:agent-project-context"
   },
   "loaded_domains": [
     {
-      "name": "@aikdna/example",
+      "name": "kdna:example:agent-project-context",
       "version": "1.0.0"
     }
   ],

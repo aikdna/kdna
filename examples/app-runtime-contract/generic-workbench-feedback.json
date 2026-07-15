@@ -1,8 +1,7 @@
 {
-  "feedback_version": "1.0",
   "event_id": "generic-workbench-feedback-001",
   "source": "app",
-  "domain_id": "@aikdna/example",
+  "domain_id": "kdna:example:agent-project-context",
   "trace_id": "trace_2222222222222222",
   "user_feedback": {
     "type": "useful_judgment",
