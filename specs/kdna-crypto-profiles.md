@@ -46,7 +46,7 @@ The canonical model is envelope encryption:
 1. Generate a random content encryption key (`CEK`) per encrypted asset or entry
    set.
 2. Encrypt payload entries with the `CEK` using `AES-256-GCM` and the
-   profile-defined AAD (six lines, joined by LF; see RFC-0018 R5).
+   profile-defined AAD (eight lines, joined by LF; see RFC-0018 R5).
 3. Never store the raw `CEK` in the `.kdna` asset.
 4. Store one or more key grants (`key_slots[]`) that wrap the `CEK` according
    to the entitlement profile.
@@ -89,7 +89,7 @@ Encrypted payload entries MUST use authenticated encryption. Decryption MUST
 fail if ciphertext or associated metadata is modified.
 
 For `kdna.envelope.aead`, the AEAD is frozen to `AES-256-GCM` with
-12-byte IV, 16-byte tag, and the six-line AAD format documented in
+12-byte IV, 16-byte tag, and the eight-line AAD format documented in
 RFC-0018 R5.
 
 Future AEADs (e.g. ChaCha20-Poly1305) require a new envelope profile ID.
@@ -102,17 +102,19 @@ For `kdna.envelope.aead`, the AAD format is:
 
 ```
 kdna.envelope.aead
+0.1.0
 <asset_uid>
-<asset_digest>
+<asset_id>
+<asset_version>
 <entry_path>
 <access_mode>
 <entitlement_profile>
 ```
 
-See RFC-0018 R5 for the full contract. The `asset_digest` is the
-asset-level digest (the value that binds the `.kdna` file as a whole).
-Per-entry digest binding is not in the AAD; cross-entry swap protection
-comes from `entry_path` + AES-GCM authentication.
+See RFC-0018 R5 for the full contract. The final package digest cannot be an
+input because it includes the encrypted entry and would create a digest cycle.
+The AAD binds stable asset identity and release version; the signed delivery
+or entitlement record binds the final package digest after packaging.
 
 For other profile IDs (`kdna.encryption.licensed-entry`,
 `kdna.encryption.password`), the AAD is the four-line format
@@ -142,12 +144,12 @@ auto-downgrade path (RFC-0018 R4.3).
 `kdna.envelope.aead` test vectors are published at
 `conformance/envelope-aead/`:
 
-- `kdna.envelope.aead-vector-01-scrypt-basic.json` — scrypt-sha256-v1,
+- `envelope-aead-vector-01-scrypt-basic.json` — scrypt-sha256-v1,
   single password slot, basic round-trip.
-- `kdna.envelope.aead-vector-02-scrypt-multi-entry-aad.json` — two
+- `envelope-aead-vector-02-scrypt-multi-entry-aad.json` — two
   AADs over the same CEK + IV + plaintext; proves AAD binding via
   divergent tags.
-- `kdna.envelope.aead-vector-03-argon2id-basic.json` — argon2id-v1,
+- `envelope-aead-vector-03-argon2id-basic.json` — argon2id-v1,
   single password slot, basic round-trip.
 
 A conformance runner at `conformance/envelope-aead.mjs`

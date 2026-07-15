@@ -32,17 +32,16 @@ const payload = {
       },
     ],
   },
-  patterns: {
-    misunderstandings: [
-      {
-        id: 'protected_m1',
-        wrong: 'Each implementation can choose different associated data.',
-        correct: 'Every implementation authenticates the same stable manifest coordinates.',
-        key_distinction: 'interoperability',
-        why: 'Different associated data must fail authentication.',
-      },
-    ],
-  },
+  patterns: [
+    {
+      type: 'misunderstanding',
+      id: 'protected_m1',
+      wrong: 'Each implementation can choose different associated data.',
+      correct: 'Every implementation authenticates the same stable manifest coordinates.',
+      key_distinction: 'interoperability',
+      why: 'Different associated data must fail authentication.',
+    },
+  ],
   scenarios: [],
   cases: [],
   reasoning: {

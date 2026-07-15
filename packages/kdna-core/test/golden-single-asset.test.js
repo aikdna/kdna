@@ -201,7 +201,7 @@ test('committed CBOR validates and loads exact self-check shapes without silent 
 
     const inspected = core.inspect(asset);
     assert.deepEqual(inspected, {
-      kdna_version: '1.0',
+      format_version: '0.1.0',
       asset_id: fixture.manifest.asset_id,
       asset_uid: fixture.manifest.asset_uid,
       asset_type: fixture.manifest.asset_type,
@@ -241,9 +241,10 @@ test('committed CBOR validates and loads exact self-check shapes without silent 
       failure_modes: [],
       patterns: [],
     });
-    assert.equal(capsule.type, 'kdna.context.capsule');
-    assert.equal(capsule.domain, fixture.manifest.asset_id);
-    assert.equal(capsule.judgment_version, fixture.manifest.judgment_version);
+    assert.equal(capsule.type, 'kdna.runtime-capsule');
+    assert.equal(capsule.contract_version, '0.1.0');
+    assert.equal(capsule.asset.asset_id, fixture.manifest.asset_id);
+    assert.equal(capsule.asset.judgment_version, fixture.manifest.judgment_version);
     assert.equal(capsule.trace.schema_valid, true);
 
     const full = core.loadAuthorized(asset, { profile: 'full', as: 'json' });
@@ -288,7 +289,7 @@ test('committed cross-language payload fixtures use only the canonical self-chec
     ]);
   }
 
-  const capsuleRoot = path.join(REPO_ROOT, 'conformance', 'capsule-v2');
+  const capsuleRoot = path.join(REPO_ROOT, 'conformance', 'runtime-capsule');
   const capsuleGolden = JSON.parse(
     fs.readFileSync(path.join(capsuleRoot, 'golden.json'), 'utf8'),
   );
@@ -358,6 +359,7 @@ test('prompt treats each scoped field as content but does not render an empty ro
   for (const [name, scopedCore, expectedText] of variants) {
     const payload = {
       profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
       core: { highest_question: '', axioms: [], ...scopedCore },
     };
     const { temporary, asset } = createAsset(payload);
@@ -373,6 +375,7 @@ test('prompt treats each scoped field as content but does not render an empty ro
 
   const emptyRolePayload = {
     profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
     core: { highest_question: '', axioms: [], judgment_role: {} },
   };
   const { temporary, asset } = createAsset(emptyRolePayload);

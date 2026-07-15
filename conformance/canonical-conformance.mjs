@@ -1,6 +1,6 @@
 /**
- * canonical-conformance.mjs — Wave 4 conformance rewrite.
- * Tests canonical distribution container with real Core toolchain fixtures.
+ * canonical-conformance.mjs — stable container conformance.
+ * Tests the distribution container with real Core toolchain fixtures.
  * Run: node --test conformance/canonical-conformance.mjs
  */
 import { test } from 'node:test';
@@ -37,24 +37,28 @@ function fixtureDir(name) {
 function buildFixture(name, manifestOverrides = {}, payloadOverrides = {}) {
   const dir = fixtureDir(name);
   const manifest = {
-    kdna_version: '1.0',
+    format_version: '0.1.0',
     asset_id: `kdna:c:${name}`,
-    asset_uid: `kdna:c:${name}@1.0.0`,
+    asset_uid: `urn:uuid:00000000-0000-4000-8000-${sha256(name).slice(0, 12)}`,
     asset_type: 'domain',
-    name: `@c/${name}`,
     title: `Conformance ${name}`,
     version: '1.0.0',
     judgment_version: '1.0.0',
     created_at: '2026-06-25T00:00:00Z',
     updated_at: '2026-06-25T00:00:00Z',
     creator: { name: 'C', id: 'c' },
-    compatibility: { min_loader_version: '1.0.0', profile: 'kdna.payload.judgment' },
+    compatibility: {
+      min_loader_version: '0.18.1',
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+    },
     payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
     access: 'public',
     ...manifestOverrides,
   };
   const payload = {
     profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
     core: {
       highest_question: 'Conformance test.',
       axioms: [
@@ -105,23 +109,27 @@ test('canonical container: ZIP with required entries', () => {
 test('canonical container: deterministic output', () => {
   const dir = fixtureDir('det');
   const manifest = {
-    kdna_version: '1.0',
+    format_version: '0.1.0',
     asset_id: 'kdna:c:det',
-    asset_uid: 'kdna:c:det@1.0.0',
+    asset_uid: 'urn:uuid:00000000-0000-4000-8000-000000000001',
     asset_type: 'domain',
-    name: '@c/det',
     title: 'Det',
     version: '1.0.0',
     judgment_version: '1.0.0',
     created_at: '2026-06-25T00:00:00Z',
     updated_at: '2026-06-25T00:00:00Z',
     creator: { name: 'C', id: 'c' },
-    compatibility: { min_loader_version: '1.0.0', profile: 'kdna.payload.judgment' },
+    compatibility: {
+      min_loader_version: '0.18.1',
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+    },
     payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
     access: 'public',
   };
   const payload = {
     profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
     core: {
       highest_question: 'X',
       axioms: [
@@ -183,7 +191,7 @@ test('access: licensed/password → needs_password', () => {
   const plaintext = cbor.encode(f.payload);
   const envelope = core.encryptProtectedEntry(plaintext, {
     entryName: 'payload.kdnab',
-    manifest: { name: '@c/pwd', version: '1.0.0' },
+    manifest: pwdManifest,
     password: 'test',
     recoveryCode: core.generateRecoveryCode(),
   });
@@ -204,12 +212,10 @@ test('access: remote → needs_runtime', () => {
   assert.equal(plan.state, 'needs_runtime');
 });
 
-test('access: legacy open alias → public', () => {
+test('access: removed alias fails closed', () => {
   const f = buildFixture('open', { access: 'open' });
   const plan = core.planLoad(f.kdna);
-  assert.equal(plan.access, 'public');
-  assert.equal(plan.access_alias, 'open');
-  assert.equal(plan.state, 'ready');
+  assert.equal(plan.state, 'invalid');
 });
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -265,9 +271,9 @@ test('negative: encoding=json manifest is rejected', () => {
   fs.writeFileSync(
     path.join(dir, 'kdna.json'),
     JSON.stringify({
-      kdna_version: '1.0',
+      format_version: '0.1.0',
       asset_id: 'kdna:c:bad-enc',
-      asset_uid: 'u',
+      asset_uid: 'urn:uuid:00000000-0000-4000-8000-000000000002',
       asset_type: 'domain',
       title: 'X',
       version: '1.0.0',
@@ -276,11 +282,16 @@ test('negative: encoding=json manifest is rejected', () => {
       updated_at: '2026-01-01T00:00:00Z',
       creator: { name: 'T' },
       payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false },
-      compatibility: { min_loader_version: '1.0.0', profile: 'kdna.payload.judgment' },
+      compatibility: {
+        min_loader_version: '0.18.1',
+        profile: 'kdna.payload.judgment',
+        profile_version: '0.1.0',
+      },
     }),
   );
   const p = {
     profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
     core: { highest_question: 'Q', axioms: [{ id: 'a1', one_sentence: 'Test.' }] },
   };
   fs.writeFileSync(path.join(dir, 'payload.kdnab'), cbor.encode(p));
@@ -298,9 +309,9 @@ test('negative: JSON payload disguised as CBOR is rejected', () => {
   fs.writeFileSync(
     path.join(dir, 'kdna.json'),
     JSON.stringify({
-      kdna_version: '1.0',
+      format_version: '0.1.0',
       asset_id: 'kdna:c:bad-payload',
-      asset_uid: 'u',
+      asset_uid: 'urn:uuid:00000000-0000-4000-8000-000000000003',
       asset_type: 'domain',
       title: 'X',
       version: '1.0.0',
@@ -309,11 +320,16 @@ test('negative: JSON payload disguised as CBOR is rejected', () => {
       updated_at: '2026-01-01T00:00:00Z',
       creator: { name: 'T' },
       payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
-      compatibility: { min_loader_version: '1.0.0', profile: 'kdna.payload.judgment' },
+      compatibility: {
+        min_loader_version: '0.18.1',
+        profile: 'kdna.payload.judgment',
+        profile_version: '0.1.0',
+      },
     }),
   );
   const p = {
     profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
     core: { highest_question: 'Q', axioms: [{ id: 'a1', one_sentence: 'Test.' }] },
   };
   fs.writeFileSync(path.join(dir, 'payload.kdnab'), JSON.stringify(p));
@@ -338,8 +354,9 @@ test('integration: pack → validate → load', () => {
   assert.equal(core.validate(f.kdna).overall_valid, true);
   assert.equal(core.planLoad(f.kdna).can_load_now, true);
   const r = core.loadAuthorized(f.kdna, { profile: 'index', as: 'json' });
-  assert.equal(r.type, 'kdna.context.capsule');
-  assert.equal(r.domain, '@c/integ');
+  assert.equal(r.type, 'kdna.runtime-capsule');
+  assert.equal(r.contract_version, '0.1.0');
+  assert.equal(r.asset.asset_id, f.manifest.asset_id);
 });
 
 test('integration: pack → unpack → validate', () => {

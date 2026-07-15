@@ -56,6 +56,7 @@ described by `specs/external-grant-envelope.schema.json`.
 Required cryptographic values are:
 
 - `profile`: `kdna.envelope.external-grant`
+- `contract_version`: `0.1.0`
 - `alg`: `A256GCM`
 - `cek_derivation`: `HKDF-SHA256`
 - `key_ref`: opaque, non-secret asset key reference
@@ -84,6 +85,7 @@ The exact UTF-8 AAD, with no trailing newline, is:
 
 ```text
 kdna.envelope.external-grant
+0.1.0
 <asset_uid>
 <asset_id>
 <asset_version>
@@ -95,7 +97,8 @@ licensed
 <entitlement_profile>
 ```
 
-The canonical package `asset_digest` cannot appear in this AAD because it
+The second line is the stable external-grant contract version. The canonical
+package `asset_digest` cannot appear in this AAD because it
 includes the encrypted entry and would create a digest cycle. The signed grant
 binds that final digest after packaging. The AAD instead binds immutable asset
 identity and the plaintext digest.
@@ -131,7 +134,7 @@ The issuer:
 3. generates an ephemeral X25519 key pair;
 4. computes `shared = X25519(ephemeral_private, device_public)`;
 5. derives `KEK = HKDF-SHA256(shared, wrap.salt,
-   UTF-8("kdna.key-context.device-grant\n" + grant_id), 32)`;
+   UTF-8("kdna.key-context.device-grant\n0.1.0\n" + grant_id), 32)`;
 6. wraps the 32-byte CEK using AES-256-KW (RFC 3394);
 7. destroys the CEK, KEK, shared secret, and ephemeral private key; and
 8. signs the grant with Ed25519.
@@ -165,7 +168,9 @@ A runtime MUST perform these checks before plaintext parsing:
 4. verify grant status, time window, monotonic status version, and local clock;
 5. compare account/device expectations, including both device public keys;
 6. compare manifest asset ID, UID, version, access, entitlement profile, entry
-   path, `checksums.json.asset_digest`, and ciphertext SHA-256;
+   path, expected final container digest **A**, and ciphertext SHA-256. The
+   caller supplies A as `expectedAssetDigest`; it is not the checksums entry-set
+   digest **E**;
 7. derive the device KEK and AES-KW unwrap the CEK;
 8. verify the envelope AAD and AES-GCM tag;
 9. verify `plaintext_digest`; and

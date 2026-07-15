@@ -32,9 +32,7 @@
     "encryption": {
       "profile": "kdna.envelope.external-grant",
       "profile_version": "0.1.0",
-      "encrypted_entries": [
-        "payload.kdnab"
-      ],
+      "encrypted_entries": ["payload.kdnab"],
       "key_grant_profile": "kdna.grant.external-key"
     }
   },

@@ -1,7 +1,7 @@
 {
-  "contract_id": "kdna.golden-single-asset/1",
+  "contract_id": "kdna.golden-single-asset",
   "manifest": {
-    "kdna_version": "1.0",
+    "format_version": "0.1.0",
     "asset_id": "kdna:fixture:release-decision-golden",
     "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000401",
     "asset_type": "domain",
@@ -15,8 +15,9 @@
       "id": "synthetic_protocol_fixture"
     },
     "compatibility": {
-      "min_loader_version": "0.16.0",
-      "profile": "kdna.payload.judgment"
+      "min_loader_version": "0.18.1",
+      "profile": "kdna.payload.judgment",
+      "profile_version": "0.1.0"
     },
     "payload": {
       "path": "payload.kdnab",
@@ -52,6 +53,7 @@
   },
   "payload": {
     "profile": "kdna.payload.judgment",
+    "profile_version": "0.1.0",
     "core": {
       "highest_question": "Which rollout choice preserves the safest verified recovery path?",
       "worldview": [

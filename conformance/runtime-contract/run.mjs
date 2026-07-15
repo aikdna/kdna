@@ -198,7 +198,7 @@ function applyMutation(input, vector) {
 function validateGoldens() {
   assertAuthoritativeCapsuleLineage();
   assertValid(
-    'ConsumptionPlan 1.0',
+    'ConsumptionPlan',
     core.validateConsumptionPlan(golden.plan, {
       trustedPlanDigest: golden.plan.integrity.plan_digest,
     }),
@@ -211,15 +211,15 @@ function validateGoldens() {
   const pair = core.negotiateRuntimePair(golden.plan, baseContext());
   assert.equal(pair.state, 'selected');
 
-  assertValid('Host 2 request', core.validateAgentHostRequest(golden.request, baseContext()));
+  assertValid('Agent Host request', core.validateAgentHostRequest(golden.request, baseContext()));
   const builtRequest = core.buildAgentHostRequest(
     { request_id: golden.request.request_id, capsule: golden.request.capsule },
     baseContext(),
   );
-  assert.ok(equalJson(builtRequest, golden.request), 'Host 2 builder must reproduce golden');
+  assert.ok(equalJson(builtRequest, golden.request), 'Agent Host builder must reproduce golden');
 
   assertValid(
-    'Host 2 receipt',
+    'Agent Host receipt',
     core.validateAgentHostReceipt(golden.receipt, { request: golden.request }),
   );
   assert.ok(
@@ -556,5 +556,5 @@ validateAuditNegativeVectors();
 validateRawJsonBoundary();
 
 console.log(
-  `Runtime contract v1 valid through @aikdna/kdna-core: ${positiveTraces.length} terminal traces, ${negotiationVectors.cases.length} negotiation vectors, ${negativeVectors.cases.length + auditNegativeVectors.cases.length} negative vectors`,
+  `Runtime contract valid through @aikdna/kdna-core: ${positiveTraces.length} terminal traces, ${negotiationVectors.cases.length} negotiation vectors, ${negativeVectors.cases.length + auditNegativeVectors.cases.length} negative vectors`,
 );

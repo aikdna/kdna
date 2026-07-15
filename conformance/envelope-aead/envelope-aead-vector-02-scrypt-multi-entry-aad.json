@@ -1,6 +1,6 @@
 {
   "id": "envelope-aead-vector-02-scrypt-multi-entry-aad",
-  "description": "scrypt-sha256-v1: same CEK + IV + plaintext under two different AADs (entry_path differs). The two ciphertexts MUST differ because AAD is part of the GCM input. A reader MUST reject if AAD does not match.",
+  "description": "scrypt-sha256-v1: same CEK + IV + plaintext under two different AADs (entry_path differs). GCM ciphertext bytes remain identical while authentication tags differ. A reader MUST reject if AAD does not match.",
   "inputs": {
     "password": "kdna-envelope-test-vector-2-password",
     "salt": "ICEiIyQlJicoKSorLC0uLw==",

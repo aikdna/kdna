@@ -3,9 +3,8 @@
  *
  * Verifies the Core module surface after the single-format refactor:
  *   - exports MIMETYPE, isKdnaSourceDir, detectContainerFormat
- *   - does NOT export old v1/v2 split names
  *   - detectContainerFormat returns 'kdna' for current assets and null for others
- *   - current Runtime schema and explicit legacy-source validation remain separate
+ *   - authoritative and packaged Runtime schemas remain identical
  */
 'use strict';
 
@@ -17,10 +16,9 @@ const os = require('node:os');
 const cbor = require('cbor-x');
 
 const core = require('../src/index.js');
-const v1 = require('../src/container/index.js');
+const container = require('../src/container/index.js');
 
 const LEGACY_MIMETYPE = ['application/vnd', 'aikdna', 'kdna+zip'].join('.');
-const { validateManifest } = require('../src/lint-pure.js');
 const { createKdnaAssetReader } = require('../src/asset-reader.js');
 const packagedManifestSchema = require('../schema/manifest.schema.json');
 const authoritativeManifestSchema = require('../../../schema/manifest.schema.json');
@@ -33,11 +31,6 @@ test('Core root exports single-format public API', () => {
   assert.equal(typeof core.isKdnaSourceDir, 'function', 'isKdnaSourceDir exported');
   assert.equal(typeof core.detectContainerFormat, 'function', 'detectContainerFormat exported');
 
-  assert.equal(core.MIMETYPE_V1, undefined, 'MIMETYPE_V1 must not be exported');
-  assert.equal(core.MIMETYPE_V2, undefined, 'MIMETYPE_V2 must not be exported');
-  assert.equal(core.MIMETYPE_LEGACY, undefined, 'MIMETYPE_LEGACY must not be exported');
-  assert.equal(core.isV1SourceDir, undefined, 'isV1SourceDir must not be exported');
-  assert.equal(core.isV2SourceDir, undefined, 'isV2SourceDir must not be exported');
   assert.equal(core.isSourceDir, undefined, 'isSourceDir alias must not be exported');
 });
 
@@ -52,12 +45,12 @@ test('Core runtime API rejects source directories and accepts packaged assets', 
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-runtime-file-'));
   try {
     const assetPath = path.join(tmp, 'minimal.kdna');
-    v1.pack(source, assetPath);
+    container.pack(source, assetPath);
     const packagedPlan = core.planLoad(assetPath);
     assert.equal(packagedPlan.state, 'ready');
     assert.equal(
       packagedPlan.input_fingerprint.source_fingerprint,
-      v1.planLoad(source).input_fingerprint.source_fingerprint,
+      container.planLoad(source).input_fingerprint.source_fingerprint,
       'source fingerprint is stable across source and packaged transports',
     );
   } finally {
@@ -65,16 +58,16 @@ test('Core runtime API rejects source directories and accepts packaged assets', 
   }
 });
 
-test('v1 entry exports single-format public API', () => {
-  assert.equal(v1.MIMETYPE, 'application/vnd.kdna.asset');
-  assert.equal(typeof v1.isKdnaSourceDir, 'function');
-  assert.equal(typeof v1.detectContainerFormat, 'function');
+test('container entry exports the single-format public API', () => {
+  assert.equal(container.MIMETYPE, 'application/vnd.kdna.asset');
+  assert.equal(typeof container.isKdnaSourceDir, 'function');
+  assert.equal(typeof container.detectContainerFormat, 'function');
 
-  assert.equal(v1.MIMETYPE_V1, undefined);
-  assert.equal(v1.MIMETYPE_V2, undefined);
-  assert.equal(v1.MIMETYPE_LEGACY, undefined);
-  assert.equal(v1.isV1SourceDir, undefined);
-  assert.equal(v1.isV2SourceDir, undefined);
+  assert.equal(container.MIMETYPE_V1, undefined);
+  assert.equal(container.MIMETYPE_V2, undefined);
+  assert.equal(container.MIMETYPE_LEGACY, undefined);
+  assert.equal(container.isV1SourceDir, undefined);
+  assert.equal(container.isV2SourceDir, undefined);
 });
 
 test('detectContainerFormat returns kdna for current asset and null for others', () => {
@@ -86,7 +79,7 @@ test('detectContainerFormat returns kdna for current asset and null for others',
     fs.writeFileSync(
       path.join(src, 'kdna.json'),
       JSON.stringify({
-        kdna_version: '1.0',
+        format_version: '0.1.0',
         asset_id: 'kdna:test:detect',
         asset_uid: 'urn:uuid:00000000-0000-4000-8000-000000000001',
         asset_type: 'sample',
@@ -96,94 +89,54 @@ test('detectContainerFormat returns kdna for current asset and null for others',
         created_at: '2026-01-01T00:00:00Z',
         updated_at: '2026-01-01T00:00:00Z',
         creator: { name: 'Test' },
-        compatibility: { min_loader_version: '1.0.0', profile: 'kdna.payload.judgment' },
-        payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false },
+        compatibility: {
+          min_loader_version: '1.0.0',
+          profile: 'kdna.payload.judgment',
+          profile_version: '0.1.0',
+        },
+        payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
       }),
     );
     fs.writeFileSync(
       path.join(src, 'payload.kdnab'),
-      JSON.stringify({ profile: 'kdna.payload.judgment', core: { highest_question: 'q', axioms: [] } }),
+      cbor.encode({
+        profile: 'kdna.payload.judgment',
+        profile_version: '0.1.0',
+        core: { highest_question: 'q', axioms: [] },
+      }),
     );
 
     const packed = path.join(tmp, 'test.kdna');
-    v1.pack(src, packed);
-    assert.equal(v1.detectContainerFormat(packed), 'kdna', 'packed current asset detects as kdna');
+    container.pack(src, packed);
+    assert.equal(
+      container.detectContainerFormat(packed),
+      'kdna',
+      'packed current asset detects as kdna',
+    );
 
     const notKdna = path.join(tmp, 'not.kdna');
     fs.writeFileSync(notKdna, 'this is not a zip file');
-    assert.equal(v1.detectContainerFormat(notKdna), null, 'non-zip returns null');
+    assert.equal(container.detectContainerFormat(notKdna), null, 'non-zip returns null');
 
     const oldMimeDir = path.join(tmp, 'old');
     fs.mkdirSync(oldMimeDir, { recursive: true });
     fs.writeFileSync(path.join(oldMimeDir, 'mimetype'), LEGACY_MIMETYPE);
     fs.writeFileSync(path.join(oldMimeDir, 'kdna.json'), '{}');
     fs.writeFileSync(path.join(oldMimeDir, 'payload.kdnab'), '{}');
-    assert.equal(v1.isKdnaSourceDir(oldMimeDir), false, 'old mimetype source dir is rejected');
+    assert.equal(
+      container.isKdnaSourceDir(oldMimeDir),
+      false,
+      'removed mimetype source dir is rejected',
+    );
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }
 });
 
-test('legacy authoring-source manifest validator remains explicit and enforces its own version gate', () => {
-  const valid = {
-    kdna_version: '1.0',
-    name: '@test/x',
-    version: '0.1.0',
-    judgment_version: '0.1.0',
-    description: 'd',
-    author: { name: 'A', id: 'a' },
-    license: { type: 'CC0-1.0' },
-    status: 'experimental',
-    quality_badge: 'untested',
-    access: 'public',
-    languages: ['en'],
-    default_language: 'en',
-  };
-  const r1 = validateManifest(valid);
-  assert.equal(r1.errors.length, 0, `valid manifest errors: ${r1.errors.join('; ')}`);
-
-  const missing = { ...valid };
-  delete missing.kdna_version;
-  const r2 = validateManifest(missing);
-  assert.ok(
-    r2.errors.some((e) => e.includes('kdna_version') && e.includes('missing')),
-    'missing kdna_version rejected',
-  );
-
-  const wrong = { ...valid, kdna_version: '2.0' };
-  const r3 = validateManifest(wrong);
-  assert.ok(
-    r3.errors.some((e) => e.includes('kdna_version') && e.includes('invalid value')),
-    'wrong kdna_version rejected',
-  );
-
-  const onlyOld = {
-    format: 'kdna',
-    format_version: '2.' + '0',
-    spec_version: '1.0-rc',
-    name: '@test/x',
-    version: '0.1.0',
-    judgment_version: '0.1.0',
-    description: 'd',
-    author: { name: 'A', id: 'a' },
-    license: { type: 'CC0-1.0' },
-    status: 'experimental',
-    quality_badge: 'untested',
-    access: 'public',
-    languages: ['en'],
-    default_language: 'en',
-  };
-  const r4 = validateManifest(onlyOld);
-  assert.ok(
-    r4.errors.some((e) => e.includes('kdna_version')),
-    'manifest with only old format fields rejected',
-  );
-});
-
 test('packaged manifest schema exposes only the single wire contract', () => {
-  assert.deepEqual(packagedManifestSchema.properties.kdna_version.enum, ['1.0']);
+  assert.equal(packagedManifestSchema.properties.format_version.const, '0.1.0');
   assert.deepEqual(packagedManifestSchema.properties.payload.properties.encoding.enum, ['cbor']);
-  assert.equal(packagedManifestSchema.properties.format_version, undefined);
+  assert.equal(packagedManifestSchema.properties[['kdna', 'version'].join('_')], undefined);
   assert.equal(packagedManifestSchema.properties.spec_version, undefined);
 });
 
@@ -208,17 +161,17 @@ test('Runtime manifest creator provenance is optional for validate and load', ()
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
     fs.writeFileSync(
       path.join(source, 'checksums.json'),
-      JSON.stringify(v1.buildChecksums(source), null, 2),
+      JSON.stringify(container.buildChecksums(source), null, 2),
     );
 
     const assetPath = path.join(tmp, 'no-creator.kdna');
-    v1.pack(source, assetPath);
+    container.pack(source, assetPath);
     const validation = core.validate(assetPath);
     assert.equal(validation.overall_valid, true, validation.problems.join('; '));
 
     const capsule = core.load(assetPath, { profile: 'compact', as: 'json' });
-    assert.equal(capsule.type, 'kdna.context.capsule');
-    assert.equal(capsule.domain, manifest.asset_id);
+    assert.equal(capsule.type, 'kdna.runtime-capsule');
+    assert.equal(capsule.asset.asset_id, manifest.asset_id);
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }
@@ -237,11 +190,11 @@ test('Runtime manifest rejects an explicitly empty creator name', () => {
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
     fs.writeFileSync(
       path.join(source, 'checksums.json'),
-      JSON.stringify(v1.buildChecksums(source), null, 2),
+      JSON.stringify(container.buildChecksums(source), null, 2),
     );
 
     const assetPath = path.join(tmp, 'empty-creator.kdna');
-    v1.pack(source, assetPath);
+    container.pack(source, assetPath);
     const validation = core.validate(assetPath);
     assert.equal(validation.overall_valid, false);
     assert.equal(validation.schema_valid, false);
@@ -257,13 +210,13 @@ test('Runtime manifest rejects an explicitly empty creator name', () => {
   }
 });
 
-test('asset reader verifySync enforces kdna_version and current mimetype', () => {
+test('asset reader verifySync enforces format_version and current mimetype', () => {
   const reader = createKdnaAssetReader();
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-reader-'));
   try {
     const file = path.join(tmp, 'single.kdna');
     const manifest = {
-      kdna_version: '1.0',
+      format_version: '0.1.0',
       asset_id: 'kdna:test:reader',
       asset_uid: 'urn:uuid:00000000-0000-4000-8000-000000000001',
       asset_type: 'sample',
@@ -273,11 +226,19 @@ test('asset reader verifySync enforces kdna_version and current mimetype', () =>
       created_at: '2026-01-01T00:00:00Z',
       updated_at: '2026-01-01T00:00:00Z',
       creator: { name: 'Test' },
-      compatibility: { min_loader_version: '1.0.0', profile: 'kdna.payload.judgment' },
+      compatibility: {
+        min_loader_version: '1.0.0',
+        profile: 'kdna.payload.judgment',
+        profile_version: '0.1.0',
+      },
       payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
       access: 'public',
     };
-    const payload = { profile: 'kdna.payload.judgment', core: { highest_question: 'q', axioms: [] } };
+    const payload = {
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+      core: { highest_question: 'q', axioms: [] },
+    };
 
     const files = {
       mimetype: Buffer.from('application/vnd.kdna.asset', 'utf8'),
@@ -347,7 +308,7 @@ test('asset reader verifySync enforces kdna_version and current mimetype', () =>
 
     const verify = reader.verifySync(reader.openSync(file));
     assert.equal(verify.ok, true, `verify errors: ${verify.errors.join('; ')}`);
-    assert.equal(verify.manifest.kdna_version, '1.0');
+    assert.equal(verify.manifest.format_version, '0.1.0');
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }

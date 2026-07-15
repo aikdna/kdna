@@ -1,3 +1,5 @@
+'use strict';
+
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -7,642 +9,276 @@ const cbor = require('cbor-x');
 
 const {
   createKdnaAssetReader,
-  createLicensedDecryptEntry,
-  encryptLicensedEntry,
   createPasswordDecryptEntry,
+  decodeRecoveryCode,
+  decryptProtectedEntry,
   encryptProtectedEntry,
+  generateRecoveryCode,
 } = require('../src');
 
-// ──────────────────────────────────────────────────────────────────────
-// LEGACY FIXTURE DEBT — tests that construct fixtures with separate
-// KDNA_Core.json + KDNA_Patterns.json entries instead of the single-format
-// `payload.kdnab` (CBOR-encoded judgment data). These fixtures predate the
-// Round 4A/4B single-format contract (`kdna_version: "1.0"`,
-// `application/vnd.kdna.asset`). Rewriting them requires migrating every
-// skipped fixture to the current container layout.
-//
-// The 5 affected tests are marked with `test.skip()` so that `npm test`
-// exits zero on CI. The test bodies are preserved for reference during the
-// single-format fixture alignment pass.
-// ──────────────────────────────────────────────────────────────────────
-
-function u16(n) {
-  const b = Buffer.alloc(2);
-  b.writeUInt16LE(n);
-  return b;
+function u16(value) {
+  const out = Buffer.alloc(2);
+  out.writeUInt16LE(value);
+  return out;
 }
 
-function u32(n) {
-  const b = Buffer.alloc(4);
-  b.writeUInt32LE(n);
-  return b;
+function u32(value) {
+  const out = Buffer.alloc(4);
+  out.writeUInt32LE(value);
+  return out;
 }
 
 function makeZip(entries) {
   const localParts = [];
   const centralParts = [];
   let offset = 0;
-
   for (const [name, value] of Object.entries(entries)) {
-    const nameBuf = Buffer.from(name);
+    const nameBytes = Buffer.from(name);
     const data = Buffer.from(value);
     const local = Buffer.concat([
-      u32(0x04034b50),
-      u16(20),
-      u16(0),
-      u16(0),
-      u16(0),
-      u16(0),
-      u32(0),
-      u32(data.length),
-      u32(data.length),
-      u16(nameBuf.length),
-      u16(0),
-      nameBuf,
-      data,
+      u32(0x04034b50), u16(20), u16(0), u16(0), u16(0), u16(0),
+      u32(0), u32(data.length), u32(data.length), u16(nameBytes.length), u16(0),
+      nameBytes, data,
     ]);
     localParts.push(local);
-
-    centralParts.push(
-      Buffer.concat([
-        u32(0x02014b50),
-        u16(20),
-        u16(20),
-        u16(0),
-        u16(0),
-        u16(0),
-        u16(0),
-        u32(0),
-        u32(data.length),
-        u32(data.length),
-        u16(nameBuf.length),
-        u16(0),
-        u16(0),
-        u16(0),
-        u16(0),
-        u32(0),
-        u32(offset),
-        nameBuf,
-      ]),
-    );
+    centralParts.push(Buffer.concat([
+      u32(0x02014b50), u16(20), u16(20), u16(0), u16(0), u16(0), u16(0),
+      u32(0), u32(data.length), u32(data.length), u16(nameBytes.length), u16(0),
+      u16(0), u16(0), u16(0), u32(0), u32(offset), nameBytes,
+    ]));
     offset += local.length;
   }
-
-  const central = Buffer.concat(centralParts);
   const local = Buffer.concat(localParts);
-  const eocd = Buffer.concat([
-    u32(0x06054b50),
-    u16(0),
-    u16(0),
-    u16(centralParts.length),
-    u16(centralParts.length),
-    u32(central.length),
-    u32(local.length),
-    u16(0),
+  const central = Buffer.concat(centralParts);
+  return Buffer.concat([
+    local,
+    central,
+    u32(0x06054b50), u16(0), u16(0), u16(centralParts.length),
+    u16(centralParts.length), u32(central.length), u32(local.length), u16(0),
   ]);
-  return Buffer.concat([local, central, eocd]);
 }
 
-function json(value) {
-  return JSON.stringify(value, null, 2);
-}
-
-test.skip('asset reader opens, verifies, and loads a .kdna asset without extraction', { todo: 'v2 legacy — v1 equivalent covered in tests/container-cli/v1-fixture-matrix.test.js and tests/container-cli/v1-global-cli.test.js' }, async () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-asset-'));
-  const assetPath = path.join(tmp, 'writing.kdna');
-  fs.writeFileSync(
-    assetPath,
-    makeZip({
-      mimetype: 'application/vnd.kdna.asset',
-      'kdna.json': json({
-        format: 'kdna',
-        kdna_version: '1.0',
-        name: '@aikdna/writing',
-        version: '0.1.0',
-        judgment_version: '2026.05',
-        access: 'open',
-        status: 'experimental',
-        quality_badge: 'untested',
-        description: 'Writing asset',
-        author: { name: 'Test', id: 'test' },
-        license: { type: 'CC-BY-4.0' },
-        languages: ['en'],
-        default_language: 'en',
-        keywords: ['writing'],
-      }),
-      'KDNA_Core.json': json({
-        meta: { domain: 'writing', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
-        stances: ['Structure before polish.'],
-        axioms: [{ id: 'a1', one_sentence: 'Writing has structure.', full_statement: 'Writing has structure.', why: 'Readers need a path.' }],
-        ontology: [],
-      }),
-      'KDNA_Patterns.json': json({
-        meta: { domain: 'writing', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
-        misunderstandings: [{ id: 'm1', wrong: 'Polish first.', correct: 'Structure first.', key_distinction: 'structure', why: 'Polish hides weak thinking.' }],
-        self_check: ['Did I inspect structure?'],
-      }),
-    }),
-  );
-
-  const reader = createKdnaAssetReader();
-  const asset = await reader.open(assetPath);
-  assert.match(asset.asset_digest, /^sha256:/);
-
-  const entries = await reader.listEntries(asset);
-  assert.deepEqual(entries, ['KDNA_Core.json', 'KDNA_Patterns.json', 'kdna.json', 'mimetype']);
-
-  const manifest = await reader.readManifest(asset);
-  assert.equal(manifest.name, '@aikdna/writing');
-  assert.equal(await reader.readJson(asset, 'KDNA_Scenarios.json'), null);
-  assert.equal(reader.readJsonSync(asset, 'KDNA_Scenarios.json'), null);
-
-  const verify = await reader.verify(asset);
-  assert.equal(verify.ok, true);
-  assert.match(verify.content_digest, /^sha256:/);
-
-  const compact = await reader.loadProfile(asset, 'compact');
-  assert.equal(compact.manifest.name, '@aikdna/writing');
-  assert.equal(compact.domain.core.axioms[0].id, 'a1');
-  assert.match(compact.context, /Writing has structure/);
-
-  const index = await reader.loadProfile(asset, 'index');
-  assert.equal(index.name, '@aikdna/writing');
-  assert.deepEqual(index.keywords, ['writing']);
-});
-
-test('asset verification rejects archives without the KDNA mimetype marker', async () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-no-mimetype-'));
-  const assetPath = path.join(tmp, 'legacy.kdna');
-  fs.writeFileSync(
-    assetPath,
-    makeZip({
-      'kdna.json': json({
-        format: 'kdna',
-        kdna_version: '1.0',
-        name: '@aikdna/legacy',
-        version: '0.1.0',
-        judgment_version: '2026.05',
-        access: 'open',
-        status: 'experimental',
-        quality_badge: 'untested',
-        description: 'Legacy asset without media marker',
-        author: { name: 'Test', id: 'test' },
-        license: { type: 'CC-BY-4.0' },
-        languages: ['en'],
-        default_language: 'en',
-      }),
-      'KDNA_Core.json': json({
-        meta: { domain: 'legacy', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
-        stances: ['Legacy assets need migration.'],
-        axioms: [{ id: 'a1', one_sentence: 'Markers matter.', full_statement: 'Markers matter.', why: 'Loaders need identity.' }],
-        ontology: [],
-      }),
-      'KDNA_Patterns.json': json({
-        meta: { domain: 'legacy', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
-        misunderstandings: [{ id: 'm1', wrong: 'Extension is enough.', correct: 'Mimetype is required.', key_distinction: 'identity', why: 'ZIP is generic.' }],
-        self_check: ['Did I check mimetype?'],
-      }),
-    }),
-  );
-
-  const reader = createKdnaAssetReader();
-  const verify = await reader.verify(await reader.open(assetPath));
-  assert.equal(verify.ok, false);
-  assert.ok(verify.errors.includes('required entry missing: mimetype'));
-});
-
-test('asset verification rejects deprecated plaintext source containers', async () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-kdna-spec-'));
-  const assetPath = path.join(tmp, 'legacy.kdna');
-  fs.writeFileSync(
-    assetPath,
-    makeZip({
-      mimetype: 'application/vnd.kdna.asset',
-      'kdna.json': json({
-        kdna_spec: '1.0-rc',
-        name: '@aikdna/legacy',
-        version: '0.1.0',
-        judgment_version: '2026.05',
-        access: 'open',
-        status: 'experimental',
-        quality_badge: 'untested',
-        description: 'Legacy asset with deprecated field',
-        author: { name: 'Test', id: 'test' },
-        license: { type: 'CC-BY-4.0' },
-        languages: ['en'],
-        default_language: 'en',
-      }),
-      'KDNA_Core.json': json({
-        meta: { domain: 'legacy', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
-        stances: ['Legacy manifests need migration.'],
-        axioms: [{ id: 'a1', one_sentence: 'Canonical names matter.', full_statement: 'Canonical names matter.', why: 'Implementers need one name.' }],
-        ontology: [],
-      }),
-      'KDNA_Patterns.json': json({
-        meta: { domain: 'legacy', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
-        misunderstandings: [{ id: 'm1', wrong: 'Two spec fields are harmless.', correct: 'One field is canonical.', key_distinction: 'interop', why: 'Schema drift breaks loaders.' }],
-        self_check: ['Did I use the correct version field?'],
-      }),
-    }),
-  );
-
-  const reader = createKdnaAssetReader();
-  const verify = await reader.verify(await reader.open(assetPath));
-  assert.equal(verify.ok, false);
-  assert.ok(verify.errors.some((error) => /forbidden top-level source entry|missing payload\.kdnab/.test(error)));
-});
-
-test.skip('asset reader decrypts licensed entries only through an in-memory hook', { todo: 'Phase 3 encryption — gated until after conformance recovery and load-contract stabilization' }, async () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-licensed-'));
-  const assetPath = path.join(tmp, 'writing-pro.kdna');
-  const core = {
-    meta: { domain: 'writing_pro', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
-    stances: ['Licensed judgment stays protected.'],
-    axioms: [{ id: 'licensed_a1', one_sentence: 'Protected judgment loads in memory.', full_statement: 'Protected judgment loads in memory.', why: 'Assets can be licensed.' }],
-    ontology: [],
-  };
-  const patterns = {
-    meta: { domain: 'writing_pro', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
-    misunderstandings: [{ id: 'licensed_m1', wrong: 'Decrypt to disk.', correct: 'Decrypt in memory.', key_distinction: 'storage', why: 'Plaintext must not persist.' }],
-    self_check: ['Did decryption stay in memory?'],
-  };
-  const manifest = {
-    format: 'kdna',
-    kdna_version: '1.0',
-    name: '@aikdna/writing_pro',
-    version: '0.1.0',
-    judgment_version: '2026.05',
+function manifest() {
+  return {
+    format_version: '0.1.0',
+    asset_id: 'kdna:test:protected',
+    asset_uid: 'urn:uuid:00000000-0000-4000-8000-000000000009',
+    asset_type: 'fixture',
+    title: 'Protected test asset',
+    version: '1.0.0',
+    judgment_version: '1.0.0',
+    created_at: '2026-07-15T00:00:00Z',
+    updated_at: '2026-07-15T00:00:00Z',
+    compatibility: {
+      min_loader_version: '0.18.1',
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+    },
+    payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: true },
     access: 'licensed',
-    status: 'experimental',
-    quality_badge: 'untested',
-    description: 'Licensed writing asset',
-    author: { name: 'Test', id: 'test' },
-    license: { type: 'KCL-1.0' },
-    languages: ['en'],
-    default_language: 'en',
-    encryption: {
-      profile: 'kdna.encryption.licensed-entry',
-      encrypted_entries: ['KDNA_Core.json', 'KDNA_Patterns.json'],
-    },
-  };
-  const licenseKey = 'KDNA-LIC-TEST';
-
-  fs.writeFileSync(
-    assetPath,
-    makeZip({
-      mimetype: 'application/vnd.kdna.asset',
-      'kdna.json': json(manifest),
-      'KDNA_Core.json': json(
-        encryptLicensedEntry(json(core), {
-          entryName: 'KDNA_Core.json',
-          manifest,
-          licenseKey,
-        }),
-      ),
-      'KDNA_Patterns.json': json(
-        encryptLicensedEntry(json(patterns), {
-          entryName: 'KDNA_Patterns.json',
-          manifest,
-          licenseKey,
-        }),
-      ),
-    }),
-  );
-
-  const reader = createKdnaAssetReader();
-  const asset = await reader.open(assetPath);
-  const verifyWithoutHook = await reader.verify(asset, { requireDecryption: true });
-  assert.equal(verifyWithoutHook.ok, false);
-  assert.ok(verifyWithoutHook.errors.includes('decryptEntry hook required for encrypted entries'));
-
-  await assert.rejects(
-    () => reader.loadProfile(asset, 'compact'),
-    /encrypted entry requires decryptEntry hook/,
-  );
-
-  const decryptEntry = createLicensedDecryptEntry({ licenseKey });
-  const verifyWithHook = await reader.verify(asset, { requireDecryption: true, decryptEntry });
-  assert.equal(verifyWithHook.ok, true);
-  assert.match(verifyWithHook.warnings.join('\n'), /encrypted entries present/);
-
-  const loaded = await reader.loadProfile(asset, 'compact', { decryptEntry });
-  assert.equal(loaded.domain.core.axioms[0].id, 'licensed_a1');
-  assert.match(loaded.context, /Protected judgment loads in memory/);
-
-  const syncAsset = reader.openSync(assetPath);
-  const syncVerify = reader.verifySync(syncAsset, { requireDecryption: true, decryptEntry });
-  assert.equal(syncVerify.ok, true);
-  const syncLoaded = reader.loadProfileSync(syncAsset, 'compact', { decryptEntry });
-  assert.equal(syncLoaded.domain.core.axioms[0].id, 'licensed_a1');
-
-  const wrongDecryptEntry = createLicensedDecryptEntry({
-    licenseKey: 'wrong',
-  });
-  const wrongVerify = await reader.verify(asset, {
-    requireDecryption: true,
-    decryptEntry: wrongDecryptEntry,
-  });
-  assert.equal(wrongVerify.ok, false);
-});
-
-test.skip('cross-language fixture: decrypts shared test_licensed_entry.kdna from Swift', { todo: 'Phase 3 encryption — gated until after conformance recovery and load-contract stabilization' }, async () => {
-  const fixturePath = path.resolve(__dirname, '../../../fixtures/test_licensed_entry.kdna');
-  const expectedCorePath = path.resolve(__dirname, '../../../fixtures/expected/KDNA_Core.json');
-
-  assert.ok(fs.existsSync(fixturePath), 'shared fixture must exist');
-
-  const reader = createKdnaAssetReader();
-  const asset = await reader.open(fixturePath);
-  const manifest = await reader.readManifest(asset);
-  assert.equal(manifest.access, 'licensed');
-  assert.deepStrictEqual(manifest.encryption.encrypted_entries, ['KDNA_Core.json']);
-
-  const decryptEntry = createLicensedDecryptEntry({
-    licenseKey: 'KDNA-TEST-LICENSE-VECTOR-2026',
-  });
-
-  // Decrypt encrypted entry
-  const coreJson = await reader.readJson(asset, 'KDNA_Core.json', { decryptEntry });
-  const expectedCore = JSON.parse(fs.readFileSync(expectedCorePath, 'utf8'));
-  assert.deepStrictEqual(coreJson, expectedCore);
-
-  // Plaintext entry is readable without hook
-  const patternsJson = await reader.readJson(asset, 'KDNA_Patterns.json');
-  assert.ok(patternsJson.meta);
-
-  // Verify with hook succeeds
-  const verifyResult = await reader.verify(asset, { requireDecryption: true, decryptEntry });
-  assert.equal(verifyResult.ok, true);
-
-  // Verify without hook fails
-  const verifyNoHook = await reader.verify(asset, { requireDecryption: true });
-  assert.equal(verifyNoHook.ok, false);
-
-  // Wrong key fails
-  const badDecryptEntry = createLicensedDecryptEntry({ licenseKey: 'WRONG-KEY' });
-  const verifyBad = await reader.verify(asset, { requireDecryption: true, decryptEntry: badDecryptEntry });
-  assert.equal(verifyBad.ok, false);
-});
-
-test('protected entry encrypts and decrypts with password (RFC-0009)', () => {
-  const {
-    encryptProtectedEntry,
-    decryptProtectedEntry,
-    generateRecoveryCode,
-    decodeRecoveryCode,
-  } = require('../src');
-
-  const plaintext = JSON.stringify({ secret: 'protected judgment' });
-  const password = 'KDNA-Test-Vector-2026';
-  const manifest = { name: '@test/protected', version: '1.0.0' };
-
-  const envelope = encryptProtectedEntry(plaintext, {
-    entryName: 'KDNA_Core.json',
-    manifest,
-    password,
-  });
-
-  assert.equal(envelope.profile, 'kdna.encryption.password');
-  assert.equal(envelope.alg, 'AES-256-GCM');
-  assert.equal(envelope.kdf, 'Argon2id');
-  assert.ok(envelope.key_slots);
-  assert.equal(envelope.key_slots.length, 2);
-  assert.equal(envelope.key_slots[0].slot, 'password');
-  assert.equal(envelope.key_slots[1].slot, 'recovery');
-  assert.deepEqual(Object.keys(envelope.password_kdf).sort(), [
-    'iterations', 'memory_kib', 'name', 'parallelism', 'salt',
-  ]);
-  assert.equal(envelope.password_kdf.name, 'Argon2id');
-  assert.match(envelope.password_kdf.salt, /^[A-Za-z0-9+/]+={0,2}$/);
-  assert.equal(envelope.password_kdf.memory_kib, 65536);
-  assert.equal(envelope.password_kdf.iterations, 3);
-  assert.equal(envelope.password_kdf.parallelism, 4);
-
-  const decrypted = decryptProtectedEntry(envelope, {
-    entryName: 'KDNA_Core.json',
-    manifest,
-    password,
-  });
-  assert.equal(decrypted.toString('utf8'), plaintext);
-});
-
-test('protected entry decrypts with recovery code (RFC-0009)', () => {
-  const {
-    encryptProtectedEntry,
-    decryptProtectedEntry,
-    generateRecoveryCode,
-    decodeRecoveryCode,
-  } = require('../src');
-
-  const plaintext = JSON.stringify({ secret: 'protected judgment' });
-  const password = 'KDNA-Test-Vector-2026';
-  const manifest = { name: '@test/protected', version: '1.0.0' };
-
-  const envelope = encryptProtectedEntry(plaintext, {
-    entryName: 'KDNA_Core.json',
-    manifest,
-    password,
-  });
-
-  // Recovery code format validation
-  const code = generateRecoveryCode();
-  assert.ok(code.startsWith('kdna-recover-'));
-  const raw = decodeRecoveryCode(code);
-  assert.equal(raw.length, 32);
-
-  // Encrypt with a known recovery code so we can test decryption
-  const envelopeWithCode = encryptProtectedEntry(plaintext, {
-    entryName: 'KDNA_Core.json',
-    manifest,
-    password,
-    recoveryCode: code,
-  });
-
-  // Decrypt via recovery code
-  const decrypted = decryptProtectedEntry(envelopeWithCode, {
-    entryName: 'KDNA_Core.json',
-    manifest,
-    recoveryCode: code,
-  });
-  assert.equal(decrypted.toString('utf8'), plaintext);
-});
-
-test('protected entry wrong password fails', () => {
-  const {
-    encryptProtectedEntry,
-    decryptProtectedEntry,
-  } = require('../src');
-
-  const plaintext = JSON.stringify({ secret: 'protected judgment' });
-  const password = 'KDNA-Test-Vector-2026';
-  const manifest = { name: '@test/protected', version: '1.0.0' };
-
-  const envelope = encryptProtectedEntry(plaintext, {
-    entryName: 'KDNA_Core.json',
-    manifest,
-    password,
-  });
-
-  assert.throws(() => {
-    decryptProtectedEntry(envelope, {
-      entryName: 'KDNA_Core.json',
-      manifest,
-      password: 'wrong-password',
-    });
-  }, /integrity check failed|AES-256-KW unwrap/);
-});
-
-test.skip('protected .kdna asset loads and decrypts with password hook', { todo: 'Phase 3 encryption — gated until after conformance recovery and load-contract stabilization' }, async () => {
-  const {
-    createKdnaAssetReader,
-    createPasswordDecryptEntry,
-    encryptProtectedEntry,
-  } = require('../src');
-
-  const password = 'KDNA-Test-Vector-2026';
-  const manifest = {
-    format: 'kdna',
-    kdna_version: '1.0',
-    name: '@test/protected',
-    version: '0.1.0',
-    judgment_version: '2026.05',
-    access: 'protected',
-    status: 'experimental',
-    quality_badge: 'untested',
-    description: 'Protected asset',
-    author: { name: 'Test', id: 'test' },
-    license: { type: 'CC-BY-4.0' },
-    languages: ['en'],
-    default_language: 'en',
+    entitlement: { profile: 'password' },
     encryption: {
       profile: 'kdna.encryption.password',
-      encrypted_entries: ['KDNA_Core.json'],
+      profile_version: '0.1.0',
+      encrypted_entries: ['payload.kdnab'],
     },
   };
+}
 
-  const core = {
-    meta: { domain: 'protected', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
-    stances: ['Protected judgment stays protected.'],
-    axioms: [{ id: 'a1', one_sentence: 'Passwords are user-friendly.', full_statement: 'Passwords are user-friendly.', why: 'Users remember passwords.' }],
-    ontology: [],
-  };
-
-  const patterns = {
-    meta: { domain: 'protected', version: '0.1.0', created: '2026-05-27', purpose: 'test', load_condition: 'always' },
-    terminology: { standard_terms: [], banned_terms: [] },
-    misunderstandings: [],
-    self_check: ['Did I check the password?'],
-  };
-
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-protected-'));
-  const assetPath = path.join(tmp, 'protected.kdna');
-
-  fs.writeFileSync(
-    assetPath,
-    makeZip({
-      mimetype: 'application/vnd.kdna.asset',
-      'kdna.json': json(manifest),
-      'KDNA_Core.json': json(
-        encryptProtectedEntry(json(core), {
-          entryName: 'KDNA_Core.json',
-          manifest,
-          password,
-        }),
-      ),
-      'KDNA_Patterns.json': json(patterns),
-    }),
-  );
-
+test('asset reader verifies and decrypts the committed password fixture in memory', async () => {
+  const fixture = path.resolve(__dirname, '../../../fixtures/test_protected_entry.kdna');
+  const expected = JSON.parse(fs.readFileSync(
+    path.resolve(__dirname, '../../../fixtures/expected/payload_protected.json'),
+    'utf8',
+  ));
   const reader = createKdnaAssetReader();
-  const asset = await reader.open(assetPath);
-
-  // Without hook, verify fails when requireDecryption is true
-  const verifyNoHook = await reader.verify(asset, { requireDecryption: true });
-  assert.equal(verifyNoHook.ok, false);
-
-  // With correct password hook, verify succeeds
-  const decryptEntry = createPasswordDecryptEntry({ password });
-  const verifyWithHook = await reader.verify(asset, { requireDecryption: true, decryptEntry });
-  assert.equal(verifyWithHook.ok, true);
-
-  // Load and check content
-  const loaded = await reader.loadProfile(asset, 'compact', { decryptEntry });
-  assert.equal(loaded.domain.core.axioms[0].id, 'a1');
-  assert.ok(loaded.context.includes('Passwords are user-friendly'));
-
-  // Wrong password fails
-  const wrongDecryptEntry = createPasswordDecryptEntry({ password: 'wrong' });
-  await assert.rejects(
-    () => reader.loadProfile(asset, 'compact', { decryptEntry: wrongDecryptEntry }),
-    /AES-256-KW unwrap: integrity check failed|wrong password/,
-  );
-});
-
-test('password-envelope fixture decrypts the stable payload bytes', async () => {
-  const fixturePath = path.resolve(__dirname, '../../../fixtures/test_protected_entry.kdna');
-  const expectedPayloadPath = path.resolve(
-    __dirname,
-    '../../../fixtures/expected/payload_protected.json',
+  const asset = await reader.open(fixture);
+  assert.match(asset.asset_digest, /^sha256:[0-9a-f]{64}$/);
+  assert.deepEqual(
+    await reader.listEntries(asset),
+    ['checksums.json', 'kdna.json', 'mimetype', 'payload.kdnab'],
   );
 
-  assert.ok(fs.existsSync(fixturePath), 'shared fixture must exist');
-
-  const reader = createKdnaAssetReader();
-  const asset = await reader.open(fixturePath);
-  const manifest = await reader.readManifest(asset);
-  assert.equal(manifest.format_version, '0.1.0');
-  assert.equal(manifest.access, 'licensed');
-  assert.equal(manifest.encryption.profile, 'kdna.encryption.password');
-  assert.equal(manifest.encryption.profile_version, '0.1.0');
-
+  const assetManifest = await reader.readManifest(asset);
   const decryptEntry = createPasswordDecryptEntry({ password: 'KDNA-TEST-VECTOR-2026' });
+  const verification = await reader.verify(asset, { requireDecryption: true, decryptEntry });
+  assert.equal(verification.ok, true, verification.errors.join('; '));
   const plaintext = decryptEntry({
-    entryName: manifest.payload.path,
-    ciphertext: await reader.readEntry(asset, manifest.payload.path),
-    manifest,
+    entryName: assetManifest.payload.path,
+    ciphertext: await reader.readEntry(asset, assetManifest.payload.path),
+    manifest: assetManifest,
   });
-  const expectedPayload = JSON.parse(fs.readFileSync(expectedPayloadPath, 'utf8'));
-  assert.deepEqual(cbor.decode(plaintext), expectedPayload);
+  assert.deepEqual(cbor.decode(plaintext), expected);
 });
 
-test('protected entry decrypt fails with tampered ciphertext', async () => {
-  const { createPasswordDecryptEntry, encryptProtectedEntry } = require('../src');
-  const password = 'KDNA-Test-Vector-2026';
-  const manifest = {
-    format: 'kdna',
-    kdna_version: '1.0',
-    name: '@test/protected',
-    version: '0.1.0',
-    judgment_version: '2026.05',
-    access: 'protected',
-    status: 'experimental',
-    quality_badge: 'untested',
-    description: 'Protected asset',
-    author: { name: 'Test', id: 'test' },
-    license: { type: 'CC-BY-4.0' },
-    languages: ['en'],
-    default_language: 'en',
-    encryption: {
-      profile: 'kdna.encryption.password',
-      encrypted_entries: ['KDNA_Core.json'],
-    },
-  };
-
-  const core = { meta: { domain: 'protected', version: '0.1.0' }, axioms: [{ id: 'a1' }] };
-  const envelope = encryptProtectedEntry(json(core), {
-    entryName: 'KDNA_Core.json',
-    manifest,
-    password,
+test('encrypted fixture requires an in-memory decrypt hook when decryption is required', async () => {
+  const fixture = path.resolve(__dirname, '../../../fixtures/test_protected_entry.kdna');
+  const reader = createKdnaAssetReader();
+  const verification = await reader.verify(await reader.open(fixture), {
+    requireDecryption: true,
   });
+  assert.equal(verification.ok, false);
+  assert.ok(verification.errors.includes('decryptEntry hook required for encrypted entries'));
+});
 
-  // Tamper with ciphertext
-  const parsed = JSON.parse(json(envelope));
-  const ciphertextBuf = Buffer.from(parsed.ciphertext, 'base64');
-  ciphertextBuf[0] ^= 0xff;
-  parsed.ciphertext = ciphertextBuf.toString('base64');
-
-  const decryptEntry = createPasswordDecryptEntry({ password });
-  assert.throws(
-    () => decryptEntry({ entryName: 'KDNA_Core.json', ciphertext: json(parsed), manifest }),
+test('asset reader projects the encrypted fixture through the authorized Runtime path', async () => {
+  const fixture = path.resolve(__dirname, '../../../fixtures/test_protected_entry.kdna');
+  const reader = createKdnaAssetReader();
+  const decryptEntry = createPasswordDecryptEntry({ password: 'KDNA-TEST-VECTOR-2026' });
+  const capsule = await reader.loadProfile(await reader.open(fixture), 'compact', {
+    password: 'KDNA-TEST-VECTOR-2026',
+    decryptEntry,
+  });
+  assert.equal(capsule.type, 'kdna.runtime-capsule');
+  assert.equal(capsule.contract_version, '0.1.0');
+  assert.equal(capsule.asset.asset_id, 'kdna:fixture:password-envelope');
+  assert.equal(
+    capsule.context.highest_question,
+    'Can the same protected judgment be recovered across implementations?',
   );
+});
+
+test('synchronous reader verification and projection preserve the encrypted fixture contract', () => {
+  const fixture = path.resolve(__dirname, '../../../fixtures/test_protected_entry.kdna');
+  const reader = createKdnaAssetReader();
+  const asset = reader.openSync(fixture);
+  const decryptEntry = createPasswordDecryptEntry({ password: 'KDNA-TEST-VECTOR-2026' });
+  const verification = reader.verifySync(asset, { requireDecryption: true, decryptEntry });
+  assert.equal(verification.ok, true, verification.errors.join('; '));
+  const capsule = reader.loadProfileSync(asset, 'compact', {
+    password: 'KDNA-TEST-VECTOR-2026',
+    decryptEntry,
+  });
+  assert.equal(capsule.type, 'kdna.runtime-capsule');
+  assert.equal(capsule.asset.asset_uid, verification.manifest.asset_uid);
+});
+
+test('wrong password hook cannot verify the encrypted fixture', async () => {
+  const fixture = path.resolve(__dirname, '../../../fixtures/test_protected_entry.kdna');
+  const reader = createKdnaAssetReader();
+  const decryptEntry = createPasswordDecryptEntry({ password: 'wrong-password' });
+  const verification = await reader.verify(await reader.open(fixture), {
+    requireDecryption: true,
+    decryptEntry,
+  });
+  assert.equal(verification.ok, false);
+  assert.ok(verification.errors.some((error) => /integrity check failed|unwrap/i.test(error)));
+});
+
+test('asset verification rejects an archive without the KDNA mimetype marker', async () => {
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-missing-marker-'));
+  try {
+    const assetPath = path.join(temporary, 'invalid.kdna');
+    fs.writeFileSync(assetPath, makeZip({
+      'kdna.json': JSON.stringify(manifest()),
+      'payload.kdnab': cbor.encode({
+        profile: 'kdna.payload.judgment',
+        profile_version: '0.1.0',
+        core: { highest_question: 'Q', axioms: [] },
+      }),
+    }));
+    const reader = createKdnaAssetReader();
+    const verification = await reader.verify(await reader.open(assetPath));
+    assert.equal(verification.ok, false);
+    assert.ok(verification.errors.includes('required entry missing: mimetype'));
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
+});
+
+test('asset verification rejects top-level authoring source entries', async () => {
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-source-entry-'));
+  try {
+    const assetPath = path.join(temporary, 'invalid.kdna');
+    const sourceEntry = ['KDNA', 'Core.json'].join('_');
+    fs.writeFileSync(assetPath, makeZip({
+      mimetype: 'application/vnd.kdna.asset',
+      'kdna.json': JSON.stringify(manifest()),
+      'payload.kdnab': cbor.encode({
+        profile: 'kdna.payload.judgment',
+        profile_version: '0.1.0',
+        core: { highest_question: 'Q', axioms: [] },
+      }),
+      [sourceEntry]: '{}',
+    }));
+    const reader = createKdnaAssetReader();
+    const verification = await reader.verify(await reader.open(assetPath));
+    assert.equal(verification.ok, false);
+    assert.ok(verification.errors.some((error) => error.includes('forbidden top-level source entry')));
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
+});
+
+test('password envelope round-trips with the stable profile coordinate', () => {
+  const assetManifest = manifest();
+  const plaintext = cbor.encode({ secret: 'protected judgment' });
+  const envelope = encryptProtectedEntry(plaintext, {
+    entryName: assetManifest.payload.path,
+    manifest: assetManifest,
+    password: 'correct-password',
+  });
+  assert.equal(envelope.profile, 'kdna.encryption.password');
+  assert.equal(envelope.profile_version, '0.1.0');
+  assert.equal(envelope.alg, 'AES-256-GCM');
+  assert.deepEqual(
+    decryptProtectedEntry(envelope, {
+      entryName: assetManifest.payload.path,
+      manifest: assetManifest,
+      password: 'correct-password',
+    }),
+    plaintext,
+  );
+});
+
+test('recovery code unwraps the same password envelope CEK', () => {
+  const assetManifest = manifest();
+  const recoveryCode = generateRecoveryCode();
+  assert.equal(decodeRecoveryCode(recoveryCode).length, 32);
+  const plaintext = Buffer.from('recoverable protected judgment');
+  const envelope = encryptProtectedEntry(plaintext, {
+    entryName: assetManifest.payload.path,
+    manifest: assetManifest,
+    password: 'correct-password',
+    recoveryCode,
+  });
+  assert.deepEqual(
+    decryptProtectedEntry(envelope, {
+      entryName: assetManifest.payload.path,
+      manifest: assetManifest,
+      recoveryCode,
+    }),
+    plaintext,
+  );
+});
+
+test('wrong password fails closed', () => {
+  const assetManifest = manifest();
+  const envelope = encryptProtectedEntry(Buffer.from('secret'), {
+    entryName: assetManifest.payload.path,
+    manifest: assetManifest,
+    password: 'correct-password',
+  });
+  assert.throws(() => decryptProtectedEntry(envelope, {
+    entryName: assetManifest.payload.path,
+    manifest: assetManifest,
+    password: 'wrong-password',
+  }), /integrity check failed|AES-256-KW unwrap/);
+});
+
+test('tampered password-envelope ciphertext fails authentication', () => {
+  const assetManifest = manifest();
+  const envelope = encryptProtectedEntry(Buffer.from('secret'), {
+    entryName: assetManifest.payload.path,
+    manifest: assetManifest,
+    password: 'correct-password',
+  });
+  const bytes = Buffer.from(envelope.ciphertext, 'base64');
+  bytes[0] ^= 0xff;
+  envelope.ciphertext = bytes.toString('base64');
+  assert.throws(() => decryptProtectedEntry(envelope, {
+    entryName: assetManifest.payload.path,
+    manifest: assetManifest,
+    password: 'correct-password',
+  }));
 });

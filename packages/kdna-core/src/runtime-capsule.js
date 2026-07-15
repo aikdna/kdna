@@ -434,10 +434,7 @@ function assertSuccessfulDigestEvidence(digests) {
 }
 
 function normalizeRuntimeAccess(access) {
-  if (!access || access === 'open') return 'public';
-  if (access === 'protected') return 'licensed';
-  if (access === 'runtime') return 'remote';
-  return access;
+  return access || 'public';
 }
 
 function buildRuntimeCapsule({

@@ -4,13 +4,7 @@
   "title": "KDNA Agent Host Receipt",
   "description": "Correlated Host response envelope. A matched runtime receipt proves only that the Host boundary accepted the exact Runtime Capsule value; it does not prove semantic consumption or conformance.",
   "type": "object",
-  "required": [
-    "protocol",
-    "protocol_version",
-    "request_id",
-    "runtime_receipt",
-    "outcome"
-  ],
+  "required": ["protocol", "protocol_version", "request_id", "runtime_receipt", "outcome"],
   "additionalProperties": false,
   "properties": {
     "protocol": {
@@ -47,14 +41,10 @@
                 "const": "completed"
               }
             },
-            "required": [
-              "provider_execution_status"
-            ]
+            "required": ["provider_execution_status"]
           }
         },
-        "required": [
-          "runtime_receipt"
-        ]
+        "required": ["runtime_receipt"]
       },
       "then": {
         "properties": {
@@ -117,10 +107,7 @@
           "$ref": "#/$defs/sha256"
         },
         "capsule_delivery_comparison": {
-          "enum": [
-            "matched",
-            "mismatched"
-          ]
+          "enum": ["matched", "mismatched"]
         },
         "capsule_schema_validation": {
           "const": "passed"
@@ -129,13 +116,7 @@
           "const": "matched"
         },
         "provider_execution_status": {
-          "enum": [
-            "completed",
-            "not_started",
-            "failed",
-            "cancelled",
-            "timed_out"
-          ]
+          "enum": ["completed", "not_started", "failed", "cancelled", "timed_out"]
         },
         "usage": {
           "$ref": "#/$defs/observedUsage"
@@ -161,19 +142,12 @@
                 "const": "matched"
               }
             },
-            "required": [
-              "capsule_delivery_comparison"
-            ]
+            "required": ["capsule_delivery_comparison"]
           },
           "then": {
             "properties": {
               "provider_execution_status": {
-                "enum": [
-                  "completed",
-                  "failed",
-                  "cancelled",
-                  "timed_out"
-                ]
+                "enum": ["completed", "failed", "cancelled", "timed_out"]
               }
             }
           },
@@ -212,10 +186,7 @@
     },
     "semanticConsumption": {
       "type": "object",
-      "required": [
-        "state",
-        "basis"
-      ],
+      "required": ["state", "basis"],
       "additionalProperties": false,
       "properties": {
         "state": {
@@ -228,13 +199,7 @@
     },
     "observedUsage": {
       "type": "object",
-      "required": [
-        "elapsed_ms",
-        "elapsed_basis",
-        "tokens_used",
-        "model_calls",
-        "basis"
-      ],
+      "required": ["elapsed_ms", "elapsed_basis", "tokens_used", "model_calls", "basis"],
       "additionalProperties": false,
       "properties": {
         "elapsed_ms": {
@@ -267,10 +232,7 @@
           ]
         },
         "basis": {
-          "enum": [
-            "host_reported",
-            "not_observed"
-          ]
+          "enum": ["host_reported", "not_observed"]
         }
       },
       "allOf": [
@@ -281,9 +243,7 @@
                 "const": "host_reported"
               }
             },
-            "required": [
-              "basis"
-            ]
+            "required": ["basis"]
           },
           "then": {
             "properties": {
@@ -312,24 +272,15 @@
     },
     "modelIdentity": {
       "type": "object",
-      "required": [
-        "value",
-        "basis"
-      ],
+      "required": ["value", "basis"],
       "additionalProperties": false,
       "properties": {
         "value": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": ["string", "null"],
           "minLength": 1
         },
         "basis": {
-          "enum": [
-            "host_reported",
-            "not_observed"
-          ]
+          "enum": ["host_reported", "not_observed"]
         }
       },
       "allOf": [
@@ -340,9 +291,7 @@
                 "const": "host_reported"
               }
             },
-            "required": [
-              "basis"
-            ]
+            "required": ["basis"]
           },
           "then": {
             "properties": {
@@ -364,10 +313,7 @@
     },
     "outcome": {
       "type": "object",
-      "required": [
-        "judgment",
-        "usage"
-      ],
+      "required": ["judgment", "usage"],
       "additionalProperties": false,
       "properties": {
         "judgment": {
@@ -387,11 +333,7 @@
     },
     "judgment": {
       "type": "object",
-      "required": [
-        "answer",
-        "reasoning",
-        "confidence"
-      ],
+      "required": ["answer", "reasoning", "confidence"],
       "additionalProperties": false,
       "properties": {
         "answer": {
@@ -405,20 +347,14 @@
           }
         },
         "confidence": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": ["string", "null"],
           "minLength": 1
         }
       }
     },
     "usage": {
       "type": "object",
-      "required": [
-        "tokens_used",
-        "model_calls"
-      ],
+      "required": ["tokens_used", "model_calls"],
       "additionalProperties": false,
       "properties": {
         "tokens_used": {

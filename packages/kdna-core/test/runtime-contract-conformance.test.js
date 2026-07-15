@@ -32,7 +32,7 @@ test('ConsumptionPlan, Agent Host, and JudgmentTrace conformance vectors pass', 
     { cwd: ROOT, encoding: 'utf8' },
   );
 
-  assert.match(output, /Runtime contract v1 valid/);
+  assert.match(output, /Runtime contract valid/);
 });
 
 test('runtime-contract fixtures reproduce from the authoritative Capsule bytes', () => {

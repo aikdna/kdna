@@ -10,8 +10,6 @@ export {
   formatContext,
 } from './loader.js';
 
-export { lintDomain, validateManifest } from './lint-pure.js';
-
 export {
   MIMETYPE,
   REQUIRED_DIR_ENTRIES,

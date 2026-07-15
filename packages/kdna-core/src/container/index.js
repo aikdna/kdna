@@ -1219,9 +1219,6 @@ function validate(inputPath, _opts = {}) {
 
 function normalizeAccess(access) {
   const value = access || 'public';
-  if (value === 'open') return { access: 'public', alias: value };
-  if (value === 'protected') return { access: 'licensed', alias: value };
-  if (value === 'runtime') return { access: 'remote', alias: value };
   return { access: value, alias: null };
 }
 
@@ -1235,7 +1232,6 @@ function inferEntitlementProfile(manifest) {
   if (manifest.encryption && manifest.encryption.profile === 'kdna.encryption.password.scrypt') {
     return 'password';
   }
-  if (manifest.access === 'protected') return 'password';
   return null;
 }
 
@@ -2181,7 +2177,8 @@ function loadAssetUnsafe(inputPath, opts = {}) {
     if (m.load_contract && m.load_contract.profiles && m.load_contract.profiles.compact && m.load_contract.profiles.compact.max_tokens_hint) {
       maxTokensHint = m.load_contract.profiles.compact.max_tokens_hint;
     }
-    result.content = { asset_id: m.asset_id, asset_uid: m.asset_uid, title: m.title, version: m.version, judgment_version: m.judgment_version, asset_type: m.asset_type, summary: m.summary || null, language: m.language || null, keywords: m.keywords || [], profiles_available: m.load_contract ? Object.keys(m.load_contract.profiles || {}) : [], max_tokens_hint: maxTokensHint };
+    result.content = { asset_id: m.asset_id, asset_uid: m.asset_uid, title: m.title, version: m.version, judgment_version: m.judgment_version, asset_type: m.asset_type, summary: m.summary || null, language: m.language || null, keywords: m.keywords || [], profiles_available: m.load_contract ? Object.keys(m.load_contract.profiles || {}) : [] };
+    if (maxTokensHint !== undefined) result.content.max_tokens_hint = maxTokensHint;
   } else if (profile === 'compact') {
     const core = payload.core || {};
     const normalizeList = (items) => (items || []).map((item) => {

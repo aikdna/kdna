@@ -178,12 +178,14 @@ hint.
 ### R5 — AAD format
 
 The Additional Authenticated Data for AES-256-GCM is the
-UTF-8 encoding of six lines joined by `\n` (LF, U+000A):
+UTF-8 encoding of eight lines joined by `\n` (LF, U+000A):
 
 ```
 kdna.envelope.aead
+0.1.0
 <asset_uid>
-<asset_digest>
+<asset_id>
+<asset_version>
 <entry_path>
 <access_mode>
 <entitlement_profile>
@@ -192,20 +194,22 @@ kdna.envelope.aead
 | Line | Source |
 |------|--------|
 | 1    | Literal `kdna.envelope.aead`. |
-| 2    | `kdna.json.asset_uid`. |
-| 3    | `kdna.json.digests.asset` (the asset-level digest, the value that binds the .kdna file as a whole). |
-| 4    | The encrypted entry's path inside the .kdna container (e.g. `KDNA_Core.json`). |
-| 5    | `kdna.json.access` (one of `public`, `licensed`, `remote`). |
-| 6    | The active entitlement profile (e.g. `password`, `account`, `org`, `device_bound`, `local_receipt`, `purchase_receipt`, `remote`). |
+| 2    | Stable envelope profile version, literal `0.1.0`. |
+| 3    | `kdna.json.asset_uid`. |
+| 4    | `kdna.json.asset_id`. |
+| 5    | `kdna.json.version`. |
+| 6    | The encrypted entry's path inside the `.kdna` container (normally `payload.kdnab`). |
+| 7    | `kdna.json.access` (one of `public`, `licensed`, `remote`). |
+| 8    | The active entitlement profile (for example `password`, `account`, or `org`). |
 
-`asset_uid`, `asset_digest`, `entry_path`, and
+`asset_uid`, `asset_id`, `asset_version`, `entry_path`, and
 `entitlement_profile` are part of the AAD so that:
 
 - A ciphertext cannot be moved across entries in the same
   asset (the tag would not verify against the new path's
   AAD).
-- A ciphertext cannot be moved across assets (the asset_uid
-  and asset_digest would differ).
+- A ciphertext cannot be moved across assets or asset releases (the UID,
+  identifier, or release version would differ).
 - A ciphertext cannot be moved across access modes or
   entitlement profiles (the tag would not verify).
 
@@ -263,13 +267,13 @@ Every conforming implementation MUST be able to decrypt
 **all three** test vectors in `conformance/envelope-aead/`
 without modification. The vectors are:
 
-- `kdna.envelope.aead-vector-01-scrypt-basic.json` —
+- `envelope-aead-vector-01-scrypt-basic.json` —
   scrypt-sha256-v1, single password slot, basic round-trip.
-- `kdna.envelope.aead-vector-02-scrypt-multi-entry-aad.json` —
+- `envelope-aead-vector-02-scrypt-multi-entry-aad.json` —
   scrypt-sha256-v1, two AADs (different `entry_path`) over
   the same CEK + IV + plaintext, proving AAD binding via
   divergent tags.
-- `kdna.envelope.aead-vector-03-argon2id-basic.json` —
+- `envelope-aead-vector-03-argon2id-basic.json` —
   argon2id-v1, single password slot, basic round-trip.
 
 A conformance runner at `conformance/envelope-aead.mjs`

@@ -32,9 +32,7 @@
     "encryption": {
       "profile": "kdna.envelope.external-grant",
       "profile_version": "0.1.0",
-      "encrypted_entries": [
-        "payload.kdnab"
-      ],
+      "encrypted_entries": ["payload.kdnab"],
       "key_grant_profile": "kdna.grant.external-key"
     }
   },
@@ -56,10 +54,7 @@
   "checksums": {
     "digest_profile": "kdna.digest-basis.runtime-entry-set",
     "digest_profile_version": "0.1.0",
-    "covered_entries": [
-      "kdna.json",
-      "payload.kdnab"
-    ],
+    "covered_entries": ["kdna.json", "payload.kdnab"],
     "algorithm": "sha256",
     "manifest_digest": "sha256:3af4035d7bfc7c27af9f8b7273be524d550cc5d6ee2d5d74273134ed5c9e5e7d",
     "payload_digest": "sha256:92f67d1e6f0c8c9ced0dd500e7ad0cebf80b6532c06cce8766456ce80e8bc819",

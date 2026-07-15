@@ -5,7 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 
 const core = require('../src');
-const v1 = require('../src/container');
+const container = require('../src/container');
 
 const repoRoot = path.resolve(__dirname, '..', '..', '..');
 const minimalSource = path.join(repoRoot, 'examples', 'minimal');
@@ -19,10 +19,10 @@ function withAsset(mutator, { rebuildChecksums = true } = {}) {
   if (rebuildChecksums) {
     fs.writeFileSync(
       path.join(source, 'checksums.json'),
-      JSON.stringify(v1.buildChecksums(source), null, 2),
+      JSON.stringify(container.buildChecksums(source), null, 2),
     );
   }
-  v1.pack(source, assetPath);
+  container.pack(source, assetPath);
   return { tmp, source, assetPath, cleanup: () => fs.rmSync(tmp, { recursive: true, force: true }) };
 }
 
@@ -87,16 +87,16 @@ test('stable APIs converge on current inspect, five-gate validate, Capsule load,
     const validationSync = core.validateKDNASync(fixture.assetPath);
     const validation = await core.validateKDNA(fixture.assetPath);
     assert.deepEqual(validation, validationSync);
-    assert.deepEqual(validation, v1.validate(fixture.assetPath));
+    assert.deepEqual(validation, container.validate(fixture.assetPath));
     assert.equal(validation.overall_valid, true, validation.problems.join('; '));
 
     const loadedSync = core.loadKDNASync(fixture.assetPath, { profile: 'compact', as: 'json' });
     const loaded = await core.loadKDNA(fixture.assetPath, { profile: 'compact', as: 'json' });
     const loadedByDefault = core.loadKDNASync(fixture.assetPath);
-    assert.equal(loadedSync.type, 'kdna.context.capsule');
-    assert.equal(loaded.type, 'kdna.context.capsule');
-    assert.equal(loadedByDefault.type, 'kdna.context.capsule');
-    assert.equal(loaded.domain, loadedSync.domain);
+    assert.equal(loadedSync.type, 'kdna.runtime-capsule');
+    assert.equal(loaded.type, 'kdna.runtime-capsule');
+    assert.equal(loadedByDefault.type, 'kdna.runtime-capsule');
+    assert.deepEqual(loaded.asset, loadedSync.asset);
     assert.deepEqual(loaded.context, loadedSync.context);
 
     const promptSync = core.renderForAgentSync(fixture.assetPath, { profile: 'compact' });
@@ -144,10 +144,10 @@ test('path, Buffer, Uint8Array, and opened-asset inputs have current API parity 
     const opened = core.openKDNASync(bytes);
     const expectedValidation = core.validateKDNASync(fixture.assetPath);
     const expectedInspect = core.inspectKDNASync(fixture.assetPath);
-    assert.deepEqual(v1.inspect(bytes), v1.inspect(fixture.assetPath));
-    assert.deepEqual(v1.validate(bytes), v1.validate(fixture.assetPath));
-    const filePlan = v1.planLoad(fixture.assetPath);
-    const memoryPlan = v1.planLoad(bytes);
+    assert.deepEqual(container.inspect(bytes), container.inspect(fixture.assetPath));
+    assert.deepEqual(container.validate(bytes), container.validate(fixture.assetPath));
+    const filePlan = container.planLoad(fixture.assetPath);
+    const memoryPlan = container.planLoad(bytes);
     assert.deepEqual(memoryPlan.asset, filePlan.asset);
     assert.deepEqual(memoryPlan.checks, filePlan.checks);
     assert.equal(memoryPlan.state, filePlan.state);
@@ -157,8 +157,8 @@ test('path, Buffer, Uint8Array, and opened-asset inputs have current API parity 
       filePlan.input_fingerprint.source_fingerprint,
     );
     assert.deepEqual(
-      v1.loadAuthorized(bytes, { as: 'json' }).context,
-      v1.loadAuthorized(fixture.assetPath, { as: 'json' }).context,
+      container.loadAuthorized(bytes, { as: 'json' }).context,
+      container.loadAuthorized(fixture.assetPath, { as: 'json' }).context,
     );
 
     const originalMkdtemp = fs.mkdtempSync;
@@ -171,7 +171,7 @@ test('path, Buffer, Uint8Array, and opened-asset inputs have current API parity 
         const inspect = core.inspectKDNASync(input);
         assert.equal(inspect.asset_digest, expectedInspect.asset_digest);
         assert.equal(inspect.content_digest, expectedInspect.content_digest);
-        assert.equal(core.loadKDNASync(input, { as: 'json' }).type, 'kdna.context.capsule');
+        assert.equal(core.loadKDNASync(input, { as: 'json' }).type, 'kdna.runtime-capsule');
       }
     } finally {
       fs.mkdtempSync = originalMkdtemp;
@@ -185,7 +185,7 @@ test('path, Buffer, Uint8Array, and opened-asset inputs have current API parity 
     };
     try {
       core.inspectKDNASync(fixture.assetPath);
-      v1.inspect(fixture.assetPath);
+      container.inspect(fixture.assetPath);
     } finally {
       fs.readFileSync = originalReadFile;
     }
@@ -214,7 +214,7 @@ test('packaged load entry points authorize and project one immutable file snapsh
   const loaders = [
     ['stable', (input) => core.loadKDNASync(input, { as: 'json' })],
     ['runtime', (input) => core.loadAuthorized(input, { as: 'json' })],
-    ['v1', (input) => v1.loadAuthorized(input, { as: 'json' })],
+    ['container', (input) => container.loadAuthorized(input, { as: 'json' })],
   ];
 
   try {
@@ -232,7 +232,7 @@ test('packaged load entry points authorize and project one immutable file snapsh
       };
       try {
         const capsule = load(publicAsset.assetPath);
-        assert.equal(capsule.domain, 'kdna:test:snapshot-public', name);
+        assert.equal(capsule.asset.asset_id, 'kdna:test:snapshot-public', name);
         assert.equal(capsule.access, 'public', name);
         assert.equal(reads, 1, `${name} must read the packaged path once`);
       } finally {
@@ -279,14 +279,16 @@ test('language is valid and creator provenance remains optional but cannot be ex
   }
 });
 
-test('current manifest validation rejects known pre-1.0 version aliases', () => {
+test('current manifest validation rejects removed manifest aliases', () => {
   const fixture = withAsset((source) => updateManifest(source, (manifest) => {
     manifest.kdna_spec = '1.0-rc';
   }));
   try {
     const validation = core.validateKDNASync(fixture.assetPath);
     assert.equal(validation.schema_valid, false);
-    assert.ok(validation.problems.includes('kdna.json: kdna_spec is not allowed. Use kdna_version.'));
+    assert.ok(
+      validation.problems.includes('kdna.json: kdna_spec is not allowed. Use format_version.'),
+    );
     assert.equal(core.verifyAssetSync(fixture.assetPath).ok, false);
   } finally {
     fixture.cleanup();
@@ -359,7 +361,7 @@ test('direct reader loadProfile uses current Capsule and legacy readDataMap fail
     const reader = core.createKdnaAssetReader();
     const asset = reader.openSync(fixture.assetPath);
     const capsule = reader.loadProfileSync(asset, 'compact');
-    assert.equal(capsule.type, 'kdna.context.capsule');
+    assert.equal(capsule.type, 'kdna.runtime-capsule');
     assert.throws(
       () => reader.readDataMapSync(asset),
       (error) => error.code === 'KDNA_LEGACY_DATA_MAP_UNSUPPORTED',

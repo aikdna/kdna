@@ -109,6 +109,11 @@
         "encrypted": { "type": "boolean" }
       }
     },
+    "access": {
+      "type": "string",
+      "enum": ["public", "licensed", "remote"],
+      "description": "Stable delivery and authorization mode for the asset."
+    },
     "summary": { "type": "string" },
     "description": { "type": "string" },
     "language": { "type": "string" },

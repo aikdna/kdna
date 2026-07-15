@@ -18,13 +18,20 @@ test('container dispatcher loads sibling modules from packaged src layout', () =
   assert.equal(asset.manifest.title, 'Agent Project Context');
 });
 
-test('v1 schema validation does not depend on the host project cwd', () => {
+test('container schema validation does not depend on the host project cwd', () => {
   const tmp = os.tmpdir();
-  const v1Entry = path.join(repoRoot, 'packages', 'kdna-core', 'src', 'v1', 'index.js');
+  const containerEntry = path.join(
+    repoRoot,
+    'packages',
+    'kdna-core',
+    'src',
+    'container',
+    'index.js',
+  );
   const example = path.join(repoRoot, 'examples', 'minimal');
   const script = `
-    const v1 = require(${JSON.stringify(v1Entry)});
-    const result = v1.validate(${JSON.stringify(example)});
+    const container = require(${JSON.stringify(containerEntry)});
+    const result = container.validate(${JSON.stringify(example)});
     if (!result.overall_valid) {
       throw new Error(JSON.stringify(result.problems || result, null, 2));
     }

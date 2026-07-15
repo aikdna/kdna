@@ -244,11 +244,6 @@ export interface KDNAManifest {
   [key: string]: any;
 }
 
-export interface LintResult {
-  errors: string[];
-  warnings: string[];
-}
-
 export interface ValidationResult {
   valid: boolean;
   errors: string[];
@@ -703,6 +698,7 @@ export function authorizeExternalKeyGrant(options: {
   grant: KDNAExternalKeyGrant;
   issuerPublicKeys: Map<string, unknown> | Record<string, unknown>;
   manifest: KDNAManifest;
+  /** Final immutable container digest A; never checksums entry-set digest E. */
   expectedAssetDigest: string;
   envelope: KDNAExternalGrantEnvelope | Uint8Array;
   deviceAgreementKey: KDNADeviceKeyPairs['agreement'] | unknown;
@@ -1493,10 +1489,6 @@ export interface KDNASemver {
 export function parseSemver(version: string): KDNASemver | null;
 export function compareSemver(left: string, right: string): number;
 export function satisfies(version: string, range: string): boolean;
-
-// Lint
-export function lintDomain(dataMap: KDNAFileDataMap): LintResult;
-export function validateManifest(manifest: unknown): LintResult;
 
 // Validate
 export function validateDomainSchema(

@@ -52,13 +52,7 @@
       "format": "date-time"
     },
     "overall_status": {
-      "enum": [
-        "execution_completed",
-        "blocked",
-        "execution_failed",
-        "cancelled",
-        "timed_out"
-      ]
+      "enum": ["execution_completed", "blocked", "execution_failed", "cancelled", "timed_out"]
     },
     "runtime_contract": {
       "$ref": "#/$defs/runtimeContract"
@@ -122,17 +116,10 @@
       "if": {
         "properties": {
           "overall_status": {
-            "enum": [
-              "execution_completed",
-              "execution_failed",
-              "cancelled",
-              "timed_out"
-            ]
+            "enum": ["execution_completed", "execution_failed", "cancelled", "timed_out"]
           }
         },
-        "required": [
-          "overall_status"
-        ]
+        "required": ["overall_status"]
       },
       "then": {
         "properties": {
@@ -210,9 +197,7 @@
             "const": "execution_completed"
           }
         },
-        "required": [
-          "overall_status"
-        ]
+        "required": ["overall_status"]
       },
       "then": {
         "properties": {
@@ -245,10 +230,7 @@
               "comparison": {
                 "properties": {
                   "overall": {
-                    "enum": [
-                      "within_limit",
-                      "not_observed"
-                    ]
+                    "enum": ["within_limit", "not_observed"]
                   }
                 }
               }
@@ -270,32 +252,21 @@
             "const": "blocked"
           }
         },
-        "required": [
-          "overall_status"
-        ]
+        "required": ["overall_status"]
       },
       "then": {
         "properties": {
           "runtime_contract": {
             "properties": {
               "negotiation_state": {
-                "enum": [
-                  "selected",
-                  "blocked",
-                  "not_started"
-                ]
+                "enum": ["selected", "blocked", "not_started"]
               }
             }
           },
           "capsule_delivery_evidence": {
             "properties": {
               "host_boundary_comparison": {
-                "enum": [
-                  "mismatched",
-                  "not_delivered",
-                  "not_observed",
-                  "unavailable"
-                ]
+                "enum": ["mismatched", "not_delivered", "not_observed", "unavailable"]
               }
             }
           },
@@ -333,10 +304,7 @@
           "execution": {
             "properties": {
               "delivery_status": {
-                "enum": [
-                  "not_delivered",
-                  "rejected_before_execution"
-                ]
+                "enum": ["not_delivered", "rejected_before_execution"]
               },
               "execution_status": {
                 "const": "not_started"
@@ -359,9 +327,7 @@
             "const": "execution_failed"
           }
         },
-        "required": [
-          "overall_status"
-        ]
+        "required": ["overall_status"]
       },
       "then": {
         "properties": {
@@ -405,9 +371,7 @@
             "const": "cancelled"
           }
         },
-        "required": [
-          "overall_status"
-        ]
+        "required": ["overall_status"]
       },
       "then": {
         "properties": {
@@ -451,9 +415,7 @@
             "const": "timed_out"
           }
         },
-        "required": [
-          "overall_status"
-        ]
+        "required": ["overall_status"]
       },
       "then": {
         "properties": {
@@ -576,9 +538,7 @@
           "minItems": 1,
           "uniqueItems": true,
           "items": {
-            "enum": [
-              "0.1.0"
-            ]
+            "enum": ["0.1.0"]
           }
         },
         "plan_host_protocols": {
@@ -595,37 +555,18 @@
           "$ref": "https://github.com/aikdna/kdna/specs/agent-host-capabilities.schema.json"
         },
         "negotiation_state": {
-          "enum": [
-            "selected",
-            "blocked",
-            "not_started"
-          ]
+          "enum": ["selected", "blocked", "not_started"]
         },
         "selected_capsule_version": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "enum": [
-            "0.1.0",
-            null
-          ]
+          "type": ["string", "null"],
+          "enum": ["0.1.0", null]
         },
         "selected_host_protocol": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "enum": [
-            "kdna.agent-host",
-            null
-          ]
+          "type": ["string", "null"],
+          "enum": ["kdna.agent-host", null]
         },
         "issue_code": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": ["string", "null"],
           "enum": [
             "KDNA_CAPSULE_VERSION_UNSUPPORTED",
             "KDNA_HOST_PROTOCOL_UNSUPPORTED",
@@ -642,9 +583,7 @@
                 "const": "selected"
               }
             },
-            "required": [
-              "negotiation_state"
-            ]
+            "required": ["negotiation_state"]
           },
           "then": {
             "properties": {
@@ -677,9 +616,7 @@
                 "const": "blocked"
               }
             },
-            "required": [
-              "negotiation_state"
-            ]
+            "required": ["negotiation_state"]
           },
           "then": {
             "properties": {
@@ -696,9 +633,7 @@
                 "const": "not_started"
               }
             },
-            "required": [
-              "negotiation_state"
-            ]
+            "required": ["negotiation_state"]
           },
           "then": {
             "properties": {
@@ -712,13 +647,7 @@
     },
     "assetIdentity": {
       "type": "object",
-      "required": [
-        "asset_id",
-        "asset_uid",
-        "version",
-        "judgment_version",
-        "access"
-      ],
+      "required": ["asset_id", "asset_uid", "version", "judgment_version", "access"],
       "additionalProperties": false,
       "properties": {
         "asset_id": {
@@ -735,21 +664,13 @@
           "$ref": "#/$defs/semver"
         },
         "access": {
-          "enum": [
-            "public",
-            "licensed",
-            "remote"
-          ]
+          "enum": ["public", "licensed", "remote"]
         }
       }
     },
     "successfulDigest": {
       "type": "object",
-      "required": [
-        "value",
-        "basis",
-        "comparison"
-      ],
+      "required": ["value", "basis", "comparison"],
       "additionalProperties": false,
       "properties": {
         "value": {
@@ -760,25 +681,14 @@
         },
         "comparison": {
           "type": "object",
-          "required": [
-            "state",
-            "against",
-            "expected",
-            "source"
-          ],
+          "required": ["state", "against", "expected", "source"],
           "additionalProperties": false,
           "properties": {
             "state": {
-              "enum": [
-                "matched",
-                "not_compared"
-              ]
+              "enum": ["matched", "not_compared"]
             },
             "against": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             },
             "expected": {
               "oneOf": [
@@ -791,10 +701,7 @@
               ]
             },
             "source": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": ["string", "null"]
             }
           }
         }
@@ -852,23 +759,11 @@
           ]
         },
         "delivered_capsule_version": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "enum": [
-            "0.1.0",
-            null
-          ]
+          "type": ["string", "null"],
+          "enum": ["0.1.0", null]
         },
         "host_boundary_comparison": {
-          "enum": [
-            "matched",
-            "mismatched",
-            "not_delivered",
-            "not_observed",
-            "unavailable"
-          ]
+          "enum": ["matched", "mismatched", "not_delivered", "not_observed", "unavailable"]
         },
         "request_id": {
           "oneOf": [
@@ -893,9 +788,7 @@
                 "const": "matched"
               }
             },
-            "required": [
-              "host_boundary_comparison"
-            ]
+            "required": ["host_boundary_comparison"]
           },
           "then": {
             "properties": {
@@ -928,9 +821,7 @@
                 "const": "mismatched"
               }
             },
-            "required": [
-              "host_boundary_comparison"
-            ]
+            "required": ["host_boundary_comparison"]
           },
           "then": {
             "properties": {
@@ -963,9 +854,7 @@
                 "const": "not_observed"
               }
             },
-            "required": [
-              "host_boundary_comparison"
-            ]
+            "required": ["host_boundary_comparison"]
           },
           "then": {
             "properties": {
@@ -995,15 +884,10 @@
           "if": {
             "properties": {
               "host_boundary_comparison": {
-                "enum": [
-                  "not_delivered",
-                  "unavailable"
-                ]
+                "enum": ["not_delivered", "unavailable"]
               }
             },
-            "required": [
-              "host_boundary_comparison"
-            ]
+            "required": ["host_boundary_comparison"]
           },
           "then": {
             "properties": {
@@ -1029,9 +913,7 @@
                 "const": "unavailable"
               }
             },
-            "required": [
-              "host_boundary_comparison"
-            ]
+            "required": ["host_boundary_comparison"]
           },
           "then": {
             "properties": {
@@ -1048,25 +930,12 @@
     },
     "projectionActual": {
       "type": "object",
-      "required": [
-        "profile",
-        "capsule_delivery_digest",
-        "profile_deviated_from_plan"
-      ],
+      "required": ["profile", "capsule_delivery_digest", "profile_deviated_from_plan"],
       "additionalProperties": false,
       "properties": {
         "profile": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "enum": [
-            "index",
-            "compact",
-            "scenario",
-            "full",
-            null
-          ]
+          "type": ["string", "null"],
+          "enum": ["index", "compact", "scenario", "full", null]
         },
         "capsule_delivery_digest": {
           "oneOf": [
@@ -1079,10 +948,7 @@
           ]
         },
         "profile_deviated_from_plan": {
-          "type": [
-            "boolean",
-            "null"
-          ]
+          "type": ["boolean", "null"]
         }
       }
     },
@@ -1098,23 +964,13 @@
       "additionalProperties": false,
       "properties": {
         "delivery_status": {
-          "enum": [
-            "correlated_response",
-            "rejected_before_execution",
-            "not_delivered"
-          ]
+          "enum": ["correlated_response", "rejected_before_execution", "not_delivered"]
         },
         "semantic_consumption": {
           "$ref": "#/$defs/semanticConsumption"
         },
         "execution_status": {
-          "enum": [
-            "completed",
-            "not_started",
-            "failed",
-            "cancelled",
-            "timed_out"
-          ]
+          "enum": ["completed", "not_started", "failed", "cancelled", "timed_out"]
         },
         "conformance_status": {
           "const": "not_evaluated"
@@ -1126,10 +982,7 @@
     },
     "semanticConsumption": {
       "type": "object",
-      "required": [
-        "state",
-        "basis"
-      ],
+      "required": ["state", "basis"],
       "additionalProperties": false,
       "properties": {
         "state": {
@@ -1142,24 +995,15 @@
     },
     "modelIdentity": {
       "type": "object",
-      "required": [
-        "value",
-        "basis"
-      ],
+      "required": ["value", "basis"],
       "additionalProperties": false,
       "properties": {
         "value": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": ["string", "null"],
           "minLength": 1
         },
         "basis": {
-          "enum": [
-            "host_reported",
-            "not_observed"
-          ]
+          "enum": ["host_reported", "not_observed"]
         }
       },
       "allOf": [
@@ -1170,9 +1014,7 @@
                 "const": "host_reported"
               }
             },
-            "required": [
-              "basis"
-            ]
+            "required": ["basis"]
           },
           "then": {
             "properties": {
@@ -1194,11 +1036,7 @@
     },
     "budgetEvidence": {
       "type": "object",
-      "required": [
-        "limits",
-        "actual",
-        "comparison"
-      ],
+      "required": ["limits", "actual", "comparison"],
       "additionalProperties": false,
       "properties": {
         "limits": {
@@ -1252,10 +1090,7 @@
           ]
         },
         "elapsed_basis": {
-          "enum": [
-            "host_monotonic",
-            "not_observed"
-          ]
+          "enum": ["host_monotonic", "not_observed"]
         },
         "tokens_used": {
           "oneOf": [
@@ -1280,10 +1115,7 @@
           ]
         },
         "usage_basis": {
-          "enum": [
-            "host_reported",
-            "not_observed"
-          ]
+          "enum": ["host_reported", "not_observed"]
         }
       },
       "allOf": [
@@ -1294,9 +1126,7 @@
                 "const": "host_monotonic"
               }
             },
-            "required": [
-              "elapsed_basis"
-            ]
+            "required": ["elapsed_basis"]
           },
           "then": {
             "properties": {
@@ -1321,9 +1151,7 @@
                 "const": "host_reported"
               }
             },
-            "required": [
-              "usage_basis"
-            ]
+            "required": ["usage_basis"]
           },
           "then": {
             "properties": {
@@ -1363,58 +1191,28 @@
       "additionalProperties": false,
       "properties": {
         "projection_chars": {
-          "enum": [
-            "within_limit",
-            "exceeded",
-            "not_observed"
-          ]
+          "enum": ["within_limit", "exceeded", "not_observed"]
         },
         "task_chars": {
-          "enum": [
-            "within_limit",
-            "exceeded"
-          ]
+          "enum": ["within_limit", "exceeded"]
         },
         "elapsed_ms": {
-          "enum": [
-            "within_limit",
-            "exceeded",
-            "not_observed"
-          ]
+          "enum": ["within_limit", "exceeded", "not_observed"]
         },
         "tokens_used": {
-          "enum": [
-            "within_limit",
-            "exceeded",
-            "not_limited",
-            "not_observed"
-          ]
+          "enum": ["within_limit", "exceeded", "not_limited", "not_observed"]
         },
         "model_calls": {
-          "enum": [
-            "within_limit",
-            "exceeded",
-            "not_limited",
-            "not_observed"
-          ]
+          "enum": ["within_limit", "exceeded", "not_limited", "not_observed"]
         },
         "overall": {
-          "enum": [
-            "within_limit",
-            "exceeded",
-            "not_observed"
-          ]
+          "enum": ["within_limit", "exceeded", "not_observed"]
         }
       }
     },
     "resultRef": {
       "type": "object",
-      "required": [
-        "shape",
-        "result_digest",
-        "basis",
-        "stored"
-      ],
+      "required": ["shape", "result_digest", "basis", "stored"],
       "additionalProperties": false,
       "properties": {
         "shape": {
@@ -1433,11 +1231,7 @@
     },
     "issue": {
       "type": "object",
-      "required": [
-        "code",
-        "message",
-        "phase"
-      ],
+      "required": ["code", "message", "phase"],
       "additionalProperties": false,
       "properties": {
         "code": {
@@ -1449,15 +1243,7 @@
           "minLength": 1
         },
         "phase": {
-          "enum": [
-            "plan",
-            "negotiation",
-            "load",
-            "budget",
-            "delivery",
-            "host",
-            "execution"
-          ]
+          "enum": ["plan", "negotiation", "load", "budget", "delivery", "host", "execution"]
         }
       }
     }

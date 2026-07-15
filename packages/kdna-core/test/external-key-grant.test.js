@@ -366,6 +366,34 @@ test('published external-grant golden verifies signature, unwraps CEK, and decry
   }
 });
 
+test('external envelope AAD binds the stable contract coordinate and asset release', () => {
+  const golden = conformanceJson('golden.json');
+  assert.deepEqual(
+    core.externalEnvelopeAad({
+      manifest: golden.manifest,
+      entryName: golden.envelope.entry_path,
+      plaintextDigest: golden.envelope.plaintext_digest,
+      keyRef: golden.envelope.key_ref,
+      issuerKeyId: golden.envelope.issuer_key_id,
+    }).toString('utf8').split('\n'),
+    [
+      core.EXTERNAL_ENVELOPE_PROFILE,
+      core.EXTERNAL_GRANT_CONTRACT_VERSION,
+      golden.manifest.asset_uid,
+      golden.manifest.asset_id,
+      golden.manifest.version,
+      golden.envelope.entry_path,
+      golden.envelope.plaintext_digest,
+      golden.envelope.key_ref,
+      golden.envelope.issuer_key_id,
+      golden.manifest.access,
+      golden.manifest.entitlement.profile,
+    ],
+  );
+  assert.notEqual(golden.expected_asset_digest, golden.checksums.entry_set_digest);
+  assert.equal(golden.grant.asset.digest, golden.expected_asset_digest);
+});
+
 test('published external-grant negative fixtures fail with their declared error codes', () => {
   const golden = conformanceJson('golden.json');
   const cases = [
