@@ -1,5 +1,18 @@
 {
   "schema": "kdna.post-cutover-naming-allowlist",
   "schema_version": "0.1.0",
-  "exceptions": []
+  "exceptions": [
+    {
+      "path": "conformance/ecosystem-profile-0.9/golden/cluster-consumption-plan.json",
+      "token": "/api/v2/notifications",
+      "owner": "Example notification API",
+      "reason": "Third-party API route retained verbatim as interoperability input."
+    },
+    {
+      "path": "conformance/ecosystem-profile-0.9/golden/cluster-judgment-trace.json",
+      "token": "/api/v2/notifications",
+      "owner": "Example notification API",
+      "reason": "Third-party API route retained verbatim as interoperability input."
+    }
+  ]
 }

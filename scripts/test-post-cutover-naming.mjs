@@ -133,8 +133,8 @@ test('stable coordinates and domain or third-party versions are not generation c
   assert.deepEqual(collectCandidates(legal), []);
 });
 
-test('all 62 hash-bound retired tokens fail independently', () => {
-  assert.equal(authorityTokens.length, 62);
+test('all 73 hash-bound retired tokens fail independently', () => {
+  assert.equal(authorityTokens.length, 73);
   for (const [index, token] of authorityTokens.entries()) {
     const violations = scanRecords(
       [{ path: `fixtures/authority-${index}.bin`, surface: 'tracked', bytes: token }],
@@ -367,6 +367,23 @@ test('KDNA-owned generation prose, identifiers, paths, and tags fail', () => {
   const tokens = scanRecords(records, []).map((violation) => violation.token);
   for (const identifier of identifiers) assert.ok(tokens.includes(identifier));
   assert.ok(tokens.includes(ownedGeneration));
+});
+
+test('generation-style route coordinates fail while an exact third-party route can be allowed', () => {
+  const ownedRoute = ['/', 'v', '7', '/entitlements/activate'].join('');
+  const externalRoute = ['/api/', 'v', '2', '/notifications/preferences'].join('');
+  assert.ok(collectCandidates(ownedRoute).some(({ rule }) => rule === 'generation-route-coordinate'));
+
+  const path = 'fixtures/third-party-route.json';
+  const record = { path, surface: 'tracked', text: externalRoute };
+  const exceptions = [{
+    path,
+    token: externalRoute.slice(0, externalRoute.lastIndexOf('/')),
+    owner: 'Example notification API',
+    reason: 'Third-party API route retained verbatim as interoperability input.',
+  }];
+  validateAllowlist(exceptions, [record]);
+  assert.deepEqual(scanRecords([record], exceptions, []), []);
 });
 
 test('release-candidate suffixes without a separator remain generation candidates', () => {

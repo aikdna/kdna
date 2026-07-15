@@ -6,6 +6,10 @@
   inspect, validate, default verification, LoadPlan, and load. Structurally
   valid assets that require a newer loader now fail closed with
   `KDNA_LOADER_VERSION_UNSUPPORTED` before projection.
+- Remove generation-style prefixes from KDNA-owned entitlement, subscription,
+  project, and verification routes; give active fixture responsibilities plain
+  names; and extend the public naming gate with hash-bound retirements plus two
+  exact third-party API exceptions.
 
 ## 0.13.2
 

@@ -8,7 +8,23 @@ import { fileURLToPath } from 'node:url';
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_OUTPUT = path.join(SCRIPT_DIR, 'post-cutover-token-authority.json');
 const EXPECTED_REPOSITORY = 'open/kdna';
-const EXPECTED_TOKEN_COUNT = 62;
+const EXPECTED_TOKEN_COUNT = 73;
+// These KDNA-owned public-surface retirements were discovered after the main
+// responsibility migration was frozen. Keep them encoded here so the naming
+// gate does not contain the retired plaintext it is designed to reject.
+const ACTIVE_RESIDUAL_RETIREMENTS = Object.freeze([
+  'L3YxL2VudGl0bGVtZW50cy9hY3RpdmF0ZQ==',
+  'L3YxL2VudGl0bGVtZW50cy9yZXZva2U=',
+  'L3YxL2VudGl0bGVtZW50cy9zdGF0dXM=',
+  'L3YxL2VudGl0bGVtZW50cy9zeW5j',
+  'L3YxL3Byb2plY3Q=',
+  'L3YxL3N1YnNjcmlwdGlvbi9hY3RpdmF0ZQ==',
+  'L3YxL3ZlcmlmeQ==',
+  'TXlDb3JwLXYy',
+  'ZnV0dXJlLWF1ZGl0LXN5c3RlbS12Mg==',
+  'd2VsbG5lc3MtY2hlY2tpbi12Mg==',
+  'd2VsbG5lc3MtcHVzaC12Mg==',
+]);
 
 function tokenSetDigest(encodedTokens) {
   return createHash('sha256').update(JSON.stringify(encodedTokens)).digest('hex');
@@ -18,7 +34,7 @@ function buildTokenAuthority(manifest) {
   if (!manifest || typeof manifest !== 'object' || !Array.isArray(manifest.entries)) {
     throw new Error('migration manifest entries are required');
   }
-  const tokens = manifest.entries
+  const migratedTokens = manifest.entries
     .filter((entry) => entry.repo === EXPECTED_REPOSITORY && entry.classification === 'A')
     .flatMap((entry) => {
       if (!Array.isArray(entry.replacements)) {
@@ -32,8 +48,8 @@ function buildTokenAuthority(manifest) {
         throw new Error('migration replacement old value must be a non-empty string');
       }
       return Buffer.from(replacement.old, 'utf8').toString('base64');
-    })
-    .sort();
+    });
+  const tokens = [...new Set([...migratedTokens, ...ACTIVE_RESIDUAL_RETIREMENTS])].sort();
 
   if (tokens.length !== EXPECTED_TOKEN_COUNT || new Set(tokens).size !== EXPECTED_TOKEN_COUNT) {
     throw new Error(
@@ -92,6 +108,7 @@ function main() {
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
 
 export {
+  ACTIVE_RESIDUAL_RETIREMENTS,
   buildTokenAuthority,
   EXPECTED_REPOSITORY,
   EXPECTED_TOKEN_COUNT,

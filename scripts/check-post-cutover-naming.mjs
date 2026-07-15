@@ -14,15 +14,15 @@ const ROOT = path.resolve(SCRIPT_DIR, '..');
 const ALLOWLIST_PATH = path.join(SCRIPT_DIR, 'post-cutover-naming-allowlist.json');
 const ALLOWLIST_RELATIVE_PATH = path.relative(ROOT, ALLOWLIST_PATH).split(path.sep).join('/');
 const ALLOWLIST_AUTHORITY_DIGEST =
-  '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945';
+  '8aad12a135da7a50604870c1af7cd1c3f28805c07436ce9bae9253fd1580f28b';
 const TOKEN_AUTHORITY_PATH = path.join(SCRIPT_DIR, 'post-cutover-token-authority.json');
 const TOKEN_AUTHORITY_RELATIVE_PATH = path
   .relative(ROOT, TOKEN_AUTHORITY_PATH)
   .split(path.sep)
   .join('/');
 const TOKEN_AUTHORITY_FILE_DIGEST =
-  '124e7d38f9148fdba1b352f1d09133072b11ddbf0fef9846313d4bf221a4bd08';
-const TOKEN_AUTHORITY_COUNT = 62;
+  '3d810cd1c8cabe83e4b9d5ec0a2c74473d93b94968a332ac98ef0077022298b9';
+const TOKEN_AUTHORITY_COUNT = 73;
 const ARCHIVE_LIMITS = Object.freeze({
   archiveBytes: 25 * 1024 * 1024,
   entries: 256,
@@ -58,6 +58,10 @@ function candidateRules() {
         `\\b(?:kdna(?:-core|-eval)?|agent)-${VERSION_PREFIX}(?=(?:[0-9]|\\$|\\{))`,
         'gu',
       ),
+    },
+    {
+      name: 'generation-route-coordinate',
+      regex: /\/[vV][0-9]+\/[A-Za-z0-9][A-Za-z0-9._~-]*/gu,
     },
     {
       name: 'owned-identifier-generation',
@@ -811,12 +815,16 @@ function scanRecords(records, allowlist, authorityTokens = loadTokenAuthority())
         });
       }
     }
-    for (const finding of collectCandidates(record.rawPathText, rules)) {
+    // The allowlist is full-tuple hash-bound before scanning. Its exact
+    // third-party tokens necessarily contain candidates, so do not make the
+    // authority file require a circular exception for itself.
+    const scanCandidateRules = record.path !== ALLOWLIST_RELATIVE_PATH;
+    for (const finding of scanCandidateRules ? collectCandidates(record.rawPathText, rules) : []) {
       if (!spanIsAllowed(allowed.path, finding.start, finding.end)) {
         violations.push({ ...finding, path: record.path, line: null, surface: record.surface });
       }
     }
-    for (const finding of collectCandidates(record.rawText, rules)) {
+    for (const finding of scanCandidateRules ? collectCandidates(record.rawText, rules) : []) {
       if (!spanIsAllowed(allowed.text, finding.start, finding.end)) {
         violations.push({
           ...finding,
