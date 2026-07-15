@@ -12,9 +12,10 @@
  * loading contract. .kdna assets are created, inspected, packed,
  * unpacked, and validated through the official KDNA toolchain.
  *
- * Output: a deterministic ZIP-compatible .kdna container with mimetype
- * as the first entry (uncompressed). Packing the same source directory
- * twice produces byte-identical output, so the SHA-256 is stable.
+ * Output: a canonical-order ZIP-compatible .kdna container with mimetype
+ * as the first entry (uncompressed). Repeated packing is byte-reproducible
+ * only with one pinned packer toolchain and compressor; DEFLATE bytes and the
+ * resulting package SHA-256 may differ across compressors or zlib versions.
  */
 
 import { spawnSync } from 'node:child_process';

@@ -468,7 +468,7 @@ Packages: `@aikdna/kdna-core`
   2. **Schema gate:** `kdna.json` against `manifest.schema.json` via AJV 2020-12
   3. **Payload gate:** `payload.kdnab` against `payload-profile.schema.json`
   4. **Checksums gate:** when `checksums.json` is present, computed digests are compared against declared values for `kdna.json`, `payload.kdnab`, and the combined asset digest
-- **KDNA Core pack module.** `pack(sourceDir, outputPath)` produces a deterministic `.kdna` container: fixed DOS epoch timestamps, alphabetical entry order, mimetype first (STORED, method 0). Same source → byte-identical output.
+- **KDNA Core pack module.** `pack(sourceDir, outputPath)` produces a canonical-order `.kdna` container: fixed DOS epoch timestamps, alphabetical entry order, mimetype first (STORED, method 0). Package bytes are reproducible with one pinned packer toolchain and compressor; DEFLATE output may differ across compressors or zlib versions.
 - **KDNA Core unpack module.** `unpack(inputPath, outputDir)` extracts a `.kdna` container to a directory with path-traversal protection.
 - **Container security hardening.** ZIP reader enforces:
   - Maximum container size (25 MiB), max entries (128), max entry size (5 MiB), max total uncompressed (12 MiB)

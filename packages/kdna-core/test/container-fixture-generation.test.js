@@ -331,11 +331,17 @@ test('public packer preserves logical identity while binding new transport bytes
 test('packaging contract distinguishes logical identity from transport bytes', () => {
   const formatDoc = fs.readFileSync(path.join(repoRoot, 'docs', 'core', 'file-format.md'), 'utf8');
   const agentGuide = fs.readFileSync(path.join(repoRoot, 'docs', '15-minute-agent-guide.md'), 'utf8');
+  const statusMatrix = fs.readFileSync(path.join(repoRoot, 'docs', 'tool-status-matrix.md'), 'utf8');
+  const changelog = fs.readFileSync(
+    path.join(repoRoot, 'packages', 'kdna-core', 'CHANGELOG.md'),
+    'utf8',
+  );
   const containerSource = fs.readFileSync(
     path.join(repoRoot, 'packages', 'kdna-core', 'src', 'container', 'index.js'),
     'utf8',
   );
-  for (const text of [formatDoc, agentGuide, containerSource]) {
+  const packScript = fs.readFileSync(path.join(repoRoot, 'scripts', 'pack-asset.mjs'), 'utf8');
+  for (const text of [formatDoc, agentGuide, changelog, containerSource, packScript]) {
     assert.match(text, /pinned (?:packer )?toolchain/u);
     assert.match(text, /DEFLATE/u);
   }
@@ -344,9 +350,22 @@ test('packaging contract distinguishes logical identity from transport bytes', (
     assert.match(text, /source_fingerprint/u);
     assert.match(text, /exact immutable (?:package\s+)?bytes/u);
   }
-  const publicClaims = `${formatDoc}\n${agentGuide}\n${containerSource}`;
+  const publicClaims = [
+    formatDoc,
+    agentGuide,
+    statusMatrix,
+    changelog,
+    containerSource,
+    packScript,
+  ].join('\n');
   assert.doesNotMatch(publicClaims, /Equal logical entries produce equal package bytes/u);
   assert.doesNotMatch(publicClaims, /same input → same SHA-256/u);
+  assert.doesNotMatch(publicClaims, /Same source → byte-identical output/u);
+  assert.doesNotMatch(
+    publicClaims,
+    /Packing the same source directory\s+twice produces byte-identical output/u,
+  );
+  assert.doesNotMatch(publicClaims, /Deterministic ZIP pack/u);
   assert.doesNotMatch(publicClaims, /same source directory packed twice produces\s+\* byte-identical output/u);
 });
 

@@ -12,7 +12,7 @@
 | `kdna inspect <path>` | Inspect manifest metadata | Released |
 | `kdna plan-load <path>` | LoadPlan with entitlement diagnostics | Released |
 | `kdna load <path> --profile=... --as=...` | Render judgment context | Released |
-| `kdna pack <dir> <out.kdna>` | Deterministic ZIP pack | Released |
+| `kdna pack <dir> <out.kdna>` | Canonical-order ZIP pack; transport bytes are compressor-bound | Released |
 | `kdna unpack <file.kdna> <dir>` | Unpack container | Released |
 | `kdna demo judgment <dir>` | Create a current-format judgment demonstration | Released |
 | `kdna install <file.kdna>` | Install to local asset store | Released |
