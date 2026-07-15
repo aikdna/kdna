@@ -4,6 +4,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
+const { sameFilesystemIdentity } = require('./filesystem-identity');
 
 const repoRoot = path.resolve(__dirname, '..');
 // The override exists so regression tests can exercise the real validator
@@ -142,7 +143,7 @@ for (const component of manifest.components) {
             encoding: 'utf8',
             stdio: ['ignore', 'pipe', 'pipe'],
           }).trim();
-          if (fs.realpathSync(checkoutRoot) !== fs.realpathSync(localPath)) {
+          if (!sameFilesystemIdentity(checkoutRoot, localPath)) {
             fail(component, `live package path is not a repository root: ${localPath}`);
           }
           checkoutCommit = execFileSync('git', ['rev-parse', 'HEAD'], {

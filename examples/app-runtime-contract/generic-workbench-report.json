@@ -1,8 +1,8 @@
 {
   "report_version": "1.0",
   "report_id": "generic-workbench-report-001",
-  "created_at": "2026-06-25T00:00:00Z",
-  "trace_id": "generic-workbench-trace-001",
+  "created_at": "2026-07-15T00:00:02Z",
+  "trace_id": "trace_2222222222222222",
   "task": {
     "summary": "Example task."
   },

@@ -3,11 +3,11 @@
   "event_id": "generic-client-feedback-001",
   "source": "app",
   "domain_id": "@aikdna/example",
-  "trace_id": "generic-client-trace-001",
+  "trace_id": "trace_1111111111111111",
   "user_feedback": {
     "type": "useful_judgment",
     "rating": 4,
     "comment": "Example feedback."
   },
-  "timestamp": "2026-06-25T00:00:00Z"
+  "timestamp": "2026-07-15T00:00:02Z"
 }

@@ -1,8 +1,8 @@
 {
   "report_version": "1.0",
   "report_id": "generic-client-report-001",
-  "created_at": "2026-06-25T00:00:00Z",
-  "trace_id": "generic-client-trace-001",
+  "created_at": "2026-07-15T00:00:02Z",
+  "trace_id": "trace_1111111111111111",
   "task": {
     "summary": "Example task."
   },

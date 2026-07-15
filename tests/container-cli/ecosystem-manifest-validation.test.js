@@ -6,6 +6,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+const { sameFilesystemIdentity } = require('../../scripts/filesystem-identity');
 
 const repoRoot = path.resolve(__dirname, '..', '..');
 const validator = path.join(repoRoot, 'scripts', 'validate-ecosystem-manifest.js');
@@ -51,6 +52,30 @@ function runValidator(manifestPath, reposRoot) {
     },
   });
 }
+
+test('Windows repository aliases compare by canonical filesystem identity', () => {
+  const shortPath = String.raw`C:\Users\RUNNER~1\work\kdna-cli`;
+  const longPath = String.raw`c:/users/runneradmin/work/kdna-cli/`;
+  const realpath = (input) => {
+    if (input === shortPath || input === longPath) {
+      return String.raw`C:\Users\RunnerAdmin\work\kdna-cli`;
+    }
+    return input;
+  };
+  assert.equal(sameFilesystemIdentity(shortPath, longPath, { platform: 'win32', realpath }), true);
+});
+
+test('Windows identity comparison does not collapse a nested repository path', () => {
+  const repositoryRoot = String.raw`C:\work\outer`;
+  const nestedPackage = String.raw`C:\work\outer\fixture-package`;
+  assert.equal(
+    sameFilesystemIdentity(repositoryRoot, nestedPackage, {
+      platform: 'win32',
+      realpath: (input) => input,
+    }),
+    false,
+  );
+});
 
 test('ecosystem manifest does not claim the nonexistent kdna-releases repository', () => {
   const manifest = JSON.parse(

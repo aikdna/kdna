@@ -3,11 +3,11 @@
   "event_id": "generic-workbench-feedback-001",
   "source": "app",
   "domain_id": "@aikdna/example",
-  "trace_id": "generic-workbench-trace-001",
+  "trace_id": "trace_2222222222222222",
   "user_feedback": {
     "type": "useful_judgment",
     "rating": 4,
     "comment": "Example feedback."
   },
-  "timestamp": "2026-06-25T00:00:00Z"
+  "timestamp": "2026-07-15T00:00:02Z"
 }
