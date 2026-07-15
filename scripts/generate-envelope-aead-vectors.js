@@ -132,7 +132,7 @@ function buildEnvelope({ kdf_profile, password, salt, iv, plaintext, aad, cek, k
         slot: 'password',
         kdf_profile,
         kdf_params:
-          kdf_profile === 'scrypt-sha256-v1'
+          kdf_profile === 'scrypt-sha256'
             ? { ...SCRYPT_PARAMS, salt: salt.toString('base64') }
             : { ...ARGON2_PARAMS, salt: salt.toString('base64') },
         wrap: KEY_WRAPPING,
@@ -145,7 +145,7 @@ function buildEnvelope({ kdf_profile, password, salt, iv, plaintext, aad, cek, k
   };
 }
 
-// ── Vector 1: scrypt-sha256-v1 basic round-trip ─────────────────────
+// ── Vector 1: scrypt-sha256 basic round-trip ─────────────────────
 
 function vector1() {
   const password = 'kdna-envelope-test-vector-1-password';
@@ -169,7 +169,7 @@ function vector1() {
   });
   const kek = deriveKekScrypt(password, salt);
   const envelope = buildEnvelope({
-    kdf_profile: 'scrypt-sha256-v1',
+    kdf_profile: 'scrypt-sha256',
     password,
     salt,
     iv,
@@ -181,7 +181,7 @@ function vector1() {
   const scryptParams = { ...SCRYPT_PARAMS, salt: salt.toString('base64') };
   return {
     id: 'envelope-aead-vector-01-scrypt-basic',
-    description: 'scrypt-sha256-v1: basic round-trip with one password slot.',
+    description: 'scrypt-sha256: basic round-trip with one password slot.',
     inputs: {
       password,
       salt: salt.toString('base64'),
@@ -199,7 +199,7 @@ function vector1() {
   };
 }
 
-// ── Vector 2: scrypt-sha256-v1 multi-entry AAD ──────────────────────
+// ── Vector 2: scrypt-sha256 multi-entry AAD ──────────────────────
 // Proves that the AAD binding to <entry_path> prevents ciphertext
 // swapping across entries: encrypting the same plaintext under
 // different entry paths produces different ciphertexts.
@@ -234,7 +234,7 @@ function vector2() {
   });
   const kek = deriveKekScrypt(password, salt);
   const envelope1 = buildEnvelope({
-    kdf_profile: 'scrypt-sha256-v1',
+    kdf_profile: 'scrypt-sha256',
     password,
     salt,
     iv,
@@ -244,7 +244,7 @@ function vector2() {
     kek,
   });
   const envelope2 = buildEnvelope({
-    kdf_profile: 'scrypt-sha256-v1',
+    kdf_profile: 'scrypt-sha256',
     password,
     salt,
     iv,
@@ -257,7 +257,7 @@ function vector2() {
   return {
     id: 'envelope-aead-vector-02-scrypt-multi-entry-aad',
     description:
-      'scrypt-sha256-v1: same CEK + IV + plaintext under two different AADs (entry_path differs). The two ciphertexts MUST differ because AAD is part of the GCM input. A reader MUST reject if AAD does not match.',
+      'scrypt-sha256: same CEK + IV + plaintext under two different AADs (entry_path differs). GCM ciphertext bytes remain identical while authentication tags differ. A reader MUST reject if AAD does not match.',
     inputs: {
       password,
       salt: salt.toString('base64'),
@@ -286,7 +286,7 @@ function vector2() {
   };
 }
 
-// ── Vector 3: argon2id-v1 basic round-trip ──────────────────────────
+// ── Vector 3: argon2id basic round-trip ──────────────────────────
 
 function vector3() {
   const password = 'kdna-envelope-test-vector-3-password';
@@ -296,7 +296,7 @@ function vector3() {
     'c1c2c3c4c5c6c7c8c9cacbcccdcecfd0e1e2e3e4e5e6e7e8e9eaebecedeeeff0',
     'hex',
   );
-  const plaintext = Buffer.from('Hello, KDNA envelope (argon2id-v1 basic).', 'utf8');
+  const plaintext = Buffer.from('Hello, KDNA envelope (argon2id basic).', 'utf8');
   const aad = buildAad({
     asset_uid: 'urn:uuid:55555555-5555-4555-8555-555555555555',
     asset_id: 'kdna:fixture:envelope-argon2id',
@@ -307,7 +307,7 @@ function vector3() {
   });
   const kek = deriveKekArgon2id(password, salt);
   const envelope = buildEnvelope({
-    kdf_profile: 'argon2id-v1',
+    kdf_profile: 'argon2id',
     password,
     salt,
     iv,
@@ -320,7 +320,7 @@ function vector3() {
   return {
     id: 'envelope-aead-vector-03-argon2id-basic',
     description:
-      'argon2id-v1: basic round-trip with the optional Argon2id KDF. Implementations without Argon2id MUST either fall back to another supported slot or refuse to load with KDNA_KDF_UNSUPPORTED.',
+      'argon2id: basic round-trip with the optional Argon2id KDF. Implementations without Argon2id MUST either fall back to another supported slot or refuse to load with KDNA_KDF_UNSUPPORTED.',
     inputs: {
       password,
       salt: salt.toString('base64'),

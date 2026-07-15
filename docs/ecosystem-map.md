@@ -134,7 +134,7 @@ See [ECOSYSTEM_NAMING.md](./ECOSYSTEM_NAMING.md) for the full naming policy.
 
 | Component | Current | Notes |
 |-----------|---------|-------|
-| SPEC | v1.0-rc | [kdna-v1rc-standard-kit.md](./kdna-v1rc-standard-kit.md) |
+| SPEC | 1.0-rc | [kdna-v1rc-standard-kit.md](./kdna-v1rc-standard-kit.md) |
 | `@aikdna/kdna-core` | 0.7.2 | JS runtime core |
 | `@aikdna/kdna-cli` | 0.19.x | Reference CLI |
 | `@aikdna/kdna-studio-core` | 1.4.2 | Authoring kernel |

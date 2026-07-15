@@ -16,12 +16,12 @@ the npm package's bundled copy is used. This ensures `npm install -g
 
 ## Single source enforcement
 
-To prevent drift (the v0.7.4 incident where the local copy lagged
+To prevent drift (the 0.7.4 incident where the local copy lagged
 behind kdna-skills and overwrote agent installs with stale content):
 
 - The remote `kdna-skills` repo is checked **first**.
 - The local bundled copy is only used as a fallback.
-- `ensureLoaderSkill()` detects v2.1 marker and re-installs if outdated.
+- `ensureLoaderSkill()` detects 2.1 marker and re-installs if outdated.
 
 ## Editing skills
 

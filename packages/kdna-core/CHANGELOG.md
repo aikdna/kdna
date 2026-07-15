@@ -13,38 +13,32 @@
   regenerate the committed CBOR and authorization conformance fixtures with
   matching checksums and digest evidence.
 
-## v0.18.0 (2026-07-15)
+## 0.18.0 (2026-07-15)
 
 ### Added
 
-- Add opt-in Runtime Capsule 2 Core primitives, formal Capsule 1/Capsule 2 and
-  digest-evidence schemas, RFC 8785 JCS delivery hashing, deterministic
-  v2-to-v1 adaptation, and committed A/C/E/P conformance goldens. Existing
-  Runtime load entry points continue to emit frozen Capsule 1 values.
-- Accept independent expected A/C/E values through `expectedDigests` and block
-  Capsule 2 emission with digest-specific mismatch codes.
-- Preserve the four frozen Capsule 1 inheritance, dependency, and RAG
-  extension fields through the one-way Capsule 2 compatibility member.
-- Define strict opt-in ConsumptionPlan 1.0, Agent Host 2, capability, runtime
-  receipt, and authoritative JudgmentTrace 1.0 schemas. Add committed
-  negotiation, plan/P recomputation, five-terminal Trace, exact-budget,
-  source-directory block, required-null, and cross-document tamper conformance
-  vectors. Plan 1 formally supports only Capsule 2 plus Host 2 and has no
-  downgrade or adapter; runtime defaults remain Plan 0.9, Capsule 1, and Host 1.
+- Introduce experimental Runtime Capsule and Host-contract candidates. These
+  candidates and their one-way adapter were superseded by the sole stable,
+  responsibility-named contracts; they are not supported aliases.
+- Add digest-evidence schemas, RFC 8785 JCS delivery hashing, independent
+  expected A/C/E comparisons, digest-specific mismatch codes, and committed
+  A/C/E/P conformance goldens.
+- Add committed negotiation, Plan/P recomputation, terminal Trace,
+  exact-budget, source-directory block, required-null, and cross-document
+  tamper vectors for ConsumptionPlan, Agent Host, and JudgmentTrace.
 - Bind Trace elapsed evidence to the correlated Host receipt, make
   unobserved finite limits propagate to an honest `not_observed` overall
   comparison, and record Host-side P mismatch as a correlated pre-execution
   rejection instead of an impossible terminal state.
-- Expose the strict opt-in ConsumptionPlan 1, Agent Host 2, budget-evidence,
-  and JudgmentTrace 1 builders and validators from CJS, ESM, and TypeScript.
-  The conformance runner now consumes this single packaged implementation.
+- Expose ConsumptionPlan, Agent Host, budget-evidence, and JudgmentTrace
+  builders and validators from CJS, ESM, and TypeScript.
 - Add a dedicated pre-Host budget-blocked Trace builder and validator. They
   preserve projected A/C/E/P, profile, and exact character evidence without
   exposing an over-budget Host request; calls within budget fail closed.
-- Add a bounded raw execution-contract JSON parser that rejects duplicate
+- Add a bounded runtime-contract JSON parser that rejects duplicate
   decoded keys, invalid UTF-8 and Unicode, BOMs, hostile-key prototype
   mutation, non-finite numbers, and trailing or non-RFC JSON input before
-  Host 2 object validation.
+  Agent Host object validation.
 
 ### Changed
 
@@ -74,7 +68,7 @@
 
 ### Fixed
 
-- Restrict Core publication to canonical `kdna-core-v*` published-release
+- Restrict Core publication to canonical `core/<package-version>` published-release
   events, require the exact version tag to identify the workflow commit, and
   make already-published versions idempotent only when registry `gitHead` and
   artifact integrity and SHA-1 shasum match the current release evidence. Only
@@ -98,7 +92,7 @@
   so package-manager lifecycle behavior cannot introduce network or build-tool
   dependencies into the offline release gate.
 - Require a non-null independently trusted Plan digest throughout the strict
-  Plan 1 / Host 2 chain, snapshot hostile validation contexts without invoking
+  ConsumptionPlan / Agent Host chain, snapshot hostile validation contexts without invoking
   accessors, and keep pre-Host budget enforcement unavailable as a public
   bypass option.
 - Require matched Host receipts to correlate sender, Host-recomputed, echoed,
@@ -108,16 +102,13 @@
 - Check internal C/E declarations and canonical/legacy alias agreement before
   independent expected values, so external matches cannot hide conflicting
   asset declarations.
-- Validate public Capsule 2 builder and adapter inputs and outputs against the
-  packaged schemas and cross-field success invariants.
-- Preserve only the frozen Capsule 1 access aliases `open`, `protected`, and
-  `runtime` for exact adapter parity while keeping Capsule 2 access canonical;
-  fail closed if compatibility metadata pairs an alias with the wrong
-  canonical access.
-- Compute Capsule 1 E directly from Runtime manifest and payload bytes when
-  checksums are absent, share the same pure E implementation across checksum
-  build/verify and both Capsule generations, and reject Capsule 1 builder
-  inputs that disagree with their manifest or digest evidence.
+- Validate Runtime Capsule builder inputs and outputs against packaged schemas
+  and cross-field success invariants.
+- Fail closed when access metadata is unknown or internally inconsistent.
+- Compute E directly from Runtime manifest and payload bytes when checksums are
+  absent, share the same pure E implementation across checksum build and
+  verification, and reject builder inputs that disagree with their manifest
+  or digest evidence.
 - Sort canonical content-tree and signing entry paths by UTF-8 bytes while
   retaining the existing UTF-16 JSON object-key order. U+E000/U+10000 vectors
   freeze the distinction.
@@ -131,7 +122,7 @@
   now fails explicitly rather than pretending current payloads are old source
   files.
 
-## v0.17.0 (2026-07-14)
+## 0.17.0 (2026-07-14)
 
 ### Added
 
@@ -164,7 +155,7 @@
 - Derive web-package readiness expectations from the declared current Core
   version rather than a stale hard-coded release number.
 
-## v0.16.0 (2026-07-13)
+## 0.16.0 (2026-07-13)
 
 ### Added
 
@@ -191,29 +182,30 @@
 - Revoked, expired, tampered, digest/version/account/device mismatches fail
   closed before Runtime Capsule projection.
 
-## v0.15.12 (2026-07-12)
+## 0.15.12 (2026-07-12)
 
 **Single-format refactor + CBOR wire contract + Runtime Capsule.**
 
 ### Breaking changes
 
-- `MIMETYPE_V1`, `MIMETYPE_V2`, `MIMETYPE_LEGACY`, `isV1SourceDir`, `isV2SourceDir`
-  removed from public API. Use `MIMETYPE`, `isKdnaSourceDir`, `detectContainerFormat`.
+- Remove generation-qualified mimetype constants and source-directory helpers
+  from the public API. Use `MIMETYPE`, `isKdnaSourceDir`, and
+  `detectContainerFormat`.
 - `detectContainerFormat` returns only `"kdna"` or `null`.
-- `kdna_version: "2.0"` is no longer accepted. Only `"1.0"`.
+- Remove the parallel legacy container discriminator. The current contract is
+  now represented solely by `format_version`.
 - `payload.encoding` accepts only `"cbor"`. JSON payload bytes are rejected;
   there is no production JSON fallback.
-- Version-qualified public APIs (`V1_REQUIRED_DIR_ENTRIES`, `readV1Layout`,
-  `buildChecksums`, `loadAsset`, and the `./v1` export) are removed. Use the
-  unversioned APIs below.
-- `kdna load --as=json` now returns Runtime Capsule format
-  (`type: "kdna.context.capsule"`) instead of raw `{status, content}`.
+- Version-qualified public APIs and the generation-qualified subpath export
+  are removed. Use the stable APIs below.
+- `kdna load --as=json` returns a Runtime Capsule instead of raw
+  `{status, content}`.
 
 ### Added
 
 - `REQUIRED_DIR_ENTRIES`, `readLayout`, `buildChecksums`, `load`, and
   `loadAsset` are the sole public container/loading APIs.
-- `buildCapsule(loadResult, v1, profile, opts)` — wraps load output as
+- `buildCapsule(loadResult, pre-cutover, profile, opts)` — wraps load output as
   `kdna.context.capsule` per `specs/runtime-capsule.md`.
 - `parsePayloadEntry` — strict CBOR decoding for `payload.kdnab`.
 
@@ -224,24 +216,24 @@
 - `loadAssetUnsafe` extends/deps processing occurs before Capsule wrapping (Story 12 fix).
 - All test fixtures converted to CBOR; golden files regenerated.
 
-## v0.15.11 (2026-07-03)
+## 0.15.11 (2026-07-03)
 
-**Fix**: repair Core v1 container dispatcher module resolution in the
+**Fix**: repair Core container dispatcher module resolution in the
 published package layout.
 
 - Corrects internal `src/container-dispatcher.js` imports so the dispatcher can
-  load sibling `asset-reader` and `v1` modules after npm packaging.
-- Loads v1 JSON schemas through package-relative static imports before falling
+  load sibling `asset-reader` and container modules after npm packaging.
+- Load Runtime schemas through package-relative static imports before falling
   back to disk discovery, so bundled server environments do not look for
   KDNA schemas in the host application directory.
-- Adds regression coverage for loading a v1 source asset through the dispatcher
+- Add regression coverage for loading a source asset through the dispatcher
   from the package `src/` layout and for validating from a non-repository cwd.
 - Fix webpack bundler warning: use `eval('require')` for ajv meta-schema import
   so webpack does not try to statically resolve the JSON file at build time.
 
 No public API changes.
 
-## v0.15.10 (2026-06-30)
+## 0.15.10 (2026-06-30)
 
 **API**: export `parseSemver`, `compareSemver`, `satisfies` from public module.
 
@@ -256,9 +248,9 @@ a parallel copy.
 
 No breaking changes. Purely additive.
 
-## v0.15.9 (2026-06-28)
+## 0.15.9 (2026-06-28)
 
-Story 12 — Asset inheritance (`extends` field, RFC #148 v2.x Phase 3).
+Story 12 — Asset inheritance (`extends` field, RFC #148 later pre-cutover.x Phase 3).
 
 - **`extends` field in `manifest.schema.json`**: assets may declare
   `extends: "@scope/name@^1.0.0"` (string) or `extends: { name, version }`
@@ -279,9 +271,9 @@ Story 12 — Asset inheritance (`extends` field, RFC #148 v2.x Phase 3).
   to load output when inheritance is applied.
 - Blocks Story 13 (trust levels) per Section 6 sequencing.
 
-## v0.15.8 (2026-06-28)
+## 0.15.8 (2026-06-28)
 
-Story 11 — RAG namespace isolation (RFC #148 v2.x Phase 3).
+Story 11 — RAG namespace isolation (RFC #148 later pre-cutover.x Phase 3).
 
 - **`rag_namespace`** field added to each entry in `resolved_dependencies`.
   Format: `name@version` (or bare `name` when version is absent). Provides a
@@ -297,7 +289,7 @@ Story 11 — RAG namespace isolation (RFC #148 v2.x Phase 3).
 - No breaking changes to existing single-asset load output or to
   `resolved_dependencies` shape (fields are additive only).
 
-## v0.15.7 (2026-06-28)
+## 0.15.7 (2026-06-28)
 
 Story 6 — dependencies runtime. Supports semver-matching local/registry dependency resolution and topological sort-based loading order.
 
@@ -305,21 +297,24 @@ Story 6 — dependencies runtime. Supports semver-matching local/registry depend
 - **Topological Sorting Resolver**: Added a robust, pure post-order DFS topological sorter with circular cycle, missing dependency, and version range mismatch checks.
 - **Topological Prompt Composition**: Enabled recursive, multi-domain prompt composition and flat topological JSON return inside `loadAuthorized`.
 
-## v0.15.6 (2026-06-28)
+## 0.15.6 (2026-06-28)
 
-Story 5 — Bundle payload type. Bumps KDNA manifest format schema to v2, introduces kdna.payload.bundle payload profile, and starts KDNA v1 format deprecation window.
+Story 5 — Bundle payload type. This historical release introduced the bundle
+payload profile while the project was still using removed generation-labelled
+container vocabulary.
 
 - **Bundle asset_type support:** added `"bundle"` to `asset_type` enum and `VALID_ASSET_TYPE` check.
-- **V2 Schema support:** bumped manifest schema version to v2.0, supporting `kdna_version` as `"2.0"`.
+- **Schema support:** added the then-current bundle manifest shape. The sole
+  current Runtime schema has since replaced it.
 - **Bundle profile support:** added `kdna.payload.bundle` payload profile and validator.
 
-## v0.15.5 (2026-06-28)
+## 0.15.5 (2026-06-28)
 
 Phase 12 audit follow-up. Closes 3 issues filed against this
 repo (#145, #146, #147).
 
 - **#145** The `compilePatterns` output for `misunderstanding`
-  cards was already preserved (the v1 round-trip fix in 0.15.4
+  cards was already preserved (the container round-trip fix in 0.15.4
   carried `failure_risk` / `applies_when` / `does_not_apply_when`).
   The audit confirmed the fix is in place. No code change required;
   this entry documents the verification.
@@ -341,7 +336,7 @@ repo (#145, #146, #147).
   warn producers/verifiers that any new exclusion MUST be added
   to both paths in the same change.
 
-## v0.15.4 (2026-06-28)
+## 0.15.4 (2026-06-28)
 
 Audit follow-ups (2026-06-28 round-trip verification). This release
 keeps the canonicalisation paths in sync across producers (studio-cli
@@ -359,10 +354,10 @@ signature generated by one tool is accepted by every other.
   for the list of fields the signing payload excludes. Documented
   in `docs/CANONICALIZATION.md`.
 
-## v0.15.3 (2026-06-27)
+## 0.15.3 (2026-06-27)
 
 - Fix (PC-2, real): `renderPromptItem` now actually ships the
-  boundary card branch. The previous v0.15.2 release (ee20c5e)
+  boundary card branch. The previous 0.15.2 release (ee20c5e)
   bumped package.json and added a CHANGELOG entry but did NOT
   include the source change to `src/container/index.js`. This release
   re-bundles the fix that landed in 46047fb (PC-1/PC-4 cleanup).
@@ -370,7 +365,7 @@ signature generated by one tool is accepted by every other.
   non-empty `scope` + `out_of_scope` → `kdna load` now prints
   `in scope: X; out of scope: Y` instead of the UUID `id`.
 
-## v0.15.2 (2026-06-27)
+## 0.15.2 (2026-06-27)
 
 - Fix (PC-2): `renderPromptItem` now renders boundary cards as
   `in scope: X; out of scope: Y; exceptions: ...` instead of
@@ -382,14 +377,14 @@ signature generated by one tool is accepted by every other.
   matches returns `(unrendered card: <type>)` instead of the
   UUID `id`, so any unrecognized card shape is visible.
 
-## v0.15.1 (2026-06-27)
+## 0.15.1 (2026-06-27)
 
 - Fix: package.json `files` array now includes `CHANGELOG.md`. The
-  v0.15.0 tarball was published without the changelog, leaving
+  0.15.0 tarball was published without the changelog, leaving
   consumers with no way to read release notes from `npm install`.
   Adding it now is a no-op for code but resolves the docs gap.
 
-## v0.15.0 (2026-06-27)
+## 0.15.0 (2026-06-27)
 
 - B2: scrypt password profile `kdna.encryption.password.scrypt` (ADR-007)
   - encryptProtectedEntryScrypt / decryptProtectedEntryScrypt (zero new deps, Node crypto.scryptSync)
@@ -397,12 +392,12 @@ signature generated by one tool is accepted by every other.
   - scrypt N=32768 r=8 p=1, 32B KEK, 16B random salt
   - planLoad inferEntitlementProfile detects scrypt profile
   - decrypt dispatch routes Argon2id vs scrypt by envelope profile field
-  - recovery slot deferred to v0.2; v0.1: single password slot
+  - recovery slot deferred to 0.2; 0.1: single password slot
 - B5: conformance:canonical npm script (threshold #8)
 
-## v0.14.0 (2026-06-25)
+## 0.14.0 (2026-06-25)
 
-- B1: unified container dispatcher (readAsset — v1/v2/ dir → CanonicalAssetModel)
+- B1: unified container dispatcher (readAsset — pre-cutover/later pre-cutover/ dir → CanonicalAssetModel)
 - B4: loadAuthorized decryption orchestration (opts.password, opts.decryptEntry)
 - B4: encrypted payload detection in runValidate (backward compatible)
 - B8: cross-language golden vectors (test-vectors/golden-vectors.js — 8/8)
@@ -411,14 +406,14 @@ signature generated by one tool is accepted by every other.
 - Wave 3a: CQ-T2/T3 symmetric compact rendering, scenario null consistency
 - Add: engines.node >=18.0.0
 
-## v0.13.3 (2026-06-22)
+## 0.13.3 (2026-06-22)
 
 - Fix: index profile includes max_tokens_hint
 - Fix: compact profile falls back to full_statement for TBD placeholders
 
 Packages: `@aikdna/kdna-core`
 
-## v0.13.2 (2026-06-21)
+## 0.13.2 (2026-06-21)
 
 ### Fixed
 
@@ -434,7 +429,7 @@ Packages: `@aikdna/kdna-core`
 
 ---
 
-## v0.13.1 (2026-06-21)
+## 0.13.1 (2026-06-21)
 
 ### Fixed
 
@@ -443,13 +438,13 @@ Packages: `@aikdna/kdna-core`
 
 ### Changed
 
-- Public API provenance and profile split clarified: `loadKDNA` / `loadKDNASync` are the stable entry points for runtime consumers. Lower-level `readV1Layout`, `runValidate`, and `planLoad` are exported for advanced tooling but carry no backward-compatibility guarantee.
+- Public API provenance and profile split clarified: `loadKDNA` / `loadKDNASync` are the stable entry points for runtime consumers. Lower-level `generation-qualified layout reader`, `runValidate`, and `planLoad` are exported for advanced tooling but carry no backward-compatibility guarantee.
 - Access enum values normalized everywhere: `public`, `licensed`, `remote`. Legacy aliases (`open` → `public`, `protected` → `licensed`, `runtime` → `remote`) are mapped transparently with an info-level issue in the LoadPlan.
 - `verifyAsset` / `verifyAssetSync`, `verifyDigest` / `verifyDigestSync`, and `verifySignature` / `verifySignatureSync` are now documented as the stable verification API surface.
 
 ---
 
-## v0.13.0 (2026-06-19)
+## 0.13.0 (2026-06-19)
 
 ### Added
 
@@ -467,14 +462,14 @@ Packages: `@aikdna/kdna-core`
   - `source.kind` and `source.path` indicating whether the input was a source directory or `.kdna` container
 - **`loadAuthorized(inputPath, opts)`** — a higher-level loader that calls `planLoad` first and blocks load when `can_load_now` is false. Throws `KDNA_LOAD_NOT_AUTHORIZED` with the first issue's code. This is the recommended entry point for agent runtimes.
 - **`loadAsset(inputPath, opts)`** — renders judgment content into agent-ready prompt text. Supports profiles (`index`, `compact`, `scenario`, `full`) and output formats (`json`, `prompt`). The `prompt` format produces a flat text block suitable for agent context windows with proper axiom applicability rendering.
-- **KDNA Core v1 inspect module.** `inspect(inputPath)` returns a content-neutral manifest summary including `asset_id`, `asset_uid`, `kdna_version`, `payload_encrypted`, `profile`, `load_contract_default_profile`, and signature count. Output is always JSON. Banned terms (`trusted`, `recommended`, `high_quality`, `officially_approved`) are enforced by an automatic assertion.
-- **KDNA Core v1 validate module.** `validate(inputPath)` runs four independent gates:
+- **KDNA Core inspect module.** `inspect(inputPath)` returns a content-neutral manifest summary including `asset_id`, `asset_uid`, `kdna_version`, `payload_encrypted`, `profile`, `load_contract_default_profile`, and signature count. Output is always JSON. Banned terms (`trusted`, `recommended`, `high_quality`, `officially_approved`) are enforced by an automatic assertion.
+- **KDNA Core validate module.** `validate(inputPath)` runs four independent gates:
   1. **Format gate:** required entries present (`mimetype`, `kdna.json`, `payload.kdnab`), mimetype content correct, lineage is an object not an array
   2. **Schema gate:** `kdna.json` against `manifest.schema.json` via AJV 2020-12
   3. **Payload gate:** `payload.kdnab` against `payload-profile.schema.json`
   4. **Checksums gate:** when `checksums.json` is present, computed digests are compared against declared values for `kdna.json`, `payload.kdnab`, and the combined asset digest
-- **KDNA Core v1 pack module.** `pack(sourceDir, outputPath)` produces a deterministic `.kdna` container: fixed DOS epoch timestamps, alphabetical entry order, mimetype first (STORED, method 0). Same source → byte-identical output.
-- **KDNA Core v1 unpack module.** `unpack(inputPath, outputDir)` extracts a `.kdna` container to a directory with path-traversal protection.
+- **KDNA Core pack module.** `pack(sourceDir, outputPath)` produces a deterministic `.kdna` container: fixed DOS epoch timestamps, alphabetical entry order, mimetype first (STORED, method 0). Same source → byte-identical output.
+- **KDNA Core unpack module.** `unpack(inputPath, outputDir)` extracts a `.kdna` container to a directory with path-traversal protection.
 - **Container security hardening.** ZIP reader enforces:
   - Maximum container size (25 MiB), max entries (128), max entry size (5 MiB), max total uncompressed (12 MiB)
   - Max compression ratio (100:1) to prevent zip bombs
@@ -484,17 +479,17 @@ Packages: `@aikdna/kdna-core`
   - Symlink and device/special file rejection
 - **Digest matching verification.** When `checksums.json` includes `manifest_digest`, `payload_digest`, or `asset_digest`, the validate module computes actual SHA-256 hashes and compares them. Mismatch produces a `KDNA_INTEGRITY_DIGEST_FAILED` issue.
 - **Load contract validation.** When the manifest includes a `load_contract` block, it is validated against `load-contract.schema.json`. A missing load contract is not an error — it simply means no specialization.
-- **Dual CJS/ESM exports.** `src/index.js` (CommonJS) and `src/index.mjs` (ES module) with matching `exports` map. The v1 module is also available at `@aikdna/kdna-core/v1`.
+- **Dual CJS/ESM exports.** `src/index.js` (CommonJS) and `src/index.mjs` (ES module) with matching `exports` map. The pre-cutover module is also available at `@aikdna/kdna-core/pre-cutover`.
 - **TypeScript declarations.** `src/types.d.ts` exports type definitions for the stable public API surface.
 
 ### Changed
 
-- **V1 is the only active format path.** The v2 reader (`readDataMapSync`, `readDataMap`) remains in the codebase for migration compatibility but is no longer the default path. All new integrations should use the v1 API: `inspect`, `validate`, `planLoad`, `loadAuthorized`.
-- `validate` and `planLoad` reject v2 containers (`application/vnd.aikdna.kdna+zip`) with a format error.
+- **Pre-cutover is the only active format path.** The later pre-cutover reader (`readDataMapSync`, `readDataMap`) remains in the codebase for migration compatibility but is no longer the default path. All new integrations should use the pre-cutover API: `inspect`, `validate`, `planLoad`, `loadAuthorized`.
+- `validate` and `planLoad` reject later pre-cutover containers (`application/vnd.aikdna.kdna+zip`) with a format error.
 - Access model normalized to the three-tier `public` | `licensed` | `remote` enum. The LoadPlan maps legacy values transparently with an info-level issue.
-- Container format detection (`detectContainerFormat`) reads only the first central-directory entry to determine v1 vs v2, preventing malicious later entries from causing format confusion.
+- Container format detection (`detectContainerFormat`) reads only the first central-directory entry to determine pre-cutover vs later pre-cutover, preventing malicious later entries from causing format confusion.
 
 ### Removed
 
-- Legacy v1 compatibility shims removed. v2 is the only legacy format and is handled through the existing `asset-reader.js` module.
+- Legacy pre-cutover compatibility shims removed. later pre-cutover is the only legacy format and is handled through the existing `asset-reader.js` module.
 - `readDataMapSync` / `readDataMap` deprecated for new use. Use `planLoad` + `loadAsset` for runtime loading or `validate` + `inspect` for diagnostics.

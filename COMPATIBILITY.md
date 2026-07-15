@@ -61,7 +61,7 @@ Compatible projects may self-declare compatibility:
 
 ```markdown
 ## KDNA Compatibility
-This project is **KDNA-Core compatible** (SPEC v1.0-rc).
+This project is **KDNA-Core compatible** (SPEC 1.0-rc).
 It supports loading and validating KDNA_Core.json and KDNA_Patterns.json.
 ```
 

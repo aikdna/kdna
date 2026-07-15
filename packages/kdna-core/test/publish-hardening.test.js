@@ -402,33 +402,33 @@ test('publication guard rejects empty workflow output paths', () => {
 
 test('release readiness accepts only the canonical Core version tag', () => {
   const expectedTag = canonicalCoreTag('0.18.0');
-  assert.equal(expectedTag, 'kdna-core-v0.18.0');
+  assert.equal(expectedTag, 'core/0.18.0');
   assert.doesNotThrow(() => assertCanonicalTagExists({ expectedTag, listedTag: expectedTag }));
   assert.throws(
-    () => assertCanonicalTagExists({ expectedTag, listedTag: 'v0.18.0' }),
-    /Canonical tag kdna-core-v0\.18\.0 not found/u,
+    () => assertCanonicalTagExists({ expectedTag, listedTag: '0.18.0' }),
+    /Canonical tag core\/0\.18\.0 not found/u,
   );
-  assert.throws(() => canonicalCoreTag('v0.18.0'), /invalid Core package version/u);
+  assert.throws(() => canonicalCoreTag('release-0.18.0'), /invalid Core package version/u);
 });
 
 test('release readiness requires the workflow tag suffix to equal the package version', () => {
   assert.doesNotThrow(() =>
     assertCanonicalWorkflowRef({
-      expectedTag: 'kdna-core-v0.18.0',
-      githubRef: 'refs/tags/kdna-core-v0.18.0',
+      expectedTag: 'core/0.18.0',
+      githubRef: 'refs/tags/core/0.18.0',
     }),
   );
   assert.throws(
     () =>
       assertCanonicalWorkflowRef({
-        expectedTag: 'kdna-core-v0.18.0',
-        githubRef: 'refs/tags/kdna-core-v0.18.0-recovery',
+        expectedTag: 'core/0.18.0',
+        githubRef: 'refs/tags/core/0.18.0-recovery',
       }),
     /does not exactly match package version tag/u,
   );
   assert.throws(
     () =>
-      assertCanonicalWorkflowRef({ expectedTag: 'kdna-core-v0.18.0', githubRef: null }),
+      assertCanonicalWorkflowRef({ expectedTag: 'core/0.18.0', githubRef: null }),
     /GITHUB_REF <missing>/u,
   );
 });
@@ -436,7 +436,7 @@ test('release readiness requires the workflow tag suffix to equal the package ve
 test('release readiness binds canonical tag, HEAD, and GITHUB_SHA', () => {
   assert.doesNotThrow(() =>
     assertTagCommit({
-      expectedTag: 'kdna-core-v0.18.0',
+      expectedTag: 'core/0.18.0',
       taggedCommit: FULL_SHA,
       headCommit: FULL_SHA,
       githubSha: FULL_SHA,
@@ -445,7 +445,7 @@ test('release readiness binds canonical tag, HEAD, and GITHUB_SHA', () => {
   assert.throws(
     () =>
       assertTagCommit({
-        expectedTag: 'kdna-core-v0.18.0',
+        expectedTag: 'core/0.18.0',
         taggedCommit: OTHER_SHA,
         headCommit: FULL_SHA,
         githubSha: FULL_SHA,
@@ -455,7 +455,7 @@ test('release readiness binds canonical tag, HEAD, and GITHUB_SHA', () => {
   assert.throws(
     () =>
       assertTagCommit({
-        expectedTag: 'kdna-core-v0.18.0',
+        expectedTag: 'core/0.18.0',
         taggedCommit: FULL_SHA,
         headCommit: FULL_SHA,
         githubSha: OTHER_SHA,
@@ -467,7 +467,7 @@ test('release readiness binds canonical tag, HEAD, and GITHUB_SHA', () => {
 test('GitHub Release observation reports SKIP without a false PASS', () => {
   const logs = [];
   const status = observeGithubRelease({
-    coreTag: 'kdna-core-v0.18.0',
+    coreTag: 'core/0.18.0',
     repo: 'aikdna/kdna',
     runGh: () => {
       throw new Error('not authenticated');
@@ -496,7 +496,7 @@ test('publish workflow keeps Core on release-published canonical tags only', () 
 
   assert.match(
     coreJob,
-    /if: github\.event_name == 'release' && github\.event\.action == 'published' && github\.event\.release\.draft == false && github\.event\.release\.prerelease == false && startsWith\(github\.event\.release\.tag_name, 'kdna-core-v'\)/u,
+    /if: github\.event_name == 'release' && github\.event\.action == 'published' && github\.event\.release\.draft == false && github\.event\.release\.prerelease == false && startsWith\(github\.event\.release\.tag_name, 'core\/'\)/u,
   );
   assert.doesNotMatch(coreJob, /workflow_dispatch/u);
   assert.equal((coreJob.match(/uses: actions\/checkout@/gu) || []).length, 1);

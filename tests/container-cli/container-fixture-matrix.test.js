@@ -1,5 +1,5 @@
 /**
- * v1-fixture-matrix.test.js — KDNA Core v1 fixture matrix coverage.
+ * container-fixture-matrix.test.js — KDNA Core container fixture matrix coverage.
  *
  * Covers: source dir, container, load profiles, invalid cases, content-neutrality.
  */
@@ -29,7 +29,7 @@ const runtimeTmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-f
 const minimalAsset = path.join(runtimeTmp, 'minimal.kdna');
 pack(minimalSource, minimalAsset);
 after(() => fs.rmSync(runtimeTmp, { recursive: true, force: true }));
-const fixturesDir = path.join(__dirname, '..', '..', 'fixtures', 'v1');
+const fixturesDir = path.join(__dirname, '..', '..', 'fixtures', 'container');
 const FORBIDDEN = [
   'trusted',
   'recommended',
@@ -92,7 +92,7 @@ test('buildChecksums generates digests accepted by validate', () => {
 test('checksum digest metadata fails closed for unknown profiles or coverage', () => {
   for (const mutation of [
     (checksums) => {
-      checksums.digest_profile = 'unknown-entry-set-v1';
+      checksums.digest_profile = 'unknown-entry-set-container';
     },
     (checksums) => {
       checksums.covered_entries = ['payload.kdnab', 'kdna.json'];
@@ -125,7 +125,7 @@ test('checksum digest metadata fails closed for unknown profiles or coverage', (
   }
 });
 
-test('canonical entry_set_digest alone supplies frozen Capsule 1 E', () => {
+test('canonical entry_set_digest alone supplies frozen Runtime Capsule E', () => {
   const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-entry-set-capsule-'));
   try {
     fs.cpSync(minimalSource, tmp, { recursive: true });
@@ -177,7 +177,7 @@ test('file layout exposes final container digest separately from entry-set diges
   assert.equal(readLayout(minimalSource).containerDigest, null);
 });
 
-test('v1 ESM entry exports the shared checksum helper', () => {
+test('container ESM entry exports the shared checksum helper', () => {
   const r = spawnSync(
     process.execPath,
     [
@@ -377,11 +377,11 @@ test('validate: bad checksum is schema-valid (digest verification is phase 2+)',
   // checksums_valid tracks schema validation, not digest matching in Phase 1
 });
 
-test('inspect: missing kdna.json fails (upstream or v1 error)', () => {
-  // Non-v1 dir falls through to upstream, which may reject it.
+test('inspect: missing kdna.json fails (upstream or container error)', () => {
+  // Non-container dir falls through to upstream, which may reject it.
   const r = run(['inspect', scoped('invalid-missing-manifest')]);
   assert.notEqual(r.status, 0, 'must fail');
-  // Error might come from upstream CLI (dev-only) or v1 route
+  // Error might come from upstream CLI (dev-only) or container route
   assert.ok(/Error|error|not found|not a KDNA|dev-only/i.test(r.stdout + r.stderr));
 });
 

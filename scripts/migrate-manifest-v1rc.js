@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * KDNA Manifest Migration Script — v1.0-rc
+ * KDNA Manifest Migration Script — 1.0-rc
  *
- * Migrates domain kdna.json manifests to the canonical v1.0-rc schema.
+ * Migrates domain kdna.json manifests to the canonical 1.0-rc schema.
  * Run from kdna repo root: node scripts/migrate-manifest-v1rc.js
  *
  * Usage:
@@ -95,7 +95,7 @@ function migrateManifest(original, domainName) {
   const errors = [];
   const migrated = JSON.parse(JSON.stringify(original));
 
-  // 1. Normalize v1.0 identity fields
+  // 1. Normalize 1.0 identity fields
   if (migrated.kdna_spec && !migrated.spec_version) {
     changes.push(`spec_version: "${migrated.kdna_spec}" (from deprecated kdna_spec)`);
     migrated.spec_version = migrated.kdna_spec;
@@ -243,7 +243,7 @@ const singleDomain = (() => {
 
 const targets = singleDomain ? [path.basename(singleDomain)] : DOMAIN_DIRS;
 
-console.log(`\nKDNA Manifest Migration — v1.0-rc`);
+console.log(`\nKDNA Manifest Migration — 1.0-rc`);
 console.log(`Mode: ${write ? 'WRITE' : 'DRY-RUN'}`);
 console.log(`Domains: ${targets.length}\n`);
 

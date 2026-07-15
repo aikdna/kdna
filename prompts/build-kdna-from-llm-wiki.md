@@ -8,7 +8,7 @@ A collection of Markdown files from an LLM Wiki. These files describe a domain: 
 
 ## Output
 
-Two JSON files following the KDNA v0.1 specification:
+Two JSON files following the KDNA 0.1 specification:
 
 - `KDNA_Core.json` — axioms, ontology, frameworks, core causal structure, stances
 - `KDNA_Patterns.json` — terminology, banned terms, misunderstandings, self-checks

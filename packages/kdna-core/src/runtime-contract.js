@@ -2,7 +2,7 @@
 
 const crypto = require('node:crypto');
 
-const Ajv2020 = require('ajv/dist/2020');
+const JsonSchema2020 = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 
 const { canonicalizeJcs, computeCapsuleDeliveryDigest } = require('./runtime-capsule');
@@ -47,7 +47,7 @@ class KDNARuntimeContractError extends Error {
 
 function schemaValidators() {
   if (validators) return validators;
-  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  const ajv = new JsonSchema2020({ allErrors: true, strict: false });
   addFormats(ajv);
   for (const schema of [
     digestEvidenceSchema,
@@ -1156,7 +1156,7 @@ function preparePreHostBudgetBlocked(capsule, safeContext) {
 }
 
 /**
- * Build the only supported Trace 1 path for a successfully projected Capsule
+ * Build the sole supported pre-Host blocked Trace path for a successfully projected Capsule
  * that exceeds an enforce-before-Host projection or task limit. This function
  * never exposes the internal request-shaped correlation candidate and cannot
  * produce a deliverable Agent Host request.

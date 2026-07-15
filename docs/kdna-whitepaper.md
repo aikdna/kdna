@@ -9,8 +9,8 @@
 
 *Making Expert Judgment Explicit, Portable, Verifiable, Composable, and Reusable*
 
-**White Paper v1.2 — May 2026**  
-**Website:** https://aikdna.com  
+**White Paper 1.2 — May 2026**
+**Website:** https://aikdna.com
 **GitHub:** https://github.com/aikdna/kdna
 
 > **Historical note:** This white paper captures the broader KDNA vision before the KDNA Core launch boundary was narrowed. Current KDNA Core public positioning is: packaged `.kdna` files, local validation, LoadPlan planning, and local loading through the official toolchain. Registry, marketplace, paid authorization, remote runtime, signatures, encryption, and quality badges are not part of the current stable launch baseline.
@@ -724,7 +724,7 @@ KDNA has moved from concept to a working protocol ecosystem with early evidence.
 
 ### 14.1 Protocol & Governance
 
-- Protocol specification: SPEC v1.0-rc. Six standard domain files. JSON Schemas.
+- Protocol specification: SPEC 1.0-rc. Six standard domain files. JSON Schemas.
 - Governance: TRADEMARK, COMPATIBILITY, FORK_POLICY, GOVERNANCE — open standard with protected identity.
 - Benchmark evidence: 5-model agent_safety mini benchmark (150 raw outputs, Best Prompt control). KDNA outperforms Best Prompt on all 5 models (avg +7.4 points).
 
@@ -779,7 +779,7 @@ KDNA's roadmap is organized into six phases, reflecting the protocol's evolution
 
 ### Phase 1: Protocol and Runtime Foundation ✅
 
-- SPEC v1.0-rc stable, six standard files, JSON Schemas
+- SPEC 1.0-rc stable, six standard files, JSON Schemas
 - `@aikdna/kdna-core` — pure JS runtime library
 - `@aikdna/kdna-cli` — command-line toolchain (verify, install, load, match, route, compare, diff, publish existing assets, identity, trace)
 - `kdna-registry` — machine-readable domain catalog with signatures, quality badges, CI validation
@@ -893,6 +893,6 @@ If this succeeds, the AI stack will not only have models, tools, knowledge, and 
 
 *KDNA is an open-source project under Apache 2.0 license. The specification, schemas, and reference toolchain are published under this license. Individual domains may carry their own content licenses.*
 
-*Website: https://aikdna.com*  
-*GitHub: https://github.com/aikdna/kdna*  
+*Website: https://aikdna.com*
+*GitHub: https://github.com/aikdna/kdna*
 *npm: @aikdna/kdna-cli, @aikdna/kdna-core*

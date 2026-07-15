@@ -2,7 +2,7 @@
 
 Version: 0.1
 Status: Draft
-Depends on: kdna-asset-card.md, kdna-license.md, registry SCHEMA.md v2.3
+Depends on: kdna-asset-card.md, kdna-license.md, registry SCHEMA.md 2.3
 
 ## 1. Purpose
 
@@ -140,4 +140,4 @@ The Asset Card's `subscription` block (see kdna-asset-card.md §3.5) is a subset
 
 ---
 
-*This specification extends kdna-asset-card.md and the historical registry SCHEMA.md (v2.3).*
+*This specification extends kdna-asset-card.md and the historical registry SCHEMA.md (2.3).*

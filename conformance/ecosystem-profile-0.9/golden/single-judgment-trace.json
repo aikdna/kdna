@@ -5,7 +5,7 @@
   "mode": "single",
   "timestamp": "2026-07-11T16:35:12Z",
   "asset_identity": {
-    "asset_id": "dev-change-risk-v0.1.0.kdna",
+    "asset_id": "dev-change-risk.kdna",
     "version": "0.1.0",
     "digest": "sha256:4fabf0f035664d0b3921f53cd724cd5f417f36e2b8c2837aebaa2469f87ecdc2",
     "digest_verified": true,

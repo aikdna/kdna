@@ -1,11 +1,11 @@
-# KDNA v1.0-rc Public Confidence Release
+# KDNA 1.0-rc Public Confidence Release
 
 > ⚠️ **Historical snapshot.** This obsolete release board does not describe the
 > current KDNA Core or the single KDNA Asset Container. Current docs:
 > README.md, docs/core/definition.md, and docs/core/principles.md.
 
-> **Milestone:** v1.0-rc  
-> **Target:** External developers can integrate, verify, publish, and contribute to KDNA — without reading internal docs or asking the maintainer.  
+> **Milestone:** 1.0-rc
+> **Target:** External developers can integrate, verify, publish, and contribute to KDNA — without reading internal docs or asking the maintainer.
 > **Status:** In progress
 
 ## Epic Overview
@@ -23,7 +23,7 @@
 
 ## Epic 1: Protocol Freeze
 
-**Goal:** SPEC is unambiguous and implementable by third parties. All v1.0 non-negotiable rules are CI-enforced.
+**Goal:** SPEC is unambiguous and implementable by third parties. All 1.0 non-negotiable rules are CI-enforced.
 
 ### Issues
 
@@ -38,7 +38,7 @@
 - [ ] `languages` (not singular `language`) — CI rejects singular field
 - [ ] `mimetype: application/vnd.kdna.asset` — CI rejects `application/x-kdna`
 - [ ] `spec_version: "1.0-rc"` — CI warns on unknown spec_version
-- [ ] Signatures use v1.0 canonical content-tree payload only
+- [ ] Signatures use 1.0 canonical content-tree payload only
 
 #### 1.3 — RFC Process Documentation
 - [ ] Document RFC process: proposal format, discussion period, acceptance criteria
@@ -56,7 +56,7 @@
 #### 2.1 — Command Output Stability Contract
 - [ ] `kdna verify --json` — document all fields, guarantee version compatibility
 - [ ] `kdna load` — document the prompt-mode output format (sections, headers, field order)
-- [ ] `kdna list --json` — document v2.1 fields (applies_when, does_not_apply_when, etc.)
+- [ ] `kdna list --json` — document 2.1 fields (applies_when, does_not_apply_when, etc.)
 - [ ] Exit codes 0-8 are documented and stable
 
 #### 2.2 — SDK API Stability
@@ -177,7 +177,7 @@
 - [ ] CI runs on PR from fork automatically
 
 #### 6.3 — Conformance Badge
-- [ ] CI badge generation: "KDNA Loader Compatible" 
+- [ ] CI badge generation: "KDNA Loader Compatible"
 - [ ] Third-party guide for displaying conformance status
 - [ ] Registry field for third-party tool conformance claims
 
@@ -185,7 +185,7 @@
 
 ## Release Checklist
 
-Before tagging `v1.0-rc`:
+Before tagging `1.0-rc`:
 
 - [ ] All 6 epics have at minimum the P0 issues completed
 - [ ] `npm run release:preflight` passes in kdna, kdna-cli, kdna-registry
@@ -201,9 +201,9 @@ Before tagging `v1.0-rc`:
 
 ## Version Matrix (Current)
 
-| Component | Version | v1.0-rc Target |
+| Component | Version | 1.0-rc Target |
 |-----------|---------|----------------|
-| KDNA SPEC | v1.0-rc | ✅ Current |
+| KDNA SPEC | 1.0-rc | ✅ Current |
 | `@aikdna/kdna-core` | 0.7.2 | 1.0.0-rc.0 |
 | `@aikdna/kdna-cli` | 0.19.3 | 1.0.0-rc.0 |
 | `@aikdna/kdna-studio-core` | 1.4.2 | 1.4.x (compatible) |
@@ -217,8 +217,8 @@ Before tagging `v1.0-rc`:
 
 ## Related
 
-- [RELEASE_CHECKLIST_0.9.0.md](../RELEASE_CHECKLIST_0.9.0.md) — mechanical hardening checklist for the v0.9.0 Phase 2 release
-- [V1RC_RELEASE_GATE.md](./V1RC_RELEASE_GATE.md) — release order and non-negotiable v1.0 rules
+- [RELEASE_CHECKLIST_0.9.0.md](../RELEASE_CHECKLIST_0.9.0.md) — mechanical hardening checklist for the 0.9.0 Phase 2 release
+- [V1RC_RELEASE_GATE.md](./V1RC_RELEASE_GATE.md) — release order and non-negotiable 1.0 rules
 
 ---
 

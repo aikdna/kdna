@@ -60,4 +60,4 @@ The generator derives each fixture from `examples/minimal`, applies the
 authorization case metadata, rebuilds checksums, and writes the matching golden
 LoadPlan.
 
-The generated cases are enforced by `tests/container-cli/v1-authorization-conformance.test.js`.
+The generated cases are enforced by `tests/container-cli/container-authorization-conformance.test.js`.

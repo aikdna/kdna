@@ -1,4 +1,4 @@
-# KDNA Identity Key Specification v0.1
+# KDNA Identity Key Specification 0.1
 
 > Historical pre-v1 identity-key draft. Current public beta `.kdna` files do
 > not require identity keys, registry trust metadata, or signatures for format

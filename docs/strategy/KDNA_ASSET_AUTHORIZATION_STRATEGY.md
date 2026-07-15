@@ -86,7 +86,7 @@ and revocation are external state.
 
 Remote assets do not deliver full judgment content to the client. A consumer
 runtime sends task context to a KDNA Runtime and receives a task-scoped
-projection. Chat v0.1 should recognize `remote` and fail gracefully unless a
+projection. Chat 0.1 should recognize `remote` and fail gracefully unless a
 remote runtime contract is implemented.
 
 ## Product Responsibilities
@@ -143,4 +143,4 @@ projections rather than the complete KDNA payload.
 - What are the default offline grace periods for consumer, subscription, and
   enterprise assets?
 - Should future remote references use `.kdnaref`, a `.kdna` remote profile, or
-  no local file in v0.1?
+  no local file in 0.1?

@@ -106,7 +106,7 @@ Every KDNA domain, whether open or commercial, MUST have an Asset Card before it
     "risk_level": "R1",
     "signature": "ed25519:<hex>",
     "asset_digest": "sha256:<64-hex>",
-    "asset_url": "https://github.com/aikdna/kdna-domain/releases/download/v0.7.5/domain.kdna",
+    "asset_url": "https://github.com/aikdna/kdna-domain/releases/download/0.7.5/domain.kdna",
     "repo": "https://github.com/aikdna/kdna-domain",
     "runtime_endpoint": null,
     "access_mode": "public | licensed | remote"

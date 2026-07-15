@@ -6,7 +6,7 @@
 **Status:** Draft  
 **Proposed:** 2026-06-08  
 **Authors:** KDNA Maintainers  
-**Related:** RFC-0012 (Artifact Contract), RFC-0010 (Fidelity Protocol), KDNA SPEC v1.0-rc, KDNA App Runtime Contract
+**Related:** RFC-0012 (Artifact Contract), RFC-0010 (Fidelity Protocol), KDNA SPEC 1.0-rc, KDNA App Runtime Contract
 
 ---
 

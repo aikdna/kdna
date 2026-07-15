@@ -1896,7 +1896,7 @@ function renderPromptItem(item) {
   // Boundary card: kdna-studio writes { id, scope, out_of_scope,
   // acceptable_exceptions }. Render the scope/out-of-scope rule
   // instead of falling through to the UUID `id` (which was the
-  // v0.15.0 behavior and made boundaries unreadable in
+  // 0.15.0 behavior and made boundaries unreadable in
   // `kdna load --as=prompt`).
   if (
     item.type === 'boundary' ||

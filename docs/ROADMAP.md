@@ -9,7 +9,7 @@
 
 ## Phase 1: Protocol and Runtime Foundation ✅
 
-- ✅ SPEC v1.0-rc — six standard files, JSON Schemas, validation rules
+- ✅ SPEC 1.0-rc — six standard files, JSON Schemas, validation rules
 - ✅ `@aikdna/kdna-core` — pure JS runtime library (load, validate, lint, render, compose)
 - ✅ `@aikdna/kdna-cli` — CLI toolchain (verify, install, load, match, route, compare, diff, publish existing assets, identity, trace)
 - ✅ `kdna-registry` — domain catalog with signatures, quality badges, risk levels, CI validation
@@ -40,7 +40,7 @@
 
 ## Phase 4: Trust and Distribution (Current)
 
-- ⬜ v1.0 standardization freeze: manifest, media type, mimetype, canonicalization, trust boundary
+- ⬜ 1.0 standardization freeze: manifest, media type, mimetype, canonicalization, trust boundary
 - ✅ .kdna open package profile
 - ✅ Ed25519 signing pipeline
 - ✅ SHA256 hash verification

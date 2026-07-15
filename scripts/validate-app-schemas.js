@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs');
-const Ajv2020 = require('ajv/dist/2020');
+const JsonSchema2020 = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 
 const checks = [
@@ -29,7 +29,7 @@ function readJson(file) {
 let failures = 0;
 
 for (const check of checks) {
-  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  const ajv = new JsonSchema2020({ allErrors: true, strict: false });
   addFormats(ajv);
   const validate = ajv.compile(readJson(check.schema));
   const ok = validate(readJson(check.data));

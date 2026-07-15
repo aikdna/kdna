@@ -8,9 +8,9 @@
  * `kdna.envelope.aead`.
  *
  * Vector inventory:
- *   01 — scrypt-sha256-v1 basic round-trip
- *   02 — scrypt-sha256-v1 multi-entry AAD binding
- *   03 — argon2id-v1 basic round-trip
+ *   01 — scrypt-sha256 basic round-trip
+ *   02 — scrypt-sha256 multi-entry AAD binding
+ *   03 — argon2id basic round-trip
  *
  * Each vector is a self-contained JSON file with:
  *   - `id`, `description`
@@ -135,10 +135,10 @@ function loadVector(id) {
 
 function deriveKek(vector) {
   const { password, kdf_profile } = vector.inputs;
-  if (kdf_profile === 'scrypt-sha256-v1' || vector.inputs.scrypt_params) {
+  if (kdf_profile === 'scrypt-sha256' || vector.inputs.scrypt_params) {
     return deriveKekScrypt(password, vector.inputs.scrypt_params);
   }
-  if (kdf_profile === 'argon2id-v1' || vector.inputs.argon2_params) {
+  if (kdf_profile === 'argon2id' || vector.inputs.argon2_params) {
     return deriveKekArgon2id(password, vector.inputs.argon2_params);
   }
   throw new Error(`unknown kdf_profile: ${kdf_profile}`);
@@ -195,11 +195,11 @@ function checkScryptBasic() {
   assert.equal(env.profile_version, '0.1.0');
   assert.equal(env.alg, 'AES-256-GCM');
   assert.equal(env.key_wrapping, 'AES-256-KW');
-  assert.equal(env.kdf_profile, 'scrypt-sha256-v1');
+  assert.equal(env.kdf_profile, 'scrypt-sha256');
   assert.equal(env.key_slots.length, 1);
-  assert.equal(env.key_slots[0].kdf_profile, 'scrypt-sha256-v1');
+  assert.equal(env.key_slots[0].kdf_profile, 'scrypt-sha256');
   assert.equal(env.key_slots[0].wrap, 'AES-256-KW');
-  return 'vector 01 scrypt-sha256-v1 basic: KEK + CEK + plaintext all match';
+  return 'vector 01 scrypt-sha256 basic: KEK + CEK + plaintext all match';
 }
 
 function checkScryptMultiEntryAad() {
@@ -266,13 +266,13 @@ function checkScryptMultiEntryAad() {
     true,
     'vector 02: cross-AAD swap MUST be rejected by GCM auth (proves AAD binding is enforced, not just computed)',
   );
-  return 'vector 02 scrypt-sha256-v1 multi-entry AAD: both entries decrypt, tags diverge, cross-AAD swap rejected';
+  return 'vector 02 scrypt-sha256 multi-entry AAD: both entries decrypt, tags diverge, cross-AAD swap rejected';
 }
 
 function checkArgon2idBasic() {
   const v = loadVector('envelope-aead-vector-03-argon2id-basic');
   if (!argon2id) {
-    return 'vector 03 argon2id-v1 basic: SKIPPED (@noble/hashes not installed; install with `npm install @noble/hashes` to enable)';
+    return 'vector 03 argon2id basic: SKIPPED (@noble/hashes not installed; install with `npm install @noble/hashes` to enable)';
   }
   const kek = deriveKek(v);
   assert.equal(
@@ -300,9 +300,9 @@ function checkArgon2idBasic() {
   const env = v.expected.envelope;
   assert.equal(env.profile, 'kdna.envelope.aead');
   assert.equal(env.profile_version, '0.1.0');
-  assert.equal(env.kdf_profile, 'argon2id-v1');
-  assert.equal(env.key_slots[0].kdf_profile, 'argon2id-v1');
-  return 'vector 03 argon2id-v1 basic: KEK + CEK + plaintext all match';
+  assert.equal(env.kdf_profile, 'argon2id');
+  assert.equal(env.key_slots[0].kdf_profile, 'argon2id');
+  return 'vector 03 argon2id basic: KEK + CEK + plaintext all match';
 }
 
 // ── JSON Schema validation (all three vectors) ─────────────────────

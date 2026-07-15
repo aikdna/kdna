@@ -55,7 +55,7 @@ test('root lock resolves the compatibility package to one exact Core and CLI pai
     resolved: 'packages/kdna-core',
     link: true,
   });
-  assert.equal(lock.packages['packages/kdna-core'].version, '0.18.0');
+  assert.equal(lock.packages['packages/kdna-core'].version, '0.18.1');
   assert.equal(lock.packages['packages/kdna/node_modules/@aikdna/kdna-core'], undefined);
   assert.equal(lock.packages['node_modules/@aikdna/kdna-cli/node_modules/@aikdna/kdna-core'], undefined);
 });

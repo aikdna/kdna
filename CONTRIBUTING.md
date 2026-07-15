@@ -37,7 +37,7 @@ Do **not** attempt to restore, shim, or reference any of these removed surfaces:
 - `legacy` — deleted in 0.27.0 hard cutover
 - `v2` — never existed; do not create
 - `registry` — deferred to future RFC (see decisions/0003)
-- `install` — no distribution in v0.7 baseline (the v0.7 line is the public stable line as of 2026-05-22; pre-v0.7 "v1 Core GA" terminology is superseded)
+- `install` — no distribution in 0.7 baseline (the 0.7 line is the public stable line as of 2026-05-22; pre-0.7 "v1 Core GA" terminology is superseded)
 - `help-legacy` — deleted alongside legacy surface
 - `setup` / `verify` — removed commands; use `kdna create` and `kdna validate`
 

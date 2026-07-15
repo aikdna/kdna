@@ -1,4 +1,4 @@
-# ~/.kdna Directory Specification v1.0
+# ~/.kdna Directory Specification 1.0
 
 > **Status:** Draft · 2026-05-26
 > **Applies to:** kdna-cli, compatible clients, authoring tools

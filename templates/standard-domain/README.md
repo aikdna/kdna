@@ -73,7 +73,7 @@ If any of the above is true, the agent should decline to load this domain.
 | File | Purpose |
 |------|---------|
 | `KDNA_Core.json` | Axioms (with optional boundaries), ontology, frameworks, causal structure, stances |
-| `KDNA_Patterns.json` | Terminology, banned terms, misunderstandings (with v2.1 boundaries), self-checks |
+| `KDNA_Patterns.json` | Terminology, banned terms, misunderstandings (with 2.1 boundaries), self-checks |
 | `evals/` | Test cases for `kdna compare` and quality scoring |
 | `kdna.json` | Domain manifest (name, version, judgment_version, signature) |
 

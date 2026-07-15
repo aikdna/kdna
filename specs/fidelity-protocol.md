@@ -6,7 +6,7 @@
 **Status:** Draft  
 **Proposed:** 2026-06-08  
 **Authors:** KDNA Maintainers  
-**Related:** RFC-0012 (Artifact Contract), KDNA SPEC v1.0-rc §3.3.2 (Quality Badges), §9 (Validation)
+**Related:** RFC-0012 (Artifact Contract), KDNA SPEC 1.0-rc §3.3.2 (Quality Badges), §9 (Validation)
 
 ---
 
@@ -280,7 +280,7 @@ To produce trustworthy fidelity results, a measurement run MUST satisfy:
 - Add fidelity measurement concepts to evaluation docs
 
 ### Phase 2: Reference Implementation
-- Extract `@assay/fidelity-core` from assay's existing fidelity protocol v2.1
+- Extract `@assay/fidelity-core` from assay's existing fidelity protocol 2.1
 - Publish as open-source reference under KDNA ecosystem
 - Implement blind A/B/C comparison with calibration anchors
 - Support configurable evaluator models

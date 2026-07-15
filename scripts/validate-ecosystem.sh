@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# KDNA Cross-Repo Validator v0.2
+# KDNA Cross-Repo Validator 0.2
 # Validates all domain repos listed in the registry and tools repos.
 # Usage: ./scripts/validate-ecosystem.sh [--no-clone] [--local-only]
 
@@ -29,7 +29,7 @@ for arg in "$@"; do
   esac
 done
 
-echo "=== KDNA Ecosystem Validator v0.2 ==="
+echo "=== KDNA Ecosystem Validator 0.2 ==="
 echo ""
 
 FAILURES=0

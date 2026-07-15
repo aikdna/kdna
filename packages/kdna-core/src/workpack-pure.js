@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 
-// ── Embedded Work Pack Schema v0.1 ──────────────────────────────────
+// ── Embedded Work Pack Schema 0.1 ──────────────────────────────────
 // Self-contained schema with resolved $refs for zero-dependency validation.
 
 const WORK_PACK_SCHEMA = {

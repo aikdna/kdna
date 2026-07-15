@@ -21,7 +21,7 @@
     "scripts": {
         "test": "node ../../scripts/run-node-tests.js test/*.test.js && node -e \"const m = require('./src/index.js'); console.log('kdna-core exports:', Object.keys(m).join(', '));\"",
         "prepublishOnly": "npm run release:check",
-        "release:check": "node scripts/check-release-readiness.js",
+    "release:check": "node ../../scripts/check-post-cutover-naming.mjs && node scripts/check-release-readiness.js",
         "publish:guard": "node scripts/check-publish-duplicate.js"
     },
     "files": [

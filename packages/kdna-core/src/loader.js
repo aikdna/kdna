@@ -157,7 +157,7 @@ function detectOldFieldNames(obj, path = '', warnings = []) {
   for (const key of Object.keys(obj)) {
     if (FIELD_ALIASES[key]) {
       warnings.push(
-        `[KDNA LOADER] ${path}.${key}: field "${key}" is not in spec v0.4. Use "${FIELD_ALIASES[key]}" instead. See docs/authoring-guide.md §0.`,
+        `[KDNA LOADER] ${path}.${key}: field "${key}" is not in spec 0.4. Use "${FIELD_ALIASES[key]}" instead. See docs/authoring-guide.md §0.`,
       );
     }
     if (typeof obj[key] === 'object' && obj[key] !== null) {

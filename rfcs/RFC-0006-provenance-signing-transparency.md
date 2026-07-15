@@ -28,8 +28,8 @@ This RFC is not yet binding. It proposes that future versions define:
 
 ## Compatibility Impact
 
-v1.0 assets continue to use the existing `kdna.json.signature` field. Future
-signature bundles MUST preserve the ability to verify v1.0 Ed25519 signatures.
+1.0 assets continue to use the existing `kdna.json.signature` field. Future
+signature bundles MUST preserve the ability to verify 1.0 Ed25519 signatures.
 
 ## Conformance Requirements
 

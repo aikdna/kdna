@@ -8,7 +8,7 @@ make their judgment loadable across models, tools, and workflows.
 
 ## Proposed Asset Types
 
-The `asset_type` field is optional in v1.0 and proposed for v1.1:
+The `asset_type` field is optional in 1.0 and proposed for 1.1:
 
 - `domain_judgment`
 - `personal_judgment`
@@ -19,7 +19,7 @@ The `asset_type` field is optional in v1.0 and proposed for v1.1:
 
 ## Proposed Privacy Levels
 
-The `privacy_level` field is optional in v1.0 and proposed for v1.1:
+The `privacy_level` field is optional in 1.0 and proposed for 1.1:
 
 - `public`
 - `private`

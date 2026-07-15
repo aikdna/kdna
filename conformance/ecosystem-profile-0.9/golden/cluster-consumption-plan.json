@@ -48,7 +48,7 @@
   },
   "selection": {
     "primary": {
-      "asset_id": "dev-change-risk-v0.1.0.kdna",
+      "asset_id": "dev-change-risk.kdna",
       "version": "0.1.0",
       "digest": "sha256:e2cec9e8fcc0b5e9b6f84a7c5864f889eedb32a0e14e3d2a69441339bef256cc",
       "role": "primary",
@@ -57,7 +57,7 @@
     },
     "advisors": [
       {
-        "asset_id": "dev-api-design-judgment-v0.1.0.kdna",
+        "asset_id": "dev-api-design-judgment.kdna",
         "version": "0.1.0",
         "digest": "sha256:577ca19ff32d1a427e4f4741af85af464a601674f708354bec15c1b2a88c4fb6",
         "role": "advisor",
@@ -68,7 +68,7 @@
     ],
     "rejected": [
       {
-        "asset_id": "creator-brand-positioning-v0.1.0.kdna",
+        "asset_id": "creator-brand-positioning.kdna",
         "version": "0.1.0",
         "role": "rejected",
         "rejection_reason": "no brand/content signals in task",

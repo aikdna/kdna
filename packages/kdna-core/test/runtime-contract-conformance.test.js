@@ -4,7 +4,7 @@ const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const Ajv2020 = require('ajv/dist/2020');
+const JsonSchema2020 = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
@@ -56,7 +56,7 @@ test('published runtime-contract schemas are byte-for-byte canonical copies', ()
 });
 
 test('published runtime-contract schemas resolve and validate without network or repo refs', () => {
-  const ajv = new Ajv2020({ allErrors: true, strict: false, loadSchema: undefined });
+  const ajv = new JsonSchema2020({ allErrors: true, strict: false, loadSchema: undefined });
   addFormats(ajv);
   const packaged = new Map();
   for (const file of schemaFiles) {

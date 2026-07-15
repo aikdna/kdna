@@ -284,7 +284,7 @@ public assets, see `OPEN/kdna-assets/`.
 ### 5.6 推送到 GitHub
 
 ```bash
-git add -A && git commit -m "Initial commit: kdna-<domain-id> v0.1.0"
+git add -A && git commit -m "Initial commit: kdna-<domain-id> 0.1.0"
 git remote add origin git@github.com:aikdna/kdna-<domain-id>.git
 git push -u origin main
 ```

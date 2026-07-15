@@ -75,7 +75,7 @@ endorsement claims from arbitrary source directories.
 kdna publish ./dist/my-domain.kdna
 
 Output:
-  Signed: @aikdna/my-domain v0.1.0
+  Signed: @aikdna/my-domain 0.1.0
   Signature: ed25519:def5678...
   Asset: ./dist/my-domain.kdna
 ```

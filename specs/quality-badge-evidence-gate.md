@@ -5,7 +5,7 @@
 
 Version: 0.1
 Status: Draft
-Depends on: kdna-asset-card.md, benchmark design docs, registry SCHEMA.md v2.3
+Depends on: kdna-asset-card.md, benchmark design docs, registry SCHEMA.md 2.3
 
 ## 1. Purpose
 

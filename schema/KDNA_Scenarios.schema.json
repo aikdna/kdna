@@ -32,7 +32,7 @@
       }
     },
     "scenes": {
-      "description": "Not part of KDNA v1.0. Use scenarios.",
+      "description": "Not part of KDNA 1.0. Use scenarios.",
       "type": "array",
       "items": {
         "type": "object",
@@ -42,7 +42,7 @@
           "name": { "type": "string" },
           "trigger_signal": {
             "type": "string",
-            "description": "Not part of KDNA v1.0. Use trigger_signals."
+            "description": "Not part of KDNA 1.0. Use trigger_signals."
           },
           "trigger_signals": {
             "type": "array",

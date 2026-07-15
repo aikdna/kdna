@@ -1,4 +1,4 @@
-# KDNA v1.0-rc Release Gate
+# KDNA 1.0-rc Release Gate
 
 > ⚠️ **Historical snapshot.** This obsolete release gate does not describe the
 > current KDNA Core or the single KDNA Asset Container. Current docs:
@@ -56,7 +56,7 @@ npm version <version> --no-git-tag-version
 npm run release:preflight
 ```
 
-## Non-Negotiable v1.0 Rules
+## Non-Negotiable 1.0 Rules
 
 - Manifest uses `kdna_version: "1.0"`.
 - `format`, `format_version`, and `spec_version` are not protocol discriminators.
@@ -65,6 +65,6 @@ npm run release:preflight
 - Root `mimetype` is required and must be
   `application/vnd.kdna.asset`.
 - `application/x-kdna` is invalid.
-- Signatures use the v1.0 canonical content-tree payload only.
+- Signatures use the 1.0 canonical content-tree payload only.
 - Registry installable entries must declare `media_type`,
   `asset_url`, and `asset_digest`.

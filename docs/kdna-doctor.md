@@ -25,9 +25,9 @@ CLI: @aikdna/kdna-cli (/usr/local/bin/kdna)
   Data:    ~/.kdna/
 
   Agents:
-    Codex:        detected  — kdna-loader installed  (v2026.05)
-    Claude Code:  detected  — kdna-loader installed  (v2026.05)
-    OpenCode:     detected  — kdna-loader installed  (v2026.05)
+    Codex:        detected  — kdna-loader installed  (2026.05)
+    Claude Code:  detected  — kdna-loader installed  (2026.05)
+    OpenCode:     detected  — kdna-loader installed  (2026.05)
     Cursor:       not detected
     Gemini:       not detected
 

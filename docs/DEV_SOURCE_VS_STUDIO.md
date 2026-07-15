@@ -18,10 +18,10 @@ KDNA defines two authoring formats:
 
 ## Why This Gap Exists
 
-The Studio project format was introduced in v1.0-rc as a canonical
+The Studio project format was introduced in 1.0-rc as a canonical
 Studio-compatible authoring workspace. At the time of the original note:
 
-1. **`kdna-studio-cli` (v0.2.0)** was the only tool that created Studio projects
+1. **`kdna-studio-cli` (0.2.0)** was the only tool that created Studio projects
 2. Several early domain repos were authored before Studio existed and used dev source directories
 3. **No migration tool** exists to convert dev source → Studio project while preserving all content (only axioms are currently imported via `--from-folder`)
 
@@ -56,7 +56,7 @@ No separate source-directory distribution step is needed.
 
 ## Honesty Note
 
-The original version of this note documented a temporary v1.0-rc mismatch
+The original version of this note documented a temporary 1.0-rc mismatch
 between early source workspaces and Studio-compatible projects. Current public
 guidance is simpler: users consume packaged `.kdna` files; creators may use dev
 source directories, Studio projects, or compatible tools to produce them.

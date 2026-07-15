@@ -1,9 +1,9 @@
-# Archived v1.0-rc Registry Trust Harness
+# Archived 1.0-rc Registry Trust Harness
 
 This directory records why the former `tests/registry-trust/run.mjs` harness
 was removed from the executable KDNA Core test surface.
 
-The harness targeted the superseded v1.0-rc registry and install workflow. It
+The harness targeted the superseded 1.0-rc registry and install workflow. It
 generated the removed multi-file payload shape, invoked a machine-global
 `kdna` executable instead of code owned by this repository, and accepted broad
 non-zero exits for several scenarios. After the CLI changed, those assertions

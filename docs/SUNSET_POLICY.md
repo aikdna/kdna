@@ -1,6 +1,6 @@
 # Deprecation & Sunset Policy
 
-> **Status:** v1.0-rc  
+> **Status:** 1.0-rc
 > **Effective:** 2026-06-11
 
 KDNA's deprecation policy ensures that users are never caught between a documented feature and its removal.

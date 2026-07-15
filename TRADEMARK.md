@@ -27,7 +27,7 @@ You may use the KDNA Marks to truthfully refer to the KDNA project, protocol, or
 
 You may use the Marks to describe compatibility, provided the description is accurate and references the specific [COMPATIBILITY.md](./COMPATIBILITY.md) level:
 
-- "This tool is KDNA-Core compatible (SPEC v1.0-rc)."
+- "This tool is KDNA-Core compatible (SPEC 1.0-rc)."
 - "This domain asset follows the KDNA domain structure."
 
 ### Community Content

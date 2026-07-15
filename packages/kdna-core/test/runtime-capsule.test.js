@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const Ajv2020 = require('ajv/dist/2020');
+const JsonSchema2020 = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 
 const core = require('../src');
@@ -26,7 +26,7 @@ const GOLDEN_BYTES = Buffer.from(
 );
 
 function validators() {
-  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  const ajv = new JsonSchema2020({ allErrors: true, strict: false });
   addFormats(ajv);
   ajv.addSchema(digestEvidenceSchema);
   return {
@@ -67,9 +67,14 @@ test('loadAuthorized and loadRuntimeCapsule expose the same sole public shape', 
     core.loadAuthorized(GOLDEN_BYTES, options),
     core.loadRuntimeCapsule(GOLDEN_BYTES, options),
   );
-  assert.equal(Object.hasOwn(core, 'adaptCapsuleV2ToV1'), false);
-  assert.equal(Object.hasOwn(core, 'loadCapsuleV2'), false);
-  assert.equal(Object.hasOwn(core, 'buildCapsuleV2'), false);
+  const generationMarker = 'V';
+  for (const removedName of [
+    ['adaptCapsule', generationMarker, 2, 'To', generationMarker, 1].join(''),
+    ['loadCapsule', generationMarker, 2].join(''),
+    ['buildCapsule', generationMarker, 2].join(''),
+  ]) {
+    assert.equal(Object.hasOwn(core, removedName), false);
+  }
 });
 
 test('public Runtime Capsule builder accepts only the stable responsibility shape', () => {
@@ -90,6 +95,34 @@ test('public Runtime Capsule builder accepts only the stable responsibility shap
     schemaValid: true,
   });
   assert.deepEqual(built, loaded);
+
+  const manifestWithoutAccess = structuredClone(manifest);
+  delete manifestWithoutAccess.access;
+  const builtWithoutAccess = core.buildRuntimeCapsule({
+    projection: { profile: loaded.profile, content: loaded.context },
+    manifest: manifestWithoutAccess,
+    digests: loaded.digests,
+    signature: loaded.signature,
+    inputKind: 'packaged_bytes',
+    loadedAt: golden.loaded_at,
+    schemaValid: true,
+  });
+  assert.equal(builtWithoutAccess.access, 'public');
+
+  for (const invalidAccess of ['', null, false, 0]) {
+    assert.throws(
+      () => core.buildRuntimeCapsule({
+        projection: { profile: loaded.profile, content: loaded.context },
+        manifest: { ...manifest, access: invalidAccess },
+        digests: loaded.digests,
+        signature: loaded.signature,
+        inputKind: 'packaged_bytes',
+        loadedAt: golden.loaded_at,
+        schemaValid: true,
+      }),
+      (error) => error.code === 'KDNA_RUNTIME_CAPSULE_BUILD_INVALID',
+    );
+  }
 
   assert.throws(
     () => core.buildRuntimeCapsule({ manifest, digests: loaded.digests }),

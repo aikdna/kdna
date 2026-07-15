@@ -22,7 +22,7 @@ const SPECS_DIR = resolve(__dirname, '..', '..', 'specs');
 let _ajv = null;
 function getAjv() {
   if (_ajv) return _ajv;
-  const { Ajv2020: Ajv } = require('ajv/dist/2020');
+  const Ajv = require('ajv/dist/2020');
   _ajv = new Ajv({ allErrors: true, strict: false });
   _ajv.addFormat('date-time', /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/);
   _ajv.addFormat('date', /^\d{4}-\d{2}-\d{2}$/);

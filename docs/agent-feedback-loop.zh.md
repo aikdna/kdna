@@ -295,7 +295,7 @@ kdna compare @aikdna/decision_state --from 0.7.1 --to 0.7.2 --evals ./evals/
 
 **到 registry：**
 ```bash
-kdna publish ./dist/decision_state.kdna --release-tag v0.7.2 --repo aikdna/kdna-decision_state
+kdna publish ./dist/decision_state.kdna --release-tag 0.7.2 --repo aikdna/kdna-decision_state
 ```
 
 **到 Agent 运行时：**

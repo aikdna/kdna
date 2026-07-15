@@ -9,7 +9,7 @@ Copy this folder, fill in the bracketed placeholders, then export a packaged
 ```
 standard-domain/
 ├── README.md                   # Four Questions + Failure Risks + Files
-├── kdna.json                   # Manifest with judgment_version (v2.1)
+├── kdna.json                   # Manifest with judgment_version (2.1)
 ├── KDNA_Core.json              # Axioms with applies_when / does_not_apply_when / failure_risk
 ├── KDNA_Patterns.json          # Misunderstandings with same governance fields
 └── evals/
@@ -56,6 +56,6 @@ kdna load ./dist/your-domain.kdna --profile=compact --as=prompt
 
 ## Standard vs minimal-domain
 
-`minimal-domain/` is the **bare-minimum** template — 2 files, no v2.1 fields, no evals. Use it only for fast experimentation or learning.
+`minimal-domain/` is the **bare-minimum** template — 2 files, no 2.1 fields, no evals. Use it only for fast experimentation or learning.
 
 `standard-domain/` is the richer authoring template for domains that need evidence, limitations, and repeatable validation. KDNA distribution is local `.kdna` export plus `kdna validate` / `kdna plan-load` / `kdna load` evidence.

@@ -60,11 +60,11 @@
     },
     "asset_uid": {
       "type": "string",
-      "description": "Unique identifier for this exported .kdna asset instance. uuidv7 is recommended."
+      "description": "Unique identifier for this exported .kdna asset instance. UUID version 7 is recommended."
     },
     "project_uid": {
       "type": "string",
-      "description": "Stable identifier for the Studio project that produced this asset. uuidv7 is recommended."
+      "description": "Stable identifier for the Studio project that produced this asset. UUID version 7 is recommended."
     },
     "build_id": {
       "type": "string",
@@ -234,7 +234,7 @@
         "sensitive",
         "regulated"
       ],
-      "description": "Privacy classification. Proposed for v1.1; optional in v1.0."
+      "description": "Privacy classification. Proposed for 1.1; optional in 1.0."
     },
     "asset_type": {
       "type": "string",
@@ -246,7 +246,7 @@
         "creator_style",
         "risk_guard"
       ],
-      "description": "Judgment asset category. Proposed for v1.1; optional in v1.0."
+      "description": "Judgment asset category. Proposed for 1.1; optional in 1.0."
     },
     "fitness_for_purpose": {
       "type": "object",

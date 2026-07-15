@@ -88,6 +88,6 @@ Then install the `kdna-loader` skill for your agent from [kdna-skills](https://g
   demand through the CLI/Core path)
 - A domain creator. Use the Studio CLI for packaged `.kdna` creation; CLI dev
   scaffolds are non-canonical.
-- Per-project pinning (the v0.7–v0.8 `.kdna/config.json` mechanism was
-  removed in v0.9 because it forced loading on tasks the user didn't
+- Per-project pinning (the 0.7–0.8 `.kdna/config.json` mechanism was
+  removed in 0.9 because it forced loading on tasks the user didn't
   ask for, violating the "install ≠ load" safety model)

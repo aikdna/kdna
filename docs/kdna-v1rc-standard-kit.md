@@ -1,9 +1,9 @@
-# KDNA v1.0-rc Standard Kit
+# KDNA 1.0-rc Standard Kit
 
 > Historical release-candidate kit. Current KDNA Core public beta guidance lives
 > in `README.md`, `SPEC.md`, `docs/status.md`, and `docs/try-kdna.md`.
 
-KDNA v1.0-rc is the asset-first release candidate for the open judgment asset
+KDNA 1.0-rc is the asset-first release candidate for the open judgment asset
 layer. The goal of this kit is to give implementers one canonical entry point
 instead of forcing them to infer the standard from scattered repository files.
 
@@ -54,9 +54,9 @@ instead of forcing them to infer the standard from scattered repository files.
 11. Quality badges must follow the official badge names, evidence thresholds,
     and authoring provenance gates.
 12. KDNA-compatible claims must pass the relevant conformance profile.
-13. v1.0 assets must include root `mimetype` with
+13. 1.0 assets must include root `mimetype` with
     `application/vnd.kdna.asset`.
-14. v1.0 manifests use `kdna_version: "1.0"`; `kdna_spec` is not part of the protocol.
+14. 1.0 manifests use `kdna_version: "1.0"`; `kdna_spec` is not part of the protocol.
 
 ## Implementer Path
 

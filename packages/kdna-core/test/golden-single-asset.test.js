@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const cbor = require('cbor-x');
-const Ajv2020 = require('ajv/dist/2020.js');
+const JsonSchema2020 = require('ajv/dist/2020.js');
 
 const core = require('../src');
 const fixture = require('./fixtures/golden-single-asset.json');
@@ -38,7 +38,7 @@ function clone(value) {
 }
 
 function compileSchema(schema) {
-  return new Ajv2020({ allErrors: true, strict: false }).compile(schema);
+  return new JsonSchema2020({ allErrors: true, strict: false }).compile(schema);
 }
 
 function createAsset(payload = fixture.payload, payloadBytes = null) {

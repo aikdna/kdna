@@ -36,11 +36,11 @@ kdna doctor --agents
 
 **Current status (2026-06-01):**
 ```
-✓ Agent: OpenCode: kdna-loader installed (v2026.05)
-✓ Agent: Codex: kdna-loader installed (v2026.05)
-✓ Agent: Claude Code: kdna-loader installed (v2026.05)
-✓ Agent: Cursor: kdna-loader installed (v2026.05)
-✓ Agent: Gemini Antigravity: kdna-loader installed (v2026.05)
+✓ Agent: OpenCode: kdna-loader installed (2026.05)
+✓ Agent: Codex: kdna-loader installed (2026.05)
+✓ Agent: Claude Code: kdna-loader installed (2026.05)
+✓ Agent: Cursor: kdna-loader installed (2026.05)
+✓ Agent: Gemini Antigravity: kdna-loader installed (2026.05)
 5/5 checks passed
 ```
 

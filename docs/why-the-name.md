@@ -123,19 +123,19 @@ The real mission of KDNA is not to become the warehouse of all domain knowledge.
 
 Professional judgment is never complete on the first try.
 
-A writing KDNA might start at v0.1, only capable of judging titles and structure.
-By v0.2, it adds short-video script capability.
-By v0.3, it adds platform-specific awareness.
-By v1.0, it forms a stable writing judgment framework.
-By v1.1, it adds "de-AI-ification," fact-checking, and tone consistency.
+A writing KDNA might start at 0.1, only capable of judging titles and structure.
+By 0.2, it adds short-video script capability.
+By 0.3, it adds platform-specific awareness.
+By 1.0, it forms a stable writing judgment framework.
+By 1.1, it adds "de-AI-ification," fact-checking, and tone consistency.
 
 This is just like software versioning:
 
 ```
-writing-kdna v0.1.0
-writing-kdna v0.2.0
-writing-kdna v1.0.0
-writing-kdna v1.1.0
+writing-kdna 0.1.0
+writing-kdna 0.2.0
+writing-kdna 1.0.0
+writing-kdna 1.1.0
 ```
 
 Every version update is not just content addition — it is judgment structure evolution.

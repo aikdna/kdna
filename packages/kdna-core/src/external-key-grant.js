@@ -8,7 +8,7 @@
 
 const crypto = require('node:crypto');
 const path = require('node:path');
-const Ajv2020 = require('ajv/dist/2020');
+const JsonSchema2020 = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 const cbor = require('cbor-x');
 const { hkdfSha256, aesWrap, aesUnwrap } = require('./crypto-profile');
@@ -22,7 +22,7 @@ const ENVELOPE_ALG = 'A256GCM';
 const GRANT_WRAP_ALG = 'X25519-HKDF-SHA256+A256KW';
 
 const schemaRoot = path.join(__dirname, '..', 'schema');
-const ajv = new Ajv2020({ allErrors: true, strict: true });
+const ajv = new JsonSchema2020({ allErrors: true, strict: true });
 addFormats(ajv);
 const validateEnvelopeSchema = ajv.compile(
   require(path.join(schemaRoot, 'external-grant-envelope.schema.json')),

@@ -14,7 +14,7 @@ function escapeRegExp(value) {
 
 function canonicalTag(version) {
   assert(STABLE_VERSION_RE.test(version || ''), 'package version must be stable canonical SemVer');
-  return `kdna-v${version}`;
+  return `compat/${version}`;
 }
 
 function validateReleaseContext({ pkg, changelog, env, git }) {

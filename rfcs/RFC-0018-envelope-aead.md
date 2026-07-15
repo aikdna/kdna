@@ -22,8 +22,8 @@ an explicit `kdf_profile` field on each key slot:
 
 | `kdf_profile`        | KDF             | Implementations  | Required support |
 |----------------------|-----------------|------------------|------------------|
-| `scrypt-sha256-v1`   | scrypt-sha256   | Node.js, Swift   | **Mandatory**    |
-| `argon2id-v1`       | Argon2id        | Node.js only     | Optional v2      |
+| `scrypt-sha256`   | scrypt-sha256   | Node.js, Swift   | **Mandatory**    |
+| `argon2id`       | Argon2id        | Node.js only     | Optional v2      |
 
 The two profile IDs are **never collapsed**: a reader that does
 not support the declared `kdf_profile` MUST fail closed (see
@@ -45,10 +45,10 @@ KDNA needs a single canonical envelope profile that:
 The protocol must support both:
 
 - a **universal default** that works on every platform
-  (scrypt-sha256-v1, available in Node.js's `crypto` and
+  (scrypt-sha256, available in Node.js's `crypto` and
   Apple's CommonCrypto),
 - a **stronger opt-in** for creators who want Argon2id's
-  memory-hardness guarantees (argon2id-v1, available in
+  memory-hardness guarantees (argon2id, available in
   Node.js via `@noble/hashes/argon2.js` and in browsers via
   WASM).
 
@@ -75,7 +75,7 @@ fields are required unless marked optional.
 | `profile`      | string | yes      | MUST be `kdna.envelope.aead`. |
 | `alg`          | string | yes      | MUST be `AES-256-GCM`. |
 | `key_wrapping` | string | yes      | MUST be `AES-256-KW` (RFC 3394). |
-| `kdf_profile`  | string | yes      | One of `scrypt-sha256-v1` or `argon2id-v1`. See R4. |
+| `kdf_profile`  | string | yes      | One of `scrypt-sha256` or `argon2id`. See R4. |
 | `key_slots`    | array  | yes      | At least one entry. See R3. |
 | `iv`           | string | yes      | Base64. 12 bytes (96-bit AES-GCM nonce). |
 | `tag`          | string | yes      | Base64. 16 bytes (AES-GCM auth tag). |
@@ -99,7 +99,7 @@ Each slot has the shape:
 ```json
 {
   "slot":        "<slot name, e.g. 'password' or 'recovery'>",
-  "kdf_profile": "scrypt-sha256-v1" | "argon2id-v1",
+  "kdf_profile": "scrypt-sha256" | "argon2id",
   "kdf_params":  { ... KDF-specific parameters ... },
   "wrap":        "AES-256-KW",
   "wrapped_key": "<base64, 40 bytes>"
@@ -123,7 +123,7 @@ the reader uses to derive the KEK.
 `kdf_profile` for convenience and is a redundant copy. Readers
 MUST use the per-slot value.)
 
-#### R4.1 — `scrypt-sha256-v1`
+#### R4.1 — `scrypt-sha256`
 
 | Parameter | Value | Description |
 |-----------|-------|-------------|
@@ -138,11 +138,11 @@ The `kdf_params` object MUST include `N`, `r`, `p`, and
 `salt` (base64). Other fields are ignored.
 
 **Mandatory support.** Every conforming implementation MUST
-support `scrypt-sha256-v1`. This is the universal default and
+support `scrypt-sha256`. This is the universal default and
 the compatibility path. Node.js's built-in `crypto.scryptSync`
 is sufficient.
 
-#### R4.2 — `argon2id-v1`
+#### R4.2 — `argon2id`
 
 | Parameter  | Value  | Description |
 |------------|--------|-------------|
@@ -157,7 +157,7 @@ The `kdf_params` object MUST include `t`, `m`, `p`, and
 `salt` (base64). Other fields are ignored.
 
 **Optional v2 support.** Implementations MAY support
-`argon2id-v1`; those that do MUST verify that `m` is at least
+`argon2id`; those that do MUST verify that `m` is at least
 64 MiB. The Swift port does not have a native Argon2id
 binding and MUST follow R6.
 
@@ -224,15 +224,15 @@ fail the GCM authentication check.
 
 The KDNA Swift port (no native Argon2id binding) MUST:
 
-- (a) Support `scrypt-sha256-v1` for every envelope (mandatory
+- (a) Support `scrypt-sha256` for every envelope (mandatory
   per R4.1).
 - (b) On encountering a slot with `kdf_profile:
-  "argon2id-v1"`, EITHER:
+  "argon2id"`, EITHER:
   - Fall back to the next slot in `key_slots[]` if any other
-    slot's `kdf_profile` is `scrypt-sha256-v1`, OR
+    slot's `kdf_profile` is `scrypt-sha256`, OR
   - Fail with `KDNA_KDF_UNSUPPORTED` and a human-readable
     reason: "this Swift build does not implement Argon2id;
-    supply a password-slot scrypt-sha256-v1 envelope or
+    supply a password-slot scrypt-sha256 envelope or
     install the Argon2id extension build".
 - (c) NEVER silently accept the envelope under a weaker KDF
   than declared. The per-slot `kdf_profile` is the contract.
@@ -268,13 +268,13 @@ Every conforming implementation MUST be able to decrypt
 without modification. The vectors are:
 
 - `envelope-aead-vector-01-scrypt-basic.json` —
-  scrypt-sha256-v1, single password slot, basic round-trip.
+  scrypt-sha256, single password slot, basic round-trip.
 - `envelope-aead-vector-02-scrypt-multi-entry-aad.json` —
-  scrypt-sha256-v1, two AADs (different `entry_path`) over
+  scrypt-sha256, two AADs (different `entry_path`) over
   the same CEK + IV + plaintext, proving AAD binding via
   divergent tags.
 - `envelope-aead-vector-03-argon2id-basic.json` —
-  argon2id-v1, single password slot, basic round-trip.
+  argon2id, single password slot, basic round-trip.
 
 A conformance runner at `conformance/envelope-aead.mjs`
 re-derives each vector's expected outputs from the declared

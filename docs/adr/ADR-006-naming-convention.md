@@ -19,11 +19,11 @@ KDNA documentation, READMEs, CHANGELOGs, and spec files currently mix five diffe
 | `KDNA Core v1` | README.md, RFC-0013 |
 | `Core v1` | kdna-cli/README.md |
 | `Core GA` | SPEC.md, ecosystem-map.md |
-| `v1.0-rc` | RFC headers |
+| `1.0-rc` | RFC headers |
 | `v1` (bare) | various CHANGELOGs |
 
 The terms `Core v1`, `KDNA Core v1`, and `v1` are used interchangeably; the term
-`Core GA` is used without ever being defined; `v1.0-rc` and `Core v1` are
+`Core GA` is used without ever being defined; `1.0-rc` and `Core v1` are
 sometimes used to mean the same release, sometimes different ones.
 
 This is not just cosmetic. The ambiguity makes it impossible to write a single
@@ -61,7 +61,7 @@ isolation, `v1` is acceptable as shorthand but a sentence should always use
 |---|---|---|
 | `Core v1` (without `KDNA` prefix) | `KDNA Core v1` | Ambiguous — could be any project. |
 | `Core GA` (without definition) | `KDNA Core v1` (current release) | "GA" was never defined. The "current release" *is* the GA. |
-| `v1.0-rc` (referring to a released version) | `KDNA Core v1` or `KDNA Core v1.0-rc-1` (specific) | `v1.0-rc` only refers to pre-GA releases. |
+| `1.0-rc` (referring to a released version) | `KDNA Core v1` or `KDNA Core 1.0-rc-1` (specific) | `1.0-rc` only refers to pre-GA releases. |
 | `v1` (bare, in user-facing docs) | `KDNA Core v1` (first mention) or `KDNA Core` (later) | Bare `v1` is ambiguous about which component. |
 | `Core` (bare, in a sentence about KDNA) | `KDNA Core` | Avoid the "the Core" trap. |
 

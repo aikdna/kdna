@@ -1,106 +1,78 @@
-# KDNA Enum Tables — Single Source of Truth
+# KDNA Runtime Manifest Enum Reference
 
-> Canonical enum values for all KDNA domain manifest fields.
-> This document overrides any conflicting definitions in READMEs, wiki pages, or older specs.
-> Linked from: `schema/kdna-manifest-v1rc.json`, `SPEC.md §3.3.2`.
+This document is an explanatory index of the current runtime manifest
+vocabulary. The canonical machine-readable authority is
+[`../schema/manifest.schema.json`](../schema/manifest.schema.json). If prose
+and Schema disagree, the Schema controls and this document must be corrected.
 
----
+## Container and Payload Coordinates
 
-## 1. status — Domain Maturity
+| Field | Current value |
+|---|---|
+| `format_version` | `0.1.0` |
+| `compatibility.profile_version` | `0.1.0` |
+
+## Asset Type
+
+`asset_type` declares how callers interpret the asset payload.
 
 | Value | Meaning |
-|-------|---------|
-| `draft` | Early work in progress. Structure may change. Not ready for external use. |
-| `experimental` | Complete but not yet proven in practice. Ready for testing and feedback. |
-| `stable` | Structure frozen, content mature. Safe for production use. |
-| `deprecated` | Superseded by another domain. Must set `replaced_by`. |
-| `staging` | Non-public pre-release. Used for pro/commercial domains before public launch. Not discoverable in default registry search. |
+|---|---|
+| `domain` | A judgment domain asset. |
+| `cluster` | A composed cluster asset. |
+| `tool` | A tool-oriented asset. |
+| `sample` | A public example asset. |
+| `fixture` | A conformance or test fixture. |
+| `bundle` | A bundle-profile asset. |
 
-**Legacy values (retired):** `basic`, `pro`, `reference`
+## Payload Profile
 
----
+| Value | Meaning |
+|---|---|
+| `kdna.payload.judgment` | Judgment payload profile. |
+| `kdna.payload.bundle` | Bundle payload profile. |
 
-## 2. quality_badge — Evidence Level
+The distributed payload path is `payload.kdnab`. Its only accepted encoding is
+`cbor`.
 
-| Value | Min Eval Cases | Automated Scoring | Description |
-|-------|:---:|:---:|---|
-| `untested` | 0 | N/A | Passes schema validation only. No judgment quality evidence. |
-| `tested` | >= 10 | Manual verification | Has eval cases with manual verification. Requires `signature`. |
-| `validated` | >= 30 | Automated scoring + raw outputs | Benchmark evidence passes. Requires `signature`. |
-| `expert_reviewed` | >= 30 | External expert sign-off | Reviewed by a domain expert. Requires `reviewed_by` and `signature`. |
-| `production_ready` | >= 30 | Deployment metrics | Expert-reviewed + real-world deployment evidence. Requires `signature`. |
+## Access
 
-**Legacy values (retired):** `unreleased`
+| Value | Meaning |
+|---|---|
+| `public` | The asset can be loaded without entitlement input. |
+| `licensed` | Loading requires the declared local entitlement flow. |
+| `remote` | Loading is mediated by a remote authorization flow. |
 
----
+Omission defaults to `public`. Explicit empty, null, boolean, numeric, or
+unknown values are invalid and MUST NOT be normalized to `public`.
 
-## 3. access — Distribution Mode
+## Creator Type
 
-| Value | Description |
-|-------|-------------|
-| `open` | Plaintext, freely available. Distributed as `.kdna` package. |
-| `licensed` | Encrypted, requires local license. Distributed as a `.kdna` asset with `access: "licensed"`. |
-| `runtime` | Not distributed. Server-side API only. Highest security tier. |
+When optional creator provenance is present, `creator.creator_type` may be one
+of:
 
----
+- `human`;
+- `agent`;
+- `tool`;
+- `organization`.
 
-## 4. risk_level — Risk Classification
+Creator provenance is not a trust or authorship gate.
 
-| Value | Name | Load Behavior | Example Domains |
-|-------|------|---------------|----------------|
-| `R0` | Low | Load with no warning. | writing, prompt_diagnosis |
-| `R1` | Medium-Low | Load with informational notice. | code_review, product decisions |
-| `R2` | Medium | Load with strong warning. Recommend certified domains. | agent_safety, code_review |
-| `R3` | High | Load with mandatory warning. Require verified/reviewed badge. | security strategy, code execution |
+## Lineage Type
 
----
+| Value | Meaning |
+|---|---|
+| `original` | No declared parent asset. |
+| `fork` | Fork of another asset. |
+| `adaptation` | Adaptation of earlier material. |
+| `translation` | Translation of another asset. |
+| `private_variant` | Private variant. |
+| `organization_variant` | Organization-specific variant. |
+| `course_variant` | Course-specific variant. |
 
-## 5. i18n_level — Internationalization Maturity
+## Validity Is Not Quality
 
-| Value | Description |
-|-------|-------------|
-| `L0` | Single language only. No translation support. |
-| `L1` | Basic translation of axioms and self-checks. |
-| `L2` | Full bilingual support (en + zh-CN minimum). All judgment content translated. |
-| `L3` | Multi-language with locale-aware content (scenarios, cases differ by locale). |
-
----
-
-## 6. Field Naming Canon
-
-### kdna_version
-
-| Context | Canonical Field | Rejected |
-|---------|----------------|------------|
-| Dev source `kdna.json` | `kdna_version: "1.0"` | `format_version`, `spec_version`, `kdna_spec` |
-| `.kdna` runtime manifest | `kdna_version: "1.0"` | `format_version`, `spec_version`, `kdna_spec` |
-
-**Rule:** Current manifests use the single `kdna_version` wire field. Removed
-fields do not select alternate formats and MUST be rejected.
-
-### version vs judgment_version
-
-| Field | Tracks | Format | Increment Trigger |
-|-------|--------|--------|-------------------|
-| `version` | Package/metadata changes | semver (MAJOR.MINOR.PATCH) | File reorg, manifest changes, README updates |
-| `judgment_version` | Judgment content changes | YYYY.MM or semver | Axiom, ontology, misunderstanding, or self-check changes |
-
-`version` and `judgment_version` are independent. A domain at `version: "0.7.2"` may have `judgment_version: "2026.05"`.
-
----
-
-## 7. Fields Removed from Domain Manifest
-
-These fields appeared in some domain kdna.json files but are NOT part of the canonical manifest:
-
-| Field | Reason | Where It Belongs |
-|-------|--------|-----------------|
-| `domain_field` | Vague categorization, not standardized. | — (remove) |
-| `judgment_patterns` | Vague categorization, not standardized. | — (remove) |
-| `files` | Redundant with `file_count`. | — (remove) |
-| `registry` | Registry-level metadata, not domain-level. | Registry `domains.json` |
-| `release_status` | Registry-level field, not domain-level. | Registry `domains.json` |
-| `commercial` (in license) | Redundant with `access` field. | — (remove from license object) |
-| `allow_agent_use` (in license) | License-type-specific. Not universal. | KCL extension schema |
-| `allow_redistribution` (in license) | License-type-specific. Not universal. | KCL extension schema |
-| `allow_training` (in license) | License-type-specific. Not universal. | KCL extension schema |
+Format validity, loadability, access mode, signature state, behavioral
+evidence, and author or publisher maturity claims remain separate facts. KDNA
+Core does not convert any of them into a declaration that the asset's judgment
+is true, good, recommended, or officially approved.

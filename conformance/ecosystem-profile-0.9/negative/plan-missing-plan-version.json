@@ -2,7 +2,7 @@
   "plan_id": "plan_c7e3a1b9f2d40856",
   "mode": "single",
   "asset_ref": {
-    "asset_id": "dev-change-risk-v0.1.0.kdna",
+    "asset_id": "dev-change-risk.kdna",
     "version": "0.1.0",
     "digest": "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
   },

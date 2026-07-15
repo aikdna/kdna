@@ -21,10 +21,10 @@ kdna compare @aikdna/writing --input "help me improve this post" [--format json|
 ```markdown
 # KDNA Judgement Comparison Report
 
-**Domain:** @aikdna/writing (v0.7.2)  
-**Input:** "help me improve this post"  
-**Model:** claude-sonnet-4-20250514  
-**Date:** 2026-05-23T10:00:00Z  
+**Domain:** @aikdna/writing (0.7.2)
+**Input:** "help me improve this post"
+**Model:** claude-sonnet-4-20250514
+**Date:** 2026-05-23T10:00:00Z
 
 ---
 
@@ -155,7 +155,7 @@ The comparison report should be:
 
 ### Example Tweet
 
-> Same input. Same model. Different judgment.  
-> Without KDNA: "polish the language"  
-> With @aikdna/writing: "you're missing an argument. here's why that matters before any language fixes."  
+> Same input. Same model. Different judgment.
+> Without KDNA: "polish the language"
+> With @aikdna/writing: "you're missing an argument. here's why that matters before any language fixes."
 > kdna compare @aikdna/writing --input "help me improve this post"

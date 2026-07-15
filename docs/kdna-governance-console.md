@@ -174,7 +174,7 @@ kdna proposal lock prop_ds_001 --accept --reason "Evidence is strong."
 kdna verify @aikdna/decision_state --judgment --regression
 
 # Publish approved domain
-kdna publish ./dist/decision_state.kdna --release-tag v0.7.2
+kdna publish ./dist/decision_state.kdna --release-tag 0.7.2
 ```
 
 The Console may wrap these commands in a web interface, but the protocol remains the CLI. This ensures that governance actions are scriptable, auditable, and not locked into any single UI.

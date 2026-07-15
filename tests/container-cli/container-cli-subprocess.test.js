@@ -1,5 +1,5 @@
 /**
- * v1-cli-subprocess.test.js — drive the actual `node packages/kdna/bin/kdna.js`
+ * container-cli-subprocess.test.js — drive the actual `node packages/kdna/bin/kdna.js`
  * shim end-to-end. This is the test that proves the user's stated
  * invocation works:
  *
@@ -16,7 +16,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const cbor = require('cbor-x');
-const v1 = require('../../packages/kdna-core/src/container');
+const container = require('../../packages/kdna-core/src/container');
 
 function readPayload(p) {
   const buf = fs.readFileSync(p);
@@ -43,7 +43,7 @@ function runCli(args, opts = {}) {
 }
 
 function tmpFile(name) {
-  return path.join(fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-v1-')), name);
+  return path.join(fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-container-')), name);
 }
 
 test('cli: kdna inspect examples/minimal returns a content-neutral JSON manifest', () => {
@@ -75,7 +75,9 @@ test('cli: kdna validate examples/minimal reports overall_valid=true', () => {
 });
 
 test('cli: kdna validate --runtime exits 3 when LoadPlan cannot load now', () => {
-  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-v1-validate-runtime-'));
+  const dir = fs.mkdtempSync(
+    path.join(require('node:os').tmpdir(), 'kdna-container-validate-runtime-'),
+  );
   const secret = 'VALIDATE_RUNTIME_SECRET_SHOULD_NOT_LEAK';
   try {
     for (const name of fs.readdirSync(exampleMinimal)) {
@@ -84,7 +86,7 @@ test('cli: kdna validate --runtime exits 3 when LoadPlan cannot load now', () =>
     const manifestPath = path.join(dir, 'kdna.json');
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     manifest.access = 'remote';
-    manifest.runtime = { endpoint: 'https://runtime.example.test/v1/project' };
+    manifest.runtime = { endpoint: 'https://runtime.example.test/container/project' };
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
     const payloadPath = path.join(dir, 'payload.kdnab');
     const payload = readPayload(payloadPath);
@@ -92,10 +94,10 @@ test('cli: kdna validate --runtime exits 3 when LoadPlan cannot load now', () =>
     fs.writeFileSync(payloadPath, cbor.encode(payload));
     fs.writeFileSync(
       path.join(dir, 'checksums.json'),
-      JSON.stringify(v1.buildChecksums(dir), null, 2),
+      JSON.stringify(container.buildChecksums(dir), null, 2),
     );
     const assetPath = path.join(dir, 'remote.kdna');
-    v1.pack(dir, assetPath);
+    container.pack(dir, assetPath);
 
     const r = runCli(['validate', assetPath, '--runtime']);
     assert.equal(r.status, 3, `stdout=${r.stdout}\nstderr=${r.stderr}`);
@@ -119,7 +121,7 @@ test('cli: kdna plan-load rejects an authoring source directory', () => {
 
 test('cli: kdna plan-load accepts a packaged .kdna asset', () => {
   const assetPath = tmpFile('minimal.kdna');
-  v1.pack(exampleMinimal, assetPath);
+  container.pack(exampleMinimal, assetPath);
   const r = runCli(['plan-load', assetPath]);
   assert.equal(r.status, 0, `stdout=${r.stdout}\nstderr=${r.stderr}`);
   const out = JSON.parse(r.stdout);
@@ -132,7 +134,7 @@ test('cli: kdna plan-load accepts a packaged .kdna asset', () => {
 });
 
 test('cli: kdna plan-load returns 3 when the plan is valid but cannot load now', () => {
-  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-v1-plan-exit-'));
+  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-container-plan-exit-'));
   try {
     for (const name of fs.readdirSync(exampleMinimal)) {
       fs.copyFileSync(path.join(exampleMinimal, name), path.join(dir, name));
@@ -140,14 +142,14 @@ test('cli: kdna plan-load returns 3 when the plan is valid but cannot load now',
     const manifestPath = path.join(dir, 'kdna.json');
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     manifest.access = 'remote';
-    manifest.runtime = { endpoint: 'https://runtime.example.test/v1/project' };
+    manifest.runtime = { endpoint: 'https://runtime.example.test/container/project' };
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
     fs.writeFileSync(
       path.join(dir, 'checksums.json'),
-      JSON.stringify(v1.buildChecksums(dir), null, 2),
+      JSON.stringify(container.buildChecksums(dir), null, 2),
     );
     const assetPath = path.join(dir, 'remote.kdna');
-    v1.pack(dir, assetPath);
+    container.pack(dir, assetPath);
 
     const r = runCli(['plan-load', assetPath]);
     assert.equal(r.status, 3, `stdout=${r.stdout}\nstderr=${r.stderr}`);
@@ -185,7 +187,7 @@ test('cli: kdna unpack <packed> <dir> then kdna validate <dir> succeeds', () => 
 });
 
 test('cli: kdna validate on a directory missing mimetype exits non-zero', () => {
-  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-v1-nomime-'));
+  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-container-nomime-'));
   try {
     fs.writeFileSync(path.join(dir, 'kdna.json'), JSON.stringify({ kdna_version: '1.0' }));
     fs.writeFileSync(
@@ -196,8 +198,8 @@ test('cli: kdna validate on a directory missing mimetype exits non-zero', () => 
       }),
     );
     const r = runCli(['validate', dir]);
-    // The router must not silently pass a non-v1 directory. Either
-    // the v1 route rejects it (preferred) or the upstream CLI does
+    // The router must not silently pass a non-container directory. Either
+    // the container route rejects it (preferred) or the upstream CLI does
     // (acceptable: legacy behavior preserved). In neither case may
     // the command succeed.
     assert.notEqual(r.status, 0, `expected non-zero exit, got: ${r.stdout}`);
@@ -211,7 +213,7 @@ test('cli: kdna validate on a directory missing mimetype exits non-zero', () => 
 });
 
 test('cli: kdna validate on a directory with a non-KDNA mimetype exits non-zero', () => {
-  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-v1-badmime-'));
+  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-container-badmime-'));
   try {
     fs.writeFileSync(path.join(dir, 'mimetype'), 'application/octet-stream');
     fs.writeFileSync(path.join(dir, 'kdna.json'), JSON.stringify({ kdna_version: '1.0' }));
@@ -234,7 +236,7 @@ test('cli: kdna validate on a directory with a non-KDNA mimetype exits non-zero'
 });
 
 test('cli: kdna validate on a directory with lineage as array exits non-zero', () => {
-  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-v1-lineagearr-'));
+  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-container-lineagearr-'));
   try {
     fs.writeFileSync(path.join(dir, 'mimetype'), 'application/vnd.kdna.asset');
     fs.writeFileSync(
@@ -290,24 +292,24 @@ test('cli: non-KDNA .kdna container is rejected with a clear message (no silent 
   }
 });
 
-test('cli: a non-v1 directory does NOT trigger the v1 route (no false positive)', () => {
+test('cli: a non-container directory does NOT trigger the container route (no false positive)', () => {
   // A directory that contains kdna.json but no mimetype must not be
-  // misclassified as v1.
-  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-not-v1-'));
+  // misclassified as container.
+  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-not-container-'));
   try {
     fs.writeFileSync(path.join(dir, 'kdna.json'), JSON.stringify({ kdna_version: '1.0' }));
-    // No mimetype, no payload.kdnab — definitely not a v1 source dir.
+    // No mimetype, no payload.kdnab — definitely not a container source dir.
     // The router should fall through to upstream, which will error
     // out because it doesn't know what to do with this directory.
     const r = runCli(['validate', dir]);
-    assert.notEqual(r.status, 0, 'must not silently pass a non-v1 directory');
-    // The error must come from the v1 router (saying "missing mimetype")
+    assert.notEqual(r.status, 0, 'must not silently pass a non-container directory');
+    // The error must come from the container router (saying "missing mimetype")
     // OR from the upstream CLI. Both are acceptable. What we want to
-    // be sure of is that we did NOT emit a successful v1 validation.
+    // be sure of is that we did NOT emit a successful container validation.
     const merged = r.stdout + r.stderr;
     assert.ok(
       !/overall_valid.*true/.test(merged),
-      'must not report overall_valid=true for a non-v1 dir',
+      'must not report overall_valid=true for a non-container dir',
     );
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });

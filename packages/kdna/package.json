@@ -16,7 +16,7 @@
   "scripts": {
     "test": "node --test test/*.test.js && node bin/kdna.js --help >/dev/null && node bin/kdna-lint.js --help >/dev/null && node bin/kdna-validate.js --help >/dev/null",
     "prepublishOnly": "npm run release:check",
-    "release:check": "node scripts/check-release-readiness.js",
+    "release:check": "node ../../scripts/check-post-cutover-naming.mjs && node scripts/check-release-readiness.js",
     "release:pack": "node scripts/prepare-release-artifact.js",
     "release:smoke": "node scripts/smoke-release-artifact.js",
     "publish:guard": "node scripts/check-publish-duplicate.js",

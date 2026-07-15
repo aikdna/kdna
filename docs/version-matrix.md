@@ -8,20 +8,22 @@ presented as competing KDNA formats.
 
 | Axis | Where it appears | Meaning |
 |---|---|---|
-| Container wire field | `kdna.json` → `kdna_version: "1.0"` | The sole accepted wire discriminator. It is not a product generation. |
+| Container compatibility coordinate | `kdna.json` → `format_version: "0.1.0"` | The sole accepted container contract coordinate. It is not a product generation. |
+| Payload profile coordinate | `kdna.json` → `compatibility.profile_version: "0.1.0"` | The contract coordinate for the selected payload profile. |
 | Tool package version | npm or Swift package release | The release of a specific Core, CLI, Studio, or adapter implementation. |
 | Asset version | `kdna.json` → `version` | Packaging and metadata release of one asset. |
 | Judgment version | `kdna.json` → `judgment_version` | Release of that asset's judgment content. |
-| Candidate contract version | Namespaced plan, trace, evidence, or Cluster schema | Version of that one candidate artifact contract, not of the `.kdna` format. |
+| Artifact contract coordinate | Namespaced plan, trace, evidence, or Cluster schema | Compatibility coordinate for that artifact, not for the `.kdna` container. |
 
-Removed top-level `format_version` and `spec_version` fields are not alternate
-format selectors and MUST NOT be emitted. See
-[`version-taxonomy.md`](./version-taxonomy.md) for naming rules.
+Removed container discriminators are not alternate format selectors and MUST
+NOT be emitted. See [`version-taxonomy.md`](./version-taxonomy.md) for naming
+rules.
 
 ## Compatibility
 
-- A distribution asset must carry `kdna_version: "1.0"` and conform to the
-  current manifest and payload schemas.
+- A distribution asset must carry `format_version: "0.1.0"`, declare
+  `compatibility.profile_version: "0.1.0"`, and conform to the current
+  manifest and payload schemas.
 - Loaders use `compatibility.min_loader_version` and the namespaced payload
   profile to decide implementation compatibility.
 - Package releases can change without creating another KDNA asset format.

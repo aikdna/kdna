@@ -11,7 +11,7 @@
  */
 const fs = require('fs');
 const path = require('path');
-const Ajv2020 = require('ajv/dist/2020');
+const JsonSchema2020 = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -41,7 +41,7 @@ function readJson(rel) {
 let failures = 0;
 
 for (const check of CHECKS) {
-  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  const ajv = new JsonSchema2020({ allErrors: true, strict: false });
   addFormats(ajv);
   const schema = readJson(check.schema);
   const data = readJson(check.data);

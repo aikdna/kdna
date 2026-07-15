@@ -194,5 +194,6 @@ npm run audit:post-cutover
 ```
 
 The checked-out public tree and the published Core tarball describe one stable
-contract. Public history remains available through Git; obsolete protocol
-dialects, paths, labels, and adapters are not part of the current source tree.
+contract. Git-tracked history and migration material remain subject to the
+same post-cutover naming audit as current runtime source; their presence does
+not make removed shapes runtime-valid.

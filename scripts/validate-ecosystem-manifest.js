@@ -152,7 +152,7 @@ for (const component of manifest.components) {
           }).trim();
           const checkoutStatus = execFileSync(
             'git',
-            ['status', '--porcelain=v1', '--untracked-files=all'],
+            ['status', '--porcelain', '--untracked-files=all'],
             {
               cwd: localPath,
               encoding: 'utf8',

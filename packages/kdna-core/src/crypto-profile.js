@@ -429,9 +429,9 @@ function createRecoveryDecryptEntry(options = {}) {
     decryptProtectedEntry(ciphertext, { entryName, manifest, recoveryCode });
 }
 
-// ── B2: scrypt-based password profile (v0.1 write profile) ─────────
+// ── B2: scrypt-based password profile (0.1 write profile) ─────────
 // Uses Node built-in crypto.scryptSync — zero additional dependencies.
-// v0.2 will promote the Argon2id profile (above) as the default write
+// 0.2 will promote the Argon2id profile (above) as the default write
 // profile; this scrypt profile will remain a read-only legacy profile.
 
 const PASSWORD_PROTECTED_SCRYPT_PROFILE = 'kdna.encryption.password.scrypt';
@@ -583,7 +583,7 @@ module.exports = {
   createPasswordDecryptEntry,
   createRecoveryDecryptEntry,
 
-  // B2 scrypt password profile (v0.1 write profile)
+  // B2 scrypt password profile (0.1 write profile)
   derivePasswordKeyScrypt,
   encryptProtectedEntryScrypt,
   decryptProtectedEntryScrypt,

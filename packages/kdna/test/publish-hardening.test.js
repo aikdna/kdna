@@ -33,9 +33,9 @@ const PACKAGE_ROOT = path.resolve(__dirname, '..');
 const REPO_ROOT = path.resolve(PACKAGE_ROOT, '..', '..');
 const HASH = 'a'.repeat(40);
 const OTHER_HASH = 'c'.repeat(40);
-const CHECKOUT_V7_SHA = '9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0';
-const SETUP_NODE_V6_SHA = '249970729cb0ef3589644e2896645e5dc5ba9c38';
-const UPLOAD_V4_SHA = 'ea165f8d65b6e75b540449e92b4886f43607fa02';
+const CHECKOUT_ACTION_SHA = '9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0';
+const SETUP_NODE_ACTION_SHA = '249970729cb0ef3589644e2896645e5dc5ba9c38';
+const UPLOAD_ACTION_SHA = 'ea165f8d65b6e75b540449e92b4886f43607fa02';
 
 function releaseInput(overrides = {}) {
   const version = overrides.pkg?.version || '1.2.3';
@@ -45,10 +45,10 @@ function releaseInput(overrides = {}) {
     env: {
       GITHUB_EVENT_NAME: 'release',
       RELEASE_EVENT_ACTION: 'published',
-      RELEASE_TAG_NAME: `kdna-v${version}`,
+      RELEASE_TAG_NAME: `compat/${version}`,
       RELEASE_IS_DRAFT: 'false',
       RELEASE_IS_PRERELEASE: 'false',
-      GITHUB_REF: `refs/tags/kdna-v${version}`,
+      GITHUB_REF: `refs/tags/compat/${version}`,
       GITHUB_SHA: HASH,
       ...overrides.env,
     },
@@ -67,7 +67,7 @@ function evidence(overrides = {}) {
   const base = {
     schema: 'kdna.compat.release-evidence',
     version: '1.0',
-    source: { ref: 'refs/tags/kdna-v1.2.3', commit: HASH },
+    source: { ref: 'refs/tags/compat/1.2.3', commit: HASH },
     package: { name: '@aikdna/kdna', version: '1.2.3' },
     artifact: {
       filename: 'aikdna-kdna-1.2.3.tgz',
@@ -131,7 +131,7 @@ function packFixture(t) {
     reportText: packed.stdout,
     tarball,
     pkg,
-    source: { ref: `refs/tags/kdna-v${pkg.version}`, commit: HASH },
+    source: { ref: `refs/tags/compat/${pkg.version}`, commit: HASH },
   });
   return { candidate, packed, pkg, tarball };
 }
@@ -201,9 +201,9 @@ test('publish workflow is release-only, stable-only, immutable, and serializes e
   const immutableActions = [...workflow.matchAll(/uses: actions\/(?:checkout|setup-node|upload-artifact)@([^\s]+)/gu)];
   assert.ok(immutableActions.length > 0);
   for (const match of immutableActions) assert.match(match[1], /^[0-9a-f]{40}$/u);
-  assert.match(workflow, new RegExp(`actions/checkout@${CHECKOUT_V7_SHA} # v7`, 'u'));
-  assert.match(workflow, new RegExp(`actions/setup-node@${SETUP_NODE_V6_SHA} # v6`, 'u'));
-  assert.match(workflow, new RegExp(`actions/upload-artifact@${UPLOAD_V4_SHA} # v4`, 'u'));
+  assert.match(workflow, new RegExp(`actions/checkout@${CHECKOUT_ACTION_SHA}`, 'u'));
+  assert.match(workflow, new RegExp(`actions/setup-node@${SETUP_NODE_ACTION_SHA}`, 'u'));
+  assert.match(workflow, new RegExp(`actions/upload-artifact@${UPLOAD_ACTION_SHA}`, 'u'));
 });
 
 test('compatibility workflow fixes every live checkout and publishes only the rebound exact tarball', () => {
@@ -253,8 +253,8 @@ test('release context binds event, stable tag, package, changelog, HEAD, and wor
   assert.deepEqual(validateReleaseContext(releaseInput()), {
     name: '@aikdna/kdna',
     version: '1.2.3',
-    tag: 'kdna-v1.2.3',
-    ref: 'refs/tags/kdna-v1.2.3',
+    tag: 'compat/1.2.3',
+    ref: 'refs/tags/compat/1.2.3',
     commit: HASH,
   });
 });
@@ -266,7 +266,7 @@ test('release context rejects every ambiguous or mutable release input', async (
     ['noncanonical version', releaseInput({ pkg: { version: '01.2.3' } })],
     ['wrong event', releaseInput({ env: { GITHUB_EVENT_NAME: 'workflow_dispatch' } })],
     ['wrong action', releaseInput({ env: { RELEASE_EVENT_ACTION: 'created' } })],
-    ['wrong event tag', releaseInput({ env: { RELEASE_TAG_NAME: 'kdna-v9.9.9' } })],
+    ['wrong event tag', releaseInput({ env: { RELEASE_TAG_NAME: 'kdna-9.9.9' } })],
     ['draft', releaseInput({ env: { RELEASE_IS_DRAFT: 'true' } })],
     ['prerelease', releaseInput({ env: { RELEASE_IS_PRERELEASE: 'true' } })],
     ['branch ref', releaseInput({ env: { GITHUB_REF: 'refs/heads/main' } })],
@@ -297,10 +297,10 @@ test('current release binding rejects stale evidence before lookup or publicatio
   const cases = [
     ['evidence name', evidence({ package: { name: '@other/name' } }), valid],
     ['evidence version', evidence({ package: { version: '1.2.4' } }), valid],
-    ['evidence ref', evidence({ source: { ref: 'refs/tags/kdna-v9.9.9' } }), valid],
+    ['evidence ref', evidence({ source: { ref: 'refs/tags/compat/9.9.9' } }), valid],
     ['evidence commit', evidence({ source: { commit: OTHER_HASH } }), valid],
     ['current package', matching, releaseInput({ pkg: { version: '1.2.4' } })],
-    ['current ref', matching, releaseInput({ env: { GITHUB_REF: 'refs/tags/kdna-v9.9.9' } })],
+    ['current ref', matching, releaseInput({ env: { GITHUB_REF: 'refs/tags/compat/9.9.9' } })],
     ['current sha', matching, releaseInput({ env: { GITHUB_SHA: OTHER_HASH } })],
     ['current head', matching, releaseInput({ git: { head: OTHER_HASH } })],
     ['current tag', matching, releaseInput({ git: { tagCommit: OTHER_HASH } })],
@@ -359,7 +359,7 @@ test('release evidence recomputes hashes, files, counts, and sizes from the tarb
         reportText: JSON.stringify(tamperedReport),
         tarball,
         pkg,
-        source: { ref: `refs/tags/kdna-v${pkg.version}`, commit: HASH },
+        source: { ref: `refs/tags/compat/${pkg.version}`, commit: HASH },
       }),
     /integrity/u,
   );

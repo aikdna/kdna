@@ -160,7 +160,7 @@ function validatePackReport({ reportText, tarball, pkg, source }) {
   assert(pkg.name === EXPECTED_PACKAGE_NAME, `package name must be ${EXPECTED_PACKAGE_NAME}`);
   assert(STABLE_VERSION_RE.test(pkg.version), 'package version must be stable canonical SemVer');
   assert(
-    source.ref === `refs/tags/kdna-v${pkg.version}`,
+    source.ref === `refs/tags/compat/${pkg.version}`,
     'source ref must be the canonical compatibility version tag',
   );
   assert(COMMIT_RE.test(source.commit || ''), 'source commit must be 40-character lowercase hex');
@@ -236,7 +236,7 @@ function validateReleaseEvidence(evidence) {
   );
   assert(
     evidence.source &&
-      evidence.source.ref === `refs/tags/kdna-v${evidence.package.version}`,
+      evidence.source.ref === `refs/tags/compat/${evidence.package.version}`,
     'release evidence ref mismatch',
   );
   assert(COMMIT_RE.test(evidence.source.commit || ''), 'release evidence commit is invalid');

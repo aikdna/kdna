@@ -16,7 +16,7 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 
 | #   | Document                 | What it covers                                                                                            |
 | --- | ------------------------ | --------------------------------------------------------------------------------------------------------- |
-| 1   | `kdna-file-format.md`    | The `.kdna` ZIP container format (v1.0-rc). The single-file JSON format is REJECTED and must not be used. |
+| 1   | `kdna-file-format.md`    | The `.kdna` ZIP container format (1.0-rc). The single-file JSON format is REJECTED and must not be used. |
 | 2   | `kdna-package-format.md` | Dev source directory format (SUPERSEDED by asset-first .kdna model). Retained for reference.              |
 | 3   | `package-profiles.md`    | Dev source vs .kdna asset profiles and conversion                                                         |
 | 4   | `load-profiles.md`       | Loading behavior specifications for different agent runtimes                                              |

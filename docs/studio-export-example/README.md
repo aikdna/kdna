@@ -210,4 +210,4 @@ artifact. Export a `.kdna` container through Studio and verify it with
 
 - [STUDIO_EXPORT_CONTRACT.md](../STUDIO_EXPORT_CONTRACT.md) — full contract specification
 - [kdna-compatible-certification.md](../archive/kdna-compatible-certification.md) — certification levels
-- [kdna-v1rc-standard-kit.md](../kdna-v1rc-standard-kit.md) — v1.0-rc implementer bundle
+- [kdna-v1rc-standard-kit.md](../kdna-v1rc-standard-kit.md) — 1.0-rc implementer bundle

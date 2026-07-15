@@ -56,7 +56,7 @@ The `renderForAgent` output for the minimal fixture was compared against the exp
 | Category | Description | Impact |
 |----------|-------------|--------|
 | Signature verification | Ed25519 signature parsing relies on an external library; we do not reimplement the algorithm in pure logic. | Low — verified against test vectors. |
-| Composition conflict detection | Multi-domain composition is implemented but has not been tested with more than 3 domains simultaneously. | Medium — on our roadmap for v0.4. |
+| Composition conflict detection | Multi-domain composition is implemented but has not been tested with more than 3 domains simultaneously. | Medium — on our roadmap for 0.4. |
 
 ## Conformance Output
 

@@ -105,7 +105,7 @@ Minimum required actions:
 | `migrate_legacy` | Explicitly import or migrate a legacy source tree. |
 | `block` | Block install or load. |
 
-Current JS Core may expose a narrower v0.1 subset while the full schema is
+Current JS Core may expose a narrower 0.1 subset while the full schema is
 expanded. It MUST remain fail-closed for states it cannot evaluate.
 
 For RFC-0019 account assets, a plain object that claims `status: active` is not

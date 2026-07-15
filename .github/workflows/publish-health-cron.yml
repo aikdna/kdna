@@ -2,7 +2,7 @@
 #
 # Verifies that for every tracked package, four fields agree:
 #   1. main HEAD version (from package.json on main)
-#   2. latest git tag (e.g. v0.28.6)
+#   2. latest git tag (for example, core/0.28.6)
 #   3. npm latest version (from registry.npmjs.org)
 #   4. GitHub Release existence (for the npm-latest version)
 #
@@ -65,8 +65,8 @@ jobs:
             "kdna-web-client:kdna-web-client:package.json:v:@aikdna/kdna-web-client"
             "kdna-react:kdna-react:package.json:v:@aikdna/kdna-react"
             "create-kdna-web-app:create-kdna-web-app:package.json:v:create-kdna-web-app"
-            "kdna-core:kdna:packages/kdna-core/package.json:kdna-core-v:@aikdna/kdna-core"
-            "kdna-eval:kdna:packages/kdna-eval/package.json:kdna-eval-v:@aikdna/kdna-eval"
+            "kdna-core:kdna:packages/kdna-core/package.json:core/:@aikdna/kdna-core"
+            "kdna-eval:kdna:packages/kdna-eval/package.json:eval/:@aikdna/kdna-eval"
           )
           DRIFT=0
           echo "| package | main | tag | npm | release | drift |"
@@ -77,7 +77,10 @@ jobs:
             main_v=$(curl -sS "https://raw.githubusercontent.com/aikdna/${repo}/main/${package_path}" 2>/dev/null \
               | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["version"])' 2>/dev/null || echo "")
             tag_v=$(git ls-remote --tags "https://github.com/aikdna/$repo.git" 2>/dev/null \
-              | awk -F'/' -v prefix="refs/tags/${tag_prefix}" '$0 ~ prefix && $NF !~ /\^\{\}$/ {print $NF}' | sort -V | tail -1 || echo "")
+              | awk '{print $2}' \
+              | sed 's#^refs/tags/##' \
+              | awk -v prefix="${tag_prefix}" 'index($0, prefix) == 1 && $0 !~ /\^\{\}$/ {print $0}' \
+              | sort -V | tail -1 || echo "")
             npm_v=$(npm view "$npm_spec" version 2>/dev/null || echo "")
             release_tag="${tag_prefix}${npm_v}"
             rel_http=$(curl -sS -o /dev/null -w "%{http_code}" "https://api.github.com/repos/aikdna/${repo}/releases/tags/${release_tag}" 2>/dev/null)

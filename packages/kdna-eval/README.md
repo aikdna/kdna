@@ -80,9 +80,9 @@ const results = evaluator.score(
 | `computeComposite(dimensions, weights?, dimNames?)` | Weighted dimension composite |
 | `getPath(obj, pathStr)` | Dot-separated path navigation |
 | `extractRules(domainData)` | Read `x_eval.rules` from domain (fallback to `axioms`) |
-| **v0.2.0:** `createReplayEngine(options)` | Replay engine with 5 modes (repair, holdout, fresh, candidate-sealed, new-sealed) |
-| **v0.2.0:** `createMultiGateRunner(gates)` | Multi-gate evaluation runner (route, compose, projection, cost, quality, promotion) |
-| **v0.2.0:** `createCostTracker(profile)` | Context budget tracking (tokens, chars, assets) |
+| **0.2.0:** `createReplayEngine(options)` | Replay engine with 5 modes (repair, holdout, fresh, candidate-sealed, new-sealed) |
+| **0.2.0:** `createMultiGateRunner(gates)` | Multi-gate evaluation runner (route, compose, projection, cost, quality, promotion) |
+| **0.2.0:** `createCostTracker(profile)` | Context budget tracking (tokens, chars, assets) |
 
 ### Loader (`@aikdna/kdna-eval/loader`)
 
@@ -105,7 +105,7 @@ ZIP container loading, use `@aikdna/kdna-core`'s `loadKDNA()`.
 | `resolveDomains(operation, options?)` | Resolve domains for an operation with overrides |
 | `getRoutePolicy(operation, policies?)` | Get policy for a named operation |
 
-### Replay (`@aikdna/kdna-eval/replay`) — v0.2.0
+### Replay (`@aikdna/kdna-eval/replay`) — 0.2.0
 
 Replay engine for regression detection across five modes:
 
@@ -131,7 +131,7 @@ const run = engine.replayRun("fresh", {
 engine.compareRuns(run, previousRun);
 ```
 
-### Gates (`@aikdna/kdna-eval/gates`) — v0.2.0
+### Gates (`@aikdna/kdna-eval/gates`) — 0.2.0
 
 Multi-gate evaluation with pluggable gate functions:
 
@@ -152,7 +152,7 @@ const runner = createMultiGateRunner([
 const report = runner.runAll({ policy: myPolicy, fixtures: myFixtures });
 ```
 
-### Cost (`@aikdna/kdna-eval/cost`) — v0.2.0
+### Cost (`@aikdna/kdna-eval/cost`) — 0.2.0
 
 Context budget tracking with built-in profiles:
 

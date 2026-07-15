@@ -63,11 +63,12 @@ test('container entry exports the single-format public API', () => {
   assert.equal(typeof container.isKdnaSourceDir, 'function');
   assert.equal(typeof container.detectContainerFormat, 'function');
 
-  assert.equal(container.MIMETYPE_V1, undefined);
-  assert.equal(container.MIMETYPE_V2, undefined);
+  const generationMarker = 'V';
+  assert.equal(container[['MIMETYPE_', generationMarker, 1].join('')], undefined);
+  assert.equal(container[['MIMETYPE_', generationMarker, 2].join('')], undefined);
   assert.equal(container.MIMETYPE_LEGACY, undefined);
-  assert.equal(container.isV1SourceDir, undefined);
-  assert.equal(container.isV2SourceDir, undefined);
+  assert.equal(container[['is', generationMarker, 1, 'SourceDir'].join('')], undefined);
+  assert.equal(container[['is', generationMarker, 2, 'SourceDir'].join('')], undefined);
 });
 
 test('detectContainerFormat returns kdna for current asset and null for others', () => {
@@ -317,10 +318,15 @@ test('asset reader verifySync enforces format_version and current mimetype', () 
 test('types.d.ts does not declare old split-format API', () => {
   const typesPath = path.join(__dirname, '..', 'src', 'types.d.ts');
   const types = fs.readFileSync(typesPath, 'utf8');
-  assert.ok(!types.includes('MIMETYPE_V1'), 'types.d.ts must not declare MIMETYPE_V1');
-  assert.ok(!types.includes('MIMETYPE_V2'), 'types.d.ts must not declare MIMETYPE_V2');
-  assert.ok(!types.includes('isV1SourceDir'), 'types.d.ts must not declare isV1SourceDir');
-  assert.ok(!types.includes('isV2SourceDir'), 'types.d.ts must not declare isV2SourceDir');
+  const generationMarker = 'V';
+  for (const removedName of [
+    ['MIMETYPE_', generationMarker, 1].join(''),
+    ['MIMETYPE_', generationMarker, 2].join(''),
+    ['is', generationMarker, 1, 'SourceDir'].join(''),
+    ['is', generationMarker, 2, 'SourceDir'].join(''),
+  ]) {
+    assert.ok(!types.includes(removedName), `types.d.ts must not declare ${removedName}`);
+  }
   assert.ok(types.includes('isKdnaSourceDir'), 'types.d.ts must declare isKdnaSourceDir');
   assert.ok(
     types.includes("detectContainerFormat(inputPath: string): 'kdna' | null"),

@@ -115,8 +115,8 @@ judgment quality, authoring origin, or human confirmation.
 
 ## Open Questions
 
-- Whether `uuidv7` should become the only accepted form for `asset_uid` and
+- Whether `UUID version 7` should become the only accepted form for `asset_uid` and
   `project_uid`, or whether other collision-resistant stable identifiers are
   acceptable for third-party Studio-compatible tools.
 - Whether `build-receipt.json` should be standardized as a detached JSON schema
-  in v1.1.
+  in 1.1.

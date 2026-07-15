@@ -1,82 +1,58 @@
 # KDNA Version Taxonomy
 
-This document defines the canonical version naming for the KDNA ecosystem.
-**Bare `v1`/`v2`/`V1`/`V2`/`v1-rc`/`v2.0` without a namespace prefix is forbidden**
-in all active public documents, code comments, and specifications.
+This document defines the current version coordinates and naming rules for the
+KDNA ecosystem. Stable public names describe responsibilities, never product
+generations.
 
----
+## Responsibility Names
 
-## Approved Names
+| Responsibility | Stable public name |
+|---|---|
+| Core implementation | `KDNA Core` |
+| Distribution container | `KDNA Asset Container` |
+| Agent-facing projection | `Runtime Capsule` |
+| Pre-load decision | `LoadPlan` |
+| Authoring input | `Studio project` or `dev source` |
+| Distributed unit | `.kdna` asset or `distribution asset` |
 
-| Layer | Canonical Name | Examples |
-|-------|---------------|----------|
-| Core implementation | `KDNA Core` | "KDNA Core implements the open protocol" |
-| Asset container format | `KDNA Asset Container` | "The KDNA Asset Container uses `kdna.json` + `payload.kdnab`" |
-| Legacy plaintext ZIP | `legacy plaintext ZIP` | "Legacy plaintext ZIP containers placed `KDNA_Core.json` directly in the archive" |
-| Legacy registry asset | `legacy registry asset` | "Legacy registry assets used `kdna_spec` and registry-based distribution" |
-| Asset content version | `asset version` | "asset version 1.2.0" |
-| npm package version | `package version` | "`@aikdna/kdna-core` package version 0.13.3" |
-| Specification baseline | `specification baseline` | "The 2026.06 specification baseline" |
-| Wire format field | `kdna_version` | "The manifest carries `kdna_version: \"1.0\"`" |
-| Source tree | `source tree` / `dev source directory` | "The source tree contains `KDNA_Core.json` for authoring only" |
-| Distribution asset | `.kdna` asset / `distribution asset` | "A `.kdna` distribution asset never contains source tree files" |
+Removed generation-labelled names are historical vocabulary, not aliases for
+current responsibilities. They MUST NOT appear in current identifiers,
+filenames, routes, examples, release tags, or narrative.
 
-## Forbidden Names
+## Compatibility Coordinates
 
-| Forbidden | Reason | Use Instead |
-|-----------|--------|-------------|
-| `v1` | Ambiguous: could mean the Core implementation, legacy plaintext, or something else | `KDNA Core` or `legacy plaintext ZIP` |
-| `v2` | Ambiguous: could mean asset container, legacy registry, or future spec | `KDNA Asset Container` or `legacy registry asset` |
-| `v1.0-rc` | Historical label, not a current product generation | `KDNA Core` or an explicitly historical release label |
-| `v2.0` | Chronologically inverted (legacy v2.0 predates Core v1) | `legacy registry asset` or `KDNA Asset Container` |
-| `V1 format` | Identical string means both current Core and removed plaintext | `legacy plaintext ZIP` |
-| `Container v2` | Suggests a release generation, not a container format | `KDNA Asset Container` |
-| `Core v1` | Presents an obsolete user-facing generation | `KDNA Core` |
-| `v1 Core GA` | Presents an obsolete user-facing generation | `KDNA Core` |
+| Coordinate | Current value | Scope |
+|---|---:|---|
+| `format_version` | `0.1.0` | KDNA Asset Container contract |
+| `compatibility.profile_version` | `0.1.0` | Selected payload profile contract |
+| `contract_version` | contract-specific SemVer | Runtime, plan, trace, or evidence object |
+| `protocol_version` | protocol-specific SemVer | Host exchange contract |
 
-## Mapping: Old → New
+The container manifest has one current container coordinate. Removed
+discriminators are rejected rather than interpreted as alternate supported
+formats.
 
-| Old Term | Canonical Replacement |
-|----------|----------------------|
-| `V1 plaintext (removed)` | `legacy plaintext ZIP` |
-| `v2.0 / Legacy` | `legacy registry asset` |
-| `KDNA Core v1 GA` | `KDNA Core` |
-| `KDNA Specification v1.0-rc` | `KDNA Core specification` |
-| `KDNA Container Version 2.0` | `KDNA Asset Container` |
-| `v1 container` (current) | `KDNA Asset Container` |
-| `v2 container` (future) | Future asset container (draft) |
-| `kdna_version` | Current wire field — see Wire Fields below |
-| top-level `format_version` | Removed legacy field; do not emit |
-| top-level `spec_version` | Removed legacy field; do not emit |
+## Release Coordinates
 
-## Wire Fields
+Package, asset, and judgment releases use strict `MAJOR.MINOR.PATCH` values.
+These coordinates answer different questions:
 
-`kdna.json` has one container wire discriminator. Historical top-level fields
-are rejected rather than treated as parallel formats:
+- package version: release of one implementation package;
+- asset version: packaging or metadata release of one asset;
+- judgment version: release of judgment-relevant content.
 
-| Field | Purpose | Current Value | Public Meaning |
-|-------|---------|---------------|----------------|
-| `kdna_version` | KDNA Asset Container discriminator | `"1.0"` | Current and only accepted wire value. It is not a product marketing version. |
-| top-level `format_version` | Removed legacy discriminator | none | MUST NOT be emitted; does not select another supported format. |
-| top-level `spec_version` | Removed legacy discriminator | none | MUST NOT be emitted; evidence subobjects may separately version their own schemas. |
+A package release does not create another KDNA format. An asset-only packaging
+change does not imply a judgment change.
 
-**Do not reference these wire field values in public documentation as product version labels.**
+## Asset Filenames
 
-## Asset Filename Convention
+Distribution filenames describe asset identity and end in `.kdna`. Version
+coordinates belong inside `kdna.json`; they MUST NOT be embedded in filenames.
 
-Distribution assets should follow this pattern:
+## Enforcement
 
-```
-{domain-name}.kdna          # e.g., viral-topic-selection.kdna
-```
-
-Do NOT embed version numbers in filenames:
-- ❌ `viral-topic-selection-v1.1.0.kdna`
-- ✅ `viral-topic-selection.kdna`
-
-The asset version is declared inside `kdna.json`, not in the filename.
-
-## CI Gate
-
-Active public docs must not contain naked `v1`/`v2`/`v1-rc`/`v1.0-rc`/`v2.0`
-except under `docs/archive/` or within explicit historical context banners.
+The post-cutover audit scans every tracked path and text file, plus dry-run and
+actual npm package contents. It has no blanket exclusions for RFCs, changelogs,
+archives, or migration material. Exact third-party syntax may be allowed only
+with a path, token, owner, and reason; KDNA-owned generation names are never
+allowlisted.

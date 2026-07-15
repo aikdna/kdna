@@ -3,7 +3,7 @@
 - **Status**: accepted
 - **Date**: 2026-06-27
 - **Deciders**: aikdna
-- **Refs**: `docs/KDNA_ASSET_AUTHORIZATION_AND_DISTRIBUTION_STRATEGY_DRAFT.md` (v0.3) §6.1, `rfcs/RFC-0009-password-protected-kdna-assets.md`, `specs/kdna-crypto-profiles.md`, ADR-005
+- **Refs**: `docs/KDNA_ASSET_AUTHORIZATION_AND_DISTRIBUTION_STRATEGY_DRAFT.md` (0.3) §6.1, `rfcs/RFC-0009-password-protected-kdna-assets.md`, `specs/kdna-crypto-profiles.md`, ADR-005
 
 ## Context
 
@@ -13,12 +13,12 @@ RFC-0009 specifies Argon2id as the password KDF. ADR-005 requires no new encrypt
 
 ## Decision
 
-**Add a scrypt-based password profile as the B2 v0.1 write profile.** The profile ID is `kdna.encryption.password.scrypt`.
+**Add a scrypt-based password profile as the B2 0.1 write profile.** The profile ID is `kdna.encryption.password.scrypt`.
 
 ### Rationale
 
 1. **Zero additional dependencies.** Node.js `crypto.scryptSync` is built-in. `@noble/hashes` (required for Argon2id) is an optional dependency with install risks (ESM/CJS interop, no native build, but could break in edge cases with bundlers or older Node).
-2. **Ship velocity.** B2 is a 3-5 day ship-blocker. Adding a native-dep gate for a v0.1 release is unjustified risk.
+2. **Ship velocity.** B2 is a 3-5 day ship-blocker. Adding a native-dep gate for a 0.1 release is unjustified risk.
 3. **Migration path is clean.** `kdna.encryption.password.scrypt` and `kdna.encryption.password` (Argon2id) are distinct profile IDs. Consumers can support both. Future Studio exports can default to Argon2id while scrypt remains a legacy read-only profile.
 4. **ADR-005 compliance.** ADR-005 forbids *new* profiles until existing ones are frozen. The scrypt profile is a *variant* of `kdna.encryption.password`, not a new architectural profile. It shares the same envelope structure, key wrapping, AAD rules, and CEK model; only the KDF differs.
 
@@ -87,13 +87,13 @@ Same envelope structure as `kdna.encryption.password`:
 
 ### Recovery Slot: Deferred
 
-v0.1 does NOT implement the recovery code slot. The envelope contains only the `password` key slot. Recovery slot (`kdna-recover-XXXX-XXXX-...`) is deferred to v0.2 per RFC-0009 §4.
+0.1 does NOT implement the recovery code slot. The envelope contains only the `password` key slot. Recovery slot (`kdna-recover-XXXX-XXXX-...`) is deferred to 0.2 per RFC-0009 §4.
 
 ### Migration Path to Argon2id
 
-1. v0.1: `kdna.encryption.password.scrypt` is the write profile.
-2. v0.2: Add `kdna.encryption.password` (Argon2id, via `@noble/hashes`) as an additional write profile. Studio export offers `--password --kdf argon2id`.
-3. v0.3+: `kdna.encryption.password` (Argon2id) becomes the default write profile. `kdna.encryption.password.scrypt` becomes **read-only legacy** (decrypt still supported, but new exports use Argon2id).
+1. 0.1: `kdna.encryption.password.scrypt` is the write profile.
+2. 0.2: Add `kdna.encryption.password` (Argon2id, via `@noble/hashes`) as an additional write profile. Studio export offers `--password --kdf argon2id`.
+3. 0.3+: `kdna.encryption.password` (Argon2id) becomes the default write profile. `kdna.encryption.password.scrypt` becomes **read-only legacy** (decrypt still supported, but new exports use Argon2id).
 4. Both profiles share identical envelope structure. Consumers detect the profile from the `profile` field and route to the correct KDF.
 
 ## Consequences
@@ -103,7 +103,7 @@ v0.1 does NOT implement the recovery code slot. The envelope contains only the `
 - `kdna-studio-core` `compile/index.js` recognizes password profile and sets correct `encryption` metadata.
 - `kdna-core` `v1/index.js` `inferEntitlementProfile()` gains detection of `kdna.encryption.password.scrypt`.
 - e2e test replaces the "exits 2" stub test with round-trip + fail-closed tests.
-- ADR-005's profile inventory should be updated to list `kdna.encryption.password.scrypt` as the v0.1 write profile and `kdna.encryption.password` (Argon2id) as read-only until v0.2.
+- ADR-005's profile inventory should be updated to list `kdna.encryption.password.scrypt` as the 0.1 write profile and `kdna.encryption.password` (Argon2id) as read-only until 0.2.
 - No new npm dependencies are required.
 
 ## Implementation Tasks

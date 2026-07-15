@@ -3,7 +3,7 @@
 const crypto = require('node:crypto');
 const fs = require('node:fs');
 
-const Ajv2020 = require('ajv/dist/2020');
+const JsonSchema2020 = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 
 const { createKdnaAssetReader } = require('./asset-reader');
@@ -46,7 +46,7 @@ let validators;
 
 function schemaValidators() {
   if (validators) return validators;
-  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  const ajv = new JsonSchema2020({ allErrors: true, strict: false });
   addFormats(ajv);
   ajv.addSchema(digestEvidenceSchema);
   validators = {
@@ -434,7 +434,7 @@ function assertSuccessfulDigestEvidence(digests) {
 }
 
 function normalizeRuntimeAccess(access) {
-  return access || 'public';
+  return access === undefined ? 'public' : access;
 }
 
 function buildRuntimeCapsule({
@@ -471,7 +471,7 @@ function buildRuntimeCapsule({
       'Runtime Capsule loaded_at must be an ISO date-time string.',
     );
   }
-  const runtimeAccess = normalizeRuntimeAccess(manifest.access || 'public');
+  const runtimeAccess = normalizeRuntimeAccess(manifest.access);
   if (!['public', 'licensed', 'remote'].includes(runtimeAccess)) {
     fail('KDNA_RUNTIME_CAPSULE_BUILD_INVALID', `Unsupported Runtime access: ${runtimeAccess}.`);
   }

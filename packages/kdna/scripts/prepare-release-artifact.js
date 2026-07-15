@@ -75,7 +75,7 @@ function assertOutsideRepository(destination, label) {
 }
 
 function treeStatus() {
-  return run('git', ['status', '--porcelain=v1', '--untracked-files=all']).trim();
+  return run('git', ['status', '--porcelain', '--untracked-files=all']).trim();
 }
 
 function main() {

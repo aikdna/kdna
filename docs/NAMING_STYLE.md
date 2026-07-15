@@ -1,6 +1,6 @@
 # Naming Style
 
-Status: v1.0-rc public naming canon
+Status: 1.0-rc public naming canon
 
 ## Canonical Names
 

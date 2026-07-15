@@ -67,7 +67,7 @@ A minimal public manifest has this shape:
 
 ```json
 {
-  "kdna_version": "1.0",
+  "format_version": "0.1.0",
   "asset_id": "kdna:example:editorial_judgment",
   "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
   "asset_type": "domain",
@@ -78,7 +78,8 @@ A minimal public manifest has this shape:
   "updated_at": "2026-07-13T00:00:00Z",
   "compatibility": {
     "min_loader_version": "1.0.0",
-    "profile": "kdna.payload.judgment"
+    "profile": "kdna.payload.judgment",
+    "profile_version": "0.1.0"
   },
   "payload": {
     "path": "payload.kdnab",
@@ -110,10 +111,10 @@ not available, producers omit the block; they MUST NOT invent placeholder
 identities such as `"Anonymous"` or `"Unknown"`. Authoring-source identity
 requirements are defined separately and do not change this container rule.
 
-`kdna_version` is the sole container wire discriminator. Its current accepted
-value is `"1.0"`; it is not a product-generation or marketing label. Removed
-top-level `format_version` and `spec_version` fields do not select alternate
-formats and MUST NOT be emitted.
+`format_version` is the sole container compatibility coordinate. Its current
+accepted value is `"0.1.0"`; it is not a product-generation or marketing
+label. Removed container discriminators do not select alternate formats and
+MUST NOT be emitted.
 
 The manifest MUST NOT contain judgment content such as axioms, patterns,
 boundaries, cases, or self-checks.
@@ -126,6 +127,7 @@ For an unencrypted judgment asset, `payload.kdnab` is a CBOR map matching
 ```text
 {
   profile: "kdna.payload.judgment",
+  profile_version: "0.1.0",
   core: {
     highest_question: string,
     axioms: array,

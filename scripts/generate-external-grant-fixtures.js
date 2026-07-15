@@ -3,6 +3,7 @@
 /** Generates deterministic, public test-only RFC-0019 fixtures. */
 
 const crypto = require('node:crypto');
+const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
@@ -166,3 +167,18 @@ writeNegative('device-mismatch.json', {
   expected_device_id: 'dev_other',
   grant,
 });
+
+execFileSync(
+  process.execPath,
+  [
+    require.resolve('prettier/bin/prettier.cjs'),
+    '--write',
+    path.join(outDir, 'golden.json'),
+    ...fs
+      .readdirSync(negativeDir)
+      .filter((name) => name.endsWith('.json'))
+      .sort()
+      .map((name) => path.join(negativeDir, name)),
+  ],
+  { stdio: 'ignore' },
+);

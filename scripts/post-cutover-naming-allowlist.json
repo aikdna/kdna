@@ -1,0 +1,180 @@
+{
+  "schema": "kdna.post-cutover-naming-allowlist",
+  "schema_version": "0.1.0",
+  "exceptions": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "token": "actions/checkout@v7",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/checkout."
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "token": "actions/setup-node@v6",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/setup-node."
+    },
+    {
+      "path": ".github/workflows/codeql-js.yml",
+      "token": "actions/checkout@v7",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/checkout."
+    },
+    {
+      "path": ".github/workflows/codeql-js.yml",
+      "token": "github/codeql-action/init@v4",
+      "owner": "GitHub CodeQL",
+      "reason": "Third-party action release reference owned by GitHub CodeQL."
+    },
+    {
+      "path": ".github/workflows/codeql-js.yml",
+      "token": "github/codeql-action/autobuild@v4",
+      "owner": "GitHub CodeQL",
+      "reason": "Third-party action release reference owned by GitHub CodeQL."
+    },
+    {
+      "path": ".github/workflows/codeql-js.yml",
+      "token": "github/codeql-action/analyze@v4",
+      "owner": "GitHub CodeQL",
+      "reason": "Third-party action release reference owned by GitHub CodeQL."
+    },
+    {
+      "path": ".github/workflows/core-smoke.yml",
+      "token": "actions/checkout@v7",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/checkout."
+    },
+    {
+      "path": ".github/workflows/core-smoke.yml",
+      "token": "actions/setup-node@v6",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/setup-node."
+    },
+    {
+      "path": ".github/workflows/core-smoke.yml",
+      "token": "actions/setup-python@v6",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/setup-python."
+    },
+    {
+      "path": ".github/workflows/docs-ci.yml",
+      "token": "actions/checkout@v7",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/checkout."
+    },
+    {
+      "path": ".github/workflows/docs-ci.yml",
+      "token": "actions/setup-node@v6",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/setup-node."
+    },
+    {
+      "path": ".github/workflows/eval.yml",
+      "token": "actions/checkout@v7",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/checkout."
+    },
+    {
+      "path": ".github/workflows/eval.yml",
+      "token": "actions/setup-node@v6",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/setup-node."
+    },
+    {
+      "path": ".github/workflows/publish-health-cron.yml",
+      "token": "actions/checkout@v7",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/checkout."
+    },
+    {
+      "path": ".github/workflows/publish-health-cron.yml",
+      "token": "actions/setup-node@v6",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/setup-node."
+    },
+    {
+      "path": ".github/workflows/registry-validate.yml",
+      "token": "actions/checkout@v7",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/checkout."
+    },
+    {
+      "path": ".github/workflows/registry-validate.yml",
+      "token": "actions/setup-node@v6",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/setup-node."
+    },
+    {
+      "path": ".github/workflows/stale.yml",
+      "token": "actions/stale@v10",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/stale."
+    },
+    {
+      "path": ".github/workflows/validate.yml",
+      "token": "actions/checkout@v7",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/checkout."
+    },
+    {
+      "path": ".github/workflows/validate.yml",
+      "token": "actions/setup-node@v6",
+      "owner": "GitHub Actions",
+      "reason": "Third-party action release reference owned by actions/setup-node."
+    },
+    {
+      "path": "package-lock.json",
+      "token": "riscv64",
+      "owner": "RISC-V International",
+      "reason": "Third-party npm platform identifier for the RISC-V 64-bit architecture."
+    },
+    {
+      "path": "scripts/post-cutover-naming-allowlist.json",
+      "token": "actions/checkout@v7",
+      "owner": "GitHub Actions",
+      "reason": "Exact authority record for the third-party actions/checkout reference."
+    },
+    {
+      "path": "scripts/post-cutover-naming-allowlist.json",
+      "token": "actions/setup-node@v6",
+      "owner": "GitHub Actions",
+      "reason": "Exact authority record for the third-party actions/setup-node reference."
+    },
+    {
+      "path": "scripts/post-cutover-naming-allowlist.json",
+      "token": "github/codeql-action/init@v4",
+      "owner": "GitHub CodeQL",
+      "reason": "Exact authority record for the third-party CodeQL initialization reference."
+    },
+    {
+      "path": "scripts/post-cutover-naming-allowlist.json",
+      "token": "github/codeql-action/autobuild@v4",
+      "owner": "GitHub CodeQL",
+      "reason": "Exact authority record for the third-party CodeQL autobuild reference."
+    },
+    {
+      "path": "scripts/post-cutover-naming-allowlist.json",
+      "token": "github/codeql-action/analyze@v4",
+      "owner": "GitHub CodeQL",
+      "reason": "Exact authority record for the third-party CodeQL analysis reference."
+    },
+    {
+      "path": "scripts/post-cutover-naming-allowlist.json",
+      "token": "actions/setup-python@v6",
+      "owner": "GitHub Actions",
+      "reason": "Exact authority record for the third-party actions/setup-python reference."
+    },
+    {
+      "path": "scripts/post-cutover-naming-allowlist.json",
+      "token": "actions/stale@v10",
+      "owner": "GitHub Actions",
+      "reason": "Exact authority record for the third-party actions/stale reference."
+    },
+    {
+      "path": "scripts/post-cutover-naming-allowlist.json",
+      "token": "riscv64",
+      "owner": "RISC-V International",
+      "reason": "Exact authority record for the third-party npm platform identifier."
+    }
+  ]
+}

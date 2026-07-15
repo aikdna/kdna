@@ -24,7 +24,7 @@ function canonicalCoreTag(version) {
   if (typeof version !== 'string' || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u.test(version)) {
     throw new Error(`invalid Core package version: ${version || '<missing>'}`);
   }
-  return `kdna-core-v${version}`;
+  return `core/${version}`;
 }
 
 function assertCanonicalTagExists({ expectedTag, listedTag }) {

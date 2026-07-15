@@ -1,8 +1,8 @@
 # KDNA Crypto Profiles
 
 Status: **Active.** The `kdna.envelope.aead`
-profile ID and its two KDF sub-profiles (`scrypt-sha256-v1` mandatory,
-`argon2id-v1` optional compatibility KDF) are frozen; see RFC-0018 for the normative
+profile ID and its two KDF sub-profiles (`scrypt-sha256` mandatory,
+`argon2id` optional compatibility KDF) are frozen; see RFC-0018 for the normative
 contract. Predecessor profiles (`kdna.encryption.licensed-entry` from RFC-0008,
 `kdna.encryption.password` from RFC-0009) remain in their own distinct
 profile IDs and continue to be supported.
@@ -55,7 +55,7 @@ The canonical model is envelope encryption:
 
 | Entitlement profile | CEK wrapping source |
 |---|---|
-| `password` | User passphrase derives a `KEK` via `scrypt-sha256-v1` (default) or `argon2id-v1` (opt-in). |
+| `password` | User passphrase derives a `KEK` via `scrypt-sha256` (default) or `argon2id` (opt-in). |
 | `local_receipt` | Signed receipt carries or references wrapped CEK material. |
 | `account` | Entitlement server returns a short-lived wrapped CEK. |
 | `org` | Organization entitlement server returns a short-lived wrapped CEK. |
@@ -73,10 +73,10 @@ A short PIN MUST NOT be treated as the file encryption password.
 For `kdna.envelope.aead`, the password slot's KDF is selected by
 `kdf_profile`:
 
-- `scrypt-sha256-v1` — mandatory, every conforming implementation MUST support
+- `scrypt-sha256` — mandatory, every conforming implementation MUST support
   it. N=32768, r=8, p=1, 16-byte salt, 32-byte KEK. Node.js's built-in
   `crypto.scryptSync` is sufficient.
-- `argon2id-v1` — optional v2, Node.js implementations SHOULD support it.
+- `argon2id` — optional v2, Node.js implementations SHOULD support it.
   t=3, m=65536, p=4, 16-byte salt, 32-byte KEK. The Swift port does not
   have a native binding and follows RFC-0018 R6 (fallback to next slot
   or `KDNA_KDF_UNSUPPORTED`).
@@ -144,12 +144,12 @@ auto-downgrade path (RFC-0018 R4.3).
 `kdna.envelope.aead` test vectors are published at
 `conformance/envelope-aead/`:
 
-- `envelope-aead-vector-01-scrypt-basic.json` — scrypt-sha256-v1,
+- `envelope-aead-vector-01-scrypt-basic.json` — scrypt-sha256,
   single password slot, basic round-trip.
 - `envelope-aead-vector-02-scrypt-multi-entry-aad.json` — two
   AADs over the same CEK + IV + plaintext; proves AAD binding via
   divergent tags.
-- `envelope-aead-vector-03-argon2id-basic.json` — argon2id-v1,
+- `envelope-aead-vector-03-argon2id-basic.json` — argon2id,
   single password slot, basic round-trip.
 
 A conformance runner at `conformance/envelope-aead.mjs`

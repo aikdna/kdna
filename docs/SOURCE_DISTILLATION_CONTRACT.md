@@ -9,7 +9,7 @@
 
 This contract defines the five-layer object model for distillation-first KDNA authoring: declaring a target domain, turning a user's existing content into loadable .kdna judgment assets through AI-assisted pattern extraction, and enforcing mandatory human confirmation — all within a declared scope.
 
-The critical addition in v0.2: **Domain-First Distillation.** Before any content analysis begins, the user MUST declare what domain, scope, and granularity this KDNA targets. Without this declaration, distillation produces unfiltered personality dumps rather than domain-specific judgment assets.
+The critical addition in 0.2: **Domain-First Distillation.** Before any content analysis begins, the user MUST declare what domain, scope, and granularity this KDNA targets. Without this declaration, distillation produces unfiltered personality dumps rather than domain-specific judgment assets.
 
 ## Non-goals
 
@@ -56,7 +56,7 @@ Before any evidence is analyzed, the user MUST declare a Distillation Target. Th
   ],
   "load_condition": "Load when reviewing or drafting longform writing. Do not load for visual design or decision-making tasks.",
   "declared_at": "2026-05-31T10:00:00Z",
-  "declared_by": "kdna-studio-cli v2.1.0"
+  "declared_by": "kdna-studio-cli 2.1.0"
 }
 ```
 
@@ -151,7 +151,7 @@ Source Evidence registers content provided by the user for analysis. Evidence is
   "privacy_level": "private",
   "import_scope": "local_only",
   "registered_at": "2026-05-31T10:00:00Z",
-  "registered_by": "kdna-studio-cli v0.2.0"
+  "registered_by": "kdna-studio-cli 0.2.0"
 }
 ```
 
@@ -188,7 +188,7 @@ Distillation Candidates are AI-proposed judgment elements extracted from Source 
   "sensitive_inference_check": "passed",
   "proposed_at": "2026-05-31T10:05:00Z",
   "proposed_by": {
-    "tool": "kdna-studio-cli v0.2.0",
+    "tool": "kdna-studio-cli 0.2.0",
     "model": "claude-sonnet-4-20250514"
   }
 }
@@ -291,7 +291,7 @@ Each distillation-produced .kdna MUST be accompanied by a provenance receipt. Th
 ```json
 {
   "receipt_id": "pr_20260531_writing_style_v0.1.0",
-  "kdna_asset": "@alice/writing_style v0.1.0",
+  "kdna_asset": "@alice/writing_style 0.1.0",
   "asset_digest": "sha256:def456...",
   "authoring_path": "distillation_first",
   "source_evidence": [

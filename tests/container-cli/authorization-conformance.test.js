@@ -1,5 +1,5 @@
 /**
- * Authorization conformance tests for KDNA Core v1.
+ * Authorization conformance tests for KDNA Core container.
  *
  * The fixtures and goldens in conformance/authorization are the shared
  * contract that other implementations, including Swift Core and Chat,
@@ -15,7 +15,7 @@ const os = require('node:os');
 const path = require('node:path');
 const Ajv = require('ajv/dist/2020.js');
 
-const v1 = require('../../packages/kdna-core/src/container');
+const container = require('../../packages/kdna-core/src/container');
 
 const repoRoot = path.resolve(__dirname, '..', '..');
 const cliBin = path.join(repoRoot, 'packages', 'kdna', 'bin', 'kdna.js');
@@ -60,7 +60,7 @@ function withPackedFixture(fixturePath, fn) {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-auth-conformance-'));
   const assetPath = path.join(tmp, 'fixture.kdna');
   try {
-    v1.pack(fixturePath, assetPath);
+    container.pack(fixturePath, assetPath);
     return fn(assetPath);
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
@@ -80,7 +80,7 @@ for (const testCase of cases) {
     const fixturePath = path.join(authRoot, 'fixtures', testCase.fixture);
     const golden = JSON.parse(fs.readFileSync(path.join(authRoot, testCase.golden), 'utf8'));
     withPackedFixture(fixturePath, (assetPath) => {
-      const actual = normalizePlan(v1.planLoad(assetPath, testCase.options), testCase);
+      const actual = normalizePlan(container.planLoad(assetPath, testCase.options), testCase);
       assertValidLoadPlan(actual);
       assert.deepEqual(actual, golden);
     });

@@ -4,7 +4,7 @@
 >
 > **Audience:** Domain authors migrating from pre-Core KDNA formats (legacy JSON / legacy registry assets) to the current specification baseline.
 >
-> **Breaking changes summary (v1.0-rc):**
+> **Breaking changes summary (1.0-rc):**
 > - `evidence_type` changed from `string` to `array` — wrap existing values
 > - Quality badge thresholds raised: tested ≥10 (was ≥3), validated ≥30 (was ≥10)
 > - `source_mode` is strongly recommended (defaults to `"blank"` if absent)
@@ -15,15 +15,15 @@
 
 ## Field Renames
 
-| v2.0 / Legacy | v1.0-rc | Notes |
+| 2.0 / Legacy | 1.0-rc | Notes |
 |---------------|---------|-------|
 | `solved_problem` (axiom) | `why` | Renamed for clarity. Content is the same: why this axiom matters. |
-| `kdna_spec` (manifest) | `spec_version` | v1.0-rc uses `spec_version`. `kdna_spec` is rejected. |
+| `kdna_spec` (manifest) | `spec_version` | 1.0-rc uses `spec_version`. `kdna_spec` is rejected. |
 | `language` (singular) | `languages` (array) | Now accepts multiple language codes. `default_language` is separate. |
 
 ## Type Changes
 
-| Field | v2.0 / Legacy | v1.0-rc | Impact |
+| Field | 2.0 / Legacy | 1.0-rc | Impact |
 |-------|---------------|---------|--------|
 | `evidence_type` | `"string"` (single value) | `["array", "of", "strings"]` | Wrap your value: `"practice_patterns"` → `["practice_patterns"]` |
 | `languages` | `"string"` | `["array", "of", "strings"]` | Wrap your value: `"en"` → `["en"]` |
@@ -38,7 +38,7 @@
 
 ### Axiom (`KDNA_Core.json`)
 
-The strict schema requires these fields per axiom — previously optional in v2.0:
+The strict schema requires these fields per axiom — previously optional in 2.0:
 - `applies_when`
 - `does_not_apply_when`
 - `failure_risk`
@@ -50,11 +50,11 @@ All `id` fields across all KDNA JSON files MUST be globally unique within a doma
 
 - `AX-001` in `KDNA_Core.json` → cannot be reused as `M-001` in `KDNA_Patterns.json`
 - Use consistent prefixes: `AX-` for axioms, `ON-` for ontology, `FW-` for frameworks, `M-` for misunderstandings, etc.
-- The v1.0-rc strict validator checks cross-file uniqueness; pre-v1.0 validators did not.
+- The 1.0-rc strict validator checks cross-file uniqueness; pre-1.0 validators did not.
 
 ## Quality Badge Thresholds
 
-| Badge | v2.0 Threshold | v1.0-rc Threshold |
+| Badge | 2.0 Threshold | 1.0-rc Threshold |
 |-------|---------------|-------------------|
 | `tested` | >= 3 evals | >= 10 evals |
 | `validated` | >= 10 evals | >= 30 evals |
@@ -69,7 +69,7 @@ All badges require `signature`, `authoring` provenance, and `human_confirmed: tr
 | Dev source directory | Compile via `kdna-studio` into trusted `.kdna` asset |
 | Manual JSON files | Studio project → compile → export |
 
-The merged single-file JSON format is rejected in v1.0-rc. Conforming tools MUST reject it.
+The merged single-file JSON format is rejected in 1.0-rc. Conforming tools MUST reject it.
 
 ## Tooling Migration
 

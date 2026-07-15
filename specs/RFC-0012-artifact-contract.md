@@ -3,13 +3,13 @@
 **Status:** Draft  
 **Proposed:** 2026-06-08  
 **Authors:** KDNA Maintainers  
-**Related:** KDNA SPEC v1.0-rc, kdna-workpack v0.1.0, KDNA Cluster SPEC §13
+**Related:** KDNA SPEC 1.0-rc, kdna-workpack 0.1.0, KDNA Cluster SPEC §13
 
 ---
 
 ## Abstract
 
-KDNA v1.0-rc defines how domain judgment is encoded as loadable, verifiable assets. The WorkPack standard defines how KDNA, skills, gates, and risk policies are bundled into reusable atomic work capabilities. However, neither defines what comes out: the artifacts produced by KDNA-governed generation lack a standard envelope, identity, quality summary, trace linkage, and review lifecycle.
+KDNA 1.0-rc defines how domain judgment is encoded as loadable, verifiable assets. The WorkPack standard defines how KDNA, skills, gates, and risk policies are bundled into reusable atomic work capabilities. However, neither defines what comes out: the artifacts produced by KDNA-governed generation lack a standard envelope, identity, quality summary, trace linkage, and review lifecycle.
 
 This RFC proposes an **Artifact Contract** — a minimal standard envelope for any output produced through KDNA-governed generation. It also defines a **Stage Definition** contract for declaring multi-stage pipelines that compose sequential, parallel, and conditional artifact generation steps.
 
@@ -201,7 +201,7 @@ See `specs/artifact-envelope.schema.json`.
     "status": "pending"
   },
   "metadata": {
-    "tags": ["pilot", "writing-v0.7"],
+    "tags": ["pilot", "writing-0.7"],
     "environment": "dev"
   }
 }

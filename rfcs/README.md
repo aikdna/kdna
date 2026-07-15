@@ -18,7 +18,7 @@ Current initial RFC set:
 - [RFC-0010: KDNA Fidelity Protocol](../specs/fidelity-protocol.md)
 - [RFC-0011: KDNA Product Runtime](../docs/product-runtime.md)
 - [RFC-0012: KDNA Artifact Contract](../specs/RFC-0012-artifact-contract.md)
-- [RFC-0018: KDNA Canonical Envelope Profile — `kdna.envelope.aead`](./RFC-0018-envelope-aead.md) — accepted canonical envelope profile. Three known-answer test vectors live at `conformance/envelope-aead/`. The `scrypt-sha256-v1` KDF is mandatory and `argon2id-v1` is an optional compatibility KDF. The profile non-collapse invariant forbids silent cross-KDF or cross-AEAD migration.
+- [RFC-0018: KDNA Canonical Envelope Profile — `kdna.envelope.aead`](./RFC-0018-envelope-aead.md) — accepted canonical envelope profile. Three known-answer test vectors live at `conformance/envelope-aead/`. The `scrypt-sha256` KDF is mandatory and `argon2id` is an optional compatibility KDF. The profile non-collapse invariant forbids silent cross-KDF or cross-AEAD migration.
 
 ## RFC States
 

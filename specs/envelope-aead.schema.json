@@ -38,7 +38,7 @@
     },
     "kdf_profile": {
       "type": "string",
-      "enum": ["scrypt-sha256-v1", "argon2id-v1"],
+      "enum": ["scrypt-sha256", "argon2id"],
       "description": "KDF profile for the primary (first) key slot. MUST match the first entry's key_slots[].kdf_profile. Per-slot kdf_profile is the contract; this top-level field is a convenience copy. Readers MUST use the per-slot value, not this top-level field."
     },
     "key_slots": {
@@ -76,12 +76,12 @@
         },
         "kdf_profile": {
           "type": "string",
-          "enum": ["scrypt-sha256-v1", "argon2id-v1"],
+          "enum": ["scrypt-sha256", "argon2id"],
           "description": "KDF profile for this slot. Readers MUST use this value, not the envelope-level kdf_profile. The non-collapse invariant requires a reader to fail with KDNA_KDF_UNSUPPORTED if this value is not supported AND no other slot offers a supported KDF."
         },
         "kdf_params": {
           "type": "object",
-          "description": "KDF-specific parameters. The shape depends on the slot's kdf_profile (scrypt-sha256-v1 needs N/r/p/salt; argon2id-v1 needs t/m/p/salt). The application layer MUST verify that the params match the kdf_profile; this schema accepts both shapes and lets the consumer pick.",
+          "description": "KDF-specific parameters. The shape depends on the slot's kdf_profile (scrypt-sha256 needs N/r/p/salt; argon2id needs t/m/p/salt). The application layer MUST verify that the params match the kdf_profile; this schema accepts both shapes and lets the consumer pick.",
           "anyOf": [{ "$ref": "#/$defs/scrypt_params" }, { "$ref": "#/$defs/argon2_params" }]
         },
         "wrap": {

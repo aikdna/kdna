@@ -54,7 +54,7 @@ These licenses are suitable for:
 - Community-contributed domains
 - Educational and reference KDNA
 
-## 4. KDNA Commercial License (KCL) v1.0 Draft
+## 4. KDNA Commercial License (KCL) 1.0 Draft
 
 For commercial KDNA domains, we define the **KDNA Commercial License (KCL)**.
 This is a custom license designed for the unique nature of KDNA as an AI Agent
@@ -153,8 +153,8 @@ license:
 | `CC-BY-4.0` | Creative Commons Attribution 4.0 |
 | `CC-BY-SA-4.0` | Creative Commons Attribution-ShareAlike 4.0 |
 | `CC0-1.0` | Creative Commons Zero (Public Domain) |
-| `KCL-1.0` | KDNA Commercial License v1.0 |
-| `KCL-E-1.0` | KDNA Commercial License — Enterprise v1.0 |
+| `KCL-1.0` | KDNA Commercial License 1.0 |
+| `KCL-E-1.0` | KDNA Commercial License — Enterprise 1.0 |
 | `Apache-2.0` | Apache License 2.0 (for protocol, not recommended for domain assets) |
 | `MIT` | MIT License |
 | `custom` | Custom license (URL required) |

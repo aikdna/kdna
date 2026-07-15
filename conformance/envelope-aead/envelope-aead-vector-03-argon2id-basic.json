@@ -1,12 +1,12 @@
 {
   "id": "envelope-aead-vector-03-argon2id-basic",
-  "description": "argon2id-v1: basic round-trip with the optional Argon2id KDF. Implementations without Argon2id MUST either fall back to another supported slot or refuse to load with KDNA_KDF_UNSUPPORTED.",
+  "description": "argon2id: basic round-trip with the optional Argon2id KDF. Implementations without Argon2id MUST either fall back to another supported slot or refuse to load with KDNA_KDF_UNSUPPORTED.",
   "inputs": {
     "password": "kdna-envelope-test-vector-3-password",
     "salt": "MDEyMzQ1Njc4OTo7PD0+Pw==",
     "iv": "MTIzNDU2Nzg5Ojs8",
     "cek": "wcLDxMXGx8jJysvMzc7P0OHi4+Tl5ufo6err7O3u7/A=",
-    "plaintext": "Hello, KDNA envelope (argon2id-v1 basic).",
+    "plaintext": "Hello, KDNA envelope (argon2id basic).",
     "aad": "kdna.envelope.aead\n0.1.0\nurn:uuid:55555555-5555-4555-8555-555555555555\nkdna:fixture:envelope-argon2id\n1.0.0\nKDNA_Core.json\nlicensed\npassword",
     "aad_lines": [
       "kdna.envelope.aead",
@@ -33,11 +33,11 @@
       "profile_version": "0.1.0",
       "alg": "AES-256-GCM",
       "key_wrapping": "AES-256-KW",
-      "kdf_profile": "argon2id-v1",
+      "kdf_profile": "argon2id",
       "key_slots": [
         {
           "slot": "password",
-          "kdf_profile": "argon2id-v1",
+          "kdf_profile": "argon2id",
           "kdf_params": {
             "t": 3,
             "m": 65536,
@@ -50,8 +50,8 @@
         }
       ],
       "iv": "MTIzNDU2Nzg5Ojs8",
-      "tag": "DuJwaZ8lnlTWwMwv/le08A==",
-      "ciphertext": "R9XD0cxAAcIN5YPdnmYXf1HoMtP0w8wRuUHrEYlTfbFacnIjmSa1h0g="
+      "tag": "dgmezzgi9WGc8D7GnjSmSw==",
+      "ciphertext": "R9XD0cxAAcIN5YPdnmYXf1HoMtP0w8wRuUHrEYlTcKUKIXkhw2E="
     }
   }
 }
