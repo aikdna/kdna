@@ -19,7 +19,8 @@
     "release:check": "node scripts/check-release-readiness.js",
     "release:pack": "node scripts/prepare-release-artifact.js",
     "release:smoke": "node scripts/smoke-release-artifact.js",
-    "publish:guard": "node scripts/check-publish-duplicate.js"
+    "publish:guard": "node scripts/check-publish-duplicate.js",
+    "publish:verified": "node scripts/publish-verified-artifact.js"
   },
   "keywords": [
     "kdna",

@@ -6,10 +6,15 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { createRequire } = require('node:module');
+const { OFFICIAL_REGISTRY, REGISTRY_TIMEOUT_MS, verifyAuditedNpm } = require('./npm-tooling');
 
-const PACKAGE_ROOT = path.resolve(__dirname, '..');
-const REPO_ROOT = path.resolve(PACKAGE_ROOT, '..', '..');
-const EVIDENCE_ROOT = path.join(REPO_ROOT, 'release-evidence');
+function parseArguments(argv) {
+  const artifactIndex = argv.indexOf('--artifact');
+  if (artifactIndex < 0 || !argv[artifactIndex + 1] || argv.length !== 2) {
+    throw new Error('usage: smoke-release-artifact.js --artifact <verified.tgz>');
+  }
+  return { artifactPath: path.resolve(argv[artifactIndex + 1]) };
+}
 
 function packageDirectories(nodeModulesRoot, packageName) {
   const found = new Set();
@@ -44,14 +49,9 @@ function readManifest(packagePath) {
 }
 
 function main() {
-  const evidence = JSON.parse(
-    fs.readFileSync(path.join(EVIDENCE_ROOT, 'compat.npm-pack.json'), 'utf8'),
-  );
-  if (path.basename(evidence.filename) !== evidence.filename || !evidence.filename.endsWith('.tgz')) {
-    throw new Error('compat release evidence does not name one local .tgz artifact');
-  }
-  const artifactPath = path.join(EVIDENCE_ROOT, evidence.filename);
+  const { artifactPath } = parseArguments(process.argv.slice(2));
   if (!fs.existsSync(artifactPath)) throw new Error(`exact release tarball is missing: ${artifactPath}`);
+  verifyAuditedNpm();
 
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-compat-clean-install-'));
   try {
@@ -67,9 +67,10 @@ function main() {
         '--package-lock=false',
         '--no-audit',
         '--no-fund',
+        `--registry=${OFFICIAL_REGISTRY}`,
         artifactPath,
       ],
-      { cwd: temp, stdio: 'inherit' },
+      { cwd: temp, stdio: 'inherit', timeout: REGISTRY_TIMEOUT_MS },
     );
 
     const modules = path.join(temp, 'node_modules');
@@ -113,6 +114,15 @@ function main() {
       cwd: temp,
       stdio: 'ignore',
     });
+    for (const executable of ['kdna-lint', 'kdna-validate']) {
+      const publicBin = path.join(modules, '.bin', executable);
+      if (!fs.existsSync(publicBin)) throw new Error(`public executable is missing: ${executable}`);
+      execFileSync(publicBin, ['--help'], {
+        cwd: temp,
+        stdio: 'ignore',
+        timeout: REGISTRY_TIMEOUT_MS,
+      });
+    }
     console.log('clean exact-tarball install resolved one Core 0.18.0 and CLI 0.33.0');
   } finally {
     fs.rmSync(temp, { recursive: true, force: true });
@@ -128,4 +138,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { packageDirectories };
+module.exports = { packageDirectories, parseArguments };

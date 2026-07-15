@@ -3,6 +3,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { execFileSync } = require('node:child_process');
 
 const repoRoot = path.resolve(__dirname, '..');
 // The override exists so regression tests can exercise the real validator
@@ -64,7 +65,7 @@ function componentPackagePath(component) {
       return null;
     }
     const localPackagePath = path.join(localRoot, relativePackagePath);
-    if (fs.existsSync(localPackagePath)) return localPackagePath;
+    return fs.existsSync(localPackagePath) ? localPackagePath : null;
   }
 
   const declaredPath = path.resolve(repoRoot, component.package_json);
@@ -95,26 +96,84 @@ for (const component of manifest.components) {
     fail(component, 'known_limitations must be an array');
   }
 
+  const localPath = componentPath(component);
+
   if (component.package_json) {
     const pkgPath = componentPackagePath(component);
-    if (pkgPath) {
-      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-      if (component.npm_package && pkg.name !== component.npm_package) {
-        fail(
-          component,
-          `package name mismatch: manifest=${component.npm_package} package.json=${pkg.name}`,
-        );
+    if (!pkgPath) {
+      if (liveLifecycle.has(component.lifecycle)) {
+        fail(component, 'live package evidence is unavailable; repository checkout is required');
       }
-      if (component.current_version !== null && pkg.version !== component.current_version) {
-        fail(
-          component,
-          `version mismatch: manifest=${component.current_version} package.json=${pkg.version}`,
-        );
+    } else {
+      let pkg;
+      try {
+        pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+      } catch (error) {
+        fail(component, `package evidence is unreadable: ${error.message}`);
+      }
+      if (pkg) {
+        if (component.npm_package && pkg.name !== component.npm_package) {
+          fail(
+            component,
+            `package name mismatch: manifest=${component.npm_package} package.json=${pkg.name}`,
+          );
+        }
+        if (component.current_version !== null && pkg.version !== component.current_version) {
+          fail(
+            component,
+            `version mismatch: manifest=${component.current_version} package.json=${pkg.version}`,
+          );
+        }
+      }
+    }
+
+    if (
+      liveLifecycle.has(component.lifecycle) &&
+      component.local_path &&
+      component.local_path !== '.'
+    ) {
+      if (!localPath) {
+        fail(component, 'live package repository checkout is unavailable');
+      } else {
+        let checkoutCommit = null;
+        try {
+          const checkoutRoot = execFileSync('git', ['rev-parse', '--show-toplevel'], {
+            cwd: localPath,
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'pipe'],
+          }).trim();
+          if (fs.realpathSync(checkoutRoot) !== fs.realpathSync(localPath)) {
+            fail(component, `live package path is not a repository root: ${localPath}`);
+          }
+          checkoutCommit = execFileSync('git', ['rev-parse', 'HEAD'], {
+            cwd: localPath,
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'pipe'],
+          }).trim();
+          const checkoutStatus = execFileSync(
+            'git',
+            ['status', '--porcelain=v1', '--untracked-files=all'],
+            {
+              cwd: localPath,
+              encoding: 'utf8',
+              stdio: ['ignore', 'pipe', 'pipe'],
+            },
+          ).trim();
+          if (checkoutStatus) {
+            fail(component, 'live package checkout is dirty');
+          }
+        } catch (error) {
+          fail(component, `live package checkout identity is unreadable: ${error.message}`);
+        }
+        if (checkoutCommit && checkoutCommit !== component.conformance_commit) {
+          fail(
+            component,
+            `checkout commit mismatch: manifest=${component.conformance_commit} checkout=${checkoutCommit}`,
+          );
+        }
       }
     }
   }
-
-  const localPath = componentPath(component);
 
   // A live component without a package or release artifact has no external
   // evidence surface for this validator to inspect. In that case, a real Git

@@ -496,7 +496,7 @@ test('publish workflow keeps Core on release-published canonical tags only', () 
 
   assert.match(
     coreJob,
-    /if: github\.event_name == 'release' && github\.event\.action == 'published' && startsWith\(github\.ref, 'refs\/tags\/kdna-core-v'\)/u,
+    /if: github\.event_name == 'release' && github\.event\.action == 'published' && github\.event\.release\.draft == false && github\.event\.release\.prerelease == false && startsWith\(github\.event\.release\.tag_name, 'kdna-core-v'\)/u,
   );
   assert.doesNotMatch(coreJob, /workflow_dispatch/u);
   assert.equal((coreJob.match(/uses: actions\/checkout@/gu) || []).length, 1);

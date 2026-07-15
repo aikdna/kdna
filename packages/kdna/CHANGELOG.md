@@ -8,6 +8,9 @@
 - Preserve the existing CLI delegation shims and default runtime behavior. The
   compatibility package does not claim semantic Capsule consumption, judgment
   quality, or a second format/runtime path.
+- Bind publication to a stable release event, one immutable source commit, an
+  independently parsed exact tarball, the audited npm client and registry, and
+  fail-closed registry duplicate evidence before any publish command can run.
 
 ## 0.12.0 (2026-07-14)
 
