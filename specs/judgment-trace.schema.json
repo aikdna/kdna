@@ -568,7 +568,7 @@
         "issue_code": {
           "type": ["string", "null"],
           "enum": [
-            "KDNA_CAPSULE_VERSION_UNSUPPORTED",
+            "KDNA_CAPSULE_CONTRACT_VERSION_UNSUPPORTED",
             "KDNA_HOST_PROTOCOL_UNSUPPORTED",
             "KDNA_HOST_CAPSULE_PAIR_UNSUPPORTED",
             null

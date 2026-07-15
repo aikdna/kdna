@@ -78,3 +78,22 @@ test('published runtime-contract schemas resolve and validate without network or
     assert.equal(validate(value), true, `${file}: ${JSON.stringify(validate.errors)}`);
   }
 });
+
+test('JudgmentTrace schema accepts every Runtime negotiation conformance issue code', () => {
+  const schema = readJson(path.join(PACKAGED_SCHEMAS, 'judgment-trace.schema.json'));
+  const negotiationCases = readJson(
+    path.join(RUNTIME_CONTRACT_FIXTURES, 'negotiation-cases.json'),
+  );
+  const allowedIssueCodes = new Set(
+    schema.$defs.runtimeContract.properties.issue_code.enum,
+  );
+
+  for (const fixture of negotiationCases.cases) {
+    const issueCode = fixture.expected.issue_code;
+    assert.equal(
+      allowedIssueCodes.has(issueCode),
+      true,
+      `${fixture.name}: ${issueCode} must be accepted by JudgmentTrace`,
+    );
+  }
+});

@@ -4,6 +4,9 @@
 
 ### Fixed
 
+- Keep the canonical JudgmentTrace schema's blocked Runtime negotiation codes
+  identical to the Runtime implementation, TypeScript declarations, and
+  conformance fixtures.
 - Accept only `reasoning.self_check` in judgment payloads and fail closed on
   the deprecated plural field or malformed entries.
 - Preserve each validated self-check string or structured question exactly in
