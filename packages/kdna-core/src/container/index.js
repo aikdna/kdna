@@ -835,9 +835,17 @@ function runValidate(layout) {
   if (isEncryptedPayload) {
     // Encrypted payload — verify it's a proper encryption envelope, not plaintext.
     const encProfile = layout.manifest.encryption?.profile;
+    const encProfileVersion = layout.manifest.encryption?.profile_version;
     if (encProfile && payload.profile !== encProfile) {
       result.payload_valid = false;
       problems.push(`payload: encrypted envelope profile ${payload.profile || 'unknown'} does not match manifest encryption profile ${encProfile}`);
+    }
+    const payloadProfileVersion = payload.profile === EXTERNAL_ENVELOPE_PROFILE
+      ? payload.contract_version
+      : payload.profile_version;
+    if (encProfileVersion && payloadProfileVersion !== encProfileVersion) {
+      result.payload_valid = false;
+      problems.push(`payload: encrypted envelope compatibility coordinate ${payloadProfileVersion || 'unknown'} does not match manifest encryption profile_version ${encProfileVersion}`);
     }
     let hasKeyMaterial = !!payload.wrapped_key || (Array.isArray(payload.key_slots) && payload.key_slots.length > 0);
     if (payload.profile === EXTERNAL_ENVELOPE_PROFILE) {

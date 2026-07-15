@@ -300,6 +300,7 @@ test('planLoad: password licensed asset requires password before load', () => {
       manifest.entitlement = { profile: 'password', offline: true, revocable: false };
       manifest.encryption = {
         profile: 'kdna.encryption.password',
+        profile_version: '0.1.0',
         encrypted_entries: ['payload.kdnab'],
       };
       manifest.payload.encrypted = true;

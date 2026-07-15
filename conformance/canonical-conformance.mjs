@@ -183,7 +183,11 @@ test('access: licensed/password → needs_password', () => {
     ...f.manifest,
     access: 'licensed',
     entitlement: { profile: 'password' },
-    encryption: { profile: 'kdna.encryption.password', encrypted_entries: ['payload.kdnab'] },
+    encryption: {
+      profile: 'kdna.encryption.password',
+      profile_version: '0.1.0',
+      encrypted_entries: ['payload.kdnab'],
+    },
     payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: true },
   };
   // Overwrite manifest with licensed config

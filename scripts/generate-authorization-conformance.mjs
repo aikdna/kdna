@@ -37,6 +37,7 @@ const cases = [
       entitlement: { profile: 'password', offline: true, revocable: false },
       encryption: {
         profile: 'kdna.encryption.password',
+        profile_version: '0.1.0',
         encrypted_entries: ['payload.kdnab'],
       },
       payload: { encrypted: true },
@@ -53,6 +54,7 @@ const cases = [
       entitlement: { profile: 'password', offline: true, revocable: false },
       encryption: {
         profile: 'kdna.encryption.password',
+        profile_version: '0.1.0',
         encrypted_entries: ['payload.kdnab'],
       },
       payload: { encrypted: true },

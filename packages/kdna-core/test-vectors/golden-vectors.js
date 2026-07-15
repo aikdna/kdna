@@ -35,7 +35,11 @@ const PAYLOAD_JSON = {
 const PAYLOAD_STR = JSON.stringify(PAYLOAD_JSON);
 const ENCRYPTED_MANIFEST = { ...MANIFEST, access: 'licensed',
   entitlement: { profile: 'password' },
-  encryption: { profile: 'kdna.encryption.password', encrypted_entries: ['payload.kdnab'] },
+  encryption: {
+    profile: 'kdna.encryption.password',
+    profile_version: '0.1.0',
+    encrypted_entries: ['payload.kdnab'],
+  },
   payload: { path: 'payload.kdnab', encoding: 'json', encrypted: true } };
 
 function tmpDir() { return fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-gv-')); }

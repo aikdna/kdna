@@ -4,6 +4,9 @@
 
 ### Fixed
 
+- Require the manifest encryption profile and compatibility coordinate to
+  identify a supported contract, and reject a missing, unknown, or
+  envelope-mismatched `profile_version` before decryption.
 - Keep the canonical JudgmentTrace schema's blocked Runtime negotiation codes
   identical to the Runtime implementation, TypeScript declarations, and
   conformance fixtures.

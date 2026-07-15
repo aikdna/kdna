@@ -201,6 +201,48 @@ test('licensed interoperability fixture uses the current encrypted payload contr
   assert.deepEqual(cbor.decode(plaintext), cbor.decode(canonical));
 });
 
+test('manifest encryption profile coordinates fail closed before decryption', () => {
+  const fixture = path.join(repoRoot, 'fixtures', 'test_protected_entry.kdna');
+  const cases = [
+    ['missing profile_version', (manifest) => { delete manifest.encryption.profile_version; }],
+    ['unsupported profile_version', (manifest) => { manifest.encryption.profile_version = '9.9.9'; }],
+  ];
+
+  for (const [name, mutate] of cases) {
+    const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-encryption-coordinate-'));
+    const source = path.join(temporary, 'source');
+    const asset = path.join(temporary, 'mutated.kdna');
+    try {
+      container.unpack(fixture, source);
+      const manifestPath = path.join(source, 'kdna.json');
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      mutate(manifest);
+      fs.writeFileSync(manifestPath, JSON.stringify(manifest));
+      fs.writeFileSync(
+        path.join(source, 'checksums.json'),
+        JSON.stringify(core.buildChecksums(source)),
+      );
+      container.pack(source, asset);
+
+      const validation = container.validate(asset);
+      assert.equal(validation.schema_valid, false, name);
+      assert.equal(validation.overall_valid, false, name);
+      assert.match(validation.problems.join('; '), /profile_version/u, name);
+      assert.throws(
+        () => core.loadAuthorized(asset, {
+          profile: 'compact',
+          as: 'json',
+          password: 'KDNA-TEST-VECTOR-2026',
+        }),
+        /LoadPlan denied loading/u,
+        name,
+      );
+    } finally {
+      fs.rmSync(temporary, { recursive: true, force: true });
+    }
+  }
+});
+
 test('licensed fixture ZIP bytes and local or central metadata are platform-independent', () => {
   const fixture = path.join(repoRoot, 'fixtures', 'test_licensed_entry.kdna');
   const archive = readZipMetadata(fixture);
