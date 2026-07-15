@@ -19,7 +19,7 @@ const validateManifest = ajv.compile(manifestSchema);
 
 function runtimeManifest(overrides = {}) {
   return {
-    kdna_version: '1.0',
+    format_version: '0.1.0',
     asset_id: 'kdna:example:code-review',
     asset_uid: 'urn:uuid:00000000-0000-4000-8000-000000000001',
     asset_type: 'domain',
@@ -31,6 +31,7 @@ function runtimeManifest(overrides = {}) {
     compatibility: {
       min_loader_version: '0.17.0',
       profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
     },
     payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
     access: 'public',

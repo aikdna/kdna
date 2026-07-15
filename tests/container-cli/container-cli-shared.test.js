@@ -237,7 +237,7 @@ test('detectContainerFormat: returns null for a non-zip file', () => {
 
 test('inspect: examples/minimal returns the documented fields', () => {
   const out = container.inspect(exampleMinimal);
-  assert.equal(out.kdna_version, '1.0');
+  assert.equal(out.format_version, '0.1.0');
   assert.equal(out.asset_id, 'kdna:example:agent-project-context');
   assert.equal(out.title, 'Agent Project Context');
   assert.equal(out.version, '1.0.0');
@@ -510,7 +510,7 @@ test('loadAsset: rejected LoadPlan states do not leak judgment payload', () => {
   }
 });
 
-test('loadAsset: compact profile preserves Human Lock boundary fields', () => {
+test('loadAsset: compact profile preserves axiom applicability boundary fields', () => {
   const dir = makeTmp('kdna-container-human-lock-projection-');
   try {
     copyMinimal(dir);
@@ -530,9 +530,11 @@ test('loadAsset: compact profile preserves Human Lock boundary fields', () => {
       path.join(dir, 'checksums.json'),
       JSON.stringify(container.buildChecksums(dir), null, 2),
     );
+    const assetPath = path.join(dir, 'runtime.kdna');
+    container.pack(dir, assetPath);
 
-    const loaded = container.load(dir, { profile: 'compact', as: 'json' });
-    assert.equal(loaded.type, 'kdna.context.capsule');
+    const loaded = container.load(assetPath, { profile: 'compact', as: 'json' });
+    assert.equal(loaded.type, 'kdna.runtime-capsule');
     assert.deepEqual(loaded.context.axioms[0], {
       type: 'axiom_applicability',
       id: 'evidence_first',
@@ -543,7 +545,7 @@ test('loadAsset: compact profile preserves Human Lock boundary fields', () => {
       failure_risk: 'The agent may overfit to unsupported generalities.',
     });
 
-    const prompt = container.load(dir, { profile: 'compact', as: 'prompt' }).text;
+    const prompt = container.load(assetPath, { profile: 'compact', as: 'prompt' }).text;
     assert.match(prompt, /applies when: reviewing factual claims/);
     assert.match(prompt, /does not apply when: writing fictional copy/);
     assert.match(prompt, /failure risk: The agent may overfit/);
@@ -570,8 +572,10 @@ test('load: compact profile preserves canonical reasoning.self_check entries', (
       path.join(dir, 'checksums.json'),
       JSON.stringify(container.buildChecksums(dir), null, 2),
     );
+    const assetPath = path.join(dir, 'runtime.kdna');
+    container.pack(dir, assetPath);
 
-    const loaded = container.load(dir, { profile: 'compact', as: 'json' });
+    const loaded = container.load(assetPath, { profile: 'compact', as: 'json' });
     assert.deepEqual(loaded.context.self_checks, [
       'Did I preserve the judgment boundary?',
       { question: 'Did I avoid inventing human provenance?' },
@@ -581,7 +585,7 @@ test('load: compact profile preserves canonical reasoning.self_check entries', (
   }
 });
 
-test('planLoad: unknown access fails closed with a schema-valid plan', () => {
+test('planLoad: unknown access fails closed with a schema-valid invalid plan', () => {
   const dir = makeTmp('kdna-container-plan-unknown-access-');
   try {
     copyMinimal(dir);
@@ -594,7 +598,7 @@ test('planLoad: unknown access fails closed with a schema-valid plan', () => {
     assert.equal(plan.access, null);
     assert.equal(plan.state, 'invalid');
     assert.equal(plan.required_action, 'block');
-    assert.equal(plan.issues[0].code, 'KDNA_ACCESS_MODE_UNKNOWN');
+    assert.equal(plan.issues[0].code, 'KDNA_FORMAT_INVALID');
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -607,46 +611,6 @@ test('planLoad: checksum mismatch returns invalid with blocking issue', () => {
     const checksumsPath = path.join(dir, 'checksums.json');
     const checksums = JSON.parse(fs.readFileSync(checksumsPath, 'utf8'));
     checksums.payload_digest =
-      'sha256:0000000000000000000000000000000000000000000000000000000000000000';
-    fs.writeFileSync(checksumsPath, JSON.stringify(checksums, null, 2));
-
-    const plan = container.planLoad(dir);
-    assertValidLoadPlan(plan);
-    assert.equal(plan.state, 'invalid');
-    assert.equal(plan.required_action, 'block');
-    assert.equal(plan.can_load_now, false);
-    assert.equal(plan.checks.checksums_valid, false);
-    assert.ok(plan.issues.some((issue) => issue.code === 'KDNA_INTEGRITY_DIGEST_FAILED'));
-  } finally {
-    fs.rmSync(dir, { recursive: true, force: true });
-  }
-});
-
-test('validate: placeholder asset_digest is rejected', () => {
-  const dir = makeTmp('kdna-container-placeholder-digest-');
-  try {
-    copyMinimal(dir);
-    const checksumsPath = path.join(dir, 'checksums.json');
-    const checksums = JSON.parse(fs.readFileSync(checksumsPath, 'utf8'));
-    checksums.asset_digest = 'sha256:placeholder';
-    fs.writeFileSync(checksumsPath, JSON.stringify(checksums, null, 2));
-
-    const out = container.validate(dir);
-    assert.equal(out.overall_valid, false);
-    assert.equal(out.checksums_valid, false);
-    assert.ok(out.problems.some((problem) => problem.startsWith('checksums: /asset_digest')));
-  } finally {
-    fs.rmSync(dir, { recursive: true, force: true });
-  }
-});
-
-test('planLoad: asset_digest mismatch returns invalid with blocking issue', () => {
-  const dir = makeTmp('kdna-container-plan-asset-digest-invalid-');
-  try {
-    copyMinimal(dir);
-    const checksumsPath = path.join(dir, 'checksums.json');
-    const checksums = JSON.parse(fs.readFileSync(checksumsPath, 'utf8'));
-    checksums.asset_digest =
       'sha256:0000000000000000000000000000000000000000000000000000000000000000';
     fs.writeFileSync(checksumsPath, JSON.stringify(checksums, null, 2));
 

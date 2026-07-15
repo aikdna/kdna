@@ -55,7 +55,7 @@ test('inspect minimal source dir', () => {
   const r = run(['inspect', minimalSource]);
   assert.equal(r.status, 0, r.stderr);
   const out = JSON.parse(r.stdout);
-  assert.equal(out.kdna_version, '1.0');
+  assert.equal(out.format_version, '0.1.0');
   assert.equal(out.asset_id, 'kdna:example:agent-project-context');
   for (const t of FORBIDDEN) assert.ok(!Object.prototype.hasOwnProperty.call(out, t));
 });
@@ -77,7 +77,8 @@ test('buildChecksums generates digests accepted by validate', () => {
     const checksums = buildChecksums(tmp);
     assert.equal(checksums.digest_profile, 'kdna.digest-basis.runtime-entry-set');
     assert.deepEqual(checksums.covered_entries, ['kdna.json', 'payload.kdnab']);
-    assert.equal(checksums.entry_set_digest, checksums.asset_digest);
+    assert.match(checksums.entry_set_digest, /^sha256:[a-f0-9]{64}$/u);
+    assert.equal(Object.hasOwn(checksums, 'asset_digest'), false);
     fs.writeFileSync(path.join(tmp, 'checksums.json'), JSON.stringify(checksums, null, 2));
     const r = run(['validate', tmp]);
     assert.equal(r.status, 0, r.stderr);
@@ -125,7 +126,7 @@ test('checksum digest metadata fails closed for unknown profiles or coverage', (
   }
 });
 
-test('canonical entry_set_digest alone supplies frozen Runtime Capsule E', () => {
+test('canonical entry_set_digest supplies Runtime Capsule entry-set evidence', () => {
   const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-entry-set-capsule-'));
   try {
     fs.cpSync(minimalSource, tmp, { recursive: true });
@@ -139,28 +140,25 @@ test('canonical entry_set_digest alone supplies frozen Runtime Capsule E', () =>
     const validation = validate(assetPath);
     assert.equal(validation.overall_valid, true, validation.problems.join('; '));
     const capsule = loadAuthorized(assetPath, { as: 'json' });
-    assert.equal(capsule.asset_digest, expectedEntrySetDigest);
+    assert.equal(capsule.digests.runtime_entry_set.value, expectedEntrySetDigest);
+    assert.equal(capsule.digests.runtime_entry_set.comparison.state, 'matched');
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }
 });
 
-test('checksum aliases fail closed when entry_set_digest disagrees with asset_digest', () => {
+test('obsolete asset_digest cannot replace canonical entry_set_digest', () => {
   const tmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-entry-set-alias-'));
   try {
     fs.cpSync(minimalSource, tmp, { recursive: true });
     const checksums = buildChecksums(tmp);
-    checksums.entry_set_digest = `sha256:${'0'.repeat(64)}`;
+    checksums.asset_digest = checksums.entry_set_digest;
+    delete checksums.entry_set_digest;
     fs.writeFileSync(path.join(tmp, 'checksums.json'), JSON.stringify(checksums, null, 2));
 
     const result = validate(tmp);
     assert.equal(result.checksums_valid, false);
-    assert.ok(
-      result.problems.includes(
-        'checksums: entry_set_digest does not match deprecated asset_digest alias',
-      ),
-      result.problems.join('; '),
-    );
+    assert.ok(result.problems.some((problem) => problem.includes('entry_set_digest')));
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }
@@ -173,7 +171,7 @@ test('file layout exposes final container digest separately from entry-set diges
   const checksums = JSON.parse(layout.map['checksums.json'].toString('utf8'));
 
   assert.equal(layout.containerDigest, expectedContainerDigest);
-  assert.notEqual(layout.containerDigest, checksums.asset_digest);
+  assert.notEqual(layout.containerDigest, checksums.entry_set_digest);
   assert.equal(readLayout(minimalSource).containerDigest, null);
 });
 

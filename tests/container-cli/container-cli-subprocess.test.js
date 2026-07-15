@@ -50,7 +50,7 @@ test('cli: kdna inspect examples/minimal returns a content-neutral JSON manifest
   const r = runCli(['inspect', exampleMinimal]);
   assert.equal(r.status, 0, `stdout=${r.stdout}\nstderr=${r.stderr}`);
   const out = JSON.parse(r.stdout);
-  assert.equal(out.kdna_version, '1.0');
+  assert.equal(out.format_version, '0.1.0');
   assert.equal(out.asset_id, 'kdna:example:agent-project-context');
   assert.equal(out.title, 'Agent Project Context');
   assert.equal(out.payload, 'payload.kdnab');

@@ -1436,6 +1436,10 @@ function planLoad(inputPath, opts = {}) {
   const plan = baseLoadPlan(inputPath, layout, validation, opts);
 
   if (!validation.overall_valid) {
+    if (!['public', 'licensed', 'remote'].includes(plan.access)) {
+      plan.access = null;
+      plan.access_alias = null;
+    }
     plan.state = 'invalid';
     plan.required_action = 'block';
     plan.can_load_now = false;
