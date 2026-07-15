@@ -728,6 +728,9 @@ export interface KDNAInspectResult {
   payload: string | null;
   payload_encrypted: boolean | null;
   profile: string | null;
+  loader_version: string;
+  min_loader_version: string | null;
+  loader_compatible: boolean | null;
   load_contract_default_profile: string | null;
   checksums_present?: boolean;
   entries: string[];
@@ -746,6 +749,9 @@ export interface KDNAValidationReport {
   payload_valid: boolean;
   checksums_valid: boolean;
   load_contract_valid: boolean;
+  loader_version: string;
+  min_loader_version: string | null;
+  loader_compatible: boolean | null;
   overall_valid: boolean;
   problems: string[];
 }
@@ -1388,6 +1394,15 @@ export function inspect(
   input: string | Uint8Array,
   options?: Record<string, any>,
 ): Record<string, any>;
+export const KDNA_LOADER_VERSION: '0.19.0';
+export const STRICT_LOADER_VERSION: RegExp;
+export function parseLoaderVersion(version: unknown): readonly [string, string, string] | null;
+export function compareLoaderVersions(left: string, right: string): -1 | 0 | 1;
+export function assessLoaderCompatibility(manifest: Partial<KDNAManifest> | null | undefined): {
+  loader_version: string;
+  min_loader_version: string | null;
+  loader_compatible: boolean | null;
+};
 export function validate(
   input: string | Uint8Array,
   options?: Record<string, any>,

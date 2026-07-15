@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Enforce strict `compatibility.min_loader_version` coordinates across
+  inspect, validate, default verification, LoadPlan, and load. Structurally
+  valid assets that require a newer loader now fail closed with
+  `KDNA_LOADER_VERSION_UNSUPPORTED` before projection.
+
 ## 0.13.2
 
 **2026-06-22**

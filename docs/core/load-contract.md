@@ -68,6 +68,21 @@ When the official KDNA loader opens a `.kdna` file, it MUST:
 2. If `load_contract` is present, use the profile named in `default_profile` (or the caller-requested profile if different) to determine the reading strategy.
 3. If the requested profile has `requires_decryption: true`, refuse to load without a key and emit a `requires_decryption` trace status.
 4. If the requested profile's `max_tokens_hint` is exceeded by the actual content, the loader SHOULD emit a warning trace, not silently truncate.
-5. If the manifest's `compatibility.min_loader_version` is higher than the loader's version, emit a `version_incompatible` trace and refuse to load.
+5. Parse both the manifest's `compatibility.min_loader_version` and the loader
+   package coordinate as strict `x.y.z` decimal triples. Leading zeros,
+   prefixes, prerelease suffixes, build metadata, missing components, and
+   whitespace are invalid. Compare arbitrary-size components without numeric
+   truncation.
+6. If the structurally valid manifest requires a loader coordinate higher than
+   the current package coordinate, return a blocking LoadPlan with
+   `KDNA_LOADER_VERSION_UNSUPPORTED`, emit `version_incompatible` Runtime
+   evidence when a trace is produced, and refuse to load. This is not a
+   format/schema failure.
+
+`inspect` and `validate` report `loader_version`, `min_loader_version`, and
+`loader_compatible`. `validate.overall_valid` remains the conjunction of the
+five structural gates; callers that intend to load MUST use `planLoad` or a
+load entry point to enforce implementation compatibility. The default asset
+reader verification path also rejects an unsupported loader requirement.
 
 The trace vocabulary is defined in `trace.md`.

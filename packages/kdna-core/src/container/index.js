@@ -41,6 +41,11 @@ const zlib = require('node:zlib');
 const crypto = require('node:crypto');
 const cbor = require('cbor-x');
 const {
+  KDNA_LOADER_VERSION,
+  assessLoaderCompatibility,
+  loaderVersionUnsupportedMessage,
+} = require('../loader-compatibility');
+const {
   EXTERNAL_ENVELOPE_PROFILE,
   validateExternalEnvelope,
   isVerifiedExternalEntitlement,
@@ -746,6 +751,7 @@ function buildInspectOutput(container) {
     payload: m.payload ? m.payload.path : null,
     payload_encrypted: m.payload ? m.payload.encrypted : null,
     profile: m.compatibility ? m.compatibility.profile : null,
+    ...assessLoaderCompatibility(m),
     load_contract_default_profile: m.load_contract ? m.load_contract.default_profile : null,
   };
   if (m.signatures !== undefined) out.signature_count = Array.isArray(m.signatures) ? m.signatures.length : 0;
@@ -767,6 +773,7 @@ function runValidate(layout) {
     payload_valid: true,
     checksums_valid: true,
     load_contract_valid: true,
+    ...assessLoaderCompatibility(layout.manifest),
   };
   const problems = [];
 
@@ -1489,6 +1496,19 @@ function planLoad(inputPath, opts = {}) {
 
   const manifest = layout.manifest;
 
+  if (validation.loader_compatible === false) {
+    plan.state = 'invalid';
+    plan.required_action = 'block';
+    plan.can_load_now = false;
+    plan.projection_policy = 'none';
+    plan.issues.push(buildLoadPlanIssue(
+      'KDNA_LOADER_VERSION_UNSUPPORTED',
+      'blocking',
+      loaderVersionUnsupportedMessage(validation.min_loader_version),
+    ));
+    return finalizeLoadPlan(plan);
+  }
+
   function externalEntitlementMatchesCurrentAsset(entitlement) {
     if (!isVerifiedExternalEntitlement(entitlement) || !entitlement.asset) return false;
     return entitlement.asset.asset_id === manifest.asset_id
@@ -1896,6 +1916,7 @@ function assertNoForbiddenTerms(obj) {
 
 module.exports = {
   MIMETYPE,
+  KDNA_LOADER_VERSION,
   REQUIRED_DIR_ENTRIES,
   isKdnaSourceDir,
   detectContainerFormat,

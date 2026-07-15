@@ -407,6 +407,9 @@ test('validate: bad checksum has exactly one structured digest failure', () => {
     payload_valid: true,
     checksums_valid: false,
     load_contract_valid: true,
+    loader_version: '0.19.0',
+    min_loader_version: '0.19.0',
+    loader_compatible: true,
     overall_valid: false,
     problems: [expectedProblem],
   });

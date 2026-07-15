@@ -51,6 +51,13 @@ if (
 Runtime entry points accept final packaged bytes or a packaged file. Authoring
 directories must be packed before they can produce a Runtime Capsule.
 
+`compatibility.min_loader_version` is a strict `x.y.z` loader package
+coordinate. `inspect` and `validate` expose it together with
+`loader_version` and `loader_compatible`. Structural validation remains
+separate from loadability: `planLoad` and every load path block a valid asset
+that requires a newer loader with `KDNA_LOADER_VERSION_UNSUPPORTED` before
+projection.
+
 ## Stable Runtime contracts
 
 There is one current responsibility chain:

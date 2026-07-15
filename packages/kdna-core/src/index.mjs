@@ -12,6 +12,7 @@ export {
 
 export {
   MIMETYPE,
+  KDNA_LOADER_VERSION,
   REQUIRED_DIR_ENTRIES,
   isKdnaSourceDir,
   detectContainerFormat,
@@ -26,6 +27,12 @@ export {
   compareSemver,
   satisfies,
 } from './container/index.js';
+
+import loaderCompatibility from './loader-compatibility.js';
+export const STRICT_LOADER_VERSION = loaderCompatibility.STRICT_LOADER_VERSION;
+export const parseLoaderVersion = loaderCompatibility.parseLoaderVersion;
+export const compareLoaderVersions = loaderCompatibility.compareLoaderVersions;
+export const assessLoaderCompatibility = loaderCompatibility.assessLoaderCompatibility;
 
 import runtimeApi from './runtime-api.js';
 export const planLoad = runtimeApi.planLoad;

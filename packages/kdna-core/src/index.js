@@ -14,6 +14,7 @@ const container = require('./container');
 const runtimeApi = require('./runtime-api');
 const runtimeCapsule = require('./runtime-capsule');
 const runtimeContract = require('./runtime-contract');
+const loaderCompatibility = require('./loader-compatibility');
 
 module.exports = {
   ...publicApi,
@@ -29,4 +30,8 @@ module.exports = {
   ...runtimeApi,
   ...runtimeCapsule,
   ...runtimeContract,
+  STRICT_LOADER_VERSION: loaderCompatibility.STRICT_LOADER_VERSION,
+  parseLoaderVersion: loaderCompatibility.parseLoaderVersion,
+  compareLoaderVersions: loaderCompatibility.compareLoaderVersions,
+  assessLoaderCompatibility: loaderCompatibility.assessLoaderCompatibility,
 };

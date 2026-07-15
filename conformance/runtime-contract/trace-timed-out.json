@@ -6,7 +6,7 @@
     "plan_id": "plan_0123456789abcdef",
     "plan_digest_profile": "kdna.canonicalization.consumption-plan-jcs",
     "plan_digest_profile_version": "0.1.0",
-    "plan_digest": "sha256:c3229f99fc39c56131bf255744f98a207e4597acc5f794ed30693ced40c914f1",
+    "plan_digest": "sha256:63e19af544125da1d8b9fe7e16cde73e76b305501af18d0aa3c6cebdf3d990d7",
     "comparison": "matched"
   },
   "parent_trace_id": null,
@@ -42,16 +42,16 @@
       "basis": "kdna.digest-basis.container-bytes",
       "comparison": {
         "against": "external_expected",
-        "expected": "sha256:df18a4b15c930940061c58744c0bcac040a0a54c596db358da02c0a31082a23e",
+        "expected": "sha256:9b2e19abc739f3471826a9af6f423b0e993fd27b0eb4aebf314eb1e6515cd33d",
         "source": "install_receipt",
         "state": "matched"
       },
-      "value": "sha256:df18a4b15c930940061c58744c0bcac040a0a54c596db358da02c0a31082a23e"
+      "value": "sha256:9b2e19abc739f3471826a9af6f423b0e993fd27b0eb4aebf314eb1e6515cd33d"
     },
     "content": {
       "basis": "kdna.digest-basis.content-tree",
       "comparison": { "against": null, "expected": null, "source": null, "state": "not_compared" },
-      "value": "sha256:72595802e214dff1a5b5a1153dd7e343190668d5da5ba32bcff2857774cc9428"
+      "value": "sha256:51fcee33e96af6cd2a254178c6a821cdd2ce2b30bb2e30782320e75d444c5c90"
     },
     "profile": "kdna.digest-evidence",
     "profile_version": "0.1.0",
@@ -59,27 +59,27 @@
       "basis": "kdna.digest-basis.runtime-entry-set",
       "comparison": {
         "against": "checksum_declaration",
-        "expected": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7",
+        "expected": "sha256:ade5cc99c48fa0e49e5e86f433fba39d68180e92e4a52a3450f55055ab2de040",
         "source": "checksums.json.entry_set_digest",
         "state": "matched"
       },
-      "value": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7"
+      "value": "sha256:ade5cc99c48fa0e49e5e86f433fba39d68180e92e4a52a3450f55055ab2de040"
     }
   },
   "capsule_delivery_evidence": {
     "basis": "kdna.canonicalization.runtime-capsule-jcs",
     "basis_version": "0.1.0",
-    "observed": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+    "observed": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
     "sender_computed": true,
-    "host_recomputed": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
-    "host_echoed": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+    "host_recomputed": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
+    "host_echoed": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
     "delivered_capsule_version": "0.1.0",
     "host_boundary_comparison": "matched",
     "request_id": "host_0123456789abcdef01234567"
   },
   "projection_actual": {
     "profile": "compact",
-    "capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+    "capsule_delivery_digest": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
     "profile_deviated_from_plan": false
   },
   "host_receipt": {
@@ -95,12 +95,12 @@
       "capsule_schema_validation": "passed",
       "capsule_version": "0.1.0",
       "contract_version": "0.1.0",
-      "echoed_capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
-      "host_recomputed_capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+      "echoed_capsule_delivery_digest": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
+      "host_recomputed_capsule_delivery_digest": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
       "model_identity": { "basis": "not_observed", "value": null },
       "provider_execution_status": "timed_out",
       "semantic_consumption": { "basis": null, "state": "not_observed" },
-      "sender_capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+      "sender_capsule_delivery_digest": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
       "type": "kdna.agent-host.runtime-receipt",
       "usage": {
         "basis": "not_observed",

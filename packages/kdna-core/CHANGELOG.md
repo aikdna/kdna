@@ -4,6 +4,13 @@
 
 ### Fixed
 
+- Enforce `compatibility.min_loader_version` as a strict `x.y.z` loader package
+  coordinate across inspect, validate, default verification, LoadPlan, and
+  load. Requirements above Core `0.19.0` now fail closed with
+  `KDNA_LOADER_VERSION_UNSUPPORTED` before projection; malformed coordinates
+  remain schema failures, and arbitrary-size components compare without
+  numeric overflow.
+
 - Require the manifest encryption profile and compatibility coordinate to
   identify a supported contract, and reject a missing, unknown, or
   envelope-mismatched `profile_version` before decryption.

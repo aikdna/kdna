@@ -3,13 +3,13 @@
   "digest_profile_version": "0.1.0",
   "covered_entries": ["kdna.json", "payload.kdnab"],
   "algorithm": "sha256",
-  "manifest_digest": "sha256:02c3cc28d118b3d54c045f81baaaf0d631bdf6a9fc3ae9ac51bba1396d7f1f76",
+  "manifest_digest": "sha256:4d9887d1f54a3d5b55f439115d4c9e393663240c23ac9af1caacc3df448df1bb",
   "payload_digest": "sha256:3f82646bd1ac39241d7b8d268e7d7c5cec57f941b858c6634eb91ded516584fa",
-  "entry_set_digest": "sha256:1d13e623c3bc7806b5b56cff4ac543582055e763da1a9bcccc7770c3c8a11f4a",
+  "entry_set_digest": "sha256:9710bf0f2467933863e31a6724cdfa0a25cbcede7c33227adb8a0470c0f8e9de",
   "entries": {
     "kdna.json": {
       "algorithm": "sha256",
-      "value": "02c3cc28d118b3d54c045f81baaaf0d631bdf6a9fc3ae9ac51bba1396d7f1f76"
+      "value": "4d9887d1f54a3d5b55f439115d4c9e393663240c23ac9af1caacc3df448df1bb"
     },
     "payload.kdnab": {
       "algorithm": "sha256",

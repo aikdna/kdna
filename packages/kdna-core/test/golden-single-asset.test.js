@@ -196,6 +196,9 @@ test('committed CBOR validates and loads exact self-check shapes without silent 
       payload_valid: true,
       checksums_valid: true,
       load_contract_valid: true,
+      loader_version: '0.19.0',
+      min_loader_version: '0.19.0',
+      loader_compatible: true,
       overall_valid: true,
       problems: [],
     });
@@ -212,6 +215,9 @@ test('committed CBOR validates and loads exact self-check shapes without silent 
       payload: 'payload.kdnab',
       payload_encrypted: false,
       profile: 'kdna.payload.judgment',
+      loader_version: '0.19.0',
+      min_loader_version: '0.19.0',
+      loader_compatible: true,
       load_contract_default_profile: 'compact',
       checksums_present: true,
     });

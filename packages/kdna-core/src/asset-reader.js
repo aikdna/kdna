@@ -6,6 +6,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const zlib = require('zlib');
 const cbor = require('cbor-x');
+const { loaderVersionUnsupportedMessage } = require('./loader-compatibility');
 
 const KDNA_MEDIA_TYPE = 'application/vnd.kdna.asset';
 const ASSET_SOURCE_BYTES = Symbol.for('@aikdna/kdna-core.asset-source-bytes');
@@ -419,6 +420,11 @@ function appendCurrentValidationErrors(asset, errors) {
   try {
     const validation = validateCurrentContainer(asset);
     if (!validation.overall_valid) errors.push(...validation.problems);
+    if (validation.loader_compatible === false) {
+      errors.push(
+        loaderVersionUnsupportedMessage(validation.min_loader_version),
+      );
+    }
   } catch (e) {
     errors.push(e.message);
   }

@@ -17,7 +17,7 @@
   "input_fingerprint": {
     "has_password_input": false,
     "entitlement_input": null,
-    "source_fingerprint": "sha256:8332c4eb0fdd7fd5212eeee17a5d5381c739ba8e85542594fb24bb17cf7c7554"
+    "source_fingerprint": "sha256:0da44dd97affeac65e4b4adc08f8c71f753221d873768c5c5400174443cdfe38"
   },
   "checks": {
     "format_valid": true,
@@ -36,7 +36,7 @@
     {
       "code": "KDNA_INTEGRITY_DIGEST_FAILED",
       "severity": "blocking",
-      "message": "checksums: entry_set_digest mismatch (declared 1d13e623..., actual f6e214c0...)"
+      "message": "checksums: entry_set_digest mismatch (declared 9710bf0f..., actual 0c1474e7...)"
     }
   ],
   "source": {

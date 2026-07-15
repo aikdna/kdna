@@ -133,6 +133,7 @@ conformance. Initial issue codes:
 - `KDNA_FORMAT_INVALID`
 - `KDNA_FORMAT_LEGACY_SOURCE_TREE`
 - `KDNA_FORMAT_FORBIDDEN_ENTRY`
+- `KDNA_LOADER_VERSION_UNSUPPORTED`
 - `KDNA_INTEGRITY_DIGEST_FAILED`
 - `KDNA_INTEGRITY_SIGNATURE_FAILED`
 - `KDNA_CRYPTO_PROFILE_UNSUPPORTED`
@@ -143,6 +144,12 @@ conformance. Initial issue codes:
 Compatibility implementations MAY additionally emit namespaced transitional
 codes such as `KDNA_AUTH_VALIDATION_FAILED`, but final cross-implementation
 goldens SHOULD converge on the list above.
+
+`KDNA_LOADER_VERSION_UNSUPPORTED` has one narrow meaning: the manifest is
+structurally valid, its strict `compatibility.min_loader_version` coordinate is
+higher than the current loader package coordinate, and the asset therefore
+cannot be loaded by this implementation. A malformed coordinate is a schema
+failure and MUST NOT be relabeled as loader incompatibility.
 
 ## 7. Entitlement State
 
