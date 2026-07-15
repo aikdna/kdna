@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const cbor = require('cbor-x');
 
 const {
   createKdnaAssetReader,
@@ -577,29 +578,31 @@ test.skip('protected .kdna asset loads and decrypts with password hook', { todo:
   );
 });
 
-test.skip('cross-language fixture: decrypts shared test_protected_entry.kdna from Swift', { todo: 'Phase 3 encryption — gated until after conformance recovery and load-contract stabilization' }, async () => {
+test('password-envelope fixture decrypts the stable payload bytes', async () => {
   const fixturePath = path.resolve(__dirname, '../../../fixtures/test_protected_entry.kdna');
-  const expectedCorePath = path.resolve(__dirname, '../../../fixtures/expected/KDNA_Core_protected.json');
-  const expectedPatternsPath = path.resolve(__dirname, '../../../fixtures/expected/KDNA_Patterns_protected.json');
+  const expectedPayloadPath = path.resolve(
+    __dirname,
+    '../../../fixtures/expected/payload_protected.json',
+  );
 
   assert.ok(fs.existsSync(fixturePath), 'shared fixture must exist');
 
   const reader = createKdnaAssetReader();
   const asset = await reader.open(fixturePath);
   const manifest = await reader.readManifest(asset);
-  assert.equal(manifest.access, 'protected');
+  assert.equal(manifest.format_version, '0.1.0');
+  assert.equal(manifest.access, 'licensed');
   assert.equal(manifest.encryption.profile, 'kdna.encryption.password');
+  assert.equal(manifest.encryption.profile_version, '0.1.0');
 
   const decryptEntry = createPasswordDecryptEntry({ password: 'KDNA-TEST-VECTOR-2026' });
-  const verifyWithHook = await reader.verify(asset, { requireDecryption: true, decryptEntry });
-  assert.equal(verifyWithHook.ok, true);
-
-  const loaded = await reader.loadProfile(asset, 'compact', { decryptEntry });
-  const expectedCore = JSON.parse(fs.readFileSync(expectedCorePath, 'utf8'));
-  const expectedPatterns = JSON.parse(fs.readFileSync(expectedPatternsPath, 'utf8'));
-
-  assert.deepEqual(loaded.domain.core, expectedCore);
-  assert.deepEqual(loaded.domain.patterns, expectedPatterns);
+  const plaintext = decryptEntry({
+    entryName: manifest.payload.path,
+    ciphertext: await reader.readEntry(asset, manifest.payload.path),
+    manifest,
+  });
+  const expectedPayload = JSON.parse(fs.readFileSync(expectedPayloadPath, 'utf8'));
+  assert.deepEqual(cbor.decode(plaintext), expectedPayload);
 });
 
 test('protected entry decrypt fails with tampered ciphertext', async () => {

@@ -82,7 +82,11 @@
     },
     "task": {
       "type": "object",
-      "required": ["summary", "task_family", "context"],
+      "required": [
+        "summary",
+        "task_family",
+        "context"
+      ],
       "additionalProperties": false,
       "properties": {
         "summary": {
@@ -91,7 +95,10 @@
           "maxLength": 500
         },
         "task_family": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "minLength": 1
         },
         "context": true
@@ -99,7 +106,12 @@
     },
     "expectedDigest": {
       "type": "object",
-      "required": ["value", "basis", "source", "comparison"],
+      "required": [
+        "value",
+        "basis",
+        "source",
+        "comparison"
+      ],
       "additionalProperties": false,
       "properties": {
         "value": {
@@ -119,7 +131,10 @@
           ]
         },
         "comparison": {
-          "enum": ["matched", "not_compared"]
+          "enum": [
+            "matched",
+            "not_compared"
+          ]
         }
       },
       "allOf": [
@@ -130,7 +145,9 @@
                 "const": "caller"
               }
             },
-            "required": ["source"]
+            "required": [
+              "source"
+            ]
           },
           "then": {
             "properties": {
@@ -175,7 +192,11 @@
           "$ref": "#/$defs/semver"
         },
         "access": {
-          "enum": ["public", "licensed", "remote"]
+          "enum": [
+            "public",
+            "licensed",
+            "remote"
+          ]
         },
         "expected_digests": {
           "$ref": "#/$defs/expectedDigests"
@@ -184,7 +205,11 @@
     },
     "expectedDigests": {
       "type": "object",
-      "required": ["asset", "content", "runtime_entry_set"],
+      "required": [
+        "asset",
+        "content",
+        "runtime_entry_set"
+      ],
       "additionalProperties": false,
       "properties": {
         "asset": {
@@ -200,7 +225,12 @@
                       "const": "kdna.digest-basis.container-bytes"
                     },
                     "source": {
-                      "enum": ["caller", "registry", "install_receipt", "lockfile"]
+                      "enum": [
+                        "caller",
+                        "registry",
+                        "install_receipt",
+                        "lockfile"
+                      ]
                     }
                   }
                 }
@@ -285,7 +315,12 @@
       "additionalProperties": false,
       "properties": {
         "profile": {
-          "enum": ["index", "compact", "scenario", "full"]
+          "enum": [
+            "index",
+            "compact",
+            "scenario",
+            "full"
+          ]
         },
         "accepted_capsule_versions": {
           "type": "array",
@@ -310,7 +345,9 @@
     },
     "hostRequest": {
       "type": "object",
-      "required": ["accepted_protocols"],
+      "required": [
+        "accepted_protocols"
+      ],
       "additionalProperties": false,
       "properties": {
         "accepted_protocols": {
@@ -327,7 +364,9 @@
     },
     "resultRequest": {
       "type": "object",
-      "required": ["shape"],
+      "required": [
+        "shape"
+      ],
       "additionalProperties": false,
       "properties": {
         "shape": {
@@ -384,7 +423,10 @@
     },
     "constraints": {
       "type": "object",
-      "required": ["enforce_before_host", "reject_on_exceed"],
+      "required": [
+        "enforce_before_host",
+        "reject_on_exceed"
+      ],
       "additionalProperties": false,
       "properties": {
         "enforce_before_host": {
@@ -397,20 +439,31 @@
     },
     "tracePolicy": {
       "type": "object",
-      "required": ["emit", "storage"],
+      "required": [
+        "emit",
+        "storage"
+      ],
       "additionalProperties": false,
       "properties": {
         "emit": {
           "const": true
         },
         "storage": {
-          "enum": ["ephemeral", "session", "persistent"]
+          "enum": [
+            "ephemeral",
+            "session",
+            "persistent"
+          ]
         }
       }
     },
     "integrity": {
       "type": "object",
-      "required": ["profile", "profile_version", "plan_digest"],
+      "required": [
+        "profile",
+        "profile_version",
+        "plan_digest"
+      ],
       "additionalProperties": false,
       "properties": {
         "profile": {

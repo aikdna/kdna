@@ -165,7 +165,7 @@ kdna/
 Toolchain packages follow [SemVer 2.0](https://semver.org/). Package versions
 are release identifiers, not competing KDNA product formats. There is one
 current KDNA Asset Container; technical compatibility identifiers such as
-`kdna_version` are defined by the schemas and specification. Breaking protocol
+`format_version` are defined by the schemas and specification. Breaking protocol
 changes require an RFC and an explicit migration path.
 
 ## Ecosystem

@@ -1,10 +1,9 @@
 {
   "expected_error": "KDNA_GRANT_ASSET_MISMATCH",
   "manifest": {
-    "kdna_version": "1.0",
+    "format_version": "0.1.0",
     "asset_id": "kdna:fixture:external-grant",
     "asset_uid": "urn:uuid:00190000-0000-4000-8000-000000000001",
-    "name": "@fixture/external-grant",
     "asset_type": "fixture",
     "title": "External Grant Fixture",
     "version": "1.0.1",
@@ -15,8 +14,9 @@
       "name": "KDNA Conformance"
     },
     "compatibility": {
-      "min_loader_version": "0.16.0",
-      "profile": "kdna.payload.judgment"
+      "min_loader_version": "0.18.1",
+      "profile": "kdna.payload.judgment",
+      "profile_version": "0.1.0"
     },
     "payload": {
       "path": "payload.kdnab",
@@ -31,15 +31,19 @@
     },
     "encryption": {
       "profile": "kdna.envelope.external-grant",
-      "encrypted_entries": ["payload.kdnab"],
+      "profile_version": "0.1.0",
+      "encrypted_entries": [
+        "payload.kdnab"
+      ],
       "key_grant_profile": "kdna.grant.external-key"
     }
   },
   "grant": {
     "profile": "kdna.grant.external-key",
+    "contract_version": "0.1.0",
     "grant_id": "grt_fixture_01",
     "issuer": "https://fixture.invalid",
-    "signing_key_id": "fixture-grant-signing-v1",
+    "signing_key_id": "fixture-grant-signing",
     "entitlement_id": "ent_fixture_01",
     "account_id": "acct_fixture_01",
     "device_id": "dev_fixture_01",
@@ -49,11 +53,11 @@
       "asset_id": "kdna:fixture:external-grant",
       "asset_uid": "urn:uuid:00190000-0000-4000-8000-000000000001",
       "version": "1.0.0",
-      "digest": "sha256:81d53d4d7fd33ee7b9a33771f179a0dedaf32da4cebf3a279b0109cfe0abe608",
+      "digest": "sha256:6ac42efa0cbce8137e545a1d1a28900a3293a8a200587398bdcd6fac3ea45db1",
       "entry_path": "payload.kdnab",
-      "ciphertext_digest": "sha256:1aceead89e2b3af5c46710050bc1dd4bd3ee359038ff631539c6e28752b45b66",
+      "ciphertext_digest": "sha256:54be3615c32682f0c86ec2aafb51d982cbf51db8e468a122bf04a9a0994ecfd4",
       "key_ref": "assetkey:fixture:external-grant:1.0.0",
-      "issuer_key_id": "fixture-asset-root-v1"
+      "issuer_key_id": "fixture-asset-root"
     },
     "issued_at": "2026-07-13T00:00:00.000Z",
     "refresh_after": "2026-07-14T00:00:00.000Z",
@@ -65,8 +69,8 @@
       "alg": "X25519-HKDF-SHA256+A256KW",
       "ephemeral_public_key": "x25519:mkUDqYqxD-jTVMnELL0MnXlE9S59FNjqWXdefcnjv0s",
       "salt": "JiYmJiYmJiYmJiYmJiYmJg",
-      "wrapped_cek": "ZhFBMG5YCAtMkTUA6bDzxiLtvviN-1iffaHlLL1MY5RGqvYI20F6Bw"
+      "wrapped_cek": "Rg-WDt_wdWY7Q9D_Cwdn0B4akh5b57CDAyihh0SbtYeo6P2vUYW7ig"
     },
-    "signature": "ed25519:tA1HLRl2NqPzwN0j5Mv2Op-sLiyVtAJMz4TJbqHwFOZ6mrfRzk8e7SwD71iRpioA-Cbzn84PPi-GLpV9n9drCA"
+    "signature": "ed25519:otgwX2JMtayGeIhF1wWvW419wFVZL5ze2bENTJ_47oa5tOJ2m0jJ36hIaVQ4qMgBGwBZdIFDObEOsqqBgrK2Dg"
   }
 }

@@ -1,37 +1,41 @@
 {
-  "format_version": null,
+  "format_version": "0.1.0",
   "asset": {
-    "asset_id": null,
-    "asset_uid": null,
-    "title": null,
-    "version": null,
-    "judgment_version": null
+    "asset_id": "kdna:conformance:authorization:expired-entitlement",
+    "asset_uid": "urn:uuid:65787069-7265-442d-856e-7469746c656d",
+    "title": "Authorization Fixture: expired-entitlement",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0"
   },
-  "access": null,
+  "access": "licensed",
   "access_alias": null,
-  "entitlement_profile": null,
-  "state": "invalid",
-  "required_action": "block",
+  "entitlement_profile": "local_receipt",
+  "state": "expired_grace",
+  "required_action": "renew_entitlement",
   "can_load_now": false,
   "projection_policy": "none",
-  "input_fingerprint": null,
+  "input_fingerprint": {
+    "has_password_input": false,
+    "entitlement_input": "expired",
+    "source_fingerprint": "sha256:018b117c4b0aa22e178a6f39343bddfdcca60d946af0f404fbcf45462a6e4452"
+  },
   "checks": {
-    "format_valid": false,
-    "schema_valid": false,
-    "payload_valid": false,
-    "checksums_valid": false,
-    "load_contract_valid": false,
-    "overall_valid": false
+    "format_valid": true,
+    "schema_valid": true,
+    "payload_valid": true,
+    "checksums_valid": true,
+    "load_contract_valid": true,
+    "overall_valid": true
   },
   "issues": [
     {
-      "code": "KDNA_FORMAT_INVALID",
+      "code": "KDNA_AUTH_EXPIRED",
       "severity": "blocking",
-      "message": "Cannot find module './v1/index.js'\nRequire stack:\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container-dispatcher.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container/index.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/public-api.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/index.js\n- /Users/kdna/aikdna/open/kdna/scripts/generate-self-check-conformance-fixtures.mjs"
+      "message": "The entitlement is expired."
     }
   ],
   "source": {
-    "kind": null,
+    "kind": "file",
     "path": "<fixture:expired-entitlement>"
   }
 }

@@ -4,7 +4,13 @@
   "title": "KDNA Digest Evidence",
   "description": "Observed A/C/E digest values, their fixed bases, and factual comparison evidence.",
   "type": "object",
-  "required": ["profile", "profile_version", "asset", "content", "runtime_entry_set"],
+  "required": [
+    "profile",
+    "profile_version",
+    "asset",
+    "content",
+    "runtime_entry_set"
+  ],
   "additionalProperties": false,
   "properties": {
     "profile": {
@@ -74,15 +80,33 @@
     },
     "comparison": {
       "type": "object",
-      "required": ["state", "against", "expected", "source"],
+      "required": [
+        "state",
+        "against",
+        "expected",
+        "source"
+      ],
       "additionalProperties": false,
       "properties": {
         "state": {
-          "enum": ["matched", "mismatched", "not_compared", "unavailable"]
+          "enum": [
+            "matched",
+            "mismatched",
+            "not_compared",
+            "unavailable"
+          ]
         },
         "against": {
-          "type": ["string", "null"],
-          "enum": ["external_expected", "manifest_declaration", "checksum_declaration", null]
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "external_expected",
+            "manifest_declaration",
+            "checksum_declaration",
+            null
+          ]
         },
         "expected": {
           "oneOf": [
@@ -110,10 +134,15 @@
           "if": {
             "properties": {
               "state": {
-                "enum": ["matched", "mismatched"]
+                "enum": [
+                  "matched",
+                  "mismatched"
+                ]
               }
             },
-            "required": ["state"]
+            "required": [
+              "state"
+            ]
           },
           "then": {
             "properties": {
@@ -133,10 +162,15 @@
           "if": {
             "properties": {
               "state": {
-                "enum": ["not_compared", "unavailable"]
+                "enum": [
+                  "not_compared",
+                  "unavailable"
+                ]
               }
             },
-            "required": ["state"]
+            "required": [
+              "state"
+            ]
           },
           "then": {
             "properties": {
@@ -156,7 +190,11 @@
     },
     "digest": {
       "type": "object",
-      "required": ["value", "basis", "comparison"],
+      "required": [
+        "value",
+        "basis",
+        "comparison"
+      ],
       "additionalProperties": false,
       "properties": {
         "value": {
@@ -186,10 +224,14 @@
                     "const": "unavailable"
                   }
                 },
-                "required": ["state"]
+                "required": [
+                  "state"
+                ]
               }
             },
-            "required": ["comparison"]
+            "required": [
+              "comparison"
+            ]
           },
           "then": {
             "properties": {

@@ -9,6 +9,34 @@ const cbor = require('cbor-x');
 const core = require('../src');
 
 const NOW = new Date('2026-07-13T00:00:00Z');
+const CONFORMANCE_ROOT = path.join(__dirname, '..', '..', '..', 'conformance', 'external-grant');
+
+function conformanceJson(...parts) {
+  return JSON.parse(fs.readFileSync(path.join(CONFORMANCE_ROOT, ...parts), 'utf8'));
+}
+
+function authorizeConformanceFixture(golden, overrides = {}) {
+  return core.authorizeExternalKeyGrant({
+    grant: golden.grant,
+    issuerPublicKeys: {
+      [golden.grant.signing_key_id]: golden.test_keys.issuer_signing_public_key,
+    },
+    manifest: golden.manifest,
+    expectedAssetDigest: golden.expected_asset_digest,
+    envelope: Buffer.from(golden.envelope_cbor, 'base64url'),
+    deviceAgreementKey: {
+      public_key: golden.test_keys.device_agreement_public_key,
+      private_key: golden.test_keys.device_agreement_private_key,
+    },
+    expectedAccountId: golden.grant.account_id,
+    expectedDeviceId: golden.grant.device_id,
+    expectedDeviceSigningPublicKey: golden.test_keys.device_signing_public_key,
+    now: NOW,
+    networkAvailable: false,
+    allowOffline: true,
+    ...overrides,
+  });
+}
 
 function fixture() {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-external-grant-'));
@@ -16,10 +44,9 @@ function fixture() {
   const assetFile = path.join(tmp, 'external-grant.kdna');
   fs.mkdirSync(source, { recursive: true });
   const manifest = {
-    kdna_version: '1.0',
+    format_version: '0.1.0',
     asset_id: 'kdna:fixture:external-grant',
     asset_uid: 'urn:uuid:18a3b84e-d8a9-4e22-b486-3d15132d389e',
-    name: '@fixture/external-grant',
     asset_type: 'domain',
     title: 'External Grant Fixture',
     version: '1.0.0',
@@ -27,18 +54,24 @@ function fixture() {
     created_at: '2026-07-13T00:00:00Z',
     updated_at: '2026-07-13T00:00:00Z',
     creator: { name: 'Fixture Publisher' },
-    compatibility: { min_loader_version: '0.16.0', profile: 'kdna.payload.judgment' },
+    compatibility: {
+      min_loader_version: '0.18.1',
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+    },
     payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: true },
     access: 'licensed',
     entitlement: { profile: 'account', offline: true, revocable: true },
     encryption: {
       profile: core.EXTERNAL_ENVELOPE_PROFILE,
+      profile_version: core.EXTERNAL_GRANT_CONTRACT_VERSION,
       encrypted_entries: ['payload.kdnab'],
       key_grant_profile: core.EXTERNAL_GRANT_PROFILE,
     },
   };
   const payload = {
     profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
     core: {
       highest_question: 'How can I create room to choose before reacting?',
       axioms: [{ id: 'A1', one_sentence: 'Pause before choosing.' }],
@@ -56,7 +89,7 @@ function fixture() {
     entryName: 'payload.kdnab',
     issuerRootKey: issuerRoot,
     keyRef: 'assetkey:fixture:external-grant:1.0.0',
-    issuerKeyId: 'fixture-asset-root-test-v1',
+    issuerKeyId: 'fixture-asset-root-test',
     iv: Buffer.alloc(12, 0x24),
   });
   const encodedEnvelope = core.encodeExternalEnvelope(envelope);
@@ -66,6 +99,7 @@ function fixture() {
   const checksums = core.buildChecksums(source);
   fs.writeFileSync(path.join(source, 'checksums.json'), JSON.stringify(checksums));
   core.pack(source, assetFile);
+  const assetDigest = core.computeAssetDigest(fs.readFileSync(assetFile));
 
   const device = core.generateDeviceKeyPairs();
   const signing = crypto.generateKeyPairSync('ed25519');
@@ -73,7 +107,7 @@ function fixture() {
   const grant = core.createExternalKeyGrant({
     issuerRootKey: issuerRoot,
     issuerSigningPrivateKey: signing.privateKey,
-    signingKeyId: 'fixture-grant-test-v1',
+    signingKeyId: 'fixture-grant-test',
     issuer: 'https://issuer.example',
     entitlementId: 'ent_test_01',
     accountId: 'acct_test_01',
@@ -82,7 +116,7 @@ function fixture() {
     deviceSigningPublicKey: device.signing.public_key,
     manifest,
     envelope,
-    assetDigest: checksums.asset_digest,
+    assetDigest,
     issuedAt: NOW,
     refreshAfter: new Date('2026-07-14T00:00:00Z'),
     offlineGraceUntil: new Date('2026-07-20T00:00:00Z'),
@@ -99,10 +133,11 @@ function fixture() {
     encodedEnvelope,
     issuerRoot,
     checksums,
+    assetDigest,
     device,
     grant,
     signing,
-    issuerPublicKeys: { 'fixture-grant-test-v1': `ed25519:${signingPublic.x}` },
+    issuerPublicKeys: { 'fixture-grant-test': `ed25519:${signingPublic.x}` },
   };
 }
 
@@ -111,7 +146,7 @@ function authorize(f, overrides = {}) {
     grant: f.grant,
     issuerPublicKeys: f.issuerPublicKeys,
     manifest: f.manifest,
-    checksums: f.checksums,
+    expectedAssetDigest: f.assetDigest,
     envelope: f.encodedEnvelope,
     deviceAgreementKey: f.device.agreement,
     expectedAccountId: 'acct_test_01',
@@ -141,7 +176,7 @@ test('external grant decrypts only after signed account/device authorization', (
     );
 
     const plan = core.planLoad(f.assetFile, { entitlement: session.entitlement });
-    assert.equal(plan.state, 'ready');
+    assert.equal(plan.state, 'ready', JSON.stringify(plan.issues));
     assert.equal(plan.can_load_now, true);
 
     const capsule = core.loadAuthorized(f.assetFile, {
@@ -150,9 +185,9 @@ test('external grant decrypts only after signed account/device authorization', (
       entitlement: session.entitlement,
       decryptEntry: session.decryptEntry,
     });
-    assert.equal(capsule.type, 'kdna.context.capsule');
-    assert.equal(capsule.version, '1.0');
-    assert.equal(capsule.domain, f.manifest.name);
+    assert.equal(capsule.type, 'kdna.runtime-capsule');
+    assert.equal(capsule.contract_version, '0.1.0');
+    assert.equal(capsule.asset.asset_id, f.manifest.asset_id);
     assert.equal(JSON.stringify(capsule).includes('wrapped_cek'), false);
     session.dispose();
   } finally {
@@ -171,7 +206,6 @@ test('a verified entitlement cannot make a different asset plan ready', () => {
     const otherManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     otherManifest.asset_id = 'kdna:fixture:different-external-grant';
     otherManifest.asset_uid = 'urn:uuid:18a3b84e-d8a9-4e22-b486-3d15132d3999';
-    otherManifest.name = '@fixture/different-external-grant';
     otherManifest.version = '2.0.0';
     fs.writeFileSync(manifestPath, JSON.stringify(otherManifest));
     fs.writeFileSync(
@@ -209,10 +243,8 @@ test('offline grace is explicit and hard expiry fails closed', () => {
   try {
     const offline = authorize(f, { now: new Date('2026-07-16T00:00:00Z') });
     assert.equal(offline.entitlement.status, 'offline_grace');
-    assert.equal(
-      core.planLoad(f.assetFile, { entitlement: offline.entitlement }).state,
-      'offline_grace',
-    );
+    const offlinePlan = core.planLoad(f.assetFile, { entitlement: offline.entitlement });
+    assert.equal(offlinePlan.state, 'offline_grace', JSON.stringify(offlinePlan.issues));
     offline.dispose();
     assert.throws(
       () => authorize(f, { now: new Date('2026-07-22T00:00:00Z') }),
@@ -234,7 +266,7 @@ test('invalid time windows and status rollback fail closed', () => {
       () => core.createExternalKeyGrant({
         issuerRootKey: f.issuerRoot,
         issuerSigningPrivateKey: f.signing.privateKey,
-        signingKeyId: 'fixture-grant-test-v1',
+        signingKeyId: 'fixture-grant-test',
         issuer: 'https://issuer.example',
         entitlementId: 'ent_test_01',
         accountId: 'acct_test_01',
@@ -243,7 +275,7 @@ test('invalid time windows and status rollback fail closed', () => {
         deviceSigningPublicKey: f.device.signing.public_key,
         manifest: f.manifest,
         envelope: f.envelope,
-        assetDigest: f.checksums.asset_digest,
+        assetDigest: f.assetDigest,
         issuedAt: NOW,
         refreshAfter: new Date('2026-07-16T00:00:00Z'),
         offlineGraceUntil: new Date('2026-07-15T00:00:00Z'),
@@ -262,7 +294,7 @@ test('tampered, revoked, digest, version, and device mismatches fail closed', ()
     const revokedGrant = core.createExternalKeyGrant({
       issuerRootKey: f.issuerRoot,
       issuerSigningPrivateKey: f.signing.privateKey,
-      signingKeyId: 'fixture-grant-test-v1',
+      signingKeyId: 'fixture-grant-test',
       issuer: 'https://issuer.example',
       entitlementId: 'ent_test_01',
       accountId: 'acct_test_01',
@@ -271,7 +303,7 @@ test('tampered, revoked, digest, version, and device mismatches fail closed', ()
       deviceSigningPublicKey: f.device.signing.public_key,
       manifest: f.manifest,
       envelope: f.envelope,
-      assetDigest: f.checksums.asset_digest,
+      assetDigest: f.assetDigest,
       status: 'revoked',
       issuedAt: NOW,
       refreshAfter: new Date('2026-07-14T00:00:00Z'),
@@ -290,9 +322,7 @@ test('tampered, revoked, digest, version, and device mismatches fail closed', ()
       },
       {
         expected: 'KDNA_GRANT_DIGEST_MISMATCH',
-        overrides: {
-          checksums: { ...f.checksums, asset_digest: `sha256:${'0'.repeat(64)}` },
-        },
+        overrides: { expectedAssetDigest: `sha256:${'0'.repeat(64)}` },
       },
       {
         expected: 'KDNA_GRANT_ASSET_MISMATCH',
@@ -312,5 +342,48 @@ test('tampered, revoked, digest, version, and device mismatches fail closed', ()
     }
   } finally {
     fs.rmSync(f.tmp, { recursive: true, force: true });
+  }
+});
+
+test('published external-grant golden verifies signature, unwraps CEK, and decrypts ciphertext', () => {
+  const golden = conformanceJson('golden.json');
+  assert.equal(core.validateExternalEnvelope(golden.envelope), golden.envelope);
+  assert.equal(core.validateExternalKeyGrant(golden.grant), golden.grant);
+  assert.equal(golden.envelope.contract_version, core.EXTERNAL_GRANT_CONTRACT_VERSION);
+  assert.equal(golden.grant.contract_version, core.EXTERNAL_GRANT_CONTRACT_VERSION);
+  assert.equal(golden.grant.asset.digest, golden.expected_asset_digest);
+
+  const session = authorizeConformanceFixture(golden);
+  try {
+    const plaintext = session.decryptEntry({
+      entryName: golden.manifest.payload.path,
+      ciphertext: Buffer.from(golden.envelope_cbor, 'base64url'),
+      manifest: golden.manifest,
+    });
+    assert.equal(plaintext.toString('base64url'), golden.plaintext_cbor);
+  } finally {
+    session.dispose();
+  }
+});
+
+test('published external-grant negative fixtures fail with their declared error codes', () => {
+  const golden = conformanceJson('golden.json');
+  const cases = [
+    ['tampered-signature.json', (fixture) => ({ grant: fixture.grant })],
+    ['revoked.json', (fixture) => ({ grant: fixture.grant })],
+    ['asset-version-mismatch.json', (fixture) => ({ manifest: fixture.manifest })],
+    [
+      'asset-digest-mismatch.json',
+      (fixture) => ({ expectedAssetDigest: fixture.expected_asset_digest }),
+    ],
+    ['device-mismatch.json', (fixture) => ({ expectedDeviceId: fixture.expected_device_id })],
+  ];
+  for (const [filename, overrides] of cases) {
+    const fixture = conformanceJson('negative', filename);
+    assert.throws(
+      () => authorizeConformanceFixture(golden, overrides(fixture)),
+      (error) => error.code === fixture.expected_error,
+      filename,
+    );
   }
 });

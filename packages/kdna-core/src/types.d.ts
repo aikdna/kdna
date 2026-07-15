@@ -703,7 +703,7 @@ export function authorizeExternalKeyGrant(options: {
   grant: KDNAExternalKeyGrant;
   issuerPublicKeys: Map<string, unknown> | Record<string, unknown>;
   manifest: KDNAManifest;
-  checksums: KDNAChecksums;
+  expectedAssetDigest: string;
   envelope: KDNAExternalGrantEnvelope | Uint8Array;
   deviceAgreementKey: KDNADeviceKeyPairs['agreement'] | unknown;
   expectedAccountId: string;
@@ -722,7 +722,7 @@ export function isVerifiedExternalEntitlement(
 export type KDNAAssetInput = string | Uint8Array | KdnaAsset;
 
 export interface KDNAInspectResult {
-  kdna_version: string | null;
+  format_version: '0.1.0' | null;
   asset_id: string | null;
   asset_uid: string | null;
   asset_type: string | null;
@@ -1377,13 +1377,12 @@ export interface KDNAChecksumEntry {
 
 export interface KDNAChecksums {
   digest_profile?: 'kdna.digest-basis.runtime-entry-set';
+  digest_profile_version?: '0.1.0';
   covered_entries?: ['kdna.json', 'payload.kdnab'];
   algorithm: 'sha256';
   manifest_digest?: string;
   payload_digest?: string;
   entry_set_digest?: string;
-  /** @deprecated Use entry_set_digest. This is not the final .kdna file digest. */
-  asset_digest?: string;
   entries?: Record<string, KDNAChecksumEntry>;
 }
 
@@ -1403,7 +1402,7 @@ export interface KDNALoadPlanIssue {
   message: string;
 }
 export interface KDNALoadPlan {
-  kdna_version: string | null;
+  format_version: '0.1.0' | null;
   asset: {
     asset_id: string | null;
     asset_uid: string | null;
@@ -1439,7 +1438,11 @@ export interface KDNALoadPlan {
     | string;
   can_load_now: boolean;
   projection_policy: 'minimal' | 'remote' | 'none' | string;
-  input_fingerprint: string | null;
+  input_fingerprint: {
+    has_password_input: boolean;
+    entitlement_input: 'active' | 'expired' | 'revoked' | 'offline_grace' | null;
+    source_fingerprint: string;
+  } | null;
   checks: Record<string, boolean>;
   issues: KDNALoadPlanIssue[];
   source: {

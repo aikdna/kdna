@@ -1,0 +1,29 @@
+{
+  "profile": "kdna.encryption.password",
+  "profile_version": "0.1.0",
+  "alg": "AES-256-GCM",
+  "kdf": "Argon2id",
+  "key_wrapping": "AES-256-KW",
+  "password_kdf": {
+    "name": "Argon2id",
+    "salt": "AAkACQAJAAkACQAJAAkACQ==",
+    "memory_kib": 65536,
+    "iterations": 3,
+    "parallelism": 4
+  },
+  "key_slots": [
+    {
+      "slot": "password",
+      "wrap": "AES-256-KW",
+      "wrapped_key": "SnbSF+2dwOCcbYk9LABEhgvbv3SceEx99NuQmAPYKpkaMIxrLzYtfg=="
+    },
+    {
+      "slot": "recovery",
+      "wrap": "AES-256-KW",
+      "wrapped_key": "zyhJrAM6opGGbHLPlHgXrwa6TIgm33v1lx6m3LSqCdJaSmWGYHe5jw=="
+    }
+  ],
+  "iv": "CQgHBgUEAwIBAAkI",
+  "tag": "GMBXD/812+d+/5wWni94Ng==",
+  "ciphertext": "aSckBc8BLjKvw63IQBkKD6QC7lnmupNq2CZzwZla5smooBV3LWkuv8VL/P2mpFtZQhmjDRdH/UEImIq0El/H+aIrDpoXrv+CW9/xsBRQe+7kXYPDkByLvPqxe8LX5ZZud/T3xBhSU+AhlDJLvI9oGIW3ORyGDvKHigxYKGzzIgCMISYR4G3DVV6QLrI2vArCvS41MDHbeRyUyRpX3v5x+VrRjnXUr+5e/uBAMXwszmXa0/58tETmqomom82WVHL9rHT/zkZb5JuP3YHsfLjhykdT/71UyToc/kox3IVfh5wZio9ZJ0uYGby+5sMtNHkn9tLKx2RD89gP7WnYgm22cgGbC1rcmldPkNElYJuU8T5TPdempLtuXswONGQKFSdFq/L/KFGk80Z6hpLhS5q3rcR/Vy2cLv38ZSB2qLajvnB3uFg3mQ4sBdqYxWdDxHtC8EW94j0D7J+Qqh9lKvOx0H/n9C4npRv3FwWPlEV9V0RR+AyTAgGqHErEsXb0vd7KlF4AZdICbdGMz8syTbU4ggL5dw9XqCCR342+XRrWD/E8b+2VIFhsYVS/g5soxFCp1Rp8Bq2e1VHZFBiJk66p8FD1Lm23MUXT9G8xkqv98r+f0FPkw3Sn9SNYyIyNMlE6Eoaq3o5Z+HT+uEF8qqdlKlwLxRvo/eZBAsboDTZqj8V0NAc6Xt4l7UfyT4EWdB0KLA+NwBURKnuQ5VLJz/QAOvBHmvjmQU0mrOEiN09FWe/4sDlj1C0t3J1lHzXQvsqa+ccnb/+i3oecT+V7N8g6wfvU/q2e9DnglFfQyu0PjppxkLiXr0qIyeYKHaD8CIy6lEdj5nkErlzG5KZ5z0PmIRc20qBnaJLzX3eUkaXMcSJheBFpV443EHKbksrLp0A8fz5jtCFWV0aWgGyZLWpqyGSut5wBdI7YN4Aj+CA3YggkPDpSJU6SMn/Elpa/NiPo3zwxIyKaoZC8BcVIkHf50HhqLtMvQxDEbroil3omEx6Uq4aNV5N7Ip3rP6xx1z/YsCkEFivWW73H7h8harJP27JF0l+paZbcfAb8iAaNvfq53NfCZS+AqaFwHlBAexATM5TAtu9SopPaB9kM5dbv2xU="
+}

@@ -1,37 +1,41 @@
 {
-  "format_version": null,
+  "format_version": "0.1.0",
   "asset": {
-    "asset_id": null,
-    "asset_uid": null,
-    "title": null,
-    "version": null,
-    "judgment_version": null
+    "asset_id": "kdna:conformance:authorization:remote-recognized-not-loaded",
+    "asset_uid": "urn:uuid:72656d6f-7465-4d72-8563-6f676e697a65",
+    "title": "Authorization Fixture: remote-recognized-not-loaded",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0"
   },
-  "access": null,
+  "access": "remote",
   "access_alias": null,
   "entitlement_profile": null,
-  "state": "invalid",
-  "required_action": "block",
+  "state": "needs_runtime",
+  "required_action": "connect_runtime",
   "can_load_now": false,
-  "projection_policy": "none",
-  "input_fingerprint": null,
+  "projection_policy": "remote",
+  "input_fingerprint": {
+    "has_password_input": false,
+    "entitlement_input": null,
+    "source_fingerprint": "sha256:01e8b9f909cac1982898ce865a82bdbe8ff16c78053b3a8d1e0cac9073fd10e5"
+  },
   "checks": {
-    "format_valid": false,
-    "schema_valid": false,
-    "payload_valid": false,
-    "checksums_valid": false,
-    "load_contract_valid": false,
-    "overall_valid": false
+    "format_valid": true,
+    "schema_valid": true,
+    "payload_valid": true,
+    "checksums_valid": true,
+    "load_contract_valid": true,
+    "overall_valid": true
   },
   "issues": [
     {
-      "code": "KDNA_FORMAT_INVALID",
+      "code": "KDNA_AUTH_REMOTE_RUNTIME_REQUIRED",
       "severity": "blocking",
-      "message": "Cannot find module './v1/index.js'\nRequire stack:\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container-dispatcher.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container/index.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/public-api.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/index.js\n- /Users/kdna/aikdna/open/kdna/scripts/generate-self-check-conformance-fixtures.mjs"
+      "message": "Remote assets require a runtime projection endpoint."
     }
   ],
   "source": {
-    "kind": null,
+    "kind": "file",
     "path": "<fixture:remote-recognized-not-loaded>"
   }
 }

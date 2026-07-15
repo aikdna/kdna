@@ -159,16 +159,16 @@ MUST NOT redefine:
 
 ### 2.10 Protocol Versioning
 
-The KDNA Core protocol version refers to the logical specification, not the wire
-format. The current public protocol and toolchain are **Beta**. The current wire
-container format is the **KDNA Asset Container** (`kdna_version: "1.0"`,
-`application/vnd.kdna.asset`), which implements the current Core logical model.
+The public protocol and toolchain are **Beta**. Package releases follow SemVer,
+while each wire contract carries its own compatibility coordinate. The current
+container uses `format_version: "0.1.0"` and
+`application/vnd.kdna.asset`.
 
 | Layer | Current Version | Meaning |
 |---|---|---|
-| Protocol (logical) | Beta | What KDNA assets are, how they load |
-| Container (wire) | `kdna_version: "1.0"` | KDNA Asset Container encoding |
-| Capsule (agent interface) | `kdna.context.capsule` v1.0 | What Agents receive |
+| Protocol maturity | Beta | What KDNA assets are and how they load |
+| Container | `format_version: "0.1.0"` | KDNA Asset Container encoding |
+| Capsule | `kdna.runtime-capsule` + `contract_version: "0.1.0"` | What Agents receive |
 
 Legacy plaintext ZIP containers (without `payload.kdnab`) are superseded and
 MUST be rejected by conforming tools.

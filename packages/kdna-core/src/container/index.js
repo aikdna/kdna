@@ -1454,18 +1454,10 @@ function planLoad(inputPath, opts = {}) {
 
   function externalEntitlementMatchesCurrentAsset(entitlement) {
     if (!isVerifiedExternalEntitlement(entitlement) || !entitlement.asset) return false;
-    let checksums;
-    try {
-      checksums = layout.map['checksums.json']
-        ? parseJsonEntry('checksums.json', layout.map['checksums.json'])
-        : null;
-    } catch {
-      return false;
-    }
-    return entitlement.asset.asset_id === (manifest.asset_id || manifest.name)
+    return entitlement.asset.asset_id === manifest.asset_id
       && entitlement.asset.asset_uid === manifest.asset_uid
       && entitlement.asset.version === manifest.version
-      && entitlement.asset.digest === checksums?.entry_set_digest
+      && entitlement.asset.digest === layout.containerDigest
       && entitlement.asset.entry_path === manifest.payload?.path;
   }
 

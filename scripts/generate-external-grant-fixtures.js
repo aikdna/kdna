@@ -4,11 +4,12 @@
 
 const crypto = require('node:crypto');
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 const cbor = require('cbor-x');
 const core = require('../packages/kdna-core/src');
 
-const outDir = path.join(__dirname, '..', 'conformance', 'kdna-external-grant-v1');
+const outDir = path.join(__dirname, '..', 'conformance', 'external-grant');
 const negativeDir = path.join(outDir, 'negative');
 
 function privateKeyFromSeed(type, seedByte) {
@@ -37,10 +38,9 @@ function writeNegative(name, value) {
 fs.mkdirSync(negativeDir, { recursive: true });
 
 const manifest = {
-  kdna_version: '1.0',
+  format_version: '0.1.0',
   asset_id: 'kdna:fixture:external-grant',
   asset_uid: 'urn:uuid:00190000-0000-4000-8000-000000000001',
-  name: '@fixture/external-grant',
   asset_type: 'fixture',
   title: 'External Grant Fixture',
   version: '1.0.0',
@@ -48,12 +48,17 @@ const manifest = {
   created_at: '2026-07-13T00:00:00Z',
   updated_at: '2026-07-13T00:00:00Z',
   creator: { name: 'KDNA Conformance' },
-  compatibility: { min_loader_version: '0.16.0', profile: 'kdna.payload.judgment' },
+  compatibility: {
+    min_loader_version: '0.18.1',
+    profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
+  },
   payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: true },
   access: 'licensed',
   entitlement: { profile: 'account', offline: true, revocable: true },
   encryption: {
     profile: core.EXTERNAL_ENVELOPE_PROFILE,
+    profile_version: core.EXTERNAL_GRANT_CONTRACT_VERSION,
     encrypted_entries: ['payload.kdnab'],
     key_grant_profile: core.EXTERNAL_GRANT_PROFILE,
   },
@@ -61,6 +66,7 @@ const manifest = {
 const plaintext = Buffer.from(
   cbor.encode({
     profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
     core: { highest_question: 'Can this device decrypt?', axioms: [] },
   }),
 );
@@ -77,34 +83,27 @@ const envelope = core.encryptExternalGrantEntry(plaintext, {
   manifest,
   issuerRootKey: root,
   keyRef: 'assetkey:fixture:external-grant:1.0.0',
-  issuerKeyId: 'fixture-asset-root-v1',
+  issuerKeyId: 'fixture-asset-root',
   iv: Buffer.alloc(12, 0x25),
 });
 const encodedEnvelope = core.encodeExternalEnvelope(envelope);
 const manifestBytes = Buffer.from(JSON.stringify(manifest));
-const entries = {
-  'kdna.json': crypto.createHash('sha256').update(manifestBytes).digest('hex'),
-  'payload.kdnab': crypto.createHash('sha256').update(encodedEnvelope).digest('hex'),
-};
-const combined = Object.keys(entries)
-  .sort()
-  .map((name) => `${name}:${entries[name]}`)
-  .join('\n');
-const checksums = {
-  algorithm: 'sha256',
-  manifest_digest: `sha256:${entries['kdna.json']}`,
-  payload_digest: `sha256:${entries['payload.kdnab']}`,
-  asset_digest: `sha256:${crypto.createHash('sha256').update(combined).digest('hex')}`,
-  entries: Object.fromEntries(
-    Object.entries(entries).map(([name, value]) => [name, { algorithm: 'sha256', value }]),
-  ),
-};
+const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-external-grant-fixture-'));
+const assetPath = path.join(fixtureDir, 'external-grant.kdna');
+fs.writeFileSync(path.join(fixtureDir, 'mimetype'), core.MIMETYPE);
+fs.writeFileSync(path.join(fixtureDir, 'kdna.json'), manifestBytes);
+fs.writeFileSync(path.join(fixtureDir, 'payload.kdnab'), encodedEnvelope);
+const checksums = core.buildChecksums(fixtureDir);
+fs.writeFileSync(path.join(fixtureDir, 'checksums.json'), JSON.stringify(checksums));
+core.pack(fixtureDir, assetPath);
+const expectedAssetDigest = core.computeAssetDigest(fs.readFileSync(assetPath));
+fs.rmSync(fixtureDir, { recursive: true, force: true });
 
 function makeGrant(overrides = {}) {
   return core.createExternalKeyGrant({
     issuerRootKey: root,
     issuerSigningPrivateKey: issuerSigning.privateKey,
-    signingKeyId: 'fixture-grant-signing-v1',
+    signingKeyId: 'fixture-grant-signing',
     issuer: 'https://fixture.invalid',
     entitlementId: 'ent_fixture_01',
     accountId: 'acct_fixture_01',
@@ -113,7 +112,7 @@ function makeGrant(overrides = {}) {
     deviceSigningPublicKey: `ed25519:${deviceSigningPublic}`,
     manifest,
     envelope,
-    assetDigest: checksums.asset_digest,
+    assetDigest: expectedAssetDigest,
     issuedAt: new Date('2026-07-13T00:00:00Z'),
     refreshAfter: new Date('2026-07-14T00:00:00Z'),
     offlineGraceUntil: new Date('2026-07-20T00:00:00Z'),
@@ -133,6 +132,7 @@ write('golden.json', {
   envelope,
   envelope_cbor: encodedEnvelope.toString('base64url'),
   checksums,
+  expected_asset_digest: expectedAssetDigest,
   grant,
   test_keys: {
     issuer_root: root.toString('base64url'),
@@ -158,7 +158,7 @@ writeNegative('asset-version-mismatch.json', {
 });
 writeNegative('asset-digest-mismatch.json', {
   expected_error: 'KDNA_GRANT_DIGEST_MISMATCH',
-  checksums: { ...checksums, asset_digest: `sha256:${'0'.repeat(64)}` },
+  expected_asset_digest: `sha256:${'0'.repeat(64)}`,
   grant,
 });
 writeNegative('device-mismatch.json', {

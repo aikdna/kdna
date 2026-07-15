@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// generate-vectors.js — Compute kdna.envelope.aead test vectors (Story 17)
+// Compute the stable kdna.envelope.aead conformance vectors.
 //
 // Run from OPEN/kdna/:
 //   node scripts/generate-envelope-aead-vectors.js
@@ -14,10 +14,8 @@
 // the CEK-wrapping + AEAD pipelines (deterministic given the same
 // IV; we fix IV per vector).
 //
-// Story 17 deliverable: this script + the 3 vector JSON files it
-// produces. The script is NOT published to consumers — only the
-// vector files are. Re-running is a maintainer action to regenerate
-// vectors after a future change to the KDF or envelope format.
+// This script is NOT published to consumers — only the vector files are.
+// Re-running is a maintainer action after a compatible contract change.
 
 'use strict';
 
@@ -26,6 +24,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const ENVELOPE_PROFILE = 'kdna.envelope.aead';
+const PROFILE_VERSION = '0.1.0';
 const ALG = 'AES-256-GCM';
 const KEY_WRAPPING = 'AES-256-KW';
 
@@ -39,8 +38,10 @@ function buildAad(parts) {
   return Buffer.from(
     [
       ENVELOPE_PROFILE,
+      PROFILE_VERSION,
       parts.asset_uid,
-      parts.asset_digest,
+      parts.asset_id,
+      parts.asset_version,
       parts.entry_path,
       parts.access_mode,
       parts.entitlement_profile,
@@ -122,6 +123,7 @@ function buildEnvelope({ kdf_profile, password, salt, iv, plaintext, aad, cek, k
   const tag = cipher.getAuthTag();
   return {
     profile: ENVELOPE_PROFILE,
+    profile_version: PROFILE_VERSION,
     alg: ALG,
     key_wrapping: KEY_WRAPPING,
     kdf_profile,
@@ -156,10 +158,11 @@ function vector1() {
     'a1a2a3a4a5a6a7a8a9aaabacadaeafb0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0',
     'hex',
   );
-  const plaintext = Buffer.from('Hello, KDNA envelope v1 (scrypt-sha256 basic).', 'utf8');
+  const plaintext = Buffer.from('Hello, KDNA envelope (scrypt-sha256 basic).', 'utf8');
   const aad = buildAad({
     asset_uid: 'urn:uuid:11111111-1111-4111-8111-111111111111',
-    asset_digest: 'sha256:2222222222222222222222222222222222222222222222222222222222222222',
+    asset_id: 'kdna:fixture:envelope-basic',
+    asset_version: '1.0.0',
     entry_path: 'KDNA_Core.json',
     access_mode: 'licensed',
     entitlement_profile: 'password',
@@ -177,7 +180,7 @@ function vector1() {
   });
   const scryptParams = { ...SCRYPT_PARAMS, salt: salt.toString('base64') };
   return {
-    id: 'kdna.envelope.aead-vector-01-scrypt-basic',
+    id: 'envelope-aead-vector-01-scrypt-basic',
     description: 'scrypt-sha256-v1: basic round-trip with one password slot.',
     inputs: {
       password,
@@ -211,17 +214,20 @@ function vector2() {
   );
   const plaintext = Buffer.from('Same plaintext, two entries.', 'utf8');
   const assetUid = 'urn:uuid:33333333-3333-4333-8333-333333333333';
-  const assetDigest = 'sha256:4444444444444444444444444444444444444444444444444444444444444444';
+  const assetId = 'kdna:fixture:envelope-multi-entry';
+  const assetVersion = '1.0.0';
   const aadEntry1 = buildAad({
     asset_uid: assetUid,
-    asset_digest: assetDigest,
+    asset_id: assetId,
+    asset_version: assetVersion,
     entry_path: 'KDNA_Core.json',
     access_mode: 'licensed',
     entitlement_profile: 'password',
   });
   const aadEntry2 = buildAad({
     asset_uid: assetUid,
-    asset_digest: assetDigest,
+    asset_id: assetId,
+    asset_version: assetVersion,
     entry_path: 'KDNA_Patterns.json',
     access_mode: 'licensed',
     entitlement_profile: 'password',
@@ -249,7 +255,7 @@ function vector2() {
   });
   const scryptParams = { ...SCRYPT_PARAMS, salt: salt.toString('base64') };
   return {
-    id: 'kdna.envelope.aead-vector-02-scrypt-multi-entry-aad',
+    id: 'envelope-aead-vector-02-scrypt-multi-entry-aad',
     description:
       'scrypt-sha256-v1: same CEK + IV + plaintext under two different AADs (entry_path differs). The two ciphertexts MUST differ because AAD is part of the GCM input. A reader MUST reject if AAD does not match.',
     inputs: {
@@ -290,10 +296,11 @@ function vector3() {
     'c1c2c3c4c5c6c7c8c9cacbcccdcecfd0e1e2e3e4e5e6e7e8e9eaebecedeeeff0',
     'hex',
   );
-  const plaintext = Buffer.from('Hello, KDNA envelope v1 (argon2id-v1 basic).', 'utf8');
+  const plaintext = Buffer.from('Hello, KDNA envelope (argon2id-v1 basic).', 'utf8');
   const aad = buildAad({
     asset_uid: 'urn:uuid:55555555-5555-4555-8555-555555555555',
-    asset_digest: 'sha256:6666666666666666666666666666666666666666666666666666666666666666',
+    asset_id: 'kdna:fixture:envelope-argon2id',
+    asset_version: '1.0.0',
     entry_path: 'KDNA_Core.json',
     access_mode: 'licensed',
     entitlement_profile: 'password',
@@ -311,9 +318,9 @@ function vector3() {
   });
   const argon2Params = { ...ARGON2_PARAMS, salt: salt.toString('base64') };
   return {
-    id: 'kdna.envelope.aead-vector-03-argon2id-basic',
+    id: 'envelope-aead-vector-03-argon2id-basic',
     description:
-      'argon2id-v1: basic round-trip with the optional v2 KDF. Node.js implementations only; Swift port MUST either fallback to scrypt-sha256-v1 or refuse to load with KDNA_KDF_UNSUPPORTED.',
+      'argon2id-v1: basic round-trip with the optional Argon2id KDF. Implementations without Argon2id MUST either fall back to another supported slot or refuse to load with KDNA_KDF_UNSUPPORTED.',
     inputs: {
       password,
       salt: salt.toString('base64'),
@@ -333,7 +340,7 @@ function vector3() {
 
 // ── Main ────────────────────────────────────────────────────────────
 
-const outDir = path.resolve(__dirname, '..', 'conformance', 'kdna.envelope.aead');
+const outDir = path.resolve(__dirname, '..', 'conformance', 'envelope-aead');
 fs.mkdirSync(outDir, { recursive: true });
 
 const vectors = [vector1(), vector2(), vector3()];

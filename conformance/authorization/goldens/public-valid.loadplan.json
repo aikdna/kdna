@@ -1,37 +1,35 @@
 {
-  "format_version": null,
+  "format_version": "0.1.0",
   "asset": {
-    "asset_id": null,
-    "asset_uid": null,
-    "title": null,
-    "version": null,
-    "judgment_version": null
+    "asset_id": "kdna:conformance:authorization:public-valid",
+    "asset_uid": "urn:uuid:7075626c-6963-4d76-816c-696400000000",
+    "title": "Authorization Fixture: public-valid",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0"
   },
-  "access": null,
+  "access": "public",
   "access_alias": null,
   "entitlement_profile": null,
-  "state": "invalid",
-  "required_action": "block",
-  "can_load_now": false,
-  "projection_policy": "none",
-  "input_fingerprint": null,
-  "checks": {
-    "format_valid": false,
-    "schema_valid": false,
-    "payload_valid": false,
-    "checksums_valid": false,
-    "load_contract_valid": false,
-    "overall_valid": false
+  "state": "ready",
+  "required_action": "load",
+  "can_load_now": true,
+  "projection_policy": "minimal",
+  "input_fingerprint": {
+    "has_password_input": false,
+    "entitlement_input": null,
+    "source_fingerprint": "sha256:fa8ac9ee3c03b8e3512df90301aefa040087068d5af4b06bd1fff291f7b348a0"
   },
-  "issues": [
-    {
-      "code": "KDNA_FORMAT_INVALID",
-      "severity": "blocking",
-      "message": "Cannot find module './v1/index.js'\nRequire stack:\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container-dispatcher.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container/index.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/public-api.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/index.js\n- /Users/kdna/aikdna/open/kdna/scripts/generate-self-check-conformance-fixtures.mjs"
-    }
-  ],
+  "checks": {
+    "format_valid": true,
+    "schema_valid": true,
+    "payload_valid": true,
+    "checksums_valid": true,
+    "load_contract_valid": true,
+    "overall_valid": true
+  },
+  "issues": [],
   "source": {
-    "kind": null,
+    "kind": "file",
     "path": "<fixture:public-valid>"
   }
 }

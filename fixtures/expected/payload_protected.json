@@ -1,0 +1,34 @@
+{
+  "profile": "kdna.payload.judgment",
+  "profile_version": "0.1.0",
+  "core": {
+    "highest_question": "Can the same protected judgment be recovered across implementations?",
+    "axioms": [
+      {
+        "id": "protected_a1",
+        "one_sentence": "Cross-implementation decryption must recover identical payload bytes.",
+        "full_statement": "A JavaScript-encrypted payload decrypts identically in every conforming implementation.",
+        "why": "Interoperability requires one authenticated wire contract."
+      }
+    ]
+  },
+  "patterns": {
+    "misunderstandings": [
+      {
+        "id": "protected_m1",
+        "wrong": "Each implementation can choose different associated data.",
+        "correct": "Every implementation authenticates the same stable manifest coordinates.",
+        "key_distinction": "interoperability",
+        "why": "Different associated data must fail authentication."
+      }
+    ]
+  },
+  "scenarios": [],
+  "cases": [],
+  "reasoning": {
+    "self_check": [
+      "Did decryption recover the exact canonical payload bytes?"
+    ],
+    "failure_modes": []
+  }
+}

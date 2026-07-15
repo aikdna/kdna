@@ -1,64 +1,54 @@
-# Asset Identity Model
+# Asset Identity and Digest Responsibilities
 
-KDNA asset identity separates semantic domain identity, Studio project identity,
-build identity, and byte-level integrity.
+KDNA separates human-readable asset identity, globally unique identity,
+release versions, and byte-level integrity. These values must not collapse into
+one generic `name`, `version`, or `digest` field.
 
-Studio-compatible exporters generate these fields. Users and agents should not
-hand-fill them for release-reviewed assets.
+## Manifest identity
 
-## Required Fields
+Every current manifest contains:
 
 ```json
 {
-  "asset_uid": "uuidv7",
-  "project_uid": "uuidv7",
-  "build_id": "build_xxx",
-  "domain_id": "macapp_development_debugging",
-  "registry_name": "@scope/macapp_development_debugging",
-  "version": "0.3.0",
-  "judgment_version": "0.3.0",
-  "content_digest": "sha256:<64-hex>",
-  "asset_digest": "sha256:<64-hex>"
+  "format_version": "0.1.0",
+  "asset_id": "kdna:example:asset",
+  "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+  "version": "1.0.0",
+  "judgment_version": "1.0.0"
 }
 ```
 
-## Stability Rules
+| Field | Stability | Meaning |
+| --- | --- | --- |
+| `asset_id` | stable while the asset's public identity is stable | human-readable namespaced identity |
+| `asset_uid` | stable for one asset lineage | globally unique identity |
+| `version` | changes for a packaged release | SemVer release coordinate |
+| `judgment_version` | changes when encoded judgment semantics change | SemVer judgment coordinate |
 
-| Field              | Stability                                       | Owner                   | Meaning                                              |
-| ------------------ | ----------------------------------------------- | ----------------------- | ---------------------------------------------------- |
-| `domain_id`        | Stable while the domain meaning is stable       | Studio project          | Human-readable semantic domain slug.                 |
-| `registry_name`    | Stable across published versions                | Registry / publisher    | Scoped distribution name, such as `@scope/name`.     |
-| `project_uid`      | Stable for one Studio project                   | Studio                  | Links exported assets back to the authoring project. |
-| `asset_uid`        | New for each exported `.kdna` asset instance    | Studio exporter         | Identifies a concrete asset artifact.                |
-| `build_id`         | New for each compile/export run                 | Studio compiler         | Identifies the build event and report set.           |
-| `version`          | Changes for packaging or metadata releases      | Publisher               | Semver package version.                              |
-| `judgment_version` | Changes when judgment content changes           | Human reviewer / Studio | Version of the locked judgment itself.               |
-| `content_digest`   | Changes when canonical internal content changes | Studio exporter         | Canonical internal content-tree hash.                |
-| `asset_digest`     | Changes when final `.kdna` bytes change         | Exporter / registry     | Whole-file byte hash used for install trust.         |
+Creator provenance is optional and is never a loading prerequisite or a trust
+claim.
 
-## Placement
+## Digest responsibilities
 
-`domain_id`, `registry_name`, `project_uid`, `asset_uid`, `build_id`,
-`judgment_version`, and `content_digest` SHOULD appear in `kdna.json`.
+| Name | Basis | Location and owner |
+| --- | --- | --- |
+| A | final packaged `.kdna` bytes | external expected value, registry, receipt, or lockfile |
+| C | canonical content tree | manifest declaration or external evidence |
+| E | raw `kdna.json` + `payload.kdnab` entry set | `checksums.json.entry_set_digest` |
+| P | canonical Runtime Capsule delivered to a Host | Host request, receipt, and Judgment Trace |
 
-`asset_digest` MUST be recorded outside the immutable container, such as in:
+A cannot be stored inside the container it hashes without circularity. A grant,
+registry, or install receipt that binds the final asset therefore carries A as
+external evidence. `checksums.json` carries E and per-entry digests; it must not
+claim to be the final container digest.
 
-- registry entry;
-- local install receipt;
-- detached build receipt;
-- release lockfile.
+The Runtime Capsule exposes A, C, and E under distinct members with explicit
+basis and comparison evidence. P is detached from the Capsule it hashes.
 
-Runtime Capsule 1 has a frozen historical exception: its top-level field named
-`asset_digest` contains the runtime entry-set digest E, not this whole-file A.
-Runtime Capsule 2 removes that ambiguity by using `digests.asset`,
-`digests.content`, and `digests.runtime_entry_set` with explicit basis strings.
+## Why the identities stay separate
 
-## Why These IDs Are Separate
-
-One domain can have multiple Studio projects during review. One project can
-produce many builds. One build can produce an encrypted and an open asset. Two
-assets may share judgment content but have different signatures, encryption
-metadata, or packaging bytes.
-
-Collapsing these identities into only `name` and `version` makes provenance,
-revocation, audit, and reproducibility ambiguous.
+Two packaged assets may contain the same judgment but differ in encryption,
+signatures, or attachments. A metadata-only release may change `version`
+without changing `judgment_version`. Repacking identical logical content may
+preserve C while changing A. Keeping these coordinates separate makes
+authorization, revocation, audit, and reproducibility unambiguous.

@@ -1,5 +1,5 @@
 /**
- * kdna.envelope.aead.mjs — Conformance runner (Story 17 / RFC-0018)
+ * Stable kdna.envelope.aead conformance runner.
  *
  * Re-derives the three frozen test vectors under
  * `conformance/envelope-aead/` from their declared inputs
@@ -63,7 +63,7 @@ try {
 }
 
 const root = path.dirname(fileURLToPath(import.meta.url));
-const vectorsDir = path.join(root, 'kdna.envelope.aead');
+const vectorsDir = path.join(root, 'envelope-aead');
 const schemaPath = path.join(root, '..', 'specs', 'envelope-aead.schema.json');
 
 // ── KDF implementations (mirror kdna-core crypto-profile.js) ───────
@@ -164,7 +164,7 @@ function unwrapAndDecrypt(envelope, kek, aad) {
 // ── Per-vector check functions ──────────────────────────────────────
 
 function checkScryptBasic() {
-  const v = loadVector('kdna.envelope.aead-vector-01-scrypt-basic');
+  const v = loadVector('envelope-aead-vector-01-scrypt-basic');
   const kek = deriveKek(v);
   const expectedKek = Buffer.from(v.expected.kek, 'base64');
   assert.equal(
@@ -192,6 +192,7 @@ function checkScryptBasic() {
   // Envelope shape
   const env = v.expected.envelope;
   assert.equal(env.profile, 'kdna.envelope.aead');
+  assert.equal(env.profile_version, '0.1.0');
   assert.equal(env.alg, 'AES-256-GCM');
   assert.equal(env.key_wrapping, 'AES-256-KW');
   assert.equal(env.kdf_profile, 'scrypt-sha256-v1');
@@ -202,13 +203,15 @@ function checkScryptBasic() {
 }
 
 function checkScryptMultiEntryAad() {
-  const v = loadVector('kdna.envelope.aead-vector-02-scrypt-multi-entry-aad');
+  const v = loadVector('envelope-aead-vector-02-scrypt-multi-entry-aad');
   const kek = deriveKek(v);
   assert.equal(
     kek.toString('base64'),
     Buffer.from(v.expected.kek, 'base64').toString('base64'),
     'vector 02: derived KEK does not match expected KEK',
   );
+  assert.equal(v.expected.envelope_entry_1.profile_version, '0.1.0');
+  assert.equal(v.expected.envelope_entry_2.profile_version, '0.1.0');
 
   // Both envelopes decrypt to the same plaintext.
   const r1 = unwrapAndDecrypt(
@@ -267,7 +270,7 @@ function checkScryptMultiEntryAad() {
 }
 
 function checkArgon2idBasic() {
-  const v = loadVector('kdna.envelope.aead-vector-03-argon2id-basic');
+  const v = loadVector('envelope-aead-vector-03-argon2id-basic');
   if (!argon2id) {
     return 'vector 03 argon2id-v1 basic: SKIPPED (@noble/hashes not installed; install with `npm install @noble/hashes` to enable)';
   }
@@ -296,6 +299,7 @@ function checkArgon2idBasic() {
 
   const env = v.expected.envelope;
   assert.equal(env.profile, 'kdna.envelope.aead');
+  assert.equal(env.profile_version, '0.1.0');
   assert.equal(env.kdf_profile, 'argon2id-v1');
   assert.equal(env.key_slots[0].kdf_profile, 'argon2id-v1');
   return 'vector 03 argon2id-v1 basic: KEK + CEK + plaintext all match';
@@ -310,9 +314,9 @@ function checkSchemaValidation() {
   const validate = ajv.compile(schema);
 
   const vectors = [
-    'kdna.envelope.aead-vector-01-scrypt-basic',
-    'kdna.envelope.aead-vector-02-scrypt-multi-entry-aad',
-    'kdna.envelope.aead-vector-03-argon2id-basic',
+    'envelope-aead-vector-01-scrypt-basic',
+    'envelope-aead-vector-02-scrypt-multi-entry-aad',
+    'envelope-aead-vector-03-argon2id-basic',
   ];
 
   for (const id of vectors) {
@@ -335,7 +339,7 @@ function checkSchemaValidation() {
 
 // ── Main ────────────────────────────────────────────────────────────
 
-export function runKdnaEnvelopeAeadV1Conformance() {
+export function runKdnaEnvelopeAeadConformance() {
   const results = [];
   results.push(checkScryptBasic());
   results.push(checkScryptMultiEntryAad());
@@ -345,7 +349,7 @@ export function runKdnaEnvelopeAeadV1Conformance() {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const results = runKdnaEnvelopeAeadV1Conformance();
+  const results = runKdnaEnvelopeAeadConformance();
   for (const r of results) console.log(`  PASS ${r}`);
-  console.log(`KDNA envelope-aead-v1 conformance passed (3 vectors, 1 schema)`);
+  console.log(`KDNA envelope-aead conformance passed (3 vectors, 1 schema)`);
 }

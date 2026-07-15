@@ -37,18 +37,21 @@ const workdir = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-conformance-'));
 
 function manifest(overrides = {}) {
   return {
-    kdna_version: '1.0',
+    format_version: '0.1.0',
     asset_id: 'kdna:conformance:single-format',
     asset_uid: 'urn:uuid:00000000-0000-4000-8000-000000000001',
     asset_type: 'fixture',
-    name: '@example/single-format',
     title: 'Single-format conformance fixture',
     version: '1.0.0',
     judgment_version: '1.0.0',
     created_at: '2026-07-01T00:00:00.000Z',
     updated_at: '2026-07-01T00:00:00.000Z',
     creator: { name: 'KDNA Conformance', id: 'conformance' },
-    compatibility: { min_loader_version: '0.15.12', profile: 'kdna.payload.judgment' },
+    compatibility: {
+      min_loader_version: '0.18.1',
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+    },
     payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
     access: 'public',
     ...overrides,
@@ -58,6 +61,7 @@ function manifest(overrides = {}) {
 function payload() {
   return {
     profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
     core: {
       highest_question: 'Does this asset prove the single-format lifecycle?',
       axioms: [
@@ -107,7 +111,7 @@ try {
 
   const inspected = core.inspect(asset);
   assert.equal(inspected.asset_id, 'kdna:conformance:single-format');
-  assert.equal(inspected.kdna_version, '1.0');
+  assert.equal(inspected.format_version, '0.1.0');
 
   const validation = core.validate(asset);
   assert.equal(validation.overall_valid, true, validation.problems.join('\n'));
@@ -118,8 +122,9 @@ try {
   assert.equal(plan.can_load_now, true);
 
   const capsule = core.loadAuthorized(asset, { profile: 'compact', as: 'json' });
-  assert.equal(capsule.type, 'kdna.context.capsule');
-  assert.equal(capsule.domain, '@example/single-format');
+  assert.equal(capsule.type, 'kdna.runtime-capsule');
+  assert.equal(capsule.contract_version, '0.1.0');
+  assert.equal(capsule.asset.asset_id, 'kdna:conformance:single-format');
 
   const jsonPayloadSource = writeSource('json-payload', {
     rawPayload: Buffer.from(JSON.stringify(payload())),
@@ -130,12 +135,12 @@ try {
   assert.equal(jsonPayloadValidation.payload_valid, false, 'JSON payload bytes must be rejected');
 
   const wrongVersionSource = writeSource('wrong-version', {
-    manifestOverrides: { kdna_version: '2.0' },
+    manifestOverrides: { format_version: '2.0.0' },
   });
   const wrongVersionAsset = path.join(workdir, 'wrong-version.kdna');
   core.pack(wrongVersionSource, wrongVersionAsset);
   const wrongVersionValidation = core.validate(wrongVersionAsset);
-  assert.equal(wrongVersionValidation.schema_valid, false, 'unknown kdna_version must fail');
+  assert.equal(wrongVersionValidation.schema_valid, false, 'unknown format_version must fail');
 
   const forbiddenSource = writeSource('forbidden-source');
   fs.writeFileSync(path.join(forbiddenSource, 'KDNA_Core.json'), '{}');

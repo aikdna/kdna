@@ -81,7 +81,12 @@
     },
     "planRef": {
       "type": "object",
-      "required": ["plan_id", "plan_digest_profile", "plan_digest_profile_version", "plan_digest"],
+      "required": [
+        "plan_id",
+        "plan_digest_profile",
+        "plan_digest_profile_version",
+        "plan_digest"
+      ],
       "additionalProperties": false,
       "properties": {
         "plan_id": {
@@ -134,7 +139,12 @@
       "additionalProperties": false,
       "properties": {
         "profile": {
-          "enum": ["index", "compact", "scenario", "full"]
+          "enum": [
+            "index",
+            "compact",
+            "scenario",
+            "full"
+          ]
         },
         "required_digest_profile": {
           "const": "kdna.digest-evidence"
@@ -149,7 +159,9 @@
     },
     "resultContract": {
       "type": "object",
-      "required": ["shape"],
+      "required": [
+        "shape"
+      ],
       "additionalProperties": false,
       "properties": {
         "shape": {
@@ -168,7 +180,11 @@
     },
     "authority": {
       "type": "object",
-      "required": ["asset_id", "role", "final_decision"],
+      "required": [
+        "asset_id",
+        "role",
+        "final_decision"
+      ],
       "additionalProperties": false,
       "properties": {
         "asset_id": {
@@ -209,7 +225,11 @@
           "$ref": "#/$defs/semver"
         },
         "access": {
-          "enum": ["public", "licensed", "remote"]
+          "enum": [
+            "public",
+            "licensed",
+            "remote"
+          ]
         },
         "role": {
           "const": "primary"

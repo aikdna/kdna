@@ -1,37 +1,41 @@
 {
-  "format_version": null,
+  "format_version": "0.1.0",
   "asset": {
-    "asset_id": null,
-    "asset_uid": null,
-    "title": null,
-    "version": null,
-    "judgment_version": null
+    "asset_id": "kdna:conformance:authorization:revoked-entitlement",
+    "asset_uid": "urn:uuid:7265766f-6b65-442d-856e-7469746c656d",
+    "title": "Authorization Fixture: revoked-entitlement",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0"
   },
-  "access": null,
+  "access": "licensed",
   "access_alias": null,
-  "entitlement_profile": null,
-  "state": "invalid",
-  "required_action": "block",
+  "entitlement_profile": "local_receipt",
+  "state": "denied",
+  "required_action": "contact_issuer",
   "can_load_now": false,
   "projection_policy": "none",
-  "input_fingerprint": null,
+  "input_fingerprint": {
+    "has_password_input": false,
+    "entitlement_input": "revoked",
+    "source_fingerprint": "sha256:bf0242b65b48b46727ac791764958544df0b9d2c44888bbc35f6f3a2adf82c9f"
+  },
   "checks": {
-    "format_valid": false,
-    "schema_valid": false,
-    "payload_valid": false,
-    "checksums_valid": false,
-    "load_contract_valid": false,
-    "overall_valid": false
+    "format_valid": true,
+    "schema_valid": true,
+    "payload_valid": true,
+    "checksums_valid": true,
+    "load_contract_valid": true,
+    "overall_valid": true
   },
   "issues": [
     {
-      "code": "KDNA_FORMAT_INVALID",
+      "code": "KDNA_AUTH_REVOKED",
       "severity": "blocking",
-      "message": "Cannot find module './v1/index.js'\nRequire stack:\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container-dispatcher.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container/index.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/public-api.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/index.js\n- /Users/kdna/aikdna/open/kdna/scripts/generate-self-check-conformance-fixtures.mjs"
+      "message": "The entitlement has been revoked."
     }
   ],
   "source": {
-    "kind": null,
+    "kind": "file",
     "path": "<fixture:revoked-entitlement>"
   }
 }
