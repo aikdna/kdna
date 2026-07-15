@@ -581,10 +581,10 @@ function readLayout(absPath) {
     ? `sha256:${crypto.createHash('sha256').update(containerBytes).digest('hex')}`
     : null;
 
-  return finalizeV1Layout({ kind, map, entries, containerDigest });
+  return finalizeContainerLayout({ kind, map, entries, containerDigest });
 }
 
-function finalizeV1Layout({ kind, map, entries, containerDigest }) {
+function finalizeContainerLayout({ kind, map, entries, containerDigest }) {
   if (kind !== 'dir' && (!entries || entries.length === 0 || entries[0].name !== 'mimetype')) {
     throw new Error('not a KDNA Asset Container: first entry is not mimetype');
   }
@@ -630,7 +630,7 @@ function readLayoutBytes(input) {
       map[entry.name] = entry.data;
     }
   }
-  return finalizeV1Layout({
+  return finalizeContainerLayout({
     kind: 'memory',
     map,
     entries,

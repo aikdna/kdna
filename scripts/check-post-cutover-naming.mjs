@@ -49,6 +49,11 @@ function candidateRules() {
         /\b(?:[a-z][A-Za-z0-9_]*(?:Capsule|Plan|Host|Trace|Core|KDNA|Container|Profile|Schema|Payload|Envelope|Cluster|Runtime)V[0-9]+|[A-Z][A-Z0-9_]*_V[0-9]+)\b/gu,
     },
     {
+      name: 'owned-infix-generation',
+      regex:
+        /\b(?:[A-Za-z_$][A-Za-z0-9_$]*V[0-9]+Layout|[A-Za-z_$][A-Za-z0-9_$]*FromV[0-9]+Payload)\b/gu,
+    },
+    {
       name: 'owned-suffix-generation',
       regex:
         /\b(?:KDNA|Core|Container|Capsule|Profile|Runtime|ConsumptionPlan|JudgmentTrace|AgentHost|Host|Trace|Schema|Payload|Envelope|Cluster|Assay|Studio)V[0-9]+\b/giu,

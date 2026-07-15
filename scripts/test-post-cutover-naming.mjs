@@ -39,6 +39,9 @@ test('KDNA-owned generation prose, identifiers, paths, and tags fail', () => {
   const identifiers = [
     ['buildRuntimeCapsule', 'V', '2'].join(''),
     ...['Capsule', 'Runtime', 'Host', 'KDNA', 'kdna'].map((name) => [name, 'V', '2'].join('')),
+    ['finalize', 'V', '1', 'Layout'].join(''),
+    ['read', 'V', '1', 'Layout'].join(''),
+    ['cardsFrom', 'V', '1', 'Payload'].join(''),
   ];
   const ownedTag = ['kdna-core-', prefix, '${version}'].join('');
   const records = [

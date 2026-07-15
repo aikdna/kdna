@@ -703,7 +703,7 @@ test('pack: output has mimetype as the first entry, STORED', () => {
     container.pack(src, out);
     const r = container.detectContainerFormat(out);
     assert.equal(r, 'kdna');
-    // The container must round-trip through readV1Layout.
+    // The container must round-trip through the container layout reader.
     const v = container.readLayout(out);
     assert.equal(v.kind, 'file');
     assert.ok(v.map.mimetype);
@@ -918,7 +918,7 @@ test('malicious containers fail consistently before judgment payload output', ()
   }
 });
 
-test('readV1Layout: rejects a container source with a missing required entry', async () => {
+test('readContainerLayout: rejects a container source with a missing required entry', async () => {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'kdna-container-missing-'));
   try {
     await fsp.writeFile(path.join(dir, 'mimetype'), MIMETYPE);

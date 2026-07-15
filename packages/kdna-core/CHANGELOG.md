@@ -318,7 +318,7 @@ repo (#145, #146, #147).
   carried `failure_risk` / `applies_when` / `does_not_apply_when`).
   The audit confirmed the fix is in place. No code change required;
   this entry documents the verification.
-- **#146** `cardsFromV1Payload` (in the studio-cli consumer) now
+- **#146** The Studio CLI payload-card projection now
   infers a `type` for `payload.patterns` entries that omit it,
   by inspecting the field set. Misunderstandings (which have
   `wrong` + `correct`), terms (have `term` + `definition`),
