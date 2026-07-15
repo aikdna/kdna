@@ -46,12 +46,15 @@ The minimum valid `core` object is `{ "highest_question": "", "axioms": [] }`. T
 
 ```json
 {
-  "self_checks": [],
+  "self_check": [],
   "failure_modes": []
 }
 ```
 
-Both arrays are optional within the section.
+Both arrays are optional within the section. `self_check` accepts strings and
+objects with a required string `question` field. The deprecated plural payload
+field `self_checks` is invalid and validation fails closed instead of dropping
+the entries during loading.
 
 ## `evolution` section (optional)
 
@@ -132,7 +135,10 @@ This is the **smallest** payload that conforms to the schema. The conformance su
     }
   ],
   "reasoning": {
-    "self_checks": ["Did I check X?"],
+    "self_check": [
+      "Did I check X?",
+      { "question": "Did I preserve the declared boundary?" }
+    ],
     "failure_modes": [
       {
         "id": "f1",

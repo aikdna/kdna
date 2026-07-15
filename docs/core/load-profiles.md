@@ -61,7 +61,8 @@ judgment role, axioms, boundaries, self-checks, and failure modes.
 - `judgment_role` — from `payload.core.judgment_role`, preserving its declared shape
 - `axioms` — from `payload.core.axioms` (one-sentence form if available)
 - `boundaries` — from `payload.core.boundaries`
-- `self_checks` — Runtime Capsule projection of `payload.reasoning.self_check`
+- `self_checks` — Runtime Capsule projection of `payload.reasoning.self_check`,
+  preserving each declared string or structured question without changing its shape
 - `failure_modes` — from `payload.reasoning.failure_modes`
 - `patterns` — from `payload.patterns` (first 3, truncated)
 - Default max_tokens_hint from `load_contract.profiles.compact.max_tokens_hint`

@@ -1,8 +1,11 @@
 {
+  "digest_profile": "kdna-runtime-entry-set-v1",
+  "covered_entries": ["kdna.json", "payload.kdnab"],
   "algorithm": "sha256",
   "manifest_digest": "sha256:10e0281db03ce018fdeedeb34bce686a24c8b5736282e3354de12251f826aa88",
-  "payload_digest": "sha256:e0855ab99ce773fd5d062357919ecbfa1be41556afa6da954476501efc4a6e01",
-  "asset_digest": "sha256:e3699be014b3906ff1cd2b50029d111407e3bc30ed1ff88b7261a2eb26e7f12e",
+  "payload_digest": "sha256:aa0ab88238a644dbec7e4944ead708da219947c8beb1142cef3c0719de79beb1",
+  "entry_set_digest": "sha256:e695592a9f0356e33e322504289fe9b7996123f509d428c821beae2d573ba553",
+  "asset_digest": "sha256:e695592a9f0356e33e322504289fe9b7996123f509d428c821beae2d573ba553",
   "entries": {
     "kdna.json": {
       "algorithm": "sha256",
@@ -10,7 +13,7 @@
     },
     "payload.kdnab": {
       "algorithm": "sha256",
-      "value": "e0855ab99ce773fd5d062357919ecbfa1be41556afa6da954476501efc4a6e01"
+      "value": "aa0ab88238a644dbec7e4944ead708da219947c8beb1142cef3c0719de79beb1"
     }
   }
 }

@@ -2202,6 +2202,13 @@ function loadV1Unsafe(inputPath, opts = {}) {
       if (item && typeof item === 'object') return item;
       return null;
     }).filter(Boolean);
+    const preserveDeclaredList = (items) => (
+      Array.isArray(items)
+        ? items.map((item) => (
+          typeof item === 'string' ? item : structuredClone(item)
+        ))
+        : []
+    );
     result.content = {
       highest_question: core.highest_question || null,
       // These scoped domain-level values are already validated by the payload
@@ -2217,11 +2224,10 @@ function loadV1Unsafe(inputPath, opts = {}) {
           : null,
       axioms: (core.axioms || []).map(normalizeCompactAxiom).filter(Boolean),
       boundaries: normalizeList(core.boundaries),
-      // The canonical payload field is singular (`reasoning.self_check`).
-      // Runtime Capsule uses plural (`context.self_checks`) as its projection
-      // field. Reading the plural name from the payload silently discarded
-      // every Studio-authored self-check.
-      self_checks: normalizeList(payload.reasoning && payload.reasoning.self_check),
+      // Payload uses the singular field name while Runtime Capsule uses the
+      // plural collection name. Preserve every validated item and its shape;
+      // strings remain strings and structured questions remain objects.
+      self_checks: preserveDeclaredList(payload.reasoning && payload.reasoning.self_check),
       failure_modes: normalizeList(payload.reasoning && payload.reasoning.failure_modes),
       patterns: normalizeList(payload.patterns).slice(0, 3),
     };

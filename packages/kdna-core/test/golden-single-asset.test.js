@@ -12,6 +12,26 @@ const canonicalPayloadSchema = require('../../../schema/payload-profile-v1.schem
 const packagedPayloadSchema = require('../schema/payload-profile-v1.schema.json');
 
 const SCOPED_FIELDS = ['worldview', 'value_order', 'judgment_role'];
+const CANONICAL_SCHEMA_PATH = path.resolve(
+  __dirname,
+  '..',
+  '..',
+  '..',
+  'schema',
+  'payload-profile-v1.schema.json',
+);
+const PACKAGED_SCHEMA_PATH = path.resolve(
+  __dirname,
+  '..',
+  'schema',
+  'payload-profile-v1.schema.json',
+);
+const GOLDEN_PAYLOAD_PATH = path.resolve(
+  __dirname,
+  'fixtures',
+  'golden-single-asset-payload.kdnab',
+);
+const REPO_ROOT = path.resolve(__dirname, '..', '..', '..');
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -21,14 +41,17 @@ function compileSchema(schema) {
   return new Ajv2020({ allErrors: true, strict: false }).compile(schema);
 }
 
-function createAsset(payload = fixture.payload) {
+function createAsset(payload = fixture.payload, payloadBytes = null) {
   const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-golden-core-'));
   const source = path.join(temporary, 'source');
   const asset = path.join(temporary, 'golden.kdna');
   fs.mkdirSync(source, { recursive: true });
   fs.writeFileSync(path.join(source, 'mimetype'), core.MIMETYPE);
   fs.writeFileSync(path.join(source, 'kdna.json'), JSON.stringify(fixture.manifest));
-  fs.writeFileSync(path.join(source, 'payload.kdnab'), cbor.encode(payload));
+  fs.writeFileSync(
+    path.join(source, 'payload.kdnab'),
+    payloadBytes === null ? cbor.encode(payload) : payloadBytes,
+  );
   fs.writeFileSync(
     path.join(source, 'checksums.json'),
     JSON.stringify(core.buildChecksums(source)),
@@ -37,7 +60,13 @@ function createAsset(payload = fixture.payload) {
   return { temporary, asset };
 }
 
-test('canonical and packaged payload schemas constrain the same scoped judgment fields', () => {
+test('canonical and packaged payload schemas are byte-for-byte identical', () => {
+  assert.deepEqual(
+    fs.readFileSync(PACKAGED_SCHEMA_PATH),
+    fs.readFileSync(CANONICAL_SCHEMA_PATH),
+  );
+  assert.deepEqual(packagedPayloadSchema, canonicalPayloadSchema);
+
   const canonicalCore = canonicalPayloadSchema.properties.core.properties;
   const packagedCore = packagedPayloadSchema.properties.core.properties;
 
@@ -89,8 +118,75 @@ test('payload schemas reject malformed scoped judgment field shapes', () => {
   }
 });
 
-test('Golden asset validates, inspects content-neutrally, and loads exact compact semantics', () => {
-  const { temporary, asset } = createAsset();
+test('payload schemas reject deprecated or malformed self-check fields', () => {
+  const invalidCases = [
+    [
+      'deprecated plural field',
+      (payload) => {
+        payload.reasoning = { self_checks: ['Did I use the deprecated field?'] };
+      },
+    ],
+    ['singular field is not an array', (payload) => { payload.reasoning.self_check = {}; }],
+    ['singular field contains a number', (payload) => { payload.reasoning.self_check = [42]; }],
+    [
+      'structured question is missing question',
+      (payload) => { payload.reasoning.self_check = [{ failure_risk: 'missing question' }]; },
+    ],
+    [
+      'structured question is not a string',
+      (payload) => { payload.reasoning.self_check = [{ question: 42 }]; },
+    ],
+  ];
+
+  for (const [schemaName, schema] of [
+    ['canonical', canonicalPayloadSchema],
+    ['packaged', packagedPayloadSchema],
+  ]) {
+    const validate = compileSchema(schema);
+    for (const [caseName, mutate] of invalidCases) {
+      const payload = clone(fixture.payload);
+      mutate(payload);
+      assert.equal(
+        validate(payload),
+        false,
+        `${schemaName} schema accepted invalid case: ${caseName}`,
+      );
+    }
+  }
+});
+
+test('Core validation and loading fail closed for deprecated or malformed self-checks', () => {
+  const invalidCases = [
+    (payload) => {
+      payload.reasoning = { self_checks: ['Did I use the deprecated field?'] };
+    },
+    (payload) => { payload.reasoning.self_check = [42]; },
+    (payload) => { payload.reasoning.self_check = [{ question: 42 }]; },
+  ];
+
+  for (const mutate of invalidCases) {
+    const payload = clone(fixture.payload);
+    mutate(payload);
+    const { temporary, asset } = createAsset(payload);
+    try {
+      const validation = core.validate(asset);
+      assert.equal(validation.payload_valid, false);
+      assert.equal(validation.overall_valid, false);
+      assert.throws(
+        () => core.loadAuthorized(asset, { profile: 'compact', as: 'json' }),
+        /LoadPlan denied loading/u,
+      );
+    } finally {
+      fs.rmSync(temporary, { recursive: true, force: true });
+    }
+  }
+});
+
+test('committed CBOR validates and loads exact self-check shapes without silent loss', () => {
+  const goldenPayloadBytes = fs.readFileSync(GOLDEN_PAYLOAD_PATH);
+  assert.deepEqual(cbor.decode(goldenPayloadBytes), fixture.payload);
+
+  const { temporary, asset } = createAsset(fixture.payload, goldenPayloadBytes);
   try {
     const validation = core.validate(asset);
     assert.deepEqual(validation, {
@@ -141,12 +237,7 @@ test('Golden asset validates, inspects content-neutrally, and loads exact compac
         },
       ],
       boundaries: fixture.payload.core.boundaries,
-      self_checks: [
-        {
-          type: 'text',
-          text: fixture.payload.reasoning.self_check[0],
-        },
-      ],
+      self_checks: fixture.payload.reasoning.self_check,
       failure_modes: [],
       patterns: [],
     });
@@ -166,12 +257,58 @@ test('Golden asset validates, inspects content-neutrally, and loads exact compac
       fixture.payload.core.judgment_role.acts_as,
       ...fixture.payload.core.judgment_role.does_not_act_as,
       fixture.payload.core.judgment_role.responsibility,
+      fixture.payload.reasoning.self_check[0],
+      fixture.payload.reasoning.self_check[1].question,
     ]) {
       assert.ok(prompt.text.includes(value), `prompt omitted declared value: ${value}`);
     }
   } finally {
     fs.rmSync(temporary, { recursive: true, force: true });
   }
+});
+
+test('committed cross-language payload fixtures use only the canonical self-check field', () => {
+  const fixturePayloads = [
+    [
+      'examples/minimal/payload.kdnab',
+      fs.readFileSync(path.join(REPO_ROOT, 'examples', 'minimal', 'payload.kdnab')),
+    ],
+    ['golden-single-asset-payload.kdnab', fs.readFileSync(GOLDEN_PAYLOAD_PATH)],
+  ];
+  const authorizationRoot = path.join(
+    REPO_ROOT,
+    'conformance',
+    'authorization',
+    'fixtures',
+  );
+  for (const name of fs.readdirSync(authorizationRoot).sort()) {
+    fixturePayloads.push([
+      `authorization/${name}/payload.kdnab`,
+      fs.readFileSync(path.join(authorizationRoot, name, 'payload.kdnab')),
+    ]);
+  }
+
+  const capsuleRoot = path.join(REPO_ROOT, 'conformance', 'capsule-v2');
+  const capsuleGolden = JSON.parse(
+    fs.readFileSync(path.join(capsuleRoot, 'golden.json'), 'utf8'),
+  );
+  const capsuleBytes = Buffer.from(
+    fs.readFileSync(path.join(capsuleRoot, capsuleGolden.fixture), 'utf8').trim(),
+    'base64',
+  );
+  const asset = core.createKdnaAssetReader().openSync(capsuleBytes);
+  fixturePayloads.push(['capsule fixture payload', asset.readEntry('payload.kdnab')]);
+
+  for (const [name, encoded] of fixturePayloads) {
+    const payload = cbor.decode(encoded);
+    assert.equal(Object.hasOwn(payload.reasoning, 'self_checks'), false, name);
+    assert.equal(Object.hasOwn(payload.reasoning, 'self_check'), true, name);
+    assert.equal(Array.isArray(payload.reasoning.self_check), true, name);
+  }
+
+  const capsule = core.loadAuthorized(capsuleBytes, { profile: 'compact', as: 'json' });
+  assert.equal(Object.hasOwn(capsule.context, 'self_checks'), true);
+  assert.equal(Object.hasOwn(capsule.context, 'self_check'), false);
 });
 
 test('compact projection does not trim strings, reorder values, or normalize role shape', () => {

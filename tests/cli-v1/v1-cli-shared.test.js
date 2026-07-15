@@ -562,7 +562,7 @@ test('load: compact profile preserves canonical reasoning.self_check entries', (
       ...(payload.reasoning || {}),
       self_check: [
         'Did I preserve the judgment boundary?',
-        { type: 'question', text: 'Did I avoid inventing human provenance?' },
+        { question: 'Did I avoid inventing human provenance?' },
       ],
     };
     fs.writeFileSync(payloadPath, cbor.encode(payload));
@@ -573,8 +573,8 @@ test('load: compact profile preserves canonical reasoning.self_check entries', (
 
     const loaded = v1.load(dir, { profile: 'compact', as: 'json' });
     assert.deepEqual(loaded.context.self_checks, [
-      { type: 'text', text: 'Did I preserve the judgment boundary?' },
-      { type: 'question', text: 'Did I avoid inventing human provenance?' },
+      'Did I preserve the judgment boundary?',
+      { question: 'Did I avoid inventing human provenance?' },
     ]);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });

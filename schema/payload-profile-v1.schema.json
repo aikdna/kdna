@@ -78,13 +78,14 @@
       "properties": {
         "self_check": {
           "type": "array",
-          "description": "Self-check questions. Each item is either a string (yes/no question) or an object with a `question` field and optional metadata. Naming is singular to match the source format (KDNA_Patterns.json self_check) and the load-profiles reference; older revisions of this schema declared the field as `self_checks` (plural) with item type `string`, which rejected every object-shaped question and was incompatible with the actual compile output.",
+          "description": "Self-check questions. Each item is either a string or an object with a required string `question` field and optional metadata.",
           "items": {
             "oneOf": [
               { "type": "string" },
               {
                 "type": "object",
                 "required": ["question"],
+                "additionalProperties": true,
                 "properties": {
                   "question": { "type": "string" },
                   "applies_when": { "type": "array" },
@@ -95,6 +96,7 @@
             ]
           }
         },
+        "self_checks": false,
         "failure_modes": {
           "type": "array",
           "items": { "type": "object" }

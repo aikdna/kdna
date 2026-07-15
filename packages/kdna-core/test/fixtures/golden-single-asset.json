@@ -102,7 +102,10 @@
     "cases": [],
     "reasoning": {
       "self_check": [
-        "Did I preserve the verified recovery path without inventing release facts?"
+        "Did I preserve the verified recovery path without inventing release facts?",
+        {
+          "question": "Did I retain the structured self-check without changing its shape?"
+        }
       ],
       "failure_modes": []
     },

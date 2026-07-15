@@ -76,7 +76,27 @@
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "self_checks": { "type": "array", "items": { "type": "string" } },
+        "self_check": {
+          "type": "array",
+          "description": "Self-check questions. Each item is either a string or an object with a required string `question` field and optional metadata.",
+          "items": {
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "object",
+                "required": ["question"],
+                "additionalProperties": true,
+                "properties": {
+                  "question": { "type": "string" },
+                  "applies_when": { "type": "array" },
+                  "does_not_apply_when": { "type": "array" },
+                  "failure_risk": { "type": "string" }
+                }
+              }
+            ]
+          }
+        },
+        "self_checks": false,
         "failure_modes": {
           "type": "array",
           "items": { "type": "object" }

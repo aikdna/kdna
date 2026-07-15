@@ -218,7 +218,9 @@ function writeFixture(testCase) {
   });
   fs.writeFileSync(manifestPath, json(updated));
   formatJsonFiles([manifestPath]);
-  fs.writeFileSync(path.join(fixtureDir, 'checksums.json'), json(v1.buildChecksums(fixtureDir)));
+  const checksumsPath = path.join(fixtureDir, 'checksums.json');
+  fs.writeFileSync(checksumsPath, json(v1.buildChecksums(fixtureDir)));
+  formatJsonFiles([checksumsPath]);
 
   if (testCase.tamperPayloadAfterChecksums) {
     const payloadPath = path.join(fixtureDir, 'payload.kdnab');

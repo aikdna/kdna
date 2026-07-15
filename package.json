@@ -23,6 +23,7 @@
     "conformance:phase2": "node conformance/run.mjs --profile phase2-protocol",
     "conformance:envelope-aead": "node conformance/kdna-envelope-aead-v1.mjs",
     "conformance:authorization:update": "node scripts/generate-authorization-conformance.mjs",
+    "conformance:self-check:update": "node scripts/generate-self-check-conformance-fixtures.mjs",
     "conformance:ecosystem-profile-0.9": "node conformance/ecosystem-profile-0.9/run.mjs",
     "conformance:consumption-plan": "node conformance/ecosystem-profile-0.9/run.mjs --contract consumption-plan",
     "conformance:cluster-manifest": "node conformance/ecosystem-profile-0.9/run.mjs --contract cluster-manifest",

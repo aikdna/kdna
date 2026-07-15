@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.18.1 (2026-07-15)
+
+### Fixed
+
+- Accept only `reasoning.self_check` in judgment payloads and fail closed on
+  the deprecated plural field or malformed entries.
+- Preserve each validated self-check string or structured question exactly in
+  compact Runtime Capsule projection instead of silently dropping or changing
+  its shape.
+- Keep the canonical and packaged payload schemas byte-for-byte identical, and
+  regenerate the committed CBOR and authorization conformance fixtures with
+  matching checksums and digest evidence.
+
 ## v0.18.0 (2026-07-15)
 
 ### Added
