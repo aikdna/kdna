@@ -6,6 +6,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { test } = require('node:test');
 
+const { compileSchema } = require('../../scripts/validate-app-schemas');
 const { checks, runChecks } = require('../../scripts/release-preflight');
 const {
   INVALID_RUNTIME_MANIFEST_FIXTURES,
@@ -185,6 +186,77 @@ test('runtime cross-links require explicit null selected_domain for non-load rou
     report.loaded_domains = [];
   });
   assert.ok(failures.some((failure) => failure.includes('must set selected_domain to null')));
+});
+
+test('route-only ask and skip reports validate independently but cannot join an execution triple', async (t) => {
+  const validateReport = compileSchema('specs/judgment-report-schema.json');
+  for (const [status, action] of [
+    ['ASK_AMBIGUOUS_DOMAIN', 'ask'],
+    ['SKIP_WEAK_FIT', 'skip'],
+  ]) {
+    await t.test(action, (t) => {
+      const exampleDir = copyRuntimeExamples(t);
+      const reportPath = path.join(exampleDir, 'generic-client-report.json');
+      mutateJson(reportPath, (report) => {
+        report.trace_id = null;
+        report.route_decision.status = status;
+        report.route_decision.action = action;
+        report.route_decision.selected_domain = null;
+        report.loaded_domains = [];
+      });
+
+      const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+      assert.equal(validateReport(report), true, JSON.stringify(validateReport.errors, null, 2));
+
+      const failures = validateRuntimeContract({ exampleDir, logger: quietLogger });
+      assert.ok(
+        failures.some((failure) =>
+          failure.includes(
+            `${action} route-only report cannot participate in a JudgmentTrace + feedback execution-evidence triple`,
+          ),
+        ),
+      );
+    });
+  }
+});
+
+test('block report cannot link to a completed execution Trace', (t) => {
+  const failures = runtimeFailuresAfter(t, 'report', (report) => {
+    report.route_decision.status = 'BLOCK_TRUST_FAILED';
+    report.route_decision.action = 'block';
+    report.route_decision.selected_domain = null;
+    report.loaded_domains = [];
+  });
+  assert.ok(
+    failures.some((failure) =>
+      failure.includes(
+        'block route requires a blocked JudgmentTrace, observed execution_completed',
+      ),
+    ),
+  );
+});
+
+test('load report cannot link to a blocked Trace', (t) => {
+  const exampleDir = copyRuntimeExamples(t);
+  const tracePath = path.join(exampleDir, 'generic-client-trace.json');
+  fs.copyFileSync(
+    path.join(repoRoot, 'conformance', 'runtime-contract', 'blocked-source-directory-trace.json'),
+    tracePath,
+  );
+  const blockedTrace = JSON.parse(fs.readFileSync(tracePath, 'utf8'));
+  mutateJson(path.join(exampleDir, 'generic-client-report.json'), (report) => {
+    report.trace_id = blockedTrace.trace_id;
+  });
+  mutateJson(path.join(exampleDir, 'generic-client-feedback.json'), (feedback) => {
+    feedback.trace_id = blockedTrace.trace_id;
+  });
+
+  const failures = validateRuntimeContract({ exampleDir, logger: quietLogger });
+  assert.ok(
+    failures.some((failure) =>
+      failure.includes('load route requires an execution JudgmentTrace, observed blocked'),
+    ),
+  );
 });
 
 test('runtime cross-links reject status and action combinations that disagree', (t) => {

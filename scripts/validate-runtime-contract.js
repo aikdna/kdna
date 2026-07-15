@@ -28,6 +28,12 @@ const STATUS_TO_ACTION = {
   LOAD_STRONG_FIT: 'load',
   BLOCK_TRUST_FAILED: 'block',
 };
+const LOAD_TRACE_STATUSES = new Set([
+  'execution_completed',
+  'execution_failed',
+  'cancelled',
+  'timed_out',
+]);
 
 function validationErrors(validate) {
   return (validate.errors || []).map((error) => `${error.instancePath || '/'} ${error.message}`);
@@ -78,7 +84,7 @@ function validateRuntimeContract(options = {}) {
     return false;
   }
 
-  function validateRouteSemantics(reportPath, feedbackPath, trace, report, feedback) {
+  function validateExecutionEvidenceTriple(reportPath, feedbackPath, trace, report, feedback) {
     const route = report.route_decision || {};
     const expectedAction = STATUS_TO_ACTION[route.status];
     if (!expectedAction) {
@@ -87,9 +93,6 @@ function validateRuntimeContract(options = {}) {
       fail(reportPath, `route action ${route.action} does not match status ${route.status}`);
     }
 
-    if (report.trace_id !== trace.trace_id) {
-      fail(reportPath, `trace_id ${report.trace_id} does not match trace ${trace.trace_id}`);
-    }
     if (feedback.trace_id !== trace.trace_id) {
       fail(feedbackPath, `trace_id ${feedback.trace_id} does not match trace ${trace.trace_id}`);
     }
@@ -110,6 +113,21 @@ function validateRuntimeContract(options = {}) {
 
     const loadedDomains = Array.isArray(report.loaded_domains) ? report.loaded_domains : [];
     if (route.action === 'load') {
+      if (report.trace_id !== trace.trace_id) {
+        fail(reportPath, `trace_id ${report.trace_id} does not match trace ${trace.trace_id}`);
+      }
+      if (!LOAD_TRACE_STATUSES.has(trace.overall_status)) {
+        fail(
+          reportPath,
+          `load route requires an execution JudgmentTrace, observed ${trace.overall_status}`,
+        );
+      }
+      if (trace.runtime_contract?.negotiation_state !== 'selected') {
+        fail(reportPath, `load route requires selected Runtime negotiation evidence`);
+      }
+      if (trace.capsule_delivery_evidence?.host_boundary_comparison !== 'matched') {
+        fail(reportPath, `load route requires matched Host boundary evidence`);
+      }
       if (route.selected_domain !== asset.asset_id) {
         fail(
           reportPath,
@@ -141,13 +159,36 @@ function validateRuntimeContract(options = {}) {
           }
         }
       }
-    } else {
+    } else if (route.action === 'block') {
+      if (report.trace_id !== trace.trace_id) {
+        fail(reportPath, `trace_id ${report.trace_id} does not match trace ${trace.trace_id}`);
+      }
+      if (trace.overall_status !== 'blocked') {
+        fail(
+          reportPath,
+          `block route requires a blocked JudgmentTrace, observed ${trace.overall_status}`,
+        );
+      }
+      if (route.selected_domain !== null) {
+        fail(reportPath, `block route must set selected_domain to null`);
+      }
+      if (loadedDomains.length !== 0) {
+        fail(reportPath, `block route must not report loaded domains`);
+      }
+    } else if (route.action === 'ask' || route.action === 'skip') {
+      if (report.trace_id !== null) {
+        fail(reportPath, `${route.action} route-only report must set trace_id to null`);
+      }
       if (route.selected_domain !== null) {
         fail(reportPath, `${route.action} route must set selected_domain to null`);
       }
       if (loadedDomains.length !== 0) {
         fail(reportPath, `${route.action} route must not report loaded domains`);
       }
+      fail(
+        reportPath,
+        `${route.action} route-only report cannot participate in a JudgmentTrace + feedback execution-evidence triple`,
+      );
     }
   }
 
@@ -174,7 +215,7 @@ function validateRuntimeContract(options = {}) {
     }
 
     if (documentsValid) {
-      validateRouteSemantics(
+      validateExecutionEvidenceTriple(
         paths.report,
         paths.feedback,
         documents.trace,
@@ -206,5 +247,6 @@ module.exports = {
   PREFIXES,
   SCHEMAS,
   STATUS_TO_ACTION,
+  LOAD_TRACE_STATUSES,
   validateRuntimeContract,
 };

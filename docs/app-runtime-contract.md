@@ -13,6 +13,21 @@ packaged asset
 The schemas and executable vectors are in [`specs/`](../specs/) and
 [`conformance/runtime-contract/`](../conformance/runtime-contract/).
 
+## Validator scope
+
+`npm run validate:runtime-contract` validates a committed
+report + JudgmentTrace + feedback **execution-evidence triple**. It does not
+treat JudgmentTrace as an independent routing trace.
+
+- A `load` report must link to a Trace whose `overall_status` is
+  `execution_completed`, `execution_failed`, `cancelled`, or `timed_out`, with
+  selected Runtime negotiation and matched Host-boundary evidence.
+- A `block` report must link to a Trace whose `overall_status` is `blocked`,
+  with no selected or loaded domain in the report.
+- An `ask` or `skip` report is a route-only report. It may be validated against
+  the Judgment Report schema independently, must use a null `trace_id`, and is
+  not a member of a JudgmentTrace + feedback execution-evidence triple.
+
 ## Application responsibilities
 
 An application MUST:
