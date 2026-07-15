@@ -14,6 +14,7 @@ const {
   buildChecksums,
   loadAuthorized,
   pack,
+  planLoad,
   readLayout,
   validate,
 } = require('../../packages/kdna-core/src/container');
@@ -24,6 +25,7 @@ function readPayload(p) {
 }
 
 const cliBin = path.join(__dirname, '..', '..', 'packages', 'kdna', 'bin', 'kdna.js');
+const workspaceCorePreload = path.join(__dirname, '..', '..', 'scripts', 'use-workspace-core.js');
 const minimalSource = path.join(__dirname, '..', '..', 'examples', 'minimal');
 const runtimeTmp = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'kdna-fixture-runtime-'));
 const minimalAsset = path.join(runtimeTmp, 'minimal.kdna');
@@ -39,9 +41,14 @@ const FORBIDDEN = [
 ];
 
 function run(args) {
+  const preload = `--require=${workspaceCorePreload}`;
+  const nodeOptions = process.env.NODE_OPTIONS?.includes(preload)
+    ? process.env.NODE_OPTIONS
+    : [process.env.NODE_OPTIONS, preload].filter(Boolean).join(' ');
   return spawnSync(process.execPath, [cliBin, ...args], {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
+    env: { ...process.env, NODE_OPTIONS: nodeOptions },
   });
 }
 
@@ -355,9 +362,24 @@ test('load from packed container index+json', () => {
 // ── Negative: invalid fixtures ────────────────────────────────────
 
 test('validate: missing kdna.json fails', () => {
-  const r = run(['validate', scoped('invalid-missing-manifest')]);
-  assert.notEqual(r.status, 0, 'should fail format_valid');
-  assert.ok(!/overall_valid.*true/.test(r.stdout + r.stderr));
+  const fixture = scoped('invalid-missing-manifest');
+  assert.throws(
+    () => validate(fixture),
+    (error) => error.message === 'not a KDNA authoring source directory: missing kdna.json',
+  );
+  const plan = planLoad(fixture);
+  assert.deepEqual(plan.issues, [
+    {
+      code: 'KDNA_FORMAT_INVALID',
+      severity: 'blocking',
+      message: `Source directory missing required entries: ${fixture}`,
+    },
+  ]);
+
+  const r = run(['validate', fixture]);
+  assert.equal(r.status, 2);
+  assert.equal(r.stdout, '');
+  assert.equal(r.stderr, `Error: Not a KDNA container or source directory: ${fixture}\n`);
 });
 
 test('validate: missing payload.kdnab fails', () => {
@@ -365,14 +387,38 @@ test('validate: missing payload.kdnab fails', () => {
   assert.notEqual(r.status, 0, 'should fail format_valid');
 });
 
-test('validate: bad checksum is schema-valid (digest verification is phase 2+)', () => {
-  // Phase 1 validates checksums JSON schema structure,
-  // not digest correctness. Digest verification is a Phase 2+ feature.
-  const r = run(['validate', scoped('invalid-bad-checksum')]);
+test('validate: bad checksum has exactly one structured digest failure', () => {
+  const fixture = scoped('invalid-bad-checksum');
+  const checksums = JSON.parse(fs.readFileSync(path.join(fixture, 'checksums.json'), 'utf8'));
+  const declared = checksums.payload_digest.replace(/^sha256:/u, '');
+  const actual = crypto
+    .createHash('sha256')
+    .update(fs.readFileSync(path.join(fixture, 'payload.kdnab')))
+    .digest('hex');
+  const expectedProblem = `checksums: payload_digest mismatch (declared ${declared.slice(0, 8)}..., actual ${actual.slice(0, 8)}...)`;
+
+  const r = run(['validate', fixture]);
+  assert.equal(r.status, 1, r.stderr);
+  assert.equal(r.stderr, '');
   const out = JSON.parse(r.stdout);
-  // Schema shape is valid even if digests don't match
-  assert.equal(out.format_valid, true);
-  // checksums_valid tracks schema validation, not digest matching in Phase 1
+  assert.deepEqual(out, {
+    format_valid: true,
+    schema_valid: true,
+    payload_valid: true,
+    checksums_valid: false,
+    load_contract_valid: true,
+    overall_valid: false,
+    problems: [expectedProblem],
+  });
+
+  const plan = planLoad(fixture);
+  assert.deepEqual(plan.issues, [
+    {
+      code: 'KDNA_INTEGRITY_DIGEST_FAILED',
+      severity: 'blocking',
+      message: expectedProblem,
+    },
+  ]);
 });
 
 test('inspect: missing kdna.json fails (upstream or container error)', () => {
