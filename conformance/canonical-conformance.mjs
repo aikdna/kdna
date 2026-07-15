@@ -48,13 +48,13 @@ function buildFixture(name, manifestOverrides = {}, payloadOverrides = {}) {
     created_at: '2026-06-25T00:00:00Z',
     updated_at: '2026-06-25T00:00:00Z',
     creator: { name: 'C', id: 'c' },
-    compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
+    compatibility: { min_loader_version: '1.0.0', profile: 'kdna.payload.judgment' },
     payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
     access: 'public',
     ...manifestOverrides,
   };
   const payload = {
-    profile: 'judgment-profile-v1',
+    profile: 'kdna.payload.judgment',
     core: {
       highest_question: 'Conformance test.',
       axioms: [
@@ -116,12 +116,12 @@ test('canonical container: deterministic output', () => {
     created_at: '2026-06-25T00:00:00Z',
     updated_at: '2026-06-25T00:00:00Z',
     creator: { name: 'C', id: 'c' },
-    compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
+    compatibility: { min_loader_version: '1.0.0', profile: 'kdna.payload.judgment' },
     payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
     access: 'public',
   };
   const payload = {
-    profile: 'judgment-profile-v1',
+    profile: 'kdna.payload.judgment',
     core: {
       highest_question: 'X',
       axioms: [
@@ -175,7 +175,7 @@ test('access: licensed/password → needs_password', () => {
     ...f.manifest,
     access: 'licensed',
     entitlement: { profile: 'password' },
-    encryption: { profile: 'kdna-password-protected-v1', encrypted_entries: ['payload.kdnab'] },
+    encryption: { profile: 'kdna.encryption.password', encrypted_entries: ['payload.kdnab'] },
     payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: true },
   };
   // Overwrite manifest with licensed config
@@ -276,11 +276,11 @@ test('negative: encoding=json manifest is rejected', () => {
       updated_at: '2026-01-01T00:00:00Z',
       creator: { name: 'T' },
       payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false },
-      compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
+      compatibility: { min_loader_version: '1.0.0', profile: 'kdna.payload.judgment' },
     }),
   );
   const p = {
-    profile: 'judgment-profile-v1',
+    profile: 'kdna.payload.judgment',
     core: { highest_question: 'Q', axioms: [{ id: 'a1', one_sentence: 'Test.' }] },
   };
   fs.writeFileSync(path.join(dir, 'payload.kdnab'), cbor.encode(p));
@@ -309,11 +309,11 @@ test('negative: JSON payload disguised as CBOR is rejected', () => {
       updated_at: '2026-01-01T00:00:00Z',
       creator: { name: 'T' },
       payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
-      compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
+      compatibility: { min_loader_version: '1.0.0', profile: 'kdna.payload.judgment' },
     }),
   );
   const p = {
-    profile: 'judgment-profile-v1',
+    profile: 'kdna.payload.judgment',
     core: { highest_question: 'Q', axioms: [{ id: 'a1', one_sentence: 'Test.' }] },
   };
   fs.writeFileSync(path.join(dir, 'payload.kdnab'), JSON.stringify(p));

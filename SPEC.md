@@ -2,7 +2,7 @@
 
 **Status:** Current (GA)
 **Format:** KDNA Asset — `.kdna` file, `application/vnd.kdna.asset`, CBOR-encoded
-`payload.kdnab` (RFC 8949). See `packages/kdna-core/src/v1/index.js` for the
+`payload.kdnab` (RFC 8949). See `packages/kdna-core/src/container/index.js` for the
 reference packer and validator.
 
 **Previous:** v0.4 (superseded)
@@ -597,13 +597,13 @@ invariant (RFC-0018 R4.3) applies to all three.
 
 | Profile ID | RFC | Algorithm | KDF | Required support |
 |------------|-----|-----------|-----|------------------|
-| `kdna-licensed-entry-v1` | RFC-0008 | AES-256-GCM, AES-256-KW | HKDF-SHA256 | Mandatory (compat path) |
-| `kdna-password-protected-v1` | RFC-0009 | AES-256-GCM, AES-256-KW | Argon2id | Optional (compat path) |
-| `kdna-envelope-aead-v1` | **RFC-0018** (frozen 2026-06-28) | AES-256-GCM, AES-256-KW | `scrypt-sha256-v1` (mandatory) or `argon2id-v1` (optional v2, Node.js only) | Mandatory for new exports |
+| `kdna.encryption.licensed-entry` | RFC-0008 | AES-256-GCM, AES-256-KW | HKDF-SHA256 | Mandatory (compat path) |
+| `kdna.encryption.password` | RFC-0009 | AES-256-GCM, AES-256-KW | Argon2id | Optional (compat path) |
+| `kdna.envelope.aead` | **RFC-0018** (frozen 2026-06-28) | AES-256-GCM, AES-256-KW | `scrypt-sha256-v1` (mandatory) or `argon2id-v1` (optional v2, Node.js only) | Mandatory for new exports |
 
-The `kdna-envelope-aead-v1` profile is the canonical target for new
+The `kdna.envelope.aead` profile is the canonical target for new
 product-facing exports. Test vectors are at
-`conformance/kdna-envelope-aead-v1/`. A Swift port that does not
+`conformance/envelope-aead/`. A Swift port that does not
 implement Argon2id MUST either fall back to the next slot's
 `scrypt-sha256-v1` KDF or fail with `KDNA_KDF_UNSUPPORTED` (RFC-0018
 R6). There is no silent fall-through.
@@ -799,7 +799,7 @@ removed legacy fields and MUST NOT be emitted. See
   },
   "compatibility": {
     "min_loader_version": "0.15.12",
-    "profile": "judgment-profile-v1"
+    "profile": "kdna.payload.judgment"
   },
   "payload": {
     "path": "payload.kdnab",

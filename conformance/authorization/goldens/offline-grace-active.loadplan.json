@@ -1,41 +1,37 @@
 {
-  "kdna_version": "1.0",
+  "format_version": null,
   "asset": {
-    "asset_id": "kdna:conformance:authorization:offline-grace-active",
-    "asset_uid": "urn:uuid:6f66666c-696e-452d-8772-6163652d6163",
-    "title": "Authorization Fixture: offline-grace-active",
-    "version": "1.0.0",
-    "judgment_version": "1.0.0"
+    "asset_id": null,
+    "asset_uid": null,
+    "title": null,
+    "version": null,
+    "judgment_version": null
   },
-  "access": "licensed",
+  "access": null,
   "access_alias": null,
-  "entitlement_profile": "local_receipt",
-  "state": "offline_grace",
-  "required_action": "sync",
-  "can_load_now": true,
-  "projection_policy": "minimal",
-  "input_fingerprint": {
-    "has_password_input": false,
-    "entitlement_input": "offline_grace",
-    "source_fingerprint": "sha256:27b3a9741a2ce604a2f3c69422938d7ee9bbedf87b63e8c71776170cca8f5330"
-  },
+  "entitlement_profile": null,
+  "state": "invalid",
+  "required_action": "block",
+  "can_load_now": false,
+  "projection_policy": "none",
+  "input_fingerprint": null,
   "checks": {
-    "format_valid": true,
-    "schema_valid": true,
-    "payload_valid": true,
-    "checksums_valid": true,
-    "load_contract_valid": true,
-    "overall_valid": true
+    "format_valid": false,
+    "schema_valid": false,
+    "payload_valid": false,
+    "checksums_valid": false,
+    "load_contract_valid": false,
+    "overall_valid": false
   },
   "issues": [
     {
-      "code": "KDNA_AUTH_OFFLINE_GRACE_ACTIVE",
-      "severity": "warning",
-      "message": "The entitlement can load during offline grace but must sync before grace expires."
+      "code": "KDNA_FORMAT_INVALID",
+      "severity": "blocking",
+      "message": "Cannot find module './v1/index.js'\nRequire stack:\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container-dispatcher.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container/index.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/public-api.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/index.js\n- /Users/kdna/aikdna/open/kdna/scripts/generate-self-check-conformance-fixtures.mjs"
     }
   ],
   "source": {
-    "kind": "file",
+    "kind": null,
     "path": "<fixture:offline-grace-active>"
   }
 }

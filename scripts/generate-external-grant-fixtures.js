@@ -48,7 +48,7 @@ const manifest = {
   created_at: '2026-07-13T00:00:00Z',
   updated_at: '2026-07-13T00:00:00Z',
   creator: { name: 'KDNA Conformance' },
-  compatibility: { min_loader_version: '0.16.0', profile: 'judgment-profile-v1' },
+  compatibility: { min_loader_version: '0.16.0', profile: 'kdna.payload.judgment' },
   payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: true },
   access: 'licensed',
   entitlement: { profile: 'account', offline: true, revocable: true },
@@ -60,7 +60,7 @@ const manifest = {
 };
 const plaintext = Buffer.from(
   cbor.encode({
-    profile: 'judgment-profile-v1',
+    profile: 'kdna.payload.judgment',
     core: { highest_question: 'Can this device decrypt?', axioms: [] },
   }),
 );

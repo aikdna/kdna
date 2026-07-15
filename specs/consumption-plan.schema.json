@@ -1,0 +1,428 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/specs/consumption-plan.schema.json",
+  "title": "KDNA ConsumptionPlan",
+  "description": "Single-asset plan for Runtime Capsule delivery to an Agent Host.",
+  "type": "object",
+  "required": [
+    "type",
+    "contract_version",
+    "plan_id",
+    "created_at",
+    "mode",
+    "task",
+    "asset_ref",
+    "projection_request",
+    "host_request",
+    "result_request",
+    "budget",
+    "constraints",
+    "trace_policy",
+    "integrity"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "const": "kdna.consumption-plan"
+    },
+    "plan_id": {
+      "type": "string",
+      "pattern": "^plan_[0-9a-f]{16}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mode": {
+      "const": "single"
+    },
+    "task": {
+      "$ref": "#/$defs/task"
+    },
+    "asset_ref": {
+      "$ref": "#/$defs/assetRef"
+    },
+    "projection_request": {
+      "$ref": "#/$defs/projectionRequest"
+    },
+    "host_request": {
+      "$ref": "#/$defs/hostRequest"
+    },
+    "result_request": {
+      "$ref": "#/$defs/resultRequest"
+    },
+    "budget": {
+      "$ref": "#/$defs/budget"
+    },
+    "constraints": {
+      "$ref": "#/$defs/constraints"
+    },
+    "trace_policy": {
+      "$ref": "#/$defs/tracePolicy"
+    },
+    "integrity": {
+      "$ref": "#/$defs/integrity"
+    },
+    "contract_version": {
+      "const": "0.1.0"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([+-].+)?$"
+    },
+    "assetId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*(:[a-zA-Z0-9_.-]+)+$"
+    },
+    "task": {
+      "type": "object",
+      "required": ["summary", "task_family", "context"],
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "task_family": {
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "context": true
+      }
+    },
+    "expectedDigest": {
+      "type": "object",
+      "required": ["value", "basis", "source", "comparison"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "$ref": "#/$defs/sha256"
+        },
+        "basis": {
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "caller",
+            "registry",
+            "install_receipt",
+            "lockfile",
+            "kdna.json.content_digest",
+            "checksums.json.entry_set_digest"
+          ]
+        },
+        "comparison": {
+          "enum": ["matched", "not_compared"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "source": {
+                "const": "caller"
+              }
+            },
+            "required": ["source"]
+          },
+          "then": {
+            "properties": {
+              "comparison": {
+                "const": "not_compared"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "comparison": {
+                "const": "matched"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "assetRef": {
+      "type": "object",
+      "required": [
+        "asset_id",
+        "asset_uid",
+        "version",
+        "judgment_version",
+        "access",
+        "expected_digests"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/assetId"
+        },
+        "asset_uid": {
+          "type": "string",
+          "format": "uri"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/semver"
+        },
+        "access": {
+          "enum": ["public", "licensed", "remote"]
+        },
+        "expected_digests": {
+          "$ref": "#/$defs/expectedDigests"
+        }
+      }
+    },
+    "expectedDigests": {
+      "type": "object",
+      "required": ["asset", "content", "runtime_entry_set"],
+      "additionalProperties": false,
+      "properties": {
+        "asset": {
+          "oneOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/expectedDigest"
+                },
+                {
+                  "properties": {
+                    "basis": {
+                      "const": "kdna.digest-basis.container-bytes"
+                    },
+                    "source": {
+                      "enum": ["caller", "registry", "install_receipt", "lockfile"]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "content": {
+          "oneOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/expectedDigest"
+                },
+                {
+                  "properties": {
+                    "basis": {
+                      "const": "kdna.digest-basis.content-tree"
+                    },
+                    "source": {
+                      "enum": [
+                        "caller",
+                        "registry",
+                        "install_receipt",
+                        "lockfile",
+                        "kdna.json.content_digest"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "runtime_entry_set": {
+          "oneOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/expectedDigest"
+                },
+                {
+                  "properties": {
+                    "basis": {
+                      "const": "kdna.digest-basis.runtime-entry-set"
+                    },
+                    "source": {
+                      "enum": [
+                        "caller",
+                        "registry",
+                        "install_receipt",
+                        "lockfile",
+                        "checksums.json.entry_set_digest"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "projectionRequest": {
+      "type": "object",
+      "required": [
+        "profile",
+        "accepted_capsule_versions",
+        "required_digest_profile",
+        "required_digest_profile_version",
+        "require_packaged_asset"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "enum": ["index", "compact", "scenario", "full"]
+        },
+        "accepted_capsule_versions": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": "0.1.0"
+            }
+          ],
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "required_digest_profile": {
+          "const": "kdna.digest-evidence"
+        },
+        "require_packaged_asset": {
+          "const": true
+        },
+        "required_digest_profile_version": {
+          "const": "0.1.0"
+        }
+      }
+    },
+    "hostRequest": {
+      "type": "object",
+      "required": ["accepted_protocols"],
+      "additionalProperties": false,
+      "properties": {
+        "accepted_protocols": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": "kdna.agent-host"
+            }
+          ],
+          "minItems": 1,
+          "maxItems": 1
+        }
+      }
+    },
+    "resultRequest": {
+      "type": "object",
+      "required": ["shape"],
+      "additionalProperties": false,
+      "properties": {
+        "shape": {
+          "const": "structured_judgment"
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "required": [
+        "max_projection_chars",
+        "max_task_chars",
+        "deadline_ms",
+        "max_tokens",
+        "max_model_calls"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "max_projection_chars": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_task_chars": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "deadline_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_tokens": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "max_model_calls": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "required": ["enforce_before_host", "reject_on_exceed"],
+      "additionalProperties": false,
+      "properties": {
+        "enforce_before_host": {
+          "const": true
+        },
+        "reject_on_exceed": {
+          "const": true
+        }
+      }
+    },
+    "tracePolicy": {
+      "type": "object",
+      "required": ["emit", "storage"],
+      "additionalProperties": false,
+      "properties": {
+        "emit": {
+          "const": true
+        },
+        "storage": {
+          "enum": ["ephemeral", "session", "persistent"]
+        }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "required": ["profile", "profile_version", "plan_digest"],
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "const": "kdna.canonicalization.consumption-plan-jcs"
+        },
+        "plan_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "profile_version": {
+          "const": "0.1.0"
+        }
+      }
+    }
+  }
+}

@@ -17,7 +17,7 @@ const os = require('node:os');
 const cbor = require('cbor-x');
 
 const core = require('../src/index.js');
-const v1 = require('../src/v1/index.js');
+const v1 = require('../src/container/index.js');
 
 const LEGACY_MIMETYPE = ['application/vnd', 'aikdna', 'kdna+zip'].join('.');
 const { validateManifest } = require('../src/lint-pure.js');
@@ -96,13 +96,13 @@ test('detectContainerFormat returns kdna for current asset and null for others',
         created_at: '2026-01-01T00:00:00Z',
         updated_at: '2026-01-01T00:00:00Z',
         creator: { name: 'Test' },
-        compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
+        compatibility: { min_loader_version: '1.0.0', profile: 'kdna.payload.judgment' },
         payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false },
       }),
     );
     fs.writeFileSync(
       path.join(src, 'payload.kdnab'),
-      JSON.stringify({ profile: 'judgment-profile-v1', core: { highest_question: 'q', axioms: [] } }),
+      JSON.stringify({ profile: 'kdna.payload.judgment', core: { highest_question: 'q', axioms: [] } }),
     );
 
     const packed = path.join(tmp, 'test.kdna');
@@ -273,11 +273,11 @@ test('asset reader verifySync enforces kdna_version and current mimetype', () =>
       created_at: '2026-01-01T00:00:00Z',
       updated_at: '2026-01-01T00:00:00Z',
       creator: { name: 'Test' },
-      compatibility: { min_loader_version: '1.0.0', profile: 'judgment-profile-v1' },
+      compatibility: { min_loader_version: '1.0.0', profile: 'kdna.payload.judgment' },
       payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
       access: 'public',
     };
-    const payload = { profile: 'judgment-profile-v1', core: { highest_question: 'q', axioms: [] } };
+    const payload = { profile: 'kdna.payload.judgment', core: { highest_question: 'q', axioms: [] } };
 
     const files = {
       mimetype: Buffer.from('application/vnd.kdna.asset', 'utf8'),

@@ -3,7 +3,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const v1 = require('../packages/kdna-core/src/v1');
+const v1 = require('../packages/kdna-core/src/container');
 
 const repoRoot = path.resolve(__dirname, '..');
 const examplesRoot = path.join(repoRoot, 'examples');

@@ -48,7 +48,7 @@ function manifest(overrides = {}) {
     created_at: '2026-07-01T00:00:00.000Z',
     updated_at: '2026-07-01T00:00:00.000Z',
     creator: { name: 'KDNA Conformance', id: 'conformance' },
-    compatibility: { min_loader_version: '0.15.12', profile: 'judgment-profile-v1' },
+    compatibility: { min_loader_version: '0.15.12', profile: 'kdna.payload.judgment' },
     payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: false },
     access: 'public',
     ...overrides,
@@ -57,7 +57,7 @@ function manifest(overrides = {}) {
 
 function payload() {
   return {
-    profile: 'judgment-profile-v1',
+    profile: 'kdna.payload.judgment',
     core: {
       highest_question: 'Does this asset prove the single-format lifecycle?',
       axioms: [

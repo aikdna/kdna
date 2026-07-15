@@ -13,7 +13,7 @@ trust, not to decrypt buyer licenses.
 
 Licensed user activation is defined in `kdna-entitlement-api.md`. Local
 licensed loading uses a `license_key` plus machine fingerprint to derive an
-in-memory decrypt hook for `kdna-licensed-entry-v1`.
+in-memory decrypt hook for `kdna.encryption.licensed-entry`.
 
 ## 2. Key Format
 

@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/aikdna/kdna/schema/load-plan.schema.json",
-  "title": "KDNA LoadPlan v1",
+  "title": "KDNA LoadPlan",
   "description": "Machine-readable pre-load authorization and runtime planning result for KDNA Core assets.",
   "type": "object",
   "required": [
-    "kdna_version",
+    "format_version",
     "asset",
     "access",
     "access_alias",
@@ -21,7 +21,9 @@
   ],
   "additionalProperties": false,
   "properties": {
-    "kdna_version": { "type": ["string", "null"] },
+    "format_version": {
+      "oneOf": [{ "const": "0.1.0" }, { "type": "null" }]
+    },
     "asset": {
       "type": "object",
       "required": ["asset_id", "asset_uid", "title", "version", "judgment_version"],

@@ -1,5 +1,4 @@
 {
-  "kdna_version": "1.0",
   "asset_id": "kdna:conformance:authorization:receipt-missing",
   "asset_uid": "urn:uuid:72656365-6970-442d-8d69-7373696e6700",
   "asset_type": "fixture",
@@ -14,7 +13,8 @@
   },
   "compatibility": {
     "min_loader_version": "1.0.0",
-    "profile": "judgment-profile-v1"
+    "profile": "kdna.payload.judgment",
+    "profile_version": "0.1.0"
   },
   "payload": {
     "path": "payload.kdnab",
@@ -51,6 +51,7 @@
       }
     }
   },
+  "format_version": "0.1.0",
   "access": "licensed",
   "entitlement": {
     "profile": "local_receipt",

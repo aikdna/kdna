@@ -207,7 +207,7 @@ for (const component of referenceAssetComponents()) {
 
 section('Tarball Allowlist Checks');
 assertPack('@aikdna/kdna-core', path.join(repoRoot, 'packages', 'kdna-core'), {
-  required: ['LICENSE', 'NOTICE', 'src/v1/index.js', 'src/v1/index.mjs'],
+  required: ['LICENSE', 'NOTICE', 'src/container/index.js', 'src/container/index.mjs'],
   forbidden: [/\.bak$/, /\.tgz$/],
 });
 assertPack('@aikdna/kdna-cli', componentPath('aikdna/kdna-cli'), {

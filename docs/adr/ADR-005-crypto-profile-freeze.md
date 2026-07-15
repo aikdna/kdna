@@ -10,9 +10,9 @@ The KDNA ecosystem has three encryption profiles, two of which are partially imp
 
 | Profile | JS Core | Swift Core | Status |
 |---|---|---|---|
-| `kdna-licensed-entry-v1` (RFC-0008, HKDF + AES-KW + AES-GCM) | Implemented | Implemented | Canonical write candidate |
+| `kdna.encryption.licensed-entry` (RFC-0008, HKDF + AES-KW + AES-GCM) | Implemented | Implemented | Canonical write candidate |
 | `kdna-licensed-entry-experimental` (scrypt-sha256) | Implemented | Rejected: "scrypt not available in Swift core" | Compatibility only |
-| `kdna-password-protected-v1` (RFC-0009, Argon2id + AES-KW + AES-GCM) | Implemented | Implemented | Password protection |
+| `kdna.encryption.password` (RFC-0009, Argon2id + AES-KW + AES-GCM) | Implemented | Implemented | Password protection |
 
 Additionally, there are critical security gaps:
 - Swift `KDNALicenseTypes.verifySignature()` always returns `true` (placeholder)
@@ -25,7 +25,7 @@ Additionally, there are critical security gaps:
 1. **No new encryption profiles SHALL be added** until all existing profiles are inventoried, frozen, and covered by cross-language test vectors.
 
 2. **Profile classification:**
-   - `kdna-envelope-aead-v1` (or equivalent from design doc) is the future **canonical write profile**.
+   - `kdna.envelope.aead` (or equivalent from design doc) is the future **canonical write profile**.
    - All other profiles are **read-only compatibility profiles**.
    - The canonical write profile selection must be made by a separate ADR after B1-B4 are complete.
 

@@ -1,5 +1,4 @@
 {
-  "kdna_version": "1.0",
   "name": "@yourscope/your_domain_id",
   "asset_id": "kdna:example:standard",
   "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000002",
@@ -26,12 +25,14 @@
   },
   "compatibility": {
     "min_loader_version": "1.0.0",
-    "profile": "judgment-profile-v1"
+    "profile": "kdna.payload.judgment",
+    "profile_version": "0.1.0"
   },
   "payload": {
     "path": "payload.kdnab",
     "encoding": "cbor",
     "encrypted": false
   },
-  "risk_level": "R0"
+  "risk_level": "R0",
+  "format_version": "0.1.0"
 }

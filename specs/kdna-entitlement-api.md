@@ -181,7 +181,7 @@ Local fixture files MAY contain:
 | `allowed_agents` | Recommended | Agent/client allowlist. |
 | `activation_server` | Recommended | Endpoint used for future activation refresh. |
 
-For `kdna-key-grant-v1`, clients persist the highest verified
+For `kdna.grant.external-key`, clients persist the highest verified
 `status_version` and greatest verified wall-clock value in their platform
 SecretStore. A lower status version or material clock rollback fails closed;
 removing the local entitlement is the only supported reset before a new device
@@ -437,7 +437,7 @@ API namespace:
 POST device-activations
 → user verifies the displayed code in a signed-in browser
 → POST device-activations/{id}/poll with a signed device proof
-→ signed kdna-key-grant-v1
+→ signed kdna.grant.external-key
 ```
 
 Subsequent synchronization uses a server challenge and a signed proof from the
@@ -447,9 +447,9 @@ violation, or mismatched proof MUST fail closed.
 
 The grant and encrypted asset contracts are defined by RFC-0019 and:
 
-- `kdna-key-grant-v1.schema.json`;
-- `kdna-envelope-external-grant-v1.schema.json`;
-- `../conformance/kdna-external-grant-v1/`.
+- `external-key-grant.schema.json`;
+- `external-grant-envelope.schema.json`;
+- `../conformance/external-grant/`.
 
 The issuer derives the asset CEK only inside its trusted key boundary and wraps
 it to the requesting device's public agreement key. The CEK MUST NOT be stored

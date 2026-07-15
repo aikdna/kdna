@@ -1,8 +1,8 @@
 # RFC-0019: Account/device external key grants
 
 - Status: Draft
-- Profile: `kdna-envelope-external-grant-v1`
-- Grant: `kdna-key-grant-v1`
+- Profile: `kdna.envelope.external-grant`
+- Grant: `kdna.grant.external-key`
 - Applies to: `access: "licensed"` with `entitlement.profile: "account"` or `"org"`
 
 ## 1. Problem and non-goals
@@ -51,11 +51,11 @@ that root key ID and requires asset-root rotation plus asset re-encryption.
 ## 3. Asset envelope
 
 The encrypted entry is deterministic CBOR containing the JSON presentation
-described by `specs/kdna-envelope-external-grant-v1.schema.json`.
+described by `specs/external-grant-envelope.schema.json`.
 
 Required cryptographic values are:
 
-- `profile`: `kdna-envelope-external-grant-v1`
+- `profile`: `kdna.envelope.external-grant`
 - `alg`: `A256GCM`
 - `cek_derivation`: `HKDF-SHA256`
 - `key_ref`: opaque, non-secret asset key reference
@@ -72,7 +72,7 @@ bytes of the exact AAD in section 3.2.
 
 ```text
 salt = SHA-256(binding)
-info = UTF-8("kdna-external-asset-cek-v1\n" + key_ref)
+info = UTF-8("kdna.key-context.asset-content\n" + key_ref)
 CEK  = HKDF-SHA256(root, salt, info, 32)
 ```
 
@@ -83,7 +83,7 @@ The root and CEK are memory-only. `key_ref` and `issuer_key_id` are not secrets.
 The exact UTF-8 AAD, with no trailing newline, is:
 
 ```text
-kdna-envelope-external-grant-v1
+kdna.envelope.external-grant
 <asset_uid>
 <asset_id>
 <asset_version>
@@ -119,8 +119,8 @@ atomically.
 
 ## 5. Signed key grant
 
-`kdna-key-grant-v1` uses the schema in
-`specs/kdna-key-grant-v1.schema.json`. The signature input is UTF-8 canonical
+`kdna.grant.external-key` uses the schema in
+`specs/external-key-grant.schema.json`. The signature input is UTF-8 canonical
 JSON with recursively lexicographically sorted object keys, no insignificant
 whitespace, and the `signature` member omitted. Array order is preserved.
 
@@ -131,7 +131,7 @@ The issuer:
 3. generates an ephemeral X25519 key pair;
 4. computes `shared = X25519(ephemeral_private, device_public)`;
 5. derives `KEK = HKDF-SHA256(shared, wrap.salt,
-   UTF-8("kdna-device-grant-kek-v1\n" + grant_id), 32)`;
+   UTF-8("kdna.key-context.device-grant\n" + grant_id), 32)`;
 6. wraps the 32-byte CEK using AES-256-KW (RFC 3394);
 7. destroys the CEK, KEK, shared secret, and ephemeral private key; and
 8. signs the grant with Ed25519.

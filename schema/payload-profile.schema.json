@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/schema/payload-profile.schema.json",
+  "title": "KDNA Judgment Payload Profile",
+  "description": "Schema for the payload entry of a .kdna container. The payload is the actual judgment data.",
+  "type": "object",
+  "required": ["profile", "profile_version", "core"],
+  "additionalProperties": true,
+  "properties": {
+    "profile": {
+      "type": "string",
+      "const": "kdna.payload.judgment",
+      "description": "Profile identifier. Must be the literal string 'kdna.payload.judgment'."
+    },
+    "profile_version": {
+      "const": "0.1.0",
+      "description": "Compatibility coordinate for the judgment payload profile."
+    },
+    "core": {
+      "type": "object",
+      "required": ["highest_question", "axioms"],
+      "additionalProperties": true,
+      "properties": {
+        "highest_question": {
+          "type": "string",
+          "description": "The single most important question this judgment system answers."
+        },
+        "worldview": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Scoped assumptions used at qualitative judgment forks; not general facts or deterministic policy."
+        },
+        "value_order": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ordered qualitative priorities, highest priority first."
+        },
+        "judgment_role": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "acts_as": { "type": "string" },
+            "does_not_act_as": {
+              "oneOf": [
+                { "type": "string" },
+                { "type": "array", "items": { "type": "string" } }
+              ]
+            },
+            "responsibility": { "type": "string" }
+          },
+          "description": "The authority this asset exercises and the responsibilities explicitly outside it."
+        },
+        "axioms": {
+          "type": "array",
+          "description": "The list of axioms. Phase 1 accepts an empty array."
+        },
+        "boundaries": {
+          "type": "array",
+          "description": "Explicit out-of-scope statements."
+        },
+        "risk_model": {
+          "type": "object",
+          "description": "Structural risk metadata."
+        }
+      }
+    },
+    "patterns": {
+      "type": "array",
+      "description": "Recognized patterns."
+    },
+    "scenarios": {
+      "type": "array",
+      "description": "Scenario descriptions."
+    },
+    "cases": {
+      "type": "array",
+      "description": "Worked cases."
+    },
+    "reasoning": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "self_check": {
+          "type": "array",
+          "description": "Self-check questions. Each item is either a string or an object with a required string `question` field and optional metadata.",
+          "items": {
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "object",
+                "required": ["question"],
+                "additionalProperties": true,
+                "properties": {
+                  "question": { "type": "string" },
+                  "applies_when": { "type": "array" },
+                  "does_not_apply_when": { "type": "array" },
+                  "failure_risk": { "type": "string" }
+                }
+              }
+            ]
+          }
+        },
+        "self_checks": false,
+        "failure_modes": {
+          "type": "array",
+          "items": { "type": "object" }
+        }
+      }
+    },
+    "evolution": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "changelog": { "type": "array", "items": { "type": "object" } },
+        "version_notes": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

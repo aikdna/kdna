@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// generate-vectors.js — Compute kdna-envelope-aead-v1 test vectors (Story 17)
+// generate-vectors.js — Compute kdna.envelope.aead test vectors (Story 17)
 //
 // Run from OPEN/kdna/:
 //   node scripts/generate-envelope-aead-vectors.js
@@ -25,7 +25,7 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const ENVELOPE_PROFILE = 'kdna-envelope-aead-v1';
+const ENVELOPE_PROFILE = 'kdna.envelope.aead';
 const ALG = 'AES-256-GCM';
 const KEY_WRAPPING = 'AES-256-KW';
 
@@ -177,7 +177,7 @@ function vector1() {
   });
   const scryptParams = { ...SCRYPT_PARAMS, salt: salt.toString('base64') };
   return {
-    id: 'kdna-envelope-aead-v1-vector-01-scrypt-basic',
+    id: 'kdna.envelope.aead-vector-01-scrypt-basic',
     description: 'scrypt-sha256-v1: basic round-trip with one password slot.',
     inputs: {
       password,
@@ -249,7 +249,7 @@ function vector2() {
   });
   const scryptParams = { ...SCRYPT_PARAMS, salt: salt.toString('base64') };
   return {
-    id: 'kdna-envelope-aead-v1-vector-02-scrypt-multi-entry-aad',
+    id: 'kdna.envelope.aead-vector-02-scrypt-multi-entry-aad',
     description:
       'scrypt-sha256-v1: same CEK + IV + plaintext under two different AADs (entry_path differs). The two ciphertexts MUST differ because AAD is part of the GCM input. A reader MUST reject if AAD does not match.',
     inputs: {
@@ -311,7 +311,7 @@ function vector3() {
   });
   const argon2Params = { ...ARGON2_PARAMS, salt: salt.toString('base64') };
   return {
-    id: 'kdna-envelope-aead-v1-vector-03-argon2id-basic',
+    id: 'kdna.envelope.aead-vector-03-argon2id-basic',
     description:
       'argon2id-v1: basic round-trip with the optional v2 KDF. Node.js implementations only; Swift port MUST either fallback to scrypt-sha256-v1 or refuse to load with KDNA_KDF_UNSUPPORTED.',
     inputs: {
@@ -333,7 +333,7 @@ function vector3() {
 
 // ── Main ────────────────────────────────────────────────────────────
 
-const outDir = path.resolve(__dirname, '..', 'conformance', 'kdna-envelope-aead-v1');
+const outDir = path.resolve(__dirname, '..', 'conformance', 'kdna.envelope.aead');
 fs.mkdirSync(outDir, { recursive: true });
 
 const vectors = [vector1(), vector2(), vector3()];

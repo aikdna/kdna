@@ -23,12 +23,12 @@ function runTsc(args) {
 
 function representativeTypesSource(importSpecifier) {
   return [
-    `import { ALG, EXTERNAL_AAD_PROFILE, WORK_PACK_SCHEMA, KDNAManifest, KDNAWorkPackManifest, LicensedEntryLegacyEnvelope, encryptLicensedEntryV1, decryptLicensedEntryV1, decryptLicensedEntry, encryptProtectedEntry, validateWorkPackManifest, inspectWorkPack, externalEnvelopeAad } from ${JSON.stringify(importSpecifier)};`,
+    `import { ALG, EXTERNAL_AAD_PROFILE, WORK_PACK_SCHEMA, KDNAManifest, KDNAWorkPackManifest, LicensedEntryLegacyEnvelope, encryptLicensedEntry, decryptLicensedEntry, decryptLicensedEntry, encryptProtectedEntry, validateWorkPackManifest, inspectWorkPack, externalEnvelopeAad } from ${JSON.stringify(importSpecifier)};`,
     "const algorithm: 'AES-256-GCM' = ALG;",
-    "const aadProfile: 'kdna-external-asset-cek-v1' = EXTERNAL_AAD_PROFILE;",
+    "const aadProfile: 'kdna.key-context.asset-content' = EXTERNAL_AAD_PROFILE;",
     'declare const manifest: KDNAManifest;',
-    "const envelope = encryptLicensedEntryV1('judgment', { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
-    "const plaintext: Uint8Array = decryptLicensedEntryV1(envelope, { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
+    "const envelope = encryptLicensedEntry('judgment', { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
+    "const plaintext: Uint8Array = decryptLicensedEntry(envelope, { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
     "const unifiedV1: Uint8Array = decryptLicensedEntry(envelope, { entryName: 'payload.kdnab', manifest, licenseKey: 'license' });",
     "const protectedEnvelope = encryptProtectedEntry('judgment', { entryName: 'payload.kdnab', manifest, password: 'password' });",
     "const kdfName: 'Argon2id' = protectedEnvelope.password_kdf.name;",

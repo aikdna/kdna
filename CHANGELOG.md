@@ -10,7 +10,7 @@
 
 **2026-06-22**
 
-- loadV1 reports profile_available and available_profiles, no silent scenario fallback.
+- loadAsset reports profile_available and available_profiles, no silent scenario fallback.
 
 ## 0.13.0
 

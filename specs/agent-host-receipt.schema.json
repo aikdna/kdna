@@ -1,0 +1,371 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/specs/agent-host-receipt.schema.json",
+  "title": "KDNA Agent Host Receipt",
+  "description": "Correlated Host response envelope. A matched runtime receipt proves only that the Host boundary accepted the exact Runtime Capsule value; it does not prove semantic consumption or conformance.",
+  "type": "object",
+  "required": ["protocol", "protocol_version", "request_id", "runtime_receipt", "outcome"],
+  "additionalProperties": false,
+  "properties": {
+    "protocol": {
+      "const": "kdna.agent-host"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^host_[0-9a-f]{24}$"
+    },
+    "runtime_receipt": {
+      "$ref": "#/$defs/runtimeReceipt"
+    },
+    "outcome": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/outcome"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "protocol_version": {
+      "const": "0.1.0"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "runtime_receipt": {
+            "properties": {
+              "provider_execution_status": {
+                "const": "completed"
+              }
+            },
+            "required": ["provider_execution_status"]
+          }
+        },
+        "required": ["runtime_receipt"]
+      },
+      "then": {
+        "properties": {
+          "outcome": {
+            "$ref": "#/$defs/outcome"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "outcome": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "runtimeReceipt": {
+      "type": "object",
+      "required": [
+        "type",
+        "contract_version",
+        "capsule_version",
+        "capsule_digest_profile",
+        "capsule_digest_profile_version",
+        "sender_capsule_delivery_digest",
+        "host_recomputed_capsule_delivery_digest",
+        "echoed_capsule_delivery_digest",
+        "capsule_delivery_comparison",
+        "capsule_schema_validation",
+        "asset_id_correlation",
+        "provider_execution_status",
+        "usage",
+        "semantic_consumption",
+        "model_identity"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "kdna.agent-host.runtime-receipt"
+        },
+        "capsule_version": {
+          "const": "0.1.0"
+        },
+        "capsule_digest_profile": {
+          "const": "kdna.canonicalization.runtime-capsule-jcs"
+        },
+        "sender_capsule_delivery_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "host_recomputed_capsule_delivery_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "echoed_capsule_delivery_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "capsule_delivery_comparison": {
+          "enum": ["matched", "mismatched"]
+        },
+        "capsule_schema_validation": {
+          "const": "passed"
+        },
+        "asset_id_correlation": {
+          "const": "matched"
+        },
+        "provider_execution_status": {
+          "enum": ["completed", "not_started", "failed", "cancelled", "timed_out"]
+        },
+        "usage": {
+          "$ref": "#/$defs/observedUsage"
+        },
+        "semantic_consumption": {
+          "$ref": "#/$defs/semanticConsumption"
+        },
+        "model_identity": {
+          "$ref": "#/$defs/modelIdentity"
+        },
+        "contract_version": {
+          "const": "0.1.0"
+        },
+        "capsule_digest_profile_version": {
+          "const": "0.1.0"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "capsule_delivery_comparison": {
+                "const": "matched"
+              }
+            },
+            "required": ["capsule_delivery_comparison"]
+          },
+          "then": {
+            "properties": {
+              "provider_execution_status": {
+                "enum": ["completed", "failed", "cancelled", "timed_out"]
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "provider_execution_status": {
+                "const": "not_started"
+              },
+              "usage": {
+                "properties": {
+                  "tokens_used": {
+                    "type": "null"
+                  },
+                  "model_calls": {
+                    "type": "null"
+                  },
+                  "basis": {
+                    "const": "not_observed"
+                  }
+                }
+              },
+              "model_identity": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  },
+                  "basis": {
+                    "const": "not_observed"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "semanticConsumption": {
+      "type": "object",
+      "required": ["state", "basis"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "const": "not_observed"
+        },
+        "basis": {
+          "type": "null"
+        }
+      }
+    },
+    "observedUsage": {
+      "type": "object",
+      "required": ["elapsed_ms", "elapsed_basis", "tokens_used", "model_calls", "basis"],
+      "additionalProperties": false,
+      "properties": {
+        "elapsed_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "elapsed_basis": {
+          "const": "host_monotonic"
+        },
+        "tokens_used": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model_calls": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "basis": {
+          "enum": ["host_reported", "not_observed"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "basis": {
+                "const": "host_reported"
+              }
+            },
+            "required": ["basis"]
+          },
+          "then": {
+            "properties": {
+              "tokens_used": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "model_calls": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "tokens_used": {
+                "type": "null"
+              },
+              "model_calls": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "modelIdentity": {
+      "type": "object",
+      "required": ["value", "basis"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "basis": {
+          "enum": ["host_reported", "not_observed"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "basis": {
+                "const": "host_reported"
+              }
+            },
+            "required": ["basis"]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "outcome": {
+      "type": "object",
+      "required": ["judgment", "usage"],
+      "additionalProperties": false,
+      "properties": {
+        "judgment": {
+          "$ref": "#/$defs/judgment"
+        },
+        "usage": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/usage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "judgment": {
+      "type": "object",
+      "required": ["answer", "reasoning", "confidence"],
+      "additionalProperties": false,
+      "properties": {
+        "answer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reasoning": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence": {
+          "type": ["string", "null"],
+          "minLength": 1
+        }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "required": ["tokens_used", "model_calls"],
+      "additionalProperties": false,
+      "properties": {
+        "tokens_used": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "model_calls": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "expected_error": "KDNA_GRANT_DIGEST_MISMATCH",
+  "checksums": {
+    "algorithm": "sha256",
+    "manifest_digest": "sha256:dadfa5b27f6bacc3c0348310266521ea59517a17e9edce8f92ad4fc3a5b60b89",
+    "payload_digest": "sha256:5f40f76a2d50c597dc95c6e9d2a41242a174c03a518c84415fd03a8e8821fe47",
+    "asset_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "entries": {
+      "kdna.json": {
+        "algorithm": "sha256",
+        "value": "dadfa5b27f6bacc3c0348310266521ea59517a17e9edce8f92ad4fc3a5b60b89"
+      },
+      "payload.kdnab": {
+        "algorithm": "sha256",
+        "value": "5f40f76a2d50c597dc95c6e9d2a41242a174c03a518c84415fd03a8e8821fe47"
+      }
+    }
+  },
+  "grant": {
+    "profile": "kdna.grant.external-key",
+    "grant_id": "grt_fixture_01",
+    "issuer": "https://fixture.invalid",
+    "signing_key_id": "fixture-grant-signing-v1",
+    "entitlement_id": "ent_fixture_01",
+    "account_id": "acct_fixture_01",
+    "device_id": "dev_fixture_01",
+    "device_public_key": "x25519:fTSkgV-muYJTXmCvO9m0lVaBYIDxZB_4HSt8iugmikQ",
+    "device_signing_public_key": "ed25519:oJql9HpnWYAv-VX43C0qFKXJnSO-l_hkEn_5ODRVpPA",
+    "asset": {
+      "asset_id": "kdna:fixture:external-grant",
+      "asset_uid": "urn:uuid:00190000-0000-4000-8000-000000000001",
+      "version": "1.0.0",
+      "digest": "sha256:81d53d4d7fd33ee7b9a33771f179a0dedaf32da4cebf3a279b0109cfe0abe608",
+      "entry_path": "payload.kdnab",
+      "ciphertext_digest": "sha256:1aceead89e2b3af5c46710050bc1dd4bd3ee359038ff631539c6e28752b45b66",
+      "key_ref": "assetkey:fixture:external-grant:1.0.0",
+      "issuer_key_id": "fixture-asset-root-v1"
+    },
+    "issued_at": "2026-07-13T00:00:00.000Z",
+    "refresh_after": "2026-07-14T00:00:00.000Z",
+    "offline_grace_until": "2026-07-20T00:00:00.000Z",
+    "expires_at": "2026-07-21T00:00:00.000Z",
+    "status": "active",
+    "status_version": 1,
+    "wrap": {
+      "alg": "X25519-HKDF-SHA256+A256KW",
+      "ephemeral_public_key": "x25519:mkUDqYqxD-jTVMnELL0MnXlE9S59FNjqWXdefcnjv0s",
+      "salt": "JiYmJiYmJiYmJiYmJiYmJg",
+      "wrapped_cek": "ZhFBMG5YCAtMkTUA6bDzxiLtvviN-1iffaHlLL1MY5RGqvYI20F6Bw"
+    },
+    "signature": "ed25519:tA1HLRl2NqPzwN0j5Mv2Op-sLiyVtAJMz4TJbqHwFOZ6mrfRzk8e7SwD71iRpioA-Cbzn84PPi-GLpV9n9drCA"
+  }
+}

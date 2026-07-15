@@ -1,0 +1,86 @@
+{
+  "id": "kdna.envelope.aead-vector-02-scrypt-multi-entry-aad",
+  "description": "scrypt-sha256-v1: same CEK + IV + plaintext under two different AADs (entry_path differs). The two ciphertexts MUST differ because AAD is part of the GCM input. A reader MUST reject if AAD does not match.",
+  "inputs": {
+    "password": "kdna-envelope-test-vector-2-password",
+    "salt": "ICEiIyQlJicoKSorLC0uLw==",
+    "iv": "ISIjJCUmJygpKiss",
+    "cek": "sbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9A=",
+    "plaintext": "Same plaintext, two entries.",
+    "aad_entry_1": "kdna.envelope.aead\nurn:uuid:33333333-3333-4333-8333-333333333333\nsha256:4444444444444444444444444444444444444444444444444444444444444444\nKDNA_Core.json\nlicensed\npassword",
+    "aad_entry_1_lines": [
+      "kdna.envelope.aead",
+      "urn:uuid:33333333-3333-4333-8333-333333333333",
+      "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "KDNA_Core.json",
+      "licensed",
+      "password"
+    ],
+    "aad_entry_2": "kdna.envelope.aead\nurn:uuid:33333333-3333-4333-8333-333333333333\nsha256:4444444444444444444444444444444444444444444444444444444444444444\nKDNA_Patterns.json\nlicensed\npassword",
+    "aad_entry_2_lines": [
+      "kdna.envelope.aead",
+      "urn:uuid:33333333-3333-4333-8333-333333333333",
+      "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "KDNA_Patterns.json",
+      "licensed",
+      "password"
+    ],
+    "scrypt_params": {
+      "N": 32768,
+      "r": 8,
+      "p": 1,
+      "salt": "ICEiIyQlJicoKSorLC0uLw=="
+    }
+  },
+  "expected": {
+    "kek": "/nSMeLFKL1A9SNIZVIzp6f00H7JTAIm5w6QDiByYuC8=",
+    "envelope_entry_1": {
+      "profile": "kdna.envelope.aead",
+      "alg": "AES-256-GCM",
+      "key_wrapping": "AES-256-KW",
+      "kdf_profile": "scrypt-sha256-v1",
+      "key_slots": [
+        {
+          "slot": "password",
+          "kdf_profile": "scrypt-sha256-v1",
+          "kdf_params": {
+            "N": 32768,
+            "r": 8,
+            "p": 1,
+            "salt": "ICEiIyQlJicoKSorLC0uLw=="
+          },
+          "wrap": "AES-256-KW",
+          "wrapped_key": "YWNYvZpHOHlMdiXq3vZxuYLfde7jHrklh29Adt5rkv/j1tWoRhHLfA=="
+        }
+      ],
+      "iv": "ISIjJCUmJygpKiss",
+      "tag": "fvfg2vsrCMpCt7CN/cybEg==",
+      "ciphertext": "iK3tLDHVWvApPo93D5l0v2Z+jO7iuNKLJJhrYQ=="
+    },
+    "envelope_entry_2": {
+      "profile": "kdna.envelope.aead",
+      "alg": "AES-256-GCM",
+      "key_wrapping": "AES-256-KW",
+      "kdf_profile": "scrypt-sha256-v1",
+      "key_slots": [
+        {
+          "slot": "password",
+          "kdf_profile": "scrypt-sha256-v1",
+          "kdf_params": {
+            "N": 32768,
+            "r": 8,
+            "p": 1,
+            "salt": "ICEiIyQlJicoKSorLC0uLw=="
+          },
+          "wrap": "AES-256-KW",
+          "wrapped_key": "YWNYvZpHOHlMdiXq3vZxuYLfde7jHrklh29Adt5rkv/j1tWoRhHLfA=="
+        }
+      ],
+      "iv": "ISIjJCUmJygpKiss",
+      "tag": "1mx15N/TJKf4I0Qc2Sa0OQ==",
+      "ciphertext": "iK3tLDHVWvApPo93D5l0v2Z+jO7iuNKLJJhrYQ=="
+    },
+    "ciphertext_entry_1_eq_entry_2": true,
+    "tag_entry_1_eq_entry_2": false
+  }
+}

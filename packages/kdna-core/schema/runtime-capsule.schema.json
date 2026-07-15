@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/specs/runtime-capsule.schema.json",
+  "title": "KDNA Runtime Capsule",
+  "description": "Current Runtime Capsule carrying explicit A/C/E digest evidence. P is external delivery metadata and is never embedded here.",
+  "type": "object",
+  "required": [
+    "type",
+    "contract_version",
+    "asset",
+    "digests",
+    "signature",
+    "access",
+    "risk_level",
+    "profile",
+    "context",
+    "trace"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "const": "kdna.runtime-capsule" },
+    "contract_version": { "const": "0.1.0" },
+    "asset": { "$ref": "#/$defs/asset" },
+    "digests": {
+      "allOf": [
+        {
+          "$ref": "https://github.com/aikdna/kdna/specs/digest-evidence.schema.json"
+        },
+        {
+          "properties": {
+            "asset": { "$ref": "#/$defs/successfulDigest" },
+            "content": { "$ref": "#/$defs/successfulDigest" },
+            "runtime_entry_set": { "$ref": "#/$defs/successfulDigest" }
+          }
+        }
+      ]
+    },
+    "signature": { "$ref": "#/$defs/signature" },
+    "access": { "enum": ["public", "licensed", "remote"] },
+    "risk_level": { "type": ["string", "null"] },
+    "profile": { "enum": ["index", "compact", "scenario", "full"] },
+    "context": { "type": "object" },
+    "trace": { "$ref": "#/$defs/trace" }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "asset": {
+      "type": "object",
+      "required": ["asset_id", "asset_uid", "version", "judgment_version"],
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*(:[a-zA-Z0-9_.-]+)+$"
+        },
+        "asset_uid": { "type": "string", "format": "uri" },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([+-].+)?$"
+        },
+        "judgment_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([+-].+)?$"
+        }
+      }
+    },
+    "successfulDigest": {
+      "type": "object",
+      "properties": {
+        "value": { "$ref": "#/$defs/sha256" },
+        "comparison": {
+          "type": "object",
+          "properties": {
+            "state": { "enum": ["matched", "not_compared"] }
+          }
+        }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["state"],
+      "additionalProperties": false,
+      "properties": {
+        "state": { "enum": ["verified", "not_checked", "absent"] },
+        "issuer": { "type": "string", "minLength": 1 }
+      }
+    },
+    "trace": {
+      "type": "object",
+      "required": [
+        "payload_encoding",
+        "loaded_by",
+        "loaded_at",
+        "input_kind",
+        "runtime_eligible",
+        "schema_valid",
+        "signature_state",
+        "profile"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "payload_encoding": { "const": "cbor" },
+        "loaded_by": { "const": "kdna-core" },
+        "loaded_at": { "type": "string", "format": "date-time" },
+        "input_kind": { "enum": ["packaged_file", "packaged_bytes"] },
+        "runtime_eligible": { "const": true },
+        "schema_valid": { "const": true },
+        "signature_state": { "enum": ["verified", "not_checked", "absent"] },
+        "profile": { "enum": ["index", "compact", "scenario", "full"] }
+      }
+    }
+  }
+}

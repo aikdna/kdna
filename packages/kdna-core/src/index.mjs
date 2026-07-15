@@ -23,12 +23,11 @@ export {
   buildChecksums,
   pack,
   unpack,
-  buildCapsule,
   FORBIDDEN_OUTPUT_TERMS,
   parseSemver,
   compareSemver,
   satisfies,
-} from './v1/index.js';
+} from './container/index.js';
 
 import runtimeApi from './runtime-api.js';
 export const planLoad = runtimeApi.planLoad;
@@ -57,8 +56,8 @@ import cryptoProfile from './crypto-profile.js';
 import externalKeyGrant from './external-key-grant.js';
 import publicApi from './public-api.js';
 import workpackPure from './workpack-pure.js';
-import capsuleV2 from './capsule-v2.js';
-import executionContractV1 from './execution-contract-v1.js';
+import runtimeCapsule from './runtime-capsule.js';
+import runtimeContract from './runtime-contract.js';
 
 export const openKDNA = publicApi.openKDNA;
 export const openKDNASync = publicApi.openKDNASync;
@@ -80,58 +79,62 @@ export const matchDomain = publicApi.matchDomain;
 export const matchDomainSync = publicApi.matchDomainSync;
 export const composeKDNA = publicApi.composeKDNA;
 
-export const DIGEST_PROFILE = capsuleV2.DIGEST_PROFILE;
-export const CAPSULE_DIGEST_PROFILE = capsuleV2.CAPSULE_DIGEST_PROFILE;
-export const BASIS = capsuleV2.BASIS;
-export const computeAssetDigest = capsuleV2.computeAssetDigest;
-export const computeRuntimeEntrySetDigest = capsuleV2.computeRuntimeEntrySetDigest;
-export const computeDigestEvidence = capsuleV2.computeDigestEvidence;
-export const canonicalizeJcs = capsuleV2.canonicalizeJcs;
-export const computeCapsuleDeliveryDigest = capsuleV2.computeCapsuleDeliveryDigest;
-export const buildCapsuleV2 = capsuleV2.buildCapsuleV2;
-export const loadCapsuleV2 = capsuleV2.loadCapsuleV2;
-export const adaptCapsuleV2ToV1 = capsuleV2.adaptCapsuleV2ToV1;
+export const DIGEST_PROFILE = runtimeCapsule.DIGEST_PROFILE;
+export const DIGEST_PROFILE_VERSION = runtimeCapsule.DIGEST_PROFILE_VERSION;
+export const CAPSULE_DIGEST_PROFILE = runtimeCapsule.CAPSULE_DIGEST_PROFILE;
+export const CANONICALIZATION_PROFILE_VERSION = runtimeCapsule.CANONICALIZATION_PROFILE_VERSION;
+export const RUNTIME_CAPSULE_CONTRACT_VERSION = runtimeCapsule.RUNTIME_CAPSULE_CONTRACT_VERSION;
+export const BASIS = runtimeCapsule.BASIS;
+export const computeAssetDigest = runtimeCapsule.computeAssetDigest;
+export const computeRuntimeEntrySetDigest = runtimeCapsule.computeRuntimeEntrySetDigest;
+export const computeDigestEvidence = runtimeCapsule.computeDigestEvidence;
+export const canonicalizeJcs = runtimeCapsule.canonicalizeJcs;
+export const computeCapsuleDeliveryDigest = runtimeCapsule.computeCapsuleDeliveryDigest;
+export const buildRuntimeCapsule = runtimeCapsule.buildRuntimeCapsule;
+export const loadRuntimeCapsule = runtimeCapsule.loadRuntimeCapsule;
 
-export const KDNAExecutionContractError = executionContractV1.KDNAExecutionContractError;
-export const PLAN_DIGEST_PROFILE = executionContractV1.PLAN_DIGEST_PROFILE;
-export const HOST_PROTOCOL = executionContractV1.HOST_PROTOCOL;
-export const DEFAULT_CORE_CAPSULE_VERSIONS = executionContractV1.DEFAULT_CORE_CAPSULE_VERSIONS;
-export const parseExecutionContractJsonV1 = executionContractV1.parseExecutionContractJsonV1;
-export const computeConsumptionPlanDigestV1 = executionContractV1.computeConsumptionPlanDigestV1;
-export const buildConsumptionPlanV1 = executionContractV1.buildConsumptionPlanV1;
-export const validateConsumptionPlanV1 = executionContractV1.validateConsumptionPlanV1;
-export const negotiateExecutionPairV1 = executionContractV1.negotiateExecutionPairV1;
-export const buildAgentHost2RequestV1 = executionContractV1.buildAgentHost2RequestV1;
-export const validateAgentHost2RequestV1 = executionContractV1.validateAgentHost2RequestV1;
-export const validateAgentHost2ReceiptV1 = executionContractV1.validateAgentHost2ReceiptV1;
-export const deriveBudgetEvidenceV1 = executionContractV1.deriveBudgetEvidenceV1;
-export const buildPreHostBudgetBlockedTraceV1 =
-  executionContractV1.buildPreHostBudgetBlockedTraceV1;
-export const validatePreHostBudgetBlockedTraceV1 =
-  executionContractV1.validatePreHostBudgetBlockedTraceV1;
-export const buildJudgmentTraceV1 = executionContractV1.buildJudgmentTraceV1;
-export const validateJudgmentTraceV1 = executionContractV1.validateJudgmentTraceV1;
+export const KDNARuntimeContractError = runtimeContract.KDNARuntimeContractError;
+export const PLAN_DIGEST_PROFILE = runtimeContract.PLAN_DIGEST_PROFILE;
+export const PLAN_DIGEST_PROFILE_VERSION = runtimeContract.PLAN_DIGEST_PROFILE_VERSION;
+export const HOST_PROTOCOL = runtimeContract.HOST_PROTOCOL;
+export const HOST_PROTOCOL_VERSION = runtimeContract.HOST_PROTOCOL_VERSION;
+export const DEFAULT_CORE_CAPSULE_CONTRACT_VERSIONS =
+  runtimeContract.DEFAULT_CORE_CAPSULE_CONTRACT_VERSIONS;
+export const parseRuntimeContractJson = runtimeContract.parseRuntimeContractJson;
+export const computeConsumptionPlanDigest = runtimeContract.computeConsumptionPlanDigest;
+export const buildConsumptionPlan = runtimeContract.buildConsumptionPlan;
+export const validateConsumptionPlan = runtimeContract.validateConsumptionPlan;
+export const negotiateRuntimePair = runtimeContract.negotiateRuntimePair;
+export const buildAgentHostRequest = runtimeContract.buildAgentHostRequest;
+export const validateAgentHostRequest = runtimeContract.validateAgentHostRequest;
+export const validateAgentHostReceipt = runtimeContract.validateAgentHostReceipt;
+export const deriveBudgetEvidence = runtimeContract.deriveBudgetEvidence;
+export const buildPreHostBudgetBlockedTrace =
+  runtimeContract.buildPreHostBudgetBlockedTrace;
+export const validatePreHostBudgetBlockedTrace =
+  runtimeContract.validatePreHostBudgetBlockedTrace;
+export const buildJudgmentTrace = runtimeContract.buildJudgmentTrace;
+export const validateJudgmentTrace = runtimeContract.validateJudgmentTrace;
 
 export const STANDARD_ENTRIES = assetReader.STANDARD_ENTRIES;
 export const createKdnaAssetReader = assetReader.createKdnaAssetReader;
 
 export const {
   LICENSED_ENTRY_PROFILE,
-  LICENSED_EXPERIMENTAL_PROFILE,
   PASSWORD_PROTECTED_PROFILE,
   PASSWORD_PROTECTED_SCRYPT_PROFILE,
+  ENCRYPTION_PROFILE_VERSION,
   ALG,
   RFC_KDF,
   RFC_KEY_WRAPPING,
-  LEGACY_KDF,
   PASSWORD_KDF,
   SCRYPT_KDF,
   deriveWrappingKey,
   generateCEK,
   wrapCEK,
   unwrapCEK,
-  encryptLicensedEntryV1,
-  decryptLicensedEntryV1,
+  encryptLicensedEntry,
+  decryptLicensedEntry,
   derivePasswordKey,
   generateRecoveryCode,
   decodeRecoveryCode,
@@ -143,11 +146,6 @@ export const {
   encryptProtectedEntryScrypt,
   decryptProtectedEntryScrypt,
   createPasswordDecryptEntryScrypt,
-  deriveLicensedEntryKey,
-  encryptLicensedEntryLegacy,
-  decryptLicensedEntryLegacy,
-  encryptLicensedEntry,
-  decryptLicensedEntry,
   createLicensedDecryptEntry,
   hkdfSha256,
   aesWrap,
@@ -159,6 +157,7 @@ export const {
   EXTERNAL_GRANT_PROFILE,
   EXTERNAL_AAD_PROFILE,
   DEVICE_KEK_PROFILE,
+  EXTERNAL_GRANT_CONTRACT_VERSION,
   KDNAExternalGrantError,
   canonicalJson,
   grantSigningPayload,

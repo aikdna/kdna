@@ -53,15 +53,15 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 | 20  | `outcome-record-schema.json`    | Schema for recording whether a judgment was correct in hindsight  |
 | 21  | `product-runtime.schema.json`   | Schema for KDNA Product Runtime data                              |
 | 22  | `runtime-capsule.md`            | Runtime Capsule 1 compatibility and opt-in Capsule 2 semantics    |
-| 23  | `runtime-capsule-1.schema.json` | Frozen Capsule 1 wire schema (`asset_digest` means E)             |
-| 24  | `runtime-capsule-2.schema.json` | Opt-in Capsule 2 wire schema with explicit A/C/E evidence         |
+| 23  | `runtime-capsule.schema.json` | Frozen Capsule 1 wire schema (`asset_digest` means E)             |
+| 24  | `runtime-capsule.schema.json` | Opt-in Capsule 2 wire schema with explicit A/C/E evidence         |
 | 25  | `digest-evidence.schema.json`   | Digest values, bases, expected sources, and comparison facts      |
-| 26  | `capsule-2-execution-contract.md` | Opt-in Plan 1.0, Host 2, negotiation, P receipt, and Trace 1.0 contract |
-| 27  | `consumption-plan-1.schema.json` | Strict single-asset ConsumptionPlan 1.0 with JCS plan integrity |
-| 28  | `agent-host-capabilities-1.schema.json` | Pre-execution Host capability observation |
-| 29  | `agent-host-2-request.schema.json` | Strict Capsule 2 Host request with detached P |
-| 30  | `agent-host-2-receipt.schema.json` | Correlated Host 2 runtime receipt and outcome |
-| 31  | `judgment-trace-1.schema.json` | Authoritative strict JudgmentTrace 1.0 execution evidence |
+| 26  | `runtime-contract.md` | Opt-in Plan 1.0, Host 2, negotiation, P receipt, and Trace 1.0 contract |
+| 27  | `consumption-plan.schema.json` | Strict single-asset ConsumptionPlan 1.0 with JCS plan integrity |
+| 28  | `agent-host-capabilities.schema.json` | Pre-execution Host capability observation |
+| 29  | `agent-host-request.schema.json` | Strict Capsule 2 Host request with detached P |
+| 30  | `agent-host-receipt.schema.json` | Correlated Host 2 runtime receipt and outcome |
+| 31  | `judgment-trace.schema.json` | Authoritative strict JudgmentTrace 1.0 execution evidence |
 
 ## Consumption extensions
 

@@ -1,14 +1,14 @@
 # KDNA Crypto Profiles
 
-Status: **Active.** The `kdna-envelope-aead-v1`
+Status: **Active.** The `kdna.envelope.aead`
 profile ID and its two KDF sub-profiles (`scrypt-sha256-v1` mandatory,
 `argon2id-v1` optional compatibility KDF) are frozen; see RFC-0018 for the normative
-contract. Predecessor profiles (`kdna-licensed-entry-v1` from RFC-0008,
-`kdna-password-protected-v1` from RFC-0009) remain in their own distinct
+contract. Predecessor profiles (`kdna.encryption.licensed-entry` from RFC-0008,
+`kdna.encryption.password` from RFC-0009) remain in their own distinct
 profile IDs and continue to be supported.
 Normative: Yes after profile IDs and test vectors are frozen  
 Related specs: `kdna-authorization-contract.md`, `kdna-secret-store.md`,
-`kdna-import-security.md`, `RFC-0018-kdna-envelope-aead-v1.md`
+`kdna-import-security.md`, `RFC-0018-envelope-aead.md`
 
 ## 1. Scope
 
@@ -18,28 +18,28 @@ entitlement business logic, or product UX.
 
 ## 2. Current Compatibility Profile
 
-`kdna-licensed-entry-v1` is the current CLI/Core MVP compatibility profile.
+`kdna.encryption.licensed-entry` is the current CLI/Core MVP compatibility profile.
 
 It derives an entry decrypt key from existing license activation material and
 decrypts protected entries in memory. Implementations MAY support it for
 migration and compatibility.
 
-`kdna-password-protected-v1` is the password + recovery profile from
+`kdna.encryption.password` is the password + recovery profile from
 RFC-0009. It MAY be supported for compatibility with existing password-
 protected assets. New product exports SHOULD NOT target it; use
-`kdna-envelope-aead-v1` instead.
+`kdna.envelope.aead` instead.
 
 New product-facing exports SHOULD converge on the canonical envelope profile
 (RFC-0018) after the profile is frozen and test vectors exist. As of
 2026-06-28 this convergence is recommended and feasible.
 
-## 3. Canonical Envelope Profile — `kdna-envelope-aead-v1`
+## 3. Canonical Envelope Profile — `kdna.envelope.aead`
 
 **Accepted by RFC-0018.** Three test vectors are
-published at `conformance/kdna-envelope-aead-v1/` and the conformance
-runner `conformance/kdna-envelope-aead-v1.mjs` re-derives them.
+published at `conformance/envelope-aead/` and the conformance
+runner `conformance/envelope-aead.mjs` re-derives them.
 
-Profile ID: `kdna-envelope-aead-v1`
+Profile ID: `kdna.envelope.aead`
 
 The canonical model is envelope encryption:
 
@@ -64,13 +64,13 @@ The canonical model is envelope encryption:
 
 The full normative rules (envelope shape, KDF profile parameters, AAD
 format, the profile non-collapse invariant, the Swift-port behaviour, error
-codes) are in `rfcs/RFC-0018-kdna-envelope-aead-v1.md`.
+codes) are in `rfcs/RFC-0018-envelope-aead.md`.
 
 ## 4. Password Profile
 
 A short PIN MUST NOT be treated as the file encryption password.
 
-For `kdna-envelope-aead-v1`, the password slot's KDF is selected by
+For `kdna.envelope.aead`, the password slot's KDF is selected by
 `kdf_profile`:
 
 - `scrypt-sha256-v1` — mandatory, every conforming implementation MUST support
@@ -88,7 +88,7 @@ Chat MUST NOT log or persist passwords.
 Encrypted payload entries MUST use authenticated encryption. Decryption MUST
 fail if ciphertext or associated metadata is modified.
 
-For `kdna-envelope-aead-v1`, the AEAD is frozen to `AES-256-GCM` with
+For `kdna.envelope.aead`, the AEAD is frozen to `AES-256-GCM` with
 12-byte IV, 16-byte tag, and the six-line AAD format documented in
 RFC-0018 R5.
 
@@ -98,10 +98,10 @@ cross-profile migration.
 
 ## 6. Associated Data
 
-For `kdna-envelope-aead-v1`, the AAD format is:
+For `kdna.envelope.aead`, the AAD format is:
 
 ```
-kdna-envelope-aead-v1
+kdna.envelope.aead
 <asset_uid>
 <asset_digest>
 <entry_path>
@@ -114,8 +114,8 @@ asset-level digest (the value that binds the `.kdna` file as a whole).
 Per-entry digest binding is not in the AAD; cross-entry swap protection
 comes from `entry_path` + AES-GCM authentication.
 
-For other profile IDs (`kdna-licensed-entry-v1`,
-`kdna-password-protected-v1`), the AAD is the four-line format
+For other profile IDs (`kdna.encryption.licensed-entry`,
+`kdna.encryption.password`), the AAD is the four-line format
 defined in RFC-0008 / RFC-0009.
 
 This prevents ciphertext swapping across assets, entries, manifests, and access
@@ -129,28 +129,28 @@ legacy developer import path.
 A runtime MUST reject an asset that attempts to downgrade from a stronger
 declared profile to a weaker implementation path.
 
-`kdna-licensed-entry-v1`, `kdna-password-protected-v1`, and
-`kdna-envelope-aead-v1` MUST remain distinct profile IDs.
+`kdna.encryption.licensed-entry`, `kdna.encryption.password`, and
+`kdna.envelope.aead` MUST remain distinct profile IDs.
 
-Within `kdna-envelope-aead-v1`, the per-slot `kdf_profile` is also part
+Within `kdna.envelope.aead`, the per-slot `kdf_profile` is also part
 of the non-collapse rule: a reader that does not support the declared
 `kdf_profile` MUST fail with `KDNA_KDF_UNSUPPORTED`. There is no
 auto-downgrade path (RFC-0018 R4.3).
 
 ## 8. Test Vectors
 
-`kdna-envelope-aead-v1` test vectors are published at
-`conformance/kdna-envelope-aead-v1/`:
+`kdna.envelope.aead` test vectors are published at
+`conformance/envelope-aead/`:
 
-- `kdna-envelope-aead-v1-vector-01-scrypt-basic.json` — scrypt-sha256-v1,
+- `kdna.envelope.aead-vector-01-scrypt-basic.json` — scrypt-sha256-v1,
   single password slot, basic round-trip.
-- `kdna-envelope-aead-v1-vector-02-scrypt-multi-entry-aad.json` — two
+- `kdna.envelope.aead-vector-02-scrypt-multi-entry-aad.json` — two
   AADs over the same CEK + IV + plaintext; proves AAD binding via
   divergent tags.
-- `kdna-envelope-aead-v1-vector-03-argon2id-basic.json` — argon2id-v1,
+- `kdna.envelope.aead-vector-03-argon2id-basic.json` — argon2id-v1,
   single password slot, basic round-trip.
 
-A conformance runner at `conformance/kdna-envelope-aead-v1.mjs`
+A conformance runner at `conformance/envelope-aead.mjs`
 re-derives each vector and asserts equality. Run with:
 
 ```bash

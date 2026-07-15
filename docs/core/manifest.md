@@ -44,7 +44,7 @@ this Runtime container manifest.
 ```json
 {
   "min_loader_version": "1.0.0",
-  "profile": "judgment-profile-v1"
+  "profile": "kdna.payload.judgment"
 }
 ```
 
@@ -100,7 +100,7 @@ Phase 1 **does not** implement fork/adapt behaviour. The `type` enum covers the 
   "updated_at": "2026-06-16T00:00:00Z",
   "compatibility": {
     "min_loader_version": "1.0.0",
-    "profile": "judgment-profile-v1"
+    "profile": "kdna.payload.judgment"
   },
   "payload": {
     "path": "payload.kdnab",

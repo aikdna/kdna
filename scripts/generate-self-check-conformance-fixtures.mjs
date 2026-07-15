@@ -12,7 +12,7 @@ const core = require('../packages/kdna-core/src');
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const minimalRoot = path.join(repoRoot, 'examples', 'minimal');
-const capsuleRoot = path.join(repoRoot, 'conformance', 'capsule-v2');
+const capsuleRoot = path.join(repoRoot, 'conformance', 'runtime-capsule');
 const goldenPayloadSource = path.join(
   repoRoot,
   'packages',
@@ -38,6 +38,8 @@ function migratePayload(payload, source) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
     throw new Error(`${source}: payload must decode to an object`);
   }
+  payload.profile = 'kdna.payload.judgment';
+  payload.profile_version = '0.1.0';
   const reasoning = payload.reasoning;
   if (!reasoning || typeof reasoning !== 'object' || Array.isArray(reasoning)) {
     throw new Error(`${source}: reasoning must be an object`);
@@ -61,22 +63,8 @@ const minimalPayload = migratePayload(
   'examples/minimal/payload.kdnab',
 );
 fs.writeFileSync(minimalPayloadPath, cbor.encode(minimalPayload));
-const previousMinimalChecksums = JSON.parse(
-  fs.readFileSync(path.join(minimalRoot, 'checksums.json'), 'utf8'),
-);
 const rebuiltMinimalChecksums = core.buildChecksums(minimalRoot);
-// This fixture intentionally retains the older checksum alias shape so the
-// committed Capsule vector continues to exercise that compatibility path.
-const minimalChecksums = Object.hasOwn(previousMinimalChecksums, 'digest_profile')
-  ? rebuiltMinimalChecksums
-  : {
-      algorithm: rebuiltMinimalChecksums.algorithm,
-      manifest_digest: rebuiltMinimalChecksums.manifest_digest,
-      payload_digest: rebuiltMinimalChecksums.payload_digest,
-      asset_digest: rebuiltMinimalChecksums.asset_digest,
-      entries: rebuiltMinimalChecksums.entries,
-    };
-fs.writeFileSync(path.join(minimalRoot, 'checksums.json'), json(minimalChecksums));
+fs.writeFileSync(path.join(minimalRoot, 'checksums.json'), json(rebuiltMinimalChecksums));
 
 const goldenSource = JSON.parse(fs.readFileSync(goldenPayloadSource, 'utf8'));
 migratePayload(goldenSource.payload, 'golden-single-asset.json');
@@ -92,11 +80,10 @@ try {
   const goldenPath = path.join(capsuleRoot, 'golden.json');
   const previous = JSON.parse(fs.readFileSync(goldenPath, 'utf8'));
   const evidence = core.computeDigestEvidence(assetBytes);
-  const capsule2 = core.loadCapsuleV2(assetBytes, {
+  const runtimeCapsule = core.loadRuntimeCapsule(assetBytes, {
     loadedAt: previous.loaded_at,
     profile: 'compact',
   });
-  const capsule1 = core.adaptCapsuleV2ToV1(capsule2);
   const next = {
     profile_ids: previous.profile_ids,
     fixture: previous.fixture,
@@ -105,10 +92,9 @@ try {
       asset: evidence.asset.value,
       content: evidence.content.value,
       runtime_entry_set: evidence.runtime_entry_set.value,
-      capsule_delivery: core.computeCapsuleDeliveryDigest(capsule2),
+      capsule_delivery: core.computeCapsuleDeliveryDigest(runtimeCapsule),
     },
-    capsule_2: capsule2,
-    capsule_1: capsule1,
+    runtime_capsule: runtimeCapsule,
     jcs_vectors: previous.jcs_vectors,
   };
   fs.writeFileSync(path.join(capsuleRoot, previous.fixture), `${assetBytes.toString('base64')}\n`);

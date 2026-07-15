@@ -1,6 +1,6 @@
 {
   "format": "kdna",
-  "format_version": "1.0",
+  "format_version": "0.1.0",
   "spec_version": "1.0-rc",
   "name": "@aikdna/code_review",
   "version": "0.1",

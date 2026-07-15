@@ -13,7 +13,7 @@
     "id": "conformance"
   },
   "encryption": {
-    "profile": "kdna-licensed-entry-v1",
+    "profile": "kdna.encryption.licensed-entry",
     "encrypted_entries": ["KDNA_Core.json"]
   }
 }

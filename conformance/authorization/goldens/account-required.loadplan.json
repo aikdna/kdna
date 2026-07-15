@@ -1,41 +1,37 @@
 {
-  "kdna_version": "1.0",
+  "format_version": null,
   "asset": {
-    "asset_id": "kdna:conformance:authorization:account-required",
-    "asset_uid": "urn:uuid:6163636f-756e-442d-8265-717569726564",
-    "title": "Authorization Fixture: account-required",
-    "version": "1.0.0",
-    "judgment_version": "1.0.0"
+    "asset_id": null,
+    "asset_uid": null,
+    "title": null,
+    "version": null,
+    "judgment_version": null
   },
-  "access": "licensed",
+  "access": null,
   "access_alias": null,
-  "entitlement_profile": "account",
-  "state": "needs_account",
-  "required_action": "sign_in_or_activate",
+  "entitlement_profile": null,
+  "state": "invalid",
+  "required_action": "block",
   "can_load_now": false,
   "projection_policy": "none",
-  "input_fingerprint": {
-    "has_password_input": false,
-    "entitlement_input": null,
-    "source_fingerprint": "sha256:7bc24d6d53bd98a4d79087c66d5034276d20bde529a62b694cc58bd9f2150f40"
-  },
+  "input_fingerprint": null,
   "checks": {
-    "format_valid": true,
-    "schema_valid": true,
-    "payload_valid": true,
-    "checksums_valid": true,
-    "load_contract_valid": true,
-    "overall_valid": true
+    "format_valid": false,
+    "schema_valid": false,
+    "payload_valid": false,
+    "checksums_valid": false,
+    "load_contract_valid": false,
+    "overall_valid": false
   },
   "issues": [
     {
-      "code": "KDNA_AUTH_ACCOUNT_REQUIRED",
+      "code": "KDNA_FORMAT_INVALID",
       "severity": "blocking",
-      "message": "Account authorization is required before this asset can be loaded."
+      "message": "Cannot find module './v1/index.js'\nRequire stack:\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container-dispatcher.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container/index.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/public-api.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/index.js\n- /Users/kdna/aikdna/open/kdna/scripts/generate-self-check-conformance-fixtures.mjs"
     }
   ],
   "source": {
-    "kind": "file",
+    "kind": null,
     "path": "<fixture:account-required>"
   }
 }

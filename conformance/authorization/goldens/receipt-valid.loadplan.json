@@ -1,35 +1,37 @@
 {
-  "kdna_version": "1.0",
+  "format_version": null,
   "asset": {
-    "asset_id": "kdna:conformance:authorization:receipt-valid",
-    "asset_uid": "urn:uuid:72656365-6970-442d-8661-6c6964000000",
-    "title": "Authorization Fixture: receipt-valid",
-    "version": "1.0.0",
-    "judgment_version": "1.0.0"
+    "asset_id": null,
+    "asset_uid": null,
+    "title": null,
+    "version": null,
+    "judgment_version": null
   },
-  "access": "licensed",
+  "access": null,
   "access_alias": null,
-  "entitlement_profile": "local_receipt",
-  "state": "ready",
-  "required_action": "load",
-  "can_load_now": true,
-  "projection_policy": "minimal",
-  "input_fingerprint": {
-    "has_password_input": false,
-    "entitlement_input": "active",
-    "source_fingerprint": "sha256:95f90cb5bcd54a8d0a012a8f15037ccb9c9e04f5ceec153a47e3ec7b32bc5064"
-  },
+  "entitlement_profile": null,
+  "state": "invalid",
+  "required_action": "block",
+  "can_load_now": false,
+  "projection_policy": "none",
+  "input_fingerprint": null,
   "checks": {
-    "format_valid": true,
-    "schema_valid": true,
-    "payload_valid": true,
-    "checksums_valid": true,
-    "load_contract_valid": true,
-    "overall_valid": true
+    "format_valid": false,
+    "schema_valid": false,
+    "payload_valid": false,
+    "checksums_valid": false,
+    "load_contract_valid": false,
+    "overall_valid": false
   },
-  "issues": [],
+  "issues": [
+    {
+      "code": "KDNA_FORMAT_INVALID",
+      "severity": "blocking",
+      "message": "Cannot find module './v1/index.js'\nRequire stack:\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container-dispatcher.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container/index.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/public-api.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/index.js\n- /Users/kdna/aikdna/open/kdna/scripts/generate-self-check-conformance-fixtures.mjs"
+    }
+  ],
   "source": {
-    "kind": "file",
+    "kind": null,
     "path": "<fixture:receipt-valid>"
   }
 }

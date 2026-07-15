@@ -55,7 +55,7 @@ govern attribution and redistribution, not access.
 access: "licensed"
 ```
 
-**Description:** Authorized-use KDNA. Delivered as a `.kdna` asset with protected entries encrypted under `kdna-licensed-entry-v1`.
+**Description:** Authorized-use KDNA. Delivered as a `.kdna` asset with protected entries encrypted under `kdna.encryption.licensed-entry`.
 The Agent must verify a license before loading. Content is decrypted at load time
 but full content is still delivered to the authorized Agent.
 
@@ -212,7 +212,7 @@ locked. Choose mode before first publication.
 ## 7. Security Considerations
 
 1. **Open mode:** No technical security. Relies on license + social norms.
-2. **Licensed mode:** `kdna-licensed-entry-v1` encrypted entries plus Entitlement API activation/sync. Protects against casual copying, not determined reverse engineering.
+2. **Licensed mode:** `kdna.encryption.licensed-entry` encrypted entries plus Entitlement API activation/sync. Protects against casual copying, not determined reverse engineering.
 3. **Runtime mode:** Server-side protection. Strongest defense. Trade-off: requires network, adds latency, reduces Agent context awareness.
 
 The choice of mode should balance:

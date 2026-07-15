@@ -2,10 +2,10 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/aikdna/kdna/schema/manifest.schema.json",
   "title": "KDNA Manifest",
-  "description": "Schema for kdna.json, the public metadata layer of a .kdna container (kdna_version 1.0).",
+  "description": "Schema for kdna.json, the public metadata layer of a .kdna container.",
   "type": "object",
   "required": [
-    "kdna_version",
+    "format_version",
     "asset_id",
     "asset_uid",
     "asset_type",
@@ -19,10 +19,10 @@
   ],
   "additionalProperties": true,
   "properties": {
-    "kdna_version": {
+    "format_version": {
       "type": "string",
-      "description": "KDNA container version this manifest conforms to.",
-      "enum": ["1.0"]
+      "description": "Compatibility coordinate for the KDNA container format.",
+      "const": "0.1.0"
     },
     "asset_id": {
       "type": "string",
@@ -81,7 +81,7 @@
     },
     "compatibility": {
       "type": "object",
-      "required": ["min_loader_version", "profile"],
+      "required": ["min_loader_version", "profile", "profile_version"],
       "additionalProperties": true,
       "properties": {
         "min_loader_version": {
@@ -90,8 +90,12 @@
         },
         "profile": {
           "type": "string",
-          "description": "Payload profile identifier (e.g. judgment-profile-v1).",
-          "enum": ["judgment-profile-v1", "bundle-profile-v1"]
+          "description": "Payload profile identifier (e.g. kdna.payload.judgment).",
+          "enum": ["kdna.payload.judgment", "kdna.payload.bundle"]
+        },
+        "profile_version": {
+          "const": "0.1.0",
+          "description": "Compatibility coordinate for the selected payload profile."
         }
       }
     },

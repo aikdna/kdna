@@ -10,10 +10,10 @@ The KDNA ecosystem currently has FOUR independent loading code paths that implem
 
 | Path | Location | Authorization Behavior |
 |---|---|---|
-| Core `planLoad` + `loadAuthorized` | `kdna-core/src/v1/index.js` | Complete state machine, checksums, signature |
+| Core `planLoad` + `loadAuthorized` | `kdna-core/src/container/index.js` | Complete state machine, checksums, signature |
 | CLI `kdna load` | `kdna-cli/src/cli.js` | Uses `planLoad` but has dead-code fallback |
 | Agent `cmdLoad` | `kdna-cli/src/agent.js:339-357` | Bypasses planLoad entirely, checks `manifest.access` directly |
-| MCP `loadV1Authorized` | `kdna-skills/mcp-server` | Has inline wrapper, partial checks |
+| MCP `loadAssetAuthorized` | `kdna-skills/mcp-server` | Has inline wrapper, partial checks |
 
 The agent.js path bypasses:
 - Format/structure validation

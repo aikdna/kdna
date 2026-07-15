@@ -1,46 +1,37 @@
 {
-  "kdna_version": "1.0",
+  "format_version": null,
   "asset": {
-    "asset_id": "kdna:conformance:authorization:tampered-payload",
-    "asset_uid": "urn:uuid:74616d70-6572-4564-8d70-61796c6f6164",
-    "title": "Authorization Fixture: tampered-payload",
-    "version": "1.0.0",
-    "judgment_version": "1.0.0"
+    "asset_id": null,
+    "asset_uid": null,
+    "title": null,
+    "version": null,
+    "judgment_version": null
   },
-  "access": "public",
+  "access": null,
   "access_alias": null,
   "entitlement_profile": null,
   "state": "invalid",
   "required_action": "block",
   "can_load_now": false,
   "projection_policy": "none",
-  "input_fingerprint": {
-    "has_password_input": false,
-    "entitlement_input": null,
-    "source_fingerprint": "sha256:5bc37dc9d919916085196166f19f2bad4e34be0ece6333106498b02004e99e66"
-  },
+  "input_fingerprint": null,
   "checks": {
-    "format_valid": true,
-    "schema_valid": true,
-    "payload_valid": true,
+    "format_valid": false,
+    "schema_valid": false,
+    "payload_valid": false,
     "checksums_valid": false,
-    "load_contract_valid": true,
+    "load_contract_valid": false,
     "overall_valid": false
   },
   "issues": [
     {
-      "code": "KDNA_INTEGRITY_DIGEST_FAILED",
+      "code": "KDNA_FORMAT_INVALID",
       "severity": "blocking",
-      "message": "checksums: payload_digest mismatch (declared aa0ab882..., actual 4bebbce4...)"
-    },
-    {
-      "code": "KDNA_INTEGRITY_DIGEST_FAILED",
-      "severity": "blocking",
-      "message": "checksums: entry_set_digest mismatch (declared 416ec458..., actual c716595c...)"
+      "message": "Cannot find module './v1/index.js'\nRequire stack:\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container-dispatcher.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container/index.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/public-api.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/index.js\n- /Users/kdna/aikdna/open/kdna/scripts/generate-self-check-conformance-fixtures.mjs"
     }
   ],
   "source": {
-    "kind": "file",
+    "kind": null,
     "path": "<fixture:tampered-payload>"
   }
 }

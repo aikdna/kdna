@@ -8,8 +8,8 @@ const Ajv2020 = require('ajv/dist/2020.js');
 
 const core = require('../src');
 const fixture = require('./fixtures/golden-single-asset.json');
-const canonicalPayloadSchema = require('../../../schema/payload-profile-v1.schema.json');
-const packagedPayloadSchema = require('../schema/payload-profile-v1.schema.json');
+const canonicalPayloadSchema = require('../../../schema/payload-profile.schema.json');
+const packagedPayloadSchema = require('../schema/payload-profile.schema.json');
 
 const SCOPED_FIELDS = ['worldview', 'value_order', 'judgment_role'];
 const CANONICAL_SCHEMA_PATH = path.resolve(
@@ -18,13 +18,13 @@ const CANONICAL_SCHEMA_PATH = path.resolve(
   '..',
   '..',
   'schema',
-  'payload-profile-v1.schema.json',
+  'payload-profile.schema.json',
 );
 const PACKAGED_SCHEMA_PATH = path.resolve(
   __dirname,
   '..',
   'schema',
-  'payload-profile-v1.schema.json',
+  'payload-profile.schema.json',
 );
 const GOLDEN_PAYLOAD_PATH = path.resolve(
   __dirname,
@@ -210,7 +210,7 @@ test('committed CBOR validates and loads exact self-check shapes without silent 
       judgment_version: fixture.manifest.judgment_version,
       payload: 'payload.kdnab',
       payload_encrypted: false,
-      profile: 'judgment-profile-v1',
+      profile: 'kdna.payload.judgment',
       load_contract_default_profile: 'compact',
       checksums_present: true,
     });
@@ -357,7 +357,7 @@ test('prompt treats each scoped field as content but does not render an empty ro
 
   for (const [name, scopedCore, expectedText] of variants) {
     const payload = {
-      profile: 'judgment-profile-v1',
+      profile: 'kdna.payload.judgment',
       core: { highest_question: '', axioms: [], ...scopedCore },
     };
     const { temporary, asset } = createAsset(payload);
@@ -372,7 +372,7 @@ test('prompt treats each scoped field as content but does not render an empty ro
   }
 
   const emptyRolePayload = {
-    profile: 'judgment-profile-v1',
+    profile: 'kdna.payload.judgment',
     core: { highest_question: '', axioms: [], judgment_role: {} },
   };
   const { temporary, asset } = createAsset(emptyRolePayload);

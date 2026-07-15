@@ -1,16 +1,16 @@
-# Payload Profile v1 (`judgment-profile-v1`)
+# Payload Profile v1 (`kdna.payload.judgment`)
 
-The payload is the actual judgment data. Its **shape** is defined by a payload profile. Phase 1 defines exactly one profile, **`judgment-profile-v1`**, which is the minimum structure that an agent can load and reason over.
+The payload is the actual judgment data. Its **shape** is defined by a payload profile. Phase 1 defines exactly one profile, **`kdna.payload.judgment`**, which is the minimum structure that an agent can load and reason over.
 
-The authoritative schema is [`schema/payload-profile-v1.schema.json`](../../schema/payload-profile-v1.schema.json).
+The authoritative schema is [`schema/payload-profile.schema.json`](../../schema/payload-profile.schema.json).
 
 ## Top-level shape
 
-A `judgment-profile-v1` payload is a single JSON object with the following sections:
+A `kdna.payload.judgment` payload is a single JSON object with the following sections:
 
 | Section | Type | Phase 1 requirement |
 | --- | --- | --- |
-| `profile` | string constant | Required. MUST be the literal string `"judgment-profile-v1"`. |
+| `profile` | string constant | Required. MUST be the literal string `"kdna.payload.judgment"`. |
 | `core` | object | Required. Holds the central axioms and boundaries. |
 | `patterns` | array | Optional. Phase 1 allows an empty array. |
 | `scenarios` | array | Optional. Phase 1 allows an empty array. |
@@ -71,7 +71,7 @@ Both arrays are optional within the section.
 
 ```json
 {
-  "profile": "judgment-profile-v1",
+  "profile": "kdna.payload.judgment",
   "core": {
     "highest_question": "",
     "axioms": []
@@ -85,7 +85,7 @@ This is the **smallest** payload that conforms to the schema. The conformance su
 
 ```json
 {
-  "profile": "judgment-profile-v1",
+  "profile": "kdna.payload.judgment",
   "core": {
     "highest_question": "What is the central question this judgment system answers?",
     "worldview": ["A scoped assumption used for this domain's tradeoffs."],
@@ -160,12 +160,12 @@ This is the **smallest** payload that conforms to the schema. The conformance su
 }
 ```
 
-## Why `judgment-profile-v1` is explicit
+## Why `kdna.payload.judgment` is explicit
 
 A previous design allowed the payload to be any JSON object. That forced every loader to learn a custom schema for every asset, and made the "what is a valid judgment asset?" question impossible to answer statically. By pinning a single profile, the format gains a **conformance target**: a tool can claim to be a conforming KDNA loader and validate against this profile. The `profile` field is a wire-level schema discriminator, not a user-facing container generation.
 
 ## What this profile does NOT define
 
-- It does not define a domain ontology or a category system. A `judgment-profile-v1` asset about safety and an asset about cooking use the same shape; the meaning comes from the prose in `axioms`, `scenarios`, and `cases`.
+- It does not define a domain ontology or a category system. A `kdna.payload.judgment` asset about safety and an asset about cooking use the same shape; the meaning comes from the prose in `axioms`, `scenarios`, and `cases`.
 - It does not define evaluation, scoring, or grading. The payload is the **thing to be judged**, not the judgment of the thing.
 - It does not require encryption. Encryption is a per-entry property in the container; the profile is content-shape-agnostic.

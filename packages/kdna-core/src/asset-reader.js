@@ -412,7 +412,7 @@ function validateCurrentContainer(asset) {
   if (!Buffer.isBuffer(bytes)) {
     throw new Error('Current KDNA validation requires the original .kdna container bytes');
   }
-  return require('./v1').validate(bytes);
+  return require('./container').validate(bytes);
 }
 
 function appendCurrentValidationErrors(asset, errors) {

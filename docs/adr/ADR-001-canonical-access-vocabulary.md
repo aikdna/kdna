@@ -46,11 +46,11 @@ public | licensed | remote
      "entitlement": { "profile": "password" }
    }
    ```
-4. Legacy assets MAY be auto-migrated from `protected` to `licensed/password` ONLY when the crypto profile explicitly indicates password protection (`kdna-password-protected-v1`). Otherwise, the reader SHALL reject with `legacy manifest ambiguous`.
+4. Legacy assets MAY be auto-migrated from `protected` to `licensed/password` ONLY when the crypto profile explicitly indicates password protection (`kdna.encryption.password`). Otherwise, the reader SHALL reject with `legacy manifest ambiguous`.
 
 ## Consequences
 
 - All code locations writing `open`, `protected`, or `runtime` must be updated to their canonical equivalents.
-- The `normalizeAccess()` function in `kdna-core/src/v1/index.js` is the canonical implementation.
+- The `normalizeAccess()` function in `kdna-core/src/container/index.js` is the canonical implementation.
 - All consumer code must check against canonical values, not raw manifest values.
 - RFC-0009's introduction of `protected` as an access mode is superseded by this ADR.

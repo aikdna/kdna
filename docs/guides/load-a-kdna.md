@@ -11,4 +11,4 @@ This guide will walk through loading a `.kdna` file at runtime. The minimum flow
 5. Validate the payload against the declared `compatibility.profile` schema.
 6. Apply your runtime policy (out of scope for KDNA Core).
 
-Phase 1 provides a reference `inspect` command (`scripts/v1-inspect.mjs`) that demonstrates steps 1–2. The full loading flow is implemented by [`@aikdna/kdna-core`](https://github.com/aikdna/kdna-core).
+Phase 1 provides a reference `inspect` command (`scripts/inspect-asset.mjs`) that demonstrates steps 1–2. The full loading flow is implemented by [`@aikdna/kdna-core`](https://github.com/aikdna/kdna-core).

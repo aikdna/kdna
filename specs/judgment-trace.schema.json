@@ -1,0 +1,1251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/specs/judgment-trace.schema.json",
+  "title": "KDNA JudgmentTrace",
+  "description": "Authoritative strict terminal evidence for Runtime contract execution.",
+  "type": "object",
+  "required": [
+    "type",
+    "contract_version",
+    "trace_id",
+    "plan_ref",
+    "parent_trace_id",
+    "timestamp",
+    "overall_status",
+    "runtime_contract",
+    "asset_identity",
+    "digest_evidence",
+    "capsule_delivery_evidence",
+    "projection_actual",
+    "host_receipt",
+    "execution",
+    "budget",
+    "result_ref",
+    "errors",
+    "warnings"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "const": "kdna.judgment-trace"
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^trace_[0-9a-f]{16}$"
+    },
+    "plan_ref": {
+      "$ref": "#/$defs/planRef"
+    },
+    "parent_trace_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^trace_[0-9a-f]{16}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "overall_status": {
+      "enum": ["execution_completed", "blocked", "execution_failed", "cancelled", "timed_out"]
+    },
+    "runtime_contract": {
+      "$ref": "#/$defs/runtimeContract"
+    },
+    "asset_identity": {
+      "$ref": "#/$defs/assetIdentity"
+    },
+    "digest_evidence": {
+      "$ref": "https://github.com/aikdna/kdna/specs/digest-evidence.schema.json"
+    },
+    "capsule_delivery_evidence": {
+      "$ref": "#/$defs/capsuleDeliveryEvidence"
+    },
+    "projection_actual": {
+      "$ref": "#/$defs/projectionActual"
+    },
+    "host_receipt": {
+      "oneOf": [
+        {
+          "$ref": "https://github.com/aikdna/kdna/specs/agent-host-receipt.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "execution": {
+      "$ref": "#/$defs/execution"
+    },
+    "budget": {
+      "$ref": "#/$defs/budgetEvidence"
+    },
+    "result_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/resultRef"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/issue"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "contract_version": {
+      "const": "0.1.0"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "overall_status": {
+            "enum": ["execution_completed", "execution_failed", "cancelled", "timed_out"]
+          }
+        },
+        "required": ["overall_status"]
+      },
+      "then": {
+        "properties": {
+          "runtime_contract": {
+            "properties": {
+              "negotiation_state": {
+                "const": "selected"
+              },
+              "selected_capsule_version": {
+                "const": "0.1.0"
+              },
+              "selected_host_protocol": {
+                "const": "kdna.agent-host"
+              },
+              "issue_code": {
+                "type": "null"
+              }
+            }
+          },
+          "digest_evidence": {
+            "properties": {
+              "asset": {
+                "$ref": "#/$defs/successfulDigest"
+              },
+              "content": {
+                "$ref": "#/$defs/successfulDigest"
+              },
+              "runtime_entry_set": {
+                "$ref": "#/$defs/successfulDigest"
+              }
+            }
+          },
+          "capsule_delivery_evidence": {
+            "properties": {
+              "host_boundary_comparison": {
+                "const": "matched"
+              }
+            }
+          },
+          "host_receipt": {
+            "$ref": "https://github.com/aikdna/kdna/specs/agent-host-receipt.schema.json"
+          },
+          "projection_actual": {
+            "properties": {
+              "profile": {
+                "type": "string"
+              },
+              "capsule_delivery_digest": {
+                "$ref": "#/$defs/sha256"
+              },
+              "profile_deviated_from_plan": {
+                "type": "boolean"
+              }
+            }
+          },
+          "budget": {
+            "properties": {
+              "actual": {
+                "properties": {
+                  "projection_chars": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "overall_status": {
+            "const": "execution_completed"
+          }
+        },
+        "required": ["overall_status"]
+      },
+      "then": {
+        "properties": {
+          "host_receipt": {
+            "properties": {
+              "runtime_receipt": {
+                "properties": {
+                  "provider_execution_status": {
+                    "const": "completed"
+                  }
+                }
+              },
+              "outcome": {
+                "type": "object"
+              }
+            }
+          },
+          "execution": {
+            "properties": {
+              "delivery_status": {
+                "const": "correlated_response"
+              },
+              "execution_status": {
+                "const": "completed"
+              }
+            }
+          },
+          "budget": {
+            "properties": {
+              "comparison": {
+                "properties": {
+                  "overall": {
+                    "enum": ["within_limit", "not_observed"]
+                  }
+                }
+              }
+            }
+          },
+          "result_ref": {
+            "$ref": "#/$defs/resultRef"
+          },
+          "errors": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "overall_status": {
+            "const": "blocked"
+          }
+        },
+        "required": ["overall_status"]
+      },
+      "then": {
+        "properties": {
+          "runtime_contract": {
+            "properties": {
+              "negotiation_state": {
+                "enum": ["selected", "blocked", "not_started"]
+              }
+            }
+          },
+          "capsule_delivery_evidence": {
+            "properties": {
+              "host_boundary_comparison": {
+                "enum": ["mismatched", "not_delivered", "not_observed", "unavailable"]
+              }
+            }
+          },
+          "host_receipt": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "https://github.com/aikdna/kdna/specs/agent-host-receipt.schema.json"
+                  },
+                  {
+                    "properties": {
+                      "runtime_receipt": {
+                        "properties": {
+                          "capsule_delivery_comparison": {
+                            "const": "mismatched"
+                          },
+                          "provider_execution_status": {
+                            "const": "not_started"
+                          }
+                        }
+                      },
+                      "outcome": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "execution": {
+            "properties": {
+              "delivery_status": {
+                "enum": ["not_delivered", "rejected_before_execution"]
+              },
+              "execution_status": {
+                "const": "not_started"
+              }
+            }
+          },
+          "result_ref": {
+            "type": "null"
+          },
+          "errors": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "overall_status": {
+            "const": "execution_failed"
+          }
+        },
+        "required": ["overall_status"]
+      },
+      "then": {
+        "properties": {
+          "host_receipt": {
+            "properties": {
+              "runtime_receipt": {
+                "properties": {
+                  "provider_execution_status": {
+                    "const": "failed"
+                  }
+                }
+              },
+              "outcome": {
+                "type": "null"
+              }
+            }
+          },
+          "execution": {
+            "properties": {
+              "delivery_status": {
+                "const": "correlated_response"
+              },
+              "execution_status": {
+                "const": "failed"
+              }
+            }
+          },
+          "result_ref": {
+            "type": "null"
+          },
+          "errors": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "overall_status": {
+            "const": "cancelled"
+          }
+        },
+        "required": ["overall_status"]
+      },
+      "then": {
+        "properties": {
+          "host_receipt": {
+            "properties": {
+              "runtime_receipt": {
+                "properties": {
+                  "provider_execution_status": {
+                    "const": "cancelled"
+                  }
+                }
+              },
+              "outcome": {
+                "type": "null"
+              }
+            }
+          },
+          "execution": {
+            "properties": {
+              "delivery_status": {
+                "const": "correlated_response"
+              },
+              "execution_status": {
+                "const": "cancelled"
+              }
+            }
+          },
+          "result_ref": {
+            "type": "null"
+          },
+          "errors": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "overall_status": {
+            "const": "timed_out"
+          }
+        },
+        "required": ["overall_status"]
+      },
+      "then": {
+        "properties": {
+          "host_receipt": {
+            "properties": {
+              "runtime_receipt": {
+                "properties": {
+                  "provider_execution_status": {
+                    "const": "timed_out"
+                  }
+                }
+              },
+              "outcome": {
+                "type": "null"
+              }
+            }
+          },
+          "execution": {
+            "properties": {
+              "delivery_status": {
+                "const": "correlated_response"
+              },
+              "execution_status": {
+                "const": "timed_out"
+              }
+            }
+          },
+          "budget": {
+            "properties": {
+              "comparison": {
+                "properties": {
+                  "elapsed_ms": {
+                    "const": "exceeded"
+                  },
+                  "overall": {
+                    "const": "exceeded"
+                  }
+                }
+              }
+            }
+          },
+          "result_ref": {
+            "type": "null"
+          },
+          "errors": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "assetId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*(:[a-zA-Z0-9_.-]+)+$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([+-].+)?$"
+    },
+    "planRef": {
+      "type": "object",
+      "required": [
+        "plan_id",
+        "plan_digest_profile",
+        "plan_digest_profile_version",
+        "plan_digest",
+        "comparison"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "pattern": "^plan_[0-9a-f]{16}$"
+        },
+        "plan_digest_profile": {
+          "const": "kdna.canonicalization.consumption-plan-jcs"
+        },
+        "plan_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "comparison": {
+          "const": "matched"
+        },
+        "plan_digest_profile_version": {
+          "const": "0.1.0"
+        }
+      }
+    },
+    "runtimeContract": {
+      "type": "object",
+      "required": [
+        "plan_capsule_versions",
+        "core_capsule_versions",
+        "plan_host_protocols",
+        "host_capabilities",
+        "negotiation_state",
+        "selected_capsule_version",
+        "selected_host_protocol",
+        "issue_code"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "plan_capsule_versions": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": "0.1.0"
+            }
+          ],
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "core_capsule_versions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["0.1.0"]
+          }
+        },
+        "plan_host_protocols": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": "kdna.agent-host"
+            }
+          ],
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "host_capabilities": {
+          "$ref": "https://github.com/aikdna/kdna/specs/agent-host-capabilities.schema.json"
+        },
+        "negotiation_state": {
+          "enum": ["selected", "blocked", "not_started"]
+        },
+        "selected_capsule_version": {
+          "type": ["string", "null"],
+          "enum": ["0.1.0", null]
+        },
+        "selected_host_protocol": {
+          "type": ["string", "null"],
+          "enum": ["kdna.agent-host", null]
+        },
+        "issue_code": {
+          "type": ["string", "null"],
+          "enum": [
+            "KDNA_CAPSULE_VERSION_UNSUPPORTED",
+            "KDNA_HOST_PROTOCOL_UNSUPPORTED",
+            "KDNA_HOST_CAPSULE_PAIR_UNSUPPORTED",
+            null
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "negotiation_state": {
+                "const": "selected"
+              }
+            },
+            "required": ["negotiation_state"]
+          },
+          "then": {
+            "properties": {
+              "selected_capsule_version": {
+                "const": "0.1.0"
+              },
+              "selected_host_protocol": {
+                "const": "kdna.agent-host"
+              },
+              "issue_code": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "selected_capsule_version": {
+                "type": "null"
+              },
+              "selected_host_protocol": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "negotiation_state": {
+                "const": "blocked"
+              }
+            },
+            "required": ["negotiation_state"]
+          },
+          "then": {
+            "properties": {
+              "issue_code": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "negotiation_state": {
+                "const": "not_started"
+              }
+            },
+            "required": ["negotiation_state"]
+          },
+          "then": {
+            "properties": {
+              "issue_code": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "assetIdentity": {
+      "type": "object",
+      "required": ["asset_id", "asset_uid", "version", "judgment_version", "access"],
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/assetId"
+        },
+        "asset_uid": {
+          "type": "string",
+          "format": "uri"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/semver"
+        },
+        "access": {
+          "enum": ["public", "licensed", "remote"]
+        }
+      }
+    },
+    "successfulDigest": {
+      "type": "object",
+      "required": ["value", "basis", "comparison"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "$ref": "#/$defs/sha256"
+        },
+        "basis": {
+          "type": "string"
+        },
+        "comparison": {
+          "type": "object",
+          "required": ["state", "against", "expected", "source"],
+          "additionalProperties": false,
+          "properties": {
+            "state": {
+              "enum": ["matched", "not_compared"]
+            },
+            "against": {
+              "type": ["string", "null"]
+            },
+            "expected": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/sha256"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "source": {
+              "type": ["string", "null"]
+            }
+          }
+        }
+      }
+    },
+    "capsuleDeliveryEvidence": {
+      "type": "object",
+      "required": [
+        "basis",
+        "basis_version",
+        "observed",
+        "sender_computed",
+        "host_recomputed",
+        "host_echoed",
+        "delivered_capsule_version",
+        "host_boundary_comparison",
+        "request_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "const": "kdna.canonicalization.runtime-capsule-jcs"
+        },
+        "observed": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sender_computed": {
+          "type": "boolean"
+        },
+        "host_recomputed": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "host_echoed": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "delivered_capsule_version": {
+          "type": ["string", "null"],
+          "enum": ["0.1.0", null]
+        },
+        "host_boundary_comparison": {
+          "enum": ["matched", "mismatched", "not_delivered", "not_observed", "unavailable"]
+        },
+        "request_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^host_[0-9a-f]{24}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "basis_version": {
+          "const": "0.1.0"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "host_boundary_comparison": {
+                "const": "matched"
+              }
+            },
+            "required": ["host_boundary_comparison"]
+          },
+          "then": {
+            "properties": {
+              "observed": {
+                "$ref": "#/$defs/sha256"
+              },
+              "sender_computed": {
+                "const": true
+              },
+              "host_recomputed": {
+                "$ref": "#/$defs/sha256"
+              },
+              "host_echoed": {
+                "$ref": "#/$defs/sha256"
+              },
+              "delivered_capsule_version": {
+                "const": "0.1.0"
+              },
+              "request_id": {
+                "type": "string",
+                "pattern": "^host_[0-9a-f]{24}$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "host_boundary_comparison": {
+                "const": "mismatched"
+              }
+            },
+            "required": ["host_boundary_comparison"]
+          },
+          "then": {
+            "properties": {
+              "observed": {
+                "$ref": "#/$defs/sha256"
+              },
+              "sender_computed": {
+                "const": true
+              },
+              "host_recomputed": {
+                "$ref": "#/$defs/sha256"
+              },
+              "host_echoed": {
+                "$ref": "#/$defs/sha256"
+              },
+              "delivered_capsule_version": {
+                "const": "0.1.0"
+              },
+              "request_id": {
+                "type": "string",
+                "pattern": "^host_[0-9a-f]{24}$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "host_boundary_comparison": {
+                "const": "not_observed"
+              }
+            },
+            "required": ["host_boundary_comparison"]
+          },
+          "then": {
+            "properties": {
+              "observed": {
+                "$ref": "#/$defs/sha256"
+              },
+              "sender_computed": {
+                "const": true
+              },
+              "host_recomputed": {
+                "type": "null"
+              },
+              "host_echoed": {
+                "type": "null"
+              },
+              "delivered_capsule_version": {
+                "const": "0.1.0"
+              },
+              "request_id": {
+                "type": "string",
+                "pattern": "^host_[0-9a-f]{24}$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "host_boundary_comparison": {
+                "enum": ["not_delivered", "unavailable"]
+              }
+            },
+            "required": ["host_boundary_comparison"]
+          },
+          "then": {
+            "properties": {
+              "host_recomputed": {
+                "type": "null"
+              },
+              "host_echoed": {
+                "type": "null"
+              },
+              "delivered_capsule_version": {
+                "type": "null"
+              },
+              "request_id": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "host_boundary_comparison": {
+                "const": "unavailable"
+              }
+            },
+            "required": ["host_boundary_comparison"]
+          },
+          "then": {
+            "properties": {
+              "observed": {
+                "type": "null"
+              },
+              "sender_computed": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "projectionActual": {
+      "type": "object",
+      "required": ["profile", "capsule_delivery_digest", "profile_deviated_from_plan"],
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "type": ["string", "null"],
+          "enum": ["index", "compact", "scenario", "full", null]
+        },
+        "capsule_delivery_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "profile_deviated_from_plan": {
+          "type": ["boolean", "null"]
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "delivery_status",
+        "semantic_consumption",
+        "execution_status",
+        "conformance_status",
+        "model_identity"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "delivery_status": {
+          "enum": ["correlated_response", "rejected_before_execution", "not_delivered"]
+        },
+        "semantic_consumption": {
+          "$ref": "#/$defs/semanticConsumption"
+        },
+        "execution_status": {
+          "enum": ["completed", "not_started", "failed", "cancelled", "timed_out"]
+        },
+        "conformance_status": {
+          "const": "not_evaluated"
+        },
+        "model_identity": {
+          "$ref": "#/$defs/modelIdentity"
+        }
+      }
+    },
+    "semanticConsumption": {
+      "type": "object",
+      "required": ["state", "basis"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "const": "not_observed"
+        },
+        "basis": {
+          "type": "null"
+        }
+      }
+    },
+    "modelIdentity": {
+      "type": "object",
+      "required": ["value", "basis"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "basis": {
+          "enum": ["host_reported", "not_observed"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "basis": {
+                "const": "host_reported"
+              }
+            },
+            "required": ["basis"]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "budgetEvidence": {
+      "type": "object",
+      "required": ["limits", "actual", "comparison"],
+      "additionalProperties": false,
+      "properties": {
+        "limits": {
+          "$ref": "https://github.com/aikdna/kdna/specs/consumption-plan.schema.json#/$defs/budget"
+        },
+        "actual": {
+          "$ref": "#/$defs/budgetActual"
+        },
+        "comparison": {
+          "$ref": "#/$defs/budgetComparison"
+        }
+      }
+    },
+    "budgetActual": {
+      "type": "object",
+      "required": [
+        "projection_chars",
+        "task_chars",
+        "elapsed_ms",
+        "elapsed_basis",
+        "tokens_used",
+        "model_calls",
+        "usage_basis"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "projection_chars": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "task_chars": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "elapsed_ms": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "elapsed_basis": {
+          "enum": ["host_monotonic", "not_observed"]
+        },
+        "tokens_used": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model_calls": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "usage_basis": {
+          "enum": ["host_reported", "not_observed"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "elapsed_basis": {
+                "const": "host_monotonic"
+              }
+            },
+            "required": ["elapsed_basis"]
+          },
+          "then": {
+            "properties": {
+              "elapsed_ms": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "elapsed_ms": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "usage_basis": {
+                "const": "host_reported"
+              }
+            },
+            "required": ["usage_basis"]
+          },
+          "then": {
+            "properties": {
+              "tokens_used": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "model_calls": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "tokens_used": {
+                "type": "null"
+              },
+              "model_calls": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "budgetComparison": {
+      "type": "object",
+      "required": [
+        "projection_chars",
+        "task_chars",
+        "elapsed_ms",
+        "tokens_used",
+        "model_calls",
+        "overall"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "projection_chars": {
+          "enum": ["within_limit", "exceeded", "not_observed"]
+        },
+        "task_chars": {
+          "enum": ["within_limit", "exceeded"]
+        },
+        "elapsed_ms": {
+          "enum": ["within_limit", "exceeded", "not_observed"]
+        },
+        "tokens_used": {
+          "enum": ["within_limit", "exceeded", "not_limited", "not_observed"]
+        },
+        "model_calls": {
+          "enum": ["within_limit", "exceeded", "not_limited", "not_observed"]
+        },
+        "overall": {
+          "enum": ["within_limit", "exceeded", "not_observed"]
+        }
+      }
+    },
+    "resultRef": {
+      "type": "object",
+      "required": ["shape", "result_digest", "basis", "stored"],
+      "additionalProperties": false,
+      "properties": {
+        "shape": {
+          "const": "structured_judgment"
+        },
+        "result_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "basis": {
+          "const": "kdna.canonicalization.result-jcs"
+        },
+        "stored": {
+          "type": "boolean"
+        }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "required": ["code", "message", "phase"],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phase": {
+          "enum": ["plan", "negotiation", "load", "budget", "delivery", "host", "execution"]
+        }
+      }
+    }
+  }
+}

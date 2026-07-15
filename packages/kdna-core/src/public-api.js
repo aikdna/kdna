@@ -9,7 +9,7 @@
 
 const fs = require('fs');
 const { createKdnaAssetReader } = require('./asset-reader');
-const v1 = require('./v1');
+const container = require('./container');
 const runtimeApi = require('./runtime-api');
 
 function readerFrom(options = {}) {
@@ -53,7 +53,7 @@ function openKDNASync(input, options = {}) {
 async function inspectKDNA(input, options = {}) {
   const reader = readerFrom(options);
   const asset = await asAsset(input, { ...options, reader });
-  const current = v1.inspect(canonicalBytes(asset), options);
+  const current = container.inspect(canonicalBytes(asset), options);
   const manifest = await reader.readManifest(asset);
   const entries = await reader.listEntries(asset);
   const contentDigest = await reader.contentDigest(asset);
@@ -74,7 +74,7 @@ async function inspectKDNA(input, options = {}) {
 function inspectKDNASync(input, options = {}) {
   const reader = readerFrom(options);
   const asset = asAssetSync(input, { ...options, reader });
-  const current = v1.inspect(canonicalBytes(asset), options);
+  const current = container.inspect(canonicalBytes(asset), options);
   const manifest = reader.readManifestSync(asset);
   const entries = reader.listEntriesSync(asset);
   const contentDigest = reader.contentDigestSync(asset);
@@ -101,11 +101,11 @@ function loadKDNASync(input, options = {}) {
 }
 
 async function validateKDNA(input, options = {}) {
-  return v1.validate(isAsset(input) ? canonicalBytes(input) : input, options);
+  return container.validate(isAsset(input) ? canonicalBytes(input) : input, options);
 }
 
 function validateKDNASync(input, options = {}) {
-  return v1.validate(isAsset(input) ? canonicalBytes(input) : input, options);
+  return container.validate(isAsset(input) ? canonicalBytes(input) : input, options);
 }
 
 async function renderForAgent(input, options = {}) {

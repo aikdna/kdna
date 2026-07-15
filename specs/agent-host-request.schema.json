@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/specs/agent-host-request.schema.json",
+  "title": "KDNA Agent Host Request",
+  "description": "Agent Host request carrying one exact Runtime Capsule, plan correlation, detached delivery digest P, projection/result contracts, and enforceable limits.",
+  "type": "object",
+  "required": [
+    "protocol",
+    "protocol_version",
+    "request_id",
+    "plan_ref",
+    "runtime_contract",
+    "projection_contract",
+    "result_contract",
+    "budget",
+    "constraints",
+    "phase",
+    "task",
+    "authority",
+    "asset",
+    "capsule"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "protocol": {
+      "const": "kdna.agent-host"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^host_[0-9a-f]{24}$"
+    },
+    "plan_ref": {
+      "$ref": "#/$defs/planRef"
+    },
+    "runtime_contract": {
+      "$ref": "#/$defs/runtimeContract"
+    },
+    "projection_contract": {
+      "$ref": "#/$defs/projectionContract"
+    },
+    "result_contract": {
+      "$ref": "#/$defs/resultContract"
+    },
+    "budget": {
+      "$ref": "#/$defs/budget"
+    },
+    "constraints": {
+      "$ref": "#/$defs/constraints"
+    },
+    "phase": {
+      "const": "single_judgment"
+    },
+    "task": {
+      "$ref": "#/$defs/task"
+    },
+    "authority": {
+      "$ref": "#/$defs/authority"
+    },
+    "asset": {
+      "$ref": "#/$defs/asset"
+    },
+    "capsule": {
+      "$ref": "https://github.com/aikdna/kdna/specs/runtime-capsule.schema.json"
+    },
+    "protocol_version": {
+      "const": "0.1.0"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "assetId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*(:[a-zA-Z0-9_.-]+)+$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([+-].+)?$"
+    },
+    "planRef": {
+      "type": "object",
+      "required": ["plan_id", "plan_digest_profile", "plan_digest_profile_version", "plan_digest"],
+      "additionalProperties": false,
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "pattern": "^plan_[0-9a-f]{16}$"
+        },
+        "plan_digest_profile": {
+          "const": "kdna.canonicalization.consumption-plan-jcs"
+        },
+        "plan_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "plan_digest_profile_version": {
+          "const": "0.1.0"
+        }
+      }
+    },
+    "runtimeContract": {
+      "type": "object",
+      "required": [
+        "capsule_version",
+        "capsule_digest_profile",
+        "capsule_digest_profile_version",
+        "capsule_delivery_digest"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "capsule_version": {
+          "const": "0.1.0"
+        },
+        "capsule_digest_profile": {
+          "const": "kdna.canonicalization.runtime-capsule-jcs"
+        },
+        "capsule_delivery_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "capsule_digest_profile_version": {
+          "const": "0.1.0"
+        }
+      }
+    },
+    "projectionContract": {
+      "type": "object",
+      "required": [
+        "profile",
+        "required_digest_profile",
+        "required_digest_profile_version",
+        "require_packaged_asset"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "enum": ["index", "compact", "scenario", "full"]
+        },
+        "required_digest_profile": {
+          "const": "kdna.digest-evidence"
+        },
+        "require_packaged_asset": {
+          "const": true
+        },
+        "required_digest_profile_version": {
+          "const": "0.1.0"
+        }
+      }
+    },
+    "resultContract": {
+      "type": "object",
+      "required": ["shape"],
+      "additionalProperties": false,
+      "properties": {
+        "shape": {
+          "const": "structured_judgment"
+        }
+      }
+    },
+    "budget": {
+      "$ref": "https://github.com/aikdna/kdna/specs/consumption-plan.schema.json#/$defs/budget"
+    },
+    "constraints": {
+      "$ref": "https://github.com/aikdna/kdna/specs/consumption-plan.schema.json#/$defs/constraints"
+    },
+    "task": {
+      "$ref": "https://github.com/aikdna/kdna/specs/consumption-plan.schema.json#/$defs/task"
+    },
+    "authority": {
+      "type": "object",
+      "required": ["asset_id", "role", "final_decision"],
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/assetId"
+        },
+        "role": {
+          "const": "primary"
+        },
+        "final_decision": {
+          "const": true
+        }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "required": [
+        "asset_id",
+        "asset_uid",
+        "version",
+        "judgment_version",
+        "access",
+        "role",
+        "expected_digests"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/assetId"
+        },
+        "asset_uid": {
+          "type": "string",
+          "format": "uri"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/semver"
+        },
+        "access": {
+          "enum": ["public", "licensed", "remote"]
+        },
+        "role": {
+          "const": "primary"
+        },
+        "expected_digests": {
+          "$ref": "https://github.com/aikdna/kdna/specs/consumption-plan.schema.json#/$defs/expectedDigests"
+        }
+      }
+    }
+  }
+}

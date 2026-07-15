@@ -19,14 +19,14 @@ const MANIFEST = {
   version: '1.0.0', judgment_version: '1.0.0',
   created_at: '2026-06-25T00:00:00Z', updated_at: '2026-06-25T00:00:00Z',
   creator: { name: 'Test', id: 'test' },
-  compatibility: { min_loader_version: '0.0.0', profile: 'judgment-profile-v1' },
+  compatibility: { min_loader_version: '0.0.0', profile: 'kdna.payload.judgment' },
   payload: { path: 'payload.kdnab', encoding: 'json', encrypted: false },
   access: 'public',
   asset_digest: 'sha256:0000000000000000000000000000000000000000000000000000000000000000',
   content_digest: 'sha256:0000000000000000000000000000000000000000000000000000000000000000',
 };
 const PAYLOAD_JSON = {
-  profile: 'judgment-profile-v1',
+  profile: 'kdna.payload.judgment',
   core: { highest_question: 'What is the golden path?',
     axioms: [{ id: 'gv-001', one_sentence: 'Golden vectors must be deterministic.', full_statement: 'All implementations MUST produce identical output.', applies_when: ['Testing'], does_not_apply_when: [], failure_risk: 'Divergent implementations.' }],
     boundaries: [{ type: 'scope', text: 'Only test vectors defined in this file.' }] },
@@ -35,7 +35,7 @@ const PAYLOAD_JSON = {
 const PAYLOAD_STR = JSON.stringify(PAYLOAD_JSON);
 const ENCRYPTED_MANIFEST = { ...MANIFEST, access: 'licensed',
   entitlement: { profile: 'password' },
-  encryption: { profile: 'kdna-password-protected-v1', encrypted_entries: ['payload.kdnab'] },
+  encryption: { profile: 'kdna.encryption.password', encrypted_entries: ['payload.kdnab'] },
   payload: { path: 'payload.kdnab', encoding: 'json', encrypted: true } };
 
 function tmpDir() { return fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-gv-')); }
@@ -49,7 +49,7 @@ test('B8: encryptProtectedEntry produces valid envelope', () => {
   const envelope = core.encryptProtectedEntry(PAYLOAD_STR, {
     entryName: 'payload.kdnab', manifest: MANIFEST, password: TEST_PASSWORD, recoveryCode: rc,
   });
-  assert.equal(envelope.profile, 'kdna-password-protected-v1');
+  assert.equal(envelope.profile, 'kdna.encryption.password');
   assert.equal(envelope.alg, 'AES-256-GCM');
   assert.equal(envelope.kdf, 'Argon2id');
   assert.equal(envelope.key_wrapping, 'AES-256-KW');

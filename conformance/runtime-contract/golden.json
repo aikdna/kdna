@@ -1,0 +1,434 @@
+{
+  "profile_ids": {
+    "plan": "kdna.canonicalization.consumption-plan-jcs",
+    "asset": "kdna.digest-basis.container-bytes",
+    "content": "kdna.digest-basis.content-tree",
+    "runtime_entry_set": "kdna.digest-basis.runtime-entry-set",
+    "capsule_delivery": "kdna.canonicalization.runtime-capsule-jcs",
+    "result": "kdna.canonicalization.result-jcs"
+  },
+  "plan": {
+    "type": "kdna.consumption-plan",
+    "contract_version": "0.1.0",
+    "plan_id": "plan_0123456789abcdef",
+    "created_at": "2026-07-15T00:00:00.000Z",
+    "mode": "single",
+    "task": {
+      "summary": "Apply the packaged judgment asset to this fixture decision.",
+      "task_family": null,
+      "context": {}
+    },
+    "asset_ref": {
+      "asset_id": "kdna:example:agent-project-context",
+      "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+      "version": "1.0.0",
+      "judgment_version": "1.0.0",
+      "access": "public",
+      "expected_digests": {
+        "asset": {
+          "value": "sha256:df18a4b15c930940061c58744c0bcac040a0a54c596db358da02c0a31082a23e",
+          "basis": "kdna.digest-basis.container-bytes",
+          "source": "install_receipt",
+          "comparison": "matched"
+        },
+        "content": {
+          "value": "sha256:72595802e214dff1a5b5a1153dd7e343190668d5da5ba32bcff2857774cc9428",
+          "basis": "kdna.digest-basis.content-tree",
+          "source": "caller",
+          "comparison": "not_compared"
+        },
+        "runtime_entry_set": {
+          "value": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7",
+          "basis": "kdna.digest-basis.runtime-entry-set",
+          "source": "checksums.json.entry_set_digest",
+          "comparison": "matched"
+        }
+      }
+    },
+    "projection_request": {
+      "profile": "compact",
+      "accepted_capsule_versions": ["0.1.0"],
+      "required_digest_profile": "kdna.digest-evidence",
+      "required_digest_profile_version": "0.1.0",
+      "require_packaged_asset": true
+    },
+    "host_request": { "accepted_protocols": ["kdna.agent-host"] },
+    "result_request": { "shape": "structured_judgment" },
+    "budget": {
+      "max_projection_chars": 12000,
+      "max_task_chars": 1000,
+      "deadline_ms": 30000,
+      "max_tokens": null,
+      "max_model_calls": null
+    },
+    "trace_policy": { "emit": true, "storage": "session" },
+    "integrity": {
+      "profile": "kdna.canonicalization.consumption-plan-jcs",
+      "profile_version": "0.1.0",
+      "plan_digest": "sha256:c3229f99fc39c56131bf255744f98a207e4597acc5f794ed30693ced40c914f1"
+    },
+    "constraints": { "enforce_before_host": true, "reject_on_exceed": true }
+  },
+  "capabilities": {
+    "type": "kdna.agent-host-capabilities",
+    "protocol_version": "0.1.0",
+    "capability_basis": "registered_descriptor",
+    "host_protocols": ["kdna.agent-host"],
+    "capsule_versions": ["0.1.0"],
+    "capsule_digest_profiles": ["kdna.canonicalization.runtime-capsule-jcs"],
+    "capsule_digest_profile_versions": ["0.1.0"]
+  },
+  "request": {
+    "protocol": "kdna.agent-host",
+    "protocol_version": "0.1.0",
+    "request_id": "host_0123456789abcdef01234567",
+    "plan_ref": {
+      "plan_id": "plan_0123456789abcdef",
+      "plan_digest_profile": "kdna.canonicalization.consumption-plan-jcs",
+      "plan_digest_profile_version": "0.1.0",
+      "plan_digest": "sha256:c3229f99fc39c56131bf255744f98a207e4597acc5f794ed30693ced40c914f1"
+    },
+    "runtime_contract": {
+      "capsule_version": "0.1.0",
+      "capsule_digest_profile": "kdna.canonicalization.runtime-capsule-jcs",
+      "capsule_digest_profile_version": "0.1.0",
+      "capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa"
+    },
+    "projection_contract": {
+      "profile": "compact",
+      "required_digest_profile": "kdna.digest-evidence",
+      "required_digest_profile_version": "0.1.0",
+      "require_packaged_asset": true
+    },
+    "result_contract": { "shape": "structured_judgment" },
+    "budget": {
+      "deadline_ms": 30000,
+      "max_model_calls": null,
+      "max_projection_chars": 12000,
+      "max_task_chars": 1000,
+      "max_tokens": null
+    },
+    "constraints": { "enforce_before_host": true, "reject_on_exceed": true },
+    "phase": "single_judgment",
+    "task": {
+      "context": {},
+      "summary": "Apply the packaged judgment asset to this fixture decision.",
+      "task_family": null
+    },
+    "authority": {
+      "asset_id": "kdna:example:agent-project-context",
+      "role": "primary",
+      "final_decision": true
+    },
+    "asset": {
+      "access": "public",
+      "asset_id": "kdna:example:agent-project-context",
+      "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+      "expected_digests": {
+        "asset": {
+          "basis": "kdna.digest-basis.container-bytes",
+          "comparison": "matched",
+          "source": "install_receipt",
+          "value": "sha256:df18a4b15c930940061c58744c0bcac040a0a54c596db358da02c0a31082a23e"
+        },
+        "content": {
+          "basis": "kdna.digest-basis.content-tree",
+          "comparison": "not_compared",
+          "source": "caller",
+          "value": "sha256:72595802e214dff1a5b5a1153dd7e343190668d5da5ba32bcff2857774cc9428"
+        },
+        "runtime_entry_set": {
+          "basis": "kdna.digest-basis.runtime-entry-set",
+          "comparison": "matched",
+          "source": "checksums.json.entry_set_digest",
+          "value": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7"
+        }
+      },
+      "judgment_version": "1.0.0",
+      "version": "1.0.0",
+      "role": "primary"
+    },
+    "capsule": {
+      "access": "public",
+      "asset": {
+        "asset_id": "kdna:example:agent-project-context",
+        "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+        "judgment_version": "1.0.0",
+        "version": "1.0.0"
+      },
+      "context": {
+        "axioms": [
+          {
+            "applies_when": [],
+            "does_not_apply_when": [],
+            "failure_risk": null,
+            "id": "a1",
+            "one_sentence": "The minimal payload is the smallest shape that passes the schema.",
+            "statement": "The minimal payload is the smallest shape that passes the schema.",
+            "type": "axiom_applicability"
+          }
+        ],
+        "boundaries": [],
+        "failure_modes": [],
+        "highest_question": "What does this minimal example demonstrate?",
+        "judgment_role": null,
+        "patterns": [],
+        "self_checks": [],
+        "value_order": [],
+        "worldview": []
+      },
+      "contract_version": "0.1.0",
+      "digests": {
+        "asset": {
+          "basis": "kdna.digest-basis.container-bytes",
+          "comparison": {
+            "against": "external_expected",
+            "expected": "sha256:df18a4b15c930940061c58744c0bcac040a0a54c596db358da02c0a31082a23e",
+            "source": "install_receipt",
+            "state": "matched"
+          },
+          "value": "sha256:df18a4b15c930940061c58744c0bcac040a0a54c596db358da02c0a31082a23e"
+        },
+        "content": {
+          "basis": "kdna.digest-basis.content-tree",
+          "comparison": {
+            "against": null,
+            "expected": null,
+            "source": null,
+            "state": "not_compared"
+          },
+          "value": "sha256:72595802e214dff1a5b5a1153dd7e343190668d5da5ba32bcff2857774cc9428"
+        },
+        "profile": "kdna.digest-evidence",
+        "profile_version": "0.1.0",
+        "runtime_entry_set": {
+          "basis": "kdna.digest-basis.runtime-entry-set",
+          "comparison": {
+            "against": "checksum_declaration",
+            "expected": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7",
+            "source": "checksums.json.entry_set_digest",
+            "state": "matched"
+          },
+          "value": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7"
+        }
+      },
+      "profile": "compact",
+      "risk_level": null,
+      "signature": { "state": "absent" },
+      "trace": {
+        "input_kind": "packaged_bytes",
+        "loaded_at": "2026-07-15T00:00:00.000Z",
+        "loaded_by": "kdna-core",
+        "payload_encoding": "cbor",
+        "profile": "compact",
+        "runtime_eligible": true,
+        "schema_valid": true,
+        "signature_state": "absent"
+      },
+      "type": "kdna.runtime-capsule"
+    }
+  },
+  "receipt": {
+    "protocol": "kdna.agent-host",
+    "protocol_version": "0.1.0",
+    "request_id": "host_0123456789abcdef01234567",
+    "runtime_receipt": {
+      "type": "kdna.agent-host.runtime-receipt",
+      "contract_version": "0.1.0",
+      "capsule_version": "0.1.0",
+      "capsule_digest_profile": "kdna.canonicalization.runtime-capsule-jcs",
+      "capsule_digest_profile_version": "0.1.0",
+      "sender_capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+      "host_recomputed_capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+      "echoed_capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+      "capsule_delivery_comparison": "matched",
+      "capsule_schema_validation": "passed",
+      "asset_id_correlation": "matched",
+      "provider_execution_status": "completed",
+      "semantic_consumption": { "state": "not_observed", "basis": null },
+      "model_identity": { "value": null, "basis": "not_observed" },
+      "usage": {
+        "elapsed_ms": 1000,
+        "elapsed_basis": "host_monotonic",
+        "tokens_used": null,
+        "model_calls": null,
+        "basis": "not_observed"
+      }
+    },
+    "outcome": {
+      "judgment": {
+        "answer": "The fixture demonstrates a correlated Agent Host boundary.",
+        "reasoning": [],
+        "confidence": null
+      },
+      "usage": null
+    }
+  },
+  "trace": {
+    "type": "kdna.judgment-trace",
+    "contract_version": "0.1.0",
+    "trace_id": "trace_0123456789abcdef",
+    "plan_ref": {
+      "plan_id": "plan_0123456789abcdef",
+      "plan_digest_profile": "kdna.canonicalization.consumption-plan-jcs",
+      "plan_digest_profile_version": "0.1.0",
+      "plan_digest": "sha256:c3229f99fc39c56131bf255744f98a207e4597acc5f794ed30693ced40c914f1",
+      "comparison": "matched"
+    },
+    "parent_trace_id": null,
+    "timestamp": "2026-07-15T00:00:01.000Z",
+    "overall_status": "execution_completed",
+    "runtime_contract": {
+      "plan_capsule_versions": ["0.1.0"],
+      "core_capsule_versions": ["0.1.0"],
+      "plan_host_protocols": ["kdna.agent-host"],
+      "host_capabilities": {
+        "capability_basis": "registered_descriptor",
+        "capsule_digest_profile_versions": ["0.1.0"],
+        "capsule_digest_profiles": ["kdna.canonicalization.runtime-capsule-jcs"],
+        "capsule_versions": ["0.1.0"],
+        "host_protocols": ["kdna.agent-host"],
+        "protocol_version": "0.1.0",
+        "type": "kdna.agent-host-capabilities"
+      },
+      "negotiation_state": "selected",
+      "selected_capsule_version": "0.1.0",
+      "selected_host_protocol": "kdna.agent-host",
+      "issue_code": null
+    },
+    "asset_identity": {
+      "access": "public",
+      "asset_id": "kdna:example:agent-project-context",
+      "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+      "judgment_version": "1.0.0",
+      "version": "1.0.0"
+    },
+    "digest_evidence": {
+      "asset": {
+        "basis": "kdna.digest-basis.container-bytes",
+        "comparison": {
+          "against": "external_expected",
+          "expected": "sha256:df18a4b15c930940061c58744c0bcac040a0a54c596db358da02c0a31082a23e",
+          "source": "install_receipt",
+          "state": "matched"
+        },
+        "value": "sha256:df18a4b15c930940061c58744c0bcac040a0a54c596db358da02c0a31082a23e"
+      },
+      "content": {
+        "basis": "kdna.digest-basis.content-tree",
+        "comparison": {
+          "against": null,
+          "expected": null,
+          "source": null,
+          "state": "not_compared"
+        },
+        "value": "sha256:72595802e214dff1a5b5a1153dd7e343190668d5da5ba32bcff2857774cc9428"
+      },
+      "profile": "kdna.digest-evidence",
+      "profile_version": "0.1.0",
+      "runtime_entry_set": {
+        "basis": "kdna.digest-basis.runtime-entry-set",
+        "comparison": {
+          "against": "checksum_declaration",
+          "expected": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7",
+          "source": "checksums.json.entry_set_digest",
+          "state": "matched"
+        },
+        "value": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7"
+      }
+    },
+    "capsule_delivery_evidence": {
+      "basis": "kdna.canonicalization.runtime-capsule-jcs",
+      "basis_version": "0.1.0",
+      "observed": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+      "sender_computed": true,
+      "host_recomputed": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+      "host_echoed": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+      "delivered_capsule_version": "0.1.0",
+      "host_boundary_comparison": "matched",
+      "request_id": "host_0123456789abcdef01234567"
+    },
+    "projection_actual": {
+      "profile": "compact",
+      "capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+      "profile_deviated_from_plan": false
+    },
+    "host_receipt": {
+      "outcome": {
+        "judgment": {
+          "answer": "The fixture demonstrates a correlated Agent Host boundary.",
+          "confidence": null,
+          "reasoning": []
+        },
+        "usage": null
+      },
+      "protocol": "kdna.agent-host",
+      "protocol_version": "0.1.0",
+      "request_id": "host_0123456789abcdef01234567",
+      "runtime_receipt": {
+        "asset_id_correlation": "matched",
+        "capsule_delivery_comparison": "matched",
+        "capsule_digest_profile": "kdna.canonicalization.runtime-capsule-jcs",
+        "capsule_digest_profile_version": "0.1.0",
+        "capsule_schema_validation": "passed",
+        "capsule_version": "0.1.0",
+        "contract_version": "0.1.0",
+        "echoed_capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+        "host_recomputed_capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+        "model_identity": { "basis": "not_observed", "value": null },
+        "provider_execution_status": "completed",
+        "semantic_consumption": { "basis": null, "state": "not_observed" },
+        "sender_capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+        "type": "kdna.agent-host.runtime-receipt",
+        "usage": {
+          "basis": "not_observed",
+          "elapsed_basis": "host_monotonic",
+          "elapsed_ms": 1000,
+          "model_calls": null,
+          "tokens_used": null
+        }
+      }
+    },
+    "execution": {
+      "delivery_status": "correlated_response",
+      "semantic_consumption": { "basis": null, "state": "not_observed" },
+      "execution_status": "completed",
+      "conformance_status": "not_evaluated",
+      "model_identity": { "basis": "not_observed", "value": null }
+    },
+    "budget": {
+      "limits": {
+        "deadline_ms": 30000,
+        "max_model_calls": null,
+        "max_projection_chars": 12000,
+        "max_task_chars": 1000,
+        "max_tokens": null
+      },
+      "actual": {
+        "projection_chars": 1946,
+        "task_chars": 105,
+        "elapsed_ms": 1000,
+        "elapsed_basis": "host_monotonic",
+        "tokens_used": null,
+        "model_calls": null,
+        "usage_basis": "not_observed"
+      },
+      "comparison": {
+        "projection_chars": "within_limit",
+        "task_chars": "within_limit",
+        "elapsed_ms": "within_limit",
+        "tokens_used": "not_limited",
+        "model_calls": "not_limited",
+        "overall": "within_limit"
+      }
+    },
+    "result_ref": {
+      "shape": "structured_judgment",
+      "result_digest": "sha256:1eaf74a72271ba2dd9044792ed9a61740b3c450e0c0dec48cad2e34026f08ae9",
+      "basis": "kdna.canonicalization.result-jcs",
+      "stored": true
+    },
+    "errors": [],
+    "warnings": []
+  }
+}

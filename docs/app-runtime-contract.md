@@ -88,7 +88,7 @@ Historical guidance: [kdna-trace.md](./kdna-trace.md)
 
 Deprecated compatibility schema: [judgment-trace-schema.json](../specs/judgment-trace-schema.json)
 
-Plan 1 execution authority: [JudgmentTrace 1.0](../specs/judgment-trace-1.schema.json)
+Plan 1 execution authority: [JudgmentTrace 1.0](../specs/judgment-trace.schema.json)
 
 This legacy app trace records an application's claimed influence during a
 task. It is not a generic execution log and is not valid ConsumptionPlan 1.0

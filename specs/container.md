@@ -78,7 +78,7 @@ A minimal public manifest has this shape:
   "updated_at": "2026-07-13T00:00:00Z",
   "compatibility": {
     "min_loader_version": "1.0.0",
-    "profile": "judgment-profile-v1"
+    "profile": "kdna.payload.judgment"
   },
   "payload": {
     "path": "payload.kdnab",
@@ -121,11 +121,11 @@ boundaries, cases, or self-checks.
 ## 5. CBOR Payload
 
 For an unencrypted judgment asset, `payload.kdnab` is a CBOR map matching
-[`../schema/payload-profile-v1.schema.json`](../schema/payload-profile-v1.schema.json):
+[`../schema/payload-profile.schema.json`](../schema/payload-profile.schema.json):
 
 ```text
 {
-  profile: "judgment-profile-v1",
+  profile: "kdna.payload.judgment",
   core: {
     highest_question: string,
     axioms: array,

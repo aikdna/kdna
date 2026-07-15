@@ -1,41 +1,37 @@
 {
-  "kdna_version": "1.0",
+  "format_version": null,
   "asset": {
-    "asset_id": "kdna:conformance:authorization:receipt-missing",
-    "asset_uid": "urn:uuid:72656365-6970-442d-8d69-7373696e6700",
-    "title": "Authorization Fixture: receipt-missing",
-    "version": "1.0.0",
-    "judgment_version": "1.0.0"
+    "asset_id": null,
+    "asset_uid": null,
+    "title": null,
+    "version": null,
+    "judgment_version": null
   },
-  "access": "licensed",
+  "access": null,
   "access_alias": null,
-  "entitlement_profile": "local_receipt",
-  "state": "needs_license",
-  "required_action": "install_receipt",
+  "entitlement_profile": null,
+  "state": "invalid",
+  "required_action": "block",
   "can_load_now": false,
   "projection_policy": "none",
-  "input_fingerprint": {
-    "has_password_input": false,
-    "entitlement_input": null,
-    "source_fingerprint": "sha256:7436c264f32d5c0f28acb7b1cb156afa7e9fef74fb24955904843eacd76e12e3"
-  },
+  "input_fingerprint": null,
   "checks": {
-    "format_valid": true,
-    "schema_valid": true,
-    "payload_valid": true,
-    "checksums_valid": true,
-    "load_contract_valid": true,
-    "overall_valid": true
+    "format_valid": false,
+    "schema_valid": false,
+    "payload_valid": false,
+    "checksums_valid": false,
+    "load_contract_valid": false,
+    "overall_valid": false
   },
   "issues": [
     {
-      "code": "KDNA_AUTH_ENTITLEMENT_REQUIRED",
+      "code": "KDNA_FORMAT_INVALID",
       "severity": "blocking",
-      "message": "A valid entitlement is required before this asset can be loaded."
+      "message": "Cannot find module './v1/index.js'\nRequire stack:\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container-dispatcher.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container/index.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/public-api.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/index.js\n- /Users/kdna/aikdna/open/kdna/scripts/generate-self-check-conformance-fixtures.mjs"
     }
   ],
   "source": {
-    "kind": "file",
+    "kind": null,
     "path": "<fixture:receipt-missing>"
   }
 }

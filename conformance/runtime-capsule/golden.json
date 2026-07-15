@@ -1,0 +1,109 @@
+{
+  "profile_ids": {
+    "asset": "kdna.digest-basis.container-bytes",
+    "content": "kdna.digest-basis.content-tree",
+    "runtime_entry_set": "kdna.digest-basis.runtime-entry-set",
+    "capsule_delivery": "kdna.canonicalization.runtime-capsule-jcs"
+  },
+  "fixture": "minimal.kdna.b64",
+  "loaded_at": "2026-07-15T00:00:00.000Z",
+  "expected": {
+    "asset": "sha256:df18a4b15c930940061c58744c0bcac040a0a54c596db358da02c0a31082a23e",
+    "content": "sha256:72595802e214dff1a5b5a1153dd7e343190668d5da5ba32bcff2857774cc9428",
+    "runtime_entry_set": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7",
+    "capsule_delivery": "sha256:a47e4ca696ef765bec51f5bde315ca18a14f41d0007a5e0d3b917940a3014106"
+  },
+  "runtime_capsule": {
+    "type": "kdna.runtime-capsule",
+    "contract_version": "0.1.0",
+    "asset": {
+      "asset_id": "kdna:example:agent-project-context",
+      "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+      "version": "1.0.0",
+      "judgment_version": "1.0.0"
+    },
+    "digests": {
+      "profile": "kdna.digest-evidence",
+      "profile_version": "0.1.0",
+      "asset": {
+        "value": "sha256:df18a4b15c930940061c58744c0bcac040a0a54c596db358da02c0a31082a23e",
+        "basis": "kdna.digest-basis.container-bytes",
+        "comparison": {
+          "state": "not_compared",
+          "against": null,
+          "expected": null,
+          "source": null
+        }
+      },
+      "content": {
+        "value": "sha256:72595802e214dff1a5b5a1153dd7e343190668d5da5ba32bcff2857774cc9428",
+        "basis": "kdna.digest-basis.content-tree",
+        "comparison": {
+          "state": "not_compared",
+          "against": null,
+          "expected": null,
+          "source": null
+        }
+      },
+      "runtime_entry_set": {
+        "value": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7",
+        "basis": "kdna.digest-basis.runtime-entry-set",
+        "comparison": {
+          "state": "matched",
+          "against": "checksum_declaration",
+          "expected": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7",
+          "source": "checksums.json.entry_set_digest"
+        }
+      }
+    },
+    "signature": {
+      "state": "absent"
+    },
+    "access": "public",
+    "risk_level": null,
+    "profile": "compact",
+    "context": {
+      "highest_question": "What does this minimal example demonstrate?",
+      "worldview": [],
+      "value_order": [],
+      "judgment_role": null,
+      "axioms": [
+        {
+          "type": "axiom_applicability",
+          "id": "a1",
+          "statement": "The minimal payload is the smallest shape that passes the schema.",
+          "one_sentence": "The minimal payload is the smallest shape that passes the schema.",
+          "applies_when": [],
+          "does_not_apply_when": [],
+          "failure_risk": null
+        }
+      ],
+      "boundaries": [],
+      "self_checks": [],
+      "failure_modes": [],
+      "patterns": []
+    },
+    "trace": {
+      "payload_encoding": "cbor",
+      "loaded_by": "kdna-core",
+      "loaded_at": "2026-07-15T00:00:00.000Z",
+      "input_kind": "packaged_bytes",
+      "runtime_eligible": true,
+      "schema_valid": true,
+      "signature_state": "absent",
+      "profile": "compact"
+    }
+  },
+  "jcs_vectors": [
+    {
+      "name": "utf16-key-order-and-numbers",
+      "value": {
+        "": "bmp",
+        "𐀀": "astral",
+        "minusZero": 0,
+        "small": 1e-7
+      },
+      "canonical": "{\"minusZero\":0,\"small\":1e-7,\"𐀀\":\"astral\",\"\":\"bmp\"}"
+    }
+  ]
+}

@@ -10,9 +10,9 @@ const require = createRequire(import.meta.url);
 const core = require('../packages/kdna-core/src');
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const CAPSULE_ROOT = path.join(ROOT, 'conformance', 'capsule-v2');
-const OUTPUT_ROOT = path.join(ROOT, 'conformance', 'runtime-contract-v1');
-const CORE_CAPSULE_VERSIONS = ['2.0', '1.0'];
+const CAPSULE_ROOT = path.join(ROOT, 'conformance', 'runtime-capsule');
+const OUTPUT_ROOT = path.join(ROOT, 'conformance', 'runtime-contract');
+const CORE_CAPSULE_VERSIONS = ['0.1.0'];
 
 function json(value) {
   return prettier.format(JSON.stringify(value), {
@@ -24,7 +24,7 @@ function json(value) {
 }
 
 function readJson(file) {
-  return core.parseExecutionContractJsonV1(fs.readFileSync(file));
+  return core.parseRuntimeContractJson(fs.readFileSync(file));
 }
 
 function equalJson(left, right) {
@@ -58,12 +58,14 @@ function buildReceipt(request, providerExecutionStatus, elapsedMs, outcome = nul
   const capsuleDeliveryDigest = request.runtime_contract.capsule_delivery_digest;
   const receipt = {
     protocol: request.protocol,
+    protocol_version: request.protocol_version,
     request_id: request.request_id,
     runtime_receipt: {
       type: 'kdna.agent-host.runtime-receipt',
-      receipt_version: '1.0.0',
+      contract_version: '0.1.0',
       capsule_version: request.runtime_contract.capsule_version,
       capsule_digest_profile: request.runtime_contract.capsule_digest_profile,
+      capsule_digest_profile_version: request.runtime_contract.capsule_digest_profile_version,
       sender_capsule_delivery_digest: capsuleDeliveryDigest,
       host_recomputed_capsule_delivery_digest: core.computeCapsuleDeliveryDigest(request.capsule),
       echoed_capsule_delivery_digest: capsuleDeliveryDigest,
@@ -85,7 +87,7 @@ function buildReceipt(request, providerExecutionStatus, elapsedMs, outcome = nul
   };
   assertValid(
     `${providerExecutionStatus} Host receipt`,
-    core.validateAgentHost2ReceiptV1(receipt, { request }),
+    core.validateAgentHostReceipt(receipt, { request }),
   );
   return receipt;
 }
@@ -96,16 +98,16 @@ async function buildFixtures() {
     fs.readFileSync(path.join(CAPSULE_ROOT, capsuleGolden.fixture), 'utf8').trim(),
     'base64',
   );
-  const canonicalCapsule = core.loadCapsuleV2(capsuleBytes, {
+  const canonicalCapsule = core.loadRuntimeCapsule(capsuleBytes, {
     loadedAt: capsuleGolden.loaded_at,
     profile: 'compact',
   });
   assert(
-    equalJson(canonicalCapsule, capsuleGolden.capsule_2),
+    equalJson(canonicalCapsule, capsuleGolden.runtime_capsule),
     'official Capsule bytes do not reproduce the committed Capsule fixture',
   );
 
-  const capsule = core.loadCapsuleV2(capsuleBytes, {
+  const capsule = core.loadRuntimeCapsule(capsuleBytes, {
     loadedAt: capsuleGolden.loaded_at,
     profile: 'compact',
     expectedDigests: {
@@ -124,7 +126,7 @@ async function buildFixtures() {
     content: expectedDigest(capsule.digests.content, 'content'),
     runtime_entry_set: expectedDigest(capsule.digests.runtime_entry_set, 'runtime entry set'),
   };
-  const plan = core.buildConsumptionPlanV1({
+  const plan = core.buildConsumptionPlan({
     plan_id: 'plan_0123456789abcdef',
     created_at: '2026-07-15T00:00:00.000Z',
     task: {
@@ -149,12 +151,13 @@ async function buildFixtures() {
     trace_policy: { emit: true, storage: 'session' },
   });
   const capabilities = {
-    type: 'kdna.agent-host.capabilities',
-    version: '1.0',
+    type: 'kdna.agent-host-capabilities',
+    protocol_version: '0.1.0',
     capability_basis: 'registered_descriptor',
-    host_protocols: ['kdna.agent-host/2', 'kdna.agent-host/1'],
-    capsule_versions: ['2.0', '1.0'],
-    capsule_digest_profiles: ['kdna-capsule-jcs-v1'],
+    host_protocols: ['kdna.agent-host'],
+    capsule_versions: ['0.1.0'],
+    capsule_digest_profiles: ['kdna.canonicalization.runtime-capsule-jcs'],
+    capsule_digest_profile_versions: ['0.1.0'],
   };
   const context = {
     plan,
@@ -162,13 +165,13 @@ async function buildFixtures() {
     capabilities,
     coreCapsuleVersions: CORE_CAPSULE_VERSIONS,
   };
-  const request = core.buildAgentHost2RequestV1(
+  const request = core.buildAgentHostRequest(
     { request_id: 'host_0123456789abcdef01234567', capsule },
     context,
   );
   const outcome = {
     judgment: {
-      answer: 'The fixture demonstrates a correlated Host 2 boundary.',
+      answer: 'The fixture demonstrates a correlated Agent Host boundary.',
       reasoning: [],
       confidence: null,
     },
@@ -182,7 +185,7 @@ async function buildFixtures() {
   };
 
   function trace(input, receipt, observation = 'host_receipt') {
-    return core.buildJudgmentTraceV1(input, {
+    return core.buildJudgmentTrace(input, {
       ...context,
       request: receipt === undefined ? null : request,
       receipt: receipt ?? null,
@@ -276,7 +279,7 @@ async function buildFixtures() {
       content: capsuleGolden.profile_ids.content,
       runtime_entry_set: capsuleGolden.profile_ids.runtime_entry_set,
       capsule_delivery: core.CAPSULE_DIGEST_PROFILE,
-      result: 'kdna-result-jcs-v1',
+      result: 'kdna.canonicalization.result-jcs',
     },
     plan,
     capabilities,

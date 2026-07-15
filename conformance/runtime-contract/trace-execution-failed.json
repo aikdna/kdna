@@ -1,0 +1,156 @@
+{
+  "type": "kdna.judgment-trace",
+  "contract_version": "0.1.0",
+  "trace_id": "trace_1111111111111111",
+  "plan_ref": {
+    "plan_id": "plan_0123456789abcdef",
+    "plan_digest_profile": "kdna.canonicalization.consumption-plan-jcs",
+    "plan_digest_profile_version": "0.1.0",
+    "plan_digest": "sha256:c3229f99fc39c56131bf255744f98a207e4597acc5f794ed30693ced40c914f1",
+    "comparison": "matched"
+  },
+  "parent_trace_id": null,
+  "timestamp": "2026-07-15T00:00:02.200Z",
+  "overall_status": "execution_failed",
+  "runtime_contract": {
+    "plan_capsule_versions": ["0.1.0"],
+    "core_capsule_versions": ["0.1.0"],
+    "plan_host_protocols": ["kdna.agent-host"],
+    "host_capabilities": {
+      "capability_basis": "registered_descriptor",
+      "capsule_digest_profile_versions": ["0.1.0"],
+      "capsule_digest_profiles": ["kdna.canonicalization.runtime-capsule-jcs"],
+      "capsule_versions": ["0.1.0"],
+      "host_protocols": ["kdna.agent-host"],
+      "protocol_version": "0.1.0",
+      "type": "kdna.agent-host-capabilities"
+    },
+    "negotiation_state": "selected",
+    "selected_capsule_version": "0.1.0",
+    "selected_host_protocol": "kdna.agent-host",
+    "issue_code": null
+  },
+  "asset_identity": {
+    "access": "public",
+    "asset_id": "kdna:example:agent-project-context",
+    "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000001",
+    "judgment_version": "1.0.0",
+    "version": "1.0.0"
+  },
+  "digest_evidence": {
+    "asset": {
+      "basis": "kdna.digest-basis.container-bytes",
+      "comparison": {
+        "against": "external_expected",
+        "expected": "sha256:df18a4b15c930940061c58744c0bcac040a0a54c596db358da02c0a31082a23e",
+        "source": "install_receipt",
+        "state": "matched"
+      },
+      "value": "sha256:df18a4b15c930940061c58744c0bcac040a0a54c596db358da02c0a31082a23e"
+    },
+    "content": {
+      "basis": "kdna.digest-basis.content-tree",
+      "comparison": { "against": null, "expected": null, "source": null, "state": "not_compared" },
+      "value": "sha256:72595802e214dff1a5b5a1153dd7e343190668d5da5ba32bcff2857774cc9428"
+    },
+    "profile": "kdna.digest-evidence",
+    "profile_version": "0.1.0",
+    "runtime_entry_set": {
+      "basis": "kdna.digest-basis.runtime-entry-set",
+      "comparison": {
+        "against": "checksum_declaration",
+        "expected": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7",
+        "source": "checksums.json.entry_set_digest",
+        "state": "matched"
+      },
+      "value": "sha256:52b8ceb0dfe2081dc955487de31bc693e14f3a51ed5a79ece7a4e1ac26249de7"
+    }
+  },
+  "capsule_delivery_evidence": {
+    "basis": "kdna.canonicalization.runtime-capsule-jcs",
+    "basis_version": "0.1.0",
+    "observed": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+    "sender_computed": true,
+    "host_recomputed": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+    "host_echoed": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+    "delivered_capsule_version": "0.1.0",
+    "host_boundary_comparison": "matched",
+    "request_id": "host_0123456789abcdef01234567"
+  },
+  "projection_actual": {
+    "profile": "compact",
+    "capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+    "profile_deviated_from_plan": false
+  },
+  "host_receipt": {
+    "outcome": null,
+    "protocol": "kdna.agent-host",
+    "protocol_version": "0.1.0",
+    "request_id": "host_0123456789abcdef01234567",
+    "runtime_receipt": {
+      "asset_id_correlation": "matched",
+      "capsule_delivery_comparison": "matched",
+      "capsule_digest_profile": "kdna.canonicalization.runtime-capsule-jcs",
+      "capsule_digest_profile_version": "0.1.0",
+      "capsule_schema_validation": "passed",
+      "capsule_version": "0.1.0",
+      "contract_version": "0.1.0",
+      "echoed_capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+      "host_recomputed_capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+      "model_identity": { "basis": "not_observed", "value": null },
+      "provider_execution_status": "failed",
+      "semantic_consumption": { "basis": null, "state": "not_observed" },
+      "sender_capsule_delivery_digest": "sha256:3ff3f7986c437460fc6a09de9d864d7d2d3d551571a3a95b2dac21b4a63ee4fa",
+      "type": "kdna.agent-host.runtime-receipt",
+      "usage": {
+        "basis": "not_observed",
+        "elapsed_basis": "host_monotonic",
+        "elapsed_ms": 1200,
+        "model_calls": null,
+        "tokens_used": null
+      }
+    }
+  },
+  "execution": {
+    "delivery_status": "correlated_response",
+    "semantic_consumption": { "basis": null, "state": "not_observed" },
+    "execution_status": "failed",
+    "conformance_status": "not_evaluated",
+    "model_identity": { "basis": "not_observed", "value": null }
+  },
+  "budget": {
+    "limits": {
+      "deadline_ms": 30000,
+      "max_model_calls": null,
+      "max_projection_chars": 12000,
+      "max_task_chars": 1000,
+      "max_tokens": null
+    },
+    "actual": {
+      "projection_chars": 1946,
+      "task_chars": 105,
+      "elapsed_ms": 1200,
+      "elapsed_basis": "host_monotonic",
+      "tokens_used": null,
+      "model_calls": null,
+      "usage_basis": "not_observed"
+    },
+    "comparison": {
+      "projection_chars": "within_limit",
+      "task_chars": "within_limit",
+      "elapsed_ms": "within_limit",
+      "tokens_used": "not_limited",
+      "model_calls": "not_limited",
+      "overall": "within_limit"
+    }
+  },
+  "result_ref": null,
+  "errors": [
+    {
+      "code": "KDNA_HOST_EXECUTION_FAILED",
+      "message": "The Host reported provider execution failure.",
+      "phase": "execution"
+    }
+  ],
+  "warnings": []
+}

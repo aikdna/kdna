@@ -185,7 +185,7 @@ function readSourceDirectory(absPath, _opts) {
 }
 
 function readKdnaContainer(absPath, _opts) {
-  const v1Layout = require('./v1/index.js').readLayout(absPath);
+  const layout = require('./container/index.js').readLayout(absPath);
   const containerBuf = fs.readFileSync(absPath);
   const assetDigest = crypto.createHash('sha256').update(containerBuf).digest();
 
@@ -194,15 +194,15 @@ function readKdnaContainer(absPath, _opts) {
     sourcePath: absPath,
     format: 'kdna',
     mimetype: MIMETYPE,
-    manifest: v1Layout.manifest,
-    payloadRaw: v1Layout.map['payload.kdnab'] || null,
-    checksums: v1Layout.map['checksums.json']
-      ? (() => { try { return JSON.parse(v1Layout.map['checksums.json'].toString('utf8')); } catch { return null; } })()
+    manifest: layout.manifest,
+    payloadRaw: layout.map['payload.kdnab'] || null,
+    checksums: layout.map['checksums.json']
+      ? (() => { try { return JSON.parse(layout.map['checksums.json'].toString('utf8')); } catch { return null; } })()
       : null,
     assetDigest,
     containerDigest: `sha256:${assetDigest.toString('hex')}`,
     containerBuffer: containerBuf,
-    entries: new Map(Object.entries(v1Layout.map)),
+    entries: new Map(Object.entries(layout.map)),
   };
 }
 

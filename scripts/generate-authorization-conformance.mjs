@@ -6,7 +6,7 @@ import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 
 const require = createRequire(import.meta.url);
-const v1 = require('../packages/kdna-core/src/v1');
+const container = require('../packages/kdna-core/src/container');
 const cbor = require('cbor-x');
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -36,7 +36,7 @@ const cases = [
       access: 'licensed',
       entitlement: { profile: 'password', offline: true, revocable: false },
       encryption: {
-        profile: 'kdna-password-protected-v1',
+        profile: 'kdna.encryption.password',
         encrypted_entries: ['payload.kdnab'],
       },
       payload: { encrypted: true },
@@ -52,7 +52,7 @@ const cases = [
       access: 'licensed',
       entitlement: { profile: 'password', offline: true, revocable: false },
       encryption: {
-        profile: 'kdna-password-protected-v1',
+        profile: 'kdna.encryption.password',
         encrypted_entries: ['payload.kdnab'],
       },
       payload: { encrypted: true },
@@ -143,7 +143,7 @@ const cases = [
     description: 'Remote asset is recognized but not locally loaded.',
     manifest: {
       access: 'remote',
-      runtime: { endpoint: 'https://runtime.example.test/v1/project' },
+      runtime: { endpoint: 'https://runtime.example.test/project' },
     },
     options: {},
     cli_args: [],
@@ -219,7 +219,7 @@ function writeFixture(testCase) {
   fs.writeFileSync(manifestPath, json(updated));
   formatJsonFiles([manifestPath]);
   const checksumsPath = path.join(fixtureDir, 'checksums.json');
-  fs.writeFileSync(checksumsPath, json(v1.buildChecksums(fixtureDir)));
+  fs.writeFileSync(checksumsPath, json(container.buildChecksums(fixtureDir)));
   formatJsonFiles([checksumsPath]);
 
   if (testCase.tamperPayloadAfterChecksums) {
@@ -261,8 +261,8 @@ const caseIndex = cases.map((testCase) => {
   const fixtureDir = writeFixture(testCase);
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-auth-golden-'));
   const assetPath = path.join(tempRoot, `${testCase.fixture}.kdna`);
-  v1.pack(fixtureDir, assetPath);
-  const plan = normalizePlan(v1.planLoad(assetPath, testCase.options), testCase);
+  container.pack(fixtureDir, assetPath);
+  const plan = normalizePlan(container.planLoad(assetPath, testCase.options), testCase);
   fs.rmSync(tempRoot, { recursive: true, force: true });
   fs.writeFileSync(path.join(goldensRoot, `${testCase.id}.loadplan.json`), json(plan));
   return {

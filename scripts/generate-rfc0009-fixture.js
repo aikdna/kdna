@@ -161,7 +161,7 @@ const manifest = {
   languages: ['en'],
   default_language: 'en',
   encryption: {
-    profile: 'kdna-password-protected-v1',
+    profile: 'kdna.encryption.password',
     encrypted_entries: ['KDNA_Core.json', 'KDNA_Patterns.json'],
   },
 };

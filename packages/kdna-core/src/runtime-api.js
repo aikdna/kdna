@@ -2,12 +2,12 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const v1 = require('./v1');
+const container = require('./container');
 
 function invalidDirectoryPlan(inputPath) {
   const resolved = path.resolve(inputPath);
   return {
-    kdna_version: null,
+    format_version: null,
     asset: { asset_id: null, asset_uid: null, title: null, version: null, judgment_version: null },
     access: null,
     access_alias: null,
@@ -64,7 +64,7 @@ function guardResolver(options = {}) {
 
 function planLoad(inputPath, options = {}) {
   if (isDirectory(inputPath)) return invalidDirectoryPlan(inputPath);
-  return v1.planLoad(inputPath, guardResolver(options));
+  return container.planLoad(inputPath, guardResolver(options));
 }
 
 function loadAuthorized(inputPath, options = {}) {
@@ -77,9 +77,9 @@ function loadAuthorized(inputPath, options = {}) {
     error.plan = plan;
     throw error;
   }
-  // v1.loadAuthorized snapshots packaged paths once and uses that same Buffer
+  // container.loadAuthorized snapshots packaged paths once and uses that same Buffer
   // for its LoadPlan, authorization decision, and Runtime Capsule projection.
-  return v1.loadAuthorized(inputPath, guardResolver(options));
+  return container.loadAuthorized(inputPath, guardResolver(options));
 }
 
 module.exports = {

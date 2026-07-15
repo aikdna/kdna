@@ -198,7 +198,7 @@ export interface KDNAFileDataMap {
 }
 
 export interface KDNAManifest {
-  kdna_version: '1.0';
+  format_version: '0.1.0';
   asset_id: string;
   asset_uid: string;
   asset_type: 'domain' | 'cluster' | 'tool' | 'sample' | 'fixture' | 'bundle';
@@ -209,7 +209,8 @@ export interface KDNAManifest {
   updated_at: string;
   compatibility: {
     min_loader_version: string;
-    profile: 'judgment-profile-v1' | 'bundle-profile-v1';
+    profile: 'kdna.payload.judgment' | 'kdna.payload.bundle';
+    profile_version: '0.1.0';
     [key: string]: any;
   };
   payload: {
@@ -238,10 +239,6 @@ export interface KDNAManifest {
     encrypted_entries?: string[];
     [key: string]: any;
   };
-  /** @deprecated Legacy source/signature compatibility only. */
-  name?: string;
-  /** @deprecated Legacy source/signature compatibility only. */
-  author?: { name: string; id?: string; pubkey?: string; public_key_pem?: string };
   content_digest?: string;
   signature?: string;
   [key: string]: any;
@@ -382,35 +379,25 @@ export interface KdnaDecryptOptions {
 
 export function createKdnaAssetReader(): KdnaAssetReader;
 
-export const LICENSED_ENTRY_PROFILE: 'kdna-licensed-entry-v1';
-export const LICENSED_EXPERIMENTAL_PROFILE: 'kdna-licensed-entry-experimental';
-export const PASSWORD_PROTECTED_PROFILE: 'kdna-password-protected-v1';
-export const PASSWORD_PROTECTED_SCRYPT_PROFILE: 'kdna-password-protected-v1-scrypt';
+export const LICENSED_ENTRY_PROFILE: 'kdna.encryption.licensed-entry';
+export const PASSWORD_PROTECTED_PROFILE: 'kdna.encryption.password';
+export const PASSWORD_PROTECTED_SCRYPT_PROFILE: 'kdna.encryption.password.scrypt';
+export const ENCRYPTION_PROFILE_VERSION: '0.1.0';
 export const ALG: 'AES-256-GCM';
 export const RFC_KDF: 'HKDF-SHA256';
 export const RFC_KEY_WRAPPING: 'AES-256-KW';
-export const LEGACY_KDF: 'scrypt-sha256';
 export const PASSWORD_KDF: 'Argon2id';
 export const SCRYPT_KDF: 'scrypt-sha256';
 
 export type KDNACryptoInput = string | Uint8Array;
 
 export interface LicensedEntryEnvelope {
-  profile: 'kdna-licensed-entry-v1';
+  profile: 'kdna.encryption.licensed-entry';
+  profile_version: '0.1.0';
   alg: 'AES-256-GCM';
   kdf: 'HKDF-SHA256';
   key_wrapping: 'AES-256-KW';
   wrapped_key: string;
-  iv: string;
-  tag: string;
-  ciphertext: string;
-}
-
-export interface LicensedEntryLegacyEnvelope {
-  profile: 'kdna-licensed-entry-experimental';
-  alg: 'AES-256-GCM';
-  kdf: 'scrypt-sha256';
-  salt: string;
   iv: string;
   tag: string;
   ciphertext: string;
@@ -439,7 +426,8 @@ export interface KDNAScryptKdfParams {
 }
 
 export interface KDNAProtectedEntryEnvelope {
-  profile: 'kdna-password-protected-v1';
+  profile: 'kdna.encryption.password';
+  profile_version: '0.1.0';
   alg: 'AES-256-GCM';
   kdf: 'Argon2id';
   key_wrapping: 'AES-256-KW';
@@ -455,7 +443,8 @@ export interface KDNAProtectedEntryEnvelope {
 }
 
 export interface KDNAScryptProtectedEntryEnvelope {
-  profile: 'kdna-password-protected-v1-scrypt';
+  profile: 'kdna.encryption.password.scrypt';
+  profile_version: '0.1.0';
   alg: 'AES-256-GCM';
   kdf: 'scrypt-sha256';
   key_wrapping: 'AES-256-KW';
@@ -476,17 +465,6 @@ export interface KDNALicensedEntryOptions {
   licenseKey: KDNACryptoInput;
 }
 
-export interface KDNALicensedEntryLegacyOptions extends KDNALicensedEntryOptions {
-  machineFingerprint: string;
-}
-
-export function deriveLicensedEntryKey(options: {
-  licenseKey: string;
-  machineFingerprint: string;
-  salt: string | Uint8Array;
-  keyLength?: number;
-}): Uint8Array;
-
 export function hkdfSha256(
   ikm: KDNACryptoInput,
   salt?: Uint8Array | null,
@@ -500,11 +478,11 @@ export function generateCEK(): Uint8Array;
 export function wrapCEK(cek: Uint8Array, wrappingKey: Uint8Array): Uint8Array;
 export function unwrapCEK(wrappedCek: Uint8Array, wrappingKey: Uint8Array): Uint8Array;
 
-export function encryptLicensedEntryV1(
+export function encryptLicensedEntry(
   plaintext: KDNACryptoInput,
   options: KDNALicensedEntryOptions,
 ): LicensedEntryEnvelope;
-export function decryptLicensedEntryV1(
+export function decryptLicensedEntry(
   envelope: KDNACryptoInput | LicensedEntryEnvelope,
   options: KDNALicensedEntryOptions,
 ): Uint8Array;
@@ -563,53 +541,23 @@ export function decryptProtectedEntryScrypt(
 export function createPasswordDecryptEntryScrypt(options: {
   password: KDNACryptoInput;
 }): NonNullable<KdnaDecryptOptions['decryptEntry']>;
-export function encryptLicensedEntryLegacy(
-  plaintext: KDNACryptoInput,
-  options: KDNALicensedEntryLegacyOptions,
-): LicensedEntryLegacyEnvelope;
-export function decryptLicensedEntryLegacy(
-  envelope: KDNACryptoInput | LicensedEntryLegacyEnvelope,
-  options: KDNALicensedEntryLegacyOptions,
-): Uint8Array;
-
-export function encryptLicensedEntry(
-  plaintext: string | Uint8Array,
-  options: KDNALicensedEntryOptions,
-): LicensedEntryEnvelope;
-
-export function decryptLicensedEntry(
-  envelope: LicensedEntryEnvelope,
-  options: KDNALicensedEntryOptions,
-): Uint8Array;
-export function decryptLicensedEntry(
-  envelope: LicensedEntryLegacyEnvelope,
-  options: KDNALicensedEntryLegacyOptions,
-): Uint8Array;
-export function decryptLicensedEntry(
-  envelope: KDNACryptoInput,
-  options: KDNALicensedEntryLegacyOptions,
-): Uint8Array;
-export function decryptLicensedEntry(
-  envelope: KDNACryptoInput | LicensedEntryEnvelope | LicensedEntryLegacyEnvelope,
-  options: KDNALicensedEntryLegacyOptions,
-): Uint8Array;
-
 export function createLicensedDecryptEntry(options: {
   licenseKey: KDNACryptoInput;
-  machineFingerprint?: string;
 }): NonNullable<KdnaDecryptOptions['decryptEntry']>;
 
-export const EXTERNAL_ENVELOPE_PROFILE: 'kdna-envelope-external-grant-v1';
-export const EXTERNAL_GRANT_PROFILE: 'kdna-key-grant-v1';
-export const EXTERNAL_AAD_PROFILE: 'kdna-external-asset-cek-v1';
-export const DEVICE_KEK_PROFILE: 'kdna-device-grant-kek-v1';
+export const EXTERNAL_ENVELOPE_PROFILE: 'kdna.envelope.external-grant';
+export const EXTERNAL_GRANT_PROFILE: 'kdna.grant.external-key';
+export const EXTERNAL_AAD_PROFILE: 'kdna.key-context.asset-content';
+export const DEVICE_KEK_PROFILE: 'kdna.key-context.device-grant';
+export const EXTERNAL_GRANT_CONTRACT_VERSION: '0.1.0';
 
 export class KDNAExternalGrantError extends Error {
   code: string;
 }
 
 export interface KDNAExternalGrantEnvelope {
-  profile: 'kdna-envelope-external-grant-v1';
+  profile: 'kdna.envelope.external-grant';
+  contract_version: '0.1.0';
   alg: 'A256GCM';
   cek_derivation: 'HKDF-SHA256';
   key_ref: string;
@@ -622,7 +570,8 @@ export interface KDNAExternalGrantEnvelope {
 }
 
 export interface KDNAExternalKeyGrant {
-  profile: 'kdna-key-grant-v1';
+  profile: 'kdna.grant.external-key';
+  contract_version: '0.1.0';
   grant_id: string;
   issuer: string;
   signing_key_id: string;
@@ -664,7 +613,7 @@ export interface KDNADeviceKeyPairs {
 /** Runtime-branded by authorizeExternalKeyGrant; a structurally similar object is not accepted. */
 export interface KDNAVerifiedExternalEntitlement {
   readonly status: 'active' | 'offline_grace';
-  readonly profile: 'kdna-key-grant-v1';
+  readonly profile: 'kdna.grant.external-key';
   readonly grant_id: string;
   readonly entitlement_id: string;
   readonly account_id: string;
@@ -805,32 +754,6 @@ export interface KDNAValidationReport {
   problems: string[];
 }
 
-export interface KDNARuntimeCapsule {
-  type: 'kdna.context.capsule';
-  version: '1.0';
-  domain: string | null;
-  judgment_version: string | null;
-  asset_digest: string;
-  signature: { state: 'verified' | 'not_checked' | 'absent'; issuer?: string };
-  access: string;
-  risk_level: string | null;
-  profile: string;
-  context: Record<string, any>;
-  trace: Record<string, any>;
-  extends_chain?: Array<Record<string, any>>;
-  inheritance_applied?: boolean;
-  resolved_dependencies?: Array<Record<string, any>>;
-  rag_isolation_policy?: Record<string, any>;
-  [key: string]: any;
-}
-
-export interface KDNACapsule1Extensions {
-  extends_chain?: Array<Record<string, any>>;
-  inheritance_applied?: boolean;
-  resolved_dependencies?: Array<Record<string, any>>;
-  rag_isolation_policy?: Record<string, any>;
-}
-
 export type KDNADigestComparisonState = 'matched' | 'mismatched' | 'not_compared' | 'unavailable';
 
 export type KDNADigestComparisonSource =
@@ -840,8 +763,7 @@ export type KDNADigestComparisonSource =
   | 'lockfile'
   | 'kdna.json.content_digest'
   | 'kdna.json.authoring.content_digest'
-  | 'checksums.json.entry_set_digest'
-  | 'checksums.json.asset_digest';
+  | 'checksums.json.entry_set_digest';
 
 export interface KDNADigestComparison {
   state: KDNADigestComparisonState;
@@ -857,15 +779,16 @@ export interface KDNADigestValue {
 }
 
 export interface KDNADigestEvidence {
-  profile: 'kdna-capsule-digests-v1';
+  profile: 'kdna.digest-evidence';
+  profile_version: '0.1.0';
   asset: KDNADigestValue;
   content: KDNADigestValue;
   runtime_entry_set: KDNADigestValue;
 }
 
-export interface KDNARuntimeCapsuleV2 {
-  type: 'kdna.context.capsule';
-  version: '2.0';
+export interface KDNARuntimeCapsule {
+  type: 'kdna.runtime-capsule';
+  contract_version: '0.1.0';
   asset: {
     asset_id: string;
     asset_uid: string;
@@ -888,19 +811,17 @@ export interface KDNARuntimeCapsuleV2 {
     signature_state: 'verified' | 'not_checked' | 'absent';
     profile: 'index' | 'compact' | 'scenario' | 'full';
   };
-  compatibility?: {
-    capsule_1_domain?: string;
-    capsule_1_access?: 'open' | 'protected' | 'runtime';
-    capsule_1_extensions?: KDNACapsule1Extensions;
-  };
 }
 
-export const DIGEST_PROFILE: 'kdna-capsule-digests-v1';
-export const CAPSULE_DIGEST_PROFILE: 'kdna-capsule-jcs-v1';
+export const DIGEST_PROFILE: 'kdna.digest-evidence';
+export const DIGEST_PROFILE_VERSION: '0.1.0';
+export const CAPSULE_DIGEST_PROFILE: 'kdna.canonicalization.runtime-capsule-jcs';
+export const CANONICALIZATION_PROFILE_VERSION: '0.1.0';
+export const RUNTIME_CAPSULE_CONTRACT_VERSION: '0.1.0';
 export const BASIS: Readonly<{
-  asset: 'kdna-container-bytes-v1';
-  content: 'kdna-content-tree-v1';
-  runtime_entry_set: 'kdna-runtime-entry-set-v1';
+  asset: 'kdna.digest-basis.container-bytes';
+  content: 'kdna.digest-basis.content-tree';
+  runtime_entry_set: 'kdna.digest-basis.runtime-entry-set';
 }>;
 export function computeAssetDigest(assetBytes: Uint8Array): string;
 export function computeRuntimeEntrySetDigest(
@@ -920,23 +841,22 @@ export function computeDigestEvidence(
           }
       >
     >;
-    /** @deprecated Use expectedDigests.asset. */
-    expectedAssetDigest?:
-      string | { value: string; source: 'caller' | 'registry' | 'install_receipt' | 'lockfile' };
   },
 ): KDNADigestEvidence;
 export function canonicalizeJcs(value: unknown): string;
 export function computeCapsuleDeliveryDigest(
-  capsule: KDNARuntimeCapsuleV2 | Record<string, any>,
+  capsule: KDNARuntimeCapsule | Record<string, any>,
 ): string;
-export function buildCapsuleV2(input: {
-  capsule1: KDNARuntimeCapsule;
+export function buildRuntimeCapsule(input: {
+  projection: Record<string, any>;
   manifest: KDNAManifest;
   digests: KDNADigestEvidence;
+  signature: { state: 'verified' | 'not_checked' | 'absent'; issuer?: string };
   inputKind: 'packaged_file' | 'packaged_bytes';
   loadedAt?: string;
-}): KDNARuntimeCapsuleV2;
-export function loadCapsuleV2(
+  schemaValid?: boolean;
+}): KDNARuntimeCapsule;
+export function loadRuntimeCapsule(
   input: string | Uint8Array,
   options?: {
     profile?: 'index' | 'compact' | 'scenario' | 'full';
@@ -951,13 +871,8 @@ export function loadCapsuleV2(
           }
       >
     >;
-    /** @deprecated Use expectedDigests.asset. */
-    expectedAssetDigest?:
-      string | { value: string; source: 'caller' | 'registry' | 'install_receipt' | 'lockfile' };
   } & KdnaDecryptOptions,
-): KDNARuntimeCapsuleV2;
-export function adaptCapsuleV2ToV1(capsule: KDNARuntimeCapsuleV2): KDNARuntimeCapsule;
-
+): KDNARuntimeCapsule;
 export type KDNAJsonValue =
   null | boolean | number | string | KDNAJsonValue[] | { [key: string]: KDNAJsonValue };
 
@@ -971,13 +886,13 @@ export type KDNAExecutionContractValidationResult =
   | { valid: true; code: null; errors: []; value?: unknown }
   | { valid: false; code: string; errors: KDNAExecutionContractValidationError[] };
 
-export class KDNAExecutionContractError extends Error {
+export class KDNARuntimeContractError extends Error {
   code: string;
   details?: unknown;
   constructor(code: string, message: string, details?: unknown);
 }
 
-export interface KDNAExpectedDigestV1 {
+export interface KDNAExpectedDigest {
   value: string;
   basis: string;
   source:
@@ -986,14 +901,13 @@ export interface KDNAExpectedDigestV1 {
     | 'install_receipt'
     | 'lockfile'
     | 'kdna.json.content_digest'
-    | 'checksums.json.entry_set_digest'
-    | 'checksums.json.asset_digest';
+    | 'checksums.json.entry_set_digest';
   comparison: 'matched' | 'not_compared';
 }
 
-export interface KDNAConsumptionPlanV1 {
-  type: 'kdna.consumption.plan';
-  plan_version: '1.0.0';
+export interface KDNAConsumptionPlan {
+  type: 'kdna.consumption-plan';
+  contract_version: '0.1.0';
   plan_id: string;
   created_at: string;
   mode: 'single';
@@ -1005,26 +919,31 @@ export interface KDNAConsumptionPlanV1 {
     judgment_version: string;
     access: 'public' | 'licensed' | 'remote';
     expected_digests: {
-      asset: KDNAExpectedDigestV1 | null;
-      content: KDNAExpectedDigestV1 | null;
-      runtime_entry_set: KDNAExpectedDigestV1 | null;
+      asset: KDNAExpectedDigest | null;
+      content: KDNAExpectedDigest | null;
+      runtime_entry_set: KDNAExpectedDigest | null;
     };
   };
   projection_request: {
     profile: 'index' | 'compact' | 'scenario' | 'full';
-    accepted_capsule_versions: ['2.0'];
-    required_digest_profile: 'kdna-capsule-digests-v1';
+    accepted_capsule_versions: ['0.1.0'];
+    required_digest_profile: 'kdna.digest-evidence';
+    required_digest_profile_version: '0.1.0';
     require_packaged_asset: true;
   };
-  host_request: { accepted_protocols: ['kdna.agent-host/2'] };
+  host_request: { accepted_protocols: ['kdna.agent-host'] };
   result_request: { shape: 'structured_judgment' };
-  budget: KDNAExecutionBudgetV1;
+  budget: KDNAExecutionBudget;
   constraints: { enforce_before_host: true; reject_on_exceed: true };
   trace_policy: { emit: true; storage: 'ephemeral' | 'session' | 'persistent' };
-  integrity: { profile: 'kdna-consumption-plan-jcs-v1'; plan_digest: string };
+  integrity: {
+    profile: 'kdna.canonicalization.consumption-plan-jcs';
+    profile_version: '0.1.0';
+    plan_digest: string;
+  };
 }
 
-export interface KDNAExecutionBudgetV1 {
+export interface KDNAExecutionBudget {
   max_projection_chars: number;
   max_task_chars: number;
   deadline_ms: number;
@@ -1032,49 +951,55 @@ export interface KDNAExecutionBudgetV1 {
   max_model_calls: number | null;
 }
 
-export interface KDNAAgentHostCapabilitiesV1 {
-  type: 'kdna.agent-host.capabilities';
-  version: '1.0';
+export interface KDNAAgentHostCapabilities {
+  type: 'kdna.agent-host-capabilities';
+  protocol_version: '0.1.0';
   capability_basis: 'registered_descriptor' | 'legacy_assumption';
-  host_protocols: string[];
-  capsule_versions: string[];
-  capsule_digest_profiles: string[];
+  host_protocols: Array<'kdna.agent-host'>;
+  capsule_versions: Array<'0.1.0'>;
+  capsule_digest_profiles: Array<'kdna.canonicalization.runtime-capsule-jcs'>;
+  capsule_digest_profile_versions: ['0.1.0'];
 }
 
-export interface KDNAAgentHost2RequestV1 {
-  protocol: 'kdna.agent-host/2';
+export interface KDNAAgentHostRequest {
+  protocol: 'kdna.agent-host';
+  protocol_version: '0.1.0';
   request_id: string;
   plan_ref: {
     plan_id: string;
-    plan_digest_profile: 'kdna-consumption-plan-jcs-v1';
+    plan_digest_profile: 'kdna.canonicalization.consumption-plan-jcs';
+    plan_digest_profile_version: '0.1.0';
     plan_digest: string;
   };
   runtime_contract: {
-    capsule_version: '2.0';
-    capsule_digest_profile: 'kdna-capsule-jcs-v1';
+    capsule_version: '0.1.0';
+    capsule_digest_profile: 'kdna.canonicalization.runtime-capsule-jcs';
+    capsule_digest_profile_version: '0.1.0';
     capsule_delivery_digest: string;
   };
-  projection_contract: KDNAConsumptionPlanV1['projection_request'] extends infer T
+  projection_contract: KDNAConsumptionPlan['projection_request'] extends infer T
     ? Omit<Extract<T, object>, 'accepted_capsule_versions'>
     : never;
   result_contract: { shape: 'structured_judgment' };
-  budget: KDNAExecutionBudgetV1;
-  constraints: KDNAConsumptionPlanV1['constraints'];
+  budget: KDNAExecutionBudget;
+  constraints: KDNAConsumptionPlan['constraints'];
   phase: 'single_judgment';
-  task: KDNAConsumptionPlanV1['task'];
+  task: KDNAConsumptionPlan['task'];
   authority: { asset_id: string; role: 'primary'; final_decision: true };
-  asset: KDNAConsumptionPlanV1['asset_ref'] & { role: 'primary' };
-  capsule: KDNARuntimeCapsuleV2;
+  asset: KDNAConsumptionPlan['asset_ref'] & { role: 'primary' };
+  capsule: KDNARuntimeCapsule;
 }
 
-export interface KDNAAgentHost2ReceiptV1 {
-  protocol: 'kdna.agent-host/2';
+export interface KDNAAgentHostReceipt {
+  protocol: 'kdna.agent-host';
+  protocol_version: '0.1.0';
   request_id: string;
   runtime_receipt: {
     type: 'kdna.agent-host.runtime-receipt';
-    receipt_version: '1.0.0';
-    capsule_version: '2.0';
-    capsule_digest_profile: 'kdna-capsule-jcs-v1';
+    contract_version: '0.1.0';
+    capsule_version: '0.1.0';
+    capsule_digest_profile: 'kdna.canonicalization.runtime-capsule-jcs';
+    capsule_digest_profile_version: '0.1.0';
     sender_capsule_delivery_digest: string;
     host_recomputed_capsule_delivery_digest: string;
     echoed_capsule_delivery_digest: string;
@@ -1098,8 +1023,8 @@ export interface KDNAAgentHost2ReceiptV1 {
   } | null;
 }
 
-export interface KDNABudgetEvidenceV1 {
-  limits: KDNAExecutionBudgetV1;
+export interface KDNABudgetEvidence {
+  limits: KDNAExecutionBudget;
   actual: {
     projection_chars: number | null;
     task_chars: number;
@@ -1119,19 +1044,20 @@ export interface KDNABudgetEvidenceV1 {
   };
 }
 
-export interface KDNAJudgmentTraceIssueV1 {
+export interface KDNAJudgmentTraceIssue {
   code: string;
   message: string;
   phase: 'plan' | 'negotiation' | 'load' | 'budget' | 'delivery' | 'host' | 'execution';
 }
 
-export interface KDNAJudgmentTraceV1 {
-  type: 'kdna.judgment.trace';
-  trace_version: '1.0.0';
+export interface KDNAJudgmentTrace {
+  type: 'kdna.judgment-trace';
+  contract_version: '0.1.0';
   trace_id: string;
   plan_ref: {
     plan_id: string;
-    plan_digest_profile: 'kdna-consumption-plan-jcs-v1';
+    plan_digest_profile: 'kdna.canonicalization.consumption-plan-jcs';
+    plan_digest_profile_version: '0.1.0';
     plan_digest: string;
     comparison: 'matched';
   };
@@ -1140,15 +1066,15 @@ export interface KDNAJudgmentTraceV1 {
   overall_status:
     'execution_completed' | 'blocked' | 'execution_failed' | 'cancelled' | 'timed_out';
   runtime_contract: {
-    plan_capsule_versions: ['2.0'];
-    core_capsule_versions: Array<'2.0' | '1.0'>;
-    plan_host_protocols: ['kdna.agent-host/2'];
-    host_capabilities: KDNAAgentHostCapabilitiesV1;
+    plan_capsule_versions: ['0.1.0'];
+    core_capsule_versions: Array<'0.1.0'>;
+    plan_host_protocols: ['kdna.agent-host'];
+    host_capabilities: KDNAAgentHostCapabilities;
     negotiation_state: 'selected' | 'blocked' | 'not_started';
-    selected_capsule_version: '2.0' | null;
-    selected_host_protocol: 'kdna.agent-host/2' | null;
+    selected_capsule_version: '0.1.0' | null;
+    selected_host_protocol: 'kdna.agent-host' | null;
     issue_code:
-      | 'KDNA_CAPSULE_VERSION_UNSUPPORTED'
+      | 'KDNA_CAPSULE_CONTRACT_VERSION_UNSUPPORTED'
       | 'KDNA_HOST_PROTOCOL_UNSUPPORTED'
       | 'KDNA_HOST_CAPSULE_PAIR_UNSUPPORTED'
       | null;
@@ -1162,12 +1088,13 @@ export interface KDNAJudgmentTraceV1 {
   };
   digest_evidence: KDNADigestEvidence;
   capsule_delivery_evidence: {
-    basis: 'kdna-capsule-jcs-v1';
+    basis: 'kdna.canonicalization.runtime-capsule-jcs';
+    basis_version: '0.1.0';
     observed: string | null;
     sender_computed: boolean;
     host_recomputed: string | null;
     host_echoed: string | null;
-    delivered_capsule_version: '2.0' | null;
+    delivered_capsule_version: '0.1.0' | null;
     host_boundary_comparison:
       'matched' | 'mismatched' | 'not_delivered' | 'not_observed' | 'unavailable';
     request_id: string | null;
@@ -1177,7 +1104,7 @@ export interface KDNAJudgmentTraceV1 {
     capsule_delivery_digest: string | null;
     profile_deviated_from_plan: boolean | null;
   };
-  host_receipt: KDNAAgentHost2ReceiptV1 | null;
+  host_receipt: KDNAAgentHostReceipt | null;
   execution: {
     delivery_status: 'correlated_response' | 'rejected_before_execution' | 'not_delivered';
     semantic_consumption: { state: 'not_observed'; basis: null };
@@ -1185,118 +1112,120 @@ export interface KDNAJudgmentTraceV1 {
     conformance_status: 'not_evaluated';
     model_identity: { value: string | null; basis: 'host_reported' | 'not_observed' };
   };
-  budget: KDNABudgetEvidenceV1;
+  budget: KDNABudgetEvidence;
   result_ref: {
     shape: 'structured_judgment';
     result_digest: string;
-    basis: 'kdna-result-jcs-v1';
+    basis: 'kdna.canonicalization.result-jcs';
     stored: boolean;
   } | null;
-  errors: KDNAJudgmentTraceIssueV1[];
+  errors: KDNAJudgmentTraceIssue[];
   warnings: string[];
 }
 
-export interface KDNAExecutionPairContextV1 {
+export interface KDNARuntimePairContext {
   trustedPlanDigest: string;
-  capabilities: KDNAAgentHostCapabilitiesV1;
+  capabilities: KDNAAgentHostCapabilities;
   coreCapsuleVersions: readonly string[];
 }
 
-export interface KDNAHost2ValidationContextV1 extends KDNAExecutionPairContextV1 {
-  plan: KDNAConsumptionPlanV1;
+export interface KDNAAgentHostValidationContext extends KDNARuntimePairContext {
+  plan: KDNAConsumptionPlan;
 }
 
-export interface KDNAJudgmentTraceContextV1 extends KDNAHost2ValidationContextV1 {
-  request: KDNAAgentHost2RequestV1 | null;
-  receipt: KDNAAgentHost2ReceiptV1 | null;
+export interface KDNAJudgmentTraceContext extends KDNAAgentHostValidationContext {
+  request: KDNAAgentHostRequest | null;
+  receipt: KDNAAgentHostReceipt | null;
   trustedDeliveryObservation: 'host_receipt' | 'not_delivered' | 'not_observed';
 }
 
-export interface KDNAPreHostBudgetBlockedTraceContextV1
-  extends KDNAHost2ValidationContextV1 {
-  capsule: KDNARuntimeCapsuleV2;
+export interface KDNAPreHostBudgetBlockedTraceContext
+  extends KDNAAgentHostValidationContext {
+  capsule: KDNARuntimeCapsule;
 }
 
-export const PLAN_DIGEST_PROFILE: 'kdna-consumption-plan-jcs-v1';
-export const HOST_PROTOCOL: 'kdna.agent-host/2';
-export const DEFAULT_CORE_CAPSULE_VERSIONS: readonly ['2.0', '1.0'];
-export function parseExecutionContractJsonV1(
+export const PLAN_DIGEST_PROFILE: 'kdna.canonicalization.consumption-plan-jcs';
+export const PLAN_DIGEST_PROFILE_VERSION: '0.1.0';
+export const HOST_PROTOCOL: 'kdna.agent-host';
+export const HOST_PROTOCOL_VERSION: '0.1.0';
+export const DEFAULT_CORE_CAPSULE_CONTRACT_VERSIONS: readonly ['0.1.0'];
+export function parseRuntimeContractJson(
   input: string | Uint8Array,
   options?: { maxBytes?: number; maxDepth?: number },
 ): KDNAJsonValue;
-export function computeConsumptionPlanDigestV1(plan: KDNAConsumptionPlanV1): string;
-export function buildConsumptionPlanV1(input: {
+export function computeConsumptionPlanDigest(plan: KDNAConsumptionPlan): string;
+export function buildConsumptionPlan(input: {
   plan_id: string;
   created_at: string;
-  task: KDNAConsumptionPlanV1['task'];
-  asset_ref: KDNAConsumptionPlanV1['asset_ref'];
-  projection_profile: KDNAConsumptionPlanV1['projection_request']['profile'];
-  budget: KDNAExecutionBudgetV1;
-  constraints: KDNAConsumptionPlanV1['constraints'];
-  trace_policy: KDNAConsumptionPlanV1['trace_policy'];
-}): KDNAConsumptionPlanV1;
-export function validateConsumptionPlanV1(
+  task: KDNAConsumptionPlan['task'];
+  asset_ref: KDNAConsumptionPlan['asset_ref'];
+  projection_profile: KDNAConsumptionPlan['projection_request']['profile'];
+  budget: KDNAExecutionBudget;
+  constraints: KDNAConsumptionPlan['constraints'];
+  trace_policy: KDNAConsumptionPlan['trace_policy'];
+}): KDNAConsumptionPlan;
+export function validateConsumptionPlan(
   plan: unknown,
   context: { trustedPlanDigest: string },
 ): KDNAExecutionContractValidationResult;
-export function negotiateExecutionPairV1(
-  plan: KDNAConsumptionPlanV1,
-  context: KDNAExecutionPairContextV1,
+export function negotiateRuntimePair(
+  plan: KDNAConsumptionPlan,
+  context: KDNARuntimePairContext,
 ): {
   state: 'selected' | 'blocked';
-  capsule_version: '2.0' | null;
-  host_protocol: 'kdna.agent-host/2' | null;
+  capsule_version: '0.1.0' | null;
+  host_protocol: 'kdna.agent-host' | null;
   issue_code: string | null;
 };
-export function buildAgentHost2RequestV1(
-  input: { request_id: string; capsule: KDNARuntimeCapsuleV2 },
-  context: KDNAHost2ValidationContextV1,
-): KDNAAgentHost2RequestV1;
-export function validateAgentHost2RequestV1(
+export function buildAgentHostRequest(
+  input: { request_id: string; capsule: KDNARuntimeCapsule },
+  context: KDNAAgentHostValidationContext,
+): KDNAAgentHostRequest;
+export function validateAgentHostRequest(
   request: unknown,
-  context: KDNAHost2ValidationContextV1,
+  context: KDNAAgentHostValidationContext,
 ): KDNAExecutionContractValidationResult;
-export function validateAgentHost2ReceiptV1(
+export function validateAgentHostReceipt(
   receipt: unknown,
-  context: { request: KDNAAgentHost2RequestV1 },
+  context: { request: KDNAAgentHostRequest },
 ): KDNAExecutionContractValidationResult;
-export function deriveBudgetEvidenceV1(
-  plan: KDNAConsumptionPlanV1,
+export function deriveBudgetEvidence(
+  plan: KDNAConsumptionPlan,
   context: {
     trustedPlanDigest: string;
-    request: KDNAAgentHost2RequestV1 | null;
-    receipt: KDNAAgentHost2ReceiptV1 | null;
+    request: KDNAAgentHostRequest | null;
+    receipt: KDNAAgentHostReceipt | null;
   },
-): KDNABudgetEvidenceV1;
-export function buildPreHostBudgetBlockedTraceV1(
+): KDNABudgetEvidence;
+export function buildPreHostBudgetBlockedTrace(
   input: {
     trace_id: string;
     timestamp: string;
-    capsule: KDNARuntimeCapsuleV2;
+    capsule: KDNARuntimeCapsule;
     parent_trace_id?: string | null;
     warnings?: string[];
   },
-  context: KDNAHost2ValidationContextV1,
-): KDNAJudgmentTraceV1;
-export function validatePreHostBudgetBlockedTraceV1(
+  context: KDNAAgentHostValidationContext,
+): KDNAJudgmentTrace;
+export function validatePreHostBudgetBlockedTrace(
   trace: unknown,
-  context: KDNAPreHostBudgetBlockedTraceContextV1,
+  context: KDNAPreHostBudgetBlockedTraceContext,
 ): KDNAExecutionContractValidationResult;
-export function buildJudgmentTraceV1(
+export function buildJudgmentTrace(
   input: {
     trace_id: string;
     timestamp: string;
-    overall_status: KDNAJudgmentTraceV1['overall_status'];
+    overall_status: KDNAJudgmentTrace['overall_status'];
     parent_trace_id?: string | null;
     result_stored?: boolean;
-    errors?: KDNAJudgmentTraceIssueV1[];
+    errors?: KDNAJudgmentTraceIssue[];
     warnings?: string[];
   },
-  context: KDNAJudgmentTraceContextV1,
-): KDNAJudgmentTraceV1;
-export function validateJudgmentTraceV1(
+  context: KDNAJudgmentTraceContext,
+): KDNAJudgmentTrace;
+export function validateJudgmentTrace(
   trace: unknown,
-  context: KDNAJudgmentTraceContextV1,
+  context: KDNAJudgmentTraceContext,
 ): KDNAExecutionContractValidationResult;
 
 export interface KDNAMatchResult extends KDNAInspectResult {
@@ -1447,7 +1376,7 @@ export interface KDNAChecksumEntry {
 }
 
 export interface KDNAChecksums {
-  digest_profile?: 'kdna-runtime-entry-set-v1';
+  digest_profile?: 'kdna.digest-basis.runtime-entry-set';
   covered_entries?: ['kdna.json', 'payload.kdnab'];
   algorithm: 'sha256';
   manifest_digest?: string;
@@ -1550,22 +1479,6 @@ export function loadAsset(
     as?: 'json' | 'prompt' | string;
   },
 ): KDNARuntimeCapsule | Record<string, any>;
-export function buildCapsule(
-  loadResult: {
-    profile: string;
-    content?: Record<string, unknown>;
-    extends_chain?: unknown[];
-    inheritance_applied?: boolean;
-    resolved_dependencies?: unknown[];
-    rag_isolation_policy?: Record<string, unknown>;
-    [key: string]: unknown;
-  },
-  layout: KDNALayout,
-  profile: string,
-  options?: {
-    _validation?: { schema_valid?: boolean; signature_valid?: boolean | null };
-  },
-): KDNARuntimeCapsule;
 export const FORBIDDEN_OUTPUT_TERMS: readonly string[];
 
 export interface KDNASemver {

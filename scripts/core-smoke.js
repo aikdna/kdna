@@ -70,14 +70,14 @@ if (fs.existsSync(monorepoSource)) {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-smoke-'));
     try {
       const coreRoot = path.join(__dirname, '..', 'packages', 'kdna-core');
-      const v1 = require(path.join(coreRoot, 'src', 'v1', 'index.js'));
+      const container = require(path.join(coreRoot, 'src', 'container', 'index.js'));
       const source = path.join(__dirname, '..', 'examples', 'minimal');
       const assetPath = path.join(tmp, 'smoke.kdna');
-      v1.pack(source, assetPath);
+      container.pack(source, assetPath);
       const bytes = fs.readFileSync(assetPath);
       const asset = reader.createKdnaAssetReader().openSync(bytes);
       const result = reader.createKdnaAssetReader().loadProfileSync(asset, 'compact');
-      if (!result || result.type !== 'kdna.context.capsule') {
+      if (!result || result.type !== 'kdna.runtime-capsule') {
         throw new Error('loadProfileSync did not return a Runtime Capsule');
       }
 

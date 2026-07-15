@@ -1,13 +1,13 @@
 # RFC-0008: Encrypted and Licensed KDNA Assets
 
 Status: superseded — active compatibility-only. The encryption profile name
-`kdna-licensed-entry-v1`, the core algorithm choices (AES-256-GCM,
+`kdna.encryption.licensed-entry`, the core algorithm choices (AES-256-GCM,
 HKDF-SHA256), and the fail-closed entitlement state diagram remain the basis of
 the current container-level licensed-entry implementation. The per-entry
 encryption model and source-tree file targets described in the body of this RFC
 are superseded by the [Container spec](../specs/container.md) and unified
 `payload.kdnab` envelope AEAD
-([conformance](../conformance/kdna-envelope-aead-v1.mjs)).
+([conformance](../conformance/envelope-aead.mjs)).
 
 ## Summary
 
@@ -54,7 +54,7 @@ declared in `kdna.json` under `encryption.encrypted_entries`.
 
 ## Encryption Profile
 
-The baseline profile is `kdna-licensed-entry-v1`.
+The baseline profile is `kdna.encryption.licensed-entry`.
 
 Required algorithms:
 
@@ -65,7 +65,7 @@ Required algorithms:
 - Authentication tag: stored with each encrypted entry.
 
 Implementations MAY add `XChaCha20-Poly1305` as a future profile, but MUST NOT
-label it `kdna-licensed-entry-v1`.
+label it `kdna.encryption.licensed-entry`.
 
 ## Key Model
 
@@ -151,7 +151,7 @@ The key-wrapping key (KWK) is derived from the license key via HKDF-SHA256
 
 - IKM: `KDNA-TEST-LICENSE-VECTOR-2026` (UTF-8)
 - Salt: 32 zero bytes (`0x00 * 32`)
-- Info: `kdna-licensed-entry-v1-kwk` (UTF-8)
+- Info: `kdna.encryption.licensed-entry-kwk` (UTF-8)
 - Output length: 32 bytes
 
 ### AAD Format
@@ -160,7 +160,7 @@ Additional authenticated data for AES-256-GCM is the UTF-8 encoding of four
 lines joined by `\n` (LF, U+000A):
 
 ```
-kdna-licensed-entry-v1
+kdna.encryption.licensed-entry
 <manifest.name>
 <manifest.version>
 <entryName>
@@ -169,7 +169,7 @@ kdna-licensed-entry-v1
 Example:
 
 ```text
-kdna-licensed-entry-v1
+kdna.encryption.licensed-entry
 @aikdna/writing
 1.0.0
 KDNA_Core.json
@@ -182,7 +182,7 @@ these fields:
 
 ```json
 {
-  "profile": "kdna-licensed-entry-v1",
+  "profile": "kdna.encryption.licensed-entry",
   "alg": "AES-256-GCM",
   "kdf": "HKDF-SHA256",
   "key_wrapping": "AES-256-KW",
@@ -221,7 +221,7 @@ Field constraints:
 
 Implementations MUST reject with a distinct error when:
 
-- `profile` is not `kdna-licensed-entry-v1`.
+- `profile` is not `kdna.encryption.licensed-entry`.
 - `alg` is not `AES-256-GCM`.
 - `kdf` is not `HKDF-SHA256`.
 - `key_wrapping` is not `AES-256-KW`.

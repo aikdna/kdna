@@ -13,10 +13,11 @@ const addFormats = require('ajv-formats');
 const cbor = require('cbor-x');
 const { hkdfSha256, aesWrap, aesUnwrap } = require('./crypto-profile');
 
-const EXTERNAL_ENVELOPE_PROFILE = 'kdna-envelope-external-grant-v1';
-const EXTERNAL_GRANT_PROFILE = 'kdna-key-grant-v1';
-const EXTERNAL_AAD_PROFILE = 'kdna-external-asset-cek-v1';
-const DEVICE_KEK_PROFILE = 'kdna-device-grant-kek-v1';
+const EXTERNAL_ENVELOPE_PROFILE = 'kdna.envelope.external-grant';
+const EXTERNAL_GRANT_PROFILE = 'kdna.grant.external-key';
+const EXTERNAL_AAD_PROFILE = 'kdna.key-context.asset-content';
+const DEVICE_KEK_PROFILE = 'kdna.key-context.device-grant';
+const EXTERNAL_GRANT_CONTRACT_VERSION = '0.1.0';
 const ENVELOPE_ALG = 'A256GCM';
 const GRANT_WRAP_ALG = 'X25519-HKDF-SHA256+A256KW';
 
@@ -24,10 +25,10 @@ const schemaRoot = path.join(__dirname, '..', 'schema');
 const ajv = new Ajv2020({ allErrors: true, strict: true });
 addFormats(ajv);
 const validateEnvelopeSchema = ajv.compile(
-  require(path.join(schemaRoot, 'kdna-envelope-external-grant-v1.schema.json')),
+  require(path.join(schemaRoot, 'external-grant-envelope.schema.json')),
 );
 const validateGrantSchema = ajv.compile(
-  require(path.join(schemaRoot, 'kdna-key-grant-v1.schema.json')),
+  require(path.join(schemaRoot, 'external-key-grant.schema.json')),
 );
 
 const verifiedEntitlements = new WeakSet();
@@ -127,8 +128,9 @@ function externalEnvelopeAad({ manifest, entryName, plaintextDigest, keyRef, iss
   const entitlementProfile = manifest?.entitlement?.profile || '';
   const fields = [
     EXTERNAL_ENVELOPE_PROFILE,
+    EXTERNAL_GRANT_CONTRACT_VERSION,
     manifest?.asset_uid || '',
-    manifest?.asset_id || manifest?.name || '',
+    manifest?.asset_id || '',
     manifest?.version || '',
     entryName,
     plaintextDigest,
@@ -210,6 +212,7 @@ function encryptExternalGrantEntry(plaintextValue, options = {}) {
     const ciphertext = Buffer.concat([cipher.update(plaintext), cipher.final()]);
     return {
       profile: EXTERNAL_ENVELOPE_PROFILE,
+      contract_version: EXTERNAL_GRANT_CONTRACT_VERSION,
       alg: ENVELOPE_ALG,
       cek_derivation: 'HKDF-SHA256',
       key_ref: keyRef,
@@ -327,9 +330,18 @@ function createExternalKeyGrant(options = {}) {
     shared = crypto.diffieHellman({ privateKey: ephemeral.privateKey, publicKey: deviceKey });
     const salt = wrapSalt ? Buffer.from(wrapSalt) : crypto.randomBytes(16);
     if (salt.length !== 16) fail('KDNA_GRANT_FORMAT_INVALID', 'grant wrap salt must be 16 bytes');
-    kek = hkdfSha256(shared, salt, Buffer.from(`${DEVICE_KEK_PROFILE}\n${grantId}`, 'utf8'), 32);
+    kek = hkdfSha256(
+      shared,
+      salt,
+      Buffer.from(
+        `${DEVICE_KEK_PROFILE}\n${EXTERNAL_GRANT_CONTRACT_VERSION}\n${grantId}`,
+        'utf8',
+      ),
+      32,
+    );
     const grant = {
       profile: EXTERNAL_GRANT_PROFILE,
+      contract_version: EXTERNAL_GRANT_CONTRACT_VERSION,
       grant_id: grantId,
       issuer,
       signing_key_id: signingKeyId,
@@ -339,7 +351,7 @@ function createExternalKeyGrant(options = {}) {
       device_public_key: devicePublicKey,
       device_signing_public_key: deviceSigningPublicKey,
       asset: {
-        asset_id: manifest.asset_id || manifest.name,
+        asset_id: manifest.asset_id,
         asset_uid: manifest.asset_uid,
         version: manifest.version,
         digest: assetDigest,
@@ -402,7 +414,7 @@ function authorizeExternalKeyGrant(options = {}) {
     grant,
     issuerPublicKeys,
     manifest,
-    checksums,
+    expectedAssetDigest,
     envelope: envelopeValue,
     deviceAgreementKey,
     expectedAccountId,
@@ -433,10 +445,15 @@ function authorizeExternalKeyGrant(options = {}) {
     'KDNA_GRANT_DEVICE_MISMATCH',
     'device signing key',
   );
-  expectEqual(grant.asset.asset_id, manifest.asset_id || manifest.name, 'KDNA_GRANT_ASSET_MISMATCH', 'asset ID');
+  expectEqual(grant.asset.asset_id, manifest.asset_id, 'KDNA_GRANT_ASSET_MISMATCH', 'asset ID');
   expectEqual(grant.asset.asset_uid, manifest.asset_uid, 'KDNA_GRANT_ASSET_MISMATCH', 'asset UID');
   expectEqual(grant.asset.version, manifest.version, 'KDNA_GRANT_ASSET_MISMATCH', 'asset version');
-  expectEqual(grant.asset.digest, checksums?.asset_digest, 'KDNA_GRANT_DIGEST_MISMATCH', 'asset digest');
+  expectEqual(
+    grant.asset.digest,
+    expectedAssetDigest,
+    'KDNA_GRANT_DIGEST_MISMATCH',
+    'asset digest',
+  );
   expectEqual(grant.asset.entry_path, envelope.entry_path, 'KDNA_GRANT_ASSET_MISMATCH', 'entry path');
   expectEqual(grant.asset.key_ref, envelope.key_ref, 'KDNA_GRANT_ASSET_MISMATCH', 'key reference');
   expectEqual(grant.asset.issuer_key_id, envelope.issuer_key_id, 'KDNA_GRANT_ASSET_MISMATCH', 'issuer asset key');
@@ -454,7 +471,15 @@ function authorizeExternalKeyGrant(options = {}) {
   const ephemeralKey = publicKeyFromRaw('X25519', `x25519:${b64url(ephemeralRaw)}`);
   const shared = crypto.diffieHellman({ privateKey, publicKey: ephemeralKey });
   const salt = decodeB64url(grant.wrap.salt, 'grant wrap salt', 16);
-  const kek = hkdfSha256(shared, salt, Buffer.from(`${DEVICE_KEK_PROFILE}\n${grant.grant_id}`, 'utf8'), 32);
+  const kek = hkdfSha256(
+    shared,
+    salt,
+    Buffer.from(
+      `${DEVICE_KEK_PROFILE}\n${EXTERNAL_GRANT_CONTRACT_VERSION}\n${grant.grant_id}`,
+      'utf8',
+    ),
+    32,
+  );
   let cek;
   try {
     cek = aesUnwrap(kek, decodeB64url(grant.wrap.wrapped_cek, 'wrapped CEK', 40));
@@ -543,6 +568,7 @@ module.exports = {
   EXTERNAL_GRANT_PROFILE,
   EXTERNAL_AAD_PROFILE,
   DEVICE_KEK_PROFILE,
+  EXTERNAL_GRANT_CONTRACT_VERSION,
   KDNAExternalGrantError,
   canonicalJson,
   grantSigningPayload,

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aikdna.com/schema/judgment-trace.schema.json",
   "title": "KDNA Legacy App Judgment Trace",
-  "description": "Deprecated compatibility schema for existing app-runtime examples. It is non-authoritative for ConsumptionPlan 1.0 and is not interchangeable with specs/judgment-trace-1.schema.json.",
+  "description": "Deprecated compatibility schema for existing app-runtime examples. It is non-authoritative for ConsumptionPlan 1.0 and is not interchangeable with specs/judgment-trace.schema.json.",
   "$comment": "New execution evidence must use the authoritative JudgmentTrace 1.0 schema. Keep this file only for existing app compatibility.",
   "deprecated": true,
   "type": "object",

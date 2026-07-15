@@ -2,7 +2,7 @@
 
 > **Status:** Superseded historical gate design. Do not use as implementation guidance.
 > **Audience:** Owner + downstream implementation agents (Core / CLI / Studio).
-> **Scope boundary:** This document covers the **entry gate** for adding signature and encryption handling to `.kdna` private assets. It does **not** redesign the existing `kdna-licensed-entry-v1` profile (see [kdna-encryption-authorization.md](../kdna-encryption-authorization.md)) and it does **not** introduce any authorization, entitlement, billing, registry scoring, or content-quality concepts.
+> **Scope boundary:** This document covers the **entry gate** for adding signature and encryption handling to `.kdna` private assets. It does **not** redesign the existing `kdna.encryption.licensed-entry` profile (see [kdna-encryption-authorization.md](../kdna-encryption-authorization.md)) and it does **not** introduce any authorization, entitlement, billing, registry scoring, or content-quality concepts.
 
 > Signature, encryption, LoadPlan, authorization, and Runtime Capsule behavior
 > has since shipped under the single-container contract. For current behavior,
@@ -33,7 +33,7 @@ These four terms are deliberately non-overlapping. Any future PR that mixes them
 |---|---|
 | What it proves | The bytes you received match the bytes that were hashed. |
 | What it does **not** prove | Who produced the bytes; whether the bytes are correct; whether the bytes are safe. |
-| Where it lives today | Core 0.11.0 — entry-level content digests, validated through Core's `validate` / `loadV1` pipeline. The `kdna verify` CLI command is a **proposed future command** (see §3); it is not a description of current CLI behavior. |
+| Where it lives today | Core 0.11.0 — entry-level content digests, validated through Core's `validate` / `loadAsset` pipeline. The `kdna verify` CLI command is a **proposed future command** (see §3); it is not a description of current CLI behavior. |
 | Strength | Collision resistance of the chosen hash (BLAKE3 / SHA-256 family). |
 | Failure mode | Mismatch ⇒ "the asset was modified or corrupted in transit/storage." |
 | Trust implication | **None.** A digest says nothing about author or quality. |
@@ -88,21 +88,21 @@ The shipped KDNA v1 container shape is **fixed** and out of scope for this gate.
 |---|---|---|---|
 | `mimetype` | Container type marker. | Public. | No. |
 | `kdna.json` | Public manifest (identity, version, authors, license_ref, entry list, declared digests). | **Always public / always plaintext.** Must never be encrypted. | **No — never, under any profile.** |
-| `payload.kdnab` | Domain content payload (the KDNA JSON entries, packed). | Public by default. | Optional, under `kdna-licensed-entry-v1` only. |
+| `payload.kdnab` | Domain content payload (the KDNA JSON entries, packed). | Public by default. | Optional, under `kdna.encryption.licensed-entry` only. |
 | `checksums.json` | Per-entry content digests. | Public. | No. |
 
 Any change to these four files (rename, merge, repackage, change of role, or the addition of a fifth mandatory file) is a **baseline change**, not a Phase S proposal, and must go through a separate version-bump process.
 
 ### 2.1 Phase S future proposal (not implemented)
 
-The shape below is a **future** proposal for Phase S1–S4. It does not change §2.0. It co-exists with the existing `kdna-licensed-entry-v1` profile; the two are layered, not competing. Nothing in this section is implemented, and nothing in this section may be interpreted as a commitment to migrate the v1 baseline.
+The shape below is a **future** proposal for Phase S1–S4. It does not change §2.0. It co-exists with the existing `kdna.encryption.licensed-entry` profile; the two are layered, not competing. Nothing in this section is implemented, and nothing in this section may be interpreted as a commitment to migrate the v1 baseline.
 
 ```
 example.kdna
 ├── mimetype                     (baseline — §2.0, frozen)
 ├── kdna.json                    (baseline — §2.0, frozen; always plaintext)
 ├── payload.kdnab                (baseline — §2.0, frozen; may be plaintext or
-│                                 kdna-licensed-entry-v1 encrypted)
+│                                 kdna.encryption.licensed-entry encrypted)
 ├── checksums.json               (baseline — §2.0, frozen)
 │
 │   ── Phase S additions (proposed, not shipped) ──
@@ -135,7 +135,7 @@ The fields below are **proposed Phase S additions** to `kdna.json`. They are opt
 |---|---|---|---|
 | `mimetype` | Public | n/a (baseline) | **No — never.** |
 | `kdna.json` | **Always public, always plaintext** | Same. The proposed `signatures_ref` / `encryption_ref` / `key_hint` / `entry_modes` fields are plaintext additions. | **No — never. kdna.json is never encrypted.** |
-| `payload.kdnab` | Public by default. | n/a (baseline). | Optional, only under `kdna-licensed-entry-v1`. |
+| `payload.kdnab` | Public by default. | n/a (baseline). | Optional, only under `kdna.encryption.licensed-entry`. |
 | `signatures/kdna.json.sig` | n/a (baseline) | Public. | No. A signature is meaningless if hidden. |
 | `encryption/envelope.json` | n/a (baseline) | Public metadata only. | Never contains keys, never contains plaintext. |
 | Key material | n/a (baseline) | **Never in the asset.** | n/a — keys live in the consumer's keychain. |
@@ -144,7 +144,7 @@ The fields below are **proposed Phase S additions** to `kdna.json`. They are opt
 
 The envelope is a Phase S addition; it does not exist in v1 baseline assets. When at least one entry in `payload.kdnab` is encrypted under a Phase S profile, this file describes *how* to ask for decryption:
 
-- `profile` — name of the envelope profile (e.g. `kdna-private-entry-v1`); distinct from `kdna-licensed-entry-v1` to avoid scope overlap.
+- `profile` — name of the envelope profile (e.g. `kdna-private-entry-v1`); distinct from `kdna.encryption.licensed-entry` to avoid scope overlap.
 - `algorithm` — declared AEAD (e.g. AES-256-GCM, ChaCha20-Poly1305).
 - `key_hint` — same value as the manifest's `key_hint`; envelope and manifest must agree.
 - `entry_refs` — list of `(entry_id, content_address, nonce, aad)` tuples, where `entry_id` identifies a sub-region of `payload.kdnab` (the baseline payload container is unchanged).
@@ -178,7 +178,7 @@ Encryption is **never** required to verify digest or signature. A reader that ca
 
 ## 3. Proposed CLI behavior (not implemented — all commands are future)
 
-**Every command in this section is a proposed future CLI command.** None of them exist in the current CLI. The current CLI exposes digest matching through Core v1's `validate` / `loadV1` pipeline, not through a `kdna verify` command. The verbs below are **proposed names**; actual command grammar can vary, but the verbs must remain distinct and the boundaries below must hold.
+**Every command in this section is a proposed future CLI command.** None of them exist in the current CLI. The current CLI exposes digest matching through Core v1's `validate` / `loadAsset` pipeline, not through a `kdna verify` command. The verbs below are **proposed names**; actual command grammar can vary, but the verbs must remain distinct and the boundaries below must hold.
 
 ### 3.1 Proposed verbs
 
@@ -313,7 +313,7 @@ Implementation of the S1–S5 phases (§7) may begin **only when every condition
 | G1 | Studio v1 export end-to-end passes (public v1, round-trip through Core loader). | Studio lead | CI green; one recorded terminal session of `kdna load` on a Studio-exported v1. |
 | G2 | At least one real public `.kdna` example or another validated public asset is migrated to the v1 manifest shape. | Domain owner | The KDNA loads via `kdna load` and produces an equivalent judgment result to its pre-migration version. |
 | G3 | Core / CLI / Studio versions are aligned to a single release line. | Release lead | A published version matrix entry where all three components carry the same minor version. |
-| G4 | Digest matching is shipped and announced (not just implemented). | Core lead | Release notes for the digest feature exist and a Core v1 `validate` / `loadV1` walkthrough is published. The future `kdna verify` command is **not** part of this gate condition. |
+| G4 | Digest matching is shipped and announced (not just implemented). | Core lead | Release notes for the digest feature exist and a Core v1 `validate` / `loadAsset` walkthrough is published. The future `kdna verify` command is **not** part of this gate condition. |
 | G5 | All open issues from the previous reconciliation pass are closed or explicitly deferred with a recorded reason. | Owner | Issue board snapshot. |
 | G6 | Clean-install CI is green on at least one each of macOS, Linux, and Windows. | CI lead | Latest CI run artifacts. |
 | G7 | This gate design is **approved** by the owner, in writing, with all open questions in §8 resolved. | Owner | Approval comment / signed-off PR. |
@@ -370,7 +370,7 @@ The following questions block the gate approval (G7) and cannot be answered by i
 |---|---|---|---|
 | D1 | **Key distribution.** How does a reader obtain the decryption key? | Determines whether `key_hint` in §2.2 is a scope URI, a key-server query, or an out-of-band ID. Without this, the envelope can't be specified. | (a) Operator-side keychain only, (b) scope-published public key + encrypted payload, (c) external KMS integration deferred to S5. |
 | D2 | **Signature algorithm and key lifecycle.** Ed25519 only, or also post-quantum? Rotation policy? | Affects `signatures_ref` and `kid` shape. | (a) Ed25519 only for v1, (b) Ed25519 + hybrid PQ draft, (c) pluggable. |
-| D3 | **Encrypted-entry format compatibility with `kdna-licensed-entry-v1`.** | The existing licensed profile encrypts entries too. The new envelope must not collide with it. | (a) New profile name (`kdna-private-entry-v1`), distinct from licensed; (b) shared profile with a different `mode` field. |
+| D3 | **Encrypted-entry format compatibility with `kdna.encryption.licensed-entry`.** | The existing licensed profile encrypts entries too. The new envelope must not collide with it. | (a) New profile name (`kdna-private-entry-v1`), distinct from licensed; (b) shared profile with a different `mode` field. |
 | D4 | **Author identity vs. signature identity.** A signature proves "key X signed this", not "Alice signed this". | Determines whether `authors[]` in the manifest is for humans, for orgs, or just an opaque key reference. | (a) Keep human authors list separate from `kid`; (b) introduce an `author_keys[]` block. |
 | D5 | **Status-object durability.** Is the four-booleans-plus-`signature_status` contract a v1 promise, or advisory? | If advisory, downstream consumers will fork; if a promise, the loader's API is stable. | (a) SemVer-stable, (b) experimental until S4 exit. |
 | D6 | **Backwards compatibility for existing public assets.** | Many existing assets have no signature block. The loader must accept them — but should it warn? | (a) Silent; (b) warn once per asset, never per load; (c) warn per load. |

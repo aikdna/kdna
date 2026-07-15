@@ -106,7 +106,7 @@ function json(value) {
   return JSON.stringify(value, null, 2);
 }
 
-test.skip('asset reader opens, verifies, and loads a .kdna asset without extraction', { todo: 'v2 legacy — v1 equivalent covered in tests/cli-v1/v1-fixture-matrix.test.js and tests/cli-v1/v1-global-cli.test.js' }, async () => {
+test.skip('asset reader opens, verifies, and loads a .kdna asset without extraction', { todo: 'v2 legacy — v1 equivalent covered in tests/container-cli/v1-fixture-matrix.test.js and tests/container-cli/v1-global-cli.test.js' }, async () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-asset-'));
   const assetPath = path.join(tmp, 'writing.kdna');
   fs.writeFileSync(
@@ -280,7 +280,7 @@ test.skip('asset reader decrypts licensed entries only through an in-memory hook
     languages: ['en'],
     default_language: 'en',
     encryption: {
-      profile: 'kdna-licensed-entry-v1',
+      profile: 'kdna.encryption.licensed-entry',
       encrypted_entries: ['KDNA_Core.json', 'KDNA_Patterns.json'],
     },
   };
@@ -401,7 +401,7 @@ test('protected entry encrypts and decrypts with password (RFC-0009)', () => {
     password,
   });
 
-  assert.equal(envelope.profile, 'kdna-password-protected-v1');
+  assert.equal(envelope.profile, 'kdna.encryption.password');
   assert.equal(envelope.alg, 'AES-256-GCM');
   assert.equal(envelope.kdf, 'Argon2id');
   assert.ok(envelope.key_slots);
@@ -514,7 +514,7 @@ test.skip('protected .kdna asset loads and decrypts with password hook', { todo:
     languages: ['en'],
     default_language: 'en',
     encryption: {
-      profile: 'kdna-password-protected-v1',
+      profile: 'kdna.encryption.password',
       encrypted_entries: ['KDNA_Core.json'],
     },
   };
@@ -588,7 +588,7 @@ test.skip('cross-language fixture: decrypts shared test_protected_entry.kdna fro
   const asset = await reader.open(fixturePath);
   const manifest = await reader.readManifest(asset);
   assert.equal(manifest.access, 'protected');
-  assert.equal(manifest.encryption.profile, 'kdna-password-protected-v1');
+  assert.equal(manifest.encryption.profile, 'kdna.encryption.password');
 
   const decryptEntry = createPasswordDecryptEntry({ password: 'KDNA-TEST-VECTOR-2026' });
   const verifyWithHook = await reader.verify(asset, { requireDecryption: true, decryptEntry });
@@ -620,7 +620,7 @@ test('protected entry decrypt fails with tampered ciphertext', async () => {
     languages: ['en'],
     default_language: 'en',
     encryption: {
-      profile: 'kdna-password-protected-v1',
+      profile: 'kdna.encryption.password',
       encrypted_entries: ['KDNA_Core.json'],
     },
   };

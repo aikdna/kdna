@@ -1,11 +1,11 @@
 {
-  "kdna_version": "1.0",
+  "format_version": null,
   "asset": {
-    "asset_id": "kdna:conformance:authorization:unknown-access",
-    "asset_uid": "urn:uuid:756e6b6e-6f77-4e2d-8163-636573730000",
-    "title": "Authorization Fixture: unknown-access",
-    "version": "1.0.0",
-    "judgment_version": "1.0.0"
+    "asset_id": null,
+    "asset_uid": null,
+    "title": null,
+    "version": null,
+    "judgment_version": null
   },
   "access": null,
   "access_alias": null,
@@ -14,28 +14,24 @@
   "required_action": "block",
   "can_load_now": false,
   "projection_policy": "none",
-  "input_fingerprint": {
-    "has_password_input": false,
-    "entitlement_input": null,
-    "source_fingerprint": "sha256:6f2b40d8407a7b1d10f1648e0bfa14ab59f4746e823471474e67f11b237e7a9b"
-  },
+  "input_fingerprint": null,
   "checks": {
-    "format_valid": true,
-    "schema_valid": true,
-    "payload_valid": true,
-    "checksums_valid": true,
-    "load_contract_valid": true,
-    "overall_valid": true
+    "format_valid": false,
+    "schema_valid": false,
+    "payload_valid": false,
+    "checksums_valid": false,
+    "load_contract_valid": false,
+    "overall_valid": false
   },
   "issues": [
     {
-      "code": "KDNA_ACCESS_MODE_UNKNOWN",
+      "code": "KDNA_FORMAT_INVALID",
       "severity": "blocking",
-      "message": "Unknown access value \"subscription\"."
+      "message": "Cannot find module './v1/index.js'\nRequire stack:\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container-dispatcher.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/container/index.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/public-api.js\n- /Users/kdna/aikdna/open/kdna/packages/kdna-core/src/index.js\n- /Users/kdna/aikdna/open/kdna/scripts/generate-self-check-conformance-fixtures.mjs"
     }
   ],
   "source": {
-    "kind": "file",
+    "kind": null,
     "path": "<fixture:unknown-access>"
   }
 }

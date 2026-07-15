@@ -5,7 +5,7 @@
 > encryption, paid authorization, hosted distribution, and signature trust are
 > not current launch requirements.
 
-> **Status:** Design specification with CLI/core MVP implemented. Licensed `.kdna` uses the `kdna-licensed-entry-v1` encrypted-entry profile. License activation, sync, revocation, offline grace, and audit events are defined in [KDNA Entitlement API](../specs/kdna-entitlement-api.md). See [KCL-1.0](../specs/LICENSE-KCL-1.0.md) for the canonical commercial license.
+> **Status:** Design specification with CLI/core MVP implemented. Licensed `.kdna` uses the `kdna.encryption.licensed-entry` encrypted-entry profile. License activation, sync, revocation, offline grace, and audit events are defined in [KDNA Entitlement API](../specs/kdna-entitlement-api.md). See [KCL-1.0](../specs/LICENSE-KCL-1.0.md) for the canonical commercial license.
 
 ## Overview
 
@@ -24,7 +24,7 @@ KDNA domains with `access: licensed` or `access: runtime` require protection mec
 For `licensed` domains, selected internal entries are encrypted inside the same `.kdna` asset:
 
 - Extension: `.kdna`
-- Profile: `kdna-licensed-entry-v1`
+- Profile: `kdna.encryption.licensed-entry`
 - Encryption: AES-256-GCM per protected entry
 - Key: Derived from license key + machine fingerprint
 - The `kdna.json` manifest is stored in plaintext for discovery; only KDNA JSON files are encrypted
@@ -49,7 +49,7 @@ License requirements are declared in `kdna.json` under `access` and
 {
   "access": "licensed",
   "encryption": {
-    "profile": "kdna-licensed-entry-v1",
+    "profile": "kdna.encryption.licensed-entry",
     "encrypted_entries": [
       "KDNA_Core.json",
       "KDNA_Patterns.json"

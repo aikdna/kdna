@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kdna.ai/specs/external-grant-envelope.schema.json",
+  "title": "KDNA External Grant Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "contract_version",
+    "alg",
+    "cek_derivation",
+    "key_ref",
+    "issuer_key_id",
+    "entry_path",
+    "plaintext_digest",
+    "iv",
+    "tag",
+    "ciphertext"
+  ],
+  "properties": {
+    "profile": { "const": "kdna.envelope.external-grant" },
+    "contract_version": { "const": "0.1.0" },
+    "alg": { "const": "A256GCM" },
+    "cek_derivation": { "const": "HKDF-SHA256" },
+    "key_ref": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "issuer_key_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "entry_path": { "type": "string", "pattern": "^[^/].*[^/]$|^[^/]$", "maxLength": 256 },
+    "plaintext_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "iv": { "type": "string", "pattern": "^[A-Za-z0-9_-]{16}$" },
+    "tag": { "type": "string", "pattern": "^[A-Za-z0-9_-]{22}$" },
+    "ciphertext": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_-]+$" }
+  }
+}

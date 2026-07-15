@@ -47,7 +47,7 @@ Future extensions (passkey, hardware key, local keychain biometric) MAY reuse `a
 
 ## Encryption Profile
 
-The profile name is `kdna-password-protected-v1`.
+The profile name is `kdna.encryption.password`.
 
 ### Algorithms
 
@@ -86,7 +86,7 @@ Each encrypted entry inside the `.kdna` container is a JSON object:
 
 ```json
 {
-  "profile": "kdna-password-protected-v1",
+  "profile": "kdna.encryption.password",
   "alg": "AES-256-GCM",
   "kdf": "Argon2id",
   "key_wrapping": "AES-256-KW",
@@ -132,7 +132,7 @@ A protected asset MUST include at least a `password` slot. It MAY include a `rec
 Additional authenticated data for AES-256-GCM is the UTF-8 encoding of four lines joined by `\n` (LF, U+000A):
 
 ```
-kdna-password-protected-v1
+kdna.encryption.password
 <manifest.name>
 <manifest.version>
 <entryName>
@@ -301,7 +301,7 @@ kdna-recover-7F3K-L9Q2-M8V1-X4P6
 
 Implementations MUST reject with a distinct error when:
 
-- `profile` is not `kdna-password-protected-v1`.
+- `profile` is not `kdna.encryption.password`.
 - `alg` is not `AES-256-GCM`.
 - `kdf` is not `Argon2id`.
 - `key_wrapping` is not `AES-256-KW`.
@@ -314,7 +314,7 @@ Implementations MUST reject with a distinct error when:
 ## Compatibility Impact
 
 - `access: "protected"` is a new value. Older loaders that do not recognize it MUST reject the asset or treat it as unsupported rather than defaulting to open.
-- The `encryption.profile` value `kdna-password-protected-v1` is new. Loaders that support only `kdna-licensed-entry-v1` MUST reject this profile cleanly.
+- The `encryption.profile` value `kdna.encryption.password` is new. Loaders that support only `kdna.encryption.licensed-entry` MUST reject this profile cleanly.
 - Manifest schema is backward compatible: new fields are inside `encryption`, which already exists in RFC-0008.
 
 ## Open Questions

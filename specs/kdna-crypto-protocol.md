@@ -51,7 +51,7 @@ licensed .kdna asset
 
 - **Format:** `KDNA-LIC-...` opaque activation key.
 - **Purpose:** Proves the buyer can activate the asset and derives the local
-  decrypt hook for `kdna-licensed-entry-v1`.
+  decrypt hook for `kdna.encryption.licensed-entry`.
 - **Storage:** MAY be present in the local activation file when required for
   offline licensed loading, but MUST NOT be printed, logged, included in audit
   events, or embedded in `.kdna` assets.
@@ -104,7 +104,7 @@ Asset distributed through any author-chosen channel:
   "creator": { "name": "Example Author" },
   "compatibility": {
     "min_loader_version": "0.15.12",
-    "profile": "judgment-profile-v1"
+    "profile": "kdna.payload.judgment"
   },
   "payload": {
     "path": "payload.kdnab",
@@ -113,7 +113,7 @@ Asset distributed through any author-chosen channel:
   },
   "access": "licensed",
   "encryption": {
-    "profile": "kdna-envelope-aead-v1",
+    "profile": "kdna.envelope.aead",
     "encrypted_entries": ["payload.kdnab"]
   }
 }
@@ -306,13 +306,13 @@ What it DOES provide:
 | Phase | What | Prerequisite |
 |-------|------|-------------|
 | P0 | Spec this document | Done |
-| P1 | `kdna-licensed-entry-v1` encrypted-entry profile | CLI/Core MVP implemented |
+| P1 | `kdna.encryption.licensed-entry` encrypted-entry profile | CLI/Core MVP implemented |
 | P2 | Direct `.kdna` reader with in-memory decrypt hook | CLI/Core MVP implemented |
 | P3 | `kdna license activate` and `kdna license sync` | CLI MVP implemented |
 | P4 | Entitlement revoke/admin API | Specified |
 | P5 | Runtime projection and watermark service | Future server implementation |
 | P6 | ~~TUF-like registry trust roles~~ | **Cancelled.** Per-author Ed25519 identity replaces registry-owned trust roles. |
-| P7 | `kdna-envelope-aead-v1` canonical envelope profile (RFC-0018) | **Accepted.** Test vectors live in `conformance/kdna-envelope-aead-v1/`; release-specific implementation maturity is tracked in public status and release notes. |
+| P7 | `kdna.envelope.aead` canonical envelope profile (RFC-0018) | **Accepted.** Test vectors live in `conformance/envelope-aead/`; release-specific implementation maturity is tracked in public status and release notes. |
 
 ---
 
@@ -320,7 +320,7 @@ What it DOES provide:
 
 | Existing Component | Crypto Protocol Role |
 |-------------------|---------------------|
-| `@aikdna/kdna-core/src/crypto-profile.js` | `kdna-licensed-entry-v1` encryption and decryption primitives |
+| `@aikdna/kdna-core/src/crypto-profile.js` | `kdna.encryption.licensed-entry` encryption and decryption primitives |
 | `@aikdna/kdna-core/src/asset-reader.js` | Direct `.kdna` reading and in-memory decrypt hooks |
 | `kdna-cli/src/cmds/license.js` | Activation, sync, status, local entitlement checks |
 | `kdna-cli/src/verify.js` | Direct `.kdna` verification with optional decrypt hook |

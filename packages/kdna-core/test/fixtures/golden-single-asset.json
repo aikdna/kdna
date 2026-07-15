@@ -16,7 +16,7 @@
     },
     "compatibility": {
       "min_loader_version": "0.16.0",
-      "profile": "judgment-profile-v1"
+      "profile": "kdna.payload.judgment"
     },
     "payload": {
       "path": "payload.kdnab",
@@ -51,7 +51,7 @@
     }
   },
   "payload": {
-    "profile": "judgment-profile-v1",
+    "profile": "kdna.payload.judgment",
     "core": {
       "highest_question": "Which rollout choice preserves the safest verified recovery path?",
       "worldview": [

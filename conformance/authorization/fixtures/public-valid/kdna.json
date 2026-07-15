@@ -1,5 +1,4 @@
 {
-  "kdna_version": "1.0",
   "asset_id": "kdna:conformance:authorization:public-valid",
   "asset_uid": "urn:uuid:7075626c-6963-4d76-816c-696400000000",
   "asset_type": "fixture",
@@ -14,7 +13,8 @@
   },
   "compatibility": {
     "min_loader_version": "1.0.0",
-    "profile": "judgment-profile-v1"
+    "profile": "kdna.payload.judgment",
+    "profile_version": "0.1.0"
   },
   "payload": {
     "path": "payload.kdnab",
@@ -51,5 +51,6 @@
       }
     }
   },
+  "format_version": "0.1.0",
   "access": "public"
 }

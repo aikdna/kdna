@@ -1,0 +1,64 @@
+{
+  "cases": [
+    {
+      "name": "audit-1-stable-plan-cannot-advertise-multiple-capsule-contracts",
+      "scenario": "plan-advertises-multiple-capsule-contracts",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "audit-2-unregistered-descriptor-cannot-be-selected-for-stable-plan",
+      "scenario": "unregistered-descriptor-selected-for-stable-plan",
+      "expected_code": "KDNA_HOST_CAPSULE_PAIR_UNSUPPORTED"
+    },
+    {
+      "name": "audit-3-host-request-cannot-omit-plan-correlation",
+      "scenario": "request-without-plan-ref",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "audit-4-coordinated-asset-substitution-breaks-the-trusted-plan-ref",
+      "scenario": "coordinated-asset-substitution",
+      "expected_code": "KDNA_TRUSTED_PLAN_DIGEST_MISMATCH"
+    },
+    {
+      "name": "audit-5-trace-cannot-substitute-the-observed-host-descriptor",
+      "scenario": "trace-host-descriptor-substitution",
+      "expected_code": "KDNA_TRACE_NEGOTIATION_EVIDENCE_MISMATCH"
+    },
+    {
+      "name": "audit-6-trace-cannot-forge-budget-actuals",
+      "scenario": "forged-budget-actual",
+      "expected_code": "KDNA_TRACE_BUDGET_MISMATCH"
+    },
+    {
+      "name": "audit-7-terminal-status-must-match-the-correlated-receipt",
+      "scenario": "terminal-status-receipt-mismatch",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "audit-8-completed-execution-cannot-cross-a-projection-limit",
+      "scenario": "completed-over-projection-budget",
+      "expected_code": "KDNA_TRACE_BUDGET_LIMIT_VIOLATION"
+    },
+    {
+      "name": "audit-9-trace-elapsed-cannot-self-authenticate",
+      "scenario": "trace-elapsed-self-rewrite",
+      "expected_code": "KDNA_TRACE_BUDGET_MISMATCH"
+    },
+    {
+      "name": "audit-10-unobserved-finite-token-limit-cannot-be-within-limit",
+      "scenario": "finite-token-limit-unobserved-overall",
+      "expected_code": "KDNA_TRACE_BUDGET_MISMATCH"
+    },
+    {
+      "name": "audit-11-p-mismatch-cannot-claim-provider-execution",
+      "scenario": "p-mismatch-provider-execution",
+      "expected_code": "SCHEMA_INVALID"
+    },
+    {
+      "name": "audit-12-p-mismatch-values-must-actually-differ",
+      "scenario": "p-mismatch-equal-values",
+      "expected_code": "KDNA_TRACE_CAPSULE_DELIVERY_DIGEST_MISMATCH"
+    }
+  ]
+}

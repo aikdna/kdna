@@ -1,5 +1,4 @@
 {
-  "kdna_version": "1.0",
   "asset_id": "kdna:conformance:authorization:unknown-access",
   "asset_uid": "urn:uuid:756e6b6e-6f77-4e2d-8163-636573730000",
   "asset_type": "fixture",
@@ -14,7 +13,8 @@
   },
   "compatibility": {
     "min_loader_version": "1.0.0",
-    "profile": "judgment-profile-v1"
+    "profile": "kdna.payload.judgment",
+    "profile_version": "0.1.0"
   },
   "payload": {
     "path": "payload.kdnab",
@@ -51,5 +51,6 @@
       }
     }
   },
+  "format_version": "0.1.0",
   "access": "subscription"
 }

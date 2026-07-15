@@ -5,7 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 
 const core = require('../src');
-const v1 = require('../src/v1');
+const v1 = require('../src/container');
 
 const repoRoot = path.resolve(__dirname, '..', '..', '..');
 const minimalSource = path.join(repoRoot, 'examples', 'minimal');

@@ -11,10 +11,10 @@ const cryptoProfile = require('./crypto-profile');
 const externalKeyGrant = require('./external-key-grant');
 const publicApi = require('./public-api');
 const workpackPure = require('./workpack-pure');
-const v1 = require('./v1');
+const container = require('./container');
 const runtimeApi = require('./runtime-api');
-const capsuleV2 = require('./capsule-v2');
-const executionContractV1 = require('./execution-contract-v1');
+const runtimeCapsule = require('./runtime-capsule');
+const runtimeContract = require('./runtime-contract');
 
 module.exports = {
   ...publicApi,
@@ -27,8 +27,8 @@ module.exports = {
   ...cryptoProfile,
   ...externalKeyGrant,
   ...workpackPure,
-  ...v1,
+  ...container,
   ...runtimeApi,
-  ...capsuleV2,
-  ...executionContractV1,
+  ...runtimeCapsule,
+  ...runtimeContract,
 };

@@ -12,7 +12,7 @@ Phase 1 baseline vocabulary. Each term is defined in 1–3 sentences. Some terms
 
 **Manifest** — the public metadata layer of a `.kdna` file. Stored as `kdna.json` at the root of the container. Always plaintext so that the official toolchain can identify and route the file even if the payload is encrypted.
 
-**Payload** — the actual judgment data. Stored as `payload.kdnab` at the root of the container. May be plaintext or selectively encrypted. The structure of the payload is defined by a **payload profile** (e.g. `judgment-profile-v1`).
+**Payload** — the actual judgment data. Stored as `payload.kdnab` at the root of the container. May be plaintext or selectively encrypted. The structure of the payload is defined by a **payload profile** (e.g. `kdna.payload.judgment`).
 
 **Envelope** — the set of metadata entries that describe the container itself: encryption metadata, signature references, digests. Distinct from the payload, which is the judgment content.
 

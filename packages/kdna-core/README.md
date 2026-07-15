@@ -28,7 +28,7 @@ const {
   validate,
   planLoad,
   loadAuthorized,
-  loadCapsuleV2,
+  loadRuntimeCapsule,
   computeDigestEvidence,
   computeCapsuleDeliveryDigest,
   adaptCapsuleV2ToV1,
@@ -72,7 +72,7 @@ const evidence = computeDigestEvidence('./asset.kdna', {
   },
 });
 
-const capsule2 = loadCapsuleV2('./asset.kdna', {
+const capsule2 = loadRuntimeCapsule('./asset.kdna', {
   profile: 'compact',
   expectedDigests: {
     asset: expectedA,
@@ -93,16 +93,16 @@ state as explicit context:
 
 ```js
 const {
-  parseExecutionContractJsonV1,
-  buildConsumptionPlanV1,
-  buildAgentHost2RequestV1,
-  buildPreHostBudgetBlockedTraceV1,
-  validatePreHostBudgetBlockedTraceV1,
-  validateAgentHost2ReceiptV1,
-  buildJudgmentTraceV1,
+  parseRuntimeContractJson,
+  buildConsumptionPlan,
+  buildAgentHostRequest,
+  buildPreHostBudgetBlockedTrace,
+  validatePreHostBudgetBlockedTrace,
+  validateAgentHostReceipt,
+  buildJudgmentTrace,
 } = require('@aikdna/kdna-core');
 
-const plan = buildConsumptionPlanV1({
+const plan = buildConsumptionPlan({
   plan_id: 'plan_0123456789abcdef',
   created_at: new Date().toISOString(),
   task,
@@ -119,17 +119,17 @@ const executionContext = {
   capabilities: observedHostCapabilities,
   coreCapsuleVersions: ['2.0', '1.0'],
 };
-const request = buildAgentHost2RequestV1(
+const request = buildAgentHostRequest(
   { request_id: 'host_0123456789abcdef01234567', capsule: capsule2 },
   executionContext,
 );
 
 // Parse raw Host JSON before object-level Schema/correlation validation.
-const receipt = parseExecutionContractJsonV1(rawReceiptBytes);
-const receiptValidation = validateAgentHost2ReceiptV1(receipt, { request });
+const receipt = parseRuntimeContractJson(rawReceiptBytes);
+const receiptValidation = validateAgentHostReceipt(receipt, { request });
 if (!receiptValidation.valid) throw new Error(receiptValidation.code);
 
-const trace = buildJudgmentTraceV1(traceInput, {
+const trace = buildJudgmentTrace(traceInput, {
   ...executionContext,
   request,
   receipt,
@@ -142,11 +142,11 @@ trusted observation explicitly as `not_delivered` or `not_observed`; request
 existence alone is not treated as delivery evidence.
 
 If Capsule projection succeeded but the exact projection or task character
-count exceeds the Plan budget, `buildAgentHost2RequestV1()` fails closed and
+count exceeds the Plan budget, `buildAgentHostRequest()` fails closed and
 must not be bypassed. Use the dedicated evidence-only terminal instead:
 
 ```js
-const blockedTrace = buildPreHostBudgetBlockedTraceV1(
+const blockedTrace = buildPreHostBudgetBlockedTrace(
   {
     trace_id: 'trace_0123456789abcdef',
     timestamp: new Date().toISOString(),
@@ -155,7 +155,7 @@ const blockedTrace = buildPreHostBudgetBlockedTraceV1(
   executionContext,
 );
 
-const blockedValidation = validatePreHostBudgetBlockedTraceV1(blockedTrace, {
+const blockedValidation = validatePreHostBudgetBlockedTrace(blockedTrace, {
   ...executionContext,
   capsule: capsule2,
 });
@@ -168,7 +168,7 @@ and `exceeded` comparison, but it never exposes an over-budget Host request or
 a request ID. Calling it when neither projection nor task is over budget is an
 error.
 
-`parseExecutionContractJsonV1()` is the raw protocol boundary. It rejects
+`parseRuntimeContractJson()` is the raw protocol boundary. It rejects
 duplicate decoded object keys, invalid UTF-8, BOMs, non-scalar Unicode,
 non-finite numbers, trailing input, and non-RFC JSON grammar before an object
 validator runs. Its default limits are 2 MiB and 64 nested containers;
@@ -179,7 +179,7 @@ keys, invalid original bytes, or a stripped BOM, so Host adapters must not use
 plain `JSON.parse()` for untrusted protocol messages.
 
 An A, C, or E mismatch is returned as evidence by `computeDigestEvidence()`
-and blocks `loadCapsuleV2()` with a digest-specific error. The adapter always
+and blocks `loadRuntimeCapsule()` with a digest-specific error. The adapter always
 maps E to Capsule 1 `asset_digest`; it never substitutes A or C. Core computes
 E from the raw Runtime manifest and payload bytes even when `checksums.json` is
 absent, in which case E is reported as `not_compared`.

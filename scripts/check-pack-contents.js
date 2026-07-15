@@ -11,18 +11,18 @@ const defaultNpmCache = path.join(os.tmpdir(), 'kdna-npm-cache');
 // Schema files moved to repo-root schema/ — no longer in npm package
 const requiredCoreFiles = [
   'src/asset-reader.js',
-  'src/capsule-v2.js',
-  'src/execution-contract-v1.js',
+  'src/runtime-capsule.js',
+  'src/runtime-contract.js',
   'src/index.js',
   'src/types.d.ts',
   'schema/digest-evidence.schema.json',
-  'schema/runtime-capsule-1.schema.json',
-  'schema/runtime-capsule-2.schema.json',
-  'schema/consumption-plan-1.schema.json',
-  'schema/agent-host-capabilities-1.schema.json',
-  'schema/agent-host-2-request.schema.json',
-  'schema/agent-host-2-receipt.schema.json',
-  'schema/judgment-trace-1.schema.json',
+  'schema/runtime-capsule.schema.json',
+  'schema/runtime-capsule.schema.json',
+  'schema/consumption-plan.schema.json',
+  'schema/agent-host-capabilities.schema.json',
+  'schema/agent-host-request.schema.json',
+  'schema/agent-host-receipt.schema.json',
+  'schema/judgment-trace.schema.json',
 ];
 const requiredCompatFiles = [
   'bin/kdna.js',

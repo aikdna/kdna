@@ -81,4 +81,4 @@ Canonicalization does not prove judgment quality. It proves that all verifiers
 are hashing and signing the same bytes.
 
 Runtime Capsule delivery uses a separate RFC 8785 JCS profile named
-`kdna-capsule-jcs-v1`. Its digest is P and is not the asset content digest C.
+`kdna.canonicalization.runtime-capsule-jcs`. Its digest is P and is not the asset content digest C.

@@ -1,5 +1,4 @@
 {
-  "kdna_version": "1.0",
   "asset_id": "kdna:conformance:authorization:remote-recognized-not-loaded",
   "asset_uid": "urn:uuid:72656d6f-7465-4d72-8563-6f676e697a65",
   "asset_type": "fixture",
@@ -14,7 +13,8 @@
   },
   "compatibility": {
     "min_loader_version": "1.0.0",
-    "profile": "judgment-profile-v1"
+    "profile": "kdna.payload.judgment",
+    "profile_version": "0.1.0"
   },
   "payload": {
     "path": "payload.kdnab",
@@ -51,8 +51,9 @@
       }
     }
   },
+  "format_version": "0.1.0",
   "access": "remote",
   "runtime": {
-    "endpoint": "https://runtime.example.test/v1/project"
+    "endpoint": "https://runtime.example.test/project"
   }
 }

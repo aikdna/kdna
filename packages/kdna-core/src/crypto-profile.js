@@ -17,14 +17,7 @@ try {
  * - AES-256-GCM content encryption
  * - Random CEK per asset; license key only unwraps CEK, never touches content
  */
-const LICENSED_ENTRY_PROFILE = 'kdna-licensed-entry-v1';
-
-/**
- * Pre-RFC legacy profile (now experimental).
- * Uses scrypt-sha256 with concatenated secret (`licenseKey|machineFingerprint`).
- * Retained for backward compatibility only.
- */
-const LICENSED_EXPERIMENTAL_PROFILE = 'kdna-licensed-entry-experimental';
+const LICENSED_ENTRY_PROFILE = 'kdna.encryption.licensed-entry';
 
 /**
  * RFC-0009 compliant profile.
@@ -33,11 +26,11 @@ const LICENSED_EXPERIMENTAL_PROFILE = 'kdna-licensed-entry-experimental';
  * - AES-256-GCM content encryption
  * - Dual key slots: password + recovery
  */
-const PASSWORD_PROTECTED_PROFILE = 'kdna-password-protected-v1';
+const PASSWORD_PROTECTED_PROFILE = 'kdna.encryption.password';
+const ENCRYPTION_PROFILE_VERSION = '0.1.0';
 
 const RFC_KDF = 'HKDF-SHA256';
 const RFC_KEY_WRAPPING = 'AES-256-KW';
-const LEGACY_KDF = 'scrypt-sha256';
 const PASSWORD_KDF = 'Argon2id';
 const ALG = 'AES-256-GCM';
 
@@ -63,14 +56,20 @@ function normalizeEnvelope(value) {
     try { return cbor.decode(Buffer.from(value, 'utf8')); } catch { /* fall through */ }
   }
   if (value && typeof value === 'object') return value;
-  throw new Error('encrypted entry envelope must be CBOR (kdna_version 1.0)');
+  throw new Error('encrypted entry envelope must be CBOR (format 0.1.0)');
 }
 
-function encryptedEntryAad(entryName, manifest = {}, profile = LICENSED_ENTRY_PROFILE) {
+function encryptedEntryAad(
+  entryName,
+  manifest = {},
+  profile = LICENSED_ENTRY_PROFILE,
+  profileVersion = ENCRYPTION_PROFILE_VERSION,
+) {
   return Buffer.from(
     [
       profile,
-      manifest.name || manifest.asset_id || '',
+      profileVersion,
+      manifest.asset_id || '',
       manifest.version || '',
       entryName,
     ].join('\n'),
@@ -173,7 +172,7 @@ function aesUnwrap(key, ciphertext) {
 /**
  * Derive a key-wrapping key (KWK) from a license key via HKDF-SHA256.
  */
-function deriveWrappingKey(licenseKey, info = 'kdna-licensed-entry-v1-kwk') {
+function deriveWrappingKey(licenseKey, info = 'kdna.encryption.licensed-entry-kwk') {
   return hkdfSha256(licenseKey, null, info, 32);
 }
 
@@ -207,7 +206,7 @@ function unwrapCEK(wrappedCek, wrappingKey) {
  * 4. Wrap CEK with KWK (AES-256-KW)
  * 5. Store wrapped_key in envelope
  */
-function encryptLicensedEntryV1(plaintext, options = {}) {
+function encryptLicensedEntry(plaintext, options = {}) {
   const { entryName, manifest = {}, licenseKey } = options;
   if (!entryName) throw new Error('entryName is required');
   if (!licenseKey) throw new Error('licenseKey is required for RFC-0008 encryption');
@@ -223,6 +222,7 @@ function encryptLicensedEntryV1(plaintext, options = {}) {
 
   return {
     profile: LICENSED_ENTRY_PROFILE,
+    profile_version: ENCRYPTION_PROFILE_VERSION,
     alg: ALG,
     kdf: RFC_KDF,
     key_wrapping: RFC_KEY_WRAPPING,
@@ -240,7 +240,7 @@ function encryptLicensedEntryV1(plaintext, options = {}) {
  * 2. Unwrap CEK from wrapped_key (AES-256-KW)
  * 3. Decrypt content with CEK (AES-256-GCM)
  */
-function decryptLicensedEntryV1(envelopeValue, options = {}) {
+function decryptLicensedEntry(envelopeValue, options = {}) {
   const { entryName, manifest = {}, licenseKey } = options;
   if (!entryName) throw new Error('entryName is required');
   if (!licenseKey) throw new Error('licenseKey is required for RFC-0008 decryption');
@@ -248,6 +248,9 @@ function decryptLicensedEntryV1(envelopeValue, options = {}) {
   const envelope = normalizeEnvelope(envelopeValue);
   if (envelope.profile !== LICENSED_ENTRY_PROFILE) {
     throw new Error(`unsupported encrypted entry profile: ${envelope.profile || 'unknown'} (expected ${LICENSED_ENTRY_PROFILE})`);
+  }
+  if (envelope.profile_version !== ENCRYPTION_PROFILE_VERSION) {
+    throw new Error(`unsupported encrypted entry profile_version: ${envelope.profile_version || 'unknown'}`);
   }
   if (envelope.alg !== ALG) throw new Error(`unsupported encrypted entry alg: ${envelope.alg}`);
   if (envelope.kdf !== RFC_KDF) throw new Error(`unsupported encrypted entry kdf: ${envelope.kdf}`);
@@ -358,6 +361,7 @@ function encryptProtectedEntry(plaintext, options = {}) {
 
   return {
     profile: PASSWORD_PROTECTED_PROFILE,
+    profile_version: ENCRYPTION_PROFILE_VERSION,
     alg: ALG,
     kdf: PASSWORD_KDF,
     key_wrapping: RFC_KEY_WRAPPING,
@@ -381,6 +385,9 @@ function decryptProtectedEntry(envelopeValue, options = {}) {
     throw new Error(
       `unsupported encrypted entry profile: ${envelope.profile || 'unknown'} (expected ${PASSWORD_PROTECTED_PROFILE})`,
     );
+  }
+  if (envelope.profile_version !== ENCRYPTION_PROFILE_VERSION) {
+    throw new Error(`unsupported encrypted entry profile_version: ${envelope.profile_version || 'unknown'}`);
   }
   if (envelope.alg !== ALG) throw new Error(`unsupported encrypted entry alg: ${envelope.alg}`);
   if (envelope.kdf !== PASSWORD_KDF) throw new Error(`unsupported encrypted entry kdf: ${envelope.kdf}`);
@@ -427,7 +434,7 @@ function createRecoveryDecryptEntry(options = {}) {
 // v0.2 will promote the Argon2id profile (above) as the default write
 // profile; this scrypt profile will remain a read-only legacy profile.
 
-const PASSWORD_PROTECTED_SCRYPT_PROFILE = 'kdna-password-protected-v1-scrypt';
+const PASSWORD_PROTECTED_SCRYPT_PROFILE = 'kdna.encryption.password.scrypt';
 const SCRYPT_KDF = 'scrypt-sha256';
 
 function derivePasswordKeyScrypt(password, params = {}) {
@@ -468,6 +475,7 @@ function encryptProtectedEntryScrypt(plaintext, options = {}) {
 
   return {
     profile: PASSWORD_PROTECTED_SCRYPT_PROFILE,
+    profile_version: ENCRYPTION_PROFILE_VERSION,
     alg: ALG,
     kdf: SCRYPT_KDF,
     key_wrapping: RFC_KEY_WRAPPING,
@@ -508,6 +516,9 @@ function decryptProtectedEntryScrypt(envelopeValue, options = {}) {
       `unsupported encrypted entry profile: ${envelope.profile || 'unknown'} (expected ${PASSWORD_PROTECTED_SCRYPT_PROFILE})`,
     );
   }
+  if (envelope.profile_version !== ENCRYPTION_PROFILE_VERSION) {
+    throw new Error(`unsupported encrypted entry profile_version: ${envelope.profile_version || 'unknown'}`);
+  }
   if (envelope.alg !== ALG) throw new Error(`unsupported encrypted entry alg: ${envelope.alg}`);
   if (envelope.kdf !== SCRYPT_KDF) throw new Error(`unsupported encrypted entry kdf: ${envelope.kdf}`);
   if (envelope.key_wrapping !== RFC_KEY_WRAPPING) {
@@ -537,95 +548,21 @@ function createPasswordDecryptEntryScrypt(options = {}) {
     decryptProtectedEntryScrypt(ciphertext, { entryName, manifest, password });
 }
 
-// ── Legacy / experimental profile (pre-RFC, backward compat) ───────
-
-function deriveLicensedEntryKeyLegacy(options = {}) {
-  const { licenseKey, machineFingerprint, salt, keyLength = 32 } = options;
-  if (!licenseKey) throw new Error('licenseKey is required');
-  if (!machineFingerprint) throw new Error('machineFingerprint is required');
-  const saltBuffer = Buffer.isBuffer(salt) || salt instanceof Uint8Array
-    ? Buffer.from(salt)
-    : decodeBase64(salt, 'salt');
-  const secret = `${licenseKey}|${machineFingerprint}`;
-  return crypto.scryptSync(secret, saltBuffer, keyLength);
-}
-
-function encryptLicensedEntryLegacy(plaintext, options = {}) {
-  const { entryName, manifest = {}, licenseKey, machineFingerprint } = options;
-  if (!entryName) throw new Error('entryName is required');
-  const salt = crypto.randomBytes(16);
-  const iv = crypto.randomBytes(12);
-  const key = deriveLicensedEntryKeyLegacy({ licenseKey, machineFingerprint, salt });
-  const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
-  cipher.setAAD(encryptedEntryAad(entryName, manifest, LICENSED_EXPERIMENTAL_PROFILE));
-  const ciphertext = Buffer.concat([cipher.update(toBuffer(plaintext, 'plaintext')), cipher.final()]);
-  return {
-    profile: LICENSED_EXPERIMENTAL_PROFILE,
-    alg: ALG,
-    kdf: LEGACY_KDF,
-    salt: salt.toString('base64'),
-    iv: iv.toString('base64'),
-    tag: cipher.getAuthTag().toString('base64'),
-    ciphertext: ciphertext.toString('base64'),
-  };
-}
-
-function decryptLicensedEntryLegacy(envelopeValue, options = {}) {
-  const { entryName, manifest = {}, licenseKey, machineFingerprint } = options;
-  if (!entryName) throw new Error('entryName is required');
-  const envelope = normalizeEnvelope(envelopeValue);
-  if (envelope.profile !== LICENSED_EXPERIMENTAL_PROFILE) {
-    throw new Error(`unsupported encrypted entry profile: ${envelope.profile || 'unknown'}`);
-  }
-  if (envelope.alg !== ALG) throw new Error(`unsupported encrypted entry alg: ${envelope.alg}`);
-  if (envelope.kdf !== LEGACY_KDF) throw new Error(`unsupported encrypted entry kdf: ${envelope.kdf}`);
-  const key = deriveLicensedEntryKeyLegacy({
-    licenseKey,
-    machineFingerprint,
-    salt: envelope.salt,
-  });
-  const decipher = crypto.createDecipheriv('aes-256-gcm', key, decodeBase64(envelope.iv, 'iv'));
-  decipher.setAAD(encryptedEntryAad(entryName, manifest, LICENSED_EXPERIMENTAL_PROFILE));
-  decipher.setAuthTag(decodeBase64(envelope.tag, 'tag'));
-  return Buffer.concat([
-    decipher.update(decodeBase64(envelope.ciphertext, 'ciphertext')),
-    decipher.final(),
-  ]);
-}
-
-// ── Unified entry points (auto-detect profile) ────────────────────
-
-function encryptLicensedEntry(plaintext, options = {}) {
-  return encryptLicensedEntryV1(plaintext, options);
-}
-
-function decryptLicensedEntry(envelopeValue, options = {}) {
-  const envelope = normalizeEnvelope(envelopeValue);
-  if (envelope.profile === LICENSED_ENTRY_PROFILE) {
-    return decryptLicensedEntryV1(envelopeValue, options);
-  }
-  if (envelope.profile === LICENSED_EXPERIMENTAL_PROFILE) {
-    return decryptLicensedEntryLegacy(envelopeValue, options);
-  }
-  throw new Error(`unsupported encrypted entry profile: ${envelope.profile || 'unknown'}`);
-}
-
 function createLicensedDecryptEntry(options = {}) {
-  const { licenseKey, machineFingerprint } = options;
+  const { licenseKey } = options;
   return ({ entryName, ciphertext, manifest }) =>
-    decryptLicensedEntry(ciphertext, { entryName, manifest, licenseKey, machineFingerprint });
+    decryptLicensedEntry(ciphertext, { entryName, manifest, licenseKey });
 }
 
 module.exports = {
   // Profiles
   LICENSED_ENTRY_PROFILE,
-  LICENSED_EXPERIMENTAL_PROFILE,
   PASSWORD_PROTECTED_PROFILE,
   PASSWORD_PROTECTED_SCRYPT_PROFILE,
+  ENCRYPTION_PROFILE_VERSION,
   ALG,
   RFC_KDF,
   RFC_KEY_WRAPPING,
-  LEGACY_KDF,
   PASSWORD_KDF,
   SCRYPT_KDF,
 
@@ -634,8 +571,8 @@ module.exports = {
   generateCEK,
   wrapCEK,
   unwrapCEK,
-  encryptLicensedEntryV1,
-  decryptLicensedEntryV1,
+  encryptLicensedEntry,
+  decryptLicensedEntry,
 
   // RFC-0009 compliant (Argon2id)
   derivePasswordKey,
@@ -652,14 +589,7 @@ module.exports = {
   decryptProtectedEntryScrypt,
   createPasswordDecryptEntryScrypt,
 
-  // Legacy
-  deriveLicensedEntryKey: deriveLicensedEntryKeyLegacy,
-  encryptLicensedEntryLegacy,
-  decryptLicensedEntryLegacy,
-
-  // Unified
-  encryptLicensedEntry,
-  decryptLicensedEntry,
+  // Consumer adapter
   createLicensedDecryptEntry,
 
   // Low-level

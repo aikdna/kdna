@@ -6,10 +6,10 @@ opt-in contract
 
 Formal schemas:
 
-- [Runtime Capsule 1](./runtime-capsule-1.schema.json)
-- [Runtime Capsule 2](./runtime-capsule-2.schema.json)
+- [Runtime Capsule 1](./runtime-capsule.schema.json)
+- [Runtime Capsule 2](./runtime-capsule.schema.json)
 - [Digest Evidence](./digest-evidence.schema.json)
-- [Capsule 2 Execution Contract](./capsule-2-execution-contract.md)
+- [Capsule 2 Execution Contract](./runtime-contract.md)
 
 ## 1. Purpose
 
@@ -74,7 +74,7 @@ were actually completed.
 ```
 
 Capsule 1 `asset_digest` is permanently the runtime entry-set digest E
-(`kdna-runtime-entry-set-v1`). It is not the SHA-256 of the final `.kdna`
+(`kdna.digest-basis.runtime-entry-set`). It is not the SHA-256 of the final `.kdna`
 file. This historical name is frozen for compatibility. Runtime Core computes
 E directly from the raw `kdna.json` and `payload.kdnab` bytes even when the
 optional `checksums.json` entry is absent; checksum declarations only determine
@@ -97,9 +97,9 @@ named observations:
 
 | Member                      | Basis                       | Meaning                                       |
 | --------------------------- | --------------------------- | --------------------------------------------- |
-| `digests.asset`             | `kdna-container-bytes-v1`   | A: SHA-256 of exact final `.kdna` bytes       |
-| `digests.content`           | `kdna-content-tree-v1`      | C: canonical distributed content tree         |
-| `digests.runtime_entry_set` | `kdna-runtime-entry-set-v1` | E: raw Runtime manifest and payload entry set |
+| `digests.asset`             | `kdna.digest-basis.container-bytes`   | A: SHA-256 of exact final `.kdna` bytes       |
+| `digests.content`           | `kdna.digest-basis.content-tree`      | C: canonical distributed content tree         |
+| `digests.runtime_entry_set` | `kdna.digest-basis.runtime-entry-set` | E: raw Runtime manifest and payload entry set |
 
 Each member records its observed value and a factual comparison. A successful
 Capsule 2 contains only `matched` or `not_compared`; a mismatch is evidence for
@@ -132,13 +132,13 @@ Capsule 2 carries those values unchanged under
 reproduce the exact Capsule 1 value. They have no Capsule 2 identity, routing,
 digest, or trust authority.
 
-P (`kdna-capsule-jcs-v1`) is SHA-256 over RFC 8785 JCS bytes of the exact
+P (`kdna.canonicalization.runtime-capsule-jcs`) is SHA-256 over RFC 8785 JCS bytes of the exact
 delivered Capsule. P is never embedded in the Capsule it hashes. Its opt-in
 Host request, correlated receipt, and JudgmentTrace 1.0 integration are
 defined by the Capsule 2 Execution Contract; existing Runtime defaults remain
 Capsule 1, Plan 0.9, and Host 1.
 
-Core exposes Capsule 2 only through the explicit `loadCapsuleV2()` API. The
+Core exposes Capsule 2 only through the explicit `loadRuntimeCapsule()` API. The
 existing `loadAuthorized()` route continues to emit the frozen Capsule 1.
 Source directories cannot emit Capsule 2 because they have no final byte-stream
 identity A. The public Capsule 2 builder fails closed unless its Capsule 1
