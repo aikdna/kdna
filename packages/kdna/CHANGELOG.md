@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.13.0 (2026-07-15)
+
+- Pin the compatibility package to the exact KDNA CLI 0.33.0 and KDNA Core
+  0.18.0 registry releases so its legacy executable names resolve through the
+  coordinated current toolchain.
+- Preserve the existing CLI delegation shims and default runtime behavior. The
+  compatibility package does not claim semantic Capsule consumption, judgment
+  quality, or a second format/runtime path.
+
 ## 0.12.0 (2026-07-14)
 
 - Pin the compatibility package to the exact KDNA CLI 0.32.0 and KDNA Core

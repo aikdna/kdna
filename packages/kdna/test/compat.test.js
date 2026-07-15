@@ -12,12 +12,52 @@ const packageRoot = path.resolve(__dirname, '..');
 const repoRoot = path.resolve(packageRoot, '..', '..');
 const validator = path.join(packageRoot, 'bin', 'kdna-validate.js');
 
-test('compatibility dependencies pin the released runtime pair exactly', () => {
+test('compatibility manifest pins one released toolchain without claiming the current CLI binary', () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf8'));
+  assert.equal(pkg.version, '0.13.0');
   assert.deepEqual(pkg.dependencies, {
-    '@aikdna/kdna-cli': '0.32.0',
-    '@aikdna/kdna-core': '0.17.0',
+    '@aikdna/kdna-cli': '0.33.0',
+    '@aikdna/kdna-core': '0.18.0',
   });
+  assert.deepEqual(pkg.bin, {
+    'kdna-lint': 'bin/kdna-lint.js',
+    'kdna-validate': 'bin/kdna-validate.js',
+  });
+  assert.equal(pkg.bin.kdna, undefined);
+  assert.equal(pkg.main, undefined);
+  assert.equal(pkg.exports, undefined);
+});
+
+test('root lock resolves the compatibility package to one exact Core and CLI pair', () => {
+  const rootPackage = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
+  const lock = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package-lock.json'), 'utf8'));
+
+  assert.equal(rootPackage.devDependencies['@aikdna/kdna-cli'], '0.33.0');
+  assert.deepEqual(lock.packages['packages/kdna'].dependencies, {
+    '@aikdna/kdna-cli': '0.33.0',
+    '@aikdna/kdna-core': '0.18.0',
+  });
+  assert.equal(lock.packages['packages/kdna'].version, '0.13.0');
+  assert.equal(lock.packages['node_modules/@aikdna/kdna-cli'].version, '0.33.0');
+  assert.equal(
+    lock.packages['node_modules/@aikdna/kdna-cli'].resolved,
+    'https://registry.npmjs.org/@aikdna/kdna-cli/-/kdna-cli-0.33.0.tgz',
+  );
+  assert.equal(
+    lock.packages['node_modules/@aikdna/kdna-cli'].integrity,
+    'sha512-A8bbemlQhRzmpY/c395X2HXFBElYsViLeuwHq0JZE0dxOKOKdWUPUXm5jb4HioGchSyrm7gRv0UQUSxcWzhZxA==',
+  );
+  assert.equal(
+    lock.packages['node_modules/@aikdna/kdna-cli'].dependencies['@aikdna/kdna-core'],
+    '0.18.0',
+  );
+  assert.deepEqual(lock.packages['node_modules/@aikdna/kdna-core'], {
+    resolved: 'packages/kdna-core',
+    link: true,
+  });
+  assert.equal(lock.packages['packages/kdna-core'].version, '0.18.0');
+  assert.equal(lock.packages['packages/kdna/node_modules/@aikdna/kdna-core'], undefined);
+  assert.equal(lock.packages['node_modules/@aikdna/kdna-cli/node_modules/@aikdna/kdna-core'], undefined);
 });
 
 test('kdna-validate delegates packaged assets to the current CLI', () => {

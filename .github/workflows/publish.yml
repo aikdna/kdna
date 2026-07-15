@@ -72,57 +72,68 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-compat:
-    if: startsWith(github.ref_name, 'kdna-v')
+    if: github.event_name == 'release' && github.event.action == 'published' && startsWith(github.ref, 'refs/tags/kdna-v')
     runs-on: macos-latest
     permissions:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          fetch-depth: 0
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           repository: aikdna/kdna-cli
-          ref: 135f8840a181234dae1a536f95caf41587e5a789
+          ref: dcc5f70df4cbb0460ef27222d5c1e6fa3e632888
           path: .ecosystem-repos/kdna-cli
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           repository: aikdna/kdna-skills
-          ref: 2bc8d0455b595bf77e970b547e00a481765ed879
+          ref: 76ce82a001fc363d93581cd3d0e54c7c31de0c26
           path: .ecosystem-repos/kdna-skills
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           repository: aikdna/kdna-studio-core
-          ref: 3d5875c9cc07e496f33389c66cadad51b9c52e64
+          ref: ee65a8896a77c0f2c797a0d85e04be1fc5aacbd6
           path: .ecosystem-repos/kdna-studio-core
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           repository: aikdna/kdna-studio-cli
-          ref: dfece1b627fbef52c072902571eaaf955b5232e1
+          ref: 66545bf2b51b93433e5233fed9a5b93c6a366bfe
           path: .ecosystem-repos/kdna-studio-cli
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           repository: aikdna/kdna-core-swift
-          ref: 904c1d8d5c8008686b283fe921ef15d116f5a9ca
+          ref: b1f7f1a7cba5459413f00ecc0302f71e0d21ef78
           path: .ecosystem-repos/kdna-core-swift
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           repository: aikdna/kdna-vscode
           ref: c0d885ba8222b6dccad87ec67f7d82fcc1283107
           path: .ecosystem-repos/kdna-vscode
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
+      - name: Verify canonical compatibility release tag
+        run: npm --workspace @aikdna/kdna run release:check
       - run: npm run ecosystem-gate
       - run: npm run release:evidence -- --package=compat
-      - uses: actions/upload-artifact@v4
+      - name: Prepare exact compatibility tarball
+        run: npm --workspace @aikdna/kdna run release:pack
+      - name: Verify exact tarball through a clean registry install
+        run: npm --workspace @aikdna/kdna run release:smoke
+      - name: Guard duplicate compatibility publication
+        id: compat-publish-guard
+        run: npm --workspace @aikdna/kdna run publish:guard -- --github-output="$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: kdna-compat-release-evidence
           path: release-evidence/
       - name: Publish @aikdna/kdna compatibility package
-        run: npm publish --provenance --access public
-        working-directory: packages/kdna
+        if: steps.compat-publish-guard.outputs.publish_required == 'true'
+        run: npm publish "release-evidence/$(node -p \"require('./release-evidence/compat.npm-pack.json').filename\")" --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

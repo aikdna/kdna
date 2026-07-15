@@ -280,6 +280,7 @@ test('cli: non-KDNA .kdna container is rejected with a clear message (no silent 
     assert.ok(
       r.stderr.includes('Unknown') ||
         r.stderr.includes('unsupported') ||
+        r.stderr.includes('Invalid .kdna asset') ||
         r.stderr.includes('not a') ||
         r.stderr.includes('Not a'),
       `rejection message must be descriptive, got: ${r.stderr}`,

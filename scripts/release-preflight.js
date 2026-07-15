@@ -8,6 +8,7 @@ const checks = [
   ['npm', ['run', 'lint']],
   ['npm', ['run', 'conformance']],
   ['npm', ['test']],
+  ['npm', ['--workspace', '@aikdna/kdna', 'test']],
   ['npm', ['--prefix', 'examples/typescript-agent', 'ci']],
   ['npm', ['--prefix', 'examples/typescript-agent', 'test']],
   ['npm', ['run', 'check:pack']],

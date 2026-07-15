@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "KDNA toolkit compatibility package. The kdna CLI binary has moved to @aikdna/kdna-cli \u2014 use npm install -g @aikdna/kdna-cli.",
   "type": "commonjs",
   "bin": {
@@ -14,7 +14,12 @@
     "README.md"
   ],
   "scripts": {
-    "test": "node --test test/*.test.js && node bin/kdna.js --help >/dev/null && node bin/kdna-lint.js --help >/dev/null && node bin/kdna-validate.js --help >/dev/null"
+    "test": "node --test test/*.test.js && node bin/kdna.js --help >/dev/null && node bin/kdna-lint.js --help >/dev/null && node bin/kdna-validate.js --help >/dev/null",
+    "prepublishOnly": "npm run release:check",
+    "release:check": "node scripts/check-release-readiness.js",
+    "release:pack": "node scripts/prepare-release-artifact.js",
+    "release:smoke": "node scripts/smoke-release-artifact.js",
+    "publish:guard": "node scripts/check-publish-duplicate.js"
   },
   "keywords": [
     "kdna",
@@ -38,7 +43,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@aikdna/kdna-cli": "0.32.0",
-    "@aikdna/kdna-core": "0.17.0"
+    "@aikdna/kdna-cli": "0.33.0",
+    "@aikdna/kdna-core": "0.18.0"
   }
 }
