@@ -285,9 +285,103 @@ function integrity(bytes) {
   return `sha512-${crypto.createHash('sha512').update(bytes).digest('base64')}`;
 }
 
+function sameFileIdentity(left, right) {
+  return left.dev === right.dev && left.ino === right.ino;
+}
+
+function canonicalTempRoot(candidate = os.tmpdir()) {
+  const resolved = fs.realpathSync(candidate);
+  const stats = fs.lstatSync(resolved);
+  assert(
+    stats.isDirectory() && !stats.isSymbolicLink(),
+    'system temp root must be one real directory',
+  );
+  const relative = path.relative(fs.realpathSync(REPO_ROOT), resolved);
+  assert(
+    relative !== '' && (relative.startsWith('..') || path.isAbsolute(relative)),
+    'system temp root must be outside the repository',
+  );
+  if (typeof process.geteuid === 'function') {
+    const effectiveUid = process.geteuid();
+    assert(
+      stats.uid === effectiveUid || stats.uid === 0,
+      'system temp root must be owned by the effective user or root',
+    );
+  }
+  const writableByOtherUsers = (stats.mode & 0o022) !== 0;
+  assert(
+    !writableByOtherUsers || (stats.mode & 0o1000) !== 0,
+    'writable system temp root must use the sticky bit',
+  );
+  return resolved;
+}
+
+function makePrivateTemp(prefix, root = canonicalTempRoot()) {
+  assert(/^[a-z0-9-]+$/u.test(prefix || ''), 'private temp prefix is invalid');
+  const canonicalRoot = canonicalTempRoot(root);
+  const rootBefore = fs.lstatSync(canonicalRoot);
+  const directory = fs.mkdtempSync(path.join(canonicalRoot, prefix));
+  let created;
+  let descriptor;
+  try {
+    created = fs.lstatSync(directory);
+    assert(
+      created.isDirectory() && !created.isSymbolicLink(),
+      'private temp must remain one real directory',
+    );
+    assert(fs.realpathSync(directory) === directory, 'private temp path must remain canonical');
+    const flags =
+      fs.constants.O_RDONLY | (fs.constants.O_DIRECTORY || 0) | (fs.constants.O_NOFOLLOW || 0);
+    descriptor = fs.openSync(directory, flags);
+    const opened = fs.fstatSync(descriptor);
+    assert(
+      opened.isDirectory() && sameFileIdentity(created, opened),
+      'private temp identity changed before it was secured',
+    );
+    fs.fchmodSync(descriptor, 0o700);
+    const secured = fs.fstatSync(descriptor);
+    const finalPath = fs.lstatSync(directory);
+    assert(
+      secured.isDirectory() &&
+        finalPath.isDirectory() &&
+        !finalPath.isSymbolicLink() &&
+        sameFileIdentity(created, secured) &&
+        sameFileIdentity(secured, finalPath),
+      'private temp identity changed while it was secured',
+    );
+    if (typeof process.geteuid === 'function') {
+      assert(secured.uid === process.geteuid(), 'private temp must be owned by the effective user');
+    }
+    assert((secured.mode & 0o777) === 0o700, 'private temp mode must be 0700');
+    assert(fs.realpathSync(directory) === directory, 'secured private temp path must be canonical');
+    const rootAfter = fs.lstatSync(canonicalTempRoot(canonicalRoot));
+    assert(
+      sameFileIdentity(rootBefore, rootAfter),
+      'system temp root identity changed while creating private temp',
+    );
+    return directory;
+  } catch (error) {
+    if (created) {
+      try {
+        const current = fs.lstatSync(directory);
+        if (
+          current.isDirectory() &&
+          !current.isSymbolicLink() &&
+          sameFileIdentity(created, current)
+        ) {
+          fs.rmdirSync(directory);
+        }
+      } catch {}
+    }
+    throw error;
+  } finally {
+    if (descriptor !== undefined) fs.closeSync(descriptor);
+  }
+}
+
 function cleanGitEnvironment(environment = process.env) {
   return {
-    TMPDIR: fs.realpathSync(os.tmpdir()),
+    TMPDIR: canonicalTempRoot(),
     GIT_CONFIG_NOSYSTEM: '1',
     GIT_CONFIG_GLOBAL: '/dev/null',
     GIT_CONFIG_SYSTEM: '/dev/null',
@@ -857,7 +951,7 @@ function readCanonicalRegularOneLink(file, label, limits = {}) {
 }
 
 function defaultTrustedNpmTarball() {
-  return path.join(os.tmpdir(), 'aikdna-trusted-tools', TRUSTED_NPM_FILENAME);
+  return path.join(canonicalTempRoot(), 'aikdna-trusted-tools', TRUSTED_NPM_FILENAME);
 }
 
 function trustedNpmTarballPath(explicitPath = process.env[TRUSTED_NPM_ENVIRONMENT]) {
@@ -1047,7 +1141,7 @@ function readTrustedNpmEntries(bytes) {
 
 function extractTrustedNpmRelease(file) {
   const entries = readTrustedNpmEntries(verifyTrustedNpmTarball(file));
-  const root = fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()), 'kdna-core-trusted-npm-'));
+  const root = makePrivateTemp('kdna-core-trusted-npm-');
   fs.chmodSync(root, 0o700);
   let complete = false;
   try {
@@ -1113,7 +1207,7 @@ function extractTrustedNpmRelease(file) {
 }
 
 function createTrustedToolEntries(nodeExecutable, npmCliPath) {
-  const directory = fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()), 'kdna-core-node-'));
+  const directory = makePrivateTemp('kdna-core-node-');
   try {
     const nodeEntry = path.join(directory, 'node');
     const npmEntry = path.join(directory, 'npm');
@@ -1245,7 +1339,7 @@ function cleanNpmEnvironment({
     npm_config_audit: 'false',
     npm_config_fund: 'false',
     npm_config_update_notifier: 'false',
-    TMPDIR: fs.realpathSync(os.tmpdir()),
+    TMPDIR: canonicalTempRoot(),
     LC_ALL: 'C',
     LANG: 'C',
   };
@@ -1273,7 +1367,7 @@ function assertNoProjectNpmConfig(cwd, projectRoot = cwd) {
 }
 
 function runNpm(invocation, args, options = {}) {
-  const home = options.home || fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-npm-home-'));
+  const home = options.home || makePrivateTemp('kdna-core-npm-home-');
   const removeHome = options.home === undefined;
   const cache = options.cache || path.join(home, 'cache');
   try {
@@ -1309,7 +1403,7 @@ function runTrustedNpmCommand(args, options = {}) {
   const root = options.root || REPO_ROOT;
   const environment = options.environment || process.env;
   const invocation = resolveTrustedNpmInvocation({ environment, root });
-  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-trusted-command-'));
+  const home = makePrivateTemp('kdna-core-trusted-command-');
   try {
     assertNoProjectNpmConfig(root, root);
     const result = spawnSync(invocation.command, [...invocation.prefixArgs, ...args], {
@@ -2107,7 +2201,7 @@ function prepareRelease({ evidencePath, artifactPath, env = process.env, root = 
     path.basename(resolvedArtifact) === expectedFilename(context.version),
     'Core release artifact destination must use the npm filename',
   );
-  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-authoritative-release-'));
+  const temp = makePrivateTemp('kdna-core-authoritative-release-');
   let invocation;
   let artifactCreated = false;
   let evidenceCreated = false;
@@ -2238,7 +2332,7 @@ function evaluateRegistryResult(result, rawEvidence) {
 }
 
 function queryRegistry(invocation, evidence) {
-  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-registry-query-'));
+  const temp = makePrivateTemp('kdna-core-registry-query-');
   try {
     fs.writeFileSync(
       path.join(temp, 'package.json'),
@@ -2399,7 +2493,7 @@ function publishRelease({ evidencePath, artifactPath, env = process.env, root = 
     typeof env.NODE_AUTH_TOKEN === 'string' && env.NODE_AUTH_TOKEN !== '',
     'NODE_AUTH_TOKEN is required for Core publication',
   );
-  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-publisher-'));
+  const temp = makePrivateTemp('kdna-core-publisher-');
   let invocation;
   try {
     invocation = resolveTrustedNpmInvocation({ environment: env, root });
@@ -2458,7 +2552,7 @@ function publishRelease({ evidencePath, artifactPath, env = process.env, root = 
 }
 
 function smokeRelease({ evidencePath, artifactPath, env = process.env, root = REPO_ROOT }) {
-  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-release-smoke-'));
+  const temp = makePrivateTemp('kdna-core-release-smoke-');
   let invocation;
   try {
     invocation = resolveTrustedNpmInvocation({ environment: env, root });
@@ -2525,7 +2619,7 @@ function smokeRelease({ evidencePath, artifactPath, env = process.env, root = RE
 function comparePackageCommits({ baseline, candidate, root = REPO_ROOT }) {
   assert(COMMIT_RE.test(baseline || ''), 'package invariant baseline must be a full commit id');
   assert(COMMIT_RE.test(candidate || ''), 'package invariant candidate must be a full commit id');
-  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-package-invariant-'));
+  const temp = makePrivateTemp('kdna-core-package-invariant-');
   let invocation;
   try {
     invocation = resolveTrustedNpmInvocation({ root });
@@ -2702,6 +2796,7 @@ module.exports = {
   bindCurrentEvidence,
   buildEvidence,
   buildRegistryManifest,
+  canonicalTempRoot,
   cleanGitEnvironment,
   cleanNpmEnvironment,
   commitDocument,
@@ -2715,6 +2810,7 @@ module.exports = {
   inspectTree,
   initializeIsolatedGateRepository,
   materializeTree,
+  makePrivateTemp,
   packMaterializedSource,
   parseArtifactArguments,
   parseIndexEntries,

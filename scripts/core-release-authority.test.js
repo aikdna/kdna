@@ -25,6 +25,7 @@ const {
   assertIndexMatchesTree,
   assertNoProjectNpmConfig,
   buildRegistryManifest,
+  canonicalTempRoot,
   cleanGitEnvironment,
   cleanNpmEnvironment,
   commitDocument,
@@ -35,6 +36,7 @@ const {
   initializeIsolatedGateRepository,
   integrity,
   materializeTree,
+  makePrivateTemp,
   parseIndexEntries,
   parseTarFiles,
   parseTreeEntries,
@@ -300,6 +302,70 @@ test('trusted Git environment removes hostile inherited Git controls', () => {
   assert.equal(environment.LD_PRELOAD, undefined);
   assert.equal(environment.DYLD_INSERT_LIBRARIES, undefined);
   assert.equal(environment.GITHUB_TOKEN, undefined);
+});
+
+test('private temp creation canonicalizes a symlinked system temp root', (t) => {
+  const target = makePrivateTemp('kdna-core-temp-target-');
+  const alias = `${target}-alias`;
+  fs.symlinkSync(target, alias, 'dir');
+  t.after(() => {
+    fs.rmSync(alias, { force: true });
+    fs.rmSync(target, { recursive: true, force: true });
+  });
+  assert.equal(canonicalTempRoot(alias), target);
+  const child = makePrivateTemp('kdna-core-temp-child-', alias);
+  assert.equal(path.dirname(child), target);
+  assert.equal(fs.realpathSync(child), child);
+});
+
+test('private temp creation rejects a writable non-sticky root', (t) => {
+  const root = makePrivateTemp('kdna-core-insecure-temp-root-');
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  fs.chmodSync(root, 0o777);
+  assert.throws(
+    () => canonicalTempRoot(root),
+    /writable system temp root must use the sticky bit/u,
+  );
+});
+
+test('private temp creation rejects same-root symlink substitution', () => {
+  const result = spawnSync(
+    process.execPath,
+    [
+      '-e',
+      String.raw`
+        'use strict';
+        const fs = require('node:fs');
+        const path = require('node:path');
+        const authority = require(process.argv[1]);
+        const root = authority.makePrivateTemp('kdna-core-substitution-root-');
+        const victim = path.join(root, 'victim');
+        fs.mkdirSync(victim, { mode: 0o700 });
+        const original = fs.mkdtempSync;
+        fs.mkdtempSync = (prefix) => {
+          const created = original(prefix);
+          fs.rmdirSync(created);
+          fs.symlinkSync(victim, created, 'dir');
+          return created;
+        };
+        try {
+          authority.makePrivateTemp('kdna-core-substitution-child-', root);
+          process.exitCode = 2;
+        } catch (error) {
+          if (!/private temp must remain one real directory/u.test(String(error.message))) {
+            process.stderr.write(String(error.stack || error));
+            process.exitCode = 3;
+          }
+        } finally {
+          fs.mkdtempSync = original;
+          fs.rmSync(root, { recursive: true, force: true });
+        }
+      `,
+      require.resolve('./core-release-authority'),
+    ],
+    { encoding: 'utf8' },
+  );
+  assert.equal(result.status, 0, result.stderr || result.stdout);
 });
 
 test('release JSON rejects duplicates, BOMs, invalid scalars, size, and depth before normalization', () => {
