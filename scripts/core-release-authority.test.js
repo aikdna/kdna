@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
 const crypto = require('node:crypto');
 const fs = require('node:fs');
+const http = require('node:http');
 const os = require('node:os');
 const path = require('node:path');
 const { test } = require('node:test');
@@ -11,10 +12,19 @@ const zlib = require('node:zlib');
 
 const {
   AUDITED_NPM_VERSION,
+  JSON_LIMITS,
   OFFICIAL_REGISTRY,
   REPO_ROOT,
+  TRUSTED_NPM_ENVIRONMENT,
+  TRUSTED_NPM_ENTRY_COUNT,
+  TRUSTED_NPM_FILENAME,
+  TRUSTED_NPM_INTEGRITY,
+  TRUSTED_NPM_URL,
   TREE_LIMITS,
+  assertNoInheritedNpmAuthority,
   assertIndexMatchesTree,
+  assertNoProjectNpmConfig,
+  buildRegistryManifest,
   cleanGitEnvironment,
   cleanNpmEnvironment,
   commitDocument,
@@ -22,18 +32,22 @@ const {
   expectedRegistryE404,
   guardCandidate,
   inspectTree,
+  initializeIsolatedGateRepository,
   integrity,
   materializeTree,
-  npmPublishArguments,
   parseIndexEntries,
   parseTarFiles,
   parseTreeEntries,
   publishCandidate,
+  resolveTrustedNpmInvocation,
+  runNpm,
   sha1,
   sha256,
+  strictJson,
   validateEvidenceArtifact,
   validateReleaseContext,
   validateReleaseEvidence,
+  verifyTrustedNpmTarball,
   writeGithubDecision,
 } = require('./core-release-authority');
 
@@ -76,6 +90,8 @@ function releaseContext(overrides = {}) {
     changelog:
       overrides.changelog || '# Changelog\n\n## Unreleased\n\n## 1.2.3 (2026-07-16)\n\n## 1.2.2\n',
     env: {
+      GITHUB_REPOSITORY: 'aikdna/kdna',
+      GITHUB_SERVER_URL: 'https://github.com',
       GITHUB_EVENT_NAME: 'release',
       RELEASE_EVENT_ACTION: 'published',
       RELEASE_TAG_NAME: '1.2.3',
@@ -93,7 +109,10 @@ function releaseContext(overrides = {}) {
       tagCommit: HASH,
       tree: TREE,
       commitTree: TREE,
+      author: { normalized: 'Aikdna <release@example.com>' },
+      committer: { normalized: 'Release Bot <bot@example.com>' },
       signoffs: ['Aikdna <release@example.com>'],
+      authorSignoffMatch: true,
       ...overrides.git,
     },
   };
@@ -123,6 +142,9 @@ function evidenceFixture(overrides = {}) {
       tag: version,
       commit: HASH,
       tree: TREE,
+      author: 'Aikdna <release@example.com>',
+      committer: 'Release Bot <bot@example.com>',
+      author_signoff_match: true,
       dco_signoff_count: 1,
       tracked_file_count: 10,
       tracked_bytes: 1000,
@@ -138,6 +160,9 @@ function evidenceFixture(overrides = {}) {
     tooling: {
       git: 'git version 2.50.1',
       npm: AUDITED_NPM_VERSION,
+      npm_release_url: TRUSTED_NPM_URL,
+      npm_release_integrity: TRUSTED_NPM_INTEGRITY,
+      npm_release_entry_count: TRUSTED_NPM_ENTRY_COUNT,
       node: 'v26.4.0',
       platform: 'darwin',
       arch: 'arm64',
@@ -205,7 +230,10 @@ test('release context accepts only one exact natural SemVer tag binding', () => 
     ref: 'refs/tags/1.2.3',
     commit: HASH,
     tree: TREE,
+    author: 'Aikdna <release@example.com>',
+    committer: 'Release Bot <bot@example.com>',
     signoffs: ['Aikdna <release@example.com>'],
+    authorSignoffMatch: true,
   });
 });
 
@@ -215,6 +243,9 @@ test('release context rejects prefixed, prerelease, mutable, unsigned, dirty, or
     ['scope prefix', releaseContext({ pkg: { version: 'core/1.2.3' } })],
     ['prerelease version', releaseContext({ pkg: { version: '1.2.3-rc.1' } })],
     ['leading zero', releaseContext({ pkg: { version: '01.2.3' } })],
+    ['missing repository', releaseContext({ env: { GITHUB_REPOSITORY: undefined } })],
+    ['wrong repository', releaseContext({ env: { GITHUB_REPOSITORY: 'other/kdna' } })],
+    ['wrong GitHub server', releaseContext({ env: { GITHUB_SERVER_URL: 'https://example.com' } })],
     ['wrong event', releaseContext({ env: { GITHUB_EVENT_NAME: 'workflow_dispatch' } })],
     ['wrong action', releaseContext({ env: { RELEASE_EVENT_ACTION: 'created' } })],
     ['wrong event tag', releaseContext({ env: { RELEASE_TAG_NAME: '1.2.30' } })],
@@ -228,6 +259,8 @@ test('release context rejects prefixed, prerelease, mutable, unsigned, dirty, or
     ['HEAD mismatch', releaseContext({ env: { GITHUB_SHA: OTHER_HASH } })],
     ['tree mismatch', releaseContext({ git: { commitTree: OTHER_HASH } })],
     ['no DCO', releaseContext({ git: { signoffs: [] } })],
+    ['missing author', releaseContext({ git: { author: null } })],
+    ['author DCO mismatch', releaseContext({ git: { authorSignoffMatch: false } })],
     ['substring changelog', releaseContext({ changelog: '# Changelog\n\nnotes 1.2.3\n' })],
     [
       'duplicate changelog',
@@ -250,6 +283,9 @@ test('trusted Git environment removes hostile inherited Git controls', () => {
     GIT_CONFIG_SYSTEM: '/tmp/system',
     GIT_CONFIG_COUNT: '9',
     GIT_REPLACE_REF_BASE: 'refs/evil',
+    LD_PRELOAD: '/tmp/hostile.so',
+    DYLD_INSERT_LIBRARIES: '/tmp/hostile.dylib',
+    GITHUB_TOKEN: 'must-not-propagate',
   });
   assert.equal(environment.GIT_DIR, undefined);
   assert.equal(environment.GIT_INDEX_FILE, undefined);
@@ -261,27 +297,187 @@ test('trusted Git environment removes hostile inherited Git controls', () => {
   assert.equal(environment.GIT_CONFIG_COUNT, '0');
   assert.equal(environment.GIT_NO_REPLACE_OBJECTS, '1');
   assert.equal(environment.GIT_CONFIG_NOSYSTEM, '1');
+  assert.equal(environment.LD_PRELOAD, undefined);
+  assert.equal(environment.DYLD_INSERT_LIBRARIES, undefined);
+  assert.equal(environment.GITHUB_TOKEN, undefined);
 });
 
-test('publisher npm environment uses only its isolated token indirection config', () => {
+test('release JSON rejects duplicates, BOMs, invalid scalars, size, and depth before normalization', () => {
+  assert.deepEqual(strictJson('{"safe":[1,true,null]}', 'fixture'), { safe: [1, true, null] });
+  for (const source of [
+    '{"a":1,"a":2}',
+    '{"outer":{"a":1,"a":2}}',
+    '{"__proto__":{},"__proto__":{}}',
+    '{"n":1e999}',
+    '"\\uD800"',
+  ]) {
+    assert.throws(() => strictJson(source, 'hostile JSON'));
+  }
+  assert.throws(() => strictJson(Buffer.from([0xef, 0xbb, 0xbf, 0x7b, 0x7d]), 'BOM'), /BOM/u);
+  assert.throws(
+    () => strictJson('[]', 'oversized', { bytes: 1, depth: JSON_LIMITS.depth }),
+    /byte limit/u,
+  );
+  assert.throws(() => strictJson('[[[]]]', 'deep', { bytes: 64, depth: 2 }), /nesting limit/u);
+});
+
+test('inherited npm executable authority and mutable trusted tar paths fail closed', (t) => {
+  assert.throws(
+    () => assertNoInheritedNpmAuthority({ npm_execpath: '/tmp/hostile-npm.js' }),
+    /inherited npm executable authority/u,
+  );
+  assert.throws(
+    () => assertNoInheritedNpmAuthority({ NPM_NODE_EXECPATH: '/tmp/hostile-node' }),
+    /inherited npm executable authority/u,
+  );
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-trusted-npm-hostile-'));
+  t.after(() => fs.rmSync(temp, { recursive: true, force: true }));
+  const candidate = path.join(temp, TRUSTED_NPM_FILENAME);
+  fs.writeFileSync(candidate, tarballFixture());
+  assert.throws(() => verifyTrustedNpmTarball(candidate), /integrity/u);
+  const hardlink = path.join(temp, 'hardlinked.tgz');
+  fs.linkSync(candidate, hardlink);
+  assert.throws(() => verifyTrustedNpmTarball(candidate), /hard link/u);
+});
+
+test(
+  'provisioned official npm bytes resolve to the audited CLI and ignore mutable PATH',
+  { skip: !process.env[TRUSTED_NPM_ENVIRONMENT] },
+  (t) => {
+    const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-path-npm-'));
+    t.after(() => fs.rmSync(temp, { recursive: true, force: true }));
+    const environment = { ...process.env, PATH: '/tmp/hostile-path' };
+    for (const key of Object.keys(environment)) {
+      if (['npm_execpath', 'npm_node_execpath'].includes(key.toLowerCase())) {
+        delete environment[key];
+      }
+    }
+    const invocation = resolveTrustedNpmInvocation({
+      environment,
+    });
+    try {
+      const result = runNpm(invocation, ['--version'], { timeout: 30_000 });
+      assert.equal(result.stdout.trim(), AUDITED_NPM_VERSION);
+      assert.equal(result.stderr, '');
+      const pathResult = spawnSync('npm', ['--version'], {
+        encoding: 'utf8',
+        env: cleanNpmEnvironment({
+          invocation,
+          home: path.join(temp, 'home'),
+          cache: path.join(temp, 'cache'),
+          environment,
+        }),
+        shell: false,
+      });
+      assert.equal(pathResult.status, 0, pathResult.stderr);
+      assert.equal(pathResult.stdout.trim(), AUDITED_NPM_VERSION);
+      const ancestor = path.join(temp, 'hostile-ancestor');
+      const project = path.join(ancestor, 'controlled-project');
+      fs.mkdirSync(project, { recursive: true });
+      fs.writeFileSync(path.join(ancestor, 'package.json'), '{"private":true}\n');
+      fs.writeFileSync(path.join(ancestor, '.npmrc'), 'strict-ssl=false\n');
+      fs.writeFileSync(
+        path.join(project, 'package.json'),
+        '{"name":"controlled-project","version":"1.0.0","private":true}\n',
+      );
+      const strictSsl = runNpm(invocation, ['config', 'get', 'strict-ssl'], {
+        cwd: project,
+        projectRoot: project,
+        home: path.join(temp, 'strict-home'),
+        cache: path.join(temp, 'strict-cache'),
+      });
+      assert.equal(strictSsl.stdout.trim(), 'true');
+    } finally {
+      invocation.cleanup();
+    }
+  },
+);
+
+test(
+  'trusted-npm failure output is a stable summary without child provider details',
+  { skip: !process.env[TRUSTED_NPM_ENVIRONMENT] },
+  () => {
+    const marker = 'provider-body-must-not-escape';
+    const result = spawnSync(
+      process.execPath,
+      [path.join(REPO_ROOT, 'scripts', 'core-release-authority.js'), 'trusted-npm', marker],
+      { cwd: REPO_ROOT, encoding: 'utf8', env: process.env, shell: false },
+    );
+    assert.equal(result.status, 1);
+    assert.equal(result.stdout, '');
+    assert.equal(
+      result.stderr,
+      'Core release authority rejected: trusted npm workflow command failed\n',
+    );
+    assert.doesNotMatch(result.stderr, new RegExp(marker, 'u'));
+  },
+);
+
+test('publisher process environment uses a minimal provenance and token whitelist', () => {
+  const invocation = {
+    command: process.execPath,
+    prefixArgs: ['/opt/audited/npm-cli.js'],
+    cliPath: '/opt/audited/npm-cli.js',
+    toolEntries: { directory: '/opt/audited/tool-bin' },
+  };
   const environment = cleanNpmEnvironment({
-    npmExecutable: '/opt/audited/bin/npm',
+    invocation,
     home: '/tmp/isolated-home',
     cache: '/tmp/isolated-cache',
-    userconfig: '/tmp/isolated-publisher.npmrc',
+    allowAuth: true,
     environment: {
       GIT_DIR: '/tmp/hostile-git-dir',
       NODE_AUTH_TOKEN: 'test-placeholder',
       NODE_OPTIONS: '--require=/tmp/hostile.js',
+      NODE_EXTRA_CA_CERTS: '/tmp/hostile-ca.pem',
+      NODE_TLS_REJECT_UNAUTHORIZED: '0',
+      SSL_CERT_FILE: '/tmp/hostile-cert.pem',
+      LD_PRELOAD: '/tmp/hostile.so',
+      LD_AUDIT: '/tmp/hostile-audit.so',
+      DYLD_INSERT_LIBRARIES: '/tmp/hostile.dylib',
+      GITHUB_TOKEN: 'must-not-propagate',
+      AWS_SECRET_ACCESS_KEY: 'must-not-propagate',
+      NPM_TOKEN: 'must-not-propagate',
       npm_config_userconfig: '/tmp/hostile.npmrc',
     },
   });
   assert.equal(environment.NODE_AUTH_TOKEN, 'test-placeholder');
-  assert.equal(environment.npm_config_userconfig, '/tmp/isolated-publisher.npmrc');
+  assert.equal(environment.npm_config_userconfig, '/tmp/isolated-home/absent-user.npmrc');
   assert.equal(environment.npm_config_registry, OFFICIAL_REGISTRY);
+  assert.equal(environment.npm_config_strict_ssl, 'true');
   assert.equal(environment.npm_config_ignore_scripts, 'true');
+  assert.equal(environment.npm_execpath, invocation.cliPath);
+  assert.equal(environment.npm_node_execpath, process.execPath);
   assert.equal(environment.GIT_DIR, undefined);
   assert.equal(environment.NODE_OPTIONS, '');
+  assert.equal(environment.NODE_EXTRA_CA_CERTS, undefined);
+  assert.equal(environment.NODE_TLS_REJECT_UNAUTHORIZED, undefined);
+  assert.equal(environment.SSL_CERT_FILE, undefined);
+  assert.equal(environment.LD_PRELOAD, undefined);
+  assert.equal(environment.LD_AUDIT, undefined);
+  assert.equal(environment.DYLD_INSERT_LIBRARIES, undefined);
+  assert.equal(environment.GITHUB_TOKEN, undefined);
+  assert.equal(environment.AWS_SECRET_ACCESS_KEY, undefined);
+  assert.equal(environment.NPM_TOKEN, undefined);
+
+  const unauthenticated = cleanNpmEnvironment({
+    invocation,
+    home: '/tmp/isolated-home',
+    cache: '/tmp/isolated-cache',
+    environment: { NODE_AUTH_TOKEN: 'must-not-propagate', NPM_TOKEN: 'must-not-propagate' },
+  });
+  assert.equal(unauthenticated.NODE_AUTH_TOKEN, undefined);
+  assert.equal(unauthenticated.NPM_TOKEN, undefined);
+});
+
+test('npm execution rejects project configuration from cwd through its declared root', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-npm-config-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const nested = path.join(root, 'packages', 'core');
+  fs.mkdirSync(nested, { recursive: true });
+  assert.doesNotThrow(() => assertNoProjectNpmConfig(nested, root));
+  fs.writeFileSync(path.join(root, '.npmrc'), 'registry=https://example.invalid/\n');
+  assert.throws(() => assertNoProjectNpmConfig(nested, root), /project npm config is forbidden/u);
 });
 
 test('tree parser accepts only bounded regular canonical UTF-8 blobs', async (t) => {
@@ -352,6 +548,12 @@ test('index authority rejects hidden entries and a symlinked index', (t) => {
   git(['update-index', '--no-skip-worktree', 'safe.txt']);
 
   const index = path.join(root, '.git', 'index');
+  const hardlink = `${index}.hardlink`;
+  fs.linkSync(index, hardlink);
+  assert.throws(() => assertIndexMatchesTree(tree, root), /hard link/u);
+  fs.unlinkSync(hardlink);
+  assert.doesNotThrow(() => assertIndexMatchesTree(tree, root));
+
   fs.renameSync(index, `${index}.real`);
   fs.symlinkSync('index.real', index);
   assert.throws(() => assertIndexMatchesTree(tree, root), /real file/u);
@@ -374,6 +576,21 @@ test('exact commit blobs materialize without reading the mutable worktree', (t) 
     ),
   );
   assert.equal(fs.existsSync(path.join(source, '.git')), false);
+  initializeIsolatedGateRepository(source, tree, head, REPO_ROOT);
+  assert.equal(
+    require('node:child_process')
+      .execFileSync('/usr/bin/git', ['rev-parse', 'HEAD'], { cwd: source, encoding: 'utf8' })
+      .trim(),
+    head,
+  );
+  assert.equal(
+    require('node:child_process').execFileSync(
+      '/usr/bin/git',
+      ['status', '--porcelain=v2', '--untracked-files=all'],
+      { cwd: source, encoding: 'utf8' },
+    ),
+    '',
+  );
   assert.ok(commitDocument(head).signoffs.length > 0);
 });
 
@@ -409,6 +626,15 @@ test('evidence rejects forged fields, identity, tooling, gates, reproducibility,
     ['DCO', evidenceFixture({ source: { dco_signoff_count: 0 } }).evidence],
     ['materialization', evidenceFixture({ source: { materialization: 'working-tree' } }).evidence],
     ['npm', evidenceFixture({ tooling: { npm: '11.16.0' } }).evidence],
+    [
+      'npm source',
+      evidenceFixture({ tooling: { npm_release_url: 'https://example.invalid/' } }).evidence,
+    ],
+    [
+      'npm integrity',
+      evidenceFixture({ tooling: { npm_release_integrity: 'sha512-forged' } }).evidence,
+    ],
+    ['npm entry count', evidenceFixture({ tooling: { npm_release_entry_count: 1 } }).evidence],
     ['gate', evidenceFixture({ gates: { naming: false } }).evidence],
     [
       'one pack',
@@ -471,20 +697,25 @@ test('registry absence fails closed for auth, outage, timeout, prefix, suffix, a
     await t.test(name, () => assert.throws(() => evaluateRegistryResult(result, evidence)));
 });
 
-test('existing registry version is idempotent only for exact identity and optional matching gitHead', async (t) => {
+test('existing registry version is idempotent only for exact identity and matching gitHead', async (t) => {
   const { evidence } = evidenceFixture();
-  for (const metadata of [
-    registryMetadata(evidence),
-    registryMetadata(evidence, { gitHead: evidence.source.commit }),
-  ]) {
-    assert.deepEqual(
-      evaluateRegistryResult({ status: 0, stdout: metadata, stderr: '' }, evidence),
+  assert.deepEqual(
+    evaluateRegistryResult(
       {
-        decision: 'skip-identical',
-        shouldPublish: false,
+        status: 0,
+        stdout: registryMetadata(evidence, { gitHead: evidence.source.commit }),
+        stderr: '',
       },
-    );
-  }
+      evidence,
+    ),
+    {
+      decision: 'skip-identical',
+      shouldPublish: false,
+    },
+  );
+  assert.throws(() =>
+    evaluateRegistryResult({ status: 0, stdout: registryMetadata(evidence), stderr: '' }, evidence),
+  );
   const collisions = [
     ['name', { name: '@other/core' }],
     ['version', { version: '1.2.4' }],
@@ -541,19 +772,21 @@ test('guard and publisher rebind, revalidate, requery, and publish only the reta
       lookups += 1;
       return e404Result(candidate);
     },
-    publish: (args) => {
+    publish: (request) => {
       publishes += 1;
-      assert.deepEqual(args, npmPublishArguments('/tmp/aikdna-kdna-core-1.2.3.tgz'));
+      assert.equal(request.evidence, evidence);
+      assert.equal(request.tarball, tarball);
+      assert.equal(request.artifactPath, '/tmp/aikdna-kdna-core-1.2.3.tgz');
       return { status: 0 };
     },
   });
   assert.deepEqual(published, { decision: 'published', shouldPublish: true, published: true });
-  assert.equal(bindings, 2);
+  assert.equal(bindings, 3);
   assert.equal(lookups, 2);
   assert.equal(publishes, 1);
 });
 
-test('publisher skips exact existing identity and pins the required npm publish arguments', () => {
+test('publisher skips exact existing registry identity without invoking the publisher', () => {
   const { evidence, tarball } = evidenceFixture();
   let publishes = 0;
   const result = publishCandidate({
@@ -572,15 +805,107 @@ test('publisher skips exact existing identity and pins the required npm publish 
   });
   assert.deepEqual(result, { decision: 'skip-identical', shouldPublish: false, published: false });
   assert.equal(publishes, 0);
-  assert.deepEqual(npmPublishArguments('/tmp/aikdna-kdna-core-1.2.3.tgz'), [
-    'publish',
-    '/tmp/aikdna-kdna-core-1.2.3.tgz',
-    '--ignore-scripts',
-    '--provenance',
-    '--access=public',
-    `--registry=${OFFICIAL_REGISTRY}`,
-  ]);
 });
+
+test('registry manifest binds exact retained package identity to the evidence commit', () => {
+  const packageManifest = { name: '@aikdna/kdna-core', version: '1.2.3' };
+  const tarball = tarballFixture({ bytes: Buffer.from(`${JSON.stringify(packageManifest)}\n`) });
+  const { evidence } = evidenceFixture({ tarball });
+  assert.deepEqual(buildRegistryManifest(evidence, tarball), {
+    ...packageManifest,
+    gitHead: HASH,
+  });
+  const hostileTarball = tarballFixture({
+    bytes: Buffer.from(`${JSON.stringify({ ...packageManifest, gitHead: OTHER_HASH })}\n`),
+  });
+  const hostile = evidenceFixture({ tarball: hostileTarball });
+  assert.throws(
+    () => buildRegistryManifest(hostile.evidence, hostileTarball),
+    /publisher-owned field gitHead/u,
+  );
+  const hostileTagTarball = tarballFixture({
+    bytes: Buffer.from(`${JSON.stringify({ ...packageManifest, tag: 'next' })}\n`),
+  });
+  const hostileTag = evidenceFixture({ tarball: hostileTagTarball });
+  assert.throws(
+    () => buildRegistryManifest(hostileTag.evidence, hostileTagTarball),
+    /publisher-owned field tag/u,
+  );
+});
+
+test(
+  'audited publisher uploads the unchanged retained bytes with exact registry gitHead',
+  { skip: !process.env[TRUSTED_NPM_ENVIRONMENT] },
+  async (t) => {
+    const packageManifest = { name: '@aikdna/kdna-core', version: '1.2.3' };
+    const tarball = tarballFixture({ bytes: Buffer.from(`${JSON.stringify(packageManifest)}\n`) });
+    const { evidence } = evidenceFixture({ tarball });
+    const manifest = buildRegistryManifest(evidence, tarball);
+    const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-publisher-capture-'));
+    t.after(() => fs.rmSync(temp, { recursive: true, force: true }));
+    const manifestPath = path.join(temp, 'manifest.json');
+    const artifactPath = path.join(temp, evidence.artifact.filename);
+    fs.writeFileSync(manifestPath, `${JSON.stringify(manifest)}\n`, { mode: 0o600 });
+    fs.writeFileSync(artifactPath, tarball, { mode: 0o600 });
+
+    let resolveRequest;
+    let rejectRequest;
+    const capturedRequest = new Promise((resolve, reject) => {
+      resolveRequest = resolve;
+      rejectRequest = reject;
+    });
+    const server = http.createServer((request, response) => {
+      const chunks = [];
+      let bytes = 0;
+      request.on('data', (chunk) => {
+        bytes += chunk.length;
+        if (bytes > 2 * 1024 * 1024) request.destroy(new Error('request exceeds test limit'));
+        else chunks.push(chunk);
+      });
+      request.on('error', rejectRequest);
+      request.on('end', () => {
+        resolveRequest({
+          authorization: request.headers.authorization,
+          body: Buffer.concat(chunks),
+          method: request.method,
+        });
+        response.writeHead(201, { 'content-type': 'application/json' });
+        response.end('{}');
+      });
+    });
+    await new Promise((resolve, reject) => {
+      server.once('error', reject);
+      server.listen(0, '127.0.0.1', resolve);
+    });
+    t.after(() => new Promise((resolve) => server.close(resolve)));
+
+    const invocation = resolveTrustedNpmInvocation();
+    t.after(() => invocation.cleanup());
+    const { publishVerified } = require('./core-release-publisher');
+    const address = server.address();
+    await publishVerified({
+      libraryPath: invocation.publishLibraryPath,
+      manifestPath,
+      artifactPath,
+      registry: `http://127.0.0.1:${address.port}/`,
+      token: 'test-placeholder',
+      provenance: false,
+      npmVersion: AUDITED_NPM_VERSION,
+    });
+    const request = await capturedRequest;
+    assert.equal(request.method, 'PUT');
+    assert.equal(request.authorization, 'Bearer test-placeholder');
+    const metadata = strictJson(request.body, 'captured registry request');
+    assert.deepEqual(metadata['dist-tags'], { latest: '1.2.3' });
+    assert.equal(metadata.versions['1.2.3'].gitHead, HASH);
+    const attachment = Object.values(metadata._attachments).find(
+      (candidate) => candidate.content_type === 'application/octet-stream',
+    );
+    assert.ok(attachment);
+    assert.deepEqual(Buffer.from(attachment.data, 'base64'), tarball);
+    assert.equal(attachment.length, tarball.length);
+  },
+);
 
 test('GitHub output is append-only and exact', (t) => {
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-github-output-'));
@@ -605,10 +930,13 @@ test('Core workflow uses the authoritative retained-artifact path and no direct 
   assert.ok(start >= 0 && end > start);
   assert.match(job, /!startsWith\(github\.event\.release\.tag_name, 'v'\)/u);
   assert.match(job, /!contains\(github\.event\.release\.tag_name, '\/'\)/u);
+  assert.match(job, /github\.repository == 'aikdna\/kdna'/u);
   assert.doesNotMatch(job, /startsWith\(github\.event\.release\.tag_name, 'core\/'\)/u);
   assert.doesNotMatch(job, /workflow_dispatch/u);
   assert.match(job, /ref: \$\{\{ github\.event\.release\.tag_name \}\}/u);
-  assert.match(job, /npm install --global npm@11\.17\.0 --ignore-scripts/u);
+  assert.match(job, /KDNA_TRUSTED_NPM_TARBALL=\$RUNNER_TEMP\/npm-11\.17\.0\.tgz/u);
+  const provision = job.indexOf('core-release-authority.js provision-npm');
+  const verifyNpm = job.indexOf('core-release-authority.js verify-npm');
   const check = job.indexOf('core-release-authority.js check');
   const tests = job.indexOf('scripts/core-release-authority.test.js');
   const prepare = job.indexOf('core-release-authority.js prepare');
@@ -617,6 +945,9 @@ test('Core workflow uses the authoritative retained-artifact path and no direct 
   const publish = job.indexOf('core-release-authority.js publish');
   assert.ok(
     check >= 0 &&
+      provision >= 0 &&
+      provision < verifyNpm &&
+      verifyNpm < check &&
       check < tests &&
       tests < prepare &&
       prepare < smoke &&
@@ -624,8 +955,36 @@ test('Core workflow uses the authoritative retained-artifact path and no direct 
       guard < publish,
   );
   assert.match(job, /if: steps\.registry\.outputs\.should_publish == 'true'/u);
+  assert.doesNotMatch(job, /npm install --global/u);
+  assert.equal(
+    job.split('\n').filter((line) => /^\s*(?:-\s*)?(?:run:\s*)?npm(?:\s|$)/u.test(line)).length,
+    0,
+  );
+  assert.match(job, /core-release-authority\.js trusted-npm ci --ignore-scripts/u);
   assert.doesNotMatch(job, /run:\s*>?-?\s*npm publish\b/u);
   assert.doesNotMatch(job, /working-directory: packages\/kdna-core/u);
+  assert.match(job, /^    permissions:\n      contents: read\n      id-token: write\n    env:$/mu);
+  assert.match(
+    job,
+    /Remove transient Core release outputs[\s\S]*if: always\(\)[\s\S]*rm -f "\$CORE_RELEASE_EVIDENCE" "\$CORE_RELEASE_ARTIFACT"[\s\S]*"\$KDNA_TRUSTED_NPM_TARBALL"/u,
+  );
+});
+
+test('Core CI provisions one audited npm authority before every npm command', () => {
+  const workflow = fs.readFileSync(path.join(REPO_ROOT, '.github', 'workflows', 'ci.yml'), 'utf8');
+  assert.match(workflow, /^permissions:\n  contents: read\njobs:$/mu);
+  const start = workflow.indexOf('  test:');
+  const end = workflow.indexOf('\n  public-surface:', start);
+  const job = workflow.slice(start, end);
+  const provision = job.indexOf('core-release-authority.js provision-npm');
+  const verify = job.indexOf('core-release-authority.js verify-npm');
+  const firstTrustedCommand = job.indexOf('core-release-authority.js trusted-npm');
+  assert.ok(provision >= 0 && provision < verify && verify < firstTrustedCommand);
+  assert.equal(
+    job.split('\n').filter((line) => /^\s*(?:-\s*)?(?:run:\s*)?npm(?:\s|$)/u.test(line)).length,
+    0,
+  );
+  assert.match(job, /if: always\(\)[\s\S]*rm -f "\$KDNA_TRUSTED_NPM_TARBALL"/u);
 });
 
 test('Core package prepublish hook blocks direct worktree publication', () => {

@@ -4,6 +4,7 @@
 const crypto = require('node:crypto');
 const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
+const https = require('node:https');
 const os = require('node:os');
 const path = require('node:path');
 const { TextDecoder } = require('node:util');
@@ -15,6 +16,15 @@ const PACKAGE_NAME = '@aikdna/kdna-core';
 const REPOSITORY = 'aikdna/kdna';
 const TRUSTED_GIT = '/usr/bin/git';
 const AUDITED_NPM_VERSION = '11.17.0';
+const TRUSTED_NPM_URL = 'https://registry.npmjs.org/npm/-/npm-11.17.0.tgz';
+const TRUSTED_NPM_INTEGRITY =
+  'sha512-PurxiZexEHDTE4SSaLI3ZrnbAGiZfeyUcQcxcP5D+hfytNAze/D1IzDuInTn9XVLIbAQUnQuSPXJx02LHjLvQw==';
+const TRUSTED_NPM_ENVIRONMENT = 'KDNA_TRUSTED_NPM_TARBALL';
+const TRUSTED_NPM_FILENAME = `npm-${AUDITED_NPM_VERSION}.tgz`;
+const TRUSTED_NPM_ENTRY_COUNT = 1938;
+const TRUSTED_NPM_COMPRESSED_LIMIT = 16 * 1024 * 1024;
+const TRUSTED_NPM_UNPACKED_LIMIT = 64 * 1024 * 1024;
+const TRUSTED_PUBLISHER_RELATIVE = 'scripts/core-release-publisher.js';
 const OFFICIAL_REGISTRY = 'https://registry.npmjs.org/';
 const REGISTRY_TIMEOUT_MS = 30_000;
 const COMMIT_RE = /^[0-9a-f]{40}$/u;
@@ -34,6 +44,7 @@ const TAR_LIMITS = Object.freeze({
   fileBytes: 32 * 1024 * 1024,
   totalBytes: 128 * 1024 * 1024,
 });
+const JSON_LIMITS = Object.freeze({ bytes: 8 * 1024 * 1024, depth: 64 });
 
 function fail(message) {
   throw new Error(message);
@@ -50,17 +61,215 @@ function exactKeys(value, keys, label) {
   assert(JSON.stringify(actual) === JSON.stringify(expected), `${label} fields are not exact`);
 }
 
-function strictJson(bytes, label) {
+function strictJson(bytes, label, limits = JSON_LIMITS) {
+  assert(
+    limits &&
+      Number.isSafeInteger(limits.bytes) &&
+      limits.bytes > 0 &&
+      limits.bytes <= JSON_LIMITS.bytes &&
+      Number.isSafeInteger(limits.depth) &&
+      limits.depth > 0 &&
+      limits.depth <= JSON_LIMITS.depth,
+    `${label} JSON limits are invalid`,
+  );
   let source;
-  try {
-    source = Buffer.isBuffer(bytes) ? UTF8.decode(bytes) : String(bytes);
-  } catch {
-    fail(`${label} is not valid UTF-8`);
+  if (Buffer.isBuffer(bytes) || bytes instanceof Uint8Array) {
+    assert(bytes.byteLength <= limits.bytes, `${label} exceeds the JSON byte limit`);
+    assert(
+      !(bytes.byteLength >= 3 && bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf),
+      `${label} must not begin with a UTF-8 BOM`,
+    );
+    try {
+      source = UTF8.decode(bytes);
+    } catch {
+      fail(`${label} is not valid UTF-8`);
+    }
+  } else {
+    assert(typeof bytes === 'string', `${label} must be JSON text or bytes`);
+    source = bytes;
   }
-  try {
-    return JSON.parse(source);
-  } catch {
-    fail(`${label} is not one valid JSON document`);
+  assert(source.charCodeAt(0) !== 0xfeff, `${label} must not begin with a BOM`);
+  assert(Buffer.byteLength(source, 'utf8') <= limits.bytes, `${label} exceeds the JSON byte limit`);
+  return new DuplicateSafeJsonParser(source, label, limits.depth).parse();
+}
+
+class DuplicateSafeJsonParser {
+  constructor(source, label, maxDepth) {
+    this.source = source;
+    this.label = label;
+    this.maxDepth = maxDepth;
+    this.index = 0;
+  }
+
+  reject(message) {
+    fail(`${this.label} is not one valid JSON document: ${message} at ${this.index}`);
+  }
+
+  whitespace() {
+    while (
+      this.index < this.source.length &&
+      [' ', '\n', '\r', '\t'].includes(this.source[this.index])
+    ) {
+      this.index += 1;
+    }
+  }
+
+  parse() {
+    this.whitespace();
+    const value = this.value(0);
+    this.whitespace();
+    if (this.index !== this.source.length) this.reject('trailing content');
+    return value;
+  }
+
+  value(depth) {
+    this.whitespace();
+    const char = this.source[this.index];
+    if (char === '{' || char === '[') {
+      if (depth >= this.maxDepth) this.reject('nesting limit exceeded');
+      return char === '{' ? this.object(depth + 1) : this.array(depth + 1);
+    }
+    if (char === '"') return this.string();
+    if (char === '-' || (char >= '0' && char <= '9')) return this.number();
+    for (const [literal, value] of [
+      ['true', true],
+      ['false', false],
+      ['null', null],
+    ]) {
+      if (this.source.startsWith(literal, this.index)) {
+        this.index += literal.length;
+        return value;
+      }
+    }
+    this.reject('expected a value');
+  }
+
+  object(depth) {
+    const value = {};
+    const keys = new Set();
+    this.index += 1;
+    this.whitespace();
+    if (this.source[this.index] === '}') {
+      this.index += 1;
+      return value;
+    }
+    while (this.index < this.source.length) {
+      if (this.source[this.index] !== '"') this.reject('expected a quoted member name');
+      const key = this.string();
+      if (keys.has(key)) this.reject(`duplicate member ${JSON.stringify(key)}`);
+      keys.add(key);
+      this.whitespace();
+      if (this.source[this.index] !== ':') this.reject('expected a colon');
+      this.index += 1;
+      Object.defineProperty(value, key, {
+        value: this.value(depth),
+        enumerable: true,
+        writable: true,
+        configurable: true,
+      });
+      this.whitespace();
+      if (this.source[this.index] === '}') {
+        this.index += 1;
+        return value;
+      }
+      if (this.source[this.index] !== ',') this.reject('expected a comma or closing brace');
+      this.index += 1;
+      this.whitespace();
+    }
+    this.reject('unterminated object');
+  }
+
+  array(depth) {
+    const value = [];
+    this.index += 1;
+    this.whitespace();
+    if (this.source[this.index] === ']') {
+      this.index += 1;
+      return value;
+    }
+    while (this.index < this.source.length) {
+      value.push(this.value(depth));
+      this.whitespace();
+      if (this.source[this.index] === ']') {
+        this.index += 1;
+        return value;
+      }
+      if (this.source[this.index] !== ',') this.reject('expected a comma or closing bracket');
+      this.index += 1;
+      this.whitespace();
+    }
+    this.reject('unterminated array');
+  }
+
+  string() {
+    this.index += 1;
+    let value = '';
+    while (this.index < this.source.length) {
+      const char = this.source[this.index];
+      if (char === '"') {
+        this.index += 1;
+        return value;
+      }
+      if (char === '\\') {
+        this.index += 1;
+        value += this.escape();
+        continue;
+      }
+      const code = this.source.charCodeAt(this.index);
+      if (code <= 0x1f) this.reject('unescaped control character');
+      if (code >= 0xd800 && code <= 0xdbff) {
+        const low = this.source.charCodeAt(this.index + 1);
+        if (low < 0xdc00 || low > 0xdfff) this.reject('unpaired Unicode surrogate');
+        value += this.source.slice(this.index, this.index + 2);
+        this.index += 2;
+        continue;
+      }
+      if (code >= 0xdc00 && code <= 0xdfff) this.reject('unpaired Unicode surrogate');
+      value += char;
+      this.index += 1;
+    }
+    this.reject('unterminated string');
+  }
+
+  escape() {
+    const char = this.source[this.index];
+    const simple = { '"': '"', '\\': '\\', '/': '/', b: '\b', f: '\f', n: '\n', r: '\r', t: '\t' };
+    if (Object.prototype.hasOwnProperty.call(simple, char)) {
+      this.index += 1;
+      return simple[char];
+    }
+    if (char !== 'u') this.reject('invalid string escape');
+    this.index += 1;
+    const first = this.hexCodeUnit();
+    if (first >= 0xd800 && first <= 0xdbff) {
+      if (this.source.slice(this.index, this.index + 2) !== '\\u') {
+        this.reject('unpaired Unicode surrogate');
+      }
+      this.index += 2;
+      const second = this.hexCodeUnit();
+      if (second < 0xdc00 || second > 0xdfff) this.reject('unpaired Unicode surrogate');
+      return String.fromCodePoint(0x10000 + ((first - 0xd800) << 10) + (second - 0xdc00));
+    }
+    if (first >= 0xdc00 && first <= 0xdfff) this.reject('unpaired Unicode surrogate');
+    return String.fromCharCode(first);
+  }
+
+  hexCodeUnit() {
+    const token = this.source.slice(this.index, this.index + 4);
+    if (!/^[0-9a-fA-F]{4}$/u.test(token)) this.reject('invalid Unicode escape');
+    this.index += 4;
+    return Number.parseInt(token, 16);
+  }
+
+  number() {
+    const match = /^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/u.exec(
+      this.source.slice(this.index),
+    );
+    if (!match) this.reject('invalid number');
+    this.index += match[0].length;
+    const value = Number(match[0]);
+    if (!Number.isFinite(value)) this.reject('number is outside the finite range');
+    return value;
   }
 }
 
@@ -77,12 +286,8 @@ function integrity(bytes) {
 }
 
 function cleanGitEnvironment(environment = process.env) {
-  const clean = {};
-  for (const [key, value] of Object.entries(environment)) {
-    if (!key.startsWith('GIT_')) clean[key] = value;
-  }
   return {
-    ...clean,
+    TMPDIR: fs.realpathSync(os.tmpdir()),
     GIT_CONFIG_NOSYSTEM: '1',
     GIT_CONFIG_GLOBAL: '/dev/null',
     GIT_CONFIG_SYSTEM: '/dev/null',
@@ -301,6 +506,40 @@ function materializeTree(tree, destination, root = REPO_ROOT) {
   return destination;
 }
 
+function initializeIsolatedGateRepository(sourceRoot, tree, commit, objectRoot = REPO_ROOT) {
+  assert(!fs.existsSync(path.join(sourceRoot, '.git')), 'isolated gate source already has .git');
+  assert(COMMIT_RE.test(commit || ''), 'isolated gate commit must be a full commit id');
+  runGit(['init', '--quiet'], { cwd: sourceRoot });
+  runGit(['add', '--force', '--all', '--', '.'], { cwd: sourceRoot });
+  assertIndexMatchesTree(tree, sourceRoot);
+  const writtenTree = gitText(['write-tree'], {
+    cwd: sourceRoot,
+    label: 'git write-tree isolated release source',
+  });
+  assert(writtenTree === tree.tree, 'isolated gate tree object differs from the release tree');
+  const commitBytes = gitBytes(['cat-file', 'commit', commit], { cwd: objectRoot });
+  const writtenCommit = gitText(['hash-object', '-t', 'commit', '-w', '--stdin'], {
+    cwd: sourceRoot,
+    input: commitBytes,
+    label: 'git hash-object isolated release commit',
+  });
+  assert(writtenCommit === commit, 'isolated gate commit object differs from the release commit');
+  runGit(['update-ref', '--no-deref', 'HEAD', commit], { cwd: sourceRoot });
+  assert(
+    gitText(['rev-parse', '--verify', 'HEAD^{commit}'], { cwd: sourceRoot }) === commit,
+    'isolated gate HEAD differs from the release commit',
+  );
+  assert(
+    gitText(['rev-parse', '--verify', 'HEAD^{tree}'], { cwd: sourceRoot }) === tree.tree,
+    'isolated gate HEAD tree differs from the release tree',
+  );
+  assert(
+    gitText(['status', '--porcelain=v2', '--untracked-files=all'], { cwd: sourceRoot }) === '',
+    'isolated gate repository is not clean',
+  );
+  return sourceRoot;
+}
+
 function parseIndexEntries(raw) {
   return splitNul(raw, 'Git index listing').map((record, index) => {
     const tab = record.indexOf(0x09);
@@ -328,8 +567,8 @@ function assertIndexMatchesTree(tree, root = REPO_ROOT) {
     'release .git must be one real directory',
   );
   assert(
-    indexStats.isFile() && !indexStats.isSymbolicLink(),
-    'release index must be one real file',
+    indexStats.isFile() && !indexStats.isSymbolicLink() && indexStats.nlink === 1,
+    'release index must be one real file with exactly one hard link',
   );
   const relativeIndex = path.relative(fs.realpathSync(gitDirectory), fs.realpathSync(indexPath));
   assert(
@@ -364,6 +603,47 @@ function assertIndexMatchesTree(tree, root = REPO_ROOT) {
   }
 }
 
+function normalizeCommitIdentity(name, email, label) {
+  assert(typeof name === 'string' && typeof email === 'string', `${label} identity is invalid`);
+  const normalizedName = name
+    .normalize('NFC')
+    .trim()
+    .replace(/[\t ]+/gu, ' ');
+  const normalizedEmail = email.normalize('NFC').trim().toLowerCase();
+  assert(
+    normalizedName &&
+      !/[\u0000-\u001f\u007f<>]/u.test(normalizedName) &&
+      /^[^<>\s@]+@[^<>\s@]+$/u.test(normalizedEmail),
+    `${label} identity is invalid`,
+  );
+  return `${normalizedName} <${normalizedEmail}>`;
+}
+
+function validateNormalizedIdentity(value, label) {
+  assert(typeof value === 'string', `${label} identity is invalid`);
+  const match = /^([^<>\r\n]+) <([^<>\s@]+@[^<>\s@]+)>$/u.exec(value);
+  assert(match, `${label} identity is invalid`);
+  assert(normalizeCommitIdentity(match[1], match[2], label) === value, `${label} is not canonical`);
+  return value;
+}
+
+function parseCommitIdentity(headers, kind) {
+  const matches = [
+    ...headers.matchAll(
+      new RegExp(
+        `^${kind} (.+) <([^<>\\s@]+@[^<>\\s@]+)> ([0-9]+) ([+-](?:0[0-9]|1[0-4])[0-5][0-9])$`,
+        'gmu',
+      ),
+    ),
+  ];
+  assert(matches.length === 1, `release commit must contain one valid ${kind} identity`);
+  return Object.freeze({
+    normalized: normalizeCommitIdentity(matches[0][1], matches[0][2], kind),
+    timestamp: matches[0][3],
+    timezone: matches[0][4],
+  });
+}
+
 function commitDocument(commit, root = REPO_ROOT) {
   const bytes = gitBytes(['cat-file', 'commit', commit], { cwd: root });
   let source;
@@ -377,13 +657,27 @@ function commitDocument(commit, root = REPO_ROOT) {
   assert(treeMatch, 'release commit object has no valid tree header');
   const separator = source.indexOf('\n\n');
   assert(separator >= 0, 'release commit object has no message body');
+  const headers = source.slice(0, separator);
+  const author = parseCommitIdentity(headers, 'author');
+  const committer = parseCommitIdentity(headers, 'committer');
   const message = source.slice(separator + 2);
   const trailerBlock = message.trimEnd().split(/\n\n/u).at(-1) || '';
   const signoffs = [
     ...trailerBlock.matchAll(/^Signed-off-by: ([^<>\r\n]+) <([^<>\s@]+@[^<>\s@]+)>$/gmu),
-  ].map((match) => `${match[1].trim()} <${match[2]}>`);
+  ].map((match) => normalizeCommitIdentity(match[1], match[2], 'Signed-off-by'));
   assert(signoffs.length > 0, 'release commit must contain a valid DCO Signed-off-by trailer');
-  return Object.freeze({ tree: treeMatch[1], message, signoffs });
+  assert(
+    signoffs.includes(author.normalized),
+    'release commit author must have an exact normalized DCO Signed-off-by trailer',
+  );
+  return Object.freeze({
+    tree: treeMatch[1],
+    message,
+    author,
+    committer,
+    signoffs: Object.freeze(signoffs),
+    authorSignoffMatch: true,
+  });
 }
 
 function validateReleaseContext(input) {
@@ -399,6 +693,11 @@ function validateReleaseContext(input) {
   );
   const tag = pkg.version;
   const ref = `refs/tags/${tag}`;
+  assert(env.GITHUB_REPOSITORY === REPOSITORY, `GITHUB_REPOSITORY must be ${REPOSITORY}`);
+  assert(
+    env.GITHUB_SERVER_URL === 'https://github.com',
+    'GITHUB_SERVER_URL must be https://github.com',
+  );
   assert(env.GITHUB_EVENT_NAME === 'release', 'GITHUB_EVENT_NAME must be release');
   assert(env.RELEASE_EVENT_ACTION === 'published', 'release action must be published');
   assert(env.RELEASE_TAG_NAME === tag, `release tag must be exactly ${tag}`);
@@ -418,6 +717,15 @@ function validateReleaseContext(input) {
   assert(OBJECT_RE.test(git.tree || ''), 'release tree id is invalid');
   assert(git.commitTree === git.tree, 'commit object tree must equal the inspected release tree');
   assert(Array.isArray(git.signoffs) && git.signoffs.length > 0, 'release commit must satisfy DCO');
+  assert(
+    git.author && typeof git.author.normalized === 'string',
+    'release commit author observation is missing',
+  );
+  assert(
+    git.committer && typeof git.committer.normalized === 'string',
+    'release commit committer observation is missing',
+  );
+  assert(git.authorSignoffMatch === true, 'release commit author DCO match is missing');
 
   const escaped = pkg.version.replace(/\./gu, '\\.');
   const headings = [
@@ -439,7 +747,10 @@ function validateReleaseContext(input) {
     ref,
     commit: git.head,
     tree: git.tree,
+    author: git.author.normalized,
+    committer: git.committer.normalized,
     signoffs: Object.freeze([...git.signoffs]),
+    authorSignoffMatch: true,
   });
 }
 
@@ -487,99 +798,541 @@ function inspectAuthoritativeRelease(env = process.env, root = REPO_ROOT) {
       tagCommit,
       tree: tree.tree,
       commitTree: commit.tree,
+      author: commit.author,
+      committer: commit.committer,
       signoffs: commit.signoffs,
+      authorSignoffMatch: commit.authorSignoffMatch,
     },
   });
   return Object.freeze({ ...context, treeState: tree });
 }
 
-function resolveAuditedNpm() {
-  const candidates = [
-    path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'npm.cmd' : 'npm'),
-    process.env.npm_execpath,
-  ].filter(Boolean);
-  const executable = candidates.find(
-    (candidate) => path.isAbsolute(candidate) && fs.existsSync(candidate),
+function readCanonicalRegularOneLink(file, label, limits = {}) {
+  const absolute = path.resolve(file);
+  assert(resolveDestination(absolute) === absolute, `${label} path must be canonical`);
+  const before = fs.lstatSync(absolute);
+  assert(
+    before.isFile() && !before.isSymbolicLink() && before.nlink === 1,
+    `${label} must be a canonical regular file with exactly one hard link`,
+  );
+  const minimum = limits.minimum ?? 1;
+  const maximum = limits.maximum ?? Number.MAX_SAFE_INTEGER;
+  assert(
+    Number.isSafeInteger(before.size) && before.size >= minimum && before.size <= maximum,
+    `${label} size is invalid`,
+  );
+  const noFollow = fs.constants.O_NOFOLLOW || 0;
+  const descriptor = fs.openSync(absolute, fs.constants.O_RDONLY | noFollow);
+  try {
+    const opened = fs.fstatSync(descriptor);
+    assert(
+      opened.isFile() &&
+        opened.nlink === 1 &&
+        opened.dev === before.dev &&
+        opened.ino === before.ino &&
+        opened.size === before.size,
+      `${label} changed while opening`,
+    );
+    const bytes = fs.readFileSync(descriptor);
+    const after = fs.fstatSync(descriptor);
+    const pathAfter = fs.lstatSync(absolute);
+    assert(
+      after.dev === opened.dev &&
+        after.ino === opened.ino &&
+        after.size === opened.size &&
+        after.nlink === 1 &&
+        pathAfter.dev === opened.dev &&
+        pathAfter.ino === opened.ino &&
+        pathAfter.size === opened.size &&
+        pathAfter.nlink === 1 &&
+        !pathAfter.isSymbolicLink() &&
+        fs.realpathSync(absolute) === absolute,
+      `${label} changed while reading`,
+    );
+    assert(bytes.length === opened.size, `${label} read was incomplete`);
+    return Object.freeze({ path: absolute, bytes, stat: opened });
+  } finally {
+    fs.closeSync(descriptor);
+  }
+}
+
+function defaultTrustedNpmTarball() {
+  return path.join(os.tmpdir(), 'aikdna-trusted-tools', TRUSTED_NPM_FILENAME);
+}
+
+function trustedNpmTarballPath(explicitPath = process.env[TRUSTED_NPM_ENVIRONMENT]) {
+  return resolveDestination(path.resolve(explicitPath || defaultTrustedNpmTarball()));
+}
+
+function verifyTrustedNpmTarball(file) {
+  const candidate = readCanonicalRegularOneLink(
+    trustedNpmTarballPath(file),
+    'trusted npm release tarball',
+    { maximum: TRUSTED_NPM_COMPRESSED_LIMIT },
   );
   assert(
-    executable,
-    'audited npm executable is not adjacent to Node and npm_execpath is unavailable',
+    integrity(candidate.bytes) === TRUSTED_NPM_INTEGRITY,
+    `trusted npm release bytes do not match official npm ${AUDITED_NPM_VERSION} integrity`,
   );
-  const tempHome = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-npm-version-'));
-  try {
-    const result = spawnSync(executable, ['--version'], {
-      encoding: 'utf8',
-      env: cleanNpmEnvironment({
-        npmExecutable: executable,
-        home: tempHome,
-        cache: path.join(tempHome, 'cache'),
-      }),
-      maxBuffer: 1024 * 1024,
-      shell: false,
-      timeout: REGISTRY_TIMEOUT_MS,
-    });
-    assert(!result.error, `npm version check failed: ${result.error?.message || 'unknown error'}`);
-    assert(Number.isInteger(result.status) && result.status === 0, 'npm version check failed');
-    assert(result.stderr === '', 'npm version check wrote unexpected stderr');
-    assert(
-      result.stdout.trim() === AUDITED_NPM_VERSION,
-      `npm must be exactly ${AUDITED_NPM_VERSION}`,
+  return candidate.bytes;
+}
+
+function downloadTrustedNpmBytes(request = https.get) {
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const finish = (callback, value) => {
+      if (settled) return;
+      settled = true;
+      callback(value);
+    };
+    const requested = request(
+      new URL(TRUSTED_NPM_URL),
+      {
+        minVersion: 'TLSv1.2',
+        headers: {
+          accept: 'application/octet-stream',
+          'user-agent': `aikdna-core-release-authority/${AUDITED_NPM_VERSION}`,
+        },
+      },
+      (response) => {
+        if (response.statusCode !== 200) {
+          response.resume();
+          finish(reject, new Error(`trusted npm source returned HTTP ${response.statusCode}`));
+          return;
+        }
+        const contentLength = response.headers['content-length'];
+        if (contentLength !== undefined) {
+          if (typeof contentLength !== 'string' || !/^(?:0|[1-9][0-9]*)$/u.test(contentLength)) {
+            response.destroy(new Error('trusted npm source content length is invalid'));
+            return;
+          }
+          const declared = Number(contentLength);
+          if (
+            !Number.isSafeInteger(declared) ||
+            declared < 1 ||
+            declared > TRUSTED_NPM_COMPRESSED_LIMIT
+          ) {
+            response.destroy(new Error('trusted npm source content length is outside its limit'));
+            return;
+          }
+        }
+        const chunks = [];
+        let total = 0;
+        response.on('data', (chunk) => {
+          total += chunk.length;
+          if (total > TRUSTED_NPM_COMPRESSED_LIMIT) {
+            response.destroy(new Error('trusted npm source exceeded its compressed byte limit'));
+            return;
+          }
+          chunks.push(Buffer.from(chunk));
+        });
+        let ended = false;
+        response.on('end', () => {
+          ended = true;
+          if (contentLength !== undefined && total !== Number(contentLength)) {
+            finish(reject, new Error('trusted npm source length differs from its response'));
+            return;
+          }
+          if (total < 1) {
+            finish(reject, new Error('trusted npm source returned no bytes'));
+            return;
+          }
+          finish(resolve, Buffer.concat(chunks, total));
+        });
+        response.on('aborted', () =>
+          finish(reject, new Error('trusted npm source response was aborted')),
+        );
+        response.on('close', () => {
+          if (!ended) finish(reject, new Error('trusted npm source response closed early'));
+        });
+        response.on('error', (error) => finish(reject, error));
+      },
     );
-  } finally {
-    fs.rmSync(tempHome, { recursive: true, force: true });
+    requested.setTimeout(REGISTRY_TIMEOUT_MS, () => {
+      requested.destroy(new Error('trusted npm source timed out'));
+    });
+    requested.on('error', (error) => finish(reject, error));
+  });
+}
+
+async function provisionTrustedNpmTarball({ artifactPath, root = REPO_ROOT, request = https.get }) {
+  const destination = assertOutsideRepository(artifactPath, 'trusted npm release tarball', root);
+  assert(
+    path.basename(destination) === TRUSTED_NPM_FILENAME,
+    `trusted npm destination must be named ${TRUSTED_NPM_FILENAME}`,
+  );
+  assert(!fs.existsSync(destination), 'trusted npm release tarball already exists');
+  const bytes = await downloadTrustedNpmBytes(request);
+  assert(
+    integrity(bytes) === TRUSTED_NPM_INTEGRITY,
+    `downloaded npm bytes do not match official npm ${AUDITED_NPM_VERSION} integrity`,
+  );
+  fs.mkdirSync(path.dirname(destination), { recursive: true, mode: 0o700 });
+  let created = false;
+  try {
+    fs.writeFileSync(destination, bytes, { flag: 'wx', mode: 0o600 });
+    created = true;
+    verifyTrustedNpmTarball(destination);
+    return destination;
+  } catch (error) {
+    if (created) fs.rmSync(destination, { force: true });
+    throw error;
   }
-  return executable;
+}
+
+function readTrustedNpmEntries(bytes) {
+  let archive;
+  try {
+    archive = zlib.gunzipSync(bytes, { maxOutputLength: TRUSTED_NPM_UNPACKED_LIMIT });
+  } catch {
+    fail('trusted npm release gzip stream is invalid');
+  }
+  const entries = [];
+  const paths = new Set();
+  let totalBytes = 0;
+  let offset = 0;
+  let zeroBlocks = 0;
+  while (offset + 512 <= archive.length) {
+    const header = archive.subarray(offset, offset + 512);
+    if (header.every((byte) => byte === 0)) {
+      zeroBlocks += 1;
+      offset += 512;
+      if (zeroBlocks === 2) break;
+      continue;
+    }
+    assert(zeroBlocks === 0, 'trusted npm tar has data after its terminator began');
+    const storedChecksum = parseTarNumber(header.subarray(148, 156), 'trusted npm checksum');
+    let computedChecksum = 0;
+    for (let index = 0; index < 512; index += 1) {
+      computedChecksum += index >= 148 && index < 156 ? 0x20 : header[index];
+    }
+    assert(storedChecksum === computedChecksum, 'trusted npm tar header checksum mismatch');
+    const size = parseTarNumber(header.subarray(124, 136), 'trusted npm entry size');
+    const mode = parseTarNumber(header.subarray(100, 108), 'trusted npm entry mode');
+    assert(size <= TRUSTED_NPM_UNPACKED_LIMIT, 'trusted npm tar entry is oversized');
+    assert(mode === 0o644 || mode === 0o755, 'trusted npm tar entry mode is invalid');
+    const type = header[156];
+    assert(type === 0 || type === 0x30, 'trusted npm tar contains a non-file entry');
+    const name = decodeTarHeaderText(header.subarray(0, 100), 'trusted npm tar name');
+    const prefix = decodeTarHeaderText(header.subarray(345, 500), 'trusted npm tar prefix');
+    const fullPath = prefix ? `${prefix}/${name}` : name;
+    const packagePath = decodeTarPath(fullPath, 'trusted npm tar path');
+    assert(!paths.has(packagePath), `trusted npm tar duplicates ${packagePath}`);
+    const dataStart = offset + 512;
+    const dataEnd = dataStart + size;
+    assert(dataEnd <= archive.length, 'trusted npm tar entry is truncated');
+    paths.add(packagePath);
+    totalBytes += size;
+    assert(totalBytes <= TRUSTED_NPM_UNPACKED_LIMIT, 'trusted npm tar exceeds its byte limit');
+    entries.push(
+      Object.freeze({
+        path: packagePath,
+        mode,
+        bytes: Buffer.from(archive.subarray(dataStart, dataEnd)),
+      }),
+    );
+    offset = dataStart + Math.ceil(size / 512) * 512;
+  }
+  assert(zeroBlocks === 2, 'trusted npm tar is missing its two-block terminator');
+  assert(
+    archive.subarray(offset).every((byte) => byte === 0),
+    'trusted npm tar contains trailing bytes',
+  );
+  assert(
+    entries.length === TRUSTED_NPM_ENTRY_COUNT,
+    'trusted npm release entry count is not the audited value',
+  );
+  return Object.freeze(entries);
+}
+
+function extractTrustedNpmRelease(file) {
+  const entries = readTrustedNpmEntries(verifyTrustedNpmTarball(file));
+  const root = fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()), 'kdna-core-trusted-npm-'));
+  fs.chmodSync(root, 0o700);
+  let complete = false;
+  try {
+    for (const entry of entries) {
+      const target = path.join(root, 'package', ...entry.path.split('/'));
+      const relative = path.relative(root, target);
+      assert(
+        relative && !relative.startsWith('..') && !path.isAbsolute(relative),
+        'trusted npm extraction escaped its root',
+      );
+      fs.mkdirSync(path.dirname(target), { recursive: true, mode: 0o700 });
+      fs.writeFileSync(target, entry.bytes, {
+        flag: 'wx',
+        mode: entry.mode === 0o755 ? 0o700 : 0o600,
+      });
+      const written = fs.lstatSync(target);
+      assert(
+        written.isFile() && !written.isSymbolicLink() && written.nlink === 1,
+        `trusted npm extracted file is invalid: ${entry.path}`,
+      );
+    }
+    const npmRoot = path.join(root, 'package');
+    const manifestPath = path.join(npmRoot, 'package.json');
+    const cliPath = path.join(npmRoot, 'bin', 'npm-cli.js');
+    const publishLibraryPath = path.join(npmRoot, 'node_modules', 'libnpmpublish');
+    const publishLibraryManifestPath = path.join(publishLibraryPath, 'package.json');
+    const manifestFile = readCanonicalRegularOneLink(manifestPath, 'trusted npm manifest', {
+      maximum: 1024 * 1024,
+    });
+    readCanonicalRegularOneLink(cliPath, 'trusted npm CLI', { maximum: 1024 * 1024 });
+    const publishLibraryManifestFile = readCanonicalRegularOneLink(
+      publishLibraryManifestPath,
+      'trusted npm publisher manifest',
+      { maximum: 1024 * 1024 },
+    );
+    const manifest = strictJson(manifestFile.bytes, 'trusted npm manifest');
+    assert(
+      manifest.name === 'npm' &&
+        manifest.version === AUDITED_NPM_VERSION &&
+        manifest.bin &&
+        manifest.bin.npm === 'bin/npm-cli.js',
+      'trusted npm release identity or CLI entry is invalid',
+    );
+    const publishLibraryManifest = strictJson(
+      publishLibraryManifestFile.bytes,
+      'trusted npm publisher manifest',
+    );
+    assert(
+      publishLibraryManifest.name === 'libnpmpublish' &&
+        typeof publishLibraryManifest.main === 'string',
+      'trusted npm publisher library identity is invalid',
+    );
+    complete = true;
+    return Object.freeze({
+      cliPath,
+      publishLibraryPath,
+      root,
+      cleanup: () => fs.rmSync(root, { recursive: true, force: true }),
+    });
+  } finally {
+    if (!complete) fs.rmSync(root, { recursive: true, force: true });
+  }
+}
+
+function createTrustedToolEntries(nodeExecutable, npmCliPath) {
+  const directory = fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()), 'kdna-core-node-'));
+  try {
+    const nodeEntry = path.join(directory, 'node');
+    const npmEntry = path.join(directory, 'npm');
+    fs.symlinkSync(nodeExecutable, nodeEntry, 'file');
+    fs.symlinkSync(npmCliPath, npmEntry, 'file');
+    assert(
+      fs.realpathSync(nodeEntry) === nodeExecutable,
+      'trusted Node PATH entry does not resolve to the current Node executable',
+    );
+    assert(
+      fs.realpathSync(npmEntry) === npmCliPath,
+      'trusted npm PATH entry does not resolve to the authenticated npm CLI',
+    );
+    return Object.freeze({ directory, nodeEntry, npmEntry });
+  } catch (error) {
+    fs.rmSync(directory, { recursive: true, force: true });
+    throw error;
+  }
+}
+
+function assertNoInheritedNpmAuthority(environment) {
+  for (const key of Object.keys(environment)) {
+    if (['npm_execpath', 'npm_node_execpath'].includes(key.toLowerCase())) {
+      fail('inherited npm executable authority is forbidden');
+    }
+  }
+}
+
+function resolveTrustedNpmInvocation(options = {}) {
+  const environment = options.environment || process.env;
+  assertNoInheritedNpmAuthority(environment);
+  const nodeExecutable = path.resolve(options.nodeExecutable || process.execPath);
+  const node = readCanonicalRegularOneLink(nodeExecutable, 'trusted Node executable', {
+    maximum: 512 * 1024 * 1024,
+  });
+  assert(node.path === process.execPath, 'trusted Node must be the current process executable');
+  const tarball = trustedNpmTarballPath(
+    options.tarballPath || environment[TRUSTED_NPM_ENVIRONMENT],
+  );
+  assertOutsideRepository(tarball, 'trusted npm release tarball', options.root || REPO_ROOT);
+  const extracted = extractTrustedNpmRelease(tarball);
+  let toolEntries;
+  try {
+    toolEntries = createTrustedToolEntries(node.path, extracted.cliPath);
+    return Object.freeze({
+      command: node.path,
+      prefixArgs: Object.freeze([extracted.cliPath]),
+      cliPath: extracted.cliPath,
+      publishLibraryPath: extracted.publishLibraryPath,
+      toolEntries,
+      version: AUDITED_NPM_VERSION,
+      releaseUrl: TRUSTED_NPM_URL,
+      releaseIntegrity: TRUSTED_NPM_INTEGRITY,
+      cleanup: () => {
+        fs.rmSync(toolEntries.directory, { recursive: true, force: true });
+        extracted.cleanup();
+      },
+    });
+  } catch (error) {
+    extracted.cleanup();
+    throw error;
+  }
 }
 
 function cleanNpmEnvironment({
-  npmExecutable,
+  invocation,
   home,
   cache,
   environment = process.env,
   userconfig,
+  allowAuth = false,
 }) {
-  const clean = cleanGitEnvironment(environment);
-  for (const key of Object.keys(clean)) {
-    if (/^npm_config_/iu.test(key) || ['NODE_OPTIONS', 'NODE_PATH', 'INIT_CWD'].includes(key)) {
-      delete clean[key];
-    }
+  assert(
+    invocation &&
+      invocation.command === process.execPath &&
+      Array.isArray(invocation.prefixArgs) &&
+      invocation.prefixArgs.length === 1 &&
+      invocation.toolEntries &&
+      typeof invocation.toolEntries.directory === 'string',
+    'trusted npm invocation is invalid',
+  );
+  const allowedEnvironment = new Set([
+    'ACTIONS_ID_TOKEN_REQUEST_TOKEN',
+    'ACTIONS_ID_TOKEN_REQUEST_URL',
+    'CI',
+    'GITHUB_ACTIONS',
+    'GITHUB_EVENT_NAME',
+    'GITHUB_REF',
+    'GITHUB_REPOSITORY',
+    'GITHUB_REPOSITORY_ID',
+    'GITHUB_REPOSITORY_OWNER_ID',
+    'GITHUB_RUN_ATTEMPT',
+    'GITHUB_RUN_ID',
+    'GITHUB_SERVER_URL',
+    'GITHUB_SHA',
+    'GITHUB_WORKFLOW_REF',
+    'KDNA_CORE_BASELINE',
+    'KDNA_ECOSYSTEM_MANIFEST_PATH',
+    'KDNA_ECOSYSTEM_REPOS_ROOT',
+    'KDNA_REPOS_ROOT',
+    TRUSTED_NPM_ENVIRONMENT,
+    'RELEASE_EVENT_ACTION',
+    'RELEASE_IS_DRAFT',
+    'RELEASE_IS_PRERELEASE',
+    'RELEASE_TAG_NAME',
+    'RUNNER_ENVIRONMENT',
+  ]);
+  const clean = {};
+  for (const key of allowedEnvironment) {
+    if (typeof environment[key] === 'string') clean[key] = environment[key];
   }
+  if (allowAuth && typeof environment.NODE_AUTH_TOKEN === 'string')
+    clean.NODE_AUTH_TOKEN = environment.NODE_AUTH_TOKEN;
   return {
     ...clean,
     HOME: home,
-    PATH: `${path.dirname(npmExecutable)}:/usr/bin:/bin`,
+    PATH: `${invocation.toolEntries.directory}:${path.dirname(TRUSTED_GIT)}:/usr/bin:/bin`,
+    NODE: invocation.command,
     NODE_OPTIONS: '',
     NODE_PATH: '',
-    npm_execpath: npmExecutable,
+    npm_execpath: invocation.cliPath,
+    npm_node_execpath: invocation.command,
     npm_config_cache: cache,
     npm_config_registry: OFFICIAL_REGISTRY,
+    npm_config_strict_ssl: 'true',
     npm_config_userconfig: userconfig || path.join(home, 'absent-user.npmrc'),
     npm_config_globalconfig: path.join(home, 'absent-global.npmrc'),
     npm_config_ignore_scripts: 'true',
     npm_config_audit: 'false',
     npm_config_fund: 'false',
     npm_config_update_notifier: 'false',
+    TMPDIR: fs.realpathSync(os.tmpdir()),
+    LC_ALL: 'C',
+    LANG: 'C',
   };
 }
 
-function runNpm(npmExecutable, args, options = {}) {
+function assertNoProjectNpmConfig(cwd, projectRoot = cwd) {
+  const resolvedCwd = fs.realpathSync(cwd);
+  const resolvedRoot = fs.realpathSync(projectRoot);
+  const relative = path.relative(resolvedRoot, resolvedCwd);
+  assert(
+    relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative)),
+    'npm cwd must be inside its declared project root',
+  );
+  let current = resolvedCwd;
+  while (true) {
+    assert(
+      !fs.existsSync(path.join(current, '.npmrc')),
+      `project npm config is forbidden: ${current}`,
+    );
+    if (current === resolvedRoot) break;
+    const parent = path.dirname(current);
+    assert(parent !== current, 'npm project root is not an ancestor of its cwd');
+    current = parent;
+  }
+}
+
+function runNpm(invocation, args, options = {}) {
   const home = options.home || fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-npm-home-'));
   const removeHome = options.home === undefined;
   const cache = options.cache || path.join(home, 'cache');
   try {
-    return runProcess(npmExecutable, args, {
+    assertNoProjectNpmConfig(
+      options.cwd || REPO_ROOT,
+      options.projectRoot || options.cwd || REPO_ROOT,
+    );
+    return runProcess(invocation.command, [...invocation.prefixArgs, ...args], {
       ...options,
       env: cleanNpmEnvironment({
-        npmExecutable,
+        invocation,
         home,
         cache,
         environment: options.env,
       }),
       encoding: options.encoding || 'utf8',
-      label: options.label || `npm ${args[0] || ''}`,
+      label: options.label || `trusted npm ${args[0] || ''}`,
     });
   } finally {
     if (removeHome) fs.rmSync(home, { recursive: true, force: true });
+  }
+}
+
+function runTrustedNpmCommand(args, options = {}) {
+  assert(
+    Array.isArray(args) &&
+      args.length > 0 &&
+      args.every((argument) =>
+        Boolean(typeof argument === 'string' && argument && !argument.includes('\0')),
+      ),
+    'trusted-npm requires one or more valid npm arguments',
+  );
+  const root = options.root || REPO_ROOT;
+  const environment = options.environment || process.env;
+  const invocation = resolveTrustedNpmInvocation({ environment, root });
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-trusted-command-'));
+  try {
+    assertNoProjectNpmConfig(root, root);
+    const result = spawnSync(invocation.command, [...invocation.prefixArgs, ...args], {
+      cwd: root,
+      encoding: 'utf8',
+      env: cleanNpmEnvironment({
+        invocation,
+        home,
+        cache: path.join(home, 'cache'),
+        environment,
+      }),
+      maxBuffer: 256 * 1024 * 1024,
+      shell: false,
+      timeout: options.timeout || 15 * 60_000,
+    });
+    assert(!result.error, 'trusted npm workflow command failed');
+    assert(Number.isInteger(result.status), 'trusted npm workflow command failed');
+    assert(result.status === 0, 'trusted npm workflow command failed');
+    if (result.stdout) process.stdout.write(result.stdout);
+    return true;
+  } finally {
+    fs.rmSync(home, { recursive: true, force: true });
+    invocation.cleanup();
   }
 }
 
@@ -650,7 +1403,9 @@ function decodeTarPath(value, label) {
   return packagePath;
 }
 
-function parseTarFiles(tarball) {
+function parseTarFiles(tarball, options = { includeBytes: false }) {
+  exactKeys(options, ['includeBytes'], 'tar parser options');
+  assert(typeof options.includeBytes === 'boolean', 'tar parser includeBytes option is invalid');
   assert(Buffer.isBuffer(tarball) && tarball.length > 0, 'release artifact is empty');
   assert(
     tarball.length <= TAR_LIMITS.packedBytes,
@@ -658,7 +1413,9 @@ function parseTarFiles(tarball) {
   );
   let archive;
   try {
-    archive = zlib.gunzipSync(tarball);
+    archive = zlib.gunzipSync(tarball, {
+      maxOutputLength: TAR_LIMITS.totalBytes + TAR_LIMITS.files * 1024 + 1024,
+    });
   } catch {
     fail('release artifact is not a valid gzip tarball');
   }
@@ -729,7 +1486,15 @@ function parseTarFiles(tarball) {
       paths.add(packagePath);
       totalBytes += size;
       assert(totalBytes <= TAR_LIMITS.totalBytes, 'tarball exceeds the unpacked byte limit');
-      files.push(Object.freeze({ path: packagePath, mode, size, sha256: sha256(data) }));
+      files.push(
+        Object.freeze({
+          path: packagePath,
+          mode,
+          size,
+          sha256: sha256(data),
+          ...(options.includeBytes ? { bytes: data } : {}),
+        }),
+      );
       assert(files.length <= TAR_LIMITS.files, 'tarball exceeds the file-count limit');
       pax = {};
       longPath = null;
@@ -744,6 +1509,31 @@ function parseTarFiles(tarball) {
   assert(Object.keys(pax).length === 0 && longPath === null, 'tarball has dangling path metadata');
   files.sort((left, right) => left.path.localeCompare(right.path));
   return Object.freeze(files);
+}
+
+function buildRegistryManifest(rawEvidence, tarball) {
+  const evidence = validateReleaseEvidence(rawEvidence);
+  validateEvidenceArtifact(evidence, tarball);
+  const packageJson = parseTarFiles(tarball, { includeBytes: true }).find(
+    (entry) => entry.path === 'package.json',
+  );
+  assert(packageJson, 'retained Core artifact has no package.json');
+  const manifest = strictJson(packageJson.bytes, 'retained Core package.json');
+  assert(
+    manifest && typeof manifest === 'object' && !Array.isArray(manifest),
+    'retained Core package manifest must be an object',
+  );
+  assert(
+    manifest.name === evidence.package.name && manifest.version === evidence.package.version,
+    'retained Core package manifest identity differs from evidence',
+  );
+  for (const field of ['_id', '_nodeVersion', '_npmVersion', 'dist', 'gitHead', 'tag']) {
+    assert(
+      !Object.prototype.hasOwnProperty.call(manifest, field),
+      `retained Core package manifest contains publisher-owned field ${field}`,
+    );
+  }
+  return Object.freeze({ ...manifest, gitHead: evidence.source.commit });
 }
 
 function expectedFilename(version) {
@@ -824,7 +1614,7 @@ function validatePack({ reportText, tarball, packageManifest }) {
   });
 }
 
-function packMaterializedSource(sourceRoot, npmExecutable, packageManifest, parentTemp, label) {
+function packMaterializedSource(sourceRoot, invocation, packageManifest, parentTemp, label) {
   const runRoot = path.join(parentTemp, label);
   const artifacts = path.join(runRoot, 'artifacts');
   const home = path.join(runRoot, 'home');
@@ -832,10 +1622,11 @@ function packMaterializedSource(sourceRoot, npmExecutable, packageManifest, pare
   fs.mkdirSync(artifacts, { recursive: true, mode: 0o700 });
   fs.mkdirSync(home, { recursive: true, mode: 0o700 });
   const result = runNpm(
-    npmExecutable,
+    invocation,
     ['pack', '--json', '--ignore-scripts', '--pack-destination', artifacts],
     {
       cwd: path.join(sourceRoot, ...PACKAGE_RELATIVE.split('/')),
+      projectRoot: sourceRoot,
       home,
       cache,
       label: `audited npm pack ${label}`,
@@ -859,11 +1650,11 @@ function packMaterializedSource(sourceRoot, npmExecutable, packageManifest, pare
   return Object.freeze({ artifactPath, reportText: result.stdout, tarball, artifact });
 }
 
-function gateEnvironment(npmExecutable, tempRoot) {
+function gateEnvironment(invocation, tempRoot) {
   const home = path.join(tempRoot, 'gate-home');
   const cache = path.join(tempRoot, 'gate-cache');
   fs.mkdirSync(home, { recursive: true, mode: 0o700 });
-  return cleanNpmEnvironment({ npmExecutable, home, cache });
+  return cleanNpmEnvironment({ invocation, home, cache });
 }
 
 function runNodeGate(scriptPath, cwd, environment, label) {
@@ -878,8 +1669,8 @@ function runNodeGate(scriptPath, cwd, environment, label) {
   return result.stdout.trim();
 }
 
-function runReleaseGates({ sourceRoot, npmExecutable, tempRoot, repositoryRoot = REPO_ROOT }) {
-  const environment = gateEnvironment(npmExecutable, tempRoot);
+function runReleaseGates({ sourceRoot, invocation, tempRoot }) {
+  const environment = gateEnvironment(invocation, tempRoot);
   runNodeGate(
     path.join(sourceRoot, 'scripts', 'check-pack-contents.js'),
     sourceRoot,
@@ -887,14 +1678,14 @@ function runReleaseGates({ sourceRoot, npmExecutable, tempRoot, repositoryRoot =
     'Core pack-content gate',
   );
   runNodeGate(
-    path.join(repositoryRoot, 'scripts', 'check-public-surface.mjs'),
-    repositoryRoot,
+    path.join(sourceRoot, 'scripts', 'check-public-surface.mjs'),
+    sourceRoot,
     environment,
     'Core public-surface gate',
   );
   runNodeGate(
-    path.join(repositoryRoot, 'scripts', 'check-post-cutover-naming.mjs'),
-    repositoryRoot,
+    path.join(sourceRoot, 'scripts', 'check-post-cutover-naming.mjs'),
+    sourceRoot,
     environment,
     'Core naming gate',
   );
@@ -917,6 +1708,9 @@ function buildEvidence({ context, artifact, secondArtifact, npmVersion, gitVersi
       tag: context.tag,
       commit: context.commit,
       tree: context.tree,
+      author: context.author,
+      committer: context.committer,
+      author_signoff_match: context.authorSignoffMatch,
       dco_signoff_count: context.signoffs.length,
       tracked_file_count: context.treeState.fileCount,
       tracked_bytes: context.treeState.totalBytes,
@@ -930,6 +1724,9 @@ function buildEvidence({ context, artifact, secondArtifact, npmVersion, gitVersi
     tooling: Object.freeze({
       git: gitVersion,
       npm: npmVersion,
+      npm_release_url: TRUSTED_NPM_URL,
+      npm_release_integrity: TRUSTED_NPM_INTEGRITY,
+      npm_release_entry_count: TRUSTED_NPM_ENTRY_COUNT,
       node: process.version,
       platform: process.platform,
       arch: process.arch,
@@ -974,6 +1771,9 @@ function validateReleaseEvidence(evidence) {
       'tag',
       'commit',
       'tree',
+      'author',
+      'committer',
+      'author_signoff_match',
       'dco_signoff_count',
       'tracked_file_count',
       'tracked_bytes',
@@ -989,6 +1789,12 @@ function validateReleaseEvidence(evidence) {
   );
   assert(COMMIT_RE.test(evidence.source.commit || ''), 'Core release evidence commit is invalid');
   assert(OBJECT_RE.test(evidence.source.tree || ''), 'Core release evidence tree is invalid');
+  validateNormalizedIdentity(evidence.source.author, 'Core release evidence author');
+  validateNormalizedIdentity(evidence.source.committer, 'Core release evidence committer');
+  assert(
+    evidence.source.author_signoff_match === true,
+    'Core release evidence author DCO match is invalid',
+  );
   assert(
     Number.isSafeInteger(evidence.source.dco_signoff_count) &&
       evidence.source.dco_signoff_count > 0,
@@ -1024,7 +1830,16 @@ function validateReleaseEvidence(evidence) {
 
   exactKeys(
     evidence.tooling,
-    ['git', 'npm', 'node', 'platform', 'arch'],
+    [
+      'git',
+      'npm',
+      'npm_release_url',
+      'npm_release_integrity',
+      'npm_release_entry_count',
+      'node',
+      'platform',
+      'arch',
+    ],
     'Core release evidence tooling',
   );
   assert(
@@ -1034,6 +1849,18 @@ function validateReleaseEvidence(evidence) {
   assert(
     evidence.tooling.npm === AUDITED_NPM_VERSION,
     'Core release evidence npm version is not audited',
+  );
+  assert(
+    evidence.tooling.npm_release_url === TRUSTED_NPM_URL,
+    'Core release evidence npm source is not audited',
+  );
+  assert(
+    evidence.tooling.npm_release_integrity === TRUSTED_NPM_INTEGRITY,
+    'Core release evidence npm integrity is not audited',
+  );
+  assert(
+    evidence.tooling.npm_release_entry_count === TRUSTED_NPM_ENTRY_COUNT,
+    'Core release evidence npm extraction boundary is not audited',
   );
   assert(
     /^v\d+\.\d+\.\d+$/u.test(evidence.tooling.node || ''),
@@ -1237,6 +2064,33 @@ function parseArtifactArguments(argv, usage) {
   return { evidencePath, artifactPath };
 }
 
+function parseTrustedNpmArguments(argv) {
+  assert(
+    argv.length === 2 && argv[0] === '--artifact' && argv[1],
+    'usage: provision-npm --artifact <outside-repo/npm-11.17.0.tgz>',
+  );
+  return { artifactPath: path.resolve(argv[1]) };
+}
+
+function verifyTrustedNpmInvocation(options = {}) {
+  const invocation = resolveTrustedNpmInvocation(options);
+  try {
+    const result = runNpm(invocation, ['--version'], {
+      label: 'trusted npm version verification',
+      timeout: REGISTRY_TIMEOUT_MS,
+    });
+    assert(result.stderr === '', 'trusted npm version verification wrote unexpected stderr');
+    assert(result.stdout.trim() === AUDITED_NPM_VERSION, 'trusted npm version output is invalid');
+    return Object.freeze({
+      version: invocation.version,
+      releaseUrl: invocation.releaseUrl,
+      releaseIntegrity: invocation.releaseIntegrity,
+    });
+  } finally {
+    invocation.cleanup();
+  }
+}
+
 function prepareRelease({ evidencePath, artifactPath, env = process.env, root = REPO_ROOT }) {
   const resolvedEvidence = assertOutsideRepository(evidencePath, 'Core release evidence', root);
   const resolvedArtifact = assertOutsideRepository(artifactPath, 'Core release artifact', root);
@@ -1253,34 +2107,36 @@ function prepareRelease({ evidencePath, artifactPath, env = process.env, root = 
     path.basename(resolvedArtifact) === expectedFilename(context.version),
     'Core release artifact destination must use the npm filename',
   );
-  const npmExecutable = resolveAuditedNpm();
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-authoritative-release-'));
+  let invocation;
   let artifactCreated = false;
   let evidenceCreated = false;
   let complete = false;
   try {
+    invocation = resolveTrustedNpmInvocation({ environment: env, root });
     const firstSource = materializeTree(context.treeState, path.join(temp, 'source-one'), root);
     const secondSource = materializeTree(context.treeState, path.join(temp, 'source-two'), root);
+    initializeIsolatedGateRepository(firstSource, context.treeState, context.commit, root);
+    initializeIsolatedGateRepository(secondSource, context.treeState, context.commit, root);
     const packageManifest = strictJson(
       fs.readFileSync(path.join(firstSource, ...PACKAGE_RELATIVE.split('/'), 'package.json')),
       'materialized Core package.json',
     );
     const gates = runReleaseGates({
       sourceRoot: firstSource,
-      npmExecutable,
+      invocation,
       tempRoot: path.join(temp, 'gates'),
-      repositoryRoot: root,
     });
     const first = packMaterializedSource(
       firstSource,
-      npmExecutable,
+      invocation,
       packageManifest,
       temp,
       'pack-one',
     );
     const second = packMaterializedSource(
       secondSource,
-      npmExecutable,
+      invocation,
       packageManifest,
       temp,
       'pack-two',
@@ -1320,6 +2176,7 @@ function prepareRelease({ evidencePath, artifactPath, env = process.env, root = 
     return evidence;
   } finally {
     fs.rmSync(temp, { recursive: true, force: true });
+    if (invocation) invocation.cleanup();
     if (!complete) {
       if (evidenceCreated) fs.rmSync(resolvedEvidence, { force: true });
       if (artifactCreated) fs.rmSync(resolvedArtifact, { force: true });
@@ -1363,11 +2220,9 @@ function evaluateRegistryResult(result, rawEvidence) {
   assert(result.stderr === '', 'successful registry lookup wrote unexpected stderr');
   const metadata = strictJson(result.stdout, 'registry metadata stdout');
   const keys = Object.keys(metadata).sort();
-  const required = ['dist.integrity', 'dist.shasum', 'name', 'version'].sort();
-  const withGitHead = [...required, 'gitHead'].sort();
+  const required = ['dist.integrity', 'dist.shasum', 'gitHead', 'name', 'version'].sort();
   assert(
-    JSON.stringify(keys) === JSON.stringify(required) ||
-      JSON.stringify(keys) === JSON.stringify(withGitHead),
+    JSON.stringify(keys) === JSON.stringify(required),
     'registry metadata fields are not exact',
   );
   assert(metadata.name === evidence.package.name, 'registry package name collision');
@@ -1377,20 +2232,25 @@ function evaluateRegistryResult(result, rawEvidence) {
     'registry integrity collision',
   );
   assert(metadata['dist.shasum'] === evidence.artifact.shasum, 'registry shasum collision');
-  if (Object.prototype.hasOwnProperty.call(metadata, 'gitHead')) {
-    assert(COMMIT_RE.test(metadata.gitHead || ''), 'registry gitHead is invalid');
-    assert(metadata.gitHead === evidence.source.commit, 'registry gitHead collision');
-  }
+  assert(COMMIT_RE.test(metadata.gitHead || ''), 'registry gitHead is invalid');
+  assert(metadata.gitHead === evidence.source.commit, 'registry gitHead collision');
   return Object.freeze({ decision: 'skip-identical', shouldPublish: false });
 }
 
-function queryRegistry(npmExecutable, evidence) {
+function queryRegistry(invocation, evidence) {
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-registry-query-'));
   try {
+    fs.writeFileSync(
+      path.join(temp, 'package.json'),
+      `${JSON.stringify({ name: 'kdna-core-registry-query', version: '1.0.0', private: true })}\n`,
+      { flag: 'wx', mode: 0o600 },
+    );
+    assertNoProjectNpmConfig(temp, temp);
     const spec = `${evidence.package.name}@${evidence.package.version}`;
     return spawnSync(
-      npmExecutable,
+      invocation.command,
       [
+        ...invocation.prefixArgs,
         'view',
         spec,
         'name',
@@ -1403,9 +2263,10 @@ function queryRegistry(npmExecutable, evidence) {
         `--registry=${OFFICIAL_REGISTRY}`,
       ],
       {
+        cwd: temp,
         encoding: 'utf8',
         env: cleanNpmEnvironment({
-          npmExecutable,
+          invocation,
           home: path.join(temp, 'home'),
           cache: path.join(temp, 'cache'),
         }),
@@ -1427,6 +2288,15 @@ function bindCurrentEvidence(rawEvidence, env = process.env, root = REPO_ROOT) {
   assert(evidence.source.tag === context.tag, 'release evidence tag binding is stale');
   assert(evidence.source.commit === context.commit, 'release evidence commit binding is stale');
   assert(evidence.source.tree === context.tree, 'release evidence tree binding is stale');
+  assert(evidence.source.author === context.author, 'release evidence author binding is stale');
+  assert(
+    evidence.source.committer === context.committer,
+    'release evidence committer binding is stale',
+  );
+  assert(
+    evidence.source.author_signoff_match === context.authorSignoffMatch,
+    'release evidence author DCO binding is stale',
+  );
   assert(
     evidence.source.dco_signoff_count === context.signoffs.length,
     'release evidence DCO binding is stale',
@@ -1458,28 +2328,35 @@ function bindCurrentEvidence(rawEvidence, env = process.env, root = REPO_ROOT) {
 function readCandidate({ evidencePath, artifactPath, env = process.env, root = REPO_ROOT }) {
   assertOutsideRepository(evidencePath, 'Core release evidence', root);
   assertOutsideRepository(artifactPath, 'Core release artifact', root);
-  const evidenceStats = fs.lstatSync(evidencePath);
-  const artifactStats = fs.lstatSync(artifactPath);
-  assert(
-    evidenceStats.isFile() && !evidenceStats.isSymbolicLink(),
-    'Core release evidence must be a regular file',
-  );
-  assert(
-    artifactStats.isFile() && !artifactStats.isSymbolicLink(),
-    'Core release artifact must be a regular file',
-  );
+  const evidenceFile = readCanonicalRegularOneLink(evidencePath, 'Core release evidence', {
+    maximum: JSON_LIMITS.bytes,
+  });
+  const artifactFile = readCanonicalRegularOneLink(artifactPath, 'Core release artifact', {
+    maximum: TAR_LIMITS.packedBytes,
+  });
   const evidence = bindCurrentEvidence(
-    strictJson(fs.readFileSync(evidencePath), 'Core release evidence'),
+    strictJson(evidenceFile.bytes, 'Core release evidence'),
     env,
     root,
   );
-  const tarball = fs.readFileSync(artifactPath);
+  const tarball = artifactFile.bytes;
   validateEvidenceArtifact(evidence, tarball);
   assert(
-    path.basename(artifactPath) === evidence.artifact.filename,
+    path.basename(artifactFile.path) === evidence.artifact.filename,
     'retained Core artifact filename differs from evidence',
   );
-  return Object.freeze({ evidence, tarball, artifactPath });
+  return Object.freeze({ evidence, tarball, artifactPath: artifactFile.path });
+}
+
+function writeVerifiedArtifactCopy(directory, evidence, tarball) {
+  validateEvidenceArtifact(evidence, tarball);
+  const artifactPath = path.join(directory, evidence.artifact.filename);
+  fs.writeFileSync(artifactPath, tarball, { flag: 'wx', mode: 0o600 });
+  const copy = readCanonicalRegularOneLink(artifactPath, 'secured Core release artifact', {
+    maximum: TAR_LIMITS.packedBytes,
+  });
+  validateEvidenceArtifact(evidence, copy.bytes);
+  return copy.path;
 }
 
 function guardCandidate({ evidence, tarball, bindCurrent, lookup }) {
@@ -1488,98 +2365,115 @@ function guardCandidate({ evidence, tarball, bindCurrent, lookup }) {
   return evaluateRegistryResult(lookup(bound), bound);
 }
 
-function npmPublishArguments(artifactPath) {
-  return [
-    'publish',
-    artifactPath,
-    '--ignore-scripts',
-    '--provenance',
-    '--access=public',
-    `--registry=${OFFICIAL_REGISTRY}`,
-  ];
-}
-
 function publishCandidate({ evidence, tarball, artifactPath, bindCurrent, lookup, publish }) {
   const bound = bindCurrent(evidence);
   validateEvidenceArtifact(bound, tarball);
   const decision = evaluateRegistryResult(lookup(bound), bound);
   if (!decision.shouldPublish) return Object.freeze({ ...decision, published: false });
-  const result = publish(npmPublishArguments(artifactPath));
-  assert(
-    result && !result.error,
-    `npm publish failed: ${result?.error?.message || 'unknown error'}`,
-  );
-  assert(Number.isInteger(result.status), 'npm publish returned no integer status');
-  assert(result.status === 0, `npm publish exited ${result.status}`);
+  const rebound = bindCurrent(bound);
+  validateEvidenceArtifact(rebound, tarball);
+  const result = publish({ evidence: rebound, tarball, artifactPath });
+  assert(result && !result.error, 'verified Core publisher failed');
+  assert(Number.isInteger(result.status), 'verified Core publisher returned no integer status');
+  assert(result.status === 0, 'verified Core publisher failed');
   return Object.freeze({ decision: 'published', shouldPublish: true, published: true });
 }
 
 function guardRelease({ evidencePath, artifactPath, env = process.env, root = REPO_ROOT }) {
-  const npmExecutable = resolveAuditedNpm();
-  const candidate = readCandidate({ evidencePath, artifactPath, env, root });
-  return guardCandidate({
-    evidence: candidate.evidence,
-    tarball: candidate.tarball,
-    bindCurrent: (evidence) => bindCurrentEvidence(evidence, env, root),
-    lookup: (evidence) => queryRegistry(npmExecutable, evidence),
-  });
+  const invocation = resolveTrustedNpmInvocation({ environment: env, root });
+  try {
+    const candidate = readCandidate({ evidencePath, artifactPath, env, root });
+    return guardCandidate({
+      evidence: candidate.evidence,
+      tarball: candidate.tarball,
+      bindCurrent: (evidence) => bindCurrentEvidence(evidence, env, root),
+      lookup: (evidence) => queryRegistry(invocation, evidence),
+    });
+  } finally {
+    invocation.cleanup();
+  }
 }
 
 function publishRelease({ evidencePath, artifactPath, env = process.env, root = REPO_ROOT }) {
-  const npmExecutable = resolveAuditedNpm();
-  const candidate = readCandidate({ evidencePath, artifactPath, env, root });
   assert(
     typeof env.NODE_AUTH_TOKEN === 'string' && env.NODE_AUTH_TOKEN !== '',
     'NODE_AUTH_TOKEN is required for Core publication',
   );
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-publisher-'));
+  let invocation;
   try {
-    const userconfig = path.join(temp, 'publisher.npmrc');
-    fs.writeFileSync(userconfig, '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}\n', {
+    invocation = resolveTrustedNpmInvocation({ environment: env, root });
+    const candidate = readCandidate({ evidencePath, artifactPath, env, root });
+    const publishTree = inspectTree(candidate.evidence.source.commit, root);
+    const publishRoot = materializeTree(publishTree, path.join(temp, 'source'), root);
+    initializeIsolatedGateRepository(
+      publishRoot,
+      publishTree,
+      candidate.evidence.source.commit,
+      root,
+    );
+    assertNoProjectNpmConfig(publishRoot, publishRoot);
+    const securedArtifact = writeVerifiedArtifactCopy(temp, candidate.evidence, candidate.tarball);
+    const registryManifest = buildRegistryManifest(candidate.evidence, candidate.tarball);
+    const registryManifestPath = path.join(temp, 'registry-manifest.json');
+    fs.writeFileSync(registryManifestPath, `${JSON.stringify(registryManifest)}\n`, {
       flag: 'wx',
       mode: 0o600,
+    });
+    const publisherPath = path.join(publishRoot, ...TRUSTED_PUBLISHER_RELATIVE.split('/'));
+    readCanonicalRegularOneLink(publisherPath, 'exact-commit Core publisher', {
+      maximum: 1024 * 1024,
     });
     return publishCandidate({
       evidence: candidate.evidence,
       tarball: candidate.tarball,
-      artifactPath: candidate.artifactPath,
+      artifactPath: securedArtifact,
       bindCurrent: (evidence) => bindCurrentEvidence(evidence, env, root),
-      lookup: (evidence) => queryRegistry(npmExecutable, evidence),
-      publish: (args) =>
-        spawnSync(npmExecutable, args, {
-          env: cleanNpmEnvironment({
-            npmExecutable,
-            home: path.join(temp, 'home'),
-            cache: path.join(temp, 'cache'),
-            environment: env,
-            userconfig,
-          }),
-          maxBuffer: 16 * 1024 * 1024,
-          shell: false,
-          stdio: 'inherit',
-          timeout: 300_000,
-        }),
+      lookup: (evidence) => queryRegistry(invocation, evidence),
+      publish: () =>
+        spawnSync(
+          invocation.command,
+          [publisherPath, invocation.publishLibraryPath, registryManifestPath, securedArtifact],
+          {
+            cwd: publishRoot,
+            env: cleanNpmEnvironment({
+              invocation,
+              home: path.join(temp, 'home'),
+              cache: path.join(temp, 'cache'),
+              environment: env,
+              allowAuth: true,
+            }),
+            maxBuffer: 16 * 1024 * 1024,
+            shell: false,
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'pipe'],
+            timeout: 300_000,
+          },
+        ),
     });
   } finally {
     fs.rmSync(temp, { recursive: true, force: true });
+    if (invocation) invocation.cleanup();
   }
 }
 
 function smokeRelease({ evidencePath, artifactPath, env = process.env, root = REPO_ROOT }) {
-  const npmExecutable = resolveAuditedNpm();
-  const candidate = readCandidate({ evidencePath, artifactPath, env, root });
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-release-smoke-'));
+  let invocation;
   try {
+    invocation = resolveTrustedNpmInvocation({ environment: env, root });
+    const candidate = readCandidate({ evidencePath, artifactPath, env, root });
+    const securedArtifact = writeVerifiedArtifactCopy(temp, candidate.evidence, candidate.tarball);
     fs.writeFileSync(
       path.join(temp, 'package.json'),
       `${JSON.stringify({ name: 'kdna-core-release-smoke', version: '1.0.0', private: true })}\n`,
       { flag: 'wx', mode: 0o600 },
     );
     runNpm(
-      npmExecutable,
+      invocation,
       [
         'install',
-        candidate.artifactPath,
+        securedArtifact,
         '--ignore-scripts',
         '--package-lock=false',
         '--no-audit',
@@ -1624,17 +2518,19 @@ function smokeRelease({ evidencePath, artifactPath, env = process.env, root = RE
     return true;
   } finally {
     fs.rmSync(temp, { recursive: true, force: true });
+    if (invocation) invocation.cleanup();
   }
 }
 
 function comparePackageCommits({ baseline, candidate, root = REPO_ROOT }) {
   assert(COMMIT_RE.test(baseline || ''), 'package invariant baseline must be a full commit id');
   assert(COMMIT_RE.test(candidate || ''), 'package invariant candidate must be a full commit id');
-  const npmExecutable = resolveAuditedNpm();
-  const baselineTree = inspectTree(baseline, root);
-  const candidateTree = inspectTree(candidate, root);
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-package-invariant-'));
+  let invocation;
   try {
+    invocation = resolveTrustedNpmInvocation({ root });
+    const baselineTree = inspectTree(baseline, root);
+    const candidateTree = inspectTree(candidate, root);
     const baselineSource = materializeTree(baselineTree, path.join(temp, 'baseline'), root);
     const candidateSource = materializeTree(candidateTree, path.join(temp, 'candidate'), root);
     const baselineManifest = strictJson(
@@ -1652,14 +2548,14 @@ function comparePackageCommits({ baseline, candidate, root = REPO_ROOT }) {
     );
     const first = packMaterializedSource(
       baselineSource,
-      npmExecutable,
+      invocation,
       baselineManifest,
       temp,
       'baseline-pack',
     );
     const second = packMaterializedSource(
       candidateSource,
-      npmExecutable,
+      invocation,
       candidateManifest,
       temp,
       'candidate-pack',
@@ -1679,6 +2575,7 @@ function comparePackageCommits({ baseline, candidate, root = REPO_ROOT }) {
     });
   } finally {
     fs.rmSync(temp, { recursive: true, force: true });
+    if (invocation) invocation.cleanup();
   }
 }
 
@@ -1701,8 +2598,23 @@ function parseInvariantArguments(argv) {
   return { baseline: argv[baselineIndex + 1], candidate: argv[candidateIndex + 1] };
 }
 
-function main(argv = process.argv.slice(2)) {
+async function main(argv = process.argv.slice(2)) {
   const [command, ...args] = argv;
+  if (command === 'provision-npm') {
+    const { artifactPath } = parseTrustedNpmArguments(args);
+    await provisionTrustedNpmTarball({ artifactPath });
+    console.log(`Trusted npm release provisioned: ${AUDITED_NPM_VERSION}`);
+    return;
+  }
+  if (command === 'verify-npm' && args.length === 0) {
+    const verified = verifyTrustedNpmInvocation();
+    console.log(`Trusted npm release verified: ${verified.version}`);
+    return;
+  }
+  if (command === 'trusted-npm') {
+    runTrustedNpmCommand(args);
+    return;
+  }
   if (command === 'check' && args.length === 0) {
     const context = inspectAuthoritativeRelease();
     console.log(
@@ -1755,20 +2667,21 @@ function main(argv = process.argv.slice(2)) {
     console.log(JSON.stringify(result, null, 2));
     return;
   }
-  fail('usage: core-release-authority.js <check|prepare|smoke|guard|publish|invariant>');
+  fail(
+    'usage: core-release-authority.js <provision-npm|verify-npm|trusted-npm|check|prepare|smoke|guard|publish|invariant>',
+  );
 }
 
 if (require.main === module) {
-  try {
-    main();
-  } catch (error) {
+  main().catch((error) => {
     console.error(`Core release authority rejected: ${error.message}`);
     process.exitCode = 1;
-  }
+  });
 }
 
 module.exports = {
   AUDITED_NPM_VERSION,
+  JSON_LIMITS,
   OFFICIAL_REGISTRY,
   PACKAGE_NAME,
   REPO_ROOT,
@@ -1776,32 +2689,45 @@ module.exports = {
   TAR_LIMITS,
   TREE_LIMITS,
   TRUSTED_GIT,
+  TRUSTED_NPM_ENVIRONMENT,
+  TRUSTED_NPM_FILENAME,
+  TRUSTED_NPM_INTEGRITY,
+  TRUSTED_NPM_ENTRY_COUNT,
+  TRUSTED_NPM_URL,
+  assertNoInheritedNpmAuthority,
   assertIndexMatchesTree,
+  assertNoProjectNpmConfig,
   assertOutsideRepository,
   batchReadBlobs,
   bindCurrentEvidence,
   buildEvidence,
+  buildRegistryManifest,
   cleanGitEnvironment,
   cleanNpmEnvironment,
   commitDocument,
   comparePackageCommits,
   evaluateRegistryResult,
   expectedRegistryE404,
+  downloadTrustedNpmBytes,
   guardCandidate,
   integrity,
   inspectAuthoritativeRelease,
   inspectTree,
+  initializeIsolatedGateRepository,
   materializeTree,
-  npmPublishArguments,
   packMaterializedSource,
   parseArtifactArguments,
   parseIndexEntries,
   parseInvariantArguments,
+  parseTrustedNpmArguments,
   parseTarFiles,
   parseTreeEntries,
   publishCandidate,
-  resolveAuditedNpm,
+  provisionTrustedNpmTarball,
+  resolveTrustedNpmInvocation,
   runGit,
+  runNpm,
+  runTrustedNpmCommand,
   sha1,
   sha256,
   strictJson,
@@ -1809,5 +2735,7 @@ module.exports = {
   validatePack,
   validateReleaseContext,
   validateReleaseEvidence,
+  verifyTrustedNpmInvocation,
+  verifyTrustedNpmTarball,
   writeGithubDecision,
 };

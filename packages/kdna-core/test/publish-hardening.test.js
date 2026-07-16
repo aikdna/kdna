@@ -508,16 +508,24 @@ test('publish workflow delegates Core only to the authoritative retained-artifac
   assert.equal((coreJob.match(/uses: actions\/checkout@/gu) || []).length, 1);
   assert.doesNotMatch(coreJob, /\.ecosystem-repos/u);
   assert.match(coreJob, /ref: \$\{\{ github\.event\.release\.tag_name \}\}/u);
-  assert.match(coreJob, /npm install --global npm@11\.17\.0 --ignore-scripts/u);
+  assert.match(coreJob, /KDNA_TRUSTED_NPM_TARBALL=\$RUNNER_TEMP\/npm-11\.17\.0\.tgz/u);
 
+  const provisionNpm = coreJob.indexOf('core-release-authority.js provision-npm');
+  const verifyNpm = coreJob.indexOf('core-release-authority.js verify-npm');
   const releaseCheck = coreJob.indexOf('core-release-authority.js check');
   const evidence = coreJob.indexOf('core-release-authority.js prepare');
   const smoke = coreJob.indexOf('core-release-authority.js smoke');
   const duplicateGuard = coreJob.indexOf('core-release-authority.js guard');
   const publish = coreJob.indexOf('core-release-authority.js publish');
-  assert.ok(releaseCheck > 0 && releaseCheck < evidence);
+  assert.ok(
+    provisionNpm > 0 &&
+      provisionNpm < verifyNpm &&
+      verifyNpm < releaseCheck &&
+      releaseCheck < evidence,
+  );
   assert.ok(evidence < smoke && smoke < duplicateGuard && duplicateGuard < publish);
   assert.match(coreJob, /if: steps\.registry\.outputs\.should_publish == 'true'/u);
   assert.doesNotMatch(coreJob, /run:\s*>?-?\s*npm publish\b/u);
+  assert.doesNotMatch(coreJob, /npm install --global/u);
   assert.doesNotMatch(coreJob, /working-directory: packages\/kdna-core/u);
 });

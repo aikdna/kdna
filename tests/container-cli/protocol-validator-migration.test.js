@@ -91,7 +91,7 @@ function assertCorePublishValidatorOrder(workflow) {
     'Core publish must run the Runtime contract validator once',
   );
 
-  const install = job.indexOf('run: npm ci');
+  const install = job.indexOf('trusted-npm ci --ignore-scripts');
   const protocol = protocolMatches[0].index;
   const runtime = runtimeMatches[0].index;
   const prepare = job.indexOf('node scripts/core-release-authority.js prepare');
@@ -448,8 +448,8 @@ test('Core publication cannot bypass either validator or reorder it after author
   assert.doesNotThrow(() => assertCorePublishValidatorOrder(workflow));
 
   for (const command of [
-    'npm run validate:protocol-fixtures',
-    'npm run validate:runtime-contract',
+    'trusted-npm run validate:protocol-fixtures',
+    'trusted-npm run validate:runtime-contract',
   ]) {
     assert.throws(
       () => assertCorePublishValidatorOrder(workflow.replace(command, 'npm run omitted-gate')),
@@ -458,10 +458,13 @@ test('Core publication cannot bypass either validator or reorder it after author
   }
 
   const reordered = workflow
-    .replace('        run: npm run validate:runtime-contract\n', '')
+    .replace(
+      '        run: node scripts/core-release-authority.js trusted-npm run validate:runtime-contract\n',
+      '',
+    )
     .replace(
       '      - name: Verify the retained artifact through a clean install\n',
-      '      - run: npm run validate:runtime-contract\n' +
+      '      - run: node scripts/core-release-authority.js trusted-npm run validate:runtime-contract\n' +
         '      - name: Verify the retained artifact through a clean install\n',
     );
   assert.throws(

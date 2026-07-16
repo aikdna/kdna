@@ -11,6 +11,7 @@ concurrency:
 jobs:
   publish-core:
     if: >-
+      github.repository == 'aikdna/kdna' &&
       github.event_name == 'release' &&
       github.event.action == 'published' &&
       github.event.release.draft == false &&
@@ -36,22 +37,27 @@ jobs:
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
-      - name: Pin the audited npm release client
+      - name: Select the outside-repository trusted npm release
         run: |
-          npm install --global npm@11.17.0 --ignore-scripts --registry=https://registry.npmjs.org/
-          npm --version | grep -Fx 11.17.0
-      - run: npm ci --ignore-scripts
+          echo "KDNA_TRUSTED_NPM_TARBALL=$RUNNER_TEMP/npm-11.17.0.tgz" >> "$GITHUB_ENV"
+      - name: Fetch and authenticate the audited npm release bytes
+        run: >-
+          node scripts/core-release-authority.js provision-npm
+          --artifact "$RUNNER_TEMP/npm-11.17.0.tgz"
+      - name: Verify the isolated npm CLI and extraction boundary
+        run: node scripts/core-release-authority.js verify-npm
+      - run: node scripts/core-release-authority.js trusted-npm ci --ignore-scripts
       - name: Verify exact natural SemVer tag and authoritative source
         run: node scripts/core-release-authority.js check
       - name: Test Core and hostile release policy
         run: |
-          npm --workspace @aikdna/kdna-core test
+          node scripts/core-release-authority.js trusted-npm --workspace @aikdna/kdna-core test
           node --test scripts/core-release-authority.test.js
       - name: Validate authoritative Runtime manifest fixtures
-        run: npm run validate:protocol-fixtures
+        run: node scripts/core-release-authority.js trusted-npm run validate:protocol-fixtures
       - name: Validate published Runtime contract surfaces
-        run: npm run validate:runtime-contract
-      - run: npm run conformance
+        run: node scripts/core-release-authority.js trusted-npm run validate:runtime-contract
+      - run: node scripts/core-release-authority.js trusted-npm run conformance
       - name: Select outside-repository release outputs
         run: |
           CORE_VERSION=$(node -p "require('./packages/kdna-core/package.json').version")
@@ -89,7 +95,9 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Remove transient Core release outputs
         if: always()
-        run: rm -f "$CORE_RELEASE_EVIDENCE" "$CORE_RELEASE_ARTIFACT"
+        run: >-
+          rm -f "$CORE_RELEASE_EVIDENCE" "$CORE_RELEASE_ARTIFACT"
+          "$KDNA_TRUSTED_NPM_TARBALL"
 
   publish-eval:
     if: github.event_name == 'release' && github.event.action == 'published' && github.event.release.draft == false && github.event.release.prerelease == false && startsWith(github.event.release.tag_name, 'eval/')

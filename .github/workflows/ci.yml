@@ -1,5 +1,7 @@
 name: CI
 on: [pull_request, push]
+permissions:
+  contents: read
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -7,10 +9,25 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: { node-version: 22 }
-      - run: npm ci
+      - name: Select the outside-repository trusted npm release
+        run: echo "KDNA_TRUSTED_NPM_TARBALL=$RUNNER_TEMP/npm-11.17.0.tgz" >> "$GITHUB_ENV"
+      - name: Fetch and authenticate the audited npm release bytes
+        run: >-
+          node scripts/core-release-authority.js provision-npm
+          --artifact "$RUNNER_TEMP/npm-11.17.0.tgz"
+      - name: Verify the isolated npm CLI and extraction boundary
+        run: node scripts/core-release-authority.js verify-npm
+      - run: node scripts/core-release-authority.js trusted-npm ci
       - name: Enforce protocol naming and scoped release gates
-        run: npm run test:post-cutover && npm run test:release-scopes && node --test scripts/core-release-authority.test.js && npm run audit:post-cutover
-      - run: npm test
+        run: |
+          node scripts/core-release-authority.js trusted-npm run test:post-cutover
+          node scripts/core-release-authority.js trusted-npm run test:release-scopes
+          node --test scripts/core-release-authority.test.js
+          node scripts/core-release-authority.js trusted-npm run audit:post-cutover
+      - run: node scripts/core-release-authority.js trusted-npm test
+      - name: Remove the trusted npm release bytes
+        if: always()
+        run: rm -f "$KDNA_TRUSTED_NPM_TARBALL"
 
   public-surface:
     name: public-surface check (private-name leak)
