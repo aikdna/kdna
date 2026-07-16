@@ -113,6 +113,38 @@ authorization. Only a grant whose signature, time bounds, account, device,
 asset identity, version, digest, encrypted entry, and key wrapping have been
 verified by Core can move a LoadPlan to `ready` or `offline_grace`.
 
+### 5.1 Deployer-Controlled Remote Runtime Loading
+
+The consumer loading contract and the server deployment contract are
+different responsibilities.
+
+Ordinary consumer entry points MUST keep `access: "remote"` in
+`needs_runtime`, with `required_action: "connect_runtime"` and
+`can_load_now: false`. They MUST NOT accept a caller boolean, role string,
+profile override, or output override that converts the remote plan into a
+local load.
+
+The JS reference implementation exposes the separate
+`@aikdna/kdna-core/remote-runtime` package subpath for a deployer that already
+controls the final packaged server-side asset. Its
+`loadRemoteRuntimeAsset(input)` operation:
+
+1. accepts exactly one packaged path or packaged byte input;
+2. snapshots a path once and uses the same immutable bytes for planning,
+   validation, digest evidence, payload loading, and Capsule construction;
+3. requires a structurally valid, checksum-valid, loader-compatible
+   `access: "remote"` asset;
+4. rejects public, licensed, source-directory, dependency, and inheritance
+   inputs;
+5. emits only a `full` JSON Runtime Capsule for server-internal projection.
+
+Physical control of the deployed remote asset is the authorization boundary
+for this server-side operation. The operation is not network authentication,
+caller entitlement verification, content confidentiality from the deployer,
+projection minimization, or a hosted-service contract. The embedding Runtime
+MUST enforce those request-level boundaries and MUST NOT deliver the full
+server-side Capsule to an Agent client.
+
 ## 6. Stable Issue Codes
 
 Implementations MUST use stable issue codes for localization, diagnostics, and
@@ -140,6 +172,9 @@ conformance. Initial issue codes:
 - `KDNA_ACCESS_MODE_UNKNOWN`
 - `KDNA_ENTITLEMENT_PROFILE_UNKNOWN`
 - `KDNA_REMOTE_NOT_SUPPORTED`
+- `KDNA_REMOTE_RUNTIME_ACCESS_REQUIRED`
+- `KDNA_REMOTE_RUNTIME_COMPOSITION_UNSUPPORTED`
+- `KDNA_REMOTE_RUNTIME_OPTIONS_FORBIDDEN`
 
 Compatibility implementations MAY additionally emit namespaced transitional
 codes such as `KDNA_AUTH_VALIDATION_FAILED`, but final cross-implementation

@@ -52,6 +52,20 @@ Remote runtimes SHOULD:
   response;
 - emit audit events without protected plaintext.
 
+The deployer's server-side full Capsule and the client-facing task projection
+are different disclosure boundaries. In the JS reference implementation, a
+deployer that physically controls the packaged remote asset may obtain the
+server-side Capsule only through
+`@aikdna/kdna-core/remote-runtime.loadRemoteRuntimeAsset(input)`. That
+operation is remote-only, single-asset, option-free, and fixed to the `full`
+JSON profile. It does not authorize the network caller or decide what may leave
+the server.
+
+The embedding remote Runtime MUST authenticate and authorize each request,
+derive the minimum task-relevant projection, and keep the full Capsule inside
+the deployer-controlled server boundary. Ordinary consumer Core entry points
+MUST continue to deny local loading of the same remote asset.
+
 ## 6. Tool And Plugin Boundary
 
 Consumers MUST default-deny full protected payload access to tools, plugins,

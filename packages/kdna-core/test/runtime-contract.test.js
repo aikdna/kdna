@@ -765,6 +765,10 @@ test('npm pack cold install validates the stable Runtime Contract, entrypoints, 
       "const assert = require('node:assert/strict');",
       "const fs = require('node:fs');",
       "const core = require('@aikdna/kdna-core');",
+      "const remoteRuntime = require('@aikdna/kdna-core/remote-runtime');",
+      "assert.deepEqual(Object.keys(remoteRuntime), ['loadRemoteRuntimeAsset']);",
+      "assert.equal(core.loadRemoteRuntimeAsset, undefined);",
+      "assert.throws(() => require('@aikdna/kdna-core/src/container/index.js'), (error) => error && error.code === 'ERR_PACKAGE_PATH_NOT_EXPORTED');",
       "const raw = fs.readFileSync('golden.json');",
       'const golden = core.parseRuntimeContractJson(raw);',
       'const result = core.validateConsumptionPlan(golden.plan, { trustedPlanDigest: golden.plan.integrity.plan_digest });',
@@ -778,7 +782,7 @@ test('npm pack cold install validates the stable Runtime Contract, entrypoints, 
       "if (blocked.budget.comparison.projection_chars !== 'exceeded' || blocked.capsule_delivery_evidence.request_id !== null || blocked.host_receipt !== null) throw new Error('packed pre-Host budget evidence mismatch');",
       'const blockedResult = core.validatePreHostBudgetBlockedTrace(blocked, { ...executionContext, capsule: golden.request.capsule });',
       "if (!blockedResult.valid) throw new Error(blockedResult.code);",
-      "import('@aikdna/kdna-core').then((esm) => {",
+      "Promise.all([import('@aikdna/kdna-core'), import('@aikdna/kdna-core/remote-runtime')]).then(([esm, remoteEsm]) => {",
       "  const cjsNames = Object.keys(core).sort();",
       "  const esmNames = Object.keys(esm).filter((name) => name !== 'default').sort();",
       "  if (JSON.stringify(cjsNames) !== JSON.stringify(esmNames)) throw new Error('installed CJS/ESM names differ');",
@@ -792,11 +796,29 @@ test('npm pack cold install validates the stable Runtime Contract, entrypoints, 
       "      assert.deepStrictEqual(esm[name], core[name], `installed export differs: ${name}`);",
       '    }',
       '  }',
+      "  assert.deepEqual(Object.keys(remoteEsm).filter((name) => name !== 'default'), ['loadRemoteRuntimeAsset']);",
+      "  assert.equal(remoteEsm.loadRemoteRuntimeAsset.name, remoteRuntime.loadRemoteRuntimeAsset.name);",
+      "  assert.equal(remoteEsm.loadRemoteRuntimeAsset.length, remoteRuntime.loadRemoteRuntimeAsset.length);",
       '}).catch((error) => { console.error(error); process.exitCode = 1; });',
     ].join('\n');
-    execFileSync(process.execPath, ['-e', verify], { cwd: tmp, stdio: 'pipe' });
+    execFileSync(process.execPath, ['-e', verify], {
+      cwd: tmp,
+      stdio: 'pipe',
+      env: { ...process.env, NODE_OPTIONS: '' },
+    });
     const checkPath = path.join(tmp, 'check.ts');
-    fs.writeFileSync(checkPath, representativeTypesSource('@aikdna/kdna-core'));
+    fs.writeFileSync(
+      checkPath,
+      [
+        representativeTypesSource('@aikdna/kdna-core'),
+        "import { loadRemoteRuntimeAsset } from '@aikdna/kdna-core/remote-runtime';",
+        'declare const remoteInput: string | Uint8Array;',
+        'const remoteCapsule = loadRemoteRuntimeAsset(remoteInput);',
+        '// @ts-expect-error Remote Runtime callers cannot pass policy options',
+        "loadRemoteRuntimeAsset(remoteInput, { profile: 'compact' });",
+        'console.log(remoteCapsule);',
+      ].join('\n'),
+    );
     runTsc([
       '--noEmit',
       '--strict',
@@ -807,7 +829,11 @@ test('npm pack cold install validates the stable Runtime Contract, entrypoints, 
       '--target',
       'es2022',
       checkPath,
-    ], { cwd: tmp, stdio: 'pipe' });
+    ], {
+      cwd: tmp,
+      stdio: 'pipe',
+      env: { ...process.env, NODE_OPTIONS: '' },
+    });
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add an explicit `@aikdna/kdna-core/remote-runtime` server-side loading
+  contract for deployers that control a packaged `access: "remote"` asset.
+  It uses one immutable byte snapshot, forces a full JSON Runtime Capsule for
+  server-internal projection, rejects multi-asset declarations and caller
+  policy overrides, and leaves every ordinary consumer load entry point
+  fail-closed at `needs_runtime` / `connect_runtime`.
 - Enforce strict `compatibility.min_loader_version` coordinates across
   inspect, validate, default verification, LoadPlan, and load. Structurally
   valid assets that require a newer loader now fail closed with

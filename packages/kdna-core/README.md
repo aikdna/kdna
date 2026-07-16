@@ -138,6 +138,33 @@ callers. Account grants never silently fall back to password authorization.
 `json` or `prompt` output. The requested profile controls the emitted context
 shape; implementations must not label one projection as another.
 
+## Deployer-controlled remote Runtime
+
+Ordinary consumers always receive `needs_runtime` / `connect_runtime` when an
+asset declares `access: "remote"`. A deployer that physically controls the
+server-side packaged asset uses the separate package subpath:
+
+```js
+const {
+  loadRemoteRuntimeAsset,
+} = require('@aikdna/kdna-core/remote-runtime');
+
+const fullCapsule = loadRemoteRuntimeAsset('./deployed-judgment.kdna');
+```
+
+The function accepts one final packaged file path or packaged byte buffer. It
+validates and plans one immutable byte snapshot, accepts only a single remote
+asset, and returns a full JSON Runtime Capsule for the server's projection
+engine. It does not accept caller-selected access, profile, output, dependency,
+or inheritance options.
+
+Possession of the deployed asset is the authorization boundary for this
+server-side API. The API does not authenticate network callers, verify their
+entitlements, make plaintext confidential from the deployer, minimize the
+projection returned to a client, or provide an AIKDNA-hosted service. The
+embedding Runtime must implement those request and disclosure controls and
+must never return the full server-side Capsule to an Agent client.
+
 ## Boundary
 
 Core validates technical structure, integrity, authorization, compatibility,

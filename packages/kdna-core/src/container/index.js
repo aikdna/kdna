@@ -1937,6 +1937,17 @@ module.exports = {
   satisfies,
 };
 
+// The remote Runtime package subpath uses this non-enumerable bridge. Keeping
+// it non-enumerable prevents the package-root object spread from turning the
+// deployer-only contract into an ordinary consumer API. Package exports also
+// block direct access to this internal container module after installation.
+Object.defineProperty(module.exports, 'loadRemoteRuntimeAssetForServer', {
+  value: loadRemoteRuntimeAssetForServer,
+  enumerable: false,
+  configurable: false,
+  writable: false,
+});
+
 // ─── loadAsset — layout runtime loading / load contract ──────────────────────
 
 function renderPromptItem(item) {
@@ -2047,6 +2058,148 @@ function loadAuthorized(inputPath, opts = {}) {
     _runtimeInputKind: inputKind,
   };
   return loadAssetUnsafe(inputSnapshot, mergedOpts);
+}
+
+function remoteRuntimeDeniedPlan(plan, code, message) {
+  return finalizeLoadPlan({
+    ...plan,
+    state: 'invalid',
+    required_action: 'block',
+    can_load_now: false,
+    projection_policy: 'none',
+    issues: [buildLoadPlanIssue(code, 'blocking', message)],
+  });
+}
+
+function packagedAssetRequiredPlan(inputPath) {
+  return finalizeLoadPlan({
+    format_version: null,
+    asset: {
+      asset_id: null,
+      asset_uid: null,
+      title: null,
+      version: null,
+      judgment_version: null,
+    },
+    access: null,
+    access_alias: null,
+    entitlement_profile: null,
+    state: 'invalid',
+    required_action: 'block',
+    can_load_now: false,
+    projection_policy: 'none',
+    input_fingerprint: null,
+    checks: {
+      format_valid: false,
+      schema_valid: false,
+      payload_valid: false,
+      checksums_valid: false,
+      load_contract_valid: false,
+      overall_valid: false,
+    },
+    issues: [buildLoadPlanIssue(
+      'KDNA_ASSET_FILE_REQUIRED',
+      'blocking',
+      'Remote Runtime loading requires a packaged .kdna asset file. Source directories are authoring inputs only.',
+    )],
+    source: {
+      kind: 'dir',
+      path: typeof inputPath === 'string' ? path.resolve(inputPath) : null,
+    },
+  });
+}
+
+function loadPlanDeniedError(plan, fallbackCode = 'KDNA_LOAD_NOT_AUTHORIZED') {
+  const issueCodes = Array.isArray(plan && plan.issues)
+    ? plan.issues.map((issue) => issue.code).filter(Boolean)
+    : [];
+  const error = new Error(
+    `LoadPlan denied loading: state=${plan?.state || 'invalid'} required_action=${plan?.required_action || 'block'}`,
+  );
+  error.code = issueCodes[0] || fallbackCode;
+  error.plan = plan;
+  return error;
+}
+
+/**
+ * Deployer-only remote Runtime loading contract.
+ *
+ * The caller must already control the packaged remote asset. This function
+ * snapshots a packaged path exactly once, validates and plans that immutable
+ * byte snapshot, accepts only the remote access mode and the frozen
+ * single-asset shape, then emits the full JSON Runtime Capsule required by a
+ * server-side projection engine.
+ */
+function loadRemoteRuntimeAssetForServer(inputPath) {
+  const inputKind = typeof inputPath === 'string' ? 'packaged_file' : 'packaged_bytes';
+  const inputSnapshot = snapshotPackagedInput(inputPath);
+
+  if (!Buffer.isBuffer(inputSnapshot)) {
+    if (typeof inputPath === 'string') {
+      try {
+        if (fs.statSync(path.resolve(inputPath)).isDirectory()) {
+          throw loadPlanDeniedError(packagedAssetRequiredPlan(inputPath));
+        }
+      } catch (error) {
+        if (error && error.code === 'KDNA_ASSET_FILE_REQUIRED') throw error;
+      }
+      throw loadPlanDeniedError(planLoad(inputPath));
+    }
+    const plan = remoteRuntimeDeniedPlan(
+      packagedAssetRequiredPlan(null),
+      'KDNA_FORMAT_INVALID',
+      'Remote Runtime input must be a packaged .kdna file path or packaged bytes.',
+    );
+    throw loadPlanDeniedError(plan);
+  }
+
+  const plan = planLoad(inputSnapshot);
+  if (!plan.checks || plan.checks.overall_valid !== true) {
+    throw loadPlanDeniedError(plan);
+  }
+
+  if (plan.access !== 'remote') {
+    throw loadPlanDeniedError(remoteRuntimeDeniedPlan(
+      plan,
+      'KDNA_REMOTE_RUNTIME_ACCESS_REQUIRED',
+      'The Remote Runtime loader accepts only packaged assets whose access mode is remote.',
+    ));
+  }
+
+  const layout = readInputLayout(inputSnapshot);
+  const manifest = layout.manifest;
+  const hasDependencies = manifest.dependencies
+    && typeof manifest.dependencies === 'object'
+    && Object.keys(manifest.dependencies).length > 0;
+  if (hasDependencies || manifest.extends !== undefined) {
+    throw loadPlanDeniedError(remoteRuntimeDeniedPlan(
+      plan,
+      'KDNA_REMOTE_RUNTIME_COMPOSITION_UNSUPPORTED',
+      'Remote Runtime loading currently accepts one asset only; dependencies and extends declarations are not authorized.',
+    ));
+  }
+
+  if (
+    plan.state !== 'needs_runtime'
+    || plan.required_action !== 'connect_runtime'
+    || plan.can_load_now !== false
+    || plan.projection_policy !== 'remote'
+  ) {
+    throw loadPlanDeniedError(plan);
+  }
+
+  return loadAssetUnsafe(inputSnapshot, {
+    profile: 'full',
+    as: 'json',
+    resolvedDependencies: [],
+    extendsChain: [],
+    _validation: {
+      schema_valid: plan.checks.overall_valid === true,
+      signature_valid: plan.signature_valid === true,
+    },
+    _runtimeAssetBytes: inputSnapshot,
+    _runtimeInputKind: inputKind,
+  });
 }
 
 function loadAsset(inputPath, opts = {}) {

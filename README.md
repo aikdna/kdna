@@ -99,6 +99,13 @@ Protected, licensed, remote, and native-app loading behavior is specified here:
 - [Import security](./specs/kdna-import-security.md)
 - [Apple native runtime integration](./docs/apple-native-runtime-integration.md)
 
+Ordinary Core loading remains fail-closed for `access: "remote"`. Self-hosted
+Runtime deployers that control the packaged server-side asset use the explicit
+`@aikdna/kdna-core/remote-runtime` package subpath to obtain one full Capsule
+for server-side projection. That API is not a client loading shortcut, an
+identity or entitlement service, a content-confidentiality mechanism against
+the deployer, or an AIKDNA-hosted endpoint. See [Remote access](./docs/REMOTE_MODE.md).
+
 ## What KDNA Core does not define
 
 KDNA Core is **content-neutral**. It does not define:

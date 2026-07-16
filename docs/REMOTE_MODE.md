@@ -45,6 +45,45 @@ Agent or application
 The full judgment payload is not returned to the caller. The server must not
 turn remote mode into an endpoint for raw asset extraction.
 
+## Server-Side Core Entry Point
+
+An ordinary consumer must continue to use the package root. Its
+`loadAuthorized`, `load`, `loadAsset`, and `loadRuntimeCapsule` entry points
+always return a `needs_runtime` LoadPlan with the `connect_runtime` action for
+`access: "remote"`.
+
+A deployer that controls the final packaged remote asset uses the separate
+server-side package subpath:
+
+```js
+const {
+  loadRemoteRuntimeAsset,
+} = require('@aikdna/kdna-core/remote-runtime');
+
+const serverCapsule = loadRemoteRuntimeAsset('/srv/kdna/asset.kdna');
+```
+
+This function:
+
+- accepts only a packaged file path or packaged bytes;
+- snapshots a file path once, then plans, validates, and loads those same
+  immutable bytes;
+- accepts only `access: "remote"`;
+- emits a full JSON Runtime Capsule with the `full` profile;
+- rejects public and licensed assets, invalid or incompatible assets,
+  authoring directories, caller policy options, and assets with dependencies
+  or inheritance.
+
+The full Capsule is server-internal input to a projection engine. It must not
+be returned to the Agent client.
+
+Physical control of the deployed remote asset is the authorization boundary
+for this entry point. The entry point is not request authentication,
+entitlement verification, transport security, content protection from the
+deployer, or projection-minimization policy. Those controls belong to the
+embedding Runtime. It also does not imply that AIKDNA operates a hosted remote
+service.
+
 ## Public Reference Components
 
 - [`@aikdna/kdna-remote-server`](https://github.com/aikdna/kdna-remote-server)

@@ -11,6 +11,9 @@ const path = require('node:path');
 const packageName = '@aikdna/kdna-core';
 const packageRoot = path.join(__dirname, '..', 'packages', 'kdna-core');
 const originalResolveFilename = Module._resolveFilename;
+const workspaceSubpaths = new Map([
+  [`${packageName}/remote-runtime`, path.join(packageRoot, 'src', 'remote-runtime.js')],
+]);
 
 Module._resolveFilename = function resolveWorkspaceCore(request, parent, isMain, options) {
   if (request === packageName) {
@@ -19,9 +22,8 @@ Module._resolveFilename = function resolveWorkspaceCore(request, parent, isMain,
   if (request === `${packageName}/package.json`) {
     return path.join(packageRoot, 'package.json');
   }
-  if (request.startsWith(`${packageName}/`)) {
-    const localRequest = path.join(packageRoot, request.slice(packageName.length + 1));
-    return originalResolveFilename.call(this, localRequest, parent, isMain, options);
+  if (workspaceSubpaths.has(request)) {
+    return workspaceSubpaths.get(request);
   }
   return originalResolveFilename.call(this, request, parent, isMain, options);
 };
