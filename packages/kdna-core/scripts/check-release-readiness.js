@@ -1,30 +1,20 @@
 #!/usr/bin/env node
 'use strict';
 
-const { execFileSync } = require('node:child_process');
-const fs = require('node:fs');
-const path = require('node:path');
-
-const PACKAGE_ROOT = path.resolve(__dirname, '..');
+const ROOT_AUTHORITY = require('../../../scripts/core-release-authority');
 
 function normalizeCommandOutput(output) {
   return typeof output === 'string' ? output.trim() : '';
 }
 
-function run(command, args, options = {}) {
-  const output = execFileSync(command, args, {
-    cwd: path.resolve(PACKAGE_ROOT, '..', '..'),
-    encoding: 'utf8',
-    ...options,
-  });
-  return normalizeCommandOutput(output);
-}
-
 function canonicalCoreTag(version) {
-  if (typeof version !== 'string' || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u.test(version)) {
+  if (
+    typeof version !== 'string' ||
+    !/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/u.test(version)
+  ) {
     throw new Error(`invalid Core package version: ${version || '<missing>'}`);
   }
-  return `core/${version}`;
+  return version;
 }
 
 function assertCanonicalTagExists({ expectedTag, listedTag }) {
@@ -75,73 +65,15 @@ function observeGithubRelease({ coreTag, repo, runGh, log = console.log }) {
 }
 
 function main() {
-  const pkg = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, 'package.json'), 'utf8'));
-  const version = pkg.version;
-  const name = pkg.name;
-  const coreTag = canonicalCoreTag(version);
-  const failures = [];
-
-  function check(label, fn) {
-    try {
-      fn();
-      console.log(`  PASS ${label}`);
-    } catch (error) {
-      failures.push(`${label}: ${error.message}`);
-      console.error(`  FAIL ${label}: ${error.message}`);
-    }
+  if (process.env.npm_lifecycle_event === 'prepublishOnly') {
+    throw new Error(
+      'direct worktree publication is forbidden; publish only through scripts/core-release-authority.js and its retained artifact',
+    );
   }
-
-  console.log(`Release readiness check: ${name}@${version}\n`);
-
-  check('worktree is clean', () => {
-    const status = run('git', ['status', '--porcelain']);
-    if (status) throw new Error('tracked or untracked release inputs are not committed');
-  });
-
-  check(`canonical tag ${coreTag} exists`, () => {
-    const listedTag = run('git', ['tag', '--list', coreTag]);
-    assertCanonicalTagExists({ expectedTag: coreTag, listedTag });
-  });
-
-  if (process.env.GITHUB_ACTIONS === 'true' || process.env.GITHUB_REF) {
-    check('workflow ref exactly matches the package version tag', () => {
-      assertCanonicalWorkflowRef({ expectedTag: coreTag, githubRef: process.env.GITHUB_REF });
-    });
-  } else {
-    console.log('  SKIP workflow release-ref gate: not running in GitHub Actions');
-  }
-
-  check('canonical version tag points to the workflow commit', () => {
-    const headCommit = run('git', ['rev-parse', 'HEAD']);
-    const taggedCommit = run('git', ['rev-list', '-n', '1', coreTag]);
-    const githubSha = process.env.GITHUB_SHA || null;
-    if (process.env.GITHUB_ACTIONS === 'true' && githubSha === null) {
-      throw new Error('GITHUB_SHA is required in GitHub Actions');
-    }
-    if (githubSha !== null && !/^[0-9a-f]{40}$/u.test(githubSha)) {
-      throw new Error('GITHUB_SHA must be a full lowercase 40-character commit SHA');
-    }
-    assertTagCommit({ expectedTag: coreTag, taggedCommit, headCommit, githubSha });
-  });
-
-  check('CHANGELOG has version entry', () => {
-    const changelog = fs.readFileSync(path.join(PACKAGE_ROOT, 'CHANGELOG.md'), 'utf8');
-    if (!changelog.includes(version)) throw new Error(`CHANGELOG.md missing entry for ${version}`);
-  });
-
-  const repositoryMatch = pkg.repository.url.match(/github\.com\/([^/]+\/[^.]+)/u);
-  observeGithubRelease({
-    coreTag,
-    repo: repositoryMatch ? repositoryMatch[1] : 'aikdna/kdna',
-    runGh: (args) => run('gh', args, { stdio: 'ignore' }),
-  });
-
-  if (failures.length > 0) {
-    console.error(`\n${failures.length} required check(s) failed. Fix before publishing.`);
-    process.exitCode = 1;
-    return;
-  }
-  console.log('\nAll required checks passed. Ready to publish.');
+  const authoritative = ROOT_AUTHORITY.inspectAuthoritativeRelease();
+  console.log(
+    `Authoritative Core release binding passed: ${authoritative.name}@${authoritative.version} ${authoritative.commit}`,
+  );
 }
 
 if (require.main === module) main();

@@ -2,7 +2,7 @@
 #
 # Verifies that for every tracked package, four fields agree:
 #   1. main HEAD version (from package.json on main)
-#   2. latest git tag (for example, core/0.28.6)
+#   2. latest exact package tag
 #   3. npm latest version (from registry.npmjs.org)
 #   4. GitHub Release existence (for the npm-latest version)
 #
@@ -65,7 +65,7 @@ jobs:
             "kdna-web-client:kdna-web-client:package.json:v:@aikdna/kdna-web-client"
             "kdna-react:kdna-react:package.json:v:@aikdna/kdna-react"
             "create-kdna-web-app:create-kdna-web-app:package.json:v:create-kdna-web-app"
-            "kdna-core:kdna:packages/kdna-core/package.json:core/:@aikdna/kdna-core"
+            "kdna-core:kdna:packages/kdna-core/package.json:natural:@aikdna/kdna-core"
             "kdna-eval:kdna:packages/kdna-eval/package.json:eval/:@aikdna/kdna-eval"
           )
           DRIFT=0
@@ -76,22 +76,37 @@ jobs:
             # Use curl + raw.githubusercontent.com (no auth needed for public repos)
             main_v=$(curl -sS "https://raw.githubusercontent.com/aikdna/${repo}/main/${package_path}" 2>/dev/null \
               | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["version"])' 2>/dev/null || echo "")
-            tag_v=$(git ls-remote --tags "https://github.com/aikdna/$repo.git" 2>/dev/null \
-              | awk '{print $2}' \
-              | sed 's#^refs/tags/##' \
-              | awk -v prefix="${tag_prefix}" 'index($0, prefix) == 1 && $0 !~ /\^\{\}$/ {print $0}' \
-              | sort -V | tail -1 || echo "")
+            if [ "$tag_prefix" = "natural" ]; then
+              tag_v=$(git ls-remote --tags "https://github.com/aikdna/$repo.git" 2>/dev/null \
+                | awk '{print $2}' \
+                | sed 's#^refs/tags/##' \
+                | awk '$0 ~ /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/ {print $0}' \
+                | sort -V | tail -1 || echo "")
+              tag_stripped="$tag_v"
+              tag_display="$tag_v"
+            else
+              tag_v=$(git ls-remote --tags "https://github.com/aikdna/$repo.git" 2>/dev/null \
+                | awk '{print $2}' \
+                | sed 's#^refs/tags/##' \
+                | awk -v prefix="${tag_prefix}" 'index($0, prefix) == 1 && $0 !~ /\^\{\}$/ {print $0}' \
+                | sort -V | tail -1 || echo "")
+              tag_stripped="${tag_v#${tag_prefix}}"
+              tag_display="${tag_prefix}${tag_stripped}"
+            fi
             npm_v=$(npm view "$npm_spec" version 2>/dev/null || echo "")
-            release_tag="${tag_prefix}${npm_v}"
+            if [ "$tag_prefix" = "natural" ]; then
+              release_tag="$npm_v"
+            else
+              release_tag="${tag_prefix}${npm_v}"
+            fi
             rel_http=$(curl -sS -o /dev/null -w "%{http_code}" "https://api.github.com/repos/aikdna/${repo}/releases/tags/${release_tag}" 2>/dev/null)
             rel_exists=$([ "$rel_http" = "200" ] && echo "yes" || echo "no")
-            tag_stripped="${tag_v#${tag_prefix}}"
             drift="ok"
             if [ -z "$main_v" ] || [ -z "$npm_v" ] || [ "$main_v" != "$tag_stripped" ] || [ "$tag_stripped" != "$npm_v" ] || [ "$rel_exists" = "no" ]; then
               drift="DRIFT"
               DRIFT=$((DRIFT+1))
             fi
-            echo "| $pkg | ${main_v:-?} | ${tag_prefix}${tag_stripped:-?} | ${npm_v:-?} | $rel_exists | $drift |"
+            echo "| $pkg | ${main_v:-?} | ${tag_display:-?} | ${npm_v:-?} | $rel_exists | $drift |"
           done
           echo "## publish-health drift report" >> $GITHUB_STEP_SUMMARY
           echo "Drift count: $DRIFT" >> $GITHUB_STEP_SUMMARY

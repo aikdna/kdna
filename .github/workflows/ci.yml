@@ -9,7 +9,7 @@ jobs:
         with: { node-version: 22 }
       - run: npm ci
       - name: Enforce protocol naming and scoped release gates
-        run: npm run test:post-cutover && npm run test:release-scopes && npm run audit:post-cutover
+        run: npm run test:post-cutover && npm run test:release-scopes && node --test scripts/core-release-authority.test.js && npm run audit:post-cutover
       - run: npm test
 
   public-surface:

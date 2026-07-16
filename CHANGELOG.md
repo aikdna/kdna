@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Replace the Core worktree publication path with a natural-SemVer-tag release
+  authority. It binds the release event, tag, commit, tree, clean index, DCO,
+  package version, and changelog; materializes two isolated sources from Git
+  blobs; requires byte-identical npm 11.17 packs; retains one verified tarball;
+  and revalidates evidence, registry identity, and the current tag before
+  publication.
 - Add an explicit `@aikdna/kdna-core/remote-runtime` server-side loading
   contract for deployers that control a packaged `access: "remote"` asset.
   It uses one immutable byte snapshot, forces a full JSON Runtime Capsule for

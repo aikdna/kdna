@@ -402,11 +402,11 @@ test('publication guard rejects empty workflow output paths', () => {
 
 test('release readiness accepts only the canonical Core version tag', () => {
   const expectedTag = canonicalCoreTag('0.18.0');
-  assert.equal(expectedTag, 'core/0.18.0');
+  assert.equal(expectedTag, '0.18.0');
   assert.doesNotThrow(() => assertCanonicalTagExists({ expectedTag, listedTag: expectedTag }));
   assert.throws(
-    () => assertCanonicalTagExists({ expectedTag, listedTag: '0.18.0' }),
-    /Canonical tag core\/0\.18\.0 not found/u,
+    () => assertCanonicalTagExists({ expectedTag, listedTag: 'core/0.18.0' }),
+    /Canonical tag 0\.18\.0 not found/u,
   );
   assert.throws(() => canonicalCoreTag('release-0.18.0'), /invalid Core package version/u);
 });
@@ -414,21 +414,21 @@ test('release readiness accepts only the canonical Core version tag', () => {
 test('release readiness requires the workflow tag suffix to equal the package version', () => {
   assert.doesNotThrow(() =>
     assertCanonicalWorkflowRef({
-      expectedTag: 'core/0.18.0',
-      githubRef: 'refs/tags/core/0.18.0',
+      expectedTag: '0.18.0',
+      githubRef: 'refs/tags/0.18.0',
     }),
   );
   assert.throws(
     () =>
       assertCanonicalWorkflowRef({
-        expectedTag: 'core/0.18.0',
-        githubRef: 'refs/tags/core/0.18.0-recovery',
+        expectedTag: '0.18.0',
+        githubRef: 'refs/tags/0.18.0-recovery',
       }),
     /does not exactly match package version tag/u,
   );
   assert.throws(
     () =>
-      assertCanonicalWorkflowRef({ expectedTag: 'core/0.18.0', githubRef: null }),
+      assertCanonicalWorkflowRef({ expectedTag: '0.18.0', githubRef: null }),
     /GITHUB_REF <missing>/u,
   );
 });
@@ -436,7 +436,7 @@ test('release readiness requires the workflow tag suffix to equal the package ve
 test('release readiness binds canonical tag, HEAD, and GITHUB_SHA', () => {
   assert.doesNotThrow(() =>
     assertTagCommit({
-      expectedTag: 'core/0.18.0',
+      expectedTag: '0.18.0',
       taggedCommit: FULL_SHA,
       headCommit: FULL_SHA,
       githubSha: FULL_SHA,
@@ -445,7 +445,7 @@ test('release readiness binds canonical tag, HEAD, and GITHUB_SHA', () => {
   assert.throws(
     () =>
       assertTagCommit({
-        expectedTag: 'core/0.18.0',
+        expectedTag: '0.18.0',
         taggedCommit: OTHER_SHA,
         headCommit: FULL_SHA,
         githubSha: FULL_SHA,
@@ -455,7 +455,7 @@ test('release readiness binds canonical tag, HEAD, and GITHUB_SHA', () => {
   assert.throws(
     () =>
       assertTagCommit({
-        expectedTag: 'core/0.18.0',
+        expectedTag: '0.18.0',
         taggedCommit: FULL_SHA,
         headCommit: FULL_SHA,
         githubSha: OTHER_SHA,
@@ -467,7 +467,7 @@ test('release readiness binds canonical tag, HEAD, and GITHUB_SHA', () => {
 test('GitHub Release observation reports SKIP without a false PASS', () => {
   const logs = [];
   const status = observeGithubRelease({
-    coreTag: 'core/0.18.0',
+    coreTag: '0.18.0',
     repo: 'aikdna/kdna',
     runGh: () => {
       throw new Error('not authenticated');
@@ -486,7 +486,7 @@ test('ignored command output is normalized without throwing', () => {
   assert.equal(normalizeCommandOutput('  value\n'), 'value');
 });
 
-test('publish workflow keeps Core on release-published canonical tags only', () => {
+test('publish workflow delegates Core only to the authoritative retained-artifact release path', () => {
   const workflow = fs.readFileSync(path.join(REPO_ROOT, '.github', 'workflows', 'publish.yml'), 'utf8');
   const coreStart = workflow.indexOf('  publish-core:');
   const coreEnd = workflow.indexOf('\n  publish-eval:', coreStart);
@@ -494,18 +494,30 @@ test('publish workflow keeps Core on release-published canonical tags only', () 
   assert.notEqual(coreEnd, -1);
   const coreJob = workflow.slice(coreStart, coreEnd);
 
-  assert.match(
+  assert.match(coreJob, /github\.event_name == 'release'/u);
+  assert.match(coreJob, /github\.event\.action == 'published'/u);
+  assert.match(coreJob, /github\.event\.release\.draft == false/u);
+  assert.match(coreJob, /github\.event\.release\.prerelease == false/u);
+  assert.match(coreJob, /!startsWith\(github\.event\.release\.tag_name, 'v'\)/u);
+  assert.match(coreJob, /!contains\(github\.event\.release\.tag_name, '\/'\)/u);
+  assert.doesNotMatch(
     coreJob,
-    /if: github\.event_name == 'release' && github\.event\.action == 'published' && github\.event\.release\.draft == false && github\.event\.release\.prerelease == false && startsWith\(github\.event\.release\.tag_name, 'core\/'\)/u,
+    /startsWith\(github\.event\.release\.tag_name, 'core\/'\)/u,
   );
   assert.doesNotMatch(coreJob, /workflow_dispatch/u);
   assert.equal((coreJob.match(/uses: actions\/checkout@/gu) || []).length, 1);
   assert.doesNotMatch(coreJob, /\.ecosystem-repos/u);
+  assert.match(coreJob, /ref: \$\{\{ github\.event\.release\.tag_name \}\}/u);
+  assert.match(coreJob, /npm install --global npm@11\.17\.0 --ignore-scripts/u);
 
-  const releaseCheck = coreJob.indexOf('run: npm --workspace @aikdna/kdna-core run release:check');
-  const evidence = coreJob.indexOf('run: npm run release:evidence -- --package=core');
-  const duplicateGuard = coreJob.indexOf('id: core-publish-guard');
-  const publish = coreJob.indexOf('if: steps.core-publish-guard.outputs.publish_required');
+  const releaseCheck = coreJob.indexOf('core-release-authority.js check');
+  const evidence = coreJob.indexOf('core-release-authority.js prepare');
+  const smoke = coreJob.indexOf('core-release-authority.js smoke');
+  const duplicateGuard = coreJob.indexOf('core-release-authority.js guard');
+  const publish = coreJob.indexOf('core-release-authority.js publish');
   assert.ok(releaseCheck > 0 && releaseCheck < evidence);
-  assert.ok(evidence < duplicateGuard && duplicateGuard < publish);
+  assert.ok(evidence < smoke && smoke < duplicateGuard && duplicateGuard < publish);
+  assert.match(coreJob, /if: steps\.registry\.outputs\.should_publish == 'true'/u);
+  assert.doesNotMatch(coreJob, /run:\s*>?-?\s*npm publish\b/u);
+  assert.doesNotMatch(coreJob, /working-directory: packages\/kdna-core/u);
 });

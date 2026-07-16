@@ -1,0 +1,1813 @@
+#!/usr/bin/env node
+'use strict';
+
+const crypto = require('node:crypto');
+const { spawnSync } = require('node:child_process');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { TextDecoder } = require('node:util');
+const zlib = require('node:zlib');
+
+const REPO_ROOT = path.resolve(__dirname, '..');
+const PACKAGE_RELATIVE = 'packages/kdna-core';
+const PACKAGE_NAME = '@aikdna/kdna-core';
+const REPOSITORY = 'aikdna/kdna';
+const TRUSTED_GIT = '/usr/bin/git';
+const AUDITED_NPM_VERSION = '11.17.0';
+const OFFICIAL_REGISTRY = 'https://registry.npmjs.org/';
+const REGISTRY_TIMEOUT_MS = 30_000;
+const COMMIT_RE = /^[0-9a-f]{40}$/u;
+const OBJECT_RE = /^[0-9a-f]{40}$/u;
+const STABLE_SEMVER_RE = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/u;
+const UTF8 = new TextDecoder('utf-8', { fatal: true });
+const TREE_LIMITS = Object.freeze({
+  files: 10_000,
+  fileBytes: 16 * 1024 * 1024,
+  totalBytes: 128 * 1024 * 1024,
+  pathBytes: 1024,
+  segmentBytes: 255,
+});
+const TAR_LIMITS = Object.freeze({
+  packedBytes: 64 * 1024 * 1024,
+  files: 1024,
+  fileBytes: 32 * 1024 * 1024,
+  totalBytes: 128 * 1024 * 1024,
+});
+
+function fail(message) {
+  throw new Error(message);
+}
+
+function assert(condition, message) {
+  if (!condition) fail(message);
+}
+
+function exactKeys(value, keys, label) {
+  assert(value && typeof value === 'object' && !Array.isArray(value), `${label} must be an object`);
+  const actual = Object.keys(value).sort();
+  const expected = [...keys].sort();
+  assert(JSON.stringify(actual) === JSON.stringify(expected), `${label} fields are not exact`);
+}
+
+function strictJson(bytes, label) {
+  let source;
+  try {
+    source = Buffer.isBuffer(bytes) ? UTF8.decode(bytes) : String(bytes);
+  } catch {
+    fail(`${label} is not valid UTF-8`);
+  }
+  try {
+    return JSON.parse(source);
+  } catch {
+    fail(`${label} is not one valid JSON document`);
+  }
+}
+
+function sha1(bytes) {
+  return crypto.createHash('sha1').update(bytes).digest('hex');
+}
+
+function sha256(bytes) {
+  return crypto.createHash('sha256').update(bytes).digest('hex');
+}
+
+function integrity(bytes) {
+  return `sha512-${crypto.createHash('sha512').update(bytes).digest('base64')}`;
+}
+
+function cleanGitEnvironment(environment = process.env) {
+  const clean = {};
+  for (const [key, value] of Object.entries(environment)) {
+    if (!key.startsWith('GIT_')) clean[key] = value;
+  }
+  return {
+    ...clean,
+    GIT_CONFIG_NOSYSTEM: '1',
+    GIT_CONFIG_GLOBAL: '/dev/null',
+    GIT_CONFIG_SYSTEM: '/dev/null',
+    GIT_CONFIG_COUNT: '0',
+    GIT_NO_REPLACE_OBJECTS: '1',
+    GIT_OPTIONAL_LOCKS: '0',
+    LC_ALL: 'C',
+    LANG: 'C',
+  };
+}
+
+function runProcess(command, args, options = {}) {
+  const result = spawnSync(command, args, {
+    cwd: options.cwd || REPO_ROOT,
+    encoding: options.encoding || 'buffer',
+    input: options.input,
+    env: options.env || process.env,
+    maxBuffer: options.maxBuffer || 256 * 1024 * 1024,
+    shell: false,
+    stdio: options.stdio,
+    timeout: options.timeout,
+  });
+  if (result.error) fail(`${options.label || command} failed: ${result.error.message}`);
+  assert(Number.isInteger(result.status), `${options.label || command} returned no integer status`);
+  if (result.status !== 0) {
+    const stderr = Buffer.isBuffer(result.stderr)
+      ? result.stderr.toString('utf8').trim()
+      : String(result.stderr || '').trim();
+    fail(
+      `${options.label || command} exited ${result.status}: ${stderr || 'no diagnostic output'}`,
+    );
+  }
+  return result;
+}
+
+function runGit(args, options = {}) {
+  assert(fs.existsSync(TRUSTED_GIT), `trusted Git is unavailable at ${TRUSTED_GIT}`);
+  return runProcess(
+    TRUSTED_GIT,
+    [
+      '--no-replace-objects',
+      '-c',
+      'core.fsmonitor=false',
+      '-c',
+      'core.untrackedCache=false',
+      ...args,
+    ],
+    {
+      ...options,
+      cwd: options.cwd || REPO_ROOT,
+      env: cleanGitEnvironment(options.env),
+      label: options.label || `git ${args[0] || ''}`,
+    },
+  );
+}
+
+function gitText(args, options = {}) {
+  const result = runGit(args, { ...options, encoding: 'utf8' });
+  assert(result.stderr === '', `${options.label || `git ${args[0]}`} wrote unexpected stderr`);
+  return result.stdout.trim();
+}
+
+function gitBytes(args, options = {}) {
+  const result = runGit(args, { ...options, encoding: 'buffer' });
+  assert(
+    result.stderr.length === 0,
+    `${options.label || `git ${args[0]}`} wrote unexpected stderr`,
+  );
+  return result.stdout;
+}
+
+function splitNul(bytes, label) {
+  assert(Buffer.isBuffer(bytes), `${label} must be bytes`);
+  const records = [];
+  let start = 0;
+  for (let index = 0; index < bytes.length; index += 1) {
+    if (bytes[index] !== 0) continue;
+    assert(index > start, `${label} contains an empty record`);
+    records.push(Buffer.from(bytes.subarray(start, index)));
+    start = index + 1;
+  }
+  assert(start === bytes.length, `${label} is missing its final NUL terminator`);
+  return records;
+}
+
+function decodePath(bytes, label) {
+  assert(bytes.length > 0 && bytes.length <= TREE_LIMITS.pathBytes, `${label} length is invalid`);
+  let value;
+  try {
+    value = UTF8.decode(bytes);
+  } catch {
+    fail(`${label} is not valid UTF-8`);
+  }
+  const segments = value.split('/');
+  assert(!path.posix.isAbsolute(value), `${label} is absolute`);
+  assert(!value.includes('\\'), `${label} contains a backslash`);
+  assert(!/[\u0000-\u001f\u007f]/u.test(value), `${label} contains a control character`);
+  assert(value.normalize('NFC') === value, `${label} is not NFC-normalized`);
+  assert(path.posix.normalize(value) === value, `${label} is not canonical`);
+  assert(
+    segments.every((segment) => segment && segment !== '.' && segment !== '..'),
+    `${label} contains an unsafe segment`,
+  );
+  assert(
+    segments.every((segment) => Buffer.byteLength(segment) <= TREE_LIMITS.segmentBytes),
+    `${label} contains an oversized segment`,
+  );
+  assert(!segments.some((segment) => segment.toLowerCase() === '.git'), `${label} contains .git`);
+  return value;
+}
+
+function parseTreeEntries(raw, limits = TREE_LIMITS) {
+  const entries = [];
+  let totalBytes = 0;
+  const paths = new Set();
+  const foldedPaths = new Set();
+  for (const [index, record] of splitNul(raw, 'Git tree listing').entries()) {
+    const tab = record.indexOf(0x09);
+    assert(tab > 0, `Git tree entry ${index} is malformed`);
+    const header = record.subarray(0, tab).toString('ascii');
+    const match = /^(\d{6}) (blob|commit) ([0-9a-f]{40}) +([0-9]+|-)$/u.exec(header);
+    assert(match, `Git tree entry ${index} header is malformed`);
+    const [, mode, type, object, sizeText] = match;
+    assert(type === 'blob', `Git tree entry ${index} is a gitlink`);
+    assert(
+      mode === '100644' || mode === '100755',
+      `Git tree entry ${index} mode ${mode} is forbidden`,
+    );
+    assert(OBJECT_RE.test(object), `Git tree entry ${index} object id is invalid`);
+    assert(/^\d+$/u.test(sizeText), `Git tree entry ${index} blob size is missing`);
+    const size = Number(sizeText);
+    assert(
+      Number.isSafeInteger(size) && size >= 0 && size <= limits.fileBytes,
+      `Git tree entry ${index} size is invalid`,
+    );
+    const filePath = decodePath(record.subarray(tab + 1), `Git tree entry ${index} path`);
+    assert(!paths.has(filePath), `Git tree contains duplicate path ${filePath}`);
+    const folded = filePath.toLocaleLowerCase('en-US');
+    assert(!foldedPaths.has(folded), `Git tree contains a case-folding collision at ${filePath}`);
+    paths.add(filePath);
+    foldedPaths.add(folded);
+    totalBytes += size;
+    assert(totalBytes <= limits.totalBytes, 'Git tree exceeds the total byte limit');
+    entries.push(Object.freeze({ path: filePath, mode, object, size }));
+    assert(entries.length <= limits.files, 'Git tree exceeds the file-count limit');
+  }
+  assert(entries.length > 0, 'Git tree must contain files');
+  return Object.freeze(entries);
+}
+
+function inspectTree(commit, root = REPO_ROOT) {
+  assert(COMMIT_RE.test(commit), 'source commit must be a full lowercase commit id');
+  const tree = gitText(['rev-parse', '--verify', `${commit}^{tree}`], { cwd: root });
+  assert(OBJECT_RE.test(tree), 'source tree id is invalid');
+  const entries = parseTreeEntries(
+    gitBytes(['ls-tree', '-r', '-z', '--full-tree', '--long', commit], { cwd: root }),
+  );
+  return Object.freeze({
+    commit,
+    tree,
+    entries,
+    fileCount: entries.length,
+    totalBytes: entries.reduce((sum, entry) => sum + entry.size, 0),
+  });
+}
+
+function batchReadBlobs(entries, root = REPO_ROOT) {
+  const input = Buffer.from(`${entries.map((entry) => entry.object).join('\n')}\n`, 'ascii');
+  const output = gitBytes(['cat-file', '--batch'], {
+    cwd: root,
+    input,
+    maxBuffer: TREE_LIMITS.totalBytes + entries.length * 256,
+    label: 'git cat-file --batch',
+  });
+  const blobs = [];
+  let offset = 0;
+  for (const [index, entry] of entries.entries()) {
+    const newline = output.indexOf(0x0a, offset);
+    assert(newline > offset, `blob batch header ${index} is missing`);
+    const header = output.subarray(offset, newline).toString('ascii');
+    const match = /^([0-9a-f]{40}) blob (\d+)$/u.exec(header);
+    assert(match, `blob batch header ${index} is malformed`);
+    assert(match[1] === entry.object, `blob batch object ${index} changed`);
+    assert(Number(match[2]) === entry.size, `blob batch size ${index} changed`);
+    const start = newline + 1;
+    const end = start + entry.size;
+    assert(end < output.length && output[end] === 0x0a, `blob batch body ${index} is truncated`);
+    const bytes = Buffer.from(output.subarray(start, end));
+    const object = sha1(Buffer.concat([Buffer.from(`blob ${bytes.length}\0`), bytes]));
+    assert(object === entry.object, `blob ${entry.path} does not match its object id`);
+    blobs.push(bytes);
+    offset = end + 1;
+  }
+  assert(offset === output.length, 'blob batch contains trailing output');
+  return blobs;
+}
+
+function materializeTree(tree, destination, root = REPO_ROOT) {
+  assert(!fs.existsSync(destination), `materialization destination already exists: ${destination}`);
+  fs.mkdirSync(destination, { recursive: false, mode: 0o700 });
+  const blobs = batchReadBlobs(tree.entries, root);
+  for (const [index, entry] of tree.entries.entries()) {
+    const target = path.join(destination, ...entry.path.split('/'));
+    const relative = path.relative(destination, target);
+    assert(
+      relative && !relative.startsWith('..') && !path.isAbsolute(relative),
+      'materialized path escaped its root',
+    );
+    fs.mkdirSync(path.dirname(target), { recursive: true, mode: 0o700 });
+    fs.writeFileSync(target, blobs[index], {
+      flag: 'wx',
+      mode: entry.mode === '100755' ? 0o755 : 0o644,
+    });
+    fs.chmodSync(target, entry.mode === '100755' ? 0o755 : 0o644);
+  }
+  return destination;
+}
+
+function parseIndexEntries(raw) {
+  return splitNul(raw, 'Git index listing').map((record, index) => {
+    const tab = record.indexOf(0x09);
+    assert(tab > 0, `Git index entry ${index} is malformed`);
+    const match = /^(\d{6}) ([0-9a-f]{40}) ([0-3])$/u.exec(
+      record.subarray(0, tab).toString('ascii'),
+    );
+    assert(match, `Git index entry ${index} header is malformed`);
+    assert(match[3] === '0', `Git index entry ${index} has a nonzero merge stage`);
+    return {
+      mode: match[1],
+      object: match[2],
+      path: decodePath(record.subarray(tab + 1), `Git index entry ${index} path`),
+    };
+  });
+}
+
+function assertIndexMatchesTree(tree, root = REPO_ROOT) {
+  const gitDirectory = path.join(path.resolve(root), '.git');
+  const indexPath = path.join(gitDirectory, 'index');
+  const indexStats = fs.lstatSync(indexPath);
+  const gitStats = fs.lstatSync(gitDirectory);
+  assert(
+    gitStats.isDirectory() && !gitStats.isSymbolicLink(),
+    'release .git must be one real directory',
+  );
+  assert(
+    indexStats.isFile() && !indexStats.isSymbolicLink(),
+    'release index must be one real file',
+  );
+  const relativeIndex = path.relative(fs.realpathSync(gitDirectory), fs.realpathSync(indexPath));
+  assert(
+    relativeIndex && !relativeIndex.startsWith('..') && !path.isAbsolute(relativeIndex),
+    'release index is outside .git',
+  );
+
+  const indexEntries = parseIndexEntries(gitBytes(['ls-files', '--stage', '-z'], { cwd: root }));
+  assert(
+    indexEntries.length === tree.entries.length,
+    'Git index file count differs from the release tree',
+  );
+  for (let index = 0; index < tree.entries.length; index += 1) {
+    const expected = tree.entries[index];
+    const actual = indexEntries[index];
+    assert(
+      actual.path === expected.path &&
+        actual.mode === expected.mode &&
+        actual.object === expected.object,
+      `Git index differs from the release tree at ${expected.path}`,
+    );
+  }
+
+  for (const record of splitNul(
+    gitBytes(['ls-files', '-v', '-z'], { cwd: root }),
+    'Git index flags',
+  )) {
+    assert(
+      record.length > 2 && record[0] === 0x48 && record[1] === 0x20,
+      'Git index contains hidden or skip-worktree entries',
+    );
+  }
+}
+
+function commitDocument(commit, root = REPO_ROOT) {
+  const bytes = gitBytes(['cat-file', 'commit', commit], { cwd: root });
+  let source;
+  try {
+    source = UTF8.decode(bytes);
+  } catch {
+    fail('release commit object is not valid UTF-8');
+  }
+  assert(!source.includes('\0'), 'release commit object contains NUL');
+  const treeMatch = /^tree ([0-9a-f]{40})$/mu.exec(source);
+  assert(treeMatch, 'release commit object has no valid tree header');
+  const separator = source.indexOf('\n\n');
+  assert(separator >= 0, 'release commit object has no message body');
+  const message = source.slice(separator + 2);
+  const trailerBlock = message.trimEnd().split(/\n\n/u).at(-1) || '';
+  const signoffs = [
+    ...trailerBlock.matchAll(/^Signed-off-by: ([^<>\r\n]+) <([^<>\s@]+@[^<>\s@]+)>$/gmu),
+  ].map((match) => `${match[1].trim()} <${match[2]}>`);
+  assert(signoffs.length > 0, 'release commit must contain a valid DCO Signed-off-by trailer');
+  return Object.freeze({ tree: treeMatch[1], message, signoffs });
+}
+
+function validateReleaseContext(input) {
+  const { pkg, changelog, env, git } = input;
+  assert(
+    pkg && typeof pkg === 'object' && !Array.isArray(pkg),
+    'Core package manifest must be an object',
+  );
+  assert(pkg.name === PACKAGE_NAME, `Core package name must be ${PACKAGE_NAME}`);
+  assert(
+    STABLE_SEMVER_RE.test(pkg.version || ''),
+    'Core version must be exact stable natural SemVer',
+  );
+  const tag = pkg.version;
+  const ref = `refs/tags/${tag}`;
+  assert(env.GITHUB_EVENT_NAME === 'release', 'GITHUB_EVENT_NAME must be release');
+  assert(env.RELEASE_EVENT_ACTION === 'published', 'release action must be published');
+  assert(env.RELEASE_TAG_NAME === tag, `release tag must be exactly ${tag}`);
+  assert(env.RELEASE_IS_DRAFT === 'false', 'draft releases cannot publish');
+  assert(env.RELEASE_IS_PRERELEASE === 'false', 'prereleases cannot publish');
+  assert(env.GITHUB_REF === ref, `GITHUB_REF must be exactly ${ref}`);
+  if (env.GITHUB_REF_TYPE !== undefined)
+    assert(env.GITHUB_REF_TYPE === 'tag', 'GITHUB_REF_TYPE must be tag');
+  if (env.GITHUB_REF_NAME !== undefined)
+    assert(env.GITHUB_REF_NAME === tag, 'GITHUB_REF_NAME must equal the release tag');
+  assert(COMMIT_RE.test(env.GITHUB_SHA || ''), 'GITHUB_SHA must be a full lowercase commit id');
+  assert(git.status === '', 'release worktree must be clean');
+  assert(COMMIT_RE.test(git.head || ''), 'HEAD must be a full lowercase commit id');
+  assert(COMMIT_RE.test(git.tagCommit || ''), 'release tag must dereference to a commit');
+  assert(git.tagCommit === git.head, 'release tag commit must equal HEAD');
+  assert(env.GITHUB_SHA === git.head, 'GITHUB_SHA must equal HEAD and the release tag commit');
+  assert(OBJECT_RE.test(git.tree || ''), 'release tree id is invalid');
+  assert(git.commitTree === git.tree, 'commit object tree must equal the inspected release tree');
+  assert(Array.isArray(git.signoffs) && git.signoffs.length > 0, 'release commit must satisfy DCO');
+
+  const escaped = pkg.version.replace(/\./gu, '\\.');
+  const headings = [
+    ...changelog.matchAll(new RegExp(`^## ${escaped}(?: \\(\\d{4}-\\d{2}-\\d{2}\\))?$`, 'gmu')),
+  ];
+  assert(
+    headings.length === 1,
+    `Core CHANGELOG must contain exactly one ## ${pkg.version} heading`,
+  );
+  const finalized = [...changelog.matchAll(/^## (\d+\.\d+\.\d+)(?: \(\d{4}-\d{2}-\d{2}\))?$/gmu)];
+  assert(
+    finalized.length > 0 && finalized[0][1] === pkg.version,
+    'Core version must be the first finalized CHANGELOG entry',
+  );
+  return Object.freeze({
+    name: pkg.name,
+    version: pkg.version,
+    tag,
+    ref,
+    commit: git.head,
+    tree: git.tree,
+    signoffs: Object.freeze([...git.signoffs]),
+  });
+}
+
+function readBlobAtPath(tree, relativePath, root = REPO_ROOT) {
+  const entry = tree.entries.find((candidate) => candidate.path === relativePath);
+  assert(entry, `release tree is missing ${relativePath}`);
+  return batchReadBlobs([entry], root)[0];
+}
+
+function inspectAuthoritativeRelease(env = process.env, root = REPO_ROOT) {
+  const repositoryRoot = gitText(['rev-parse', '--path-format=absolute', '--show-toplevel'], {
+    cwd: root,
+  });
+  assert(
+    fs.realpathSync(repositoryRoot) === fs.realpathSync(root),
+    'release repository root is ambiguous',
+  );
+  const head = gitText(['rev-parse', '--verify', 'HEAD^{commit}'], { cwd: root });
+  assert(COMMIT_RE.test(head), 'HEAD is not a full lowercase commit id');
+  const tree = inspectTree(head, root);
+  const pkg = strictJson(
+    readBlobAtPath(tree, `${PACKAGE_RELATIVE}/package.json`, root),
+    'Core package.json',
+  );
+  assert(
+    STABLE_SEMVER_RE.test(pkg.version || ''),
+    'Core package version must be exact stable natural SemVer',
+  );
+  const tag = pkg.version;
+  const tagRef = `refs/tags/${tag}`;
+  const exactTagObject = gitText(['show-ref', '--verify', '--hash', tagRef], { cwd: root });
+  assert(OBJECT_RE.test(exactTagObject), 'exact Core release tag does not exist');
+  const tagCommit = gitText(['rev-parse', '--verify', `${tagRef}^{commit}`], { cwd: root });
+  const status = gitText(['status', '--porcelain=v2', '--untracked-files=all'], { cwd: root });
+  assertIndexMatchesTree(tree, root);
+  const commit = commitDocument(head, root);
+  const changelog = UTF8.decode(readBlobAtPath(tree, `${PACKAGE_RELATIVE}/CHANGELOG.md`, root));
+  const context = validateReleaseContext({
+    pkg,
+    changelog,
+    env,
+    git: {
+      status,
+      head,
+      tagCommit,
+      tree: tree.tree,
+      commitTree: commit.tree,
+      signoffs: commit.signoffs,
+    },
+  });
+  return Object.freeze({ ...context, treeState: tree });
+}
+
+function resolveAuditedNpm() {
+  const candidates = [
+    path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'npm.cmd' : 'npm'),
+    process.env.npm_execpath,
+  ].filter(Boolean);
+  const executable = candidates.find(
+    (candidate) => path.isAbsolute(candidate) && fs.existsSync(candidate),
+  );
+  assert(
+    executable,
+    'audited npm executable is not adjacent to Node and npm_execpath is unavailable',
+  );
+  const tempHome = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-npm-version-'));
+  try {
+    const result = spawnSync(executable, ['--version'], {
+      encoding: 'utf8',
+      env: cleanNpmEnvironment({
+        npmExecutable: executable,
+        home: tempHome,
+        cache: path.join(tempHome, 'cache'),
+      }),
+      maxBuffer: 1024 * 1024,
+      shell: false,
+      timeout: REGISTRY_TIMEOUT_MS,
+    });
+    assert(!result.error, `npm version check failed: ${result.error?.message || 'unknown error'}`);
+    assert(Number.isInteger(result.status) && result.status === 0, 'npm version check failed');
+    assert(result.stderr === '', 'npm version check wrote unexpected stderr');
+    assert(
+      result.stdout.trim() === AUDITED_NPM_VERSION,
+      `npm must be exactly ${AUDITED_NPM_VERSION}`,
+    );
+  } finally {
+    fs.rmSync(tempHome, { recursive: true, force: true });
+  }
+  return executable;
+}
+
+function cleanNpmEnvironment({
+  npmExecutable,
+  home,
+  cache,
+  environment = process.env,
+  userconfig,
+}) {
+  const clean = cleanGitEnvironment(environment);
+  for (const key of Object.keys(clean)) {
+    if (/^npm_config_/iu.test(key) || ['NODE_OPTIONS', 'NODE_PATH', 'INIT_CWD'].includes(key)) {
+      delete clean[key];
+    }
+  }
+  return {
+    ...clean,
+    HOME: home,
+    PATH: `${path.dirname(npmExecutable)}:/usr/bin:/bin`,
+    NODE_OPTIONS: '',
+    NODE_PATH: '',
+    npm_execpath: npmExecutable,
+    npm_config_cache: cache,
+    npm_config_registry: OFFICIAL_REGISTRY,
+    npm_config_userconfig: userconfig || path.join(home, 'absent-user.npmrc'),
+    npm_config_globalconfig: path.join(home, 'absent-global.npmrc'),
+    npm_config_ignore_scripts: 'true',
+    npm_config_audit: 'false',
+    npm_config_fund: 'false',
+    npm_config_update_notifier: 'false',
+  };
+}
+
+function runNpm(npmExecutable, args, options = {}) {
+  const home = options.home || fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-npm-home-'));
+  const removeHome = options.home === undefined;
+  const cache = options.cache || path.join(home, 'cache');
+  try {
+    return runProcess(npmExecutable, args, {
+      ...options,
+      env: cleanNpmEnvironment({
+        npmExecutable,
+        home,
+        cache,
+        environment: options.env,
+      }),
+      encoding: options.encoding || 'utf8',
+      label: options.label || `npm ${args[0] || ''}`,
+    });
+  } finally {
+    if (removeHome) fs.rmSync(home, { recursive: true, force: true });
+  }
+}
+
+function parseTarNumber(bytes, label) {
+  if (bytes[0] & 0x80) {
+    const copy = Buffer.from(bytes);
+    copy[0] &= 0x7f;
+    let value = 0n;
+    for (const byte of copy) value = value * 256n + BigInt(byte);
+    assert(value <= BigInt(Number.MAX_SAFE_INTEGER), `${label} exceeds the safe integer range`);
+    return Number(value);
+  }
+  const source = bytes.toString('ascii').replace(/\0.*$/u, '').trim();
+  assert(/^[0-7]*$/u.test(source), `${label} is not octal`);
+  return source ? Number.parseInt(source, 8) : 0;
+}
+
+function parsePax(bytes) {
+  const values = {};
+  let offset = 0;
+  while (offset < bytes.length) {
+    const space = bytes.indexOf(0x20, offset);
+    assert(space > offset, 'PAX record length is malformed');
+    const lengthText = bytes.subarray(offset, space).toString('ascii');
+    assert(/^[1-9]\d*$/u.test(lengthText), 'PAX record length is invalid');
+    const length = Number(lengthText);
+    assert(
+      Number.isSafeInteger(length) && offset + length <= bytes.length,
+      'PAX record is truncated',
+    );
+    assert(bytes[offset + length - 1] === 0x0a, 'PAX record is missing its newline');
+    const record = UTF8.decode(bytes.subarray(space + 1, offset + length - 1));
+    const equals = record.indexOf('=');
+    assert(equals > 0, 'PAX record has no key');
+    const key = record.slice(0, equals);
+    assert(!Object.prototype.hasOwnProperty.call(values, key), `PAX key ${key} is duplicated`);
+    values[key] = record.slice(equals + 1);
+    offset += length;
+  }
+  return values;
+}
+
+function decodeTarHeaderText(bytes, label) {
+  const nul = bytes.indexOf(0);
+  const value = nul === -1 ? bytes : bytes.subarray(0, nul);
+  if (nul !== -1) {
+    assert(
+      bytes.subarray(nul).every((byte) => byte === 0),
+      `${label} has nonzero bytes after NUL`,
+    );
+  }
+  try {
+    return UTF8.decode(value);
+  } catch {
+    fail(`${label} is not valid UTF-8`);
+  }
+}
+
+function decodeTarPath(value, label) {
+  const bytes = Buffer.from(value, 'utf8');
+  assert(
+    bytes.length > 0 && bytes.length <= TREE_LIMITS.pathBytes + 8,
+    `${label} length is invalid`,
+  );
+  assert(value.startsWith('package/'), `${label} is outside package/`);
+  const packagePath = value.slice('package/'.length);
+  decodePath(Buffer.from(packagePath, 'utf8'), label);
+  return packagePath;
+}
+
+function parseTarFiles(tarball) {
+  assert(Buffer.isBuffer(tarball) && tarball.length > 0, 'release artifact is empty');
+  assert(
+    tarball.length <= TAR_LIMITS.packedBytes,
+    'release artifact exceeds the packed byte limit',
+  );
+  let archive;
+  try {
+    archive = zlib.gunzipSync(tarball);
+  } catch {
+    fail('release artifact is not a valid gzip tarball');
+  }
+  const files = [];
+  const paths = new Set();
+  let offset = 0;
+  let zeroBlocks = 0;
+  let pax = {};
+  let longPath = null;
+  let totalBytes = 0;
+  while (offset + 512 <= archive.length) {
+    const header = archive.subarray(offset, offset + 512);
+    if (header.every((byte) => byte === 0)) {
+      zeroBlocks += 1;
+      offset += 512;
+      if (zeroBlocks === 2) break;
+      continue;
+    }
+    assert(zeroBlocks === 0, 'tarball contains data after its terminator began');
+    const storedChecksum = parseTarNumber(header.subarray(148, 156), 'tar checksum');
+    let computedChecksum = 0;
+    for (let index = 0; index < 512; index += 1) {
+      computedChecksum += index >= 148 && index < 156 ? 0x20 : header[index];
+    }
+    assert(storedChecksum === computedChecksum, 'tar header checksum mismatch');
+    const size = parseTarNumber(header.subarray(124, 136), 'tar entry size');
+    assert(size <= TAR_LIMITS.fileBytes, 'tar entry exceeds the file byte limit');
+    const mode = parseTarNumber(header.subarray(100, 108), 'tar entry mode');
+    const type = String.fromCharCode(header[156] || 0x30);
+    const name = decodeTarHeaderText(header.subarray(0, 100), 'tar name');
+    const prefix = decodeTarHeaderText(header.subarray(345, 500), 'tar prefix');
+    const headerPath = prefix ? `${prefix}/${name}` : name;
+    const dataStart = offset + 512;
+    const dataEnd = dataStart + size;
+    assert(dataEnd <= archive.length, 'tar entry is truncated');
+    const data = Buffer.from(archive.subarray(dataStart, dataEnd));
+    if (type === 'x') {
+      assert(
+        Object.keys(pax).length === 0 && longPath === null,
+        'tarball has stacked path metadata',
+      );
+      pax = parsePax(data);
+      assert(
+        Object.keys(pax).every((key) => key === 'path' || key === 'size'),
+        'tarball contains unsupported PAX metadata',
+      );
+    } else if (type === 'L') {
+      assert(
+        Object.keys(pax).length === 0 && longPath === null,
+        'tarball has stacked path metadata',
+      );
+      longPath = decodeTarHeaderText(data, 'GNU long path');
+    } else {
+      assert(type === '0' || type === '\0', `tar entry type ${JSON.stringify(type)} is forbidden`);
+      const fullPath = pax.path || longPath || headerPath;
+      if (pax.size !== undefined) assert(/^\d+$/u.test(pax.size), 'PAX size is not canonical');
+      const effectiveSize = pax.size === undefined ? size : Number(pax.size);
+      assert(
+        Number.isSafeInteger(effectiveSize) && effectiveSize === size,
+        'PAX size differs from the tar header',
+      );
+      const packagePath = decodeTarPath(fullPath, 'tar entry path');
+      assert(!paths.has(packagePath), `tarball contains duplicate path ${packagePath}`);
+      assert(
+        mode === 0o644 || mode === 0o755,
+        `tar entry ${packagePath} has forbidden mode ${mode.toString(8)}`,
+      );
+      paths.add(packagePath);
+      totalBytes += size;
+      assert(totalBytes <= TAR_LIMITS.totalBytes, 'tarball exceeds the unpacked byte limit');
+      files.push(Object.freeze({ path: packagePath, mode, size, sha256: sha256(data) }));
+      assert(files.length <= TAR_LIMITS.files, 'tarball exceeds the file-count limit');
+      pax = {};
+      longPath = null;
+    }
+    offset = dataStart + Math.ceil(size / 512) * 512;
+  }
+  assert(zeroBlocks === 2, 'tarball is missing its two-block terminator');
+  assert(
+    archive.subarray(offset).every((byte) => byte === 0),
+    'tarball contains nonzero trailing bytes',
+  );
+  assert(Object.keys(pax).length === 0 && longPath === null, 'tarball has dangling path metadata');
+  files.sort((left, right) => left.path.localeCompare(right.path));
+  return Object.freeze(files);
+}
+
+function expectedFilename(version) {
+  return `aikdna-kdna-core-${version}.tgz`;
+}
+
+function validatePack({ reportText, tarball, packageManifest }) {
+  const document = strictJson(reportText, 'npm pack report');
+  assert(
+    Array.isArray(document) && document.length === 1,
+    'npm pack must report exactly one artifact',
+  );
+  const report = document[0];
+  exactKeys(
+    report,
+    [
+      'id',
+      'name',
+      'version',
+      'size',
+      'unpackedSize',
+      'shasum',
+      'integrity',
+      'filename',
+      'files',
+      'entryCount',
+      'bundled',
+    ],
+    'npm pack artifact report',
+  );
+  assert(
+    report.name === packageManifest.name && report.version === packageManifest.version,
+    'npm pack identity mismatch',
+  );
+  assert(
+    report.filename === expectedFilename(packageManifest.version),
+    'npm pack filename mismatch',
+  );
+  assert(
+    Array.isArray(report.bundled) && report.bundled.length === 0,
+    'npm pack unexpectedly bundled dependencies',
+  );
+  assert(report.size === tarball.length, 'npm pack size differs from the artifact bytes');
+  assert(report.shasum === sha1(tarball), 'npm pack shasum differs from the artifact bytes');
+  assert(
+    report.integrity === integrity(tarball),
+    'npm pack integrity differs from the artifact bytes',
+  );
+  const files = parseTarFiles(tarball);
+  const reported = Array.isArray(report.files)
+    ? report.files
+        .map((file) => {
+          exactKeys(file, ['path', 'size', 'mode'], 'npm pack file report');
+          return { path: file.path, size: file.size, mode: file.mode };
+        })
+        .sort((left, right) => left.path.localeCompare(right.path))
+    : null;
+  assert(reported, 'npm pack files report is missing');
+  assert(
+    JSON.stringify(reported) ===
+      JSON.stringify(
+        files.map(({ path: filePath, size, mode }) => ({ path: filePath, size, mode })),
+      ),
+    'npm pack files report differs from the tarball',
+  );
+  assert(report.entryCount === files.length, 'npm pack entry count differs from the tarball');
+  const unpackedSize = files.reduce((sum, file) => sum + file.size, 0);
+  assert(report.unpackedSize === unpackedSize, 'npm pack unpacked size differs from the tarball');
+  return Object.freeze({
+    filename: report.filename,
+    integrity: report.integrity,
+    shasum: report.shasum,
+    sha256: sha256(tarball),
+    packed_size: tarball.length,
+    unpacked_size: unpackedSize,
+    file_count: files.length,
+    files,
+  });
+}
+
+function packMaterializedSource(sourceRoot, npmExecutable, packageManifest, parentTemp, label) {
+  const runRoot = path.join(parentTemp, label);
+  const artifacts = path.join(runRoot, 'artifacts');
+  const home = path.join(runRoot, 'home');
+  const cache = path.join(runRoot, 'cache');
+  fs.mkdirSync(artifacts, { recursive: true, mode: 0o700 });
+  fs.mkdirSync(home, { recursive: true, mode: 0o700 });
+  const result = runNpm(
+    npmExecutable,
+    ['pack', '--json', '--ignore-scripts', '--pack-destination', artifacts],
+    {
+      cwd: path.join(sourceRoot, ...PACKAGE_RELATIVE.split('/')),
+      home,
+      cache,
+      label: `audited npm pack ${label}`,
+      timeout: 120_000,
+    },
+  );
+  assert(result.stderr === '', `${label} npm pack wrote unexpected stderr`);
+  const report = strictJson(result.stdout, `${label} npm pack report`);
+  assert(
+    Array.isArray(report) && report.length === 1 && typeof report[0].filename === 'string',
+    `${label} npm pack filename is missing`,
+  );
+  const artifactPath = path.join(artifacts, report[0].filename);
+  const stats = fs.lstatSync(artifactPath);
+  assert(
+    stats.isFile() && !stats.isSymbolicLink(),
+    `${label} npm pack artifact is not a regular file`,
+  );
+  const tarball = fs.readFileSync(artifactPath);
+  const artifact = validatePack({ reportText: result.stdout, tarball, packageManifest });
+  return Object.freeze({ artifactPath, reportText: result.stdout, tarball, artifact });
+}
+
+function gateEnvironment(npmExecutable, tempRoot) {
+  const home = path.join(tempRoot, 'gate-home');
+  const cache = path.join(tempRoot, 'gate-cache');
+  fs.mkdirSync(home, { recursive: true, mode: 0o700 });
+  return cleanNpmEnvironment({ npmExecutable, home, cache });
+}
+
+function runNodeGate(scriptPath, cwd, environment, label) {
+  const result = runProcess(process.execPath, [scriptPath], {
+    cwd,
+    encoding: 'utf8',
+    env: environment,
+    label,
+    timeout: 120_000,
+  });
+  assert(result.stderr === '', `${label} wrote unexpected stderr`);
+  return result.stdout.trim();
+}
+
+function runReleaseGates({ sourceRoot, npmExecutable, tempRoot, repositoryRoot = REPO_ROOT }) {
+  const environment = gateEnvironment(npmExecutable, tempRoot);
+  runNodeGate(
+    path.join(sourceRoot, 'scripts', 'check-pack-contents.js'),
+    sourceRoot,
+    environment,
+    'Core pack-content gate',
+  );
+  runNodeGate(
+    path.join(repositoryRoot, 'scripts', 'check-public-surface.mjs'),
+    repositoryRoot,
+    environment,
+    'Core public-surface gate',
+  );
+  runNodeGate(
+    path.join(repositoryRoot, 'scripts', 'check-post-cutover-naming.mjs'),
+    repositoryRoot,
+    environment,
+    'Core naming gate',
+  );
+  return Object.freeze({
+    release_readiness: true,
+    pack_content: true,
+    public_surface: true,
+    naming: true,
+  });
+}
+
+function buildEvidence({ context, artifact, secondArtifact, npmVersion, gitVersion, gates }) {
+  assert(artifact.sha256 === secondArtifact.sha256, 'independent npm packs are not byte-identical');
+  return Object.freeze({
+    schema: 'kdna.core.release-evidence',
+    schema_version: '1.0.0',
+    source: Object.freeze({
+      repository: REPOSITORY,
+      ref: context.ref,
+      tag: context.tag,
+      commit: context.commit,
+      tree: context.tree,
+      dco_signoff_count: context.signoffs.length,
+      tracked_file_count: context.treeState.fileCount,
+      tracked_bytes: context.treeState.totalBytes,
+      materialization: 'git-cat-file-blobs',
+    }),
+    package: Object.freeze({
+      name: context.name,
+      version: context.version,
+      directory: PACKAGE_RELATIVE,
+    }),
+    tooling: Object.freeze({
+      git: gitVersion,
+      npm: npmVersion,
+      node: process.version,
+      platform: process.platform,
+      arch: process.arch,
+    }),
+    gates,
+    reproducibility: Object.freeze({
+      isolated_exact_commit_sources: 2,
+      npm_pack_ignore_scripts: true,
+      same_platform_byte_equal: true,
+      first_sha256: artifact.sha256,
+      second_sha256: secondArtifact.sha256,
+    }),
+    artifact,
+  });
+}
+
+function validateReleaseEvidence(evidence) {
+  exactKeys(
+    evidence,
+    [
+      'schema',
+      'schema_version',
+      'source',
+      'package',
+      'tooling',
+      'gates',
+      'reproducibility',
+      'artifact',
+    ],
+    'Core release evidence',
+  );
+  assert(
+    evidence.schema === 'kdna.core.release-evidence',
+    'Core release evidence schema is invalid',
+  );
+  assert(evidence.schema_version === '1.0.0', 'Core release evidence schema version is invalid');
+  exactKeys(
+    evidence.source,
+    [
+      'repository',
+      'ref',
+      'tag',
+      'commit',
+      'tree',
+      'dco_signoff_count',
+      'tracked_file_count',
+      'tracked_bytes',
+      'materialization',
+    ],
+    'Core release evidence source',
+  );
+  assert(evidence.source.repository === REPOSITORY, 'Core release evidence repository is invalid');
+  assert(STABLE_SEMVER_RE.test(evidence.source.tag || ''), 'Core release evidence tag is invalid');
+  assert(
+    evidence.source.ref === `refs/tags/${evidence.source.tag}`,
+    'Core release evidence ref is invalid',
+  );
+  assert(COMMIT_RE.test(evidence.source.commit || ''), 'Core release evidence commit is invalid');
+  assert(OBJECT_RE.test(evidence.source.tree || ''), 'Core release evidence tree is invalid');
+  assert(
+    Number.isSafeInteger(evidence.source.dco_signoff_count) &&
+      evidence.source.dco_signoff_count > 0,
+    'Core release evidence DCO count is invalid',
+  );
+  assert(
+    Number.isSafeInteger(evidence.source.tracked_file_count) &&
+      evidence.source.tracked_file_count > 0 &&
+      evidence.source.tracked_file_count <= TREE_LIMITS.files,
+    'Core release evidence tracked file count is invalid',
+  );
+  assert(
+    Number.isSafeInteger(evidence.source.tracked_bytes) &&
+      evidence.source.tracked_bytes > 0 &&
+      evidence.source.tracked_bytes <= TREE_LIMITS.totalBytes,
+    'Core release evidence tracked byte count is invalid',
+  );
+  assert(
+    evidence.source.materialization === 'git-cat-file-blobs',
+    'Core release evidence materialization is invalid',
+  );
+
+  exactKeys(evidence.package, ['name', 'version', 'directory'], 'Core release evidence package');
+  assert(evidence.package.name === PACKAGE_NAME, 'Core release evidence package name is invalid');
+  assert(
+    evidence.package.version === evidence.source.tag,
+    'Core release evidence version differs from its tag',
+  );
+  assert(
+    evidence.package.directory === PACKAGE_RELATIVE,
+    'Core release evidence package directory is invalid',
+  );
+
+  exactKeys(
+    evidence.tooling,
+    ['git', 'npm', 'node', 'platform', 'arch'],
+    'Core release evidence tooling',
+  );
+  assert(
+    /^git version \d+\.\d+\./u.test(evidence.tooling.git || ''),
+    'Core release evidence Git version is invalid',
+  );
+  assert(
+    evidence.tooling.npm === AUDITED_NPM_VERSION,
+    'Core release evidence npm version is not audited',
+  );
+  assert(
+    /^v\d+\.\d+\.\d+$/u.test(evidence.tooling.node || ''),
+    'Core release evidence Node version is invalid',
+  );
+  assert(
+    typeof evidence.tooling.platform === 'string' && evidence.tooling.platform.length > 0,
+    'Core release evidence platform is invalid',
+  );
+  assert(
+    typeof evidence.tooling.arch === 'string' && evidence.tooling.arch.length > 0,
+    'Core release evidence architecture is invalid',
+  );
+
+  exactKeys(
+    evidence.gates,
+    ['release_readiness', 'pack_content', 'public_surface', 'naming'],
+    'Core release evidence gates',
+  );
+  assert(
+    Object.values(evidence.gates).every((value) => value === true),
+    'Core release evidence contains an unpassed gate',
+  );
+
+  exactKeys(
+    evidence.reproducibility,
+    [
+      'isolated_exact_commit_sources',
+      'npm_pack_ignore_scripts',
+      'same_platform_byte_equal',
+      'first_sha256',
+      'second_sha256',
+    ],
+    'Core release evidence reproducibility',
+  );
+  assert(
+    evidence.reproducibility.isolated_exact_commit_sources === 2,
+    'Core release evidence requires two isolated sources',
+  );
+  assert(
+    evidence.reproducibility.npm_pack_ignore_scripts === true,
+    'Core release evidence must disable pack scripts',
+  );
+  assert(
+    evidence.reproducibility.same_platform_byte_equal === true,
+    'Core release packs are not byte-equal',
+  );
+  assert(
+    /^[0-9a-f]{64}$/u.test(evidence.reproducibility.first_sha256 || ''),
+    'Core first pack digest is invalid',
+  );
+  assert(
+    evidence.reproducibility.second_sha256 === evidence.reproducibility.first_sha256,
+    'Core pack digests differ',
+  );
+
+  const artifact = evidence.artifact;
+  exactKeys(
+    artifact,
+    [
+      'filename',
+      'integrity',
+      'shasum',
+      'sha256',
+      'packed_size',
+      'unpacked_size',
+      'file_count',
+      'files',
+    ],
+    'Core release evidence artifact',
+  );
+  assert(
+    artifact.filename === expectedFilename(evidence.package.version),
+    'Core release evidence filename is invalid',
+  );
+  assert(
+    /^sha512-[A-Za-z0-9+/]{86}==$/u.test(artifact.integrity || ''),
+    'Core release evidence integrity is invalid',
+  );
+  assert(/^[0-9a-f]{40}$/u.test(artifact.shasum || ''), 'Core release evidence shasum is invalid');
+  assert(/^[0-9a-f]{64}$/u.test(artifact.sha256 || ''), 'Core release evidence sha256 is invalid');
+  assert(
+    artifact.sha256 === evidence.reproducibility.first_sha256,
+    'Core artifact digest differs from reproducibility evidence',
+  );
+  assert(
+    Number.isSafeInteger(artifact.packed_size) &&
+      artifact.packed_size > 0 &&
+      artifact.packed_size <= TAR_LIMITS.packedBytes,
+    'Core release evidence packed size is invalid',
+  );
+  assert(
+    Number.isSafeInteger(artifact.unpacked_size) &&
+      artifact.unpacked_size > 0 &&
+      artifact.unpacked_size <= TAR_LIMITS.totalBytes,
+    'Core release evidence unpacked size is invalid',
+  );
+  assert(
+    Number.isSafeInteger(artifact.file_count) &&
+      artifact.file_count > 0 &&
+      artifact.file_count <= TAR_LIMITS.files,
+    'Core release evidence file count is invalid',
+  );
+  assert(
+    Array.isArray(artifact.files) && artifact.files.length === artifact.file_count,
+    'Core release evidence files are invalid',
+  );
+  let unpackedSize = 0;
+  let previous = null;
+  for (const file of artifact.files) {
+    exactKeys(file, ['path', 'mode', 'size', 'sha256'], 'Core release evidence file');
+    decodePath(Buffer.from(file.path, 'utf8'), 'Core release evidence file path');
+    assert(
+      previous === null || previous.localeCompare(file.path) < 0,
+      'Core release evidence files must be uniquely sorted',
+    );
+    previous = file.path;
+    assert(
+      file.mode === 0o644 || file.mode === 0o755,
+      'Core release evidence file mode is invalid',
+    );
+    assert(
+      Number.isSafeInteger(file.size) && file.size >= 0 && file.size <= TAR_LIMITS.fileBytes,
+      'Core release evidence file size is invalid',
+    );
+    assert(
+      /^[0-9a-f]{64}$/u.test(file.sha256 || ''),
+      'Core release evidence file digest is invalid',
+    );
+    unpackedSize += file.size;
+  }
+  assert(
+    unpackedSize === artifact.unpacked_size,
+    'Core release evidence unpacked size differs from its files',
+  );
+  return evidence;
+}
+
+function validateEvidenceArtifact(rawEvidence, tarball) {
+  const evidence = validateReleaseEvidence(rawEvidence);
+  assert(
+    Buffer.isBuffer(tarball) && tarball.length === evidence.artifact.packed_size,
+    'retained artifact size differs from evidence',
+  );
+  assert(
+    sha1(tarball) === evidence.artifact.shasum,
+    'retained artifact shasum differs from evidence',
+  );
+  assert(
+    sha256(tarball) === evidence.artifact.sha256,
+    'retained artifact sha256 differs from evidence',
+  );
+  assert(
+    integrity(tarball) === evidence.artifact.integrity,
+    'retained artifact integrity differs from evidence',
+  );
+  const files = parseTarFiles(tarball);
+  assert(
+    JSON.stringify(files) === JSON.stringify(evidence.artifact.files),
+    'retained artifact files differ from evidence',
+  );
+  return evidence;
+}
+
+function resolveDestination(destination) {
+  let existing = path.resolve(destination);
+  const suffix = [];
+  while (!fs.existsSync(existing)) {
+    const parent = path.dirname(existing);
+    assert(parent !== existing, `cannot resolve destination ${destination}`);
+    suffix.unshift(path.basename(existing));
+    existing = parent;
+  }
+  return path.resolve(fs.realpathSync(existing), ...suffix);
+}
+
+function assertOutsideRepository(destination, label, root = REPO_ROOT) {
+  const resolved = resolveDestination(destination);
+  const relative = path.relative(fs.realpathSync(root), resolved);
+  assert(
+    relative !== '' && (relative.startsWith('..') || path.isAbsolute(relative)),
+    `${label} must be outside the repository`,
+  );
+  return resolved;
+}
+
+function parseArtifactArguments(argv, usage) {
+  const evidenceIndex = argv.indexOf('--evidence');
+  const artifactIndex = argv.indexOf('--artifact');
+  assert(
+    argv.length === 4 &&
+      evidenceIndex >= 0 &&
+      artifactIndex >= 0 &&
+      argv[evidenceIndex + 1] &&
+      argv[artifactIndex + 1],
+    usage,
+  );
+  const evidencePath = path.resolve(argv[evidenceIndex + 1]);
+  const artifactPath = path.resolve(argv[artifactIndex + 1]);
+  assert(evidencePath !== artifactPath, 'release evidence and artifact paths must differ');
+  return { evidencePath, artifactPath };
+}
+
+function prepareRelease({ evidencePath, artifactPath, env = process.env, root = REPO_ROOT }) {
+  const resolvedEvidence = assertOutsideRepository(evidencePath, 'Core release evidence', root);
+  const resolvedArtifact = assertOutsideRepository(artifactPath, 'Core release artifact', root);
+  assert(
+    resolvedEvidence !== resolvedArtifact,
+    'Core release evidence and artifact destinations collide',
+  );
+  assert(
+    !fs.existsSync(resolvedEvidence) && !fs.existsSync(resolvedArtifact),
+    'Core release outputs already exist',
+  );
+  const context = inspectAuthoritativeRelease(env, root);
+  assert(
+    path.basename(resolvedArtifact) === expectedFilename(context.version),
+    'Core release artifact destination must use the npm filename',
+  );
+  const npmExecutable = resolveAuditedNpm();
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-authoritative-release-'));
+  let artifactCreated = false;
+  let evidenceCreated = false;
+  let complete = false;
+  try {
+    const firstSource = materializeTree(context.treeState, path.join(temp, 'source-one'), root);
+    const secondSource = materializeTree(context.treeState, path.join(temp, 'source-two'), root);
+    const packageManifest = strictJson(
+      fs.readFileSync(path.join(firstSource, ...PACKAGE_RELATIVE.split('/'), 'package.json')),
+      'materialized Core package.json',
+    );
+    const gates = runReleaseGates({
+      sourceRoot: firstSource,
+      npmExecutable,
+      tempRoot: path.join(temp, 'gates'),
+      repositoryRoot: root,
+    });
+    const first = packMaterializedSource(
+      firstSource,
+      npmExecutable,
+      packageManifest,
+      temp,
+      'pack-one',
+    );
+    const second = packMaterializedSource(
+      secondSource,
+      npmExecutable,
+      packageManifest,
+      temp,
+      'pack-two',
+    );
+    assert(
+      first.tarball.equals(second.tarball),
+      'two isolated exact-commit npm packs differ byte-for-byte',
+    );
+    const evidence = buildEvidence({
+      context,
+      artifact: first.artifact,
+      secondArtifact: second.artifact,
+      npmVersion: AUDITED_NPM_VERSION,
+      gitVersion: gitText(['--version'], { cwd: root }),
+      gates,
+    });
+    validateEvidenceArtifact(evidence, first.tarball);
+    fs.mkdirSync(path.dirname(resolvedArtifact), { recursive: true, mode: 0o700 });
+    fs.mkdirSync(path.dirname(resolvedEvidence), { recursive: true, mode: 0o700 });
+    fs.writeFileSync(resolvedArtifact, first.tarball, { flag: 'wx', mode: 0o600 });
+    artifactCreated = true;
+    assert(
+      fs.readFileSync(resolvedArtifact).equals(first.tarball),
+      'retained Core artifact differs after writing',
+    );
+    fs.writeFileSync(resolvedEvidence, `${JSON.stringify(evidence, null, 2)}\n`, {
+      flag: 'wx',
+      mode: 0o600,
+    });
+    evidenceCreated = true;
+    const rebound = inspectAuthoritativeRelease(env, root);
+    assert(
+      rebound.commit === context.commit && rebound.tree === context.tree,
+      'release binding changed during evidence generation',
+    );
+    complete = true;
+    return evidence;
+  } finally {
+    fs.rmSync(temp, { recursive: true, force: true });
+    if (!complete) {
+      if (evidenceCreated) fs.rmSync(resolvedEvidence, { force: true });
+      if (artifactCreated) fs.rmSync(resolvedArtifact, { force: true });
+    }
+  }
+}
+
+function expectedRegistryE404(evidence) {
+  const spec = `${evidence.package.name}@${evidence.package.version}`;
+  return Object.freeze({
+    summary: `No match found for version ${evidence.package.version}`,
+    detail:
+      `The requested resource '${spec}' could not be found or you do not have permission to access it.` +
+      '\n\nNote that you can also install from a\ntarball, folder, http url, or git url.',
+  });
+}
+
+function evaluateRegistryResult(result, rawEvidence) {
+  const evidence = validateReleaseEvidence(rawEvidence);
+  assert(
+    result && !result.error,
+    `registry lookup failed: ${result?.error?.message || 'unknown error'}`,
+  );
+  assert(Number.isInteger(result.status), 'registry lookup returned no integer status');
+  assert(
+    typeof result.stdout === 'string' && typeof result.stderr === 'string',
+    'registry output must be text',
+  );
+  if (result.status === 1) {
+    assert(result.stderr === '', 'registry E404 wrote contradictory or injected stderr');
+    const document = strictJson(result.stdout, 'registry E404 stdout');
+    exactKeys(document, ['error'], 'registry E404 document');
+    exactKeys(document.error, ['code', 'summary', 'detail'], 'registry E404 error');
+    const expected = expectedRegistryE404(evidence);
+    assert(document.error.code === 'E404', 'registry absence requires E404');
+    assert(document.error.summary === expected.summary, 'registry E404 version mismatch');
+    assert(document.error.detail === expected.detail, 'registry E404 target mismatch');
+    return Object.freeze({ decision: 'publish', shouldPublish: true });
+  }
+  assert(result.status === 0, `registry lookup exited ${result.status}; refusing publication`);
+  assert(result.stderr === '', 'successful registry lookup wrote unexpected stderr');
+  const metadata = strictJson(result.stdout, 'registry metadata stdout');
+  const keys = Object.keys(metadata).sort();
+  const required = ['dist.integrity', 'dist.shasum', 'name', 'version'].sort();
+  const withGitHead = [...required, 'gitHead'].sort();
+  assert(
+    JSON.stringify(keys) === JSON.stringify(required) ||
+      JSON.stringify(keys) === JSON.stringify(withGitHead),
+    'registry metadata fields are not exact',
+  );
+  assert(metadata.name === evidence.package.name, 'registry package name collision');
+  assert(metadata.version === evidence.package.version, 'registry package version collision');
+  assert(
+    metadata['dist.integrity'] === evidence.artifact.integrity,
+    'registry integrity collision',
+  );
+  assert(metadata['dist.shasum'] === evidence.artifact.shasum, 'registry shasum collision');
+  if (Object.prototype.hasOwnProperty.call(metadata, 'gitHead')) {
+    assert(COMMIT_RE.test(metadata.gitHead || ''), 'registry gitHead is invalid');
+    assert(metadata.gitHead === evidence.source.commit, 'registry gitHead collision');
+  }
+  return Object.freeze({ decision: 'skip-identical', shouldPublish: false });
+}
+
+function queryRegistry(npmExecutable, evidence) {
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-registry-query-'));
+  try {
+    const spec = `${evidence.package.name}@${evidence.package.version}`;
+    return spawnSync(
+      npmExecutable,
+      [
+        'view',
+        spec,
+        'name',
+        'version',
+        'dist.integrity',
+        'dist.shasum',
+        'gitHead',
+        '--json',
+        '--loglevel=silent',
+        `--registry=${OFFICIAL_REGISTRY}`,
+      ],
+      {
+        encoding: 'utf8',
+        env: cleanNpmEnvironment({
+          npmExecutable,
+          home: path.join(temp, 'home'),
+          cache: path.join(temp, 'cache'),
+        }),
+        maxBuffer: 1024 * 1024,
+        shell: false,
+        timeout: REGISTRY_TIMEOUT_MS,
+      },
+    );
+  } finally {
+    fs.rmSync(temp, { recursive: true, force: true });
+  }
+}
+
+function bindCurrentEvidence(rawEvidence, env = process.env, root = REPO_ROOT) {
+  const evidence = validateReleaseEvidence(rawEvidence);
+  const context = inspectAuthoritativeRelease(env, root);
+  assert(evidence.source.repository === REPOSITORY, 'release evidence repository binding is stale');
+  assert(evidence.source.ref === context.ref, 'release evidence ref binding is stale');
+  assert(evidence.source.tag === context.tag, 'release evidence tag binding is stale');
+  assert(evidence.source.commit === context.commit, 'release evidence commit binding is stale');
+  assert(evidence.source.tree === context.tree, 'release evidence tree binding is stale');
+  assert(
+    evidence.source.dco_signoff_count === context.signoffs.length,
+    'release evidence DCO binding is stale',
+  );
+  assert(
+    evidence.source.tracked_file_count === context.treeState.fileCount,
+    'release evidence file-count binding is stale',
+  );
+  assert(
+    evidence.source.tracked_bytes === context.treeState.totalBytes,
+    'release evidence byte-count binding is stale',
+  );
+  assert(
+    evidence.package.name === context.name && evidence.package.version === context.version,
+    'release evidence package binding is stale',
+  );
+  assert(evidence.tooling.node === process.version, 'release evidence Node binding is stale');
+  assert(
+    evidence.tooling.platform === process.platform && evidence.tooling.arch === process.arch,
+    'release evidence platform binding is stale',
+  );
+  assert(
+    evidence.tooling.git === gitText(['--version'], { cwd: root }),
+    'release evidence Git binding is stale',
+  );
+  return evidence;
+}
+
+function readCandidate({ evidencePath, artifactPath, env = process.env, root = REPO_ROOT }) {
+  assertOutsideRepository(evidencePath, 'Core release evidence', root);
+  assertOutsideRepository(artifactPath, 'Core release artifact', root);
+  const evidenceStats = fs.lstatSync(evidencePath);
+  const artifactStats = fs.lstatSync(artifactPath);
+  assert(
+    evidenceStats.isFile() && !evidenceStats.isSymbolicLink(),
+    'Core release evidence must be a regular file',
+  );
+  assert(
+    artifactStats.isFile() && !artifactStats.isSymbolicLink(),
+    'Core release artifact must be a regular file',
+  );
+  const evidence = bindCurrentEvidence(
+    strictJson(fs.readFileSync(evidencePath), 'Core release evidence'),
+    env,
+    root,
+  );
+  const tarball = fs.readFileSync(artifactPath);
+  validateEvidenceArtifact(evidence, tarball);
+  assert(
+    path.basename(artifactPath) === evidence.artifact.filename,
+    'retained Core artifact filename differs from evidence',
+  );
+  return Object.freeze({ evidence, tarball, artifactPath });
+}
+
+function guardCandidate({ evidence, tarball, bindCurrent, lookup }) {
+  const bound = bindCurrent(evidence);
+  validateEvidenceArtifact(bound, tarball);
+  return evaluateRegistryResult(lookup(bound), bound);
+}
+
+function npmPublishArguments(artifactPath) {
+  return [
+    'publish',
+    artifactPath,
+    '--ignore-scripts',
+    '--provenance',
+    '--access=public',
+    `--registry=${OFFICIAL_REGISTRY}`,
+  ];
+}
+
+function publishCandidate({ evidence, tarball, artifactPath, bindCurrent, lookup, publish }) {
+  const bound = bindCurrent(evidence);
+  validateEvidenceArtifact(bound, tarball);
+  const decision = evaluateRegistryResult(lookup(bound), bound);
+  if (!decision.shouldPublish) return Object.freeze({ ...decision, published: false });
+  const result = publish(npmPublishArguments(artifactPath));
+  assert(
+    result && !result.error,
+    `npm publish failed: ${result?.error?.message || 'unknown error'}`,
+  );
+  assert(Number.isInteger(result.status), 'npm publish returned no integer status');
+  assert(result.status === 0, `npm publish exited ${result.status}`);
+  return Object.freeze({ decision: 'published', shouldPublish: true, published: true });
+}
+
+function guardRelease({ evidencePath, artifactPath, env = process.env, root = REPO_ROOT }) {
+  const npmExecutable = resolveAuditedNpm();
+  const candidate = readCandidate({ evidencePath, artifactPath, env, root });
+  return guardCandidate({
+    evidence: candidate.evidence,
+    tarball: candidate.tarball,
+    bindCurrent: (evidence) => bindCurrentEvidence(evidence, env, root),
+    lookup: (evidence) => queryRegistry(npmExecutable, evidence),
+  });
+}
+
+function publishRelease({ evidencePath, artifactPath, env = process.env, root = REPO_ROOT }) {
+  const npmExecutable = resolveAuditedNpm();
+  const candidate = readCandidate({ evidencePath, artifactPath, env, root });
+  assert(
+    typeof env.NODE_AUTH_TOKEN === 'string' && env.NODE_AUTH_TOKEN !== '',
+    'NODE_AUTH_TOKEN is required for Core publication',
+  );
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-publisher-'));
+  try {
+    const userconfig = path.join(temp, 'publisher.npmrc');
+    fs.writeFileSync(userconfig, '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}\n', {
+      flag: 'wx',
+      mode: 0o600,
+    });
+    return publishCandidate({
+      evidence: candidate.evidence,
+      tarball: candidate.tarball,
+      artifactPath: candidate.artifactPath,
+      bindCurrent: (evidence) => bindCurrentEvidence(evidence, env, root),
+      lookup: (evidence) => queryRegistry(npmExecutable, evidence),
+      publish: (args) =>
+        spawnSync(npmExecutable, args, {
+          env: cleanNpmEnvironment({
+            npmExecutable,
+            home: path.join(temp, 'home'),
+            cache: path.join(temp, 'cache'),
+            environment: env,
+            userconfig,
+          }),
+          maxBuffer: 16 * 1024 * 1024,
+          shell: false,
+          stdio: 'inherit',
+          timeout: 300_000,
+        }),
+    });
+  } finally {
+    fs.rmSync(temp, { recursive: true, force: true });
+  }
+}
+
+function smokeRelease({ evidencePath, artifactPath, env = process.env, root = REPO_ROOT }) {
+  const npmExecutable = resolveAuditedNpm();
+  const candidate = readCandidate({ evidencePath, artifactPath, env, root });
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-release-smoke-'));
+  try {
+    fs.writeFileSync(
+      path.join(temp, 'package.json'),
+      `${JSON.stringify({ name: 'kdna-core-release-smoke', version: '1.0.0', private: true })}\n`,
+      { flag: 'wx', mode: 0o600 },
+    );
+    runNpm(
+      npmExecutable,
+      [
+        'install',
+        candidate.artifactPath,
+        '--ignore-scripts',
+        '--package-lock=false',
+        '--no-audit',
+        '--no-fund',
+        `--registry=${OFFICIAL_REGISTRY}`,
+      ],
+      {
+        cwd: temp,
+        home: path.join(temp, 'home'),
+        cache: path.join(temp, 'cache'),
+        label: 'Core exact-tarball clean install',
+        timeout: 120_000,
+      },
+    );
+    const probe = [
+      "const assert=require('node:assert/strict');",
+      "const fs=require('node:fs');",
+      "const path=require('node:path');",
+      "const core=require('@aikdna/kdna-core');",
+      "const remote=require('@aikdna/kdna-core/remote-runtime');",
+      "const manifestPath=require.resolve('@aikdna/kdna-core/package.json');",
+      'const manifest=require(manifestPath);',
+      `assert.equal(manifest.name,${JSON.stringify(candidate.evidence.package.name)});`,
+      `assert.equal(manifest.version,${JSON.stringify(candidate.evidence.package.version)});`,
+      'assert.match(manifestPath,/node_modules\\/@aikdna\\/kdna-core\\/package\\.json$/);',
+      "assert.deepEqual(Object.keys(remote),['loadRemoteRuntimeAsset']);",
+      'assert.equal(core.loadRemoteRuntimeAsset,undefined);',
+      'assert.equal(core.loadRemoteRuntimeAssetForServer,undefined);',
+      'assert.equal(core.loadAssetUnsafe,undefined);',
+      "assert.equal(fs.existsSync(path.join(path.dirname(manifestPath),manifest.exports['./remote-runtime'].types)),true);",
+      "for(const spec of ['@aikdna/kdna-core/src/container/index.js','@aikdna/kdna-core/src/remote-runtime.js']) assert.throws(()=>require(spec),e=>e&&e.code==='ERR_PACKAGE_PATH_NOT_EXPORTED');",
+      "Promise.all([import('@aikdna/kdna-core'),import('@aikdna/kdna-core/remote-runtime')]).then(([esm,resm])=>{assert.equal(esm.loadRemoteRuntimeAsset,undefined);assert.deepEqual(Object.keys(resm).filter(k=>k!=='default'),['loadRemoteRuntimeAsset']);}).catch(e=>{console.error(e);process.exit(1);});",
+    ].join('\n');
+    const result = runProcess(process.execPath, ['-e', probe], {
+      cwd: temp,
+      encoding: 'utf8',
+      env: { ...process.env, NODE_OPTIONS: '', NODE_PATH: '' },
+      label: 'Core installed artifact probe',
+      timeout: 30_000,
+    });
+    assert(result.stderr === '', 'Core installed artifact probe wrote unexpected stderr');
+    return true;
+  } finally {
+    fs.rmSync(temp, { recursive: true, force: true });
+  }
+}
+
+function comparePackageCommits({ baseline, candidate, root = REPO_ROOT }) {
+  assert(COMMIT_RE.test(baseline || ''), 'package invariant baseline must be a full commit id');
+  assert(COMMIT_RE.test(candidate || ''), 'package invariant candidate must be a full commit id');
+  const npmExecutable = resolveAuditedNpm();
+  const baselineTree = inspectTree(baseline, root);
+  const candidateTree = inspectTree(candidate, root);
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-package-invariant-'));
+  try {
+    const baselineSource = materializeTree(baselineTree, path.join(temp, 'baseline'), root);
+    const candidateSource = materializeTree(candidateTree, path.join(temp, 'candidate'), root);
+    const baselineManifest = strictJson(
+      fs.readFileSync(path.join(baselineSource, ...PACKAGE_RELATIVE.split('/'), 'package.json')),
+      'baseline Core package.json',
+    );
+    const candidateManifest = strictJson(
+      fs.readFileSync(path.join(candidateSource, ...PACKAGE_RELATIVE.split('/'), 'package.json')),
+      'candidate Core package.json',
+    );
+    assert(baselineManifest.name === candidateManifest.name, 'Core package invariant name changed');
+    assert(
+      baselineManifest.version === candidateManifest.version,
+      'Core package invariant version changed',
+    );
+    const first = packMaterializedSource(
+      baselineSource,
+      npmExecutable,
+      baselineManifest,
+      temp,
+      'baseline-pack',
+    );
+    const second = packMaterializedSource(
+      candidateSource,
+      npmExecutable,
+      candidateManifest,
+      temp,
+      'candidate-pack',
+    );
+    const installedSurfaceEqual =
+      JSON.stringify(first.artifact.files) === JSON.stringify(second.artifact.files);
+    assert(installedSurfaceEqual, 'Core package installation paths, modes, or bytes changed');
+    return Object.freeze({
+      baseline,
+      candidate,
+      package: `${baselineManifest.name}@${baselineManifest.version}`,
+      tar_byte_equal: first.tarball.equals(second.tarball),
+      installed_surface_equal: true,
+      baseline_sha256: first.artifact.sha256,
+      candidate_sha256: second.artifact.sha256,
+      files: first.artifact.file_count,
+    });
+  } finally {
+    fs.rmSync(temp, { recursive: true, force: true });
+  }
+}
+
+function writeGithubDecision(filePath, decision) {
+  assert(filePath, 'GITHUB_OUTPUT is required');
+  fs.appendFileSync(
+    filePath,
+    `should_publish=${decision.shouldPublish ? 'true' : 'false'}\ndecision=${decision.decision}\n`,
+    'utf8',
+  );
+}
+
+function parseInvariantArguments(argv) {
+  const baselineIndex = argv.indexOf('--baseline');
+  const candidateIndex = argv.indexOf('--candidate');
+  assert(
+    argv.length === 4 && baselineIndex >= 0 && candidateIndex >= 0,
+    'usage: invariant --baseline <commit> --candidate <commit>',
+  );
+  return { baseline: argv[baselineIndex + 1], candidate: argv[candidateIndex + 1] };
+}
+
+function main(argv = process.argv.slice(2)) {
+  const [command, ...args] = argv;
+  if (command === 'check' && args.length === 0) {
+    const context = inspectAuthoritativeRelease();
+    console.log(
+      `Core release binding verified: ${context.name}@${context.version} ${context.commit}`,
+    );
+    return;
+  }
+  if (command === 'prepare') {
+    const options = parseArtifactArguments(
+      args,
+      'usage: prepare --evidence <outside-repo.json> --artifact <outside-repo.tgz>',
+    );
+    const evidence = prepareRelease(options);
+    console.log(
+      `Core release artifact prepared: ${evidence.package.name}@${evidence.package.version} ${evidence.artifact.sha256}`,
+    );
+    return;
+  }
+  if (command === 'smoke') {
+    const options = parseArtifactArguments(
+      args,
+      'usage: smoke --evidence <outside-repo.json> --artifact <outside-repo.tgz>',
+    );
+    smokeRelease(options);
+    console.log('Core retained artifact clean-install smoke passed');
+    return;
+  }
+  if (command === 'guard') {
+    const options = parseArtifactArguments(
+      args,
+      'usage: guard --evidence <outside-repo.json> --artifact <outside-repo.tgz>',
+    );
+    const decision = guardRelease(options);
+    if (process.env.GITHUB_ACTIONS === 'true')
+      writeGithubDecision(process.env.GITHUB_OUTPUT, decision);
+    console.log(`Core registry decision: ${decision.decision}`);
+    return;
+  }
+  if (command === 'publish') {
+    const options = parseArtifactArguments(
+      args,
+      'usage: publish --evidence <outside-repo.json> --artifact <outside-repo.tgz>',
+    );
+    const decision = publishRelease(options);
+    console.log(`Core publisher decision: ${decision.decision}`);
+    return;
+  }
+  if (command === 'invariant') {
+    const result = comparePackageCommits(parseInvariantArguments(args));
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+  fail('usage: core-release-authority.js <check|prepare|smoke|guard|publish|invariant>');
+}
+
+if (require.main === module) {
+  try {
+    main();
+  } catch (error) {
+    console.error(`Core release authority rejected: ${error.message}`);
+    process.exitCode = 1;
+  }
+}
+
+module.exports = {
+  AUDITED_NPM_VERSION,
+  OFFICIAL_REGISTRY,
+  PACKAGE_NAME,
+  REPO_ROOT,
+  STABLE_SEMVER_RE,
+  TAR_LIMITS,
+  TREE_LIMITS,
+  TRUSTED_GIT,
+  assertIndexMatchesTree,
+  assertOutsideRepository,
+  batchReadBlobs,
+  bindCurrentEvidence,
+  buildEvidence,
+  cleanGitEnvironment,
+  cleanNpmEnvironment,
+  commitDocument,
+  comparePackageCommits,
+  evaluateRegistryResult,
+  expectedRegistryE404,
+  guardCandidate,
+  integrity,
+  inspectAuthoritativeRelease,
+  inspectTree,
+  materializeTree,
+  npmPublishArguments,
+  packMaterializedSource,
+  parseArtifactArguments,
+  parseIndexEntries,
+  parseInvariantArguments,
+  parseTarFiles,
+  parseTreeEntries,
+  publishCandidate,
+  resolveAuditedNpm,
+  runGit,
+  sha1,
+  sha256,
+  strictJson,
+  validateEvidenceArtifact,
+  validatePack,
+  validateReleaseContext,
+  validateReleaseEvidence,
+  writeGithubDecision,
+};

@@ -23,6 +23,9 @@
 
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
+import releaseAuthority from './core-release-authority.js';
+
+const { TRUSTED_GIT, cleanGitEnvironment } = releaseAuthority;
 
 const ALLOWLIST_PATHS = new Set([
   'scripts/check-public-surface.mjs', // self (contains scanned strings)
@@ -39,7 +42,12 @@ const FORBIDDEN_PATTERNS = [
 ];
 
 function listTrackedFiles() {
-  return execFileSync('git', ['ls-files'], { encoding: 'utf8' }).split('\n').filter(Boolean);
+  return execFileSync(TRUSTED_GIT, ['--no-replace-objects', 'ls-files'], {
+    encoding: 'utf8',
+    env: cleanGitEnvironment(),
+  })
+    .split('\n')
+    .filter(Boolean);
 }
 
 function isAllowlisted(relPath) {

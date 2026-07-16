@@ -8,6 +8,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import releaseAuthority from './core-release-authority.js';
+
+const { TRUSTED_GIT, cleanGitEnvironment } = releaseAuthority;
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, '..');
@@ -155,17 +158,19 @@ function loadTokenAuthority() {
 }
 
 function git(args) {
-  return execFileSync('git', args, {
+  return execFileSync(TRUSTED_GIT, ['--no-replace-objects', ...args], {
     cwd: ROOT,
     encoding: 'utf8',
+    env: cleanGitEnvironment(),
     stdio: ['ignore', 'pipe', 'pipe'],
   });
 }
 
 function gitBytes(args) {
-  return execFileSync('git', args, {
+  return execFileSync(TRUSTED_GIT, ['--no-replace-objects', ...args], {
     cwd: ROOT,
     encoding: 'buffer',
+    env: cleanGitEnvironment(),
     stdio: ['ignore', 'pipe', 'pipe'],
   });
 }

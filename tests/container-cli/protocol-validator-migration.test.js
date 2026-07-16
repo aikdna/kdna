@@ -94,16 +94,27 @@ function assertCorePublishValidatorOrder(workflow) {
   const install = job.indexOf('run: npm ci');
   const protocol = protocolMatches[0].index;
   const runtime = runtimeMatches[0].index;
-  const evidence = job.indexOf('run: npm run release:evidence');
-  const guard = job.indexOf('run: npm --workspace @aikdna/kdna-core run publish:guard');
-  const publicationMatches = [...job.matchAll(/run: npm publish --provenance --access public/gu)];
-  assert.equal(publicationMatches.length, 1, 'Core publish must have one publication primitive');
+  const prepare = job.indexOf('node scripts/core-release-authority.js prepare');
+  const smoke = job.indexOf('node scripts/core-release-authority.js smoke');
+  const guard = job.indexOf('node scripts/core-release-authority.js guard');
+  const publicationMatches = [
+    ...job.matchAll(/node scripts\/core-release-authority\.js publish/gu),
+  ];
+  assert.equal(
+    publicationMatches.length,
+    1,
+    'Core publish must have one authoritative publication primitive',
+  );
   const publication = publicationMatches[0].index;
   assert.ok(protocol > install, 'protocol fixtures must run after the clean install');
   assert.ok(runtime > protocol, 'Runtime contract validation must follow manifest validation');
-  assert.ok(evidence > runtime, 'release evidence must follow both validators');
-  assert.ok(guard > evidence, 'the duplicate-publication guard must follow release evidence');
-  assert.ok(publication > guard, 'publication must follow validators, evidence, and its guard');
+  assert.ok(prepare > runtime, 'authoritative packing must follow both validators');
+  assert.ok(smoke > prepare, 'clean-install smoke must follow authoritative packing');
+  assert.ok(guard > smoke, 'the duplicate-publication guard must follow clean-install smoke');
+  assert.ok(
+    publication > guard,
+    'publication must follow validators, authoritative packing, smoke, and its guard',
+  );
 }
 
 test('runtime contract validator accepts all three current trace/report/feedback triples', () => {
@@ -431,7 +442,7 @@ test('release preflight retains both current protocol validators', () => {
   assert.ok(calls.every(({ options }) => options.stdio === 'inherit'));
 });
 
-test('Core publication cannot bypass either validator or reorder it after evidence', () => {
+test('Core publication cannot bypass either validator or reorder it after authoritative packing', () => {
   const workflowPath = path.join(repoRoot, '.github', 'workflows', 'publish.yml');
   const workflow = fs.readFileSync(workflowPath, 'utf8');
   assert.doesNotThrow(() => assertCorePublishValidatorOrder(workflow));
@@ -449,18 +460,22 @@ test('Core publication cannot bypass either validator or reorder it after eviden
   const reordered = workflow
     .replace('        run: npm run validate:runtime-contract\n', '')
     .replace(
-      '      - name: Publish @aikdna/kdna-core\n',
-      '      - name: Publish @aikdna/kdna-core\n        run: npm run validate:runtime-contract\n',
+      '      - name: Verify the retained artifact through a clean install\n',
+      '      - run: npm run validate:runtime-contract\n' +
+        '      - name: Verify the retained artifact through a clean install\n',
     );
-  assert.throws(() => assertCorePublishValidatorOrder(reordered), /release evidence must follow/u);
+  assert.throws(
+    () => assertCorePublishValidatorOrder(reordered),
+    /authoritative packing must follow/u,
+  );
 
   const injectedPublish = workflow.replace(
     '      - name: Validate authoritative Runtime manifest fixtures\n',
-    '      - run: npm publish --provenance --access public\n' +
+    '      - run: node scripts/core-release-authority.js publish\n' +
       '      - name: Validate authoritative Runtime manifest fixtures\n',
   );
   assert.throws(
     () => assertCorePublishValidatorOrder(injectedPublish),
-    /one publication primitive/u,
+    /one authoritative publication primitive/u,
   );
 });
