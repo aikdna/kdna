@@ -6,7 +6,7 @@
     "plan_id": "plan_0123456789abcdef",
     "plan_digest_profile": "kdna.canonicalization.consumption-plan-jcs",
     "plan_digest_profile_version": "0.1.0",
-    "plan_digest": "sha256:63e19af544125da1d8b9fe7e16cde73e76b305501af18d0aa3c6cebdf3d990d7",
+    "plan_digest": "sha256:84e1165cc9bceb29dcb341c91574e33b7366ba2525c4959ea6a520f06dae12d4",
     "comparison": "matched"
   },
   "parent_trace_id": null,

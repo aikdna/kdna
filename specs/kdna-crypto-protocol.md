@@ -103,7 +103,7 @@ Asset distributed through any author-chosen channel:
   "updated_at": "2026-07-01T00:00:00.000Z",
   "creator": { "name": "Example Author" },
   "compatibility": {
-    "min_loader_version": "0.19.0",
+    "min_loader_version": "0.20.0",
     "profile": "kdna.payload.judgment"
   },
   "payload": {

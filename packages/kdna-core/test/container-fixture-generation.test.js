@@ -16,7 +16,7 @@ const container = require('../src/container');
 const repoRoot = path.resolve(__dirname, '..', '..', '..');
 const generator = path.join(repoRoot, 'scripts', 'generate-container-negative-fixtures.mjs');
 const licenseKey = 'KDNA-TEST-LICENSE-VECTOR-2026';
-const licensedFixtureSha256 = '662ec25e0481eac3bf22be875dd2b2e46b70d0152f056b42c5d522bdbf54a4b8';
+const licensedFixtureSha256 = '25d1258352701e31c8e94253170947d936f6f861af70aeb984d38769c600f4dc';
 const licensedFixtureEntries = ['mimetype', 'checksums.json', 'kdna.json', 'payload.kdnab'];
 
 const crc32Table = Array.from({ length: 256 }, (_, index) => {

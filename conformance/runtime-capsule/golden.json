@@ -8,10 +8,10 @@
   "fixture": "minimal.kdna.b64",
   "loaded_at": "2026-07-15T00:00:00.000Z",
   "expected": {
-    "asset": "sha256:9b2e19abc739f3471826a9af6f423b0e993fd27b0eb4aebf314eb1e6515cd33d",
-    "content": "sha256:51fcee33e96af6cd2a254178c6a821cdd2ce2b30bb2e30782320e75d444c5c90",
-    "runtime_entry_set": "sha256:ade5cc99c48fa0e49e5e86f433fba39d68180e92e4a52a3450f55055ab2de040",
-    "capsule_delivery": "sha256:52bb5eb52c8dc4da92d9d1fc3c9f123483e70c405df93046c40de9bdc087af77"
+    "asset": "sha256:0f6d33af23e9d3305a523ab78156e80ee63b191680ddba2175a0e6046ded7964",
+    "content": "sha256:aeaa3e31b4be25e41a686963772988a613ee711a02fa13151a55877f251cd2ea",
+    "runtime_entry_set": "sha256:a756e89ed89f625940086da3757d6a8ff3b8dbee0c54bcb37988e0c891da5b3c",
+    "capsule_delivery": "sha256:ba18200f4837b5d7d09a42e56d7d5424b7969ed7ed6788d6fbb92816a2c56f4b"
   },
   "runtime_capsule": {
     "type": "kdna.runtime-capsule",
@@ -26,7 +26,7 @@
       "profile": "kdna.digest-evidence",
       "profile_version": "0.1.0",
       "asset": {
-        "value": "sha256:9b2e19abc739f3471826a9af6f423b0e993fd27b0eb4aebf314eb1e6515cd33d",
+        "value": "sha256:0f6d33af23e9d3305a523ab78156e80ee63b191680ddba2175a0e6046ded7964",
         "basis": "kdna.digest-basis.container-bytes",
         "comparison": {
           "state": "not_compared",
@@ -36,7 +36,7 @@
         }
       },
       "content": {
-        "value": "sha256:51fcee33e96af6cd2a254178c6a821cdd2ce2b30bb2e30782320e75d444c5c90",
+        "value": "sha256:aeaa3e31b4be25e41a686963772988a613ee711a02fa13151a55877f251cd2ea",
         "basis": "kdna.digest-basis.content-tree",
         "comparison": {
           "state": "not_compared",
@@ -46,12 +46,12 @@
         }
       },
       "runtime_entry_set": {
-        "value": "sha256:ade5cc99c48fa0e49e5e86f433fba39d68180e92e4a52a3450f55055ab2de040",
+        "value": "sha256:a756e89ed89f625940086da3757d6a8ff3b8dbee0c54bcb37988e0c891da5b3c",
         "basis": "kdna.digest-basis.runtime-entry-set",
         "comparison": {
           "state": "matched",
           "against": "checksum_declaration",
-          "expected": "sha256:ade5cc99c48fa0e49e5e86f433fba39d68180e92e4a52a3450f55055ab2de040",
+          "expected": "sha256:a756e89ed89f625940086da3757d6a8ff3b8dbee0c54bcb37988e0c891da5b3c",
           "source": "checksums.json.entry_set_digest"
         }
       }

@@ -14,7 +14,7 @@
       "name": "KDNA Conformance"
     },
     "compatibility": {
-      "min_loader_version": "0.19.0",
+      "min_loader_version": "0.20.0",
       "profile": "kdna.payload.judgment",
       "profile_version": "0.1.0"
     },
@@ -56,13 +56,13 @@
     "digest_profile_version": "0.1.0",
     "covered_entries": ["kdna.json", "payload.kdnab"],
     "algorithm": "sha256",
-    "manifest_digest": "sha256:b40c7ffc5066d071c2e65560a718c0088c40129a66a48dd2cf45d8982f427b40",
+    "manifest_digest": "sha256:42919820615f548352bc6e0682d95e515a14b0c3df67f95acb7c6b5812154993",
     "payload_digest": "sha256:92f67d1e6f0c8c9ced0dd500e7ad0cebf80b6532c06cce8766456ce80e8bc819",
-    "entry_set_digest": "sha256:8fccdeb528a09584fab1d0369a62b4ad2d191a6e96968e43eff56e786bb909b5",
+    "entry_set_digest": "sha256:ac3d19fc06bff5f92974590302ffb8847515a580ed955d2ef0ada11f789ec2a2",
     "entries": {
       "kdna.json": {
         "algorithm": "sha256",
-        "value": "b40c7ffc5066d071c2e65560a718c0088c40129a66a48dd2cf45d8982f427b40"
+        "value": "42919820615f548352bc6e0682d95e515a14b0c3df67f95acb7c6b5812154993"
       },
       "payload.kdnab": {
         "algorithm": "sha256",
@@ -70,7 +70,7 @@
       }
     }
   },
-  "expected_asset_digest": "sha256:53bb4b8b694369e0e16f76c9f72070537141632ef6b6266aeb379adc0e0e67f6",
+  "expected_asset_digest": "sha256:508b1301fd0b05ce4197ce94597dff6bde8b9dca540c63174e846f0800648733",
   "grant": {
     "profile": "kdna.grant.external-key",
     "contract_version": "0.1.0",
@@ -86,7 +86,7 @@
       "asset_id": "kdna:fixture:external-grant",
       "asset_uid": "urn:uuid:00190000-0000-4000-8000-000000000001",
       "version": "1.0.0",
-      "digest": "sha256:53bb4b8b694369e0e16f76c9f72070537141632ef6b6266aeb379adc0e0e67f6",
+      "digest": "sha256:508b1301fd0b05ce4197ce94597dff6bde8b9dca540c63174e846f0800648733",
       "entry_path": "payload.kdnab",
       "ciphertext_digest": "sha256:54be3615c32682f0c86ec2aafb51d982cbf51db8e468a122bf04a9a0994ecfd4",
       "key_ref": "assetkey:fixture:external-grant:1.0.0",
@@ -104,7 +104,7 @@
       "salt": "JiYmJiYmJiYmJiYmJiYmJg",
       "wrapped_cek": "Rg-WDt_wdWY7Q9D_Cwdn0B4akh5b57CDAyihh0SbtYeo6P2vUYW7ig"
     },
-    "signature": "ed25519:uHeDs7VNSU8JyGygfFKUg-amGrC4QpWWoeFfJG8vNqf15leVRG3dkKsUEuc9Pao1vF091o2oRl_ou1tGGVfSBA"
+    "signature": "ed25519:rPrvwMV5PYySuorXWjyVTFWPbEC7_K9zw_cLHioBn3vaS5zbUmtLM7HzrokMkeW3g4fJmqw49XB-Q5L2OkHsAg"
   },
   "test_keys": {
     "issuer_root": "GRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRk",

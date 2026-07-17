@@ -34,7 +34,7 @@ function withAsset(minLoaderVersion, callback) {
 }
 
 test('loader coordinate is the strict current package version', () => {
-  assert.equal(core.KDNA_LOADER_VERSION, '0.19.0');
+  assert.equal(core.KDNA_LOADER_VERSION, '0.20.0');
   assert.equal(core.KDNA_LOADER_VERSION, packageMetadata.version);
   assert.deepEqual(core.parseLoaderVersion('0.19.0'), ['0', '19', '0']);
 });
@@ -76,13 +76,14 @@ test('inspect, validate, default verify, plan, and load agree on loader compatib
   const vectors = [
     { required: '0.18.999999999999999999999', compatible: true },
     { required: '0.19.0', compatible: true },
-    { required: '0.19.1', compatible: false },
+    { required: '0.20.0', compatible: true },
+    { required: '0.20.1', compatible: false },
     { required: '999999999999999999999.0.0', compatible: false },
   ];
   for (const vector of vectors) {
     withAsset(vector.required, (assetPath) => {
       const inspected = core.inspect(assetPath);
-      assert.equal(inspected.loader_version, '0.19.0');
+      assert.equal(inspected.loader_version, '0.20.0');
       assert.equal(inspected.min_loader_version, vector.required);
       assert.equal(inspected.loader_compatible, vector.compatible);
 

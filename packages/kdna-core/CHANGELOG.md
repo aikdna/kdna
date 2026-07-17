@@ -1,14 +1,6 @@
 # Changelog
 
-## Unreleased
-
-### Added
-
-- Add the separate `@aikdna/kdna-core/remote-runtime` package subpath for a
-  deployer-controlled, single packaged remote asset. It validates and loads one
-  immutable byte snapshot into a fixed full JSON Runtime Capsule while the
-  package-root consumer loaders continue to return
-  `KDNA_AUTH_REMOTE_RUNTIME_REQUIRED`.
+## 0.20.0 (2026-07-17)
 
 ### Changed
 
@@ -19,6 +11,14 @@
   caller adoption policy remain outside Core conformance.
 
 ## 0.19.0 (2026-07-16)
+
+### Added
+
+- Add the separate `@aikdna/kdna-core/remote-runtime` package subpath for a
+  deployer-controlled, single packaged remote asset. It validates and loads one
+  immutable byte snapshot into a fixed full JSON Runtime Capsule while the
+  package-root consumer loaders continue to return
+  `KDNA_AUTH_REMOTE_RUNTIME_REQUIRED`.
 
 ### Fixed
 

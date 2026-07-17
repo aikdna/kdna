@@ -17,7 +17,7 @@
   "input_fingerprint": {
     "has_password_input": false,
     "entitlement_input": null,
-    "source_fingerprint": "sha256:e94ba5727bc5621bef566ab52d79c7817f2bc34e77274c6f63948a678d51e392"
+    "source_fingerprint": "sha256:a0218d64d07e56f1c7b82d91287d63209351515829d66675958e25be89d8ad70"
   },
   "checks": {
     "format_valid": true,
