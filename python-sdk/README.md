@@ -33,7 +33,7 @@ from kdna import inspect_kdna, open_kdna
 
 metadata = inspect_kdna("./writing.kdna")
 capsule = open_kdna("./writing.kdna", mode="minimum")
-assert capsule["type"] == "kdna.context.capsule"
+assert capsule["type"] == "kdna.runtime-capsule"
 ```
 
 Modes map to Core profiles:

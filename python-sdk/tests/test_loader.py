@@ -37,7 +37,7 @@ def test_inspect_and_open_return_toolchain_objects(current_asset: Path):
     assert info["payload"] == "payload.kdnab"
 
     capsule = open_kdna(str(current_asset), mode="minimum")
-    assert capsule["type"] == "kdna.context.capsule"
+    assert capsule["type"] == "kdna.runtime-capsule"
     assert capsule["profile"] == "compact"
     assert capsule["trace"]["payload_encoding"] == "cbor"
     assert "highest_question" in capsule["context"]
@@ -57,7 +57,7 @@ def test_verify_digest_accepts_prefixed_and_bare_sha(current_asset: Path):
 def test_format_context_preserves_runtime_capsule(current_asset: Path):
     rendered = format_context(open_kdna(str(current_asset)))
     parsed = json.loads(rendered)
-    assert parsed["type"] == "kdna.context.capsule"
+    assert parsed["type"] == "kdna.runtime-capsule"
     assert parsed["context"]["highest_question"]
 
 

@@ -18,7 +18,7 @@ def format_context(domain: Dict[str, Any]) -> str:
     if not domain:
         return ""
 
-    if domain.get("type") == "kdna.context.capsule":
+    if domain.get("type") == "kdna.runtime-capsule":
         return json.dumps(domain, ensure_ascii=False, indent=2)
 
     parts = []

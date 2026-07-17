@@ -119,8 +119,8 @@ def open_kdna(asset_path: str, mode: str = "minimum") -> Dict[str, Any]:
     capsule = _run_cli(
         ["load", asset_path, f"--profile={MODE_TO_PROFILE[mode]}", "--as=json"]
     )
-    if capsule.get("type") != "kdna.context.capsule":
-        raise KDNAAssetError("KDNA Core did not return a Runtime Capsule")
+    if capsule.get("type") != "kdna.runtime-capsule":
+        raise KDNAAssetError("returned capsule has an unknown type")
     return capsule
 
 
