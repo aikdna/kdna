@@ -1,13 +1,23 @@
 # KDNA Source Distillation Contract
 
-> Version: 0.2  
-> Status: Updated — added Distillation Target (Layer 0) and Scope Gate  
-> Audience: KDNA Studio, kdna-studio-cli, kdna-studio-core, Mac Apps, agent adapters  
+> Version: 0.2
+> Status: Optional human-reviewed authoring profile; not KDNA Core validity
+> Audience: KDNA Studio, kdna-studio-cli, kdna-studio-core, Mac Apps, agent adapters
 > Relationship: Companion to [`app-runtime-contract.md`](./app-runtime-contract.md)
+
+> Every MUST in this document is conditional on an authoring product claiming
+> conformance to this human-reviewed distillation profile. Human confirmation,
+> Human Judgment Lock, local-only source handling, and a companion provenance
+> receipt are not universal requirements for creating a valid `.kdna` asset.
+> Humans, AI systems, Agents, tools, and mixed workflows may create assets under
+> other authoring profiles; KDNA Core applies the same format validation to all.
 
 ## Purpose
 
-This contract defines the five-layer object model for distillation-first KDNA authoring: declaring a target domain, turning a user's existing content into loadable .kdna judgment assets through AI-assisted pattern extraction, and enforcing mandatory human confirmation — all within a declared scope.
+This profile defines a five-layer object model for human-reviewed,
+distillation-first authoring: declare a target domain, turn a user's existing
+content into loadable `.kdna` judgment assets through AI-assisted pattern
+extraction, and preserve an explicit human-review claim within that scope.
 
 The critical addition in 0.2: **Domain-First Distillation.** Before any content analysis begins, the user MUST declare what domain, scope, and granularity this KDNA targets. Without this declaration, distillation produces unfiltered personality dumps rather than domain-specific judgment assets.
 
@@ -32,7 +42,9 @@ Layer 4: Consumption Layer      →  .kdna loading
 
 ### Layer 0: Distillation Target
 
-Before any evidence is analyzed, the user MUST declare a Distillation Target. This is not optional — distillation without a target produces mixed-personality artifacts that violate KDNA's core value proposition (domain-specific, loadable judgment).
+Before any evidence is analyzed under this profile, the user MUST declare a
+Distillation Target. This is required for the profile's domain-scoped review
+claim; it is not a universal KDNA Core creation requirement.
 
 ```json
 {
@@ -173,7 +185,10 @@ Source Evidence registers content provided by the user for analysis. Evidence is
 
 ### Layer 2: Distillation Layer — Distillation Candidate
 
-Distillation Candidates are AI-proposed judgment elements extracted from Source Evidence. They are hypotheses, not KDNA. They require human confirmation.
+Distillation Candidates are AI-proposed judgment elements extracted from Source
+Evidence. Under this profile they remain hypotheses until human confirmation.
+Other authoring profiles may publish AI-originated judgment without making a
+human-reviewed claim.
 
 ```json
 {
@@ -269,12 +284,12 @@ Judgment Cards are confirmed and Human-Locked judgment elements ready for compil
 | Status | Meaning |
 |--------|---------|
 | `draft` | Candidate accepted but not yet locked |
-| `locked` | Human Judgment Lock applied — ready for compilation |
+| `locked` | Human Judgment Lock applied — ready for this profile's reviewed compilation |
 | `revised` | Locked card was later modified and re-locked |
 
 **Rules:**
 
-1. Only `locked` cards may be compiled into formal KDNA domain files
+1. Only `locked` cards may enter a release that claims this human-reviewed profile
 2. Human Judgment Lock requires explicit confirmation — a single "approve all" should require secondary confirmation
 3. Each locked card records who locked it and when
 4. Cards can be revised, but revision requires re-locking
@@ -286,7 +301,9 @@ The compiled .kdna asset follows the standard KDNA format defined in [SPEC.md](.
 
 ### Provenance Receipt
 
-Each distillation-produced .kdna MUST be accompanied by a provenance receipt. This receipt is separate from the .kdna — it is not embedded in domain files.
+Each `.kdna` that claims this distillation profile MUST be accompanied by a
+provenance receipt. The receipt is separate from the `.kdna`; it is not a Core
+format-validity requirement or an embedded domain entry.
 
 ```json
 {
@@ -426,9 +443,13 @@ The Mac Studio app implements the UI for:
 
 ## Trust Boundaries
 
-1. **AI proposes, human confirms.** This boundary is absolute. No candidate enters .kdna without human confirmation.
+1. **For this profile, AI proposes and a human confirms.** No candidate enters a
+   release claiming this human-reviewed profile without confirmation. AI-native
+   assets remain valid under other authoring profiles when they satisfy Core.
 
-2. **Content stays local, judgment becomes portable.** Source evidence remains on the user's device. Only confirmed judgment structures enter .kdna.
+2. **For this profile, content stays local and reviewed judgment becomes
+   portable.** Source evidence remains on the user's device. Only confirmed
+   judgment structures enter the profile-conformant release.
 
 3. **Sensitive inferences are blocked by default.** The system actively prevents sensitive personal attributes from becoming candidates.
 

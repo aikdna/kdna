@@ -48,23 +48,33 @@ KDNA Core MAY:
 - Enable optional Evidence Claims that describe what an asset has been observed to do
 - Enable optional catalogs/registries that list asset metadata
 
-### 2.3 Judgment, Not Fact
+### 2.3 Judgment Is the First-Class Asset Responsibility
 
-KDNA carries judgment structure: value ordering, taste, standards, boundaries,
-risk models, preferences, personality, stance, and methods of choosing.
+KDNA makes a bounded judgment system the first-class payload responsibility:
+value ordering, taste, standards, boundaries, risk models, preferences, stance,
+and methods of choosing.
 
-KDNA does NOT carry:
-- Facts, knowledge bases, or ground truth
-- Documents, RAG content, or information retrieval data
-- Executable code, workflow steps, or automation scripts
+This is an asset-contract boundary, not an exclusive claim over content. The
+same judgment may also appear in a Prompt, Skill, Policy, knowledge base,
+workflow, model, or ordinary document. Those carriers may be versioned, tested,
+and inspected in their own systems, and they may produce the same behavior in a
+particular task. KDNA's contribution is the shared asset identity, integrity,
+authorization, LoadPlan, projection, and lifecycle contract.
 
-Facts and knowledge belong to document stores, databases, and RAG systems.
-Judgment belongs to KDNA.
+A `.kdna` payload MAY include factual premises, examples, references, method
+descriptions, or relationships needed to express its judgment. Core does not
+certify those statements as ground truth, and a KDNA asset is not thereby a
+general document store, retrieval corpus, executable-code package, or workflow
+engine. KDNA does not monopolize judgment, knowledge, or reasoning.
 
 ### 2.4 `.kdna` Is THE Asset
 
 The `.kdna` file is the sole official distribution and loading format. It is not
 a generic prompt, not a plaintext ZIP, and not a loose source directory.
+
+Equivalent judgment content may still be represented in a Prompt, Skill,
+Policy, or another carrier. That content overlap does not turn those carriers
+into `.kdna` assets, and it does not make KDNA behaviorally superior by default.
 
 Source directories (`KDNA_Core.json`, `KDNA_Patterns.json`, etc.) are authoring
 workspaces. They MUST NOT be distributed as assets or loaded by Agents.

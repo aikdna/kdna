@@ -24,7 +24,7 @@ Before loading any KDNA, the agent should ask: **"Would domain judgment change t
 
 | Condition | Example |
 |---|---|
-| The task is purely mechanical | Format JSON, extract emails, translate text |
+| The task does not need an independently managed judgment asset | Routine formatting or extraction under an already sufficient local contract |
 | The domain judgment is obvious to any competent adult | "Is 2+2=4?" |
 | KDNA would slow down a time-sensitive operation | Real-time data processing |
 | The loaded KDNA does not change the reasoning path | Vague axioms that produce the same output as no KDNA |
@@ -115,9 +115,13 @@ If the user asks a sales question and the agent needs to look up a definition, t
 
 Loading unused KDNA wastes context. Wait until the task requires domain judgment, then load the relevant domain.
 
-### Don't load KDNA for internal agent operations
+### Don't assume internal agent operations are judgment-free
 
-Tool selection, code execution, file I/O — these are mechanical operations. KDNA is for user-facing judgment, not for agent plumbing.
+Tool selection, code execution, and file I/O can involve substantial judgment:
+which tool is safe, whether evidence is sufficient, when to stop, and whether an
+action is authorized. The question is not whether the operation is internal or
+user-facing. Load KDNA only when an independently managed judgment asset adds a
+needed contract beyond the Host's existing Prompt, Skill, Policy, and controls.
 
 ## 6. When KDNA Makes Things Worse
 

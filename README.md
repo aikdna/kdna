@@ -7,6 +7,12 @@
 > provenance, access, projections, and evidence can be managed independently
 > from any one Prompt, Skill, model, or application.
 
+Judgment can also remain in those carriers. Prompts and Skills can be
+structured, versioned, tested, and reused; RAG and knowledge systems can store
+or retrieve judgment. KDNA adds a standard asset and loading contract when the
+judgment needs to move independently. Equivalent content may produce the same
+behavior in another carrier, and KDNA does not claim otherwise.
+
 Anyone can create a KDNA asset. KDNA Core validates structure, integrity,
 provenance, and authorization facts; it does not decide whether the judgment is
 true, good, expert, or worthy of publication. Creation and compatible Agent
@@ -18,7 +24,7 @@ asset internals is not a compatible Agent consumption path.
 >
 > What IS KDNA, fundamentally? → [Core Narrative and Boundaries](./docs/core-narrative-and-boundaries.md)
 >
-> Why KDNA instead of a system prompt? → [Why KDNA](./docs/why-kdna.md) · [KDNA and the AI Stack](./docs/kdna-and-ai-stack.md)
+> When does KDNA add value beyond an existing Prompt or Skill? → [Why KDNA](./docs/why-kdna.md) · [KDNA and the AI Stack](./docs/kdna-and-ai-stack.md)
 >
 > Building a consumption runtime? → [Consumption Runtime](./docs/consumption-runtime.md)
 >

@@ -7,13 +7,13 @@ person, creator, professional, team, or organization using it.
 KDNA exists so that judgment can be made explicit, carried across models, and
 used through a consistent runtime contract.
 
-## The Judgment Layer
+## The Judgment Asset Contract
 
-Facts answer *what is known*. Memory answers *what happened before*. Skills and
-workflows answer *how to act*. Evaluation answers *whether an observed result
-met a chosen test*.
+Facts, memory, Skills, workflows, Policies, Prompts, and evaluations can all
+carry judgment. Their primary contracts differ, and none has an exclusive
+claim over a content type.
 
-KDNA carries a different kind of asset:
+KDNA makes the following judgment content first-class in one asset:
 
 - what matters most;
 - which distinctions must not be blurred;
@@ -23,8 +23,9 @@ KDNA carries a different kind of asset:
 - when the judgment does not apply.
 
 KDNA does not replace data governance, memory, private compute, RAG,
-evaluation infrastructure, fine-tuning, skills, or workflows. It gives those
-systems an explicit judgment reference.
+evaluation infrastructure, fine-tuning, Skills, Prompts, Policies, or
+workflows. The same judgment can remain in any of them. KDNA adds value when it
+needs independent identity, integrity, authorization, loading, and lifecycle.
 
 ## Whose Judgment?
 

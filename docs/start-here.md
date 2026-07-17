@@ -1,6 +1,7 @@
 # Start Here
 
-**Skills give agents hands. KDNA gives them judgment.**
+**Judgment can live in many carriers. KDNA gives a selected judgment system a
+portable asset and loading contract.**
 
 KDNA is an open judgment-asset protocol. Anyone can create a `.kdna` asset;
 compatible Agent consumption goes through the KDNA toolchain, authorization,
@@ -80,15 +81,17 @@ kdna load ./my-domain.kdna --profile=compact --as=prompt
 
 ## What KDNA Is (and Isn't)
 
-| KDNA is | KDNA is NOT |
-|---------|------------|
-| A judgment reference agents load before acting | A prompt library |
-| Structured axioms, boundaries, self-checks | A RAG / knowledge base |
-| Version-controlled, verifiable | A workflow engine |
-| Cross-agent portable | Model fine-tuning |
-| Scoped judgment structures with optional provenance | A `.cursorrules` replacement |
+| KDNA makes first-class | KDNA does not claim |
+|-------------------------|---------------------|
+| A named, scoped judgment asset | That Prompt, Skill, RAG, Policy, or Memory cannot carry judgment |
+| Format, identity, integrity, and version contracts | That asset content is true, good, or superior |
+| LoadPlan, authorization, projection, and Capsule delivery | Tool permission or workflow execution authority |
+| Cross-agent portability through a shared protocol | Guaranteed behavior improvement on every model or task |
+| Optional provenance and lifecycle metadata | Ownership of all facts, methods, or reasoning |
 
-Tools let AI **act**. KDNA helps AI **judge**.
+Use KDNA when the judgment needs that independent asset contract. Keep using a
+Prompt, Skill, document, Policy, or knowledge system when its own contract is
+enough.
 
 ---
 

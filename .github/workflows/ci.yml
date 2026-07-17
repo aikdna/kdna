@@ -38,3 +38,7 @@ jobs:
         with: { node-version: 22 }
       - name: Run check-public-surface
         run: node scripts/check-public-surface.mjs
+      - name: Reject public narrative false dichotomies
+        run: npm run audit:public-narrative
+      - name: Test public narrative boundary guard
+        run: npm run test:public-narrative

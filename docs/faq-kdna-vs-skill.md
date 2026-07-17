@@ -1,25 +1,28 @@
-# FAQ: KDNA vs Skill, Prompt, and AI Ecosystem
+# FAQ: KDNA with Skills, Prompts, and the AI Ecosystem
 
 ## What is KDNA?
 
-KDNA is a **judgment asset format**. A `.kdna` file encodes how to judge the quality
-of work in a specific domain — when something is good enough, when to stop, what
-not to say, what misunderstandings to avoid.
+KDNA is a **judgment asset format and loading protocol**. A `.kdna` file gives a
+selected, bounded judgment system its own identity, version, integrity,
+authorization, projection, and lifecycle contract.
 
-It is NOT a prompt, a skill, a workflow, a knowledge base, or a rules file.
+Judgment may also exist in a Prompt, Skill, Policy, workflow, knowledge base,
+Memory, model, or ordinary document. KDNA does not claim exclusive ownership of
+judgment; it standardizes one way to distribute and consume it as an asset.
 
 ---
 
-## Is KDNA a Skill?
+## Is a `.kdna` asset the same artifact as a Skill?
 
-No. **Skill is execution, KDNA is judgment.**
+No. Their contents may overlap, but their primary contracts differ.
 
-| | Skill | KDNA |
-|---|-------|------|
-| What it does | Executes a procedure | Judges quality |
-| Answers | "How do I do this?" | "Is this good enough?" |
-| Example | "Write a PR review" | "Is this review rubber-stamp or behavior-first?" |
-| Format | Code / tool calls / steps | Structured judgment axioms, stances, banned terms |
+| | Skill | `.kdna` asset |
+|---|-------|---------------|
+| Primary contract | Reusable capability, instructions, references, or tool procedure | Judgment asset identity, integrity, loading, and projection |
+| May carry judgment | Yes | Yes — as the first-class payload responsibility |
+| May describe methods | Yes | Yes, when needed to express the judgment system |
+| Grants tool authority | No; authority still comes from the Host/user | No |
+| Portability | Defined by the relevant Agent/Skill system | Defined by the KDNA protocol |
 
 ---
 
@@ -27,20 +30,24 @@ No. **Skill is execution, KDNA is judgment.**
 
 Yes. This is the recommended pattern:
 
-1. **Skill** executes the task (e.g., review a PR, write a blog post)
-2. **KDNA** loads alongside it and injects judgment guidance into the agent's context
-3. The agent uses KDNA to judge its own output before delivering it
+1. A **Skill** supplies the task capability, instructions, or references.
+2. A **KDNA Runtime** loads a named judgment asset under its LoadPlan and
+   authorization contract.
+3. The Host decides how both inputs participate in the task and retains all
+   execution authority.
 
-Example: a PR review Skill + a code-review KDNA → the agent catches architectural
-issues that a rule-based Skill would miss.
+The same code-review judgment may already be present in the Skill. A separate
+`.kdna` becomes useful when that judgment needs independent versioning,
+authorization, distribution, projection, or replacement across multiple hosts.
 
 ---
 
-## Can a .kdna file contain a Skill?
+## Can a `.kdna` file contain Skill-like material?
 
-No. `.kdna` files contain structured judgment data (axioms, stances, banned terms,
-misunderstandings, self-checks). They do not contain executable code, tool calls,
-or workflow steps.
+It can contain method descriptions, examples, references, or relationships that
+are necessary to express a judgment system. It is not a Skill installation
+package, workflow engine, or executable-code authority. A KDNA Runtime never
+turns attached or described material into permission to execute tools.
 
 ---
 
@@ -70,17 +77,23 @@ asset by default; choose Cluster only when the task truly needs multiple assets.
 Write a Skill when:
 - You need the agent to follow a specific procedure
 - The task has clear steps (validate → review → report)
-- The value is in the execution, not the judgment
+- The relevant Agent/Skill system already provides the identity, distribution,
+  update, and trust contract you need
+- Keeping the judgment inside that Skill is sufficient
 
 ---
 
 ## When should I write a KDNA?
 
 Write a KDNA when:
-- The task requires judgment, not just execution
-- You want the agent to catch its own mistakes
-- You have domain expertise to encode (banned terms, failure modes, misunderstandings)
-- You want consistent quality standards across different agents/models
+- A selected judgment system needs an identity and lifecycle independent from
+  one Prompt, Skill, model, or application
+- Consumers must verify exact asset bytes, version, authorization, and projection
+- The same asset needs to move across compatible Agents or runtimes
+- Replacement, revocation, rollback, or consumption evidence matters
+
+Do not create a `.kdna` merely because a task contains judgment. Use the simpler
+carrier when it already meets the requirement.
 
 ---
 
@@ -105,32 +118,35 @@ or workflow.
 
 | | Prompt | KDNA |
 |---|--------|------|
-| Format | Free text | Structured (axioms, stances, banned terms) |
-| Verification | None | `kdna validate` + schema gate |
-| Reuse | Copy-paste | Installable `.kdna` file |
-| Judgment depth | Surface-level | Encodes failure modes, misunderstandings |
-| Versioning | Ad-hoc | `judgment_version` + lineage |
+| Primary contract | Instructions and context for a model invocation | Judgment asset distribution and loading |
+| Structure | Free text or any application-defined structure | Public KDNA Schema and container contract |
+| Testing/versioning | Fully possible in the owning prompt system | Standardized asset validation, version, digest, and lineage |
+| Reuse | Application-defined | Portable across compatible KDNA runtimes |
+| Authorization/projection | Application-defined | LoadPlan and Runtime Capsule contract |
+
+The same judgment can be represented in both. KDNA does not make it deeper or
+better merely by changing the carrier.
 
 ---
 
-## KDNA vs Memory (RAG) — what's the difference?
+## KDNA vs Memory or RAG — what's the difference?
 
-Memory/RAG retrieves **facts**. KDNA encodes **judgment**.
+Memory and RAG can store or retrieve facts, rules, preferences, examples, and
+judgment. Their primary contract is persistence or retrieval. KDNA's primary
+contract is the identity and compatible consumption of a bounded judgment asset.
 
-RAG says "this document contains X." KDNA says "when you see X, consider Y; Z is
-a common misunderstanding; don't say W."
-
-They are complementary. You can use RAG for facts and KDNA for judgment.
+Retrieving a passage that contains judgment does not prove that one exact asset
+version was authorized, projected, and delivered. Conversely, loading a KDNA
+asset does not make it a current-fact source or replace retrieval.
 
 ---
 
 ## KDNA vs MCP — what's the difference?
 
-MCP (Model Context Protocol) connects agents to **tools**. KDNA connects agents to
-**judgment standards**.
-
-MCP says "here's a function to search the database." KDNA says "before you search,
-check if the query is safe; if the user asks for PII, refuse."
+MCP standardizes server, resource, prompt, and tool interaction. KDNA standardizes
+a judgment asset and its loading contract. An MCP server may expose KDNA assets,
+and MCP prompts/resources may themselves carry judgment. Neither protocol grants
+permission to act merely because content was delivered.
 
 ---
 

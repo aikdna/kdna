@@ -1,130 +1,81 @@
-# Evaluating KDNA Effectiveness
+# Evaluating a KDNA Asset
 
-> [中文版](./evaluation.zh.md) · See also: [Meta-Cognition](./meta-cognition.md)
+> [中文版](./evaluation.zh.md)
 
-> This is an external evaluation method, not a KDNA Core quality or promotion
-> authority. Every result must identify the evaluator, exact asset, task and
-> population scope, rubric, model/tool coordinates, method, time, and evidence.
-> Different evaluators may legitimately reach different conclusions.
+This document describes external evaluation. It is not KDNA Core format
+validity, an official quality scale, or a promotion authority.
 
-KDNA claims to improve agent judgment. This document defines how to test that claim.
+## Separate the claims
 
-## Core Principle
+An evaluation should identify which claim it tests:
 
-> **KDNA is working if the agent's reasoning trajectory changes, not just its wording.**
+1. **Format claim** — the asset passes the current Schema, integrity, and load
+   contract. Core and conformance tests own this claim.
+2. **Delivery claim** — the intended asset version was authorized, projected,
+   and delivered to the Host. LoadPlan, Capsule, and receipts support this.
+3. **Adherence claim** — a model output is consistent with selected asset
+   content under a named task and method.
+4. **Causal claim** — loading this asset caused a measured behavioral change
+   relative to a controlled alternative.
+5. **Value claim** — an evaluator prefers that change under a named rubric.
+6. **Outcome claim** — use of the asset contributed to a real-world result.
 
-A KDNA-shaped answer should be diagnostically different from a generic one — not just better-phrased.
+Passing one layer does not prove the next. In particular, a valid `.kdna` file
+does not prove adherence, improvement, truth, expertise, or outcome value.
 
-## Scoring Dimensions
+## Prompt, Skill, and KDNA controls
 
-Rate each dimension 1–5. A KDNA-loaded answer should score higher than the no-KDNA baseline on most dimensions.
+Judgment content may already exist in a Prompt, Skill, Policy, RAG corpus, or
+model. A fair test must say what each condition receives.
 
-| # | Dimension | What to check |
-|---|---|---|
-| D1 | **Diagnostic depth** | Does the answer identify root causes, not just surface symptoms? |
-| D2 | **Terminology consistency** | Does the answer use preferred domain terms and avoid banned ones? |
-| D3 | **Misunderstanding detection** | Does the answer catch implied misunderstandings in the user's input? |
-| D4 | **Axiom alignment** | Does the reasoning follow domain axioms rather than generic common sense? |
-| D5 | **Scenario classification** | Does the answer correctly classify the situation type? |
-| D6 | **Actionable specificity** | Is the guidance concrete and domain-specific, not generic advice? |
-| D7 | **Boundary awareness** | Does the answer know what it should NOT do or claim? |
-| D8 | **Self-check pass rate** | What percentage of domain self-check items does the answer satisfy? |
+Useful comparisons include:
 
-## A/B Test Design
+- application baseline with no equivalent judgment;
+- best Prompt carrying equivalent judgment;
+- Skill or Policy carrying equivalent judgment;
+- the same content delivered through a `.kdna` Runtime Capsule;
+- alternate assets expressing different judgment systems.
 
-For each domain, define test cases. Compare the same input with and without KDNA loaded.
+If an equivalent Prompt and `.kdna` produce the same behavior, that is a valid
+result. It suggests that the content, rather than the carrier, drove the
+behavior. KDNA may still add asset identity, integrity, authorization,
+projection, replacement, and rollback value.
 
-### Test Case Format
+## Required evaluation coordinates
 
-```json
-{
-  "id": "sales_price_objection_01",
-  "domain": "sales",
-  "input": "The customer says our service is too expensive. What should I do?",
-  "without_kdna_expected": {
-    "likely_response_pattern": "Suggest discount or explain value features",
-    "failure_mode": "Treats price objection as a pricing problem rather than a certainty deficit"
-  },
-  "with_kdna_expected": {
-    "likely_response_pattern": "Diagnose which certainty dimension is missing (value, fit, risk, social) before responding",
-    "success_signal": "Identifies the objection as a certainty signal, not a price negotiation trigger"
-  },
-  "scoring_weight": {
-    "D1_diagnostic_depth": 5,
-    "D3_misunderstanding_detection": 5,
-    "D4_axiom_alignment": 4,
-    "D5_scenario_classification": 3
-  }
-}
-```
+Every published result should record:
 
-### Test Suite Structure
+- evaluator and evaluation purpose;
+- exact asset identity, version, and digest;
+- exact model, Host, Prompt, Skill, tool, and runtime coordinates;
+- task and population scope;
+- control conditions and sampling method;
+- rubric, scorer, and disagreement handling;
+- time, raw evidence location, and known limitations.
 
-```
-evals/
-├── sales/
-│   ├── price_objection.json
-│   ├── trust_deficit.json
-│   └── urgency_trap.json
-├── communication/
-│   ├── conflict_escalation.json
-│   └── emotional_deflection.json
-└── management/
-    ├── execution_failure.json
-    └── delegation_avoidance.json
-```
+Different evaluators may legitimately reach different conclusions.
 
-Each domain should have at least 3 test cases covering its core distinctions.
+## Example method
 
-## Minimum Viable Evaluation
+For a bounded writing task:
 
-Start with the simplest possible test:
+1. Define the judgment claim and rubric before generation.
+2. Freeze the exact source material and model settings.
+3. Run a no-equivalent-judgment baseline, an equivalent-Prompt control, and the
+   `.kdna` condition.
+4. Verify the KDNA condition's asset digest, LoadPlan, and Capsule separately
+   from the output score.
+5. Blind the output order where possible.
+6. Preserve failures and null results, not only wins.
+7. Report behavioral findings as evaluator-scoped evidence, not intrinsic asset
+   metadata.
 
-1. Pick one domain and one test case.
-2. Run the same input through the agent twice: once without KDNA, once with KDNA loaded.
-3. Compare the reasoning paths — not just the final answer, but the assumptions, diagnostic moves, and terminology used.
-4. Score both on D1–D8.
-5. If the KDNA-loaded answer does not score at least 2 points higher on the weighted dimensions, the KDNA domain is not working.
+## What Core may report
 
-## Self-Check as Auto-Evaluation
+Core may report technical facts such as schema validity, checksums, signature
+verification, authorization state, compatibility, projection, and receipt
+coordinates. It must not turn an evaluator's score into built-in “good,”
+“expert,” “safe,” “high quality,” or “recommended” status.
 
-Each domain's `KDNA_Patterns.json` contains `self_check` items. These can be used as automated evaluation:
-
-| Self-check type | Evaluation use |
-|---|---|
-| "Did the answer use [preferred term]?" | Terminology consistency |
-| "Did the answer avoid [banned term]?" | Negative pattern detection |
-| "Did the answer diagnose before prescribing?" | Axiom alignment |
-| "Did the answer identify which type of [X]?" | Scenario classification |
-
-Running self-check items against outputs gives a machine-verifiable quality signal without needing human judgment for every test.
-
-## Quality Thresholds
-
-| Score range | Label | Meaning |
-|---|---|---|
-| 8–40 (all D1–D8 at max) | Exceptional | KDNA is transforming judgment; domain is highly effective |
-| 6–7 | Effective | Clear improvement over baseline; domain is working |
-| 4–5 | Marginal | Some improvement but not consistently across dimensions |
-| 1–3 | Ineffective | KDNA is not changing reasoning trajectory; domain needs revision |
-
-## When a Domain Fails Evaluation
-
-If a domain consistently scores below 5:
-
-1. Check if the axioms are too vague to guide reasoning.
-2. Check if the misunderstandings are too generic to detect.
-3. Check if the self-check items are answerable with yes/no.
-4. Check if the banned terms actually appear in agent outputs.
-5. Consider whether the domain boundary is too broad — narrow it.
-
-A domain that cannot be evaluated is not a domain — it's a document.
-
-## Roadmap
-
-| Phase | What |
-|---|---|
-| Now | Add 3 test cases per domain in `evals/` directory |
-| Soon | Script that runs the same prompt with/without KDNA and diffs the output |
-| Later | Integrate self-check items into automated scoring |
-| Future | Community-contributed eval sets for new domains |
+External catalogs and products may publish such assessments under their own
+identity, method, scope, and evidence.

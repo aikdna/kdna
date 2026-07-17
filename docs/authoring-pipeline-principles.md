@@ -1,5 +1,11 @@
 # Authoring Pipeline Principles
 
+> **Scope:** This document defines an optional human-reviewed Studio authoring
+> profile. It is not the universal KDNA creation contract. AI systems, Agents,
+> tools, humans, and mixed workflows may create valid `.kdna` assets directly.
+> Human Judgment Lock is required only when a product claims this profile or a
+> specific human-reviewed provenance state.
+
 A KDNA-compatible authoring pipeline is the judgment production interface. It helps humans turn implicit expertise into explicit, structured, testable, and versioned judgment assets.
 
 It is not a domain generator. It is not an AI autopilot for judgment. It is the workshop where domain authors discover, articulate, challenge, lock, and export their judgment.
@@ -8,9 +14,10 @@ It is not a domain generator. It is not an AI autopilot for judgment. It is the 
 
 ## Core Principles
 
-### 1. Human judgment is the source
+### 1. Human judgment is the source for this profile
 
-AI may interview. AI may challenge. AI may compile and test. But the judgment itself originates from the human domain expert.
+Within this profile, AI may interview, challenge, compile, and test, while the
+released judgment is attributed to and confirmed by a human domain author.
 
 the authoring pipeline makes this explicit in its workflow:
 - The author speaks their judgment.
@@ -47,9 +54,11 @@ Within the Studio, AI plays four helper roles:
 | **Compiler** | Transforms articulated judgment into structured KDNA JSON | Reviews the structure for accuracy and completeness |
 | **Evaluator** | Runs eval suites and reports pass/fail/gaps | Interprets results and decides if quality is sufficient for export |
 
-At no point does AI decide what the judgment should be.
+Within this human-reviewed profile, AI does not decide what judgment will carry
+the human-confirmed provenance claim. This does not prohibit AI-native KDNA
+creation under another profile.
 
-### 4. Provenance before reviewed export
+### 4. Provenance before a human-reviewed export
 
 The Studio can enforce a strict review workflow before judgment enters a
 reviewed release file:
@@ -122,7 +131,7 @@ AI generates counterexamples and stress tests for each card.
 
 Author decides: keep, modify, or discard.
 
-### Phase 4: Human Judgment Lock
+### Phase 4: Human Judgment Lock for this profile
 
 Author explicitly locks each card.
 
@@ -182,7 +191,8 @@ The domain is validated, signed, and exported.
 These principles have concrete implications for Studio implementation:
 
 1. **No "Generate Domain" button.** The primary action is "Lock Judgment" and "Run Test Lab," not "Auto-Generate."
-2. **Lock-first workflow.** Every judgment element must be explicitly locked before it enters the exported domain.
+2. **Lock-first profile.** Every judgment element must be explicitly locked
+   before it enters an export that claims this human-reviewed profile.
 3. **Challenge mode is default.** The Studio should proactively generate counterexamples, not wait for the user to ask.
 4. **Test Lab integration.** Validation and comparison are first-class UI features, not afterthoughts.
 5. **Identity-bound.** Every exported domain is signed with the author's identity key. Anonymous exports are not permitted.
@@ -192,7 +202,8 @@ These principles have concrete implications for Studio implementation:
 
 ## Summary
 
-the authoring pipeline exists because human judgment is the scarce resource in the agent era.
+This authoring profile exists to make a named human author's judgment explicit
+and reviewable. It does not define human judgment as the only valid KDNA source.
 
 The Studio does not replace human judgment. It makes human judgment **articulable, challengeable, testable, and transferable** across the agent ecosystem.
 

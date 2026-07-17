@@ -47,20 +47,21 @@ Because the issue is not whether the model **can** judge. The issue is:
 
 An LLM has **implicit judgment inside the model**. KDNA provides **explicit judgment outside the model**. These are not competitors. They are complementary.
 
-> The model provides general intelligence.
-> KDNA provides a human-led, domain-specific judgment system that the model can load and apply.
+> The model provides learned capability and implicit judgment.
+> KDNA provides a selected, domain-specific judgment asset that a compatible runtime can load.
 
 ---
 
-## 3. Judgment vs Knowledge
+## 3. Judgment and Knowledge
 
-Knowledge answers: *What is this? What happened? What facts are relevant? How does something work?*
+Knowledge and judgment are not exclusive content classes. Knowledge systems can
+store norms, preferences, Policies, and judgment; judgment assets can contain
+factual premises, examples, and descriptive relationships.
 
-Judgment answers different questions: *What matters most here? What should be rejected? What is the real problem versus a surface symptom? Which risk matters most? What boundary should not be crossed? What counts as good enough? When should the agent stop and ask for human confirmation?*
-
-A knowledge base stores information. A judgment system defines how information should be interpreted, prioritized, rejected, and applied.
-
-This is why KDNA is not a knowledge base. KDNA does not try to store all knowledge in a domain. It encodes the judgment structure that helps an AI agent decide **how to use knowledge responsibly**.
+Their primary contracts differ. A knowledge base focuses on organizing and
+providing content. KDNA focuses on giving a bounded judgment system an asset
+identity and compatible loading contract. KDNA does not become a current-fact
+authority merely because its payload includes factual premises.
 
 ---
 
@@ -78,19 +79,21 @@ A judgment system does not only say what is right once. It helps an agent repeat
 
 ## 5. Judgment System vs Judgment System Asset
 
-A judgment system becomes a **judgment system asset** when it is structured in a way that can be reused by AI agents and governed by humans.
+A judgment system becomes a **judgment system asset** when it is structured in a way that can be independently identified, distributed, and reused by AI systems.
 
 A judgment system asset should be: explicit, inspectable, portable, verifiable, composable, versioned, loadable by AI agents, distributable, licensable, and evolvable over time.
 
-**A KDNA domain is the package form of a judgment system asset.** It can be created by a person, team, community, or organization. It may be assisted by AI. But it must be human-led.
+**A `.kdna` file is the package form of a judgment system asset.** It can be
+created by a person, team, community, organization, AI system, Agent, tool, or
+mixed workflow. Authorship and review claims must describe the actual process.
 
 ---
 
-## 6. Why Human-Led Judgment Matters
+## 6. Authorship, review, and provenance
 
-KDNA should not be generated as arbitrary JSON by an AI system and treated as authoritative.
-
-AI can help create KDNA by extracting candidate principles, finding repeated patterns, detecting contradictions, asking clarifying questions, generating examples, proposing self-checks, and building test cases. Humans, agents, and tools can create `.kdna` files through the official toolchain.
+AI can help create KDNA by extracting candidate principles, finding repeated
+patterns, detecting contradictions, generating examples, proposing self-checks,
+and building test cases. It may also originate an asset directly.
 
 The current protocol boundary is:
 
@@ -107,12 +110,14 @@ KDNA does not replace LLMs. KDNA gives LLMs an explicit judgment reference.
 | Component | Role |
 |-----------|------|
 | **LLM** | General intelligence, language, reasoning, generation |
-| **Knowledge base** | External facts, documents, context |
-| **Skill** | Repeatable procedure or capability |
+| **Knowledge base** | Organized content that may include facts and judgment |
+| **Skill** | Repeatable capability that may include procedure and judgment |
 | **Workflow** | Execution order and flow |
-| **KDNA** | Human-led domain judgment system |
+| **KDNA** | Independently identified and loadable judgment asset |
 
-A prompt tells the AI what to do now. A skill tells the AI how to perform a procedure. A knowledge base provides information. KDNA tells the AI **how to judge within a domain**.
+Prompt, Skill, and knowledge systems may all carry the same domain judgment.
+KDNA makes the selected judgment system independently identifiable and loadable
+under a shared protocol.
 
 **Example:**
 
@@ -132,7 +137,7 @@ A common misunderstanding is: "If LLMs become super intelligent, KDNA becomes un
 KDNA takes the opposite view. As AI becomes stronger, it becomes more important to define what judgment it should use, whose standards it should respect, which boundaries it should follow, what risks it should prioritize, when it should refuse, when it should ask for human confirmation, and how its judgment can be inspected.
 
 > Weak AI needs better capability.
-> Strong AI needs better alignment with human-led judgment systems.
+> Strong AI benefits from explicit, inspectable judgment systems when the task requires them.
 > The stronger the AI, the more important it becomes to make judgment explicit.
 
 ---
@@ -163,13 +168,17 @@ KDNA is the open format for that future.
 ## 11. Common Misunderstandings
 
 **"Is KDNA just a prompt?"**
-No. A prompt is usually task-scoped. KDNA is domain-scoped, structured, versioned, validated, and reusable across tasks and agents.
+They are different artifact contracts, but their judgment content may overlap.
+Prompts can be structured, versioned, validated, and reused. KDNA standardizes
+portable asset identity, integrity, authorization, and loading.
 
 **"Is KDNA a knowledge base?"**
-No. A knowledge base stores information. KDNA encodes how information should be judged, prioritized, rejected, and applied.
+KDNA is not a general knowledge-management product, but both can carry facts and
+judgment. Their primary storage and consumption contracts differ.
 
 **"Is KDNA a skill?"**
-No. A skill packages a repeatable procedure. KDNA packages the judgment system that guides whether the procedure is appropriate and what quality standard should be applied.
+A Skill packages a capability under its Agent system; `.kdna` packages judgment
+under the KDNA protocol. Either can contain judgment and method descriptions.
 
 **"Can an LLM generate KDNA automatically?"**
 Yes. Humans, agents, tools, or hybrid workflows can draft `.kdna` assets through the official toolchain. Human review and Human Lock are optional provenance signals for reviewed publishing; they are not format-validity requirements.
@@ -184,9 +193,11 @@ No. KDNA makes judgment explicit and reviewable. It does not guarantee correctne
 
 ## 12. Final Principle
 
-KDNA is not built on the belief that AI lacks judgment. It is built on the belief that human-led judgment systems need a standard way to enter AI workflows.
+KDNA is not built on the belief that AI or other carriers lack judgment. It is
+built on the proposition that some judgment systems need an independent,
+portable asset and loading contract.
 
 > LLMs provide general intelligence.
-> KDNA provides human-led domain judgment systems.
+> KDNA provides an open asset contract for selected domain judgment systems.
 
 The future of AI work is not only about better models. It is also about whose judgment those models are asked to carry.

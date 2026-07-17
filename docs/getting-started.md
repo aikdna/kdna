@@ -80,7 +80,9 @@ Expected result:
 kdna load ./my-domain.kdna --profile=compact --as=prompt
 ```
 
-This emits agent-readable judgment context. The agent references the judgment structure silently — users see better answers, not KDNA internals.
+This emits agent-readable judgment context under the runtime contract. Loading
+does not guarantee a better answer or prove that the model followed every
+projected judgment.
 
 ---
 
@@ -107,13 +109,13 @@ adapter, and legacy compatibility commands are tracked in
 
 ---
 
-## What KDNA Does Not Do
+## What KDNA Does and Does Not Replace
 
-KDNA is a judgment layer, not:
-- A prompt library (it doesn't store wording templates)
-- A knowledge base (it doesn't store facts or documents)
-- A tool API (it doesn't execute actions)
-- A retrieval system (it doesn't search external data)
-- An operating manual (it doesn't describe procedures)
+Prompt, Skill, Policy, Memory, knowledge, retrieval, and workflow systems can all
+carry judgment. A `.kdna` payload may also contain factual premises, examples,
+references, and method descriptions needed to express its judgment.
 
-It sits between your agent and its task, shaping how the agent thinks before it acts.
+KDNA does not replace those systems. It adds a standard asset identity,
+integrity, authorization, loading, and projection contract. It does not search
+external data, grant tool permissions, execute a workflow, certify factual
+premises, or guarantee behavior improvement.

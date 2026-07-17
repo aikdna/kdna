@@ -12,6 +12,8 @@
     "validate:examples": "node scripts/validate-examples.js",
     "validate:runtime-contract": "node scripts/validate-runtime-contract.js",
     "audit:public-confidence": "node scripts/check-public-surface.mjs",
+    "audit:public-narrative": "node scripts/check-public-narrative-boundaries.mjs",
+    "test:public-narrative": "node --test scripts/check-public-narrative-boundaries.test.mjs",
     "audit:post-cutover": "node scripts/check-post-cutover-naming.mjs",
     "test:post-cutover": "node --test scripts/test-post-cutover-naming.mjs",
     "test:release-scopes": "node --test scripts/test-scoped-release-readiness.mjs",

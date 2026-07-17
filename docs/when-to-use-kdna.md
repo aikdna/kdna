@@ -1,36 +1,40 @@
 # When to Use KDNA
 
-Not every task needs KDNA. Use it when judgment matters more than procedure.
+Not every judgment needs KDNA. The trigger is not “judgment versus procedure”
+or “KDNA versus Skill.” Prompts, Skills, Policies, workflows, Memory, RAG, and
+knowledge bases can all carry judgment.
 
-## The Trigger Condition
+## Use KDNA when the asset contract matters
 
-Use KDNA when the **same surface input could mean multiple different things — and getting it wrong leads to wrong action.**
+Use KDNA when several of these are required:
 
-If the task has a clear procedure (steps, template, output format), use Skills.
-If the task requires deciding *what kind of situation this is*, use KDNA.
+- the judgment needs an identity independent from one Prompt, Skill, model, or
+  application;
+- exact version and byte integrity must be verified;
+- loading requires authorization or task-scoped projection;
+- the same asset must move across compatible runtimes;
+- replacement, revocation, rollback, or consumption evidence matters;
+- the judgment and the capability using it must evolve independently.
 
-## Use KDNA
+Examples include a brand judgment asset used by several writing tools, a
+review standard authorized for one team but not another, or a diagnostic asset
+that must be pinned and rolled back independently from the Agent Skill.
 
-| Scenario | Why |
-|----------|-----|
-| User says "your price is too high" | Could be value uncertainty, budget constraint, or risk fear. Wrong diagnosis → wrong response. |
-| Team meeting transcript | Could be a real decision or just discussion. Confusing discussion for decision → fake progress. |
-| User requests a feature | Could be a real need or a guessed solution. Building the wrong thing → wasted effort. |
-| Metric drops 30% | Could be a real signal or normal variance. Acting on noise → wasted resources. |
-| Someone asks for a learning plan | Could need structure or need feedback. Plan without feedback → guaranteed failure. |
+## Use the simpler carrier when it is enough
 
-## Skip KDNA
+Keep judgment in a Prompt, Skill, document, Policy, Memory, or retrieval system
+when its existing identity, tests, deployment, authorization, and update path
+already meet the requirement.
 
-| Scenario | Why | Use Instead |
-|----------|-----|-------------|
-| Format this text as a table | Pure formatting task | Skills |
-| What is the capital of France? | Fact lookup | Search / RAG |
-| Write this in a friendlier tone | Style adjustment | Prompt / Skills |
-| Convert Markdown to HTML | Mechanical transformation | Skills / Tools |
-| Generate a weekly report from this data | Template-based output | Skills |
+Routine formatting may still involve judgment about safety or correctness; a
+complex diagnosis may still be handled well by a tested Prompt. Task complexity
+alone does not determine whether KDNA is needed.
 
-## The Boundary Rule
+## Boundary question
 
-When in doubt, ask: **"Could an expert and a novice interpret this input differently, and would that difference change the action taken?"**
+Ask:
 
-If yes → KDNA. If no → Skills, RAG, or Prompt.
+> Does this judgment need to be managed and loaded as an independent asset, or
+> is its current carrier already sufficient?
+
+Use KDNA for the first case. Use the simpler existing mechanism for the second.

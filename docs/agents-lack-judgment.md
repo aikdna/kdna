@@ -1,6 +1,7 @@
-# AI Agents Do Not Lack Tools. They Lack Judgment.
+# AI Agents Need More Than Tools: Judgment Should Be Portable
 
-> The agent ecosystem has solved action. It has not solved discernment.
+> Judgment already exists across the AI stack. KDNA asks when it should become
+> an independently identified and loadable asset.
 
 Over the past eighteen months, we have watched agents learn to call APIs, query databases, execute code, and orchestrate workflows. MCP standardized tool access. Function calling became a first-class primitive. Workflow engines made multi-step execution reliable.
 
@@ -40,39 +41,52 @@ Here is what a typical agent produces:
 
 Here is what the agent should have produced:
 
-> **Classification:** UNRESOLVED  
-> **Missing:** owner, timing, explicit choice  
-> **Misunderstanding detected:** Social agreement mistaken for commitment (MS-001)  
+> **Classification:** UNRESOLVED
+> **Missing:** owner, timing, explicit choice
+> **Misunderstanding detected:** Social agreement mistaken for commitment (MS-001)
 > **Recommended action:** Before execution, assign owner and deadline. Do not treat as decided.
 
 The first output is not wrong. It is *dangerously incomplete*. It turns discussion into the appearance of a decision. Anyone reading the summary will think "marketing budget increase" is a decided item. It is not.
 
 This failure mode — let's call it **false actionization** — is not a bug in the LLM. It is a missing layer in the agent stack. The agent has no concept of "decision state." It has never been told that "everyone agreed" is not the same as "someone owns this with a deadline."
 
-## Why Prompts Cannot Fix This
+## Why Prompt-Only Embedding May Not Be Enough
 
 You might think: "Just add this to the system prompt."
 
-We tried. Here is why it fails at scale:
+Prompts can be structured, versioned in Git, tested against fixtures, inspected,
+and composed under application-defined rules. A well-engineered prompt system
+may be entirely sufficient.
 
-1. **Prompts are not testable.** You cannot unit-test whether a prompt correctly classifies 30 edge cases. You can only eyeball outputs.
-2. **Prompts are not versioned.** When you update the prompt, you have no idea what you broke. There is no regression test.
-3. **Prompts are not composable.** Two good prompts about sales and management do not automatically produce correct judgment about sales management. They conflict.
-4. **Prompts are not inspectable.** When the agent makes a wrong call, you cannot trace which part of the prompt failed. It is a black box.
+The portability problem appears when judgment must move beyond that one prompt
+system. Different applications may use different identifiers, version rules,
+authorization models, projection budgets, and evidence formats. Copying the
+same text does not by itself prove that the same asset version was authorized
+and delivered without semantic loss.
 
-Prompts express intent. They do not encode structure.
+KDNA does not fix this by making the judgment smarter. It supplies a shared
+asset and loading contract when an application-specific prompt contract is no
+longer enough.
 
-## Why RAG Cannot Fix This
+## Why Retrieval Alone Does Not Establish Asset Consumption
 
 You might think: "Just retrieve relevant documents."
 
-RAG is excellent for factual knowledge. It is the wrong tool for judgment. Retrieval answers "what is true?" Judgment answers "what kind of situation is this?" These are different cognitive operations.
+RAG can retrieve facts, Policies, rubrics, examples, counterexamples, and
+judgment. It is not the wrong tool merely because the content is judgmental.
 
-When an agent misclassifies a meeting note, it is not because it lacked access to the company's wiki. It is because it lacked a structured understanding of what "decided" means in this domain — and what signals distinguish it from "discussed."
+Retrieval and KDNA make different guarantees. Retrieval selects passages for a
+query; KDNA identifies and loads a bounded asset version under integrity,
+authorization, and projection rules. A retrieved passage may solve the task.
+When exact identity and lifecycle matter, retrieval alone does not prove which
+judgment asset was consumed or whether its required boundaries were preserved.
 
-## The Missing Layer: Domain Cognition
+## The Additional Contract: Portable Domain Judgment
 
-What the agent needs is not more tools, more memory, or more documents. It needs **domain judgment**: a structured encoding of how experts in a specific domain classify situations, detect misunderstandings, and reason from principles to action.
+Some tasks need **domain judgment**: a structured encoding of how a person,
+team, model, or other author classifies situations, detects misunderstandings,
+and reasons from principles to action. That judgment may already live in tools,
+Memory, documents, Prompt, Skill, Policy, or model behavior.
 
 This is what KDNA (Knowledge DNA) encodes:
 
@@ -83,7 +97,10 @@ This is what KDNA (Knowledge DNA) encodes:
 - **Self-checks** — Verification steps before finalizing judgment
 - **Scenarios** — Signal patterns that should trigger specific response strategies
 
-KDNA is not a prompt. It is not a knowledge base. It is a **cognitive scaffold** that changes how the agent reasons — independent of what it knows or what it can do.
+KDNA packages a selected judgment system as a `.kdna` asset. It does not replace
+the Prompt or knowledge system that may contain equivalent content, and loading
+it does not guarantee that a model's behavior will improve. Its distinct value
+is protocol-level identity, integrity, authorization, projection, and lifecycle.
 
 ## Before and After: The Same Input, Different Trajectory
 
@@ -117,22 +134,25 @@ benchmark artifact is not part of the current public beta repository.
 
 Here is how KDNA fits into the complete agent stack:
 
-| Layer | Question | What It Provides | What It Does NOT Do |
-|---|---|---|---|
-| **Prompt** | What should the agent say? | Intent, tone, format | Structured reasoning, testable judgment |
-| **Skill** | How does the agent do a task? | Workflow, steps, templates | Situation classification, misread detection |
-| **MCP / Tools** | What can the agent do? | Action capabilities | Judgment about whether to act |
-| **RAG / Memory** | What does the agent know? | Facts, documents, history | Expert reasoning patterns |
-| **KDNA** | What kind of situation is this? | Judgment structure, axioms, frameworks | Actions, facts, or workflows |
-| **Workflow** | How does the agent sequence? | State machines, orchestration | Classification or reasoning |
+| Carrier or protocol | Primary contract | May carry judgment? |
+|---|---|---|
+| **Prompt** | Invocation instructions and context | Yes |
+| **Skill** | Reusable capability, instructions, references, and tools | Yes |
+| **MCP / Tools** | Server, resource, prompt, and tool interaction | Yes |
+| **RAG / Memory** | Retrieval and continuity | Yes |
+| **KDNA** | Judgment asset identity and compatible loading | Yes — first-class payload responsibility |
+| **Workflow / Policy** | Sequencing, governance, and enforcement | Yes |
 
-KDNA does not replace any of these layers. It sits between **memory** and **workflow** — determining what the agent *should think* before it decides what to *do* or *say*.
+These are overlapping systems, not mutually exclusive cognitive layers. KDNA
+works alongside them when judgment needs its own portable asset contract.
 
 ## Why This Matters for Builders
 
 If you are building agent frameworks, consider this: every domain your users care about has expert judgment patterns that currently live only in senior practitioners' heads. Sales directors know which objections mask certainty deficits. Engineering managers know which "execution problems" are actually upstream clarity failures. Product leaders know which feature requests mask real needs.
 
-These patterns are not workflows. They are not documents. They are **cognitive structures**: ways of seeing that take years to develop and seconds to misapply.
+These patterns may be represented in workflows, documents, prompts, skills, or
+models. KDNA offers another representation: a named, bounded judgment asset
+that compatible runtimes can inspect and load under a shared contract.
 
 KDNA is a format for extracting those structures, encoding them in machine-verifiable JSON, and loading them into agents as a first-class cognitive layer.
 
@@ -142,9 +162,12 @@ The agent ecosystem will not stop at tools. The next frontier is not "more capab
 
 We are building toward a world where agents do not just execute tasks — they know when *not* to execute. Where they do not just retrieve facts — they know which facts matter for this kind of situation. Where they do not just follow workflows — they know which workflow applies, and whether the preconditions are met.
 
-That world requires a new layer in the stack. Not bigger models. Not more tools. **Structured judgment.**
+That world benefits from making structured judgment portable alongside better
+models, tools, retrieval, prompts, skills, and workflows.
 
-KDNA is our proposal for that layer. It is open, testable, versioned, and composable. We do not claim it is the final answer. We claim it is the right question:
+KDNA is our proposal for that asset contract. We do not claim that it is the
+only place judgment can live or that every task needs it. We claim the question
+is worth making explicit:
 
 > **What would it take for an agent to not just act correctly, but to correctly decide whether to act at all?**
 
