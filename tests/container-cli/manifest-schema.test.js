@@ -54,6 +54,28 @@ test('authoritative Runtime manifest schema rejects an explicitly empty creator 
   );
 });
 
+test('authoritative Runtime manifest schema rejects intrinsic assessment fields', async (t) => {
+  for (const field of [
+    'quality_badge',
+    'risk_level',
+    'trusted',
+    'recommended',
+    'high_quality',
+    'expert_reviewed',
+    'production_ready',
+    'officially_approved',
+  ]) {
+    await t.test(field, () => {
+      const manifest = runtimeManifest({ [field]: field === 'risk_level' ? 'R0' : true });
+      assert.equal(validateManifest(manifest), false);
+      assert.ok(
+        validateManifest.errors.some((error) => error.instancePath === `/${field}`),
+        JSON.stringify(validateManifest.errors, null, 2),
+      );
+    });
+  }
+});
+
 test('legacy source manifest dialect is not accepted as a Runtime manifest', () => {
   const manifest = {
     kdna_version: '1.0',

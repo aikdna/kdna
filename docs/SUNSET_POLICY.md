@@ -21,7 +21,7 @@ KDNA's deprecation policy ensures that users are never caught between a document
 | Merged single-file JSON | Rejected | ZIP container format |
 | Dev source directories (as runtime) | Non-canonical | `.kdna` assets in `~/.kdna/packages/` |
 | `~/.kdna/domains/` | Legacy | `~/.kdna/packages/` |
-| `basic` / `pro` / `reference` badges | Retired | `untested` / `tested` / `validated` / `expert_reviewed` / `production_ready` |
+| All protocol-level asset quality / risk / trust / recommendation / production badges | Retired | Issuer-scoped external assessments plus caller-owned adoption policy |
 
 ## Un-deprecated Items
 

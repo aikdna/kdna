@@ -1,5 +1,10 @@
 # Decision State KDNA
 
+> **Historical pre-container authoring example.** The source `kdna.json` in
+> this directory uses the deprecated authoring dialect and is not a current
+> Runtime manifest or template. Current authority lives in `schema/manifest.schema.json`,
+> `templates/`, and packaged `.kdna` conformance fixtures.
+
 A minimal KDNA domain for judging whether a discussion has produced an actionable decision.
 
 ## Purpose

@@ -800,7 +800,6 @@ export interface KDNARuntimeCapsule {
   digests: KDNADigestEvidence;
   signature: { state: 'verified' | 'not_checked' | 'absent'; issuer?: string };
   access: 'public' | 'licensed' | 'remote';
-  risk_level: string | null;
   profile: 'index' | 'compact' | 'scenario' | 'full';
   context: Record<string, any>;
   trace: {

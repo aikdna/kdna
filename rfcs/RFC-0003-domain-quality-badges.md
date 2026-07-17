@@ -1,6 +1,11 @@
 # RFC-0003: Domain Quality Badges
 
-Status: draft
+Status: withdrawn (historical quality-badge proposal)
+
+> KDNA Core does not issue asset quality, trust, recommendation, risk, or
+> production-readiness levels. An evaluator may publish an issuer-scoped,
+> versioned assessment with an explicit subject, rubric, scope, method, time,
+> and evidence; that assessment is not a Core property.
 
 ## Summary
 

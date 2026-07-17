@@ -1,5 +1,8 @@
 # KDNA Card 规范
 
+> **状态：历史。** 这份切换前的 Card 把风险和质量当作资产内生字段，仅为
+> 追溯保留，不是当前 Manifest、Runtime、Registry 或 Conformance 合同。
+
 ## 用途
 
 KDNA Card 是每个 KDNA 领域的标准化元数据文档，帮助部署者做出负责任的决策。

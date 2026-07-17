@@ -10,6 +10,7 @@ const { compileSchema } = require('../../scripts/validate-app-schemas');
 const { checks, runChecks } = require('../../scripts/release-preflight');
 const {
   INVALID_RUNTIME_MANIFEST_FIXTURES,
+  INTRINSIC_ASSESSMENT_FIELDS,
   LOAD_CONTRACT_SCHEMA,
   MANIFEST_SCHEMA,
   PACKAGED_LOAD_CONTRACT_SCHEMA,
@@ -174,7 +175,7 @@ test('runtime cross-links reject selected or loaded domains on every non-load ro
   for (const [status, action] of [
     ['SKIP_WEAK_FIT', 'skip'],
     ['ASK_AMBIGUOUS_DOMAIN', 'ask'],
-    ['BLOCK_TRUST_FAILED', 'block'],
+    ['BLOCK_POLICY_FAILED', 'block'],
   ]) {
     await t.test(action, () => {
       const failures = runtimeFailuresAfter(t, 'report', (report) => {
@@ -233,7 +234,7 @@ test('route-only ask and skip reports validate independently but cannot join an 
 
 test('block report cannot link to a completed execution Trace', (t) => {
   const failures = runtimeFailuresAfter(t, 'report', (report) => {
-    report.route_decision.status = 'BLOCK_TRUST_FAILED';
+    report.route_decision.status = 'BLOCK_POLICY_FAILED';
     report.route_decision.action = 'block';
     report.route_decision.selected_domain = null;
     report.loaded_domains = [];
@@ -298,17 +299,38 @@ test('runtime cross-links bind every loaded identity and delivery field', async 
   }
 });
 
-test('runtime cross-links reject invented quality, risk, or source evidence', async (t) => {
+test('runtime cross-links reject Core-owned quality and risk fields', async (t) => {
   for (const [field, value] of [
     ['quality_badge', 'verified'],
     ['risk_level', 'low'],
-    ['source', 'registry'],
   ]) {
     await t.test(field, () => {
       const failures = runtimeFailuresAfter(t, 'report', (report) => {
         report.loaded_domains[0][field] = value;
       });
-      assert.ok(failures.some((failure) => failure.includes(`${field} must remain null`)));
+      assert.ok(failures.some((failure) => failure.includes(`/loaded_domains/0/${field}`)));
+    });
+  }
+});
+
+test('runtime cross-links keep unobserved source evidence explicitly null', (t) => {
+  const failures = runtimeFailuresAfter(t, 'report', (report) => {
+    report.loaded_domains[0].source = 'registry';
+  });
+  assert.ok(failures.some((failure) => failure.includes('source must remain null')));
+});
+
+test('Runtime manifest authority rejects intrinsic asset assessments', async (t) => {
+  for (const field of INTRINSIC_ASSESSMENT_FIELDS) {
+    await t.test(field, () => {
+      const root = copyProtocolFixtures(t);
+      mutateJson(path.join(root, 'templates/minimal-domain/kdna.json'), (manifest) => {
+        manifest[field] = field === 'risk_level' ? 'R0' : true;
+      });
+      const failures = validateProtocolFixtures({ root, logger: quietLogger });
+      assert.ok(
+        failures.some((failure) => failure.includes(`${field}: intrinsic asset assessments`)),
+      );
     });
   }
 });

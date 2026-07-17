@@ -122,8 +122,9 @@ override the author's access declaration.
 
 ### 2.8 Evidence Is Optional
 
-Evidence Claims, Asset Assay, and Field Validation are optional quality-evidence
-layers. They describe what an asset has been observed to prove — nothing more.
+Evidence Claims, Asset Assay, and Field Validation are optional, issuer-scoped
+external assessments. They describe what a named evaluator observed under a
+defined subject, rubric, method, scope, time, and evidence — nothing more.
 
 An asset without evidence is still a valid KDNA asset. Load-ready evidence MUST
 NOT be conflated with behavior-evaluated or production status.
@@ -134,16 +135,18 @@ Evidence MUST NOT be required for:
 - Asset loading
 - Asset consumption
 
-Evidence MAY be required for:
-- Specific quality or trust claims the author chooses to publish
-- Optional catalog/registry listings with quality metadata
-- Internal quality gates defined by the consumer's own policy
+Evidence MAY be required by:
+- An evaluator for the exact external claim it publishes
+- An optional catalog or distribution channel under its own policy
+- A consumer or Host under its current task-scoped adoption policy
 
 **Signature is an integrity and provenance mechanism, not evidence of quality.**
 Signatures bind an asset version to a key. Whether signatures are optional or
 required for a given protocol version or distribution profile is determined by
-the container specification, not by this boundary. A signature verifies who
-signed — it does not endorse content correctness, quality, or authority.
+the container specification, not by this boundary. A signature verifies that a
+specified key signed specified bytes or a specified digest. Binding that key to
+a real identity is a separate external claim. Neither fact endorses content
+correctness, quality, or authority.
 
 ### 2.9 Private Experiments Cannot Redefine These Boundaries
 
@@ -254,15 +257,23 @@ draft (authoring)
 → optionally: deprecated → removed or revoked
 ```
 
-At each stage, the asset MAY carry optional evidence:
+At each stage, an external evaluator MAY publish a scoped assessment. The
+assessment must identify its issuer, exact asset subject, rubric, method,
+task/environment scope, time, and evidence. Examples of evaluator-owned claims
+include:
 
-- **none:** Valid asset, loadable, usable — nothing more claimed
-- **conformance evidence:** Proven to validate and load correctly
-- **behavioral evidence:** Proven to change Agent judgment in controlled tests
-- **field evidence:** Proven useful by real users in real tasks
-- **production:** All structural, behavioral, trust, UX, and maintenance gates passed
+- **Core technical conformance:** the named schemas and executable fixtures pass
+- **behavioral assessment:** a named evaluator observed a difference under a
+  defined task and method
+- **field assessment:** a named evaluator observed outcomes in a defined product
+  population and time window
+- **caller adoption decision:** a specific Host or organization allows use under
+  its own policy
 
-No evidence level is required for the asset to exist as a valid KDNA asset.
+These are not a universal ladder and do not create Core quality, risk, trust,
+recommendation, certification, or production-readiness fields. No external
+assessment or adoption decision is required for the asset to exist as a valid
+KDNA asset.
 
 ---
 

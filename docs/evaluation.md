@@ -2,6 +2,11 @@
 
 > [中文版](./evaluation.zh.md) · See also: [Meta-Cognition](./meta-cognition.md)
 
+> This is an external evaluation method, not a KDNA Core quality or promotion
+> authority. Every result must identify the evaluator, exact asset, task and
+> population scope, rubric, model/tool coordinates, method, time, and evidence.
+> Different evaluators may legitimately reach different conclusions.
+
 KDNA claims to improve agent judgment. This document defines how to test that claim.
 
 ## Core Principle

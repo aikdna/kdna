@@ -23,7 +23,7 @@ kdna route "<task>" --json
 │  1. Intent Gate        → needs_kdna?     │
 │  2. Negative Match     → any rejection?  │
 │  3. Domain Fit         → any match?      │
-│  4. Trust Gate         → can load?       │
+│  4. Load Policy Gate   → may load now?   │
 │  5. Ambiguity Gate     → which one?      │
 │  6. Output State       → 7-state result   │
 └─────────────────────────────────────────┘
@@ -64,13 +64,13 @@ Agent executes route result exactly
 **Trace**: record ambiguity and user choice.
 
 ### LOAD_STRONG_FIT
-**Condition**: One domain has high-confidence match, and trust gate passes.  
+**Condition**: One domain has high-confidence match, and caller load policy passes.
 **Action**: `kdna load <domain>`. Apply domain to task judgment.  
 **Trace**: record loaded domain, triggered axioms, excluded domains.
 
-### BLOCK_TRUST_FAILED
-**Condition**: Domain matches semantically, but trust verification fails.  
-**Reasons**: signature invalid, domain yanked, license expired, risk level blocked by policy, compatibility level insufficient.  
+### BLOCK_POLICY_FAILED
+**Condition**: Domain matches semantically, but the caller's current load policy fails.
+**Reasons**: required signature check failed, catalog state is disallowed, license or authorization is insufficient, the planned action exceeds caller policy, or compatibility is insufficient.
 **Action**: Block loading. Notify user if appropriate for the Agent mode.  
 **Trace**: record trust failure with specific reason.
 
@@ -82,14 +82,15 @@ KDNA routing asks first: **"Does this explicitly say it should NOT be used here?
 
 A domain that states `"does_not_apply_when": ["user asks for frontend implementation only"]` must be excluded before any positive matching is considered. The domain author's boundary must be respected at the protocol level — not left to LLM interpretation.
 
-## 5. Trust Gate
+## 5. Caller Load Policy Gate
 
 Before loading, verify:
 
 1. **Signature valid**: `kdna verify <domain>` passes
 2. **Not yanked**: domain is not in yanked state in registry
 3. **License valid**: for `licensed` or `runtime` domains, license is active
-4. **Risk level acceptable**: domain's risk_level does not exceed organizational policy
+4. **Action policy satisfied**: the task, requested authority, action consequence,
+   environment, and reversibility satisfy caller policy
 5. **Compatibility**: domain declares supported SPEC version compatible with loader
 
 ## 6. Agent Integration Modes
@@ -107,7 +108,7 @@ Before loading, verify:
 - Skip → user can manually load if they disagree
 
 ### Mode C: Policy-Locked (Enterprise)
-- Admin configures allowed domains, risk levels, and auto-load policies
+- Admin configures allowed assets, action boundaries, and auto-load policies
 - Route respects organizational policy gates
 - All decisions logged for compliance audit
 
@@ -124,7 +125,7 @@ $ kdna route "design a landing page for my SaaS" --discover --json
     {
       "name": "@aikdna/website_design",
       "reason": "matches website structure and conversion evaluation",
-      "trust": "official",
+      "external_assessment_ref": "https://example.com/assessments/website-design.json",
       "install_command": "kdna install @aikdna/website_design"
     }
   ],
@@ -163,9 +164,9 @@ The Agent then executes exactly the route result:
 | REJECT_NEGATIVE_MATCH | skip | Answer normally. The rejected domain's boundary excludes this task. |
 | ASK_AMBIGUOUS_DOMAIN | ask | Present choice to user. Don't blend. |
 | LOAD_STRONG_FIT | load | `kdna load <domain>` |
-| BLOCK_TRUST_FAILED | block | Stop. Trust/policy/lice verify failed. |
+| BLOCK_POLICY_FAILED | block | Stop. Caller load policy failed. |
 
-**Note on REJECT_NEGATIVE_MATCH**: A candidate domain is rejected — but if no other domain matches, the route's action is `skip` (not `block`). The Agent answers normally. `block` is reserved for trust/policy failures where loading would violate governance.
+**Note on REJECT_NEGATIVE_MATCH**: A candidate domain is rejected — but if no other domain matches, the route's action is `skip` (not `block`). The Agent answers normally. `block` is reserved for caller-policy failures where loading would violate current authority or governance.
 
 ## 9. Trace
 

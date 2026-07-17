@@ -1,6 +1,11 @@
 # From Wiki to KDNA
 
-This directory demonstrates the recommended pipeline from LLM Wiki to KDNA:
+> **Historical pre-container authoring example.** This preserves an early
+> source-distillation demonstration. Its expanded source `kdna.json` is not a
+> current Runtime manifest or template; use the current `templates/`, Studio
+> exporter, and packaged `.kdna` conformance path.
+
+This directory records the earlier pipeline from LLM Wiki to KDNA:
 
 ```
 wiki/     →   raw materials (Markdown knowledge pages)

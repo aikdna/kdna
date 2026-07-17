@@ -15,7 +15,8 @@ A KDNA registry is a machine-readable index of available `.kdna` assets. Its pur
 
 - Discovery — helping users find relevant domains
 - Distribution — providing download/install URLs
-- Optional metadata — surfacing quality badges, eval reports, publisher info
+- Optional metadata — surfacing issuer-scoped assessment references, eval
+  reports, and publisher-provided information without turning them into Core facts
 
 ## What Registry Does NOT Do
 

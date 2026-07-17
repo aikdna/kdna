@@ -26,7 +26,7 @@ const STATUS_TO_ACTION = {
   REJECT_NEGATIVE_MATCH: 'skip',
   ASK_AMBIGUOUS_DOMAIN: 'ask',
   LOAD_STRONG_FIT: 'load',
-  BLOCK_TRUST_FAILED: 'block',
+  BLOCK_POLICY_FAILED: 'block',
 };
 const LOAD_TRACE_STATUSES = new Set([
   'execution_completed',
@@ -153,10 +153,13 @@ function validateRuntimeContract(options = {}) {
             );
           }
         }
-        for (const field of ['quality_badge', 'risk_level', 'source']) {
-          if (loaded[field] != null) {
-            fail(reportPath, `loaded_domains[0].${field} must remain null when not observed`);
+        for (const field of ['quality_badge', 'risk_level']) {
+          if (Object.prototype.hasOwnProperty.call(loaded, field)) {
+            fail(reportPath, `loaded_domains[0].${field} is not a Core Runtime fact`);
           }
+        }
+        if (loaded.source != null) {
+          fail(reportPath, `loaded_domains[0].source must remain null when not observed`);
         }
       }
     } else if (route.action === 'block') {

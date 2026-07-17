@@ -14,7 +14,6 @@
   "keywords": ["[TODO: add relevant keywords]"],
   "access": "public",
   "status": "experimental",
-  "quality_badge": "untested",
   "creator": {
     "name": "Your Name",
     "id": "your-id"
@@ -32,6 +31,5 @@
     "encoding": "cbor",
     "encrypted": false
   },
-  "risk_level": "R0",
   "format_version": "0.1.0"
 }

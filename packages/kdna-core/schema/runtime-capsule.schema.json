@@ -11,7 +11,6 @@
     "digests",
     "signature",
     "access",
-    "risk_level",
     "profile",
     "context",
     "trace"
@@ -37,7 +36,6 @@
     },
     "signature": { "$ref": "#/$defs/signature" },
     "access": { "enum": ["public", "licensed", "remote"] },
-    "risk_level": { "type": ["string", "null"] },
     "profile": { "enum": ["index", "compact", "scenario", "full"] },
     "context": { "type": "object" },
     "trace": { "$ref": "#/$defs/trace" }

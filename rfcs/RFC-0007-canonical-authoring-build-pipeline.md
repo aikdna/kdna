@@ -1,6 +1,14 @@
 # RFC-0007: Canonical Authoring and Asset Build Pipeline
 
-Status: active
+Status: withdrawn (historical pre-Core proposal)
+
+> This RFC is not current KDNA Core authority. Its mandatory Human Lock,
+> quality promotion, registry trust, provenance, and signature rules conflict
+> with the content-neutral Core contract. Current authority is the packaged
+> `.kdna` container, Runtime manifest/payload schemas, authorization contract,
+> and their executable conformance fixtures. Authoring products and distribution
+> channels may publish their own issuer-scoped requirements without changing
+> base format validity.
 
 ## Summary
 

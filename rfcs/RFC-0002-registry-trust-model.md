@@ -1,6 +1,9 @@
 # RFC-0002: Registry Trust Model
 
-Status: draft
+Status: withdrawn (historical registry proposal)
+
+> Not current KDNA Core authority. Registry policy, review status, and
+> caller-scoped risk decisions must remain external to base asset validity.
 
 ## Summary
 

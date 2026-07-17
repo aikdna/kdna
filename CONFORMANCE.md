@@ -23,7 +23,7 @@ node conformance/run.mjs --profile loader
 | `--profile asset` | Can open and inspect `.kdna` files |
 | `--profile loader` | Can validate, load, render, and digest-check |
 | `--profile runtime` | Follows asset-first loading behavior |
-| `--profile registry` | Preserves required metadata and trust checks |
+| `--profile registry` | Preserves declared metadata and digest evidence without adding endorsement |
 | `--profile asset-loader` | Combined asset + loader compatibility |
 
 ## Public Claim Format
@@ -46,10 +46,11 @@ An implementation is NOT KDNA-compatible if it:
 
 - Requires users to unpack `.kdna` as the normal path
 - Treats dev source directories as canonical installed assets
-- Ignores `asset_digest` or signature metadata
+- Ignores required digest evidence, or misreports a performed signature check
 - Writes decrypted licensed entries to persistent disk
 - Silently blends multiple domains without attribution
-- Uses legacy quality badge names (`basic`, `pro`, `reference`) or non-standard variants (`expert-reviewed` with hyphen, `production-ready` with hyphen — correct names use underscores: `expert_reviewed`, `production_ready`)
+- Emits asset-level quality, risk, trust, recommendation, certification, or
+  production-readiness fields as Core conformance facts
 
 ## Fixtures Tested
 
@@ -60,11 +61,11 @@ An implementation is NOT KDNA-compatible if it:
 | Lint errors | 1 | Duplicate axiom IDs |
 | Cross-file errors | 1 | Domain name mismatch |
 | Manifest errors | 2 | `kdna_spec`, singular `language` |
-| Quality warnings | 1 | Non-yes/no self-check |
+| Authoring lint warnings | 1 | Non-yes/no self-check |
 
 ## After Passing
 
 1. Save `kdna-conformance-last-run.json`
 2. Publish your conformance report (see template)
-3. Register on the [KDNA-compatible implementations list](https://github.com/aikdna/kdna) (optional)
-4. For official certification, complete registry governance review
+3. If another catalog or product consumes the report, keep that caller's
+   adoption policy and any external evaluation separate from Core conformance

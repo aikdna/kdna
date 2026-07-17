@@ -1,5 +1,11 @@
 # KDNA Compatibility Policy
 
+> **Historical snapshot.** The source-directory, Human Lock, registry, and
+> quality requirements below predate the current packaged `.kdna` Runtime
+> contract. Current compatibility authority is the normative schemas under
+> `schema/` and `specs/`, the packaged Core mirrors, and executable conformance
+> fixtures. This file must not be used as a current implementation gate.
+
 This document defines what it means to be KDNA-compatible. It exists to prevent fragmentation — where multiple similar-but-incompatible "DNA" formats confuse users and undermine the standard.
 
 ## KDNA-Compatible: Definition

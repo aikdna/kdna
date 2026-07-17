@@ -94,7 +94,7 @@
             "REJECT_NEGATIVE_MATCH",
             "ASK_AMBIGUOUS_DOMAIN",
             "LOAD_STRONG_FIT",
-            "BLOCK_TRUST_FAILED"
+            "BLOCK_POLICY_FAILED"
           ]
         },
         "action": {
@@ -124,10 +124,10 @@
           "name": { "type": "string" },
           "version": { "type": "string" },
           "judgment_version": { "type": ["string", "null"] },
-          "quality_badge": { "type": ["string", "null"] },
+          "quality_badge": false,
           "status": { "type": ["string", "null"] },
           "access": { "type": ["string", "null"] },
-          "risk_level": { "type": ["string", "null"] },
+          "risk_level": false,
           "source": {
             "type": ["string", "null"],
             "description": "local, registry, private-registry, runtime, or app-bundled."

@@ -69,17 +69,17 @@
   "capsule_delivery_evidence": {
     "basis": "kdna.canonicalization.runtime-capsule-jcs",
     "basis_version": "0.1.0",
-    "observed": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
+    "observed": "sha256:f60f002dfe761e3c8a64a0476d4718007ed3d2f19c13232223eb6d66ac682c13",
     "sender_computed": true,
-    "host_recomputed": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
-    "host_echoed": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
+    "host_recomputed": "sha256:f60f002dfe761e3c8a64a0476d4718007ed3d2f19c13232223eb6d66ac682c13",
+    "host_echoed": "sha256:f60f002dfe761e3c8a64a0476d4718007ed3d2f19c13232223eb6d66ac682c13",
     "delivered_capsule_version": "0.1.0",
     "host_boundary_comparison": "matched",
     "request_id": "host_0123456789abcdef01234567"
   },
   "projection_actual": {
     "profile": "compact",
-    "capsule_delivery_digest": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
+    "capsule_delivery_digest": "sha256:f60f002dfe761e3c8a64a0476d4718007ed3d2f19c13232223eb6d66ac682c13",
     "profile_deviated_from_plan": false
   },
   "host_receipt": {
@@ -95,12 +95,12 @@
       "capsule_schema_validation": "passed",
       "capsule_version": "0.1.0",
       "contract_version": "0.1.0",
-      "echoed_capsule_delivery_digest": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
-      "host_recomputed_capsule_delivery_digest": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
+      "echoed_capsule_delivery_digest": "sha256:f60f002dfe761e3c8a64a0476d4718007ed3d2f19c13232223eb6d66ac682c13",
+      "host_recomputed_capsule_delivery_digest": "sha256:f60f002dfe761e3c8a64a0476d4718007ed3d2f19c13232223eb6d66ac682c13",
       "model_identity": { "basis": "not_observed", "value": null },
       "provider_execution_status": "failed",
       "semantic_consumption": { "basis": null, "state": "not_observed" },
-      "sender_capsule_delivery_digest": "sha256:62f6aba550846fe17c3d0e0598fd10d3e4e3dcb952e0f7c34aabef388a866bcd",
+      "sender_capsule_delivery_digest": "sha256:f60f002dfe761e3c8a64a0476d4718007ed3d2f19c13232223eb6d66ac682c13",
       "type": "kdna.agent-host.runtime-receipt",
       "usage": {
         "basis": "not_observed",
@@ -127,7 +127,7 @@
       "max_tokens": null
     },
     "actual": {
-      "projection_chars": 1946,
+      "projection_chars": 1928,
       "task_chars": 105,
       "elapsed_ms": 1200,
       "elapsed_basis": "host_monotonic",

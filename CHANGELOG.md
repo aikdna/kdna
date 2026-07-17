@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Remove intrinsic asset quality and risk authority from the current Runtime
+  contract. Runtime manifests now reject protocol-owned quality, risk, trust,
+  recommendation, certification, and production-readiness fields; Runtime
+  Capsules and Judgment Reports no longer carry `risk_level` or
+  `quality_badge`; and the old quality-badge, risk-tier, registry-trust, and
+  mandatory-Human-Lock specifications are explicitly historical or withdrawn.
+  External evaluations remain issuer-scoped, and load adoption remains caller
+  policy.
 - Replace the Core worktree publication path with a natural-SemVer-tag release
   authority. It binds the release event, tag, commit, tree, clean index, DCO,
   package version, and changelog; materializes two isolated sources from Git

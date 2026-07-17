@@ -1,7 +1,9 @@
 # RFC-0010: KDNA Fidelity Protocol
 
-> Draft evaluation RFC. Fidelity results may become release evidence, but they
-> are not part of KDNA Core format validity or the current first-run path.
+> Draft external-evaluation RFC. A Fidelity result is an issuer-scoped
+> assessment of one exact asset under a named rubric, model/tool coordinate,
+> task scope, method, and time. It is not a KDNA Core quality, risk, trust,
+> recommendation, certification, or production-readiness property.
 
 **Status:** Draft  
 **Proposed:** 2026-06-08  
@@ -12,7 +14,11 @@
 
 ## Abstract
 
-KDNA's current quality system measures structural validity (schema conformance, governance field presence, eval case coverage) and output quality (diagnostic depth, terminology consistency, axiom alignment). Neither measures whether domain judgment actually **transferred into the output** — whether the agent internalized the axioms or merely quoted them, whether KDNA meaningfully changed the output beyond what a best-practice prompt would produce, and whether the judgment survived through to the final artifact.
+Core technical conformance measures structural validity, not behavioral effect.
+External evaluators may separately ask whether domain judgment **transferred
+into an output** — whether the Agent merely quoted the asset, whether behavior
+changed relative to a named comparison, and whether judgment survived into a
+final artifact.
 
 This RFC proposes the **KDNA Fidelity Protocol**: a standardized method for measuring judgment transfer fidelity. It defines three measurement axes (triggered, changed, reached artifact), a multi-task blind comparison design with calibration anchors, per-axiom transfer levels, and cross-model consistency testing.
 
@@ -150,7 +156,8 @@ Every fidelity run MUST include two calibration anchors to verify the measuremen
 | **positive** | Core scenario the domain is explicitly designed for | High fidelity (score ≥ 0.80) | Domain is not fit for its stated purpose |
 | **negative** | Scenario the domain explicitly does NOT apply to (`does_not_apply_when`) | Low fidelity (score ≤ 0.30) | Measurement is over-attributing — false positives |
 
-If either anchor fails, the entire fidelity result is marked with `calibration_valid: false` and must not be trusted.
+If either anchor fails, the evaluator must mark `calibration_valid: false`; the
+result cannot support that evaluator's stated fidelity claim.
 
 ### 2.6 Multi-Task Evaluation
 
@@ -168,32 +175,19 @@ Minimum 5 tasks per fidelity run. More tasks = higher statistical confidence.
 
 ---
 
-## 3. Relationship to KDNA Quality Badges
+## 3. Relationship to Core and Caller Policy
 
-The Fidelity Protocol extends — but does not replace — the existing quality badge system.
+Fidelity does not extend Core conformance and does not create an official
+promotion ladder. A report is meaningful only with its evaluator, subject,
+scope, rubric, model/tool coordinates, method, time, calibration state, and raw
+evidence. Another evaluator or caller may use a different policy and reach a
+different conclusion.
 
-### 3.1 Current badge requirements (from SPEC §3.3.2)
+A catalog, product, or organization MAY require a particular evaluator's
+Fidelity report for its own channel or task. That is a caller adoption policy;
+it does not change the asset's base format validity or become a Core field.
 
-| Badge | Eval Cases | Scoring | Fidelity Required? |
-|-------|-----------|---------|-------------------|
-| `untested` | 0 | Schema only | No |
-| `tested` | ≥10 | Manual verification | No |
-| `validated` | ≥30 | Automated scoring | **Proposed: yes** |
-| `expert_reviewed` | ≥30 | External expert + fidelity | **Proposed: yes** |
-| `production_ready` | ≥30 | Deployment + fidelity | **Proposed: yes** |
-
-### 3.2 Proposed: Fidelity as a prerequisite for validated+
-
-Under this RFC, domains seeking `validated`, `expert_reviewed`, or `production_ready` badges would need:
-1. A fidelity run with `overall_score ≥ 0.70` and `passed: true`
-2. `calibration_valid: true`
-3. `blind_delta > 0` (KDNA outperforms best prompt)
-4. No axioms at `contradicted` level
-5. The Fidelity Report artifact registered alongside the domain's eval artifacts
-
-This does NOT change the existing badge definitions in SPEC — it adds an optional fidelity dimension that badge issuers MAY require. The registry trust gate MAY enforce fidelity as a gating condition for promotion to `validated` and above.
-
-### 3.3 Relationship to `kdna verify --judgment`
+### 3.1 Relationship to `kdna verify --judgment`
 
 `kdna verify --judgment` remains the structural governance check. Fidelity is the behavioral transfer check. They are complementary:
 
@@ -255,7 +249,8 @@ This bidirectional linkage enables:
 - **Not a replacement for eval cases.** Eval cases test classification accuracy; fidelity tests judgment transfer. Both are needed.
 - **Not a replacement for `kdna compare`.** Compare shows A/B diff; fidelity quantifies transfer with blind controls and calibration.
 - **Not a replacement for human expert review.** Expert review evaluates domain content; fidelity evaluates transfer effectiveness.
-- **Not an automated quality badge issuer.** Fidelity is evidence for badge promotion, not an automatic badge grant.
+- **Not a Core quality or promotion authority.** Fidelity is an external,
+  issuer-scoped assessment only.
 - **Not a one-shot measurement.** Fidelity should be measured per-version, per-model, and tracked over time.
 
 ---

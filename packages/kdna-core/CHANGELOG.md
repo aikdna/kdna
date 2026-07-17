@@ -10,6 +10,14 @@
   package-root consumer loaders continue to return
   `KDNA_AUTH_REMOTE_RUNTIME_REQUIRED`.
 
+### Changed
+
+- Keep Core authority limited to technical facts: Runtime manifests reject
+  intrinsic quality, risk, trust, recommendation, certification, and
+  production-readiness fields; Runtime Capsules and generic Judgment Reports
+  no longer project `risk_level` or `quality_badge`. External assessment and
+  caller adoption policy remain outside Core conformance.
+
 ## 0.19.0 (2026-07-16)
 
 ### Fixed

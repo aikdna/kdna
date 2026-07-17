@@ -1,5 +1,9 @@
 # Creator Workflow
 
+> **历史工作流。** 本文件保留早期公开领域创作经验；其中的质量晋级和旧
+> Manifest 字段不是当前 KDNA Core 合同。当前格式与 Runtime 权威以
+> `schema/`、`specs/` 和可执行 conformance fixtures 为准。
+
 KDNA 领域不应该依赖少数人临场手写好 JSON。这个流程定义了创建一个 experimental 公开领域的最小可重复路径。
 
 目标是让资产可被清晰理解、独立验证并安全使用：边界明确、文件有效、安装路径可复现，且每一项公开质量声明都附有相应的公开证据与限制说明。

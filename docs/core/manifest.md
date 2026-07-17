@@ -26,5 +26,12 @@ aliases fail closed.
 `name` is non-empty. Core validates declared facts; it does not infer a creator,
 quality rank, review state, or official approval.
 
+The Runtime manifest explicitly rejects `quality_badge`, `risk_level`,
+`trusted`, `recommended`, `high_quality`, `expert_reviewed`,
+`production_ready`, and `officially_approved`. Those names would turn an
+external assessment or caller policy into an intrinsic Core fact. An asset's
+judgment payload may still express its own scoped standards, warnings, and
+risk judgments; Core does not adopt them as protocol verdicts.
+
 The manifest does not contain judgment content. Runtime inspection can expose
 identity and compatibility metadata without projecting the payload.

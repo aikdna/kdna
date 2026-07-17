@@ -1,5 +1,9 @@
 # KDNA Card Specification
 
+> **Status: Historical.** This pre-Core card required intrinsic risk and
+> quality fields. It is retained for traceability and is not a current manifest,
+> Runtime, registry, or conformance contract.
+
 Every KDNA domain SHOULD publish a KDNA Card — a standardized metadata document describing the domain's purpose, risks, provenance, and governance status.
 
 ## Purpose

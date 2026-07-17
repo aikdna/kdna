@@ -12,6 +12,16 @@ const MANIFEST_SCHEMA = 'schema/manifest.schema.json';
 const PACKAGED_MANIFEST_SCHEMA = 'packages/kdna-core/schema/manifest.schema.json';
 const LOAD_CONTRACT_SCHEMA = 'schema/load-contract.schema.json';
 const PACKAGED_LOAD_CONTRACT_SCHEMA = 'packages/kdna-core/schema/load-contract.schema.json';
+const INTRINSIC_ASSESSMENT_FIELDS = [
+  'quality_badge',
+  'risk_level',
+  'trusted',
+  'recommended',
+  'high_quality',
+  'expert_reviewed',
+  'production_ready',
+  'officially_approved',
+];
 
 const AUTHORIZATION_FIXTURES = [
   'account-required',
@@ -186,6 +196,11 @@ function validateProtocolFixtures(options = {}) {
     if (schema.required?.includes('creator')) {
       error(`${MANIFEST_SCHEMA}: creator provenance must remain optional`);
     }
+    for (const field of INTRINSIC_ASSESSMENT_FIELDS) {
+      if (schema.properties?.[field] !== false) {
+        error(`${MANIFEST_SCHEMA}: ${field} must be rejected as an intrinsic asset assessment`);
+      }
+    }
 
     for (const field of [
       'format_version',
@@ -225,6 +240,11 @@ function validateProtocolFixtures(options = {}) {
     for (const relativePath of runtimeFixtures) {
       const fixture = readJson(relativePath);
       if (!fixture) continue;
+      for (const field of INTRINSIC_ASSESSMENT_FIELDS) {
+        if (hasOwn(fixture, field)) {
+          error(`${relativePath}.${field}: intrinsic asset assessments are not Runtime facts`);
+        }
+      }
       for (const { surface, validate } of validators) {
         if (!validate(fixture)) {
           error(
@@ -324,6 +344,7 @@ if (require.main === module) main();
 
 module.exports = {
   discoverRuntimeManifestInventory,
+  INTRINSIC_ASSESSMENT_FIELDS,
   INVALID_RUNTIME_MANIFEST_FIXTURES,
   LOAD_CONTRACT_SCHEMA,
   MANIFEST_SCHEMA,

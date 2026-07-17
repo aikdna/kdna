@@ -489,7 +489,6 @@ function buildRuntimeCapsule({
     digests,
     signature: signatureEvidence,
     access: runtimeAccess,
-    risk_level: manifest.risk_level || null,
     profile: projection.profile,
     context: projection.content || {},
     trace: {

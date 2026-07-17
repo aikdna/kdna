@@ -143,6 +143,14 @@
     "description": { "type": "string" },
     "language": { "type": "string" },
     "languages": { "type": "array", "items": { "type": "string" } },
+    "quality_badge": false,
+    "risk_level": false,
+    "trusted": false,
+    "recommended": false,
+    "high_quality": false,
+    "expert_reviewed": false,
+    "production_ready": false,
+    "officially_approved": false,
     "license": {
       "oneOf": [
         { "type": "string" },

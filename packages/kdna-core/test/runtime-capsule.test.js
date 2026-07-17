@@ -56,6 +56,7 @@ test('committed Runtime Capsule golden freezes A, C, E, Capsule, and P', () => {
   assert.deepEqual(capsule, golden.runtime_capsule);
   assert.equal(capsule.type, 'kdna.runtime-capsule');
   assert.equal(capsule.contract_version, '0.1.0');
+  assert.equal(Object.hasOwn(capsule, 'risk_level'), false);
   assert.equal(core.computeCapsuleDeliveryDigest(capsule), golden.expected.capsule_delivery);
   assert.equal(schema.evidence(evidence), true, JSON.stringify(schema.evidence.errors));
   assert.equal(schema.capsule(capsule), true, JSON.stringify(schema.capsule.errors));
@@ -141,6 +142,9 @@ test('Runtime Capsule schema rejects old generation and compatibility fields', (
     },
     (value) => {
       value.compatibility = { legacy: true };
+    },
+    (value) => {
+      value.risk_level = 'R0';
     },
     (value) => {
       value.digests.profile_version = '1.0.0';

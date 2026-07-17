@@ -1,11 +1,12 @@
 # KDNA Asset Card Specification
 
-> Draft release-card concept. Current public examples should use `.kdna` files
-> plus release cards as descriptive evidence; this file does not define a
-> registry listing, marketplace listing, or official certification system.
+> **Withdrawn historical draft.** This pre-Core release-card concept treats
+> quality and risk as intrinsic asset levels. It is retained for traceability
+> and does not define a current manifest, Runtime, registry listing, marketplace
+> listing, conformance claim, or official certification system.
 
 Version: 0.1
-Status: Draft
+Status: Withdrawn
 Canonical: `KDNA/specs/kdna-asset-card.md`
 
 ## 1. Purpose

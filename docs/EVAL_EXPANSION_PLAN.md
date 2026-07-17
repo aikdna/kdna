@@ -1,5 +1,10 @@
 # Reference Domain Eval Expansion Plan
 
+> **Status: Historical.** This pre-Core plan targeted protocol quality badges
+> and registry promotion. It is not an active Core roadmap. Future evaluation
+> results must remain issuer-scoped external assessments and cannot create Core
+> quality or promotion levels.
+
 Goal: upgrade 3 core reference domains from `tested` (10-15 evals) to `validated` (30+ evals with automated scoring, raw outputs, and benchmark reports).
 
 ## Current State

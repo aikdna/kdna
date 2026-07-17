@@ -28,7 +28,6 @@ Every Capsule is a closed object with:
   "digests": {},
   "signature": { "state": "absent" },
   "access": "public",
-  "risk_level": null,
   "profile": "compact",
   "context": {},
   "trace": {}
@@ -85,6 +84,11 @@ schema-valid state, signature state, and selected projection profile.
 
 These facts do not establish semantic consumption, behavioral influence,
 judgment quality, or model conformance.
+
+The Capsule deliberately carries no asset-level quality, risk, trust,
+recommendation, certification, or production-readiness field. A Host may apply
+its own task-scoped policy or consume an issuer-scoped external assessment, but
+neither conclusion becomes an intrinsic property of the asset or a Core fact.
 
 ## 5. Consumer rules
 

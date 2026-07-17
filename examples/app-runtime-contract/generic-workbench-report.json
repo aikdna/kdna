@@ -16,10 +16,8 @@
       "name": "kdna:example:agent-project-context",
       "version": "1.0.0",
       "judgment_version": "1.0.0",
-      "quality_badge": null,
       "status": "matched",
       "access": "public",
-      "risk_level": null,
       "source": null
     }
   ],

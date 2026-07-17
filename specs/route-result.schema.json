@@ -15,9 +15,9 @@
         "REJECT_NEGATIVE_MATCH",
         "ASK_AMBIGUOUS_DOMAIN",
         "LOAD_STRONG_FIT",
-        "BLOCK_TRUST_FAILED"
+        "BLOCK_POLICY_FAILED"
       ],
-      "description": "The routing state. Determined by the Router's 5-gate pipeline (Intent → Negative → Fit → Trust → Ambiguity)."
+      "description": "The routing state. Determined by the Router's 5-gate pipeline (Intent → Negative → Fit → Caller Policy → Ambiguity)."
     },
     "action": {
       "type": "string",
@@ -90,19 +90,19 @@
         }
       }
     },
-    "trust": {
+    "policy": {
       "type": "object",
-      "description": "Trust verification results. Only populated when a domain is a candidate for loading.",
+      "description": "Caller-owned load-policy results. Only populated when an asset is a candidate for loading. These are task-scoped decisions, not intrinsic asset value fields.",
       "properties": {
         "signature_valid": { "type": "boolean" },
         "not_yanked": { "type": "boolean" },
         "license_valid": { "type": "boolean" },
-        "risk_level_acceptable": { "type": "boolean" },
+        "caller_policy_satisfied": { "type": "boolean" },
         "compatibility_ok": { "type": "boolean" },
         "failures": {
           "type": "array",
           "items": { "type": "string" },
-          "description": "List of trust checks that failed, if any."
+          "description": "List of caller-policy checks that failed, if any."
         }
       }
     },
@@ -137,7 +137,10 @@
         "properties": {
           "domain": { "type": "string" },
           "reason": { "type": "string" },
-          "trust": { "type": "string", "enum": ["official", "community", "verified"] },
+          "external_assessment_ref": {
+            "type": "string",
+            "description": "Optional reference to an issuer-scoped external assessment."
+          },
           "install_command": { "type": "string" }
         }
       }

@@ -9,16 +9,15 @@ Human Lock, optional signing, optional encryption, and provenance recording.
 
 A conforming `.kdna` asset MAY NOT be created by directly packaging arbitrary
 source directories and presenting the result as carrying provenance, signature,
-quality, or endorsement claims. A `.kdna` asset is format-valid when it passes
-`kdna validate`; provenance and trust signals are separate layers, such as
-conformance metadata, Human Lock evidence, compiler metadata, signatures, eval
-evidence, or an asset digest.
+external-evaluation, or endorsement claims. A `.kdna` asset is format-valid when
+it passes `kdna validate`; optional provenance, identity binding, Human Lock,
+signatures, and external evaluations remain separate, issuer-scoped claims.
 
 Dev source directories are non-canonical workspaces for authoring tools, Git
 review, diagnostics, and debugging. They MUST NOT be treated as public runtime
 assets unless they have been exported to a validated `.kdna` container. They
-must also be accompanied by the required provenance evidence for any trust,
-signature, quality, or endorsement claim being made.
+must also be accompanied by the required evidence for any provenance, identity,
+signature, external-evaluation, or endorsement claim being made.
 
 ## Ecosystem Roles
 
@@ -85,18 +84,15 @@ higher quality MUST include authoring provenance and conformance evidence:
 
 `created_by` is provenance metadata, not an allowlist. Compatibility is
 established by validation and conformance evidence, for example
-`authoring.conformance.passed: true`. Manual or experimental sources may exist,
-but they cannot claim reviewed quality or release-evidence status without the required evidence.
-Schema validation proves structure only. It does not prove judgment quality.
+`authoring.conformance.passed: true`. Manual or experimental sources may exist.
+Any external evaluation or release claim must identify its issuer, exact
+subject, rubric, method, scope, time, and evidence. Schema validation proves
+structure only; it does not prove judgment quality or establish adoption policy.
 
 ## Release Evidence Binding
 
-| Source evidence | Highest allowed quality |
-| --- | --- |
-| Manual JSON or `manual-dev-source` | `untested` |
-| Structure passes, no Human Lock | `untested` |
-| Human Lock exists, no eval evidence | below `tested` |
-| Studio provenance + Human Lock + eval cases | `tested` |
-| Studio provenance + automated eval + quality report | `validated` |
-| External expert review | `expert_reviewed` |
-| Real deployment data + continuous eval | `production_ready` |
+Release evidence binds a named publisher's exact artifact and technical
+materials. Human review, automated evaluation, expert review, and deployment
+results may be published as separate issuer-scoped assessments. They are not a
+universal ladder and do not create Core quality, trust, risk, recommendation,
+certification, or production-readiness fields.
