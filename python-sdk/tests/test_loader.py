@@ -69,7 +69,22 @@ def test_invalid_mode_raises(current_asset: Path):
         open_kdna(str(current_asset), mode="everything")
 
 
-@pytest.mark.parametrize("version", ["0.33.9", "0.35.0"])
+def test_current_cli_boundary_is_accepted(monkeypatch):
+    loader._require_compatible_cli.cache_clear()
+
+    def invoke_cli(command, arguments):
+        assert command == ("current-kdna",)
+        assert arguments == ["--version"]
+        return subprocess.CompletedProcess(
+            [*command, *arguments], returncode=0, stdout="0.35.0\n", stderr=""
+        )
+
+    monkeypatch.setattr(loader, "_invoke_cli", invoke_cli)
+    assert loader._require_compatible_cli(("current-kdna",)) == "0.35.0"
+    loader._require_compatible_cli.cache_clear()
+
+
+@pytest.mark.parametrize("version", ["0.34.9", "0.36.0"])
 def test_cli_outside_supported_boundary_is_rejected(monkeypatch, version):
     loader._require_compatible_cli.cache_clear()
     monkeypatch.setenv("KDNA_CLI", "outdated-kdna")
@@ -82,12 +97,12 @@ def test_cli_outside_supported_boundary_is_rejected(monkeypatch, version):
         )
 
     monkeypatch.setattr(loader, "_invoke_cli", invoke_cli)
-    with pytest.raises(KDNAAssetError, match=">=0.34.0,<0.35.0"):
+    with pytest.raises(KDNAAssetError, match=">=0.35.0,<0.36.0"):
         loader._run_cli(["inspect", "asset.kdna", "--json"])
     loader._require_compatible_cli.cache_clear()
 
 
-@pytest.mark.parametrize("version", ["v0.34.0", "0.34.0+local", "0.34"])
+@pytest.mark.parametrize("version", ["v0.35.0", "0.35.0+local", "0.35"])
 def test_cli_requires_exact_natural_semver_output(monkeypatch, version):
     loader._require_compatible_cli.cache_clear()
     monkeypatch.setenv("KDNA_CLI", "malformed-version-kdna")

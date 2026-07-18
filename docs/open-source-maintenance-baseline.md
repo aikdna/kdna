@@ -1,6 +1,6 @@
 # Open Source Maintenance Baseline
 
-> Last updated: 2026-07-04. This document defines the public maintenance-mode
+> Last updated: 2026-07-18. This document defines the public maintenance-mode
 > boundary for the KDNA open-source ecosystem.
 
 ## Lifecycle Map
@@ -15,6 +15,8 @@
 | Web packages and scaffolder | Experimental | Published integration surfaces for upload, inspect, plan-load, load, and activation proxying. |
 | Swift runtime and app-shared package | Beta | Support surfaces until parity and release evidence are refreshed after public release. |
 | `kdna-vscode` | Legacy | Historical reference only; current workflows use CLI, Studio CLI, and loader integrations. |
+| `@aikdna/agent` | Legacy / Deprecated | Frozen source only; current Agent integration uses `kdna-loader` or the experimental MCP bridge. |
+| `@aikdna/kdna-artifact-engine` and `@aikdna/kdna-fidelity-core` | Legacy / Deprecated | Historical draft implementations; not part of the current Runtime Capsule toolchain. |
 
 ## Accepted Maintenance Work
 

@@ -14,57 +14,37 @@ const validator = path.join(packageRoot, 'bin', 'kdna-validate.js');
 const compatRequire = createRequire(path.join(packageRoot, 'package.json'));
 const core = compatRequire('@aikdna/kdna-core');
 const cliPackageRoot = path.dirname(compatRequire.resolve('@aikdna/kdna-cli/package.json'));
-const COMPAT_CORE_LOCK_PATH = 'packages/kdna/node_modules/@aikdna/kdna-core';
-const CLI_CORE_LOCK_PATH = 'node_modules/@aikdna/kdna-cli/node_modules/@aikdna/kdna-core';
-const RELEASED_CORE_LOCK_METADATA = {
-  version: '0.18.0',
-  resolved: 'https://registry.npmjs.org/@aikdna/kdna-core/-/kdna-core-0.18.0.tgz',
-  integrity:
-    'sha512-2z8cJX+L39QdtwPoBI4tM0e5o5K7GOBliMeF60Ja3Uv6smJYBLRMSts1sIO/7ECGyk46HCOOs82VvVvLsGPBUQ==',
-  license: 'Apache-2.0',
-  dependencies: {
-    '@noble/hashes': '^1.8.0',
-    ajv: '^8.20.0',
-    'ajv-formats': '^3.0.1',
-    'cbor-x': '^1.6.4',
-  },
-  engines: { node: '>=18.0.0' },
-  peerDependencies: {
-    ajv: '^8.17.1',
-    'ajv-formats': '^3.0.1',
-  },
-  peerDependenciesMeta: {
-    ajv: { optional: true },
-    'ajv-formats': { optional: true },
-  },
-};
+const ROOT_CORE_LOCK_PATH = 'node_modules/@aikdna/kdna-core';
+const CLI_LOCK_PATH = 'node_modules/@aikdna/kdna-cli';
 const PACKABLE_FIXTURE_FILES = ['mimetype', 'kdna.json', 'checksums.json', 'payload.kdnab'];
 const EXPECTED_PACKABLE_FIXTURE_COUNT = 2;
 
-function assertReleasedCorePair(lock) {
-  const compatibilityCore = lock.packages[COMPAT_CORE_LOCK_PATH];
-  const cliCore = lock.packages[CLI_CORE_LOCK_PATH];
-  assert.ok(compatibilityCore, `missing ${COMPAT_CORE_LOCK_PATH}`);
-  assert.ok(cliCore, `missing ${CLI_CORE_LOCK_PATH}`);
-
-  for (const [location, node] of [
-    [COMPAT_CORE_LOCK_PATH, compatibilityCore],
-    [CLI_CORE_LOCK_PATH, cliCore],
-  ]) {
-    assert.deepEqual(
-      node,
-      RELEASED_CORE_LOCK_METADATA,
-      `${location} must match the complete released Core metadata`,
-    );
-  }
-
-  assert.deepEqual(cliCore, compatibilityCore, 'nested Core lock metadata must match exactly');
-
-  assert.deepEqual(lock.packages['node_modules/@aikdna/kdna-core'], {
+function assertCurrentToolchainLock(lock) {
+  assert.deepEqual(lock.packages[ROOT_CORE_LOCK_PATH], {
     resolved: 'packages/kdna-core',
     link: true,
   });
   assert.equal(lock.packages['packages/kdna-core'].version, '0.20.0');
+  assert.deepEqual(
+    Object.keys(lock.packages).filter((location) => location.endsWith('/@aikdna/kdna-core')),
+    [ROOT_CORE_LOCK_PATH],
+    'the workspace lock must resolve one Core package',
+  );
+
+  const cli = lock.packages[CLI_LOCK_PATH];
+  assert.equal(cli.version, '0.35.0');
+  assert.equal(
+    cli.resolved,
+    'https://registry.npmjs.org/@aikdna/kdna-cli/-/kdna-cli-0.35.0.tgz',
+  );
+  assert.equal(
+    cli.integrity,
+    'sha512-QYfI8zJGkCWNTypQqVDN9y82+368c5OtTQQBWs9U73hndWVXwslgx0DOE0RAUmlkVQZyE4p5WgQCxOCO6Qbyug==',
+  );
+  assert.deepEqual(cli.dependencies, {
+    '@aikdna/kdna-core': '0.20.0',
+    '@aikdna/kdna-eval': '0.3.1',
+  });
 }
 
 function discoverPackableFixtures(fixturesRoot) {
@@ -95,9 +75,10 @@ test('compatibility manifest pins one released toolchain without claiming the cu
   const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf8'));
   assert.equal(pkg.version, '0.13.0');
   assert.deepEqual(pkg.dependencies, {
-    '@aikdna/kdna-cli': '0.33.0',
-    '@aikdna/kdna-core': '0.18.0',
+    '@aikdna/kdna-cli': '0.35.0',
+    '@aikdna/kdna-core': '0.20.0',
   });
+  assert.deepEqual(pkg.engines, { node: '>=20' });
   assert.deepEqual(pkg.bin, {
     'kdna-lint': 'bin/kdna-lint.js',
     'kdna-validate': 'bin/kdna-validate.js',
@@ -111,70 +92,39 @@ test('root lock resolves the compatibility package to one exact Core and CLI pai
   const rootPackage = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
   const lock = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package-lock.json'), 'utf8'));
 
-  assert.equal(rootPackage.devDependencies['@aikdna/kdna-cli'], '0.33.0');
+  assert.equal(rootPackage.devDependencies['@aikdna/kdna-cli'], '0.35.0');
   assert.deepEqual(lock.packages['packages/kdna'].dependencies, {
-    '@aikdna/kdna-cli': '0.33.0',
-    '@aikdna/kdna-core': '0.18.0',
+    '@aikdna/kdna-cli': '0.35.0',
+    '@aikdna/kdna-core': '0.20.0',
   });
   assert.equal(lock.packages['packages/kdna'].version, '0.13.0');
-  assert.equal(lock.packages['node_modules/@aikdna/kdna-cli'].version, '0.33.0');
-  assert.equal(
-    lock.packages['node_modules/@aikdna/kdna-cli'].resolved,
-    'https://registry.npmjs.org/@aikdna/kdna-cli/-/kdna-cli-0.33.0.tgz',
-  );
-  assert.equal(
-    lock.packages['node_modules/@aikdna/kdna-cli'].integrity,
-    'sha512-A8bbemlQhRzmpY/c395X2HXFBElYsViLeuwHq0JZE0dxOKOKdWUPUXm5jb4HioGchSyrm7gRv0UQUSxcWzhZxA==',
-  );
-  assert.equal(
-    lock.packages['node_modules/@aikdna/kdna-cli'].dependencies['@aikdna/kdna-core'],
-    '0.18.0',
-  );
-  assertReleasedCorePair(lock);
+  assertCurrentToolchainLock(lock);
 });
 
-test('released Core pair gate fails closed on nested lock drift', async (t) => {
+test('current toolchain lock gate fails closed on source or topology drift', async (t) => {
   const lock = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package-lock.json'), 'utf8'));
   for (const [name, mutate] of [
-    ['version', (candidate) => (candidate.packages[CLI_CORE_LOCK_PATH].version = '0.18.1')],
+    ['CLI version', (candidate) => (candidate.packages[CLI_LOCK_PATH].version = '0.35.1')],
+    ['CLI source', (candidate) => (candidate.packages[CLI_LOCK_PATH].resolved = 'forged')],
+    ['CLI integrity', (candidate) => (candidate.packages[CLI_LOCK_PATH].integrity = 'forged')],
     [
-      'integrity',
-      (candidate) => (candidate.packages[CLI_CORE_LOCK_PATH].integrity = 'sha512-drift'),
+      'CLI Core binding',
+      (candidate) => (candidate.packages[CLI_LOCK_PATH].dependencies['@aikdna/kdna-core'] = '0.19.0'),
     ],
-    ['metadata', (candidate) => (candidate.packages[CLI_CORE_LOCK_PATH].license = 'drift')],
+    ['workspace Core version', (candidate) => (candidate.packages['packages/kdna-core'].version = '0.19.0')],
+    ['workspace Core link', (candidate) => (candidate.packages[ROOT_CORE_LOCK_PATH].link = false)],
     [
-      'shared forged integrity',
-      (candidate) => {
-        candidate.packages[COMPAT_CORE_LOCK_PATH].integrity = 'sha512-shared-forgery';
-        candidate.packages[CLI_CORE_LOCK_PATH].integrity = 'sha512-shared-forgery';
-      },
-    ],
-    [
-      'shared forged license',
-      (candidate) => {
-        candidate.packages[COMPAT_CORE_LOCK_PATH].license = 'forged';
-        candidate.packages[CLI_CORE_LOCK_PATH].license = 'forged';
-      },
-    ],
-    [
-      'shared forged dependencies',
-      (candidate) => {
-        candidate.packages[COMPAT_CORE_LOCK_PATH].dependencies.ajv = '^0.0.0';
-        candidate.packages[CLI_CORE_LOCK_PATH].dependencies.ajv = '^0.0.0';
-      },
-    ],
-    [
-      'shared forged engines',
-      (candidate) => {
-        candidate.packages[COMPAT_CORE_LOCK_PATH].engines.node = '>=999';
-        candidate.packages[CLI_CORE_LOCK_PATH].engines.node = '>=999';
-      },
+      'nested Core copy',
+      (candidate) =>
+        (candidate.packages['node_modules/@aikdna/kdna-cli/node_modules/@aikdna/kdna-core'] = {
+          version: '0.20.0',
+        }),
     ],
   ]) {
     await t.test(name, () => {
       const drifted = structuredClone(lock);
       mutate(drifted);
-      assert.throws(() => assertReleasedCorePair(drifted));
+      assert.throws(() => assertCurrentToolchainLock(drifted));
     });
   }
 });
@@ -213,8 +163,8 @@ test('kdna-validate delegates released CLI fixtures through the paired toolchain
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-compat-validate-'));
   t.after(() => fs.rmSync(temp, { force: true, recursive: true }));
 
-  assert.equal(compatRequire('@aikdna/kdna-core/package.json').version, '0.18.0');
-  assert.equal(compatRequire('@aikdna/kdna-cli/package.json').version, '0.33.0');
+  assert.equal(compatRequire('@aikdna/kdna-core/package.json').version, '0.20.0');
+  assert.equal(compatRequire('@aikdna/kdna-cli/package.json').version, '0.35.0');
   const fixtures = discoverPackableFixtures(path.join(cliPackageRoot, 'fixtures'));
 
   for (const [index, fixture] of fixtures.entries()) {

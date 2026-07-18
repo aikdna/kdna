@@ -47,7 +47,7 @@
     "release:evidence": "node scripts/generate-release-evidence.js",
     "release:preflight": "node scripts/release-preflight.js",
     "test:core-smoke": "node scripts/core-smoke.js",
-    "test:ecosystem-lock": "node scripts/ecosystem-version-lock.js --strict",
+    "test:ecosystem-lock": "node --test scripts/ecosystem-version-lock.test.js && node scripts/ecosystem-version-lock.js --strict",
     "asset:validate": "node scripts/validate-asset.mjs",
     "asset:inspect": "node scripts/inspect-asset.mjs",
     "asset:pack": "node scripts/pack-asset.mjs",
@@ -72,7 +72,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@aikdna/kdna-cli": "0.33.0",
+    "@aikdna/kdna-cli": "0.35.0",
     "@eslint/js": "^10.0.1",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",

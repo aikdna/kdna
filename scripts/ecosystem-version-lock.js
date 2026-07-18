@@ -1,136 +1,372 @@
 #!/usr/bin/env node
+'use strict';
+
 /**
- * ecosystem-version-lock — enforces cross-repo version consistency for the
- * @aikdna/* packages. Runs from the kdna monorepo (the control repo) and
- * reports any consumer whose declared @aikdna/kdna-core / kdna-cli /
- * kdna-studio-core dependency is below the safety baseline.
+ * Fail-closed cross-repository lock for current KDNA npm coordinates.
  *
- * PR-8 (follow-up to PR-1): the bug we just fixed in PR-1 (missing
- * STANDARD_ENTRIES) shipped because consumers pinned ^0.7 / ^0.8 of
- * kdna-core while the monorepo source was already at 0.9.x. After
- * publishing @aikdna/kdna-core 0.9.1 (the post-PR-1 release), this gate
- * must ensure no consumer falls behind.
- *
- * The baseline version is read from:
- *   - KDNA_CORE_BASELINE env var, OR
- *   - packages/kdna-core/package.json (the monorepo source of truth)
- *
- * Repos to scan are read from KDNA_REPOS_ROOT (defaults to the parent of
- * the kdna monorepo). Each subdirectory is treated
- * as a consumer if it has a package.json declaring a @aikdna/* dep.
- *
- * Usage:
- *   node scripts/ecosystem-version-lock.js [--strict]
- *
- * Exit 0: all consumers meet baseline.
- * Exit 1: at least one consumer is behind.
+ * Baselines come from the public ecosystem manifest, with Eval added from its
+ * co-located package manifest until the ecosystem manifest can represent more
+ * than one npm package per repository. Current repositories must use the exact
+ * accepted version of every managed dependency. Repositories explicitly marked
+ * Legacy or Removed are reported and excluded from the current toolchain gate.
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
-const SCAN_PACKAGES = [
-  '@aikdna/kdna-core',
-  '@aikdna/kdna-cli',
-  '@aikdna/kdna-studio-core',
-  '@aikdna/kdna-studio-cli',
-  '@aikdna/kdna-studio-swift',
-];
+const CURRENT_LIFECYCLES = new Set(['Stable', 'Beta', 'Experimental']);
+const EXCLUDED_LIFECYCLES = new Set(['Legacy', 'Removed']);
 
-function readPackageVersion(repoRoot, pkgName) {
-  if (pkgName === '@aikdna/kdna-core') {
-    // The monorepo IS the source of truth for kdna-core.
-    const p = path.join(repoRoot, 'kdna', 'packages', 'kdna-core', 'package.json');
-    if (fs.existsSync(p)) return JSON.parse(fs.readFileSync(p, 'utf8')).version;
+// This is an explicit compatibility policy, not a best-effort inventory. Any
+// repository, manifest, or managed dependency disappearing must fail the gate
+// until the ecosystem policy is deliberately updated in the same change.
+const EXPECTED_BINDINGS = Object.freeze(
+  [
+    ['create-kdna-web-app', 'templates/express/package.json', 'dependencies', '@aikdna/kdna-core'],
+    [
+      'create-kdna-web-app',
+      'templates/express/package.json',
+      'dependencies',
+      '@aikdna/kdna-web-server',
+    ],
+    [
+      'create-kdna-web-app',
+      'templates/nextjs-pages/package.json',
+      'dependencies',
+      '@aikdna/kdna-core',
+    ],
+    [
+      'create-kdna-web-app',
+      'templates/nextjs-pages/package.json',
+      'dependencies',
+      '@aikdna/kdna-react',
+    ],
+    [
+      'create-kdna-web-app',
+      'templates/nextjs-pages/package.json',
+      'dependencies',
+      '@aikdna/kdna-web-server',
+    ],
+    ['create-kdna-web-app', 'templates/nextjs/package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['create-kdna-web-app', 'templates/nextjs/package.json', 'dependencies', '@aikdna/kdna-react'],
+    [
+      'create-kdna-web-app',
+      'templates/nextjs/package.json',
+      'dependencies',
+      '@aikdna/kdna-web-server',
+    ],
+    ['kdna', 'package.json', 'devDependencies', '@aikdna/kdna-cli'],
+    ['kdna', 'packages/kdna/package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna', 'packages/kdna/package.json', 'dependencies', '@aikdna/kdna-cli'],
+    ['kdna-activation-server', 'package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna-assets', 'package.json', 'devDependencies', '@aikdna/kdna-core'],
+    ['kdna-assets', 'package.json', 'devDependencies', '@aikdna/kdna-cli'],
+    ['kdna-cli', 'package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna-cli', 'package.json', 'dependencies', '@aikdna/kdna-eval'],
+    ['kdna-demo-web-viewer', 'app/package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna-demo-web-viewer', 'app/package.json', 'dependencies', '@aikdna/kdna-react'],
+    ['kdna-demo-web-viewer', 'app/package.json', 'dependencies', '@aikdna/kdna-web-client'],
+    ['kdna-demo-web-viewer', 'app/package.json', 'dependencies', '@aikdna/kdna-web-server'],
+    ['kdna-react', 'package.json', 'devDependencies', '@aikdna/kdna-core'],
+    ['kdna-react', 'package.json', 'devDependencies', '@aikdna/kdna-activation-server'],
+    ['kdna-react', 'package.json', 'devDependencies', '@aikdna/kdna-web-server'],
+    ['kdna-react', 'package.json', 'dependencies', '@aikdna/kdna-web-client'],
+    ['kdna-remote-server', 'package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna-remote-server', 'package.json', 'devDependencies', '@aikdna/kdna-activation-server'],
+    ['kdna-skills', 'mcp-server/package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna-studio-cli', 'package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna-studio-cli', 'package.json', 'dependencies', '@aikdna/kdna-studio-core'],
+    ['kdna-studio-core', 'package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna-web-client', 'package.json', 'devDependencies', '@aikdna/kdna-web-server'],
+    ['kdna-web-server', 'package.json', 'devDependencies', '@aikdna/kdna-core'],
+    ['kdna-web-server', 'package.json', 'peerDependencies', '@aikdna/kdna-core'],
+    ['kdna-web-server', 'package.json', 'devDependencies', '@aikdna/kdna-activation-server'],
+  ].map(([repository, manifest, section, packageName]) => ({
+    repository,
+    manifest,
+    section,
+    packageName,
+  })),
+);
+
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+function readBaselines(controlRoot) {
+  const manifest = readJson(path.join(controlRoot, 'ecosystem-manifest.json'));
+  const baselines = new Map();
+  const lifecycleByRepository = new Map();
+  const manifestsByRepository = new Map();
+
+  for (const component of manifest.components) {
+    const repositoryName = component.repository.split('/').pop();
+    lifecycleByRepository.set(repositoryName, component.lifecycle);
+    if (CURRENT_LIFECYCLES.has(component.lifecycle) && component.package_json) {
+      const componentRoot = path.resolve(controlRoot, component.local_path || '.');
+      const packagePath = path.resolve(controlRoot, component.package_json);
+      const relativeManifest = path.relative(componentRoot, packagePath);
+      const manifests = manifestsByRepository.get(repositoryName) || [];
+      manifests.push(relativeManifest);
+      manifestsByRepository.set(repositoryName, manifests);
+    }
+    if (
+      CURRENT_LIFECYCLES.has(component.lifecycle) &&
+      component.npm_package &&
+      component.current_version
+    ) {
+      baselines.set(component.npm_package, component.current_version);
+    }
   }
-  return null;
+
+  const evalPackage = readJson(path.join(controlRoot, 'packages', 'kdna-eval', 'package.json'));
+  baselines.set(evalPackage.name, evalPackage.version);
+  if (process.env.KDNA_CORE_BASELINE) {
+    baselines.set('@aikdna/kdna-core', process.env.KDNA_CORE_BASELINE);
+  }
+
+  for (const binding of EXPECTED_BINDINGS) {
+    const manifests = manifestsByRepository.get(binding.repository) || [];
+    manifests.push(binding.manifest);
+    manifestsByRepository.set(binding.repository, [...new Set(manifests)].sort());
+  }
+
+  return { baselines, lifecycleByRepository, manifestsByRepository };
 }
 
-function parseSemver(spec) {
-  // Strip ^, ~, >=, etc. Just return the digits.
-  const m = String(spec).match(/(\d+)\.(\d+)\.(\d+)/);
-  if (!m) return null;
-  return { major: +m[1], minor: +m[2], patch: +m[3] };
-}
+function workspacePackagePaths(repositoryRoot, rootPackage) {
+  const paths = [path.join(repositoryRoot, 'package.json')];
+  const declarations = Array.isArray(rootPackage.workspaces)
+    ? rootPackage.workspaces
+    : rootPackage.workspaces?.packages || [];
 
-function cmpSemver(a, b) {
-  if (a.major !== b.major) return a.major - b.major;
-  if (a.minor !== b.minor) return a.minor - b.minor;
-  return a.patch - b.patch;
-}
-
-function findConsumers(reposRoot) {
-  const out = [];
-  if (!fs.existsSync(reposRoot)) return out;
-  for (const entry of fs.readdirSync(reposRoot)) {
-    const pkgPath = path.join(reposRoot, entry, 'package.json');
-    if (!fs.existsSync(pkgPath)) continue;
-    let pkg;
-    try {
-      pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-    } catch (_) {
+  for (const declaration of declarations) {
+    if (typeof declaration !== 'string') continue;
+    if (declaration.endsWith('/*') && !declaration.slice(0, -2).includes('*')) {
+      const parent = path.join(repositoryRoot, declaration.slice(0, -2));
+      if (!fs.existsSync(parent)) continue;
+      for (const entry of fs.readdirSync(parent, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        const candidate = path.join(parent, entry.name, 'package.json');
+        if (fs.existsSync(candidate)) paths.push(candidate);
+      }
       continue;
     }
-    if (!pkg.dependencies && !pkg.devDependencies) continue;
-    for (const aikdna of SCAN_PACKAGES) {
-      const dep = (pkg.dependencies || {})[aikdna] || (pkg.devDependencies || {})[aikdna];
-      if (dep) {
-        out.push({ repo: entry, pkg: aikdna, declared: dep, declaredV: parseSemver(dep) });
+    if (!declaration.includes('*')) {
+      const candidate = path.join(repositoryRoot, declaration, 'package.json');
+      if (fs.existsSync(candidate)) paths.push(candidate);
+    }
+  }
+
+  return [...new Set(paths)].sort();
+}
+
+function repositoryRoots(reposRoot, controlRoot) {
+  const roots = new Map();
+  if (fs.existsSync(reposRoot)) {
+    for (const entry of fs.readdirSync(reposRoot, { withFileTypes: true })) {
+      if (!entry.isDirectory() || entry.name.startsWith('.')) continue;
+      roots.set(entry.name, path.join(reposRoot, entry.name));
+    }
+  }
+  if (controlRoot && fs.existsSync(controlRoot)) {
+    roots.set(path.basename(controlRoot), controlRoot);
+  }
+  return roots;
+}
+
+function findConsumers(
+  reposRoot,
+  baselines,
+  lifecycleByRepository,
+  manifestsByRepository = new Map(),
+  options = {},
+) {
+  const consumers = [];
+  const skipped = [];
+  const controlRoot = options.controlRoot || path.join(reposRoot, 'kdna');
+
+  for (const [repository, repositoryRoot] of repositoryRoots(reposRoot, controlRoot)) {
+    const rootPackagePath = path.join(repositoryRoot, 'package.json');
+
+    const lifecycle = lifecycleByRepository.get(repository) || null;
+    if (EXCLUDED_LIFECYCLES.has(lifecycle)) {
+      skipped.push({ repository, lifecycle });
+      continue;
+    }
+
+    let packagePaths = [];
+    if (fs.existsSync(rootPackagePath)) {
+      try {
+        packagePaths = workspacePackagePaths(repositoryRoot, readJson(rootPackagePath));
+      } catch {
+        consumers.push({ repository, manifest: 'package.json', error: 'invalid JSON' });
+      }
+    }
+    for (const manifest of manifestsByRepository.get(repository) || []) {
+      const packagePath = path.join(repositoryRoot, manifest);
+      if (!fs.existsSync(packagePath)) {
+        consumers.push({ repository, manifest, error: 'required manifest is missing' });
+      } else {
+        packagePaths.push(packagePath);
+      }
+    }
+
+    for (const packagePath of [...new Set(packagePaths)].sort()) {
+      let pkg;
+      try {
+        pkg = readJson(packagePath);
+      } catch {
+        consumers.push({
+          repository,
+          manifest: path.relative(repositoryRoot, packagePath),
+          error: 'invalid JSON',
+        });
+        continue;
+      }
+      for (const section of [
+        'dependencies',
+        'devDependencies',
+        'optionalDependencies',
+        'peerDependencies',
+      ]) {
+        const declarations = pkg[section] || {};
+        for (const [packageName, expected] of baselines) {
+          if (!Object.prototype.hasOwnProperty.call(declarations, packageName)) continue;
+          consumers.push({
+            repository,
+            manifest: path.relative(repositoryRoot, packagePath),
+            section,
+            packageName,
+            declared: declarations[packageName],
+            expected,
+          });
+        }
       }
     }
   }
-  return out;
+
+  return { consumers, skipped };
+}
+
+function bindingKey(binding) {
+  return `${binding.repository}\0${binding.manifest}\0${binding.section}\0${binding.packageName}`;
+}
+
+function reconcileBindings(consumers, baselines, expectedBindings = EXPECTED_BINDINGS) {
+  const expectedByKey = new Map(expectedBindings.map((binding) => [bindingKey(binding), binding]));
+  const seen = new Set();
+  const reconciled = [];
+
+  for (const consumer of consumers) {
+    if (consumer.error) {
+      reconciled.push(consumer);
+      continue;
+    }
+    const key = bindingKey(consumer);
+    if (!expectedByKey.has(key)) {
+      reconciled.push({
+        ...consumer,
+        error: 'unexpected managed binding; update the explicit ecosystem policy',
+      });
+      continue;
+    }
+    if (seen.has(key)) {
+      reconciled.push({ ...consumer, error: 'duplicate managed binding' });
+      continue;
+    }
+    seen.add(key);
+    reconciled.push(consumer);
+  }
+
+  for (const [key, binding] of expectedByKey) {
+    if (seen.has(key)) continue;
+    const expected = baselines.get(binding.packageName);
+    reconciled.push({
+      ...binding,
+      expected,
+      error: expected
+        ? 'expected managed binding is missing'
+        : 'managed package has no current ecosystem baseline',
+    });
+  }
+  return reconciled;
+}
+
+function evaluateConsumers(consumers) {
+  return consumers.map((consumer) => ({
+    ...consumer,
+    ok: !consumer.error && consumer.declared === consumer.expected,
+  }));
 }
 
 function main() {
   const strict = process.argv.includes('--strict');
   const reposRoot = process.env.KDNA_REPOS_ROOT || path.resolve(__dirname, '..', '..');
-  const baselineEnv = process.env.KDNA_CORE_BASELINE;
-  const baseline = baselineEnv
-    ? { pkg: '@aikdna/kdna-core', version: baselineEnv, semver: parseSemver(baselineEnv) }
-    : (() => {
-        const v = readPackageVersion(reposRoot, '@aikdna/kdna-core');
-        if (!v) return null;
-        return { pkg: '@aikdna/kdna-core', version: v, semver: parseSemver(v) };
-      })();
-
-  if (!baseline || !baseline.semver) {
-    console.error(
-      'ecosystem-version-lock: cannot determine baseline version (set KDNA_CORE_BASELINE or run from kdna monorepo)',
-    );
+  const controlRoot = process.env.KDNA_CONTROL_ROOT || path.join(reposRoot, 'kdna');
+  let policy;
+  try {
+    policy = readBaselines(controlRoot);
+  } catch (error) {
+    console.error(`ecosystem-version-lock: cannot read public baselines: ${error.message}`);
     process.exit(2);
   }
 
-  console.log(`ecosystem-version-lock: baseline @aikdna/kdna-core = ${baseline.version}`);
+  console.log('ecosystem-version-lock: exact current coordinates');
+  for (const [packageName, version] of [...policy.baselines].sort()) {
+    console.log(`  BASELINE ${packageName}@${version}`);
+  }
   console.log(`scanning ${reposRoot}`);
 
-  const consumers = findConsumers(reposRoot);
-  if (consumers.length === 0) {
-    console.log('  (no consumers found)');
-    return;
+  const discovered = findConsumers(
+    reposRoot,
+    policy.baselines,
+    policy.lifecycleByRepository,
+    policy.manifestsByRepository,
+    { controlRoot },
+  );
+  for (const repository of discovered.skipped) {
+    console.log(`  SKIP ${repository.repository}: ${repository.lifecycle}`);
   }
 
+  const evaluated = evaluateConsumers(reconcileBindings(discovered.consumers, policy.baselines));
   const failures = [];
-  for (const c of consumers) {
-    if (c.declaredV && cmpSemver(c.declaredV, baseline.semver) >= 0) {
-      console.log(`  PASS ${c.repo}: ${c.pkg}@${c.declared}`);
+  for (const consumer of evaluated) {
+    const section = consumer.section ? `#${consumer.section}` : '';
+    const label = `${consumer.repository}/${consumer.manifest}${section}`;
+    if (consumer.ok) {
+      console.log(`  PASS ${label}: ${consumer.packageName}@${consumer.declared}`);
+      continue;
+    }
+    const detail = consumer.error
+      ? consumer.error
+      : `${consumer.packageName}@${consumer.declared} (expected exact ${consumer.expected})`;
+    if (strict) {
+      failures.push(`${label}: ${detail}`);
+      console.log(`  FAIL ${label}: ${detail}`);
     } else {
-      const msg = `${c.repo}: ${c.pkg}@${c.declared} (baseline ${baseline.version})`;
-      if (strict) {
-        failures.push(msg);
-        console.log(`  FAIL ${msg}`);
-      } else {
-        console.log(`  WARN ${msg}`);
-      }
+      console.log(`  WARN ${label}: ${detail}`);
     }
   }
 
   if (failures.length > 0) {
-    console.error(`\necosystem-version-lock: ${failures.length} consumer(s) behind baseline`);
+    console.error(`\necosystem-version-lock: ${failures.length} consumer(s) drifted`);
     process.exit(1);
   }
-  console.log(`\necosystem-version-lock: ${consumers.length} consumer check(s) completed`);
+  console.log(
+    `\necosystem-version-lock: ${EXPECTED_BINDINGS.length} expected binding(s) are present and exact`,
+  );
 }
 
 if (require.main === module) main();
-module.exports = { findConsumers, parseSemver, cmpSemver };
+
+module.exports = {
+  EXPECTED_BINDINGS,
+  bindingKey,
+  evaluateConsumers,
+  findConsumers,
+  readBaselines,
+  reconcileBindings,
+  repositoryRoots,
+  workspacePackagePaths,
+};

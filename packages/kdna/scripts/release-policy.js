@@ -23,6 +23,8 @@ function validateReleaseContext({ pkg, changelog, env, git }) {
   const tag = canonicalTag(pkg.version);
   const expectedRef = `refs/tags/${tag}`;
 
+  assert(env.GITHUB_REPOSITORY === 'aikdna/kdna', 'GITHUB_REPOSITORY must be aikdna/kdna');
+  assert(env.GITHUB_SERVER_URL === 'https://github.com', 'GITHUB_SERVER_URL must be github.com');
   assert(env.GITHUB_EVENT_NAME === 'release', 'GITHUB_EVENT_NAME must be release');
   assert(env.RELEASE_EVENT_ACTION === 'published', 'release action must be published');
   assert(env.RELEASE_TAG_NAME === tag, `release tag must be exactly ${tag}`);
@@ -37,8 +39,13 @@ function validateReleaseContext({ pkg, changelog, env, git }) {
   assert(typeof git.status === 'string' && git.status.length === 0, 'worktree must be clean');
   assert(COMMIT_RE.test(git.head || ''), 'HEAD must be a 40-character lowercase commit');
   assert(COMMIT_RE.test(git.tagCommit || ''), 'release tag must resolve to a commit');
+  assert(
+    COMMIT_RE.test(git.mainCommit || ''),
+    'protected origin/main must resolve to a 40-character lowercase commit',
+  );
   assert(git.tagCommit === git.head, `${tag} must resolve to HEAD`);
   assert(env.GITHUB_SHA === git.head, 'GITHUB_SHA must equal HEAD and the release tag commit');
+  assert(git.mainContainsHead === true, 'release tag commit must be an ancestor of origin/main');
 
   const heading = new RegExp(
     `^## ${escapeRegExp(pkg.version)}(?: \\(\\d{4}-\\d{2}-\\d{2}\\))?$`,

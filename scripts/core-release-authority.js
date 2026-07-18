@@ -1303,10 +1303,13 @@ function cleanNpmEnvironment({
     'GITHUB_RUN_ID',
     'GITHUB_SERVER_URL',
     'GITHUB_SHA',
+    'GITHUB_OUTPUT',
     'GITHUB_WORKFLOW_REF',
+    'KDNA_CONTROL_ROOT',
     'KDNA_CORE_BASELINE',
     'KDNA_ECOSYSTEM_MANIFEST_PATH',
     'KDNA_ECOSYSTEM_REPOS_ROOT',
+    'KDNA_PYTHON',
     'KDNA_REPOS_ROOT',
     TRUSTED_NPM_ENVIRONMENT,
     'RELEASE_EVENT_ACTION',
@@ -1366,6 +1369,33 @@ function assertNoProjectNpmConfig(cwd, projectRoot = cwd) {
   }
 }
 
+function createTokenUserConfig(home, environment = process.env) {
+  const token = environment.NODE_AUTH_TOKEN;
+  assert(
+    typeof token === 'string' && token !== '' && !/[\r\n\0]/u.test(token),
+    'trusted npm authentication token is missing or invalid',
+  );
+  const homeState = fs.lstatSync(home);
+  assert(
+    homeState.isDirectory() && !homeState.isSymbolicLink() && (homeState.mode & 0o777) === 0o700,
+    'trusted npm authentication home must be a private directory',
+  );
+  const userconfig = path.join(home, 'auth-user.npmrc');
+  fs.writeFileSync(userconfig, '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}\n', {
+    flag: 'wx',
+    mode: 0o600,
+  });
+  const configState = fs.lstatSync(userconfig);
+  assert(
+    configState.isFile() &&
+      !configState.isSymbolicLink() &&
+      configState.nlink === 1 &&
+      (configState.mode & 0o777) === 0o600,
+    'trusted npm authentication config must be one private regular file',
+  );
+  return userconfig;
+}
+
 function runNpm(invocation, args, options = {}) {
   const home = options.home || makePrivateTemp('kdna-core-npm-home-');
   const removeHome = options.home === undefined;
@@ -1406,6 +1436,8 @@ function runTrustedNpmCommand(args, options = {}) {
   const home = makePrivateTemp('kdna-core-trusted-command-');
   try {
     assertNoProjectNpmConfig(root, root);
+    const userconfig =
+      options.allowAuth === true ? createTokenUserConfig(home, environment) : undefined;
     const result = spawnSync(invocation.command, [...invocation.prefixArgs, ...args], {
       cwd: root,
       encoding: 'utf8',
@@ -1414,6 +1446,8 @@ function runTrustedNpmCommand(args, options = {}) {
         home,
         cache: path.join(home, 'cache'),
         environment,
+        allowAuth: options.allowAuth === true,
+        userconfig,
       }),
       maxBuffer: 256 * 1024 * 1024,
       shell: false,
@@ -2709,6 +2743,10 @@ async function main(argv = process.argv.slice(2)) {
     runTrustedNpmCommand(args);
     return;
   }
+  if (command === 'trusted-npm-auth') {
+    runTrustedNpmCommand(args, { allowAuth: true });
+    return;
+  }
   if (command === 'check' && args.length === 0) {
     const context = inspectAuthoritativeRelease();
     console.log(
@@ -2762,7 +2800,7 @@ async function main(argv = process.argv.slice(2)) {
     return;
   }
   fail(
-    'usage: core-release-authority.js <provision-npm|verify-npm|trusted-npm|check|prepare|smoke|guard|publish|invariant>',
+    'usage: core-release-authority.js <provision-npm|verify-npm|trusted-npm|trusted-npm-auth|check|prepare|smoke|guard|publish|invariant>',
   );
 }
 
@@ -2800,6 +2838,7 @@ module.exports = {
   cleanGitEnvironment,
   cleanNpmEnvironment,
   commitDocument,
+  createTokenUserConfig,
   comparePackageCommits,
   evaluateRegistryResult,
   expectedRegistryE404,

@@ -15,6 +15,66 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-activation-server
+          ref: 6e203a78c038f15c0e65f19b9aa22a6f642478cb
+          path: .ecosystem-repos/kdna-activation-server
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-assets
+          ref: 2e28e0d16d2b915b942a8b600c0ba62c1de4898e
+          path: .ecosystem-repos/kdna-assets
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-cli
+          ref: 6927df153b0b3b592a500760f6d87eac6fde7860
+          path: .ecosystem-repos/kdna-cli
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/create-kdna-web-app
+          ref: 4241dc20814bae4fcf72d44df7c0670ef70bda00
+          path: .ecosystem-repos/create-kdna-web-app
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-demo-web-viewer
+          ref: a7d4df05973d472ec24ba060f3d9c02c0d22c6f3
+          path: .ecosystem-repos/kdna-demo-web-viewer
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-react
+          ref: 3edcdce0f75b6dfb1eb4147cedaf24f8af6574a3
+          path: .ecosystem-repos/kdna-react
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-remote-server
+          ref: eb677ea0fece9b0886724df8383563253ec45600
+          path: .ecosystem-repos/kdna-remote-server
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-skills
+          ref: 7e2b2725a700176209f5e21444e28a049e808d4f
+          path: .ecosystem-repos/kdna-skills
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-studio-cli
+          ref: abd1624741a5dfa0b1a604e44d57209ce3caf18b
+          path: .ecosystem-repos/kdna-studio-cli
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-studio-core
+          ref: e1d49b3cb3e6c236499a3ecbd6884497e41fd834
+          path: .ecosystem-repos/kdna-studio-core
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-web-client
+          ref: d128ac815fc82d0249b7f49793a1a0103949c4ee
+          path: .ecosystem-repos/kdna-web-client
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-web-server
+          ref: 9fc1377bfb378d5977ab77dcdc30ee4f0b2a181d
+          path: .ecosystem-repos/kdna-web-server
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: 22
@@ -23,6 +83,8 @@ jobs:
           python-version: '3.12'
       - name: Install workspace deps
         run: npm ci
+      - name: Install fixed Python test dependency
+        run: python -m pip install --disable-pip-version-check --no-input pytest==9.1.0
       - name: Run core-smoke
         run: npm run test:core-smoke
       - name: Run full kdna-core test suite
@@ -31,5 +93,11 @@ jobs:
         run: npm --workspace @aikdna/kdna-eval test
       - name: Cross-repo ecosystem-version-lock (PR-8)
         env:
-          KDNA_REPOS_ROOT: ${{ github.workspace }}/..
+          KDNA_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos
+          KDNA_CONTROL_ROOT: ${{ github.workspace }}
         run: npm run test:ecosystem-lock
+      - name: Verify Python adapter against the exact current CLI
+        env:
+          KDNA_CLI: ${{ github.workspace }}/node_modules/.bin/kdna
+          PYTHONPATH: ${{ github.workspace }}/python-sdk
+        run: python -m pytest python-sdk/tests -q

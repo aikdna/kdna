@@ -1,7 +1,14 @@
 # KDNA Phase 2 — Architecture Overview
 
-**Status:** Draft  
+**Status:** Historical / withdrawn
 **Date:** 2026-06-08
+
+> This document is a frozen historical design record. RFC-0009, RFC-0010, and
+> the two npm reference SDKs described below are not part of the current KDNA
+> toolchain. `@aikdna/kdna-artifact-engine` and
+> `@aikdna/kdna-fidelity-core` are deprecated; current Runtime manifests reject
+> protocol-owned quality, trust, certification, and production-readiness
+> authority. Do not use this document as current integration guidance.
 
 ---
 

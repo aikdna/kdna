@@ -29,6 +29,7 @@ const {
   cleanGitEnvironment,
   cleanNpmEnvironment,
   commitDocument,
+  createTokenUserConfig,
   evaluateRegistryResult,
   expectedRegistryE404,
   guardCandidate,
@@ -502,12 +503,18 @@ test('publisher process environment uses a minimal provenance and token whitelis
       LD_AUDIT: '/tmp/hostile-audit.so',
       DYLD_INSERT_LIBRARIES: '/tmp/hostile.dylib',
       GITHUB_TOKEN: 'must-not-propagate',
+      GITHUB_OUTPUT: '/tmp/github-output',
+      KDNA_CONTROL_ROOT: '/tmp/control-root',
+      KDNA_PYTHON: '/tmp/python',
       AWS_SECRET_ACCESS_KEY: 'must-not-propagate',
       NPM_TOKEN: 'must-not-propagate',
       npm_config_userconfig: '/tmp/hostile.npmrc',
     },
   });
   assert.equal(environment.NODE_AUTH_TOKEN, 'test-placeholder');
+  assert.equal(environment.GITHUB_OUTPUT, '/tmp/github-output');
+  assert.equal(environment.KDNA_CONTROL_ROOT, '/tmp/control-root');
+  assert.equal(environment.KDNA_PYTHON, '/tmp/python');
   assert.equal(environment.npm_config_userconfig, '/tmp/isolated-home/absent-user.npmrc');
   assert.equal(environment.npm_config_registry, OFFICIAL_REGISTRY);
   assert.equal(environment.npm_config_strict_ssl, 'true');
@@ -534,6 +541,20 @@ test('publisher process environment uses a minimal provenance and token whitelis
   });
   assert.equal(unauthenticated.NODE_AUTH_TOKEN, undefined);
   assert.equal(unauthenticated.NPM_TOKEN, undefined);
+});
+
+test('trusted npm auth config contains only a literal environment reference in a private file', (t) => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-auth-config-'));
+  fs.chmodSync(home, 0o700);
+  t.after(() => fs.rmSync(home, { recursive: true, force: true }));
+  const userconfig = createTokenUserConfig(home, { NODE_AUTH_TOKEN: 'test-placeholder' });
+  const state = fs.lstatSync(userconfig);
+  assert.equal(state.mode & 0o777, 0o600);
+  assert.equal(
+    fs.readFileSync(userconfig, 'utf8'),
+    '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}\n',
+  );
+  assert.throws(() => createTokenUserConfig(home, {}), /missing or invalid/u);
 });
 
 test('npm execution rejects project configuration from cwd through its declared root', (t) => {

@@ -1,10 +1,10 @@
 # KDNA Tool Status Matrix
 
-> Last updated: 2026-07-14. Matches `@aikdna/kdna-cli@0.31.1`.
+> Last updated: 2026-07-18. Matches `@aikdna/kdna-cli@0.35.0`.
 > `Released` means the command is present in the published package; it is not a
 > claim that the overall Beta protocol/toolchain has reached GA.
 
-## Runtime CLI (`@aikdna/kdna-cli@0.31.1`)
+## Runtime CLI (`@aikdna/kdna-cli@0.35.0`)
 
 | Command | Purpose | Status |
 |---|---|---|
@@ -22,8 +22,8 @@
 | `kdna identity show` | Show public key | Released |
 | `kdna sign <file.kdna>` | Sign with identity key | Released |
 | `kdna verify <file.kdna>` | Verify signature | Released |
-| `kdna revoke <sig.kdsig>` | Issue signed revocation | Released |
-| `kdna revocation-status <sig.kdsig>` | Check revocation status | Released |
+| `kdna revoke <asset>` | Issue signed revocation | Released |
+| `kdna revocation status <asset>` | Check revocation status | Released |
 | `kdna load --remote-server <url>` | Load `access:remote` assets via server | Released |
 | `kdna route <asset-path>` | Select a primary framework and emit a trace | Beta |
 | `kdna compose <asset-path>` | Compose a primary with bounded advisors | Beta |
@@ -36,7 +36,7 @@
 | `kdna doctor [--agents]` | Installation health check | Released |
 | `kdna setup` | First-time setup wizard | Released |
 
-## Studio (`@aikdna/kdna-studio-cli@0.9.1`)
+## Studio (`@aikdna/kdna-studio-cli@0.10.2`)
 
 | Command | Purpose | Status |
 |---|---|---|
@@ -54,8 +54,8 @@
 
 | Component | Status |
 |---|---|
-| `kdna-loader` skill | **Stable** — supports OpenCode, Codex, Claude Code, Cursor, Gemini. Auto-install via `kdna setup`. |
-| MCP server adapter | Stable |
+| `kdna-loader` skill | **Beta** — supports OpenCode, Codex, Claude Code, Cursor, Gemini. Auto-install via `kdna setup`. |
+| MCP server adapter | Experimental |
 
 ## Native Apps
 
@@ -67,5 +67,8 @@ private development status is not part of the open protocol's tool matrix.
 | Component | Notes |
 |---|---|
 | `kdna-vscode` | Archived 2026-06-25. Use `kdna-cli` for validate/plan-load/pack/unpack. |
+| `@aikdna/agent` | Deprecated legacy npm coordinate. Use the `kdna-loader` integration. |
+| `@aikdna/kdna-artifact-engine` | Deprecated historical implementation of a withdrawn draft contract. |
+| `@aikdna/kdna-fidelity-core` | Deprecated historical implementation of a withdrawn draft contract. |
 | Legacy `kdna install <url>` | Was registry-based install, removed in 0.27.0. Current `kdna install` installs local files. |
 | `kdna registry` | Registry distribution is not part of the current local-file path. |

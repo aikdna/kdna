@@ -1,10 +1,12 @@
 # Changelog
 
-## 0.13.0 (2026-07-15)
+## 0.13.0 (2026-07-18)
 
-- Pin the compatibility package to the exact KDNA CLI 0.33.0 and KDNA Core
-  0.18.0 registry releases so its legacy executable names resolve through the
+- Pin the compatibility package to the exact KDNA CLI 0.35.0 and KDNA Core
+  0.20.0 registry releases so its legacy executable names resolve through the
   coordinated current toolchain.
+- Require Node.js 20 or later and prove a clean registry install resolves one
+  physical Core package shared by the compatibility aliases and CLI.
 - Preserve the existing CLI delegation shims and default runtime behavior. The
   compatibility package does not claim semantic Capsule consumption, judgment
   quality, or a second format/runtime path.

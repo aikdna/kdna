@@ -9,7 +9,10 @@ const path = require('node:path');
 const test = require('node:test');
 const zlib = require('node:zlib');
 
-const { validateCurrentReleaseBinding } = require('../scripts/current-release-binding');
+const {
+  readCurrentReleaseBinding,
+  validateCurrentReleaseBinding,
+} = require('../scripts/current-release-binding');
 const {
   AUDITED_NPM_VERSION,
   OFFICIAL_REGISTRY,
@@ -35,7 +38,22 @@ const HASH = 'a'.repeat(40);
 const OTHER_HASH = 'c'.repeat(40);
 const CHECKOUT_ACTION_SHA = '9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0';
 const SETUP_NODE_ACTION_SHA = '249970729cb0ef3589644e2896645e5dc5ba9c38';
+const SETUP_PYTHON_ACTION_SHA = 'ece7cb06caefa5fff74198d8649806c4678c61a1';
 const UPLOAD_ACTION_SHA = 'ea165f8d65b6e75b540449e92b4886f43607fa02';
+const EXPECTED_CONSUMER_CHECKOUTS = [
+  ['aikdna/create-kdna-web-app', '4241dc20814bae4fcf72d44df7c0670ef70bda00'],
+  ['aikdna/kdna-cli', '6927df153b0b3b592a500760f6d87eac6fde7860'],
+  ['aikdna/kdna-skills', '7e2b2725a700176209f5e21444e28a049e808d4f'],
+  ['aikdna/kdna-studio-core', 'e1d49b3cb3e6c236499a3ecbd6884497e41fd834'],
+  ['aikdna/kdna-studio-cli', 'abd1624741a5dfa0b1a604e44d57209ce3caf18b'],
+  ['aikdna/kdna-activation-server', '6e203a78c038f15c0e65f19b9aa22a6f642478cb'],
+  ['aikdna/kdna-remote-server', 'eb677ea0fece9b0886724df8383563253ec45600'],
+  ['aikdna/kdna-web-server', '9fc1377bfb378d5977ab77dcdc30ee4f0b2a181d'],
+  ['aikdna/kdna-web-client', 'd128ac815fc82d0249b7f49793a1a0103949c4ee'],
+  ['aikdna/kdna-react', '3edcdce0f75b6dfb1eb4147cedaf24f8af6574a3'],
+  ['aikdna/kdna-assets', '2e28e0d16d2b915b942a8b600c0ba62c1de4898e'],
+  ['aikdna/kdna-demo-web-viewer', 'a7d4df05973d472ec24ba060f3d9c02c0d22c6f3'],
+];
 
 function releaseInput(overrides = {}) {
   const version = overrides.pkg?.version || '1.2.3';
@@ -48,6 +66,8 @@ function releaseInput(overrides = {}) {
       RELEASE_TAG_NAME: `compat/${version}`,
       RELEASE_IS_DRAFT: 'false',
       RELEASE_IS_PRERELEASE: 'false',
+      GITHUB_REPOSITORY: 'aikdna/kdna',
+      GITHUB_SERVER_URL: 'https://github.com',
       GITHUB_REF: `refs/tags/compat/${version}`,
       GITHUB_SHA: HASH,
       ...overrides.env,
@@ -56,6 +76,8 @@ function releaseInput(overrides = {}) {
       status: '',
       head: HASH,
       tagCommit: HASH,
+      mainCommit: HASH,
+      mainContainsHead: true,
       ...overrides.git,
     },
   };
@@ -105,6 +127,17 @@ function e404Result(candidate = evidence()) {
     stdout: JSON.stringify({ error: { code: 'E404', ...expected } }),
     stderr: '',
   };
+}
+
+function runGit(root, args) {
+  const result = spawnSync('git', args, {
+    cwd: root,
+    encoding: 'utf8',
+    shell: false,
+  });
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 0, result.stderr);
+  return result.stdout.trim();
 }
 
 function packFixture(t) {
@@ -185,8 +218,7 @@ test('publish workflow is release-only, stable-only, immutable, and serializes e
   for (const [job, next] of [
     ['publish-core', 'publish-eval'],
     ['publish-eval', 'publish-compat'],
-    ['publish-compat', 'publish-agent'],
-    ['publish-agent', null],
+    ['publish-compat', null],
   ]) {
     const start = workflow.indexOf(`  ${job}:`);
     const end = next ? workflow.indexOf(`\n  ${next}:`, start) : workflow.length;
@@ -198,55 +230,90 @@ test('publish workflow is release-only, stable-only, immutable, and serializes e
     assert.match(body, /github\.event\.release\.prerelease == false/u);
   }
 
-  const immutableActions = [...workflow.matchAll(/uses: actions\/(?:checkout|setup-node|upload-artifact)@([^\s]+)/gu)];
+  const immutableActions = [
+    ...workflow.matchAll(/uses: actions\/(?:checkout|setup-node|setup-python|upload-artifact)@([^\s]+)/gu),
+  ];
   assert.ok(immutableActions.length > 0);
   for (const match of immutableActions) assert.match(match[1], /^[0-9a-f]{40}$/u);
   assert.match(workflow, new RegExp(`actions/checkout@${CHECKOUT_ACTION_SHA}`, 'u'));
   assert.match(workflow, new RegExp(`actions/setup-node@${SETUP_NODE_ACTION_SHA}`, 'u'));
+  assert.match(workflow, new RegExp(`actions/setup-python@${SETUP_PYTHON_ACTION_SHA}`, 'u'));
   assert.match(workflow, new RegExp(`actions/upload-artifact@${UPLOAD_ACTION_SHA}`, 'u'));
+  assert.doesNotMatch(
+    workflow,
+    /publish-agent|working-directory: examples\/typescript-agent|Publish @aikdna\/agent/u,
+  );
 });
 
 test('compatibility workflow fixes every live checkout and publishes only the rebound exact tarball', () => {
   const workflow = fs.readFileSync(path.join(REPO_ROOT, '.github', 'workflows', 'publish.yml'), 'utf8');
   const start = workflow.indexOf('  publish-compat:');
-  const end = workflow.indexOf('\n  publish-agent:', start);
-  const job = workflow.slice(start, end);
+  const job = workflow.slice(start);
   for (const [repository, commit] of [
-    ['aikdna/kdna-cli', 'dcc5f70df4cbb0460ef27222d5c1e6fa3e632888'],
-    ['aikdna/kdna-skills', '76ce82a001fc363d93581cd3d0e54c7c31de0c26'],
-    ['aikdna/kdna-studio-core', 'ee65a8896a77c0f2c797a0d85e04be1fc5aacbd6'],
-    ['aikdna/kdna-studio-cli', '66545bf2b51b93433e5233fed9a5b93c6a366bfe'],
+    ...EXPECTED_CONSUMER_CHECKOUTS,
     ['aikdna/kdna-core-swift', 'b1f7f1a7cba5459413f00ecc0302f71e0d21ef78'],
     ['aikdna/kdna-vscode', 'c0d885ba8222b6dccad87ec67f7d82fcc1283107'],
-    ['aikdna/kdna-activation-server', '9ba3c71b50dc282f24f1fb455a0e79019d36458f'],
-    ['aikdna/kdna-remote-server', '2e97c860e4eab1797ec19e304fd771b51454009d'],
-    ['aikdna/kdna-web-server', 'e99bf65ec95101a2bc9a7bed1e85f597db001486'],
-    ['aikdna/kdna-web-client', 'ad27c702c29b0780dce89dfa5e3665d69fca179d'],
-    ['aikdna/kdna-react', 'b012419be197a5f3ce8d1e4b13cf9552cadef069'],
-    ['aikdna/create-kdna-web-app', '33b3b4c2b7934eff27f5c4fd3bc30c5498642127'],
   ]) {
     assert.match(job, new RegExp(`repository: ${repository.replace('/', '\\/')}\\n\\s+ref: ${commit}`, 'u'));
   }
   assert.match(job, /ref: \$\{\{ github\.event\.release\.tag_name \}\}/u);
-  assert.match(
-    job,
-    /npm install --global npm@11\.17\.0 --ignore-scripts --registry=https:\/\/registry\.npmjs\.org\//u,
-  );
-  assert.match(job, /npm --version \| grep -Fx 11\.17\.0/u);
-  assert.match(job, /npm ci --ignore-scripts/u);
+  assert.match(job, /github\.repository == 'aikdna\/kdna'/u);
+  assert.doesNotMatch(job, /npm install --global|npm --version \|/u);
+  assert.match(job, new RegExp(`actions/setup-python@${SETUP_PYTHON_ACTION_SHA}`, 'u'));
+  assert.match(job, /pytest==9\.1\.0/u);
+  assert.ok(job.includes('KDNA_PYTHON: ${{ env.pythonLocation }}/bin/python'));
 
+  const provisionNpm = job.indexOf('provision-npm');
+  const verifyNpm = job.indexOf('verify-npm');
+  const install = job.indexOf('trusted-npm ci --ignore-scripts');
+  const fetchMain = job.indexOf(
+    'git fetch --no-tags origin refs/heads/main:refs/remotes/origin/main',
+  );
   const releaseCheck = job.indexOf('run release:check');
-  const ecosystemGate = job.indexOf('npm run ecosystem-gate');
+  const versionLock = job.indexOf('run test:ecosystem-lock');
+  const ecosystemGate = job.indexOf('run ecosystem-gate');
   const pack = job.indexOf('run release:pack');
   const smoke = job.indexOf('run release:smoke');
   const guard = job.indexOf('run publish:guard');
   const publish = job.indexOf('run publish:verified');
-  assert.ok(releaseCheck >= 0 && releaseCheck < ecosystemGate);
-  assert.ok(ecosystemGate < pack && pack < smoke && smoke < guard && guard < publish);
+  assert.ok(provisionNpm >= 0 && provisionNpm < verifyNpm);
+  assert.ok(verifyNpm < install && install < fetchMain && fetchMain < releaseCheck);
+  assert.ok(releaseCheck < versionLock);
+  assert.ok(versionLock < ecosystemGate && ecosystemGate < pack);
+  assert.ok(pack < smoke && smoke < guard && guard < publish);
+  assert.match(job.slice(job.lastIndexOf('\n', publish - 250), publish), /trusted-npm-auth/u);
+  assert.ok(job.includes('KDNA_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos'));
+  assert.ok(job.includes('KDNA_CONTROL_ROOT: ${{ github.workspace }}'));
+  assert.ok(job.includes('KDNA_TRUSTED_NPM_TARBALL=$RUNNER_TEMP/npm-11.17.0.tgz'));
+  assert.ok(job.includes('"$KDNA_TRUSTED_NPM_TARBALL"'));
   assert.equal((job.match(/\$RUNNER_TEMP\/kdna-compat-release\.tgz/gu) || []).length, 5);
   assert.doesNotMatch(job, /run:\s+npm publish\b/u);
   assert.match(job, /if: steps\.registry\.outputs\.should_publish == 'true'/u);
   assert.match(job, /if: always\(\)/u);
+});
+
+test('core smoke checks every expected dependency consumer at an immutable accepted commit', () => {
+  const workflow = fs.readFileSync(
+    path.join(REPO_ROOT, '.github', 'workflows', 'core-smoke.yml'),
+    'utf8',
+  );
+  for (const [repository, commit] of EXPECTED_CONSUMER_CHECKOUTS) {
+    assert.match(
+      workflow,
+      new RegExp(`repository: ${repository.replace('/', '\\/')}\\n\\s+ref: ${commit}`, 'u'),
+    );
+  }
+  const versionLock = workflow.indexOf('npm run test:ecosystem-lock');
+  assert.ok(versionLock >= 0);
+  assert.ok(workflow.includes('KDNA_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos'));
+  assert.ok(workflow.includes('KDNA_CONTROL_ROOT: ${{ github.workspace }}'));
+  assert.match(workflow, /pytest==9\.1\.0/u);
+  assert.match(workflow, /python -m pytest python-sdk\/tests -q/u);
+  const ecosystemGate = fs.readFileSync(path.join(REPO_ROOT, 'scripts', 'ecosystem-gate.js'), 'utf8');
+  assert.match(ecosystemGate, /python adapter pytest against current CLI/u);
+  const immutableCheckouts = [...workflow.matchAll(/uses: actions\/checkout@([^\s]+)/gu)];
+  assert.equal(immutableCheckouts.length, EXPECTED_CONSUMER_CHECKOUTS.length + 1);
+  for (const match of immutableCheckouts) assert.equal(match[1], CHECKOUT_ACTION_SHA);
 });
 
 test('release context binds event, stable tag, package, changelog, HEAD, and workflow commit', () => {
@@ -265,6 +332,8 @@ test('release context rejects every ambiguous or mutable release input', async (
     ['prerelease version', releaseInput({ pkg: { version: '1.2.3-rc.1' } })],
     ['noncanonical version', releaseInput({ pkg: { version: '01.2.3' } })],
     ['wrong event', releaseInput({ env: { GITHUB_EVENT_NAME: 'workflow_dispatch' } })],
+    ['wrong repository', releaseInput({ env: { GITHUB_REPOSITORY: 'mirror/kdna' } })],
+    ['wrong server', releaseInput({ env: { GITHUB_SERVER_URL: 'https://example.invalid' } })],
     ['wrong action', releaseInput({ env: { RELEASE_EVENT_ACTION: 'created' } })],
     ['wrong event tag', releaseInput({ env: { RELEASE_TAG_NAME: 'kdna-9.9.9' } })],
     ['draft', releaseInput({ env: { RELEASE_IS_DRAFT: 'true' } })],
@@ -273,6 +342,8 @@ test('release context rejects every ambiguous or mutable release input', async (
     ['short workflow sha', releaseInput({ env: { GITHUB_SHA: HASH.slice(0, 12) } })],
     ['dirty tree', releaseInput({ git: { status: '?? artifact.tgz' } })],
     ['tag differs from head', releaseInput({ git: { tagCommit: OTHER_HASH } })],
+    ['missing protected main', releaseInput({ git: { mainCommit: '' } })],
+    ['tag commit outside protected main', releaseInput({ git: { mainContainsHead: false } })],
     ['workflow sha differs from head', releaseInput({ env: { GITHUB_SHA: OTHER_HASH } })],
     ['substring changelog', releaseInput({ changelog: '# Changelog\n\nnotes for 1.2.3 only\n' })],
     ['prefix heading', releaseInput({ changelog: '# Changelog\n\n## 1.2.30\n' })],
@@ -340,6 +411,51 @@ test('current release binding rejects stale evidence before lookup or publicatio
   );
   assert.equal(lookupCalls, 0);
   assert.equal(publishCalls, 0);
+});
+
+test('current release reader accepts protected main ancestry and rejects a branch-only tag', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-compat-main-ancestry-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  fs.mkdirSync(path.join(root, 'packages', 'kdna'), { recursive: true });
+  fs.writeFileSync(
+    path.join(root, 'packages', 'kdna', 'package.json'),
+    `${JSON.stringify({ name: '@aikdna/kdna', version: '1.2.3' })}\n`,
+  );
+  fs.writeFileSync(
+    path.join(root, 'packages', 'kdna', 'CHANGELOG.md'),
+    '# Changelog\n\n## 1.2.3\n',
+  );
+  runGit(root, ['init', '--quiet']);
+  runGit(root, ['config', 'user.name', 'KDNA Test']);
+  runGit(root, ['config', 'user.email', 'test@example.invalid']);
+  runGit(root, ['add', '.']);
+  runGit(root, ['commit', '--quiet', '-m', 'test: accepted main']);
+  const accepted = runGit(root, ['rev-parse', 'HEAD']);
+  runGit(root, ['update-ref', 'refs/remotes/origin/main', accepted]);
+  runGit(root, ['tag', 'compat/1.2.3']);
+  const acceptedEnv = releaseInput({ env: { GITHUB_SHA: accepted } }).env;
+  assert.doesNotThrow(() =>
+    readCurrentReleaseBinding({
+      root,
+      evidence: evidence({ source: { commit: accepted } }),
+      env: acceptedEnv,
+    }),
+  );
+
+  fs.writeFileSync(path.join(root, 'branch-only.txt'), 'not accepted\n');
+  runGit(root, ['add', 'branch-only.txt']);
+  runGit(root, ['commit', '--quiet', '-m', 'test: branch-only candidate']);
+  const branchOnly = runGit(root, ['rev-parse', 'HEAD']);
+  runGit(root, ['tag', '--force', 'compat/1.2.3']);
+  assert.throws(
+    () =>
+      readCurrentReleaseBinding({
+        root,
+        evidence: evidence({ source: { commit: branchOnly } }),
+        env: releaseInput({ env: { GITHUB_SHA: branchOnly } }).env,
+      }),
+    /ancestor of origin\/main/u,
+  );
 });
 
 test('release evidence recomputes hashes, files, counts, and sizes from the tarball', (t) => {

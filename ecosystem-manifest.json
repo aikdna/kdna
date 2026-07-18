@@ -24,7 +24,8 @@
       "conformance_commit": "1e77e3e0d486c330fe9f9262b514ef24c859d469",
       "known_limitations": [
         "hosted remote loading and activation are self-hosted reference surfaces, not an AIKDNA-hosted service",
-        "behavioral value remains an optional per-asset evidence claim"
+        "behavioral value remains an optional per-asset evidence claim",
+        "co-located @aikdna/agent, @aikdna/kdna-artifact-engine, and @aikdna/kdna-fidelity-core npm coordinates are legacy and deprecated; they are not current Core packages"
       ],
       "recommended_entrypoint": "kdna plan-load <asset> before kdna load <asset>",
       "legacy_replacement": null
@@ -34,12 +35,12 @@
       "local_path": "../kdna-cli",
       "npm_package": "@aikdna/kdna-cli",
       "package_json": "../kdna-cli/package.json",
-      "current_version": "0.34.0",
+      "current_version": "0.35.0",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed", "remote"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "c1604760c2e1d7e57203117217b43e184ff120d9",
+      "conformance_commit": "6927df153b0b3b592a500760f6d87eac6fde7860",
       "known_limitations": [
         "hosted registry, marketplace, and commercial distribution are not part of the local CLI baseline"
       ],
@@ -57,7 +58,7 @@
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "c8a6c294d2c57e891b4baef6c601cfa0a8798086",
+      "conformance_commit": "2e28e0d16d2b915b942a8b600c0ba62c1de4898e",
       "known_limitations": [
         "reference assets provide content-specific evidence and do not establish a general protocol capability claim",
         "the repository package is private validation tooling; the public coordinate is the exact GitHub Release artifact, not an npm package"
@@ -75,7 +76,7 @@
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "77d07e87353e6349ae16270722732570d63eb0a0",
+      "conformance_commit": "7e2b2725a700176209f5e21444e28a049e808d4f",
       "known_limitations": [
         "MCP is a structured bridge; the loader skill remains the default Agent integration"
       ],
@@ -92,7 +93,7 @@
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "cc3ebabf119af751d6f50e2445ad4363aae88f37",
+      "conformance_commit": "e1d49b3cb3e6c236499a3ecbd6884497e41fd834",
       "known_limitations": [
         "Studio export is beta and treats review, Human Lock, signatures, and release evidence as optional provenance layers"
       ],
@@ -214,7 +215,7 @@
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "0ab83adc02c01368698ccdff1bf1d74de05a419c",
+      "conformance_commit": "4241dc20814bae4fcf72d44df7c0670ef70bda00",
       "known_limitations": [
         "published to npm as an experimental local scaffolder, not an AIKDNA-hosted application platform",
         "the verified boundary is Core 0.20.0, Web Server 0.3.0, Web Client 0.2.2, React 0.3.0, Node.js 20 or later, npm, pnpm 11.14.0, and Yarn 1.22.22",

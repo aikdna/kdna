@@ -77,7 +77,50 @@ function checkVSCodeBoundary() {
   }
 }
 
+function checkRetiredNpmBoundaries() {
+  const retired = [
+    ['@aikdna/agent', 'examples/typescript-agent/package.json'],
+    ['@aikdna/kdna-artifact-engine', 'packages/artifact-engine/package.json'],
+    ['@aikdna/kdna-fidelity-core', 'packages/fidelity-core/package.json'],
+  ];
+  const workflow = readText(path.join(repoRoot, '.github', 'workflows', 'publish.yml'));
+  const evidenceGenerator = readText(
+    path.join(repoRoot, 'scripts', 'generate-release-evidence.js'),
+  );
+  const maintenance = readText(path.join(repoRoot, 'docs', 'open-source-maintenance-baseline.md'));
+  const statusMatrix = readText(path.join(repoRoot, 'docs', 'tool-status-matrix.md'));
+  const core = component('aikdna/kdna');
+  const limitations = Array.isArray(core?.known_limitations)
+    ? core.known_limitations.join('\n')
+    : '';
+
+  for (const [coordinate, packagePath] of retired) {
+    const pkg = readJson(path.join(repoRoot, packagePath));
+    if (pkg.name !== coordinate || pkg.private !== true) {
+      fail(coordinate, 'retired package source must keep its exact identity and be private');
+    }
+    for (const script of ['prepublishOnly', 'release:check', 'release:evidence:check']) {
+      if (pkg.scripts && Object.prototype.hasOwnProperty.call(pkg.scripts, script)) {
+        fail(coordinate, `retired package must not expose ${script}`);
+      }
+    }
+    for (const [label, text] of [
+      ['publish workflow', workflow],
+      ['release evidence generator', evidenceGenerator],
+    ]) {
+      if (text.includes(coordinate)) fail(coordinate, `${label} still exposes publication`);
+    }
+    if (!maintenance.includes(coordinate) || !statusMatrix.includes(coordinate)) {
+      fail(coordinate, 'retired lifecycle is missing from current public status documentation');
+    }
+    if (!limitations.includes(coordinate)) {
+      fail(coordinate, 'ecosystem manifest does not classify the co-located legacy coordinate');
+    }
+  }
+}
+
 checkVSCodeBoundary();
+checkRetiredNpmBoundaries();
 
 if (failures.length > 0) {
   console.error(`public truth validation failed: ${failures.length} failure(s)`);
