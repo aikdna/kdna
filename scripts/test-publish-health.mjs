@@ -69,7 +69,10 @@ test('GitHub credentials are never sent to registry or source hosts', () => {
   process.env.GITHUB_TOKEN = 'test-only-placeholder';
   try {
     assert.equal(fetchHeaders('https://registry.npmjs.org/a/latest').Authorization, undefined);
-    assert.equal(fetchHeaders('https://raw.githubusercontent.com/a/b/main/package.json').Authorization, undefined);
+    assert.equal(
+      fetchHeaders('https://raw.githubusercontent.com/a/b/main/package.json').Authorization,
+      undefined,
+    );
     assert.equal(
       fetchHeaders('https://api.github.com/repos/a/b/releases/tags/1.0.0').Authorization,
       'Bearer test-only-placeholder',
