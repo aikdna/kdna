@@ -16,12 +16,12 @@
       "local_path": ".",
       "npm_package": "@aikdna/kdna-core",
       "package_json": "packages/kdna-core/package.json",
-      "current_version": "0.18.0",
+      "current_version": "0.20.0",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed", "remote"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "fed4fc86e3c8447a94e7498a795d0fcd5108595e",
+      "conformance_commit": "1e77e3e0d486c330fe9f9262b514ef24c859d469",
       "known_limitations": [
         "hosted remote loading and activation are self-hosted reference surfaces, not an AIKDNA-hosted service",
         "behavioral value remains an optional per-asset evidence claim"
@@ -34,12 +34,12 @@
       "local_path": "../kdna-cli",
       "npm_package": "@aikdna/kdna-cli",
       "package_json": "../kdna-cli/package.json",
-      "current_version": "0.33.0",
+      "current_version": "0.34.0",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed", "remote"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "dcc5f70df4cbb0460ef27222d5c1e6fa3e632888",
+      "conformance_commit": "c1604760c2e1d7e57203117217b43e184ff120d9",
       "known_limitations": [
         "hosted registry, marketplace, and commercial distribution are not part of the local CLI baseline"
       ],
@@ -47,16 +47,35 @@
       "legacy_replacement": null
     },
     {
-      "repository": "aikdna/kdna-skills",
-      "local_path": "../kdna-skills",
-      "npm_package": "@aikdna/kdna-mcp-server",
-      "package_json": "../kdna-skills/mcp-server/package.json",
-      "current_version": "0.4.1",
+      "repository": "aikdna/kdna-assets",
+      "local_path": "../kdna-assets",
+      "npm_package": null,
+      "package_json": null,
+      "artifact_path": "references/public/laozi-wuwei/laozi-wuwei-0.1.1.kdna",
+      "current_version": "0.1.1",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "76ce82a001fc363d93581cd3d0e54c7c31de0c26",
+      "conformance_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
+      "known_limitations": [
+        "reference assets provide content-specific evidence and do not establish a general protocol capability claim",
+        "the repository package is private validation tooling; the public coordinate is the exact GitHub Release artifact, not an npm package"
+      ],
+      "recommended_entrypoint": "download laozi-wuwei-0.1.1.kdna from the 0.1.1 GitHub Release, then run kdna inspect, plan-load, and load",
+      "legacy_replacement": null
+    },
+    {
+      "repository": "aikdna/kdna-skills",
+      "local_path": "../kdna-skills",
+      "npm_package": "@aikdna/kdna-mcp-server",
+      "package_json": "../kdna-skills/mcp-server/package.json",
+      "current_version": "0.4.2",
+      "lifecycle": "Experimental",
+      "supported_kdna_version": "1.0",
+      "supported_access_modes": ["public"],
+      "supported_entitlement_profiles": [],
+      "conformance_commit": "77d07e87353e6349ae16270722732570d63eb0a0",
       "known_limitations": [
         "MCP is a structured bridge; the loader skill remains the default Agent integration"
       ],
@@ -68,12 +87,12 @@
       "local_path": "../kdna-studio-core",
       "npm_package": "@aikdna/kdna-studio-core",
       "package_json": "../kdna-studio-core/package.json",
-      "current_version": "1.9.0",
+      "current_version": "2.0.2",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "ee65a8896a77c0f2c797a0d85e04be1fc5aacbd6",
+      "conformance_commit": "cc3ebabf119af751d6f50e2445ad4363aae88f37",
       "known_limitations": [
         "Studio export is beta and treats review, Human Lock, signatures, and release evidence as optional provenance layers"
       ],
@@ -85,12 +104,12 @@
       "local_path": "../kdna-studio-cli",
       "npm_package": "@aikdna/kdna-studio-cli",
       "package_json": "../kdna-studio-cli/package.json",
-      "current_version": "0.9.2",
+      "current_version": "0.10.2",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "66545bf2b51b93433e5233fed9a5b93c6a366bfe",
+      "conformance_commit": "abd1624741a5dfa0b1a604e44d57209ce3caf18b",
       "known_limitations": ["remote authoring delivery is outside the local Studio CLI baseline"],
       "recommended_entrypoint": "kdna-studio create/add/approve/export",
       "legacy_replacement": null
@@ -100,12 +119,12 @@
       "local_path": "../kdna-activation-server",
       "npm_package": "@aikdna/kdna-activation-server",
       "package_json": "../kdna-activation-server/package.json",
-      "current_version": "0.1.2",
+      "current_version": "0.2.0",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["licensed"],
       "supported_entitlement_profiles": ["license_key"],
-      "conformance_commit": "9ba3c71b50dc282f24f1fb455a0e79019d36458f",
+      "conformance_commit": "bb75f114fbd0969a176671e12df3b003186228da",
       "known_limitations": [
         "self-hosted support surface only; not an AIKDNA-hosted activation service",
         "paid distribution and commercial delivery flows are not part of the public Core baseline"
@@ -118,12 +137,12 @@
       "local_path": "../kdna-remote-server",
       "npm_package": "@aikdna/kdna-remote-server",
       "package_json": "../kdna-remote-server/package.json",
-      "current_version": "0.3.2",
+      "current_version": "0.4.1",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["remote"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "2e97c860e4eab1797ec19e304fd771b51454009d",
+      "conformance_commit": "9df3155ee0b45814cc31c5476373494eee595761",
       "known_limitations": [
         "self-hosted projection server only; there is no AIKDNA-hosted remote loading service",
         "remote-mode server operation remains an experimental self-hosted reference surface"
@@ -136,15 +155,15 @@
       "local_path": "../kdna-web-server",
       "npm_package": "@aikdna/kdna-web-server",
       "package_json": "../kdna-web-server/package.json",
-      "current_version": "0.2.3",
+      "current_version": "0.3.0",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "e99bf65ec95101a2bc9a7bed1e85f597db001486",
+      "conformance_commit": "6a7cfc493d454affda249a5fc8c12ec0ed473fb1",
       "known_limitations": [
         "published to npm as an experimental integration surface, not a stable hosted-platform claim",
-        "server-side Studio export, remote forwarding, CORS helpers, and durable Cloudflare/R2 storage are not implemented in the web-server MVP"
+        "the verified surface is Node.js-hosted Next.js and Express; server-side Studio export, remote forwarding, and CORS helpers are not implemented"
       ],
       "recommended_entrypoint": "mount the server adapter and run the package test/build checks before release",
       "legacy_replacement": null
@@ -154,12 +173,12 @@
       "local_path": "../kdna-web-client",
       "npm_package": "@aikdna/kdna-web-client",
       "package_json": "../kdna-web-client/package.json",
-      "current_version": "0.2.0",
+      "current_version": "0.2.2",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "ad27c702c29b0780dce89dfa5e3665d69fca179d",
+      "conformance_commit": "7b7f140cfe3abde5d5efb1794bed726d47eaec84",
       "known_limitations": [
         "published to npm as an experimental integration surface, not a stable browser runtime",
         "browser utilities must never perform KDNA decryption; server-side loading remains required"
@@ -172,15 +191,15 @@
       "local_path": "../kdna-react",
       "npm_package": "@aikdna/kdna-react",
       "package_json": "../kdna-react/package.json",
-      "current_version": "0.2.0",
+      "current_version": "0.3.0",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "b012419be197a5f3ce8d1e4b13cf9552cadef069",
+      "conformance_commit": "986f2956e07f357b2bd92a499b4e9153871c5e6b",
       "known_limitations": [
-        "published to npm as an experimental integration surface",
-        "React components depend on the web server contract and should stay version-aligned with web-server and web-client"
+        "published to npm as an experimental integration surface, not a hosted-platform claim",
+        "the verified boundary is Web Client 0.2.2, Web Server 0.3.0, Activation 0.2.0, React 18 or 19, and Node.js 20 or later"
       ],
       "recommended_entrypoint": "use endpoint-backed hooks/components",
       "legacy_replacement": null
@@ -190,18 +209,36 @@
       "local_path": "../create-kdna-web-app",
       "npm_package": "create-kdna-web-app",
       "package_json": "../create-kdna-web-app/package.json",
-      "current_version": "0.3.1",
+      "current_version": "0.4.0",
       "lifecycle": "Experimental",
       "supported_kdna_version": "1.0",
-      "supported_access_modes": ["public"],
+      "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "33b3b4c2b7934eff27f5c4fd3bc30c5498642127",
+      "conformance_commit": "0ab83adc02c01368698ccdff1bf1d74de05a419c",
       "known_limitations": [
-        "published to npm as an experimental scaffolder",
-        "generated-app smoke tests should run against the latest published sibling web packages",
-        "generated templates target the public upload/inspect/plan-load/load flow only; remote-mode web forwarding is not wired"
+        "published to npm as an experimental local scaffolder, not an AIKDNA-hosted application platform",
+        "the verified boundary is Core 0.20.0, Web Server 0.3.0, Web Client 0.2.2, React 0.3.0, Node.js 20 or later, npm, pnpm 11.14.0, and Yarn 1.22.22",
+        "generated templates cover local public and password-protected inspect/plan-load/load flows; remote-mode web forwarding is not wired"
       ],
-      "recommended_entrypoint": "npx create-kdna-web-app <app>",
+      "recommended_entrypoint": "npx create-kdna-web-app@0.4.0 <app>",
+      "legacy_replacement": null
+    },
+    {
+      "repository": "aikdna/kdna-demo-web-viewer",
+      "local_path": "../kdna-demo-web-viewer",
+      "npm_package": null,
+      "package_json": "../kdna-demo-web-viewer/app/package.json",
+      "current_version": "0.1.1",
+      "lifecycle": "Experimental",
+      "supported_kdna_version": "1.0",
+      "supported_access_modes": ["public", "licensed"],
+      "supported_entitlement_profiles": [],
+      "conformance_commit": "a7d4df05973d472ec24ba060f3d9c02c0d22c6f3",
+      "known_limitations": [
+        "source-only official reference application; it is not an npm package or an AIKDNA-hosted service",
+        "the verified browser boundary covers local public and password-protected assets through the Node.js web server, not remote-mode forwarding"
+      ],
+      "recommended_entrypoint": "npm --prefix app ci && npm --prefix app run dev",
       "legacy_replacement": null
     },
     {
@@ -209,12 +246,12 @@
       "local_path": "../kdna-core-swift",
       "npm_package": null,
       "package_json": null,
-      "current_version": null,
+      "current_version": "0.20.0",
       "lifecycle": "Beta",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "fed4fc86e3c8447a94e7498a795d0fcd5108595e",
+      "conformance_commit": "1e77e3e0d486c330fe9f9262b514ef24c859d469",
       "known_limitations": [
         "Swift conformance remains pinned to an explicit public Core fixture commit and must be recertified when that pin changes"
       ],

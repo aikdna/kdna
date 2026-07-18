@@ -215,7 +215,49 @@ for (const component of manifest.components) {
     continue;
   }
 
+  if (component.artifact_path && liveLifecycle.has(component.lifecycle) && !localPath) {
+    fail(component, 'live artifact repository checkout is unavailable');
+  }
+
   if (component.artifact_path && localPath) {
+    if (liveLifecycle.has(component.lifecycle) && !component.package_json) {
+      try {
+        const checkoutRoot = execFileSync('git', ['rev-parse', '--show-toplevel'], {
+          cwd: localPath,
+          encoding: 'utf8',
+          stdio: ['ignore', 'pipe', 'pipe'],
+        }).trim();
+        if (!sameFilesystemIdentity(checkoutRoot, localPath)) {
+          fail(component, `live artifact path is not a repository root: ${localPath}`);
+        }
+        const checkoutCommit = execFileSync('git', ['rev-parse', 'HEAD'], {
+          cwd: localPath,
+          encoding: 'utf8',
+          stdio: ['ignore', 'pipe', 'pipe'],
+        }).trim();
+        const checkoutStatus = execFileSync(
+          'git',
+          ['status', '--porcelain', '--untracked-files=all'],
+          {
+            cwd: localPath,
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'pipe'],
+          },
+        ).trim();
+        if (checkoutStatus) {
+          fail(component, 'live artifact checkout is dirty');
+        }
+        if (component.conformance_commit && checkoutCommit !== component.conformance_commit) {
+          fail(
+            component,
+            `checkout commit mismatch: manifest=${component.conformance_commit} checkout=${checkoutCommit}`,
+          );
+        }
+      } catch (error) {
+        fail(component, `live artifact checkout identity is unreadable: ${error.message}`);
+      }
+    }
+
     const artifactPath = path.join(localPath, component.artifact_path);
     if (!fs.existsSync(artifactPath)) {
       fail(component, `missing release artifact ${component.artifact_path}`);
@@ -243,7 +285,11 @@ for (const component of manifest.components) {
       fs.existsSync(declaredLocalPath) &&
       path.resolve(localPath) === declaredLocalPath;
     const workflowPath = path.join(localPath, '.github', 'workflows', 'ci.yml');
-    if (shouldCheckReferenceWorkflow && fs.existsSync(workflowPath)) {
+    if (
+      component.lifecycle === 'Legacy' &&
+      shouldCheckReferenceWorkflow &&
+      fs.existsSync(workflowPath)
+    ) {
       const workflow = fs.readFileSync(workflowPath, 'utf8');
       if (!workflow.includes('@aikdna/kdna-cli@0.26.1')) {
         fail(component, 'legacy proof asset CI must pin @aikdna/kdna-cli@0.26.1');

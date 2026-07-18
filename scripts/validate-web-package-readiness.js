@@ -33,10 +33,9 @@ const packages = [
       'src/storage.js',
       'src/adapters/nextjs/index.js',
       'src/adapters/express/index.js',
-      'src/adapters/cloudflare/index.js',
       'tests/server.test.js',
     ],
-    exports: ['.', './nextjs', './express', './cloudflare'],
+    exports: ['.', './nextjs', './express'],
     forbiddenPeerDependencies: ['@aikdna/kdna-studio-core'],
     exactPeerDependencies: {
       '@aikdna/kdna-core': currentCore.current_version,
