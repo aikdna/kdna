@@ -29,6 +29,11 @@ PRs that fail any verification command will be reviewed with requested changes.
 
 All commits must include a `Signed-off-by:` line. Use `git commit -s` to add it automatically.
 
+If a pull request is squash-merged, the final squash commit must also carry a
+`Signed-off-by:` trailer that exactly matches the author name and email GitHub
+assigns to that commit. The trailers on the pull request's source commits do
+not replace this final-commit requirement.
+
 This certifies that you wrote the code or have the right to submit it under the project's license (Apache-2.0). No CLA is required.
 
 ## ANTI-PATTERNS
