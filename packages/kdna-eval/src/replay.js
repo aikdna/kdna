@@ -148,7 +148,7 @@ function defaultEvaluate(fixture, policy, mode, previousRun) {
   };
 }
 
-function detectRegressions(results, previousRun, tolerance) {
+function detectRegressions(results, previousRun, tolerance = 0.05) {
   const flags = [];
   if (!previousRun || !previousRun.results) return flags;
 

@@ -148,3 +148,13 @@ test("code-review budget has correct roadmap-aligned limits", () => {
   assert.equal(report.limits.maxTokens, 1200);
   assert.equal(report.limits.maxAssets, 8);
 });
+
+test("README cost tracker example stays executable and within its stated budget", () => {
+  const tracker = createCostTracker("code-review");
+  tracker.trackAsset({ id: "domain-1", tokens: 700, chars: 1000 });
+  tracker.trackAdvisor({ id: "system", tokens: 200, content: "..." });
+  const report = tracker.getCostReport();
+
+  assert.deepEqual(report.consumed, { tokens: 900, chars: 1003, assets: 2 });
+  assert.equal(report.over_budget, false);
+});

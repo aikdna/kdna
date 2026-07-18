@@ -6,8 +6,14 @@
 - Complete the TypeScript value declarations for every root runtime export,
   including replay, gates, cost, consumption, route-card, and consumer-index
   helpers.
+- Give every public package subpath its own exact declaration surface, align
+  the loader validators across CommonJS and ESM, and type the supported replay
+  and Cluster API compositions without broad `any` fallbacks.
+- Default direct score-regression detection to the same five-percent tolerance
+  used by replay runs, and correct the executable cost-tracker example.
 - Add fail-closed public-surface and packed TypeScript consumer regression
-  checks so runtime and declaration exports cannot drift silently again.
+  checks across the root and all ten subpaths so runtime and declaration
+  exports cannot drift silently again.
 
 ## 0.3.1 (2026-07-12)
 

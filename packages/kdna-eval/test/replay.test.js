@@ -177,6 +177,14 @@ test("detectRegressions catches score regressions", () => {
   assert.equal(flags[0].kind, "score-regression");
 });
 
+test("detectRegressions defaults to a five-percent score tolerance", () => {
+  const results = [{ id: "f1", score: 50, pass: true }];
+  const previousRun = { results: [{ id: "f1", score: 100, pass: true }] };
+  const flags = detectRegressions(results, previousRun);
+  assert.equal(flags.length, 1);
+  assert.equal(flags[0].kind, "score-regression");
+});
+
 test("detectRegressions returns empty when no previous run", () => {
   const results = [{ id: "f1", score: 50, pass: true }];
   const flags = detectRegressions(results, null, 0.05);

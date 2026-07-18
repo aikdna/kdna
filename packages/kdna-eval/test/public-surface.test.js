@@ -8,69 +8,142 @@ const { test } = require("node:test");
 const ts = require("typescript");
 
 const PACKAGE_ROOT = path.resolve(__dirname, "..");
-const TYPES_PATH = path.join(PACKAGE_ROOT, "src", "types.d.ts");
+const PACKAGE_MANIFEST = require("../package.json");
+const PACKAGE_NAME = PACKAGE_MANIFEST.name;
 
-const EXPECTED_ROOT_VALUE_EXPORTS = Object.freeze([
-  "BASELINE_ARMS",
-  "BUDGET_PROFILES",
-  "CLASSIFICATION_LEVELS",
-  "CLUSTER_COMPARISON_ARMS",
-  "CLUSTER_GATES",
-  "COMPARISON_ARM_DESCRIPTIONS",
-  "DEFAULT_SCORE",
-  "FIXTURE_CATEGORIES",
-  "GATE_NAMES",
-  "REPLAY_MODES",
-  "SCORE_MAX",
-  "SCORE_MIN",
-  "VALID_STATUSES",
-  "aggregateGates",
-  "applyRouteCard",
-  "behavioralGate",
-  "clampDelta",
-  "classifyAsset",
-  "computeComposite",
-  "createAdvisorRelationLedger",
-  "createAllBaselineArms",
-  "createAssayProfile",
-  "createBaselineArm",
-  "createClusterFixture",
-  "createConsumptionRunner",
-  "createCostTracker",
-  "createEvaluator",
-  "createFixture",
-  "createMultiGateRunner",
-  "createReplayEngine",
-  "detectContamination",
-  "detectRegressions",
-  "economicsGate",
-  "evaluateAxioms",
-  "evaluateCandidates",
-  "evaluateCondition",
-  "evaluateNonApplicable",
-  "extractRules",
-  "extractThresholds",
-  "gateFromArray",
-  "generateEvidenceClaim",
-  "getPath",
-  "hashInput",
-  "isTrusted",
-  "loadConsumerIndex",
-  "loadRouteCard",
-  "productGate",
-  "recordAdvisorDecision",
-  "resolveConsumerIndex",
-  "runAssay",
-  "runClusterAssay",
-  "runClusterReplay",
-  "scoreJudgment",
-  "structuralGate",
-  "trustGate",
-  "validateConsumerIndex",
-  "validateFixtureSet",
-  "validateRouteCard",
-  "validateWeight",
-]);
+const EXPECTED_VALUE_EXPORTS = Object.freeze({
+  ".": Object.freeze([
+    "BASELINE_ARMS",
+    "BUDGET_PROFILES",
+    "CLASSIFICATION_LEVELS",
+    "CLUSTER_COMPARISON_ARMS",
+    "CLUSTER_GATES",
+    "COMPARISON_ARM_DESCRIPTIONS",
+    "DEFAULT_SCORE",
+    "FIXTURE_CATEGORIES",
+    "GATE_NAMES",
+    "REPLAY_MODES",
+    "SCORE_MAX",
+    "SCORE_MIN",
+    "VALID_STATUSES",
+    "aggregateGates",
+    "applyRouteCard",
+    "behavioralGate",
+    "clampDelta",
+    "classifyAsset",
+    "computeComposite",
+    "createAdvisorRelationLedger",
+    "createAllBaselineArms",
+    "createAssayProfile",
+    "createBaselineArm",
+    "createClusterFixture",
+    "createConsumptionRunner",
+    "createCostTracker",
+    "createEvaluator",
+    "createFixture",
+    "createMultiGateRunner",
+    "createReplayEngine",
+    "detectContamination",
+    "detectRegressions",
+    "economicsGate",
+    "evaluateAxioms",
+    "evaluateCandidates",
+    "evaluateCondition",
+    "evaluateNonApplicable",
+    "extractRules",
+    "extractThresholds",
+    "gateFromArray",
+    "generateEvidenceClaim",
+    "getPath",
+    "hashInput",
+    "isTrusted",
+    "loadConsumerIndex",
+    "loadRouteCard",
+    "productGate",
+    "recordAdvisorDecision",
+    "resolveConsumerIndex",
+    "runAssay",
+    "runClusterAssay",
+    "runClusterReplay",
+    "scoreJudgment",
+    "structuralGate",
+    "trustGate",
+    "validateConsumerIndex",
+    "validateFixtureSet",
+    "validateRouteCard",
+    "validateWeight",
+  ]),
+  "./loader": Object.freeze([
+    "KDNA_DIR",
+    "listDomains",
+    "listPersonas",
+    "loadDomainFromData",
+    "loadDomainFromFile",
+    "loadDomains",
+    "loadFlatDomainFromData",
+    "loadFlatDomainFromFile",
+    "loadFlatDomains",
+    "loadPersona",
+    "validateDomain",
+    "validatePersona",
+  ]),
+  "./route": Object.freeze(["getRoutePolicy", "resolveDomains"]),
+  "./replay": Object.freeze([
+    "REPLAY_MODES",
+    "createReplayEngine",
+    "detectRegressions",
+    "hashInput",
+  ]),
+  "./gates": Object.freeze([
+    "GATE_NAMES",
+    "aggregateGates",
+    "createMultiGateRunner",
+    "gateFromArray",
+  ]),
+  "./cost": Object.freeze(["BUDGET_PROFILES", "createCostTracker"]),
+  "./consume": Object.freeze(["createConsumptionRunner"]),
+  "./route-card": Object.freeze(["applyRouteCard", "loadRouteCard", "validateRouteCard"]),
+  "./consumer-index": Object.freeze([
+    "VALID_STATUSES",
+    "isTrusted",
+    "loadConsumerIndex",
+    "resolveConsumerIndex",
+    "validateConsumerIndex",
+  ]),
+  "./assay": Object.freeze([
+    "BASELINE_ARMS",
+    "CLASSIFICATION_LEVELS",
+    "FIXTURE_CATEGORIES",
+    "classifyAsset",
+    "createAllBaselineArms",
+    "createAssayProfile",
+    "createBaselineArm",
+    "createFixture",
+    "detectContamination",
+    "evaluateNonApplicable",
+    "generateEvidenceClaim",
+    "runAssay",
+    "scoreJudgment",
+    "validateFixtureSet",
+  ]),
+  "./cluster-assay": Object.freeze([
+    "CLUSTER_COMPARISON_ARMS",
+    "CLUSTER_GATES",
+    "COMPARISON_ARM_DESCRIPTIONS",
+    "behavioralGate",
+    "createAdvisorRelationLedger",
+    "createClusterFixture",
+    "economicsGate",
+    "productGate",
+    "recordAdvisorDecision",
+    "runClusterAssay",
+    "runClusterReplay",
+    "structuralGate",
+    "trustGate",
+  ]),
+});
+
+const PUBLIC_EXPORT_PATHS = Object.freeze(Object.keys(EXPECTED_VALUE_EXPORTS));
 
 function sortedUnique(values) {
   return [...new Set(values)].sort();
@@ -119,8 +192,53 @@ function declarationValueExports(typesPath) {
 
   return checker
     .getExportsOfModule(moduleSymbol)
-    .filter((symbol) => (symbol.flags & ts.SymbolFlags.Value) !== 0)
+    .filter((symbol) => {
+      const target =
+        (symbol.flags & ts.SymbolFlags.Alias) !== 0 ? checker.getAliasedSymbol(symbol) : symbol;
+      return (target.flags & ts.SymbolFlags.Value) !== 0;
+    })
     .map((symbol) => symbol.getName());
+}
+
+function packageSpecifier(exportPath) {
+  return exportPath === "." ? PACKAGE_NAME : `${PACKAGE_NAME}/${exportPath.slice(2)}`;
+}
+
+function installedDeclarationPath(consumerRoot, exportPath) {
+  const containingFile = path.join(consumerRoot, "consumer.mts");
+  const resolved = ts.resolveModuleName(
+    packageSpecifier(exportPath),
+    containingFile,
+    {
+      module: ts.ModuleKind.NodeNext,
+      moduleResolution: ts.ModuleResolutionKind.NodeNext,
+      target: ts.ScriptTarget.ES2022,
+    },
+    ts.sys,
+  ).resolvedModule;
+  assert.ok(resolved, `TypeScript could not resolve ${packageSpecifier(exportPath)}`);
+  return resolved.resolvedFileName;
+}
+
+function runtimeSurfaceSource(moduleStyle) {
+  const entries = PUBLIC_EXPORT_PATHS.map((exportPath) => [
+    packageSpecifier(exportPath),
+    EXPECTED_VALUE_EXPORTS[exportPath],
+  ]);
+  const load =
+    moduleStyle === "esm"
+      ? "const loaded = await import(specifier);"
+      : "const loaded = require(specifier);";
+  return `const entries = ${JSON.stringify(entries)};
+for (const [specifier, expected] of entries) {
+  ${load}
+  const actual = Object.keys(loaded).sort();
+  const wanted = [...expected].sort();
+  if (JSON.stringify(actual) !== JSON.stringify(wanted)) {
+    throw new Error(\`${moduleStyle} packed surface mismatch for \${specifier}; expected=\${wanted}; actual=\${actual}\`);
+  }
+}
+`;
 }
 
 function run(command, args, options = {}) {
@@ -148,16 +266,22 @@ function runNpm(args, options = {}) {
   });
 }
 
-test("CommonJS, ESM, and TypeScript expose the exact root value surface", async () => {
-  const commonJsExports = Object.keys(require("../src/index.js"));
-  const esmModule = await import(pathToFileURL(path.join(PACKAGE_ROOT, "src", "index.mjs")).href);
-  const esmExports = Object.keys(esmModule);
-  const typeExports = declarationValueExports(TYPES_PATH);
+test("CommonJS, ESM, and TypeScript expose each exact public value surface", async () => {
+  assert.equal(EXPECTED_VALUE_EXPORTS["."].length, 59);
+  assert.equal(PUBLIC_EXPORT_PATHS.length, 11);
 
-  assert.equal(EXPECTED_ROOT_VALUE_EXPORTS.length, 59);
-  assertExactSurface("CommonJS", EXPECTED_ROOT_VALUE_EXPORTS, commonJsExports);
-  assertExactSurface("ESM", EXPECTED_ROOT_VALUE_EXPORTS, esmExports);
-  assertExactSurface("TypeScript", EXPECTED_ROOT_VALUE_EXPORTS, typeExports);
+  for (const exportPath of PUBLIC_EXPORT_PATHS) {
+    const metadata = PACKAGE_MANIFEST.exports[exportPath];
+    assert.ok(metadata && typeof metadata === "object", `missing metadata for ${exportPath}`);
+    const commonJsExports = Object.keys(require(path.join(PACKAGE_ROOT, metadata.require)));
+    const esmModule = await import(pathToFileURL(path.join(PACKAGE_ROOT, metadata.import)).href);
+    const typeExports = declarationValueExports(path.join(PACKAGE_ROOT, metadata.types));
+    const expected = EXPECTED_VALUE_EXPORTS[exportPath];
+
+    assertExactSurface(`${exportPath} CommonJS`, expected, commonJsExports);
+    assertExactSurface(`${exportPath} ESM`, expected, Object.keys(esmModule));
+    assertExactSurface(`${exportPath} TypeScript`, expected, typeExports);
+  }
 });
 
 test("public-surface guard rejects hostile names and accepts reordered sets", () => {
@@ -172,7 +296,7 @@ test("public-surface guard rejects hostile names and accepts reordered sets", ()
   assert.doesNotThrow(() => assertExactSurface("same-set", ["beta", "alpha"], ["alpha", "beta"]));
 });
 
-test("the packed package compiles and executes every root value export from TypeScript", () => {
+test("the packed package preserves every CJS, ESM, and TypeScript public surface", () => {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "kdna-eval-types-"));
   try {
     const packJson = runNpm(
@@ -212,11 +336,81 @@ test("the packed package compiles and executes every root value export from Type
     assert.equal(installedPackage.name, "@aikdna/kdna-eval");
     assert.equal(installedPackage.version, "0.3.2");
 
-    const importList = EXPECTED_ROOT_VALUE_EXPORTS.join(",\n  ");
-    const valueList = EXPECTED_ROOT_VALUE_EXPORTS.join(",\n  ");
-    const consumerSource = `import {\n  ${importList}\n} from "@aikdna/kdna-eval";\n\nconst policies = {\n  review: { operation: "review", loadProfile: "compact" as const, domains: [] },\n};\nconst consumption = createConsumptionRunner({ policies, budgetProfile: "interactive" });\nconst gateRunner = createMultiGateRunner(["route"]);\nconst replay = createReplayEngine();\nconst cost = createCostTracker("interactive");\nconst routeCard = loadRouteCard({\n  route_card: "0.1.0",\n  domain_id: "example",\n  role: "primary",\n});\nif (!routeCard.valid || !routeCard.card) throw new Error("route card did not load");\nconst appliedPolicies = applyRouteCard(routeCard.card, policies);\nconst consumerIndex = loadConsumerIndex({ consumer_index: "0.1.0", entries: [] });\nif (!consumerIndex.valid || !consumerIndex.index) throw new Error("consumer index did not load");\nconst resolution = resolveConsumerIndex(consumerIndex.index, "review", "example");\nreplay.compareRuns({ results: [] }, { results: [] });\ngateRunner.runGates({});\nconsumption.cost({ id: "example", text: "bounded" }, {});\ncost.getCostReport();\nvoid appliedPolicies;\nvoid resolution;\n\nconst values = [\n  ${valueList}\n];\nif (values.some((value) => value === undefined)) {\n  throw new Error("undefined root export");\n}\n`;
+    const aliases = Object.fromEntries(
+      PUBLIC_EXPORT_PATHS.map((exportPath, index) => [exportPath, `surface${index}`]),
+    );
+    const namespaceImports = PUBLIC_EXPORT_PATHS.map(
+      (exportPath) =>
+        `import * as ${aliases[exportPath]} from "${packageSpecifier(exportPath)}";`,
+    ).join("\n");
+    const valueList = PUBLIC_EXPORT_PATHS.flatMap((exportPath) =>
+      EXPECTED_VALUE_EXPORTS[exportPath].map((name) => `${aliases[exportPath]}.${name}`),
+    ).join(",\n  ");
+    const root = aliases["."];
+    const costModule = aliases["./cost"];
+    const consumerSource = `${namespaceImports}
+
+const policies = {
+  review: { operation: "review", loadProfile: "compact" as const, domains: [] },
+};
+const consumption = ${root}.createConsumptionRunner({ policies, budgetProfile: "interactive" });
+const gateRunner = ${root}.createMultiGateRunner(["route"]);
+const replay = ${root}.createReplayEngine();
+const replayRun = replay.replayRun("fresh", { fixtures: [{ input: "test" }] });
+if (replayRun.summary.total !== 1) throw new Error("string replay input was not evaluated");
+const decision = ${root}.recordAdvisorDecision("advisor", "approved");
+const ledger = ${root}.createAdvisorRelationLedger(
+  { selection: { advisors: [{ asset_id: "advisor" }] } },
+  [decision],
+);
+if (ledger.summary.human_reviewed_count !== 1) throw new Error("advisor decision was not applied");
+const clusterReplay = ${root}.runClusterReplay(replay, []);
+if (Object.keys(clusterReplay).length !== 5) throw new Error("cluster replay did not run five modes");
+const regressions = ${root}.detectRegressions(
+  [{ id: "f1", score: 50, pass: true }],
+  { results: [{ id: "f1", score: 100, pass: true }] },
+);
+if (regressions.length !== 1) throw new Error("default score tolerance missed a regression");
+const cost = ${costModule}.createCostTracker("code-review");
+cost.trackAsset({ id: "domain-1", tokens: 700, chars: 1000 });
+cost.trackAdvisor({ id: "system", tokens: 200, content: "..." });
+const costReport = cost.getCostReport();
+if (costReport.consumed.tokens !== 900 || costReport.consumed.chars !== 1003 || costReport.over_budget) {
+  throw new Error("README cost example drifted");
+}
+const routeCard = ${root}.loadRouteCard({
+  route_card: "0.1.0",
+  domain_id: "example",
+  role: "primary",
+});
+if (!routeCard.valid || !routeCard.card) throw new Error("route card did not load");
+const appliedPolicies = ${root}.applyRouteCard(routeCard.card, policies);
+const consumerIndex = ${root}.loadConsumerIndex({ consumer_index: "0.1.0", entries: [] });
+if (!consumerIndex.valid || !consumerIndex.index) throw new Error("consumer index did not load");
+const resolution = ${root}.resolveConsumerIndex(consumerIndex.index, "review", "example");
+replay.compareRuns({ results: [] }, { results: [] });
+gateRunner.runGates({});
+consumption.cost({ id: "example", text: "bounded" }, {});
+void appliedPolicies;
+void resolution;
+
+const values = [
+  ${valueList}
+];
+if (values.some((value) => value === undefined)) {
+  throw new Error("undefined public export");
+}
+`;
     fs.writeFileSync(path.join(consumerRoot, "consumer.mts"), consumerSource);
     fs.writeFileSync(path.join(consumerRoot, "consumer.cts"), consumerSource);
+    fs.writeFileSync(
+      path.join(consumerRoot, "surface.mjs"),
+      runtimeSurfaceSource("esm"),
+    );
+    fs.writeFileSync(
+      path.join(consumerRoot, "surface.cjs"),
+      runtimeSurfaceSource("cjs"),
+    );
     fs.writeFileSync(
       path.join(consumerRoot, "tsconfig.json"),
       `${JSON.stringify(
@@ -237,9 +431,30 @@ test("the packed package compiles and executes every root value export from Type
     );
 
     const typescriptRoot = path.dirname(require.resolve("typescript/package.json"));
+    const installedPackageRoot = path.join(
+      consumerRoot,
+      "node_modules",
+      "@aikdna",
+      "kdna-eval",
+    );
+    for (const exportPath of PUBLIC_EXPORT_PATHS) {
+      const declarationPath = installedDeclarationPath(consumerRoot, exportPath);
+      const expectedDeclaration = path.resolve(
+        installedPackageRoot,
+        PACKAGE_MANIFEST.exports[exportPath].types,
+      );
+      assert.equal(fs.realpathSync(declarationPath), fs.realpathSync(expectedDeclaration));
+      assertExactSurface(
+        `${exportPath} packed TypeScript`,
+        EXPECTED_VALUE_EXPORTS[exportPath],
+        declarationValueExports(declarationPath),
+      );
+    }
     run(process.execPath, [path.join(typescriptRoot, "bin", "tsc"), "-p", "tsconfig.json"], {
       cwd: consumerRoot,
     });
+    run(process.execPath, ["surface.mjs"], { cwd: consumerRoot });
+    run(process.execPath, ["surface.cjs"], { cwd: consumerRoot });
     run(process.execPath, [path.join("dist", "consumer.mjs")], { cwd: consumerRoot });
     run(process.execPath, [path.join("dist", "consumer.cjs")], { cwd: consumerRoot });
   } finally {

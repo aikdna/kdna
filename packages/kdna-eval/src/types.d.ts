@@ -31,6 +31,7 @@ export interface KdnaDomainData {
   axioms?: ScoringRule[];
   thresholds?: Record<string, unknown>;
   _source?: { type: string; path?: string; id?: string };
+  [key: string]: unknown;
 }
 
 export interface DimensionScores {
@@ -83,6 +84,7 @@ export interface Persona {
   domains: { id: string; weight: number }[];
   preferences: Record<string, unknown>;
   _source?: { type: string; path?: string; id?: string };
+  [key: string]: unknown;
 }
 
 export interface CreateEvaluatorOptions {
@@ -166,7 +168,7 @@ export type ReplayMode = "repair" | "holdout" | "fresh" | "candidate-sealed" | "
 
 export interface ReplayFixture {
   id?: string;
-  input?: { id?: string; [key: string]: unknown };
+  input?: unknown;
   score?: number;
   pass?: boolean;
   dimensions?: Record<string, number>;
@@ -187,7 +189,7 @@ export interface ReplayRegressionFlag {
   id: string;
   kind: "pass-regression" | "score-regression";
   current: boolean | number;
-  previous: boolean | number;
+  previous: boolean | number | undefined;
   delta?: number;
 }
 
@@ -206,12 +208,12 @@ export interface ReplayRun extends ReplayComparableRun {
 export interface ReplayRunOptions {
   policy?: Record<string, unknown>;
   fixtures?: ReplayFixture[];
-  previousRun?: ReplayComparableRun;
+  previousRun?: ReplayComparableRun | null;
   evaluate?: (
     fixture: ReplayFixture,
     policy: Record<string, unknown> | undefined,
     mode: ReplayMode,
-    previousRun: ReplayComparableRun | undefined,
+    previousRun: ReplayComparableRun | null | undefined,
   ) => ReplayResult;
 }
 
@@ -389,7 +391,7 @@ export declare function loadRouteCard(pathOrObject: string | RouteCard): RouteCa
 export declare function validateRouteCard(card: unknown): RouteCardResult;
 export declare function applyRouteCard(
   card: RouteCard,
-  policies?: Record<string, RoutePolicy>,
+  policies?: Record<string, RoutePolicy> | null,
 ): Record<string, RoutePolicy>;
 
 export type ConsumerStatus =
@@ -525,6 +527,53 @@ export interface ClusterAssayReport {
   dataset_fingerprint: string;
 }
 
+export type AdvisorDecisionValue =
+  | "approved"
+  | "approved_with_changes"
+  | "rejected"
+  | "needs_revision";
+
+export interface AdvisorDecision {
+  asset_id: string;
+  decision: AdvisorDecisionValue;
+  notes?: string | null;
+  reviewed_at?: string;
+  reviewed_by?: string;
+  changes_requested?: unknown[];
+  contribution_accepted?: boolean;
+  [key: string]: unknown;
+}
+
+export interface AdvisorRelationLedger {
+  ledger_version: string;
+  cluster_id: string;
+  created_at: string;
+  entries: Array<Record<string, unknown>>;
+  summary: {
+    total_entries: number;
+    primary_count: number;
+    advisor_count: number;
+    rejected_count: number;
+    human_reviewed_count: number;
+    pending_review_count: number;
+  };
+}
+
+export interface ClusterReplayFixture {
+  fixture_id?: string;
+  task?: unknown;
+  [key: string]: unknown;
+}
+
+export interface ClusterReplaySuiteResult {
+  status: "completed" | "failed" | "error";
+  total?: number;
+  passed?: number;
+  failed?: number;
+  pass_rate?: number;
+  error?: string;
+}
+
 export declare const FIXTURE_CATEGORIES: readonly AssayFixtureCategory[];
 export declare const BASELINE_ARMS: readonly AssayBaselineArm[];
 export declare const CLASSIFICATION_LEVELS: readonly string[];
@@ -557,6 +606,22 @@ export declare function economicsGate(plan?: Record<string, unknown> | null, exe
 export declare function trustGate(assetsLoaded?: Array<Record<string, unknown>> | null): ClusterAssayGate;
 export declare function productGate(plan?: Record<string, unknown> | null, manifest?: Record<string, unknown>): ClusterAssayGate;
 export declare function runClusterAssay(options?: Record<string, unknown>): ClusterAssayReport;
-export declare function createAdvisorRelationLedger(plan?: Record<string, unknown>, manifest?: Record<string, unknown>): Record<string, unknown>;
-export declare function recordAdvisorDecision(assetId: string, decision: "approved" | "approved_with_changes" | "rejected" | "needs_revision", options?: Record<string, unknown>): Record<string, unknown>;
-export declare function runClusterReplay(engine: Record<string, unknown>, fixtures: Array<Record<string, unknown>>, options?: Record<string, unknown>): Record<string, unknown>;
+export declare function createAdvisorRelationLedger(
+  plan?: Record<string, unknown> | null,
+  decisions?: readonly AdvisorDecision[],
+): AdvisorRelationLedger;
+export declare function recordAdvisorDecision(
+  assetId: string,
+  decision: AdvisorDecisionValue,
+  options?: {
+    notes?: string;
+    reviewedBy?: string;
+    changesRequested?: unknown[];
+    [key: string]: unknown;
+  },
+): AdvisorDecision;
+export declare function runClusterReplay(
+  engine: Pick<ReplayEngine, "replayRun">,
+  fixtures: readonly ClusterReplayFixture[],
+  options?: { clusterId?: string; [key: string]: unknown },
+): Record<ReplayMode, ClusterReplaySuiteResult>;

@@ -14,52 +14,52 @@
     "./loader": {
       "import": "./src/loader.mjs",
       "require": "./src/loader.js",
-      "types": "./src/types.d.ts"
+      "types": "./src/loader.d.ts"
     },
     "./route": {
       "import": "./src/route.mjs",
       "require": "./src/route.js",
-      "types": "./src/types.d.ts"
+      "types": "./src/route.d.ts"
     },
     "./replay": {
       "import": "./src/replay.mjs",
       "require": "./src/replay.js",
-      "types": "./src/types.d.ts"
+      "types": "./src/replay.d.ts"
     },
     "./gates": {
       "import": "./src/gates.mjs",
       "require": "./src/gates.js",
-      "types": "./src/types.d.ts"
+      "types": "./src/gates.d.ts"
     },
     "./cost": {
       "import": "./src/cost.mjs",
       "require": "./src/cost.js",
-      "types": "./src/types.d.ts"
+      "types": "./src/cost.d.ts"
     },
     "./consume": {
       "import": "./src/consume.mjs",
       "require": "./src/consume.js",
-      "types": "./src/types.d.ts"
+      "types": "./src/consume.d.ts"
     },
     "./route-card": {
       "import": "./src/route-card.mjs",
       "require": "./src/route-card.js",
-      "types": "./src/types.d.ts"
+      "types": "./src/route-card.d.ts"
     },
     "./consumer-index": {
       "import": "./src/consumer-index.mjs",
       "require": "./src/consumer-index.js",
-      "types": "./src/types.d.ts"
+      "types": "./src/consumer-index.d.ts"
     },
     "./assay": {
       "import": "./src/assay.mjs",
       "require": "./src/assay.js",
-      "types": "./src/types.d.ts"
+      "types": "./src/assay.d.ts"
     },
     "./cluster-assay": {
       "import": "./src/cluster-assay.mjs",
       "require": "./src/cluster-assay.js",
-      "types": "./src/types.d.ts"
+      "types": "./src/cluster-assay.d.ts"
     },
     "./package.json": "./package.json"
   },

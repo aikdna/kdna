@@ -97,6 +97,12 @@ ZIP container loading, use `@aikdna/kdna-core`'s `loadKDNA()`.
 | `listDomains(kdnaDir?)` | List `.kdna` / `.json` files |
 | `loadPersona(personaId, options?)` | Load a director persona |
 | `listPersonas(kdnaDir?, defaults?)` | List available personas |
+| `validateDomain(data, fileName?)` | Validate one flat domain object |
+| `validatePersona(data)` | Validate one persona object |
+
+`loadDomainFromFile`, `loadDomainFromData`, and `loadDomains` are aliases for
+their `loadFlat*` counterparts. `KDNA_DIR` exposes the default flat-file
+directory.
 
 ### Route (`@aikdna/kdna-eval/route`)
 
@@ -162,20 +168,20 @@ Context budget tracking with built-in profiles:
 | `BUDGET_PROFILES` | Object mapping profile names to `{ maxTokens, maxChars, maxAssets }` limits |
 
 Tracker API:
-- `trackAsset(tracker, asset)` — track one asset
-- `trackAdvisor(tracker, advisor)` — track one advisor
-- `isOverBudget(tracker)` → `boolean`
-- `getCostReport(tracker)` → structured report with consumption breakdown
+- `trackAsset(asset)` — track one asset
+- `trackAdvisor(advisor)` — track one advisor
+- `isOverBudget()` → `boolean`
+- `getCostReport()` → structured report with consumption breakdown
 
 ```js
 const { createCostTracker } = require("@aikdna/kdna-eval/cost");
 
 const tracker = createCostTracker("code-review");
-tracker.trackAsset(tracker, { id: "domain-1", tokens: 3000, chars: 2500 });
-tracker.trackAdvisor(tracker, { id: "system", tokens: 500, content: "..." });
+tracker.trackAsset({ id: "domain-1", tokens: 700, chars: 1000 });
+tracker.trackAdvisor({ id: "system", tokens: 200, content: "..." });
 
 const report = tracker.getCostReport();
-// { profile: "code-review", consumed: { tokens: 3500, chars: 2500, assets: 2 }, over_budget: false, ... }
+// { profile: "code-review", consumed: { tokens: 900, chars: 1003, assets: 2 }, over_budget: false, ... }
 ```
 
 ## Scoring Rule Format
@@ -219,10 +225,11 @@ const results = evaluator.score(candidates, [
 
 ## Version 0.3.2 TypeScript and ESM parity
 
-Version 0.3.2 keeps the CommonJS, ESM, and TypeScript root value exports in
-lockstep. TypeScript consumers can import the replay, gate, cost, consumption,
-route-card, and consumer-index APIs from the package root, and ESM consumers
-receive the same score constants as CommonJS consumers.
+Version 0.3.2 keeps the CommonJS, ESM, and TypeScript value exports in lockstep
+at the package root and at every documented subpath. TypeScript consumers can
+import the replay, gate, cost, consumption, route-card, and consumer-index APIs
+from the package root or their matching subpaths, and ESM consumers receive the
+same score constants and loader validators as CommonJS consumers.
 
 ## Version 0.3.1 Assay Contracts
 
