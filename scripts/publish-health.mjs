@@ -192,7 +192,9 @@ async function auditPackage(entry) {
   };
 }
 
-export async function run(policy = validatePolicy(JSON.parse(fs.readFileSync(policyPath, 'utf8')))) {
+export async function run(
+  policy = validatePolicy(JSON.parse(fs.readFileSync(policyPath, 'utf8'))),
+) {
   const results = [];
   for (const entry of policy.packages) {
     try {
