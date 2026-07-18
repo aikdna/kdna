@@ -56,7 +56,7 @@ const EXPECTED_CONSUMER_CHECKOUTS = [
 ];
 const EXPECTED_COMPAT_CHECKOUTS = [
   ...EXPECTED_CONSUMER_CHECKOUTS,
-  ['aikdna/kdna-core-swift', 'b1f7f1a7cba5459413f00ecc0302f71e0d21ef78'],
+  ['aikdna/kdna-core-swift', '4a9b732b590a711c544da5280a4b78f071369617'],
   ['aikdna/kdna-vscode', 'c0d885ba8222b6dccad87ec67f7d82fcc1283107'],
 ];
 
