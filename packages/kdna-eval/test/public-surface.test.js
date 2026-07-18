@@ -128,7 +128,7 @@ function run(command, args, options = {}) {
     cwd: options.cwd,
     encoding: "utf8",
     env: options.env || process.env,
-    shell: false,
+    shell: options.shell || false,
   });
   assert.equal(
     result.status,
@@ -136,6 +136,16 @@ function run(command, args, options = {}) {
     `${command} ${args.join(" ")} failed\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`,
   );
   return result.stdout;
+}
+
+function runNpm(args, options = {}) {
+  if (process.env.npm_execpath) {
+    return run(process.execPath, [process.env.npm_execpath, ...args], options);
+  }
+  return run(process.platform === "win32" ? "npm.cmd" : "npm", args, {
+    ...options,
+    shell: process.platform === "win32",
+  });
 }
 
 test("CommonJS, ESM, and TypeScript expose the exact root value surface", async () => {
@@ -165,9 +175,7 @@ test("public-surface guard rejects hostile names and accepts reordered sets", ()
 test("the packed package compiles and executes every root value export from TypeScript", () => {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "kdna-eval-types-"));
   try {
-    const npm = process.platform === "win32" ? "npm.cmd" : "npm";
-    const packJson = run(
-      npm,
+    const packJson = runNpm(
       ["pack", "--json", "--ignore-scripts", "--pack-destination", tempRoot],
       { cwd: PACKAGE_ROOT },
     );
@@ -180,8 +188,7 @@ test("the packed package compiles and executes every root value export from Type
 
     const consumerRoot = path.join(tempRoot, "consumer");
     fs.mkdirSync(consumerRoot);
-    run(
-      npm,
+    runNpm(
       [
         "install",
         "--offline",
