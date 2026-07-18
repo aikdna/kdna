@@ -87,7 +87,7 @@ Request body:
 ```json
 {
   "domain": "kdna:aikdna:writing-pro",
-  "license_key": "KDNA-LIC-...",
+  "license_key": "<license-secret>",
   "machine_fingerprint": "<sha256 fingerprint>",
   "client": "kdna-cli",
   "client_version": "0.17.0",
@@ -117,7 +117,7 @@ A successful response returns an activation object:
 {
   "version": "1.0",
   "license_id": "lic_abc123",
-  "license_key": "KDNA-LIC-...",
+  "license_key": "<license-secret>",
   "domain": "kdna:aikdna:writing-pro",
   "issued_to": "buyer@example.com",
   "issued_at": "2026-05-27T00:00:00.000Z",
@@ -153,7 +153,7 @@ Local fixture files MAY contain:
   "activations": [
     {
       "domain": "kdna:aikdna:writing-pro",
-      "license_key": "KDNA-LIC-...",
+      "license_key": "<license-secret>",
       "license_id": "lic_abc123",
       "status": "active"
     }
@@ -223,7 +223,7 @@ Request body:
 ```json
 {
   "domain": "kdna:aikdna:writing-pro",
-  "license_key": "KDNA-LIC-...",
+  "license_key": "<license-secret>",
   "license_id": "lic_abc123",
   "machine_fingerprint": "<sha256 fingerprint>",
   "client": "kdna-cli",
@@ -338,7 +338,7 @@ Example:
 {
   "version": "1.0",
   "license_id": "lic_abc123",
-  "license_key": "KDNA-LIC-...",
+  "license_key": "<license-secret>",
   "domain": "kdna:aikdna:writing-pro",
   "issued_to": "buyer@example.com",
   "issued_at": "2026-05-27T00:00:00.000Z",
@@ -421,7 +421,7 @@ URL, such as:
 
 ```bash
 kdna license activate kdna:aikdna:writing-pro \
-  --key KDNA-LIC-... \
+  --key <license-secret> \
   --server https://license.example.com/entitlements/activate
 
 kdna license sync kdna:aikdna:writing-pro \
