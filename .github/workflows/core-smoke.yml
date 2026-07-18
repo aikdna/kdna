@@ -12,7 +12,7 @@ on:
 jobs:
   smoke:
     name: core-smoke
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
@@ -53,8 +53,18 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-skills
-          ref: 7e2b2725a700176209f5e21444e28a049e808d4f
+          ref: c9ac7de534b7ba810217d1d15b14a23a6e5b845f
           path: .ecosystem-repos/kdna-skills
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-core-swift
+          ref: b1f7f1a7cba5459413f00ecc0302f71e0d21ef78
+          path: .ecosystem-repos/kdna-core-swift
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-vscode
+          ref: c0d885ba8222b6dccad87ec67f7d82fcc1283107
+          path: .ecosystem-repos/kdna-vscode
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-cli
@@ -81,23 +91,45 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: '3.12'
+      - name: Select the outside-repository trusted npm release
+        run: |
+          echo "KDNA_TRUSTED_NPM_TARBALL=$RUNNER_TEMP/npm-11.17.0.tgz" >> "$GITHUB_ENV"
+      - name: Fetch and authenticate the audited npm release bytes
+        run: >-
+          node scripts/core-release-authority.js provision-npm
+          --artifact "$RUNNER_TEMP/npm-11.17.0.tgz"
+      - name: Verify the isolated npm CLI and extraction boundary
+        run: node scripts/core-release-authority.js verify-npm
       - name: Install workspace deps
-        run: npm ci
+        run: node scripts/core-release-authority.js trusted-npm ci --ignore-scripts
       - name: Install fixed Python test dependency
         run: python -m pip install --disable-pip-version-check --no-input pytest==9.1.0
       - name: Run core-smoke
-        run: npm run test:core-smoke
+        run: node scripts/core-release-authority.js trusted-npm run test:core-smoke
       - name: Run full kdna-core test suite
-        run: npm --workspace @aikdna/kdna-core test
+        run: >-
+          node scripts/core-release-authority.js trusted-npm
+          --workspace @aikdna/kdna-core test
       - name: Run kdna-eval test suite
-        run: npm --workspace @aikdna/kdna-eval test
+        run: >-
+          node scripts/core-release-authority.js trusted-npm
+          --workspace @aikdna/kdna-eval test
       - name: Cross-repo ecosystem-version-lock (PR-8)
         env:
           KDNA_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos
           KDNA_CONTROL_ROOT: ${{ github.workspace }}
-        run: npm run test:ecosystem-lock
+        run: >-
+          node scripts/core-release-authority.js trusted-npm
+          run test:ecosystem-lock
       - name: Verify Python adapter against the exact current CLI
         env:
           KDNA_CLI: ${{ github.workspace }}/node_modules/.bin/kdna
           PYTHONPATH: ${{ github.workspace }}/python-sdk
         run: python -m pytest python-sdk/tests -q
+      - name: Rehearse the complete compatibility ecosystem gate
+        env:
+          KDNA_PYTHON: ${{ env.pythonLocation }}/bin/python
+        run: node scripts/core-release-authority.js trusted-npm run ecosystem-gate
+      - name: Remove the trusted npm release bytes
+        if: always()
+        run: rm -f "$KDNA_TRUSTED_NPM_TARBALL"

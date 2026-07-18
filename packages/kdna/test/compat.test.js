@@ -73,7 +73,7 @@ function discoverPackableFixtures(fixturesRoot) {
 
 test('compatibility manifest pins one released toolchain without claiming the current CLI binary', () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf8'));
-  assert.equal(pkg.version, '0.13.0');
+  assert.equal(pkg.version, '0.13.1');
   assert.deepEqual(pkg.dependencies, {
     '@aikdna/kdna-cli': '0.35.0',
     '@aikdna/kdna-core': '0.20.0',
@@ -97,7 +97,7 @@ test('root lock resolves the compatibility package to one exact Core and CLI pai
     '@aikdna/kdna-cli': '0.35.0',
     '@aikdna/kdna-core': '0.20.0',
   });
-  assert.equal(lock.packages['packages/kdna'].version, '0.13.0');
+  assert.equal(lock.packages['packages/kdna'].version, '0.13.1');
   assertCurrentToolchainLock(lock);
 });
 

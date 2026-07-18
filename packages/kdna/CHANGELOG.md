@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.13.1 (2026-07-18)
+
+- Preserve the 0.13.0 toolchain binding while rehearsing the full cross-repo
+  gate in the same audited, scripts-off npm environment used for publication.
+- Bind the MCP test checkout to its accepted isolation fix so the nested
+  dry-run explicitly verifies prepublish ordering without weakening real
+  retained-artifact publication.
+- Add a bounded ecosystem-stage diagnostic for fail-closed release failures;
+  arbitrary child and provider output remains suppressed.
+- Supersede the withdrawn `compat/0.13.0` GitHub release, which stopped before
+  artifact construction and was never published to npm.
+
 ## 0.13.0 (2026-07-18)
 
 - Pin the compatibility package to the exact KDNA CLI 0.35.0 and KDNA Core

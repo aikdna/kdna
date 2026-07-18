@@ -9,6 +9,10 @@ const os = require('node:os');
 const path = require('node:path');
 const { TextDecoder } = require('node:util');
 const zlib = require('node:zlib');
+const {
+  ECOSYSTEM_GATE_STAGE_MAX_BYTES,
+  isSafeEcosystemGateStage,
+} = require('./ecosystem-gate-stages.js');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
 const PACKAGE_RELATIVE = 'packages/kdna-core';
@@ -1421,6 +1425,29 @@ function runNpm(invocation, args, options = {}) {
   }
 }
 
+function extractSafeEcosystemFailureStage(args, result) {
+  if (
+    !Array.isArray(args) ||
+    args.length !== 2 ||
+    args[0] !== 'run' ||
+    args[1] !== 'ecosystem-gate'
+  ) {
+    return null;
+  }
+  const output = `${result && typeof result.stdout === 'string' ? result.stdout : ''}\n${
+    result && typeof result.stderr === 'string' ? result.stderr : ''
+  }`;
+  const matches = [
+    ...output.matchAll(
+      new RegExp(
+        `^KDNA_SAFE_ECOSYSTEM_STAGE=([a-z0-9-]{1,${ECOSYSTEM_GATE_STAGE_MAX_BYTES}})\\r?$`,
+        'gmu',
+      ),
+    ),
+  ].filter((match) => isSafeEcosystemGateStage(match[1]));
+  return matches.length === 1 ? matches[0][1] : null;
+}
+
 function runTrustedNpmCommand(args, options = {}) {
   assert(
     Array.isArray(args) &&
@@ -1455,7 +1482,14 @@ function runTrustedNpmCommand(args, options = {}) {
     });
     assert(!result.error, 'trusted npm workflow command failed');
     assert(Number.isInteger(result.status), 'trusted npm workflow command failed');
-    assert(result.status === 0, 'trusted npm workflow command failed');
+    if (result.status !== 0) {
+      const safeStage = extractSafeEcosystemFailureStage(args, result);
+      fail(
+        safeStage
+          ? `trusted npm workflow command failed at ecosystem stage ${safeStage}`
+          : 'trusted npm workflow command failed',
+      );
+    }
     if (result.stdout) process.stdout.write(result.stdout);
     return true;
   } finally {
@@ -2841,6 +2875,7 @@ module.exports = {
   createTokenUserConfig,
   comparePackageCommits,
   evaluateRegistryResult,
+  extractSafeEcosystemFailureStage,
   expectedRegistryE404,
   downloadTrustedNpmBytes,
   guardCandidate,
