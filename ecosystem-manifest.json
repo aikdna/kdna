@@ -147,7 +147,7 @@
     {
       "repository": "aikdna/kdna-assets",
       "local_path": "../kdna-assets",
-      "source_commit": "2e28e0d16d2b915b942a8b600c0ba62c1de4898e",
+      "source_commit": "cc0c91c7adb7401b0b0b52b567d61f3fbf134828",
       "conformance_commit": "1e77e3e0d486c330fe9f9262b514ef24c859d469",
       "component_version": null,
       "packages": [],
