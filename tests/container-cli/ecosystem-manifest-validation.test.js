@@ -563,26 +563,19 @@ test('validator binds a live package-less component to an exact release tag and 
 test('validator binds every artifact path, digest, version, release tag, and release commit', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-artifact-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
-  const assetBytes = fs.readFileSync(
-    path.resolve(
-      repoRoot,
-      '..',
-      'kdna-assets',
-      'references/public/laozi-wuwei/laozi-wuwei-0.1.1.kdna',
-    ),
-  );
+  const assetBytes = fs.readFileSync(path.join(repoRoot, 'fixtures', 'test_protected_entry.kdna'));
   const assetHash = crypto.createHash('sha256').update(assetBytes).digest('hex');
   const currentConformanceCommit = JSON.parse(
     fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
   ).components.find((entry) => entry.repository === 'aikdna/kdna').conformance_commit;
   const assetRoot = path.join(root, 'fixture-assets');
   const commit = initRepository(assetRoot, { 'release.kdna': assetBytes });
-  git(assetRoot, ['tag', '0.1.1']);
+  git(assetRoot, ['tag', '1.0.0']);
   const artifact = {
     path: 'release.kdna',
-    version: '0.1.1',
+    version: '1.0.0',
     sha256: assetHash,
-    release_tag: '0.1.1',
+    release_tag: '1.0.0',
     release_commit: commit,
     conformance_commit: currentConformanceCommit,
     kind: 'kdna-asset',
