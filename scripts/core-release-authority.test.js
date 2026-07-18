@@ -626,9 +626,12 @@ test('index authority rejects hidden entries and a symlinked index', (t) => {
 });
 
 test('exact commit blobs materialize without reading the mutable worktree', (t) => {
-  const head = require('node:child_process')
-    .execFileSync('/usr/bin/git', ['rev-parse', 'HEAD'], { cwd: REPO_ROOT, encoding: 'utf8' })
-    .trim();
+  const head =
+    process.env.KDNA_TEST_EXACT_COMMIT ||
+    require('node:child_process')
+      .execFileSync('/usr/bin/git', ['rev-parse', 'HEAD'], { cwd: REPO_ROOT, encoding: 'utf8' })
+      .trim();
+  assert.match(head, /^[0-9a-f]{40}$/u);
   const tree = inspectTree(head);
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-materialize-test-'));
   t.after(() => fs.rmSync(temp, { recursive: true, force: true }));

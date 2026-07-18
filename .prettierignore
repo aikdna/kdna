@@ -4,5 +4,6 @@ node_modules/
 examples/
 schema/
 python-sdk/.venv/
+python-sdk/.mypy_cache/
 packages/
 benchmarks/raw/

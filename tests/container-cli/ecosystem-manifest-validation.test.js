@@ -231,6 +231,55 @@ test('ecosystem validator accepts only the exact clean package repository root',
   }
 });
 
+test('ecosystem validator binds live release artifacts to an exact clean repository commit', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-live-artifact-commit-'));
+  try {
+    const artifactRoot = path.join(tmp, 'fixture-assets');
+    fs.mkdirSync(artifactRoot);
+    fs.writeFileSync(path.join(artifactRoot, 'release.kdna'), 'fixture');
+    for (const args of [
+      ['init'],
+      ['config', 'user.name', 'KDNA Test'],
+      ['config', 'user.email', 'test@invalid.example'],
+      ['add', 'release.kdna'],
+      ['commit', '-m', 'fixture'],
+    ]) {
+      const result = spawnSync('git', args, { cwd: artifactRoot, encoding: 'utf8' });
+      assert.equal(result.status, 0, result.stderr);
+    }
+    const commit = spawnSync('git', ['rev-parse', 'HEAD'], {
+      cwd: artifactRoot,
+      encoding: 'utf8',
+    }).stdout.trim();
+    const exactComponent = liveComponent({
+      repository: 'aikdna/fixture-assets',
+      local_path: '../fixture-assets',
+      npm_package: null,
+      package_json: null,
+      artifact_path: 'release.kdna',
+      conformance_commit: commit,
+    });
+    const manifestPath = writeManifest(tmp, exactComponent);
+
+    const clean = runValidator(manifestPath, tmp);
+    assert.equal(clean.status, 0, `stdout=${clean.stdout}\nstderr=${clean.stderr}`);
+    assert.match(clean.stdout, /validation passed/u);
+
+    writeManifest(tmp, { ...exactComponent, conformance_commit: '0'.repeat(40) });
+    const mismatched = runValidator(manifestPath, tmp);
+    assert.equal(mismatched.status, 1, `stdout=${mismatched.stdout}\nstderr=${mismatched.stderr}`);
+    assert.match(mismatched.stderr, /checkout commit mismatch/u);
+
+    writeManifest(tmp, exactComponent);
+    fs.writeFileSync(path.join(artifactRoot, 'untracked.txt'), 'dirty');
+    const dirty = runValidator(manifestPath, tmp);
+    assert.equal(dirty.status, 1, `stdout=${dirty.stdout}\nstderr=${dirty.stderr}`);
+    assert.match(dirty.stderr, /live artifact checkout is dirty/u);
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+});
+
 test('ecosystem validator rejects a package directory nested in some other repository', () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-live-package-nested-root-'));
   try {
