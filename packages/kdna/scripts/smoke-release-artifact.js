@@ -78,7 +78,7 @@ function main() {
     const cliPath = path.join(modules, '@aikdna', 'kdna-cli');
     const corePath = path.join(modules, '@aikdna', 'kdna-core');
     const expected = [
-      [compatPath, '@aikdna/kdna', '0.13.0'],
+      [compatPath, '@aikdna/kdna', '0.13.1'],
       [cliPath, '@aikdna/kdna-cli', '0.35.0'],
       [corePath, '@aikdna/kdna-core', '0.20.0'],
     ];

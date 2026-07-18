@@ -76,7 +76,7 @@
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
-      "conformance_commit": "7e2b2725a700176209f5e21444e28a049e808d4f",
+      "conformance_commit": "c9ac7de534b7ba810217d1d15b14a23a6e5b845f",
       "known_limitations": [
         "MCP is a structured bridge; the loader skill remains the default Agent integration"
       ],

@@ -31,6 +31,7 @@ const {
   commitDocument,
   createTokenUserConfig,
   evaluateRegistryResult,
+  extractSafeEcosystemFailureStage,
   expectedRegistryE404,
   guardCandidate,
   inspectTree,
@@ -479,6 +480,40 @@ test(
     assert.doesNotMatch(result.stderr, new RegExp(marker, 'u'));
   },
 );
+
+test('trusted npm exposes only one exact ecosystem stage sentinel', () => {
+  const args = ['run', 'ecosystem-gate'];
+  assert.equal(
+    extractSafeEcosystemFailureStage(args, {
+      stdout: 'ordinary test output\n',
+      stderr: 'provider details\nKDNA_SAFE_ECOSYSTEM_STAGE=swift-test\n',
+    }),
+    'swift-test',
+  );
+  for (const result of [
+    { stdout: 'KDNA_SAFE_ECOSYSTEM_STAGE=swift-test-suffix!', stderr: '' },
+    { stdout: 'prefix KDNA_SAFE_ECOSYSTEM_STAGE=swift-test', stderr: '' },
+    {
+      stdout: 'KDNA_SAFE_ECOSYSTEM_STAGE=swift-test\n',
+      stderr: 'KDNA_SAFE_ECOSYSTEM_STAGE=core-test\n',
+    },
+    { stdout: 'KDNA_SAFE_ECOSYSTEM_STAGE=Swift-Test\n', stderr: '' },
+    { stdout: 'KDNA_SAFE_ECOSYSTEM_STAGE=provider-detail\n', stderr: '' },
+    {
+      stdout: `KDNA_SAFE_ECOSYSTEM_STAGE=${'a'.repeat(33)}\n`,
+      stderr: '',
+    },
+  ]) {
+    assert.equal(extractSafeEcosystemFailureStage(args, result), null);
+  }
+  assert.equal(
+    extractSafeEcosystemFailureStage(['test'], {
+      stdout: 'KDNA_SAFE_ECOSYSTEM_STAGE=swift-test\n',
+      stderr: '',
+    }),
+    null,
+  );
+});
 
 test('publisher process environment uses a minimal provenance and token whitelist', () => {
   const invocation = {

@@ -43,7 +43,7 @@ const UPLOAD_ACTION_SHA = 'ea165f8d65b6e75b540449e92b4886f43607fa02';
 const EXPECTED_CONSUMER_CHECKOUTS = [
   ['aikdna/create-kdna-web-app', '4241dc20814bae4fcf72d44df7c0670ef70bda00'],
   ['aikdna/kdna-cli', '6927df153b0b3b592a500760f6d87eac6fde7860'],
-  ['aikdna/kdna-skills', '7e2b2725a700176209f5e21444e28a049e808d4f'],
+  ['aikdna/kdna-skills', 'c9ac7de534b7ba810217d1d15b14a23a6e5b845f'],
   ['aikdna/kdna-studio-core', 'e1d49b3cb3e6c236499a3ecbd6884497e41fd834'],
   ['aikdna/kdna-studio-cli', 'abd1624741a5dfa0b1a604e44d57209ce3caf18b'],
   ['aikdna/kdna-activation-server', '6e203a78c038f15c0e65f19b9aa22a6f642478cb'],
@@ -53,6 +53,11 @@ const EXPECTED_CONSUMER_CHECKOUTS = [
   ['aikdna/kdna-react', '3edcdce0f75b6dfb1eb4147cedaf24f8af6574a3'],
   ['aikdna/kdna-assets', '2e28e0d16d2b915b942a8b600c0ba62c1de4898e'],
   ['aikdna/kdna-demo-web-viewer', 'a7d4df05973d472ec24ba060f3d9c02c0d22c6f3'],
+];
+const EXPECTED_COMPAT_CHECKOUTS = [
+  ...EXPECTED_CONSUMER_CHECKOUTS,
+  ['aikdna/kdna-core-swift', 'b1f7f1a7cba5459413f00ecc0302f71e0d21ef78'],
+  ['aikdna/kdna-vscode', 'c0d885ba8222b6dccad87ec67f7d82fcc1283107'],
 ];
 
 function releaseInput(overrides = {}) {
@@ -249,11 +254,7 @@ test('compatibility workflow fixes every live checkout and publishes only the re
   const workflow = fs.readFileSync(path.join(REPO_ROOT, '.github', 'workflows', 'publish.yml'), 'utf8');
   const start = workflow.indexOf('  publish-compat:');
   const job = workflow.slice(start);
-  for (const [repository, commit] of [
-    ...EXPECTED_CONSUMER_CHECKOUTS,
-    ['aikdna/kdna-core-swift', 'b1f7f1a7cba5459413f00ecc0302f71e0d21ef78'],
-    ['aikdna/kdna-vscode', 'c0d885ba8222b6dccad87ec67f7d82fcc1283107'],
-  ]) {
+  for (const [repository, commit] of EXPECTED_COMPAT_CHECKOUTS) {
     assert.match(job, new RegExp(`repository: ${repository.replace('/', '\\/')}\\n\\s+ref: ${commit}`, 'u'));
   }
   assert.match(job, /ref: \$\{\{ github\.event\.release\.tag_name \}\}/u);
@@ -292,27 +293,45 @@ test('compatibility workflow fixes every live checkout and publishes only the re
   assert.match(job, /if: always\(\)/u);
 });
 
-test('core smoke checks every expected dependency consumer at an immutable accepted commit', () => {
+test('core smoke rehearses the release ecosystem with every immutable accepted checkout', () => {
   const workflow = fs.readFileSync(
     path.join(REPO_ROOT, '.github', 'workflows', 'core-smoke.yml'),
     'utf8',
   );
-  for (const [repository, commit] of EXPECTED_CONSUMER_CHECKOUTS) {
+  for (const [repository, commit] of EXPECTED_COMPAT_CHECKOUTS) {
     assert.match(
       workflow,
       new RegExp(`repository: ${repository.replace('/', '\\/')}\\n\\s+ref: ${commit}`, 'u'),
     );
   }
-  const versionLock = workflow.indexOf('npm run test:ecosystem-lock');
-  assert.ok(versionLock >= 0);
+  assert.match(workflow, /runs-on: macos-latest/u);
+  const provisionNpm = workflow.indexOf('provision-npm');
+  const verifyNpm = workflow.indexOf('verify-npm');
+  const install = workflow.indexOf('trusted-npm ci --ignore-scripts');
+  const versionLock = workflow.indexOf('run test:ecosystem-lock');
+  const ecosystemGateRun = workflow.indexOf('run ecosystem-gate');
+  assert.ok(provisionNpm >= 0 && provisionNpm < verifyNpm);
+  assert.ok(verifyNpm < install && install < versionLock);
+  assert.ok(versionLock < ecosystemGateRun);
   assert.ok(workflow.includes('KDNA_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos'));
   assert.ok(workflow.includes('KDNA_CONTROL_ROOT: ${{ github.workspace }}'));
+  assert.ok(workflow.includes('KDNA_PYTHON: ${{ env.pythonLocation }}/bin/python'));
+  assert.ok(workflow.includes('KDNA_TRUSTED_NPM_TARBALL=$RUNNER_TEMP/npm-11.17.0.tgz'));
+  assert.match(workflow, /if: always\(\)/u);
   assert.match(workflow, /pytest==9\.1\.0/u);
   assert.match(workflow, /python -m pytest python-sdk\/tests -q/u);
   const ecosystemGate = fs.readFileSync(path.join(REPO_ROOT, 'scripts', 'ecosystem-gate.js'), 'utf8');
   assert.match(ecosystemGate, /python adapter pytest against current CLI/u);
+  assert.match(
+    ecosystemGate,
+    /const swiftModuleCache = fs\.mkdtempSync\([\s\S]*kdna-core-swift-ecosystem-gate-module-cache-/u,
+  );
+  assert.match(
+    ecosystemGate,
+    /finally \{\s+fs\.rmSync\(swiftModuleCache, \{ recursive: true, force: true \}\);\s+\}/u,
+  );
   const immutableCheckouts = [...workflow.matchAll(/uses: actions\/checkout@([^\s]+)/gu)];
-  assert.equal(immutableCheckouts.length, EXPECTED_CONSUMER_CHECKOUTS.length + 1);
+  assert.equal(immutableCheckouts.length, EXPECTED_COMPAT_CHECKOUTS.length + 1);
   for (const match of immutableCheckouts) assert.equal(match[1], CHECKOUT_ACTION_SHA);
 });
 
@@ -653,7 +672,7 @@ test('guard and publisher reparse one exact tarball before the network operation
       bound += 1;
     },
     lookup: (spec) => {
-      assert.equal(spec, '@aikdna/kdna@0.13.0');
+      assert.equal(spec, '@aikdna/kdna@0.13.1');
       lookedUp += 1;
       return e404Result(candidate);
     },
