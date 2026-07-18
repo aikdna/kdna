@@ -14,6 +14,8 @@ Status: 1.0-rc public naming canon
 | Studio CLI command | `kdna-studio` |
 | Runtime core package | `@aikdna/kdna-core` |
 | Runtime CLI package | `@aikdna/kdna-cli` |
+| Evaluation package | `@aikdna/kdna-eval` |
+| Legacy compatibility package | `@aikdna/kdna` |
 | Studio core package | `@aikdna/kdna-studio-core` |
 | Studio CLI package | `@aikdna/kdna-studio-cli` |
 | Reference app | a KDNA-compatible client |
@@ -51,4 +53,3 @@ Avoid:
 - "KDA"
 - "KDNA asset operating system" as the first public definition
 - "single .kdna file" when the correct concept is a scoped KDNA Domain Asset
-

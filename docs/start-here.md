@@ -106,7 +106,10 @@ KDNA Core is the **official KDNA judgment-asset format and runtime loading contr
 | [kdna-eval](https://github.com/aikdna/kdna/tree/main/packages/kdna-eval) | Replay, budget, and consumption-evaluation primitives |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI for creating and exporting `.kdna` assets |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Official agent loader adapter |
-| [kdna-assets](https://github.com/aikdna/kdna-assets) | Historical AIKDNA demonstration archive; not the current onboarding path |
+| [kdna-assets](https://github.com/aikdna/kdna-assets) | Public reference-asset releases; technical examples, not content endorsements or the default onboarding path |
+| [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Apple-platform runtime with a current 0.20.0 conformance release |
+| [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Apple-platform authoring kernel; 0.4.0 remains the published release while current-runtime recertification is pending |
+| [kdna-app-shared](https://github.com/aikdna/kdna-app-shared) | Shared Apple-app presentation infrastructure; 0.5.0 remains the published release while current-runtime recertification is pending |
 
 ---
 

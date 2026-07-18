@@ -9,14 +9,21 @@
 |---|---|---|
 | Protocol, schemas, conformance fixtures | Stable | Format and loader contract changes require tests and public evidence. |
 | `@aikdna/kdna-core` and `@aikdna/kdna-cli` | Beta | Local public `.kdna` assets are the supported first-run path. |
+| `@aikdna/kdna-eval` | Experimental | Issuer-scoped evaluation, replay, budget, and consumption evidence; not KDNA Core content authority. |
+| `@aikdna/kdna` | Legacy compatibility | Maintained migration bridge; new integrations use `@aikdna/kdna-cli` and `@aikdna/kdna-core` directly. |
 | Studio Core and Studio CLI | Beta | Public local asset authoring/export is supported; AI-assisted authoring remains experimental. |
-| Public `.kdna` assets | Beta | Releases require metadata, SHA sidecars, public URLs, and public-surface checks. |
+| Public `.kdna` reference assets | Experimental | Current technical references require metadata, SHA sidecars, public URLs, and public-surface checks; they are not content endorsements or the default onboarding path. |
 | Agent loader skill and MCP server | Beta / Experimental | Loader behavior must preserve plan-load-before-load and content-neutral boundaries. |
 | Web packages and scaffolder | Experimental | Published integration surfaces for upload, inspect, plan-load, load, and activation proxying. |
-| Swift runtime and app-shared package | Beta | Support surfaces until parity and release evidence are refreshed after public release. |
+| Swift runtime, Studio Swift, and app-shared package | Beta | Swift Core has a current 0.20.0 conformance release; Studio Swift 0.4.0 and App Shared 0.5.0 remain published but require current-runtime recertification before stronger claims. |
 | `kdna-vscode` | Legacy | Historical reference only; current workflows use CLI, Studio CLI, and loader integrations. |
 | `@aikdna/agent` | Legacy / Deprecated | Frozen source only; current Agent integration uses `kdna-loader` or the experimental MCP bridge. |
 | `@aikdna/kdna-artifact-engine` and `@aikdna/kdna-fidelity-core` | Legacy / Deprecated | Historical draft implementations; not part of the current Runtime Capsule toolchain. |
+
+The machine-readable lifecycle and release-status inventory is
+[`ecosystem-manifest.json`](../ecosystem-manifest.json). Its schema distinguishes
+active packages, the compatibility bridge, deprecated coordinates, source-only
+applications, and exact release artifacts.
 
 ## Accepted Maintenance Work
 

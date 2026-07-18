@@ -2,27 +2,30 @@
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const crypto = require('node:crypto');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { sameFilesystemIdentity } = require('../../scripts/filesystem-identity');
+const {
+  currentAssetIndexInventory,
+  manifestArtifactInventory,
+  resolveComponentPath,
+} = require('../../scripts/ecosystem-manifest');
 
 const repoRoot = path.resolve(__dirname, '..', '..');
 const validator = path.join(repoRoot, 'scripts', 'validate-ecosystem-manifest.js');
 
-function liveComponent(overrides = {}) {
+function packageRecord(overrides = {}) {
   return {
-    repository: 'aikdna/fixture-package',
-    local_path: '../fixture-package',
+    package_json: 'package.json',
+    package_name: '@aikdna/fixture-package',
     npm_package: '@aikdna/fixture-package',
-    package_json: '../fixture-package/package.json',
-    current_version: '1.0.0',
+    version: '1.0.0',
     lifecycle: 'Beta',
-    supported_kdna_version: '1.0',
-    supported_access_modes: [],
-    supported_entitlement_profiles: [],
-    conformance_commit: '0'.repeat(40),
+    release_status: 'active',
+    dependency_policy: 'current',
     known_limitations: [],
     recommended_entrypoint: null,
     legacy_replacement: null,
@@ -30,15 +33,54 @@ function liveComponent(overrides = {}) {
   };
 }
 
-function writeManifest(root, component) {
+function component(overrides = {}) {
+  return {
+    repository: 'aikdna/fixture-package',
+    local_path: '../fixture-package',
+    source_commit: '0'.repeat(40),
+    conformance_commit: null,
+    component_version: null,
+    packages: [packageRecord()],
+    artifacts: [],
+    lifecycle: 'Beta',
+    supported_kdna_version: '1.0',
+    supported_access_modes: [],
+    supported_entitlement_profiles: [],
+    known_limitations: [],
+    recommended_entrypoint: null,
+    legacy_replacement: null,
+    ...overrides,
+  };
+}
+
+function manifest(components) {
+  const records = components.some((entry) => entry.repository === 'aikdna/kdna')
+    ? components
+    : [
+        JSON.parse(
+          fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
+        ).components.find((entry) => entry.repository === 'aikdna/kdna'),
+        ...components,
+      ];
+  return {
+    schema_version: 2,
+    lifecycle_terms: [
+      'Stable',
+      'Beta',
+      'Experimental',
+      'Legacy',
+      'Removed',
+      'Future',
+      'Draft Normative',
+    ],
+    baseline_statement: 'test-only manifest',
+    components: records,
+  };
+}
+
+function writeManifest(root, components) {
   const manifestPath = path.join(root, 'ecosystem-manifest.json');
-  fs.writeFileSync(
-    manifestPath,
-    JSON.stringify({
-      lifecycle_terms: ['Stable', 'Beta', 'Experimental', 'Legacy', 'Removed'],
-      components: [component],
-    }),
-  );
+  fs.writeFileSync(manifestPath, `${JSON.stringify(manifest(components), null, 2)}\n`);
   return manifestPath;
 }
 
@@ -51,6 +93,27 @@ function runValidator(manifestPath, reposRoot) {
       ...(reposRoot ? { KDNA_ECOSYSTEM_REPOS_ROOT: reposRoot } : {}),
     },
   });
+}
+
+function git(root, args) {
+  const result = spawnSync('git', args, { cwd: root, encoding: 'utf8' });
+  assert.equal(result.status, 0, result.stderr);
+  return result.stdout.trim();
+}
+
+function initRepository(root, files) {
+  fs.mkdirSync(root, { recursive: true });
+  for (const [relativePath, bytes] of Object.entries(files)) {
+    const filePath = path.join(root, relativePath);
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, bytes);
+  }
+  git(root, ['init']);
+  git(root, ['config', 'user.name', 'KDNA Test']);
+  git(root, ['config', 'user.email', 'test@invalid.example']);
+  git(root, ['add', '.']);
+  git(root, ['commit', '-m', 'fixture']);
+  return git(root, ['rev-parse', 'HEAD']);
 }
 
 test('Windows repository aliases compare by canonical filesystem identity', () => {
@@ -66,10 +129,8 @@ test('Windows repository aliases compare by canonical filesystem identity', () =
 });
 
 test('Windows identity comparison does not collapse a nested repository path', () => {
-  const repositoryRoot = String.raw`C:\work\outer`;
-  const nestedPackage = String.raw`C:\work\outer\fixture-package`;
   assert.equal(
-    sameFilesystemIdentity(repositoryRoot, nestedPackage, {
+    sameFilesystemIdentity(String.raw`C:\work\outer`, String.raw`C:\work\outer\nested`, {
       platform: 'win32',
       realpath: (input) => input,
     }),
@@ -77,232 +138,501 @@ test('Windows identity comparison does not collapse a nested repository path', (
   );
 });
 
-test('ecosystem manifest does not claim the nonexistent kdna-releases repository', () => {
-  const manifest = JSON.parse(
-    fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
+test('explicit ecosystem checkout root is authoritative over a sibling checkout', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-resolver-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const controlRoot = path.join(root, 'control', 'kdna');
+  const siblingRoot = path.join(root, 'control', 'fixture-package');
+  const explicitRoot = path.join(root, 'verified');
+  const explicitRepo = path.join(explicitRoot, 'fixture-package');
+  fs.mkdirSync(controlRoot, { recursive: true });
+  fs.mkdirSync(siblingRoot, { recursive: true });
+  fs.mkdirSync(explicitRepo, { recursive: true });
+
+  const record = component();
+  assert.equal(
+    resolveComponentPath(controlRoot, record, { reposRoot: explicitRoot }),
+    explicitRepo,
   );
   assert.equal(
-    manifest.components.some((component) => component.repository === 'aikdna/kdna-releases'),
-    false,
+    resolveComponentPath(controlRoot, record, { reposRoot: path.join(root, 'missing') }),
+    null,
   );
 });
 
-test('ecosystem validator fails closed for a live repo without package, artifact, or checkout', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-ecosystem-manifest-'));
-  try {
-    const manifestPath = path.join(tmp, 'ecosystem-manifest.json');
-    fs.writeFileSync(
-      manifestPath,
-      JSON.stringify({
-        lifecycle_terms: ['Stable', 'Beta', 'Experimental', 'Legacy', 'Removed'],
-        components: [
-          {
-            repository: 'aikdna/does-not-exist',
-            local_path: '../does-not-exist',
-            npm_package: null,
-            package_json: null,
-            current_version: null,
-            lifecycle: 'Beta',
-            supported_kdna_version: '1.0',
-            supported_access_modes: [],
-            supported_entitlement_profiles: [],
-            conformance_commit: null,
-            known_limitations: [],
-            recommended_entrypoint: null,
-            legacy_replacement: null,
+test('canonical schema-2 manifest inventories every public repository, co-located package, and reference asset', () => {
+  const canonical = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
+  );
+  assert.equal(canonical.schema_version, 2);
+  assert.equal(
+    canonical.components.some((entry) => entry.repository === 'aikdna/kdna-releases'),
+    false,
+  );
+  const core = canonical.components.find((entry) => entry.repository === 'aikdna/kdna');
+  assert.deepEqual(
+    new Set(core.packages.map((entry) => entry.npm_package)),
+    new Set([
+      '@aikdna/kdna-core',
+      '@aikdna/kdna-eval',
+      '@aikdna/kdna',
+      '@aikdna/agent',
+      '@aikdna/kdna-artifact-engine',
+      '@aikdna/kdna-fidelity-core',
+    ]),
+  );
+  const assets = canonical.components.find((entry) => entry.repository === 'aikdna/kdna-assets');
+  assert.equal(assets.packages.length, 0);
+  assert.equal(assets.artifacts.length, 2);
+  assert.deepEqual(
+    new Set(
+      canonical.components
+        .filter((entry) => entry.local_path !== null)
+        .map((entry) => entry.repository),
+    ),
+    new Set([
+      'aikdna/create-kdna-web-app',
+      'aikdna/kdna',
+      'aikdna/kdna-activation-server',
+      'aikdna/kdna-app-shared',
+      'aikdna/kdna-assets',
+      'aikdna/kdna-cli',
+      'aikdna/kdna-core-swift',
+      'aikdna/kdna-demo-web-viewer',
+      'aikdna/kdna-react',
+      'aikdna/kdna-remote-server',
+      'aikdna/kdna-skills',
+      'aikdna/kdna-studio-cli',
+      'aikdna/kdna-studio-core',
+      'aikdna/kdna-studio-swift',
+      'aikdna/kdna-vscode',
+      'aikdna/kdna-web-client',
+      'aikdna/kdna-web-server',
+    ]),
+  );
+  assert.deepEqual(
+    canonical.components
+      .filter((entry) => entry.release_tag)
+      .map((entry) => [entry.repository, entry.component_version, entry.release_tag]),
+    [
+      ['aikdna/kdna-core-swift', '0.20.0', 'v0.20.0'],
+      ['aikdna/kdna-app-shared', '0.5.0', '0.5.0'],
+      ['aikdna/kdna-studio-swift', '0.4.0', '0.4.0'],
+    ],
+  );
+});
+
+test('canonical Core conformance anchor is bound to the exact Core release tag', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-core-anchor-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const canonical = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
+  );
+  const core = canonical.components.find((entry) => entry.repository === 'aikdna/kdna');
+  const oldAnchor = git(repoRoot, ['rev-parse', `${core.conformance_commit}^`]);
+  for (const entry of canonical.components) {
+    if (entry.conformance_commit === core.conformance_commit) {
+      entry.conformance_commit = oldAnchor;
+    }
+    for (const artifact of entry.artifacts) {
+      if (artifact.conformance_commit === core.conformance_commit) {
+        artifact.conformance_commit = oldAnchor;
+      }
+    }
+  }
+  const manifestPath = path.join(root, 'ecosystem-manifest.json');
+  fs.writeFileSync(manifestPath, JSON.stringify(canonical));
+  const result = runValidator(manifestPath);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /Core conformance_commit must equal release tag/u);
+});
+
+test('asset inventory is an exact two-way projection of index/current.json', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-asset-inventory-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const assetRoot = path.join(root, 'kdna-assets');
+  const assetBytes = fs.readFileSync(path.join(repoRoot, 'fixtures', 'test_protected_entry.kdna'));
+  const assetHash = crypto.createHash('sha256').update(assetBytes).digest('hex');
+  const artifactPath = 'references/public/fixture/fixture-1.0.0.kdna';
+  const index = {
+    assets: [
+      {
+        version: '1.0.0',
+        digest: { value: assetHash },
+        artifact: { path: artifactPath },
+        download: {
+          url: 'https://github.com/aikdna/kdna-assets/releases/download/1.0.0/fixture-1.0.0.kdna',
+        },
+      },
+    ],
+    clusters: [],
+  };
+  const commit = initRepository(assetRoot, {
+    [artifactPath]: assetBytes,
+    'index/current.json': JSON.stringify(index),
+  });
+  git(assetRoot, ['tag', '1.0.0']);
+  const currentConformanceCommit = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
+  ).components.find((entry) => entry.repository === 'aikdna/kdna').conformance_commit;
+  const artifact = {
+    path: artifactPath,
+    version: '1.0.0',
+    sha256: assetHash,
+    release_tag: '1.0.0',
+    release_commit: commit,
+    conformance_commit: currentConformanceCommit,
+    kind: 'kdna-asset',
+    lifecycle: 'Experimental',
+    known_limitations: [],
+    recommended_entrypoint: 'inspect then load',
+  };
+  const assets = component({
+    repository: 'aikdna/kdna-assets',
+    local_path: '../kdna-assets',
+    source_commit: commit,
+    conformance_commit: currentConformanceCommit,
+    packages: [],
+    artifacts: [artifact],
+    lifecycle: 'Experimental',
+  });
+  const manifestPath = writeManifest(root, [assets]);
+  const indexPath = path.join(assetRoot, 'index', 'current.json');
+
+  assert.deepEqual(manifestArtifactInventory(assets), currentAssetIndexInventory(index));
+  let result = runValidator(manifestPath, root);
+  assert.equal(result.status, 0, `stdout=${result.stdout}\nstderr=${result.stderr}`);
+
+  for (const hostileIndex of [
+    { ...index, assets: [] },
+    {
+      ...index,
+      assets: [
+        ...index.assets,
+        {
+          ...index.assets[0],
+          artifact: { path: 'references/public/extra/extra-1.0.0.kdna' },
+          download: {
+            url: 'https://github.com/aikdna/kdna-assets/releases/download/1.0.0/extra-1.0.0.kdna',
           },
+        },
+      ],
+    },
+  ]) {
+    fs.writeFileSync(indexPath, JSON.stringify(hostileIndex));
+    result = runValidator(manifestPath, root);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /artifact inventory differs/u);
+  }
+
+  fs.writeFileSync(indexPath, JSON.stringify({ ...index, clusters: [{ id: 'fixture' }] }));
+  result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /clusters require an ecosystem manifest schema extension/u);
+});
+
+test('validator rejects schema 1, mixed legacy fields, and unknown fields', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-schema-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+
+  for (const candidate of [
+    { ...manifest([component()]), schema_version: 1 },
+    {
+      ...manifest([component({ npm_package: '@aikdna/old-shape' })]),
+    },
+    { ...manifest([component()]), unknown: true },
+    manifest([component({ packages: [packageRecord({ version: '1.0.0-01' })] })]),
+    manifest([component({ packages: [packageRecord({ version: '1.0.0-a..b' })] })]),
+  ]) {
+    const manifestPath = path.join(root, 'ecosystem-manifest.json');
+    fs.writeFileSync(manifestPath, JSON.stringify(candidate));
+    const result = runValidator(manifestPath, root);
+    assert.equal(result.status, 1, `stdout=${result.stdout}\nstderr=${result.stderr}`);
+    assert.match(result.stderr, /manifest schema/u);
+  }
+});
+
+test('validator fails closed for a live component without evidence or checkout', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-no-evidence-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const manifestPath = writeManifest(root, [
+    component({
+      repository: 'aikdna/does-not-exist',
+      local_path: '../does-not-exist',
+      source_commit: null,
+      packages: [],
+    }),
+  ]);
+  const result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /repository checkout is unavailable|source_commit|no package/u);
+});
+
+test('validator rejects unavailable or unreadable current package evidence', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-package-evidence-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+
+  const missingRoot = path.join(root, 'fixture-package');
+  const missingCommit = initRepository(missingRoot, { 'README.md': 'missing package' });
+  let manifestPath = writeManifest(root, [component({ source_commit: missingCommit })]);
+  let result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /package evidence is unavailable/u);
+
+  fs.rmSync(missingRoot, { recursive: true, force: true });
+  const brokenRoot = path.join(root, 'fixture-package');
+  const brokenCommit = initRepository(brokenRoot, { 'package.json': '{not-json' });
+  manifestPath = writeManifest(root, [component({ source_commit: brokenCommit })]);
+  result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /package evidence is unreadable/u);
+});
+
+test('validator binds every external package to one exact clean source commit', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-package-commit-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const packageRoot = path.join(root, 'fixture-package');
+  const commit = initRepository(packageRoot, {
+    'package.json': JSON.stringify({ name: '@aikdna/fixture-package', version: '1.0.0' }),
+  });
+  const manifestPath = writeManifest(root, [component({ source_commit: commit })]);
+
+  const clean = runValidator(manifestPath, root);
+  assert.equal(clean.status, 0, `stdout=${clean.stdout}\nstderr=${clean.stderr}`);
+
+  writeManifest(root, [component({ source_commit: '0'.repeat(40) })]);
+  const mismatched = runValidator(manifestPath, root);
+  assert.equal(mismatched.status, 1);
+  assert.match(mismatched.stderr, /checkout commit mismatch/u);
+
+  writeManifest(root, [component({ source_commit: commit })]);
+  fs.writeFileSync(path.join(packageRoot, 'untracked.txt'), 'dirty');
+  const dirty = runValidator(manifestPath, root);
+  assert.equal(dirty.status, 1);
+  assert.match(dirty.stderr, /checkout is dirty/u);
+});
+
+test('validator rejects component and package path escape and symlink escape', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-paths-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const packageRoot = path.join(root, 'fixture-package');
+  const outside = path.join(root, 'outside-package.json');
+  fs.writeFileSync(outside, JSON.stringify({ name: '@aikdna/fixture-package', version: '1.0.0' }));
+  const commit = initRepository(packageRoot, {
+    'package.json': JSON.stringify({ name: '@aikdna/fixture-package', version: '1.0.0' }),
+  });
+
+  let manifestPath = writeManifest(root, [component({ local_path: '../../fixture-package' })]);
+  let result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /manifest schema/u);
+
+  manifestPath = writeManifest(root, [component({ local_path: '../different-repository' })]);
+  result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /local_path must be/u);
+
+  manifestPath = writeManifest(root, [
+    component({ local_path: '.', source_commit: null, packages: [] }),
+  ]);
+  result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /only aikdna\/kdna may use/u);
+
+  manifestPath = writeManifest(root, [
+    component({
+      source_commit: commit,
+      packages: [packageRecord({ package_json: '../outside-package.json' })],
+    }),
+  ]);
+  result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /manifest schema/u);
+
+  fs.unlinkSync(path.join(packageRoot, 'package.json'));
+  fs.symlinkSync(outside, path.join(packageRoot, 'package.json'));
+  manifestPath = writeManifest(root, [component({ source_commit: commit })]);
+  result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /resolves outside/u);
+});
+
+test('validator rejects duplicate repository, package source, package name, and npm coordinate', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-duplicates-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+
+  const candidates = [
+    [component(), component()],
+    [component({ packages: [packageRecord(), packageRecord()] })],
+    [
+      component({
+        packages: [
+          packageRecord(),
+          packageRecord({
+            package_json: 'other/package.json',
+            package_name: '@aikdna/fixture-package',
+            npm_package: '@aikdna/other',
+          }),
         ],
       }),
-    );
-
-    const result = spawnSync(process.execPath, [validator], {
-      encoding: 'utf8',
-      env: { ...process.env, KDNA_ECOSYSTEM_MANIFEST_PATH: manifestPath },
-    });
-    assert.equal(result.status, 1, `stdout=${result.stdout}\nstderr=${result.stderr}`);
-    assert.match(result.stderr, /repository checkout is unavailable/);
-    assert.doesNotMatch(result.stdout, /validation passed/);
-  } finally {
-    fs.rmSync(tmp, { recursive: true, force: true });
-  }
-});
-
-test('ecosystem validator rejects unavailable or unreadable live package evidence', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-live-package-evidence-'));
-  try {
-    const missing = writeManifest(
-      tmp,
-      liveComponent({
-        repository: 'aikdna/definitely-missing-package-proof',
-        local_path: '../definitely-missing-package-proof',
-        package_json: '../definitely-missing-package-proof/package.json',
+    ],
+    [
+      component({
+        packages: [
+          packageRecord(),
+          packageRecord({
+            package_json: 'other/package.json',
+            package_name: '@aikdna/other',
+            npm_package: '@aikdna/fixture-package',
+          }),
+        ],
       }),
-    );
-    const missingResult = runValidator(missing, tmp);
-    assert.equal(missingResult.status, 1);
-    assert.match(missingResult.stderr, /live package evidence is unavailable/u);
+    ],
+  ];
 
-    const brokenRoot = path.join(tmp, 'broken-package-proof');
-    fs.mkdirSync(brokenRoot);
-    fs.writeFileSync(path.join(brokenRoot, 'package.json'), '{not-json');
-    const broken = writeManifest(
-      tmp,
-      liveComponent({
-        repository: 'aikdna/broken-package-proof',
-        local_path: '../broken-package-proof',
-        package_json: '../broken-package-proof/package.json',
-      }),
-    );
-    const brokenResult = runValidator(broken, tmp);
-    assert.equal(brokenResult.status, 1);
-    assert.match(brokenResult.stderr, /package evidence is unreadable/u);
-    assert.doesNotMatch(brokenResult.stdout, /validation passed/u);
-  } finally {
-    fs.rmSync(tmp, { recursive: true, force: true });
+  for (const components of candidates) {
+    const manifestPath = writeManifest(root, components);
+    const result = runValidator(manifestPath, root);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /duplicate/u);
   }
 });
 
-test('ecosystem validator binds every external live package checkout to its manifest commit', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-live-package-commit-'));
-  try {
-    const packageRoot = path.join(tmp, 'fixture-package');
-    fs.mkdirSync(packageRoot);
-    fs.writeFileSync(
-      path.join(packageRoot, 'package.json'),
-      JSON.stringify({ name: '@aikdna/fixture-package', version: '1.0.0' }),
-    );
-    for (const args of [
-      ['init'],
-      ['config', 'user.name', 'KDNA Test'],
-      ['config', 'user.email', 'test@invalid.example'],
-      ['add', 'package.json'],
-      ['commit', '-m', 'fixture'],
-    ]) {
-      const result = spawnSync('git', args, { cwd: packageRoot, encoding: 'utf8' });
-      assert.equal(result.status, 0, result.stderr);
-    }
-
-    const manifestPath = writeManifest(tmp, liveComponent());
-    const result = runValidator(manifestPath, tmp);
-    assert.equal(result.status, 1, `stdout=${result.stdout}\nstderr=${result.stderr}`);
-    assert.match(result.stderr, /checkout commit mismatch/u);
-    assert.doesNotMatch(result.stdout, /validation passed/u);
-  } finally {
-    fs.rmSync(tmp, { recursive: true, force: true });
-  }
+test('validator enforces deprecated package source and publication boundaries', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-deprecated-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const packageRoot = path.join(root, 'fixture-package');
+  const commit = initRepository(packageRoot, {
+    'package.json': JSON.stringify({
+      name: '@aikdna/fixture-package',
+      version: '1.0.0',
+      scripts: { prepublishOnly: 'exit 0' },
+    }),
+  });
+  const deprecated = packageRecord({
+    lifecycle: 'Legacy',
+    release_status: 'deprecated',
+    dependency_policy: 'frozen',
+    legacy_replacement: '@aikdna/replacement',
+  });
+  const manifestPath = writeManifest(root, [
+    component({
+      source_commit: commit,
+      lifecycle: 'Legacy',
+      packages: [deprecated],
+      legacy_replacement: '@aikdna/replacement',
+    }),
+  ]);
+  const result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /deprecated package source must be private|must not expose/u);
 });
 
-test('ecosystem validator accepts only the exact clean package repository root', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-live-package-clean-root-'));
-  try {
-    const packageRoot = path.join(tmp, 'fixture-package');
-    fs.mkdirSync(packageRoot);
-    fs.writeFileSync(
-      path.join(packageRoot, 'package.json'),
-      JSON.stringify({ name: '@aikdna/fixture-package', version: '1.0.0' }),
-    );
-    for (const args of [
-      ['init'],
-      ['config', 'user.name', 'KDNA Test'],
-      ['config', 'user.email', 'test@invalid.example'],
-      ['add', 'package.json'],
-      ['commit', '-m', 'fixture'],
-    ]) {
-      const result = spawnSync('git', args, { cwd: packageRoot, encoding: 'utf8' });
-      assert.equal(result.status, 0, result.stderr);
-    }
-    const commit = spawnSync('git', ['rev-parse', 'HEAD'], {
-      cwd: packageRoot,
-      encoding: 'utf8',
-    }).stdout.trim();
-    const manifestPath = writeManifest(tmp, liveComponent({ conformance_commit: commit }));
+test('validator binds a live package-less component to an exact release tag and commit', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-component-release-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const swiftRoot = path.join(root, 'fixture-swift');
+  const commit = initRepository(swiftRoot, { 'Package.swift': '// swift fixture\n' });
+  git(swiftRoot, ['tag', '0.5.0']);
+  const released = component({
+    repository: 'aikdna/fixture-swift',
+    local_path: '../fixture-swift',
+    source_commit: commit,
+    component_version: '0.5.0',
+    release_tag: '0.5.0',
+    release_commit: commit,
+    packages: [],
+  });
+  const manifestPath = writeManifest(root, [released]);
 
-    const clean = runValidator(manifestPath, tmp);
-    assert.equal(clean.status, 0, `stdout=${clean.stdout}\nstderr=${clean.stderr}`);
-    assert.match(clean.stdout, /validation passed/u);
+  let result = runValidator(manifestPath, root);
+  assert.equal(result.status, 0, `stdout=${result.stdout}\nstderr=${result.stderr}`);
 
-    fs.writeFileSync(path.join(packageRoot, 'untracked.txt'), 'dirty');
-    const dirty = runValidator(manifestPath, tmp);
-    assert.equal(dirty.status, 1, `stdout=${dirty.stdout}\nstderr=${dirty.stderr}`);
-    assert.match(dirty.stderr, /checkout is dirty/u);
-    assert.doesNotMatch(dirty.stdout, /validation passed/u);
-  } finally {
-    fs.rmSync(tmp, { recursive: true, force: true });
-  }
+  writeManifest(root, [{ ...released, release_commit: '0'.repeat(40) }]);
+  result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /component release tag mismatch|release Git evidence/u);
+
+  const { release_tag: ignoredTag, release_commit: ignoredCommit, ...unbound } = released;
+  writeManifest(root, [unbound]);
+  result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /must bind its current release tag and commit/u);
 });
 
-test('ecosystem validator binds live release artifacts to an exact clean repository commit', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-live-artifact-commit-'));
-  try {
-    const artifactRoot = path.join(tmp, 'fixture-assets');
-    fs.mkdirSync(artifactRoot);
-    fs.writeFileSync(path.join(artifactRoot, 'release.kdna'), 'fixture');
-    for (const args of [
-      ['init'],
-      ['config', 'user.name', 'KDNA Test'],
-      ['config', 'user.email', 'test@invalid.example'],
-      ['add', 'release.kdna'],
-      ['commit', '-m', 'fixture'],
-    ]) {
-      const result = spawnSync('git', args, { cwd: artifactRoot, encoding: 'utf8' });
-      assert.equal(result.status, 0, result.stderr);
-    }
-    const commit = spawnSync('git', ['rev-parse', 'HEAD'], {
-      cwd: artifactRoot,
-      encoding: 'utf8',
-    }).stdout.trim();
-    const exactComponent = liveComponent({
+test('validator binds every artifact path, digest, version, release tag, and release commit', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-artifact-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const assetBytes = fs.readFileSync(
+    path.resolve(
+      repoRoot,
+      '..',
+      'kdna-assets',
+      'references/public/laozi-wuwei/laozi-wuwei-0.1.1.kdna',
+    ),
+  );
+  const assetHash = crypto.createHash('sha256').update(assetBytes).digest('hex');
+  const currentConformanceCommit = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
+  ).components.find((entry) => entry.repository === 'aikdna/kdna').conformance_commit;
+  const assetRoot = path.join(root, 'fixture-assets');
+  const commit = initRepository(assetRoot, { 'release.kdna': assetBytes });
+  git(assetRoot, ['tag', '0.1.1']);
+  const artifact = {
+    path: 'release.kdna',
+    version: '0.1.1',
+    sha256: assetHash,
+    release_tag: '0.1.1',
+    release_commit: commit,
+    conformance_commit: currentConformanceCommit,
+    kind: 'kdna-asset',
+    lifecycle: 'Experimental',
+    known_limitations: [],
+    recommended_entrypoint: 'inspect then load',
+  };
+  const manifestPath = writeManifest(root, [
+    component({
       repository: 'aikdna/fixture-assets',
       local_path: '../fixture-assets',
-      npm_package: null,
-      package_json: null,
-      artifact_path: 'release.kdna',
-      conformance_commit: commit,
-    });
-    const manifestPath = writeManifest(tmp, exactComponent);
+      source_commit: commit,
+      conformance_commit: currentConformanceCommit,
+      packages: [],
+      artifacts: [artifact],
+    }),
+  ]);
 
-    const clean = runValidator(manifestPath, tmp);
-    assert.equal(clean.status, 0, `stdout=${clean.stdout}\nstderr=${clean.stderr}`);
-    assert.match(clean.stdout, /validation passed/u);
+  const valid = runValidator(manifestPath, root);
+  assert.equal(valid.status, 0, `stdout=${valid.stdout}\nstderr=${valid.stderr}`);
 
-    writeManifest(tmp, { ...exactComponent, conformance_commit: '0'.repeat(40) });
-    const mismatched = runValidator(manifestPath, tmp);
-    assert.equal(mismatched.status, 1, `stdout=${mismatched.stdout}\nstderr=${mismatched.stderr}`);
-    assert.match(mismatched.stderr, /checkout commit mismatch/u);
+  writeManifest(root, [
+    component({
+      repository: 'aikdna/fixture-assets',
+      local_path: '../fixture-assets',
+      source_commit: commit,
+      conformance_commit: currentConformanceCommit,
+      packages: [],
+      artifacts: [{ ...artifact, sha256: '0'.repeat(64) }],
+    }),
+  ]);
+  const mismatched = runValidator(manifestPath, root);
+  assert.equal(mismatched.status, 1);
+  assert.match(mismatched.stderr, /SHA-256 mismatch/u);
 
-    writeManifest(tmp, exactComponent);
-    fs.writeFileSync(path.join(artifactRoot, 'untracked.txt'), 'dirty');
-    const dirty = runValidator(manifestPath, tmp);
-    assert.equal(dirty.status, 1, `stdout=${dirty.stdout}\nstderr=${dirty.stderr}`);
-    assert.match(dirty.stderr, /live artifact checkout is dirty/u);
-  } finally {
-    fs.rmSync(tmp, { recursive: true, force: true });
-  }
-});
-
-test('ecosystem validator rejects a package directory nested in some other repository', () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-live-package-nested-root-'));
-  try {
-    for (const args of [
-      ['init'],
-      ['config', 'user.name', 'KDNA Test'],
-      ['config', 'user.email', 'test@invalid.example'],
-    ]) {
-      const result = spawnSync('git', args, { cwd: tmp, encoding: 'utf8' });
-      assert.equal(result.status, 0, result.stderr);
-    }
-    const packageRoot = path.join(tmp, 'fixture-package');
-    fs.mkdirSync(packageRoot);
-    fs.writeFileSync(
-      path.join(packageRoot, 'package.json'),
-      JSON.stringify({ name: '@aikdna/fixture-package', version: '1.0.0' }),
-    );
-    const manifestPath = writeManifest(tmp, liveComponent());
-    const result = runValidator(manifestPath, tmp);
-    assert.equal(result.status, 1, `stdout=${result.stdout}\nstderr=${result.stderr}`);
-    assert.match(result.stderr, /not a repository root/u);
-    assert.doesNotMatch(result.stdout, /validation passed/u);
-  } finally {
-    fs.rmSync(tmp, { recursive: true, force: true });
-  }
+  writeManifest(root, [
+    component({
+      repository: 'aikdna/fixture-assets',
+      local_path: '../fixture-assets',
+      source_commit: commit,
+      packages: [],
+      artifacts: [
+        {
+          ...artifact,
+          conformance_commit: git(repoRoot, ['rev-parse', `${currentConformanceCommit}^`]),
+        },
+      ],
+    }),
+  ]);
+  const unboundConformance = runValidator(manifestPath, root);
+  assert.equal(unboundConformance.status, 1);
+  assert.match(unboundConformance.stderr, /artifact conformance_commit differs/u);
 });

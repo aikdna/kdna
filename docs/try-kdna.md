@@ -43,7 +43,7 @@ This proves the format works end-to-end. The output will be minimal — one plac
 
 - **Load into your AI agent**: [15-minute agent guide](./15-minute-agent-guide.md)
 - **Create your own domain**: [30-minute authoring guide](./30-minute-authoring-guide.md)
-- **Historical AIKDNA demonstrations**: [kdna-assets](https://github.com/aikdna/kdna-assets) (archived; not current-format onboarding assets)
+- **Current AIKDNA reference display**: [kdna-assets](https://github.com/aikdna/kdna-assets) (current-format technical references, not content endorsements or the default onboarding path)
 - **Current status**: [docs/status.md](./status.md)
 
 ## What KDNA Is

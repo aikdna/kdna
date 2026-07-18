@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Replace the repository-level ecosystem inventory with a strict schema-2
+  manifest. It records co-located Core, Eval, compatibility, and deprecated npm
+  packages; distinguishes repository source commits from conformance anchors;
+  binds both 0.1.1 reference assets to exact release commits and SHA-256 values;
+  removes the Eval baseline special case; and makes release-health policy an
+  exact version-bound projection of active and compatibility package records.
 - Retire the legacy `@aikdna/agent`, `@aikdna/kdna-artifact-engine`, and
   `@aikdna/kdna-fidelity-core` publication surfaces. Their source workspaces are
   private historical references, their npm coordinates are deprecated, and

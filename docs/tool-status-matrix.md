@@ -57,10 +57,26 @@
 | `kdna-loader` skill | **Beta** — supports OpenCode, Codex, Claude Code, Cursor, Gemini. Auto-install via `kdna setup`. |
 | MCP server adapter | Experimental |
 
+## Package Boundaries
+
+| Package | Status |
+|---|---|
+| `@aikdna/kdna-core@0.20.0` | Beta runtime SDK |
+| `@aikdna/kdna-eval@0.3.1` | Experimental evaluation toolkit |
+| `@aikdna/kdna@0.13.1` | Maintained Legacy compatibility bridge; use CLI/Core directly for new integrations |
+
 ## Native Apps
 
 Application products have independent release and maturity lifecycles. Their
 private development status is not part of the open protocol's tool matrix.
+
+## Swift Package Boundaries
+
+| Package | Public release | Status |
+|---|---|---|
+| `kdna-core-swift` | `0.20.0` | Beta runtime; conformance is pinned to the current Core fixture commit. |
+| `kdna-studio-swift` | `0.4.0` | Beta authoring kernel; the published release predates current Swift Core integration and awaits recertification. |
+| `kdna-app-shared` | `0.5.0` | Beta presentation infrastructure; the published release predates Swift Core 0.20.0 and awaits recertification. |
 
 ## Archived / Removed
 

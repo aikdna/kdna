@@ -3,7 +3,8 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { execSync } = require('node:child_process');
+const { execFileSync } = require('node:child_process');
+const { currentPublishedPackages } = require('./ecosystem-manifest');
 
 const DOCS_DIR = path.resolve(__dirname, '..', 'docs');
 let failures = 0;
@@ -52,26 +53,26 @@ for (const file of docsFiles) {
 
 console.log('── Package published and reachable');
 
-const packages = [
-  '@aikdna/kdna-cli',
-  '@aikdna/kdna-core',
-  '@aikdna/kdna-eval',
-  '@aikdna/kdna-studio-cli',
-  '@aikdna/kdna-studio-core',
-  '@aikdna/kdna-web-client',
-  '@aikdna/kdna-web-server',
-  '@aikdna/kdna-react',
-  'create-kdna-web-app',
-];
+const ecosystemManifest = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, '..', 'ecosystem-manifest.json'), 'utf8'),
+);
+const packages = currentPublishedPackages(ecosystemManifest).map(({ packageRecord }) => ({
+  name: packageRecord.npm_package,
+  version: packageRecord.version,
+}));
 
-for (const name of packages) {
+for (const { name, version } of packages) {
   try {
-    const actual = execSync(`npm view ${name} version`, {
+    const actual = execFileSync('npm', ['view', name, 'version'], {
       encoding: 'utf8',
       timeout: 15000,
       stdio: ['ignore', 'pipe', 'ignore'],
     }).trim();
-    check(`${name} is published (v${actual})`, /^\d+\.\d+\.\d+$/.test(actual));
+    check(
+      `${name} manifest=${version} npm=${actual}`,
+      actual === version,
+      'registry latest must equal the manifest version',
+    );
   } catch (e) {
     check(`${name} is published`, false, e.message.slice(0, 80));
   }

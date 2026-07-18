@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 const { execFileSync } = require('node:child_process');
+const { currentPublishedPackages } = require('./ecosystem-manifest');
 
 const repoRoot = path.resolve(__dirname, '..');
 const outputRoot = path.join(repoRoot, 'release-evidence');
@@ -27,6 +28,33 @@ const knownPackages = {
     publish_command: 'npm publish --provenance --access public',
   },
 };
+
+function validateKnownPackages() {
+  const manifest = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
+  );
+  const manifestPackages = currentPublishedPackages(manifest).filter(
+    ({ component }) => component.repository === 'aikdna/kdna',
+  );
+  const expected = new Map(
+    manifestPackages.map(({ component, packageRecord }) => [
+      packageRecord.npm_package,
+      path.resolve(repoRoot, component.local_path || '.', path.dirname(packageRecord.package_json)),
+    ]),
+  );
+  const observed = new Map(
+    Object.values(knownPackages).map((entry) => {
+      const pkg = JSON.parse(fs.readFileSync(path.join(entry.path, 'package.json'), 'utf8'));
+      return [pkg.name, path.resolve(entry.path)];
+    }),
+  );
+  if (
+    expected.size !== observed.size ||
+    [...expected].some(([packageName, packagePath]) => observed.get(packageName) !== packagePath)
+  ) {
+    throw new Error('release evidence package inventory differs from ecosystem-manifest.json');
+  }
+}
 
 function json(value) {
   return JSON.stringify(value, null, 2) + '\n';
@@ -154,6 +182,7 @@ function generateSbom(sourceCommit, selectedPackages) {
 }
 
 function main() {
+  validateKnownPackages();
   fs.rmSync(outputRoot, { recursive: true, force: true });
   fs.mkdirSync(outputRoot, { recursive: true });
   fs.mkdirSync(npmCacheDir, { recursive: true });

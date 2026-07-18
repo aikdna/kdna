@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aikdna.github.io/schemas/ecosystem-manifest.schema.json",
+  "title": "KDNA Ecosystem Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "lifecycle_terms", "baseline_statement", "components"],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "lifecycle_terms": {
+      "const": [
+        "Stable",
+        "Beta",
+        "Experimental",
+        "Legacy",
+        "Removed",
+        "Future",
+        "Draft Normative"
+      ]
+    },
+    "baseline_statement": { "type": "string", "minLength": 1 },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/component" }
+    }
+  },
+  "$defs": {
+    "lifecycle": {
+      "enum": [
+        "Stable",
+        "Beta",
+        "Experimental",
+        "Legacy",
+        "Removed",
+        "Future",
+        "Draft Normative"
+      ]
+    },
+    "sha1": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\\+([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?$"
+    },
+    "stringArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "packagePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*(?:^|/)\\.(?:/|$)).*package\\.json$"
+    },
+    "artifactPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*(?:^|/)\\.(?:/|$)).+\\.kdna$"
+    },
+    "localPath": {
+      "oneOf": [
+        { "const": "." },
+        { "type": "string", "pattern": "^\\.\\./[A-Za-z0-9._-]+$" },
+        { "type": "null" }
+      ]
+    },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package_json",
+        "package_name",
+        "npm_package",
+        "version",
+        "lifecycle",
+        "release_status",
+        "dependency_policy",
+        "known_limitations",
+        "recommended_entrypoint",
+        "legacy_replacement"
+      ],
+      "properties": {
+        "package_json": { "$ref": "#/$defs/packagePath" },
+        "package_name": { "type": "string", "minLength": 1 },
+        "npm_package": {
+          "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        },
+        "version": { "$ref": "#/$defs/semver" },
+        "lifecycle": { "$ref": "#/$defs/lifecycle" },
+        "release_status": {
+          "enum": ["active", "compatibility", "deprecated", "source-only"]
+        },
+        "dependency_policy": { "enum": ["current", "frozen", "none"] },
+        "known_limitations": { "$ref": "#/$defs/stringArray" },
+        "recommended_entrypoint": {
+          "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        },
+        "legacy_replacement": {
+          "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "release_status": { "const": "active" } } },
+          "then": {
+            "properties": {
+              "npm_package": { "type": "string", "minLength": 1 },
+              "lifecycle": { "enum": ["Stable", "Beta", "Experimental"] },
+              "dependency_policy": { "const": "current" },
+              "legacy_replacement": { "type": "null" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "release_status": { "const": "compatibility" } } },
+          "then": {
+            "properties": {
+              "npm_package": { "type": "string", "minLength": 1 },
+              "lifecycle": { "const": "Legacy" },
+              "dependency_policy": { "const": "current" },
+              "legacy_replacement": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "release_status": { "const": "deprecated" } } },
+          "then": {
+            "properties": {
+              "npm_package": { "type": "string", "minLength": 1 },
+              "lifecycle": { "enum": ["Legacy", "Removed"] },
+              "dependency_policy": { "const": "frozen" },
+              "legacy_replacement": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "release_status": { "const": "source-only" } } },
+          "then": { "properties": { "npm_package": { "type": "null" } } }
+        }
+      ]
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "version",
+        "sha256",
+        "release_tag",
+        "release_commit",
+        "conformance_commit",
+        "kind",
+        "lifecycle",
+        "known_limitations",
+        "recommended_entrypoint"
+      ],
+      "properties": {
+        "path": { "$ref": "#/$defs/artifactPath" },
+        "version": { "$ref": "#/$defs/semver" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "release_tag": { "type": "string", "minLength": 1 },
+        "release_commit": { "$ref": "#/$defs/sha1" },
+        "conformance_commit": { "$ref": "#/$defs/sha1" },
+        "kind": { "const": "kdna-asset" },
+        "lifecycle": { "$ref": "#/$defs/lifecycle" },
+        "known_limitations": { "$ref": "#/$defs/stringArray" },
+        "recommended_entrypoint": { "type": "string", "minLength": 1 }
+      }
+    },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "local_path",
+        "source_commit",
+        "conformance_commit",
+        "component_version",
+        "packages",
+        "artifacts",
+        "lifecycle",
+        "supported_kdna_version",
+        "supported_access_modes",
+        "supported_entitlement_profiles",
+        "known_limitations",
+        "recommended_entrypoint",
+        "legacy_replacement"
+      ],
+      "properties": {
+        "repository": { "type": "string", "pattern": "^aikdna/[A-Za-z0-9._-]+$" },
+        "local_path": { "$ref": "#/$defs/localPath" },
+        "source_commit": { "oneOf": [{ "$ref": "#/$defs/sha1" }, { "type": "null" }] },
+        "conformance_commit": {
+          "oneOf": [{ "$ref": "#/$defs/sha1" }, { "type": "null" }]
+        },
+        "release_tag": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^v?(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "release_commit": {
+          "oneOf": [{ "$ref": "#/$defs/sha1" }, { "type": "null" }]
+        },
+        "component_version": {
+          "oneOf": [{ "$ref": "#/$defs/semver" }, { "type": "null" }]
+        },
+        "packages": { "type": "array", "items": { "$ref": "#/$defs/package" } },
+        "artifacts": { "type": "array", "items": { "$ref": "#/$defs/artifact" } },
+        "lifecycle": { "$ref": "#/$defs/lifecycle" },
+        "supported_kdna_version": {
+          "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        },
+        "supported_access_modes": { "$ref": "#/$defs/stringArray" },
+        "supported_entitlement_profiles": { "$ref": "#/$defs/stringArray" },
+        "known_limitations": { "$ref": "#/$defs/stringArray" },
+        "recommended_entrypoint": {
+          "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        },
+        "legacy_replacement": {
+          "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        }
+      }
+    }
+  }
+}

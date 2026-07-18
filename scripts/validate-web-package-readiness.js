@@ -3,6 +3,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { requireNpmPackage } = require('./ecosystem-manifest');
 
 const repoRoot = path.resolve(__dirname, '..');
 const reposRoot = process.env.KDNA_REPOS_ROOT
@@ -11,12 +12,9 @@ const reposRoot = process.env.KDNA_REPOS_ROOT
 const ecosystemManifest = JSON.parse(
   fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
 );
-const currentCore = ecosystemManifest.components.find(
-  (component) =>
-    component.repository === 'aikdna/kdna' && component.npm_package === '@aikdna/kdna-core',
-);
+const currentCore = requireNpmPackage(ecosystemManifest, '@aikdna/kdna-core').packageRecord;
 
-if (!currentCore || !currentCore.current_version) {
+if (!currentCore.version) {
   throw new Error('ecosystem manifest must declare the current @aikdna/kdna-core version');
 }
 
@@ -38,7 +36,7 @@ const packages = [
     exports: ['.', './nextjs', './express'],
     forbiddenPeerDependencies: ['@aikdna/kdna-studio-core'],
     exactPeerDependencies: {
-      '@aikdna/kdna-core': currentCore.current_version,
+      '@aikdna/kdna-core': currentCore.version,
     },
     packageJsonFiles: ['package.json'],
     requiredPackageFiles: ['SECURITY.md'],
