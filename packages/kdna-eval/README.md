@@ -255,6 +255,16 @@ Version 0.3.2 also closes implicit-evidence paths in Assay and Replay APIs:
   including fixture IDs, tasks, categories, and expected evidence. Object key
   order does not change the hash, while task or expectation changes do.
   `created_at` and the derived `task_hash` are excluded from the fingerprint.
+- `generateEvidenceClaim(report, options)` requires `options.traceId` from a
+  real JudgmentTrace. It omits absent optional plan IDs and asset digests,
+  rejects malformed digests and fingerprints, and does not claim axiom coverage
+  because an Asset Assay does not observe per-trace axiom activation. Every
+  planned baseline execution must produce a result; runner errors fail the
+  `execution_evidence` threshold and cannot become behavior-evaluated evidence.
+- Route policy lookup accepts only an operation's own validated data property.
+  Prototype members, accessors, inherited policy fields, and malformed domain
+  records are rejected; inherited, accessor-based, or non-finite domain
+  overrides are rejected without executing their getters.
 - Fixture evidence must be deterministic JSON data: cycles, `BigInt`,
   `undefined`, functions, symbols, sparse arrays, accessors, and non-plain
   nested objects are rejected before an Assay runner or Replay engine executes.

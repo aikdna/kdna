@@ -25,4 +25,5 @@ export type {
   AssayThresholds,
   CreateAssayFixtureOptions,
   CreateAssayProfileOptions,
+  GenerateEvidenceClaimOptions,
 } from "./types.js";

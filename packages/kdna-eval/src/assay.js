@@ -695,7 +695,7 @@ async function runAssay(opts = {}) {
       .filter(r => r.result && !r.error)
       .map(r => scoreJudgment(r.result, r.result?.expected || fixtureFor(r.fixture_id, fixtures), { arm: arm.arm }));
     const skipped = armResults.filter(r => r.result?.skipped || r.result?.decision === 'does_not_apply').length;
-    const errors = armResults.filter(r => r.error).length;
+    const errors = armResults.filter(r => r.error || !r.result).length;
     byArm[arm.arm] = {
       count: armResults.length,
       scores,
@@ -758,6 +758,14 @@ async function runAssay(opts = {}) {
   const thresholdResults = {
     fixture_dataset: { pass: fixtureValidation.valid, detail: fixtureValidation.summary },
     baseline_arms: { pass: baselineValidation.valid, detail: baselineValidation.summary },
+    execution_evidence: {
+      pass: results.length > 0 && results.every(row => row.result && !row.error),
+      detail: {
+        attempted: results.length,
+        completed: results.filter(row => row.result && !row.error).length,
+        errors: results.filter(row => row.error || !row.result).length,
+      },
+    },
     blind_improvement: {
       pass: meanImprovement >= t.blind_mean_improvement_min || criticalErrorReduction >= t.critical_error_reduction_pct,
       detail: {
@@ -887,57 +895,128 @@ function classifyAsset(evidence = {}) {
  * @returns {object} evidence claim (conforms to evidence-claim-candidate-0.9 schema)
  */
 function generateEvidenceClaim(assayOutput, opts = {}) {
+  if (!isPlainObject(assayOutput)) {
+    throw new TypeError('generateEvidenceClaim requires an assay report object');
+  }
   const { profile, threshold_results, overall_verdict, result_count } = assayOutput;
+  if (!isPlainObject(opts)) {
+    throw new TypeError('generateEvidenceClaim options must be a plain object');
+  }
+  const optionErrors = canonicalValidationErrors(opts, 'options');
+  if (optionErrors.length) {
+    throw new TypeError(`Invalid EvidenceClaim options: ${optionErrors.join('; ')}`);
+  }
+  const traceId = Object.prototype.hasOwnProperty.call(opts, 'traceId') ? opts.traceId : undefined;
+  const planId = Object.prototype.hasOwnProperty.call(opts, 'planId') ? opts.planId : undefined;
+  if (!isNonEmptyString(traceId)) {
+    throw new TypeError('traceId is required; EvidenceClaim must reference a real JudgmentTrace');
+  }
+  if (planId !== undefined && !isNonEmptyString(planId)) {
+    throw new TypeError('planId must be a non-empty string when provided');
+  }
+  for (const name of ['taskFamily', 'model', 'runtime']) {
+    if (Object.prototype.hasOwnProperty.call(opts, name) && !isNonEmptyString(opts[name])) {
+      throw new TypeError(`${name} must be a non-empty string when provided`);
+    }
+  }
+  const taskFamily = Object.prototype.hasOwnProperty.call(opts, 'taskFamily') ?
+    opts.taskFamily : 'asset_assay';
+  const model = Object.prototype.hasOwnProperty.call(opts, 'model') ? opts.model : 'unknown';
+  const runtime = Object.prototype.hasOwnProperty.call(opts, 'runtime') ?
+    opts.runtime : 'kdna-eval 0.3.2';
+  if (!isPlainObject(profile)) {
+    throw new TypeError('assay report profile must be a plain object');
+  }
+  if (!Object.prototype.hasOwnProperty.call(assayOutput, 'dataset_fingerprint') ||
+      !isNonEmptyString(assayOutput.dataset_fingerprint) ||
+      !/^sha256:[a-f0-9]{16,128}$/.test(assayOutput.dataset_fingerprint)) {
+    throw new TypeError('assay report dataset_fingerprint must be a canonical sha256 fingerprint');
+  }
+  if (!Object.prototype.hasOwnProperty.call(profile, 'asset_id') ||
+      !isNonEmptyString(profile.asset_id) ||
+      !Object.prototype.hasOwnProperty.call(profile, 'asset_version') ||
+      !isNonEmptyString(profile.asset_version)) {
+    throw new TypeError('assay report profile must contain asset_id and asset_version');
+  }
+  const assetDigest = Object.prototype.hasOwnProperty.call(profile, 'asset_digest') ?
+    profile.asset_digest : undefined;
+  if (assetDigest !== undefined && assetDigest !== null &&
+      !/^sha256:[a-f0-9]{64}$/.test(assetDigest)) {
+    throw new TypeError('assay report asset_digest must be a canonical sha256 digest when provided');
+  }
 
-  return {
+  const hasCompleteArmEvidence = (data) => isPlainObject(data) &&
+    Number.isInteger(data.count) && data.count > 0 &&
+    Number.isInteger(data.errors) && data.errors === 0 &&
+    Array.isArray(data.scores) && data.scores.length === data.count &&
+    Number.isFinite(data.mean_score);
+  const baselineArm = assayOutput.results_by_arm?.['no_kdna'];
+  const targetArm = assayOutput.results_by_arm?.['correct_single_kdna'];
+  const hasMeasuredMarginalValue = hasCompleteArmEvidence(baselineArm) &&
+    hasCompleteArmEvidence(targetArm) && Number.isInteger(result_count) && result_count > 0;
+  const baselineScore = hasMeasuredMarginalValue ? baselineArm.mean_score : null;
+  const targetScore = hasMeasuredMarginalValue ? targetArm.mean_score : null;
+  const behaviorEvaluated = overall_verdict === 'pass' && hasMeasuredMarginalValue;
+
+  const assetRef = {
+    asset_id: profile.asset_id,
+    version: profile.asset_version,
+  };
+  if (assetDigest !== undefined && assetDigest !== null) {
+    assetRef.digest = assetDigest;
+  }
+
+  const claim = {
     evidence_version: '0.9.0',
     claim_id: `claim_${crypto.randomBytes(8).toString('hex')}`,
-    trace_id: opts.traceId || null,
-    plan_id: opts.planId || null,
+    trace_id: traceId,
     claim_type: 'comparison_assay',
-    asset_ref: {
-      asset_id: profile.asset_id,
-      version: profile.asset_version,
-      digest: profile.asset_digest,
-    },
+    asset_ref: assetRef,
     scope: {
-      task_family: opts.taskFamily || 'asset_assay',
+      task_family: taskFamily,
       task_hash: assayOutput.dataset_fingerprint,
-      model: opts.model || 'unknown',
-      runtime: opts.runtime || 'kdna-eval 0.3.2',
+      model,
+      runtime,
       dataset_fingerprint: assayOutput.dataset_fingerprint,
       evaluator: 'deterministic',
     },
-    judgment_quality: {
-      axiom_coverage: {
-        triggered: result_count,
-        available: assayOutput.fixture_validation?.summary?.total || 0,
-        coverage_ratio: assayOutput.fixture_validation?.summary?.total > 0 ?
-          result_count / assayOutput.fixture_validation.summary.total : 0,
-      },
-    },
+    // An Asset Assay measures fixtures and comparison arms. It does not observe
+    // how many asset axioms a JudgmentTrace triggered, so emitting
+    // judgment_quality.axiom_coverage here would invent evidence.
+    judgment_quality: {},
     comparison_arms: Object.fromEntries(
-      Object.entries(assayOutput.results_by_arm || {}).map(([arm, data]) => [
-        arm,
-        { score: Math.round(data.mean_score * 100) / 100, status: 'completed', arm },
-      ])
+      Object.entries(assayOutput.results_by_arm || {}).map(([arm, data]) => {
+        const completed = hasCompleteArmEvidence(data);
+        return [
+          arm,
+          {
+            ...(completed ? { score: Math.round(data.mean_score * 100) / 100 } : {}),
+            status: completed ? 'completed' : 'failed',
+            arm,
+          },
+        ];
+      })
     ),
     marginal_value: {
-      baseline_score: assayOutput.results_by_arm?.['no_kdna']?.mean_score || null,
-      target_score: assayOutput.results_by_arm?.['correct_single_kdna']?.mean_score || null,
-      delta: null,
-      threshold_met: overall_verdict === 'pass',
+      baseline_score: hasMeasuredMarginalValue ? baselineScore : null,
+      target_score: hasMeasuredMarginalValue ? targetScore : null,
+      delta: hasMeasuredMarginalValue ?
+        Math.round((targetScore - baselineScore) * 100) / 100 : null,
+      threshold_met: hasMeasuredMarginalValue ? overall_verdict === 'pass' : null,
       threshold_name: '+0.5 mean vs no-KDNA or -30% critical errors',
-      evidence_produced: true,
+      evidence_produced: hasMeasuredMarginalValue,
     },
     limitations: [
       `Automated assay — ${result_count} fixture × baseline arm combinations evaluated`,
       `Thresholds passed: ${Object.values(threshold_results).filter(t => t.pass).length}/${Object.values(threshold_results).length}`,
       `Failed thresholds: ${assayOutput.failed_thresholds.join(', ') || 'none'}`,
+      'Axiom coverage was not measured by this assay and is not claimed',
+      ...(!hasMeasuredMarginalValue ?
+        ['Marginal value was not measured because baseline or target execution evidence was incomplete'] : []),
     ],
     classification: {
-      level: overall_verdict === 'pass' ? 'behavior_evaluated' : 'usage_evidence',
-      not_behavior_evaluated: overall_verdict !== 'pass',
+      level: behaviorEvaluated ? 'behavior_evaluated' : 'usage_evidence',
+      not_behavior_evaluated: !behaviorEvaluated,
       not_field_validated: true,
       not_production: true,
       load_ready_only: false,
@@ -947,6 +1026,9 @@ function generateEvidenceClaim(assayOutput, opts = {}) {
       generated_at: new Date().toISOString(),
     },
   };
+
+  if (planId !== undefined) claim.plan_id = planId;
+  return claim;
 }
 
 module.exports = {

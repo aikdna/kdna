@@ -21,10 +21,18 @@ test("strict consumers cannot construct invalid assay evidence identifiers or fi
   createMultiGateRunner,
   createReplayEngine,
   economicsGate,
+  generateEvidenceClaim,
   runClusterAssay,
   runClusterReplay,
 } from "@aikdna/kdna-eval";
 import type { CreateAssayFixtureOptions } from "@aikdna/kdna-eval/assay";
+import {
+  generateEvidenceClaim as generateSubpathEvidenceClaim,
+} from "@aikdna/kdna-eval/assay";
+import type {
+  AssayReport,
+  GenerateEvidenceClaimOptions,
+} from "@aikdna/kdna-eval/assay";
 import {
   economicsGate as subpathEconomicsGate,
 } from "@aikdna/kdna-eval/cluster-assay";
@@ -40,6 +48,13 @@ const assayOptions: CreateAssayFixtureOptions = {
   task: "Review the release evidence",
   expected: { answer: "hold" },
 };
+declare const assayReport: AssayReport;
+const evidenceClaimOptions: GenerateEvidenceClaimOptions = {
+  traceId: "trace_0000000000000001",
+  planId: "plan_0000000000000001",
+};
+const rootEvidenceClaim = generateEvidenceClaim(assayReport, evidenceClaimOptions);
+const subpathEvidenceClaim = generateSubpathEvidenceClaim(assayReport, evidenceClaimOptions);
 const clusterOptions: CreateClusterFixtureOptions = {
   task: "Review the cluster evidence",
   expectedPrimary: "@aikdna/primary",
@@ -90,8 +105,13 @@ subpathGateErrors[0].toUpperCase();
 const replay = runClusterReplay(createReplayEngine(), [clusterFixture]);
 void profile; void fixture; void ledger; void assay; void emptyAssay; void emptyOptionsAssay;
 void blockedAssay; void replay;
+void rootEvidenceClaim; void subpathEvidenceClaim;
 
 if (false) {
+  // @ts-expect-error a real traceId is required
+  generateEvidenceClaim(assayReport);
+  // @ts-expect-error a real traceId is required
+  generateSubpathEvidenceClaim(assayReport, {});
   // @ts-expect-error assetId cannot be numeric
   createAssayProfile({ assetId: 42 });
   // @ts-expect-error expected evidence is required

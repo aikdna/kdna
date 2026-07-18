@@ -602,6 +602,16 @@ void ${root}.runAssay({
   if (assayRunnerCalls !== 0 || report.overall_verdict !== "fail" || report.result_count !== 0) {
     throw new Error("invalid packed assay dataset did not fail before runner invocation");
   }
+  const rootClaim = ${root}.generateEvidenceClaim(report, {
+    traceId: "trace_packed_root_assay",
+  });
+  const subpathClaim = ${aliases["./assay"]}.generateEvidenceClaim(report, {
+    traceId: "trace_packed_subpath_assay",
+  });
+  if (rootClaim.trace_id !== "trace_packed_root_assay" ||
+      subpathClaim.trace_id !== "trace_packed_subpath_assay") {
+    throw new Error("packed EvidenceClaim did not preserve its required trace identity");
+  }
 });
 const relaxedAssayProfile = ${root}.createAssayProfile({
   thresholds: {

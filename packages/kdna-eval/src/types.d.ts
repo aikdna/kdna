@@ -551,6 +551,14 @@ export interface AssayReport {
   dataset_fingerprint: string;
 }
 
+export interface GenerateEvidenceClaimOptions {
+  traceId: string;
+  planId?: string;
+  taskFamily?: string;
+  model?: string;
+  runtime?: string;
+}
+
 export interface ClusterAssayGate {
   pass: boolean | null;
   score: number | null;
@@ -822,7 +830,7 @@ export declare function runAssay(options: {
   baselineArms?: AssayArmDefinition[];
 }): Promise<AssayReport>;
 export declare function classifyAsset(evidence?: Record<string, unknown>): Record<string, unknown> & { levels: string[]; highest_level: string };
-export declare function generateEvidenceClaim(report: AssayReport, options?: Record<string, unknown>): Record<string, unknown>;
+export declare function generateEvidenceClaim(report: AssayReport, options: GenerateEvidenceClaimOptions): Record<string, unknown>;
 
 export type ClusterComparisonArm =
   | "primary_only"

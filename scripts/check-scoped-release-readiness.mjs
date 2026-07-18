@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { execFileSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -52,12 +53,91 @@ function assertCommitBinding({ expectedTag, taggedCommit, headCommit, githubSha,
   }
 }
 
-function assertEvidenceBinding({ manifest, label, packageName, version, githubSha }) {
+function resolveSafeRepositoryFile(repoRoot, relativePath, label) {
+  if (
+    typeof relativePath !== 'string' ||
+    relativePath.length === 0 ||
+    relativePath.includes('\\') ||
+    path.isAbsolute(relativePath) ||
+    path.posix.normalize(relativePath) !== relativePath ||
+    relativePath.startsWith('../')
+  ) {
+    throw new Error(`${label} path must be a normalized repository-relative path`);
+  }
+  const resolved = path.resolve(repoRoot, ...relativePath.split('/'));
+  const relative = path.relative(repoRoot, resolved);
+  if (relative === '' || relative.startsWith('..') || path.isAbsolute(relative)) {
+    throw new Error(`${label} path must stay inside the repository`);
+  }
+  const stat = fs.lstatSync(resolved);
+  if (!stat.isFile() || stat.isSymbolicLink()) {
+    throw new Error(`${label} must be a regular file, not a symlink`);
+  }
+  const realPath = fs.realpathSync(resolved);
+  const realRelative = path.relative(fs.realpathSync(repoRoot), realPath);
+  if (realRelative === '' || realRelative.startsWith('..') || path.isAbsolute(realRelative)) {
+    throw new Error(`${label} real path must stay inside the repository`);
+  }
+  return resolved;
+}
+
+function inspectEvidenceArtifact({ manifest, repoRoot = ROOT }) {
+  if (!Array.isArray(manifest?.artifacts) || manifest.artifacts.length !== 1) {
+    throw new Error('release evidence must contain exactly one artifact');
+  }
+  const [artifact] = manifest.artifacts;
+  if (!artifact || typeof artifact !== 'object' || Array.isArray(artifact)) {
+    throw new Error('release evidence artifact must be an object');
+  }
+  if (artifact.artifact_path !== `release-evidence/${artifact.filename}`) {
+    throw new Error('release evidence artifact path must exactly bind its filename');
+  }
+  const artifactPath = resolveSafeRepositoryFile(
+    repoRoot,
+    artifact.artifact_path,
+    'release artifact',
+  );
+  const bytes = fs.readFileSync(artifactPath);
+  let packageMetadata;
+  try {
+    packageMetadata = JSON.parse(
+      execFileSync('tar', ['-xOzf', artifactPath, 'package/package.json'], {
+        encoding: 'utf8',
+        maxBuffer: 1024 * 1024,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      }),
+    );
+  } catch {
+    throw new Error('release artifact must contain a readable package/package.json');
+  }
+  return {
+    artifactPath,
+    relativePath: artifact.artifact_path,
+    size: bytes.length,
+    sha256: crypto.createHash('sha256').update(bytes).digest('hex'),
+    shasum: crypto.createHash('sha1').update(bytes).digest('hex'),
+    integrity: `sha512-${crypto.createHash('sha512').update(bytes).digest('base64')}`,
+    packageName: packageMetadata?.name,
+    version: packageMetadata?.version,
+  };
+}
+
+function assertEvidenceBinding({
+  manifest,
+  label,
+  packageName,
+  version,
+  githubSha,
+  artifactInspection,
+}) {
   if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest)) {
     throw new Error('release evidence manifest must be an object');
   }
   if (manifest.source_commit !== githubSha) {
     throw new Error('release evidence source_commit must equal GITHUB_SHA');
+  }
+  if (manifest.source_repository !== 'aikdna/kdna') {
+    throw new Error('release evidence source_repository must equal aikdna/kdna');
   }
   if (manifest.git_dirty !== false)
     throw new Error('release evidence must record a clean worktree');
@@ -74,6 +154,52 @@ function assertEvidenceBinding({ manifest, label, packageName, version, githubSh
     artifact.version !== version
   ) {
     throw new Error('release evidence artifact identity does not match the scoped package');
+  }
+  if (
+    typeof artifact.filename !== 'string' ||
+    !/^[A-Za-z0-9][A-Za-z0-9._-]*\.tgz$/u.test(artifact.filename) ||
+    path.posix.basename(artifact.filename) !== artifact.filename ||
+    artifact.artifact_path !== `release-evidence/${artifact.filename}`
+  ) {
+    throw new Error('release evidence artifact path does not safely bind its filename');
+  }
+  const expectedFilename = `${packageName.replace(/^@/u, '').replace('/', '-')}-${version}.tgz`;
+  if (artifact.filename !== expectedFilename) {
+    throw new Error('release evidence artifact filename does not match the scoped package');
+  }
+  if (
+    typeof artifact.sha256 !== 'string' ||
+    !/^[a-f0-9]{64}$/u.test(artifact.sha256) ||
+    typeof artifact.shasum !== 'string' ||
+    !/^[a-f0-9]{40}$/u.test(artifact.shasum) ||
+    typeof artifact.integrity !== 'string' ||
+    !/^sha512-[A-Za-z0-9+/]+={0,2}$/u.test(artifact.integrity) ||
+    !Number.isSafeInteger(artifact.size) ||
+    artifact.size <= 0
+  ) {
+    throw new Error('release evidence artifact hashes and size must be complete');
+  }
+  const expectedPublishCommand = `npm publish "${artifact.artifact_path}" --provenance --access public`;
+  if (
+    artifact.npm_provenance_required !== true ||
+    artifact.publish_command !== expectedPublishCommand
+  ) {
+    throw new Error('release evidence must preserve npm provenance for the exact artifact');
+  }
+  if (!artifactInspection || typeof artifactInspection !== 'object') {
+    throw new Error('release artifact inspection is required');
+  }
+  if (
+    artifactInspection.relativePath !== artifact.artifact_path ||
+    artifactInspection.size !== artifact.size ||
+    artifactInspection.sha256 !== artifact.sha256 ||
+    artifactInspection.shasum !== artifact.shasum ||
+    artifactInspection.integrity !== artifact.integrity
+  ) {
+    throw new Error('release evidence hashes do not match the retained artifact bytes');
+  }
+  if (artifactInspection.packageName !== packageName || artifactInspection.version !== version) {
+    throw new Error('retained artifact package identity does not match the scoped package');
   }
 }
 
@@ -128,17 +254,16 @@ function main() {
     status: runGit(['status', '--porcelain']),
   });
   if (args.evidence) {
-    const evidencePath = path.resolve(ROOT, args.evidence);
-    const relativeEvidencePath = path.relative(ROOT, evidencePath);
-    if (relativeEvidencePath.startsWith('..') || path.isAbsolute(relativeEvidencePath)) {
-      throw new Error('release evidence path must stay inside the repository');
-    }
+    const evidencePath = resolveSafeRepositoryFile(ROOT, args.evidence, 'release evidence');
+    const manifest = JSON.parse(fs.readFileSync(evidencePath, 'utf8'));
+    const artifactInspection = inspectEvidenceArtifact({ manifest });
     assertEvidenceBinding({
-      manifest: JSON.parse(fs.readFileSync(evidencePath, 'utf8')),
+      manifest,
       label: args.label,
       packageName: pkg.name,
       version: pkg.version,
       githubSha: process.env.GITHUB_SHA,
+      artifactInspection,
     });
   }
   console.log(`Scoped release readiness passed: ${pkg.name}@${pkg.version} from ${expectedTag}`);
@@ -151,5 +276,7 @@ export {
   assertEvidenceBinding,
   assertReleaseContext,
   canonicalScopedTag,
+  inspectEvidenceArtifact,
   parseArguments,
+  resolveSafeRepositoryFile,
 };

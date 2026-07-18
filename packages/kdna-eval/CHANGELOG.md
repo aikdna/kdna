@@ -54,6 +54,19 @@
 - Reject coercible or malformed standalone behavioral and product gate evidence,
   and require custom multi-gate functions to return every declared `GateResult`
   field before an explicit pass can participate in aggregation.
+- Generate schema-valid EvidenceClaims only when the caller supplies a real
+  `traceId`. Missing plan IDs and asset digests are omitted instead of encoded
+  as forbidden `null` values, and Asset Assay execution counts are no longer
+  mislabeled as observed axiom coverage. Runner errors fail the explicit
+  execution-evidence threshold and cannot produce behavior-evaluated or
+  completed comparison claims.
+- Resolve route policies from validated own data properties only. Prototype
+  members, accessors, inherited policy fields, and malformed domain entries
+  fail closed instead of becoming executable routing policy.
+- Retain the actual Eval package tarball produced for release evidence, bind its
+  repository-relative path, hashes, size, and package identity, and publish
+  those verified bytes with npm provenance instead of packing the directory a
+  second time.
 
 ## 0.3.1 (2026-07-12)
 

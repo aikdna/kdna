@@ -1,5 +1,9 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
+const fs = require('node:fs');
+const path = require('node:path');
+const Ajv2020 = require('ajv/dist/2020').default;
+const addFormats = require('ajv-formats');
 const {
   FIXTURE_CATEGORIES,
   BASELINE_ARMS,
@@ -16,6 +20,22 @@ const {
   classifyAsset,
   generateEvidenceClaim,
 } = require('../src/assay');
+
+const evidenceClaimSchema = JSON.parse(fs.readFileSync(
+  path.resolve(__dirname, '../../../specs/evidence-claim-candidate-0.9.schema.json'),
+  'utf8',
+));
+const evidenceClaimAjv = new Ajv2020({ allErrors: true, strict: true });
+addFormats(evidenceClaimAjv);
+const validateEvidenceClaim = evidenceClaimAjv.compile(evidenceClaimSchema);
+
+function assertSchemaValidEvidenceClaim(claim) {
+  assert.strictEqual(
+    validateEvidenceClaim(claim),
+    true,
+    evidenceClaimAjv.errorsText(validateEvidenceClaim.errors, { separator: '\n' }),
+  );
+}
 
 const fixture = (category, task, expected = { answer: 'expected' }) =>
   createFixture({ category, task, expected });
@@ -354,10 +374,9 @@ it('asset dataset fingerprint is key-order stable and content-sensitive', async 
   assert.strictEqual(original.dataset_fingerprint, sameSemantics.dataset_fingerprint);
   assert.notStrictEqual(original.dataset_fingerprint, changedTask.dataset_fingerprint);
   assert.notStrictEqual(original.dataset_fingerprint, changedExpected.dataset_fingerprint);
-  assert.strictEqual(
-    generateEvidenceClaim(original).scope.dataset_fingerprint,
-    original.dataset_fingerprint,
-  );
+  const originalClaim = generateEvidenceClaim(original, { traceId: 'trace_fingerprint_assay' });
+  assertSchemaValidEvidenceClaim(originalClaim);
+  assert.strictEqual(originalClaim.scope.dataset_fingerprint, original.dataset_fingerprint);
 });
 
 // ── Baseline Arms ─────────────────────────────────────────────────────
@@ -565,13 +584,71 @@ it('does not inflate classification', () => {
 
 // ── Evidence Claim Generator ──────────────────────────────────────────
 
+const completedArmEvidence = (meanScore, count = 21) => ({
+  count,
+  scores: Array.from({ length: count }, () => ({ score: meanScore })),
+  mean_score: meanScore,
+  errors: 0,
+});
+
+it('generates schema-valid claims from actual passing and failing Assay reports', async () => {
+  const profile = relaxedProfile();
+  const passingReport = await runAssay({
+    profile,
+    fixtures: [fixture('positive_target', 'actual passing assay')],
+    runner: async (_fixture, arm) => ({
+      answer: 'observed answer',
+      score_5pt: arm.arm === 'correct_single_kdna' ? 5 : 2,
+    }),
+  });
+  const failingReport = await runAssay({
+    profile,
+    fixtures: [],
+    runner: async () => { throw new Error('invalid fixtures must not invoke the runner'); },
+  });
+
+  assert.strictEqual(passingReport.overall_verdict, 'pass');
+  assert.strictEqual(failingReport.overall_verdict, 'fail');
+  assertSchemaValidEvidenceClaim(
+    generateEvidenceClaim(passingReport, { traceId: 'trace_actual_passing_assay' }),
+  );
+  assertSchemaValidEvidenceClaim(
+    generateEvidenceClaim(failingReport, { traceId: 'trace_actual_failing_assay' }),
+  );
+});
+
+it('never treats runner errors as passing or behavior-evaluated evidence', async () => {
+  const report = await runAssay({
+    profile: relaxedProfile(),
+    fixtures: [fixture('positive_target', 'runner error assay')],
+    runner: async () => { throw new Error('runner unavailable'); },
+  });
+  const claim = generateEvidenceClaim(report, { traceId: 'trace_runner_error_assay' });
+
+  assert.strictEqual(report.overall_verdict, 'fail');
+  assert.ok(report.failed_thresholds.includes('execution_evidence'));
+  assert.ok(Object.values(report.results_by_arm).every(arm => arm.errors === 1));
+  assertSchemaValidEvidenceClaim(claim);
+  assert.strictEqual(claim.classification.level, 'usage_evidence');
+  assert.strictEqual(claim.classification.not_behavior_evaluated, true);
+  assert.strictEqual(claim.marginal_value.evidence_produced, false);
+  assert.strictEqual(claim.marginal_value.baseline_score, null);
+  assert.strictEqual(claim.marginal_value.target_score, null);
+  assert.strictEqual(claim.marginal_value.threshold_met, null);
+  assert.ok(Object.values(claim.comparison_arms).every(arm => arm.status === 'failed'));
+});
+
 it('generates evidence claim from assay results', () => {
   const assayOutput = {
-    profile: { asset_id: 'test.kdna', asset_version: '0.1.0', asset_digest: 'sha256:abc123' },
+    profile: {
+      asset_id: 'test.kdna',
+      asset_version: '0.1.0',
+      asset_digest: `sha256:${'a'.repeat(64)}`,
+    },
     fixture_validation: { valid: true, summary: { total: 21 } },
     results_by_arm: {
-      no_kdna: { mean_score: 2.5 },
-      correct_single_kdna: { mean_score: 4.2 },
+      no_kdna: completedArmEvidence(2.5),
+      correct_single_kdna: completedArmEvidence(4.2),
     },
     threshold_results: {
       fixture_dataset: { pass: true },
@@ -584,14 +661,22 @@ it('generates evidence claim from assay results', () => {
     overall_verdict: 'pass',
     failed_thresholds: [],
     result_count: 84,
-    dataset_fingerprint: 'sha256:test123',
+    dataset_fingerprint: `sha256:${'b'.repeat(64)}`,
   };
-  const claim = generateEvidenceClaim(assayOutput, { taskFamily: 'deploy_risk', model: 'claude-sonnet-5' });
+  const claim = generateEvidenceClaim(assayOutput, {
+    traceId: 'trace_passing_assay',
+    planId: 'plan_passing_assay',
+    taskFamily: 'deploy_risk',
+    model: 'claude-sonnet-5',
+  });
+  assertSchemaValidEvidenceClaim(claim);
   assert.strictEqual(claim.evidence_version, '0.9.0');
   assert.strictEqual(claim.claim_type, 'comparison_assay');
   assert.strictEqual(claim.scope.runtime, 'kdna-eval 0.3.2');
   assert.strictEqual(claim.classification.level, 'behavior_evaluated');
   assert.strictEqual(claim.marginal_value.evidence_produced, true);
+  assert.strictEqual(claim.marginal_value.delta, 1.7);
+  assert.ok(!Object.hasOwn(claim.judgment_quality, 'axiom_coverage'));
   assert.ok(claim.claim_id.startsWith('claim_'));
 });
 
@@ -599,7 +684,10 @@ it('generates evidence claim for failed assay', () => {
   const assayOutput = {
     profile: { asset_id: 'test.kdna', asset_version: '0.1.0' },
     fixture_validation: { valid: true, summary: { total: 21 } },
-    results_by_arm: { no_kdna: { mean_score: 2.0 }, correct_single_kdna: { mean_score: 2.1 } },
+    results_by_arm: {
+      no_kdna: completedArmEvidence(2.0),
+      correct_single_kdna: completedArmEvidence(2.1),
+    },
     threshold_results: {
       fixture_dataset: { pass: true },
       blind_improvement: { pass: false, detail: { mean_improvement: 0.1 } },
@@ -611,12 +699,68 @@ it('generates evidence claim for failed assay', () => {
     overall_verdict: 'fail',
     failed_thresholds: ['blind_improvement'],
     result_count: 84,
-    dataset_fingerprint: 'sha256:test123',
+    dataset_fingerprint: `sha256:${'c'.repeat(64)}`,
   };
-  const claim = generateEvidenceClaim(assayOutput);
+  const claim = generateEvidenceClaim(assayOutput, { traceId: 'trace_failing_assay' });
+  assertSchemaValidEvidenceClaim(claim);
   assert.strictEqual(claim.classification.level, 'usage_evidence');
   assert.strictEqual(claim.classification.not_behavior_evaluated, true);
   assert.strictEqual(claim.marginal_value.threshold_met, false);
+  assert.ok(!Object.hasOwn(claim, 'plan_id'));
+  assert.ok(!Object.hasOwn(claim.asset_ref, 'digest'));
+  assert.ok(!Object.hasOwn(claim.judgment_quality, 'axiom_coverage'));
+});
+
+it('refuses to invent missing trace identity or accept malformed digest evidence', () => {
+  const assayOutput = {
+    profile: { asset_id: 'test.kdna', asset_version: '0.1.0' },
+    fixture_validation: { valid: true, summary: { total: 1 } },
+    results_by_arm: {},
+    threshold_results: { fixture_dataset: { pass: false } },
+    overall_verdict: 'fail',
+    failed_thresholds: ['fixture_dataset'],
+    result_count: 0,
+    dataset_fingerprint: `sha256:${'d'.repeat(64)}`,
+  };
+
+  assert.throws(
+    () => generateEvidenceClaim(assayOutput),
+    /traceId is required; EvidenceClaim must reference a real JudgmentTrace/,
+  );
+  Object.defineProperty(Object.prototype, 'traceId', {
+    value: 'trace_inherited_must_not_count',
+    configurable: true,
+  });
+  try {
+    assert.throws(
+      () => generateEvidenceClaim(assayOutput, {}),
+      /traceId is required; EvidenceClaim must reference a real JudgmentTrace/,
+    );
+  } finally {
+    delete Object.prototype.traceId;
+  }
+  const accessorOptions = {};
+  Object.defineProperty(accessorOptions, 'traceId', {
+    enumerable: true,
+    get() { throw new Error('must not execute EvidenceClaim option getters'); },
+  });
+  assert.throws(
+    () => generateEvidenceClaim(assayOutput, accessorOptions),
+    /Invalid EvidenceClaim options/,
+  );
+  const noDigestClaim = generateEvidenceClaim(
+    { ...assayOutput, profile: { ...assayOutput.profile, asset_digest: null } },
+    { traceId: 'trace_missing_digest' },
+  );
+  assertSchemaValidEvidenceClaim(noDigestClaim);
+  assert.ok(!Object.hasOwn(noDigestClaim.asset_ref, 'digest'));
+  assert.throws(
+    () => generateEvidenceClaim(
+      { ...assayOutput, profile: { ...assayOutput.profile, asset_digest: 'sha256:not-a-digest' } },
+      { traceId: 'trace_bad_digest' },
+    ),
+    /asset_digest must be a canonical sha256 digest/,
+  );
 });
 
 // ── CJS exports ───────────────────────────────────────────────────────
