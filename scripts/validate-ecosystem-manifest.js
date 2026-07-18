@@ -23,7 +23,7 @@ const schemaPath = path.join(repoRoot, 'schema', 'ecosystem-manifest.schema.json
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 const liveLifecycle = new Set(['Stable', 'Beta', 'Experimental']);
-const currentReleaseStatuses = new Set(['active', 'compatibility']);
+const publishableReleaseStatuses = new Set(['active', 'candidate', 'compatibility']);
 const retiredReleaseStatus = 'deprecated';
 
 let failures = 0;
@@ -196,7 +196,13 @@ function assertPackageManifest(component, packageRecord, pkg, origin) {
   if (packageRecord.npm_package && packageRecord.npm_package !== packageRecord.package_name) {
     fail(component, 'npm_package must equal package_name when present', detail);
   }
-  if (currentReleaseStatuses.has(packageRecord.release_status) && pkg.private === true) {
+  if (
+    packageRecord.release_status === 'candidate' &&
+    packageRecord.published_version === packageRecord.version
+  ) {
+    fail(component, 'candidate version must differ from published_version', detail);
+  }
+  if (publishableReleaseStatuses.has(packageRecord.release_status) && pkg.private === true) {
     fail(component, `${packageRecord.release_status} package must not be private`, detail);
   }
   if (packageRecord.release_status === retiredReleaseStatus) {
@@ -241,7 +247,7 @@ function assertPackage(component, packageRecord, root) {
   if (!filePath || !fs.existsSync(filePath)) {
     if (
       liveLifecycle.has(component.lifecycle) ||
-      currentReleaseStatuses.has(packageRecord.release_status)
+      publishableReleaseStatuses.has(packageRecord.release_status)
     ) {
       fail(component, 'current package evidence is unavailable', packageRecord.package_json);
     }

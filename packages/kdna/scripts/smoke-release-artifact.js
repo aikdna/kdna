@@ -78,8 +78,8 @@ function main() {
     const cliPath = path.join(modules, '@aikdna', 'kdna-cli');
     const corePath = path.join(modules, '@aikdna', 'kdna-core');
     const expected = [
-      [compatPath, '@aikdna/kdna', '0.13.1'],
-      [cliPath, '@aikdna/kdna-cli', '0.35.0'],
+      [compatPath, '@aikdna/kdna', '0.13.2'],
+      [cliPath, '@aikdna/kdna-cli', '0.35.1'],
       [corePath, '@aikdna/kdna-core', '0.20.0'],
     ];
     for (const [packagePath, name, version] of expected) {
@@ -123,7 +123,7 @@ function main() {
         timeout: REGISTRY_TIMEOUT_MS,
       });
     }
-    console.log('clean exact-tarball install resolved one Core 0.20.0 and CLI 0.35.0');
+    console.log('clean exact-tarball install resolved one Core 0.20.0 and CLI 0.35.1');
   } finally {
     fs.rmSync(temp, { recursive: true, force: true });
   }

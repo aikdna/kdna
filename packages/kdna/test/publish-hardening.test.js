@@ -42,7 +42,7 @@ const SETUP_PYTHON_ACTION_SHA = 'ece7cb06caefa5fff74198d8649806c4678c61a1';
 const UPLOAD_ACTION_SHA = 'ea165f8d65b6e75b540449e92b4886f43607fa02';
 const EXPECTED_CONSUMER_CHECKOUTS = [
   ['aikdna/create-kdna-web-app', '4241dc20814bae4fcf72d44df7c0670ef70bda00'],
-  ['aikdna/kdna-cli', '6927df153b0b3b592a500760f6d87eac6fde7860'],
+  ['aikdna/kdna-cli', '0a23a2528bd55ee99a4d3a9ed488793973096fd4'],
   ['aikdna/kdna-skills', 'c9ac7de534b7ba810217d1d15b14a23a6e5b845f'],
   ['aikdna/kdna-studio-core', 'e1d49b3cb3e6c236499a3ecbd6884497e41fd834'],
   ['aikdna/kdna-studio-cli', 'abd1624741a5dfa0b1a604e44d57209ce3caf18b'],
@@ -51,7 +51,7 @@ const EXPECTED_CONSUMER_CHECKOUTS = [
   ['aikdna/kdna-web-server', '9fc1377bfb378d5977ab77dcdc30ee4f0b2a181d'],
   ['aikdna/kdna-web-client', 'd128ac815fc82d0249b7f49793a1a0103949c4ee'],
   ['aikdna/kdna-react', '3edcdce0f75b6dfb1eb4147cedaf24f8af6574a3'],
-  ['aikdna/kdna-assets', 'cc0c91c7adb7401b0b0b52b567d61f3fbf134828'],
+  ['aikdna/kdna-assets', 'a189b5005d33bd19a5039b4a86834e920f6b0072'],
   ['aikdna/kdna-demo-web-viewer', 'a7d4df05973d472ec24ba060f3d9c02c0d22c6f3'],
 ];
 const EXPECTED_COMPAT_CHECKOUTS = [
@@ -674,7 +674,7 @@ test('guard and publisher reparse one exact tarball before the network operation
       bound += 1;
     },
     lookup: (spec) => {
-      assert.equal(spec, '@aikdna/kdna@0.13.1');
+      assert.equal(spec, '@aikdna/kdna@0.13.2');
       lookedUp += 1;
       return e404Result(candidate);
     },

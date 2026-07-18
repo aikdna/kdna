@@ -103,7 +103,7 @@ test('consumer discovery scans workspaces and records explicit legacy exclusions
   writeJson(path.join(root, 'current', 'package.json'), {
     private: true,
     workspaces: ['packages/*'],
-    devDependencies: { '@aikdna/kdna-cli': '0.35.0' },
+    devDependencies: { '@aikdna/kdna-cli': '0.35.1' },
   });
   writeJson(path.join(root, 'current', 'packages', 'bridge', 'package.json'), {
     dependencies: { '@aikdna/kdna-core': '0.20.0' },
@@ -115,7 +115,7 @@ test('consumer discovery scans workspaces and records explicit legacy exclusions
   const result = findConsumers(
     root,
     new Map([
-      ['@aikdna/kdna-cli', '0.35.0'],
+      ['@aikdna/kdna-cli', '0.35.1'],
       ['@aikdna/kdna-core', '0.20.0'],
     ]),
     new Map([

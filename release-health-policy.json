@@ -6,7 +6,7 @@
       "repository": "aikdna/kdna-cli",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-cli",
-      "version": "0.35.0",
+      "version": "0.35.1",
       "canonical_tag": { "type": "natural" }
     },
     {

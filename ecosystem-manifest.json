@@ -49,9 +49,10 @@
           "package_json": "packages/kdna/package.json",
           "package_name": "@aikdna/kdna",
           "npm_package": "@aikdna/kdna",
-          "version": "0.13.1",
+          "version": "0.13.2",
+          "published_version": "0.13.1",
           "lifecycle": "Legacy",
-          "release_status": "compatibility",
+          "release_status": "candidate",
           "dependency_policy": "current",
           "known_limitations": [
             "maintained migration bridge; new integrations should install the CLI and Core packages directly"
@@ -116,7 +117,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "6927df153b0b3b592a500760f6d87eac6fde7860",
+      "source_commit": "0a23a2528bd55ee99a4d3a9ed488793973096fd4",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -125,7 +126,7 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-cli",
           "npm_package": "@aikdna/kdna-cli",
-          "version": "0.35.0",
+          "version": "0.35.1",
           "lifecycle": "Beta",
           "release_status": "active",
           "dependency_policy": "current",
@@ -147,7 +148,7 @@
     {
       "repository": "aikdna/kdna-assets",
       "local_path": "../kdna-assets",
-      "source_commit": "cc0c91c7adb7401b0b0b52b567d61f3fbf134828",
+      "source_commit": "a189b5005d33bd19a5039b4a86834e920f6b0072",
       "conformance_commit": "1e77e3e0d486c330fe9f9262b514ef24c859d469",
       "component_version": null,
       "packages": [],

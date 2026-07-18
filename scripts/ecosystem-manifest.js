@@ -74,6 +74,19 @@ function currentPublishedPackages(manifest) {
   );
 }
 
+function candidateIncumbentPackages(manifest) {
+  return packageRecords(manifest)
+    .filter(
+      ({ packageRecord }) =>
+        packageRecord?.release_status === 'candidate' &&
+        typeof packageRecord?.npm_package === 'string',
+    )
+    .map(({ component, packageRecord }) => ({
+      component,
+      packageRecord: { ...packageRecord, version: packageRecord.published_version },
+    }));
+}
+
 function resolveComponentPath(repoRoot, component, options = {}) {
   if (!component?.local_path) return null;
   if (component.local_path === '.') return repoRoot;
@@ -134,6 +147,7 @@ function currentAssetIndexInventory(index) {
 module.exports = {
   CURRENT_RELEASE_STATUSES,
   artifactRecords,
+  candidateIncumbentPackages,
   componentRecords,
   currentAssetIndexInventory,
   currentPublishedPackages,

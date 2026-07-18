@@ -14,7 +14,7 @@ import {
 } from './publish-health.mjs';
 
 const require = createRequire(import.meta.url);
-const { currentPublishedPackages } = require('./ecosystem-manifest.js');
+const { candidateIncumbentPackages, currentPublishedPackages } = require('./ecosystem-manifest.js');
 
 const policy = JSON.parse(
   fs.readFileSync(new URL('../release-health-policy.json', import.meta.url), 'utf8'),
@@ -51,7 +51,10 @@ test('release-health policy is complete, unique, and structurally valid', () => 
 });
 
 test('release-health policy is an exact projection of current public package records', () => {
-  const manifestRecords = currentPublishedPackages(ecosystemManifest);
+  const manifestRecords = [
+    ...currentPublishedPackages(ecosystemManifest),
+    ...candidateIncumbentPackages(ecosystemManifest),
+  ];
   const expected = new Map(
     manifestRecords.map(({ component, packageRecord }) => [
       packageRecord.npm_package,

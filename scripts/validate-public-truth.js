@@ -144,12 +144,15 @@ function checkCompatibilityBoundary() {
     return;
   }
   if (
-    compatibility.release_status !== 'compatibility' ||
+    !['candidate', 'compatibility'].includes(compatibility.release_status) ||
     compatibility.lifecycle !== 'Legacy' ||
     compatibility.dependency_policy !== 'current' ||
     !compatibility.legacy_replacement
   ) {
-    fail('@aikdna/kdna', 'compatibility bridge lifecycle is not structurally classified');
+    fail(
+      '@aikdna/kdna',
+      'compatibility bridge candidate/current lifecycle is not structurally classified',
+    );
   }
 
   const workflow = readText(path.join(repoRoot, '.github', 'workflows', 'publish.yml'));

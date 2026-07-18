@@ -9,10 +9,33 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { sameFilesystemIdentity } = require('../../scripts/filesystem-identity');
 const {
+  candidateIncumbentPackages,
+  currentPublishedPackages,
   currentAssetIndexInventory,
   manifestArtifactInventory,
   resolveComponentPath,
 } = require('../../scripts/ecosystem-manifest');
+
+test('candidate packages stay outside current-published projections', () => {
+  const candidate = packageRecord({
+    published_version: '0.9.0',
+    lifecycle: 'Legacy',
+    release_status: 'candidate',
+    legacy_replacement: '@aikdna/replacement',
+  });
+  assert.deepEqual(
+    currentPublishedPackages(
+      manifest([component({ repository: 'aikdna/kdna', local_path: '.', packages: [candidate] })]),
+    ),
+    [],
+  );
+  assert.equal(
+    candidateIncumbentPackages(
+      manifest([component({ repository: 'aikdna/kdna', local_path: '.', packages: [candidate] })]),
+    )[0].packageRecord.version,
+    '0.9.0',
+  );
+});
 
 const repoRoot = path.resolve(__dirname, '..', '..');
 const validator = path.join(repoRoot, 'scripts', 'validate-ecosystem-manifest.js');
@@ -343,6 +366,18 @@ test('validator rejects schema 1, mixed legacy fields, and unknown fields', (t) 
     { ...manifest([component()]), unknown: true },
     manifest([component({ packages: [packageRecord({ version: '1.0.0-01' })] })]),
     manifest([component({ packages: [packageRecord({ version: '1.0.0-a..b' })] })]),
+    manifest([
+      component({
+        packages: [
+          packageRecord({
+            release_status: 'candidate',
+            lifecycle: 'Legacy',
+            legacy_replacement: '@aikdna/replacement',
+          }),
+        ],
+      }),
+    ]),
+    manifest([component({ packages: [packageRecord({ published_version: '0.9.0' })] })]),
   ]) {
     const manifestPath = path.join(root, 'ecosystem-manifest.json');
     fs.writeFileSync(manifestPath, JSON.stringify(candidate));
