@@ -1,7 +1,8 @@
 {
   "name": "@aikdna/agent",
   "version": "0.2.1",
-  "description": "KDNA TypeScript Agent SDK — framework-agnostic judgment layer for AI agents",
+  "private": true,
+  "description": "Archived source for the deprecated @aikdna/agent package",
   "type": "module",
   "main": "./dist/index.js",
   "exports": {
@@ -21,10 +22,7 @@
   "scripts": {
     "build": "tsc",
     "demo": "npm run build && node dist/demo.js",
-    "test": "npm run build && node dist/demo.js >/dev/null",
-    "release:check": "node ../../scripts/check-post-cutover-naming.mjs && node ../../scripts/check-scoped-release-readiness.mjs --package=examples/typescript-agent --scope=agent --label=agent",
-    "release:evidence:check": "node ../../scripts/check-scoped-release-readiness.mjs --package=examples/typescript-agent --scope=agent --label=agent --evidence=release-evidence/artifact-manifest.json",
-    "prepublishOnly": "npm run release:check && npm run release:evidence:check && npm run build"
+    "test": "npm run build && node dist/demo.js >/dev/null"
   },
   "dependencies": {
     "@aikdna/kdna-core": "^0.12.3"

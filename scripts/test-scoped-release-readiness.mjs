@@ -52,7 +52,6 @@ function evidence(overrides = {}) {
 
 test('scoped tag is exactly scope plus stable package version', () => {
   assert.equal(canonicalScopedTag('eval', '0.3.1'), TAG);
-  assert.equal(canonicalScopedTag('agent', '0.2.1'), 'agent/0.2.1');
   assert.throws(() => canonicalScopedTag('eval', '0.3.1-extra'), /invalid stable package version/u);
 });
 
@@ -105,8 +104,8 @@ test('release evidence binds one exact package artifact to GITHUB_SHA', () => {
   }
 });
 
-test('eval and agent workflows gate the exact tag, commit, and evidence before publish', () => {
-  for (const name of ['publish-eval', 'publish-agent']) {
+test('eval workflow gates the exact tag, commit, and evidence before publish', () => {
+  for (const name of ['publish-eval']) {
     const job = workflowJob(name);
     assert.match(job, /ref: \$\{\{ github\.event\.release\.tag_name \}\}/u);
     assert.match(job, /fetch-depth: 0/u);
@@ -129,4 +128,8 @@ test('eval and agent workflows gate the exact tag, commit, and evidence before p
     assert.ok(evidenceCheck > evidenceGeneration, `${name} must verify generated evidence`);
     assert.ok(publication > evidenceCheck, `${name} publish must follow every release gate`);
   }
+  assert.doesNotMatch(
+    PUBLISH_WORKFLOW,
+    /publish-agent|working-directory: examples\/typescript-agent|Publish @aikdna\/agent/u,
+  );
 });

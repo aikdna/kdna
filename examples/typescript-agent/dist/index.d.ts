@@ -1,8 +1,8 @@
 /**
- * @aikdna/agent — KDNA TypeScript Agent SDK entry point.
+ * Archived @aikdna/agent source. This coordinate is deprecated and private.
  *
  * Usage:
- *   import { KDNAAgent, type JudgmentResult } from "@aikdna/agent";
+ *   import { KDNAAgent, type JudgmentResult } from "./dist/index.js";
  */
 export { KDNAAgent } from "./agent.js";
 export type { JudgmentResult, HistoryEntry } from "./agent.js";

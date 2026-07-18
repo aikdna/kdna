@@ -1,12 +1,19 @@
-# @aikdna/agent
+# @aikdna/agent (Archived)
 
-KDNA Agent SDK - pre/post judgment guardrails for AI agents.
+> **Legacy / deprecated.** This directory preserves the source of the retired
+> `@aikdna/agent` npm package. It is private, has no publication workflow, and
+> is not part of the current KDNA toolchain. Do not start a new integration
+> from this package.
 
-## Install
+For current Agent integration, use the official
+[`kdna-loader`](https://github.com/aikdna/kdna-skills) flow, which preserves
+`inspect` → `plan-load` → `load`, or integrate the current
+[`@aikdna/kdna-core`](../../packages/kdna-core/) Runtime Capsule contract.
 
-```bash
-npm install @aikdna/agent
-```
+## Historical usage
+
+The remaining code and examples below describe the frozen historical package;
+they are retained for provenance only.
 
 ## Usage
 

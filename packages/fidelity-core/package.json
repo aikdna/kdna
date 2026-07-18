@@ -1,7 +1,8 @@
 {
   "name": "@aikdna/kdna-fidelity-core",
   "version": "0.1.0",
-  "description": "KDNA Fidelity Core — reference SDK for measuring judgment transfer fidelity in KDNA-governed artifacts",
+  "private": true,
+  "description": "Archived source for the deprecated @aikdna/kdna-fidelity-core package",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -14,8 +15,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "node --import tsx --test test/*.test.ts",
-    "prepublishOnly": "npm run build"
+    "test": "node --import tsx --test test/*.test.ts"
   },
   "files": [
     "dist/",

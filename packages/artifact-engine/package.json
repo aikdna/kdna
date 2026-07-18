@@ -1,7 +1,8 @@
 {
   "name": "@aikdna/kdna-artifact-engine",
   "version": "0.1.0",
-  "description": "KDNA Artifact Engine — reference SDK for multi-stage KDNA-governed artifact generation pipelines",
+  "private": true,
+  "description": "Archived source for the deprecated @aikdna/kdna-artifact-engine package",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -14,8 +15,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "node --import tsx --test test/*.test.ts",
-    "prepublishOnly": "npm run build"
+    "test": "node --import tsx --test test/*.test.ts"
   },
   "files": [
     "dist/",

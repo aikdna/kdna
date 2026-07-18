@@ -131,6 +131,18 @@ run('kdna validate:examples', repoRoot, 'npm', ['run', 'validate:examples']);
 run('kdna validate:ecosystem-manifest', repoRoot, 'npm', ['run', 'validate:ecosystem-manifest']);
 run('kdna validate:public-truth', repoRoot, 'npm', ['run', 'validate:public-truth']);
 run('kdna production npm audit', repoRoot, 'npm', ['audit', '--omit=dev']);
+run(
+  'python adapter pytest against current CLI',
+  path.join(repoRoot, 'python-sdk'),
+  process.env.KDNA_PYTHON || 'python3',
+  ['-m', 'pytest', 'tests', '-q'],
+  {
+    env: {
+      KDNA_CLI: path.join(repoRoot, 'node_modules', '.bin', 'kdna'),
+      PYTHONPATH: path.join(repoRoot, 'python-sdk'),
+    },
+  },
+);
 
 section('Cross Repo Package Tests');
 run('kdna-cli fresh npm ci', componentPath('aikdna/kdna-cli'), 'npm', ['ci']);

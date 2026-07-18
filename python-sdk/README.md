@@ -26,7 +26,7 @@ Use the npm CLI/Core packages for the stable public runtime. The Python adapter
 is a source-level integration preview until a separate signed release pipeline
 exists.
 
-The adapter supports `@aikdna/kdna-cli >=0.34.0,<0.35.0` and checks the CLI
+The adapter supports `@aikdna/kdna-cli >=0.35.0,<0.36.0` and checks the CLI
 version before its first operation. Compatibility with a later pre-1.0 CLI
 minor release must be verified before this range is widened. The adapter also
 validates the stable `inspect` response boundary (`format_version`, `asset_id`,

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Retire the legacy `@aikdna/agent`, `@aikdna/kdna-artifact-engine`, and
+  `@aikdna/kdna-fidelity-core` publication surfaces. Their source workspaces are
+  private historical references, their npm coordinates are deprecated, and
+  current integrations use Core/CLI plus the loader or experimental MCP bridge.
 - Remove intrinsic asset quality and risk authority from the current Runtime
   contract. Runtime manifests now reject protocol-owned quality, risk, trust,
   recommendation, certification, and production-readiness fields; Runtime
