@@ -237,7 +237,7 @@ function main() {
       size: bytes.length,
       unpacked_size: pack.unpackedSize,
       entry_count: pack.entryCount,
-      publish_command: `npm publish "${artifactRelativePath}" --provenance --access public`,
+      publish_command: `npm publish "./${artifactRelativePath}" --provenance --access public`,
       npm_provenance_required: true,
       files: (pack.files || []).map((file) => ({
         path: file.path,

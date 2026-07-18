@@ -179,7 +179,7 @@ function assertEvidenceBinding({
   ) {
     throw new Error('release evidence artifact hashes and size must be complete');
   }
-  const expectedPublishCommand = `npm publish "${artifact.artifact_path}" --provenance --access public`;
+  const expectedPublishCommand = `npm publish "./${artifact.artifact_path}" --provenance --access public`;
   if (
     artifact.npm_provenance_required !== true ||
     artifact.publish_command !== expectedPublishCommand

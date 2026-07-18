@@ -86,7 +86,7 @@ function artifactFixture(t, { packageName = '@aikdna/kdna-eval', version = '0.3.
     shasum: crypto.createHash('sha1').update(bytes).digest('hex'),
     integrity: `sha512-${crypto.createHash('sha512').update(bytes).digest('base64')}`,
     size: bytes.length,
-    publish_command: `npm publish "release-evidence/${filename}" --provenance --access public`,
+    publish_command: `npm publish "./release-evidence/${filename}" --provenance --access public`,
     npm_provenance_required: true,
   };
   const manifest = evidence({ artifacts: [artifact] });
@@ -255,6 +255,32 @@ test('release evidence generator retains and binds the real npm pack artifact', 
       artifactInspection: inspection,
     }),
   );
+  const publishDryRun = JSON.parse(
+    execFileSync(
+      'npm',
+      [
+        'publish',
+        `./${artifact.artifact_path}`,
+        '--dry-run',
+        '--ignore-scripts',
+        '--access',
+        'public',
+        '--json',
+      ],
+      {
+        cwd: REPO_ROOT,
+        encoding: 'utf8',
+        maxBuffer: 8 * 1024 * 1024,
+        stdio: ['ignore', 'pipe', 'pipe'],
+        env: {
+          ...process.env,
+          npm_config_cache: path.join(REPO_ROOT, '.npm-cache', 'release-evidence-test'),
+        },
+      },
+    ),
+  );
+  assert.equal(publishDryRun['@aikdna/kdna-eval']?.id, '@aikdna/kdna-eval@0.3.2');
+  assert.equal(publishDryRun['@aikdna/kdna-eval']?.filename, artifact.filename);
 });
 
 test('eval workflow gates the exact tag, commit, and evidence before publish', () => {
@@ -286,7 +312,8 @@ test('eval workflow gates the exact tag, commit, and evidence before publish', (
     );
     assert.ok(publication > artifactSelection, `${name} publish must follow every release gate`);
     assert.match(job, /EVAL_RELEASE_ARTIFACT/u);
-    assert.match(job, /npm publish "\$EVAL_RELEASE_ARTIFACT" --provenance --access public/u);
+    assert.match(job, /npm publish "\.\/\$EVAL_RELEASE_ARTIFACT" --provenance --access public/u);
+    assert.doesNotMatch(job, /npm publish "\$EVAL_RELEASE_ARTIFACT" --provenance --access public/u);
     assert.doesNotMatch(job, /working-directory: packages\/kdna-eval/u);
   }
   assert.doesNotMatch(

@@ -144,7 +144,7 @@ jobs:
             echo "@aikdna/kdna-eval@$VERSION is already published; skipping."
             exit 0
           fi
-          npm publish "$EVAL_RELEASE_ARTIFACT" --provenance --access public
+          npm publish "./$EVAL_RELEASE_ARTIFACT" --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
