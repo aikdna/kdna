@@ -466,6 +466,29 @@ test('current release reader requires exact DCO and protected main ancestry', (t
     }),
   );
 
+  fs.writeFileSync(path.join(root, 'mismatched-signoff.txt'), 'wrong signer\n');
+  runGit(root, ['add', 'mismatched-signoff.txt']);
+  runGit(root, [
+    'commit',
+    '--quiet',
+    '-m',
+    'test: mismatched signoff',
+    '-m',
+    'Signed-off-by: Other Author <other@example.invalid>',
+  ]);
+  const mismatched = runGit(root, ['rev-parse', 'HEAD']);
+  runGit(root, ['update-ref', 'refs/remotes/origin/main', mismatched]);
+  runGit(root, ['tag', '--force', 'compat/1.2.3']);
+  assert.throws(
+    () =>
+      readCurrentReleaseBinding({
+        root,
+        evidence: evidence({ source: { commit: mismatched } }),
+        env: releaseInput({ env: { GITHUB_SHA: mismatched } }).env,
+      }),
+    /author must have an exact normalized DCO Signed-off-by trailer/u,
+  );
+
   fs.writeFileSync(path.join(root, 'unsigned.txt'), 'not signed off\n');
   runGit(root, ['add', 'unsigned.txt']);
   runGit(root, ['commit', '--quiet', '-m', 'test: unsigned candidate']);
