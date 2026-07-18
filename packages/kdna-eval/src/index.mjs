@@ -1,4 +1,7 @@
 export {
+  DEFAULT_SCORE,
+  SCORE_MIN,
+  SCORE_MAX,
   computeComposite,
   createEvaluator,
   evaluateAxioms,

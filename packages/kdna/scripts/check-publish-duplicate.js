@@ -7,17 +7,22 @@ const path = require('node:path');
 const { readCurrentReleaseBinding } = require('./current-release-binding');
 const { OFFICIAL_REGISTRY, REGISTRY_TIMEOUT_MS, verifyAuditedNpm } = require('./npm-tooling');
 const { evaluateRegistryResult } = require('./registry-duplicate-policy');
+const { assertCandidateAfterLatest } = require('./registry-latest-policy');
 const { validateEvidenceArtifact } = require('./release-evidence');
 
 function fail(message) {
   throw new Error(message);
 }
 
-function guardCandidate({ evidence, tarball, bindCurrent, lookup }) {
+function guardCandidate({ evidence, tarball, bindCurrent, lookup, lookupLatest }) {
   bindCurrent(evidence);
   validateEvidenceArtifact(evidence, tarball);
   const spec = `${evidence.package.name}@${evidence.package.version}`;
-  return evaluateRegistryResult(lookup(spec), evidence);
+  const decision = evaluateRegistryResult(lookup(spec), evidence);
+  if (decision.shouldPublish) {
+    assertCandidateAfterLatest(lookupLatest(`${evidence.package.name}@latest`), evidence);
+  }
+  return decision;
 }
 
 function parseArguments(argv) {
@@ -60,6 +65,24 @@ function main() {
           'version',
           'dist.integrity',
           'dist.shasum',
+          '--json',
+          '--loglevel=silent',
+          `--registry=${OFFICIAL_REGISTRY}`,
+        ],
+        {
+          encoding: 'utf8',
+          maxBuffer: 1024 * 1024,
+          shell: false,
+          timeout: REGISTRY_TIMEOUT_MS,
+        },
+      ),
+    lookupLatest: (spec) =>
+      spawnSync(
+        'npm',
+        [
+          'view',
+          spec,
+          'version',
           '--json',
           '--loglevel=silent',
           `--registry=${OFFICIAL_REGISTRY}`,

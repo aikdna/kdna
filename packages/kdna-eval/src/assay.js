@@ -14,6 +14,12 @@ const crypto = require('crypto');
 const { createReplayEngine } = require('./replay');
 const { createMultiGateRunner } = require('./gates');
 const { createCostTracker, BUDGET_PROFILES } = require('./cost');
+const {
+  canonicalValidationErrors,
+  fingerprintFixtureDataset,
+  fingerprintInvalidDataset,
+  isPlainObject,
+} = require('./evidence-canonical');
 
 // ── Constants ─────────────────────────────────────────────────────────
 
@@ -42,6 +48,83 @@ const CLASSIFICATION_LEVELS = [
   'production_asset',
 ];
 
+const THRESHOLD_RULES = {
+  positive_target_min_count: { kind: 'integer', min: 0 },
+  non_applicable_min_count: { kind: 'integer', min: 0 },
+  adjacent_ambiguous_min_count: { kind: 'integer', min: 0 },
+  high_risk_failure_min_count: { kind: 'integer', min: 0 },
+  regression_min_count: { kind: 'integer', min: 0 },
+  holdout_required: { kind: 'boolean' },
+  blind_mean_improvement_min: { kind: 'number', min: 0, max: 4 },
+  critical_error_reduction_pct: { kind: 'number', min: 0, max: 100 },
+  non_applicable_accuracy_min: { kind: 'number', min: 0, max: 1 },
+  harmful_contamination_max: { kind: 'number', min: 0, max: 1 },
+  high_risk_harm_zero: { kind: 'boolean' },
+  regression_pass_required: { kind: 'boolean' },
+  min_model_runtime_combinations: { kind: 'integer', min: 1 },
+  human_review_required: { kind: 'boolean' },
+  structural_gate: { kind: 'boolean' },
+  behavioral_gate: { kind: 'boolean' },
+  boundary_gate: { kind: 'boolean' },
+  contamination_gate: { kind: 'boolean' },
+  trust_gate: { kind: 'boolean' },
+  economics_gate: { kind: 'boolean' },
+  interoperability_gate: { kind: 'boolean' },
+  product_gate: { kind: 'boolean' },
+};
+
+function isNonEmptyString(value) {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function validateThresholds(thresholds) {
+  if (!isPlainObject(thresholds)) return ['thresholds must be a plain object'];
+
+  const errors = [];
+  for (const [name, value] of Object.entries(thresholds)) {
+    const rule = THRESHOLD_RULES[name];
+    if (!rule) {
+      errors.push(`thresholds.${name} is not supported`);
+      continue;
+    }
+    if (rule.kind === 'boolean') {
+      if (typeof value !== 'boolean') errors.push(`thresholds.${name} must be a boolean`);
+      continue;
+    }
+    if (typeof value !== 'number' || !Number.isFinite(value)) {
+      errors.push(`thresholds.${name} must be a finite number`);
+      continue;
+    }
+    if (rule.kind === 'integer' && !Number.isInteger(value)) {
+      errors.push(`thresholds.${name} must be an integer`);
+    }
+    if (rule.min !== undefined && value < rule.min) {
+      errors.push(`thresholds.${name} must be >= ${rule.min}`);
+    }
+    if (rule.max !== undefined && value > rule.max) {
+      errors.push(`thresholds.${name} must be <= ${rule.max}`);
+    }
+  }
+  return errors;
+}
+
+function validateProfile(profile) {
+  if (!isPlainObject(profile)) return ['profile must be a plain object'];
+  const errors = [];
+  if (!isNonEmptyString(profile.asset_id)) errors.push('profile.asset_id must be a non-empty string');
+  if (!isNonEmptyString(profile.asset_version)) errors.push('profile.asset_version must be a non-empty string');
+  if (profile.asset_digest !== null && !isNonEmptyString(profile.asset_digest)) {
+    errors.push('profile.asset_digest must be null or a non-empty string');
+  }
+  errors.push(...validateThresholds(profile.thresholds));
+  for (const name of Object.keys(THRESHOLD_RULES)) {
+    if (!Object.prototype.hasOwnProperty.call(profile.thresholds || {}, name)) {
+      errors.push(`profile.thresholds.${name} is required`);
+    }
+  }
+  return errors;
+}
+
 // ── Assay Profile ─────────────────────────────────────────────────────
 
 /**
@@ -55,11 +138,27 @@ const CLASSIFICATION_LEVELS = [
  * @returns {object} assay profile
  */
 function createAssayProfile(opts = {}) {
+  if (!isPlainObject(opts)) throw new TypeError('createAssayProfile options must be a plain object');
+  const optionErrors = canonicalValidationErrors(opts, 'options');
+  if (optionErrors.length) throw new TypeError(`Invalid assay profile options: ${optionErrors.join('; ')}`);
+  if (opts.assetId !== undefined && !isNonEmptyString(opts.assetId)) {
+    throw new TypeError('assetId must be a non-empty string when provided');
+  }
+  if (opts.assetVersion !== undefined && !isNonEmptyString(opts.assetVersion)) {
+    throw new TypeError('assetVersion must be a non-empty string when provided');
+  }
+  if (opts.assetDigest !== undefined && opts.assetDigest !== null && !isNonEmptyString(opts.assetDigest)) {
+    throw new TypeError('assetDigest must be null or a non-empty string when provided');
+  }
+  if (opts.thresholds !== undefined) {
+    const thresholdErrors = validateThresholds(opts.thresholds);
+    if (thresholdErrors.length) throw new TypeError(`Invalid assay thresholds: ${thresholdErrors.join('; ')}`);
+  }
   return {
     profile_version: '0.9.0',
     asset_id: opts.assetId || 'unknown',
     asset_version: opts.assetVersion || '0.1.0',
-    asset_digest: opts.assetDigest || null,
+    asset_digest: opts.assetDigest ?? null,
     created_at: new Date().toISOString(),
     thresholds: {
       // Default candidate thresholds per roadmap §7.1
@@ -81,14 +180,14 @@ function createAssayProfile(opts = {}) {
       human_review_required: opts.thresholds?.human_review_required ?? true,
 
       // Gates
-      structural_gate: true,
-      behavioral_gate: true,
-      boundary_gate: true,
-      contamination_gate: true,
-      trust_gate: false,       // requires signature + authorization infrastructure
-      economics_gate: false,   // requires real cost data
-      interoperability_gate: false, // requires cross-language evidence
-      product_gate: false,     // requires UX + user evidence
+      structural_gate: opts.thresholds?.structural_gate ?? true,
+      behavioral_gate: opts.thresholds?.behavioral_gate ?? true,
+      boundary_gate: opts.thresholds?.boundary_gate ?? true,
+      contamination_gate: opts.thresholds?.contamination_gate ?? true,
+      trust_gate: opts.thresholds?.trust_gate ?? false,       // requires signature + authorization infrastructure
+      economics_gate: opts.thresholds?.economics_gate ?? false,   // requires real cost data
+      interoperability_gate: opts.thresholds?.interoperability_gate ?? false, // requires cross-language evidence
+      product_gate: opts.thresholds?.product_gate ?? false,     // requires UX + user evidence
     },
   };
 }
@@ -105,11 +204,61 @@ function createAssayProfile(opts = {}) {
 function validateFixtureSet(fixtures, profile) {
   const counts = {};
   for (const cat of FIXTURE_CATEGORIES) counts[cat] = 0;
-  for (const f of fixtures) {
-    if (FIXTURE_CATEGORIES.includes(f.category)) counts[f.category]++;
+  const errors = validateProfile(profile);
+  if (!Array.isArray(fixtures)) {
+    return {
+      valid: false,
+      summary: { total: 0, by_category: counts, required_met: false },
+      errors: [...errors, 'fixtures must be an array'],
+    };
   }
 
-  const errors = [];
+  if (fixtures.length === 0) errors.push('fixtures must contain at least one fixture');
+  const seenIds = new Set();
+  const seenTasks = new Set();
+  fixtures.forEach((fixture, index) => {
+    const label = `fixtures[${index}]`;
+    if (!isPlainObject(fixture)) {
+      errors.push(`${label} must be a plain object`);
+      return;
+    }
+    const evidenceErrors = canonicalValidationErrors(fixture, label);
+    if (evidenceErrors.length) {
+      errors.push(...evidenceErrors);
+      return;
+    }
+    if (!isNonEmptyString(fixture.fixture_id)) {
+      errors.push(`${label}.fixture_id must be a non-empty string`);
+    } else if (seenIds.has(fixture.fixture_id)) {
+      errors.push(`${label}.fixture_id duplicates ${fixture.fixture_id}`);
+    } else {
+      seenIds.add(fixture.fixture_id);
+    }
+    if (!FIXTURE_CATEGORIES.includes(fixture.category)) {
+      errors.push(`${label}.category must be one of: ${FIXTURE_CATEGORIES.join(', ')}`);
+    } else {
+      counts[fixture.category]++;
+    }
+    if (!isNonEmptyString(fixture.task)) {
+      errors.push(`${label}.task must be a non-empty string`);
+    } else {
+      const normalizedTask = fixture.task.trim();
+      if (seenTasks.has(normalizedTask)) errors.push(`${label}.task duplicates another fixture task`);
+      seenTasks.add(normalizedTask);
+    }
+    if (!isPlainObject(fixture.expected) || Object.keys(fixture.expected).length === 0) {
+      errors.push(`${label}.expected must be a non-empty plain object`);
+    }
+  });
+
+  if (errors.some(error => error.startsWith('profile') || error.startsWith('thresholds'))) {
+    return {
+      valid: false,
+      summary: { total: fixtures.length, by_category: counts, required_met: false },
+      errors,
+    };
+  }
+
   const t = profile.thresholds;
 
   if (counts.positive_target < t.positive_target_min_count)
@@ -146,17 +295,27 @@ function validateFixtureSet(fixtures, profile) {
  * @param {object} [opts.metadata]
  * @returns {object} fixture
  */
-function createFixture(opts = {}) {
+function createFixture(opts) {
+  if (!isPlainObject(opts)) throw new TypeError('createFixture requires an options object');
+  const optionErrors = canonicalValidationErrors(opts, 'options');
+  if (optionErrors.length) throw new TypeError(`Invalid fixture options: ${optionErrors.join('; ')}`);
   if (!FIXTURE_CATEGORIES.includes(opts.category))
     throw new Error(`Unknown fixture category: ${opts.category}. Must be one of: ${FIXTURE_CATEGORIES.join(', ')}`);
+  if (!isNonEmptyString(opts.task)) throw new TypeError('task must be a non-empty string');
+  if (!isPlainObject(opts.expected) || Object.keys(opts.expected).length === 0) {
+    throw new TypeError('expected must be a non-empty plain object');
+  }
+  if (opts.metadata !== undefined && !isPlainObject(opts.metadata)) {
+    throw new TypeError('metadata must be a plain object when provided');
+  }
 
-  const task = opts.task || '';
+  const task = opts.task;
   return {
     fixture_id: `fixture_${crypto.randomBytes(8).toString('hex')}`,
     category: opts.category,
     task,
     task_hash: `sha256:${crypto.createHash('sha256').update(task).digest('hex')}`,
-    expected: opts.expected || {},
+    expected: opts.expected,
     metadata: opts.metadata || {},
     created_at: new Date().toISOString(),
   };
@@ -174,6 +333,9 @@ function createFixture(opts = {}) {
 function createBaselineArm(arm, config = {}) {
   if (!BASELINE_ARMS.includes(arm))
     throw new Error(`Unknown baseline arm: ${arm}. Must be one of: ${BASELINE_ARMS.join(', ')}`);
+  if (!isPlainObject(config)) throw new TypeError('baseline config must be a plain object');
+  const configErrors = canonicalValidationErrors(config, 'config');
+  if (configErrors.length) throw new TypeError(`Invalid baseline config: ${configErrors.join('; ')}`);
   return {
     arm,
     description: ARM_DESCRIPTIONS[arm],
@@ -195,6 +357,50 @@ const ARM_DESCRIPTIONS = {
  */
 function createAllBaselineArms() {
   return BASELINE_ARMS.map(arm => createBaselineArm(arm));
+}
+
+function validateBaselineArms(baselineArms) {
+  const errors = [];
+  if (!Array.isArray(baselineArms)) {
+    return { valid: false, summary: { total: 0, required: BASELINE_ARMS.length }, errors: ['baselineArms must be an array'] };
+  }
+  if (baselineArms.length !== BASELINE_ARMS.length) {
+    errors.push(`baselineArms must contain exactly ${BASELINE_ARMS.length} arms`);
+  }
+  const seen = new Set();
+  baselineArms.forEach((definition, index) => {
+    const label = `baselineArms[${index}]`;
+    if (!isPlainObject(definition)) {
+      errors.push(`${label} must be a plain object`);
+      return;
+    }
+    const evidenceErrors = canonicalValidationErrors(definition, label);
+    if (evidenceErrors.length) {
+      errors.push(...evidenceErrors);
+      return;
+    }
+    if (!BASELINE_ARMS.includes(definition.arm)) {
+      errors.push(`${label}.arm must be one of: ${BASELINE_ARMS.join(', ')}`);
+    } else if (seen.has(definition.arm)) {
+      errors.push(`${label}.arm duplicates ${definition.arm}`);
+    } else {
+      seen.add(definition.arm);
+    }
+    if (definition.description !== undefined && !isNonEmptyString(definition.description)) {
+      errors.push(`${label}.description must be a non-empty string when provided`);
+    }
+    if (definition.config !== undefined && !isPlainObject(definition.config)) {
+      errors.push(`${label}.config must be a plain object when provided`);
+    }
+  });
+  for (const arm of BASELINE_ARMS) {
+    if (!seen.has(arm)) errors.push(`baselineArms is missing ${arm}`);
+  }
+  return {
+    valid: errors.length === 0,
+    summary: { total: baselineArms.length, required: BASELINE_ARMS.length },
+    errors,
+  };
 }
 
 // ── Judgment Scoring ──────────────────────────────────────────────────
@@ -407,13 +613,55 @@ async function runAssay(opts = {}) {
   const { profile, fixtures, runner, asset = {}, context = {} } = opts;
   if (!runner || typeof runner !== 'function')
     throw new Error('runAssay requires a runner function: async (fixture, baselineArm, context) => result');
+  const profileErrors = validateProfile(profile);
+  if (profileErrors.length) {
+    throw new TypeError(`Invalid assay profile: ${profileErrors.join('; ')}`);
+  }
 
-  const baselineArms = opts.baselineArms || createAllBaselineArms();
+  const baselineArms = opts.baselineArms === undefined ? createAllBaselineArms() : opts.baselineArms;
   const results = [];
   const startTime = Date.now();
 
   // Validate fixture set
   const fixtureValidation = validateFixtureSet(fixtures, profile);
+
+  if (!fixtureValidation.valid) {
+    return {
+      assay_version: '0.9.0',
+      profile,
+      fixture_validation: fixtureValidation,
+      results_by_arm: {},
+      results: [],
+      result_count: 0,
+      threshold_results: {
+        fixture_dataset: { pass: false, detail: fixtureValidation.summary },
+      },
+      overall_verdict: 'fail',
+      failed_thresholds: ['fixture_dataset'],
+      duration_ms: Date.now() - startTime,
+      dataset_fingerprint: fingerprintInvalidDataset(fixtureValidation.errors, 'asset-assay'),
+    };
+  }
+
+  const baselineValidation = validateBaselineArms(baselineArms);
+  if (!baselineValidation.valid) {
+    return {
+      assay_version: '0.9.0',
+      profile,
+      fixture_validation: fixtureValidation,
+      results_by_arm: {},
+      results: [],
+      result_count: 0,
+      threshold_results: {
+        fixture_dataset: { pass: true, detail: fixtureValidation.summary },
+        baseline_arms: { pass: false, detail: baselineValidation },
+      },
+      overall_verdict: 'fail',
+      failed_thresholds: ['baseline_arms'],
+      duration_ms: Date.now() - startTime,
+      dataset_fingerprint: fingerprintFixtureDataset(fixtures, 'asset-assay'),
+    };
+  }
 
   // Run each fixture against each baseline arm
   for (const fixture of fixtures) {
@@ -447,7 +695,7 @@ async function runAssay(opts = {}) {
       .filter(r => r.result && !r.error)
       .map(r => scoreJudgment(r.result, r.result?.expected || fixtureFor(r.fixture_id, fixtures), { arm: arm.arm }));
     const skipped = armResults.filter(r => r.result?.skipped || r.result?.decision === 'does_not_apply').length;
-    const errors = armResults.filter(r => r.error).length;
+    const errors = armResults.filter(r => r.error || !r.result).length;
     byArm[arm.arm] = {
       count: armResults.length,
       scores,
@@ -509,6 +757,15 @@ async function runAssay(opts = {}) {
 
   const thresholdResults = {
     fixture_dataset: { pass: fixtureValidation.valid, detail: fixtureValidation.summary },
+    baseline_arms: { pass: baselineValidation.valid, detail: baselineValidation.summary },
+    execution_evidence: {
+      pass: results.length > 0 && results.every(row => row.result && !row.error),
+      detail: {
+        attempted: results.length,
+        completed: results.filter(row => row.result && !row.error).length,
+        errors: results.filter(row => row.error || !row.result).length,
+      },
+    },
     blind_improvement: {
       pass: meanImprovement >= t.blind_mean_improvement_min || criticalErrorReduction >= t.critical_error_reduction_pct,
       detail: {
@@ -553,7 +810,7 @@ async function runAssay(opts = {}) {
     overall_verdict: allPassed ? 'pass' : 'fail',
     failed_thresholds: Object.entries(thresholdResults).filter(([, tr]) => !tr.pass).map(([name]) => name),
     duration_ms: durationMs,
-    dataset_fingerprint: `sha256:${crypto.createHash('sha256').update(JSON.stringify(fixtures.map(f => f.fixture_id))).digest('hex').slice(0, 32)}`,
+    dataset_fingerprint: fingerprintFixtureDataset(fixtures, 'asset-assay'),
   };
 }
 
@@ -638,57 +895,128 @@ function classifyAsset(evidence = {}) {
  * @returns {object} evidence claim (conforms to evidence-claim-candidate-0.9 schema)
  */
 function generateEvidenceClaim(assayOutput, opts = {}) {
+  if (!isPlainObject(assayOutput)) {
+    throw new TypeError('generateEvidenceClaim requires an assay report object');
+  }
   const { profile, threshold_results, overall_verdict, result_count } = assayOutput;
+  if (!isPlainObject(opts)) {
+    throw new TypeError('generateEvidenceClaim options must be a plain object');
+  }
+  const optionErrors = canonicalValidationErrors(opts, 'options');
+  if (optionErrors.length) {
+    throw new TypeError(`Invalid EvidenceClaim options: ${optionErrors.join('; ')}`);
+  }
+  const traceId = Object.prototype.hasOwnProperty.call(opts, 'traceId') ? opts.traceId : undefined;
+  const planId = Object.prototype.hasOwnProperty.call(opts, 'planId') ? opts.planId : undefined;
+  if (!isNonEmptyString(traceId)) {
+    throw new TypeError('traceId is required; EvidenceClaim must reference a real JudgmentTrace');
+  }
+  if (planId !== undefined && !isNonEmptyString(planId)) {
+    throw new TypeError('planId must be a non-empty string when provided');
+  }
+  for (const name of ['taskFamily', 'model', 'runtime']) {
+    if (Object.prototype.hasOwnProperty.call(opts, name) && !isNonEmptyString(opts[name])) {
+      throw new TypeError(`${name} must be a non-empty string when provided`);
+    }
+  }
+  const taskFamily = Object.prototype.hasOwnProperty.call(opts, 'taskFamily') ?
+    opts.taskFamily : 'asset_assay';
+  const model = Object.prototype.hasOwnProperty.call(opts, 'model') ? opts.model : 'unknown';
+  const runtime = Object.prototype.hasOwnProperty.call(opts, 'runtime') ?
+    opts.runtime : 'kdna-eval 0.3.2';
+  if (!isPlainObject(profile)) {
+    throw new TypeError('assay report profile must be a plain object');
+  }
+  if (!Object.prototype.hasOwnProperty.call(assayOutput, 'dataset_fingerprint') ||
+      !isNonEmptyString(assayOutput.dataset_fingerprint) ||
+      !/^sha256:[a-f0-9]{16,128}$/.test(assayOutput.dataset_fingerprint)) {
+    throw new TypeError('assay report dataset_fingerprint must be a canonical sha256 fingerprint');
+  }
+  if (!Object.prototype.hasOwnProperty.call(profile, 'asset_id') ||
+      !isNonEmptyString(profile.asset_id) ||
+      !Object.prototype.hasOwnProperty.call(profile, 'asset_version') ||
+      !isNonEmptyString(profile.asset_version)) {
+    throw new TypeError('assay report profile must contain asset_id and asset_version');
+  }
+  const assetDigest = Object.prototype.hasOwnProperty.call(profile, 'asset_digest') ?
+    profile.asset_digest : undefined;
+  if (assetDigest !== undefined && assetDigest !== null &&
+      !/^sha256:[a-f0-9]{64}$/.test(assetDigest)) {
+    throw new TypeError('assay report asset_digest must be a canonical sha256 digest when provided');
+  }
 
-  return {
+  const hasCompleteArmEvidence = (data) => isPlainObject(data) &&
+    Number.isInteger(data.count) && data.count > 0 &&
+    Number.isInteger(data.errors) && data.errors === 0 &&
+    Array.isArray(data.scores) && data.scores.length === data.count &&
+    Number.isFinite(data.mean_score);
+  const baselineArm = assayOutput.results_by_arm?.['no_kdna'];
+  const targetArm = assayOutput.results_by_arm?.['correct_single_kdna'];
+  const hasMeasuredMarginalValue = hasCompleteArmEvidence(baselineArm) &&
+    hasCompleteArmEvidence(targetArm) && Number.isInteger(result_count) && result_count > 0;
+  const baselineScore = hasMeasuredMarginalValue ? baselineArm.mean_score : null;
+  const targetScore = hasMeasuredMarginalValue ? targetArm.mean_score : null;
+  const behaviorEvaluated = overall_verdict === 'pass' && hasMeasuredMarginalValue;
+
+  const assetRef = {
+    asset_id: profile.asset_id,
+    version: profile.asset_version,
+  };
+  if (assetDigest !== undefined && assetDigest !== null) {
+    assetRef.digest = assetDigest;
+  }
+
+  const claim = {
     evidence_version: '0.9.0',
     claim_id: `claim_${crypto.randomBytes(8).toString('hex')}`,
-    trace_id: opts.traceId || null,
-    plan_id: opts.planId || null,
+    trace_id: traceId,
     claim_type: 'comparison_assay',
-    asset_ref: {
-      asset_id: profile.asset_id,
-      version: profile.asset_version,
-      digest: profile.asset_digest,
-    },
+    asset_ref: assetRef,
     scope: {
-      task_family: opts.taskFamily || 'asset_assay',
+      task_family: taskFamily,
       task_hash: assayOutput.dataset_fingerprint,
-      model: opts.model || 'unknown',
-      runtime: opts.runtime || 'kdna-eval 0.3.1',
+      model,
+      runtime,
       dataset_fingerprint: assayOutput.dataset_fingerprint,
       evaluator: 'deterministic',
     },
-    judgment_quality: {
-      axiom_coverage: {
-        triggered: result_count,
-        available: assayOutput.fixture_validation?.summary?.total || 0,
-        coverage_ratio: assayOutput.fixture_validation?.summary?.total > 0 ?
-          result_count / assayOutput.fixture_validation.summary.total : 0,
-      },
-    },
+    // An Asset Assay measures fixtures and comparison arms. It does not observe
+    // how many asset axioms a JudgmentTrace triggered, so emitting
+    // judgment_quality.axiom_coverage here would invent evidence.
+    judgment_quality: {},
     comparison_arms: Object.fromEntries(
-      Object.entries(assayOutput.results_by_arm || {}).map(([arm, data]) => [
-        arm,
-        { score: Math.round(data.mean_score * 100) / 100, status: 'completed', arm },
-      ])
+      Object.entries(assayOutput.results_by_arm || {}).map(([arm, data]) => {
+        const completed = hasCompleteArmEvidence(data);
+        return [
+          arm,
+          {
+            ...(completed ? { score: Math.round(data.mean_score * 100) / 100 } : {}),
+            status: completed ? 'completed' : 'failed',
+            arm,
+          },
+        ];
+      })
     ),
     marginal_value: {
-      baseline_score: assayOutput.results_by_arm?.['no_kdna']?.mean_score || null,
-      target_score: assayOutput.results_by_arm?.['correct_single_kdna']?.mean_score || null,
-      delta: null,
-      threshold_met: overall_verdict === 'pass',
+      baseline_score: hasMeasuredMarginalValue ? baselineScore : null,
+      target_score: hasMeasuredMarginalValue ? targetScore : null,
+      delta: hasMeasuredMarginalValue ?
+        Math.round((targetScore - baselineScore) * 100) / 100 : null,
+      threshold_met: hasMeasuredMarginalValue ? overall_verdict === 'pass' : null,
       threshold_name: '+0.5 mean vs no-KDNA or -30% critical errors',
-      evidence_produced: true,
+      evidence_produced: hasMeasuredMarginalValue,
     },
     limitations: [
       `Automated assay — ${result_count} fixture × baseline arm combinations evaluated`,
       `Thresholds passed: ${Object.values(threshold_results).filter(t => t.pass).length}/${Object.values(threshold_results).length}`,
       `Failed thresholds: ${assayOutput.failed_thresholds.join(', ') || 'none'}`,
+      'Axiom coverage was not measured by this assay and is not claimed',
+      ...(!hasMeasuredMarginalValue ?
+        ['Marginal value was not measured because baseline or target execution evidence was incomplete'] : []),
     ],
     classification: {
-      level: overall_verdict === 'pass' ? 'behavior_evaluated' : 'usage_evidence',
-      not_behavior_evaluated: overall_verdict !== 'pass',
+      level: behaviorEvaluated ? 'behavior_evaluated' : 'usage_evidence',
+      not_behavior_evaluated: !behaviorEvaluated,
       not_field_validated: true,
       not_production: true,
       load_ready_only: false,
@@ -698,6 +1026,9 @@ function generateEvidenceClaim(assayOutput, opts = {}) {
       generated_at: new Date().toISOString(),
     },
   };
+
+  if (planId !== undefined) claim.plan_id = planId;
+  return claim;
 }
 
 module.exports = {

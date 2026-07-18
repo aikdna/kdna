@@ -4,8 +4,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
+const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
-const { currentPublishedPackages } = require('./ecosystem-manifest');
+const { publishableSourcePackages } = require('./ecosystem-manifest');
 
 const repoRoot = path.resolve(__dirname, '..');
 const outputRoot = path.join(repoRoot, 'release-evidence');
@@ -15,25 +16,21 @@ const knownPackages = {
   core: {
     label: 'core',
     path: path.join(repoRoot, 'packages', 'kdna-core'),
-    publish_command: 'npm publish --provenance --access public',
   },
   compat: {
     label: 'compat',
     path: path.join(repoRoot, 'packages', 'kdna'),
-    publish_command: 'npm publish --provenance --access public',
   },
   eval: {
     label: 'eval',
     path: path.join(repoRoot, 'packages', 'kdna-eval'),
-    publish_command: 'npm publish --provenance --access public',
   },
 };
 
-function validateKnownPackages() {
-  const manifest = JSON.parse(
-    fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
-  );
-  const manifestPackages = currentPublishedPackages(manifest).filter(
+function validateKnownPackages(
+  manifest = JSON.parse(fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8')),
+) {
+  const manifestPackages = publishableSourcePackages(manifest).filter(
     ({ component }) => component.repository === 'aikdna/kdna',
   );
   const expected = new Map(
@@ -93,11 +90,39 @@ function parsePackageSelection() {
   return [knownPackages[selected]];
 }
 
-function packDryRun(entry) {
-  const stdout = run('npm', ['pack', '--dry-run', '--json'], entry.path);
+function packArtifact(entry) {
+  const stdout = run('npm', ['pack', '--json', '--pack-destination', outputRoot], entry.path);
   const parsed = JSON.parse(stdout);
   if (!parsed[0]) throw new Error(`npm pack returned no package metadata for ${entry.label}`);
-  return parsed[0];
+  const pack = parsed[0];
+  const expectedFilename = `${pack.name.replace(/^@/, '').replace('/', '-')}-${pack.version}.tgz`;
+  if (
+    typeof pack.filename !== 'string' ||
+    !/^[A-Za-z0-9][A-Za-z0-9._-]*\.tgz$/.test(pack.filename) ||
+    path.basename(pack.filename) !== pack.filename ||
+    pack.filename !== expectedFilename
+  ) {
+    throw new Error(`npm pack returned an unsafe artifact filename for ${entry.label}`);
+  }
+  const artifactPath = path.join(outputRoot, pack.filename);
+  const stat = fs.lstatSync(artifactPath);
+  if (!stat.isFile() || stat.isSymbolicLink()) {
+    throw new Error(`npm pack did not produce a regular artifact for ${entry.label}`);
+  }
+  const bytes = fs.readFileSync(artifactPath);
+  const shasum = crypto.createHash('sha1').update(bytes).digest('hex');
+  const integrity = `sha512-${crypto.createHash('sha512').update(bytes).digest('base64')}`;
+  if (pack.shasum !== shasum || pack.integrity !== integrity || pack.size !== bytes.length) {
+    throw new Error(`npm pack metadata does not bind the generated artifact for ${entry.label}`);
+  }
+  return {
+    pack,
+    artifactPath,
+    bytes,
+    shasum,
+    integrity,
+    sha256: crypto.createHash('sha256').update(bytes).digest('hex'),
+  };
 }
 
 function spdxId(value) {
@@ -197,19 +222,22 @@ function main() {
     if (!fs.existsSync(entry.path)) {
       throw new Error(`Package path does not exist: ${entry.path}`);
     }
-    const pack = packDryRun(entry);
+    const { pack, artifactPath, bytes, shasum, integrity, sha256 } = packArtifact(entry);
+    const artifactRelativePath = path.relative(repoRoot, artifactPath).split(path.sep).join('/');
     const artifact = {
       label: entry.label,
       package_name: pack.name,
       version: pack.version,
       filename: pack.filename,
-      shasum: pack.shasum,
-      integrity: pack.integrity,
-      size: pack.size,
+      artifact_path: artifactRelativePath,
+      sha256,
+      shasum,
+      integrity,
+      size: bytes.length,
       unpacked_size: pack.unpackedSize,
       entry_count: pack.entryCount,
-      publish_command: entry.publish_command,
-      npm_provenance_required: entry.publish_command.includes('--provenance'),
+      publish_command: `npm publish "./${artifactRelativePath}" --provenance --access public`,
+      npm_provenance_required: true,
       files: (pack.files || []).map((file) => ({
         path: file.path,
         size: file.size,
@@ -245,4 +273,6 @@ function main() {
   if (dirtyStatus) console.log('note: git_dirty=true because the worktree has uncommitted changes');
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = { validateKnownPackages };

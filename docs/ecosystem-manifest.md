@@ -23,6 +23,7 @@ release statuses:
 | Status | Meaning |
 | --- | --- |
 | `active` | A current npm package and managed dependency coordinate. |
+| `candidate` | Versioned, publishable source that has not yet passed registry publication acceptance. Both coordinates must be stable SemVer and the candidate must be newer than `published_version`. The candidate remains outside current-published projections until promoted, while the incumbent registry release and candidate main source remain separate release-health checks. |
 | `compatibility` | A maintained migration bridge. Its own dependencies remain current, but new integrations should use its declared replacement. |
 | `deprecated` | A historical npm coordinate with frozen, non-publishable source and an explicit replacement. |
 | `source-only` | A public source package or application that is not an npm publication. |
@@ -47,7 +48,7 @@ artifact anchors cannot select a different reachable Core ancestor.
 - Select repositories by their unique `repository` value.
 - Do not infer package maturity from repository maturity; co-located packages
   can have different lifecycles.
-- Do not treat `compatibility` or `deprecated` packages as recommended new
+- Do not treat `candidate`, `compatibility`, or `deprecated` packages as recommended new
   dependencies.
 - Verify the schema before consuming helper projections. A missing or malformed
   array is an error, not an empty inventory.

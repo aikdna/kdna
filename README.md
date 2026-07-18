@@ -148,7 +148,7 @@ The official KDNA toolchain is published from this repo and its companion packag
 | **KDNA SDK** | Embeddable library for integrations | `packages/kdna-core/` |
 | **KDNA Eval** | Experimental replay, budget, and consumption-evaluation primitives | `packages/kdna-eval/` + `@aikdna/kdna-eval` |
 
-`@aikdna/kdna@0.13.1` remains a maintained compatibility bridge. New
+`@aikdna/kdna` remains a maintained compatibility bridge. New
 integrations should install `@aikdna/kdna-cli` and `@aikdna/kdna-core`
 directly. The complete package, source-only application, and release-artifact
 inventory is published in the schema-2

@@ -8,5 +8,7 @@ export {
   loadDomainFromData,
   loadDomains,
   listPersonas,
-  loadPersona
+  loadPersona,
+  validateDomain,
+  validatePersona,
 } from "./loader.js";

@@ -10,8 +10,23 @@ const {
   loadFlatDomains,
   loadDomainFromFile,
   loadPersona,
-  listPersonas
+  listPersonas,
+  validateDomain,
+  validatePersona,
 } = require("../src/loader.js");
+
+function validPersona(overrides = {}) {
+  return {
+    id: "test-persona",
+    schemaVersion: 1,
+    name: "Test",
+    description: "A test persona.",
+    ruleOfSix: {},
+    domains: [],
+    preferences: {},
+    ...overrides,
+  };
+}
 
 test("listDomains returns names from kdna dir", async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), "kdna-eval-"));
@@ -91,8 +106,95 @@ test("listPersonas includes filesystem personas", async () => {
 });
 
 test("loadPersona falls back with provenance", async () => {
-  const defaults = { "test-persona": { id: "test-persona", schemaVersion: 1, name: "Test", ruleOfSix: {}, domains: [], preferences: {} } };
+  const defaults = { "test-persona": validPersona() };
   const p = await loadPersona("test-persona", { kdnaDir: "/nonexistent", defaults });
   assert.equal(p.id, "test-persona");
   assert.equal(p._source.type, "builtin-fallback");
+});
+
+test("validateDomain rejects values that violate its declared return type", () => {
+  const hostileDomains = [
+    [{ id: 42, schemaVersion: "one" }, /id must be a non-empty string/],
+    [{ id: "domain", schemaVersion: "one" }, /schemaVersion must be a finite number/],
+    [{ id: "domain", schemaVersion: 1, x_eval: [] }, /x_eval must be an object/],
+    [
+      { id: "domain", schemaVersion: 1, x_eval: { rules: [{}] } },
+      /x_eval\.rules\[0\]\.id must be a string/,
+    ],
+    [
+      {
+        id: "domain",
+        schemaVersion: 1,
+        axioms: [
+          {
+            id: "rule",
+            dimensions: [1],
+            condition: { path: "score", op: "gt", value: 0 },
+            effect: { value: 1 },
+          },
+        ],
+      },
+      /axioms\[0\]\.dimensions must be an array of strings/,
+    ],
+    [{ id: "domain", schemaVersion: 1, thresholds: [] }, /thresholds must be an object/],
+    [{ id: "domain", schemaVersion: 1, _source: { type: 1 } }, /_source\.type/],
+  ];
+
+  for (const [domain, expectedError] of hostileDomains) {
+    assert.throws(() => validateDomain(domain, "hostile"), expectedError);
+  }
+});
+
+test("validateDomain accepts and preserves every declared scoring-rule shape", () => {
+  const domain = {
+    id: "domain",
+    schemaVersion: 1,
+    x_eval: {
+      rules: [
+        {
+          id: "rule",
+          dimensions: ["quality"],
+          condition: { path: "score", op: "between", min: 0, max: 1 },
+          effect: { value: 1, multiplyBy: "weight", clamp: { min: 0, max: 2 } },
+        },
+      ],
+      thresholds: { promotion: 0.8 },
+    },
+    _source: { type: "programmatic", id: "domain" },
+  };
+  assert.strictEqual(validateDomain(domain, "valid"), domain);
+});
+
+test("validatePersona rejects incomplete and mistyped declared fields", () => {
+  const hostilePersonas = [
+    [{ ...validPersona(), name: undefined }, /name must be a non-empty string/],
+    [{ ...validPersona(), name: 42 }, /name must be a non-empty string/],
+    [{ ...validPersona(), schemaVersion: "one" }, /schemaVersion must be a finite number/],
+    [{ ...validPersona(), description: undefined }, /description must be a string/],
+    [{ ...validPersona(), ruleOfSix: { clarity: "high" } }, /ruleOfSix\.clarity/],
+    [{ ...validPersona(), domains: [{ id: "domain", weight: "one" }] }, /domains\[0\]\.weight/],
+    [{ ...validPersona(), preferences: [] }, /preferences must be an object/],
+    [{ ...validPersona(), _source: null }, /_source must be an object/],
+  ];
+
+  for (const [persona, expectedError] of hostilePersonas) {
+    assert.throws(() => validatePersona(persona), expectedError);
+  }
+});
+
+test("invalid fallback defaults cannot bypass Domain or Persona validation", async () => {
+  await assert.rejects(
+    loadFlatDomainFromFile("bad.kdna", "/nonexistent", {
+      "bad.kdna": { id: 42, schemaVersion: "one" },
+    }),
+    /id must be a non-empty string/,
+  );
+  await assert.rejects(
+    loadPersona("bad", {
+      kdnaDir: "/nonexistent",
+      defaults: { bad: { id: "bad", schemaVersion: 1 } },
+    }),
+    /name must be a non-empty string/,
+  );
+  assert.throws(() => loadFlatDomainFromData("null"), /Invalid domain programmatic/);
 });

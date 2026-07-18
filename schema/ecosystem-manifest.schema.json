@@ -49,6 +49,10 @@
       "type": "string",
       "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\\+([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?$"
     },
+    "stableSemver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
     "stringArray": {
       "type": "array",
       "uniqueItems": true,
@@ -93,9 +97,10 @@
           "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
         },
         "version": { "$ref": "#/$defs/semver" },
+        "published_version": { "$ref": "#/$defs/stableSemver" },
         "lifecycle": { "$ref": "#/$defs/lifecycle" },
         "release_status": {
-          "enum": ["active", "compatibility", "deprecated", "source-only"]
+          "enum": ["active", "candidate", "compatibility", "deprecated", "source-only"]
         },
         "dependency_policy": { "enum": ["current", "frozen", "none"] },
         "known_limitations": { "$ref": "#/$defs/stringArray" },
@@ -117,6 +122,31 @@
               "legacy_replacement": { "type": "null" }
             }
           }
+        },
+        {
+          "if": { "properties": { "release_status": { "const": "candidate" } } },
+          "then": {
+            "required": ["published_version"],
+            "properties": {
+              "version": { "$ref": "#/$defs/stableSemver" },
+              "published_version": { "$ref": "#/$defs/stableSemver" },
+              "npm_package": { "type": "string", "minLength": 1 },
+              "lifecycle": { "enum": ["Stable", "Beta", "Experimental", "Legacy"] },
+              "dependency_policy": { "const": "current" }
+            },
+            "allOf": [
+              {
+                "if": { "properties": { "lifecycle": { "const": "Legacy" } } },
+                "then": {
+                  "properties": {
+                    "legacy_replacement": { "type": "string", "minLength": 1 }
+                  }
+                },
+                "else": { "properties": { "legacy_replacement": { "type": "null" } } }
+              }
+            ]
+          },
+          "else": { "properties": { "published_version": false } }
         },
         {
           "if": { "properties": { "release_status": { "const": "compatibility" } } },

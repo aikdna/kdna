@@ -1,5 +1,9 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
+const fs = require('node:fs');
+const path = require('node:path');
+const Ajv2020 = require('ajv/dist/2020').default;
+const addFormats = require('ajv-formats');
 const {
   FIXTURE_CATEGORIES,
   BASELINE_ARMS,
@@ -16,6 +20,43 @@ const {
   classifyAsset,
   generateEvidenceClaim,
 } = require('../src/assay');
+
+const evidenceClaimSchema = JSON.parse(fs.readFileSync(
+  path.resolve(__dirname, '../../../specs/evidence-claim-candidate-0.9.schema.json'),
+  'utf8',
+));
+const evidenceClaimAjv = new Ajv2020({ allErrors: true, strict: true });
+addFormats(evidenceClaimAjv);
+const validateEvidenceClaim = evidenceClaimAjv.compile(evidenceClaimSchema);
+
+function assertSchemaValidEvidenceClaim(claim) {
+  assert.strictEqual(
+    validateEvidenceClaim(claim),
+    true,
+    evidenceClaimAjv.errorsText(validateEvidenceClaim.errors, { separator: '\n' }),
+  );
+}
+
+const fixture = (category, task, expected = { answer: 'expected' }) =>
+  createFixture({ category, task, expected });
+
+const relaxedProfile = () => createAssayProfile({
+  assetId: 'test.kdna',
+  thresholds: {
+    positive_target_min_count: 0,
+    non_applicable_min_count: 0,
+    adjacent_ambiguous_min_count: 0,
+    high_risk_failure_min_count: 0,
+    regression_min_count: 0,
+    holdout_required: false,
+    blind_mean_improvement_min: 0,
+    critical_error_reduction_pct: 0,
+    non_applicable_accuracy_min: 0,
+    harmful_contamination_max: 1,
+    high_risk_harm_zero: false,
+    regression_pass_required: false,
+  },
+});
 
 // ── Profile ───────────────────────────────────────────────────────────
 
@@ -37,6 +78,56 @@ it('creates assay profile with custom thresholds', () => {
   assert.strictEqual(profile.thresholds.blind_mean_improvement_min, 1.0);
   // Unspecified thresholds retain defaults
   assert.strictEqual(profile.thresholds.non_applicable_accuracy_min, 0.90);
+});
+
+it('applies every advertised gate threshold override', () => {
+  const profile = createAssayProfile({
+    assetId: 'custom.kdna',
+    thresholds: {
+      structural_gate: false,
+      behavioral_gate: false,
+      boundary_gate: false,
+      contamination_gate: false,
+      trust_gate: true,
+      economics_gate: true,
+      interoperability_gate: true,
+      product_gate: true,
+    },
+  });
+  assert.deepStrictEqual(
+    Object.fromEntries(Object.entries(profile.thresholds).filter(([name]) => name.endsWith('_gate'))),
+    {
+      structural_gate: false,
+      behavioral_gate: false,
+      boundary_gate: false,
+      contamination_gate: false,
+      trust_gate: true,
+      economics_gate: true,
+      interoperability_gate: true,
+      product_gate: true,
+    },
+  );
+});
+
+it('rejects missing profile options and invalid threshold domains', () => {
+  assert.strictEqual(createAssayProfile().asset_id, 'unknown');
+  assert.throws(() => createAssayProfile({ assetId: '' }), /assetId/);
+  assert.throws(
+    () => createAssayProfile({ assetId: 'x', thresholds: { non_applicable_accuracy_min: 1.1 } }),
+    /must be <= 1/,
+  );
+  assert.throws(
+    () => createAssayProfile({ assetId: 'x', thresholds: { regression_min_count: 1.5 } }),
+    /must be an integer/,
+  );
+  assert.throws(
+    () => createAssayProfile({ assetId: 'x', thresholds: { holdout_required: 'yes' } }),
+    /must be a boolean/,
+  );
+  assert.throws(
+    () => createAssayProfile({ assetId: 'x', thresholds: { misspelled_threshold: 1 } }),
+    /not supported/,
+  );
 });
 
 // ── Fixture Categories ────────────────────────────────────────────────
@@ -64,32 +155,48 @@ it('CLASSIFICATION_LEVELS includes all 6 levels', () => {
 // ── Create Fixture ────────────────────────────────────────────────────
 
 it('creates a valid fixture', () => {
-  const f = createFixture({ category: 'positive_target', task: 'Should we deploy this hotfix?' });
+  const f = fixture('positive_target', 'Should we deploy this hotfix?');
   assert.strictEqual(f.category, 'positive_target');
   assert.ok(f.fixture_id.startsWith('fixture_'));
   assert.ok(f.task_hash.startsWith('sha256:'));
 });
 
 it('createFixture rejects unknown category', () => {
-  assert.throws(() => createFixture({ category: 'invalid_category', task: 'test' }), /Unknown fixture category/);
+  assert.throws(() => createFixture({ category: 'invalid_category', task: 'test', expected: { answer: 'x' } }), /Unknown fixture category/);
 });
 
 it('createFixture generates unique fixture_ids', () => {
-  const f1 = createFixture({ category: 'positive_target', task: 'task A' });
-  const f2 = createFixture({ category: 'positive_target', task: 'task B' });
+  const f1 = fixture('positive_target', 'task A');
+  const f2 = fixture('positive_target', 'task B');
   assert.notStrictEqual(f1.fixture_id, f2.fixture_id);
+});
+
+it('createFixture requires explicit non-empty task and expected evidence', () => {
+  assert.throws(() => createFixture(), /options object/);
+  assert.throws(
+    () => createFixture({ category: 'positive_target', task: '', expected: { answer: 'x' } }),
+    /task must be a non-empty string/,
+  );
+  assert.throws(
+    () => createFixture({ category: 'positive_target', task: 'task', expected: {} }),
+    /expected must be a non-empty plain object/,
+  );
+  assert.throws(
+    () => createFixture({ category: 'positive_target', task: 'task', expected: { value: 1n } }),
+    /unsupported bigint evidence/,
+  );
 });
 
 // ── Validate Fixture Set ──────────────────────────────────────────────
 
 it('validates a complete fixture set', () => {
   const fixtures = [
-    ...Array.from({ length: 8 }, (_, i) => createFixture({ category: 'positive_target', task: `task ${i}` })),
-    ...Array.from({ length: 4 }, (_, i) => createFixture({ category: 'non_applicable', task: `not-in-scope ${i}` })),
-    ...Array.from({ length: 4 }, (_, i) => createFixture({ category: 'adjacent_ambiguous', task: `borderline ${i}` })),
-    ...Array.from({ length: 2 }, (_, i) => createFixture({ category: 'high_risk_failure', task: `dangerous ${i}` })),
-    ...Array.from({ length: 2 }, (_, i) => createFixture({ category: 'regression', task: `regression ${i}` })),
-    ...Array.from({ length: 1 }, (_, i) => createFixture({ category: 'holdout', task: `holdout ${i}` })),
+    ...Array.from({ length: 8 }, (_, i) => fixture('positive_target', `task ${i}`)),
+    ...Array.from({ length: 4 }, (_, i) => fixture('non_applicable', `not-in-scope ${i}`)),
+    ...Array.from({ length: 4 }, (_, i) => fixture('adjacent_ambiguous', `borderline ${i}`)),
+    ...Array.from({ length: 2 }, (_, i) => fixture('high_risk_failure', `dangerous ${i}`)),
+    ...Array.from({ length: 2 }, (_, i) => fixture('regression', `regression ${i}`)),
+    fixture('holdout', 'holdout 0'),
   ];
   const profile = createAssayProfile({ assetId: 'test.kdna' });
   const result = validateFixtureSet(fixtures, profile);
@@ -101,7 +208,7 @@ it('validates a complete fixture set', () => {
 
 it('rejects insufficient fixture counts', () => {
   const fixtures = [
-    createFixture({ category: 'positive_target', task: 'only one task' }),
+    fixture('positive_target', 'only one task'),
   ];
   const profile = createAssayProfile({ assetId: 'test.kdna' });
   const result = validateFixtureSet(fixtures, profile);
@@ -111,16 +218,165 @@ it('rejects insufficient fixture counts', () => {
 
 it('rejects missing holdout when required', () => {
   const fixtures = [
-    ...Array.from({ length: 8 }, (_, i) => createFixture({ category: 'positive_target', task: `task ${i}` })),
-    ...Array.from({ length: 4 }, (_, i) => createFixture({ category: 'non_applicable', task: `na ${i}` })),
-    ...Array.from({ length: 4 }, (_, i) => createFixture({ category: 'adjacent_ambiguous', task: `adj ${i}` })),
-    ...Array.from({ length: 2 }, (_, i) => createFixture({ category: 'high_risk_failure', task: `hr ${i}` })),
-    ...Array.from({ length: 2 }, (_, i) => createFixture({ category: 'regression', task: `reg ${i}` })),
+    ...Array.from({ length: 8 }, (_, i) => fixture('positive_target', `task ${i}`)),
+    ...Array.from({ length: 4 }, (_, i) => fixture('non_applicable', `na ${i}`)),
+    ...Array.from({ length: 4 }, (_, i) => fixture('adjacent_ambiguous', `adj ${i}`)),
+    ...Array.from({ length: 2 }, (_, i) => fixture('high_risk_failure', `hr ${i}`)),
+    ...Array.from({ length: 2 }, (_, i) => fixture('regression', `reg ${i}`)),
   ];
   const profile = createAssayProfile({ assetId: 'test.kdna' });
   const result = validateFixtureSet(fixtures, profile);
   assert.strictEqual(result.valid, false);
   assert.ok(result.errors.some(e => e.includes('holdout')));
+});
+
+it('fails closed without invoking the runner for insufficient fixture evidence', async () => {
+  const profile = createAssayProfile({ assetId: 'test.kdna' });
+  let calls = 0;
+  const report = await runAssay({
+    profile,
+    fixtures: [fixture('positive_target', 'insufficient')],
+    runner: async () => { calls++; return { answer: 'should not run' }; },
+  });
+  assert.strictEqual(calls, 0);
+  assert.strictEqual(report.overall_verdict, 'fail');
+  assert.deepStrictEqual(report.failed_thresholds, ['fixture_dataset']);
+  assert.strictEqual(report.result_count, 0);
+});
+
+it('fails closed without invoking the runner for malformed or duplicate fixtures', async () => {
+  const profile = createAssayProfile({
+    assetId: 'test.kdna',
+    thresholds: {
+      positive_target_min_count: 0,
+      non_applicable_min_count: 0,
+      adjacent_ambiguous_min_count: 0,
+      high_risk_failure_min_count: 0,
+      regression_min_count: 0,
+      holdout_required: false,
+    },
+  });
+  const valid = fixture('positive_target', 'valid');
+  const datasets = [
+    [],
+    [{ ...valid, task: '' }],
+    [{ ...valid, expected: {} }],
+    [valid, { ...valid, task: 'duplicate id' }],
+    [valid, { ...valid, fixture_id: 'different-id' }],
+  ];
+  for (const fixtures of datasets) {
+    let calls = 0;
+    const report = await runAssay({
+      profile,
+      fixtures,
+      runner: async () => { calls++; return { answer: 'should not run' }; },
+    });
+    assert.strictEqual(calls, 0);
+    assert.strictEqual(report.overall_verdict, 'fail');
+    assert.strictEqual(report.fixture_validation.valid, false);
+  }
+});
+
+it('fails closed without invoking the runner for an externally malformed profile', async () => {
+  const profile = createAssayProfile({ assetId: 'test.kdna' });
+  profile.thresholds.harmful_contamination_max = -1;
+  let calls = 0;
+  await assert.rejects(
+    runAssay({
+      profile,
+      fixtures: [fixture('positive_target', 'valid')],
+      runner: async () => { calls++; return { answer: 'should not run' }; },
+    }),
+    /Invalid assay profile.*harmful_contamination_max/,
+  );
+  assert.strictEqual(calls, 0);
+});
+
+it('requires each exact baseline arm once before invoking the runner', async () => {
+  const allArms = createAllBaselineArms();
+  const invalidArmSets = [
+    [],
+    allArms.slice(0, 3),
+    [allArms[0], allArms[0], allArms[2], allArms[3]],
+    [allArms[0], allArms[1], allArms[2], { arm: 'unknown' }],
+    [allArms[0], allArms[1], allArms[2], null],
+    [allArms[0], allArms[1], allArms[2], { arm: 'wrong_or_adjacent_kdna', config: new Date() }],
+  ];
+  for (const baselineArms of invalidArmSets) {
+    let calls = 0;
+    const report = await runAssay({
+      profile: relaxedProfile(),
+      fixtures: [fixture('positive_target', 'valid baseline task')],
+      baselineArms,
+      runner: async () => { calls++; return { answer: 'must not run', score_5pt: 5 }; },
+    });
+    assert.strictEqual(calls, 0);
+    assert.strictEqual(report.overall_verdict, 'fail');
+    assert.deepStrictEqual(report.failed_thresholds, ['baseline_arms']);
+  }
+});
+
+it('rejects non-canonical fixture evidence before invoking the runner', async () => {
+  const base = fixture('positive_target', 'canonical evidence task');
+  const cyclic = { answer: 'x' };
+  cyclic.self = cyclic;
+  const namedArray = ['value'];
+  namedArray.extra = 'hidden from JSON arrays';
+  let getterCalls = 0;
+  const accessorExpected = {};
+  Object.defineProperty(accessorExpected, 'answer', {
+    enumerable: true,
+    get() { getterCalls++; return 'must not execute'; },
+  });
+  const invalidFixtures = [
+    { ...base, expected: cyclic },
+    { ...base, expected: { value: 1n } },
+    { ...base, expected: { value: undefined } },
+    { ...base, metadata: { value: () => true } },
+    { ...base, metadata: { value: new Date() } },
+    { ...base, metadata: { namedArray } },
+    { ...base, expected: accessorExpected },
+  ];
+  for (const invalidFixture of invalidFixtures) {
+    let calls = 0;
+    const report = await runAssay({
+      profile: relaxedProfile(),
+      fixtures: [invalidFixture],
+      runner: async () => { calls++; return { answer: 'must not run' }; },
+    });
+    assert.strictEqual(calls, 0);
+    assert.strictEqual(report.overall_verdict, 'fail');
+    assert.strictEqual(report.fixture_validation.valid, false);
+  }
+  assert.strictEqual(getterCalls, 0);
+});
+
+it('asset dataset fingerprint is key-order stable and content-sensitive', async () => {
+  const base = fixture('positive_target', 'fingerprint task', { answer: 'hold', score: 4 });
+  const reordered = {
+    metadata: {},
+    expected: { score: 4, answer: 'hold' },
+    task_hash: base.task_hash,
+    task: base.task,
+    category: base.category,
+    fixture_id: base.fixture_id,
+    created_at: 'different volatile timestamp',
+  };
+  const run = fixtures => runAssay({
+    profile: relaxedProfile(),
+    fixtures,
+    runner: async () => ({ answer: 'hold', score_5pt: 4 }),
+  });
+  const original = await run([base]);
+  const sameSemantics = await run([reordered]);
+  const changedTask = await run([{ ...base, task: 'mutated fingerprint task' }]);
+  const changedExpected = await run([{ ...base, expected: { answer: 'ship', score: 4 } }]);
+  assert.strictEqual(original.dataset_fingerprint, sameSemantics.dataset_fingerprint);
+  assert.notStrictEqual(original.dataset_fingerprint, changedTask.dataset_fingerprint);
+  assert.notStrictEqual(original.dataset_fingerprint, changedExpected.dataset_fingerprint);
+  const originalClaim = generateEvidenceClaim(original, { traceId: 'trace_fingerprint_assay' });
+  assertSchemaValidEvidenceClaim(originalClaim);
+  assert.strictEqual(originalClaim.scope.dataset_fingerprint, original.dataset_fingerprint);
 });
 
 // ── Baseline Arms ─────────────────────────────────────────────────────
@@ -189,7 +445,7 @@ it('behavioral gate accepts a 30% critical-error reduction when mean scores tie'
       regression_pass_required: false,
     },
   });
-  const fixtures = [createFixture({ category: 'positive_target', task: 'test', expected: {} })];
+  const fixtures = [fixture('positive_target', 'test')];
   const assay = await runAssay({
     profile,
     fixtures,
@@ -328,13 +584,71 @@ it('does not inflate classification', () => {
 
 // ── Evidence Claim Generator ──────────────────────────────────────────
 
+const completedArmEvidence = (meanScore, count = 21) => ({
+  count,
+  scores: Array.from({ length: count }, () => ({ score: meanScore })),
+  mean_score: meanScore,
+  errors: 0,
+});
+
+it('generates schema-valid claims from actual passing and failing Assay reports', async () => {
+  const profile = relaxedProfile();
+  const passingReport = await runAssay({
+    profile,
+    fixtures: [fixture('positive_target', 'actual passing assay')],
+    runner: async (_fixture, arm) => ({
+      answer: 'observed answer',
+      score_5pt: arm.arm === 'correct_single_kdna' ? 5 : 2,
+    }),
+  });
+  const failingReport = await runAssay({
+    profile,
+    fixtures: [],
+    runner: async () => { throw new Error('invalid fixtures must not invoke the runner'); },
+  });
+
+  assert.strictEqual(passingReport.overall_verdict, 'pass');
+  assert.strictEqual(failingReport.overall_verdict, 'fail');
+  assertSchemaValidEvidenceClaim(
+    generateEvidenceClaim(passingReport, { traceId: 'trace_actual_passing_assay' }),
+  );
+  assertSchemaValidEvidenceClaim(
+    generateEvidenceClaim(failingReport, { traceId: 'trace_actual_failing_assay' }),
+  );
+});
+
+it('never treats runner errors as passing or behavior-evaluated evidence', async () => {
+  const report = await runAssay({
+    profile: relaxedProfile(),
+    fixtures: [fixture('positive_target', 'runner error assay')],
+    runner: async () => { throw new Error('runner unavailable'); },
+  });
+  const claim = generateEvidenceClaim(report, { traceId: 'trace_runner_error_assay' });
+
+  assert.strictEqual(report.overall_verdict, 'fail');
+  assert.ok(report.failed_thresholds.includes('execution_evidence'));
+  assert.ok(Object.values(report.results_by_arm).every(arm => arm.errors === 1));
+  assertSchemaValidEvidenceClaim(claim);
+  assert.strictEqual(claim.classification.level, 'usage_evidence');
+  assert.strictEqual(claim.classification.not_behavior_evaluated, true);
+  assert.strictEqual(claim.marginal_value.evidence_produced, false);
+  assert.strictEqual(claim.marginal_value.baseline_score, null);
+  assert.strictEqual(claim.marginal_value.target_score, null);
+  assert.strictEqual(claim.marginal_value.threshold_met, null);
+  assert.ok(Object.values(claim.comparison_arms).every(arm => arm.status === 'failed'));
+});
+
 it('generates evidence claim from assay results', () => {
   const assayOutput = {
-    profile: { asset_id: 'test.kdna', asset_version: '0.1.0', asset_digest: 'sha256:abc123' },
+    profile: {
+      asset_id: 'test.kdna',
+      asset_version: '0.1.0',
+      asset_digest: `sha256:${'a'.repeat(64)}`,
+    },
     fixture_validation: { valid: true, summary: { total: 21 } },
     results_by_arm: {
-      no_kdna: { mean_score: 2.5 },
-      correct_single_kdna: { mean_score: 4.2 },
+      no_kdna: completedArmEvidence(2.5),
+      correct_single_kdna: completedArmEvidence(4.2),
     },
     threshold_results: {
       fixture_dataset: { pass: true },
@@ -347,13 +661,22 @@ it('generates evidence claim from assay results', () => {
     overall_verdict: 'pass',
     failed_thresholds: [],
     result_count: 84,
-    dataset_fingerprint: 'sha256:test123',
+    dataset_fingerprint: `sha256:${'b'.repeat(64)}`,
   };
-  const claim = generateEvidenceClaim(assayOutput, { taskFamily: 'deploy_risk', model: 'claude-sonnet-5' });
+  const claim = generateEvidenceClaim(assayOutput, {
+    traceId: 'trace_passing_assay',
+    planId: 'plan_passing_assay',
+    taskFamily: 'deploy_risk',
+    model: 'claude-sonnet-5',
+  });
+  assertSchemaValidEvidenceClaim(claim);
   assert.strictEqual(claim.evidence_version, '0.9.0');
   assert.strictEqual(claim.claim_type, 'comparison_assay');
+  assert.strictEqual(claim.scope.runtime, 'kdna-eval 0.3.2');
   assert.strictEqual(claim.classification.level, 'behavior_evaluated');
   assert.strictEqual(claim.marginal_value.evidence_produced, true);
+  assert.strictEqual(claim.marginal_value.delta, 1.7);
+  assert.ok(!Object.hasOwn(claim.judgment_quality, 'axiom_coverage'));
   assert.ok(claim.claim_id.startsWith('claim_'));
 });
 
@@ -361,7 +684,10 @@ it('generates evidence claim for failed assay', () => {
   const assayOutput = {
     profile: { asset_id: 'test.kdna', asset_version: '0.1.0' },
     fixture_validation: { valid: true, summary: { total: 21 } },
-    results_by_arm: { no_kdna: { mean_score: 2.0 }, correct_single_kdna: { mean_score: 2.1 } },
+    results_by_arm: {
+      no_kdna: completedArmEvidence(2.0),
+      correct_single_kdna: completedArmEvidence(2.1),
+    },
     threshold_results: {
       fixture_dataset: { pass: true },
       blind_improvement: { pass: false, detail: { mean_improvement: 0.1 } },
@@ -373,12 +699,68 @@ it('generates evidence claim for failed assay', () => {
     overall_verdict: 'fail',
     failed_thresholds: ['blind_improvement'],
     result_count: 84,
-    dataset_fingerprint: 'sha256:test123',
+    dataset_fingerprint: `sha256:${'c'.repeat(64)}`,
   };
-  const claim = generateEvidenceClaim(assayOutput);
+  const claim = generateEvidenceClaim(assayOutput, { traceId: 'trace_failing_assay' });
+  assertSchemaValidEvidenceClaim(claim);
   assert.strictEqual(claim.classification.level, 'usage_evidence');
   assert.strictEqual(claim.classification.not_behavior_evaluated, true);
   assert.strictEqual(claim.marginal_value.threshold_met, false);
+  assert.ok(!Object.hasOwn(claim, 'plan_id'));
+  assert.ok(!Object.hasOwn(claim.asset_ref, 'digest'));
+  assert.ok(!Object.hasOwn(claim.judgment_quality, 'axiom_coverage'));
+});
+
+it('refuses to invent missing trace identity or accept malformed digest evidence', () => {
+  const assayOutput = {
+    profile: { asset_id: 'test.kdna', asset_version: '0.1.0' },
+    fixture_validation: { valid: true, summary: { total: 1 } },
+    results_by_arm: {},
+    threshold_results: { fixture_dataset: { pass: false } },
+    overall_verdict: 'fail',
+    failed_thresholds: ['fixture_dataset'],
+    result_count: 0,
+    dataset_fingerprint: `sha256:${'d'.repeat(64)}`,
+  };
+
+  assert.throws(
+    () => generateEvidenceClaim(assayOutput),
+    /traceId is required; EvidenceClaim must reference a real JudgmentTrace/,
+  );
+  Object.defineProperty(Object.prototype, 'traceId', {
+    value: 'trace_inherited_must_not_count',
+    configurable: true,
+  });
+  try {
+    assert.throws(
+      () => generateEvidenceClaim(assayOutput, {}),
+      /traceId is required; EvidenceClaim must reference a real JudgmentTrace/,
+    );
+  } finally {
+    delete Object.prototype.traceId;
+  }
+  const accessorOptions = {};
+  Object.defineProperty(accessorOptions, 'traceId', {
+    enumerable: true,
+    get() { throw new Error('must not execute EvidenceClaim option getters'); },
+  });
+  assert.throws(
+    () => generateEvidenceClaim(assayOutput, accessorOptions),
+    /Invalid EvidenceClaim options/,
+  );
+  const noDigestClaim = generateEvidenceClaim(
+    { ...assayOutput, profile: { ...assayOutput.profile, asset_digest: null } },
+    { traceId: 'trace_missing_digest' },
+  );
+  assertSchemaValidEvidenceClaim(noDigestClaim);
+  assert.ok(!Object.hasOwn(noDigestClaim.asset_ref, 'digest'));
+  assert.throws(
+    () => generateEvidenceClaim(
+      { ...assayOutput, profile: { ...assayOutput.profile, asset_digest: 'sha256:not-a-digest' } },
+      { traceId: 'trace_bad_digest' },
+    ),
+    /asset_digest must be a canonical sha256 digest/,
+  );
 });
 
 // ── CJS exports ───────────────────────────────────────────────────────

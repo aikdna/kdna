@@ -1,5 +1,74 @@
 # Changelog
 
+## 0.3.2 (2026-07-19)
+
+- Make the ESM root export the same score constants as the CommonJS root.
+- Complete the TypeScript value declarations for every root runtime export,
+  including replay, gates, cost, consumption, route-card, and consumer-index
+  helpers.
+- Give every public package subpath its own exact declaration surface, align
+  the loader validators across CommonJS and ESM, and type the supported replay
+  and Cluster API compositions without broad `any` fallbacks.
+- Default direct score-regression detection to the same five-percent tolerance
+  used by replay runs, and correct the executable cost-tracker example.
+- Add fail-closed public-surface and packed TypeScript consumer regression
+  checks across the root and all ten subpaths so runtime and declaration
+  exports cannot drift silently again.
+- Reject malformed, empty, duplicate, or below-threshold Assay fixture sets
+  before invoking a runner, and require non-empty task and expected evidence.
+- Require structurally valid Cluster fixtures and identifiers, prevent empty or
+  invalid fixture evidence from producing a passing Cluster verdict, and make
+  Cluster Replay reject incomplete result sets.
+- Count replay success only when `pass === true`; missing or non-boolean pass
+  evidence is failed and reported as incomplete instead of becoming an implicit
+  success.
+- Fully validate the nested Domain, Persona, RouteCard, and ConsumerIndex
+  shapes promised by TypeScript, including fallback-loaded defaults, and make
+  consumer-index resolution and trust checks fail safely on malformed input.
+- Require exactly one of each documented Asset Assay baseline arm before a
+  runner is invoked; empty, partial, duplicate, unknown, or malformed arm sets
+  cannot produce a passing report.
+- Bind Asset and Cluster dataset fingerprints to canonical evaluation content,
+  not fixture IDs alone. Object key order is normalized, task and expected
+  evidence mutations change the hash, and non-JSON evidence fails validation.
+- Validate Cluster manifest identifiers and product-gate fields before
+  producing the strongly typed report, while preserving documented defaults
+  when optional identifiers are absent.
+- Bind a passing Cluster Assay to one valid selected primary, exact fixture
+  expectations, verified loaded primary/advisor assets, and non-loaded rejected
+  assets; missing, duplicate, blocked, or mismatched identities fail closed.
+- Require all seven comparison arms exactly once, with finite 1–5 scores,
+  nonnegative result/error counts, and the exact fixture ID set for every arm.
+- Require explicit Cluster budget and observed execution-cost evidence. Zero
+  observed tokens remain zero; missing cost data is never replaced with a
+  passing synthetic estimate.
+- Recognize canonical Cluster plans whose applicability decision is `blocked`
+  as valid non-executable diagnostics. They are not mislabeled as malformed,
+  but no blocked plan can pass an Assay gate or promotion verdict.
+- Make the standalone economics gate fail closed on missing or malformed plan
+  and execution-cost evidence while preserving the optional empty Assay runner
+  calls supported by 0.3.1.
+- Keep Replay result IDs as stable non-empty strings even when fixture input IDs
+  are numeric or empty, fail closed on malformed custom evaluator results, and
+  normalize arbitrary thrown gate values to the declared string error shape.
+- Reject coercible or malformed standalone behavioral and product gate evidence,
+  and require custom multi-gate functions to return every declared `GateResult`
+  field as own enumerable accessor-free data before an explicit pass can
+  participate in aggregation. Valid results are detached into safe copies.
+- Generate schema-valid EvidenceClaims only when the caller supplies a real
+  `traceId`. Missing plan IDs and asset digests are omitted instead of encoded
+  as forbidden `null` values, and Asset Assay execution counts are no longer
+  mislabeled as observed axiom coverage. Runner errors fail the explicit
+  execution-evidence threshold and cannot produce behavior-evaluated or
+  completed comparison claims.
+- Resolve route policies from validated own data properties only. Prototype
+  members, accessors, inherited policy fields, and malformed domain entries
+  fail closed instead of becoming executable routing policy.
+- Retain the actual Eval package tarball produced for release evidence, bind its
+  repository-relative path, hashes, size, and package identity, and publish
+  those verified bytes with npm provenance instead of packing the directory a
+  second time.
+
 ## 0.3.1 (2026-07-12)
 
 - Add fail-closed Asset Assay and five-gate Cluster Assay contracts.

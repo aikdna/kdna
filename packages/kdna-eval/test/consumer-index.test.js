@@ -126,3 +126,42 @@ test("VALID_STATUSES includes all five expected statuses", () => {
     "trusted_runtime",
   ]);
 });
+
+test("validateConsumerIndex rejects hostile entry shapes without throwing", () => {
+  const baseEntry = { domain_id: "test", status: "trusted_runtime" };
+  const hostileIndexes = [
+    { consumer_index: "0.1.0", entries: [null] },
+    { consumer_index: "0.1.0", entries: [42] },
+    { consumer_index: "0.1.0", entries: [{ ...baseEntry, enabled: "yes" }] },
+    { consumer_index: "0.1.0", entries: [{ ...baseEntry, route_preference: [] }] },
+    {
+      consumer_index: "0.1.0",
+      entries: [{ ...baseEntry, route_preference: { primary_for: {} } }],
+    },
+    {
+      consumer_index: "0.1.0",
+      entries: [{ ...baseEntry, route_preference: { advisor_for: ["review", 1] } }],
+    },
+    {
+      consumer_index: "0.1.0",
+      entries: [{ ...baseEntry, route_preference: { never_for: null } }],
+    },
+  ];
+
+  for (const index of hostileIndexes) {
+    let validation;
+    assert.doesNotThrow(() => {
+      validation = validateConsumerIndex(index);
+    });
+    assert.equal(validation.valid, false, JSON.stringify(index));
+    assert.equal(validation.index, null);
+    assert.doesNotThrow(() => resolveConsumerIndex(index, "review", "test"));
+    assert.deepEqual(resolveConsumerIndex(index, "review", "test"), {
+      status: "draft_generated",
+      routePreference: null,
+      isTrusted: false,
+      isEnabled: false,
+    });
+    assert.equal(isTrusted(index, "test"), false);
+  }
+});

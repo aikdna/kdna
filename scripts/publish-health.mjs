@@ -12,6 +12,23 @@ const policyPath = path.join(repoRoot, 'release-health-policy.json');
 const stableSemver = /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/u;
 const slsaPredicate = 'https://slsa.dev/provenance/v1';
 
+function compareStableVersions(left, right) {
+  const leftMatch = stableSemver.exec(left || '');
+  const rightMatch = stableSemver.exec(right || '');
+  if (!leftMatch || !rightMatch) throw new Error('stable SemVer comparison requires x.y.z');
+  for (let index = 1; index <= 3; index += 1) {
+    const leftPart = BigInt(leftMatch[index]);
+    const rightPart = BigInt(rightMatch[index]);
+    if (leftPart > rightPart) return 1;
+    if (leftPart < rightPart) return -1;
+  }
+  return 0;
+}
+
+export function expectedMainVersion(entry) {
+  return entry.candidate_version || entry.version;
+}
+
 export function canonicalTag(policy, version) {
   if (!stableSemver.test(version)) {
     throw new Error(`invalid stable version: ${version}`);
@@ -43,6 +60,13 @@ export function validatePolicy(policy) {
     }
     if (!stableSemver.test(entry.version)) {
       throw new Error(`invalid expected version for ${entry.npm_package}`);
+    }
+    if (
+      entry.candidate_version !== undefined &&
+      (!stableSemver.test(entry.candidate_version) ||
+        compareStableVersions(entry.candidate_version, entry.version) <= 0)
+    ) {
+      throw new Error(`invalid candidate version for ${entry.npm_package}`);
     }
     if (!/^aikdna\/[a-z0-9._-]+$/u.test(entry.repository)) {
       throw new Error(`invalid public repository coordinate: ${entry.repository}`);
@@ -170,6 +194,7 @@ async function auditPackage(entry) {
   const npmVersion = registry.version;
   if (!stableSemver.test(npmVersion || '')) throw new Error('npm latest is not stable SemVer');
   const expectedVersion = entry.version;
+  const mainExpectedVersion = expectedMainVersion(entry);
 
   const source = await fetchJson(
     `https://raw.githubusercontent.com/${entry.repository}/main/${entry.package_json}`,
@@ -188,7 +213,7 @@ async function auditPackage(entry) {
 
   const failures = [];
   if (npmVersion !== expectedVersion) failures.push('manifest/npm version mismatch');
-  if (source.version !== expectedVersion) failures.push('main/manifest version mismatch');
+  if (source.version !== mainExpectedVersion) failures.push('main/manifest version mismatch');
   if (!release) failures.push('release tag or published Release missing');
   if (taggedSource && taggedSource.version !== expectedVersion) {
     failures.push('tag/manifest version mismatch');

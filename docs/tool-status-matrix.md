@@ -1,10 +1,10 @@
 # KDNA Tool Status Matrix
 
-> Last updated: 2026-07-18. Matches `@aikdna/kdna-cli@0.35.0`.
+> Last updated: 2026-07-19. Matches `@aikdna/kdna-cli@0.35.1`.
 > `Released` means the command is present in the published package; it is not a
 > claim that the overall Beta protocol/toolchain has reached GA.
 
-## Runtime CLI (`@aikdna/kdna-cli@0.35.0`)
+## Runtime CLI (`@aikdna/kdna-cli@0.35.1`)
 
 | Command | Purpose | Status |
 |---|---|---|
@@ -29,6 +29,8 @@
 | `kdna compose <asset-path>` | Compose a primary with bounded advisors | Beta |
 | `kdna project <asset-path>` | Render a packaged asset as a task-safe projection | Beta |
 | `kdna eval-consumption <asset-path>` | Evaluate a consumption policy with replay and gates | Beta |
+| `kdna eval asset <asset-path>` | Emit an Asset Assay observation matrix; CLI inputs do not create provenance claims | Experimental |
+| `kdna eval cluster <plan>` | Emit fail-closed Cluster diagnostics; trust/economics promotion remains inside a trusted Eval API producer | Experimental |
 | `kdna compose-review-workbook` | Generate a review workbook from diagnostics | Beta |
 | `kdna validate-compose-decisions` | Validate a decision ledger against fixture evidence | Beta |
 | `kdna apply-reviewed-compose-decisions` | Create disabled candidate sidecar entries | Beta |
@@ -62,8 +64,8 @@
 | Package | Status |
 |---|---|
 | `@aikdna/kdna-core@0.20.0` | Beta runtime SDK |
-| `@aikdna/kdna-eval@0.3.1` | Experimental evaluation toolkit |
-| `@aikdna/kdna@0.13.1` | Maintained Legacy compatibility bridge; use CLI/Core directly for new integrations |
+| `@aikdna/kdna-eval@0.3.2` | Released Experimental evaluation toolkit; issuer-scoped evidence is not KDNA Core authority |
+| `@aikdna/kdna@0.13.2` candidate | Prepared Legacy compatibility update for CLI 0.35.1; 0.13.1 remains published until registry acceptance |
 
 ## Native Apps
 

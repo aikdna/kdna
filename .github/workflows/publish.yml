@@ -125,22 +125,26 @@ jobs:
         run: npm --workspace @aikdna/kdna-eval run release:check
       - run: npm --workspace @aikdna/kdna-eval test
       - run: npm --workspace @aikdna/kdna-eval run typecheck
-      - run: npm run release:evidence -- --package=eval
+      - name: Build and retain the exact Eval package artifact
+        run: npm run release:evidence -- --package=eval
       - name: Verify eval release evidence
         run: npm --workspace @aikdna/kdna-eval run release:evidence:check
+      - name: Select the verified Eval artifact
+        run: |
+          ARTIFACT_PATH=$(node -p "require('./release-evidence/artifact-manifest.json').artifacts[0].artifact_path")
+          echo "EVAL_RELEASE_ARTIFACT=$ARTIFACT_PATH" >> "$GITHUB_ENV"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: kdna-eval-release-evidence
           path: release-evidence/
       - name: Publish @aikdna/kdna-eval
         run: |
-          VERSION=$(node -p "require('./package.json').version")
+          VERSION=$(node -p "require('./packages/kdna-eval/package.json').version")
           if npm view "@aikdna/kdna-eval@$VERSION" version >/dev/null 2>&1; then
             echo "@aikdna/kdna-eval@$VERSION is already published; skipping."
             exit 0
           fi
-          npm publish --provenance --access public
-        working-directory: packages/kdna-eval
+          npm publish "./$EVAL_RELEASE_ARTIFACT" --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -170,7 +174,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-cli
-          ref: 6927df153b0b3b592a500760f6d87eac6fde7860
+          ref: 0a23a2528bd55ee99a4d3a9ed488793973096fd4
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
@@ -243,7 +247,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-assets
-          ref: cc0c91c7adb7401b0b0b52b567d61f3fbf134828
+          ref: a189b5005d33bd19a5039b4a86834e920f6b0072
           path: .ecosystem-repos/kdna-assets
           fetch-depth: 0
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
