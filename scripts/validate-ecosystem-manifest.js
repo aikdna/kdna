@@ -1,306 +1,518 @@
 #!/usr/bin/env node
 'use strict';
 
+const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
+const Ajv2020 = require('ajv/dist/2020');
+const addFormats = require('ajv-formats');
+const { inspect } = require('../packages/kdna-core/src/container');
 const { sameFilesystemIdentity } = require('./filesystem-identity');
+const {
+  currentAssetIndexInventory,
+  manifestArtifactInventory,
+  resolveComponentPath,
+} = require('./ecosystem-manifest');
 
 const repoRoot = path.resolve(__dirname, '..');
-// The override exists so regression tests can exercise the real validator
-// against an isolated manifest without rewriting the canonical file.
 const manifestPath = process.env.KDNA_ECOSYSTEM_MANIFEST_PATH
   ? path.resolve(process.env.KDNA_ECOSYSTEM_MANIFEST_PATH)
   : path.join(repoRoot, 'ecosystem-manifest.json');
+const schemaPath = path.join(repoRoot, 'schema', 'ecosystem-manifest.schema.json');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-const allowedLifecycle = new Set(manifest.lifecycle_terms || []);
+const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 const liveLifecycle = new Set(['Stable', 'Beta', 'Experimental']);
-const requiredFields = [
-  'repository',
-  'npm_package',
-  'current_version',
-  'lifecycle',
-  'supported_kdna_version',
-  'supported_access_modes',
-  'supported_entitlement_profiles',
-  'conformance_commit',
-  'known_limitations',
-  'recommended_entrypoint',
-  'legacy_replacement',
-];
+const currentReleaseStatuses = new Set(['active', 'compatibility']);
+const retiredReleaseStatus = 'deprecated';
 
 let failures = 0;
 
-function fail(component, message) {
+function label(component, detail = '') {
+  const repository = component?.repository || '<unknown>';
+  return detail ? `${repository} ${detail}` : repository;
+}
+
+function fail(component, message, detail = '') {
   failures += 1;
-  console.error(`FAIL ${component.repository || '<unknown>'}: ${message}`);
+  console.error(`FAIL ${label(component, detail)}: ${message}`);
 }
 
-function componentPath(component) {
-  if (!component.local_path) return null;
-  if (component.local_path === '.') return repoRoot;
+function validateSchema() {
+  const ajv = new Ajv2020({ allErrors: true, strict: true });
+  addFormats(ajv);
+  const validate = ajv.compile(schema);
+  if (validate(manifest)) return true;
 
-  const repoName = component.repository.split('/').pop();
-  const envRoot = process.env.KDNA_ECOSYSTEM_REPOS_ROOT;
-  if (envRoot) {
-    const envPath = path.resolve(envRoot, repoName);
-    if (fs.existsSync(envPath)) return envPath;
+  for (const error of validate.errors || []) {
+    failures += 1;
+    const location = error.instancePath || '/';
+    console.error(`FAIL manifest schema ${location}: ${error.message}`);
   }
-
-  const localPath = path.resolve(repoRoot, component.local_path);
-  if (fs.existsSync(localPath)) return localPath;
-
-  const ciPath = path.join(repoRoot, '.ecosystem-repos', repoName);
-  if (fs.existsSync(ciPath)) return ciPath;
-
-  return null;
+  return false;
 }
 
-function componentPackagePath(component) {
-  if (!component.package_json) return null;
-  const localRoot = componentPath(component);
-  if (localRoot && component.local_path) {
-    const relativePackagePath = path.relative(component.local_path, component.package_json);
-    if (relativePackagePath.startsWith('..') || path.isAbsolute(relativePackagePath)) {
-      fail(component, `package_json escapes component root: ${component.package_json}`);
+function gitText(cwd, args) {
+  return execFileSync('git', args, {
+    cwd,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  }).trim();
+}
+
+function gitBytes(cwd, args) {
+  return execFileSync('git', args, {
+    cwd,
+    encoding: null,
+    maxBuffer: 32 * 1024 * 1024,
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+}
+
+function assertConformanceCommit(component, commit, detail = '') {
+  if (!commit) return;
+  try {
+    const objectType = gitText(repoRoot, ['cat-file', '-t', commit]);
+    if (objectType !== 'commit') {
+      fail(component, `conformance anchor is not a commit: ${commit}`, detail);
+      return;
+    }
+    execFileSync('git', ['merge-base', '--is-ancestor', commit, 'HEAD'], {
+      cwd: repoRoot,
+      stdio: 'ignore',
+    });
+  } catch {
+    fail(
+      component,
+      `conformance commit is not reachable from current KDNA history: ${commit}`,
+      detail,
+    );
+  }
+}
+
+function assertComponentRelease(component, root) {
+  const hasTag = typeof component.release_tag === 'string';
+  const hasCommit = typeof component.release_commit === 'string';
+  if (hasTag !== hasCommit) {
+    fail(component, 'component release_tag and release_commit must be declared together');
+    return;
+  }
+  if (!hasTag) return;
+  if (!component.component_version) {
+    fail(component, 'component release evidence requires component_version');
+  } else if (
+    component.release_tag !== component.component_version &&
+    component.release_tag !== `v${component.component_version}`
+  ) {
+    fail(component, 'component release_tag must equal component_version with at most a v prefix');
+  }
+  if (!root) return;
+  try {
+    const tagCommit = gitText(root, ['rev-list', '-n', '1', `refs/tags/${component.release_tag}`]);
+    if (tagCommit !== component.release_commit) {
+      fail(
+        component,
+        `component release tag mismatch: manifest=${component.release_commit} tag=${tagCommit}`,
+      );
+    }
+    if (component.source_commit) {
+      execFileSync(
+        'git',
+        ['merge-base', '--is-ancestor', component.release_commit, component.source_commit],
+        { cwd: root, stdio: 'ignore' },
+      );
+    }
+  } catch (error) {
+    fail(component, `component release Git evidence is unavailable: ${error.message}`);
+  }
+}
+
+function relativeRecordPath(component, recordPath, kind) {
+  if (
+    path.posix.isAbsolute(recordPath) ||
+    path.win32.isAbsolute(recordPath) ||
+    recordPath.includes('\\') ||
+    recordPath.split('/').some((segment) => segment === '.' || segment === '..') ||
+    path.posix.normalize(recordPath) !== recordPath
+  ) {
+    fail(component, `${kind} path must be a normalized repository-relative POSIX path`, recordPath);
+    return null;
+  }
+  return recordPath;
+}
+
+function resolvedRecordPath(component, root, recordPath, kind) {
+  const relativePath = relativeRecordPath(component, recordPath, kind);
+  if (!relativePath || !root) return null;
+
+  const candidate = path.resolve(root, relativePath);
+  const relative = path.relative(root, candidate);
+  if (relative.startsWith('..') || path.isAbsolute(relative)) {
+    fail(component, `${kind} path escapes the component repository`, recordPath);
+    return null;
+  }
+  if (!fs.existsSync(candidate)) return candidate;
+
+  try {
+    const realRoot = fs.realpathSync(root);
+    const realCandidate = fs.realpathSync(candidate);
+    const realRelative = path.relative(realRoot, realCandidate);
+    if (realRelative.startsWith('..') || path.isAbsolute(realRelative)) {
+      fail(component, `${kind} path resolves outside the component repository`, recordPath);
       return null;
     }
-    const localPackagePath = path.join(localRoot, relativePackagePath);
-    return fs.existsSync(localPackagePath) ? localPackagePath : null;
+  } catch (error) {
+    fail(component, `${kind} path identity is unreadable: ${error.message}`, recordPath);
+    return null;
   }
-
-  const declaredPath = path.resolve(repoRoot, component.package_json);
-  return fs.existsSync(declaredPath) ? declaredPath : null;
+  return candidate;
 }
 
-if (!Array.isArray(manifest.components) || manifest.components.length === 0) {
-  console.error('FAIL manifest: components must be a non-empty array');
-  process.exit(1);
+function readJsonEvidence(component, filePath, detail) {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch (error) {
+    fail(component, `package evidence is unreadable: ${error.message}`, detail);
+    return null;
+  }
 }
 
-for (const component of manifest.components) {
-  for (const field of requiredFields) {
-    if (!Object.prototype.hasOwnProperty.call(component, field)) {
-      fail(component, `missing field ${field}`);
+function assertPackageManifest(component, packageRecord, pkg, origin) {
+  const detail = packageRecord.package_json;
+  if (pkg.name !== packageRecord.package_name) {
+    fail(
+      component,
+      `${origin} package name mismatch: manifest=${packageRecord.package_name} package.json=${pkg.name}`,
+      detail,
+    );
+  }
+  if (pkg.version !== packageRecord.version) {
+    fail(
+      component,
+      `${origin} package version mismatch: manifest=${packageRecord.version} package.json=${pkg.version}`,
+      detail,
+    );
+  }
+  if (packageRecord.npm_package && packageRecord.npm_package !== packageRecord.package_name) {
+    fail(component, 'npm_package must equal package_name when present', detail);
+  }
+  if (currentReleaseStatuses.has(packageRecord.release_status) && pkg.private === true) {
+    fail(component, `${packageRecord.release_status} package must not be private`, detail);
+  }
+  if (packageRecord.release_status === retiredReleaseStatus) {
+    if (pkg.private !== true) {
+      fail(component, 'deprecated package source must be private', detail);
+    }
+    for (const script of ['prepublishOnly', 'release:check', 'release:evidence:check']) {
+      if (pkg.scripts && Object.prototype.hasOwnProperty.call(pkg.scripts, script)) {
+        fail(component, `deprecated package must not expose ${script}`, detail);
+      }
     }
   }
-  if (!allowedLifecycle.has(component.lifecycle)) {
-    fail(component, `invalid lifecycle ${component.lifecycle}`);
-  }
-  if (!Array.isArray(component.supported_access_modes)) {
-    fail(component, 'supported_access_modes must be an array');
-  }
-  if (!Array.isArray(component.supported_entitlement_profiles)) {
-    fail(component, 'supported_entitlement_profiles must be an array');
-  }
-  if (!Array.isArray(component.known_limitations)) {
-    fail(component, 'known_limitations must be an array');
-  }
+}
 
-  const localPath = componentPath(component);
-
-  if (component.package_json) {
-    const pkgPath = componentPackagePath(component);
-    if (!pkgPath) {
-      if (liveLifecycle.has(component.lifecycle)) {
-        fail(component, 'live package evidence is unavailable; repository checkout is required');
-      }
-    } else {
-      let pkg;
-      try {
-        pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-      } catch (error) {
-        fail(component, `package evidence is unreadable: ${error.message}`);
-      }
-      if (pkg) {
-        if (component.npm_package && pkg.name !== component.npm_package) {
-          fail(
-            component,
-            `package name mismatch: manifest=${component.npm_package} package.json=${pkg.name}`,
-          );
-        }
-        if (component.current_version !== null && pkg.version !== component.current_version) {
-          fail(
-            component,
-            `version mismatch: manifest=${component.current_version} package.json=${pkg.version}`,
-          );
-        }
-      }
+function assertCheckout(component, root) {
+  if (!root || component.local_path === '.') return;
+  try {
+    const checkoutRoot = gitText(root, ['rev-parse', '--show-toplevel']);
+    if (!sameFilesystemIdentity(checkoutRoot, root)) {
+      fail(component, `component path is not a repository root: ${root}`);
+      return;
     }
 
+    const checkoutCommit = gitText(root, ['rev-parse', 'HEAD']);
+    const checkoutStatus = gitText(root, ['status', '--porcelain', '--untracked-files=all']);
+    if (checkoutStatus) fail(component, 'component checkout is dirty');
+    if (!component.source_commit) {
+      fail(component, 'checked-out component must declare source_commit');
+    } else if (checkoutCommit !== component.source_commit) {
+      fail(
+        component,
+        `checkout commit mismatch: manifest=${component.source_commit} checkout=${checkoutCommit}`,
+      );
+    }
+  } catch (error) {
+    fail(component, `component checkout identity is unreadable: ${error.message}`);
+  }
+}
+
+function assertPackage(component, packageRecord, root) {
+  const filePath = resolvedRecordPath(component, root, packageRecord.package_json, 'package_json');
+  if (!filePath || !fs.existsSync(filePath)) {
     if (
-      liveLifecycle.has(component.lifecycle) &&
-      component.local_path &&
-      component.local_path !== '.'
+      liveLifecycle.has(component.lifecycle) ||
+      currentReleaseStatuses.has(packageRecord.release_status)
     ) {
-      if (!localPath) {
-        fail(component, 'live package repository checkout is unavailable');
-      } else {
-        let checkoutCommit = null;
-        try {
-          const checkoutRoot = execFileSync('git', ['rev-parse', '--show-toplevel'], {
-            cwd: localPath,
-            encoding: 'utf8',
-            stdio: ['ignore', 'pipe', 'pipe'],
-          }).trim();
-          if (!sameFilesystemIdentity(checkoutRoot, localPath)) {
-            fail(component, `live package path is not a repository root: ${localPath}`);
-          }
-          checkoutCommit = execFileSync('git', ['rev-parse', 'HEAD'], {
-            cwd: localPath,
-            encoding: 'utf8',
-            stdio: ['ignore', 'pipe', 'pipe'],
-          }).trim();
-          const checkoutStatus = execFileSync(
-            'git',
-            ['status', '--porcelain', '--untracked-files=all'],
-            {
-              cwd: localPath,
-              encoding: 'utf8',
-              stdio: ['ignore', 'pipe', 'pipe'],
-            },
-          ).trim();
-          if (checkoutStatus) {
-            fail(component, 'live package checkout is dirty');
-          }
-        } catch (error) {
-          fail(component, `live package checkout identity is unreadable: ${error.message}`);
-        }
-        if (checkoutCommit && checkoutCommit !== component.conformance_commit) {
-          fail(
-            component,
-            `checkout commit mismatch: manifest=${component.conformance_commit} checkout=${checkoutCommit}`,
-          );
-        }
-      }
+      fail(component, 'current package evidence is unavailable', packageRecord.package_json);
     }
+    return;
   }
 
-  // A live component without a package or release artifact has no external
-  // evidence surface for this validator to inspect. In that case, a real Git
-  // checkout is the minimum verification anchor. Do not silently count a
-  // missing repository as a passing ecosystem component.
-  const hasPackageEvidence = Boolean(
-    component.npm_package && component.package_json && component.current_version,
+  const pkg = readJsonEvidence(component, filePath, packageRecord.package_json);
+  if (pkg) assertPackageManifest(component, packageRecord, pkg, 'checkout');
+
+  if (!component.source_commit || !root || component.local_path === '.') return;
+  try {
+    const bytes = gitBytes(root, [
+      'show',
+      `${component.source_commit}:${packageRecord.package_json}`,
+    ]);
+    const committedPackage = JSON.parse(bytes.toString('utf8'));
+    assertPackageManifest(component, packageRecord, committedPackage, 'source_commit');
+  } catch (error) {
+    fail(
+      component,
+      `package evidence is unavailable at source_commit: ${error.message}`,
+      packageRecord.package_json,
+    );
+  }
+}
+
+function sha256(bytes) {
+  return crypto.createHash('sha256').update(bytes).digest('hex');
+}
+
+function assertArtifact(component, artifact, root) {
+  assertConformanceCommit(component, artifact.conformance_commit, artifact.path);
+  const filePath = resolvedRecordPath(component, root, artifact.path, 'artifact');
+  if (!filePath || !fs.existsSync(filePath)) {
+    if (liveLifecycle.has(component.lifecycle)) {
+      fail(component, 'current artifact evidence is unavailable', artifact.path);
+    }
+    return;
+  }
+
+  const bytes = fs.readFileSync(filePath);
+  const observedHash = sha256(bytes);
+  if (observedHash !== artifact.sha256) {
+    fail(
+      component,
+      `artifact SHA-256 mismatch: manifest=${artifact.sha256} observed=${observedHash}`,
+      artifact.path,
+    );
+  }
+
+  try {
+    const summary = inspect(filePath);
+    if (summary.version !== artifact.version) {
+      fail(
+        component,
+        `artifact version mismatch: manifest=${artifact.version} asset=${summary.version}`,
+        artifact.path,
+      );
+    }
+  } catch (error) {
+    fail(component, `artifact is not inspectable: ${error.message}`, artifact.path);
+  }
+
+  if (!root) return;
+  try {
+    const releaseBytes = gitBytes(root, ['show', `${artifact.release_commit}:${artifact.path}`]);
+    const releaseHash = sha256(releaseBytes);
+    if (releaseHash !== artifact.sha256) {
+      fail(
+        component,
+        `release artifact SHA-256 mismatch: manifest=${artifact.sha256} release=${releaseHash}`,
+        artifact.path,
+      );
+    }
+    const tagCommit = gitText(root, ['rev-list', '-n', '1', `refs/tags/${artifact.release_tag}`]);
+    if (tagCommit !== artifact.release_commit) {
+      fail(
+        component,
+        `release tag mismatch: manifest=${artifact.release_commit} tag=${tagCommit}`,
+        artifact.path,
+      );
+    }
+  } catch (error) {
+    fail(
+      component,
+      `release artifact Git evidence is unavailable: ${error.message}`,
+      artifact.path,
+    );
+  }
+}
+
+function assertAssetIndex(component, root) {
+  if (component.repository !== 'aikdna/kdna-assets' || !root) return;
+  const indexPath = resolvedRecordPath(component, root, 'index/current.json', 'asset index');
+  if (!indexPath || !fs.existsSync(indexPath)) {
+    fail(component, 'current asset index is unavailable', 'index/current.json');
+    return;
+  }
+  try {
+    const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+    const indexed = currentAssetIndexInventory(index);
+    const declared = manifestArtifactInventory(component);
+    if (JSON.stringify(indexed) !== JSON.stringify(declared)) {
+      fail(component, 'artifact inventory differs from the exact index/current.json projection');
+    }
+  } catch (error) {
+    fail(component, `current asset index is invalid: ${error.message}`, 'index/current.json');
+  }
+}
+
+if (validateSchema()) {
+  const coreComponent = manifest.components.find(
+    (component) => component.repository === 'aikdna/kdna',
   );
-  const hasArtifactEvidence = Boolean(component.artifact_path && component.current_version);
-  if (liveLifecycle.has(component.lifecycle) && !hasPackageEvidence && !hasArtifactEvidence) {
-    if (!localPath) {
-      fail(
-        component,
-        'live component has no package/artifact evidence and its repository checkout is unavailable',
-      );
-    } else if (!fs.existsSync(path.join(localPath, '.git'))) {
-      fail(
-        component,
-        'live component has no package/artifact evidence and local_path is not a Git checkout',
-      );
+  const coreConformanceCommit = coreComponent?.conformance_commit || null;
+  const corePackageRecords = (coreComponent?.packages || []).filter(
+    (packageRecord) => packageRecord.npm_package === '@aikdna/kdna-core',
+  );
+  if (!coreComponent || corePackageRecords.length !== 1 || !coreConformanceCommit) {
+    fail(coreComponent, 'manifest must declare one KDNA Core package and conformance anchor');
+  } else {
+    try {
+      const coreReleaseTag = corePackageRecords[0].version;
+      const coreReleaseCommit = gitText(repoRoot, [
+        'rev-list',
+        '-n',
+        '1',
+        `refs/tags/${coreReleaseTag}`,
+      ]);
+      if (coreReleaseCommit !== coreConformanceCommit) {
+        fail(
+          coreComponent,
+          `Core conformance_commit must equal release tag ${coreReleaseTag}: ${coreReleaseCommit}`,
+        );
+      }
+    } catch (error) {
+      fail(coreComponent, `Core release tag evidence is unavailable: ${error.message}`);
     }
   }
+  const repositories = new Set();
+  const packageNames = new Set();
+  const npmPackages = new Set();
+  const packageSources = new Set();
+  const artifactSources = new Set();
 
-  if (component.repository === 'aikdna/kdna-core-swift' && localPath) {
-    const workflowPath = path.join(localPath, '.github', 'workflows', 'ci.yml');
-    if (fs.existsSync(workflowPath)) {
-      const workflow = fs.readFileSync(workflowPath, 'utf8');
-      if (component.conformance_commit && !workflow.includes(component.conformance_commit)) {
-        fail(component, 'Swift CI conformance commit does not match ecosystem manifest');
-      }
-      if (/git clone .*--branch main .*aikdna\/kdna\.git/.test(workflow)) {
-        fail(component, 'Swift CI must not dynamically clone kdna main for conformance fixtures');
-      }
+  for (const component of manifest.components) {
+    if (repositories.has(component.repository)) {
+      fail(component, 'duplicate repository component');
     }
-  }
+    repositories.add(component.repository);
 
-  if (component.lifecycle === 'Removed') {
-    continue;
-  }
+    const repositoryName = component.repository.split('/').pop();
+    const expectedLocalPath = `../${repositoryName}`;
+    if (component.local_path === '.' && component.repository !== 'aikdna/kdna') {
+      fail(component, 'only aikdna/kdna may use the manifest repository as local_path');
+    } else if (
+      component.local_path !== null &&
+      component.local_path !== '.' &&
+      component.local_path !== expectedLocalPath
+    ) {
+      fail(component, `local_path must be ${expectedLocalPath}`);
+    }
 
-  if (component.artifact_path && liveLifecycle.has(component.lifecycle) && !localPath) {
-    fail(component, 'live artifact repository checkout is unavailable');
-  }
-
-  if (component.artifact_path && localPath) {
-    if (liveLifecycle.has(component.lifecycle) && !component.package_json) {
-      try {
-        const checkoutRoot = execFileSync('git', ['rev-parse', '--show-toplevel'], {
-          cwd: localPath,
-          encoding: 'utf8',
-          stdio: ['ignore', 'pipe', 'pipe'],
-        }).trim();
-        if (!sameFilesystemIdentity(checkoutRoot, localPath)) {
-          fail(component, `live artifact path is not a repository root: ${localPath}`);
-        }
-        const checkoutCommit = execFileSync('git', ['rev-parse', 'HEAD'], {
-          cwd: localPath,
-          encoding: 'utf8',
-          stdio: ['ignore', 'pipe', 'pipe'],
-        }).trim();
-        const checkoutStatus = execFileSync(
-          'git',
-          ['status', '--porcelain', '--untracked-files=all'],
-          {
-            cwd: localPath,
-            encoding: 'utf8',
-            stdio: ['ignore', 'pipe', 'pipe'],
-          },
-        ).trim();
-        if (checkoutStatus) {
-          fail(component, 'live artifact checkout is dirty');
-        }
-        if (component.conformance_commit && checkoutCommit !== component.conformance_commit) {
-          fail(
-            component,
-            `checkout commit mismatch: manifest=${component.conformance_commit} checkout=${checkoutCommit}`,
-          );
-        }
-      } catch (error) {
-        fail(component, `live artifact checkout identity is unreadable: ${error.message}`);
+    const root = resolveComponentPath(repoRoot, component);
+    const isLive = liveLifecycle.has(component.lifecycle);
+    if (isLive && !root) {
+      fail(component, 'live component repository checkout is unavailable');
+    }
+    if (component.lifecycle === 'Removed') {
+      if (component.packages.length > 0 || component.artifacts.length > 0) {
+        fail(component, 'Removed component must not expose package or artifact records');
+      }
+      if (component.local_path !== null) {
+        fail(component, 'Removed component must not declare a local_path');
       }
     }
-
-    const artifactPath = path.join(localPath, component.artifact_path);
-    if (!fs.existsSync(artifactPath)) {
-      fail(component, `missing release artifact ${component.artifact_path}`);
+    if (component.lifecycle === 'Legacy' && !component.legacy_replacement) {
+      fail(component, 'Legacy component must declare legacy_replacement');
+    }
+    if (isLive && component.local_path !== '.' && !component.source_commit) {
+      fail(component, 'live external component must declare source_commit');
     }
 
-    const sourceManifestPath = path.join(localPath, 'kdna.json');
-    if (fs.existsSync(sourceManifestPath)) {
-      const sourceManifest = JSON.parse(fs.readFileSync(sourceManifestPath, 'utf8'));
+    assertCheckout(component, root);
+    assertConformanceCommit(component, component.conformance_commit);
+    assertComponentRelease(component, root);
+    assertAssetIndex(component, root);
+    if (
+      coreConformanceCommit &&
+      component.conformance_commit &&
+      component.conformance_commit !== coreConformanceCommit
+    ) {
+      fail(component, 'component conformance_commit differs from the current KDNA anchor');
+    }
+    if (component.artifacts.length > 0 && !component.conformance_commit) {
+      fail(component, 'artifact-bearing component must declare its Core conformance anchor');
+    }
+
+    for (const packageRecord of component.packages) {
+      const sourceKey = `${component.repository}:${packageRecord.package_json}`;
+      if (packageSources.has(sourceKey)) {
+        fail(component, 'duplicate package_json record', packageRecord.package_json);
+      }
+      packageSources.add(sourceKey);
+
+      if (packageNames.has(packageRecord.package_name)) {
+        fail(component, `duplicate package_name ${packageRecord.package_name}`);
+      }
+      packageNames.add(packageRecord.package_name);
+
+      if (packageRecord.npm_package) {
+        if (npmPackages.has(packageRecord.npm_package)) {
+          fail(component, `duplicate npm_package ${packageRecord.npm_package}`);
+        }
+        npmPackages.add(packageRecord.npm_package);
+      }
+      assertPackage(component, packageRecord, root);
+    }
+
+    for (const artifact of component.artifacts) {
+      const sourceKey = `${component.repository}:${artifact.path}`;
+      if (artifactSources.has(sourceKey)) {
+        fail(component, 'duplicate artifact record', artifact.path);
+      }
+      artifactSources.add(sourceKey);
       if (
-        component.current_version !== null &&
-        sourceManifest.version !== component.current_version
+        component.conformance_commit &&
+        artifact.conformance_commit !== component.conformance_commit
       ) {
         fail(
           component,
-          `source version mismatch: manifest=${component.current_version} kdna.json=${sourceManifest.version}`,
+          'artifact conformance_commit differs from its component anchor',
+          artifact.path,
         );
       }
+      if (coreConformanceCommit && artifact.conformance_commit !== coreConformanceCommit) {
+        fail(
+          component,
+          'artifact conformance_commit differs from the current KDNA anchor',
+          artifact.path,
+        );
+      }
+      assertArtifact(component, artifact, root);
     }
 
-    const declaredLocalPath = component.local_path
-      ? path.resolve(repoRoot, component.local_path)
-      : null;
-    const shouldCheckReferenceWorkflow =
-      declaredLocalPath &&
-      fs.existsSync(declaredLocalPath) &&
-      path.resolve(localPath) === declaredLocalPath;
-    const workflowPath = path.join(localPath, '.github', 'workflows', 'ci.yml');
     if (
-      component.lifecycle === 'Legacy' &&
-      shouldCheckReferenceWorkflow &&
-      fs.existsSync(workflowPath)
+      isLive &&
+      component.packages.length === 0 &&
+      component.artifacts.length === 0 &&
+      component.component_version === null
     ) {
-      const workflow = fs.readFileSync(workflowPath, 'utf8');
-      if (!workflow.includes('@aikdna/kdna-cli@0.26.1')) {
-        fail(component, 'legacy proof asset CI must pin @aikdna/kdna-cli@0.26.1');
-      }
-      for (const command of [
-        `kdna validate ${component.artifact_path}`,
-        `kdna plan-load ${component.artifact_path}`,
-        `kdna load ${component.artifact_path}`,
-      ]) {
-        if (!workflow.includes(command)) {
-          fail(component, `legacy proof asset CI missing "${command}"`);
+      fail(component, 'live component has no package, artifact, or component version evidence');
+    }
+    if (
+      isLive &&
+      component.packages.length === 0 &&
+      component.artifacts.length === 0 &&
+      (!component.release_tag || !component.release_commit)
+    ) {
+      fail(component, 'live package-less component must bind its current release tag and commit');
+    }
+
+    if (component.repository === 'aikdna/kdna-core-swift' && root) {
+      const workflowPath = path.join(root, '.github', 'workflows', 'ci.yml');
+      if (fs.existsSync(workflowPath)) {
+        const workflow = fs.readFileSync(workflowPath, 'utf8');
+        if (component.conformance_commit && !workflow.includes(component.conformance_commit)) {
+          fail(component, 'Swift CI conformance commit does not match ecosystem manifest');
+        }
+        if (/git clone .*--branch main .*aikdna\/kdna\.git/.test(workflow)) {
+          fail(component, 'Swift CI must not dynamically clone kdna main for conformance fixtures');
         }
       }
     }
@@ -312,4 +524,14 @@ if (failures > 0) {
   process.exit(1);
 }
 
-console.log(`ecosystem-manifest validation passed: ${manifest.components.length} component(s)`);
+const packageCount = manifest.components.reduce(
+  (total, component) => total + component.packages.length,
+  0,
+);
+const artifactCount = manifest.components.reduce(
+  (total, component) => total + component.artifacts.length,
+  0,
+);
+console.log(
+  `ecosystem-manifest validation passed: ${manifest.components.length} component(s), ${packageCount} package record(s), ${artifactCount} artifact record(s)`,
+);

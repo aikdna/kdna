@@ -3,7 +3,8 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { execSync } = require('node:child_process');
+const { execFileSync } = require('node:child_process');
+const { currentPublishedPackages } = require('./ecosystem-manifest');
 
 let failures = 0;
 
@@ -18,34 +19,24 @@ function check(name, condition, detail = '') {
 }
 
 const REPOS_ROOT = path.resolve(__dirname, '..', '..');
-
-const PACKAGES = [
-  { repo: 'kdna/packages/kdna-core', pkg: '@aikdna/kdna-core' },
-  { repo: 'kdna/packages/kdna-eval', pkg: '@aikdna/kdna-eval' },
-  { repo: 'kdna-cli', pkg: '@aikdna/kdna-cli' },
-  { repo: 'kdna-studio-cli', pkg: '@aikdna/kdna-studio-cli' },
-  { repo: 'kdna-studio-core', pkg: '@aikdna/kdna-studio-core' },
-  { repo: 'kdna-web-client', pkg: '@aikdna/kdna-web-client' },
-  { repo: 'kdna-web-server', pkg: '@aikdna/kdna-web-server' },
-  { repo: 'kdna-react', pkg: '@aikdna/kdna-react' },
-  { repo: 'create-kdna-web-app', pkg: 'create-kdna-web-app' },
-];
-
-function compareSemver(a, b) {
-  const left = String(a).split('.').map(Number);
-  const right = String(b).split('.').map(Number);
-  if (left.length !== 3 || right.length !== 3 || [...left, ...right].some(Number.isNaN)) {
-    return null;
-  }
-  for (let index = 0; index < 3; index++) {
-    if (left[index] !== right[index]) return left[index] > right[index] ? 1 : -1;
-  }
-  return 0;
-}
+const manifest = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, '..', 'ecosystem-manifest.json'), 'utf8'),
+);
+const PACKAGES = currentPublishedPackages(manifest).map(({ component, packageRecord }) => {
+  const componentRoot = path.resolve(__dirname, '..', component.local_path || '.');
+  return {
+    repo: path.relative(
+      REPOS_ROOT,
+      path.dirname(path.join(componentRoot, packageRecord.package_json)),
+    ),
+    pkg: packageRecord.npm_package,
+    expectedVersion: packageRecord.version,
+  };
+});
 
 console.log('── npm publish drift check\n');
 
-for (const { repo, pkg } of PACKAGES) {
+for (const { repo, pkg, expectedVersion } of PACKAGES) {
   const repoPath = path.join(REPOS_ROOT, repo);
   const pkgJsonPath = path.join(repoPath, 'package.json');
 
@@ -56,7 +47,7 @@ for (const { repo, pkg } of PACKAGES) {
 
   let npmVersion;
   try {
-    npmVersion = execSync(`npm view ${pkg} version`, {
+    npmVersion = execFileSync('npm', ['view', pkg, 'version'], {
       encoding: 'utf8',
       timeout: 15000,
       stdio: ['ignore', 'pipe', 'ignore'],
@@ -70,37 +61,18 @@ for (const { repo, pkg } of PACKAGES) {
     continue;
   }
 
-  if (!repoVersion) {
-    check(
-      `${pkg}: published (v${npmVersion})`,
-      /^\d+\.\d+\.\d+$/.test(npmVersion),
-      'repo not cloned, only npm checked',
-    );
-    continue;
-  }
-
-  const comparison = compareSemver(repoVersion, npmVersion);
-  if (comparison === 0) {
-    check(`${pkg} repo=${repoVersion} npm=${npmVersion}`, true);
-    continue;
-  }
-
-  if (comparison === 1) {
-    const changelogPath = path.join(repoPath, 'CHANGELOG.md');
-    const changelog = fs.existsSync(changelogPath) ? fs.readFileSync(changelogPath, 'utf8') : '';
-    check(
-      `${pkg} repo=${repoVersion} npm=${npmVersion} (pending release)`,
-      changelog.includes(repoVersion),
-      `forward version requires a CHANGELOG entry for ${repoVersion}`,
-    );
-    continue;
-  }
-
   check(
-    `${pkg} repo=${repoVersion} npm=${npmVersion}`,
-    false,
-    comparison === -1 ? 'repository version is behind npm' : 'invalid semver',
+    `${pkg} manifest=${expectedVersion} npm=${npmVersion}`,
+    npmVersion === expectedVersion,
+    'registry latest must equal the manifest version',
   );
+  if (repoVersion) {
+    check(
+      `${pkg} repo=${repoVersion} manifest=${expectedVersion}`,
+      repoVersion === expectedVersion,
+      'repository package version must equal the manifest version',
+    );
+  }
 }
 
 console.log(

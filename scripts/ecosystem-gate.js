@@ -6,6 +6,7 @@ const path = require('node:path');
 const os = require('node:os');
 const { spawnSync } = require('node:child_process');
 const { isSafeEcosystemGateStage } = require('./ecosystem-gate-stages.js');
+const { artifactRecords, requireComponent, resolveComponentPath } = require('./ecosystem-manifest');
 
 const repoRoot = path.resolve(__dirname, '..');
 const manifest = JSON.parse(
@@ -112,26 +113,14 @@ function assertPack(stage, label, cwd, checks) {
 }
 
 function componentPath(repository) {
-  const component = manifest.components.find((entry) => entry.repository === repository);
-  if (!component || !component.local_path) return null;
-  const localPath = path.resolve(repoRoot, component.local_path);
-  if (fs.existsSync(localPath)) return localPath;
-
-  const repoName = repository.split('/').pop();
-  const envRoot = process.env.KDNA_ECOSYSTEM_REPOS_ROOT;
-  if (envRoot) {
-    const envPath = path.resolve(envRoot, repoName);
-    if (fs.existsSync(envPath)) return envPath;
-  }
-
-  const ciPath = path.join(repoRoot, '.ecosystem-repos', repoName);
-  if (fs.existsSync(ciPath)) return ciPath;
-
-  return localPath;
+  const component = requireComponent(manifest, repository);
+  return resolveComponentPath(repoRoot, component);
 }
 
 function referenceAssetComponents() {
-  return manifest.components.filter((entry) => entry.artifact_path);
+  return artifactRecords(manifest).filter(
+    ({ artifactRecord }) => artifactRecord.kind === 'kdna-asset',
+  );
 }
 
 try {
@@ -209,6 +198,23 @@ try {
     'npm',
     ['audit', '--omit=dev'],
   );
+  run('assets-install', 'kdna-assets fresh npm ci', componentPath('aikdna/kdna-assets'), 'npm', [
+    'ci',
+  ]);
+  run(
+    'assets-audit',
+    'kdna-assets public evidence audit',
+    componentPath('aikdna/kdna-assets'),
+    'npm',
+    ['run', 'audit'],
+  );
+  run(
+    'assets-release',
+    'kdna-assets exact GitHub Release bytes',
+    componentPath('aikdna/kdna-assets'),
+    'npm',
+    ['run', 'check:releases'],
+  );
   run('cli-test', 'kdna-cli npm test', componentPath('aikdna/kdna-cli'), 'npm', ['test']);
   run(
     'mcp-test',
@@ -244,31 +250,47 @@ try {
       },
     },
   );
+  run(
+    'app-shared-swift-test',
+    'kdna-app-shared source Swift test',
+    componentPath('aikdna/kdna-app-shared'),
+    'swift',
+    ['test', '--disable-sandbox', '-Xcc', `-fmodules-cache-path=${swiftModuleCache}`],
+    { env: { CLANG_MODULE_CACHE_PATH: swiftModuleCache } },
+  );
+  run(
+    'studio-swift-test',
+    'kdna-studio-swift source Swift test',
+    componentPath('aikdna/kdna-studio-swift'),
+    'swift',
+    ['test', '--disable-sandbox', '-Xcc', `-fmodules-cache-path=${swiftModuleCache}`],
+    { env: { CLANG_MODULE_CACHE_PATH: swiftModuleCache } },
+  );
 
   section('Legacy Proof Asset Release Artifacts');
   const kdnaBin = path.join(repoRoot, 'packages', 'kdna', 'bin', 'kdna.js');
-  for (const component of referenceAssetComponents()) {
+  for (const { component, artifactRecord } of referenceAssetComponents()) {
     const assetRoot = componentPath(component.repository);
     run(
       'proof-asset-validate',
-      `${component.repository} validate release artifact`,
+      `${component.repository} validate ${artifactRecord.path}`,
       assetRoot,
       'node',
-      [kdnaBin, 'validate', component.artifact_path],
+      [kdnaBin, 'validate', artifactRecord.path],
     );
     run(
       'proof-asset-plan',
-      `${component.repository} plan release artifact load`,
+      `${component.repository} plan ${artifactRecord.path}`,
       assetRoot,
       'node',
-      [kdnaBin, 'plan-load', component.artifact_path],
+      [kdnaBin, 'plan-load', artifactRecord.path],
     );
     runCaptured(
       'proof-asset-load',
-      `${component.repository} load release artifact`,
+      `${component.repository} load ${artifactRecord.path}`,
       assetRoot,
       'node',
-      [kdnaBin, 'load', component.artifact_path, '--profile=compact', '--as=prompt'],
+      [kdnaBin, 'load', artifactRecord.path, '--profile=compact', '--as=prompt'],
     );
   }
 

@@ -146,7 +146,13 @@ The official KDNA toolchain is published from this repo and its companion packag
 | **KDNA CLI** | Official command-line entry: `inspect`, `validate`, `pack`, `unpack`, `load` | this repo + `@aikdna/kdna-cli` |
 | **KDNA Loader** | Official runtime loader for AI agents | `packages/kdna-core/` + `@aikdna/kdna-cli` |
 | **KDNA SDK** | Embeddable library for integrations | `packages/kdna-core/` |
-| **KDNA Eval** | Replay, budget, and consumption-evaluation primitives | `packages/kdna-eval/` |
+| **KDNA Eval** | Experimental replay, budget, and consumption-evaluation primitives | `packages/kdna-eval/` + `@aikdna/kdna-eval` |
+
+`@aikdna/kdna@0.13.1` remains a maintained compatibility bridge. New
+integrations should install `@aikdna/kdna-cli` and `@aikdna/kdna-core`
+directly. The complete package, source-only application, and release-artifact
+inventory is published in the schema-2
+[ecosystem manifest](./docs/ecosystem-manifest.md).
 
 ## Examples
 
@@ -188,8 +194,14 @@ changes require an RFC and an explicit migration path.
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | `@aikdna/kdna-cli` | KDNA runtime CLI |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | `@aikdna/kdna-studio-cli` | AI-powered authoring CLI |
 | [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | `@aikdna/kdna-studio-core` | Studio SDK for creators |
-| [kdna-skills](https://github.com/aikdna/kdna-skills) | — | AI agent skill loader |
+| [kdna-skills](https://github.com/aikdna/kdna-skills) | `kdna-loader` skill; `@aikdna/kdna-mcp-server@0.4.2` (Experimental) | AI agent skill loader and MCP server |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | — | Public asset releases |
+| [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Swift package `0.20.0` | Apple-platform runtime |
+| [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Swift package `0.4.0` | Apple-platform authoring kernel; release recertification is pending |
+| [kdna-app-shared](https://github.com/aikdna/kdna-app-shared) | Swift package `0.5.0` | Shared Apple-app presentation infrastructure; release recertification is pending |
+
+Machine consumers should use [`ecosystem-manifest.json`](./ecosystem-manifest.json)
+instead of inferring one package per repository.
 
 ## License
 

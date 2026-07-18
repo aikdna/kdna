@@ -24,15 +24,25 @@ export function canonicalTag(policy, version) {
 }
 
 export function validatePolicy(policy) {
-  if (policy?.schema_version !== '1' || !Array.isArray(policy.packages)) {
-    throw new Error('release-health policy must use schema_version 1 and a packages array');
+  if (policy?.schema_version !== '2' || !Array.isArray(policy.packages)) {
+    throw new Error('release-health policy must use schema_version 2 and a packages array');
   }
 
   const packageNames = new Set();
   const sourcePaths = new Set();
   for (const entry of policy.packages) {
-    for (const field of ['label', 'repository', 'package_json', 'npm_package', 'canonical_tag']) {
+    for (const field of [
+      'label',
+      'repository',
+      'package_json',
+      'npm_package',
+      'version',
+      'canonical_tag',
+    ]) {
       if (!entry[field]) throw new Error(`release-health entry is missing ${field}`);
+    }
+    if (!stableSemver.test(entry.version)) {
+      throw new Error(`invalid expected version for ${entry.npm_package}`);
     }
     if (!/^aikdna\/[a-z0-9._-]+$/u.test(entry.repository)) {
       throw new Error(`invalid public repository coordinate: ${entry.repository}`);
@@ -159,11 +169,12 @@ async function auditPackage(entry) {
   );
   const npmVersion = registry.version;
   if (!stableSemver.test(npmVersion || '')) throw new Error('npm latest is not stable SemVer');
+  const expectedVersion = entry.version;
 
   const source = await fetchJson(
     `https://raw.githubusercontent.com/${entry.repository}/main/${entry.package_json}`,
   );
-  const release = await selectRelease(entry, npmVersion);
+  const release = await selectRelease(entry, expectedVersion);
   const taggedSource = release
     ? await fetchJson(
         `https://raw.githubusercontent.com/${entry.repository}/${release.commit}/${entry.package_json}`,
@@ -176,14 +187,18 @@ async function auditPackage(entry) {
     !registry.gitHead || !release ? Boolean(release) : registry.gitHead === release.commit;
 
   const failures = [];
-  if (source.version !== npmVersion) failures.push('main/npm version mismatch');
+  if (npmVersion !== expectedVersion) failures.push('manifest/npm version mismatch');
+  if (source.version !== expectedVersion) failures.push('main/manifest version mismatch');
   if (!release) failures.push('release tag or published Release missing');
-  if (taggedSource && taggedSource.version !== npmVersion) failures.push('tag/npm mismatch');
+  if (taggedSource && taggedSource.version !== expectedVersion) {
+    failures.push('tag/manifest version mismatch');
+  }
   if (!sourceBound) failures.push('npm gitHead/tag commit mismatch');
   if (!provenance) failures.push('SLSA provenance missing');
 
   return {
     entry,
+    expectedVersion,
     mainVersion: source.version || null,
     npmVersion,
     release,
@@ -202,6 +217,7 @@ export async function run(
     } catch (error) {
       results.push({
         entry,
+        expectedVersion: entry.version,
         mainVersion: null,
         npmVersion: null,
         release: null,
@@ -212,17 +228,17 @@ export async function run(
   }
 
   console.log('## npm publish-health report\n');
-  console.log('| package | main | npm | release | provenance | status |');
-  console.log('| --- | --- | --- | --- | --- | --- |');
+  console.log('| package | expected | main | npm | release | provenance | status |');
+  console.log('| --- | --- | --- | --- | --- | --- | --- |');
   for (const result of results) {
     const release = result.release
       ? result.release.legacy
-        ? `historical release for ${result.npmVersion}`
+        ? `historical release for ${result.expectedVersion}`
         : result.release.tag
       : '?';
     const status = result.failures.length ? result.failures.join('; ') : 'ok';
     console.log(
-      `| ${result.entry.npm_package} | ${result.mainVersion || '?'} | ${result.npmVersion || '?'} | ${release} | ${result.provenance ? 'SLSA v1' : 'missing'} | ${status} |`,
+      `| ${result.entry.npm_package} | ${result.expectedVersion || '?'} | ${result.mainVersion || '?'} | ${result.npmVersion || '?'} | ${release} | ${result.provenance ? 'SLSA v1' : 'missing'} | ${status} |`,
     );
   }
 

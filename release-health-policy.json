@@ -1,11 +1,12 @@
 {
-  "schema_version": "1",
+  "schema_version": "2",
   "packages": [
     {
       "label": "KDNA CLI",
       "repository": "aikdna/kdna-cli",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-cli",
+      "version": "0.35.0",
       "canonical_tag": { "type": "natural" }
     },
     {
@@ -13,6 +14,7 @@
       "repository": "aikdna/kdna-skills",
       "package_json": "mcp-server/package.json",
       "npm_package": "@aikdna/kdna-mcp-server",
+      "version": "0.4.2",
       "canonical_tag": { "type": "prefix", "value": "v" }
     },
     {
@@ -20,6 +22,7 @@
       "repository": "aikdna/kdna-studio-cli",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-studio-cli",
+      "version": "0.10.2",
       "canonical_tag": { "type": "natural" }
     },
     {
@@ -27,6 +30,7 @@
       "repository": "aikdna/kdna-studio-core",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-studio-core",
+      "version": "2.0.2",
       "canonical_tag": { "type": "natural" }
     },
     {
@@ -34,6 +38,7 @@
       "repository": "aikdna/kdna-activation-server",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-activation-server",
+      "version": "0.2.0",
       "canonical_tag": { "type": "natural" }
     },
     {
@@ -41,6 +46,7 @@
       "repository": "aikdna/kdna-remote-server",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-remote-server",
+      "version": "0.4.1",
       "canonical_tag": { "type": "natural" }
     },
     {
@@ -48,6 +54,7 @@
       "repository": "aikdna/kdna-web-server",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-web-server",
+      "version": "0.3.0",
       "canonical_tag": { "type": "natural" }
     },
     {
@@ -55,6 +62,7 @@
       "repository": "aikdna/kdna-web-client",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-web-client",
+      "version": "0.2.2",
       "canonical_tag": { "type": "natural" }
     },
     {
@@ -62,6 +70,7 @@
       "repository": "aikdna/kdna-react",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-react",
+      "version": "0.3.0",
       "canonical_tag": { "type": "natural" }
     },
     {
@@ -69,6 +78,7 @@
       "repository": "aikdna/create-kdna-web-app",
       "package_json": "package.json",
       "npm_package": "create-kdna-web-app",
+      "version": "0.4.0",
       "canonical_tag": { "type": "natural" }
     },
     {
@@ -76,6 +86,7 @@
       "repository": "aikdna/kdna",
       "package_json": "packages/kdna-core/package.json",
       "npm_package": "@aikdna/kdna-core",
+      "version": "0.20.0",
       "canonical_tag": { "type": "natural" }
     },
     {
@@ -83,10 +94,19 @@
       "repository": "aikdna/kdna",
       "package_json": "packages/kdna-eval/package.json",
       "npm_package": "@aikdna/kdna-eval",
+      "version": "0.3.1",
       "canonical_tag": { "type": "prefix", "value": "eval/" },
       "legacy_release_tag_sha256": {
         "0.3.1": "711abd8fd04f2b1466e8c0f331a1139cbe67361fec6c8c3c2957adc7b786c4b4"
       }
+    },
+    {
+      "label": "KDNA Compatibility Bridge",
+      "repository": "aikdna/kdna",
+      "package_json": "packages/kdna/package.json",
+      "npm_package": "@aikdna/kdna",
+      "version": "0.13.1",
+      "canonical_tag": { "type": "prefix", "value": "compat/" }
     }
   ]
 }

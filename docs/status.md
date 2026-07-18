@@ -35,6 +35,8 @@ silently alter single-asset consumption.
 | Single-asset consumption runtime | Beta | Task-aware planning, projection, trace, and evaluation surfaces |
 | Cluster runtime | Beta | Explicit multi-asset roles, routing, conflict checks, plans, and traces |
 | JS Core | Reference implementation | Primary public conformance implementation |
+| Eval package | Experimental | Issuer-scoped replay, budget, and consumption evaluation; not Core authority |
+| `@aikdna/kdna` compatibility package | Legacy compatibility | Maintained migration bridge; not the recommended new integration path |
 | Swift, React, and Web adapters | Beta / experimental | Check each repository's release notes and shared conformance evidence |
 
 ## Current First-Run Path

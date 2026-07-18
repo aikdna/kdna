@@ -8,6 +8,9 @@ on:
       - 'docs/**'
       - 'scripts/docs-ci.js'
       - 'scripts/check-publish-drift.js'
+      - 'scripts/ecosystem-manifest.js'
+      - 'ecosystem-manifest.json'
+      - 'schema/ecosystem-manifest.schema.json'
       - '.github/workflows/docs-ci.yml'
   pull_request:
     branches: [main]
@@ -15,6 +18,9 @@ on:
       - 'docs/**'
       - 'scripts/docs-ci.js'
       - 'scripts/check-publish-drift.js'
+      - 'scripts/ecosystem-manifest.js'
+      - 'ecosystem-manifest.json'
+      - 'schema/ecosystem-manifest.schema.json'
       - '.github/workflows/docs-ci.yml'
 
 jobs:

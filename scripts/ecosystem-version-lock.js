@@ -4,17 +4,16 @@
 /**
  * Fail-closed cross-repository lock for current KDNA npm coordinates.
  *
- * Baselines come from the public ecosystem manifest, with Eval added from its
- * co-located package manifest until the ecosystem manifest can represent more
- * than one npm package per repository. Current repositories must use the exact
- * accepted version of every managed dependency. Repositories explicitly marked
- * Legacy or Removed are reported and excluded from the current toolchain gate.
+ * Package records come from the schema-2 public ecosystem manifest. Active and
+ * compatibility coordinates are both recognized so an unreviewed dependency
+ * on either fails closed; the explicit binding policy is the only allowlist.
+ * Deprecated package manifests are frozen and excluded from dependency scans.
  */
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { packageRecords } = require('./ecosystem-manifest');
 
-const CURRENT_LIFECYCLES = new Set(['Stable', 'Beta', 'Experimental']);
 const EXCLUDED_LIFECYCLES = new Set(['Legacy', 'Removed']);
 
 // This is an explicit compatibility policy, not a best-effort inventory. Any
@@ -102,25 +101,27 @@ function readBaselines(controlRoot) {
   for (const component of manifest.components) {
     const repositoryName = component.repository.split('/').pop();
     lifecycleByRepository.set(repositoryName, component.lifecycle);
-    if (CURRENT_LIFECYCLES.has(component.lifecycle) && component.package_json) {
-      const componentRoot = path.resolve(controlRoot, component.local_path || '.');
-      const packagePath = path.resolve(controlRoot, component.package_json);
-      const relativeManifest = path.relative(componentRoot, packagePath);
+  }
+
+  for (const { component, packageRecord } of packageRecords(manifest)) {
+    const repositoryName = component.repository.split('/').pop();
+    if (packageRecord.dependency_policy === 'current') {
       const manifests = manifestsByRepository.get(repositoryName) || [];
-      manifests.push(relativeManifest);
+      manifests.push(packageRecord.package_json);
       manifestsByRepository.set(repositoryName, manifests);
     }
     if (
-      CURRENT_LIFECYCLES.has(component.lifecycle) &&
-      component.npm_package &&
-      component.current_version
+      ['active', 'compatibility'].includes(packageRecord.release_status) &&
+      packageRecord.npm_package &&
+      packageRecord.version
     ) {
-      baselines.set(component.npm_package, component.current_version);
+      if (baselines.has(packageRecord.npm_package)) {
+        throw new Error(`duplicate managed package ${packageRecord.npm_package}`);
+      }
+      baselines.set(packageRecord.npm_package, packageRecord.version);
     }
   }
 
-  const evalPackage = readJson(path.join(controlRoot, 'packages', 'kdna-eval', 'package.json'));
-  baselines.set(evalPackage.name, evalPackage.version);
   if (process.env.KDNA_CORE_BASELINE) {
     baselines.set('@aikdna/kdna-core', process.env.KDNA_CORE_BASELINE);
   }
@@ -312,9 +313,9 @@ function main() {
     process.exit(2);
   }
 
-  console.log('ecosystem-version-lock: exact current coordinates');
+  console.log('ecosystem-version-lock: exact managed coordinates');
   for (const [packageName, version] of [...policy.baselines].sort()) {
-    console.log(`  BASELINE ${packageName}@${version}`);
+    console.log(`  MANAGED ${packageName}@${version}`);
   }
   console.log(`scanning ${reposRoot}`);
 

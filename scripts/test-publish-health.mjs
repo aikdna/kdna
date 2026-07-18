@@ -3,6 +3,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import test from 'node:test';
+import { createRequire } from 'node:module';
 
 import {
   candidateTags,
@@ -12,13 +13,19 @@ import {
   validatePolicy,
 } from './publish-health.mjs';
 
+const require = createRequire(import.meta.url);
+const { currentPublishedPackages } = require('./ecosystem-manifest.js');
+
 const policy = JSON.parse(
   fs.readFileSync(new URL('../release-health-policy.json', import.meta.url), 'utf8'),
+);
+const ecosystemManifest = JSON.parse(
+  fs.readFileSync(new URL('../ecosystem-manifest.json', import.meta.url), 'utf8'),
 );
 
 test('release-health policy is complete, unique, and structurally valid', () => {
   assert.equal(validatePolicy(policy), policy);
-  assert.equal(policy.packages.length, 12);
+  assert.equal(policy.packages.length, 13);
   assert.deepEqual(
     new Set(policy.packages.map((entry) => entry.npm_package)),
     new Set([
@@ -34,8 +41,41 @@ test('release-health policy is complete, unique, and structurally valid', () => 
       'create-kdna-web-app',
       '@aikdna/kdna-core',
       '@aikdna/kdna-eval',
+      '@aikdna/kdna',
     ]),
   );
+  assert.throws(
+    () => validatePolicy({ ...policy, packages: [{ ...policy.packages[0], version: 'latest' }] }),
+    /invalid expected version/u,
+  );
+});
+
+test('release-health policy is an exact projection of current public package records', () => {
+  const manifestRecords = currentPublishedPackages(ecosystemManifest);
+  const expected = new Map(
+    manifestRecords.map(({ component, packageRecord }) => [
+      packageRecord.npm_package,
+      {
+        repository: component.repository,
+        package_json: packageRecord.package_json,
+        version: packageRecord.version,
+      },
+    ]),
+  );
+  assert.deepEqual(
+    new Set(policy.packages.map((entry) => entry.npm_package)),
+    new Set(expected.keys()),
+  );
+  for (const entry of policy.packages) {
+    assert.deepEqual(
+      {
+        repository: entry.repository,
+        package_json: entry.package_json,
+        version: entry.version,
+      },
+      expected.get(entry.npm_package),
+    );
+  }
 });
 
 test('natural and prefixed canonical tags are exact', () => {

@@ -20,6 +20,8 @@ lockfiles, logs, and security reports.
 | --- | --- | --- | --- | --- |
 | Protocol | `aikdna/kdna` | monorepo | none | SPEC, schemas, docs, JS runtime core workspace |
 | Runtime core | `aikdna/kdna` / `packages/kdna-core` | `@aikdna/kdna-core` | none | Load, validate, inspect, render `.kdna` assets |
+| Evaluation toolkit | `aikdna/kdna` / `packages/kdna-eval` | `@aikdna/kdna-eval` | none | Experimental issuer-scoped replay, budget, and consumption evaluation |
+| Compatibility bridge | `aikdna/kdna` / `packages/kdna` | `@aikdna/kdna` | `kdna`, `kdna-validate` | Maintained Legacy migration path; not the recommended new integration |
 | Runtime CLI | `aikdna/kdna-cli` | `@aikdna/kdna-cli` | `kdna` | Inspect, validate, pack, unpack, load `.kdna` assets |
 | Studio core | `aikdna/kdna-studio-core` | `@aikdna/kdna-studio-core` | none | Authoring SDK kernel |
 | Studio CLI | `aikdna/kdna-studio-cli` | `@aikdna/kdna-studio-cli` | `kdna-studio` | Command-line authoring: create, card, export |
