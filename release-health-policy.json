@@ -106,6 +106,7 @@
       "package_json": "packages/kdna/package.json",
       "npm_package": "@aikdna/kdna",
       "version": "0.13.1",
+      "candidate_version": "0.13.2",
       "canonical_tag": { "type": "prefix", "value": "compat/" }
     }
   ]

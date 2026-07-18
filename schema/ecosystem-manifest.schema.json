@@ -49,6 +49,10 @@
       "type": "string",
       "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\\+([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?$"
     },
+    "stableSemver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
     "stringArray": {
       "type": "array",
       "uniqueItems": true,
@@ -93,7 +97,7 @@
           "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
         },
         "version": { "$ref": "#/$defs/semver" },
-        "published_version": { "$ref": "#/$defs/semver" },
+        "published_version": { "$ref": "#/$defs/stableSemver" },
         "lifecycle": { "$ref": "#/$defs/lifecycle" },
         "release_status": {
           "enum": ["active", "candidate", "compatibility", "deprecated", "source-only"]
@@ -124,7 +128,8 @@
           "then": {
             "required": ["published_version"],
             "properties": {
-              "published_version": { "$ref": "#/$defs/semver" },
+              "version": { "$ref": "#/$defs/stableSemver" },
+              "published_version": { "$ref": "#/$defs/stableSemver" },
               "npm_package": { "type": "string", "minLength": 1 },
               "lifecycle": { "enum": ["Stable", "Beta", "Experimental", "Legacy"] },
               "dependency_policy": { "const": "current" }

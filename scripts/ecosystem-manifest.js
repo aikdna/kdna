@@ -4,6 +4,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const CURRENT_RELEASE_STATUSES = new Set(['active', 'compatibility']);
+const PUBLISHABLE_SOURCE_STATUSES = new Set(['active', 'candidate', 'compatibility']);
+const STABLE_SEMVER_RE = /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/u;
 
 function componentRecords(manifest) {
   if (manifest?.schema_version !== 2 || !Array.isArray(manifest?.components)) {
@@ -74,6 +76,27 @@ function currentPublishedPackages(manifest) {
   );
 }
 
+function publishableSourcePackages(manifest) {
+  return packageRecords(manifest).filter(
+    ({ packageRecord }) =>
+      PUBLISHABLE_SOURCE_STATUSES.has(packageRecord?.release_status) &&
+      typeof packageRecord?.npm_package === 'string',
+  );
+}
+
+function compareStableVersions(left, right) {
+  const leftMatch = STABLE_SEMVER_RE.exec(left || '');
+  const rightMatch = STABLE_SEMVER_RE.exec(right || '');
+  if (!leftMatch || !rightMatch) throw new Error('stable SemVer comparison requires x.y.z');
+  for (let index = 1; index <= 3; index += 1) {
+    const leftPart = BigInt(leftMatch[index]);
+    const rightPart = BigInt(rightMatch[index]);
+    if (leftPart > rightPart) return 1;
+    if (leftPart < rightPart) return -1;
+  }
+  return 0;
+}
+
 function candidateIncumbentPackages(manifest) {
   return packageRecords(manifest)
     .filter(
@@ -84,6 +107,7 @@ function candidateIncumbentPackages(manifest) {
     .map(({ component, packageRecord }) => ({
       component,
       packageRecord: { ...packageRecord, version: packageRecord.published_version },
+      candidateVersion: packageRecord.version,
     }));
 }
 
@@ -146,13 +170,16 @@ function currentAssetIndexInventory(index) {
 
 module.exports = {
   CURRENT_RELEASE_STATUSES,
+  PUBLISHABLE_SOURCE_STATUSES,
   artifactRecords,
   candidateIncumbentPackages,
+  compareStableVersions,
   componentRecords,
   currentAssetIndexInventory,
   currentPublishedPackages,
   manifestArtifactInventory,
   packageRecords,
+  publishableSourcePackages,
   requireComponent,
   requireNpmPackage,
   resolveComponentPath,

@@ -23,6 +23,7 @@ const { publishArguments, publishCandidate } = require('../scripts/publish-verif
 const { guardCandidate } = require('../scripts/check-publish-duplicate');
 const { assertOutsideRepository } = require('../scripts/prepare-release-artifact');
 const { evaluateRegistryResult, expectedE404 } = require('../scripts/registry-duplicate-policy');
+const { assertCandidateAfterLatest } = require('../scripts/registry-latest-policy');
 const {
   EXPECTED_FILES,
   parseTarFiles,
@@ -678,6 +679,10 @@ test('guard and publisher reparse one exact tarball before the network operation
       lookedUp += 1;
       return e404Result(candidate);
     },
+    lookupLatest: (spec) => {
+      assert.equal(spec, '@aikdna/kdna@latest');
+      return { status: 0, stdout: '"0.13.1"\n', stderr: '' };
+    },
   });
   assert.deepEqual(decision, { decision: 'publish', shouldPublish: true });
   assert.equal(bound, 1);
@@ -691,6 +696,10 @@ test('guard and publisher reparse one exact tarball before the network operation
     bindCurrent: () => {
       bound += 1;
     },
+    lookupLatest: (spec) => {
+      assert.equal(spec, '@aikdna/kdna@latest');
+      return { status: 0, stdout: '"0.13.1"\n', stderr: '' };
+    },
     publish: (args) => {
       assert.deepEqual(args, publishArguments('/tmp/exact-kdna-compat.tgz'));
       published += 1;
@@ -700,6 +709,26 @@ test('guard and publisher reparse one exact tarball before the network operation
   assert.equal(result.status, 0);
   assert.equal(bound, 2);
   assert.equal(published, 1);
+});
+
+test('guard and publisher fail closed before npm latest rollback', async (t) => {
+  const candidate = evidence();
+  for (const [name, result] of [
+    ['equal', { status: 0, stdout: JSON.stringify(candidate.package.version), stderr: '' }],
+    ['newer', { status: 0, stdout: '"9.9.9"', stderr: '' }],
+    ['prerelease', { status: 0, stdout: '"0.13.2-rc.1"', stderr: '' }],
+    ['malformed', { status: 0, stdout: '"0.13.1" trailing', stderr: '' }],
+    ['stderr', { status: 0, stdout: '"0.13.1"', stderr: 'warning' }],
+    ['outage', { status: 1, stdout: '', stderr: '' }],
+  ]) {
+    await t.test(name, () =>
+      assert.throws(() => assertCandidateAfterLatest(result, candidate)),
+    );
+  }
+  assert.equal(
+    assertCandidateAfterLatest({ status: 0, stdout: '"0.13.1"\n', stderr: '' }, candidate),
+    '0.13.1',
+  );
 });
 
 test('publisher pins scripts, provenance, access, registry, and the network timeout', () => {

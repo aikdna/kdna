@@ -10,9 +10,11 @@ const { spawnSync } = require('node:child_process');
 const { sameFilesystemIdentity } = require('../../scripts/filesystem-identity');
 const {
   candidateIncumbentPackages,
+  compareStableVersions,
   currentPublishedPackages,
   currentAssetIndexInventory,
   manifestArtifactInventory,
+  publishableSourcePackages,
   resolveComponentPath,
 } = require('../../scripts/ecosystem-manifest');
 
@@ -35,6 +37,13 @@ test('candidate packages stay outside current-published projections', () => {
     )[0].packageRecord.version,
     '0.9.0',
   );
+  assert.equal(
+    publishableSourcePackages(manifest([component({ packages: [candidate] })])).filter(
+      ({ packageRecord }) => packageRecord.npm_package === '@aikdna/fixture-package',
+    ).length,
+    1,
+  );
+  assert.equal(compareStableVersions('100000000000000000000.0.0', '99999999999999999999.9.9'), 1);
 });
 
 const repoRoot = path.resolve(__dirname, '..', '..');
@@ -377,6 +386,28 @@ test('validator rejects schema 1, mixed legacy fields, and unknown fields', (t) 
         ],
       }),
     ]),
+    manifest([
+      component({
+        packages: [
+          packageRecord({
+            version: '1.0.1-rc.1',
+            published_version: '1.0.0',
+            release_status: 'candidate',
+          }),
+        ],
+      }),
+    ]),
+    manifest([
+      component({
+        packages: [
+          packageRecord({
+            version: '1.0.1',
+            published_version: '1.0.0+candidate',
+            release_status: 'candidate',
+          }),
+        ],
+      }),
+    ]),
     manifest([component({ packages: [packageRecord({ published_version: '0.9.0' })] })]),
   ]) {
     const manifestPath = path.join(root, 'ecosystem-manifest.json');
@@ -445,6 +476,26 @@ test('validator binds every external package to one exact clean source commit', 
   const dirty = runValidator(manifestPath, root);
   assert.equal(dirty.status, 1);
   assert.match(dirty.stderr, /checkout is dirty/u);
+});
+
+test('validator requires a candidate stable version newer than the incumbent', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-candidate-order-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const packageRoot = path.join(root, 'fixture-package');
+  const commit = initRepository(packageRoot, {
+    'package.json': JSON.stringify({ name: '@aikdna/fixture-package', version: '0.13.0' }),
+  });
+  const candidate = packageRecord({
+    version: '0.13.0',
+    published_version: '0.13.1',
+    release_status: 'candidate',
+  });
+  const manifestPath = writeManifest(root, [
+    component({ source_commit: commit, packages: [candidate] }),
+  ]);
+  const result = runValidator(manifestPath, root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /candidate version must be greater/u);
 });
 
 test('validator rejects component and package path escape and symlink escape', (t) => {

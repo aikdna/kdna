@@ -255,18 +255,10 @@ test('release evidence generator retains and binds the real npm pack artifact', 
       artifactInspection: inspection,
     }),
   );
-  const publishDryRun = JSON.parse(
+  const packDryRun = JSON.parse(
     execFileSync(
       'npm',
-      [
-        'publish',
-        `./${artifact.artifact_path}`,
-        '--dry-run',
-        '--ignore-scripts',
-        '--access',
-        'public',
-        '--json',
-      ],
+      ['pack', `./${artifact.artifact_path}`, '--dry-run', '--ignore-scripts', '--json'],
       {
         cwd: REPO_ROOT,
         encoding: 'utf8',
@@ -279,8 +271,8 @@ test('release evidence generator retains and binds the real npm pack artifact', 
       },
     ),
   );
-  assert.equal(publishDryRun['@aikdna/kdna-eval']?.id, '@aikdna/kdna-eval@0.3.2');
-  assert.equal(publishDryRun['@aikdna/kdna-eval']?.filename, artifact.filename);
+  assert.equal(packDryRun[0]?.id, '@aikdna/kdna-eval@0.3.2');
+  assert.equal(packDryRun[0]?.filename, artifact.filename);
 });
 
 test('eval workflow gates the exact tag, commit, and evidence before publish', () => {

@@ -8,7 +8,10 @@
   Eval runtime identity and evidence boundaries; no new format or authority
   path is introduced.
 - Rehearse the clean registry install against the accepted CLI source and
-  require one physical Core package across the compatibility and CLI paths.
+  require one physical Core and Eval package across the compatibility and CLI
+  paths.
+- Fail publication closed unless the candidate is a stable SemVer newer than
+  npm `latest`, rechecking that ordering immediately before `npm publish`.
 
 ## 0.13.1 (2026-07-18)
 

@@ -77,10 +77,12 @@ function main() {
     const compatPath = path.join(modules, '@aikdna', 'kdna');
     const cliPath = path.join(modules, '@aikdna', 'kdna-cli');
     const corePath = path.join(modules, '@aikdna', 'kdna-core');
+    const evalPath = path.join(modules, '@aikdna', 'kdna-eval');
     const expected = [
       [compatPath, '@aikdna/kdna', '0.13.2'],
       [cliPath, '@aikdna/kdna-cli', '0.35.1'],
       [corePath, '@aikdna/kdna-core', '0.20.0'],
+      [evalPath, '@aikdna/kdna-eval', '0.3.2'],
     ];
     for (const [packagePath, name, version] of expected) {
       const manifest = readManifest(packagePath);
@@ -104,16 +106,34 @@ function main() {
         `clean install contains ${physicalCorePackages.length} physical Core packages: ${physicalCorePackages.join(', ')}`,
       );
     }
+    const physicalEvalPackages = packageDirectories(modules, '@aikdna/kdna-eval');
+    if (physicalEvalPackages.length !== 1 || physicalEvalPackages[0] !== fs.realpathSync(evalPath)) {
+      throw new Error(
+        `clean install contains ${physicalEvalPackages.length} physical Eval packages: ${physicalEvalPackages.join(', ')}`,
+      );
+    }
 
     execFileSync(
       'npm',
-      ['ls', '@aikdna/kdna', '@aikdna/kdna-cli', '@aikdna/kdna-core', '--all'],
+      [
+        'ls',
+        '@aikdna/kdna',
+        '@aikdna/kdna-cli',
+        '@aikdna/kdna-core',
+        '@aikdna/kdna-eval',
+        '--all',
+      ],
       { cwd: temp, stdio: 'inherit' },
     );
     execFileSync(process.execPath, [path.join(compatPath, 'bin', 'kdna.js'), '--help'], {
       cwd: temp,
       stdio: 'ignore',
     });
+    execFileSync(
+      process.execPath,
+      [path.join(compatPath, 'bin', 'kdna.js'), 'eval', 'asset', '--help'],
+      { cwd: temp, stdio: 'ignore', timeout: REGISTRY_TIMEOUT_MS },
+    );
     for (const executable of ['kdna-lint', 'kdna-validate']) {
       const publicBin = path.join(modules, '.bin', executable);
       if (!fs.existsSync(publicBin)) throw new Error(`public executable is missing: ${executable}`);
@@ -123,7 +143,9 @@ function main() {
         timeout: REGISTRY_TIMEOUT_MS,
       });
     }
-    console.log('clean exact-tarball install resolved one Core 0.20.0 and CLI 0.35.1');
+    console.log(
+      'clean exact-tarball install resolved one Core 0.20.0, Eval 0.3.2, and CLI 0.35.1',
+    );
   } finally {
     fs.rmSync(temp, { recursive: true, force: true });
   }

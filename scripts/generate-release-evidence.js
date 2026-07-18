@@ -6,7 +6,7 @@ const path = require('node:path');
 const os = require('node:os');
 const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
-const { currentPublishedPackages } = require('./ecosystem-manifest');
+const { publishableSourcePackages } = require('./ecosystem-manifest');
 
 const repoRoot = path.resolve(__dirname, '..');
 const outputRoot = path.join(repoRoot, 'release-evidence');
@@ -27,11 +27,10 @@ const knownPackages = {
   },
 };
 
-function validateKnownPackages() {
-  const manifest = JSON.parse(
-    fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
-  );
-  const manifestPackages = currentPublishedPackages(manifest).filter(
+function validateKnownPackages(
+  manifest = JSON.parse(fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8')),
+) {
+  const manifestPackages = publishableSourcePackages(manifest).filter(
     ({ component }) => component.repository === 'aikdna/kdna',
   );
   const expected = new Map(
@@ -274,4 +273,6 @@ function main() {
   if (dirtyStatus) console.log('note: git_dirty=true because the worktree has uncommitted changes');
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = { validateKnownPackages };

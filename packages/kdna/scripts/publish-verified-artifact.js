@@ -8,6 +8,7 @@ const path = require('node:path');
 const { readCurrentReleaseBinding } = require('./current-release-binding');
 const { OFFICIAL_REGISTRY, REGISTRY_TIMEOUT_MS, verifyAuditedNpm } = require('./npm-tooling');
 const { validateEvidenceArtifact } = require('./release-evidence');
+const { assertCandidateAfterLatest } = require('./registry-latest-policy');
 
 function fail(message) {
   throw new Error(message);
@@ -25,9 +26,10 @@ function publishArguments(artifact) {
   ];
 }
 
-function publishCandidate({ evidence, tarball, artifactPath, bindCurrent, publish }) {
+function publishCandidate({ evidence, tarball, artifactPath, bindCurrent, lookupLatest, publish }) {
   bindCurrent(evidence);
   validateEvidenceArtifact(evidence, tarball);
+  assertCandidateAfterLatest(lookupLatest(`${evidence.package.name}@latest`), evidence);
   const result = publish(publishArguments(artifactPath));
   if (result.error) fail(`npm publish failed: ${result.error.message}`);
   if (!Number.isInteger(result.status)) fail('npm publish did not return an integer exit status');
@@ -74,6 +76,24 @@ function main() {
           root: path.resolve(__dirname, '..', '..', '..'),
           evidence: candidate,
         }),
+      lookupLatest: (spec) =>
+        spawnSync(
+          'npm',
+          [
+            'view',
+            spec,
+            'version',
+            '--json',
+            '--loglevel=silent',
+            `--registry=${OFFICIAL_REGISTRY}`,
+          ],
+          {
+            encoding: 'utf8',
+            maxBuffer: 1024 * 1024,
+            shell: false,
+            timeout: REGISTRY_TIMEOUT_MS,
+          },
+        ),
       publish: (args) =>
         spawnSync('npm', args, {
           encoding: 'utf8',

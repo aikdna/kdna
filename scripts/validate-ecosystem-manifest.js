@@ -10,6 +10,7 @@ const addFormats = require('ajv-formats');
 const { inspect } = require('../packages/kdna-core/src/container');
 const { sameFilesystemIdentity } = require('./filesystem-identity');
 const {
+  compareStableVersions,
   currentAssetIndexInventory,
   manifestArtifactInventory,
   resolveComponentPath,
@@ -195,12 +196,6 @@ function assertPackageManifest(component, packageRecord, pkg, origin) {
   }
   if (packageRecord.npm_package && packageRecord.npm_package !== packageRecord.package_name) {
     fail(component, 'npm_package must equal package_name when present', detail);
-  }
-  if (
-    packageRecord.release_status === 'candidate' &&
-    packageRecord.published_version === packageRecord.version
-  ) {
-    fail(component, 'candidate version must differ from published_version', detail);
   }
   if (publishableReleaseStatuses.has(packageRecord.release_status) && pkg.private === true) {
     fail(component, `${packageRecord.release_status} package must not be private`, detail);
@@ -447,6 +442,16 @@ if (validateSchema()) {
     }
 
     for (const packageRecord of component.packages) {
+      if (
+        packageRecord.release_status === 'candidate' &&
+        compareStableVersions(packageRecord.version, packageRecord.published_version) <= 0
+      ) {
+        fail(
+          component,
+          'candidate version must be greater than published_version',
+          packageRecord.package_json,
+        );
+      }
       const sourceKey = `${component.repository}:${packageRecord.package_json}`;
       if (packageSources.has(sourceKey)) {
         fail(component, 'duplicate package_json record', packageRecord.package_json);

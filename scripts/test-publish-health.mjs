@@ -8,6 +8,7 @@ import { createRequire } from 'node:module';
 import {
   candidateTags,
   canonicalTag,
+  expectedMainVersion,
   fetchHeaders,
   legacyTagDigest,
   validatePolicy,
@@ -56,12 +57,13 @@ test('release-health policy is an exact projection of current public package rec
     ...candidateIncumbentPackages(ecosystemManifest),
   ];
   const expected = new Map(
-    manifestRecords.map(({ component, packageRecord }) => [
+    manifestRecords.map(({ component, packageRecord, candidateVersion }) => [
       packageRecord.npm_package,
       {
         repository: component.repository,
         package_json: packageRecord.package_json,
         version: packageRecord.version,
+        ...(candidateVersion ? { candidate_version: candidateVersion } : {}),
       },
     ]),
   );
@@ -75,10 +77,30 @@ test('release-health policy is an exact projection of current public package rec
         repository: entry.repository,
         package_json: entry.package_json,
         version: entry.version,
+        ...(entry.candidate_version ? { candidate_version: entry.candidate_version } : {}),
       },
       expected.get(entry.npm_package),
     );
   }
+});
+
+test('candidate health monitors the incumbent registry release and candidate main source', () => {
+  const compat = policy.packages.find((entry) => entry.npm_package === '@aikdna/kdna');
+  assert.equal(compat.version, '0.13.1');
+  assert.equal(expectedMainVersion(compat), '0.13.2');
+  assert.throws(
+    () => validatePolicy({ ...policy, packages: [{ ...compat, candidate_version: '0.13.1' }] }),
+    /invalid candidate version/u,
+  );
+  assert.throws(
+    () => validatePolicy({ ...policy, packages: [{ ...compat, candidate_version: '0.13.0' }] }),
+    /invalid candidate version/u,
+  );
+  assert.throws(
+    () =>
+      validatePolicy({ ...policy, packages: [{ ...compat, candidate_version: '0.13.2-rc.1' }] }),
+    /invalid candidate version/u,
+  );
 });
 
 test('natural and prefixed canonical tags are exact', () => {
