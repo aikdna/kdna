@@ -51,7 +51,7 @@ const EXPECTED_CONSUMER_CHECKOUTS = [
   ['aikdna/kdna-web-server', '9fc1377bfb378d5977ab77dcdc30ee4f0b2a181d'],
   ['aikdna/kdna-web-client', 'd128ac815fc82d0249b7f49793a1a0103949c4ee'],
   ['aikdna/kdna-react', '3edcdce0f75b6dfb1eb4147cedaf24f8af6574a3'],
-  ['aikdna/kdna-assets', '2e28e0d16d2b915b942a8b600c0ba62c1de4898e'],
+  ['aikdna/kdna-assets', 'cc0c91c7adb7401b0b0b52b567d61f3fbf134828'],
   ['aikdna/kdna-demo-web-viewer', 'a7d4df05973d472ec24ba060f3d9c02c0d22c6f3'],
 ];
 const EXPECTED_COMPAT_CHECKOUTS = [
