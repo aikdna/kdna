@@ -78,6 +78,38 @@ test("replayRun detects failed fixtures", () => {
   const run = engine.replayRun("repair", { fixtures, policy: { id: "p1" } });
   assert.equal(run.summary.passed, 1);
   assert.equal(run.summary.failed, 1);
+  assert.equal(run.summary.incomplete, 0);
+});
+
+test("replayRun never treats missing or non-boolean pass evidence as success", () => {
+  const fixtures = [
+    { id: "missing" },
+    { id: "null", pass: null },
+    { id: "string", pass: "true" },
+    { id: "expected", expected: { pass: true } },
+  ];
+  const engine = createReplayEngine();
+  const run = engine.replayRun("fresh", { fixtures });
+  assert.equal(run.summary.total, 4);
+  assert.equal(run.summary.passed, 1);
+  assert.equal(run.summary.failed, 3);
+  assert.equal(run.summary.incomplete, 3);
+  assert.equal(run.results[0].pass, undefined);
+  assert.equal(run.results[1].pass, undefined);
+  assert.equal(run.results[2].pass, undefined);
+});
+
+test("custom replay evaluation also counts only pass === true", () => {
+  const fixtures = [{ id: "true" }, { id: "false" }, { id: "missing" }];
+  const engine = createReplayEngine();
+  const run = engine.replayRun("fresh", {
+    fixtures,
+    evaluate: fixture => ({
+      id: fixture.id,
+      ...(fixture.id === "true" ? { pass: true } : fixture.id === "false" ? { pass: false } : {}),
+    }),
+  });
+  assert.deepEqual(run.summary, { total: 3, passed: 1, failed: 2, incomplete: 1, regressions: 0 });
 });
 
 test("replayRun with custom evaluate function uses it", () => {

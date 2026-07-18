@@ -418,14 +418,80 @@ const gateRunner = ${root}.createMultiGateRunner(["route"]);
 const replay = ${root}.createReplayEngine();
 const replayRun = replay.replayRun("fresh", { fixtures: [{ input: "test" }] });
 if (replayRun.summary.total !== 1) throw new Error("string replay input was not evaluated");
+if (replayRun.summary.passed !== 0 || replayRun.summary.incomplete !== 1) {
+  throw new Error("replay input without explicit pass evidence did not fail closed");
+}
+const assayFixtureOptions: ${aliases["./assay"]}.CreateAssayFixtureOptions = {
+  category: "positive_target",
+  task: "Review the packed release evidence",
+  expected: { answer: "hold" },
+};
+const assayProfile = ${root}.createAssayProfile();
+const assayFixture = ${root}.createFixture(assayFixtureOptions);
+let assayRunnerCalls = 0;
+void ${root}.runAssay({
+  profile: assayProfile,
+  fixtures: [assayFixture],
+  runner: () => { assayRunnerCalls++; return { answer: "must not run" }; },
+}).then((report) => {
+  if (assayRunnerCalls !== 0 || report.overall_verdict !== "fail" || report.result_count !== 0) {
+    throw new Error("invalid packed assay dataset did not fail before runner invocation");
+  }
+});
 const decision = ${root}.recordAdvisorDecision("advisor", "approved");
 const ledger = ${root}.createAdvisorRelationLedger(
-  { selection: { advisors: [{ asset_id: "advisor" }] } },
+  {
+    cluster_ref: { cluster_id: "cluster" },
+    selection: { advisors: [{ asset_id: "advisor" }] },
+  },
   [decision],
 );
 if (ledger.summary.human_reviewed_count !== 1) throw new Error("advisor decision was not applied");
-const clusterReplay = ${root}.runClusterReplay(replay, []);
-if (Object.keys(clusterReplay).length !== 5) throw new Error("cluster replay did not run five modes");
+const clusterFixtureOptions: ${aliases["./cluster-assay"]}.CreateClusterFixtureOptions = {
+  task: "Review the packed cluster evidence",
+  expectedPrimary: "primary",
+};
+const clusterFixture = ${root}.createClusterFixture(clusterFixtureOptions);
+const explicitReplayEngine: Pick<${root}.ReplayEngine, "replayRun"> = {
+  replayRun(mode, options) {
+    const results = (options?.fixtures || []).map((fixture) => ({
+      id: String(fixture.id),
+      score: 100,
+      pass: true,
+    }));
+    return {
+      mode,
+      timestamp: new Date().toISOString(),
+      inputHash: "packed-consumer",
+      results,
+      regressionFlags: [],
+      summary: {
+        total: results.length,
+        passed: results.length,
+        failed: 0,
+        incomplete: 0,
+        regressions: 0,
+      },
+    };
+  },
+};
+const clusterReplay = ${root}.runClusterReplay(explicitReplayEngine, [clusterFixture]);
+if (Object.keys(clusterReplay).length !== 5 ||
+    Object.values(clusterReplay).some(result => result.status !== "completed" || result.passed !== 1)) {
+  throw new Error("cluster replay did not preserve explicit packed pass evidence");
+}
+if (false) {
+  // @ts-expect-error assetId cannot be numeric
+  ${root}.createAssayProfile({ assetId: 42 });
+  // @ts-expect-error expected evidence is required
+  ${root}.createFixture({ category: "positive_target", task: "missing expected" });
+  // @ts-expect-error expectedPrimary is required
+  ${root}.createClusterFixture({ task: "missing primary" });
+  // @ts-expect-error cluster_id cannot be numeric
+  ${root}.createAdvisorRelationLedger({ cluster_ref: { cluster_id: 42 } });
+  // @ts-expect-error asset_id cannot be numeric
+  ${root}.createAdvisorRelationLedger({ selection: { advisors: [{ asset_id: 42 }] } });
+}
 const regressions = ${root}.detectRegressions(
   [{ id: "f1", score: 50, pass: true }],
   { results: [{ id: "f1", score: 100, pass: true }] },

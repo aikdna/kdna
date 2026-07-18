@@ -14,6 +14,17 @@
 - Add fail-closed public-surface and packed TypeScript consumer regression
   checks across the root and all ten subpaths so runtime and declaration
   exports cannot drift silently again.
+- Reject malformed, empty, duplicate, or below-threshold Assay fixture sets
+  before invoking a runner, and require non-empty task and expected evidence.
+- Require structurally valid Cluster fixtures and identifiers, prevent empty or
+  invalid fixture evidence from producing a passing Cluster verdict, and make
+  Cluster Replay reject incomplete result sets.
+- Count replay success only when `pass === true`; missing or non-boolean pass
+  evidence is failed and reported as incomplete instead of becoming an implicit
+  success.
+- Fully validate the nested Domain, Persona, RouteCard, and ConsumerIndex
+  shapes promised by TypeScript, including fallback-loaded defaults, and make
+  consumer-index resolution and trust checks fail safely on malformed input.
 
 ## 0.3.1 (2026-07-12)
 

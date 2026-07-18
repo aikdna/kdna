@@ -41,19 +41,108 @@ const COMPARISON_ARM_DESCRIPTIONS = {
   no_kdna: 'No KDNA assets — raw model baseline.',
 };
 
+function isPlainObject(value) {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+function isNonEmptyString(value) {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function validateClusterFixtures(fixtures) {
+  const errors = [];
+  if (!Array.isArray(fixtures)) {
+    return { valid: false, total: 0, errors: ['fixtures must be an array'] };
+  }
+  if (fixtures.length === 0) errors.push('fixtures must contain at least one fixture');
+
+  const seenIds = new Set();
+  const seenTasks = new Set();
+  fixtures.forEach((fixture, index) => {
+    const label = `fixtures[${index}]`;
+    if (!isPlainObject(fixture)) {
+      errors.push(`${label} must be a plain object`);
+      return;
+    }
+    if (!isNonEmptyString(fixture.fixture_id)) {
+      errors.push(`${label}.fixture_id must be a non-empty string`);
+    } else if (seenIds.has(fixture.fixture_id)) {
+      errors.push(`${label}.fixture_id duplicates ${fixture.fixture_id}`);
+    } else {
+      seenIds.add(fixture.fixture_id);
+    }
+    if (!isNonEmptyString(fixture.task)) {
+      errors.push(`${label}.task must be a non-empty string`);
+    } else {
+      const normalizedTask = fixture.task.trim();
+      if (seenTasks.has(normalizedTask)) errors.push(`${label}.task duplicates another fixture task`);
+      seenTasks.add(normalizedTask);
+    }
+    if (!isNonEmptyString(fixture.expected_primary)) {
+      errors.push(`${label}.expected_primary must be a non-empty string`);
+    }
+    for (const key of ['expected_advisors', 'expected_rejected']) {
+      if (!Array.isArray(fixture[key]) || fixture[key].some(value => !isNonEmptyString(value))) {
+        errors.push(`${label}.${key} must be an array of non-empty strings`);
+      }
+    }
+    if (!Number.isInteger(fixture.expected_conflicts) || fixture.expected_conflicts < 0) {
+      errors.push(`${label}.expected_conflicts must be a non-negative integer`);
+    }
+  });
+
+  return { valid: errors.length === 0, total: fixtures.length, errors };
+}
+
+function validateReplayResults(replayResults, fixtures) {
+  if (!Array.isArray(replayResults) || replayResults.length !== fixtures.length) return false;
+  const expectedIds = new Set(fixtures.map(fixture => fixture.fixture_id));
+  const observedIds = new Set();
+  for (const result of replayResults) {
+    if (!isPlainObject(result) || !isNonEmptyString(result.id) || observedIds.has(result.id) ||
+        !expectedIds.has(result.id) || typeof result.pass !== 'boolean') {
+      return false;
+    }
+    observedIds.add(result.id);
+  }
+  return observedIds.size === expectedIds.size;
+}
+
 // ── Fixture Creation ──────────────────────────────────────────────────
 
 /**
  * Create a Cluster Assay fixture.
  */
-function createClusterFixture(opts = {}) {
-  const task = opts.task || '';
+function createClusterFixture(opts) {
+  if (!isPlainObject(opts)) throw new TypeError('createClusterFixture requires an options object');
+  if (!isNonEmptyString(opts.task)) throw new TypeError('task must be a non-empty string');
+  if (!isNonEmptyString(opts.expectedPrimary)) {
+    throw new TypeError('expectedPrimary must be a non-empty string');
+  }
+  for (const key of ['expectedAdvisors', 'expectedRejected']) {
+    if (opts[key] !== undefined && (!Array.isArray(opts[key]) || opts[key].some(value => !isNonEmptyString(value)))) {
+      throw new TypeError(`${key} must be an array of non-empty strings when provided`);
+    }
+  }
+  if (opts.expectedConflicts !== undefined &&
+      (!Number.isInteger(opts.expectedConflicts) || opts.expectedConflicts < 0)) {
+    throw new TypeError('expectedConflicts must be a non-negative integer when provided');
+  }
+  if (opts.taskFamily !== undefined && !isNonEmptyString(opts.taskFamily)) {
+    throw new TypeError('taskFamily must be a non-empty string when provided');
+  }
+  if (opts.category !== undefined && !isNonEmptyString(opts.category)) {
+    throw new TypeError('category must be a non-empty string when provided');
+  }
+  const task = opts.task;
   return {
     fixture_id: `cfix_${crypto.randomBytes(8).toString('hex')}`,
     task,
     task_hash: 'sha256:' + crypto.createHash('sha256').update(task).digest('hex'),
     task_family: opts.taskFamily || 'general',
-    expected_primary: opts.expectedPrimary || null,
+    expected_primary: opts.expectedPrimary,
     expected_advisors: opts.expectedAdvisors || [],
     expected_rejected: opts.expectedRejected || [],
     expected_conflicts: opts.expectedConflicts || 0,
@@ -245,6 +334,7 @@ function productGate(plan, manifest) {
 function runClusterAssay(opts = {}) {
   const { manifest, plan, executionCost, comparisonArms = [], fixtures = [] } = opts;
   const startTime = Date.now();
+  const fixtureValidation = validateClusterFixtures(fixtures);
 
   // Structural gate
   const structural = structuralGate(plan);
@@ -281,8 +371,9 @@ function runClusterAssay(opts = {}) {
 
   const gates = { structural, behavioral, economics, trust, product };
   // Promotion is fail-closed: a hard gate that was not run is not a pass.
-  const allPassed = Object.values(gates).every(g => g.pass === true);
-  const blocked = Object.values(gates).filter(g => g.pass === false).length;
+  const allGatesPassed = Object.values(gates).every(g => g.pass === true);
+  const allPassed = fixtureValidation.valid && allGatesPassed;
+  const blocked = Object.values(gates).filter(g => g.pass === false).length + (fixtureValidation.valid ? 0 : 1);
   const passed = Object.values(gates).filter(g => g.pass === true).length;
   const notRun = Object.values(gates).filter(g => g.pass === null).length;
 
@@ -292,7 +383,8 @@ function runClusterAssay(opts = {}) {
     cluster_version: manifest?.version || '0.1.0',
     timestamp: new Date().toISOString(),
     duration_ms: Date.now() - startTime,
-    fixture_count: fixtures.length,
+    fixture_count: Array.isArray(fixtures) ? fixtures.length : 0,
+    fixture_validation: fixtureValidation,
     comparison_arms: comparisonArmResults,
     gates,
     verdict: {
@@ -303,6 +395,7 @@ function runClusterAssay(opts = {}) {
       all_passed: allPassed,
       failed_gates: Object.entries(gates).filter(([, g]) => g.pass === false).map(([name]) => name),
       incomplete_gates: Object.entries(gates).filter(([, g]) => g.pass === null).map(([name]) => name),
+      failed_evidence: fixtureValidation.valid ? [] : ['fixture_dataset'],
     },
     marginal_value: {
       primary_only_score: primaryOnly?.mean_score || null,
@@ -312,7 +405,7 @@ function runClusterAssay(opts = {}) {
       threshold: 0.30,
     },
     dataset_fingerprint: 'sha256:' + crypto.createHash('sha256')
-      .update(JSON.stringify(fixtures.map(f => f.fixture_id || ''))).digest('hex').slice(0, 32),
+      .update(JSON.stringify(Array.isArray(fixtures) ? fixtures.map(f => f?.fixture_id || '') : [])).digest('hex').slice(0, 32),
   };
 }
 
@@ -327,9 +420,38 @@ function runClusterAssay(opts = {}) {
  * @returns {object} ledger
  */
 function createAdvisorRelationLedger(plan, decisions = []) {
+  if (plan !== undefined && plan !== null && !isPlainObject(plan)) {
+    throw new TypeError('plan must be a plain object, null, or undefined');
+  }
+  if (!Array.isArray(decisions)) throw new TypeError('decisions must be an array');
+  const clusterId = plan?.cluster_ref?.cluster_id;
+  if (clusterId !== undefined && !isNonEmptyString(clusterId)) {
+    throw new TypeError('plan.cluster_ref.cluster_id must be a non-empty string when provided');
+  }
   const advisors = plan?.selection?.advisors || [];
   const rejected = plan?.selection?.rejected || [];
   const primary = plan?.selection?.primary;
+
+  for (const [label, entries] of [['advisors', advisors], ['rejected', rejected]]) {
+    if (!Array.isArray(entries)) throw new TypeError(`plan.selection.${label} must be an array`);
+    entries.forEach((entry, index) => {
+      if (!isPlainObject(entry) || !isNonEmptyString(entry.asset_id)) {
+        throw new TypeError(`plan.selection.${label}[${index}].asset_id must be a non-empty string`);
+      }
+    });
+  }
+  if (primary !== undefined && primary !== null &&
+      (!isPlainObject(primary) || !isNonEmptyString(primary.asset_id))) {
+    throw new TypeError('plan.selection.primary.asset_id must be a non-empty string');
+  }
+  decisions.forEach((decision, index) => {
+    if (!isPlainObject(decision) || !isNonEmptyString(decision.asset_id)) {
+      throw new TypeError(`decisions[${index}].asset_id must be a non-empty string`);
+    }
+    if (!['approved', 'approved_with_changes', 'rejected', 'needs_revision'].includes(decision.decision)) {
+      throw new TypeError(`decisions[${index}].decision is invalid`);
+    }
+  });
 
   const entries = [];
 
@@ -377,7 +499,7 @@ function createAdvisorRelationLedger(plan, decisions = []) {
 
   return {
     ledger_version: '0.9.0',
-    cluster_id: plan?.cluster_ref?.cluster_id || 'unknown',
+    cluster_id: clusterId || 'unknown',
     created_at: new Date().toISOString(),
     entries,
     summary: {
@@ -398,6 +520,8 @@ function createAdvisorRelationLedger(plan, decisions = []) {
  */
 function recordAdvisorDecision(assetId, decision, opts = {}) {
   const valid = ['approved', 'approved_with_changes', 'rejected', 'needs_revision'];
+  if (!isNonEmptyString(assetId)) throw new TypeError('assetId must be a non-empty string');
+  if (!isPlainObject(opts)) throw new TypeError('options must be a plain object');
   if (!valid.includes(decision)) throw new Error(`Invalid decision: ${decision}. Must be: ${valid.join(', ')}`);
 
   return {
@@ -422,15 +546,28 @@ function recordAdvisorDecision(assetId, decision, opts = {}) {
  * @returns {object} replay results per suite
  */
 function runClusterReplay(engine, fixtures, opts = {}) {
+  const fixtureValidation = validateClusterFixtures(fixtures);
   const results = {};
+  if (!engine || typeof engine.replayRun !== 'function') {
+    for (const mode of REPLAY_MODES) {
+      results[mode] = { status: 'failed', error: 'Replay engine must provide replayRun' };
+    }
+    return results;
+  }
+  if (!fixtureValidation.valid) {
+    for (const mode of REPLAY_MODES) {
+      results[mode] = { status: 'failed', error: 'Invalid cluster fixture dataset' };
+    }
+    return results;
+  }
   for (const mode of REPLAY_MODES) {
     try {
       const run = engine.replayRun(mode, {
         fixtures: fixtures.map(f => ({ id: f.fixture_id, task: f.task, expected: f })),
         policy: { cluster_id: opts.clusterId || 'unknown' },
       });
-      if (run?.results) {
-        const passed = run.results.filter(r => r.pass !== false).length;
+      if (validateReplayResults(run?.results, fixtures)) {
+        const passed = run.results.filter(r => r.pass === true).length;
         results[mode] = {
           status: 'completed',
           total: run.results.length,
@@ -439,7 +576,7 @@ function runClusterReplay(engine, fixtures, opts = {}) {
           pass_rate: run.results.length > 0 ? passed / run.results.length : 0,
         };
       } else {
-        results[mode] = { status: 'failed', error: 'No results from replay engine' };
+        results[mode] = { status: 'failed', error: 'Invalid or incomplete results from replay engine' };
       }
     } catch (e) {
       results[mode] = { status: 'error', error: e.message };

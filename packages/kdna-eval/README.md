@@ -231,6 +231,24 @@ import the replay, gate, cost, consumption, route-card, and consumer-index APIs
 from the package root or their matching subpaths, and ESM consumers receive the
 same score constants and loader validators as CommonJS consumers.
 
+Version 0.3.2 also closes implicit-evidence paths in Assay and Replay APIs:
+
+- Asset fixtures require a non-empty task and non-empty expected result;
+  malformed, duplicate, empty, or below-threshold fixture sets fail before the
+  runner is called.
+- Cluster fixtures require a non-empty expected primary asset. Empty,
+  malformed, or duplicate Cluster fixture sets cannot produce a passing Assay
+  verdict and are rejected before Replay invokes its engine.
+- Replay counts a result as passed only when it contains the explicit boolean
+  value `pass: true`. Missing or non-boolean pass evidence is counted as failed
+  and reported in `summary.incomplete`.
+- Cluster and advisor-ledger identifiers are non-empty strings at runtime and
+  in the strict TypeScript declarations.
+- Domain, Persona, RouteCard, and ConsumerIndex validators enforce their full
+  declared nested shapes, including fallback-loaded defaults. Consumer-index
+  resolution and trust checks return safe disabled results for malformed
+  indexes rather than trusting partial data.
+
 ## Version 0.3.1 Assay Contracts
 
 Version 0.3.1 adds fail-closed Asset and Cluster Assay behavior exported from both the package

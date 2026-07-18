@@ -16,9 +16,13 @@ export {
 export type {
   AdvisorDecision,
   AdvisorDecisionValue,
+  AdvisorRelationAsset,
   AdvisorRelationLedger,
+  AdvisorRelationPlan,
   ClusterAssayGate,
+  ClusterAssayOptions,
   ClusterAssayReport,
   ClusterReplayFixture,
   ClusterReplaySuiteResult,
+  CreateClusterFixtureOptions,
 } from "./types.js";

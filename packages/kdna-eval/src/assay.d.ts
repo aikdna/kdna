@@ -21,4 +21,8 @@ export type {
   AssayFixtureCategory,
   AssayProfile,
   AssayReport,
+  AssayThresholdOverrides,
+  AssayThresholds,
+  CreateAssayFixtureOptions,
+  CreateAssayProfileOptions,
 } from "./types.js";

@@ -42,6 +42,89 @@ const CLASSIFICATION_LEVELS = [
   'production_asset',
 ];
 
+const THRESHOLD_RULES = {
+  positive_target_min_count: { kind: 'integer', min: 0 },
+  non_applicable_min_count: { kind: 'integer', min: 0 },
+  adjacent_ambiguous_min_count: { kind: 'integer', min: 0 },
+  high_risk_failure_min_count: { kind: 'integer', min: 0 },
+  regression_min_count: { kind: 'integer', min: 0 },
+  holdout_required: { kind: 'boolean' },
+  blind_mean_improvement_min: { kind: 'number', min: 0, max: 4 },
+  critical_error_reduction_pct: { kind: 'number', min: 0, max: 100 },
+  non_applicable_accuracy_min: { kind: 'number', min: 0, max: 1 },
+  harmful_contamination_max: { kind: 'number', min: 0, max: 1 },
+  high_risk_harm_zero: { kind: 'boolean' },
+  regression_pass_required: { kind: 'boolean' },
+  min_model_runtime_combinations: { kind: 'integer', min: 1 },
+  human_review_required: { kind: 'boolean' },
+  structural_gate: { kind: 'boolean' },
+  behavioral_gate: { kind: 'boolean' },
+  boundary_gate: { kind: 'boolean' },
+  contamination_gate: { kind: 'boolean' },
+  trust_gate: { kind: 'boolean' },
+  economics_gate: { kind: 'boolean' },
+  interoperability_gate: { kind: 'boolean' },
+  product_gate: { kind: 'boolean' },
+};
+
+function isPlainObject(value) {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+function isNonEmptyString(value) {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function validateThresholds(thresholds) {
+  if (!isPlainObject(thresholds)) return ['thresholds must be a plain object'];
+
+  const errors = [];
+  for (const [name, value] of Object.entries(thresholds)) {
+    const rule = THRESHOLD_RULES[name];
+    if (!rule) {
+      errors.push(`thresholds.${name} is not supported`);
+      continue;
+    }
+    if (rule.kind === 'boolean') {
+      if (typeof value !== 'boolean') errors.push(`thresholds.${name} must be a boolean`);
+      continue;
+    }
+    if (typeof value !== 'number' || !Number.isFinite(value)) {
+      errors.push(`thresholds.${name} must be a finite number`);
+      continue;
+    }
+    if (rule.kind === 'integer' && !Number.isInteger(value)) {
+      errors.push(`thresholds.${name} must be an integer`);
+    }
+    if (rule.min !== undefined && value < rule.min) {
+      errors.push(`thresholds.${name} must be >= ${rule.min}`);
+    }
+    if (rule.max !== undefined && value > rule.max) {
+      errors.push(`thresholds.${name} must be <= ${rule.max}`);
+    }
+  }
+  return errors;
+}
+
+function validateProfile(profile) {
+  if (!isPlainObject(profile)) return ['profile must be a plain object'];
+  const errors = [];
+  if (!isNonEmptyString(profile.asset_id)) errors.push('profile.asset_id must be a non-empty string');
+  if (!isNonEmptyString(profile.asset_version)) errors.push('profile.asset_version must be a non-empty string');
+  if (profile.asset_digest !== null && !isNonEmptyString(profile.asset_digest)) {
+    errors.push('profile.asset_digest must be null or a non-empty string');
+  }
+  errors.push(...validateThresholds(profile.thresholds));
+  for (const name of Object.keys(THRESHOLD_RULES)) {
+    if (!Object.prototype.hasOwnProperty.call(profile.thresholds || {}, name)) {
+      errors.push(`profile.thresholds.${name} is required`);
+    }
+  }
+  return errors;
+}
+
 // ── Assay Profile ─────────────────────────────────────────────────────
 
 /**
@@ -55,11 +138,25 @@ const CLASSIFICATION_LEVELS = [
  * @returns {object} assay profile
  */
 function createAssayProfile(opts = {}) {
+  if (!isPlainObject(opts)) throw new TypeError('createAssayProfile options must be a plain object');
+  if (opts.assetId !== undefined && !isNonEmptyString(opts.assetId)) {
+    throw new TypeError('assetId must be a non-empty string when provided');
+  }
+  if (opts.assetVersion !== undefined && !isNonEmptyString(opts.assetVersion)) {
+    throw new TypeError('assetVersion must be a non-empty string when provided');
+  }
+  if (opts.assetDigest !== undefined && opts.assetDigest !== null && !isNonEmptyString(opts.assetDigest)) {
+    throw new TypeError('assetDigest must be null or a non-empty string when provided');
+  }
+  if (opts.thresholds !== undefined) {
+    const thresholdErrors = validateThresholds(opts.thresholds);
+    if (thresholdErrors.length) throw new TypeError(`Invalid assay thresholds: ${thresholdErrors.join('; ')}`);
+  }
   return {
     profile_version: '0.9.0',
     asset_id: opts.assetId || 'unknown',
     asset_version: opts.assetVersion || '0.1.0',
-    asset_digest: opts.assetDigest || null,
+    asset_digest: opts.assetDigest ?? null,
     created_at: new Date().toISOString(),
     thresholds: {
       // Default candidate thresholds per roadmap §7.1
@@ -105,11 +202,56 @@ function createAssayProfile(opts = {}) {
 function validateFixtureSet(fixtures, profile) {
   const counts = {};
   for (const cat of FIXTURE_CATEGORIES) counts[cat] = 0;
-  for (const f of fixtures) {
-    if (FIXTURE_CATEGORIES.includes(f.category)) counts[f.category]++;
+  const errors = validateProfile(profile);
+  if (!Array.isArray(fixtures)) {
+    return {
+      valid: false,
+      summary: { total: 0, by_category: counts, required_met: false },
+      errors: [...errors, 'fixtures must be an array'],
+    };
   }
 
-  const errors = [];
+  if (fixtures.length === 0) errors.push('fixtures must contain at least one fixture');
+  const seenIds = new Set();
+  const seenTasks = new Set();
+  fixtures.forEach((fixture, index) => {
+    const label = `fixtures[${index}]`;
+    if (!isPlainObject(fixture)) {
+      errors.push(`${label} must be a plain object`);
+      return;
+    }
+    if (!isNonEmptyString(fixture.fixture_id)) {
+      errors.push(`${label}.fixture_id must be a non-empty string`);
+    } else if (seenIds.has(fixture.fixture_id)) {
+      errors.push(`${label}.fixture_id duplicates ${fixture.fixture_id}`);
+    } else {
+      seenIds.add(fixture.fixture_id);
+    }
+    if (!FIXTURE_CATEGORIES.includes(fixture.category)) {
+      errors.push(`${label}.category must be one of: ${FIXTURE_CATEGORIES.join(', ')}`);
+    } else {
+      counts[fixture.category]++;
+    }
+    if (!isNonEmptyString(fixture.task)) {
+      errors.push(`${label}.task must be a non-empty string`);
+    } else {
+      const normalizedTask = fixture.task.trim();
+      if (seenTasks.has(normalizedTask)) errors.push(`${label}.task duplicates another fixture task`);
+      seenTasks.add(normalizedTask);
+    }
+    if (!isPlainObject(fixture.expected) || Object.keys(fixture.expected).length === 0) {
+      errors.push(`${label}.expected must be a non-empty plain object`);
+    }
+  });
+
+  if (errors.some(error => error.startsWith('profile') || error.startsWith('thresholds'))) {
+    return {
+      valid: false,
+      summary: { total: fixtures.length, by_category: counts, required_met: false },
+      errors,
+    };
+  }
+
   const t = profile.thresholds;
 
   if (counts.positive_target < t.positive_target_min_count)
@@ -146,17 +288,25 @@ function validateFixtureSet(fixtures, profile) {
  * @param {object} [opts.metadata]
  * @returns {object} fixture
  */
-function createFixture(opts = {}) {
+function createFixture(opts) {
+  if (!isPlainObject(opts)) throw new TypeError('createFixture requires an options object');
   if (!FIXTURE_CATEGORIES.includes(opts.category))
     throw new Error(`Unknown fixture category: ${opts.category}. Must be one of: ${FIXTURE_CATEGORIES.join(', ')}`);
+  if (!isNonEmptyString(opts.task)) throw new TypeError('task must be a non-empty string');
+  if (!isPlainObject(opts.expected) || Object.keys(opts.expected).length === 0) {
+    throw new TypeError('expected must be a non-empty plain object');
+  }
+  if (opts.metadata !== undefined && !isPlainObject(opts.metadata)) {
+    throw new TypeError('metadata must be a plain object when provided');
+  }
 
-  const task = opts.task || '';
+  const task = opts.task;
   return {
     fixture_id: `fixture_${crypto.randomBytes(8).toString('hex')}`,
     category: opts.category,
     task,
     task_hash: `sha256:${crypto.createHash('sha256').update(task).digest('hex')}`,
-    expected: opts.expected || {},
+    expected: opts.expected,
     metadata: opts.metadata || {},
     created_at: new Date().toISOString(),
   };
@@ -407,6 +557,10 @@ async function runAssay(opts = {}) {
   const { profile, fixtures, runner, asset = {}, context = {} } = opts;
   if (!runner || typeof runner !== 'function')
     throw new Error('runAssay requires a runner function: async (fixture, baselineArm, context) => result');
+  const profileErrors = validateProfile(profile);
+  if (profileErrors.length) {
+    throw new TypeError(`Invalid assay profile: ${profileErrors.join('; ')}`);
+  }
 
   const baselineArms = opts.baselineArms || createAllBaselineArms();
   const results = [];
@@ -414,6 +568,24 @@ async function runAssay(opts = {}) {
 
   // Validate fixture set
   const fixtureValidation = validateFixtureSet(fixtures, profile);
+
+  if (!fixtureValidation.valid) {
+    return {
+      assay_version: '0.9.0',
+      profile,
+      fixture_validation: fixtureValidation,
+      results_by_arm: {},
+      results: [],
+      result_count: 0,
+      threshold_results: {
+        fixture_dataset: { pass: false, detail: fixtureValidation.summary },
+      },
+      overall_verdict: 'fail',
+      failed_thresholds: ['fixture_dataset'],
+      duration_ms: Date.now() - startTime,
+      dataset_fingerprint: fingerprintFixtures(fixtures),
+    };
+  }
 
   // Run each fixture against each baseline arm
   for (const fixture of fixtures) {
@@ -553,8 +725,15 @@ async function runAssay(opts = {}) {
     overall_verdict: allPassed ? 'pass' : 'fail',
     failed_thresholds: Object.entries(thresholdResults).filter(([, tr]) => !tr.pass).map(([name]) => name),
     duration_ms: durationMs,
-    dataset_fingerprint: `sha256:${crypto.createHash('sha256').update(JSON.stringify(fixtures.map(f => f.fixture_id))).digest('hex').slice(0, 32)}`,
+    dataset_fingerprint: fingerprintFixtures(fixtures),
   };
+}
+
+function fingerprintFixtures(fixtures) {
+  const ids = Array.isArray(fixtures)
+    ? fixtures.map(fixture => isPlainObject(fixture) && isNonEmptyString(fixture.fixture_id) ? fixture.fixture_id : null)
+    : [];
+  return `sha256:${crypto.createHash('sha256').update(JSON.stringify(ids)).digest('hex').slice(0, 32)}`;
 }
 
 function fixtureFor(fixtureId, fixtures) {

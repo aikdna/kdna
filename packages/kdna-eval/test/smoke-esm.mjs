@@ -38,7 +38,11 @@ assert.equal(costReport.consumed.tokens, 100);
 // Smoke test assay module
 const profile = createAssayProfile({ assetId: 'smoke-test.kdna' });
 assert.equal(profile.profile_version, '0.9.0');
-const fixture = createFixture({ category: 'positive_target', task: 'smoke test task' });
+const fixture = createFixture({
+  category: 'positive_target',
+  task: 'smoke test task',
+  expected: { answer: 'smoke test answer' },
+});
 assert.equal(fixture.category, 'positive_target');
 const validation = validateFixtureSet([fixture], profile);
 assert.equal(validation.valid, false); // insufficient count

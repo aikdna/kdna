@@ -17,6 +17,9 @@ const {
   generateEvidenceClaim,
 } = require('../src/assay');
 
+const fixture = (category, task, expected = { answer: 'expected' }) =>
+  createFixture({ category, task, expected });
+
 // ── Profile ───────────────────────────────────────────────────────────
 
 it('creates assay profile with defaults', () => {
@@ -37,6 +40,27 @@ it('creates assay profile with custom thresholds', () => {
   assert.strictEqual(profile.thresholds.blind_mean_improvement_min, 1.0);
   // Unspecified thresholds retain defaults
   assert.strictEqual(profile.thresholds.non_applicable_accuracy_min, 0.90);
+});
+
+it('rejects missing profile options and invalid threshold domains', () => {
+  assert.strictEqual(createAssayProfile().asset_id, 'unknown');
+  assert.throws(() => createAssayProfile({ assetId: '' }), /assetId/);
+  assert.throws(
+    () => createAssayProfile({ assetId: 'x', thresholds: { non_applicable_accuracy_min: 1.1 } }),
+    /must be <= 1/,
+  );
+  assert.throws(
+    () => createAssayProfile({ assetId: 'x', thresholds: { regression_min_count: 1.5 } }),
+    /must be an integer/,
+  );
+  assert.throws(
+    () => createAssayProfile({ assetId: 'x', thresholds: { holdout_required: 'yes' } }),
+    /must be a boolean/,
+  );
+  assert.throws(
+    () => createAssayProfile({ assetId: 'x', thresholds: { misspelled_threshold: 1 } }),
+    /not supported/,
+  );
 });
 
 // ── Fixture Categories ────────────────────────────────────────────────
@@ -64,32 +88,44 @@ it('CLASSIFICATION_LEVELS includes all 6 levels', () => {
 // ── Create Fixture ────────────────────────────────────────────────────
 
 it('creates a valid fixture', () => {
-  const f = createFixture({ category: 'positive_target', task: 'Should we deploy this hotfix?' });
+  const f = fixture('positive_target', 'Should we deploy this hotfix?');
   assert.strictEqual(f.category, 'positive_target');
   assert.ok(f.fixture_id.startsWith('fixture_'));
   assert.ok(f.task_hash.startsWith('sha256:'));
 });
 
 it('createFixture rejects unknown category', () => {
-  assert.throws(() => createFixture({ category: 'invalid_category', task: 'test' }), /Unknown fixture category/);
+  assert.throws(() => createFixture({ category: 'invalid_category', task: 'test', expected: { answer: 'x' } }), /Unknown fixture category/);
 });
 
 it('createFixture generates unique fixture_ids', () => {
-  const f1 = createFixture({ category: 'positive_target', task: 'task A' });
-  const f2 = createFixture({ category: 'positive_target', task: 'task B' });
+  const f1 = fixture('positive_target', 'task A');
+  const f2 = fixture('positive_target', 'task B');
   assert.notStrictEqual(f1.fixture_id, f2.fixture_id);
+});
+
+it('createFixture requires explicit non-empty task and expected evidence', () => {
+  assert.throws(() => createFixture(), /options object/);
+  assert.throws(
+    () => createFixture({ category: 'positive_target', task: '', expected: { answer: 'x' } }),
+    /task must be a non-empty string/,
+  );
+  assert.throws(
+    () => createFixture({ category: 'positive_target', task: 'task', expected: {} }),
+    /expected must be a non-empty plain object/,
+  );
 });
 
 // ── Validate Fixture Set ──────────────────────────────────────────────
 
 it('validates a complete fixture set', () => {
   const fixtures = [
-    ...Array.from({ length: 8 }, (_, i) => createFixture({ category: 'positive_target', task: `task ${i}` })),
-    ...Array.from({ length: 4 }, (_, i) => createFixture({ category: 'non_applicable', task: `not-in-scope ${i}` })),
-    ...Array.from({ length: 4 }, (_, i) => createFixture({ category: 'adjacent_ambiguous', task: `borderline ${i}` })),
-    ...Array.from({ length: 2 }, (_, i) => createFixture({ category: 'high_risk_failure', task: `dangerous ${i}` })),
-    ...Array.from({ length: 2 }, (_, i) => createFixture({ category: 'regression', task: `regression ${i}` })),
-    ...Array.from({ length: 1 }, (_, i) => createFixture({ category: 'holdout', task: `holdout ${i}` })),
+    ...Array.from({ length: 8 }, (_, i) => fixture('positive_target', `task ${i}`)),
+    ...Array.from({ length: 4 }, (_, i) => fixture('non_applicable', `not-in-scope ${i}`)),
+    ...Array.from({ length: 4 }, (_, i) => fixture('adjacent_ambiguous', `borderline ${i}`)),
+    ...Array.from({ length: 2 }, (_, i) => fixture('high_risk_failure', `dangerous ${i}`)),
+    ...Array.from({ length: 2 }, (_, i) => fixture('regression', `regression ${i}`)),
+    fixture('holdout', 'holdout 0'),
   ];
   const profile = createAssayProfile({ assetId: 'test.kdna' });
   const result = validateFixtureSet(fixtures, profile);
@@ -101,7 +137,7 @@ it('validates a complete fixture set', () => {
 
 it('rejects insufficient fixture counts', () => {
   const fixtures = [
-    createFixture({ category: 'positive_target', task: 'only one task' }),
+    fixture('positive_target', 'only one task'),
   ];
   const profile = createAssayProfile({ assetId: 'test.kdna' });
   const result = validateFixtureSet(fixtures, profile);
@@ -111,16 +147,78 @@ it('rejects insufficient fixture counts', () => {
 
 it('rejects missing holdout when required', () => {
   const fixtures = [
-    ...Array.from({ length: 8 }, (_, i) => createFixture({ category: 'positive_target', task: `task ${i}` })),
-    ...Array.from({ length: 4 }, (_, i) => createFixture({ category: 'non_applicable', task: `na ${i}` })),
-    ...Array.from({ length: 4 }, (_, i) => createFixture({ category: 'adjacent_ambiguous', task: `adj ${i}` })),
-    ...Array.from({ length: 2 }, (_, i) => createFixture({ category: 'high_risk_failure', task: `hr ${i}` })),
-    ...Array.from({ length: 2 }, (_, i) => createFixture({ category: 'regression', task: `reg ${i}` })),
+    ...Array.from({ length: 8 }, (_, i) => fixture('positive_target', `task ${i}`)),
+    ...Array.from({ length: 4 }, (_, i) => fixture('non_applicable', `na ${i}`)),
+    ...Array.from({ length: 4 }, (_, i) => fixture('adjacent_ambiguous', `adj ${i}`)),
+    ...Array.from({ length: 2 }, (_, i) => fixture('high_risk_failure', `hr ${i}`)),
+    ...Array.from({ length: 2 }, (_, i) => fixture('regression', `reg ${i}`)),
   ];
   const profile = createAssayProfile({ assetId: 'test.kdna' });
   const result = validateFixtureSet(fixtures, profile);
   assert.strictEqual(result.valid, false);
   assert.ok(result.errors.some(e => e.includes('holdout')));
+});
+
+it('fails closed without invoking the runner for insufficient fixture evidence', async () => {
+  const profile = createAssayProfile({ assetId: 'test.kdna' });
+  let calls = 0;
+  const report = await runAssay({
+    profile,
+    fixtures: [fixture('positive_target', 'insufficient')],
+    runner: async () => { calls++; return { answer: 'should not run' }; },
+  });
+  assert.strictEqual(calls, 0);
+  assert.strictEqual(report.overall_verdict, 'fail');
+  assert.deepStrictEqual(report.failed_thresholds, ['fixture_dataset']);
+  assert.strictEqual(report.result_count, 0);
+});
+
+it('fails closed without invoking the runner for malformed or duplicate fixtures', async () => {
+  const profile = createAssayProfile({
+    assetId: 'test.kdna',
+    thresholds: {
+      positive_target_min_count: 0,
+      non_applicable_min_count: 0,
+      adjacent_ambiguous_min_count: 0,
+      high_risk_failure_min_count: 0,
+      regression_min_count: 0,
+      holdout_required: false,
+    },
+  });
+  const valid = fixture('positive_target', 'valid');
+  const datasets = [
+    [],
+    [{ ...valid, task: '' }],
+    [{ ...valid, expected: {} }],
+    [valid, { ...valid, task: 'duplicate id' }],
+    [valid, { ...valid, fixture_id: 'different-id' }],
+  ];
+  for (const fixtures of datasets) {
+    let calls = 0;
+    const report = await runAssay({
+      profile,
+      fixtures,
+      runner: async () => { calls++; return { answer: 'should not run' }; },
+    });
+    assert.strictEqual(calls, 0);
+    assert.strictEqual(report.overall_verdict, 'fail');
+    assert.strictEqual(report.fixture_validation.valid, false);
+  }
+});
+
+it('fails closed without invoking the runner for an externally malformed profile', async () => {
+  const profile = createAssayProfile({ assetId: 'test.kdna' });
+  profile.thresholds.harmful_contamination_max = -1;
+  let calls = 0;
+  await assert.rejects(
+    runAssay({
+      profile,
+      fixtures: [fixture('positive_target', 'valid')],
+      runner: async () => { calls++; return { answer: 'should not run' }; },
+    }),
+    /Invalid assay profile.*harmful_contamination_max/,
+  );
+  assert.strictEqual(calls, 0);
 });
 
 // ── Baseline Arms ─────────────────────────────────────────────────────
@@ -189,7 +287,7 @@ it('behavioral gate accepts a 30% critical-error reduction when mean scores tie'
       regression_pass_required: false,
     },
   });
-  const fixtures = [createFixture({ category: 'positive_target', task: 'test', expected: {} })];
+  const fixtures = [fixture('positive_target', 'test')];
   const assay = await runAssay({
     profile,
     fixtures,

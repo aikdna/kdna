@@ -31,10 +31,31 @@ const CANONICAL_MANIFEST = {
 // ── Fixtures ──────────────────────────────────────────────────────────
 
 it('creates cluster fixture with required fields', () => {
-  const f = createClusterFixture({ task: 'Deploy to production?', taskFamily: 'deploy', category: 'target' });
+  const f = createClusterFixture({
+    task: 'Deploy to production?',
+    taskFamily: 'deploy',
+    category: 'target',
+    expectedPrimary: '@aikdna/dev-change-risk',
+  });
   assert.ok(f.fixture_id.startsWith('cfix_'));
   assert.ok(f.task_hash.startsWith('sha256:'));
   assert.strictEqual(f.category, 'target');
+});
+
+it('createClusterFixture requires explicit structural evidence', () => {
+  assert.throws(() => createClusterFixture(), /options object/);
+  assert.throws(
+    () => createClusterFixture({ task: '', expectedPrimary: '@aikdna/primary' }),
+    /task must be a non-empty string/,
+  );
+  assert.throws(
+    () => createClusterFixture({ task: 'task', expectedPrimary: '' }),
+    /expectedPrimary must be a non-empty string/,
+  );
+  assert.throws(
+    () => createClusterFixture({ task: 'task', expectedPrimary: '@aikdna/primary', expectedConflicts: -1 }),
+    /expectedConflicts must be a non-negative integer/,
+  );
 });
 
 // ── Gates ─────────────────────────────────────────────────────────────
@@ -149,7 +170,7 @@ it('runs full cluster assay with valid plan', () => {
     manifest: CANONICAL_MANIFEST,
     plan,
     executionCost: { tokens_used: 500 },
-    fixtures: [createClusterFixture({ task: 'test' })],
+    fixtures: [createClusterFixture({ task: 'test', expectedPrimary: '@aikdna/dev-change-risk' })],
   });
   assert.ok(result.verdict);
   assert.ok(result.gates.structural);
@@ -158,6 +179,7 @@ it('runs full cluster assay with valid plan', () => {
   assert.ok(result.gates.product);
   assert.strictEqual(result.cluster_id, '@aikdna/launch-decision');
   assert.strictEqual(result.fixture_count, 1);
+  assert.strictEqual(result.fixture_validation.valid, true);
   assert.strictEqual(result.verdict.overall, 'fail');
   assert.strictEqual(result.verdict.all_passed, false);
   assert.ok(result.verdict.incomplete_gates.includes('behavioral'));
@@ -207,6 +229,22 @@ it('ledger with human decisions updates correctly', () => {
   assert.strictEqual(ledger.summary.pending_review_count, 0);
 });
 
+it('advisor ledger rejects non-string cluster and asset identifiers', () => {
+  assert.throws(
+    () => createAdvisorRelationLedger({ cluster_ref: { cluster_id: 42 } }),
+    /cluster_id must be a non-empty string/,
+  );
+  assert.throws(
+    () => createAdvisorRelationLedger({ selection: { primary: { asset_id: 42 } } }),
+    /primary.asset_id must be a non-empty string/,
+  );
+  assert.throws(
+    () => createAdvisorRelationLedger({ selection: { advisors: [{ asset_id: 42 }] } }),
+    /advisors\[0\].asset_id must be a non-empty string/,
+  );
+  assert.throws(() => recordAdvisorDecision(42, 'approved'), /assetId must be a non-empty string/);
+});
+
 // ── Constants ─────────────────────────────────────────────────────────
 
 it('CLUSTER_COMPARISON_ARMS has 7 arms', () => {
@@ -227,12 +265,89 @@ it('cluster replay runs all 5 suites', () => {
   const { createReplayEngine } = require('../src/replay');
   const engine = createReplayEngine();
   const fixtures = [
-    createClusterFixture({ task: 'task A' }),
-    createClusterFixture({ task: 'task B' }),
+    createClusterFixture({ task: 'task A', expectedPrimary: '@aikdna/primary' }),
+    createClusterFixture({ task: 'task B', expectedPrimary: '@aikdna/primary' }),
   ];
   const results = runClusterReplay(engine, fixtures, { clusterId: '@aikdna/test' });
   assert.strictEqual(Object.keys(results).length, 5);
   assert.ok(results.repair);
+});
+
+it('cluster replay rejects invalid evidence before invoking the engine', () => {
+  let calls = 0;
+  const engine = { replayRun: () => { calls++; return { results: [] }; } };
+  const fixture = createClusterFixture({ task: 'task', expectedPrimary: '@aikdna/primary' });
+  for (const fixtures of [
+    [],
+    [{ ...fixture, task: '' }],
+    [fixture, { ...fixture, task: 'duplicate' }],
+    [fixture, { ...fixture, fixture_id: 'different-id' }],
+  ]) {
+    const results = runClusterReplay(engine, fixtures);
+    assert.strictEqual(calls, 0);
+    assert.ok(Object.values(results).every(result => result.status === 'failed'));
+  }
+});
+
+it('cluster replay requires complete explicit boolean pass evidence', () => {
+  const fixtures = [
+    createClusterFixture({ task: 'task A', expectedPrimary: '@aikdna/primary' }),
+    createClusterFixture({ task: 'task B', expectedPrimary: '@aikdna/primary' }),
+  ];
+  const incompleteEngine = {
+    replayRun: () => ({
+      results: fixtures.map(fixture => ({ id: fixture.fixture_id, score: 100 })),
+    }),
+  };
+  const incomplete = runClusterReplay(incompleteEngine, fixtures);
+  assert.ok(Object.values(incomplete).every(result => result.status === 'failed'));
+
+  const explicitEngine = {
+    replayRun: () => ({
+      results: fixtures.map((fixture, index) => ({ id: fixture.fixture_id, pass: index === 0 })),
+    }),
+  };
+  const explicit = runClusterReplay(explicitEngine, fixtures);
+  assert.ok(Object.values(explicit).every(result => result.status === 'completed'));
+  assert.ok(Object.values(explicit).every(result => result.passed === 1 && result.failed === 1));
+});
+
+it('official replay engine cannot synthesize a cluster pass without observed pass evidence', () => {
+  const { createReplayEngine } = require('../src/replay');
+  const fixture = createClusterFixture({ task: 'task', expectedPrimary: '@aikdna/primary' });
+  const results = runClusterReplay(createReplayEngine(), [fixture]);
+  assert.ok(Object.values(results).every(result => result.status === 'failed'));
+  assert.ok(Object.values(results).every(result => result.passed === undefined));
+});
+
+it('cluster assay cannot pass with zero, malformed, or duplicate fixtures', () => {
+  const plan = {
+    applicability: { decision: 'applies' },
+    selection: { primary: { asset_id: '@aikdna/primary' }, advisors: [], rejected: [] },
+    budget: { max_tokens: 800, assets_consumed: 1 },
+  };
+  const options = {
+    manifest: CANONICAL_MANIFEST,
+    plan,
+    executionCost: { tokens_used: 400 },
+    comparisonArms: [
+      { arm: 'primary_only', mean_score: 3 },
+      { arm: 'bounded_compose', mean_score: 4 },
+    ],
+    assetsLoaded: [{ asset_id: '@aikdna/primary', role: 'primary', digest_verified: true, authorization: 'public' }],
+  };
+  const fixture = createClusterFixture({ task: 'task', expectedPrimary: '@aikdna/primary' });
+  for (const fixtures of [
+    [],
+    [{ ...fixture, expected_primary: '' }],
+    [fixture, { ...fixture, task: 'duplicate' }],
+    [fixture, { ...fixture, fixture_id: 'different-id' }],
+  ]) {
+    const report = runClusterAssay({ ...options, fixtures });
+    assert.strictEqual(report.verdict.overall, 'fail');
+    assert.strictEqual(report.verdict.all_passed, false);
+    assert.deepStrictEqual(report.verdict.failed_evidence, ['fixture_dataset']);
+  }
 });
 
 console.log('cluster-assay.test.js: all tests complete');

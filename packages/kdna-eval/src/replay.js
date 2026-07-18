@@ -37,7 +37,7 @@ function createReplayEngine(options) {
         inputHash,
         results: [],
         regressionFlags: [],
-        summary: { total: 0, passed: 0, failed: 0, regressions: 0 },
+        summary: { total: 0, passed: 0, failed: 0, incomplete: 0, regressions: 0 },
       };
     }
 
@@ -58,8 +58,9 @@ function createReplayEngine(options) {
       regressionFlags,
       summary: {
         total: results.length,
-        passed: results.filter((r) => r.pass !== false).length,
-        failed: results.filter((r) => r.pass === false).length,
+        passed: results.filter((r) => r.pass === true).length,
+        failed: results.filter((r) => r.pass !== true).length,
+        incomplete: results.filter((r) => typeof r.pass !== "boolean").length,
         regressions: regressionFlags.length,
       },
     };
@@ -137,7 +138,9 @@ function createReplayEngine(options) {
 function defaultEvaluate(fixture, policy, mode, previousRun) {
   const id = fixture.id ?? fixture.input?.id ?? `fixture-${Math.random().toString(36).slice(2, 7)}`;
   const score = fixture.score ?? fixture.expected?.score ?? 50;
-  const pass = fixture.pass ?? fixture.expected?.pass ?? true;
+  const pass = typeof fixture.pass === "boolean"
+    ? fixture.pass
+    : (typeof fixture.expected?.pass === "boolean" ? fixture.expected.pass : undefined);
 
   return {
     id,

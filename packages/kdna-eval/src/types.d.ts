@@ -202,7 +202,7 @@ export interface ReplayRun extends ReplayComparableRun {
   timestamp: string;
   inputHash: string;
   regressionFlags: ReplayRegressionFlag[];
-  summary: { total: number; passed: number; failed: number; regressions: number };
+  summary: { total: number; passed: number; failed: number; incomplete: number; regressions: number };
 }
 
 export interface ReplayRunOptions {
@@ -469,8 +469,49 @@ export interface AssayFixture {
   fixture_id: string;
   category: AssayFixtureCategory;
   task: string;
-  expected?: Record<string, unknown>;
+  expected: Record<string, unknown>;
   [key: string]: unknown;
+}
+
+export interface AssayThresholds {
+  positive_target_min_count: number;
+  non_applicable_min_count: number;
+  adjacent_ambiguous_min_count: number;
+  high_risk_failure_min_count: number;
+  regression_min_count: number;
+  holdout_required: boolean;
+  blind_mean_improvement_min: number;
+  critical_error_reduction_pct: number;
+  non_applicable_accuracy_min: number;
+  harmful_contamination_max: number;
+  high_risk_harm_zero: boolean;
+  regression_pass_required: boolean;
+  min_model_runtime_combinations: number;
+  human_review_required: boolean;
+  structural_gate: boolean;
+  behavioral_gate: boolean;
+  boundary_gate: boolean;
+  contamination_gate: boolean;
+  trust_gate: boolean;
+  economics_gate: boolean;
+  interoperability_gate: boolean;
+  product_gate: boolean;
+}
+
+export type AssayThresholdOverrides = Partial<AssayThresholds>;
+
+export interface CreateAssayProfileOptions {
+  assetId?: string;
+  assetVersion?: string;
+  assetDigest?: string | null;
+  thresholds?: AssayThresholdOverrides;
+}
+
+export interface CreateAssayFixtureOptions {
+  category: AssayFixtureCategory;
+  task: string;
+  expected: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface AssayArmDefinition {
@@ -482,14 +523,22 @@ export interface AssayProfile {
   asset_id: string;
   asset_version: string;
   asset_digest: string | null;
-  thresholds: Record<string, number | boolean>;
+  thresholds: AssayThresholds;
   [key: string]: unknown;
 }
 
 export interface AssayReport {
   assay_version: string;
   profile: AssayProfile;
-  fixture_validation: { valid: boolean; errors?: string[]; summary?: Record<string, number> };
+  fixture_validation: {
+    valid: boolean;
+    errors: string[];
+    summary: {
+      total: number;
+      by_category: Record<AssayFixtureCategory, number>;
+      required_met: boolean;
+    };
+  };
   results_by_arm: Record<string, { count: number; mean_score: number; errors: number }>;
   results: unknown[];
   result_count: number;
@@ -512,6 +561,7 @@ export interface ClusterAssayReport {
   cluster_id: string;
   cluster_version: string;
   fixture_count: number;
+  fixture_validation: { valid: boolean; total: number; errors: string[] };
   gates: Record<string, ClusterAssayGate>;
   verdict: {
     overall: "pass" | "fail";
@@ -521,6 +571,7 @@ export interface ClusterAssayReport {
     all_passed: boolean;
     failed_gates: string[];
     incomplete_gates: string[];
+    failed_evidence: string[];
   };
   comparison_arms: unknown[];
   marginal_value: Record<string, unknown>;
@@ -560,8 +611,47 @@ export interface AdvisorRelationLedger {
 }
 
 export interface ClusterReplayFixture {
-  fixture_id?: string;
-  task?: unknown;
+  fixture_id: string;
+  task: string;
+  expected_primary: string;
+  expected_advisors: string[];
+  expected_rejected: string[];
+  expected_conflicts: number;
+  [key: string]: unknown;
+}
+
+export interface CreateClusterFixtureOptions {
+  task: string;
+  expectedPrimary: string;
+  taskFamily?: string;
+  expectedAdvisors?: string[];
+  expectedRejected?: string[];
+  expectedConflicts?: number;
+  category?: string;
+}
+
+export interface ClusterAssayOptions {
+  manifest?: Record<string, unknown>;
+  plan?: Record<string, unknown>;
+  executionCost?: Record<string, unknown>;
+  comparisonArms?: Array<Record<string, unknown>>;
+  fixtures: ClusterReplayFixture[];
+  assetsLoaded?: Array<Record<string, unknown>>;
+}
+
+export interface AdvisorRelationAsset {
+  asset_id: string;
+  [key: string]: unknown;
+}
+
+export interface AdvisorRelationPlan {
+  cluster_ref?: { cluster_id: string; [key: string]: unknown };
+  selection?: {
+    primary?: AdvisorRelationAsset | null;
+    advisors?: AdvisorRelationAsset[];
+    rejected?: AdvisorRelationAsset[];
+    [key: string]: unknown;
+  };
   [key: string]: unknown;
 }
 
@@ -577,9 +667,17 @@ export interface ClusterReplaySuiteResult {
 export declare const FIXTURE_CATEGORIES: readonly AssayFixtureCategory[];
 export declare const BASELINE_ARMS: readonly AssayBaselineArm[];
 export declare const CLASSIFICATION_LEVELS: readonly string[];
-export declare function createAssayProfile(options?: Record<string, unknown>): AssayProfile;
-export declare function validateFixtureSet(fixtures: AssayFixture[], profile: AssayProfile): { valid: boolean; errors: string[]; summary: Record<string, number> };
-export declare function createFixture(options?: Record<string, unknown>): AssayFixture;
+export declare function createAssayProfile(options?: CreateAssayProfileOptions): AssayProfile;
+export declare function validateFixtureSet(fixtures: AssayFixture[], profile: AssayProfile): {
+  valid: boolean;
+  errors: string[];
+  summary: {
+    total: number;
+    by_category: Record<AssayFixtureCategory, number>;
+    required_met: boolean;
+  };
+};
+export declare function createFixture(options: CreateAssayFixtureOptions): AssayFixture;
 export declare function createAllBaselineArms(): AssayArmDefinition[];
 export declare function createBaselineArm(arm: AssayBaselineArm, config?: Record<string, unknown>): AssayArmDefinition;
 export declare function scoreJudgment(result: Record<string, unknown>, expected?: Record<string, unknown>, criteria?: Record<string, unknown>): Record<string, unknown> & { score: number };
@@ -599,15 +697,15 @@ export declare function generateEvidenceClaim(report: AssayReport, options?: Rec
 export declare const CLUSTER_COMPARISON_ARMS: readonly string[];
 export declare const CLUSTER_GATES: readonly string[];
 export declare const COMPARISON_ARM_DESCRIPTIONS: Readonly<Record<string, string>>;
-export declare function createClusterFixture(options?: Record<string, unknown>): Record<string, unknown>;
+export declare function createClusterFixture(options: CreateClusterFixtureOptions): ClusterReplayFixture;
 export declare function structuralGate(plan: Record<string, unknown> | null): ClusterAssayGate;
 export declare function behavioralGate(clusterResults?: Record<string, unknown> | null, primaryOnlyResults?: Record<string, unknown> | null): ClusterAssayGate;
 export declare function economicsGate(plan?: Record<string, unknown> | null, executionCost?: Record<string, unknown>): ClusterAssayGate;
 export declare function trustGate(assetsLoaded?: Array<Record<string, unknown>> | null): ClusterAssayGate;
 export declare function productGate(plan?: Record<string, unknown> | null, manifest?: Record<string, unknown>): ClusterAssayGate;
-export declare function runClusterAssay(options?: Record<string, unknown>): ClusterAssayReport;
+export declare function runClusterAssay(options: ClusterAssayOptions): ClusterAssayReport;
 export declare function createAdvisorRelationLedger(
-  plan?: Record<string, unknown> | null,
+  plan?: AdvisorRelationPlan | null,
   decisions?: readonly AdvisorDecision[],
 ): AdvisorRelationLedger;
 export declare function recordAdvisorDecision(
