@@ -69,6 +69,25 @@ test("replayRun executes fixtures and produces results", () => {
   assert.equal(run.summary.failed, 0);
 });
 
+test("replayRun replaces numeric and empty IDs with stable strings", () => {
+  const fixtures = [
+    { input: { id: 42 }, pass: true },
+    { id: "", pass: true },
+    { input: { id: "input-id" }, pass: true },
+  ];
+  const engine = createReplayEngine();
+  const first = engine.replayRun("fresh", { fixtures });
+  const second = engine.replayRun("fresh", { fixtures });
+  assert.deepEqual(
+    first.results.map((result) => result.id),
+    second.results.map((result) => result.id),
+  );
+  assert.ok(first.results.every((result) => typeof result.id === "string" && result.id.length > 0));
+  assert.notEqual(first.results[0].id, 42);
+  assert.notEqual(first.results[1].id, "");
+  assert.equal(first.results[2].id, "input-id");
+});
+
 test("replayRun detects failed fixtures", () => {
   const fixtures = [
     { id: "f1", score: 40, pass: false },
@@ -110,6 +129,27 @@ test("custom replay evaluation also counts only pass === true", () => {
     }),
   });
   assert.deepEqual(run.summary, { total: 3, passed: 1, failed: 2, incomplete: 1, regressions: 0 });
+});
+
+test("custom replay evaluation fails closed on malformed strong results", () => {
+  const engine = createReplayEngine();
+  const run = engine.replayRun("fresh", {
+    fixtures: [{ id: "numeric" }, { id: "null" }, { id: "bad-pass" }, { id: "accessor" }],
+    evaluate: (fixture) => {
+      if (fixture.id === "numeric") return { id: 42, pass: true };
+      if (fixture.id === "null") return null;
+      if (fixture.id === "bad-pass") return { id: "valid-id", pass: "true" };
+      const result = { pass: true };
+      Object.defineProperty(result, "id", {
+        enumerable: true,
+        get() { throw new Error("hostile result"); },
+      });
+      return result;
+    },
+  });
+  assert.deepEqual(run.summary, { total: 4, passed: 0, failed: 4, incomplete: 4, regressions: 0 });
+  assert.ok(run.results.every((result) => typeof result.id === "string" && result.id.length > 0));
+  assert.ok(run.results.every((result) => result.details.status === "invalid_result"));
 });
 
 test("replayRun with custom evaluate function uses it", () => {

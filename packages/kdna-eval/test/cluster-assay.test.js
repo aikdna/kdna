@@ -1,5 +1,6 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
+const BLOCKED_CLUSTER_PLAN = require('../../../conformance/ecosystem-profile-0.9/golden/cluster-blocked-plan.json');
 const {
   CLUSTER_COMPARISON_ARMS,
   CLUSTER_GATES,
@@ -16,49 +17,86 @@ const {
 } = require('../src/cluster-assay');
 
 const CANONICAL_MANIFEST = {
-  format: 'kdna-cluster', format_version: '0.9.0',
-  cluster_id: '@aikdna/launch-decision', name: 'Launch Decision', version: '0.1.0',
+  format: 'kdna-cluster',
+  format_version: '0.9.0',
+  cluster_id: '@aikdna/launch-decision',
+  name: 'Launch Decision',
+  version: '0.1.0',
   description: 'Coordinates deploy-risk and API-design judgments.',
-  type: 'vertical', status: 'draft',
+  type: 'vertical',
+  status: 'draft',
   domains: [
-    { id: '@aikdna/dev-change-risk', version: '^0.1.0', role: 'primary-candidate', required: true, load_condition: 'Task involves a deploy decision.' },
-    { id: '@aikdna/dev-api-design', version: '^0.1.0', role: 'advisor', required: false, load_condition: 'Task introduces new API.', contribution_hypothesis_template: 'API design dimension beyond deploy risk.' },
+    {
+      id: '@aikdna/dev-change-risk',
+      version: '^0.1.0',
+      role: 'primary-candidate',
+      required: true,
+      load_condition: 'Task involves a deploy decision.',
+    },
+    {
+      id: '@aikdna/dev-api-design',
+      version: '^0.1.0',
+      role: 'advisor',
+      required: false,
+      load_condition: 'Task introduces new API.',
+      contribution_hypothesis_template: 'API design dimension beyond deploy risk.',
+    },
   ],
-  composition: { strategy: 'signal_based', max_active_domains: 3, conflict_policy: 'surface', primary_selection: 'exactly_one', advisor_selection: 'contribution_hypothesis_required' },
+  composition: {
+    strategy: 'signal_based',
+    max_active_domains: 3,
+    conflict_policy: 'surface',
+    primary_selection: 'exactly_one',
+    advisor_selection: 'contribution_hypothesis_required',
+  },
   budget: { profile: 'interactive', max_tokens: 800, max_assets: 3 },
 };
 
 function passingClusterOptions() {
-  const fixtures = [createClusterFixture({
-    task: 'Bound Cluster evidence?',
-    expectedPrimary: '@aikdna/dev-change-risk',
-    expectedAdvisors: ['@aikdna/dev-api-design'],
-    expectedRejected: ['@aikdna/irrelevant'],
-    expectedConflicts: 1,
-  })];
+  const fixtures = [
+    createClusterFixture({
+      task: 'Bound Cluster evidence?',
+      expectedPrimary: '@aikdna/dev-change-risk',
+      expectedAdvisors: ['@aikdna/dev-api-design'],
+      expectedRejected: ['@aikdna/irrelevant'],
+      expectedConflicts: 1,
+    }),
+  ];
   const plan = {
     applicability: { decision: 'applies' },
     selection: {
       primary: { asset_id: '@aikdna/dev-change-risk', selection_reason: 'only primary' },
-      advisors: [{
-        asset_id: '@aikdna/dev-api-design',
-        contribution_hypothesis: 'API design review for PATCH semantics',
-      }],
+      advisors: [
+        {
+          asset_id: '@aikdna/dev-api-design',
+          contribution_hypothesis: 'API design review for PATCH semantics',
+        },
+      ],
       rejected: [{ asset_id: '@aikdna/irrelevant', rejection_reason: 'no task match' }],
     },
     conflicts: [{ conflict_id: 'conflict-1' }],
     budget: { profile: 'interactive', max_tokens: 800, max_assets: 3, assets_consumed: 2 },
   };
-  const comparisonArms = CLUSTER_COMPARISON_ARMS.map(arm => ({
+  const comparisonArms = CLUSTER_COMPARISON_ARMS.map((arm) => ({
     arm,
-    fixture_ids: fixtures.map(fixture => fixture.fixture_id),
-    mean_score: arm === 'bounded_compose' ? 4 : (arm === 'primary_only' ? 3 : 3.2),
+    fixture_ids: fixtures.map((fixture) => fixture.fixture_id),
+    mean_score: arm === 'bounded_compose' ? 4 : arm === 'primary_only' ? 3 : 3.2,
     result_count: fixtures.length,
     critical_errors: 0,
   }));
   const assetsLoaded = [
-    { asset_id: '@aikdna/dev-change-risk', role: 'primary', digest_verified: true, authorization: 'public' },
-    { asset_id: '@aikdna/dev-api-design', role: 'advisor', digest_verified: true, authorization: 'public' },
+    {
+      asset_id: '@aikdna/dev-change-risk',
+      role: 'primary',
+      digest_verified: true,
+      authorization: 'public',
+    },
+    {
+      asset_id: '@aikdna/dev-api-design',
+      role: 'advisor',
+      digest_verified: true,
+      authorization: 'public',
+    },
   ];
   return {
     manifest: CANONICAL_MANIFEST,
@@ -95,7 +133,12 @@ it('createClusterFixture requires explicit structural evidence', () => {
     /expectedPrimary must be a non-empty string/,
   );
   assert.throws(
-    () => createClusterFixture({ task: 'task', expectedPrimary: '@aikdna/primary', expectedConflicts: -1 }),
+    () =>
+      createClusterFixture({
+        task: 'task',
+        expectedPrimary: '@aikdna/primary',
+        expectedConflicts: -1,
+      }),
     /expectedConflicts must be a non-negative integer/,
   );
 });
@@ -107,7 +150,12 @@ it('structural gate passes for valid plan', () => {
     applicability: { decision: 'applies' },
     selection: {
       primary: { asset_id: '@aikdna/dev-change-risk', weight: 1 },
-      advisors: [{ asset_id: '@aikdna/dev-api-design', contribution_hypothesis: 'API design review — PATCH semantics validation' }],
+      advisors: [
+        {
+          asset_id: '@aikdna/dev-api-design',
+          contribution_hypothesis: 'API design review — PATCH semantics validation',
+        },
+      ],
       rejected: [{ asset_id: '@aikdna/irrelevant', rejection_reason: 'no match' }],
     },
     conflicts: [],
@@ -123,8 +171,9 @@ it('structural gate fails without primary', () => {
 });
 
 it('structural gate fails blocked applicability', () => {
-  const g = structuralGate({ applicability: { decision: 'blocked' } });
+  const g = structuralGate(BLOCKED_CLUSTER_PLAN);
   assert.strictEqual(g.pass, false);
+  assert.strictEqual(g.details.status, 'blocked');
 });
 
 it('behavioral gate returns not_run without data', () => {
@@ -144,16 +193,43 @@ it('behavioral gate fails with insufficient improvement', () => {
   assert.strictEqual(g.pass, false);
 });
 
+it('behavioral gate rejects coercible and hostile comparison evidence', () => {
+  const cases = [
+    [{ mean_score: '4' }, { mean_score: '3' }],
+    [{ mean_score: 4 }, { mean_score: Number.NaN }],
+    [42, { mean_score: 3 }],
+  ];
+  const accessor = {};
+  Object.defineProperty(accessor, 'mean_score', { enumerable: true, get() { throw new Error('no'); } });
+  cases.push([accessor, { mean_score: 3 }]);
+
+  for (const [cluster, primary] of cases) {
+    let result;
+    assert.doesNotThrow(() => { result = behavioralGate(cluster, primary); });
+    assert.strictEqual(result.pass, false);
+    assert.strictEqual(result.details.status, 'invalid_evidence');
+  }
+});
+
 it('economics gate passes within budget', () => {
-  const plan = { selection: { advisors: [] }, budget: { max_tokens: 800, assets_consumed: 1 } };
-  const g = economicsGate(plan, { tokens_used: 400 });
+  const { plan } = passingClusterOptions();
+  const g = economicsGate(plan, { tokens_used: 400, model_calls: 1 });
   assert.strictEqual(g.pass, true);
 });
 
 it('economics gate fails over budget', () => {
-  const plan = { selection: { advisors: [{ id: 'a1' }] }, budget: { max_tokens: 800, assets_consumed: 2 } };
-  const g = economicsGate(plan, { tokens_used: 1200 });
+  const { plan } = passingClusterOptions();
+  const g = economicsGate(plan, { tokens_used: 1200, model_calls: 1 });
   assert.strictEqual(g.pass, false);
+});
+
+it('standalone economics gate fails closed without explicit evidence', () => {
+  assert.strictEqual(economicsGate().pass, false);
+  assert.strictEqual(economicsGate({}, {}).pass, false);
+  assert.strictEqual(
+    economicsGate(BLOCKED_CLUSTER_PLAN, { tokens_used: 0, model_calls: 0 }).pass,
+    false,
+  );
 });
 
 it('trust gate passes with verified assets', () => {
@@ -166,7 +242,9 @@ it('trust gate passes with verified assets', () => {
 });
 
 it('trust gate fails with unverified primary', () => {
-  const assets = [{ asset_id: 'a', role: 'primary', digest_verified: false, authorization: 'public' }];
+  const assets = [
+    { asset_id: 'a', role: 'primary', digest_verified: false, authorization: 'public' },
+  ];
   const g = trustGate(assets);
   assert.strictEqual(g.pass, false);
 });
@@ -195,6 +273,25 @@ it('product gate fails with TODO description', () => {
   assert.ok(g.issues.length > 0);
 });
 
+it('product gate rejects malformed and hostile manifest fields without throwing', () => {
+  const cases = [
+    { ...CANONICAL_MANIFEST, composition: { strategy: 42 } },
+    { ...CANONICAL_MANIFEST, domains: [{ load_condition: 42 }, { load_condition: 'valid' }] },
+    'not-a-manifest',
+  ];
+  const accessor = {};
+  Object.defineProperty(accessor, 'description', { enumerable: true, get() { throw new Error('no'); } });
+  cases.push(accessor);
+
+  for (const manifest of cases) {
+    let result;
+    assert.doesNotThrow(() => { result = productGate({}, manifest); });
+    assert.strictEqual(result.pass, false);
+    assert.strictEqual(result.details.status, 'invalid_evidence');
+  }
+  assert.strictEqual(productGate('not-a-plan', CANONICAL_MANIFEST).pass, false);
+});
+
 // ── Full Assay ────────────────────────────────────────────────────────
 
 it('runs full cluster assay with valid plan', () => {
@@ -202,7 +299,13 @@ it('runs full cluster assay with valid plan', () => {
     applicability: { decision: 'applies' },
     selection: {
       primary: { asset_id: '@aikdna/dev-change-risk', weight: 1, selection_reason: 'only primary' },
-      advisors: [{ asset_id: '@aikdna/dev-api-design', contribution_hypothesis: 'API design review for PATCH semantics', accepted: true }],
+      advisors: [
+        {
+          asset_id: '@aikdna/dev-api-design',
+          contribution_hypothesis: 'API design review for PATCH semantics',
+          accepted: true,
+        },
+      ],
       rejected: [{ asset_id: '@aikdna/irrelevant', rejection_reason: 'no match' }],
     },
     budget: { profile: 'interactive', max_tokens: 800, assets_consumed: 2 },
@@ -233,8 +336,52 @@ it('passes only with a fully bound plan, fixtures, seven comparison arms, cost, 
   assert.strictEqual(result.verdict.overall, 'pass');
   assert.strictEqual(result.verdict.all_passed, true);
   assert.deepStrictEqual(result.verdict.failed_evidence, []);
-  assert.ok(Object.values(result.evidence_validation).every(validation => validation.valid));
-  assert.ok(result.comparison_arms.every(arm => arm.status === 'completed'));
+  assert.ok(Object.values(result.evidence_validation).every((validation) => validation.valid));
+  assert.ok(result.comparison_arms.every((arm) => arm.status === 'completed'));
+});
+
+it('accepts the canonical blocked plan as a valid diagnostic that can never pass', () => {
+  const options = passingClusterOptions();
+  options.plan = BLOCKED_CLUSTER_PLAN;
+  let result;
+  assert.doesNotThrow(() => {
+    result = runClusterAssay(options);
+  });
+
+  assert.strictEqual(result.plan_status, 'blocked');
+  assert.deepStrictEqual(result.evidence_validation.plan, {
+    valid: true,
+    executable: false,
+    status: 'blocked',
+    decision: 'blocked',
+    errors: [],
+  });
+  assert.strictEqual(result.verdict.overall, 'fail');
+  assert.strictEqual(result.verdict.all_passed, false);
+  assert.ok(!result.verdict.failed_evidence.includes('cluster_plan'));
+  assert.ok(Object.values(result.gates).every((gate) => gate.pass !== true));
+  assert.ok(Object.values(result.gates).every((gate) => gate.details.status === 'blocked'));
+  assert.ok(result.comparison_arms.every((arm) => arm.status === 'blocked'));
+});
+
+it('rejects blocked plans that contain a selection as malformed evidence', () => {
+  const options = passingClusterOptions();
+  options.plan = {
+    ...BLOCKED_CLUSTER_PLAN,
+    selection: { primary: { asset_id: 'must-not-execute' }, advisors: [], rejected: [] },
+  };
+  const result = runClusterAssay(options);
+  assert.strictEqual(result.plan_status, 'invalid');
+  assert.strictEqual(result.verdict.overall, 'fail');
+  assert.ok(result.verdict.failed_evidence.includes('cluster_plan'));
+});
+
+it('empty Cluster Assay calls remain compatible fail diagnostics', () => {
+  for (const result of [runClusterAssay(), runClusterAssay({})]) {
+    assert.strictEqual(result.verdict.overall, 'fail');
+    assert.strictEqual(result.verdict.all_passed, false);
+    assert.strictEqual(result.plan_status, 'invalid');
+  }
 });
 
 it('reproduced empty primary and loaded asset IDs can never pass', () => {
@@ -246,7 +393,9 @@ it('reproduced empty primary and loaded asset IDs can never pass', () => {
 
   const emptyLoadedId = passingClusterOptions();
   emptyLoadedId.assetsLoaded[0] = {
-    role: 'primary', digest_verified: true, authorization: 'public',
+    role: 'primary',
+    digest_verified: true,
+    authorization: 'public',
   };
   const emptyLoadedReport = runClusterAssay(emptyLoadedId);
   assert.strictEqual(emptyLoadedReport.verdict.overall, 'fail');
@@ -262,14 +411,20 @@ it('loaded assets bind exactly to selected primary, advisors, and rejected IDs',
   duplicate.assetsLoaded[1].asset_id = duplicate.assetsLoaded[0].asset_id;
   cases.push(duplicate);
   const absentPrimary = passingClusterOptions();
-  absentPrimary.assetsLoaded = absentPrimary.assetsLoaded.map(asset => ({ ...asset, role: 'advisor' }));
+  absentPrimary.assetsLoaded = absentPrimary.assetsLoaded.map((asset) => ({
+    ...asset,
+    role: 'advisor',
+  }));
   cases.push(absentPrimary);
   const missingAdvisor = passingClusterOptions();
   missingAdvisor.assetsLoaded = [missingAdvisor.assetsLoaded[0]];
   cases.push(missingAdvisor);
   const rejectedLoaded = passingClusterOptions();
   rejectedLoaded.assetsLoaded.push({
-    asset_id: '@aikdna/irrelevant', role: 'control', digest_verified: true, authorization: 'public',
+    asset_id: '@aikdna/irrelevant',
+    role: 'control',
+    digest_verified: true,
+    authorization: 'public',
   });
   cases.push(rejectedLoaded);
   const blocked = passingClusterOptions();
@@ -289,10 +444,18 @@ it('loaded assets bind exactly to selected primary, advisors, and rejected IDs',
 
 it('fixture expectations bind exact selected, rejected, and conflict evidence', () => {
   const mutations = [
-    fixture => { fixture.expected_primary = '@aikdna/other-primary'; },
-    fixture => { fixture.expected_advisors = []; },
-    fixture => { fixture.expected_rejected = []; },
-    fixture => { fixture.expected_conflicts = 0; },
+    (fixture) => {
+      fixture.expected_primary = '@aikdna/other-primary';
+    },
+    (fixture) => {
+      fixture.expected_advisors = [];
+    },
+    (fixture) => {
+      fixture.expected_rejected = [];
+    },
+    (fixture) => {
+      fixture.expected_conflicts = 0;
+    },
   ];
   for (const mutate of mutations) {
     const options = passingClusterOptions();
@@ -335,8 +498,11 @@ it('all seven comparison arms must be unique, finite, and bound to the exact fix
     assert.strictEqual(report.verdict.overall, 'fail');
     assert.ok(report.verdict.failed_evidence.includes('comparison_arms'));
     assert.strictEqual(report.gates.behavioral.pass, false);
-    assert.ok(report.comparison_arms.every(arm =>
-      arm.status === 'invalid' && arm.score === null && arm.fixture_ids.length === 0));
+    assert.ok(
+      report.comparison_arms.every(
+        (arm) => arm.status === 'invalid' && arm.score === null && arm.fixture_ids.length === 0,
+      ),
+    );
   }
 });
 
@@ -384,7 +550,13 @@ it('creates advisor relation ledger', () => {
     cluster_ref: { cluster_id: '@aikdna/test' },
     selection: {
       primary: { asset_id: '@aikdna/primary', selection_reason: 'only primary-candidate' },
-      advisors: [{ asset_id: '@aikdna/advisor1', contribution_hypothesis: 'API design review', accepted: true }],
+      advisors: [
+        {
+          asset_id: '@aikdna/advisor1',
+          contribution_hypothesis: 'API design review',
+          accepted: true,
+        },
+      ],
       rejected: [{ asset_id: '@aikdna/rejected1', rejection_reason: 'no match' }],
     },
   };
@@ -396,7 +568,10 @@ it('creates advisor relation ledger', () => {
 });
 
 it('records advisor decision', () => {
-  const d = recordAdvisorDecision('@aikdna/advisor1', 'approved', { notes: 'LGTM', reviewedBy: 'expert' });
+  const d = recordAdvisorDecision('@aikdna/advisor1', 'approved', {
+    notes: 'LGTM',
+    reviewedBy: 'expert',
+  });
   assert.strictEqual(d.decision, 'approved');
   assert.strictEqual(d.contribution_accepted, true);
 });
@@ -414,7 +589,9 @@ it('ledger with human decisions updates correctly', () => {
       rejected: [],
     },
   };
-  const decisions = [recordAdvisorDecision('@aikdna/advisor1', 'approved', { notes: 'Valid contribution' })];
+  const decisions = [
+    recordAdvisorDecision('@aikdna/advisor1', 'approved', { notes: 'Valid contribution' }),
+  ];
   const ledger = createAdvisorRelationLedger(plan, decisions);
   assert.strictEqual(ledger.summary.human_reviewed_count, 1);
   assert.strictEqual(ledger.summary.pending_review_count, 0);
@@ -466,7 +643,12 @@ it('cluster replay runs all 5 suites', () => {
 
 it('cluster replay rejects invalid evidence before invoking the engine', () => {
   let calls = 0;
-  const engine = { replayRun: () => { calls++; return { results: [] }; } };
+  const engine = {
+    replayRun: () => {
+      calls++;
+      return { results: [] };
+    },
+  };
   const fixture = createClusterFixture({ task: 'task', expectedPrimary: '@aikdna/primary' });
   for (const fixtures of [
     [],
@@ -476,7 +658,7 @@ it('cluster replay rejects invalid evidence before invoking the engine', () => {
   ]) {
     const results = runClusterReplay(engine, fixtures);
     assert.strictEqual(calls, 0);
-    assert.ok(Object.values(results).every(result => result.status === 'failed'));
+    assert.ok(Object.values(results).every((result) => result.status === 'failed'));
   }
 });
 
@@ -487,11 +669,11 @@ it('cluster replay requires complete explicit boolean pass evidence', () => {
   ];
   const incompleteEngine = {
     replayRun: () => ({
-      results: fixtures.map(fixture => ({ id: fixture.fixture_id, score: 100 })),
+      results: fixtures.map((fixture) => ({ id: fixture.fixture_id, score: 100 })),
     }),
   };
   const incomplete = runClusterReplay(incompleteEngine, fixtures);
-  assert.ok(Object.values(incomplete).every(result => result.status === 'failed'));
+  assert.ok(Object.values(incomplete).every((result) => result.status === 'failed'));
 
   const explicitEngine = {
     replayRun: () => ({
@@ -499,16 +681,16 @@ it('cluster replay requires complete explicit boolean pass evidence', () => {
     }),
   };
   const explicit = runClusterReplay(explicitEngine, fixtures);
-  assert.ok(Object.values(explicit).every(result => result.status === 'completed'));
-  assert.ok(Object.values(explicit).every(result => result.passed === 1 && result.failed === 1));
+  assert.ok(Object.values(explicit).every((result) => result.status === 'completed'));
+  assert.ok(Object.values(explicit).every((result) => result.passed === 1 && result.failed === 1));
 });
 
 it('official replay engine cannot synthesize a cluster pass without observed pass evidence', () => {
   const { createReplayEngine } = require('../src/replay');
   const fixture = createClusterFixture({ task: 'task', expectedPrimary: '@aikdna/primary' });
   const results = runClusterReplay(createReplayEngine(), [fixture]);
-  assert.ok(Object.values(results).every(result => result.status === 'failed'));
-  assert.ok(Object.values(results).every(result => result.passed === undefined));
+  assert.ok(Object.values(results).every((result) => result.status === 'failed'));
+  assert.ok(Object.values(results).every((result) => result.passed === undefined));
 });
 
 it('cluster assay cannot pass with zero, malformed, or duplicate fixtures', () => {
@@ -525,7 +707,14 @@ it('cluster assay cannot pass with zero, malformed, or duplicate fixtures', () =
       { arm: 'primary_only', mean_score: 3 },
       { arm: 'bounded_compose', mean_score: 4 },
     ],
-    assetsLoaded: [{ asset_id: '@aikdna/primary', role: 'primary', digest_verified: true, authorization: 'public' }],
+    assetsLoaded: [
+      {
+        asset_id: '@aikdna/primary',
+        role: 'primary',
+        digest_verified: true,
+        authorization: 'public',
+      },
+    ],
   };
   const fixture = createClusterFixture({ task: 'task', expectedPrimary: '@aikdna/primary' });
   for (const fixtures of [
@@ -542,7 +731,10 @@ it('cluster assay cannot pass with zero, malformed, or duplicate fixtures', () =
 });
 
 it('cluster assay rejects malformed manifest fields before producing a typed report', () => {
-  const fixture = createClusterFixture({ task: 'manifest task', expectedPrimary: '@aikdna/primary' });
+  const fixture = createClusterFixture({
+    task: 'manifest task',
+    expectedPrimary: '@aikdna/primary',
+  });
   assert.throws(
     () => runClusterAssay({ manifest: { cluster_id: 42 }, fixtures: [fixture] }),
     /manifest.cluster_id must be a non-empty string/,
@@ -569,7 +761,10 @@ it('cluster assay rejects malformed manifest fields before producing a typed rep
 });
 
 it('cluster fixtures reject non-canonical evidence before replay engine invocation', () => {
-  const base = createClusterFixture({ task: 'canonical cluster task', expectedPrimary: '@aikdna/primary' });
+  const base = createClusterFixture({
+    task: 'canonical cluster task',
+    expectedPrimary: '@aikdna/primary',
+  });
   const cycle = {};
   cycle.self = cycle;
   const invalidFixtures = [
@@ -581,9 +776,17 @@ it('cluster fixtures reject non-canonical evidence before replay engine invocati
   ];
   for (const fixture of invalidFixtures) {
     let calls = 0;
-    const replay = runClusterReplay({ replayRun: () => { calls++; return { results: [] }; } }, [fixture]);
+    const replay = runClusterReplay(
+      {
+        replayRun: () => {
+          calls++;
+          return { results: [] };
+        },
+      },
+      [fixture],
+    );
     assert.strictEqual(calls, 0);
-    assert.ok(Object.values(replay).every(result => result.status === 'failed'));
+    assert.ok(Object.values(replay).every((result) => result.status === 'failed'));
     const report = runClusterAssay({ manifest: CANONICAL_MANIFEST, fixtures: [fixture] });
     assert.strictEqual(report.verdict.overall, 'fail');
     assert.strictEqual(report.fixture_validation.valid, false);
@@ -614,7 +817,7 @@ it('cluster dataset fingerprint is key-order stable and content-sensitive', () =
     fixture_id: base.fixture_id,
     created_at: 'different volatile timestamp',
   };
-  const run = fixtures => runClusterAssay({ manifest: CANONICAL_MANIFEST, fixtures });
+  const run = (fixtures) => runClusterAssay({ manifest: CANONICAL_MANIFEST, fixtures });
   const original = run([base]);
   const sameSemantics = run([reordered]);
   const changedTask = run([{ ...base, task: 'mutated cluster fingerprint task' }]);

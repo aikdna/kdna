@@ -59,6 +59,35 @@ test("function gate that throws returns pass=false with error", () => {
   assert.deepEqual(results[0].errors, ["gate crashed"]);
 });
 
+test("function gates normalize non-Error throws to deterministic strings", () => {
+  const thrown = ["boom", { code: "OBJECT_THROW" }, undefined, Object.create(null)];
+  const runner = createMultiGateRunner(thrown.map((value) => () => { throw value; }));
+  const results = runner.runGates({});
+  assert.deepEqual(results.map((result) => result.errors), [
+    ["boom"],
+    ["[object Object]"],
+    ["undefined"],
+    ["unprintable thrown value"],
+  ]);
+  assert.ok(results.every((result) => result.pass === false));
+  assert.ok(results.every((result) => result.errors.every((error) => typeof error === "string")));
+});
+
+test("custom gate results require the complete strong return contract", () => {
+  const gates = [
+    () => ({ pass: true }),
+    () => undefined,
+    () => ({ gate: "bad-score", pass: true, score: "1", details: {}, errors: [] }),
+    () => ({ gate: "bad-errors", pass: true, score: 1, details: {}, errors: [undefined] }),
+  ];
+  const runner = createMultiGateRunner(gates);
+  const results = runner.runGates({});
+  assert.ok(results.every((result) => result.pass === false));
+  assert.ok(results.every((result) => typeof result.gate === "string"));
+  assert.ok(results.every((result) => result.errors.every((error) => typeof error === "string")));
+  assert.equal(runner.runAll({}).overall, "fail");
+});
+
 test("hasGate detects gate by name", () => {
   const runner = createMultiGateRunner(["route", "cost"]);
   assert.equal(runner.hasGate("route"), true);

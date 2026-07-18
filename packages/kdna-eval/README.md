@@ -276,6 +276,21 @@ Version 0.3.2 also closes implicit-evidence paths in Assay and Replay APIs:
   count matching the selected primary and advisors, plus observed nonnegative
   token and model-call counts. An observed `tokens_used: 0` is preserved rather
   than replaced by an estimate.
+- Cluster plan types distinguish executable `applies` plans from canonical
+  non-executable `blocked` plans. A blocked plan may record a zero-consumption
+  budget without `max_tokens`; the Assay reports `plan_status: "blocked"`, does
+  not call it malformed, and never allows any gate or verdict to pass.
+- The standalone `economicsGate(plan, executionCost)` requires both evidence
+  objects and fails closed on missing or malformed values. `runClusterAssay()`
+  and `runClusterAssay({})` remain supported diagnostic calls and always fail
+  without promotion evidence.
+- Replay generates deterministic non-empty string fallback IDs for fixtures
+  whose own or input IDs are absent, empty, or non-string. Malformed custom
+  evaluator results are incomplete failures, and arbitrary values thrown by a
+  multi-gate function are normalized to string errors. Custom gate returns must
+  satisfy the complete `GateResult` shape before they can pass aggregation;
+  standalone behavioral and product gates likewise reject malformed evidence
+  without throwing or coercing it into a pass.
 
 ## Version 0.3.1 Assay Contracts
 

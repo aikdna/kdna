@@ -42,6 +42,18 @@
 - Require explicit Cluster budget and observed execution-cost evidence. Zero
   observed tokens remain zero; missing cost data is never replaced with a
   passing synthetic estimate.
+- Recognize canonical Cluster plans whose applicability decision is `blocked`
+  as valid non-executable diagnostics. They are not mislabeled as malformed,
+  but no blocked plan can pass an Assay gate or promotion verdict.
+- Make the standalone economics gate fail closed on missing or malformed plan
+  and execution-cost evidence while preserving the optional empty Assay runner
+  calls supported by 0.3.1.
+- Keep Replay result IDs as stable non-empty strings even when fixture input IDs
+  are numeric or empty, fail closed on malformed custom evaluator results, and
+  normalize arbitrary thrown gate values to the declared string error shape.
+- Reject coercible or malformed standalone behavioral and product gate evidence,
+  and require custom multi-gate functions to return every declared `GateResult`
+  field before an explicit pass can participate in aggregation.
 
 ## 0.3.1 (2026-07-12)
 

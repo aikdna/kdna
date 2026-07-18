@@ -16,6 +16,63 @@ function hashInput(input) {
     .slice(0, 16);
 }
 
+function isNonEmptyString(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function invalidReplayResult(fallbackId, validationIssues) {
+  return {
+    id: fallbackId,
+    pass: undefined,
+    details: {
+      status: "invalid_result",
+      validation_issues: validationIssues,
+    },
+  };
+}
+
+function normalizeReplayResult(result, fallbackId) {
+  if (!result || typeof result !== "object" || Array.isArray(result)) {
+    return invalidReplayResult(fallbackId, ["evaluator result must be a plain object"]);
+  }
+
+  const issues = [];
+  const normalized = { ...result };
+  if (!isNonEmptyString(result.id)) {
+    issues.push("result.id must be a non-empty string");
+    normalized.id = fallbackId;
+  }
+  if (result.score !== undefined &&
+      (typeof result.score !== "number" || !Number.isFinite(result.score))) {
+    issues.push("result.score must be a finite number when provided");
+    delete normalized.score;
+  }
+  if (result.pass !== undefined && typeof result.pass !== "boolean") {
+    issues.push("result.pass must be boolean when provided");
+  }
+  if (result.dimensions !== undefined &&
+      (!result.dimensions || typeof result.dimensions !== "object" || Array.isArray(result.dimensions))) {
+    issues.push("result.dimensions must be an object when provided");
+    delete normalized.dimensions;
+  }
+  if (result.details !== undefined &&
+      (!result.details || typeof result.details !== "object" || Array.isArray(result.details))) {
+    issues.push("result.details must be an object when provided");
+  }
+
+  if (issues.length) {
+    normalized.pass = undefined;
+    normalized.details = {
+      ...(result.details && typeof result.details === "object" && !Array.isArray(result.details)
+        ? result.details
+        : {}),
+      status: "invalid_result",
+      validation_issues: issues,
+    };
+  }
+  return normalized;
+}
+
 function createReplayEngine(options) {
   const { store, logger } = options ?? {};
   const runs = [];
@@ -43,8 +100,23 @@ function createReplayEngine(options) {
 
     const evaluate = params.evaluate || defaultEvaluate;
 
-    for (const fixture of fixtures) {
-      const result = evaluate(fixture, policy, mode, previousRun);
+    for (const [index, fixture] of fixtures.entries()) {
+      const fallbackId = `fixture-${inputHash}-${index + 1}`;
+      let result;
+      try {
+        result = normalizeReplayResult(
+          evaluate(fixture, policy, mode, previousRun, fallbackId),
+          fallbackId,
+        );
+      } catch (error) {
+        let message;
+        try {
+          message = error instanceof Error ? error.message : String(error);
+        } catch (_) {
+          message = "unprintable evaluator failure";
+        }
+        result = invalidReplayResult(fallbackId, [`evaluator failed: ${message}`]);
+      }
       results.push(result);
     }
 
@@ -135,18 +207,20 @@ function createReplayEngine(options) {
   return { replayRun, compareRuns, isRegression, _getRuns };
 }
 
-function defaultEvaluate(fixture, policy, mode, previousRun) {
-  const id = fixture.id ?? fixture.input?.id ?? `fixture-${Math.random().toString(36).slice(2, 7)}`;
-  const score = fixture.score ?? fixture.expected?.score ?? 50;
-  const pass = typeof fixture.pass === "boolean"
+function defaultEvaluate(fixture, policy, mode, previousRun, fallbackId) {
+  const fixtureId = isNonEmptyString(fixture?.id) ? fixture.id : null;
+  const inputId = isNonEmptyString(fixture?.input?.id) ? fixture.input.id : null;
+  const id = fixtureId ?? inputId ?? fallbackId;
+  const score = fixture?.score ?? fixture?.expected?.score ?? 50;
+  const pass = typeof fixture?.pass === "boolean"
     ? fixture.pass
-    : (typeof fixture.expected?.pass === "boolean" ? fixture.expected.pass : undefined);
+    : (typeof fixture?.expected?.pass === "boolean" ? fixture.expected.pass : undefined);
 
   return {
     id,
     score,
     pass,
-    dimensions: fixture.dimensions ?? {},
+    dimensions: fixture?.dimensions ?? {},
     details: { policy: policy?.id ?? null, mode },
   };
 }

@@ -563,6 +563,7 @@ export interface ClusterAssayReport {
   cluster_id: string;
   cluster_version: string;
   fixture_count: number;
+  plan_status: "applies" | "blocked" | "invalid";
   fixture_validation: { valid: boolean; total: number; errors: string[] };
   gates: Record<string, ClusterAssayGate>;
   verdict: {
@@ -580,7 +581,7 @@ export interface ClusterAssayReport {
     plan: ClusterEvidenceValidation;
     fixture_expectations: ClusterEvidenceValidation;
     comparison_arms: ClusterEvidenceValidation;
-    loaded_assets: ClusterEvidenceValidation & { status?: "not_run" | "invalid" | "completed" };
+    loaded_assets: ClusterEvidenceValidation;
     economics: ClusterEvidenceValidation;
   };
   marginal_value: Record<string, unknown>;
@@ -594,7 +595,7 @@ export interface ClusterComparisonArmReport {
   critical_errors: number | null;
   result_count: number | null;
   fixture_ids: string[];
-  status: "completed" | "invalid" | "not_run";
+  status: "completed" | "blocked" | "invalid" | "not_run";
 }
 
 export type AdvisorDecisionValue =
@@ -654,12 +655,15 @@ export interface ClusterAssayOptions {
   plan?: ClusterAssayPlan | null;
   executionCost?: ClusterExecutionCost;
   comparisonArms?: ClusterComparisonEvidence[];
-  fixtures: ClusterReplayFixture[];
+  fixtures?: ClusterReplayFixture[];
   assetsLoaded?: ClusterLoadedAsset[];
 }
 
 export interface ClusterEvidenceValidation {
   valid: boolean;
+  executable?: boolean;
+  status?: "applies" | "blocked" | "completed" | "invalid" | "not_run";
+  decision?: "applies" | "blocked" | null;
   errors: string[];
 }
 
@@ -678,7 +682,12 @@ export type ClusterPlanRejected = ClusterPlanAsset & (
   | { rejection_policy: string }
 );
 
-export interface ClusterAssayPlan {
+export interface ClusterAssayPlanBase {
+  cluster_ref?: { cluster_id?: string; [key: string]: unknown };
+  [key: string]: unknown;
+}
+
+export interface ClusterAppliesAssayPlan extends ClusterAssayPlanBase {
   applicability: { decision: "applies"; [key: string]: unknown };
   selection: {
     primary: ClusterPlanAsset;
@@ -688,18 +697,35 @@ export interface ClusterAssayPlan {
   };
   conflicts: unknown[];
   assets_loaded?: ClusterLoadedAsset[];
-  budget: ClusterPlanBudget;
-  cluster_ref?: { cluster_id?: string; [key: string]: unknown };
-  [key: string]: unknown;
+  budget: ClusterAppliesPlanBudget;
 }
 
-export interface ClusterPlanBudget {
+export interface ClusterBlockedAssayPlan extends ClusterAssayPlanBase {
+  applicability: { decision: "blocked"; [key: string]: unknown };
+  selection?: never;
+  conflicts?: unknown[];
+  budget: ClusterBlockedPlanBudget;
+}
+
+export type ClusterAssayPlan = ClusterAppliesAssayPlan | ClusterBlockedAssayPlan;
+
+export interface ClusterAppliesPlanBudget {
   max_tokens: number;
   max_assets: number;
   assets_consumed: number;
   profile?: string;
   [key: string]: unknown;
 }
+
+export interface ClusterBlockedPlanBudget {
+  profile: string;
+  max_assets: number;
+  assets_consumed: 0;
+  max_tokens?: number;
+  [key: string]: unknown;
+}
+
+export type ClusterPlanBudget = ClusterAppliesPlanBudget | ClusterBlockedPlanBudget;
 
 export interface ClusterExecutionCost {
   tokens_used: number;
@@ -812,10 +838,10 @@ export declare const COMPARISON_ARM_DESCRIPTIONS: Readonly<Record<string, string
 export declare function createClusterFixture(options: CreateClusterFixtureOptions): ClusterReplayFixture;
 export declare function structuralGate(plan: Record<string, unknown> | null): ClusterAssayGate;
 export declare function behavioralGate(clusterResults?: Record<string, unknown> | null, primaryOnlyResults?: Record<string, unknown> | null): ClusterAssayGate;
-export declare function economicsGate(plan?: Record<string, unknown> | null, executionCost?: Record<string, unknown>): ClusterAssayGate;
+export declare function economicsGate(plan: ClusterAppliesAssayPlan, executionCost: ClusterExecutionCost): ClusterAssayGate;
 export declare function trustGate(assetsLoaded?: ClusterLoadedAsset[] | null): ClusterAssayGate;
 export declare function productGate(plan?: Record<string, unknown> | null, manifest?: Record<string, unknown>): ClusterAssayGate;
-export declare function runClusterAssay(options: ClusterAssayOptions): ClusterAssayReport;
+export declare function runClusterAssay(options?: ClusterAssayOptions): ClusterAssayReport;
 export declare function createAdvisorRelationLedger(
   plan?: AdvisorRelationPlan | null,
   decisions?: readonly AdvisorDecision[],

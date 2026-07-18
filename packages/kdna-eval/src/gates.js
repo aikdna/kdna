@@ -1,20 +1,73 @@
 const GATE_NAMES = ["route", "compose", "projection", "cost", "quality", "promotion"];
 
+function normalizeThrownValue(value) {
+  try {
+    const message = value instanceof Error ? value.message : String(value);
+    return typeof message === "string" ? message : String(message);
+  } catch (_) {
+    return "unprintable thrown value";
+  }
+}
+
+function isPlainObject(value) {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+function invalidGateResult(gate, errors) {
+  return {
+    gate,
+    pass: false,
+    score: 0,
+    details: { status: "invalid_result" },
+    errors,
+  };
+}
+
+function gateName(gate) {
+  try {
+    return typeof gate.name === "string" && gate.name.trim().length > 0 ? gate.name : "anonymous";
+  } catch (_) {
+    return "anonymous";
+  }
+}
+
+function normalizeGateResult(result, fallbackGate) {
+  const errors = [];
+  if (!isPlainObject(result)) {
+    return invalidGateResult(fallbackGate, ["gate result must be a plain object"]);
+  }
+  if (typeof result.gate !== "string" || result.gate.trim().length === 0) {
+    errors.push("gate result.gate must be a non-empty string");
+  }
+  if (![true, false, null].includes(result.pass)) {
+    errors.push("gate result.pass must be true, false, or null");
+  }
+  if (result.score !== null &&
+      (typeof result.score !== "number" || !Number.isFinite(result.score))) {
+    errors.push("gate result.score must be a finite number or null");
+  }
+  if (!isPlainObject(result.details)) {
+    errors.push("gate result.details must be a plain object");
+  }
+  if (!Array.isArray(result.errors) || result.errors.some((error) => typeof error !== "string")) {
+    errors.push("gate result.errors must be a string array");
+  }
+  return errors.length ? invalidGateResult(fallbackGate, errors) : result;
+}
+
 function createMultiGateRunner(gates) {
   const gateList = gates ?? GATE_NAMES;
 
   function runGate(gate, context) {
     if (typeof gate === "function") {
+      const name = gateName(gate);
       try {
-        return gate(context);
+        return normalizeGateResult(gate(context), name);
       } catch (e) {
-        return {
-          gate: gate.name || "anonymous",
-          pass: false,
-          score: 0,
-          details: {},
-          errors: [e.message],
-        };
+        const message = normalizeThrownValue(e);
+        return invalidGateResult(name, [message]);
       }
     }
 

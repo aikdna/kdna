@@ -246,6 +246,70 @@ for (const [specifier, expected] of entries) {
   if (JSON.stringify(actual) !== JSON.stringify(wanted)) {
     throw new Error(\`${moduleStyle} packed surface mismatch for \${specifier}; expected=\${wanted}; actual=\${actual}\`);
   }
+  if (${JSON.stringify([PACKAGE_NAME, `${PACKAGE_NAME}/cluster-assay`])}.includes(specifier)) {
+    if (loaded.economicsGate().pass !== false || loaded.economicsGate({}, {}).pass !== false) {
+      throw new Error(\`${moduleStyle} packed \${specifier} economicsGate did not fail closed\`);
+    }
+    if (loaded.behavioralGate({ mean_score: "4" }, { mean_score: "3" }).pass !== false ||
+        loaded.productGate({}, {
+          description: "Complete description",
+          domains: [{ load_condition: "one" }, { load_condition: "two" }],
+          composition: { strategy: 42 },
+        }).pass !== false) {
+      throw new Error(\`${moduleStyle} packed \${specifier} standalone gates accepted malformed evidence\`);
+    }
+    const blocked = loaded.runClusterAssay({
+      plan: {
+        plan_version: "0.9.0",
+        plan_id: "plan_0000000000000001",
+        mode: "cluster",
+        cluster_ref: { cluster_id: "@aikdna/launch-decision" },
+        task: { summary: "No qualified primary" },
+        load_plan_ref: { status: "blocked" },
+        applicability: { decision: "blocked", confidence: "none" },
+        projection_ref: { shape: "compact" },
+        budget: { profile: "interactive", max_assets: 3, assets_consumed: 0 },
+        trace_policy: { emit: ["decision"], storage: "ephemeral" },
+        composition_policy_ref: { strategy: "signal_based" },
+      },
+      fixtures: [{
+        fixture_id: "packed-blocked",
+        task: "No qualified primary",
+        expected_primary: "none",
+        expected_advisors: [],
+        expected_rejected: [],
+        expected_conflicts: 0,
+      }],
+    });
+    if (blocked.plan_status !== "blocked" || blocked.verdict.overall !== "fail" ||
+        blocked.verdict.failed_evidence.includes("cluster_plan") ||
+        Object.values(blocked.gates).some((gate) => gate.pass === true)) {
+      throw new Error(\`${moduleStyle} packed \${specifier} blocked plan diagnostic drifted\`);
+    }
+  }
+  if (${JSON.stringify([PACKAGE_NAME, `${PACKAGE_NAME}/replay`])}.includes(specifier)) {
+    const engine = loaded.createReplayEngine();
+    const fixtures = [{ input: { id: 42 }, pass: true }, { id: "", pass: true }];
+    const first = engine.replayRun("fresh", { fixtures });
+    const second = engine.replayRun("fresh", { fixtures });
+    if (first.results.some((result) => typeof result.id !== "string" || result.id.length === 0) ||
+        JSON.stringify(first.results.map((result) => result.id)) !==
+          JSON.stringify(second.results.map((result) => result.id))) {
+      throw new Error(\`${moduleStyle} packed \${specifier} replay IDs are not stable strings\`);
+    }
+  }
+  if (${JSON.stringify([PACKAGE_NAME, `${PACKAGE_NAME}/gates`])}.includes(specifier)) {
+    const errors = loaded.createMultiGateRunner([() => { throw { code: "boom" }; }])
+      .runGates({})[0].errors;
+    if (errors.length !== 1 || typeof errors[0] !== "string") {
+      throw new Error(\`${moduleStyle} packed \${specifier} gate errors violated string[]\`);
+    }
+    const invalidRunner = loaded.createMultiGateRunner([() => ({ pass: true }), () => undefined]);
+    if (invalidRunner.runAll({}).overall !== "fail" ||
+        invalidRunner.runGates({}).some((result) => result.pass === true)) {
+      throw new Error(\`${moduleStyle} packed \${specifier} accepted malformed custom results\`);
+    }
+  }
 }
 `;
 }
@@ -290,6 +354,75 @@ test("CommonJS, ESM, and TypeScript expose each exact public value surface", asy
     assertExactSurface(`${exportPath} CommonJS`, expected, commonJsExports);
     assertExactSurface(`${exportPath} ESM`, expected, Object.keys(esmModule));
     assertExactSurface(`${exportPath} TypeScript`, expected, typeExports);
+  }
+});
+
+test("local root and subpaths preserve fail-closed strong returns in CommonJS and ESM", async () => {
+  async function loadBoth(exportPath) {
+    const metadata = PACKAGE_MANIFEST.exports[exportPath];
+    return [
+      require(path.join(PACKAGE_ROOT, metadata.require)),
+      await import(pathToFileURL(path.join(PACKAGE_ROOT, metadata.import)).href),
+    ];
+  }
+
+  for (const loaded of [
+    ...(await loadBoth(".")),
+    ...(await loadBoth("./cluster-assay")),
+  ]) {
+    assert.equal(loaded.economicsGate().pass, false);
+    assert.equal(loaded.economicsGate({}, {}).pass, false);
+    assert.equal(loaded.behavioralGate({ mean_score: "4" }, { mean_score: "3" }).pass, false);
+    assert.equal(loaded.productGate({}, {
+      description: "Complete description",
+      domains: [{ load_condition: "one" }, { load_condition: "two" }],
+      composition: { strategy: 42 },
+    }).pass, false);
+    assert.equal(loaded.runClusterAssay().verdict.overall, "fail");
+    assert.equal(loaded.runClusterAssay({}).verdict.overall, "fail");
+    const blocked = loaded.runClusterAssay({
+      plan: require("../../../conformance/ecosystem-profile-0.9/golden/cluster-blocked-plan.json"),
+      fixtures: [{
+        fixture_id: "local-blocked",
+        task: "No qualified primary",
+        expected_primary: "none",
+        expected_advisors: [],
+        expected_rejected: [],
+        expected_conflicts: 0,
+      }],
+    });
+    assert.equal(blocked.plan_status, "blocked");
+    assert.equal(blocked.verdict.overall, "fail");
+    assert.ok(!blocked.verdict.failed_evidence.includes("cluster_plan"));
+    assert.ok(Object.values(blocked.gates).every((gate) => gate.pass !== true));
+  }
+
+  for (const loaded of [
+    ...(await loadBoth(".")),
+    ...(await loadBoth("./replay")),
+  ]) {
+    const fixtures = [{ input: { id: 42 }, pass: true }, { id: "", pass: true }];
+    const engine = loaded.createReplayEngine();
+    const first = engine.replayRun("fresh", { fixtures });
+    const second = engine.replayRun("fresh", { fixtures });
+    assert.deepEqual(first.results.map((result) => result.id), second.results.map((result) => result.id));
+    assert.ok(first.results.every((result) => typeof result.id === "string" && result.id.length > 0));
+  }
+
+  for (const loaded of [
+    ...(await loadBoth(".")),
+    ...(await loadBoth("./gates")),
+  ]) {
+    const results = loaded.createMultiGateRunner([
+      () => { throw "boom"; },
+      () => { throw { code: "OBJECT_THROW" }; },
+      () => { throw undefined; },
+    ]).runGates({});
+    assert.ok(results.every((result) => result.pass === false));
+    assert.ok(results.every((result) => result.errors.every((error) => typeof error === "string")));
+    const invalidRunner = loaded.createMultiGateRunner([() => ({ pass: true }), () => undefined]);
+    assert.equal(invalidRunner.runAll({}).overall, "fail");
+    assert.ok(invalidRunner.runGates({}).every((result) => result.pass === false));
   }
 });
 
@@ -363,6 +496,9 @@ test("the packed package preserves every CJS, ESM, and TypeScript public surface
 const root = aliases["."];
 const loaderModule = aliases["./loader"];
 const costModule = aliases["./cost"];
+const replayModule = aliases["./replay"];
+const gatesModule = aliases["./gates"];
+const clusterModule = aliases["./cluster-assay"];
 const routeCardModule = aliases["./route-card"];
 const consumerIndexModule = aliases["./consumer-index"];
 const consumerSource = `${namespaceImports}
@@ -415,11 +551,40 @@ const policies = {
 };
 const consumption = ${root}.createConsumptionRunner({ policies, budgetProfile: "interactive" });
 const gateRunner = ${root}.createMultiGateRunner(["route"]);
+const thrownGateErrors = ${root}.createMultiGateRunner([() => { throw "boom"; }]).runGates({})[0].errors;
+const thrownSubpathGateErrors = ${gatesModule}.createMultiGateRunner([() => { throw { code: "boom" }; }]).runGates({})[0].errors;
+if (typeof thrownGateErrors[0] !== "string" || typeof thrownSubpathGateErrors[0] !== "string") {
+  throw new Error("packed gate runner violated its string[] return type");
+}
+const partialGate = (() => ({ pass: true })) as unknown as ${root}.GateDefinition;
+const undefinedGate = (() => undefined) as unknown as ${root}.GateDefinition;
+for (const invalidRunner of [
+  ${root}.createMultiGateRunner([partialGate, undefinedGate]),
+  ${gatesModule}.createMultiGateRunner([partialGate, undefinedGate]),
+]) {
+  if (invalidRunner.runAll({}).overall !== "fail" ||
+      invalidRunner.runGates({}).some((result) => result.pass === true)) {
+    throw new Error("packed gate runner accepted malformed custom results");
+  }
+}
 const replay = ${root}.createReplayEngine();
 const replayRun = replay.replayRun("fresh", { fixtures: [{ input: "test" }] });
 if (replayRun.summary.total !== 1) throw new Error("string replay input was not evaluated");
 if (replayRun.summary.passed !== 0 || replayRun.summary.incomplete !== 1) {
   throw new Error("replay input without explicit pass evidence did not fail closed");
+}
+const numericReplayFixtures: ${root}.ReplayFixture[] = [
+  { input: { id: 42 }, pass: true },
+  { id: "", pass: true },
+];
+for (const replayEngine of [${root}.createReplayEngine(), ${replayModule}.createReplayEngine()]) {
+  const first = replayEngine.replayRun("fresh", { fixtures: numericReplayFixtures });
+  const second = replayEngine.replayRun("fresh", { fixtures: numericReplayFixtures });
+  if (first.results.some((result) => typeof result.id !== "string" || result.id.length === 0) ||
+      JSON.stringify(first.results.map((result) => result.id)) !==
+        JSON.stringify(second.results.map((result) => result.id))) {
+    throw new Error("packed replay result IDs are not stable strings");
+  }
 }
 const assayFixtureOptions: ${aliases["./assay"]}.CreateAssayFixtureOptions = {
   category: "positive_target",
@@ -540,6 +705,53 @@ if (packedClusterAssay.verdict.overall !== "pass" ||
     packedClusterAssay.gates.economics.details?.tokens_used !== 0) {
   throw new Error("fully bound packed Cluster Assay did not pass with explicit zero-token evidence");
 }
+const defensiveRootEconomics = ${root}.economicsGate as unknown as (
+  plan?: unknown,
+  executionCost?: unknown,
+) => ${root}.ClusterAssayGate;
+const defensiveSubpathEconomics = ${clusterModule}.economicsGate as unknown as (
+  plan?: unknown,
+  executionCost?: unknown,
+) => ${root}.ClusterAssayGate;
+for (const gate of [defensiveRootEconomics, defensiveSubpathEconomics]) {
+  if (gate().pass !== false || gate({}, {}).pass !== false) {
+    throw new Error("packed standalone economics gate did not fail closed");
+  }
+}
+for (const clusterApi of [${root}, ${clusterModule}]) {
+  if (clusterApi.behavioralGate({ mean_score: "4" }, { mean_score: "3" }).pass !== false ||
+      clusterApi.productGate({}, {
+        description: "Complete description",
+        domains: [{ load_condition: "one" }, { load_condition: "two" }],
+        composition: { strategy: 42 },
+      }).pass !== false) {
+    throw new Error("packed standalone Cluster gates accepted malformed evidence");
+  }
+}
+const blockedClusterPlan: ${root}.ClusterAssayPlan = {
+  plan_version: "0.9.0",
+  plan_id: "plan_0000000000000001",
+  mode: "cluster",
+  cluster_ref: { cluster_id: "@aikdna/launch-decision" },
+  task: { summary: "No qualified primary" },
+  load_plan_ref: { status: "blocked" },
+  applicability: { decision: "blocked", confidence: "none" },
+  projection_ref: { shape: "compact" },
+  budget: { profile: "interactive", max_assets: 3, assets_consumed: 0 },
+  trace_policy: { emit: ["decision"], storage: "ephemeral" },
+  composition_policy_ref: { strategy: "signal_based" },
+};
+for (const run of [${root}.runClusterAssay, ${clusterModule}.runClusterAssay]) {
+  const emptyReport = run();
+  const emptyOptionsReport = run({});
+  const blockedReport = run({ plan: blockedClusterPlan, fixtures: [clusterFixture] });
+  if (emptyReport.verdict.overall !== "fail" || emptyOptionsReport.verdict.overall !== "fail" ||
+      blockedReport.plan_status !== "blocked" || blockedReport.verdict.overall !== "fail" ||
+      blockedReport.verdict.failed_evidence.includes("cluster_plan") ||
+      Object.values(blockedReport.gates).some((gate) => gate.pass === true)) {
+    throw new Error("packed Cluster Assay fail diagnostics drifted");
+  }
+}
 expectThrows(
   () => ${root}.runClusterAssay({
     manifest: { cluster_id: 42 as unknown as string },
@@ -580,6 +792,17 @@ if (false) {
     selection: { primary: { asset_id: "primary" }, advisors: [], rejected: [] },
     conflicts: [],
   } });
+  // @ts-expect-error standalone economics evidence arguments are required
+  ${root}.economicsGate();
+  // @ts-expect-error standalone economics evidence arguments are required
+  ${clusterModule}.economicsGate();
+  // @ts-expect-error blocked plans cannot contain an executable selection
+  const invalidBlockedPlan: ${root}.ClusterAssayPlan = {
+    applicability: { decision: "blocked" },
+    selection: { primary: { asset_id: "primary" }, advisors: [], rejected: [] },
+    budget: { profile: "interactive", max_assets: 3, assets_consumed: 0 },
+  };
+  void invalidBlockedPlan;
 }
 const regressions = ${root}.detectRegressions(
   [{ id: "f1", score: 50, pass: true }],

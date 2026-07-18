@@ -18,12 +18,22 @@ test("strict consumers cannot construct invalid assay evidence identifiers or fi
   createAssayProfile,
   createClusterFixture,
   createFixture,
+  createMultiGateRunner,
   createReplayEngine,
+  economicsGate,
   runClusterAssay,
   runClusterReplay,
 } from "@aikdna/kdna-eval";
 import type { CreateAssayFixtureOptions } from "@aikdna/kdna-eval/assay";
-import type { CreateClusterFixtureOptions } from "@aikdna/kdna-eval/cluster-assay";
+import {
+  economicsGate as subpathEconomicsGate,
+} from "@aikdna/kdna-eval/cluster-assay";
+import type {
+  ClusterAssayPlan,
+  CreateClusterFixtureOptions,
+} from "@aikdna/kdna-eval/cluster-assay";
+import { createMultiGateRunner as createSubpathGateRunner } from "@aikdna/kdna-eval/gates";
+import { createReplayEngine as createSubpathReplayEngine } from "@aikdna/kdna-eval/replay";
 
 const assayOptions: CreateAssayFixtureOptions = {
   category: "positive_target",
@@ -42,8 +52,44 @@ const ledger = createAdvisorRelationLedger({
   selection: { primary: { asset_id: "@aikdna/primary" } },
 });
 const assay = runClusterAssay({ fixtures: [clusterFixture] });
+const emptyAssay = runClusterAssay();
+const emptyOptionsAssay = runClusterAssay({});
+const blockedPlan: ClusterAssayPlan = {
+  plan_version: "0.9.0",
+  plan_id: "plan_0000000000000001",
+  mode: "cluster",
+  cluster_ref: { cluster_id: "@aikdna/launch-decision" },
+  task: { summary: "No qualified primary" },
+  load_plan_ref: { status: "blocked" },
+  applicability: { decision: "blocked", confidence: "none" },
+  projection_ref: { shape: "compact" },
+  budget: { profile: "interactive", max_assets: 3, assets_consumed: 0 },
+  trace_policy: { emit: ["decision"], storage: "ephemeral" },
+  composition_policy_ref: { strategy: "signal_based" },
+};
+const blockedAssay = runClusterAssay({ plan: blockedPlan, fixtures: [clusterFixture] });
+if (blockedAssay.evidence_validation.loaded_assets.status === "blocked") {
+  blockedAssay.plan_status.toUpperCase();
+}
+if (blockedPlan.applicability.decision === "blocked") {
+  const consumed: 0 = blockedPlan.budget.assets_consumed;
+  void consumed;
+}
+const numericReplay = createReplayEngine().replayRun("fresh", {
+  fixtures: [{ input: { id: 42 }, pass: true }],
+});
+const numericSubpathReplay = createSubpathReplayEngine().replayRun("fresh", {
+  fixtures: [{ input: { id: 42 }, pass: true }],
+});
+numericReplay.results[0].id.toUpperCase();
+numericSubpathReplay.results[0].id.toUpperCase();
+const gateErrors = createMultiGateRunner([() => { throw "boom"; }]).runGates({})[0].errors;
+const subpathGateErrors = createSubpathGateRunner([() => { throw { code: "boom" }; }]).runGates({})[0].errors;
+gateErrors[0].toUpperCase();
+subpathGateErrors[0].toUpperCase();
 const replay = runClusterReplay(createReplayEngine(), [clusterFixture]);
-void profile; void fixture; void ledger; void assay; void replay;
+void profile; void fixture; void ledger; void assay; void emptyAssay; void emptyOptionsAssay;
+void blockedAssay; void replay;
 
 if (false) {
   // @ts-expect-error assetId cannot be numeric
@@ -71,6 +117,17 @@ if (false) {
     selection: { primary: { asset_id: "primary" }, advisors: [], rejected: [] },
     conflicts: [],
   } });
+  // @ts-expect-error blocked plans cannot contain an executable selection
+  const invalidBlockedPlan: ClusterAssayPlan = {
+    applicability: { decision: "blocked" },
+    selection: { primary: { asset_id: "primary" }, advisors: [], rejected: [] },
+    budget: { profile: "interactive", max_assets: 3, assets_consumed: 0 },
+  };
+  void invalidBlockedPlan;
+  // @ts-expect-error standalone economics evidence arguments are required
+  economicsGate();
+  // @ts-expect-error standalone economics evidence arguments are required
+  subpathEconomicsGate();
 }
 `,
     );
@@ -87,6 +144,8 @@ if (false) {
         "@aikdna/kdna-eval": [path.join(PACKAGE_ROOT, "src/types.d.ts")],
         "@aikdna/kdna-eval/assay": [path.join(PACKAGE_ROOT, "src/assay.d.ts")],
         "@aikdna/kdna-eval/cluster-assay": [path.join(PACKAGE_ROOT, "src/cluster-assay.d.ts")],
+        "@aikdna/kdna-eval/gates": [path.join(PACKAGE_ROOT, "src/gates.d.ts")],
+        "@aikdna/kdna-eval/replay": [path.join(PACKAGE_ROOT, "src/replay.d.ts")],
       },
     };
     const program = ts.createProgram([consumerPath], options);
