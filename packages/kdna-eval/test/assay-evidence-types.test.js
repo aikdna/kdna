@@ -60,6 +60,17 @@ if (false) {
   runClusterAssay({ manifest: { cluster_id: 42 }, fixtures: [clusterFixture] });
   // @ts-expect-error manifest load_condition cannot be numeric
   runClusterAssay({ manifest: { domains: [{ load_condition: 42 }] }, fixtures: [clusterFixture] });
+  runClusterAssay({ fixtures: [clusterFixture], comparisonArms: [{
+    // @ts-expect-error unknown arm is outside the seven-arm comparison contract
+    arm: "unknown", fixture_ids: [clusterFixture.fixture_id], mean_score: 3,
+    result_count: 1, critical_errors: 0,
+  }] });
+  // @ts-expect-error budget evidence is required on a typed Cluster plan
+  runClusterAssay({ fixtures: [clusterFixture], plan: {
+    applicability: { decision: "applies" },
+    selection: { primary: { asset_id: "primary" }, advisors: [], rejected: [] },
+    conflicts: [],
+  } });
 }
 `,
     );

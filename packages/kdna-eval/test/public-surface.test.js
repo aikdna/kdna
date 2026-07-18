@@ -502,6 +502,44 @@ if (Object.keys(clusterReplay).length !== 5 ||
     Object.values(clusterReplay).some(result => result.status !== "completed" || result.passed !== 1)) {
   throw new Error("cluster replay did not preserve explicit packed pass evidence");
 }
+const clusterPlan: ${root}.ClusterAssayPlan = {
+  applicability: { decision: "applies" },
+  selection: { primary: { asset_id: "primary" }, advisors: [], rejected: [] },
+  conflicts: [],
+  budget: { max_tokens: 800, max_assets: 1, assets_consumed: 1 },
+};
+const clusterComparisons: ${root}.ClusterComparisonEvidence[] =
+  ${root}.CLUSTER_COMPARISON_ARMS.map((arm) => ({
+    arm,
+    fixture_ids: [clusterFixture.fixture_id],
+    mean_score: arm === "bounded_compose" ? 4 : (arm === "primary_only" ? 3 : 3.2),
+    result_count: 1,
+    critical_errors: 0,
+  }));
+const packedClusterAssay = ${root}.runClusterAssay({
+  manifest: {
+    cluster_id: "cluster",
+    version: "0.1.0",
+    description: "A complete packed Cluster Assay consumer.",
+    domains: [{ load_condition: "Primary task matches." }, { load_condition: "Control task matches." }],
+    composition: { strategy: "signal_based" },
+  },
+  plan: clusterPlan,
+  executionCost: { tokens_used: 0, model_calls: 1 },
+  comparisonArms: clusterComparisons,
+  fixtures: [clusterFixture],
+  assetsLoaded: [{
+    asset_id: "primary",
+    role: "primary",
+    digest_verified: true,
+    authorization: "public",
+  }],
+});
+if (packedClusterAssay.verdict.overall !== "pass" ||
+    packedClusterAssay.verdict.failed_evidence.length !== 0 ||
+    packedClusterAssay.gates.economics.details?.tokens_used !== 0) {
+  throw new Error("fully bound packed Cluster Assay did not pass with explicit zero-token evidence");
+}
 expectThrows(
   () => ${root}.runClusterAssay({
     manifest: { cluster_id: 42 as unknown as string },
@@ -531,6 +569,17 @@ if (false) {
   ${root}.runClusterAssay({ manifest: { cluster_id: 42 }, fixtures: [clusterFixture] });
   // @ts-expect-error manifest load_condition cannot be numeric
   ${root}.runClusterAssay({ manifest: { domains: [{ load_condition: 42 }] }, fixtures: [clusterFixture] });
+  ${root}.runClusterAssay({ fixtures: [clusterFixture], comparisonArms: [{
+    // @ts-expect-error unknown comparison arms are not part of the seven-arm contract
+    arm: "unknown", fixture_ids: [clusterFixture.fixture_id], mean_score: 3,
+    result_count: 1, critical_errors: 0,
+  }] });
+  // @ts-expect-error a Cluster Assay plan requires explicit budget evidence
+  ${root}.runClusterAssay({ fixtures: [clusterFixture], plan: {
+    applicability: { decision: "applies" },
+    selection: { primary: { asset_id: "primary" }, advisors: [], rejected: [] },
+    conflicts: [],
+  } });
 }
 const regressions = ${root}.detectRegressions(
   [{ id: "f1", score: 50, pass: true }],

@@ -262,6 +262,20 @@ Version 0.3.2 also closes implicit-evidence paths in Assay and Replay APIs:
   composition strategies are validated before a strongly typed report is
   created. Missing optional identifiers retain the documented `unknown` and
   `0.1.0` defaults.
+- A passing Cluster Assay requires a valid plan with exactly one selected
+  primary, unique selected/rejected IDs, explicit advisor contribution
+  hypotheses and rejection reasons, and fixture expectations that exactly
+  match the selected primary, advisor set, rejected set, and conflict count.
+- Loaded evidence requires exactly one verified and authorized primary matching
+  the plan, every selected advisor loaded as `advisor`, no rejected asset
+  loaded, unique IDs, and only `primary`, `advisor`, or `control` roles.
+- All seven `CLUSTER_COMPARISON_ARMS` are required exactly once. Each record
+  binds the exact fixture ID set, a finite 1–5 mean score, a result count equal
+  to the fixture count, and a valid critical-error count.
+- Passing economics evidence requires explicit positive plan limits, an asset
+  count matching the selected primary and advisors, plus observed nonnegative
+  token and model-call counts. An observed `tokens_used: 0` is preserved rather
+  than replaced by an estimate.
 
 ## Version 0.3.1 Assay Contracts
 

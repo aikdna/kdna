@@ -115,6 +115,234 @@ function validateReplayResults(replayResults, fixtures) {
   return observedIds.size === expectedIds.size;
 }
 
+function sameStringSet(actual, expected) {
+  if (actual.length !== expected.length) return false;
+  const actualSet = new Set(actual);
+  return actualSet.size === actual.length && expected.every(value => actualSet.has(value));
+}
+
+function validateClusterPlan(plan) {
+  const errors = [];
+  if (!isPlainObject(plan)) return { valid: false, errors: ['plan must be a plain object'] };
+  const canonicalErrors = canonicalValidationErrors(plan, 'plan');
+  if (canonicalErrors.length) return { valid: false, errors: canonicalErrors };
+
+  if (!isPlainObject(plan.applicability) || plan.applicability.decision !== 'applies') {
+    errors.push('plan.applicability.decision must be applies');
+  }
+  if (!isPlainObject(plan.selection)) {
+    errors.push('plan.selection must be a plain object');
+    return { valid: false, errors };
+  }
+  if (!isPlainObject(plan.selection.primary) || !isNonEmptyString(plan.selection.primary.asset_id)) {
+    errors.push('plan.selection.primary.asset_id must be a non-empty string');
+  }
+  for (const key of ['advisors', 'rejected']) {
+    if (!Array.isArray(plan.selection[key])) {
+      errors.push(`plan.selection.${key} must be an array`);
+    }
+  }
+  if (!Array.isArray(plan.conflicts)) errors.push('plan.conflicts must be an array');
+
+  const allIds = [];
+  if (isNonEmptyString(plan.selection.primary?.asset_id)) allIds.push(plan.selection.primary.asset_id);
+  for (const key of ['advisors', 'rejected']) {
+    if (!Array.isArray(plan.selection[key])) continue;
+    plan.selection[key].forEach((entry, index) => {
+      if (!isPlainObject(entry) || !isNonEmptyString(entry.asset_id)) {
+        errors.push(`plan.selection.${key}[${index}].asset_id must be a non-empty string`);
+      } else {
+        allIds.push(entry.asset_id);
+      }
+      if (key === 'rejected' && isPlainObject(entry) &&
+          !isNonEmptyString(entry.rejection_reason || entry.reason || entry.rejection_policy)) {
+        errors.push(`plan.selection.rejected[${index}] must include a non-empty rejection reason`);
+      }
+    });
+  }
+  const duplicateIds = allIds.filter((assetId, index) => allIds.indexOf(assetId) !== index);
+  if (duplicateIds.length) errors.push(`plan asset IDs must be unique: ${[...new Set(duplicateIds)].join(', ')}`);
+
+  return { valid: errors.length === 0, errors };
+}
+
+function validateFixtureBindings(fixtures, plan) {
+  const errors = [];
+  const primaryId = plan.selection.primary.asset_id;
+  const advisorIds = plan.selection.advisors.map(advisor => advisor.asset_id);
+  const rejectedIds = plan.selection.rejected.map(rejected => rejected.asset_id);
+  fixtures.forEach((fixture, index) => {
+    const label = `fixtures[${index}]`;
+    if (fixture.expected_primary !== primaryId) {
+      errors.push(`${label}.expected_primary must match selected primary ${primaryId}`);
+    }
+    if (!sameStringSet(fixture.expected_advisors, advisorIds)) {
+      errors.push(`${label}.expected_advisors must exactly match selected advisor IDs`);
+    }
+    if (!sameStringSet(fixture.expected_rejected, rejectedIds)) {
+      errors.push(`${label}.expected_rejected must exactly match rejected asset IDs`);
+    }
+    if (fixture.expected_conflicts !== plan.conflicts.length) {
+      errors.push(`${label}.expected_conflicts must equal observed conflict count ${plan.conflicts.length}`);
+    }
+  });
+  return { valid: errors.length === 0, errors };
+}
+
+function validateComparisonArms(comparisonArms, fixtures) {
+  const errors = [];
+  if (!Array.isArray(comparisonArms)) {
+    return { valid: false, errors: ['comparisonArms must be an array'] };
+  }
+  if (comparisonArms.length !== CLUSTER_COMPARISON_ARMS.length) {
+    errors.push(`comparisonArms must contain exactly ${CLUSTER_COMPARISON_ARMS.length} arms`);
+  }
+  const expectedFixtureIds = fixtures.map(fixture => fixture.fixture_id);
+  const seenArms = new Set();
+  comparisonArms.forEach((record, index) => {
+    const label = `comparisonArms[${index}]`;
+    if (!isPlainObject(record)) {
+      errors.push(`${label} must be a plain object`);
+      return;
+    }
+    const canonicalErrors = canonicalValidationErrors(record, label);
+    if (canonicalErrors.length) {
+      errors.push(...canonicalErrors);
+      return;
+    }
+    if (!CLUSTER_COMPARISON_ARMS.includes(record.arm)) {
+      errors.push(`${label}.arm must be a documented Cluster comparison arm`);
+    } else if (seenArms.has(record.arm)) {
+      errors.push(`${label}.arm duplicates ${record.arm}`);
+    } else {
+      seenArms.add(record.arm);
+    }
+    if (!Array.isArray(record.fixture_ids) ||
+        record.fixture_ids.some(fixtureId => !isNonEmptyString(fixtureId)) ||
+        !sameStringSet(record.fixture_ids, expectedFixtureIds)) {
+      errors.push(`${label}.fixture_ids must exactly match the assay fixture dataset`);
+    }
+    if (typeof record.mean_score !== 'number' || !Number.isFinite(record.mean_score) ||
+        record.mean_score < 1 || record.mean_score > 5) {
+      errors.push(`${label}.mean_score must be a finite number from 1 to 5`);
+    }
+    if (!Number.isInteger(record.result_count) || record.result_count !== fixtures.length) {
+      errors.push(`${label}.result_count must equal fixture count ${fixtures.length}`);
+    }
+    if (!Number.isInteger(record.critical_errors) || record.critical_errors < 0 ||
+        record.critical_errors > record.result_count) {
+      errors.push(`${label}.critical_errors must be between 0 and result_count`);
+    }
+  });
+  for (const arm of CLUSTER_COMPARISON_ARMS) {
+    if (!seenArms.has(arm)) errors.push(`comparisonArms is missing ${arm}`);
+  }
+  return { valid: errors.length === 0, errors };
+}
+
+function validateLoadedAssets(assetsLoaded, plan) {
+  const errors = [];
+  if (assetsLoaded === undefined || assetsLoaded === null) {
+    return { valid: false, status: 'not_run', errors: ['Loaded-asset evidence was not provided'] };
+  }
+  if (!Array.isArray(assetsLoaded)) return { valid: false, status: 'invalid', errors: ['assetsLoaded must be an array'] };
+  if (assetsLoaded.length === 0) errors.push('assetsLoaded must contain at least one asset');
+  const ids = [];
+  const loadedAdvisorIds = [];
+  let primaryCount = 0;
+  let loadedPrimaryId = null;
+  assetsLoaded.forEach((asset, index) => {
+    const label = `assetsLoaded[${index}]`;
+    if (!isPlainObject(asset)) {
+      errors.push(`${label} must be a plain object`);
+      return;
+    }
+    const canonicalErrors = canonicalValidationErrors(asset, label);
+    if (canonicalErrors.length) {
+      errors.push(...canonicalErrors);
+      return;
+    }
+    if (!isNonEmptyString(asset.asset_id)) {
+      errors.push(`${label}.asset_id must be a non-empty string`);
+    } else {
+      ids.push(asset.asset_id);
+    }
+    if (!['primary', 'advisor', 'control'].includes(asset.role)) {
+      errors.push(`${label}.role must be primary, advisor, or control`);
+    }
+    if (asset.digest_verified !== true) errors.push(`${label}.digest_verified must be true`);
+    if (!isNonEmptyString(asset.authorization) || asset.authorization.trim().toLowerCase() === 'blocked') {
+      errors.push(`${label}.authorization must be non-empty and not blocked`);
+    }
+    if (asset.role === 'primary') {
+      primaryCount++;
+      loadedPrimaryId = asset.asset_id;
+    }
+    if (asset.role === 'advisor' && isNonEmptyString(asset.asset_id)) loadedAdvisorIds.push(asset.asset_id);
+  });
+  const duplicates = ids.filter((assetId, index) => ids.indexOf(assetId) !== index);
+  if (duplicates.length) errors.push(`loaded asset IDs must be unique: ${[...new Set(duplicates)].join(', ')}`);
+  if (primaryCount !== 1) errors.push('assetsLoaded must contain exactly one primary');
+  const selectedPrimaryId = plan?.selection?.primary?.asset_id;
+  if (isNonEmptyString(selectedPrimaryId) && loadedPrimaryId !== selectedPrimaryId) {
+    errors.push(`loaded primary must match selected primary ${selectedPrimaryId}`);
+  }
+  if (plan) {
+    const selectedAdvisorIds = plan.selection.advisors.map(advisor => advisor.asset_id);
+    if (!sameStringSet(loadedAdvisorIds, selectedAdvisorIds)) {
+      errors.push('loaded advisor IDs must exactly match selected advisor IDs');
+    }
+    const rejectedIds = new Set(plan.selection.rejected.map(rejected => rejected.asset_id));
+    const loadedRejected = ids.filter(assetId => rejectedIds.has(assetId));
+    if (loadedRejected.length) {
+      errors.push(`rejected asset IDs must not be loaded: ${loadedRejected.join(', ')}`);
+    }
+  }
+  return { valid: errors.length === 0, status: errors.length ? 'invalid' : 'completed', errors };
+}
+
+function validateEconomicsEvidence(plan, executionCost) {
+  const errors = [];
+  if (!isPlainObject(plan?.budget)) {
+    errors.push('plan.budget must be a plain object');
+  } else {
+    const expectedAssets = 1 + plan.selection.advisors.length;
+    if (typeof plan.budget.max_tokens !== 'number' || !Number.isFinite(plan.budget.max_tokens) ||
+        plan.budget.max_tokens <= 0) {
+      errors.push('plan.budget.max_tokens must be a finite positive number');
+    }
+    if (!Number.isInteger(plan.budget.max_assets) || plan.budget.max_assets <= 0) {
+      errors.push('plan.budget.max_assets must be a positive integer');
+    }
+    if (!Number.isInteger(plan.budget.assets_consumed) || plan.budget.assets_consumed !== expectedAssets) {
+      errors.push(`plan.budget.assets_consumed must equal selected asset count ${expectedAssets}`);
+    }
+    if (Number.isInteger(plan.budget.max_assets) && expectedAssets > plan.budget.max_assets) {
+      errors.push('selected asset count exceeds plan.budget.max_assets');
+    }
+  }
+  if (!isPlainObject(executionCost)) {
+    errors.push('executionCost must be a plain object');
+  } else {
+    const canonicalErrors = canonicalValidationErrors(executionCost, 'executionCost');
+    errors.push(...canonicalErrors);
+    if (typeof executionCost.tokens_used !== 'number' || !Number.isFinite(executionCost.tokens_used) ||
+        executionCost.tokens_used < 0) {
+      errors.push('executionCost.tokens_used must be a finite nonnegative number');
+    }
+    if (!Number.isInteger(executionCost.model_calls) || executionCost.model_calls < 0) {
+      errors.push('executionCost.model_calls must be a nonnegative integer');
+    }
+  }
+  return { valid: errors.length === 0, errors };
+}
+
+function gateWithEvidence(gate, validation) {
+  if (validation.valid) return gate;
+  const issues = [...(gate.issues || []), ...validation.errors];
+  return { ...gate, pass: false, score: 0, issues };
+}
+
 // ── Fixture Creation ──────────────────────────────────────────────────
 
 /**
@@ -164,8 +392,11 @@ function createClusterFixture(opts) {
  * Structural gate — does the cluster resolve and compose correctly?
  */
 function structuralGate(plan) {
+  const planValidation = validateClusterPlan(plan);
+  if (!planValidation.valid) {
+    return { pass: false, score: 0, issues: planValidation.errors, details: { status: 'invalid_plan' } };
+  }
   const issues = [];
-  if (!plan) return { pass: false, score: 0, issues: ['No plan produced'] };
 
   if (plan.applicability?.decision === 'blocked')
     issues.push('Cluster applicability blocked — no primary matched');
@@ -233,8 +464,8 @@ function behavioralGate(clusterResults, primaryOnlyResults) {
  */
 function economicsGate(plan, executionCost) {
   const assetCount = (plan?.selection?.advisors?.length || 0) + 1;
-  const tokensUsed = executionCost?.tokens_used || plan?.budget?.assets_consumed * 400 || 0;
-  const maxTokens = plan?.budget?.max_tokens || 800;
+  const tokensUsed = executionCost?.tokens_used ?? ((plan?.budget?.assets_consumed ?? 0) * 400);
+  const maxTokens = plan?.budget?.max_tokens ?? 800;
   const budgetOk = tokensUsed <= maxTokens;
 
   // Marginal cost: each additional asset should improve judgment by at least 0.15
@@ -264,28 +495,18 @@ function economicsGate(plan, executionCost) {
  * Trust gate — are all assets authorized and verified?
  */
 function trustGate(assetsLoaded) {
-  if (assetsLoaded == null) {
+  const validation = validateLoadedAssets(assetsLoaded);
+  if (validation.status === 'not_run') {
     return { pass: null, score: 0, issues: ['Trust evidence not provided'], details: { status: 'not_run' } };
   }
-  if (!assetsLoaded.length) {
-    return { pass: false, score: 0, issues: ['No assets loaded'], details: {} };
-  }
-
-  const issues = [];
-  for (const a of assetsLoaded) {
-    if (!a.digest_verified) issues.push(`${a.asset_id}: digest not verified`);
-    if (a.authorization === 'blocked') issues.push(`${a.asset_id}: authorization blocked`);
-  }
-
-  const primaryAsset = assetsLoaded.find(a => a.role === 'primary');
-  if (primaryAsset && !primaryAsset.digest_verified) {
-    issues.push('Primary asset digest not verified — blocking');
+  if (!validation.valid) {
+    return { pass: false, score: 0, issues: validation.errors, details: { status: 'invalid' } };
   }
 
   return {
-    pass: issues.length === 0,
-    score: issues.length === 0 ? 1.0 : Math.max(0, 1.0 - issues.length * 0.25),
-    issues,
+    pass: true,
+    score: 1.0,
+    issues: [],
     details: {
       total_assets: assetsLoaded.length,
       verified: assetsLoaded.filter(a => a.digest_verified).length,
@@ -344,37 +565,68 @@ function runClusterAssay(opts = {}) {
   validateClusterAssayManifest(manifest);
   const startTime = Date.now();
   const fixtureValidation = validateClusterFixtures(fixtures);
+  const planValidation = validateClusterPlan(plan);
+  const fixtureBindingValidation = fixtureValidation.valid && planValidation.valid
+    ? validateFixtureBindings(fixtures, plan)
+    : { valid: false, errors: ['Fixture expectations require a valid fixture dataset and Cluster plan'] };
+  const comparisonValidation = fixtureValidation.valid
+    ? validateComparisonArms(comparisonArms, fixtures)
+    : { valid: false, errors: ['Comparison arms require a valid fixture dataset'] };
+  const loadedAssets = opts.assetsLoaded !== undefined
+    ? opts.assetsLoaded
+    : (planValidation.valid ? plan.assets_loaded : undefined);
+  const loadedAssetValidation = validateLoadedAssets(loadedAssets, planValidation.valid ? plan : null);
+  const economicsValidation = planValidation.valid
+    ? validateEconomicsEvidence(plan, executionCost)
+    : { valid: false, errors: ['Economics evidence requires a valid Cluster plan'] };
 
   // Structural gate
-  const structural = structuralGate(plan);
+  const structural = gateWithEvidence(structuralGate(plan), fixtureBindingValidation);
 
   // Behavioral gate
-  const primaryOnly = comparisonArms.find(a => a.arm === 'primary_only') || null;
-  const boundedCompose = comparisonArms.find(a => a.arm === 'bounded_compose') || null;
-  const behavioral = behavioralGate(boundedCompose, primaryOnly);
+  const primaryOnly = comparisonValidation.valid
+    ? comparisonArms.find(a => a.arm === 'primary_only') || null
+    : null;
+  const boundedCompose = comparisonValidation.valid
+    ? comparisonArms.find(a => a.arm === 'bounded_compose') || null
+    : null;
+  const behavioral = comparisonValidation.valid
+    ? behavioralGate(boundedCompose, primaryOnly)
+    : { pass: false, score: 0, issues: comparisonValidation.errors, details: { status: 'invalid_evidence' } };
 
   // Economics gate
-  const economics = economicsGate(plan, executionCost);
+  const economics = planValidation.valid && economicsValidation.valid
+    ? economicsGate(plan, executionCost)
+    : {
+      pass: false,
+      score: 0,
+      issues: [...planValidation.errors, ...economicsValidation.errors],
+      details: { status: 'invalid_evidence' },
+    };
 
   // Trust gate — asset-loading evidence is required for evaluation.
   // Plan selection alone is NOT trust evidence. The gate returns null
   // (not evaluated) when no observed trust data is available.
-  const trust = (plan?.assets_loaded?.length || opts?.assetsLoaded?.length)
-    ? trustGate(opts.assetsLoaded || plan.assets_loaded)
-    : trustGate(null);
+  const trust = loadedAssetValidation.status === 'not_run'
+    ? trustGate(null)
+    : (loadedAssetValidation.valid
+      ? trustGate(loadedAssets)
+      : { pass: false, score: 0, issues: loadedAssetValidation.errors, details: { status: 'invalid' } });
 
   // Product gate
-  const product = productGate(plan, manifest);
+  const product = productGate(planValidation.valid ? plan : null, manifest);
 
   // Comparison arm results
   const comparisonArmResults = CLUSTER_COMPARISON_ARMS.map(arm => {
-    const armData = comparisonArms.find(a => a.arm === arm);
+    const armData = comparisonValidation.valid ? comparisonArms.find(a => a.arm === arm) : null;
     return {
       arm,
       description: COMPARISON_ARM_DESCRIPTIONS[arm],
-      score: armData?.mean_score || null,
-      critical_errors: armData?.critical_errors || null,
-      status: armData ? 'completed' : 'not_run',
+      score: armData?.mean_score ?? null,
+      critical_errors: armData?.critical_errors ?? null,
+      result_count: armData?.result_count ?? null,
+      fixture_ids: armData?.fixture_ids || [],
+      status: comparisonValidation.valid ? 'completed' : 'invalid',
     };
   });
 
@@ -404,13 +656,27 @@ function runClusterAssay(opts = {}) {
       all_passed: allPassed,
       failed_gates: Object.entries(gates).filter(([, g]) => g.pass === false).map(([name]) => name),
       incomplete_gates: Object.entries(gates).filter(([, g]) => g.pass === null).map(([name]) => name),
-      failed_evidence: fixtureValidation.valid ? [] : ['fixture_dataset'],
+      failed_evidence: [
+        ...(!fixtureValidation.valid ? ['fixture_dataset'] : []),
+        ...(!planValidation.valid ? ['cluster_plan'] : []),
+        ...(!fixtureBindingValidation.valid ? ['fixture_expectations'] : []),
+        ...(!comparisonValidation.valid ? ['comparison_arms'] : []),
+        ...(!loadedAssetValidation.valid ? ['loaded_assets'] : []),
+        ...(!economicsValidation.valid ? ['economics'] : []),
+      ],
+    },
+    evidence_validation: {
+      plan: planValidation,
+      fixture_expectations: fixtureBindingValidation,
+      comparison_arms: comparisonValidation,
+      loaded_assets: loadedAssetValidation,
+      economics: economicsValidation,
     },
     marginal_value: {
-      primary_only_score: primaryOnly?.mean_score || null,
-      cluster_score: boundedCompose?.mean_score || null,
-      delta: (boundedCompose?.mean_score || 0) - (primaryOnly?.mean_score || 0),
-      threshold_met: ((boundedCompose?.mean_score || 0) - (primaryOnly?.mean_score || 0)) >= 0.3,
+      primary_only_score: primaryOnly?.mean_score ?? null,
+      cluster_score: boundedCompose?.mean_score ?? null,
+      delta: comparisonValidation.valid ? boundedCompose.mean_score - primaryOnly.mean_score : 0,
+      threshold_met: comparisonValidation.valid && boundedCompose.mean_score - primaryOnly.mean_score >= 0.3,
       threshold: 0.30,
     },
     dataset_fingerprint: fixtureValidation.valid

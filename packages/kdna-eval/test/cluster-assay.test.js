@@ -28,6 +28,48 @@ const CANONICAL_MANIFEST = {
   budget: { profile: 'interactive', max_tokens: 800, max_assets: 3 },
 };
 
+function passingClusterOptions() {
+  const fixtures = [createClusterFixture({
+    task: 'Bound Cluster evidence?',
+    expectedPrimary: '@aikdna/dev-change-risk',
+    expectedAdvisors: ['@aikdna/dev-api-design'],
+    expectedRejected: ['@aikdna/irrelevant'],
+    expectedConflicts: 1,
+  })];
+  const plan = {
+    applicability: { decision: 'applies' },
+    selection: {
+      primary: { asset_id: '@aikdna/dev-change-risk', selection_reason: 'only primary' },
+      advisors: [{
+        asset_id: '@aikdna/dev-api-design',
+        contribution_hypothesis: 'API design review for PATCH semantics',
+      }],
+      rejected: [{ asset_id: '@aikdna/irrelevant', rejection_reason: 'no task match' }],
+    },
+    conflicts: [{ conflict_id: 'conflict-1' }],
+    budget: { profile: 'interactive', max_tokens: 800, max_assets: 3, assets_consumed: 2 },
+  };
+  const comparisonArms = CLUSTER_COMPARISON_ARMS.map(arm => ({
+    arm,
+    fixture_ids: fixtures.map(fixture => fixture.fixture_id),
+    mean_score: arm === 'bounded_compose' ? 4 : (arm === 'primary_only' ? 3 : 3.2),
+    result_count: fixtures.length,
+    critical_errors: 0,
+  }));
+  const assetsLoaded = [
+    { asset_id: '@aikdna/dev-change-risk', role: 'primary', digest_verified: true, authorization: 'public' },
+    { asset_id: '@aikdna/dev-api-design', role: 'advisor', digest_verified: true, authorization: 'public' },
+  ];
+  return {
+    manifest: CANONICAL_MANIFEST,
+    plan,
+    executionCost: { tokens_used: 500, model_calls: 1 },
+    comparisonArms,
+    fixtures,
+    assetsLoaded,
+  };
+}
+
 // ── Fixtures ──────────────────────────────────────────────────────────
 
 it('creates cluster fixture with required fields', () => {
@@ -182,8 +224,157 @@ it('runs full cluster assay with valid plan', () => {
   assert.strictEqual(result.fixture_validation.valid, true);
   assert.strictEqual(result.verdict.overall, 'fail');
   assert.strictEqual(result.verdict.all_passed, false);
-  assert.ok(result.verdict.incomplete_gates.includes('behavioral'));
+  assert.ok(result.verdict.failed_gates.includes('behavioral'));
   assert.ok(result.verdict.incomplete_gates.includes('trust'));
+});
+
+it('passes only with a fully bound plan, fixtures, seven comparison arms, cost, and loaded assets', () => {
+  const result = runClusterAssay(passingClusterOptions());
+  assert.strictEqual(result.verdict.overall, 'pass');
+  assert.strictEqual(result.verdict.all_passed, true);
+  assert.deepStrictEqual(result.verdict.failed_evidence, []);
+  assert.ok(Object.values(result.evidence_validation).every(validation => validation.valid));
+  assert.ok(result.comparison_arms.every(arm => arm.status === 'completed'));
+});
+
+it('reproduced empty primary and loaded asset IDs can never pass', () => {
+  const emptyPrimary = passingClusterOptions();
+  emptyPrimary.plan.selection.primary = {};
+  const emptyPrimaryReport = runClusterAssay(emptyPrimary);
+  assert.strictEqual(emptyPrimaryReport.verdict.overall, 'fail');
+  assert.ok(emptyPrimaryReport.verdict.failed_evidence.includes('cluster_plan'));
+
+  const emptyLoadedId = passingClusterOptions();
+  emptyLoadedId.assetsLoaded[0] = {
+    role: 'primary', digest_verified: true, authorization: 'public',
+  };
+  const emptyLoadedReport = runClusterAssay(emptyLoadedId);
+  assert.strictEqual(emptyLoadedReport.verdict.overall, 'fail');
+  assert.ok(emptyLoadedReport.verdict.failed_evidence.includes('loaded_assets'));
+});
+
+it('loaded assets bind exactly to selected primary, advisors, and rejected IDs', () => {
+  const cases = [];
+  const mismatchedPrimary = passingClusterOptions();
+  mismatchedPrimary.assetsLoaded[0].asset_id = '@aikdna/other-primary';
+  cases.push(mismatchedPrimary);
+  const duplicate = passingClusterOptions();
+  duplicate.assetsLoaded[1].asset_id = duplicate.assetsLoaded[0].asset_id;
+  cases.push(duplicate);
+  const absentPrimary = passingClusterOptions();
+  absentPrimary.assetsLoaded = absentPrimary.assetsLoaded.map(asset => ({ ...asset, role: 'advisor' }));
+  cases.push(absentPrimary);
+  const missingAdvisor = passingClusterOptions();
+  missingAdvisor.assetsLoaded = [missingAdvisor.assetsLoaded[0]];
+  cases.push(missingAdvisor);
+  const rejectedLoaded = passingClusterOptions();
+  rejectedLoaded.assetsLoaded.push({
+    asset_id: '@aikdna/irrelevant', role: 'control', digest_verified: true, authorization: 'public',
+  });
+  cases.push(rejectedLoaded);
+  const blocked = passingClusterOptions();
+  blocked.assetsLoaded[0].authorization = '  blocked  ';
+  cases.push(blocked);
+  const unknownRole = passingClusterOptions();
+  unknownRole.assetsLoaded[1].role = 'observer';
+  cases.push(unknownRole);
+
+  for (const options of cases) {
+    const report = runClusterAssay(options);
+    assert.strictEqual(report.verdict.overall, 'fail');
+    assert.ok(report.verdict.failed_evidence.includes('loaded_assets'));
+    assert.strictEqual(report.gates.trust.pass, false);
+  }
+});
+
+it('fixture expectations bind exact selected, rejected, and conflict evidence', () => {
+  const mutations = [
+    fixture => { fixture.expected_primary = '@aikdna/other-primary'; },
+    fixture => { fixture.expected_advisors = []; },
+    fixture => { fixture.expected_rejected = []; },
+    fixture => { fixture.expected_conflicts = 0; },
+  ];
+  for (const mutate of mutations) {
+    const options = passingClusterOptions();
+    mutate(options.fixtures[0]);
+    const report = runClusterAssay(options);
+    assert.strictEqual(report.verdict.overall, 'fail');
+    assert.ok(report.verdict.failed_evidence.includes('fixture_expectations'));
+    assert.strictEqual(report.gates.structural.pass, false);
+  }
+  const missingReason = passingClusterOptions();
+  delete missingReason.plan.selection.rejected[0].rejection_reason;
+  const missingReasonReport = runClusterAssay(missingReason);
+  assert.strictEqual(missingReasonReport.verdict.overall, 'fail');
+  assert.ok(missingReasonReport.verdict.failed_evidence.includes('cluster_plan'));
+});
+
+it('all seven comparison arms must be unique, finite, and bound to the exact fixture set', () => {
+  const cases = [];
+  const missing = passingClusterOptions();
+  missing.comparisonArms.pop();
+  cases.push(missing);
+  const duplicate = passingClusterOptions();
+  duplicate.comparisonArms[6] = { ...duplicate.comparisonArms[0] };
+  cases.push(duplicate);
+  const unknown = passingClusterOptions();
+  unknown.comparisonArms[0].arm = 'unknown';
+  cases.push(unknown);
+  const unbound = passingClusterOptions();
+  unbound.comparisonArms[0].fixture_ids = ['other-fixture'];
+  cases.push(unbound);
+  const missingCount = passingClusterOptions();
+  missingCount.comparisonArms[0].result_count = 0;
+  cases.push(missingCount);
+  const invalidScore = passingClusterOptions();
+  invalidScore.comparisonArms[0].mean_score = Infinity;
+  cases.push(invalidScore);
+
+  for (const options of cases) {
+    const report = runClusterAssay(options);
+    assert.strictEqual(report.verdict.overall, 'fail');
+    assert.ok(report.verdict.failed_evidence.includes('comparison_arms'));
+    assert.strictEqual(report.gates.behavioral.pass, false);
+    assert.ok(report.comparison_arms.every(arm =>
+      arm.status === 'invalid' && arm.score === null && arm.fixture_ids.length === 0));
+  }
+});
+
+it('missing or malformed economics evidence cannot synthesize zero cost', () => {
+  const cases = [];
+  const missingCost = passingClusterOptions();
+  delete missingCost.executionCost;
+  cases.push(missingCost);
+  const missingBudget = passingClusterOptions();
+  delete missingBudget.plan.budget;
+  cases.push(missingBudget);
+  const wrongConsumed = passingClusterOptions();
+  wrongConsumed.plan.budget.assets_consumed = 1;
+  cases.push(wrongConsumed);
+  const overAssetBudget = passingClusterOptions();
+  overAssetBudget.plan.budget.max_assets = 1;
+  cases.push(overAssetBudget);
+  const invalidTokens = passingClusterOptions();
+  invalidTokens.executionCost.tokens_used = -1;
+  cases.push(invalidTokens);
+  const invalidCalls = passingClusterOptions();
+  invalidCalls.executionCost.model_calls = 0.5;
+  cases.push(invalidCalls);
+
+  for (const options of cases) {
+    const report = runClusterAssay(options);
+    assert.strictEqual(report.verdict.overall, 'fail');
+    assert.ok(report.verdict.failed_evidence.includes('economics'));
+    assert.strictEqual(report.gates.economics.pass, false);
+  }
+});
+
+it('explicit observed zero-token cost is preserved', () => {
+  const options = passingClusterOptions();
+  options.executionCost.tokens_used = 0;
+  const report = runClusterAssay(options);
+  assert.strictEqual(report.verdict.overall, 'pass');
+  assert.strictEqual(report.gates.economics.details.tokens_used, 0);
 });
 
 // ── Advisor Relation Ledger ───────────────────────────────────────────
@@ -346,7 +537,7 @@ it('cluster assay cannot pass with zero, malformed, or duplicate fixtures', () =
     const report = runClusterAssay({ ...options, fixtures });
     assert.strictEqual(report.verdict.overall, 'fail');
     assert.strictEqual(report.verdict.all_passed, false);
-    assert.deepStrictEqual(report.verdict.failed_evidence, ['fixture_dataset']);
+    assert.ok(report.verdict.failed_evidence.includes('fixture_dataset'));
   }
 });
 

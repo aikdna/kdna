@@ -575,9 +575,26 @@ export interface ClusterAssayReport {
     incomplete_gates: string[];
     failed_evidence: string[];
   };
-  comparison_arms: unknown[];
+  comparison_arms: ClusterComparisonArmReport[];
+  evidence_validation: {
+    plan: ClusterEvidenceValidation;
+    fixture_expectations: ClusterEvidenceValidation;
+    comparison_arms: ClusterEvidenceValidation;
+    loaded_assets: ClusterEvidenceValidation & { status?: "not_run" | "invalid" | "completed" };
+    economics: ClusterEvidenceValidation;
+  };
   marginal_value: Record<string, unknown>;
   dataset_fingerprint: string;
+}
+
+export interface ClusterComparisonArmReport {
+  arm: ClusterComparisonArm;
+  description: string;
+  score: number | null;
+  critical_errors: number | null;
+  result_count: number | null;
+  fixture_ids: string[];
+  status: "completed" | "invalid" | "not_run";
 }
 
 export type AdvisorDecisionValue =
@@ -634,11 +651,77 @@ export interface CreateClusterFixtureOptions {
 
 export interface ClusterAssayOptions {
   manifest?: ClusterAssayManifest | null;
-  plan?: Record<string, unknown>;
-  executionCost?: Record<string, unknown>;
-  comparisonArms?: Array<Record<string, unknown>>;
+  plan?: ClusterAssayPlan | null;
+  executionCost?: ClusterExecutionCost;
+  comparisonArms?: ClusterComparisonEvidence[];
   fixtures: ClusterReplayFixture[];
-  assetsLoaded?: Array<Record<string, unknown>>;
+  assetsLoaded?: ClusterLoadedAsset[];
+}
+
+export interface ClusterEvidenceValidation {
+  valid: boolean;
+  errors: string[];
+}
+
+export interface ClusterPlanAsset {
+  asset_id: string;
+  [key: string]: unknown;
+}
+
+export interface ClusterPlanAdvisor extends ClusterPlanAsset {
+  contribution_hypothesis: string;
+}
+
+export type ClusterPlanRejected = ClusterPlanAsset & (
+  | { rejection_reason: string }
+  | { reason: string }
+  | { rejection_policy: string }
+);
+
+export interface ClusterAssayPlan {
+  applicability: { decision: "applies"; [key: string]: unknown };
+  selection: {
+    primary: ClusterPlanAsset;
+    advisors: ClusterPlanAdvisor[];
+    rejected: ClusterPlanRejected[];
+    [key: string]: unknown;
+  };
+  conflicts: unknown[];
+  assets_loaded?: ClusterLoadedAsset[];
+  budget: ClusterPlanBudget;
+  cluster_ref?: { cluster_id?: string; [key: string]: unknown };
+  [key: string]: unknown;
+}
+
+export interface ClusterPlanBudget {
+  max_tokens: number;
+  max_assets: number;
+  assets_consumed: number;
+  profile?: string;
+  [key: string]: unknown;
+}
+
+export interface ClusterExecutionCost {
+  tokens_used: number;
+  model_calls: number;
+  [key: string]: unknown;
+}
+
+export interface ClusterLoadedAsset {
+  asset_id: string;
+  role: "primary" | "advisor" | "control";
+  digest_verified: true;
+  authorization: string;
+  [key: string]: unknown;
+}
+
+export interface ClusterComparisonEvidence {
+  arm: ClusterComparisonArm;
+  fixture_ids: string[];
+  mean_score: number;
+  result_count: number;
+  critical_errors: number;
+  [key: string]: unknown;
 }
 
 export interface ClusterAssayManifest {
@@ -715,14 +798,22 @@ export declare function runAssay(options: {
 export declare function classifyAsset(evidence?: Record<string, unknown>): Record<string, unknown> & { levels: string[]; highest_level: string };
 export declare function generateEvidenceClaim(report: AssayReport, options?: Record<string, unknown>): Record<string, unknown>;
 
-export declare const CLUSTER_COMPARISON_ARMS: readonly string[];
+export type ClusterComparisonArm =
+  | "primary_only"
+  | "bounded_compose"
+  | "wrong_advisor"
+  | "irrelevant_advisor"
+  | "budget_waste"
+  | "adversarial"
+  | "no_kdna";
+export declare const CLUSTER_COMPARISON_ARMS: readonly ClusterComparisonArm[];
 export declare const CLUSTER_GATES: readonly string[];
 export declare const COMPARISON_ARM_DESCRIPTIONS: Readonly<Record<string, string>>;
 export declare function createClusterFixture(options: CreateClusterFixtureOptions): ClusterReplayFixture;
 export declare function structuralGate(plan: Record<string, unknown> | null): ClusterAssayGate;
 export declare function behavioralGate(clusterResults?: Record<string, unknown> | null, primaryOnlyResults?: Record<string, unknown> | null): ClusterAssayGate;
 export declare function economicsGate(plan?: Record<string, unknown> | null, executionCost?: Record<string, unknown>): ClusterAssayGate;
-export declare function trustGate(assetsLoaded?: Array<Record<string, unknown>> | null): ClusterAssayGate;
+export declare function trustGate(assetsLoaded?: ClusterLoadedAsset[] | null): ClusterAssayGate;
 export declare function productGate(plan?: Record<string, unknown> | null, manifest?: Record<string, unknown>): ClusterAssayGate;
 export declare function runClusterAssay(options: ClusterAssayOptions): ClusterAssayReport;
 export declare function createAdvisorRelationLedger(

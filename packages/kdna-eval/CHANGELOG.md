@@ -34,6 +34,14 @@
 - Validate Cluster manifest identifiers and product-gate fields before
   producing the strongly typed report, while preserving documented defaults
   when optional identifiers are absent.
+- Bind a passing Cluster Assay to one valid selected primary, exact fixture
+  expectations, verified loaded primary/advisor assets, and non-loaded rejected
+  assets; missing, duplicate, blocked, or mismatched identities fail closed.
+- Require all seven comparison arms exactly once, with finite 1–5 scores,
+  nonnegative result/error counts, and the exact fixture ID set for every arm.
+- Require explicit Cluster budget and observed execution-cost evidence. Zero
+  observed tokens remain zero; missing cost data is never replaced with a
+  passing synthetic estimate.
 
 ## 0.3.1 (2026-07-12)
 
