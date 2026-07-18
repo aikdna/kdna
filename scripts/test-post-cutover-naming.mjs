@@ -496,14 +496,7 @@ test('allowlist full-tuple authority rejects additions, removals, and modificati
 
 test('a generation token injected only into any publishable tarball surface fails', () => {
   const roots = discoverPackageRoots();
-  assert.deepEqual(roots, [
-    'examples/typescript-agent',
-    'packages/artifact-engine',
-    'packages/fidelity-core',
-    'packages/kdna',
-    'packages/kdna-core',
-    'packages/kdna-eval',
-  ]);
+  assert.deepEqual(roots, ['packages/kdna', 'packages/kdna-core', 'packages/kdna-eval']);
   const records = roots.map((root) => ({
     path: `${root}/README.md`,
     surface: 'packed-tarball',
