@@ -86,6 +86,7 @@ function releaseInput(overrides = {}) {
       tagCommit: HASH,
       mainCommit: HASH,
       mainContainsHead: true,
+      authorSignoffMatch: true,
       ...overrides.git,
     },
   };
@@ -366,6 +367,7 @@ test('release context rejects every ambiguous or mutable release input', async (
     ['tag differs from head', releaseInput({ git: { tagCommit: OTHER_HASH } })],
     ['missing protected main', releaseInput({ git: { mainCommit: '' } })],
     ['tag commit outside protected main', releaseInput({ git: { mainContainsHead: false } })],
+    ['release commit DCO mismatch', releaseInput({ git: { authorSignoffMatch: false } })],
     ['workflow sha differs from head', releaseInput({ env: { GITHUB_SHA: OTHER_HASH } })],
     ['substring changelog', releaseInput({ changelog: '# Changelog\n\nnotes for 1.2.3 only\n' })],
     ['prefix heading', releaseInput({ changelog: '# Changelog\n\n## 1.2.30\n' })],
@@ -435,7 +437,7 @@ test('current release binding rejects stale evidence before lookup or publicatio
   assert.equal(publishCalls, 0);
 });
 
-test('current release reader accepts protected main ancestry and rejects a branch-only tag', (t) => {
+test('current release reader requires exact DCO and protected main ancestry', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-compat-main-ancestry-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   fs.mkdirSync(path.join(root, 'packages', 'kdna'), { recursive: true });
@@ -451,7 +453,7 @@ test('current release reader accepts protected main ancestry and rejects a branc
   runGit(root, ['config', 'user.name', 'KDNA Test']);
   runGit(root, ['config', 'user.email', 'test@example.invalid']);
   runGit(root, ['add', '.']);
-  runGit(root, ['commit', '--quiet', '-m', 'test: accepted main']);
+  runGit(root, ['commit', '--quiet', '-s', '-m', 'test: accepted main']);
   const accepted = runGit(root, ['rev-parse', 'HEAD']);
   runGit(root, ['update-ref', 'refs/remotes/origin/main', accepted]);
   runGit(root, ['tag', 'compat/1.2.3']);
@@ -464,9 +466,25 @@ test('current release reader accepts protected main ancestry and rejects a branc
     }),
   );
 
+  fs.writeFileSync(path.join(root, 'unsigned.txt'), 'not signed off\n');
+  runGit(root, ['add', 'unsigned.txt']);
+  runGit(root, ['commit', '--quiet', '-m', 'test: unsigned candidate']);
+  const unsigned = runGit(root, ['rev-parse', 'HEAD']);
+  runGit(root, ['update-ref', 'refs/remotes/origin/main', unsigned]);
+  runGit(root, ['tag', '--force', 'compat/1.2.3']);
+  assert.throws(
+    () =>
+      readCurrentReleaseBinding({
+        root,
+        evidence: evidence({ source: { commit: unsigned } }),
+        env: releaseInput({ env: { GITHUB_SHA: unsigned } }).env,
+      }),
+    /valid DCO Signed-off-by trailer/u,
+  );
+
   fs.writeFileSync(path.join(root, 'branch-only.txt'), 'not accepted\n');
   runGit(root, ['add', 'branch-only.txt']);
-  runGit(root, ['commit', '--quiet', '-m', 'test: branch-only candidate']);
+  runGit(root, ['commit', '--quiet', '-s', '-m', 'test: branch-only candidate']);
   const branchOnly = runGit(root, ['rev-parse', 'HEAD']);
   runGit(root, ['tag', '--force', 'compat/1.2.3']);
   assert.throws(
