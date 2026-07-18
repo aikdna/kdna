@@ -161,6 +161,15 @@ function assertExactSurface(label, expected, actual) {
   }
 }
 
+function assertSameFile(actualPath, expectedPath) {
+  const actual = fs.statSync(actualPath, { bigint: true });
+  const expected = fs.statSync(expectedPath, { bigint: true });
+  assert.ok(actual.isFile(), "resolved declaration must be a file");
+  assert.ok(expected.isFile(), "export declaration target must be a file");
+  assert.equal(actual.dev, expected.dev, "resolved declaration is on a different device");
+  assert.equal(actual.ino, expected.ino, "resolved declaration is a different file");
+}
+
 function formatDiagnostics(diagnostics) {
   return diagnostics
     .map((diagnostic) => {
@@ -294,6 +303,11 @@ test("public-surface guard rejects hostile names and accepts reordered sets", ()
     /missing=\[\]; unexpected=\[gamma\]/,
   );
   assert.doesNotThrow(() => assertExactSurface("same-set", ["beta", "alpha"], ["alpha", "beta"]));
+  assert.doesNotThrow(() => assertSameFile(__filename, fs.realpathSync(__filename)));
+  assert.throws(
+    () => assertSameFile(__filename, path.join(PACKAGE_ROOT, "package.json")),
+    /different file/,
+  );
 });
 
 test("the packed package preserves every CJS, ESM, and TypeScript public surface", () => {
@@ -443,7 +457,7 @@ if (values.some((value) => value === undefined)) {
         installedPackageRoot,
         PACKAGE_MANIFEST.exports[exportPath].types,
       );
-      assert.equal(fs.realpathSync(declarationPath), fs.realpathSync(expectedDeclaration));
+      assertSameFile(declarationPath, expectedDeclaration);
       assertExactSurface(
         `${exportPath} packed TypeScript`,
         EXPECTED_VALUE_EXPORTS[exportPath],
