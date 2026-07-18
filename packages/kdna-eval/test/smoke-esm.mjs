@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { createEvaluator, evaluateCandidates, createReplayEngine, createMultiGateRunner, createCostTracker, createAssayProfile, createFixture, validateFixtureSet, scoreJudgment } from "../src/index.mjs";
+import { DEFAULT_SCORE, SCORE_MIN, SCORE_MAX, createEvaluator, evaluateCandidates, createReplayEngine, createMultiGateRunner, createCostTracker, createAssayProfile, createFixture, validateFixtureSet, scoreJudgment } from "../src/index.mjs";
 import { loadFlatDomains } from "../src/loader.mjs";
 import { resolveDomains } from "../src/route.mjs";
 
@@ -10,6 +10,9 @@ assert.ok(typeof resolveDomains === "function");
 assert.ok(typeof createReplayEngine === "function");
 assert.ok(typeof createMultiGateRunner === "function");
 assert.ok(typeof createCostTracker === "function");
+assert.equal(DEFAULT_SCORE, 50);
+assert.equal(SCORE_MIN, 0);
+assert.equal(SCORE_MAX, 100);
 
 const evaluator = createEvaluator({ dimensions: ["clarity", "impact"] });
 const results = evaluator.score(

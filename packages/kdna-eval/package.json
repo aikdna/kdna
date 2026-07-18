@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-eval",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "KDNA consumption evaluation framework — configurable scoring, multi-gate gating, replay regression, and cost tracking.",
   "type": "commonjs",
   "main": "src/index.js",

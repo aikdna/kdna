@@ -159,6 +159,295 @@ export declare function evaluateCandidates(candidates: Record<string, unknown>[]
 export declare function createEvaluator(options?: CreateEvaluatorOptions): Evaluator;
 export declare function extractRules(domainData: KdnaDomainData): ScoringRule[];
 export declare function extractThresholds(domainData: KdnaDomainData): Record<string, unknown>;
+export declare function clampDelta(delta: number, clamp?: EffectClamp | null): number;
+export declare function validateWeight(weight: number, domainId: string): void;
+
+export type ReplayMode = "repair" | "holdout" | "fresh" | "candidate-sealed" | "new-sealed";
+
+export interface ReplayFixture {
+  id?: string;
+  input?: { id?: string; [key: string]: unknown };
+  score?: number;
+  pass?: boolean;
+  dimensions?: Record<string, number>;
+  expected?: { score?: number; pass?: boolean; [key: string]: unknown };
+  [key: string]: unknown;
+}
+
+export interface ReplayResult {
+  id: string;
+  score?: number;
+  pass?: boolean;
+  dimensions?: Record<string, unknown>;
+  details?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+export interface ReplayRegressionFlag {
+  id: string;
+  kind: "pass-regression" | "score-regression";
+  current: boolean | number;
+  previous: boolean | number;
+  delta?: number;
+}
+
+export interface ReplayComparableRun {
+  results: ReplayResult[];
+}
+
+export interface ReplayRun extends ReplayComparableRun {
+  mode: ReplayMode;
+  timestamp: string;
+  inputHash: string;
+  regressionFlags: ReplayRegressionFlag[];
+  summary: { total: number; passed: number; failed: number; regressions: number };
+}
+
+export interface ReplayRunOptions {
+  policy?: Record<string, unknown>;
+  fixtures?: ReplayFixture[];
+  previousRun?: ReplayComparableRun;
+  evaluate?: (
+    fixture: ReplayFixture,
+    policy: Record<string, unknown> | undefined,
+    mode: ReplayMode,
+    previousRun: ReplayComparableRun | undefined,
+  ) => ReplayResult;
+}
+
+export interface ReplayDifference {
+  index: number;
+  kind: "added" | "removed" | "score-change" | "pass-change";
+  a: ReplayResult | null;
+  b: ReplayResult | null;
+  delta?: number;
+}
+
+export interface ReplayComparison {
+  diff: ReplayDifference[];
+  scoreDelta: number;
+}
+
+export interface ReplayEngineOptions {
+  store?: { save(run: ReplayRun): void };
+  logger?: { info(message: string, details: Record<string, unknown>): void };
+}
+
+export interface ReplayEngine {
+  replayRun(mode: ReplayMode, options?: ReplayRunOptions): ReplayRun;
+  compareRuns(runA?: ReplayComparableRun | null, runB?: ReplayComparableRun | null): ReplayComparison;
+  isRegression(
+    current?: ReplayResult | null,
+    baseline?: ReplayResult | null,
+    tolerance?: number,
+  ): boolean;
+  _getRuns(): ReplayRun[];
+}
+
+export declare const REPLAY_MODES: readonly ReplayMode[];
+export declare function hashInput(input: unknown): string;
+export declare function detectRegressions(
+  results: ReplayResult[],
+  previousRun?: ReplayComparableRun | null,
+  tolerance?: number,
+): ReplayRegressionFlag[];
+export declare function createReplayEngine(options?: ReplayEngineOptions): ReplayEngine;
+
+export interface GateResult {
+  gate: string;
+  pass: boolean | null;
+  score: number | null;
+  details: Record<string, unknown>;
+  errors: string[];
+  [key: string]: unknown;
+}
+
+export type GateDefinition = string | ((context: Record<string, unknown>) => GateResult);
+
+export interface AggregateGateResult {
+  overall: "pass" | "fail" | "no-results";
+  blocked_gates: string[];
+  passed_gates: string[];
+  failed_gates: string[];
+  result_count: number;
+  results: GateResult[];
+}
+
+export interface MultiGateRunner {
+  runGates(context: Record<string, unknown>): GateResult[];
+  runAll(context: Record<string, unknown>): AggregateGateResult;
+  hasGate(name: string): boolean;
+}
+
+export declare const GATE_NAMES: readonly string[];
+export declare function createMultiGateRunner(gates?: readonly GateDefinition[]): MultiGateRunner;
+export declare function aggregateGates(results: GateResult[]): AggregateGateResult;
+export declare function gateFromArray(results: GateResult[]): boolean;
+
+export type BudgetProfileName = "interactive" | "code-review" | "offline-audit";
+
+export interface BudgetProfile {
+  maxTokens: number;
+  maxChars: number;
+  maxAssets: number;
+  _note?: string;
+}
+
+export interface CostInput {
+  id?: unknown;
+  type?: string;
+  tokens?: number;
+  estimatedTokens?: number;
+  chars?: number;
+  text?: string;
+  content?: string;
+}
+
+export interface CostReport {
+  profile: BudgetProfileName | "custom";
+  limits: BudgetProfile;
+  consumed: { tokens: number; chars: number; assets: number };
+  over_budget: boolean;
+  over_budget_reasons: string[];
+  asset_details: Array<{
+    id: unknown;
+    type: string;
+    tokens: number;
+    chars: number;
+  }>;
+}
+
+export interface CostTracker {
+  trackAsset(asset: CostInput): void;
+  trackAdvisor(advisor: CostInput): void;
+  isOverBudget(): boolean;
+  getCostReport(): CostReport;
+  _reset(): void;
+}
+
+export declare const BUDGET_PROFILES: Readonly<Record<BudgetProfileName, Readonly<BudgetProfile>>>;
+export declare function createCostTracker(
+  budgetProfile: BudgetProfileName | BudgetProfile,
+): CostTracker;
+
+export interface ConsumptionAsset {
+  id?: string;
+  path?: string;
+  text?: string | null;
+  estimatedTokens?: number;
+  [key: string]: unknown;
+}
+
+export interface ConsumptionRunnerOptions {
+  policies?: Record<string, RoutePolicy>;
+  budgetProfile?: BudgetProfileName | BudgetProfile;
+}
+
+export interface ConsumptionRunner {
+  route(asset?: ConsumptionAsset | null, context?: Record<string, unknown>): GateResult;
+  cost(asset?: ConsumptionAsset | null, context?: Record<string, unknown>): GateResult;
+  compose(asset?: ConsumptionAsset | null, context?: Record<string, unknown>): GateResult;
+  promotion(asset?: ConsumptionAsset | null, context?: Record<string, unknown>): GateResult;
+  projection(asset?: ConsumptionAsset | null, context?: Record<string, unknown>): GateResult;
+  quality(asset?: ConsumptionAsset | null, context?: Record<string, unknown>): GateResult;
+}
+
+export declare function createConsumptionRunner(options?: ConsumptionRunnerOptions): ConsumptionRunner;
+
+export interface RouteCard {
+  route_card: string;
+  domain_id: string;
+  role: "primary" | "advisor" | "control";
+  boundaries?: {
+    applies_when?: string[];
+    does_not_apply_when?: string[];
+  };
+  neighbors?: Array<{
+    domain_id: string;
+    relationship: "complement" | "alternative" | "supersedes";
+    weight_delta?: number;
+  }>;
+  advisor_edges?: Array<{
+    domain_id: string;
+    when: "always" | "on_uncertainty" | "on_conflict";
+  }>;
+  provenance?: {
+    review_status?: string;
+    generated_by?: string;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
+
+export interface RouteCardResult {
+  valid: boolean;
+  card: RouteCard | null;
+  errors: string[];
+}
+
+export declare function loadRouteCard(pathOrObject: string | RouteCard): RouteCardResult;
+export declare function validateRouteCard(card: unknown): RouteCardResult;
+export declare function applyRouteCard(
+  card: RouteCard,
+  policies?: Record<string, RoutePolicy>,
+): Record<string, RoutePolicy>;
+
+export type ConsumerStatus =
+  | "draft_generated"
+  | "lint_repaired"
+  | "human_reviewed"
+  | "eval_candidate"
+  | "trusted_runtime";
+
+export interface ConsumerIndexEntry {
+  domain_id: string;
+  status: ConsumerStatus;
+  enabled?: boolean;
+  route_preference?: {
+    primary_for?: string[];
+    advisor_for?: string[];
+    never_for?: string[];
+  };
+  [key: string]: unknown;
+}
+
+export interface ConsumerIndex {
+  consumer_index: string;
+  entries: ConsumerIndexEntry[];
+  [key: string]: unknown;
+}
+
+export interface ConsumerIndexResult {
+  valid: boolean;
+  index: ConsumerIndex | null;
+  errors: string[];
+}
+
+export interface ConsumerIndexResolution {
+  status: ConsumerStatus;
+  routePreference:
+    | "primary"
+    | "advisor"
+    | { primaryFor: string[]; advisorFor: string[]; neverFor: string[] }
+    | null;
+  isTrusted: boolean;
+  isEnabled: boolean;
+}
+
+export declare const VALID_STATUSES: readonly ConsumerStatus[];
+export declare function loadConsumerIndex(
+  pathOrObject: string | ConsumerIndex,
+): ConsumerIndexResult;
+export declare function validateConsumerIndex(index: unknown): ConsumerIndexResult;
+export declare function resolveConsumerIndex(
+  index: ConsumerIndex | null | undefined,
+  task: string | null | undefined,
+  domainId: string,
+): ConsumerIndexResolution;
+export declare function isTrusted(
+  index: ConsumerIndex | null | undefined,
+  domainId: string,
+): boolean;
 
 export type AssayFixtureCategory =
   | "positive_target"

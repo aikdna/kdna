@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.2 (2026-07-19)
+
+- Make the ESM root export the same score constants as the CommonJS root.
+- Complete the TypeScript value declarations for every root runtime export,
+  including replay, gates, cost, consumption, route-card, and consumer-index
+  helpers.
+- Add fail-closed public-surface and packed TypeScript consumer regression
+  checks so runtime and declaration exports cannot drift silently again.
+
 ## 0.3.1 (2026-07-12)
 
 - Add fail-closed Asset Assay and five-gate Cluster Assay contracts.

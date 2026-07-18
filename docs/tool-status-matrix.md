@@ -62,7 +62,7 @@
 | Package | Status |
 |---|---|
 | `@aikdna/kdna-core@0.20.0` | Beta runtime SDK |
-| `@aikdna/kdna-eval@0.3.1` | Experimental evaluation toolkit |
+| `@aikdna/kdna-eval@0.3.2` candidate | Experimental evaluation toolkit; 0.3.1 remains the current npm release until the 0.3.2 release gates pass |
 | `@aikdna/kdna@0.13.1` | Maintained Legacy compatibility bridge; use CLI/Core directly for new integrations |
 
 ## Native Apps

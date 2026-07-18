@@ -35,7 +35,7 @@
           "package_json": "packages/kdna-eval/package.json",
           "package_name": "@aikdna/kdna-eval",
           "npm_package": "@aikdna/kdna-eval",
-          "version": "0.3.1",
+          "version": "0.3.2",
           "lifecycle": "Experimental",
           "release_status": "active",
           "dependency_policy": "current",

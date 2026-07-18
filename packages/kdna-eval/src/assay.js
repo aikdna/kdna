@@ -655,7 +655,7 @@ function generateEvidenceClaim(assayOutput, opts = {}) {
       task_family: opts.taskFamily || 'asset_assay',
       task_hash: assayOutput.dataset_fingerprint,
       model: opts.model || 'unknown',
-      runtime: opts.runtime || 'kdna-eval 0.3.1',
+      runtime: opts.runtime || 'kdna-eval 0.3.2',
       dataset_fingerprint: assayOutput.dataset_fingerprint,
       evaluator: 'deterministic',
     },

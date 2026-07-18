@@ -352,6 +352,7 @@ it('generates evidence claim from assay results', () => {
   const claim = generateEvidenceClaim(assayOutput, { taskFamily: 'deploy_risk', model: 'claude-sonnet-5' });
   assert.strictEqual(claim.evidence_version, '0.9.0');
   assert.strictEqual(claim.claim_type, 'comparison_assay');
+  assert.strictEqual(claim.scope.runtime, 'kdna-eval 0.3.2');
   assert.strictEqual(claim.classification.level, 'behavior_evaluated');
   assert.strictEqual(claim.marginal_value.evidence_produced, true);
   assert.ok(claim.claim_id.startsWith('claim_'));

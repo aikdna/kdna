@@ -94,7 +94,7 @@
       "repository": "aikdna/kdna",
       "package_json": "packages/kdna-eval/package.json",
       "npm_package": "@aikdna/kdna-eval",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "canonical_tag": { "type": "prefix", "value": "eval/" },
       "legacy_release_tag_sha256": {
         "0.3.1": "711abd8fd04f2b1466e8c0f331a1139cbe67361fec6c8c3c2957adc7b786c4b4"

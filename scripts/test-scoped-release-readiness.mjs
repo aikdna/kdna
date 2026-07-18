@@ -13,7 +13,7 @@ import {
 
 const SHA = '1'.repeat(40);
 const OTHER_SHA = '2'.repeat(40);
-const TAG = 'eval/0.3.1';
+const TAG = 'eval/0.3.2';
 const PUBLISH_WORKFLOW = fs.readFileSync(
   new URL('../.github/workflows/publish.yml', import.meta.url),
   'utf8',
@@ -45,14 +45,14 @@ function evidence(overrides = {}) {
     source_commit: SHA,
     git_dirty: false,
     selected_packages: ['eval'],
-    artifacts: [{ label: 'eval', package_name: '@aikdna/kdna-eval', version: '0.3.1' }],
+    artifacts: [{ label: 'eval', package_name: '@aikdna/kdna-eval', version: '0.3.2' }],
     ...overrides,
   };
 }
 
 test('scoped tag is exactly scope plus stable package version', () => {
-  assert.equal(canonicalScopedTag('eval', '0.3.1'), TAG);
-  assert.throws(() => canonicalScopedTag('eval', '0.3.1-extra'), /invalid stable package version/u);
+  assert.equal(canonicalScopedTag('eval', '0.3.2'), TAG);
+  assert.throws(() => canonicalScopedTag('eval', '0.3.2-extra'), /invalid stable package version/u);
 });
 
 test('release context rejects prefix-only and mutable release inputs', () => {
@@ -87,7 +87,7 @@ test('release evidence binds one exact package artifact to GITHUB_SHA', () => {
     manifest: evidence(),
     label: 'eval',
     packageName: '@aikdna/kdna-eval',
-    version: '0.3.1',
+    version: '0.3.2',
     githubSha: SHA,
   };
   assert.doesNotThrow(() => assertEvidenceBinding(input));
@@ -97,7 +97,7 @@ test('release evidence binds one exact package artifact to GITHUB_SHA', () => {
     evidence({ selected_packages: ['eval', 'agent'] }),
     evidence({ artifacts: [] }),
     evidence({
-      artifacts: [{ label: 'eval', package_name: '@aikdna/kdna-eval', version: '0.3.2' }],
+      artifacts: [{ label: 'eval', package_name: '@aikdna/kdna-eval', version: '0.3.3' }],
     }),
   ]) {
     assert.throws(() => assertEvidenceBinding({ ...input, manifest }));

@@ -47,7 +47,8 @@ npm install -g @aikdna/kdna-studio-cli  # 创作 CLI（0.10.2）
 - `kdna-studio`：AI 辅助创作功能（distill、interview、feynman）为实验性
 - `kdna-loader` 为 Beta；MCP server adapter 为实验性
 - `kdna-core-swift`：Beta 运行时，仍需持续维护与 JS Core 的一致性证据
-- `@aikdna/kdna-eval@0.3.1`：实验性评测工具；输出是评价者范围内的证据，不是 Core 权威
+- `@aikdna/kdna-eval@0.3.2` 候选：实验性评测工具；0.3.1 仍是 npm 当前已发布版本，
+  0.3.2 在发布门禁通过后才可对外宣称已发布；输出是评价者范围内的证据，不是 Core 权威
 - `@aikdna/kdna@0.13.1`：持续维护的 Legacy 兼容桥；新集成直接使用 CLI 与 Core
 - `@aikdna/agent`、`@aikdna/kdna-artifact-engine` 与
   `@aikdna/kdna-fidelity-core` 为已弃用的历史 npm 坐标，不属于当前工具链

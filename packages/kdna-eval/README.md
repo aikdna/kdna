@@ -217,6 +217,13 @@ const results = evaluator.score(candidates, [
 ]);
 ```
 
+## Version 0.3.2 TypeScript and ESM parity
+
+Version 0.3.2 keeps the CommonJS, ESM, and TypeScript root value exports in
+lockstep. TypeScript consumers can import the replay, gate, cost, consumption,
+route-card, and consumer-index APIs from the package root, and ESM consumers
+receive the same score constants as CommonJS consumers.
+
 ## Version 0.3.1 Assay Contracts
 
 Version 0.3.1 adds fail-closed Asset and Cluster Assay behavior exported from both the package
