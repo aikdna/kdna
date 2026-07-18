@@ -15,10 +15,10 @@ function commitHasMatchingSignOff({ authorName, authorEmail, message }) {
     .split(/\r?\n/u)
     .map((line) => SIGN_OFF_PATTERN.exec(line))
     .filter(Boolean)
-    .some((match) => (
-      match[1].trim() === expectedName
-      && match[2].trim().toLowerCase() === expectedEmail
-    ));
+    .some(
+      (match) =>
+        match[1].trim() === expectedName && match[2].trim().toLowerCase() === expectedEmail,
+    );
 }
 
 function git(args) {
@@ -48,7 +48,9 @@ function main() {
     cwd: repositoryRoot,
     stdio: 'ignore',
   });
-  const commits = git(['rev-list', '--reverse', `${base}..${head}`]).split(/\r?\n/u).filter(Boolean);
+  const commits = git(['rev-list', '--reverse', `${base}..${head}`])
+    .split(/\r?\n/u)
+    .filter(Boolean);
   if (commits.length === 0) throw new Error('pull request commit range is empty');
   const records = commits.map((sha) => ({
     sha,
