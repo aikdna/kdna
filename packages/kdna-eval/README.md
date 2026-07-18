@@ -298,7 +298,9 @@ Version 0.3.2 also closes implicit-evidence paths in Assay and Replay APIs:
   whose own or input IDs are absent, empty, or non-string. Malformed custom
   evaluator results are incomplete failures, and arbitrary values thrown by a
   multi-gate function are normalized to string errors. Custom gate returns must
-  satisfy the complete `GateResult` shape before they can pass aggregation;
+  provide the complete `GateResult` shape through own enumerable data
+  properties before they can pass aggregation. Accessors and inherited fields
+  are never read, and accepted results are detached into safe copies;
   standalone behavioral and product gates likewise reject malformed evidence
   without throwing or coercing it into a pass.
 

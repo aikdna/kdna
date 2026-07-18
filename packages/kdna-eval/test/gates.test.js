@@ -88,6 +88,158 @@ test("custom gate results require the complete strong return contract", () => {
   assert.equal(runner.runAll({}).overall, "fail");
 });
 
+test("custom gate normalization never reads accessors or inherited result fields", () => {
+  let reads = 0;
+  const accessorPass = {
+    gate: "accessor-pass",
+    score: 1,
+    details: {},
+    errors: [],
+  };
+  Object.defineProperty(accessorPass, "pass", {
+    enumerable: true,
+    get() {
+      reads++;
+      return true;
+    },
+  });
+
+  const unknownAccessor = {
+    gate: "unknown-accessor",
+    pass: true,
+    score: 1,
+    details: {},
+    errors: [],
+  };
+  Object.defineProperty(unknownAccessor, "unknown", {
+    enumerable: true,
+    get() {
+      reads++;
+      return "must-not-run";
+    },
+  });
+
+  const nestedDetails = {};
+  Object.defineProperty(nestedDetails, "secret", {
+    enumerable: true,
+    get() {
+      reads++;
+      return "must-not-run";
+    },
+  });
+  const nestedAccessor = {
+    gate: "nested-accessor",
+    pass: true,
+    score: 1,
+    details: nestedDetails,
+    errors: [],
+  };
+
+  const inherited = {};
+  Object.defineProperty(inherited, "pass", {
+    enumerable: true,
+    get() {
+      reads++;
+      return true;
+    },
+  });
+  const inheritedPass = Object.assign(Object.create(inherited), {
+    gate: "inherited-pass",
+    score: 1,
+    details: {},
+    errors: [],
+  });
+
+  for (const hostileResult of [accessorPass, unknownAccessor, nestedAccessor, inheritedPass]) {
+    const runner = createMultiGateRunner([() => hostileResult]);
+    const aggregate = runner.runAll({});
+    assert.equal(aggregate.overall, "fail");
+    assert.equal(aggregate.results[0].pass, false);
+    assert.ok(aggregate.results[0].errors.every((error) => typeof error === "string"));
+  }
+  assert.equal(reads, 0);
+});
+
+test("valid custom gate results are copied into detached safe data", () => {
+  const source = {
+    gate: "safe",
+    pass: true,
+    score: 1,
+    details: { selected: "domain", evidence: [1, { verified: true }] },
+    errors: [],
+  };
+  const result = createMultiGateRunner([() => source]).runGates({})[0];
+  assert.equal(result.pass, true);
+  assert.notEqual(result, source);
+  assert.notEqual(result.details, source.details);
+  assert.notEqual(result.details.evidence, source.details.evidence);
+
+  source.pass = false;
+  source.details.selected = "mutated";
+  source.details.evidence[1].verified = false;
+  assert.equal(result.pass, true);
+  assert.equal(result.details.selected, "domain");
+  assert.equal(result.details.evidence[1].verified, true);
+});
+
+test("direct aggregate helpers reject accessor GateResults without reading them", () => {
+  let reads = 0;
+  const hostile = {
+    gate: "direct-accessor",
+    score: 1,
+    details: {},
+    errors: [],
+  };
+  Object.defineProperty(hostile, "pass", {
+    enumerable: true,
+    get() {
+      reads++;
+      return true;
+    },
+  });
+
+  assert.equal(gateFromArray([hostile]), false);
+  const aggregate = aggregateGates([hostile]);
+  assert.equal(aggregate.overall, "fail");
+  assert.equal(aggregate.results[0].pass, false);
+  assert.ok(aggregate.results[0].errors.every((error) => typeof error === "string"));
+  assert.equal(reads, 0);
+});
+
+test("Proxy GateResults are rejected before any Proxy trap runs", () => {
+  let traps = 0;
+  const proxy = new Proxy(
+    { gate: "proxy", pass: true, score: 1, details: {}, errors: [] },
+    {
+      get() {
+        traps++;
+        return true;
+      },
+      getOwnPropertyDescriptor() {
+        traps++;
+        return undefined;
+      },
+      getPrototypeOf() {
+        traps++;
+        return Object.prototype;
+      },
+      ownKeys() {
+        traps++;
+        return [];
+      },
+    },
+  );
+
+  const runnerResult = createMultiGateRunner([() => proxy]).runAll({});
+  const directAggregate = aggregateGates([proxy]);
+  assert.equal(gateFromArray([proxy]), false);
+  assert.equal(runnerResult.overall, "fail");
+  assert.equal(directAggregate.overall, "fail");
+  assert.ok(runnerResult.results[0].errors.every((error) => typeof error === "string"));
+  assert.ok(directAggregate.results[0].errors.every((error) => typeof error === "string"));
+  assert.equal(traps, 0);
+});
+
 test("hasGate detects gate by name", () => {
   const runner = createMultiGateRunner(["route", "cost"]);
   assert.equal(runner.hasGate("route"), true);
@@ -135,8 +287,8 @@ test("gateFromArray returns false for empty array", () => {
 test("gateFromArray returns true when all pass", () => {
   assert.equal(
     gateFromArray([
-      { gate: "a", pass: true },
-      { gate: "b", pass: true },
+      { gate: "a", pass: true, score: 1, details: {}, errors: [] },
+      { gate: "b", pass: true, score: 1, details: {}, errors: [] },
     ]),
     true
   );

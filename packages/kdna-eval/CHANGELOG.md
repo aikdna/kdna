@@ -53,7 +53,8 @@
   normalize arbitrary thrown gate values to the declared string error shape.
 - Reject coercible or malformed standalone behavioral and product gate evidence,
   and require custom multi-gate functions to return every declared `GateResult`
-  field before an explicit pass can participate in aggregation.
+  field as own enumerable accessor-free data before an explicit pass can
+  participate in aggregation. Valid results are detached into safe copies.
 - Generate schema-valid EvidenceClaims only when the caller supplies a real
   `traceId`. Missing plan IDs and asset digests are omitted instead of encoded
   as forbidden `null` values, and Asset Assay execution counts are no longer

@@ -309,6 +309,35 @@ for (const [specifier, expected] of entries) {
         invalidRunner.runGates({}).some((result) => result.pass === true)) {
       throw new Error(\`${moduleStyle} packed \${specifier} accepted malformed custom results\`);
     }
+    let accessorReads = 0;
+    const hostileResult = { gate: "hostile", score: 1, details: {}, errors: [] };
+    Object.defineProperty(hostileResult, "pass", {
+      enumerable: true,
+      get() { accessorReads++; return true; },
+    });
+    const hostileAggregate = loaded.createMultiGateRunner([() => hostileResult]).runAll({});
+    const directHostileAggregate = loaded.aggregateGates([hostileResult]);
+    if (accessorReads !== 0 || hostileAggregate.overall !== "fail" ||
+        directHostileAggregate.overall !== "fail" || loaded.gateFromArray([hostileResult]) !== false ||
+        hostileAggregate.results[0].pass !== false ||
+        hostileAggregate.results[0].errors.some((error) => typeof error !== "string")) {
+      throw new Error(\`${moduleStyle} packed \${specifier} read an accessor GateResult\`);
+    }
+    let proxyTraps = 0;
+    const proxyResult = new Proxy(
+      { gate: "proxy", pass: true, score: 1, details: {}, errors: [] },
+      {
+        get() { proxyTraps++; return true; },
+        getOwnPropertyDescriptor() { proxyTraps++; return undefined; },
+        getPrototypeOf() { proxyTraps++; return Object.prototype; },
+        ownKeys() { proxyTraps++; return []; },
+      },
+    );
+    if (loaded.createMultiGateRunner([() => proxyResult]).runAll({}).overall !== "fail" ||
+        loaded.aggregateGates([proxyResult]).overall !== "fail" ||
+        loaded.gateFromArray([proxyResult]) !== false || proxyTraps !== 0) {
+      throw new Error(\`${moduleStyle} packed \${specifier} inspected a Proxy GateResult\`);
+    }
   }
 }
 `;
@@ -423,6 +452,34 @@ test("local root and subpaths preserve fail-closed strong returns in CommonJS an
     const invalidRunner = loaded.createMultiGateRunner([() => ({ pass: true }), () => undefined]);
     assert.equal(invalidRunner.runAll({}).overall, "fail");
     assert.ok(invalidRunner.runGates({}).every((result) => result.pass === false));
+    let reads = 0;
+    const hostileResult = { gate: "hostile", score: 1, details: {}, errors: [] };
+    Object.defineProperty(hostileResult, "pass", {
+      enumerable: true,
+      get() { reads++; return true; },
+    });
+    const hostileAggregate = loaded.createMultiGateRunner([() => hostileResult]).runAll({});
+    const directHostileAggregate = loaded.aggregateGates([hostileResult]);
+    assert.equal(reads, 0);
+    assert.equal(hostileAggregate.overall, "fail");
+    assert.equal(directHostileAggregate.overall, "fail");
+    assert.equal(loaded.gateFromArray([hostileResult]), false);
+    assert.equal(hostileAggregate.results[0].pass, false);
+    assert.ok(hostileAggregate.results[0].errors.every((error) => typeof error === "string"));
+    let traps = 0;
+    const proxyResult = new Proxy(
+      { gate: "proxy", pass: true, score: 1, details: {}, errors: [] },
+      {
+        get() { traps++; return true; },
+        getOwnPropertyDescriptor() { traps++; return undefined; },
+        getPrototypeOf() { traps++; return Object.prototype; },
+        ownKeys() { traps++; return []; },
+      },
+    );
+    assert.equal(loaded.createMultiGateRunner([() => proxyResult]).runAll({}).overall, "fail");
+    assert.equal(loaded.aggregateGates([proxyResult]).overall, "fail");
+    assert.equal(loaded.gateFromArray([proxyResult]), false);
+    assert.equal(traps, 0);
   }
 });
 
@@ -566,6 +623,52 @@ for (const invalidRunner of [
       invalidRunner.runGates({}).some((result) => result.pass === true)) {
     throw new Error("packed gate runner accepted malformed custom results");
   }
+}
+let packedGateAccessorReads = 0;
+const hostileGateResult = { gate: "hostile", score: 1, details: {}, errors: [] };
+Object.defineProperty(hostileGateResult, "pass", {
+  enumerable: true,
+  get() { packedGateAccessorReads++; return true; },
+});
+const hostileGate = (() => hostileGateResult) as unknown as ${root}.GateDefinition;
+for (const hostileRunner of [
+  ${root}.createMultiGateRunner([hostileGate]),
+  ${gatesModule}.createMultiGateRunner([hostileGate]),
+]) {
+  const hostileAggregate = hostileRunner.runAll({});
+  if (hostileAggregate.overall !== "fail" || hostileAggregate.results[0].pass !== false ||
+      hostileAggregate.results[0].errors.some((error) => typeof error !== "string")) {
+    throw new Error("packed gate runner accepted an accessor GateResult");
+  }
+}
+if (packedGateAccessorReads !== 0) {
+  throw new Error("packed gate runner executed an accessor GateResult");
+}
+let packedProxyTraps = 0;
+const packedProxyResult = new Proxy(
+  { gate: "proxy", pass: true, score: 1, details: {}, errors: [] },
+  {
+    get() { packedProxyTraps++; return true; },
+    getOwnPropertyDescriptor() { packedProxyTraps++; return undefined; },
+    getPrototypeOf() { packedProxyTraps++; return Object.prototype; },
+    ownKeys() { packedProxyTraps++; return []; },
+  },
+) as ${root}.GateResult;
+for (const gateApi of [${root}, ${gatesModule}]) {
+  const directAccessorAggregate = gateApi.aggregateGates([
+    hostileGateResult as unknown as ${root}.GateResult,
+  ]);
+  if (directAccessorAggregate.overall !== "fail" ||
+      gateApi.gateFromArray([hostileGateResult as unknown as ${root}.GateResult]) !== false ||
+      gateApi.createMultiGateRunner([(() => packedProxyResult) as ${root}.GateDefinition])
+        .runAll({}).overall !== "fail" ||
+      gateApi.aggregateGates([packedProxyResult]).overall !== "fail" ||
+      gateApi.gateFromArray([packedProxyResult]) !== false) {
+    throw new Error("packed gate API accepted hostile direct results");
+  }
+}
+if (packedGateAccessorReads !== 0 || packedProxyTraps !== 0) {
+  throw new Error("packed gate API inspected accessor or Proxy results");
 }
 const replay = ${root}.createReplayEngine();
 const replayRun = replay.replayRun("fresh", { fixtures: [{ input: "test" }] });
