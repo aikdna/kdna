@@ -11,11 +11,12 @@ it is not an Agent consumption path.
 import hashlib
 import json
 import os
+import re
 import shlex
 import subprocess
+from functools import lru_cache
 from pathlib import Path
-from typing import Optional, Dict, Any, List
-
+from typing import Optional, Dict, Any, List, Tuple
 
 CORE_FILES = ["KDNA_Core.json", "KDNA_Patterns.json"]
 OPTIONAL_FILES = [
@@ -26,6 +27,10 @@ OPTIONAL_FILES = [
 ]
 ALLOWED_MODES = {"minimum", "all", "auto"}
 MODE_TO_PROFILE = {"minimum": "compact", "all": "full", "auto": "compact"}
+CLI_COMPATIBILITY = ">=0.34.0,<0.35.0"
+_MINIMUM_CLI_VERSION_PARTS = (0, 34, 0)
+_MAXIMUM_CLI_VERSION_PARTS = (0, 35, 0)
+_CLI_VERSION_PATTERN = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
 
 
 class KDNAAssetError(ValueError):
@@ -49,12 +54,18 @@ def _validate_mode(mode: str) -> None:
         raise KDNAAssetError(f"Invalid load mode {mode!r}; expected one of: {allowed}")
 
 
-def _run_cli(arguments: List[str]) -> Dict[str, Any]:
-    command = shlex.split(os.environ.get("KDNA_CLI", "kdna"))
+def _cli_command() -> Tuple[str, ...]:
+    command = tuple(shlex.split(os.environ.get("KDNA_CLI", "kdna")))
     if not command:
         raise KDNAAssetError("KDNA_CLI is empty")
+    return command
+
+
+def _invoke_cli(
+    command: Tuple[str, ...], arguments: List[str]
+) -> subprocess.CompletedProcess:
     try:
-        completed = subprocess.run(
+        return subprocess.run(
             [*command, *arguments],
             check=False,
             capture_output=True,
@@ -64,6 +75,34 @@ def _run_cli(arguments: List[str]) -> Dict[str, Any]:
         raise KDNAAssetError(
             "KDNA CLI not found. Install it with: npm install -g @aikdna/kdna-cli"
         ) from exc
+
+
+@lru_cache(maxsize=4)
+def _require_compatible_cli(command: Tuple[str, ...]) -> str:
+    completed = _invoke_cli(command, ["--version"])
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip()
+        raise KDNAAssetError(
+            f"KDNA CLI version check failed (exit {completed.returncode}): {detail}"
+        )
+
+    version = completed.stdout.strip()
+    match = _CLI_VERSION_PATTERN.fullmatch(version)
+    if match is None:
+        raise KDNAAssetError(f"KDNA CLI returned an invalid version: {version!r}")
+
+    version_parts = tuple(int(part) for part in match.groups())
+    if not _MINIMUM_CLI_VERSION_PARTS <= version_parts < _MAXIMUM_CLI_VERSION_PARTS:
+        raise KDNAAssetError(
+            f"KDNA CLI {version} is unsupported; required range: {CLI_COMPATIBILITY}"
+        )
+    return version
+
+
+def _run_cli(arguments: List[str]) -> Dict[str, Any]:
+    command = _cli_command()
+    _require_compatible_cli(command)
+    completed = _invoke_cli(command, arguments)
 
     if completed.returncode != 0:
         detail = completed.stderr.strip() or completed.stdout.strip()
@@ -96,7 +135,14 @@ def verify_digest(asset_path: str, expected_digest: str) -> Dict[str, Any]:
 
 def inspect_kdna(asset_path: str) -> Dict[str, Any]:
     """Return public metadata through ``kdna inspect``."""
-    return _run_cli(["inspect", asset_path, "--json"])
+    metadata = _run_cli(["inspect", asset_path, "--json"])
+    required = ("format_version", "asset_id", "version", "payload")
+    missing = [field for field in required if not metadata.get(field)]
+    if missing:
+        raise KDNAAssetError(
+            "KDNA inspect response is missing required fields: " + ", ".join(missing)
+        )
+    return metadata
 
 
 def open_kdna(asset_path: str, mode: str = "minimum") -> Dict[str, Any]:

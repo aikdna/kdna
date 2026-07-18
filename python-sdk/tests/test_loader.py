@@ -5,6 +5,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
+import kdna.loader as loader
 
 from kdna import (
     KDNAAssetError,
@@ -33,7 +34,9 @@ def current_asset(tmp_path: Path) -> Path:
 
 def test_inspect_and_open_return_toolchain_objects(current_asset: Path):
     info = inspect_kdna(str(current_asset))
-    assert info["kdna_version"] == "1.0"
+    assert info.get("kdna_version") is None
+    assert info["format_version"] == "0.1.0"
+    assert info["asset_id"] is not None
     assert info["payload"] == "payload.kdnab"
 
     capsule = open_kdna(str(current_asset), mode="minimum")
@@ -64,6 +67,46 @@ def test_format_context_preserves_runtime_capsule(current_asset: Path):
 def test_invalid_mode_raises(current_asset: Path):
     with pytest.raises(KDNAAssetError, match="Invalid load mode"):
         open_kdna(str(current_asset), mode="everything")
+
+
+@pytest.mark.parametrize("version", ["0.33.9", "0.35.0"])
+def test_cli_outside_supported_boundary_is_rejected(monkeypatch, version):
+    loader._require_compatible_cli.cache_clear()
+    monkeypatch.setenv("KDNA_CLI", "outdated-kdna")
+
+    def invoke_cli(command, arguments):
+        assert command == ("outdated-kdna",)
+        assert arguments == ["--version"]
+        return subprocess.CompletedProcess(
+            [*command, *arguments], returncode=0, stdout=f"{version}\n", stderr=""
+        )
+
+    monkeypatch.setattr(loader, "_invoke_cli", invoke_cli)
+    with pytest.raises(KDNAAssetError, match=">=0.34.0,<0.35.0"):
+        loader._run_cli(["inspect", "asset.kdna", "--json"])
+    loader._require_compatible_cli.cache_clear()
+
+
+@pytest.mark.parametrize("version", ["v0.34.0", "0.34.0+local", "0.34"])
+def test_cli_requires_exact_natural_semver_output(monkeypatch, version):
+    loader._require_compatible_cli.cache_clear()
+    monkeypatch.setenv("KDNA_CLI", "malformed-version-kdna")
+
+    def invoke_cli(command, arguments):
+        return subprocess.CompletedProcess(
+            [*command, *arguments], returncode=0, stdout=f"{version}\n", stderr=""
+        )
+
+    monkeypatch.setattr(loader, "_invoke_cli", invoke_cli)
+    with pytest.raises(KDNAAssetError, match="invalid version"):
+        loader._run_cli(["inspect", "asset.kdna", "--json"])
+    loader._require_compatible_cli.cache_clear()
+
+
+def test_inspect_rejects_incomplete_cli_response(monkeypatch):
+    monkeypatch.setattr(loader, "_run_cli", lambda arguments: {"asset_id": "asset"})
+    with pytest.raises(KDNAAssetError, match="format_version, version, payload"):
+        inspect_kdna("asset.kdna")
 
 
 def test_load_dev_source_and_classify_input(tmp_path: Path):
