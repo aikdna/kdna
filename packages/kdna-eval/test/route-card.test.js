@@ -146,3 +146,33 @@ test("applyRouteCard handles null policies", () => {
   const augmented = applyRouteCard(card, null);
   assert.deepEqual(augmented, {});
 });
+
+test("validateRouteCard rejects hostile nested shapes without throwing", () => {
+  const base = { route_card: "0.1.0", domain_id: "test", role: "primary" };
+  const hostileCards = [
+    { ...base, boundaries: [] },
+    { ...base, boundaries: { applies_when: [1] } },
+    { ...base, boundaries: { does_not_apply_when: ["valid", null] } },
+    { ...base, neighbors: [null] },
+    { ...base, neighbors: [{ domain_id: 42, relationship: "complement" }] },
+    {
+      ...base,
+      neighbors: [{ domain_id: "neighbor", relationship: "complement", weight_delta: "0.2" }],
+    },
+    { ...base, advisor_edges: [null] },
+    { ...base, advisor_edges: [{ domain_id: 42, when: "always" }] },
+    { ...base, provenance: [] },
+    { ...base, provenance: { generated_by: 42 } },
+    { ...base, provenance: { generated_by: "test", review_status: 42 } },
+  ];
+
+  for (const card of hostileCards) {
+    let result;
+    assert.doesNotThrow(() => {
+      result = validateRouteCard(card);
+    });
+    assert.equal(result.valid, false, JSON.stringify(card));
+    assert.equal(result.card, null);
+    assert.ok(result.errors.length > 0);
+  }
+});

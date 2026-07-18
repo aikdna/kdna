@@ -360,9 +360,55 @@ test("the packed package preserves every CJS, ESM, and TypeScript public surface
     const valueList = PUBLIC_EXPORT_PATHS.flatMap((exportPath) =>
       EXPECTED_VALUE_EXPORTS[exportPath].map((name) => `${aliases[exportPath]}.${name}`),
     ).join(",\n  ");
-    const root = aliases["."];
-    const costModule = aliases["./cost"];
-    const consumerSource = `${namespaceImports}
+const root = aliases["."];
+const loaderModule = aliases["./loader"];
+const costModule = aliases["./cost"];
+const routeCardModule = aliases["./route-card"];
+const consumerIndexModule = aliases["./consumer-index"];
+const consumerSource = `${namespaceImports}
+
+function expectThrows(fn: () => unknown, label: string): void {
+  let threw = false;
+  try {
+    fn();
+  } catch {
+    threw = true;
+  }
+  if (!threw) throw new Error(\`\${label} did not fail closed\`);
+}
+
+const validatedDomain = ${loaderModule}.validateDomain({
+  id: "typed-domain",
+  schemaVersion: 1,
+  x_eval: {
+    rules: [{
+      id: "rule",
+      dimensions: ["quality"],
+      condition: { path: "score", op: "gte", value: 1 },
+      effect: { value: 1 },
+    }],
+  },
+});
+validatedDomain.id.toUpperCase();
+validatedDomain.schemaVersion.toFixed(0);
+const validatedPersona = ${loaderModule}.validatePersona({
+  id: "typed-persona",
+  schemaVersion: 1,
+  name: "Typed Persona",
+  description: "Strict package consumer persona.",
+  ruleOfSix: { quality: 1 },
+  domains: [{ id: "typed-domain", weight: 1 }],
+  preferences: {},
+});
+validatedPersona.name.toUpperCase();
+expectThrows(
+  () => ${loaderModule}.validateDomain({ id: 42, schemaVersion: "one" }),
+  "loader subpath domain validator",
+);
+expectThrows(
+  () => ${loaderModule}.validatePersona({ id: "bad", schemaVersion: 1 }),
+  "loader subpath persona validator",
+);
 
 const policies = {
   review: { operation: "review", loadProfile: "compact" as const, domains: [] },
@@ -392,16 +438,36 @@ const costReport = cost.getCostReport();
 if (costReport.consumed.tokens !== 900 || costReport.consumed.chars !== 1003 || costReport.over_budget) {
   throw new Error("README cost example drifted");
 }
-const routeCard = ${root}.loadRouteCard({
+const routeCard = ${routeCardModule}.loadRouteCard({
   route_card: "0.1.0",
   domain_id: "example",
   role: "primary",
 });
 if (!routeCard.valid || !routeCard.card) throw new Error("route card did not load");
-const appliedPolicies = ${root}.applyRouteCard(routeCard.card, policies);
-const consumerIndex = ${root}.loadConsumerIndex({ consumer_index: "0.1.0", entries: [] });
+const invalidRouteCard = ${routeCardModule}.validateRouteCard({
+  route_card: "0.1.0",
+  domain_id: "example",
+  role: "primary",
+  boundaries: { applies_when: [1] },
+});
+if (invalidRouteCard.valid || invalidRouteCard.card) {
+  throw new Error("route-card subpath accepted a numeric boundary");
+}
+const appliedPolicies = ${routeCardModule}.applyRouteCard(routeCard.card, policies);
+const consumerIndex = ${consumerIndexModule}.loadConsumerIndex({ consumer_index: "0.1.0", entries: [] });
 if (!consumerIndex.valid || !consumerIndex.index) throw new Error("consumer index did not load");
-const resolution = ${root}.resolveConsumerIndex(consumerIndex.index, "review", "example");
+const invalidConsumerIndex = ${consumerIndexModule}.validateConsumerIndex({
+  consumer_index: "0.1.0",
+  entries: [{
+    domain_id: "example",
+    status: "trusted_runtime",
+    route_preference: { primary_for: {} },
+  }],
+});
+if (invalidConsumerIndex.valid || invalidConsumerIndex.index) {
+  throw new Error("consumer-index subpath accepted an object preference list");
+}
+const resolution = ${consumerIndexModule}.resolveConsumerIndex(consumerIndex.index, "review", "example");
 replay.compareRuns({ results: [] }, { results: [] });
 gateRunner.runGates({});
 consumption.cost({ id: "example", text: "bounded" }, {});

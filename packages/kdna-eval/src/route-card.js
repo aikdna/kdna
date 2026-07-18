@@ -14,10 +14,24 @@ function loadRouteCard(pathOrObject) {
   return { valid: false, card: null, errors: ["input must be an object or file path"] };
 }
 
+function isRecord(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function validateStringArray(value, field, errors) {
+  if (!Array.isArray(value)) {
+    errors.push(`${field} must be an array`);
+    return;
+  }
+  value.forEach((item, index) => {
+    if (typeof item !== "string") errors.push(`${field}[${index}] must be a string`);
+  });
+}
+
 function validateRouteCard(card) {
   const errors = [];
 
-  if (!card || typeof card !== "object") {
+  if (!isRecord(card)) {
     errors.push("card must be an object");
     return { valid: false, card: null, errors };
   }
@@ -34,38 +48,68 @@ function validateRouteCard(card) {
     errors.push('role must be one of: primary, advisor, control');
   }
 
-  if (card.boundaries) {
-    if (card.boundaries.applies_when && !Array.isArray(card.boundaries.applies_when)) {
-      errors.push("boundaries.applies_when must be an array");
-    }
-    if (card.boundaries.does_not_apply_when && !Array.isArray(card.boundaries.does_not_apply_when)) {
-      errors.push("boundaries.does_not_apply_when must be an array");
+  if (card.boundaries !== undefined) {
+    if (!isRecord(card.boundaries)) {
+      errors.push("boundaries must be an object");
+    } else {
+      if (card.boundaries.applies_when !== undefined) {
+        validateStringArray(card.boundaries.applies_when, "boundaries.applies_when", errors);
+      }
+      if (card.boundaries.does_not_apply_when !== undefined) {
+        validateStringArray(
+          card.boundaries.does_not_apply_when,
+          "boundaries.does_not_apply_when",
+          errors,
+        );
+      }
     }
   }
 
-  if (card.neighbors && !Array.isArray(card.neighbors)) {
+  if (card.neighbors !== undefined && !Array.isArray(card.neighbors)) {
     errors.push("neighbors must be an array");
   } else if (Array.isArray(card.neighbors)) {
-    for (const n of card.neighbors) {
-      if (!n.domain_id) errors.push("neighbor missing domain_id");
+    for (const [index, n] of card.neighbors.entries()) {
+      if (!isRecord(n)) {
+        errors.push(`neighbors[${index}] must be an object`);
+        continue;
+      }
+      if (typeof n.domain_id !== "string" || n.domain_id.length === 0) {
+        errors.push(`neighbors[${index}].domain_id must be a non-empty string`);
+      }
       if (!["complement", "alternative", "supersedes"].includes(n.relationship)) {
-        errors.push(`invalid neighbor relationship: ${n.relationship}`);
+        errors.push(`invalid neighbors[${index}].relationship: ${String(n.relationship)}`);
+      }
+      if (
+        n.weight_delta !== undefined &&
+        (typeof n.weight_delta !== "number" || !Number.isFinite(n.weight_delta))
+      ) {
+        errors.push(`neighbors[${index}].weight_delta must be a finite number`);
       }
     }
   }
 
-  if (card.advisor_edges && !Array.isArray(card.advisor_edges)) {
+  if (card.advisor_edges !== undefined && !Array.isArray(card.advisor_edges)) {
     errors.push("advisor_edges must be an array");
   } else if (Array.isArray(card.advisor_edges)) {
-    for (const e of card.advisor_edges) {
-      if (!e.domain_id) errors.push("advisor_edge missing domain_id");
+    for (const [index, e] of card.advisor_edges.entries()) {
+      if (!isRecord(e)) {
+        errors.push(`advisor_edges[${index}] must be an object`);
+        continue;
+      }
+      if (typeof e.domain_id !== "string" || e.domain_id.length === 0) {
+        errors.push(`advisor_edges[${index}].domain_id must be a non-empty string`);
+      }
       if (!["always", "on_uncertainty", "on_conflict"].includes(e.when)) {
-        errors.push(`invalid advisor_edge when: ${e.when}`);
+        errors.push(`invalid advisor_edges[${index}].when: ${String(e.when)}`);
       }
     }
   }
 
-  if (card.provenance) {
+  if (card.provenance !== undefined) {
+    if (!isRecord(card.provenance)) {
+      errors.push("provenance must be an object");
+      return { valid: false, card: null, errors };
+    }
     const validReviewStatuses = [
       "draft_generated",
       "lint_repaired",
@@ -73,11 +117,19 @@ function validateRouteCard(card) {
       "eval_candidate",
       "trusted_runtime",
     ];
-    if (card.provenance.review_status && !validReviewStatuses.includes(card.provenance.review_status)) {
-      errors.push(`invalid provenance.review_status: ${card.provenance.review_status}`);
+    if (
+      card.provenance.review_status !== undefined &&
+      !validReviewStatuses.includes(card.provenance.review_status)
+    ) {
+      errors.push(`invalid provenance.review_status: ${String(card.provenance.review_status)}`);
     }
-    if (!card.provenance.generated_by) {
-      errors.push("provenance.generated_by is required when provenance is present");
+    if (
+      typeof card.provenance.generated_by !== "string" ||
+      card.provenance.generated_by.length === 0
+    ) {
+      errors.push(
+        "provenance.generated_by is required and must be a non-empty string when provenance is present",
+      );
     }
   }
 

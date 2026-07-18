@@ -22,10 +22,24 @@ function loadConsumerIndex(pathOrObject) {
   return { valid: false, index: null, errors: ["input must be an object or file path"] };
 }
 
+function isRecord(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function validatePreferenceList(value, field, errors) {
+  if (!Array.isArray(value)) {
+    errors.push(`${field} must be an array`);
+    return;
+  }
+  value.forEach((item, index) => {
+    if (typeof item !== "string") errors.push(`${field}[${index}] must be a string`);
+  });
+}
+
 function validateConsumerIndex(index) {
   const errors = [];
 
-  if (!index || typeof index !== "object") {
+  if (!isRecord(index)) {
     errors.push("index must be an object");
     return { valid: false, index: null, errors };
   }
@@ -39,12 +53,36 @@ function validateConsumerIndex(index) {
     return { valid: false, index: null, errors };
   }
 
-  for (const entry of index.entries) {
-    if (!entry.domain_id || typeof entry.domain_id !== "string") {
-      errors.push(`entry missing domain_id`);
+  for (const [entryIndex, entry] of index.entries.entries()) {
+    if (!isRecord(entry)) {
+      errors.push(`entries[${entryIndex}] must be an object`);
+      continue;
+    }
+    if (typeof entry.domain_id !== "string" || entry.domain_id.length === 0) {
+      errors.push(`entries[${entryIndex}].domain_id must be a non-empty string`);
     }
     if (!VALID_STATUSES.includes(entry.status)) {
-      errors.push(`invalid status "${entry.status}" for ${entry.domain_id || "unknown"}. Valid: ${VALID_STATUSES.join(", ")}`);
+      errors.push(
+        `invalid status "${String(entry.status)}" for ${entry.domain_id || "unknown"}. Valid: ${VALID_STATUSES.join(", ")}`,
+      );
+    }
+    if (entry.enabled !== undefined && typeof entry.enabled !== "boolean") {
+      errors.push(`entries[${entryIndex}].enabled must be a boolean`);
+    }
+    if (entry.route_preference !== undefined) {
+      if (!isRecord(entry.route_preference)) {
+        errors.push(`entries[${entryIndex}].route_preference must be an object`);
+        continue;
+      }
+      for (const field of ["primary_for", "advisor_for", "never_for"]) {
+        if (entry.route_preference[field] !== undefined) {
+          validatePreferenceList(
+            entry.route_preference[field],
+            `entries[${entryIndex}].route_preference.${field}`,
+            errors,
+          );
+        }
+      }
     }
   }
 
@@ -56,11 +94,12 @@ function validateConsumerIndex(index) {
 }
 
 function resolveConsumerIndex(index, task, domainId) {
-  if (!index || !index.entries) {
+  const validation = validateConsumerIndex(index);
+  if (!validation.valid || !validation.index) {
     return { status: "draft_generated", routePreference: null, isTrusted: false, isEnabled: false };
   }
 
-  const entry = index.entries.find((e) => e.domain_id === domainId);
+  const entry = validation.index.entries.find((e) => e.domain_id === domainId);
   if (!entry) {
     return { status: "draft_generated", routePreference: null, isTrusted: false, isEnabled: false };
   }
@@ -93,8 +132,9 @@ function resolveConsumerIndex(index, task, domainId) {
 }
 
 function isTrusted(index, domainId) {
-  if (!index || !index.entries) return false;
-  const entry = index.entries.find((e) => e.domain_id === domainId);
+  const validation = validateConsumerIndex(index);
+  if (!validation.valid || !validation.index) return false;
+  const entry = validation.index.entries.find((e) => e.domain_id === domainId);
   if (!entry) return false;
   return entry.status === "trusted_runtime" && entry.enabled === true;
 }
