@@ -192,6 +192,19 @@ jobs:
           repository: aikdna/kdna-core-swift
           ref: 4a9b732b590a711c544da5280a4b78f071369617
           path: .ecosystem-repos/kdna-core-swift
+          fetch-depth: 0
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-app-shared
+          ref: 3f999a6e8d7015ef024beea044584eb2eac50d90
+          path: .ecosystem-repos/kdna-app-shared
+          fetch-depth: 0
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          repository: aikdna/kdna-studio-swift
+          ref: 638bd845ff265f0488b7bfccb745f608b23ead88
+          path: .ecosystem-repos/kdna-studio-swift
+          fetch-depth: 0
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-vscode
@@ -232,6 +245,7 @@ jobs:
           repository: aikdna/kdna-assets
           ref: 2e28e0d16d2b915b942a8b600c0ba62c1de4898e
           path: .ecosystem-repos/kdna-assets
+          fetch-depth: 0
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-demo-web-viewer
