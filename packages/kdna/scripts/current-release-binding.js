@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { validateReleaseEvidence } = require('./release-evidence');
 const { canonicalTag, validateReleaseContext } = require('./release-policy');
+const { commitDocument } = require('../../../scripts/core-release-authority');
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -56,6 +57,7 @@ function readCurrentReleaseBinding({ root, evidence, env = process.env }) {
       tagCommit: git(['rev-parse', `${tag}^{commit}`]),
       mainCommit,
       mainContainsHead: gitIsAncestor(head, mainCommit),
+      authorSignoffMatch: commitDocument(head, root).authorSignoffMatch,
     },
   });
 }

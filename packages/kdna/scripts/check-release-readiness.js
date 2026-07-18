@@ -5,6 +5,7 @@ const { execFileSync, spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const { canonicalTag, validateReleaseContext } = require('./release-policy');
+const { commitDocument } = require('../../../scripts/core-release-authority');
 
 const PACKAGE_ROOT = path.resolve(__dirname, '..');
 const REPO_ROOT = path.resolve(PACKAGE_ROOT, '..', '..');
@@ -46,6 +47,7 @@ function main() {
       tagCommit: git(['rev-parse', `${tag}^{commit}`]),
       mainCommit,
       mainContainsHead: gitIsAncestor(head, mainCommit),
+      authorSignoffMatch: commitDocument(head, REPO_ROOT).authorSignoffMatch,
     },
   });
   console.log(

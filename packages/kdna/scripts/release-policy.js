@@ -46,6 +46,10 @@ function validateReleaseContext({ pkg, changelog, env, git }) {
   assert(git.tagCommit === git.head, `${tag} must resolve to HEAD`);
   assert(env.GITHUB_SHA === git.head, 'GITHUB_SHA must equal HEAD and the release tag commit');
   assert(git.mainContainsHead === true, 'release tag commit must be an ancestor of origin/main');
+  assert(
+    git.authorSignoffMatch === true,
+    'release commit author must have an exact normalized DCO Signed-off-by trailer',
+  );
 
   const heading = new RegExp(
     `^## ${escapeRegExp(pkg.version)}(?: \\(\\d{4}-\\d{2}-\\d{2}\\))?$`,
