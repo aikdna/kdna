@@ -17,6 +17,7 @@
     "audit:post-cutover": "node scripts/check-post-cutover-naming.mjs",
     "test:post-cutover": "node --test scripts/test-post-cutover-naming.mjs",
     "test:release-scopes": "node --test scripts/test-scoped-release-readiness.mjs",
+    "test:release-health": "node --test scripts/test-publish-health.mjs",
     "validate:app-schemas": "node scripts/validate-app-schemas.js",
     "validate:protocol-fixtures": "node scripts/validate-protocol-fixtures.js",
     "validate:rfc0013-schemas": "node scripts/validate-rfc0013-schemas.js",

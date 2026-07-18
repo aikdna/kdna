@@ -1,15 +1,15 @@
 # publish-health-cron.yml — Daily drift check for the npm pipeline.
 #
-# Verifies that for every tracked package, four fields agree:
+# Verifies that for every tracked package, the public release surfaces agree:
 #   1. main HEAD version (from package.json on main)
-#   2. latest exact package tag
-#   3. npm latest version (from registry.npmjs.org)
-#   4. GitHub Release existence (for the npm-latest version)
+#   2. npm latest version and SLSA provenance
+#   3. exact canonical package tag (or one version-bound historical coordinate)
+#   4. package.json version at the tagged commit
+#   5. npm gitHead binding when the registry exposes it
+#   6. published, non-prerelease GitHub Release existence
 #
-# Delegates the actual work to scripts/ecosystem-version-lock.js (which
-# already enforces cross-repo version consistency in the kdna monorepo)
-# and scripts/validate-public-truth.js (which validates ecosystem manifest
-# + public/private boundaries).
+# Delegates the public package audit to scripts/publish-health.mjs and keeps
+# ecosystem-version-lock plus validate-public-truth as independent gates.
 #
 # On drift detection, fails the job so a notification can be wired up
 # (e.g. via the repository's notification settings / Slack webhook).
@@ -51,66 +51,10 @@ jobs:
 
       - name: Run publish-health (all tracked npm packages)
         id: cross
-        # Keep the public package/release audit in-tree so CI can run it with
-        # npm and GitHub CLI access.
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          PACKAGES=(
-            "kdna-cli:kdna-cli:package.json:v:@aikdna/kdna-cli"
-            "kdna-mcp-server:kdna-skills:mcp-server/package.json:v:@aikdna/kdna-mcp-server"
-            "kdna-studio-cli:kdna-studio-cli:package.json:v:@aikdna/kdna-studio-cli"
-            "kdna-studio-core:kdna-studio-core:package.json:v:@aikdna/kdna-studio-core"
-            "kdna-activation-server:kdna-activation-server:package.json:v:@aikdna/kdna-activation-server"
-            "kdna-remote-server:kdna-remote-server:package.json:v:@aikdna/kdna-remote-server"
-            "kdna-web-server:kdna-web-server:package.json:v:@aikdna/kdna-web-server"
-            "kdna-web-client:kdna-web-client:package.json:v:@aikdna/kdna-web-client"
-            "kdna-react:kdna-react:package.json:v:@aikdna/kdna-react"
-            "create-kdna-web-app:create-kdna-web-app:package.json:v:create-kdna-web-app"
-            "kdna-core:kdna:packages/kdna-core/package.json:natural:@aikdna/kdna-core"
-            "kdna-eval:kdna:packages/kdna-eval/package.json:eval/:@aikdna/kdna-eval"
-          )
-          DRIFT=0
-          echo "| package | main | tag | npm | release | drift |"
-          echo "| --- | --- | --- | --- | --- | --- |"
-          for entry in "${PACKAGES[@]}"; do
-            IFS=':' read -r pkg repo package_path tag_prefix npm_spec <<< "$entry"
-            # Use curl + raw.githubusercontent.com (no auth needed for public repos)
-            main_v=$(curl -sS "https://raw.githubusercontent.com/aikdna/${repo}/main/${package_path}" 2>/dev/null \
-              | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["version"])' 2>/dev/null || echo "")
-            if [ "$tag_prefix" = "natural" ]; then
-              tag_v=$(git ls-remote --tags "https://github.com/aikdna/$repo.git" 2>/dev/null \
-                | awk '{print $2}' \
-                | sed 's#^refs/tags/##' \
-                | awk '$0 ~ /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/ {print $0}' \
-                | sort -V | tail -1 || echo "")
-              tag_stripped="$tag_v"
-              tag_display="$tag_v"
-            else
-              tag_v=$(git ls-remote --tags "https://github.com/aikdna/$repo.git" 2>/dev/null \
-                | awk '{print $2}' \
-                | sed 's#^refs/tags/##' \
-                | awk -v prefix="${tag_prefix}" 'index($0, prefix) == 1 && $0 !~ /\^\{\}$/ {print $0}' \
-                | sort -V | tail -1 || echo "")
-              tag_stripped="${tag_v#${tag_prefix}}"
-              tag_display="${tag_prefix}${tag_stripped}"
-            fi
-            npm_v=$(npm view "$npm_spec" version 2>/dev/null || echo "")
-            if [ "$tag_prefix" = "natural" ]; then
-              release_tag="$npm_v"
-            else
-              release_tag="${tag_prefix}${npm_v}"
-            fi
-            rel_http=$(curl -sS -o /dev/null -w "%{http_code}" "https://api.github.com/repos/aikdna/${repo}/releases/tags/${release_tag}" 2>/dev/null)
-            rel_exists=$([ "$rel_http" = "200" ] && echo "yes" || echo "no")
-            drift="ok"
-            if [ -z "$main_v" ] || [ -z "$npm_v" ] || [ "$main_v" != "$tag_stripped" ] || [ "$tag_stripped" != "$npm_v" ] || [ "$rel_exists" = "no" ]; then
-              drift="DRIFT"
-              DRIFT=$((DRIFT+1))
-            fi
-            echo "| $pkg | ${main_v:-?} | ${tag_display:-?} | ${npm_v:-?} | $rel_exists | $drift |"
-          done
-          echo "## publish-health drift report" >> $GITHUB_STEP_SUMMARY
-          echo "Drift count: $DRIFT" >> $GITHUB_STEP_SUMMARY
-          if [ "$DRIFT" -gt 0 ]; then exit 1; fi
+          node scripts/publish-health.mjs | tee -a "$GITHUB_STEP_SUMMARY"
         continue-on-error: true
 
       - name: Summarize results

@@ -26,6 +26,7 @@ jobs:
         run: |
           node scripts/core-release-authority.js trusted-npm run test:post-cutover
           node scripts/core-release-authority.js trusted-npm run test:release-scopes
+          node scripts/core-release-authority.js trusted-npm run test:release-health
           node --test scripts/core-release-authority.test.js
           node scripts/core-release-authority.js trusted-npm run audit:post-cutover
       - run: node scripts/core-release-authority.js trusted-npm test
