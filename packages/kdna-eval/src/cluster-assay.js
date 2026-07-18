@@ -10,6 +10,12 @@
 const crypto = require('crypto');
 const { createReplayEngine, REPLAY_MODES } = require('./replay');
 const { createCostTracker, BUDGET_PROFILES } = require('./cost');
+const {
+  canonicalValidationErrors,
+  fingerprintFixtureDataset,
+  fingerprintInvalidDataset,
+  isPlainObject,
+} = require('./evidence-canonical');
 
 // ── Constants ─────────────────────────────────────────────────────────
 
@@ -41,12 +47,6 @@ const COMPARISON_ARM_DESCRIPTIONS = {
   no_kdna: 'No KDNA assets — raw model baseline.',
 };
 
-function isPlainObject(value) {
-  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
-  const prototype = Object.getPrototypeOf(value);
-  return prototype === Object.prototype || prototype === null;
-}
-
 function isNonEmptyString(value) {
   return typeof value === 'string' && value.trim().length > 0;
 }
@@ -64,6 +64,11 @@ function validateClusterFixtures(fixtures) {
     const label = `fixtures[${index}]`;
     if (!isPlainObject(fixture)) {
       errors.push(`${label} must be a plain object`);
+      return;
+    }
+    const evidenceErrors = canonicalValidationErrors(fixture, label);
+    if (evidenceErrors.length) {
+      errors.push(...evidenceErrors);
       return;
     }
     if (!isNonEmptyString(fixture.fixture_id)) {
@@ -117,6 +122,8 @@ function validateReplayResults(replayResults, fixtures) {
  */
 function createClusterFixture(opts) {
   if (!isPlainObject(opts)) throw new TypeError('createClusterFixture requires an options object');
+  const optionErrors = canonicalValidationErrors(opts, 'options');
+  if (optionErrors.length) throw new TypeError(`Invalid cluster fixture options: ${optionErrors.join('; ')}`);
   if (!isNonEmptyString(opts.task)) throw new TypeError('task must be a non-empty string');
   if (!isNonEmptyString(opts.expectedPrimary)) {
     throw new TypeError('expectedPrimary must be a non-empty string');
@@ -332,7 +339,9 @@ function productGate(plan, manifest) {
  * @returns {object} assay results
  */
 function runClusterAssay(opts = {}) {
+  if (!isPlainObject(opts)) throw new TypeError('runClusterAssay options must be a plain object');
   const { manifest, plan, executionCost, comparisonArms = [], fixtures = [] } = opts;
+  validateClusterAssayManifest(manifest);
   const startTime = Date.now();
   const fixtureValidation = validateClusterFixtures(fixtures);
 
@@ -404,9 +413,43 @@ function runClusterAssay(opts = {}) {
       threshold_met: ((boundedCompose?.mean_score || 0) - (primaryOnly?.mean_score || 0)) >= 0.3,
       threshold: 0.30,
     },
-    dataset_fingerprint: 'sha256:' + crypto.createHash('sha256')
-      .update(JSON.stringify(Array.isArray(fixtures) ? fixtures.map(f => f?.fixture_id || '') : [])).digest('hex').slice(0, 32),
+    dataset_fingerprint: fixtureValidation.valid
+      ? fingerprintFixtureDataset(fixtures, 'cluster-assay')
+      : fingerprintInvalidDataset(fixtureValidation.errors, 'cluster-assay'),
   };
+}
+
+function validateClusterAssayManifest(manifest) {
+  if (manifest === undefined || manifest === null) return;
+  if (!isPlainObject(manifest)) throw new TypeError('manifest must be a plain object when provided');
+  const manifestErrors = canonicalValidationErrors(manifest, 'manifest');
+  if (manifestErrors.length) throw new TypeError(`Invalid Cluster Assay manifest: ${manifestErrors.join('; ')}`);
+  if (manifest.cluster_id !== undefined && !isNonEmptyString(manifest.cluster_id)) {
+    throw new TypeError('manifest.cluster_id must be a non-empty string when provided');
+  }
+  if (manifest.version !== undefined && !isNonEmptyString(manifest.version)) {
+    throw new TypeError('manifest.version must be a non-empty string when provided');
+  }
+  if (manifest.description !== undefined && typeof manifest.description !== 'string') {
+    throw new TypeError('manifest.description must be a string when provided');
+  }
+  if (manifest.domains !== undefined) {
+    if (!Array.isArray(manifest.domains)) throw new TypeError('manifest.domains must be an array when provided');
+    manifest.domains.forEach((domain, index) => {
+      if (!isPlainObject(domain)) throw new TypeError(`manifest.domains[${index}] must be a plain object`);
+      if (domain.load_condition !== undefined && typeof domain.load_condition !== 'string') {
+        throw new TypeError(`manifest.domains[${index}].load_condition must be a string when provided`);
+      }
+    });
+  }
+  if (manifest.composition !== undefined) {
+    if (!isPlainObject(manifest.composition)) {
+      throw new TypeError('manifest.composition must be a plain object when provided');
+    }
+    if (manifest.composition.strategy !== undefined && !isNonEmptyString(manifest.composition.strategy)) {
+      throw new TypeError('manifest.composition.strategy must be a non-empty string when provided');
+    }
+  }
 }
 
 // ── Advisor Relation Ledger ───────────────────────────────────────────

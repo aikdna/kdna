@@ -56,6 +56,10 @@ if (false) {
   createAdvisorRelationLedger({ cluster_ref: { cluster_id: 42 } });
   // @ts-expect-error asset_id cannot be numeric
   createAdvisorRelationLedger({ selection: { advisors: [{ asset_id: 42 }] } });
+  // @ts-expect-error manifest cluster_id cannot be numeric
+  runClusterAssay({ manifest: { cluster_id: 42 }, fixtures: [clusterFixture] });
+  // @ts-expect-error manifest load_condition cannot be numeric
+  runClusterAssay({ manifest: { domains: [{ load_condition: 42 }] }, fixtures: [clusterFixture] });
 }
 `,
     );

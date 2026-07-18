@@ -14,6 +14,12 @@ const crypto = require('crypto');
 const { createReplayEngine } = require('./replay');
 const { createMultiGateRunner } = require('./gates');
 const { createCostTracker, BUDGET_PROFILES } = require('./cost');
+const {
+  canonicalValidationErrors,
+  fingerprintFixtureDataset,
+  fingerprintInvalidDataset,
+  isPlainObject,
+} = require('./evidence-canonical');
 
 // ── Constants ─────────────────────────────────────────────────────────
 
@@ -66,12 +72,6 @@ const THRESHOLD_RULES = {
   interoperability_gate: { kind: 'boolean' },
   product_gate: { kind: 'boolean' },
 };
-
-function isPlainObject(value) {
-  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
-  const prototype = Object.getPrototypeOf(value);
-  return prototype === Object.prototype || prototype === null;
-}
 
 function isNonEmptyString(value) {
   return typeof value === 'string' && value.trim().length > 0;
@@ -139,6 +139,8 @@ function validateProfile(profile) {
  */
 function createAssayProfile(opts = {}) {
   if (!isPlainObject(opts)) throw new TypeError('createAssayProfile options must be a plain object');
+  const optionErrors = canonicalValidationErrors(opts, 'options');
+  if (optionErrors.length) throw new TypeError(`Invalid assay profile options: ${optionErrors.join('; ')}`);
   if (opts.assetId !== undefined && !isNonEmptyString(opts.assetId)) {
     throw new TypeError('assetId must be a non-empty string when provided');
   }
@@ -178,14 +180,14 @@ function createAssayProfile(opts = {}) {
       human_review_required: opts.thresholds?.human_review_required ?? true,
 
       // Gates
-      structural_gate: true,
-      behavioral_gate: true,
-      boundary_gate: true,
-      contamination_gate: true,
-      trust_gate: false,       // requires signature + authorization infrastructure
-      economics_gate: false,   // requires real cost data
-      interoperability_gate: false, // requires cross-language evidence
-      product_gate: false,     // requires UX + user evidence
+      structural_gate: opts.thresholds?.structural_gate ?? true,
+      behavioral_gate: opts.thresholds?.behavioral_gate ?? true,
+      boundary_gate: opts.thresholds?.boundary_gate ?? true,
+      contamination_gate: opts.thresholds?.contamination_gate ?? true,
+      trust_gate: opts.thresholds?.trust_gate ?? false,       // requires signature + authorization infrastructure
+      economics_gate: opts.thresholds?.economics_gate ?? false,   // requires real cost data
+      interoperability_gate: opts.thresholds?.interoperability_gate ?? false, // requires cross-language evidence
+      product_gate: opts.thresholds?.product_gate ?? false,     // requires UX + user evidence
     },
   };
 }
@@ -218,6 +220,11 @@ function validateFixtureSet(fixtures, profile) {
     const label = `fixtures[${index}]`;
     if (!isPlainObject(fixture)) {
       errors.push(`${label} must be a plain object`);
+      return;
+    }
+    const evidenceErrors = canonicalValidationErrors(fixture, label);
+    if (evidenceErrors.length) {
+      errors.push(...evidenceErrors);
       return;
     }
     if (!isNonEmptyString(fixture.fixture_id)) {
@@ -290,6 +297,8 @@ function validateFixtureSet(fixtures, profile) {
  */
 function createFixture(opts) {
   if (!isPlainObject(opts)) throw new TypeError('createFixture requires an options object');
+  const optionErrors = canonicalValidationErrors(opts, 'options');
+  if (optionErrors.length) throw new TypeError(`Invalid fixture options: ${optionErrors.join('; ')}`);
   if (!FIXTURE_CATEGORIES.includes(opts.category))
     throw new Error(`Unknown fixture category: ${opts.category}. Must be one of: ${FIXTURE_CATEGORIES.join(', ')}`);
   if (!isNonEmptyString(opts.task)) throw new TypeError('task must be a non-empty string');
@@ -324,6 +333,9 @@ function createFixture(opts) {
 function createBaselineArm(arm, config = {}) {
   if (!BASELINE_ARMS.includes(arm))
     throw new Error(`Unknown baseline arm: ${arm}. Must be one of: ${BASELINE_ARMS.join(', ')}`);
+  if (!isPlainObject(config)) throw new TypeError('baseline config must be a plain object');
+  const configErrors = canonicalValidationErrors(config, 'config');
+  if (configErrors.length) throw new TypeError(`Invalid baseline config: ${configErrors.join('; ')}`);
   return {
     arm,
     description: ARM_DESCRIPTIONS[arm],
@@ -345,6 +357,50 @@ const ARM_DESCRIPTIONS = {
  */
 function createAllBaselineArms() {
   return BASELINE_ARMS.map(arm => createBaselineArm(arm));
+}
+
+function validateBaselineArms(baselineArms) {
+  const errors = [];
+  if (!Array.isArray(baselineArms)) {
+    return { valid: false, summary: { total: 0, required: BASELINE_ARMS.length }, errors: ['baselineArms must be an array'] };
+  }
+  if (baselineArms.length !== BASELINE_ARMS.length) {
+    errors.push(`baselineArms must contain exactly ${BASELINE_ARMS.length} arms`);
+  }
+  const seen = new Set();
+  baselineArms.forEach((definition, index) => {
+    const label = `baselineArms[${index}]`;
+    if (!isPlainObject(definition)) {
+      errors.push(`${label} must be a plain object`);
+      return;
+    }
+    const evidenceErrors = canonicalValidationErrors(definition, label);
+    if (evidenceErrors.length) {
+      errors.push(...evidenceErrors);
+      return;
+    }
+    if (!BASELINE_ARMS.includes(definition.arm)) {
+      errors.push(`${label}.arm must be one of: ${BASELINE_ARMS.join(', ')}`);
+    } else if (seen.has(definition.arm)) {
+      errors.push(`${label}.arm duplicates ${definition.arm}`);
+    } else {
+      seen.add(definition.arm);
+    }
+    if (definition.description !== undefined && !isNonEmptyString(definition.description)) {
+      errors.push(`${label}.description must be a non-empty string when provided`);
+    }
+    if (definition.config !== undefined && !isPlainObject(definition.config)) {
+      errors.push(`${label}.config must be a plain object when provided`);
+    }
+  });
+  for (const arm of BASELINE_ARMS) {
+    if (!seen.has(arm)) errors.push(`baselineArms is missing ${arm}`);
+  }
+  return {
+    valid: errors.length === 0,
+    summary: { total: baselineArms.length, required: BASELINE_ARMS.length },
+    errors,
+  };
 }
 
 // ── Judgment Scoring ──────────────────────────────────────────────────
@@ -562,7 +618,7 @@ async function runAssay(opts = {}) {
     throw new TypeError(`Invalid assay profile: ${profileErrors.join('; ')}`);
   }
 
-  const baselineArms = opts.baselineArms || createAllBaselineArms();
+  const baselineArms = opts.baselineArms === undefined ? createAllBaselineArms() : opts.baselineArms;
   const results = [];
   const startTime = Date.now();
 
@@ -583,7 +639,27 @@ async function runAssay(opts = {}) {
       overall_verdict: 'fail',
       failed_thresholds: ['fixture_dataset'],
       duration_ms: Date.now() - startTime,
-      dataset_fingerprint: fingerprintFixtures(fixtures),
+      dataset_fingerprint: fingerprintInvalidDataset(fixtureValidation.errors, 'asset-assay'),
+    };
+  }
+
+  const baselineValidation = validateBaselineArms(baselineArms);
+  if (!baselineValidation.valid) {
+    return {
+      assay_version: '0.9.0',
+      profile,
+      fixture_validation: fixtureValidation,
+      results_by_arm: {},
+      results: [],
+      result_count: 0,
+      threshold_results: {
+        fixture_dataset: { pass: true, detail: fixtureValidation.summary },
+        baseline_arms: { pass: false, detail: baselineValidation },
+      },
+      overall_verdict: 'fail',
+      failed_thresholds: ['baseline_arms'],
+      duration_ms: Date.now() - startTime,
+      dataset_fingerprint: fingerprintFixtureDataset(fixtures, 'asset-assay'),
     };
   }
 
@@ -681,6 +757,7 @@ async function runAssay(opts = {}) {
 
   const thresholdResults = {
     fixture_dataset: { pass: fixtureValidation.valid, detail: fixtureValidation.summary },
+    baseline_arms: { pass: baselineValidation.valid, detail: baselineValidation.summary },
     blind_improvement: {
       pass: meanImprovement >= t.blind_mean_improvement_min || criticalErrorReduction >= t.critical_error_reduction_pct,
       detail: {
@@ -725,15 +802,8 @@ async function runAssay(opts = {}) {
     overall_verdict: allPassed ? 'pass' : 'fail',
     failed_thresholds: Object.entries(thresholdResults).filter(([, tr]) => !tr.pass).map(([name]) => name),
     duration_ms: durationMs,
-    dataset_fingerprint: fingerprintFixtures(fixtures),
+    dataset_fingerprint: fingerprintFixtureDataset(fixtures, 'asset-assay'),
   };
-}
-
-function fingerprintFixtures(fixtures) {
-  const ids = Array.isArray(fixtures)
-    ? fixtures.map(fixture => isPlainObject(fixture) && isNonEmptyString(fixture.fixture_id) ? fixture.fixture_id : null)
-    : [];
-  return `sha256:${crypto.createHash('sha256').update(JSON.stringify(ids)).digest('hex').slice(0, 32)}`;
 }
 
 function fixtureFor(fixtureId, fixtures) {

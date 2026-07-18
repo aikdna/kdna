@@ -248,6 +248,20 @@ Version 0.3.2 also closes implicit-evidence paths in Assay and Replay APIs:
   declared nested shapes, including fallback-loaded defaults. Consumer-index
   resolution and trust checks return safe disabled results for malformed
   indexes rather than trusting partial data.
+- Asset Assay requires exactly the four documented baseline arms, once each,
+  before invoking a runner. Empty, partial, duplicate, unknown, or malformed
+  arm sets fail closed regardless of relaxed thresholds.
+- Asset and Cluster dataset fingerprints hash canonical evaluation content,
+  including fixture IDs, tasks, categories, and expected evidence. Object key
+  order does not change the hash, while task or expectation changes do.
+  `created_at` and the derived `task_hash` are excluded from the fingerprint.
+- Fixture evidence must be deterministic JSON data: cycles, `BigInt`,
+  `undefined`, functions, symbols, sparse arrays, accessors, and non-plain
+  nested objects are rejected before an Assay runner or Replay engine executes.
+- Cluster manifest identifiers, descriptions, domain load conditions, and
+  composition strategies are validated before a strongly typed report is
+  created. Missing optional identifiers retain the documented `unknown` and
+  `0.1.0` defaults.
 
 ## Version 0.3.1 Assay Contracts
 

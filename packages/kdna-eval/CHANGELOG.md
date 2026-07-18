@@ -25,6 +25,15 @@
 - Fully validate the nested Domain, Persona, RouteCard, and ConsumerIndex
   shapes promised by TypeScript, including fallback-loaded defaults, and make
   consumer-index resolution and trust checks fail safely on malformed input.
+- Require exactly one of each documented Asset Assay baseline arm before a
+  runner is invoked; empty, partial, duplicate, unknown, or malformed arm sets
+  cannot produce a passing report.
+- Bind Asset and Cluster dataset fingerprints to canonical evaluation content,
+  not fixture IDs alone. Object key order is normalized, task and expected
+  evidence mutations change the hash, and non-JSON evidence fails validation.
+- Validate Cluster manifest identifiers and product-gate fields before
+  producing the strongly typed report, while preserving documented defaults
+  when optional identifiers are absent.
 
 ## 0.3.1 (2026-07-12)
 

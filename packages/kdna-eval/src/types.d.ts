@@ -516,6 +516,8 @@ export interface CreateAssayFixtureOptions {
 
 export interface AssayArmDefinition {
   arm: AssayBaselineArm;
+  description?: string;
+  config?: Record<string, unknown>;
   [key: string]: unknown;
 }
 
@@ -631,12 +633,31 @@ export interface CreateClusterFixtureOptions {
 }
 
 export interface ClusterAssayOptions {
-  manifest?: Record<string, unknown>;
+  manifest?: ClusterAssayManifest | null;
   plan?: Record<string, unknown>;
   executionCost?: Record<string, unknown>;
   comparisonArms?: Array<Record<string, unknown>>;
   fixtures: ClusterReplayFixture[];
   assetsLoaded?: Array<Record<string, unknown>>;
+}
+
+export interface ClusterAssayManifest {
+  cluster_id?: string;
+  version?: string;
+  description?: string;
+  domains?: ClusterAssayManifestDomain[];
+  composition?: ClusterAssayManifestComposition;
+  [key: string]: unknown;
+}
+
+export interface ClusterAssayManifestDomain {
+  load_condition?: string;
+  [key: string]: unknown;
+}
+
+export interface ClusterAssayManifestComposition {
+  strategy?: string;
+  [key: string]: unknown;
 }
 
 export interface AdvisorRelationAsset {

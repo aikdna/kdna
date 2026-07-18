@@ -438,6 +438,28 @@ void ${root}.runAssay({
     throw new Error("invalid packed assay dataset did not fail before runner invocation");
   }
 });
+const relaxedAssayProfile = ${root}.createAssayProfile({
+  thresholds: {
+    positive_target_min_count: 0,
+    non_applicable_min_count: 0,
+    adjacent_ambiguous_min_count: 0,
+    high_risk_failure_min_count: 0,
+    regression_min_count: 0,
+    holdout_required: false,
+  },
+});
+let baselineRunnerCalls = 0;
+void ${root}.runAssay({
+  profile: relaxedAssayProfile,
+  fixtures: [assayFixture],
+  baselineArms: [],
+  runner: () => { baselineRunnerCalls++; return { answer: "must not run" }; },
+}).then((report) => {
+  if (baselineRunnerCalls !== 0 || report.overall_verdict !== "fail" ||
+      !report.failed_thresholds.includes("baseline_arms")) {
+    throw new Error("empty packed baseline arms did not fail before runner invocation");
+  }
+});
 const decision = ${root}.recordAdvisorDecision("advisor", "approved");
 const ledger = ${root}.createAdvisorRelationLedger(
   {
@@ -480,6 +502,20 @@ if (Object.keys(clusterReplay).length !== 5 ||
     Object.values(clusterReplay).some(result => result.status !== "completed" || result.passed !== 1)) {
   throw new Error("cluster replay did not preserve explicit packed pass evidence");
 }
+expectThrows(
+  () => ${root}.runClusterAssay({
+    manifest: { cluster_id: 42 as unknown as string },
+    fixtures: [clusterFixture],
+  }),
+  "cluster assay numeric manifest identifier",
+);
+expectThrows(
+  () => ${root}.runClusterAssay({
+    manifest: { domains: [{ load_condition: 42 as unknown as string }] },
+    fixtures: [clusterFixture],
+  }),
+  "cluster assay numeric load condition",
+);
 if (false) {
   // @ts-expect-error assetId cannot be numeric
   ${root}.createAssayProfile({ assetId: 42 });
@@ -491,6 +527,10 @@ if (false) {
   ${root}.createAdvisorRelationLedger({ cluster_ref: { cluster_id: 42 } });
   // @ts-expect-error asset_id cannot be numeric
   ${root}.createAdvisorRelationLedger({ selection: { advisors: [{ asset_id: 42 }] } });
+  // @ts-expect-error manifest cluster_id cannot be numeric
+  ${root}.runClusterAssay({ manifest: { cluster_id: 42 }, fixtures: [clusterFixture] });
+  // @ts-expect-error manifest load_condition cannot be numeric
+  ${root}.runClusterAssay({ manifest: { domains: [{ load_condition: 42 }] }, fixtures: [clusterFixture] });
 }
 const regressions = ${root}.detectRegressions(
   [{ id: "f1", score: 50, pass: true }],

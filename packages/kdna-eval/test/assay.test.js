@@ -20,6 +20,24 @@ const {
 const fixture = (category, task, expected = { answer: 'expected' }) =>
   createFixture({ category, task, expected });
 
+const relaxedProfile = () => createAssayProfile({
+  assetId: 'test.kdna',
+  thresholds: {
+    positive_target_min_count: 0,
+    non_applicable_min_count: 0,
+    adjacent_ambiguous_min_count: 0,
+    high_risk_failure_min_count: 0,
+    regression_min_count: 0,
+    holdout_required: false,
+    blind_mean_improvement_min: 0,
+    critical_error_reduction_pct: 0,
+    non_applicable_accuracy_min: 0,
+    harmful_contamination_max: 1,
+    high_risk_harm_zero: false,
+    regression_pass_required: false,
+  },
+});
+
 // ── Profile ───────────────────────────────────────────────────────────
 
 it('creates assay profile with defaults', () => {
@@ -40,6 +58,35 @@ it('creates assay profile with custom thresholds', () => {
   assert.strictEqual(profile.thresholds.blind_mean_improvement_min, 1.0);
   // Unspecified thresholds retain defaults
   assert.strictEqual(profile.thresholds.non_applicable_accuracy_min, 0.90);
+});
+
+it('applies every advertised gate threshold override', () => {
+  const profile = createAssayProfile({
+    assetId: 'custom.kdna',
+    thresholds: {
+      structural_gate: false,
+      behavioral_gate: false,
+      boundary_gate: false,
+      contamination_gate: false,
+      trust_gate: true,
+      economics_gate: true,
+      interoperability_gate: true,
+      product_gate: true,
+    },
+  });
+  assert.deepStrictEqual(
+    Object.fromEntries(Object.entries(profile.thresholds).filter(([name]) => name.endsWith('_gate'))),
+    {
+      structural_gate: false,
+      behavioral_gate: false,
+      boundary_gate: false,
+      contamination_gate: false,
+      trust_gate: true,
+      economics_gate: true,
+      interoperability_gate: true,
+      product_gate: true,
+    },
+  );
 });
 
 it('rejects missing profile options and invalid threshold domains', () => {
@@ -113,6 +160,10 @@ it('createFixture requires explicit non-empty task and expected evidence', () =>
   assert.throws(
     () => createFixture({ category: 'positive_target', task: 'task', expected: {} }),
     /expected must be a non-empty plain object/,
+  );
+  assert.throws(
+    () => createFixture({ category: 'positive_target', task: 'task', expected: { value: 1n } }),
+    /unsupported bigint evidence/,
   );
 });
 
@@ -219,6 +270,94 @@ it('fails closed without invoking the runner for an externally malformed profile
     /Invalid assay profile.*harmful_contamination_max/,
   );
   assert.strictEqual(calls, 0);
+});
+
+it('requires each exact baseline arm once before invoking the runner', async () => {
+  const allArms = createAllBaselineArms();
+  const invalidArmSets = [
+    [],
+    allArms.slice(0, 3),
+    [allArms[0], allArms[0], allArms[2], allArms[3]],
+    [allArms[0], allArms[1], allArms[2], { arm: 'unknown' }],
+    [allArms[0], allArms[1], allArms[2], null],
+    [allArms[0], allArms[1], allArms[2], { arm: 'wrong_or_adjacent_kdna', config: new Date() }],
+  ];
+  for (const baselineArms of invalidArmSets) {
+    let calls = 0;
+    const report = await runAssay({
+      profile: relaxedProfile(),
+      fixtures: [fixture('positive_target', 'valid baseline task')],
+      baselineArms,
+      runner: async () => { calls++; return { answer: 'must not run', score_5pt: 5 }; },
+    });
+    assert.strictEqual(calls, 0);
+    assert.strictEqual(report.overall_verdict, 'fail');
+    assert.deepStrictEqual(report.failed_thresholds, ['baseline_arms']);
+  }
+});
+
+it('rejects non-canonical fixture evidence before invoking the runner', async () => {
+  const base = fixture('positive_target', 'canonical evidence task');
+  const cyclic = { answer: 'x' };
+  cyclic.self = cyclic;
+  const namedArray = ['value'];
+  namedArray.extra = 'hidden from JSON arrays';
+  let getterCalls = 0;
+  const accessorExpected = {};
+  Object.defineProperty(accessorExpected, 'answer', {
+    enumerable: true,
+    get() { getterCalls++; return 'must not execute'; },
+  });
+  const invalidFixtures = [
+    { ...base, expected: cyclic },
+    { ...base, expected: { value: 1n } },
+    { ...base, expected: { value: undefined } },
+    { ...base, metadata: { value: () => true } },
+    { ...base, metadata: { value: new Date() } },
+    { ...base, metadata: { namedArray } },
+    { ...base, expected: accessorExpected },
+  ];
+  for (const invalidFixture of invalidFixtures) {
+    let calls = 0;
+    const report = await runAssay({
+      profile: relaxedProfile(),
+      fixtures: [invalidFixture],
+      runner: async () => { calls++; return { answer: 'must not run' }; },
+    });
+    assert.strictEqual(calls, 0);
+    assert.strictEqual(report.overall_verdict, 'fail');
+    assert.strictEqual(report.fixture_validation.valid, false);
+  }
+  assert.strictEqual(getterCalls, 0);
+});
+
+it('asset dataset fingerprint is key-order stable and content-sensitive', async () => {
+  const base = fixture('positive_target', 'fingerprint task', { answer: 'hold', score: 4 });
+  const reordered = {
+    metadata: {},
+    expected: { score: 4, answer: 'hold' },
+    task_hash: base.task_hash,
+    task: base.task,
+    category: base.category,
+    fixture_id: base.fixture_id,
+    created_at: 'different volatile timestamp',
+  };
+  const run = fixtures => runAssay({
+    profile: relaxedProfile(),
+    fixtures,
+    runner: async () => ({ answer: 'hold', score_5pt: 4 }),
+  });
+  const original = await run([base]);
+  const sameSemantics = await run([reordered]);
+  const changedTask = await run([{ ...base, task: 'mutated fingerprint task' }]);
+  const changedExpected = await run([{ ...base, expected: { answer: 'ship', score: 4 } }]);
+  assert.strictEqual(original.dataset_fingerprint, sameSemantics.dataset_fingerprint);
+  assert.notStrictEqual(original.dataset_fingerprint, changedTask.dataset_fingerprint);
+  assert.notStrictEqual(original.dataset_fingerprint, changedExpected.dataset_fingerprint);
+  assert.strictEqual(
+    generateEvidenceClaim(original).scope.dataset_fingerprint,
+    original.dataset_fingerprint,
+  );
 });
 
 // ── Baseline Arms ─────────────────────────────────────────────────────

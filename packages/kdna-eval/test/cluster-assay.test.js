@@ -350,4 +350,87 @@ it('cluster assay cannot pass with zero, malformed, or duplicate fixtures', () =
   }
 });
 
+it('cluster assay rejects malformed manifest fields before producing a typed report', () => {
+  const fixture = createClusterFixture({ task: 'manifest task', expectedPrimary: '@aikdna/primary' });
+  assert.throws(
+    () => runClusterAssay({ manifest: { cluster_id: 42 }, fixtures: [fixture] }),
+    /manifest.cluster_id must be a non-empty string/,
+  );
+  assert.throws(
+    () => runClusterAssay({ manifest: { version: 7 }, fixtures: [fixture] }),
+    /manifest.version must be a non-empty string/,
+  );
+  assert.throws(
+    () => runClusterAssay({ manifest: { description: 42 }, fixtures: [fixture] }),
+    /manifest.description must be a string/,
+  );
+  assert.throws(
+    () => runClusterAssay({ manifest: { domains: [{ load_condition: 42 }] }, fixtures: [fixture] }),
+    /load_condition must be a string/,
+  );
+  assert.throws(
+    () => runClusterAssay({ manifest: { composition: { strategy: 42 } }, fixtures: [fixture] }),
+    /composition.strategy must be a non-empty string/,
+  );
+  const compatible = runClusterAssay({ fixtures: [fixture] });
+  assert.strictEqual(compatible.cluster_id, 'unknown');
+  assert.strictEqual(compatible.cluster_version, '0.1.0');
+});
+
+it('cluster fixtures reject non-canonical evidence before replay engine invocation', () => {
+  const base = createClusterFixture({ task: 'canonical cluster task', expectedPrimary: '@aikdna/primary' });
+  const cycle = {};
+  cycle.self = cycle;
+  const invalidFixtures = [
+    { ...base, evidence: cycle },
+    { ...base, evidence: { value: 1n } },
+    { ...base, evidence: { value: undefined } },
+    { ...base, evidence: { value: () => true } },
+    { ...base, evidence: { value: new Date() } },
+  ];
+  for (const fixture of invalidFixtures) {
+    let calls = 0;
+    const replay = runClusterReplay({ replayRun: () => { calls++; return { results: [] }; } }, [fixture]);
+    assert.strictEqual(calls, 0);
+    assert.ok(Object.values(replay).every(result => result.status === 'failed'));
+    const report = runClusterAssay({ manifest: CANONICAL_MANIFEST, fixtures: [fixture] });
+    assert.strictEqual(report.verdict.overall, 'fail');
+    assert.strictEqual(report.fixture_validation.valid, false);
+  }
+});
+
+it('cluster dataset fingerprint is key-order stable and content-sensitive', () => {
+  const created = createClusterFixture({
+    task: 'cluster fingerprint task',
+    taskFamily: 'release',
+    category: 'target',
+    expectedPrimary: '@aikdna/primary',
+    expectedAdvisors: ['@aikdna/advisor'],
+    expectedRejected: ['@aikdna/rejected'],
+    expectedConflicts: 1,
+  });
+  const base = { ...created, evidence: { alpha: 1, beta: 2 } };
+  const reordered = {
+    evidence: { beta: 2, alpha: 1 },
+    category: base.category,
+    expected_conflicts: base.expected_conflicts,
+    expected_rejected: base.expected_rejected,
+    expected_advisors: base.expected_advisors,
+    expected_primary: base.expected_primary,
+    task_family: base.task_family,
+    task_hash: base.task_hash,
+    task: base.task,
+    fixture_id: base.fixture_id,
+    created_at: 'different volatile timestamp',
+  };
+  const run = fixtures => runClusterAssay({ manifest: CANONICAL_MANIFEST, fixtures });
+  const original = run([base]);
+  const sameSemantics = run([reordered]);
+  const changedTask = run([{ ...base, task: 'mutated cluster fingerprint task' }]);
+  const changedExpected = run([{ ...base, expected_primary: '@aikdna/other-primary' }]);
+  assert.strictEqual(original.dataset_fingerprint, sameSemantics.dataset_fingerprint);
+  assert.notStrictEqual(original.dataset_fingerprint, changedTask.dataset_fingerprint);
+  assert.notStrictEqual(original.dataset_fingerprint, changedExpected.dataset_fingerprint);
+});
+
 console.log('cluster-assay.test.js: all tests complete');
