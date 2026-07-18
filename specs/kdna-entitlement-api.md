@@ -1,7 +1,7 @@
 # KDNA Entitlement API
 
 Version: 0.2
-Status: Draft / legacy receipt and RFC-0019 account-device subsets implemented
+Status: Active legacy-receipt contract; RFC-0019 account-device flow is separate
 
 This specification defines the production contract for activating, syncing,
 revoking, and auditing licensed KDNA assets.
@@ -30,7 +30,7 @@ The entitlement record is never part of the canonical `.kdna` asset. It is store
 outside the asset, for example:
 
 ```text
-~/.kdna/licenses/<scope-name>.json
+~/.kdna/licenses/<implementation-defined-id>.json
 ```
 
 The legacy receipt contract below remains supported for existing license-key
@@ -86,7 +86,7 @@ Request body:
 
 ```json
 {
-  "domain": "@aikdna/writing_pro",
+  "domain": "kdna:aikdna:writing-pro",
   "license_key": "KDNA-LIC-...",
   "machine_fingerprint": "<sha256 fingerprint>",
   "client": "kdna-cli",
@@ -101,10 +101,10 @@ Required fields:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `domain` | Yes | Scoped asset name, for example `@scope/name`. |
+| `domain` | Yes | Exact `asset_id` from the KDNA Core manifest, for example `kdna:aikdna:writing-pro`. Its grammar is authoritative in Core's published `manifest.schema.json`. |
 | `license_key` | Yes | Secret activation key. Never log this field. |
 | `machine_fingerprint` | Yes for machine-bound licenses | Client device fingerprint. |
-| `client` | Yes | Calling client, for example `kdna-cli`, `kdna-studio-cli`, `kdna-vscode`, or any third-party consumer of the protocol. |
+| `client` | No | Informational calling-client label, for example `kdna-cli` or a third-party consumer. Servers MUST NOT use it as authorization authority. |
 
 Optional fields are for account/device management and analytics. Servers MUST
 ignore unknown fields for forward compatibility.
@@ -118,7 +118,7 @@ A successful response returns an activation object:
   "version": "1.0",
   "license_id": "lic_abc123",
   "license_key": "KDNA-LIC-...",
-  "domain": "@aikdna/writing_pro",
+  "domain": "kdna:aikdna:writing-pro",
   "issued_to": "buyer@example.com",
   "issued_at": "2026-05-27T00:00:00.000Z",
   "expires_at": "2027-05-27T00:00:00.000Z",
@@ -152,7 +152,7 @@ Local fixture files MAY contain:
 {
   "activations": [
     {
-      "domain": "@aikdna/writing_pro",
+      "domain": "kdna:aikdna:writing-pro",
       "license_key": "KDNA-LIC-...",
       "license_id": "lic_abc123",
       "status": "active"
@@ -222,7 +222,7 @@ Request body:
 
 ```json
 {
-  "domain": "@aikdna/writing_pro",
+  "domain": "kdna:aikdna:writing-pro",
   "license_key": "KDNA-LIC-...",
   "license_id": "lic_abc123",
   "machine_fingerprint": "<sha256 fingerprint>",
@@ -238,7 +238,7 @@ If the license has been revoked, the server MUST return either:
 ```json
 {
   "license_id": "lic_abc123",
-  "domain": "@aikdna/writing_pro",
+  "domain": "kdna:aikdna:writing-pro",
   "status": "revoked",
   "revoked": true,
   "revoked_at": "2026-05-27T00:00:00.000Z",
@@ -303,7 +303,7 @@ Request:
 ```json
 {
   "license_id": "lic_abc123",
-  "domain": "@aikdna/writing_pro",
+  "domain": "kdna:aikdna:writing-pro",
   "reason": "payment_failed",
   "revoked_by": "billing-system",
   "revoked_at": "2026-05-27T00:00:00.000Z"
@@ -329,7 +329,7 @@ The next client sync MUST receive the revoked status.
 Reference clients store one JSON file per domain:
 
 ```text
-~/.kdna/licenses/<scope-name>.json
+~/.kdna/licenses/<implementation-defined-id>.json
 ```
 
 Example:
@@ -339,7 +339,7 @@ Example:
   "version": "1.0",
   "license_id": "lic_abc123",
   "license_key": "KDNA-LIC-...",
-  "domain": "@aikdna/writing_pro",
+  "domain": "kdna:aikdna:writing-pro",
   "issued_to": "buyer@example.com",
   "issued_at": "2026-05-27T00:00:00.000Z",
   "expires_at": "2027-05-27T00:00:00.000Z",
@@ -371,7 +371,7 @@ Example:
   "event": "license",
   "action": "sync",
   "agent": "kdna-cli",
-  "domain": "@aikdna/writing_pro",
+  "domain": "kdna:aikdna:writing-pro",
   "license_id": "lic_abc123",
   "valid": false,
   "issues": ["License has been revoked"],
@@ -420,11 +420,11 @@ URL provided by the caller. Production clients SHOULD pass the concrete endpoint
 URL, such as:
 
 ```bash
-kdna license activate @aikdna/writing_pro \
+kdna license activate kdna:aikdna:writing-pro \
   --key KDNA-LIC-... \
   --server https://license.example.com/entitlements/activate
 
-kdna license sync @aikdna/writing_pro \
+kdna license sync kdna:aikdna:writing-pro \
   --server https://license.example.com/entitlements/sync
 ```
 
