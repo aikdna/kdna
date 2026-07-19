@@ -50,8 +50,8 @@ npm install -g @aikdna/kdna-studio-cli  # 创作 CLI（0.10.2）
 - `@aikdna/kdna-eval@0.3.2` 已发布：实验性评测工具；输出是评价者范围内的证据，
   不是 Core 权威。CLI 的 Asset 观测矩阵不生成来源声明，Cluster 的 trust/economics
   晋级必须在可信证据生产者内调用 Eval API
-- `@aikdna/kdna@0.13.2` 候选：面向 CLI 0.35.1 的 Legacy 兼容桥更新；npm 当前已发布
-  版本在注册表验收前仍为 0.13.1。新集成直接使用 CLI 与 Core
+- `@aikdna/kdna@0.13.2` 已发布：面向 CLI 0.35.1 的维护中 Legacy 兼容桥；
+  新集成仍直接使用 CLI 与 Core
 - `@aikdna/agent`、`@aikdna/kdna-artifact-engine` 与
   `@aikdna/kdna-fidelity-core` 为已弃用的历史 npm 坐标，不属于当前工具链
 

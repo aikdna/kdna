@@ -84,21 +84,29 @@ test('release-health policy is an exact projection of current public package rec
   }
 });
 
-test('candidate health monitors the incumbent registry release and candidate main source', () => {
+test('maintained compatibility health monitors the exact published source', () => {
   const compat = policy.packages.find((entry) => entry.npm_package === '@aikdna/kdna');
-  assert.equal(compat.version, '0.13.1');
+  assert.equal(compat.version, '0.13.2');
   assert.equal(expectedMainVersion(compat), '0.13.2');
+  assert.equal(compat.candidate_version, undefined);
+});
+
+test('candidate health requires a stable version newer than its incumbent', () => {
+  const compat = policy.packages.find((entry) => entry.npm_package === '@aikdna/kdna');
+  const candidate = { ...compat, version: '0.13.1', candidate_version: '0.13.2' };
+  assert.equal(validatePolicy({ ...policy, packages: [candidate] }).packages[0], candidate);
+  assert.equal(expectedMainVersion(candidate), '0.13.2');
   assert.throws(
-    () => validatePolicy({ ...policy, packages: [{ ...compat, candidate_version: '0.13.1' }] }),
+    () => validatePolicy({ ...policy, packages: [{ ...candidate, candidate_version: '0.13.1' }] }),
     /invalid candidate version/u,
   );
   assert.throws(
-    () => validatePolicy({ ...policy, packages: [{ ...compat, candidate_version: '0.13.0' }] }),
+    () => validatePolicy({ ...policy, packages: [{ ...candidate, candidate_version: '0.13.0' }] }),
     /invalid candidate version/u,
   );
   assert.throws(
     () =>
-      validatePolicy({ ...policy, packages: [{ ...compat, candidate_version: '0.13.2-rc.1' }] }),
+      validatePolicy({ ...policy, packages: [{ ...candidate, candidate_version: '0.13.2-rc.1' }] }),
     /invalid candidate version/u,
   );
 });
