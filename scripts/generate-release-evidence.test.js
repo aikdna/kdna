@@ -9,19 +9,19 @@ const { validateKnownPackages } = require('./generate-release-evidence');
 
 const repoRoot = path.resolve(__dirname, '..');
 
-test('release evidence inventories candidate source without treating it as current-published', () => {
+test('release evidence inventories the maintained compatibility source', () => {
   const manifest = JSON.parse(
     fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
   );
   assert.doesNotThrow(() => validateKnownPackages(manifest));
 
-  const withoutCandidateSource = structuredClone(manifest);
-  const compatibility = withoutCandidateSource.components
+  const withoutCompatibilitySource = structuredClone(manifest);
+  const compatibility = withoutCompatibilitySource.components
     .find((component) => component.repository === 'aikdna/kdna')
     .packages.find((packageRecord) => packageRecord.npm_package === '@aikdna/kdna');
   compatibility.release_status = 'deprecated';
   assert.throws(
-    () => validateKnownPackages(withoutCandidateSource),
+    () => validateKnownPackages(withoutCompatibilitySource),
     /release evidence package inventory differs/u,
   );
 });

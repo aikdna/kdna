@@ -41,27 +41,11 @@ const CHECKOUT_ACTION_SHA = '9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0';
 const SETUP_NODE_ACTION_SHA = '249970729cb0ef3589644e2896645e5dc5ba9c38';
 const SETUP_PYTHON_ACTION_SHA = 'ece7cb06caefa5fff74198d8649806c4678c61a1';
 const UPLOAD_ACTION_SHA = 'ea165f8d65b6e75b540449e92b4886f43607fa02';
-const EXPECTED_CONSUMER_CHECKOUTS = [
-  ['aikdna/create-kdna-web-app', '4241dc20814bae4fcf72d44df7c0670ef70bda00'],
-  ['aikdna/kdna-cli', '0a23a2528bd55ee99a4d3a9ed488793973096fd4'],
-  ['aikdna/kdna-skills', 'c9ac7de534b7ba810217d1d15b14a23a6e5b845f'],
-  ['aikdna/kdna-studio-core', 'e1d49b3cb3e6c236499a3ecbd6884497e41fd834'],
-  ['aikdna/kdna-studio-cli', 'abd1624741a5dfa0b1a604e44d57209ce3caf18b'],
-  ['aikdna/kdna-activation-server', '6e203a78c038f15c0e65f19b9aa22a6f642478cb'],
-  ['aikdna/kdna-remote-server', 'eb677ea0fece9b0886724df8383563253ec45600'],
-  ['aikdna/kdna-web-server', '9fc1377bfb378d5977ab77dcdc30ee4f0b2a181d'],
-  ['aikdna/kdna-web-client', 'd128ac815fc82d0249b7f49793a1a0103949c4ee'],
-  ['aikdna/kdna-react', '3edcdce0f75b6dfb1eb4147cedaf24f8af6574a3'],
-  ['aikdna/kdna-assets', 'a189b5005d33bd19a5039b4a86834e920f6b0072'],
-  ['aikdna/kdna-demo-web-viewer', 'a7d4df05973d472ec24ba060f3d9c02c0d22c6f3'],
-];
-const EXPECTED_COMPAT_CHECKOUTS = [
-  ...EXPECTED_CONSUMER_CHECKOUTS,
-  ['aikdna/kdna-core-swift', '4a9b732b590a711c544da5280a4b78f071369617'],
-  ['aikdna/kdna-app-shared', '3f999a6e8d7015ef024beea044584eb2eac50d90'],
-  ['aikdna/kdna-studio-swift', '638bd845ff265f0488b7bfccb745f608b23ead88'],
-  ['aikdna/kdna-vscode', 'c0d885ba8222b6dccad87ec67f7d82fcc1283107'],
-];
+const EXPECTED_COMPAT_CHECKOUTS = JSON.parse(
+  fs.readFileSync(path.join(REPO_ROOT, 'ecosystem-manifest.json'), 'utf8'),
+).components
+  .filter((component) => component.local_path && component.local_path !== '.')
+  .map((component) => [component.repository, component.source_commit]);
 
 function releaseInput(overrides = {}) {
   const version = overrides.pkg?.version || '1.2.3';

@@ -64,7 +64,7 @@ test('schema-2 package records derive Eval and compatibility coordinates without
           {
             package_json: 'packages/kdna/package.json',
             npm_package: '@aikdna/kdna',
-            version: '0.13.1',
+            version: '0.13.2',
             release_status: 'compatibility',
             dependency_policy: 'current',
           },
@@ -82,7 +82,7 @@ test('schema-2 package records derive Eval and compatibility coordinates without
 
   const policy = readBaselines(root);
   assert.deepEqual(Object.fromEntries([...policy.baselines].sort()), {
-    '@aikdna/kdna': '0.13.1',
+    '@aikdna/kdna': '0.13.2',
     '@aikdna/kdna-core': '0.20.0',
     '@aikdna/kdna-eval': '0.3.2',
   });

@@ -65,7 +65,7 @@
 |---|---|
 | `@aikdna/kdna-core@0.20.0` | Beta runtime SDK |
 | `@aikdna/kdna-eval@0.3.2` | Released Experimental evaluation toolkit; issuer-scoped evidence is not KDNA Core authority |
-| `@aikdna/kdna@0.13.2` candidate | Prepared Legacy compatibility update for CLI 0.35.1; 0.13.1 remains published until registry acceptance |
+| `@aikdna/kdna@0.13.2` | Released, maintained Legacy compatibility bridge for CLI 0.35.1; new integrations use CLI and Core directly |
 
 ## Native Apps
 

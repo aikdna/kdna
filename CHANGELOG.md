@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Publish `@aikdna/kdna@0.13.2` as the maintained Legacy compatibility bridge
+  for CLI 0.35.1, Eval 0.3.2, and Core 0.20.0, with exact Release, registry,
+  signature, provenance, and clean-install acceptance evidence.
 - Replace the repository-level ecosystem inventory with a strict schema-2
   manifest. It records co-located Core, Eval, compatibility, and deprecated npm
   packages; distinguishes repository source commits from conformance anchors;
