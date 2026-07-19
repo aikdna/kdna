@@ -254,6 +254,43 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
   );
 });
 
+test('ecosystem workflow checkouts stay pinned to schema-2 source commits', () => {
+  const canonical = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
+  );
+  const components = canonical.components.filter(
+    (entry) => entry.local_path && entry.local_path !== '.' && entry.source_commit,
+  );
+
+  for (const workflowName of ['core-smoke.yml', 'publish.yml']) {
+    const workflow = fs.readFileSync(
+      path.join(repoRoot, '.github', 'workflows', workflowName),
+      'utf8',
+    );
+    for (const entry of components) {
+      const repositoryMarker = `repository: ${entry.repository}`;
+      let offset = 0;
+      let occurrences = 0;
+      while ((offset = workflow.indexOf(repositoryMarker, offset)) >= 0) {
+        const nextStep = workflow.indexOf('\n      - ', offset);
+        const checkoutBlock = workflow.slice(offset, nextStep >= 0 ? nextStep : workflow.length);
+        assert.match(
+          checkoutBlock,
+          new RegExp(`^\\s*ref: ${entry.source_commit}\\s*$`, 'mu'),
+          `${workflowName} must check out ${entry.repository} at its schema-2 source commit`,
+        );
+        occurrences += 1;
+        offset += repositoryMarker.length;
+      }
+      assert.equal(
+        occurrences,
+        1,
+        `${workflowName} must check out ${entry.repository} exactly once`,
+      );
+    }
+  }
+});
+
 test('canonical Core conformance anchor is bound to the exact Core release tag', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-core-anchor-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
