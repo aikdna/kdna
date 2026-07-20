@@ -17,6 +17,15 @@ empty top-level `repositories` placeholder.
 Each repository appears exactly once in `components[]` and declares explicit
 `packages[]` and `artifacts[]` arrays.
 
+Repository mission, component lifecycle, release-wave membership, and
+compatibility promises are separate facts. `Pre-release` and `Experimental`
+describe current component maturity; they do not remove an integration's
+mission or require every repository to ship in the same wave. `Unassessed`
+retains the repository mission while making no maturity or compatibility claim;
+it is excluded from a release wave until a fact card is owner-reviewed.
+`Legacy` and `Removed` may be used only for explicitly identified historical
+coordinates or repositories, not inferred from missing a release milestone.
+
 Package paths are relative to their repository root. Package records use these
 release statuses:
 
@@ -48,6 +57,8 @@ artifact anchors cannot select a different reachable Core ancestor.
 - Select repositories by their unique `repository` value.
 - Do not infer package maturity from repository maturity; co-located packages
   can have different lifecycles.
+- Do not infer repository lifecycle from release-wave membership or dependency
+  policy. Lifecycle changes require an explicit owner decision.
 - Do not treat `candidate`, `compatibility`, or `deprecated` packages as recommended new
   dependencies.
 - Verify the schema before consuming helper projections. A missing or malformed

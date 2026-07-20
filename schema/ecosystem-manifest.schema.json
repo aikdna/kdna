@@ -9,9 +9,9 @@
     "schema_version": { "const": 2 },
     "lifecycle_terms": {
       "const": [
-        "Stable",
-        "Beta",
+        "Pre-release",
         "Experimental",
+        "Unassessed",
         "Legacy",
         "Removed",
         "Future",
@@ -28,9 +28,9 @@
   "$defs": {
     "lifecycle": {
       "enum": [
-        "Stable",
-        "Beta",
+        "Pre-release",
         "Experimental",
+        "Unassessed",
         "Legacy",
         "Removed",
         "Future",
@@ -117,7 +117,7 @@
           "then": {
             "properties": {
               "npm_package": { "type": "string", "minLength": 1 },
-              "lifecycle": { "enum": ["Stable", "Beta", "Experimental"] },
+              "lifecycle": { "enum": ["Pre-release", "Experimental"] },
               "dependency_policy": { "const": "current" },
               "legacy_replacement": { "type": "null" }
             }
@@ -131,7 +131,7 @@
               "version": { "$ref": "#/$defs/stableSemver" },
               "published_version": { "$ref": "#/$defs/stableSemver" },
               "npm_package": { "type": "string", "minLength": 1 },
-              "lifecycle": { "enum": ["Stable", "Beta", "Experimental", "Legacy"] },
+              "lifecycle": { "enum": ["Pre-release", "Experimental", "Legacy"] },
               "dependency_policy": { "const": "current" }
             },
             "allOf": [

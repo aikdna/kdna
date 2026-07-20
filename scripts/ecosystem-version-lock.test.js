@@ -97,7 +97,7 @@ test('schema-2 package records derive Eval and compatibility coordinates without
   assert.equal(manifests.includes('packages/retired/package.json'), false);
 });
 
-test('consumer discovery scans workspaces and records explicit legacy exclusions', (t) => {
+test('consumer discovery scans workspaces and records explicit non-release-wave exclusions', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-version-lock-consumers-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   writeJson(path.join(root, 'current', 'package.json'), {
@@ -111,6 +111,9 @@ test('consumer discovery scans workspaces and records explicit legacy exclusions
   writeJson(path.join(root, 'legacy', 'package.json'), {
     dependencies: { '@aikdna/kdna-core': '^0.12.3' },
   });
+  writeJson(path.join(root, 'unassessed', 'package.json'), {
+    dependencies: { '@aikdna/kdna-core': '^0.10.0' },
+  });
 
   const result = findConsumers(
     root,
@@ -119,11 +122,15 @@ test('consumer discovery scans workspaces and records explicit legacy exclusions
       ['@aikdna/kdna-core', '0.20.0'],
     ]),
     new Map([
-      ['current', 'Beta'],
+      ['current', 'Pre-release'],
       ['legacy', 'Legacy'],
+      ['unassessed', 'Unassessed'],
     ]),
   );
-  assert.deepEqual(result.skipped, [{ repository: 'legacy', lifecycle: 'Legacy' }]);
+  assert.deepEqual(result.skipped, [
+    { repository: 'legacy', lifecycle: 'Legacy' },
+    { repository: 'unassessed', lifecycle: 'Unassessed' },
+  ]);
   assert.deepEqual(
     result.consumers.map((consumer) => [consumer.manifest, consumer.section, consumer.packageName]),
     [

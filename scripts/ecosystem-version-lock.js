@@ -14,7 +14,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { packageRecords } = require('./ecosystem-manifest');
 
-const EXCLUDED_LIFECYCLES = new Set(['Legacy', 'Removed']);
+const EXCLUDED_LIFECYCLES = new Set(['Unassessed', 'Legacy', 'Removed']);
 
 // This is an explicit compatibility policy, not a best-effort inventory. Any
 // repository, manifest, or managed dependency disappearing must fail the gate

@@ -60,19 +60,21 @@ function checkVSCodeBoundary() {
   const pkg = readJson(path.join(vscodeRoot, 'package.json'));
   const coreRange = (pkg.dependencies && pkg.dependencies['@aikdna/kdna-core']) || null;
   const currentCoreVersion = packageVersion('@aikdna/kdna-core');
-  if (coreRange && !coreRange.includes(currentCoreVersion) && vscode.lifecycle !== 'Legacy') {
+  if (vscode.lifecycle !== 'Unassessed') {
     fail(
       'aikdna/kdna-vscode',
-      'VS Code depends on an old kdna-core version but is not marked Legacy',
+      'VS Code maturity must remain Unassessed until independently recertified and owner-reviewed',
     );
   }
-  if (vscode.lifecycle === 'Legacy') {
-    if (Array.isArray(vscode.supported_access_modes) && vscode.supported_access_modes.length > 0) {
-      fail('aikdna/kdna-vscode', 'Legacy VS Code must not advertise supported access modes');
-    }
-    if (!vscode.legacy_replacement) {
-      fail('aikdna/kdna-vscode', 'Legacy VS Code must declare a legacy_replacement');
-    }
+  if (
+    coreRange &&
+    !coreRange.includes(currentCoreVersion) &&
+    !(vscode.known_limitations || []).some((item) => /recertif/iu.test(item))
+  ) {
+    fail('aikdna/kdna-vscode', 'old Core dependency must be disclosed as recertification debt');
+  }
+  if (vscode.legacy_replacement !== null) {
+    fail('aikdna/kdna-vscode', 'retained editor mission must not be represented as a replacement');
   }
 }
 

@@ -23,7 +23,7 @@ const manifestPath = process.env.KDNA_ECOSYSTEM_MANIFEST_PATH
 const schemaPath = path.join(repoRoot, 'schema', 'ecosystem-manifest.schema.json');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
-const liveLifecycle = new Set(['Stable', 'Beta', 'Experimental']);
+const liveLifecycle = new Set(['Pre-release', 'Experimental']);
 const publishableReleaseStatuses = new Set(['active', 'candidate', 'compatibility']);
 const retiredReleaseStatus = 'deprecated';
 

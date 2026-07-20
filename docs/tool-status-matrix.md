@@ -84,7 +84,7 @@ private development status is not part of the open protocol's tool matrix.
 
 | Component | Notes |
 |---|---|
-| `kdna-vscode` | Pre-release editor integration; maturity and compatibility are tracked independently from the CLI. |
+| `kdna-vscode` | Editor mission retained; current maturity and exact compatibility are unassessed pending owner-reviewed recertification. |
 | `@aikdna/agent` | Deprecated legacy npm coordinate. Use the `kdna-loader` integration. |
 | `@aikdna/kdna-artifact-engine` | Deprecated historical implementation of a withdrawn draft contract. |
 | `@aikdna/kdna-fidelity-core` | Deprecated historical implementation of a withdrawn draft contract. |
