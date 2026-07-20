@@ -9,7 +9,8 @@
   published package bytes.
 - Reconcile current public maturity language to pre-release, keep exact
   published-version contracts separate from corrective source candidates, and
-  remove output-improvement language from the active Agent guide.
+  remove output-improvement language from the active Agent guide. Apply the
+  same maturity boundary to Cluster and embedded Studio documentation.
 
 - Publish `@aikdna/kdna@0.13.2` as the maintained Legacy compatibility bridge
   for CLI 0.35.1, Eval 0.3.2, and Core 0.20.0, with exact Release, registry,

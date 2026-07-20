@@ -154,7 +154,7 @@ permission to act merely because content was delivered.
 ## Current shipped capabilities
 
 `Released` means the command is shipped; the overall protocol and toolchain
-remain Beta.
+remain pre-release.
 
 | Surface | Availability |
 |---|---|

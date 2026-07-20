@@ -187,7 +187,7 @@ but that claim is separate from base asset validity.
 | **Agent Runtime** | Loads KDNA and generates judgments | Studio's Test Lab uses a sandbox runtime for validation |
 | **Evaluator** | Optional issuer-scoped review | Studio may expose review tools without making them a Core gate |
 | **KDNA Governance Console** | Organizational approval, audit, rollback | Receives domains from Studio for governance review |
-| **a KDNA-compatible client** | Consumer-facing agent with built-in Studio Beta | a KDNA-compatible client Studio Beta is the first embedded implementation |
+| **a KDNA-compatible client** | Consumer-facing agent with an embedded pre-release Studio | a KDNA-compatible client provides the first embedded implementation |
 
 ---
 

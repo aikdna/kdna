@@ -1,6 +1,6 @@
 # KDNA Clusters
 
-> **Status: Beta advanced path.** A single `.kdna` asset remains the foundation
+> **Status: Pre-release advanced path.** A single `.kdna` asset remains the foundation
 > and default. Cluster is an explicit multi-asset runtime for tasks that truly
 > need multiple scoped judgment assets; it does not replace or silently alter
 > single-asset loading. See [Status](./status.md).

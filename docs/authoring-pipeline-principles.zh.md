@@ -179,7 +179,7 @@ AI 为每张卡片生成反例和压力测试。
 | **Agent 运行时** | 加载 KDNA 并生成判断 | Studio 的测试实验室使用沙盒运行时进行验证 |
 | **评价者** | 可选、评价者范围内的复核 | Studio 可以提供复核工具，但不把它变成 Core 门禁 |
 | **KDNA Governance Console** | 组织审批、审计、回滚 | 从 Studio 接收域进行治理审核 |
-| **a KDNA-compatible client** | 内置 Studio Beta 的面向消费者的 Agent | a KDNA-compatible client Studio Beta 是第一个嵌入式实现 |
+| **a KDNA-compatible client** | 内置预发布 Studio 的面向消费者的 Agent | a KDNA-compatible client 提供第一个嵌入式实现 |
 
 ---
 
