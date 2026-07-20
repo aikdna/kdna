@@ -7,11 +7,12 @@
  */
 
 const crypto = require('node:crypto');
-const path = require('node:path');
 const JsonSchema2020 = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 const cbor = require('cbor-x');
 const { hkdfSha256, aesWrap, aesUnwrap } = require('./crypto-profile');
+const externalEnvelopeSchema = require('../schema/external-grant-envelope.schema.json');
+const externalKeyGrantSchema = require('../schema/external-key-grant.schema.json');
 
 const EXTERNAL_ENVELOPE_PROFILE = 'kdna.envelope.external-grant';
 const EXTERNAL_GRANT_PROFILE = 'kdna.grant.external-key';
@@ -21,15 +22,10 @@ const EXTERNAL_GRANT_CONTRACT_VERSION = '0.1.0';
 const ENVELOPE_ALG = 'A256GCM';
 const GRANT_WRAP_ALG = 'X25519-HKDF-SHA256+A256KW';
 
-const schemaRoot = path.join(__dirname, '..', 'schema');
 const ajv = new JsonSchema2020({ allErrors: true, strict: true });
 addFormats(ajv);
-const validateEnvelopeSchema = ajv.compile(
-  require(path.join(schemaRoot, 'external-grant-envelope.schema.json')),
-);
-const validateGrantSchema = ajv.compile(
-  require(path.join(schemaRoot, 'external-key-grant.schema.json')),
-);
+const validateEnvelopeSchema = ajv.compile(externalEnvelopeSchema);
+const validateGrantSchema = ajv.compile(externalKeyGrantSchema);
 
 const verifiedEntitlements = new WeakSet();
 
