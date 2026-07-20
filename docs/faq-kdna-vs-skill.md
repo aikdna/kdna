@@ -67,8 +67,9 @@ A Cluster is the **explicit advanced multi-asset path**. It coordinates
 multiple scoped KDNA assets under roles, routing, conflict, budget, and trace
 controls.
 
-**Is Cluster available now?** The CLI Cluster runtime is beta. Use a single
-asset by default; choose Cluster only when the task truly needs multiple assets.
+**Is Cluster available now?** The CLI Cluster runtime is pre-release. Use a
+single asset by default; choose Cluster only when the task truly needs multiple
+assets and verify the exact CLI/Core pair.
 
 ---
 

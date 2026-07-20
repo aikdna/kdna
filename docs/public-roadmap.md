@@ -50,9 +50,10 @@ next release set.
 
 Experiments about whether KDNA increases intelligence, improves output by a
 percentage, or beats equivalent Prompt or Skill content are not project-level
-release gates. Such results are evaluator-specific and asset-specific. They may
-be kept as optional research, but they do not decide whether the container,
-toolchain, authorization model, or ecosystem integrations should exist.
+release gates or a KDNA project workstream. An asset owner may evaluate a
+specific asset for a specific use, but that result does not decide whether the
+container, toolchain, authorization model, or ecosystem integrations should
+exist.
 
 Protocol and product evidence instead focuses on:
 

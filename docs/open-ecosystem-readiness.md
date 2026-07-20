@@ -1,12 +1,13 @@
 # Open Ecosystem Readiness
 
-KDNA has completed the asset-first protocol layer. The next open-source bar is
-ecosystem dependability: external developers should be able to integrate,
-verify, publish, and contribute without relying on private project knowledge.
+KDNA has implemented a pre-release asset-first protocol path. The next
+open-source bar is ecosystem dependability: external developers should be able
+to integrate, verify, publish, and contribute without relying on private
+project knowledge.
 
 ## P0 Readiness Gates
 
-- `@aikdna/kdna-core` exposes stable public asset APIs.
+- `@aikdna/kdna-core` exposes versioned pre-release public asset APIs.
 - Conformance tests exist for loaders and validators.
 - (Registry is out of scope for KDNA Core; see 00-current-truth.md.)
 

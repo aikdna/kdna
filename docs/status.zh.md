@@ -4,7 +4,8 @@
 
 ## 当前定位
 
-KDNA Core 是 KDNA 判断资产格式与运行时加载合约的公开 beta 实现。`.kdna` 是开放的判断资产文件格式。
+KDNA Core 是 KDNA 判断资产格式与运行时加载合约的公开预发布实现。`.kdna`
+是开放的判断资产文件格式；当前没有组件因这份状态页被提升为 Beta、stable 或 GA。
 
 ## 已发布的基础功能
 
@@ -23,7 +24,7 @@ KDNA Core/CLI 已达到 GA，也不等于未发布的纠正候选已经上线。
   0.35.1 已发布事实，不属于纠正候选支持面
 - **`kdna load --remote-server`** — 远程资产加载（需自托管 kdna-remote-server）
 
-## Beta 消费编排功能
+## 预发布消费编排功能
 
 - **`kdna route` / `kdna compose` / `kdna project`** — 带 Trace 的选择、有限组合与已打包资产投影
 - **`kdna eval-consumption`** — 使用公开安全 fixture 的消费评测、预算报告与审查流程
@@ -48,8 +49,8 @@ npm install -g @aikdna/kdna-studio-cli  # 创作 CLI（0.10.2）
 ## 其他成熟度边界
 
 - `kdna-studio`：AI 辅助创作功能（distill、interview、feynman）为实验性
-- `kdna-loader` 为 Beta；MCP server adapter 为实验性
-- `kdna-core-swift`：Beta 运行时，仍需持续维护与 JS Core 的一致性证据
+- Agent loader 与 MCP adapter 的成熟度按各自仓库和精确版本判断
+- `kdna-core-swift`：预发布运行时，仍需持续维护与 JS Core 的一致性证据
 - `@aikdna/kdna-eval@0.3.2` 已发布：实验性评测工具；输出是评价者范围内的证据，
   不是 Core 权威。CLI 的 Asset 观测矩阵不生成来源声明，Cluster 的 trust/economics
   晋级必须在可信证据生产者内调用 Eval API

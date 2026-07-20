@@ -44,9 +44,9 @@ Expected result:
 kdna load ./minimal.kdna --profile=compact --as=prompt
 ```
 
-This emits the judgment asset in a form that the agent can read. The agent
-references the judgment structure silently — users see better answers, not
-KDNA internals.
+This emits the judgment asset in a form that the agent can read. It makes the
+selected judgment structure available to the Host; it does not guarantee a
+better answer or authorize hidden loading.
 
 ## Step 4: Use with your agent
 
@@ -69,11 +69,11 @@ and can load judgment on demand.
 
 | Feature | Status | Notes |
 |---|---|---|
-| `kdna demo minimal` | stable | Creates a local fixture for the current format |
-| `kdna inspect` | stable | Reads current source dirs and `.kdna` containers |
-| `kdna validate` | stable | Schema + format + payload + checksums + load-contract |
-| `kdna pack` | stable | Reproducible ZIP with a pinned packer toolchain; DEFLATE bytes may differ across compressors |
-| `kdna unpack` | stable | Extract .kdna container |
+| `kdna demo minimal` | available | Creates a local fixture for the current format |
+| `kdna inspect` | available | Reads current source dirs and `.kdna` containers |
+| `kdna validate` | available | Schema + format + payload + checksums + load-contract |
+| `kdna pack` | available | Reproducible ZIP with a pinned packer toolchain; DEFLATE bytes may differ across compressors |
+| `kdna unpack` | available | Extract .kdna container |
 | `kdna load --as=prompt` | available | Emits agent-readable judgment context |
 | `kdna load --profile=compact` | available | Compact judgment profile for token efficiency |
 

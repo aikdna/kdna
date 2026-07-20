@@ -23,10 +23,12 @@
 
 ## Maturity Truth
 
-- The KDNA Asset Container and local public-asset runtime are the stable public
-  baseline.
-- Studio authoring, task-aware consumption, Cluster, signing, and revocation
-  are beta surfaces.
+- The KDNA ecosystem is pre-release. No current component is promoted to Beta,
+  stable, or GA by this page.
+- Exact published versions retain their own public contracts. Unpublished
+  corrective source candidates remain outside those released coordinates.
+- Container, Runtime, Studio, Cluster, signing, revocation, and ecosystem
+  integrations each require their own exact-version compatibility evidence.
 - Licensed and remote contracts mature independently from the public container
   path; check release-specific conformance before production use.
 - Remote and activation servers are experimental self-hostable reference

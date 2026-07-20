@@ -7,6 +7,9 @@
   non-truncating compact projection with explicit omission reporting, checksums,
   entitlement, and asset-signature boundaries without changing any already
   published package bytes.
+- Reconcile current public maturity language to pre-release, keep exact
+  published-version contracts separate from corrective source candidates, and
+  remove output-improvement language from the active Agent guide.
 
 - Publish `@aikdna/kdna@0.13.2` as the maintained Legacy compatibility bridge
   for CLI 0.35.1, Eval 0.3.2, and Core 0.20.0, with exact Release, registry,
