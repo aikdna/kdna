@@ -128,7 +128,7 @@ The full score is harder because KDNA-loaded agents are more conservative — th
 **In judgment, being conservative is better than being wrong.**
 
 The benchmark summary is historical public narrative evidence. The detailed
-benchmark artifact is not part of the current public beta repository.
+benchmark artifact is not part of the current pre-release repository.
 
 ## The Six Layers, Properly Defined
 

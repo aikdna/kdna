@@ -115,9 +115,10 @@ KDNA Core is the **official KDNA judgment-asset format and runtime loading contr
 
 ## Current State
 
-The current KDNA Asset Container and local public-asset path are in public beta
-for packaged `.kdna` creation, validation, LoadPlan diagnostics, and loading.
-See [Status](./status.md) for the stable / beta / experimental boundary.
+The current KDNA Asset Container and local public-asset path are pre-release
+snapshots for packaged `.kdna` creation, validation, LoadPlan diagnostics, and
+loading. See [Status](./status.md) and the exact package release notes for the
+released / pre-release / experimental boundary.
 
 A single KDNA asset is the foundation and default consumption path. A KDNA
 Cluster is an explicit advanced path for coordinating multiple assets around a

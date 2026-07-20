@@ -184,4 +184,4 @@ KDNA does the opposite. It adds a **judgment gate** between discussion and execu
 
 ---
 
-*This case study is based on a composite of real incidents. Identifying details have been changed. The KDNA analysis was produced using the `decision_state` domain asset and historical benchmark methodology. The detailed benchmark artifact is not part of the current public beta repository.*
+*This case study is based on a composite of real incidents. Identifying details have been changed. The KDNA analysis was produced using the `decision_state` domain asset and historical benchmark methodology. The detailed benchmark artifact is not part of the current pre-release repository.*

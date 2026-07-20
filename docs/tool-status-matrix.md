@@ -2,7 +2,7 @@
 
 > Last updated: 2026-07-19. Matches `@aikdna/kdna-cli@0.35.1`.
 > `Released` means the command is present in the published package; it is not a
-> claim that the overall Beta protocol/toolchain has reached GA.
+> claim that the overall pre-release protocol/toolchain has reached GA.
 
 ## Runtime CLI (`@aikdna/kdna-cli@0.35.1`)
 
@@ -25,15 +25,15 @@
 | `kdna revoke <asset>` | Issue signed revocation | Released |
 | `kdna revocation status <asset>` | Check revocation status | Released |
 | `kdna load --remote-server <url>` | Load `access:remote` assets via server | Released |
-| `kdna route <asset-path>` | Select a primary framework and emit a trace | Beta |
-| `kdna compose <asset-path>` | Compose a primary with bounded advisors | Beta |
-| `kdna project <asset-path>` | Render a packaged asset as a task-safe projection | Beta |
-| `kdna eval-consumption <asset-path>` | Evaluate a consumption policy with replay and gates | Beta |
+| `kdna route <asset-path>` | Select a primary framework and emit a trace | Pre-release |
+| `kdna compose <asset-path>` | Compose a primary with bounded advisors | Pre-release |
+| `kdna project <asset-path>` | Render a packaged asset as a task-safe projection | Pre-release |
+| `kdna eval-consumption <asset-path>` | Evaluate a consumption policy with replay and gates | Optional experiment; not a project gate |
 | `kdna eval asset <asset-path>` | Emit an Asset Assay observation matrix; CLI inputs do not create provenance claims | Experimental |
 | `kdna eval cluster <plan>` | Emit fail-closed Cluster diagnostics; trust/economics promotion remains inside a trusted Eval API producer | Experimental |
-| `kdna compose-review-workbook` | Generate a review workbook from diagnostics | Beta |
-| `kdna validate-compose-decisions` | Validate a decision ledger against fixture evidence | Beta |
-| `kdna apply-reviewed-compose-decisions` | Create disabled candidate sidecar entries | Beta |
+| `kdna compose-review-workbook` | Generate a review workbook from diagnostics | Pre-release |
+| `kdna validate-compose-decisions` | Validate a decision ledger against fixture evidence | Pre-release |
+| `kdna apply-reviewed-compose-decisions` | Create disabled candidate sidecar entries | Pre-release |
 | `kdna workpack <init\|validate\|plan\|run\|report>` | WorkPack pipeline | Experimental |
 | `kdna doctor [--agents]` | Installation health check | Released |
 | `kdna setup` | First-time setup wizard | Released |
@@ -56,14 +56,14 @@
 
 | Component | Status |
 |---|---|
-| `kdna-loader` skill | **Beta** — supports OpenCode, Codex, Claude Code, Cursor, Gemini. Auto-install via `kdna setup`. |
+| `kdna-loader` skill | **Pre-release** — supports OpenCode, Codex, Claude Code, Cursor, Gemini. Auto-install via `kdna setup`. |
 | MCP server adapter | Experimental |
 
 ## Package Boundaries
 
 | Package | Status |
 |---|---|
-| `@aikdna/kdna-core@0.20.0` | Beta runtime SDK |
+| `@aikdna/kdna-core@0.20.0` | Released pre-release runtime SDK |
 | `@aikdna/kdna-eval@0.3.2` | Released Experimental evaluation toolkit; issuer-scoped evidence is not KDNA Core authority |
 | `@aikdna/kdna@0.13.2` | Released, maintained Legacy compatibility bridge for CLI 0.35.1; new integrations use CLI and Core directly |
 
@@ -76,15 +76,15 @@ private development status is not part of the open protocol's tool matrix.
 
 | Package | Public release | Status |
 |---|---|---|
-| `kdna-core-swift` | `0.20.0` | Beta runtime; conformance is pinned to the current Core fixture commit. |
-| `kdna-studio-swift` | `0.4.0` | Beta authoring kernel; the published release predates current Swift Core integration and awaits recertification. |
-| `kdna-app-shared` | `0.5.0` | Beta presentation infrastructure; the published release predates Swift Core 0.20.0 and awaits recertification. |
+| `kdna-core-swift` | `0.20.0` | Pre-release runtime; conformance is pinned to the current Core fixture commit. |
+| `kdna-studio-swift` | `0.4.0` | Pre-release authoring kernel; the published release predates current Swift Core integration and awaits recertification. |
+| `kdna-app-shared` | `0.5.0` | Pre-release application integration; the published release predates Swift Core 0.20.0 and awaits recertification. |
 
-## Archived / Removed
+## Editor and Legacy Coordinates
 
 | Component | Notes |
 |---|---|
-| `kdna-vscode` | Archived 2026-06-25. Use `kdna-cli` for validate/plan-load/pack/unpack. |
+| `kdna-vscode` | Pre-release editor integration; maturity and compatibility are tracked independently from the CLI. |
 | `@aikdna/agent` | Deprecated legacy npm coordinate. Use the `kdna-loader` integration. |
 | `@aikdna/kdna-artifact-engine` | Deprecated historical implementation of a withdrawn draft contract. |
 | `@aikdna/kdna-fidelity-core` | Deprecated historical implementation of a withdrawn draft contract. |

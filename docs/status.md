@@ -25,19 +25,19 @@ silently alter single-asset consumption.
 
 | Layer | Status | Public meaning |
 |---|---|---|
-| KDNA Asset Container | Stable baseline | Current mimetype, manifest, CBOR payload, checksums, and container rules |
-| Local public-asset runtime | Stable baseline | `inspect`, `validate`, `plan-load`, `load`, `pack`, `unpack`, Runtime Capsule |
-| Authoring toolchain | Beta | Studio project, card, compile, and `.kdna` export paths |
+| KDNA Asset Container | Pre-release | Current mimetype, manifest, CBOR payload, checksums, and container rules; exact-version contract under reconciliation |
+| Local public-asset runtime | Pre-release | `inspect`, `validate`, `plan-load`, `load`, `pack`, `unpack`, Runtime Capsule |
+| Authoring toolchain | Pre-release | Studio project, card, compile, and `.kdna` export paths |
 | Licensed access | Candidate | Public authorization and encryption contracts; verify the release-specific lifecycle before production use |
 | Remote access | Candidate | Remote access mode and projection contracts are public |
 | Remote/activation reference servers | Experimental | Self-hostable implementations; no AIKDNA-hosted service is part of the baseline |
-| Signing and revocation | Beta | Integrity and provenance mechanisms, not content endorsement |
-| Single-asset consumption runtime | Beta | Task-aware planning, projection, trace, and evaluation surfaces |
-| Cluster runtime | Beta | Explicit multi-asset roles, routing, conflict checks, plans, and traces |
+| Signing and revocation | Pre-release | Integrity and provenance mechanisms, not content endorsement |
+| Single-asset consumption runtime | Pre-release | Task-aware planning, projection, trace, and optional evaluation surfaces |
+| Cluster runtime | Pre-release | Explicit multi-asset roles, routing, conflict checks, plans, and traces |
 | JS Core | Reference implementation | Primary public conformance implementation |
 | Eval package | Experimental | Issuer-scoped replay, budget, and consumption evaluation; not Core authority |
 | `@aikdna/kdna` compatibility package | Legacy compatibility | Maintained migration bridge; not the recommended new integration path |
-| Swift, React, and Web adapters | Beta / experimental | Check each repository's release notes and shared conformance evidence |
+| Swift, Agent, editor, React, and Web integrations | Pre-release / experimental | Check each repository's release notes and shared conformance evidence |
 
 ## Current First-Run Path
 

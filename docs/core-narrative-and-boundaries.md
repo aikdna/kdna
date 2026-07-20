@@ -172,14 +172,14 @@ MUST NOT redefine:
 
 ### 2.10 Protocol Versioning
 
-The public protocol and toolchain are **Beta**. Package releases follow SemVer,
+The public protocol and toolchain are **pre-release**. Package releases follow SemVer,
 while each wire contract carries its own compatibility coordinate. The current
 container uses `format_version: "0.1.0"` and
 `application/vnd.kdna.asset`.
 
 | Layer | Current Version | Meaning |
 |---|---|---|
-| Protocol maturity | Beta | What KDNA assets are and how they load |
+| Protocol maturity | Pre-release | What KDNA assets are and how they load |
 | Container | `format_version: "0.1.0"` | KDNA Asset Container encoding |
 | Capsule | `kdna.runtime-capsule` + `contract_version: "0.1.0"` | What Agents receive |
 

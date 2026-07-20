@@ -1,8 +1,10 @@
-> **Development snapshot — release reset in progress**
+> **Pre-release ecosystem — contract and narrative correction in progress**
 >
-> This repository is not currently a stable, beta, or production-ready
-> release. Published packages and documentation may describe an earlier
-> development snapshot. A new Development Preview has not been released.
+> KDNA is a judgment-asset container and ecosystem. This repository owns the
+> protocol and Core runtime; companion repositories provide creation,
+> consumption, authorization, Apple, Web, Agent, editor, and developer
+> integrations. Existing packages are pre-release snapshots, not Beta, stable,
+> GA, or a reason to retire an integration's mission.
 
 # KDNA
 
@@ -38,13 +40,14 @@ asset internals is not a compatible Agent consumption path.
 >
 > This repo defines **KDNA Core** — the file format, schemas, and runtime loading contract. The official KDNA toolchain is published from this repo and its companion packages.
 
-[![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE) [![Maturity: Beta — format stable, toolchain tested, pre-1.0 features evolving](https://img.shields.io/badge/maturity-Beta-blueviolet)](#maturity)
+[![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE) [![Maturity: Pre-release](https://img.shields.io/badge/maturity-Pre--release-orange)](#maturity)
 
-> **Maturity: Beta** — the current KDNA Asset Container and the local public-asset
-> path are the stable public baseline. Licensed and remote access have public
-> protocol contracts and evolving reference implementations; check release
-> notes before production use. Hosted marketplace, billing, and AIKDNA-hosted
-> loading are not part of the public baseline. See
+> **Maturity: Pre-release** — the container, toolchain, and integrations are
+> being reconciled against their exact public contracts. Component maturity
+> varies and must be stated per repository and version; no integration is
+> declared valueless merely because it is outside one release wave. Check the
+> exact version's schema, specification, fixtures, conformance, and release
+> notes before use. See
 > [`docs/maturity.md`](./docs/maturity.md).
 
 ## See KDNA in action — then create your own

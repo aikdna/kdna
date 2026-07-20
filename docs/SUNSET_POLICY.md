@@ -27,7 +27,7 @@ KDNA's deprecation policy ensures that users are never caught between a document
 
 | Item | Previous Status | Current Status | Reason |
 |------|----------------|----------------|--------|
-| `kdna dev pack` | Marked "Deprecated" in error | Beta | Actively maintained. Serves a real need for dev-to-asset conversion. |
+| `kdna dev pack` | Marked "Deprecated" in error | Pre-release | Actively maintained. Serves a real need for dev-to-asset conversion. |
 
 ## Enforcement
 

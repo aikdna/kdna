@@ -10,9 +10,9 @@ validated, packable asset.
 
 | Layer | Status | What it means |
 |---|---|---|
-| KDNA Asset Container | stable | `.kdna` container, `mimetype`, `kdna.json`, `payload.kdnab`, and `checksums.json` are the current local asset baseline. |
-| Runtime CLI | beta-ready | `kdna inspect`, `kdna validate`, `kdna plan-load`, `kdna load`, `kdna pack`, and `kdna unpack` work for local assets. |
-| Studio authoring CLI | beta | `kdna-studio` is the official authoring path, but commands and UX may still change between beta releases. |
+| KDNA Asset Container | pre-release | `.kdna` container, `mimetype`, `kdna.json`, `payload.kdnab`, and `checksums.json` are the current local asset path; exact-version contracts remain authoritative. |
+| Runtime CLI | pre-release | `kdna inspect`, `kdna validate`, `kdna plan-load`, `kdna load`, `kdna pack`, and `kdna unpack` work for local assets. |
+| Studio authoring CLI | pre-release | `kdna-studio` is the official authoring path, but commands and UX may still change between releases. |
 | Agent / MCP loading | preview | Loader and MCP paths use the same LoadPlan-first contract, but agent-specific integration quality varies by runtime. |
 | Evidence and provenance layers | optional / independently versioned | Human Lock, signatures, release evidence, authorization, and evaluation reports do not decide KDNA format validity. |
 
@@ -96,9 +96,9 @@ kdna-studio migrate my_expertise --out ./my_expertise.kdna \
 
 ## Current limitations
 
-- **Authoring path is beta.** The `kdna-studio` CLI is part of the official
+- **Authoring path is pre-release.** The `kdna-studio` CLI is part of the official
   KDNA toolchain but the authoring surface is still evolving.
-- **Official authoring path.** Public beta examples should be exported through
+- **Official authoring path.** Pre-release examples should be exported through
   the official KDNA Studio toolchain. Third-party authoring tools should
   integrate through the official Studio SDK or CLI so the output remains a
   standard packaged `.kdna` file.

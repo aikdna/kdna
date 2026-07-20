@@ -98,7 +98,7 @@ kdna load ./minimal.kdna --profile=compact --as=prompt
 
 ## 高级工作流
 
-当前 public beta 的基础路径刻意保持很小：创建或生成 packaged `.kdna`
+当前预发布基础路径刻意保持很小：创建或生成 packaged `.kdna`
 文件，校验，规划加载，然后加载。高级创作者命令、Agent 适配器命令和
 legacy 兼容命令统一记录在 [status.md](./status.md)。
 
