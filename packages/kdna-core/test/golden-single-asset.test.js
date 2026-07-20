@@ -10,6 +10,9 @@ const core = require('../src');
 const fixture = require('./fixtures/golden-single-asset.json');
 const canonicalPayloadSchema = require('../../../schema/payload-profile.schema.json');
 const packagedPayloadSchema = require('../schema/payload-profile.schema.json');
+const canonicalManifestSchema = require('../../../schema/manifest.schema.json');
+const packagedManifestSchema = require('../schema/manifest.schema.json');
+const loadContractSchema = require('../../../schema/load-contract.schema.json');
 
 const SCOPED_FIELDS = ['worldview', 'value_order', 'judgment_role'];
 const CANONICAL_SCHEMA_PATH = path.resolve(
@@ -40,6 +43,12 @@ function clone(value) {
 
 function compileSchema(schema) {
   return new JsonSchema2020({ allErrors: true, strict: false }).compile(schema);
+}
+
+function compileManifestSchema(schema) {
+  const ajv = new JsonSchema2020({ allErrors: true, strict: false });
+  ajv.addSchema(loadContractSchema);
+  return ajv.compile(schema);
 }
 
 function createAsset(payload = fixture.payload, payloadBytes = null) {
@@ -81,6 +90,78 @@ test('canonical and packaged payload schemas are byte-for-byte identical', () =>
   ]) {
     const validate = compileSchema(schema);
     assert.equal(validate(fixture.payload), true, `${name}: ${JSON.stringify(validate.errors)}`);
+  }
+});
+
+test('current manifest schemas reject every legacy asset-signature declaration', () => {
+  assert.deepEqual(canonicalManifestSchema, packagedManifestSchema);
+  for (const schema of [canonicalManifestSchema, packagedManifestSchema]) {
+    const validate = compileManifestSchema(schema);
+    for (const field of ['signature', 'signatures']) {
+      const manifest = clone(fixture.manifest);
+      manifest[field] = field === 'signature' ? 'ed25519:legacy' : ['signatures/legacy.json'];
+      assert.equal(validate(manifest), false, `${field}: ${JSON.stringify(validate.errors)}`);
+    }
+  }
+});
+
+test('public container documents keep checksums optional under one authority', () => {
+  const containerSpec = fs.readFileSync(path.join(REPO_ROOT, 'specs', 'container.md'), 'utf8');
+  const importSecurity = fs.readFileSync(
+    path.join(REPO_ROOT, 'specs', 'kdna-import-security.md'),
+    'utf8',
+  );
+  const fileFormat = fs.readFileSync(path.join(REPO_ROOT, 'specs', 'kdna-file-format.md'), 'utf8');
+
+  assert.match(containerSpec, /### 3\.2 Optional[\s\S]*`checksums\.json`/);
+  assert.match(importSecurity, /authoritative current entry classification[\s\S]*container\.md/);
+  assert.match(importSecurity, /`checksums\.json` is optional at the protocol layer/);
+  assert.match(fileFormat, /`checksums\.json` is optional in the protocol/);
+});
+
+test('payload schemas reject empty judgment shells without requiring a human author', () => {
+  const invalidPayloads = [
+    {
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+      core: { axioms: [] },
+    },
+    {
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+      core: { highest_question: '   ', axioms: ['   '] },
+    },
+    {
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+      core: { axioms: [{ id: 'label-only' }], judgment_role: {} },
+    },
+    {
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+      core: {
+        axioms: ['A statement without a declared scope is insufficient.'],
+        judgment_role: { internal_note: 'not a scope declaration' },
+      },
+    },
+  ];
+  const authorNeutralPayload = {
+    profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
+    core: {
+      axioms: [{
+        statement: 'Prefer the reversible option while evidence remains incomplete.',
+        applies_when: ['choosing between reversible and irreversible actions'],
+      }],
+    },
+  };
+
+  for (const schema of [canonicalPayloadSchema, packagedPayloadSchema]) {
+    const validate = compileSchema(schema);
+    for (const payload of invalidPayloads) {
+      assert.equal(validate(payload), false, JSON.stringify(validate.errors));
+    }
+    assert.equal(validate(authorNeutralPayload), true, JSON.stringify(validate.errors));
   }
 });
 
@@ -196,7 +277,7 @@ test('committed CBOR validates and loads exact self-check shapes without silent 
       payload_valid: true,
       checksums_valid: true,
       load_contract_valid: true,
-      loader_version: '0.20.0',
+      loader_version: '0.21.0',
       min_loader_version: '0.20.0',
       loader_compatible: true,
       overall_valid: true,
@@ -215,7 +296,7 @@ test('committed CBOR validates and loads exact self-check shapes without silent 
       payload: 'payload.kdnab',
       payload_encrypted: false,
       profile: 'kdna.payload.judgment',
-      loader_version: '0.20.0',
+      loader_version: '0.21.0',
       min_loader_version: '0.20.0',
       loader_compatible: true,
       load_contract_default_profile: 'compact',
@@ -377,7 +458,11 @@ test('prompt treats each scoped field as content but does not render an empty ro
     const payload = {
       profile: 'kdna.payload.judgment',
       profile_version: '0.1.0',
-      core: { highest_question: '', axioms: [], ...scopedCore },
+      core: {
+        highest_question: 'Which scoped choice applies?',
+        axioms: ['Prefer the declared scoped choice.'],
+        ...scopedCore,
+      },
     };
     const { temporary, asset } = createAsset(payload);
     try {
@@ -393,14 +478,34 @@ test('prompt treats each scoped field as content but does not render an empty ro
   const emptyRolePayload = {
     profile: 'kdna.payload.judgment',
     profile_version: '0.1.0',
-    core: { highest_question: '', axioms: [], judgment_role: {} },
+    core: {
+      axioms: ['A statement without scope is not enough for this payload.'],
+      judgment_role: {},
+    },
   };
   const { temporary, asset } = createAsset(emptyRolePayload);
   try {
-    assert.equal(core.validate(asset).overall_valid, true);
-    const prompt = core.loadAuthorized(asset, { profile: 'compact', as: 'prompt' });
-    assert.ok(prompt.text.includes('No content available'));
-    assert.equal(prompt.text.includes('Judgment role:'), false);
+    assert.equal(core.validate(asset).overall_valid, false);
+    assert.throws(
+      () => core.loadAuthorized(asset, { profile: 'compact', as: 'prompt' }),
+      /LoadPlan denied loading/,
+    );
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
+});
+
+test('compact projection preserves every declared pattern', () => {
+  const payload = clone(fixture.payload);
+  payload.patterns = [1, 2, 3, 4, 5].map((number) => ({
+    type: 'pattern',
+    text: `Pattern ${number}`,
+  }));
+  const { temporary, asset } = createAsset(payload);
+  try {
+    const capsule = core.loadAuthorized(asset, { profile: 'compact', as: 'json' });
+    assert.equal(capsule.context.patterns.length, 5);
+    assert.deepEqual(capsule.context.patterns, payload.patterns);
   } finally {
     fs.rmSync(temporary, { recursive: true, force: true });
   }

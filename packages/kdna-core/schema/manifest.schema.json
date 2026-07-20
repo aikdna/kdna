@@ -40,6 +40,14 @@
           }
         }
       }
+    },
+    {
+      "if": { "properties": { "access": { "const": "licensed" } }, "required": ["access"] },
+      "then": { "required": ["entitlement"] }
+    },
+    {
+      "if": { "required": ["entitlement"] },
+      "then": { "properties": { "access": { "const": "licensed" } }, "required": ["access"] }
     }
   ],
   "properties": {
@@ -139,6 +147,19 @@
       "enum": ["public", "licensed", "remote"],
       "description": "Stable delivery and authorization mode for the asset."
     },
+    "entitlement": {
+      "type": "object",
+      "required": ["profile"],
+      "additionalProperties": true,
+      "properties": {
+        "profile": {
+          "type": "string",
+          "enum": ["password", "local_receipt", "account", "org"]
+        },
+        "offline": { "type": "boolean" },
+        "revocable": { "type": "boolean" }
+      }
+    },
     "summary": { "type": "string" },
     "description": { "type": "string" },
     "language": { "type": "string" },
@@ -223,19 +244,8 @@
         }
       }
     },
-    "signatures": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["role", "path", "algorithm"],
-        "properties": {
-          "role": { "type": "string" },
-          "path": { "type": "string" },
-          "algorithm": { "type": "string" },
-          "key_id": { "type": "string" }
-        }
-      }
-    },
+    "signature": false,
+    "signatures": false,
     "dependencies": {
       "type": "object",
       "additionalProperties": {

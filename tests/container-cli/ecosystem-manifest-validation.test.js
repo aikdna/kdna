@@ -491,7 +491,7 @@ test('validator rejects unavailable or unreadable current package evidence', (t)
   assert.match(result.stderr, /package evidence is unreadable/u);
 });
 
-test('validator binds every external package to one exact clean source commit', (t) => {
+test('validator binds external packages to the accepted source snapshot without reinterpreting current checkout state', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-package-commit-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const packageRoot = path.join(root, 'fixture-package');
@@ -506,13 +506,20 @@ test('validator binds every external package to one exact clean source commit', 
   writeManifest(root, [component({ source_commit: '0'.repeat(40) })]);
   const mismatched = runValidator(manifestPath, root);
   assert.equal(mismatched.status, 1);
-  assert.match(mismatched.stderr, /checkout commit mismatch/u);
+  assert.match(mismatched.stderr, /accepted source snapshot is unreadable/u);
 
   writeManifest(root, [component({ source_commit: commit })]);
   fs.writeFileSync(path.join(packageRoot, 'untracked.txt'), 'dirty');
-  const dirty = runValidator(manifestPath, root);
-  assert.equal(dirty.status, 1);
-  assert.match(dirty.stderr, /checkout is dirty/u);
+  fs.writeFileSync(
+    path.join(packageRoot, 'package.json'),
+    JSON.stringify({ name: '@aikdna/fixture-package', version: '2.0.0' }),
+  );
+  const advancedCheckout = runValidator(manifestPath, root);
+  assert.equal(
+    advancedCheckout.status,
+    0,
+    `stdout=${advancedCheckout.stdout}\nstderr=${advancedCheckout.stderr}`,
+  );
 });
 
 test('validator requires a candidate stable version newer than the incumbent', (t) => {
@@ -535,7 +542,7 @@ test('validator requires a candidate stable version newer than the incumbent', (
   assert.match(result.stderr, /candidate version must be greater/u);
 });
 
-test('validator rejects component and package path escape and symlink escape', (t) => {
+test('validator rejects manifest path escape and does not follow a current-checkout symlink past an immutable source pin', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-paths-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const packageRoot = path.join(root, 'fixture-package');
@@ -576,8 +583,7 @@ test('validator rejects component and package path escape and symlink escape', (
   fs.symlinkSync(outside, path.join(packageRoot, 'package.json'));
   manifestPath = writeManifest(root, [component({ source_commit: commit })]);
   result = runValidator(manifestPath, root);
-  assert.equal(result.status, 1);
-  assert.match(result.stderr, /resolves outside/u);
+  assert.equal(result.status, 0, `stdout=${result.stdout}\nstderr=${result.stderr}`);
 });
 
 test('validator rejects duplicate repository, package source, package name, and npm coordinate', (t) => {

@@ -33,7 +33,9 @@ KDNA's deprecation policy ensures that users are never caught between a document
 
 The `kdna dev validate` command warns about rejected fields and retired badge names.
 
-The `kdna verify` command rejects `.kdna` assets with rejected fields, rejected format, or stale spec versions.
+The current Preview uses `kdna validate` for container and Schema rejection,
+then `kdna plan-load` for authorization and compatibility diagnostics. The old
+asset-signature `verify` surface is not part of the Preview candidate.
 
 ## For Contributors
 

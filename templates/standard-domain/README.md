@@ -74,8 +74,8 @@ If any of the above is true, the agent should decline to load this domain.
 |------|---------|
 | `KDNA_Core.json` | Axioms (with optional boundaries), ontology, frameworks, causal structure, stances |
 | `KDNA_Patterns.json` | Terminology, banned terms, misunderstandings (with 2.1 boundaries), self-checks |
-| `evals/` | Test cases for `kdna compare` and quality scoring |
-| `kdna.json` | Domain manifest (name, version, judgment_version, signature) |
+| `evals/` | Optional asset-level review cases owned by their named evaluator |
+| `kdna.json` | Domain manifest (name, version, judgment_version, scope) |
 
 ## License
 

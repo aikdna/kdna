@@ -73,8 +73,9 @@ in the Agent Host request, receipt, and Judgment Trace.
 The requested profile controls `context`. Implementations must not emit one
 shape while labeling it as another profile. `compact` preserves scoped
 `highest_question`, `worldview`, ordered `value_order`, `judgment_role`,
-applicability-aware axioms, boundaries, self-checks, failure modes, and a
-bounded pattern set when present.
+applicability-aware axioms, boundaries, self-checks, failure modes, and every
+declared pattern. An implementation that cannot retain those semantics must
+fail closed rather than silently truncate them.
 
 ## 4. Trace facts
 

@@ -54,6 +54,36 @@ test('authoritative Runtime manifest schema rejects an explicitly empty creator 
   );
 });
 
+test('authoritative Runtime manifest schema closes the licensed entitlement contract', () => {
+  for (const profile of ['password', 'local_receipt', 'account', 'org']) {
+    const manifest = runtimeManifest({
+      access: 'licensed',
+      entitlement: { profile, offline: profile !== 'account', revocable: profile !== 'password' },
+    });
+    assert.equal(
+      validateManifest(manifest),
+      true,
+      `${profile}: ${JSON.stringify(validateManifest.errors, null, 2)}`,
+    );
+  }
+
+  assert.equal(validateManifest(runtimeManifest({ access: 'licensed' })), false);
+  assert.equal(
+    validateManifest(runtimeManifest({
+      access: 'licensed',
+      entitlement: { profile: 'coupon_code' },
+    })),
+    false,
+  );
+  assert.equal(
+    validateManifest(runtimeManifest({
+      access: 'public',
+      entitlement: { profile: 'password' },
+    })),
+    false,
+  );
+});
+
 test('authoritative Runtime manifest schema rejects intrinsic assessment fields', async (t) => {
   for (const field of [
     'quality_badge',

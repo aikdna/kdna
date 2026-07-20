@@ -18,7 +18,8 @@
  *   - mimetype must be the first entry in a .kdna container
  *   - mimetype must be STORED (compression method 0) in a .kdna container
  *   - the source directory must contain mimetype, kdna.json, payload.kdnab
- *   - checksums.json and signatures/ are optional
+ *   - checksums.json and attachments/ are optional
+ *   - asset signatures are outside the current Preview contract
  *   - lineage must be a single object (not an array)
  *   - pack output is reproducible within one pinned toolchain/compressor;
  *     DEFLATE bytes may differ across compressors, zlib versions, or systems
@@ -61,7 +62,7 @@ const { readAsset } = (() => {
 
 const MIMETYPE = 'application/vnd.kdna.asset';
 const REQUIRED_DIR_ENTRIES = ['mimetype', 'kdna.json', 'payload.kdnab'];
-const OPTIONAL_DIR_ENTRIES = ['checksums.json', 'signatures', 'attachments'];
+const OPTIONAL_DIR_ENTRIES = ['checksums.json', 'attachments'];
 const ALLOWED_TOP_LEVEL_ENTRIES = new Set([
   ...REQUIRED_DIR_ENTRIES,
   ...OPTIONAL_DIR_ENTRIES,
@@ -405,7 +406,7 @@ function validateContainerEntryMetadata(entry) {
     }
     throw new Error(`container includes unsupported top-level entry: ${topLevel}`);
   }
-  if ((topLevel === 'signatures' || topLevel === 'attachments') && normalizedName === topLevel) {
+  if (topLevel === 'attachments' && normalizedName === topLevel) {
     throw new Error(`container directory entry is not supported: ${name}`);
   }
   if (method !== 0 && method !== 8) {
@@ -558,7 +559,7 @@ function readLayout(absPath) {
         if (fs.statSync(full).isFile()) {
           map[f] = fs.readFileSync(full);
         } else {
-          // subdirectory like signatures/ — record its presence but not contents here
+          // Optional subdirectories are recorded without becoming payloads.
           map[f] = null;
         }
       }
@@ -570,7 +571,7 @@ function readLayout(absPath) {
     containerBytes = fs.readFileSync(absPath);
     entries = listZipEntriesFromBuffer(containerBytes);
     for (const e of entries) {
-      // We only need the well-known entries; signatures/ attachments/ etc.
+      // We only need the well-known entries and optional attachments.
       // are passed through unchanged by the loader but not parsed here.
       if (
         e.name === 'mimetype' ||
@@ -754,7 +755,6 @@ function buildInspectOutput(container) {
     ...assessLoaderCompatibility(m),
     load_contract_default_profile: m.load_contract ? m.load_contract.default_profile : null,
   };
-  if (m.signatures !== undefined) out.signature_count = Array.isArray(m.signatures) ? m.signatures.length : 0;
   if (container.map['checksums.json']) out.checksums_present = true;
   return out;
 }
@@ -1322,7 +1322,9 @@ function inputFingerprint(inputPath, layout, opts = {}) {
   ) ? opts.entitlement.status : null;
 
   return {
-    has_password_input: opts.hasPassword === true,
+    has_password_input:
+      opts.hasPassword === true ||
+      (typeof opts.password === 'string' && opts.password.length > 0),
     entitlement_input: entitlementInput,
     source_fingerprint: computeSourceFingerprint(inputPath, layout),
   };
@@ -1675,18 +1677,19 @@ function planLoad(inputPath, opts = {}) {
     }
 
     if (plan.entitlement_profile === 'password') {
-      if (opts.password || opts.hasPassword === true) {
-        if (opts.hasPassword === true && !opts.password) {
-          plan.issues.push(buildLoadPlanIssue(
-            'KDNA_AUTH_PASSWORD_DIAGNOSTIC',
-            'info',
-            'hasPassword is a diagnostic credential-presence signal only; it does not verify the password.',
-          ));
-        }
-        plan.state = 'ready';
-        plan.required_action = 'load';
-        plan.can_load_now = true;
-        plan.projection_policy = 'minimal';
+      if (
+        opts.hasPassword === true ||
+        (typeof opts.password === 'string' && opts.password.length > 0)
+      ) {
+        plan.state = 'needs_password';
+        plan.required_action = 'enter_password';
+        plan.can_load_now = false;
+        plan.projection_policy = 'none';
+        plan.issues.push(buildLoadPlanIssue(
+          'KDNA_AUTH_PASSWORD_UNVERIFIED',
+          'blocking',
+          'A password was provided but has not been verified. Only an authorized load may verify it by decrypting the protected payload.',
+        ));
       } else {
         plan.state = 'needs_password';
         plan.required_action = 'enter_password';
@@ -2035,7 +2038,13 @@ function loadAuthorized(inputPath, opts = {}) {
   const inputKind = typeof inputPath === 'string' ? 'packaged_file' : 'packaged_bytes';
   const inputSnapshot = snapshotPackagedInput(inputPath);
   const plan = planLoad(inputSnapshot, opts);
-  if (plan.can_load_now !== true) {
+  const loadMayVerifyPassword =
+    typeof opts.password === 'string' &&
+    opts.password.length > 0 &&
+    plan.state === 'needs_password' &&
+    Array.isArray(plan.issues) &&
+    plan.issues.some((issue) => issue.code === 'KDNA_AUTH_PASSWORD_UNVERIFIED');
+  if (plan.can_load_now !== true && !loadMayVerifyPassword) {
     const issueCodes = Array.isArray(plan.issues)
       ? plan.issues.map((issue) => issue.code).filter(Boolean)
       : [];
@@ -2428,7 +2437,7 @@ function loadAssetUnsafe(inputPath, opts = {}) {
       // strings remain strings and structured questions remain objects.
       self_checks: preserveDeclaredList(payload.reasoning && payload.reasoning.self_check),
       failure_modes: normalizeList(payload.reasoning && payload.reasoning.failure_modes),
-      patterns: normalizeList(payload.patterns).slice(0, 3),
+      patterns: normalizeList(payload.patterns),
     };
     if (m.load_contract && m.load_contract.profiles && m.load_contract.profiles.compact && m.load_contract.profiles.compact.max_tokens_hint) {
       result.max_tokens_hint = m.load_contract.profiles.compact.max_tokens_hint;
@@ -2610,8 +2619,6 @@ function wrapAsCapsule(result, layout, profile, opts) {
 function buildRuntimeCapsuleProjection(loadResult, layout, profile, opts = {}) {
   const m = layout.manifest;
   const val = opts._validation || {};
-  const pubkey = (m.creator && m.creator.pubkey) || null;
-  const sigVerified = val.signature_valid === true;
   const runtimeCapsule = require('../runtime-capsule');
   const digests = runtimeCapsule.computeDigestEvidence(opts._runtimeAssetBytes, {
     expectedDigests: opts.expectedDigests,
@@ -2620,9 +2627,7 @@ function buildRuntimeCapsuleProjection(loadResult, layout, profile, opts = {}) {
     projection: loadResult,
     manifest: m,
     digests,
-    signature: pubkey
-      ? { state: sigVerified ? 'verified' : 'not_checked', issuer: pubkey }
-      : { state: 'absent' },
+    signature: { state: 'absent' },
     inputKind: opts._runtimeInputKind,
     loadedAt: opts.loadedAt,
     schemaValid: val.schema_valid === true,

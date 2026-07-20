@@ -110,6 +110,19 @@ test('public Runtime Capsule builder accepts only the stable responsibility shap
   });
   assert.equal(builtWithoutAccess.access, 'public');
 
+  assert.throws(
+    () => core.buildRuntimeCapsule({
+      projection: { profile: loaded.profile, content: loaded.context },
+      manifest,
+      digests: loaded.digests,
+      signature: { state: 'verified', issuer: 'legacy-key' },
+      inputKind: 'packaged_bytes',
+      loadedAt: golden.loaded_at,
+      schemaValid: true,
+    }),
+    (error) => error.code === 'KDNA_ASSET_SIGNATURE_UNSUPPORTED',
+  );
+
   for (const invalidAccess of ['', null, false, 0]) {
     assert.throws(
       () => core.buildRuntimeCapsule({

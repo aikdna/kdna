@@ -20,6 +20,40 @@ test('rejects carrier false dichotomies', () => {
   }
 });
 
+test('rejects project-level superiority and nonexistent command claims', () => {
+  const samples = [
+    "KDNA's value proposition is that structured domain judgment improves agent decisions.",
+    'The presence of the domain made the output worse than baseline.',
+    '**Status:** Implemented. `kdna compare` is available.',
+    "`kdna compare` is the easiest way to see KDNA's value.",
+    'How would you test whether an agent using this domain judges better than one without it?',
+  ];
+  for (const sample of samples) {
+    assert.ok(findNarrativeViolations('docs/example.md', sample).length > 0, sample);
+  }
+});
+
+test('rejects operational examples for withdrawn commands and historical scores', () => {
+  const samples = [
+    '```bash\nkdna compare ./asset.kdna --input "task"\n```',
+    '```bash\nkdna sign ./asset.kdna\n```',
+    '```bash\nkdna verify ./asset.kdna\n```',
+    '```bash\nkdna revoke ./asset.kdna\n```',
+    '```bash\nkdna version bump minor\n```',
+    'Benchmark: 90.0% → 96.7%',
+    'Selected arm: +0.09',
+    'Cluster delta: -0.17',
+  ];
+  for (const sample of samples) {
+    assert.ok(findNarrativeViolations('docs/example.md', sample).length > 0, sample);
+  }
+});
+
+test('preserves exact released-command history without advertising an operational example', () => {
+  const content = '| `kdna verify <file.kdna>` | Released in 0.35.1; withdrawn from Preview candidate |';
+  assert.deepEqual(findNarrativeViolations('docs/tool-status-matrix.md', content), []);
+});
+
 test('allows overlapping-carrier boundaries', () => {
   const content = `
 Prompts and Skills can carry judgment and can be versioned and tested.

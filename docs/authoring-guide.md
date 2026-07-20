@@ -8,7 +8,8 @@
 2. Rename the folder to your domain ID (e.g., `my_domain`)
 3. Edit each JSON file — fill in every placeholder in angle brackets
 4. Validate: `npx kdna dev validate <your-domain-folder>`
-5. Test: `kdna verify <your-domain-folder>`
+5. Export a `.kdna` asset, then validate and load that exact asset through the
+   Runtime contract.
 
 > **To produce a `.kdna` asset:** create or migrate a Studio project, export it, then run `kdna validate`, `kdna plan-load`, and `kdna load`. See [getting-started.md](./getting-started.md).
 
@@ -251,11 +252,12 @@ The only valid test: compare two agent responses to the same input — one witho
 If the difference is only vocabulary (the agent uses different words but reaches the same conclusion), the KDNA is not working. Revise until the judgment itself changes.
 
 ```bash
-# Verify your domain structure
-kdna verify <your-domain-folder>
+# Validate the exported asset and inspect its LoadPlan
+kdna validate ./dist/my-domain.kdna
+kdna plan-load ./dist/my-domain.kdna
 
-# Compare before/after judgment (requires API key)
-kdna compare <domain-name> --input "<test prompt>"
+# Load an explicit projection for review
+kdna load ./dist/my-domain.kdna --profile=compact --as=json
 ```
 
 ---

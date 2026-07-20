@@ -1,6 +1,13 @@
 # RFC-0009: Password-Protected KDNA Assets
 
-Status: draft
+Status: superseded historical draft
+
+> The body preserves an earlier `access: "protected"` design and is not current
+> format authority. The current manifest uses `access: "licensed"` with an
+> explicit password entitlement profile and the published encryption profiles.
+> Current Schema, container spec, conformance fixtures, and implementations are
+> authoritative. Asset-signature fields and entries described below are outside
+> the current Preview.
 
 ## Summary
 
