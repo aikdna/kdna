@@ -36,8 +36,8 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 | 9   | Archived evaluation gate spec | Evaluation evidence requirements and CI gate rules             |
 | 10  | `human-lock.md`               | Optional Human Lock provenance protocol                        |
 | 11  | `human-lock-gate-design.md`   | Human Lock gate design specification                           |
-| 12  | `fidelity-protocol.md`        | RFC-0010: KDNA Fidelity Protocol — measuring judgment transfer |
-| 13  | `fidelity-result.schema.json` | Schema for fidelity measurement results                        |
+| 12  | `fidelity-protocol.md`        | Withdrawn RFC-0010 evaluation draft; historical research only  |
+| 13  | `fidelity-result.schema.json` | Historical external-evaluation result schema; not a Core gate  |
 | 14  | `evidence-trace.schema.json`  | Schema for recording what KDNA triggered during a judgment     |
 | 15  | `route-result.schema.json`    | Schema for KDNA routing decisions                              |
 
@@ -71,7 +71,7 @@ sidecar boundary and the reference runtime workflow.
 
 | #   | Document                  | What it covers                                                                        |
 | --- | ------------------------- | ------------------------------------------------------------------------------------- |
-| 32  | `kdna-crypto-protocol.md` | Cryptographic infrastructure for .kdna encryption, signing, licensing, and revocation |
+| 32  | `kdna-crypto-protocol.md` | Current encrypted-entry and entitlement contract; asset signing is outside the Preview |
 | 34  | `kdna-entitlement-api.md` | Activation, sync, revocation, offline grace, and license audit API contract           |
 
 ### Authoring & Tooling
@@ -79,7 +79,7 @@ sidecar boundary and the reference runtime workflow.
 | #   | Document                                 | What it covers                                        |
 | --- | ---------------------------------------- | ----------------------------------------------------- |
 | 35  | `kdna-asset-card.md`                     | KDNA Asset Card specification                         |
-| 36  | `cli-license-identity-skeleton.md`       | CLI license and identity skeleton                     |
+| 36  | `cli-license-identity-skeleton.md`       | Withdrawn command-surface draft; current CLI help is authoritative |
 | 37  | `authorization-subscription-metadata.md` | Authorization and subscription metadata specification |
 | 38  | `enum-tables.md`                         | Enumerated value reference tables                     |
 

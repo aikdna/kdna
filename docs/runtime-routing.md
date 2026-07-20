@@ -8,7 +8,8 @@ Canonical: `docs/runtime-routing.md`
 
 KDNA Runtime Routing is the mechanism that determines **whether, which, and how** a KDNA domain should be loaded for a given task. It is not a search engine — it is a **gate**. Its primary responsibility is to prevent wrong-domain loading (Judgment Contamination) while enabling correct-domain loading.
 
-**Core principle: No KDNA is better than wrong KDNA.**
+**Core principle:** do not load an asset outside its declared scope or without
+an honest authorization and compatibility result.
 
 ## 2. Router Architecture
 
@@ -84,11 +85,13 @@ A domain that states `"does_not_apply_when": ["user asks for frontend implementa
 
 ## 5. Caller Load Policy Gate
 
-Before loading, verify:
+Before loading, inspect and plan:
 
-1. **Signature valid**: `kdna verify <domain>` passes
-2. **Not yanked**: domain is not in yanked state in registry
-3. **License valid**: for `licensed` or `runtime` domains, license is active
+1. **Integrity valid**: `kdna validate <asset>` passes, including checksums when present
+2. **LoadPlan honest**: `kdna plan-load <asset>` reports the actual credential,
+   entitlement, compatibility, and projection state
+3. **Entitlement valid**: for `licensed` or `remote` assets, the applicable
+   authorization path is satisfied
 4. **Action policy satisfied**: the task, requested authority, action consequence,
    environment, and reversibility satisfy caller policy
 5. **Compatibility**: domain declares supported SPEC version compatible with loader
@@ -144,7 +147,7 @@ kdna route "<user task>" --json
 It composes existing CLI capabilities:
 - `kdna available --json` → local domain inventory
 - `kdna match "<task>" --json` → mechanical negative match
-- `kdna verify <domain>` → trust verification
+- `kdna plan-load <asset>` → authorization, integrity, and compatibility plan
 
 The output conforms to [`specs/route-result.schema.json`](../specs/route-result.schema.json).
 

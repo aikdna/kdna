@@ -24,7 +24,8 @@ The Artifact Contract is an **extension layer**, not a modification to KDNA Core
 KDNA's current output surface is unstructured:
 
 - `kdna load` emits formatted text/JSON for agent injection — no structured output
-- `kdna compare` emits a diff report — not a versioned artifact
+- Legacy comparison tooling could emit an unversioned diff report; no current
+  Preview comparison command or Core artifact responsibility is implied
 - WorkPack's `run_workpack_dry` emits `output` as a raw string and `output_path` as a file path — no artifact identity or integrity
 - The Judgment Trace records *what was loaded* but not *what was produced*
 

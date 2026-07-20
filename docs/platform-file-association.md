@@ -86,7 +86,7 @@ Finder context menu options for `.kdna` files:
 | Option | Action |
 |--------|--------|
 | **Open** | Opens in a KDNA-compatible client Domain Inspector |
-| **Validate** | Shell: `kdna verify <file>` with result notification |
+| **Validate** | Runtime adapter: `inspect` then `validate` / `plan-load`; never direct ZIP parsing |
 | **Install** | Shell: `kdna install <file>` with result notification |
 | **Inspect** | Shows metadata without unpacking |
 | **Share** | Standard macOS share sheet |

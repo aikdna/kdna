@@ -51,7 +51,7 @@ const cases = [
   {
     id: 'password-valid',
     fixture: 'password-valid',
-    description: 'Licensed password asset is ready once Core receives a password credential.',
+    description: 'Licensed password asset reports a supplied credential as unverified until authorized load decrypts it.',
     manifest: {
       access: 'licensed',
       entitlement: { profile: 'password', offline: true, revocable: false },

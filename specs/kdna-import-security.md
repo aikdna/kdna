@@ -25,12 +25,19 @@ A conforming importer MUST:
 
 ## 3. Runtime Entry Checks
 
-For current KDNA Core public launch assets, the baseline entries are:
+The authoritative current entry classification is the Required/Optional table
+in [`container.md`](./container.md). Importers MUST NOT maintain a second entry
+list with different requiredness.
+
+The required Runtime entries are exactly:
 
 - `mimetype`
 - `kdna.json`
 - `payload.kdnab`
-- `checksums.json`
+
+`checksums.json` is optional at the protocol layer and official writers emit
+it. When it is present, importers MUST validate it and reject a declared digest
+mismatch. Its absence is not by itself a format error.
 
 Future Phase S security profiles may add signature and encryption entries. They
 MUST NOT silently redefine the current baseline.

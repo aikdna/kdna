@@ -36,7 +36,6 @@ const AUTHORIZATION_FIXTURES = [
   'remote-recognized-not-loaded',
   'revoked-entitlement',
   'tampered-payload',
-  'unknown-entitlement-profile',
 ].map((name) => `conformance/authorization/fixtures/${name}/kdna.json`);
 
 const RUNTIME_MANIFEST_FIXTURES = [
@@ -50,6 +49,7 @@ const RUNTIME_MANIFEST_FIXTURES = [
 
 const INVALID_RUNTIME_MANIFEST_FIXTURES = [
   'conformance/authorization/fixtures/unknown-access/kdna.json',
+  'conformance/authorization/fixtures/unknown-entitlement-profile/kdna.json',
   'fixtures/container/invalid-missing-payload/kdna.json',
 ];
 

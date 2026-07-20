@@ -336,8 +336,8 @@ test('Runtime manifest authority rejects intrinsic asset assessments', async (t)
 });
 
 test('protocol fixture validator accepts the exact authoritative Runtime manifest inventory', () => {
-  assert.equal(RUNTIME_MANIFEST_FIXTURES.length, 18);
-  assert.equal(INVALID_RUNTIME_MANIFEST_FIXTURES.length, 2);
+  assert.equal(RUNTIME_MANIFEST_FIXTURES.length, 17);
+  assert.equal(INVALID_RUNTIME_MANIFEST_FIXTURES.length, 3);
   assert.equal(
     new Set([...RUNTIME_MANIFEST_FIXTURES, ...INVALID_RUNTIME_MANIFEST_FIXTURES]).size,
     20,

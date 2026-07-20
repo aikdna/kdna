@@ -3,6 +3,10 @@
 > Last updated: 2026-07-19. Matches `@aikdna/kdna-cli@0.35.1`.
 > `Released` means the command is present in the published package; it is not a
 > claim that the overall pre-release protocol/toolchain has reached GA.
+> The unreleased corrective source candidate withdraws asset-level
+> sign/verify/revoke commands rather than selecting among incompatible
+> signature contracts. This table preserves the exact 0.35.1 fact and does not
+> claim that the candidate has already been published.
 
 ## Runtime CLI (`@aikdna/kdna-cli@0.35.1`)
 
@@ -20,10 +24,10 @@
 | `kdna remove <name>` | Remove installed asset | Released |
 | `kdna identity init` | Create Ed25519 signing key | Released |
 | `kdna identity show` | Show public key | Released |
-| `kdna sign <file.kdna>` | Sign with identity key | Released |
-| `kdna verify <file.kdna>` | Verify signature | Released |
-| `kdna revoke <asset>` | Issue signed revocation | Released |
-| `kdna revocation status <asset>` | Check revocation status | Released |
+| `kdna sign <file.kdna>` | Legacy asset signing | Released in 0.35.1; withdrawn from Preview candidate |
+| `kdna verify <file.kdna>` | Legacy asset-signature verification | Released in 0.35.1; withdrawn from Preview candidate |
+| `kdna revoke <asset>` | Legacy signed asset revocation | Released in 0.35.1; withdrawn from Preview candidate |
+| `kdna revocation status <asset>` | Legacy asset revocation status | Released in 0.35.1; withdrawn from Preview candidate |
 | `kdna load --remote-server <url>` | Load `access:remote` assets via server | Released |
 | `kdna route <asset-path>` | Select a primary framework and emit a trace | Pre-release |
 | `kdna compose <asset-path>` | Compose a primary with bounded advisors | Pre-release |
@@ -35,7 +39,7 @@
 | `kdna validate-compose-decisions` | Validate a decision ledger against fixture evidence | Pre-release |
 | `kdna apply-reviewed-compose-decisions` | Create disabled candidate sidecar entries | Pre-release |
 | `kdna workpack <init\|validate\|plan\|run\|report>` | WorkPack pipeline | Experimental |
-| `kdna doctor [--agents]` | Installation health check | Released |
+| `kdna doctor [--agents]` | Installation health check | Released; loadability false-positive is a known blocker |
 | `kdna setup` | First-time setup wizard | Released |
 
 ## Studio (`@aikdna/kdna-studio-cli@0.10.2`)

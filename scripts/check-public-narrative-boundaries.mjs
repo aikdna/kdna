@@ -6,6 +6,11 @@ import { fileURLToPath } from 'node:url';
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
+// Adapter-specific smoke instructions are versioned with that adapter. They
+// remain in the narrative audit, but their command examples are not treated as
+// Core CLI documentation here.
+const ADAPTER_COMMAND_DOCS = new Set(['docs/CROSS_AGENT_SMOKE_TEST.md']);
+
 const FORBIDDEN = [
   [
     'skill-execution-kdna-judgment',
@@ -38,6 +43,34 @@ const FORBIDDEN = [
     /Tool selection, code execution, file I\/O[^\n]+mechanical operations/i,
   ],
   ['mechanical-agent-operations-zh', /工具选择、代码执行、文件 I\/O[^\n]+机械操作/i],
+  [
+    'project-value-is-output-improvement',
+    /KDNA(?:'s)? value proposition is that structured domain judgment improves agent decisions/i,
+  ],
+  [
+    'baseline-superiority-as-contract',
+    /presence of the domain made the output worse than baseline/i,
+  ],
+  [
+    'compare-command-implemented-claim',
+    /Status:\*\*\s*Implemented\.[^\n]*`kdna compare`/i,
+  ],
+  [
+    'compare-command-usage-claim',
+    /`kdna compare` is the easiest way to see KDNA's value/i,
+  ],
+  [
+    'better-than-unloaded-release-question',
+    /test whether an agent using this domain judges better than one without it/i,
+  ],
+  ['current-cli-compare-example', /^\s*kdna\s+compare(?:\s|$)/im],
+  ['current-cli-asset-sign-example', /^\s*kdna\s+sign(?:\s|$)/im],
+  ['current-cli-asset-verify-example', /^\s*kdna\s+verify(?:\s|$)/im],
+  ['current-cli-asset-revoke-example', /^\s*kdna\s+revoke(?:\s|$)/im],
+  ['current-cli-version-mutation-example', /^\s*kdna\s+version\s+(?:bump|history)(?:\s|$)/im],
+  ['historical-benchmark-90-to-96', /90\.0%[^\n]{0,80}96\.7%/i],
+  ['historical-five-arm-score-positive', /(?:^|[^\d])\+0\.09(?:[^\d]|$)/m],
+  ['historical-five-arm-score-negative', /(?:^|[^\d])-0\.17(?:[^\d]|$)/m],
 ];
 
 const REQUIRED_GUARDRAILS = new Map([
@@ -51,10 +84,22 @@ const REQUIRED_GUARDRAILS = new Map([
     'docs/faq-kdna-vs-skill.md',
     ['does not claim exclusive ownership of', 'The same judgment can be represented in both'],
   ],
+  [
+    'docs/agents-lack-judgment.md',
+    ['Judgment can already live', 'does not by itself prove'],
+  ],
+  [
+    'docs/kdna-compare-report.md',
+    ['does not expose a', 'not a Preview release gate'],
+  ],
+  [
+    'docs/judgment-contamination.md',
+    ['# Scope Mismatch and Boundary Leakage', 'do not imply that KDNA owns all'],
+  ],
 ]);
 
 function markdownFiles() {
-  const roots = ['README.md', 'README.zh.md', 'docs'];
+  const roots = ['README.md', 'README.zh.md', 'PUBLISHING_EXAMPLE.md', 'docs', 'specs', 'templates'];
   const files = [];
 
   function visit(path) {
@@ -72,7 +117,10 @@ function markdownFiles() {
 
 export function findNarrativeViolations(relPath, content) {
   if (relPath.startsWith('docs/archive/')) return [];
-  return FORBIDDEN.flatMap(([rule, pattern]) =>
+  const rules = ADAPTER_COMMAND_DOCS.has(relPath)
+    ? FORBIDDEN.filter(([rule]) => !rule.startsWith('current-cli-'))
+    : FORBIDDEN;
+  return rules.flatMap(([rule, pattern]) =>
     pattern.test(content) ? [{ path: relPath, rule }] : [],
   );
 }

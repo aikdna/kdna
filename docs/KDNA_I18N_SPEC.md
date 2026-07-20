@@ -1,5 +1,9 @@
 # KDNA Internationalization & Localization Specification
 
+> **Status:** Historical authoring design. The current Preview does not expose
+> locale-selection or i18n-verification CLI flags. A future localization
+> profile must be admitted and versioned before it becomes a format contract.
+
 KDNA domains encode judgment. Localization changes the language of expression, not the logic of judgment.
 
 ## Core Principle
@@ -141,11 +145,13 @@ A conforming validator MUST check:
 
 ## CLI Support
 
+The current Preview can validate and load an already-authored localized asset,
+but it does not select or certify locales:
+
 ```bash
-kdna inspect @aikdna/writing --locale zh-CN
-kdna card @aikdna/writing --locale zh-CN
-kdna verify @aikdna/writing --i18n
-kdna list --locale zh-CN
+kdna validate ./writing-zh-CN.kdna
+kdna plan-load ./writing-zh-CN.kdna
+kdna load ./writing-zh-CN.kdna --profile=compact --as=json
 ```
 
 ## Studio Core Integration

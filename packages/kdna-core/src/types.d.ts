@@ -240,7 +240,6 @@ export interface KDNAManifest {
     [key: string]: any;
   };
   content_digest?: string;
-  signature?: string;
   [key: string]: any;
 }
 
@@ -292,7 +291,6 @@ export interface KdnaAssetVerifyResult {
   manifest: KDNAManifest | null;
   asset_digest: string;
   content_digest: string;
-  signature_valid: boolean | null;
 }
 
 export interface KdnaAssetIndexProfile {
@@ -338,7 +336,6 @@ export interface KdnaAssetReader {
     options?: {
       asset_digest?: string;
       content_digest?: string;
-      requireSignature?: boolean;
       requireDecryption?: boolean;
     } & KdnaDecryptOptions,
   ): KdnaAssetVerifyResult;
@@ -347,7 +344,6 @@ export interface KdnaAssetReader {
     options?: {
       asset_digest?: string;
       content_digest?: string;
-      requireSignature?: boolean;
       requireDecryption?: boolean;
     } & KdnaDecryptOptions,
   ): Promise<KdnaAssetVerifyResult>;
@@ -736,7 +732,6 @@ export interface KDNAInspectResult {
   entries: string[];
   asset_digest: string;
   content_digest: string;
-  signature_valid: boolean | null;
   ok: boolean | null;
   errors: string[];
   warnings: string[];
@@ -798,7 +793,7 @@ export interface KDNARuntimeCapsule {
     judgment_version: string;
   };
   digests: KDNADigestEvidence;
-  signature: { state: 'verified' | 'not_checked' | 'absent'; issuer?: string };
+  signature: { state: 'absent' };
   access: 'public' | 'licensed' | 'remote';
   profile: 'index' | 'compact' | 'scenario' | 'full';
   context: Record<string, any>;
@@ -809,7 +804,7 @@ export interface KDNARuntimeCapsule {
     input_kind: 'packaged_file' | 'packaged_bytes';
     runtime_eligible: true;
     schema_valid: true;
-    signature_state: 'verified' | 'not_checked' | 'absent';
+    signature_state: 'absent';
     profile: 'index' | 'compact' | 'scenario' | 'full';
   };
 }
@@ -852,7 +847,7 @@ export function buildRuntimeCapsule(input: {
   projection: Record<string, any>;
   manifest: KDNAManifest;
   digests: KDNADigestEvidence;
-  signature: { state: 'verified' | 'not_checked' | 'absent'; issuer?: string };
+  signature?: { state: 'absent' };
   inputKind: 'packaged_file' | 'packaged_bytes';
   loadedAt?: string;
   schemaValid?: boolean;
@@ -1296,7 +1291,6 @@ export function verifyAsset(
   options?: {
     asset_digest?: string;
     content_digest?: string;
-    requireSignature?: boolean;
     requireDecryption?: boolean;
   } & KdnaDecryptOptions,
 ): Promise<KdnaAssetVerifyResult>;
@@ -1305,7 +1299,6 @@ export function verifyAssetSync(
   options?: {
     asset_digest?: string;
     content_digest?: string;
-    requireSignature?: boolean;
     requireDecryption?: boolean;
   } & KdnaDecryptOptions,
 ): KdnaAssetVerifyResult;
@@ -1317,14 +1310,6 @@ export function verifyDigest(
 export function verifyDigestSync(
   input: KDNAAssetInput,
   expectedDigest: string,
-  options?: KdnaDecryptOptions,
-): KdnaAssetVerifyResult;
-export function verifySignature(
-  input: KDNAAssetInput,
-  options?: KdnaDecryptOptions,
-): Promise<KdnaAssetVerifyResult>;
-export function verifySignatureSync(
-  input: KDNAAssetInput,
   options?: KdnaDecryptOptions,
 ): KdnaAssetVerifyResult;
 export function matchDomain(
@@ -1393,7 +1378,7 @@ export function inspect(
   input: string | Uint8Array,
   options?: Record<string, any>,
 ): Record<string, any>;
-export const KDNA_LOADER_VERSION: '0.20.0';
+export const KDNA_LOADER_VERSION: '0.21.0';
 export const STRICT_LOADER_VERSION: RegExp;
 export function parseLoaderVersion(version: unknown): readonly [string, string, string] | null;
 export function compareLoaderVersions(left: string, right: string): -1 | 0 | 1;

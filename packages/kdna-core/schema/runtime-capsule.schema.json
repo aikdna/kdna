@@ -82,8 +82,7 @@
       "required": ["state"],
       "additionalProperties": false,
       "properties": {
-        "state": { "enum": ["verified", "not_checked", "absent"] },
-        "issuer": { "type": "string", "minLength": 1 }
+        "state": { "const": "absent" }
       }
     },
     "trace": {
@@ -106,7 +105,7 @@
         "input_kind": { "enum": ["packaged_file", "packaged_bytes"] },
         "runtime_eligible": { "const": true },
         "schema_valid": { "const": true },
-        "signature_state": { "enum": ["verified", "not_checked", "absent"] },
+        "signature_state": { "const": "absent" },
         "profile": { "enum": ["index", "compact", "scenario", "full"] }
       }
     }

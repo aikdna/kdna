@@ -37,7 +37,7 @@ A KDNA-compatible authoring pipeline does not "write KDNA for you." It provides:
 - Counterexample challenges to stress-test each judgment
 - Validation that catches structural errors before export
 - A Test Lab for running evals against the emerging domain
-- Export to versioned, signed `.kdna` packages
+- Export to versioned `.kdna` assets
 
 The success metric is not "did it export a `.kdna` file?" but "did the user articulate, reject, modify, supplement,复述, test, and iterate their own judgment?"
 
@@ -139,24 +139,29 @@ Author explicitly locks each card.
 - Locked cards become part of the formal domain
 - Unlocked cards remain in draft
 
-### Phase 5: Test Lab
+### Phase 5: Optional Test Workshop
 
-The emerging domain is tested against real inputs.
+The author may review the emerging asset against a small set of real inputs.
+This workshop checks whether the exported judgment matches the author's stated
+intent and boundaries; it is not a Core validity or project release gate.
 
 - Load the domain into a sandbox agent
-- Run eval cases
-- Compare with/without KDNA (`kdna compare`)
-- Author iterates based on results
+- Review a few previously unused tasks
+- Check in-scope direction, out-of-scope restraint, and conflict deference
+- Let the author revise or keep the selected judgment
 
 ### Phase 6: Export
 
-The domain is validated, signed, and exported.
+The domain is exported and exercised through the current Runtime contract.
 
-- `kdna dev validate` — structural check
-- `kdna verify --judgment` — behavioral score
-- Ed25519 signature applied
+- `kdna validate <asset.kdna>` — container and Schema check
+- `kdna plan-load <asset.kdna>` — authorization and compatibility plan
+- `kdna load <asset.kdna>` — Runtime Capsule projection
 - `.kdna` package generated
-- Ready for `kdna publish`
+
+Asset signing is outside the current Preview. A product that claims this
+human-reviewed profile may attach its own explicit confirmation provenance,
+but that claim is separate from base asset validity.
 
 ---
 
@@ -177,10 +182,10 @@ The domain is validated, signed, and exported.
 
 | Component | Role | Studio Relationship |
 |-----------|------|---------------------|
-| **KDNA CLI** | Protocol control plane — validation, comparison, publishing | Studio calls CLI commands for Test Lab and export |
+| **KDNA CLI** | Runtime control plane — inspection, validation, planning, and loading | Studio tests exported bytes through the current Runtime path |
 | **Registry** | Domain discovery and distribution | Studio exports packages ready for registry publication |
 | **Agent Runtime** | Loads KDNA and generates judgments | Studio's Test Lab uses a sandbox runtime for validation |
-| **Eval Suite** | Tests judgment quality | Studio runs evals during Test Lab phase |
+| **Evaluator** | Optional issuer-scoped review | Studio may expose review tools without making them a Core gate |
 | **KDNA Governance Console** | Organizational approval, audit, rollback | Receives domains from Studio for governance review |
 | **a KDNA-compatible client** | Consumer-facing agent with built-in Studio Beta | a KDNA-compatible client Studio Beta is the first embedded implementation |
 
@@ -194,8 +199,11 @@ These principles have concrete implications for Studio implementation:
 2. **Lock-first profile.** Every judgment element must be explicitly locked
    before it enters an export that claims this human-reviewed profile.
 3. **Challenge mode is default.** The Studio should proactively generate counterexamples, not wait for the user to ask.
-4. **Test Lab integration.** Validation and comparison are first-class UI features, not afterthoughts.
-5. **Identity-bound.** Every exported domain is signed with the author's identity key. Anonymous exports are not permitted.
+4. **Review is bounded.** Validation is required for export; behavioral review
+   remains an optional, issuer-scoped workshop.
+5. **Claim-bound provenance.** Human confirmation is required only when an
+   export claims this human-reviewed profile. Base KDNA assets remain
+   author-neutral and may be anonymous.
 6. **Iteration-centric.** The UI should make it easy to revise locked judgments, re-run tests, and re-export — judgment is iterative, not one-shot.
 
 ---

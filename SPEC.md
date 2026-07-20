@@ -92,10 +92,21 @@ The payload declares:
   "profile_version": "0.1.0",
   "core": {
     "highest_question": "What bounded qualitative decision does this asset help make?",
-    "axioms": []
+    "axioms": [
+      {
+        "statement": "Prefer the reversible option while required evidence is incomplete.",
+        "applies_when": ["choosing between reversible and irreversible actions"]
+      }
+    ]
   }
 }
 ```
+
+`highest_question` is an optional authoring concept, but when present it is
+non-empty. Every payload contains at least one non-empty judgment statement
+and identifies its problem domain, role, boundary, or applicability. This is a
+content-neutral minimum: it does not require a human author or claim that the
+judgment is correct.
 
 `worldview`, `value_order`, `judgment_role`, axioms, boundaries, patterns,
 scenarios, cases, self-checks, and failure modes are judgment content. A loader

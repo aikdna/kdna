@@ -9,6 +9,11 @@ are superseded by the [Container spec](../specs/container.md) and unified
 `payload.kdnab` envelope AEAD
 ([conformance](../conformance/envelope-aead.mjs)).
 
+Any asset-signature field, entry, digest rule, or verification command in the
+historical body is also superseded. The current Preview rejects asset-level
+signature representations; external grant and confirmation signatures remain
+separate contracts.
+
 ## Summary
 
 Licensed KDNA assets use the same `.kdna` container and media type as open
