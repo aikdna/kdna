@@ -79,9 +79,19 @@ fail closed rather than silently truncate them.
 
 ## 4. Trace facts
 
-The Capsule `trace` records only loading facts required by the schema:
+The Capsule `trace` records only loading and projection facts required by the schema:
 packaged-file or packaged-bytes input, CBOR payload, Core loader, load time,
-schema-valid state, signature state, and selected projection profile.
+schema-valid state, signature state, selected projection profile, and an optional
+`projection_report`. For `compact`, current Core emitters include that report:
+
+- `status` is `complete` when no non-empty payload path was omitted, otherwise
+  `partial`;
+- `omitted` lists deterministic JSON Pointer paths and counts;
+- `omitted_total` is the sum of those counts.
+
+The report is projection metadata, not judgment content. It makes intentional
+profile omission visible without creating a second payload, digest, or budget
+protocol.
 
 These facts do not establish semantic consumption, behavioral influence,
 judgment quality, or model conformance.

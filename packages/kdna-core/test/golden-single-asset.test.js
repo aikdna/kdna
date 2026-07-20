@@ -528,3 +528,108 @@ test('compact projection preserves every declared pattern', () => {
     fs.rmSync(temporary, { recursive: true, force: true });
   }
 });
+
+test('compact projection reports every non-empty omitted payload path and count', () => {
+  const payload = clone(fixture.payload);
+  payload.core.ontology = [{ id: 'concept-1' }, { id: 'concept-2' }];
+  payload.core.risk_model = {
+    risks: [{ id: 'risk-1' }, { id: 'risk-2' }],
+  };
+  payload.reasoning.reasoning_chains = [{ id: 'chain-1' }];
+  payload.scenarios = [{ id: 'scenario-1' }, { id: 'scenario-2' }];
+  payload.cases = [{ id: 'case-1' }];
+  payload.evolution = {
+    changelog: [{ version: '1.0.0' }],
+    version_notes: ['note one', 'note two'],
+  };
+
+  const { temporary, asset } = createAsset(payload);
+  try {
+    const capsule = core.loadAuthorized(asset, { profile: 'compact', as: 'json' });
+    const report = capsule.trace.projection_report;
+    assert.equal(report.status, 'partial');
+    assert.deepEqual(Object.fromEntries(report.omitted.map(({ path: itemPath, count }) => [itemPath, count])), {
+      '/cases': 1,
+      '/core/axioms/*/confidence': 1,
+      '/core/axioms/*/full_statement': 1,
+      '/core/axioms/*/why': 1,
+      '/core/ontology': 2,
+      '/core/risk_model/risks': 2,
+      '/evolution/changelog': 1,
+      '/evolution/version_notes': 2,
+      '/reasoning/reasoning_chains': 1,
+      '/scenarios': 2,
+    });
+    assert.equal(report.omitted_total, 14);
+
+    const prompt = core.loadAuthorized(asset, { profile: 'compact', as: 'prompt' });
+    assert.match(prompt.text, /Projection completeness: partial/);
+    for (const entry of report.omitted) {
+      assert.ok(prompt.text.includes(`${entry.path} (${entry.count})`), entry.path);
+    }
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
+});
+
+test('compact projection declares structural omission and never trims axiom applicability text', () => {
+  const fullStatement = `Keep every declared character ${'x'.repeat(180)}`;
+  const payload = {
+    profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
+    core: {
+      highest_question: 'What must remain exact?',
+      axioms: [{
+        full_statement: fullStatement,
+        applies_when: ['first condition', 'second condition', 'third condition'],
+        does_not_apply_when: ['first exclusion', 'second exclusion', 'third exclusion'],
+      }],
+    },
+    patterns: [],
+    reasoning: { self_check: [], failure_modes: [] },
+  };
+
+  const { temporary, asset } = createAsset(payload);
+  try {
+    const capsule = core.loadAuthorized(asset, { profile: 'compact', as: 'json' });
+    assert.equal(capsule.context.axioms[0].one_sentence, fullStatement);
+    assert.deepEqual(capsule.trace.projection_report, {
+      status: 'partial',
+      omitted: [{ path: '/core/axioms/*/full_statement', count: 1 }],
+      omitted_total: 1,
+    });
+
+    const prompt = core.loadAuthorized(asset, { profile: 'compact', as: 'prompt' });
+    assert.ok(prompt.text.includes(fullStatement));
+    assert.ok(prompt.text.includes('third condition'));
+    assert.ok(prompt.text.includes('third exclusion'));
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
+});
+
+test('compact projection explicitly reports complete when it omits no non-empty content path', () => {
+  const payload = {
+    profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
+    core: {
+      highest_question: 'What is the smallest complete projection?',
+      axioms: ['Preserve the declared compact judgment.'],
+    },
+    patterns: [],
+    reasoning: { self_check: [], failure_modes: [] },
+    evolution: { changelog: [], version_notes: [] },
+  };
+
+  const { temporary, asset } = createAsset(payload);
+  try {
+    const capsule = core.loadAuthorized(asset, { profile: 'compact', as: 'json' });
+    assert.deepEqual(capsule.trace.projection_report, {
+      status: 'complete',
+      omitted: [],
+      omitted_total: 0,
+    });
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
+});

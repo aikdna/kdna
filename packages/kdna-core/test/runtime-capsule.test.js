@@ -87,7 +87,11 @@ test('public Runtime Capsule builder accepts only the stable responsibility shap
   const asset = reader.openSync(GOLDEN_BYTES);
   const manifest = reader.readManifestSync(asset);
   const built = core.buildRuntimeCapsule({
-    projection: { profile: loaded.profile, content: loaded.context },
+    projection: {
+      profile: loaded.profile,
+      content: loaded.context,
+      projection_report: loaded.trace.projection_report,
+    },
     manifest,
     digests: loaded.digests,
     signature: loaded.signature,

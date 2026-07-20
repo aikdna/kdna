@@ -106,8 +106,50 @@
         "runtime_eligible": { "const": true },
         "schema_valid": { "const": true },
         "signature_state": { "const": "absent" },
-        "profile": { "enum": ["index", "compact", "scenario", "full"] }
+        "profile": { "enum": ["index", "compact", "scenario", "full"] },
+        "projection_report": { "$ref": "#/$defs/projectionReport" }
       }
+    },
+    "projectionReport": {
+      "type": "object",
+      "required": ["status", "omitted", "omitted_total"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["complete", "partial"] },
+        "omitted": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "count"],
+            "additionalProperties": false,
+            "properties": {
+              "path": { "type": "string", "pattern": "^/" },
+              "count": { "type": "integer", "minimum": 1 }
+            }
+          }
+        },
+        "omitted_total": { "type": "integer", "minimum": 0 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "complete" } } },
+          "then": {
+            "properties": {
+              "omitted": { "maxItems": 0 },
+              "omitted_total": { "const": 0 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "partial" } } },
+          "then": {
+            "properties": {
+              "omitted": { "minItems": 1 },
+              "omitted_total": { "minimum": 1 }
+            }
+          }
+        }
+      ]
     }
   }
 }

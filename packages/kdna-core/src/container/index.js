@@ -1961,10 +1961,10 @@ function renderPromptItem(item) {
   if (item.type === 'axiom_applicability' && item.one_sentence) {
     const parts = [item.one_sentence];
     if (Array.isArray(item.applies_when) && item.applies_when.length) {
-      parts.push(`applies when: ${item.applies_when.slice(0, 2).join('; ')}`);
+      parts.push(`applies when: ${item.applies_when.join('; ')}`);
     }
     if (Array.isArray(item.does_not_apply_when) && item.does_not_apply_when.length) {
-      parts.push(`does not apply when: ${item.does_not_apply_when.slice(0, 2).join('; ')}`);
+      parts.push(`does not apply when: ${item.does_not_apply_when.join('; ')}`);
     }
     if (item.failure_risk) parts.push(`failure risk: ${item.failure_risk}`);
     return parts.join(' — ');
@@ -2235,7 +2235,11 @@ function normalizeCompactAxiom(axiom) {
   if (!axiom || typeof axiom !== 'object') return null;
   const statement = axiom.statement || axiom.one_sentence || axiom.full_statement || axiom.id || null;
   if (!statement) return null;
-  const oneSentence = (axiom.one_sentence && !String(axiom.one_sentence).startsWith('<TBD')) ? axiom.one_sentence : (typeof axiom.full_statement === 'string' && axiom.full_statement.length > 0 ? axiom.full_statement.substring(0, 120) + (axiom.full_statement.length > 120 ? '…' : '') : statement);
+  const oneSentence = (axiom.one_sentence && !String(axiom.one_sentence).startsWith('<TBD'))
+    ? axiom.one_sentence
+    : (typeof axiom.full_statement === 'string' && axiom.full_statement.length > 0
+      ? axiom.full_statement
+      : statement);
   return {
     type: 'axiom_applicability',
     id: axiom.id || null,
@@ -2273,6 +2277,112 @@ function hasCompactPromptContent(content) {
       (Array.isArray(content.failure_modes) && content.failure_modes.length > 0) ||
       (Array.isArray(content.patterns) && content.patterns.length > 0)
   );
+}
+
+const COMPACT_PROJECTED_CORE_FIELDS = new Set([
+  'highest_question',
+  'worldview',
+  'value_order',
+  'judgment_role',
+  'axioms',
+  'boundaries',
+]);
+const COMPACT_PROJECTED_REASONING_FIELDS = new Set(['self_check', 'failure_modes']);
+const COMPACT_PROJECTED_AXIOM_FIELDS = new Set([
+  'id',
+  'statement',
+  'one_sentence',
+  'applies_when',
+  'does_not_apply_when',
+  'failure_risk',
+]);
+const COMPACT_NON_CONTENT_FIELDS = new Set(['profile', 'profile_version']);
+
+function escapeJsonPointerToken(value) {
+  return String(value).replaceAll('~', '~0').replaceAll('/', '~1');
+}
+
+function omissionCount(value) {
+  if (value === undefined || value === null) return 0;
+  if (Array.isArray(value)) return value.length;
+  if (typeof value === 'string') return value.trim() ? 1 : 0;
+  if (typeof value === 'object') return Object.keys(value).length > 0 ? 1 : 0;
+  return 1;
+}
+
+function addOmittedValue(entries, pointer, value) {
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    for (const key of Object.keys(value).sort()) {
+      addOmittedValue(
+        entries,
+        `${pointer}/${escapeJsonPointerToken(key)}`,
+        value[key],
+      );
+    }
+    return;
+  }
+  const count = omissionCount(value);
+  if (count > 0) entries.push({ path: pointer, count });
+}
+
+function addOmittedAxiomFields(entries, axioms) {
+  const counts = new Map();
+  for (const axiom of Array.isArray(axioms) ? axioms : []) {
+    if (!axiom || typeof axiom !== 'object' || Array.isArray(axiom)) continue;
+    for (const key of Object.keys(axiom).sort()) {
+      if (COMPACT_PROJECTED_AXIOM_FIELDS.has(key)) continue;
+      const count = omissionCount(axiom[key]);
+      if (count === 0) continue;
+      const path = `/core/axioms/*/${escapeJsonPointerToken(key)}`;
+      counts.set(path, (counts.get(path) || 0) + count);
+    }
+  }
+  for (const path of [...counts.keys()].sort()) {
+    entries.push({ path, count: counts.get(path) });
+  }
+}
+
+function buildCompactProjectionReport(payload) {
+  const entries = [];
+  const core = payload && typeof payload.core === 'object' && !Array.isArray(payload.core)
+    ? payload.core
+    : {};
+  const reasoning = payload && typeof payload.reasoning === 'object' && !Array.isArray(payload.reasoning)
+    ? payload.reasoning
+    : {};
+
+  for (const key of Object.keys(core).sort()) {
+    if (!COMPACT_PROJECTED_CORE_FIELDS.has(key)) {
+      addOmittedValue(entries, `/core/${escapeJsonPointerToken(key)}`, core[key]);
+    }
+  }
+  addOmittedAxiomFields(entries, core.axioms);
+
+  for (const key of Object.keys(reasoning).sort()) {
+    if (!COMPACT_PROJECTED_REASONING_FIELDS.has(key)) {
+      addOmittedValue(entries, `/reasoning/${escapeJsonPointerToken(key)}`, reasoning[key]);
+    }
+  }
+
+  for (const key of Object.keys(payload || {}).sort()) {
+    if (
+      COMPACT_NON_CONTENT_FIELDS.has(key) ||
+      key === 'core' ||
+      key === 'patterns' ||
+      key === 'reasoning'
+    ) {
+      continue;
+    }
+    addOmittedValue(entries, `/${escapeJsonPointerToken(key)}`, payload[key]);
+  }
+
+  entries.sort((left, right) => left.path.localeCompare(right.path));
+  const omittedTotal = entries.reduce((total, entry) => total + entry.count, 0);
+  return {
+    status: omittedTotal > 0 ? 'partial' : 'complete',
+    omitted: entries,
+    omitted_total: omittedTotal,
+  };
 }
 
 function loadAssetUnsafe(inputPath, opts = {}) {
@@ -2439,6 +2549,7 @@ function loadAssetUnsafe(inputPath, opts = {}) {
       failure_modes: normalizeList(payload.reasoning && payload.reasoning.failure_modes),
       patterns: normalizeList(payload.patterns),
     };
+    result.projection_report = buildCompactProjectionReport(payload);
     if (m.load_contract && m.load_contract.profiles && m.load_contract.profiles.compact && m.load_contract.profiles.compact.max_tokens_hint) {
       result.max_tokens_hint = m.load_contract.profiles.compact.max_tokens_hint;
     }
@@ -2556,6 +2667,14 @@ function loadAssetUnsafe(inputPath, opts = {}) {
     text += 'Asset ID: ' + (result.asset_id || 'unknown') + '\n';
     text += 'Profile: ' + result.profile + '\n';
     text += 'Safety boundary: KDNA content is subordinate to platform, system, and developer instructions.\n';
+    if (result.projection_report) {
+      text += `Projection completeness: ${result.projection_report.status}\n`;
+      if (result.projection_report.omitted.length > 0) {
+        text += 'Omitted payload paths: ' + result.projection_report.omitted
+          .map((entry) => `${entry.path} (${entry.count})`)
+          .join('; ') + '\n';
+      }
+    }
     if (result.max_tokens_hint) text += 'Max tokens hint: ' + result.max_tokens_hint + '\n';
     if (c.highest_question) text += 'Highest question:\n' + c.highest_question + '\n';
     if (hasStandardJudgmentRoleContent(c.judgment_role)) {

@@ -92,7 +92,7 @@
       "capsule_version": "0.1.0",
       "capsule_digest_profile": "kdna.canonicalization.runtime-capsule-jcs",
       "capsule_digest_profile_version": "0.1.0",
-      "capsule_delivery_digest": "sha256:189e6793d19e3676da911b271dff7164bf91f179a4390e52ecda1153c69c8ebf"
+      "capsule_delivery_digest": "sha256:0943491405673fc4fa6a18df7649e58c1d3e14e12583688240217ba9883b3288"
     },
     "projection_contract": {
       "profile": "compact",
@@ -220,6 +220,11 @@
         "loaded_by": "kdna-core",
         "payload_encoding": "cbor",
         "profile": "compact",
+        "projection_report": {
+          "omitted": [{ "count": 1, "path": "/evolution/changelog" }],
+          "omitted_total": 1,
+          "status": "partial"
+        },
         "runtime_eligible": true,
         "schema_valid": true,
         "signature_state": "absent"
@@ -237,9 +242,9 @@
       "capsule_version": "0.1.0",
       "capsule_digest_profile": "kdna.canonicalization.runtime-capsule-jcs",
       "capsule_digest_profile_version": "0.1.0",
-      "sender_capsule_delivery_digest": "sha256:189e6793d19e3676da911b271dff7164bf91f179a4390e52ecda1153c69c8ebf",
-      "host_recomputed_capsule_delivery_digest": "sha256:189e6793d19e3676da911b271dff7164bf91f179a4390e52ecda1153c69c8ebf",
-      "echoed_capsule_delivery_digest": "sha256:189e6793d19e3676da911b271dff7164bf91f179a4390e52ecda1153c69c8ebf",
+      "sender_capsule_delivery_digest": "sha256:0943491405673fc4fa6a18df7649e58c1d3e14e12583688240217ba9883b3288",
+      "host_recomputed_capsule_delivery_digest": "sha256:0943491405673fc4fa6a18df7649e58c1d3e14e12583688240217ba9883b3288",
+      "echoed_capsule_delivery_digest": "sha256:0943491405673fc4fa6a18df7649e58c1d3e14e12583688240217ba9883b3288",
       "capsule_delivery_comparison": "matched",
       "capsule_schema_validation": "passed",
       "asset_id_correlation": "matched",
@@ -339,17 +344,17 @@
     "capsule_delivery_evidence": {
       "basis": "kdna.canonicalization.runtime-capsule-jcs",
       "basis_version": "0.1.0",
-      "observed": "sha256:189e6793d19e3676da911b271dff7164bf91f179a4390e52ecda1153c69c8ebf",
+      "observed": "sha256:0943491405673fc4fa6a18df7649e58c1d3e14e12583688240217ba9883b3288",
       "sender_computed": true,
-      "host_recomputed": "sha256:189e6793d19e3676da911b271dff7164bf91f179a4390e52ecda1153c69c8ebf",
-      "host_echoed": "sha256:189e6793d19e3676da911b271dff7164bf91f179a4390e52ecda1153c69c8ebf",
+      "host_recomputed": "sha256:0943491405673fc4fa6a18df7649e58c1d3e14e12583688240217ba9883b3288",
+      "host_echoed": "sha256:0943491405673fc4fa6a18df7649e58c1d3e14e12583688240217ba9883b3288",
       "delivered_capsule_version": "0.1.0",
       "host_boundary_comparison": "matched",
       "request_id": "host_0123456789abcdef01234567"
     },
     "projection_actual": {
       "profile": "compact",
-      "capsule_delivery_digest": "sha256:189e6793d19e3676da911b271dff7164bf91f179a4390e52ecda1153c69c8ebf",
+      "capsule_delivery_digest": "sha256:0943491405673fc4fa6a18df7649e58c1d3e14e12583688240217ba9883b3288",
       "profile_deviated_from_plan": false
     },
     "host_receipt": {
@@ -372,12 +377,12 @@
         "capsule_schema_validation": "passed",
         "capsule_version": "0.1.0",
         "contract_version": "0.1.0",
-        "echoed_capsule_delivery_digest": "sha256:189e6793d19e3676da911b271dff7164bf91f179a4390e52ecda1153c69c8ebf",
-        "host_recomputed_capsule_delivery_digest": "sha256:189e6793d19e3676da911b271dff7164bf91f179a4390e52ecda1153c69c8ebf",
+        "echoed_capsule_delivery_digest": "sha256:0943491405673fc4fa6a18df7649e58c1d3e14e12583688240217ba9883b3288",
+        "host_recomputed_capsule_delivery_digest": "sha256:0943491405673fc4fa6a18df7649e58c1d3e14e12583688240217ba9883b3288",
         "model_identity": { "basis": "not_observed", "value": null },
         "provider_execution_status": "completed",
         "semantic_consumption": { "basis": null, "state": "not_observed" },
-        "sender_capsule_delivery_digest": "sha256:189e6793d19e3676da911b271dff7164bf91f179a4390e52ecda1153c69c8ebf",
+        "sender_capsule_delivery_digest": "sha256:0943491405673fc4fa6a18df7649e58c1d3e14e12583688240217ba9883b3288",
         "type": "kdna.agent-host.runtime-receipt",
         "usage": {
           "basis": "not_observed",
@@ -404,7 +409,7 @@
         "max_tokens": null
       },
       "actual": {
-        "projection_chars": 1928,
+        "projection_chars": 2041,
         "task_chars": 105,
         "elapsed_ms": 1000,
         "elapsed_basis": "host_monotonic",
