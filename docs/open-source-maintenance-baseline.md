@@ -7,16 +7,16 @@
 
 | Surface | Lifecycle | Maintenance claim |
 |---|---|---|
-| Protocol, schemas, conformance fixtures | Stable | Format and loader contract changes require tests and public evidence. |
-| `@aikdna/kdna-core` and `@aikdna/kdna-cli` | Beta | Local public `.kdna` assets are the supported first-run path. |
+| Protocol, schemas, conformance fixtures | Pre-release | Format and loader contract changes require tests and public evidence. |
+| `@aikdna/kdna-core` and `@aikdna/kdna-cli` | Pre-release | Local public `.kdna` assets are the supported first-run path. |
 | `@aikdna/kdna-eval` | Experimental | Issuer-scoped evaluation, replay, budget, and consumption evidence; not KDNA Core content authority. |
 | `@aikdna/kdna` | Legacy compatibility | Maintained migration bridge; new integrations use `@aikdna/kdna-cli` and `@aikdna/kdna-core` directly. |
-| Studio Core and Studio CLI | Beta | Public local asset authoring/export is supported; AI-assisted authoring remains experimental. |
+| Studio Core and Studio CLI | Pre-release | Public local asset authoring/export is supported; AI-assisted authoring remains experimental. |
 | Public `.kdna` reference assets | Experimental | Current technical references require metadata, SHA sidecars, public URLs, and public-surface checks; they are not content endorsements or the default onboarding path. |
-| Agent loader skill and MCP server | Beta / Experimental | Loader behavior must preserve plan-load-before-load and content-neutral boundaries. |
-| Web packages and scaffolder | Experimental | Published integration surfaces for upload, inspect, plan-load, load, and activation proxying. |
-| Swift runtime, Studio Swift, and app-shared package | Beta | Swift Core has a current 0.20.0 conformance release; Studio Swift 0.4.0 and App Shared 0.5.0 remain published but require current-runtime recertification before stronger claims. |
-| `kdna-vscode` | Legacy | Historical reference only; current workflows use CLI, Studio CLI, and loader integrations. |
+| Agent loader skill and MCP server | Pre-release / Experimental | Loader behavior must preserve plan-load-before-load and content-neutral boundaries. |
+| Web packages and scaffolder | Pre-release / Experimental | Published integration surfaces for upload, inspect, plan-load, load, and activation proxying. |
+| Swift runtime, Studio Swift, and app-shared package | Pre-release | Swift Core has a current 0.20.0 conformance release; Studio Swift 0.4.0 and App Shared 0.5.0 remain published but require current-runtime recertification before stronger claims. |
+| `kdna-vscode` | Pre-release integration | Editor workflows have an independent maturity lifecycle and remain part of the ecosystem. |
 | `@aikdna/agent` | Legacy / Deprecated | Frozen source only; current Agent integration uses `kdna-loader` or the experimental MCP bridge. |
 | `@aikdna/kdna-artifact-engine` and `@aikdna/kdna-fidelity-core` | Legacy / Deprecated | Historical draft implementations; not part of the current Runtime Capsule toolchain. |
 

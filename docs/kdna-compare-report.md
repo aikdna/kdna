@@ -1,7 +1,7 @@
 # KDNA Compare Report — Design Specification
 
 > **Status:** Implemented. `kdna compare` available in `@aikdna/kdna-cli`.
-> Historical benchmark artifacts are not part of the current public beta
+> Historical benchmark artifacts are not part of the current pre-release
 > repository.
 
 ## Overview

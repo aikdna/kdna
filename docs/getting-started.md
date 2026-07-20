@@ -102,7 +102,7 @@ kdna load ./minimal.kdna --profile=compact --as=prompt
 
 ## Advanced workflows
 
-The basic public beta path is intentionally small: create or generate a
+The basic pre-release path is intentionally small: create or generate a
 packaged `.kdna` file, validate it, plan loading, and load it. Advanced creator,
 adapter, and legacy compatibility commands are tracked in
 [status.md](./status.md).

@@ -1,28 +1,26 @@
 # KDNA Maturity Disclosure
 
-> **Current product maturity: Beta.** This page separates protocol validity,
-> implementation maturity, and optional asset evidence.
+> **Current product maturity: Pre-release.** This page separates exact-version
+> protocol validity, component maturity, and optional asset evidence.
 
-## What Beta Means
+## What Pre-release Means
 
-The KDNA Asset Container and local public-asset path are stable enough for
-integration and conformance testing. Other layers mature independently. A
-stable container does not make every runtime, adapter, server, or asset
-production-ready.
+KDNA has published 0.x protocol, toolchain, and integration snapshots, but the
+ecosystem is correcting contract and narrative inconsistencies before its next
+Development Preview. A released package proves that exact artifact exists; it
+does not make the whole ecosystem stable or make components outside one release
+wave valueless.
 
 | Surface | Maturity |
 |---|---|
-| Asset container, manifest, CBOR payload, checksums | Stable baseline |
-| Local public `validate → plan-load → load` | Stable baseline |
-| Runtime Capsule contract | Stable baseline in the JS reference path |
-| Studio authoring/export | Beta |
-| Single-asset task-aware runtime | Beta |
-| Cluster runtime and Cluster Assay | Beta |
-| Signing and revocation | Beta |
-| Licensed access and encrypted lifecycle | Candidate; confirm release-specific conformance |
-| Remote access protocol | Candidate |
-| Remote and activation reference servers | Experimental and self-hosted |
-| Swift, React, and Web parity | Beta / experimental by repository |
+| Asset container, manifest, CBOR payload, checksums | Pre-release; exact-version contract under reconciliation |
+| Local `validate → plan-load → load` | Pre-release; verify against the exact CLI/Core pair |
+| Runtime Capsule contract | Pre-release in the JS reference path |
+| Studio authoring/export | Pre-release; authoring fidelity under review |
+| Single-asset and multi-asset consumption | Pre-release / experimental by exact command |
+| Signing, revocation, licensed and encrypted lifecycle | Pre-release; security contracts under review |
+| Remote and activation reference servers | Pre-release integrations; self-hosted |
+| Swift, Agent, editor, React, and Web integrations | Pre-release by repository and exact version |
 
 ## Four Things That Must Not Be Collapsed
 
@@ -52,14 +50,18 @@ not separate KDNA product formats. Active user documentation describes one
 current KDNA Asset Container; schema and protocol documents carry the technical
 compatibility identifiers needed by implementations.
 
-## Not in the Public Baseline
+## Not Required by the Core Container
 
-- an AIKDNA-hosted registry or universal discovery service;
+- a hosted registry or universal discovery service;
 - a marketplace, billing service, or mandatory commercial platform;
-- an AIKDNA-hosted remote loading endpoint;
+- a hosted remote loading endpoint;
 - universal content ranking, certification, or recommendation;
 - a guarantee that an asset improves every model or task;
 - a complete memory, learning, evaluation, or deployment platform.
+
+Optional services and integrations may exist without becoming mandatory parts
+of the container protocol. Their value and maturity are assessed through their
+own contracts, users, and release evidence.
 
 For a specific package, use its release notes and CI evidence. For product
 boundaries, see [Core Narrative and Boundaries](./core-narrative-and-boundaries.md).
