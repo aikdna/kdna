@@ -1,15 +1,15 @@
 {
   "schema_version": 2,
   "lifecycle_terms": [
-    "Stable",
-    "Beta",
+    "Pre-release",
     "Experimental",
+    "Unassessed",
     "Legacy",
     "Removed",
     "Future",
     "Draft Normative"
   ],
-  "baseline_statement": "KDNA has one current Asset Container and a toolchain-mediated Runtime Capsule contract. Local public and licensed lifecycles are released; remote and hosted reference services remain experimental. Asset behavior evidence is optional and content-specific.",
+  "baseline_statement": "KDNA is a pre-release judgment-asset container and ecosystem. All 17 public repositories retain distinct missions; component maturity, release-wave membership, and compatibility commitments are independent. Exact published-version contracts remain authoritative, and asset utility evidence is optional and content-specific.",
   "components": [
     {
       "repository": "aikdna/kdna",
@@ -24,7 +24,7 @@
           "package_name": "@aikdna/kdna-core",
           "npm_package": "@aikdna/kdna-core",
           "version": "0.20.0",
-          "lifecycle": "Beta",
+          "lifecycle": "Pre-release",
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
@@ -102,7 +102,7 @@
           "legacy_replacement": "external evaluation tooling"
         }
       ],
-      "lifecycle": "Beta",
+      "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed", "remote"],
       "supported_entitlement_profiles": [],
@@ -126,7 +126,7 @@
           "package_name": "@aikdna/kdna-cli",
           "npm_package": "@aikdna/kdna-cli",
           "version": "0.35.1",
-          "lifecycle": "Beta",
+          "lifecycle": "Pre-release",
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
@@ -134,7 +134,7 @@
           "legacy_replacement": null
         }
       ],
-      "lifecycle": "Beta",
+      "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed", "remote"],
       "supported_entitlement_profiles": [],
@@ -236,7 +236,7 @@
           "package_name": "@aikdna/kdna-studio-core",
           "npm_package": "@aikdna/kdna-studio-core",
           "version": "2.0.2",
-          "lifecycle": "Beta",
+          "lifecycle": "Pre-release",
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
@@ -244,12 +244,12 @@
           "legacy_replacement": null
         }
       ],
-      "lifecycle": "Beta",
+      "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "Studio export is beta and treats review, Human Lock, signatures, and release evidence as optional provenance layers"
+        "Studio export is pre-release and treats review, Human Lock, signatures, and release evidence as optional provenance layers"
       ],
       "recommended_entrypoint": "Studio project export followed by Core validate and plan-load",
       "legacy_replacement": null
@@ -267,7 +267,7 @@
           "package_name": "@aikdna/kdna-studio-cli",
           "npm_package": "@aikdna/kdna-studio-cli",
           "version": "0.10.2",
-          "lifecycle": "Beta",
+          "lifecycle": "Pre-release",
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
@@ -275,7 +275,7 @@
           "legacy_replacement": null
         }
       ],
-      "lifecycle": "Beta",
+      "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
@@ -518,7 +518,7 @@
       "component_version": "0.20.0",
       "artifacts": [],
       "packages": [],
-      "lifecycle": "Beta",
+      "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
@@ -538,7 +538,7 @@
       "component_version": "0.5.0",
       "artifacts": [],
       "packages": [],
-      "lifecycle": "Beta",
+      "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
@@ -559,7 +559,7 @@
       "component_version": "0.4.0",
       "artifacts": [],
       "packages": [],
-      "lifecycle": "Beta",
+      "lifecycle": "Pre-release",
       "supported_kdna_version": "1.0",
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
@@ -583,23 +583,25 @@
           "package_name": "kdna-vscode",
           "npm_package": null,
           "version": "0.1.0",
-          "lifecycle": "Legacy",
+          "lifecycle": "Unassessed",
           "release_status": "source-only",
-          "dependency_policy": "frozen",
-          "known_limitations": ["archived extension source; not a current npm publication"],
-          "recommended_entrypoint": "use the CLI and Studio CLI",
-          "legacy_replacement": "@aikdna/kdna-cli"
+          "dependency_policy": "none",
+          "known_limitations": [
+            "editor integration mission retained; current source maturity and exact Core compatibility require independent recertification"
+          ],
+          "recommended_entrypoint": null,
+          "legacy_replacement": null
         }
       ],
-      "lifecycle": "Legacy",
+      "lifecycle": "Unassessed",
       "supported_kdna_version": "pre-cutover",
       "supported_access_modes": [],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "archived historical extension; direct ZIP loading is not part of the current runtime baseline"
+        "editor integration mission retained; current source depends on an older Core coordinate, and maturity and compatibility remain unassessed pending an owner-reviewed fact card"
       ],
-      "recommended_entrypoint": "Use CLI and Studio CLI for current workflows",
-      "legacy_replacement": "@aikdna/kdna-cli"
+      "recommended_entrypoint": null,
+      "legacy_replacement": null
     },
     {
       "repository": "aikdna/kdna-writing",
