@@ -144,6 +144,24 @@ test('payload schemas reject empty judgment shells without requiring a human aut
         judgment_role: { internal_note: 'not a scope declaration' },
       },
     },
+    {
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+      core: {
+        axioms: ['An arbitrary nonempty object is not a boundary.'],
+        boundaries: [{ internal_note: null }],
+      },
+    },
+    {
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+      core: {
+        axioms: [{
+          statement: 'Whitespace is not an applicability boundary.',
+          applies_when: ['   '],
+        }],
+      },
+    },
   ];
   const authorNeutralPayload = {
     profile: 'kdna.payload.judgment',
