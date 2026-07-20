@@ -598,7 +598,7 @@
       "supported_access_modes": [],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "editor integration mission retained; current source depends on an older Core coordinate, and maturity and compatibility remain unassessed pending an owner-reviewed fact card"
+        "editor integration mission retained; current source depends on an older Core coordinate, and maturity and compatibility remain unassessed pending an owner-reviewed fact card and independent recertification"
       ],
       "recommended_entrypoint": null,
       "legacy_replacement": null
