@@ -46,11 +46,23 @@
                 "anyOf": [
                   {
                     "required": ["applies_when"],
-                    "properties": { "applies_when": { "type": "array", "minItems": 1 } }
+                    "properties": {
+                      "applies_when": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": { "type": "string", "minLength": 1, "pattern": "\\S" }
+                      }
+                    }
                   },
                   {
                     "required": ["does_not_apply_when"],
-                    "properties": { "does_not_apply_when": { "type": "array", "minItems": 1 } }
+                    "properties": {
+                      "does_not_apply_when": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": { "type": "string", "minLength": 1, "pattern": "\\S" }
+                      }
+                    }
                   }
                 ]
               }
@@ -103,6 +115,16 @@
               {
                 "type": "object",
                 "minProperties": 1,
+                "properties": {
+                  "applies_when": {
+                    "type": "array",
+                    "items": { "type": "string", "minLength": 1, "pattern": "\\S" }
+                  },
+                  "does_not_apply_when": {
+                    "type": "array",
+                    "items": { "type": "string", "minLength": 1, "pattern": "\\S" }
+                  }
+                },
                 "anyOf": [
                   {
                     "required": ["statement"],
@@ -127,7 +149,39 @@
           "items": {
             "oneOf": [
               { "type": "string", "minLength": 1, "pattern": "\\S" },
-              { "type": "object", "minProperties": 1 }
+              {
+                "type": "object",
+                "minProperties": 1,
+                "anyOf": [
+                  { "required": ["scope"], "properties": { "scope": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  { "required": ["out_of_scope"], "properties": { "out_of_scope": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  { "required": ["text"], "properties": { "text": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  { "required": ["statement"], "properties": { "statement": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  { "required": ["one_sentence"], "properties": { "one_sentence": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  { "required": ["boundary"], "properties": { "boundary": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  { "required": ["stance"], "properties": { "stance": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  {
+                    "required": ["applies_when"],
+                    "properties": {
+                      "applies_when": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": { "type": "string", "minLength": 1, "pattern": "\\S" }
+                      }
+                    }
+                  },
+                  {
+                    "required": ["does_not_apply_when"],
+                    "properties": {
+                      "does_not_apply_when": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": { "type": "string", "minLength": 1, "pattern": "\\S" }
+                      }
+                    }
+                  }
+                ]
+              }
             ]
           },
           "description": "Explicit out-of-scope statements."
