@@ -1,81 +1,52 @@
-# KDNA Public Roadmap
+# Public Roadmap
 
-> Public direction, not an internal delivery schedule. Only released and
-> reproducible behavior is described as current capability.
+## Current status: development reset
 
-## Where KDNA Is Now
+KDNA does not currently have a stable, beta, GA, or production-ready release.
+Published packages and documentation describe development snapshots and may not
+match the source candidate under repair. A new Development Preview has not been
+released.
 
-KDNA has one current asset model and two complementary use paths:
+Current work is intentionally limited to:
 
-- **Single asset** — the atomic, foundational, default path.
-- **Cluster** — the explicit advanced path for coordinating multiple assets.
+- correcting public repository and package status;
+- fixing format, integrity, authorization, loading, and projection defects;
+- reducing the supported authoring and Runtime surface;
+- aligning the final source coordinates and conformance evidence.
 
-Anyone can create assets. The protocol and toolchain do not approve authors or
-judge content quality. AIKDNA-published assets are reference material, not the
-ecosystem's exclusive content source.
+This work does not authorize new repositories, commands, protocols, services,
+adapters, or ecosystem products.
 
-The current stable baseline is local public-asset creation and consumption:
+## Next possible public milestone
 
-```text
-author → .kdna → validate → LoadPlan → load/project → Runtime Capsule → Agent
-```
+The next possible milestone is a small **Development Preview / Protocol
+Preview**. It remains blocked until the retained contract is safe, internally
+consistent, built from unique new version coordinates, and verified from one
+final source set. Release coordinates require owner approval.
 
-Licensed and remote access contracts exist, with maturity disclosed separately
-from the container and public-asset path.
+A Preview will not claim GA compatibility, external adoption, improved model
+intelligence, or better results. It will still preserve minimum version
+integrity: one version maps to one source and artifact set, breaking changes use
+new coordinates, and unsupported assets are rejected consistently with an
+accurate diagnosis.
 
-## Current Priorities
+## Evidence boundary
 
-### 1. Runtime and security closure
+Historical asset-level utility experiments are not a project existence,
+release, or product-admission gate. Their results do not establish general
+model improvement and do not justify new evaluation infrastructure. Content
+utility remains optional, asset-specific, and evaluator-scoped.
 
-- keep one container, one payload contract, and one Agent interface;
-- prove public, licensed, and remote behavior with reproducible fixtures;
-- preserve in-memory-only handling for decrypted licensed content;
-- fail closed on malformed, unauthorized, or unverifiable input.
+## Explicitly not on the roadmap
 
-### 2. Author experience
+- Store, Cluster, Registry, Host, Trace, marketplace, hosted loading, billing,
+  badge, certification, Web/React product suites, or editor products;
+- general migration for maintainer-owned development artifacts;
+- compatibility promises inferred from repository, package, test, or CI
+  existence;
+- new behavior experiments required to prove that KDNA beats equivalent
+  Prompt or Skill content.
 
-- make the first independent asset easy to create without private knowledge;
-- keep review and Evidence optional unless an author makes a corresponding
-  claim;
-- preserve scope boundaries so one asset remains understandable and reusable.
-
-### 3. Single asset and Cluster together
-
-- keep all default commands usable with one asset and no hidden Router;
-- keep Cluster explicit, role-based, conflict-aware, and independently
-  testable;
-- report routing quality separately from answer quality.
-
-### 4. Cross-runtime compatibility
-
-- maintain shared fixtures across JS, Swift, React, Web, and Agent adapters;
-- require compatible runtimes to implement LoadPlan, authorization, integrity
-  verification, and Runtime Capsule output;
-- test Codex, Claude Code, and OpenCode through the same public toolchain.
-
-### 5. An author-led ecosystem
-
-- publish minimal, encrypted, remote, and Cluster reference examples;
-- document self-publication without an official registry dependency;
-- make author identity, version, compatibility, and optional evidence legible;
-- let independent creators and applications choose their own distribution and
-  business models.
-
-## What KDNA Core Is Not Building
-
-- a content judge or truth authority;
-- an official-only authoring system;
-- a mandatory registry, marketplace, or hosted service;
-- a universal asset ranking or recommendation engine;
-- a replacement for RAG, memory, skills, workflows, evaluation, or
-  fine-tuning;
-- one giant asset that replaces scoped assets and explicit Cluster composition.
-
-## How to Contribute
-
-- Create an asset: [30-Minute Authoring Guide](./30-minute-authoring-guide.md)
-- Integrate a runtime: [Consumption Runtime](./consumption-runtime.md)
-- Add conformance coverage: [`conformance/`](../conformance/)
-- Publish a reference asset: [aikdna/kdna-assets](https://github.com/aikdna/kdna-assets)
-- Report protocol or implementation ambiguity through the relevant public
-  repository issue tracker.
+Future public documentation will describe the exact supported path only after
+the final Development Preview candidate exists. This page does not present
+unreleased local behavior as currently available public functionality.
