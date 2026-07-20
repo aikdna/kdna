@@ -4,8 +4,9 @@
 
 - Prepare `@aikdna/kdna-core@0.21.0` as an unpublished Development Preview
   candidate. It closes password LoadPlan, minimum judgment semantics,
-  non-truncating compact projection, checksums, entitlement, and asset-signature
-  boundaries without changing any already published package bytes.
+  non-truncating compact projection with explicit omission reporting, checksums,
+  entitlement, and asset-signature boundaries without changing any already
+  published package bytes.
 
 - Publish `@aikdna/kdna@0.13.2` as the maintained Legacy compatibility bridge
   for CLI 0.35.1, Eval 0.3.2, and Core 0.20.0, with exact Release, registry,

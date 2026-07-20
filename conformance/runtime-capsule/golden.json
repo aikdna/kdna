@@ -11,7 +11,7 @@
     "asset": "sha256:0f6d33af23e9d3305a523ab78156e80ee63b191680ddba2175a0e6046ded7964",
     "content": "sha256:aeaa3e31b4be25e41a686963772988a613ee711a02fa13151a55877f251cd2ea",
     "runtime_entry_set": "sha256:a756e89ed89f625940086da3757d6a8ff3b8dbee0c54bcb37988e0c891da5b3c",
-    "capsule_delivery": "sha256:ba18200f4837b5d7d09a42e56d7d5424b7969ed7ed6788d6fbb92816a2c56f4b"
+    "capsule_delivery": "sha256:1d34035bb45c59ed3875323789ee1f1ed9e7efb08a96c807d9225950b73a9136"
   },
   "runtime_capsule": {
     "type": "kdna.runtime-capsule",
@@ -90,7 +90,17 @@
       "runtime_eligible": true,
       "schema_valid": true,
       "signature_state": "absent",
-      "profile": "compact"
+      "profile": "compact",
+      "projection_report": {
+        "status": "partial",
+        "omitted": [
+          {
+            "path": "/evolution/changelog",
+            "count": 1
+          }
+        ],
+        "omitted_total": 1
+      }
     }
   },
   "jcs_vectors": [

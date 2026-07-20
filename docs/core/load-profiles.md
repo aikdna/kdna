@@ -64,7 +64,9 @@ judgment role, axioms, boundaries, self-checks, and failure modes.
 - `self_checks` — Runtime Capsule projection of `payload.reasoning.self_check`,
   preserving each declared string or structured question without changing its shape
 - `failure_modes` — from `payload.reasoning.failure_modes`
-- `patterns` — from `payload.patterns` (first 3, truncated)
+- `patterns` — every declared item from `payload.patterns`
+- `trace.projection_report` — `complete` or `partial`, with every non-empty
+  omitted payload path and count; prompt rendering carries the same disclosure
 - Default max_tokens_hint from `load_contract.profiles.compact.max_tokens_hint`
 
 **Example output** (`--as=prompt`):
@@ -93,16 +95,15 @@ implementation.
 or trigger, so large payloads are read selectively rather than all at
 once.
 
-**Phase 1 behavior (current)**:
-- If `payload.scenarios` is present and non-empty, return the scenario
-  array.
-- If `payload.scenarios` is absent or empty, **fall back to `compact`**
-  and include a `note` indicating the fallback.
+**Current behavior**:
+- Return the declared `payload.scenarios` array as-is.
+- If it is absent or empty, return an empty scenarios array. Do not silently
+  relabel or fall back to another profile.
 
 **Deterministic**: the scenario profile MUST NOT allow the loader to
 guess which sections apply. The selection MUST be rule-based.
-In Phase 1, the scenario profile accepts the full scenarios array
-as-is; future phases will add trigger-matching rules.
+The current scenario profile accepts the full scenarios array as-is. Any future
+trigger-matching contract must be additive and explicitly versioned.
 
 **NOT suitable as a default Agent prompt** unless the caller explicitly
 requests scenario-routed reading.

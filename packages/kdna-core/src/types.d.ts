@@ -806,6 +806,11 @@ export interface KDNARuntimeCapsule {
     schema_valid: true;
     signature_state: 'absent';
     profile: 'index' | 'compact' | 'scenario' | 'full';
+    projection_report?: {
+      status: 'complete' | 'partial';
+      omitted: Array<{ path: string; count: number }>;
+      omitted_total: number;
+    };
   };
 }
 

@@ -12,6 +12,10 @@
   separate from format validity.
 - Preserve every declared pattern in compact projection instead of silently
   applying a prefix budget.
+- Report every non-empty payload path intentionally omitted by compact
+  projection, including deterministic counts, in Runtime Capsule trace and
+  prompt output; preserve complete axiom applicability lists and stop trimming
+  a full-statement fallback.
 - Make `checksums.json` optional under one container authority and verify it
   whenever it is present.
 - Withdraw asset-signature containers from the Development Preview contract;

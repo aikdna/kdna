@@ -517,6 +517,9 @@ function buildRuntimeCapsule({
       profile: projection.profile,
     },
   };
+  if (projection.projection_report !== undefined) {
+    capsule.trace.projection_report = globalThis.structuredClone(projection.projection_report);
+  }
   assertRuntimeCapsuleSuccess(capsule, 'KDNA_RUNTIME_CAPSULE_BUILD_INVALID');
   return capsule;
 }
