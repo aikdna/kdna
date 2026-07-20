@@ -23,6 +23,9 @@
   and Human Lock provenance remain separate responsibilities.
 - Close licensed entitlement validation around the declared `password`,
   `local_receipt`, `account`, and `org` profiles.
+- Load external-grant Schemas through static package imports so bundler-based
+  ecosystem adapters retain the exact Core validators instead of failing at
+  activation time.
 
 ## 0.20.0 (2026-07-17)
 
