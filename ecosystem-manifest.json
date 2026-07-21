@@ -261,7 +261,7 @@
     {
       "repository": "aikdna/kdna-studio-cli",
       "local_path": "../kdna-studio-cli",
-      "source_commit": "543e651d95a3679f3938dcaa67672572150456d1",
+      "source_commit": "1438899ec75697f9187a92e242d5053e04db30dc",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -518,7 +518,7 @@
     {
       "repository": "aikdna/kdna-core-swift",
       "local_path": "../kdna-core-swift",
-      "source_commit": "f866025d386b45bfe94fb39adcf6c09438629d42",
+      "source_commit": "2c69a1d5302c2912fc09d344047e5f08841e06e4",
       "conformance_commit": "3676ab0e4b54b83c4193eef3519b19cc6d0cd245",
       "release_tag": "v0.20.0",
       "release_commit": "4a9b732b590a711c544da5280a4b78f071369617",
