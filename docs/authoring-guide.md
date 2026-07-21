@@ -7,7 +7,7 @@
 1. Copy `templates/minimal-domain/` to your working directory
 2. Rename the folder to your domain ID (e.g., `my_domain`)
 3. Edit each JSON file — fill in every placeholder in angle brackets
-4. Validate: `npx kdna dev validate <your-domain-folder>`
+4. Validate: `kdna validate <your-domain-folder>`
 5. Export a `.kdna` asset, then validate and load that exact asset through the
    Runtime contract.
 
@@ -84,7 +84,7 @@ If you write KDNA JSON from scratch, you MUST use these exact field names. The l
 | `brief` / `bad_pattern` / `master_pattern` (on cases) | `title` / `what_happened` / `structural_pattern` |
 | `capability_layers` (on evolution) | `stages` |
 
-For dev source experiments, start from `kdna dev scaffold <name>` or `kdna cluster init <name>` so field names stay consistent. This creates a non-canonical workspace only. A formal asset exists when it is exported to the KDNA Asset Container and passes `kdna validate`; the Studio toolchain is one authoring path, not a creation gate.
+For dev source experiments, copy `templates/minimal-domain/` or start a Studio project with `kdna-studio create <name>` (from `@aikdna/kdna-studio-cli`), or use `kdna cluster init <name>` so field names stay consistent. This creates a non-canonical workspace only. A formal asset exists when it is exported to the KDNA Asset Container and passes `kdna validate`; the Studio toolchain is one authoring path, not a creation gate.
 
 ---
 

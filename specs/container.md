@@ -181,7 +181,7 @@ logs, or bypass Core with generic ZIP/CBOR code.
 Raw payload inspection is a developer-only operation:
 
 ```bash
-kdna dev decode asset.kdna --reveal
+kdna unpack asset.kdna ./unpacked-asset
 ```
 
 It is not an Agent consumption path.
