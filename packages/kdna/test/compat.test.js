@@ -16,6 +16,8 @@ const core = compatRequire('@aikdna/kdna-core');
 const cliPackageRoot = path.dirname(compatRequire.resolve('@aikdna/kdna-cli/package.json'));
 const ROOT_CORE_LOCK_PATH = 'node_modules/@aikdna/kdna-core';
 const CLI_LOCK_PATH = 'node_modules/@aikdna/kdna-cli';
+const CLI_NESTED_CORE_LOCK_PATH = 'node_modules/@aikdna/kdna-cli/node_modules/@aikdna/kdna-core';
+const COMPAT_NESTED_CORE_LOCK_PATH = 'packages/kdna/node_modules/@aikdna/kdna-core';
 const PACKABLE_FIXTURE_FILES = ['mimetype', 'kdna.json', 'checksums.json', 'payload.kdnab'];
 const EXPECTED_PACKABLE_FIXTURE_COUNT = 2;
 
@@ -24,12 +26,30 @@ function assertCurrentToolchainLock(lock) {
     resolved: 'packages/kdna-core',
     link: true,
   });
-  assert.equal(lock.packages['packages/kdna-core'].version, '0.20.0');
+  assert.equal(lock.packages['packages/kdna-core'].version, '0.21.0');
   assert.deepEqual(
-    Object.keys(lock.packages).filter((location) => location.endsWith('/@aikdna/kdna-core')),
-    [ROOT_CORE_LOCK_PATH],
-    'the workspace lock must resolve one Core package',
+    Object.keys(lock.packages)
+      .filter((location) => location.endsWith('/@aikdna/kdna-core'))
+      .sort(),
+    [
+      CLI_NESTED_CORE_LOCK_PATH,
+      COMPAT_NESTED_CORE_LOCK_PATH,
+      ROOT_CORE_LOCK_PATH,
+    ].sort(),
+    'the workspace lock must resolve the candidate Core plus the exact published 0.20.0 pair',
   );
+  for (const nestedPath of [CLI_NESTED_CORE_LOCK_PATH, COMPAT_NESTED_CORE_LOCK_PATH]) {
+    const nested = lock.packages[nestedPath];
+    assert.equal(nested.version, '0.20.0');
+    assert.equal(
+      nested.resolved,
+      'https://registry.npmjs.org/@aikdna/kdna-core/-/kdna-core-0.20.0.tgz',
+    );
+    assert.equal(
+      nested.integrity,
+      'sha512-zdx5NuC4mOuN3625Dsn8Bq01/V9+MQy+kT870XXX2JHOjKJhXnBwO3BU8jke2vBrxfnzH7Jm9MmeqTM0UCBc0Q==',
+    );
+  }
 
   const cli = lock.packages[CLI_LOCK_PATH];
   assert.equal(cli.version, '0.35.1');
