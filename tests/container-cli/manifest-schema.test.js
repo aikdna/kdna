@@ -69,17 +69,21 @@ test('authoritative Runtime manifest schema closes the licensed entitlement cont
 
   assert.equal(validateManifest(runtimeManifest({ access: 'licensed' })), false);
   assert.equal(
-    validateManifest(runtimeManifest({
-      access: 'licensed',
-      entitlement: { profile: 'coupon_code' },
-    })),
+    validateManifest(
+      runtimeManifest({
+        access: 'licensed',
+        entitlement: { profile: 'coupon_code' },
+      }),
+    ),
     false,
   );
   assert.equal(
-    validateManifest(runtimeManifest({
-      access: 'public',
-      entitlement: { profile: 'password' },
-    })),
+    validateManifest(
+      runtimeManifest({
+        access: 'public',
+        entitlement: { profile: 'password' },
+      }),
+    ),
     false,
   );
 });

@@ -78,7 +78,8 @@ test('rejects output-uplift requirements in current authoring guidance', () => {
 });
 
 test('preserves exact released-command history without advertising an operational example', () => {
-  const content = '| `kdna verify <file.kdna>` | Released in 0.35.1; withdrawn from Preview candidate |';
+  const content =
+    '| `kdna verify <file.kdna>` | Released in 0.35.1; withdrawn from Preview candidate |';
   assert.deepEqual(findNarrativeViolations('docs/tool-status-matrix.md', content), []);
 });
 

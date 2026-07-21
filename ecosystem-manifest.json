@@ -15,7 +15,7 @@
       "repository": "aikdna/kdna",
       "local_path": ".",
       "source_commit": null,
-      "conformance_commit": "f13390916c0b6a71aed8a62c458b5c440985ad98",
+      "conformance_commit": "3676ab0e4b54b83c4193eef3519b19cc6d0cd245",
       "component_version": null,
       "artifacts": [],
       "packages": [
@@ -149,7 +149,7 @@
       "repository": "aikdna/kdna-assets",
       "local_path": "../kdna-assets",
       "source_commit": "8656656f845adf8f5711114c5fa2fa9ecff05806",
-      "conformance_commit": "f13390916c0b6a71aed8a62c458b5c440985ad98",
+      "conformance_commit": "3676ab0e4b54b83c4193eef3519b19cc6d0cd245",
       "component_version": null,
       "packages": [],
       "artifacts": [
@@ -159,7 +159,7 @@
           "sha256": "4a90b91fe955ec3a563a7c2b598568f0eedbd04d3393211692490dfde2e09ffc",
           "release_tag": "0.1.1",
           "release_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
-          "conformance_commit": "f13390916c0b6a71aed8a62c458b5c440985ad98",
+          "conformance_commit": "3676ab0e4b54b83c4193eef3519b19cc6d0cd245",
           "kind": "kdna-asset",
           "lifecycle": "Experimental",
           "known_limitations": [
@@ -173,7 +173,7 @@
           "sha256": "d8513486bc033523359b8a582ca5d879d5ec01c926601d2fde34813a793c5ccf",
           "release_tag": "0.1.1",
           "release_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
-          "conformance_commit": "f13390916c0b6a71aed8a62c458b5c440985ad98",
+          "conformance_commit": "3676ab0e4b54b83c4193eef3519b19cc6d0cd245",
           "kind": "kdna-asset",
           "lifecycle": "Experimental",
           "known_limitations": [
@@ -519,7 +519,7 @@
       "repository": "aikdna/kdna-core-swift",
       "local_path": "../kdna-core-swift",
       "source_commit": "f866025d386b45bfe94fb39adcf6c09438629d42",
-      "conformance_commit": "f13390916c0b6a71aed8a62c458b5c440985ad98",
+      "conformance_commit": "3676ab0e4b54b83c4193eef3519b19cc6d0cd245",
       "release_tag": "v0.20.0",
       "release_commit": "4a9b732b590a711c544da5280a4b78f071369617",
       "component_version": "0.20.0",

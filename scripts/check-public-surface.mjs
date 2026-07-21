@@ -55,15 +55,11 @@ const FORBIDDEN_HASHES = [
   },
   {
     label: 'private repo name',
-    hashes: new Set([
-      '3ce236400925c24e9e5416bdc69abe5427b3183e2abe6f848b297334cfdeaa25',
-    ]),
+    hashes: new Set(['3ce236400925c24e9e5416bdc69abe5427b3183e2abe6f848b297334cfdeaa25']),
   },
   {
     label: 'private consumer app',
-    hashes: new Set([
-      '61e79d887fa6b41acfebaeee47c2ba816bc76c892b1f72a3c2ba3f34900a22f8',
-    ]),
+    hashes: new Set(['61e79d887fa6b41acfebaeee47c2ba816bc76c892b1f72a3c2ba3f34900a22f8']),
   },
   {
     label: 'private scheduled product',
@@ -74,9 +70,7 @@ const FORBIDDEN_HASHES = [
   },
   {
     label: 'private pipeline codename',
-    hashes: new Set([
-      'b4dd311429383a0df964f510fea4f208531f6e4807ffcef7e70899cefd0d4632',
-    ]),
+    hashes: new Set(['b4dd311429383a0df964f510fea4f208531f6e4807ffcef7e70899cefd0d4632']),
   },
 ];
 

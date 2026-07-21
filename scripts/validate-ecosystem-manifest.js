@@ -235,10 +235,7 @@ function assertPackage(component, packageRecord, root) {
   if (component.source_commit && root && component.local_path !== '.') {
     let bytes;
     try {
-      bytes = gitBytes(root, [
-        'show',
-        `${component.source_commit}:${packageRecord.package_json}`,
-      ]);
+      bytes = gitBytes(root, ['show', `${component.source_commit}:${packageRecord.package_json}`]);
     } catch (error) {
       fail(
         component,
@@ -273,7 +270,6 @@ function assertPackage(component, packageRecord, root) {
 
   const pkg = readJsonEvidence(component, filePath, packageRecord.package_json);
   if (pkg) assertPackageManifest(component, packageRecord, pkg, 'checkout');
-
 }
 
 function sha256(bytes) {
@@ -373,9 +369,10 @@ if (validateSchema()) {
   } else {
     try {
       const corePackageRecord = corePackageRecords[0];
-      const publishedTag = corePackageRecord.release_status === 'candidate'
-        ? corePackageRecord.published_version
-        : corePackageRecord.version;
+      const publishedTag =
+        corePackageRecord.release_status === 'candidate'
+          ? corePackageRecord.published_version
+          : corePackageRecord.version;
       const publishedCommit = gitText(repoRoot, [
         'rev-list',
         '-n',

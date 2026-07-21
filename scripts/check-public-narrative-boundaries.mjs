@@ -51,14 +51,8 @@ const FORBIDDEN = [
     'baseline-superiority-as-contract',
     /presence of the domain made the output worse than baseline/i,
   ],
-  [
-    'compare-command-implemented-claim',
-    /Status:\*\*\s*Implemented\.[^\n]*`kdna compare`/i,
-  ],
-  [
-    'compare-command-usage-claim',
-    /`kdna compare` is the easiest way to see KDNA's value/i,
-  ],
+  ['compare-command-implemented-claim', /Status:\*\*\s*Implemented\.[^\n]*`kdna compare`/i],
+  ['compare-command-usage-claim', /`kdna compare` is the easiest way to see KDNA's value/i],
   [
     'better-than-unloaded-release-question',
     /test whether an agent using this domain judges better than one without it/i,
@@ -82,13 +76,20 @@ const FORBIDDEN = [
   ['install-to-library', /Install to KDNA Library/i],
   ['no-kdna-value-threshold', /minimum_threshold_for_kdna_value/i],
   ['no-kdna-uplift-baseline', /(?:must\s+)?improve average score[^\n]{0,100}no-KDNA baseline/i],
-  ['universal-behavior-test', /The only valid test:[^\n]{0,120}(?:without|no-KDNA)[^\n]{0,120}(?:with|KDNA loaded)/i],
+  [
+    'universal-behavior-test',
+    /The only valid test:[^\n]{0,120}(?:without|no-KDNA)[^\n]{0,120}(?:with|KDNA loaded)/i,
+  ],
 ];
 
 const REQUIRED_GUARDRAILS = new Map([
   [
     'docs/core-narrative-and-boundaries.md',
-    ['independent asset and a shared loading contract', 'claim exclusive ownership of judgment or automatic behavioral superiority', 'KDNA does not require a global asset library'],
+    [
+      'independent asset and a shared loading contract',
+      'claim exclusive ownership of judgment or automatic behavioral superiority',
+      'KDNA does not require a global asset library',
+    ],
   ],
   [
     'docs/loader-behavior.md',
@@ -108,14 +109,8 @@ const REQUIRED_GUARDRAILS = new Map([
     'docs/faq-kdna-vs-skill.md',
     ['does not claim exclusive ownership of', 'The same judgment can be represented in both'],
   ],
-  [
-    'docs/agents-lack-judgment.md',
-    ['Judgment can already live', 'does not by itself prove'],
-  ],
-  [
-    'docs/kdna-compare-report.md',
-    ['does not expose a', 'not a Preview release gate'],
-  ],
+  ['docs/agents-lack-judgment.md', ['Judgment can already live', 'does not by itself prove']],
+  ['docs/kdna-compare-report.md', ['does not expose a', 'not a Preview release gate']],
   [
     'docs/judgment-contamination.md',
     ['# Scope Mismatch and Boundary Leakage', 'do not imply that KDNA owns all'],
@@ -145,10 +140,8 @@ function narrativeFiles() {
       for (const entry of readdirSync(path)) visit(join(path, entry));
       return;
     }
-    if (
-      path.endsWith('.md') ||
-      path.endsWith('templates/standard-domain/evals/scoring.json')
-    ) files.push(path);
+    if (path.endsWith('.md') || path.endsWith('templates/standard-domain/evals/scoring.json'))
+      files.push(path);
   }
 
   for (const root of roots) visit(join(REPO_ROOT, root));
