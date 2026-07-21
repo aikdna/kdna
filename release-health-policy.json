@@ -9,7 +9,8 @@
       "version": "0.35.1",
       "canonical_tag": {
         "type": "natural"
-      }
+      },
+      "candidate_version": "0.36.0"
     },
     {
       "label": "KDNA MCP Server",
