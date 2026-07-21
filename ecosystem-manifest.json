@@ -227,7 +227,7 @@
     {
       "repository": "aikdna/kdna-studio-core",
       "local_path": "../kdna-studio-core",
-      "source_commit": "e1d49b3cb3e6c236499a3ecbd6884497e41fd834",
+      "source_commit": "b46695b56755ab1080c440bbe2b22ed667c4784b",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -236,11 +236,14 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-studio-core",
           "npm_package": "@aikdna/kdna-studio-core",
-          "version": "2.0.2",
+          "version": "3.0.0",
+          "published_version": "2.0.2",
           "lifecycle": "Pre-release",
-          "release_status": "active",
+          "release_status": "candidate",
           "dependency_policy": "current",
-          "known_limitations": [],
+          "known_limitations": [
+            "3.0.0 is a breaking candidate: published 2.x root exports and deep-import paths are not silently preserved"
+          ],
           "recommended_entrypoint": null,
           "legacy_replacement": null
         }
@@ -258,7 +261,7 @@
     {
       "repository": "aikdna/kdna-studio-cli",
       "local_path": "../kdna-studio-cli",
-      "source_commit": "abd1624741a5dfa0b1a604e44d57209ce3caf18b",
+      "source_commit": "b741e9e6743b1f8acbecbaf77b8e62fcecd72f27",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -267,11 +270,14 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-studio-cli",
           "npm_package": "@aikdna/kdna-studio-cli",
-          "version": "0.10.2",
+          "version": "0.11.0",
+          "published_version": "0.10.2",
           "lifecycle": "Pre-release",
-          "release_status": "active",
+          "release_status": "candidate",
           "dependency_policy": "current",
-          "known_limitations": [],
+          "known_limitations": [
+            "0.11.0 is bound to the unpublished Studio Core 3.0.0 breaking candidate"
+          ],
           "recommended_entrypoint": "npm install -g @aikdna/kdna-studio-cli",
           "legacy_replacement": null
         }

@@ -216,6 +216,20 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
   const assets = canonical.components.find((entry) => entry.repository === 'aikdna/kdna-assets');
   assert.equal(assets.packages.length, 0);
   assert.equal(assets.artifacts.length, 2);
+  const studioCore = canonical.components.find(
+    (entry) => entry.repository === 'aikdna/kdna-studio-core',
+  ).packages[0];
+  assert.deepEqual(
+    [studioCore.version, studioCore.published_version, studioCore.release_status],
+    ['3.0.0', '2.0.2', 'candidate'],
+  );
+  const studioCli = canonical.components.find(
+    (entry) => entry.repository === 'aikdna/kdna-studio-cli',
+  ).packages[0];
+  assert.deepEqual(
+    [studioCli.version, studioCli.published_version, studioCli.release_status],
+    ['0.11.0', '0.10.2', 'candidate'],
+  );
   assert.deepEqual(
     new Set(
       canonical.components
