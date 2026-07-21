@@ -1,30 +1,17 @@
-# skills/
+# Bundled Agent Adapter
 
-> **Source of truth:** [kdna-skills](https://github.com/aikdna/kdna-skills) repository.
-> The copy in this directory is an **offline fallback** for `kdna setup`
-> when GitHub is unreachable. It is kept in sync via release CI.
+> **Status:** Unassessed compatibility copy. The source repository is
+> [kdna-skills](https://github.com/aikdna/kdna-skills).
 
-## Why ship a fallback copy
+This directory preserves the adapter copy used by published setup code. It is
+not the canonical KDNA user experience and must not be installed as a
+broad-trigger discovery Skill.
 
-`kdna setup` (and `ensureLoaderSkill` inside `kdna install`) tries to
-fetch the latest SKILL.md from
-`https://raw.githubusercontent.com/aikdna/kdna-skills/main/kdna-loader/SKILL.md`.
+The current candidate accepts only one explicit `.kdna` file or an exact
+user-approved Host attachment. It does not scan a global store, select a
+judgment autonomously, or hide active use.
 
-If the network is unavailable (corporate firewall, offline laptop, etc.)
-the npm package's bundled copy is used. This ensures `npm install -g
-@aikdna/kdna-cli && kdna setup` works in **any** environment.
-
-## Single source enforcement
-
-To prevent drift (the 0.7.4 incident where the local copy lagged
-behind kdna-skills and overwrote agent installs with stale content):
-
-- The remote `kdna-skills` repo is checked **first**.
-- The local bundled copy is only used as a fallback.
-- `ensureLoaderSkill()` detects 2.1 marker and re-installs if outdated.
-
-## Editing skills
-
-Edit them in `kdna-skills`. Bundled copy here is auto-refreshed on
-KDNA release; do NOT edit it directly.
+Future packaging must verify byte equality with the accepted `kdna-skills`
+source and pass the Host adapter contract before this copy can be described as
+supported.
 

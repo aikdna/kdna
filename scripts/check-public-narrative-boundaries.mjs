@@ -71,12 +71,36 @@ const FORBIDDEN = [
   ['historical-benchmark-90-to-96', /90\.0%[^\n]{0,80}96\.7%/i],
   ['historical-five-arm-score-positive', /(?:^|[^\d])\+0\.09(?:[^\d]|$)/m],
   ['historical-five-arm-score-negative', /(?:^|[^\d])-0\.17(?:[^\d]|$)/m],
+  ['historical-blind-score-positive', /(?:^|[^\d])\+0\.19(?:[^\d]|$)/m],
+  ['historical-blind-score-negative', /(?:^|[^\d])-0\.14(?:[^\d]|$)/m],
+  ['historical-agreement-percent', /95\.6%/i],
+  ['autonomous-task-selection', /agent automatically decides per task whether KDNA applies/i],
+  ['silent-loader-application', /(?:loader|agent) (?:should )?apply KDNA silently/i],
+  ['better-judgment-loader-promise', /user (?:should )?see(?:s)? better judgment/i],
+  ['hidden-kdna-use', /do not mention KDNA[^\n]{0,100}unless the user explicitly asks/i],
+  ['global-store-shared-authority', /all agents share the `?~\/\.kdna\/?`? asset store/i],
+  ['install-to-library', /Install to KDNA Library/i],
+  ['no-kdna-value-threshold', /minimum_threshold_for_kdna_value/i],
+  ['no-kdna-uplift-baseline', /(?:must\s+)?improve average score[^\n]{0,100}no-KDNA baseline/i],
+  ['universal-behavior-test', /The only valid test:[^\n]{0,120}(?:without|no-KDNA)[^\n]{0,120}(?:with|KDNA loaded)/i],
 ];
 
 const REQUIRED_GUARDRAILS = new Map([
   [
     'docs/core-narrative-and-boundaries.md',
-    ['asset-contract boundary', 'KDNA does not monopolize judgment'],
+    ['independent asset and a shared loading contract', 'claim exclusive ownership of judgment or automatic behavioral superiority', 'KDNA does not require a global asset library'],
+  ],
+  [
+    'docs/loader-behavior.md',
+    ['explicitly supplied', 'Discovery is not consent', 'disable, switch, and rollback controls'],
+  ],
+  [
+    'docs/integrations.md',
+    ['Current supported technical path', '**Unassessed**', 'not the current product contract'],
+  ],
+  [
+    'docs/local-kdna-home-spec.md',
+    ['Historical implementation note', 'The canonical portable object is a `.kdna` file'],
   ],
   ['docs/kdna-and-ai-stack.md', ['The boundary is a contract', 'The same judgment may appear']],
   ['docs/kdna-and-ai-stack.zh.md', ['边界是合同', '同一判断可以同时存在']],
@@ -96,10 +120,23 @@ const REQUIRED_GUARDRAILS = new Map([
     'docs/judgment-contamination.md',
     ['# Scope Mismatch and Boundary Leakage', 'do not imply that KDNA owns all'],
   ],
+  [
+    'packages/kdna-eval/README.md',
+    ['claimant-scoped', 'not KDNA Core authority', 'does not use Prompt/Skill superiority'],
+  ],
 ]);
 
-function markdownFiles() {
-  const roots = ['README.md', 'README.zh.md', 'PUBLISHING_EXAMPLE.md', 'docs', 'specs', 'templates'];
+function narrativeFiles() {
+  const roots = [
+    'README.md',
+    'README.zh.md',
+    'PUBLISHING_EXAMPLE.md',
+    'docs',
+    'specs',
+    'templates',
+    'skills',
+    'packages/kdna-eval/README.md',
+  ];
   const files = [];
 
   function visit(path) {
@@ -108,7 +145,10 @@ function markdownFiles() {
       for (const entry of readdirSync(path)) visit(join(path, entry));
       return;
     }
-    if (path.endsWith('.md')) files.push(path);
+    if (
+      path.endsWith('.md') ||
+      path.endsWith('templates/standard-domain/evals/scoring.json')
+    ) files.push(path);
   }
 
   for (const root of roots) visit(join(REPO_ROOT, root));
@@ -140,7 +180,7 @@ export function findMissingGuardrails(
 
 export function auditRepository() {
   const violations = [];
-  for (const path of markdownFiles()) {
+  for (const path of narrativeFiles()) {
     const relPath = relative(REPO_ROOT, path);
     violations.push(...findNarrativeViolations(relPath, readFileSync(path, 'utf8')));
   }

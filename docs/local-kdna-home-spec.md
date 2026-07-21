@@ -1,94 +1,36 @@
-# ~/.kdna Directory Specification 1.0
+# Local KDNA State — Historical Store Design
 
-> **Status:** Draft · 2026-05-26
-> **Applies to:** kdna-cli, compatible clients, authoring tools
+> **Status:** Historical implementation note. It is not the canonical user
+> model or a protocol requirement.
 
-## Purpose
+Earlier CLI work defined `~/.kdna/packages/` as a global installed-asset store.
+Published commands may still read or write that layout. The KDNA protocol does
+not require a global asset library, installation step, active version, registry
+cache, or automatic discovery.
 
-Define the canonical local directory structure for all KDNA products. Every product MUST use `~/.kdna/` as its local KDNA home. Products that store KDNA data elsewhere break ecosystem interoperability.
+## Current invariant
 
-KDNA's canonical installed object is a `.kdna` asset. Products MUST NOT treat extracted domain directories as installed runtime domains.
+The canonical portable object is a `.kdna` file. A conforming Host may consume
+an explicit file path directly. Saving a file, attaching it to a project,
+authorizing it, deciding that it applies, and loading it are separate events.
 
-## Directory Structure
+## Optional local state
 
-```
-~/.kdna/
-│
-├── config.json                  # Global configuration
-├── index.json                   # Installed asset index
-│
-├── packages/                    # Canonical installed .kdna assets
-│   └── @aikdna/
-│       └── writing/
-│           └── 0.7.2/
-│               ├── writing-0.7.2.kdna
-│               └── receipt.json
-│
-├── clusters/                    # Cluster manifests
-│   └── animation.json
-│
-├── registry/                    # Local registry cache
-│   ├── domains.json             # Cached registry index + trust metadata
-│   └── manifests/               # Individual registry manifests
-│
-├── traces/                      # Judgment traces
-│   └── YYYY-MM-DD/
-│       └── <trace_id>.json
-│
-├── feedback/                    # Feedback events
-│   └── YYYY-MM-DD/
-│       └── <event_id>.json
-│
-├── evals/                       # User eval cases
-│   └── <domain>/
-│       └── <case>.json
-│
-├── cache/                       # Rebuildable runtime cache
-│   └── ...
-│
-├── identity/                    # Author/developer identity
-│   ├── keypair.json
-│   └── pubkey.json
-│
-└── licenses/                    # Enterprise/pro license files
-    └── <license_id>.lic
-```
+A CLI or app may use `~/.kdna/` for private implementation state such as:
 
-## Invariants
+- validation or projection caches that can be rebuilt;
+- receipts recording exact file digest and prior authorization;
+- Host attachment records approved by the user;
+- credentials stored through an appropriate system secret store;
+- local traces that respect the user's privacy settings.
 
-- `packages/` contains the real installed assets.
-- `index.json` records installed asset names, versions, local asset paths, and receipt paths.
-- `receipt.json` records install source, `asset_digest`, `content_digest`, signature status, access mode, install time, and local asset path.
-- `registry/domains.json` records registry trust metadata, including snapshot expiry, timestamp expiry, and revocations.
-- `cache/` MAY contain temporary extracted files, but cache contents are not canonical and may be deleted.
-- `domains/` is not part of the runtime model.
-- Installers MUST NOT rewrite `kdna.json` inside an installed `.kdna` asset.
+Such state must not become an independent source of judgment authority. It must
+not silently replace an attached asset with a newer version, make every saved
+file eligible for every task, or imply user consent.
 
-## Product Responsibilities
+## Compatibility status
 
-| Product | Reads from | Writes to |
-|---------|------------|-----------|
-| kdna-cli | `packages/`, `index.json`, `registry/` | `packages/`, `index.json`, `identity/`, `licenses/` |
-| a KDNA-compatible client | `packages/`, `index.json`, `config.json` | `traces/`, `feedback/` |
-| Authoring environment | dev source workspaces, `identity/` | `.kdna` assets, `identity/` |
-
-## Install Layout
-
-Installing `@aikdna/writing@0.7.2` MUST produce:
-
-```
-~/.kdna/packages/@aikdna/writing/0.7.2/writing-0.7.2.kdna
-~/.kdna/packages/@aikdna/writing/0.7.2/receipt.json
-~/.kdna/index.json
-```
-
-It MUST NOT produce:
-
-```
-~/.kdna/domains/@aikdna/writing/KDNA_Core.json
-~/.kdna/domains/@aikdna/writing/KDNA_Patterns.json
-```
-
-## Loading
-
-A conforming runtime loads from the `.kdna` asset path recorded in `index.json` and verified by `receipt.json`. If a registry entry exists, the runtime or verifier MUST also reject yanked or revoked assets. It may read ZIP entries directly or extract to a hidden temporary directory for the duration of a command. Persistent extraction is not required and MUST NOT become the source of trust.
+The previous `packages/`, `index.json`, registry, Cluster, feedback, and eval
+layout remains relevant only to the published implementation surfaces that use
+it. Those surfaces require separate compatibility and product review. New Host
+integrations should use explicit files or exact user-approved attachments.

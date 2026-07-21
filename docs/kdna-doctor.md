@@ -1,128 +1,37 @@
-# kdna doctor — Design Specification
+# `kdna doctor` — Diagnostic Boundary
 
-> **Status:** Implemented. `kdna doctor` and `kdna doctor --agents` available in `@aikdna/kdna-cli`.
-
-`kdna doctor` diagnoses the KDNA installation and agent integration status.
-
-## Usage
+`@aikdna/kdna-cli` includes `kdna doctor` surfaces for local implementation
+diagnostics. Their results must be interpreted narrowly.
 
 ```bash
-kdna doctor            # Full system diagnostic
-kdna doctor --agents   # Agent-specific diagnostic
-kdna doctor --domains  # Domain integrity check
-kdna doctor --json     # Machine-readable output
-```
-
-## kdna doctor --agents
-
-Verifies that KDNA is correctly integrated with each AI agent on the system. Outputs:
-
-```
-KDNA Doctor
-
-CLI: @aikdna/kdna-cli (/usr/local/bin/kdna)
-  Core:    @aikdna/kdna-core
-  Data:    ~/.kdna/
-
-  Agents:
-    Codex:        detected  — kdna-loader installed  (2026.05)
-    Claude Code:  detected  — kdna-loader installed  (2026.05)
-    OpenCode:     detected  — kdna-loader installed  (2026.05)
-    Cursor:       not detected
-    Gemini:       not detected
-
-  Domains:
-    installed: 3
-    corrupted: 0
-    needs update: 1  (run kdna update)
-
-  Result: All detected agents have kdna-loader installed.
-```
-
-### Per-Agent Check
-
-For each detected agent, `kdna doctor --agents` checks:
-
-1. **Agent binary/installation detected** — Is the agent installed on the system?
-2. **kdna-loader skill present** — Is SKILL.md in the correct skill directory?
-3. **Skill version current** — Is the loaded skill version >= minimum required?
-
-### Agent Detection Logic
-
-| Agent | Detection | Skill Path |
-|-------|-----------|------------|
-| **Codex** | `which codex` or `~/.codex/` exists | `~/.codex/skills/kdna-loader/SKILL.md` |
-| **Claude Code** | `which claude` or `~/.claude/` exists | `~/.claude/skills/kdna-loader/SKILL.md` |
-| **OpenCode** | `which opencode` or `~/.agents/` exists | `~/.agents/skills/kdna-loader/SKILL.md` |
-| **Cursor** | `~/.cursor/` exists | `~/.cursor/skills/kdna-loader/SKILL.md` |
-| **Gemini** | `which gemini` or `~/.gemini/` exists | `~/.gemini/skills/kdna-loader/SKILL.md` |
-
-### Domain Integrity Check
-
-```bash
+kdna doctor
+kdna doctor --agents
 kdna doctor --domains
+kdna doctor --json
 ```
 
-For each installed domain, checks:
-- Manifest (`kdna.json`) present and valid
-- KDNA_Core.json + KDNA_Patterns.json present
-- File count matches `file_count` in manifest
-- Structural validation passes (`kdna-lint`)
-- Optional: evals pass rate (if evals/ exists)
+## What a check may establish
 
-### Exit Codes
+- a CLI binary or known directory exists;
+- a Skill file exists at a known path;
+- a legacy package-store entry can be enumerated;
+- a selected local object passes the checks implemented by that CLI version.
 
-| Code | Meaning |
-|------|---------|
-| 0 | All checks passed |
-| 1 | Warning (e.g., skill outdated but functional) |
-| 2 | Error (missing skill, corrupted domain, etc.) |
-| 3 | CLI not installed correctly |
+## What it does not establish
 
-### Integration with kdna setup
+- that a Skill is current, safe, or semantically correct;
+- that an Agent invoked the Skill or adopted a judgment;
+- that an installed asset is authorized or applicable to the current task;
+- that a global package store is the required KDNA user model;
+- that an answer improved.
 
-`kdna setup` should run `kdna doctor --agents` automatically after installation to confirm success. The setup script should exit with a clear message if `kdna doctor --agents` returns a non-zero code.
-
-### JSON Output
+For current file-first use, validate and plan the exact file:
 
 ```bash
-kdna doctor --agents --json
+kdna validate ./my-judgment.kdna
+kdna plan-load ./my-judgment.kdna --json
 ```
 
-```json
-{
-  "cli": {
-    "package": "@aikdna/kdna-cli",
-    "version": "0.9.0",
-    "path": "/usr/local/bin/kdna"
-  },
-  "core": {
-    "package": "@aikdna/kdna-core",
-    "version": "0.2.3"
-  },
-  "data_root": "/Users/me/.kdna",
-  "agents": {
-    "codex": {
-      "detected": true,
-      "skill_installed": true,
-      "skill_version": "2026.05",
-      "skill_path": "/Users/me/.codex/skills/kdna-loader/SKILL.md"
-    },
-    "claude_code": {
-      "detected": true,
-      "skill_installed": true,
-      "skill_version": "2026.05"
-    },
-    "opencode": {
-      "detected": false,
-      "skill_installed": false
-    }
-  },
-  "domains": {
-    "installed": 3,
-    "corrupted": 0,
-    "needs_update": 1
-  },
-  "exit_code": 0
-}
-```
+Agent adapter health requires an end-to-end Host test with an exact asset,
+adapter coordinate, visible attachment state, and user controls. File presence
+alone must never be reported as successful integration.

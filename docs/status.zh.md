@@ -1,64 +1,53 @@
-# KDNA Core 状态 — 2026 年 7 月
+# KDNA 公开状态
 
-> 中文摘要。完整技术状态请参见 [status.md](./status.md)（英文）。
+> 当前公开状态的中文摘要。版本级命令事实见各包的 CHANGELOG 和
+> [工具状态矩阵](./tool-status-matrix.md)。
 
-## 当前定位
+## 产品定位
 
-KDNA Core 是 KDNA 判断资产格式与运行时加载合约的公开预发布实现。`.kdna`
-是开放的判断资产文件格式；当前没有组件因这份状态页被提升为 Beta、stable 或 GA。
+KDNA 是开放的判断资产协议。任何人、Agent 或工具都可以创建 `.kdna` 文件。
+KDNA Core 校验结构、完整性、来源声明和授权事实；它不判断内容是否正确、专业、
+有用或值得采用。
 
-## 已发布的基础功能
+当前默认消费路径从一份明确选择的文件或一项精确、经用户批准的 Host 附加项开始：
 
-下列命令描述已发布的 `@aikdna/kdna-cli@0.35.1` 精确事实；“已发布”不表示
-KDNA Core/CLI 已达到 GA，也不等于未发布的纠正候选已经上线。整体工具链当前
-仍为 NO-GO。
-
-- **`.kdna` 文件格式** — 单一当前容器结构、清单 schema、CBOR payload profile、校验和
-- **`kdna validate`** — 当前 `.kdna` 容器完整校验
-- **`kdna plan-load`** — 加载前检查（权利状态、访问模式）
-- **`kdna load`** — 渲染 agent 可读的判断上下文（`--profile=index|compact|scenario|full`，`--as=json|prompt`）
-- **`kdna pack` / `kdna unpack`** — 确定性打包与解包
-- **`kdna identity` / `kdna sign` / `kdna verify`** — 0.35.1 的历史签名表面；
-  未发布的 Preview 候选因合同分裂撤下资产级 sign/verify/revoke，只保留身份基础能力
-- **`kdna revoke <asset>` / `kdna revocation status <asset>`** — 仅描述
-  0.35.1 已发布事实，不属于纠正候选支持面
-- **`kdna load --remote-server`** — 远程资产加载（需自托管 kdna-remote-server）
-
-## 预发布消费编排功能
-
-- **`kdna route` / `kdna compose` / `kdna project`** — 带 Trace 的选择、有限组合与已打包资产投影
-- **`kdna eval-consumption`** — 使用公开安全 fixture 的消费评测、预算报告与审查流程
-
-## 安装
-
-```bash
-npm install -g @aikdna/kdna-cli   # 运行时 CLI（0.35.1）
-npm install -g @aikdna/kdna-studio-cli  # 创作 CLI（0.10.2）
+```text
+inspect → validate → LoadPlan → authorization → load/project
+→ Runtime Capsule → Agent Host
 ```
 
-需要按任务选择、组合和评测资产时，请参见[消费运行时指南](./consumption-runtime.md)。
+协议不要求全局资产库、安装步骤、自动发现或 Agent Skill。保存或发现文件不等于
+授权；授权不等于每个任务都适用；加载成功不等于 Agent 已遵循，也不保证结果更好。
 
-## 参考资产
+## 当前成熟度
 
-公开资产仓库当前展示两个符合现行格式的技术参考资产和零个 Cluster。
-展示不等于认可，也不代表已经证明行为价值；CLI 本地生成示范资产仍是
-推荐的首次上手路径，协议不依赖官方持续生产内容。
+整个生态处于预发布阶段。本页不会把任何组件提升为 Beta、stable 或 GA。
 
-→ [公开参考展示](https://github.com/aikdna/kdna-assets)
+| 层级 | 状态 | 含义 |
+|---|---|---|
+| `.kdna` 容器与 JS Core | Pre-release / 参考实现 | 当前格式、校验与加载合同，精确版本仍需按发布证据判断 |
+| Runtime CLI | Pre-release | `inspect`、`validate`、`plan-load`、`load`、`pack`、`unpack` |
+| Studio 创作工具链 | Pre-release | 项目、判断卡、编译和 `.kdna` 导出 |
+| 加密、授权、签名与撤销 | Pre-release / Candidate | 技术原语不等于内容认证或托管商业服务 |
+| Remote / Activation 服务器 | Experimental | 可自托管参考实现，不代表 AIKDNA 提供线上服务 |
+| 多资产、路由、评测表面 | Experimental | 待重新认证的高级实现，不属于默认路径 |
+| Swift、Web、React、编辑器和 Agent 适配 | 各自独立 | 必须检查精确版本、依赖坐标和证据 |
+| `kdna-loader` Skill | Unassessed | 使命保留；旧的广泛发现与静默加载模型不是当前 Host 合同 |
 
-## 其他成熟度边界
+## 用户与 Host 边界
 
-- `kdna-studio`：AI 辅助创作功能（distill、interview、feynman）为实验性
-- Agent loader 与 MCP adapter 的成熟度按各自仓库和精确版本判断
-- `kdna-core-swift`：预发布运行时，仍需持续维护与 JS Core 的一致性证据
-- `@aikdna/kdna-eval@0.3.2` 已发布：实验性评测工具；输出是评价者范围内的证据，
-  不是 Core 权威。CLI 的 Asset 观测矩阵不生成来源声明，Cluster 的 trust/economics
-  晋级必须在可信证据生产者内调用 Eval API
-- `@aikdna/kdna@0.13.2` 已发布：面向 CLI 0.35.1 的维护中 Legacy 兼容桥；
-  新集成仍直接使用 CLI 与 Core
-- `@aikdna/agent`、`@aikdna/kdna-artifact-engine` 与
-  `@aikdna/kdna-fidelity-core` 为已弃用的历史 npm 坐标，不属于当前工具链
+兼容 Host 只能从用户明确选择的文件或已经批准并固定身份、版本、digest 的附加项
+开始。在资产生效时，它必须显示资产身份、作用域和采用原因，并提供停用、切换和
+回滚入口。Skill 和 MCP 只能是薄适配器，不能替用户决定权威。
 
-## 路线图
+## 公开边界
 
-→ [公开路线图](./public-roadmap.md)
+- 有效资产不要求行为实验、真人背书、官方批准或注册表登记。
+- 公开参考资产只展示技术工具链，不代表内容认可。
+- Prompt、Skill、Policy、Memory 和普通文档都可以携带判断；KDNA 增加的是独立
+  身份、版本、完整性、授权、加载和投影合同。
+- 托管注册表、市场、计费和 AIKDNA 托管加载服务不属于当前公开基线。
+- 已发布版本保持自己的历史合同；未发布纠正候选不能被叙述成已经上线。
+
+参见[成熟度](./maturity.md)、[公开路线图](./public-roadmap.md)和
+[核心叙事与边界](./core-narrative-and-boundaries.md)。

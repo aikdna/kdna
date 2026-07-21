@@ -46,12 +46,12 @@ release wave do not answer all four questions. Maturity must be stated per
 component, and integration value must not be inferred from whether it is in the
 next release set.
 
-## Evidence boundary
+## Claim boundary
 
-Experiments about whether KDNA increases intelligence, improves output by a
-percentage, or beats equivalent Prompt or Skill content are not project-level
-release gates or a KDNA project workstream. An asset owner may evaluate a
-specific asset for a specific use, but that result does not decide whether the
+KDNA does not claim to increase intelligence, improve output by a percentage,
+or make one carrier intrinsically superior to another. Those are not protocol
+claims or project-level release gates. An asset owner may assess a specific
+asset for a specific use, but that assessment does not decide whether the
 container, toolchain, authorization model, or ecosystem integrations should
 exist.
 
@@ -71,9 +71,11 @@ Protocol and product evidence instead focuses on:
 2. Fix confirmed protocol, security, schema, projection, and version-integrity
    defects.
 3. Verify the minimal create-to-consume path and preserve judgment fidelity.
-4. Give every integration an explicit maturity statement and reproducible
+4. Establish the file-first, user-authorized Host experience: explicit file or
+   attachment, visible active state, and disable/switch/rollback control.
+5. Give every integration an explicit maturity statement and reproducible
    compatibility evidence.
-5. Publish future Development Preview coordinates component by component when
+6. Publish future Development Preview coordinates component by component when
    their own gates are satisfied.
 
 No new version may overwrite an existing coordinate. No repository is promoted
@@ -83,8 +85,8 @@ because it is outside one Preview wave.
 ## Contribution boundary
 
 New work should explain how it contributes to creating, carrying, verifying,
-authorizing, governing, or consuming judgment assets. Project-level intelligence
-improvement experiments and generalized superiority claims are out of scope.
+authorizing, governing, or consuming judgment assets. Intelligence-enhancement
+and generalized superiority claims are out of scope.
 Changes to a repository's mission or lifecycle require an explicit owner
 decision; they cannot be inferred from cleanup, release scoping, or an Agent
 audit.

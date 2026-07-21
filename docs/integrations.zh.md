@@ -1,73 +1,30 @@
 # KDNA Agent 集成
 
-KDNA 通过一个 `kdna-loader` 适配 skill 集成到主流 AI 编程 Agent。本地 `.kdna` 资产通过 CLI 校验、规划和加载；不同领域是资产，不是分别注册的 skill。
+## 当前支持的技术路径
 
-## 支持的 Agent
-
-| Agent | Skill 路径 | 备注 |
-|-------|-----------|------|
-| **Claude Code** | `~/.claude/skills/kdna-loader/SKILL.md` | Anthropic — 每次请求运行 kdna-loader |
-| **Codex** (OpenAI) | `~/.codex/skills/kdna-loader/SKILL.md` | OpenAI — 相同 skill，不同目录 |
-| **OpenCode** | `~/.agents/skills/kdna-loader/SKILL.md` | 开源 Agent |
-| **Cursor** | `~/.cursor/skills/kdna-loader/SKILL.md` | AI 原生代码编辑器 |
-| **GitHub Copilot** | 通过 kdna-loader skill | 手动配置 |
-
-## 工作原理（默认安全模型）
-
-`kdna-loader` skill 是一个纯文本指令文件（SKILL.md），它教 Agent 使用 KDNA 的协议。它不会预加载所有领域，也不会在每次请求时扫描和注入所有资产。
-
-当你向 Agent 提问时，Agent 按任务判断：
-
-1. **这个任务是否需要 KDNA？** 纯格式化、事实查询、代码执行等任务应静默跳过。
-2. **本地有哪些 `.kdna`？** Agent 或 MCP server 通过 KDNA 工具链读取本地资产和元数据，不直接解压资产。
-3. **哪份资产适用？** Agent 使用 CLI/Core 提供的元数据和资产声明的适用边界判断。
-4. **加载 0 或 1 个主领域。** 如果 `does_not_apply_when` 命中，资产应自我取消资格；多个资产冲突时应让用户选择。
-5. **静默应用。** 加载后，Agent 从资产的判断结构推理，但不把 KDNA 内容朗读给用户。
-
-这样用户即使有很多 `.kdna` 文件，也不会造成上下文膨胀。Agent 先检查小型元数据，只在任务需要时加载 compact judgment profile。
-
-## 跨 Agent 兼容
-
-所有 Agent 可以使用同一批本地 `.kdna` 文件。先校验，再在支持 loader 的运行时中加载：
-
-```bash
-kdna demo minimal ./minimal
-kdna pack ./minimal ./minimal.kdna
-kdna validate ./minimal.kdna
-kdna plan-load ./minimal.kdna
-kdna load ./minimal.kdna --profile=compact --as=prompt
-```
-
-公开示例资产发布后，用对应 release card 中的 packaged `.kdna` 文件替换
-`minimal.kdna`。
-
-如果你的 Agent 使用不同路径，创建软链接：
-
-```bash
-ln -s ~/.kdna ~/.claude/Kdna
-```
-
-## 安装
-
-```bash
-curl -fsSL https://aikdna.com/install | bash
-```
-
-或手动：
+所有兼容 Host 都可以从同一份明确的 `.kdna` 文件开始：
 
 ```bash
 npm install -g @aikdna/kdna-cli
-kdna demo minimal ./minimal
-kdna pack ./minimal ./minimal.kdna
-kdna validate ./minimal.kdna
-kdna plan-load ./minimal.kdna
-kdna load ./minimal.kdna --profile=compact --as=prompt
+kdna validate ./asset.kdna --runtime
+kdna plan-load ./asset.kdna --json
+kdna load ./asset.kdna --profile=compact --as=json
 ```
 
-然后从 [kdna-skills](https://github.com/aikdna/kdna-skills) 安装对应 Agent 的 loader skill。
+Host 得到 Runtime Capsule。这只证明技术交付，不证明模型已经采用其中判断，也不
+证明结果更好。
 
-## 什么不会作为 skill 安装
+## Agent 适配器
 
-- KDNA 领域本身。领域是 `.kdna` 资产，通过 CLI/Core 路径按需发现和加载。
-- 领域创建器。正式的 packaged `.kdna` 创建优先使用 Studio CLI；其它高级创作/调试工具不属于基础加载路径。
-- 每项目强制加载配置。旧 `.kdna/config.json` 机制已移出主路径，因为它会让资产在用户没有请求的任务中被强制加载。
+`kdna-skills` 为 Codex、Claude Code、OpenCode、Cursor 和兼容 Host 保存 Skill 与
+MCP 适配使命，但当前 loader Skill 的发布成熟度是 **Unassessed**。过去“全局自动
+发现并静默加载”的模型不是当前产品合同。
+
+合格适配器必须从用户明确选择的文件，或 Host 批准的精确工作区/应用/会话附加
+关系开始；必须调用 `inspect → plan-load → load`，通过 Host 状态显示当前资产身份
+和作用域，也不能从文件存在推导使用权。
+
+在该流程重新验收前，请使用上面的显式 CLI/Core 路径，或在 Host 中直接集成同一
+合同。`kdna setup` 成功不能证明 Agent 集成正确。
+
+目标边界见 [Agent 适配器行为](./loader-behavior.zh.md)。

@@ -18,11 +18,12 @@ kdna load ./judgment.kdna --profile=compact --as=json
 ```
 
 **What you'll see:** a profile-selected Runtime Capsule produced by the KDNA
-loader. Use it through a compatible Agent integration, then compare the result
-with the same task without KDNA. Repeating asset vocabulary is not proof; look
-for changed distinctions, boundaries, and decisions.
+loader. This is technical delivery evidence: the identified asset can be
+validated, planned, and rendered for a Host. It does not by itself prove that
+an Agent followed the asset or that the result became better.
 
-This is what KDNA does: the agent's reasoning shifts, not its tone.
+A compatible Host should expose which exact asset is active, its scope, and why
+it was attached, with controls to disable, switch, or roll back it.
 
 ## Path B: Create a minimal asset from scratch
 

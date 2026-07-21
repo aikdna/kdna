@@ -1,34 +1,50 @@
 # Open Ecosystem Readiness
 
-KDNA has implemented a pre-release asset-first protocol path. The next
-open-source bar is ecosystem dependability: external developers should be able
-to integrate, verify, publish, and contribute without relying on private
-project knowledge.
+> Status: readiness criteria, not a completion claim.
 
-## P0 Readiness Gates
+KDNA is a 17-repository pre-release ecosystem. Repository or package existence
+does not prove that every coordinate works together, and adapter presence does
+not prove a usable Host experience.
 
-- `@aikdna/kdna-core` exposes versioned pre-release public asset APIs.
-- Conformance tests exist for loaders and validators.
-- (Registry is out of scope for KDNA Core; see 00-current-truth.md.)
+## Protocol and toolchain bar
 
-## P1 Readiness Gates
+- One exact `.kdna` file can be created, exported, inspected, validated,
+  planned, authorized, and loaded at pinned package coordinates.
+- Shared schemas and conformance fixtures establish the same technical meaning
+  across maintained implementations.
+- Encryption and authorization fail closed and do not grant Agent action
+  permissions.
+- Public documentation distinguishes released coordinates from unpublished
+  corrective candidates.
 
-- MCP adapter exists for agent runtimes.
-- Reference domains publish limitations, evals, and benchmark evidence.
-- Skill + KDNA demo explains judgment-layer separation.
-- RFC index defines protocol participation path.
-- Web package path is implemented, published, and smoke-tested end to end:
-  `kdna-web-server` -> `kdna-web-client` -> `kdna-react` ->
-  `create-kdna-web-app`.
+## Host and user-experience bar
 
-## Completion Criteria
+- A Host begins with an explicit file or exact user-approved attachment.
+- Saving, discovery, attachment, authorization, applicability, and loading are
+  distinct.
+- Active identity, version or digest, scope, and reason remain visible.
+- The user can disable, switch, and roll back an attachment.
+- Skill and MCP integrations remain thin adapters and do not select authority
+  for themselves.
 
-An external developer can:
+## Integration bar
 
-1. Load and inspect a `.kdna` asset with `kdna-core`.
-2. Run conformance tests to check compatibility.
-3. (Registry is out of scope; see 00-current-truth.md. Local asset creation via `kdna demo` / `kdna pack` / `kdna-studio-cli` is the supported path.)
-4. Connect KDNA to an agent through MCP or a loader skill.
-5. Scaffold a KDNA web application from published packages and complete an
-   upload -> inspect -> plan-load -> load flow using only published
-   documentation.
+Each Web, React, Swift, editor, Agent, activation, or remote integration must be
+judged at its own exact version and dependency coordinates. A test in one
+repository cannot promote the rest of the ecosystem.
+
+The `kdna-loader` Skill is currently Unassessed. The presence of an MCP adapter
+or installation guide is not evidence that an Agent integration satisfies the
+current Host contract.
+
+## Stronger public claims require
+
+1. an exact bill of materials;
+2. clean-source and packaged-artifact verification at those coordinates;
+3. end-to-end technical evidence for each claimed integration;
+4. a real user acceptance flow that checks attachment, scope, visibility,
+   authorization, disable/switch/rollback, and semantic preservation;
+5. owner approval of the exact release artifacts.
+
+Behavioral outcome claims, if anyone chooses to make them, require separately
+named evaluation evidence. They are not protocol readiness criteria.

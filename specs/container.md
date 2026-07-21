@@ -30,7 +30,9 @@ Agent or application
 
 - Authoring source files are editable development inputs, never distribution
   entries.
-- The `.kdna` file is the canonical installed asset.
+- The `.kdna` file is the canonical portable and distributed asset. A Host may
+  read it directly or preserve an immutable copy; no installation step or
+  global library is required by the container contract.
 - The Runtime Capsule is the only Agent-facing judgment representation.
 
 ## 3. Container Entries

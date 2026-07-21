@@ -1,94 +1,66 @@
-# Load KDNA into your AI agent in 15 minutes
+# Load a KDNA file into an AI Host
 
-## What this guide proves
-
-After running through the [5-minute path](./try-kdna.md), you have a working
-`.kdna` file. This guide shows how to load it into your AI agent's context.
+This guide demonstrates the current portable path: validate one explicitly
+selected `.kdna` file, inspect the load decision, and hand the resulting
+Runtime Capsule to a Host. It does not require a global asset library or an
+Agent-installed Skill.
 
 ## Prerequisites
 
-- Node.js >= 18
-- npm
-- Completed the [5-minute path](./try-kdna.md) (you have a `.kdna` file)
+- Node.js 18 or later
+- `npm install -g @aikdna/kdna-cli`
+- a `.kdna` file that the user selected for this task, session, app, or project
 
-## Step 1: Install the official KDNA CLI
-
-```bash
-npm install -g @aikdna/kdna-cli
-```
-
-## Step 2: Validate a .kdna asset
+## Validate and plan
 
 ```bash
-kdna validate ./minimal.kdna
-kdna plan-load ./minimal.kdna
+kdna validate ./my-judgment.kdna
+kdna plan-load ./my-judgment.kdna --json
 ```
 
-Expected result:
+Do not continue unless the LoadPlan says the file can load now. A valid file is
+not automatically authorized, applicable, adopted, or beneficial.
 
-```json
-{
-  "format_valid": true,
-  "schema_valid": true,
-  "payload_valid": true,
-  "checksums_valid": true,
-  "load_contract_valid": true,
-  "overall_valid": true,
-  "problems": []
-}
-```
-
-## Step 3: Load judgment context
+## Load a projection
 
 ```bash
-kdna load ./minimal.kdna --profile=compact --as=prompt
+kdna load ./my-judgment.kdna --profile=compact --as=json
 ```
 
-This emits the judgment asset in a form that the agent can read. It makes the
-selected judgment structure available to the Host; it does not guarantee a
-better answer or authorize hidden loading.
+For Hosts that accept only text:
 
-## Step 4: Use with your agent
+```bash
+kdna load ./my-judgment.kdna --profile=compact --as=prompt
+```
 
-Copy the output from `kdna load --as=prompt` into your agent's context or
-system instructions. For supported agents (OpenCode, Codex, Claude Code,
-Cursor), the `kdna-loader` skill in [kdna-skills](https://github.com/aikdna/kdna-skills)
-provides automatic discovery of local `.kdna` assets.
+The Host must keep the attachment visible: asset identity, exact version or
+digest, scope, and why it was selected. The user must be able to disable,
+switch, or roll back the attachment.
 
-Manual loader setup per agent:
+## Use in Codex, Claude Code, or OpenCode
 
-- **OpenCode**: Copy `kdna-skills/kdna-loader/SKILL.md` into `~/.agents/skills/kdna-loader/SKILL.md`
-- **Codex**: Copy into `~/.codex/skills/kdna-loader/SKILL.md`
-- **Claude Code**: Copy into `~/.claude/skills/kdna-loader/SKILL.md`
-- **Cursor**: Copy into `~/.cursor/skills/kdna-loader/SKILL.md`
+The protocol path is the same in every Host:
 
-Once the loader is installed, your agent will discover local `.kdna` assets
-and can load judgment on demand.
+1. the user selects a `.kdna` file, or approves an exact Host attachment;
+2. the Host calls `plan-load` and then `load`;
+3. the Host supplies only the toolchain-produced projection to the model;
+4. the Host shows which asset is active and keeps user controls available.
 
-## What works today
+The `kdna-loader` repository retains an Agent-adapter mission, but its current
+Skill is **Unassessed**. Global discovery, broad task triggers, autonomous asset
+selection, and hidden use are not the recommended integration path and are not
+proof of protocol conformance.
 
-| Feature | Status | Notes |
-|---|---|---|
-| `kdna demo minimal` | available | Creates a local fixture for the current format |
-| `kdna inspect` | available | Reads current source dirs and `.kdna` containers |
-| `kdna validate` | available | Schema + format + payload + checksums + load-contract |
-| `kdna pack` | available | Reproducible ZIP with a pinned packer toolchain; DEFLATE bytes may differ across compressors |
-| `kdna unpack` | available | Extract .kdna container |
-| `kdna load --as=prompt` | available | Emits agent-readable judgment context |
-| `kdna load --profile=compact` | available | Compact judgment profile for token efficiency |
+## What this proves
 
-## Current limitations
+This path can prove that a selected file was validated, authorized, projected,
+and delivered. It does not prove that its judgments are true, that the model
+followed them, or that the result is better.
 
-- **Agent runtime loading is available for the current format.** `kdna load`
-  supports `.kdna` containers produced by the current `kdna pack` command. Pin a released CLI
-  version when you need reproducible automation.
-- **Agent support varies by platform.** The `kdna-loader` skill adapter supports
-  discovery of local `.kdna` files. Agent-specific integration quality varies
-  by agent runtime.
+## Package-byte note
 
-## Troubleshooting
-
-If `kdna load ./minimal.kdna --as=prompt` returns an error, the expected
-behavior is a human-readable message explaining which surface is currently
-supported. If you see a stack trace or an unhelpful error, please
-[open an issue](https://github.com/aikdna/kdna/issues).
+The logical entry identity is stable under the format contract, but exact ZIP
+transport bytes depend on the pinned packer toolchain and its DEFLATE
+implementation. Compare the declared entry-set and content identities for
+logical equivalence; bind authorization or delivery to the exact immutable
+package bytes actually selected.

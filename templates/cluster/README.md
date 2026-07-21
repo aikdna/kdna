@@ -1,7 +1,7 @@
 # Cluster: example_cluster
 
 > **Status: Design / Experimental** — Cluster is an explicit advanced path; it does not change the single-asset KDNA format.
-> For current stable usage, use single `.kdna` assets.
+> For the current default pre-release path, use single `.kdna` assets.
 
 A KDNA cluster project view groups multiple related domains before packaging.
 The public runtime asset is the exported `.kdna` container, not this folder.

@@ -43,9 +43,37 @@ test('rejects operational examples for withdrawn commands and historical scores'
     'Benchmark: 90.0% → 96.7%',
     'Selected arm: +0.09',
     'Cluster delta: -0.17',
+    'Blind improvement: +0.19',
+    'Blind improvement: -0.14',
+    'Agreement: 95.6%',
   ];
   for (const sample of samples) {
     assert.ok(findNarrativeViolations('docs/example.md', sample).length > 0, sample);
+  }
+});
+
+test('rejects autonomous, hidden, or global-store loader claims', () => {
+  const samples = [
+    'The agent automatically decides per task whether KDNA applies.',
+    'The loader should apply KDNA silently.',
+    'The user sees better judgment, not KDNA internals.',
+    'Do not mention KDNA or the asset unless the user explicitly asks.',
+    'All agents share the ~/.kdna/ asset store.',
+    'Offers: Install to KDNA Library or View Contents',
+  ];
+  for (const sample of samples) {
+    assert.ok(findNarrativeViolations('docs/example.md', sample).length > 0, sample);
+  }
+});
+
+test('rejects output-uplift requirements in current authoring guidance', () => {
+  const samples = [
+    '"minimum_threshold_for_kdna_value": {',
+    'Loading your KDNA must improve average score by at least +2 vs no-KDNA baseline.',
+    'The only valid test: compare without KDNA and with KDNA loaded.',
+  ];
+  for (const sample of samples) {
+    assert.ok(findNarrativeViolations('templates/example.md', sample).length > 0, sample);
   }
 });
 

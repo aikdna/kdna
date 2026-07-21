@@ -96,7 +96,8 @@ Do not try to encode an entire profession at once.
 **Better:** `frontline_team_feedback`  
 **Best:** `feedback-delivery-first-time-manager`
 
-A narrow domain forces you to write axioms that actually change behavior. A broad domain produces generic advice.
+A narrow domain forces you to write axioms with a clear decision boundary. A
+broad domain produces generic advice whose intended effect cannot be inspected.
 
 ---
 
@@ -118,13 +119,15 @@ If you cannot fill both blanks concretely, your domain is too vague.
 
 ## 3. Write Good Axioms
 
-Axioms are the domain's core judgment principles. They must change how the agent responds.
+Axioms are the domain's core judgment principles. They must state a meaningful
+choice and the conditions under which that choice applies.
 
 ### What makes a good axiom:
 
 - **Specific**: Two experts would agree when it applies
 - **Falsifiable**: You can construct a scenario where it does NOT apply
-- **Behavior-changing**: The agent would say something different with vs without it
+- **Decision-bearing**: Applying the axiom would select, reject, prioritize, or
+  qualify something in at least one concrete case
 
 ### Good vs Bad:
 
@@ -136,8 +139,10 @@ Axioms are the domain's core judgment principles. They must change how the agent
 
 ### Self-test for each axiom:
 
-- If I remove this axiom, would the agent give a different answer to at least one scenario?
-- Can I write a specific scenario where this axiom would change the agent's judgment?
+- If I remove this axiom, does the asset lose a meaningful choice in at least
+  one scenario?
+- Can I write a specific scenario where this axiom selects one direction over
+  another?
 - Can I write a scenario where this axiom does NOT apply (proving it has a boundary)?
 
 ---
@@ -168,7 +173,8 @@ Stances are the domain's default positions. Think of them as "when in doubt, lea
 ### What makes a good stance:
 
 - Prescriptive, not descriptive
-- An agent would act differently depending on which stance it holds
+- The stance selects a direction that differs from at least one plausible
+  alternative
 - Paired with its opposite (so the agent knows both positions exist)
 
 ### Good vs Bad:
@@ -232,7 +238,7 @@ A trigger signal should be something the agent can actually detect in text.
 
 Before submitting a domain, verify:
 
-- [ ] Each axiom changes agent behavior in at least one specific scenario
+- [ ] Each axiom carries a meaningful choice in at least one specific scenario
 - [ ] Each ontology concept has a real boundary (something it is NOT)
 - [ ] Each stance is prescriptive (would bias the agent toward a different answer)
 - [ ] Each misunderstanding describes a belief a real agent might hold
@@ -240,16 +246,33 @@ Before submitting a domain, verify:
 - [ ] All trigger signals are observable in text
 - [ ] `kdna-lint` passes with zero warnings
 - [ ] `kdna-validate` passes
-- [ ] A no-KDNA vs with-KDNA comparison shows a judgment change, not just vocabulary difference
+- [ ] Named review cases cover in-scope direction, out-of-scope restraint, and
+      conflicts with facts, user intent, safety policy, or Host authority
+- [ ] The exported projection preserves the critical judgment units and reports
+      any omission or partial projection
 - [ ] The `kdna.json` manifest is filled and accurate
 
 ---
 
-## 10. Test Behaviorally
+## 10. Review the Asset and Its Projection
 
-The only valid test: compare two agent responses to the same input — one without KDNA loaded, one with KDNA loaded.
+There is no universal output-improvement test for a judgment asset. Before
+sharing one, the asset owner or a named reviewer should instead inspect a
+bounded set of cases and declare what acceptance means for that asset:
 
-If the difference is only vocabulary (the agent uses different words but reaches the same conclusion), the KDNA is not working. Revise until the judgment itself changes.
+- in-scope cases should express the declared preference or decision rule;
+- out-of-scope cases should not inherit the asset's judgment;
+- current facts, explicit user intent, law, safety policy, and Host authority
+  take precedence when they conflict;
+- the exported projection should preserve critical judgment units and make any
+  omission visible;
+- authorization, disabling, switching, and rollback should remain possible in
+  the intended Host.
+
+A caller may compare different carriers or unloaded outputs for its own
+diagnosis, but that comparison is not a KDNA validity gate and does not prove
+that KDNA improves model intelligence, is universally correct, or is superior
+to Prompt, Skill, or ordinary documents.
 
 ```bash
 # Validate the exported asset and inspect its LoadPlan

@@ -1,6 +1,7 @@
 # KDNA Application Runtime Contract
 
-Applications consume KDNA through one stable responsibility chain:
+Applications consume one explicit file or exact user-approved attachment
+through this responsibility chain:
 
 ```text
 packaged asset
@@ -32,6 +33,8 @@ treat JudgmentTrace as an independent routing trace.
 
 An application MUST:
 
+- begin from an asset the user selected or an exact attachment the Host has
+  already recorded as user-approved;
 - request a LoadPlan before projecting judgment content;
 - treat `public`, `licensed`, and `remote` as distinct authorization paths;
 - deliver the exact Capsule whose digest is bound into the Host request;
@@ -41,6 +44,11 @@ An application MUST:
   consumption evidence, and behavioral conformity;
 - fail closed on digest, identity, version, capability, budget, or receipt
   mismatch.
+- expose the active asset identity, version or digest, scope, and reason, with
+  controls to disable, switch, and roll back it.
+
+An application MUST NOT treat directory discovery, a cache entry, an installed
+Skill, or a task-keyword match as user authorization.
 
 An application MAY choose its own UI, model provider, storage, and workflow.
 It may not redefine the shared protocol objects or turn optional author

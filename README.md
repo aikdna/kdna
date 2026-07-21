@@ -69,9 +69,8 @@ kdna load ./judgment.kdna --profile=compact --as=json
 ```
 
 The AIKDNA asset repository currently displays two current-format technical
-reference assets and zero Clusters. Listing is not an endorsement or a claim of
-behavioral value, and the local demonstration above remains the recommended
-first-run path.
+reference assets and zero Clusters. Listing is not an endorsement, and the
+local demonstration above remains the recommended first-run path.
 
 → [Full 5-minute guide](./docs/try-kdna.md) · [Public reference display](https://github.com/aikdna/kdna-assets)
 
@@ -157,6 +156,11 @@ The official KDNA toolchain is published from this repo and its companion packag
 | **KDNA SDK** | Embeddable library for integrations | `packages/kdna-core/` |
 | **KDNA Eval** | Experimental replay, budget, and consumption-evaluation primitives | `packages/kdna-eval/` + `@aikdna/kdna-eval` |
 
+The direct-file `validate → plan-load → load` path is the current recommended
+Agent-facing technical path. The historical global package-store and
+auto-discovery Skill experience is not a protocol requirement and is under
+product recertification; it must not be treated as the default KDNA user model.
+
 `@aikdna/kdna` remains a maintained compatibility bridge. New
 integrations should install `@aikdna/kdna-cli` and `@aikdna/kdna-core`
 directly. The complete package, source-only application, and release-artifact
@@ -203,7 +207,7 @@ changes require an RFC and an explicit migration path.
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | `@aikdna/kdna-cli` | KDNA runtime CLI |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | `@aikdna/kdna-studio-cli` | AI-powered authoring CLI |
 | [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | `@aikdna/kdna-studio-core` | Studio SDK for creators |
-| [kdna-skills](https://github.com/aikdna/kdna-skills) | `kdna-loader` skill; `@aikdna/kdna-mcp-server@0.4.2` (Experimental) | AI agent skill loader and MCP server |
+| [kdna-skills](https://github.com/aikdna/kdna-skills) | `kdna-loader` (Unassessed); `@aikdna/kdna-mcp-server@0.4.2` (Experimental) | Agent and MCP adapter mission; not automatic judgment authority |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | — | Public asset releases |
 | [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Swift package `0.20.0` | Apple-platform runtime |
 | [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Swift package `0.4.0` | Apple-platform authoring kernel; release recertification is pending |

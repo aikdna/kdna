@@ -1,11 +1,15 @@
 # KDNA Clusters
 
-> **Status: Pre-release advanced path.** A single `.kdna` asset remains the foundation
+> **Status: Experimental advanced path under recertification.** A single `.kdna` asset remains the foundation
 > and default. Cluster is an explicit multi-asset runtime for tasks that truly
 > need multiple scoped judgment assets; it does not replace or silently alter
 > single-asset loading. See [Status](./status.md).
 
-A KDNA Cluster is a composable judgment system: multiple scoped KDNA domain assets working together under defined roles and route policy to handle complex tasks.
+A KDNA Cluster is an explicit composition proposal: multiple scoped KDNA
+domain assets referenced under declared roles and route policy. Its presence
+does not authorize automatic discovery or loading. A Host must begin from an
+exact user-approved Cluster or asset set and keep conflicts and active assets
+visible.
 
 A cluster is not a broader merged `.kdna`. Each domain asset keeps its own scope, version, provenance, and evaluation boundary. The cluster defines which assets participate, when they load, how conflicts surface, and how the combined system is reviewed.
 
@@ -18,7 +22,7 @@ A single monolithic KDNA for a broad domain has four problems:
 | **Too vague** | A "Business Growth KDNA" with 20 principles becomes a collection of truisms |
 | **Context bloat** | Loading all judgment patterns when only 2 are relevant wastes agent context |
 | **Frame conflict** | "Speed over quality" and "trust over speed" clash silently inside the same asset |
-| **Untestable** | You cannot prove which specific judgment improved when everything is bundled together |
+| **Attribution ambiguity** | You cannot identify which judgment supplied a distinction when everything is bundled together |
 
 ## Domain KDNA vs Cluster vs Work Pack
 
@@ -43,12 +47,16 @@ Every domain asset in a cluster has one of four roles:
 
 ## Composition Rules
 
-1. **Must have a primary.** Every task has exactly one Primary KDNA. No exceptions.
+1. **Must have an authorized primary.** Every composed use names exactly one
+   Primary KDNA from the user-approved set.
 2. **Cannot average.** If two assets disagree, surface the conflict — do not blend them into a "balanced" nothing.
 3. **Conflicts must be visible.** Tell the user: "Domain A sees this as X. Domain B sees it as Y. Which lens fits better?"
 4. **Load by task phase.** Diagnosis → Design → Expression → Review each loads different assets. Do not load everything upfront.
 5. **Trace attribution.** When multiple domains influence output, traces must preserve which domain supplied which judgment.
-6. **Cluster has its own benchmark.** Test not just individual assets, but whether the cluster as a system selects the right primary, avoids irrelevant assets, detects conflicts, and produces layered judgments.
+6. **Cluster has a named review contract.** The owner or evaluator declares how
+   to review primary selection, irrelevant-asset restraint, conflict handling,
+   projection completeness, and rollback. This is not a universal quality or
+   carrier-superiority score.
 
 ## Cluster Manifest
 

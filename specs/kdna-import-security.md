@@ -61,9 +61,9 @@ Consumers MUST:
 
 ## 5. Persistence Rules
 
-Consumers MUST store the original `.kdna` asset or an implementation-defined
-immutable copy. They MUST NOT persist decrypted source JSON as canonical
-installed asset state.
+Consumers MAY read the original `.kdna` file directly or preserve an
+implementation-defined immutable copy. If they persist state, they MUST NOT
+persist decrypted source JSON as the canonical asset.
 
 Derived caches, if introduced later, MUST be encrypted at rest, rebuildable,
 marked non-canonical, and bound to local runtime policy.
@@ -71,7 +71,7 @@ marked non-canonical, and bound to local runtime policy.
 ## 6. Legacy Import
 
 Legacy source-tree import MUST be explicit. A consumer MUST NOT silently treat a
-directory of top-level source JSON files as an installed runtime asset.
+directory of top-level source JSON files as a portable runtime asset.
 
 Legacy import SHOULD return a LoadPlan issue such as
 `KDNA_FORMAT_LEGACY_SOURCE_TREE` or an equivalent transitional code.

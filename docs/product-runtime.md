@@ -2,6 +2,9 @@
 
 > Draft product-runtime RFC. This is not part of the current KDNA Core public
 > pre-release baseline and should not be read as shipped app/runtime capability.
+> Its Skill-driven Agent model is also superseded for current integration
+> guidance: current Hosts start from an explicit file or exact user-approved
+> attachment and keep active use visible and reversible.
 
 **Status:** Draft  
 **Proposed:** 2026-06-08  

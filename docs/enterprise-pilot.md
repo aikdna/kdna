@@ -1,8 +1,8 @@
 # Team and Organization Pilot
 
 Organizations are one KDNA use case, not the definition of KDNA. This guide
-tests whether an explicit judgment asset survives model changes and improves a
-specific, bounded decision context.
+checks whether an explicit judgment asset remains identifiable, authorized,
+bounded, and inspectable when it is used across named Hosts and model changes.
 
 ## Choose a Bounded Judgment
 
@@ -30,17 +30,22 @@ kdna load ./pilot.kdna --profile=compact --as=prompt
 Start with a single asset. Use a Cluster only when the task genuinely needs
 multiple scoped judgment assets under explicit roles.
 
-## Test the Judgment, Not the Vocabulary
+## Review the Declared Judgment and Boundaries
 
-Use real tasks and compare:
+Use real tasks and record:
 
-1. the same model without KDNA;
-2. the same model with the asset;
-3. a different model with the same asset;
-4. non-applicable tasks, where the asset should skip, block, or ask.
+1. which exact asset, version, digest, scope, and Host were authorized;
+2. whether in-scope tasks express the owner's declared direction;
+3. whether a different Host can consume the same explicit asset without
+   silently changing its identity or critical projection;
+4. whether non-applicable and conflicting tasks skip, ask, or defer as
+   declared;
+5. whether the user can see, disable, switch, and roll back the active asset.
 
-Review the actual decision, boundary use, error type, and consistency. A model
-repeating asset terminology is not proof of useful judgment transfer.
+Review the actual decision, boundary use, error type, and delivery evidence. A
+model repeating asset terminology is not proof of faithful adoption. A caller
+may run carrier comparisons for diagnosis, but they are not KDNA validity or
+release gates.
 
 The optional evaluation path is:
 
@@ -59,7 +64,8 @@ validate → plan-load → load/project → eval/replay → expert review
 
 ## Exit Criteria
 
-A pilot is informative when it has a pinned asset, reproducible tasks, a
-baseline, model-swap results, non-applicable cases, observed failures, and a
-rollback path. It does not need to prove universal quality or become an
-AIKDNA-published reference asset.
+A pilot is informative when it has a pinned asset, named owner and Host,
+reproducible tasks, declared acceptance boundaries, non-applicable cases,
+observed failures, visible delivery state, and a rollback path. It does not
+prove universal quality, model-intelligence gain, or carrier superiority, and
+it does not need to become an AIKDNA-published reference asset.

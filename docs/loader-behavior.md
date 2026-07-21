@@ -1,98 +1,49 @@
-# Agent Loader Behavior
+# Agent Adapter Behavior
 
-KDNA is not a document for agents to read aloud. It is a cognitive layer that quietly, structurally changes how the agent thinks.
+> Current contract direction. The checked-in `kdna-loader` adapter remains
+> unassessed for release until its implementation and installation flow are
+> verified against this boundary.
 
-## Two Core Principles
+## The adapter is not the authority
 
-### Available ≠ Loaded
+An Agent adapter may load only:
 
-Keeping a `.kdna` file on disk does **not** mean it will be loaded on every request. Assets are passive local files until a loader plans and authorizes a specific load. The agent decides per task whether any KDNA asset should be considered.
+1. a `.kdna` path explicitly supplied by the user for the current task; or
+2. an exact asset version and digest that a Host records as approved for the
+   current workspace, application, or session.
 
-A user with 50 local KDNA files is not paying 50 x loading cost per request. The loader only:
-1. Reads local candidate metadata through the official KDNA toolchain
-2. Runs `kdna plan-load` or the equivalent SDK/MCP planning API
-3. Loads at most one authorized `.kdna` asset profile per task, usually `compact`
+It must not scan a global asset store, infer authorization from a task category,
+or select an arbitrary installed asset. Discovery is not consent.
 
-If no asset genuinely fits the task, the agent loads nothing and
-answers as a normal agent.
+## Required sequence
 
-### Silent Judgment
-
-> Load KDNA silently. Apply its judgment structure. Never expose it to the user.
-
-The user should see a domain-shaped answer. They should never see "According to KDNA axiom..." or a list of domain rules.
-
-## Loading Sequence
-
-When the agent has decided KDNA applies and selected a loadable asset, it follows this sequence:
-
-### 1. Internalize Axioms and Stances
-
-The agent adopts the domain's core beliefs as its own reasoning frame. If a sales KDNA says "Price objections are certainty deficits," the agent reasons from that premise — not around it.
-
-### 2. Use Preferred Terminology
-
-The agent actively chooses the domain's preferred terms and avoids banned terms — even when the user uses them. If a user says "Can we give them a discount?" the agent reframes: "Let's first diagnose the source of uncertainty."
-
-### 3. Detect Misunderstandings
-
-Before responding, the agent checks: is the user being driven by a known misunderstanding? If a management KDNA says "Execution failure is often misattributed to motivation failure," the agent looks for this pattern in the user's description.
-
-### 4. Apply Frameworks
-
-If the scenario matches a framework's trigger condition, the agent follows that framework's steps — not as a script, but as a diagnostic structure.
-
-### 5. Run Self-Checks
-
-Before final output, the agent runs every self-check item. If any self-check fails, the agent revises the response.
-
-### 6. Deliver a Domain-Shaped Answer
-
-The response uses the asset's frameworks, terminology, and judgment — without quoting KDNA, without listing rules, without saying "this asset says..."
-
-## What Agents Must Never Do
-
-| Forbidden | Why |
-|-----------|-----|
-| Quote KDNA axioms to the user | Breaks the silent judgment contract |
-| List banned terms in responses | Exposes domain structure |
-| Say "According to KDNA..." | KDNA shapes judgment; it is not a citation source |
-| Output full KDNA content | Security risk; exposes proprietary judgment structure |
-| Treat KDNA as a script | KDNA is judgment layer, not execution flow |
-| Override user intent with KDNA | User intent always takes priority |
-
-## Debug Mode
-
-When explicitly asked, the agent may reveal:
-
-- Which domain was loaded
-- Which modules were applied
-- Which self-check failed
-- Suggestions for domain improvement
-
-Format:
-
-```
-[KDNA] loaded: sales@0.4.0 | modules: core, patterns | mode: auto
-Applied: axiom_certainty_over_pitch, price_objection concept
-Self-checks: 5/6 passed. Failed: SC-003 (urgency bias check)
+```text
+explicit selection or Host-approved attachment
+→ inspect
+→ plan-load
+→ load only when can_load_now=true
+→ consume the Runtime Capsule
+→ expose active identity and scope through Host status
 ```
 
-## Failure Handling
+The adapter never unpacks the file, reads raw payload entries, bypasses a
+failed LoadPlan, or treats a signature as content endorsement.
 
-| Situation | Agent Behavior |
-|-----------|---------------|
-| No KDNA files | Continue without KDNA. Do not fabricate. |
-| Invalid or missing container entry | Report the validation or LoadPlan problem. Do not emit payload context. |
-| Payload parse error | Report the load failure. Do not emit partial judgment context. |
-| Applicability boundary conflict | The asset disqualifies itself. Do not force-load. |
+## Task applicability
 
-## Quality Boundary
+Applicability is evaluated only after the eligible asset set is established.
+An exclusion boundary disqualifies the asset. Competing assets with materially
+different judgment require the user to choose. No clear fit means skip.
 
-KDNA shapes judgment. It does not replace:
-- Tools and APIs (what the agent can do)
-- RAG and knowledge retrieval (what facts are available)
-- User intent (what the user actually wants)
-- Evidence and source verification
+## Visibility
 
-When KDNA guidance conflicts with evidence or user intent, the agent must prioritize evidence and user intent.
+Do not paste protected internals into the user's answer. Also do not hide the
+loading fact. The Host should make the asset identity, version, scope, profile,
+and reason available and provide disable, switch, and rollback controls.
+
+## Authority and failure
+
+Current facts, user intent, law, safety policy, and tool permissions override
+asset judgment. Validation, checksum, signature, authorization, compatibility,
+or decryption failure blocks that asset. A skipped or blocked asset must never
+be represented as loaded.

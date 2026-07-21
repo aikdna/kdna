@@ -1,6 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aikdna.com/schemas/cluster-manifest-candidate-0.9.schema.json",
+  "$comment": "Historical candidate retained for provenance and fixture compatibility. It is not the current default single-asset product path and does not authorize automatic asset discovery or loading.",
+  "deprecated": true,
   "title": "KDNA Cluster Manifest 0.9 Candidate",
   "description": "Canonical candidate schema for kdna.cluster.json — the single Cluster format that replaces legacy packages-based, Schema B domains-based, and consume.js route/compose definitions. Defines a composable judgment system of independently qualified KDNA assets with explicit selection, conflict, budget, trace, and evaluation rules.",
   "type": "object",

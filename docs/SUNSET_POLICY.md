@@ -19,8 +19,8 @@ KDNA's deprecation policy ensures that users are never caught between a document
 | `kdna_spec` field | Rejected | Use `format_version` in current manifests |
 | singular `language` field | Rejected | Use `languages` array |
 | Merged single-file JSON | Rejected | ZIP container format |
-| Dev source directories (as runtime) | Non-canonical | `.kdna` assets in `~/.kdna/packages/` |
-| `~/.kdna/domains/` | Legacy | `~/.kdna/packages/` |
+| Dev source directories (as runtime) | Non-canonical | Explicit packaged `.kdna` files |
+| `~/.kdna/domains/` | Legacy | Explicit file or exact user-approved Host attachment |
 | All protocol-level asset quality / risk / trust / recommendation / production badges | Retired | Issuer-scoped external assessments plus caller-owned adoption policy |
 
 ## Un-deprecated Items

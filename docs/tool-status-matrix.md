@@ -29,18 +29,23 @@
 | `kdna revoke <asset>` | Legacy signed asset revocation | Released in 0.35.1; withdrawn from Preview candidate |
 | `kdna revocation status <asset>` | Legacy asset revocation status | Released in 0.35.1; withdrawn from Preview candidate |
 | `kdna load --remote-server <url>` | Load `access:remote` assets via server | Released |
-| `kdna route <asset-path>` | Select a primary framework and emit a trace | Pre-release |
-| `kdna compose <asset-path>` | Compose a primary with bounded advisors | Pre-release |
-| `kdna project <asset-path>` | Render a packaged asset as a task-safe projection | Pre-release |
-| `kdna eval-consumption <asset-path>` | Evaluate a consumption policy with replay and gates | Optional experiment; not a project gate |
-| `kdna eval asset <asset-path>` | Emit an Asset Assay observation matrix; CLI inputs do not create provenance claims | Experimental |
-| `kdna eval cluster <plan>` | Emit fail-closed Cluster diagnostics; trust/economics promotion remains inside a trusted Eval API producer | Experimental |
-| `kdna compose-review-workbook` | Generate a review workbook from diagnostics | Pre-release |
-| `kdna validate-compose-decisions` | Validate a decision ledger against fixture evidence | Pre-release |
-| `kdna apply-reviewed-compose-decisions` | Create disabled candidate sidecar entries | Pre-release |
-| `kdna workpack <init\|validate\|plan\|run\|report>` | WorkPack pipeline | Experimental |
-| `kdna doctor [--agents]` | Installation health check | Released; loadability false-positive is a known blocker |
-| `kdna setup` | First-time setup wizard | Released |
+| `kdna route <asset-path>` | Historical advanced applicability implementation | Published or candidate surface under recertification; not default |
+| `kdna compose <asset-path>` | Historical multi-asset composition implementation | Published or candidate surface under recertification; not default |
+| `kdna project <asset-path>` | Historical task-projection implementation | Published or candidate surface under recertification; not default |
+| `kdna eval-consumption <asset-path>` | Historical consumption-evaluation implementation | Experimental; not a project or release gate |
+| `kdna eval asset <asset-path>` | Historical asset-evaluation implementation | Experimental; not current project evidence |
+| `kdna eval cluster <plan>` | Historical Cluster-evaluation implementation | Experimental; not current project evidence |
+| `kdna compose-review-workbook` | Historical review-workbook implementation | Under recertification; not default |
+| `kdna validate-compose-decisions` | Historical decision-ledger implementation | Under recertification; not default |
+| `kdna apply-reviewed-compose-decisions` | Historical candidate-sidecar implementation | Under recertification; not default |
+| `kdna workpack <init\|validate\|plan\|run\|report>` | Historical WorkPack implementation | Experimental; not current product contract |
+| `kdna doctor [--agents]` | Legacy store and file-presence diagnostics | Released; presence is not adapter correctness |
+| `kdna setup` | Historical first-time setup wizard | Released; not the recommended file-first path |
+
+The local-store commands above are published facts, not the canonical product
+model. New use starts from an explicit `.kdna` file or an exact user-approved
+Host attachment. Installing a version, marking an active version, or finding a
+Skill does not authorize or apply judgment.
 
 ## Studio (`@aikdna/kdna-studio-cli@0.10.2`)
 
@@ -60,7 +65,7 @@
 
 | Component | Status |
 |---|---|
-| `kdna-loader` skill | **Pre-release** — supports OpenCode, Codex, Claude Code, Cursor, Gemini. Auto-install via `kdna setup`. |
+| `kdna-loader` skill | **Unassessed** — mission retained; the previous broad-discovery and silent-loading model is not the current Host contract. |
 | MCP server adapter | Experimental |
 
 ## Package Boundaries
@@ -89,7 +94,7 @@ private development status is not part of the open protocol's tool matrix.
 | Component | Notes |
 |---|---|
 | `kdna-vscode` | Editor mission retained; current maturity and exact compatibility are unassessed pending owner-reviewed recertification. |
-| `@aikdna/agent` | Deprecated legacy npm coordinate. Use the `kdna-loader` integration. |
+| `@aikdna/agent` | Deprecated legacy npm coordinate. Use the explicit-file runtime path; Agent adapters require recertification. |
 | `@aikdna/kdna-artifact-engine` | Deprecated historical implementation of a withdrawn draft contract. |
 | `@aikdna/kdna-fidelity-core` | Deprecated historical implementation of a withdrawn draft contract. |
 | Legacy `kdna install <url>` | Was registry-based install, removed in 0.27.0. Current `kdna install` installs local files. |

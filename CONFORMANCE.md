@@ -45,7 +45,7 @@ See [conformance-report-example.md](./docs/conformance-report-example.md) for a 
 An implementation is NOT KDNA-compatible if it:
 
 - Requires users to unpack `.kdna` as the normal path
-- Treats dev source directories as canonical installed assets
+- Treats dev source directories as canonical portable assets
 - Ignores required digest evidence, or misreports a performed signature check
 - Writes decrypted licensed entries to persistent disk
 - Silently blends multiple domains without attribution

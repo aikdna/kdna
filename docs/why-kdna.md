@@ -51,10 +51,10 @@ what an asset has been observed to do; it is not a creation license.
 A single KDNA asset is the atomic, default path: one scoped judgment asset is
 created, validated, authorized, and loaded for a task.
 
-A KDNA Cluster is the explicit advanced path: multiple assets can be assigned
-roles, routed, checked for conflicts, and coordinated around one task. Cluster
-does not replace the single-asset model, and the single-asset path does not
-silently invoke Cluster routing.
+A KDNA Cluster is an experimental advanced surface under recertification.
+Multiple assets require an explicit Host policy and user-approved candidate
+set. Cluster does not replace the single-asset model, and the single-asset path
+does not silently invoke Cluster routing.
 
 ## Open Creation, Contracted Consumption
 

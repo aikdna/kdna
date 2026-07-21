@@ -10,16 +10,16 @@ KDNA Core validates structure, integrity, provenance, and authorization facts;
 it does not judge whether asset content is correct, useful, expert, or worthy
 of publication.
 
-There is one current KDNA Asset Container and one compatible Agent consumption
+There is one current KDNA Asset Container and one compatible Host consumption
 contract:
 
 ```text
 inspect → LoadPlan → authorization → load/project → Runtime Capsule → Agent
 ```
 
-A single asset is the foundation and default path. Cluster is an explicit
-advanced path for coordinating multiple assets; it does not replace or
-silently alter single-asset consumption.
+A single explicitly selected file or exact user-approved attachment is the
+foundation and default path. A global asset library, automatic discovery, and
+an Agent-installed Skill are not protocol requirements.
 
 ## Maturity by Layer
 
@@ -32,12 +32,12 @@ silently alter single-asset consumption.
 | Remote access | Candidate | Remote access mode and projection contracts are public |
 | Remote/activation reference servers | Experimental | Self-hostable implementations; no AIKDNA-hosted service is part of the baseline |
 | Signing and revocation | Pre-release | Integrity and provenance mechanisms, not content endorsement |
-| Single-asset consumption runtime | Pre-release | Task-aware planning, projection, trace, and optional evaluation surfaces |
-| Cluster runtime | Pre-release | Explicit multi-asset roles, routing, conflict checks, plans, and traces |
+| Single-asset consumption runtime | Pre-release | Explicit-file planning, projection, and trace surfaces |
+| Cluster and policy runtime | Experimental | Published advanced surfaces under product recertification; not the default path |
 | JS Core | Reference implementation | Primary public conformance implementation |
 | Eval package | Experimental | Issuer-scoped replay, budget, and consumption evaluation; not Core authority |
 | `@aikdna/kdna` compatibility package | Legacy compatibility | Maintained migration bridge; not the recommended new integration path |
-| Swift, Agent, editor, React, and Web integrations | Pre-release / experimental | Check each repository's release notes and shared conformance evidence |
+| Swift, Agent, editor, React, and Web integrations | Pre-release / experimental / unassessed | Check each repository's exact version and evidence; `kdna-loader` is currently Unassessed |
 
 ## Current First-Run Path
 
@@ -70,6 +70,8 @@ kdna validate ./my-domain.kdna
 - A compatible runtime implements LoadPlan, authorization, integrity checks,
   and Runtime Capsule output. Raw unpacking or decoding is not an Agent
   consumption implementation.
+- Saving or finding a file is not authorization. Hosts must show active asset,
+  version or digest, scope, and reason, with disable/switch/rollback controls.
 - Hosted registry, marketplace, billing, and AIKDNA-hosted loading are not part
   of the current public baseline.
 

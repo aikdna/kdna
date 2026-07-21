@@ -9,7 +9,7 @@
     "Future",
     "Draft Normative"
   ],
-  "baseline_statement": "KDNA is a pre-release judgment-asset container and ecosystem. All 17 public repositories retain distinct missions; component maturity, release-wave membership, and compatibility commitments are independent. Exact published-version contracts remain authoritative, and asset utility evidence is optional and content-specific.",
+  "baseline_statement": "KDNA is a pre-release judgment-asset container and ecosystem. All 17 public repositories retain distinct missions; component maturity, release-wave membership, and compatibility commitments are independent. Exact published-version contracts remain authoritative, and external asset assessment is optional, scoped, and separate from Core validity.",
   "components": [
     {
       "repository": "aikdna/kdna",
@@ -71,8 +71,8 @@
           "known_limitations": [
             "deprecated historical npm coordinate; source is frozen and private"
           ],
-          "recommended_entrypoint": "use the kdna-loader integration",
-          "legacy_replacement": "kdna-loader or @aikdna/kdna-mcp-server"
+          "recommended_entrypoint": "use an explicit .kdna file through current Core or CLI",
+          "legacy_replacement": "@aikdna/kdna-core or @aikdna/kdna-cli"
         },
         {
           "package_json": "packages/artifact-engine/package.json",
@@ -109,7 +109,7 @@
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "hosted remote loading and activation are self-hosted reference surfaces, not an AIKDNA-hosted service",
-        "behavioral value remains an optional per-asset evidence claim"
+        "asset adoption, external assessment, and real-world outcomes are claimant-scoped evidence and do not decide protocol validity"
       ],
       "recommended_entrypoint": "kdna plan-load <asset> before kdna load <asset>",
       "legacy_replacement": null
@@ -187,7 +187,7 @@
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "reference assets provide content-specific evidence and do not establish a general protocol capability claim",
+        "reference assets demonstrate technical interoperability and do not establish content correctness, adoption, or outcome claims",
         "the repository package is private validation tooling; the public coordinate is the exact GitHub Release artifact, not an npm package"
       ],
       "recommended_entrypoint": "download laozi-wuwei-0.1.1.kdna from the 0.1.1 GitHub Release, then run kdna inspect, plan-load, and load",
@@ -219,9 +219,9 @@
       "supported_access_modes": ["public"],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "MCP is a structured bridge; the loader skill remains the default Agent integration"
+        "MCP is an experimental structured bridge; the loader Skill is Unassessed and neither discovery nor matching creates user authority"
       ],
-      "recommended_entrypoint": "kdna.plan-load before kdna.load",
+      "recommended_entrypoint": "pass one explicit .kdna file or exact user-approved Host attachment through plan-load before load",
       "legacy_replacement": null
     },
     {

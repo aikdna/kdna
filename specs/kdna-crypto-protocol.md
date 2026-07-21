@@ -121,15 +121,14 @@ Asset distributed through any author-chosen channel:
 
 ---
 
-## 4. Purchase Flow (Buyer → Distribution/Entitlement Service → Local)
+## 4. Acquisition and Activation Flow
 
 ```
-Buyer installs and activates:
-  kdna install @scope/silver-care
-  kdna license activate @scope/silver-care --key KDNA-LIC-... --server <activate-url>
+User obtains an exact licensed .kdna file through an author-chosen channel
+and asks a compatible Host to activate that exact asset identity and digest
     ↓
-1. CLI installs immutable `.kdna` under ~/.kdna/packages/
-2. CLI sends activation request to entitlement server:
+1. Host validates the asset and records the user-approved attachment scope
+2. Host sends an activation request to the entitlement server:
    {
      "domain": "@scope/silver-care",
      "license_key": "KDNA-LIC-...",
@@ -140,7 +139,8 @@ Buyer installs and activates:
 3. Server validates purchase, status, expiration, limits, and binding policy
 4. Server returns activation object
     ↓
-5. CLI stores local activation metadata outside the asset:
+5. Host stores local activation metadata outside the asset through an
+   appropriate protected store:
    {
      "license_id": "lic_abc123",
      "license_key": "KDNA-LIC-...",
@@ -154,15 +154,20 @@ Buyer installs and activates:
 The production request/response contract is defined in
 `kdna-entitlement-api.md`.
 
+Published CLI versions may also expose a package-store activation workflow.
+That is an exact-version implementation surface, not a protocol requirement or
+an independent source of consent.
+
 ---
 
 ## 5. Load Flow (Runtime Decryption)
 
 ```
-Agent triggers: kdna load @scope/silver-care
+Host plans and loads the explicit file or exact user-approved attachment
     ↓
-1. Runtime resolves installed asset from ~/.kdna/index.json
-2. Runtime reads the `.kdna` file directly
+1. Runtime resolves the exact asset version and digest from the supplied file
+   or attachment record
+2. Runtime reads the `.kdna` file directly or from an immutable cache
 3. Runtime checks local activation: not expired, not revoked, domain matches,
    machine binding matches, and offline grace is valid
 4. Runtime derives decrypt hook from license_key + machine_fingerprint

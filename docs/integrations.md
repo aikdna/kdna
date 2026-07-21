@@ -1,93 +1,34 @@
 # KDNA Agent Integrations
 
-KDNA integrates with major AI coding agents through one adapter skill:
-`kdna-loader`. KDNA assets are local `.kdna` files validated, planned, and
-loaded through the CLI; domains are assets, not separate skills.
+## Current supported technical path
 
-## Supported Agents
-
-| Agent | Skill Path |
-|-------|-----------|
-| **Claude Code** | `~/.claude/skills/kdna-loader/SKILL.md` |
-| **Codex** (OpenAI) | `~/.codex/skills/kdna-loader/SKILL.md` |
-| **OpenCode** | `~/.agents/skills/kdna-loader/SKILL.md` |
-| **Cursor** | `~/.cursor/skills/kdna-loader/SKILL.md` |
-| **GitHub Copilot** | Via `kdna-loader` skill (manual setup) |
-
-## How It Works (the safe-by-default model)
-
-The `kdna-loader` skill is a single instruction file (SKILL.md) that
-teaches the agent the **protocol** for using KDNA. It does NOT
-pre-load any domains; it does NOT scan all installed domains on every
-request.
-
-When you ask the agent a question, the agent decides per-task:
-
-1. **Does this task need KDNA at all?** Most tasks (formatting,
-   lookup, code execution) don't. Skip silently.
-2. **What's available?** The agent or MCP server asks the KDNA toolchain for
-   local `.kdna` assets and metadata. It does not unzip assets directly.
-3. **What fits?** For each candidate domain, the agent uses CLI/Core-provided
-   metadata and the asset's declared applicability boundaries.
-4. **Load 0 or 1 primary domain.** If `does_not_apply_when` matches,
-   the domain disqualifies itself. If two domains fit and disagree,
-   the agent surfaces the choice to the user — never silently blends.
-5. **Apply silently.** Once loaded, the agent reasons from the
-   domain's axioms, but never quotes KDNA back to the user.
-
-**Why this matters at scale**: a user with many `.kdna` files incurs no
-context bloat. The agent inspects small metadata first and loads only the
-compact judgment profile when a task calls for it.
-
-For the full protocol, see [loader-behavior.md](./loader-behavior.md).
-
-## Cross-Agent Compatibility
-
-All agents can use the same local `.kdna` files. Validate once, load wherever
-the runtime supports the loader:
-
-```bash
-kdna demo minimal ./minimal
-kdna pack ./minimal ./minimal.kdna
-kdna validate ./minimal.kdna
-kdna plan-load ./minimal.kdna
-kdna load ./minimal.kdna --profile=compact --as=prompt
-```
-
-When public example assets are released, use their packaged `.kdna` file and
-release card in place of `minimal.kdna`.
-
-If your agent uses a different default path, create a symlink:
-
-```bash
-ln -s ~/.kdna ~/.claude/Kdna
-```
-
-## Install
-
-```bash
-curl -fsSL https://aikdna.com/install | bash
-```
-
-Or manually:
+All compatible Hosts can start from the same explicit `.kdna` file:
 
 ```bash
 npm install -g @aikdna/kdna-cli
-kdna demo minimal ./minimal
-kdna pack ./minimal ./minimal.kdna
-kdna validate ./minimal.kdna
-kdna plan-load ./minimal.kdna
-kdna load ./minimal.kdna --profile=compact --as=prompt
+kdna validate ./asset.kdna --runtime
+kdna plan-load ./asset.kdna --json
+kdna load ./asset.kdna --profile=compact --as=json
 ```
 
-Then install the `kdna-loader` skill for your agent from [kdna-skills](https://github.com/aikdna/kdna-skills).
+The Host receives a Runtime Capsule. This proves technical delivery only; it
+does not prove that the model followed the judgment or that the result is
+better.
 
-## What's NOT installed as a skill
+## Agent adapters
 
-- KDNA domains themselves (they are `.kdna` assets, discovered and loaded on
-  demand through the CLI/Core path)
-- A domain creator. Use the Studio CLI for packaged `.kdna` creation; CLI dev
-  scaffolds are non-canonical.
-- Per-project pinning (the 0.7–0.8 `.kdna/config.json` mechanism was
-  removed in 0.9 because it forced loading on tasks the user didn't
-  ask for, violating the "install ≠ load" safety model)
+`kdna-skills` contains Skill and MCP adapters for Codex, Claude Code, OpenCode,
+Cursor, and compatible Hosts. The repository mission is retained, but the
+loader Skill is currently **Unassessed** for release. The previous global
+auto-discovery and silent-loading model is not the current product contract.
+
+A conforming adapter must start from an explicit user-selected file or an exact
+Host-approved workspace/application/session attachment. It must use
+`inspect → plan-load → load`, expose active identity and scope through Host
+status, and never infer authority from a file's presence.
+
+Until that adapter flow is recertified, use the explicit CLI/Core path above or
+integrate the same calls directly in the Host. Do not rely on `kdna setup` as
+proof that an Agent integration is correct.
+
+See [Agent Adapter Behavior](./loader-behavior.md) for the target boundary.

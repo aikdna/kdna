@@ -16,13 +16,13 @@ This template demonstrates the minimum viable KDNA domain structure. Use it as a
 - `KDNA_Core.json` — Axioms and ontology
 - `KDNA_Patterns.json` — Misunderstandings and self-checks
 - `kdna.json` — Domain manifest
-- `evals/` — Evaluation cases
+- `evals/` — Optional owner-scoped review cases
 
 ## Four Questions
 
 ### 1. What does this domain judge?
 
-[TODO: describe the core judgment this domain improves]
+[TODO: describe the bounded choice or distinction this domain governs]
 
 ### 2. Where does it apply?
 

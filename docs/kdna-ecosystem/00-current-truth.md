@@ -12,14 +12,18 @@
   it does not judge content correctness, usefulness, expertise, or quality.
 - There is one current KDNA Asset Container and one compatible Agent interface:
   LoadPlan, authorization, integrity checks, and Runtime Capsule.
-- A single asset is the atomic and default path.
-- Cluster is the explicit advanced path for multiple assets; it does not
-  replace or silently alter single-asset loading.
+- A single explicitly selected file or exact user-approved Host attachment is
+  the atomic and default path.
+- Cluster is an experimental advanced surface under recertification. It does
+  not replace or silently alter single-asset loading.
 - public, licensed, and remote are author-declared access modes, not content
   rankings.
 - Evidence is optional and supports specific observed claims; it is not a
   creation, validation, or loading requirement.
 - AIKDNA-published assets are reference assets, not official judgments.
+- Saving, discovering, or caching an asset does not attach or authorize it.
+- An active Host attachment remains visible and can be disabled, switched, or
+  rolled back.
 
 ## Maturity Truth
 

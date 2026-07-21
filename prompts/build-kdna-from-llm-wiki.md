@@ -17,12 +17,15 @@ Two JSON files following the KDNA 0.1 specification:
 
 ### 1. Extract Axioms, Not Summaries
 
-An axiom is an irreducible starting assumption that changes how an agent responds. It is not a fact from the Wiki.
+An axiom is an irreducible starting assumption that carries a meaningful
+choice within a declared scope. It is not a fact from the Wiki.
 
 Bad (summary): "Code review catches bugs before they reach production."
 Good (axiom): "Correctness and security are blocking concerns. Style preferences are not."
 
-Test each axiom: if an agent loaded this axiom, would it respond differently than an agent that only read the Wiki? If no, delete it.
+Test each axiom: can an author identify a concrete case where it selects,
+rejects, prioritizes, or qualifies one direction over another, and a boundary
+case where it does not apply? If not, delete it.
 
 ### 2. Define Boundaries for Every Concept
 
@@ -75,13 +78,14 @@ Good: "My role is to help the author ship safe, maintainable code, not to prove 
 
 ### 8. Prefer Fewer, Stronger Entries
 
-A KDNA with 3 sharp axioms is better than a KDNA with 15 vague ones. Quality > quantity. Every entry must earn its place by changing agent behavior.
+Prefer 3 sharp axioms to 15 vague ones. Every entry must earn its place by
+carrying a bounded distinction or choice.
 
 ## Final Check
 
 Before outputting, verify:
 
-- [ ] Every axiom would change how an agent responds
+- [ ] Every axiom carries a meaningful choice in at least one named case
 - [ ] Every ontology entry has a boundary
 - [ ] Every banned term has `why` and `replace_with`
 - [ ] Every misunderstanding has `key_distinction`

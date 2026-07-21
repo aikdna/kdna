@@ -1,8 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aikdna.com/schemas/ecosystem-profile-0.9-candidate.schema.json",
+  "$comment": "Historical, withdrawn ecosystem-completion candidate retained for provenance and fixture compatibility. It is not the current KDNA roadmap, product contract, maturity model, or release gate.",
   "title": "KDNA Ecosystem Profile 0.9 Candidate",
-  "description": "Cross-repository bill of materials for Ecosystem Profile 0.9. Defines the contract surface, compatibility matrix, and conformance requirements that all repositories in the KDNA ecosystem must satisfy.",
+  "description": "Historical cross-repository candidate profile. Its original fields are preserved for provenance; current repositories are not required to satisfy this withdrawn completion model.",
+  "deprecated": true,
   "type": "object",
   "required": ["profile", "profile_version", "contracts", "repositories", "compatibility_matrix"],
   "properties": {
