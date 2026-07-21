@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Fail closed on hostile Argon2id parameters in untrusted password envelopes:
+  `memory_kib`, `iterations`, and `parallelism` must be integers within
+  defensive bounds (256 MiB / 16 / 8), removing a remote denial-of-service
+  path when loading third-party protected assets.
+
 ## 0.21.0 (2026-07-20)
 
 ### Changed

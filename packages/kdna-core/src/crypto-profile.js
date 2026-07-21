@@ -278,6 +278,18 @@ function ensureArgon2id() {
   }
 }
 
+const MAX_ARGON2_MEMORY_KIB = 262144; // 256 MiB
+const MAX_ARGON2_ITERATIONS = 16;
+const MAX_ARGON2_PARALLELISM = 8;
+
+function boundedArgon2Param(value, name, max) {
+  if (value === undefined) return undefined;
+  if (!Number.isSafeInteger(value) || value < 1 || value > max) {
+    throw new Error(`unsupported Argon2id ${name}: must be an integer between 1 and ${max}`);
+  }
+  return value;
+}
+
 function derivePasswordKey(password, params = {}) {
   ensureArgon2id();
   const {
@@ -287,12 +299,15 @@ function derivePasswordKey(password, params = {}) {
     parallelism = 4,
   } = params;
   if (!salt) throw new Error('salt is required for Argon2id');
+  const boundedMemory = boundedArgon2Param(memory_kib, 'memory_kib', MAX_ARGON2_MEMORY_KIB);
+  const boundedIterations = boundedArgon2Param(iterations, 'iterations', MAX_ARGON2_ITERATIONS);
+  const boundedParallelism = boundedArgon2Param(parallelism, 'parallelism', MAX_ARGON2_PARALLELISM);
   const saltBuf = decodeBase64(salt, 'salt');
   const passwordBuf = toBuffer(password, 'password');
   const key = argon2id(passwordBuf, saltBuf, {
-    t: iterations,
-    m: memory_kib,
-    p: parallelism,
+    t: boundedIterations,
+    m: boundedMemory,
+    p: boundedParallelism,
     dkLen: 32,
   });
   return Buffer.from(key);

@@ -282,3 +282,30 @@ test('tampered password-envelope ciphertext fails authentication', () => {
     password: 'correct-password',
   }));
 });
+
+test('hostile Argon2id parameters in an untrusted envelope fail closed', () => {
+  const assetManifest = manifest();
+  const envelope = encryptProtectedEntry(Buffer.from('secret'), {
+    entryName: assetManifest.payload.path,
+    manifest: assetManifest,
+    password: 'correct-password',
+  });
+  for (const hostileKdf of [
+    { ...envelope.password_kdf, memory_kib: 64 * 1024 * 1024 },
+    { ...envelope.password_kdf, iterations: 1_000_000 },
+    { ...envelope.password_kdf, parallelism: 1024 },
+    { ...envelope.password_kdf, memory_kib: 0 },
+    { ...envelope.password_kdf, iterations: 1.5 },
+  ]) {
+    const hostileEnvelope = { ...envelope, password_kdf: hostileKdf };
+    assert.throws(
+      () =>
+        decryptProtectedEntry(hostileEnvelope, {
+          entryName: assetManifest.payload.path,
+          manifest: assetManifest,
+          password: 'correct-password',
+        }),
+      /unsupported Argon2id/,
+    );
+  }
+});
