@@ -373,23 +373,41 @@ if (validateSchema()) {
   } else {
     try {
       const corePackageRecord = corePackageRecords[0];
-      const coreReleaseTag = corePackageRecord.release_status === 'candidate'
+      const publishedTag = corePackageRecord.release_status === 'candidate'
         ? corePackageRecord.published_version
         : corePackageRecord.version;
-      const coreReleaseCommit = gitText(repoRoot, [
+      const publishedCommit = gitText(repoRoot, [
         'rev-list',
         '-n',
         '1',
-        `refs/tags/${coreReleaseTag}`,
+        `refs/tags/${publishedTag}`,
       ]);
-      if (coreReleaseCommit !== coreConformanceCommit) {
+      if (corePackageRecord.release_status === 'candidate') {
+        execFileSync(
+          'git',
+          ['merge-base', '--is-ancestor', publishedCommit, coreConformanceCommit],
+          { cwd: repoRoot, stdio: 'ignore' },
+        );
+        const candidatePackage = JSON.parse(
+          gitBytes(repoRoot, [
+            'show',
+            `${coreConformanceCommit}:${corePackageRecord.package_json}`,
+          ]).toString('utf8'),
+        );
+        assertPackageManifest(
+          coreComponent,
+          corePackageRecord,
+          candidatePackage,
+          'conformance_commit',
+        );
+      } else if (publishedCommit !== coreConformanceCommit) {
         fail(
           coreComponent,
-          `Core conformance_commit must equal release tag ${coreReleaseTag}: ${coreReleaseCommit}`,
+          `Core conformance_commit must equal release tag ${publishedTag}: ${publishedCommit}`,
         );
       }
     } catch (error) {
-      fail(coreComponent, `Core release tag evidence is unavailable: ${error.message}`);
+      fail(coreComponent, `Core conformance evidence is unavailable: ${error.message}`);
     }
   }
   const repositories = new Set();

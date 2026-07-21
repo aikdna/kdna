@@ -291,14 +291,15 @@ test('ecosystem workflow checkouts stay pinned to schema-2 source commits', () =
   }
 });
 
-test('canonical Core conformance anchor is bound to the exact Core release tag', (t) => {
+test('candidate Core conformance anchor carries the declared candidate package version', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-core-anchor-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const canonical = JSON.parse(
     fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
   );
   const core = canonical.components.find((entry) => entry.repository === 'aikdna/kdna');
-  const oldAnchor = git(repoRoot, ['rev-parse', `${core.conformance_commit}^`]);
+  const corePackage = core.packages.find((entry) => entry.npm_package === '@aikdna/kdna-core');
+  const oldAnchor = git(repoRoot, ['rev-list', '-n', '1', corePackage.published_version]);
   for (const entry of canonical.components) {
     if (entry.conformance_commit === core.conformance_commit) {
       entry.conformance_commit = oldAnchor;
@@ -313,7 +314,7 @@ test('canonical Core conformance anchor is bound to the exact Core release tag',
   fs.writeFileSync(manifestPath, JSON.stringify(canonical));
   const result = runValidator(manifestPath);
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /Core conformance_commit must equal release tag/u);
+  assert.match(result.stderr, /conformance_commit package version mismatch/u);
 });
 
 test('asset inventory is an exact two-way projection of index/current.json', (t) => {
