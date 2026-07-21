@@ -157,7 +157,7 @@ Source Evidence registers content provided by the user for analysis. Evidence is
 {
   "evidence_id": "ev_20260531_001",
   "source_type": "local_folder",
-  "source_path": "/Users/alice/writing-samples/",
+  "source_path": "<path-to-your-writing-samples>/",
   "file_count": 47,
   "content_hash": "sha256:abc123...",
   "privacy_level": "private",

@@ -114,16 +114,16 @@ Example for writing domain:
 **Location:** KDNA_Cases.json · cases[] + KDNA_Patterns.json · `counterexamples[]`
 
 - What's the most common failure pattern you've seen?
-- What's a case where applying domain principles produced a clearly better outcome?
+- What's a case where the declared judgment produces a recognizably different, in-scope choice?
 - What's a case where applying domain principles would have been wrong?
 
-### 13. Evaluation — How to verify judgment quality
+### 13. Verification — How to check semantic fidelity
 
 **Location:** evals/ directory + KDNA_Evolution.json · `eval_results[]`
 
-- How would you test whether an agent using this domain judges better than one without it?
-- What's a test case where the correct judgment is clear?
-- What would count as evidence that this domain is working?
+- How would you test whether the exported asset preserves the selected judgment and boundaries?
+- What's a task where two legitimate judgment assets should lead to different choices?
+- What would count as evidence that loading, scope, authorization, and rollback work as declared?
 
 ---
 

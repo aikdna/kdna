@@ -216,6 +216,20 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
   const assets = canonical.components.find((entry) => entry.repository === 'aikdna/kdna-assets');
   assert.equal(assets.packages.length, 0);
   assert.equal(assets.artifacts.length, 2);
+  const studioCore = canonical.components.find(
+    (entry) => entry.repository === 'aikdna/kdna-studio-core',
+  ).packages[0];
+  assert.deepEqual(
+    [studioCore.version, studioCore.published_version, studioCore.release_status],
+    ['3.0.0', '2.0.2', 'candidate'],
+  );
+  const studioCli = canonical.components.find(
+    (entry) => entry.repository === 'aikdna/kdna-studio-cli',
+  ).packages[0];
+  assert.deepEqual(
+    [studioCli.version, studioCli.published_version, studioCli.release_status],
+    ['0.11.0', '0.10.2', 'candidate'],
+  );
   assert.deepEqual(
     new Set(
       canonical.components
@@ -291,14 +305,15 @@ test('ecosystem workflow checkouts stay pinned to schema-2 source commits', () =
   }
 });
 
-test('canonical Core conformance anchor is bound to the exact Core release tag', (t) => {
+test('candidate Core conformance anchor carries the declared candidate package version', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-core-anchor-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const canonical = JSON.parse(
     fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
   );
   const core = canonical.components.find((entry) => entry.repository === 'aikdna/kdna');
-  const oldAnchor = git(repoRoot, ['rev-parse', `${core.conformance_commit}^`]);
+  const corePackage = core.packages.find((entry) => entry.npm_package === '@aikdna/kdna-core');
+  const oldAnchor = git(repoRoot, ['rev-list', '-n', '1', corePackage.published_version]);
   for (const entry of canonical.components) {
     if (entry.conformance_commit === core.conformance_commit) {
       entry.conformance_commit = oldAnchor;
@@ -313,7 +328,7 @@ test('canonical Core conformance anchor is bound to the exact Core release tag',
   fs.writeFileSync(manifestPath, JSON.stringify(canonical));
   const result = runValidator(manifestPath);
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /Core conformance_commit must equal release tag/u);
+  assert.match(result.stderr, /conformance_commit package version mismatch/u);
 });
 
 test('asset inventory is an exact two-way projection of index/current.json', (t) => {
@@ -491,7 +506,7 @@ test('validator rejects unavailable or unreadable current package evidence', (t)
   assert.match(result.stderr, /package evidence is unreadable/u);
 });
 
-test('validator binds every external package to one exact clean source commit', (t) => {
+test('validator binds external packages to the accepted source snapshot without reinterpreting current checkout state', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-package-commit-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const packageRoot = path.join(root, 'fixture-package');
@@ -506,13 +521,20 @@ test('validator binds every external package to one exact clean source commit', 
   writeManifest(root, [component({ source_commit: '0'.repeat(40) })]);
   const mismatched = runValidator(manifestPath, root);
   assert.equal(mismatched.status, 1);
-  assert.match(mismatched.stderr, /checkout commit mismatch/u);
+  assert.match(mismatched.stderr, /accepted source snapshot is unreadable/u);
 
   writeManifest(root, [component({ source_commit: commit })]);
   fs.writeFileSync(path.join(packageRoot, 'untracked.txt'), 'dirty');
-  const dirty = runValidator(manifestPath, root);
-  assert.equal(dirty.status, 1);
-  assert.match(dirty.stderr, /checkout is dirty/u);
+  fs.writeFileSync(
+    path.join(packageRoot, 'package.json'),
+    JSON.stringify({ name: '@aikdna/fixture-package', version: '2.0.0' }),
+  );
+  const advancedCheckout = runValidator(manifestPath, root);
+  assert.equal(
+    advancedCheckout.status,
+    0,
+    `stdout=${advancedCheckout.stdout}\nstderr=${advancedCheckout.stderr}`,
+  );
 });
 
 test('validator requires a candidate stable version newer than the incumbent', (t) => {
@@ -535,7 +557,7 @@ test('validator requires a candidate stable version newer than the incumbent', (
   assert.match(result.stderr, /candidate version must be greater/u);
 });
 
-test('validator rejects component and package path escape and symlink escape', (t) => {
+test('validator rejects manifest path escape and does not follow a current-checkout symlink past an immutable source pin', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-paths-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const packageRoot = path.join(root, 'fixture-package');
@@ -576,8 +598,7 @@ test('validator rejects component and package path escape and symlink escape', (
   fs.symlinkSync(outside, path.join(packageRoot, 'package.json'));
   manifestPath = writeManifest(root, [component({ source_commit: commit })]);
   result = runValidator(manifestPath, root);
-  assert.equal(result.status, 1);
-  assert.match(result.stderr, /resolves outside/u);
+  assert.equal(result.status, 0, `stdout=${result.stdout}\nstderr=${result.stderr}`);
 });
 
 test('validator rejects duplicate repository, package source, package name, and npm coordinate', (t) => {

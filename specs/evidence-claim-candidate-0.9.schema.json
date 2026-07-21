@@ -1,6 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aikdna.com/schemas/evidence-claim-candidate-0.9.schema.json",
+  "$comment": "Historical, withdrawn evidence-claim candidate retained for provenance and fixture compatibility. It is not KDNA Core validity metadata or a current release gate.",
+  "deprecated": true,
   "title": "KDNA EvidenceClaim 0.9 Candidate",
   "description": "Candidate evidence contract. A bounded claim about judgment quality backed by identifiable evidence. Separate from Trace: Trace records execution facts; EvidenceClaim interprets quality. References trace_id and plan_id; does not duplicate trace content.",
   "type": "object",

@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.21.0 (2026-07-20)
+
+### Changed
+
+- Keep `planLoad` fail-closed for password-protected assets until the supplied
+  credential is actually verified by `load`; a mere password-present signal
+  no longer reports `ready` or `can_load_now: true`.
+- Require at least one non-empty, author-neutral judgment unit and explicit
+  scope or boundary semantics while keeping optional creator provenance
+  separate from format validity.
+- Preserve every declared pattern in compact projection instead of silently
+  applying a prefix budget.
+- Report every non-empty payload path intentionally omitted by compact
+  projection, including deterministic counts, in Runtime Capsule trace and
+  prompt output; preserve complete axiom applicability lists and stop trimming
+  a full-statement fallback.
+- Make `checksums.json` optional under one container authority and verify it
+  whenever it is present.
+- Withdraw asset-signature containers from the Development Preview contract;
+  malformed or legacy signature declarations now fail closed. External grants
+  and Human Lock provenance remain separate responsibilities.
+- Close licensed entitlement validation around the declared `password`,
+  `local_receipt`, `account`, and `org` profiles.
+- Load external-grant Schemas through static package imports so bundler-based
+  ecosystem adapters retain the exact Core validators instead of failing at
+  activation time.
+
 ## 0.20.0 (2026-07-17)
 
 ### Changed

@@ -475,7 +475,22 @@ function buildRuntimeCapsule({
   if (!['public', 'licensed', 'remote'].includes(runtimeAccess)) {
     fail('KDNA_RUNTIME_CAPSULE_BUILD_INVALID', `Unsupported Runtime access: ${runtimeAccess}.`);
   }
-  const signatureEvidence = signature || { state: 'absent' };
+  if (
+    signature !== undefined &&
+    (
+      !signature ||
+      typeof signature !== 'object' ||
+      Array.isArray(signature) ||
+      signature.state !== 'absent' ||
+      Object.keys(signature).some((key) => key !== 'state')
+    )
+  ) {
+    fail(
+      'KDNA_ASSET_SIGNATURE_UNSUPPORTED',
+      'Asset signatures are outside the current Preview contract.',
+    );
+  }
+  const signatureEvidence = { state: 'absent' };
 
   const capsule = {
     type: 'kdna.runtime-capsule',
@@ -502,6 +517,9 @@ function buildRuntimeCapsule({
       profile: projection.profile,
     },
   };
+  if (projection.projection_report !== undefined) {
+    capsule.trace.projection_report = globalThis.structuredClone(projection.projection_report);
+  }
   assertRuntimeCapsuleSuccess(capsule, 'KDNA_RUNTIME_CAPSULE_BUILD_INVALID');
   return capsule;
 }

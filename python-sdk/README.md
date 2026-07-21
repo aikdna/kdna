@@ -22,14 +22,14 @@ python -m pytest
 ```
 
 This directory is not currently published as an official PyPI distribution.
-Use the npm CLI/Core packages for the stable public runtime. The Python adapter
+Use the npm CLI/Core packages for the published pre-release runtime. The Python adapter
 is a source-level integration preview until a separate signed release pipeline
 exists.
 
 The adapter supports `@aikdna/kdna-cli >=0.35.0,<0.36.0` and checks the CLI
 version before its first operation. Compatibility with a later pre-1.0 CLI
 minor release must be verified before this range is widened. The adapter also
-validates the stable `inspect` response boundary (`format_version`, `asset_id`,
+validates the declared `inspect` response boundary (`format_version`, `asset_id`,
 `version`, and `payload`) instead of relying on the removed `kdna_version`
 field.
 

@@ -1,259 +1,62 @@
 ---
 name: kdna-loader
-description: Discover and load KDNA judgment frameworks from installed .kdna assets when the task requires domain-specific judgment (review, diagnosis, critique, classification, strategy) where the same input could legitimately be interpreted multiple ways. Skip for pure formatting, factual lookup, code execution, or mechanical transformations. This skill is the entire interface to KDNA — domains themselves are not separate skills.
+description: Validate and load one explicit KDNA .kdna file when the user asks to use that file or the Host supplies an exact user-approved attachment. Do not discover, install, auto-select, or silently apply assets.
 ---
 
 # KDNA Loader
 
-KDNA (Knowledge DNA) is a portable format for encoding domain judgment.
-Each KDNA domain is a small JSON bundle (~5–30 KB) that describes how
-an expert thinks inside one domain: the principles they reason from,
-the misunderstandings they avoid, the questions they ask themselves
-before deciding.
+This adapter consumes one explicit KDNA judgment asset through the official
+KDNA CLI/Core boundary. It does not define the KDNA protocol or decide which
+judgment has authority.
 
-**KDNA does not act. KDNA shapes how an agent judges before acting.**
-Together with this skill, KDNA + kdna-loader form a complete loop:
-this skill provides the **routing and protocol**, KDNA provides the
-**judgment material**.
+## Activation boundary
 
-This skill is the **only** KDNA-related skill. Domains themselves are
-not registered as skills — they live as `.kdna` assets under `~/.kdna/packages/` and
-are discovered on demand. Whether the user has 1 domain installed or
-100, this skill is the single entry point.
+Use this Skill only when either:
 
----
+- the user explicitly asks to use a specific local `.kdna` file; or
+- the Host supplies an exact attachment already approved by the user, including
+  file identity or path, version or digest, and attachment scope.
 
-## Part 1 — Decide whether KDNA applies at all
+Do not scan directories or a global asset store, call discovery or matching
+commands to choose an asset, infer consent from file presence, or activate from
+broad task keywords. If no exact approved asset is available, continue without
+KDNA or ask the user to choose one.
 
-Most tasks do **not** need KDNA. Run this check first.
-
-### Use KDNA when
-
-- The same input could mean different things, and the wrong reading
-  produces a wrong response. Examples:
-  - "Your price is too high" → could be value uncertainty, budget,
-    or risk aversion. Wrong diagnosis → wrong response.
-  - "Review this article opening" → could need polish, or structural
-    rewrite. Wrong frame → wasted edit cycle.
-  - "Did our meeting reach a decision?" → could be a real commitment
-    or just discussion. Wrong call → fake progress.
-- The task is **review / diagnosis / critique / classification /
-  strategy / evaluation** in a specific domain.
-- The user expects expert judgment, not a procedure.
-
-### Skip KDNA when
-
-- The task is mechanical: format conversion, syntax fixes, lookups,
-  arithmetic, code execution.
-- The task is purely creative without a judgment dimension.
-- The user explicitly asked for one-shot output without analysis.
-- No installed domain plausibly covers the task.
-
-If you decide to skip, **answer normally** and do not mention KDNA.
-The user should never see "I considered loading KDNA but didn't."
-
----
-
-## Part 2 — Discover what's installed
-
-Do **not** assume any specific domains exist. Ask the CLI every time.
+## Validate and plan
 
 ```bash
-kdna available --json
+kdna validate <file.kdna>
+kdna plan-load <file.kdna> --json
 ```
 
-Returns a compact JSON array — one entry per installed domain — with:
-`name`, `version`, `judgment_version`, `status`, `description`,
-`core_insight`, `keywords`, `applies_when` (flattened across all
-axioms), `does_not_apply_when` (flattened), `failure_risks`. Yanked
-domains are excluded automatically.
+Do not parse the ZIP, decode the payload, or infer authorization from manifest
+fields. Continue only when Core reports `can_load_now: true`.
 
-This is your **only** discovery interface. Do not inspect `~/.kdna/packages/` manually, unzip `.kdna` files,
-or `cat` internal JSON entries directly — the CLI is the supported contract
-between this skill and the KDNA file format. The on-disk layout may
-change; `kdna available` will not.
-
-If the command returns `[]` or fails (CLI not installed) → no KDNA
-available → answer normally, mention installation only if the user is
-asking about KDNA itself.
-
----
-
-## Part 3 — Evaluate fit (per candidate domain)
-
-`kdna available --json` already gave you each domain's `applies_when`
-and `does_not_apply_when` (flattened across all axioms). For each
-domain in the list, decide whether it fits the current task by
-**reading the language**, not by token matching.
-
-For a hint signal (optional, low-trust), you can also call:
+## Load
 
 ```bash
-kdna match "<task in user's own words>" --json
+kdna load <file.kdna> --profile=compact --as=json
 ```
 
-This returns two things:
+Use only the toolchain-produced Runtime Capsule. Never expose credentials,
+encrypted payloads, protected source content, or raw container internals.
 
-- `dropped`: domains whose `does_not_apply_when` matched the task
-  with high enough confidence to mechanically disqualify them.
-  **Respect this.** Even if your own reading thinks the domain
-  could fit, the author explicitly excluded the case.
-- `hints`: domains with weak surface keyword overlap. Many false
-  positives are normal — treat as one input among many, not as a
-  decision.
+## Visible Host state
 
-The decision is yours, not the CLI's. The CLI only mechanically
-disqualifies (via `dropped`); it cannot pick the winner.
+Current facts, explicit user intent, law, safety rules, system and developer
+instructions, and Host permissions take precedence over the selected judgment.
+The Host must show active identity, exact version or digest, attachment scope,
+and load reason, with disable, switch, and rollback controls.
 
-### How to decide
-
-For each domain still in play after `dropped` exclusion:
-
-1. Does the domain's **description** match what the user is asking?
-2. Does **any** `applies_when` entry describe a situation that
-   matches this specific task?
-3. Does **any** `does_not_apply_when` entry describe what the user
-   actually wants (e.g. they explicitly asked for copy edit)?
-
-If 1 and 2 are yes and 3 is no → strong fit.
-If 2 is unclear → weak fit. Prefer skipping over forcing.
-
-A domain's `failure_risks` (also in `available --json`) tells you
-what bad output the author warns about. Pre-check: is this exactly
-what you'd produce if you loaded the domain? If yes, skip it.
-
----
-
-## Part 4 — Selection
-
-After evaluating, you should usually have:
-
-- **0 fits** → do not load KDNA. Answer normally.
-- **1 fit** → load it.
-- **2+ fits** → prefer the narrowest match. If two domains take
-  genuinely different stances on the task, surface the choice:
-  > "Two installed domains could apply here: @aikdna/writing
-  > (structural diagnosis) and @yourorg/copy_polish (line-level
-  > polish). Which judgment frame should I use?"
-  Do **not** silently blend.
-
-Never load more than one domain as primary. A secondary domain can
-constrain (e.g. `@aikdna/agent_safety` always advises on irreversible
-actions), but the primary judgment frame is always one.
-
----
-
-## Part 5 — Load
-
-Once selected, load the domain via the CLI:
-
-```bash
-kdna load @scope/name
-```
-
-The default output (`--as=prompt`) is a compact text rendering
-optimized for system-prompt injection: axioms with their
-`applies_when` / `does_not_apply_when` / `failure_risk`, stances,
-banned terms, misunderstandings, and self-checks. Typically
-~30–50% smaller than the raw JSON.
-
-Other output modes:
-
-```bash
-kdna load @scope/name --as=json   # raw Core + Patterns JSON
-kdna load @scope/name --as=raw    # concatenated raw file contents
-```
-
-Use `--as=prompt` for normal loading. Use `--as=json` only when you
-genuinely need to inspect the structure (e.g. user is debugging the
-domain itself).
-
-**Token discipline**: the prompt output already includes everything
-the agent needs to apply judgment. Do not also `cat` the optional
-files (`KDNA_Scenarios.json`, `KDNA_Cases.json`, etc.) unless the
-user explicitly asks for examples, reasoning chains, or capability
-stages.
-
----
-
-## Part 6 — Apply silently
-
-You have now internalized the domain's judgment surface. From this
-point on:
-
-1. **Adopt the axioms as your reasoning frame** — reason *from*
-   them, not *around* them.
-2. **Honour the boundaries** — for each axiom you'd apply, confirm
-   the task is in `applies_when` AND not in `does_not_apply_when`.
-3. **Pre-check failure_risk** — before producing output, ask:
-   "Am I about to commit the failure this domain explicitly warns
-   about?" If yes, step back.
-4. **Use preferred terminology** — even if the user uses banned
-   terms, gently substitute the domain's terms.
-5. **Detect named misunderstandings** in the user's framing.
-6. **Apply frameworks** when their `when_to_use` matches.
-7. **Run self-checks** before final output. If a self-check fails,
-   revise.
-8. **Output a domain-shaped answer** — never quote KDNA, never list
-   axioms, never say "according to the loaded KDNA." The user sees
-   sharper judgment, not the source.
-
----
-
-## Part 7 — Boundary respect
-
-KDNA does not override:
-
-- **User intent**: if the user asks for grammar fixes, give grammar
-  fixes — do not lecture about structural void.
-- **Evidence**: if the user provides facts contradicting an axiom,
-  evidence wins.
-- **Safety**: if `@aikdna/agent_safety` (or equivalent) says halt,
-  halt.
-- **Skills' execution layer**: KDNA shapes judgment; other skills /
-  tools do the action.
-
----
+Do not hide whether KDNA was used. Do not claim that an asset is true, expert,
+officially approved, or guaranteed to improve the result.
 
 ## Failure handling
 
-| Situation | What to do |
+| Situation | Action |
 |---|---|
-| `kdna` CLI not installed | Skip KDNA. Answer normally. Mention installation only if user asks about KDNA itself. |
-| `kdna available --json` returns `[]` | No domains installed. Skip KDNA. |
-| `kdna load <name>` exits non-zero | That domain is broken (yanked, missing files, parse error). Try next candidate or skip KDNA. The error message tells you why. |
-| User explicitly asks for a domain that isn't installed | Tell them, suggest `kdna install <name>`. Do not fabricate the domain. |
-| Two domains' stances directly conflict on the task | Surface to user. Do not blend. |
-
----
-
-## Debug mode
-
-If the user asks "did you use KDNA?" or "which domain did you load?",
-you may reveal:
-
-```
-Loaded: @aikdna/writing@0.7.2 (judgment_version 2026.05)
-Reason: matched axiom_problem_not_prose.applies_when
-        on "user asked for content review"
-Applied modules: KDNA_Core, KDNA_Patterns
-Skipped: @aikdna/code_review (task is not code-related)
-```
-
-Otherwise, stay silent about the loading mechanics.
-
----
-
-## What this skill is NOT
-
-- Not a list of available KDNA domains (those are installed `.kdna` assets, discovered on demand)
-- Not a registry browser (use `kdna list --available` CLI)
-- Not an authoring workflow. Agents may create assets through official authoring
-  and compile/export tools; this loader skill only discovers and consumes the
-  resulting `.kdna` files. Human Lock is optional provenance or an explicit
-  representation claim, not a prerequisite for a valid or loadable asset.
-- Not an auto-loader that runs on every request — you decide per
-  request whether the task needs KDNA at all
-
-The skill teaches the protocol. The KDNA files supply the judgment.
-Both are required; neither is sufficient alone.
+| No explicit file or approved attachment | Do not use KDNA. |
+| Ambiguous choice | Ask the user; do not choose autonomously. |
+| `can_load_now` is not `true` | Follow Core or block. |
+| Outside declared scope | Skip the asset. |
+| User disables or replaces it | Stop using it immediately. |

@@ -18,7 +18,7 @@ behavior.
 |---|---|---|
 | `kdna-core-swift` | Swift runtime implementation: validate, inspect, plan, authorize, project. | Product UI state or Studio authoring rules. |
 | `kdna-studio-swift` | Swift authoring kernel: project, cards, compile, runtime export. | Chat load behavior or app-private `.kdna` formats. |
-| `kdna-app-shared` | Shared app presentation/adapters after Core exposes stable types. | Access values, entitlement profiles, LoadPlan states, crypto profiles. |
+| `kdna-app-shared` | Shared app presentation/adapters after Core exposes conformance-backed types. | Access values, entitlement profiles, LoadPlan states, crypto profiles. |
 | Native consumer app | Import local `.kdna`, render LoadPlan, request credentials, load projections. | Manifest-based authorization decisions. |
 | Native authoring app | Call Studio export and validate through Core. | Runtime container variants that Core/CLI cannot inspect. |
 

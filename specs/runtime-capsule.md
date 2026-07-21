@@ -73,14 +73,25 @@ in the Agent Host request, receipt, and Judgment Trace.
 The requested profile controls `context`. Implementations must not emit one
 shape while labeling it as another profile. `compact` preserves scoped
 `highest_question`, `worldview`, ordered `value_order`, `judgment_role`,
-applicability-aware axioms, boundaries, self-checks, failure modes, and a
-bounded pattern set when present.
+applicability-aware axioms, boundaries, self-checks, failure modes, and every
+declared pattern. An implementation that cannot retain those semantics must
+fail closed rather than silently truncate them.
 
 ## 4. Trace facts
 
-The Capsule `trace` records only loading facts required by the schema:
+The Capsule `trace` records only loading and projection facts required by the schema:
 packaged-file or packaged-bytes input, CBOR payload, Core loader, load time,
-schema-valid state, signature state, and selected projection profile.
+schema-valid state, signature state, selected projection profile, and an optional
+`projection_report`. For `compact`, current Core emitters include that report:
+
+- `status` is `complete` when no non-empty payload path was omitted, otherwise
+  `partial`;
+- `omitted` lists deterministic JSON Pointer paths and counts;
+- `omitted_total` is the sum of those counts.
+
+The report is projection metadata, not judgment content. It makes intentional
+profile omission visible without creating a second payload, digest, or budget
+protocol.
 
 These facts do not establish semantic consumption, behavioral influence,
 judgment quality, or model conformance.

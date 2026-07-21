@@ -1,143 +1,74 @@
-# KDNA Meta-Cognition
+# Host Adoption Policy for KDNA
 
-> [中文版](./meta-cognition.zh.md) · See also: [Evaluation Framework](./evaluation.md)
+> [中文版](./meta-cognition.zh.md)
+>
+> This is product guidance for Hosts. It is not a KDNA format rule and does not
+> authorize an Agent to discover or select arbitrary assets on a machine.
 
-How agents should think about using KDNA itself — when to apply it, when to skip it, how to resolve conflicts, and how to compose domains.
+## Start from authority, not task keywords
 
-This is the judgment layer for the judgment layer.
+A Host may consider a KDNA asset only when the user explicitly selected the
+file or previously approved an exact asset version and digest for the current
+workspace, application, or session.
 
-## 1. The First Question: Should KDNA Be Used At All?
+The order is:
 
-Before loading any KDNA, the agent should ask: **"Would domain judgment change the reasoning trajectory here, or just add overhead?"**
+```text
+user selection or approved attachment
+→ eligible asset set
+→ task applicability
+→ LoadPlan and authorization
+→ load / ask / skip / block
+```
 
-### Use KDNA when
+Task classification narrows an already-authorized set. It never grants an
+asset permission to influence a task.
 
-| Condition | Example |
+## Four decisions
+
+| Decision | Meaning |
 |---|---|
-| The task requires diagnosis, not just information retrieval | "Why is this sales page not converting?" |
-| The domain has non-obvious judgment patterns | Distinguishing price objection from certainty deficit |
-| The user's framing likely contains domain-specific misunderstandings | "The employee won't execute → motivation problem" |
-| The output quality depends on terminology precision | Legal, medical, security domains |
-| The agent would otherwise give generic, common-sense answers | "Make it more fun" for elder engagement |
+| `load` | One exact authorized asset clearly applies and LoadPlan permits loading |
+| `ask` | More than one eligible asset or an ambiguous scope requires user choice |
+| `skip` | No eligible asset clearly applies, or a simpler mechanism is sufficient |
+| `block` | Validation, integrity, authorization, compatibility, or policy fails |
 
-### Skip KDNA when
+No asset is a valid default merely because it is newer, globally stored,
+keyword-matched, or marked with a content-maturity label.
 
-| Condition | Example |
-|---|---|
-| The task does not need an independently managed judgment asset | Routine formatting or extraction under an already sufficient local contract |
-| The domain judgment is obvious to any competent adult | "Is 2+2=4?" |
-| KDNA would slow down a time-sensitive operation | Real-time data processing |
-| The loaded KDNA does not change the reasoning path | Vague axioms that produce the same output as no KDNA |
-| The user explicitly asks for a generic, non-specialized response | "Give me the standard textbook answer" |
+## Conflict order
 
-### The KDNA Humility Principle
+During use, the Host preserves this authority order:
 
-> **KDNA shapes judgment. It does not replace evidence, override user intent, or substitute for missing facts.**
+1. system, safety, law, and tool permissions;
+2. current user intent and explicit task constraints;
+3. verifiable current facts and evidence;
+4. the selected asset's declared scope, boundaries, and judgment;
+5. Host presentation and convenience preferences.
 
-If KDNA axioms conflict with specific evidence the user provides, the evidence takes priority. If the user explicitly rejects a KDNA-shaped framing, respect that. KDNA is a lens, not a dogma.
+If two authorized assets encode materially different judgment, surface the
+choice. Do not average them or silently select the one the Agent prefers.
 
-## 2. Single Domain vs Multi-Domain
+## Visibility and control
 
-### When one domain is enough
+The Host should make the following inspectable without dumping protected
+content into every response:
 
-Most tasks need only one leading domain. The agent should:
-1. Identify the primary domain from the user's goal.
-2. Load Core + Patterns for that domain.
-3. Use optional files only if the task triggers their load conditions.
-4. Answer within that domain's frame.
+- active asset identity, version, and digest;
+- attachment scope: workspace, application, session, or one task;
+- why the asset was loaded or skipped;
+- LoadPlan and authorization state;
+- controls to disable, switch, and roll back.
 
-### When to load multiple domains
+The ordinary answer need not quote asset internals. That is different from
+hiding the fact that an asset affected the task.
 
-Load multiple domains when:
+## When to skip KDNA
 
-- The user's task spans two distinct judgment areas (e.g., "Review this sales page copy" involves both sales and communication)
-- One domain provides the primary lens and another provides constraints
-- The domains address different layers of the same problem
+Use a Prompt, Skill, Policy, document, Memory, or knowledge system when its
+existing contract is enough. Skip KDNA when the task is outside the selected
+asset's scope, when current facts contradict a premise, when the user rejects
+the asset's frame, or when the Host cannot preserve its boundaries.
 
-### Composition rules
-
-When using multiple domains:
-
-1. **One leader, others as advisors.** Pick one primary domain. Other domains provide constraints, boundaries, or checks — not competing answers.
-2. **Surface conflicts, don't blend.** If domain A says "price objections are certainty deficits" and domain B says "price objections are value communication failures," tell the user: "Domain A interprets this as a certainty problem. Domain B sees it as a communication quality problem. Which lens is more useful here?"
-3. **Don't average.** Combining two domain stances into a middle-ground answer produces mush. Pick one frame and use the other as a quality check.
-4. **Check terminology overlap.** If two domains define the same term differently, choose one definition for the output and note the ambiguity.
-
-## 3. Conflict Arbitration
-
-When two KDNA domains give contradictory guidance:
-
-### Resolution order
-
-1. **User intent overrides domain preference.** If the user explicitly chooses a framing, use it.
-2. **Specific domain over general domain.** A domain built for the exact problem beats a tangentially relevant one.
-3. **Evidence over axiom.** If the user provides facts that contradict a domain axiom, the facts win.
-4. **Stated boundary wins.** If domain A says "this does NOT cover X" and the task is about X, domain A disqualifies itself.
-
-### When to reject KDNA guidance
-
-- The domain's axioms are contradicted by specific, verifiable evidence in the current case.
-- The domain's terminology actively confuses the user.
-- The domain's self-check items cannot be satisfied for this task.
-- The domain is marked `deprecated` or `draft` and the risk of bad judgment is high.
-
-## 4. Domain Selection Heuristics
-
-### By user language
-
-- If the user asks in Chinese about a domain that has a Chinese KDNA version, prefer the Chinese-language domain over the English one.
-- If only an English KDNA exists but the user is Chinese, load the English KDNA but translate the reasoning in the output.
-
-### By task type
-
-| Task type | Domain selection priority |
-|---|---|
-| Diagnosis/review/critique | Load the domain whose axioms define the diagnostic lens |
-| Creation/generation | Load the domain whose frameworks define the creative structure |
-| Decision/choice | Load the domain whose stances define the evaluation criteria |
-| Learning/improvement | Load the domain whose Evolution model defines the growth path |
-
-### By domain maturity
-
-When multiple domains match, prefer:
-1. `stable` — production-ready, known quality
-2. `experimental` — usable but evolving
-3. `draft` — use only if no better option exists, and warn the user
-4. `deprecated` — only use if the user explicitly requests it
-
-## 5. KDNA Load Boundaries
-
-### Don't load KDNA for sub-tasks
-
-If the user asks a sales question and the agent needs to look up a definition, the definition lookup does not need KDNA loaded. Only the primary judgment task does.
-
-### Don't pre-load domains "just in case"
-
-Loading unused KDNA wastes context. Wait until the task requires domain judgment, then load the relevant domain.
-
-### Don't assume internal agent operations are judgment-free
-
-Tool selection, code execution, and file I/O can involve substantial judgment:
-which tool is safe, whether evidence is sufficient, when to stop, and whether an
-action is authorized. The question is not whether the operation is internal or
-user-facing. Load KDNA only when an independently managed judgment asset adds a
-needed contract beyond the Host's existing Prompt, Skill, Policy, and controls.
-
-## 6. When KDNA Makes Things Worse
-
-KDNA can degrade output quality when:
-
-- **Overfitting.** The agent forces a domain frame onto a situation it doesn't fit. Example: applying "price objection as certainty deficit" to a customer who genuinely cannot afford the product.
-- **Terminology rigidity.** The agent insists on domain terminology that the user doesn't understand.
-- **False diagnosis.** The agent detects a "misunderstanding" that isn't there, because the domain's misunderstanding list is too aggressive.
-- **Premature closure.** The agent stops thinking once it finds a domain pattern match, missing the unique aspects of the case.
-
-### The meta-check
-
-Before finalizing any KDNA-shaped answer, the agent should ask:
-
-1. "Would this answer still make sense if I removed all domain-specific terminology?"
-2. "Am I fitting the situation to the KDNA, or fitting the KDNA to the situation?"
-3. "Is there a simpler, correct answer that doesn't need this domain at all?"
-
-If the answer to (3) is yes, prefer the simpler answer.
+KDNA adds an independent asset and loading contract. It is not a requirement
+for every judgment task.

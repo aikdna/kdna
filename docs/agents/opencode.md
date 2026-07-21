@@ -1,52 +1,23 @@
-# KDNA + OpenCode
+# KDNA with OpenCode
 
-## Quick Install
+Use an explicitly selected `.kdna` file. No global KDNA library or automatically
+installed Skill is required.
 
 ```bash
 npm install -g @aikdna/kdna-cli
-kdna setup
-kdna doctor --agents
+kdna validate ./my-judgment.kdna
+kdna plan-load ./my-judgment.kdna --json
+kdna load ./my-judgment.kdna --profile=compact --as=prompt
 ```
 
-## Prepare a Packaged Asset
+Supply the final projection to OpenCode in the current task or through a Host
+adapter. Keep the active asset identity, exact version or digest, attachment
+scope, and selection reason visible outside the answer. The user must be able
+to disable or replace it.
 
-```bash
-kdna demo minimal ./minimal
-kdna pack ./minimal ./minimal.kdna
-kdna validate ./minimal.kdna
-kdna plan-load ./minimal.kdna
-kdna load ./minimal.kdna --profile=compact --as=prompt
-```
+The repository also contains a `kdna-loader` Skill, but that adapter is
+currently **Unassessed**. Do not treat `kdna setup`, Skill-file presence, global
+asset discovery, or silent loading as evidence that OpenCode used KDNA
+correctly.
 
-For a public example domain, start from its packaged `.kdna` file and release
-card. Validate and plan-load that file before loading it into the agent.
-
-## Verify It Works
-
-Ask OpenCode a task where the loaded domain should matter:
-
-```text
-Review this blog post for structural quality.
-```
-
-OpenCode should apply the loaded judgment silently. You should not see
-"According to KDNA axiom..." in the response; KDNA is context for judgment,
-not text to quote back.
-
-## Manual Loader Installation
-
-If `kdna setup` doesn't detect OpenCode:
-
-```bash
-mkdir -p ~/.agents/skills/kdna-loader
-cp ~/.kdna/skills/kdna-loader/SKILL.md ~/.agents/skills/kdna-loader/SKILL.md
-```
-
-## Common Issues
-
-| Symptom | Fix |
-|---|---|
-| "KDNA not loaded" | Run `kdna setup` again, then load a local `.kdna` file with `kdna load` |
-| "No assets found" | Validate and pass an explicit local `.kdna` path |
-| "Skill outdated" | `kdna setup --force` to reinstall |
-| OpenCode not detected | Install OpenCode, then `kdna setup --opencode` |
+See [Loader behavior](../loader-behavior.md) for the Host contract.

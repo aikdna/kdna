@@ -2,7 +2,7 @@
   "$schema": "https://aikdna.com/schemas/eval-scoring.json",
   "domain": "@yourscope/your_domain_id",
   "scoring_framework": "D1-D8",
-  "purpose": "How to score whether loading your KDNA actually changes the agent's reasoning trajectory.",
+  "purpose": "An optional, owner- or reviewer-scoped rubric for checking whether this asset expresses its declared judgment and boundaries on named cases.",
   "dimensions": [
     {
       "id": "D1",
@@ -53,8 +53,9 @@
       "scale": "0/N to N/N"
     }
   ],
-  "minimum_threshold_for_kdna_value": {
-    "description": "Loading your KDNA must improve average score by at least +2 vs no-KDNA baseline, averaged across all 10 cases.",
-    "rationale": "If the lift is <+2, the domain is not adding value."
+  "review_boundary": {
+    "evaluator": "Name the asset owner or reviewer who applies this rubric.",
+    "acceptance": "Define case-specific expectations for in-scope direction, out-of-scope restraint, conflict deference, and projection completeness before review.",
+    "forbidden_inference": "These scores do not prove model-intelligence gain, carrier superiority, universal correctness, or intrinsic asset quality."
   }
 }

@@ -120,10 +120,24 @@ function readBaselines(controlRoot) {
       }
       baselines.set(packageRecord.npm_package, packageRecord.version);
     }
+    if (
+      packageRecord.release_status === 'candidate' &&
+      packageRecord.npm_package &&
+      packageRecord.published_version
+    ) {
+      if (baselines.has(packageRecord.npm_package)) {
+        throw new Error(`duplicate managed package ${packageRecord.npm_package}`);
+      }
+      baselines.set(packageRecord.npm_package, packageRecord.published_version);
+    }
   }
 
+  const candidateBaselines = new Map();
   if (process.env.KDNA_CORE_BASELINE) {
-    baselines.set('@aikdna/kdna-core', process.env.KDNA_CORE_BASELINE);
+    candidateBaselines.set('@aikdna/kdna-core', process.env.KDNA_CORE_BASELINE);
+  }
+  if (process.env.KDNA_STUDIO_CORE_BASELINE) {
+    candidateBaselines.set('@aikdna/kdna-studio-core', process.env.KDNA_STUDIO_CORE_BASELINE);
   }
 
   for (const binding of EXPECTED_BINDINGS) {
@@ -132,7 +146,7 @@ function readBaselines(controlRoot) {
     manifestsByRepository.set(binding.repository, [...new Set(manifests)].sort());
   }
 
-  return { baselines, lifecycleByRepository, manifestsByRepository };
+  return { baselines, candidateBaselines, lifecycleByRepository, manifestsByRepository };
 }
 
 function workspacePackagePaths(repositoryRoot, rootPackage) {
@@ -294,10 +308,13 @@ function reconcileBindings(consumers, baselines, expectedBindings = EXPECTED_BIN
   return reconciled;
 }
 
-function evaluateConsumers(consumers) {
+function evaluateConsumers(consumers, candidateBaselines = new Map()) {
   return consumers.map((consumer) => ({
     ...consumer,
-    ok: !consumer.error && consumer.declared === consumer.expected,
+    ok:
+      !consumer.error &&
+      (consumer.declared === consumer.expected ||
+        consumer.declared === candidateBaselines.get(consumer.packageName)),
   }));
 }
 
@@ -317,6 +334,9 @@ function main() {
   for (const [packageName, version] of [...policy.baselines].sort()) {
     console.log(`  MANAGED ${packageName}@${version}`);
   }
+  for (const [packageName, version] of [...policy.candidateBaselines].sort()) {
+    console.log(`  MANAGED-CANDIDATE ${packageName}@${version}`);
+  }
   console.log(`scanning ${reposRoot}`);
 
   const discovered = findConsumers(
@@ -330,7 +350,10 @@ function main() {
     console.log(`  SKIP ${repository.repository}: ${repository.lifecycle}`);
   }
 
-  const evaluated = evaluateConsumers(reconcileBindings(discovered.consumers, policy.baselines));
+  const evaluated = evaluateConsumers(
+    reconcileBindings(discovered.consumers, policy.baselines),
+    policy.candidateBaselines,
+  );
   const failures = [];
   for (const consumer of evaluated) {
     const section = consumer.section ? `#${consumer.section}` : '';

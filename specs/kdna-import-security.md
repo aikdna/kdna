@@ -25,12 +25,19 @@ A conforming importer MUST:
 
 ## 3. Runtime Entry Checks
 
-For current KDNA Core public launch assets, the baseline entries are:
+The authoritative current entry classification is the Required/Optional table
+in [`container.md`](./container.md). Importers MUST NOT maintain a second entry
+list with different requiredness.
+
+The required Runtime entries are exactly:
 
 - `mimetype`
 - `kdna.json`
 - `payload.kdnab`
-- `checksums.json`
+
+`checksums.json` is optional at the protocol layer and official writers emit
+it. When it is present, importers MUST validate it and reject a declared digest
+mismatch. Its absence is not by itself a format error.
 
 Future Phase S security profiles may add signature and encryption entries. They
 MUST NOT silently redefine the current baseline.
@@ -54,9 +61,9 @@ Consumers MUST:
 
 ## 5. Persistence Rules
 
-Consumers MUST store the original `.kdna` asset or an implementation-defined
-immutable copy. They MUST NOT persist decrypted source JSON as canonical
-installed asset state.
+Consumers MAY read the original `.kdna` file directly or preserve an
+implementation-defined immutable copy. If they persist state, they MUST NOT
+persist decrypted source JSON as the canonical asset.
 
 Derived caches, if introduced later, MUST be encrypted at rest, rebuildable,
 marked non-canonical, and bound to local runtime policy.
@@ -64,7 +71,7 @@ marked non-canonical, and bound to local runtime policy.
 ## 6. Legacy Import
 
 Legacy source-tree import MUST be explicit. A consumer MUST NOT silently treat a
-directory of top-level source JSON files as an installed runtime asset.
+directory of top-level source JSON files as a portable runtime asset.
 
 Legacy import SHOULD return a LoadPlan issue such as
 `KDNA_FORMAT_LEGACY_SOURCE_TREE` or an equivalent transitional code.

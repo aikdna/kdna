@@ -22,8 +22,8 @@ load its Runtime Capsule into an Agent context.
 | **Package professional expertise or creative taste** | [Why KDNA](./why-kdna.md#whose-judgment) | 10 min |
 | **Build a team judgment asset** | [Enterprise Pilot](./enterprise-pilot.md) | 20 min |
 | **Load KDNA into my AI agent** | [15-Minute Agent Guide](./15-minute-agent-guide.md) | 15 min |
-| **Use multiple assets as a Cluster** | [Consumption Runtime](./consumption-runtime.md) | 20 min |
-| **Evaluate an asset** | [Maturity and evidence](./maturity.md) | 10 min |
+| **Understand optional advanced runtime surfaces** | [Consumption Runtime](./consumption-runtime.md) | 20 min |
+| **Assess a specific asset claim** | [Maturity and evidence](./maturity.md) | 10 min |
 | **Understand the protocol** | [KDNA and the AI Stack](./kdna-and-ai-stack.md) | 15 min |
 | **Contribute** | [CONTRIBUTING.md](../CONTRIBUTING.md) | 5 min |
 
@@ -93,6 +93,11 @@ Use KDNA when the judgment needs that independent asset contract. Keep using a
 Prompt, Skill, document, Policy, or knowledge system when its own contract is
 enough.
 
+The current recommended user path starts from an explicit `.kdna` file. A Host
+may remember an exact attachment after user approval, but a global library,
+automatic discovery, and silent Skill loading are not required and do not
+create authority.
+
 ---
 
 ## Repository Map
@@ -105,7 +110,7 @@ KDNA Core is the **official KDNA judgment-asset format and runtime loading contr
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | Official runtime CLI: inspect, validate, pack, unpack, load |
 | [kdna-eval](https://github.com/aikdna/kdna/tree/main/packages/kdna-eval) | Replay, budget, and consumption-evaluation primitives |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI for creating and exporting `.kdna` assets |
-| [kdna-skills](https://github.com/aikdna/kdna-skills) | Official agent loader adapter |
+| [kdna-skills](https://github.com/aikdna/kdna-skills) | Agent and MCP adapter mission; current loader Skill is Unassessed |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | Public reference-asset releases; technical examples, not content endorsements or the default onboarding path |
 | [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Apple-platform runtime with a current 0.20.0 conformance release |
 | [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Apple-platform authoring kernel; 0.4.0 remains the published release while current-runtime recertification is pending |
@@ -120,9 +125,9 @@ snapshots for packaged `.kdna` creation, validation, LoadPlan diagnostics, and
 loading. See [Status](./status.md) and the exact package release notes for the
 released / pre-release / experimental boundary.
 
-A single KDNA asset is the foundation and default consumption path. A KDNA
-Cluster is an explicit advanced path for coordinating multiple assets around a
-task. The two paths coexist; Cluster does not replace the single-asset model.
+A single explicitly selected KDNA asset is the foundation and default
+consumption path. Published Cluster and policy commands are advanced surfaces
+under recertification; they do not replace the single-file model.
 
 For applications that need task-aware asset selection, start with the
 [Consumption Runtime guide](./consumption-runtime.md). It explains route,

@@ -15,7 +15,9 @@ every error message had to be rationalized across two incompatible systems.
 
 We deleted the legacy command surface entirely in 0.27.0. There is no migration shim, no compatibility
 bridge, and no `kdna help legacy` reference. Users who authored legacy `.kdna` files must re-author
-them against the current schema and `kdna create` workflow.
+them against the current schema and the current authoring workflow (this record originally said
+`kdna create`; that command never shipped — the real paths are `kdna-studio create` from
+`@aikdna/kdna-studio-cli`, or `kdna pack` for a hand-maintained source directory).
 
 ## Rationale
 
@@ -24,7 +26,8 @@ cosmetically — from the current schema. Any translation layer would have been 
 ambiguous edge cases, and would have become a permanent maintenance tax. A hard cutover forces
 one-time migration cost instead of indefinite dual-surface cost.
 
-The removal also eliminates confusion for new users. A single `kdna create` path is the only path.
+The removal also eliminates confusion for new users. A single documented authoring path
+(now `kdna-studio create`, or manual `kdna pack` + `kdna validate`) is the only path.
 There is no "old way" to stumble into, no docs to bifurcate, no support questions about which
 surface to use.
 

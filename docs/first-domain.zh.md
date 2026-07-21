@@ -13,10 +13,10 @@ npm i -g @aikdna/kdna-cli
 ## 第二步：创建开发源工作区
 
 ```bash
-kdna dev scaffold my-domain
+cp -R templates/minimal-domain my-domain
 ```
 
-这会脚手架出一个非权威的开发源工作区，包含占位的公理、概念、立场和自检。需要可信 `.kdna` 资产时，请使用 An authoring environment 完成 Human Lock、编译和导出。
+这会复制出一个非权威的开发源工作区，包含占位的公理、概念、立场和自检。需要可信 `.kdna` 资产时，请使用 [`@aikdna/kdna-studio-cli`](https://github.com/aikdna/kdna-studio-cli)（`kdna-studio create` / `card` / `export`）完成 Human Lock、编译和导出。
 
 ## 第三步：查看
 
@@ -56,14 +56,14 @@ kdna inspect ./my-domain
 ## 第六步：创建你自己的
 
 ```bash
-kdna dev scaffold my-domain
+cp -R templates/minimal-domain my-domain
 ```
 
 编辑 `KDNA_Core.json`——为你的领域写 2-3 条公理。然后：
 
 ```bash
+kdna validate ./my-domain
 kdna publish --check ./my-domain
-kdna dev validate ./my-domain
 ```
 
 **下一步**：[Loader 行为规范](/zh/docs/loader-behavior) — 理解 Agent 该如何使用 KDNA。

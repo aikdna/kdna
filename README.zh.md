@@ -1,271 +1,134 @@
+> **预发布生态——正在核对精确合同与公开叙事**
+>
+> KDNA 是判断资产格式与生态。本仓库负责协议和 Core Runtime；其余公开仓库负责
+> 创建、消费、授权、Apple、Web、Agent、编辑器和开发者集成。仓库使命、成熟度、
+> 发布波次与兼容承诺是不同事实。
+
 # KDNA
 
-> **KDNA 是开放的判断资产协议。个人、创作者、专业者、团队、组织、Agent 和工具都可以创建 `.kdna`，让判断、品味、价值、标准、边界、立场与个性跨模型和运行时携带。**
+> **KDNA 让可复用判断获得独立身份和生命周期。**
 
-> 任何人都可以创建 KDNA。KDNA Core 校验结构、完整性、来源和授权事实，不判断其中的判断是否真实、正确、高级或值得发布。兼容 Agent 消费遵循 `inspect → LoadPlan → authorization → load/project → Runtime Capsule`；直接解压或解析原始 payload 不是兼容消费路径。
+KDNA 是开放的判断资产格式与运行协议。个人、团队、组织、Agent 和工具都可以
+创建有边界的 `.kdna` 资产，让其中的判断、版本、来源、访问、投影和生命周期
+独立于某个 Prompt、Skill、模型或应用被管理。
 
-> KDNA Core 内容中立，不评价判断内容好坏，不提供官方内容推荐、交易、评级或信任背书。
+判断也可以继续存在于 Prompt、Skill、Policy、Memory、知识库、工作流、模型和
+普通文档中。KDNA 只在判断需要独立文件与共享加载合同时增加价值，不宣称垄断
+判断，也不承诺让模型更聪明或让输出自动更好。
 
-> 官方网站: [aikdna.com](https://aikdna.com) · [![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli)
-
-KDNA Core 定义 `.kdna` 文件格式、Schema、运行时加载契约和官方工具链核心实现。人、Agent、工具或混合流程都可以创建 `.kdna` 文件；格式合法性由 `kdna validate` 判断。
-
-Prompt、RAG、Skill、Policy、知识库、模型和普通文档都可以携带判断。
-**KDNA Core 为被选择的领域判断提供独立资产与加载合同。**
-
-KDNA Core 不是让 Agent 扮演专家，而是让 Agent 在一套明确的判断系统中工作。
-
-KDNA Core 不是通用提示词库、知识库或操作手册产品。它把一个有边界的判断系统
-作为规范资产封装；资产可以包含表达判断所需的事实前提、示例、方法和关系，但
-不会因此取代这些相邻系统。
-
-> 本仓库定义 KDNA Core 格式、Schema、运行时加载契约与官方工具链核心实现。
-> KDNA 官方工具链由本仓库及配套仓库共同发布。推荐通过官方 SDK、CLI、Loader 或 API 接入 KDNA。通过 `kdna validate` 且完整实现 LoadPlan → Capsule 契约的第三方兼容实现，同样被认可为合格的 KDNA 运行时。直接解压 `.kdna` 或读取内部 payload 不是兼容实现，而是绕过消费契约。
-
-## 为什么现在需要 KDNA
-
-> **模型已经具备通用判断，但模型的默认判断不一定是用户自己的判断。**
-
-当前的 Agent 生态已经解决了"行动"问题：函数调用、MCP、工具使用、工作流。但能行动不等于能判断——一个什么都能做的 Agent，如果分辨不了"价格异议"和"确定性缺失"，就会带着自信执行错误的操作。
-
-工具让 AI 能行动。**KDNA 让作者自己的判断标准可以显式参与行动。**
-
-由人治理的学习闭环可以使用显式判断资产。KDNA 让判断结构可以被记录、验证、加载和演进；记忆、Outcome、权限、评测和部署政策仍由运行时或应用负责。Human Lock、签名和发布证据是可选来源与证明层，不是 `.kdna` 格式合法性的前提。
-
-判断可以来自个人偏好、创作品味、专业诊断、团队标准或组织制度。KDNA 把这些判断编码为可校验、可携带的资产，并作为判断参照层加载到 Agent 中——独立于 Prompt、知识库和工具。
-
-单个 KDNA 是原子、基础和默认路径。KDNA Cluster 是显式的高级路径，用于让多个范围清晰的资产围绕一个任务协作。两条路径共同存在；单资产不会暗中调用 Cluster Router。
-
-## KDNA Core 与官方工具链
-
-KDNA Core 是本仓库定义的判断资产格式与运行时加载契约。
-`.kdna` 资产的创建、加载、消费、验证、保护都由 KDNA 工具链负责。
-
-| 工具链组件 | 角色 | 仓库 |
-|---|---|---|
-| **KDNA Studio** | 人类判断资产创作环境 | [aikdna/kdna-studio-core](https://github.com/aikdna/kdna-studio-core) |
-| **KDNA CLI** | 官方命令行入口（inspect / validate / pack / unpack / load） | 本仓库 + [aikdna/kdna-cli](https://github.com/aikdna/kdna-cli) |
-| **KDNA Loader** | 官方运行时 loader，集成到 Agent | [aikdna/kdna-skills](https://github.com/aikdna/kdna-skills) |
-| **KDNA SDK** | 官方可嵌入库，供第一方集成 | 本仓库 `packages/kdna-core/` |
-
-第三方产品可通过官方 SDK、CLI、Loader 或 API 接入 KDNA。第三方运行时只有在完整实现 LoadPlan、授权、完整性校验和 Runtime Capsule 契约时才是兼容实现；只通过格式 validator 不足以让原始解码器成为 Agent 运行时。
-
-## 为什么需要 KDNA
-
-大多数 Agent 框架关注工具、检索、工作流或记忆。KDNA 关注的是**判断力**：
-
-- Agent 应该从哪些假设出发？
-- 这个领域里哪些概念是核心？
-- 哪些术语应该使用，哪些应该避免？
-- 哪些常见误解应该被提前识别？
-- 哪些场景信号应该改变 Agent 的响应策略？
-- Agent 应该如何从原则推导到行动？
-
-## Before / After KDNA
-
-> **KDNA 优化的不是措辞，而是推理路径。**
-
-| 没有 KDNA | 有 KDNA |
-|---|---|
-| 通用、知识层面的回答 | 领域特化的专家判断 |
-| 把反对意见当作字面陈述 | 诊断隐藏在话语背后的不确定性 |
-| "客户说太贵 → 给折扣" | "价格异议是确定性缺失 → 诊断是哪个维度" |
-| "员工不执行 → 积极性问题" | "执行失败 → 检查上游系统条件" |
-| "老人不参加 → 活动不够有趣" | "拒绝参与 → 识别隐形障碍（恐惧、负担感、尊严威胁）" |
-| 临时上下文中的判断指示 | 具有独立身份与加载合同的判断资产 |
-| 由所在系统自行测试和版本化 | 由共享格式、完整性和消费协议验证 |
-
-详见 [`docs/kdna-in-action.md`](./docs/kdna-in-action.md)（英文），包含五个详细案例：相同输入，不同 KDNA 领域，完全不同的认知路径。
-
-## KDNA 与 Skill 的关系
-
-Skill 和 KDNA 不做虚假二分。Skill 可以携带判断，KDNA 资产也可以描述方法；
-差别在于主要合同，而不是谁“拥有判断”。
-
-| 维度 | KDNA | Skill |
-|---|---|---|
-| 主要合同 | 判断资产身份、完整性、加载与投影 | 可复用能力、资料、步骤与工具调用 |
-| 判断内容 | 可以携带 | 可以携带 |
-| 执行权限 | 不授予 | 仍由 Host、用户和工具权限决定 |
-| 复用方式 | 通过 `.kdna` 协议跨兼容 Runtime 加载 | 通过对应 Agent / Skill 机制安装或调用 |
-| 典型内容 | 作用域、边界、优先、例外、自查 | 方法、脚本、模板、参考资料、工具 |
-
-同一判断可以同时存在于 Skill、Prompt 和 `.kdna` 中。需要独立身份、授权、
-投影和生命周期时，KDNA 才提供额外价值。
-
-## KDNA 与 LLM Wiki
-
-KDNA 不替代 LLM Wiki——它们构成一条流水线：
-
-```
-原始材料  →  LLM Wiki  →  KDNA  →  Skills / Agents
-```
-
-| 层级 | LLM Wiki | KDNA |
-|---|---|---|
-| 角色 | 知识组织 | 认知编码 |
-| 产出 | 链接化的 Markdown 知识库 | 领域公理、模式、判断 |
-| 问题 | 团队知道什么？ | Agent 应该如何思考？ |
-| 用户 | 人和 Agent | 加载领域判断的 Agent |
-
-LLM Wiki 组织和综合文档；KDNA 把被选择的判断系统封装成可加载资产。两者都
-可以包含事实、解释和判断，但拥有不同的资产与消费合同。
-
-> LLM Wiki organizes evolving knowledge.
-> KDNA packages selected judgment under a portable loading contract.
-
-## 文件模型
-
-KDNA 的公共资产是一个打包后的 `.kdna` 文件。作者工具、检查工具或 `unpack` 可以把它展开成可查看、可编辑的结构化视图，但公开消费和运行时加载的主对象始终是 `.kdna` 文件本身。
+KDNA Core 校验结构、完整性、来源声明和授权事实；它不决定资产内容是否真实、
+正确、专业、优质或值得采用。兼容 Agent 消费遵循：
 
 ```text
-example.kdna
-├── mimetype
-├── kdna.json       # manifest、身份、版本、access mode、load contract
-├── payload.kdnab   # 结构化判断 payload
-└── checksums.json  # 完整性摘要
+明确文件或已授权附加
+→ inspect
+→ LoadPlan
+→ authorization / integrity / compatibility
+→ load/project
+→ Runtime Capsule
+→ Host / Agent
 ```
 
-判断 payload 可以包含公理、适用边界、不适用边界、失败风险、术语、常见误解、自检和场景信号等结构。用户不需要直接面对内部 JSON 文件；需要检查或二次创作时，应通过官方工具链 inspect / unpack / fork / export。
+直接解压或解析原始 payload 不是兼容的 Agent 消费路径。
 
-## 快速开始
+> 第一次使用 → [Start Here](./docs/start-here.md)
+>
+> KDNA 的定义与边界 → [Core Narrative and Boundaries](./docs/core-narrative-and-boundaries.md)
+>
+> 何时需要 KDNA → [Why KDNA](./docs/why-kdna.zh.md) · [什么时候使用 KDNA](./docs/when-to-use-kdna.zh.md)
+>
+> 当前状态与路线图 → [Status](./docs/status.zh.md) · [Public Roadmap](./docs/public-roadmap.md)
+
+## 五分钟技术路径
+
+当前推荐路径直接使用一份 `.kdna` 文件，不要求先建立全局资产库：
 
 ```bash
 npm install -g @aikdna/kdna-cli
-kdna validate <asset>.kdna
-kdna plan-load <asset>.kdna
-kdna load <asset>.kdna --profile=compact --as=prompt
+
+kdna demo judgment ./judgment
+kdna pack ./judgment ./judgment.kdna
+kdna validate ./judgment.kdna --runtime
+kdna plan-load ./judgment.kdna --json
+kdna load ./judgment.kdna --profile=compact --as=json
 ```
 
-你会看到这份 `.kdna` 的 compact profile：公理、边界、自检、失败模式和 patterns 都会被渲染成 Agent 可读的判断上下文。
+这条路径证明容器能够被当前工具链验证、规划和投影，不证明模型已经采用资产，
+也不证明资产内容正确或结果更好。
+
+## `.kdna` 是什么
+
+一份 `.kdna` 是单文件、可携带的判断资产。当前容器包含公开 manifest、结构化
+判断 payload、完整性摘要，以及按精确版本合同支持的可选加密、签名、来源和
+谱系信息。
+
+创作项目、展开 JSON、Registry 页面、receipt 和评价报告都可以围绕资产工作，
+但不是 `.kdna` 分发对象本身。
+
+## 本机与 Agent 使用边界
+
+文件存在、保存副本、附加到工作区、授权、适用于当前任务和实际加载是六个不同
+事实。KDNA 协议不要求“安装资产”才能使用；`~/.kdna`、项目 `.kdna/`、Store、
+Registry、Skill 和 MCP 都只是产品实现选择。
+
+当前稳定的技术入口是显式文件的 `validate → plan-load → load`。Agent 适配器的
+最终产品模型仍在收敛：它只能执行用户明确选择或 Host 已授权的资产，不能从全机
+任意资产中自主选择并隐藏使用。当前采用的资产身份、版本、作用域和原因必须可查，
+并可停用、切换和回滚。
+
+## Core 负责与不负责
+
+Core 负责：
+
+- 容器、Schema、Payload 与必需条目；
+- 身份、版本、digest、兼容与可选谱系；
+- 加密、签名、授权声明的技术表示；
+- LoadPlan、Runtime 投影与 Capsule 合同；
+- 兼容实现之间不静默改字节或丢关键语义。
+
+Core 不负责：
+
+- 裁定判断内容的普遍正误或质量；
+- 认证作者专业性或现实身份；
+- 决定当前任务该采用哪份资产；
+- 授予文件、网络、支付或部署权限；
+- 保证模型采用资产或结果更好。
+
+## 创作自己的资产
+
+Studio 是创作工具，不是格式合法性的唯一入口。当前命令行创作路径：
 
 ```bash
-# 检查一切是否正常
-kdna doctor --agents
+npm install -g @aikdna/kdna-studio-cli @aikdna/kdna-cli
+kdna-studio create my-domain --name @yourscope/my-domain
+kdna-studio card add my-domain axiom \
+  --field one_sentence="一条有明确取舍含义的判断" \
+  --field full_statement="说明这条判断如何影响选择" \
+  --field why="说明理由" \
+  --field applies_when='["适用情境"]' \
+  --field does_not_apply_when='["不适用情境"]' \
+  --field failure_risk="误用风险"
+kdna-studio export my-domain --out ./my-domain.kdna
+kdna validate ./my-domain.kdna
+kdna plan-load ./my-domain.kdna
 ```
 
-或克隆仓库：
+人、AI、Agent、工具和混合流程都可以创建资产。只有资产声称代表某个人或机构时，
+才需要相应主体确认该代表关系。
 
-```bash
-git clone https://github.com/aikdna/kdna.git
-cd kdna
-npm install
-npm run validate:examples
-```
+## 17 仓生态
 
-## 安装到你的 Agent
+KDNA 的公开生态保留 17 个仓库使命，覆盖协议/Core、Runtime CLI、Studio、参考
+资产、Apple、Agent/MCP/编辑器、Web、授权与远程消费。它们成熟度不同，也不会
+同时发布。机器可读的精确版本与生命周期见
+[`ecosystem-manifest.json`](./ecosystem-manifest.json)。
 
-```bash
-npm i -g @aikdna/kdna-cli
-kdna setup
-```
+## 成熟度
 
-`kdna setup` 自动检测你的 Agent（OpenCode、Codex、Claude Code、Cursor、Gemini），安装 `kdna-loader` 技能，并创建数据目录。
+当前整体是 **Pre-release**。已发布包、本地纠错候选、源码实验、Source-only 集成
+和兼容承诺必须分别判断。请以精确版本的规范、Schema、fixture、conformance、
+release notes 和产物为准。
 
-只有 **一个** 技能：
+## License
 
-| 技能 | 作用 |
-|---|---|
-| **kdna-loader** | 加载领域认知——检测领域、应用公理、运行自查。领域是数据资产，由 CLI 管理。 |
-
-支持 **Codex**、**Claude Code**、**OpenCode**、**Cursor** 和 **GitHub Copilot**。
-
-## 本地使用 KDNA
-
-```bash
-# 1. 安装 CLI + 技能
-npm i -g @aikdna/kdna-cli
-kdna setup
-
-# 2. 校验一个本地 .kdna
-kdna validate <asset>.kdna
-
-# 3. 规划加载
-kdna plan-load <asset>.kdna
-
-# 4. 加载为 Agent prompt
-kdna load <asset>.kdna --profile=compact --as=prompt
-```
-
-要创建自己的领域：
-
-```bash
-npm install -g @aikdna/kdna-studio-cli
-kdna-studio create my_expertise --name @yourscope/my_expertise
-# 导入材料、生成判断卡片；需要发布证据时可加入人工确认记录
-kdna-studio export ./my_expertise --out dist/my_expertise.kdna
-kdna validate dist/my_expertise.kdna
-kdna plan-load dist/my_expertise.kdna
-kdna load dist/my_expertise.kdna --profile=compact --as=prompt
-```
-
-由 KDNA Studio CLI 导出的 `.kdna` 是当前工具链的分发资产。Studio 项目和解包目录是创作、调试或审计视图，不是 Agent 的消费格式。public、licensed 和 remote 的成熟度见 [status.md](./docs/status.md)。
-
-## 规范
-
-完整 KDNA 规范见 [SPEC.md](./SPEC.md)。
-
-### 试试 Demo
-
-> **2026-06-27 cleanup**: The `minimal-agent` demo previously referenced `sales` and `management` KDNA domains, which were removed in commit `3bdbb0f` (2026-06-23). The demo path is no longer runnable as written.
-
-```bash
-# Demonstrations available:
-# - examples/from-wiki-to-kdna — Wiki → KDNA pipeline
-# - examples/decision_state — domain loader fixture
-# - examples/app-runtime-contract — report/trace fixtures
-```
-
-要试 KDNA 的最小路径，用 `examples/decision_state/` 或 `examples/from-wiki-to-kdna/`。
-
-## 示例资产
-
-KDNA 的公开示例以打包的 `.kdna` 文件形式分发，不通过 GitHub 仓库作为入口。
-
-下载 `.kdna` 文件后：
-
-```bash
-kdna validate <asset>.kdna
-kdna plan-load <asset>.kdna
-kdna load <asset>.kdna --profile=compact --as=prompt
-```
-
-公开示例资产的下载入口见官方网站 examples 页面。
-
-### 演示样例
-
-`examples/` 目录包含最小演示样例，用于测试校验器和说明规范。这些 **不是** 官方领域目录——它们是规范示例。
-
-| 示例 | 用途 |
-|---------|---------|
-| [decision_state](./examples/decision_state) | 校验器测试的最小领域夹具 |
-| [from-wiki-to-kdna](./examples/from-wiki-to-kdna) | LLM Wiki 到 KDNA 的流水线演示 |
-| [app-runtime-contract](./examples/app-runtime-contract) | Report / trace / feedback fixtures |
-
-### 核心文档
-
-| 文档 | 说明 |
-|---|---|
-| [SPEC.md](./SPEC.md) | KDNA 协议规范 |
-| [docs/getting-started.zh.md](./docs/getting-started.zh.md) | 安装、创建和使用 KDNA |
-| [docs/evaluation.zh.md](./docs/evaluation.zh.md) | 如何检验 KDNA 是否改善了判断力 |
-| [docs/meta-cognition.zh.md](./docs/meta-cognition.zh.md) | 何时用 KDNA、冲突仲裁、领域组合 |
-| [docs/kdna-in-chinese.md](./docs/kdna-in-chinese.md) | 中文 KDNA 编写指南 |
-
-## 工具
-
-| 工具 | 仓库 | 说明 |
-|---|---|---|
-| Skills | [kdna-skills](https://github.com/aikdna/kdna-skills) | kdna-loader 技能 + CLI 安装器，支持所有主流 Agent |
-
-## 中文资源
-
-- [README.zh.md](./README.zh.md) — 中文 README（当前页面）
-- [docs/getting-started.zh.md](./docs/getting-started.zh.md) — 快速上手指南
-- [docs/kdna-in-chinese.md](./docs/kdna-in-chinese.md) — 中文 KDNA 编写指南
-- [docs/i18n.md](./docs/i18n.md) — KDNA 国际化策略
-
-## 许可
-
-- 代码: Apache-2.0
-- 文档和示例: CC BY 4.0
+Apache-2.0。见 [LICENSE](./LICENSE)。

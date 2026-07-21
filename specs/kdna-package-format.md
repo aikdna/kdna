@@ -34,6 +34,6 @@ payload.kdnab
 checksums.json   (emitted by official writers)
 ```
 
-Use a Studio-compatible exporter for normal creation and migration. `kdna dev`
-commands are explicit diagnostics and do not convert a source directory into a
-second canonical asset form.
+Use a Studio-compatible exporter for normal creation and migration. `kdna pack`
+and `kdna validate` handle manual source-directory packaging and validation;
+they do not convert a source directory into a second canonical asset form.

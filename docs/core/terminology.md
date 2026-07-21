@@ -8,13 +8,13 @@ Phase 1 baseline vocabulary. Each term is defined in 1–3 sentences. Some terms
 
 **Official KDNA toolchain** — the SDK, CLI, Loader, and API through which `.kdna` assets are created, inspected, protected, loaded, and consumed. Third-party products integrate KDNA through the official SDK, CLI, Loader, or API. (See principle 9 in `principles.md`.)
 
-**.kdna** — the standardized container file. A single `.kdna` file holds a manifest, a payload, optional signatures, optional attachments, and an optional checksums file, all in a ZIP-compatible container with a `mimetype` entry.
+**.kdna** — the standardized container file. A single Preview `.kdna` file holds a manifest, a payload, optional attachments, and an optional checksums file, all in a ZIP-compatible container with a `mimetype` entry.
 
 **Manifest** — the public metadata layer of a `.kdna` file. Stored as `kdna.json` at the root of the container. Always plaintext so that the official toolchain can identify and route the file even if the payload is encrypted.
 
 **Payload** — the actual judgment data. Stored as `payload.kdnab` at the root of the container. May be plaintext or selectively encrypted. The structure of the payload is defined by a **payload profile** (e.g. `kdna.payload.judgment`).
 
-**Envelope** — the set of metadata entries that describe the container itself: encryption metadata, signature references, digests. Distinct from the payload, which is the judgment content.
+**Envelope** — the set of metadata entries that describe the container itself: encryption metadata and digests. Distinct from the payload, which is the judgment content.
 
 **Asset ID** — a human-readable identifier for an asset, e.g. `kdna:example:writing-core`. The `kdna:` prefix is the asset identifier namespace; it is unrelated to the manifest's `format_version` compatibility coordinate. The rest of the identifier is the producer's choice. Asset IDs are NOT globally unique by themselves; they are namespaced.
 
@@ -26,7 +26,11 @@ Phase 1 baseline vocabulary. Each term is defined in 1–3 sentences. Some terms
 
 **Digest** — a cryptographic hash of an entry, used for integrity checks. The default algorithm in Phase 1 is SHA-256. Digests may be recorded in the checksums file or in the manifest's `digests` block.
 
-**Signature** — a cryptographic signature over a payload or manifest entry, recorded as a separate file in the `signatures/` directory. A signature has a key reference, an algorithm, and a digest of the signed bytes. The signature is verifiable; whether it is meaningful is a caller decision.
+**Asset signature** — outside the current Preview asset contract. Preview
+containers reject asset-level signature fields and entries instead of choosing
+between the earlier incompatible inline, root-file, directory, and detached
+designs. External grant and Human Lock signatures are separate, explicitly
+scoped contracts; neither makes an asset's content correct or endorsed.
 
 ## Runtime concepts
 

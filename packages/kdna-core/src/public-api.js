@@ -63,7 +63,6 @@ async function inspectKDNA(input, options = {}) {
     entries,
     asset_digest: asset.asset_digest,
     content_digest: contentDigest,
-    signature_valid: verification ? verification.signature_valid : null,
     ok: verification ? verification.ok : null,
     errors: verification ? verification.errors : [],
     warnings: verification ? verification.warnings : [],
@@ -84,7 +83,6 @@ function inspectKDNASync(input, options = {}) {
     entries,
     asset_digest: asset.asset_digest,
     content_digest: contentDigest,
-    signature_valid: verification ? verification.signature_valid : null,
     ok: verification ? verification.ok : null,
     errors: verification ? verification.errors : [],
     warnings: verification ? verification.warnings : [],
@@ -136,14 +134,6 @@ async function verifyDigest(input, expectedDigest, options = {}) {
 
 function verifyDigestSync(input, expectedDigest, options = {}) {
   return verifyAssetSync(input, { ...options, asset_digest: expectedDigest });
-}
-
-async function verifySignature(input, options = {}) {
-  return verifyAsset(input, { ...options, requireSignature: true });
-}
-
-function verifySignatureSync(input, options = {}) {
-  return verifyAssetSync(input, { ...options, requireSignature: true });
 }
 
 function scoreMatch(input, info) {
@@ -211,8 +201,6 @@ module.exports = {
   verifyAssetSync,
   verifyDigest,
   verifyDigestSync,
-  verifySignature,
-  verifySignatureSync,
   matchDomain,
   matchDomainSync,
   composeKDNA,

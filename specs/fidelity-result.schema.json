@@ -176,7 +176,7 @@
               "score": { "type": "number", "minimum": 0, "maximum": 1 },
               "judgment_delta": {
                 "type": "number",
-                "description": "Score difference from baseline (no_kdna). Positive = KDNA improved judgment transfer."
+                "description": "Difference from the named evaluator baseline. Positive means that evaluator assigned a higher score under its declared rubric; it is not an intrinsic KDNA improvement claim."
               }
             }
           }

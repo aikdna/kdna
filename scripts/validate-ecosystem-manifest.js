@@ -221,23 +221,42 @@ function assertCheckout(component, root) {
       return;
     }
 
-    const checkoutCommit = gitText(root, ['rev-parse', 'HEAD']);
-    const checkoutStatus = gitText(root, ['status', '--porcelain', '--untracked-files=all']);
-    if (checkoutStatus) fail(component, 'component checkout is dirty');
     if (!component.source_commit) {
       fail(component, 'checked-out component must declare source_commit');
-    } else if (checkoutCommit !== component.source_commit) {
-      fail(
-        component,
-        `checkout commit mismatch: manifest=${component.source_commit} checkout=${checkoutCommit}`,
-      );
+    } else {
+      gitText(root, ['rev-parse', '--verify', `${component.source_commit}^{commit}`]);
     }
   } catch (error) {
-    fail(component, `component checkout identity is unreadable: ${error.message}`);
+    fail(component, `accepted source snapshot is unreadable: ${error.message}`);
   }
 }
 
 function assertPackage(component, packageRecord, root) {
+  if (component.source_commit && root && component.local_path !== '.') {
+    let bytes;
+    try {
+      bytes = gitBytes(root, ['show', `${component.source_commit}:${packageRecord.package_json}`]);
+    } catch (error) {
+      fail(
+        component,
+        `package evidence is unavailable at source_commit: ${error.message}`,
+        packageRecord.package_json,
+      );
+      return;
+    }
+    try {
+      const committedPackage = JSON.parse(bytes.toString('utf8'));
+      assertPackageManifest(component, packageRecord, committedPackage, 'source_commit');
+    } catch (error) {
+      fail(
+        component,
+        `package evidence is unreadable at source_commit: ${error.message}`,
+        packageRecord.package_json,
+      );
+    }
+    return;
+  }
+
   const filePath = resolvedRecordPath(component, root, packageRecord.package_json, 'package_json');
   if (!filePath || !fs.existsSync(filePath)) {
     if (
@@ -251,22 +270,6 @@ function assertPackage(component, packageRecord, root) {
 
   const pkg = readJsonEvidence(component, filePath, packageRecord.package_json);
   if (pkg) assertPackageManifest(component, packageRecord, pkg, 'checkout');
-
-  if (!component.source_commit || !root || component.local_path === '.') return;
-  try {
-    const bytes = gitBytes(root, [
-      'show',
-      `${component.source_commit}:${packageRecord.package_json}`,
-    ]);
-    const committedPackage = JSON.parse(bytes.toString('utf8'));
-    assertPackageManifest(component, packageRecord, committedPackage, 'source_commit');
-  } catch (error) {
-    fail(
-      component,
-      `package evidence is unavailable at source_commit: ${error.message}`,
-      packageRecord.package_json,
-    );
-  }
 }
 
 function sha256(bytes) {
@@ -365,21 +368,43 @@ if (validateSchema()) {
     fail(coreComponent, 'manifest must declare one KDNA Core package and conformance anchor');
   } else {
     try {
-      const coreReleaseTag = corePackageRecords[0].version;
-      const coreReleaseCommit = gitText(repoRoot, [
+      const corePackageRecord = corePackageRecords[0];
+      const publishedTag =
+        corePackageRecord.release_status === 'candidate'
+          ? corePackageRecord.published_version
+          : corePackageRecord.version;
+      const publishedCommit = gitText(repoRoot, [
         'rev-list',
         '-n',
         '1',
-        `refs/tags/${coreReleaseTag}`,
+        `refs/tags/${publishedTag}`,
       ]);
-      if (coreReleaseCommit !== coreConformanceCommit) {
+      if (corePackageRecord.release_status === 'candidate') {
+        execFileSync(
+          'git',
+          ['merge-base', '--is-ancestor', publishedCommit, coreConformanceCommit],
+          { cwd: repoRoot, stdio: 'ignore' },
+        );
+        const candidatePackage = JSON.parse(
+          gitBytes(repoRoot, [
+            'show',
+            `${coreConformanceCommit}:${corePackageRecord.package_json}`,
+          ]).toString('utf8'),
+        );
+        assertPackageManifest(
+          coreComponent,
+          corePackageRecord,
+          candidatePackage,
+          'conformance_commit',
+        );
+      } else if (publishedCommit !== coreConformanceCommit) {
         fail(
           coreComponent,
-          `Core conformance_commit must equal release tag ${coreReleaseTag}: ${coreReleaseCommit}`,
+          `Core conformance_commit must equal release tag ${publishedTag}: ${publishedCommit}`,
         );
       }
     } catch (error) {
-      fail(coreComponent, `Core release tag evidence is unavailable: ${error.message}`);
+      fail(coreComponent, `Core conformance evidence is unavailable: ${error.message}`);
     }
   }
   const repositories = new Set();

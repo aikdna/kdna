@@ -43,14 +43,16 @@ KDNA 使用语义化版本：`MAJOR.MINOR.PATCH`
 - [ ] `kdna.json` 中 `version` 匹配新版本
 - [ ] `kdna-lint` 和 `kdna-validate` 通过
 - [ ] `CHANGELOG.md` 有本版本的条目
-- [ ] 如果是 MINOR 或 MAJOR：重新运行 benchmark 并记录 `evaluation_history`
+- [ ] 如果声明评价结果：记录具名评价者、任务、方法、模型/Runtime 坐标与证据
 - [ ] 如果是 MAJOR：通知现有用户破坏性变更
-- [ ] 相比前一版本无退化
+- [ ] 由资产责任人复核预期判断变化与边界
 
-## CLI 快捷方式
+## 当前 CLI 工作流
 
 ```bash
-kdna version bump patch   # 0.1.0 → 0.1.1
-kdna version bump minor   # 0.1.0 → 0.2.0
-kdna version bump major   # 0.1.0 → 1.0.0
+kdna validate ./dist/my-domain-0.2.0.kdna
+kdna inspect ./dist/my-domain-0.2.0.kdna
 ```
+
+版本编辑和历史记录目前由创作/分发工具负责；Preview CLI 没有
+`version bump` 或 `version history` 子命令。

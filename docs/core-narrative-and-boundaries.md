@@ -1,338 +1,163 @@
 # KDNA Core Narrative and Boundaries
 
-**Status:** Definitive — 2026-07. This is the normative product definition for
-the KDNA open protocol. Protocol implementers should read this document alongside
-[SPEC.md](../SPEC.md) and the adopted normative specs in [`specs/`](../specs/).
+**Status:** current public product definition. Read exact wire behavior from
+[SPEC.md](../SPEC.md), adopted specifications, schemas, fixtures, and the release
+artifacts for the version you use.
 
----
+## Definition
 
-## 1. One-Sentence Definition
+> KDNA is an open judgment-asset format and runtime protocol. It gives a
+> bounded judgment system an independent file, identity, version, integrity,
+> access, projection, and lifecycle contract.
 
-> KDNA is an open judgment-asset format and protocol that gives reusable,
-> bounded judgment an independent identity and lifecycle. People, teams,
-> Agents, and tools can create assets whose judgment, versions, provenance,
-> access, projections, and evidence are managed independently from any one
-> Prompt, Skill, model, or application. KDNA Core validates the protocol; it
-> does not judge whether the content is correct, good, or worthy of existence.
+People, organizations, Agents, tools, and mixed workflows may create KDNA
+assets. KDNA Core validates technical claims; it does not decide whether the
+judgment is true, good, expert, representative, or appropriate for a task.
 
-## 2. Ten Immutable Boundaries
+## What the asset contains
 
-These boundaries MUST NOT change across any protocol version. A change to any of
-these is a change to what KDNA fundamentally is — and requires a new protocol,
-not a new version.
+A judgment system may express priorities, taste, standards, boundaries,
+trade-offs, risk models, preferences, stances, exceptions, and methods of
+choosing. It may include facts, examples, references, or methods needed to
+explain those judgments, but KDNA is not thereby a general document store,
+knowledge base, Policy engine, workflow, or executable package.
 
-### 2.1 Open Creation
+The same judgment may also live in a Prompt, Skill, Policy, Memory, knowledge
+base, workflow, model, or ordinary document. Those carriers can be versioned,
+tested, and reused in their own systems. KDNA adds value when the selected
+judgment needs an independent asset and a shared loading contract; it does not
+claim exclusive ownership of judgment or automatic behavioral superiority.
 
-Anyone — individual, Agent, organization, or software — can create KDNA assets.
-The protocol defines format validity (`kdna validate`). It does not define who
-may create, what judgments are correct, what quality level is required, or
-whether an asset is "good enough" to exist.
+## Content neutrality
 
-MUST NOT:
-- Require official approval, review, registry listing, or "expert" status
-- Gate creation on behavior evaluation, field validation, or human review
-- Rate, rank, or recommend asset content
+KDNA Core may verify:
 
-### 2.2 Content Neutrality
+- container and schema conformance;
+- identity, version, digest, and compatibility coordinates;
+- declared provenance and optional signature facts;
+- encryption and authorization states;
+- LoadPlan and Runtime Capsule structure;
+- whether a compatible implementation preserved required semantics.
 
-KDNA Core validates structure, not content. It answers "is this a valid KDNA
-asset?" never "is this good judgment?"
+KDNA Core does not verify:
 
-KDNA Core MUST NOT:
-- Define what judgment is correct, advanced, or valuable
-- Rate assets by quality, usefulness, or correctness
-- Serve as a content judge, recommendation engine, or trust authority
+- factual or moral correctness of the asset;
+- author expertise, sincerity, or real-world identity;
+- universal content quality or recommendation;
+- task applicability chosen by a Host;
+- tool permission or authority to act;
+- guaranteed improvement in an answer or outcome.
 
-KDNA Core MAY:
-- Validate schema, digest, signature, and authorization
-- Enable optional Evidence Claims that describe what an asset has been observed to do
-- Enable optional catalogs/registries that list asset metadata
+“Correct” is not a universal label for every judgment. A factual premise can
+be verified, a constraint can be satisfied, an asset can match its creator's
+declared intent, and an evaluator can prefer an outcome under a named rubric.
+Taste, style, risk tolerance, and value ordering usually require that authority
+and scope to be named.
 
-### 2.3 Judgment Is the First-Class Asset Responsibility
+## The `.kdna` file
 
-KDNA makes a bounded judgment system the first-class payload responsibility:
-value ordering, taste, standards, boundaries, risk models, preferences, stance,
-and methods of choosing.
+The canonical distributed asset is one `.kdna` file. Authoring workspaces,
+expanded JSON, catalog pages, receipts, and evaluation reports are related
+objects, not substitutes for the distributed asset.
 
-This is an asset-contract boundary, not an exclusive claim over content. The
-same judgment may also appear in a Prompt, Skill, Policy, knowledge base,
-workflow, model, or ordinary document. Those carriers may be versioned, tested,
-and inspected in their own systems, and they may produce the same behavior in a
-particular task. KDNA's contribution is the shared asset identity, integrity,
-authorization, LoadPlan, projection, and lifecycle contract.
-
-A `.kdna` payload MAY include factual premises, examples, references, method
-descriptions, or relationships needed to express its judgment. Core does not
-certify those statements as ground truth, and a KDNA asset is not thereby a
-general document store, retrieval corpus, executable-code package, or workflow
-engine. KDNA does not monopolize judgment, knowledge, or reasoning.
-
-### 2.4 `.kdna` Is THE Asset
-
-The `.kdna` file is the sole official distribution and loading format. It is not
-a generic prompt, not a plaintext ZIP, and not a loose source directory.
-
-Equivalent judgment content may still be represented in a Prompt, Skill,
-Policy, or another carrier. That content overlap does not turn those carriers
-into `.kdna` assets, and it does not make KDNA behaviorally superior by default.
-
-Source directories (`KDNA_Core.json`, `KDNA_Patterns.json`, etc.) are authoring
-workspaces. They MUST NOT be distributed as assets or loaded by Agents.
-
-### 2.5 Toolchain-Mediated Creation and Consumption
-
-Creation and consumption happen through the KDNA toolchain: KDNA Studio, CLI,
-SDK, Loader, or API.
-
-Agents MUST NOT use generic `unzip`, CBOR decode, or internal JSON parsing as a
-normal consumption path. The consumption contract is:
+A compatible Agent consumption path is:
 
 ```text
-inspect → LoadPlan → authorization → load/project → Runtime Capsule → Agent
+explicit file or authorized attachment
+→ inspect
+→ LoadPlan
+→ authorization / integrity / compatibility
+→ load and project
+→ Runtime Capsule
+→ Host delivery
+→ Agent use
 ```
 
-### 2.6 Runtime Capsule Is The Agent Interface
+Agents and applications consume the Runtime Capsule. Generic ZIP extraction or
+raw payload decoding is a developer/audit action, not a compatible Agent
+runtime.
 
-Agents consume KDNA through a Runtime Capsule emitted by `kdna load`. They
-MUST NOT read raw asset internals (ZIP entries, CBOR payload, source-tree JSON).
+## Local use and user authority
 
-A compatible third-party implementation that wants to serve as an Agent's KDNA
-runtime MUST:
-- Implement the full LoadPlan contract
-- Implement the full authorization contract
-- Verify digests and optional signatures
-- Emit a compliant Runtime Capsule
-- NOT expose raw payload internals to the consuming Agent
+KDNA does not require a global asset library or an installation step. A user
+may inspect and load a `.kdna` file directly. A product may preserve an
+immutable local snapshot, receipt, credential, or cache for repeated use, but
+storage never grants task authority.
 
-Direct unzip-and-read is not a compatible implementation — it is bypassing the
-consumption contract.
+These are separate facts:
 
-### 2.7 Three Access Modes, Author Decides
+1. the file exists or was discovered;
+2. a copy was saved;
+3. an exact version and digest were attached to a workspace, application, or
+   session;
+4. the user or Host authorized that relationship;
+5. the asset applies to the current task;
+6. the Runtime actually loaded and delivered it.
 
-Every KDNA asset declares exactly one canonical access value:
+An Agent adapter may help execute an explicit selection or a Host-authorized
+attachment. It must not scan arbitrary machine assets, choose one from a broad
+task description, and hide that decision. The Host must make the active asset,
+version, scope, and reason inspectable and must support disable, switch, and
+rollback.
 
-| Value | Meaning |
-|---|---|
-| `public` | Content has no secrecy. Can be inspected, forked, and re-authored through official toolchain paths. Agent consumption still goes through Capsule. |
-| `licensed` | Judgment content is encrypted. LoadPlan validates entitlement before in-memory-only decryption. Decrypted content MUST NOT be written to disk, logs, or Trace. |
-| `remote` | Full judgment content never leaves the server. Only task-scoped projections are returned to authorized callers. |
+`~/.kdna`, a project `.kdna/` directory, a Registry, Store, Skill, or MCP server
+is an implementation choice, not a source of content authority and not a
+format-validity requirement.
 
-Legacy values MUST be accepted as input but MUST NOT be emitted as canonical
-output:
+## Authority order during use
 
-| Legacy | Canonical |
-|---|---|
-| `open` | `public` |
-| `protected` | `licensed` |
-| `runtime` | `remote` |
+The asset supplies scoped judgment; it does not take over the task. Current
+user intent, verifiable facts, law, safety policy, Host permissions, and
+environment constraints remain authoritative. They may make an otherwise valid
+asset inapplicable or unloadable.
 
-The author chooses the access mode. The toolchain enforces the declared access
-and authorization rules. The toolchain is not a content censor and does not
-override the author's access declaration.
+Loading an asset does not turn the Agent into the author, copy a personality,
+or make the asset true. A Host can faithfully deliver a judgment that a named
+evaluator dislikes or that conflicts with current facts. Delivery, adoption,
+and external outcome are different claims.
 
-### 2.8 Evidence Is Optional
+## Access and provenance
 
-Evidence Claims, Asset Assay, and Field Validation are optional, issuer-scoped
-external assessments. They describe what a named evaluator observed under a
-defined subject, rubric, method, scope, time, and evidence — nothing more.
+The public protocol defines version-specific access and authorization
+contracts. An access declaration describes how content may be obtained; it is
+not a content ranking. Encryption protects content according to its exact
+profile. A signature binds specified bytes or a digest to a key; identity,
+expertise, endorsement, and content correctness remain separate claims.
 
-An asset without evidence is still a valid KDNA asset. Load-ready evidence MUST
-NOT be conflated with behavior-evaluated or production status.
+Human review, organizational approval, AI generation, Agent generation, and
+mixed creation are provenance facts when declared. They are not universal
+format-validity requirements. An asset that claims to represent a person or
+organization needs evidence for that representation; an ordinary asset does
+not need to make such a claim.
 
-Evidence MUST NOT be required for:
-- Asset creation
-- Asset validation
-- Asset loading
-- Asset consumption
+## Single and multi-asset use
 
-Evidence MAY be required by:
-- An evaluator for the exact external claim it publishes
-- An optional catalog or distribution channel under its own policy
-- A consumer or Host under its current task-scoped adoption policy
-
-**Signature is an integrity and provenance mechanism, not evidence of quality.**
-Signatures bind an asset version to a key. Whether signatures are optional or
-required for a given protocol version or distribution profile is determined by
-the container specification, not by this boundary. A signature verifies that a
-specified key signed specified bytes or a specified digest. Binding that key to
-a real identity is a separate external claim. Neither fact endorses content
-correctness, quality, or authority.
-
-### 2.9 Private Experiments Cannot Redefine These Boundaries
-
-Private experimental results (Router performance, advisor contamination
-thresholds, trust-runtime policies, etc.) may inform toolchain improvements but
-MUST NOT redefine:
-
-- Who can create KDNA
-- What KDNA fundamentally is
-- Whether un-evaluated assets are valid KDNA
-- Whether the toolchain is a content gatekeeper
-- Whether Agents may bypass authorization and Capsule boundaries
-
-### 2.10 Protocol Versioning
-
-The public protocol and toolchain are **pre-release**. Package releases follow SemVer,
-while each wire contract carries its own compatibility coordinate. The current
-container uses `format_version: "0.1.0"` and
-`application/vnd.kdna.asset`.
-
-| Layer | Current Version | Meaning |
-|---|---|---|
-| Protocol maturity | Pre-release | What KDNA assets are and how they load |
-| Container | `format_version: "0.1.0"` | KDNA Asset Container encoding |
-| Capsule | `kdna.runtime-capsule` + `contract_version: "0.1.0"` | What Agents receive |
-
-Legacy plaintext ZIP containers (without `payload.kdnab`) are superseded and
-MUST be rejected by conforming tools.
-
----
-
-## 3. Agent Consumption Contract
-
-The ONLY supported Agent consumption path through the official toolchain is:
+One asset is the atomic and default path:
 
 ```text
-1. discover or explicitly select a .kdna asset
-2. kdna inspect → public metadata only
-3. kdna plan-load → LoadPlan (authorization, validation, readiness)
-4. authorization:
-   - public → proceed
-   - licensed → entitlement check → in-memory decrypt
-   - remote → server-side projection
-5. kdna load → Runtime Capsule (profile-selected, validated, verified)
-6. Agent receives Capsule, never raw internals
-7. Trace emitted (what happened, how much it cost)
+select one .kdna → plan-load → load → use
 ```
 
-### 3.1 LoadPlan States
+Multi-asset composition is an explicit advanced product capability. It must
+not be activated implicitly, embedded as hidden policy in a single asset, or
+used to bypass the authorization and loadability of each component.
 
-The LoadPlan returns a `state` and a `can_load_now` boolean. The consumer MUST
-check `can_load_now`, not infer loadability from the state name alone. The
-canonical states defined by the authorization contract and LoadPlan schema are:
+## Evidence and product maturity
 
-| State | `can_load_now` | Meaning |
-|---|---|---|
-| `ready` | `true` | Asset can be loaded now |
-| `offline_grace` | `true` | Asset can load now; entitlement sync required before grace expires |
-| `needs_password` | `false` | Password-protected asset lacks a password |
-| `needs_license` | `false` | Required receipt or activation is missing |
-| `needs_account` | `false` | Account authorization is required |
-| `needs_org_auth` | `false` | Organization or SSO authorization is required |
-| `needs_runtime` | `false` | Remote runtime is required |
-| `expired_grace` | `false` | Entitlement expired; grace period may apply |
-| `denied` | `false` | Entitlement explicitly denied or revoked |
-| `invalid` | `false` | Format, integrity, signature, crypto, access, or policy check failed |
-| `format_invalid` | `false` | Not a recognized KDNA container |
+Technical conformance, provenance, Host delivery, observed adoption, and
+external outcome are separate evidence classes. Passing one does not prove the
+next. Optional evaluators may publish scoped assessments, but those assessments
+do not decide whether a technically valid asset may exist or load.
 
-A consumer MUST NOT load judgment content when `can_load_now` is false.
-The consumer MUST NOT decide loadability from the state name alone — only
-`can_load_now` is authoritative.
+The public ecosystem is pre-release. A repository mission, a published 0.x
+package, a green test suite, a local corrective candidate, and a compatibility
+promise are distinct facts. Use the exact version's release notes and public
+contracts; do not infer whole-ecosystem maturity from one component.
 
-### 3.2 Licensed Asset Security
+## Durable limits
 
-For `licensed` assets:
-
-- Judgment content is encrypted in `payload.kdnab`
-- Decryption material is obtained through entitlement check
-- The full, raw decrypted payload exists ONLY in memory
-- The full raw payload MUST NOT be written to disk, logs, or Trace output
-- Authorized, task-scoped, profile-selected judgment projection MAY enter the Runtime Capsule as the Agent's consumption interface
-- `kdna dev decode --reveal` is a developer/debug interface; it MUST NOT be
-  auto-invoked by Agents or exposed to normal consumption paths
-
-### 3.3 Developer Inspection Paths
-
-Developers MAY use these paths for debugging, forking, or audit:
-
-```bash
-kdna inspect <asset.kdna>          # manifest metadata only
-kdna unpack <asset.kdna> <dir>     # source tree for forking/audit (public only)
-kdna dev decode <asset.kdna> --reveal  # raw payload (dev/debug, explicit opt-in)
-```
-
-These are developer tools, not Agent consumption paths.
-
----
-
-## 4. Asset Lifecycle
-
-Every KDNA asset follows this lifecycle model:
-
-```text
-draft (authoring)
-→ packed (.kdna container created)
-→ validated (kdna validate passes)
-→ published (available for consumption)
-→ optionally: deprecated → removed or revoked
-```
-
-At each stage, an external evaluator MAY publish a scoped assessment. The
-assessment must identify its issuer, exact asset subject, rubric, method,
-task/environment scope, time, and evidence. Examples of evaluator-owned claims
-include:
-
-- **Core technical conformance:** the named schemas and executable fixtures pass
-- **behavioral assessment:** a named evaluator observed a difference under a
-  defined task and method
-- **field assessment:** a named evaluator observed outcomes in a defined product
-  population and time window
-- **caller adoption decision:** a specific Host or organization allows use under
-  its own policy
-
-These are not a universal ladder and do not create Core quality, risk, trust,
-recommendation, certification, or production-readiness fields. No external
-assessment or adoption decision is required for the asset to exist as a valid
-KDNA asset.
-
----
-
-## 5. Single Asset Is The Default Path
-
-A new user MUST be able to receive value without learning Router, Advisor,
-Consumer Index, Cluster, Bundle, or Work Pack terminology.
-
-Single-asset consumption is:
-
-```text
-select one .kdna → plan-load → load → use → trace
-```
-
-Single-asset mode MUST NOT implicitly invoke Router or Cluster behavior.
-
----
-
-## 6. Cluster Is Advanced
-
-Cluster is a separate, explicitly-enabled advanced capability. A Cluster
-manifest (`kdna.cluster.json`) references independently loadable `.kdna` assets
-and defines selection, composition, conflict, and budget rules.
-
-Cluster MUST NOT:
-- Be the default consumption path
-- Be invoked implicitly in single-asset mode
-- Embed Cluster policy inside `.kdna` containers
-- Load assets that cannot independently authorize and validate
-
----
-
-## 7. Evidence And Catalog Are Optional Layers
-
-### 7.1 Evidence
-
-- Asset Assay: measures whether an asset changes Agent judgment against baselines
-- Evidence Claim: a bounded, verifiable statement about observed behavior
-- Field Validation: evidence from real users in real tasks
-
-Evidence is always optional. An asset without evidence is a valid KDNA asset.
-
-### 7.2 Catalogs And Registries
-
-Catalogs and registries provide discovery, version, download, and metadata. They
-are optional distribution channels, not approval bodies.
-
-Official listing, official example, official recommendation, and behaviorally
-validated MUST be four distinct concepts. Registry inclusion MUST NOT imply any
-of the others.
-
----
+KDNA does not store a complete mind, complete personality, all knowledge, or
+general intelligence. It does not grant tool access, network access, payment,
+deployment, or representation authority. If a Prompt, Skill, document, Policy,
+Memory, or knowledge system already provides the needed contract, use the
+simpler mechanism.

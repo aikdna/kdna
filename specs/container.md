@@ -30,7 +30,9 @@ Agent or application
 
 - Authoring source files are editable development inputs, never distribution
   entries.
-- The `.kdna` file is the canonical installed asset.
+- The `.kdna` file is the canonical portable and distributed asset. A Host may
+  read it directly or preserve an immutable copy; no installation step or
+  global library is required by the container contract.
 - The Runtime Capsule is the only Agent-facing judgment representation.
 
 ## 3. Container Entries
@@ -48,10 +50,16 @@ Agent or application
 | Entry | Encoding | Meaning |
 |---|---|---|
 | `checksums.json` | UTF-8 JSON | Digests over the distributed bytes; official writers emit it |
-| `signatures/` | implementation-defined signed records | Optional provenance and integrity signatures |
 | `attachments/` | binary | Optional assets governed by the manifest and loader policy |
 
 No optional entry may become an alternate judgment payload.
+
+Asset signatures are outside the current Preview contract. A container with
+`signature.json`, a top-level `signatures/` entry, or manifest `signature` /
+`signatures` declarations MUST be rejected rather than interpreted through a
+legacy or implementation-defined signature format. Signed external grants and
+Human Lock provenance records are separate contracts and are not asset
+signatures.
 
 ### 3.3 Forbidden top-level source entries
 
@@ -167,12 +175,13 @@ logs, or bypass Core with generic ZIP/CBOR code.
 7. Decode or authorize and decrypt `payload.kdnab` in memory.
 8. Validate the decoded payload profile.
 9. Select `index`, `compact`, `scenario`, or `full` context.
-10. Emit a Runtime Capsule with honest validation and signature state.
+10. Emit a Runtime Capsule with honest validation state and
+    `signature.state = "absent"`.
 
 Raw payload inspection is a developer-only operation:
 
 ```bash
-kdna dev decode asset.kdna --reveal
+kdna unpack asset.kdna ./unpacked-asset
 ```
 
 It is not an Agent consumption path.
@@ -188,7 +197,7 @@ A conforming loader rejects at least:
 - non-CBOR payload or encrypted-envelope bytes;
 - unsupported access, entitlement, payload, or crypto profiles;
 - declared digest mismatch;
-- invalid signatures when signature verification is requested or required;
+- any unsupported asset-signature entry or manifest declaration;
 - failure to authorize or decrypt an encrypted asset.
 
 KDNA has one current distribution format. Historical formats may be handled by

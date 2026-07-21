@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Prepare `@aikdna/kdna-core@0.21.0` as an unpublished Development Preview
+  candidate. It closes password LoadPlan, minimum judgment semantics,
+  non-truncating compact projection with explicit omission reporting, checksums,
+  entitlement, and asset-signature boundaries without changing any already
+  published package bytes.
+- Reconcile current public maturity language to pre-release, keep exact
+  published-version contracts separate from corrective source candidates, and
+  remove output-improvement language from the active Agent guide. Apply the
+  same maturity boundary to Cluster and embedded Studio documentation.
+
 - Publish `@aikdna/kdna@0.13.2` as the maintained Legacy compatibility bridge
   for CLI 0.35.1, Eval 0.3.2, and Core 0.20.0, with exact Release, registry,
   signature, provenance, and clean-install acceptance evidence.

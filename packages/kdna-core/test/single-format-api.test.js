@@ -238,7 +238,10 @@ test('asset reader verifySync enforces format_version and current mimetype', () 
     const payload = {
       profile: 'kdna.payload.judgment',
       profile_version: '0.1.0',
-      core: { highest_question: 'q', axioms: [] },
+      core: {
+        highest_question: 'Which reader behavior preserves the container contract?',
+        axioms: ['Reject containers whose required format coordinates are invalid.'],
+      },
     };
 
     const files = {

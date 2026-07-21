@@ -1,13 +1,11 @@
 # KDNA Canonicalization
 
-This document defines the canonical byte model used for `content_digest` and
-Ed25519 signatures.
+This document defines the canonical byte model used for `content_digest`.
 
 ## Entry Set
 
 The canonical content tree includes every non-directory ZIP entry except:
 
-- `signature.json`
 - `.DS_Store`
 - `build-receipt.json`
 - any entry under `reports/`
@@ -22,7 +20,7 @@ Entries are sorted by UTF-8 path bytes in ascending lexicographic order before
 hashing. This is a byte comparison, not JavaScript's default UTF-16 string
 ordering. For example, a path beginning with U+E000 sorts before a path
 beginning with U+10000. ZIP central-directory order and compression method do
-not affect `content_digest` or signature payloads.
+not affect `content_digest`.
 
 ## JSON Canonicalization
 
@@ -36,7 +34,6 @@ JSON entries are parsed and serialized with:
 
 For `kdna.json`, the following fields are removed before hashing:
 
-- `signature`
 - `asset_digest`
 - `container_sha256`
 - `content_digest`
@@ -59,26 +56,18 @@ sha256:<sha256-of-joined-entry-lines>
 
 Entry lines are joined with `\n`.
 
-## Signing Payload
+## Asset Signature Boundary
 
-The Ed25519 signing payload is **the same** joined entry-line string used as
-the input to `content_digest` (same exclusion set: `signature.json`,
-`.DS_Store`, `build-receipt.json`, `reports/*`). Self-referential digest
-fields are stripped before signing and verification. Conforming verifiers
-MUST reject signatures that do not verify against this payload.
-
-Producers and verifiers MUST agree on the exclusion set. A producer that
-omits `build-receipt.json` from the digest but signs the same file (or
-vice versa) would compute two different byte strings and the signature
-would fail to verify. The reference implementation in
-`packages/kdna-core/src/asset-reader.js` keeps `buildContentDigest` and
-`buildSigningPayload` aligned; any new exclusion MUST be added to both
-paths in the same change.
+The current Preview does not define an asset-signature payload. Containers
+that declare asset signatures are rejected under the current container
+contract. Content canonicalization therefore makes no authenticity claim;
+it only provides deterministic digest material.
 
 ## Non-Goals
 
-Canonicalization does not prove judgment quality. It proves that all verifiers
-are hashing and signing the same bytes.
+Canonicalization does not prove authorship, authorization, authenticity, or
+judgment quality. It proves that all conforming implementations hash the same
+bytes.
 
 Runtime Capsule delivery uses a separate RFC 8785 JCS profile named
 `kdna.canonicalization.runtime-capsule-jcs`. Its digest is P and is not the asset content digest C.

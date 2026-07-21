@@ -18,7 +18,8 @@
  *   - mimetype must be the first entry in a .kdna container
  *   - mimetype must be STORED (compression method 0) in a .kdna container
  *   - the source directory must contain mimetype, kdna.json, payload.kdnab
- *   - checksums.json and signatures/ are optional
+ *   - checksums.json and attachments/ are optional
+ *   - asset signatures are outside the current Preview contract
  *   - lineage must be a single object (not an array)
  *   - pack output is reproducible within one pinned toolchain/compressor;
  *     DEFLATE bytes may differ across compressors, zlib versions, or systems
@@ -61,7 +62,7 @@ const { readAsset } = (() => {
 
 const MIMETYPE = 'application/vnd.kdna.asset';
 const REQUIRED_DIR_ENTRIES = ['mimetype', 'kdna.json', 'payload.kdnab'];
-const OPTIONAL_DIR_ENTRIES = ['checksums.json', 'signatures', 'attachments'];
+const OPTIONAL_DIR_ENTRIES = ['checksums.json', 'attachments'];
 const ALLOWED_TOP_LEVEL_ENTRIES = new Set([
   ...REQUIRED_DIR_ENTRIES,
   ...OPTIONAL_DIR_ENTRIES,
@@ -405,7 +406,7 @@ function validateContainerEntryMetadata(entry) {
     }
     throw new Error(`container includes unsupported top-level entry: ${topLevel}`);
   }
-  if ((topLevel === 'signatures' || topLevel === 'attachments') && normalizedName === topLevel) {
+  if (topLevel === 'attachments' && normalizedName === topLevel) {
     throw new Error(`container directory entry is not supported: ${name}`);
   }
   if (method !== 0 && method !== 8) {
@@ -558,7 +559,7 @@ function readLayout(absPath) {
         if (fs.statSync(full).isFile()) {
           map[f] = fs.readFileSync(full);
         } else {
-          // subdirectory like signatures/ — record its presence but not contents here
+          // Optional subdirectories are recorded without becoming payloads.
           map[f] = null;
         }
       }
@@ -570,7 +571,7 @@ function readLayout(absPath) {
     containerBytes = fs.readFileSync(absPath);
     entries = listZipEntriesFromBuffer(containerBytes);
     for (const e of entries) {
-      // We only need the well-known entries; signatures/ attachments/ etc.
+      // We only need the well-known entries and optional attachments.
       // are passed through unchanged by the loader but not parsed here.
       if (
         e.name === 'mimetype' ||
@@ -754,7 +755,6 @@ function buildInspectOutput(container) {
     ...assessLoaderCompatibility(m),
     load_contract_default_profile: m.load_contract ? m.load_contract.default_profile : null,
   };
-  if (m.signatures !== undefined) out.signature_count = Array.isArray(m.signatures) ? m.signatures.length : 0;
   if (container.map['checksums.json']) out.checksums_present = true;
   return out;
 }
@@ -1322,7 +1322,9 @@ function inputFingerprint(inputPath, layout, opts = {}) {
   ) ? opts.entitlement.status : null;
 
   return {
-    has_password_input: opts.hasPassword === true,
+    has_password_input:
+      opts.hasPassword === true ||
+      (typeof opts.password === 'string' && opts.password.length > 0),
     entitlement_input: entitlementInput,
     source_fingerprint: computeSourceFingerprint(inputPath, layout),
   };
@@ -1675,18 +1677,19 @@ function planLoad(inputPath, opts = {}) {
     }
 
     if (plan.entitlement_profile === 'password') {
-      if (opts.password || opts.hasPassword === true) {
-        if (opts.hasPassword === true && !opts.password) {
-          plan.issues.push(buildLoadPlanIssue(
-            'KDNA_AUTH_PASSWORD_DIAGNOSTIC',
-            'info',
-            'hasPassword is a diagnostic credential-presence signal only; it does not verify the password.',
-          ));
-        }
-        plan.state = 'ready';
-        plan.required_action = 'load';
-        plan.can_load_now = true;
-        plan.projection_policy = 'minimal';
+      if (
+        opts.hasPassword === true ||
+        (typeof opts.password === 'string' && opts.password.length > 0)
+      ) {
+        plan.state = 'needs_password';
+        plan.required_action = 'enter_password';
+        plan.can_load_now = false;
+        plan.projection_policy = 'none';
+        plan.issues.push(buildLoadPlanIssue(
+          'KDNA_AUTH_PASSWORD_UNVERIFIED',
+          'blocking',
+          'A password was provided but has not been verified. Only an authorized load may verify it by decrypting the protected payload.',
+        ));
       } else {
         plan.state = 'needs_password';
         plan.required_action = 'enter_password';
@@ -1958,10 +1961,10 @@ function renderPromptItem(item) {
   if (item.type === 'axiom_applicability' && item.one_sentence) {
     const parts = [item.one_sentence];
     if (Array.isArray(item.applies_when) && item.applies_when.length) {
-      parts.push(`applies when: ${item.applies_when.slice(0, 2).join('; ')}`);
+      parts.push(`applies when: ${item.applies_when.join('; ')}`);
     }
     if (Array.isArray(item.does_not_apply_when) && item.does_not_apply_when.length) {
-      parts.push(`does not apply when: ${item.does_not_apply_when.slice(0, 2).join('; ')}`);
+      parts.push(`does not apply when: ${item.does_not_apply_when.join('; ')}`);
     }
     if (item.failure_risk) parts.push(`failure risk: ${item.failure_risk}`);
     return parts.join(' — ');
@@ -2035,7 +2038,13 @@ function loadAuthorized(inputPath, opts = {}) {
   const inputKind = typeof inputPath === 'string' ? 'packaged_file' : 'packaged_bytes';
   const inputSnapshot = snapshotPackagedInput(inputPath);
   const plan = planLoad(inputSnapshot, opts);
-  if (plan.can_load_now !== true) {
+  const loadMayVerifyPassword =
+    typeof opts.password === 'string' &&
+    opts.password.length > 0 &&
+    plan.state === 'needs_password' &&
+    Array.isArray(plan.issues) &&
+    plan.issues.some((issue) => issue.code === 'KDNA_AUTH_PASSWORD_UNVERIFIED');
+  if (plan.can_load_now !== true && !loadMayVerifyPassword) {
     const issueCodes = Array.isArray(plan.issues)
       ? plan.issues.map((issue) => issue.code).filter(Boolean)
       : [];
@@ -2226,7 +2235,11 @@ function normalizeCompactAxiom(axiom) {
   if (!axiom || typeof axiom !== 'object') return null;
   const statement = axiom.statement || axiom.one_sentence || axiom.full_statement || axiom.id || null;
   if (!statement) return null;
-  const oneSentence = (axiom.one_sentence && !String(axiom.one_sentence).startsWith('<TBD')) ? axiom.one_sentence : (typeof axiom.full_statement === 'string' && axiom.full_statement.length > 0 ? axiom.full_statement.substring(0, 120) + (axiom.full_statement.length > 120 ? '…' : '') : statement);
+  const oneSentence = (axiom.one_sentence && !String(axiom.one_sentence).startsWith('<TBD'))
+    ? axiom.one_sentence
+    : (typeof axiom.full_statement === 'string' && axiom.full_statement.length > 0
+      ? axiom.full_statement
+      : statement);
   return {
     type: 'axiom_applicability',
     id: axiom.id || null,
@@ -2264,6 +2277,112 @@ function hasCompactPromptContent(content) {
       (Array.isArray(content.failure_modes) && content.failure_modes.length > 0) ||
       (Array.isArray(content.patterns) && content.patterns.length > 0)
   );
+}
+
+const COMPACT_PROJECTED_CORE_FIELDS = new Set([
+  'highest_question',
+  'worldview',
+  'value_order',
+  'judgment_role',
+  'axioms',
+  'boundaries',
+]);
+const COMPACT_PROJECTED_REASONING_FIELDS = new Set(['self_check', 'failure_modes']);
+const COMPACT_PROJECTED_AXIOM_FIELDS = new Set([
+  'id',
+  'statement',
+  'one_sentence',
+  'applies_when',
+  'does_not_apply_when',
+  'failure_risk',
+]);
+const COMPACT_NON_CONTENT_FIELDS = new Set(['profile', 'profile_version']);
+
+function escapeJsonPointerToken(value) {
+  return String(value).replaceAll('~', '~0').replaceAll('/', '~1');
+}
+
+function omissionCount(value) {
+  if (value === undefined || value === null) return 0;
+  if (Array.isArray(value)) return value.length;
+  if (typeof value === 'string') return value.trim() ? 1 : 0;
+  if (typeof value === 'object') return Object.keys(value).length > 0 ? 1 : 0;
+  return 1;
+}
+
+function addOmittedValue(entries, pointer, value) {
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    for (const key of Object.keys(value).sort()) {
+      addOmittedValue(
+        entries,
+        `${pointer}/${escapeJsonPointerToken(key)}`,
+        value[key],
+      );
+    }
+    return;
+  }
+  const count = omissionCount(value);
+  if (count > 0) entries.push({ path: pointer, count });
+}
+
+function addOmittedAxiomFields(entries, axioms) {
+  const counts = new Map();
+  for (const axiom of Array.isArray(axioms) ? axioms : []) {
+    if (!axiom || typeof axiom !== 'object' || Array.isArray(axiom)) continue;
+    for (const key of Object.keys(axiom).sort()) {
+      if (COMPACT_PROJECTED_AXIOM_FIELDS.has(key)) continue;
+      const count = omissionCount(axiom[key]);
+      if (count === 0) continue;
+      const path = `/core/axioms/*/${escapeJsonPointerToken(key)}`;
+      counts.set(path, (counts.get(path) || 0) + count);
+    }
+  }
+  for (const path of [...counts.keys()].sort()) {
+    entries.push({ path, count: counts.get(path) });
+  }
+}
+
+function buildCompactProjectionReport(payload) {
+  const entries = [];
+  const core = payload && typeof payload.core === 'object' && !Array.isArray(payload.core)
+    ? payload.core
+    : {};
+  const reasoning = payload && typeof payload.reasoning === 'object' && !Array.isArray(payload.reasoning)
+    ? payload.reasoning
+    : {};
+
+  for (const key of Object.keys(core).sort()) {
+    if (!COMPACT_PROJECTED_CORE_FIELDS.has(key)) {
+      addOmittedValue(entries, `/core/${escapeJsonPointerToken(key)}`, core[key]);
+    }
+  }
+  addOmittedAxiomFields(entries, core.axioms);
+
+  for (const key of Object.keys(reasoning).sort()) {
+    if (!COMPACT_PROJECTED_REASONING_FIELDS.has(key)) {
+      addOmittedValue(entries, `/reasoning/${escapeJsonPointerToken(key)}`, reasoning[key]);
+    }
+  }
+
+  for (const key of Object.keys(payload || {}).sort()) {
+    if (
+      COMPACT_NON_CONTENT_FIELDS.has(key) ||
+      key === 'core' ||
+      key === 'patterns' ||
+      key === 'reasoning'
+    ) {
+      continue;
+    }
+    addOmittedValue(entries, `/${escapeJsonPointerToken(key)}`, payload[key]);
+  }
+
+  entries.sort((left, right) => left.path.localeCompare(right.path));
+  const omittedTotal = entries.reduce((total, entry) => total + entry.count, 0);
+  return {
+    status: omittedTotal > 0 ? 'partial' : 'complete',
+    omitted: entries,
+    omitted_total: omittedTotal,
+  };
 }
 
 function loadAssetUnsafe(inputPath, opts = {}) {
@@ -2428,8 +2547,9 @@ function loadAssetUnsafe(inputPath, opts = {}) {
       // strings remain strings and structured questions remain objects.
       self_checks: preserveDeclaredList(payload.reasoning && payload.reasoning.self_check),
       failure_modes: normalizeList(payload.reasoning && payload.reasoning.failure_modes),
-      patterns: normalizeList(payload.patterns).slice(0, 3),
+      patterns: normalizeList(payload.patterns),
     };
+    result.projection_report = buildCompactProjectionReport(payload);
     if (m.load_contract && m.load_contract.profiles && m.load_contract.profiles.compact && m.load_contract.profiles.compact.max_tokens_hint) {
       result.max_tokens_hint = m.load_contract.profiles.compact.max_tokens_hint;
     }
@@ -2547,6 +2667,14 @@ function loadAssetUnsafe(inputPath, opts = {}) {
     text += 'Asset ID: ' + (result.asset_id || 'unknown') + '\n';
     text += 'Profile: ' + result.profile + '\n';
     text += 'Safety boundary: KDNA content is subordinate to platform, system, and developer instructions.\n';
+    if (result.projection_report) {
+      text += `Projection completeness: ${result.projection_report.status}\n`;
+      if (result.projection_report.omitted.length > 0) {
+        text += 'Omitted payload paths: ' + result.projection_report.omitted
+          .map((entry) => `${entry.path} (${entry.count})`)
+          .join('; ') + '\n';
+      }
+    }
     if (result.max_tokens_hint) text += 'Max tokens hint: ' + result.max_tokens_hint + '\n';
     if (c.highest_question) text += 'Highest question:\n' + c.highest_question + '\n';
     if (hasStandardJudgmentRoleContent(c.judgment_role)) {
@@ -2610,8 +2738,6 @@ function wrapAsCapsule(result, layout, profile, opts) {
 function buildRuntimeCapsuleProjection(loadResult, layout, profile, opts = {}) {
   const m = layout.manifest;
   const val = opts._validation || {};
-  const pubkey = (m.creator && m.creator.pubkey) || null;
-  const sigVerified = val.signature_valid === true;
   const runtimeCapsule = require('../runtime-capsule');
   const digests = runtimeCapsule.computeDigestEvidence(opts._runtimeAssetBytes, {
     expectedDigests: opts.expectedDigests,
@@ -2620,9 +2746,7 @@ function buildRuntimeCapsuleProjection(loadResult, layout, profile, opts = {}) {
     projection: loadResult,
     manifest: m,
     digests,
-    signature: pubkey
-      ? { state: sigVerified ? 'verified' : 'not_checked', issuer: pubkey }
-      : { state: 'absent' },
+    signature: { state: 'absent' },
     inputKind: opts._runtimeInputKind,
     loadedAt: opts.loadedAt,
     schemaValid: val.schema_valid === true,

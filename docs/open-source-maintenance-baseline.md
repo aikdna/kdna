@@ -1,7 +1,8 @@
-# Open Source Maintenance Baseline
+# Open Source Pre-release Maintenance Baseline
 
-> Last updated: 2026-07-18. This document defines the public maintenance-mode
-> boundary for the KDNA open-source ecosystem.
+> Last updated: 2026-07-21. This document defines the public pre-release
+> maintenance boundary for the KDNA open-source ecosystem. It does not freeze
+> or retire any repository mission.
 
 ## Lifecycle Map
 
@@ -13,11 +14,11 @@
 | `@aikdna/kdna` | Legacy compatibility | Maintained migration bridge; new integrations use `@aikdna/kdna-cli` and `@aikdna/kdna-core` directly. |
 | Studio Core and Studio CLI | Pre-release | Public local asset authoring/export is supported; AI-assisted authoring remains experimental. |
 | Public `.kdna` reference assets | Experimental | Current technical references require metadata, SHA sidecars, public URLs, and public-surface checks; they are not content endorsements or the default onboarding path. |
-| Agent loader skill and MCP server | Pre-release / Experimental | Loader behavior must preserve plan-load-before-load and content-neutral boundaries. |
+| Agent loader skill and MCP server | Unassessed / Experimental | Loader mission retained; explicit-file/user-approved attachment, visibility, and control require independent recertification. |
 | Web packages and scaffolder | Pre-release / Experimental | Published integration surfaces for upload, inspect, plan-load, load, and activation proxying. |
 | Swift runtime, Studio Swift, and app-shared package | Pre-release | Swift Core has a current 0.20.0 conformance release; Studio Swift 0.4.0 and App Shared 0.5.0 remain published but require current-runtime recertification before stronger claims. |
 | `kdna-vscode` | Unassessed integration | The editor mission remains part of the ecosystem; current source maturity and exact compatibility await owner-reviewed recertification. |
-| `@aikdna/agent` | Legacy / Deprecated | Frozen source only; current Agent integration uses `kdna-loader` or the experimental MCP bridge. |
+| `@aikdna/agent` | Legacy / Deprecated | Frozen source only; new integrations use explicit Core/CLI file loading while Agent adapters are recertified. |
 | `@aikdna/kdna-artifact-engine` and `@aikdna/kdna-fidelity-core` | Legacy / Deprecated | Historical draft implementations; not part of the current Runtime Capsule toolchain. |
 
 The machine-readable lifecycle and release-status inventory is
@@ -27,7 +28,7 @@ applications, and exact release artifacts.
 
 ## Accepted Maintenance Work
 
-Maintenance-mode PRs should fit one or more of these categories:
+Pre-release maintenance PRs should fit one or more of these categories:
 
 - Bug fixes with a minimal regression test or reproduction.
 - Documentation truth fixes that align public claims with shipped behavior.

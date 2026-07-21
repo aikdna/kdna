@@ -63,20 +63,22 @@ KDNA has TWO version concepts:
 
 The spec version in each KDNA JSON file refers to which version of the KDNA protocol the file follows — NOT the domain's content version. A domain at `0.2.0` can still use spec version `1.0-rc`.
 
-## Version and Evaluation
+## Version Verification
 
-Every version change that affects judgment (MINOR + MAJOR) MUST be re-evaluated:
+Every version change that affects judgment must produce a new coordinate and be
+revalidated as an asset. The current Preview does not provide a project-level
+comparison command or require a benchmark gate:
 
 ```bash
-# Before release, compare old vs new
-kdna compare --before examples/my_domain_0.1.0 --after examples/my_domain_0.2.0
+kdna validate ./dist/my-domain-0.2.0.kdna
+kdna plan-load ./dist/my-domain-0.2.0.kdna
+kdna load ./dist/my-domain-0.2.0.kdna --profile=compact --as=json
 ```
 
-If you claim a public asset is evaluated, publish the evaluation report and
-reproducible evidence next to the release card. Do not use `evaluated` unless
-the evidence is available to users.
-
-If a version change DEGRADES judgment, do not release — fix the regression first.
+If a publisher makes an asset-level evaluation claim, that publisher must bind
+the claim to its named evaluator, rubric, task set, model/runtime coordinates,
+time, and reproducible evidence. Such a claim is optional and never changes
+Core format validity.
 
 ## Pre-Release Checklist
 
@@ -88,20 +90,17 @@ Before bumping and publishing:
 - [ ] `kdna plan-load <asset.kdna>` returns the expected loading plan
 - [ ] `CHANGELOG.md` has an entry for this version
 - [ ] Release card includes SHA-256, use commands, boundaries, and known limitations
-- [ ] If MINOR or MAJOR: re-run benchmark or evaluation and publish the report if you claim evaluated status
+- [ ] If an evaluation claim is made: publish its exact issuer, scope, method, coordinates, and evidence
 - [ ] If MAJOR: notify existing users of breaking change
-- [ ] No regression compared to previous version
+- [ ] The asset owner's intended judgment changes and boundaries were reviewed
 
-## CLI Shortcut
+## Current CLI Workflow
 
 ```bash
-# Bump version and run all checks
-kdna version bump patch   # 0.1.0 → 0.1.1
-kdna version bump minor   # 0.1.0 → 0.2.0
-kdna version bump major   # 0.1.0 → 1.0.0
-
-# Show version history
-kdna version history examples/sales
+# Update the manifest version in the authoring source, export a new file, then:
+kdna validate ./dist/my-domain-0.2.0.kdna
+kdna inspect ./dist/my-domain-0.2.0.kdna
 ```
 
-(CLI implementation pending — currently manual)
+Version editing and history are currently authoring/distribution responsibilities;
+the Preview CLI has no `version bump` or `version history` subcommand.

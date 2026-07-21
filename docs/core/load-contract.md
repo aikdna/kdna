@@ -67,7 +67,7 @@ When the official KDNA loader opens a `.kdna` file, it MUST:
 1. Read the manifest.
 2. If `load_contract` is present, use the profile named in `default_profile` (or the caller-requested profile if different) to determine the reading strategy.
 3. If the requested profile has `requires_decryption: true`, refuse to load without a key and emit a `requires_decryption` trace status.
-4. If the requested profile's `max_tokens_hint` is exceeded by the actual content, the loader SHOULD emit a warning trace, not silently truncate.
+4. If the requested profile's `max_tokens_hint` is exceeded by the actual content, the loader SHOULD emit a warning trace, not silently truncate. A compact projection MUST disclose every non-empty omitted payload path and count in its projection report; prompt rendering MUST carry the same disclosure.
 5. Parse both the manifest's `compatibility.min_loader_version` and the loader
    package coordinate as strict `x.y.z` decimal triples. Leading zeros,
    prefixes, prerelease suffixes, build metadata, missing components, and

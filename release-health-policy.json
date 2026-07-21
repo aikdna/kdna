@@ -7,7 +7,9 @@
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-cli",
       "version": "0.35.1",
-      "canonical_tag": { "type": "natural" }
+      "canonical_tag": {
+        "type": "natural"
+      }
     },
     {
       "label": "KDNA MCP Server",
@@ -15,7 +17,10 @@
       "package_json": "mcp-server/package.json",
       "npm_package": "@aikdna/kdna-mcp-server",
       "version": "0.4.2",
-      "canonical_tag": { "type": "prefix", "value": "v" }
+      "canonical_tag": {
+        "type": "prefix",
+        "value": "v"
+      }
     },
     {
       "label": "KDNA Studio CLI",
@@ -23,7 +28,10 @@
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-studio-cli",
       "version": "0.10.2",
-      "canonical_tag": { "type": "natural" }
+      "canonical_tag": {
+        "type": "natural"
+      },
+      "candidate_version": "0.11.0"
     },
     {
       "label": "KDNA Studio Core",
@@ -31,7 +39,10 @@
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-studio-core",
       "version": "2.0.2",
-      "canonical_tag": { "type": "natural" }
+      "canonical_tag": {
+        "type": "natural"
+      },
+      "candidate_version": "3.0.0"
     },
     {
       "label": "KDNA Activation Server",
@@ -39,7 +50,9 @@
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-activation-server",
       "version": "0.2.0",
-      "canonical_tag": { "type": "natural" }
+      "canonical_tag": {
+        "type": "natural"
+      }
     },
     {
       "label": "KDNA Remote Server",
@@ -47,7 +60,9 @@
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-remote-server",
       "version": "0.4.1",
-      "canonical_tag": { "type": "natural" }
+      "canonical_tag": {
+        "type": "natural"
+      }
     },
     {
       "label": "KDNA Web Server",
@@ -55,7 +70,9 @@
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-web-server",
       "version": "0.3.0",
-      "canonical_tag": { "type": "natural" }
+      "canonical_tag": {
+        "type": "natural"
+      }
     },
     {
       "label": "KDNA Web Client",
@@ -63,7 +80,9 @@
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-web-client",
       "version": "0.2.2",
-      "canonical_tag": { "type": "natural" }
+      "canonical_tag": {
+        "type": "natural"
+      }
     },
     {
       "label": "KDNA React",
@@ -71,7 +90,9 @@
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-react",
       "version": "0.3.0",
-      "canonical_tag": { "type": "natural" }
+      "canonical_tag": {
+        "type": "natural"
+      }
     },
     {
       "label": "Create KDNA Web App",
@@ -79,7 +100,9 @@
       "package_json": "package.json",
       "npm_package": "create-kdna-web-app",
       "version": "0.4.0",
-      "canonical_tag": { "type": "natural" }
+      "canonical_tag": {
+        "type": "natural"
+      }
     },
     {
       "label": "KDNA Core",
@@ -87,7 +110,10 @@
       "package_json": "packages/kdna-core/package.json",
       "npm_package": "@aikdna/kdna-core",
       "version": "0.20.0",
-      "canonical_tag": { "type": "natural" }
+      "canonical_tag": {
+        "type": "natural"
+      },
+      "candidate_version": "0.21.0"
     },
     {
       "label": "KDNA Eval",
@@ -95,7 +121,10 @@
       "package_json": "packages/kdna-eval/package.json",
       "npm_package": "@aikdna/kdna-eval",
       "version": "0.3.2",
-      "canonical_tag": { "type": "prefix", "value": "eval/" },
+      "canonical_tag": {
+        "type": "prefix",
+        "value": "eval/"
+      },
       "legacy_release_tag_sha256": {
         "0.3.1": "711abd8fd04f2b1466e8c0f331a1139cbe67361fec6c8c3c2957adc7b786c4b4"
       }
@@ -106,7 +135,10 @@
       "package_json": "packages/kdna/package.json",
       "npm_package": "@aikdna/kdna",
       "version": "0.13.2",
-      "canonical_tag": { "type": "prefix", "value": "compat/" }
+      "canonical_tag": {
+        "type": "prefix",
+        "value": "compat/"
+      }
     }
   ]
 }

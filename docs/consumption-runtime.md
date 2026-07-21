@@ -1,56 +1,40 @@
 # KDNA Consumption Runtime
 
-KDNA assets are portable judgment packages. A consumption runtime decides how
-to use them for one task without changing the assets themselves.
+The default consumption path begins with one explicit `.kdna` file or one exact
+Host attachment that the user has already approved.
 
 ```text
-asset candidates → route → compose → project → agent context
-                         ↓
-                  trace → evaluate → review
+explicit file / approved attachment
+→ inspect and validate
+→ LoadPlan
+→ authorization
+→ Runtime Capsule
+→ Host delivery and visible active state
 ```
 
-## What each step does
+Possession, saving, attachment, authorization, applicability, and loading are
+separate events. Finding a file does not authorize it. Authorization does not
+make it applicable to every task. Capsule delivery does not prove behavioral
+conformity or a better result.
 
-- **Route** selects a primary judgment framework or abstains when no suitable
-  framework is available.
-- **Compose** adds only bounded advisor frameworks when they have a clear role.
-  It does not fall back to loading every available asset.
-- **Project** renders the selected asset into a task-safe context shape.
-- **Trace** records the selection, budget, rejected candidates, and input
-  provenance so a decision can be inspected later.
-- **Evaluate** compares a policy across independent fixture sets and records
-  quality, structure, and cost separately.
+## Host policy
 
-## Sidecars keep the file format stable
+Within its user-approved attachment set, a Host may evaluate declared scope and
+return `load`, `ask`, `skip`, or `block`. It must not scan arbitrary files or a
+global store, infer consent from task keywords, or silently blend competing
+assets.
 
-Route cards, consumer indexes, traces, and evidence manifests are optional
-sidecars. They are versioned separately from `.kdna` files and may be replaced
-without repacking an asset.
+When an asset is active, the Host should expose its identity, version or digest,
+scope, and selection reason, with controls to disable, switch, and roll back.
 
-A generated sidecar is not an automatic runtime default. Consumers should
-keep generated entries disabled until they have the required review and
-evaluation evidence. A sidecar can describe a decision; it cannot turn an
-asset into an endorsed or universally suitable asset.
+## Advanced published surfaces
 
-## Budget profiles
+Some published pre-release coordinates contain routing, composition, sidecar,
+trace, review, and evaluation commands. They are advanced implementations under
+product recertification, not prerequisites of the `.kdna` format and not the
+default user flow. A sidecar can record a Host decision; it cannot endorse an
+asset or grant it authority.
 
-The reference runtime offers three profiles:
-
-| Profile | Intended use | Default approach |
-| --- | --- | --- |
-| `interactive` | Fast, user-facing work | One primary and a strict context budget. |
-| `code-review` | Review and design discussion | A primary, bounded advisors, and a complete trace. |
-| `offline-audit` | Evaluation and comparison | Explicitly configured budget; broad controls are allowed only for audit. |
-
-Profile names are runtime policy, not protocol fields. Integrations may define
-their own limits while preserving a trace of the chosen policy.
-
-## Safety and review
-
-Consumption metadata should be evaluated independently of an asset's file
-validity. A valid asset can still be a poor match for a task. Reference tools
-therefore support replay, review workbooks, and validation artifacts before a
-candidate sidecar is applied.
-
-See the [KDNA CLI consumption guide](https://github.com/aikdna/kdna-cli/blob/main/docs/consumption-runtime.md)
-for commands and examples.
+See [Runtime applicability policy](./runtime-routing.md),
+[Application Runtime Contract](./app-runtime-contract.md), and the
+[tool status matrix](./tool-status-matrix.md).

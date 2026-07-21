@@ -313,13 +313,13 @@ test('load compact profile as prompt renders object patterns readably', () => {
   }
 });
 
-test('load scenario profile falls back to compact', () => {
+test('load scenario profile returns an explicit empty scenario projection without fallback', () => {
   const r = run(['load', minimalAsset, '--profile=scenario', '--as=json']);
   assert.equal(r.status, 0, r.stderr);
   const out = JSON.parse(r.stdout);
   assert.equal(out.profile, 'scenario');
-  // minimal fixture has no scenarios → should fallback
-  assert.ok(out.content !== null || out.profile_available === false || true);
+  assert.deepEqual(out.context, { scenarios: [] });
+  assert.equal(Object.hasOwn(out.context, 'highest_question'), false);
 });
 
 test('load full profile as json', () => {
@@ -407,7 +407,7 @@ test('validate: bad checksum has exactly one structured digest failure', () => {
     payload_valid: true,
     checksums_valid: false,
     load_contract_valid: true,
-    loader_version: '0.20.0',
+    loader_version: '0.21.0',
     min_loader_version: '0.20.0',
     loader_compatible: true,
     overall_valid: false,

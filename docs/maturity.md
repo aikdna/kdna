@@ -17,10 +17,11 @@ wave valueless.
 | Local `validate → plan-load → load` | Pre-release; verify against the exact CLI/Core pair |
 | Runtime Capsule contract | Pre-release in the JS reference path |
 | Studio authoring/export | Pre-release; authoring fidelity under review |
-| Single-asset and multi-asset consumption | Pre-release / experimental by exact command |
+| Explicit-file single-asset consumption | Pre-release by exact command |
+| Global store, automatic discovery, Skill routing, and multi-asset policy | Published or experimental surfaces under recertification; not the default user contract |
 | Signing, revocation, licensed and encrypted lifecycle | Pre-release; security contracts under review |
 | Remote and activation reference servers | Pre-release integrations; self-hosted |
-| Swift, Agent, editor, React, and Web integrations | Pre-release by repository and exact version |
+| Swift, Agent, editor, React, and Web integrations | Pre-release, experimental, or unassessed by repository and exact version |
 
 ## Four Things That Must Not Be Collapsed
 
@@ -29,6 +30,9 @@ wave valueless.
 3. **Behavior evidence** — an optional evaluation observed a result.
 4. **Product readiness** — a specific application or deployment accepts the
    operational risk.
+
+Storage, attachment, authorization, applicability, and load are also separate
+events. No maturity label collapses them into automatic consent.
 
 Passing one layer does not imply the others. KDNA Core never converts these
 facts into a judgment that the content is correct, high-quality, or officially

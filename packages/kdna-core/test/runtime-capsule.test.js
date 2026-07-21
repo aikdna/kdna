@@ -87,7 +87,11 @@ test('public Runtime Capsule builder accepts only the stable responsibility shap
   const asset = reader.openSync(GOLDEN_BYTES);
   const manifest = reader.readManifestSync(asset);
   const built = core.buildRuntimeCapsule({
-    projection: { profile: loaded.profile, content: loaded.context },
+    projection: {
+      profile: loaded.profile,
+      content: loaded.context,
+      projection_report: loaded.trace.projection_report,
+    },
     manifest,
     digests: loaded.digests,
     signature: loaded.signature,
@@ -109,6 +113,19 @@ test('public Runtime Capsule builder accepts only the stable responsibility shap
     schemaValid: true,
   });
   assert.equal(builtWithoutAccess.access, 'public');
+
+  assert.throws(
+    () => core.buildRuntimeCapsule({
+      projection: { profile: loaded.profile, content: loaded.context },
+      manifest,
+      digests: loaded.digests,
+      signature: { state: 'verified', issuer: 'legacy-key' },
+      inputKind: 'packaged_bytes',
+      loadedAt: golden.loaded_at,
+      schemaValid: true,
+    }),
+    (error) => error.code === 'KDNA_ASSET_SIGNATURE_UNSUPPORTED',
+  );
 
   for (const invalidAccess of ['', null, false, 0]) {
     assert.throws(

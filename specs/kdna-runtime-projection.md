@@ -32,7 +32,8 @@ The preferred flow is:
 ## 4. Local Licensed Assets
 
 For local licensed assets, plaintext judgment content MUST remain in memory.
-Consumers MUST NOT write extracted source JSON as canonical installed state.
+Consumers MUST NOT write extracted source JSON as the canonical portable asset
+or as an alternate source of runtime authority.
 
 Local projection reduces accidental exposure but does not prevent authorized
 learning. Authors who cannot accept full local plaintext exposure SHOULD choose

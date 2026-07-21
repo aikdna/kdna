@@ -21,17 +21,17 @@
   },
   "checks": {
     "format_valid": true,
-    "schema_valid": true,
+    "schema_valid": false,
     "payload_valid": true,
     "checksums_valid": true,
     "load_contract_valid": true,
-    "overall_valid": true
+    "overall_valid": false
   },
   "issues": [
     {
-      "code": "KDNA_ENTITLEMENT_PROFILE_UNKNOWN",
+      "code": "KDNA_FORMAT_INVALID",
       "severity": "blocking",
-      "message": "Unknown entitlement profile \"coupon_code\"."
+      "message": "manifest: /entitlement/profile must be equal to one of the allowed values"
     }
   ],
   "source": {

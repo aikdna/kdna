@@ -5,10 +5,11 @@
 > is not part of the current KDNA toolchain. Do not start a new integration
 > from this package.
 
-For current Agent integration, use the official
-[`kdna-loader`](https://github.com/aikdna/kdna-skills) flow, which preserves
+For current Agent integration, use one explicit `.kdna` file through
 `inspect` → `plan-load` → `load`, or integrate the current
 [`@aikdna/kdna-core`](../../packages/kdna-core/) Runtime Capsule contract.
+The `kdna-loader` adapter is currently Unassessed and is not a replacement for
+user-approved Host attachment policy.
 
 ## Historical usage
 

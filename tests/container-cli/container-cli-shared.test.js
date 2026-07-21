@@ -331,11 +331,19 @@ test('planLoad: password licensed asset requires password before load', () => {
 
     const unlockedPlan = container.planLoad(dir, { hasPassword: true });
     assertValidLoadPlan(unlockedPlan);
-    assert.equal(unlockedPlan.state, 'ready');
-    assert.equal(unlockedPlan.required_action, 'load');
-    assert.equal(unlockedPlan.can_load_now, true);
-    assert.equal(unlockedPlan.issues[0].code, 'KDNA_AUTH_PASSWORD_DIAGNOSTIC');
-    assert.equal(unlockedPlan.issues[0].severity, 'info');
+    assert.equal(unlockedPlan.state, 'needs_password');
+    assert.equal(unlockedPlan.required_action, 'enter_password');
+    assert.equal(unlockedPlan.can_load_now, false);
+    assert.equal(unlockedPlan.issues[0].code, 'KDNA_AUTH_PASSWORD_UNVERIFIED');
+    assert.equal(unlockedPlan.issues[0].severity, 'blocking');
+
+    const wrongPasswordPlan = container.planLoad(dir, { password: 'definitely-wrong' });
+    assertValidLoadPlan(wrongPasswordPlan);
+    assert.equal(wrongPasswordPlan.state, 'needs_password');
+    assert.equal(wrongPasswordPlan.required_action, 'enter_password');
+    assert.equal(wrongPasswordPlan.can_load_now, false);
+    assert.equal(wrongPasswordPlan.input_fingerprint.has_password_input, true);
+    assert.equal(wrongPasswordPlan.issues[0].code, 'KDNA_AUTH_PASSWORD_UNVERIFIED');
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -430,7 +438,9 @@ test('planLoad: unknown entitlement profile fails closed', () => {
     assert.equal(plan.state, 'invalid');
     assert.equal(plan.required_action, 'block');
     assert.equal(plan.can_load_now, false);
-    assert.equal(plan.issues[0].code, 'KDNA_ENTITLEMENT_PROFILE_UNKNOWN');
+    assert.equal(plan.checks.schema_valid, false);
+    assert.equal(plan.checks.overall_valid, false);
+    assert.equal(plan.issues[0].code, 'KDNA_FORMAT_INVALID');
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -535,8 +545,8 @@ test('loadAsset: compact profile preserves axiom applicability boundary fields',
       {
         id: 'evidence_first',
         one_sentence: 'Prefer specific evidence over broad claims',
-        applies_when: 'reviewing factual claims',
-        does_not_apply_when: 'writing fictional copy',
+        applies_when: ['reviewing factual claims'],
+        does_not_apply_when: ['writing fictional copy'],
         failure_risk: 'The agent may overfit to unsupported generalities.',
       },
     ];
@@ -887,6 +897,11 @@ test('malicious containers fail consistently before judgment payload output', ()
         'forbidden-top-level',
         [...baseEntries, { name: 'KDNA_Core.json', data: '{}' }],
         /forbidden top-level/,
+      ],
+      [
+        'unsupported-signature-entry',
+        [...baseEntries, { name: 'signatures/legacy.json', data: '{}' }],
+        /unsupported top-level/,
       ],
       [
         'symlink',

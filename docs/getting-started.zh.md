@@ -78,7 +78,9 @@ kdna plan-load ./my_domain.kdna
 kdna load ./my_domain.kdna --profile=compact --as=prompt
 ```
 
-这会输出 Agent 可读的判断上下文。Agent 静默引用判断结构——用户看到更好的回答，而非 KDNA 内部细节。
+这会输出 Agent 可读的判断上下文。兼容 Host 必须让用户能够看到当前采用的
+资产身份、版本或摘要、作用域和采用原因，并提供停用、切换和回滚入口。
+加载成功只证明上下文已经生成，不证明 Agent 忠实遵循，也不保证结果更好。
 
 ---
 

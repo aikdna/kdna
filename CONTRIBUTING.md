@@ -36,14 +36,21 @@ not replace this final-commit requirement.
 
 This certifies that you wrote the code or have the right to submit it under the project's license (Apache-2.0). No CLA is required.
 
-## ANTI-PATTERNS
+## Contract and scope discipline
 
-Do **not** attempt to restore, shim, or reference any of these removed surfaces:
-- `legacy` — deleted in 0.27.0 hard cutover
-- alternative container generation — never existed; do not create
-- `registry` — deferred to future RFC (see decisions/0003)
-- `install` — no distribution in 0.7 baseline (the 0.7 line is the public stable line as of 2026-05-22; earlier "Core GA" terminology is superseded)
-- `help-legacy` — deleted alongside legacy surface
-- `setup` / `verify` — removed commands; use `kdna create` and `kdna validate`
+- Treat `.kdna` as the portable object. Do not introduce a required global
+  library, automatic machine-wide discovery, or silent asset selection.
+- Keep possession, attachment, authorization, applicability, projection, and
+  Host delivery as separate facts.
+- Do not infer current commands from retired baselines or old decision notes.
+  Check the exact candidate or published coordinate you are changing, its
+  `--help`, tests, and current status documentation.
+- Do not make KDNA validity depend on output improvement, Prompt/Skill
+  superiority, universal correctness, or a quality badge.
+- New public responsibilities, repositories, compatibility promises, or
+  destructive removals require an approved proposal and an identified real
+  consumer or failure.
 
-If your PR touches any of the above, it will be rejected. Read `decisions/` for rationale.
+Historical command and architecture decisions remain useful provenance, but
+they do not override the current file-first product contract or the exact
+released contract of an older coordinate.

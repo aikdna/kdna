@@ -1,6 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aikdna.com/schemas/consumption-plan-candidate-0.9.schema.json",
+  "$comment": "Historical candidate retained for provenance and fixture compatibility. Current Runtime contracts are documented separately.",
+  "deprecated": true,
   "title": "KDNA ConsumptionPlan 0.9 Candidate",
   "description": "Candidate pre-execution plan for one KDNA use. Determined before any model call. mode=single or mode=cluster. The plan records intent; the Trace records observed execution.",
   "type": "object",

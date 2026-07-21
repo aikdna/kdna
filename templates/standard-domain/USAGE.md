@@ -17,7 +17,7 @@ standard-domain/
     ├── 3_boundary_cases.json   # Edge of scope
     ├── 3_failure_cases.json    # Known failure modes (cite failure_risk)
     ├── 1_excluded_case.json    # Wrong domain entirely
-    └── scoring.json            # D1-D8 dimensions
+    └── scoring.json            # optional owner-scoped review rubric
 ```
 
 ## How to use
@@ -40,7 +40,7 @@ kdna identity init
 #    - Every axiom MUST have applies_when, does_not_apply_when, failure_risk
 #    - Every misunderstanding MUST have applies_when, failure_risk
 
-# 5. Fill out evals/ — 10 real cases
+# 5. Fill out evals/ with bounded review cases if your claim needs them
 
 # 6. Optionally review and customize the declared cases in evals/
 
@@ -58,4 +58,8 @@ kdna load ./dist/your-domain.kdna --profile=compact --as=prompt
 
 `minimal-domain/` is the **bare-minimum** template — 2 files, no 2.1 fields, no evals. Use it only for fast experimentation or learning.
 
-`standard-domain/` is the richer authoring template for domains that need evidence, limitations, and repeatable validation. KDNA distribution is local `.kdna` export plus `kdna validate` / `kdna plan-load` / `kdna load` evidence.
+`standard-domain/` is the richer authoring template for domains that need
+declared review cases, limitations, and repeatable technical validation. KDNA
+distribution is local `.kdna` export plus `kdna validate` / `kdna plan-load` /
+`kdna load` evidence. Optional review results remain scoped to the named owner
+or evaluator and do not become Core validity metadata.

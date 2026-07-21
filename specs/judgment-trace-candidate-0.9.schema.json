@@ -1,6 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aikdna.com/schemas/judgment-trace-candidate-0.9.schema.json",
+  "$comment": "Historical candidate retained for provenance and fixture compatibility. Current Runtime contracts are documented separately.",
+  "deprecated": true,
   "title": "KDNA JudgmentTrace 0.9 Candidate",
   "description": "Candidate trace contract recording what actually happened during one KDNA use. Always references plan_id. Records execution facts; quality interpretation belongs in EvidenceClaim.",
   "type": "object",
