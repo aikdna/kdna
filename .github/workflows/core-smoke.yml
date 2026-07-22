@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-cli
-          ref: e48d9179b101613704350c91a7b0498679253c3e
+          ref: db58804bcd4e760e990906067a633b196db1eb8d
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
@@ -89,7 +89,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-core
-          ref: 9774e12c61bfbc1439c66dc35af14da7bb686e71
+          ref: 4513f7393fcbc95e13a7a09871ea78d336b93520
           path: .ecosystem-repos/kdna-studio-core
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
