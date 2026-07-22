@@ -37,6 +37,12 @@ function run(stage, label, cwd, command, args, options = {}) {
     fail(stage, label, `missing directory ${cwd}`);
     return;
   }
+  try {
+    fs.appendFileSync(
+      process.env.KDNA_GATE_PROGRESS_LOG || '/tmp/kdna-gate-progress.log',
+      `${new Date().toISOString()} START ${stage} ${label}\n`,
+    );
+  } catch {}
   console.log(`$ ${command} ${args.join(' ')}`);
   const result = spawnSync(command, args, {
     cwd,

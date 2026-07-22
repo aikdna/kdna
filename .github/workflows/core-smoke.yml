@@ -147,7 +147,11 @@ jobs:
       - name: Rehearse the complete compatibility ecosystem gate
         env:
           KDNA_PYTHON: ${{ env.pythonLocation }}/bin/python
+          KDNA_GATE_PROGRESS_LOG: ${{ runner.temp }}/gate-progress.log
         run: node scripts/core-release-authority.js trusted-npm run ecosystem-gate
+      - name: Show ecosystem gate progress on failure
+        if: failure()
+        run: cat "${{ runner.temp }}/gate-progress.log" || true
       - name: Remove the trusted npm release bytes
         if: always()
         run: rm -f "$KDNA_TRUSTED_NPM_TARBALL"
