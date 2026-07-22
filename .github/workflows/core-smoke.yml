@@ -148,13 +148,6 @@ jobs:
         env:
           KDNA_PYTHON: ${{ env.pythonLocation }}/bin/python
         run: node scripts/core-release-authority.js trusted-npm run ecosystem-gate
-      - name: TEMP DEBUG ecosystem gate output
-        if: failure()
-        env:
-          KDNA_PYTHON: ${{ env.pythonLocation }}/bin/python
-          KDNA_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos
-          NODE: ${{ env.NODE }}
-        run: node scripts/ecosystem-gate.js || true
       - name: Remove the trusted npm release bytes
         if: always()
         run: rm -f "$KDNA_TRUSTED_NPM_TARBALL"

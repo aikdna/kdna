@@ -246,6 +246,7 @@ try {
     {
       env: {
         KDNA_CONFORMANCE_ROOT: repoRoot,
+        NODE: process.execPath,
         CLANG_MODULE_CACHE_PATH: swiftModuleCache,
       },
     },
