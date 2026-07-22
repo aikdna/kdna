@@ -55,7 +55,13 @@ const {
 const { readAsset } = (() => {
   try {
     return require('../container-dispatcher.js');
-  } catch {
+  } catch (e) {
+    if (!(e && e.code === 'MODULE_NOT_FOUND' && /container-dispatcher/.test(e.message || ''))) {
+      process.emitWarning(
+        `container-dispatcher failed to load; falling back to the legacy reader: ${e.message}`,
+        { code: 'KDNA_DISPATCHER_DEGRADED' },
+      );
+    }
     return { readAsset: null };
   }
 })();

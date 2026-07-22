@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Warn with `KDNA_DISPATCHER_DEGRADED` when the container dispatcher fails to
+  load for any reason other than the module being absent, instead of silently
+  degrading to the legacy reader.
 - Fail closed on hostile Argon2id parameters in untrusted password envelopes:
   `memory_kib`, `iterations`, and `parallelism` must be integers within
   defensive bounds (256 MiB / 16 / 8), removing a remote denial-of-service
