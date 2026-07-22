@@ -117,7 +117,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "a3eadd63afbf2f5a363c82cee2de2fbe02243b90",
+      "source_commit": "e48d9179b101613704350c91a7b0498679253c3e",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
