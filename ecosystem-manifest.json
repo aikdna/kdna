@@ -117,7 +117,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "d9528e70c1c92cc52d9698c40fcd291443490ea4",
+      "source_commit": "33b259f29f30eeabed1253d8228f498e88cb95ef",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -228,7 +228,7 @@
     {
       "repository": "aikdna/kdna-studio-core",
       "local_path": "../kdna-studio-core",
-      "source_commit": "dbc1c799d6478fce63b91f060ba7013887c658c9",
+      "source_commit": "9774e12c61bfbc1439c66dc35af14da7bb686e71",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -262,7 +262,7 @@
     {
       "repository": "aikdna/kdna-studio-cli",
       "local_path": "../kdna-studio-cli",
-      "source_commit": "89bbb48b5a5e7fc7c76885cdb444874fa6f17d4d",
+      "source_commit": "40cbfa3736aa37e5670ca8fc2d0c9f9cdc7a81c0",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -294,7 +294,7 @@
     {
       "repository": "aikdna/kdna-activation-server",
       "local_path": "../kdna-activation-server",
-      "source_commit": "61a58cd06514e755237aeb73d8267c5599362663",
+      "source_commit": "2f9ee46042d1a492c17631d2019d0bd5d83c8bcf",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -326,7 +326,7 @@
     {
       "repository": "aikdna/kdna-remote-server",
       "local_path": "../kdna-remote-server",
-      "source_commit": "eb677ea0fece9b0886724df8383563253ec45600",
+      "source_commit": "c7258f87a57c82d36e78b5e362749da90b6cf236",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -581,7 +581,7 @@
     {
       "repository": "aikdna/kdna-vscode",
       "local_path": "../kdna-vscode",
-      "source_commit": "73d6eb26990b09c5c56547a5e5e35eb2d9ab7cc4",
+      "source_commit": "78f982f4da08d850fbd5b207e5e03dc6ee61e160",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
