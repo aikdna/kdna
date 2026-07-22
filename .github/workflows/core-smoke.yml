@@ -147,9 +147,7 @@ jobs:
       - name: Rehearse the complete compatibility ecosystem gate
         env:
           KDNA_PYTHON: ${{ env.pythonLocation }}/bin/python
-          KDNA_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos
-          NODE: /Users/runner/hostedtoolcache/node/22.23.1/arm64/bin/node
-        run: node scripts/ecosystem-gate.js
+        run: node scripts/core-release-authority.js trusted-npm run ecosystem-gate
       - name: Remove the trusted npm release bytes
         if: always()
         run: rm -f "$KDNA_TRUSTED_NPM_TARBALL"
