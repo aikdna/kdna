@@ -174,22 +174,22 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-cli
-          ref: d9528e70c1c92cc52d9698c40fcd291443490ea4
+          ref: a3eadd63afbf2f5a363c82cee2de2fbe02243b90
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-skills
-          ref: 9d9b96ffc42ed62231cd984c6a52f231fd40ebb3
+          ref: 7de3a0215515460e5b7fccb0908f4271a21ec6fd
           path: .ecosystem-repos/kdna-skills
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-core
-          ref: dbc1c799d6478fce63b91f060ba7013887c658c9
+          ref: 9774e12c61bfbc1439c66dc35af14da7bb686e71
           path: .ecosystem-repos/kdna-studio-core
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-cli
-          ref: 89bbb48b5a5e7fc7c76885cdb444874fa6f17d4d
+          ref: 40cbfa3736aa37e5670ca8fc2d0c9f9cdc7a81c0
           path: .ecosystem-repos/kdna-studio-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
@@ -212,17 +212,17 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-vscode
-          ref: 73d6eb26990b09c5c56547a5e5e35eb2d9ab7cc4
+          ref: 78f982f4da08d850fbd5b207e5e03dc6ee61e160
           path: .ecosystem-repos/kdna-vscode
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-activation-server
-          ref: 61a58cd06514e755237aeb73d8267c5599362663
+          ref: 2f9ee46042d1a492c17631d2019d0bd5d83c8bcf
           path: .ecosystem-repos/kdna-activation-server
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-remote-server
-          ref: eb677ea0fece9b0886724df8383563253ec45600
+          ref: c7258f87a57c82d36e78b5e362749da90b6cf236
           path: .ecosystem-repos/kdna-remote-server
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:

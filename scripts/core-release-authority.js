@@ -1310,6 +1310,7 @@ function cleanNpmEnvironment({
     'GITHUB_OUTPUT',
     'GITHUB_WORKFLOW_REF',
     'KDNA_CONTROL_ROOT',
+    'KDNA_GATE_PROGRESS_LOG',
     'KDNA_CORE_BASELINE',
     'KDNA_STUDIO_CORE_BASELINE',
     'KDNA_ECOSYSTEM_MANIFEST_PATH',
@@ -1479,7 +1480,11 @@ function runTrustedNpmCommand(args, options = {}) {
       }),
       maxBuffer: 256 * 1024 * 1024,
       shell: false,
-      timeout: options.timeout || 15 * 60_000,
+      timeout:
+        options.timeout ||
+        (Array.isArray(args) && args[0] === 'run' && args[1] === 'ecosystem-gate'
+          ? 40 * 60_000
+          : 15 * 60_000),
     });
     assert(!result.error, 'trusted npm workflow command failed');
     assert(Number.isInteger(result.status), 'trusted npm workflow command failed');

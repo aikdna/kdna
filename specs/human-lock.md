@@ -33,6 +33,12 @@ or experimental `.kdna` files remain format-valid when they pass `kdna validate`
 they simply must not claim inherited Human Lock, human confirmation, signature,
 or reviewed-trust status without the matching evidence.
 
+> **Current wiring status (Preview):** the Core verifier checks Human Lock
+> signatures when a manifest carries `author.public_key_pem`, but the current
+> Studio pipeline neither attaches signatures to exported assets nor writes a
+> public key into the manifest. Runtime signature verification is inert for
+> Studio exports; unsigned assets are valid and must not make signature claims.
+
 ---
 
 ## Fields Requiring Human Judgment Lock
