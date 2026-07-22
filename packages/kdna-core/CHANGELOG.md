@@ -3,8 +3,12 @@
 ## Unreleased
 
 - Warn with `KDNA_DISPATCHER_DEGRADED` when the container dispatcher fails to
-  load for any reason other than the module being absent, instead of silently
-  degrading to the legacy reader.
+  load for any reason other than the dispatcher file itself being absent,
+  instead of silently degrading to the legacy reader. The absence check now
+  resolves the dispatcher path up front, so a present dispatcher with a
+  missing internal dependency, a syntax or initialization error, or a
+  permission error is reported instead of being mistaken for a missing
+  module.
 - Fail closed on hostile Argon2id parameters in untrusted password envelopes:
   `memory_kib`, `iterations`, and `parallelism` must be integers within
   defensive bounds (256 MiB / 16 / 8), removing a remote denial-of-service

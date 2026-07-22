@@ -52,17 +52,40 @@ const {
   isVerifiedExternalEntitlement,
 } = require('../external-key-grant');
 
+function warnDispatcherDegraded(e) {
+  process.emitWarning(
+    `container-dispatcher failed to load; falling back to the legacy reader: ${e.message}`,
+    { code: 'KDNA_DISPATCHER_DEGRADED' },
+  );
+  return { readAsset: null };
+}
+
 const { readAsset } = (() => {
+  const dispatcherRequest = '../container-dispatcher.js';
+  // Absence check via require.resolve: resolution only inspects the module
+  // path and never executes the target, so it can only fail with
+  // MODULE_NOT_FOUND when the dispatcher file itself cannot be located.
+  // Message matching is intentionally not used: Node prints the require
+  // stack inside MODULE_NOT_FOUND messages, so a dispatcher whose own
+  // internal dependency is missing would mention "container-dispatcher"
+  // and be misclassified as absent.
   try {
-    return require('../container-dispatcher.js');
+    require.resolve(dispatcherRequest);
   } catch (e) {
-    if (!(e && e.code === 'MODULE_NOT_FOUND' && /container-dispatcher/.test(e.message || ''))) {
-      process.emitWarning(
-        `container-dispatcher failed to load; falling back to the legacy reader: ${e.message}`,
-        { code: 'KDNA_DISPATCHER_DEGRADED' },
-      );
+    if (e && e.code === 'MODULE_NOT_FOUND') {
+      // The dispatcher file is genuinely absent: expected in minimal
+      // installs. Fall back silently.
+      return { readAsset: null };
     }
-    return { readAsset: null };
+    return warnDispatcherDegraded(e);
+  }
+  // The file resolved; any failure from here on (missing internal
+  // dependency, syntax error, initialization throw, permission error) is a
+  // real load failure and must be surfaced.
+  try {
+    return require(dispatcherRequest);
+  } catch (e) {
+    return warnDispatcherDegraded(e);
   }
 })();
 
