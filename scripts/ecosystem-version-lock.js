@@ -72,7 +72,7 @@ const EXPECTED_BINDINGS = Object.freeze(
     ['kdna-react', 'package.json', 'dependencies', '@aikdna/kdna-web-client'],
     ['kdna-remote-server', 'package.json', 'dependencies', '@aikdna/kdna-core'],
     ['kdna-remote-server', 'package.json', 'devDependencies', '@aikdna/kdna-activation-server'],
-    ['kdna-skills', 'mcp-server/package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna-skills', 'mcp-server/package.json', 'dependencies', '@aikdna/kdna-cli'],
     ['kdna-studio-cli', 'package.json', 'dependencies', '@aikdna/kdna-core'],
     ['kdna-studio-cli', 'package.json', 'dependencies', '@aikdna/kdna-studio-core'],
     ['kdna-studio-core', 'package.json', 'dependencies', '@aikdna/kdna-core'],
@@ -133,6 +133,9 @@ function readBaselines(controlRoot) {
   }
 
   const candidateBaselines = new Map();
+  if (process.env.KDNA_CLI_BASELINE) {
+    candidateBaselines.set('@aikdna/kdna-cli', process.env.KDNA_CLI_BASELINE);
+  }
   if (process.env.KDNA_CORE_BASELINE) {
     candidateBaselines.set('@aikdna/kdna-core', process.env.KDNA_CORE_BASELINE);
   }

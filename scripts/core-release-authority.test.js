@@ -540,6 +540,7 @@ test('publisher process environment uses a minimal provenance and token whitelis
       GITHUB_TOKEN: 'must-not-propagate',
       GITHUB_OUTPUT: '/tmp/github-output',
       KDNA_CONTROL_ROOT: '/tmp/control-root',
+      KDNA_CLI_BASELINE: '0.36.0',
       KDNA_PYTHON: '/tmp/python',
       AWS_SECRET_ACCESS_KEY: 'must-not-propagate',
       NPM_TOKEN: 'must-not-propagate',
@@ -549,6 +550,7 @@ test('publisher process environment uses a minimal provenance and token whitelis
   assert.equal(environment.NODE_AUTH_TOKEN, 'test-placeholder');
   assert.equal(environment.GITHUB_OUTPUT, '/tmp/github-output');
   assert.equal(environment.KDNA_CONTROL_ROOT, '/tmp/control-root');
+  assert.equal(environment.KDNA_CLI_BASELINE, '0.36.0');
   assert.equal(environment.KDNA_PYTHON, '/tmp/python');
   assert.equal(environment.npm_config_userconfig, '/tmp/isolated-home/absent-user.npmrc');
   assert.equal(environment.npm_config_registry, OFFICIAL_REGISTRY);
