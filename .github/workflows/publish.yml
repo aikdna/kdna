@@ -179,17 +179,17 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-skills
-          ref: a186b3d5080837576a0934c62c995c29759e462c
+          ref: a011f03364428f35ef17cda470c0835dff3067fe
           path: .ecosystem-repos/kdna-skills
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-core
-          ref: d215be1b1535e04dc865a996609c0144415575c1
+          ref: 8ca7df19cadd32a08b4067a39992bb28039bf294
           path: .ecosystem-repos/kdna-studio-core
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-cli
-          ref: f937966f04c8713497032208a1d5a85a85cdf221
+          ref: e9741982bb784e7f4410d495c917dc42db6c170f
           path: .ecosystem-repos/kdna-studio-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
@@ -212,7 +212,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-vscode
-          ref: e199205d6e27d31e928d4d0423fa9509bd545b24
+          ref: ec896fda5c1eba1b14631dc5bed7c35564a0c062
           path: .ecosystem-repos/kdna-vscode
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
