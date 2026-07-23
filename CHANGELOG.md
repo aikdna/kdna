@@ -10,6 +10,9 @@
 - Advance the ecosystem conformance anchor and the two accepted reference-asset
   records to exact Core candidate commit `76bbc587ce05f7e575c2373832cc5c9eee9df98a`
   after Swift CI and both reference assets were recertified against that commit.
+- Reconcile the ecosystem manifest and its two exact-checkout workflows to the
+  accepted CLI, MCP, Studio, Swift, shared-app, and VS Code main coordinates;
+  MCP 0.5.0 is a candidate over the published 0.4.2 incumbent.
 - Reconcile current public maturity language to pre-release, keep exact
   published-version contracts separate from corrective source candidates, and
   remove output-improvement language from the active Agent guide. Apply the

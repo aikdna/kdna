@@ -117,7 +117,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "db58804bcd4e760e990906067a633b196db1eb8d",
+      "source_commit": "478114cda7d1f9e807b0c26b1ebd1b32721150eb",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -197,7 +197,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "7de3a0215515460e5b7fccb0908f4271a21ec6fd",
+      "source_commit": "a186b3d5080837576a0934c62c995c29759e462c",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -206,13 +206,14 @@
           "package_json": "mcp-server/package.json",
           "package_name": "@aikdna/kdna-mcp-server",
           "npm_package": "@aikdna/kdna-mcp-server",
-          "version": "0.4.2",
+          "version": "0.5.0",
           "lifecycle": "Experimental",
-          "release_status": "active",
+          "release_status": "candidate",
           "dependency_policy": "current",
           "known_limitations": [],
           "recommended_entrypoint": "npx @aikdna/kdna-mcp-server",
-          "legacy_replacement": null
+          "legacy_replacement": null,
+          "published_version": "0.4.2"
         }
       ],
       "lifecycle": "Experimental",
@@ -228,7 +229,7 @@
     {
       "repository": "aikdna/kdna-studio-core",
       "local_path": "../kdna-studio-core",
-      "source_commit": "4513f7393fcbc95e13a7a09871ea78d336b93520",
+      "source_commit": "d215be1b1535e04dc865a996609c0144415575c1",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -262,7 +263,7 @@
     {
       "repository": "aikdna/kdna-studio-cli",
       "local_path": "../kdna-studio-cli",
-      "source_commit": "40cbfa3736aa37e5670ca8fc2d0c9f9cdc7a81c0",
+      "source_commit": "f937966f04c8713497032208a1d5a85a85cdf221",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -519,7 +520,7 @@
     {
       "repository": "aikdna/kdna-core-swift",
       "local_path": "../kdna-core-swift",
-      "source_commit": "a8d9f443d725ba49d38c2ffac6aedecc79407657",
+      "source_commit": "95f638e2f0472a375704fb5fe2f057de0cb4cb07",
       "conformance_commit": "76bbc587ce05f7e575c2373832cc5c9eee9df98a",
       "release_tag": "v0.20.0",
       "release_commit": "4a9b732b590a711c544da5280a4b78f071369617",
@@ -531,7 +532,7 @@
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "Swift conformance remains pinned to an explicit public Core fixture commit and must be recertified when that pin changes"
+        "accepted main is recertified against exact public Core candidate commit 76bbc587ce05f7e575c2373832cc5c9eee9df98a; the 0.20.0 tag remains the published incumbent"
       ],
       "recommended_entrypoint": "fixed conformance fixtures only",
       "legacy_replacement": null
@@ -539,7 +540,7 @@
     {
       "repository": "aikdna/kdna-app-shared",
       "local_path": "../kdna-app-shared",
-      "source_commit": "69391e1b453f1ded986fdc7d4824db92a5f91461",
+      "source_commit": "c942bc932ab087dc6f1ed751cb476c82e2db43a4",
       "conformance_commit": null,
       "release_tag": "0.5.0",
       "release_commit": "436f7832fbedba9bf55d9459cfa5a2c7f761967e",
@@ -552,7 +553,7 @@
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "Swift package source only; it is not an npm publication",
-        "the 0.5.0 release predates Swift Core 0.20.0 and must be recertified before a stronger current-runtime claim"
+        "the 0.5.0 tag predates the current Swift integration; accepted main is recertified against Swift Core 95f638e2f0472a375704fb5fe2f057de0cb4cb07 but remains unpublished source"
       ],
       "recommended_entrypoint": ".package(url: \"https://github.com/aikdna/kdna-app-shared.git\", exact: \"0.5.0\")",
       "legacy_replacement": null
@@ -560,7 +561,7 @@
     {
       "repository": "aikdna/kdna-studio-swift",
       "local_path": "../kdna-studio-swift",
-      "source_commit": "80cd16ebb18ad32c75b1f88225648dd8dc42a54d",
+      "source_commit": "1a23e36afc69cd08dd79375b82e76518cdba474c",
       "conformance_commit": null,
       "release_tag": "0.4.0",
       "release_commit": "97b57d84b2321e13de18f5b07b18435ce002b958",
@@ -573,7 +574,7 @@
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "Swift package source only; it is not an npm publication",
-        "the 0.4.0 release predates the current Swift Core integration and has not been recertified against Swift Core 0.20.0"
+        "the 0.4.0 tag predates the current Swift integration; accepted main is recertified against Swift Core 95f638e2f0472a375704fb5fe2f057de0cb4cb07 and App Shared c942bc932ab087dc6f1ed751cb476c82e2db43a4 but remains unpublished source"
       ],
       "recommended_entrypoint": ".package(url: \"https://github.com/aikdna/kdna-studio-swift.git\", exact: \"0.4.0\")",
       "legacy_replacement": null
@@ -581,7 +582,7 @@
     {
       "repository": "aikdna/kdna-vscode",
       "local_path": "../kdna-vscode",
-      "source_commit": "78f982f4da08d850fbd5b207e5e03dc6ee61e160",
+      "source_commit": "e199205d6e27d31e928d4d0423fa9509bd545b24",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -595,18 +596,18 @@
           "release_status": "source-only",
           "dependency_policy": "none",
           "known_limitations": [
-            "editor integration mission retained; current source maturity and exact Core compatibility require independent recertification"
+          "editor integration mission retained; technical Host/UI acceptance is synthetic and does not substitute for Owner judgment-material acceptance or Marketplace review"
           ],
           "recommended_entrypoint": null,
           "legacy_replacement": null
         }
       ],
       "lifecycle": "Unassessed",
-      "supported_kdna_version": "pre-cutover",
+    "supported_kdna_version": "1.0",
       "supported_access_modes": [],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "editor integration mission retained; current source depends on an older Core coordinate, and maturity and compatibility remain unassessed pending an owner-reviewed fact card and independent recertification"
+      "accepted source uses the exact CLI/Core candidate line and passed real Extension Development Host controls, but end-user judgment acceptance and Marketplace release remain unassessed"
       ],
       "recommended_entrypoint": null,
       "legacy_replacement": null

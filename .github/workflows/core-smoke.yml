@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-cli
-          ref: db58804bcd4e760e990906067a633b196db1eb8d
+          ref: 478114cda7d1f9e807b0c26b1ebd1b32721150eb
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
@@ -56,40 +56,40 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-skills
-          ref: 7de3a0215515460e5b7fccb0908f4271a21ec6fd
+          ref: a186b3d5080837576a0934c62c995c29759e462c
           path: .ecosystem-repos/kdna-skills
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-core-swift
-          ref: a8d9f443d725ba49d38c2ffac6aedecc79407657
+          ref: 95f638e2f0472a375704fb5fe2f057de0cb4cb07
           path: .ecosystem-repos/kdna-core-swift
           fetch-depth: 0
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-app-shared
-          ref: 69391e1b453f1ded986fdc7d4824db92a5f91461
+          ref: c942bc932ab087dc6f1ed751cb476c82e2db43a4
           path: .ecosystem-repos/kdna-app-shared
           fetch-depth: 0
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-swift
-          ref: 80cd16ebb18ad32c75b1f88225648dd8dc42a54d
+          ref: 1a23e36afc69cd08dd79375b82e76518cdba474c
           path: .ecosystem-repos/kdna-studio-swift
           fetch-depth: 0
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-vscode
-          ref: 78f982f4da08d850fbd5b207e5e03dc6ee61e160
+          ref: e199205d6e27d31e928d4d0423fa9509bd545b24
           path: .ecosystem-repos/kdna-vscode
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-cli
-          ref: 40cbfa3736aa37e5670ca8fc2d0c9f9cdc7a81c0
+          ref: f937966f04c8713497032208a1d5a85a85cdf221
           path: .ecosystem-repos/kdna-studio-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-core
-          ref: 4513f7393fcbc95e13a7a09871ea78d336b93520
+          ref: d215be1b1535e04dc865a996609c0144415575c1
           path: .ecosystem-repos/kdna-studio-core
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
