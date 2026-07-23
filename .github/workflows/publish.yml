@@ -33,7 +33,7 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           ref: ${{ github.event.release.tag_name }}
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
@@ -116,7 +116,7 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           ref: ${{ github.event.release.tag_name }}
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
@@ -255,7 +255,7 @@ jobs:
           repository: aikdna/kdna-demo-web-viewer
           ref: 6bae1c23ba61aa9860aa2ea74a4f972e6afafd12
           path: .ecosystem-repos/kdna-demo-web-viewer
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
