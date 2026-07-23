@@ -13,6 +13,10 @@
 - Reconcile the ecosystem manifest and its two exact-checkout workflows to the
   accepted CLI, MCP, Studio, Swift, shared-app, and VS Code main coordinates;
   MCP 0.5.0 is a candidate over the published 0.4.2 incumbent.
+- Re-anchor the ecosystem manifest and both exact-checkout workflows to the
+  final Skills, Studio Core, Studio CLI, and VS Code release-integrity
+  correction commits; record the published 0.1.0 Marketplace extension as the
+  incumbent while keeping 0.2.0 explicitly unpublished and unassessed.
 - Reconcile current public maturity language to pre-release, keep exact
   published-version contracts separate from corrective source candidates, and
   remove output-improvement language from the active Agent guide. Apply the

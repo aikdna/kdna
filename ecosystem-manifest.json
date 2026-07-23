@@ -197,7 +197,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "a186b3d5080837576a0934c62c995c29759e462c",
+      "source_commit": "a011f03364428f35ef17cda470c0835dff3067fe",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -229,7 +229,7 @@
     {
       "repository": "aikdna/kdna-studio-core",
       "local_path": "../kdna-studio-core",
-      "source_commit": "d215be1b1535e04dc865a996609c0144415575c1",
+      "source_commit": "8ca7df19cadd32a08b4067a39992bb28039bf294",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -263,7 +263,7 @@
     {
       "repository": "aikdna/kdna-studio-cli",
       "local_path": "../kdna-studio-cli",
-      "source_commit": "f937966f04c8713497032208a1d5a85a85cdf221",
+      "source_commit": "e9741982bb784e7f4410d495c917dc42db6c170f",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -582,7 +582,7 @@
     {
       "repository": "aikdna/kdna-vscode",
       "local_path": "../kdna-vscode",
-      "source_commit": "e199205d6e27d31e928d4d0423fa9509bd545b24",
+      "source_commit": "ec896fda5c1eba1b14631dc5bed7c35564a0c062",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -596,7 +596,7 @@
           "release_status": "source-only",
           "dependency_policy": "none",
           "known_limitations": [
-            "editor integration mission retained; technical Host/UI acceptance is synthetic and does not substitute for Owner judgment-material acceptance or Marketplace review"
+            "the historical 0.1.0 Marketplace extension remains the published incumbent; 0.2.0 is an unpublished source candidate whose technical Host/UI acceptance does not substitute for Owner judgment-material acceptance or Marketplace review"
           ],
           "recommended_entrypoint": null,
           "legacy_replacement": null
@@ -607,7 +607,7 @@
       "supported_access_modes": [],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "accepted source uses the exact CLI/Core candidate line and passed real Extension Development Host controls, but end-user judgment acceptance and Marketplace release remain unassessed"
+        "the historical 0.1.0 Marketplace extension remains published; accepted 0.2.0 source uses the exact CLI/Core candidate line and passed real Extension Development Host controls, but end-user judgment acceptance and the 0.2.0 Marketplace release remain unassessed"
       ],
       "recommended_entrypoint": null,
       "legacy_replacement": null
