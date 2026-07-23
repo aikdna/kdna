@@ -39,6 +39,12 @@ test('workspace discovery includes root and declared workspace packages only', (
 test('schema-2 package records derive Eval and compatibility coordinates without source special cases', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-version-lock-baselines-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const previousCliBaseline = process.env.KDNA_CLI_BASELINE;
+  process.env.KDNA_CLI_BASELINE = '0.36.0';
+  t.after(() => {
+    if (previousCliBaseline === undefined) delete process.env.KDNA_CLI_BASELINE;
+    else process.env.KDNA_CLI_BASELINE = previousCliBaseline;
+  });
   writeJson(path.join(root, 'ecosystem-manifest.json'), {
     schema_version: 2,
     components: [
@@ -86,6 +92,7 @@ test('schema-2 package records derive Eval and compatibility coordinates without
     '@aikdna/kdna-core': '0.20.0',
     '@aikdna/kdna-eval': '0.3.2',
   });
+  assert.equal(policy.candidateBaselines.get('@aikdna/kdna-cli'), '0.36.0');
   const manifests = policy.manifestsByRepository.get('kdna');
   for (const expected of [
     'packages/kdna-core/package.json',
