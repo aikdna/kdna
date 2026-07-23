@@ -7,6 +7,9 @@
   non-truncating compact projection with explicit omission reporting, checksums,
   entitlement, and asset-signature boundaries without changing any already
   published package bytes.
+- Advance the ecosystem conformance anchor and the two accepted reference-asset
+  records to exact Core candidate commit `76bbc587ce05f7e575c2373832cc5c9eee9df98a`
+  after Swift CI and both reference assets were recertified against that commit.
 - Reconcile current public maturity language to pre-release, keep exact
   published-version contracts separate from corrective source candidates, and
   remove output-improvement language from the active Agent guide. Apply the
