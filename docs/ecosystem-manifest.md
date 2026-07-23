@@ -46,9 +46,12 @@ only one side. `source_commit` identifies an accepted repository checkout;
 not be interpreted as that repository's release commit. A live package-less
 component records `component_version`, `release_tag`, and `release_commit`
 separately, because its accepted source checkout may be newer than its current
-public release. The current ecosystem conformance anchor is fixed to the exact
-Git commit behind the declared `@aikdna/kdna-core` release tag; component and
-artifact anchors cannot select a different reachable Core ancestor.
+public release. For an active published Core line, the ecosystem conformance
+anchor is fixed to the exact Git commit behind its declared release tag. While
+Core is explicitly recorded as a newer `candidate`, the anchor may instead be
+the exact candidate commit: it must descend from the published tag and its
+package version must equal the candidate version. Component and artifact
+anchors cannot select a different Core commit.
 
 ## Consumer Rules
 
