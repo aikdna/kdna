@@ -117,7 +117,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "478114cda7d1f9e807b0c26b1ebd1b32721150eb",
+      "source_commit": "5307fbc0d729f3fb3cb5ad6c24afeeb4053da0a6",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -197,7 +197,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "a011f03364428f35ef17cda470c0835dff3067fe",
+      "source_commit": "b58f01bede0a194fb04a7855fd4fcb381f8e965c",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
