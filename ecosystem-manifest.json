@@ -596,18 +596,18 @@
           "release_status": "source-only",
           "dependency_policy": "none",
           "known_limitations": [
-          "editor integration mission retained; technical Host/UI acceptance is synthetic and does not substitute for Owner judgment-material acceptance or Marketplace review"
+            "editor integration mission retained; technical Host/UI acceptance is synthetic and does not substitute for Owner judgment-material acceptance or Marketplace review"
           ],
           "recommended_entrypoint": null,
           "legacy_replacement": null
         }
       ],
       "lifecycle": "Unassessed",
-    "supported_kdna_version": "1.0",
+      "supported_kdna_version": "1.0",
       "supported_access_modes": [],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-      "accepted source uses the exact CLI/Core candidate line and passed real Extension Development Host controls, but end-user judgment acceptance and Marketplace release remain unassessed"
+        "accepted source uses the exact CLI/Core candidate line and passed real Extension Development Host controls, but end-user judgment acceptance and Marketplace release remain unassessed"
       ],
       "recommended_entrypoint": null,
       "legacy_replacement": null

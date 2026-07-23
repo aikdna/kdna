@@ -18,6 +18,7 @@
       "package_json": "mcp-server/package.json",
       "npm_package": "@aikdna/kdna-mcp-server",
       "version": "0.4.2",
+      "candidate_version": "0.5.0",
       "canonical_tag": {
         "type": "prefix",
         "value": "v"
