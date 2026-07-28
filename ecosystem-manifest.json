@@ -117,7 +117,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "5307fbc0d729f3fb3cb5ad6c24afeeb4053da0a6",
+      "source_commit": "1d9900ee13176ba20f32ab72bd9a22a7de51503d",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -149,7 +149,7 @@
     {
       "repository": "aikdna/kdna-assets",
       "local_path": "../kdna-assets",
-      "source_commit": "853292686ce003d75b2f078ac32634969bb0de98",
+      "source_commit": "72362a9749d099799e3093699f43437fe2fa4d8e",
       "conformance_commit": "76bbc587ce05f7e575c2373832cc5c9eee9df98a",
       "component_version": null,
       "packages": [],
@@ -197,7 +197,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "b58f01bede0a194fb04a7855fd4fcb381f8e965c",
+      "source_commit": "b64baa90a6d78c91ec34fa2d3674fe5c8f24e505",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -263,7 +263,7 @@
     {
       "repository": "aikdna/kdna-studio-cli",
       "local_path": "../kdna-studio-cli",
-      "source_commit": "e9741982bb784e7f4410d495c917dc42db6c170f",
+      "source_commit": "7056162365897b3008fe0e56c2cdcf95260b6e5d",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -359,7 +359,7 @@
     {
       "repository": "aikdna/kdna-web-server",
       "local_path": "../kdna-web-server",
-      "source_commit": "fa7ab37250dc0cd62dd37938b5c7a766d98bc849",
+      "source_commit": "d8fcece8642dc1cf47e93a59213eab5b046654eb",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -391,7 +391,7 @@
     {
       "repository": "aikdna/kdna-web-client",
       "local_path": "../kdna-web-client",
-      "source_commit": "36588c414e9ea5c78b2461184389b4b2b5cd6985",
+      "source_commit": "7cb0da126d3c36259e48e4447ee58348f54f78e7",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -423,7 +423,7 @@
     {
       "repository": "aikdna/kdna-react",
       "local_path": "../kdna-react",
-      "source_commit": "21bf622300491fdb67fe6db27e8806c9de0d24c1",
+      "source_commit": "49e06898a1b9b304119881931421bb1cb0c31c10",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -488,7 +488,7 @@
     {
       "repository": "aikdna/kdna-demo-web-viewer",
       "local_path": "../kdna-demo-web-viewer",
-      "source_commit": "6bae1c23ba61aa9860aa2ea74a4f972e6afafd12",
+      "source_commit": "f2bb5459229c44fe0c8ef0294602797e6c9fd7e2",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -582,7 +582,7 @@
     {
       "repository": "aikdna/kdna-vscode",
       "local_path": "../kdna-vscode",
-      "source_commit": "ec896fda5c1eba1b14631dc5bed7c35564a0c062",
+      "source_commit": "f5629f664efc098916f9576c4d3652a62c994bd4",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
