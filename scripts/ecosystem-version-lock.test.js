@@ -197,9 +197,16 @@ test('consumer discovery keeps peer and development declarations distinct', (t) 
   );
 });
 
-test('explicit policy contains 34 unique current managed dependency declarations', () => {
-  assert.equal(EXPECTED_BINDINGS.length, 34);
+test('explicit policy contains 33 unique current managed dependency declarations', () => {
+  assert.equal(EXPECTED_BINDINGS.length, 33);
   assert.equal(new Set(EXPECTED_BINDINGS.map(bindingKey)).size, EXPECTED_BINDINGS.length);
+  assert.equal(
+    EXPECTED_BINDINGS.some(
+      ({ repository, packageName }) =>
+        repository === 'kdna-cli' && packageName === '@aikdna/kdna-eval',
+    ),
+    false,
+  );
 });
 
 test('reconciliation fails closed when an expected repository, manifest, or dependency vanishes', () => {
