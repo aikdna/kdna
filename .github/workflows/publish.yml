@@ -79,7 +79,7 @@ jobs:
           node scripts/core-release-authority.js guard
           --evidence "$CORE_RELEASE_EVIDENCE"
           --artifact "$CORE_RELEASE_ARTIFACT"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: kdna-core-release-evidence
           path: |
@@ -133,7 +133,7 @@ jobs:
         run: |
           ARTIFACT_PATH=$(node -p "require('./release-evidence/artifact-manifest.json').artifacts[0].artifact_path")
           echo "EVAL_RELEASE_ARTIFACT=$ARTIFACT_PATH" >> "$GITHUB_ENV"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: kdna-eval-release-evidence
           path: release-evidence/
@@ -312,7 +312,7 @@ jobs:
           --workspace @aikdna/kdna run publish:guard --
           --evidence "$RUNNER_TEMP/kdna-compat-release-evidence.json"
           --artifact "$RUNNER_TEMP/kdna-compat-release.tgz"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: kdna-compat-release-evidence
           path: |
