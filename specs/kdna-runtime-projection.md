@@ -29,6 +29,17 @@ The preferred flow is:
 | `remote` | Projection is returned by a remote KDNA Runtime. |
 | `none` | No projection may be produced. |
 
+For the local `compact` profile, the reference Core preserves the declared
+order and closed public fields of `payload.core.core_structure`. This is
+necessary because an accepted `priority` or `exception` relation can change
+how two otherwise valid judgments are consumed. Unknown relation properties
+and relation values outside that closed pair are schema-invalid and are never
+copied as private authoring state. Prompt
+projection renders only the relation's public `from`, `to`, and `via`.
+Relation IDs, rationales, authoring review reasons, and resolutions are not
+Payload fields. The separate remote projection boundary does not inherit this
+relationship disclosure rule.
+
 ## 4. Local Licensed Assets
 
 For local licensed assets, plaintext judgment content MUST remain in memory.

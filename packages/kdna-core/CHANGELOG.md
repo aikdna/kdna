@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Validate decrypted external-grant and password payload plaintext against the
+  same declared Payload schema used for ordinary assets. Correct credentials
+  can no longer load schema-invalid judgment bytes.
+- Close `core_structure` relation objects to the existing public relation
+  fields and project only that allowlist in compact Runtime Capsules, blocking
+  private Creation state hidden in arbitrary relation properties.
+- Make the external-grant conformance golden carry one deterministic, actual
+  encrypted `.kdna` byte snapshot. The regression now checks the exact package
+  digest, Core validation, signed authorization, LoadPlan and authorized load
+  against that same artifact instead of deriving grant identity from
+  zlib-dependent repacking.
 - Warn with `KDNA_DISPATCHER_DEGRADED` when the container dispatcher fails to
   load for any reason other than the dispatcher file itself being absent,
   instead of silently degrading to the legacy reader. The absence check now

@@ -1,5 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const crypto = require('node:crypto');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
@@ -8,6 +9,8 @@ const JsonSchema2020 = require('ajv/dist/2020.js');
 
 const core = require('../src');
 const fixture = require('./fixtures/golden-single-asset.json');
+const minimalFormatFixture = require('./fixtures/core-format-minimal.json');
+const officialCreationOutputFixture = require('./fixtures/official-creation-output.json');
 const canonicalPayloadSchema = require('../../../schema/payload-profile.schema.json');
 const packagedPayloadSchema = require('../schema/payload-profile.schema.json');
 const canonicalManifestSchema = require('../../../schema/manifest.schema.json');
@@ -70,6 +73,32 @@ function createAsset(payload = fixture.payload, payloadBytes = null) {
   return { temporary, asset };
 }
 
+function createBoundaryAsset(definition) {
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-boundary-core-'));
+  const source = path.join(temporary, 'source');
+  const asset = path.join(temporary, `${definition.fixture_id}.kdna`);
+  fs.mkdirSync(source, { recursive: true });
+
+  const payloadBytes = cbor.encode(definition.payload);
+  const manifest = clone(definition.manifest);
+  if (definition.writer_profile === 'official-creation-output') {
+    manifest.payload.digest =
+      `sha256:${crypto.createHash('sha256').update(payloadBytes).digest('hex')}`;
+  }
+
+  fs.writeFileSync(path.join(source, 'mimetype'), core.MIMETYPE);
+  fs.writeFileSync(path.join(source, 'kdna.json'), JSON.stringify(manifest));
+  fs.writeFileSync(path.join(source, 'payload.kdnab'), payloadBytes);
+  if (definition.expected_entry_names.includes('checksums.json')) {
+    fs.writeFileSync(
+      path.join(source, 'checksums.json'),
+      JSON.stringify(core.buildChecksums(source)),
+    );
+  }
+  core.pack(source, asset);
+  return { temporary, source, asset, manifest };
+}
+
 test('canonical and packaged payload schemas are byte-for-byte identical', () => {
   assert.deepEqual(
     fs.readFileSync(PACKAGED_SCHEMA_PATH),
@@ -106,17 +135,116 @@ test('current manifest schemas reject every legacy asset-signature declaration',
 });
 
 test('public container documents keep checksums optional under one authority', () => {
+  const specification = fs.readFileSync(path.join(REPO_ROOT, 'SPEC.md'), 'utf8');
   const containerSpec = fs.readFileSync(path.join(REPO_ROOT, 'specs', 'container.md'), 'utf8');
+  const creationBoundary = fs.readFileSync(
+    path.join(REPO_ROOT, 'specs', 'creation-output-boundary.md'),
+    'utf8',
+  );
   const importSecurity = fs.readFileSync(
     path.join(REPO_ROOT, 'specs', 'kdna-import-security.md'),
     'utf8',
   );
   const fileFormat = fs.readFileSync(path.join(REPO_ROOT, 'specs', 'kdna-file-format.md'), 'utf8');
+  const coreFileFormat = fs.readFileSync(
+    path.join(REPO_ROOT, 'docs', 'core', 'file-format.md'),
+    'utf8',
+  );
 
+  const specificationRequired = specification.match(
+    /Required protocol entries are:[\s\S]*?Optional protocol entries are:/,
+  );
+  assert.ok(specificationRequired);
+  assert.doesNotMatch(specificationRequired[0], /`checksums\.json`/);
+  assert.match(specification, /The absence of `checksums\.json` is not a format error/);
   assert.match(containerSpec, /### 3\.2 Optional[\s\S]*`checksums\.json`/);
+  assert.match(containerSpec, /The absence of `checksums\.json` is not a format error/);
   assert.match(importSecurity, /authoritative current entry classification[\s\S]*container\.md/);
   assert.match(importSecurity, /`checksums\.json` is optional at the protocol layer/);
   assert.match(fileFormat, /`checksums\.json` is optional in the protocol/);
+  assert.match(coreFileFormat, /Its absence is\s+not a Core format error/);
+  assert.match(creationBoundary, /three required\s+protocol entries/);
+  assert.match(creationBoundary, /canonical four-entry baseline/);
+});
+
+test('public contracts keep highest_question optional for Core and explicit for official writers', () => {
+  const specification = fs.readFileSync(path.join(REPO_ROOT, 'SPEC.md'), 'utf8');
+  const containerSpec = fs.readFileSync(path.join(REPO_ROOT, 'specs', 'container.md'), 'utf8');
+  const creationBoundary = fs.readFileSync(
+    path.join(REPO_ROOT, 'specs', 'creation-output-boundary.md'),
+    'utf8',
+  );
+
+  assert.match(specification, /`highest_question` is an optional authoring concept/);
+  assert.match(containerSpec, /highest_question\?: string/);
+  assert.match(creationBoundary, /`core\.highest_question` is also optional for Core format validity/);
+  assert.match(creationBoundary, /MUST NOT derive `highest_question` from the first axiom/);
+  assert.match(creationBoundary, /Core MUST NOT report Creation Accepted/);
+});
+
+test('three-entry fixture without highest_question is Core Format Valid', () => {
+  const created = createBoundaryAsset(minimalFormatFixture);
+  try {
+    const layout = core.readLayout(created.asset);
+    assert.deepEqual(
+      layout.entries.map((entry) => entry.name).sort(),
+      [...minimalFormatFixture.expected_entry_names].sort(),
+    );
+    assert.equal(Object.hasOwn(layout.map, 'checksums.json'), false);
+
+    const validation = core.validate(created.asset);
+    assert.equal(validation.overall_valid, true, validation.problems.join('\n'));
+    assert.equal(validation.checksums_valid, true);
+
+    const full = core.loadAuthorized(created.asset, { profile: 'full', as: 'json' });
+    assert.equal(
+      Object.hasOwn(full.context.payload.core, 'highest_question'),
+      false,
+    );
+    assert.deepEqual(full.context.payload, minimalFormatFixture.payload);
+  } finally {
+    fs.rmSync(created.temporary, { recursive: true, force: true });
+  }
+});
+
+test('official Creation Writer fixture emits four entries and explicit scoped semantics', () => {
+  const created = createBoundaryAsset(officialCreationOutputFixture);
+  try {
+    const layout = core.readLayout(created.asset);
+    assert.deepEqual(
+      layout.entries.map((entry) => entry.name).sort(),
+      [...officialCreationOutputFixture.expected_entry_names].sort(),
+    );
+    assert.equal(core.inspect(created.asset).checksums_present, true);
+
+    const validation = core.validate(created.asset);
+    assert.equal(validation.overall_valid, true, validation.problems.join('\n'));
+
+    const full = core.loadAuthorized(created.asset, { profile: 'full', as: 'json' });
+    for (const field of [
+      'highest_question',
+      'worldview',
+      'value_order',
+      'judgment_role',
+      'boundaries',
+    ]) {
+      assert.deepEqual(
+        full.context.payload.core[field],
+        officialCreationOutputFixture.payload.core[field],
+        field,
+      );
+    }
+    assert.deepEqual(full.context.payload, officialCreationOutputFixture.payload);
+    assert.equal(officialCreationOutputFixture.creation_status, 'not-assessed');
+    assert.equal(Object.hasOwn(full.context.manifest, 'creation_status'), false);
+    assert.equal(
+      JSON.stringify(full.context).includes('human_lock'),
+      false,
+      'synthetic official output must not invent human confirmation',
+    );
+  } finally {
+    fs.rmSync(created.temporary, { recursive: true, force: true });
+  }
 });
 
 test('payload schemas reject empty judgment shells without requiring a human author', () => {
@@ -343,6 +471,7 @@ test('committed CBOR validates and loads exact self-check shapes without silent 
         },
       ],
       boundaries: fixture.payload.core.boundaries,
+      core_structure: [],
       self_checks: fixture.payload.reasoning.self_check,
       failure_modes: [],
       patterns: [],
@@ -428,7 +557,24 @@ test('committed cross-language payload fixtures use only the canonical self-chec
   assert.equal(Object.hasOwn(capsule.context, 'self_check'), false);
 });
 
-test('compact projection does not trim strings, reorder values, or normalize role shape', () => {
+test('compact projection preserves scoped fields and closed public relation order/shape', () => {
+  const payloadProfile = fs.readFileSync(
+    path.join(REPO_ROOT, 'docs', 'core', 'payload-profile.md'),
+    'utf8',
+  );
+  const runtimeProjection = fs.readFileSync(
+    path.join(REPO_ROOT, 'specs', 'kdna-runtime-projection.md'),
+    'utf8',
+  );
+  assert.match(
+    payloadProfile,
+    /compact` projection preserves relation order and the closed\s+public shape/,
+  );
+  assert.match(
+    runtimeProjection,
+    /compact` profile[\s\S]*preserves the declared\s+order and closed public fields of `payload\.core\.core_structure`/,
+  );
+
   const payload = clone(fixture.payload);
   payload.core.worldview = ['  Preserve declared spacing.  '];
   payload.core.value_order = [
@@ -440,6 +586,18 @@ test('compact projection does not trim strings, reorder values, or normalize rol
     does_not_act_as: '  a single declared exclusion  ',
     responsibility: '  retain exact declared strings  ',
   };
+  payload.core.core_structure = [
+    {
+      from: 'axiom-primary',
+      to: 'axiom-secondary',
+      via: 'priority',
+    },
+    {
+      from: 'boundary-exception',
+      to: 'axiom-primary',
+      via: 'exception',
+    },
+  ];
 
   const { temporary, asset } = createAsset(payload);
   try {
@@ -448,6 +606,107 @@ test('compact projection does not trim strings, reorder values, or normalize rol
     assert.deepEqual(capsule.context.worldview, payload.core.worldview);
     assert.deepEqual(capsule.context.value_order, payload.core.value_order);
     assert.deepEqual(capsule.context.judgment_role, payload.core.judgment_role);
+    assert.deepEqual(capsule.context.core_structure, payload.core.core_structure);
+    assert.equal(
+      capsule.trace.projection_report.omitted.some(
+        (entry) => entry.path.startsWith('/core/core_structure'),
+      ),
+      false,
+    );
+
+    const prompt = core.loadAuthorized(asset, { profile: 'compact', as: 'prompt' });
+    assert.match(prompt.text, /Judgment relations:/);
+    assert.match(prompt.text, /axiom-primary --priority--> axiom-secondary/);
+    assert.match(prompt.text, /boundary-exception --exception--> axiom-primary/);
+    assert.doesNotMatch(prompt.text, /private relation (?:reason|resolution)/i);
+
+    const full = core.loadAuthorized(asset, { profile: 'full', as: 'json' });
+    assert.deepEqual(
+      full.context.payload.core.core_structure,
+      payload.core.core_structure,
+    );
+    for (const relation of [
+      ...full.context.payload.core.core_structure,
+      ...capsule.context.core_structure,
+    ]) {
+      assert.equal(Object.hasOwn(relation, 'rationale'), false);
+      assert.equal(Object.hasOwn(relation, 'resolution'), false);
+    }
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
+});
+
+test('private Creation fields cannot enter a Runtime relation', () => {
+  const hostileFields = {
+    id: 'private-relation-id',
+    rationale: 'PRIVATE RELATION REASON MUST NOT ENTER RUNTIME',
+    resolution: 'PRIVATE RELATION RESOLUTION MUST NOT ENTER RUNTIME',
+    creation_mode: 'human-confirmed',
+    confirmation_receipt_ids: ['receipt-private'],
+    private_creation_state: { accepted: true },
+  };
+  for (const [field, value] of Object.entries(hostileFields)) {
+    const payload = clone(fixture.payload);
+    payload.core.core_structure = [{
+      from: 'axiom-primary',
+      to: 'axiom-secondary',
+      via: 'priority',
+      [field]: value,
+    }];
+    const { temporary, asset } = createAsset(payload);
+    try {
+      const validation = core.validate(asset);
+      assert.equal(validation.overall_valid, false, field);
+      assert.equal(validation.payload_valid, false, field);
+      assert.match(
+        validation.problems.join('\n'),
+        /core_structure.*must NOT have additional properties/,
+        field,
+      );
+      for (const request of [
+        { profile: 'full', as: 'json' },
+        { profile: 'compact', as: 'json' },
+        { profile: 'compact', as: 'prompt' },
+      ]) {
+        assert.throws(
+          () => core.loadAuthorized(asset, request),
+          /LoadPlan denied loading/i,
+          `${field}:${request.profile}:${request.as}`,
+        );
+      }
+    } finally {
+      fs.rmSync(temporary, { recursive: true, force: true });
+    }
+  }
+});
+
+test('unknown Runtime relation values fail closed before every projection', () => {
+  const payload = clone(fixture.payload);
+  payload.core.core_structure = [{
+    from: 'axiom-primary',
+    to: 'axiom-secondary',
+    via: 'support',
+  }];
+  const { temporary, asset } = createAsset(payload);
+  try {
+    const validation = core.validate(asset);
+    assert.equal(validation.overall_valid, false);
+    assert.equal(validation.payload_valid, false);
+    assert.match(
+      validation.problems.join('\n'),
+      /core_structure.*must be equal to one of the allowed values/,
+    );
+    for (const request of [
+      { profile: 'full', as: 'json' },
+      { profile: 'compact', as: 'json' },
+      { profile: 'compact', as: 'prompt' },
+    ]) {
+      assert.throws(
+        () => core.loadAuthorized(asset, request),
+        /LoadPlan denied loading/i,
+      );
+    }
   } finally {
     fs.rmSync(temporary, { recursive: true, force: true });
   }

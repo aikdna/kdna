@@ -36,7 +36,7 @@
       "key_grant_profile": "kdna.grant.external-key"
     }
   },
-  "plaintext_cbor": "uQADZ3Byb2ZpbGV1a2RuYS5wYXlsb2FkLmp1ZGdtZW50b3Byb2ZpbGVfdmVyc2lvbmUwLjEuMGRjb3JluQACcGhpZ2hlc3RfcXVlc3Rpb254GENhbiB0aGlzIGRldmljZSBkZWNyeXB0P2ZheGlvbXOA",
+  "plaintext_cbor": "uQADZ3Byb2ZpbGV1a2RuYS5wYXlsb2FkLmp1ZGdtZW50b3Byb2ZpbGVfdmVyc2lvbmUwLjEuMGRjb3JluQACcGhpZ2hlc3RfcXVlc3Rpb254GENhbiB0aGlzIGRldmljZSBkZWNyeXB0P2ZheGlvbXOBeEBPbmx5IHRoZSBhdXRob3JpemVkIGRldmljZSBtYXkgbG9hZCB0aGlzIHZhbGlkIGZpeHR1cmUganVkZ21lbnQu",
   "envelope": {
     "profile": "kdna.envelope.external-grant",
     "contract_version": "0.1.0",
@@ -45,20 +45,20 @@
     "key_ref": "assetkey:fixture:external-grant:1.0.0",
     "issuer_key_id": "fixture-asset-root",
     "entry_path": "payload.kdnab",
-    "plaintext_digest": "sha256:1bf782a17eef953ab7154a292bb6fab3fe75629bf151aefabafa6660b9d8865d",
+    "plaintext_digest": "sha256:97ec3efc27208a7f1bfb62e2b93e3a94abcc826049035e888995643640c97216",
     "iv": "JSUlJSUlJSUlJSUl",
-    "tag": "N3AStNGeQCHuP6lBUVEs9g",
-    "ciphertext": "_Mt_mWF18khV1yF03AHZAISO4CFF2FubqDQ5mDpOe0RKPCuRCSj21kGHx1yWea9-fXWc2YvGGakQhp5Y0fa2RhWcsKGFBKzJL0IEIQyZJuvtlJfZP1S3E6BW-MpWLewuU9T3ExAh4ywHtCdYV1B_KrsV"
+    "tag": "EKw2AayP0AgZITqWnzGsFg",
+    "ciphertext": "e6ruLar8eM5h7fZpNDPiaxcMB47MUMBGnprhmdy-rj5_3FMT5mxQvj0Xet7BMryJexP_Ihwc_Ht0WllYu5kMYm52PQB5I3Vp2hBNA48LlXODGYvBfy4x6Rg61lYG59TCrNuOf9D1btFKnGQdKxH8XGkjDlegtGlg5_ofK3MGyplnUnLWm88INL-eJmQpDb2k1y4rmjlYku7-GXdJiwliZP8yMMjpWW-b6Z8f3mlTcMZSPQG2"
   },
-  "envelope_cbor": "uQALZ3Byb2ZpbGV4HGtkbmEuZW52ZWxvcGUuZXh0ZXJuYWwtZ3JhbnRwY29udHJhY3RfdmVyc2lvbmUwLjEuMGNhbGdnQTI1NkdDTW5jZWtfZGVyaXZhdGlvbmtIS0RGLVNIQTI1NmdrZXlfcmVmeCVhc3NldGtleTpmaXh0dXJlOmV4dGVybmFsLWdyYW50OjEuMC4wbWlzc3Vlcl9rZXlfaWRyZml4dHVyZS1hc3NldC1yb290amVudHJ5X3BhdGhtcGF5bG9hZC5rZG5hYnBwbGFpbnRleHRfZGlnZXN0eEdzaGEyNTY6MWJmNzgyYTE3ZWVmOTUzYWI3MTU0YTI5MmJiNmZhYjNmZTc1NjI5YmYxNTFhZWZhYmFmYTY2NjBiOWQ4ODY1ZGJpdnBKU1VsSlNVbEpTVWxKU1VsY3RhZ3ZOM0FTdE5HZVFDSHVQNmxCVVZFczlnamNpcGhlcnRleHR4mF9NdF9tV0YxOGtoVjF5RjAzQUhaQUlTTzRDRkYyRnVicURRNW1EcE9lMFJLUEN1UkNTajIxa0dIeDF5V2VhOS1mWFdjMll2R0dha1FocDVZMGZhMlJoV2NzS0dGQkt6SkwwSUVJUXlaSnV2dGxKZlpQMVMzRTZCVy1NcFdMZXd1VTlUM0V4QWg0eXdIdENkWVYxQl9LcnNW",
+  "envelope_cbor": "uQALZ3Byb2ZpbGV4HGtkbmEuZW52ZWxvcGUuZXh0ZXJuYWwtZ3JhbnRwY29udHJhY3RfdmVyc2lvbmUwLjEuMGNhbGdnQTI1NkdDTW5jZWtfZGVyaXZhdGlvbmtIS0RGLVNIQTI1NmdrZXlfcmVmeCVhc3NldGtleTpmaXh0dXJlOmV4dGVybmFsLWdyYW50OjEuMC4wbWlzc3Vlcl9rZXlfaWRyZml4dHVyZS1hc3NldC1yb290amVudHJ5X3BhdGhtcGF5bG9hZC5rZG5hYnBwbGFpbnRleHRfZGlnZXN0eEdzaGEyNTY6OTdlYzNlZmMyNzIwOGE3ZjFiZmI2MmUyYjkzZTNhOTRhYmNjODI2MDQ5MDM1ZTg4ODk5NTY0MzY0MGM5NzIxNmJpdnBKU1VsSlNVbEpTVWxKU1VsY3RhZ3ZFS3cyQWF5UDBBZ1pJVHFXbnpHc0ZnamNpcGhlcnRleHR48GU2cnVMYXI4ZU01aDdmWnBORFBpYXhjTUI0N01VTUJHbnByaG1keS1yajVfM0ZNVDVteFF2ajBYZXQ3Qk1yeUpleFBfSWh3Y19IdDBXbGxZdTVrTVltNTJQUUI1STNWcDJoQk5BNDhMbFhPREdZdkJmeTR4NlJnNjFsWUc1OVRDck51T2Y5RDFidEZLbkdRZEt4SDhYR2tqRGxlZ3RHbGc1X29mSzNNR3lwbG5VbkxXbTg4SU5MLWVKbVFwRGIyazF5NHJtamxZa3U3LUdYZEppd2xpWlA4eU1NanBXVy1iNlo4ZjNtbFRjTVpTUFFHMg",
   "checksums": {
     "digest_profile": "kdna.digest-basis.runtime-entry-set",
     "digest_profile_version": "0.1.0",
     "covered_entries": ["kdna.json", "payload.kdnab"],
     "algorithm": "sha256",
     "manifest_digest": "sha256:42919820615f548352bc6e0682d95e515a14b0c3df67f95acb7c6b5812154993",
-    "payload_digest": "sha256:92f67d1e6f0c8c9ced0dd500e7ad0cebf80b6532c06cce8766456ce80e8bc819",
-    "entry_set_digest": "sha256:ac3d19fc06bff5f92974590302ffb8847515a580ed955d2ef0ada11f789ec2a2",
+    "payload_digest": "sha256:a622c692a76791f5faba88c9fb57339dff1f54c1dae9de9ee29df5b017b6e243",
+    "entry_set_digest": "sha256:eaf66507439dccf67c675f1f2b2fabdd1cff7eeb89515d842641df1fb20ea534",
     "entries": {
       "kdna.json": {
         "algorithm": "sha256",
@@ -66,11 +66,12 @@
       },
       "payload.kdnab": {
         "algorithm": "sha256",
-        "value": "92f67d1e6f0c8c9ced0dd500e7ad0cebf80b6532c06cce8766456ce80e8bc819"
+        "value": "a622c692a76791f5faba88c9fb57339dff1f54c1dae9de9ee29df5b017b6e243"
       }
     }
   },
-  "expected_asset_digest": "sha256:508b1301fd0b05ce4197ce94597dff6bde8b9dca540c63174e846f0800648733",
+  "asset_kdna_base64url": "UEsDBBQAAAAAAAAAAQAQMy2QGgAAABoAAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQua2RuYS5hc3NldFBLAwQUAAAAAAAAAAEATnIxWJ4CAACeAgAADgAAAGNoZWNrc3Vtcy5qc29ueyJkaWdlc3RfcHJvZmlsZSI6ImtkbmEuZGlnZXN0LWJhc2lzLnJ1bnRpbWUtZW50cnktc2V0IiwiZGlnZXN0X3Byb2ZpbGVfdmVyc2lvbiI6IjAuMS4wIiwiY292ZXJlZF9lbnRyaWVzIjpbImtkbmEuanNvbiIsInBheWxvYWQua2RuYWIiXSwiYWxnb3JpdGhtIjoic2hhMjU2IiwibWFuaWZlc3RfZGlnZXN0Ijoic2hhMjU2OjQyOTE5ODIwNjE1ZjU0ODM1MmJjNmUwNjgyZDk1ZTUxNWExNGIwYzNkZjY3Zjk1YWNiN2M2YjU4MTIxNTQ5OTMiLCJwYXlsb2FkX2RpZ2VzdCI6InNoYTI1NjphNjIyYzY5MmE3Njc5MWY1ZmFiYTg4YzlmYjU3MzM5ZGZmMWY1NGMxZGFlOWRlOWVlMjlkZjViMDE3YjZlMjQzIiwiZW50cnlfc2V0X2RpZ2VzdCI6InNoYTI1NjplYWY2NjUwNzQzOWRjY2Y2N2M2NzVmMWYyYjJmYWJkZDFjZmY3ZWViODk1MTVkODQyNjQxZGYxZmIyMGVhNTM0IiwiZW50cmllcyI6eyJrZG5hLmpzb24iOnsiYWxnb3JpdGhtIjoic2hhMjU2IiwidmFsdWUiOiI0MjkxOTgyMDYxNWY1NDgzNTJiYzZlMDY4MmQ5NWU1MTVhMTRiMGMzZGY2N2Y5NWFjYjdjNmI1ODEyMTU0OTkzIn0sInBheWxvYWQua2RuYWIiOnsiYWxnb3JpdGhtIjoic2hhMjU2IiwidmFsdWUiOiJhNjIyYzY5MmE3Njc5MWY1ZmFiYTg4YzlmYjU3MzM5ZGZmMWY1NGMxZGFlOWRlOWVlMjlkZjViMDE3YjZlMjQzIn19fVBLAwQUAAAAAAAAAAEApdoMjgIDAAACAwAACQAAAGtkbmEuanNvbnsiZm9ybWF0X3ZlcnNpb24iOiIwLjEuMCIsImFzc2V0X2lkIjoia2RuYTpmaXh0dXJlOmV4dGVybmFsLWdyYW50IiwiYXNzZXRfdWlkIjoidXJuOnV1aWQ6MDAxOTAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDAxIiwiYXNzZXRfdHlwZSI6ImZpeHR1cmUiLCJ0aXRsZSI6IkV4dGVybmFsIEdyYW50IEZpeHR1cmUiLCJ2ZXJzaW9uIjoiMS4wLjAiLCJqdWRnbWVudF92ZXJzaW9uIjoiMS4wLjAiLCJjcmVhdGVkX2F0IjoiMjAyNi0wNy0xM1QwMDowMDowMFoiLCJ1cGRhdGVkX2F0IjoiMjAyNi0wNy0xM1QwMDowMDowMFoiLCJjcmVhdG9yIjp7Im5hbWUiOiJLRE5BIENvbmZvcm1hbmNlIn0sImNvbXBhdGliaWxpdHkiOnsibWluX2xvYWRlcl92ZXJzaW9uIjoiMC4yMC4wIiwicHJvZmlsZSI6ImtkbmEucGF5bG9hZC5qdWRnbWVudCIsInByb2ZpbGVfdmVyc2lvbiI6IjAuMS4wIn0sInBheWxvYWQiOnsicGF0aCI6InBheWxvYWQua2RuYWIiLCJlbmNvZGluZyI6ImNib3IiLCJlbmNyeXB0ZWQiOnRydWV9LCJhY2Nlc3MiOiJsaWNlbnNlZCIsImVudGl0bGVtZW50Ijp7InByb2ZpbGUiOiJhY2NvdW50Iiwib2ZmbGluZSI6dHJ1ZSwicmV2b2NhYmxlIjp0cnVlfSwiZW5jcnlwdGlvbiI6eyJwcm9maWxlIjoia2RuYS5lbnZlbG9wZS5leHRlcm5hbC1ncmFudCIsInByb2ZpbGVfdmVyc2lvbiI6IjAuMS4wIiwiZW5jcnlwdGVkX2VudHJpZXMiOlsicGF5bG9hZC5rZG5hYiJdLCJrZXlfZ3JhbnRfcHJvZmlsZSI6ImtkbmEuZ3JhbnQuZXh0ZXJuYWwta2V5In19UEsDBBQAAAAAAAAAAQBBvYzSVgIAAFYCAAANAAAAcGF5bG9hZC5rZG5hYrkAC2dwcm9maWxleBxrZG5hLmVudmVsb3BlLmV4dGVybmFsLWdyYW50cGNvbnRyYWN0X3ZlcnNpb25lMC4xLjBjYWxnZ0EyNTZHQ01uY2VrX2Rlcml2YXRpb25rSEtERi1TSEEyNTZna2V5X3JlZnglYXNzZXRrZXk6Zml4dHVyZTpleHRlcm5hbC1ncmFudDoxLjAuMG1pc3N1ZXJfa2V5X2lkcmZpeHR1cmUtYXNzZXQtcm9vdGplbnRyeV9wYXRobXBheWxvYWQua2RuYWJwcGxhaW50ZXh0X2RpZ2VzdHhHc2hhMjU2Ojk3ZWMzZWZjMjcyMDhhN2YxYmZiNjJlMmI5M2UzYTk0YWJjYzgyNjA0OTAzNWU4ODg5OTU2NDM2NDBjOTcyMTZiaXZwSlNVbEpTVWxKU1VsSlNVbGN0YWd2RUt3MkFheVAwQWdaSVRxV256R3NGZ2pjaXBoZXJ0ZXh0ePBlNnJ1TGFyOGVNNWg3ZlpwTkRQaWF4Y01CNDdNVU1CR25wcmhtZHktcmo1XzNGTVQ1bXhRdmowWGV0N0JNcnlKZXhQX0lod2NfSHQwV2xsWXU1a01ZbTUyUFFCNUkzVnAyaEJOQTQ4TGxYT0RHWXZCZnk0eDZSZzYxbFlHNTlUQ3JOdU9mOUQxYnRGS25HUWRLeEg4WEdrakRsZWd0R2xnNV9vZkszTUd5cGxuVW5MV204OElOTC1lSm1RcERiMmsxeTRybWpsWWt1Ny1HWGRKaXdsaVpQOHlNTWpwV1ctYjZaOGYzbWxUY01aU1BRRzJQSwECFAAUAAAAAAAAAAEAEDMtkBoAAAAaAAAACAAAAAAAAAAAAAAAAAAAAAAAbWltZXR5cGVQSwECFAAUAAAAAAAAAAEATnIxWJ4CAACeAgAADgAAAAAAAAAAAAAAAABAAAAAY2hlY2tzdW1zLmpzb25QSwECFAAUAAAAAAAAAAEApdoMjgIDAAACAwAACQAAAAAAAAAAAAAAAAAKAwAAa2RuYS5qc29uUEsBAhQAFAAAAAAAAAABAEG9jNJWAgAAVgIAAA0AAAAAAAAAAAAAAAAAMwYAAHBheWxvYWQua2RuYWJQSwUGAAAAAAQABADkAAAAtAgAAAAA",
+  "expected_asset_digest": "sha256:20d8832e64e5060eaf99a9172d205267e8fd45e3cd1a1b41c693dbde995af989",
   "grant": {
     "profile": "kdna.grant.external-key",
     "contract_version": "0.1.0",
@@ -86,9 +87,9 @@
       "asset_id": "kdna:fixture:external-grant",
       "asset_uid": "urn:uuid:00190000-0000-4000-8000-000000000001",
       "version": "1.0.0",
-      "digest": "sha256:508b1301fd0b05ce4197ce94597dff6bde8b9dca540c63174e846f0800648733",
+      "digest": "sha256:20d8832e64e5060eaf99a9172d205267e8fd45e3cd1a1b41c693dbde995af989",
       "entry_path": "payload.kdnab",
-      "ciphertext_digest": "sha256:54be3615c32682f0c86ec2aafb51d982cbf51db8e468a122bf04a9a0994ecfd4",
+      "ciphertext_digest": "sha256:29729c4a93e4864ef9ef87b4773ba160cd5d41a45b9dbf9b3209b31c65b8cd47",
       "key_ref": "assetkey:fixture:external-grant:1.0.0",
       "issuer_key_id": "fixture-asset-root"
     },
@@ -102,9 +103,9 @@
       "alg": "X25519-HKDF-SHA256+A256KW",
       "ephemeral_public_key": "x25519:mkUDqYqxD-jTVMnELL0MnXlE9S59FNjqWXdefcnjv0s",
       "salt": "JiYmJiYmJiYmJiYmJiYmJg",
-      "wrapped_cek": "Rg-WDt_wdWY7Q9D_Cwdn0B4akh5b57CDAyihh0SbtYeo6P2vUYW7ig"
+      "wrapped_cek": "RQNIu0lrgdO1EbxW7OGC7w4DMB1swZvVwcXmNAXk5ZRHMzBkB1dPKw"
     },
-    "signature": "ed25519:rPrvwMV5PYySuorXWjyVTFWPbEC7_K9zw_cLHioBn3vaS5zbUmtLM7HzrokMkeW3g4fJmqw49XB-Q5L2OkHsAg"
+    "signature": "ed25519:FrghVktYuf9gGhlsLPB9L6VU_myOj25lsmiSYJx4P2YWegrKXeYAKCHtRLmd1YReDu5VMdawa-YdYG78HpS6DA"
   },
   "test_keys": {
     "issuer_root": "GRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRk",

@@ -106,6 +106,28 @@
           },
           "description": "The authority this asset exercises and the responsibilities explicitly outside it."
         },
+        "core_structure": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "to", "via"],
+            "properties": {
+              "from": { "type": "string", "minLength": 1, "pattern": "\\S" },
+              "to": { "type": "string", "minLength": 1, "pattern": "\\S" },
+              "via": { "type": "string", "enum": ["priority", "exception"] },
+              "applies_when": {
+                "type": "array",
+                "items": { "type": "string", "minLength": 1, "pattern": "\\S" }
+              },
+              "does_not_apply_when": {
+                "type": "array",
+                "items": { "type": "string", "minLength": 1, "pattern": "\\S" }
+              }
+            }
+          },
+          "description": "Ordered public judgment relations. Relation objects are closed so private authoring state cannot enter Runtime projection."
+        },
         "axioms": {
           "type": "array",
           "minItems": 1,

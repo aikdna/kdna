@@ -36,6 +36,90 @@ function writeNegative(name, value) {
   fs.writeFileSync(path.join(negativeDir, name), `${JSON.stringify(value, null, 2)}\n`);
 }
 
+const CRC_TABLE = (() => {
+  const table = new Uint32Array(256);
+  for (let index = 0; index < table.length; index += 1) {
+    let value = index;
+    for (let bit = 0; bit < 8; bit += 1) {
+      value = value & 1 ? 0xedb88320 ^ (value >>> 1) : value >>> 1;
+    }
+    table[index] = value >>> 0;
+  }
+  return table;
+})();
+
+function crc32(bytes) {
+  let value = 0xffffffff;
+  for (const byte of bytes) {
+    value = CRC_TABLE[(value ^ byte) & 0xff] ^ (value >>> 8);
+  }
+  return (value ^ 0xffffffff) >>> 0;
+}
+
+// The public packer intentionally permits zlib-dependent DEFLATE transport
+// bytes. This conformance generator needs one immutable package identity, so
+// it writes a standards-compliant ZIP whose entries are all STORED. Core then
+// validates and authorized-loads these exact encrypted bytes in the tests.
+function buildStoredFixtureAsset(entries) {
+  const localChunks = [];
+  const centralChunks = [];
+  let offset = 0;
+  for (const [name, data] of entries) {
+    const nameBytes = Buffer.from(name, 'utf8');
+    const bytes = Buffer.from(data);
+    const checksum = crc32(bytes);
+    const local = Buffer.alloc(30 + nameBytes.length);
+    local.writeUInt32LE(0x04034b50, 0);
+    local.writeUInt16LE(20, 4);
+    local.writeUInt16LE(0, 6);
+    local.writeUInt16LE(0, 8);
+    local.writeUInt16LE(0, 10);
+    local.writeUInt16LE(1, 12);
+    local.writeUInt32LE(checksum, 14);
+    local.writeUInt32LE(bytes.length, 18);
+    local.writeUInt32LE(bytes.length, 22);
+    local.writeUInt16LE(nameBytes.length, 26);
+    local.writeUInt16LE(0, 28);
+    nameBytes.copy(local, 30);
+    localChunks.push(local, bytes);
+
+    const central = Buffer.alloc(46 + nameBytes.length);
+    central.writeUInt32LE(0x02014b50, 0);
+    central.writeUInt16LE(20, 4);
+    central.writeUInt16LE(20, 6);
+    central.writeUInt16LE(0, 8);
+    central.writeUInt16LE(0, 10);
+    central.writeUInt16LE(0, 12);
+    central.writeUInt16LE(1, 14);
+    central.writeUInt32LE(checksum, 16);
+    central.writeUInt32LE(bytes.length, 20);
+    central.writeUInt32LE(bytes.length, 24);
+    central.writeUInt16LE(nameBytes.length, 28);
+    central.writeUInt16LE(0, 30);
+    central.writeUInt16LE(0, 32);
+    central.writeUInt16LE(0, 34);
+    central.writeUInt16LE(0, 36);
+    central.writeUInt32LE(0, 38);
+    central.writeUInt32LE(offset, 42);
+    nameBytes.copy(central, 46);
+    centralChunks.push(central);
+    offset += local.length + bytes.length;
+  }
+
+  const centralOffset = offset;
+  const centralSize = centralChunks.reduce((total, chunk) => total + chunk.length, 0);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(0, 4);
+  end.writeUInt16LE(0, 6);
+  end.writeUInt16LE(entries.length, 8);
+  end.writeUInt16LE(entries.length, 10);
+  end.writeUInt32LE(centralSize, 12);
+  end.writeUInt32LE(centralOffset, 16);
+  end.writeUInt16LE(0, 20);
+  return Buffer.concat([...localChunks, ...centralChunks, end]);
+}
+
 fs.mkdirSync(negativeDir, { recursive: true });
 
 const manifest = {
@@ -68,7 +152,10 @@ const plaintext = Buffer.from(
   cbor.encode({
     profile: 'kdna.payload.judgment',
     profile_version: '0.1.0',
-    core: { highest_question: 'Can this device decrypt?', axioms: [] },
+    core: {
+      highest_question: 'Can this device decrypt?',
+      axioms: ['Only the authorized device may load this valid fixture judgment.'],
+    },
   }),
 );
 const root = Buffer.alloc(32, 0x19);
@@ -95,9 +182,20 @@ fs.writeFileSync(path.join(fixtureDir, 'mimetype'), core.MIMETYPE);
 fs.writeFileSync(path.join(fixtureDir, 'kdna.json'), manifestBytes);
 fs.writeFileSync(path.join(fixtureDir, 'payload.kdnab'), encodedEnvelope);
 const checksums = core.buildChecksums(fixtureDir);
-fs.writeFileSync(path.join(fixtureDir, 'checksums.json'), JSON.stringify(checksums));
-core.pack(fixtureDir, assetPath);
-const expectedAssetDigest = core.computeAssetDigest(fs.readFileSync(assetPath));
+const checksumsBytes = Buffer.from(JSON.stringify(checksums));
+fs.writeFileSync(path.join(fixtureDir, 'checksums.json'), checksumsBytes);
+const assetBytes = buildStoredFixtureAsset([
+  ['mimetype', Buffer.from(core.MIMETYPE)],
+  ['checksums.json', checksumsBytes],
+  ['kdna.json', manifestBytes],
+  ['payload.kdnab', encodedEnvelope],
+]);
+fs.writeFileSync(assetPath, assetBytes);
+const validation = core.validate(assetPath);
+if (!validation.overall_valid) {
+  throw new Error(`generated external-grant asset is invalid: ${validation.problems.join('; ')}`);
+}
+const expectedAssetDigest = core.computeAssetDigest(assetBytes);
 fs.rmSync(fixtureDir, { recursive: true, force: true });
 
 function makeGrant(overrides = {}) {
@@ -133,6 +231,7 @@ write('golden.json', {
   envelope,
   envelope_cbor: encodedEnvelope.toString('base64url'),
   checksums,
+  asset_kdna_base64url: assetBytes.toString('base64url'),
   expected_asset_digest: expectedAssetDigest,
   grant,
   test_keys: {

@@ -38,7 +38,7 @@ function authorizeConformanceFixture(golden, overrides = {}) {
   });
 }
 
-function fixture() {
+function fixture(payloadOverride = null) {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-external-grant-'));
   const source = path.join(tmp, 'source');
   const assetFile = path.join(tmp, 'external-grant.kdna');
@@ -69,7 +69,7 @@ function fixture() {
       key_grant_profile: core.EXTERNAL_GRANT_PROFILE,
     },
   };
-  const payload = {
+  const payload = payloadOverride || {
     profile: 'kdna.payload.judgment',
     profile_version: '0.1.0',
     core: {
@@ -192,6 +192,107 @@ test('external grant decrypts only after signed account/device authorization', (
     session.dispose();
   } finally {
     fs.rmSync(f.tmp, { recursive: true, force: true });
+  }
+});
+
+test('external-grant decryption rejects schema-invalid plaintext', () => {
+  const f = fixture({
+    profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
+    core: {
+      highest_question: 'This envelope decrypts but has no valid judgment.',
+      axioms: [],
+    },
+  });
+  const session = authorize(f);
+  try {
+    const plan = core.planLoad(f.assetFile, {
+      entitlement: session.entitlement,
+    });
+    assert.equal(plan.state, 'ready', JSON.stringify(plan.issues));
+    assert.throws(
+      () => core.loadAuthorized(f.assetFile, {
+        profile: 'compact',
+        as: 'json',
+        entitlement: session.entitlement,
+        decryptEntry: session.decryptEntry,
+      }),
+      (error) =>
+        error.code === 'KDNA_PAYLOAD_INVALID' &&
+        /Decrypted payload failed its declared schema/.test(error.message),
+    );
+  } finally {
+    session.dispose();
+    fs.rmSync(f.tmp, { recursive: true, force: true });
+  }
+});
+
+test('password decryption rejects schema-invalid plaintext', () => {
+  const temporary = fs.mkdtempSync(
+    path.join(os.tmpdir(), 'kdna-password-invalid-payload-'),
+  );
+  const source = path.join(temporary, 'source');
+  const assetFile = path.join(temporary, 'invalid-password.kdna');
+  fs.mkdirSync(source);
+  const manifest = {
+    format_version: '0.1.0',
+    asset_id: 'kdna:fixture:password-invalid-payload',
+    asset_uid: 'urn:uuid:18a3b84e-d8a9-4e22-b486-3d15132d389f',
+    asset_type: 'domain',
+    title: 'Password Invalid Payload Fixture',
+    version: '1.0.0',
+    judgment_version: '1.0.0',
+    created_at: '2026-07-13T00:00:00Z',
+    updated_at: '2026-07-13T00:00:00Z',
+    compatibility: {
+      min_loader_version: '0.20.0',
+      profile: 'kdna.payload.judgment',
+      profile_version: '0.1.0',
+    },
+    payload: { path: 'payload.kdnab', encoding: 'cbor', encrypted: true },
+    access: 'licensed',
+    entitlement: { profile: 'password', offline: true, revocable: false },
+    encryption: {
+      profile: 'kdna.encryption.password',
+      profile_version: '0.1.0',
+      encrypted_entries: ['payload.kdnab'],
+    },
+  };
+  const plaintext = Buffer.from(cbor.encode({
+    profile: 'kdna.payload.judgment',
+    profile_version: '0.1.0',
+    core: {
+      highest_question: 'This password is correct but the payload is invalid.',
+      axioms: [],
+    },
+  }));
+  const envelope = core.encryptProtectedEntry(plaintext, {
+    entryName: 'payload.kdnab',
+    manifest,
+    password: 'correct-password',
+  });
+  fs.writeFileSync(path.join(source, 'mimetype'), core.MIMETYPE);
+  fs.writeFileSync(path.join(source, 'kdna.json'), JSON.stringify(manifest));
+  fs.writeFileSync(path.join(source, 'payload.kdnab'), cbor.encode(envelope));
+  fs.writeFileSync(
+    path.join(source, 'checksums.json'),
+    JSON.stringify(core.buildChecksums(source)),
+  );
+  core.pack(source, assetFile);
+  try {
+    assert.equal(core.validate(assetFile).overall_valid, true);
+    assert.throws(
+      () => core.loadAuthorized(assetFile, {
+        profile: 'compact',
+        as: 'json',
+        password: 'correct-password',
+      }),
+      (error) =>
+        error.code === 'KDNA_PAYLOAD_INVALID' &&
+        /Decrypted payload failed its declared schema/.test(error.message),
+    );
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
   }
 });
 
@@ -408,6 +509,19 @@ test('tampered, revoked, digest, version, and device mismatches fail closed', ()
 
 test('published external-grant golden verifies signature, unwraps CEK, and decrypts ciphertext', () => {
   const golden = conformanceJson('golden.json');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-published-external-grant-'));
+  const assetFile = path.join(tmp, 'published-external-grant.kdna');
+  const assetBytes = Buffer.from(golden.asset_kdna_base64url, 'base64url');
+  const plaintextBytes = Buffer.from(golden.plaintext_cbor, 'base64url');
+  fs.writeFileSync(assetFile, assetBytes);
+  assert.equal(
+    assetBytes.includes(plaintextBytes),
+    false,
+    'published encrypted fixture must not contain a plaintext shadow payload',
+  );
+  assert.equal(core.computeAssetDigest(assetBytes), golden.expected_asset_digest);
+  const validation = core.validate(assetFile);
+  assert.equal(validation.overall_valid, true, JSON.stringify(validation.problems));
   assert.equal(core.validateExternalEnvelope(golden.envelope), golden.envelope);
   assert.equal(core.validateExternalKeyGrant(golden.grant), golden.grant);
   assert.equal(golden.envelope.contract_version, core.EXTERNAL_GRANT_CONTRACT_VERSION);
@@ -416,6 +530,15 @@ test('published external-grant golden verifies signature, unwraps CEK, and decry
 
   const session = authorizeConformanceFixture(golden);
   try {
+    const plan = core.planLoad(assetFile, { entitlement: session.entitlement });
+    assert.equal(plan.state, 'ready', JSON.stringify(plan.issues));
+    const capsule = core.loadAuthorized(assetFile, {
+      profile: 'compact',
+      as: 'json',
+      entitlement: session.entitlement,
+      decryptEntry: session.decryptEntry,
+    });
+    assert.equal(capsule.asset.asset_id, golden.manifest.asset_id);
     const plaintext = session.decryptEntry({
       entryName: golden.manifest.payload.path,
       ciphertext: Buffer.from(golden.envelope_cbor, 'base64url'),
@@ -424,6 +547,7 @@ test('published external-grant golden verifies signature, unwraps CEK, and decry
     assert.equal(plaintext.toString('base64url'), golden.plaintext_cbor);
   } finally {
     session.dispose();
+    fs.rmSync(tmp, { recursive: true, force: true });
   }
 });
 
