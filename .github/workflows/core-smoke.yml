@@ -61,7 +61,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-core-swift
-          ref: 95f638e2f0472a375704fb5fe2f057de0cb4cb07
+          ref: 9fb45802a32f4ecfedb946065461d92990e97f36
           path: .ecosystem-repos/kdna-core-swift
           fetch-depth: 0
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0

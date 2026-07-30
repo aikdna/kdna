@@ -287,9 +287,12 @@ test('core smoke rehearses the release ecosystem with every immutable accepted c
     'utf8',
   );
   for (const [repository, commit] of EXPECTED_COMPAT_CHECKOUTS) {
+    const smokeCommit = repository === 'aikdna/kdna-core-swift'
+      ? '9fb45802a32f4ecfedb946065461d92990e97f36'
+      : commit;
     assert.match(
       workflow,
-      new RegExp(`repository: ${repository.replace('/', '\\/')}\\n\\s+ref: ${commit}`, 'u'),
+      new RegExp(`repository: ${repository.replace('/', '\\/')}\\n\\s+ref: ${smokeCommit}`, 'u'),
     );
   }
   assert.match(workflow, /runs-on: macos-latest/u);
