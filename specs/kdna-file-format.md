@@ -15,3 +15,9 @@ In short:
 - Agents consume the Runtime Capsule returned by Core, never unpacked files.
 
 There is no second current container format.
+
+The protocol minimum and the official Creation Writer output profile are
+different conformance layers. See
+[Creation Output Boundary](./creation-output-boundary.md): Core accepts the
+three required entries, while an official Creation Writer emits those entries
+plus `checksums.json`.

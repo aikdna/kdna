@@ -1,0 +1,44 @@
+{
+  "fixture_id": "kdna.core-format-minimal",
+  "expected_entry_names": [
+    "mimetype",
+    "kdna.json",
+    "payload.kdnab"
+  ],
+  "manifest": {
+    "format_version": "0.1.0",
+    "asset_id": "kdna:fixture:core-format-minimal",
+    "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000501",
+    "asset_type": "fixture",
+    "title": "Core Format Minimal",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0",
+    "created_at": "2026-07-28T00:00:00Z",
+    "updated_at": "2026-07-28T00:00:00Z",
+    "compatibility": {
+      "min_loader_version": "0.20.0",
+      "profile": "kdna.payload.judgment",
+      "profile_version": "0.1.0"
+    },
+    "payload": {
+      "path": "payload.kdnab",
+      "encoding": "cbor",
+      "encrypted": false
+    },
+    "access": "public"
+  },
+  "payload": {
+    "profile": "kdna.payload.judgment",
+    "profile_version": "0.1.0",
+    "core": {
+      "axioms": [
+        {
+          "statement": "Prefer the reversible option while required evidence remains incomplete.",
+          "applies_when": [
+            "choosing between reversible and irreversible actions"
+          ]
+        }
+      ]
+    }
+  }
+}

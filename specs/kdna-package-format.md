@@ -34,6 +34,10 @@ payload.kdnab
 checksums.json   (emitted by official writers)
 ```
 
+This is the official Creation Writer baseline. The Core container protocol
+requires the first three entries and treats `checksums.json` as optional. See
+[Creation Output Boundary](./creation-output-boundary.md).
+
 Use a Studio-compatible exporter for normal creation and migration. `kdna pack`
 and `kdna validate` handle manual source-directory packaging and validation;
 they do not convert a source directory into a second canonical asset form.

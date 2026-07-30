@@ -89,6 +89,11 @@ A `.kdna` file is a single, portable container that holds:
 
 `.kdna` files are produced by authors through the KDNA toolchain and consumed by the KDNA loader. The format itself is content-neutral — KDNA Core does not rank judgment quality or endorse specific assets. Agents can create `.kdna` files through the official SDK; any file that passes `kdna validate` is a valid KDNA asset.
 
+Core format validity and Creation Engine acceptance are separate results. An
+official Creation Writer emits `checksums.json` and explicit scoped authoring
+semantics, but those stricter writer requirements do not redefine the minimum
+Core format. See [Creation Output Boundary](./specs/creation-output-boundary.md).
+
 ## What KDNA Core defines
 
 KDNA Core is the **format authority**. It defines:

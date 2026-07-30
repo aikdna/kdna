@@ -1,0 +1,235 @@
+{
+  "fixture_id": "kdna.official-creation-output",
+  "writer_profile": "official-creation-output",
+  "creation_status": "not-assessed",
+  "expected_entry_names": [
+    "mimetype",
+    "kdna.json",
+    "payload.kdnab",
+    "checksums.json"
+  ],
+  "manifest": {
+    "format_version": "0.1.0",
+    "asset_id": "kdna:fixture:official-creation-output",
+    "asset_uid": "urn:uuid:00000000-0000-4000-8000-000000000502",
+    "asset_type": "fixture",
+    "title": "Official Creation Output",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0",
+    "created_at": "2026-07-28T00:00:00Z",
+    "updated_at": "2026-07-28T00:00:00Z",
+    "creator": {
+      "name": "Synthetic Creation Writer Fixture",
+      "creator_type": "tool"
+    },
+    "compatibility": {
+      "min_loader_version": "0.20.0",
+      "profile": "kdna.payload.judgment",
+      "profile_version": "0.1.0"
+    },
+    "payload": {
+      "path": "payload.kdnab",
+      "encoding": "cbor",
+      "encrypted": false
+    },
+    "access": "public",
+    "summary": "Synthetic fixture for the official Creation Writer output boundary."
+  },
+  "payload": {
+    "profile": "kdna.payload.judgment",
+    "profile_version": "0.1.0",
+    "core": {
+      "highest_question": "Which bounded choice preserves a reversible path without inventing evidence?",
+      "worldview": [
+        "Observed task facts remain authoritative.",
+        "Judgment applies only inside its declared scope."
+      ],
+      "value_order": [
+        "prevent irreversible harm",
+        "preserve a verified recovery path",
+        "reduce delay"
+      ],
+      "judgment_role": {
+        "acts_as": "a scoped qualitative decision guide",
+        "does_not_act_as": [
+          "a source of operational facts",
+          "an authorization to execute actions"
+        ],
+        "responsibility": "Order declared tradeoffs after current facts are supplied."
+      },
+      "axioms": [
+        {
+          "id": "axiom_reversibility",
+          "one_sentence": "Prefer the smallest reversible step while evidence remains incomplete.",
+          "full_statement": "Choose the smallest reversible step that can produce the missing evidence without creating irreversible harm.",
+          "why": "The decision should preserve recovery while uncertainty remains.",
+          "applies_when": [
+            "required evidence is incomplete and a reversible option exists"
+          ],
+          "does_not_apply_when": [
+            "an external safety rule already requires a specific action"
+          ],
+          "failure_risk": "An irreversible choice may be made before recovery is verified."
+        }
+      ],
+      "ontology": [
+        {
+          "id": "concept_reversible_step",
+          "one_sentence": "A reversible step can be undone without lasting loss.",
+          "essence": "It preserves the ability to return to a verified state.",
+          "boundary": "It does not mean that every low-cost action is safe.",
+          "trigger_signal": "The decision changes persistent state."
+        }
+      ],
+      "frameworks": [
+        {
+          "id": "framework_bounded_choice",
+          "name": "Bounded choice",
+          "when_to_use": "A qualitative decision has incomplete evidence.",
+          "steps": [
+            "identify irreversible outcomes",
+            "identify the smallest reversible option",
+            "state the evidence still missing"
+          ]
+        }
+      ],
+        "core_structure": [
+          {
+            "from": "boundary_external_authority",
+            "to": "axiom_reversibility",
+            "via": "exception"
+          }
+        ],
+      "stances": [
+        {
+          "stance": "Current evidence outranks inherited assumptions.",
+          "applies_when": [
+            "the asset assumption conflicts with observed task facts"
+          ]
+        }
+      ],
+      "boundaries": [
+        {
+          "id": "boundary_external_authority",
+          "scope": "qualitative tradeoffs after current facts and authority are supplied",
+          "out_of_scope": "inventing facts, permissions, or confirmation",
+          "acceptable_exceptions": []
+        }
+      ],
+      "risk_model": {
+        "risks": [
+          {
+            "id": "risk_overreach",
+            "name": "Scope overreach",
+            "description": "The judgment may be applied outside its declared task.",
+            "mitigation": "Stop and request a new scope decision."
+          }
+        ]
+      },
+      "aesthetics": [
+        {
+          "id": "aesthetic_clarity",
+          "name": "Explicit boundaries",
+          "description": "Prefer visible scope language over implied authority."
+        }
+      ]
+    },
+    "patterns": [
+      {
+        "id": "misunderstanding_validation",
+        "wrong": "Format validation proves the judgment was confirmed.",
+        "correct": "Format validation and confirmation are independent results.",
+        "key_distinction": "Technical validity is not representational authority.",
+        "why": "Collapsing the results would fabricate provenance."
+      },
+      {
+        "id": "term_format_valid",
+        "type": "term",
+        "term": "Format Valid",
+        "definition": "Core accepted every applicable technical gate."
+      },
+      {
+        "id": "banned_term_officially_correct",
+        "type": "banned_term",
+        "term": "officially correct",
+        "why": "Core does not certify judgment content.",
+        "replace_with": "Format Valid"
+      },
+      {
+        "id": "pattern_stop_at_boundary",
+        "type": "pattern",
+        "name": "Stop at the declared boundary",
+        "one_sentence": "Do not extend scoped judgment into an undeclared task.",
+        "what_it_looks_like": "The current request requires authority the asset does not declare.",
+        "how_to_fix": "Stop and request a new scope decision.",
+        "failure_risk": "The asset may be treated as a general authority."
+      }
+    ],
+    "scenarios": [
+      {
+        "id": "scenario_incomplete_evidence",
+        "name": "Incomplete rollout evidence",
+        "trigger_signal": "A release choice lacks verified recovery evidence."
+      }
+    ],
+    "cases": [
+      {
+        "id": "case_limited_rollout",
+        "title": "Limited rollout preserves recovery",
+        "context": "Required checks passed but rollback evidence was incomplete.",
+        "what_happened": "The team selected a reversible limited rollout.",
+        "what_was_learned": "The smaller step produced evidence without removing recovery.",
+        "structural_pattern": "Reversibility outranks speed while recovery evidence is incomplete."
+      }
+    ],
+    "reasoning": {
+      "self_check": [
+        "Did I preserve the declared boundary without inventing facts?"
+      ],
+      "failure_modes": [
+        {
+          "id": "failure_scope_overreach",
+          "mode": "Treating a scoped asset as general authority.",
+          "correct": "Stop outside the declared scope."
+        }
+      ],
+      "reasoning_chains": [
+        {
+          "id": "reasoning_reversibility",
+          "one_sentence": "Incomplete evidence increases the value of reversibility.",
+          "logic": [
+            "The evidence required for an irreversible choice is incomplete.",
+            "A reversible option can produce the missing evidence.",
+            "Choose the reversible option unless external authority requires otherwise."
+          ],
+          "so_what": "Preserve recovery while resolving uncertainty."
+        }
+      ]
+    },
+    "evolution": {
+      "stages": [
+        {
+          "id": "stage_initial",
+          "name": "Initial authored judgment",
+          "description": "The first synthetic semantic revision.",
+          "indicators": [
+            "scope and boundaries are explicit"
+          ]
+        }
+      ],
+      "evolution_layers": [],
+      "measurement": [],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "changes": [
+            "initial synthetic fixture"
+          ]
+        }
+      ],
+      "version_notes": [
+        "No Creation Accepted or human-confirmation claim is made."
+      ]
+    }
+  }
+}

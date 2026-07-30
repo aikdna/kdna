@@ -10,12 +10,23 @@ an uncompressed first entry named `mimetype` whose exact content is
 mimetype
 kdna.json
 payload.kdnab
-checksums.json
 ```
 
 `kdna.json` is the public manifest. `payload.kdnab` is the CBOR judgment
-payload or a declared encrypted envelope. `checksums.json` records canonical
-runtime entry-set evidence.
+payload or a declared encrypted envelope.
+
+## Optional entries
+
+```text
+checksums.json
+attachments/
+```
+
+`checksums.json` records canonical runtime entry-set evidence. Its absence is
+not a Core format error; if present, its schema and declared digests must
+verify. Official Creation Writers emit it and therefore produce a four-entry
+baseline. This stricter writer rule does not change the three-entry protocol
+minimum.
 
 Authoring JSON, reports, receipts, credentials, and plaintext do not belong in
 the container. The packer rejects unknown top-level source entries, unsafe
@@ -41,4 +52,6 @@ directory may be compiled by an authoring tool, but it is not a runtime asset
 and cannot be used as Runtime Capsule evidence.
 
 See [SPEC.md](../../SPEC.md) and
-[`schema/manifest.schema.json`](../../schema/manifest.schema.json).
+[`schema/manifest.schema.json`](../../schema/manifest.schema.json). The
+separate authoring-result boundary is defined in
+[Creation Output Boundary](../../specs/creation-output-boundary.md).

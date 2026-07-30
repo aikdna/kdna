@@ -8,10 +8,10 @@
   "fixture": "minimal.kdna.b64",
   "loaded_at": "2026-07-15T00:00:00.000Z",
   "expected": {
-    "asset": "sha256:0f6d33af23e9d3305a523ab78156e80ee63b191680ddba2175a0e6046ded7964",
+    "asset": "sha256:b501eaf12db5520ed12bdec1d46044002039624ea1673bccf0402226748a0cde",
     "content": "sha256:aeaa3e31b4be25e41a686963772988a613ee711a02fa13151a55877f251cd2ea",
     "runtime_entry_set": "sha256:a756e89ed89f625940086da3757d6a8ff3b8dbee0c54bcb37988e0c891da5b3c",
-    "capsule_delivery": "sha256:1d34035bb45c59ed3875323789ee1f1ed9e7efb08a96c807d9225950b73a9136"
+    "capsule_delivery": "sha256:17fee85adf3ec88db48ec9e8fddaf35300a88456af3caa8e6bc212d0ece7ac2d"
   },
   "runtime_capsule": {
     "type": "kdna.runtime-capsule",
@@ -26,7 +26,7 @@
       "profile": "kdna.digest-evidence",
       "profile_version": "0.1.0",
       "asset": {
-        "value": "sha256:0f6d33af23e9d3305a523ab78156e80ee63b191680ddba2175a0e6046ded7964",
+        "value": "sha256:b501eaf12db5520ed12bdec1d46044002039624ea1673bccf0402226748a0cde",
         "basis": "kdna.digest-basis.container-bytes",
         "comparison": {
           "state": "not_compared",
@@ -78,6 +78,7 @@
         }
       ],
       "boundaries": [],
+      "core_structure": [],
       "self_checks": [],
       "failure_modes": [],
       "patterns": []

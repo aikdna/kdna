@@ -49,10 +49,20 @@ kdna-studio card add my_expertise axiom \
   --field evidence_type="practice"
 ```
 
-A minimal valid `.kdna` payload contains:
-- A `highest_question` — what single question does this judgment answer?
-- One or more `axioms` — the core principles
-- Optional: `patterns`, `scenarios`, `cases`, `reasoning`, `evolution`
+The official Creation Writer output profile is stricter than the Core protocol
+minimum. It explicitly contains:
+
+- a `highest_question` — what single question does this judgment answer;
+- a scoped `worldview`;
+- an ordered `value_order`;
+- a `judgment_role`;
+- global boundaries and one or more `axioms`;
+- optional patterns, scenarios, cases, reasoning, and evolution content.
+
+A Core-valid asset produced by another compatible writer may omit
+`highest_question` when it declares scope through a role, boundary, or axiom
+applicability condition. The official Creation Writer must not derive the
+highest question from the first axiom.
 
 ## Step 4: Review and approve for Studio export
 
@@ -75,6 +85,11 @@ kdna-studio export my_expertise --out ./my_expertise.kdna
 
 This produces a `.kdna` container with `mimetype`, `kdna.json`,
 `payload.kdnab`, and `checksums.json`.
+
+Those four entries are the official Creation Writer baseline.
+`checksums.json` remains optional at the lower Core protocol layer. Format
+validation and Creation Engine acceptance are separate results; see
+[Creation Output Boundary](../specs/creation-output-boundary.md).
 
 ## Step 6: Validate with the official CLI
 

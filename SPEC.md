@@ -24,14 +24,25 @@ A runtime asset is one immutable `.kdna` ZIP file. Its first entry is
 application/vnd.kdna.asset
 ```
 
-Required entries are:
+Required protocol entries are:
 
 | Entry | Responsibility |
 |---|---|
 | `mimetype` | Unambiguous container detection |
 | `kdna.json` | Public identity, compatibility, access, and payload metadata |
 | `payload.kdnab` | CBOR-encoded judgment payload or encrypted envelope |
-| `checksums.json` | Runtime entry-set integrity evidence |
+
+Optional protocol entries are:
+
+| Entry | Responsibility |
+|---|---|
+| `checksums.json` | Runtime entry-set integrity evidence; emitted by official Creation Writers |
+| `attachments/` | Supplementary bytes governed by the manifest and loader policy |
+
+The absence of `checksums.json` is not a format error. When the entry is
+present, its schema and declared digests MUST verify. An exporter that presents
+itself as an official KDNA Creation Writer MUST emit the canonical four-entry
+baseline: the three required protocol entries plus `checksums.json`.
 
 Authoring source files, reports, build receipts, credentials, and decrypted
 plaintext are not distribution entries. Runtimes MUST reject forbidden
@@ -91,7 +102,6 @@ The payload declares:
   "profile": "kdna.payload.judgment",
   "profile_version": "0.1.0",
   "core": {
-    "highest_question": "What bounded qualitative decision does this asset help make?",
     "axioms": [
       {
         "statement": "Prefer the reversible option while required evidence is incomplete.",
@@ -116,7 +126,29 @@ MUST NOT silently trim, reorder, reinterpret, or invent that content.
 How a source book, thinker, expert, or dataset becomes this payload is an
 authoring concern outside the runtime protocol.
 
-## 4. Digest responsibility
+## 4. Format validity and creation acceptance
+
+Core reports whether an asset is **Format Valid**: its container, manifest,
+payload, integrity evidence when present, compatibility, authorization, and
+projection satisfy the public technical contracts. Format validity is
+content-neutral. It does not prove who formed or confirmed the judgment,
+whether the judgment represents a person or organization, whether its sources
+are sufficient, or whether it passed semantic tests.
+
+A Creation Engine may separately report **Creation Accepted** under its own
+declared creation mode, scope, source, confirmation, and semantic-test
+contracts. Creation acceptance does not change Core validity, and Core validity
+does not imply creation acceptance. Compilers and loaders MUST NOT synthesize a
+human confirmation or infer creation acceptance from successful validation.
+
+Official Creation Writer output is intentionally stricter than the minimum
+Core payload. It explicitly declares the highest question, scoped worldview,
+ordered value priorities, judgment role, and global boundaries, and it emits
+`checksums.json`. These authoring requirements do not make the same fields
+universal Core requirements for assets produced by other compatible writers.
+See [Creation Output Boundary](specs/creation-output-boundary.md).
+
+## 5. Digest responsibility
 
 The protocol distinguishes three digests:
 
@@ -124,17 +156,19 @@ The protocol distinguishes three digests:
 |---|---|
 | **A** | SHA-256 of the immutable packaged `.kdna` bytes |
 | **C** | SHA-256 of decoded judgment payload bytes |
-| **E** | Canonical runtime entry-set digest recorded by `checksums.json` |
+| **E** | Canonical runtime entry-set digest recorded by `checksums.json`, when present |
 
 A, C, and E are not interchangeable. A signed entitlement that binds an asset
-MUST bind A. `checksums.json` carries E and per-entry evidence; it does not
-retroactively become A.
+MUST bind A. When `checksums.json` is present, it carries E and per-entry
+evidence; it does not retroactively become A. A Core-valid three-entry asset
+has no declared E evidence.
 
-## 5. Validation and authorization
+## 6. Validation and authorization
 
 Validation independently reports container format, manifest schema, payload,
-checksums, and load-contract results. `overall_valid` is true only when every
-required gate succeeds.
+checksums, and load-contract results. The checksums gate succeeds without
+evidence when the optional entry is absent, and verifies the evidence when it
+is present. `overall_valid` is true only when every applicable gate succeeds.
 
 `planLoad` performs no plaintext projection. It returns a content-neutral plan
 that says whether loading is ready, blocked, needs authorization input, or
@@ -146,7 +180,7 @@ ready.
 Decrypted plaintext and content-encryption keys remain in volatile memory and
 MUST NOT be written to logs, traces, reports, caches, or temporary files.
 
-## 6. Runtime projection
+## 7. Runtime projection
 
 An authorized JSON load emits the sole public Runtime Capsule defined by
 [`specs/runtime-capsule.schema.json`](specs/runtime-capsule.schema.json). Its
@@ -163,7 +197,7 @@ The Capsule preserves:
 Producing a Capsule proves delivery of a verified projection. It does not prove
 that a model semantically understood or faithfully applied the judgment.
 
-## 7. Agent Host and trace boundary
+## 8. Agent Host and trace boundary
 
 The stable ConsumptionPlan, Agent Host request/receipt, and JudgmentTrace
 schemas live in [`specs/`](specs/) and have executable vectors in
@@ -181,7 +215,7 @@ No implementation may collapse these states into a claim that an agent
 "consumed" or "followed" KDNA when only delivery or process completion was
 observed.
 
-## 8. Cryptographic profiles
+## 9. Cryptographic profiles
 
 The stable password envelope is defined by
 [`RFC-0018`](rfcs/RFC-0018-envelope-aead.md). The account/device external key
@@ -190,7 +224,7 @@ grant is defined by
 profiles, versions, algorithms, fields required by their AAD, or failed
 authentication MUST fail closed.
 
-## 9. Conformance
+## 10. Conformance
 
 A conforming implementation MUST pass the relevant executable suites without
 editing their committed vectors:

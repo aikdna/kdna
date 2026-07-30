@@ -762,6 +762,32 @@ function parsePayloadEntry(name, bytes, opts = {}) {
   return parsed;
 }
 
+function assertDecryptedPayloadValid(payload, manifest) {
+  const validators = loadSchemas();
+  if (!validators) {
+    const error = new Error(
+      'Decrypted payload schema validation is unavailable.',
+    );
+    error.code = 'KDNA_PAYLOAD_SCHEMA_UNAVAILABLE';
+    throw error;
+  }
+  const isBundleProfile =
+    manifest.compatibility?.profile === 'kdna.payload.bundle' ||
+    manifest.asset_type === 'bundle';
+  const validator = isBundleProfile
+    ? validators.bundlePayload
+    : validators.payload;
+  if (validator(payload)) return payload;
+  const details = (validator.errors || [])
+    .map((entry) => `${entry.instancePath || '<root>'} ${entry.message}`)
+    .join('; ');
+  const error = new Error(
+    `Decrypted payload failed its declared schema${details ? `: ${details}` : '.'}`,
+  );
+  error.code = 'KDNA_PAYLOAD_INVALID';
+  throw error;
+}
+
 // ─── inspect ───────────────────────────────────────────────────────────
 
 /**
@@ -2302,6 +2328,7 @@ function hasCompactPromptContent(content) {
       hasStandardJudgmentRoleContent(content.judgment_role) ||
       (Array.isArray(content.axioms) && content.axioms.length > 0) ||
       (Array.isArray(content.boundaries) && content.boundaries.length > 0) ||
+      (Array.isArray(content.core_structure) && content.core_structure.length > 0) ||
       (Array.isArray(content.self_checks) && content.self_checks.length > 0) ||
       (Array.isArray(content.failure_modes) && content.failure_modes.length > 0) ||
       (Array.isArray(content.patterns) && content.patterns.length > 0)
@@ -2315,6 +2342,7 @@ const COMPACT_PROJECTED_CORE_FIELDS = new Set([
   'judgment_role',
   'axioms',
   'boundaries',
+  'core_structure',
 ]);
 const COMPACT_PROJECTED_REASONING_FIELDS = new Set(['self_check', 'failure_modes']);
 const COMPACT_PROJECTED_AXIOM_FIELDS = new Set([
@@ -2432,6 +2460,7 @@ function loadAssetUnsafe(inputPath, opts = {}) {
     // B4: Attempt decryption when password or decrypt hook is available.
     if (opts.decryptEntry) {
       // Consumer-provided decrypt hook (e.g., licensed entry key)
+      let decryptedBuf;
       try {
         const decrypted = opts.decryptEntry({
           asset: { entries: layout.map, manifest: m },
@@ -2439,18 +2468,27 @@ function loadAssetUnsafe(inputPath, opts = {}) {
           entryName: 'payload.kdnab',
           ciphertext: layout.map['payload.kdnab'],
         });
-        const decryptedBuf = typeof decrypted === 'string'
+        decryptedBuf = typeof decrypted === 'string'
           ? Buffer.from(decrypted, 'utf8')
           : Buffer.from(decrypted);
-        payload = parsePayloadEntry('payload.kdnab', decryptedBuf);
       } catch (e) {
         const err = new Error(`Decryption failed: ${e.message}`);
         err.code = e.code || 'KDNA_DECRYPT_FAILED';
         throw err;
       }
+      try {
+        payload = assertDecryptedPayloadValid(
+          parsePayloadEntry('payload.kdnab', decryptedBuf),
+          m,
+        );
+      } catch (error) {
+        if (!error.code) error.code = 'KDNA_PAYLOAD_INVALID';
+        throw error;
+      }
     } else if (opts.password) {
       // Password-based decryption via kdna.encryption.password*
       // profiles. Detects Argon2id vs scrypt from the envelope profile.
+      let decryptedBuf;
       try {
         const {
           decryptProtectedEntry,
@@ -2464,16 +2502,24 @@ function loadAssetUnsafe(inputPath, opts = {}) {
         const decryptFn = (envelope.profile === PASSWORD_PROTECTED_SCRYPT_PROFILE)
           ? decryptProtectedEntryScrypt
           : decryptProtectedEntry;
-        const decryptedBuf = decryptFn(encryptedEnvelope, {
+        decryptedBuf = decryptFn(encryptedEnvelope, {
           entryName: 'payload.kdnab',
           manifest: m,
           password: opts.password,
         });
-        payload = parsePayloadEntry('payload.kdnab', decryptedBuf);
       } catch (e) {
         const err = new Error(`Decryption failed with provided password: ${e.message}`);
         err.code = 'KDNA_DECRYPT_FAILED';
         throw err;
+      }
+      try {
+        payload = assertDecryptedPayloadValid(
+          parsePayloadEntry('payload.kdnab', decryptedBuf),
+          m,
+        );
+      } catch (error) {
+        if (!error.code) error.code = 'KDNA_PAYLOAD_INVALID';
+        throw error;
       }
     } else {
       const isExternal = payload.profile === EXTERNAL_ENVELOPE_PROFILE;
@@ -2556,6 +2602,32 @@ function loadAssetUnsafe(inputPath, opts = {}) {
         ))
         : []
     );
+    const projectCoreStructure = (items) => (
+      Array.isArray(items)
+        ? items.map((relation) => {
+            if (
+              !relation ||
+              typeof relation !== 'object' ||
+              Array.isArray(relation)
+            ) {
+              return null;
+            }
+            const projected = {};
+            for (const key of [
+              'from',
+              'to',
+              'via',
+              'applies_when',
+              'does_not_apply_when',
+            ]) {
+              if (relation[key] !== undefined) {
+                projected[key] = globalThis.structuredClone(relation[key]);
+              }
+            }
+            return projected;
+          }).filter(Boolean)
+        : []
+    );
     result.content = {
       highest_question: core.highest_question || null,
       // These scoped domain-level values are already validated by the payload
@@ -2571,6 +2643,9 @@ function loadAssetUnsafe(inputPath, opts = {}) {
           : null,
       axioms: (core.axioms || []).map(normalizeCompactAxiom).filter(Boolean),
       boundaries: normalizeList(core.boundaries),
+      // Relations are already part of the public Payload. Preserve order and
+      // the closed public relation fields, never arbitrary authoring state.
+      core_structure: projectCoreStructure(core.core_structure),
       // Payload uses the singular field name while Runtime Capsule uses the
       // plural collection name. Preserve every validated item and its shape;
       // strings remain strings and structured questions remain objects.
@@ -2727,6 +2802,17 @@ function loadAssetUnsafe(inputPath, opts = {}) {
     }
     if (c.axioms && c.axioms.length) text += 'Axioms:\n' + c.axioms.map((a) => '- ' + renderPromptItem(a)).join('\n') + '\n';
     if (c.boundaries && c.boundaries.length) text += 'Boundaries:\n' + c.boundaries.map((b) => '- ' + renderPromptItem(b)).join('\n') + '\n';
+    if (c.core_structure && c.core_structure.length) {
+      text += 'Judgment relations:\n' + c.core_structure.map((relation) => {
+        if (typeof relation === 'string') return '- ' + sanitizePrompt(relation);
+        if (!relation || typeof relation !== 'object' || Array.isArray(relation)) {
+          return '- (unrendered relation)';
+        }
+        const from = sanitizePrompt(relation.from || 'unknown');
+        const to = sanitizePrompt(relation.to || 'unknown');
+        return `- ${from} --${sanitizePrompt(relation.via || 'relates_to')}--> ${to}`;
+      }).join('\n') + '\n';
+    }
     if (c.self_checks && c.self_checks.length) text += 'Self-checks:\n' + c.self_checks.map((s) => '- ' + renderPromptItem(s)).join('\n') + '\n';
     if (c.failure_modes && c.failure_modes.length) text += 'Failure modes:\n' + c.failure_modes.map((f) => '- ' + renderPromptItem(f)).join('\n') + '\n';
     if (c.patterns && c.patterns.length) text += 'Patterns:\n' + c.patterns.map((p) => '- ' + renderPromptItem(p)).join('\n') + '\n';

@@ -15,6 +15,9 @@ and, when `can_load_now` is true, consume the Runtime Capsule returned by Core.
 
 This container contract is content-neutral. It does not decide whether an
 asset's judgment, taste, values, standards, or personality are good or true.
+It also does not decide whether an authoring process is complete or whether a
+person or organization confirmed the judgment. See
+[Creation Output Boundary](./creation-output-boundary.md).
 
 ## 2. One Authoring-to-Consumption Path
 
@@ -53,6 +56,12 @@ Agent or application
 | `attachments/` | binary | Optional assets governed by the manifest and loader policy |
 
 No optional entry may become an alternate judgment payload.
+
+The absence of `checksums.json` is not a format error. When it is present, a
+loader MUST validate its schema and declared digests. An exporter that presents
+itself as an official KDNA Creation Writer MUST emit `checksums.json`, producing
+the canonical four-entry baseline without turning the entry into a universal
+Core requirement.
 
 Asset signatures are outside the current Preview contract. A container with
 `signature.json`, a top-level `signatures/` entry, or manifest `signature` /
@@ -137,7 +146,7 @@ For an unencrypted judgment asset, `payload.kdnab` is a CBOR map matching
   profile: "kdna.payload.judgment",
   profile_version: "0.1.0",
   core: {
-    highest_question: string,
+    highest_question?: string,
     axioms: array,
     boundaries?: array,
     risk_model?: object
@@ -152,6 +161,13 @@ For an unencrypted judgment asset, `payload.kdnab` is a CBOR map matching
 
 Writers MUST encode this map as CBOR. Readers MUST NOT guess JSON when CBOR
 decoding fails.
+
+`highest_question` is optional for Core format validity. A payload without it
+still needs at least one non-empty axiom and a declared domain, role, boundary,
+or applicability condition as required by the payload schema. Official
+Creation Writers use the stricter output profile in
+[Creation Output Boundary](./creation-output-boundary.md) and emit the field
+explicitly; they do not derive it from the first axiom.
 
 ## 6. Encryption and Authorization
 
@@ -196,6 +212,7 @@ A conforming loader rejects at least:
 - a manifest that does not match the current schema;
 - non-CBOR payload or encrypted-envelope bytes;
 - unsupported access, entitlement, payload, or crypto profiles;
+- schema-invalid plaintext after successful authorized decryption;
 - declared digest mismatch;
 - any unsupported asset-signature entry or manifest declaration;
 - failure to authorize or decrypt an encrypted asset.

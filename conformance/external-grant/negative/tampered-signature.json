@@ -15,9 +15,9 @@
       "asset_id": "kdna:fixture:external-grant",
       "asset_uid": "urn:uuid:00190000-0000-4000-8000-000000000001",
       "version": "1.0.0",
-      "digest": "sha256:508b1301fd0b05ce4197ce94597dff6bde8b9dca540c63174e846f0800648733",
+      "digest": "sha256:20d8832e64e5060eaf99a9172d205267e8fd45e3cd1a1b41c693dbde995af989",
       "entry_path": "payload.kdnab",
-      "ciphertext_digest": "sha256:54be3615c32682f0c86ec2aafb51d982cbf51db8e468a122bf04a9a0994ecfd4",
+      "ciphertext_digest": "sha256:29729c4a93e4864ef9ef87b4773ba160cd5d41a45b9dbf9b3209b31c65b8cd47",
       "key_ref": "assetkey:fixture:external-grant:1.0.0",
       "issuer_key_id": "fixture-asset-root"
     },
@@ -31,8 +31,8 @@
       "alg": "X25519-HKDF-SHA256+A256KW",
       "ephemeral_public_key": "x25519:mkUDqYqxD-jTVMnELL0MnXlE9S59FNjqWXdefcnjv0s",
       "salt": "JiYmJiYmJiYmJiYmJiYmJg",
-      "wrapped_cek": "Rg-WDt_wdWY7Q9D_Cwdn0B4akh5b57CDAyihh0SbtYeo6P2vUYW7ig"
+      "wrapped_cek": "RQNIu0lrgdO1EbxW7OGC7w4DMB1swZvVwcXmNAXk5ZRHMzBkB1dPKw"
     },
-    "signature": "ed25519:rPrvwMV5PYySuorXWjyVTFWPbEC7_K9zw_cLHioBn3vaS5zbUmtLM7HzrokMkeW3g4fJmqw49XB-Q5L2OkHsAg"
+    "signature": "ed25519:FrghVktYuf9gGhlsLPB9L6VU_myOj25lsmiSYJx4P2YWegrKXeYAKCHtRLmd1YReDu5VMdawa-YdYG78HpS6DA"
   }
 }
