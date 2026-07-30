@@ -268,13 +268,16 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
   );
 });
 
-test('ecosystem workflow checkouts stay pinned to schema-2 source commits', () => {
+test('ecosystem workflow checkouts stay pinned to accepted or explicitly scoped candidate commits', () => {
   const canonical = JSON.parse(
     fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
   );
   const components = canonical.components.filter(
     (entry) => entry.local_path && entry.local_path !== '.' && entry.source_commit,
   );
+  const candidateSmokePins = new Map([
+    ['core-smoke.yml:aikdna/kdna-core-swift', '9fb45802a32f4ecfedb946065461d92990e97f36'],
+  ]);
 
   for (const workflowName of ['core-smoke.yml', 'publish.yml']) {
     const workflow = fs.readFileSync(
@@ -288,10 +291,12 @@ test('ecosystem workflow checkouts stay pinned to schema-2 source commits', () =
       while ((offset = workflow.indexOf(repositoryMarker, offset)) >= 0) {
         const nextStep = workflow.indexOf('\n      - ', offset);
         const checkoutBlock = workflow.slice(offset, nextStep >= 0 ? nextStep : workflow.length);
+        const expectedCommit =
+          candidateSmokePins.get(`${workflowName}:${entry.repository}`) ?? entry.source_commit;
         assert.match(
           checkoutBlock,
-          new RegExp(`^\\s*ref: ${entry.source_commit}\\s*$`, 'mu'),
-          `${workflowName} must check out ${entry.repository} at its schema-2 source commit`,
+          new RegExp(`^\\s*ref: ${expectedCommit}\\s*$`, 'mu'),
+          `${workflowName} must check out ${entry.repository} at its accepted or scoped candidate commit`,
         );
         occurrences += 1;
         offset += repositoryMarker.length;
@@ -303,6 +308,12 @@ test('ecosystem workflow checkouts stay pinned to schema-2 source commits', () =
       );
     }
   }
+
+  assert.equal(
+    candidateSmokePins.has('publish.yml:aikdna/kdna-core-swift'),
+    false,
+    'publish workflow cannot consume a candidate-only Swift pin',
+  );
 });
 
 test('candidate Core conformance anchor carries the declared candidate package version', (t) => {

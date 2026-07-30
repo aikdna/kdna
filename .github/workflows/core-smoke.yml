@@ -60,6 +60,8 @@ jobs:
           path: .ecosystem-repos/kdna-skills
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
+          # Creation candidate-only smoke input. The public release/publish
+          # authority remains ecosystem-manifest.json until this PR is accepted.
           repository: aikdna/kdna-core-swift
           ref: 9fb45802a32f4ecfedb946065461d92990e97f36
           path: .ecosystem-repos/kdna-core-swift
