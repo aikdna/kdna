@@ -86,7 +86,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-cli
-          ref: ccbf43de4d48ef842766593ec6d34f2d1393a4ba
+          ref: 019c88d111a0e0e6f8095966a8317e58cde636fb
           path: .ecosystem-repos/kdna-studio-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
