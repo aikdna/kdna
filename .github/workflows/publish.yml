@@ -179,22 +179,22 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-skills
-          ref: b64baa90a6d78c91ec34fa2d3674fe5c8f24e505
+          ref: 226300c987d17614e36da9612de00e8d6cf3aae9
           path: .ecosystem-repos/kdna-skills
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-core
-          ref: 8ca7df19cadd32a08b4067a39992bb28039bf294
+          ref: 176e0264f30a0b62f5680b56db84bd90dff83dfe
           path: .ecosystem-repos/kdna-studio-core
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-cli
-          ref: 7056162365897b3008fe0e56c2cdcf95260b6e5d
+          ref: ccbf43de4d48ef842766593ec6d34f2d1393a4ba
           path: .ecosystem-repos/kdna-studio-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-core-swift
-          ref: 95f638e2f0472a375704fb5fe2f057de0cb4cb07
+          ref: b6865342531da408a01dded13d656d7d00e31bcd
           path: .ecosystem-repos/kdna-core-swift
           fetch-depth: 0
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
@@ -247,7 +247,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-assets
-          ref: 72362a9749d099799e3093699f43437fe2fa4d8e
+          ref: 3d8b6f3b9c26d38ef99e0578ef4aff40f5a94990
           path: .ecosystem-repos/kdna-assets
           fetch-depth: 0
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
