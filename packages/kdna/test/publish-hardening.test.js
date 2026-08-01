@@ -288,7 +288,7 @@ test('core smoke rehearses the release ecosystem with every immutable accepted c
   );
   for (const [repository, commit] of EXPECTED_COMPAT_CHECKOUTS) {
     const smokeCommit = repository === 'aikdna/kdna-core-swift'
-      ? 'b6865342531da408a01dded13d656d7d00e31bcd'
+      ? '5a18436884ebee539e44322f713dfa507a2ed24d'
       : commit;
     assert.match(
       workflow,
