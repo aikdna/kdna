@@ -276,7 +276,7 @@ test('ecosystem workflow checkouts stay pinned to accepted or explicitly scoped 
     (entry) => entry.local_path && entry.local_path !== '.' && entry.source_commit,
   );
   const candidateSmokePins = new Map([
-    ['core-smoke.yml:aikdna/kdna-core-swift', '5a18436884ebee539e44322f713dfa507a2ed24d'],
+    ['core-smoke.yml:aikdna/kdna-core-swift', '3a999e6d0d73a563e6646035c764acf9e67c46f5'],
   ]);
 
   for (const workflowName of ['core-smoke.yml', 'publish.yml']) {
