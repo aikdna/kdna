@@ -179,7 +179,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-skills
-          ref: 226300c987d17614e36da9612de00e8d6cf3aae9
+          ref: ffb6703d29ea04ec805826485f408f5bf03eb433
           path: .ecosystem-repos/kdna-skills
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
