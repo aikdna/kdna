@@ -25,9 +25,10 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 
 | #   | Document                      | What it covers                                                                                                                                                       |
 | --- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 5   | `kdna-authorization-contract.md` | Current source-candidate LoadPlan and authorization responsibility contract |
 | 6   | `kdna-access-modes.md`        | Access control: public / licensed / remote                                                                                                                           |
-| 7   | `kdna-license.md`             | KDNA Commercial License (KCL) terms                                                                                                                                  |
-| 8   | `LICENSE-KCL-1.0.md`          | KCL 1.0 full license text                                                                                                                                            |
+| 7   | `kdna-license.md`             | Current boundary between software license, asset legal terms, and technical authorization |
+| 8   | `LICENSE-KCL-1.0.md`          | Optional publisher-selected KCL 1.0 license text; not automatically applied |
 
 ### Quality & Governance
 
@@ -35,7 +36,7 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 | --- | ----------------------------- | -------------------------------------------------------------- |
 | 9   | Archived evaluation gate spec | Evaluation evidence requirements and CI gate rules             |
 | 10  | `human-lock.md`               | Optional Human Lock provenance protocol                        |
-| 11  | `human-lock-gate-design.md`   | Human Lock gate design specification                           |
+| 11  | `human-lock-gate-design.md`   | Withdrawn universal-gate design; current Human Lock claims are conditional under `human-lock.md` |
 | 12  | `fidelity-protocol.md`        | Withdrawn RFC-0010 evaluation draft; historical research only  |
 | 13  | `fidelity-result.schema.json` | Historical external-evaluation result schema; not a Core gate  |
 | 14  | `evidence-trace.schema.json`  | Schema for recording what KDNA triggered during a judgment     |
@@ -45,8 +46,8 @@ The core protocol specification is in `SPEC.md` at the repository root. Start th
 
 | #   | Document                        | What it covers                                                    |
 | --- | ------------------------------- | ----------------------------------------------------------------- |
-| 16  | `RFC-0012-artifact-contract.md` | RFC-0012: KDNA Artifact Contract — ArtifactEnvelope specification |
-| 17  | `artifact-envelope.schema.json` | Schema for artifact envelopes                                     |
+| 16  | `RFC-0012-artifact-contract.md` | Withdrawn Artifact/WorkPack proposal; historical only |
+| 17  | `artifact-envelope.schema.json` | Historical schema retained for compatibility tests                 |
 | 18  | `judgment-trace-schema.json`    | Historical domain-authoring record; not Runtime execution evidence |
 | 19  | `judgment-report-schema.json`   | Schema for human-readable reports generated from a judgment trace |
 | 20  | `outcome-record-schema.json`    | Schema for recording whether a judgment was correct in hindsight  |
@@ -71,17 +72,19 @@ sidecar boundary and the reference runtime workflow.
 
 | #   | Document                  | What it covers                                                                        |
 | --- | ------------------------- | ------------------------------------------------------------------------------------- |
-| 32  | `kdna-crypto-protocol.md` | Current encrypted-entry and entitlement contract; asset signing is outside the Preview |
-| 34  | `kdna-entitlement-api.md` | Activation, sync, revocation, offline grace, and license audit API contract           |
+| 32  | `kdna-crypto-profiles.md` | Current supported encryption-profile boundary |
+| 33  | `kdna-crypto-protocol.md` | Encrypted-entry and entitlement design; asset signing is outside the Preview |
+| 34  | `kdna-secret-store.md` | Candidate native-product secret-storage contract |
+| 35  | `kdna-entitlement-api.md` | Experimental legacy Activation Server HTTP contract; not a current CLI command surface |
 
 ### Authoring & Tooling
 
 | #   | Document                                 | What it covers                                        |
 | --- | ---------------------------------------- | ----------------------------------------------------- |
-| 35  | `kdna-asset-card.md`                     | KDNA Asset Card specification                         |
-| 36  | `cli-license-identity-skeleton.md`       | Withdrawn command-surface draft; current CLI help is authoritative |
-| 37  | `authorization-subscription-metadata.md` | Authorization and subscription metadata specification |
-| 38  | `enum-tables.md`                         | Enumerated value reference tables                     |
+| 36  | `kdna-asset-card.md`                     | Withdrawn fixed quality-card design; historical authoring research only |
+| 37  | `cli-license-identity-skeleton.md`       | Withdrawn command-surface draft; current CLI help is authoritative |
+| 38  | `authorization-subscription-metadata.md` | Withdrawn Marketplace/Asset-Card metadata draft |
+| 39  | `enum-tables.md`                         | Enumerated value reference tables                     |
 
 ### Improvement & Evolution
 
@@ -89,7 +92,7 @@ sidecar boundary and the reference runtime workflow.
 | --- | ---------------------------------- | ------------------------------------- |
 | 39  | `improvement-proposal-schema.json` | Schema for KDNA improvement proposals |
 | 40  | `stage-definition.schema.json`     | Schema for stage definitions          |
-| 41  | `RFC-0012-artifact-contract.md`    | (See also Artifacts section above)    |
+| 41  | `RFC-0012-artifact-contract.md`    | Withdrawn historical proposal (see above) |
 
 For app and runtime integration, read `docs/app-runtime-contract.md` after `docs/runtime-routing.md`.
 

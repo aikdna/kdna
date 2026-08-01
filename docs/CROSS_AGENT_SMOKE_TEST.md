@@ -16,6 +16,8 @@ A future cross-Host acceptance run must start from one explicitly selected
 - whether judgment use was observed, separately from external outcome;
 - the exact Host and adapter coordinates.
 
-Codex, Claude Code, and OpenCode must consume the same frozen asset through
-their own Host adapters. Installing a Markdown Skill or finding a file on disk
-is not acceptance evidence.
+One qualified real Host is sufficient to prove the functional product path.
+Any run using Codex, Claude Code, OpenCode, or another compatible Host must
+report the exact Hosts it actually exercised. A named multi-Host set is a
+portability benchmark coordinate, not a universal product minimum. Installing
+a Markdown Skill or finding a file on disk is not acceptance evidence.

@@ -1,7 +1,12 @@
-# KDNA Cross-Domain Conflict Resolution
+# KDNA Cross-Domain Conflict Resolution — Withdrawn Design
 
-**Status:** Draft  
+**Status:** Withdrawn historical draft  
 **Version:** 1.0
+
+> This document describes a retired Cluster/WorkPack composition proposal. The
+> current Runtime contract is single-asset and does not expose the commands,
+> semantic conflict detector, automatic precedence rules, or multi-asset load
+> behavior below. It is retained only to explain the earlier design.
 
 ## 1. Problem
 

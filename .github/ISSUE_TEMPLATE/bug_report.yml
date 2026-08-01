@@ -1,32 +1,39 @@
 name: Bug Report
 description: Something is broken — CLI, loader, conformance, or schema
-labels: [type:bug]
+labels: ["type:bug"]
 body:
   - type: input
+    id: summary
     attributes:
       label: What happened?
       description: One sentence summary
   - type: textarea
+    id: reproduction
     attributes:
       label: Steps to reproduce
       description: Exact commands or actions
       render: bash
   - type: textarea
+    id: expected
     attributes:
       label: Expected behavior
   - type: textarea
+    id: actual
     attributes:
       label: Actual behavior
       description: Error message, wrong output, etc.
   - type: input
+    id: kdna_version
     attributes:
       label: KDNA CLI version
       description: Output of `kdna --version`
   - type: input
+    id: node_version
     attributes:
       label: Node version
       description: Output of `node --version`
   - type: dropdown
+    id: area
     attributes:
       label: Area
       options:

@@ -1,9 +1,16 @@
 # KDNA Crypto Protocol
 
-## Status: Preview contract for licensed encrypted entries and entitlement checks; asset signing is withdrawn from the Preview; runtime watermarking remains a server-side design.
+Status: **Pre-release design and compatibility map.** The current wire-profile
+candidate is defined by `kdna-crypto-profiles.md` and RFC-0018. The legacy
+license-key receipt flow is compatibility code, not a recommended product
+workflow or a command exposed by the current Runtime CLI source candidate.
+Account/device grants are defined separately by RFC-0019. Asset signing is
+withdrawn from the Preview, and runtime watermarking remains an unimplemented
+server-side design.
 
 This document defines how `.kdna` entries are encrypted and how licensed or
-remote access is authorized. It does not define an asset-signature contract.
+remote access may be authorized. It does not define an asset-signature
+contract, a production entitlement service, or a stable CLI command surface.
 
 **Design principle:** KDNA encryption does not promise "uncopyable files." It promises legitimate purchase, authorized use, leak tracing, and managed revocation. The goal is to raise the cost of unauthorized use high enough to make honest purchase the rational choice.
 
@@ -16,8 +23,8 @@ Every KDNA domain declares one of three access modes. The mode determines the cr
 | Mode | Distribution | At Rest | At Load | Revocable | Watermark |
 |------|:-----------:|:-------:|:-------:|:---------:|:---------:|
 | `public` | Plaintext .kdna | Plaintext | Authorized local projection | No | Optional |
-| `licensed` | Licensed .kdna | Encrypted entries | Local in-memory decrypt with license key | Yes | Required |
-| `remote` | Never distributed | Server-side only | API projection | Yes | Required |
+| `licensed` | Licensed .kdna | Encrypted entries | Authorized in-memory decrypt through the declared entitlement profile | Policy-dependent | Not a Core requirement |
+| `remote` | Never distributed | Server-side only | Authorized API projection | Policy-dependent | Product policy |
 
 **Public mode** requires no secrecy but Agent consumption still goes through
 LoadPlan and Runtime Capsule. This document focuses on `licensed` and `remote`.
@@ -33,29 +40,35 @@ as a whole.
 ```
 licensed .kdna asset
     ↓
-  encrypted KDNA entries (AES-256-GCM envelopes)
+  encrypted KDNA entries (declared, supported envelope profile)
     ↓
-  entry decrypt key derived from license_key + machine_fingerprint
+  CEK unwrapped in memory from an authorized password, receipt, account,
+  organization, or device grant
     ↓
-  local activation metadata outside the asset
+  non-secret entitlement metadata outside the asset; secrets in SecretStore
 ```
 
-### 2.1 Entry Decrypt Key
+### 2.1 Content Encryption Key
 
-- **Type:** 256-bit symmetric key derived with `scrypt-sha256`.
-- **Inputs:** `license_key`, `machine_fingerprint`, and the encrypted-entry
-  profile salt.
-- **Scope:** Used only to decrypt protected entries in memory.
-- **Persistence:** MUST NOT be written to disk, logged, or embedded in traces.
+- **Type:** profile-defined symmetric CEK; RFC-0018 uses a random 256-bit CEK.
+- **Source:** unwrapped through the exact key-slot or external-grant contract
+  declared by the asset. A password slot uses its declared KDF. Account and
+  organization profiles use RFC-0019 external grants and do not fall back to a
+  password or legacy receipt.
+- **Scope:** used only to decrypt protected entries in memory.
+- **Persistence:** MUST NOT be written to disk, logged, embedded in traces, or
+  returned to an Agent-facing consumer.
 
 ### 2.2 License Key
 
 - **Format:** `KDNA-LIC-...` opaque activation key.
-- **Purpose:** Proves the buyer can activate the asset and derives the local
-  decrypt hook for `kdna.encryption.licensed-entry`.
-- **Storage:** MAY be present in the local activation file when required for
-  offline licensed loading, but MUST NOT be printed, logged, included in audit
-  events, or embedded in `.kdna` assets.
+- **Purpose:** Legacy bearer credential for the
+  `kdna.encryption.licensed-entry` compatibility profile.
+- **Storage:** MUST NOT be present in plaintext activation JSON, argv,
+  environment variables, logs, traces, reports, or `.kdna` assets. A product
+  that still supports this compatibility profile retrieves the credential from
+  an approved SecretStore or one-time protected input channel and passes only
+  a scoped in-memory decrypt hook to Core.
 
 ### 2.3 External Signing Keys
 
@@ -121,42 +134,35 @@ Asset distributed through any author-chosen channel:
 
 ---
 
-## 4. Acquisition and Activation Flow
+## 4. Acquisition and Authorization Flow
 
 ```
 User obtains an exact licensed .kdna file through an author-chosen channel
-and asks a compatible Host to activate that exact asset identity and digest
+and asks a compatible Host to authorize that exact asset identity and digest
     ↓
 1. Host validates the asset and records the user-approved attachment scope
-2. Host sends an activation request to the entitlement server:
-   {
-     "domain": "@scope/silver-care",
-     "license_key": "KDNA-LIC-...",
-     "machine_fingerprint": "sha256:...",
-     "client": "kdna-cli"
-   }
+2. Product adapter obtains the credential or device proof from a protected
+   input channel and sends the profile-specific request to the configured issuer
     ↓
 3. Server validates purchase, status, expiration, limits, and binding policy
-4. Server returns activation object
+4. Server returns a signed receipt or external grant bound to the asset and
+   subject/device as required by the profile
     ↓
-5. Host stores local activation metadata outside the asset through an
-   appropriate protected store:
+5. Host stores only non-secret status metadata outside the asset and places
+   replayable credentials or private keys in an approved SecretStore:
    {
      "license_id": "lic_abc123",
-     "license_key": "KDNA-LIC-...",
      "domain": "@scope/silver-care",
      "status": "active",
-     "machine_fingerprint": "sha256:...",
+     "secret_ref": "implementation-defined-private-reference",
      "offline_valid_until": "2026-06-03T00:00:00.000Z"
    }
 ```
 
-The production request/response contract is defined in
-`kdna-entitlement-api.md`.
-
-Published CLI versions may also expose a package-store activation workflow.
-That is an exact-version implementation surface, not a protocol requirement or
-an independent source of consent.
+The experimental legacy request/response contract is documented in
+`kdna-entitlement-api.md`. Account/device grants use RFC-0019. Neither document
+creates a production hosted service or adds activation commands to the current
+Runtime CLI source candidate.
 
 ---
 
@@ -168,10 +174,11 @@ Host plans and loads the explicit file or exact user-approved attachment
 1. Runtime resolves the exact asset version and digest from the supplied file
    or attachment record
 2. Runtime reads the `.kdna` file directly or from an immutable cache
-3. Runtime checks local activation: not expired, not revoked, domain matches,
-   machine binding matches, and offline grace is valid
-4. Runtime derives decrypt hook from license_key + machine_fingerprint
-5. Runtime decrypts protected entries in memory only
+3. Product adapter checks the declared entitlement profile: not expired or
+   revoked, bindings match, and any offline lease is valid
+4. Product adapter retrieves the required secret or grant through SecretStore
+   and supplies a scoped in-memory decrypt hook
+5. Core decrypts protected entries in memory only
 6. Runtime projects the requested profile into a Runtime Capsule
 7. Agent receives the Capsule, never the raw payload or encryption envelope
 8. Runtime logs audit metadata without license_key or decrypted content
@@ -184,10 +191,10 @@ Plaintext KDNA NEVER touches disk.
 ## 6. Revocation Flow
 
 ```
-Entitlement server revokes buyer's license
+Entitlement issuer revokes the subject's entitlement
     ↓
 Server updates license status → revoked
-kdna CLI periodically syncs (kdna license sync)
+Authorized product adapter refreshes the signed status or grant
     ↓
 Next load attempt:
   License status: revoked
@@ -201,12 +208,13 @@ sync.
 
 ---
 
-## 7. Watermark Policy
+## 7. Watermark Design Boundary
 
-Watermarking is an accountability layer above local decryption. Runtime KDNA
-SHOULD include server-side watermark traces. Licensed local KDNA MAY include
-watermark policy in the asset or entitlement response, but watermarking is not
-required for the CLI/Core encrypted-entry MVP.
+Watermarking, if a product adopts it, is an accountability layer above Core
+decryption. Core and the current Runtime CLI do not promise or require output
+watermarking. A remote product may define a separately disclosed watermark
+policy, but must not imply that the KDNA protocol makes a file copy-proof or
+that all licensed output is traceable.
 
 | Mode | Watermark Content | Injection Point |
 |------|------------------|----------------|
@@ -245,24 +253,12 @@ asset signature.
 
 ## 9. Identity Key Boundary
 
-### 9.1 Key Generation
-
-```bash
-kdna identity init
-```
-
-Generates:
-- `~/.kdna/identity/kdna.key` — Ed25519 private key (PEM, chmod 600)
-- `~/.kdna/identity/kdna.pub` — Ed25519 public key (PEM)
-
-This key can support external grant, license, receipt, or confirmation
-contracts. It is not the buyer license secret used for local decryption, and it
-does not create a Preview asset signature.
-
-The corrective Preview CLI exposes only the identity operations in its own
-current help. Legacy backup/import and rotation sketches are not part of this
-protocol; secret-key recovery must not be improvised with unauthenticated
-encryption.
+External grants and signed receipts may use issuer or device signing keys under
+their own contracts. Their private keys belong in SecretStore and are not KDNA
+asset content. The published CLI `0.35.1` identity commands are a historical
+implementation surface; the current corrective Runtime CLI source candidate
+does not expose an identity command. Neither surface creates a Preview
+asset-signature contract.
 
 ---
 
@@ -272,7 +268,9 @@ encryption.
    distribute misleading metadata. Callers verify exact bytes, digests,
    checksums when present, and applicable entitlement evidence; Core does not
    endorse content.
-2. **License keys are bearer secrets** — if leaked, a license may be abused until revoked or re-bound. Mitigation: machine binding, short offline leases, sync, and audit.
+2. **Legacy license keys are bearer secrets** — if leaked, a license may be
+   abused until revoked or re-bound. Mitigation includes SecretStore, scoped
+   one-time input, short offline leases, device proof, refresh, and audit.
 3. **Plaintext exists in agent context** — any agent that uses local licensed KDNA can receive plaintext fragments in context. This is unavoidable. The defense is activation, projection, audit, and licensing, not absolute prevention.
 4. **Offline use is policy-controlled** — `licensed` mode works offline only until `offline_valid_until`. This is a business decision, not a crypto limitation.
 
@@ -288,8 +286,8 @@ encryption.
 What it DOES provide:
 - ✅ Authenticated encrypted-entry envelopes and entitlement checks
 - ✅ Digest verification and optional checksum verification
-- ✅ Leak accountability when runtime watermarking is enabled
-- ✅ Managed revocation through entitlement sync
+- ✅ A boundary for product-specific leak accountability when separately enabled
+- ✅ Fail-closed revocation handling when an authorized adapter supplies current evidence
 - ✅ Clear separation of public / licensed / remote modes
 - ✅ License keys excluded from audit logs and traces
 
@@ -300,10 +298,10 @@ What it DOES provide:
 | Phase | What | Prerequisite |
 |-------|------|-------------|
 | P0 | Spec this document | Done |
-| P1 | `kdna.encryption.licensed-entry` encrypted-entry profile | CLI/Core MVP implemented |
-| P2 | Direct `.kdna` reader with in-memory decrypt hook | CLI/Core MVP implemented |
-| P3 | `kdna license activate` and `kdna license sync` | CLI MVP implemented |
-| P4 | Entitlement revoke/admin API | Specified |
+| P1 | `kdna.encryption.licensed-entry` compatibility primitives | Present in source; legacy compatibility, not the target export profile |
+| P2 | Direct `.kdna` reader with in-memory decrypt hook | Present in Core source |
+| P3 | Legacy activation/sync implementation | Retained as non-routable source compatibility code; not a current CLI command |
+| P4 | Entitlement revoke/admin API | Experimental server contract; no hosted production service is promised |
 | P5 | Runtime projection and watermark service | Future server implementation |
 | P6 | ~~TUF-like registry trust roles and Preview asset signing~~ | **Cancelled for this Preview.** No replacement asset-signature contract is implied. |
 | P7 | `kdna.envelope.aead` canonical envelope profile (RFC-0018) | **Pre-release candidate.** Deterministic test vectors live in `conformance/envelope-aead/`; stable compatibility begins only at the first public profile release. |
@@ -316,8 +314,10 @@ What it DOES provide:
 |-------------------|---------------------|
 | `@aikdna/kdna-core/src/crypto-profile.js` | `kdna.encryption.licensed-entry` encryption and decryption primitives |
 | `@aikdna/kdna-core/src/asset-reader.js` | Direct `.kdna` reading and in-memory decrypt hooks |
-| `kdna-cli/src/cmds/license.js` | Activation, sync, status, local entitlement checks |
+| `kdna-cli/src/cmds/license.js` | Non-routable legacy compatibility implementation; not a current CLI command |
 | `kdna-cli/src/verify.js` | Direct `.kdna` structure, digest, checksum, and decrypt-hook verification |
 | `specs/kdna-entitlement-api.md` | Activation, sync, revoke, offline grace, and audit API contract |
+| `specs/kdna-secret-store.md` | Storage boundary for replayable credentials and device keys |
+| `rfcs/RFC-0019-account-device-external-key-grant.md` | Account/device external-key grant contract |
 | `specs/kdna-access-modes.md` | Defines public / licensed / remote (crypto protocol references this) |
 | `specs/kdna-license.md` | KCL-1.0 legal terms (crypto protocol provides technical enforcement) |

@@ -253,7 +253,7 @@
       }
     },
     "extends": {
-      "description": "Asset inheritance declaration (Story 12). This asset inherits judgment content from the named base asset. Distinct from 'dependencies' (peer composition): 'extends' creates a single-inheritance hierarchy where the child specialises the parent. The child's cards override the parent's cards with the same ID; parent cards not overridden are inherited. Format: '@scope/name@semver-range' string, or an object with 'name' and optional 'version' fields.",
+      "description": "Asset inheritance declaration. This asset inherits judgment content from the named base asset. Distinct from 'dependencies' (peer composition): 'extends' creates a single-inheritance hierarchy where the child specialises the parent. The child's cards override the parent's cards with the same ID; parent cards not overridden are inherited. Format: '@scope/name@semver-range' string, or an object with 'name' and optional 'version' fields.",
       "oneOf": [
         {
           "type": "string",

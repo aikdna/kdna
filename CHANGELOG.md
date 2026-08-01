@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- Clarify the public Creation boundary as three independent results while
+  keeping Core responsible only for `FORMAT_VALID`; make Human Lock
+  claim-conditional, classify multi-Host runs as portability evidence, and
+  stream entitlement credentials through stdin instead of argv examples.
+- Reconcile the Crypto and Entitlement documents with the current profile,
+  SecretStore, RFC-0019, and CLI boundaries: legacy license-key code is
+  compatibility-only, replayable credentials do not belong in plaintext
+  metadata, and watermarking is not a Core guarantee.
+- Replace the stale Cluster-era load-profile and access-mode prose with the
+  current single-asset Runtime boundaries: profiles do not silently allocate
+  or compress multiple assets, access does not imply adoption or full-content
+  delivery, and hosted entitlement/remote services remain product concerns.
+- Replace the draft commercial/marketplace license model with the actual
+  software-license, per-asset legal-term, and technical-authorization
+  boundary; mark the unadopted Cluster conflict and Artifact/WorkPack RFCs as
+  withdrawn history.
+- Repair the public GitHub Issue forms, remove duplicate Markdown files that
+  were misnamed as YAML, and replace fixed judgment/self-check counts with
+  content- and risk-dependent guidance.
+- Remove an internal sprint label from all public Manifest schema copies and
+  replace internal approval language in public example/readiness documents
+  with public maintainer release boundaries.
 - Prepare `@aikdna/kdna-core@0.21.0` as an unpublished Development Preview
   candidate. It closes password LoadPlan, minimum judgment semantics,
   non-truncating compact projection with explicit omission reporting, checksums,

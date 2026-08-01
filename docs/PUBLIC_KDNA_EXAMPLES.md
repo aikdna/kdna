@@ -59,11 +59,13 @@ An examples page may show release cards for public `.kdna` examples. It must rem
 
 First-stage public examples should normally use `draft` or `tested`. Do not use `evaluated` unless there is a published evaluation report and reproducible test evidence.
 
-## Approval Boundary
+## Project Release Boundary
 
-Owner approval is required at two levels:
+KDNA project maintainer review applies at two levels:
 
-1. **Publishing model approval** — how `.kdna` files are hosted, displayed, downloaded, and described.
-2. **Per-asset release approval** — each public `.kdna` file must be approved with its release card, metadata, evidence, boundaries, and download location.
+1. **Publishing model review** — how `.kdna` files are hosted, displayed, downloaded, and described.
+2. **Per-example release review** — every example the KDNA project chooses to publish is reviewed together with its public metadata, evidence, boundaries, and download location.
 
-Approval of the publishing model does not authorize unlimited asset publication.
+Review of the publishing model does not authorize unlimited example publication.
+This is a maintainer workflow for the KDNA project's own examples, not a
+protocol requirement or a universal approval gate for third-party assets.

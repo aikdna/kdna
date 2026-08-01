@@ -44,7 +44,7 @@ current Host contract.
 3. end-to-end technical evidence for each claimed integration;
 4. a real user acceptance flow that checks attachment, scope, visibility,
    authorization, disable/switch/rollback, and semantic preservation;
-5. owner approval of the exact release artifacts.
+5. authorized maintainer approval of the exact release artifacts.
 
 Behavioral outcome claims, if anyone chooses to make them, require separately
 named evaluation evidence. They are not protocol readiness criteria.
