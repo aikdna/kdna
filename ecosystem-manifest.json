@@ -14,7 +14,7 @@
     {
       "repository": "aikdna/kdna",
       "local_path": ".",
-      "source_commit": null,
+      "source_commit": "e6d1b27299eda46da58adca84def7c2b782ac883",
       "conformance_commit": "76bbc587ce05f7e575c2373832cc5c9eee9df98a",
       "component_version": null,
       "artifacts": [],
@@ -117,7 +117,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "1d9900ee13176ba20f32ab72bd9a22a7de51503d",
+      "source_commit": "b60d90af2f04ce50ab2443228ba270ea0f3303c7",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -149,7 +149,7 @@
     {
       "repository": "aikdna/kdna-assets",
       "local_path": "../kdna-assets",
-      "source_commit": "3d8b6f3b9c26d38ef99e0578ef4aff40f5a94990",
+      "source_commit": "4de5bb01f4216624e57ffa7ac901e982dd323d95",
       "conformance_commit": "76bbc587ce05f7e575c2373832cc5c9eee9df98a",
       "component_version": null,
       "packages": [],
@@ -197,7 +197,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "cad0c6fe61c1a8f8516e20d74211df2e40fe9c2f",
+      "source_commit": "72a8cc51354cfdaf1e46241c861db73f980123d3",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -229,7 +229,7 @@
     {
       "repository": "aikdna/kdna-studio-core",
       "local_path": "../kdna-studio-core",
-      "source_commit": "176e0264f30a0b62f5680b56db84bd90dff83dfe",
+      "source_commit": "26595f1d72d4f49d1bb88f3c2f32c2d72ad34a37",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -263,7 +263,7 @@
     {
       "repository": "aikdna/kdna-studio-cli",
       "local_path": "../kdna-studio-cli",
-      "source_commit": "019c88d111a0e0e6f8095966a8317e58cde636fb",
+      "source_commit": "2aca9bcad64c29b0e35caf3f2e0107c513094d0f",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
