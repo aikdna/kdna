@@ -1,23 +1,29 @@
----
 name: Feature request
-about: Suggest an enhancement to KDNA
+description: Suggest an enhancement to KDNA
 title: ''
-labels: enhancement
-assignees: ''
----
-
-## Problem
-
-What problem are you trying to solve?
-
-## Proposal
-
-Describe your proposed solution.
-
-## Alternatives
-
-What alternatives have you considered?
-
-## Impact
-
-How would this change affect existing KDNA usage?
+labels: ["type:feature"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user or implementer problem are you trying to solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the smallest change that would solve the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: What simpler existing path or alternative did you consider?
+  - type: textarea
+    id: impact
+    attributes:
+      label: Compatibility and scope
+      description: Which public contract or user flow changes, if any?

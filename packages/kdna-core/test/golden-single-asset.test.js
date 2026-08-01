@@ -179,7 +179,8 @@ test('public contracts keep highest_question optional for Core and explicit for 
   assert.match(containerSpec, /highest_question\?: string/);
   assert.match(creationBoundary, /`core\.highest_question` is also optional for Core format validity/);
   assert.match(creationBoundary, /MUST NOT derive `highest_question` from the first axiom/);
-  assert.match(creationBoundary, /Core MUST NOT report Creation Accepted/);
+  assert.match(creationBoundary, /Core owns only Format Valid and MUST NOT report/);
+  assert.match(creationBoundary, /Judgment Accepted or Application Verified/);
 });
 
 test('three-entry fixture without highest_question is Core Format Valid', () => {

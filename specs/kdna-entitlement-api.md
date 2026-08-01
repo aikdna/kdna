@@ -1,10 +1,12 @@
 # KDNA Entitlement API
 
 Version: 0.2
-Status: Active legacy-receipt contract; RFC-0019 account-device flow is separate
+Status: Experimental legacy-receipt HTTP contract; RFC-0019 account-device flow is separate
 
-This specification defines the production contract for activating, syncing,
-revoking, and auditing licensed KDNA assets.
+This specification defines the HTTP contract implemented by the experimental
+`@aikdna/kdna-activation-server` for activating, syncing, revoking, and
+auditing legacy license-key entitlements. It is not an AIKDNA-hosted production
+service and does not add a `kdna license` command to the current Runtime CLI.
 
 It complements:
 
@@ -23,15 +25,13 @@ The Entitlement API answers one question:
 For `access: "licensed"` assets, a valid entitlement allows the local runtime to
 derive an in-memory decrypt hook for protected entries.
 
-For `access: "runtime"` assets, a valid entitlement allows a server-side runtime
+For `access: "remote"` assets, a valid entitlement allows a server-side runtime
 to return a task-scoped projection.
 
-The entitlement record is never part of the canonical `.kdna` asset. It is stored
-outside the asset, for example:
-
-```text
-~/.kdna/licenses/<implementation-defined-id>.json
-```
+The entitlement record is never part of the canonical `.kdna` asset. A client
+may keep a signed non-secret record in an implementation-defined private
+location. A credential or license key belongs in an approved SecretStore or
+ephemeral activation channel, never in that JSON record.
 
 The legacy receipt contract below remains supported for existing license-key
 assets. Account/device encrypted assets use the separate RFC-0019 external key
@@ -53,25 +53,18 @@ Clients and servers MUST follow these rules:
    server type, but MUST NOT include `license_key`, decrypted content, or raw
    protected entries.
 
-## 3. Client Commands
+## 3. Client Integration Boundary
 
-The CLI reference commands are:
+The current Runtime CLI command allowlist does not expose legacy
+`kdna license ...` commands. A product adapter integrates this HTTP API
+directly, or through a future separately versioned client surface, and keeps
+the exact activation/sync endpoint in trusted configuration.
 
-```bash
-kdna license activate <domain> --key <license-key> --server <url>
-kdna license sync [domain] [--server <url>]
-kdna license status [domain] [--json]
-kdna license install <license.json>
-```
-
-`--server <url>` is an exact activation or sync endpoint URL. For local testing,
-the CLI MAY also accept a `file://` entitlement fixture.
-
-For RFC-0019 account/device assets, the preferred activation command opens the
-issuer's browser flow and keeps device private keys in the platform
-SecretStore. A headless client may read a one-time activation credential from
-standard input. It MUST NOT accept that credential as an ordinary command-line
-argument.
+Activation credentials are sent only in the protected HTTP request body after
+the user or deployment has selected the issuer. A headless product adapter may
+read a one-time credential from standard input or an approved SecretStore. It
+MUST NOT accept that credential as an ordinary command-line argument, URL,
+workspace file, or log field.
 
 ## 4. Activation Request
 
@@ -324,9 +317,11 @@ Response:
 
 The next client sync MUST receive the revoked status.
 
-## 10. Local Activation File
+## 10. Local Non-Secret Entitlement Record
 
-Reference clients store one JSON file per domain:
+An implementation may cache one signed, non-secret record per asset in a
+private product-owned location. The path below is illustrative and is not a
+global KDNA discovery requirement:
 
 ```text
 ~/.kdna/licenses/<implementation-defined-id>.json
@@ -338,7 +333,6 @@ Example:
 {
   "version": "1.0",
   "license_id": "lic_abc123",
-  "license_key": "<license-secret>",
   "domain": "kdna:aikdna:writing-pro",
   "issued_to": "buyer@example.com",
   "issued_at": "2026-05-27T00:00:00.000Z",
@@ -355,8 +349,10 @@ Example:
 }
 ```
 
-This file is an activation record, not a KDNA asset. It MAY contain the
-`license_key`, so it MUST be treated as sensitive local state.
+This file is an entitlement record, not a KDNA asset. It MUST NOT contain a
+`license_key`, password, private device key, unwrapped content key, or other
+replayable credential. Those values remain in an approved SecretStore or
+ephemeral request channel.
 
 ## 11. Audit Event
 
@@ -400,33 +396,14 @@ Audit events MUST NOT include:
 - ciphertext
 - raw machine fingerprint, unless enterprise policy explicitly requires it
 
-## 12. Compatibility With CLI MVP
+## 12. Runtime CLI Compatibility Boundary
 
-The current CLI MVP implements:
-
-- `kdna license install`
-- `kdna license status`
-- `kdna license activate`
-- `kdna license sync`
-- machine binding
-- revocation enforcement
-- offline grace fail-closed
-- local file entitlement fixtures
-- trace audit events without `license_key`
-- automatic in-memory decrypt hook for licensed `.kdna` loading and verification
-
-The CLI currently posts activation and sync requests to the exact `--server`
-URL provided by the caller. Production clients SHOULD pass the concrete endpoint
-URL, such as:
-
-```bash
-kdna license activate kdna:aikdna:writing-pro \
-  --key <license-secret> \
-  --server https://license.example.com/entitlements/activate
-
-kdna license sync kdna:aikdna:writing-pro \
-  --server https://license.example.com/entitlements/sync
-```
+The current Runtime CLI implements Core validation, LoadPlan and authorized
+loading for supported entitlement inputs, but it does not expose the removed
+legacy activation-management command family. Activation Server clients are
+product-specific adapters until a separately reviewed public client command is
+introduced. The HTTP server contract therefore MUST NOT be presented as CLI
+help, an installed default, or a global local-license Store.
 
 ## 13. Account/Device External Key Grant
 

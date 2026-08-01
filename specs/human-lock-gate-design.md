@@ -1,12 +1,14 @@
-# Human Lock Gate — Design & Implementation Plan
+# Human Lock Gate — Withdrawn Historical Design
 
 Version: 0.1
-Status: Draft
+Status: Withdrawn historical draft
 Based on: `KDNA/specs/human-lock.md` (SPEC)
 
-> Current boundary: this gate applies to Studio/review workflows that claim
-> Human Lock or human confirmation. It does not make Human Lock a universal
-> KDNA Core format-validity or creation requirement.
+> The three-point universal enforcement plan below was not adopted. Current
+> behavior is defined by `human-lock.md`: only a Studio/review workflow that
+> explicitly claims Human Lock or human confirmation applies that provenance
+> gate. Ordinary Core validation, `kdna pack`, Agent-authored Creation and
+> unreviewed assets do not require Human Lock.
 
 ## 1. Objective
 

@@ -1,8 +1,13 @@
 # KDNA Authorization & Subscription Metadata Specification
 
 Version: 0.1
-Status: Draft
+Status: Withdrawn historical draft
 Depends on: kdna-asset-card.md, kdna-license.md, registry SCHEMA.md 2.3
+
+> This Marketplace/Asset-Card metadata proposal was not adopted as a current
+> Core, Runtime CLI, Registry, or Activation Server contract. It is retained
+> only as historical product research. Current technical authorization is
+> defined by `kdna-authorization-contract.md` and its referenced schemas.
 
 ## 1. Purpose
 
@@ -69,7 +74,7 @@ Define the metadata schema for commercial KDNA assets that enables:
 
 ```
 1. User: kdna install @scope/domain-pro
-2. User: kdna license activate @scope/domain-pro --key KDNA-LIC-XXXX --server <activate-url>
+2. User securely streams the one-time credential to `kdna license activate @scope/domain-pro --credential-stdin --server <activate-url>`
 3. CLI: POST /entitlements/activate { license_key, domain, machine_fingerprint, client }
 4. Server: Validate key, check expiration, check agent/device limits, return activation object
 5. CLI: Stores activation metadata outside the asset in ~/.kdna/licenses/

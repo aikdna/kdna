@@ -1,9 +1,15 @@
-# RFC-0012: KDNA Artifact Contract
+# RFC-0012: KDNA Artifact Contract — Withdrawn Draft
 
-**Status:** Draft  
+**Status:** Withdrawn historical draft  
 **Proposed:** 2026-06-08  
 **Authors:** KDNA Maintainers  
 **Related:** KDNA SPEC 1.0-rc, kdna-workpack 0.1.0, KDNA Cluster SPEC §13
+
+> This RFC was not adopted as a current Core or Runtime responsibility. The
+> artifact/fidelity packages and WorkPack/Cluster pipeline described below are
+> deprecated historical implementations. Current execution evidence is the
+> Runtime Capsule, Consumption Plan, Host receipt, and Judgment Trace family;
+> none of them makes output quality or human review a Core claim.
 
 ---
 

@@ -596,7 +596,7 @@
           "release_status": "source-only",
           "dependency_policy": "none",
           "known_limitations": [
-            "the historical 0.1.0 Marketplace extension remains the published incumbent; 0.2.0 is an unpublished source candidate whose technical Host/UI acceptance does not substitute for Owner judgment-material acceptance or Marketplace review"
+            "the historical 0.1.0 Marketplace extension remains the published incumbent; 0.2.0 is an unpublished source candidate whose technical Host/UI verification does not substitute for real-user product acceptance or Marketplace publication"
           ],
           "recommended_entrypoint": null,
           "legacy_replacement": null

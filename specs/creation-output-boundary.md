@@ -8,18 +8,25 @@ This document separates KDNA Core format validity from the stricter output
 contract used by an official KDNA Creation Writer. It does not define an
 interview method, content score, author ranking, or KDNA endorsement.
 
-Two independent results exist:
+Three independent Creation results exist: `FORMAT_VALID`,
+`JUDGMENT_ACCEPTED`, and `APPLICATION_VERIFIED`.
 
-- **Format Valid** means Core accepted the container, manifest, payload,
+- **Format Valid (`FORMAT_VALID`)** means Core accepted the container, manifest, payload,
   applicable integrity evidence, compatibility, authorization, and projection
   contracts.
-- **Creation Accepted** means a Creation Engine found sufficient source,
-  confirmation, boundary, conflict, and semantic-test evidence for its declared
-  creation mode and scope.
+- **Judgment Accepted (`JUDGMENT_ACCEPTED`)** means a Creation Engine found sufficient, honest source,
+  authority and risk-adaptive semantic-test evidence for its declared creation
+  mode and scope.
+- **Application Verified (`APPLICATION_VERIFIED`)** means an independent Consumer loaded the exact
+  Format Valid asset through the Runtime contract and produced accepted,
+  task-scoped semantic-adoption evidence under a frozen plan.
 
-Neither result implies the other. Core MUST NOT report Creation Accepted, and a
-Creation Engine MUST NOT treat successful Core validation as evidence that a
-person or organization authored, confirmed, or is represented by an asset.
+No result implies another. Core owns only Format Valid and MUST NOT report
+Judgment Accepted or Application Verified. A Creation Engine MUST NOT treat
+successful Core validation as evidence that a person or organization authored,
+confirmed, or is represented by an asset. `CREATION_COMPLETE` is a private
+Creation aggregate only when all three results bind the same semantic and asset
+digests; it is not a Core field.
 
 ## 2. Core minimum
 
@@ -53,14 +60,15 @@ payload.kdnab
 checksums.json
 ```
 
-It also emits explicit, non-placeholder authoring semantics:
+It also emits explicit, non-placeholder authoring semantics sufficient for the
+asset's declared task and risk:
 
-- `core.highest_question`;
-- scoped `core.worldview`;
-- ordered `core.value_order`;
-- `core.judgment_role`;
-- global boundaries;
 - at least one complete judgment axiom.
+
+`core.highest_question`, `core.worldview`, `core.value_order`,
+`core.judgment_role`, global boundaries and relations are emitted only when the
+authored judgment actually declares them. A Writer MUST NOT invent filler to
+make an asset appear structurally richer.
 
 The Writer MUST NOT derive `highest_question` from the first axiom. It MUST NOT
 place source material, private evidence, confirmation receipts, semantic-test
