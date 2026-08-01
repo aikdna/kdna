@@ -520,7 +520,7 @@
     {
       "repository": "aikdna/kdna-core-swift",
       "local_path": "../kdna-core-swift",
-      "source_commit": "b6865342531da408a01dded13d656d7d00e31bcd",
+      "source_commit": "5a18436884ebee539e44322f713dfa507a2ed24d",
       "conformance_commit": "76bbc587ce05f7e575c2373832cc5c9eee9df98a",
       "release_tag": "v0.20.0",
       "release_commit": "4a9b732b590a711c544da5280a4b78f071369617",
