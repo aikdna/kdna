@@ -339,10 +339,7 @@ test('candidate Core conformance anchor carries the declared candidate package v
   fs.writeFileSync(manifestPath, JSON.stringify(canonical));
   const result = runValidator(manifestPath);
   assert.equal(result.status, 1);
-  assert.match(
-    result.stderr,
-    /conformance_commit must equal release tag 0.21.0/u,
-  );
+  assert.match(result.stderr, /conformance_commit must equal release tag 0.21.0/u);
 });
 
 test('asset inventory is an exact two-way projection of index/current.json', (t) => {
