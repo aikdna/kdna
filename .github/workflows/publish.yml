@@ -217,12 +217,12 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-activation-server
-          ref: 2f9ee46042d1a492c17631d2019d0bd5d83c8bcf
+          ref: d3423f577b2c849adf22cc99f6837af7a6500b58
           path: .ecosystem-repos/kdna-activation-server
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-remote-server
-          ref: c7258f87a57c82d36e78b5e362749da90b6cf236
+          ref: d377319a7ad74032c2b699f6fc5eadf28f52dd83
           path: .ecosystem-repos/kdna-remote-server
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
