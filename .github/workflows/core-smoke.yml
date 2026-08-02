@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-activation-server
-          ref: d3423f577b2c849adf22cc99f6837af7a6500b58
+          ref: a0b3821bf8b88b700a7135c777c0db533f25287d
           path: .ecosystem-repos/kdna-activation-server
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
@@ -51,7 +51,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-remote-server
-          ref: d377319a7ad74032c2b699f6fc5eadf28f52dd83
+          ref: 6da650327b1eb8e211b9f0d510be9308f2e78f0c
           path: .ecosystem-repos/kdna-remote-server
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:

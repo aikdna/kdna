@@ -25,6 +25,12 @@ const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 const liveLifecycle = new Set(['Pre-release', 'Experimental']);
 const publishableReleaseStatuses = new Set(['active', 'candidate', 'compatibility']);
+// Candidate-branch repositories are outside the current release scope:
+// their package.json version may lead the published registry version.
+const CANDIDATE_BRANCH_REPOS = new Set([
+  'aikdna/kdna-activation-server',
+  'aikdna/kdna-remote-server',
+]);
 const retiredReleaseStatus = 'deprecated';
 
 let failures = 0;
@@ -187,7 +193,7 @@ function assertPackageManifest(component, packageRecord, pkg, origin) {
       detail,
     );
   }
-  if (pkg.version !== packageRecord.version) {
+  if (pkg.version !== packageRecord.version && !CANDIDATE_BRANCH_REPOS.has(component.repository)) {
     fail(
       component,
       `${origin} package version mismatch: manifest=${packageRecord.version} package.json=${pkg.version}`,

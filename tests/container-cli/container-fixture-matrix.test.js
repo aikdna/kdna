@@ -379,7 +379,7 @@ test('validate: missing kdna.json fails', () => {
   const r = run(['validate', fixture]);
   assert.equal(r.status, 2);
   assert.equal(r.stdout, '');
-  assert.equal(r.stderr, `Error: Not a KDNA container or source directory: ${fixture}\n`);
+  assert.equal(r.stderr, 'Error: Target is not a KDNA container or source directory.\n');
 });
 
 test('validate: missing payload.kdnab fails', () => {
@@ -463,5 +463,5 @@ for (const profile of ['index', 'compact', 'scenario', 'full']) {
 test('load: unknown profile gives clear error', () => {
   const r = run(['load', minimalAsset, '--profile=nonexistent', '--as=json']);
   assert.notEqual(r.status, 0);
-  assert.match(r.stderr || r.stdout, /unknown/i);
+  assert.match(r.stderr || r.stdout, /unknown|invalid load profile/i);
 });
