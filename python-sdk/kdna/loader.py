@@ -27,9 +27,9 @@ OPTIONAL_FILES = [
 ]
 ALLOWED_MODES = {"minimum", "all", "auto"}
 MODE_TO_PROFILE = {"minimum": "compact", "all": "full", "auto": "compact"}
-CLI_COMPATIBILITY = ">=0.35.0,<0.36.0"
-_MINIMUM_CLI_VERSION_PARTS = (0, 35, 0)
-_MAXIMUM_CLI_VERSION_PARTS = (0, 36, 0)
+CLI_COMPATIBILITY = ">=0.36.0,<0.37.0"
+_MINIMUM_CLI_VERSION_PARTS = (0, 36, 0)
+_MAXIMUM_CLI_VERSION_PARTS = (0, 37, 0)
 _CLI_VERSION_PATTERN = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
 
 
