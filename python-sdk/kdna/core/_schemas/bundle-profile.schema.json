@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/schema/bundle-profile.schema.json",
+  "title": "KDNA Bundle Payload Profile",
+  "description": "Schema for the payload entry of a KDNA bundle container.",
+  "type": "object",
+  "required": ["profile", "profile_version", "components"],
+  "additionalProperties": true,
+  "properties": {
+    "profile": {
+      "type": "string",
+      "const": "kdna.payload.bundle",
+      "description": "Profile identifier. Must be the literal string 'kdna.payload.bundle'."
+    },
+    "profile_version": {
+      "const": "0.1.0",
+      "description": "Compatibility coordinate for the bundle payload profile."
+    },
+    "components": {
+      "type": "array",
+      "description": "List of component assets bundled in this container.",
+      "items": {
+        "type": "object",
+        "required": ["id", "path"],
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the component asset."
+          },
+          "path": {
+            "type": "string",
+            "description": "Relative path to the component asset (.kdna container) within the bundle payload or bundle package."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Optional priority for resolving card conflicts."
+          }
+        }
+      }
+    }
+  }
+}

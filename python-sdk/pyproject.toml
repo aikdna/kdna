@@ -4,17 +4,24 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kdna"
-version = "0.5.0"
-description = "Python adapter for the official KDNA CLI and Runtime Capsule contract"
+version = "0.6.0"
+description = "Python Core and adapter for the KDNA protocol: independent container parsing, validation, LoadPlan, Runtime Capsule, and deterministic pack"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = {text = "Apache-2.0"}
+dependencies = [
+    "cbor2>=5.4",
+    "jsonschema>=4.18",
+]
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "black>=24", "mypy>=1"]
 
 [tool.setuptools.packages.find]
 include = ["kdna*"]
+
+[tool.setuptools.package-data]
+"kdna.core" = ["_schemas/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

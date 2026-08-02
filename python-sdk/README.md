@@ -1,39 +1,55 @@
-# KDNA Python Adapter
+# KDNA Python Core + Adapter
 
-This source-only adapter lets Python applications use the official KDNA
-toolchain without opening `.kdna` containers themselves.
+This package contains two layers:
 
-It delegates to `@aikdna/kdna-cli` for:
+1. **`kdna.core`** — an independent Python implementation of the KDNA
+   protocol containers. It parses the ZIP envelope (mimetype STORED first,
+   CBOR `payload.kdnab`), validates `kdna.json` / payload / checksums against
+   the protocol JSON Schemas, computes the LoadPlan decision tree, emits the
+   Runtime Capsule with digest evidence, and packs authoring sources into
+   deterministic byte-identical containers. It has no dependency on the JS
+   toolchain.
+2. **`kdna.loader`** — the existing adapter that delegates `inspect → LoadPlan
+   → authorization → load → Runtime Capsule` to `@aikdna/kdna-cli` for
+   applications that prefer the official JS runtime.
 
-```text
-inspect → LoadPlan → authorization → load → Runtime Capsule
+## Python Core
+
+```python
+from kdna.core import validate_file, plan_load_file, load_file, pack
+
+result = validate_file("./writing.kdna")   # five gates + overall_valid
+plan = plan_load_file("./writing.kdna")    # state / can_load_now / required_action
+capsule = load_file("./writing.kdna", "compact")  # Runtime Capsule
+pack("./authoring-source", "./writing.kdna")      # deterministic output
 ```
 
-It never unzips an asset or decodes `payload.kdnab`. `open_kdna()` returns the
-Runtime Capsule produced by KDNA Core.
+The Core is interoperable with the JS Core: a JS-packed container validates
+and loads identically in Python, a Python-packed container validates and
+loads identically in JS, and both packers produce byte-identical output for
+the same source (same SHA-256).
 
 ## Install for local development
 
 ```bash
-npm install -g @aikdna/kdna-cli
 cd python-sdk
 python -m pip install -e ".[dev]"
 python -m pytest
 ```
 
 This directory is not currently published as an official PyPI distribution.
-Use the npm CLI/Core packages for the published pre-release runtime. The Python adapter
+Use the npm CLI/Core packages for the published pre-release runtime. The Python Core
 is a source-level integration preview until a separate signed release pipeline
 exists.
 
-The adapter supports `@aikdna/kdna-cli >=0.35.0,<0.36.0` and checks the CLI
-version before its first operation. Compatibility with a later pre-1.0 CLI
+The adapter layer supports `@aikdna/kdna-cli >=0.35.0,<0.36.0` and checks the
+CLI version before its first operation. Compatibility with a later pre-1.0 CLI
 minor release must be verified before this range is widened. The adapter also
 validates the declared `inspect` response boundary (`format_version`, `asset_id`,
 `version`, and `payload`) instead of relying on the removed `kdna_version`
 field.
 
-## Use
+## Adapter use
 
 ```python
 from kdna import inspect_kdna, open_kdna

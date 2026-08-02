@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/schema/load-contract.schema.json",
+  "title": "KDNA Load Contract",
+  "description": "Manifest block that describes how a loader may read the asset. See docs/core/load-contract.md.",
+  "type": "object",
+  "required": ["default_profile", "profiles"],
+  "additionalProperties": true,
+  "properties": {
+    "default_profile": {
+      "type": "string",
+      "enum": ["index", "compact", "scenario", "full"]
+    },
+    "profiles": {
+      "type": "object",
+      "required": ["index", "compact", "scenario", "full"],
+      "additionalProperties": false,
+      "properties": {
+        "index": { "$ref": "#/$defs/profile" },
+        "compact": { "$ref": "#/$defs/profile" },
+        "scenario": { "$ref": "#/$defs/profile" },
+        "full": { "$ref": "#/$defs/profile" }
+      }
+    }
+  },
+  "$defs": {
+    "profile": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "requires_decryption": { "type": "boolean" },
+        "max_tokens_hint": { "type": "integer", "minimum": 0 },
+        "selection": { "type": "string" },
+        "intended_for": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
