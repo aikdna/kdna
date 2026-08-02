@@ -146,7 +146,12 @@
               }
             ]
           },
-          "else": { "properties": { "published_version": false } }
+          "else": {
+            "if": {
+              "properties": { "release_status": { "enum": ["deprecated", "source-only"] } }
+            },
+            "then": { "properties": { "published_version": false } }
+          }
         },
         {
           "if": { "properties": { "release_status": { "const": "compatibility" } } },
