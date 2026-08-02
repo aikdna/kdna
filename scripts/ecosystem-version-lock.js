@@ -321,6 +321,9 @@ const LAGGING_CONSUMERS = new Set([
   'create-kdna-web-app',
   'kdna-demo-web-viewer',
 ]);
+// The monorepo compatibility package pins the released pairing
+// (packages/kdna); it is a publish snapshot, not a current consumer.
+const LAGGING_CONSUMER_MANIFESTS = new Set(['packages/kdna/package.json']);
 
 function evaluateConsumers(consumers, candidateBaselines = new Map()) {
   return consumers.map((consumer) => ({
@@ -329,7 +332,8 @@ function evaluateConsumers(consumers, candidateBaselines = new Map()) {
       !consumer.error &&
       (consumer.declared === consumer.expected ||
         consumer.declared === candidateBaselines.get(consumer.packageName) ||
-        LAGGING_CONSUMERS.has(consumer.repository)),
+        LAGGING_CONSUMERS.has(consumer.repository) ||
+        LAGGING_CONSUMER_MANIFESTS.has(consumer.manifest)),
   }));
 }
 
