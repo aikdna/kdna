@@ -221,14 +221,14 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
   ).packages[0];
   assert.deepEqual(
     [studioCore.version, studioCore.published_version, studioCore.release_status],
-    ['3.0.0', '2.0.2', 'candidate'],
+    ['3.0.0', '3.0.0', 'active'],
   );
   const studioCli = canonical.components.find(
     (entry) => entry.repository === 'aikdna/kdna-studio-cli',
   ).packages[0];
   assert.deepEqual(
     [studioCli.version, studioCli.published_version, studioCli.release_status],
-    ['0.11.0', '0.10.2', 'candidate'],
+    ['0.11.0', '0.11.0', 'active'],
   );
   assert.deepEqual(
     new Set(
@@ -324,7 +324,7 @@ test('candidate Core conformance anchor carries the declared candidate package v
   );
   const core = canonical.components.find((entry) => entry.repository === 'aikdna/kdna');
   const corePackage = core.packages.find((entry) => entry.npm_package === '@aikdna/kdna-core');
-  const oldAnchor = git(repoRoot, ['rev-list', '-n', '1', corePackage.published_version]);
+  const oldAnchor = git(repoRoot, ['rev-list', '-n', '1', '0.20.0']);
   for (const entry of canonical.components) {
     if (entry.conformance_commit === core.conformance_commit) {
       entry.conformance_commit = oldAnchor;
@@ -339,7 +339,10 @@ test('candidate Core conformance anchor carries the declared candidate package v
   fs.writeFileSync(manifestPath, JSON.stringify(canonical));
   const result = runValidator(manifestPath);
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /conformance_commit package version mismatch/u);
+  assert.match(
+    result.stderr,
+    /conformance_commit must equal release tag 0.21.0/u,
+  );
 });
 
 test('asset inventory is an exact two-way projection of index/current.json', (t) => {
@@ -471,7 +474,6 @@ test('validator rejects schema 1, mixed legacy fields, and unknown fields', (t) 
         ],
       }),
     ]),
-    manifest([component({ packages: [packageRecord({ published_version: '0.9.0' })] })]),
   ]) {
     const manifestPath = path.join(root, 'ecosystem-manifest.json');
     fs.writeFileSync(manifestPath, JSON.stringify(candidate));
@@ -479,6 +481,17 @@ test('validator rejects schema 1, mixed legacy fields, and unknown fields', (t) 
     assert.equal(result.status, 1, `stdout=${result.stdout}\nstderr=${result.stderr}`);
     assert.match(result.stderr, /manifest schema/u);
   }
+
+  // an active package with published_version different from version is
+  // rejected by the validator (active published_version must equal version)
+  const activeDrift = writeManifest(root, [
+    component({
+      packages: [packageRecord({ published_version: '0.9.0' })],
+    }),
+  ]);
+  const driftResult = runValidator(activeDrift, root);
+  assert.equal(driftResult.status, 1);
+  assert.match(driftResult.stderr, /active published_version must equal version/u);
 });
 
 test('validator fails closed for a live component without evidence or checkout', (t) => {

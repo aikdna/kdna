@@ -468,6 +468,17 @@ if (validateSchema()) {
 
     for (const packageRecord of component.packages) {
       if (
+        packageRecord.release_status === 'active' &&
+        packageRecord.published_version !== undefined &&
+        packageRecord.published_version !== packageRecord.version
+      ) {
+        fail(
+          component,
+          'active published_version must equal version',
+          packageRecord.package_json,
+        );
+      }
+      if (
         packageRecord.release_status === 'candidate' &&
         compareStableVersions(packageRecord.version, packageRecord.published_version) <= 0
       ) {
