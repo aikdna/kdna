@@ -136,8 +136,7 @@ def _project_content(payload: Dict[str, Any], profile: str, manifest: Dict[str, 
             ),
             "patterns": _normalize_list(payload.get("patterns")),
         }
-        if "core_structure" in core:
-            content["core_structure"] = _project_core_structure(core.get("core_structure"))
+        content["core_structure"] = _project_core_structure(core.get("core_structure"))
         return content
     if profile == "scenario":
         return {"scenarios": payload.get("scenarios") or []}

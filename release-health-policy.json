@@ -6,19 +6,17 @@
       "repository": "aikdna/kdna-cli",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-cli",
-      "version": "0.35.1",
+      "version": "0.36.0",
       "canonical_tag": {
         "type": "natural"
-      },
-      "candidate_version": "0.36.0"
+      }
     },
     {
       "label": "KDNA MCP Server",
       "repository": "aikdna/kdna-skills",
       "package_json": "mcp-server/package.json",
       "npm_package": "@aikdna/kdna-mcp-server",
-      "version": "0.4.2",
-      "candidate_version": "0.5.0",
+      "version": "0.5.0",
       "canonical_tag": {
         "type": "prefix",
         "value": "v"
@@ -29,22 +27,20 @@
       "repository": "aikdna/kdna-studio-cli",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-studio-cli",
-      "version": "0.10.2",
+      "version": "0.11.0",
       "canonical_tag": {
         "type": "natural"
-      },
-      "candidate_version": "0.11.0"
+      }
     },
     {
       "label": "KDNA Studio Core",
       "repository": "aikdna/kdna-studio-core",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-studio-core",
-      "version": "2.0.2",
+      "version": "3.0.0",
       "canonical_tag": {
         "type": "natural"
-      },
-      "candidate_version": "3.0.0"
+      }
     },
     {
       "label": "KDNA Activation Server",
@@ -111,11 +107,10 @@
       "repository": "aikdna/kdna",
       "package_json": "packages/kdna-core/package.json",
       "npm_package": "@aikdna/kdna-core",
-      "version": "0.20.0",
+      "version": "0.21.0",
       "canonical_tag": {
         "type": "natural"
-      },
-      "candidate_version": "0.21.0"
+      }
     },
     {
       "label": "KDNA Eval",

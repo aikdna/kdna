@@ -31,14 +31,10 @@ function assertCurrentToolchainLock(lock) {
     Object.keys(lock.packages)
       .filter((location) => location.endsWith('/@aikdna/kdna-core'))
       .sort(),
-    [
-      CLI_NESTED_CORE_LOCK_PATH,
-      COMPAT_NESTED_CORE_LOCK_PATH,
-      ROOT_CORE_LOCK_PATH,
-    ].sort(),
+    [COMPAT_NESTED_CORE_LOCK_PATH, ROOT_CORE_LOCK_PATH].sort(),
     'the workspace lock must resolve the candidate Core plus the exact published 0.20.0 pair',
   );
-  for (const nestedPath of [CLI_NESTED_CORE_LOCK_PATH, COMPAT_NESTED_CORE_LOCK_PATH]) {
+  for (const nestedPath of [COMPAT_NESTED_CORE_LOCK_PATH]) {
     const nested = lock.packages[nestedPath];
     assert.equal(nested.version, '0.20.0');
     assert.equal(
@@ -52,18 +48,18 @@ function assertCurrentToolchainLock(lock) {
   }
 
   const cli = lock.packages[CLI_LOCK_PATH];
-  assert.equal(cli.version, '0.35.1');
+  assert.equal(cli.version, '0.36.0');
   assert.equal(
     cli.resolved,
-    'https://registry.npmjs.org/@aikdna/kdna-cli/-/kdna-cli-0.35.1.tgz',
+    'https://registry.npmjs.org/@aikdna/kdna-cli/-/kdna-cli-0.36.0.tgz',
   );
   assert.equal(
     cli.integrity,
-    'sha512-eAdceLAmQceS2/o7RPg2RB71ikd3g1xB85Fw9WJgPcvekBGriDti7XC0b4+LS7fZJdlokiz9tj7WsxlOTdP3Aw==',
+    'sha512-Uz7tIpGpNE5O3X2oFQTHKHKSI23TlquBcr0O9ybwfoaAcCmdtrPCQMbDj6fOdC7VMNWNx8Fty9LugvaIZKd4rQ==',
   );
   assert.deepEqual(cli.dependencies, {
-    '@aikdna/kdna-core': '0.20.0',
-    '@aikdna/kdna-eval': '0.3.2',
+    '@aikdna/kdna-core': '0.21.0',
+    'cbor-x': '1.6.4',
   });
 }
 
@@ -112,7 +108,7 @@ test('root lock resolves the compatibility package to one exact Core and CLI pai
   const rootPackage = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
   const lock = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package-lock.json'), 'utf8'));
 
-  assert.equal(rootPackage.devDependencies['@aikdna/kdna-cli'], '0.35.1');
+  assert.equal(rootPackage.devDependencies['@aikdna/kdna-cli'], '0.36.0');
   assert.deepEqual(lock.packages['packages/kdna'].dependencies, {
     '@aikdna/kdna-cli': '0.35.1',
     '@aikdna/kdna-core': '0.20.0',

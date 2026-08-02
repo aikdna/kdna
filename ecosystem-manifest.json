@@ -14,8 +14,8 @@
     {
       "repository": "aikdna/kdna",
       "local_path": ".",
-      "source_commit": "e6d1b27299eda46da58adca84def7c2b782ac883",
-      "conformance_commit": "76bbc587ce05f7e575c2373832cc5c9eee9df98a",
+      "source_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
+      "conformance_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
       "component_version": null,
       "artifacts": [],
       "packages": [
@@ -24,9 +24,9 @@
           "package_name": "@aikdna/kdna-core",
           "npm_package": "@aikdna/kdna-core",
           "version": "0.21.0",
-          "published_version": "0.20.0",
+          "published_version": "0.21.0",
           "lifecycle": "Pre-release",
-          "release_status": "candidate",
+          "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
           "recommended_entrypoint": "npm install @aikdna/kdna-core",
@@ -117,7 +117,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "b60d90af2f04ce50ab2443228ba270ea0f3303c7",
+      "source_commit": "bb86c55fa1107f2e266e106f38b12166eb862501",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -128,12 +128,12 @@
           "npm_package": "@aikdna/kdna-cli",
           "version": "0.36.0",
           "lifecycle": "Pre-release",
-          "release_status": "candidate",
+          "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
           "recommended_entrypoint": "npm install -g @aikdna/kdna-cli",
           "legacy_replacement": null,
-          "published_version": "0.35.1"
+          "published_version": "0.36.0"
         }
       ],
       "lifecycle": "Pre-release",
@@ -150,7 +150,7 @@
       "repository": "aikdna/kdna-assets",
       "local_path": "../kdna-assets",
       "source_commit": "4de5bb01f4216624e57ffa7ac901e982dd323d95",
-      "conformance_commit": "76bbc587ce05f7e575c2373832cc5c9eee9df98a",
+      "conformance_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
       "component_version": null,
       "packages": [],
       "artifacts": [
@@ -160,7 +160,7 @@
           "sha256": "4a90b91fe955ec3a563a7c2b598568f0eedbd04d3393211692490dfde2e09ffc",
           "release_tag": "0.1.1",
           "release_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
-          "conformance_commit": "76bbc587ce05f7e575c2373832cc5c9eee9df98a",
+          "conformance_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
           "kind": "kdna-asset",
           "lifecycle": "Experimental",
           "known_limitations": [
@@ -174,7 +174,7 @@
           "sha256": "d8513486bc033523359b8a582ca5d879d5ec01c926601d2fde34813a793c5ccf",
           "release_tag": "0.1.1",
           "release_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
-          "conformance_commit": "76bbc587ce05f7e575c2373832cc5c9eee9df98a",
+          "conformance_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
           "kind": "kdna-asset",
           "lifecycle": "Experimental",
           "known_limitations": [
@@ -197,7 +197,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "72a8cc51354cfdaf1e46241c861db73f980123d3",
+      "source_commit": "a960891739b1777efd9ded2951f2b4561ef56656",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -208,12 +208,12 @@
           "npm_package": "@aikdna/kdna-mcp-server",
           "version": "0.5.0",
           "lifecycle": "Experimental",
-          "release_status": "candidate",
+          "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
           "recommended_entrypoint": "npx @aikdna/kdna-mcp-server",
           "legacy_replacement": null,
-          "published_version": "0.4.2"
+          "published_version": "0.5.0"
         }
       ],
       "lifecycle": "Experimental",
@@ -229,7 +229,7 @@
     {
       "repository": "aikdna/kdna-studio-core",
       "local_path": "../kdna-studio-core",
-      "source_commit": "26595f1d72d4f49d1bb88f3c2f32c2d72ad34a37",
+      "source_commit": "5245b280ba2fdd5562a3953c8b6e284b0ab32db2",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -239,9 +239,9 @@
           "package_name": "@aikdna/kdna-studio-core",
           "npm_package": "@aikdna/kdna-studio-core",
           "version": "3.0.0",
-          "published_version": "2.0.2",
+          "published_version": "3.0.0",
           "lifecycle": "Pre-release",
-          "release_status": "candidate",
+          "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [
             "3.0.0 is a breaking candidate: published 2.x root exports and deep-import paths are not silently preserved"
@@ -263,7 +263,7 @@
     {
       "repository": "aikdna/kdna-studio-cli",
       "local_path": "../kdna-studio-cli",
-      "source_commit": "690a1e5ac13209d4b600e4d867a6f01714053e6f",
+      "source_commit": "8c5ba7fa4d1cfa524fd9ac0cc3f552ecd666be04",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -273,9 +273,9 @@
           "package_name": "@aikdna/kdna-studio-cli",
           "npm_package": "@aikdna/kdna-studio-cli",
           "version": "0.11.0",
-          "published_version": "0.10.2",
+          "published_version": "0.11.0",
           "lifecycle": "Pre-release",
-          "release_status": "candidate",
+          "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [
             "0.11.0 is bound to the unpublished Studio Core 3.0.0 breaking candidate"
@@ -295,7 +295,7 @@
     {
       "repository": "aikdna/kdna-activation-server",
       "local_path": "../kdna-activation-server",
-      "source_commit": "2f9ee46042d1a492c17631d2019d0bd5d83c8bcf",
+      "source_commit": "a0b3821bf8b88b700a7135c777c0db533f25287d",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -327,7 +327,7 @@
     {
       "repository": "aikdna/kdna-remote-server",
       "local_path": "../kdna-remote-server",
-      "source_commit": "c7258f87a57c82d36e78b5e362749da90b6cf236",
+      "source_commit": "6da650327b1eb8e211b9f0d510be9308f2e78f0c",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -359,7 +359,7 @@
     {
       "repository": "aikdna/kdna-web-server",
       "local_path": "../kdna-web-server",
-      "source_commit": "d8fcece8642dc1cf47e93a59213eab5b046654eb",
+      "source_commit": "5148ef337d0a3206b9b0e75f066cbfaca972c99f",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -520,8 +520,8 @@
     {
       "repository": "aikdna/kdna-core-swift",
       "local_path": "../kdna-core-swift",
-      "source_commit": "3a999e6d0d73a563e6646035c764acf9e67c46f5",
-      "conformance_commit": "76bbc587ce05f7e575c2373832cc5c9eee9df98a",
+      "source_commit": "cc335d5ed745529c04bcb51b7260185ec2ca84e8",
+      "conformance_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
       "release_tag": "v0.20.0",
       "release_commit": "4a9b732b590a711c544da5280a4b78f071369617",
       "component_version": "0.20.0",

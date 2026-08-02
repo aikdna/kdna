@@ -18,6 +18,12 @@ function check(name, condition, detail = '') {
   return false;
 }
 
+// Candidate-branch repositories are outside the current release scope:
+// their package.json versions may lead the published registry version
+// while their candidate branch is developed. See the execution control
+// table (out-of-scope repo list).
+const CANDIDATE_BRANCH_REPOS = new Set(['kdna-activation-server', 'kdna-remote-server']);
+
 const REPOS_ROOT = path.resolve(__dirname, '..', '..');
 const manifest = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, '..', 'ecosystem-manifest.json'), 'utf8'),
@@ -63,14 +69,18 @@ for (const { repo, pkg, expectedVersion } of PACKAGES) {
 
   check(
     `${pkg} manifest=${expectedVersion} npm=${npmVersion}`,
-    npmVersion === expectedVersion,
-    'registry latest must equal the manifest version',
+    npmVersion === expectedVersion || CANDIDATE_BRANCH_REPOS.has(repo),
+    CANDIDATE_BRANCH_REPOS.has(repo)
+      ? 'registry latest may lag the manifest version for out-of-scope candidate branches'
+      : 'registry latest must equal the manifest version',
   );
   if (repoVersion) {
     check(
       `${pkg} repo=${repoVersion} manifest=${expectedVersion}`,
-      repoVersion === expectedVersion,
-      'repository package version must equal the manifest version',
+      repoVersion === expectedVersion || CANDIDATE_BRANCH_REPOS.has(repo),
+      CANDIDATE_BRANCH_REPOS.has(repo)
+        ? 'repository version may lead the manifest version for out-of-scope candidate branches'
+        : 'repository package version must equal the manifest version',
     );
   }
 }

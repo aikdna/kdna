@@ -463,5 +463,5 @@ for (const profile of ['index', 'compact', 'scenario', 'full']) {
 test('load: unknown profile gives clear error', () => {
   const r = run(['load', minimalAsset, '--profile=nonexistent', '--as=json']);
   assert.notEqual(r.status, 0);
-  assert.match(r.stderr || r.stdout, /unknown/i);
+  assert.match(r.stderr || r.stdout, /unknown|invalid load profile/i);
 });

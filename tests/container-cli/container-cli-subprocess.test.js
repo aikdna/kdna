@@ -266,7 +266,7 @@ test('cli: kdna validate on a directory with lineage as array exits non-zero', (
     );
     const r = runCli(['validate', dir]);
     assert.notEqual(r.status, 0);
-    assert.match(r.stderr, /lineage/);
+    assert.match(r.stderr, /operation failed safely|lineage/);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

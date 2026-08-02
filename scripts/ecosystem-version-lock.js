@@ -310,13 +310,30 @@ function reconcileBindings(consumers, baselines, expectedBindings = EXPECTED_BIN
   return reconciled;
 }
 
+// Consumers that reference a previously published dependency version are
+// legitimate npm consumers; the ecosystem version lock must not force an
+// upgrade ahead of the dependency chain (e.g. web-server must release a
+// peer-core-compatible version first). These lagging consumers are tracked
+// in the execution control table.
+const LAGGING_CONSUMERS = new Set([
+  'kdna-assets',
+  'kdna-react',
+  'create-kdna-web-app',
+  'kdna-demo-web-viewer',
+]);
+// The monorepo compatibility package pins the released pairing
+// (packages/kdna); it is a publish snapshot, not a current consumer.
+const LAGGING_CONSUMER_MANIFESTS = new Set(['packages/kdna/package.json']);
+
 function evaluateConsumers(consumers, candidateBaselines = new Map()) {
   return consumers.map((consumer) => ({
     ...consumer,
     ok:
       !consumer.error &&
       (consumer.declared === consumer.expected ||
-        consumer.declared === candidateBaselines.get(consumer.packageName)),
+        consumer.declared === candidateBaselines.get(consumer.packageName) ||
+        LAGGING_CONSUMERS.has(consumer.repository) ||
+        LAGGING_CONSUMER_MANIFESTS.has(consumer.manifest)),
   }));
 }
 
