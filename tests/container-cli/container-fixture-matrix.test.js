@@ -379,7 +379,7 @@ test('validate: missing kdna.json fails', () => {
   const r = run(['validate', fixture]);
   assert.equal(r.status, 2);
   assert.equal(r.stdout, '');
-  assert.equal(r.stderr, 'Error: Target is not a KDNA container or source directory.\n');
+  assert.equal(r.stderr, `Error: Not a KDNA container or source directory: ${fixture}\n`);
 });
 
 test('validate: missing payload.kdnab fails', () => {

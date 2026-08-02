@@ -116,7 +116,7 @@ test('cli: kdna plan-load rejects an authoring source directory', () => {
   const r = runCli(['plan-load', exampleMinimal]);
   assert.equal(r.status, 2, `stdout=${r.stdout}\nstderr=${r.stderr}`);
   assert.equal(r.stdout, '');
-  assert.match(r.stderr, /explicit regular packaged \.kdna file is required/);
+  assert.match(r.stderr, /requires a packaged \.kdna asset file or installed package name/);
 });
 
 test('cli: kdna plan-load accepts a packaged .kdna asset', () => {
