@@ -9,7 +9,10 @@ import hashlib
 import json
 from typing import Any, Dict, List, Optional
 
+import cbor2
+
 from . import container
+from .crypto_profile import KDNADecryptionError, decrypt_password_entry
 from .plan import plan_load
 from .validate import compute_runtime_entry_set_digest
 
@@ -258,10 +261,24 @@ def load(
 ) -> Dict[str, Any]:
     """Load a packaged asset and return a Runtime Capsule (JS-equivalent shape).
 
-    Raises ValueError when the LoadPlan denies loading.
+    Raises ValueError when the LoadPlan denies loading. For a password-protected
+    asset, providing ``password`` authorizes the load: the credential is treated
+    as unverified until decryption succeeds (mirror of JS ``loadAuthorized``).
     """
     plan = plan_load(data, has_password=has_password, password=password, entitlement=entitlement)
-    if plan["can_load_now"] is not True:
+
+    # A password asset reports a supplied credential as unverified
+    # (KDNA_AUTH_PASSWORD_UNVERIFIED); a provided password authorizes us to try
+    # to load it — the real check is the decryption itself, which fails closed.
+    load_may_verify_password = (
+        bool(password)
+        and plan["state"] == "needs_password"
+        and any(
+            issue.get("code") == "KDNA_AUTH_PASSWORD_UNVERIFIED"
+            for issue in (plan.get("issues") or [])
+        )
+    )
+    if plan["can_load_now"] is not True and not load_may_verify_password:
         codes = [issue["code"] for issue in plan["issues"] if issue.get("code")]
         raise ValueError(
             f"LoadPlan denied loading: state={plan['state']} "
@@ -273,6 +290,25 @@ def load(
     if not isinstance(payload, dict):
         raise ValueError("payload is not a CBOR object")
     manifest = layout.manifest
+
+    payload_meta = manifest.get("payload") or {}
+    if payload_meta.get("encrypted"):
+        # Authorized load: decrypt the entry, then project the plaintext payload.
+        # Wrong password / tampered entry → KDNADecryptionError (fail closed).
+        if not password:
+            raise ValueError(
+                "this asset is password-protected; a password is required to load it"
+            )
+        plaintext = decrypt_password_entry(
+            payload,
+            entry_name=payload_meta.get("path", "payload.kdnab"),
+            manifest=manifest,
+            password=password,
+        )
+        decrypted = cbor2.loads(plaintext)
+        if not isinstance(decrypted, dict):
+            raise ValueError("decrypted payload is not a CBOR object")
+        payload = decrypted
 
     profiles = _available_profiles(payload)
     if profile not in profiles:

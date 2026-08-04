@@ -12,9 +12,15 @@ license = {text = "Apache-2.0"}
 dependencies = [
     "cbor2>=5.4",
     "jsonschema>=4.18",
+    # Authorized decryption (crypto_profile): AES-256-KW + AES-256-GCM.
+    "cryptography>=42",
 ]
 
 [project.optional-dependencies]
+# Argon2id is a per-slot KDF for the kdna.encryption.password profile. It is
+# OPTIONAL by design (RFC-0018 R4.3): a reader without it fails closed with
+# KDNA_KDF_UNSUPPORTED rather than downgrading. scrypt-sha256 is stdlib-only.
+argon2 = ["argon2-cffi>=23"]
 dev = ["pytest>=8", "black>=24", "mypy>=1"]
 
 [tool.setuptools.packages.find]

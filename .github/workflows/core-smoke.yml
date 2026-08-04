@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-cli
-          ref: bb86c55fa1107f2e266e106f38b12166eb862501
+          ref: f281cd5f8d60363bea64636916b98b5e6cb6ae1e
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
@@ -56,7 +56,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-skills
-          ref: a960891739b1777efd9ded2951f2b4561ef56656
+          ref: 9c3fa00128d87a7146e353c9cfde202a5f391f99
           path: .ecosystem-repos/kdna-skills
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
@@ -86,12 +86,12 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-cli
-          ref: 8c5ba7fa4d1cfa524fd9ac0cc3f552ecd666be04
+          ref: c0fc93759d245fb1700849f5783822f3b4268ebf
           path: .ecosystem-repos/kdna-studio-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-core
-          ref: 5245b280ba2fdd5562a3953c8b6e284b0ab32db2
+          ref: b315ac7a0142ba594649eb764c525ba752a21e12
           path: .ecosystem-repos/kdna-studio-core
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
@@ -121,7 +121,7 @@ jobs:
       - name: Install workspace deps
         run: node scripts/core-release-authority.js trusted-npm ci --ignore-scripts
       - name: Install fixed Python test dependencies
-        run: python -m pip install --disable-pip-version-check --no-input pytest==9.1.0 cbor2==6.1.4 jsonschema==4.26.0
+        run: python -m pip install --disable-pip-version-check --no-input pytest==9.1.0 cbor2==6.1.4 jsonschema==4.26.0 cryptography==50.0.0 argon2-cffi==25.1.0
       - name: Run core-smoke
         run: node scripts/core-release-authority.js trusted-npm run test:core-smoke
       - name: Run full kdna-core test suite
