@@ -174,7 +174,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-cli
-          ref: f281cd5f8d60363bea64636916b98b5e6cb6ae1e
+          ref: 6841900df1df876f2b6e300b1416b4a9186c0aba
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
