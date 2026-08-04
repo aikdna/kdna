@@ -36,7 +36,7 @@
     },
     "signature": { "$ref": "#/$defs/signature" },
     "access": { "enum": ["public", "licensed", "remote"] },
-    "profile": { "enum": ["index", "compact", "scenario", "full"] },
+    "profile": { "enum": ["index", "compact", "scenario", "full", "minimal"] },
     "context": { "type": "object" },
     "trace": { "$ref": "#/$defs/trace" }
   },
@@ -106,7 +106,7 @@
         "runtime_eligible": { "const": true },
         "schema_valid": { "const": true },
         "signature_state": { "const": "absent" },
-        "profile": { "enum": ["index", "compact", "scenario", "full"] },
+        "profile": { "enum": ["index", "compact", "scenario", "full", "minimal"] },
         "projection_report": { "$ref": "#/$defs/projectionReport" }
       }
     },

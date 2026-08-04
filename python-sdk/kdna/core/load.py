@@ -143,15 +143,47 @@ def _project_content(payload: Dict[str, Any], profile: str, manifest: Dict[str, 
         return content
     if profile == "scenario":
         return {"scenarios": payload.get("scenarios") or []}
+    if profile == "minimal":
+        # RFC-0020: minimal projects the core judgment surface a small model
+        # needs: highest_question + boundary-friendly axioms + full boundaries.
+        # Mirror of JS projectMinimalAxiom: deterministic reduction, no inference.
+        return {
+            "highest_question": core.get("highest_question"),
+            "axioms": [
+                axiom
+                for axiom in (_project_minimal_axiom(a) for a in (core.get("axioms") or []))
+                if axiom is not None
+            ],
+            "boundaries": _normalize_list(core.get("boundaries")),
+        }
     if profile == "full":
         return {"manifest": copy.deepcopy(manifest), "payload": copy.deepcopy(payload)}
     raise ValueError(f"unknown load profile: {profile}")
 
 
-def _available_profiles(payload: Dict[str, Any]) -> List[str]:
+def _project_minimal_axiom(axiom: Any) -> Optional[Dict[str, Any]]:
+    normalized = _normalize_compact_axiom(axiom)
+    if normalized is None:
+        return None
+    return {
+        "type": "axiom_applicability",
+        "id": normalized.get("id"),
+        "one_sentence": normalized.get("one_sentence"),
+        "does_not_apply_when": normalized.get("does_not_apply_when") or [],
+        "failure_risk": normalized.get("failure_risk"),
+    }
+
+
+def _available_profiles(payload: Dict[str, Any], manifest: Optional[Dict[str, Any]] = None) -> List[str]:
     profiles = ["index"]
     if isinstance(payload.get("core"), dict):
         profiles.append("compact")
+        # RFC-0020: minimal availability follows the manifest declaration, not
+        # payload inference. An asset that declares minimal in load_contract
+        # (and carries core judgment) may be projected minimally.
+        load_contract = (manifest or {}).get("load_contract") or {}
+        if "minimal" in (load_contract.get("profiles") or {}):
+            profiles.append("minimal")
     if payload.get("scenarios"):
         profiles.append("scenario")
     profiles.append("full")
@@ -310,7 +342,7 @@ def load(
             raise ValueError("decrypted payload is not a CBOR object")
         payload = decrypted
 
-    profiles = _available_profiles(payload)
+    profiles = _available_profiles(payload, manifest)
     if profile not in profiles:
         raise ValueError(f"unknown load profile: {profile}")
 

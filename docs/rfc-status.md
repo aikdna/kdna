@@ -12,6 +12,7 @@ KDNA Core surface.
 | RFC-0013 | Judgment Asset Lifecycle | Withdrawn | Archived; no Core fields or behavior were adopted. |
 | RFC-0014 | KDNA Card extension | Withdrawn | Archived; no proposed Card extension fields were adopted. |
 | RFC-0015 | Runtime Trace extension | Withdrawn | Archived; use the maintained trace schema and documentation. |
+| RFC-0020 | Minimal projection profile | Draft | Additive fifth load profile; defined in `load-profiles.md`. |
 
 The canonical protocol is [SPEC.md](../SPEC.md). Runtime behavior is described
 by released package documentation. A draft RFC never establishes a compatibility
