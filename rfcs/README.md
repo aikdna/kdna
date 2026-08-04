@@ -28,6 +28,34 @@ Current initial RFC set:
 - `superseded` — replaced by a newer RFC.
 - `withdrawn` — intentionally abandoned.
 
+## Feature Lifecycle
+
+Every protocol feature (a format field, profile, command, or wire contract)
+carries one lifecycle state, independent of its RFC state:
+
+- `Active` — part of the current contract; implementations must support it.
+- `Deprecated` — still supported but scheduled for removal; implementations
+  SHOULD warn on use and migrate callers.
+- `Removed` — no longer part of the contract; implementations must reject it
+  fail-closed.
+
+A feature moves `Active -> Deprecated -> Removed`. A feature is never removed
+without first passing through `Deprecated`.
+
+## Deprecation Window
+
+A deprecated feature stays supported for at least **12 months** after the
+deprecation is announced in an `active` RFC before it may move to `Removed`
+(modeled on the Model Context Protocol's deprecation practice). During the
+window:
+
+- The deprecation RFC names the feature, the replacement, and the removal date.
+- Implementations SHOULD emit a machine-readable deprecation notice on use.
+- The removal date may be extended, but never moved earlier, once announced.
+
+A feature that never had an `Active` window (a withdrawn draft) may be removed
+without a deprecation window.
+
 ## Required Sections
 
 Every RFC should include: summary, motivation, normative rules,
