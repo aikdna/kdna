@@ -175,21 +175,26 @@ def decrypt_password_entry(
         raise KDNADecryptionError(
             f"unsupported encrypted entry key_wrapping: {envelope.get('key_wrapping') or 'unknown'}"
         )
+    # The declared KDF is a contract, not a hint (mirror JS crypto-profile.js,
+    # which validates kdf before branching on password vs recovery). A tampered
+    # kdf must fail closed on both the password and the recovery path.
+    if profile == PASSWORD_PROFILE:
+        if envelope.get("kdf") != PASSWORD_KDF:
+            raise KDNADecryptionError(
+                f"unsupported encrypted entry kdf: {envelope.get('kdf') or 'unknown'}"
+            )
+    else:  # PASSWORD_SCRYPT_PROFILE
+        if envelope.get("kdf") != SCRYPT_KDF:
+            raise KDNADecryptionError(
+                f"unsupported encrypted entry kdf: {envelope.get('kdf') or 'unknown'}"
+            )
 
     if password is not None:
         if not isinstance(password, str) or not password:
             raise KDNADecryptionError("password must be a non-empty string")
         if profile == PASSWORD_PROFILE:
-            if envelope.get("kdf") != PASSWORD_KDF:
-                raise KDNADecryptionError(
-                    f"unsupported encrypted entry kdf: {envelope.get('kdf') or 'unknown'}"
-                )
             kek = _derive_argon2id_key(password, envelope.get("password_kdf") or {})
         else:  # PASSWORD_SCRYPT_PROFILE
-            if envelope.get("kdf") != SCRYPT_KDF:
-                raise KDNADecryptionError(
-                    f"unsupported encrypted entry kdf: {envelope.get('kdf') or 'unknown'}"
-                )
             kek = _derive_scrypt_key(password, envelope.get("scrypt_params") or {})
         wrapped = _find_slot(envelope, "password")
     elif recovery_code is not None:

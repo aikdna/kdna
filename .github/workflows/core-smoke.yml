@@ -121,7 +121,7 @@ jobs:
       - name: Install workspace deps
         run: node scripts/core-release-authority.js trusted-npm ci --ignore-scripts
       - name: Install fixed Python test dependencies
-        run: python -m pip install --disable-pip-version-check --no-input pytest==9.1.0 cbor2==6.1.4 jsonschema==4.26.0
+        run: python -m pip install --disable-pip-version-check --no-input pytest==9.1.0 cbor2==6.1.4 jsonschema==4.26.0 cryptography==50.0.0 argon2-cffi==25.1.0
       - name: Run core-smoke
         run: node scripts/core-release-authority.js trusted-npm run test:core-smoke
       - name: Run full kdna-core test suite

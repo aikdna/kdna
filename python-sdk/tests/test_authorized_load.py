@@ -6,7 +6,10 @@ Proves the Python Core can:
    the password-valid fixture decrypts and projects a compact capsule;
 3. fail closed on a wrong password, tampered entry, missing credential;
 4. KDF non-collapse (RFC-0018 R4.3): an Argon2id slot without argon2-cffi
-   reports KDNA_KDF_UNSUPPORTED instead of downgrading to scrypt.
+   reports KDNA_KDF_UNSUPPORTED instead of downgrading to scrypt;
+5. the declared ``kdf`` is validated before the password/recovery branch, so a
+   tampered kdf fails closed on the recovery path too (mirror of JS
+   ``decryptProtectedEntry``).
 
 Fixtures come from the committed ``conformance/authorization`` tree; the
 unpacked fixture directories are packed back into containers with the SDK's
@@ -15,17 +18,22 @@ own deterministic pack (same as the JS authorization conformance test).
 
 from __future__ import annotations
 
+import base64
 import builtins
 import json
 from pathlib import Path
 
 import pytest
+from cryptography.hazmat.primitives.keywrap import aes_key_unwrap, aes_key_wrap
 
 from kdna.core import load, pack_source, plan_load
 from kdna.core.crypto_profile import (
     KDNADecryptionError,
     decrypt_password_entry,
     PASSWORD_PROFILE,
+    _decode_recovery_code,
+    _derive_argon2id_key,
+    _find_slot,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -50,6 +58,24 @@ def _envelope_and_manifest(fixture: str):
     manifest = json.loads((base / "kdna.json").read_text())
     envelope = cbor2.loads((base / "payload.kdnab").read_bytes())
     return envelope, manifest
+
+
+def _with_recovery_slot(envelope, recovery_code: str):
+    """Add a recovery key slot wrapping the same CEK as the password slot.
+
+    Mirrors JS ``encryptProtectedEntry``: unwrap the CEK from the password
+    slot, then wrap it again with the recovery code key.
+    """
+    password_slot = _find_slot(envelope, "password")
+    kek = _derive_argon2id_key(PASSWORD, envelope["password_kdf"])
+    cek = aes_key_unwrap(kek, password_slot)
+    recovery_key = _decode_recovery_code(recovery_code)
+    wrapped = aes_key_wrap(recovery_key, cek)
+    enriched = dict(envelope)
+    enriched["key_slots"] = list(envelope["key_slots"]) + [
+        {"slot": "recovery", "wrap": "AES-256-KW", "wrapped_key": base64.b64encode(wrapped).decode()}
+    ]
+    return enriched
 
 
 # -- plan decisions ----------------------------------------------------------
@@ -166,3 +192,36 @@ def test_profile_constant_matches_manifest_schema() -> None:
     # The decryption profile is the same identifier the manifest schema allows.
     envelope, _ = _envelope_and_manifest("password-valid")
     assert envelope["profile"] == PASSWORD_PROFILE
+
+
+RECOVERY_CODE = "kdna-recover-00112233445566778899aabbccddeeff-00112233445566778899aabbccddeeff"
+
+
+def test_recovery_code_decrypts_with_untampered_kdf() -> None:
+    # Sanity: the recovery path itself works when the kdf field is intact.
+    envelope, manifest = _envelope_and_manifest("password-valid")
+    enriched = _with_recovery_slot(envelope, RECOVERY_CODE)
+    plaintext = decrypt_password_entry(
+        enriched,
+        entry_name=manifest["payload"]["path"],
+        manifest=manifest,
+        recovery_code=RECOVERY_CODE,
+    )
+    assert plaintext  # non-empty plaintext proves the recovery unwrap + GCM tag verified
+
+
+def test_tampered_kdf_fails_closed_on_recovery_path() -> None:
+    # Mirror JS decryptProtectedEntry: the declared kdf is validated before the
+    # password/recovery branch, so a tampered kdf must fail closed even when a
+    # correct recovery code is supplied.
+    envelope, manifest = _envelope_and_manifest("password-valid")
+    enriched = _with_recovery_slot(envelope, RECOVERY_CODE)
+    tampered = dict(enriched, kdf="scrypt-sha256")
+    with pytest.raises(KDNADecryptionError) as excinfo:
+        decrypt_password_entry(
+            tampered,
+            entry_name=manifest["payload"]["path"],
+            manifest=manifest,
+            recovery_code=RECOVERY_CODE,
+        )
+    assert "kdf" in str(excinfo.value)
