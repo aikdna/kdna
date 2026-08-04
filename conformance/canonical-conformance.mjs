@@ -371,3 +371,40 @@ test('integration: pack → unpack → validate', () => {
   assert.ok(fs.existsSync(path.join(out, 'payload.kdnab')));
   assert.equal(core.validate(out).overall_valid, true);
 });
+
+test('integration: minimal projection is boundary-friendly and declared-only', () => {
+  const f = buildFixture('minimal', {
+    load_contract: {
+      default_profile: 'compact',
+      profiles: {
+        index: {},
+        compact: { max_tokens_hint: 5000 },
+        minimal: { max_tokens_hint: 900 },
+        scenario: {},
+        full: {},
+      },
+    },
+  });
+  assert.equal(core.validate(f.kdna).overall_valid, true);
+  const minimal = core.loadAuthorized(f.kdna, { profile: 'minimal', as: 'json' });
+  assert.equal(minimal.profile, 'minimal');
+  assert.equal(minimal.context.highest_question, 'Conformance test.');
+  assert.equal(minimal.context.axioms.length, 1);
+  assert.equal(minimal.context.axioms[0].one_sentence, 'Test axiom.');
+  assert.deepEqual(minimal.context.axioms[0].does_not_apply_when, []);
+  assert.equal(minimal.context.axioms[0].failure_risk, 'None.');
+  assert.equal(minimal.context.boundaries.length, 1);
+  // minimal must not leak compact-only content (patterns)
+  assert.equal(minimal.context.patterns, undefined);
+
+  // compact remains a strict superset
+  const compact = core.loadAuthorized(f.kdna, { profile: 'compact', as: 'json' });
+  assert.ok(Array.isArray(compact.context.patterns) && compact.context.patterns.length > 0);
+});
+
+test('integration: minimal fails closed when not declared in load_contract', () => {
+  const f = buildFixture('minimal-undec', {}); // no load_contract, no minimal
+  const denied = core.loadAuthorized(f.kdna, { profile: 'minimal', as: 'json' });
+  assert.equal(denied.profile, 'minimal');
+  assert.deepEqual(denied.context, {});
+});
