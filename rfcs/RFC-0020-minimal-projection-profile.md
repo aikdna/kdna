@@ -170,12 +170,30 @@ New positive and negative fixtures:
 
 ## 5. Token budget
 
-The default `max_tokens_hint` for `minimal` is left as a TBD anchor pending
-the kdnawork J-Bench small-model sweep (B1). The measured baseline for the
-reference assets is ~800-1,100 tokens for the boundary-friendly projection
-(one_sentence axioms + does_not_apply_when + failure_risk + boundaries),
-versus ~5.4k tokens for `compact`. The sweep data will backfill the exact
-hint; no number is hard-coded before that measurement.
+The default `max_tokens_hint` for `minimal` is **1200 tokens**.
+
+Two measurements back this anchor:
+
+1. **Projection size (measured on the reference assets).** The
+   boundary-friendly projection (one_sentence axioms + does_not_apply_when +
+   failure_risk + boundaries) measures ~800-1,100 tokens on
+   `laozi-wuwei-0.1.1` and `epictetus-control-and-character-0.1.1`, versus
+   ~5.4k tokens for `compact` on the same assets. `minimal` is therefore a
+   context/cost/latency reduction, not a content addition.
+
+2. **Small-model injection sweep (kdnawork, 2-4B local models, 2026-08-04).**
+   A full-factor A/B sweep on a discriminating private-rule suite (runs=3,
+   0 INVALID) compared full-payload injection against the reduced injection
+   on two recommended local models. Injection size made no significant
+   quality difference: qwen3.5:4b scored 12/12 (full) vs 11/12 (reduced);
+   llama3.2:3b scored 11/12 at both sizes. The reduced injection costs
+   ~540 characters versus ~6,000 for the full payload.
+
+**Value positioning.** `minimal` is justified by cost, context-window, and
+latency savings for context-constrained models. This RFC makes **no
+quality-improvement claim**: the sweep found the reduced injection does not
+measureably outperform the larger one, and `minimal` is a strict subset of
+`compact`. A consumer that needs the fuller surface loads `compact`.
 
 ## 6. Content neutrality
 
