@@ -197,7 +197,7 @@
     {
       "repository": "aikdna/kdna-skills",
       "local_path": "../kdna-skills",
-      "source_commit": "a960891739b1777efd9ded2951f2b4561ef56656",
+      "source_commit": "9c3fa00128d87a7146e353c9cfde202a5f391f99",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
