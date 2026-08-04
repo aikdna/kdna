@@ -1,0 +1,37 @@
+{
+  "name": "@aikdna/kdna-conformance",
+  "version": "0.1.0",
+  "description": "KDNA conformance suite: fixtures, runner, and hostile cases for third-party implementations to prove the current asset-first KDNA contract.",
+  "type": "commonjs",
+  "main": "index.js",
+  "bin": {
+    "kdna-conformance": "bin/kdna-conformance.js"
+  },
+  "files": [
+    "index.js",
+    "bin/",
+    "fixtures/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/",
+    "conformance": "node bin/kdna-conformance.js"
+  },
+  "dependencies": {
+    "@aikdna/kdna-core": "0.21.0",
+    "cbor-x": "^1.6.4"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aikdna/kdna.git",
+    "directory": "packages/kdna-conformance"
+  },
+  "keywords": [
+    "kdna",
+    "conformance",
+    "judgment-asset",
+    "conformance-testing"
+  ]
+}
