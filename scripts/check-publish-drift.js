@@ -83,6 +83,27 @@ for (const { repo, pkg, expectedVersion } of PACKAGES) {
         : 'repository package version must equal the manifest version',
     );
   }
+
+  // Pre-publish narrative gate: the in-package README and its Chinese mirror
+  // must not advertise a different "latest" version than the one being
+  // published. A stale "latest is X" claim misleads installers.
+  if (!CANDIDATE_BRANCH_REPOS.has(repo)) {
+    for (const readmeName of ['README.md', 'README.zh.md']) {
+      const readmePath = path.join(repoPath, readmeName);
+      if (!fs.existsSync(readmePath)) continue;
+      const readmeText = fs.readFileSync(readmePath, 'utf8');
+      const latestClaim = readmeText.match(
+        /(?:registry\s+`?latest`?\s*(?:release)?\s*(?:is|为|是)?\s*`?|latest`?\s*(?:is|为|是)\s*`?)(\d+\.\d+\.\d+)/i,
+      );
+      if (latestClaim) {
+        check(
+          `${pkg} ${readmeName} latest-claim=${latestClaim[1]} manifest=${expectedVersion}`,
+          latestClaim[1] === expectedVersion,
+          `${readmeName} latest-version claim must equal the manifest version`,
+        );
+      }
+    }
+  }
 }
 
 console.log(
