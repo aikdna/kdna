@@ -101,7 +101,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-web-server
-          ref: 5148ef337d0a3206b9b0e75f066cbfaca972c99f
+          ref: a4dce0b636193d604e39b383cdcf8f5a897b3872
           path: .ecosystem-repos/kdna-web-server
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:

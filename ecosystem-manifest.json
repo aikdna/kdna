@@ -359,7 +359,7 @@
     {
       "repository": "aikdna/kdna-web-server",
       "local_path": "../kdna-web-server",
-      "source_commit": "5148ef337d0a3206b9b0e75f066cbfaca972c99f",
+      "source_commit": "a4dce0b636193d604e39b383cdcf8f5a897b3872",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -368,7 +368,7 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-web-server",
           "npm_package": "@aikdna/kdna-web-server",
-          "version": "0.3.0",
+          "version": "0.3.1",
           "lifecycle": "Experimental",
           "release_status": "active",
           "dependency_policy": "current",
