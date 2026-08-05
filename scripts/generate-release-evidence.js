@@ -25,6 +25,10 @@ const knownPackages = {
     label: 'eval',
     path: path.join(repoRoot, 'packages', 'kdna-eval'),
   },
+  conformance: {
+    label: 'conformance',
+    path: path.join(repoRoot, 'packages', 'kdna-conformance'),
+  },
 };
 
 function validateKnownPackages(
