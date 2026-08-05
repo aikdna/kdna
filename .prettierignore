@@ -7,3 +7,4 @@ python-sdk/.venv/
 python-sdk/.mypy_cache/
 packages/
 benchmarks/raw/
+docs/inspector/index.html

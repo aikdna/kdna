@@ -12,7 +12,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT_PATH = path.join(ROOT, 'docs', 'inspector', 'index.html');
 
 if (!fs.existsSync(OUT_PATH)) {
-  console.error('check:asset-inspector: docs/inspector/index.html is missing; run npm run build:asset-inspector');
+  console.error(
+    'check:asset-inspector: docs/inspector/index.html is missing; run npm run build:asset-inspector',
+  );
   process.exit(1);
 }
 
