@@ -2992,15 +2992,23 @@ function loadAssetUnsafe(inputPath, opts = {}) {
     const c = result.content;
     const compactHasNoPromptContent =
       result.profile === 'compact' && !hasCompactPromptContent(c);
+    const minimalHasNoPromptContent =
+      result.profile === 'minimal' && !hasMinimalPromptContent(c);
     const legacyProfileHasNoPromptContent =
       result.profile !== 'compact' &&
+      result.profile !== 'minimal' &&
       c &&
       c.scenarios &&
       c.scenarios.length === 0 &&
       !c.highest_question &&
       !(c.axioms && c.axioms.length) &&
       !(c.boundaries && c.boundaries.length);
-    if (!c || compactHasNoPromptContent || legacyProfileHasNoPromptContent) {
+    if (
+      !c ||
+      compactHasNoPromptContent ||
+      minimalHasNoPromptContent ||
+      legacyProfileHasNoPromptContent
+    ) {
       return {
         status: result.status,
         profile: result.profile,
