@@ -117,6 +117,7 @@ Protected, licensed, remote, and native-app loading behavior is specified here:
 - [Runtime projection](./specs/kdna-runtime-projection.md)
 - [Import security](./specs/kdna-import-security.md)
 - [Apple native runtime integration](./docs/apple-native-runtime-integration.md)
+- [SPEC-INDEX: every normative specification](./SPEC-INDEX.md)
 
 Ordinary Core loading remains fail-closed for `access: "remote"`. Self-hosted
 Runtime deployers that control the packaged server-side asset use the explicit
