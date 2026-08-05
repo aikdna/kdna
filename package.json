@@ -2,7 +2,7 @@
   "name": "@aikdna/kdna-monorepo",
   "version": "0.7.0",
   "private": true,
-  "description": "KDNA Core — official KDNA judgment-asset format, runtime loading contract, and official toolchain.",
+  "description": "KDNA Core \u2014 official KDNA judgment-asset format, runtime loading contract, and official toolchain.",
   "type": "commonjs",
   "scripts": {
     "lint": "eslint packages/kdna-core/src/",
@@ -57,7 +57,9 @@
     "kdna:pack": "node packages/kdna/bin/kdna.js pack",
     "kdna:unpack": "node packages/kdna/bin/kdna.js unpack",
     "test:container-cli": "node scripts/run-node-tests.js tests/container-cli/*.test.js",
-    "pretest": "node scripts/core-smoke.js"
+    "pretest": "node scripts/core-smoke.js",
+    "build:asset-inspector": "node scripts/build-asset-inspector.mjs",
+    "check:asset-inspector": "node scripts/check-asset-inspector.mjs"
   },
   "license": "Apache-2.0",
   "repository": {
@@ -73,6 +75,7 @@
   ],
   "devDependencies": {
     "@aikdna/kdna-cli": "0.36.0",
+    "@aikdna/kdna-web-client": "0.2.2",
     "@eslint/js": "^10.0.1",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",

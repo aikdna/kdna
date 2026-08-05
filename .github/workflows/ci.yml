@@ -29,6 +29,8 @@ jobs:
           node scripts/core-release-authority.js trusted-npm run test:release-health
           node --test scripts/core-release-authority.test.js
           node scripts/core-release-authority.js trusted-npm run audit:post-cutover
+      - name: Verify the single-file asset inspector is fresh
+        run: node scripts/core-release-authority.js trusted-npm run check:asset-inspector
       - run: node scripts/core-release-authority.js trusted-npm test
       - name: Remove the trusted npm release bytes
         if: always()

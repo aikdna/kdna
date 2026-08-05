@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KDNA Asset Inspector</title>
+<meta name="description" content="Inspect a .kdna asset entirely in your browser. Nothing is uploaded." />
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: #161b23;
+    --panel-2: #1d242f;
+    --border: #2a3342;
+    --text: #e6ebf2;
+    --muted: #93a0b4;
+    --accent: #4da3ff;
+    --ok: #3fb96f;
+    --err: #e5534b;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 32px 20px 64px; }
+  header h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: 0.2px; }
+  header p.sub { margin: 0 0 24px; color: var(--muted); font-size: 14px; }
+  .privacy {
+    display: inline-block; margin-bottom: 20px; padding: 6px 12px;
+    border: 1px solid var(--border); border-radius: 999px;
+    color: var(--muted); font-size: 13px; background: var(--panel);
+  }
+  .privacy b { color: var(--ok); font-weight: 600; }
+  #drop {
+    border: 2px dashed var(--border); border-radius: 12px;
+    background: var(--panel); padding: 48px 24px; text-align: center;
+    cursor: pointer; transition: border-color 0.15s, background 0.15s;
+  }
+  #drop.over { border-color: var(--accent); background: var(--panel-2); }
+  #drop .big { font-size: 16px; margin-bottom: 6px; }
+  #drop .hint { color: var(--muted); font-size: 13px; }
+  #file { display: none; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; margin-top: 20px;
+  }
+  .card h2 { font-size: 15px; margin: 0 0 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; }
+  .kv { display: grid; grid-template-columns: 160px 1fr; gap: 8px 16px; font-size: 14px; }
+  .kv dt { color: var(--muted); }
+  .kv dd { margin: 0; word-break: break-word; }
+  .badge {
+    display: inline-block; padding: 1px 8px; border-radius: 999px;
+    font-size: 12px; border: 1px solid var(--border); color: var(--muted);
+    margin-right: 6px; font-family: var(--mono);
+  }
+  .badge.ok { color: var(--ok); border-color: var(--ok); }
+  .badge.warn { color: #d29922; border-color: #d29922; }
+  .error {
+    border-color: var(--err);
+  }
+  .error h2 { color: var(--err); }
+  .error .code { font-family: var(--mono); font-size: 13px; color: var(--err); }
+  .error .msg { margin-top: 8px; font-size: 14px; }
+  details { margin-top: 16px; }
+  summary { cursor: pointer; color: var(--accent); font-size: 14px; user-select: none; }
+  pre {
+    background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px; overflow: auto; font-family: var(--mono); font-size: 12.5px;
+    max-height: 420px; white-space: pre-wrap; word-break: break-word;
+  }
+  footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; }
+  footer code { font-family: var(--mono); }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  #status { margin-top: 16px; font-size: 14px; color: var(--muted); min-height: 20px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>KDNA Asset Inspector</h1>
+    <p class="sub">Open a <code>.kdna</code> file to inspect its container, manifest, and load contract.</p>
+  </header>
+
+  <span class="privacy"><b>Private by design</b> &mdash; parsing happens entirely in your browser; the file is never uploaded.</span>
+
+  <div id="drop" role="button" tabindex="0" aria-label="Choose or drop a .kdna file">
+    <div class="big">Drop a <strong>.kdna</strong> file here, or click to choose one</div>
+    <div class="hint">The container structure, manifest, and load profiles are validated locally and shown below.</div>
+  </div>
+  <input id="file" type="file" accept=".kdna,application/vnd.kdna.asset" />
+  <div id="status" aria-live="polite"></div>
+
+  <div id="result"></div>
+
+  <footer>
+    Inspector uses <code>@aikdna/kdna-web-client@__KDNA_WEB_CLIENT_VERSION__</code>
+    (inlined bundle sha256:<code>__KDNA_WEB_CLIENT_DIGEST__</code>&hellip;).
+    Source and protocol specs: <a href="https://github.com/aikdna/kdna">aikdna/kdna</a>.
+    A valid container proves structure, not judgment quality.
+  </footer>
+</div>
+
+<script type="module">
+/*__KDNA_WEB_CLIENT_BUNDLE__*/
+
+const drop = document.getElementById('drop');
+const fileInput = document.getElementById('file');
+const status = document.getElementById('status');
+const result = document.getElementById('result');
+
+drop.addEventListener('click', () => fileInput.click());
+drop.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    fileInput.click();
+  }
+});
+drop.addEventListener('dragover', (event) => {
+  event.preventDefault();
+  drop.classList.add('over');
+});
+drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+drop.addEventListener('drop', (event) => {
+  event.preventDefault();
+  drop.classList.remove('over');
+  const file = event.dataTransfer?.files?.[0];
+  if (file) inspect(file);
+});
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files?.[0];
+  if (file) inspect(file);
+  fileInput.value = '';
+});
+
+function el(tag, attrs = {}, children = []) {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(attrs)) {
+    if (key === 'class') node.className = value;
+    else if (key === 'text') node.textContent = value;
+    else node.setAttribute(key, value);
+  }
+  for (const child of [].concat(children)) {
+    node.append(child);
+  }
+  return node;
+}
+
+function formatBytes(bytes) {
+  if (!Number.isFinite(bytes)) return 'unknown';
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
+
+async function inspect(file) {
+  result.replaceChildren();
+  status.textContent = `Reading ${file.name}…`;
+  try {
+    const meta = await readKDNAMetadata(file);
+    status.textContent = '';
+    result.append(renderMetadata(file, meta));
+  } catch (error) {
+    status.textContent = '';
+    result.append(renderError(file, error));
+  }
+}
+
+function renderMetadata(file, meta) {
+  const card = el('section', { class: 'card' });
+  card.append(el('h2', { text: 'Asset metadata' }));
+
+  const kv = el('dl', { class: 'kv' });
+  const rows = [
+    ['File', `${file.name} (${formatBytes(meta.fileSize)})`],
+    ['Domain / asset id', meta.domain ?? '—'],
+    ['Version', meta.version ?? '—'],
+    ['Title', meta.title ?? '—'],
+    ['Description', meta.description ?? '—'],
+  ];
+  for (const [label, value] of rows) {
+    kv.append(el('dt', { text: label }));
+    kv.append(el('dd', { text: String(value) }));
+  }
+  kv.append(el('dt', { text: 'Encrypted payload' }));
+  kv.append(el('dd', {}, [
+    el('span', { class: `badge ${meta.encrypted ? 'warn' : 'ok'}`, text: meta.encrypted ? 'yes' : 'no' }),
+  ]));
+  kv.append(el('dt', { text: 'Load profiles' }));
+  kv.append(el('dd', {}, meta.profiles.length
+    ? meta.profiles.map((profile) => el('span', { class: 'badge', text: profile }))
+    : [el('span', { text: '—' })]));
+  kv.append(el('dt', { text: 'Container entries' }));
+  kv.append(el('dd', { text: meta.entries.join(', ') }));
+  card.append(kv);
+
+  const details = el('details');
+  details.append(el('summary', { text: 'Full manifest (kdna.json)' }));
+  details.append(el('pre', { text: JSON.stringify(meta.manifest, null, 2) }));
+  card.append(details);
+
+  return card;
+}
+
+function renderError(file, error) {
+  const card = el('section', { class: 'card error' });
+  card.append(el('h2', { text: 'Rejected' }));
+  const code = error && typeof error.code === 'string' ? error.code : 'KDNA_UNKNOWN_ERROR';
+  card.append(el('div', { class: 'code', text: `${file.name} — ${code}` }));
+  card.append(el('div', { class: 'msg', text: error?.message ?? 'The file could not be read as a KDNA asset.' }));
+  card.append(el('div', { class: 'msg', text: 'The inspector fails closed: any structural problem rejects the whole file.' }));
+  return card;
+}
+</script>
+</body>
+</html>
