@@ -24,7 +24,7 @@ Measured against the reference assets (`laozi-wuwei-0.1.1`,
 - `self_checks`: ~4%
 
 For small local models (2-4B parameter, the kdnawork local cold-start tier:
-qwen2.5:3b/1.5b, llama3.2:3b, gemma2:2b, phi3:mini) this is too large.
+qwen3.5:4b, llama3.2:3b) this is too large.
 `compact` at 5.4k tokens exceeds the entire context window of a 4K-context
 model and consumes most of an 8K window. Consumers currently work around this
 by hand-trimming or hard-capping the CLI output (a measured 12k-char cap in
