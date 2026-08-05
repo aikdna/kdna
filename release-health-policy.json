@@ -67,7 +67,7 @@
       "repository": "aikdna/kdna-web-server",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-web-server",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "canonical_tag": {
         "type": "natural"
       }
