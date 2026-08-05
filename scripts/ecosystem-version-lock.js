@@ -322,6 +322,7 @@ const LAGGING_CONSUMERS = new Set([
   'kdna-react',
   'create-kdna-web-app',
   'kdna-demo-web-viewer',
+  'kdna-web-client',
 ]);
 // The monorepo compatibility package pins the released pairing
 // (packages/kdna); it is a publish snapshot, not a current consumer.
