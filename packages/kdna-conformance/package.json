@@ -16,7 +16,9 @@
   ],
   "scripts": {
     "test": "node --test test/",
-    "conformance": "node bin/kdna-conformance.js"
+    "conformance": "node bin/kdna-conformance.js",
+    "release:check": "node ../../scripts/check-post-cutover-naming.mjs && node ../../scripts/check-scoped-release-readiness.mjs --package=packages/kdna-conformance --scope=conformance --label=conformance",
+    "release:evidence:check": "node ../../scripts/check-scoped-release-readiness.mjs --package=packages/kdna-conformance --scope=conformance --label=conformance --evidence=release-evidence/artifact-manifest.json"
   },
   "dependencies": {
     "@aikdna/kdna-core": "0.21.0",

@@ -148,6 +148,61 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+  publish-conformance:
+    if: >-
+      github.repository == 'aikdna/kdna' &&
+      github.event_name == 'release' &&
+      github.event.action == 'published' &&
+      github.event.release.draft == false &&
+      github.event.release.prerelease == false &&
+      startsWith(github.event.release.tag_name, 'conformance/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      RELEASE_EVENT_ACTION: ${{ github.event.action }}
+      RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+      RELEASE_IS_DRAFT: ${{ github.event.release.draft }}
+      RELEASE_IS_PRERELEASE: ${{ github.event.release.prerelease }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          ref: ${{ github.event.release.tag_name }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - name: Verify exact conformance tag and source commit
+        run: npm --workspace @aikdna/kdna-conformance run release:check
+      - run: npm --workspace @aikdna/kdna-conformance test
+      - run: npm --workspace @aikdna/kdna-conformance run conformance
+      - name: Build and retain the exact Conformance package artifact
+        run: npm run release:evidence -- --package=conformance
+      - name: Verify conformance release evidence
+        run: npm --workspace @aikdna/kdna-conformance run release:evidence:check
+      - name: Select the verified Conformance artifact
+        run: |
+          ARTIFACT_PATH=$(node -p "require('./release-evidence/artifact-manifest.json').artifacts[0].artifact_path")
+          echo "CONFORMANCE_RELEASE_ARTIFACT=$ARTIFACT_PATH" >> "$GITHUB_ENV"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: kdna-conformance-release-evidence
+          path: release-evidence/
+      - name: Publish @aikdna/kdna-conformance
+        run: |
+          VERSION=$(node -p "require('./packages/kdna-conformance/package.json').version")
+          if npm view "@aikdna/kdna-conformance@$VERSION" version >/dev/null 2>&1; then
+            echo "@aikdna/kdna-conformance@$VERSION is already published; skipping."
+            exit 0
+          fi
+          npm publish "./$CONFORMANCE_RELEASE_ARTIFACT" --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
   publish-compat:
     if: >-
       github.repository == 'aikdna/kdna' &&

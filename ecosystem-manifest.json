@@ -47,6 +47,20 @@
           "legacy_replacement": null
         },
         {
+          "package_json": "packages/kdna-conformance/package.json",
+          "package_name": "@aikdna/kdna-conformance",
+          "npm_package": "@aikdna/kdna-conformance",
+          "version": "0.1.0",
+          "lifecycle": "Experimental",
+          "release_status": "active",
+          "dependency_policy": "current",
+          "known_limitations": [
+            "conformance verdicts are mechanism checks against the pinned reference implementation, not ecosystem authority"
+          ],
+          "recommended_entrypoint": "npm install @aikdna/kdna-conformance",
+          "legacy_replacement": null
+        },
+        {
           "package_json": "packages/kdna/package.json",
           "package_name": "@aikdna/kdna",
           "npm_package": "@aikdna/kdna",

@@ -207,6 +207,7 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
     new Set([
       '@aikdna/kdna-core',
       '@aikdna/kdna-eval',
+      '@aikdna/kdna-conformance',
       '@aikdna/kdna',
       '@aikdna/agent',
       '@aikdna/kdna-artifact-engine',
