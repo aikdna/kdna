@@ -19,6 +19,7 @@ Current initial RFC set:
 - [RFC-0011: KDNA Product Runtime](../docs/product-runtime.md)
 - [RFC-0012: KDNA Artifact Contract](../specs/RFC-0012-artifact-contract.md)
 - [RFC-0018: KDNA Canonical Envelope Profile — `kdna.envelope.aead`](./RFC-0018-envelope-aead.md) — draft pre-release candidate for the first public envelope wire contract. Three known-answer test vectors live at `conformance/envelope-aead/`. The unversioned `scrypt-sha256` KDF is mandatory, `argon2id` is optional, and `profile_version: 0.1.0` carries the wire coordinate. The profile non-collapse invariant forbids silent cross-KDF or cross-AEAD migration.
+- [RFC-0021: KDNA Signature Track](./RFC-0021-signature-track.md) — draft placeholder that reserves and scopes the signature track turning RFC-0006's long-term signing model into an independently verifiable wire contract. Names six milestones (payload canonicalization, identity, bundle format, rotation/revocation, offline verification, 1.0 compatibility) and the fail-closed / non-collapse / provenance-is-not-correctness / offline invariants. No implementation is bound to it yet.
 
 ## RFC States
 
