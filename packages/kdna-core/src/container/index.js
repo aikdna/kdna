@@ -2319,6 +2319,27 @@ function hasStandardJudgmentRoleContent(role) {
   );
 }
 
+function projectMinimalAxiom(axiom) {
+  const normalized = normalizeCompactAxiom(axiom);
+  if (!normalized) return null;
+  return {
+    type: 'axiom_applicability',
+    id: normalized.id || null,
+    one_sentence: normalized.one_sentence || null,
+    does_not_apply_when: normalized.does_not_apply_when || [],
+    failure_risk: normalized.failure_risk || null,
+  };
+}
+
+function hasMinimalPromptContent(content) {
+  if (!content) return false;
+  return Boolean(
+    content.highest_question ||
+      (Array.isArray(content.axioms) && content.axioms.length > 0) ||
+      (Array.isArray(content.boundaries) && content.boundaries.length > 0)
+  );
+}
+
 function hasCompactPromptContent(content) {
   if (!content) return false;
   return Boolean(
@@ -2566,6 +2587,17 @@ function loadAssetUnsafe(inputPath, opts = {}) {
       || (payload.reasoning && ((payload.reasoning.self_check && payload.reasoning.self_check.length > 0) || (payload.reasoning.failure_modes && payload.reasoning.failure_modes.length > 0)));
     profiles.push('index');
     if (hasJudgment) profiles.push('compact');
+    // RFC-0020: minimal availability follows the manifest declaration, not
+    // payload inference. An asset that declares minimal in load_contract
+    // (and carries core judgment) may be projected minimally.
+    if (
+      hasJudgment &&
+      m.load_contract &&
+      m.load_contract.profiles &&
+      m.load_contract.profiles.minimal
+    ) {
+      profiles.push('minimal');
+    }
     if (payload.scenarios && payload.scenarios.length > 0) profiles.push('scenario');
     profiles.push('full');
     return profiles;
@@ -2656,6 +2688,34 @@ function loadAssetUnsafe(inputPath, opts = {}) {
     result.projection_report = buildCompactProjectionReport(payload);
     if (m.load_contract && m.load_contract.profiles && m.load_contract.profiles.compact && m.load_contract.profiles.compact.max_tokens_hint) {
       result.max_tokens_hint = m.load_contract.profiles.compact.max_tokens_hint;
+    }
+  } else if (profile === 'minimal') {
+    const core = payload.core || {};
+    // RFC-0020: minimal availability follows the manifest declaration. If the
+    // asset does not declare minimal in load_contract, fail closed with an
+    // empty projection rather than silently serving a projection the asset
+    // did not opt into.
+    if (!result.profile_available) {
+      result.content = {};
+      result.projection_report = buildCompactProjectionReport(payload);
+    } else {
+      const normalizeList = (items) => (items || []).map((item) => {
+        if (typeof item === 'string') return { type: 'text', text: item };
+        if (item && typeof item === 'object') return item;
+        return null;
+      }).filter(Boolean);
+      // RFC-0020: minimal projects the core judgment surface a small model needs:
+      // highest_question + boundary-friendly axioms + full boundaries. It is a
+      // strict subset of compact (deterministic reduction, no inference).
+      result.content = {
+        highest_question: core.highest_question || null,
+        axioms: (core.axioms || []).map(projectMinimalAxiom).filter(Boolean),
+        boundaries: normalizeList(core.boundaries),
+      };
+      result.projection_report = buildCompactProjectionReport(payload);
+      if (m.load_contract && m.load_contract.profiles && m.load_contract.profiles.minimal && m.load_contract.profiles.minimal.max_tokens_hint) {
+        result.max_tokens_hint = m.load_contract.profiles.minimal.max_tokens_hint;
+      }
     }
   } else if (profile === 'scenario') {
     result.content = { scenarios: payload.scenarios || [] };
@@ -2750,15 +2810,23 @@ function loadAssetUnsafe(inputPath, opts = {}) {
     const c = result.content;
     const compactHasNoPromptContent =
       result.profile === 'compact' && !hasCompactPromptContent(c);
+    const minimalHasNoPromptContent =
+      result.profile === 'minimal' && !hasMinimalPromptContent(c);
     const legacyProfileHasNoPromptContent =
       result.profile !== 'compact' &&
+      result.profile !== 'minimal' &&
       c &&
       c.scenarios &&
       c.scenarios.length === 0 &&
       !c.highest_question &&
       !(c.axioms && c.axioms.length) &&
       !(c.boundaries && c.boundaries.length);
-    if (!c || compactHasNoPromptContent || legacyProfileHasNoPromptContent) {
+    if (
+      !c ||
+      compactHasNoPromptContent ||
+      minimalHasNoPromptContent ||
+      legacyProfileHasNoPromptContent
+    ) {
       return {
         status: result.status,
         profile: result.profile,

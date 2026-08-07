@@ -129,16 +129,60 @@ Agent context risks:
 `--as=prompt`, because a raw JSON dump is ill-suited for agent
 context injection.
 
-## 5. Profile summary
+## 5. `minimal` — small-model core judgment surface
+
+**Purpose**: the minimal judgment surface for small local models
+(2-4B parameter tier) whose context window cannot comfortably hold
+`compact`. RFC-0020 defines this profile; it is a strict subset of
+`compact`.
+
+**Suitable as an Agent prompt**: yes, for context-constrained models.
+`compact` remains the recommended default Agent-invocation profile when
+context budget allows.
+
+**Output fields**:
+- `highest_question` — from `payload.core.highest_question`, if present
+- `axioms` — every declared axiom, reduced deterministically to
+  `id`, `one_sentence`, `does_not_apply_when`, and `failure_risk`
+- `boundaries` — the full `payload.core.boundaries` array, preserving every
+  declared string or structured boundary
+
+**Axiom reduction**: a string axiom projects as
+`{ id: null, one_sentence: <the string>, does_not_apply_when: [],
+failure_risk: null }`. An object axiom uses `one_sentence` when present and
+not a `<TBD...>` placeholder, else `full_statement`, else `statement`.
+`applies_when` is intentionally omitted; a consumer that needs it must load
+`compact`.
+
+**Deterministic**: same asset, same profile, same output. Order of axioms and
+boundaries is the declared payload order. No deduplication, no reordering, no
+inference.
+
+**Relation to `compact`**: `minimal` is a strict subset. Every `minimal`
+field equals the corresponding `compact` field. Upgrading from `minimal` to
+`compact` is lossless for the fields `minimal` exposes.
+
+**Availability**: `minimal` is advertised in `profiles_available` only when
+the asset declares it in `load_contract.profiles`. A loader that requests
+`minimal` on an asset that does not declare it MUST fail closed (empty
+projection in Core; an error in consumers that require content). A loader
+built before RFC-0020 that does not know `minimal` MUST fail closed rather
+than silently fall back.
+
+**NOT suitable for**: audit, editing, full-payload reading, or scenario-routed
+reading.
+
+## 6. Profile summary
 
 | Profile | Agent prompt? | Payload included | Default? | Use case |
 |---|---|---|---|---|
 | `index` | no | no | no | routing, listing |
 | `compact` | **yes** | partial (axioms, boundaries) | **yes** | agent invocation |
+| `minimal` | **yes** | partial (one-sentence axioms, boundaries) | no | small-model context budget |
 | `scenario` | only if explicitly requested | partial (matched sections) | no | input-routed reading |
 | `full` | **no** | yes (complete) | no | editing, audit, archival |
 
-## 6. Content-neutrality across all profiles
+## 7. Content-neutrality across all profiles
 
 Every profile output MUST be content-neutral. The loader MUST NOT:
 - Evaluate whether the content is "good", "correct", or "high-quality"
@@ -151,7 +195,7 @@ Every profile output MUST be content-neutral. The loader MUST NOT:
 The official implementation (`@aikdna/kdna-core.loadAuthorized`) enforces this
 via `FORBIDDEN_OUTPUT_TERMS`.
 
-## 7. Extension
+## 8. Extension
 
 - **Future phases** may add more profiles. New profiles MUST be additive
   and MUST NOT change the semantics of existing profiles.
@@ -159,5 +203,5 @@ via `FORBIDDEN_OUTPUT_TERMS`.
   obtain authorization, decrypt only in memory, and emit a Runtime Capsule;
   without the required credential it returns a non-loadable LoadPlan.
 - **Custom profiles** are not part of the current runtime contract. If an asset
-  declares a profile not in `{index, compact, scenario, full}`, the
+  declares a profile not in `{index, compact, scenario, full, minimal}`, the
   loader MUST reject it with a clear error.

@@ -21,7 +21,7 @@
     "validate:app-schemas": "node scripts/validate-app-schemas.js",
     "validate:protocol-fixtures": "node scripts/validate-protocol-fixtures.js",
     "validate:rfc0013-schemas": "node scripts/validate-rfc0013-schemas.js",
-    "test": "npm --workspace @aikdna/kdna-core test && npm --workspace @aikdna/kdna-eval test && node scripts/run-node-tests.js tests/container-cli/*.test.js",
+    "test": "npm --workspace @aikdna/kdna-core test && npm --workspace @aikdna/kdna-eval test && node scripts/run-node-tests.js tests/container-cli/*.test.js && node --test conformance/rfc-0020-minimal.mjs",
     "conformance": "node conformance/run.mjs",
     "conformance:canonical": "node --test conformance/canonical-conformance.mjs",
     "conformance:runtime-capsule": "node --test packages/kdna-core/test/runtime-capsule.test.js",
@@ -59,7 +59,8 @@
     "test:container-cli": "node scripts/run-node-tests.js tests/container-cli/*.test.js",
     "pretest": "node scripts/core-smoke.js",
     "build:asset-inspector": "node scripts/build-asset-inspector.mjs",
-    "check:asset-inspector": "node scripts/check-asset-inspector.mjs"
+    "check:asset-inspector": "node scripts/check-asset-inspector.mjs",
+    "conformance:rfc-0020-minimal": "node --test conformance/rfc-0020-minimal.mjs"
   },
   "license": "Apache-2.0",
   "repository": {
