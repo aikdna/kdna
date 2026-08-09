@@ -74,7 +74,7 @@ Skill does not authorize or apply judgment.
 |---|---|
 | `@aikdna/kdna-core@0.20.0` | Released pre-release runtime SDK |
 | `@aikdna/kdna-eval@0.3.2` | Released Experimental evaluation toolkit; issuer-scoped evidence is not KDNA Core authority |
-| `@aikdna/kdna@0.13.2` | Released, maintained Legacy compatibility bridge for CLI 0.35.1; new integrations use CLI and Core directly |
+| `@aikdna/kdna@0.14.0` | Released, maintained Legacy compatibility bridge for CLI 0.36.1; new integrations use CLI and Core directly |
 
 ## Native Apps
 
