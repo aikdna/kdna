@@ -703,13 +703,13 @@ test('guard and publisher reparse one exact tarball before the network operation
       bound += 1;
     },
     lookup: (spec) => {
-      assert.equal(spec, '@aikdna/kdna@0.13.2');
+      assert.equal(spec, `@aikdna/kdna@${candidate.package.version}`);
       lookedUp += 1;
       return e404Result(candidate);
     },
     lookupLatest: (spec) => {
       assert.equal(spec, '@aikdna/kdna@latest');
-      return { status: 0, stdout: '"0.13.1"\n', stderr: '' };
+      return { status: 0, stdout: '"0.13.2"\n', stderr: '' };
     },
   });
   assert.deepEqual(decision, { decision: 'publish', shouldPublish: true });
@@ -726,7 +726,7 @@ test('guard and publisher reparse one exact tarball before the network operation
     },
     lookupLatest: (spec) => {
       assert.equal(spec, '@aikdna/kdna@latest');
-      return { status: 0, stdout: '"0.13.1"\n', stderr: '' };
+      return { status: 0, stdout: '"0.13.2"\n', stderr: '' };
     },
     publish: (args) => {
       assert.deepEqual(args, publishArguments('/tmp/exact-kdna-compat.tgz'));

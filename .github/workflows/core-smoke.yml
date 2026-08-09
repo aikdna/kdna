@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/create-kdna-web-app
-          ref: 7f7f2866b8f9abc4a5cc0f5796c85d9da50f56db
+          ref: 644ca5eb660a6f8edeea960b47ebbd7121360fa0
           path: .ecosystem-repos/create-kdna-web-app
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-react
-          ref: 49e06898a1b9b304119881931421bb1cb0c31c10
+          ref: e96d8ad18c8ae2106967c25e9e9a41270c3cc4ca
           path: .ecosystem-repos/kdna-react
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
@@ -96,7 +96,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-web-client
-          ref: 7cb0da126d3c36259e48e4447ee58348f54f78e7
+          ref: ac6f44c5158f1fe47e532517c59ce115e87160c9
           path: .ecosystem-repos/kdna-web-client
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:

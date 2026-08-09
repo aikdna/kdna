@@ -88,7 +88,7 @@
       "repository": "aikdna/kdna-web-client",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-web-client",
-      "version": "0.2.2",
+      "version": "0.3.0",
       "canonical_tag": {
         "type": "natural"
       }
@@ -98,7 +98,7 @@
       "repository": "aikdna/kdna-react",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-react",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "canonical_tag": {
         "type": "natural"
       }
@@ -108,7 +108,7 @@
       "repository": "aikdna/create-kdna-web-app",
       "package_json": "package.json",
       "npm_package": "create-kdna-web-app",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "canonical_tag": {
         "type": "natural"
       }
@@ -143,6 +143,7 @@
       "package_json": "packages/kdna/package.json",
       "npm_package": "@aikdna/kdna",
       "version": "0.13.2",
+      "candidate_version": "0.14.0",
       "canonical_tag": {
         "type": "prefix",
         "value": "compat/"

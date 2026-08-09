@@ -75,7 +75,7 @@
   ],
   "devDependencies": {
     "@aikdna/kdna-cli": "0.36.0",
-    "@aikdna/kdna-web-client": "0.2.2",
+    "@aikdna/kdna-web-client": "0.3.0",
     "@eslint/js": "^10.0.1",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
