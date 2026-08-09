@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.14.0 (2026-08-09)
+
+- Bind the maintained compatibility bridge to the exact published KDNA CLI
+  0.36.1 and KDNA Core 0.21.0 toolchain.
+- Preserve the legacy `kdna-lint` executable with a self-contained fail-closed
+  structural lint that delegates to `@aikdna/kdna-core`; the current CLI no
+  longer ships standalone validators.
+- Preserve the `kdna-validate` compatibility alias for `kdna validate`.
+- Require one physical Core package across the compatibility and CLI paths.
+- Fail publication closed unless the candidate is a stable SemVer newer than
+  npm `latest`, rechecking that ordering immediately before `npm publish`.
+
 ## 0.13.2 (2026-07-19)
 
 - Bind the maintained compatibility bridge to the exact published KDNA CLI

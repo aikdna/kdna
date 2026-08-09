@@ -88,8 +88,8 @@ test('release-health policy is an exact projection of current public package rec
 test('maintained compatibility health monitors the exact published source', () => {
   const compat = policy.packages.find((entry) => entry.npm_package === '@aikdna/kdna');
   assert.equal(compat.version, '0.13.2');
-  assert.equal(expectedMainVersion(compat), '0.13.2');
-  assert.equal(compat.candidate_version, undefined);
+  assert.equal(expectedMainVersion(compat), '0.14.0');
+  assert.equal(compat.candidate_version, '0.14.0');
 });
 
 test('candidate health requires a stable version newer than its incumbent', () => {

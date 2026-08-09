@@ -41,7 +41,7 @@ const indexSource = readSource('index.js');
 // as local bindings using the exact names index.js imports (including its two
 // import renames) so the two files concatenate into one module.
 const EXPORT_LIST =
-  'export{Rs as KDNA_ASSET_ID_PATTERN,Fs as KDNA_SCHEMA_AUTHORITY,Es as validateJudgmentTrace,Us as validateRuntimeCapsule}';
+  'export{Ls as KDNA_ASSET_ID_PATTERN,Ks as KDNA_SCHEMA_AUTHORITY,Fs as validateJudgmentTrace,Us as validateRuntimeCapsule}';
 if (!validators.includes(EXPORT_LIST)) {
   throw new Error(
     'kdna-web-client generated validators export list changed; the inspector ' +
@@ -50,8 +50,8 @@ if (!validators.includes(EXPORT_LIST)) {
 }
 const validatorsBody = validators.replace(
   EXPORT_LIST,
-  'const KDNA_ASSET_ID_PATTERN=Rs,KDNA_SCHEMA_AUTHORITY=Fs,' +
-    'validateCanonicalJudgmentTrace=Es,validateCanonicalRuntimeCapsule=Us;',
+  'const KDNA_ASSET_ID_PATTERN=Ls,KDNA_SCHEMA_AUTHORITY=Ks,' +
+    'validateCanonicalJudgmentTrace=Fs,validateCanonicalRuntimeCapsule=Us;',
 );
 
 // Drop only the import block that pulls in the generated validators; the rest

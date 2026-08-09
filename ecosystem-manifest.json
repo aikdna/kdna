@@ -64,9 +64,10 @@
           "package_json": "packages/kdna/package.json",
           "package_name": "@aikdna/kdna",
           "npm_package": "@aikdna/kdna",
-          "version": "0.13.2",
+          "version": "0.14.0",
+          "published_version": "0.13.2",
           "lifecycle": "Legacy",
-          "release_status": "compatibility",
+          "release_status": "candidate",
           "dependency_policy": "current",
           "known_limitations": [
             "maintained migration bridge; new integrations should install the CLI and Core packages directly"
@@ -405,7 +406,7 @@
     {
       "repository": "aikdna/kdna-web-client",
       "local_path": "../kdna-web-client",
-      "source_commit": "7cb0da126d3c36259e48e4447ee58348f54f78e7",
+      "source_commit": "ac6f44c5158f1fe47e532517c59ce115e87160c9",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -414,7 +415,7 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-web-client",
           "npm_package": "@aikdna/kdna-web-client",
-          "version": "0.2.2",
+          "version": "0.3.0",
           "lifecycle": "Experimental",
           "release_status": "active",
           "dependency_policy": "current",
@@ -437,7 +438,7 @@
     {
       "repository": "aikdna/kdna-react",
       "local_path": "../kdna-react",
-      "source_commit": "49e06898a1b9b304119881931421bb1cb0c31c10",
+      "source_commit": "e96d8ad18c8ae2106967c25e9e9a41270c3cc4ca",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -446,7 +447,7 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-react",
           "npm_package": "@aikdna/kdna-react",
-          "version": "0.3.0",
+          "version": "0.4.0",
           "lifecycle": "Experimental",
           "release_status": "active",
           "dependency_policy": "current",
@@ -469,7 +470,7 @@
     {
       "repository": "aikdna/create-kdna-web-app",
       "local_path": "../create-kdna-web-app",
-      "source_commit": "7f7f2866b8f9abc4a5cc0f5796c85d9da50f56db",
+      "source_commit": "644ca5eb660a6f8edeea960b47ebbd7121360fa0",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -478,12 +479,12 @@
           "package_json": "package.json",
           "package_name": "create-kdna-web-app",
           "npm_package": "create-kdna-web-app",
-          "version": "0.4.0",
+          "version": "0.5.0",
           "lifecycle": "Experimental",
           "release_status": "active",
           "dependency_policy": "current",
           "known_limitations": [],
-          "recommended_entrypoint": "npx create-kdna-web-app@0.4.0 <app>",
+          "recommended_entrypoint": "npx create-kdna-web-app@0.5.0 <app>",
           "legacy_replacement": null
         }
       ],

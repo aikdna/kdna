@@ -25,8 +25,8 @@ npm install -g @aikdna/kdna-cli
 This package remains available so older installation instructions using
 `@aikdna/kdna` resolve to the current KDNA CLI.
 
-Version 0.13.2 is bound to `@aikdna/kdna-cli@0.35.1` and
-`@aikdna/kdna-core@0.20.0`, requires Node.js 20 or later, and installs one
+Version 0.14.0 is bound to `@aikdna/kdna-cli@0.36.1` and
+`@aikdna/kdna-core@0.21.0`, requires Node.js 20 or later, and installs one
 physical Core package. It is a migration bridge, not the recommended package
 for new applications.
 
