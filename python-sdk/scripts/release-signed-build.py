@@ -120,7 +120,7 @@ def main() -> None:
 
     secret_key = load_secret_key()
     try:
-        artifacts = sorted(dist.glob("kdna-*.tar.gz")) + sorted(dist.glob("kdna-*.whl"))
+        artifacts = sorted(dist.glob("*.tar.gz")) + sorted(dist.glob("*.whl"))
         if not artifacts:
             raise SystemExit("no artifacts built")
         for artifact in artifacts:

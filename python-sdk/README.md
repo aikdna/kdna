@@ -29,18 +29,23 @@ and loads identically in Python, a Python-packed container validates and
 loads identically in JS, and both packers produce byte-identical output for
 the same source (same SHA-256).
 
-## Install for local development
+## Install
+
+The Python distribution publishes on PyPI as **`aikdna`** (the import package is
+`kdna`):
+
+```bash
+python -m pip install aikdna
+python -c "import kdna; print(kdna.open_kdna)"
+```
+
+For local development inside this repository:
 
 ```bash
 cd python-sdk
 python -m pip install -e ".[dev]"
 python -m pytest
 ```
-
-This directory is not currently published as an official PyPI distribution.
-Use the npm CLI/Core packages for the published pre-release runtime. The Python Core
-is a source-level integration preview until a separate signed release pipeline
-exists.
 
 The adapter layer supports `@aikdna/kdna-cli >=0.35.0,<0.36.0` and checks the
 CLI version before its first operation. Compatibility with a later pre-1.0 CLI

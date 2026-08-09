@@ -3,7 +3,7 @@ requires = ["setuptools>=75", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "kdna"
+name = "aikdna"
 version = "0.6.0"
 description = "Python Core and adapter for the KDNA protocol: independent container parsing, validation, LoadPlan, Runtime Capsule, and deterministic pack"
 readme = "README.md"
