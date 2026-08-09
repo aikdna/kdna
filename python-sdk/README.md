@@ -39,6 +39,9 @@ python -m pip install aikdna
 python -c "import kdna; print(kdna.open_kdna)"
 ```
 
+> **Security note:** the `kdna` project on PyPI is unrelated to this project.
+> Install only the official `aikdna` distribution from this repository.
+
 For local development inside this repository:
 
 ```bash
