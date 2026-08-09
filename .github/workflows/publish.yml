@@ -388,3 +388,69 @@ jobs:
           rm -f "$RUNNER_TEMP/kdna-compat-release-evidence.json"
           "$RUNNER_TEMP/kdna-compat-release.tgz"
           "$KDNA_TRUSTED_NPM_TARBALL"
+
+  publish-python:
+    if: >-
+      github.repository == 'aikdna/kdna' &&
+      github.event_name == 'release' &&
+      github.event.action == 'published' &&
+      github.event.release.draft == false &&
+      github.event.release.prerelease == false &&
+      startsWith(github.event.release.tag_name, 'python/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      RELEASE_EVENT_ACTION: ${{ github.event.action }}
+      RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+      RELEASE_IS_DRAFT: ${{ github.event.release.draft }}
+      RELEASE_IS_PRERELEASE: ${{ github.event.release.prerelease }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          ref: ${{ github.event.release.tag_name }}
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Install build and signing dependencies
+        run: python -m pip install --disable-pip-version-check --no-input build twine
+      - name: Install minisign
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq minisign
+      - name: Run the signed python release build
+        env:
+          KDNA_PYTHON: ${{ env.pythonLocation }}/bin/python
+          KDNA_PYPI_SIGNING_KEY: ${{ secrets.PYPI_SIGNING_KEY }}
+          KDNA_PYPI_PUBLIC_KEY_PATH: ${{ github.workspace }}/python-sdk/release-signing.pub
+        run: python python-sdk/scripts/release-signed-build.py
+      - name: Verify every checksum sidecar against its artifact
+        run: |
+          cd python-sdk/dist
+          for sidecar in *.sha256; do
+            shasum -a 256 -c "$sidecar"
+          done
+      - name: Verify every minisign signature against the release public key
+        run: |
+          cd python-sdk/dist
+          for sig in .signatures/*.minisig; do
+            artifact="$(basename "${sig%.minisig}")"
+            minisign -V -p ../../python-sdk/release-signing.pub -x "$sig" -m "$artifact"
+          done
+      - name: Publish to PyPI
+        run: >-
+          python -m twine upload
+          --repository pypi
+          --username __token__
+          --non-interactive
+          --skip-existing
+          dist/kdna-*.whl
+          dist/kdna-*.tar.gz
+        env:
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: kdna-python-release-artifacts
+          path: python-sdk/dist/

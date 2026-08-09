@@ -11,9 +11,11 @@ npm-debug.log*
 conformance/fixtures/generated/*
 !conformance/fixtures/generated/.gitkeep
 python-sdk/dist/
+python-sdk/build/
 python-sdk/kdna.egg-info/
 python-sdk/.venv/
 python-sdk/venv/
+python-sdk/*.egg-info/
 __pycache__/
 *.pyc
 .pytest_cache/
