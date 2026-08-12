@@ -68,6 +68,11 @@ kdna plan-load ./judgment.kdna --json
 kdna load ./judgment.kdna --profile=compact --as=json
 ```
 
+> **Python/PyPI note:** the `kdna` project name on PyPI is an unrelated
+> third-party placeholder, not ours. Our official Python distribution on PyPI
+> is **`aikdna`** (the import package name remains `kdna`). Install only
+> `aikdna` from PyPI — never `pip install kdna`.
+
 The AIKDNA asset repository currently displays two current-format technical
 reference assets and zero Clusters. Listing is not an endorsement, and the
 local demonstration above remains the recommended first-run path.
