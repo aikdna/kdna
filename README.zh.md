@@ -53,6 +53,10 @@ kdna plan-load ./judgment.kdna --json
 kdna load ./judgment.kdna --profile=compact --as=json
 ```
 
+> **Python/PyPI 提示：** PyPI 上的 `kdna` 项目名是与本项目无关的第三方空占，
+> 并非我方。我方在 PyPI 的官方发行名是 **`aikdna`**（import 包名仍为
+> `kdna`）。只安装 PyPI 的 `aikdna`——绝不要 `pip install kdna`。
+
 这条路径证明容器能够被当前工具链验证、规划和投影，不证明模型已经采用资产，
 也不证明资产内容正确或结果更好。
 

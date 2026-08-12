@@ -64,3 +64,23 @@ else
 fi
 
 echo "No token-like strings found."
+
+echo
+
+echo "== PyPI kdna name-squat release monitor =="
+# The PyPI `kdna` project name is an unrelated third-party placeholder, not
+# ours. Our official Python distribution on PyPI is `aikdna` (import package
+# `kdna`). If anyone uploads a release file to the `kdna` project, alert so a
+# reader cannot mistake it for our package.
+if ! command -v curl >/dev/null 2>&1; then
+  echo "SKIP: curl not available; PyPI kdna squat monitor not run."
+else
+  body="$(curl -fsS -A 'Mozilla/5.0 (AIKDNA typosquat watch)' --max-time 30 https://pypi.org/simple/kdna/ 2>/dev/null || true)"
+  count="$(printf '%s' "$body" | grep -cE 'href="[^"]*\.(whl|tar\.gz)#sha256=' || true)"
+  if (( count > 0 )); then
+    echo "ALERT: PyPI project \"kdna\" now hosts $count release file(s) (name squat)."
+    printf '%s\n' "$body" | grep -oE 'href="[^"]*"' || true
+    exit 1
+  fi
+  echo "OK: PyPI \"kdna\" has no release files (name-squat monitor clear)."
+fi
