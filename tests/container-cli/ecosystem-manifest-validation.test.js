@@ -262,7 +262,7 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
       .filter((entry) => entry.release_tag)
       .map((entry) => [entry.repository, entry.component_version, entry.release_tag]),
     [
-      ['aikdna/kdna-core-swift', '0.20.0', 'v0.20.0'],
+      ['aikdna/kdna-core-swift', '0.21.0', 'v0.21.0'],
       ['aikdna/kdna-app-shared', '0.5.0', '0.5.0'],
       ['aikdna/kdna-studio-swift', '0.4.0', '0.4.0'],
     ],
@@ -277,7 +277,7 @@ test('ecosystem workflow checkouts stay pinned to accepted or explicitly scoped 
     (entry) => entry.local_path && entry.local_path !== '.' && entry.source_commit,
   );
   const candidateSmokePins = new Map([
-    ['core-smoke.yml:aikdna/kdna-core-swift', 'cc335d5ed745529c04bcb51b7260185ec2ca84e8'],
+    ['core-smoke.yml:aikdna/kdna-core-swift', 'c1f8495db5e5c094458ff62c295e28cd760fb166'],
   ]);
 
   for (const workflowName of ['core-smoke.yml', 'publish.yml']) {
