@@ -218,7 +218,7 @@ changes require an RFC and an explicit migration path.
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | `@aikdna/kdna-cli` | KDNA runtime CLI |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | `@aikdna/kdna-studio-cli` | AI-powered authoring CLI |
 | [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | `@aikdna/kdna-studio-core` | Studio SDK for creators |
-| [kdna-skills](https://github.com/aikdna/kdna-skills) | `kdna-loader` (Unassessed); `@aikdna/kdna-mcp-server@0.4.2` (Experimental) | Agent and MCP adapter mission; not automatic judgment authority |
+| [kdna-skills](https://github.com/aikdna/kdna-skills) | `kdna-loader` (Unassessed); `@aikdna/kdna-mcp-server@0.5.0` (Experimental) | Agent and MCP adapter mission; not automatic judgment authority |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | — | Public asset releases |
 | [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Swift package `0.20.0` | Apple-platform runtime |
 | [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Swift package `0.4.0` | Apple-platform authoring kernel; release recertification is pending |
