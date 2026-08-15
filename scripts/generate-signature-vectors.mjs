@@ -5,10 +5,16 @@
  *
  * The vectors pin, byte for byte:
  *   - the canonical content digest of a minimal asset;
+ *   - the runtime entry-set digest (kdna.json + payload.kdnab);
  *   - the Ed25519 signing payload derived from it;
  *   - the signature bundle and its canonical wire bytes;
  *   - the signer key fingerprint;
  *   - a set of negative cases every conforming verifier must reject.
+ *
+ * Container ZIP/DEFLATE bytes are deliberately NOT pinned: DEFLATE output
+ * differs across compressors, zlib versions, and systems (specs/container.md).
+ * Container-level conformance is round-trip equivalence (unpack → repack →
+ * identical logical digests, validate/plan/load pass), checked by the runner.
  *
  * Ed25519 and SHA-256 are deterministic, so this script reproduces identical
  * output on every run and every platform. The private key seed is public
@@ -102,8 +108,16 @@ function buildVectors() {
   const bundleBytes = core.serializeSignatureBundle(bundle);
   const wrongBundle = core.signContentDigest(contentDigest, WRONG_SEED.toString('hex'));
 
+  // Container packing is exercised for the sign round-trip, but container
+  // bytes are never pinned: DEFLATE output is not stable across compressors,
+  // zlib versions, or systems (specs/container.md). The pinned anchors are
+  // the deterministic logical coordinates: content digest, entry-set digest,
+  // signing payload bytes, and Ed25519-deterministic bundle bytes.
   const unsignedContainer = core.packEntryMap(entries);
   const signed = core.signContainerBytes(unsignedContainer, seedHex);
+  if (signed.content_digest !== contentDigest) {
+    throw new Error('generator internal error: signContainerBytes digest drift');
+  }
 
   return {
     vector_format: VECTOR_FORMAT,
@@ -112,7 +126,7 @@ function buildVectors() {
     profile_version: core.KDSIG_PROFILE_VERSION,
     algorithm: core.KDSIG_ALGORITHM,
     entry_name: core.SIGNATURE_ENTRY_NAME,
-    note: 'Deterministic known-answer vectors for kdsig.ed25519 (RFC-0021 M1). The seed is public vector material, never a real signing key.',
+    note: 'Deterministic known-answer vectors for kdsig.ed25519 (RFC-0021 M1). The seed is public vector material, never a real signing key. Container ZIP/DEFLATE bytes are deliberately not pinned; only logical digest coordinates and Ed25519-deterministic bytes are.',
     key: {
       seed_hex: seedHex,
       public_key_hex: bundle.public_key,
@@ -128,22 +142,18 @@ function buildVectors() {
         'kdna.json': hex(entries['kdna.json']),
         'payload.kdnab': hex(entries['payload.kdnab']),
       },
-      unsigned_container_sha256: crypto
-        .createHash('sha256')
-        .update(unsignedContainer)
-        .digest('hex'),
     },
     expected: {
       content_digest: contentDigest,
+      entry_set_digest: core.computeRuntimeEntrySetDigest(
+        entries['kdna.json'],
+        entries['payload.kdnab'],
+      ),
       signing_payload_hex: hex(signingPayload),
       signing_payload: signingPayload.toString('utf8'),
       bundle,
       bundle_bytes_hex: hex(bundleBytes),
       key_fingerprint: core.keyFingerprint(bundle.public_key),
-      signed_container_sha256: crypto
-        .createHash('sha256')
-        .update(signed.containerBytes)
-        .digest('hex'),
     },
     negative_cases: [
       {

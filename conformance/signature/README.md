@@ -10,13 +10,21 @@ of [RFC-0021](../../rfcs/RFC-0021-signature-track.md).
   - the signer key (a public vector seed — never a real signing key),
   - the unsigned asset entries (hex-encoded),
   - the pinned canonical `content_digest`,
+  - the pinned runtime `entry_set_digest` (kdna.json + payload.kdnab),
   - the pinned Ed25519 signing payload,
   - the pinned signature bundle and its canonical wire bytes,
-  - the signed container SHA-256,
   - negative cases that every conforming verifier MUST reject fail-closed,
   - the documented wrong-key (pinning) semantics.
 - `run.mjs` — the JavaScript known-answer runner
   (`npm run conformance:signature`).
+
+Container ZIP/DEFLATE bytes are deliberately **not** pinned: DEFLATE output
+differs across compressors, zlib versions, and systems
+([specs/container.md](../../specs/container.md)). The pinned anchors are the
+deterministic logical coordinates (content digest, entry-set digest, signing
+payload bytes, and Ed25519-deterministic bundle bytes); container-level
+conformance is round-trip equivalence — unpack → repack preserves every
+pinned digest and the signature still verifies through validate/plan/load.
 
 ## Wire contract (summary)
 

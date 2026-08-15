@@ -170,8 +170,11 @@ M1 conformance is demonstrated by the known-answer vectors under
 `conformance/signature/`:
 
 - `vectors.json` pins the signer key, the unsigned asset entries, the content
-  digest, the signing payload, the bundle bytes, the signed container hash,
-  the negative cases, and the wrong-key pinning semantics;
+  digest, the entry-set digest, the signing payload, the bundle bytes, the
+  negative cases, and the wrong-key pinning semantics. Container ZIP/DEFLATE
+  bytes are deliberately not pinned (DEFLATE output differs across
+  compressors, zlib versions, and systems); container-level conformance is
+  round-trip equivalence over the pinned logical digests;
 - the JavaScript runner (`conformance/signature/run.mjs`) and the Python
   tests (`python-sdk/tests/test_signature.py`) are the two independent
   verifier implementations that bind this milestone;

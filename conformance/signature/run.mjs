@@ -5,8 +5,11 @@
  *
  * Consumes conformance/signature/vectors.json and proves that this
  * implementation:
- *   - reproduces the pinned content digest, signing payload, bundle bytes,
- *     and signature (deterministic re-signing);
+ *   - reproduces the pinned content digest, entry-set digest, signing
+ *     payload, and bundle bytes (deterministic re-signing);
+ *   - preserves every pinned digest through container pack/unpack
+ *     round-trips (container DEFLATE bytes are platform-dependent and are
+ *     deliberately not pinned);
  *   - verifies the pinned bundle offline and reports the pinned evidence;
  *   - loads a signed container and projects verified signature evidence into
  *     the Runtime Capsule;
@@ -16,7 +19,6 @@
  * file. Exit code 0 = every known answer matches.
  */
 
-import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -40,10 +42,6 @@ function check(name, condition, detail = '') {
   }
   failures += 1;
   console.error(`  FAIL ${name}${detail ? ` — ${detail}` : ''}`);
-}
-
-function sha256Hex(buf) {
-  return crypto.createHash('sha256').update(buf).digest('hex');
 }
 
 function entryBuffers() {
@@ -115,13 +113,23 @@ console.log(
   `kdsig.ed25519 known-answer conformance (${vectors.vector_format} ${vectors.vector_format_version})`,
 );
 
-// 1. Canonical content digest and signing payload.
+// 1. Canonical content digest, entry-set digest, and signing payload.
 const entries = entryBuffers();
 const contentDigest = core.contentDigestFromEntryBuffers(entries);
 check(
   'content digest matches the pinned known answer',
   contentDigest === vectors.expected.content_digest,
   contentDigest,
+);
+
+const entrySetDigest = core.computeRuntimeEntrySetDigest(
+  entries['kdna.json'],
+  entries['payload.kdnab'],
+);
+check(
+  'entry-set digest matches the pinned known answer',
+  entrySetDigest === vectors.expected.entry_set_digest,
+  entrySetDigest,
 );
 
 const signingPayload = core.buildSigningPayload(contentDigest);
@@ -161,16 +169,40 @@ check(
   evidence.content_digest === vectors.expected.content_digest,
 );
 
-// 4. Container-level signing is deterministic and matches the pinned bytes.
+// 4. Container round-trip equivalence. Container ZIP/DEFLATE bytes are NOT
+// pinned: DEFLATE output differs across compressors, zlib versions, and
+// systems (specs/container.md). Conformance at the container level is
+// logical equivalence — unpack → repack preserves every pinned digest and
+// the signature still verifies through validate/plan/load.
 const unsignedContainer = core.packEntryMap(entries);
-check(
-  'unsigned container matches the pinned hash',
-  sha256Hex(unsignedContainer) === vectors.asset.unsigned_container_sha256,
+const unsignedRoundTrip = core.packEntryMap(
+  core.fullEntryBufferMap(core.readLayoutBytes(unsignedContainer)),
 );
+check(
+  'unsigned round-trip preserves the pinned content digest',
+  core.contentDigestFromEntryBuffers(
+    core.fullEntryBufferMap(core.readLayoutBytes(unsignedRoundTrip)),
+  ) === vectors.expected.content_digest,
+);
+
 const signed = core.signContainerBytes(unsignedContainer, vectors.key.seed_hex);
 check(
-  'signed container matches the pinned hash',
-  sha256Hex(signed.containerBytes) === vectors.expected.signed_container_sha256,
+  'signing round-trip binds the pinned content digest',
+  signed.content_digest === vectors.expected.content_digest,
+);
+check(
+  'signing round-trip emits the pinned bundle bytes',
+  signed.bundleBytes.toString('hex') === vectors.expected.bundle_bytes_hex,
+);
+
+const signedRoundTrip = core.packEntryMap(
+  core.fullEntryBufferMap(core.readLayoutBytes(signed.containerBytes)),
+);
+const roundTripValidation = core.validate(signedRoundTrip);
+check(
+  'repacked signed container still validates with a verified signature',
+  roundTripValidation.overall_valid === true && roundTripValidation.signature_state === 'verified',
+  JSON.stringify(roundTripValidation.problems),
 );
 
 // 5. Signed container validates, plans, and loads with verified evidence.
