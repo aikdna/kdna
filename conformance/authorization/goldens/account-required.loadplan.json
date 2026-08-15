@@ -24,9 +24,11 @@
     "schema_valid": true,
     "payload_valid": true,
     "checksums_valid": true,
+    "signature_valid": true,
     "load_contract_valid": true,
     "overall_valid": true
   },
+  "signature_state": "absent",
   "issues": [
     {
       "code": "KDNA_AUTH_ACCOUNT_REQUIRED",

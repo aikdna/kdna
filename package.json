@@ -30,6 +30,8 @@
     "conformance:runtime-contract:update": "node scripts/generate-runtime-contract-fixtures.mjs --write",
     "conformance:phase2": "node conformance/run.mjs --profile phase2-protocol",
     "conformance:envelope-aead": "node conformance/envelope-aead.mjs",
+    "conformance:signature": "node conformance/signature/run.mjs",
+    "conformance:signature:check": "node scripts/generate-signature-vectors.mjs --check",
     "verify:crypto-evidence": "node scripts/check-generated-crypto-evidence.mjs",
     "conformance:authorization:update": "node scripts/generate-authorization-conformance.mjs",
     "conformance:self-check:update": "node scripts/generate-self-check-conformance-fixtures.mjs",

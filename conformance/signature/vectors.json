@@ -1,0 +1,125 @@
+{
+  "vector_format": "kdsig.conformance-vectors",
+  "vector_format_version": "0.1.0",
+  "profile": "kdsig.ed25519",
+  "profile_version": "0.1.0",
+  "algorithm": "ed25519",
+  "entry_name": "signature.kdsig",
+  "note": "Deterministic known-answer vectors for kdsig.ed25519 (RFC-0021 M1). The seed is public vector material, never a real signing key.",
+  "key": {
+    "seed_hex": "5b9ee61ae3a1cba16e08837c241e98bd7d04d9ff76c01e5f22b2d7bb3072d814",
+    "public_key_hex": "74d0d1782e37787dc40c0dc40815fee6f2d92ad200b33f39fe16c38cf27ec0cf",
+    "key_fingerprint": "sha256:b588d9ae01fcb143d9eee1f241bd6a44acfec27960e4e9390324a001e8f7a54d"
+  },
+  "wrong_key": {
+    "seed_hex": "9c0a51cb4093ea4e3e9fafcbdf2301f8482c1fef2ff921f8e988e2e4ff7aa6d0",
+    "public_key_hex": "034de7074769f04fc26c2929739e3e5c4640fe619c95d04f38ab15996081d166"
+  },
+  "asset": {
+    "entries": {
+      "mimetype": "6170706c69636174696f6e2f766e642e6b646e612e6173736574",
+      "kdna.json": "7b22616363657373223a227075626c6963222c2261737365745f6964223a226b646e613a636f6e666f726d616e63653a7369676e61747572653a6b647369672d65643235353139222c2261737365745f74797065223a2266697874757265222c2261737365745f756964223a2275726e3a757569643a30303030303030302d303030302d343030302d383030302d303030303030303030353131222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32302e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e312e30227d2c22637265617465645f6174223a22323032362d30382d31365430303a30303a30305a222c22666f726d61745f76657273696f6e223a22302e312e30222c226a7564676d656e745f76657273696f6e223a22312e302e30222c227061796c6f6164223a7b22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73652c2270617468223a227061796c6f61642e6b646e6162227d2c227469746c65223a225369676e617475726520436f6e666f726d616e63652046697874757265222c22757064617465645f6174223a22323032362d30382d31365430303a30303a30305a222c2276657273696f6e223a22312e302e30227d0a",
+      "payload.kdnab": "b900036770726f66696c65756b646e612e7061796c6f61642e6a7564676d656e746f70726f66696c655f76657273696f6e65302e312e3064636f7265b90001666178696f6d7381b900026973746174656d656e74783356657269667920696e74656772697479206265666f7265207472757374696e672061206c6f61646564206a7564676d656e742e6c6170706c6965735f7768656e81781b6c6f6164696e672061207369676e6564204b444e41206173736574"
+    },
+    "unsigned_container_sha256": "99f880a76d80b332337712508dd1ef34fb17931ad4984bbb0ebcb5d6003dfeff"
+  },
+  "expected": {
+    "content_digest": "sha256:499aa90c48816e220d088c0a6cd997df3f0790688b80c2bd6781132a7fad99e1",
+    "signing_payload_hex": "6b647369672e656432353531393a302e312e303a7368613235363a34393961613930633438383136653232306430383863306136636439393764663366303739303638386238306332626436373831313332613766616439396531",
+    "signing_payload": "kdsig.ed25519:0.1.0:sha256:499aa90c48816e220d088c0a6cd997df3f0790688b80c2bd6781132a7fad99e1",
+    "bundle": {
+      "algorithm": "ed25519",
+      "content_digest": "sha256:499aa90c48816e220d088c0a6cd997df3f0790688b80c2bd6781132a7fad99e1",
+      "profile": "kdsig.ed25519",
+      "profile_version": "0.1.0",
+      "public_key": "74d0d1782e37787dc40c0dc40815fee6f2d92ad200b33f39fe16c38cf27ec0cf",
+      "signature": "95d2fa627302f5bd7f3a491d8507737b02fd7fe33077c8ccfd39a7cdeae951e7c307751e84ea18c4fee067cd6dd9bc469dc758f3ac87f6a3cd9a18ae9de57506"
+    },
+    "bundle_bytes_hex": "7b22616c676f726974686d223a2265643235353139222c22636f6e74656e745f646967657374223a227368613235363a34393961613930633438383136653232306430383863306136636439393764663366303739303638386238306332626436373831313332613766616439396531222c2270726f66696c65223a226b647369672e65643235353139222c2270726f66696c655f76657273696f6e223a22302e312e30222c227075626c69635f6b6579223a2237346430643137383265333737383764633430633064633430383135666565366632643932616432303062333366333966653136633338636632376563306366222c227369676e6174757265223a223935643266613632373330326635626437663361343931643835303737333762303266643766653333303737633863636664333961376364656165393531653763333037373531653834656131386334666565303637636436646439626334363964633735386633616338376636613363643961313861653964653537353036227d0a",
+    "key_fingerprint": "sha256:b588d9ae01fcb143d9eee1f241bd6a44acfec27960e4e9390324a001e8f7a54d",
+    "signed_container_sha256": "c1bda313e7e5bd8a95d0e0784282e265d9cbb0870bf21710c7ba697b5189fea8"
+  },
+  "negative_cases": [
+    {
+      "id": "tampered-payload",
+      "description": "One payload statement changed after signing while keeping the CBOR valid; the bundle content_digest no longer matches.",
+      "mutate": {
+        "entry": "payload.kdnab",
+        "cbor_set": {
+          "path": ["core", "axioms", "0", "statement"],
+          "value": "Tampered statement."
+        }
+      },
+      "expected_code": "KDNA_INTEGRITY_SIGNATURE_FAILED"
+    },
+    {
+      "id": "tampered-manifest",
+      "description": "Manifest title changed after signing; the bundle content_digest no longer matches.",
+      "mutate": {
+        "entry": "kdna.json",
+        "json_set": {
+          "path": "title",
+          "value": "Tampered Title"
+        }
+      },
+      "expected_code": "KDNA_INTEGRITY_SIGNATURE_FAILED"
+    },
+    {
+      "id": "tampered-signature",
+      "description": "One nibble of the bundle signature flipped.",
+      "mutate": {
+        "bundle_signature_flip_nibble": true
+      },
+      "expected_code": "KDNA_INTEGRITY_SIGNATURE_FAILED"
+    },
+    {
+      "id": "unsupported-profile",
+      "description": "Bundle declares an unknown signature profile.",
+      "mutate": {
+        "bundle_set": {
+          "path": "profile",
+          "value": "kdsig.example"
+        }
+      },
+      "expected_code": "KDNA_SIGNATURE_PROFILE_UNSUPPORTED"
+    },
+    {
+      "id": "unsupported-version",
+      "description": "Bundle declares an unsupported profile_version.",
+      "mutate": {
+        "bundle_set": {
+          "path": "profile_version",
+          "value": "0.2.0"
+        }
+      },
+      "expected_code": "KDNA_SIGNATURE_VERSION_UNSUPPORTED"
+    },
+    {
+      "id": "extra-field",
+      "description": "Bundle carries an undeclared extra field.",
+      "mutate": {
+        "bundle_set": {
+          "path": "issuer",
+          "value": "conformance"
+        }
+      },
+      "expected_code": "KDNA_INTEGRITY_SIGNATURE_FAILED"
+    },
+    {
+      "id": "malformed-json",
+      "description": "signature.kdsig entry is not valid JSON.",
+      "mutate": {
+        "replace_bundle_bytes_hex": "7b6e6f742d6a736f6e0a"
+      },
+      "expected_code": "KDNA_INTEGRITY_SIGNATURE_FAILED"
+    }
+  ],
+  "wrong_key_semantics": {
+    "description": "M1 bundles carry their own public key. A bundle signed by a different key verifies under that key, so unpinned verification reports the foreign key fingerprint; key trust is the consumer's pinning decision and identity binding is future milestone work. Pinning the vector key must reject the foreign bundle fail-closed.",
+    "bundle_signer": "wrong_key",
+    "unpinned_state": "verified",
+    "unpinned_key_fingerprint": "sha256:c63c5a8df97fdd6b0fc626d3bcf70120902fe7a720e63fbe1d0d78f4b1a782f1",
+    "pinned_public_key": "74d0d1782e37787dc40c0dc40815fee6f2d92ad200b33f39fe16c38cf27ec0cf",
+    "pinned_expected_code": "KDNA_INTEGRITY_SIGNATURE_FAILED"
+  }
+}

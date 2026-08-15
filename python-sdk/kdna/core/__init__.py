@@ -17,8 +17,23 @@ from .validate import (
     validate_file,
 )
 from .plan import plan_load, plan_load_file
-from .pack import build_checksums, pack, pack_source
+from .pack import build_checksums, pack, pack_entries, pack_source
 from .load import load, load_file
+from .signature import (
+    KDSIG_ALGORITHM,
+    KDSIG_PROFILE,
+    KDSIG_PROFILE_VERSION,
+    SIGNATURE_ENTRY_NAME,
+    KDNASignatureError,
+    build_signing_payload,
+    generate_signing_key_pair,
+    key_fingerprint,
+    parse_signature_bundle,
+    serialize_signature_bundle,
+    sign_container_bytes,
+    sign_content_digest,
+    verify_signature_bundle,
+)
 
 __all__ = [
     "MIMETYPE",
@@ -33,7 +48,21 @@ __all__ = [
     "plan_load_file",
     "build_checksums",
     "pack",
+    "pack_entries",
     "pack_source",
     "load",
     "load_file",
+    "KDSIG_ALGORITHM",
+    "KDSIG_PROFILE",
+    "KDSIG_PROFILE_VERSION",
+    "SIGNATURE_ENTRY_NAME",
+    "KDNASignatureError",
+    "build_signing_payload",
+    "generate_signing_key_pair",
+    "key_fingerprint",
+    "parse_signature_bundle",
+    "serialize_signature_bundle",
+    "sign_container_bytes",
+    "sign_content_digest",
+    "verify_signature_bundle",
 ]

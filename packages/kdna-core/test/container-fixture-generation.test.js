@@ -52,6 +52,7 @@ function validationChecks(validation) {
     schema_valid: validation.schema_valid,
     payload_valid: validation.payload_valid,
     checksums_valid: validation.checksums_valid,
+    signature_valid: validation.signature_valid,
     load_contract_valid: validation.load_contract_valid,
     overall_valid: validation.overall_valid,
   };
@@ -538,6 +539,7 @@ test('bad-checksum fixture has one current-contract digest failure and no struct
     schema_valid: true,
     payload_valid: true,
     checksums_valid: false,
+    signature_valid: true,
     load_contract_valid: true,
     overall_valid: false,
   });
@@ -577,6 +579,7 @@ test('missing-manifest fixture carries an independently valid current payload', 
     schema_valid: true,
     payload_valid: true,
     checksums_valid: true,
+    signature_valid: true,
     load_contract_valid: true,
     overall_valid: true,
   });

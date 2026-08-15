@@ -17,10 +17,14 @@ export {
   isKdnaSourceDir,
   detectContainerFormat,
   readLayout,
+  readLayoutBytes,
+  fullEntryBufferMap,
   inspect,
   validate,
   buildChecksums,
   pack,
+  packEntryMap,
+  signContainerBytes,
   unpack,
   FORBIDDEN_OUTPUT_TERMS,
   parseSemver,
@@ -80,7 +84,24 @@ export const verifyDigest = publicApi.verifyDigest;
 export const verifyDigestSync = publicApi.verifyDigestSync;
 export const matchDomain = publicApi.matchDomain;
 export const matchDomainSync = publicApi.matchDomainSync;
+export const signKDNA = publicApi.signKDNA;
+export const signKDNASync = publicApi.signKDNASync;
+export const verifyKDNASignature = publicApi.verifyKDNASignature;
+export const verifyKDNASignatureSync = publicApi.verifyKDNASignatureSync;
 export const composeKDNA = publicApi.composeKDNA;
+
+import assetSignature from './signature.js';
+export const KDSIG_PROFILE = assetSignature.KDSIG_PROFILE;
+export const KDSIG_PROFILE_VERSION = assetSignature.KDSIG_PROFILE_VERSION;
+export const KDSIG_ALGORITHM = assetSignature.KDSIG_ALGORITHM;
+export const SIGNATURE_ENTRY_NAME = assetSignature.SIGNATURE_ENTRY_NAME;
+export const buildSigningPayload = assetSignature.buildSigningPayload;
+export const generateSigningKeyPair = assetSignature.generateSigningKeyPair;
+export const keyFingerprint = assetSignature.keyFingerprint;
+export const parseSignatureBundle = assetSignature.parseSignatureBundle;
+export const serializeSignatureBundle = assetSignature.serializeSignatureBundle;
+export const signContentDigest = assetSignature.signContentDigest;
+export const verifySignatureBundle = assetSignature.verifySignatureBundle;
 
 export const DIGEST_PROFILE = runtimeCapsule.DIGEST_PROFILE;
 export const DIGEST_PROFILE_VERSION = runtimeCapsule.DIGEST_PROFILE_VERSION;
@@ -121,6 +142,7 @@ export const validateJudgmentTrace = runtimeContract.validateJudgmentTrace;
 
 export const STANDARD_ENTRIES = assetReader.STANDARD_ENTRIES;
 export const createKdnaAssetReader = assetReader.createKdnaAssetReader;
+export const contentDigestFromEntryBuffers = assetReader.contentDigestFromEntryBuffers;
 
 export const {
   LICENSED_ENTRY_PROFILE,

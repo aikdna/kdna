@@ -38,6 +38,13 @@ Every Capsule is a closed object with:
 is the globally unique identity. `version` and `judgment_version` remain
 separate release and semantic-judgment coordinates.
 
+`signature.state` is `absent` for unsigned assets. For assets carrying a
+verified `signature.kdsig` bundle (RFC-0021 M1, `kdsig.ed25519`), it is
+`verified` together with the bundle `profile`, `profile_version`, the signer
+`key_fingerprint`, and the signed `content_digest`; `trace.signature_state`
+always matches `signature.state`. A failed signature never produces a capsule:
+loading rejects the asset fail-closed.
+
 There is no alternate public Capsule generation and no compatibility adapter.
 An unknown `contract_version` fails closed.
 
