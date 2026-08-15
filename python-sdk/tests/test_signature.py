@@ -143,8 +143,10 @@ def test_unsigned_container_reports_absent_signature(vectors: dict):
 
 
 def test_js_signed_container_verifies_and_loads_in_python(vectors: dict):
-    """Cross-language parity: the JS runner's pinned signed container bytes
-    must verify and load through Python with identical evidence."""
+    """Cross-language parity: a container assembled from the pinned entries
+    and the pinned (Ed25519-deterministic) bundle bytes must verify and load
+    through Python with identical evidence. Container DEFLATE bytes are not
+    pinned; the logical anchors are."""
     entries = entry_map(vectors)
     entries[SIGNATURE_ENTRY_NAME] = bytes.fromhex(
         vectors["expected"]["bundle_bytes_hex"]
