@@ -229,7 +229,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-cli
-          ref: 6841900df1df876f2b6e300b1416b4a9186c0aba
+          ref: 7f609d5a30e00ddcf2cd418699fb6390d80ed78e
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
@@ -261,7 +261,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-studio-swift
-          ref: c86010e0b9d76a2e1397bc63b1698c6bd1a83331
+          ref: c784a1262b2481ba4504548feac2bb782f5d70e5
           path: .ecosystem-repos/kdna-studio-swift
           fetch-depth: 0
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
@@ -272,32 +272,32 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-activation-server
-          ref: a0b3821bf8b88b700a7135c777c0db533f25287d
+          ref: 31b76fabc5d3f487221a7ea862f352cf190fa825
           path: .ecosystem-repos/kdna-activation-server
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-remote-server
-          ref: 6da650327b1eb8e211b9f0d510be9308f2e78f0c
+          ref: 81b563598ecc19da480d5191f9554a20cef19744
           path: .ecosystem-repos/kdna-remote-server
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-web-server
-          ref: a4dce0b636193d604e39b383cdcf8f5a897b3872
+          ref: f4907a9786f82f13e62db1040690a5f7df8f512b
           path: .ecosystem-repos/kdna-web-server
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-web-client
-          ref: ac6f44c5158f1fe47e532517c59ce115e87160c9
+          ref: f86d46255b7a4e93b40700741de9e0ddcb6bb812
           path: .ecosystem-repos/kdna-web-client
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-react
-          ref: e96d8ad18c8ae2106967c25e9e9a41270c3cc4ca
+          ref: 1c55b6539aa13604acaff589016d7cbc218f05b0
           path: .ecosystem-repos/kdna-react
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/create-kdna-web-app
-          ref: 644ca5eb660a6f8edeea960b47ebbd7121360fa0
+          ref: a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39
           path: .ecosystem-repos/create-kdna-web-app
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:

@@ -197,8 +197,8 @@ test('consumer discovery keeps peer and development declarations distinct', (t) 
   );
 });
 
-test('explicit policy contains 35 unique current managed dependency declarations', () => {
-  assert.equal(EXPECTED_BINDINGS.length, 35);
+test('explicit policy contains 34 unique current managed dependency declarations', () => {
+  assert.equal(EXPECTED_BINDINGS.length, 34);
   assert.equal(new Set(EXPECTED_BINDINGS.map(bindingKey)).size, EXPECTED_BINDINGS.length);
   assert.equal(
     EXPECTED_BINDINGS.some(
