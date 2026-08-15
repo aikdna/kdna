@@ -555,7 +555,7 @@
     {
       "repository": "aikdna/kdna-app-shared",
       "local_path": "../kdna-app-shared",
-      "source_commit": "c942bc932ab087dc6f1ed751cb476c82e2db43a4",
+      "source_commit": "017e759efb448bf99b3384ccafa7f25172169ebb",
       "conformance_commit": null,
       "release_tag": "0.5.0",
       "release_commit": "436f7832fbedba9bf55d9459cfa5a2c7f761967e",
@@ -568,7 +568,7 @@
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "Swift package source only; it is not an npm publication",
-        "the 0.5.0 tag predates the current Swift integration; accepted main is recertified against Swift Core 95f638e2f0472a375704fb5fe2f057de0cb4cb07 but remains unpublished source"
+        "the 0.5.0 tag predates the current Swift integration; accepted main is recertified against Swift Core 0.21.0 (tag commit 1e13ef5f1c9283ddf810268218ac406234d25eb7) but remains unpublished source"
       ],
       "recommended_entrypoint": ".package(url: \"https://github.com/aikdna/kdna-app-shared.git\", exact: \"0.5.0\")",
       "legacy_replacement": null
@@ -589,7 +589,7 @@
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "Swift package source only; it is not an npm publication",
-        "the 0.4.0 tag predates the current Swift integration; accepted main is recertified against Swift Core 95f638e2f0472a375704fb5fe2f057de0cb4cb07 and App Shared c942bc932ab087dc6f1ed751cb476c82e2db43a4 but remains unpublished source"
+        "the 0.4.0 tag predates the current Swift integration; accepted main is recertified against Swift Core 0.21.0 (tag commit 1e13ef5f1c9283ddf810268218ac406234d25eb7) and App Shared 017e759efb448bf99b3384ccafa7f25172169ebb but remains unpublished source"
       ],
       "recommended_entrypoint": ".package(url: \"https://github.com/aikdna/kdna-studio-swift.git\", exact: \"0.4.0\")",
       "legacy_replacement": null
