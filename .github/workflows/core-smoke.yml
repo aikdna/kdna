@@ -69,7 +69,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           repository: aikdna/kdna-app-shared
-          ref: c942bc932ab087dc6f1ed751cb476c82e2db43a4
+          ref: 017e759efb448bf99b3384ccafa7f25172169ebb
           path: .ecosystem-repos/kdna-app-shared
           fetch-depth: 0
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0

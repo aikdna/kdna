@@ -41,7 +41,15 @@ Artifacts record their repository-relative path, exact version, SHA-256,
 GitHub Release tag and commit, and the Core conformance commit used to verify
 them. The `aikdna/kdna-assets` artifact set must be an exact two-way projection
 of its accepted `index/current.json`; a new asset or Cluster cannot appear on
-only one side. `source_commit` identifies an accepted repository checkout;
+only one side. `source_commit` identifies an accepted repository checkout —
+it is a verified acceptance coordinate, not a live mirror of that repository's
+main branch, so a component may legitimately advance on its own main until the
+next acceptance. The exception is a locked consumer: when another
+manifest-listed component merges a change that consumes the producer at a
+newer coordinate than the manifest records (for example a SwiftPM pin that
+tracks the producer's main), the producer's `source_commit` must be advanced
+to that consumed coordinate in the same acceptance window, so the manifest
+never contradicts what a locked consumer actually resolves.
 `conformance_commit` identifies a separate fixture or contract anchor and must
 not be interpreted as that repository's release commit. A live package-less
 component records `component_version`, `release_tag`, and `release_commit`
