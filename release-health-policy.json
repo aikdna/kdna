@@ -47,7 +47,7 @@
       "repository": "aikdna/kdna-activation-server",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-activation-server",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "canonical_tag": {
         "type": "natural"
       }
@@ -57,7 +57,7 @@
       "repository": "aikdna/kdna-remote-server",
       "package_json": "package.json",
       "npm_package": "@aikdna/kdna-remote-server",
-      "version": "0.4.1",
+      "version": "0.4.2",
       "canonical_tag": {
         "type": "natural"
       }

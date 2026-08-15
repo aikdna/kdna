@@ -58,6 +58,10 @@ const FORBIDDEN_HASHES = [
     hashes: new Set(['3ce236400925c24e9e5416bdc69abe5427b3183e2abe6f848b297334cfdeaa25']),
   },
   {
+    label: 'private integration repo',
+    hashes: new Set(['67f665abf5cf55ca4d31f9f8228af336c19268db1e98dabf107912adfb0fcacc']),
+  },
+  {
     label: 'private consumer app',
     hashes: new Set(['61e79d887fa6b41acfebaeee47c2ba816bc76c892b1f72a3c2ba3f34900a22f8']),
   },

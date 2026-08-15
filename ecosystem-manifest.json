@@ -132,7 +132,7 @@
     {
       "repository": "aikdna/kdna-cli",
       "local_path": "../kdna-cli",
-      "source_commit": "6841900df1df876f2b6e300b1416b4a9186c0aba",
+      "source_commit": "7f609d5a30e00ddcf2cd418699fb6390d80ed78e",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -310,7 +310,7 @@
     {
       "repository": "aikdna/kdna-activation-server",
       "local_path": "../kdna-activation-server",
-      "source_commit": "a0b3821bf8b88b700a7135c777c0db533f25287d",
+      "source_commit": "31b76fabc5d3f487221a7ea862f352cf190fa825",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -319,7 +319,7 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-activation-server",
           "npm_package": "@aikdna/kdna-activation-server",
-          "version": "0.2.0",
+          "version": "0.2.1",
           "lifecycle": "Experimental",
           "release_status": "active",
           "dependency_policy": "current",
@@ -342,7 +342,7 @@
     {
       "repository": "aikdna/kdna-remote-server",
       "local_path": "../kdna-remote-server",
-      "source_commit": "6da650327b1eb8e211b9f0d510be9308f2e78f0c",
+      "source_commit": "81b563598ecc19da480d5191f9554a20cef19744",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -351,7 +351,7 @@
           "package_json": "package.json",
           "package_name": "@aikdna/kdna-remote-server",
           "npm_package": "@aikdna/kdna-remote-server",
-          "version": "0.4.1",
+          "version": "0.4.2",
           "lifecycle": "Experimental",
           "release_status": "active",
           "dependency_policy": "current",
@@ -374,7 +374,7 @@
     {
       "repository": "aikdna/kdna-web-server",
       "local_path": "../kdna-web-server",
-      "source_commit": "a4dce0b636193d604e39b383cdcf8f5a897b3872",
+      "source_commit": "f4907a9786f82f13e62db1040690a5f7df8f512b",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -406,7 +406,7 @@
     {
       "repository": "aikdna/kdna-web-client",
       "local_path": "../kdna-web-client",
-      "source_commit": "ac6f44c5158f1fe47e532517c59ce115e87160c9",
+      "source_commit": "f86d46255b7a4e93b40700741de9e0ddcb6bb812",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -438,7 +438,7 @@
     {
       "repository": "aikdna/kdna-react",
       "local_path": "../kdna-react",
-      "source_commit": "e96d8ad18c8ae2106967c25e9e9a41270c3cc4ca",
+      "source_commit": "1c55b6539aa13604acaff589016d7cbc218f05b0",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -462,7 +462,7 @@
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "published to npm as an experimental integration surface, not a hosted-platform claim",
-        "the verified boundary is Web Client 0.2.2, Web Server 0.3.0, Activation 0.2.0, React 18 or 19, and Node.js 20 or later"
+        "the verified boundary is Web Client 0.3.0, Web Server 0.3.1, Activation 0.2.1, React 18 or 19, and Node.js 20 or later"
       ],
       "recommended_entrypoint": "use endpoint-backed hooks/components",
       "legacy_replacement": null
@@ -470,7 +470,7 @@
     {
       "repository": "aikdna/create-kdna-web-app",
       "local_path": "../create-kdna-web-app",
-      "source_commit": "644ca5eb660a6f8edeea960b47ebbd7121360fa0",
+      "source_commit": "a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39",
       "conformance_commit": null,
       "component_version": null,
       "artifacts": [],
@@ -494,10 +494,10 @@
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "published to npm as an experimental local scaffolder, not an AIKDNA-hosted application platform",
-        "the verified boundary is Core 0.20.0, Web Server 0.3.0, Web Client 0.2.2, React 0.3.0, Node.js 20 or later, npm, pnpm 11.14.0, and Yarn 1.22.22",
+        "the verified boundary is Core 0.21.0, Web Server 0.3.1, Web Client 0.3.0, React 0.4.0, Node.js 20 or later, npm, pnpm 11.14.0, and Yarn 1.22.22",
         "generated templates cover local public and password-protected inspect/plan-load/load flows; remote-mode web forwarding is not wired"
       ],
-      "recommended_entrypoint": "npx create-kdna-web-app@0.4.0 <app>",
+      "recommended_entrypoint": "npx create-kdna-web-app@0.5.0 <app>",
       "legacy_replacement": null
     },
     {
@@ -535,11 +535,11 @@
     {
       "repository": "aikdna/kdna-core-swift",
       "local_path": "../kdna-core-swift",
-      "source_commit": "cc335d5ed745529c04bcb51b7260185ec2ca84e8",
+      "source_commit": "c1f8495db5e5c094458ff62c295e28cd760fb166",
       "conformance_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
-      "release_tag": "v0.20.0",
-      "release_commit": "4a9b732b590a711c544da5280a4b78f071369617",
-      "component_version": "0.20.0",
+      "release_tag": "v0.21.0",
+      "release_commit": "1e13ef5f1c9283ddf810268218ac406234d25eb7",
+      "component_version": "0.21.0",
       "artifacts": [],
       "packages": [],
       "lifecycle": "Pre-release",
@@ -547,7 +547,7 @@
       "supported_access_modes": ["public", "licensed"],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "accepted main is recertified against exact public Core candidate commit 76bbc587ce05f7e575c2373832cc5c9eee9df98a; the 0.20.0 tag remains the published incumbent"
+        "accepted main is recertified against exact public Core candidate commit 76bbc587ce05f7e575c2373832cc5c9eee9df98a; the 0.21.0 tag is the published incumbent"
       ],
       "recommended_entrypoint": "fixed conformance fixtures only",
       "legacy_replacement": null
@@ -576,7 +576,7 @@
     {
       "repository": "aikdna/kdna-studio-swift",
       "local_path": "../kdna-studio-swift",
-      "source_commit": "c86010e0b9d76a2e1397bc63b1698c6bd1a83331",
+      "source_commit": "c784a1262b2481ba4504548feac2bb782f5d70e5",
       "conformance_commit": null,
       "release_tag": "0.4.0",
       "release_commit": "97b57d84b2321e13de18f5b07b18435ce002b958",
