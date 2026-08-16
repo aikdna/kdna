@@ -12,6 +12,7 @@ KDNA Core surface.
 | RFC-0013 | Judgment Asset Lifecycle | Withdrawn | Archived; no Core fields or behavior were adopted. |
 | RFC-0014 | KDNA Asset Authorization, Entitlement, and LoadPlan | Proposed | Proposed authorization/entitlement/LoadPlan contract; not yet accepted as a binding compatibility promise. |
 | RFC-0015 | Runtime Trace extension | Withdrawn | Archived; use the maintained trace schema and documentation. |
+| RFC-0021 | KDNA Signature Track | Draft — M1 bound (pre-release candidate) | M1 asset signatures (`kdsig.ed25519`) are implemented in the JavaScript and Python Cores and bound as a pre-release candidate; M2–M6 are not yet implemented and remain non-binding. |
 
 The canonical protocol is [SPEC.md](../SPEC.md). Runtime behavior is described
 by released package documentation. A draft RFC never establishes a compatibility
