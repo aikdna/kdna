@@ -12,6 +12,7 @@ from typing import Any, Dict, List, Optional
 import cbor2
 
 from . import container
+from . import signature
 from .crypto_profile import KDNADecryptionError, decrypt_password_entry
 from .plan import plan_load
 from .validate import compute_runtime_entry_set_digest
@@ -229,7 +230,7 @@ def _compute_content_digest(layout: container.Layout) -> str:
     import json
 
     parts = []
-    excluded = {".DS_Store", "build-receipt.json"}
+    excluded = {".DS_Store", "build-receipt.json", "signature.kdsig"}
     for entry_name in sorted(layout.entries):
         if entry_name in excluded:
             continue
@@ -249,6 +250,29 @@ def _compute_content_digest(layout: container.Layout) -> str:
         parts.append(f"{entry_name}:{hashlib.sha256(digest_bytes).hexdigest()}")
     combined = "\n".join(parts)
     return f"sha256:{hashlib.sha256(combined.encode('utf-8')).hexdigest()}"
+
+
+def _signature_evidence(layout: container.Layout) -> Dict[str, Any]:
+    """Runtime Capsule signature evidence (RFC-0021 M1), fail-closed.
+
+    An absent ``signature.kdsig`` entry reports ``{"state": "absent"}``.
+    A present bundle must verify against the canonical content digest; any
+    failure raises before a capsule can be produced.
+    """
+    entry = layout.entries.get(signature.SIGNATURE_ENTRY_NAME)
+    if entry is None:
+        return {"state": "absent"}
+    evidence = signature.verify_signature_bundle(
+        entry.data,
+        _compute_content_digest(layout),
+    )
+    return {
+        "state": "verified",
+        "profile": evidence["profile"],
+        "profile_version": evidence["profile_version"],
+        "key_fingerprint": evidence["key_fingerprint"],
+        "content_digest": evidence["content_digest"],
+    }
 
 
 def load(
@@ -280,10 +304,12 @@ def load(
     )
     if plan["can_load_now"] is not True and not load_may_verify_password:
         codes = [issue["code"] for issue in plan["issues"] if issue.get("code")]
-        raise ValueError(
+        error = ValueError(
             f"LoadPlan denied loading: state={plan['state']} "
             f"required_action={plan['required_action']}"
         )
+        error.code = codes[0] if codes else "KDNA_LOAD_NOT_AUTHORIZED"
+        raise error
 
     layout = container.read_layout(data)
     payload = layout.payload
@@ -324,6 +350,8 @@ def load(
         "content": _project_content(payload, profile, manifest),
     }
 
+    signature_evidence = _signature_evidence(layout)
+
     capsule = {
         "type": "kdna.runtime-capsule",
         "contract_version": RUNTIME_CAPSULE_CONTRACT_VERSION,
@@ -334,7 +362,7 @@ def load(
             "judgment_version": manifest.get("judgment_version"),
         },
         "digests": _digest_evidence(data, layout),
-        "signature": {"state": "absent"},
+        "signature": signature_evidence,
         "access": manifest.get("access") or "public",
         "profile": profile,
         "context": projection["content"],
@@ -345,7 +373,7 @@ def load(
             "input_kind": "packaged_bytes",
             "runtime_eligible": True,
             "schema_valid": True,
-            "signature_state": "absent",
+            "signature_state": signature_evidence["state"],
             "profile": profile,
         },
     }

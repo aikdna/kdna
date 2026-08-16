@@ -124,8 +124,46 @@ test('public Runtime Capsule builder accepts only the stable responsibility shap
       loadedAt: golden.loaded_at,
       schemaValid: true,
     }),
+    (error) => error.code === 'KDNA_RUNTIME_CAPSULE_BUILD_INVALID',
+  );
+
+  assert.throws(
+    () => core.buildRuntimeCapsule({
+      projection: { profile: loaded.profile, content: loaded.context },
+      manifest,
+      digests: loaded.digests,
+      signature: {
+        state: 'verified',
+        profile: 'kdsig.unknown',
+        profile_version: '0.1.0',
+        key_fingerprint: 'sha256:' + '0'.repeat(64),
+        content_digest: 'sha256:' + '0'.repeat(64),
+      },
+      inputKind: 'packaged_bytes',
+      loadedAt: golden.loaded_at,
+      schemaValid: true,
+    }),
     (error) => error.code === 'KDNA_ASSET_SIGNATURE_UNSUPPORTED',
   );
+
+  const verifiedEvidence = {
+    state: 'verified',
+    profile: 'kdsig.ed25519',
+    profile_version: '0.1.0',
+    key_fingerprint: 'sha256:' + '0'.repeat(64),
+    content_digest: 'sha256:' + '0'.repeat(64),
+  };
+  const verifiedCapsule = core.buildRuntimeCapsule({
+    projection: { profile: loaded.profile, content: loaded.context },
+    manifest,
+    digests: loaded.digests,
+    signature: verifiedEvidence,
+    inputKind: 'packaged_bytes',
+    loadedAt: golden.loaded_at,
+    schemaValid: true,
+  });
+  assert.deepEqual(verifiedCapsule.signature, verifiedEvidence);
+  assert.equal(verifiedCapsule.trace.signature_state, 'verified');
 
   for (const invalidAccess of ['', null, false, 0]) {
     assert.throws(

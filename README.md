@@ -68,10 +68,14 @@ kdna plan-load ./judgment.kdna --json
 kdna load ./judgment.kdna --profile=compact --as=json
 ```
 
-> **Python/PyPI note:** the `kdna` project name on PyPI is an unrelated
-> third-party placeholder, not ours. Our official Python distribution on PyPI
-> is **`aikdna`** (the import package name remains `kdna`). Install only
-> `aikdna` from PyPI — never `pip install kdna`.
+> **Official package coordinates:** all official npm packages are published
+> under the **`@aikdna`** scope (for example `@aikdna/kdna-cli` and
+> `@aikdna/kdna-core`). The bare `kdna` name on npm is an unrelated
+> third-party placeholder — do not install it. On PyPI, the `kdna` project
+> name is likewise an unrelated third-party placeholder, not ours. Our
+> official Python distribution on PyPI is **`aikdna`** (the import package
+> name remains `kdna`). Install only `aikdna` from PyPI — never
+> `pip install kdna`. See [SECURITY.md](./SECURITY.md).
 
 The AIKDNA asset repository currently displays two current-format technical
 reference assets and zero Clusters. Listing is not an endorsement, and the
@@ -86,7 +90,7 @@ A `.kdna` file is a single, portable container that holds:
 - a **public manifest** (`kdna.json`) — the asset's identity and metadata
 - a **judgment payload** (`payload.kdnab`) — the actual structured judgment data
 - optional **encryption for licensed entries** — encrypted judgment payload with in-memory-only decryption (current in JS Core/CLI); optional watermarking (future)
-- optional **signatures** (`signature.kdsig`) — integrity and provenance attestations, not content endorsement
+- an optional **signature** (`signature.kdsig`) — an Ed25519 signature bundle (`kdsig.ed25519`, RFC-0021 M1) over the canonical content digest; verified offline and fail-closed during validation and loading. It attests integrity and provenance, not content endorsement
 - **version and lineage information** — for traceability across releases
 - a **runtime load contract** — describes how the official KDNA loader may read the asset
 - optional **attachments** — supplementary files referenced from the payload
@@ -99,6 +103,45 @@ official Creation Writer emits `checksums.json` and explicit scoped authoring
 semantics, but those stricter writer requirements do not redefine the minimum
 Core format. See [Creation Output Boundary](./specs/creation-output-boundary.md).
 
+## Signing and verifying assets
+
+A `.kdna` asset can carry an optional `signature.kdsig` bundle
+(`kdsig.ed25519`, [RFC-0021](./rfcs/RFC-0021-signature-track.md) M1). The
+Ed25519 signature covers the canonical content digest
+([CANONICALIZATION.md](./docs/CANONICALIZATION.md)), verification is fully
+offline, and loading is fail-closed: an asset whose signature does not verify
+is rejected, never downgraded to "unsigned".
+
+```js
+const {
+  generateSigningKeyPair,
+  signKDNA,
+  verifyKDNASignature,
+} = require('@aikdna/kdna-core');
+
+// Author side: sign a packaged asset (keep the private key secret).
+const key = generateSigningKeyPair();
+const signed = await signKDNA('./judgment.kdna', key.private_key, {
+  outputPath: './judgment.signed.kdna',
+});
+
+// Consumer side: verify offline. Throws on any verification failure.
+const evidence = await verifyKDNASignature('./judgment.signed.kdna');
+// evidence.state === 'verified', evidence.key_fingerprint, evidence.content_digest
+
+// Pin the signer key to reject signatures from any other key:
+await verifyKDNASignature('./judgment.signed.kdna', {
+  expectedPublicKey: key.public_key,
+});
+```
+
+Unsigned assets stay valid and report `state: 'absent'`; callers can require a
+signature instead. A valid signature proves integrity and key-bound
+provenance only — it never proves the judgment is correct, expert, or safe.
+The Python SDK (`python-sdk/`) signs and verifies the same wire contract, and
+both implementations share the deterministic known-answer vectors under
+[`conformance/signature/`](./conformance/signature/README.md).
+
 ## What KDNA Core defines
 
 KDNA Core is the **format authority**. It defines:
@@ -107,7 +150,7 @@ KDNA Core is the **format authority**. It defines:
 - the **manifest schema** (`kdna.json` shape and required fields)
 - the **current payload profile schema**
 - the **encryption profile** for licensed entries (AEAD envelope over `payload.kdnab`)
-- the **signature and digest metadata** used for integrity and provenance
+- the **signature and digest metadata** used for integrity and provenance (canonical content digest; the `kdsig.ed25519` asset signature profile of RFC-0021 M1)
 - the **version chain metadata** (lineage, judgment version, compatibility)
 - the **runtime loading contract** (load profiles, decryption requirements, token hints)
 

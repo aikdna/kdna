@@ -743,6 +743,12 @@ export interface KDNAValidationReport {
   schema_valid: boolean;
   payload_valid: boolean;
   checksums_valid: boolean;
+  signature_valid: boolean;
+  signature_state: 'absent' | 'verified' | 'invalid';
+  signature_evidence: (KDNASignatureEvidenceVerified & {
+    algorithm: 'ed25519';
+    public_key: string;
+  }) | null;
   load_contract_valid: boolean;
   loader_version: string;
   min_loader_version: string | null;
@@ -783,6 +789,22 @@ export interface KDNADigestEvidence {
   runtime_entry_set: KDNADigestValue;
 }
 
+export interface KDNASignatureEvidenceAbsent {
+  state: 'absent';
+}
+
+export interface KDNASignatureEvidenceVerified {
+  state: 'verified';
+  profile: 'kdsig.ed25519';
+  profile_version: '0.1.0';
+  key_fingerprint: string;
+  content_digest: string;
+}
+
+export type KDNASignatureEvidence =
+  | KDNASignatureEvidenceAbsent
+  | KDNASignatureEvidenceVerified;
+
 export interface KDNARuntimeCapsule {
   type: 'kdna.runtime-capsule';
   contract_version: '0.1.0';
@@ -793,7 +815,7 @@ export interface KDNARuntimeCapsule {
     judgment_version: string;
   };
   digests: KDNADigestEvidence;
-  signature: { state: 'absent' };
+  signature: KDNASignatureEvidence;
   access: 'public' | 'licensed' | 'remote';
   profile: 'index' | 'compact' | 'scenario' | 'full';
   context: Record<string, any>;
@@ -804,7 +826,7 @@ export interface KDNARuntimeCapsule {
     input_kind: 'packaged_file' | 'packaged_bytes';
     runtime_eligible: true;
     schema_valid: true;
-    signature_state: 'absent';
+    signature_state: 'absent' | 'verified';
     profile: 'index' | 'compact' | 'scenario' | 'full';
     projection_report?: {
       status: 'complete' | 'partial';
@@ -852,11 +874,72 @@ export function buildRuntimeCapsule(input: {
   projection: Record<string, any>;
   manifest: KDNAManifest;
   digests: KDNADigestEvidence;
-  signature?: { state: 'absent' };
+  signature?: KDNASignatureEvidence;
   inputKind: 'packaged_file' | 'packaged_bytes';
   loadedAt?: string;
   schemaValid?: boolean;
 }): KDNARuntimeCapsule;
+
+export const KDSIG_PROFILE: 'kdsig.ed25519';
+export const KDSIG_PROFILE_VERSION: '0.1.0';
+export const KDSIG_ALGORITHM: 'ed25519';
+export const SIGNATURE_ENTRY_NAME: 'signature.kdsig';
+
+export interface KDNASignatureBundle {
+  algorithm: 'ed25519';
+  content_digest: string;
+  profile: 'kdsig.ed25519';
+  profile_version: '0.1.0';
+  public_key: string;
+  signature: string;
+}
+
+export function buildSigningPayload(contentDigest: string): Uint8Array;
+export function generateSigningKeyPair(): {
+  algorithm: 'ed25519';
+  private_key: string;
+  public_key: string;
+};
+export function keyFingerprint(publicKeyHex: string): string;
+export function parseSignatureBundle(bytes: Uint8Array | string): KDNASignatureBundle;
+export function serializeSignatureBundle(bundle: KDNASignatureBundle): Uint8Array;
+export function signContentDigest(
+  contentDigest: string,
+  privateKeySeedHex: string,
+): KDNASignatureBundle;
+export function verifySignatureBundle(
+  bundle: Uint8Array | string,
+  contentDigest: string,
+  options?: { expectedPublicKey?: string },
+): KDNASignatureEvidenceVerified & { algorithm: 'ed25519'; public_key: string };
+export function signKDNA(
+  input: string | Uint8Array,
+  privateKey: string,
+  options?: { outputPath?: string },
+): Promise<{
+  containerBytes: Uint8Array;
+  bundle: KDNASignatureBundle;
+  bundleBytes: Uint8Array;
+  content_digest: string;
+}>;
+export function signKDNASync(
+  input: string | Uint8Array,
+  privateKey: string,
+  options?: { outputPath?: string },
+): {
+  containerBytes: Uint8Array;
+  bundle: KDNASignatureBundle;
+  bundleBytes: Uint8Array;
+  content_digest: string;
+};
+export function verifyKDNASignature(
+  input: string | Uint8Array,
+  options?: { required?: boolean; expectedPublicKey?: string },
+): Promise<KDNASignatureEvidence>;
+export function verifyKDNASignatureSync(
+  input: string | Uint8Array,
+  options?: { required?: boolean; expectedPublicKey?: string },
+): KDNASignatureEvidence;
 export function loadRuntimeCapsule(
   input: string | Uint8Array,
   options?: {
@@ -1360,6 +1443,11 @@ export interface KDNALayout {
 }
 
 export function readLayout(inputPath: string): KDNALayout;
+export function readLayoutBytes(input: Uint8Array): KDNALayout;
+export function fullEntryBufferMap(layout: KDNALayout): Record<string, Uint8Array>;
+export function contentDigestFromEntryBuffers(
+  buffers: Map<string, Uint8Array> | Record<string, Uint8Array>,
+): string;
 
 export interface KDNAChecksumEntry {
   algorithm: 'sha256';
@@ -1444,6 +1532,7 @@ export interface KDNALoadPlan {
     source_fingerprint: string;
   } | null;
   checks: Record<string, boolean>;
+  signature_state: 'absent' | 'verified' | 'invalid';
   issues: KDNALoadPlanIssue[];
   source: {
     kind: 'dir' | 'file' | 'memory' | string | null;
@@ -1460,6 +1549,17 @@ export function planLoad(
 ): KDNALoadPlan;
 export function buildChecksums(sourceDir: string): KDNAChecksums;
 export function pack(sourceDir: string, outputPath: string): void;
+export function packEntryMap(map: Record<string, Uint8Array>): Uint8Array;
+export function signContainerBytes(
+  input: Uint8Array,
+  privateKey: string,
+  options?: Record<string, any>,
+): {
+  containerBytes: Uint8Array;
+  bundle: KDNASignatureBundle;
+  bundleBytes: Uint8Array;
+  content_digest: string;
+};
 export function unpack(inputPath: string, outputDir: string): void;
 export function loadAuthorized(
   input: string | Uint8Array,

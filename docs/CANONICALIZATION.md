@@ -10,6 +10,7 @@ The canonical content tree includes every non-directory ZIP entry except:
 - `build-receipt.json`
 - any entry under `reports/`
 - local installation metadata
+- `signature.kdsig` (a signature can never be part of the content it signs)
 
 The root `mimetype` entry is included. `README.md`, `LICENSE`, `evals/`,
 examples, and other published evidence files are included when present.
@@ -58,10 +59,17 @@ Entry lines are joined with `\n`.
 
 ## Asset Signature Boundary
 
-The current Preview does not define an asset-signature payload. Containers
-that declare asset signatures are rejected under the current container
-contract. Content canonicalization therefore makes no authenticity claim;
-it only provides deterministic digest material.
+RFC-0021 M1 (`kdsig.ed25519`) signs the canonical content tree defined here:
+the Ed25519 signing payload is the UTF-8 encoding of
+`kdsig.ed25519:0.1.0:<content_digest>`, where `<content_digest>` is the
+content digest above computed with `signature.kdsig` excluded from the entry
+set. The signature bundle lives in the optional top-level `signature.kdsig`
+entry and is verified offline and fail-closed. See
+[rfcs/RFC-0021-signature-track.md](../rfcs/RFC-0021-signature-track.md) and
+[conformance/signature/](../conformance/signature/README.md).
+
+Canonicalization itself still makes no authenticity claim; it only provides
+the deterministic digest material that signatures (and digests) bind.
 
 ## Non-Goals
 

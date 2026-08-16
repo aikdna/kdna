@@ -24,9 +24,11 @@
     "schema_valid": true,
     "payload_valid": true,
     "checksums_valid": false,
+    "signature_valid": true,
     "load_contract_valid": true,
     "overall_valid": false
   },
+  "signature_state": "absent",
   "issues": [
     {
       "code": "KDNA_INTEGRITY_DIGEST_FAILED",

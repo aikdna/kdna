@@ -53,9 +53,12 @@ kdna plan-load ./judgment.kdna --json
 kdna load ./judgment.kdna --profile=compact --as=json
 ```
 
-> **Python/PyPI 提示：** PyPI 上的 `kdna` 项目名是与本项目无关的第三方空占，
-> 并非我方。我方在 PyPI 的官方发行名是 **`aikdna`**（import 包名仍为
+> **官方包坐标：** 所有官方 npm 包都发布在 **`@aikdna`** scope 下（例如
+> `@aikdna/kdna-cli`、`@aikdna/kdna-core`）。npm 上的裸名 `kdna` 是无关的
+> 第三方空占，请勿安装。PyPI 上的 `kdna` 项目名同样是与本项目无关的第三方
+> 空占，并非我方。我方在 PyPI 的官方发行名是 **`aikdna`**（import 包名仍为
 > `kdna`）。只安装 PyPI 的 `aikdna`——绝不要 `pip install kdna`。
+> 见 [SECURITY.md](./SECURITY.md)。
 
 这条路径证明容器能够被当前工具链验证、规划和投影，不证明模型已经采用资产，
 也不证明资产内容正确或结果更好。
@@ -68,6 +71,42 @@ kdna load ./judgment.kdna --profile=compact --as=json
 
 创作项目、展开 JSON、Registry 页面、receipt 和评价报告都可以围绕资产工作，
 但不是 `.kdna` 分发对象本身。
+
+## 资产的签名与验签
+
+`.kdna` 资产可以携带可选的 `signature.kdsig` 签名包（`kdsig.ed25519`，
+[RFC-0021](./rfcs/RFC-0021-signature-track.md) M1）。Ed25519 签名覆盖规范化
+内容摘要（[CANONICALIZATION.md](./docs/CANONICALIZATION.md)），验签完全离线，
+加载全程 fail-closed：验签失败的资产会被拒绝，绝不会降级为「未签名」。
+
+```js
+const {
+  generateSigningKeyPair,
+  signKDNA,
+  verifyKDNASignature,
+} = require('@aikdna/kdna-core');
+
+// 作者侧：签名一个已打包资产（私钥自行保密）。
+const key = generateSigningKeyPair();
+const signed = await signKDNA('./judgment.kdna', key.private_key, {
+  outputPath: './judgment.signed.kdna',
+});
+
+// 消费侧：离线验签。任何验签失败都会抛错。
+const evidence = await verifyKDNASignature('./judgment.signed.kdna');
+// evidence.state === 'verified'，含 key_fingerprint 与 content_digest
+
+// 固定签名者公钥，拒绝其他任何密钥的签名：
+await verifyKDNASignature('./judgment.signed.kdna', {
+  expectedPublicKey: key.public_key,
+});
+```
+
+未签名资产仍然有效，验签返回 `state: 'absent'`；调用方也可以强制要求签名。
+有效签名只证明完整性与绑定到密钥的来源，绝不证明判断正确、专业或安全。
+Python SDK（`python-sdk/`）签名与验签同一线格式，两个实现共享
+[`conformance/signature/`](./conformance/signature/README.md) 下的确定性
+known-answer 向量。
 
 ## 本机与 Agent 使用边界
 

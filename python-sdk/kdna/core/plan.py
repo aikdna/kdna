@@ -112,9 +112,11 @@ def plan_load(
             "schema_valid": validation["schema_valid"],
             "payload_valid": validation["payload_valid"],
             "checksums_valid": validation["checksums_valid"],
+            "signature_valid": validation["signature_valid"],
             "load_contract_valid": validation["load_contract_valid"],
             "overall_valid": validation["overall_valid"],
         },
+        "signature_state": validation["signature_state"],
         "issues": [],
         "source": {"kind": layout.kind, "path": None},
     }
@@ -388,6 +390,10 @@ def _validation_problem_code(problem: str) -> str:
     if "checksums:" in lowered:
         return "KDNA_INTEGRITY_DIGEST_FAILED"
     if "signature" in lowered:
+        if "profile_version" in lowered and "is not supported" in lowered:
+            return "KDNA_SIGNATURE_VERSION_UNSUPPORTED"
+        if ("profile" in lowered or "algorithm" in lowered) and "is not supported" in lowered:
+            return "KDNA_SIGNATURE_PROFILE_UNSUPPORTED"
         return "KDNA_INTEGRITY_SIGNATURE_FAILED"
     return "KDNA_FORMAT_INVALID"
 
@@ -415,9 +421,11 @@ def _invalid_plan(message: str, code: str, source_kind: Optional[str]) -> Dict[s
             "schema_valid": False,
             "payload_valid": False,
             "checksums_valid": False,
+            "signature_valid": False,
             "load_contract_valid": False,
             "overall_valid": False,
         },
+        "signature_state": "absent",
         "issues": [_build_issue(code, "blocking", message)],
         "source": {"kind": source_kind or "memory", "path": None},
     }
