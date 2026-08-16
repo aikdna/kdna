@@ -18,8 +18,9 @@
  *   - mimetype must be the first entry in a .kdna container
  *   - mimetype must be STORED (compression method 0) in a .kdna container
  *   - the source directory must contain mimetype, kdna.json, payload.kdnab
- *   - checksums.json and attachments/ are optional
- *   - asset signatures are outside the current Preview contract
+ *   - checksums.json, attachments/, and signature.kdsig are optional
+ *   - signature.kdsig is the RFC-0021 M1 `kdsig.ed25519` bundle; when present
+ *     it must verify fail-closed against the canonical content digest
  *   - lineage must be a single object (not an array)
  *   - pack output is reproducible within one pinned toolchain/compressor;
  *     DEFLATE bytes may differ across compressors, zlib versions, or systems
@@ -91,7 +92,7 @@ const { readAsset } = (() => {
 
 const MIMETYPE = 'application/vnd.kdna.asset';
 const REQUIRED_DIR_ENTRIES = ['mimetype', 'kdna.json', 'payload.kdnab'];
-const OPTIONAL_DIR_ENTRIES = ['checksums.json', 'attachments'];
+const OPTIONAL_DIR_ENTRIES = ['checksums.json', 'attachments', 'signature.kdsig'];
 const ALLOWED_TOP_LEVEL_ENTRIES = new Set([
   ...REQUIRED_DIR_ENTRIES,
   ...OPTIONAL_DIR_ENTRIES,
@@ -587,6 +588,13 @@ function readLayout(absPath) {
       if (fs.existsSync(full)) {
         if (fs.statSync(full).isFile()) {
           map[f] = fs.readFileSync(full);
+        } else if (f === 'attachments') {
+          // Attachment files join the entry map under their relative names so
+          // digest and signature operations see the same entry set as the
+          // packaged container.
+          for (const entry of listSourceDir(full)) {
+            map[`attachments/${entry.rel}`] = fs.readFileSync(entry.full);
+          }
         } else {
           // Optional subdirectories are recorded without becoming payloads.
           map[f] = null;
@@ -606,7 +614,8 @@ function readLayout(absPath) {
         e.name === 'mimetype' ||
         e.name === 'kdna.json' ||
         e.name === 'payload.kdnab' ||
-        e.name === 'checksums.json'
+        e.name === 'checksums.json' ||
+        e.name === 'signature.kdsig'
       ) {
         map[e.name] = e.data;
       }
@@ -663,7 +672,8 @@ function readLayoutBytes(input) {
       entry.name === 'mimetype' ||
       entry.name === 'kdna.json' ||
       entry.name === 'payload.kdnab' ||
-      entry.name === 'checksums.json'
+      entry.name === 'checksums.json' ||
+      entry.name === 'signature.kdsig'
     ) {
       map[entry.name] = entry.data;
     }
@@ -811,6 +821,7 @@ function buildInspectOutput(container) {
     load_contract_default_profile: m.load_contract ? m.load_contract.default_profile : null,
   };
   if (container.map['checksums.json']) out.checksums_present = true;
+  if (container.map['signature.kdsig']) out.signature_present = true;
   return out;
 }
 
@@ -827,6 +838,9 @@ function runValidate(layout) {
     schema_valid: true,
     payload_valid: true,
     checksums_valid: true,
+    signature_valid: true,
+    signature_state: 'absent',
+    signature_evidence: null,
     load_contract_valid: true,
     ...assessLoaderCompatibility(layout.manifest),
   };
@@ -981,6 +995,26 @@ function runValidate(layout) {
     }
   }
 
+  // signature gate — RFC-0021 M1 (`kdsig.ed25519`). An absent signature is
+  // not an error; a present signature must verify fail-closed.
+  if (layout.map['signature.kdsig'] !== undefined) {
+    try {
+      const signature = require('../signature');
+      const { contentDigestFromEntryBuffers } = require('../asset-reader');
+      const contentDigest = contentDigestFromEntryBuffers(fullEntryBufferMap(layout));
+      const evidence = signature.verifySignatureBundle(
+        layout.map['signature.kdsig'],
+        contentDigest,
+      );
+      result.signature_state = 'verified';
+      result.signature_evidence = evidence;
+    } catch (e) {
+      result.signature_valid = false;
+      result.signature_state = 'invalid';
+      problems.push(`signature: ${e.message}`);
+    }
+  }
+
   // load_contract gate — only if manifest references a load_contract block
   if (layout.manifest.load_contract) {
     const lc = layout.manifest.load_contract;
@@ -1098,12 +1132,39 @@ function verifyDigests(checksums, map, problems, result) {
   return stillValid;
 }
 
+/**
+ * Collect every file entry of a layout as name → Buffer, so digest and
+ * signature operations always cover the full entry set (including
+ * attachments), regardless of which entries layout.map parses.
+ */
+function fullEntryBufferMap(layout) {
+  const buffers = {};
+  if (Array.isArray(layout.entries)) {
+    for (const entry of layout.entries) {
+      // Entries are either parsed ZIP entry objects ({ name, data }) or plain
+      // entry names from the unified container model; both resolve through
+      // layout.map.
+      const name = typeof entry === 'string' ? entry : entry.name;
+      const data = typeof entry === 'string' ? layout.map[entry] : entry.data;
+      if (data === undefined || data === null) continue;
+      buffers[name] = data;
+    }
+    return buffers;
+  }
+  for (const [name, data] of Object.entries(layout.map)) {
+    if (data === null || data === undefined) continue;
+    buffers[name] = data;
+  }
+  return buffers;
+}
+
 function finalizeValidate(result, problems) {
   result.overall_valid =
     result.format_valid &&
     result.schema_valid &&
     result.payload_valid &&
     result.checksums_valid &&
+    result.signature_valid &&
     result.load_contract_valid;
   result.problems = problems;
   return result;
@@ -1260,6 +1321,108 @@ function pack(sourceDir, outputPath) {
   return { outputPath, entries: order };
 }
 
+/**
+ * Deterministically pack an in-memory entry map into .kdna container bytes.
+ * mimetype is forced first and STORED; remaining entries are ordered by UTF-8
+ * path bytes and DEFLATE-compressed; timestamps are pinned to the DOS epoch.
+ */
+function packEntryMap(map) {
+  for (const f of REQUIRED_DIR_ENTRIES) {
+    if (!map[f]) throw new Error(`cannot pack: missing required entry ${f}`);
+  }
+  const mime = Buffer.isBuffer(map.mimetype) ? map.mimetype.toString('utf8') : String(map.mimetype);
+  if (mime !== MIMETYPE) {
+    throw new Error(`cannot pack: mimetype is "${mime}", expected "${MIMETYPE}"`);
+  }
+  const names = Object.keys(map).filter((name) => name !== 'mimetype');
+  names.sort((a, b) => Buffer.compare(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8')));
+  const order = ['mimetype', ...names];
+
+  const localChunks = [];
+  const centralChunks = [];
+  let offset = 0;
+  for (const rel of order) {
+    const data = rel === 'mimetype' ? Buffer.from(MIMETYPE, 'utf8') : Buffer.from(map[rel]);
+    const nameBytes = Buffer.from(rel, 'utf8');
+    const method = rel === 'mimetype' ? 0 : 8;
+    const built = buildLocalHeader(nameBytes, data, method);
+    localChunks.push(built.local, built.compressed);
+    centralChunks.push(
+      buildCentral(
+        {
+          method,
+          crc: built.crc,
+          time: built.time,
+          date: built.date,
+          compressed: built.compressed,
+          dataLength: built.dataLength,
+          offset,
+        },
+        nameBytes,
+      ),
+    );
+    offset += built.local.length + built.compressed.length;
+  }
+
+  const centralOffset = offset;
+  let centralSize = 0;
+  for (const c of centralChunks) centralSize += c.length;
+  const eocd = Buffer.alloc(22);
+  eocd.writeUInt32LE(0x06054b50, 0);
+  eocd.writeUInt16LE(0, 4);
+  eocd.writeUInt16LE(0, 6);
+  eocd.writeUInt16LE(order.length, 8);
+  eocd.writeUInt16LE(order.length, 10);
+  eocd.writeUInt32LE(centralSize, 12);
+  eocd.writeUInt32LE(centralOffset, 16);
+  eocd.writeUInt16LE(0, 20);
+
+  return Buffer.concat([...localChunks, ...centralChunks, eocd]);
+}
+
+/**
+ * Sign a packaged .kdna container per RFC-0021 M1 (`kdsig.ed25519`).
+ *
+ * The container must pass every validation gate after any pre-existing
+ * signature entry is removed; signing never certifies a broken asset. The
+ * returned bytes carry a fresh `signature.kdsig` bundle whose Ed25519
+ * signature covers the canonical content digest. Fail-closed throughout.
+ */
+function signContainerBytes(input, privateKeySeedHex, _opts = {}) {
+  const signature = require('../signature');
+  const { contentDigestFromEntryBuffers } = require('../asset-reader');
+
+  const bytes = Buffer.isBuffer(input) ? input : Buffer.from(input);
+  const layout = readLayoutBytes(bytes);
+
+  // Rebuild the full entry map (including attachments) from the parsed
+  // ZIP entries; layout.map only carries the well-known protocol entries.
+  const unsignedMap = {};
+  for (const entry of layout.entries) {
+    if (entry.name === 'signature.kdsig') continue;
+    unsignedMap[entry.name] = entry.data;
+  }
+  const validation = runValidate({ ...layout, map: unsignedMap });
+  if (!validation.overall_valid) {
+    const error = new Error(
+      `cannot sign: container does not pass validation (${validation.problems.join('; ')})`,
+    );
+    error.code = 'KDNA_SIGNATURE_INPUT_INVALID';
+    throw error;
+  }
+
+  const contentDigest = contentDigestFromEntryBuffers(unsignedMap);
+  const bundle = signature.signContentDigest(contentDigest, privateKeySeedHex);
+  const bundleBytes = signature.serializeSignatureBundle(bundle);
+  const signedMap = { ...unsignedMap, [signature.SIGNATURE_ENTRY_NAME]: bundleBytes };
+  return {
+    containerBytes: packEntryMap(signedMap),
+    bundle,
+    bundleBytes,
+    content_digest: contentDigest,
+  };
+}
+
 // ─── unpack ────────────────────────────────────────────────────────────
 
 /**
@@ -1340,6 +1503,12 @@ function buildLoadPlanIssue(code, severity, message) {
 
 function validationProblemCode(problem) {
   if (/checksums?:/i.test(problem)) return 'KDNA_INTEGRITY_DIGEST_FAILED';
+  if (/signature bundle profile_version .* is not supported/i.test(problem)) {
+    return 'KDNA_SIGNATURE_VERSION_UNSUPPORTED';
+  }
+  if (/signature bundle (profile|algorithm) .* is not supported/i.test(problem)) {
+    return 'KDNA_SIGNATURE_PROFILE_UNSUPPORTED';
+  }
   if (/signature/i.test(problem)) return 'KDNA_INTEGRITY_SIGNATURE_FAILED';
   if (/payload:/i.test(problem)) return 'KDNA_FORMAT_INVALID';
   if (/manifest:/i.test(problem)) return 'KDNA_FORMAT_INVALID';
@@ -1413,9 +1582,11 @@ function baseLoadPlan(inputPath, layout, validation, opts = {}) {
       schema_valid: validation.schema_valid,
       payload_valid: validation.payload_valid,
       checksums_valid: validation.checksums_valid,
+      signature_valid: validation.signature_valid,
       load_contract_valid: validation.load_contract_valid,
       overall_valid: validation.overall_valid,
     },
+    signature_state: validation.signature_state,
     issues: [],
     source: {
       kind: layout.kind,
@@ -1481,7 +1652,8 @@ function planLoad(inputPath, opts = {}) {
         access: null, access_alias: null, entitlement_profile: null,
         state: 'invalid', required_action: 'block', can_load_now: false, projection_policy: 'none',
         input_fingerprint: null,
-        checks: { format_valid: false, schema_valid: false, payload_valid: false, checksums_valid: false, load_contract_valid: false, overall_valid: false },
+        checks: { format_valid: false, schema_valid: false, payload_valid: false, checksums_valid: false, signature_valid: false, load_contract_valid: false, overall_valid: false },
+        signature_state: 'absent',
         issues: [buildLoadPlanIssue('KDNA_FORMAT_INVALID', 'blocking', e.message)],
         source: inputSource(inputPath, 'memory'),
       });
@@ -1505,7 +1677,8 @@ function planLoad(inputPath, opts = {}) {
           access: null, access_alias: null, entitlement_profile: null,
           state: 'invalid', required_action: 'block', can_load_now: false, projection_policy: 'none',
           input_fingerprint: null,
-          checks: { format_valid: false, schema_valid: false, payload_valid: false, checksums_valid: false, load_contract_valid: false, overall_valid: false },
+          checks: { format_valid: false, schema_valid: false, payload_valid: false, checksums_valid: false, signature_valid: false, load_contract_valid: false, overall_valid: false },
+          signature_state: 'absent',
           issues: [buildLoadPlanIssue(
             e.code === 'KDNA_FORMAT_UNKNOWN' ? 'KDNA_FORMAT_UNKNOWN' : 'KDNA_FORMAT_INVALID',
             'blocking', e.message,
@@ -1526,7 +1699,8 @@ function planLoad(inputPath, opts = {}) {
         access: null, access_alias: null, entitlement_profile: null,
         state: 'invalid', required_action: 'block', can_load_now: false, projection_policy: 'none',
         input_fingerprint: null,
-        checks: { format_valid: false, schema_valid: false, payload_valid: false, checksums_valid: false, load_contract_valid: false, overall_valid: false },
+        checks: { format_valid: false, schema_valid: false, payload_valid: false, checksums_valid: false, signature_valid: false, load_contract_valid: false, overall_valid: false },
+        signature_state: 'absent',
         issues: [buildLoadPlanIssue('KDNA_FORMAT_INVALID', 'blocking', e.message)],
         source: inputSource(inputPath, null),
       });
@@ -1979,6 +2153,8 @@ module.exports = {
   isKdnaSourceDir,
   detectContainerFormat,
   readLayout: readLayout,
+  readLayoutBytes,
+  fullEntryBufferMap,
   inspect,
   validate,
   planLoad,
@@ -1986,6 +2162,8 @@ module.exports = {
   buildChecksums: buildChecksums,
   computeRuntimeEntrySetDigest,
   pack,
+  packEntryMap,
+  signContainerBytes,
   unpack,
   load: loadAsset,
   loadAsset: loadAsset,
@@ -2116,7 +2294,8 @@ function loadAuthorized(inputPath, opts = {}) {
     extendsChain: plan.extends_chain || [],
     _validation: {
       schema_valid: plan.checks && plan.checks.overall_valid === true,
-      signature_valid: plan.signature_valid === true,
+      signature_valid: plan.checks && plan.checks.signature_valid === true,
+      signature_state: plan.signature_state,
     },
     _runtimeAssetBytes: inputSnapshot,
     _runtimeInputKind: inputKind,
@@ -2158,9 +2337,11 @@ function packagedAssetRequiredPlan(inputPath) {
       schema_valid: false,
       payload_valid: false,
       checksums_valid: false,
+      signature_valid: false,
       load_contract_valid: false,
       overall_valid: false,
     },
+    signature_state: 'absent',
     issues: [buildLoadPlanIssue(
       'KDNA_ASSET_FILE_REQUIRED',
       'blocking',
@@ -2259,7 +2440,8 @@ function loadRemoteRuntimeAssetForServer(inputPath) {
     extendsChain: [],
     _validation: {
       schema_valid: plan.checks.overall_valid === true,
-      signature_valid: plan.signature_valid === true,
+      signature_valid: plan.checks.signature_valid === true,
+      signature_state: plan.signature_state,
     },
     _runtimeAssetBytes: inputSnapshot,
     _runtimeInputKind: inputKind,
@@ -2850,6 +3032,23 @@ function wrapAsCapsule(result, layout, profile, opts) {
   return result;
 }
 
+function buildSignatureEvidence(layout) {
+  if (!layout || !layout.map || layout.map['signature.kdsig'] === undefined) {
+    return { state: 'absent' };
+  }
+  const signature = require('../signature');
+  const { contentDigestFromEntryBuffers } = require('../asset-reader');
+  const contentDigest = contentDigestFromEntryBuffers(fullEntryBufferMap(layout));
+  const evidence = signature.verifySignatureBundle(layout.map['signature.kdsig'], contentDigest);
+  return {
+    state: 'verified',
+    profile: evidence.profile,
+    profile_version: evidence.profile_version,
+    key_fingerprint: evidence.key_fingerprint,
+    content_digest: evidence.content_digest,
+  };
+}
+
 function buildRuntimeCapsuleProjection(loadResult, layout, profile, opts = {}) {
   const m = layout.manifest;
   const val = opts._validation || {};
@@ -2861,7 +3060,7 @@ function buildRuntimeCapsuleProjection(loadResult, layout, profile, opts = {}) {
     projection: loadResult,
     manifest: m,
     digests,
-    signature: { state: 'absent' },
+    signature: buildSignatureEvidence(layout),
     inputKind: opts._runtimeInputKind,
     loadedAt: opts.loadedAt,
     schemaValid: val.schema_valid === true,

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Implement the RFC-0021 M1 asset signature track (`kdsig.ed25519`,
+  pre-release candidate): an optional top-level `signature.kdsig` bundle whose
+  Ed25519 signature covers the canonical content digest
+  (`kdsig.ed25519:0.1.0:<content_digest>` signing payload). Signing and
+  offline fail-closed verification land in the JavaScript Core
+  (`signKDNA`/`verifyKDNASignature`, `signContainerBytes`, validation gate,
+  LoadPlan `signature_valid`/`signature_state`, Runtime Capsule `verified`
+  evidence) and in the Python SDK (`kdna.core.signature`); both
+  implementations pass the deterministic known-answer vectors under
+  `conformance/signature/`. Unsigned assets remain valid (`state: "absent"`);
+  a present bundle that fails verification rejects validation, LoadPlan, and
+  loading. Legacy 1.0 manifest `signature`/`signatures` declarations remain
+  rejected; migration is reissue and re-sign.
 - Clarify the public Creation boundary as three independent results while
   keeping Core responsible only for `FORMAT_VALID`; make Human Lock
   claim-conditional, classify multi-Host runs as portability evidence, and

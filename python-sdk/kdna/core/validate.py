@@ -10,6 +10,7 @@ import hashlib
 from typing import Any, Dict, List
 
 from . import container
+from . import signature
 from .schema import validate_schema
 
 REMOVED_ALIASES = {
@@ -91,6 +92,9 @@ def run_validate(layout: container.Layout) -> Dict[str, Any]:
         "schema_valid": True,
         "payload_valid": True,
         "checksums_valid": True,
+        "signature_valid": True,
+        "signature_state": "absent",
+        "signature_evidence": None,
         "load_contract_valid": True,
         "loader_compatible": True,
     }
@@ -167,6 +171,24 @@ def run_validate(layout: container.Layout) -> Dict[str, Any]:
             result["load_contract_valid"] = False
             problems.extend(load_contract_problems)
 
+    # signature gate — RFC-0021 M1 (`kdsig.ed25519`). An absent signature is
+    # not an error; a present signature must verify fail-closed.
+    signature_entry = layout.entries.get(signature.SIGNATURE_ENTRY_NAME)
+    if signature_entry is not None:
+        try:
+            from .load import _compute_content_digest
+
+            evidence = signature.verify_signature_bundle(
+                signature_entry.data,
+                _compute_content_digest(layout),
+            )
+            result["signature_state"] = "verified"
+            result["signature_evidence"] = evidence
+        except signature.KDNASignatureError as error:
+            result["signature_valid"] = False
+            result["signature_state"] = "invalid"
+            problems.append(f"signature: {error}")
+
     return _finalize(result, problems)
 
 
@@ -178,6 +200,7 @@ def _finalize(result: Dict[str, Any], problems: List[str]) -> Dict[str, Any]:
             "schema_valid",
             "payload_valid",
             "checksums_valid",
+            "signature_valid",
             "load_contract_valid",
         )
     )

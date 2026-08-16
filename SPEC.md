@@ -38,11 +38,16 @@ Optional protocol entries are:
 |---|---|
 | `checksums.json` | Runtime entry-set integrity evidence; emitted by official Creation Writers |
 | `attachments/` | Supplementary bytes governed by the manifest and loader policy |
+| `signature.kdsig` | Asset signature bundle (`kdsig.ed25519`, RFC-0021 M1); verified offline and fail-closed when present |
 
 The absence of `checksums.json` is not a format error. When the entry is
 present, its schema and declared digests MUST verify. An exporter that presents
 itself as an official KDNA Creation Writer MUST emit the canonical four-entry
 baseline: the three required protocol entries plus `checksums.json`.
+
+The absence of `signature.kdsig` is not a format error. When the entry is
+present, its bundle MUST verify against the canonical content digest under
+RFC-0021 M1; verification failure MUST reject the asset.
 
 Authoring source files, reports, build receipts, credentials, and decrypted
 plaintext are not distribution entries. Runtimes MUST reject forbidden

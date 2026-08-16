@@ -8,9 +8,10 @@
  */
 
 const fs = require('fs');
-const { createKdnaAssetReader } = require('./asset-reader');
+const { createKdnaAssetReader, contentDigestFromEntryBuffers } = require('./asset-reader');
 const container = require('./container');
 const runtimeApi = require('./runtime-api');
+const signature = require('./signature');
 
 function readerFrom(options = {}) {
   return options.reader || createKdnaAssetReader();
@@ -176,6 +177,55 @@ function matchDomainSync(input, candidates, options = {}) {
   return results.sort((a, b) => b.score - a.score || String(a.asset_id).localeCompare(String(b.asset_id)));
 }
 
+/**
+ * Sign a packaged .kdna asset per RFC-0021 M1 (`kdsig.ed25519`). Returns the
+ * signed container bytes, the signature bundle, and the signed content
+ * digest. `privateKey` is the raw 32-byte Ed25519 seed as 64 lowercase hex
+ * characters. When `options.outputPath` is set the signed container is also
+ * written to that path.
+ */
+function signKDNASync(input, privateKey, options = {}) {
+  const result = container.signContainerBytes(canonicalBytes(input), privateKey, options);
+  if (typeof options.outputPath === 'string' && options.outputPath.length > 0) {
+    fs.writeFileSync(options.outputPath, result.containerBytes);
+  }
+  return result;
+}
+
+async function signKDNA(input, privateKey, options = {}) {
+  return signKDNASync(input, privateKey, options);
+}
+
+/**
+ * Verify the RFC-0021 M1 (`kdsig.ed25519`) signature of a packaged .kdna
+ * asset offline. Fail-closed: any malformed, unsupported, or unverifiable
+ * bundle throws. Returns `{ state: 'absent' }` for unsigned assets unless
+ * `options.required` is true (then absence also throws), and the verified
+ * evidence otherwise. `options.expectedPublicKey` pins the signer key.
+ */
+function verifyKDNASignatureSync(input, options = {}) {
+  const layout = container.readLayoutBytes(canonicalBytes(input));
+  const bundleBytes = layout.map[signature.SIGNATURE_ENTRY_NAME];
+  if (bundleBytes === undefined) {
+    if (options.required === true) {
+      const error = new Error(
+        `required asset signature is absent: missing entry ${signature.SIGNATURE_ENTRY_NAME}`,
+      );
+      error.code = 'KDNA_SIGNATURE_ABSENT';
+      throw error;
+    }
+    return { state: 'absent' };
+  }
+  const contentDigest = contentDigestFromEntryBuffers(container.fullEntryBufferMap(layout));
+  return signature.verifySignatureBundle(bundleBytes, contentDigest, {
+    expectedPublicKey: options.expectedPublicKey,
+  });
+}
+
+async function verifyKDNASignature(input, options = {}) {
+  return verifyKDNASignatureSync(input, options);
+}
+
 async function composeKDNA(inputs, options = {}) {
   void inputs;
   void options;
@@ -203,5 +253,9 @@ module.exports = {
   verifyDigestSync,
   matchDomain,
   matchDomainSync,
+  signKDNA,
+  signKDNASync,
+  verifyKDNASignature,
+  verifyKDNASignatureSync,
   composeKDNA,
 };

@@ -73,11 +73,12 @@ licensed .kdna asset
 ### 2.3 External Signing Keys
 
 Ed25519 keys may sign external grants, entitlement receipts, or optional Human
-Lock confirmation records under those contracts. The current Preview does not
-put an asset signature in the manifest, `signature.json`, `signatures/`, or a
-detached sidecar. Core rejects those competing asset-signature representations
-instead of silently choosing one. External signatures do not make asset content
-correct or endorsed.
+Lock confirmation records under those contracts. Asset signatures have exactly
+one canonical representation: the optional top-level `signature.kdsig` bundle
+entry defined by RFC-0021 M1 (`kdsig.ed25519`). The manifest `signature` /
+`signatures` fields, `signature.json`, `signatures/`, and detached sidecars
+remain rejected competing representations instead of being silently chosen.
+External signatures do not make asset content correct or endorsed.
 
 ---
 
@@ -246,8 +247,8 @@ silver-care-1.0.0.kdna
 
 The `.kdna` asset is a ZIP container. Publishers SHOULD use stable entry order
 and metadata normalization when reproducible builds are required. Core verifies
-the manifest digests and, when present, `checksums.json`; it does not infer an
-asset signature.
+the manifest digests and, when present, `checksums.json`; when present, the
+`signature.kdsig` bundle is verified fail-closed under RFC-0021 M1.
 
 ---
 
@@ -257,8 +258,8 @@ External grants and signed receipts may use issuer or device signing keys under
 their own contracts. Their private keys belong in SecretStore and are not KDNA
 asset content. The published CLI `0.35.1` identity commands are a historical
 implementation surface; the current corrective Runtime CLI source candidate
-does not expose an identity command. Neither surface creates a Preview
-asset-signature contract.
+does not expose an identity command. Asset signatures are governed by RFC-0021
+M1 (`kdsig.ed25519`), which is separate from both CLI identity surfaces.
 
 ---
 

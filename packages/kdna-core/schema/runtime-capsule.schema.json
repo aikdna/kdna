@@ -78,12 +78,28 @@
       }
     },
     "signature": {
-      "type": "object",
-      "required": ["state"],
-      "additionalProperties": false,
-      "properties": {
-        "state": { "const": "absent" }
-      }
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["state"],
+          "additionalProperties": false,
+          "properties": {
+            "state": { "const": "absent" }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["state", "profile", "profile_version", "key_fingerprint", "content_digest"],
+          "additionalProperties": false,
+          "properties": {
+            "state": { "const": "verified" },
+            "profile": { "const": "kdsig.ed25519" },
+            "profile_version": { "const": "0.1.0" },
+            "key_fingerprint": { "$ref": "#/$defs/sha256" },
+            "content_digest": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      ]
     },
     "trace": {
       "type": "object",
@@ -105,7 +121,7 @@
         "input_kind": { "enum": ["packaged_file", "packaged_bytes"] },
         "runtime_eligible": { "const": true },
         "schema_valid": { "const": true },
-        "signature_state": { "const": "absent" },
+        "signature_state": { "enum": ["absent", "verified"] },
         "profile": { "enum": ["index", "compact", "scenario", "full"] },
         "projection_report": { "$ref": "#/$defs/projectionReport" }
       }

@@ -15,9 +15,11 @@ const runtimeApi = require('./runtime-api');
 const runtimeCapsule = require('./runtime-capsule');
 const runtimeContract = require('./runtime-contract');
 const loaderCompatibility = require('./loader-compatibility');
+const assetSignature = require('./signature');
 
 module.exports = {
   ...publicApi,
+  ...assetSignature,
   ...loader,
   ...validate,
   ...render,

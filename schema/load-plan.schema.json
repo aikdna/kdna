@@ -15,6 +15,7 @@
     "can_load_now",
     "projection_policy",
     "checks",
+    "signature_state",
     "issues",
     "source",
     "input_fingerprint"
@@ -87,6 +88,7 @@
         "schema_valid",
         "payload_valid",
         "checksums_valid",
+        "signature_valid",
         "load_contract_valid",
         "overall_valid"
       ],
@@ -96,9 +98,14 @@
         "schema_valid": { "type": "boolean" },
         "payload_valid": { "type": "boolean" },
         "checksums_valid": { "type": "boolean" },
+        "signature_valid": { "type": "boolean" },
         "load_contract_valid": { "type": "boolean" },
         "overall_valid": { "type": "boolean" }
       }
+    },
+    "signature_state": {
+      "description": "RFC-0021 M1 signature evidence state: absent (unsigned), verified (signature.kdsig verified), or invalid (present but rejected).",
+      "enum": ["absent", "verified", "invalid"]
     },
     "issues": {
       "type": "array",

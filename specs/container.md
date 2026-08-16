@@ -54,6 +54,7 @@ Agent or application
 |---|---|---|
 | `checksums.json` | UTF-8 JSON | Digests over the distributed bytes; official writers emit it |
 | `attachments/` | binary | Optional assets governed by the manifest and loader policy |
+| `signature.kdsig` | UTF-8 JSON | Asset signature bundle (`kdsig.ed25519`, RFC-0021 M1) |
 
 No optional entry may become an alternate judgment payload.
 
@@ -63,12 +64,16 @@ itself as an official KDNA Creation Writer MUST emit `checksums.json`, producing
 the canonical four-entry baseline without turning the entry into a universal
 Core requirement.
 
-Asset signatures are outside the current Preview contract. A container with
-`signature.json`, a top-level `signatures/` entry, or manifest `signature` /
-`signatures` declarations MUST be rejected rather than interpreted through a
-legacy or implementation-defined signature format. Signed external grants and
-Human Lock provenance records are separate contracts and are not asset
-signatures.
+Asset signatures use exactly one canonical representation: the optional
+`signature.kdsig` bundle defined by RFC-0021 M1 (`kdsig.ed25519`). When the
+entry is present, a loader MUST verify it offline and fail-closed against the
+canonical content digest; verification failure MUST reject the asset rather
+than downgrading to "unsigned". The absence of `signature.kdsig` is not a
+format error. A container with `signature.json`, a top-level `signatures/`
+entry, or manifest `signature` / `signatures` declarations MUST be rejected
+rather than interpreted through a legacy or implementation-defined signature
+format. Signed external grants and Human Lock provenance records are separate
+contracts and are not asset signatures.
 
 ### 3.3 Forbidden top-level source entries
 
@@ -187,12 +192,13 @@ logs, or bypass Core with generic ZIP/CBOR code.
 3. Reject forbidden source-tree entries.
 4. Validate `kdna.json` and its access vocabulary.
 5. Verify `checksums.json` when present.
-6. Produce a LoadPlan and stop if `can_load_now` is false.
-7. Decode or authorize and decrypt `payload.kdnab` in memory.
-8. Validate the decoded payload profile.
-9. Select `index`, `compact`, `scenario`, or `full` context.
-10. Emit a Runtime Capsule with honest validation state and
-    `signature.state = "absent"`.
+6. Verify `signature.kdsig` fail-closed when present (RFC-0021 M1).
+7. Produce a LoadPlan and stop if `can_load_now` is false.
+8. Decode or authorize and decrypt `payload.kdnab` in memory.
+9. Validate the decoded payload profile.
+10. Select `index`, `compact`, `scenario`, or `full` context.
+11. Emit a Runtime Capsule with honest validation state and
+    `signature.state = "absent"` (unsigned) or `"verified"` (signed).
 
 Raw payload inspection is a developer-only operation:
 
@@ -214,6 +220,7 @@ A conforming loader rejects at least:
 - unsupported access, entitlement, payload, or crypto profiles;
 - schema-invalid plaintext after successful authorized decryption;
 - declared digest mismatch;
+- a present `signature.kdsig` bundle that fails verification (RFC-0021 M1);
 - any unsupported asset-signature entry or manifest declaration;
 - failure to authorize or decrypt an encrypted asset.
 

@@ -8,6 +8,10 @@ const addFormats = require('ajv-formats');
 
 const { createKdnaAssetReader } = require('./asset-reader');
 const container = require('./container');
+const {
+  KDSIG_PROFILE,
+  KDSIG_PROFILE_VERSION,
+} = require('./signature');
 const digestEvidenceSchema = require('../schema/digest-evidence.schema.json');
 const runtimeCapsuleSchema = require('../schema/runtime-capsule.schema.json');
 
@@ -433,6 +437,82 @@ function assertSuccessfulDigestEvidence(digests) {
   }
 }
 
+const SIGNATURE_EVIDENCE_FIELDS = Object.freeze({
+  absent: ['state'],
+  verified: ['state', 'profile', 'profile_version', 'key_fingerprint', 'content_digest'],
+});
+
+/**
+ * Normalize Runtime Capsule signature evidence (RFC-0021 M1). Unsigned assets
+ * report `{ state: 'absent' }`; signed assets report the verified kdsig.ed25519
+ * evidence. Any other shape fails closed — signatures never downgrade to
+ * "absent" and unknown profiles are never collapsed into known ones.
+ */
+function normalizeSignatureEvidence(signature) {
+  if (signature === undefined) return { state: 'absent' };
+  if (!signature || typeof signature !== 'object' || Array.isArray(signature)) {
+    fail(
+      'KDNA_RUNTIME_CAPSULE_BUILD_INVALID',
+      'Runtime Capsule signature evidence must be an object.',
+    );
+  }
+  if (signature.state === 'absent') {
+    const extra = Object.keys(signature).filter((key) => key !== 'state');
+    if (extra.length) {
+      fail(
+        'KDNA_RUNTIME_CAPSULE_BUILD_INVALID',
+        'Absent signature evidence must not carry extra fields.',
+      );
+    }
+    return { state: 'absent' };
+  }
+  if (signature.state === 'verified') {
+    const keys = Object.keys(signature).sort();
+    const expected = [...SIGNATURE_EVIDENCE_FIELDS.verified].sort();
+    if (keys.join(',') !== expected.join(',')) {
+      fail(
+        'KDNA_RUNTIME_CAPSULE_BUILD_INVALID',
+        `Verified signature evidence must carry exactly: ${SIGNATURE_EVIDENCE_FIELDS.verified.join(', ')}.`,
+      );
+    }
+    if (signature.profile !== KDSIG_PROFILE) {
+      fail(
+        'KDNA_ASSET_SIGNATURE_UNSUPPORTED',
+        `Signature profile ${JSON.stringify(signature.profile)} is not supported (supported: ${KDSIG_PROFILE}).`,
+      );
+    }
+    if (signature.profile_version !== KDSIG_PROFILE_VERSION) {
+      fail(
+        'KDNA_ASSET_SIGNATURE_UNSUPPORTED',
+        `Signature profile_version ${JSON.stringify(signature.profile_version)} is not supported (supported: ${KDSIG_PROFILE_VERSION}).`,
+      );
+    }
+    if (!SHA256_RE.test(signature.key_fingerprint || '')) {
+      fail(
+        'KDNA_RUNTIME_CAPSULE_BUILD_INVALID',
+        'Verified signature evidence requires a sha256 key_fingerprint.',
+      );
+    }
+    if (!SHA256_RE.test(signature.content_digest || '')) {
+      fail(
+        'KDNA_RUNTIME_CAPSULE_BUILD_INVALID',
+        'Verified signature evidence requires a sha256 content_digest.',
+      );
+    }
+    return {
+      state: 'verified',
+      profile: signature.profile,
+      profile_version: signature.profile_version,
+      key_fingerprint: signature.key_fingerprint,
+      content_digest: signature.content_digest,
+    };
+  }
+  fail(
+    'KDNA_ASSET_SIGNATURE_UNSUPPORTED',
+    `Signature state ${JSON.stringify(signature.state)} is not supported (supported: absent, verified).`,
+  );
+}
+
 function normalizeRuntimeAccess(access) {
   return access === undefined ? 'public' : access;
 }
@@ -475,22 +555,7 @@ function buildRuntimeCapsule({
   if (!['public', 'licensed', 'remote'].includes(runtimeAccess)) {
     fail('KDNA_RUNTIME_CAPSULE_BUILD_INVALID', `Unsupported Runtime access: ${runtimeAccess}.`);
   }
-  if (
-    signature !== undefined &&
-    (
-      !signature ||
-      typeof signature !== 'object' ||
-      Array.isArray(signature) ||
-      signature.state !== 'absent' ||
-      Object.keys(signature).some((key) => key !== 'state')
-    )
-  ) {
-    fail(
-      'KDNA_ASSET_SIGNATURE_UNSUPPORTED',
-      'Asset signatures are outside the current Preview contract.',
-    );
-  }
-  const signatureEvidence = { state: 'absent' };
+  const signatureEvidence = normalizeSignatureEvidence(signature);
 
   const capsule = {
     type: 'kdna.runtime-capsule',

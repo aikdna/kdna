@@ -31,6 +31,7 @@ ALLOWED_TOP_LEVEL_ENTRIES = {
     "KDNA_Evolution.json",
     "release",
     "signature",
+    "signature.kdsig",
     "components",
 }
 FORBIDDEN_LEGACY_TOP_LEVEL = {"store", "server", "vendor", "packages"}
@@ -169,3 +170,46 @@ def pack_source(source_dir: str) -> bytes:
     data = Path(path).read_bytes()
     Path(path).unlink()
     return data
+
+
+def pack_entries(entries: Dict[str, bytes]) -> bytes:
+    """Deterministically pack an in-memory entry map into container bytes.
+
+    Mirrors the JS ``packEntryMap``: mimetype is forced first and STORED,
+    remaining entries are ordered by UTF-8 path bytes and DEFLATE-compressed,
+    and timestamps are pinned to the DOS epoch.
+    """
+    for required in REQUIRED_DIR_ENTRIES:
+        if required not in entries:
+            raise ValueError(f"cannot pack: missing required entry {required}")
+    mime = entries["mimetype"].decode("utf-8")
+    if mime != MIMETYPE:
+        raise ValueError(f'cannot pack: mimetype is "{mime}", expected "{MIMETYPE}"')
+
+    names = sorted(
+        (name for name in entries if name != "mimetype"),
+        key=lambda name: name.encode("utf-8"),
+    )
+    order = ["mimetype", *names]
+
+    local_chunks: List[bytes] = []
+    central_chunks: List[bytes] = []
+    offset = 0
+    for relative in order:
+        data = MIMETYPE.encode("utf-8") if relative == "mimetype" else bytes(entries[relative])
+        name_bytes = relative.encode("utf-8")
+        method = 0 if relative == "mimetype" else 8
+        local, compressed, crc, time, date, data_length = _local_header(name_bytes, data, method)
+        local_chunks.append(local)
+        local_chunks.append(compressed)
+        central_chunks.append(
+            _central_header(method, crc, time, date, compressed, data_length, offset, name_bytes)
+        )
+        offset += len(local) + len(compressed)
+
+    central_offset = offset
+    central_size = sum(len(chunk) for chunk in central_chunks)
+    eocd = bytearray(22)
+    struct.pack_into("<IHHHHIIH", eocd, 0,
+                     0x06054B50, 0, 0, len(order), len(order), central_size, central_offset, 0)
+    return b"".join([*local_chunks, *central_chunks, bytes(eocd)])

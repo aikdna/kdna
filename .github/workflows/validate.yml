@@ -51,6 +51,10 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && matrix.node-version == 22
       - run: npm run conformance:phase2
         if: matrix.os == 'ubuntu-latest' && matrix.node-version == 22
+      - run: npm run conformance:signature
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version == 22
+      - run: npm run conformance:signature:check
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version == 22
 
   contract:
     runs-on: ubuntu-latest

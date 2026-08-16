@@ -7,6 +7,7 @@ const crypto = require('crypto');
 const zlib = require('zlib');
 const cbor = require('cbor-x');
 const { loaderVersionUnsupportedMessage } = require('./loader-compatibility');
+const { SIGNATURE_ENTRY_NAME } = require('./signature');
 
 const KDNA_MEDIA_TYPE = 'application/vnd.kdna.asset';
 const ASSET_SOURCE_BYTES = Symbol.for('@aikdna/kdna-core.asset-source-bytes');
@@ -44,10 +45,6 @@ function stableStringify(value) {
 
 function compareEntryNamesByUtf8(left, right) {
   return Buffer.compare(Buffer.from(left, 'utf8'), Buffer.from(right, 'utf8'));
-}
-
-function sortedEntryNames(entries) {
-  return [...entries.keys()].sort(compareEntryNamesByUtf8);
 }
 
 function parseJson(buf, entryName) {
@@ -202,13 +199,23 @@ function manifestForDigest(manifest) {
   return copy;
 }
 
-function buildContentDigest(asset) {
+// Entries excluded from the canonical content tree (docs/CANONICALIZATION.md).
+// signature.kdsig can never be part of the content it signs.
+const CONTENT_DIGEST_EXCLUDED_ENTRIES = new Set(['.DS_Store', 'build-receipt.json', 'signature.kdsig']);
+
+/**
+ * Compute the canonical content digest over a map of entry name → Buffer.
+ * Shared by the asset reader and the container signature gate so both always
+ * hash the same canonical bytes.
+ */
+function contentDigestFromEntryBuffers(buffers) {
+  const names = buffers instanceof Map ? [...buffers.keys()] : Object.keys(buffers);
+  const readBuffer = (name) => (buffers instanceof Map ? buffers.get(name) : buffers[name]);
   const parts = [];
-  const excluded = new Set(['.DS_Store', 'build-receipt.json']);
-  for (const entryName of sortedEntryNames(asset.entries)) {
-    if (excluded.has(entryName)) continue;
+  for (const entryName of names.sort(compareEntryNamesByUtf8)) {
+    if (CONTENT_DIGEST_EXCLUDED_ENTRIES.has(entryName)) continue;
     if (entryName.startsWith('reports/')) continue;
-    const entryBuf = asset.readEntry(entryName);
+    const entryBuf = readBuffer(entryName);
     let digestBuf = entryBuf;
     if (JSON_ENTRY_RE.test(entryName)) {
       const parsed = parseJson(entryBuf, entryName);
@@ -218,6 +225,14 @@ function buildContentDigest(asset) {
     parts.push(`${entryName}:${sha256Hex(digestBuf)}`);
   }
   return `sha256:${sha256Hex(Buffer.from(parts.join('\n')))}`;
+}
+
+function buildContentDigest(asset) {
+  const buffers = new Map();
+  for (const entryName of asset.entries.keys()) {
+    buffers.set(entryName, asset.readEntry(entryName));
+  }
+  return contentDigestFromEntryBuffers(buffers);
 }
 
 function verifyMediaType(asset, errors) {
@@ -380,8 +395,8 @@ function verifySync(asset, options = {}) {
   // adds transport identity; it must not maintain a second manifest or payload
   // dialect.
   appendCurrentValidationErrors(asset, errors);
-  if (options.requireSignature === true) {
-    errors.push('asset signatures are outside the current Preview contract');
+  if (options.requireSignature === true && !asset.entries.has(SIGNATURE_ENTRY_NAME)) {
+    errors.push(`required asset signature is absent: missing entry ${SIGNATURE_ENTRY_NAME}`);
   }
 
   if (!asset.entries.has('kdna.json')) errors.push('required entry missing: kdna.json');
@@ -541,8 +556,8 @@ function createKdnaAssetReader() {
       const entries = [...asset.entries.keys()].sort();
 
       appendCurrentValidationErrors(asset, errors);
-      if (options.requireSignature === true) {
-        errors.push('asset signatures are outside the current Preview contract');
+      if (options.requireSignature === true && !asset.entries.has(SIGNATURE_ENTRY_NAME)) {
+        errors.push(`required asset signature is absent: missing entry ${SIGNATURE_ENTRY_NAME}`);
       }
 
       if (!asset.entries.has('kdna.json')) errors.push('required entry missing: kdna.json');
@@ -617,5 +632,6 @@ function createKdnaAssetReader() {
 
 module.exports = {
   STANDARD_ENTRIES,
+  contentDigestFromEntryBuffers,
   createKdnaAssetReader,
 };
