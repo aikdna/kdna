@@ -93,20 +93,21 @@ def test_js_packed_container_validates_in_python(packed_source: Path):
 
 def cli_core_version() -> str:
     """Core version the JS driver is bound to (its declared dependency)."""
-    script = (
-        "const p = require('@aikdna/kdna-cli/package.json');"
-        "console.log((p.dependencies || {})['@aikdna/kdna-core'] || '')"
-    )
-    result = subprocess.run(
-        [NODE, "-e", script],
-        capture_output=True,
-        text=True,
-        check=False,
-        cwd=CLI_CWD if not os.environ.get("KDNA_CLI") else None,
-    )
-    if result.returncode != 0:
-        raise AssertionError(f"cannot read the JS Core version: {result.stderr}")
-    return result.stdout.strip()
+    import json
+
+    configured = os.environ.get("KDNA_CLI")
+    if configured:
+        cli_path = Path(shlex.split(configured)[-1]).resolve()
+        package_json = cli_path.parent.parent / "package.json"
+    else:
+        package_json = Path(CLI_CWD) / "package.json"
+    if not package_json.exists():
+        raise AssertionError(f"cannot locate the CLI package.json at {package_json}")
+    manifest = json.loads(package_json.read_text())
+    version = (manifest.get("dependencies") or {}).get("@aikdna/kdna-core")
+    if not version:
+        raise AssertionError("the CLI package.json does not declare @aikdna/kdna-core")
+    return version
 
 
 def test_js_packed_container_plan_matches_js(packed_source: Path):
