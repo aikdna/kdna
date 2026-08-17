@@ -56,8 +56,12 @@ function npmPublishedVersion(name) {
   return parsed;
 }
 
+function escapeRegExpLiteral(value) {
+  return value.replace(/\\/g, '\\\\').replace(/[.*+?^${}()|[\]]/g, '\\$&');
+}
+
 function changelogSection(changelog, version) {
-  const escaped = version.replace(/\./g, '\\.');
+  const escaped = escapeRegExpLiteral(version);
   const match = new RegExp(`^## ${escaped}(?: \\(\\d{4}-\\d{2}-\\d{2}\\))?\\s*$`, 'gmu').exec(
     changelog,
   );
