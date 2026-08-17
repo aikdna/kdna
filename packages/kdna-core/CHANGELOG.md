@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+## 0.22.0 (2026-08-17)
+
+### Added
+
+- RFC-0021 M1 asset signatures (`kdsig.ed25519`): sign and verify packaged
+  `.kdna` assets with Ed25519 signature bundles — `signKDNA`,
+  `verifyKDNASignature`, `composeKDNA`, signing-payload builders, key-pair
+  generation, key fingerprints, and signature-bundle parse/serialize —
+  mirrored byte-for-byte in the Python Core, with cross-language signature
+  conformance vectors. M1 is bound as a pre-release candidate; M2–M6 are not
+  implemented and remain non-binding.
+- RFC-0020 minimal projection profile: a fifth load profile for small local
+  models, a strict subset of compact carrying the highest-question and
+  boundary-friendly axioms plus full boundaries (~0.8–1.1k tokens vs compact
+  ~5.4k on the reference assets). Availability follows the manifest
+  declaration; assets without a minimal declaration fail closed.
+
+### Fixed
+
 - Validate decrypted external-grant and password payload plaintext against the
   same declared Payload schema used for ordinary assets. Correct credentials
   can no longer load schema-invalid judgment bytes.

@@ -1471,7 +1471,7 @@ export function inspect(
   input: string | Uint8Array,
   options?: Record<string, any>,
 ): Record<string, any>;
-export const KDNA_LOADER_VERSION: '0.21.0';
+export const KDNA_LOADER_VERSION: '0.22.0';
 export const STRICT_LOADER_VERSION: RegExp;
 export function parseLoaderVersion(version: unknown): readonly [string, string, string] | null;
 export function compareLoaderVersions(left: string, right: string): -1 | 0 | 1;

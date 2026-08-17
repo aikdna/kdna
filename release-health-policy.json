@@ -81,7 +81,8 @@
       "canonical_tag": {
         "type": "prefix",
         "value": "conformance/"
-      }
+      },
+      "candidate_version": "0.2.0"
     },
     {
       "label": "KDNA Web Client",
@@ -121,7 +122,8 @@
       "version": "0.21.0",
       "canonical_tag": {
         "type": "natural"
-      }
+      },
+      "candidate_version": "0.22.0"
     },
     {
       "label": "KDNA Eval",

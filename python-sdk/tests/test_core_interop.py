@@ -91,6 +91,25 @@ def test_js_packed_container_validates_in_python(packed_source: Path):
     assert result["problems"] == []
 
 
+def cli_core_version() -> str:
+    """Core version the JS driver is bound to (its declared dependency)."""
+    import json
+
+    configured = os.environ.get("KDNA_CLI")
+    if configured:
+        cli_path = Path(shlex.split(configured)[-1]).resolve()
+        package_json = cli_path.parent.parent / "package.json"
+    else:
+        package_json = Path(CLI_CWD) / "package.json"
+    if not package_json.exists():
+        raise AssertionError(f"cannot locate the CLI package.json at {package_json}")
+    manifest = json.loads(package_json.read_text())
+    version = (manifest.get("dependencies") or {}).get("@aikdna/kdna-core")
+    if not version:
+        raise AssertionError("the CLI package.json does not declare @aikdna/kdna-core")
+    return version
+
+
 def test_js_packed_container_plan_matches_js(packed_source: Path):
     py_plan = plan_load_file(str(packed_source))
     js_plan = run_cli("plan-load", str(packed_source), "--json")
@@ -98,7 +117,18 @@ def test_js_packed_container_plan_matches_js(packed_source: Path):
     assert py_plan["can_load_now"] == js_plan["can_load_now"]
     assert py_plan["projection_policy"] == js_plan["projection_policy"]
     assert py_plan["required_action"] == js_plan["required_action"]
-    assert py_plan["checks"] == js_plan["checks"]
+    # During the 0.22.0 release window the published CLI's Core (0.21.0)
+    # predates the kdsig plan surface. The candidate Python may then carry
+    # exactly one extra check key; once the CLI re-binds to Core >= 0.22.0
+    # the strict byte-parity path resumes automatically.
+    py_checks = dict(py_plan["checks"])
+    js_checks = dict(js_plan["checks"])
+    if tuple(int(part) for part in cli_core_version().split(".")) < (0, 22, 0):
+        extra = set(py_checks) - set(js_checks)
+        assert extra == {"signature_valid"}, extra
+        assert set(js_checks) - set(py_checks) == set()
+        py_checks.pop("signature_valid")
+    assert py_checks == js_checks
 
 
 def test_python_pack_is_deterministic(packed_source: Path):

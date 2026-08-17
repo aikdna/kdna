@@ -80,7 +80,7 @@ function main() {
     const expected = [
       [compatPath, '@aikdna/kdna', '0.14.0'],
       [cliPath, '@aikdna/kdna-cli', '0.36.1'],
-      [corePath, '@aikdna/kdna-core', '0.21.0'],
+      [corePath, '@aikdna/kdna-core', '0.22.0'],
     ];
     for (const [packagePath, name, version] of expected) {
       const manifest = readManifest(packagePath);
@@ -130,7 +130,7 @@ function main() {
       });
     }
     console.log(
-      'clean exact-tarball install resolved one Core 0.21.0 and CLI 0.36.1',
+      'clean exact-tarball install resolved one Core 0.22.0 and CLI 0.36.1',
     );
   } finally {
     fs.rmSync(temp, { recursive: true, force: true });

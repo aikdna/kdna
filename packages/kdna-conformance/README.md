@@ -3,6 +3,10 @@
 KDNA conformance suite: fixtures, runner, and hostile cases for third-party
 implementations to prove the current asset-first KDNA contract.
 
+> **Status:** the published npm incumbent is `0.1.0`. This source tree is the
+> `0.2.0` line, a source candidate that adds the byte-level interop vectors
+> and is not yet published to npm.
+
 ## What conformance means
 
 - `.kdna` packaged bytes are the Runtime asset object;

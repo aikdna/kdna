@@ -410,7 +410,7 @@ test('validate: bad checksum has exactly one structured digest failure', () => {
     signature_state: 'absent',
     signature_evidence: null,
     load_contract_valid: true,
-    loader_version: '0.21.0',
+    loader_version: '0.22.0',
     min_loader_version: '0.20.0',
     loader_compatible: true,
     overall_valid: false,

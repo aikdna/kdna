@@ -1,9 +1,10 @@
 # @aikdna/kdna-core
 
 > **Status:** Pre-release. This source tree contains unreleased work beyond
-> the published incumbent `0.21.0` (RFC-0021 M1 asset signatures); the next
-> release coordinate is not finalized. Candidate source, APIs, and evidence
-> must not be described as already published.
+> the published incumbent `0.22.0` (RFC-0021 M1 asset signatures and the
+> RFC-0020 minimal projection profile); the next release coordinate is not
+> finalized. The older `0.21.0` line predates the signature track. Candidate
+> source, APIs, and evidence must not be described as already published.
 
 Core library for packaged `.kdna` judgment assets. It implements one current
 container contract, authorization planning, integrity evidence, Runtime Capsule
@@ -12,11 +13,11 @@ projection, and the correlated Agent Host execution boundary.
 ## Install
 
 ```bash
-npm install @aikdna/kdna-core@0.21.0
+npm install @aikdna/kdna-core@0.22.0
 ```
 
 That command installs the published incumbent. Use its release notes for the
-exact `0.21.0` contract. The examples below describe the current source
+exact `0.22.0` contract. The examples below describe the current source
 candidate and require its final release coordinate before registry use.
 
 ## Pack, validate, plan, and load

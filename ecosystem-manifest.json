@@ -15,7 +15,7 @@
       "repository": "aikdna/kdna",
       "local_path": ".",
       "source_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
-      "conformance_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
+      "conformance_commit": "9430761db45824f3c7a64e1f5c9c30285df8992b",
       "component_version": null,
       "artifacts": [],
       "packages": [
@@ -23,10 +23,10 @@
           "package_json": "packages/kdna-core/package.json",
           "package_name": "@aikdna/kdna-core",
           "npm_package": "@aikdna/kdna-core",
-          "version": "0.21.0",
+          "version": "0.22.0",
           "published_version": "0.21.0",
           "lifecycle": "Pre-release",
-          "release_status": "active",
+          "release_status": "candidate",
           "dependency_policy": "current",
           "known_limitations": [],
           "recommended_entrypoint": "npm install @aikdna/kdna-core",
@@ -50,15 +50,16 @@
           "package_json": "packages/kdna-conformance/package.json",
           "package_name": "@aikdna/kdna-conformance",
           "npm_package": "@aikdna/kdna-conformance",
-          "version": "0.1.0",
+          "version": "0.2.0",
           "lifecycle": "Experimental",
-          "release_status": "active",
+          "release_status": "candidate",
           "dependency_policy": "current",
           "known_limitations": [
             "conformance verdicts are mechanism checks against the pinned reference implementation, not ecosystem authority"
           ],
           "recommended_entrypoint": "npm install @aikdna/kdna-conformance",
-          "legacy_replacement": null
+          "legacy_replacement": null,
+          "published_version": "0.1.0"
         },
         {
           "package_json": "packages/kdna/package.json",
@@ -165,7 +166,7 @@
       "repository": "aikdna/kdna-assets",
       "local_path": "../kdna-assets",
       "source_commit": "4de5bb01f4216624e57ffa7ac901e982dd323d95",
-      "conformance_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
+      "conformance_commit": "9430761db45824f3c7a64e1f5c9c30285df8992b",
       "component_version": null,
       "packages": [],
       "artifacts": [
@@ -175,7 +176,7 @@
           "sha256": "4a90b91fe955ec3a563a7c2b598568f0eedbd04d3393211692490dfde2e09ffc",
           "release_tag": "0.1.1",
           "release_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
-          "conformance_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
+          "conformance_commit": "9430761db45824f3c7a64e1f5c9c30285df8992b",
           "kind": "kdna-asset",
           "lifecycle": "Experimental",
           "known_limitations": [
@@ -189,7 +190,7 @@
           "sha256": "d8513486bc033523359b8a582ca5d879d5ec01c926601d2fde34813a793c5ccf",
           "release_tag": "0.1.1",
           "release_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
-          "conformance_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
+          "conformance_commit": "9430761db45824f3c7a64e1f5c9c30285df8992b",
           "kind": "kdna-asset",
           "lifecycle": "Experimental",
           "known_limitations": [
@@ -622,7 +623,8 @@
       "supported_access_modes": [],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "the historical 0.1.0 Marketplace extension remains published; accepted 0.2.0 source uses the exact CLI/Core candidate line and passed real Extension Development Host controls, but end-user judgment acceptance and the 0.2.0 Marketplace release remain unassessed"
+        "the historical 0.1.0 Marketplace extension remains published; accepted 0.2.0 source uses the exact CLI/Core candidate line and passed real Extension Development Host controls, but end-user judgment acceptance and the 0.2.0 Marketplace release remain unassessed",
+        "bound to Core 0.21.0 while Core 0.22.0 is the release candidate; re-binding to 0.22.0 is declared recertification debt for the 0.22.0 wave"
       ],
       "recommended_entrypoint": null,
       "legacy_replacement": null

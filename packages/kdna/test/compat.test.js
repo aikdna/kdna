@@ -26,13 +26,13 @@ function assertCurrentToolchainLock(lock) {
     resolved: 'packages/kdna-core',
     link: true,
   });
-  assert.equal(lock.packages['packages/kdna-core'].version, '0.21.0');
+  assert.equal(lock.packages['packages/kdna-core'].version, '0.22.0');
   assert.deepEqual(
     Object.keys(lock.packages)
       .filter((location) => location.endsWith('/@aikdna/kdna-core'))
       .sort(),
-    [ROOT_CORE_LOCK_PATH].sort(),
-    'the workspace lock must resolve the current Core through the candidate link',
+    [CLI_NESTED_CORE_LOCK_PATH, ROOT_CORE_LOCK_PATH].sort(),
+    'the workspace lock must resolve the candidate Core link plus the CLI-published Core only',
   );
 
   const cli = lock.packages[CLI_LOCK_PATH];
@@ -45,10 +45,24 @@ function assertCurrentToolchainLock(lock) {
     cli.integrity,
     'sha512-NuvkDxnDvN6ttm3+kh9PRKkCcjyQahGUH3ZTi8qYoduJXXLE8RUxR2rid/tEG3ZiX41bM3DABEqWSiC5fVuseg==',
   );
+  // The published CLI 0.36.1 is bound to the published Core 0.21.0. During
+  // the 0.22.0 release window the lock carries that registry Core nested
+  // under the CLI while the workspace Core moves ahead; the wave re-binds
+  // the CLI in a follow-up release.
   assert.deepEqual(cli.dependencies, {
     '@aikdna/kdna-core': '0.21.0',
     'cbor-x': '1.6.4',
   });
+  const nestedCore = lock.packages[CLI_NESTED_CORE_LOCK_PATH];
+  assert.equal(nestedCore.version, '0.21.0');
+  assert.equal(
+    nestedCore.resolved,
+    'https://registry.npmjs.org/@aikdna/kdna-core/-/kdna-core-0.21.0.tgz',
+  );
+  assert.equal(
+    nestedCore.integrity,
+    'sha512-y4AC4LlNvKsKxvIO/y14Bl62eRb0BupzvLGbXATXHX4ZUCmYhdlh6U1OL7WF+i0lCAyVJcIE7SKwhQR3uL5uxg==',
+  );
 
   // The compatibility package declares the same CLI 0.36.1 as the root
   // devDependency, so the lock dedupes to one exact CLI entry. A nested
@@ -60,7 +74,7 @@ function assertCurrentToolchainLock(lock) {
   );
   assert.deepEqual(lock.packages['packages/kdna'].dependencies, {
     '@aikdna/kdna-cli': '0.36.1',
-    '@aikdna/kdna-core': '0.21.0',
+    '@aikdna/kdna-core': '0.22.0',
   });
 }
 
@@ -93,7 +107,7 @@ test('compatibility manifest pins one released toolchain without claiming the cu
   assert.equal(pkg.version, '0.14.0');
   assert.deepEqual(pkg.dependencies, {
     '@aikdna/kdna-cli': '0.36.1',
-    '@aikdna/kdna-core': '0.21.0',
+    '@aikdna/kdna-core': '0.22.0',
   });
   assert.deepEqual(pkg.engines, { node: '>=20' });
   assert.deepEqual(pkg.bin, {
@@ -112,7 +126,7 @@ test('root lock resolves the compatibility package to one exact Core and CLI pai
   assert.equal(rootPackage.devDependencies['@aikdna/kdna-cli'], '0.36.1');
   assert.deepEqual(lock.packages['packages/kdna'].dependencies, {
     '@aikdna/kdna-cli': '0.36.1',
-    '@aikdna/kdna-core': '0.21.0',
+    '@aikdna/kdna-core': '0.22.0',
   });
   assert.equal(lock.packages['packages/kdna'].version, '0.14.0');
   assertCurrentToolchainLock(lock);
@@ -188,7 +202,7 @@ test('kdna-validate delegates released CLI fixtures through the paired toolchain
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-compat-validate-'));
   t.after(() => fs.rmSync(temp, { force: true, recursive: true }));
 
-  assert.equal(compatRequire('@aikdna/kdna-core/package.json').version, '0.21.0');
+  assert.equal(compatRequire('@aikdna/kdna-core/package.json').version, '0.22.0');
   assert.equal(compatRequire('@aikdna/kdna-cli/package.json').version, '0.36.1');
   const fixtures = discoverPackableFixtures(path.join(cliPackageRoot, 'fixtures'));
 
