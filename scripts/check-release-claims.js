@@ -58,10 +58,9 @@ function npmPublishedVersion(name) {
 
 function changelogSection(changelog, version) {
   const escaped = version.replace(/\./g, '\\.');
-  const match = new RegExp(
-    `^## ${escaped}(?: \\(\\d{4}-\\d{2}-\\d{2}\\))?\\s*$`,
-    'gmu',
-  ).exec(changelog);
+  const match = new RegExp(`^## ${escaped}(?: \\(\\d{4}-\\d{2}-\\d{2}\\))?\\s*$`, 'gmu').exec(
+    changelog,
+  );
   if (!match) return null;
   const rest = changelog.slice(match.index + match[0].length);
   const next = /^## \d+\.\d+\.\d+/gmu.exec(rest);
@@ -113,9 +112,7 @@ function checkPackage(entry) {
 
   // 3. version+feature parenthetical claims must be backed by the CHANGELOG
   const changelogPath = path.join(packageDir, 'CHANGELOG.md');
-  const changelog = fs.existsSync(changelogPath)
-    ? fs.readFileSync(changelogPath, 'utf8')
-    : '';
+  const changelog = fs.existsSync(changelogPath) ? fs.readFileSync(changelogPath, 'utf8') : '';
   for (const match of readme.matchAll(/`(\d+\.\d+\.\d+)`\s*\(([^)]{4,80})\)/g)) {
     const [, claimedVersion, claim] = match;
     if (claimedVersion === source) continue; // in-flight release describes itself
@@ -146,7 +143,9 @@ function main() {
     console.error(`claims-lint failed: ${findings.length} finding(s)`);
     process.exit(1);
   }
-  console.log(`claims-lint passed: ${PACKAGES.length} package surface(s) verified against the registry`);
+  console.log(
+    `claims-lint passed: ${PACKAGES.length} package surface(s) verified against the registry`,
+  );
 }
 
 main();
