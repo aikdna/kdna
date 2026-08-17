@@ -325,7 +325,7 @@ test('candidate Core conformance anchor carries the declared candidate package v
   );
   const core = canonical.components.find((entry) => entry.repository === 'aikdna/kdna');
   const corePackage = core.packages.find((entry) => entry.npm_package === '@aikdna/kdna-core');
-  const oldAnchor = git(repoRoot, ['rev-list', '-n', '1', '0.20.0']);
+  const oldAnchor = git(repoRoot, ['rev-list', '-n', '1', '0.21.0']);
   for (const entry of canonical.components) {
     if (entry.conformance_commit === core.conformance_commit) {
       entry.conformance_commit = oldAnchor;
@@ -340,7 +340,7 @@ test('candidate Core conformance anchor carries the declared candidate package v
   fs.writeFileSync(manifestPath, JSON.stringify(canonical));
   const result = runValidator(manifestPath);
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /conformance_commit must equal release tag 0.21.0/u);
+  assert.match(result.stderr, /conformance_commit package version mismatch/u);
 });
 
 test('asset inventory is an exact two-way projection of index/current.json', (t) => {
