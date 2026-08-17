@@ -63,7 +63,7 @@ jobs:
           # Creation candidate-only smoke input. The public release/publish
           # authority remains ecosystem-manifest.json until this PR is accepted.
           repository: aikdna/kdna-core-swift
-          ref: eb5a607428197eb47a094179d2a4b04302419dc6
+          ref: 162f858a4eea0c4d48d2bfb585abff3746dbab67
           path: .ecosystem-repos/kdna-core-swift
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
