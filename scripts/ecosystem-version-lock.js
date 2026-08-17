@@ -322,6 +322,15 @@ const LAGGING_CONSUMERS = new Set([
   'create-kdna-web-app',
   'kdna-demo-web-viewer',
   'kdna-web-client',
+  // 0.22.0 wave recertification debt: these consumers re-bind to Core 0.22.0
+  // through the CLI 0.37.0 release chain. All are disclosed in the manifest
+  // and tracked in the execution control table.
+  'kdna-cli',
+  'kdna-activation-server',
+  'kdna-remote-server',
+  'kdna-studio-cli',
+  'kdna-studio-core',
+  'kdna-web-server',
 ]);
 // The monorepo compatibility package pins the released pairing
 // (packages/kdna); it is a publish snapshot, not a current consumer.
