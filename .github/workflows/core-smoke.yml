@@ -14,51 +14,51 @@ jobs:
     name: core-smoke
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-activation-server
           ref: 31b76fabc5d3f487221a7ea862f352cf190fa825
           path: .ecosystem-repos/kdna-activation-server
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-assets
           ref: 4de5bb01f4216624e57ffa7ac901e982dd323d95
           path: .ecosystem-repos/kdna-assets
           fetch-depth: 0
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-cli
           ref: 7f609d5a30e00ddcf2cd418699fb6390d80ed78e
           path: .ecosystem-repos/kdna-cli
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/create-kdna-web-app
           ref: a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39
           path: .ecosystem-repos/create-kdna-web-app
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-demo-web-viewer
           ref: f2bb5459229c44fe0c8ef0294602797e6c9fd7e2
           path: .ecosystem-repos/kdna-demo-web-viewer
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-react
           ref: 1c55b6539aa13604acaff589016d7cbc218f05b0
           path: .ecosystem-repos/kdna-react
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-remote-server
           ref: 81b563598ecc19da480d5191f9554a20cef19744
           path: .ecosystem-repos/kdna-remote-server
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-skills
           ref: 9c3fa00128d87a7146e353c9cfde202a5f391f99
           path: .ecosystem-repos/kdna-skills
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           # Creation candidate-only smoke input. The public release/publish
           # authority remains ecosystem-manifest.json until this PR is accepted.
@@ -66,39 +66,39 @@ jobs:
           ref: eb5a607428197eb47a094179d2a4b04302419dc6
           path: .ecosystem-repos/kdna-core-swift
           fetch-depth: 0
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-app-shared
           ref: 017e759efb448bf99b3384ccafa7f25172169ebb
           path: .ecosystem-repos/kdna-app-shared
           fetch-depth: 0
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-studio-swift
           ref: c784a1262b2481ba4504548feac2bb782f5d70e5
           path: .ecosystem-repos/kdna-studio-swift
           fetch-depth: 0
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-vscode
           ref: f5629f664efc098916f9576c4d3652a62c994bd4
           path: .ecosystem-repos/kdna-vscode
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-studio-cli
           ref: c0fc93759d245fb1700849f5783822f3b4268ebf
           path: .ecosystem-repos/kdna-studio-cli
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-studio-core
           ref: b315ac7a0142ba594649eb764c525ba752a21e12
           path: .ecosystem-repos/kdna-studio-core
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-web-client
           ref: f86d46255b7a4e93b40700741de9e0ddcb6bb812
           path: .ecosystem-repos/kdna-web-client
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-web-server
           ref: f4907a9786f82f13e62db1040690a5f7df8f512b
@@ -106,7 +106,7 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: 22
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.12'
       - name: Select the outside-repository trusted npm release
