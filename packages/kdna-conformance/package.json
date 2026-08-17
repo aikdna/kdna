@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-conformance",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "KDNA conformance suite: fixtures, runner, and hostile cases for third-party implementations to prove the current asset-first KDNA contract.",
   "type": "commonjs",
   "main": "index.js",
@@ -22,7 +22,7 @@
     "release:evidence:check": "node ../../scripts/check-scoped-release-readiness.mjs --package=packages/kdna-conformance --scope=conformance --label=conformance --evidence=release-evidence/artifact-manifest.json"
   },
   "dependencies": {
-    "@aikdna/kdna-core": "0.21.0",
+    "@aikdna/kdna-core": "0.22.0",
     "cbor-x": "^1.6.5"
   },
   "license": "Apache-2.0",
