@@ -21,7 +21,7 @@ const path = require('node:path');
 const REPO_ROOT = path.resolve(__dirname, '..');
 const CANONICAL_ROOT = path.join(REPO_ROOT, 'conformance');
 const PACKAGE_VECTORS_ROOT = path.join(REPO_ROOT, 'packages', 'kdna-conformance', 'vectors');
-const VECTOR_SET_VERSION = '0.2.0';
+const VECTOR_SET_VERSION = '2026-08-17';
 
 const VECTOR_SETS = [
   { source: 'signature/vectors.json', target: 'signature/vectors.json' },
@@ -47,9 +47,9 @@ function sha256(buffer) {
 
 function listFilesRecursive(root) {
   const out = [];
-  for (const entry of fs.readdirSync(root, { withFileTypes: true }).sort((a, b) =>
-    a.name.localeCompare(b.name),
-  )) {
+  for (const entry of fs
+    .readdirSync(root, { withFileTypes: true })
+    .sort((a, b) => a.name.localeCompare(b.name))) {
     const full = path.join(root, entry.name);
     if (entry.isDirectory()) out.push(...listFilesRecursive(full));
     else if (entry.isFile()) out.push(full);
@@ -122,7 +122,9 @@ function main() {
       drift += 1;
     }
     if (drift > 0) {
-      throw new Error(`${drift} packaged vector file(s) drifted; run scripts/sync-conformance-vectors.mjs`);
+      throw new Error(
+        `${drift} packaged vector file(s) drifted; run scripts/sync-conformance-vectors.mjs`,
+      );
     }
     console.log(`conformance vectors in sync: ${manifestFiles.length} files`);
     return;

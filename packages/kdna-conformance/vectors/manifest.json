@@ -1,5 +1,5 @@
 {
-  "vector_set_version": "0.2.0",
+  "vector_set_version": "2026-08-17",
   "description": "Byte-level KDNA interop vectors packaged from the canonical conformance/ tree. Verify an implementation against these vectors plus the RFCs to claim interop.",
   "sets": {
     "signature/vectors.json": "kdsig.ed25519 signature vectors (RFC-0021 M1)",

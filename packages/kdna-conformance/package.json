@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-conformance",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "KDNA conformance suite: fixtures, runner, and hostile cases for third-party implementations to prove the current asset-first KDNA contract.",
   "type": "commonjs",
   "main": "index.js",
