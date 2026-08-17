@@ -92,8 +92,11 @@ def test_js_packed_container_validates_in_python(packed_source: Path):
 
 
 def cli_core_version() -> str:
-    """Version of the KDNA Core bound to the JS driver used by run_cli."""
-    script = "console.log(require('@aikdna/kdna-core/package.json').version)"
+    """Core version the JS driver is bound to (its declared dependency)."""
+    script = (
+        "const p = require('@aikdna/kdna-cli/package.json');"
+        "console.log((p.dependencies || {})['@aikdna/kdna-core'] || '')"
+    )
     result = subprocess.run(
         [NODE, "-e", script],
         capture_output=True,
