@@ -137,7 +137,7 @@ jobs:
           KDNA_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos
           KDNA_CONTROL_ROOT: ${{ github.workspace }}
           KDNA_CLI_BASELINE: '0.36.0'
-          KDNA_CORE_BASELINE: '0.21.0'
+          KDNA_CORE_BASELINE: '0.22.0'
           KDNA_STUDIO_CORE_BASELINE: '3.0.0'
         run: >-
           node scripts/core-release-authority.js trusted-npm
