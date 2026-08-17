@@ -5,8 +5,8 @@
 This guide will walk through integrating `@aikdna/kdna-core` into an AI agent runtime. The minimum integration is:
 
 ```js
-const { loadKdnaSync } = require('@aikdna/kdna-core');
-const result = loadKdnaSync('./my-asset.kdna', { profile: 'compact' });
+const { loadKDNASync } = require('@aikdna/kdna-core');
+const result = loadKDNASync('./my-asset.kdna', { profile: 'compact' });
 if (result.status === 'loaded') {
   // pass result.domain to your agent
 }
