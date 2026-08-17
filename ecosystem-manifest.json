@@ -623,7 +623,8 @@
       "supported_access_modes": [],
       "supported_entitlement_profiles": [],
       "known_limitations": [
-        "the historical 0.1.0 Marketplace extension remains published; accepted 0.2.0 source uses the exact CLI/Core candidate line and passed real Extension Development Host controls, but end-user judgment acceptance and the 0.2.0 Marketplace release remain unassessed"
+        "the historical 0.1.0 Marketplace extension remains published; accepted 0.2.0 source uses the exact CLI/Core candidate line and passed real Extension Development Host controls, but end-user judgment acceptance and the 0.2.0 Marketplace release remain unassessed",
+        "bound to Core 0.21.0 while Core 0.22.0 is the release candidate; re-binding to 0.22.0 is declared recertification debt for the 0.22.0 wave"
       ],
       "recommended_entrypoint": null,
       "legacy_replacement": null
