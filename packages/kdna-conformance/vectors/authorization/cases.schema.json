@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/conformance/authorization/cases.schema.json",
+  "title": "KDNA Authorization Conformance Cases",
+  "type": "object",
+  "required": ["schema", "generated_by", "note", "cases"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "https://github.com/aikdna/kdna/conformance/authorization/cases.schema.json"
+    },
+    "generated_by": { "type": "string" },
+    "note": { "type": "string" },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "fixture", "options", "cli_args", "golden"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "description": { "type": "string", "minLength": 1 },
+          "fixture": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "options": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "cli_args": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            ]
+          },
+          "golden": {
+            "type": "string",
+            "pattern": "^goldens/[a-z0-9][a-z0-9-]*\\.loadplan\\.json$"
+          }
+        }
+      }
+    }
+  }
+}

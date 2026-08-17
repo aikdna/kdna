@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-conformance",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "KDNA conformance suite: fixtures, runner, and hostile cases for third-party implementations to prove the current asset-first KDNA contract.",
   "type": "commonjs",
   "main": "index.js",
@@ -11,11 +11,12 @@
     "index.js",
     "bin/",
     "fixtures/",
+    "vectors/",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "test": "node --test test/conformance.test.js",
+    "test": "node --test test/conformance.test.js test/vectors-manifest.test.js",
     "conformance": "node bin/kdna-conformance.js",
     "release:check": "node ../../scripts/check-post-cutover-naming.mjs && node ../../scripts/check-scoped-release-readiness.mjs --package=packages/kdna-conformance --scope=conformance --label=conformance",
     "release:evidence:check": "node ../../scripts/check-scoped-release-readiness.mjs --package=packages/kdna-conformance --scope=conformance --label=conformance --evidence=release-evidence/artifact-manifest.json"

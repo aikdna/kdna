@@ -49,6 +49,31 @@ KDNA conformance report — implementation: ./my-kdna-core.js
 `fixtures/valid-asset.kdna` is a valid public judgment asset. The hostile
 cases corrupt the container and assert fail-closed behavior.
 
+## Byte-level interop vectors
+
+`vectors/` packages the canonical byte-level interop vectors so a second
+implementation can verify interoperability with this artifact plus the RFCs,
+without cloning any repository:
+
+| Set | Contract |
+|-----|----------|
+| `vectors/signature/vectors.json` | `kdsig.ed25519` asset signatures (RFC-0021 M1) |
+| `vectors/envelope-aead/` | password-envelope AEAD vectors (scrypt, Argon2id) |
+| `vectors/authorization/` | authorization LoadPlan cases with fixtures and expected goldens (RFC-0014) |
+
+`vectors/manifest.json` binds every vector file by exact byte count and
+sha256, and names the vector set version. To verify interop: parse each
+vector with your implementation, reproduce the expected outputs recorded in
+the vector files, and confirm your results hash-match the manifest. Vector
+content is generated only by the canonical generators in the KDNA Core
+repository and is copied here byte-identically; a CI test proves the packaged
+bytes never drift from the canonical tree.
+
+The RFCs live at <https://github.com/aikdna/kdna/tree/main/rfcs>. Report
+your claim in the public format from
+[CONFORMANCE.md](https://github.com/aikdna/kdna/blob/main/CONFORMANCE.md):
+command, implementation version, spec version, run summary, known deviations.
+
 ## License
 
 Apache-2.0

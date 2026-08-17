@@ -1,0 +1,55 @@
+{
+  "id": "envelope-aead-vector-01-scrypt-basic",
+  "description": "scrypt-sha256: basic round-trip with one password slot.",
+  "inputs": {
+    "password": "kdna-envelope-test-vector-1-password",
+    "salt": "AQIDBAUGBwgJCgsMDQ4PEA==",
+    "iv": "ERITFBUWFxgZGhsc",
+    "cek": "oaKjpKWmp6ipqqusra6vsMHCw8TFxsfIycrLzM3Oz9A=",
+    "plaintext": "Hello, KDNA envelope (scrypt-sha256 basic).",
+    "aad": "kdna.envelope.aead\n0.1.0\nurn:uuid:11111111-1111-4111-8111-111111111111\nkdna:fixture:envelope-basic\n1.0.0\nKDNA_Core.json\nlicensed\npassword",
+    "aad_lines": [
+      "kdna.envelope.aead",
+      "0.1.0",
+      "urn:uuid:11111111-1111-4111-8111-111111111111",
+      "kdna:fixture:envelope-basic",
+      "1.0.0",
+      "KDNA_Core.json",
+      "licensed",
+      "password"
+    ],
+    "scrypt_params": {
+      "N": 32768,
+      "r": 8,
+      "p": 1,
+      "salt": "AQIDBAUGBwgJCgsMDQ4PEA=="
+    }
+  },
+  "expected": {
+    "kek": "/XJqNxHQiIcnxZs0EXbrzm1FsUvs2eS1GacQL6UDe9w=",
+    "envelope": {
+      "profile": "kdna.envelope.aead",
+      "profile_version": "0.1.0",
+      "alg": "AES-256-GCM",
+      "key_wrapping": "AES-256-KW",
+      "kdf_profile": "scrypt-sha256",
+      "key_slots": [
+        {
+          "slot": "password",
+          "kdf_profile": "scrypt-sha256",
+          "kdf_params": {
+            "N": 32768,
+            "r": 8,
+            "p": 1,
+            "salt": "AQIDBAUGBwgJCgsMDQ4PEA=="
+          },
+          "wrap": "AES-256-KW",
+          "wrapped_key": "3gJ9hcHY9yAWGjD6kNdW15KqP9WgH6uxBQoafAwzt/qgq+lZYNuNKQ=="
+        }
+      ],
+      "iv": "ERITFBUWFxgZGhsc",
+      "tag": "YeOBwtBUMgxwwwCWZB601A==",
+      "ciphertext": "zvRW/MSSZjCI+P81uMSjNp8QOfOGJbugW2FYK3CY0TmkUK0rc3VU+VYXKg=="
+    }
+  }
+}
