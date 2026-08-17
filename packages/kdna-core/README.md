@@ -3,8 +3,8 @@
 > **Status:** Pre-release. This source tree contains unreleased work beyond
 > the published incumbent `0.22.0` (RFC-0021 M1 asset signatures and the
 > RFC-0020 minimal projection profile); the next release coordinate is not
-> finalized. Candidate source, APIs, and evidence must not be described as
-> already published.
+> finalized. The older `0.21.0` line predates the signature track. Candidate
+> source, APIs, and evidence must not be described as already published.
 
 Core library for packaged `.kdna` judgment assets. It implements one current
 container contract, authorization planning, integrity evidence, Runtime Capsule
