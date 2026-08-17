@@ -1,0 +1,43 @@
+{
+  "format_version": "0.1.0",
+  "asset": {
+    "asset_id": "kdna:conformance:authorization:expired-entitlement",
+    "asset_uid": "urn:uuid:65787069-7265-442d-856e-7469746c656d",
+    "title": "Authorization Fixture: expired-entitlement",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0"
+  },
+  "access": "licensed",
+  "access_alias": null,
+  "entitlement_profile": "local_receipt",
+  "state": "expired_grace",
+  "required_action": "renew_entitlement",
+  "can_load_now": false,
+  "projection_policy": "none",
+  "input_fingerprint": {
+    "has_password_input": false,
+    "entitlement_input": "expired",
+    "source_fingerprint": "sha256:044b1b3cbf81248f67caed172d9ae4d6910ae1c371f62d9f33f1cb36e6788d73"
+  },
+  "checks": {
+    "format_valid": true,
+    "schema_valid": true,
+    "payload_valid": true,
+    "checksums_valid": true,
+    "signature_valid": true,
+    "load_contract_valid": true,
+    "overall_valid": true
+  },
+  "signature_state": "absent",
+  "issues": [
+    {
+      "code": "KDNA_AUTH_EXPIRED",
+      "severity": "blocking",
+      "message": "The entitlement is expired."
+    }
+  ],
+  "source": {
+    "kind": "file",
+    "path": "<fixture:expired-entitlement>"
+  }
+}

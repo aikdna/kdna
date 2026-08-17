@@ -1,0 +1,43 @@
+{
+  "format_version": "0.1.0",
+  "asset": {
+    "asset_id": "kdna:conformance:authorization:remote-recognized-not-loaded",
+    "asset_uid": "urn:uuid:72656d6f-7465-4d72-8563-6f676e697a65",
+    "title": "Authorization Fixture: remote-recognized-not-loaded",
+    "version": "1.0.0",
+    "judgment_version": "1.0.0"
+  },
+  "access": "remote",
+  "access_alias": null,
+  "entitlement_profile": null,
+  "state": "needs_runtime",
+  "required_action": "connect_runtime",
+  "can_load_now": false,
+  "projection_policy": "remote",
+  "input_fingerprint": {
+    "has_password_input": false,
+    "entitlement_input": null,
+    "source_fingerprint": "sha256:7b971aa6d5c2b5fb7dd1b46cc675ecfcc6672a526998f1962dafb02c02a3cd79"
+  },
+  "checks": {
+    "format_valid": true,
+    "schema_valid": true,
+    "payload_valid": true,
+    "checksums_valid": true,
+    "signature_valid": true,
+    "load_contract_valid": true,
+    "overall_valid": true
+  },
+  "signature_state": "absent",
+  "issues": [
+    {
+      "code": "KDNA_AUTH_REMOTE_RUNTIME_REQUIRED",
+      "severity": "blocking",
+      "message": "Remote assets require a runtime projection endpoint."
+    }
+  ],
+  "source": {
+    "kind": "file",
+    "path": "<fixture:remote-recognized-not-loaded>"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "digest_profile": "kdna.digest-basis.runtime-entry-set",
+  "digest_profile_version": "0.1.0",
+  "covered_entries": ["kdna.json", "payload.kdnab"],
+  "algorithm": "sha256",
+  "manifest_digest": "sha256:c52c8930033b620e068442b00582b64bedb5fac12e3ade7cdec04432b0efb628",
+  "payload_digest": "sha256:41517f8278498452d539757baf303f4ef2229f272a6cf237968df0c0bb50883b",
+  "entry_set_digest": "sha256:75b229f6498045600f79253a309d68da1ba44bb4ee6f8e1d8712e5406335ae56",
+  "entries": {
+    "kdna.json": {
+      "algorithm": "sha256",
+      "value": "c52c8930033b620e068442b00582b64bedb5fac12e3ade7cdec04432b0efb628"
+    },
+    "payload.kdnab": {
+      "algorithm": "sha256",
+      "value": "41517f8278498452d539757baf303f4ef2229f272a6cf237968df0c0bb50883b"
+    }
+  }
+}

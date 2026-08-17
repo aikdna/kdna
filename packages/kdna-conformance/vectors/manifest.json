@@ -1,0 +1,391 @@
+{
+  "vector_set_version": "2026-08-17",
+  "description": "Byte-level KDNA interop vectors packaged from the canonical conformance/ tree. Verify an implementation against these vectors plus the RFCs to claim interop.",
+  "sets": {
+    "signature/vectors.json": "kdsig.ed25519 signature vectors (RFC-0021 M1)",
+    "envelope-aead/": "password-envelope AEAD vectors (scrypt and Argon2id)",
+    "authorization/": "authorization LoadPlan cases with fixtures and goldens (RFC-0014)"
+  },
+  "files": [
+    {
+      "path": "authorization/cases.json",
+      "sha256": "c1f35296ace76785e1d7314ddd18be5843dc308b0e12848f48ce56d5324a5e3f",
+      "bytes": 4509
+    },
+    {
+      "path": "authorization/cases.schema.json",
+      "sha256": "9314ce94dc743d7218b83054da371f2b2f401ae9c843be4024336e3ca50cccc0",
+      "bytes": 1572
+    },
+    {
+      "path": "authorization/fixtures/account-required/checksums.json",
+      "sha256": "175c9bb2ddced99c903b5ddee09e67d59e907662fdf0c9b54b6fde054e61bd1c",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/account-required/kdna.json",
+      "sha256": "968f9be0f27ce5e4f8d4d141dca9d406145e2707d05db5cae847d8d0833f569f",
+      "bytes": 1576
+    },
+    {
+      "path": "authorization/fixtures/account-required/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/account-required/payload.kdnab",
+      "sha256": "3f82646bd1ac39241d7b8d268e7d7c5cec57f941b858c6634eb91ded516584fa",
+      "bytes": 422
+    },
+    {
+      "path": "authorization/fixtures/expired-entitlement/checksums.json",
+      "sha256": "ca2d548267807835e37762a89a7348fa3c080a7d7a8957316336697258a7c5b7",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/expired-entitlement/kdna.json",
+      "sha256": "7a42464b768bb1293adcdb5556777fe13ebb496a8817ec565c825c7f11551670",
+      "bytes": 1590
+    },
+    {
+      "path": "authorization/fixtures/expired-entitlement/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/expired-entitlement/payload.kdnab",
+      "sha256": "3f82646bd1ac39241d7b8d268e7d7c5cec57f941b858c6634eb91ded516584fa",
+      "bytes": 422
+    },
+    {
+      "path": "authorization/fixtures/offline-grace-active/checksums.json",
+      "sha256": "84276dc1a18db20e3db62270741c3b0a0a30069458fe50f18b7f74dcf5123be3",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/offline-grace-active/kdna.json",
+      "sha256": "d81ed157d5cd937412e41d30decf85059674c954d5a5adb2ae5aa1947de295ee",
+      "bytes": 1593
+    },
+    {
+      "path": "authorization/fixtures/offline-grace-active/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/offline-grace-active/payload.kdnab",
+      "sha256": "3f82646bd1ac39241d7b8d268e7d7c5cec57f941b858c6634eb91ded516584fa",
+      "bytes": 422
+    },
+    {
+      "path": "authorization/fixtures/org-required/checksums.json",
+      "sha256": "0f515049887ed8591957b3b6cb5f22095462ad9262452853759a82dea97a95eb",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/org-required/kdna.json",
+      "sha256": "27bfb3a92473bdc10920ad004d963dc92815e5ea5ec16152b744828928c7f2a0",
+      "bytes": 1560
+    },
+    {
+      "path": "authorization/fixtures/org-required/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/org-required/payload.kdnab",
+      "sha256": "3f82646bd1ac39241d7b8d268e7d7c5cec57f941b858c6634eb91ded516584fa",
+      "bytes": 422
+    },
+    {
+      "path": "authorization/fixtures/password-missing/checksums.json",
+      "sha256": "426aadb0b8facb046f0731ad81ec5e2a8b640e7017725ef6f352c9fcbee3c566",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/password-missing/kdna.json",
+      "sha256": "c52c8930033b620e068442b00582b64bedb5fac12e3ade7cdec04432b0efb628",
+      "bytes": 1717
+    },
+    {
+      "path": "authorization/fixtures/password-missing/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/password-missing/payload.kdnab",
+      "sha256": "41517f8278498452d539757baf303f4ef2229f272a6cf237968df0c0bb50883b",
+      "bytes": 956
+    },
+    {
+      "path": "authorization/fixtures/password-valid/checksums.json",
+      "sha256": "015fe226dd6d2421b989d2207eb404f4887be8f41ee63a65459e0a63822f046f",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/password-valid/kdna.json",
+      "sha256": "e97a28a9b275904c30231d925f3c1fac936f99e9bb8037bf90fc319837629bd6",
+      "bytes": 1711
+    },
+    {
+      "path": "authorization/fixtures/password-valid/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/password-valid/payload.kdnab",
+      "sha256": "cf32f07ca908d40b28061ccbbead03c745e9805cff8969d97ee5e6952b7ce6f5",
+      "bytes": 956
+    },
+    {
+      "path": "authorization/fixtures/public-valid/checksums.json",
+      "sha256": "a8cbca26296aae63f3e04479bfa26bf05bb47e9cd8e367d28469ed707f4543fd",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/public-valid/kdna.json",
+      "sha256": "f546edc676c3e3b5e55575ca45ac9139c2d1dbbbf8bb6c955fadea3dad36f08a",
+      "bytes": 1468
+    },
+    {
+      "path": "authorization/fixtures/public-valid/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/public-valid/payload.kdnab",
+      "sha256": "3f82646bd1ac39241d7b8d268e7d7c5cec57f941b858c6634eb91ded516584fa",
+      "bytes": 422
+    },
+    {
+      "path": "authorization/fixtures/receipt-missing/checksums.json",
+      "sha256": "35e5a41aafe69c80e0737b67c030eebb17d65cdc735ae5cb8a7f47cf92660f08",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/receipt-missing/kdna.json",
+      "sha256": "d3a8b7b86dc674f2fc5ce8e7490408ea18861543c84743bccab01b56c5591697",
+      "bytes": 1578
+    },
+    {
+      "path": "authorization/fixtures/receipt-missing/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/receipt-missing/payload.kdnab",
+      "sha256": "3f82646bd1ac39241d7b8d268e7d7c5cec57f941b858c6634eb91ded516584fa",
+      "bytes": 422
+    },
+    {
+      "path": "authorization/fixtures/receipt-valid/checksums.json",
+      "sha256": "64491ca4bfb761160263592b2b6ba1f3f705c74a131f811af439817b785890b0",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/receipt-valid/kdna.json",
+      "sha256": "8ed9db0391a72f748e54af94580bd9052ec26a922be8dad055033e019d0979fc",
+      "bytes": 1572
+    },
+    {
+      "path": "authorization/fixtures/receipt-valid/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/receipt-valid/payload.kdnab",
+      "sha256": "3f82646bd1ac39241d7b8d268e7d7c5cec57f941b858c6634eb91ded516584fa",
+      "bytes": 422
+    },
+    {
+      "path": "authorization/fixtures/remote-recognized-not-loaded/checksums.json",
+      "sha256": "e1dce8823732835d1900557451c1aef315ac4adb1b0eeeb7076f93a7afdcd575",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/remote-recognized-not-loaded/kdna.json",
+      "sha256": "e5132ad72b3092860e74f1b2a2e1fd652997e9a03670b8fbe70e06a040ff3307",
+      "bytes": 1591
+    },
+    {
+      "path": "authorization/fixtures/remote-recognized-not-loaded/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/remote-recognized-not-loaded/payload.kdnab",
+      "sha256": "3f82646bd1ac39241d7b8d268e7d7c5cec57f941b858c6634eb91ded516584fa",
+      "bytes": 422
+    },
+    {
+      "path": "authorization/fixtures/revoked-entitlement/checksums.json",
+      "sha256": "b7eaeccc902ed82cc8d9d29c58797ef7e5e346498e1b7f8c7d86c3c0607bd68b",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/revoked-entitlement/kdna.json",
+      "sha256": "c5c5ada5afa10a9376b1aa73ecc10669c733c2580f472ee6d32f4c0bb271ec7e",
+      "bytes": 1590
+    },
+    {
+      "path": "authorization/fixtures/revoked-entitlement/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/revoked-entitlement/payload.kdnab",
+      "sha256": "3f82646bd1ac39241d7b8d268e7d7c5cec57f941b858c6634eb91ded516584fa",
+      "bytes": 422
+    },
+    {
+      "path": "authorization/fixtures/tampered-payload/checksums.json",
+      "sha256": "7e3f8df96f361ca5d98ce57887c2b3129dd035e5adde5a84c496a28433a95dac",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/tampered-payload/kdna.json",
+      "sha256": "770b05ee8410f58196245d8b724308a43fc153b2dd1a633273dc9f35e71c160d",
+      "bytes": 1480
+    },
+    {
+      "path": "authorization/fixtures/tampered-payload/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/tampered-payload/payload.kdnab",
+      "sha256": "dc0f74a12e315d0f621e90de6cf6a204f755a05cb4fe1169a34d2ee095749a89",
+      "bytes": 433
+    },
+    {
+      "path": "authorization/fixtures/unknown-access/checksums.json",
+      "sha256": "610799395cc9d7870b0e6846d1a11dd73627da0ee4a83a0716c9b51602ce4aa0",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/unknown-access/kdna.json",
+      "sha256": "d5ee39dc3df3d6e711ed0bf32428859ae8bb87c661d1289c294b040813c9297d",
+      "bytes": 1480
+    },
+    {
+      "path": "authorization/fixtures/unknown-access/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/unknown-access/payload.kdnab",
+      "sha256": "3f82646bd1ac39241d7b8d268e7d7c5cec57f941b858c6634eb91ded516584fa",
+      "bytes": 422
+    },
+    {
+      "path": "authorization/fixtures/unknown-entitlement-profile/checksums.json",
+      "sha256": "a0b5d69858bd42ce878d248f902efbee43072c24dfdf4a7aba8c309538c3f4bf",
+      "bytes": 762
+    },
+    {
+      "path": "authorization/fixtures/unknown-entitlement-profile/kdna.json",
+      "sha256": "2725f11e2c9d6db15683a26378812b2f4ce53cb8d555017b41a13f0523e9bdcd",
+      "bytes": 1613
+    },
+    {
+      "path": "authorization/fixtures/unknown-entitlement-profile/mimetype",
+      "sha256": "54f2557b354c2ab77f87a9d73b58bbbf12cfec20c40b0b13327d12df3d35e4ca",
+      "bytes": 26
+    },
+    {
+      "path": "authorization/fixtures/unknown-entitlement-profile/payload.kdnab",
+      "sha256": "3f82646bd1ac39241d7b8d268e7d7c5cec57f941b858c6634eb91ded516584fa",
+      "bytes": 422
+    },
+    {
+      "path": "authorization/goldens/account-required.loadplan.json",
+      "sha256": "417aa81bf0508e51cafbd3a324050288375ea842074d8c8e8bd4b17347cfce15",
+      "bytes": 1218
+    },
+    {
+      "path": "authorization/goldens/expired-entitlement.loadplan.json",
+      "sha256": "a1aee8db7b8c08b9190700c95e44fea6b3ccb12c80089c64447d8b56ebb48cec",
+      "bytes": 1188
+    },
+    {
+      "path": "authorization/goldens/offline-grace-active.loadplan.json",
+      "sha256": "e1d694b7949fde2437301424815d7c4659fbded6996d461dda05456315ff97f4",
+      "bytes": 1252
+    },
+    {
+      "path": "authorization/goldens/org-required.loadplan.json",
+      "sha256": "9ec79c773cbd64f93819ab79834879e303e8879463c00a0793d32a01badfa86b",
+      "bytes": 1204
+    },
+    {
+      "path": "authorization/goldens/password-missing.loadplan.json",
+      "sha256": "5f019f698c82c139587ae2d3055f1d0cd8d31a12d45454fd0c85c309e3efa0e6",
+      "bytes": 1205
+    },
+    {
+      "path": "authorization/goldens/password-valid.loadplan.json",
+      "sha256": "2352deb6b590dc98e77abd2dc8a171ee63cd84f81eae6da245790aeecf8029e0",
+      "bytes": 1270
+    },
+    {
+      "path": "authorization/goldens/public-valid.loadplan.json",
+      "sha256": "e84153bd3cb36b597d266ce946ef9f9171f9d8d8e5fa8fe32d0511f113017a66",
+      "bytes": 1003
+    },
+    {
+      "path": "authorization/goldens/receipt-missing.loadplan.json",
+      "sha256": "dc1a56d7db0c83353534d657770c15567eb0eddcb73c3a89fbef6d88569a55b3",
+      "bytes": 1219
+    },
+    {
+      "path": "authorization/goldens/receipt-valid.loadplan.json",
+      "sha256": "70d075292acd3e3cb030a5f546636ce1bac56d49f0a2076d0d8f2d6d02258214",
+      "bytes": 1023
+    },
+    {
+      "path": "authorization/goldens/remote-recognized-not-loaded.loadplan.json",
+      "sha256": "8fa2bf2290430aeeb5e6dcd9aa1351e3ca105b1e99bcf6872a176809e80c1ad9",
+      "bytes": 1238
+    },
+    {
+      "path": "authorization/goldens/revoked-entitlement.loadplan.json",
+      "sha256": "9a347fdd40f9cb25eefee15c2d7849cf9dec426fa24794d8f57390479a47e136",
+      "bytes": 1184
+    },
+    {
+      "path": "authorization/goldens/tampered-payload.loadplan.json",
+      "sha256": "1673b036dedfc9aeb04205bf1a5bc9d5eefe45d91faef776de4f9eb034e704e0",
+      "bytes": 1394
+    },
+    {
+      "path": "authorization/goldens/unknown-access.loadplan.json",
+      "sha256": "5bb79f574d066aad6703e70c6917193e9d1028a72cb9532c0981437ac1a78772",
+      "bytes": 1170
+    },
+    {
+      "path": "authorization/goldens/unknown-entitlement-profile.loadplan.json",
+      "sha256": "0736f7bc56d655b5f20965c9cfb6c94c7f1c88df1180bb6d8685355a512dc2af",
+      "bytes": 1237
+    },
+    {
+      "path": "envelope-aead/envelope-aead-vector-01-scrypt-basic.json",
+      "sha256": "fb372b227d9d146e7391eefb3f7b4aaa10caaa77433a0497a58e90c147b87b76",
+      "bytes": 1728
+    },
+    {
+      "path": "envelope-aead/envelope-aead-vector-02-scrypt-multi-entry-aad.json",
+      "sha256": "6ae7046b59e5a3bc9342f931f1ed60cae7dcc50858964311ad62fbdcb7313675",
+      "bytes": 3129
+    },
+    {
+      "path": "envelope-aead/envelope-aead-vector-03-argon2id-basic.json",
+      "sha256": "46de63ea9012ebf0020d501ff9b3bf168d2e8c34c5339f5da3dc379605e461c2",
+      "bytes": 1886
+    },
+    {
+      "path": "signature/vectors.json",
+      "sha256": "1bba5dc5cacdb13e211be11a6383056305588bbc51666bb21345ecc32e63aed3",
+      "bytes": 7345
+    }
+  ]
+}
