@@ -77,12 +77,11 @@
       "repository": "aikdna/kdna",
       "package_json": "packages/kdna-conformance/package.json",
       "npm_package": "@aikdna/kdna-conformance",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "canonical_tag": {
         "type": "prefix",
         "value": "conformance/"
-      },
-      "candidate_version": "0.2.0"
+      }
     },
     {
       "label": "KDNA Web Client",
@@ -119,11 +118,10 @@
       "repository": "aikdna/kdna",
       "package_json": "packages/kdna-core/package.json",
       "npm_package": "@aikdna/kdna-core",
-      "version": "0.21.0",
+      "version": "0.22.0",
       "canonical_tag": {
         "type": "natural"
-      },
-      "candidate_version": "0.22.0"
+      }
     },
     {
       "label": "KDNA Eval",

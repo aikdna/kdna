@@ -277,7 +277,7 @@ test('ecosystem workflow checkouts stay pinned to accepted or explicitly scoped 
     (entry) => entry.local_path && entry.local_path !== '.' && entry.source_commit,
   );
   const candidateSmokePins = new Map([
-    ['core-smoke.yml:aikdna/kdna-core-swift', '59a68b760c187d5f7c8909b085b2030d010075de'],
+    ['core-smoke.yml:aikdna/kdna-core-swift', '5a8e2bb5db92d8a9118e1668cf6f1414c4aed5c9'],
   ]);
 
   for (const workflowName of ['core-smoke.yml', 'publish.yml']) {
@@ -340,7 +340,7 @@ test('candidate Core conformance anchor carries the declared candidate package v
   fs.writeFileSync(manifestPath, JSON.stringify(canonical));
   const result = runValidator(manifestPath);
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /conformance_commit package version mismatch/u);
+  assert.match(result.stderr, /conformance_commit must equal release tag 0.22.0/u);
 });
 
 test('asset inventory is an exact two-way projection of index/current.json', (t) => {
