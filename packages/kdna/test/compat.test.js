@@ -109,7 +109,7 @@ test('compatibility manifest pins one released toolchain without claiming the cu
     '@aikdna/kdna-cli': '0.36.1',
     '@aikdna/kdna-core': '0.22.0',
   });
-  assert.deepEqual(pkg.engines, { node: '>=20' });
+  assert.deepEqual(pkg.engines, { node: '>=22' });
   assert.deepEqual(pkg.bin, {
     'kdna-lint': 'bin/kdna-lint.js',
     'kdna-validate': 'bin/kdna-validate.js',
