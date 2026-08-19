@@ -471,7 +471,7 @@
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "published to npm as an experimental integration surface, not a hosted-platform claim",
-        "the verified boundary is Web Client 0.3.0, Web Server 0.3.1, Activation 0.2.1, React 18 or 19, and Node.js 20 or later"
+        "the verified boundary is Web Client 0.3.0, Web Server 0.3.1, Activation 0.2.1, React 18 or 19, and Node.js 22 or later"
       ],
       "recommended_entrypoint": "use endpoint-backed hooks/components",
       "legacy_replacement": null
@@ -503,7 +503,7 @@
       "supported_entitlement_profiles": [],
       "known_limitations": [
         "published to npm as an experimental local scaffolder, not an AIKDNA-hosted application platform",
-        "the verified boundary is Core 0.21.0, Web Server 0.3.1, Web Client 0.3.0, React 0.4.0, Node.js 20 or later, npm, pnpm 11.14.0, and Yarn 1.22.22",
+        "the verified boundary is Core 0.21.0, Web Server 0.3.1, Web Client 0.3.0, React 0.4.0, Node.js 22 or later, npm, pnpm 11.14.0, and Yarn 1.22.22",
         "generated templates cover local public and password-protected inspect/plan-load/load flows; remote-mode web forwarding is not wired"
       ],
       "recommended_entrypoint": "npx create-kdna-web-app@0.5.0 <app>",
