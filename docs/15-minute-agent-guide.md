@@ -7,7 +7,7 @@ Agent-installed Skill.
 
 ## Prerequisites
 
-- Node.js 18 or later
+- Node.js 22 or later
 - `npm install -g @aikdna/kdna-cli`
 - a `.kdna` file that the user selected for this task, session, app, or project
 
