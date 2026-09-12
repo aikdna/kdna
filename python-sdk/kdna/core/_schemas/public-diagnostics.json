@@ -1,0 +1,350 @@
+{
+  "entries": [
+    {
+      "code": "READ_INPUT_INVALID",
+      "condition": "Wrong type, unknown/missing object field, invalid scalar, unsupported input representation",
+      "scope": "admission_and_read",
+      "stage": "input"
+    },
+    {
+      "code": "READ_SNAPSHOT_UNATTESTED",
+      "condition": "Missing/forged/deserialized Core witness",
+      "scope": "read",
+      "stage": "input"
+    },
+    {
+      "code": "READ_CORE_CAPABILITY_UNAVAILABLE",
+      "condition": "Requested Node/browser Core admission capability not implemented/available",
+      "scope": "read",
+      "stage": "input"
+    },
+    {
+      "code": "READ_UNSUPPORTED_VERSION",
+      "condition": "Entire old tuple or unknown complete version family",
+      "scope": "read",
+      "stage": "version"
+    },
+    {
+      "code": "READ_MIXED_VERSION_TUPLE",
+      "condition": "At least one new coordinate and at least one missing, different or old coordinate",
+      "scope": "read",
+      "stage": "version"
+    },
+    {
+      "code": "READ_CORE_INVALID",
+      "condition": "Core technical admission invalid; include no invented Host decision",
+      "scope": "read",
+      "stage": "core"
+    },
+    {
+      "code": "READ_INTERPRETATION_INCOMPLETE",
+      "condition": "Unknown critical semantics block static interpretation after Core structure succeeds.",
+      "scope": "read",
+      "stage": "core"
+    },
+    {
+      "code": "READ_ASSET_MISMATCH",
+      "condition": "Selector asset_id differs from admitted asset",
+      "scope": "read",
+      "stage": "selection"
+    },
+    {
+      "code": "READ_ASSET_VERSION_MISMATCH",
+      "condition": "Selector asset_version differs from admitted asset",
+      "scope": "read",
+      "stage": "selection"
+    },
+    {
+      "code": "READ_SELECTION_NOT_FOUND",
+      "condition": "No judgment ID match",
+      "scope": "read",
+      "stage": "selection"
+    },
+    {
+      "code": "READ_SELECTION_AMBIGUOUS",
+      "condition": "More than one exact match within the named package-set; never choose first",
+      "scope": "read",
+      "stage": "selection"
+    },
+    {
+      "code": "READ_HANDLE_UNTRUSTED",
+      "condition": "Handle not in the provider's issued-handle record or any serialized field altered",
+      "scope": "read",
+      "stage": "handle"
+    },
+    {
+      "code": "READ_HANDLE_VERSION_MISMATCH",
+      "condition": "Handle Core/IR/Read tuple differs",
+      "scope": "read",
+      "stage": "handle"
+    },
+    {
+      "code": "READ_HANDLE_STALE",
+      "condition": "Snapshot_id or A/C differs",
+      "scope": "read",
+      "stage": "handle"
+    },
+    {
+      "code": "READ_HANDLE_ASSET_MISMATCH",
+      "condition": "Asset or exact selection differs",
+      "scope": "read",
+      "stage": "handle"
+    },
+    {
+      "code": "READ_HANDLE_SCOPE_MISMATCH",
+      "condition": "Target or mandatory support is outside bound handle scope",
+      "scope": "read",
+      "stage": "handle"
+    },
+    {
+      "code": "READ_HOST_CONTEXT_UNTRUSTED",
+      "condition": "Provider witness absent/forged or request/snapshot/A/C correlation mismatch",
+      "scope": "read",
+      "stage": "host"
+    },
+    {
+      "code": "READ_HOST_EPOCH_MISMATCH",
+      "condition": "Handle or Host context belongs to another Host/restart epoch",
+      "scope": "read",
+      "stage": "host"
+    },
+    {
+      "code": "READ_HOST_TIME_INVALID",
+      "condition": "Host clock unavailable, non-safe, or current time precedes context/handle issue time",
+      "scope": "read",
+      "stage": "host"
+    },
+    {
+      "code": "READ_HANDLE_EXPIRED",
+      "condition": "Current Host time >= handle expires_at",
+      "scope": "read",
+      "stage": "host"
+    },
+    {
+      "code": "READ_HOST_CONTEXT_EXPIRED",
+      "condition": "Current Host time >= context expires_at",
+      "scope": "read",
+      "stage": "host"
+    },
+    {
+      "code": "READ_HOST_DENIED",
+      "condition": "Current independent Host decision denies or revocation tombstone applies",
+      "scope": "read",
+      "stage": "host"
+    },
+    {
+      "code": "READ_SCOPE_DENIED",
+      "condition": "Current authorized scope cannot include all mandatory disclosure nodes",
+      "scope": "read",
+      "stage": "host"
+    },
+    {
+      "code": "READ_PROJECTION_INVALID",
+      "condition": "Core-provided mandatory/public reference graph cannot be projected without loss",
+      "scope": "read",
+      "stage": "projection"
+    },
+    {
+      "code": "READ_BUDGET_INSUFFICIENT",
+      "condition": "Complete successful envelope exceeds requested byte limit",
+      "scope": "read",
+      "stage": "budget"
+    },
+    {
+      "code": "READ_RESPONSE_BUDGET_TOO_SMALL",
+      "scope": "control_only"
+    },
+    {
+      "code": "SET_MEMBER_UNAUTHORIZED",
+      "scope": "other_contract"
+    },
+    {
+      "code": "SET_MEMBER_MISSING",
+      "scope": "other_contract"
+    },
+    {
+      "code": "SET_MEMBER_EXTRA",
+      "scope": "other_contract"
+    },
+    {
+      "code": "SET_MEMBER_DUPLICATE",
+      "scope": "other_contract"
+    },
+    {
+      "code": "UNSUPPORTED_CROSS_ASSET_SEMANTIC_MERGE",
+      "scope": "other_contract"
+    },
+    {
+      "code": "WRITER_REQUIRED_DECLARATION_MISSING",
+      "scope": "other_contract"
+    },
+    {
+      "code": "DIGEST_INPUT_INVALID",
+      "scope": "other_contract"
+    },
+    {
+      "code": "DIGEST_EXPECTATION_MISMATCH",
+      "scope": "other_contract"
+    },
+    {
+      "code": "CAPSULE_DELIVERY_DIGEST_MISMATCH",
+      "scope": "other_contract"
+    },
+    {
+      "code": "READ_ADMISSION_RESPONSE_TOO_SMALL",
+      "scope": "control_only"
+    },
+    {
+      "code": "READ_TRANSPORT_FAILURE",
+      "scope": "transport_only"
+    },
+    {
+      "code": "READ_COMPONENT_DECLARATION_INVALID",
+      "condition": "Wrong component carrier, contract, location, criticality, type/profile, duplicate declaration or statement provenance.",
+      "scope": "Core component static interpretation",
+      "stage": "core"
+    },
+    {
+      "code": "READ_COMPONENT_CONTENT_INVALID",
+      "condition": "Component content violates the finite exact profile grammar or text/item rules.",
+      "scope": "Core component static interpretation",
+      "stage": "core"
+    },
+    {
+      "code": "READ_COMPONENT_REFERENCE_INVALID",
+      "condition": "A declared local key/component target does not resolve in the same judgment and required profile.",
+      "scope": "Core component static interpretation",
+      "stage": "core"
+    },
+    {
+      "code": "READ_COMPONENT_GRAPH_CYCLE",
+      "condition": "Taxonomy has a self edge or directed cycle.",
+      "scope": "Core component static interpretation",
+      "stage": "core"
+    },
+    {
+      "code": "READ_COMPONENT_LIMIT_EXCEEDED",
+      "condition": "Component count/content byte total/item/edge/traversal-depth limit exceeded.",
+      "scope": "Core component static interpretation",
+      "stage": "core"
+    },
+    {
+      "code": "READ_COMPONENT_BINDING_INVALID",
+      "condition": "CS1 binding target is not its owner, duplicates a role binding, or native declaration/binding digest differs.",
+      "scope": "Core component static interpretation",
+      "stage": "core"
+    },
+    {
+      "code": "READ_COMPONENT_ADOPTION_INVALID",
+      "condition": "Missing, duplicate, misplaced or inconsistent aggregate component adoption declaration.",
+      "scope": "Core component static interpretation",
+      "stage": "core"
+    },
+    {
+      "code": "READ_METHOD_PRESENCE_INVALID",
+      "condition": "Wrong, duplicate, noncritical, ownerless, redundant or contradictory method declaration presence mapping.",
+      "scope": "Core component static interpretation",
+      "stage": "core"
+    }
+  ],
+  "format": "kdna.public-diagnostics/1",
+  "non_schema_obligations": [
+    {
+      "boundary": "raw admission before schema",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-BYTES",
+      "owner": "Core"
+    },
+    {
+      "boundary": "digest admission and Host received-Capsule observation",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-DIGESTS",
+      "owner": "Core"
+    },
+    {
+      "boundary": "single resolver and IR construction",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-GRAPH",
+      "owner": "Core"
+    },
+    {
+      "boundary": "static result and condition interpretation",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-RESULT",
+      "owner": "Core"
+    },
+    {
+      "boundary": "Writer profile evaluation, separately from Core structure",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-AUTHORSHIP",
+      "owner": "Creation and Core"
+    },
+    {
+      "boundary": "admitReadRequest",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-ADMISSION",
+      "owner": "Read"
+    },
+    {
+      "boundary": "admission/control-envelope adapter",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-CONTROL",
+      "owner": "Read and transport"
+    },
+    {
+      "boundary": "complete final-body encoder and budget selection",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-BUDGET",
+      "owner": "Read"
+    },
+    {
+      "boundary": "trusted embedding current disclosure boundary",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-HOST",
+      "owner": "Host and Read"
+    },
+    {
+      "boundary": "single Core projection with Host-facing adapters",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-MODES",
+      "owner": "Core and Read"
+    },
+    {
+      "boundary": "state correlation after independently observed stages",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-STATES",
+      "owner": "Read and Host"
+    },
+    {
+      "boundary": "package-set admission and distinct runtime handoff",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-PACKAGE-SET",
+      "owner": "Core and Host"
+    },
+    {
+      "boundary": "unforgeable runtime branding",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-OPAQUE",
+      "owner": "Core, Read, embedding"
+    },
+    {
+      "boundary": "type-aware extension semantic firewall",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-EXTENSIONS",
+      "owner": "Core"
+    },
+    {
+      "boundary": "container/crypto admission before Read",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-CONTAINER",
+      "owner": "Core"
+    },
+    {
+      "boundary": "typed extension interpretation and pre-compiler/saved-byte comparison",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "id": "PUBLIC-COMPONENT-SEMANTICS",
+      "owner": "Core and formal Creation"
+    }
+  ],
+  "status": "UNPUBLISHED_DESIGN_TARGET"
+}

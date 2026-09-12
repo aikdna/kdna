@@ -55,3 +55,28 @@ moves `Active -> Deprecated -> Removed` and is never removed without a
 
 The reference implementation is [`@aikdna/kdna-core`](packages/kdna-core/).
 Conformance fixtures live in [`conformance/`](conformance/).
+
+## Unpublished next-version design — not Active
+
+Status: **UNPUBLISHED_DESIGN_TARGET / NOT_IMPLEMENTED**. This appendix records
+reviewable design decisions only. It does not change any Active 0.1 coordinate
+or lifecycle statement above, issue a deprecation notice, start the 12-month
+window, or claim that a public implementation/artifact exists.
+
+- [Public contract decisions](specs/public-contract-decisions.json): chosen
+  digest domains, authority boundaries and exact next-version tuple.
+- [Public version policy](specs/public-version-policy.md): compatibility
+  rejection, evidence axes and consumer rebinding responsibilities.
+- [Public source map](specs/public-source-map.json): planned sole editable
+  semantic source and generated/consumer dependencies; not yet generated.
+- [Read contract](specs/read-contract.md): typed public Read design and Host
+  disclosure boundary for planned `@aikdna/kdna-read@0.1.0`.
+- [Decision vectors](conformance/public-contract-decision-vectors.json):
+  concrete acceptance/rejection expectations, **NOT_RUN**, not conformance PASS.
+
+The new design targets container/payload 0.2.0, Core 0.2.0, Canonical IR 0.1.0,
+Runtime Capsule/Consumption Plan/Agent Host/Judgment Trace 0.2.0 and Read 0.1.0.
+The complete exact tuple and separate unpublished package candidates are in the
+decision and version-policy files. These design artifacts require independent
+acceptance before a separately authorized semantic-source or implementation
+package; they are not the complete normative/generated closure.

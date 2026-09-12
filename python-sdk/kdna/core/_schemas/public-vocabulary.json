@@ -1,0 +1,2109 @@
+{
+  "entries": [
+    {
+      "definition": "AuthoredUnprovidedState",
+      "kind": "enum",
+      "values": [
+        "unknown",
+        "none",
+        "not_applicable"
+      ]
+    },
+    {
+      "definition": "TechnicalState",
+      "kind": "enum",
+      "values": [
+        "not_evaluated",
+        "valid",
+        "invalid"
+      ]
+    },
+    {
+      "definition": "InterpretationState",
+      "kind": "enum",
+      "values": [
+        "not_evaluated",
+        "complete",
+        "degraded",
+        "blocked"
+      ]
+    },
+    {
+      "definition": "WriterState",
+      "kind": "enum",
+      "values": [
+        "not_evaluated",
+        "sufficient",
+        "insufficient"
+      ]
+    },
+    {
+      "definition": "ConfirmationState",
+      "kind": "enum",
+      "values": [
+        "not_evaluated",
+        "claimed_unverified",
+        "verified",
+        "rejected"
+      ]
+    },
+    {
+      "definition": "ReadPermission",
+      "kind": "enum",
+      "values": [
+        "not_evaluated",
+        "allowed",
+        "denied"
+      ]
+    },
+    {
+      "definition": "ActorKind",
+      "kind": "enum",
+      "values": [
+        "person",
+        "organization",
+        "collective",
+        "anonymous",
+        "asset_native",
+        "agent"
+      ]
+    },
+    {
+      "definition": "AccessMode",
+      "kind": "enum",
+      "values": [
+        "public",
+        "licensed",
+        "remote"
+      ]
+    },
+    {
+      "definition": "AssetType",
+      "kind": "enum",
+      "values": [
+        "domain",
+        "cluster",
+        "tool",
+        "sample",
+        "fixture",
+        "bundle"
+      ]
+    },
+    {
+      "definition": "BoundaryEffect",
+      "kind": "enum",
+      "values": [
+        "exclude",
+        "limit",
+        "out_of_domain"
+      ]
+    },
+    {
+      "definition": "ReasonRole",
+      "kind": "enum",
+      "values": [
+        "support",
+        "counter",
+        "qualification",
+        "calibration"
+      ]
+    },
+    {
+      "definition": "RelationDirection",
+      "kind": "enum",
+      "values": [
+        "directed",
+        "undirected"
+      ]
+    },
+    {
+      "definition": "ReferenceRole",
+      "kind": "enum",
+      "values": [
+        "dependency",
+        "source_use",
+        "provenance",
+        "mandatory_support",
+        "optional_expansion"
+      ]
+    },
+    {
+      "definition": "RiskState",
+      "kind": "enum",
+      "values": [
+        "ordinary",
+        "elevated",
+        "high_consequence",
+        "unknown"
+      ]
+    },
+    {
+      "definition": "VersionTuple/properties/container",
+      "kind": "literal",
+      "values": [
+        "0.2.0"
+      ]
+    },
+    {
+      "definition": "VersionTuple/properties/payload_profile",
+      "kind": "literal",
+      "values": [
+        "kdna.payload.judgment"
+      ]
+    },
+    {
+      "definition": "VersionTuple/properties/payload_version",
+      "kind": "literal",
+      "values": [
+        "0.2.0"
+      ]
+    },
+    {
+      "definition": "VersionTuple/properties/core",
+      "kind": "literal",
+      "values": [
+        "kdna.core/0.3.0"
+      ]
+    },
+    {
+      "definition": "VersionTuple/properties/ir",
+      "kind": "literal",
+      "values": [
+        "kdna.canonical-ir/0.2.0"
+      ]
+    },
+    {
+      "definition": "VersionTuple/properties/runtime",
+      "kind": "literal",
+      "values": [
+        "kdna.runtime-capsule/0.2.0"
+      ]
+    },
+    {
+      "definition": "VersionTuple/properties/plan",
+      "kind": "literal",
+      "values": [
+        "kdna.consumption-plan/0.2.0"
+      ]
+    },
+    {
+      "definition": "VersionTuple/properties/host",
+      "kind": "literal",
+      "values": [
+        "kdna.agent-host/0.2.0"
+      ]
+    },
+    {
+      "definition": "VersionTuple/properties/trace",
+      "kind": "literal",
+      "values": [
+        "kdna.judgment-trace/0.2.0"
+      ]
+    },
+    {
+      "definition": "VersionTuple/properties/read",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.2.0"
+      ]
+    },
+    {
+      "definition": "ValueText/properties/kind",
+      "kind": "literal",
+      "values": [
+        "text"
+      ]
+    },
+    {
+      "definition": "ValueNumber/properties/kind",
+      "kind": "literal",
+      "values": [
+        "number"
+      ]
+    },
+    {
+      "definition": "ValueBoolean/properties/kind",
+      "kind": "literal",
+      "values": [
+        "boolean"
+      ]
+    },
+    {
+      "definition": "ValueNull/properties/kind",
+      "kind": "literal",
+      "values": [
+        "null"
+      ]
+    },
+    {
+      "definition": "ValueNull/properties/value",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ValueList/properties/kind",
+      "kind": "literal",
+      "values": [
+        "list"
+      ]
+    },
+    {
+      "definition": "ValueRecord/properties/kind",
+      "kind": "literal",
+      "values": [
+        "record"
+      ]
+    },
+    {
+      "definition": "BoundaryDeclarationProvided/properties/state",
+      "kind": "literal",
+      "values": [
+        "provided"
+      ]
+    },
+    {
+      "definition": "BoundaryDeclarationUnprovided/properties/value",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ExceptionDeclarationProvided/properties/state",
+      "kind": "literal",
+      "values": [
+        "provided"
+      ]
+    },
+    {
+      "definition": "ExceptionDeclarationUnprovided/properties/value",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "MisuseDeclarationProvided/properties/state",
+      "kind": "literal",
+      "values": [
+        "provided"
+      ]
+    },
+    {
+      "definition": "MisuseDeclarationUnprovided/properties/value",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "TextDeclarationProvided/properties/state",
+      "kind": "literal",
+      "values": [
+        "provided"
+      ]
+    },
+    {
+      "definition": "TextDeclarationUnprovided/properties/value",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "TextListDeclarationProvided/properties/state",
+      "kind": "literal",
+      "values": [
+        "provided"
+      ]
+    },
+    {
+      "definition": "TextListDeclarationUnprovided/properties/value",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "RoleDeclarationProvided/properties/state",
+      "kind": "literal",
+      "values": [
+        "provided"
+      ]
+    },
+    {
+      "definition": "RoleDeclarationUnprovided/properties/value",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ScalarKind",
+      "kind": "enum",
+      "values": [
+        "text",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    {
+      "definition": "ScalarShape/properties/kind",
+      "kind": "literal",
+      "values": [
+        "scalar"
+      ]
+    },
+    {
+      "definition": "ListShape/properties/kind",
+      "kind": "literal",
+      "values": [
+        "list"
+      ]
+    },
+    {
+      "definition": "RecordShape/properties/kind",
+      "kind": "literal",
+      "values": [
+        "record"
+      ]
+    },
+    {
+      "definition": "InterpretedCondition/properties/kind",
+      "kind": "literal",
+      "values": [
+        "interpreted"
+      ]
+    },
+    {
+      "definition": "PredicateOperator",
+      "kind": "enum",
+      "values": [
+        "equals",
+        "not_equals",
+        "greater_than",
+        "less_than",
+        "contains",
+        "is_present"
+      ]
+    },
+    {
+      "definition": "DependencyOperand/properties/kind",
+      "kind": "literal",
+      "values": [
+        "dependency"
+      ]
+    },
+    {
+      "definition": "LiteralOperand/properties/kind",
+      "kind": "literal",
+      "values": [
+        "literal"
+      ]
+    },
+    {
+      "definition": "StructuredCondition/properties/kind",
+      "kind": "literal",
+      "values": [
+        "structured"
+      ]
+    },
+    {
+      "definition": "EvaluatorCondition/properties/kind",
+      "kind": "literal",
+      "values": [
+        "external_evaluator"
+      ]
+    },
+    {
+      "definition": "SourceTargetKind",
+      "kind": "enum",
+      "values": [
+        "judgment",
+        "reason",
+        "material",
+        "method_component"
+      ]
+    },
+    {
+      "definition": "MaterialKind",
+      "kind": "enum",
+      "values": [
+        "definition",
+        "foundation",
+        "premise",
+        "example",
+        "attachment"
+      ]
+    },
+    {
+      "definition": "JudgmentProducer/properties/kind",
+      "kind": "literal",
+      "values": [
+        "judgment_result"
+      ]
+    },
+    {
+      "definition": "SourceProducer/properties/kind",
+      "kind": "literal",
+      "values": [
+        "source"
+      ]
+    },
+    {
+      "definition": "Payload/properties/profile",
+      "kind": "literal",
+      "values": [
+        "kdna.payload.judgment"
+      ]
+    },
+    {
+      "definition": "Payload/properties/profile_version",
+      "kind": "literal",
+      "values": [
+        "0.2.0"
+      ]
+    },
+    {
+      "definition": "Compatibility/properties/profile",
+      "kind": "literal",
+      "values": [
+        "kdna.payload.judgment"
+      ]
+    },
+    {
+      "definition": "Compatibility/properties/profile_version",
+      "kind": "literal",
+      "values": [
+        "0.2.0"
+      ]
+    },
+    {
+      "definition": "PayloadDescriptor/properties/path",
+      "kind": "literal",
+      "values": [
+        "payload.kdnab"
+      ]
+    },
+    {
+      "definition": "PayloadDescriptor/properties/encoding",
+      "kind": "literal",
+      "values": [
+        "cbor"
+      ]
+    },
+    {
+      "definition": "EncryptionDescriptor/properties/encrypted_entries/items",
+      "kind": "literal",
+      "values": [
+        "payload.kdnab"
+      ]
+    },
+    {
+      "definition": "Manifest/properties/format_version",
+      "kind": "literal",
+      "values": [
+        "0.2.0"
+      ]
+    },
+    {
+      "definition": "Manifest/allOf/0/if/properties/payload/properties/encrypted",
+      "kind": "literal",
+      "values": [
+        true
+      ]
+    },
+    {
+      "definition": "ExpectedSourceKind",
+      "kind": "enum",
+      "values": [
+        "caller",
+        "manifest_declaration",
+        "checksums_declaration",
+        "trusted_receipt",
+        "host_observation"
+      ]
+    },
+    {
+      "definition": "NoComparison/properties/state",
+      "kind": "literal",
+      "values": [
+        "not_compared"
+      ]
+    },
+    {
+      "definition": "NoComparison/properties/expected",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "NoComparison/properties/expected_source",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ComparedState",
+      "kind": "enum",
+      "values": [
+        "matched",
+        "mismatched"
+      ]
+    },
+    {
+      "definition": "DigestA/properties/basis",
+      "kind": "literal",
+      "values": [
+        "container_bytes"
+      ]
+    },
+    {
+      "definition": "DigestA/properties/profile",
+      "kind": "literal",
+      "values": [
+        "kdna.digest-basis.container-bytes"
+      ]
+    },
+    {
+      "definition": "DigestA/properties/profile_version",
+      "kind": "literal",
+      "values": [
+        "0.2.0"
+      ]
+    },
+    {
+      "definition": "DigestA/properties/algorithm",
+      "kind": "literal",
+      "values": [
+        "SHA-256"
+      ]
+    },
+    {
+      "definition": "DigestC/properties/basis",
+      "kind": "literal",
+      "values": [
+        "content_tree"
+      ]
+    },
+    {
+      "definition": "DigestC/properties/profile",
+      "kind": "literal",
+      "values": [
+        "kdna.digest-basis.content-tree"
+      ]
+    },
+    {
+      "definition": "DigestC/properties/profile_version",
+      "kind": "literal",
+      "values": [
+        "0.2.0"
+      ]
+    },
+    {
+      "definition": "DigestC/properties/algorithm",
+      "kind": "literal",
+      "values": [
+        "SHA-256"
+      ]
+    },
+    {
+      "definition": "DigestE/properties/basis",
+      "kind": "literal",
+      "values": [
+        "runtime_entry_set"
+      ]
+    },
+    {
+      "definition": "DigestE/properties/profile",
+      "kind": "literal",
+      "values": [
+        "kdna.digest-basis.runtime-entry-set"
+      ]
+    },
+    {
+      "definition": "DigestE/properties/profile_version",
+      "kind": "literal",
+      "values": [
+        "0.2.0"
+      ]
+    },
+    {
+      "definition": "DigestE/properties/algorithm",
+      "kind": "literal",
+      "values": [
+        "SHA-256"
+      ]
+    },
+    {
+      "definition": "DigestP/properties/basis",
+      "kind": "literal",
+      "values": [
+        "runtime_capsule_jcs"
+      ]
+    },
+    {
+      "definition": "DigestP/properties/profile",
+      "kind": "literal",
+      "values": [
+        "kdna.canonicalization.runtime-capsule-jcs"
+      ]
+    },
+    {
+      "definition": "DigestP/properties/profile_version",
+      "kind": "literal",
+      "values": [
+        "0.2.0"
+      ]
+    },
+    {
+      "definition": "DigestP/properties/algorithm",
+      "kind": "literal",
+      "values": [
+        "SHA-256"
+      ]
+    },
+    {
+      "definition": "ReadDiagnosticCode",
+      "kind": "enum",
+      "values": [
+        "READ_INPUT_INVALID",
+        "READ_SNAPSHOT_UNATTESTED",
+        "READ_CORE_CAPABILITY_UNAVAILABLE",
+        "READ_UNSUPPORTED_VERSION",
+        "READ_MIXED_VERSION_TUPLE",
+        "READ_CORE_INVALID",
+        "READ_INTERPRETATION_INCOMPLETE",
+        "READ_ASSET_MISMATCH",
+        "READ_ASSET_VERSION_MISMATCH",
+        "READ_SELECTION_NOT_FOUND",
+        "READ_SELECTION_AMBIGUOUS",
+        "READ_HANDLE_UNTRUSTED",
+        "READ_HANDLE_VERSION_MISMATCH",
+        "READ_HANDLE_STALE",
+        "READ_HANDLE_ASSET_MISMATCH",
+        "READ_HANDLE_SCOPE_MISMATCH",
+        "READ_HOST_CONTEXT_UNTRUSTED",
+        "READ_HOST_EPOCH_MISMATCH",
+        "READ_HOST_TIME_INVALID",
+        "READ_HANDLE_EXPIRED",
+        "READ_HOST_CONTEXT_EXPIRED",
+        "READ_HOST_DENIED",
+        "READ_SCOPE_DENIED",
+        "READ_PROJECTION_INVALID",
+        "READ_BUDGET_INSUFFICIENT",
+        "READ_COMPONENT_DECLARATION_INVALID",
+        "READ_COMPONENT_CONTENT_INVALID",
+        "READ_COMPONENT_REFERENCE_INVALID",
+        "READ_COMPONENT_GRAPH_CYCLE",
+        "READ_COMPONENT_LIMIT_EXCEEDED",
+        "READ_COMPONENT_BINDING_INVALID",
+        "READ_COMPONENT_ADOPTION_INVALID",
+        "READ_METHOD_PRESENCE_INVALID"
+      ]
+    },
+    {
+      "definition": "ReadStage",
+      "kind": "enum",
+      "values": [
+        "input",
+        "version",
+        "core",
+        "selection",
+        "handle",
+        "host",
+        "projection",
+        "budget"
+      ]
+    },
+    {
+      "definition": "ReadDiagnostic/properties/severity",
+      "kind": "enum",
+      "values": [
+        "error",
+        "warning"
+      ]
+    },
+    {
+      "definition": "IRNode_judgment/properties/role",
+      "kind": "literal",
+      "values": [
+        "judgment"
+      ]
+    },
+    {
+      "definition": "IRNode_scope/properties/role",
+      "kind": "literal",
+      "values": [
+        "scope"
+      ]
+    },
+    {
+      "definition": "IRNode_boundary/properties/role",
+      "kind": "literal",
+      "values": [
+        "boundary"
+      ]
+    },
+    {
+      "definition": "IRNode_result/properties/role",
+      "kind": "literal",
+      "values": [
+        "result"
+      ]
+    },
+    {
+      "definition": "IRNode_formation_rule/properties/role",
+      "kind": "literal",
+      "values": [
+        "formation_rule"
+      ]
+    },
+    {
+      "definition": "IRNode_declaration/properties/role",
+      "kind": "literal",
+      "values": [
+        "declaration"
+      ]
+    },
+    {
+      "definition": "IRNode_provenance/properties/role",
+      "kind": "literal",
+      "values": [
+        "provenance"
+      ]
+    },
+    {
+      "definition": "IRNode_reason/properties/role",
+      "kind": "literal",
+      "values": [
+        "reason"
+      ]
+    },
+    {
+      "definition": "IRNode_source/properties/role",
+      "kind": "literal",
+      "values": [
+        "source"
+      ]
+    },
+    {
+      "definition": "IRNode_material/properties/role",
+      "kind": "literal",
+      "values": [
+        "material"
+      ]
+    },
+    {
+      "definition": "IRNode_relationship/properties/role",
+      "kind": "literal",
+      "values": [
+        "relationship"
+      ]
+    },
+    {
+      "definition": "IRNode_dependency/properties/role",
+      "kind": "literal",
+      "values": [
+        "dependency"
+      ]
+    },
+    {
+      "definition": "IRNode_diagnostic/properties/role",
+      "kind": "literal",
+      "values": [
+        "diagnostic"
+      ]
+    },
+    {
+      "definition": "CanonicalIR/properties/contract",
+      "kind": "literal",
+      "values": [
+        "kdna.canonical-ir/0.2.0"
+      ]
+    },
+    {
+      "definition": "Missing/properties/state",
+      "kind": "literal",
+      "values": [
+        "observed_missing"
+      ]
+    },
+    {
+      "definition": "OmissionReason",
+      "kind": "enum",
+      "values": [
+        "not_requested",
+        "not_in_mode",
+        "outside_selection"
+      ]
+    },
+    {
+      "definition": "Omission/properties/state",
+      "kind": "literal",
+      "values": [
+        "explicitly_omitted"
+      ]
+    },
+    {
+      "definition": "AssessmentNotEvaluated/properties/state",
+      "kind": "literal",
+      "values": [
+        "not_evaluated"
+      ]
+    },
+    {
+      "definition": "AssessmentNotEvaluated/properties/kind",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "AssessmentNotEvaluated/properties/assessor_id",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "AssessmentNotEvaluated/properties/evidence_ref",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "AssessmentKind",
+      "kind": "enum",
+      "values": [
+        "semantic_understanding",
+        "external_evaluation"
+      ]
+    },
+    {
+      "definition": "AssessmentReported/properties/state",
+      "kind": "literal",
+      "values": [
+        "reported"
+      ]
+    },
+    {
+      "definition": "ResponsibilityStates/properties/action_authorization",
+      "kind": "literal",
+      "values": [
+        "not_evaluated"
+      ]
+    },
+    {
+      "definition": "DeliveryState",
+      "kind": "enum",
+      "values": [
+        "delivered",
+        "not_delivered"
+      ]
+    },
+    {
+      "definition": "ReadEnvelopeReady/properties/contract",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.2.0"
+      ]
+    },
+    {
+      "definition": "ReadEnvelopeReady/properties/status",
+      "kind": "literal",
+      "values": [
+        "ready"
+      ]
+    },
+    {
+      "definition": "ReadEnvelopeReady/properties/diagnostics/items/allOf/1/properties/severity",
+      "kind": "literal",
+      "values": [
+        "warning"
+      ]
+    },
+    {
+      "definition": "ReadEnvelopeRejected/properties/contract",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.2.0"
+      ]
+    },
+    {
+      "definition": "ReadEnvelopeRejected/properties/status",
+      "kind": "literal",
+      "values": [
+        "rejected"
+      ]
+    },
+    {
+      "definition": "ReadEnvelopeRejected/properties/asset",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ReadEnvelopeRejected/properties/snapshot_id",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ReadEnvelopeRejected/properties/digests",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ReadEnvelopeRejected/properties/content",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Request_whole_asset/properties/mode",
+      "kind": "literal",
+      "values": [
+        "whole_asset"
+      ]
+    },
+    {
+      "definition": "Request_whole_asset/properties/selection",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Request_whole_asset/properties/handle",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Request_catalog/properties/mode",
+      "kind": "literal",
+      "values": [
+        "catalog"
+      ]
+    },
+    {
+      "definition": "Request_catalog/properties/selection",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Request_catalog/properties/handle",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Request_exact_selection/properties/mode",
+      "kind": "literal",
+      "values": [
+        "exact_selection"
+      ]
+    },
+    {
+      "definition": "Request_exact_selection/properties/handle",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Request_expand/properties/mode",
+      "kind": "literal",
+      "values": [
+        "expand"
+      ]
+    },
+    {
+      "definition": "Projected/properties/status",
+      "kind": "literal",
+      "values": [
+        "projected"
+      ]
+    },
+    {
+      "definition": "ProjectionRejected/properties/status",
+      "kind": "literal",
+      "values": [
+        "rejected"
+      ]
+    },
+    {
+      "definition": "ProjectionRejected/properties/body",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "AdmissionReason",
+      "kind": "enum",
+      "values": [
+        "representation_not_object",
+        "unknown_field",
+        "missing_required",
+        "wrong_type",
+        "invalid_identifier",
+        "unsafe_integer",
+        "out_of_range",
+        "mode_shape_invalid"
+      ]
+    },
+    {
+      "definition": "AdmissionField",
+      "kind": "enum",
+      "values": [
+        "$candidate",
+        "$unknown",
+        "request_id",
+        "tuple",
+        "budget_bytes",
+        "mode",
+        "selection",
+        "handle",
+        "tuple.container",
+        "tuple.payload_profile",
+        "tuple.payload_version",
+        "tuple.core",
+        "tuple.ir",
+        "tuple.runtime",
+        "tuple.plan",
+        "tuple.host",
+        "tuple.trace",
+        "tuple.read",
+        "selection.asset_id",
+        "selection.asset_version",
+        "selection.judgment_id",
+        "handle.handle_id",
+        "handle.asset_id",
+        "handle.asset_version",
+        "handle.A",
+        "handle.C",
+        "handle.snapshot_id",
+        "handle.core_version",
+        "handle.ir_version",
+        "handle.read_version",
+        "handle.selection",
+        "handle.target",
+        "handle.scope",
+        "handle.issued_at",
+        "handle.expires_at",
+        "handle.host_id",
+        "handle.host_epoch"
+      ]
+    },
+    {
+      "definition": "AdmissionDiagnostic/properties/stage",
+      "kind": "literal",
+      "values": [
+        "admission"
+      ]
+    },
+    {
+      "definition": "AdmissionDiagnostic/properties/severity",
+      "kind": "literal",
+      "values": [
+        "error"
+      ]
+    },
+    {
+      "definition": "ValidatedCorrelation/properties/state",
+      "kind": "literal",
+      "values": [
+        "validated"
+      ]
+    },
+    {
+      "definition": "UnavailableCorrelation/properties/state",
+      "kind": "literal",
+      "values": [
+        "unavailable"
+      ]
+    },
+    {
+      "definition": "UnavailableCorrelation/properties/request_id",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ReadAdmissionRejection/properties/contract",
+      "kind": "literal",
+      "values": [
+        "kdna.read-admission/0.1.0"
+      ]
+    },
+    {
+      "definition": "ReadAdmissionRejection/properties/code",
+      "kind": "literal",
+      "values": [
+        "READ_INPUT_INVALID"
+      ]
+    },
+    {
+      "definition": "ControlSignal",
+      "kind": "enum",
+      "values": [
+        "READ_ADMISSION_RESPONSE_TOO_SMALL",
+        "READ_RESPONSE_BUDGET_TOO_SMALL"
+      ]
+    },
+    {
+      "definition": "ReadTransportFailure/properties/code",
+      "kind": "literal",
+      "values": [
+        "READ_TRANSPORT_FAILURE"
+      ]
+    },
+    {
+      "definition": "ReadTransportFailure/properties/delivery",
+      "kind": "literal",
+      "values": [
+        "not_confirmed"
+      ]
+    },
+    {
+      "definition": "Call_read_envelope/properties/channel",
+      "kind": "literal",
+      "values": [
+        "read_envelope"
+      ]
+    },
+    {
+      "definition": "Call_read_envelope/properties/admission_rejection",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Call_read_envelope/properties/control",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Call_read_envelope/properties/transport_failure",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Call_admission_rejection/properties/channel",
+      "kind": "literal",
+      "values": [
+        "admission_rejection"
+      ]
+    },
+    {
+      "definition": "Call_admission_rejection/properties/envelope",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Call_admission_rejection/properties/control",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Call_admission_rejection/properties/transport_failure",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Call_no_body_control/properties/channel",
+      "kind": "literal",
+      "values": [
+        "no_body_control"
+      ]
+    },
+    {
+      "definition": "Call_no_body_control/properties/envelope",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Call_no_body_control/properties/admission_rejection",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Call_no_body_control/properties/transport_failure",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Call_transport_failure/properties/channel",
+      "kind": "literal",
+      "values": [
+        "transport_failure"
+      ]
+    },
+    {
+      "definition": "Call_transport_failure/properties/envelope",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Call_transport_failure/properties/admission_rejection",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Call_transport_failure/properties/control",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "HostReadContextData/properties/decision",
+      "kind": "enum",
+      "values": [
+        "allow",
+        "deny"
+      ]
+    },
+    {
+      "definition": "PackageSetHandoff/properties/contract",
+      "kind": "literal",
+      "values": [
+        "kdna.package-set-handoff/0.1.0"
+      ]
+    },
+    {
+      "definition": "SourceUseRole",
+      "kind": "enum",
+      "values": [
+        "support",
+        "counter",
+        "premise",
+        "definition",
+        "method_component",
+        "example",
+        "attachment"
+      ]
+    },
+    {
+      "definition": "ReadyStates/properties/core",
+      "kind": "literal",
+      "values": [
+        "valid"
+      ]
+    },
+    {
+      "definition": "ReadyStates/properties/interpretation",
+      "kind": "literal",
+      "values": [
+        "complete"
+      ]
+    },
+    {
+      "definition": "ReadyStates/properties/read_permission",
+      "kind": "literal",
+      "values": [
+        "allowed"
+      ]
+    },
+    {
+      "definition": "ReadyStates/properties/action_authorization",
+      "kind": "literal",
+      "values": [
+        "not_evaluated"
+      ]
+    },
+    {
+      "definition": "ReadyReceipt/properties/delivery",
+      "kind": "literal",
+      "values": [
+        "delivered"
+      ]
+    },
+    {
+      "definition": "RejectedReceipt/properties/disclosed_at",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "RejectedReceipt/properties/delivery",
+      "kind": "literal",
+      "values": [
+        "not_delivered"
+      ]
+    },
+    {
+      "definition": "AdmissionNoBodyControl/properties/code",
+      "kind": "literal",
+      "values": [
+        "READ_ADMISSION_RESPONSE_TOO_SMALL"
+      ]
+    },
+    {
+      "definition": "AdmissionNoBodyControl/properties/semantic_cause",
+      "kind": "literal",
+      "values": [
+        "READ_INPUT_INVALID"
+      ]
+    },
+    {
+      "definition": "AdmissionNoBodyControl/properties/body_bytes",
+      "kind": "literal",
+      "values": [
+        0
+      ]
+    },
+    {
+      "definition": "EnvelopeNoBodyControl/properties/code",
+      "kind": "literal",
+      "values": [
+        "READ_RESPONSE_BUDGET_TOO_SMALL"
+      ]
+    },
+    {
+      "definition": "EnvelopeNoBodyControl/properties/body_bytes",
+      "kind": "literal",
+      "values": [
+        0
+      ]
+    },
+    {
+      "definition": "AdmittedRequestReadyRecord/properties/version_rejection",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "VersionRejectionCode",
+      "kind": "enum",
+      "values": [
+        "READ_UNSUPPORTED_VERSION",
+        "READ_MIXED_VERSION_TUPLE"
+      ]
+    },
+    {
+      "definition": "AdmittedRequestVersionRecord/properties/request",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "HostReadContext/properties/decision",
+      "kind": "enum",
+      "values": [
+        "allow",
+        "deny"
+      ]
+    },
+    {
+      "definition": "Admission_admitted_request/properties/channel",
+      "kind": "literal",
+      "values": [
+        "admitted_request"
+      ]
+    },
+    {
+      "definition": "Admission_admitted_request/properties/admission_rejection",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Admission_admitted_request/properties/control",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Admission_admitted_request/properties/transport_failure",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Admission_admission_rejection/properties/channel",
+      "kind": "literal",
+      "values": [
+        "admission_rejection"
+      ]
+    },
+    {
+      "definition": "Admission_admission_rejection/properties/admitted_request",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Admission_admission_rejection/properties/control",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Admission_admission_rejection/properties/transport_failure",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Admission_no_body_control/properties/channel",
+      "kind": "literal",
+      "values": [
+        "no_body_control"
+      ]
+    },
+    {
+      "definition": "Admission_no_body_control/properties/admitted_request",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Admission_no_body_control/properties/admission_rejection",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Admission_no_body_control/properties/transport_failure",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Admission_transport_failure/properties/channel",
+      "kind": "literal",
+      "values": [
+        "transport_failure"
+      ]
+    },
+    {
+      "definition": "Admission_transport_failure/properties/admitted_request",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Admission_transport_failure/properties/admission_rejection",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "Admission_transport_failure/properties/control",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "PureConfirmationState",
+      "kind": "enum",
+      "values": [
+        "not_evaluated",
+        "claimed_unverified"
+      ]
+    },
+    {
+      "definition": "VerifiedProvenance/properties/confirmation",
+      "kind": "literal",
+      "values": [
+        "verified"
+      ]
+    },
+    {
+      "definition": "UnverifiedConfirmationState",
+      "kind": "enum",
+      "values": [
+        "not_evaluated",
+        "claimed_unverified",
+        "rejected"
+      ]
+    },
+    {
+      "definition": "AttributionRole",
+      "kind": "enum",
+      "values": [
+        "creator",
+        "rights_holder",
+        "representative"
+      ]
+    },
+    {
+      "definition": "AttributionProvided/properties/state",
+      "kind": "literal",
+      "values": [
+        "provided"
+      ]
+    },
+    {
+      "definition": "AttributionUnprovided/properties/value",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "IRNode_actor/properties/role",
+      "kind": "literal",
+      "values": [
+        "actor"
+      ]
+    },
+    {
+      "definition": "IRNode_subject/properties/role",
+      "kind": "literal",
+      "values": [
+        "subject"
+      ]
+    },
+    {
+      "definition": "IRNode_attribution/properties/role",
+      "kind": "literal",
+      "values": [
+        "attribution"
+      ]
+    },
+    {
+      "definition": "IRNode_resource/properties/role",
+      "kind": "literal",
+      "values": [
+        "resource"
+      ]
+    },
+    {
+      "definition": "IRNode_source_use/properties/role",
+      "kind": "literal",
+      "values": [
+        "source_use"
+      ]
+    },
+    {
+      "definition": "IRNode_result_contract/properties/role",
+      "kind": "literal",
+      "values": [
+        "result_contract"
+      ]
+    },
+    {
+      "definition": "IRNode_method/properties/role",
+      "kind": "literal",
+      "values": [
+        "method"
+      ]
+    },
+    {
+      "definition": "IRNode_exception/properties/role",
+      "kind": "literal",
+      "values": [
+        "exception"
+      ]
+    },
+    {
+      "definition": "IRNode_misuse/properties/role",
+      "kind": "literal",
+      "values": [
+        "misuse"
+      ]
+    },
+    {
+      "definition": "IRNode_cohesion/properties/role",
+      "kind": "literal",
+      "values": [
+        "cohesion"
+      ]
+    },
+    {
+      "definition": "IRNode_asset_declaration/properties/role",
+      "kind": "literal",
+      "values": [
+        "asset_declaration"
+      ]
+    },
+    {
+      "definition": "RuntimeMandatoryEntryName/allOf/1/not",
+      "kind": "enum",
+      "values": [
+        "checksums.json",
+        "signature.kdsig",
+        "mimetype"
+      ]
+    },
+    {
+      "definition": "CoreAdmissionAccepted/properties/status",
+      "kind": "literal",
+      "values": [
+        "accepted"
+      ]
+    },
+    {
+      "definition": "CoreAdmissionRejected/properties/status",
+      "kind": "literal",
+      "values": [
+        "rejected"
+      ]
+    },
+    {
+      "definition": "CoreAdmissionRejected/properties/component_failure/anyOf/1",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "TaxonomyBody/properties/kind",
+      "kind": "literal",
+      "values": [
+        "taxonomy"
+      ]
+    },
+    {
+      "definition": "CandidateSetBody/properties/kind",
+      "kind": "literal",
+      "values": [
+        "candidate-set"
+      ]
+    },
+    {
+      "definition": "DiscriminatorBody/properties/kind",
+      "kind": "literal",
+      "values": [
+        "discriminator-set"
+      ]
+    },
+    {
+      "definition": "ComponentStatementOrigin",
+      "kind": "enum",
+      "values": [
+        "authored",
+        "mechanical_content_representation"
+      ]
+    },
+    {
+      "definition": "MethodFieldPresence",
+      "kind": "enum",
+      "values": [
+        "declared",
+        "undeclared"
+      ]
+    },
+    {
+      "definition": "ComponentAdoptionKind",
+      "kind": "enum",
+      "values": [
+        "human_claim_unverified",
+        "delegated_agent_editorial"
+      ]
+    },
+    {
+      "definition": "ComponentInterpretationSupported/properties/status",
+      "kind": "literal",
+      "values": [
+        "supported"
+      ]
+    },
+    {
+      "definition": "ComponentInterpretationUndeclared/properties/declaration_digest",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ComponentInterpretationUndeclared/properties/content_digest",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ComponentInterpretationUndeclared/properties/profile_id",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ComponentInterpretationUndeclared/properties/component_declaration_digest",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ComponentInterpretationUndeclared/properties/statement_origin",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ComponentInterpretationUndeclared/properties/bindings_digest",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ComponentInterpretationUndeclared/properties/adoption_proposal_digest",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ComponentInterpretationUndeclared/properties/authored_content",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ComponentInterpretationUndeclared/properties/body",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "ComponentInterpretationUndeclared/properties/status",
+      "kind": "literal",
+      "values": [
+        "undeclared"
+      ]
+    },
+    {
+      "definition": "CoreComponentFailure/properties/judgment_ref/anyOf/1",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "CoreComponentFailure/properties/component_ref/anyOf/1",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "CoreComponentFailure/properties/status",
+      "kind": "literal",
+      "values": [
+        "invalid"
+      ]
+    },
+    {
+      "definition": "CoreComponentFailure/properties/body",
+      "kind": "literal",
+      "values": [
+        null
+      ]
+    },
+    {
+      "definition": "CoreComponentFailure/properties/code",
+      "kind": "enum",
+      "values": [
+        "READ_COMPONENT_DECLARATION_INVALID",
+        "READ_COMPONENT_CONTENT_INVALID",
+        "READ_COMPONENT_REFERENCE_INVALID",
+        "READ_COMPONENT_GRAPH_CYCLE",
+        "READ_COMPONENT_LIMIT_EXCEEDED",
+        "READ_COMPONENT_BINDING_INVALID",
+        "READ_COMPONENT_ADOPTION_INVALID",
+        "READ_METHOD_PRESENCE_INVALID"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/contract_id",
+      "kind": "literal",
+      "values": [
+        "kdna.component-semantics/1"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/contract_version",
+      "kind": "literal",
+      "values": [
+        "1.0.0"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/definition_digest",
+      "kind": "literal",
+      "values": [
+        "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/profiles/items/oneOf/0/properties/component_type",
+      "kind": "literal",
+      "values": [
+        "taxonomy"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/profiles/items/oneOf/0/properties/profile_id",
+      "kind": "literal",
+      "values": [
+        "taxonomy-set/1"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/profiles/items/oneOf/1/properties/component_type",
+      "kind": "literal",
+      "values": [
+        "candidate-set"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/profiles/items/oneOf/1/properties/profile_id",
+      "kind": "literal",
+      "values": [
+        "candidate-set/1"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/profiles/items/oneOf/2/properties/component_type",
+      "kind": "literal",
+      "values": [
+        "discriminator-set"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/profiles/items/oneOf/2/properties/profile_id",
+      "kind": "literal",
+      "values": [
+        "discriminator-set/1"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/component/properties/id",
+      "kind": "literal",
+      "values": [
+        "kdna.component-semantics/1"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/component/properties/location",
+      "kind": "literal",
+      "values": [
+        "Judgment.extensions"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/component/properties/critical",
+      "kind": "literal",
+      "values": [
+        true
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/component/properties/definition",
+      "kind": "literal",
+      "values": [
+        "Explicit adoption of KDNA public component semantics 1.0.0."
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/component/properties/decoded_type",
+      "kind": "literal",
+      "values": [
+        "ComponentSemanticsCarrier"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/adoption/properties/id",
+      "kind": "literal",
+      "values": [
+        "kdna.component-adoption/1"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/adoption/properties/location",
+      "kind": "literal",
+      "values": [
+        "Payload.extensions"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/adoption/properties/critical",
+      "kind": "literal",
+      "values": [
+        true
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/adoption/properties/definition",
+      "kind": "literal",
+      "values": [
+        "Static component adoption record for KDNA public component semantics 1.0.0."
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/adoption/properties/decoded_type",
+      "kind": "literal",
+      "values": [
+        "ComponentAdoptionCarrier"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/presence/properties/id",
+      "kind": "literal",
+      "values": [
+        "kdna.method-declaration-presence/1"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/presence/properties/location",
+      "kind": "literal",
+      "values": [
+        "Judgment.extensions"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/presence/properties/critical",
+      "kind": "literal",
+      "values": [
+        true
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/presence/properties/definition",
+      "kind": "literal",
+      "values": [
+        "Authored method field presence for KDNA public component semantics 1.0.0."
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/presence/properties/decoded_type",
+      "kind": "literal",
+      "values": [
+        "MethodPresenceCarrier"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/limits/properties/components_per_payload",
+      "kind": "literal",
+      "values": [
+        256
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/limits/properties/items_per_component",
+      "kind": "literal",
+      "values": [
+        128
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/limits/properties/edges_per_component",
+      "kind": "literal",
+      "values": [
+        1024
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/limits/properties/content_canonical_bytes",
+      "kind": "literal",
+      "values": [
+        65536
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/limits/properties/opted_in_total_canonical_bytes",
+      "kind": "literal",
+      "values": [
+        196608
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/limits/properties/taxonomy_path_edges",
+      "kind": "literal",
+      "values": [
+        64
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/limits/properties/title_utf8_bytes",
+      "kind": "literal",
+      "values": [
+        256
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsDescriptor/properties/limits/properties/meaning_prompt_criterion_utf8_bytes",
+      "kind": "literal",
+      "values": [
+        8192
+      ]
+    }
+  ],
+  "format": "kdna.public-vocabulary/1",
+  "status": "UNPUBLISHED_DESIGN_TARGET",
+  "version_tuple": {
+    "container": "0.2.0",
+    "core": "kdna.core/0.3.0",
+    "host": "kdna.agent-host/0.2.0",
+    "ir": "kdna.canonical-ir/0.2.0",
+    "payload_profile": "kdna.payload.judgment",
+    "payload_version": "0.2.0",
+    "plan": "kdna.consumption-plan/0.2.0",
+    "read": "kdna.read/0.2.0",
+    "runtime": "kdna.runtime-capsule/0.2.0",
+    "trace": "kdna.judgment-trace/0.2.0"
+  }
+}

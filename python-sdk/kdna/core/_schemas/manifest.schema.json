@@ -264,11 +264,8 @@
           "required": ["name"],
           "additionalProperties": false,
           "properties": {
-            "name": { "type": "string", "description": "Scoped asset name, e.g. '@aikdna/sales'." },
-            "version": {
-              "type": "string",
-              "description": "Semver range, e.g. '^1.0.0'. Defaults to '*' if absent."
-            }
+            "name":    { "type": "string", "description": "Scoped asset name, e.g. '@aikdna/sales'." },
+            "version": { "type": "string", "description": "Semver range, e.g. '^1.0.0'. Defaults to '*' if absent." }
           }
         }
       ]

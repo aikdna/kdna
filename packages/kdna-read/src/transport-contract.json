@@ -1,0 +1,37 @@
+{
+  "contract": "kdna.read-transport-admission/0.1.0",
+  "diagnostic_codes": [
+    "READ_TRANSPORT_RESPONSE_INVALID",
+    "READ_TRANSPORT_CONTEXT_INVALID",
+    "READ_TRANSPORT_ASSOCIATION_STALE",
+    "READ_TRANSPORT_ASSOCIATION_REPLAYED",
+    "READ_TRANSPORT_ASSOCIATION_CAPACITY",
+    "READ_TRANSPORT_LIMIT_EXCEEDED",
+    "READ_TRANSPORT_TIMEOUT",
+    "READ_TRANSPORT_HTTP_MISMATCH",
+    "READ_TRANSPORT_JSON_INVALID",
+    "READ_TRANSPORT_SCHEMA_INVALID",
+    "READ_TRANSPORT_BINDING_MISMATCH"
+  ],
+  "limits": {
+    "array_length": 10000,
+    "association_capacity": 4096,
+    "association_ttl_ms": 300000,
+    "json_depth": 64,
+    "json_values": 100000,
+    "max_read_ms": 30000,
+    "request_json_bytes": 65536,
+    "response_bytes": 8388608,
+    "string_bytes": 1048576
+  },
+  "proof_limits": {
+    "core_semantics": "NOT_REVALIDATED",
+    "current_remote_revocation": "NOT_PROVEN",
+    "local_capabilities": "NONE",
+    "network_replay": "NOT_PROVEN",
+    "raw_http_framing": "NOT_OBSERVABLE_THROUGH_FETCH",
+    "receipt_delivery": "REMOTE_CLAIM_ONLY",
+    "remote_authorization": "NOT_PROVEN",
+    "remote_identity": "NOT_PROVEN"
+  }
+}

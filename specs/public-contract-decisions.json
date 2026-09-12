@@ -1,0 +1,620 @@
+{
+  "document_kind": "PUBLIC_DESIGN_DECISIONS_NOT_MACHINE_SEMANTIC_SOURCE",
+  "status": "UNPUBLISHED_DESIGN_TARGET",
+  "implementation": "NOT_IMPLEMENTED",
+  "epoch": "OPEN-W1-ADMISSION-REJECTION-01",
+  "owner": "Open-A single normative writer under Open commander",
+  "acceptance": "PENDING_INDEPENDENT_AND_SUPER_DIRECTOR",
+  "version_policy": {
+    "status": "UNPUBLISHED_DESIGN_TARGET",
+    "supported_tuple": {
+      "container": "0.2.0",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.2.0",
+      "core": "kdna.core/0.3.0",
+      "ir": "kdna.canonical-ir/0.2.0",
+      "runtime": "kdna.runtime-capsule/0.2.0",
+      "plan": "kdna.consumption-plan/0.2.0",
+      "host": "kdna.agent-host/0.2.0",
+      "trace": "kdna.judgment-trace/0.2.0",
+      "read": "kdna.read/0.2.0"
+    },
+    "old_line": "0.1 ACTIVE; no deprecation notice; separate old implementation responsibility",
+    "reject_old": "READ_UNSUPPORTED_VERSION",
+    "reject_mixed": "READ_MIXED_VERSION_TUPLE",
+    "matching": "Exact set of ten successful tuple fields. Missing tuple object=input-invalid; all-old complete family=unsupported; any new version-valued coordinate with any missing/different tuple coordinate=mixed (shared payload_profile is excluded from new-family detection); unrelated complete family=unsupported.",
+    "design_axes": [
+      {
+        "axis": "container",
+        "target": "0.2.0",
+        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "source_head": "UNVERIFIED",
+        "normative_aggregate": "NOT_IMPLEMENTED",
+        "resolved_artifact_sha256": "UNVERIFIED",
+        "registry_tag": "UNVERIFIED",
+        "remote_bytes": "UNVERIFIED"
+      },
+      {
+        "axis": "payload",
+        "target": "kdna.payload.judgment/0.2.0",
+        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "source_head": "UNVERIFIED",
+        "normative_aggregate": "NOT_IMPLEMENTED",
+        "resolved_artifact_sha256": "UNVERIFIED",
+        "registry_tag": "UNVERIFIED",
+        "remote_bytes": "UNVERIFIED"
+      },
+      {
+        "axis": "core_api",
+        "target": "kdna.core/0.2.0",
+        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "source_head": "UNVERIFIED",
+        "normative_aggregate": "NOT_IMPLEMENTED",
+        "resolved_artifact_sha256": "UNVERIFIED",
+        "registry_tag": "UNVERIFIED",
+        "remote_bytes": "UNVERIFIED"
+      },
+      {
+        "axis": "canonical_ir",
+        "target": "kdna.canonical-ir/0.1.0",
+        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "source_head": "UNVERIFIED",
+        "normative_aggregate": "NOT_IMPLEMENTED",
+        "resolved_artifact_sha256": "UNVERIFIED",
+        "registry_tag": "UNVERIFIED",
+        "remote_bytes": "UNVERIFIED"
+      },
+      {
+        "axis": "runtime_capsule",
+        "target": "kdna.runtime-capsule/0.2.0",
+        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "source_head": "UNVERIFIED",
+        "normative_aggregate": "NOT_IMPLEMENTED",
+        "resolved_artifact_sha256": "UNVERIFIED",
+        "registry_tag": "UNVERIFIED",
+        "remote_bytes": "UNVERIFIED"
+      },
+      {
+        "axis": "consumption_plan",
+        "target": "kdna.consumption-plan/0.2.0",
+        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "source_head": "UNVERIFIED",
+        "normative_aggregate": "NOT_IMPLEMENTED",
+        "resolved_artifact_sha256": "UNVERIFIED",
+        "registry_tag": "UNVERIFIED",
+        "remote_bytes": "UNVERIFIED"
+      },
+      {
+        "axis": "agent_host",
+        "target": "kdna.agent-host/0.2.0",
+        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "source_head": "UNVERIFIED",
+        "normative_aggregate": "NOT_IMPLEMENTED",
+        "resolved_artifact_sha256": "UNVERIFIED",
+        "registry_tag": "UNVERIFIED",
+        "remote_bytes": "UNVERIFIED"
+      },
+      {
+        "axis": "trace",
+        "target": "kdna.judgment-trace/0.2.0",
+        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "source_head": "UNVERIFIED",
+        "normative_aggregate": "NOT_IMPLEMENTED",
+        "resolved_artifact_sha256": "UNVERIFIED",
+        "registry_tag": "UNVERIFIED",
+        "remote_bytes": "UNVERIFIED"
+      },
+      {
+        "axis": "read",
+        "target": "kdna.read/0.1.0",
+        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "source_head": "UNVERIFIED",
+        "normative_aggregate": "NOT_IMPLEMENTED",
+        "resolved_artifact_sha256": "UNVERIFIED",
+        "registry_tag": "UNVERIFIED",
+        "remote_bytes": "UNVERIFIED"
+      },
+      {
+        "axis": "package_set_handoff",
+        "target": "kdna.package-set-handoff/0.1.0",
+        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "source_head": "UNVERIFIED",
+        "normative_aggregate": "NOT_IMPLEMENTED",
+        "resolved_artifact_sha256": "UNVERIFIED",
+        "registry_tag": "UNVERIFIED",
+        "remote_bytes": "UNVERIFIED"
+      }
+    ],
+    "planned_packages": [
+      {
+        "name": "@aikdna/kdna-core",
+        "path": "packages/kdna-core",
+        "candidate_version": "0.23.0",
+        "current_source_version": "0.22.0",
+        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "implementation": "NOT_IMPLEMENTED",
+        "resolved_artifact_sha256": "UNVERIFIED",
+        "registry_tag": "UNVERIFIED",
+        "remote_bytes": "UNVERIFIED"
+      },
+      {
+        "name": "@aikdna/kdna-read",
+        "path": "packages/kdna-read",
+        "candidate_version": "0.1.0",
+        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "implementation": "NOT_IMPLEMENTED",
+        "resolved_artifact_sha256": "UNVERIFIED",
+        "registry_tag": "UNVERIFIED",
+        "remote_bytes": "UNVERIFIED"
+      }
+    ]
+  },
+  "digest_profiles": {
+    "A": {
+      "basis": "container_bytes",
+      "profile": "kdna.digest-basis.container-bytes",
+      "profile_version": "0.2.0",
+      "algorithm": "SHA-256",
+      "input": "exact final immutable .kdna container bytes after Core admission",
+      "normalization": "NONE; do not unpack/repack, canonicalize ZIP or remove signature",
+      "framing": "NONE",
+      "observation": "Core computes from the single captured final byte sequence"
+    },
+    "C": {
+      "basis": "content_tree",
+      "profile": "kdna.digest-basis.content-tree",
+      "profile_version": "0.2.0",
+      "algorithm": "SHA-256",
+      "input": "Core-admitted entry-name to typed-content map",
+      "entry_name_rule": "Nonempty strict UTF-8 Unicode scalar path, <=4096 bytes, no control/NUL/backslash/absolute/empty/dot/dot-dot segments or trailing slash. Unique exact name bytes; no Unicode normalization. Sort by unsigned UTF-8 bytes.",
+      "json_entries": "Every admitted name ending exactly .json is strict UTF-8 JSON, no duplicate keys at any depth, no invalid Unicode/nonfinite number; RFC8785 JCS bytes. Other admitted entries are binary exact bytes (including payload.kdnab); no guessing by content.",
+      "manifest_self_references_removed": [
+        "/content_digest",
+        "/authoring/content_digest"
+      ],
+      "manifest_removal_rule": "In kdna.json only, remove those properties if present, retain parent objects and every other property. A present /authoring must be an object under Core admission. Never recursively remove another content_digest key.",
+      "excluded_entries": [
+        "checksums.json",
+        "signature.kdsig"
+      ],
+      "forbidden_authoring_entries": [
+        "build-receipt.json",
+        "reports/**",
+        "authoring/**"
+      ],
+      "exclusion_rule": "checksums/signature are delivery integrity evidence, not content leaves. build-receipt/reports/authoring are forbidden by runtime admission before hashing, not a route for hiding extra entries. All other admitted runtime and attachment entries are included.",
+      "cycle_rule": "C excludes checksums/signature and the two manifest self-references; E can therefore include the final manifest containing C without a C→E→C cycle.",
+      "framing": "ASCII KDNA-CONTENT-TREE + NUL + ASCII 0.2.0 + NUL + u32be(count); for each sorted included entry: u32be(nameByteLength) + nameUTF8 + u8(kind: JSON=0,binary=1) + u64be(contentByteLength) + canonicalJSONorExactBinary. Count/length overflow rejects; never concatenation without framing."
+    },
+    "E": {
+      "basis": "runtime_entry_set",
+      "profile": "kdna.digest-basis.runtime-entry-set",
+      "profile_version": "0.2.0",
+      "algorithm": "SHA-256",
+      "input": "exact raw entry bytes for kdna.json, payload.kdnab and manifest runtime.mandatory_entries",
+      "set_rule": "New manifest runtime.mandatory_entries is required, a duplicate-free array of valid existing entry names; required base names need not be repeated. Union with the two base entries, sort unsigned UTF-8 bytes. Missing referenced member rejects. Mandatory declarations cannot include checksums.json, signature.kdsig, mimetype or forbidden authoring entries.",
+      "normalization": "NONE: retain raw JSON whitespace/member ordering and exact payload/attachment bytes; set membership comes from admitted manifest, never from checksums expected digest",
+      "framing": "ASCII KDNA-RUNTIME-ENTRY-SET + NUL + ASCII 0.2.0 + NUL + u32be(count); each sorted entry: u32be(nameByteLength) + nameUTF8 + u64be(rawByteLength) + rawBytes. Same entry-name/overflow rules as C.",
+      "expected_rule": "checksums declaration is expected comparison only; cannot supply observed E"
+    },
+    "P": {
+      "basis": "runtime_capsule_jcs",
+      "profile": "kdna.canonicalization.runtime-capsule-jcs",
+      "profile_version": "0.2.0",
+      "algorithm": "SHA-256",
+      "input": "exact complete admitted Runtime Capsule 0.2 object",
+      "normalization": "RFC8785 JCS, strict JSON/Unicode and duplicate-key rejection before object construction",
+      "framing": "NONE beyond JCS bytes",
+      "detached": true,
+      "excluded_fields": [],
+      "self_reference_rule": "P is outside Capsule, never embedded and never computed by removing fields.",
+      "comparison": "Producer computes detached P; trusted delivery evidence carries that P; Host independently recomputes P over received Capsule. All three values (producer, delivery, Host observed) must agree before matched; supplied strings do not create a Host observation."
+    }
+  },
+  "digest_evidence": {
+    "required": [
+      "basis",
+      "profile",
+      "profile_version",
+      "algorithm",
+      "observed",
+      "comparison"
+    ],
+    "comparison_states": [
+      "not_compared",
+      "matched",
+      "mismatched"
+    ],
+    "not_compared": "expected and expected_source are null",
+    "compared": "Both expected and source present; matched iff observed equals expected. Expected is never substituted for observation. Missing actual observation is NOT_EVALUATED in its enclosing technical state, not a fabricated digest.",
+    "digest_form": "sha256: followed by 64 lowercase hex characters",
+    "shape_source": "read-contract.md R02"
+  },
+  "responsibility_states": {
+    "core": [
+      "not_evaluated",
+      "valid",
+      "invalid"
+    ],
+    "writer": [
+      "not_evaluated",
+      "sufficient",
+      "insufficient"
+    ],
+    "confirmation": [
+      "not_evaluated",
+      "claimed_unverified",
+      "verified",
+      "rejected"
+    ],
+    "read_disclosure": [
+      "not_evaluated",
+      "allowed",
+      "denied"
+    ],
+    "host_action": [
+      "not_evaluated",
+      "authorized",
+      "denied"
+    ],
+    "non_implication": "No state writes another authority state; Read itself emits action_authorization=not_evaluated only."
+  },
+  "writer_profile": {
+    "required_for_this_design": [
+      "one complete authored judgment with subject/scope and result-or-formation semantics; requiredness defined by future public semantic source"
+    ],
+    "never_invent": [
+      "highest_question",
+      "worldview",
+      "value_order",
+      "role",
+      "boundary"
+    ],
+    "missing_required": "writer=insufficient with WRITER_REQUIRED_DECLARATION_MISSING; output must not contain fabricated fields",
+    "confirmation": "verified requires named external verifier plus trusted revision-bound evidence; self-claim remains claimed_unverified"
+  },
+  "decisions": [
+    {
+      "id": "PUB01",
+      "chosen": "A/C/E/P definitions in digest_profiles apply to the new 0.2 line only; actual observed evidence is computed, expected values are separately sourced.",
+      "rejected": [
+        "C means decoded payload bytes",
+        "checksums as observed digest",
+        "not_compared equals matched",
+        "unframed concatenation",
+        "P embedded in Capsule"
+      ],
+      "deferred": [
+        "Runtime implementation and shared generated digest vectors"
+      ],
+      "basis": [
+        "W0 PUB-01",
+        "Open technical selection B"
+      ],
+      "downstream": [
+        "A normative/JS Core",
+        "B language digest equivalence",
+        "C Writer packaging",
+        "D transport independently verifies P"
+      ]
+    },
+    {
+      "id": "PUB02",
+      "chosen": "Technical Core requiredness, Writer sufficiency, human/source confirmation, Read disclosure and action authorization are independent states. Writers never synthesize missing judgment declarations.",
+      "rejected": [
+        "Core valid implies writer sufficient or human confirmed",
+        "copy first axiom into highest_question",
+        "invent worldview/value order/role/boundary",
+        "self-declaration marked verified"
+      ],
+      "deferred": [
+        "External verifier deployment and profile-specific production sufficiency tooling"
+      ],
+      "basis": [
+        "W0 PUB-02",
+        "specs/creation-output-boundary.md",
+        "Open technical selection C"
+      ],
+      "downstream": [
+        "A state semantics",
+        "C honest compiler",
+        "B/D Host verification"
+      ]
+    },
+    {
+      "id": "PUB03",
+      "chosen": "The complete supported new tuple is exact. Freeze decision artifacts then generated normative aggregate; implement A JS Core/Read before B Swift/CLI/Python; C/D only rebind their accepted dependencies. App Shared precedes Studio Swift.",
+      "rejected": [
+        "0.21 consumers certified by 0.22 checkout or future 0.23 declaration",
+        "package version equals wire/IR version",
+        "Python current 90-edge table describes full environment"
+      ],
+      "deferred": [
+        "B resolved Python runtime/build-system/dev/optional environments and published artifacts"
+      ],
+      "basis": [
+        "W0 PUB-03",
+        "PD251 E-OBS-01",
+        "Open technical selection A/D"
+      ],
+      "downstream": [
+        "B only python-sdk after A in same repo",
+        "B captures setuptools>=75,wheel; dev pytest>=8,black>=24,mypy>=1; optional argon2-cffi>=23 plus actual resolution/artifact hashes",
+        "C/D exact dependency rebind"
+      ]
+    },
+    {
+      "id": "PUB04",
+      "chosen": "Only authorized package-set member admission, exact selection, isolated per-asset reads and sealed runtime handoff. No composeKDNA semantic merging.",
+      "rejected": [
+        "cross-asset IR/rule/priority/judgment merging",
+        "array concatenation creates authority",
+        "implicit package discovery or first-match selector",
+        "Read permission grants runtime/action permission"
+      ],
+      "deferred": [
+        "Production Host integration for the explicitly chosen handoff"
+      ],
+      "basis": [
+        "W0 PUB-04",
+        "Open technical selection E"
+      ],
+      "downstream": [
+        "A package-set/IR separation",
+        "B CLI",
+        "C Agent/Creation",
+        "D HTTP/Remote"
+      ]
+    },
+    {
+      "id": "PUB05",
+      "chosen": "Existing 0.1 normative line remains Active. No deprecation notice is issued here. Only a later explicit notice starts its existing 12-month Deprecated→Removed clock. New implementation accepts only the new tuple.",
+      "rejected": [
+        "remove/rename old Active coordinates",
+        "start deprecation clock by this design",
+        "dual read",
+        "automatic conversion",
+        "legacy fallback"
+      ],
+      "deferred": [
+        "Any future deprecation notice requires separate authority"
+      ],
+      "basis": [
+        "SPEC-INDEX.md existing lifecycle",
+        "Open technical selection A/D"
+      ],
+      "downstream": [
+        "Old-line maintenance and new-line releases are separate responsibilities; not a single compatibility runtime"
+      ]
+    },
+    {
+      "id": "PUB06",
+      "chosen": "README assertion, manifest metadata, source HEAD, resolved lock environment, artifact SHA, registry/tag and remote bytes remain independently identified evidence fields; unobserved fields are explicitly unverified.",
+      "rejected": [
+        "README proves latest",
+        "source HEAD proves release bytes",
+        "lock declaration proves installed resolution"
+      ],
+      "deferred": [
+        "Authorized per-artifact registry/remote verification"
+      ],
+      "basis": [
+        "W0 PUB-06",
+        "Open technical selection D"
+      ],
+      "downstream": [
+        "A matrix; B/C/D package owners"
+      ]
+    },
+    {
+      "id": "PUB07",
+      "chosen": "Core owns technical/static meaning; Creation owns sufficiency; external named verifier/Host owns real confirmation, current facts, disclosure and action permissions. Read pure projection, input adapters, reference UI and downstream products/releases are distinct.",
+      "rejected": [
+        "Reader-local ViewModel defines public IR",
+        "serialize authorized:true to create authority",
+        "static Read schedules execution",
+        "reference viewer proves Reader product or production Host"
+      ],
+      "deferred": [
+        "Production identity/PKI/persistent global revocation and product experiences"
+      ],
+      "basis": [
+        "W0 PUB-07 and ten Read decisions",
+        "Open technical selection F"
+      ],
+      "downstream": [
+        "A normative and pure Read",
+        "B language/CLI",
+        "C Agent/MCP/Creation",
+        "D HTTP/Remote/Activation; no Reader/KW writes"
+      ]
+    }
+  ],
+  "read_contract": "read-contract.md",
+  "diagnostic_design_registry": [
+    "READ_INPUT_INVALID",
+    "READ_SNAPSHOT_UNATTESTED",
+    "READ_CORE_CAPABILITY_UNAVAILABLE",
+    "READ_UNSUPPORTED_VERSION",
+    "READ_MIXED_VERSION_TUPLE",
+    "READ_CORE_INVALID",
+    "READ_INTERPRETATION_INCOMPLETE",
+    "READ_ASSET_MISMATCH",
+    "READ_ASSET_VERSION_MISMATCH",
+    "READ_SELECTION_NOT_FOUND",
+    "READ_SELECTION_AMBIGUOUS",
+    "READ_HANDLE_UNTRUSTED",
+    "READ_HANDLE_VERSION_MISMATCH",
+    "READ_HANDLE_STALE",
+    "READ_HANDLE_ASSET_MISMATCH",
+    "READ_HANDLE_SCOPE_MISMATCH",
+    "READ_HOST_CONTEXT_UNTRUSTED",
+    "READ_HOST_EPOCH_MISMATCH",
+    "READ_HOST_TIME_INVALID",
+    "READ_HANDLE_EXPIRED",
+    "READ_HOST_CONTEXT_EXPIRED",
+    "READ_HOST_DENIED",
+    "READ_SCOPE_DENIED",
+    "READ_PROJECTION_INVALID",
+    "READ_BUDGET_INSUFFICIENT",
+    "READ_RESPONSE_BUDGET_TOO_SMALL",
+    "SET_MEMBER_UNAUTHORIZED",
+    "SET_MEMBER_MISSING",
+    "SET_MEMBER_EXTRA",
+    "SET_MEMBER_DUPLICATE",
+    "UNSUPPORTED_CROSS_ASSET_SEMANTIC_MERGE",
+    "WRITER_REQUIRED_DECLARATION_MISSING",
+    "DIGEST_INPUT_INVALID",
+    "DIGEST_EXPECTATION_MISMATCH",
+    "CAPSULE_DELIVERY_DIGEST_MISMATCH",
+    "READ_ADMISSION_RESPONSE_TOO_SMALL",
+    "READ_TRANSPORT_FAILURE",
+    "READ_COMPONENT_DECLARATION_INVALID",
+    "READ_COMPONENT_CONTENT_INVALID",
+    "READ_COMPONENT_REFERENCE_INVALID",
+    "READ_COMPONENT_GRAPH_CYCLE",
+    "READ_COMPONENT_LIMIT_EXCEEDED",
+    "READ_COMPONENT_BINDING_INVALID",
+    "READ_COMPONENT_ADOPTION_INVALID",
+    "READ_METHOD_PRESENCE_INVALID"
+  ],
+  "source_of_future_machine_semantics": "specs/public-semantic-source.json (PLANNED_NOT_PRESENT)",
+  "evidence_policy": {
+    "W0_machine": {
+      "path": "docs/audits/OPEN-WAVE0-PUBLIC-BASELINE.json",
+      "sha256": "c2e66804c534075d87df471ab2f40a551895b94d72bf1f7d954c5ddee72454f7"
+    },
+    "W0_independent": {
+      "path": "docs/audits/2026-09-06-open-wave0-public-baseline-independent-acceptance.md",
+      "sha256": "145207a4f22491dd09a7574f728aa0dda6af3f5d8d271ef33220fa7d9b13e2d0"
+    },
+    "PD251_receipt_sha256": "8bd497c48e5448df4228bb3c0bb7f1d2c21866ea3c2b7f1e97fd2fefc84c4561",
+    "private_inputs": "Only accepted technical propositions inherited through W0; no private research/session/asset body copied"
+  },
+  "aggregate_policy": "Return SHA256 of sorted six-file rows {path,bytes,sha256}, compact UTF-8 JSON, row keys in that order, no LF. Full exact bytes of each of six artifacts, including SPEC-INDEX new bytes. Aggregate stored only in formal return/temp receipt, never in one of the six files; not full normative/generated closure.",
+  "vector_contract": "conformance/public-contract-decision-vectors.json; all NOT_RUN",
+  "not_proved": [
+    "Core/Read implementation",
+    "generated normative closure",
+    "SDK parity",
+    "browser runtime capability",
+    "public artifact existence",
+    "production Host or identity",
+    "Reader/formal assets/kdnawork",
+    "publication or Open Complete"
+  ],
+  "admission_rejection_repair": {
+    "finding": "E-W1-01",
+    "root_cause": "An invalid request budget cannot be both preserved and a UInt in ReadEnvelope; unsafe request_id cannot be echoed.",
+    "chosen": [
+      "Separate branded request admission from pure projection and Core admission",
+      "Four exact ReadCallResult channels: read_envelope, admission_rejection, no_body_control, transport_failure",
+      "Invalid input uses typed admission rejection under trusted independent control limit; lawful UInt budget only enters Envelope",
+      "First semantic cause and delivery failure are independent; one sanitized admission diagnostic and safe correlation",
+      "Version-before-mode rejection uses a safe branded request record with request=null; no later unvalidated fields stored"
+    ],
+    "rejected": [
+      "default/coerce invalid budget to zero",
+      "illegal budget treated as measured Envelope budget shortage",
+      "unsafe request_id or unknown keys/values echoed",
+      "throw/undefined/raw Error as public fifth exit",
+      "transport failure converted to Core or Host state",
+      "trusted control limit grants disclosure/action permission"
+    ],
+    "deferred": [
+      "Runtime implementation and actual transport/encoding verification remain separately authorized"
+    ],
+    "rule_sections": [
+      "read-contract.md#r01",
+      "read-contract.md#r02",
+      "read-contract.md#r04",
+      "read-contract.md#r06"
+    ],
+    "old_report": "docs/audits/2026-09-06-open-wave1-public-contract-independent-acceptance.md remains immutable; no backfill",
+    "aggregate": "Three repair-file and current six-file exact maps/aggregates returned outside these files; no normative/generated closure claim"
+  },
+  "diagnostic_signal_scopes": {
+    "READ_INPUT_INVALID": "admission_and_read",
+    "READ_SNAPSHOT_UNATTESTED": "read",
+    "READ_CORE_CAPABILITY_UNAVAILABLE": "read",
+    "READ_UNSUPPORTED_VERSION": "read",
+    "READ_MIXED_VERSION_TUPLE": "read",
+    "READ_CORE_INVALID": "read",
+    "READ_INTERPRETATION_INCOMPLETE": "read",
+    "READ_ASSET_MISMATCH": "read",
+    "READ_ASSET_VERSION_MISMATCH": "read",
+    "READ_SELECTION_NOT_FOUND": "read",
+    "READ_SELECTION_AMBIGUOUS": "read",
+    "READ_HANDLE_UNTRUSTED": "read",
+    "READ_HANDLE_VERSION_MISMATCH": "read",
+    "READ_HANDLE_STALE": "read",
+    "READ_HANDLE_ASSET_MISMATCH": "read",
+    "READ_HANDLE_SCOPE_MISMATCH": "read",
+    "READ_HOST_CONTEXT_UNTRUSTED": "read",
+    "READ_HOST_EPOCH_MISMATCH": "read",
+    "READ_HOST_TIME_INVALID": "read",
+    "READ_HANDLE_EXPIRED": "read",
+    "READ_HOST_CONTEXT_EXPIRED": "read",
+    "READ_HOST_DENIED": "read",
+    "READ_SCOPE_DENIED": "read",
+    "READ_PROJECTION_INVALID": "read",
+    "READ_BUDGET_INSUFFICIENT": "read",
+    "READ_RESPONSE_BUDGET_TOO_SMALL": "control_only",
+    "SET_MEMBER_UNAUTHORIZED": "other_contract",
+    "SET_MEMBER_MISSING": "other_contract",
+    "SET_MEMBER_EXTRA": "other_contract",
+    "SET_MEMBER_DUPLICATE": "other_contract",
+    "UNSUPPORTED_CROSS_ASSET_SEMANTIC_MERGE": "other_contract",
+    "WRITER_REQUIRED_DECLARATION_MISSING": "other_contract",
+    "DIGEST_INPUT_INVALID": "other_contract",
+    "DIGEST_EXPECTATION_MISMATCH": "other_contract",
+    "CAPSULE_DELIVERY_DIGEST_MISMATCH": "other_contract",
+    "READ_ADMISSION_RESPONSE_TOO_SMALL": "control_only",
+    "READ_TRANSPORT_FAILURE": "transport_only",
+    "READ_COMPONENT_DECLARATION_INVALID": "Core component static interpretation",
+    "READ_COMPONENT_CONTENT_INVALID": "Core component static interpretation",
+    "READ_COMPONENT_REFERENCE_INVALID": "Core component static interpretation",
+    "READ_COMPONENT_GRAPH_CYCLE": "Core component static interpretation",
+    "READ_COMPONENT_LIMIT_EXCEEDED": "Core component static interpretation",
+    "READ_COMPONENT_BINDING_INVALID": "Core component static interpretation",
+    "READ_COMPONENT_ADOPTION_INVALID": "Core component static interpretation",
+    "READ_METHOD_PRESENCE_INVALID": "Core component static interpretation"
+  },
+  "admission_first_error_order": [
+    "representation",
+    "unsigned_utf8_min_unknown_top_key",
+    "missing:request_id,tuple,budget_bytes,mode,selection,handle",
+    "request_id",
+    "budget_bytes",
+    "tuple_shape_then_family",
+    "mode_selection_handle_shape"
+  ],
+  "admission_reasons": [
+    "representation_not_object",
+    "unknown_field",
+    "missing_required",
+    "wrong_type",
+    "invalid_identifier",
+    "unsafe_integer",
+    "out_of_range",
+    "mode_shape_invalid"
+  ],
+  "ir_retention_pd273": {
+    "authority": "PD273 / OPEN-IR-RETENTION-DISPOSITION-PD273",
+    "carrier": "IRNode_asset_declaration.value / PublicAssetDeclaration",
+    "fields": {
+      "content_risk": "optional RiskState",
+      "extensions": "optional ordered Extension[]"
+    },
+    "presence": "Copy only own present keys from the same Core-validated Payload. No defaults; absence differs from an explicit empty array.",
+    "meaning": "Risk is an authored declaration, not verified quality or permission. Noncritical extensions retain typed opaque SemanticValue and array order; unsupported critical semantics still reject interpretation.",
+    "projection": "Necessary asset declarations remain in whole_asset/exact_selection/related expand; catalog may omit declarations with not_in_mode. Preserve Host scope, error order, and complete final-body budgeting."
+  },
+  "component_semantics_public_correction": {
+    "contract_id": "kdna.component-semantics/1",
+    "version": "1.0.0",
+    "definition_digest": "sha256:901319e594515f1a60a2a3b82c6900d54bbcfbfb7814f6cc356fa9d1b979924b",
+    "wire_unchanged": "0.2.0",
+    "scope": "Finite CS1 interpretation and explicit public mapping; existing assets and prior accepted graph retained. New static records do not prove external adoption."
+  }
+}

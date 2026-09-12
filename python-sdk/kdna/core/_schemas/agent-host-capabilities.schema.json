@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/specs/agent-host-capabilities.schema.json",
+  "title": "KDNA Agent Host Capabilities",
+  "description": "Orthogonal capabilities observed before Runtime contract execution.",
+  "type": "object",
+  "required": [
+    "type",
+    "protocol_version",
+    "capability_basis",
+    "host_protocols",
+    "capsule_versions",
+    "capsule_digest_profiles",
+    "capsule_digest_profile_versions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "const": "kdna.agent-host-capabilities"
+    },
+    "capability_basis": {
+      "enum": ["registered_descriptor", "legacy_assumption"]
+    },
+    "host_protocols": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["kdna.agent-host"]
+      }
+    },
+    "capsule_versions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["0.1.0"]
+      }
+    },
+    "capsule_digest_profiles": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "const": "kdna.canonicalization.runtime-capsule-jcs"
+      }
+    },
+    "protocol_version": {
+      "const": "0.1.0"
+    },
+    "capsule_digest_profile_versions": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "const": "0.1.0"
+        }
+      ],
+      "items": false,
+      "minItems": 1,
+      "maxItems": 1
+    }
+  }
+}

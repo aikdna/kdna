@@ -81,3 +81,7 @@ command, implementation version, spec version, run summary, known deviations.
 ## License
 
 Apache-2.0
+
+## New public-contract candidate
+
+`kdna-conformance --public-contract --source-root /absolute/kdna/source --runtime /absolute/isolated/runtime --output /absolute/report.json` runs the frozen 94 vector suite in fresh child processes against the installed Core0.23/Read0.1 candidate. The existing default suite is historical and does not describe these new exports. The new route records each real bytes, test-authority or explicit stage-observation boundary and never loads the historical Core runtime. An exact source checkout containing the generated vector worker is required; this dispatcher is not a separate semantic implementation.

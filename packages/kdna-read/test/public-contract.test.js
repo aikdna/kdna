@@ -1,0 +1,15 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict'),path=require('node:path');
+const F=require('../../../conformance/public-contract/test/bytes-fixtures.cjs');
+const runtime=process.env.KDNA_PUBLIC_RUNTIME??path.resolve(__dirname,'../../..'),{req,coreDir}=F.runtime(runtime);
+const {readNode}=req('@aikdna/kdna-read/node'),embed=req('@aikdna/kdna-read/embedding'),tuple=require(path.join(coreDir,'src/public-contract/generated-contract.json')).versionTuple;
+test('malformed admission is resolved before any Host action',async()=>{const asset=F.blank(tuple),request=F.candidate(tuple,asset);request.budget_bytes='private';let hostCalls=0;const host=embed.createTrustedHostReadProvider({observe(){hostCalls++;throw Error('unexpected');}}),control=embed.createTrustedReadControlProvider(()=>({admission_response_limit_bytes:1000000}));const result=await readNode(new Uint8Array(1),request,control,host);assert.equal(result.channel,'admission_rejection');assert.equal(result.admission_rejection.diagnostic.field,'budget_bytes');assert.equal(hostCalls,0);assert.deepEqual(Object.keys(result).sort(),['admission_rejection','channel','control','envelope','transport_failure']);});
+test('browser snapshot input preserves delivered handles for public expansion',async()=>{
+ const {admitBrowser}=req('@aikdna/kdna-core/browser'),{readBrowser}=req('@aikdna/kdna-read/browser'),{inspectSnapshot}=req('@aikdna/kdna-core/read-boundary'),asset=F.blank(tuple,2);
+ asset.payload.dependencies=[{id:'dependency:optional',producer:{kind:'judgment_result',judgment_ref:'j:1',result_contract_ref:'result-contract:1'},consumer_judgment_ref:'j:0',input_role:'context',data_type:{term:'text'},required:false,purpose:'Optional support'}];
+ const bytes=F.encode(asset,req,{deflate:true}),admitted=admitBrowser(bytes);assert.equal(admitted.status,'accepted');let calls=0;
+ const host=embed.createTrustedHostReadProvider({observe:({request,snapshot})=>{calls++;const v=inspectSnapshot(snapshot);return {host_id:'host:test',host_epoch:'epoch:1',decision_id:'decision:'+calls,request_id:request.request_id,snapshot_id:v.snapshot_id,A:v.digests.A.observed,C:v.digests.C.observed,scope:v.ir.nodes.map(n=>n.id),issued_at:900,expires_at:2000,current_ms:1000,decision:'allow',policy_id:'policy:test'};}}),control=embed.createTrustedReadControlProvider(()=>({admission_response_limit_bytes:1000000})),request=F.candidate(tuple,asset);
+ const selected=await readBrowser(admitted.snapshot,request,control,host);assert.equal(selected.envelope.status,'ready');const handle=selected.envelope.content.expansion_handles[0];assert.ok(handle);
+ const expanded=await readBrowser(admitted.snapshot,{...request,mode:'expand',handle},control,host);assert.equal(expanded.envelope.status,'ready');assert.ok(expanded.envelope.content.closure.some(n=>n.role==='judgment'&&n.value.id==='j:1'));assert.equal(expanded.envelope.snapshot_id,selected.envelope.snapshot_id);
+ const before=calls,rejected=await readBrowser(JSON.parse(JSON.stringify(admitted.snapshot)),request,control,host);assert.equal(rejected.envelope.content,null);assert.equal(calls,before);
+});

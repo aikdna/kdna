@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aikdna/kdna/specs/digest-evidence.schema.json",
+  "title": "KDNA Digest Evidence",
+  "description": "Observed A/C/E digest values, their fixed bases, and factual comparison evidence.",
+  "type": "object",
+  "required": ["profile", "profile_version", "asset", "content", "runtime_entry_set"],
+  "additionalProperties": false,
+  "properties": {
+    "profile": {
+      "const": "kdna.digest-evidence"
+    },
+    "profile_version": {
+      "const": "0.1.0"
+    },
+    "asset": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/digest"
+        },
+        {
+          "properties": {
+            "basis": {
+              "const": "kdna.digest-basis.container-bytes"
+            }
+          }
+        }
+      ]
+    },
+    "content": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/digest"
+        },
+        {
+          "properties": {
+            "basis": {
+              "const": "kdna.digest-basis.content-tree"
+            }
+          }
+        }
+      ]
+    },
+    "runtime_entry_set": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/digest"
+        },
+        {
+          "properties": {
+            "basis": {
+              "const": "kdna.digest-basis.runtime-entry-set"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "comparisonSource": {
+      "enum": [
+        "caller",
+        "registry",
+        "install_receipt",
+        "lockfile",
+        "kdna.json.content_digest",
+        "kdna.json.authoring.content_digest",
+        "checksums.json.entry_set_digest"
+      ]
+    },
+    "comparison": {
+      "type": "object",
+      "required": ["state", "against", "expected", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": ["matched", "mismatched", "not_compared", "unavailable"]
+        },
+        "against": {
+          "type": ["string", "null"],
+          "enum": ["external_expected", "manifest_declaration", "checksum_declaration", null]
+        },
+        "expected": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/comparisonSource"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": ["matched", "mismatched"]
+              }
+            },
+            "required": ["state"]
+          },
+          "then": {
+            "properties": {
+              "against": {
+                "type": "string"
+              },
+              "expected": {
+                "$ref": "#/$defs/sha256"
+              },
+              "source": {
+                "$ref": "#/$defs/comparisonSource"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": ["not_compared", "unavailable"]
+              }
+            },
+            "required": ["state"]
+          },
+          "then": {
+            "properties": {
+              "against": {
+                "type": "null"
+              },
+              "expected": {
+                "type": "null"
+              },
+              "source": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "digest": {
+      "type": "object",
+      "required": ["value", "basis", "comparison"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "basis": {
+          "type": "string"
+        },
+        "comparison": {
+          "$ref": "#/$defs/comparison"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "comparison": {
+                "properties": {
+                  "state": {
+                    "const": "unavailable"
+                  }
+                },
+                "required": ["state"]
+              }
+            },
+            "required": ["comparison"]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "$ref": "#/$defs/sha256"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

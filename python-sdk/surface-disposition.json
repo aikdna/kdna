@@ -1,0 +1,213 @@
+{
+  "format": "kdna.implementation-surface-disposition/1",
+  "scope": "python",
+  "authority": "Current root README, declared package exports and generated exact binding only; no new public semantics",
+  "retired_test_status": "Not run; incompatible historical contract tests are not current conformance. Their original bytes remain under retired.",
+  "excluded_runtime_roots": [
+    "retired",
+    "tests",
+    ".github",
+    "docs",
+    "scripts",
+    "node_modules",
+    ".build"
+  ],
+  "original_files": [
+    {
+      "original_path": "README.md",
+      "entry_sha256": "93fe2dc1bea46d6071e35490f99272bd38b440b729fd44521b13940abc71268a",
+      "disposition": "replaced_current_surface",
+      "current_path": "README.md",
+      "original_bytes_preserved_at": "retired/README.md"
+    },
+    {
+      "original_path": "examples/basic_usage.py",
+      "entry_sha256": "79b4c593d60210afa768960831299088e00961b8d3957c121d326d911f8ab15f",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/examples/basic_usage.py",
+      "original_bytes_preserved_at": "retired/examples/basic_usage.py"
+    },
+    {
+      "original_path": "examples/custom_agent.py",
+      "entry_sha256": "cb1965f2b5cdf5f617e575771e27afe4af8190107a95811d32f9f985792ef7db",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/examples/custom_agent.py",
+      "original_bytes_preserved_at": "retired/examples/custom_agent.py"
+    },
+    {
+      "original_path": "kdna/__init__.py",
+      "entry_sha256": "938f8f969069e580aa8f2d54c0fb61bbc46d9c5fe2431fbda65bcdb9e482fd1c",
+      "disposition": "replaced_current_surface",
+      "current_path": "kdna/__init__.py",
+      "original_bytes_preserved_at": "retired/kdna/__init__.py"
+    },
+    {
+      "original_path": "kdna/context.py",
+      "entry_sha256": "b2639043f69c8c2db9fc05a4ea1a5fcf062cbdbb3bdc3fa77e4a6ffa2632f18c",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/context.py",
+      "original_bytes_preserved_at": "retired/kdna/context.py"
+    },
+    {
+      "original_path": "kdna/core/__init__.py",
+      "entry_sha256": "31375dc0b096c3bdaf61805247298d88456294c9aa6c8dbfa0224c8afa6334a4",
+      "disposition": "replaced_current_surface",
+      "current_path": "kdna/core/__init__.py",
+      "original_bytes_preserved_at": "retired/kdna/core/__init__.py"
+    },
+    {
+      "original_path": "kdna/core/_schemas/bundle-profile.schema.json",
+      "entry_sha256": "45370bc73504df26a25d2e391cf543a468f872be835e57ac17ebc5c95d13f3ef",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/_schemas/bundle-profile.schema.json",
+      "original_bytes_preserved_at": "retired/kdna/core/_schemas/bundle-profile.schema.json"
+    },
+    {
+      "original_path": "kdna/core/_schemas/checksums.schema.json",
+      "entry_sha256": "34ed9bacd09a5862f6d8623921f3ff8ff2529ebf3171edcb881cfa1e4b7b7602",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/_schemas/checksums.schema.json",
+      "original_bytes_preserved_at": "retired/kdna/core/_schemas/checksums.schema.json"
+    },
+    {
+      "original_path": "kdna/core/_schemas/load-contract.schema.json",
+      "entry_sha256": "775c04c0b62bf46a4b831bfb47b0b08f319364a190cdd3baa0721a6791466c0b",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/_schemas/load-contract.schema.json",
+      "original_bytes_preserved_at": "retired/kdna/core/_schemas/load-contract.schema.json"
+    },
+    {
+      "original_path": "kdna/core/_schemas/manifest.schema.json",
+      "entry_sha256": "5ae77c50bc1e6845be3bc055e360841ed87ad74ffc65e0486297f01eaf52e27e",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/_schemas/manifest.schema.json",
+      "original_bytes_preserved_at": "retired/kdna/core/_schemas/manifest.schema.json"
+    },
+    {
+      "original_path": "kdna/core/_schemas/payload-profile.schema.json",
+      "entry_sha256": "3e2f089313191ffbe97ae906cd67fbd2138f0f33f55872bcb0852e841ff2a1a9",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/_schemas/payload-profile.schema.json",
+      "original_bytes_preserved_at": "retired/kdna/core/_schemas/payload-profile.schema.json"
+    },
+    {
+      "original_path": "kdna/core/container.py",
+      "entry_sha256": "307d71875ae154acbc8ff5b7121a126c6f89a7c11f0ac4a0d000ced7cbfd07e2",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/container.py",
+      "original_bytes_preserved_at": "retired/kdna/core/container.py"
+    },
+    {
+      "original_path": "kdna/core/crypto_profile.py",
+      "entry_sha256": "05cfb1afe3e67be31a47f4fe713c550d2da5ad7c205ce9610f05fe7618759c6a",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/crypto_profile.py",
+      "original_bytes_preserved_at": "retired/kdna/core/crypto_profile.py"
+    },
+    {
+      "original_path": "kdna/core/load.py",
+      "entry_sha256": "0f2dac925ca18592ac843d2ae989c21bff730d60348b290a486e05d1a2ccb361",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/load.py",
+      "original_bytes_preserved_at": "retired/kdna/core/load.py"
+    },
+    {
+      "original_path": "kdna/core/pack.py",
+      "entry_sha256": "0d67543ee3c05e2c5ae0b08bdacc19dd3a02e66163a8235db5678cd4325f921e",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/pack.py",
+      "original_bytes_preserved_at": "retired/kdna/core/pack.py"
+    },
+    {
+      "original_path": "kdna/core/plan.py",
+      "entry_sha256": "6a8d783432e9a08cdb5aa13ef3f5372a5153aa9e67332e305db35e5ae6d7395a",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/plan.py",
+      "original_bytes_preserved_at": "retired/kdna/core/plan.py"
+    },
+    {
+      "original_path": "kdna/core/schema.py",
+      "entry_sha256": "2950863b13385dbd8c12902a6cc1b17f9b774ceb2c60560477f3419fff8448b6",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/schema.py",
+      "original_bytes_preserved_at": "retired/kdna/core/schema.py"
+    },
+    {
+      "original_path": "kdna/core/signature.py",
+      "entry_sha256": "d33ced2ab202cbe211fa32309c8b2c145706449585041c9e256e0d35b1631341",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/signature.py",
+      "original_bytes_preserved_at": "retired/kdna/core/signature.py"
+    },
+    {
+      "original_path": "kdna/core/validate.py",
+      "entry_sha256": "eb53f8be1cc4e7976afbbe131da5d98f349dac5829bb387874be6633afb397dd",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/core/validate.py",
+      "original_bytes_preserved_at": "retired/kdna/core/validate.py"
+    },
+    {
+      "original_path": "kdna/loader.py",
+      "entry_sha256": "c65640923828ccad5f99e7ff7667a4eb1733777a79099a3434d9817d424630b4",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/kdna/loader.py",
+      "original_bytes_preserved_at": "retired/kdna/loader.py"
+    },
+    {
+      "original_path": "pyproject.toml",
+      "entry_sha256": "4ce645d38fea55038c496331dea908e7bb3c0f4a0ed9d39c79f4d43a0b73262c",
+      "disposition": "replaced_current_surface",
+      "current_path": "pyproject.toml",
+      "original_bytes_preserved_at": "retired/pyproject.toml"
+    },
+    {
+      "original_path": "release-signing.pub",
+      "entry_sha256": "ca626c9c392d8cee9e9c18f608a811968a4bba0a0ebede6e13e5e336d68cc425",
+      "disposition": "retained_byte_identical",
+      "current_path": "release-signing.pub"
+    },
+    {
+      "original_path": "scripts/release-signed-build.py",
+      "entry_sha256": "0cc09cd0252201762751959db919fe703617fb95f3aac09301d37b071d5facc7",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/scripts/release-signed-build.py",
+      "original_bytes_preserved_at": "retired/scripts/release-signed-build.py"
+    },
+    {
+      "original_path": "tests/test_authorized_load.py",
+      "entry_sha256": "a56c1ef01f0d6428b74cf77da8fbe0352d4da62242fde136c6d9dfa04451318e",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/tests/test_authorized_load.py",
+      "original_bytes_preserved_at": "retired/tests/test_authorized_load.py"
+    },
+    {
+      "original_path": "tests/test_core_interop.py",
+      "entry_sha256": "5c1443ec5b17e4ad2b5d46394afdb763cc29692984abe973048cadeec7e34234",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/tests/test_core_interop.py",
+      "original_bytes_preserved_at": "retired/tests/test_core_interop.py"
+    },
+    {
+      "original_path": "tests/test_loader.py",
+      "entry_sha256": "654cd857ae12fa7ec64ca3be4fbe019606d662c6b6e03837a5c6a645a6668053",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/tests/test_loader.py",
+      "original_bytes_preserved_at": "retired/tests/test_loader.py"
+    },
+    {
+      "original_path": "tests/test_minimal_profile.py",
+      "entry_sha256": "e2e4ee9598dc06de851a9cb55f4c2debd20b422c8dfb1666b560c0327d5d9455",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/tests/test_minimal_profile.py",
+      "original_bytes_preserved_at": "retired/tests/test_minimal_profile.py"
+    },
+    {
+      "original_path": "tests/test_signature.py",
+      "entry_sha256": "162522fdee6351c27cdcbec82bf1051f3901eb83dd336804128e298e8ed8c2dd",
+      "disposition": "retired_excluded_from_build_and_distribution",
+      "current_path": "retired/tests/test_signature.py",
+      "original_bytes_preserved_at": "retired/tests/test_signature.py"
+    }
+  ],
+  "hosted_ci_status": "NOT_RUN; CLI exact unpublished RC availability is a prerequisite. Native platform claims require actual platform execution."
+}

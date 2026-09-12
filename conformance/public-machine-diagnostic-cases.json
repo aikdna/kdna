@@ -1,0 +1,1639 @@
+[
+  {
+    "id": "DIAG-READ-ERROR",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadDiagnostic",
+    "data": {
+      "code": "READ_INPUT_INVALID",
+      "stage": "input",
+      "severity": "error",
+      "subject": null,
+      "field": null
+    },
+    "valid": true
+  },
+  {
+    "id": "DIAG-READ-WARNING",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadDiagnostic",
+    "data": {
+      "code": "READ_INPUT_INVALID",
+      "stage": "input",
+      "severity": "warning",
+      "subject": null,
+      "field": null
+    },
+    "valid": true
+  },
+  {
+    "id": "DIAG-READ-UNKNOWN",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadDiagnostic",
+    "data": {
+      "code": "READ_INPUT_INVALID",
+      "stage": "input",
+      "severity": "info",
+      "subject": null,
+      "field": null
+    },
+    "valid": false
+  },
+  {
+    "id": "DIAG-READ-WARNING-MISSING-FIELD",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadDiagnostic",
+    "data": {
+      "code": "READ_INPUT_INVALID",
+      "stage": "input",
+      "severity": "warning",
+      "subject": null
+    },
+    "valid": false
+  },
+  {
+    "id": "DIAG-READY-EMPTY",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadEnvelope",
+    "data": {
+      "contract": "kdna.read/0.1.0",
+      "request_id": "request-1",
+      "status": "ready",
+      "tuple": {
+        "container": "0.2.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.2.0",
+        "core": "kdna.core/0.2.0",
+        "ir": "kdna.canonical-ir/0.1.0",
+        "runtime": "kdna.runtime-capsule/0.2.0",
+        "plan": "kdna.consumption-plan/0.2.0",
+        "host": "kdna.agent-host/0.2.0",
+        "trace": "kdna.judgment-trace/0.2.0",
+        "read": "kdna.read/0.1.0"
+      },
+      "asset": {
+        "asset_id": "asset-1",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "snapshot_id": "snapshot-1",
+      "digests": {
+        "A": {
+          "basis": "container_bytes",
+          "profile": "kdna.digest-basis.container-bytes",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "C": {
+          "basis": "content_tree",
+          "profile": "kdna.digest-basis.content-tree",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "E": {
+          "basis": "runtime_entry_set",
+          "profile": "kdna.digest-basis.runtime-entry-set",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        }
+      },
+      "content": {
+        "declarations": [],
+        "catalog": [],
+        "selected": null,
+        "closure": [],
+        "references": [],
+        "relationships": [],
+        "missing": [],
+        "provenance": {
+          "declarations": [],
+          "confirmation": "not_evaluated",
+          "verifier_id": null,
+          "evidence_ref": null
+        },
+        "expansion_handles": []
+      },
+      "states": {
+        "core": "valid",
+        "interpretation": "complete",
+        "writer": "not_evaluated",
+        "confirmation": "not_evaluated",
+        "read_permission": "allowed",
+        "action_authorization": "not_evaluated"
+      },
+      "diagnostics": [],
+      "omissions": [],
+      "assessment": {
+        "state": "not_evaluated",
+        "kind": null,
+        "assessor_id": null,
+        "evidence_ref": null
+      },
+      "receipt": {
+        "receipt_id": "receipt-1",
+        "request_id": "request-1",
+        "snapshot_id": "snapshot-1",
+        "host_id": "host-1",
+        "host_epoch": "epoch-1",
+        "decision_id": "decision-1",
+        "disclosed_at": 0,
+        "delivery": "delivered"
+      },
+      "budget": {
+        "limit_bytes": 1000000,
+        "required_bytes": "0000000000000000",
+        "actual_bytes": "0000000000000000"
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "DIAG-READY-WARNING",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadEnvelope",
+    "data": {
+      "contract": "kdna.read/0.1.0",
+      "request_id": "request-1",
+      "status": "ready",
+      "tuple": {
+        "container": "0.2.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.2.0",
+        "core": "kdna.core/0.2.0",
+        "ir": "kdna.canonical-ir/0.1.0",
+        "runtime": "kdna.runtime-capsule/0.2.0",
+        "plan": "kdna.consumption-plan/0.2.0",
+        "host": "kdna.agent-host/0.2.0",
+        "trace": "kdna.judgment-trace/0.2.0",
+        "read": "kdna.read/0.1.0"
+      },
+      "asset": {
+        "asset_id": "asset-1",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "snapshot_id": "snapshot-1",
+      "digests": {
+        "A": {
+          "basis": "container_bytes",
+          "profile": "kdna.digest-basis.container-bytes",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "C": {
+          "basis": "content_tree",
+          "profile": "kdna.digest-basis.content-tree",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "E": {
+          "basis": "runtime_entry_set",
+          "profile": "kdna.digest-basis.runtime-entry-set",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        }
+      },
+      "content": {
+        "declarations": [],
+        "catalog": [],
+        "selected": null,
+        "closure": [],
+        "references": [],
+        "relationships": [],
+        "missing": [],
+        "provenance": {
+          "declarations": [],
+          "confirmation": "not_evaluated",
+          "verifier_id": null,
+          "evidence_ref": null
+        },
+        "expansion_handles": []
+      },
+      "states": {
+        "core": "valid",
+        "interpretation": "complete",
+        "writer": "not_evaluated",
+        "confirmation": "not_evaluated",
+        "read_permission": "allowed",
+        "action_authorization": "not_evaluated"
+      },
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "warning",
+          "subject": null,
+          "field": null
+        }
+      ],
+      "omissions": [],
+      "assessment": {
+        "state": "not_evaluated",
+        "kind": null,
+        "assessor_id": null,
+        "evidence_ref": null
+      },
+      "receipt": {
+        "receipt_id": "receipt-1",
+        "request_id": "request-1",
+        "snapshot_id": "snapshot-1",
+        "host_id": "host-1",
+        "host_epoch": "epoch-1",
+        "decision_id": "decision-1",
+        "disclosed_at": 0,
+        "delivery": "delivered"
+      },
+      "budget": {
+        "limit_bytes": 1000000,
+        "required_bytes": "0000000000000000",
+        "actual_bytes": "0000000000000000"
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "DIAG-READY-WARNINGS",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadEnvelope",
+    "data": {
+      "contract": "kdna.read/0.1.0",
+      "request_id": "request-1",
+      "status": "ready",
+      "tuple": {
+        "container": "0.2.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.2.0",
+        "core": "kdna.core/0.2.0",
+        "ir": "kdna.canonical-ir/0.1.0",
+        "runtime": "kdna.runtime-capsule/0.2.0",
+        "plan": "kdna.consumption-plan/0.2.0",
+        "host": "kdna.agent-host/0.2.0",
+        "trace": "kdna.judgment-trace/0.2.0",
+        "read": "kdna.read/0.1.0"
+      },
+      "asset": {
+        "asset_id": "asset-1",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "snapshot_id": "snapshot-1",
+      "digests": {
+        "A": {
+          "basis": "container_bytes",
+          "profile": "kdna.digest-basis.container-bytes",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "C": {
+          "basis": "content_tree",
+          "profile": "kdna.digest-basis.content-tree",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "E": {
+          "basis": "runtime_entry_set",
+          "profile": "kdna.digest-basis.runtime-entry-set",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        }
+      },
+      "content": {
+        "declarations": [],
+        "catalog": [],
+        "selected": null,
+        "closure": [],
+        "references": [],
+        "relationships": [],
+        "missing": [],
+        "provenance": {
+          "declarations": [],
+          "confirmation": "not_evaluated",
+          "verifier_id": null,
+          "evidence_ref": null
+        },
+        "expansion_handles": []
+      },
+      "states": {
+        "core": "valid",
+        "interpretation": "complete",
+        "writer": "not_evaluated",
+        "confirmation": "not_evaluated",
+        "read_permission": "allowed",
+        "action_authorization": "not_evaluated"
+      },
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "warning",
+          "subject": null,
+          "field": null
+        },
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "warning",
+          "subject": null,
+          "field": null
+        }
+      ],
+      "omissions": [],
+      "assessment": {
+        "state": "not_evaluated",
+        "kind": null,
+        "assessor_id": null,
+        "evidence_ref": null
+      },
+      "receipt": {
+        "receipt_id": "receipt-1",
+        "request_id": "request-1",
+        "snapshot_id": "snapshot-1",
+        "host_id": "host-1",
+        "host_epoch": "epoch-1",
+        "decision_id": "decision-1",
+        "disclosed_at": 0,
+        "delivery": "delivered"
+      },
+      "budget": {
+        "limit_bytes": 1000000,
+        "required_bytes": "0000000000000000",
+        "actual_bytes": "0000000000000000"
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "DIAG-READY-ERROR",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadEnvelope",
+    "data": {
+      "contract": "kdna.read/0.1.0",
+      "request_id": "request-1",
+      "status": "ready",
+      "tuple": {
+        "container": "0.2.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.2.0",
+        "core": "kdna.core/0.2.0",
+        "ir": "kdna.canonical-ir/0.1.0",
+        "runtime": "kdna.runtime-capsule/0.2.0",
+        "plan": "kdna.consumption-plan/0.2.0",
+        "host": "kdna.agent-host/0.2.0",
+        "trace": "kdna.judgment-trace/0.2.0",
+        "read": "kdna.read/0.1.0"
+      },
+      "asset": {
+        "asset_id": "asset-1",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "snapshot_id": "snapshot-1",
+      "digests": {
+        "A": {
+          "basis": "container_bytes",
+          "profile": "kdna.digest-basis.container-bytes",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "C": {
+          "basis": "content_tree",
+          "profile": "kdna.digest-basis.content-tree",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "E": {
+          "basis": "runtime_entry_set",
+          "profile": "kdna.digest-basis.runtime-entry-set",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        }
+      },
+      "content": {
+        "declarations": [],
+        "catalog": [],
+        "selected": null,
+        "closure": [],
+        "references": [],
+        "relationships": [],
+        "missing": [],
+        "provenance": {
+          "declarations": [],
+          "confirmation": "not_evaluated",
+          "verifier_id": null,
+          "evidence_ref": null
+        },
+        "expansion_handles": []
+      },
+      "states": {
+        "core": "valid",
+        "interpretation": "complete",
+        "writer": "not_evaluated",
+        "confirmation": "not_evaluated",
+        "read_permission": "allowed",
+        "action_authorization": "not_evaluated"
+      },
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ],
+      "omissions": [],
+      "assessment": {
+        "state": "not_evaluated",
+        "kind": null,
+        "assessor_id": null,
+        "evidence_ref": null
+      },
+      "receipt": {
+        "receipt_id": "receipt-1",
+        "request_id": "request-1",
+        "snapshot_id": "snapshot-1",
+        "host_id": "host-1",
+        "host_epoch": "epoch-1",
+        "decision_id": "decision-1",
+        "disclosed_at": 0,
+        "delivery": "delivered"
+      },
+      "budget": {
+        "limit_bytes": 1000000,
+        "required_bytes": "0000000000000000",
+        "actual_bytes": "0000000000000000"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "DIAG-READY-MIXED",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadEnvelope",
+    "data": {
+      "contract": "kdna.read/0.1.0",
+      "request_id": "request-1",
+      "status": "ready",
+      "tuple": {
+        "container": "0.2.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.2.0",
+        "core": "kdna.core/0.2.0",
+        "ir": "kdna.canonical-ir/0.1.0",
+        "runtime": "kdna.runtime-capsule/0.2.0",
+        "plan": "kdna.consumption-plan/0.2.0",
+        "host": "kdna.agent-host/0.2.0",
+        "trace": "kdna.judgment-trace/0.2.0",
+        "read": "kdna.read/0.1.0"
+      },
+      "asset": {
+        "asset_id": "asset-1",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "snapshot_id": "snapshot-1",
+      "digests": {
+        "A": {
+          "basis": "container_bytes",
+          "profile": "kdna.digest-basis.container-bytes",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "C": {
+          "basis": "content_tree",
+          "profile": "kdna.digest-basis.content-tree",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "E": {
+          "basis": "runtime_entry_set",
+          "profile": "kdna.digest-basis.runtime-entry-set",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        }
+      },
+      "content": {
+        "declarations": [],
+        "catalog": [],
+        "selected": null,
+        "closure": [],
+        "references": [],
+        "relationships": [],
+        "missing": [],
+        "provenance": {
+          "declarations": [],
+          "confirmation": "not_evaluated",
+          "verifier_id": null,
+          "evidence_ref": null
+        },
+        "expansion_handles": []
+      },
+      "states": {
+        "core": "valid",
+        "interpretation": "complete",
+        "writer": "not_evaluated",
+        "confirmation": "not_evaluated",
+        "read_permission": "allowed",
+        "action_authorization": "not_evaluated"
+      },
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "warning",
+          "subject": null,
+          "field": null
+        },
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ],
+      "omissions": [],
+      "assessment": {
+        "state": "not_evaluated",
+        "kind": null,
+        "assessor_id": null,
+        "evidence_ref": null
+      },
+      "receipt": {
+        "receipt_id": "receipt-1",
+        "request_id": "request-1",
+        "snapshot_id": "snapshot-1",
+        "host_id": "host-1",
+        "host_epoch": "epoch-1",
+        "decision_id": "decision-1",
+        "disclosed_at": 0,
+        "delivery": "delivered"
+      },
+      "budget": {
+        "limit_bytes": 1000000,
+        "required_bytes": "0000000000000000",
+        "actual_bytes": "0000000000000000"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "DIAG-READY-UNKNOWN",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadEnvelope",
+    "data": {
+      "contract": "kdna.read/0.1.0",
+      "request_id": "request-1",
+      "status": "ready",
+      "tuple": {
+        "container": "0.2.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.2.0",
+        "core": "kdna.core/0.2.0",
+        "ir": "kdna.canonical-ir/0.1.0",
+        "runtime": "kdna.runtime-capsule/0.2.0",
+        "plan": "kdna.consumption-plan/0.2.0",
+        "host": "kdna.agent-host/0.2.0",
+        "trace": "kdna.judgment-trace/0.2.0",
+        "read": "kdna.read/0.1.0"
+      },
+      "asset": {
+        "asset_id": "asset-1",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "snapshot_id": "snapshot-1",
+      "digests": {
+        "A": {
+          "basis": "container_bytes",
+          "profile": "kdna.digest-basis.container-bytes",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "C": {
+          "basis": "content_tree",
+          "profile": "kdna.digest-basis.content-tree",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "E": {
+          "basis": "runtime_entry_set",
+          "profile": "kdna.digest-basis.runtime-entry-set",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        }
+      },
+      "content": {
+        "declarations": [],
+        "catalog": [],
+        "selected": null,
+        "closure": [],
+        "references": [],
+        "relationships": [],
+        "missing": [],
+        "provenance": {
+          "declarations": [],
+          "confirmation": "not_evaluated",
+          "verifier_id": null,
+          "evidence_ref": null
+        },
+        "expansion_handles": []
+      },
+      "states": {
+        "core": "valid",
+        "interpretation": "complete",
+        "writer": "not_evaluated",
+        "confirmation": "not_evaluated",
+        "read_permission": "allowed",
+        "action_authorization": "not_evaluated"
+      },
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "info",
+          "subject": null,
+          "field": null
+        }
+      ],
+      "omissions": [],
+      "assessment": {
+        "state": "not_evaluated",
+        "kind": null,
+        "assessor_id": null,
+        "evidence_ref": null
+      },
+      "receipt": {
+        "receipt_id": "receipt-1",
+        "request_id": "request-1",
+        "snapshot_id": "snapshot-1",
+        "host_id": "host-1",
+        "host_epoch": "epoch-1",
+        "decision_id": "decision-1",
+        "disclosed_at": 0,
+        "delivery": "delivered"
+      },
+      "budget": {
+        "limit_bytes": 1000000,
+        "required_bytes": "0000000000000000",
+        "actual_bytes": "0000000000000000"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "DIAG-READY-MISSING-FIELD",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadEnvelope",
+    "data": {
+      "contract": "kdna.read/0.1.0",
+      "request_id": "request-1",
+      "status": "ready",
+      "tuple": {
+        "container": "0.2.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.2.0",
+        "core": "kdna.core/0.2.0",
+        "ir": "kdna.canonical-ir/0.1.0",
+        "runtime": "kdna.runtime-capsule/0.2.0",
+        "plan": "kdna.consumption-plan/0.2.0",
+        "host": "kdna.agent-host/0.2.0",
+        "trace": "kdna.judgment-trace/0.2.0",
+        "read": "kdna.read/0.1.0"
+      },
+      "asset": {
+        "asset_id": "asset-1",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "snapshot_id": "snapshot-1",
+      "digests": {
+        "A": {
+          "basis": "container_bytes",
+          "profile": "kdna.digest-basis.container-bytes",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "C": {
+          "basis": "content_tree",
+          "profile": "kdna.digest-basis.content-tree",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        },
+        "E": {
+          "basis": "runtime_entry_set",
+          "profile": "kdna.digest-basis.runtime-entry-set",
+          "profile_version": "0.2.0",
+          "algorithm": "SHA-256",
+          "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "comparison": {
+            "state": "not_compared",
+            "expected": null,
+            "expected_source": null
+          }
+        }
+      },
+      "content": {
+        "declarations": [],
+        "catalog": [],
+        "selected": null,
+        "closure": [],
+        "references": [],
+        "relationships": [],
+        "missing": [],
+        "provenance": {
+          "declarations": [],
+          "confirmation": "not_evaluated",
+          "verifier_id": null,
+          "evidence_ref": null
+        },
+        "expansion_handles": []
+      },
+      "states": {
+        "core": "valid",
+        "interpretation": "complete",
+        "writer": "not_evaluated",
+        "confirmation": "not_evaluated",
+        "read_permission": "allowed",
+        "action_authorization": "not_evaluated"
+      },
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "warning",
+          "subject": null
+        }
+      ],
+      "omissions": [],
+      "assessment": {
+        "state": "not_evaluated",
+        "kind": null,
+        "assessor_id": null,
+        "evidence_ref": null
+      },
+      "receipt": {
+        "receipt_id": "receipt-1",
+        "request_id": "request-1",
+        "snapshot_id": "snapshot-1",
+        "host_id": "host-1",
+        "host_epoch": "epoch-1",
+        "decision_id": "decision-1",
+        "disclosed_at": 0,
+        "delivery": "delivered"
+      },
+      "budget": {
+        "limit_bytes": 1000000,
+        "required_bytes": "0000000000000000",
+        "actual_bytes": "0000000000000000"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "DIAG-ADMISSION-ERROR",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "AdmissionDiagnostic",
+    "data": {
+      "stage": "admission",
+      "severity": "error",
+      "reason": "wrong_type",
+      "field": "budget_bytes"
+    },
+    "valid": true
+  },
+  {
+    "id": "DIAG-ADMISSION-WARNING",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "AdmissionDiagnostic",
+    "data": {
+      "stage": "admission",
+      "severity": "warning",
+      "reason": "wrong_type",
+      "field": "budget_bytes"
+    },
+    "valid": false
+  },
+  {
+    "id": "DIAG-ADMISSION-INFO",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "AdmissionDiagnostic",
+    "data": {
+      "stage": "admission",
+      "severity": "info",
+      "reason": "wrong_type",
+      "field": "budget_bytes"
+    },
+    "valid": false
+  },
+  {
+    "id": "DIAG-PROJECTED-EMPTY",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadProjection",
+    "data": {
+      "status": "projected",
+      "body": {
+        "asset": {
+          "asset_id": "asset-1",
+          "asset_version": "1.0.0",
+          "judgment_version": "1.0.0"
+        },
+        "tuple": {
+          "container": "0.2.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.2.0",
+          "core": "kdna.core/0.2.0",
+          "ir": "kdna.canonical-ir/0.1.0",
+          "runtime": "kdna.runtime-capsule/0.2.0",
+          "plan": "kdna.consumption-plan/0.2.0",
+          "host": "kdna.agent-host/0.2.0",
+          "trace": "kdna.judgment-trace/0.2.0",
+          "read": "kdna.read/0.1.0"
+        },
+        "digests": {
+          "A": {
+            "basis": "container_bytes",
+            "profile": "kdna.digest-basis.container-bytes",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "C": {
+            "basis": "content_tree",
+            "profile": "kdna.digest-basis.content-tree",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "E": {
+            "basis": "runtime_entry_set",
+            "profile": "kdna.digest-basis.runtime-entry-set",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          }
+        },
+        "snapshot_id": "snapshot-1",
+        "content": {
+          "declarations": [],
+          "catalog": [],
+          "selected": null,
+          "closure": [],
+          "references": [],
+          "relationships": [],
+          "missing": [],
+          "provenance": {
+            "declarations": [],
+            "confirmation": "not_evaluated",
+            "verifier_id": null,
+            "evidence_ref": null
+          },
+          "expansion_handles": []
+        },
+        "diagnostics": [],
+        "omissions": [],
+        "assessment": {
+          "state": "not_evaluated",
+          "kind": null,
+          "assessor_id": null,
+          "evidence_ref": null
+        }
+      },
+      "diagnostics": []
+    },
+    "valid": true
+  },
+  {
+    "id": "DIAG-PROJECTED-INTERNAL-WARNING",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadProjection",
+    "data": {
+      "status": "projected",
+      "body": {
+        "asset": {
+          "asset_id": "asset-1",
+          "asset_version": "1.0.0",
+          "judgment_version": "1.0.0"
+        },
+        "tuple": {
+          "container": "0.2.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.2.0",
+          "core": "kdna.core/0.2.0",
+          "ir": "kdna.canonical-ir/0.1.0",
+          "runtime": "kdna.runtime-capsule/0.2.0",
+          "plan": "kdna.consumption-plan/0.2.0",
+          "host": "kdna.agent-host/0.2.0",
+          "trace": "kdna.judgment-trace/0.2.0",
+          "read": "kdna.read/0.1.0"
+        },
+        "digests": {
+          "A": {
+            "basis": "container_bytes",
+            "profile": "kdna.digest-basis.container-bytes",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "C": {
+            "basis": "content_tree",
+            "profile": "kdna.digest-basis.content-tree",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "E": {
+            "basis": "runtime_entry_set",
+            "profile": "kdna.digest-basis.runtime-entry-set",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          }
+        },
+        "snapshot_id": "snapshot-1",
+        "content": {
+          "declarations": [],
+          "catalog": [],
+          "selected": null,
+          "closure": [],
+          "references": [],
+          "relationships": [],
+          "missing": [],
+          "provenance": {
+            "declarations": [],
+            "confirmation": "not_evaluated",
+            "verifier_id": null,
+            "evidence_ref": null
+          },
+          "expansion_handles": []
+        },
+        "diagnostics": [
+          {
+            "code": "READ_INPUT_INVALID",
+            "stage": "input",
+            "severity": "warning",
+            "subject": null,
+            "field": null
+          }
+        ],
+        "omissions": [],
+        "assessment": {
+          "state": "not_evaluated",
+          "kind": null,
+          "assessor_id": null,
+          "evidence_ref": null
+        }
+      },
+      "diagnostics": []
+    },
+    "valid": true
+  },
+  {
+    "id": "DIAG-PROJECTED-INTERNAL-ERROR",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadProjection",
+    "data": {
+      "status": "projected",
+      "body": {
+        "asset": {
+          "asset_id": "asset-1",
+          "asset_version": "1.0.0",
+          "judgment_version": "1.0.0"
+        },
+        "tuple": {
+          "container": "0.2.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.2.0",
+          "core": "kdna.core/0.2.0",
+          "ir": "kdna.canonical-ir/0.1.0",
+          "runtime": "kdna.runtime-capsule/0.2.0",
+          "plan": "kdna.consumption-plan/0.2.0",
+          "host": "kdna.agent-host/0.2.0",
+          "trace": "kdna.judgment-trace/0.2.0",
+          "read": "kdna.read/0.1.0"
+        },
+        "digests": {
+          "A": {
+            "basis": "container_bytes",
+            "profile": "kdna.digest-basis.container-bytes",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "C": {
+            "basis": "content_tree",
+            "profile": "kdna.digest-basis.content-tree",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "E": {
+            "basis": "runtime_entry_set",
+            "profile": "kdna.digest-basis.runtime-entry-set",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          }
+        },
+        "snapshot_id": "snapshot-1",
+        "content": {
+          "declarations": [],
+          "catalog": [],
+          "selected": null,
+          "closure": [],
+          "references": [],
+          "relationships": [],
+          "missing": [],
+          "provenance": {
+            "declarations": [],
+            "confirmation": "not_evaluated",
+            "verifier_id": null,
+            "evidence_ref": null
+          },
+          "expansion_handles": []
+        },
+        "diagnostics": [
+          {
+            "code": "READ_INPUT_INVALID",
+            "stage": "input",
+            "severity": "error",
+            "subject": null,
+            "field": null
+          }
+        ],
+        "omissions": [],
+        "assessment": {
+          "state": "not_evaluated",
+          "kind": null,
+          "assessor_id": null,
+          "evidence_ref": null
+        }
+      },
+      "diagnostics": []
+    },
+    "valid": true
+  },
+  {
+    "id": "DIAG-PROJECTED-TOP-WARNING",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadProjection",
+    "data": {
+      "status": "projected",
+      "body": {
+        "asset": {
+          "asset_id": "asset-1",
+          "asset_version": "1.0.0",
+          "judgment_version": "1.0.0"
+        },
+        "tuple": {
+          "container": "0.2.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.2.0",
+          "core": "kdna.core/0.2.0",
+          "ir": "kdna.canonical-ir/0.1.0",
+          "runtime": "kdna.runtime-capsule/0.2.0",
+          "plan": "kdna.consumption-plan/0.2.0",
+          "host": "kdna.agent-host/0.2.0",
+          "trace": "kdna.judgment-trace/0.2.0",
+          "read": "kdna.read/0.1.0"
+        },
+        "digests": {
+          "A": {
+            "basis": "container_bytes",
+            "profile": "kdna.digest-basis.container-bytes",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "C": {
+            "basis": "content_tree",
+            "profile": "kdna.digest-basis.content-tree",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "E": {
+            "basis": "runtime_entry_set",
+            "profile": "kdna.digest-basis.runtime-entry-set",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          }
+        },
+        "snapshot_id": "snapshot-1",
+        "content": {
+          "declarations": [],
+          "catalog": [],
+          "selected": null,
+          "closure": [],
+          "references": [],
+          "relationships": [],
+          "missing": [],
+          "provenance": {
+            "declarations": [],
+            "confirmation": "not_evaluated",
+            "verifier_id": null,
+            "evidence_ref": null
+          },
+          "expansion_handles": []
+        },
+        "diagnostics": [],
+        "omissions": [],
+        "assessment": {
+          "state": "not_evaluated",
+          "kind": null,
+          "assessor_id": null,
+          "evidence_ref": null
+        }
+      },
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "warning",
+          "subject": null,
+          "field": null
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "id": "DIAG-PROJECTED-TOP-ERROR",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadProjection",
+    "data": {
+      "status": "projected",
+      "body": {
+        "asset": {
+          "asset_id": "asset-1",
+          "asset_version": "1.0.0",
+          "judgment_version": "1.0.0"
+        },
+        "tuple": {
+          "container": "0.2.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.2.0",
+          "core": "kdna.core/0.2.0",
+          "ir": "kdna.canonical-ir/0.1.0",
+          "runtime": "kdna.runtime-capsule/0.2.0",
+          "plan": "kdna.consumption-plan/0.2.0",
+          "host": "kdna.agent-host/0.2.0",
+          "trace": "kdna.judgment-trace/0.2.0",
+          "read": "kdna.read/0.1.0"
+        },
+        "digests": {
+          "A": {
+            "basis": "container_bytes",
+            "profile": "kdna.digest-basis.container-bytes",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "C": {
+            "basis": "content_tree",
+            "profile": "kdna.digest-basis.content-tree",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "E": {
+            "basis": "runtime_entry_set",
+            "profile": "kdna.digest-basis.runtime-entry-set",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          }
+        },
+        "snapshot_id": "snapshot-1",
+        "content": {
+          "declarations": [],
+          "catalog": [],
+          "selected": null,
+          "closure": [],
+          "references": [],
+          "relationships": [],
+          "missing": [],
+          "provenance": {
+            "declarations": [],
+            "confirmation": "not_evaluated",
+            "verifier_id": null,
+            "evidence_ref": null
+          },
+          "expansion_handles": []
+        },
+        "diagnostics": [],
+        "omissions": [],
+        "assessment": {
+          "state": "not_evaluated",
+          "kind": null,
+          "assessor_id": null,
+          "evidence_ref": null
+        }
+      },
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "id": "DIAG-PROJECTED-INTERNAL-UNKNOWN",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "ReadProjection",
+    "data": {
+      "status": "projected",
+      "body": {
+        "asset": {
+          "asset_id": "asset-1",
+          "asset_version": "1.0.0",
+          "judgment_version": "1.0.0"
+        },
+        "tuple": {
+          "container": "0.2.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.2.0",
+          "core": "kdna.core/0.2.0",
+          "ir": "kdna.canonical-ir/0.1.0",
+          "runtime": "kdna.runtime-capsule/0.2.0",
+          "plan": "kdna.consumption-plan/0.2.0",
+          "host": "kdna.agent-host/0.2.0",
+          "trace": "kdna.judgment-trace/0.2.0",
+          "read": "kdna.read/0.1.0"
+        },
+        "digests": {
+          "A": {
+            "basis": "container_bytes",
+            "profile": "kdna.digest-basis.container-bytes",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "C": {
+            "basis": "content_tree",
+            "profile": "kdna.digest-basis.content-tree",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "E": {
+            "basis": "runtime_entry_set",
+            "profile": "kdna.digest-basis.runtime-entry-set",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          }
+        },
+        "snapshot_id": "snapshot-1",
+        "content": {
+          "declarations": [],
+          "catalog": [],
+          "selected": null,
+          "closure": [],
+          "references": [],
+          "relationships": [],
+          "missing": [],
+          "provenance": {
+            "declarations": [],
+            "confirmation": "not_evaluated",
+            "verifier_id": null,
+            "evidence_ref": null
+          },
+          "expansion_handles": []
+        },
+        "diagnostics": [
+          {
+            "code": "READ_INPUT_INVALID",
+            "stage": "input",
+            "severity": "info",
+            "subject": null,
+            "field": null
+          }
+        ],
+        "omissions": [],
+        "assessment": {
+          "state": "not_evaluated",
+          "kind": null,
+          "assessor_id": null,
+          "evidence_ref": null
+        }
+      },
+      "diagnostics": []
+    },
+    "valid": false
+  },
+  {
+    "id": "DIAG-IR-NODE-ERROR",
+    "schema": "specs/canonical-ir.schema.json",
+    "definition": "IRNode_diagnostic",
+    "data": {
+      "id": "diagnostic-1",
+      "role": "diagnostic",
+      "owner_judgment_id": null,
+      "value": {
+        "code": "READ_INPUT_INVALID",
+        "stage": "input",
+        "severity": "error",
+        "subject": null,
+        "field": null
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "DIAG-IR-NODE-WARNING",
+    "schema": "specs/canonical-ir.schema.json",
+    "definition": "IRNode_diagnostic",
+    "data": {
+      "id": "diagnostic-1",
+      "role": "diagnostic",
+      "owner_judgment_id": null,
+      "value": {
+        "code": "READ_INPUT_INVALID",
+        "stage": "input",
+        "severity": "warning",
+        "subject": null,
+        "field": null
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "DIAG-IR-NODE-INFO",
+    "schema": "specs/canonical-ir.schema.json",
+    "definition": "IRNode_diagnostic",
+    "data": {
+      "id": "diagnostic-1",
+      "role": "diagnostic",
+      "owner_judgment_id": null,
+      "value": {
+        "code": "READ_INPUT_INVALID",
+        "stage": "input",
+        "severity": "info",
+        "subject": null,
+        "field": null
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "DIAG-IR-ROOT-WARNING",
+    "schema": "specs/canonical-ir.schema.json",
+    "definition": "CanonicalIR",
+    "data": {
+      "contract": "kdna.canonical-ir/0.1.0",
+      "tuple": {
+        "container": "0.2.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.2.0",
+        "core": "kdna.core/0.2.0",
+        "ir": "kdna.canonical-ir/0.1.0",
+        "runtime": "kdna.runtime-capsule/0.2.0",
+        "plan": "kdna.consumption-plan/0.2.0",
+        "host": "kdna.agent-host/0.2.0",
+        "trace": "kdna.judgment-trace/0.2.0",
+        "read": "kdna.read/0.1.0"
+      },
+      "asset": {
+        "asset_id": "asset-1",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "nodes": [
+        {
+          "id": "diagnostic-1",
+          "role": "diagnostic",
+          "owner_judgment_id": null,
+          "value": {
+            "code": "READ_INPUT_INVALID",
+            "stage": "input",
+            "severity": "warning",
+            "subject": null,
+            "field": null
+          }
+        }
+      ],
+      "catalog": [],
+      "references": [],
+      "relationships": [],
+      "mandatory_closures": [],
+      "expansion_targets": []
+    },
+    "valid": true
+  }
+]

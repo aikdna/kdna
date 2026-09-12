@@ -1,0 +1,253 @@
+{
+  "accepted_designs": [
+    {
+      "bytes": 4870,
+      "path": "SPEC-INDEX.md",
+      "sha256": "34d6a900d065ff4239dd6c8359cbdb9c7b0ee56caa91713e6761c41997515091"
+    },
+    {
+      "bytes": 183385,
+      "path": "conformance/public-contract-decision-vectors.json",
+      "sha256": "5c22f92527fd93c85c04a1d28d3790455ea5cd06c0df94c56f8fd7446be9e843"
+    },
+    {
+      "bytes": 26836,
+      "path": "specs/public-contract-decisions.json",
+      "sha256": "ab20a236db86dc0d3e028c1cecd7963ff1d368e0d2cc2f56a1ce1686754c832a"
+    },
+    {
+      "bytes": 11787,
+      "path": "specs/public-source-map.json",
+      "sha256": "d95cc49644013d3eec5a99ae43d90915fd08c9e837dbd64488d62c76aa3a778b"
+    },
+    {
+      "bytes": 7459,
+      "path": "specs/public-version-policy.md",
+      "sha256": "3f144259b3ef8eef60728c75a8533147f40ccca556710257ad139bf7d6072418"
+    },
+    {
+      "bytes": 52328,
+      "path": "specs/read-contract.md",
+      "sha256": "806b7c10827a4f01ba3fd157ffc1b93397cd2514a3f0e13f98e177258f2b3a4d"
+    }
+  ],
+  "algorithm": {
+    "aggregate": "derived rows sorted by unsigned UTF-8 path; row keys path,bytes,sha256; compact JSON.stringify UTF-8; no LF; SHA-256",
+    "file_encoding": "recursive object keys sorted by JavaScript string sort; arrays preserve source order; JSON.stringify 2 spaces; UTF-8; one LF"
+  },
+  "derived": [
+    {
+      "bytes": 12100,
+      "path": "schema/manifest-0.2.schema.json",
+      "sha256": "5d0be457f4a59f8debf6f1c2e4b16adfb468b1024abd71da92fc2f652acd2cea"
+    },
+    {
+      "bytes": 37803,
+      "path": "schema/payload-profile-0.2.schema.json",
+      "sha256": "388dbf1104737e6859cc86d448761136b252a672fa4a5cac91d3ea32e50f4182"
+    },
+    {
+      "bytes": 82538,
+      "path": "specs/canonical-ir.schema.json",
+      "sha256": "9ba2ea3a86bd722f076d4218238bfdf34d53355601c226a419a29a0edf9a6a79"
+    },
+    {
+      "bytes": 10803,
+      "path": "specs/public-diagnostics.json",
+      "sha256": "9739063ea50d59e519e38826fa81613c04719f86fd13ea09897c294cab22372d"
+    },
+    {
+      "bytes": 46151,
+      "path": "specs/public-vocabulary.json",
+      "sha256": "ced620d18015887fe352f3309e4fb059cf92799cb1c5c0a7f8ff51d56ba70a2b"
+    },
+    {
+      "bytes": 124359,
+      "path": "specs/read-contract.schema.json",
+      "sha256": "47517ef119fa778c43820c8b6507fdd5a36e8a493bdc03dde1c9bbb92aa8ba30"
+    },
+    {
+      "bytes": 110832,
+      "path": "specs/read-transport-admission.schema.json",
+      "sha256": "6060273a80c46c9132ed2cdab9fd7a1854ccfb29aea19578fa1dfd2025d0b9ec"
+    }
+  ],
+  "derived_aggregate_sha256": "d2a2d74a43410392bb9ae66bdbdad091a13bc535e5051f7d38a179240720d4e8",
+  "excluded": [
+    "specs/public-generation-manifest.json",
+    "docs/audits/2026-09-06-open-wave1-machine-source-implementation.json",
+    "docs/audits/2026-09-06-open-wave1-machine-source-independent-acceptance.md"
+  ],
+  "format": "kdna.public-generation-manifest/1",
+  "integration": [
+    {
+      "bytes": 736,
+      "path": "conformance/public-contract/adapter-contract.json",
+      "sha256": "6feea9d439a736d3c162f65f31b7488ad1edbf3f14ff8261cbdcedfd9e4005c4"
+    },
+    {
+      "bytes": 3014,
+      "path": "conformance/public-contract/ir-retention-vectors.generated.json",
+      "sha256": "2157c26a5abb613defea4b2d64b47a813b8fc5fe41732d846e4d8a2bbbb2048c"
+    },
+    {
+      "bytes": 183385,
+      "path": "conformance/public-contract/vectors.generated.json",
+      "sha256": "d28ac6e5737469306397121650d4a738cd0cc555fb407f063274a7d500ec0dfc"
+    },
+    {
+      "bytes": 82538,
+      "path": "packages/kdna-core/schema/canonical-ir-0.2.schema.json",
+      "sha256": "9ba2ea3a86bd722f076d4218238bfdf34d53355601c226a419a29a0edf9a6a79"
+    },
+    {
+      "bytes": 12100,
+      "path": "packages/kdna-core/schema/manifest-0.2.schema.json",
+      "sha256": "5d0be457f4a59f8debf6f1c2e4b16adfb468b1024abd71da92fc2f652acd2cea"
+    },
+    {
+      "bytes": 37803,
+      "path": "packages/kdna-core/schema/payload-profile-0.2.schema.json",
+      "sha256": "388dbf1104737e6859cc86d448761136b252a672fa4a5cac91d3ea32e50f4182"
+    },
+    {
+      "bytes": 10803,
+      "path": "packages/kdna-core/schema/public-diagnostics.json",
+      "sha256": "9739063ea50d59e519e38826fa81613c04719f86fd13ea09897c294cab22372d"
+    },
+    {
+      "bytes": 46151,
+      "path": "packages/kdna-core/schema/public-vocabulary.json",
+      "sha256": "ced620d18015887fe352f3309e4fb059cf92799cb1c5c0a7f8ff51d56ba70a2b"
+    },
+    {
+      "bytes": 213,
+      "path": "packages/kdna-core/src/public-contract/browser.d.ts",
+      "sha256": "910d2b4e703e18a4d2bd3f4c97eb8e13302a54cfb27f9eaf436706848703a12f"
+    },
+    {
+      "bytes": 217,
+      "path": "packages/kdna-core/src/public-contract/components.d.ts",
+      "sha256": "7312f83dcb5ba467ccd4bb1275dbca8a6086df14433c9a3bbb70c0a7886a5b82"
+    },
+    {
+      "bytes": 176729,
+      "path": "packages/kdna-core/src/public-contract/generated-contract.json",
+      "sha256": "ec8a2616a768f5523e8852487e757f6f9560d1933ea3a9ee90ead69fe1120f4d"
+    },
+    {
+      "bytes": 120044,
+      "path": "packages/kdna-core/src/public-contract/handoff-validator.generated.js",
+      "sha256": "ad7da5140d21cc32a3b7ded4c6a61fdeef123af57d89ab7d18f8438ccc8c301b"
+    },
+    {
+      "bytes": 214,
+      "path": "packages/kdna-core/src/public-contract/node.d.ts",
+      "sha256": "e43a1dca3f401ccb8a24457add8012f0e5289ffb75905646c39da36dce8d2136"
+    },
+    {
+      "bytes": 221,
+      "path": "packages/kdna-core/src/public-contract/read-boundary.d.ts",
+      "sha256": "670e6de064c631da99cd79fe666cb5efa5b348067744bdbfad52f4759853b152"
+    },
+    {
+      "bytes": 49180,
+      "path": "packages/kdna-core/src/public-contract/types.d.ts",
+      "sha256": "b9fc68a180bba5ed2e9e699190318714725d6d506f3ace5ae3e1ac6a7138e44f"
+    },
+    {
+      "bytes": 1801615,
+      "path": "packages/kdna-core/src/public-contract/validators.generated.js",
+      "sha256": "5c5cbf99ce24e88d0a1db005049f861e9bd2997b6a663665177609ab9ea1f4e0"
+    },
+    {
+      "bytes": 124359,
+      "path": "packages/kdna-read/schema/read-contract-0.2.schema.json",
+      "sha256": "47517ef119fa778c43820c8b6507fdd5a36e8a493bdc03dde1c9bbb92aa8ba30"
+    },
+    {
+      "bytes": 110832,
+      "path": "packages/kdna-read/schema/read-transport-admission-0.1.schema.json",
+      "sha256": "6060273a80c46c9132ed2cdab9fd7a1854ccfb29aea19578fa1dfd2025d0b9ec"
+    },
+    {
+      "bytes": 414,
+      "path": "packages/kdna-read/src/browser.d.ts",
+      "sha256": "ffed4b5806dee908feac2beca8704cd6a3b79d1ab11706d5acfdc32e3fe9cea1"
+    },
+    {
+      "bytes": 873,
+      "path": "packages/kdna-read/src/embedding.d.ts",
+      "sha256": "179c22a6002139b90dd711d8fbabbe3425789cf49d73ad85682467bc23c5848a"
+    },
+    {
+      "bytes": 496,
+      "path": "packages/kdna-read/src/index.d.ts",
+      "sha256": "62f043a30eb38c2d7f9a0ce93a773e45cfe269e723a555d70681ff05470edb58"
+    },
+    {
+      "bytes": 359,
+      "path": "packages/kdna-read/src/node.d.ts",
+      "sha256": "5733ca8c8be900ff68c48f5b8f58f9c9b577f2368382430be23c4af4be9ac30b"
+    },
+    {
+      "bytes": 1144,
+      "path": "packages/kdna-read/src/transport-contract.json",
+      "sha256": "3ea2795e38fbfa97a37f148bccdaa8e78f8754892cacc63902c9deac2374c2dc"
+    },
+    {
+      "bytes": 887080,
+      "path": "packages/kdna-read/src/transport-validators.generated.js",
+      "sha256": "150d3265b18d1d3d7943a3a2a6e9d8ede2de58cfc140c95caacdced7cf3f1f57"
+    },
+    {
+      "bytes": 4950,
+      "path": "packages/kdna-read/src/transport.d.ts",
+      "sha256": "d0c160d4fd1ad8555ed26c1396e688d87bb904195ed29c5528e75ed70403504a"
+    },
+    {
+      "bytes": 106,
+      "path": "packages/kdna-read/src/types.d.ts",
+      "sha256": "be0b080421d40be4402e628ba63f4c47b83b19dfec1811802ca31bc11aacc839"
+    },
+    {
+      "bytes": 8721,
+      "path": "specs/component-semantics.md",
+      "sha256": "57cf168629cb6271ec462e94f373843d594f732a3618acf1d6107c76dcb17a94"
+    }
+  ],
+  "proof_limits": [
+    "Schema compilation/validation only; non-schema obligations not implemented",
+    "No Core/Read/Host runtime or 94-seed execution",
+    "No full generated vectors/JS-language types/SDK parity",
+    "No publication, registry availability, Reader product or Open Complete",
+    "Opaque runtime-only types deliberately compile to false for all JSON values; their data views never confer trust"
+  ],
+  "scripts": [
+    {
+      "bytes": 23577,
+      "path": "scripts/public-contract/generate.mjs",
+      "sha256": "6ac6a9b442636ad26ecc199f9cd9dce5e5506b28131c128cfea51077d68a3ce4"
+    },
+    {
+      "bytes": 4636,
+      "path": "scripts/public-contract/verify.mjs",
+      "sha256": "91b2c4aea45d7d2d169d3b4ab3866556ed79b6c936f9c730320889241149c14f"
+    }
+  ],
+  "source": {
+    "bytes": 252203,
+    "path": "specs/public-semantic-source.json",
+    "sha256": "862cea95bdb3a634356ad729b95e0882cb0b75fdb80f103a11f4037783899110"
+  },
+  "status": "UNPUBLISHED_GENERATED_STRUCTURE",
+  "tools": {
+    "declared_validator": {
+      "ajv": "8.20.0",
+      "no_installation_claim": true,
+      "node": "26.5.0",
+      "schema_validator": "Ajv2020"
+    },
+    "generator_node": "26.5.0"
+  }
+}

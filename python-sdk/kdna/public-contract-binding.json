@@ -1,0 +1,32 @@
+{
+  "format": "kdna.consumer-exact-binding/1",
+  "implementation": {
+    "name": "aikdna",
+    "version": "0.8.0rc2"
+  },
+  "tuple": {
+    "container": "0.2.0",
+    "core": "kdna.core/0.3.0",
+    "host": "kdna.agent-host/0.2.0",
+    "ir": "kdna.canonical-ir/0.2.0",
+    "payload_profile": "kdna.payload.judgment",
+    "payload_version": "0.2.0",
+    "plan": "kdna.consumption-plan/0.2.0",
+    "read": "kdna.read/0.2.0",
+    "runtime": "kdna.runtime-capsule/0.2.0",
+    "trace": "kdna.judgment-trace/0.2.0"
+  },
+  "semantic_source_sha256": "862cea95bdb3a634356ad729b95e0882cb0b75fdb80f103a11f4037783899110",
+  "generated_contract_sha256": "ec8a2616a768f5523e8852487e757f6f9560d1933ea3a9ee90ead69fe1120f4d",
+  "accepted_core": {
+    "version": "0.24.0-rc.component-semantics.2",
+    "tar_sha256": "a9cb3f08735b00657e4848766f0ac517abdcb256121a841f01e662525a0858ea"
+  },
+  "accepted_read": {
+    "version": "0.3.0-rc.component-semantics.2",
+    "tar_sha256": "43d0f12a1a63a88d26570bfff821919a5cd478fdbd0568bd9c819bc56078b0f0"
+  },
+  "release_state": "LOCAL_RC_ONLY_UNPUBLISHED",
+  "authority_limit": "Technical admission and explicit local read permission do not authorize actions or establish authorship/Creation acceptance.",
+  "component_definition_digest": "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3"
+}

@@ -1,0 +1,229 @@
+{
+  "document_kind": "PUBLIC_DESIGN_SOURCE_PLAN_NOT_GENERATOR_INPUT",
+  "status": "UNPUBLISHED_COMPONENT_SEMANTICS_CANDIDATE",
+  "single_machine_editable_source": {
+    "path": "specs/public-semantic-source.json",
+    "writer": "Open-A",
+    "status": "PRESENT_UNPUBLISHED",
+    "scope": "public type/rule/scalar/vocabulary/diagnostic/IR/Read definitions, version registry, canonical generation metadata and generated vector specifications; finite component grammar, binding, interpretation and explicit field presence"
+  },
+  "design_inputs": [
+    "specs/public-contract-decisions.json",
+    "specs/public-version-policy.md",
+    "specs/read-contract.md",
+    "conformance/public-contract-decision-vectors.json"
+  ],
+  "design_input_rule": "These are human-reviewed design requirements and independent seed examples, not parallel editable machine semantics or generators. The next authorized source must encode the accepted choices. Derived targets only originate from that one source; disagreements stop generation, never prefer a consumer mirror.",
+  "edges": [
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "schema/manifest-0.2.schema.json",
+      "writer": "A",
+      "role": "generated derivative, never separately hand-authored semantics",
+      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
+      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "invalidation_closure": [
+        "source types/rules/scalars/vocabulary/version changes",
+        "all affected derived schemas/types/diagnostics/vectors",
+        "dependent Core and Read accepted tuple",
+        "language/application mirrors and compatibility receipts"
+      ]
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "schema/payload-profile-0.2.schema.json",
+      "writer": "A",
+      "role": "generated derivative, never separately hand-authored semantics",
+      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
+      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "invalidation_closure": [
+        "source types/rules/scalars/vocabulary/version changes",
+        "all affected derived schemas/types/diagnostics/vectors",
+        "dependent Core and Read accepted tuple",
+        "language/application mirrors and compatibility receipts"
+      ]
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "specs/canonical-ir.schema.json",
+      "writer": "A",
+      "role": "generated derivative, never separately hand-authored semantics",
+      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
+      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "invalidation_closure": [
+        "source types/rules/scalars/vocabulary/version changes",
+        "all affected derived schemas/types/diagnostics/vectors",
+        "dependent Core and Read accepted tuple",
+        "language/application mirrors and compatibility receipts"
+      ]
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "specs/read-contract.schema.json",
+      "writer": "A",
+      "role": "generated derivative, never separately hand-authored semantics",
+      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
+      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "invalidation_closure": [
+        "source types/rules/scalars/vocabulary/version changes",
+        "all affected derived schemas/types/diagnostics/vectors",
+        "dependent Core and Read accepted tuple",
+        "language/application mirrors and compatibility receipts"
+      ]
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "specs/public-diagnostics.json",
+      "writer": "A",
+      "role": "generated derivative, never separately hand-authored semantics",
+      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
+      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "invalidation_closure": [
+        "source types/rules/scalars/vocabulary/version changes",
+        "all affected derived schemas/types/diagnostics/vectors",
+        "dependent Core and Read accepted tuple",
+        "language/application mirrors and compatibility receipts"
+      ]
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "specs/public-vocabulary.json",
+      "writer": "A",
+      "role": "generated derivative, never separately hand-authored semantics",
+      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
+      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "invalidation_closure": [
+        "source types/rules/scalars/vocabulary/version changes",
+        "all affected derived schemas/types/diagnostics/vectors",
+        "dependent Core and Read accepted tuple",
+        "language/application mirrors and compatibility receipts"
+      ]
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "packages/kdna-core/src/public-contract/types.d.ts",
+      "writer": "A",
+      "role": "generated derivative, never separately hand-authored semantics",
+      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
+      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "invalidation_closure": [
+        "source types/rules/scalars/vocabulary/version changes",
+        "all affected derived schemas/types/diagnostics/vectors",
+        "dependent Core and Read accepted tuple",
+        "language/application mirrors and compatibility receipts"
+      ]
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "conformance/public-contract/**",
+      "writer": "A",
+      "role": "generated derivative, never separately hand-authored semantics",
+      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
+      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "invalidation_closure": [
+        "source types/rules/scalars/vocabulary/version changes",
+        "all affected derived schemas/types/diagnostics/vectors",
+        "dependent Core and Read accepted tuple",
+        "language/application mirrors and compatibility receipts"
+      ]
+    },
+    {
+      "source": "fixed accepted normative aggregate exported from specs/public-semantic-source.json",
+      "target": "open/kdna-core-swift/Sources/KDNACore/Resources/Schemas/**",
+      "writer": "B",
+      "role": "consumer mirror only",
+      "generation_status": "PLANNED_NOT_PRESENT_FOR_NEW_DESIGN",
+      "invalidation_closure": [
+        "source aggregate or reference closure change",
+        "resource locks/IDs/schema bytes and generators",
+        "language parity and consumer artifacts; application owner cannot redefine source"
+      ]
+    },
+    {
+      "source": "fixed accepted normative aggregate exported from specs/public-semantic-source.json",
+      "target": "open/kdna/python-sdk/kdna/core/_schemas/**",
+      "writer": "B",
+      "role": "consumer mirror only",
+      "generation_status": "PLANNED_NOT_PRESENT_FOR_NEW_DESIGN",
+      "invalidation_closure": [
+        "source aggregate or reference closure change",
+        "resource locks/IDs/schema bytes and generators",
+        "language parity and consumer artifacts; application owner cannot redefine source"
+      ]
+    },
+    {
+      "source": "fixed accepted normative aggregate exported from specs/public-semantic-source.json",
+      "target": "open/kdna-web-client/vendor/**",
+      "writer": "D",
+      "role": "consumer mirror only",
+      "generation_status": "PLANNED_NOT_PRESENT_FOR_NEW_DESIGN",
+      "invalidation_closure": [
+        "source aggregate or reference closure change",
+        "resource locks/IDs/schema bytes and generators",
+        "language parity and consumer artifacts; application owner cannot redefine source"
+      ]
+    },
+    {
+      "source": "fixed accepted normative aggregate exported from specs/public-semantic-source.json",
+      "target": "open/kdna-react/vendor/**",
+      "writer": "D",
+      "role": "consumer mirror only",
+      "generation_status": "PLANNED_NOT_PRESENT_FOR_NEW_DESIGN",
+      "invalidation_closure": [
+        "source aggregate or reference closure change",
+        "resource locks/IDs/schema bytes and generators",
+        "language parity and consumer artifacts; application owner cannot redefine source"
+      ]
+    },
+    {
+      "source": "fixed accepted normative aggregate exported from specs/public-semantic-source.json",
+      "target": "open/kdna-web-client/src/generated/runtime-validators.js",
+      "writer": "D",
+      "role": "consumer mirror only",
+      "generation_status": "PLANNED_NOT_PRESENT_FOR_NEW_DESIGN",
+      "invalidation_closure": [
+        "source aggregate or reference closure change",
+        "resource locks/IDs/schema bytes and generators",
+        "language parity and consumer artifacts; application owner cannot redefine source"
+      ]
+    },
+    {
+      "source": "fixed accepted normative aggregate exported from specs/public-semantic-source.json",
+      "target": "open/kdna-react/src/generated/runtime-validators.js",
+      "writer": "D",
+      "role": "consumer mirror only",
+      "generation_status": "PLANNED_NOT_PRESENT_FOR_NEW_DESIGN",
+      "invalidation_closure": [
+        "source aggregate or reference closure change",
+        "resource locks/IDs/schema bytes and generators",
+        "language parity and consumer artifacts; application owner cannot redefine source"
+      ]
+    },
+    {
+      "source": "specs/public-semantic-source.json#/component_semantics",
+      "target": "specs/component-semantics.md",
+      "role": "generated definition explanation, no independently editable semantics"
+    }
+  ],
+  "handwritten_decision_vectors": "Current contract-decision-vectors are frozen acceptance input seeds, not the generated conformance/public-contract/** output authority. Implementations may not rewrite these expected results to pass.",
+  "normative_aggregate": "BOUND_BY_specs/public-generation-manifest.json_NOT_ACCEPTANCE",
+  "decision_artifact_aggregate": "Six-file exact byte map returned separately, not a full normative/generated closure.",
+  "role_sequence": [
+    "A design acceptance → one semantic source/generated normative aggregate → JS Core/Read",
+    "B Swift/CLI/Python after A; same-repo Python sequential; B E-OBS-01 environment evidence",
+    "D App Shared prerequisite → C Studio Swift",
+    "C Agent/MCP/Studio and D remaining consumers only after exact dependency acceptance"
+  ],
+  "current_authority": "Single public semantic source with component semantics, Core/IR/Read 0.3/0.2/0.2; acceptance and publication separate.",
+  "pd273_retention": {
+    "authority": "PD273 / OPEN-IR-RETENTION-DISPOSITION-PD273",
+    "carrier": "IRNode_asset_declaration.value / PublicAssetDeclaration",
+    "fields": {
+      "content_risk": "optional RiskState",
+      "extensions": "optional ordered Extension[]"
+    },
+    "presence": "Copy only own present keys from the same Core-validated Payload. No defaults; absence differs from an explicit empty array.",
+    "meaning": "Risk is an authored declaration, not verified quality or permission. Noncritical extensions retain typed opaque SemanticValue and array order; unsupported critical semantics still reject interpretation.",
+    "projection": "Necessary asset declarations remain in whole_asset/exact_selection/related expand; catalog may omit declarations with not_in_mode. Preserve Host scope, error order, and complete final-body budgeting."
+  }
+}

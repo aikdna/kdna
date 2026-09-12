@@ -26,6 +26,12 @@ function argValue(name, fallback = null) {
   return index >= 0 && args[index + 1] ? args[index + 1] : fallback;
 }
 
+if(process.argv.includes('--public-contract')){
+ const {runPublicContractVectors}=require('../public-contract/index.js');
+ const result=runPublicContractVectors({runtime:argValue('--runtime'),output:argValue('--output'),sourceRoot:argValue('--source-root',path.resolve(__dirname,'../../..'))});
+ process.stdout.write(result.stdout);process.stderr.write(result.stderr);process.exit(result.exit_code??2);
+}
+
 const impl = argValue('--impl', '@aikdna/kdna-core');
 
 let core;
