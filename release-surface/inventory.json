@@ -1,0 +1,48 @@
+{
+  "document_type": "kdna.repository-inventory",
+  "schema_version": "0.1.0",
+  "scope": "@aikdna/kdna-monorepo public repository",
+  "authority": "Declaration of what must be tracked, what may be present untracked, and what may be present ignored. Verified against real git state by scripts/check-inventory.cjs; it is not a self-report.",
+  "why": "A broad .gitignore pattern can hide a file that must travel with the repository, so the loss is invisible to `git status` and to any review that counts status lines. This declaration makes that ignore surface explicit and checkable, and it keeps internal acceptance material out of the public surface.",
+  "tracked_count": 1356,
+  "must_track_globs": [
+    "python-sdk/kdna/core/_schemas/*.json",
+    "packages/kdna-core/schema/*.json",
+    "schema/*.json",
+    "packages/kdna-conformance/public-contract/**"
+  ],
+  "allowed_untracked_globs": [],
+  "allowed_ignored_globs": [
+    "docs/audits/2026-09-*",
+    "docs/audits/OPEN-WAVE0-PUBLIC-BASELINE.json",
+    "python-sdk/delivery/**",
+    "node_modules/**",
+    ".npm-cache/**",
+    ".ecosystem-repos/**",
+    "release-evidence/**",
+    "conformance/fixtures/generated/**",
+    "python-sdk/dist/**",
+    "python-sdk/build/**",
+    "python-sdk/kdna.egg-info/**",
+    "python-sdk/*.egg-info/**",
+    "python-sdk/.venv/**",
+    "python-sdk/venv/**",
+    "**/__pycache__/**",
+    ".pytest_cache/**",
+    "*.pyc",
+    "*.tgz",
+    "*.log",
+    "npm-debug.log*",
+    ".DS_Store",
+    ".env",
+    ".npmrc"
+  ],
+  "notes": [
+    "must_track_globs are files that MUST travel: every path matching them that is present on disk has to be tracked. They are the packaged schemas and the public contract vectors a clean clone needs to install and run.",
+    "A must-track glob may be added but the four required ones cannot be removed; scripts/check-inventory.cjs holds them, plus the forbidden-tracked globs, as hard invariants of its own.",
+    "allowed_ignored_globs is the reviewed exception list. Anything present but ignored that is not listed here is a failure, because it means the ignore surface changed without a declaration.",
+    "The first three allowed_ignored_globs are D1 rule (b) internal material: internal acceptance records carrying workstation/recovery paths. They are declared here so the ignore surface is a reviewable decision, and they are also forbidden-tracked in scripts/check-inventory.cjs so `git add -f` cannot publish them.",
+    "allowed_untracked_globs is empty on purpose: this repository declares that a correct working tree has zero present-but-untracked files.",
+    "tracked_count is the exact number of tracked files. Re-pin it in the same change that adds or removes tracked files; the gate prints the command in its failure message."
+  ]
+}
