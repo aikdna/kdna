@@ -222,7 +222,12 @@ function main(argv) {
 
   const { counts, failures } = result;
   if (failures.length > 0) {
-    for (const failure of failures) console.error(`INVENTORY FAIL: ${failure}`);
+    const cap = 50;
+    for (const failure of failures.slice(0, cap)) console.error(`INVENTORY FAIL: ${failure}`);
+    if (failures.length > cap) {
+      console.error(`INVENTORY FAIL: ... and ${failures.length - cap} more not shown`);
+    }
+    console.error(`check-inventory: ${failures.length} failure(s)`);
     return 1;
   }
   console.log(`${SUCCESS_LINE} — declared and git-visible sets agree; no hidden in-repository bytes.`);
