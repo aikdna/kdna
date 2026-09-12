@@ -7,10 +7,20 @@ const os = require('node:os');
 const path = require('node:path');
 
 const core = require('../src');
+const compatibility = require('../src/loader-compatibility');
 const packageMetadata = require('../package.json');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..', '..');
 const SOURCE_FIXTURE = path.join(REPO_ROOT, 'examples', 'minimal');
+
+// The release triple of the current loader package coordinate. The prerelease
+// or build suffix is deliberately excluded: by the load contract only these
+// three numeric components take part in a compatibility comparison.
+const LOADER_NUMERIC = packageMetadata.version
+  .split(/[-+]/u)[0]
+  .split('.')
+  .map((part) => Number(part));
+const LOADER_RELEASE_TRIPLE = LOADER_NUMERIC.join('.');
 
 function withAsset(minLoaderVersion, callback) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-loader-compatibility-'));
@@ -33,9 +43,13 @@ function withAsset(minLoaderVersion, callback) {
   }
 }
 
-test('loader coordinate is the strict current package version', () => {
-  assert.equal(core.KDNA_LOADER_VERSION, '0.22.0');
+test('the loader package coordinate is the current package version and may carry a suffix', () => {
   assert.equal(core.KDNA_LOADER_VERSION, packageMetadata.version);
+  assert.deepEqual(
+    compatibility.parseLoaderCoordinate(core.KDNA_LOADER_VERSION),
+    LOADER_NUMERIC.map((part) => String(part)),
+  );
+  assert.deepEqual(compatibility.parseLoaderCoordinate('0.19.0'), ['0', '19', '0']);
   assert.deepEqual(core.parseLoaderVersion('0.19.0'), ['0', '19', '0']);
 });
 
@@ -72,22 +86,70 @@ test('strict loader parser rejects leading zeros, prefixes, prereleases, build m
   }
 });
 
+test('loader package coordinate may carry a prerelease or build suffix, its three numbers may not be lax', () => {
+  assert.deepEqual(compatibility.parseLoaderCoordinate('0.24.0-rc.component-semantics.2'), ['0', '24', '0']);
+  assert.deepEqual(compatibility.parseLoaderCoordinate('0.24.0+build.7'), ['0', '24', '0']);
+  assert.deepEqual(compatibility.parseLoaderCoordinate('0.24.0-rc.1+build.7'), ['0', '24', '0']);
+  for (const value of [
+    '00.24.0-rc.1',
+    '0.024.0-rc.1',
+    '0.24.00-rc.1',
+    'v0.24.0-rc.1',
+    '0.24-rc.1',
+    '0.24.0.1-rc.1',
+    ' 0.24.0-rc.1',
+    '0.24.0-rc.1 ',
+    '0.24.0-',
+    '0.24.0+',
+  ]) {
+    assert.equal(compatibility.parseLoaderCoordinate(value), null, value);
+  }
+});
+
+test('compatibility compares the three numeric components only, so a suffix never lowers the loader', () => {
+  // plain SemVer precedence would sort the prerelease below its own release and
+  // make the loader fail a requirement it satisfies
+  assert.equal(core.compareLoaderVersions('0.24.0', '0.24.0-rc.component-semantics.2'), 0);
+  assert.equal(core.compareLoaderVersions('0.24.1', '0.24.0-rc.1'), 1);
+  assert.equal(core.compareLoaderVersions('0.23.999999999999999999999', '0.24.0-rc.1'), -1);
+
+  const satisfied = core.assessLoaderCompatibility({
+    compatibility: { min_loader_version: LOADER_RELEASE_TRIPLE },
+  });
+  assert.equal(satisfied.loader_version, packageMetadata.version);
+  assert.equal(satisfied.min_loader_version, LOADER_RELEASE_TRIPLE);
+  assert.equal(satisfied.loader_compatible, true);
+  const blocked = core.assessLoaderCompatibility({
+    compatibility: { min_loader_version: `${LOADER_NUMERIC[0]}.${LOADER_NUMERIC[1]}.${LOADER_NUMERIC[2] + 1}` },
+  });
+  assert.equal(blocked.loader_compatible, false);
+});
+
+test('a suffixed min_loader_version stays a schema failure, not a compatibility result', () => {
+  for (const value of [`${LOADER_RELEASE_TRIPLE}-rc.1`, `${LOADER_RELEASE_TRIPLE}+build.7`, 'v0.24.0', '00.24.0']) {
+    assert.equal(core.parseLoaderVersion(value), null, value);
+    const assessed = core.assessLoaderCompatibility({
+      compatibility: { min_loader_version: value },
+    });
+    assert.equal(assessed.min_loader_version, value);
+    assert.equal(assessed.loader_compatible, null, value);
+  }
+});
+
 test('inspect, validate, default verify, plan, and load agree on loader compatibility', () => {
   const vectors = [
     { required: '0.18.999999999999999999999', compatible: true },
-    { required: '0.19.0', compatible: true },
-    { required: '0.20.0', compatible: true },
-    { required: '0.20.1', compatible: true },
-    { required: '0.21.0', compatible: true },
-    { required: '0.21.1', compatible: true },
-    { required: '0.22.0', compatible: true },
-    { required: '0.22.1', compatible: false },
+    { required: LOADER_RELEASE_TRIPLE, compatible: true },
+    {
+      required: `${LOADER_NUMERIC[0]}.${LOADER_NUMERIC[1]}.${LOADER_NUMERIC[2] + 1}`,
+      compatible: false,
+    },
     { required: '999999999999999999999.0.0', compatible: false },
   ];
   for (const vector of vectors) {
     withAsset(vector.required, (assetPath) => {
       const inspected = core.inspect(assetPath);
-      assert.equal(inspected.loader_version, '0.22.0');
+      assert.equal(inspected.loader_version, packageMetadata.version);
       assert.equal(inspected.min_loader_version, vector.required);
       assert.equal(inspected.loader_compatible, vector.compatible);
 
