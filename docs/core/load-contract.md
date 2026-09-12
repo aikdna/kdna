@@ -68,13 +68,22 @@ When the official KDNA loader opens a `.kdna` file, it MUST:
 2. If `load_contract` is present, use the profile named in `default_profile` (or the caller-requested profile if different) to determine the reading strategy.
 3. If the requested profile has `requires_decryption: true`, refuse to load without a key and emit a `requires_decryption` trace status.
 4. If the requested profile's `max_tokens_hint` is exceeded by the actual content, the loader SHOULD emit a warning trace, not silently truncate. A compact projection MUST disclose every non-empty omitted payload path and count in its projection report; prompt rendering MUST carry the same disclosure.
-5. Parse both the manifest's `compatibility.min_loader_version` and the loader
-   package coordinate as strict `x.y.z` decimal triples. Leading zeros,
-   prefixes, prerelease suffixes, build metadata, missing components, and
-   whitespace are invalid. Compare arbitrary-size components without numeric
-   truncation.
-6. If the structurally valid manifest requires a loader coordinate higher than
-   the current package coordinate, return a blocking LoadPlan with
+5. Parse the manifest's `compatibility.min_loader_version` as a strict `x.y.z`
+   decimal triple. There, leading zeros, prefixes, prerelease suffixes, build
+   metadata, missing components, and whitespace are invalid. The loader's own
+   package coordinate MAY additionally carry a SemVer prerelease or build
+   suffix (for example `0.24.0-rc.component-semantics.2`), but its three
+   numeric components are parsed with the same strictness: leading zeros,
+   missing components, and whitespace remain invalid.
+6. Compare the requirement with the loader package coordinate on the three
+   numeric components only, without numeric truncation of arbitrary-size
+   components. A prerelease or build suffix never changes the threshold —
+   `compatibility.min_loader_version` `0.24.0` is satisfied by loader package
+   coordinate `0.24.0-rc.component-semantics.2`. The comparison MUST NOT defer
+   to SemVer precedence, under which a prerelease sorts below its own release
+   and the loader would fail its own threshold. If the structurally valid
+   manifest requires a loader coordinate higher than the current package
+   coordinate, return a blocking LoadPlan with
    `KDNA_LOADER_VERSION_UNSUPPORTED`, emit `version_incompatible` Runtime
    evidence when a trace is produced, and refuse to load. This is not a
    format/schema failure.
