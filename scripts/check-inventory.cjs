@@ -198,7 +198,10 @@ function checkInventory({ root, manifestPath }) {
 
 function main(argv) {
   for (const arg of argv) {
-    if (REFUSED_INPUT_FLAGS.includes(arg)) {
+    // `--inventory foo`, `--inventory=foo` and bare `--inventory` are all the
+    // same back door: a caller handing the gate its own answer.
+    const refused = REFUSED_INPUT_FLAGS.find((flag) => arg === flag || arg.startsWith(`${flag}=`));
+    if (refused) {
       console.error(`check-inventory: refusing caller-supplied inventory input ${arg} (this gate takes its input from git, never from the caller)`);
       return 2;
     }
