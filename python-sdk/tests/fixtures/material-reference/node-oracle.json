@@ -1,0 +1,2841 @@
+{
+  "scope": "Synthetic public material reference regression; no official assets or private control paths",
+  "rows": [
+    {
+      "file": "statement-only.kdna",
+      "name": "synthetic-statement-only",
+      "expected": "accepted",
+      "core": {
+        "status": "accepted",
+        "data": {
+          "snapshot_id": "snapshot:e2ed7366-d43d-45ab-8c58-c2b20c166386",
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          },
+          "asset": {
+            "asset_id": "asset:reference-host",
+            "asset_version": "1.0.0",
+            "judgment_version": "1.0.0"
+          },
+          "digests": {
+            "A": {
+              "basis": "container_bytes",
+              "profile": "kdna.digest-basis.container-bytes",
+              "profile_version": "0.2.0",
+              "algorithm": "SHA-256",
+              "observed": "sha256:aceb8fe16aa62fb3a99ca0ab3982093ab9c854cda637be34c424c3a260af907a",
+              "comparison": {
+                "state": "not_compared",
+                "expected": null,
+                "expected_source": null
+              }
+            },
+            "C": {
+              "basis": "content_tree",
+              "profile": "kdna.digest-basis.content-tree",
+              "profile_version": "0.2.0",
+              "algorithm": "SHA-256",
+              "observed": "sha256:1f5b15448e14aad5333066156dd50bba11aca70cdd48b59a821bb751e78f0bde",
+              "comparison": {
+                "state": "not_compared",
+                "expected": null,
+                "expected_source": null
+              }
+            },
+            "E": {
+              "basis": "runtime_entry_set",
+              "profile": "kdna.digest-basis.runtime-entry-set",
+              "profile_version": "0.2.0",
+              "algorithm": "SHA-256",
+              "observed": "sha256:098229d9e457416b931b3294403306909426d8cae6694c4322d314f550f5b63e",
+              "comparison": {
+                "state": "not_compared",
+                "expected": null,
+                "expected_source": null
+              }
+            }
+          },
+          "ir": {
+            "contract": "kdna.canonical-ir/0.2.0",
+            "tuple": {
+              "container": "0.2.0",
+              "core": "kdna.core/0.3.0",
+              "host": "kdna.agent-host/0.2.0",
+              "ir": "kdna.canonical-ir/0.2.0",
+              "payload_profile": "kdna.payload.judgment",
+              "payload_version": "0.2.0",
+              "plan": "kdna.consumption-plan/0.2.0",
+              "read": "kdna.read/0.2.0",
+              "runtime": "kdna.runtime-capsule/0.2.0",
+              "trace": "kdna.judgment-trace/0.2.0"
+            },
+            "asset": {
+              "asset_id": "asset:reference-host",
+              "asset_version": "1.0.0",
+              "judgment_version": "1.0.0"
+            },
+            "nodes": [
+              {
+                "id": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                "role": "asset_declaration",
+                "owner_judgment_id": null,
+                "value": {
+                  "title": "Reference Host synthetic fixture",
+                  "access": "public"
+                }
+              },
+              {
+                "id": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                "role": "scope",
+                "owner_judgment_id": null,
+                "value": {
+                  "statement": "Only the reference Host conformance fixture"
+                }
+              },
+              {
+                "id": "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                "role": "actor",
+                "owner_judgment_id": null,
+                "value": {
+                  "id": "actor:author",
+                  "kind": "person",
+                  "name": "Synthetic author"
+                }
+              },
+              {
+                "id": "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                "role": "material",
+                "owner_judgment_id": null,
+                "value": {
+                  "id": "material:fixture",
+                  "kind": "attachment",
+                  "statement": "CC0 synthetic statement material.",
+                  "source_refs": []
+                }
+              },
+              {
+                "id": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "judgment",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "id": "judgment:0",
+                  "label": "Unit 0",
+                  "focus": "Focus 0",
+                  "subject": {
+                    "actor_ids": [
+                      "actor:author"
+                    ],
+                    "statement": "A synthetic subject"
+                  },
+                  "scope": {
+                    "statement": "Synthetic integration scope"
+                  },
+                  "result_contract": {
+                    "id": "contract:0",
+                    "form": {
+                      "term": "result.form.assertion"
+                    },
+                    "shape": {
+                      "kind": "scalar",
+                      "scalar_type": "text"
+                    },
+                    "minimum": 1,
+                    "maximum": 1,
+                    "allowed_result_types": [
+                      {
+                        "term": "result.type.text"
+                      }
+                    ]
+                  },
+                  "result": {
+                    "contract_ref": "contract:0",
+                    "result_type": {
+                      "term": "result.type.text"
+                    },
+                    "value": {
+                      "kind": "text",
+                      "value": "RESULT_SENTINEL_0"
+                    }
+                  },
+                  "material_refs": [
+                    "material:fixture"
+                  ]
+                }
+              },
+              {
+                "id": "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "subject",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "actor_ids": [
+                    "actor:author"
+                  ],
+                  "statement": "A synthetic subject"
+                }
+              },
+              {
+                "id": "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "scope",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "statement": "Synthetic integration scope"
+                }
+              },
+              {
+                "id": "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                "role": "result_contract",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "id": "contract:0",
+                  "form": {
+                    "term": "result.form.assertion"
+                  },
+                  "shape": {
+                    "kind": "scalar",
+                    "scalar_type": "text"
+                  },
+                  "minimum": 1,
+                  "maximum": 1,
+                  "allowed_result_types": [
+                    {
+                      "term": "result.type.text"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "result:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "result",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "contract_ref": "contract:0",
+                  "result_type": {
+                    "term": "result.type.text"
+                  },
+                  "value": {
+                    "kind": "text",
+                    "value": "RESULT_SENTINEL_0"
+                  }
+                }
+              }
+            ],
+            "catalog": [
+              {
+                "judgment_id": "judgment:0",
+                "label": "Unit 0",
+                "node_ref": "judgment:e350694d57314c022de4f02c10ac5afb531f63db"
+              }
+            ],
+            "references": [
+              {
+                "id": "reference:5650e6c7109b77fb70070c70fe40301e03d9ae56",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:61348dcdba248f8b074f8d776850fcf7074e109b",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:43bb4a0c97e6d1ecfbf885050d12106808d4ee61",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:e465d175253b6ebbed27d0542a697f6bf2f49f11",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:4361a742cd64b5113ef7d8a5e298302afefda030",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:e5578138a4b28130d590ecd5f14ff17d155623d4",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:fbdfa644769e4f64f2cc8cb837ea8d10ec45e7ed",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:1666db716ca63bf6eff8e96afbcf07ce15a121d0",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "result:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "mandatory_support",
+                "mandatory": true
+              }
+            ],
+            "relationships": [],
+            "mandatory_closures": [
+              {
+                "selection": {
+                  "asset_id": "asset:reference-host",
+                  "asset_version": "1.0.0",
+                  "judgment_id": "judgment:0"
+                },
+                "node_ids": [
+                  "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                  "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                  "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                  "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                  "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                  "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                  "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                  "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                  "result:e350694d57314c022de4f02c10ac5afb531f63db"
+                ]
+              }
+            ],
+            "expansion_targets": []
+          },
+          "ir_digest": "sha256:590c2930b1faf30656c7ff642048fcb5d9b46f384cbc7356ffe89371c0134443",
+          "runtime_entry_names": [
+            "kdna.json",
+            "payload.kdnab"
+          ],
+          "expansion_targets": []
+        }
+      },
+      "reads": [
+        {
+          "request": {
+            "request_id": "request:material-synthetic-statement-only-0",
+            "tuple": {
+              "container": "0.2.0",
+              "core": "kdna.core/0.3.0",
+              "host": "kdna.agent-host/0.2.0",
+              "ir": "kdna.canonical-ir/0.2.0",
+              "payload_profile": "kdna.payload.judgment",
+              "payload_version": "0.2.0",
+              "plan": "kdna.consumption-plan/0.2.0",
+              "read": "kdna.read/0.2.0",
+              "runtime": "kdna.runtime-capsule/0.2.0",
+              "trace": "kdna.judgment-trace/0.2.0"
+            },
+            "budget_bytes": 1000000,
+            "mode": "exact_selection",
+            "selection": {
+              "asset_id": "asset:reference-host",
+              "asset_version": "1.0.0",
+              "judgment_id": "judgment:0"
+            },
+            "handle": null
+          },
+          "result": {
+            "channel": "read_envelope",
+            "envelope": {
+              "contract": "kdna.read/0.2.0",
+              "request_id": "request:material-synthetic-statement-only-0",
+              "status": "ready",
+              "tuple": {
+                "container": "0.2.0",
+                "core": "kdna.core/0.3.0",
+                "host": "kdna.agent-host/0.2.0",
+                "ir": "kdna.canonical-ir/0.2.0",
+                "payload_profile": "kdna.payload.judgment",
+                "payload_version": "0.2.0",
+                "plan": "kdna.consumption-plan/0.2.0",
+                "read": "kdna.read/0.2.0",
+                "runtime": "kdna.runtime-capsule/0.2.0",
+                "trace": "kdna.judgment-trace/0.2.0"
+              },
+              "asset": {
+                "asset_id": "asset:reference-host",
+                "asset_version": "1.0.0",
+                "judgment_version": "1.0.0"
+              },
+              "snapshot_id": "snapshot:e98f8d53-8886-44c3-9265-c1736b7358a8",
+              "digests": {
+                "A": {
+                  "basis": "container_bytes",
+                  "profile": "kdna.digest-basis.container-bytes",
+                  "profile_version": "0.2.0",
+                  "algorithm": "SHA-256",
+                  "observed": "sha256:aceb8fe16aa62fb3a99ca0ab3982093ab9c854cda637be34c424c3a260af907a",
+                  "comparison": {
+                    "state": "not_compared",
+                    "expected": null,
+                    "expected_source": null
+                  }
+                },
+                "C": {
+                  "basis": "content_tree",
+                  "profile": "kdna.digest-basis.content-tree",
+                  "profile_version": "0.2.0",
+                  "algorithm": "SHA-256",
+                  "observed": "sha256:1f5b15448e14aad5333066156dd50bba11aca70cdd48b59a821bb751e78f0bde",
+                  "comparison": {
+                    "state": "not_compared",
+                    "expected": null,
+                    "expected_source": null
+                  }
+                },
+                "E": {
+                  "basis": "runtime_entry_set",
+                  "profile": "kdna.digest-basis.runtime-entry-set",
+                  "profile_version": "0.2.0",
+                  "algorithm": "SHA-256",
+                  "observed": "sha256:098229d9e457416b931b3294403306909426d8cae6694c4322d314f550f5b63e",
+                  "comparison": {
+                    "state": "not_compared",
+                    "expected": null,
+                    "expected_source": null
+                  }
+                }
+              },
+              "content": {
+                "declarations": [
+                  {
+                    "id": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                    "role": "asset_declaration",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "title": "Reference Host synthetic fixture",
+                      "access": "public"
+                    }
+                  },
+                  {
+                    "id": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                    "role": "scope",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "statement": "Only the reference Host conformance fixture"
+                    }
+                  }
+                ],
+                "catalog": [
+                  {
+                    "judgment_id": "judgment:0",
+                    "label": "Unit 0",
+                    "node_ref": "judgment:e350694d57314c022de4f02c10ac5afb531f63db"
+                  }
+                ],
+                "selected": {
+                  "asset_id": "asset:reference-host",
+                  "asset_version": "1.0.0",
+                  "judgment_id": "judgment:0"
+                },
+                "closure": [
+                  {
+                    "id": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                    "role": "asset_declaration",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "title": "Reference Host synthetic fixture",
+                      "access": "public"
+                    }
+                  },
+                  {
+                    "id": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                    "role": "scope",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "statement": "Only the reference Host conformance fixture"
+                    }
+                  },
+                  {
+                    "id": "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                    "role": "actor",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "id": "actor:author",
+                      "kind": "person",
+                      "name": "Synthetic author"
+                    }
+                  },
+                  {
+                    "id": "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                    "role": "material",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "id": "material:fixture",
+                      "kind": "attachment",
+                      "statement": "CC0 synthetic statement material.",
+                      "source_refs": []
+                    }
+                  },
+                  {
+                    "id": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "judgment",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "id": "judgment:0",
+                      "label": "Unit 0",
+                      "focus": "Focus 0",
+                      "subject": {
+                        "actor_ids": [
+                          "actor:author"
+                        ],
+                        "statement": "A synthetic subject"
+                      },
+                      "scope": {
+                        "statement": "Synthetic integration scope"
+                      },
+                      "result_contract": {
+                        "id": "contract:0",
+                        "form": {
+                          "term": "result.form.assertion"
+                        },
+                        "shape": {
+                          "kind": "scalar",
+                          "scalar_type": "text"
+                        },
+                        "minimum": 1,
+                        "maximum": 1,
+                        "allowed_result_types": [
+                          {
+                            "term": "result.type.text"
+                          }
+                        ]
+                      },
+                      "result": {
+                        "contract_ref": "contract:0",
+                        "result_type": {
+                          "term": "result.type.text"
+                        },
+                        "value": {
+                          "kind": "text",
+                          "value": "RESULT_SENTINEL_0"
+                        }
+                      },
+                      "material_refs": [
+                        "material:fixture"
+                      ]
+                    }
+                  },
+                  {
+                    "id": "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "subject",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "actor_ids": [
+                        "actor:author"
+                      ],
+                      "statement": "A synthetic subject"
+                    }
+                  },
+                  {
+                    "id": "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "scope",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "statement": "Synthetic integration scope"
+                    }
+                  },
+                  {
+                    "id": "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                    "role": "result_contract",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "id": "contract:0",
+                      "form": {
+                        "term": "result.form.assertion"
+                      },
+                      "shape": {
+                        "kind": "scalar",
+                        "scalar_type": "text"
+                      },
+                      "minimum": 1,
+                      "maximum": 1,
+                      "allowed_result_types": [
+                        {
+                          "term": "result.type.text"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "result:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "result",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "contract_ref": "contract:0",
+                      "result_type": {
+                        "term": "result.type.text"
+                      },
+                      "value": {
+                        "kind": "text",
+                        "value": "RESULT_SENTINEL_0"
+                      }
+                    }
+                  }
+                ],
+                "references": [
+                  {
+                    "id": "reference:5650e6c7109b77fb70070c70fe40301e03d9ae56",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:61348dcdba248f8b074f8d776850fcf7074e109b",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:43bb4a0c97e6d1ecfbf885050d12106808d4ee61",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:e465d175253b6ebbed27d0542a697f6bf2f49f11",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:4361a742cd64b5113ef7d8a5e298302afefda030",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:e5578138a4b28130d590ecd5f14ff17d155623d4",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:fbdfa644769e4f64f2cc8cb837ea8d10ec45e7ed",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:1666db716ca63bf6eff8e96afbcf07ce15a121d0",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "result:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  }
+                ],
+                "relationships": [],
+                "missing": [
+                  {
+                    "state": "observed_missing",
+                    "field": "highest_question"
+                  },
+                  {
+                    "state": "observed_missing",
+                    "field": "worldview"
+                  },
+                  {
+                    "state": "observed_missing",
+                    "field": "value_order"
+                  },
+                  {
+                    "state": "observed_missing",
+                    "field": "role"
+                  },
+                  {
+                    "state": "observed_missing",
+                    "field": "boundaries"
+                  }
+                ],
+                "provenance": {
+                  "declarations": [],
+                  "confirmation": "not_evaluated",
+                  "verifier_id": null,
+                  "evidence_ref": null
+                },
+                "expansion_handles": []
+              },
+              "states": {
+                "core": "valid",
+                "interpretation": "complete",
+                "writer": "not_evaluated",
+                "confirmation": "not_evaluated",
+                "read_permission": "allowed",
+                "action_authorization": "not_evaluated"
+              },
+              "diagnostics": [],
+              "omissions": [],
+              "assessment": {
+                "state": "not_evaluated",
+                "kind": null,
+                "assessor_id": null,
+                "evidence_ref": null
+              },
+              "receipt": {
+                "receipt_id": "receipt:snapshot:e98f8d53-8886-44c3-9265-c1736b7358a8:1",
+                "request_id": "request:material-synthetic-statement-only-0",
+                "snapshot_id": "snapshot:e98f8d53-8886-44c3-9265-c1736b7358a8",
+                "host_id": "host:material-reference",
+                "host_epoch": "epoch:material-reference",
+                "decision_id": "decision:request:material-synthetic-statement-only-0",
+                "disclosed_at": 1000,
+                "delivery": "delivered"
+              },
+              "budget": {
+                "limit_bytes": 1000000,
+                "required_bytes": "0000000000007489",
+                "actual_bytes": "0000000000007489"
+              }
+            },
+            "admission_rejection": null,
+            "control": null,
+            "transport_failure": null
+          }
+        }
+      ],
+      "sha256": "aceb8fe16aa62fb3a99ca0ab3982093ab9c854cda637be34c424c3a260af907a"
+    },
+    {
+      "file": "resource-only.kdna",
+      "name": "synthetic-resource-only",
+      "expected": "accepted",
+      "core": {
+        "status": "accepted",
+        "data": {
+          "snapshot_id": "snapshot:e14307cd-37af-4626-b3a2-c3ce6aa597b1",
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          },
+          "asset": {
+            "asset_id": "asset:reference-host",
+            "asset_version": "1.0.0",
+            "judgment_version": "1.0.0"
+          },
+          "digests": {
+            "A": {
+              "basis": "container_bytes",
+              "profile": "kdna.digest-basis.container-bytes",
+              "profile_version": "0.2.0",
+              "algorithm": "SHA-256",
+              "observed": "sha256:5c29693180ae4adad4696d71f5864e92e1257a89ab341e59b114a34d949d6a62",
+              "comparison": {
+                "state": "not_compared",
+                "expected": null,
+                "expected_source": null
+              }
+            },
+            "C": {
+              "basis": "content_tree",
+              "profile": "kdna.digest-basis.content-tree",
+              "profile_version": "0.2.0",
+              "algorithm": "SHA-256",
+              "observed": "sha256:c561c3feed21fad8e870af08646d9393ee8933e217bc1f5f5092c15ead05e61e",
+              "comparison": {
+                "state": "not_compared",
+                "expected": null,
+                "expected_source": null
+              }
+            },
+            "E": {
+              "basis": "runtime_entry_set",
+              "profile": "kdna.digest-basis.runtime-entry-set",
+              "profile_version": "0.2.0",
+              "algorithm": "SHA-256",
+              "observed": "sha256:125ccc80d7cd583c8720cff560fc0df84147b1ab001874e07fd72ec7714055d7",
+              "comparison": {
+                "state": "not_compared",
+                "expected": null,
+                "expected_source": null
+              }
+            }
+          },
+          "ir": {
+            "contract": "kdna.canonical-ir/0.2.0",
+            "tuple": {
+              "container": "0.2.0",
+              "core": "kdna.core/0.3.0",
+              "host": "kdna.agent-host/0.2.0",
+              "ir": "kdna.canonical-ir/0.2.0",
+              "payload_profile": "kdna.payload.judgment",
+              "payload_version": "0.2.0",
+              "plan": "kdna.consumption-plan/0.2.0",
+              "read": "kdna.read/0.2.0",
+              "runtime": "kdna.runtime-capsule/0.2.0",
+              "trace": "kdna.judgment-trace/0.2.0"
+            },
+            "asset": {
+              "asset_id": "asset:reference-host",
+              "asset_version": "1.0.0",
+              "judgment_version": "1.0.0"
+            },
+            "nodes": [
+              {
+                "id": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                "role": "asset_declaration",
+                "owner_judgment_id": null,
+                "value": {
+                  "title": "Reference Host synthetic fixture",
+                  "access": "public"
+                }
+              },
+              {
+                "id": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                "role": "scope",
+                "owner_judgment_id": null,
+                "value": {
+                  "statement": "Only the reference Host conformance fixture"
+                }
+              },
+              {
+                "id": "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                "role": "actor",
+                "owner_judgment_id": null,
+                "value": {
+                  "id": "actor:author",
+                  "kind": "person",
+                  "name": "Synthetic author"
+                }
+              },
+              {
+                "id": "resource:f42caca576a5a89aff2f243ca429f78b383348bb",
+                "role": "resource",
+                "owner_judgment_id": null,
+                "value": {
+                  "id": "resource:fixture",
+                  "entry": "attachments/material.txt",
+                  "digest": "sha256:48281e095b7279085e938cc5fcb799ca34a31ed1fb96f7fcaa22a743540dc017",
+                  "media_type": "text/plain"
+                }
+              },
+              {
+                "id": "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                "role": "material",
+                "owner_judgment_id": null,
+                "value": {
+                  "id": "material:fixture",
+                  "kind": "attachment",
+                  "source_refs": [],
+                  "resource_ref": "resource:fixture"
+                }
+              },
+              {
+                "id": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "judgment",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "id": "judgment:0",
+                  "label": "Unit 0",
+                  "focus": "Focus 0",
+                  "subject": {
+                    "actor_ids": [
+                      "actor:author"
+                    ],
+                    "statement": "A synthetic subject"
+                  },
+                  "scope": {
+                    "statement": "Synthetic integration scope"
+                  },
+                  "result_contract": {
+                    "id": "contract:0",
+                    "form": {
+                      "term": "result.form.assertion"
+                    },
+                    "shape": {
+                      "kind": "scalar",
+                      "scalar_type": "text"
+                    },
+                    "minimum": 1,
+                    "maximum": 1,
+                    "allowed_result_types": [
+                      {
+                        "term": "result.type.text"
+                      }
+                    ]
+                  },
+                  "result": {
+                    "contract_ref": "contract:0",
+                    "result_type": {
+                      "term": "result.type.text"
+                    },
+                    "value": {
+                      "kind": "text",
+                      "value": "RESULT_SENTINEL_0"
+                    }
+                  },
+                  "material_refs": [
+                    "material:fixture"
+                  ]
+                }
+              },
+              {
+                "id": "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "subject",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "actor_ids": [
+                    "actor:author"
+                  ],
+                  "statement": "A synthetic subject"
+                }
+              },
+              {
+                "id": "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "scope",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "statement": "Synthetic integration scope"
+                }
+              },
+              {
+                "id": "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                "role": "result_contract",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "id": "contract:0",
+                  "form": {
+                    "term": "result.form.assertion"
+                  },
+                  "shape": {
+                    "kind": "scalar",
+                    "scalar_type": "text"
+                  },
+                  "minimum": 1,
+                  "maximum": 1,
+                  "allowed_result_types": [
+                    {
+                      "term": "result.type.text"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "result:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "result",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "contract_ref": "contract:0",
+                  "result_type": {
+                    "term": "result.type.text"
+                  },
+                  "value": {
+                    "kind": "text",
+                    "value": "RESULT_SENTINEL_0"
+                  }
+                }
+              }
+            ],
+            "catalog": [
+              {
+                "judgment_id": "judgment:0",
+                "label": "Unit 0",
+                "node_ref": "judgment:e350694d57314c022de4f02c10ac5afb531f63db"
+              }
+            ],
+            "references": [
+              {
+                "id": "reference:5650e6c7109b77fb70070c70fe40301e03d9ae56",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:61348dcdba248f8b074f8d776850fcf7074e109b",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:43bb4a0c97e6d1ecfbf885050d12106808d4ee61",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:940fccabfcf097b1fb65cd68de86f7a9d0ba5eae",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "resource:f42caca576a5a89aff2f243ca429f78b383348bb",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:e465d175253b6ebbed27d0542a697f6bf2f49f11",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:4361a742cd64b5113ef7d8a5e298302afefda030",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:e5578138a4b28130d590ecd5f14ff17d155623d4",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:fbdfa644769e4f64f2cc8cb837ea8d10ec45e7ed",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:1666db716ca63bf6eff8e96afbcf07ce15a121d0",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "result:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "mandatory_support",
+                "mandatory": true
+              }
+            ],
+            "relationships": [],
+            "mandatory_closures": [
+              {
+                "selection": {
+                  "asset_id": "asset:reference-host",
+                  "asset_version": "1.0.0",
+                  "judgment_id": "judgment:0"
+                },
+                "node_ids": [
+                  "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                  "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                  "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                  "resource:f42caca576a5a89aff2f243ca429f78b383348bb",
+                  "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                  "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                  "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                  "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                  "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                  "result:e350694d57314c022de4f02c10ac5afb531f63db"
+                ]
+              }
+            ],
+            "expansion_targets": []
+          },
+          "ir_digest": "sha256:19d1291d71e711e5810aa292c603c94ab675dc24e70b62aea4807cd6af68d440",
+          "runtime_entry_names": [
+            "kdna.json",
+            "payload.kdnab"
+          ],
+          "expansion_targets": []
+        }
+      },
+      "reads": [
+        {
+          "request": {
+            "request_id": "request:material-synthetic-resource-only-0",
+            "tuple": {
+              "container": "0.2.0",
+              "core": "kdna.core/0.3.0",
+              "host": "kdna.agent-host/0.2.0",
+              "ir": "kdna.canonical-ir/0.2.0",
+              "payload_profile": "kdna.payload.judgment",
+              "payload_version": "0.2.0",
+              "plan": "kdna.consumption-plan/0.2.0",
+              "read": "kdna.read/0.2.0",
+              "runtime": "kdna.runtime-capsule/0.2.0",
+              "trace": "kdna.judgment-trace/0.2.0"
+            },
+            "budget_bytes": 1000000,
+            "mode": "exact_selection",
+            "selection": {
+              "asset_id": "asset:reference-host",
+              "asset_version": "1.0.0",
+              "judgment_id": "judgment:0"
+            },
+            "handle": null
+          },
+          "result": {
+            "channel": "read_envelope",
+            "envelope": {
+              "contract": "kdna.read/0.2.0",
+              "request_id": "request:material-synthetic-resource-only-0",
+              "status": "ready",
+              "tuple": {
+                "container": "0.2.0",
+                "core": "kdna.core/0.3.0",
+                "host": "kdna.agent-host/0.2.0",
+                "ir": "kdna.canonical-ir/0.2.0",
+                "payload_profile": "kdna.payload.judgment",
+                "payload_version": "0.2.0",
+                "plan": "kdna.consumption-plan/0.2.0",
+                "read": "kdna.read/0.2.0",
+                "runtime": "kdna.runtime-capsule/0.2.0",
+                "trace": "kdna.judgment-trace/0.2.0"
+              },
+              "asset": {
+                "asset_id": "asset:reference-host",
+                "asset_version": "1.0.0",
+                "judgment_version": "1.0.0"
+              },
+              "snapshot_id": "snapshot:80c9fb90-cdf3-481e-9845-ab8cdef3ce39",
+              "digests": {
+                "A": {
+                  "basis": "container_bytes",
+                  "profile": "kdna.digest-basis.container-bytes",
+                  "profile_version": "0.2.0",
+                  "algorithm": "SHA-256",
+                  "observed": "sha256:5c29693180ae4adad4696d71f5864e92e1257a89ab341e59b114a34d949d6a62",
+                  "comparison": {
+                    "state": "not_compared",
+                    "expected": null,
+                    "expected_source": null
+                  }
+                },
+                "C": {
+                  "basis": "content_tree",
+                  "profile": "kdna.digest-basis.content-tree",
+                  "profile_version": "0.2.0",
+                  "algorithm": "SHA-256",
+                  "observed": "sha256:c561c3feed21fad8e870af08646d9393ee8933e217bc1f5f5092c15ead05e61e",
+                  "comparison": {
+                    "state": "not_compared",
+                    "expected": null,
+                    "expected_source": null
+                  }
+                },
+                "E": {
+                  "basis": "runtime_entry_set",
+                  "profile": "kdna.digest-basis.runtime-entry-set",
+                  "profile_version": "0.2.0",
+                  "algorithm": "SHA-256",
+                  "observed": "sha256:125ccc80d7cd583c8720cff560fc0df84147b1ab001874e07fd72ec7714055d7",
+                  "comparison": {
+                    "state": "not_compared",
+                    "expected": null,
+                    "expected_source": null
+                  }
+                }
+              },
+              "content": {
+                "declarations": [
+                  {
+                    "id": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                    "role": "asset_declaration",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "title": "Reference Host synthetic fixture",
+                      "access": "public"
+                    }
+                  },
+                  {
+                    "id": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                    "role": "scope",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "statement": "Only the reference Host conformance fixture"
+                    }
+                  }
+                ],
+                "catalog": [
+                  {
+                    "judgment_id": "judgment:0",
+                    "label": "Unit 0",
+                    "node_ref": "judgment:e350694d57314c022de4f02c10ac5afb531f63db"
+                  }
+                ],
+                "selected": {
+                  "asset_id": "asset:reference-host",
+                  "asset_version": "1.0.0",
+                  "judgment_id": "judgment:0"
+                },
+                "closure": [
+                  {
+                    "id": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                    "role": "asset_declaration",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "title": "Reference Host synthetic fixture",
+                      "access": "public"
+                    }
+                  },
+                  {
+                    "id": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                    "role": "scope",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "statement": "Only the reference Host conformance fixture"
+                    }
+                  },
+                  {
+                    "id": "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                    "role": "actor",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "id": "actor:author",
+                      "kind": "person",
+                      "name": "Synthetic author"
+                    }
+                  },
+                  {
+                    "id": "resource:f42caca576a5a89aff2f243ca429f78b383348bb",
+                    "role": "resource",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "id": "resource:fixture",
+                      "entry": "attachments/material.txt",
+                      "digest": "sha256:48281e095b7279085e938cc5fcb799ca34a31ed1fb96f7fcaa22a743540dc017",
+                      "media_type": "text/plain"
+                    }
+                  },
+                  {
+                    "id": "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                    "role": "material",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "id": "material:fixture",
+                      "kind": "attachment",
+                      "source_refs": [],
+                      "resource_ref": "resource:fixture"
+                    }
+                  },
+                  {
+                    "id": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "judgment",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "id": "judgment:0",
+                      "label": "Unit 0",
+                      "focus": "Focus 0",
+                      "subject": {
+                        "actor_ids": [
+                          "actor:author"
+                        ],
+                        "statement": "A synthetic subject"
+                      },
+                      "scope": {
+                        "statement": "Synthetic integration scope"
+                      },
+                      "result_contract": {
+                        "id": "contract:0",
+                        "form": {
+                          "term": "result.form.assertion"
+                        },
+                        "shape": {
+                          "kind": "scalar",
+                          "scalar_type": "text"
+                        },
+                        "minimum": 1,
+                        "maximum": 1,
+                        "allowed_result_types": [
+                          {
+                            "term": "result.type.text"
+                          }
+                        ]
+                      },
+                      "result": {
+                        "contract_ref": "contract:0",
+                        "result_type": {
+                          "term": "result.type.text"
+                        },
+                        "value": {
+                          "kind": "text",
+                          "value": "RESULT_SENTINEL_0"
+                        }
+                      },
+                      "material_refs": [
+                        "material:fixture"
+                      ]
+                    }
+                  },
+                  {
+                    "id": "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "subject",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "actor_ids": [
+                        "actor:author"
+                      ],
+                      "statement": "A synthetic subject"
+                    }
+                  },
+                  {
+                    "id": "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "scope",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "statement": "Synthetic integration scope"
+                    }
+                  },
+                  {
+                    "id": "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                    "role": "result_contract",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "id": "contract:0",
+                      "form": {
+                        "term": "result.form.assertion"
+                      },
+                      "shape": {
+                        "kind": "scalar",
+                        "scalar_type": "text"
+                      },
+                      "minimum": 1,
+                      "maximum": 1,
+                      "allowed_result_types": [
+                        {
+                          "term": "result.type.text"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "result:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "result",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "contract_ref": "contract:0",
+                      "result_type": {
+                        "term": "result.type.text"
+                      },
+                      "value": {
+                        "kind": "text",
+                        "value": "RESULT_SENTINEL_0"
+                      }
+                    }
+                  }
+                ],
+                "references": [
+                  {
+                    "id": "reference:5650e6c7109b77fb70070c70fe40301e03d9ae56",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:61348dcdba248f8b074f8d776850fcf7074e109b",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:43bb4a0c97e6d1ecfbf885050d12106808d4ee61",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:940fccabfcf097b1fb65cd68de86f7a9d0ba5eae",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "resource:f42caca576a5a89aff2f243ca429f78b383348bb",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:e465d175253b6ebbed27d0542a697f6bf2f49f11",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:4361a742cd64b5113ef7d8a5e298302afefda030",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:e5578138a4b28130d590ecd5f14ff17d155623d4",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:fbdfa644769e4f64f2cc8cb837ea8d10ec45e7ed",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:1666db716ca63bf6eff8e96afbcf07ce15a121d0",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "result:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  }
+                ],
+                "relationships": [],
+                "missing": [
+                  {
+                    "state": "observed_missing",
+                    "field": "highest_question"
+                  },
+                  {
+                    "state": "observed_missing",
+                    "field": "worldview"
+                  },
+                  {
+                    "state": "observed_missing",
+                    "field": "value_order"
+                  },
+                  {
+                    "state": "observed_missing",
+                    "field": "role"
+                  },
+                  {
+                    "state": "observed_missing",
+                    "field": "boundaries"
+                  }
+                ],
+                "provenance": {
+                  "declarations": [],
+                  "confirmation": "not_evaluated",
+                  "verifier_id": null,
+                  "evidence_ref": null
+                },
+                "expansion_handles": []
+              },
+              "states": {
+                "core": "valid",
+                "interpretation": "complete",
+                "writer": "not_evaluated",
+                "confirmation": "not_evaluated",
+                "read_permission": "allowed",
+                "action_authorization": "not_evaluated"
+              },
+              "diagnostics": [],
+              "omissions": [],
+              "assessment": {
+                "state": "not_evaluated",
+                "kind": null,
+                "assessor_id": null,
+                "evidence_ref": null
+              },
+              "receipt": {
+                "receipt_id": "receipt:snapshot:80c9fb90-cdf3-481e-9845-ab8cdef3ce39:2",
+                "request_id": "request:material-synthetic-resource-only-0",
+                "snapshot_id": "snapshot:80c9fb90-cdf3-481e-9845-ab8cdef3ce39",
+                "host_id": "host:material-reference",
+                "host_epoch": "epoch:material-reference",
+                "decision_id": "decision:request:material-synthetic-resource-only-0",
+                "disclosed_at": 1000,
+                "delivery": "delivered"
+              },
+              "budget": {
+                "limit_bytes": 1000000,
+                "required_bytes": "0000000000007988",
+                "actual_bytes": "0000000000007988"
+              }
+            },
+            "admission_rejection": null,
+            "control": null,
+            "transport_failure": null
+          }
+        }
+      ],
+      "sha256": "5c29693180ae4adad4696d71f5864e92e1257a89ab341e59b114a34d949d6a62"
+    },
+    {
+      "file": "statement-and-resource.kdna",
+      "name": "synthetic-statement-and-resource",
+      "expected": "accepted",
+      "core": {
+        "status": "accepted",
+        "data": {
+          "snapshot_id": "snapshot:95558520-91ed-42ca-8211-da3a4ecdc54d",
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          },
+          "asset": {
+            "asset_id": "asset:reference-host",
+            "asset_version": "1.0.0",
+            "judgment_version": "1.0.0"
+          },
+          "digests": {
+            "A": {
+              "basis": "container_bytes",
+              "profile": "kdna.digest-basis.container-bytes",
+              "profile_version": "0.2.0",
+              "algorithm": "SHA-256",
+              "observed": "sha256:a6e7989b13312f1daf4fae5497338adefec999c68e0e46fdc9470d1a93c98a0f",
+              "comparison": {
+                "state": "not_compared",
+                "expected": null,
+                "expected_source": null
+              }
+            },
+            "C": {
+              "basis": "content_tree",
+              "profile": "kdna.digest-basis.content-tree",
+              "profile_version": "0.2.0",
+              "algorithm": "SHA-256",
+              "observed": "sha256:8fda3e2645acdf02c416ec3a913860640a9ecf9aa09768d0d5fad705c28e6934",
+              "comparison": {
+                "state": "not_compared",
+                "expected": null,
+                "expected_source": null
+              }
+            },
+            "E": {
+              "basis": "runtime_entry_set",
+              "profile": "kdna.digest-basis.runtime-entry-set",
+              "profile_version": "0.2.0",
+              "algorithm": "SHA-256",
+              "observed": "sha256:de10f4a4900260976fc2576a629205e6f40ff1a8c6eefae85d590491877caa4c",
+              "comparison": {
+                "state": "not_compared",
+                "expected": null,
+                "expected_source": null
+              }
+            }
+          },
+          "ir": {
+            "contract": "kdna.canonical-ir/0.2.0",
+            "tuple": {
+              "container": "0.2.0",
+              "core": "kdna.core/0.3.0",
+              "host": "kdna.agent-host/0.2.0",
+              "ir": "kdna.canonical-ir/0.2.0",
+              "payload_profile": "kdna.payload.judgment",
+              "payload_version": "0.2.0",
+              "plan": "kdna.consumption-plan/0.2.0",
+              "read": "kdna.read/0.2.0",
+              "runtime": "kdna.runtime-capsule/0.2.0",
+              "trace": "kdna.judgment-trace/0.2.0"
+            },
+            "asset": {
+              "asset_id": "asset:reference-host",
+              "asset_version": "1.0.0",
+              "judgment_version": "1.0.0"
+            },
+            "nodes": [
+              {
+                "id": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                "role": "asset_declaration",
+                "owner_judgment_id": null,
+                "value": {
+                  "title": "Reference Host synthetic fixture",
+                  "access": "public"
+                }
+              },
+              {
+                "id": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                "role": "scope",
+                "owner_judgment_id": null,
+                "value": {
+                  "statement": "Only the reference Host conformance fixture"
+                }
+              },
+              {
+                "id": "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                "role": "actor",
+                "owner_judgment_id": null,
+                "value": {
+                  "id": "actor:author",
+                  "kind": "person",
+                  "name": "Synthetic author"
+                }
+              },
+              {
+                "id": "resource:f42caca576a5a89aff2f243ca429f78b383348bb",
+                "role": "resource",
+                "owner_judgment_id": null,
+                "value": {
+                  "id": "resource:fixture",
+                  "entry": "attachments/material.txt",
+                  "digest": "sha256:48281e095b7279085e938cc5fcb799ca34a31ed1fb96f7fcaa22a743540dc017",
+                  "media_type": "text/plain"
+                }
+              },
+              {
+                "id": "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                "role": "material",
+                "owner_judgment_id": null,
+                "value": {
+                  "id": "material:fixture",
+                  "kind": "attachment",
+                  "statement": "CC0 synthetic statement material.",
+                  "source_refs": [],
+                  "resource_ref": "resource:fixture"
+                }
+              },
+              {
+                "id": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "judgment",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "id": "judgment:0",
+                  "label": "Unit 0",
+                  "focus": "Focus 0",
+                  "subject": {
+                    "actor_ids": [
+                      "actor:author"
+                    ],
+                    "statement": "A synthetic subject"
+                  },
+                  "scope": {
+                    "statement": "Synthetic integration scope"
+                  },
+                  "result_contract": {
+                    "id": "contract:0",
+                    "form": {
+                      "term": "result.form.assertion"
+                    },
+                    "shape": {
+                      "kind": "scalar",
+                      "scalar_type": "text"
+                    },
+                    "minimum": 1,
+                    "maximum": 1,
+                    "allowed_result_types": [
+                      {
+                        "term": "result.type.text"
+                      }
+                    ]
+                  },
+                  "result": {
+                    "contract_ref": "contract:0",
+                    "result_type": {
+                      "term": "result.type.text"
+                    },
+                    "value": {
+                      "kind": "text",
+                      "value": "RESULT_SENTINEL_0"
+                    }
+                  },
+                  "material_refs": [
+                    "material:fixture"
+                  ]
+                }
+              },
+              {
+                "id": "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "subject",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "actor_ids": [
+                    "actor:author"
+                  ],
+                  "statement": "A synthetic subject"
+                }
+              },
+              {
+                "id": "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "scope",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "statement": "Synthetic integration scope"
+                }
+              },
+              {
+                "id": "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                "role": "result_contract",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "id": "contract:0",
+                  "form": {
+                    "term": "result.form.assertion"
+                  },
+                  "shape": {
+                    "kind": "scalar",
+                    "scalar_type": "text"
+                  },
+                  "minimum": 1,
+                  "maximum": 1,
+                  "allowed_result_types": [
+                    {
+                      "term": "result.type.text"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "result:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "result",
+                "owner_judgment_id": "judgment:0",
+                "value": {
+                  "contract_ref": "contract:0",
+                  "result_type": {
+                    "term": "result.type.text"
+                  },
+                  "value": {
+                    "kind": "text",
+                    "value": "RESULT_SENTINEL_0"
+                  }
+                }
+              }
+            ],
+            "catalog": [
+              {
+                "judgment_id": "judgment:0",
+                "label": "Unit 0",
+                "node_ref": "judgment:e350694d57314c022de4f02c10ac5afb531f63db"
+              }
+            ],
+            "references": [
+              {
+                "id": "reference:5650e6c7109b77fb70070c70fe40301e03d9ae56",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:61348dcdba248f8b074f8d776850fcf7074e109b",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:43bb4a0c97e6d1ecfbf885050d12106808d4ee61",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:940fccabfcf097b1fb65cd68de86f7a9d0ba5eae",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "resource:f42caca576a5a89aff2f243ca429f78b383348bb",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:e465d175253b6ebbed27d0542a697f6bf2f49f11",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:4361a742cd64b5113ef7d8a5e298302afefda030",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:e5578138a4b28130d590ecd5f14ff17d155623d4",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:fbdfa644769e4f64f2cc8cb837ea8d10ec45e7ed",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                "role": "mandatory_support",
+                "mandatory": true
+              },
+              {
+                "id": "reference:1666db716ca63bf6eff8e96afbcf07ce15a121d0",
+                "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                "target_node": "result:e350694d57314c022de4f02c10ac5afb531f63db",
+                "role": "mandatory_support",
+                "mandatory": true
+              }
+            ],
+            "relationships": [],
+            "mandatory_closures": [
+              {
+                "selection": {
+                  "asset_id": "asset:reference-host",
+                  "asset_version": "1.0.0",
+                  "judgment_id": "judgment:0"
+                },
+                "node_ids": [
+                  "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                  "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                  "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                  "resource:f42caca576a5a89aff2f243ca429f78b383348bb",
+                  "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                  "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                  "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                  "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                  "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                  "result:e350694d57314c022de4f02c10ac5afb531f63db"
+                ]
+              }
+            ],
+            "expansion_targets": []
+          },
+          "ir_digest": "sha256:729ae5d6acc9619ecb281a5e5277f91e6863cb9965864ab41bfc9450adec27eb",
+          "runtime_entry_names": [
+            "kdna.json",
+            "payload.kdnab"
+          ],
+          "expansion_targets": []
+        }
+      },
+      "reads": [
+        {
+          "request": {
+            "request_id": "request:material-synthetic-statement-and-resource-0",
+            "tuple": {
+              "container": "0.2.0",
+              "core": "kdna.core/0.3.0",
+              "host": "kdna.agent-host/0.2.0",
+              "ir": "kdna.canonical-ir/0.2.0",
+              "payload_profile": "kdna.payload.judgment",
+              "payload_version": "0.2.0",
+              "plan": "kdna.consumption-plan/0.2.0",
+              "read": "kdna.read/0.2.0",
+              "runtime": "kdna.runtime-capsule/0.2.0",
+              "trace": "kdna.judgment-trace/0.2.0"
+            },
+            "budget_bytes": 1000000,
+            "mode": "exact_selection",
+            "selection": {
+              "asset_id": "asset:reference-host",
+              "asset_version": "1.0.0",
+              "judgment_id": "judgment:0"
+            },
+            "handle": null
+          },
+          "result": {
+            "channel": "read_envelope",
+            "envelope": {
+              "contract": "kdna.read/0.2.0",
+              "request_id": "request:material-synthetic-statement-and-resource-0",
+              "status": "ready",
+              "tuple": {
+                "container": "0.2.0",
+                "core": "kdna.core/0.3.0",
+                "host": "kdna.agent-host/0.2.0",
+                "ir": "kdna.canonical-ir/0.2.0",
+                "payload_profile": "kdna.payload.judgment",
+                "payload_version": "0.2.0",
+                "plan": "kdna.consumption-plan/0.2.0",
+                "read": "kdna.read/0.2.0",
+                "runtime": "kdna.runtime-capsule/0.2.0",
+                "trace": "kdna.judgment-trace/0.2.0"
+              },
+              "asset": {
+                "asset_id": "asset:reference-host",
+                "asset_version": "1.0.0",
+                "judgment_version": "1.0.0"
+              },
+              "snapshot_id": "snapshot:d324f8b8-c659-4e2c-b522-bca9d9d8e50f",
+              "digests": {
+                "A": {
+                  "basis": "container_bytes",
+                  "profile": "kdna.digest-basis.container-bytes",
+                  "profile_version": "0.2.0",
+                  "algorithm": "SHA-256",
+                  "observed": "sha256:a6e7989b13312f1daf4fae5497338adefec999c68e0e46fdc9470d1a93c98a0f",
+                  "comparison": {
+                    "state": "not_compared",
+                    "expected": null,
+                    "expected_source": null
+                  }
+                },
+                "C": {
+                  "basis": "content_tree",
+                  "profile": "kdna.digest-basis.content-tree",
+                  "profile_version": "0.2.0",
+                  "algorithm": "SHA-256",
+                  "observed": "sha256:8fda3e2645acdf02c416ec3a913860640a9ecf9aa09768d0d5fad705c28e6934",
+                  "comparison": {
+                    "state": "not_compared",
+                    "expected": null,
+                    "expected_source": null
+                  }
+                },
+                "E": {
+                  "basis": "runtime_entry_set",
+                  "profile": "kdna.digest-basis.runtime-entry-set",
+                  "profile_version": "0.2.0",
+                  "algorithm": "SHA-256",
+                  "observed": "sha256:de10f4a4900260976fc2576a629205e6f40ff1a8c6eefae85d590491877caa4c",
+                  "comparison": {
+                    "state": "not_compared",
+                    "expected": null,
+                    "expected_source": null
+                  }
+                }
+              },
+              "content": {
+                "declarations": [
+                  {
+                    "id": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                    "role": "asset_declaration",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "title": "Reference Host synthetic fixture",
+                      "access": "public"
+                    }
+                  },
+                  {
+                    "id": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                    "role": "scope",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "statement": "Only the reference Host conformance fixture"
+                    }
+                  }
+                ],
+                "catalog": [
+                  {
+                    "judgment_id": "judgment:0",
+                    "label": "Unit 0",
+                    "node_ref": "judgment:e350694d57314c022de4f02c10ac5afb531f63db"
+                  }
+                ],
+                "selected": {
+                  "asset_id": "asset:reference-host",
+                  "asset_version": "1.0.0",
+                  "judgment_id": "judgment:0"
+                },
+                "closure": [
+                  {
+                    "id": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                    "role": "asset_declaration",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "title": "Reference Host synthetic fixture",
+                      "access": "public"
+                    }
+                  },
+                  {
+                    "id": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                    "role": "scope",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "statement": "Only the reference Host conformance fixture"
+                    }
+                  },
+                  {
+                    "id": "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                    "role": "actor",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "id": "actor:author",
+                      "kind": "person",
+                      "name": "Synthetic author"
+                    }
+                  },
+                  {
+                    "id": "resource:f42caca576a5a89aff2f243ca429f78b383348bb",
+                    "role": "resource",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "id": "resource:fixture",
+                      "entry": "attachments/material.txt",
+                      "digest": "sha256:48281e095b7279085e938cc5fcb799ca34a31ed1fb96f7fcaa22a743540dc017",
+                      "media_type": "text/plain"
+                    }
+                  },
+                  {
+                    "id": "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                    "role": "material",
+                    "owner_judgment_id": null,
+                    "value": {
+                      "id": "material:fixture",
+                      "kind": "attachment",
+                      "statement": "CC0 synthetic statement material.",
+                      "source_refs": [],
+                      "resource_ref": "resource:fixture"
+                    }
+                  },
+                  {
+                    "id": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "judgment",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "id": "judgment:0",
+                      "label": "Unit 0",
+                      "focus": "Focus 0",
+                      "subject": {
+                        "actor_ids": [
+                          "actor:author"
+                        ],
+                        "statement": "A synthetic subject"
+                      },
+                      "scope": {
+                        "statement": "Synthetic integration scope"
+                      },
+                      "result_contract": {
+                        "id": "contract:0",
+                        "form": {
+                          "term": "result.form.assertion"
+                        },
+                        "shape": {
+                          "kind": "scalar",
+                          "scalar_type": "text"
+                        },
+                        "minimum": 1,
+                        "maximum": 1,
+                        "allowed_result_types": [
+                          {
+                            "term": "result.type.text"
+                          }
+                        ]
+                      },
+                      "result": {
+                        "contract_ref": "contract:0",
+                        "result_type": {
+                          "term": "result.type.text"
+                        },
+                        "value": {
+                          "kind": "text",
+                          "value": "RESULT_SENTINEL_0"
+                        }
+                      },
+                      "material_refs": [
+                        "material:fixture"
+                      ]
+                    }
+                  },
+                  {
+                    "id": "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "subject",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "actor_ids": [
+                        "actor:author"
+                      ],
+                      "statement": "A synthetic subject"
+                    }
+                  },
+                  {
+                    "id": "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "scope",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "statement": "Synthetic integration scope"
+                    }
+                  },
+                  {
+                    "id": "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                    "role": "result_contract",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "id": "contract:0",
+                      "form": {
+                        "term": "result.form.assertion"
+                      },
+                      "shape": {
+                        "kind": "scalar",
+                        "scalar_type": "text"
+                      },
+                      "minimum": 1,
+                      "maximum": 1,
+                      "allowed_result_types": [
+                        {
+                          "term": "result.type.text"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "result:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "result",
+                    "owner_judgment_id": "judgment:0",
+                    "value": {
+                      "contract_ref": "contract:0",
+                      "result_type": {
+                        "term": "result.type.text"
+                      },
+                      "value": {
+                        "kind": "text",
+                        "value": "RESULT_SENTINEL_0"
+                      }
+                    }
+                  }
+                ],
+                "references": [
+                  {
+                    "id": "reference:5650e6c7109b77fb70070c70fe40301e03d9ae56",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "asset_declaration:4786a4ac6f6690d8ebc05c522ff3d58bbf0748c6",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:61348dcdba248f8b074f8d776850fcf7074e109b",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "scope:7a6dc79c220dd2f704d98e7efb0d7d2a92de61f2",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:43bb4a0c97e6d1ecfbf885050d12106808d4ee61",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "actor:d446d965a27945fc8464b2ce467e1e4115a6e8fe",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:940fccabfcf097b1fb65cd68de86f7a9d0ba5eae",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "resource:f42caca576a5a89aff2f243ca429f78b383348bb",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:e465d175253b6ebbed27d0542a697f6bf2f49f11",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "material:eb881e5ea80a404f1d0adebbecafcd7e4ae813c7",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:4361a742cd64b5113ef7d8a5e298302afefda030",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "subject:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:e5578138a4b28130d590ecd5f14ff17d155623d4",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "scope:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:fbdfa644769e4f64f2cc8cb837ea8d10ec45e7ed",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "result_contract:eac86502aab5391c3b248551a80d4380c97afde3",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  },
+                  {
+                    "id": "reference:1666db716ca63bf6eff8e96afbcf07ce15a121d0",
+                    "source_node": "judgment:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "target_node": "result:e350694d57314c022de4f02c10ac5afb531f63db",
+                    "role": "mandatory_support",
+                    "mandatory": true
+                  }
+                ],
+                "relationships": [],
+                "missing": [
+                  {
+                    "state": "observed_missing",
+                    "field": "highest_question"
+                  },
+                  {
+                    "state": "observed_missing",
+                    "field": "worldview"
+                  },
+                  {
+                    "state": "observed_missing",
+                    "field": "value_order"
+                  },
+                  {
+                    "state": "observed_missing",
+                    "field": "role"
+                  },
+                  {
+                    "state": "observed_missing",
+                    "field": "boundaries"
+                  }
+                ],
+                "provenance": {
+                  "declarations": [],
+                  "confirmation": "not_evaluated",
+                  "verifier_id": null,
+                  "evidence_ref": null
+                },
+                "expansion_handles": []
+              },
+              "states": {
+                "core": "valid",
+                "interpretation": "complete",
+                "writer": "not_evaluated",
+                "confirmation": "not_evaluated",
+                "read_permission": "allowed",
+                "action_authorization": "not_evaluated"
+              },
+              "diagnostics": [],
+              "omissions": [],
+              "assessment": {
+                "state": "not_evaluated",
+                "kind": null,
+                "assessor_id": null,
+                "evidence_ref": null
+              },
+              "receipt": {
+                "receipt_id": "receipt:snapshot:d324f8b8-c659-4e2c-b522-bca9d9d8e50f:3",
+                "request_id": "request:material-synthetic-statement-and-resource-0",
+                "snapshot_id": "snapshot:d324f8b8-c659-4e2c-b522-bca9d9d8e50f",
+                "host_id": "host:material-reference",
+                "host_epoch": "epoch:material-reference",
+                "decision_id": "decision:request:material-synthetic-statement-and-resource-0",
+                "disclosed_at": 1000,
+                "delivery": "delivered"
+              },
+              "budget": {
+                "limit_bytes": 1000000,
+                "required_bytes": "0000000000008063",
+                "actual_bytes": "0000000000008063"
+              }
+            },
+            "admission_rejection": null,
+            "control": null,
+            "transport_failure": null
+          }
+        }
+      ],
+      "sha256": "a6e7989b13312f1daf4fae5497338adefec999c68e0e46fdc9470d1a93c98a0f"
+    },
+    {
+      "file": "missing-target.kdna",
+      "name": "synthetic-missing-target",
+      "expected": "rejected",
+      "core": {
+        "status": "rejected",
+        "reason": "READ_CORE_INVALID",
+        "states": {
+          "core": "invalid",
+          "interpretation": "not_evaluated"
+        },
+        "component_failure": null,
+        "diagnostics": [
+          {
+            "code": "READ_CORE_INVALID",
+            "stage": "core",
+            "severity": "error",
+            "subject": null,
+            "field": null
+          }
+        ]
+      },
+      "reads": [
+        {
+          "request": {
+            "request_id": "request:material-synthetic-missing-target-0",
+            "tuple": {
+              "container": "0.2.0",
+              "core": "kdna.core/0.3.0",
+              "host": "kdna.agent-host/0.2.0",
+              "ir": "kdna.canonical-ir/0.2.0",
+              "payload_profile": "kdna.payload.judgment",
+              "payload_version": "0.2.0",
+              "plan": "kdna.consumption-plan/0.2.0",
+              "read": "kdna.read/0.2.0",
+              "runtime": "kdna.runtime-capsule/0.2.0",
+              "trace": "kdna.judgment-trace/0.2.0"
+            },
+            "budget_bytes": 1000000,
+            "mode": "catalog",
+            "selection": null,
+            "handle": null
+          },
+          "result": {
+            "channel": "read_envelope",
+            "envelope": {
+              "contract": "kdna.read/0.2.0",
+              "request_id": "request:material-synthetic-missing-target-0",
+              "status": "rejected",
+              "tuple": null,
+              "asset": null,
+              "snapshot_id": null,
+              "digests": null,
+              "content": null,
+              "states": {
+                "core": "invalid",
+                "interpretation": "not_evaluated",
+                "writer": "not_evaluated",
+                "confirmation": "not_evaluated",
+                "read_permission": "not_evaluated",
+                "action_authorization": "not_evaluated"
+              },
+              "diagnostics": [
+                {
+                  "code": "READ_CORE_INVALID",
+                  "stage": "core",
+                  "severity": "error",
+                  "subject": null,
+                  "field": null
+                }
+              ],
+              "omissions": [],
+              "assessment": {
+                "state": "not_evaluated",
+                "kind": null,
+                "assessor_id": null,
+                "evidence_ref": null
+              },
+              "receipt": {
+                "receipt_id": "receipt:request:material-synthetic-missing-target-0",
+                "request_id": "request:material-synthetic-missing-target-0",
+                "snapshot_id": null,
+                "host_id": null,
+                "host_epoch": null,
+                "decision_id": null,
+                "disclosed_at": null,
+                "delivery": "not_delivered"
+              },
+              "budget": {
+                "limit_bytes": 1000000,
+                "required_bytes": "0000000000000945",
+                "actual_bytes": "0000000000000945"
+              }
+            },
+            "admission_rejection": null,
+            "control": null,
+            "transport_failure": null
+          }
+        }
+      ],
+      "sha256": "58e3cc0b4c4d29e5c9961082fe35f4d3ece1e20eccb02edf62a72de489a7576b"
+    },
+    {
+      "file": "wrong-target-kind.kdna",
+      "name": "synthetic-wrong-target-kind",
+      "expected": "rejected",
+      "core": {
+        "status": "rejected",
+        "reason": "READ_CORE_INVALID",
+        "states": {
+          "core": "invalid",
+          "interpretation": "not_evaluated"
+        },
+        "component_failure": null,
+        "diagnostics": [
+          {
+            "code": "READ_CORE_INVALID",
+            "stage": "core",
+            "severity": "error",
+            "subject": null,
+            "field": null
+          }
+        ]
+      },
+      "reads": [
+        {
+          "request": {
+            "request_id": "request:material-synthetic-wrong-target-kind-0",
+            "tuple": {
+              "container": "0.2.0",
+              "core": "kdna.core/0.3.0",
+              "host": "kdna.agent-host/0.2.0",
+              "ir": "kdna.canonical-ir/0.2.0",
+              "payload_profile": "kdna.payload.judgment",
+              "payload_version": "0.2.0",
+              "plan": "kdna.consumption-plan/0.2.0",
+              "read": "kdna.read/0.2.0",
+              "runtime": "kdna.runtime-capsule/0.2.0",
+              "trace": "kdna.judgment-trace/0.2.0"
+            },
+            "budget_bytes": 1000000,
+            "mode": "catalog",
+            "selection": null,
+            "handle": null
+          },
+          "result": {
+            "channel": "read_envelope",
+            "envelope": {
+              "contract": "kdna.read/0.2.0",
+              "request_id": "request:material-synthetic-wrong-target-kind-0",
+              "status": "rejected",
+              "tuple": null,
+              "asset": null,
+              "snapshot_id": null,
+              "digests": null,
+              "content": null,
+              "states": {
+                "core": "invalid",
+                "interpretation": "not_evaluated",
+                "writer": "not_evaluated",
+                "confirmation": "not_evaluated",
+                "read_permission": "not_evaluated",
+                "action_authorization": "not_evaluated"
+              },
+              "diagnostics": [
+                {
+                  "code": "READ_CORE_INVALID",
+                  "stage": "core",
+                  "severity": "error",
+                  "subject": null,
+                  "field": null
+                }
+              ],
+              "omissions": [],
+              "assessment": {
+                "state": "not_evaluated",
+                "kind": null,
+                "assessor_id": null,
+                "evidence_ref": null
+              },
+              "receipt": {
+                "receipt_id": "receipt:request:material-synthetic-wrong-target-kind-0",
+                "request_id": "request:material-synthetic-wrong-target-kind-0",
+                "snapshot_id": null,
+                "host_id": null,
+                "host_epoch": null,
+                "decision_id": null,
+                "disclosed_at": null,
+                "delivery": "not_delivered"
+              },
+              "budget": {
+                "limit_bytes": 1000000,
+                "required_bytes": "0000000000000954",
+                "actual_bytes": "0000000000000954"
+              }
+            },
+            "admission_rejection": null,
+            "control": null,
+            "transport_failure": null
+          }
+        }
+      ],
+      "sha256": "7f42e58883cde5d5a4d62ff3eb02db1e75c638d85f7d66851b67b091122527ab"
+    },
+    {
+      "file": "empty-reference.kdna",
+      "name": "synthetic-empty-reference",
+      "expected": "rejected",
+      "core": {
+        "status": "rejected",
+        "reason": "READ_CORE_INVALID",
+        "states": {
+          "core": "invalid",
+          "interpretation": "not_evaluated"
+        },
+        "component_failure": null,
+        "diagnostics": [
+          {
+            "code": "READ_CORE_INVALID",
+            "stage": "core",
+            "severity": "error",
+            "subject": null,
+            "field": null
+          }
+        ]
+      },
+      "reads": [
+        {
+          "request": {
+            "request_id": "request:material-synthetic-empty-reference-0",
+            "tuple": {
+              "container": "0.2.0",
+              "core": "kdna.core/0.3.0",
+              "host": "kdna.agent-host/0.2.0",
+              "ir": "kdna.canonical-ir/0.2.0",
+              "payload_profile": "kdna.payload.judgment",
+              "payload_version": "0.2.0",
+              "plan": "kdna.consumption-plan/0.2.0",
+              "read": "kdna.read/0.2.0",
+              "runtime": "kdna.runtime-capsule/0.2.0",
+              "trace": "kdna.judgment-trace/0.2.0"
+            },
+            "budget_bytes": 1000000,
+            "mode": "catalog",
+            "selection": null,
+            "handle": null
+          },
+          "result": {
+            "channel": "read_envelope",
+            "envelope": {
+              "contract": "kdna.read/0.2.0",
+              "request_id": "request:material-synthetic-empty-reference-0",
+              "status": "rejected",
+              "tuple": null,
+              "asset": null,
+              "snapshot_id": null,
+              "digests": null,
+              "content": null,
+              "states": {
+                "core": "invalid",
+                "interpretation": "not_evaluated",
+                "writer": "not_evaluated",
+                "confirmation": "not_evaluated",
+                "read_permission": "not_evaluated",
+                "action_authorization": "not_evaluated"
+              },
+              "diagnostics": [
+                {
+                  "code": "READ_CORE_INVALID",
+                  "stage": "core",
+                  "severity": "error",
+                  "subject": null,
+                  "field": null
+                }
+              ],
+              "omissions": [],
+              "assessment": {
+                "state": "not_evaluated",
+                "kind": null,
+                "assessor_id": null,
+                "evidence_ref": null
+              },
+              "receipt": {
+                "receipt_id": "receipt:request:material-synthetic-empty-reference-0",
+                "request_id": "request:material-synthetic-empty-reference-0",
+                "snapshot_id": null,
+                "host_id": null,
+                "host_epoch": null,
+                "decision_id": null,
+                "disclosed_at": null,
+                "delivery": "not_delivered"
+              },
+              "budget": {
+                "limit_bytes": 1000000,
+                "required_bytes": "0000000000000948",
+                "actual_bytes": "0000000000000948"
+              }
+            },
+            "admission_rejection": null,
+            "control": null,
+            "transport_failure": null
+          }
+        }
+      ],
+      "sha256": "8553341168c4def9492f1ce65694c318cdf0651c38de07a0b0371433c52c3e99"
+    },
+    {
+      "file": "null-reference.kdna",
+      "name": "synthetic-null-reference",
+      "expected": "rejected",
+      "core": {
+        "status": "rejected",
+        "reason": "READ_CORE_INVALID",
+        "states": {
+          "core": "invalid",
+          "interpretation": "not_evaluated"
+        },
+        "component_failure": null,
+        "diagnostics": [
+          {
+            "code": "READ_CORE_INVALID",
+            "stage": "core",
+            "severity": "error",
+            "subject": null,
+            "field": null
+          }
+        ]
+      },
+      "reads": [
+        {
+          "request": {
+            "request_id": "request:material-synthetic-null-reference-0",
+            "tuple": {
+              "container": "0.2.0",
+              "core": "kdna.core/0.3.0",
+              "host": "kdna.agent-host/0.2.0",
+              "ir": "kdna.canonical-ir/0.2.0",
+              "payload_profile": "kdna.payload.judgment",
+              "payload_version": "0.2.0",
+              "plan": "kdna.consumption-plan/0.2.0",
+              "read": "kdna.read/0.2.0",
+              "runtime": "kdna.runtime-capsule/0.2.0",
+              "trace": "kdna.judgment-trace/0.2.0"
+            },
+            "budget_bytes": 1000000,
+            "mode": "catalog",
+            "selection": null,
+            "handle": null
+          },
+          "result": {
+            "channel": "read_envelope",
+            "envelope": {
+              "contract": "kdna.read/0.2.0",
+              "request_id": "request:material-synthetic-null-reference-0",
+              "status": "rejected",
+              "tuple": null,
+              "asset": null,
+              "snapshot_id": null,
+              "digests": null,
+              "content": null,
+              "states": {
+                "core": "invalid",
+                "interpretation": "not_evaluated",
+                "writer": "not_evaluated",
+                "confirmation": "not_evaluated",
+                "read_permission": "not_evaluated",
+                "action_authorization": "not_evaluated"
+              },
+              "diagnostics": [
+                {
+                  "code": "READ_CORE_INVALID",
+                  "stage": "core",
+                  "severity": "error",
+                  "subject": null,
+                  "field": null
+                }
+              ],
+              "omissions": [],
+              "assessment": {
+                "state": "not_evaluated",
+                "kind": null,
+                "assessor_id": null,
+                "evidence_ref": null
+              },
+              "receipt": {
+                "receipt_id": "receipt:request:material-synthetic-null-reference-0",
+                "request_id": "request:material-synthetic-null-reference-0",
+                "snapshot_id": null,
+                "host_id": null,
+                "host_epoch": null,
+                "decision_id": null,
+                "disclosed_at": null,
+                "delivery": "not_delivered"
+              },
+              "budget": {
+                "limit_bytes": 1000000,
+                "required_bytes": "0000000000000945",
+                "actual_bytes": "0000000000000945"
+              }
+            },
+            "admission_rejection": null,
+            "control": null,
+            "transport_failure": null
+          }
+        }
+      ],
+      "sha256": "99135764b5b26ff72bf3a6d09538885f1f281ae7b58fbb47b9c14c413dd82a52"
+    },
+    {
+      "file": "missing-source.kdna",
+      "name": "synthetic-missing-source",
+      "expected": "rejected",
+      "core": {
+        "status": "rejected",
+        "reason": "READ_CORE_INVALID",
+        "states": {
+          "core": "invalid",
+          "interpretation": "not_evaluated"
+        },
+        "component_failure": null,
+        "diagnostics": [
+          {
+            "code": "READ_CORE_INVALID",
+            "stage": "core",
+            "severity": "error",
+            "subject": null,
+            "field": null
+          }
+        ]
+      },
+      "reads": [
+        {
+          "request": {
+            "request_id": "request:material-synthetic-missing-source-0",
+            "tuple": {
+              "container": "0.2.0",
+              "core": "kdna.core/0.3.0",
+              "host": "kdna.agent-host/0.2.0",
+              "ir": "kdna.canonical-ir/0.2.0",
+              "payload_profile": "kdna.payload.judgment",
+              "payload_version": "0.2.0",
+              "plan": "kdna.consumption-plan/0.2.0",
+              "read": "kdna.read/0.2.0",
+              "runtime": "kdna.runtime-capsule/0.2.0",
+              "trace": "kdna.judgment-trace/0.2.0"
+            },
+            "budget_bytes": 1000000,
+            "mode": "catalog",
+            "selection": null,
+            "handle": null
+          },
+          "result": {
+            "channel": "read_envelope",
+            "envelope": {
+              "contract": "kdna.read/0.2.0",
+              "request_id": "request:material-synthetic-missing-source-0",
+              "status": "rejected",
+              "tuple": null,
+              "asset": null,
+              "snapshot_id": null,
+              "digests": null,
+              "content": null,
+              "states": {
+                "core": "invalid",
+                "interpretation": "not_evaluated",
+                "writer": "not_evaluated",
+                "confirmation": "not_evaluated",
+                "read_permission": "not_evaluated",
+                "action_authorization": "not_evaluated"
+              },
+              "diagnostics": [
+                {
+                  "code": "READ_CORE_INVALID",
+                  "stage": "core",
+                  "severity": "error",
+                  "subject": null,
+                  "field": null
+                }
+              ],
+              "omissions": [],
+              "assessment": {
+                "state": "not_evaluated",
+                "kind": null,
+                "assessor_id": null,
+                "evidence_ref": null
+              },
+              "receipt": {
+                "receipt_id": "receipt:request:material-synthetic-missing-source-0",
+                "request_id": "request:material-synthetic-missing-source-0",
+                "snapshot_id": null,
+                "host_id": null,
+                "host_epoch": null,
+                "decision_id": null,
+                "disclosed_at": null,
+                "delivery": "not_delivered"
+              },
+              "budget": {
+                "limit_bytes": 1000000,
+                "required_bytes": "0000000000000945",
+                "actual_bytes": "0000000000000945"
+              }
+            },
+            "admission_rejection": null,
+            "control": null,
+            "transport_failure": null
+          }
+        }
+      ],
+      "sha256": "f47d04038a7ae205dbc3571e64eff7187b6c9a2767a34a8ed1e7826de4bba5ef"
+    },
+    {
+      "file": "neither-statement-nor-reference.kdna",
+      "name": "synthetic-neither-statement-nor-reference",
+      "expected": "rejected",
+      "core": {
+        "status": "rejected",
+        "reason": "READ_CORE_INVALID",
+        "states": {
+          "core": "invalid",
+          "interpretation": "not_evaluated"
+        },
+        "component_failure": null,
+        "diagnostics": [
+          {
+            "code": "READ_CORE_INVALID",
+            "stage": "core",
+            "severity": "error",
+            "subject": null,
+            "field": null
+          }
+        ]
+      },
+      "reads": [
+        {
+          "request": {
+            "request_id": "request:material-synthetic-neither-statement-nor-reference-0",
+            "tuple": {
+              "container": "0.2.0",
+              "core": "kdna.core/0.3.0",
+              "host": "kdna.agent-host/0.2.0",
+              "ir": "kdna.canonical-ir/0.2.0",
+              "payload_profile": "kdna.payload.judgment",
+              "payload_version": "0.2.0",
+              "plan": "kdna.consumption-plan/0.2.0",
+              "read": "kdna.read/0.2.0",
+              "runtime": "kdna.runtime-capsule/0.2.0",
+              "trace": "kdna.judgment-trace/0.2.0"
+            },
+            "budget_bytes": 1000000,
+            "mode": "catalog",
+            "selection": null,
+            "handle": null
+          },
+          "result": {
+            "channel": "read_envelope",
+            "envelope": {
+              "contract": "kdna.read/0.2.0",
+              "request_id": "request:material-synthetic-neither-statement-nor-reference-0",
+              "status": "rejected",
+              "tuple": null,
+              "asset": null,
+              "snapshot_id": null,
+              "digests": null,
+              "content": null,
+              "states": {
+                "core": "invalid",
+                "interpretation": "not_evaluated",
+                "writer": "not_evaluated",
+                "confirmation": "not_evaluated",
+                "read_permission": "not_evaluated",
+                "action_authorization": "not_evaluated"
+              },
+              "diagnostics": [
+                {
+                  "code": "READ_CORE_INVALID",
+                  "stage": "core",
+                  "severity": "error",
+                  "subject": null,
+                  "field": null
+                }
+              ],
+              "omissions": [],
+              "assessment": {
+                "state": "not_evaluated",
+                "kind": null,
+                "assessor_id": null,
+                "evidence_ref": null
+              },
+              "receipt": {
+                "receipt_id": "receipt:request:material-synthetic-neither-statement-nor-reference-0",
+                "request_id": "request:material-synthetic-neither-statement-nor-reference-0",
+                "snapshot_id": null,
+                "host_id": null,
+                "host_epoch": null,
+                "decision_id": null,
+                "disclosed_at": null,
+                "delivery": "not_delivered"
+              },
+              "budget": {
+                "limit_bytes": 1000000,
+                "required_bytes": "0000000000000996",
+                "actual_bytes": "0000000000000996"
+              }
+            },
+            "admission_rejection": null,
+            "control": null,
+            "transport_failure": null
+          }
+        }
+      ],
+      "sha256": "af83d3b61850d063ca0803150d90bf812ede5d2fc8bccb2a567dcd7beb66d824"
+    }
+  ]
+}

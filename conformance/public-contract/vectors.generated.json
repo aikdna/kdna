@@ -1,0 +1,5702 @@
+{
+  "admission_encoding_examples": [
+    {
+      "bytes": 302,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000302\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":\"request:1\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"$unknown\",\"reason\":\"unknown_field\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "7597523189f1553edd2c177ae5ceb1ea52e181bb13e21374000ef8e2b865558a",
+      "vector_id": "READ-FAKE-AUTH"
+    },
+    {
+      "bytes": 312,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000312\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":\"request:safe\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"budget_bytes\",\"reason\":\"missing_required\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "6925964838502b3e93f35f1fda94b33b4ae6ace4160240638af914cc0e6f7b43",
+      "vector_id": "ADM-BUDGET-MISSING"
+    },
+    {
+      "bytes": 306,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000306\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":\"request:safe\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"budget_bytes\",\"reason\":\"wrong_type\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "9b2734e4f7d7ea16890661331122ef4f4677f3ee5bd695cd888918cbb03a94bb",
+      "vector_id": "ADM-BUDGET-STRING"
+    },
+    {
+      "bytes": 306,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000306\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":\"request:safe\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"budget_bytes\",\"reason\":\"wrong_type\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "9b2734e4f7d7ea16890661331122ef4f4677f3ee5bd695cd888918cbb03a94bb",
+      "vector_id": "ADM-BUDGET-NULL"
+    },
+    {
+      "bytes": 308,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000308\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":\"request:safe\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"budget_bytes\",\"reason\":\"out_of_range\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "21597b9ad0f11ad6e285ff19fdf9d9677e57122d281259b26cdee05fa29e6708",
+      "vector_id": "ADM-BUDGET-NEGATIVE"
+    },
+    {
+      "bytes": 310,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000310\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":\"request:safe\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"budget_bytes\",\"reason\":\"unsafe_integer\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "dbefaa188232da076557081cfc238912100bcad4177f00aac54dd04f8ed32ab0",
+      "vector_id": "ADM-BUDGET-FRACTION"
+    },
+    {
+      "bytes": 310,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000310\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":\"request:safe\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"budget_bytes\",\"reason\":\"unsafe_integer\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "dbefaa188232da076557081cfc238912100bcad4177f00aac54dd04f8ed32ab0",
+      "vector_id": "ADM-BUDGET-NONSAFE"
+    },
+    {
+      "bytes": 306,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000306\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":\"request:safe\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"budget_bytes\",\"reason\":\"wrong_type\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "9b2734e4f7d7ea16890661331122ef4f4677f3ee5bd695cd888918cbb03a94bb",
+      "vector_id": "ADM-BUDGET-BOOLEAN"
+    },
+    {
+      "bytes": 302,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000302\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"request_id\",\"reason\":\"missing_required\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "b08a1af6f83d710f27f25ebc29a5889e4a4b81d85f399e11f14f30a1b7b76aa3",
+      "vector_id": "ADM-ID-MISSING"
+    },
+    {
+      "bytes": 296,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000296\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"request_id\",\"reason\":\"wrong_type\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "c647a9c10c42818e7a7f74acc68f63f2d20bc86e63909682bebec40be15f85ab",
+      "vector_id": "ADM-ID-NULL"
+    },
+    {
+      "bytes": 296,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000296\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"request_id\",\"reason\":\"wrong_type\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "c647a9c10c42818e7a7f74acc68f63f2d20bc86e63909682bebec40be15f85ab",
+      "vector_id": "ADM-ID-NUMBER"
+    },
+    {
+      "bytes": 304,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000304\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"request_id\",\"reason\":\"invalid_identifier\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "d47da2ccb7f61e1ab8f609a017a692e2b9606b7f0d10f7e30ceacddcf2ad4481",
+      "vector_id": "ADM-ID-EMPTY"
+    },
+    {
+      "bytes": 304,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000304\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"request_id\",\"reason\":\"invalid_identifier\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "d47da2ccb7f61e1ab8f609a017a692e2b9606b7f0d10f7e30ceacddcf2ad4481",
+      "vector_id": "ADM-ID-CONTROL"
+    },
+    {
+      "bytes": 304,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000304\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"request_id\",\"reason\":\"invalid_identifier\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "d47da2ccb7f61e1ab8f609a017a692e2b9606b7f0d10f7e30ceacddcf2ad4481",
+      "vector_id": "ADM-ID-TOO-LONG"
+    },
+    {
+      "bytes": 304,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000304\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"request_id\",\"reason\":\"invalid_identifier\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "d47da2ccb7f61e1ab8f609a017a692e2b9606b7f0d10f7e30ceacddcf2ad4481",
+      "vector_id": "ADM-ID-UTF8-LONG"
+    },
+    {
+      "bytes": 306,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000306\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":\"request:safe\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"budget_bytes\",\"reason\":\"wrong_type\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "9b2734e4f7d7ea16890661331122ef4f4677f3ee5bd695cd888918cbb03a94bb",
+      "vector_id": "ADM-VALID-ID-BAD-BUDGET"
+    },
+    {
+      "bytes": 304,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000304\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"request_id\",\"reason\":\"invalid_identifier\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "d47da2ccb7f61e1ab8f609a017a692e2b9606b7f0d10f7e30ceacddcf2ad4481",
+      "vector_id": "ADM-INVALID-ID-BAD-BUDGET"
+    },
+    {
+      "bytes": 297,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000297\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"$unknown\",\"reason\":\"unknown_field\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "f40815d7a6a9802bb183d436c319341ddf0617ee3654f9d835f00b204ce50fcc",
+      "vector_id": "ADM-MULTI-UNKNOWN-FIRST"
+    },
+    {
+      "bytes": 297,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000297\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"tuple\",\"reason\":\"missing_required\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "39439c284276de915c75cf4d64d22160248eefe7845c43e4c6d3b875f0c36ced",
+      "vector_id": "ADM-MULTI-MISSING-ORDER"
+    },
+    {
+      "bytes": 302,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000302\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"request_id\",\"reason\":\"missing_required\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "b08a1af6f83d710f27f25ebc29a5889e4a4b81d85f399e11f14f30a1b7b76aa3",
+      "vector_id": "ADM-MULTI-MISSING-ID-FIRST"
+    },
+    {
+      "bytes": 304,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000304\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"request_id\",\"reason\":\"invalid_identifier\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "d47da2ccb7f61e1ab8f609a017a692e2b9606b7f0d10f7e30ceacddcf2ad4481",
+      "vector_id": "ADM-MULTI-ID-BEFORE-BUDGET"
+    },
+    {
+      "bytes": 308,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000308\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":\"request:safe\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"budget_bytes\",\"reason\":\"out_of_range\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "21597b9ad0f11ad6e285ff19fdf9d9677e57122d281259b26cdee05fa29e6708",
+      "vector_id": "ADM-MULTI-BUDGET-BEFORE-TUPLE-MODE"
+    },
+    {
+      "bytes": 311,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000311\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"$candidate\",\"reason\":\"representation_not_object\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "4edc6f5b4afb43cfdb3d4303953d6530ecd58ceb6a16e619e2b190aa79e73fa3",
+      "vector_id": "ADM-NONOBJECT"
+    },
+    {
+      "bytes": 311,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000311\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":null,\"state\":\"unavailable\"},\"diagnostic\":{\"field\":\"$candidate\",\"reason\":\"representation_not_object\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "4edc6f5b4afb43cfdb3d4303953d6530ecd58ceb6a16e619e2b190aa79e73fa3",
+      "vector_id": "ADM-ARRAY"
+    },
+    {
+      "bytes": 303,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000303\",\"limit_bytes\":1000},\"correlation\":{\"request_id\":\"request:safe\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"budget_bytes\",\"reason\":\"wrong_type\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "7c6582709ee888ab3697375dfc4030eaf7641547e83a05a80c10c37eaa1ddfb6",
+      "vector_id": "ADM-CONTROL-FIT"
+    },
+    {
+      "bytes": 306,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000306\",\"limit_bytes\":1000000},\"correlation\":{\"request_id\":\"request:safe\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"budget_bytes\",\"reason\":\"wrong_type\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "9b2734e4f7d7ea16890661331122ef4f4677f3ee5bd695cd888918cbb03a94bb",
+      "vector_id": "ADM-BROWSER-SAME"
+    },
+    {
+      "bytes": 302,
+      "jcs_utf8": "{\"code\":\"READ_INPUT_INVALID\",\"contract\":\"kdna.read-admission/0.1.0\",\"control_budget\":{\"actual_bytes\":\"0000000000000302\",\"limit_bytes\":302},\"correlation\":{\"request_id\":\"request:safe\",\"state\":\"validated\"},\"diagnostic\":{\"field\":\"budget_bytes\",\"reason\":\"wrong_type\",\"severity\":\"error\",\"stage\":\"admission\"}}",
+      "sha256": "0e11e66c68eed3cedb7e4dff7c3b8d0e63f9066c7a10fad49afcef7e5ebf3831",
+      "vector_id": "ADM-CONTROL-EXACT"
+    }
+  ],
+  "admission_fixture_rules": "New candidate objects are literal raw request examples (no tuple_ref). Provider state is a test-authority observation, never a serialized permission. Nonfinite numbers and language inspection failures are not encoded as invalid JSON here; these vectors use literal JSON-compatible values. Every admission failure has Core/Host count zero. Unknown-key test observations outside read_call_result are not public echoes. JCS examples for admission bodies contain only scalar-safe ASCII after sanitization, so the exact encoding is supplied and independently reproducible without a general JCS implementation.",
+  "budget_fixture_rule": "Byte lengths are explicit inputs to the final budget decision stage, not measured encodings of the symbolic IR fixture. Fixed-width accounting is specified in R06; later implementation must independently encode the full envelope.",
+  "count": 94,
+  "diagnostic_ref": "specs/read-contract.md R04 and R07; specs/public-contract-decisions.json diagnostic_design_registry",
+  "digest_primitive_rule": "SHA values computed solely with standard-library SHA256 over explicit preimage bytes; ASCII-only JSON examples already have a stated JCS preimage. No general JCS implementation, Core code or product test ran; these primitive inputs do not claim container/Capsule format validity.",
+  "distribution": {
+    "accept": 17,
+    "reject": 77
+  },
+  "expected_notation": "ReadCallResult four discriminants and all null sibling fields are exact assertions. Old symbolic IR cases and lawful Envelope-size stage cases use an explicitly labelled assertion projection inside envelope; observation_scope is test notation, never a wire field. New admission rejection/control/transport payloads are full closed values. Root project returns ReadProjection, not a fictitious ReadCallResult. Digest/Writer/declaration/package-set primitive cases explicitly mark read_call_result=null and keep their own operation assertions; wrapping them in a ReadEnvelope would invent a public disclosure operation. All original 54 IDs remain; every Read adapter case has the new result layer.",
+  "fixture_rules": "Named fixture preconditions are test-authority assumptions, never accepted serialized Core/Host authority. An override is a dotted-path replacement; {$delete:true} deletes that one field. Fixture metadata is not serialized public input. Resolve overrides ending in tuple_ref first, expand each named tuple into the enclosing tuple property and remove tuple_ref, then apply all remaining dotted overrides. Resolve request.handle_ref=issued-handle:1 to the final fixture.handle and remove handle_ref before decoding the public request. The default node scenario uses a captured Uint8Array whose Core adapter result is the declared fixture; the root scenario passes that Core snapshot directly. Browser input representation is explicit. Fixture Core/Host witness labels, admission state and registry flags are test-authority observations, not fields supplied by asset callers. Unmentioned Host correlation identifiers match the resolved request/snapshot. A registry_matches_overridden_handle=true case means an actually issued older/different record, not attacker-editing a live record. Core data arrays describe Core-owned IR read nodes by stable ID; generated Canonical IR schema fixtures will supply exact nodes. Modes preserve listed order; assertion fields not listed in an expected object are outside that vector observation, never default success.",
+  "fixtures": {
+    "admitted-a": {
+      "A": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "C": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "assessment": {
+        "assessor_id": null,
+        "evidence_ref": null,
+        "kind": null,
+        "state": "not_evaluated"
+      },
+      "asset": {
+        "asset_id": "asset:a",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "catalog": [
+        {
+          "judgment_id": "j:1",
+          "label": "One",
+          "node_ref": "node:j1"
+        },
+        {
+          "judgment_id": "j:2",
+          "label": "Two",
+          "node_ref": "node:j2"
+        }
+      ],
+      "confirmation": "claimed_unverified",
+      "core_state": "valid",
+      "core_witness": "ISSUED_BY_CORE_FIXTURE_AUTHORITY",
+      "declarations": [
+        "decl:a"
+      ],
+      "expansion_targets": [
+        {
+          "scope": [
+            "optional:1",
+            "boundary:1"
+          ],
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "target": "optional:1"
+        }
+      ],
+      "handle": {
+        "A": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "C": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "asset_id": "asset:a",
+        "asset_version": "1.0.0",
+        "core_version": "kdna.core/0.3.0",
+        "expires_at": 1500,
+        "handle_id": "handle:1",
+        "host_epoch": "epoch:1",
+        "host_id": "host:1",
+        "ir_version": "kdna.canonical-ir/0.2.0",
+        "issued_at": 900,
+        "read_version": "kdna.read/0.2.0",
+        "scope": [
+          "optional:1",
+          "boundary:1"
+        ],
+        "selection": {
+          "asset_id": "asset:a",
+          "asset_version": "1.0.0",
+          "judgment_id": "j:1"
+        },
+        "snapshot_id": "snapshot:a:1",
+        "target": "optional:1"
+      },
+      "handle_registered_exactly": true,
+      "host": {
+        "current_ms": 1000,
+        "decision": "allow",
+        "expires_at": 2000,
+        "host_epoch": "epoch:1",
+        "host_id": "host:1",
+        "issued_at": 900,
+        "revoked": false,
+        "scope": [
+          "decl:a",
+          "node:j1",
+          "scope:1",
+          "boundary:1",
+          "result:1",
+          "node:j2",
+          "scope:2",
+          "result:2",
+          "optional:1"
+        ],
+        "witness": "ISSUED_BY_HOST_FIXTURE_AUTHORITY"
+      },
+      "host_correlation": "All context request/snapshot/A/C/decision/policy identifiers match the resolved request and fixture unless explicitly overridden.",
+      "interpretation": "complete",
+      "ir_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "mandatory_closures": {
+        "j:1": [
+          "node:j1",
+          "scope:1",
+          "boundary:1",
+          "result:1"
+        ],
+        "j:2": [
+          "node:j2",
+          "scope:2",
+          "result:2"
+        ]
+      },
+      "runtime_entry_names": [
+        "kdna.json",
+        "payload.kdnab"
+      ],
+      "snapshot_id": "snapshot:a:1",
+      "tuple": {
+        "container": "0.2.0",
+        "core": "kdna.core/0.3.0",
+        "host": "kdna.agent-host/0.2.0",
+        "ir": "kdna.canonical-ir/0.2.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.2.0",
+        "plan": "kdna.consumption-plan/0.2.0",
+        "read": "kdna.read/0.2.0",
+        "runtime": "kdna.runtime-capsule/0.2.0",
+        "trace": "kdna.judgment-trace/0.2.0"
+      },
+      "writer": "not_evaluated"
+    }
+  },
+  "implementation": "NOT_IMPLEMENTED",
+  "kind": "CONTRACT_VECTORS_NOT_RUNTIME_EVIDENCE",
+  "normative_conformance": "NOT_CLAIMED",
+  "original_54_ids_preserved": [
+    "READ-WHOLE",
+    "READ-CATALOG",
+    "READ-SELECT",
+    "READ-ASSET",
+    "READ-ASSET-VERSION",
+    "READ-NO-MATCH",
+    "READ-CORE-BAD",
+    "READ-HOST-DENY",
+    "READ-DEGRADED",
+    "READ-OLD-TUPLE",
+    "READ-MIXED-TUPLE",
+    "READ-MISSING-COORDINATE",
+    "READ-FORGED-SNAPSHOT",
+    "READ-FAKE-AUTH",
+    "READ-FAKE-HOST",
+    "READ-SCOPE",
+    "READ-EXPAND",
+    "HANDLE-FORGED",
+    "HANDLE-OLD-VERSION",
+    "HANDLE-STALE",
+    "HANDLE-WRONG-ASSET",
+    "HANDLE-OUTSIDE",
+    "HANDLE-EXPIRED",
+    "HANDLE-RESTART",
+    "HOST-CLOCK-BACK",
+    "HOST-CONTEXT-EXPIRED",
+    "HOST-REVOKED",
+    "ROOT-PURE",
+    "ROOT-BYTES",
+    "BROWSER-ADMITTED",
+    "BROWSER-PATH",
+    "BROWSER-NO-CORE",
+    "NODE-SNAPSHOT-ONCE",
+    "DECLARATION-STATES",
+    "WRITER-NO-FILLER",
+    "CONFIRMATION-VERIFIED",
+    "BUDGET-EXACT",
+    "BUDGET-FULL-ENVELOPE",
+    "BUDGET-CONTROL-ONLY",
+    "DIGEST-A",
+    "DIGEST-C-E-DOMAINS",
+    "DIGEST-SIGNATURE-EXCLUDED",
+    "DIGEST-DUPLICATE-KEY",
+    "DIGEST-UNICODE",
+    "DIGEST-P-DETACHED",
+    "DIGEST-P-HOST-MISMATCH",
+    "DIGEST-EXPECTED-NOT-OBSERVED",
+    "DIGEST-NO-EXPECTED",
+    "SET-ISOLATED",
+    "SET-UNAUTHORIZED",
+    "SET-MISSING",
+    "SET-MERGE",
+    "SET-CROSS-REFERENCE",
+    "SET-AMBIGUOUS"
+  ],
+  "repair_epoch": "OPEN-W1-ADMISSION-REJECTION-01",
+  "rule_reference_base": "specs/",
+  "status": "NOT_RUN",
+  "tuple_fixtures": {
+    "new": {
+      "container": "0.2.0",
+      "core": "kdna.core/0.3.0",
+      "host": "kdna.agent-host/0.2.0",
+      "ir": "kdna.canonical-ir/0.2.0",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.2.0",
+      "plan": "kdna.consumption-plan/0.2.0",
+      "read": "kdna.read/0.2.0",
+      "runtime": "kdna.runtime-capsule/0.2.0",
+      "trace": "kdna.judgment-trace/0.2.0"
+    },
+    "old": {
+      "container": "0.1.0",
+      "core": "historical-core",
+      "host": "kdna.agent-host/0.1.0",
+      "ir": "historical-ir",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.1.0",
+      "plan": "historical-consumption-plan",
+      "read": "historical-read",
+      "runtime": "kdna.runtime-capsule/0.1.0",
+      "trace": "historical-judgment-trace"
+    }
+  },
+  "vectors": [
+    {
+      "category": "mode",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "catalog": [
+              "j:1",
+              "j:2"
+            ],
+            "closure": [],
+            "declarations": [
+              "decl:a"
+            ],
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "omission_reasons": {
+              "node:j1": "not_in_mode",
+              "node:j2": "not_in_mode"
+            },
+            "read_permission": "allowed",
+            "selected": null,
+            "status": "ready"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-WHOLE",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "request.mode": "whole_asset",
+          "request.selection": null
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "accept",
+      "rules": [
+        "read-contract.md#r03"
+      ]
+    },
+    {
+      "category": "mode",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "catalog": [
+              "j:1",
+              "j:2"
+            ],
+            "closure": [],
+            "declarations": [],
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "omission_reasons": {
+              "decl:a": "not_in_mode",
+              "node:j1": "not_in_mode",
+              "node:j2": "not_in_mode"
+            },
+            "status": "ready"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-CATALOG",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "request.mode": "catalog",
+          "request.selection": null
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "accept",
+      "rules": [
+        "read-contract.md#r03"
+      ]
+    },
+    {
+      "category": "mode",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "catalog": [
+              "j:1"
+            ],
+            "closure": [
+              "node:j1",
+              "scope:1",
+              "boundary:1",
+              "result:1"
+            ],
+            "confirmation": "claimed_unverified",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "omission_reasons": {
+              "node:j2": "outside_selection"
+            },
+            "selected": "j:1",
+            "status": "ready"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-SELECT",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {},
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "accept",
+      "rules": [
+        "read-contract.md#r03",
+        "read-contract.md#r05"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_ASSET_MISMATCH",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "selection",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-ASSET",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "request.selection.asset_id": "asset:b"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_ASSET_VERSION_MISMATCH",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "selection",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-ASSET-VERSION",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "request.selection.asset_version": "2.0.0"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_SELECTION_NOT_FOUND",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "selection",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-NO-MATCH",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "request.selection.judgment_id": "j:absent"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "core": "invalid",
+            "delivery": "not_delivered",
+            "diagnostic": "READ_CORE_INVALID",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "read_permission": "not_evaluated",
+            "stage": "core",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-CORE-BAD",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.core_state": "invalid",
+          "fixture.host.decision": "deny"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "core": "valid",
+            "delivery": "not_delivered",
+            "diagnostic": "READ_HOST_DENIED",
+            "interpretation": "complete",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "read_permission": "denied",
+            "stage": "host",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-HOST-DENY",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.host.decision": "deny"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_INTERPRETATION_INCOMPLETE",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "core",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-DEGRADED",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.interpretation": "degraded"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "version",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_UNSUPPORTED_VERSION",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "version",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-OLD-TUPLE",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.tuple_ref": "old",
+          "request.tuple_ref": "old"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "version",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_MIXED_VERSION_TUPLE",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "version",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-MIXED-TUPLE",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "request.tuple.container": "0.1.0"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "version",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_MIXED_VERSION_TUPLE",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "version",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-MISSING-COORDINATE",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "request.tuple.host": {
+            "$delete": true
+          }
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_SNAPSHOT_UNATTESTED",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "input",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-FORGED-SNAPSHOT",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.core_witness": "SERIALIZED_COPY"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000302",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": "request:1",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "$unknown",
+              "reason": "unknown_field",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "READ-FAKE-AUTH",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "request.authorized": true
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_HOST_CONTEXT_UNTRUSTED",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "host",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-FAKE-HOST",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.host.witness": "SERIALIZED_COPY"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_SCOPE_DENIED",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "host",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-SCOPE",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.host.scope": [
+            "node:j1",
+            "scope:1",
+            "result:1"
+          ]
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "handle",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "current_host_check": true,
+            "expanded_nodes": [
+              "optional:1",
+              "boundary:1"
+            ],
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "status": "ready"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "READ-EXPAND",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "request.handle_ref": "issued-handle:1",
+          "request.mode": "expand"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "accept",
+      "rules": [
+        "read-contract.md#r05"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_HANDLE_UNTRUSTED",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "handle",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "HANDLE-FORGED",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.handle_registered_exactly": false,
+          "request.handle_ref": "issued-handle:1",
+          "request.mode": "expand"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_HANDLE_VERSION_MISMATCH",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "handle",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "HANDLE-OLD-VERSION",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.handle.read_version": "kdna.read/0.0.9",
+          "registry_matches_overridden_handle": true,
+          "request.handle_ref": "issued-handle:1",
+          "request.mode": "expand"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_HANDLE_STALE",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "handle",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "HANDLE-STALE",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.handle.snapshot_id": "snapshot:a:old",
+          "registry_matches_overridden_handle": true,
+          "request.handle_ref": "issued-handle:1",
+          "request.mode": "expand"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_HANDLE_ASSET_MISMATCH",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "handle",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "HANDLE-WRONG-ASSET",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.handle.asset_id": "asset:b",
+          "registry_matches_overridden_handle": true,
+          "request.handle_ref": "issued-handle:1",
+          "request.mode": "expand"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_HANDLE_SCOPE_MISMATCH",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "handle",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "HANDLE-OUTSIDE",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.handle.scope": [
+            "optional:1"
+          ],
+          "registry_matches_overridden_handle": true,
+          "request.handle_ref": "issued-handle:1",
+          "request.mode": "expand"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_HANDLE_EXPIRED",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "host",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "HANDLE-EXPIRED",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.host.current_ms": 1500,
+          "request.handle_ref": "issued-handle:1",
+          "request.mode": "expand"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_HOST_EPOCH_MISMATCH",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "host",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "HANDLE-RESTART",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.host.host_epoch": "epoch:2",
+          "registry_retains_old_epoch_record": true,
+          "request.handle_ref": "issued-handle:1",
+          "request.mode": "expand"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_HOST_TIME_INVALID",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "host",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "HOST-CLOCK-BACK",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.host.current_ms": 899
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_HOST_CONTEXT_EXPIRED",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "host",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "HOST-CONTEXT-EXPIRED",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.host.current_ms": 2000
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_HOST_DENIED",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "host",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "HOST-REVOKED",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "fixture.host.revoked": true
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "entry",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admission_required": true,
+        "api_result_kind": "ReadProjection",
+        "projection_assertions": {
+          "action_executed": false,
+          "clock_read": false,
+          "envelope_returned": false,
+          "host_called": false,
+          "io_called": false,
+          "issued_handles": [],
+          "permission_granted": false,
+          "status": "projected"
+        },
+        "read_call_result": null
+      },
+      "id": "ROOT-PURE",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "entry": "root"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "accept",
+      "rules": [
+        "read-contract.md#r01"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admission_required": true,
+        "api_result_kind": "ReadProjection",
+        "projection_assertions": {
+          "body": null,
+          "diagnostics": [
+            {
+              "code": "READ_INPUT_INVALID",
+              "field": null,
+              "severity": "error",
+              "stage": "input",
+              "subject": null
+            }
+          ],
+          "envelope_returned": false,
+          "status": "rejected"
+        },
+        "read_call_result": null
+      },
+      "id": "ROOT-BYTES",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "entry": "root",
+          "input_representation": "Uint8Array"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "entry",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "dom_dependency": false,
+            "duplicate_parser": false,
+            "host_reauthorized": true,
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "status": "ready"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "BROWSER-ADMITTED",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "core_browser_capability": true,
+          "entry": "browser",
+          "input_representation": "CoreSnapshot"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "accept",
+      "rules": [
+        "read-contract.md#r01"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_INPUT_INVALID",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "input",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "BROWSER-PATH",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "entry": "browser",
+          "input_representation": "path"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "read",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "action_authorization": "not_evaluated",
+            "content": null,
+            "delivery": "not_delivered",
+            "diagnostic": "READ_CORE_CAPABILITY_UNAVAILABLE",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "stage": "input",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "BROWSER-NO-CORE",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "core_browser_capability": false,
+          "entry": "browser",
+          "input_representation": "ArrayBuffer"
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r04"
+      ]
+    },
+    {
+      "category": "entry",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "admission_bytes": "immutable-bytes-1",
+            "digest_basis": "immutable-bytes-1",
+            "later_path_read": false,
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "status": "ready"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "NODE-SNAPSHOT-ONCE",
+      "input": {
+        "entry": "node",
+        "fixture": "admitted-a",
+        "host_provider": "trusted-fixture-provider",
+        "overrides": {
+          "entry": "node",
+          "input_representation": "path",
+          "path_observations": [
+            "immutable-bytes-1",
+            "changed-bytes-2"
+          ]
+        },
+        "request": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "exact_selection",
+          "request_id": "request:1",
+          "selection": {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1"
+          },
+          "tuple_ref": "new"
+        },
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "accept",
+      "rules": [
+        "read-contract.md#r01"
+      ]
+    },
+    {
+      "category": "state",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "DeclarationProjection",
+        "operation_assertions": {
+          "collapsed": false,
+          "missing": {
+            "field": "field:1",
+            "state": "observed_missing"
+          },
+          "omission": {
+            "reason": "not_requested",
+            "state": "explicitly_omitted",
+            "target": "node:optional"
+          },
+          "preserved_states": [
+            "unknown",
+            "none",
+            "not_applicable",
+            "provided"
+          ]
+        },
+        "read_call_result": null
+      },
+      "id": "DECLARATION-STATES",
+      "input": {
+        "absent_optional_field": "field:1",
+        "declarations": [
+          {
+            "state": "unknown",
+            "value": null
+          },
+          {
+            "state": "none",
+            "value": null
+          },
+          {
+            "state": "not_applicable",
+            "value": null
+          },
+          {
+            "state": "provided",
+            "value": "value:1"
+          }
+        ],
+        "unrequested_present_node": "node:optional"
+      },
+      "kind": "accept",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r03"
+      ]
+    },
+    {
+      "category": "writer",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "WriterAssessment",
+        "operation_assertions": {
+          "confirmation": "claimed_unverified",
+          "core": "valid",
+          "diagnostic": "WRITER_REQUIRED_DECLARATION_MISSING",
+          "output_fields": [
+            "axiom"
+          ],
+          "synthesized_fields": [],
+          "writer": "insufficient"
+        },
+        "read_call_result": null
+      },
+      "id": "WRITER-NO-FILLER",
+      "input": {
+        "authored_fields": {
+          "axiom": "authored statement"
+        },
+        "confirmation_claim": "self",
+        "core": "valid",
+        "profile_required": [
+          "highest_question"
+        ]
+      },
+      "kind": "reject",
+      "rules": [
+        "public-contract-decisions.json#/writer_profile"
+      ]
+    },
+    {
+      "category": "authority",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "AuthorityAssessment",
+        "operation_assertions": {
+          "action_authorization": "not_evaluated",
+          "confirmation": "verified",
+          "core": "valid",
+          "read_permission": "not_evaluated",
+          "writer": "insufficient"
+        },
+        "read_call_result": null
+      },
+      "id": "CONFIRMATION-VERIFIED",
+      "input": {
+        "core": "valid",
+        "external_verifier": "verifier:1",
+        "trusted_revision_bound_evidence": true,
+        "writer": "insufficient"
+      },
+      "kind": "accept",
+      "rules": [
+        "public-contract-decisions.json#/responsibility_states"
+      ]
+    },
+    {
+      "category": "budget",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "actual_bytes": "0000000000008192",
+            "body_delivered": true,
+            "content_delivered": true,
+            "diagnostic": null,
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "required_bytes": "0000000000008192",
+            "status": "ready",
+            "truncated": false
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "BUDGET-EXACT",
+      "input": {
+        "complete_final_success_envelope_bytes": 8192,
+        "complete_rejection_envelope_bytes": 2048,
+        "includes": [
+          "content",
+          "diagnostics",
+          "omissions",
+          "receipt",
+          "budget",
+          "handles"
+        ],
+        "limit_bytes": 8192,
+        "stage": "R06 budget decision",
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "accept",
+      "rules": [
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "budget",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "actual_bytes": "0000000000002048",
+            "body_delivered": true,
+            "content_delivered": false,
+            "diagnostic": "READ_BUDGET_INSUFFICIENT",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "required_bytes": "0000000000008192",
+            "status": "rejected",
+            "truncated": false
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "BUDGET-FULL-ENVELOPE",
+      "input": {
+        "complete_final_success_envelope_bytes": 8192,
+        "complete_rejection_envelope_bytes": 2048,
+        "includes": [
+          "content",
+          "diagnostics",
+          "omissions",
+          "receipt",
+          "budget",
+          "handles"
+        ],
+        "limit_bytes": 8191,
+        "stage": "R06 budget decision",
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "budget",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": false,
+        "budget_stage_observation": {
+          "rejection_bytes": 2048,
+          "required_success_bytes": 8192
+        },
+        "core_calls": "prior_pipeline_not_observed",
+        "host_calls": "prior_pipeline_not_observed",
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "no_body_control",
+          "control": {
+            "body_bytes": 0,
+            "code": "READ_RESPONSE_BUDGET_TOO_SMALL",
+            "correlation": {
+              "request_id": "request:1",
+              "state": "validated"
+            },
+            "semantic_cause": "READ_BUDGET_INSUFFICIENT"
+          },
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "BUDGET-CONTROL-ONLY",
+      "input": {
+        "admission_precondition": {
+          "candidate_source": "input.candidate",
+          "correlation_source": "The admitted request_id is input.candidate.request_id after the R04 Identifier check; derive correlation from that value without a default",
+          "scope": "Finite test-stage precondition only; not caller authorization, a serialized public witness, or an observation of actual Core/Host calls",
+          "stage": "R04 request admission has produced a valid branded AdmittedReadRequest from this complete candidate"
+        },
+        "candidate": {
+          "budget_bytes": 100,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:1",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "complete_final_success_envelope_bytes": 8192,
+        "complete_rejection_envelope_bytes": 2048,
+        "includes": [
+          "content",
+          "diagnostics",
+          "omissions",
+          "receipt",
+          "budget",
+          "handles"
+        ],
+        "limit_bytes": 100,
+        "stage": "R06 budget decision",
+        "trusted_control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "digest",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "DigestPrimitive",
+        "operation_assertions": {
+          "A": "sha256:054edec1d0211f624fed0cbca9d4f9400b0e491c43742af2c5b0abebf0c990d8"
+        },
+        "read_call_result": null
+      },
+      "id": "DIGEST-A",
+      "input": {
+        "bytes_hex": "00010203",
+        "stage": "digest primitive only; not container admission"
+      },
+      "kind": "accept",
+      "rules": [
+        "public-contract-decisions.json#/digest_profiles/A"
+      ]
+    },
+    {
+      "category": "digest",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "DigestPrimitive",
+        "operation_assertions": {
+          "C1": "sha256:05e4e80effef8fc60ab5997cd7ccf548efe6e2d93623e8629c058b40e24497c3",
+          "C2": "sha256:05e4e80effef8fc60ab5997cd7ccf548efe6e2d93623e8629c058b40e24497c3",
+          "C_equal": true,
+          "E1": "sha256:520bf61a37fcc7d252f3c7a3808451ff424601c83fcfc641f27dea56dee1e282",
+          "E2": "sha256:ee8062c4ed57d937f943f59ae9759bbd55593be3b7d0c95bfdfd212507051baf",
+          "E_equal": false
+        },
+        "read_call_result": null
+      },
+      "id": "DIGEST-C-E-DOMAINS",
+      "input": {
+        "C_preimage_hex": "4b444e412d434f4e54454e542d5452454500302e322e300000000002000000096b646e612e6a736f6e0000000000000000397b2261737365745f6964223a2261737365743a61222c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d0000000d7061796c6f61642e6b646e616201000000000000000101",
+        "E1_preimage_hex": "4b444e412d52554e54494d452d454e5452592d53455400302e322e300000000002000000096b646e612e6a736f6e00000000000000557b2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d2c22636f6e74656e745f646967657374223a2273656c663a6f6e65222c2261737365745f6964223a2261737365743a61227d0000000d7061796c6f61642e6b646e6162000000000000000101",
+        "E2_preimage_hex": "4b444e412d52554e54494d452d454e5452592d53455400302e322e300000000002000000096b646e612e6a736f6e000000000000005d7b202261737365745f6964223a202261737365743a61222c2022636f6e74656e745f646967657374223a202273656c663a74776f222c202272756e74696d65223a207b226d616e6461746f72795f656e7472696573223a205b5d7d207d0000000d7061796c6f61642e6b646e6162000000000000000101",
+        "canonical_manifest_utf8": "{\"asset_id\":\"asset:a\",\"runtime\":{\"mandatory_entries\":[]}}",
+        "entries1": {
+          "kdna.json": {
+            "utf8": "{\"runtime\":{\"mandatory_entries\":[]},\"content_digest\":\"self:one\",\"asset_id\":\"asset:a\"}"
+          },
+          "payload.kdnab": {
+            "hex": "01"
+          }
+        },
+        "entries2": {
+          "kdna.json": {
+            "utf8": "{ \"asset_id\": \"asset:a\", \"content_digest\": \"self:two\", \"runtime\": {\"mandatory_entries\": []} }"
+          },
+          "payload.kdnab": {
+            "hex": "01"
+          }
+        }
+      },
+      "kind": "accept",
+      "rules": [
+        "public-contract-decisions.json#/digest_profiles/C",
+        "public-contract-decisions.json#/digest_profiles/E"
+      ]
+    },
+    {
+      "category": "digest",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "DigestPrimitive",
+        "operation_assertions": {
+          "A1": "sha256:b413f47d13ee2fe6c845b2ee141af81de858df4ec549a58b7970bb96645bc8d2",
+          "A2": "sha256:fcf0a6c700dd13e274b6fba8deea8dd9b26e4eedde3495717cac8408c9c5177f",
+          "A_equal": false,
+          "C_unchanged": true,
+          "E_unchanged": true
+        },
+        "read_call_result": null
+      },
+      "id": "DIGEST-SIGNATURE-EXCLUDED",
+      "input": {
+        "content_entries_ref": "DIGEST-C-E-DOMAINS.entries1",
+        "final_container_bytes1_hex": "0001",
+        "final_container_bytes2_hex": "0002",
+        "signature1_hex": "01",
+        "signature2_hex": "02",
+        "stage": "primitive domain comparison only"
+      },
+      "kind": "accept",
+      "rules": [
+        "public-contract-decisions.json#/digest_profiles"
+      ]
+    },
+    {
+      "category": "digest",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "DigestPrimitive",
+        "operation_assertions": {
+          "C": null,
+          "diagnostic": "DIGEST_INPUT_INVALID",
+          "status": "rejected"
+        },
+        "read_call_result": null
+      },
+      "id": "DIGEST-DUPLICATE-KEY",
+      "input": {
+        "entry": "attachment.json",
+        "raw_json": "{\"x\":1,\"x\":2}"
+      },
+      "kind": "reject",
+      "rules": [
+        "public-contract-decisions.json#/digest_profiles/C"
+      ]
+    },
+    {
+      "category": "digest",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "DigestPrimitive",
+        "operation_assertions": {
+          "C": null,
+          "diagnostic": "DIGEST_INPUT_INVALID",
+          "status": "rejected"
+        },
+        "read_call_result": null
+      },
+      "id": "DIGEST-UNICODE",
+      "input": {
+        "entry": "attachment.json",
+        "raw_json": "{\"x\":\"\\ud800\"}"
+      },
+      "kind": "reject",
+      "rules": [
+        "public-contract-decisions.json#/digest_profiles/C"
+      ]
+    },
+    {
+      "category": "digest",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "DigestPrimitive",
+        "operation_assertions": {
+          "P": "sha256:4db58963fe930f82cae3b461e081e726aa58ab2b61a98b43dda0b42f75db0343",
+          "embedded_P": false,
+          "removed_fields": []
+        },
+        "read_call_result": null
+      },
+      "id": "DIGEST-P-DETACHED",
+      "input": {
+        "canonical_utf8": "{\"context\":{\"selected\":\"j:1\"},\"contract\":\"kdna.runtime-capsule/0.2.0\"}",
+        "capsule_object": {
+          "context": {
+            "selected": "j:1"
+          },
+          "contract": "kdna.runtime-capsule/0.2.0"
+        },
+        "stage": "JCS digest primitive; not complete Capsule admission"
+      },
+      "kind": "accept",
+      "rules": [
+        "public-contract-decisions.json#/digest_profiles/P"
+      ]
+    },
+    {
+      "category": "digest",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "DigestPrimitive",
+        "operation_assertions": {
+          "comparison": "mismatched",
+          "diagnostic": "CAPSULE_DELIVERY_DIGEST_MISMATCH",
+          "status": "rejected"
+        },
+        "read_call_result": null
+      },
+      "id": "DIGEST-P-HOST-MISMATCH",
+      "input": {
+        "delivery": "sha256:4db58963fe930f82cae3b461e081e726aa58ab2b61a98b43dda0b42f75db0343",
+        "host_recomputed": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "producer": "sha256:4db58963fe930f82cae3b461e081e726aa58ab2b61a98b43dda0b42f75db0343"
+      },
+      "kind": "reject",
+      "rules": [
+        "public-contract-decisions.json#/digest_profiles/P"
+      ]
+    },
+    {
+      "category": "digest",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "DigestPrimitive",
+        "operation_assertions": {
+          "comparison": "mismatched",
+          "diagnostic": "DIGEST_EXPECTATION_MISMATCH",
+          "observed": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "read_call_result": null
+      },
+      "id": "DIGEST-EXPECTED-NOT-OBSERVED",
+      "input": {
+        "expected": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "expected_source": {
+          "kind": "checksums_declaration",
+          "source_id": "checksums:1"
+        },
+        "observed": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "kind": "reject",
+      "rules": [
+        "public-contract-decisions.json#/digest_evidence"
+      ]
+    },
+    {
+      "category": "digest",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "DigestPrimitive",
+        "operation_assertions": {
+          "comparison": "not_compared",
+          "matched": false
+        },
+        "read_call_result": null
+      },
+      "id": "DIGEST-NO-EXPECTED",
+      "input": {
+        "expected": null,
+        "expected_source": null,
+        "observed": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "kind": "accept",
+      "rules": [
+        "public-contract-decisions.json#/digest_evidence"
+      ]
+    },
+    {
+      "category": "package_set",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "PackageSetDecision",
+        "operation_assertions": {
+          "action_authorized": false,
+          "merged_ir": false,
+          "selected_member": "m:a",
+          "status": "allowed"
+        },
+        "read_call_result": null
+      },
+      "id": "SET-ISOLATED",
+      "input": {
+        "admitted_members": [
+          "m:a",
+          "m:b"
+        ],
+        "cross_asset_reference": false,
+        "externally_authorized_members": [
+          "m:a",
+          "m:b"
+        ],
+        "matching_judgments": [
+          {
+            "judgment_id": "j:1",
+            "member_id": "m:a"
+          }
+        ],
+        "members": [
+          {
+            "A": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "member_id": "m:a"
+          },
+          {
+            "A": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "asset_id": "asset:b",
+            "asset_version": "1.0.0",
+            "member_id": "m:b"
+          }
+        ],
+        "operation": "isolated_read",
+        "selection": {
+          "asset_id": "asset:a",
+          "asset_version": "1.0.0",
+          "judgment_id": "j:1"
+        },
+        "tuple_ref": "new"
+      },
+      "kind": "accept",
+      "rules": [
+        "read-contract.md#r07"
+      ]
+    },
+    {
+      "category": "package_set",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "PackageSetDecision",
+        "operation_assertions": {
+          "diagnostic": "SET_MEMBER_UNAUTHORIZED",
+          "merged_ir": false,
+          "status": "rejected"
+        },
+        "read_call_result": null
+      },
+      "id": "SET-UNAUTHORIZED",
+      "input": {
+        "admitted_members": [
+          "m:a",
+          "m:b"
+        ],
+        "cross_asset_reference": false,
+        "externally_authorized_members": [
+          "m:a"
+        ],
+        "matching_judgments": [
+          {
+            "judgment_id": "j:1",
+            "member_id": "m:a"
+          }
+        ],
+        "members": [
+          {
+            "A": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "member_id": "m:a"
+          },
+          {
+            "A": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "asset_id": "asset:b",
+            "asset_version": "1.0.0",
+            "member_id": "m:b"
+          }
+        ],
+        "operation": "isolated_read",
+        "selection": {
+          "asset_id": "asset:a",
+          "asset_version": "1.0.0",
+          "judgment_id": "j:1"
+        },
+        "tuple_ref": "new"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r07"
+      ]
+    },
+    {
+      "category": "package_set",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "PackageSetDecision",
+        "operation_assertions": {
+          "diagnostic": "SET_MEMBER_MISSING",
+          "merged_ir": false,
+          "status": "rejected"
+        },
+        "read_call_result": null
+      },
+      "id": "SET-MISSING",
+      "input": {
+        "admitted_members": [
+          "m:a"
+        ],
+        "cross_asset_reference": false,
+        "externally_authorized_members": [
+          "m:a",
+          "m:b"
+        ],
+        "matching_judgments": [
+          {
+            "judgment_id": "j:1",
+            "member_id": "m:a"
+          }
+        ],
+        "members": [
+          {
+            "A": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "member_id": "m:a"
+          },
+          {
+            "A": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "asset_id": "asset:b",
+            "asset_version": "1.0.0",
+            "member_id": "m:b"
+          }
+        ],
+        "operation": "isolated_read",
+        "selection": {
+          "asset_id": "asset:a",
+          "asset_version": "1.0.0",
+          "judgment_id": "j:1"
+        },
+        "tuple_ref": "new"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r07"
+      ]
+    },
+    {
+      "category": "package_set",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "PackageSetDecision",
+        "operation_assertions": {
+          "diagnostic": "UNSUPPORTED_CROSS_ASSET_SEMANTIC_MERGE",
+          "merged_ir": false,
+          "status": "rejected"
+        },
+        "read_call_result": null
+      },
+      "id": "SET-MERGE",
+      "input": {
+        "admitted_members": [
+          "m:a",
+          "m:b"
+        ],
+        "cross_asset_reference": false,
+        "externally_authorized_members": [
+          "m:a",
+          "m:b"
+        ],
+        "matching_judgments": [
+          {
+            "judgment_id": "j:1",
+            "member_id": "m:a"
+          }
+        ],
+        "members": [
+          {
+            "A": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "member_id": "m:a"
+          },
+          {
+            "A": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "asset_id": "asset:b",
+            "asset_version": "1.0.0",
+            "member_id": "m:b"
+          }
+        ],
+        "operation": "semantic_merge",
+        "selection": {
+          "asset_id": "asset:a",
+          "asset_version": "1.0.0",
+          "judgment_id": "j:1"
+        },
+        "tuple_ref": "new"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r07"
+      ]
+    },
+    {
+      "category": "package_set",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "PackageSetDecision",
+        "operation_assertions": {
+          "diagnostic": "UNSUPPORTED_CROSS_ASSET_SEMANTIC_MERGE",
+          "merged_ir": false,
+          "status": "rejected"
+        },
+        "read_call_result": null
+      },
+      "id": "SET-CROSS-REFERENCE",
+      "input": {
+        "admitted_members": [
+          "m:a",
+          "m:b"
+        ],
+        "cross_asset_reference": true,
+        "externally_authorized_members": [
+          "m:a",
+          "m:b"
+        ],
+        "matching_judgments": [
+          {
+            "judgment_id": "j:1",
+            "member_id": "m:a"
+          }
+        ],
+        "members": [
+          {
+            "A": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "member_id": "m:a"
+          },
+          {
+            "A": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "asset_id": "asset:b",
+            "asset_version": "1.0.0",
+            "member_id": "m:b"
+          }
+        ],
+        "operation": "isolated_read",
+        "selection": {
+          "asset_id": "asset:a",
+          "asset_version": "1.0.0",
+          "judgment_id": "j:1"
+        },
+        "tuple_ref": "new"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r07"
+      ]
+    },
+    {
+      "category": "package_set",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "PackageSetDecision",
+        "operation_assertions": {
+          "diagnostic": "READ_SELECTION_AMBIGUOUS",
+          "merged_ir": false,
+          "status": "rejected"
+        },
+        "read_call_result": null
+      },
+      "id": "SET-AMBIGUOUS",
+      "input": {
+        "admitted_members": [
+          "m:a",
+          "m:b"
+        ],
+        "cross_asset_reference": false,
+        "externally_authorized_members": [
+          "m:a",
+          "m:b"
+        ],
+        "matching_judgments": [
+          {
+            "judgment_id": "j:1",
+            "member_id": "m:a"
+          },
+          {
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "judgment_id": "j:1",
+            "member_id": "m:b"
+          }
+        ],
+        "members": [
+          {
+            "A": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "member_id": "m:a"
+          },
+          {
+            "A": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "asset_id": "asset:a",
+            "asset_version": "1.0.0",
+            "member_id": "m:b"
+          }
+        ],
+        "operation": "isolated_read",
+        "selection": {
+          "asset_id": "asset:a",
+          "asset_version": "1.0.0",
+          "judgment_id": "j:1"
+        },
+        "tuple_ref": "new"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r07"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000312",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "budget_bytes",
+              "reason": "missing_required",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-BUDGET-MISSING",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000306",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "budget_bytes",
+              "reason": "wrong_type",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-BUDGET-STRING",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": "not-a-byte-limit",
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000306",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "budget_bytes",
+              "reason": "wrong_type",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-BUDGET-NULL",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": null,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000308",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "budget_bytes",
+              "reason": "out_of_range",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-BUDGET-NEGATIVE",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": -1,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000310",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "budget_bytes",
+              "reason": "unsafe_integer",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-BUDGET-FRACTION",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": 1.5,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000310",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "budget_bytes",
+              "reason": "unsafe_integer",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-BUDGET-NONSAFE",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": 9007199254740992,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000306",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "budget_bytes",
+              "reason": "wrong_type",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-BUDGET-BOOLEAN",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": true,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000302",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "request_id",
+              "reason": "missing_required",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-ID-MISSING",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "catalog",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000296",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "request_id",
+              "reason": "wrong_type",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-ID-NULL",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": null,
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000296",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "request_id",
+              "reason": "wrong_type",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-ID-NUMBER",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": 7,
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000304",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "request_id",
+              "reason": "invalid_identifier",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-ID-EMPTY",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000304",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "request_id",
+              "reason": "invalid_identifier",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-ID-CONTROL",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "id\u0001private",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000304",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "request_id",
+              "reason": "invalid_identifier",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-ID-TOO-LONG",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000304",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "request_id",
+              "reason": "invalid_identifier",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-ID-UTF8-LONG",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000306",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "budget_bytes",
+              "reason": "wrong_type",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        },
+        "safe_correlation_only": "request:safe"
+      },
+      "id": "ADM-VALID-ID-BAD-BUDGET",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": "secret-budget",
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000304",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "request_id",
+              "reason": "invalid_identifier",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-INVALID-ID-BAD-BUDGET",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": "secret-budget",
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "private\npath",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "first_unknown_key_test_observation": "a-secret",
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000297",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "$unknown",
+              "reason": "unknown_field",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        },
+        "unknown_key_not_in_public_result": true
+      },
+      "id": "ADM-MULTI-UNKNOWN-FIRST",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "a-secret": "raw-a",
+          "budget_bytes": -1,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": null,
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          },
+          "z-secret": "raw-z"
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000297",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "tuple",
+              "reason": "missing_required",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-MULTI-MISSING-ORDER",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": "bad",
+          "handle": null,
+          "mode": "catalog",
+          "request_id": null,
+          "selection": null
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000302",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "request_id",
+              "reason": "missing_required",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-MULTI-MISSING-ID-FIRST",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "handle": null,
+          "mode": "catalog",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000304",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "request_id",
+              "reason": "invalid_identifier",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-MULTI-ID-BEFORE-BUDGET",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": -1,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000308",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "budget_bytes",
+              "reason": "out_of_range",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-MULTI-BUDGET-BEFORE-TUPLE-MODE",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": -1,
+          "handle": null,
+          "mode": "bad",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": null
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000311",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "$candidate",
+              "reason": "representation_not_object",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-NONOBJECT",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": null,
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000311",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": null,
+              "state": "unavailable"
+            },
+            "diagnostic": {
+              "field": "$candidate",
+              "reason": "representation_not_object",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-ARRAY",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": [],
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000303",
+              "limit_bytes": 1000
+            },
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "budget_bytes",
+              "reason": "wrong_type",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-CONTROL-FIT",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": "bad",
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": false,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "no_body_control",
+          "control": {
+            "body_bytes": 0,
+            "code": "READ_ADMISSION_RESPONSE_TOO_SMALL",
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "semantic_cause": "READ_INPUT_INVALID"
+          },
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-CONTROL-TOO-SMALL",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": "bad",
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": false,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "transport_failure",
+          "control": null,
+          "envelope": null,
+          "transport_failure": {
+            "code": "READ_TRANSPORT_FAILURE",
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "delivery": "not_confirmed",
+            "semantic_cause": "READ_INPUT_INVALID"
+          }
+        }
+      },
+      "id": "ADM-PROVIDER-MISSING-BAD",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": "bad",
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "missing"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": false,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "transport_failure",
+          "control": null,
+          "envelope": null,
+          "transport_failure": {
+            "code": "READ_TRANSPORT_FAILURE",
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "delivery": "not_confirmed",
+            "semantic_cause": "READ_INPUT_INVALID"
+          }
+        }
+      },
+      "id": "ADM-PROVIDER-INVALID-BAD",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": "bad",
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "invalid_witness"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000306",
+              "limit_bytes": 1000000
+            },
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "budget_bytes",
+              "reason": "wrong_type",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-BROWSER-SAME",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": "bad",
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "entry": "browser"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": {
+            "code": "READ_INPUT_INVALID",
+            "contract": "kdna.read-admission/0.1.0",
+            "control_budget": {
+              "actual_bytes": "0000000000000302",
+              "limit_bytes": 302
+            },
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "diagnostic": {
+              "field": "budget_bytes",
+              "reason": "wrong_type",
+              "severity": "error",
+              "stage": "admission"
+            }
+          },
+          "channel": "admission_rejection",
+          "control": null,
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-CONTROL-EXACT",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": "bad",
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 302,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": false,
+        "api_result_kind": "ReadCallResult",
+        "body_present": false,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "no_body_control",
+          "control": {
+            "body_bytes": 0,
+            "code": "READ_ADMISSION_RESPONSE_TOO_SMALL",
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "semantic_cause": "READ_INPUT_INVALID"
+          },
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADM-CONTROL-BOUNDARY-MINUS-ONE",
+      "input": {
+        "asset_input": "CORE_MUST_NOT_BE_CALLED",
+        "candidate": {
+          "budget_bytes": "bad",
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 301,
+          "state": "authenticated"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": false,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "transport_failure",
+          "control": null,
+          "envelope": null,
+          "transport_failure": {
+            "code": "READ_TRANSPORT_FAILURE",
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "delivery": "not_confirmed",
+            "semantic_cause": null
+          }
+        }
+      },
+      "id": "ADM-PROVIDER-MISSING-VALID",
+      "input": {
+        "candidate": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": null,
+          "state": "missing"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_present": false,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_input_echo": false,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "transport_failure",
+          "control": null,
+          "envelope": null,
+          "transport_failure": {
+            "code": "READ_TRANSPORT_FAILURE",
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "delivery": "not_confirmed",
+            "semantic_cause": null
+          }
+        }
+      },
+      "id": "ADM-PROVIDER-INVALID-VALID",
+      "input": {
+        "candidate": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": null,
+          "state": "invalid_limit"
+        },
+        "entry": "node"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admitted_budget",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": true,
+        "api_result_kind": "ReadCallResult",
+        "body_present": false,
+        "core_calls": 1,
+        "host_calls": 1,
+        "preserved_request_budget": 0,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "no_body_control",
+          "control": {
+            "body_bytes": 0,
+            "code": "READ_RESPONSE_BUDGET_TOO_SMALL",
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "semantic_cause": "READ_BUDGET_INSUFFICIENT"
+          },
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADMITTED-BUDGET-ZERO",
+      "input": {
+        "admission": "valid brand issued",
+        "candidate": {
+          "budget_bytes": 0,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "complete_rejection_bytes": 2048,
+        "complete_success_bytes": 8192,
+        "control_provider": {
+          "admission_response_limit_bytes": 1,
+          "state": "authenticated"
+        },
+        "core_calls_observed": 1,
+        "first_semantic_code": "READ_BUDGET_INSUFFICIENT",
+        "host_calls_observed": 1,
+        "stage": "complete Envelope budgeting after observed pipeline"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admitted_budget",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": true,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 1,
+        "host_calls": 1,
+        "preserved_request_budget": 8192,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "budget": {
+              "actual_bytes": "0000000000008192",
+              "limit_bytes": 8192,
+              "required_bytes": "0000000000008192"
+            },
+            "diagnostic": null,
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "status": "ready"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "ADMITTED-BUDGET-EXACT",
+      "input": {
+        "admission": "valid brand issued",
+        "candidate": {
+          "budget_bytes": 8192,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "complete_rejection_bytes": 2048,
+        "complete_success_bytes": 8192,
+        "control_provider": {
+          "admission_response_limit_bytes": 1,
+          "state": "authenticated"
+        },
+        "core_calls_observed": 1,
+        "first_semantic_code": null,
+        "host_calls_observed": 1,
+        "stage": "complete Envelope budgeting after observed pipeline"
+      },
+      "kind": "accept",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admitted_budget",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": true,
+        "api_result_kind": "ReadCallResult",
+        "body_present": true,
+        "core_calls": 1,
+        "host_calls": 1,
+        "preserved_request_budget": 8191,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "budget": {
+              "actual_bytes": "0000000000002048",
+              "limit_bytes": 8191,
+              "required_bytes": "0000000000008192"
+            },
+            "diagnostic": "READ_BUDGET_INSUFFICIENT",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "status": "rejected"
+          },
+          "transport_failure": null
+        }
+      },
+      "id": "ADMITTED-BUDGET-MINUS-ONE",
+      "input": {
+        "admission": "valid brand issued",
+        "candidate": {
+          "budget_bytes": 8191,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "complete_rejection_bytes": 2048,
+        "complete_success_bytes": 8192,
+        "control_provider": {
+          "admission_response_limit_bytes": 1,
+          "state": "authenticated"
+        },
+        "core_calls_observed": 1,
+        "first_semantic_code": "READ_BUDGET_INSUFFICIENT",
+        "host_calls_observed": 1,
+        "stage": "complete Envelope budgeting after observed pipeline"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admitted_budget",
+      "execution": "NOT_RUN",
+      "expected": {
+        "admitted_request": true,
+        "api_result_kind": "ReadCallResult",
+        "body_present": false,
+        "core_calls": 1,
+        "host_calls": 0,
+        "preserved_request_budget": 1,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "no_body_control",
+          "control": {
+            "body_bytes": 0,
+            "code": "READ_RESPONSE_BUDGET_TOO_SMALL",
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "semantic_cause": "READ_CORE_INVALID"
+          },
+          "envelope": null,
+          "transport_failure": null
+        }
+      },
+      "id": "ADMITTED-BUDGET-SEMANTIC-REJECTION-TOO-SMALL",
+      "input": {
+        "admission": "valid brand issued",
+        "candidate": {
+          "budget_bytes": 1,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "complete_rejection_bytes": 2048,
+        "complete_success_bytes": null,
+        "control_provider": {
+          "admission_response_limit_bytes": 1,
+          "state": "authenticated"
+        },
+        "core_calls_observed": 1,
+        "first_semantic_code": "READ_CORE_INVALID",
+        "host_calls_observed": 0,
+        "stage": "complete Envelope budgeting after observed pipeline"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "transport",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_in_return": null,
+        "core_calls": 0,
+        "host_calls": 0,
+        "raw_exception_echo": false,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "transport_failure",
+          "control": null,
+          "envelope": null,
+          "transport_failure": {
+            "code": "READ_TRANSPORT_FAILURE",
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "delivery": "not_confirmed",
+            "semantic_cause": "READ_INPUT_INVALID"
+          }
+        },
+        "semantic_result_delivery_claim": false
+      },
+      "id": "TRANSPORT-AFTER-ADMISSION-REJECTION",
+      "input": {
+        "candidate": {
+          "budget_bytes": "bad",
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "complete_admission_rejection_bytes": 306,
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "first_semantic_code": "READ_INPUT_INVALID",
+        "physical_bytes_sent": "unobserved",
+        "transport_event": "delivery_failure_after_prepared_result"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "transport",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_in_return": null,
+        "core_calls": 1,
+        "host_calls": 0,
+        "raw_exception_echo": false,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "transport_failure",
+          "control": null,
+          "envelope": null,
+          "transport_failure": {
+            "code": "READ_TRANSPORT_FAILURE",
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "delivery": "not_confirmed",
+            "semantic_cause": "READ_CORE_INVALID"
+          }
+        },
+        "semantic_result_delivery_claim": false
+      },
+      "id": "TRANSPORT-AFTER-SEMANTIC-REJECTION",
+      "input": {
+        "candidate": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "core_observation": {
+          "host_not_called": true,
+          "technical": "invalid"
+        },
+        "first_semantic_code": "READ_CORE_INVALID",
+        "physical_bytes_sent": "unobserved",
+        "transport_event": "delivery_failure_after_prepared_result"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "transport",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "body_in_return": null,
+        "core_calls": 1,
+        "host_calls": 1,
+        "raw_exception_echo": false,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "transport_failure",
+          "control": null,
+          "envelope": null,
+          "transport_failure": {
+            "code": "READ_TRANSPORT_FAILURE",
+            "correlation": {
+              "request_id": "request:safe",
+              "state": "validated"
+            },
+            "delivery": "not_confirmed",
+            "semantic_cause": null
+          }
+        },
+        "semantic_result_delivery_claim": false
+      },
+      "id": "TRANSPORT-AFTER-SUCCESS",
+      "input": {
+        "candidate": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": "catalog",
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "control_provider": {
+          "admission_response_limit_bytes": 1000000,
+          "state": "authenticated"
+        },
+        "first_semantic_code": null,
+        "physical_bytes_sent": "unobserved",
+        "pipeline_observation": {
+          "complete_envelope_bytes": 8192,
+          "core": "valid",
+          "host": "allow",
+          "interpretation": "complete"
+        },
+        "transport_event": "delivery_failure_after_prepared_result"
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r06"
+      ]
+    },
+    {
+      "category": "admission",
+      "execution": "NOT_RUN",
+      "expected": {
+        "api_result_kind": "ReadCallResult",
+        "core_calls": 0,
+        "host_calls": 0,
+        "later_mode_not_stored": true,
+        "read_call_result": {
+          "admission_rejection": null,
+          "channel": "read_envelope",
+          "control": null,
+          "envelope": {
+            "budget": {
+              "limit_bytes": 1000000
+            },
+            "diagnostic": "READ_MIXED_VERSION_TUPLE",
+            "observation_scope": "assertion_projection_not_complete_envelope",
+            "status": "rejected",
+            "tuple": null
+          },
+          "transport_failure": null
+        },
+        "safe_brand_record": {
+          "budget_bytes": 1000000,
+          "request": null,
+          "request_id": "request:safe",
+          "version_rejection": "READ_MIXED_VERSION_TUPLE"
+        }
+      },
+      "id": "ADM-VERSION-BEFORE-MODE",
+      "input": {
+        "candidate": {
+          "budget_bytes": 1000000,
+          "handle": null,
+          "mode": {
+            "unsafe": "not echoed"
+          },
+          "request_id": "request:safe",
+          "selection": null,
+          "tuple": {
+            "container": "0.1.0",
+            "core": "kdna.core/0.3.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.2.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.2.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          }
+        },
+        "complete_rejection_bytes": 2048,
+        "control_provider": {
+          "admission_response_limit_bytes": 1000,
+          "state": "authenticated"
+        }
+      },
+      "kind": "reject",
+      "rules": [
+        "read-contract.md#r02",
+        "read-contract.md#r04"
+      ]
+    }
+  ]
+}

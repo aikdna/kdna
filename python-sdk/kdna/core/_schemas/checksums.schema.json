@@ -19,7 +19,10 @@
   "allOf": [
     {
       "if": {
-        "anyOf": [{ "required": ["digest_profile"] }, { "required": ["covered_entries"] }]
+        "anyOf": [
+          { "required": ["digest_profile"] },
+          { "required": ["covered_entries"] }
+        ]
       },
       "then": {
         "required": [
@@ -45,7 +48,10 @@
     "covered_entries": {
       "type": "array",
       "description": "Ordered entries covered by kdna.digest-basis.runtime-entry-set.",
-      "prefixItems": [{ "const": "kdna.json" }, { "const": "payload.kdnab" }],
+      "prefixItems": [
+        { "const": "kdna.json" },
+        { "const": "payload.kdnab" }
+      ],
       "items": false,
       "minItems": 2,
       "maxItems": 2

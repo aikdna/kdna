@@ -87,4 +87,5 @@ function runConformance({ core }) {
   return { results, passed, failed: results.length - passed };
 }
 
-module.exports = { runConformance };
+const {runPublicContractVectors}=require('./public-contract/index.js');
+module.exports = { runConformance,runPublicContractVectors };

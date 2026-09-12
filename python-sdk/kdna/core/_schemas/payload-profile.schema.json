@@ -150,21 +150,15 @@
                 "anyOf": [
                   {
                     "required": ["statement"],
-                    "properties": {
-                      "statement": { "type": "string", "minLength": 1, "pattern": "\\S" }
-                    }
+                    "properties": { "statement": { "type": "string", "minLength": 1, "pattern": "\\S" } }
                   },
                   {
                     "required": ["one_sentence"],
-                    "properties": {
-                      "one_sentence": { "type": "string", "minLength": 1, "pattern": "\\S" }
-                    }
+                    "properties": { "one_sentence": { "type": "string", "minLength": 1, "pattern": "\\S" } }
                   },
                   {
                     "required": ["full_statement"],
-                    "properties": {
-                      "full_statement": { "type": "string", "minLength": 1, "pattern": "\\S" }
-                    }
+                    "properties": { "full_statement": { "type": "string", "minLength": 1, "pattern": "\\S" } }
                   }
                 ]
               }
@@ -181,46 +175,13 @@
                 "type": "object",
                 "minProperties": 1,
                 "anyOf": [
-                  {
-                    "required": ["scope"],
-                    "properties": {
-                      "scope": { "type": "string", "minLength": 1, "pattern": "\\S" }
-                    }
-                  },
-                  {
-                    "required": ["out_of_scope"],
-                    "properties": {
-                      "out_of_scope": { "type": "string", "minLength": 1, "pattern": "\\S" }
-                    }
-                  },
-                  {
-                    "required": ["text"],
-                    "properties": { "text": { "type": "string", "minLength": 1, "pattern": "\\S" } }
-                  },
-                  {
-                    "required": ["statement"],
-                    "properties": {
-                      "statement": { "type": "string", "minLength": 1, "pattern": "\\S" }
-                    }
-                  },
-                  {
-                    "required": ["one_sentence"],
-                    "properties": {
-                      "one_sentence": { "type": "string", "minLength": 1, "pattern": "\\S" }
-                    }
-                  },
-                  {
-                    "required": ["boundary"],
-                    "properties": {
-                      "boundary": { "type": "string", "minLength": 1, "pattern": "\\S" }
-                    }
-                  },
-                  {
-                    "required": ["stance"],
-                    "properties": {
-                      "stance": { "type": "string", "minLength": 1, "pattern": "\\S" }
-                    }
-                  },
+                  { "required": ["scope"], "properties": { "scope": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  { "required": ["out_of_scope"], "properties": { "out_of_scope": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  { "required": ["text"], "properties": { "text": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  { "required": ["statement"], "properties": { "statement": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  { "required": ["one_sentence"], "properties": { "one_sentence": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  { "required": ["boundary"], "properties": { "boundary": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
+                  { "required": ["stance"], "properties": { "stance": { "type": "string", "minLength": 1, "pattern": "\\S" } } },
                   {
                     "required": ["applies_when"],
                     "properties": {

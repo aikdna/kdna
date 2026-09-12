@@ -1,0 +1,129 @@
+{
+  "authority": "PD273",
+  "cases": [
+    {
+      "expectation": "distinct_ir_and_disclosed_content",
+      "id": "RISK-ORDINARY-HIGH",
+      "variants": [
+        {
+          "content_risk": "ordinary"
+        },
+        {
+          "content_risk": "high_consequence"
+        }
+      ]
+    },
+    {
+      "expectation": "presence_distinct",
+      "id": "RISK-ABSENT-EXPLICIT",
+      "variants": [
+        {},
+        {
+          "content_risk": "ordinary"
+        }
+      ]
+    },
+    {
+      "expectation": "presence_distinct",
+      "id": "EXTENSIONS-ABSENT-EMPTY",
+      "variants": [
+        {},
+        {
+          "extensions": []
+        }
+      ]
+    },
+    {
+      "expectation": "retain_values_and_order",
+      "id": "EXTENSIONS-VALUES-ORDER",
+      "variants": [
+        {
+          "extensions": [
+            {
+              "critical": false,
+              "definition": "Opaque conformance declaration",
+              "id": "ext:1",
+              "value": {
+                "kind": "text",
+                "value": "one"
+              }
+            },
+            {
+              "critical": false,
+              "definition": "Opaque conformance declaration",
+              "id": "ext:2",
+              "value": {
+                "kind": "text",
+                "value": "two"
+              }
+            }
+          ]
+        },
+        {
+          "extensions": [
+            {
+              "critical": false,
+              "definition": "Opaque conformance declaration",
+              "id": "ext:1",
+              "value": {
+                "kind": "text",
+                "value": "different"
+              }
+            },
+            {
+              "critical": false,
+              "definition": "Opaque conformance declaration",
+              "id": "ext:2",
+              "value": {
+                "kind": "text",
+                "value": "two"
+              }
+            }
+          ]
+        },
+        {
+          "extensions": [
+            {
+              "critical": false,
+              "definition": "Opaque conformance declaration",
+              "id": "ext:2",
+              "value": {
+                "kind": "text",
+                "value": "two"
+              }
+            },
+            {
+              "critical": false,
+              "definition": "Opaque conformance declaration",
+              "id": "ext:1",
+              "value": {
+                "kind": "text",
+                "value": "one"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "expectation": "READ_INTERPRETATION_INCOMPLETE",
+      "id": "EXTENSIONS-CRITICAL",
+      "variants": [
+        {
+          "extensions": [
+            {
+              "critical": true,
+              "definition": "Opaque conformance declaration",
+              "id": "ext:unknown",
+              "value": {
+                "kind": "text",
+                "value": "opaque"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "format": "kdna.ir-retention-vectors/1"
+}

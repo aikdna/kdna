@@ -1,0 +1,18 @@
+{
+  "bindings": {
+    "AuthorityAssessment": "Read.states+Host.observation",
+    "DeclarationProjection": "project.declarations",
+    "DigestPrimitive": "Core.digest",
+    "PackageSetDecision": "Core.packageSet",
+    "ReadCallResult": "readNode/readBrowser",
+    "ReadProjection": "project",
+    "WriterAssessment": "Core.authorship+Creation.premise"
+  },
+  "format": "kdna.public-conformance-adapter/1",
+  "observations": "Only declared expected fields; frozen seed expectations are never runtime implementation inputs.",
+  "seed": {
+    "path": "conformance/public-contract-decision-vectors.json",
+    "sha256": "5c22f92527fd93c85c04a1d28d3790455ea5cd06c0df94c56f8fd7446be9e843"
+  },
+  "source": "specs/public-semantic-source.json"
+}

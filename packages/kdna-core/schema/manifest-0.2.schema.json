@@ -1,0 +1,562 @@
+{
+  "$defs": {
+    "AccessMode": {
+      "enum": [
+        "public",
+        "licensed",
+        "remote"
+      ],
+      "type": "string"
+    },
+    "ActorKind": {
+      "enum": [
+        "person",
+        "organization",
+        "collective",
+        "anonymous",
+        "asset_native",
+        "agent"
+      ],
+      "type": "string"
+    },
+    "AssetType": {
+      "enum": [
+        "domain",
+        "cluster",
+        "tool",
+        "sample",
+        "fixture",
+        "bundle"
+      ],
+      "type": "string"
+    },
+    "Boolean": {
+      "type": "boolean"
+    },
+    "Compatibility": {
+      "additionalProperties": false,
+      "properties": {
+        "min_loader_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "0.2.0",
+          "type": "string"
+        }
+      },
+      "required": [
+        "min_loader_version",
+        "profile",
+        "profile_version"
+      ],
+      "type": "object"
+    },
+    "Creator": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "$ref": "#/$defs/ActorKind"
+        },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "type": "object"
+    },
+    "Digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "EncryptionDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "encrypted_entries": {
+          "items": {
+            "const": "payload.kdnab",
+            "type": "string"
+          },
+          "maxItems": 1,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "profile": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "profile_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "profile",
+        "profile_version",
+        "encrypted_entries"
+      ],
+      "type": "object"
+    },
+    "EntryName": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))(?!.*//)(?!.*[/]$)[^\\\\\\u0000-\\u001f\\u007f-\\u009f]+$",
+      "type": "string"
+    },
+    "Extension": {
+      "additionalProperties": false,
+      "properties": {
+        "critical": {
+          "$ref": "#/$defs/Boolean"
+        },
+        "definition": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "value": {
+          "$ref": "#/$defs/SemanticValue"
+        }
+      },
+      "required": [
+        "id",
+        "critical",
+        "definition",
+        "value"
+      ],
+      "type": "object"
+    },
+    "FiniteNumber": {
+      "type": "number"
+    },
+    "Identifier": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$",
+      "type": "string"
+    },
+    "License": {
+      "additionalProperties": false,
+      "properties": {
+        "identifier": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "uri": {
+          "$ref": "#/$defs/NonEmptyText"
+        }
+      },
+      "required": [
+        "identifier"
+      ],
+      "type": "object"
+    },
+    "Manifest": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "payload": {
+                "properties": {
+                  "encrypted": {
+                    "const": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "encrypted"
+                ]
+              }
+            },
+            "required": [
+              "payload"
+            ]
+          },
+          "then": {
+            "required": [
+              "encryption"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "access": {
+          "$ref": "#/$defs/AccessMode"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_type": {
+          "$ref": "#/$defs/AssetType"
+        },
+        "asset_uid": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "authoring": {
+          "$ref": "#/$defs/ManifestAuthoring"
+        },
+        "compatibility": {
+          "$ref": "#/$defs/Compatibility"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "creator": {
+          "$ref": "#/$defs/Creator"
+        },
+        "description": {
+          "$ref": "#/$defs/Text"
+        },
+        "encryption": {
+          "$ref": "#/$defs/EncryptionDescriptor"
+        },
+        "format_version": {
+          "const": "0.2.0",
+          "type": "string"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "keywords": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "language": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "license": {
+          "$ref": "#/$defs/License"
+        },
+        "lineage": {
+          "items": {
+            "$ref": "#/$defs/ManifestLineage"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "payload": {
+          "$ref": "#/$defs/PayloadDescriptor"
+        },
+        "runtime": {
+          "$ref": "#/$defs/ManifestRuntime"
+        },
+        "summary": {
+          "$ref": "#/$defs/Text"
+        },
+        "title": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "format_version",
+        "asset_id",
+        "asset_uid",
+        "asset_type",
+        "title",
+        "version",
+        "judgment_version",
+        "created_at",
+        "updated_at",
+        "compatibility",
+        "payload",
+        "runtime"
+      ],
+      "type": "object"
+    },
+    "ManifestAuthoring": {
+      "additionalProperties": false,
+      "properties": {
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "content_digest"
+      ],
+      "type": "object"
+    },
+    "ManifestLineage": {
+      "additionalProperties": false,
+      "properties": {
+        "relationship": {
+          "$ref": "#/$defs/TermRef"
+        },
+        "source_asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "source_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "source_asset_id",
+        "source_version",
+        "relationship"
+      ],
+      "type": "object"
+    },
+    "ManifestRuntime": {
+      "additionalProperties": false,
+      "properties": {
+        "mandatory_entries": {
+          "items": {
+            "$ref": "#/$defs/RuntimeMandatoryEntryName"
+          },
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "mandatory_entries"
+      ],
+      "type": "object"
+    },
+    "NonEmptyText": {
+      "minLength": 1,
+      "pattern": "\\S",
+      "type": "string"
+    },
+    "PayloadDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "encoding": {
+          "const": "cbor",
+          "type": "string"
+        },
+        "encrypted": {
+          "$ref": "#/$defs/Boolean"
+        },
+        "path": {
+          "const": "payload.kdnab",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "encoding",
+        "encrypted"
+      ],
+      "type": "object"
+    },
+    "RuntimeMandatoryEntryName": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/EntryName"
+        },
+        {
+          "not": {
+            "enum": [
+              "checksums.json",
+              "signature.kdsig",
+              "mimetype"
+            ]
+          }
+        },
+        {
+          "pattern": "^(?!build-receipt\\.json$)(?!reports/)(?!authoring/)"
+        }
+      ]
+    },
+    "SemanticValue": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ValueText"
+        },
+        {
+          "$ref": "#/$defs/ValueNumber"
+        },
+        {
+          "$ref": "#/$defs/ValueBoolean"
+        },
+        {
+          "$ref": "#/$defs/ValueNull"
+        },
+        {
+          "$ref": "#/$defs/ValueList"
+        },
+        {
+          "$ref": "#/$defs/ValueRecord"
+        }
+      ]
+    },
+    "TermRef": {
+      "additionalProperties": false,
+      "properties": {
+        "extension": {
+          "$ref": "#/$defs/Extension"
+        },
+        "term": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "term"
+      ],
+      "type": "object"
+    },
+    "Text": {
+      "type": "string"
+    },
+    "Timestamp": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+      "type": "string"
+    },
+    "ValueBoolean": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "boolean",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/Boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "type": "object"
+    },
+    "ValueField": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "value": {
+          "$ref": "#/$defs/SemanticValue"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "type": "object"
+    },
+    "ValueList": {
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "items": {
+            "$ref": "#/$defs/SemanticValue"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "kind": {
+          "const": "list",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "items"
+      ],
+      "type": "object"
+    },
+    "ValueNull": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "null",
+          "type": "string"
+        },
+        "value": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "type": "object"
+    },
+    "ValueNumber": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "number",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/FiniteNumber"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "type": "object"
+    },
+    "ValueRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "fields": {
+          "items": {
+            "$ref": "#/$defs/ValueField"
+          },
+          "minItems": 0,
+          "type": "array"
+        },
+        "kind": {
+          "const": "record",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "fields"
+      ],
+      "type": "object"
+    },
+    "ValueText": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "text",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/Text"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "type": "object"
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  },
+  "$id": "urn:kdna:schema:manifest:0.2.0",
+  "$ref": "#/$defs/Manifest",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Generated from the single public semantic source. Structural validity is not trusted admission or runtime authorization.",
+  "title": "Manifest"
+}

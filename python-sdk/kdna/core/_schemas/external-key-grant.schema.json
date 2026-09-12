@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kdna.ai/specs/external-key-grant.schema.json",
+  "title": "KDNA Account/Device External Key Grant",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "contract_version",
+    "grant_id",
+    "issuer",
+    "signing_key_id",
+    "entitlement_id",
+    "account_id",
+    "device_id",
+    "device_public_key",
+    "device_signing_public_key",
+    "asset",
+    "issued_at",
+    "refresh_after",
+    "offline_grace_until",
+    "expires_at",
+    "status",
+    "status_version",
+    "wrap",
+    "signature"
+  ],
+  "properties": {
+    "profile": { "const": "kdna.grant.external-key" },
+    "contract_version": { "const": "0.1.0" },
+    "grant_id": { "$ref": "#/$defs/id" },
+    "issuer": { "type": "string", "format": "uri", "maxLength": 256 },
+    "signing_key_id": { "$ref": "#/$defs/id" },
+    "entitlement_id": { "$ref": "#/$defs/id" },
+    "account_id": { "$ref": "#/$defs/id" },
+    "device_id": { "$ref": "#/$defs/id" },
+    "device_public_key": { "type": "string", "pattern": "^x25519:[A-Za-z0-9_-]{43}$" },
+    "device_signing_public_key": { "type": "string", "pattern": "^ed25519:[A-Za-z0-9_-]{43}$" },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asset_id",
+        "asset_uid",
+        "version",
+        "digest",
+        "entry_path",
+        "ciphertext_digest",
+        "key_ref",
+        "issuer_key_id"
+      ],
+      "properties": {
+        "asset_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "asset_uid": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "version": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "digest": { "$ref": "#/$defs/digest" },
+        "entry_path": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "ciphertext_digest": { "$ref": "#/$defs/digest" },
+        "key_ref": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "issuer_key_id": { "$ref": "#/$defs/id" }
+      }
+    },
+    "issued_at": { "type": "string", "format": "date-time" },
+    "refresh_after": { "type": "string", "format": "date-time" },
+    "offline_grace_until": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["active", "revoked", "expired"] },
+    "status_version": { "type": "integer", "minimum": 1 },
+    "wrap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alg", "ephemeral_public_key", "salt", "wrapped_cek"],
+      "properties": {
+        "alg": { "const": "X25519-HKDF-SHA256+A256KW" },
+        "ephemeral_public_key": { "type": "string", "pattern": "^x25519:[A-Za-z0-9_-]{43}$" },
+        "salt": { "type": "string", "pattern": "^[A-Za-z0-9_-]{22}$" },
+        "wrapped_cek": { "type": "string", "pattern": "^[A-Za-z0-9_-]{54}$" }
+      }
+    },
+    "signature": { "type": "string", "pattern": "^ed25519:[A-Za-z0-9_-]{86}$" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9._:@/-]{1,256}$" },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  }
+}

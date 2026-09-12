@@ -1,186 +1,38 @@
-# @aikdna/kdna-core
+# KDNA Core — public component revision
 
-> **Status:** Pre-release. This source tree contains unreleased work beyond
-> the published incumbent `0.22.0` (RFC-0021 M1 asset signatures and the
-> RFC-0020 minimal projection profile); the next release coordinate is not
-> finalized. The older `0.21.0` line predates the signature track. Candidate
-> source, APIs, and evidence must not be described as already published.
+Unpublished release candidate for the public KDNA contract. The npm package target is `0.24.0-rc.component-semantics.2`; its protocol coordinate is `kdna.core/0.3.0`, with Container/Payload `0.2.0` and Canonical IR `0.2.0`. Acceptance and publication are separate steps.
 
-Core library for packaged `.kdna` judgment assets. It implements one current
-container contract, authorization planning, integrity evidence, Runtime Capsule
-projection, and the correlated Agent Host execution boundary.
+Core admits one immutable container, validates its Manifest and typed Payload, resolves the static graph, computes A/C/E and Canonical IR digests, and issues a private snapshot. Risk and noncritical extensions remain authored declarations, with presence and order preserved. Unsupported critical semantics fail closed. Core performs no condition evaluation, quality assessment or authorization.
 
-## Install
-
-```bash
-npm install @aikdna/kdna-core@0.22.0
-```
-
-That command installs the published incumbent. Use its release notes for the
-exact `0.22.0` contract. The examples below describe the current source
-candidate and require its final release coordinate before registry use.
-
-## Pack, validate, plan, and load
-
-Use the package root. Version-qualified entry points and parallel generation
-APIs are not part of the public contract.
-
-```js
-const {
-  pack,
-  validate,
-  planLoad,
-  loadAuthorized,
-} = require('@aikdna/kdna-core');
-
-pack('./authoring-source', './asset.kdna');
-
-const validation = validate('./asset.kdna');
-if (!validation.overall_valid) {
-  throw new Error(validation.problems.join('\n'));
-}
-
-const plan = planLoad('./asset.kdna');
-if (!plan.can_load_now) {
-  throw new Error(`Asset is not loadable: ${plan.required_action}`);
-}
-
-const capsule = loadAuthorized('./asset.kdna', {
-  profile: 'compact',
-  as: 'json',
-});
-
-if (
-  capsule.type !== 'kdna.runtime-capsule' ||
-  capsule.contract_version !== '0.1.0'
-) {
-  throw new Error('Unexpected Runtime Capsule contract');
-}
-```
-
-Runtime entry points accept final packaged bytes or a packaged file. Authoring
-directories must be packed before they can produce a Runtime Capsule.
-
-`compatibility.min_loader_version` is a strict `x.y.z` loader package
-coordinate. `inspect` and `validate` expose it together with
-`loader_version` and `loader_compatible`. Structural validation remains
-separate from loadability: `planLoad` and every load path block a valid asset
-that requires a newer loader with `KDNA_LOADER_VERSION_UNSUPPORTED` before
-projection.
-
-## Current candidate Runtime contracts
-
-There is one current responsibility chain:
-
-```text
-packaged .kdna
-→ validate
-→ planLoad
-→ authorize
-→ Runtime Capsule
-→ Consumption Plan
-→ Agent Host request and correlated receipt
-→ Judgment Trace
-```
-
-Every KDNA-owned contract uses an explicit compatibility coordinate:
-
-| Contract | Identity | Compatibility coordinate |
+| Entry | Value exports | Input |
 | --- | --- | --- |
-| Container manifest | `format_version` | `0.1.0` |
-| Payload profile | `profile` + `profile_version` | `kdna.payload.judgment` + `0.1.0` |
-| Runtime Capsule | `type` + `contract_version` | `kdna.runtime-capsule` + `0.1.0` |
-| Consumption Plan | `type` + `contract_version` | `kdna.consumption-plan` + `0.1.0` |
-| Agent Host | `protocol` + `protocol_version` | `kdna.agent-host` + `0.1.0` |
-| Judgment Trace | `type` + `contract_version` | `kdna.judgment-trace` + `0.1.0` |
-
-There is no public adapter between competing Capsule or Host generations.
-Unsupported compatibility coordinates fail closed.
-
-## Digest responsibilities
-
-Core keeps four digest bases separate:
-
-- **A** — final packaged container bytes;
-- **C** — the canonical content tree;
-- **E** — the raw `kdna.json` and `payload.kdnab` runtime entry set;
-- **P** — the canonical Runtime Capsule delivered to a Host.
-
-Use `computeDigestEvidence()` for A/C/E and
-`computeCapsuleDeliveryDigest()` for P. A grant or registry expectation for A
-must never be compared with E from `checksums.json`.
-
-## Consumption and Host execution
-
-`buildConsumptionPlan()` creates the single-asset execution plan and its
-detached integrity digest. `buildAgentHostRequest()` validates the accepted
-Plan digest, observed Host capabilities, Capsule compatibility coordinate,
-task, asset identity, budgets, and P before producing a request.
-
-Untrusted Host JSON must enter through `parseRuntimeContractJson()` before
-object validation. It rejects duplicate keys, invalid UTF-8, non-JSON numeric
-values, trailing input, and excessive input before correlation checks run.
-
-`buildJudgmentTrace()` records delivery, Host execution, budget, result, and
-error evidence. A correlated receipt proves a technical boundary event; it
-does not prove semantic consumption, behavioral influence, judgment quality,
-or model conformance.
-
-If the exact projection or task exceeds an enforceable pre-Host budget,
-`buildAgentHostRequest()` fails closed. Use
-`buildPreHostBudgetBlockedTrace()` to retain a terminal evidence record without
-creating a deliverable Host request.
-
-## Licensed account/device grants
-
-`authorizeExternalKeyGrant()` verifies the issuer signature, time window,
-status, account, device, final packaged asset digest A, and encrypted entry.
-It returns a branded entitlement and an in-memory decrypt hook. A plain object
-such as `{ status: 'active' }` is not authorization.
-
-Keep device private keys in the platform secret store, dispose the returned
-session after loading, and expose only the Runtime Capsule to Agent-facing
-callers. Account grants never silently fall back to password authorization.
-
-## Projection profiles
-
-`loadAuthorized()` supports `index`, `compact`, `scenario`, and `full`, with
-`json` or `prompt` output. The requested profile controls the emitted context
-shape; implementations must not label one projection as another.
-
-## Deployer-controlled remote Runtime
-
-Ordinary consumers always receive `needs_runtime` / `connect_runtime` when an
-asset declares `access: "remote"`. A deployer that physically controls the
-server-side packaged asset uses the separate package subpath:
+| root | `admitBytes` | Uint8Array; stored ZIP entries |
+| `/node` | `admitNode` | path, Buffer or Uint8Array; stored/deflate ZIP |
+| `/browser` | `admitBrowser` | ArrayBuffer or Uint8Array; synchronous stored/deflate ZIP |
+| `/components` | `getComponentSemanticsContract` | Fixed read-only definition descriptor |
+| `/read-boundary` | `inspectSnapshot` | Private snapshot; returns a frozen data view or null |
 
 ```js
-const {
-  loadRemoteRuntimeAsset,
-} = require('@aikdna/kdna-core/remote-runtime');
+import { admitNode } from '@aikdna/kdna-core/node';
+import { inspectSnapshot } from '@aikdna/kdna-core/read-boundary';
 
-const fullCapsule = loadRemoteRuntimeAsset('./deployed-judgment.kdna');
+const result = await admitNode('/absolute/path/example.kdna');
+if (result.status === 'accepted') {
+  const view = inspectSnapshot(result.snapshot);
+  console.log(view.asset, view.ir.catalog);
+} else {
+  console.log(result.reason, result.diagnostics);
+}
 ```
 
-The function accepts one final packaged file path or packaged byte buffer. It
-validates and plans one immutable byte snapshot, accepts only a single remote
-asset, and returns a full JSON Runtime Capsule for the server's projection
-engine. It does not accept caller-selected access, profile, output, dependency,
-or inheritance options.
+Accepted and rejected results are closed objects. Rejections contain sanitized fixed diagnostics. A serialized or copied snapshot cannot recreate its witness. Snapshot identity belongs to one installed Core instance; a duplicate installation rejects foreign witnesses. Each new admission has a new snapshot ID. A retained snapshot remains immutable even if the original input bytes change.
 
-Possession of the deployed asset is the authorization boundary for this
-server-side API. The API does not authenticate network callers, verify their
-entitlements, make plaintext confidential from the deployer, minimize the
-projection returned to a client, or provide an AIKDNA-hosted service. The
-embedding Runtime must implement those request and disclosure controls and
-must never return the full server-side Capsule to an Agent client.
+The implemented container capability is bounded ZIP32 with contiguous entries, matching local/central names and metadata, CRC validation, and the runtime allowlist. Limits are 25 MiB container, 128 entries, 5 MiB per entry, 12 MiB total decoded content and 100:1 compression ratio. JSON/CBOR values also have bounded depth, array size and string bytes. ZIP64, data descriptors, unsupported codecs, CBOR tags/indefinite forms and bytestring Payload values fail closed. Encryption, signature and checksums-document admission capabilities are unavailable; no metadata claim is treated as cryptographic verification. Digest primitives remain independently testable.
 
-## Boundary
+The package includes only the new public-contract implementation and mechanically generated schema/types mirrors. Root exports contain no old API aliases. Historical 0.22 source tests remain in the repository; the package test command runs public admission and component tests. Historical tests require a separate old-line environment and are not evidence for this RC.
 
-Core validates technical structure, integrity, authorization, compatibility,
-and observed execution facts. It does not rank judgment quality, endorse an
-asset, or claim that a model understood or followed loaded judgment.
+See the monorepo's single `specs/public-semantic-source.json`, generation manifest and component revision receipts for exact source, tool, evidence-route and artifact coordinates. Runtime Capsule/Plan admission, external verification services, durable Host policy and cross-language parity are separate responsibilities.
 
-## License
+Explicit critical component declarations select the fixed public taxonomy, candidate-set or discriminator-set grammar. Core checks native owner/component/role bindings, exact content and aggregate claims before supplying typed interpretations. The method IR preserves native declarations, authored presence, original content, statement provenance and normalized bodies. No carrier means undeclared, not an empty or guessed mechanism. Invalid component semantics produce a named rejected result with Core valid, interpretation blocked and no snapshot/body.
 
-Apache-2.0
+`getComponentSemanticsContract()` returns a frozen descriptor of the definition digest, profiles, carriers and limits. It accepts no caller-supplied interpreter. A static adoption digest does not establish actual human/Agent adoption or strong Creation. Real creation, identity, Host permission and action authorization remain separate boundaries.

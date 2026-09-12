@@ -1,71 +1,77 @@
 {
-    "name": "@aikdna/kdna-core",
-    "version": "0.22.0",
-    "description": "KDNA Core library for validating, planning, and loading local .kdna judgment assets.",
-    "engines": {
-        "node": ">=18.0.0"
+  "name": "@aikdna/kdna-core",
+  "version": "0.24.0-rc.component-semantics.2",
+  "description": "Public KDNA Core with bounded component interpretation and Canonical IR.",
+  "engines": {
+    "node": ">=20"
+  },
+  "type": "commonjs",
+  "main": "src/public-contract/index.js",
+  "module": "src/public-contract/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./src/public-contract/types.d.ts",
+      "import": "./src/public-contract/index.mjs",
+      "require": "./src/public-contract/index.js"
     },
-    "type": "commonjs",
-    "main": "src/index.js",
-    "module": "src/index.mjs",
-    "exports": {
-        ".": {
-            "import": "./src/index.mjs",
-            "require": "./src/index.js",
-            "types": "./src/types.d.ts"
-        },
-        "./remote-runtime": {
-            "import": "./src/remote-runtime.mjs",
-            "require": "./src/remote-runtime.js",
-            "types": "./src/remote-runtime.d.ts"
-        },
-        "./package.json": "./package.json",
-        "./schema/*": "./schema/*"
+    "./node": {
+      "types": "./src/public-contract/node.d.ts",
+      "import": "./src/public-contract/node.mjs",
+      "require": "./src/public-contract/node.js"
     },
-    "types": "src/types.d.ts",
-    "scripts": {
-        "test": "node ../../scripts/run-node-tests.js test/*.test.js && node -e \"const m = require('./src/index.js'); console.log('kdna-core exports:', Object.keys(m).join(', '));\"",
-        "prepublishOnly": "npm run release:check",
-        "release:check": "node ../../scripts/check-post-cutover-naming.mjs && node scripts/check-release-readiness.js",
-        "publish:guard": "node scripts/check-publish-duplicate.js"
+    "./browser": {
+      "types": "./src/public-contract/browser.d.ts",
+      "import": "./src/public-contract/browser.mjs",
+      "require": "./src/public-contract/browser.js"
     },
-    "files": [
-        "src/",
-        "schema/",
-        "README.md",
-        "CHANGELOG.md",
-        "LICENSE",
-        "NOTICE"
-    ],
-    "keywords": [
-        "kdna",
-        "kdna-core",
-        "ai-agent",
-        "judgment-assets"
-    ],
-    "license": "Apache-2.0",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/aikdna/kdna.git",
-        "directory": "packages/kdna-core"
+    "./read-boundary": {
+      "types": "./src/public-contract/read-boundary.d.ts",
+      "import": "./src/public-contract/read-boundary.mjs",
+      "require": "./src/public-contract/read-boundary.js"
     },
-    "homepage": "https://aikdna.com",
-    "peerDependencies": {
-        "ajv": "^8.17.1",
-        "ajv-formats": "^3.0.1"
-    },
-    "peerDependenciesMeta": {
-        "ajv": {
-            "optional": true
-        },
-        "ajv-formats": {
-            "optional": true
-        }
-    },
-    "dependencies": {
-        "@noble/hashes": "^1.8.0",
-        "cbor-x": "^1.6.5",
-        "ajv": "^8.20.0",
-        "ajv-formats": "^3.0.1"
+    "./package.json": "./package.json",
+    "./components": {
+      "types": "./src/public-contract/components.d.ts",
+      "import": "./src/public-contract/components.mjs",
+      "require": "./src/public-contract/components.js"
     }
+  },
+  "types": "src/public-contract/types.d.ts",
+  "scripts": {
+    "test": "node --test test/public-contract.test.js test/public-components.test.js",
+    "prepublishOnly": "npm run release:check",
+    "release:check": "node ../../scripts/check-post-cutover-naming.mjs && node scripts/check-release-readiness.js",
+    "publish:guard": "node scripts/check-publish-duplicate.js"
+  },
+  "files": [
+    "src/public-contract/",
+    "schema/manifest-0.2.schema.json",
+    "schema/payload-profile-0.2.schema.json",
+    "schema/canonical-ir-0.2.schema.json",
+    "schema/public-diagnostics.json",
+    "schema/public-vocabulary.json",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "keywords": [
+    "kdna",
+    "kdna-core",
+    "ai-agent",
+    "judgment-assets"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aikdna/kdna.git",
+    "directory": "packages/kdna-core"
+  },
+  "homepage": "https://aikdna.com",
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "cbor-x": "1.6.5",
+    "@noble/hashes": "1.8.0",
+    "pako": "2.1.0"
+  }
 }

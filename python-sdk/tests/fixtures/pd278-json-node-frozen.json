@@ -1,0 +1,2820 @@
+[
+  {
+    "name": "original-ff",
+    "file": "pd278-json-original-ff.kdna",
+    "category": "original",
+    "bytes": 758,
+    "sha256": "6ebf384e08608f756d28472ddc2169bf4949f3daffee961f6979afa80c6d1d7b",
+    "manifest_hex": "ff",
+    "manifest_bytes": 1,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "original-syntax",
+    "file": "pd278-json-original-syntax.kdna",
+    "category": "original",
+    "bytes": 758,
+    "sha256": "ebe136363095d4857ca0c0eff218c7c2a8a87c167329a62367a64d33b84c6efc",
+    "manifest_hex": "7b",
+    "manifest_bytes": 1,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "ff-start",
+    "file": "pd278-json-ff-start.kdna",
+    "category": "encoding",
+    "bytes": 1173,
+    "sha256": "52de56732458ee0a4090ee49968dcce9e06a94ac0b7304dabf80dcde99e58e38",
+    "manifest_hex": "ff7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 416,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "ff-string",
+    "file": "pd278-json-ff-string.kdna",
+    "category": "encoding",
+    "bytes": 770,
+    "sha256": "c122c6df4ac192ab1d9870f046b84dbabe5e3a950590d04658017dd0de3fc811",
+    "manifest_hex": "7b227469746c65223a22ff227d",
+    "manifest_bytes": 13,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "ff-after-prefix",
+    "file": "pd278-json-ff-after-prefix.kdna",
+    "category": "encoding",
+    "bytes": 1173,
+    "sha256": "b5b9f9c7e9a5a7c0eda0c142d3fc20725890ee25815415c79bace9bba1fe64b2",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7dff",
+    "manifest_bytes": 416,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "continuation-start",
+    "file": "pd278-json-continuation-start.kdna",
+    "category": "encoding",
+    "bytes": 1173,
+    "sha256": "ff09387dd00c71f2c9496c9cd90850c713e0ec22e9f8b3e89d3b965fa08b7ea0",
+    "manifest_hex": "807b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 416,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "continuation-string",
+    "file": "pd278-json-continuation-string.kdna",
+    "category": "encoding",
+    "bytes": 770,
+    "sha256": "7590d1f7cba98e6bd035f0dd4845afe1a258048edc79843653945f23c471e984",
+    "manifest_hex": "7b227469746c65223a2280227d",
+    "manifest_bytes": 13,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "continuation-after-prefix",
+    "file": "pd278-json-continuation-after-prefix.kdna",
+    "category": "encoding",
+    "bytes": 1173,
+    "sha256": "aed1272887e6108d7dcf239029e91c383e582a48c43fdc1873cad1041847415a",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d80",
+    "manifest_bytes": 416,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "overlong-two-start",
+    "file": "pd278-json-overlong-two-start.kdna",
+    "category": "encoding",
+    "bytes": 1174,
+    "sha256": "4cafbc11de354195a7e5546ae76baea8966bf7450ab15dfe09a00bb2ce1d193f",
+    "manifest_hex": "c0af7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 417,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "overlong-two-string",
+    "file": "pd278-json-overlong-two-string.kdna",
+    "category": "encoding",
+    "bytes": 771,
+    "sha256": "b56c8e02c51087c3bef2ed841fc194b96652bc03058323f983400025bd9b4e8f",
+    "manifest_hex": "7b227469746c65223a22c0af227d",
+    "manifest_bytes": 14,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "overlong-two-after-prefix",
+    "file": "pd278-json-overlong-two-after-prefix.kdna",
+    "category": "encoding",
+    "bytes": 1174,
+    "sha256": "286014ca5ac826b33fd1250783b04bb3f6846d63edaed4bc3d11dbbe85e5917f",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7dc0af",
+    "manifest_bytes": 417,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "overlong-three-start",
+    "file": "pd278-json-overlong-three-start.kdna",
+    "category": "encoding",
+    "bytes": 1175,
+    "sha256": "f509bb56b5548ca7fb31809dba5a31d9ce8c2029e4f2984b34eddb001193cb10",
+    "manifest_hex": "e080807b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 418,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "overlong-three-string",
+    "file": "pd278-json-overlong-three-string.kdna",
+    "category": "encoding",
+    "bytes": 772,
+    "sha256": "96221ac04607ad65de9bfe5e14526a973bcd4183856c88f99bb745c6e6bf8d1d",
+    "manifest_hex": "7b227469746c65223a22e08080227d",
+    "manifest_bytes": 15,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "overlong-three-after-prefix",
+    "file": "pd278-json-overlong-three-after-prefix.kdna",
+    "category": "encoding",
+    "bytes": 1175,
+    "sha256": "80272a11ebc1d0aed986a5e375633f63d93aef5484ee33094f05ccc2d1cbb53a",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7de08080",
+    "manifest_bytes": 418,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "surrogate-start",
+    "file": "pd278-json-surrogate-start.kdna",
+    "category": "encoding",
+    "bytes": 1175,
+    "sha256": "7c98d63ee68a33402909b3f88c0af9edacd49c6b5d274c133ebd252c966b219a",
+    "manifest_hex": "eda0807b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 418,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "surrogate-string",
+    "file": "pd278-json-surrogate-string.kdna",
+    "category": "encoding",
+    "bytes": 772,
+    "sha256": "7164b6030bfa1aa6491ed93475e08be2eda098cf5c1326440c17d44a037b0d7f",
+    "manifest_hex": "7b227469746c65223a22eda080227d",
+    "manifest_bytes": 15,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "surrogate-after-prefix",
+    "file": "pd278-json-surrogate-after-prefix.kdna",
+    "category": "encoding",
+    "bytes": 1175,
+    "sha256": "cd1b987fc0bf6110b8e2d478bc9aef120fee91f300e30196465113cde97ec67a",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7deda080",
+    "manifest_bytes": 418,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "overlong-four-start",
+    "file": "pd278-json-overlong-four-start.kdna",
+    "category": "encoding",
+    "bytes": 1176,
+    "sha256": "b33eca6973fb78a6bf19d37bf8d384f89077ad8810a6e6a02c86dadf578d087d",
+    "manifest_hex": "f08080807b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 419,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "overlong-four-string",
+    "file": "pd278-json-overlong-four-string.kdna",
+    "category": "encoding",
+    "bytes": 773,
+    "sha256": "f6d6506b5a2ceacd924aba18abf97a9152345f55cc7039ab1e3fa67ffeaa2ea9",
+    "manifest_hex": "7b227469746c65223a22f0808080227d",
+    "manifest_bytes": 16,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "overlong-four-after-prefix",
+    "file": "pd278-json-overlong-four-after-prefix.kdna",
+    "category": "encoding",
+    "bytes": 1176,
+    "sha256": "e1919356e35f6bb945eae1425a618bfc2cbfc6e7763dc24493bc6b9802061e12",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7df0808080",
+    "manifest_bytes": 419,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "beyond-unicode-start",
+    "file": "pd278-json-beyond-unicode-start.kdna",
+    "category": "encoding",
+    "bytes": 1176,
+    "sha256": "21b267b9e505194ca15de580adfdd26ad9caf280092e114709e567a14d9c33b4",
+    "manifest_hex": "f49080807b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 419,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "beyond-unicode-string",
+    "file": "pd278-json-beyond-unicode-string.kdna",
+    "category": "encoding",
+    "bytes": 773,
+    "sha256": "127fbc2de0b0cfef8119761f4aed47809f391b19c537cade7e467aa0bc788e2f",
+    "manifest_hex": "7b227469746c65223a22f4908080227d",
+    "manifest_bytes": 16,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "beyond-unicode-after-prefix",
+    "file": "pd278-json-beyond-unicode-after-prefix.kdna",
+    "category": "encoding",
+    "bytes": 1176,
+    "sha256": "bc6619af847bb3d23a38d1881ffd7b6fe0c5dea01fe350886c37893318adc115",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7df4908080",
+    "manifest_bytes": 419,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "illegal-lead-start",
+    "file": "pd278-json-illegal-lead-start.kdna",
+    "category": "encoding",
+    "bytes": 1176,
+    "sha256": "ec0532aaa0db318a6223d3089fa561f8f0e70f7398c918c04ca7c6674f822ca1",
+    "manifest_hex": "f58080807b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 419,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "illegal-lead-string",
+    "file": "pd278-json-illegal-lead-string.kdna",
+    "category": "encoding",
+    "bytes": 773,
+    "sha256": "9ce7508a8298fae2624e023a90ff5aa1f40c079ac7c0a165dc0533e8a550ee4f",
+    "manifest_hex": "7b227469746c65223a22f5808080227d",
+    "manifest_bytes": 16,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "illegal-lead-after-prefix",
+    "file": "pd278-json-illegal-lead-after-prefix.kdna",
+    "category": "encoding",
+    "bytes": 1176,
+    "sha256": "e963fd9915b025588d86643c84bec73e532bb0785ebb51c049e7084b8b284aeb",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7df5808080",
+    "manifest_bytes": 419,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "truncated-two-start",
+    "file": "pd278-json-truncated-two-start.kdna",
+    "category": "encoding",
+    "bytes": 1173,
+    "sha256": "8df0a65bf7711ca84baf78a18dd5807e18114e1c0f23e4fae79623b6ec747fd2",
+    "manifest_hex": "c27b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 416,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "truncated-two-string",
+    "file": "pd278-json-truncated-two-string.kdna",
+    "category": "encoding",
+    "bytes": 770,
+    "sha256": "ff9f95324eb949bcce3956d1302eadc0263dcc1c816a13bcd634b60a2694905d",
+    "manifest_hex": "7b227469746c65223a22c2227d",
+    "manifest_bytes": 13,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "truncated-two-after-prefix",
+    "file": "pd278-json-truncated-two-after-prefix.kdna",
+    "category": "encoding",
+    "bytes": 1173,
+    "sha256": "90bf9f0174f295196c84f9928c7b35da3705dee820537f3140959d13b737d6ad",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7dc2",
+    "manifest_bytes": 416,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "truncated-three-start",
+    "file": "pd278-json-truncated-three-start.kdna",
+    "category": "encoding",
+    "bytes": 1174,
+    "sha256": "9062b4fdd2c48a18a11d77c19d260cb11446af626620664af677e0b6e065328e",
+    "manifest_hex": "e2827b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 417,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "truncated-three-string",
+    "file": "pd278-json-truncated-three-string.kdna",
+    "category": "encoding",
+    "bytes": 771,
+    "sha256": "4d7fff375dea94659e9d266da0ea277066cea5b590b4cbf1b8f928b9f66cc382",
+    "manifest_hex": "7b227469746c65223a22e282227d",
+    "manifest_bytes": 14,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "truncated-three-after-prefix",
+    "file": "pd278-json-truncated-three-after-prefix.kdna",
+    "category": "encoding",
+    "bytes": 1174,
+    "sha256": "f0d9352ff693fd5b4e7d7d69b8554bcd83878eae5f6f8a20bed97049e1bc5ba2",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7de282",
+    "manifest_bytes": 417,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "truncated-four-start",
+    "file": "pd278-json-truncated-four-start.kdna",
+    "category": "encoding",
+    "bytes": 1175,
+    "sha256": "bdf8b691685328ad438ce3a548a151ede65eaf351156b039fa0bf33fd1910f5c",
+    "manifest_hex": "f09f927b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 418,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "truncated-four-string",
+    "file": "pd278-json-truncated-four-string.kdna",
+    "category": "encoding",
+    "bytes": 772,
+    "sha256": "8ca38dc824bce90aa0666a7d95838179f8cbabc89341996d1f52c799ff361cc4",
+    "manifest_hex": "7b227469746c65223a22f09f92227d",
+    "manifest_bytes": 15,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "truncated-four-after-prefix",
+    "file": "pd278-json-truncated-four-after-prefix.kdna",
+    "category": "encoding",
+    "bytes": 1175,
+    "sha256": "2e22a54211fdadcdec68e87ee96b2e1f5bb2ff5efba36de440952f0f5fecebe3",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7df09f92",
+    "manifest_bytes": 418,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "encoding-before-grammar",
+    "file": "pd278-json-encoding-before-grammar.kdna",
+    "category": "priority",
+    "bytes": 774,
+    "sha256": "933817587ba14165389c35b69c5656ee163d39fbeb5a04857bdf291a949eaf9c",
+    "manifest_hex": "7b696e76616c6964206772616d6d6172ff",
+    "manifest_bytes": 17,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "multibyte",
+    "file": "pd278-json-multibyte.kdna",
+    "category": "valid_unicode",
+    "bytes": 1188,
+    "sha256": "a7bef5329f10d45d6bdf8f5bac2243279aaa1a9a265e699a22eef773c7f96d6b",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a22e6b189e5ad9720636166c3a920f09f9880222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 431,
+    "result": {
+      "status": "accepted",
+      "data": {
+        "snapshot_id": "snapshot:c0791d24-26c2-4b69-9094-7773448fdd89",
+        "tuple": {
+          "container": "0.2.0",
+          "core": "kdna.core/0.2.0",
+          "host": "kdna.agent-host/0.2.0",
+          "ir": "kdna.canonical-ir/0.1.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.2.0",
+          "plan": "kdna.consumption-plan/0.2.0",
+          "read": "kdna.read/0.1.0",
+          "runtime": "kdna.runtime-capsule/0.2.0",
+          "trace": "kdna.judgment-trace/0.2.0"
+        },
+        "asset": {
+          "asset_id": "a",
+          "asset_version": "1",
+          "judgment_version": "1"
+        },
+        "digests": {
+          "A": {
+            "basis": "container_bytes",
+            "profile": "kdna.digest-basis.container-bytes",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:a7bef5329f10d45d6bdf8f5bac2243279aaa1a9a265e699a22eef773c7f96d6b",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "C": {
+            "basis": "content_tree",
+            "profile": "kdna.digest-basis.content-tree",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:cb0adaaa2c137a4ac683c7b6709af8a73c7f62ea91517262c843eeea5439e149",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "E": {
+            "basis": "runtime_entry_set",
+            "profile": "kdna.digest-basis.runtime-entry-set",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:55c22b5354a96fdf0893c82371d036847eac23ce174b71167d8a987861223ad6",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          }
+        },
+        "ir": {
+          "contract": "kdna.canonical-ir/0.1.0",
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.2.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.1.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.1.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          },
+          "asset": {
+            "asset_id": "a",
+            "asset_version": "1",
+            "judgment_version": "1"
+          },
+          "nodes": [
+            {
+              "id": "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+              "role": "asset_declaration",
+              "owner_judgment_id": null,
+              "value": {
+                "title": "汉字 café 😀"
+              }
+            },
+            {
+              "id": "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+              "role": "scope",
+              "owner_judgment_id": null,
+              "value": {
+                "statement": "S"
+              }
+            },
+            {
+              "id": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "judgment",
+              "owner_judgment_id": "j",
+              "value": {
+                "id": "j",
+                "focus": "F",
+                "subject": {
+                  "actor_ids": [],
+                  "statement": "S"
+                },
+                "scope": {
+                  "statement": "S"
+                },
+                "result_contract": {
+                  "id": "r",
+                  "form": {
+                    "term": "value"
+                  },
+                  "shape": {
+                    "kind": "scalar",
+                    "scalar_type": "number"
+                  },
+                  "minimum": 1,
+                  "maximum": 1,
+                  "allowed_result_types": [
+                    {
+                      "term": "number"
+                    }
+                  ]
+                },
+                "result": {
+                  "contract_ref": "r",
+                  "result_type": {
+                    "term": "number"
+                  },
+                  "value": {
+                    "kind": "number",
+                    "value": 4294967296
+                  }
+                }
+              }
+            },
+            {
+              "id": "subject:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "subject",
+              "owner_judgment_id": "j",
+              "value": {
+                "actor_ids": [],
+                "statement": "S"
+              }
+            },
+            {
+              "id": "scope:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "scope",
+              "owner_judgment_id": "j",
+              "value": {
+                "statement": "S"
+              }
+            },
+            {
+              "id": "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+              "role": "result_contract",
+              "owner_judgment_id": "j",
+              "value": {
+                "id": "r",
+                "form": {
+                  "term": "value"
+                },
+                "shape": {
+                  "kind": "scalar",
+                  "scalar_type": "number"
+                },
+                "minimum": 1,
+                "maximum": 1,
+                "allowed_result_types": [
+                  {
+                    "term": "number"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "result:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "result",
+              "owner_judgment_id": "j",
+              "value": {
+                "contract_ref": "r",
+                "result_type": {
+                  "term": "number"
+                },
+                "value": {
+                  "kind": "number",
+                  "value": 4294967296
+                }
+              }
+            }
+          ],
+          "catalog": [
+            {
+              "judgment_id": "j",
+              "label": "F",
+              "node_ref": "judgment:5384829d0300a46d73bfbc618966724278301eb7"
+            }
+          ],
+          "references": [
+            {
+              "id": "reference:ad6525549c1eac2c348b1e0af2620bd2e9a1fe17",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:14abfe35e31bf96c7ae9c6a11ec1f460e01bbbce",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:ff4b8b9fcaca758acef02feb51922c5b62020e23",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "subject:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:6a0376d4be4db93460a75d7a2b6b72e1fe5b84cc",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "scope:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:6fb327fa489b04c6c12ef5e3d2c6317f81ef4b12",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:57d3f29ceb741fc39656b049bdcb574f05d5e33f",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "result:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            }
+          ],
+          "relationships": [],
+          "mandatory_closures": [
+            {
+              "selection": {
+                "asset_id": "a",
+                "asset_version": "1",
+                "judgment_id": "j"
+              },
+              "node_ids": [
+                "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+                "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+                "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+                "subject:5384829d0300a46d73bfbc618966724278301eb7",
+                "scope:5384829d0300a46d73bfbc618966724278301eb7",
+                "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+                "result:5384829d0300a46d73bfbc618966724278301eb7"
+              ]
+            }
+          ],
+          "expansion_targets": []
+        },
+        "ir_digest": "sha256:1921d1d4180b4877cb08c659f096b46dfa3bd03826fc9dff38dcfd0b70dc341e",
+        "runtime_entry_names": [
+          "kdna.json",
+          "payload.kdnab"
+        ],
+        "expansion_targets": []
+      }
+    }
+  },
+  {
+    "name": "distinct-scalars",
+    "file": "pd278-json-distinct-scalars.kdna",
+    "category": "valid_unicode",
+    "bytes": 1177,
+    "sha256": "7b82973d74a3c6ac36cea88519e9f7067cdf4641da925724598d08292a717265",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a22c3a92065cc81222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 420,
+    "result": {
+      "status": "accepted",
+      "data": {
+        "snapshot_id": "snapshot:7103c70f-1e1a-4a99-b1aa-9d6f2998d4c0",
+        "tuple": {
+          "container": "0.2.0",
+          "core": "kdna.core/0.2.0",
+          "host": "kdna.agent-host/0.2.0",
+          "ir": "kdna.canonical-ir/0.1.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.2.0",
+          "plan": "kdna.consumption-plan/0.2.0",
+          "read": "kdna.read/0.1.0",
+          "runtime": "kdna.runtime-capsule/0.2.0",
+          "trace": "kdna.judgment-trace/0.2.0"
+        },
+        "asset": {
+          "asset_id": "a",
+          "asset_version": "1",
+          "judgment_version": "1"
+        },
+        "digests": {
+          "A": {
+            "basis": "container_bytes",
+            "profile": "kdna.digest-basis.container-bytes",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:7b82973d74a3c6ac36cea88519e9f7067cdf4641da925724598d08292a717265",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "C": {
+            "basis": "content_tree",
+            "profile": "kdna.digest-basis.content-tree",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:4679ec4e39f1cf94ca6539ca3e348ea703e4fc1815b0f5cb1508e0f4a1d878ac",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "E": {
+            "basis": "runtime_entry_set",
+            "profile": "kdna.digest-basis.runtime-entry-set",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:bc10ed3b8d2d609fc2b0cf4e9fbe4a5f663e6509455e89844574697dfd029ea9",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          }
+        },
+        "ir": {
+          "contract": "kdna.canonical-ir/0.1.0",
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.2.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.1.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.1.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          },
+          "asset": {
+            "asset_id": "a",
+            "asset_version": "1",
+            "judgment_version": "1"
+          },
+          "nodes": [
+            {
+              "id": "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+              "role": "asset_declaration",
+              "owner_judgment_id": null,
+              "value": {
+                "title": "é é"
+              }
+            },
+            {
+              "id": "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+              "role": "scope",
+              "owner_judgment_id": null,
+              "value": {
+                "statement": "S"
+              }
+            },
+            {
+              "id": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "judgment",
+              "owner_judgment_id": "j",
+              "value": {
+                "id": "j",
+                "focus": "F",
+                "subject": {
+                  "actor_ids": [],
+                  "statement": "S"
+                },
+                "scope": {
+                  "statement": "S"
+                },
+                "result_contract": {
+                  "id": "r",
+                  "form": {
+                    "term": "value"
+                  },
+                  "shape": {
+                    "kind": "scalar",
+                    "scalar_type": "number"
+                  },
+                  "minimum": 1,
+                  "maximum": 1,
+                  "allowed_result_types": [
+                    {
+                      "term": "number"
+                    }
+                  ]
+                },
+                "result": {
+                  "contract_ref": "r",
+                  "result_type": {
+                    "term": "number"
+                  },
+                  "value": {
+                    "kind": "number",
+                    "value": 4294967296
+                  }
+                }
+              }
+            },
+            {
+              "id": "subject:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "subject",
+              "owner_judgment_id": "j",
+              "value": {
+                "actor_ids": [],
+                "statement": "S"
+              }
+            },
+            {
+              "id": "scope:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "scope",
+              "owner_judgment_id": "j",
+              "value": {
+                "statement": "S"
+              }
+            },
+            {
+              "id": "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+              "role": "result_contract",
+              "owner_judgment_id": "j",
+              "value": {
+                "id": "r",
+                "form": {
+                  "term": "value"
+                },
+                "shape": {
+                  "kind": "scalar",
+                  "scalar_type": "number"
+                },
+                "minimum": 1,
+                "maximum": 1,
+                "allowed_result_types": [
+                  {
+                    "term": "number"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "result:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "result",
+              "owner_judgment_id": "j",
+              "value": {
+                "contract_ref": "r",
+                "result_type": {
+                  "term": "number"
+                },
+                "value": {
+                  "kind": "number",
+                  "value": 4294967296
+                }
+              }
+            }
+          ],
+          "catalog": [
+            {
+              "judgment_id": "j",
+              "label": "F",
+              "node_ref": "judgment:5384829d0300a46d73bfbc618966724278301eb7"
+            }
+          ],
+          "references": [
+            {
+              "id": "reference:ad6525549c1eac2c348b1e0af2620bd2e9a1fe17",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:14abfe35e31bf96c7ae9c6a11ec1f460e01bbbce",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:ff4b8b9fcaca758acef02feb51922c5b62020e23",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "subject:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:6a0376d4be4db93460a75d7a2b6b72e1fe5b84cc",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "scope:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:6fb327fa489b04c6c12ef5e3d2c6317f81ef4b12",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:57d3f29ceb741fc39656b049bdcb574f05d5e33f",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "result:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            }
+          ],
+          "relationships": [],
+          "mandatory_closures": [
+            {
+              "selection": {
+                "asset_id": "a",
+                "asset_version": "1",
+                "judgment_id": "j"
+              },
+              "node_ids": [
+                "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+                "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+                "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+                "subject:5384829d0300a46d73bfbc618966724278301eb7",
+                "scope:5384829d0300a46d73bfbc618966724278301eb7",
+                "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+                "result:5384829d0300a46d73bfbc618966724278301eb7"
+              ]
+            }
+          ],
+          "expansion_targets": []
+        },
+        "ir_digest": "sha256:9f083494c76dcf69a5ed812b0873f55bdab7d158422677e93d0e7288b7e8b594",
+        "runtime_entry_names": [
+          "kdna.json",
+          "payload.kdnab"
+        ],
+        "expansion_targets": []
+      }
+    }
+  },
+  {
+    "name": "legal-controls",
+    "file": "pd278-json-legal-controls.kdna",
+    "category": "valid_unicode",
+    "bytes": 1182,
+    "sha256": "f3d6eb25cd85e8c97c16bd00cbe83bc8d5a9fff4548eca08d57f870e0e8fe058",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a225c7530303030c285efbbbf222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 425,
+    "result": {
+      "status": "accepted",
+      "data": {
+        "snapshot_id": "snapshot:675884be-23b7-4488-b8a5-79402fb478a7",
+        "tuple": {
+          "container": "0.2.0",
+          "core": "kdna.core/0.2.0",
+          "host": "kdna.agent-host/0.2.0",
+          "ir": "kdna.canonical-ir/0.1.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.2.0",
+          "plan": "kdna.consumption-plan/0.2.0",
+          "read": "kdna.read/0.1.0",
+          "runtime": "kdna.runtime-capsule/0.2.0",
+          "trace": "kdna.judgment-trace/0.2.0"
+        },
+        "asset": {
+          "asset_id": "a",
+          "asset_version": "1",
+          "judgment_version": "1"
+        },
+        "digests": {
+          "A": {
+            "basis": "container_bytes",
+            "profile": "kdna.digest-basis.container-bytes",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:f3d6eb25cd85e8c97c16bd00cbe83bc8d5a9fff4548eca08d57f870e0e8fe058",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "C": {
+            "basis": "content_tree",
+            "profile": "kdna.digest-basis.content-tree",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:2b14a85a16020f4c1ec67b53e6b5b191ca73e78dc904d61f6f9a61dcdbb2af73",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "E": {
+            "basis": "runtime_entry_set",
+            "profile": "kdna.digest-basis.runtime-entry-set",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:b6580c037f846c6074670360f3158035107778b47680b8385c012349ca326eaf",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          }
+        },
+        "ir": {
+          "contract": "kdna.canonical-ir/0.1.0",
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.2.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.1.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.1.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          },
+          "asset": {
+            "asset_id": "a",
+            "asset_version": "1",
+            "judgment_version": "1"
+          },
+          "nodes": [
+            {
+              "id": "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+              "role": "asset_declaration",
+              "owner_judgment_id": null,
+              "value": {
+                "title": "\u0000﻿"
+              }
+            },
+            {
+              "id": "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+              "role": "scope",
+              "owner_judgment_id": null,
+              "value": {
+                "statement": "S"
+              }
+            },
+            {
+              "id": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "judgment",
+              "owner_judgment_id": "j",
+              "value": {
+                "id": "j",
+                "focus": "F",
+                "subject": {
+                  "actor_ids": [],
+                  "statement": "S"
+                },
+                "scope": {
+                  "statement": "S"
+                },
+                "result_contract": {
+                  "id": "r",
+                  "form": {
+                    "term": "value"
+                  },
+                  "shape": {
+                    "kind": "scalar",
+                    "scalar_type": "number"
+                  },
+                  "minimum": 1,
+                  "maximum": 1,
+                  "allowed_result_types": [
+                    {
+                      "term": "number"
+                    }
+                  ]
+                },
+                "result": {
+                  "contract_ref": "r",
+                  "result_type": {
+                    "term": "number"
+                  },
+                  "value": {
+                    "kind": "number",
+                    "value": 4294967296
+                  }
+                }
+              }
+            },
+            {
+              "id": "subject:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "subject",
+              "owner_judgment_id": "j",
+              "value": {
+                "actor_ids": [],
+                "statement": "S"
+              }
+            },
+            {
+              "id": "scope:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "scope",
+              "owner_judgment_id": "j",
+              "value": {
+                "statement": "S"
+              }
+            },
+            {
+              "id": "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+              "role": "result_contract",
+              "owner_judgment_id": "j",
+              "value": {
+                "id": "r",
+                "form": {
+                  "term": "value"
+                },
+                "shape": {
+                  "kind": "scalar",
+                  "scalar_type": "number"
+                },
+                "minimum": 1,
+                "maximum": 1,
+                "allowed_result_types": [
+                  {
+                    "term": "number"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "result:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "result",
+              "owner_judgment_id": "j",
+              "value": {
+                "contract_ref": "r",
+                "result_type": {
+                  "term": "number"
+                },
+                "value": {
+                  "kind": "number",
+                  "value": 4294967296
+                }
+              }
+            }
+          ],
+          "catalog": [
+            {
+              "judgment_id": "j",
+              "label": "F",
+              "node_ref": "judgment:5384829d0300a46d73bfbc618966724278301eb7"
+            }
+          ],
+          "references": [
+            {
+              "id": "reference:ad6525549c1eac2c348b1e0af2620bd2e9a1fe17",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:14abfe35e31bf96c7ae9c6a11ec1f460e01bbbce",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:ff4b8b9fcaca758acef02feb51922c5b62020e23",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "subject:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:6a0376d4be4db93460a75d7a2b6b72e1fe5b84cc",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "scope:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:6fb327fa489b04c6c12ef5e3d2c6317f81ef4b12",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:57d3f29ceb741fc39656b049bdcb574f05d5e33f",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "result:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            }
+          ],
+          "relationships": [],
+          "mandatory_closures": [
+            {
+              "selection": {
+                "asset_id": "a",
+                "asset_version": "1",
+                "judgment_id": "j"
+              },
+              "node_ids": [
+                "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+                "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+                "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+                "subject:5384829d0300a46d73bfbc618966724278301eb7",
+                "scope:5384829d0300a46d73bfbc618966724278301eb7",
+                "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+                "result:5384829d0300a46d73bfbc618966724278301eb7"
+              ]
+            }
+          ],
+          "expansion_targets": []
+        },
+        "ir_digest": "sha256:ca99ec46435208a2adfa06a0d2d76407933c91d56e613d92e059ac19e23c0ed1",
+        "runtime_entry_names": [
+          "kdna.json",
+          "payload.kdnab"
+        ],
+        "expansion_targets": []
+      }
+    }
+  },
+  {
+    "name": "astral",
+    "file": "pd278-json-astral.kdna",
+    "category": "valid_unicode",
+    "bytes": 1175,
+    "sha256": "b001495c046893e9d68c1690a3cf260cd7c2efc02fb03883a4c8d3451be4c084",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a22f09d849e222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 418,
+    "result": {
+      "status": "accepted",
+      "data": {
+        "snapshot_id": "snapshot:94239f4f-8b42-4fdb-b635-0a005340d1a7",
+        "tuple": {
+          "container": "0.2.0",
+          "core": "kdna.core/0.2.0",
+          "host": "kdna.agent-host/0.2.0",
+          "ir": "kdna.canonical-ir/0.1.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.2.0",
+          "plan": "kdna.consumption-plan/0.2.0",
+          "read": "kdna.read/0.1.0",
+          "runtime": "kdna.runtime-capsule/0.2.0",
+          "trace": "kdna.judgment-trace/0.2.0"
+        },
+        "asset": {
+          "asset_id": "a",
+          "asset_version": "1",
+          "judgment_version": "1"
+        },
+        "digests": {
+          "A": {
+            "basis": "container_bytes",
+            "profile": "kdna.digest-basis.container-bytes",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:b001495c046893e9d68c1690a3cf260cd7c2efc02fb03883a4c8d3451be4c084",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "C": {
+            "basis": "content_tree",
+            "profile": "kdna.digest-basis.content-tree",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:269cc1c0508029f6afac82952decc06df6a61b20e45781da45576e40f5490839",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "E": {
+            "basis": "runtime_entry_set",
+            "profile": "kdna.digest-basis.runtime-entry-set",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:742033faa8cff8987e45a1135a4aeea718ac71eea03382efbd7145359b1ed7fd",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          }
+        },
+        "ir": {
+          "contract": "kdna.canonical-ir/0.1.0",
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.2.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.1.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.1.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          },
+          "asset": {
+            "asset_id": "a",
+            "asset_version": "1",
+            "judgment_version": "1"
+          },
+          "nodes": [
+            {
+              "id": "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+              "role": "asset_declaration",
+              "owner_judgment_id": null,
+              "value": {
+                "title": "𝄞"
+              }
+            },
+            {
+              "id": "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+              "role": "scope",
+              "owner_judgment_id": null,
+              "value": {
+                "statement": "S"
+              }
+            },
+            {
+              "id": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "judgment",
+              "owner_judgment_id": "j",
+              "value": {
+                "id": "j",
+                "focus": "F",
+                "subject": {
+                  "actor_ids": [],
+                  "statement": "S"
+                },
+                "scope": {
+                  "statement": "S"
+                },
+                "result_contract": {
+                  "id": "r",
+                  "form": {
+                    "term": "value"
+                  },
+                  "shape": {
+                    "kind": "scalar",
+                    "scalar_type": "number"
+                  },
+                  "minimum": 1,
+                  "maximum": 1,
+                  "allowed_result_types": [
+                    {
+                      "term": "number"
+                    }
+                  ]
+                },
+                "result": {
+                  "contract_ref": "r",
+                  "result_type": {
+                    "term": "number"
+                  },
+                  "value": {
+                    "kind": "number",
+                    "value": 4294967296
+                  }
+                }
+              }
+            },
+            {
+              "id": "subject:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "subject",
+              "owner_judgment_id": "j",
+              "value": {
+                "actor_ids": [],
+                "statement": "S"
+              }
+            },
+            {
+              "id": "scope:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "scope",
+              "owner_judgment_id": "j",
+              "value": {
+                "statement": "S"
+              }
+            },
+            {
+              "id": "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+              "role": "result_contract",
+              "owner_judgment_id": "j",
+              "value": {
+                "id": "r",
+                "form": {
+                  "term": "value"
+                },
+                "shape": {
+                  "kind": "scalar",
+                  "scalar_type": "number"
+                },
+                "minimum": 1,
+                "maximum": 1,
+                "allowed_result_types": [
+                  {
+                    "term": "number"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "result:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "result",
+              "owner_judgment_id": "j",
+              "value": {
+                "contract_ref": "r",
+                "result_type": {
+                  "term": "number"
+                },
+                "value": {
+                  "kind": "number",
+                  "value": 4294967296
+                }
+              }
+            }
+          ],
+          "catalog": [
+            {
+              "judgment_id": "j",
+              "label": "F",
+              "node_ref": "judgment:5384829d0300a46d73bfbc618966724278301eb7"
+            }
+          ],
+          "references": [
+            {
+              "id": "reference:ad6525549c1eac2c348b1e0af2620bd2e9a1fe17",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:14abfe35e31bf96c7ae9c6a11ec1f460e01bbbce",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:ff4b8b9fcaca758acef02feb51922c5b62020e23",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "subject:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:6a0376d4be4db93460a75d7a2b6b72e1fe5b84cc",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "scope:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:6fb327fa489b04c6c12ef5e3d2c6317f81ef4b12",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:57d3f29ceb741fc39656b049bdcb574f05d5e33f",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "result:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            }
+          ],
+          "relationships": [],
+          "mandatory_closures": [
+            {
+              "selection": {
+                "asset_id": "a",
+                "asset_version": "1",
+                "judgment_id": "j"
+              },
+              "node_ids": [
+                "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+                "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+                "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+                "subject:5384829d0300a46d73bfbc618966724278301eb7",
+                "scope:5384829d0300a46d73bfbc618966724278301eb7",
+                "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+                "result:5384829d0300a46d73bfbc618966724278301eb7"
+              ]
+            }
+          ],
+          "expansion_targets": []
+        },
+        "ir_digest": "sha256:871e60009056f13488c1204850936dc81c625a648e040eb9bd07e4dc2d42860c",
+        "runtime_entry_names": [
+          "kdna.json",
+          "payload.kdnab"
+        ],
+        "expansion_targets": []
+      }
+    }
+  },
+  {
+    "name": "leading-bom",
+    "file": "pd278-json-leading-bom.kdna",
+    "category": "decoder_bom",
+    "bytes": 1175,
+    "sha256": "d5d273459e407b2422d52d11e6228bc4ae83f49ebd7ab452381bb4f6d6496279",
+    "manifest_hex": "efbbbf7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7d",
+    "manifest_bytes": 418,
+    "result": {
+      "status": "accepted",
+      "data": {
+        "snapshot_id": "snapshot:e11876cd-b93d-4482-a6e4-edbafa222026",
+        "tuple": {
+          "container": "0.2.0",
+          "core": "kdna.core/0.2.0",
+          "host": "kdna.agent-host/0.2.0",
+          "ir": "kdna.canonical-ir/0.1.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.2.0",
+          "plan": "kdna.consumption-plan/0.2.0",
+          "read": "kdna.read/0.1.0",
+          "runtime": "kdna.runtime-capsule/0.2.0",
+          "trace": "kdna.judgment-trace/0.2.0"
+        },
+        "asset": {
+          "asset_id": "a",
+          "asset_version": "1",
+          "judgment_version": "1"
+        },
+        "digests": {
+          "A": {
+            "basis": "container_bytes",
+            "profile": "kdna.digest-basis.container-bytes",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:d5d273459e407b2422d52d11e6228bc4ae83f49ebd7ab452381bb4f6d6496279",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "C": {
+            "basis": "content_tree",
+            "profile": "kdna.digest-basis.content-tree",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:8b62b3b0ad54f61fd8f6476ddcae1a5a560d978e8879e4d6dfa58d4785524d9f",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          },
+          "E": {
+            "basis": "runtime_entry_set",
+            "profile": "kdna.digest-basis.runtime-entry-set",
+            "profile_version": "0.2.0",
+            "algorithm": "SHA-256",
+            "observed": "sha256:534678d89d46d9bf397b535384d6894f830724e21629f16a5c0baf1e3d3b5fa9",
+            "comparison": {
+              "state": "not_compared",
+              "expected": null,
+              "expected_source": null
+            }
+          }
+        },
+        "ir": {
+          "contract": "kdna.canonical-ir/0.1.0",
+          "tuple": {
+            "container": "0.2.0",
+            "core": "kdna.core/0.2.0",
+            "host": "kdna.agent-host/0.2.0",
+            "ir": "kdna.canonical-ir/0.1.0",
+            "payload_profile": "kdna.payload.judgment",
+            "payload_version": "0.2.0",
+            "plan": "kdna.consumption-plan/0.2.0",
+            "read": "kdna.read/0.1.0",
+            "runtime": "kdna.runtime-capsule/0.2.0",
+            "trace": "kdna.judgment-trace/0.2.0"
+          },
+          "asset": {
+            "asset_id": "a",
+            "asset_version": "1",
+            "judgment_version": "1"
+          },
+          "nodes": [
+            {
+              "id": "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+              "role": "asset_declaration",
+              "owner_judgment_id": null,
+              "value": {
+                "title": "A"
+              }
+            },
+            {
+              "id": "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+              "role": "scope",
+              "owner_judgment_id": null,
+              "value": {
+                "statement": "S"
+              }
+            },
+            {
+              "id": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "judgment",
+              "owner_judgment_id": "j",
+              "value": {
+                "id": "j",
+                "focus": "F",
+                "subject": {
+                  "actor_ids": [],
+                  "statement": "S"
+                },
+                "scope": {
+                  "statement": "S"
+                },
+                "result_contract": {
+                  "id": "r",
+                  "form": {
+                    "term": "value"
+                  },
+                  "shape": {
+                    "kind": "scalar",
+                    "scalar_type": "number"
+                  },
+                  "minimum": 1,
+                  "maximum": 1,
+                  "allowed_result_types": [
+                    {
+                      "term": "number"
+                    }
+                  ]
+                },
+                "result": {
+                  "contract_ref": "r",
+                  "result_type": {
+                    "term": "number"
+                  },
+                  "value": {
+                    "kind": "number",
+                    "value": 4294967296
+                  }
+                }
+              }
+            },
+            {
+              "id": "subject:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "subject",
+              "owner_judgment_id": "j",
+              "value": {
+                "actor_ids": [],
+                "statement": "S"
+              }
+            },
+            {
+              "id": "scope:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "scope",
+              "owner_judgment_id": "j",
+              "value": {
+                "statement": "S"
+              }
+            },
+            {
+              "id": "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+              "role": "result_contract",
+              "owner_judgment_id": "j",
+              "value": {
+                "id": "r",
+                "form": {
+                  "term": "value"
+                },
+                "shape": {
+                  "kind": "scalar",
+                  "scalar_type": "number"
+                },
+                "minimum": 1,
+                "maximum": 1,
+                "allowed_result_types": [
+                  {
+                    "term": "number"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "result:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "result",
+              "owner_judgment_id": "j",
+              "value": {
+                "contract_ref": "r",
+                "result_type": {
+                  "term": "number"
+                },
+                "value": {
+                  "kind": "number",
+                  "value": 4294967296
+                }
+              }
+            }
+          ],
+          "catalog": [
+            {
+              "judgment_id": "j",
+              "label": "F",
+              "node_ref": "judgment:5384829d0300a46d73bfbc618966724278301eb7"
+            }
+          ],
+          "references": [
+            {
+              "id": "reference:ad6525549c1eac2c348b1e0af2620bd2e9a1fe17",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:14abfe35e31bf96c7ae9c6a11ec1f460e01bbbce",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:ff4b8b9fcaca758acef02feb51922c5b62020e23",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "subject:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:6a0376d4be4db93460a75d7a2b6b72e1fe5b84cc",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "scope:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:6fb327fa489b04c6c12ef5e3d2c6317f81ef4b12",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+              "role": "mandatory_support",
+              "mandatory": true
+            },
+            {
+              "id": "reference:57d3f29ceb741fc39656b049bdcb574f05d5e33f",
+              "source_node": "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+              "target_node": "result:5384829d0300a46d73bfbc618966724278301eb7",
+              "role": "mandatory_support",
+              "mandatory": true
+            }
+          ],
+          "relationships": [],
+          "mandatory_closures": [
+            {
+              "selection": {
+                "asset_id": "a",
+                "asset_version": "1",
+                "judgment_id": "j"
+              },
+              "node_ids": [
+                "asset_declaration:6481efcc779e2111cf631d26594516a197d11ecf",
+                "scope:66eadb355d25002b3f3606624b9acb73c04d2aec",
+                "judgment:5384829d0300a46d73bfbc618966724278301eb7",
+                "subject:5384829d0300a46d73bfbc618966724278301eb7",
+                "scope:5384829d0300a46d73bfbc618966724278301eb7",
+                "result_contract:c9b2e1b7d43cd6ccf968ac3f3910876349da6305",
+                "result:5384829d0300a46d73bfbc618966724278301eb7"
+              ]
+            }
+          ],
+          "expansion_targets": []
+        },
+        "ir_digest": "sha256:0b4c6cbbfd06d8090ef7fb2fd0a69e8f3d841c6ed24340ee01f070560f6e2126",
+        "runtime_entry_names": [
+          "kdna.json",
+          "payload.kdnab"
+        ],
+        "expansion_targets": []
+      }
+    }
+  },
+  {
+    "name": "trailing-bom",
+    "file": "pd278-json-trailing-bom.kdna",
+    "category": "grammar",
+    "bytes": 1175,
+    "sha256": "09908ed59dab001fc5145854e483ce1f44f9eb4f68011778122bdfbfdfeb5679",
+    "manifest_hex": "7b22666f726d61745f76657273696f6e223a22302e322e30222c2261737365745f6964223a2261222c2261737365745f756964223a2275222c2261737365745f74797065223a2266697874757265222c227469746c65223a2241222c2276657273696f6e223a2231222c226a7564676d656e745f76657273696f6e223a2231222c22637265617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22757064617465645f6174223a22323032362d30392d30365430303a30303a30305a222c22636f6d7061746962696c697479223a7b226d696e5f6c6f616465725f76657273696f6e223a22302e32332e30222c2270726f66696c65223a226b646e612e7061796c6f61642e6a7564676d656e74222c2270726f66696c655f76657273696f6e223a22302e322e30227d2c227061796c6f6164223a7b2270617468223a227061796c6f61642e6b646e6162222c22656e636f64696e67223a2263626f72222c22656e63727970746564223a66616c73657d2c2272756e74696d65223a7b226d616e6461746f72795f656e7472696573223a5b5d7d7defbbbf",
+    "manifest_bytes": 418,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "open-object",
+    "file": "pd278-json-open-object.kdna",
+    "category": "grammar",
+    "bytes": 758,
+    "sha256": "ebe136363095d4857ca0c0eff218c7c2a8a87c167329a62367a64d33b84c6efc",
+    "manifest_hex": "7b",
+    "manifest_bytes": 1,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "open-array",
+    "file": "pd278-json-open-array.kdna",
+    "category": "grammar",
+    "bytes": 758,
+    "sha256": "41577af484c38c8472163fc8af23de6eb67776ae996b8d71d054cf263b1da290",
+    "manifest_hex": "5b",
+    "manifest_bytes": 1,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "missing-colon",
+    "file": "pd278-json-missing-colon.kdna",
+    "category": "grammar",
+    "bytes": 764,
+    "sha256": "5416e5ffe294d8d3b9eddb69f3ee641839c7fe47aa3fa31f89754b1c9f7fa142",
+    "manifest_hex": "7b22612220317d",
+    "manifest_bytes": 7,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "trailing-comma",
+    "file": "pd278-json-trailing-comma.kdna",
+    "category": "grammar",
+    "bytes": 765,
+    "sha256": "cf054b2b7ae9255ad336f3585a0dea6ad289e0d3f458c3503327fb2f509d3a9e",
+    "manifest_hex": "7b2261223a312c7d",
+    "manifest_bytes": 8,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "trailing-token",
+    "file": "pd278-json-trailing-token.kdna",
+    "category": "grammar",
+    "bytes": 768,
+    "sha256": "7d9745aa9d0dbf3c0be594939498f3879de5070a8c7ab9b4c90145d5eb060b96",
+    "manifest_hex": "7b2261223a317d6a756e6b",
+    "manifest_bytes": 11,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "leading-zero",
+    "file": "pd278-json-leading-zero.kdna",
+    "category": "grammar",
+    "bytes": 765,
+    "sha256": "5017b3a31169167e49ecf5a6c3f331d0c5d4a0297c5a4bf462887b385449a000",
+    "manifest_hex": "7b2261223a30317d",
+    "manifest_bytes": 8,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "decimal-truncated",
+    "file": "pd278-json-decimal-truncated.kdna",
+    "category": "grammar",
+    "bytes": 765,
+    "sha256": "e85e4fac0891cd7d4912cce9fb40d4bd1a027c3399ae075ddd90e23dbe408cf8",
+    "manifest_hex": "7b2261223a312e7d",
+    "manifest_bytes": 8,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "exponent-truncated",
+    "file": "pd278-json-exponent-truncated.kdna",
+    "category": "grammar",
+    "bytes": 766,
+    "sha256": "6619a1f35fa4fd883219ad0e0a4d910f9609a926674e11b7103e73de70d4a1ad",
+    "manifest_hex": "7b2261223a31652b7d",
+    "manifest_bytes": 9,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "nan",
+    "file": "pd278-json-nan.kdna",
+    "category": "grammar",
+    "bytes": 766,
+    "sha256": "4ae8ebfd613664fe43d969cc734254942711308a730554e7e083d872e3116053",
+    "manifest_hex": "7b2261223a4e614e7d",
+    "manifest_bytes": 9,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "overflow",
+    "file": "pd278-json-overflow.kdna",
+    "category": "grammar",
+    "bytes": 769,
+    "sha256": "7d6f11db604a6bc03a43b5563d81677b915ed332d43e9b83722ed090a04ef637",
+    "manifest_hex": "7b2261223a3165393939397d",
+    "manifest_bytes": 12,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-escape",
+    "file": "pd278-json-invalid-escape.kdna",
+    "category": "grammar",
+    "bytes": 761,
+    "sha256": "0181c2e687a5fe48f9b8c954de7019ec0395a9aac5c88166b95f967c365582b8",
+    "manifest_hex": "225c7122",
+    "manifest_bytes": 4,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-hex",
+    "file": "pd278-json-invalid-hex.kdna",
+    "category": "grammar",
+    "bytes": 765,
+    "sha256": "5bca56aadea41e6873ebbe4f5222172870001944cb43e6736c69c1b26d032024",
+    "manifest_hex": "225c754747474722",
+    "manifest_bytes": 8,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "short-hex",
+    "file": "pd278-json-short-hex.kdna",
+    "category": "grammar",
+    "bytes": 762,
+    "sha256": "458a49b516556cd65cfcc548df43605ab906d364cf4d0630a8cbfd1e559cb96d",
+    "manifest_hex": "225c753122",
+    "manifest_bytes": 5,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "high-surrogate",
+    "file": "pd278-json-high-surrogate.kdna",
+    "category": "grammar",
+    "bytes": 765,
+    "sha256": "228e44b74ec37236af50f3f8bcc8556969b3aa9dbac6c70af2a6dbc1e35a2240",
+    "manifest_hex": "225c754438303022",
+    "manifest_bytes": 8,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "low-surrogate",
+    "file": "pd278-json-low-surrogate.kdna",
+    "category": "grammar",
+    "bytes": 765,
+    "sha256": "7812afa6460e8daf1147db71892320b30edd703a35f3dfbffa8634e7c6e70519",
+    "manifest_hex": "225c754443303022",
+    "manifest_bytes": 8,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "wrong-surrogate-pair",
+    "file": "pd278-json-wrong-surrogate-pair.kdna",
+    "category": "grammar",
+    "bytes": 771,
+    "sha256": "ee82e528ec27ce00f731df2b833a963ce46f35ffa771d370ef9163784b598071",
+    "manifest_hex": "225c75443830305c753030343122",
+    "manifest_bytes": 14,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "valid-surrogate-pair-wrong-manifest",
+    "file": "pd278-json-valid-surrogate-pair-wrong-manifest.kdna",
+    "category": "grammar",
+    "bytes": 771,
+    "sha256": "393a5d089f1abf38ad5d779bc0307d178bc241e2d3cb3b526256d3db7e96c23b",
+    "manifest_hex": "225c75443833345c754444314522",
+    "manifest_bytes": 14,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "unterminated",
+    "file": "pd278-json-unterminated.kdna",
+    "category": "grammar",
+    "bytes": 770,
+    "sha256": "9fe413b468a62b513588207f9b5be31377e403eb699b17a7223e560cd4ce6287",
+    "manifest_hex": "22756e7465726d696e61746564",
+    "manifest_bytes": 13,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "raw-newline",
+    "file": "pd278-json-raw-newline.kdna",
+    "category": "grammar",
+    "bytes": 769,
+    "sha256": "7e2d96179650190c8bb095ff40c677f62c05c5180065d518435964876c51f4a1",
+    "manifest_hex": "226c696e650a627265616b22",
+    "manifest_bytes": 12,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "duplicate",
+    "file": "pd278-json-duplicate.kdna",
+    "category": "grammar",
+    "bytes": 770,
+    "sha256": "fde15adbac18811fc8fa7adc120d6ae593e8e2074896ba2ce34e1ba47b72f5d2",
+    "manifest_hex": "7b2261223a312c2261223a327d",
+    "manifest_bytes": 13,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "escaped-duplicate",
+    "file": "pd278-json-escaped-duplicate.kdna",
+    "category": "grammar",
+    "bytes": 775,
+    "sha256": "4a89d42247c6e74a9d779d8b67d96af9d947e398b5047efa5882013adc23d6f2",
+    "manifest_hex": "7b2261223a312c225c7530303631223a327d",
+    "manifest_bytes": 18,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "proto-key",
+    "file": "pd278-json-proto-key.kdna",
+    "category": "grammar",
+    "bytes": 772,
+    "sha256": "10593324a75de3ee365642c37a25a1a7eadb84a26923184bcce4af7106dda17b",
+    "manifest_hex": "7b225f5f70726f746f5f5f223a317d",
+    "manifest_bytes": 15,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "depth-limit",
+    "file": "pd278-json-depth-limit.kdna",
+    "category": "resource",
+    "bytes": 890,
+    "sha256": "a2cbe2b454a157cf72c305b8d9025618f7e99bca53b188f9b20c99ea00943d65",
+    "manifest_hex": "5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b305d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d",
+    "manifest_bytes": 133,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "array-limit",
+    "file": "pd278-json-array-limit.kdna",
+    "category": "resource",
+    "bytes": 20760,
+    "sha256": "6044ff3be4c2ac6bb80f2da48f3c3e7106436dd3625cc836cfdc1870d9f74c58",
+    "manifest_hex": null,
+    "manifest_bytes": 20003,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "string-limit",
+    "file": "pd278-json-string-limit.kdna",
+    "category": "resource",
+    "bytes": 1049336,
+    "sha256": "68ec2099bc9c0c9d9f6d6f57d60676fa784baf65e7cdbcfaa57b7d3a146a7fc8",
+    "manifest_hex": null,
+    "manifest_bytes": 1048579,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_INPUT_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_INPUT_INVALID",
+          "stage": "input",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "safe-number-wrong-manifest",
+    "file": "pd278-json-safe-number-wrong-manifest.kdna",
+    "category": "precision",
+    "bytes": 773,
+    "sha256": "5a32d6b07ae542aec5863a9de9a7e351a15dab6147e35010008b49c550002762",
+    "manifest_hex": "39303037313939323534373430393931",
+    "manifest_bytes": 16,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  },
+  {
+    "name": "beyond-safe-number-wrong-manifest",
+    "file": "pd278-json-beyond-safe-number-wrong-manifest.kdna",
+    "category": "precision",
+    "bytes": 773,
+    "sha256": "fc826aac63e622c80e10a6bb8a98f27a206b71f9ef428b071d61502ccdbe6449",
+    "manifest_hex": "39303037313939323534373430393932",
+    "manifest_bytes": 16,
+    "result": {
+      "status": "rejected",
+      "reason": "READ_CORE_INVALID",
+      "diagnostics": [
+        {
+          "code": "READ_CORE_INVALID",
+          "stage": "core",
+          "severity": "error",
+          "subject": null,
+          "field": null
+        }
+      ]
+    }
+  }
+]

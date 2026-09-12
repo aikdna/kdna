@@ -13,7 +13,8 @@
     "fixtures/",
     "vectors/",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "public-contract/"
   ],
   "scripts": {
     "test": "node --test test/conformance.test.js test/vectors-manifest.test.js",
