@@ -21,6 +21,12 @@
  *
  * Every mutation happens in a throwaway clone under os.tmpdir(); the repository
  * under test is never modified.
+ *
+ * NOTE: this file deliberately does NOT `require()` the gate. A stub whose
+ * top-level code calls `process.exit(0)` would kill the test process during the
+ * require and node's runner would then report the file itself as one passing
+ * test — a silent false green. Every check below drives the gate as a
+ * subprocess instead, which is how it is really used.
  */
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
@@ -32,6 +38,29 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..');
 const GATE_REL = path.join('scripts', 'check-inventory.cjs');
 const MANIFEST_REL = path.join('release-surface', 'inventory.json');
+
+// Contract literals, restated here on purpose so the controls do not depend on
+// loading the module they are testing.
+const SUCCESS_LINE = 'KDNA-MONOREPO-INVENTORY: MATCH';
+const GATE_EXPORTS = [
+  'checkInventory',
+  'globToRegExp',
+  'matchesAny',
+  'REQUIRED_MUST_TRACK',
+  'FORBIDDEN_TRACKED',
+  'REFUSED_INPUT_FLAGS',
+  'SUCCESS_LINE',
+];
+// Any tracked file under one of these prefixes is covered by a declared
+// must-track glob, so it is a valid victim for the "swallowed by .gitignore"
+// control.
+const MUST_TRACK_PREFIXES = [
+  'python-sdk/kdna/core/_schemas',
+  'packages/kdna-core/schema',
+  'schema',
+  'packages/kdna-conformance/public-contract',
+];
+const INTERNAL_VICTIM = 'python-sdk/delivery/current-bindings-20260909/independent-acceptance.md';
 
 let scratch;
 let cloneSeq = 0;
@@ -55,10 +84,13 @@ function loadManifest(dir) {
   return JSON.parse(fs.readFileSync(path.join(dir, MANIFEST_REL), 'utf8'));
 }
 
-// The gate declares its own success marker and its hard invariants; read them
-// from the module under test so the controls cannot drift away from it.
-const gate = require('./check-inventory.cjs');
-const SUCCESS_LINE = gate.SUCCESS_LINE;
+function pickMustTrackVictim(dir) {
+  for (const prefix of MUST_TRACK_PREFIXES) {
+    const hit = git(dir, ['ls-files', '--', prefix]).split('\n').filter(Boolean)[0];
+    if (hit) return hit;
+  }
+  return null;
+}
 
 before(() => {
   scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-inventory-negctl-'));
@@ -83,10 +115,10 @@ test('case 1: a clean copy really runs the gate and prints its success line', ()
 test('case 2: a must-track file swallowed by .gitignore turns the gate red', () => {
   const dir = freshClone('swallowed');
   const manifest = loadManifest(dir);
-  // Pick a tracked file that a declared must-track glob covers, then make it
-  // "present but ignored and untracked" exactly the way a broad ignore rule does.
-  const tracked = git(dir, ['ls-files']).split('\n').filter(Boolean);
-  const victim = tracked.find((f) => gate.matchesAny(f, manifest.must_track_globs));
+  assert.ok(Array.isArray(manifest.must_track_globs) && manifest.must_track_globs.length > 0, 'fixture error: manifest declares no must-track globs');
+  // Make a covered file "present but ignored and untracked", exactly the way a
+  // broad ignore rule does.
+  const victim = pickMustTrackVictim(dir);
   assert.ok(victim, 'fixture error: no tracked file matches a must-track glob');
 
   git(dir, ['rm', '--cached', '--quiet', '--', victim]);
@@ -109,14 +141,12 @@ test('case 3: an undeclared present-but-untracked file turns the gate red', () =
 
 test('case 4: internal material forced into the tracked set turns the gate red', () => {
   const dir = freshClone('forced');
-  const forbidden = gate.FORBIDDEN_TRACKED.find((g) => !g.includes('*') || g.startsWith('python-sdk/delivery'));
-  const victim = 'python-sdk/delivery/current-bindings-20260909/independent-acceptance.md';
+  const victim = INTERNAL_VICTIM;
   fs.mkdirSync(path.dirname(path.join(dir, victim)), { recursive: true });
   fs.writeFileSync(path.join(dir, victim), 'internal acceptance record\n');
   // `git add -f` is exactly the back door this check exists to close.
   git(dir, ['add', '-f', '--', victim]);
   git(dir, ['-c', 'user.email=gate@test', '-c', 'user.name=gate', 'commit', '--quiet', '-m', 'force internal material in']);
-  assert.ok(forbidden, 'fixture error: no forbidden glob available');
   const r = runGate(dir);
   assert.equal(r.status, 1, `expected rc=1, got ${r.status}\n${r.stdout}\n${r.stderr}`);
   assert.match(r.stderr, /forbidden-tracked glob/);
@@ -140,4 +170,17 @@ test('case 6: the realpath entry guard runs the gate through a symlink', () => {
   const r = spawnSync(process.execPath, [link], { cwd: dir, encoding: 'utf8' });
   assert.equal(r.status, 0, `symlinked entry must still RUN the gate, got ${r.status}\n${r.stderr}`);
   assert.ok(r.stdout.includes(SUCCESS_LINE), 'symlinked entry did not print the success line');
+});
+
+test('case 7: the gate module exposes its documented surface (catches a load-time-exiting stub)', () => {
+  const dir = freshClone('exports');
+  const code = [
+    `const g = require(${JSON.stringify(path.join(dir, GATE_REL))});`,
+    `const missing = ${JSON.stringify(GATE_EXPORTS)}.filter((k) => g[k] === undefined);`,
+    `if (missing.length) { console.error('missing exports: ' + missing.join(',')); process.exit(3); }`,
+    `console.log('KDNA_GATE_EXPORTS_OK');`,
+  ].join('\n');
+  const r = spawnSync(process.execPath, ['-e', code], { encoding: 'utf8' });
+  assert.equal(r.status, 0, `gate module must expose its documented surface, got ${r.status}\n${r.stdout}\n${r.stderr}`);
+  assert.match(r.stdout, /KDNA_GATE_EXPORTS_OK/);
 });
