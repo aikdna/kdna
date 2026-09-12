@@ -19,3 +19,12 @@ python-sdk/*.egg-info/
 __pycache__/
 *.pyc
 .pytest_cache/
+
+# Internal material (D1 rule (b)): internal acceptance records and evidence
+# batches that carry workstation / recovery paths. They are NOT public
+# documentation and must never enter the public surface. This ignore surface is
+# declared in release-surface/inventory.json and enforced by
+# scripts/check-inventory.cjs.
+docs/audits/2026-09-*
+docs/audits/OPEN-WAVE0-PUBLIC-BASELINE.json
+python-sdk/delivery/
