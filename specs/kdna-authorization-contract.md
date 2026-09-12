@@ -183,8 +183,13 @@ goldens SHOULD converge on the list above.
 `KDNA_LOADER_VERSION_UNSUPPORTED` has one narrow meaning: the manifest is
 structurally valid, its strict `compatibility.min_loader_version` coordinate is
 higher than the current loader package coordinate, and the asset therefore
-cannot be loaded by this implementation. A malformed coordinate is a schema
-failure and MUST NOT be relabeled as loader incompatibility.
+cannot be loaded by this implementation. The requirement is compared with the
+loader package coordinate on the three numeric components only: the loader's
+own package coordinate MAY carry a SemVer prerelease or build suffix (for
+example `0.24.0-rc.component-semantics.2`), and that suffix never changes the
+threshold, so `min_loader_version` `0.24.0` is satisfied by loader
+`0.24.0-rc.component-semantics.2`. A malformed requirement coordinate is a
+schema failure and MUST NOT be relabeled as loader incompatibility.
 
 ## 7. Entitlement State
 
