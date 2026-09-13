@@ -2,11 +2,26 @@
 /**
  * core-smoke — require-time smoke test for @aikdna/kdna-core.
  *
- * Prevents regressions like the missing STANDARD_ENTRIES bug from re-entering
- * main. Fails CI if:
- *   - require() throws at module load
- *   - STANDARD_ENTRIES is missing or empty
- *   - the standard entries don't match the loader FILE_MAP
+ * Two surfaces are exercised and must stay separate:
+ *
+ *   - the accepted public contract (the component-semantics release candidate)
+ *     exports exactly `admitBytes` at the root. Source of truth:
+ *     specs/public-semantic-source.json:7768-7774
+ *     ("engineering.core_surface.root"), mirrored by the entry table in
+ *     packages/kdna-core/README.md:7-13 and enforced by
+ *     conformance/public-contract/test/package-surfaces.cjs:6. Restoring a
+ *     retired alias here would contradict packages/kdna-core/README.md:32
+ *     ("Root exports contain no old API aliases").
+ *   - the retained 0.22 source line that still lives in this repository and
+ *     backs the in-repo container tests (`src/asset-reader.js`, `src/loader.js`,
+ *     `src/index.js`). Those files are deliberately absent from the package
+ *     export map (packages/kdna-core/package.json "exports"/"files"), and
+ *     packages/kdna-core/README.md:32 says historical tests are not evidence
+ *     for this RC.
+ *
+ * Fails CI if require() throws at module load, if the accepted public root
+ * surface is missing, or if the retained source line breaks its internal
+ * lockstep.
  *
  * Runs from the kdna monorepo root (resolves packages/kdna-core/src) and from
  * any consumer that has @aikdna/kdna-core installed in node_modules.
@@ -15,6 +30,11 @@
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+
+// The accepted public root surface. Kept as an explicit literal so that a
+// change in the public contract forces a conscious edit here instead of
+// silently following it. Citation: specs/public-semantic-source.json:7768-7774.
+const ACCEPTED_ROOT_EXPORTS = ['admitBytes'];
 
 let failures = 0;
 function check(name, fn) {
@@ -27,7 +47,22 @@ function check(name, fn) {
   }
 }
 
-// 1. Load from monorepo source (the development path).
+function assertAcceptedRootSurface(m, where) {
+  if (!m) throw new Error(`${where}: module exports falsy`);
+  if (typeof m.admitBytes !== 'function') {
+    throw new Error(`${where}: admitBytes is not exported as a function`);
+  }
+  const observed = Object.keys(m).sort();
+  if (observed.join(',') !== [...ACCEPTED_ROOT_EXPORTS].sort().join(',')) {
+    throw new Error(
+      `${where}: root exports ${JSON.stringify(observed)}; expected exactly ${JSON.stringify(
+        ACCEPTED_ROOT_EXPORTS,
+      )}`,
+    );
+  }
+}
+
+// 1. Retained 0.22 source line (in-repo only; not the package public surface).
 const monorepoSource = path.join(
   __dirname,
   '..',
@@ -112,7 +147,9 @@ if (fs.existsSync(monorepoSource)) {
     }
   });
 
-  // 3. Top-level index.js (the public entry) must also load.
+  // 3. The retained line's internal entry (src/index.js) must also load. This
+  // is NOT the package public entry — the package entry is
+  // src/public-contract/index.js, checked below.
   const indexPath = path.join(__dirname, '..', 'packages', 'kdna-core', 'src', 'index.js');
   check('kdna-core/src/index.js loads and re-exports STANDARD_ENTRIES', () => {
     const m = require(indexPath);
@@ -125,7 +162,25 @@ if (fs.existsSync(monorepoSource)) {
   console.log('core-smoke: not in monorepo, checking installed package only');
 }
 
-// 4. Load from installed package (the consumer path). This is what every
+// 4. The current public contract entry, loaded from the monorepo source. The
+// package "main"/"exports" point here (packages/kdna-core/package.json), so it
+// is the surface every consumer of this checkout receives.
+const publicEntry = path.join(
+  __dirname,
+  '..',
+  'packages',
+  'kdna-core',
+  'src',
+  'public-contract',
+  'index.js',
+);
+if (fs.existsSync(publicEntry)) {
+  check('monorepo src/public-contract/index.js exports the accepted root surface', () => {
+    assertAcceptedRootSurface(require(publicEntry), 'monorepo src/public-contract/index.js');
+  });
+}
+
+// 5. Load from installed package (the consumer path). This is what every
 // downstream CLI / Studio / VSCode extension actually does at startup.
 try {
   const installed = require.resolve('@aikdna/kdna-core');
@@ -134,8 +189,8 @@ try {
   check('installed @aikdna/kdna-core loads without throwing', () => {
     if (!m) throw new Error('installed module exports falsy');
   });
-  check('installed @aikdna/kdna-core exports STANDARD_ENTRIES', () => {
-    if (!m.STANDARD_ENTRIES) throw new Error('installed package missing STANDARD_ENTRIES');
+  check('installed @aikdna/kdna-core exports the accepted root surface', () => {
+    assertAcceptedRootSurface(m, 'installed @aikdna/kdna-core');
   });
 } catch (e) {
   if (e.code === 'MODULE_NOT_FOUND') {
