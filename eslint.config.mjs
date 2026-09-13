@@ -1,6 +1,19 @@
 import js from '@eslint/js';
 
+// Ajv standalone validators are emitted by scripts/public-contract/generate.mjs
+// and their exact bytes are bound by specs/public-generation-manifest.json
+// (VALIDATOR_OUTPUTS). They are machine output, so linting or hand-editing them
+// would desync the generated surface; the generator owns them. Every other file
+// under the lint scope stays covered.
+const generatedValidators = {
+  ignores: [
+    'packages/kdna-core/src/public-contract/*.generated.js',
+    'packages/kdna-read/src/*.generated.js',
+  ],
+};
+
 export default [
+  generatedValidators,
   js.configs.recommended,
   {
     languageOptions: {

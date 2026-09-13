@@ -45,7 +45,9 @@ function compareUtf8(left, right) {
 function parseJson(input) {
   const text = typeof input === 'string' ? input : decoder.decode(input);
   let position = 0, values = 0;
-  function whitespace() { while (/[\x20\x09\x0a\x0d]/.test(text[position] ?? '\0')) position++; }
+  // JSON whitespace is exactly space, tab, LF, and CR. This is a character
+  // membership test, not a control-character regex.
+  function whitespace() { while (position < text.length && ' \t\n\r'.includes(text[position])) position++; }
   function string() {
     const start = position++;
     for (;;) {
