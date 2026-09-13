@@ -279,6 +279,10 @@ test('ecosystem workflow checkouts stay pinned to accepted or explicitly scoped 
   );
   const candidateSmokePins = new Map([
     ['core-smoke.yml:aikdna/kdna-core-swift', '5a8e2bb5db92d8a9118e1668cf6f1414c4aed5c9'],
+    // Scoped candidate smoke input for the CLI: the merged revision that carries
+    // the dependency fix. Only the smoke workflow may consume it; the manifest
+    // keeps the accepted published coordinate and publish.yml keeps that pin.
+    ['core-smoke.yml:aikdna/kdna-cli', '14a317f19289b79d1c42da70a20b83334c32b8b7'],
   ]);
 
   for (const workflowName of ['core-smoke.yml', 'publish.yml']) {

@@ -30,8 +30,12 @@ jobs:
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          # Candidate-only smoke input: the merged CLI revision that carries the
+          # dependency fix. The public release/publish authority remains
+          # ecosystem-manifest.json, and publish.yml keeps checking out the
+          # accepted published coordinate.
           repository: aikdna/kdna-cli
-          ref: 7f609d5a30e00ddcf2cd418699fb6390d80ed78e
+          ref: 14a317f19289b79d1c42da70a20b83334c32b8b7
           path: .ecosystem-repos/kdna-cli
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
