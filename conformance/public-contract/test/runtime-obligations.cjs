@@ -144,7 +144,7 @@ async function main() {
     fs.readFileSync(path.join(__dirname, '../ir-retention-vectors.generated.json')),
   );
   for (const test of retention.cases)
-    await check('PD273-' + test.id, 'PUBLIC-MODES', async () => {
+    await check(test.id, 'PUBLIC-MODES', async () => {
       const variants = [];
       for (const variant of test.variants) {
         const asset = optionalAsset();
