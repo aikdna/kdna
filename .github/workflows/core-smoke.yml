@@ -37,6 +37,11 @@ jobs:
           repository: aikdna/kdna-cli
           ref: 14a317f19289b79d1c42da70a20b83334c32b8b7
           path: .ecosystem-repos/kdna-cli
+          # The manifest validator reads the accepted coordinate's package
+          # evidence out of this checkout, so the history behind the scoped
+          # candidate pin has to be present (same reason as the Swift candidate
+          # checkout below).
+          fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/create-kdna-web-app
