@@ -23,6 +23,13 @@ Each Node call accepts a path or bytes through Core Node admission and therefore
 
 Browser Core admits stored and deflated bytes synchronously through the shared implementation. Browser Read also accepts a retained Core snapshot for expansion. Node execution of a browser entry is not proof of a browser engine; native browser acceptance, platform coverage and external identity/confirmation services are recorded separately.
 
-The declarations and schema mirror come from the single public semantic source. The packages do not ship the conformance test issuer. See the component revision receipts for the exact test routes, source hashes, RC hashes and remaining external proof limits.
+The declarations and schema mirror come from the single public semantic source.
+The packages do not ship the conformance test issuer. See
+[`conformance/README.md`](../../conformance/README.md) for the public suite
+routes and
+[`docs/core-read-current-status.md`](../../docs/core-read-current-status.md)
+for the dated implementation status and the remaining external proof limits.
+Independent acceptance records are internal evidence and are not part of this
+package or this repository.
 
 For an exact judgment selection, Read preserves the entire Core method value: native declaration, declared/undeclared field presence, original content and every supported interpretation body. It does not parse extension content or infer mechanisms from prose. An invalid explicit component prevents disclosure before Host evaluation. A valid empty collection stays supported and empty; an undeclared meaning stays null. Full-envelope budgeting includes all repeated raw and interpreted bytes, with no criteria truncation or partial semantics.
