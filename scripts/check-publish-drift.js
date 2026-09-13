@@ -4,7 +4,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
-const { currentPublishedPackages } = require('./ecosystem-manifest');
+const { publishableSourcePackages } = require('./ecosystem-manifest');
 
 let failures = 0;
 
@@ -28,7 +28,13 @@ const REPOS_ROOT = path.resolve(__dirname, '..', '..');
 const manifest = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, '..', 'ecosystem-manifest.json'), 'utf8'),
 );
-const PACKAGES = currentPublishedPackages(manifest).map(({ component, packageRecord }) => {
+// Every record with an npm coordinate is compared on its published source
+// coordinate. An `active` or `compatibility` record publishes its own version,
+// while a `candidate` record keeps an unpublished source coordinate above the
+// registry incumbent; that incumbent stays audited by the release-health
+// policy (see release-health-policy.json and scripts/publish-health.mjs), so
+// recording an unpublished prerelease candidate narrows nothing here.
+const PACKAGES = publishableSourcePackages(manifest).map(({ component, packageRecord }) => {
   const componentRoot = path.resolve(__dirname, '..', component.local_path || '.');
   return {
     repo: path.relative(
@@ -36,13 +42,15 @@ const PACKAGES = currentPublishedPackages(manifest).map(({ component, packageRec
       path.dirname(path.join(componentRoot, packageRecord.package_json)),
     ),
     pkg: packageRecord.npm_package,
-    expectedVersion: packageRecord.version,
+    sourceVersion: packageRecord.version,
+    publishedVersion: packageRecord.published_version || packageRecord.version,
+    candidate: packageRecord.release_status === 'candidate',
   };
 });
 
 console.log('── npm publish drift check\n');
 
-for (const { repo, pkg, expectedVersion } of PACKAGES) {
+for (const { repo, pkg, sourceVersion, publishedVersion, candidate } of PACKAGES) {
   const repoPath = path.join(REPOS_ROOT, repo);
   const pkgJsonPath = path.join(repoPath, 'package.json');
 
@@ -51,33 +59,40 @@ for (const { repo, pkg, expectedVersion } of PACKAGES) {
     repoVersion = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8')).version;
   }
 
-  let npmVersion;
-  try {
-    npmVersion = execFileSync('npm', ['view', pkg, 'version'], {
-      encoding: 'utf8',
-      timeout: 15000,
-      stdio: ['ignore', 'pipe', 'ignore'],
-    }).trim();
-  } catch {
-    npmVersion = null;
-  }
+  if (candidate) {
+    console.log(
+      `  NOTE: ${pkg} candidate source=${sourceVersion} incumbent=${publishedVersion}` +
+        ' — the incumbent registry coordinate is audited by the release-health policy',
+    );
+  } else {
+    let npmVersion;
+    try {
+      npmVersion = execFileSync('npm', ['view', pkg, 'version'], {
+        encoding: 'utf8',
+        timeout: 15000,
+        stdio: ['ignore', 'pipe', 'ignore'],
+      }).trim();
+    } catch {
+      npmVersion = null;
+    }
 
-  if (!npmVersion) {
-    check(`${pkg}: published on npm`, false, 'npm view returned nothing');
-    continue;
-  }
+    if (!npmVersion) {
+      check(`${pkg}: published on npm`, false, 'npm view returned nothing');
+      continue;
+    }
 
-  check(
-    `${pkg} manifest=${expectedVersion} npm=${npmVersion}`,
-    npmVersion === expectedVersion || CANDIDATE_BRANCH_REPOS.has(repo),
-    CANDIDATE_BRANCH_REPOS.has(repo)
-      ? 'registry latest may lag the manifest version for out-of-scope candidate branches'
-      : 'registry latest must equal the manifest version',
-  );
+    check(
+      `${pkg} manifest=${publishedVersion} npm=${npmVersion}`,
+      npmVersion === publishedVersion || CANDIDATE_BRANCH_REPOS.has(repo),
+      CANDIDATE_BRANCH_REPOS.has(repo)
+        ? 'registry latest may lag the manifest version for out-of-scope candidate branches'
+        : 'registry latest must equal the manifest version',
+    );
+  }
   if (repoVersion) {
     check(
-      `${pkg} repo=${repoVersion} manifest=${expectedVersion}`,
-      repoVersion === expectedVersion || CANDIDATE_BRANCH_REPOS.has(repo),
+      `${pkg} repo=${repoVersion} manifest=${sourceVersion}`,
+      repoVersion === sourceVersion || CANDIDATE_BRANCH_REPOS.has(repo),
       CANDIDATE_BRANCH_REPOS.has(repo)
         ? 'repository version may lead the manifest version for out-of-scope candidate branches'
         : 'repository package version must equal the manifest version',
@@ -87,7 +102,7 @@ for (const { repo, pkg, expectedVersion } of PACKAGES) {
   // Pre-publish narrative gate: the in-package README and its Chinese mirror
   // must not advertise a different "latest" version than the one being
   // published. A stale "latest is X" claim misleads installers.
-  if (!CANDIDATE_BRANCH_REPOS.has(repo)) {
+  if (!candidate && !CANDIDATE_BRANCH_REPOS.has(repo)) {
     for (const readmeName of ['README.md', 'README.zh.md']) {
       const readmePath = path.join(repoPath, readmeName);
       if (!fs.existsSync(readmePath)) continue;
@@ -97,8 +112,8 @@ for (const { repo, pkg, expectedVersion } of PACKAGES) {
       );
       if (latestClaim) {
         check(
-          `${pkg} ${readmeName} latest-claim=${latestClaim[1]} manifest=${expectedVersion}`,
-          latestClaim[1] === expectedVersion,
+          `${pkg} ${readmeName} latest-claim=${latestClaim[1]} manifest=${publishedVersion}`,
+          latestClaim[1] === publishedVersion,
           `${readmeName} latest-version claim must equal the manifest version`,
         );
       }
