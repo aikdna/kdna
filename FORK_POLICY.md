@@ -14,7 +14,17 @@ The following fork activities are explicitly permitted and encouraged:
 
 ## Protocol Forks
 
-We distinguish "protocol forks" — forks that replicate the KDNA standard under a different name — from constructive forks.
+We distinguish "protocol forks" — forks that replicate the KDNA standard under
+a different name — from constructive forks.
+
+This distinction is about naming and interoperability, not about permission.
+An independent implementation of the published contract, including one that
+passes the documented conformance profile on its own, is a legitimate use of
+open source and is explicitly permitted. You do not need our approval to build
+one, and you do not need to call it KDNA. What this policy asks is narrower:
+if you publish it, do not present it as the official project or as its
+replacement. Trademark constraints are separate from the technical permission
+and are described in [TRADEMARK.md](./TRADEMARK.md).
 
 A **protocol fork** typically:
 - Copies the KDNA file structure, schema, and validation rules

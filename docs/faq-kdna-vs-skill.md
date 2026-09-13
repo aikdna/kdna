@@ -130,6 +130,35 @@ better merely by changing the carrier.
 
 ---
 
+## Why not just keep one Markdown file?
+
+For a small, short-lived, single-person judgment, keep the Markdown file. That
+is not a compromise — it is the right carrier when one person reads one file in
+one tool, and it usually costs less to write and maintain than an asset.
+
+A structured contract starts to pay for itself when the judgment has to outlive
+the document:
+
+| Requirement | One Markdown file | A `.kdna` asset |
+|---|---|---|
+| Exact revision of the judgment | Whatever your repository or drive keeps | Asset identity, version, and content digest |
+| Who authorized what, and for which scope | Described in prose | LoadPlan, attachment scope, and authorization facts |
+| Consistent reading across tools and Hosts | Each tool re-reads the text | One loading and projection contract |
+| Replacing or rolling back a judgment | Edit the file | Versioned replacement with an explicit rollback |
+| Proving which bytes a consumer read | Not usually retained | Consumption receipt and delivery digest |
+| Authoring and maintenance cost | Low | Higher — schema, review, and export are real work |
+
+Two honest costs: a `.kdna` asset is more work to author than a Markdown file,
+and it will not make a weak judgment stronger. If neither the identity nor the
+lifecycle requirement is real yet, the Markdown file is the better answer.
+
+These capabilities are not unique to KDNA. Any system can implement identity,
+authorization, revision, and consistent interpretation. KDNA's opportunity is
+to make the shared conventions and the reading experience good, not to claim
+that a particular file extension is irreplaceable.
+
+---
+
 ## KDNA vs Memory or RAG — what's the difference?
 
 Memory and RAG can store or retrieve facts, rules, preferences, examples, and
@@ -154,23 +183,14 @@ permission to act merely because content was delivered.
 ## Current shipped capabilities
 
 `Released` means the command is shipped; the overall protocol and toolchain
-remain pre-release.
+remain pre-release. The exact per-command list lives in one place:
+[tool-status-matrix.md](tool-status-matrix.md). It is not repeated here, because
+a second copy is what drifted out of date last time.
 
-| Surface | Availability |
-|---|---|
-| `kdna inspect` | Released |
-| `kdna validate` | Released |
-| `kdna plan-load` | Released |
-| `kdna load --profile=compact --as=prompt` | Released |
-| `kdna pack` | Released |
-| `kdna unpack` | Released |
-| `kdna demo minimal` | Released |
-| `kdna lint` | Released |
-| `kdna workpack` | Experimental |
-
-Use `kdna plan-load` before `kdna load`. Local package references are supported
-after installation; source directories remain authoring inputs and runtime
-loading requires a packaged `.kdna` file.
+Two rules that do not change: run `kdna plan-load` before `kdna load`, and keep
+source directories as authoring inputs — runtime loading takes a packaged
+`.kdna` file. Any command that the published CLI does not list exits 2 with
+`command is not in the approved allowlist`.
 
 ---
 
