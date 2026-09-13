@@ -274,6 +274,13 @@ diagnosis, but that comparison is not a KDNA validity gate and does not prove
 that KDNA improves model intelligence, is universally correct, or is superior
 to Prompt, Skill, or ordinary documents.
 
+An effect experiment must use an equally sufficient Markdown/Skill judgment body
+as the comparison arm instead of a deliberately weakened baseline. Equal correct
+answers are a normal result: they do not make an asset fail and do not prove
+causal influence. Any public effect claim must state four things together — the
+task, the model, the input, and the evaluation method. If any of the four is
+missing, write "unverified" rather than a proven effect.
+
 ```bash
 # Validate the exported asset and inspect its LoadPlan
 kdna validate ./dist/my-domain.kdna
