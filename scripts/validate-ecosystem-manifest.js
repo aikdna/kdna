@@ -10,7 +10,7 @@ const addFormats = require('ajv-formats');
 const { inspect } = require('../packages/kdna-core/src/container');
 const { sameFilesystemIdentity } = require('./filesystem-identity');
 const {
-  compareStableVersions,
+  compareSemver,
   currentAssetIndexInventory,
   manifestArtifactInventory,
   resolveComponentPath,
@@ -84,16 +84,27 @@ function assertConformanceCommit(component, commit, detail = '') {
       fail(component, `conformance anchor is not a commit: ${commit}`, detail);
       return;
     }
-    execFileSync('git', ['merge-base', '--is-ancestor', commit, 'HEAD'], {
-      cwd: repoRoot,
-      stdio: 'ignore',
-    });
+    if (!isAncestorCommit(commit, 'HEAD')) {
+      throw new Error('not reachable from HEAD');
+    }
   } catch {
     fail(
       component,
       `conformance commit is not reachable from current KDNA history: ${commit}`,
       detail,
     );
+  }
+}
+
+function isAncestorCommit(ancestor, descendant) {
+  try {
+    execFileSync('git', ['merge-base', '--is-ancestor', ancestor, descendant], {
+      cwd: repoRoot,
+      stdio: 'ignore',
+    });
+    return true;
+  } catch {
+    return false;
   }
 }
 
@@ -386,23 +397,25 @@ if (validateSchema()) {
         `refs/tags/${publishedTag}`,
       ]);
       if (corePackageRecord.release_status === 'candidate') {
-        execFileSync(
-          'git',
-          ['merge-base', '--is-ancestor', publishedCommit, coreConformanceCommit],
-          { cwd: repoRoot, stdio: 'ignore' },
-        );
-        const candidatePackage = JSON.parse(
-          gitBytes(repoRoot, [
-            'show',
-            `${coreConformanceCommit}:${corePackageRecord.package_json}`,
-          ]).toString('utf8'),
-        );
-        assertPackageManifest(
-          coreComponent,
-          corePackageRecord,
-          candidatePackage,
-          'conformance_commit',
-        );
+        if (!isAncestorCommit(publishedCommit, coreConformanceCommit)) {
+          fail(
+            coreComponent,
+            `Core conformance_commit must descend from release tag ${publishedTag}: ${coreConformanceCommit}`,
+          );
+        } else {
+          const candidatePackage = JSON.parse(
+            gitBytes(repoRoot, [
+              'show',
+              `${coreConformanceCommit}:${corePackageRecord.package_json}`,
+            ]).toString('utf8'),
+          );
+          assertPackageManifest(
+            coreComponent,
+            corePackageRecord,
+            candidatePackage,
+            'conformance_commit',
+          );
+        }
       } else if (publishedCommit !== coreConformanceCommit) {
         fail(
           coreComponent,
@@ -482,7 +495,7 @@ if (validateSchema()) {
       }
       if (
         packageRecord.release_status === 'candidate' &&
-        compareStableVersions(packageRecord.version, packageRecord.published_version) <= 0
+        compareSemver(packageRecord.version, packageRecord.published_version) <= 0
       ) {
         fail(
           component,

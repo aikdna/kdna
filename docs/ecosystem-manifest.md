@@ -32,7 +32,7 @@ release statuses:
 | Status | Meaning |
 | --- | --- |
 | `active` | A current npm package and managed dependency coordinate. |
-| `candidate` | Versioned, publishable source that has not yet passed registry publication acceptance. Both coordinates must be stable SemVer and the candidate must be newer than `published_version`. The candidate remains outside current-published projections until promoted, while the incumbent registry release and candidate main source remain separate release-health checks. |
+| `candidate` | Versioned, publishable source that has not yet passed registry publication acceptance. `published_version` stays a strict `x.y.z` registry incumbent; `version` is the source coordinate, may carry a SemVer prerelease (for example `0.24.0-rc.component-semantics.2`), and must be newer than `published_version` under SemVer precedence. The candidate remains outside current-published projections until promoted, while the incumbent registry release (`version` in `release-health-policy.json`) and the candidate source (`candidate_version` there) remain separate release-health checks. |
 | `compatibility` | A maintained migration bridge. Its own dependencies remain current, but new integrations should use its declared replacement. |
 | `deprecated` | A historical npm coordinate with frozen, non-publishable source and an explicit replacement. |
 | `source-only` | A public source package or application that is not an npm publication. |
@@ -58,8 +58,9 @@ public release. For an active published Core line, the ecosystem conformance
 anchor is fixed to the exact Git commit behind its declared release tag. While
 Core is explicitly recorded as a newer `candidate`, the anchor may instead be
 the exact candidate commit: it must descend from the published tag and its
-package version must equal the candidate version. Component and artifact
-anchors cannot select a different Core commit.
+package version must equal the candidate version, including a SemVer
+prerelease candidate version. Component and artifact anchors cannot select a
+different Core commit.
 
 ## Consumer Rules
 

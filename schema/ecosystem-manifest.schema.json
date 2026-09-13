@@ -128,7 +128,6 @@
           "then": {
             "required": ["published_version"],
             "properties": {
-              "version": { "$ref": "#/$defs/stableSemver" },
               "published_version": { "$ref": "#/$defs/stableSemver" },
               "npm_package": { "type": "string", "minLength": 1 },
               "lifecycle": { "enum": ["Pre-release", "Experimental", "Legacy"] },
