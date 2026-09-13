@@ -13,25 +13,6 @@ Coordinates:
 - Container coordinate: `format_version: "0.1.0"`
 - Payload coordinate: `compatibility.profile_version: "0.1.0"`
 
-## Single source of truth
-
-Version, support and capability facts are stated in one place each, and other
-pages point at them instead of keeping a second copy. A duplicated table is
-what goes stale first, so treat a copy as a defect rather than as redundancy.
-
-| Fact | Single source |
-|---|---|
-| Format contract and every normative document | This index, and [`SPEC.md`](SPEC.md) |
-| Published vs unpublished package coordinates | [`docs/version-and-capability-matrix.md`](docs/version-and-capability-matrix.md) |
-| Per-command CLI/Studio availability | [`docs/tool-status-matrix.md`](docs/tool-status-matrix.md) |
-| Current Core/Read implementation and support status | [`docs/core-read-current-status.md`](docs/core-read-current-status.md) |
-
-Each page that states a version or support claim must also carry its applicable
-version and status, so a reader arriving from a search result can tell whether
-the page still applies. See
-[`docs/version-and-capability-matrix.md`](docs/version-and-capability-matrix.md)
-for how a change to one of these facts is meant to propagate.
-
 ## Format contract (the four-in-one)
 
 The single readable format contract consolidates the container, manifest,
