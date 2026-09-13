@@ -17,6 +17,9 @@ const cliPackageRoot = path.dirname(compatRequire.resolve('@aikdna/kdna-cli/pack
 const ROOT_CORE_LOCK_PATH = 'node_modules/@aikdna/kdna-core';
 const CLI_LOCK_PATH = 'node_modules/@aikdna/kdna-cli';
 const CLI_NESTED_CORE_LOCK_PATH = 'node_modules/@aikdna/kdna-cli/node_modules/@aikdna/kdna-core';
+const COMPAT_NESTED_CORE_LOCK_PATH = 'packages/kdna/node_modules/@aikdna/kdna-core';
+const CONFORMANCE_NESTED_CORE_LOCK_PATH =
+  'packages/kdna-conformance/node_modules/@aikdna/kdna-core';
 const COMPAT_NESTED_CLI_LOCK_PATH = 'packages/kdna/node_modules/@aikdna/kdna-cli';
 const PACKABLE_FIXTURE_FILES = ['mimetype', 'kdna.json', 'checksums.json', 'payload.kdnab'];
 const EXPECTED_PACKABLE_FIXTURE_COUNT = 2;
@@ -27,13 +30,38 @@ function assertCurrentToolchainLock(lock) {
     link: true,
   });
   assert.equal(lock.packages['packages/kdna-core'].version, '0.24.0-rc.component-semantics.2');
+  // The lock carries the candidate Core link, the Core nested under the
+  // published CLI, and one released Core for each workspace package that still
+  // pins the published Core instead of the candidate: the compatibility
+  // package and kdna-conformance. An extra, missing or renamed Core copy means
+  // the pair drifted apart again.
   assert.deepEqual(
     Object.keys(lock.packages)
       .filter((location) => location.endsWith('/@aikdna/kdna-core'))
       .sort(),
-    [CLI_NESTED_CORE_LOCK_PATH, ROOT_CORE_LOCK_PATH].sort(),
-    'the workspace lock must resolve the candidate Core link plus the CLI-published Core only',
+    [
+      CLI_NESTED_CORE_LOCK_PATH,
+      COMPAT_NESTED_CORE_LOCK_PATH,
+      CONFORMANCE_NESTED_CORE_LOCK_PATH,
+      ROOT_CORE_LOCK_PATH,
+    ].sort(),
+    'the workspace lock must resolve the candidate Core link plus the released Core for the CLI and for every package that still pins the published Core',
   );
+  for (const releasedCorePath of [
+    COMPAT_NESTED_CORE_LOCK_PATH,
+    CONFORMANCE_NESTED_CORE_LOCK_PATH,
+  ]) {
+    const releasedCore = lock.packages[releasedCorePath];
+    assert.equal(releasedCore.version, '0.22.0');
+    assert.equal(
+      releasedCore.resolved,
+      'https://registry.npmjs.org/@aikdna/kdna-core/-/kdna-core-0.22.0.tgz',
+    );
+    assert.equal(
+      releasedCore.integrity,
+      'sha512-LPKWe/jf6Shbt2NrBxuumqPWcUREocRXprRib/V/QSC+B3HqUoeUeHbxWT6iZN42NSJcLlc4P0bWvHTZ8dA7/A==',
+    );
+  }
 
   const cli = lock.packages[CLI_LOCK_PATH];
   assert.equal(cli.version, '0.36.1');
@@ -158,6 +186,17 @@ test('current toolchain lock gate fails closed on source or topology drift', asy
     [
       'compat nested CLI drift',
       (candidate) => (candidate.packages[COMPAT_NESTED_CLI_LOCK_PATH] = { version: '0.36.1' }),
+    ],
+    [
+      'unexpected extra Core copy',
+      (candidate) =>
+        (candidate.packages['packages/kdna-read/node_modules/@aikdna/kdna-core'] = {
+          version: '0.22.0',
+        }),
+    ],
+    [
+      'released Core copy dropped',
+      (candidate) => delete candidate.packages[CONFORMANCE_NESTED_CORE_LOCK_PATH],
     ],
   ]) {
     await t.test(name, () => {
