@@ -47,6 +47,15 @@ const EXPECTED_COMPAT_CHECKOUTS = JSON.parse(
   .filter((component) => component.local_path && component.local_path !== '.')
   .map((component) => [component.repository, component.source_commit]);
 
+// A component whose accepted coordinate is older may still be rehearsed in the
+// smoke workflow at an explicitly scoped candidate revision. The manifest keeps
+// the accepted coordinate and the publish workflow keeps checking that one out;
+// only the smoke workflow consumes the scoped pin.
+const SMOKE_SCOPED_CANDIDATE_PINS = new Map([
+  ['aikdna/kdna-core-swift', '5a8e2bb5db92d8a9118e1668cf6f1414c4aed5c9'],
+  ['aikdna/kdna-cli', '14a317f19289b79d1c42da70a20b83334c32b8b7'],
+]);
+
 function releaseInput(overrides = {}) {
   const version = overrides.pkg?.version || '1.2.3';
   return {
@@ -287,9 +296,7 @@ test('core smoke rehearses the release ecosystem with every immutable accepted c
     'utf8',
   );
   for (const [repository, commit] of EXPECTED_COMPAT_CHECKOUTS) {
-    const smokeCommit = repository === 'aikdna/kdna-core-swift'
-      ? '5a8e2bb5db92d8a9118e1668cf6f1414c4aed5c9'
-      : commit;
+    const smokeCommit = SMOKE_SCOPED_CANDIDATE_PINS.get(repository) ?? commit;
     assert.match(
       workflow,
       new RegExp(`repository: ${repository.replace('/', '\\/')}\\n\\s+ref: ${smokeCommit}`, 'u'),
