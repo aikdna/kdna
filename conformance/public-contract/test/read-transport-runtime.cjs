@@ -10,6 +10,10 @@ const fs = require('node:fs'),
 const { createRequire } = require('node:module');
 const { pathToFileURL } = require('node:url');
 const B = require('./browser-runtime.cjs');
+// Correlation labels only; they must be unique, not unpredictable to an
+// attacker. They are still generated from the platform CSPRNG so that no
+// insecure-randomness sink exists in this file at all.
+const unique = () => crypto.randomUUID();
 const hash = (b) => crypto.createHash('sha256').update(b).digest('hex');
 const canonical = (v) =>
   v && typeof v === 'object'
@@ -33,7 +37,7 @@ async function exerciseTransport(api, base, fixture, coordinates) {
     check = (id, matched, detail) => rows.push({ id, matched: !!matched, detail });
   let serial = 0;
   const request = (kind = 'exact_selection') => ({
-    request_id: 'request:transport:' + Math.random(),
+    request_id: 'request:transport:' + unique(),
     tuple: coordinates.tuple,
     budget_bytes: 1000000,
     mode: kind,
@@ -47,9 +51,9 @@ async function exerciseTransport(api, base, fixture, coordinates) {
     handle: null,
   });
   const context = (url, candidate) => ({
-    association_id: 'association:' + Math.random() + ':' + ++serial,
+    association_id: 'association:' + unique() + ':' + ++serial,
     endpoint_id: 'endpoint:reference',
-    session_id: 'session:' + Math.random(),
+    session_id: 'session:' + unique(),
     endpoint_url: url,
     issued_at_ms: Date.now() - 10,
     expires_at_ms: Date.now() + 60000,
@@ -714,9 +718,15 @@ async function main() {
           bytes = encode(data);
           break;
         case 'digest-A':
+          data.digests.A.observed = digest;
+          bytes = encode(data);
+          break;
         case 'digest-C':
+          data.digests.C.observed = digest;
+          bytes = encode(data);
+          break;
         case 'digest-E':
-          data.digests[kind.slice(-1)].observed = digest;
+          data.digests.E.observed = digest;
           bytes = encode(data);
           break;
         case 'selection':
