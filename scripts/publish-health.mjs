@@ -5,24 +5,31 @@ import path from 'node:path';
 import process from 'node:process';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+
+const require = createRequire(import.meta.url);
+const { compareSemver } = require('./ecosystem-manifest.js');
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const policyPath = path.join(repoRoot, 'release-health-policy.json');
 const stableSemver = /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/u;
 const slsaPredicate = 'https://slsa.dev/provenance/v1';
 
-function compareStableVersions(left, right) {
-  const leftMatch = stableSemver.exec(left || '');
-  const rightMatch = stableSemver.exec(right || '');
-  if (!leftMatch || !rightMatch) throw new Error('stable SemVer comparison requires x.y.z');
-  for (let index = 1; index <= 3; index += 1) {
-    const leftPart = BigInt(leftMatch[index]);
-    const rightPart = BigInt(rightMatch[index]);
-    if (leftPart > rightPart) return 1;
-    if (leftPart < rightPart) return -1;
+// The published coordinate stays strict `x.y.z`; the candidate source that
+// has not passed registry acceptance may be a SemVer prerelease, so ordering
+// it against the incumbent needs full SemVer precedence.
+function assertCandidateVersion(entry) {
+  if (entry.candidate_version === undefined) return;
+  let order = null;
+  try {
+    order = compareSemver(entry.candidate_version, entry.version);
+  } catch {
+    order = null;
   }
-  return 0;
+  if (order === null || order <= 0) {
+    throw new Error(`invalid candidate version for ${entry.npm_package}`);
+  }
 }
 
 export function expectedMainVersion(entry) {
@@ -61,13 +68,7 @@ export function validatePolicy(policy) {
     if (!stableSemver.test(entry.version)) {
       throw new Error(`invalid expected version for ${entry.npm_package}`);
     }
-    if (
-      entry.candidate_version !== undefined &&
-      (!stableSemver.test(entry.candidate_version) ||
-        compareStableVersions(entry.candidate_version, entry.version) <= 0)
-    ) {
-      throw new Error(`invalid candidate version for ${entry.npm_package}`);
-    }
+    assertCandidateVersion(entry);
     if (!/^aikdna\/[a-z0-9._-]+$/u.test(entry.repository)) {
       throw new Error(`invalid public repository coordinate: ${entry.repository}`);
     }

@@ -119,6 +119,7 @@
       "package_json": "packages/kdna-core/package.json",
       "npm_package": "@aikdna/kdna-core",
       "version": "0.22.0",
+      "candidate_version": "0.24.0-rc.component-semantics.2",
       "canonical_tag": {
         "type": "natural"
       }
