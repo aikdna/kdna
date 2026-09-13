@@ -560,8 +560,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-0-integer",
-    "file": "pd275-exact-0-integer.kdna",
+    "name": "number-exact-0-integer",
+    "file": "number-exact-0-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "0",
@@ -845,8 +845,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-0-float",
-    "file": "pd275-exact-0-float.kdna",
+    "name": "number-exact-0-float",
+    "file": "number-exact-0-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "0",
@@ -1130,8 +1130,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-1-integer",
-    "file": "pd275-exact-1-integer.kdna",
+    "name": "number-exact-1-integer",
+    "file": "number-exact-1-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-1",
@@ -1415,8 +1415,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-1-float",
-    "file": "pd275-exact-1-float.kdna",
+    "name": "number-exact-1-float",
+    "file": "number-exact-1-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-1",
@@ -1700,8 +1700,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-2-integer",
-    "file": "pd275-exact-2-integer.kdna",
+    "name": "number-exact-2-integer",
+    "file": "number-exact-2-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "4294967296",
@@ -1985,8 +1985,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-2-float",
-    "file": "pd275-exact-2-float.kdna",
+    "name": "number-exact-2-float",
+    "file": "number-exact-2-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "4294967296",
@@ -2270,8 +2270,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-3-integer",
-    "file": "pd275-exact-3-integer.kdna",
+    "name": "number-exact-3-integer",
+    "file": "number-exact-3-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-4294967296",
@@ -2555,8 +2555,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-3-float",
-    "file": "pd275-exact-3-float.kdna",
+    "name": "number-exact-3-float",
+    "file": "number-exact-3-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-4294967296",
@@ -2840,8 +2840,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-4-integer",
-    "file": "pd275-exact-4-integer.kdna",
+    "name": "number-exact-4-integer",
+    "file": "number-exact-4-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "9007199254740991",
@@ -3125,8 +3125,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-4-float",
-    "file": "pd275-exact-4-float.kdna",
+    "name": "number-exact-4-float",
+    "file": "number-exact-4-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "9007199254740991",
@@ -3410,8 +3410,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-5-integer",
-    "file": "pd275-exact-5-integer.kdna",
+    "name": "number-exact-5-integer",
+    "file": "number-exact-5-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-9007199254740991",
@@ -3695,8 +3695,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-5-float",
-    "file": "pd275-exact-5-float.kdna",
+    "name": "number-exact-5-float",
+    "file": "number-exact-5-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-9007199254740991",
@@ -3980,8 +3980,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-6-integer",
-    "file": "pd275-exact-6-integer.kdna",
+    "name": "number-exact-6-integer",
+    "file": "number-exact-6-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "9007199254740992",
@@ -4265,8 +4265,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-6-float",
-    "file": "pd275-exact-6-float.kdna",
+    "name": "number-exact-6-float",
+    "file": "number-exact-6-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "9007199254740992",
@@ -4550,8 +4550,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-7-integer",
-    "file": "pd275-exact-7-integer.kdna",
+    "name": "number-exact-7-integer",
+    "file": "number-exact-7-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-9007199254740992",
@@ -4835,8 +4835,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-7-float",
-    "file": "pd275-exact-7-float.kdna",
+    "name": "number-exact-7-float",
+    "file": "number-exact-7-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-9007199254740992",
@@ -5120,8 +5120,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-8-integer",
-    "file": "pd275-exact-8-integer.kdna",
+    "name": "number-exact-8-integer",
+    "file": "number-exact-8-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "9007199254740994",
@@ -5405,8 +5405,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-8-float",
-    "file": "pd275-exact-8-float.kdna",
+    "name": "number-exact-8-float",
+    "file": "number-exact-8-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "9007199254740994",
@@ -5690,8 +5690,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-9-integer",
-    "file": "pd275-exact-9-integer.kdna",
+    "name": "number-exact-9-integer",
+    "file": "number-exact-9-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-9007199254740994",
@@ -5975,8 +5975,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-9-float",
-    "file": "pd275-exact-9-float.kdna",
+    "name": "number-exact-9-float",
+    "file": "number-exact-9-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-9007199254740994",
@@ -6260,8 +6260,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-10-integer",
-    "file": "pd275-exact-10-integer.kdna",
+    "name": "number-exact-10-integer",
+    "file": "number-exact-10-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "9223372036854775808",
@@ -6545,8 +6545,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-10-float",
-    "file": "pd275-exact-10-float.kdna",
+    "name": "number-exact-10-float",
+    "file": "number-exact-10-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "9223372036854775808",
@@ -6830,8 +6830,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-11-integer",
-    "file": "pd275-exact-11-integer.kdna",
+    "name": "number-exact-11-integer",
+    "file": "number-exact-11-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-9223372036854775808",
@@ -7115,8 +7115,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-11-float",
-    "file": "pd275-exact-11-float.kdna",
+    "name": "number-exact-11-float",
+    "file": "number-exact-11-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-9223372036854775808",
@@ -7400,8 +7400,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-12-integer",
-    "file": "pd275-exact-12-integer.kdna",
+    "name": "number-exact-12-integer",
+    "file": "number-exact-12-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "18446744073709549568",
@@ -7685,8 +7685,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-12-float",
-    "file": "pd275-exact-12-float.kdna",
+    "name": "number-exact-12-float",
+    "file": "number-exact-12-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "18446744073709549568",
@@ -7970,8 +7970,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-13-integer",
-    "file": "pd275-exact-13-integer.kdna",
+    "name": "number-exact-13-integer",
+    "file": "number-exact-13-integer.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-18446744073709551616",
@@ -8255,8 +8255,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-exact-13-float",
-    "file": "pd275-exact-13-float.kdna",
+    "name": "number-exact-13-float",
+    "file": "number-exact-13-float.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": "-18446744073709551616",
@@ -8540,8 +8540,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-inexact-0",
-    "file": "pd275-inexact-0.kdna",
+    "name": "number-inexact-0",
+    "file": "number-inexact-0.kdna",
     "expected_status": "rejected",
     "expected_reason": "READ_CORE_INVALID",
     "exact_integer": "9007199254740993",
@@ -8570,8 +8570,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-inexact-1",
-    "file": "pd275-inexact-1.kdna",
+    "name": "number-inexact-1",
+    "file": "number-inexact-1.kdna",
     "expected_status": "rejected",
     "expected_reason": "READ_CORE_INVALID",
     "exact_integer": "-9007199254740993",
@@ -8600,8 +8600,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-inexact-2",
-    "file": "pd275-inexact-2.kdna",
+    "name": "number-inexact-2",
+    "file": "number-inexact-2.kdna",
     "expected_status": "rejected",
     "expected_reason": "READ_CORE_INVALID",
     "exact_integer": "9007199254740995",
@@ -8630,8 +8630,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-inexact-3",
-    "file": "pd275-inexact-3.kdna",
+    "name": "number-inexact-3",
+    "file": "number-inexact-3.kdna",
     "expected_status": "rejected",
     "expected_reason": "READ_CORE_INVALID",
     "exact_integer": "-9007199254740995",
@@ -8660,8 +8660,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-inexact-4",
-    "file": "pd275-inexact-4.kdna",
+    "name": "number-inexact-4",
+    "file": "number-inexact-4.kdna",
     "expected_status": "rejected",
     "expected_reason": "READ_CORE_INVALID",
     "exact_integer": "18446744073709551615",
@@ -8690,8 +8690,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-inexact-5",
-    "file": "pd275-inexact-5.kdna",
+    "name": "number-inexact-5",
+    "file": "number-inexact-5.kdna",
     "expected_status": "rejected",
     "expected_reason": "READ_CORE_INVALID",
     "exact_integer": "-18446744073709551615",
@@ -8720,8 +8720,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-uint-zero",
-    "file": "pd275-uint-zero.kdna",
+    "name": "number-uint-zero",
+    "file": "number-uint-zero.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": null,
@@ -9005,8 +9005,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-uint-safe-max",
-    "file": "pd275-uint-safe-max.kdna",
+    "name": "number-uint-safe-max",
+    "file": "number-uint-safe-max.kdna",
     "expected_status": "accepted",
     "expected_reason": null,
     "exact_integer": null,
@@ -9290,8 +9290,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-uint-negative",
-    "file": "pd275-uint-negative.kdna",
+    "name": "number-uint-negative",
+    "file": "number-uint-negative.kdna",
     "expected_status": "rejected",
     "expected_reason": "READ_CORE_INVALID",
     "exact_integer": null,
@@ -9320,8 +9320,8 @@
     "expectation_match": true
   },
   {
-    "name": "pd275-uint-beyond-safe",
-    "file": "pd275-uint-beyond-safe.kdna",
+    "name": "number-uint-beyond-safe",
+    "file": "number-uint-beyond-safe.kdna",
     "expected_status": "rejected",
     "expected_reason": "READ_CORE_INVALID",
     "exact_integer": null,

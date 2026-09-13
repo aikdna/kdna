@@ -28,7 +28,7 @@ class PublicContractTests(unittest.TestCase):
 
     def test_real_container_parity(self):
         total = 0
-        for expected_file in ['current-fresh-node-core.json', 'current-pd278-json-node-frozen.json']:
+        for expected_file in ['current-fresh-node-core.json', 'current-json-node-frozen.json']:
             for row in json.loads((FIXTURES / expected_file).read_text()):
                 with self.subTest(case=row['name']):
                     result = admit_file(str(FIXTURES / row['file']))
