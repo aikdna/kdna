@@ -1,4 +1,10 @@
-# Case Study: The $40,000 Meeting That Wasn't a Decision
+# Case Study: The $40,000 Meeting That Wasn't a Decision (Illustrative Composite)
+
+> **This is an illustrative composite scenario, not a measured outcome.** It is
+> a teaching composite assembled from generic patterns. It is not a real
+> customer, a reproduced benchmark, or verified business impact. Every dollar
+> amount is a scenario assumption, not an observed or saved figure. Every agent
+> output below is an illustrative expectation, not a captured production run.
 
 ## Background
 
@@ -37,8 +43,8 @@ The billing team was simultaneously refactoring their module. Their changes conf
 
 The VP Product pulled the plug. The extraction was 30% complete, had caused 2 incidents, and no one could articulate what problem it was solving or what success looked like.
 
-**Direct cost:** $40,000 in engineering time  
-**Indirect cost:** 6 weeks of lost roadmap velocity, team morale damage, trust erosion between Product and Engineering
+**Direct cost (scenario assumption, not measured):** $40,000 in engineering time  
+**Indirect cost (scenario assumption, not measured):** 6 weeks of lost roadmap velocity, team morale damage, trust erosion between Product and Engineering
 
 ---
 
@@ -57,9 +63,9 @@ This is a classic **false actionization**: treating an UNRESOLVED discussion as 
 
 ---
 
-## What the Naive AI Produced
+## What the Baseline AI Is Expected to Produce
 
-The company used an AI meeting assistant to summarize the planning session. Here is the output:
+In this scenario, a baseline AI meeting assistant summarizes the planning session. The illustrative output is:
 
 > **Q1 Planning Session Summary**
 > 
@@ -75,40 +81,40 @@ Anyone reading this summary would believe a decision was made. The AI summarized
 
 ---
 
-## What the KDNA-Loaded AI Produced
+## What the KDNA-Loaded AI Is Expected to Produce
 
-Here is the same input analyzed with the `decision_state` KDNA domain loaded:
+The same input analyzed with the `decision_state` KDNA domain loaded is expected to produce:
 
 > **Classification:** UNRESOLVED
 > 
-003e **Missing Elements:**
-003e - owner (no single person responsible for outcome)
-003e - timing (no deadline or review date)
-003e - explicit choice ("microservices" is a category, not a specific migration plan)
-003e 
-003e **Misunderstandings Detected:**
-003e - Social agreement mistaken for commitment (MS-001): "Everyone agreed" does not mean a decision was made
-003e - Action items without owners/deadlines (MS-002): "I'll look into it" is not an action item
-003e 
-003e **Triggered Axioms:**
-003e - AX-001: A discussion is not a decision until all four operational commitment elements are present
-003e - AX-003: The presence of one element does not imply the presence of the others
-003e 
-003e **Triggered Frameworks:**
-003e - FW-001: Operational Commitment Test (choice, owner, action, timing)
-003e 
-003e **Self-Checks:**
-003e - SC-1: Did I verify all four operational commitment elements? → FAILED (3 missing)
-003e - SC-2: Did I distinguish social agreement from explicit choice? → FAILED
-003e 
-003e **Recommended Action:**
-003e Before execution: assign owner, timing, and explicit choice. Do not treat as decided. Suggest: schedule follow-up within 48 hours with specific service boundary proposal and owner assignment.
+> **Missing Elements:**
+> - owner (no single person responsible for outcome)
+> - timing (no deadline or review date)
+> - explicit choice ("microservices" is a category, not a specific migration plan)
+> 
+> **Misunderstandings Detected:**
+> - Social agreement mistaken for commitment (MS-001): "Everyone agreed" does not mean a decision was made
+> - Action items without owners/deadlines (MS-002): "I'll look into it" is not an action item
+> 
+> **Triggered Axioms:**
+> - AX-001: A discussion is not a decision until all four operational commitment elements are present
+> - AX-003: The presence of one element does not imply the presence of the others
+> 
+> **Triggered Frameworks:**
+> - FW-001: Operational Commitment Test (choice, owner, action, timing)
+> 
+> **Self-Checks:**
+> - SC-1: Did I verify all four operational commitment elements? → FAILED (3 missing)
+> - SC-2: Did I distinguish social agreement from explicit choice? → FAILED
+> 
+> **Recommended Action:**
+> Before execution: assign owner, timing, and explicit choice. Do not treat as decided. Suggest: schedule follow-up within 48 hours with specific service boundary proposal and owner assignment.
 
 ---
 
-## The Difference
+## The Difference in This Scenario (Expected, Not Measured)
 
-| Dimension | Naive AI | KDNA-Loaded AI |
+| Dimension | Baseline AI (expected) | KDNA-Loaded AI (expected) |
 |---|---|---|
 | **Output type** | Summary | Judgment |
 | **Decision state** | Implied executable | Explicitly UNRESOLVED |
@@ -117,13 +123,18 @@ Here is the same input analyzed with the `decision_state` KDNA domain loaded:
 | **Business risk** | Enables false execution | Prevents premature execution |
 | **Traceability** | None | Axioms, frameworks, self-checks all logged |
 
-The KDNA-loaded output does not just describe what happened. It **diagnoses** what kind of situation this is and **prevents** a class of error that costs companies real money.
+In this scenario the KDNA-loaded output is expected to do more than describe
+what happened: it names what kind of situation this is and recommends blocking
+execution. Whether that recommendation changes a real outcome is not measured
+here, and the comparison above is an expectation, not a paired result.
 
 ---
 
-## Judgment Trace
+## Expected Judgment Trace (Illustrative)
 
-For audit and reproducibility, here is the complete judgment trace:
+A trace an implementation is expected to report for this composite input has
+this shape. It is an illustration of the reporting format, not a captured
+artifact:
 
 ```json
 {
@@ -143,24 +154,32 @@ For audit and reproducibility, here is the complete judgment trace:
 }
 ```
 
-This trace is inspectable, testable, and versioned. If the domain asset is updated, the trace changes predictably. If the classification is wrong, you can trace exactly which axiom or framework led to the error.
+A trace in this shape is designed to be inspectable and bound to an asset
+version, so a reviewer can see which axiom or framework produced a
+classification. This illustration does not show that such a trace was captured
+from a run, and it is not evidence that the classification is correct.
 
 ---
 
-## Business Impact
+## Business Impact (Scenario Reasoning, Not a Measured Result)
 
 | Scenario | Outcome |
 |---|---|
-| **Without KDNA** | $40,000 wasted, 6 weeks lost, team conflict, production incidents |
-| **With KDNA** | Meeting correctly flagged as UNRESOLVED. Follow-up scheduled within 48 hours. Proper decision made with owner, timeline, and scope. Execution proceeds with clear mandate. |
+| **Without KDNA (assumed)** | $40,000 of engineering time assumed spent, 6 weeks assumed lost, team conflict, production incidents |
+| **With KDNA (assumed)** | Meeting flagged as UNRESOLVED before execution. Follow-up scheduled within 48 hours. Owner, timeline, and scope assigned. Execution proceeds under a stated mandate. |
 
-**ROI:** The cost of implementing KDNA judgment (loading a domain asset, running classification) is approximately zero. The cost of false actionization in this case was $40,000+.
+**ROI: not established.** The $40,000 is a scenario assumption used to size the
+example, not an observed loss and not a saving. Loading and running a judgment
+asset also has its own compute and authoring cost; this document does not
+measure it and does not claim a near-zero implementation cost or any realized
+return.
 
 ---
 
 ## Why This Matters
 
-This case is not unique. It happens in every company, every week:
+This case is not unique. Variants of it show up across companies and teams —
+the examples below are additional illustrations, not measured incidents:
 
 - "We should improve onboarding" → engineers build features without defined success metrics
 - "Let's revisit the pricing model" → sales team changes quotes without approval process
@@ -176,12 +195,12 @@ KDNA does the opposite. It adds a **judgment gate** between discussion and execu
 
 ## Key Takeaways
 
-1. **False actionization is a real, measurable business risk.** It is not a theoretical concern.
+1. **False actionization is a real risk pattern.** This document illustrates the pattern; it does not measure how often it occurs or what it costs.
 2. **Summarization is not judgment.** An AI that summarizes well can still mislead dangerously.
-3. **KDNA changes the trajectory.** The same input produces fundamentally different output — not because the model is bigger, but because it has structured domain judgment.
+3. **A loaded judgment can change the output.** On this composite input the two paths are expected to produce different classifications. Equal correct answers are also a normal result and do not make an asset fail.
 4. **Judgment traces enable accountability.** When the AI flags something as UNRESOLVED, you can inspect exactly why. When it misses something, you can trace the failure.
-5. **The cost of prevention is zero. The cost of failure is real.**
+5. **Prevention is cheap to attempt; its payoff is unmeasured here.** Checking for a decision before executing costs a review step. Whether that prevents a specific loss is a claim this document does not support.
 
 ---
 
-*This case study is based on a composite of real incidents. Identifying details have been changed. The KDNA analysis was produced using the `decision_state` domain asset and historical benchmark methodology. The detailed benchmark artifact is not part of the current pre-release repository.*
+*This case study is an illustrative composite, not a measured result; identifying details are invented. The agent outputs and judgment trace shown above are expected illustrations of the named domain's declared judgment, not captured runs — no benchmark artifact, paired experiment, or customer record backs them. Replace this note only when a reproducible experiment naming the task, model, input, and evaluation method is available.*
