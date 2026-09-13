@@ -18,10 +18,10 @@ are an input, not prose to be edited. At the date above:
 | Frozen input | Bytes | SHA-256 |
 |---|---:|---|
 | `SPEC-INDEX.md` | 4870 | `34d6a900d065ff4239dd6c8359cbdb9c7b0ee56caa91713e6761c41997515091` |
-| `specs/read-contract.md` | 52328 | `806b7c10827a4f01ba3fd157ffc1b93397cd2514a3f0e13f98e177258f2b3a4d` |
+| `specs/read-contract.md` | 52305 | `5a7de907855d52ee143a0c969c16a803aefb97062c56010c99546a135ef84dc4` |
 | `specs/public-version-policy.md` | 7459 | `3f144259b3ef8eef60728c75a8533147f40ccca556710257ad139bf7d6072418` |
-| `specs/public-contract-decisions.json` | 26836 | `ab20a236db86dc0d3e028c1cecd7963ff1d368e0d2cc2f56a1ce1686754c832a` |
-| `specs/public-source-map.json` | 11787 | `d95cc49644013d3eec5a99ae43d90915fd08c9e837dbd64488d62c76aa3a778b` |
+| `specs/public-contract-decisions.json` | 26818 | `7ebbfff1588872659482d41e067b3033d54e7a1b0873c051ec36b64733b4893c` |
+| `specs/public-source-map.json` | 11770 | `ca31b1d316b74d4384c5843e3fa245dc1bba87d3be9e4922a0d4ff754e102cbf` |
 | `conformance/public-contract-decision-vectors.json` | 183385 | `5c22f92527fd93c85c04a1d28d3790455ea5cd06c0df94c56f8fd7446be9e843` |
 
 Those documents keep their original status wording, including sections that say

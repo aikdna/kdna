@@ -90,13 +90,13 @@
     },
     {
       "path": "specs/public-contract-decisions.json",
-      "bytes": 26836,
-      "sha256": "ab20a236db86dc0d3e028c1cecd7963ff1d368e0d2cc2f56a1ce1686754c832a"
+      "bytes": 26818,
+      "sha256": "7ebbfff1588872659482d41e067b3033d54e7a1b0873c051ec36b64733b4893c"
     },
     {
       "path": "specs/public-source-map.json",
-      "bytes": 11787,
-      "sha256": "d95cc49644013d3eec5a99ae43d90915fd08c9e837dbd64488d62c76aa3a778b"
+      "bytes": 11770,
+      "sha256": "ca31b1d316b74d4384c5843e3fa245dc1bba87d3be9e4922a0d4ff754e102cbf"
     },
     {
       "path": "specs/public-version-policy.md",
@@ -105,8 +105,8 @@
     },
     {
       "path": "specs/read-contract.md",
-      "bytes": 52328,
-      "sha256": "806b7c10827a4f01ba3fd157ffc1b93397cd2514a3f0e13f98e177258f2b3a4d"
+      "bytes": 52305,
+      "sha256": "5a7de907855d52ee143a0c969c16a803aefb97062c56010c99546a135ef84dc4"
     }
   ],
   "design_bindings": [
@@ -7801,8 +7801,8 @@
       "array_length": 10000,
       "string_bytes": 1048576
     },
-    "ir_retention_pd273": {
-      "authority": "PD273 / OPEN-IR-RETENTION-DISPOSITION-PD273",
+    "ir_retention": {
+      "authority": "OPEN-IR-RETENTION-DISPOSITION",
       "carrier": "IRNode_asset_declaration.value / PublicAssetDeclaration",
       "fields": {
         "content_risk": "optional RiskState",
@@ -8158,7 +8158,7 @@
     }
   },
   "transport_admission": {
-    "authority": "PD280 / R07",
+    "authority": "READ-TRANSPORT-ADMISSION",
     "contract": "kdna.read-transport-admission/0.1.0",
     "package_version": "0.3.0-rc.component-semantics.2",
     "public_subpath": "@aikdna/kdna-read/transport",

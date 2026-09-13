@@ -11,14 +11,14 @@
       "sha256": "5c22f92527fd93c85c04a1d28d3790455ea5cd06c0df94c56f8fd7446be9e843"
     },
     {
-      "bytes": 26836,
+      "bytes": 26818,
       "path": "specs/public-contract-decisions.json",
-      "sha256": "ab20a236db86dc0d3e028c1cecd7963ff1d368e0d2cc2f56a1ce1686754c832a"
+      "sha256": "7ebbfff1588872659482d41e067b3033d54e7a1b0873c051ec36b64733b4893c"
     },
     {
-      "bytes": 11787,
+      "bytes": 11770,
       "path": "specs/public-source-map.json",
-      "sha256": "d95cc49644013d3eec5a99ae43d90915fd08c9e837dbd64488d62c76aa3a778b"
+      "sha256": "ca31b1d316b74d4384c5843e3fa245dc1bba87d3be9e4922a0d4ff754e102cbf"
     },
     {
       "bytes": 7459,
@@ -26,9 +26,9 @@
       "sha256": "3f144259b3ef8eef60728c75a8533147f40ccca556710257ad139bf7d6072418"
     },
     {
-      "bytes": 52328,
+      "bytes": 52305,
       "path": "specs/read-contract.md",
-      "sha256": "806b7c10827a4f01ba3fd157ffc1b93397cd2514a3f0e13f98e177258f2b3a4d"
+      "sha256": "5a7de907855d52ee143a0c969c16a803aefb97062c56010c99546a135ef84dc4"
     }
   ],
   "algorithm": {
@@ -86,9 +86,9 @@
       "sha256": "6feea9d439a736d3c162f65f31b7488ad1edbf3f14ff8261cbdcedfd9e4005c4"
     },
     {
-      "bytes": 3014,
+      "bytes": 3038,
       "path": "conformance/public-contract/ir-retention-vectors.generated.json",
-      "sha256": "2157c26a5abb613defea4b2d64b47a813b8fc5fe41732d846e4d8a2bbbb2048c"
+      "sha256": "e63292245b9c22622da67457901ef438f8dc625b90714f7edeaef0dbe7101980"
     },
     {
       "bytes": 183385,
@@ -225,9 +225,9 @@
   ],
   "scripts": [
     {
-      "bytes": 23577,
+      "bytes": 23594,
       "path": "scripts/public-contract/generate.mjs",
-      "sha256": "6ac6a9b442636ad26ecc199f9cd9dce5e5506b28131c128cfea51077d68a3ce4"
+      "sha256": "48ca96463ec96038f47c947ff376bd75c78a3ab5504782e3b6f9d092bf6729f9"
     },
     {
       "bytes": 4636,
@@ -236,9 +236,9 @@
     }
   ],
   "source": {
-    "bytes": 252203,
+    "bytes": 252196,
     "path": "specs/public-semantic-source.json",
-    "sha256": "862cea95bdb3a634356ad729b95e0882cb0b75fdb80f103a11f4037783899110"
+    "sha256": "9e6a4a2cbd0b239a55eb3744649a53a1191df167d2d7b4b1b35b535406976c72"
   },
   "status": "UNPUBLISHED_GENERATED_STRUCTURE",
   "tools": {
