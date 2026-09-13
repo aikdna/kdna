@@ -401,6 +401,17 @@ test('validate: bad checksum has exactly one structured digest failure', () => {
   assert.equal(r.status, 1, r.stderr);
   assert.equal(r.stderr, '');
   const out = JSON.parse(r.stdout);
+  // `loader_version` is the loader's own package coordinate, not an asset
+  // field: docs/core/load-contract.md:91-92 ("`inspect` and `validate` report
+  // `loader_version`"), docs/core/trace.md:33 ("the KDNA Core version of the
+  // loader"), implemented by
+  // packages/kdna-core/src/loader-compatibility.js:3, which derives it from
+  // packages/kdna-core/package.json. run() preloads
+  // scripts/use-workspace-core.js, so the CLI must report the workspace Core
+  // coordinate. A prerelease suffix is valid here: docs/core/load-contract.md
+  // :74-82 and the Owner decision recorded as "Plan B" in the control room
+  // DECISIONS ("loader 自身包坐标允许语义化预发布后缀"), while
+  // `compatibility.min_loader_version` stays a strict x.y.z triple.
   assert.deepEqual(out, {
     format_valid: true,
     schema_valid: true,
@@ -410,7 +421,7 @@ test('validate: bad checksum has exactly one structured digest failure', () => {
     signature_state: 'absent',
     signature_evidence: null,
     load_contract_valid: true,
-    loader_version: '0.22.0',
+    loader_version: '0.24.0-rc.component-semantics.2',
     min_loader_version: '0.20.0',
     loader_compatible: true,
     overall_valid: false,
