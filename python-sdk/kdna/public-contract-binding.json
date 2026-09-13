@@ -16,7 +16,7 @@
     "runtime": "kdna.runtime-capsule/0.2.0",
     "trace": "kdna.judgment-trace/0.2.0"
   },
-  "semantic_source_sha256": "862cea95bdb3a634356ad729b95e0882cb0b75fdb80f103a11f4037783899110",
+  "semantic_source_sha256": "9e6a4a2cbd0b239a55eb3744649a53a1191df167d2d7b4b1b35b535406976c72",
   "generated_contract_sha256": "ec8a2616a768f5523e8852487e757f6f9560d1933ea3a9ee90ead69fe1120f4d",
   "accepted_core": {
     "version": "0.24.0-rc.component-semantics.2",

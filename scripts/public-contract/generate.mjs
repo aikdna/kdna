@@ -95,7 +95,7 @@ declarations.push('export declare function admitBytes(input: Uint8Array): CoreAd
 outputs.set('packages/kdna-core/src/public-contract/types.d.ts',Buffer.from(declarations.join('\n')+'\n'));
 outputs.set('packages/kdna-core/src/public-contract/generated-contract.json',bytes({versionTuple:source.versionTuple,digest_profiles:source.digest_profiles,resource_limits:e.resource_limits,component_semantics:source.component_semantics,types:compiled}));
 for(const [file,text]of Object.entries(e.typescript_surfaces))outputs.set(file,Buffer.from('// Generated from specs/public-semantic-source.json; do not edit.\n'+text));
-outputs.set('conformance/public-contract/ir-retention-vectors.generated.json',bytes({format:'kdna.ir-retention-vectors/1',authority:'PD273',cases:e.ir_retention_cases}));
+outputs.set('conformance/public-contract/ir-retention-vectors.generated.json',bytes({format:'kdna.ir-retention-vectors/1',authority:e.ir_retention.authority,cases:e.ir_retention_cases}));
 const seed='conformance/public-contract-decision-vectors.json';if(!source.accepted_designs.some(x=>x.path===seed))fail('SOURCE','seed input not accepted');const seeds=JSON.parse(regular(path.join(o.root,seed)));
 outputs.set('conformance/public-contract/vectors.generated.json',bytes(seeds));
 outputs.set('conformance/public-contract/adapter-contract.json',bytes({format:'kdna.public-conformance-adapter/1',source:'specs/public-semantic-source.json',bindings:e.adapter_bindings,observations:'Only declared expected fields; frozen seed expectations are never runtime implementation inputs.',seed:{path:seed,sha256:sha(regular(path.join(o.root,seed)))}}));

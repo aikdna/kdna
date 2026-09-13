@@ -345,14 +345,14 @@ A sealed runtime handoff is a distinct Host operation, not a Read mode or proof 
 
 `public-contract-decision-vectors.json` preserves the original 54 case IDs, synchronizes their observed channels and adds admission/correlation/control cases; all are **NOT_RUN**. E-W1-01 requires independent per-case rule derivation, including the old Host/tuple/handle/digest/package-set work that was not completed; earlier structure checks are not semantic acceptance. JSON parse/reference checks and independently computed SHA examples do not mean conformance PASS. Future acceptance must exercise the sole Core/IR boundary, pure Node-free projection, Node input snapshotting, browser capability/import graph, modes, diagnostics, mandatory closure, omissions, handles and reauthorization/budget against the same frozen decision inputs and then generated normative aggregate. Both Open-owned headless Agent and generic Reader reference consumers must preserve exact content/diagnostic/state distinctions. A Reader product, DOM layout, real identity, production Host, persistence infrastructure, SDK parity or package publication is not established here.
 
-## PD273 — Typed asset declaration retention
+## Typed asset declaration retention
 
 The existing `PublicAssetDeclaration` carried by `asset_declaration` additionally retains optional `content_risk: RiskState` and `extensions: Extension[]` from the same Core-validated Payload, only when its own key is present. No default is inserted: absent risk differs from an explicit risk, and absent extensions differ from `[]`. Noncritical extensions retain their typed opaque SemanticValue and original array order; retention never executes or interprets them. Unsupported critical semantics still fail closed with incomplete interpretation. Risk remains an authored declaration, never quality verification or permission.
 
 The necessary asset declaration is preserved in whole_asset, exact_selection and related expand disclosure under the existing Host and mandatory-support rules. Catalog can omit it as `not_in_mode`. Retained changes must alter Canonical IR and its digest and alter disclosed declaration content; the complete final Envelope is recounted without changing error precedence or Host authority.
 
 
-## PD280 / R07: Read Transport Admission
+## Read Transport Admission
 
 `@aikdna/kdna-read@0.3.0-rc.component-semantics.2/transport` supplies `admitReadTransportResponse(response, context)`. The transport protocol remains `kdna.read-transport-admission/0.1.0`; its nested Read tuple and envelope are `kdna.read/0.2.0` and it binds the exact new Core peer. The authoritative closed fields, union, limits and diagnostics are `transport_admission` in `specs/public-semantic-source.json`; Schema and declarations are generated from it.
 

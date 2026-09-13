@@ -334,7 +334,7 @@
       ],
       "basis": [
         "W0 PUB-03",
-        "PD251 E-OBS-01",
+        "E-OBS-01",
         "Open technical selection A/D"
       ],
       "downstream": [
@@ -488,7 +488,7 @@
       "path": "docs/audits/2026-09-06-open-wave0-public-baseline-independent-acceptance.md",
       "sha256": "145207a4f22491dd09a7574f728aa0dda6af3f5d8d271ef33220fa7d9b13e2d0"
     },
-    "PD251_receipt_sha256": "8bd497c48e5448df4228bb3c0bb7f1d2c21866ea3c2b7f1e97fd2fefc84c4561",
+    "receipt_sha256": "8bd497c48e5448df4228bb3c0bb7f1d2c21866ea3c2b7f1e97fd2fefc84c4561",
     "private_inputs": "Only accepted technical propositions inherited through W0; no private research/session/asset body copied"
   },
   "aggregate_policy": "Return SHA256 of sorted six-file rows {path,bytes,sha256}, compact UTF-8 JSON, row keys in that order, no LF. Full exact bytes of each of six artifacts, including SPEC-INDEX new bytes. Aggregate stored only in formal return/temp receipt, never in one of the six files; not full normative/generated closure.",
@@ -500,7 +500,7 @@
     "browser runtime capability",
     "public artifact existence",
     "production Host or identity",
-    "Reader/formal assets/kdnawork",
+    "Reader/formal assets and consuming products",
     "publication or Open Complete"
   ],
   "admission_rejection_repair": {
@@ -599,8 +599,8 @@
     "out_of_range",
     "mode_shape_invalid"
   ],
-  "ir_retention_pd273": {
-    "authority": "PD273 / OPEN-IR-RETENTION-DISPOSITION-PD273",
+  "ir_retention": {
+    "authority": "OPEN-IR-RETENTION-DISPOSITION",
     "carrier": "IRNode_asset_declaration.value / PublicAssetDeclaration",
     "fields": {
       "content_risk": "optional RiskState",

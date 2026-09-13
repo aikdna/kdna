@@ -215,8 +215,8 @@
     "C Agent/MCP/Studio and D remaining consumers only after exact dependency acceptance"
   ],
   "current_authority": "Single public semantic source with component semantics, Core/IR/Read 0.3/0.2/0.2; acceptance and publication separate.",
-  "pd273_retention": {
-    "authority": "PD273 / OPEN-IR-RETENTION-DISPOSITION-PD273",
+  "ir_retention": {
+    "authority": "OPEN-IR-RETENTION-DISPOSITION",
     "carrier": "IRNode_asset_declaration.value / PublicAssetDeclaration",
     "fields": {
       "content_risk": "optional RiskState",
