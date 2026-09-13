@@ -15,7 +15,7 @@
       "repository": "aikdna/kdna",
       "local_path": ".",
       "source_commit": "32aa3ff8e633291d4bb9e01de5a70181c8415d93",
-      "conformance_commit": "a0edd85970a2b0a559528d40dcca9eff35f8a481",
+      "conformance_commit": "6a832963ca83a22030576671e6b165d7915fd620",
       "component_version": null,
       "artifacts": [],
       "packages": [
@@ -23,10 +23,10 @@
           "package_json": "packages/kdna-core/package.json",
           "package_name": "@aikdna/kdna-core",
           "npm_package": "@aikdna/kdna-core",
-          "version": "0.22.0",
+          "version": "0.24.0-rc.component-semantics.2",
           "published_version": "0.22.0",
           "lifecycle": "Pre-release",
-          "release_status": "active",
+          "release_status": "candidate",
           "dependency_policy": "current",
           "known_limitations": [],
           "recommended_entrypoint": "npm install @aikdna/kdna-core",
@@ -167,7 +167,7 @@
       "repository": "aikdna/kdna-assets",
       "local_path": "../kdna-assets",
       "source_commit": "4de5bb01f4216624e57ffa7ac901e982dd323d95",
-      "conformance_commit": "a0edd85970a2b0a559528d40dcca9eff35f8a481",
+      "conformance_commit": "6a832963ca83a22030576671e6b165d7915fd620",
       "component_version": null,
       "packages": [],
       "artifacts": [
@@ -177,7 +177,7 @@
           "sha256": "4a90b91fe955ec3a563a7c2b598568f0eedbd04d3393211692490dfde2e09ffc",
           "release_tag": "0.1.1",
           "release_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
-          "conformance_commit": "a0edd85970a2b0a559528d40dcca9eff35f8a481",
+          "conformance_commit": "6a832963ca83a22030576671e6b165d7915fd620",
           "kind": "kdna-asset",
           "lifecycle": "Experimental",
           "known_limitations": [
@@ -191,7 +191,7 @@
           "sha256": "d8513486bc033523359b8a582ca5d879d5ec01c926601d2fde34813a793c5ccf",
           "release_tag": "0.1.1",
           "release_commit": "2dd1e2844fd8b8deff8ea0e2620fd946e5c9544f",
-          "conformance_commit": "a0edd85970a2b0a559528d40dcca9eff35f8a481",
+          "conformance_commit": "6a832963ca83a22030576671e6b165d7915fd620",
           "kind": "kdna-asset",
           "lifecycle": "Experimental",
           "known_limitations": [

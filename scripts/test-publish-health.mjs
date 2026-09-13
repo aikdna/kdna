@@ -92,11 +92,16 @@ test('maintained compatibility health monitors the exact published source', () =
   assert.equal(compat.candidate_version, '0.14.0');
 });
 
-test('candidate health requires a stable version newer than its incumbent', () => {
+test('candidate health requires a SemVer version newer than its incumbent', () => {
   const compat = policy.packages.find((entry) => entry.npm_package === '@aikdna/kdna');
   const candidate = { ...compat, version: '0.13.1', candidate_version: '0.13.2' };
   assert.equal(validatePolicy({ ...policy, packages: [candidate] }).packages[0], candidate);
   assert.equal(expectedMainVersion(candidate), '0.13.2');
+  // An unpublished prerelease candidate is a legal source coordinate above a
+  // published incumbent; it is not a stable `x.y.z` value.
+  const prerelease = { ...candidate, candidate_version: '0.13.2-rc.1' };
+  assert.equal(validatePolicy({ ...policy, packages: [prerelease] }).packages[0], prerelease);
+  assert.equal(expectedMainVersion(prerelease), '0.13.2-rc.1');
   assert.throws(
     () => validatePolicy({ ...policy, packages: [{ ...candidate, candidate_version: '0.13.1' }] }),
     /invalid candidate version/u,
@@ -107,7 +112,11 @@ test('candidate health requires a stable version newer than its incumbent', () =
   );
   assert.throws(
     () =>
-      validatePolicy({ ...policy, packages: [{ ...candidate, candidate_version: '0.13.2-rc.1' }] }),
+      validatePolicy({ ...policy, packages: [{ ...candidate, candidate_version: '0.13.1-rc.1' }] }),
+    /invalid candidate version/u,
+  );
+  assert.throws(
+    () => validatePolicy({ ...policy, packages: [{ ...candidate, candidate_version: 'latest' }] }),
     /invalid candidate version/u,
   );
 });
