@@ -55,6 +55,13 @@ asset internals is not a compatible Agent consumption path.
 Generate a current-format demonstration locally, load its Runtime Capsule, and
 then replace the demonstration judgment with your own.
 
+This walkthrough uses the currently published `@aikdna/kdna-cli` (0.36.1). The
+commands below are part of that package's allowlist and were last re-run
+against it on 2026-09-13. The unreleased Core/Read source candidate in this
+repository has a different, narrower command set and rejects assets produced by
+the published line, so do not mix the two. See
+[tool status matrix](./docs/tool-status-matrix.md) for the per-command picture.
+
 ```bash
 npm install -g @aikdna/kdna-cli
 
@@ -77,9 +84,12 @@ kdna load ./judgment.kdna --profile=compact --as=json
 > name remains `kdna`). Install only `aikdna` from PyPI — never
 > `pip install kdna`. See [SECURITY.md](./SECURITY.md).
 
-The AIKDNA asset repository currently displays two current-format technical
-reference assets and zero Clusters. Listing is not an endorsement, and the
-local demonstration above remains the recommended first-run path.
+The AIKDNA asset repository currently displays two technical reference assets
+and zero Clusters. Both pass `kdna validate` under the published 0.36.1 CLI;
+the unreleased Core source candidate rejects them with `READ_CORE_INVALID`
+because they belong to the earlier toolchain line. Listing is not an
+endorsement, and the local demonstration above remains the recommended
+first-run path.
 
 → [Full 5-minute guide](./docs/try-kdna.md) · [Public reference display](https://github.com/aikdna/kdna-assets)
 
