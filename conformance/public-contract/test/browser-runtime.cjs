@@ -196,7 +196,17 @@ function bundle(runtime, out, extraEntries = []) {
     ...extraEntries,
   ])
     entries[spec] = add(resolve(spec, from));
-  const code = `'use strict';\n(()=>{const factories=[${modules.map((m) => `function(require,module,exports){\n${m.path.endsWith('.json') ? 'module.exports=' + m.source + ';' : m.source}\n}`).join(',\n')}];const dependencies=${JSON.stringify(modules.map((m) => m.dependencies))};const entries=${JSON.stringify(entries)};globalThis.createKDNA=()=>{const cache={};function load(id){if(cache[id])return cache[id].exports;const module={exports:{}};cache[id]=module;factories[id](spec=>{if(!Object.hasOwn(dependencies[id],spec))throw Error('Unbundled dependency');return load(dependencies[id][spec]);},module,module.exports);return module.exports;}return {transport:entries['@aikdna/kdna-read/transport']===undefined?null:load(entries['@aikdna/kdna-read/transport']).admitReadTransportResponse,core:load(entries['@aikdna/kdna-core']),boundary:load(entries['@aikdna/kdna-core/read-boundary']),readRoot:load(entries['@aikdna/kdna-read']),embed:load(entries['@aikdna/kdna-read/embedding']),admit:load(entries['@aikdna/kdna-core/browser']).admitBrowser,read:load(entries['@aikdna/kdna-read/browser']).readBrowser,readBytes:load(entries['@aikdna/kdna-read/browser']).readBrowser};};})();\n`;
+  // JSON.stringify alone is not a script-safe encoding: it leaves '<', '>' and
+  // '&' as written, and U+2028/U+2029 as raw line terminators, so a module
+  // specifier or source containing any of them would change the meaning of the
+  // generated file. Escape them as JSON string escapes, which every JSON parser
+  // (and this bundle's own consumers) read back unchanged.
+  const scriptJson = (value) =>
+    JSON.stringify(value).replace(
+      /[<>&\u2028\u2029]/gu,
+      (c) => '\\u' + c.codePointAt(0).toString(16).padStart(4, '0'),
+    );
+  const code = `'use strict';\n(()=>{const factories=[${modules.map((m) => `function(require,module,exports){\n${m.path.endsWith('.json') ? 'module.exports=' + m.source + ';' : m.source}\n}`).join(',\n')}];const dependencies=${scriptJson(modules.map((m) => m.dependencies))};const entries=${scriptJson(entries)};globalThis.createKDNA=()=>{const cache={};function load(id){if(cache[id])return cache[id].exports;const module={exports:{}};cache[id]=module;factories[id](spec=>{if(!Object.hasOwn(dependencies[id],spec))throw Error('Unbundled dependency');return load(dependencies[id][spec]);},module,module.exports);return module.exports;}return {transport:entries['@aikdna/kdna-read/transport']===undefined?null:load(entries['@aikdna/kdna-read/transport']).admitReadTransportResponse,core:load(entries['@aikdna/kdna-core']),boundary:load(entries['@aikdna/kdna-core/read-boundary']),readRoot:load(entries['@aikdna/kdna-read']),embed:load(entries['@aikdna/kdna-read/embedding']),admit:load(entries['@aikdna/kdna-core/browser']).admitBrowser,read:load(entries['@aikdna/kdna-read/browser']).readBrowser,readBytes:load(entries['@aikdna/kdna-read/browser']).readBrowser};};})();\n`;
   fs.writeFileSync(out, code);
   return {
     path: out,
