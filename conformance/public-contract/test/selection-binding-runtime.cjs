@@ -32,7 +32,7 @@ async function receiveAll(admit, base, fixtures) {
   for (const fixture of fixtures) {
     const context = {
       ...fixture.context,
-      association_id: 'binding:' + Math.random(),
+      association_id: 'binding:' + crypto.randomUUID(),
       endpoint_url: base + '/case/' + fixture.id,
       issued_at_ms: Date.now() - 5,
       expires_at_ms: Date.now() + 60000,

@@ -59,6 +59,7 @@ const EXPECTED_BINDINGS = Object.freeze(
     ['kdna', 'packages/kdna/package.json', 'dependencies', '@aikdna/kdna-core'],
     ['kdna', 'packages/kdna/package.json', 'dependencies', '@aikdna/kdna-cli'],
     ['kdna', 'packages/kdna-conformance/package.json', 'dependencies', '@aikdna/kdna-core'],
+    ['kdna', 'packages/kdna-read/package.json', 'peerDependencies', '@aikdna/kdna-core'],
     ['kdna-activation-server', 'package.json', 'dependencies', '@aikdna/kdna-core'],
     ['kdna-assets', 'package.json', 'devDependencies', '@aikdna/kdna-core'],
     ['kdna-assets', 'package.json', 'devDependencies', '@aikdna/kdna-cli'],

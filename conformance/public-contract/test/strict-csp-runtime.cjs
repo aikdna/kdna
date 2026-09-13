@@ -172,7 +172,7 @@ async function exercise(api, config, origin) {
   for (const [id, body, expected] of variants) {
     const endpoint = origin + '/echo',
       c = {
-        association_id: 'csp:' + id + ':' + Math.random(),
+        association_id: 'csp:' + id + ':' + crypto.randomUUID(),
         endpoint_id: 'endpoint:csp',
         session_id: 'session:csp',
         endpoint_url: endpoint,
@@ -345,9 +345,12 @@ async function main() {
         response.setHeader('x-kdna-channel', 'read_envelope');
         response.end(Buffer.concat(chunks));
       });
-    } else if (request.url === '/bundle.js' || request.url === '/probe.js') {
+    } else if (request.url === '/bundle.js') {
       response.setHeader('Content-Type', 'text/javascript');
-      response.end(fs.readFileSync(path.join(out, request.url.slice(1))));
+      response.end(fs.readFileSync(path.join(out, 'bundle.js')));
+    } else if (request.url === '/probe.js') {
+      response.setHeader('Content-Type', 'text/javascript');
+      response.end(fs.readFileSync(path.join(out, 'probe.js')));
     } else {
       response.setHeader('Content-Type', 'text/html');
       response.end(
