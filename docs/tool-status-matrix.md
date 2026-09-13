@@ -119,5 +119,5 @@ private development status is not part of the open protocol's tool matrix.
 | `@aikdna/agent` | Deprecated legacy npm coordinate. Use the explicit-file runtime path; Agent adapters require recertification. |
 | `@aikdna/kdna-artifact-engine` | Deprecated historical implementation of a withdrawn draft contract. |
 | `@aikdna/kdna-fidelity-core` | Deprecated historical implementation of a withdrawn draft contract. |
-| Legacy `kdna install <url>` | Removed in 0.27.0. Current `kdna install ./file.kdna` installs a local `.kdna` asset; `kdna install <bare>` or `@scope/name` resolves through a configured registry. |
+| Legacy `kdna install <url>` | Removed in 0.27.0 and not reintroduced in 0.36.1: `install` is not in the allowlist above, so `kdna install <url>`, `kdna install ./file.kdna`, `kdna install <bare>` and `kdna install @scope/name` all exit 2 with `command is not in the approved allowlist`. To bring in a local asset, approve the exact `.kdna` file with `kdna attach` instead. |
 | `kdna registry` | Registry resolution requires an explicit `KDNA_REGISTRY_URL`; there is no default public registry, and registry distribution is out of scope for KDNA Core. |
