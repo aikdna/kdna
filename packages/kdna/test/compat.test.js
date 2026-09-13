@@ -26,7 +26,7 @@ function assertCurrentToolchainLock(lock) {
     resolved: 'packages/kdna-core',
     link: true,
   });
-  assert.equal(lock.packages['packages/kdna-core'].version, '0.22.0');
+  assert.equal(lock.packages['packages/kdna-core'].version, '0.24.0-rc.component-semantics.2');
   assert.deepEqual(
     Object.keys(lock.packages)
       .filter((location) => location.endsWith('/@aikdna/kdna-core'))
