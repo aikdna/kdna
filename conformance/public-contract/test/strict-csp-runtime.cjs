@@ -402,7 +402,7 @@ async function main() {
       'Old exact Node behavior/diagnostic parity',
     );
     save();
-    const pw = require('/private/tmp/kdna-open-portable-a.aecyjlrg/tools/node_modules/playwright');
+    const pw = require(path.join(root, 'tools/node_modules/playwright'));
     for (const name of ['chromium', 'webkit']) {
       const row = {
         name,

@@ -1,5 +1,5 @@
 'use strict';
-// PD280: an unchanged accepted Host RC emits the four wire channels. A loopback
+// An unchanged accepted Host RC emits the four wire channels. A loopback
 // HTTP fault proxy changes individual observations; the same consumer runs in
 // Node and real Chrome/WebKit. Remote claims are never used as local authority.
 const fs = require('node:fs'),
@@ -603,7 +603,7 @@ async function main() {
       if (incoming.url === '/') {
         outgoing.setHeader('content-type', 'text/html');
         outgoing.end(
-          '<!doctype html><title>PD280 transport verification</title><script src="/browser.js"></script>',
+          '<!doctype html><title>transport verification</title><script src="/browser.js"></script>',
         );
         return;
       }

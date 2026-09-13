@@ -352,7 +352,7 @@ async function main() {
     const baseURL = 'http://127.0.0.1:' + server.address().port;
     result.base = baseURL;
     result.node = await receiveAll(admit, baseURL, fixtures);
-    const pw = require('/private/tmp/kdna-open-portable-a.aecyjlrg/tools/node_modules/playwright');
+    const pw = require(path.join(roleRoot, 'tools/node_modules/playwright'));
     for (const [name, type, options] of [
       [
         'chrome',
