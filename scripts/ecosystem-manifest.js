@@ -6,6 +6,9 @@ const path = require('node:path');
 const CURRENT_RELEASE_STATUSES = new Set(['active', 'compatibility']);
 const PUBLISHABLE_SOURCE_STATUSES = new Set(['active', 'candidate', 'compatibility']);
 const STABLE_SEMVER_RE = /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/u;
+const SEMVER_RE =
+  /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/u;
+const NUMERIC_IDENTIFIER_RE = /^[0-9]+$/u;
 
 function componentRecords(manifest) {
   if (manifest?.schema_version !== 2 || !Array.isArray(manifest?.components)) {
@@ -85,16 +88,55 @@ function publishableSourcePackages(manifest) {
 }
 
 function compareStableVersions(left, right) {
-  const leftMatch = STABLE_SEMVER_RE.exec(left || '');
-  const rightMatch = STABLE_SEMVER_RE.exec(right || '');
-  if (!leftMatch || !rightMatch) throw new Error('stable SemVer comparison requires x.y.z');
+  if (!STABLE_SEMVER_RE.test(left || '') || !STABLE_SEMVER_RE.test(right || '')) {
+    throw new Error('stable SemVer comparison requires x.y.z');
+  }
+  return compareSemver(left, right);
+}
+
+// SemVer 2.0.0 precedence. A prerelease candidate (for example
+// `0.24.0-rc.component-semantics.2`) is an unpublished source coordinate, so
+// ordering it against a published incumbent needs the full precedence rules,
+// not a three-number comparison.
+function compareSemver(left, right) {
+  const leftMatch = SEMVER_RE.exec(left || '');
+  const rightMatch = SEMVER_RE.exec(right || '');
+  if (!leftMatch || !rightMatch) {
+    throw new Error(`SemVer comparison requires Semantic Versioning values: ${left} / ${right}`);
+  }
   for (let index = 1; index <= 3; index += 1) {
     const leftPart = BigInt(leftMatch[index]);
     const rightPart = BigInt(rightMatch[index]);
     if (leftPart > rightPart) return 1;
     if (leftPart < rightPart) return -1;
   }
-  return 0;
+  return comparePrereleaseIdentifiers(leftMatch[4] ?? null, rightMatch[4] ?? null);
+}
+
+function comparePrereleaseIdentifiers(left, right) {
+  if (left === right) return 0;
+  if (left === null) return 1;
+  if (right === null) return -1;
+  const leftParts = left.split('.');
+  const rightParts = right.split('.');
+  const shared = Math.min(leftParts.length, rightParts.length);
+  for (let index = 0; index < shared; index += 1) {
+    const leftPart = leftParts[index];
+    const rightPart = rightParts[index];
+    const leftNumeric = NUMERIC_IDENTIFIER_RE.test(leftPart);
+    const rightNumeric = NUMERIC_IDENTIFIER_RE.test(rightPart);
+    if (leftNumeric && rightNumeric) {
+      const leftValue = BigInt(leftPart);
+      const rightValue = BigInt(rightPart);
+      if (leftValue > rightValue) return 1;
+      if (leftValue < rightValue) return -1;
+      continue;
+    }
+    if (leftNumeric !== rightNumeric) return leftNumeric ? -1 : 1;
+    if (leftPart !== rightPart) return leftPart > rightPart ? 1 : -1;
+  }
+  if (leftParts.length === rightParts.length) return 0;
+  return leftParts.length > rightParts.length ? 1 : -1;
 }
 
 function candidateIncumbentPackages(manifest) {
@@ -173,6 +215,7 @@ module.exports = {
   PUBLISHABLE_SOURCE_STATUSES,
   artifactRecords,
   candidateIncumbentPackages,
+  compareSemver,
   compareStableVersions,
   componentRecords,
   currentAssetIndexInventory,

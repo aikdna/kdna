@@ -10,6 +10,7 @@ const { spawnSync } = require('node:child_process');
 const { sameFilesystemIdentity } = require('../../scripts/filesystem-identity');
 const {
   candidateIncumbentPackages,
+  compareSemver,
   compareStableVersions,
   currentPublishedPackages,
   currentAssetIndexInventory,
@@ -325,6 +326,9 @@ test('candidate Core conformance anchor carries the declared candidate package v
   );
   const core = canonical.components.find((entry) => entry.repository === 'aikdna/kdna');
   const corePackage = core.packages.find((entry) => entry.npm_package === '@aikdna/kdna-core');
+  assert.equal(corePackage.release_status, 'candidate');
+  // The anchor must descend from the published tag: an older release commit is
+  // rejected before the candidate package version is even compared.
   const oldAnchor = git(repoRoot, ['rev-list', '-n', '1', '0.21.0']);
   for (const entry of canonical.components) {
     if (entry.conformance_commit === core.conformance_commit) {
@@ -340,7 +344,26 @@ test('candidate Core conformance anchor carries the declared candidate package v
   fs.writeFileSync(manifestPath, JSON.stringify(canonical));
   const result = runValidator(manifestPath);
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /conformance_commit must equal release tag 0.22.0/u);
+  assert.match(
+    result.stderr,
+    new RegExp(`conformance_commit must descend from release tag 0\\.22\\.0: ${oldAnchor}`, 'u'),
+  );
+
+  // A descendant anchor whose Core package version is not the declared
+  // candidate version is still rejected.
+  const publishedTagCommit = git(repoRoot, ['rev-list', '-n', '1', '0.22.0']);
+  for (const entry of canonical.components) {
+    if (entry.conformance_commit === oldAnchor) entry.conformance_commit = publishedTagCommit;
+    for (const artifact of entry.artifacts) {
+      if (artifact.conformance_commit === oldAnchor) {
+        artifact.conformance_commit = publishedTagCommit;
+      }
+    }
+  }
+  fs.writeFileSync(manifestPath, JSON.stringify(canonical));
+  const publishedTagResult = runValidator(manifestPath);
+  assert.equal(publishedTagResult.status, 1);
+  assert.match(publishedTagResult.stderr, /package version mismatch/u);
 });
 
 test('asset inventory is an exact two-way projection of index/current.json', (t) => {
@@ -454,17 +477,6 @@ test('validator rejects schema 1, mixed legacy fields, and unknown fields', (t) 
       component({
         packages: [
           packageRecord({
-            version: '1.0.1-rc.1',
-            published_version: '1.0.0',
-            release_status: 'candidate',
-          }),
-        ],
-      }),
-    ]),
-    manifest([
-      component({
-        packages: [
-          packageRecord({
             version: '1.0.1',
             published_version: '1.0.0+candidate',
             release_status: 'candidate',
@@ -559,24 +571,76 @@ test('validator binds external packages to the accepted source snapshot without 
   );
 });
 
-test('validator requires a candidate stable version newer than the incumbent', (t) => {
+test('validator requires a candidate version newer than the incumbent', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-candidate-order-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const packageRoot = path.join(root, 'fixture-package');
   const commit = initRepository(packageRoot, {
     'package.json': JSON.stringify({ name: '@aikdna/fixture-package', version: '0.13.0' }),
   });
-  const candidate = packageRecord({
-    version: '0.13.0',
-    published_version: '0.13.1',
-    release_status: 'candidate',
+  for (const [version, publishedVersion] of [
+    ['0.13.0', '0.13.1'],
+    ['1.0.1-rc.1', '1.0.1'],
+  ]) {
+    fs.writeFileSync(
+      path.join(packageRoot, 'package.json'),
+      JSON.stringify({ name: '@aikdna/fixture-package', version }),
+    );
+    const result = runValidator(
+      writeManifest(root, [
+        component({
+          source_commit: commit,
+          packages: [
+            packageRecord({
+              version,
+              published_version: publishedVersion,
+              release_status: 'candidate',
+            }),
+          ],
+        }),
+      ]),
+      root,
+    );
+    assert.equal(result.status, 1, `version=${version} stdout=${result.stdout}`);
+    assert.match(result.stderr, /candidate version must be greater/u);
+  }
+});
+
+test('validator accepts an unpublished prerelease candidate above its published incumbent', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-prerelease-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const packageRoot = path.join(root, 'fixture-package');
+  const commit = initRepository(packageRoot, {
+    'package.json': JSON.stringify({
+      name: '@aikdna/fixture-package',
+      version: '1.1.0-rc.component-semantics.2',
+    }),
   });
-  const manifestPath = writeManifest(root, [
-    component({ source_commit: commit, packages: [candidate] }),
-  ]);
-  const result = runValidator(manifestPath, root);
-  assert.equal(result.status, 1);
-  assert.match(result.stderr, /candidate version must be greater/u);
+  const result = runValidator(
+    writeManifest(root, [
+      component({
+        source_commit: commit,
+        packages: [
+          packageRecord({
+            version: '1.1.0-rc.component-semantics.2',
+            published_version: '1.0.0',
+            release_status: 'candidate',
+          }),
+        ],
+      }),
+    ]),
+    root,
+  );
+  assert.equal(result.status, 0, `stdout=${result.stdout}\nstderr=${result.stderr}`);
+  assert.deepEqual(
+    [
+      compareSemver('1.1.0-rc.component-semantics.2', '1.0.0'),
+      compareSemver('1.1.0-rc.component-semantics.2', '1.1.0'),
+      compareSemver('1.1.0-rc.component-semantics.10', '1.1.0-rc.component-semantics.2'),
+      compareSemver('1.1.0', '1.1.0-rc.1'),
+    ],
+    [1, -1, 1, 1],
+  );
 });
 
 test('validator rejects manifest path escape and does not follow a current-checkout symlink past an immutable source pin', (t) => {
