@@ -2,11 +2,11 @@
   {
     "input": "A task related to this domain that needs expert judgment",
     "without_kdna": {
-      "expected_approach": "How a generic AI would typically respond",
-      "common_mistake": "What the generic response gets wrong"
+      "expected_approach": "How an equally capable agent answers without this domain. It may reach the same conclusion; write 'unspecified' when no baseline answer was actually observed.",
+      "common_mistake": "A known failure mode of the unloaded answer, if one was observed. Do not preset one: an equally correct answer is a normal result."
     },
     "with_kdna": {
-      "expected_approach": "How a domain-aware response should differ",
+      "expected_approach": "How this domain's declared judgment applies to the input. It may match the unloaded answer and still be a correct result.",
       "signal_reading": "Which domain signal this input triggers",
       "diagnosis_path": "The expert reasoning chain"
     },
