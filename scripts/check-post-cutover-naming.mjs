@@ -911,7 +911,10 @@ function main() {
     if (process.argv.includes('--json')) {
       console.log(
         JSON.stringify(
-          { violations, unenumerable_archives: deduplicateUnexpandableArchives(unenumerableArchives) },
+          {
+            violations,
+            unenumerable_archives: deduplicateUnexpandableArchives(unenumerableArchives),
+          },
           null,
           2,
         ),

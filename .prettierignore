@@ -3,8 +3,27 @@ node_modules/
 .github/
 examples/
 schema/
-python-sdk/.venv/
-python-sdk/.mypy_cache/
 packages/
 benchmarks/raw/
 docs/inspector/index.html
+
+# python-sdk holds generated schema mirrors plus fixture/oracle data, not
+# hand-written JavaScript or JSON.
+python-sdk/
+
+# Generated or byte-bound surfaces. scripts/public-contract/generate.mjs emits
+# these, and specs/public-generation-manifest.json binds their exact bytes (the
+# semantic source, the accepted designs, and the generator/verifier hashes), so
+# prettier must not rewrite them. Hand-written files next to them stay covered.
+specs/public-semantic-source.json
+specs/public-contract-decisions.json
+specs/canonical-ir.schema.json
+specs/read-contract.schema.json
+specs/read-transport-admission.schema.json
+specs/public-vocabulary.json
+conformance/public-contract-decision-vectors.json
+conformance/public-contract/vectors.generated.json
+conformance/public-contract/ir-retention-vectors.generated.json
+conformance/public-contract/adapter-contract.json
+scripts/public-contract/generate.mjs
+scripts/public-contract/verify.mjs

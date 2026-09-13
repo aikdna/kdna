@@ -66,7 +66,10 @@ let scratch;
 let cloneSeq = 0;
 
 function git(cwd, args) {
-  return execFileSync('git', ['-C', cwd, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  return execFileSync('git', ['-C', cwd, ...args], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
 }
 
 function freshClone(label) {
@@ -76,7 +79,10 @@ function freshClone(label) {
 }
 
 function runGate(cwd, args = []) {
-  const r = spawnSync(process.execPath, [path.join(cwd, GATE_REL), ...args], { cwd, encoding: 'utf8' });
+  const r = spawnSync(process.execPath, [path.join(cwd, GATE_REL), ...args], {
+    cwd,
+    encoding: 'utf8',
+  });
   return { status: r.status, stdout: r.stdout || '', stderr: r.stderr || '' };
 }
 
@@ -107,15 +113,25 @@ after(() => {
 test('case 1: a clean copy really runs the gate and prints its success line', () => {
   const dir = freshClone('clean');
   const r = runGate(dir);
-  assert.equal(r.status, 0, `expected rc=0 in a clean clone, got ${r.status}\n${r.stdout}\n${r.stderr}`);
-  assert.ok(r.stdout.includes(SUCCESS_LINE), `success line "${SUCCESS_LINE}" missing from stdout:\n${r.stdout}`);
+  assert.equal(
+    r.status,
+    0,
+    `expected rc=0 in a clean clone, got ${r.status}\n${r.stdout}\n${r.stderr}`,
+  );
+  assert.ok(
+    r.stdout.includes(SUCCESS_LINE),
+    `success line "${SUCCESS_LINE}" missing from stdout:\n${r.stdout}`,
+  );
   assert.match(r.stdout, /tracked=\d+ \(declared \d+\)/);
 });
 
 test('case 2: a must-track file swallowed by .gitignore turns the gate red', () => {
   const dir = freshClone('swallowed');
   const manifest = loadManifest(dir);
-  assert.ok(Array.isArray(manifest.must_track_globs) && manifest.must_track_globs.length > 0, 'fixture error: manifest declares no must-track globs');
+  assert.ok(
+    Array.isArray(manifest.must_track_globs) && manifest.must_track_globs.length > 0,
+    'fixture error: manifest declares no must-track globs',
+  );
   // Make a covered file "present but ignored and untracked", exactly the way a
   // broad ignore rule does.
   const victim = pickMustTrackVictim(dir);
@@ -146,7 +162,16 @@ test('case 4: internal material forced into the tracked set turns the gate red',
   fs.writeFileSync(path.join(dir, victim), 'internal acceptance record\n');
   // `git add -f` is exactly the back door this check exists to close.
   git(dir, ['add', '-f', '--', victim]);
-  git(dir, ['-c', 'user.email=gate@test', '-c', 'user.name=gate', 'commit', '--quiet', '-m', 'force internal material in']);
+  git(dir, [
+    '-c',
+    'user.email=gate@test',
+    '-c',
+    'user.name=gate',
+    'commit',
+    '--quiet',
+    '-m',
+    'force internal material in',
+  ]);
   const r = runGate(dir);
   assert.equal(r.status, 1, `expected rc=1, got ${r.status}\n${r.stdout}\n${r.stderr}`);
   assert.match(r.stderr, /forbidden-tracked glob/);
@@ -168,7 +193,11 @@ test('case 6: the realpath entry guard runs the gate through a symlink', () => {
   const link = path.join(scratch, 'symlinked-entry.cjs');
   fs.symlinkSync(path.join(dir, GATE_REL), link);
   const r = spawnSync(process.execPath, [link], { cwd: dir, encoding: 'utf8' });
-  assert.equal(r.status, 0, `symlinked entry must still RUN the gate, got ${r.status}\n${r.stderr}`);
+  assert.equal(
+    r.status,
+    0,
+    `symlinked entry must still RUN the gate, got ${r.status}\n${r.stderr}`,
+  );
   assert.ok(r.stdout.includes(SUCCESS_LINE), 'symlinked entry did not print the success line');
 });
 
@@ -181,6 +210,10 @@ test('case 7: the gate module exposes its documented surface (catches a load-tim
     `console.log('KDNA_GATE_EXPORTS_OK');`,
   ].join('\n');
   const r = spawnSync(process.execPath, ['-e', code], { encoding: 'utf8' });
-  assert.equal(r.status, 0, `gate module must expose its documented surface, got ${r.status}\n${r.stdout}\n${r.stderr}`);
+  assert.equal(
+    r.status,
+    0,
+    `gate module must expose its documented surface, got ${r.status}\n${r.stdout}\n${r.stderr}`,
+  );
   assert.match(r.stdout, /KDNA_GATE_EXPORTS_OK/);
 });

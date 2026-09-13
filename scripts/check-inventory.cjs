@@ -158,7 +158,9 @@ function checkInventory({ root, manifestPath }) {
   const untracked = git(root, ['ls-files', '--others', '--exclude-standard']);
   for (const file of untracked) {
     if (!matchesAny(file, manifest.allowed_untracked_globs)) {
-      failures.push(`"${file}" is present and untracked but is not declared in allowed_untracked_globs`);
+      failures.push(
+        `"${file}" is present and untracked but is not declared in allowed_untracked_globs`,
+      );
     }
   }
 
@@ -168,7 +170,9 @@ function checkInventory({ root, manifestPath }) {
   const ignored = git(root, ['ls-files', '--others', '--ignored', '--exclude-standard']);
   for (const file of ignored) {
     if (!matchesAny(file, manifest.allowed_ignored_globs)) {
-      failures.push(`"${file}" is present and ignored but is not declared in allowed_ignored_globs`);
+      failures.push(
+        `"${file}" is present and ignored but is not declared in allowed_ignored_globs`,
+      );
     }
   }
 
@@ -178,7 +182,9 @@ function checkInventory({ root, manifestPath }) {
     const pattern = matchesAny(file, FORBIDDEN_TRACKED);
     if (pattern) {
       forbiddenHits.push(file);
-      failures.push(`"${file}" matches forbidden-tracked glob "${pattern}" but IS tracked (internal material must never enter the public surface)`);
+      failures.push(
+        `"${file}" matches forbidden-tracked glob "${pattern}" but IS tracked (internal material must never enter the public surface)`,
+      );
     }
   }
 
@@ -202,7 +208,9 @@ function main(argv) {
     // same back door: a caller handing the gate its own answer.
     const refused = REFUSED_INPUT_FLAGS.find((flag) => arg === flag || arg.startsWith(`${flag}=`));
     if (refused) {
-      console.error(`check-inventory: refusing caller-supplied inventory input ${arg} (this gate takes its input from git, never from the caller)`);
+      console.error(
+        `check-inventory: refusing caller-supplied inventory input ${arg} (this gate takes its input from git, never from the caller)`,
+      );
       return 2;
     }
     console.error(`check-inventory: unknown argument ${arg}`);
@@ -230,7 +238,9 @@ function main(argv) {
     console.error(`check-inventory: ${failures.length} failure(s)`);
     return 1;
   }
-  console.log(`${SUCCESS_LINE} — declared and git-visible sets agree; no hidden in-repository bytes.`);
+  console.log(
+    `${SUCCESS_LINE} — declared and git-visible sets agree; no hidden in-repository bytes.`,
+  );
   console.log(
     `  tracked=${counts.tracked} (declared ${result.manifest.tracked_count}) | must-track present=${counts.must_track_present} all tracked` +
       ` | untracked=${counts.untracked} all declared | ignored=${counts.ignored} all declared | forbidden-tracked=${counts.forbidden_tracked}`,
@@ -255,10 +265,20 @@ if (require.main === module) {
     self = null;
   }
   if (!invoked || !self || invoked !== self) {
-    console.error('KDNA_INVENTORY_ENTRY_GUARD_FAILED: refusing to run under an unresolved entry path');
+    console.error(
+      'KDNA_INVENTORY_ENTRY_GUARD_FAILED: refusing to run under an unresolved entry path',
+    );
     process.exit(2);
   }
   process.exit(main(process.argv.slice(2)));
 }
 
-module.exports = { checkInventory, globToRegExp, matchesAny, REQUIRED_MUST_TRACK, FORBIDDEN_TRACKED, REFUSED_INPUT_FLAGS, SUCCESS_LINE };
+module.exports = {
+  checkInventory,
+  globToRegExp,
+  matchesAny,
+  REQUIRED_MUST_TRACK,
+  FORBIDDEN_TRACKED,
+  REFUSED_INPUT_FLAGS,
+  SUCCESS_LINE,
+};
