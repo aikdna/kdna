@@ -1,7 +1,7 @@
 [
   {
     "name": "original-ff",
-    "file": "pd278-json-original-ff.kdna",
+    "file": "json-original-ff.kdna",
     "category": "original",
     "bytes": 758,
     "sha256": "6ebf384e08608f756d28472ddc2169bf4949f3daffee961f6979afa80c6d1d7b",
@@ -28,7 +28,7 @@
   },
   {
     "name": "original-syntax",
-    "file": "pd278-json-original-syntax.kdna",
+    "file": "json-original-syntax.kdna",
     "category": "original",
     "bytes": 758,
     "sha256": "ebe136363095d4857ca0c0eff218c7c2a8a87c167329a62367a64d33b84c6efc",
@@ -55,7 +55,7 @@
   },
   {
     "name": "ff-start",
-    "file": "pd278-json-ff-start.kdna",
+    "file": "json-ff-start.kdna",
     "category": "encoding",
     "bytes": 1173,
     "sha256": "52de56732458ee0a4090ee49968dcce9e06a94ac0b7304dabf80dcde99e58e38",
@@ -82,7 +82,7 @@
   },
   {
     "name": "ff-string",
-    "file": "pd278-json-ff-string.kdna",
+    "file": "json-ff-string.kdna",
     "category": "encoding",
     "bytes": 770,
     "sha256": "c122c6df4ac192ab1d9870f046b84dbabe5e3a950590d04658017dd0de3fc811",
@@ -109,7 +109,7 @@
   },
   {
     "name": "ff-after-prefix",
-    "file": "pd278-json-ff-after-prefix.kdna",
+    "file": "json-ff-after-prefix.kdna",
     "category": "encoding",
     "bytes": 1173,
     "sha256": "b5b9f9c7e9a5a7c0eda0c142d3fc20725890ee25815415c79bace9bba1fe64b2",
@@ -136,7 +136,7 @@
   },
   {
     "name": "continuation-start",
-    "file": "pd278-json-continuation-start.kdna",
+    "file": "json-continuation-start.kdna",
     "category": "encoding",
     "bytes": 1173,
     "sha256": "ff09387dd00c71f2c9496c9cd90850c713e0ec22e9f8b3e89d3b965fa08b7ea0",
@@ -163,7 +163,7 @@
   },
   {
     "name": "continuation-string",
-    "file": "pd278-json-continuation-string.kdna",
+    "file": "json-continuation-string.kdna",
     "category": "encoding",
     "bytes": 770,
     "sha256": "7590d1f7cba98e6bd035f0dd4845afe1a258048edc79843653945f23c471e984",
@@ -190,7 +190,7 @@
   },
   {
     "name": "continuation-after-prefix",
-    "file": "pd278-json-continuation-after-prefix.kdna",
+    "file": "json-continuation-after-prefix.kdna",
     "category": "encoding",
     "bytes": 1173,
     "sha256": "aed1272887e6108d7dcf239029e91c383e582a48c43fdc1873cad1041847415a",
@@ -217,7 +217,7 @@
   },
   {
     "name": "overlong-two-start",
-    "file": "pd278-json-overlong-two-start.kdna",
+    "file": "json-overlong-two-start.kdna",
     "category": "encoding",
     "bytes": 1174,
     "sha256": "4cafbc11de354195a7e5546ae76baea8966bf7450ab15dfe09a00bb2ce1d193f",
@@ -244,7 +244,7 @@
   },
   {
     "name": "overlong-two-string",
-    "file": "pd278-json-overlong-two-string.kdna",
+    "file": "json-overlong-two-string.kdna",
     "category": "encoding",
     "bytes": 771,
     "sha256": "b56c8e02c51087c3bef2ed841fc194b96652bc03058323f983400025bd9b4e8f",
@@ -271,7 +271,7 @@
   },
   {
     "name": "overlong-two-after-prefix",
-    "file": "pd278-json-overlong-two-after-prefix.kdna",
+    "file": "json-overlong-two-after-prefix.kdna",
     "category": "encoding",
     "bytes": 1174,
     "sha256": "286014ca5ac826b33fd1250783b04bb3f6846d63edaed4bc3d11dbbe85e5917f",
@@ -298,7 +298,7 @@
   },
   {
     "name": "overlong-three-start",
-    "file": "pd278-json-overlong-three-start.kdna",
+    "file": "json-overlong-three-start.kdna",
     "category": "encoding",
     "bytes": 1175,
     "sha256": "f509bb56b5548ca7fb31809dba5a31d9ce8c2029e4f2984b34eddb001193cb10",
@@ -325,7 +325,7 @@
   },
   {
     "name": "overlong-three-string",
-    "file": "pd278-json-overlong-three-string.kdna",
+    "file": "json-overlong-three-string.kdna",
     "category": "encoding",
     "bytes": 772,
     "sha256": "96221ac04607ad65de9bfe5e14526a973bcd4183856c88f99bb745c6e6bf8d1d",
@@ -352,7 +352,7 @@
   },
   {
     "name": "overlong-three-after-prefix",
-    "file": "pd278-json-overlong-three-after-prefix.kdna",
+    "file": "json-overlong-three-after-prefix.kdna",
     "category": "encoding",
     "bytes": 1175,
     "sha256": "80272a11ebc1d0aed986a5e375633f63d93aef5484ee33094f05ccc2d1cbb53a",
@@ -379,7 +379,7 @@
   },
   {
     "name": "surrogate-start",
-    "file": "pd278-json-surrogate-start.kdna",
+    "file": "json-surrogate-start.kdna",
     "category": "encoding",
     "bytes": 1175,
     "sha256": "7c98d63ee68a33402909b3f88c0af9edacd49c6b5d274c133ebd252c966b219a",
@@ -406,7 +406,7 @@
   },
   {
     "name": "surrogate-string",
-    "file": "pd278-json-surrogate-string.kdna",
+    "file": "json-surrogate-string.kdna",
     "category": "encoding",
     "bytes": 772,
     "sha256": "7164b6030bfa1aa6491ed93475e08be2eda098cf5c1326440c17d44a037b0d7f",
@@ -433,7 +433,7 @@
   },
   {
     "name": "surrogate-after-prefix",
-    "file": "pd278-json-surrogate-after-prefix.kdna",
+    "file": "json-surrogate-after-prefix.kdna",
     "category": "encoding",
     "bytes": 1175,
     "sha256": "cd1b987fc0bf6110b8e2d478bc9aef120fee91f300e30196465113cde97ec67a",
@@ -460,7 +460,7 @@
   },
   {
     "name": "overlong-four-start",
-    "file": "pd278-json-overlong-four-start.kdna",
+    "file": "json-overlong-four-start.kdna",
     "category": "encoding",
     "bytes": 1176,
     "sha256": "b33eca6973fb78a6bf19d37bf8d384f89077ad8810a6e6a02c86dadf578d087d",
@@ -487,7 +487,7 @@
   },
   {
     "name": "overlong-four-string",
-    "file": "pd278-json-overlong-four-string.kdna",
+    "file": "json-overlong-four-string.kdna",
     "category": "encoding",
     "bytes": 773,
     "sha256": "f6d6506b5a2ceacd924aba18abf97a9152345f55cc7039ab1e3fa67ffeaa2ea9",
@@ -514,7 +514,7 @@
   },
   {
     "name": "overlong-four-after-prefix",
-    "file": "pd278-json-overlong-four-after-prefix.kdna",
+    "file": "json-overlong-four-after-prefix.kdna",
     "category": "encoding",
     "bytes": 1176,
     "sha256": "e1919356e35f6bb945eae1425a618bfc2cbfc6e7763dc24493bc6b9802061e12",
@@ -541,7 +541,7 @@
   },
   {
     "name": "beyond-unicode-start",
-    "file": "pd278-json-beyond-unicode-start.kdna",
+    "file": "json-beyond-unicode-start.kdna",
     "category": "encoding",
     "bytes": 1176,
     "sha256": "21b267b9e505194ca15de580adfdd26ad9caf280092e114709e567a14d9c33b4",
@@ -568,7 +568,7 @@
   },
   {
     "name": "beyond-unicode-string",
-    "file": "pd278-json-beyond-unicode-string.kdna",
+    "file": "json-beyond-unicode-string.kdna",
     "category": "encoding",
     "bytes": 773,
     "sha256": "127fbc2de0b0cfef8119761f4aed47809f391b19c537cade7e467aa0bc788e2f",
@@ -595,7 +595,7 @@
   },
   {
     "name": "beyond-unicode-after-prefix",
-    "file": "pd278-json-beyond-unicode-after-prefix.kdna",
+    "file": "json-beyond-unicode-after-prefix.kdna",
     "category": "encoding",
     "bytes": 1176,
     "sha256": "bc6619af847bb3d23a38d1881ffd7b6fe0c5dea01fe350886c37893318adc115",
@@ -622,7 +622,7 @@
   },
   {
     "name": "illegal-lead-start",
-    "file": "pd278-json-illegal-lead-start.kdna",
+    "file": "json-illegal-lead-start.kdna",
     "category": "encoding",
     "bytes": 1176,
     "sha256": "ec0532aaa0db318a6223d3089fa561f8f0e70f7398c918c04ca7c6674f822ca1",
@@ -649,7 +649,7 @@
   },
   {
     "name": "illegal-lead-string",
-    "file": "pd278-json-illegal-lead-string.kdna",
+    "file": "json-illegal-lead-string.kdna",
     "category": "encoding",
     "bytes": 773,
     "sha256": "9ce7508a8298fae2624e023a90ff5aa1f40c079ac7c0a165dc0533e8a550ee4f",
@@ -676,7 +676,7 @@
   },
   {
     "name": "illegal-lead-after-prefix",
-    "file": "pd278-json-illegal-lead-after-prefix.kdna",
+    "file": "json-illegal-lead-after-prefix.kdna",
     "category": "encoding",
     "bytes": 1176,
     "sha256": "e963fd9915b025588d86643c84bec73e532bb0785ebb51c049e7084b8b284aeb",
@@ -703,7 +703,7 @@
   },
   {
     "name": "truncated-two-start",
-    "file": "pd278-json-truncated-two-start.kdna",
+    "file": "json-truncated-two-start.kdna",
     "category": "encoding",
     "bytes": 1173,
     "sha256": "8df0a65bf7711ca84baf78a18dd5807e18114e1c0f23e4fae79623b6ec747fd2",
@@ -730,7 +730,7 @@
   },
   {
     "name": "truncated-two-string",
-    "file": "pd278-json-truncated-two-string.kdna",
+    "file": "json-truncated-two-string.kdna",
     "category": "encoding",
     "bytes": 770,
     "sha256": "ff9f95324eb949bcce3956d1302eadc0263dcc1c816a13bcd634b60a2694905d",
@@ -757,7 +757,7 @@
   },
   {
     "name": "truncated-two-after-prefix",
-    "file": "pd278-json-truncated-two-after-prefix.kdna",
+    "file": "json-truncated-two-after-prefix.kdna",
     "category": "encoding",
     "bytes": 1173,
     "sha256": "90bf9f0174f295196c84f9928c7b35da3705dee820537f3140959d13b737d6ad",
@@ -784,7 +784,7 @@
   },
   {
     "name": "truncated-three-start",
-    "file": "pd278-json-truncated-three-start.kdna",
+    "file": "json-truncated-three-start.kdna",
     "category": "encoding",
     "bytes": 1174,
     "sha256": "9062b4fdd2c48a18a11d77c19d260cb11446af626620664af677e0b6e065328e",
@@ -811,7 +811,7 @@
   },
   {
     "name": "truncated-three-string",
-    "file": "pd278-json-truncated-three-string.kdna",
+    "file": "json-truncated-three-string.kdna",
     "category": "encoding",
     "bytes": 771,
     "sha256": "4d7fff375dea94659e9d266da0ea277066cea5b590b4cbf1b8f928b9f66cc382",
@@ -838,7 +838,7 @@
   },
   {
     "name": "truncated-three-after-prefix",
-    "file": "pd278-json-truncated-three-after-prefix.kdna",
+    "file": "json-truncated-three-after-prefix.kdna",
     "category": "encoding",
     "bytes": 1174,
     "sha256": "f0d9352ff693fd5b4e7d7d69b8554bcd83878eae5f6f8a20bed97049e1bc5ba2",
@@ -865,7 +865,7 @@
   },
   {
     "name": "truncated-four-start",
-    "file": "pd278-json-truncated-four-start.kdna",
+    "file": "json-truncated-four-start.kdna",
     "category": "encoding",
     "bytes": 1175,
     "sha256": "bdf8b691685328ad438ce3a548a151ede65eaf351156b039fa0bf33fd1910f5c",
@@ -892,7 +892,7 @@
   },
   {
     "name": "truncated-four-string",
-    "file": "pd278-json-truncated-four-string.kdna",
+    "file": "json-truncated-four-string.kdna",
     "category": "encoding",
     "bytes": 772,
     "sha256": "8ca38dc824bce90aa0666a7d95838179f8cbabc89341996d1f52c799ff361cc4",
@@ -919,7 +919,7 @@
   },
   {
     "name": "truncated-four-after-prefix",
-    "file": "pd278-json-truncated-four-after-prefix.kdna",
+    "file": "json-truncated-four-after-prefix.kdna",
     "category": "encoding",
     "bytes": 1175,
     "sha256": "2e22a54211fdadcdec68e87ee96b2e1f5bb2ff5efba36de440952f0f5fecebe3",
@@ -946,7 +946,7 @@
   },
   {
     "name": "encoding-before-grammar",
-    "file": "pd278-json-encoding-before-grammar.kdna",
+    "file": "json-encoding-before-grammar.kdna",
     "category": "priority",
     "bytes": 774,
     "sha256": "933817587ba14165389c35b69c5656ee163d39fbeb5a04857bdf291a949eaf9c",
@@ -973,7 +973,7 @@
   },
   {
     "name": "multibyte",
-    "file": "pd278-json-multibyte.kdna",
+    "file": "json-multibyte.kdna",
     "category": "valid_unicode",
     "bytes": 1188,
     "sha256": "a7bef5329f10d45d6bdf8f5bac2243279aaa1a9a265e699a22eef773c7f96d6b",
@@ -1255,7 +1255,7 @@
   },
   {
     "name": "distinct-scalars",
-    "file": "pd278-json-distinct-scalars.kdna",
+    "file": "json-distinct-scalars.kdna",
     "category": "valid_unicode",
     "bytes": 1177,
     "sha256": "7b82973d74a3c6ac36cea88519e9f7067cdf4641da925724598d08292a717265",
@@ -1537,7 +1537,7 @@
   },
   {
     "name": "legal-controls",
-    "file": "pd278-json-legal-controls.kdna",
+    "file": "json-legal-controls.kdna",
     "category": "valid_unicode",
     "bytes": 1182,
     "sha256": "f3d6eb25cd85e8c97c16bd00cbe83bc8d5a9fff4548eca08d57f870e0e8fe058",
@@ -1819,7 +1819,7 @@
   },
   {
     "name": "astral",
-    "file": "pd278-json-astral.kdna",
+    "file": "json-astral.kdna",
     "category": "valid_unicode",
     "bytes": 1175,
     "sha256": "b001495c046893e9d68c1690a3cf260cd7c2efc02fb03883a4c8d3451be4c084",
@@ -2101,7 +2101,7 @@
   },
   {
     "name": "leading-bom",
-    "file": "pd278-json-leading-bom.kdna",
+    "file": "json-leading-bom.kdna",
     "category": "decoder_bom",
     "bytes": 1175,
     "sha256": "d5d273459e407b2422d52d11e6228bc4ae83f49ebd7ab452381bb4f6d6496279",
@@ -2383,7 +2383,7 @@
   },
   {
     "name": "trailing-bom",
-    "file": "pd278-json-trailing-bom.kdna",
+    "file": "json-trailing-bom.kdna",
     "category": "grammar",
     "bytes": 1175,
     "sha256": "09908ed59dab001fc5145854e483ce1f44f9eb4f68011778122bdfbfdfeb5679",
@@ -2410,7 +2410,7 @@
   },
   {
     "name": "open-object",
-    "file": "pd278-json-open-object.kdna",
+    "file": "json-open-object.kdna",
     "category": "grammar",
     "bytes": 758,
     "sha256": "ebe136363095d4857ca0c0eff218c7c2a8a87c167329a62367a64d33b84c6efc",
@@ -2437,7 +2437,7 @@
   },
   {
     "name": "open-array",
-    "file": "pd278-json-open-array.kdna",
+    "file": "json-open-array.kdna",
     "category": "grammar",
     "bytes": 758,
     "sha256": "41577af484c38c8472163fc8af23de6eb67776ae996b8d71d054cf263b1da290",
@@ -2464,7 +2464,7 @@
   },
   {
     "name": "missing-colon",
-    "file": "pd278-json-missing-colon.kdna",
+    "file": "json-missing-colon.kdna",
     "category": "grammar",
     "bytes": 764,
     "sha256": "5416e5ffe294d8d3b9eddb69f3ee641839c7fe47aa3fa31f89754b1c9f7fa142",
@@ -2491,7 +2491,7 @@
   },
   {
     "name": "trailing-comma",
-    "file": "pd278-json-trailing-comma.kdna",
+    "file": "json-trailing-comma.kdna",
     "category": "grammar",
     "bytes": 765,
     "sha256": "cf054b2b7ae9255ad336f3585a0dea6ad289e0d3f458c3503327fb2f509d3a9e",
@@ -2518,7 +2518,7 @@
   },
   {
     "name": "trailing-token",
-    "file": "pd278-json-trailing-token.kdna",
+    "file": "json-trailing-token.kdna",
     "category": "grammar",
     "bytes": 768,
     "sha256": "7d9745aa9d0dbf3c0be594939498f3879de5070a8c7ab9b4c90145d5eb060b96",
@@ -2545,7 +2545,7 @@
   },
   {
     "name": "leading-zero",
-    "file": "pd278-json-leading-zero.kdna",
+    "file": "json-leading-zero.kdna",
     "category": "grammar",
     "bytes": 765,
     "sha256": "5017b3a31169167e49ecf5a6c3f331d0c5d4a0297c5a4bf462887b385449a000",
@@ -2572,7 +2572,7 @@
   },
   {
     "name": "decimal-truncated",
-    "file": "pd278-json-decimal-truncated.kdna",
+    "file": "json-decimal-truncated.kdna",
     "category": "grammar",
     "bytes": 765,
     "sha256": "e85e4fac0891cd7d4912cce9fb40d4bd1a027c3399ae075ddd90e23dbe408cf8",
@@ -2599,7 +2599,7 @@
   },
   {
     "name": "exponent-truncated",
-    "file": "pd278-json-exponent-truncated.kdna",
+    "file": "json-exponent-truncated.kdna",
     "category": "grammar",
     "bytes": 766,
     "sha256": "6619a1f35fa4fd883219ad0e0a4d910f9609a926674e11b7103e73de70d4a1ad",
@@ -2626,7 +2626,7 @@
   },
   {
     "name": "nan",
-    "file": "pd278-json-nan.kdna",
+    "file": "json-nan.kdna",
     "category": "grammar",
     "bytes": 766,
     "sha256": "4ae8ebfd613664fe43d969cc734254942711308a730554e7e083d872e3116053",
@@ -2653,7 +2653,7 @@
   },
   {
     "name": "overflow",
-    "file": "pd278-json-overflow.kdna",
+    "file": "json-overflow.kdna",
     "category": "grammar",
     "bytes": 769,
     "sha256": "7d6f11db604a6bc03a43b5563d81677b915ed332d43e9b83722ed090a04ef637",
@@ -2680,7 +2680,7 @@
   },
   {
     "name": "invalid-escape",
-    "file": "pd278-json-invalid-escape.kdna",
+    "file": "json-invalid-escape.kdna",
     "category": "grammar",
     "bytes": 761,
     "sha256": "0181c2e687a5fe48f9b8c954de7019ec0395a9aac5c88166b95f967c365582b8",
@@ -2707,7 +2707,7 @@
   },
   {
     "name": "invalid-hex",
-    "file": "pd278-json-invalid-hex.kdna",
+    "file": "json-invalid-hex.kdna",
     "category": "grammar",
     "bytes": 765,
     "sha256": "5bca56aadea41e6873ebbe4f5222172870001944cb43e6736c69c1b26d032024",
@@ -2734,7 +2734,7 @@
   },
   {
     "name": "short-hex",
-    "file": "pd278-json-short-hex.kdna",
+    "file": "json-short-hex.kdna",
     "category": "grammar",
     "bytes": 762,
     "sha256": "458a49b516556cd65cfcc548df43605ab906d364cf4d0630a8cbfd1e559cb96d",
@@ -2761,7 +2761,7 @@
   },
   {
     "name": "high-surrogate",
-    "file": "pd278-json-high-surrogate.kdna",
+    "file": "json-high-surrogate.kdna",
     "category": "grammar",
     "bytes": 765,
     "sha256": "228e44b74ec37236af50f3f8bcc8556969b3aa9dbac6c70af2a6dbc1e35a2240",
@@ -2788,7 +2788,7 @@
   },
   {
     "name": "low-surrogate",
-    "file": "pd278-json-low-surrogate.kdna",
+    "file": "json-low-surrogate.kdna",
     "category": "grammar",
     "bytes": 765,
     "sha256": "7812afa6460e8daf1147db71892320b30edd703a35f3dfbffa8634e7c6e70519",
@@ -2815,7 +2815,7 @@
   },
   {
     "name": "wrong-surrogate-pair",
-    "file": "pd278-json-wrong-surrogate-pair.kdna",
+    "file": "json-wrong-surrogate-pair.kdna",
     "category": "grammar",
     "bytes": 771,
     "sha256": "ee82e528ec27ce00f731df2b833a963ce46f35ffa771d370ef9163784b598071",
@@ -2842,7 +2842,7 @@
   },
   {
     "name": "valid-surrogate-pair-wrong-manifest",
-    "file": "pd278-json-valid-surrogate-pair-wrong-manifest.kdna",
+    "file": "json-valid-surrogate-pair-wrong-manifest.kdna",
     "category": "grammar",
     "bytes": 771,
     "sha256": "393a5d089f1abf38ad5d779bc0307d178bc241e2d3cb3b526256d3db7e96c23b",
@@ -2869,7 +2869,7 @@
   },
   {
     "name": "unterminated",
-    "file": "pd278-json-unterminated.kdna",
+    "file": "json-unterminated.kdna",
     "category": "grammar",
     "bytes": 770,
     "sha256": "9fe413b468a62b513588207f9b5be31377e403eb699b17a7223e560cd4ce6287",
@@ -2896,7 +2896,7 @@
   },
   {
     "name": "raw-newline",
-    "file": "pd278-json-raw-newline.kdna",
+    "file": "json-raw-newline.kdna",
     "category": "grammar",
     "bytes": 769,
     "sha256": "7e2d96179650190c8bb095ff40c677f62c05c5180065d518435964876c51f4a1",
@@ -2923,7 +2923,7 @@
   },
   {
     "name": "duplicate",
-    "file": "pd278-json-duplicate.kdna",
+    "file": "json-duplicate.kdna",
     "category": "grammar",
     "bytes": 770,
     "sha256": "fde15adbac18811fc8fa7adc120d6ae593e8e2074896ba2ce34e1ba47b72f5d2",
@@ -2950,7 +2950,7 @@
   },
   {
     "name": "escaped-duplicate",
-    "file": "pd278-json-escaped-duplicate.kdna",
+    "file": "json-escaped-duplicate.kdna",
     "category": "grammar",
     "bytes": 775,
     "sha256": "4a89d42247c6e74a9d779d8b67d96af9d947e398b5047efa5882013adc23d6f2",
@@ -2977,7 +2977,7 @@
   },
   {
     "name": "proto-key",
-    "file": "pd278-json-proto-key.kdna",
+    "file": "json-proto-key.kdna",
     "category": "grammar",
     "bytes": 772,
     "sha256": "10593324a75de3ee365642c37a25a1a7eadb84a26923184bcce4af7106dda17b",
@@ -3004,7 +3004,7 @@
   },
   {
     "name": "depth-limit",
-    "file": "pd278-json-depth-limit.kdna",
+    "file": "json-depth-limit.kdna",
     "category": "resource",
     "bytes": 890,
     "sha256": "a2cbe2b454a157cf72c305b8d9025618f7e99bca53b188f9b20c99ea00943d65",
@@ -3031,7 +3031,7 @@
   },
   {
     "name": "array-limit",
-    "file": "pd278-json-array-limit.kdna",
+    "file": "json-array-limit.kdna",
     "category": "resource",
     "bytes": 20760,
     "sha256": "6044ff3be4c2ac6bb80f2da48f3c3e7106436dd3625cc836cfdc1870d9f74c58",
@@ -3058,7 +3058,7 @@
   },
   {
     "name": "string-limit",
-    "file": "pd278-json-string-limit.kdna",
+    "file": "json-string-limit.kdna",
     "category": "resource",
     "bytes": 1049336,
     "sha256": "68ec2099bc9c0c9d9f6d6f57d60676fa784baf65e7cdbcfaa57b7d3a146a7fc8",
@@ -3085,7 +3085,7 @@
   },
   {
     "name": "safe-number-wrong-manifest",
-    "file": "pd278-json-safe-number-wrong-manifest.kdna",
+    "file": "json-safe-number-wrong-manifest.kdna",
     "category": "precision",
     "bytes": 773,
     "sha256": "5a32d6b07ae542aec5863a9de9a7e351a15dab6147e35010008b49c550002762",
@@ -3112,7 +3112,7 @@
   },
   {
     "name": "beyond-safe-number-wrong-manifest",
-    "file": "pd278-json-beyond-safe-number-wrong-manifest.kdna",
+    "file": "json-beyond-safe-number-wrong-manifest.kdna",
     "category": "precision",
     "bytes": 773,
     "sha256": "fc826aac63e622c80e10a6bb8a98f27a206b71f9ef428b071d61502ccdbe6449",
