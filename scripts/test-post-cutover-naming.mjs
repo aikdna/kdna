@@ -18,6 +18,7 @@ import {
   parseAllowlist,
   parseTokenAuthority,
   safeNpmTarballEntries,
+  safeZipEntries,
   scanRecords,
   validateAllowlist,
 } from './check-post-cutover-naming.mjs';
@@ -259,15 +260,55 @@ test('KDNA ZIP parser rejects unsafe paths, duplicates, symlinks, and unsupporte
   ];
   for (const archive of cases) {
     assert.throws(
-      () =>
-        scanRecords(
-          [{ path: 'fixtures/hostile.kdna', surface: 'tracked', bytes: archive }],
-          [],
-          authorityTokens,
-        ),
+      () => safeZipEntries(archive, 'fixtures/hostile.kdna'),
       /ZIP entry|unsafe archive path/u,
     );
   }
+});
+
+test('a tracked hostile archive is reported instead of crashing the audit', () => {
+  const hostilePath = 'python-sdk/tests/fixtures/hostile-bad-entry-name.kdna';
+  const unenumerable = [];
+  const violations = scanRecords(
+    [
+      {
+        path: hostilePath,
+        surface: 'tracked',
+        bytes: buildZip([{ name: 'attachments/../x', content: Buffer.alloc(0) }]),
+      },
+    ],
+    [],
+    authorityTokens,
+    unenumerable,
+  );
+  assert.deepEqual(
+    unenumerable.map((entry) => entry.path),
+    [hostilePath],
+  );
+  assert.match(unenumerable[0].reason, /unsafe archive path/u);
+  assert.ok(
+    !violations.some((violation) => violation.surface.endsWith('-kdna-entry')),
+    'an unenumerable archive contributes no per-entry surfaces',
+  );
+
+  // Reporting must not become a blind spot: the container's own bytes keep
+  // being scanned, so a retired token inside an unenumerable archive is still
+  // a violation.
+  const taintedUnenumerable = [];
+  const tainted = scanRecords(
+    [
+      {
+        path: 'fixtures/hostile.kdna',
+        surface: 'tracked',
+        bytes: buildZip([{ name: 'attachments/../x', content: authorityTokens[0] }]),
+      },
+    ],
+    [],
+    authorityTokens,
+    taintedUnenumerable,
+  );
+  assert.equal(taintedUnenumerable.length, 1);
+  assert.ok(tainted.some((violation) => violation.rule === 'authority-exact-old-token'));
 });
 
 test('KDNA ZIP parser enforces entry-count, entry-size, and compression-ratio limits', () => {
@@ -283,12 +324,7 @@ test('KDNA ZIP parser enforces entry-count, entry-size, and compression-ratio li
   ];
   for (const archive of cases) {
     assert.throws(
-      () =>
-        scanRecords(
-          [{ path: 'fixtures/hostile.kdna', surface: 'tracked', bytes: archive }],
-          [],
-          authorityTokens,
-        ),
+      () => safeZipEntries(archive, 'fixtures/hostile.kdna'),
       /ZIP entry count exceeds|ZIP entry exceeds size or compression-ratio limits/u,
     );
   }

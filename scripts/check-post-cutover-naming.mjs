@@ -697,13 +697,27 @@ function hasKdnaSuffix(pathBytes) {
   return suffix.equals(Buffer.from('.kdna'));
 }
 
-function expandArchiveRecords(records) {
+function expandArchiveRecords(records, unenumerableArchives = []) {
   const expanded = [];
   for (const input of records) {
     const record = normalizeRecord(input);
     expanded.push(record);
     if (!hasKdnaSuffix(record.pathBytes)) continue;
-    for (const entry of safeZipEntries(record.bytes, record.path)) {
+    let entries;
+    try {
+      entries = safeZipEntries(record.bytes, record.path);
+    } catch (error) {
+      // A tracked `.kdna` this audit cannot enumerate (the deliberately
+      // hostile fixture python-sdk/tests/fixtures/hostile-bad-entry-name.kdna
+      // carries `attachments/../x`) must be reported, not crash the audit.
+      // The container record itself is already in `expanded`, so its raw bytes
+      // keep being scanned for exact authority tokens; only the per-entry
+      // surfaces are unavailable, and that is what `unenumerableArchives`
+      // exposes to the caller.
+      unenumerableArchives.push({ path: record.path, reason: error.message });
+      continue;
+    }
+    for (const entry of entries) {
       expanded.push(
         normalizeRecord({
           path: `${record.path}!/${entry.name}`,
@@ -790,10 +804,15 @@ function validateAllowlist(allowlist, records) {
   }
 }
 
-function scanRecords(records, allowlist, authorityTokens = loadTokenAuthority()) {
+function scanRecords(
+  records,
+  allowlist,
+  authorityTokens = loadTokenAuthority(),
+  unenumerableArchives = [],
+) {
   const violations = [];
   const rules = candidateRules();
-  for (const record of expandArchiveRecords(records)) {
+  for (const record of expandArchiveRecords(records, unenumerableArchives)) {
     const allowed = allowedSpans(record, allowlist);
     for (const tokenBytes of authorityTokens) {
       const token = tokenBytes.toString('utf8');
@@ -861,18 +880,42 @@ function deduplicateViolations(violations) {
     );
 }
 
+function deduplicateUnexpandableArchives(entries) {
+  const grouped = new Map();
+  for (const entry of entries) {
+    const key = `${entry.path}\0${entry.reason}`;
+    if (!grouped.has(key)) grouped.set(key, { path: entry.path, reason: entry.reason });
+  }
+  return [...grouped.values()].sort((left, right) => left.path.localeCompare(right.path));
+}
+
 function main() {
   const tracked = trackedRecords();
   const allowlist = parseAllowlist(fs.readFileSync(ALLOWLIST_PATH, 'utf8'));
   const authorityTokens = loadTokenAuthority();
   validateAllowlist(allowlist, tracked);
   const packed = packageRecords();
+  const unenumerableArchives = [];
   const violations = deduplicateViolations(
-    scanRecords([...tracked, ...packed], allowlist, authorityTokens),
+    scanRecords([...tracked, ...packed], allowlist, authorityTokens, unenumerableArchives),
   );
+  // Surface an archive the audit could not enumerate as an explicit note. A
+  // tracked hostile fixture must not crash the audit, and it must not be a
+  // silent skip either: the observation is printed on every run.
+  for (const entry of deduplicateUnexpandableArchives(unenumerableArchives)) {
+    console.log(
+      `Post-cutover naming audit note: ${entry.path} carries an unenumerable archive surface (${entry.reason}); the container bytes were still scanned.`,
+    );
+  }
   if (violations.length > 0) {
     if (process.argv.includes('--json')) {
-      console.log(JSON.stringify({ violations }, null, 2));
+      console.log(
+        JSON.stringify(
+          { violations, unenumerable_archives: deduplicateUnexpandableArchives(unenumerableArchives) },
+          null,
+          2,
+        ),
+      );
       process.exitCode = 1;
       return;
     }
