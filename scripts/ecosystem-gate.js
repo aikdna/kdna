@@ -33,7 +33,7 @@ function fail(stage, label, message) {
 }
 
 function run(stage, label, cwd, command, args, options = {}) {
-  if (!fs.existsSync(cwd)) {
+  if (!cwd || !fs.existsSync(cwd)) {
     fail(stage, label, `missing directory ${cwd}`);
     return;
   }
@@ -60,7 +60,7 @@ function run(stage, label, cwd, command, args, options = {}) {
 }
 
 function runCaptured(stage, label, cwd, command, args, options = {}) {
-  if (!fs.existsSync(cwd)) {
+  if (!cwd || !fs.existsSync(cwd)) {
     fail(stage, label, `missing directory ${cwd}`);
     return;
   }
@@ -123,6 +123,15 @@ function componentPath(repository) {
   return resolveComponentPath(repoRoot, component);
 }
 
+// resolveComponentPath() answers null when the sibling checkout is absent, so
+// every derived path must stay null instead of being handed to path.join (which
+// throws ERR_INVALID_ARG_TYPE and aborts the gate before it can report the
+// missing component).
+function componentSubpath(repository, ...parts) {
+  const root = componentPath(repository);
+  return root === null ? null : path.join(root, ...parts);
+}
+
 function referenceAssetComponents() {
   return artifactRecords(manifest).filter(
     ({ artifactRecord }) => artifactRecord.kind === 'kdna-asset',
@@ -165,14 +174,14 @@ try {
   run(
     'mcp-install',
     'kdna-skills mcp fresh npm ci',
-    path.join(componentPath('aikdna/kdna-skills'), 'mcp-server'),
+    componentSubpath('aikdna/kdna-skills', 'mcp-server'),
     'npm',
     ['ci'],
   );
   run(
     'mcp-audit',
     'kdna-skills mcp production npm audit',
-    path.join(componentPath('aikdna/kdna-skills'), 'mcp-server'),
+    componentSubpath('aikdna/kdna-skills', 'mcp-server'),
     'npm',
     ['audit', '--omit=dev'],
   );
@@ -225,7 +234,7 @@ try {
   run(
     'mcp-test',
     'kdna-skills mcp npm test',
-    path.join(componentPath('aikdna/kdna-skills'), 'mcp-server'),
+    componentSubpath('aikdna/kdna-skills', 'mcp-server'),
     'npm',
     ['test'],
   );
@@ -313,7 +322,7 @@ try {
   assertPack(
     'mcp-tarball',
     '@aikdna/kdna-mcp-server',
-    path.join(componentPath('aikdna/kdna-skills'), 'mcp-server'),
+    componentSubpath('aikdna/kdna-skills', 'mcp-server'),
     {
       required: ['LICENSE', 'NOTICE', 'bin/kdna-mcp.mjs'],
       forbidden: [/\.bak$/, /\.tgz$/],
