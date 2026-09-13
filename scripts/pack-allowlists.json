@@ -1,0 +1,51 @@
+{
+  "note": "Reviewed pack member allowlists. A package listed here is asserted to pack exactly these members, no more and no fewer, so that widening or narrowing the published surface is an explicit re-review rather than a silent drift. The Core list is the member set of the independently accepted candidate archive aikdna-kdna-core-0.24.0-rc.component-semantics.2.tgz (sha256 a9cb3f08735b00657e4848766f0ac517abdcb256121a841f01e662525a0858ea); the same 39 members are what `npm pack --dry-run` produces for packages/kdna-core at the first-push batch head.",
+  "packages": {
+    "@aikdna/kdna-core": {
+      "acceptedVersion": "0.24.0-rc.component-semantics.2",
+      "acceptedArchive": "aikdna-kdna-core-0.24.0-rc.component-semantics.2.tgz",
+      "acceptedArchiveSha256": "a9cb3f08735b00657e4848766f0ac517abdcb256121a841f01e662525a0858ea",
+      "members": [
+        "LICENSE",
+        "NOTICE",
+        "README.md",
+        "package.json",
+        "schema/canonical-ir-0.2.schema.json",
+        "schema/manifest-0.2.schema.json",
+        "schema/payload-profile-0.2.schema.json",
+        "schema/public-diagnostics.json",
+        "schema/public-vocabulary.json",
+        "src/public-contract/admit.js",
+        "src/public-contract/authorship.js",
+        "src/public-contract/brand.js",
+        "src/public-contract/browser.d.ts",
+        "src/public-contract/browser.js",
+        "src/public-contract/browser.mjs",
+        "src/public-contract/canonical-ir.js",
+        "src/public-contract/cbor.js",
+        "src/public-contract/component-semantics.js",
+        "src/public-contract/components.d.ts",
+        "src/public-contract/components.js",
+        "src/public-contract/components.mjs",
+        "src/public-contract/container.js",
+        "src/public-contract/digests.js",
+        "src/public-contract/generated-contract.json",
+        "src/public-contract/handoff-validator.generated.js",
+        "src/public-contract/index.js",
+        "src/public-contract/index.mjs",
+        "src/public-contract/node.d.ts",
+        "src/public-contract/node.js",
+        "src/public-contract/node.mjs",
+        "src/public-contract/package-set.js",
+        "src/public-contract/portable-inflate.js",
+        "src/public-contract/read-boundary.d.ts",
+        "src/public-contract/read-boundary.js",
+        "src/public-contract/read-boundary.mjs",
+        "src/public-contract/strict-input.js",
+        "src/public-contract/types.d.ts",
+        "src/public-contract/validate.js",
+        "src/public-contract/validators.generated.js"
+      ]
+    }
+  }
+}

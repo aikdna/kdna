@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { execFileSync } = require('child_process');
+const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
@@ -8,33 +9,14 @@ const root = path.join(__dirname, '..');
 const coreDir = path.join(root, 'packages', 'kdna-core');
 const compatDir = path.join(root, 'packages', 'kdna');
 const defaultNpmCache = path.join(os.tmpdir(), 'kdna-npm-cache');
-// The Core package ships every schema needed to validate and execute its
-// stable container, authorization, and Runtime contracts.
-const requiredCoreFiles = [
-  'src/asset-reader.js',
-  'src/runtime-capsule.js',
-  'src/runtime-contract.js',
-  'src/remote-runtime.js',
-  'src/remote-runtime.mjs',
-  'src/remote-runtime.d.ts',
-  'src/index.js',
-  'src/types.d.ts',
-  'schema/manifest.schema.json',
-  'schema/payload-profile.schema.json',
-  'schema/bundle-profile.schema.json',
-  'schema/checksums.schema.json',
-  'schema/load-contract.schema.json',
-  'schema/load-plan.schema.json',
-  'schema/digest-evidence.schema.json',
-  'schema/runtime-capsule.schema.json',
-  'schema/consumption-plan.schema.json',
-  'schema/agent-host-capabilities.schema.json',
-  'schema/agent-host-request.schema.json',
-  'schema/agent-host-receipt.schema.json',
-  'schema/judgment-trace.schema.json',
-  'schema/external-grant-envelope.schema.json',
-  'schema/external-key-grant.schema.json',
-];
+// The published Core surface is the reviewed member allowlist, not a hand-kept
+// subset: the pack must equal it member for member, so a retired member that is
+// still demanded and an unreviewed member that slipped into `files` both fail
+// here. scripts/pack-allowlists.json carries the accepted archive hash.
+const packAllowlists = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'pack-allowlists.json'), 'utf8'),
+);
+const corePackAllowlist = packAllowlists.packages['@aikdna/kdna-core'];
 const requiredCompatFiles = [
   'bin/kdna.js',
   'bin/kdna-lint.js',
@@ -54,19 +36,34 @@ function pack(cwd) {
   });
 }
 
-function checkPackage(label, cwd, requiredFiles) {
+function checkPackage(label, cwd, { required = [], exact = null } = {}) {
   const stdout = pack(cwd);
   const packResult = JSON.parse(stdout)[0];
   const files = new Set((packResult.files || []).map((file) => file.path));
-  const missing = requiredFiles.filter((file) => !files.has(file));
+  const findings = [];
+  for (const file of required) {
+    if (!files.has(file)) findings.push(`Missing from ${label} pack: ${file}`);
+  }
+  if (exact) {
+    const expected = new Set(exact);
+    for (const file of [...expected].sort()) {
+      if (!files.has(file)) findings.push(`Missing from ${label} pack: ${file}`);
+    }
+    for (const file of [...files].sort()) {
+      if (!expected.has(file)) findings.push(`Unreviewed member in ${label} pack: ${file}`);
+    }
+  }
 
-  if (missing.length) {
-    missing.forEach((file) => console.error(`Missing from ${label} pack: ${file}`));
+  if (findings.length) {
+    findings.forEach((finding) => console.error(finding));
     process.exit(1);
   }
 
   console.log(`${label} pack contents valid: ${packResult.entryCount} files`);
 }
 
-checkPackage('@aikdna/kdna-core', coreDir, requiredCoreFiles);
-checkPackage('@aikdna/kdna', compatDir, requiredCompatFiles);
+checkPackage('@aikdna/kdna-core', coreDir, {
+  required: ['LICENSE', 'NOTICE'],
+  exact: corePackAllowlist.members,
+});
+checkPackage('@aikdna/kdna', compatDir, { required: requiredCompatFiles });

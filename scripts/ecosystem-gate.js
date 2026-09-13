@@ -12,6 +12,9 @@ const repoRoot = path.resolve(__dirname, '..');
 const manifest = JSON.parse(
   fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
 );
+const packAllowlists = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'pack-allowlists.json'), 'utf8'),
+);
 const npmCacheDir = path.join(repoRoot, '.npm-cache', 'ecosystem-gate');
 const swiftModuleCache = fs.mkdtempSync(
   path.join(os.tmpdir(), 'kdna-core-swift-ecosystem-gate-module-cache-'),
@@ -105,6 +108,15 @@ function assertPack(stage, label, cwd, checks) {
     const files = packFiles(cwd);
     for (const required of checks.required || []) {
       if (!files.has(required)) fail(stage, label, `tarball missing ${required}`);
+    }
+    if (checks.exact) {
+      const expected = new Set(checks.exact);
+      for (const file of [...expected].sort()) {
+        if (!files.has(file)) fail(stage, label, `tarball missing ${file}`);
+      }
+      for (const file of [...files].sort()) {
+        if (!expected.has(file)) fail(stage, label, `tarball includes unreviewed member ${file}`);
+      }
     }
     for (const forbiddenPattern of checks.forbidden || []) {
       for (const file of files) {
@@ -312,7 +324,8 @@ try {
 
   section('Tarball Allowlist Checks');
   assertPack('core-tarball', '@aikdna/kdna-core', path.join(repoRoot, 'packages', 'kdna-core'), {
-    required: ['LICENSE', 'NOTICE', 'src/container/index.js', 'src/container/index.mjs'],
+    required: ['LICENSE', 'NOTICE'],
+    exact: packAllowlists.packages['@aikdna/kdna-core'].members,
     forbidden: [/\.bak$/, /\.tgz$/],
   });
   assertPack('cli-tarball', '@aikdna/kdna-cli', componentPath('aikdna/kdna-cli'), {
