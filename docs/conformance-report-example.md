@@ -1,8 +1,18 @@
 # KDNA Conformance Report Example
 
-Below is an example of what a third-party implementation's conformance report should contain when claiming KDNA compatibility.
+Below is an example of what a third-party implementation's conformance report
+should contain when claiming KDNA compatibility.
 
-This is a template — replace the values with your implementation's actual results.
+This is a template. Replace every value with your implementation's actual
+results, and delete the rows you did not run. Values that were not produced by
+your own run are not evidence and must not be filled in.
+
+**Read this first.** The profile runner in the reference repository
+(`conformance/run.mjs`) imports that repository's own Core and takes no flag
+that substitutes another implementation. Its output describes the reference
+implementation. It does not become a certificate for your code by being run in
+your checkout. This template is for reporting the evidence your own
+implementation produced with its own executable entry point.
 
 ---
 
@@ -10,16 +20,21 @@ This is a template — replace the values with your implementation's actual resu
 
 **Implementation:** my-kdna-loader  
 **Version:** 0.3.1  
-**KDNA Spec Version:** 1.0-rc  
+**Core / Read coordinates:** `@aikdna/kdna-core@<coordinate>` / `@aikdna/kdna-read@<coordinate>`  
 **Date:** 2026-06-01  
-**Profile:** loader
+**Profile:** loader  
+**Command:** `node conformance/run.mjs --profile loader`
 
 ## Summary
 
 ```
 KDNA conformance suite passed (loader)
-Certification Level: KDNA Loader Compatible
+Certification level: KDNA Loader Compatible
 ```
+
+`certification_level` is the fixed string the reference runner emits for this
+profile. Repeating it in a report only claims that this command exited 0 with
+this profile; it is not an independent assessment.
 
 ## Environment
 
@@ -30,26 +45,25 @@ Certification Level: KDNA Loader Compatible
 | Architecture | arm64 |
 | kdna-core dependency | @aikdna/kdna-core@0.7.2 |
 
-## Fixture Results
+## Assertion Results
 
-| Fixture | Expected | Actual | Status |
-|---------|----------|--------|--------|
-| `valid-minimal-domain.kdna` | loads, validates, renders | loads, validates, renders | PASS |
-| `valid-full-domain.kdna` | loads optional entries | loads KDNA_Scenarios.json | PASS |
-| `invalid-missing-core.kdna` | fails validation | 2 errors: KDNA_Core.json missing | PASS |
-| `invalid-missing-patterns.kdna` | fails validation | 3 errors: KDNA_Patterns.json missing | PASS |
-| `invalid-duplicate-id.kdna` | fails lint | 1 error: duplicate axiom ID | PASS |
-| `invalid-bad-meta.kdna` | fails cross-file | 1 error: domain mismatch | PASS |
-| `invalid-missing-mimetype.kdna` | fails media check | 1 error: root mimetype missing | PASS |
-| `invalid-disallowed-kdna-spec.kdna` | fails manifest | 1 error: kdna_spec is invalid | PASS |
-| `invalid-disallowed-language.kdna` | fails manifest | 1 error: singular language invalid | PASS |
-| `invalid-non-yes-no-self-check.kdna` | warns | 1 warning: self-check should be yes/no | PASS |
+Report only the assertions your run actually made. The current reference runner
+asserts the five groups below, each against an asset it builds in a temporary
+directory rather than against a checked-in fixture:
 
-**Result: 10/10 passed, 0 failures.**
+| # | Assertion | Expected | Actual | Status |
+|---|-----------|----------|--------|--------|
+| 1 | `inspect` identity | `asset_id` and `format_version` match | | |
+| 2 | `validate` overall | `overall_valid: true`, no problems | | |
+| 3 | `planLoad` readiness | `access: public`, `state: ready`, `can_load_now: true` | | |
+| 4 | `loadAuthorized` capsule | `kdna.runtime-capsule`, contract `0.1.0` | | |
+| 5 | Negative cases | JSON payload rejected; unknown `format_version` fails schema; forbidden top-level entry throws | | |
 
-## Render Verification
+**Result: __/__ passed, __ failures.**
 
-The `renderForAgent` output for the minimal fixture was compared against the expected prompt output in `conformance/fixtures/expected/minimal-prompt-output.txt`. All expected lines are present in the rendered output.
+If your implementation has its own fixture corpus, list it separately and say
+what each case is for. Do not copy this table's expectations onto fixtures that
+your run did not read.
 
 ## Known Deviations
 
@@ -60,34 +74,25 @@ The `renderForAgent` output for the minimal fixture was compared against the exp
 
 ## Conformance Output
 
-Generated at `$TMPDIR/kdna-conformance-last-run.json`:
+The reference runner writes this file to the operating system's default
+temporary directory (`os.tmpdir()`), not to the repository. Paste the file your
+own run produced:
 
 ```json
 {
   "ok": true,
   "profile": "loader",
   "certification_level": "KDNA Loader Compatible",
-  "generated": "/path/to/conformance/fixtures/generated",
-  "fixtures": [
-    "minimal",
-    "full",
-    "missingCore",
-    "missingPatterns",
-    "duplicateId",
-    "badMeta",
-    "missingMimetype",
-    "disallowedKdnaSpec",
-    "disallowedLanguage",
-    "badSelfCheck"
-  ]
+  "contract": "single-format-cbor-loadplan-capsule"
 }
 ```
 
 ## Self-Certification Statement
 
-> This implementation has passed KDNA Loader compatibility tests.
-> No official certification has been granted.
-> This report is a bounded self-attestation for the commands and evidence above.
+> This implementation passed the KDNA `loader` conformance profile on
+> `<date>`. No official certification has been granted. This report is a
+> bounded self-attestation for the commands and evidence above, and it does not
+> cover any capability outside that profile.
 
 ---
 
