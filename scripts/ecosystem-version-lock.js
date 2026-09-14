@@ -2,7 +2,7 @@
 'use strict';
 
 /**
- * Fail-closed cross-repository lock for current KDNA npm coordinates.
+ * Fail-closed cross-repository lock for accepted compatibility coordinates.
  *
  * Package records come from the schema-2 public ecosystem manifest. Active and
  * compatibility coordinates are both recognized so an unreviewed dependency
@@ -12,7 +12,11 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const assert = require('node:assert/strict');
+const { createHash } = require('node:crypto');
+const { execFileSync } = require('node:child_process');
 const { packageRecords } = require('./ecosystem-manifest');
+const { TRUSTED_GIT, cleanGitEnvironment } = require('./core-release-authority');
 
 const EXCLUDED_LIFECYCLES = new Set(['Unassessed', 'Legacy', 'Removed']);
 
@@ -134,14 +138,10 @@ function readBaselines(controlRoot) {
   }
 
   const candidateBaselines = new Map();
-  if (process.env.KDNA_CLI_BASELINE) {
-    candidateBaselines.set('@aikdna/kdna-cli', process.env.KDNA_CLI_BASELINE);
-  }
-  if (process.env.KDNA_CORE_BASELINE) {
-    candidateBaselines.set('@aikdna/kdna-core', process.env.KDNA_CORE_BASELINE);
-  }
-  if (process.env.KDNA_STUDIO_CORE_BASELINE) {
-    candidateBaselines.set('@aikdna/kdna-studio-core', process.env.KDNA_STUDIO_CORE_BASELINE);
+  for (const { packageRecord } of packageRecords(manifest)) {
+    if (packageRecord.release_status === 'candidate' && packageRecord.npm_package) {
+      candidateBaselines.set(packageRecord.npm_package, packageRecord.version);
+    }
   }
 
   for (const binding of EXPECTED_BINDINGS) {
@@ -189,7 +189,7 @@ function repositoryRoots(reposRoot, controlRoot) {
     }
   }
   if (controlRoot && fs.existsSync(controlRoot)) {
-    roots.set(path.basename(controlRoot), controlRoot);
+    roots.set('kdna', controlRoot);
   }
   return roots;
 }
@@ -312,40 +312,113 @@ function reconcileBindings(consumers, baselines, expectedBindings = EXPECTED_BIN
   return reconciled;
 }
 
-// Consumers that reference a previously published dependency version are
-// legitimate npm consumers; the ecosystem version lock must not force an
-// upgrade ahead of the dependency chain (e.g. web-server must release a
-// peer-core-compatible version first). These lagging consumers are tracked
-// in the execution control table.
-const LAGGING_CONSUMERS = new Set([
-  'kdna-assets',
-  'kdna-react',
-  'create-kdna-web-app',
-  'kdna-demo-web-viewer',
-  'kdna-web-client',
-  // 0.22.0 wave recertification debt: these consumers re-bind to Core 0.22.0
-  // through the CLI 0.37.0 release chain. All are disclosed in the manifest
-  // and tracked in the execution control table.
-  'kdna-cli',
-  'kdna-activation-server',
-  'kdna-remote-server',
-  'kdna-studio-cli',
-  'kdna-studio-core',
-  'kdna-web-server',
-]);
-// The monorepo compatibility package pins the released pairing
-// (packages/kdna); it is a publish snapshot, not a current consumer.
-const LAGGING_CONSUMER_MANIFESTS = new Set(['packages/kdna/package.json']);
+// Compatibility declarations are evidenced per complete binding tuple. A
+// repository name or an environment variable can never waive version drift.
+function readCompatibilityBindings(controlRoot, reposRoot, expectedBindings = EXPECTED_BINDINGS) {
+  const document = readJson(path.join(controlRoot, 'scripts', 'compatibility-bindings.json'));
+  const manifest = readJson(path.join(controlRoot, 'ecosystem-manifest.json'));
+  assert.equal(document.schema_version, '1.0.0');
+  assert.ok(Array.isArray(document.bindings));
+  const expected = new Set(expectedBindings.map(bindingKey));
+  const components = new Map(
+    manifest.components.map((component) => [component.repository.split('/').pop(), component]),
+  );
+  const roots = repositoryRoots(reposRoot, controlRoot);
+  const verified = new Map();
+  const blobs = new Map();
+  const git = (root, args) =>
+    execFileSync(TRUSTED_GIT, ['-C', root, ...args], {
+      env: cleanGitEnvironment(),
+      stdio: ['ignore', 'pipe', 'pipe'],
+      maxBuffer: 16 * 1024 * 1024,
+    });
+  for (const row of document.bindings) {
+    const key = bindingKey(row);
+    assert.ok(expected.has(key), 'unreviewed compatibility binding');
+    assert.ok(!verified.has(key), 'duplicate compatibility binding');
+    assert.match(row.source, /^[a-f0-9]{40}$/u, 'compatibility source must be an exact commit');
+    assert.match(row.manifest_sha256, /^[a-f0-9]{64}$/u);
+    assert.ok(row.manifest.split('/').every((part) => part && part !== '.' && part !== '..'));
+    assert.ok(!path.isAbsolute(row.manifest) && !row.manifest.includes('\\'));
+    assert.equal(typeof row.declared, 'string');
+    const root = roots.get(row.repository);
+    assert.ok(
+      root && fs.lstatSync(root).isDirectory() && !fs.lstatSync(root).isSymbolicLink(),
+      'compatibility repository must be present',
+    );
+    assert.equal(
+      fs.realpathSync(root),
+      fs.realpathSync(git(root, ['rev-parse', '--show-toplevel']).toString().trim()),
+    );
+    if (row.repository === 'kdna') {
+      git(root, ['merge-base', '--is-ancestor', row.source, 'HEAD']);
+    } else {
+      assert.equal(
+        row.source,
+        components.get(row.repository)?.source_commit,
+        'compatibility source differs from release authority',
+      );
+      assert.equal(
+        git(root, ['rev-parse', 'HEAD']).toString().trim(),
+        row.source,
+        'compatibility checkout differs from accepted commit',
+      );
+      git(root, ['diff', '--quiet', row.source, '--', row.manifest]);
+    }
+    const blobKey = `${row.repository}:${row.source}:${row.manifest}`;
+    if (!blobs.has(blobKey))
+      blobs.set(blobKey, git(root, ['show', `${row.source}:${row.manifest}`]));
+    const bytes = blobs.get(blobKey);
+    assert.equal(
+      createHash('sha256').update(bytes).digest('hex'),
+      row.manifest_sha256,
+      'compatibility manifest digest differs',
+    );
+    const pkg = JSON.parse(bytes);
+    assert.equal(
+      pkg[row.section]?.[row.packageName],
+      row.declared,
+      'compatibility declaration differs from accepted source',
+    );
+    verified.set(key, row);
+  }
+  assert.deepEqual(
+    [...verified.keys()].sort(),
+    [...expected].sort(),
+    'compatibility binding inventory differs',
+  );
+  return verified;
+}
 
-function evaluateConsumers(consumers, candidateBaselines = new Map()) {
+function validateEnvironmentBaselines(policy, compatibility, environment = process.env) {
+  for (const [name, packageName] of [
+    ['KDNA_CLI_BASELINE', '@aikdna/kdna-cli'],
+    ['KDNA_CORE_BASELINE', '@aikdna/kdna-core'],
+    ['KDNA_STUDIO_CORE_BASELINE', '@aikdna/kdna-studio-core'],
+  ]) {
+    if (!environment[name]) continue;
+    const known = new Set([
+      policy.baselines.get(packageName),
+      policy.candidateBaselines.get(packageName),
+    ]);
+    for (const row of compatibility.values()) {
+      if (row.packageName === packageName) known.add(row.declared);
+    }
+    assert.ok(
+      known.has(environment[name]),
+      `${name} cannot add an unreviewed dependency coordinate`,
+    );
+  }
+}
+
+function evaluateConsumers(consumers, compatibility = new Map()) {
   return consumers.map((consumer) => ({
     ...consumer,
     ok:
       !consumer.error &&
+      typeof consumer.declared === 'string' &&
       (consumer.declared === consumer.expected ||
-        consumer.declared === candidateBaselines.get(consumer.packageName) ||
-        LAGGING_CONSUMERS.has(consumer.repository) ||
-        LAGGING_CONSUMER_MANIFESTS.has(consumer.manifest)),
+        consumer.declared === compatibility.get(bindingKey(consumer))?.declared),
   }));
 }
 
@@ -356,6 +429,8 @@ function main() {
   let policy;
   try {
     policy = readBaselines(controlRoot);
+    policy.compatibility = readCompatibilityBindings(controlRoot, reposRoot);
+    validateEnvironmentBaselines(policy, policy.compatibility);
   } catch (error) {
     console.error(`ecosystem-version-lock: cannot read public baselines: ${error.message}`);
     process.exit(2);
@@ -383,7 +458,7 @@ function main() {
 
   const evaluated = evaluateConsumers(
     reconcileBindings(discovered.consumers, policy.baselines),
-    policy.candidateBaselines,
+    policy.compatibility,
   );
   const failures = [];
   for (const consumer of evaluated) {
@@ -421,6 +496,8 @@ module.exports = {
   evaluateConsumers,
   findConsumers,
   readBaselines,
+  readCompatibilityBindings,
+  validateEnvironmentBaselines,
   reconcileBindings,
   repositoryRoots,
   workspacePackagePaths,

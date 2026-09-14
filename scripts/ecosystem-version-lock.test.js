@@ -92,7 +92,7 @@ test('schema-2 package records derive Eval and compatibility coordinates without
     '@aikdna/kdna-core': '0.20.0',
     '@aikdna/kdna-eval': '0.3.2',
   });
-  assert.equal(policy.candidateBaselines.get('@aikdna/kdna-cli'), '0.36.0');
+  assert.equal(policy.candidateBaselines.has('@aikdna/kdna-cli'), false); // Environment values add no authority.
   const manifests = policy.manifestsByRepository.get('kdna');
   for (const expected of [
     'packages/kdna-core/package.json',
