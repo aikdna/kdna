@@ -9,6 +9,7 @@ const Ajv2020 = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 const { inspect } = require('../packages/kdna-core/src/container');
 const { sameFilesystemIdentity } = require('./filesystem-identity');
+const { resolveConformanceAnchor } = require('./conformance-anchor');
 const {
   compareSemver,
   currentAssetIndexInventory,
@@ -76,15 +77,28 @@ function gitBytes(cwd, args) {
   });
 }
 
+const conformanceResolutions = new Map();
+function resolveConformanceCommit(commit) {
+  if (!conformanceResolutions.has(commit)) {
+    const resolution = resolveConformanceAnchor(repoRoot, commit);
+    conformanceResolutions.set(commit, resolution);
+    console.log(
+      `conformance source: declared ${resolution.declared_commit}; resolved ${resolution.resolved_commit}; tree ${resolution.tree}; ${resolution.resolution}`,
+    );
+  }
+  return conformanceResolutions.get(commit).resolved_commit;
+}
+
 function assertConformanceCommit(component, commit, detail = '') {
   if (!commit) return;
   try {
-    const objectType = gitText(repoRoot, ['cat-file', '-t', commit]);
+    const resolved = resolveConformanceCommit(commit);
+    const objectType = gitText(repoRoot, ['cat-file', '-t', resolved]);
     if (objectType !== 'commit') {
       fail(component, `conformance anchor is not a commit: ${commit}`, detail);
       return;
     }
-    if (!isAncestorCommit(commit, 'HEAD')) {
+    if (!isAncestorCommit(resolved, 'HEAD')) {
       throw new Error('not reachable from HEAD');
     }
   } catch {
@@ -440,7 +454,8 @@ if (validateSchema()) {
         `refs/tags/${publishedTag}`,
       ]);
       if (corePackageRecord.release_status === 'candidate') {
-        if (!isAncestorCommit(publishedCommit, coreConformanceCommit)) {
+        const resolvedCoreConformanceCommit = resolveConformanceCommit(coreConformanceCommit);
+        if (!isAncestorCommit(publishedCommit, resolvedCoreConformanceCommit)) {
           fail(
             coreComponent,
             `Core conformance_commit must descend from release tag ${publishedTag}: ${coreConformanceCommit}`,
@@ -449,7 +464,7 @@ if (validateSchema()) {
           const candidatePackage = JSON.parse(
             gitBytes(repoRoot, [
               'show',
-              `${coreConformanceCommit}:${corePackageRecord.package_json}`,
+              `${resolvedCoreConformanceCommit}:${corePackageRecord.package_json}`,
             ]).toString('utf8'),
           );
           assertPackageManifest(

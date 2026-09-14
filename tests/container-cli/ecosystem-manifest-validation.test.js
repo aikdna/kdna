@@ -1019,7 +1019,7 @@ test('validator binds every artifact path, digest, version, release tag, and rel
       artifacts: [
         {
           ...artifact,
-          conformance_commit: git(repoRoot, ['rev-parse', `${currentConformanceCommit}^`]),
+          conformance_commit: git(repoRoot, ['rev-parse', '0.21.0']),
         },
       ],
     }),

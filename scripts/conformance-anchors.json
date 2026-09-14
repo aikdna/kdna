@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "purpose": "Preserve the exact source tree of the recorded conformance anchor across a rebase merge. Resolving an identical tree does not create a new acceptance or rename the original commit.",
+  "anchors": [
+    {
+      "commit": "5cb766f1b31a945d3b7a3a612ce7a9a26a0d1ff2",
+      "tree": "2bd86ccb5cd926bd5db8f0802a521cea86c6d61b"
+    }
+  ]
+}
