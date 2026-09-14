@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { createHash } = require('node:crypto');
-const { execFileSync } = require('node:child_process');
+const { execFileSync, spawnSync } = require('node:child_process');
 const { test, before, after } = require('node:test');
 const {
   EXPECTED_BINDINGS,
@@ -110,6 +110,15 @@ before(() => {
     component.local_path =
       component.repository === 'aikdna/kdna' ? '.' : `../${component.repository.split('/').pop()}`;
   }
+  components.find((component) => component.repository === 'aikdna/kdna').packages = [
+    ...baselines.keys(),
+  ].map((npm_package) => ({
+    npm_package,
+    package_json: 'package.json',
+    version: '999.0.0',
+    release_status: 'active',
+    dependency_policy: 'frozen',
+  }));
   json(path.join(control, 'ecosystem-manifest.json'), { schema_version: 2, components });
   json(path.join(control, 'scripts/compatibility-bindings.json'), {
     schema_version: '1.0.0',
@@ -291,5 +300,76 @@ test('compatibility preparation refuses missing and symlinked input checkouts', 
     fs.unlinkSync(source);
   } finally {
     fs.renameSync(moved, source);
+  }
+});
+
+function strictCLI() {
+  return spawnSync(
+    process.execPath,
+    [path.join(__dirname, 'ecosystem-version-lock.js'), '--strict'],
+    {
+      env: { ...process.env, KDNA_CONTROL_ROOT: control, KDNA_REPOS_ROOT: repositories },
+      encoding: 'utf8',
+      timeout: 30000,
+    },
+  );
+}
+
+for (const flag of ['assume-unchanged', 'skip-worktree']) {
+  test(`actual strict CLI detects changed bytes hidden by ${flag}`, () => {
+    const row = records.find((item) => item.repository === 'kdna-cli');
+    const root = rootFor(row.repository);
+    const file = path.join(root, row.manifest);
+    const original = fs.readFileSync(file);
+    const baseline = strictCLI();
+    assert.equal(baseline.status, 0, baseline.stderr);
+    git(root, ['update-index', `--${flag}`, row.manifest]);
+    try {
+      fs.appendFileSync(file, '\n');
+      assert.equal(git(root, ['diff', '--quiet', row.source, '--', row.manifest]), '');
+      const result = strictCLI();
+      assert.equal(result.status, 2);
+      assert.match(result.stderr, /actual compatibility manifest bytes differ/u);
+    } finally {
+      fs.writeFileSync(file, original);
+      git(root, ['update-index', `--no-${flag}`, row.manifest]);
+    }
+  });
+}
+
+test('actual strict CLI rejects a manifest leaf symlink even when its bytes match', () => {
+  const row = records.find((item) => item.repository === 'kdna-cli');
+  const root = rootFor(row.repository);
+  const file = path.join(root, row.manifest);
+  const held = path.join(temporary, 'held-manifest.json');
+  fs.renameSync(file, held);
+  git(root, ['update-index', '--assume-unchanged', row.manifest]);
+  try {
+    fs.symlinkSync(held, file);
+    const result = strictCLI();
+    assert.notEqual(result.status, 0);
+  } finally {
+    fs.unlinkSync(file);
+    fs.renameSync(held, file);
+    git(root, ['update-index', '--no-assume-unchanged', row.manifest]);
+  }
+});
+
+test('actual strict CLI rejects a symlinked manifest parent with identical file bytes', () => {
+  const row = records.find((item) => item.repository === 'create-kdna-web-app');
+  const root = rootFor(row.repository);
+  const directory = path.dirname(path.join(root, row.manifest));
+  const held = path.join(temporary, 'held-template-directory');
+  fs.renameSync(directory, held);
+  git(root, ['update-index', '--skip-worktree', row.manifest]);
+  try {
+    fs.symlinkSync(held, directory);
+    const result = strictCLI();
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /manifest path must not use symlinks/u);
+  } finally {
+    fs.unlinkSync(directory);
+    fs.renameSync(held, directory);
+    git(root, ['update-index', '--no-skip-worktree', row.manifest]);
   }
 });

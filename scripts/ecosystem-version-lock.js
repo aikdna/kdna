@@ -374,6 +374,25 @@ function readCompatibilityBindings(controlRoot, reposRoot, expectedBindings = EX
       row.manifest_sha256,
       'compatibility manifest digest differs',
     );
+    if (row.repository !== 'kdna') {
+      let observed = root;
+      const parts = row.manifest.split('/');
+      for (const [index, part] of parts.entries()) {
+        observed = path.join(observed, part);
+        const entry = fs.lstatSync(observed);
+        assert.ok(!entry.isSymbolicLink(), 'compatibility manifest path must not use symlinks');
+        assert.ok(
+          index === parts.length - 1 ? entry.isFile() : entry.isDirectory(),
+          'compatibility manifest path must contain real directories and a regular file',
+        );
+      }
+      // Index flags can hide worktree differences from Git. Always compare
+      // the actual bytes with the separately authenticated historical blob.
+      assert.ok(
+        fs.readFileSync(observed).equals(bytes),
+        'actual compatibility manifest bytes differ from accepted source',
+      );
+    }
     const pkg = JSON.parse(bytes);
     assert.equal(
       pkg[row.section]?.[row.packageName],
