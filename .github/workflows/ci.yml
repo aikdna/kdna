@@ -22,6 +22,8 @@ jobs:
       - name: Verify the isolated npm CLI and extraction boundary
         run: node scripts/core-release-authority.js verify-npm
       - run: node scripts/core-release-authority.js trusted-npm ci
+      - name: Verify integration policy counterexamples on Linux
+        run: node scripts/core-release-authority.js trusted-npm run test:integration-policy
       - name: Enforce protocol naming and scoped release gates
         run: |
           node scripts/core-release-authority.js trusted-npm run test:post-cutover
