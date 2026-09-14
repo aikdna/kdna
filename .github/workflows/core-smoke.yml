@@ -75,7 +75,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-skills
-          ref: 51f33fc687516c69c6b492735268633c21bb6901
+          ref: 40e50578178b72c400bb5b90a3ed76eef8176693
           path: .ecosystem-repos/kdna-skills
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1

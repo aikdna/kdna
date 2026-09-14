@@ -3432,10 +3432,10 @@
     },
     {
       "repository": "aikdna/kdna-skills",
-      "commit": "51f33fc687516c69c6b492735268633c21bb6901",
-      "tree": "74c923d4b0071b3b0297e7c7cbf537d22c759a4f",
+      "commit": "40e50578178b72c400bb5b90a3ed76eef8176693",
+      "tree": "11a31f59ee51fd3da91243ede9df7ade9388a277",
       "ci": {
-        "head": "eeebd9a595dd540a2318c054d261109f6433eb72",
+        "head": "c30703fdeb29184304739727163bf4b0334bdeaa",
         "required": [
           {
             "name": "agent-support",
@@ -3757,7 +3757,7 @@
           "name": "@aikdna/kdna-mcp-server",
           "version": "0.7.0-rc.component-semantics.1",
           "member_count": 19,
-          "members_sha256": "adb9915458b5e7c438d9178e55ce9e6d1fcb2ecf07c302d6f6cc916e9d6b1a28",
+          "members_sha256": "6620815ba4755d41e0cf385912c2c68027aa8aa241d2237ebbf78aabc484c1cd",
           "paths": [
             "LICENSE",
             "NOTICE",
