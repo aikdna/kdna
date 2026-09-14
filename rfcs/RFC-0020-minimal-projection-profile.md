@@ -23,12 +23,12 @@ Measured against the reference assets (`laozi-wuwei-0.1.1`,
 - `boundaries`: ~9%
 - `self_checks`: ~4%
 
-For small local models (2-4B parameter, the kdnawork local cold-start tier:
+For small local models (2-4B parameter, the local cold-start tier:
 qwen3.5:4b, llama3.2:3b) this is too large.
 `compact` at 5.4k tokens exceeds the entire context window of a 4K-context
 model and consumes most of an 8K window. Consumers currently work around this
 by hand-trimming or hard-capping the CLI output (a measured 12k-char cap in
-the kdnawork consumer truncates a `compact` projection that is ~21k chars),
+one consuming application truncates a `compact` projection that is ~21k chars),
 which fragments the judgment semantics without any protocol-level contract.
 
 This RFC adds a fifth profile, `minimal`, that projects only the core
@@ -181,7 +181,7 @@ Two measurements back this anchor:
    ~5.4k tokens for `compact` on the same assets. `minimal` is therefore a
    context/cost/latency reduction, not a content addition.
 
-2. **Small-model injection sweep (kdnawork, 2-4B local models, 2026-08-04).**
+2. **Small-model injection sweep (2-4B local models, 2026-08-04).**
    A full-factor A/B sweep on a discriminating private-rule suite (runs=3,
    0 INVALID) compared full-payload injection against the reduced injection
    on two recommended local models. Injection size made no significant
