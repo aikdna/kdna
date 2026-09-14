@@ -336,7 +336,14 @@ function readCompatibilityBindings(controlRoot, reposRoot, expectedBindings = EX
     const key = bindingKey(row);
     assert.ok(expected.has(key), 'unreviewed compatibility binding');
     assert.ok(!verified.has(key), 'duplicate compatibility binding');
-    assert.match(row.source, /^[a-f0-9]{40}$/u, 'compatibility source must be an exact commit');
+    const usesReachableBlob = row.source_manifest_blob !== undefined;
+    if (usesReachableBlob) {
+      assert.equal(row.repository, 'kdna', 'only the root may use a reachable manifest blob');
+      assert.equal(row.source, undefined, 'manifest blob and source commit are mutually exclusive');
+      assert.match(row.source_manifest_blob, /^[a-f0-9]{40}$/u);
+    } else {
+      assert.match(row.source, /^[a-f0-9]{40}$/u, 'compatibility source must be an exact commit');
+    }
     assert.match(row.manifest_sha256, /^[a-f0-9]{64}$/u);
     assert.ok(row.manifest.split('/').every((part) => part && part !== '.' && part !== '..'));
     assert.ok(!path.isAbsolute(row.manifest) && !row.manifest.includes('\\'));
@@ -350,9 +357,31 @@ function readCompatibilityBindings(controlRoot, reposRoot, expectedBindings = EX
       fs.realpathSync(root),
       fs.realpathSync(git(root, ['rev-parse', '--show-toplevel']).toString().trim()),
     );
-    if (row.repository === 'kdna') {
+    const blobKey = `${row.repository}:${row.source_manifest_blob || row.source}:${row.manifest}`;
+    if (usesReachableBlob && !blobs.has(blobKey)) {
+      // Commit IDs change during a protected rebase merge. Blob IDs and exact
+      // paths survive, but an object in another ref or the object database alone
+      // is insufficient: the manifest must occur in HEAD's reachable history.
+      const ancestors = git(root, ['rev-list', 'HEAD', '--', row.manifest])
+        .toString()
+        .trim()
+        .split('\n')
+        .filter(Boolean);
+      const reachable = ancestors.some((commit) => {
+        const entries = git(root, ['ls-tree', '-z', commit, '--', row.manifest])
+          .toString()
+          .split('\0')
+          .filter(Boolean);
+        return entries.some((entry) => {
+          const match = /^(100644|100755) blob ([a-f0-9]{40})\t(.+)$/u.exec(entry);
+          return match && match[2] === row.source_manifest_blob && match[3] === row.manifest;
+        });
+      });
+      assert.ok(reachable, 'accepted manifest blob is absent from HEAD history at its exact path');
+      blobs.set(blobKey, git(root, ['cat-file', 'blob', row.source_manifest_blob]));
+    } else if (!usesReachableBlob && row.repository === 'kdna') {
       git(root, ['merge-base', '--is-ancestor', row.source, 'HEAD']);
-    } else {
+    } else if (row.repository !== 'kdna') {
       assert.equal(
         row.source,
         components.get(row.repository)?.source_commit,
@@ -365,7 +394,6 @@ function readCompatibilityBindings(controlRoot, reposRoot, expectedBindings = EX
       );
       git(root, ['diff', '--quiet', row.source, '--', row.manifest]);
     }
-    const blobKey = `${row.repository}:${row.source}:${row.manifest}`;
     if (!blobs.has(blobKey))
       blobs.set(blobKey, git(root, ['show', `${row.source}:${row.manifest}`]));
     const bytes = blobs.get(blobKey);

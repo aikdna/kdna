@@ -79,8 +79,8 @@
       "section": "devDependencies",
       "packageName": "@aikdna/kdna-cli",
       "declared": "0.36.1",
-      "source": "c7498d7a4d87238c9e1d8b77329964bf8c1edf5a",
-      "manifest_sha256": "8c664edb5f0e281e5a26ab93443028568d733b2532b28a5ad36b1cfe9721702e"
+      "manifest_sha256": "8c664edb5f0e281e5a26ab93443028568d733b2532b28a5ad36b1cfe9721702e",
+      "source_manifest_blob": "23e3283b9efc6d76e6c31006e28b013fc33bda1e"
     },
     {
       "repository": "kdna",
@@ -88,8 +88,8 @@
       "section": "devDependencies",
       "packageName": "@aikdna/kdna-web-client",
       "declared": "0.3.0",
-      "source": "c7498d7a4d87238c9e1d8b77329964bf8c1edf5a",
-      "manifest_sha256": "8c664edb5f0e281e5a26ab93443028568d733b2532b28a5ad36b1cfe9721702e"
+      "manifest_sha256": "8c664edb5f0e281e5a26ab93443028568d733b2532b28a5ad36b1cfe9721702e",
+      "source_manifest_blob": "23e3283b9efc6d76e6c31006e28b013fc33bda1e"
     },
     {
       "repository": "kdna",
@@ -97,7 +97,7 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-core",
       "declared": "0.22.0",
-      "source": "c7498d7a4d87238c9e1d8b77329964bf8c1edf5a",
+      "source": "38d3842521b818039a9994d318e2f0a507ce8644",
       "manifest_sha256": "25e492f78417f0203bcc8282ca377716761115f737a6cf31d7b2e94d1269e2ed"
     },
     {
@@ -106,7 +106,7 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-cli",
       "declared": "0.36.1",
-      "source": "c7498d7a4d87238c9e1d8b77329964bf8c1edf5a",
+      "source": "38d3842521b818039a9994d318e2f0a507ce8644",
       "manifest_sha256": "25e492f78417f0203bcc8282ca377716761115f737a6cf31d7b2e94d1269e2ed"
     },
     {
@@ -115,8 +115,8 @@
       "section": "dependencies",
       "packageName": "@aikdna/kdna-core",
       "declared": "0.22.0",
-      "source": "c7498d7a4d87238c9e1d8b77329964bf8c1edf5a",
-      "manifest_sha256": "cf183b9cfaaa029b72c884de5da45464b8798e9aa961efebd01a82aa16d21a34"
+      "manifest_sha256": "cf183b9cfaaa029b72c884de5da45464b8798e9aa961efebd01a82aa16d21a34",
+      "source_manifest_blob": "a8d88f3a436cc37d685ecee02ab4f9f5b6d86bfb"
     },
     {
       "repository": "kdna",
@@ -124,8 +124,8 @@
       "section": "peerDependencies",
       "packageName": "@aikdna/kdna-core",
       "declared": "0.24.0-rc.component-semantics.2",
-      "source": "c7498d7a4d87238c9e1d8b77329964bf8c1edf5a",
-      "manifest_sha256": "90bcf759f87c707cb9d47db5de7ed7b796508868d9b66c09df501f175a3a86a6"
+      "manifest_sha256": "90bcf759f87c707cb9d47db5de7ed7b796508868d9b66c09df501f175a3a86a6",
+      "source_manifest_blob": "3c8d824309c9887567446f7fcb91485a8a679917"
     },
     {
       "repository": "kdna-activation-server",

@@ -80,7 +80,11 @@ before(() => {
     const commit = git(root, ['rev-parse', 'HEAD']);
     components.push({ repository: `aikdna/${repository}`, source_commit: commit, packages: [] });
     for (const row of records.filter((row) => row.repository === repository)) {
-      row.source = commit;
+      if (row.source_manifest_blob) {
+        row.source_manifest_blob = git(root, ['rev-parse', `${commit}:${row.manifest}`]);
+      } else {
+        row.source = commit;
+      }
       row.manifest_sha256 = createHash('sha256')
         .update(fs.readFileSync(path.join(root, row.manifest)))
         .digest('hex');
@@ -137,6 +141,76 @@ test('all 35 accepted declarations have verified Git blob provenance and canonic
     consumers.some((row) => row.repository === 'arbitrary-control-directory'),
     false,
   );
+});
+
+test('root blob provenance survives a rewritten commit in a fresh main-only clone', () => {
+  const source = path.join(temporary, 'rebase-source');
+  const cloned = path.join(temporary, 'rebase-main-only');
+  fs.mkdirSync(source);
+  git(source, ['init', '--quiet', '--initial-branch=main']);
+  git(source, ['config', 'user.name', 'Synthetic Test Fixture']);
+  git(source, ['config', 'user.email', 'fixture@example.test']);
+  const rows = records.filter((row) => row.source_manifest_blob).map((row) => ({ ...row }));
+  assert.equal(rows.length, 4);
+  for (const row of rows) {
+    const file = path.join(source, row.manifest);
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.copyFileSync(path.join(control, row.manifest), file);
+  }
+  git(source, ['add', '.']);
+  git(source, ['commit', '--quiet', '-m', 'Create accepted synthetic manifests']);
+  const original = git(source, ['rev-parse', 'HEAD']);
+  const tree = git(source, ['rev-parse', 'HEAD^{tree}']);
+  git(source, ['commit', '--amend', '--quiet', '-m', 'Rebase synthetic manifests']);
+  assert.notEqual(git(source, ['rev-parse', 'HEAD']), original);
+  git(source, [
+    'clone',
+    '--no-local',
+    '--no-tags',
+    '--single-branch',
+    '--branch',
+    'main',
+    source,
+    cloned,
+  ]);
+  assert.equal(git(cloned, ['rev-parse', 'HEAD^{tree}']), tree);
+  assert.throws(() => git(cloned, ['cat-file', '-e', original]));
+  const file = path.join(cloned, 'scripts/compatibility-bindings.json');
+  json(file, { schema_version: '1.0.0', bindings: rows });
+  json(path.join(cloned, 'ecosystem-manifest.json'), { components: [] });
+  assert.equal(readCompatibilityBindings(cloned, repositories, rows).size, 4);
+  const acceptedDocument = fs.readFileSync(file);
+  for (const mutate of [
+    (changed) => (changed[0].source_manifest_blob = '0'.repeat(40)),
+    (changed) => (changed[0].declared = 'unreviewed-drift'),
+    (changed) => (changed[0].manifest_sha256 = '0'.repeat(64)),
+    (changed) => (changed[0].source = original),
+  ]) {
+    const changed = JSON.parse(acceptedDocument).bindings;
+    mutate(changed);
+    json(file, { schema_version: '1.0.0', bindings: changed });
+    assert.throws(() => readCompatibilityBindings(cloned, repositories, rows));
+  }
+  const misplaced = rows.map((row) => ({ ...row }));
+  misplaced[0].manifest = 'other/package.json';
+  json(file, { schema_version: '1.0.0', bindings: misplaced });
+  assert.throws(() => readCompatibilityBindings(cloned, repositories, misplaced), /exact path/u);
+  const dangling = rows.map((row) => ({ ...row }));
+  const danglingBytes = Buffer.from(
+    '{"devDependencies":{"@aikdna/kdna-cli":"unreviewed-drift"}}\n',
+  );
+  dangling[0].source_manifest_blob = execFileSync(
+    '/usr/bin/git',
+    ['-C', cloned, 'hash-object', '-w', '--stdin'],
+    { input: danglingBytes },
+  )
+    .toString()
+    .trim();
+  dangling[0].manifest_sha256 = createHash('sha256').update(danglingBytes).digest('hex');
+  dangling[0].declared = 'unreviewed-drift';
+  assert.equal(git(cloned, ['cat-file', '-t', dangling[0].source_manifest_blob]), 'blob');
+  json(file, { schema_version: '1.0.0', bindings: dangling });
+  assert.throws(() => readCompatibilityBindings(cloned, repositories, rows), /HEAD history/u);
 });
 
 for (const binding of EXPECTED_BINDINGS) {
