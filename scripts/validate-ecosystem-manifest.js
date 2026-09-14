@@ -363,10 +363,53 @@ function assertAssetIndex(component, root) {
   }
   try {
     const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
-    const indexed = currentAssetIndexInventory(index);
+    const { published, unpublished } = currentAssetIndexInventory(index);
     const declared = manifestArtifactInventory(component);
-    if (JSON.stringify(indexed) !== JSON.stringify(declared)) {
+    if (published.length !== declared.length) {
       fail(component, 'artifact inventory differs from the exact index/current.json projection');
+      return;
+    }
+    for (const artifact of declared) {
+      const indexed = published.find((entry) => entry.path === artifact.path);
+      if (!indexed || indexed.version !== artifact.version || indexed.sha256 !== artifact.sha256) {
+        fail(component, 'artifact inventory differs from the exact index/current.json projection');
+        return;
+      }
+      if (indexed.release_tag && indexed.release_tag !== artifact.release_tag) {
+        fail(
+          component,
+          `artifact release coordinate mismatch: index=${indexed.release_tag} manifest=${artifact.release_tag}`,
+          artifact.path,
+        );
+        return;
+      }
+      // The current index no longer carries a release coordinate, so the
+      // published claim is verified against the producer's own release history
+      // instead of being read out of the index.
+      if (!artifact.release_tag) {
+        fail(component, 'published artifact must declare a release coordinate', artifact.path);
+        return;
+      }
+      try {
+        gitText(root, ['rev-list', '-n', '1', `refs/tags/${artifact.release_tag}`]);
+      } catch {
+        fail(
+          component,
+          `published artifact release coordinate is not traceable: ${artifact.release_tag}`,
+          artifact.path,
+        );
+        return;
+      }
+    }
+    for (const entry of unpublished) {
+      if (declared.some((artifact) => artifact.path === entry.path)) {
+        fail(
+          component,
+          'unpublished index entry must not be declared as a published artifact',
+          'index/current.json',
+        );
+        return;
+      }
     }
   } catch (error) {
     fail(component, `current asset index is invalid: ${error.message}`, 'index/current.json');
