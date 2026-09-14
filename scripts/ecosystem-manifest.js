@@ -5,6 +5,9 @@ const path = require('node:path');
 
 const CURRENT_RELEASE_STATUSES = new Set(['active', 'compatibility']);
 const PUBLISHABLE_SOURCE_STATUSES = new Set(['active', 'candidate', 'compatibility']);
+// Declared asset-index states that mean "registered, but no release coordinate
+// exists yet" (kdna-assets schemas/public-read-index.schema.json).
+const UNPUBLISHED_ASSET_STATUSES = new Set(['unpublished_candidate']);
 const STABLE_SEMVER_RE = /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/u;
 const SEMVER_RE =
   /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/u;
@@ -192,22 +195,61 @@ function currentAssetIndexInventory(index) {
   if (index.clusters.length !== 0) {
     throw new Error('current asset index clusters require an ecosystem manifest schema extension');
   }
-  const records = index.assets.map((entry) => {
-    const tagMatch = entry?.download?.url?.match(/\/releases\/download\/([^/]+)\//u);
-    return {
+  // The producer's index schema makes publication_status required and lets a
+  // registered candidate exist without a release coordinate, so the projection
+  // distinguishes the two declared states instead of demanding a release
+  // coordinate from every entry:
+  //   * a published entry still has to declare all four coordinates;
+  //   * an unpublished entry still has to declare its artifact integrity
+  //     (path/version/sha256) and its status, and must not carry a partial
+  //     release coordinate;
+  //   * only published entries form the published artifact inventory that the
+  //     control manifest declares, so that two-way projection covers them.
+  // An entry that carries no status is read as the earlier published-only shape,
+  // so an index written before the status field existed keeps its exact
+  // coordinate requirement (and an entry with neither a status nor a release
+  // coordinate still fails as an incomplete coordinate).
+  const published = [];
+  const paths = new Set();
+  for (const entry of index.assets) {
+    const status = typeof entry?.publication_status === 'string' ? entry.publication_status : null;
+    const download = entry?.download;
+    const tagMatch =
+      typeof download?.url === 'string'
+        ? download.url.match(/\/releases\/download\/([^/]+)\//u)
+        : null;
+    const record = {
       path: entry?.artifact?.path,
       version: entry?.version,
       sha256: entry?.digest?.value,
       release_tag: tagMatch?.[1] || null,
     };
-  });
-  if (records.some((record) => Object.values(record).some((value) => !value))) {
-    throw new Error('current asset index contains an incomplete artifact coordinate');
+    if (!record.path) {
+      throw new Error('current asset index entry must declare an artifact path');
+    }
+    if (paths.has(record.path)) {
+      throw new Error('current asset index contains duplicate artifact paths');
+    }
+    paths.add(record.path);
+    if (UNPUBLISHED_ASSET_STATUSES.has(status)) {
+      if (!record.version || !record.sha256) {
+        throw new Error(
+          'unpublished current asset index entry is missing artifact integrity coordinates',
+        );
+      }
+      if (download !== undefined || record.release_tag) {
+        throw new Error(
+          'unpublished current asset index entry must not declare a release coordinate',
+        );
+      }
+      continue;
+    }
+    if (Object.values(record).some((value) => !value)) {
+      throw new Error('current asset index contains an incomplete artifact coordinate');
+    }
+    published.push(record);
   }
-  if (new Set(records.map((record) => record.path)).size !== records.length) {
-    throw new Error('current asset index contains duplicate artifact paths');
-  }
-  return records.sort((left, right) => left.path.localeCompare(right.path));
+  return published.sort((left, right) => left.path.localeCompare(right.path));
 }
 
 module.exports = {
