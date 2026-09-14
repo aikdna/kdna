@@ -47,16 +47,6 @@ const EXPECTED_COMPAT_CHECKOUTS = JSON.parse(
   .filter((component) => component.local_path && component.local_path !== '.')
   .map((component) => [component.repository, component.source_commit]);
 
-// A component whose accepted coordinate is older may still be rehearsed in the
-// smoke workflow at an explicitly scoped candidate revision. The manifest keeps
-// the accepted coordinate and the publish workflow keeps checking that one out;
-// only the smoke workflow consumes the scoped pin.
-const SMOKE_SCOPED_CANDIDATE_PINS = new Map([
-  ['aikdna/kdna-core-swift', '5a8e2bb5db92d8a9118e1668cf6f1414c4aed5c9'],
-  ['aikdna/kdna-cli', '14a317f19289b79d1c42da70a20b83334c32b8b7'],
-  ['aikdna/kdna-skills', '8084e8c889834a142e4e1c2a59ac75059b42e0d3'],
-]);
-
 function releaseInput(overrides = {}) {
   const version = overrides.pkg?.version || '1.2.3';
   return {
@@ -291,13 +281,16 @@ test('compatibility workflow fixes every live checkout and publishes only the re
   assert.match(job, /if: always\(\)/u);
 });
 
-test('core smoke rehearses the release ecosystem with every immutable accepted checkout', () => {
+test('core smoke verifies current source after preparing exact historical compatibility inputs', () => {
   const workflow = fs.readFileSync(
     path.join(REPO_ROOT, '.github', 'workflows', 'core-smoke.yml'),
     'utf8',
   );
-  for (const [repository, commit] of EXPECTED_COMPAT_CHECKOUTS) {
-    const smokeCommit = SMOKE_SCOPED_CANDIDATE_PINS.get(repository) ?? commit;
+  const inventory = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'scripts/ecosystem-source-inventory.json'), 'utf8'));
+  const sourcePins = inventory.repositories.filter((row) => row.repository !== 'aikdna/kdna').map((row) => [row.repository, row.commit]);
+  assert.equal(sourcePins.length, 15);
+  sourcePins.push(EXPECTED_COMPAT_CHECKOUTS.find(([repository]) => repository === 'aikdna/kdna-vscode'));
+  for (const [repository, smokeCommit] of sourcePins) {
     assert.match(
       workflow,
       new RegExp(`repository: ${repository.replace('/', '\\/')}\\n\\s+ref: ${smokeCommit}`, 'u'),
@@ -307,18 +300,23 @@ test('core smoke rehearses the release ecosystem with every immutable accepted c
   const provisionNpm = workflow.indexOf('provision-npm');
   const verifyNpm = workflow.indexOf('verify-npm');
   const install = workflow.indexOf('trusted-npm ci --ignore-scripts');
-  const versionLock = workflow.indexOf('run test:ecosystem-lock');
-  const ecosystemGateRun = workflow.indexOf('run ecosystem-gate');
+  const prepare = workflow.indexOf('node scripts/prepare-compatibility-repos.js');
+  const manifest = workflow.indexOf('node scripts/validate-ecosystem-manifest.js');
+  const versionLock = workflow.indexOf('node scripts/ecosystem-version-lock.js --strict');
+  const sourceGate = workflow.indexOf('node scripts/ecosystem-source-gate.js');
   assert.ok(provisionNpm >= 0 && provisionNpm < verifyNpm);
-  assert.ok(verifyNpm < install && install < versionLock);
-  assert.ok(versionLock < ecosystemGateRun);
-  assert.ok(workflow.includes('KDNA_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos'));
+  assert.ok(verifyNpm < install && install < prepare);
+  assert.ok(prepare < manifest && manifest < versionLock && versionLock < sourceGate);
+  assert.ok(workflow.includes('KDNA_REPOS_ROOT: ${{ runner.temp }}/accepted-compatibility'));
+  assert.ok(workflow.includes('KDNA_SOURCE_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos'));
   assert.ok(workflow.includes('KDNA_CONTROL_ROOT: ${{ github.workspace }}'));
   assert.ok(workflow.includes('KDNA_PYTHON: ${{ env.pythonLocation }}/bin/python'));
   assert.ok(workflow.includes('KDNA_TRUSTED_NPM_TARBALL=$RUNNER_TEMP/npm-11.17.0.tgz'));
   assert.match(workflow, /if: always\(\)/u);
   assert.match(workflow, /pytest==9\.1\.0/u);
-  assert.match(workflow, /python -m pytest python-sdk\/tests -q/u);
+  assert.match(workflow, /python -I scripts\/run-source-pytest.test.py/u);
+  assert.ok(workflow.includes('GH_TOKEN: ${{ github.token }}'));
+  assert.ok(workflow.includes('trusted-npm run test:integration-policy'));
   const ecosystemGate = fs.readFileSync(path.join(REPO_ROOT, 'scripts', 'ecosystem-gate.js'), 'utf8');
   assert.match(ecosystemGate, /python adapter pytest against current CLI/u);
   assert.match(
