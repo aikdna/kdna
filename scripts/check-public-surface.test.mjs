@@ -196,3 +196,33 @@ test('case 6: the marker set is real and the exception set is empty but still di
   );
   assert.match(r.stdout, /KDNA_PUBLIC_SURFACE_GATE_EXPORTS_OK/);
 });
+
+test('case 7: read-only scanning ignores hostile Git controls and needs no private temp root', () => {
+  const dir = freshClone('hostile-env');
+  const temp = path.join(scratch, 'read-only-temp');
+  fs.mkdirSync(temp);
+  fs.chmodSync(temp, 0o777);
+  const r = spawnSync(process.execPath, [path.join(dir, GATE_REL)], {
+    cwd: dir,
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      PATH: temp,
+      TMPDIR: temp,
+      TMP: temp,
+      TEMP: temp,
+      GIT_DIR: path.join(temp, 'absent-repository'),
+      GIT_INDEX_FILE: path.join(temp, 'absent-index'),
+      GIT_OBJECT_DIRECTORY: path.join(temp, 'absent-objects'),
+      GIT_ALTERNATE_OBJECT_DIRECTORIES: path.join(temp, 'absent-alternate'),
+      GIT_CONFIG_GLOBAL: path.join(temp, 'absent-config'),
+      GIT_CONFIG_SYSTEM: path.join(temp, 'absent-system-config'),
+      GIT_CONFIG_COUNT: '1',
+      GIT_CONFIG_KEY_0: 'core.bare',
+      GIT_CONFIG_VALUE_0: 'true',
+    },
+  });
+  assert.equal(r.status, 0, `read-only scan failed: ${r.stdout}\n${r.stderr}`);
+  assert.ok(r.stdout.includes(SUCCESS_LINE));
+  assert.match(r.stdout, /files scanned, 0 violations/);
+});

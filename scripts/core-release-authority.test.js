@@ -27,6 +27,7 @@ const {
   buildRegistryManifest,
   canonicalTempRoot,
   cleanGitEnvironment,
+  cleanReadOnlyGitEnvironment,
   cleanNpmEnvironment,
   commitDocument,
   createTokenUserConfig,
@@ -304,6 +305,20 @@ test('trusted Git environment removes hostile inherited Git controls', () => {
   assert.equal(environment.LD_PRELOAD, undefined);
   assert.equal(environment.DYLD_INSERT_LIBRARIES, undefined);
   assert.equal(environment.GITHUB_TOKEN, undefined);
+});
+
+test('read-only Git environment excludes inherited execution and repository controls', () => {
+  const environment = cleanReadOnlyGitEnvironment();
+  assert.deepEqual(environment, {
+    GIT_CONFIG_NOSYSTEM: '1',
+    GIT_CONFIG_GLOBAL: os.devNull,
+    GIT_CONFIG_SYSTEM: os.devNull,
+    GIT_CONFIG_COUNT: '0',
+    GIT_NO_REPLACE_OBJECTS: '1',
+    GIT_OPTIONAL_LOCKS: '0',
+    LC_ALL: 'C',
+    LANG: 'C',
+  });
 });
 
 test('private temp creation canonicalizes a symlinked system temp root', (t) => {

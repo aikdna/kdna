@@ -383,6 +383,21 @@ function makePrivateTemp(prefix, root = canonicalTempRoot()) {
   }
 }
 
+// Read-only repository inspection does not allocate release material or require
+// the POSIX private-temp policy. Keep its Git configuration isolated on every OS.
+function cleanReadOnlyGitEnvironment() {
+  return {
+    GIT_CONFIG_NOSYSTEM: '1',
+    GIT_CONFIG_GLOBAL: os.devNull,
+    GIT_CONFIG_SYSTEM: os.devNull,
+    GIT_CONFIG_COUNT: '0',
+    GIT_NO_REPLACE_OBJECTS: '1',
+    GIT_OPTIONAL_LOCKS: '0',
+    LC_ALL: 'C',
+    LANG: 'C',
+  };
+}
+
 function cleanGitEnvironment(environment = process.env) {
   return {
     TMPDIR: canonicalTempRoot(),
@@ -2877,6 +2892,7 @@ module.exports = {
   buildRegistryManifest,
   canonicalTempRoot,
   cleanGitEnvironment,
+  cleanReadOnlyGitEnvironment,
   cleanNpmEnvironment,
   commitDocument,
   createTokenUserConfig,

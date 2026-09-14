@@ -46,7 +46,11 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import releaseAuthority from './core-release-authority.js';
 
-const { TRUSTED_GIT, cleanGitEnvironment } = releaseAuthority;
+const { TRUSTED_GIT, cleanReadOnlyGitEnvironment } = releaseAuthority;
+// Use the standard Git for Windows installation without consulting inherited
+// PATH. Publishing retains its separate POSIX executable and temp authority.
+const READ_ONLY_GIT =
+  process.platform === 'win32' ? String.raw`C:\Program Files\Git\bin\git.exe` : TRUSTED_GIT;
 
 const SELF_PATH = fileURLToPath(import.meta.url);
 const SUCCESS_LINE = 'public-surface check passed';
@@ -152,9 +156,9 @@ function forbiddenLabelsFor(content) {
 }
 
 function listTrackedFiles() {
-  return execFileSync(TRUSTED_GIT, ['--no-replace-objects', 'ls-files'], {
+  return execFileSync(READ_ONLY_GIT, ['--no-replace-objects', 'ls-files'], {
     encoding: 'utf8',
-    env: cleanGitEnvironment(),
+    env: cleanReadOnlyGitEnvironment(),
   })
     .split('\n')
     .filter(Boolean);
