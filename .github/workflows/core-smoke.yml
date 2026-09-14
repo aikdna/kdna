@@ -6,9 +6,10 @@ on:
   pull_request:
   workflow_dispatch:
 
-# PR-1: enforce that @aikdna/kdna-core can be required without throwing and
-# that its public exports (especially STANDARD_ENTRIES) are intact. Catches
-# regressions like the missing-STANDARD_ENTRIES and JSON_ENTRY_RE bugs.
+permissions:
+  contents: read
+  checks: read
+
 jobs:
   smoke:
     name: core-smoke
@@ -19,110 +20,107 @@ jobs:
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          repository: aikdna/kdna-activation-server
-          ref: 31b76fabc5d3f487221a7ea862f352cf190fa825
-          path: .ecosystem-repos/kdna-activation-server
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          repository: aikdna/kdna-assets
-          ref: 4de5bb01f4216624e57ffa7ac901e982dd323d95
-          path: .ecosystem-repos/kdna-assets
-          fetch-depth: 0
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          # Candidate-only smoke input: the merged CLI revision that carries the
-          # dependency fix. The public release/publish authority remains
-          # ecosystem-manifest.json, and publish.yml keeps checking out the
-          # accepted published coordinate.
-          repository: aikdna/kdna-cli
-          ref: 14a317f19289b79d1c42da70a20b83334c32b8b7
-          path: .ecosystem-repos/kdna-cli
-          # The manifest validator reads the accepted coordinate's package
-          # evidence out of this checkout, so the history behind the scoped
-          # candidate pin has to be present (same reason as the Swift candidate
-          # checkout below).
-          fetch-depth: 0
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
           repository: aikdna/create-kdna-web-app
-          ref: a7f414d1a7a6e1bd88fd61ee9d8ace49ba5c8c39
+          ref: fbdfc3d16675f728d5df3d7446d22c6637f3afd8
           path: .ecosystem-repos/create-kdna-web-app
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          repository: aikdna/kdna-demo-web-viewer
-          ref: f2bb5459229c44fe0c8ef0294602797e6c9fd7e2
-          path: .ecosystem-repos/kdna-demo-web-viewer
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          repository: aikdna/kdna-react
-          ref: 1c55b6539aa13604acaff589016d7cbc218f05b0
-          path: .ecosystem-repos/kdna-react
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          repository: aikdna/kdna-remote-server
-          ref: 81b563598ecc19da480d5191f9554a20cef19744
-          path: .ecosystem-repos/kdna-remote-server
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          # Candidate-only smoke input: the merged revision that carries the
-          # dependency fix. The manifest keeps the accepted coordinate and
-          # publish.yml keeps checking out that one, so full history is
-          # requested for the manifest evidence check.
-          repository: aikdna/kdna-skills
-          ref: 8084e8c889834a142e4e1c2a59ac75059b42e0d3
-          path: .ecosystem-repos/kdna-skills
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          # Creation candidate-only smoke input. The public release/publish
-          # authority remains ecosystem-manifest.json until this PR is accepted.
-          repository: aikdna/kdna-core-swift
-          ref: 5a8e2bb5db92d8a9118e1668cf6f1414c4aed5c9
-          path: .ecosystem-repos/kdna-core-swift
+          repository: aikdna/kdna-activation-server
+          ref: 38b31ba237b23c6dd7171a5aafa7c4032a3d8807
+          path: .ecosystem-repos/kdna-activation-server
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-app-shared
-          ref: 017e759efb448bf99b3384ccafa7f25172169ebb
+          ref: b9aab4ff6f505c8e3faceba56c2a9c95a3e88ba2
           path: .ecosystem-repos/kdna-app-shared
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          repository: aikdna/kdna-assets
+          ref: 418b98bb3bc21a6cdc792953474ee5356aa20984
+          path: .ecosystem-repos/kdna-assets
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: aikdna/kdna-cli
+          ref: 2adb6d403802e2ba6b9923258959c2179e05e32c
+          path: .ecosystem-repos/kdna-cli
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: aikdna/kdna-core-swift
+          ref: 0b85375b7e92b9ca4591f92c1e814018a4fb95b8
+          path: .ecosystem-repos/kdna-core-swift
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: aikdna/kdna-demo-web-viewer
+          ref: 1bda8851ff8a2cb5fb1d399df19cf7d0fdc0628d
+          path: .ecosystem-repos/kdna-demo-web-viewer
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: aikdna/kdna-react
+          ref: 5480640d0e62afc3baf891e66e07c89cae04a488
+          path: .ecosystem-repos/kdna-react
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: aikdna/kdna-remote-server
+          ref: c2813087e7e47d6f8848a4281c87612439d6dd4a
+          path: .ecosystem-repos/kdna-remote-server
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: aikdna/kdna-skills
+          ref: 51f33fc687516c69c6b492735268633c21bb6901
+          path: .ecosystem-repos/kdna-skills
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: aikdna/kdna-studio-cli
+          ref: 8daecf1ab47e472cd154c5f1e42273b2d59667cd
+          path: .ecosystem-repos/kdna-studio-cli
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: aikdna/kdna-studio-core
+          ref: 232b59099590d64affaed09aaa51146ad475a246
+          path: .ecosystem-repos/kdna-studio-core
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
           repository: aikdna/kdna-studio-swift
-          ref: c784a1262b2481ba4504548feac2bb782f5d70e5
+          ref: 10d33fd502449ad93d99eb5670e1da4015b0a15a
           path: .ecosystem-repos/kdna-studio-swift
           fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          repository: aikdna/kdna-vscode
-          ref: f5629f664efc098916f9576c4d3652a62c994bd4
-          path: .ecosystem-repos/kdna-vscode
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          repository: aikdna/kdna-studio-cli
-          ref: c0fc93759d245fb1700849f5783822f3b4268ebf
-          path: .ecosystem-repos/kdna-studio-cli
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          repository: aikdna/kdna-studio-core
-          ref: b315ac7a0142ba594649eb764c525ba752a21e12
-          path: .ecosystem-repos/kdna-studio-core
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
           repository: aikdna/kdna-web-client
-          ref: f86d46255b7a4e93b40700741de9e0ddcb6bb812
+          ref: 01fe619468540acbaa7929b78b612c90268511cc
           path: .ecosystem-repos/kdna-web-client
+          fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: aikdna/kdna-web-server
-          ref: f4907a9786f82f13e62db1040690a5f7df8f512b
+          ref: c1b0d1de6d23e2d642efb0ed31a16887627afce7
           path: .ecosystem-repos/kdna-web-server
+          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          # This frozen editor input is used only by historical compatibility validation.
+          repository: aikdna/kdna-vscode
+          ref: f5629f664efc098916f9576c4d3652a62c994bd4
+          path: .ecosystem-repos/kdna-vscode
+          fetch-depth: 0
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
-          node-version: 22
+          node-version: '22.23.1'
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
-          python-version: '3.12'
+          python-version: '3.12.13'
       - name: Select the outside-repository trusted npm release
         run: |
           echo "KDNA_TRUSTED_NPM_TARBALL=$RUNNER_TEMP/npm-11.17.0.tgz" >> "$GITHUB_ENV"
@@ -134,46 +132,40 @@ jobs:
         run: node scripts/core-release-authority.js verify-npm
       - name: Install workspace deps
         run: node scripts/core-release-authority.js trusted-npm ci --ignore-scripts
+      - name: Verify integration policy counterexamples on macOS
+        run: node scripts/core-release-authority.js trusted-npm run test:integration-policy
       - name: Install fixed Python test dependencies
         run: python -m pip install --disable-pip-version-check --no-input pytest==9.1.0 cbor2==6.1.4 jsonschema==4.26.0 cryptography==50.0.0 argon2-cffi==25.1.0
-      - name: Run core-smoke
-        run: node scripts/core-release-authority.js trusted-npm run test:core-smoke
-      - name: Run full kdna-core test suite
-        run: >-
-          node scripts/core-release-authority.js trusted-npm
-          --workspace @aikdna/kdna-core test
-      - name: Run kdna-eval test suite
-        run: >-
-          node scripts/core-release-authority.js trusted-npm
-          --workspace @aikdna/kdna-eval test
-      - name: Cross-repo ecosystem-version-lock (PR-8)
+      - name: Verify Python execution and receipt counterexamples
+        run: python -I scripts/run-source-pytest.test.py
+      - name: Materialize accepted historical compatibility inputs
         env:
-          KDNA_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos
+          KDNA_ECOSYSTEM_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos
+        run: >-
+          node scripts/prepare-compatibility-repos.js
+          --destination "${{ runner.temp }}/accepted-compatibility"
+      - name: Verify accepted release manifest and all historical dependency bindings
+        env:
+          KDNA_ECOSYSTEM_REPOS_ROOT: ${{ runner.temp }}/accepted-compatibility
+          KDNA_REPOS_ROOT: ${{ runner.temp }}/accepted-compatibility
           KDNA_CONTROL_ROOT: ${{ github.workspace }}
-          # The extra coordinates a not-yet-updated consumer may still declare.
-          # They must track the current candidate records in
-          # ecosystem-manifest.json (`packages[].version`), which stays the
-          # release/publish authority; a stale value here re-introduces the
-          # exact-coordinate drift this job exists to catch.
-          KDNA_CLI_BASELINE: '0.36.0'
-          KDNA_CORE_BASELINE: '0.24.0-rc.component-semantics.2'
-          KDNA_STUDIO_CORE_BASELINE: '3.0.0'
-        run: >-
-          node scripts/core-release-authority.js trusted-npm
-          run test:ecosystem-lock
-      - name: Verify Python adapter against the exact current CLI
+        run: |
+          node scripts/validate-ecosystem-manifest.js
+          node scripts/ecosystem-version-lock.js --strict
+      - name: Verify current sources, actual packs, child CI and root execution
         env:
-          KDNA_CLI: ${{ github.workspace }}/node_modules/.bin/kdna
-          PYTHONPATH: ${{ github.workspace }}/python-sdk
-        run: python -m pytest python-sdk/tests -q
-      - name: Rehearse the complete compatibility ecosystem gate
-        env:
+          KDNA_SOURCE_REPOS_ROOT: ${{ github.workspace }}/.ecosystem-repos
           KDNA_PYTHON: ${{ env.pythonLocation }}/bin/python
-          KDNA_GATE_PROGRESS_LOG: ${{ runner.temp }}/gate-progress.log
-        run: node scripts/core-release-authority.js trusted-npm run ecosystem-gate
-      - name: Show ecosystem gate progress on failure
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          node scripts/ecosystem-source-gate.js
+          --work-dir "${{ runner.temp }}/current-source-result"
+      - name: Show current source report on failure
         if: failure()
-        run: cat "${{ runner.temp }}/gate-progress.log" || true
+        run: |
+          if test -f "${{ runner.temp }}/current-source-result/source-gate.json"; then
+            cat "${{ runner.temp }}/current-source-result/source-gate.json"
+          fi
       - name: Remove the trusted npm release bytes
         if: always()
         run: rm -f "$KDNA_TRUSTED_NPM_TARBALL"
