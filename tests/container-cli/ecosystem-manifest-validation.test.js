@@ -422,7 +422,7 @@ test('asset inventory is an exact two-way projection of index/current.json', (t)
   const manifestPath = writeManifest(root, [assets]);
   const indexPath = path.join(assetRoot, 'index', 'current.json');
 
-  assert.deepEqual(manifestArtifactInventory(assets), currentAssetIndexInventory(index));
+  assert.deepEqual(manifestArtifactInventory(assets), currentAssetIndexInventory(index).published);
   let result = runValidator(manifestPath, root);
   assert.equal(result.status, 0, `stdout=${result.stdout}\nstderr=${result.stderr}`);
 
@@ -452,6 +452,156 @@ test('asset inventory is an exact two-way projection of index/current.json', (t)
   result = runValidator(manifestPath, root);
   assert.equal(result.status, 1);
   assert.match(result.stderr, /clusters require an ecosystem manifest schema extension/u);
+});
+
+test('a published index entry needs a traceable coordinate and a declared state', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-index-state-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const assetRoot = path.join(root, 'kdna-assets');
+  const assetBytes = fs.readFileSync(path.join(repoRoot, 'fixtures', 'test_protected_entry.kdna'));
+  const assetHash = crypto.createHash('sha256').update(assetBytes).digest('hex');
+  const artifactPath = 'references/public/fixture/fixture-1.0.0.kdna';
+  const candidatePath = 'references/public/candidate/candidate-1.0.0.kdna';
+  const entry = (path, overrides = {}) => ({
+    id: '@aikdna/fixture',
+    version: '1.0.0',
+    digest: { algorithm: 'sha256', value: assetHash },
+    artifact: { path, media_type: 'application/vnd.kdna.asset' },
+    ...overrides,
+  });
+  // The current index shape: a published reference whose bytes are listed in its
+  // own file inventory, beside a candidate that declares no release coordinate.
+  const index = {
+    assets: [
+      entry(artifactPath, {
+        publication_status: 'existing_reference',
+        files: [{ path: artifactPath, bytes: assetBytes.length, sha256: assetHash }],
+      }),
+      entry(candidatePath, {
+        publication_status: 'unpublished_candidate',
+        files: [{ path: candidatePath, bytes: assetBytes.length, sha256: assetHash }],
+      }),
+    ],
+    clusters: [],
+  };
+  const commit = initRepository(assetRoot, {
+    [artifactPath]: assetBytes,
+    [candidatePath]: assetBytes,
+    'index/current.json': JSON.stringify(index),
+  });
+  git(assetRoot, ['tag', '1.0.0']);
+  const currentConformanceCommit = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
+  ).components.find((entry_) => entry_.repository === 'aikdna/kdna').conformance_commit;
+  const assets = component({
+    repository: 'aikdna/kdna-assets',
+    local_path: '../kdna-assets',
+    source_commit: commit,
+    conformance_commit: currentConformanceCommit,
+    packages: [],
+    artifacts: [
+      {
+        path: artifactPath,
+        version: '1.0.0',
+        sha256: assetHash,
+        release_tag: '1.0.0',
+        release_commit: commit,
+        conformance_commit: currentConformanceCommit,
+        kind: 'kdna-asset',
+        lifecycle: 'Experimental',
+        known_limitations: [],
+        recommended_entrypoint: 'inspect then load',
+      },
+    ],
+    lifecycle: 'Experimental',
+  });
+  const manifestPath = writeManifest(root, [assets]);
+  const indexPath = path.join(assetRoot, 'index', 'current.json');
+
+  let result = runValidator(manifestPath, root);
+  assert.equal(result.status, 0, `stdout=${result.stdout}\nstderr=${result.stderr}`);
+
+  for (const [label, hostile, pattern] of [
+    [
+      'published entry without any traceable coordinate',
+      {
+        ...index,
+        assets: [
+          entry(artifactPath, { publication_status: 'existing_reference' }),
+          index.assets[1],
+        ],
+      },
+      /no traceable artifact coordinate/u,
+    ],
+    [
+      'published entry whose file inventory disagrees with its digest',
+      {
+        ...index,
+        assets: [
+          entry(artifactPath, {
+            publication_status: 'existing_reference',
+            files: [{ path: artifactPath, bytes: assetBytes.length, sha256: 'f'.repeat(64) }],
+          }),
+          index.assets[1],
+        ],
+      },
+      /no traceable artifact coordinate/u,
+    ],
+    [
+      'unpublished entry carrying a partial release coordinate',
+      {
+        ...index,
+        assets: [
+          index.assets[0],
+          { ...index.assets[1], download: { url: 'https://github.com/aikdna/kdna-assets' } },
+        ],
+      },
+      /must not declare a release coordinate/u,
+    ],
+    [
+      'unpublished entry without the status marker',
+      {
+        ...index,
+        assets: [
+          index.assets[0],
+          entry(candidatePath, {
+            files: [{ path: candidatePath, bytes: assetBytes.length, sha256: assetHash }],
+          }),
+        ],
+      },
+      /must declare either a release coordinate or an unpublished status/u,
+    ],
+    [
+      'published entry declaring an unusable release coordinate',
+      {
+        ...index,
+        assets: [
+          {
+            ...entry(artifactPath, { publication_status: 'existing_reference' }),
+            download: { url: 'https://github.com/aikdna/kdna-assets' },
+          },
+          index.assets[1],
+        ],
+      },
+      /declares an invalid release coordinate/u,
+    ],
+    [
+      'published artifact whose release tag does not exist in the producer',
+      {
+        ...index,
+        assets: [index.assets[0], index.assets[1]],
+      },
+      /release coordinate is not traceable/u,
+    ],
+  ]) {
+    if (label === 'published artifact whose release tag does not exist in the producer') {
+      git(assetRoot, ['tag', '-d', '1.0.0']);
+    }
+    fs.writeFileSync(indexPath, JSON.stringify(hostile));
+    result = runValidator(manifestPath, root);
+    assert.equal(result.status, 1, `${label}: stdout=${result.stdout}\nstderr=${result.stderr}`);
+    assert.match(result.stderr, pattern, label);
+  }
 });
 
 test('validator rejects schema 1, mixed legacy fields, and unknown fields', (t) => {
