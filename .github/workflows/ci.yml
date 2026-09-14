@@ -29,6 +29,10 @@ jobs:
           node scripts/core-release-authority.js trusted-npm run test:release-health
           node --test scripts/core-release-authority.test.js
           node scripts/core-release-authority.js trusted-npm run audit:post-cutover
+      - name: Enforce the path-name identifier gate
+        run: |
+          node scripts/check-path-name-identifiers.cjs
+          node --test scripts/check-path-name-identifiers.test.cjs
       - name: Verify the single-file asset inspector is fresh
         run: node scripts/core-release-authority.js trusted-npm run check:asset-inspector
       - run: node scripts/core-release-authority.js trusted-npm test
@@ -45,6 +49,8 @@ jobs:
         with: { node-version: 22 }
       - name: Run check-public-surface
         run: node scripts/check-public-surface.mjs
+      - name: Test the public-surface marker set and its declared exception
+        run: node --test scripts/check-public-surface.test.mjs
       - name: Reject public narrative false dichotomies
         run: npm run audit:public-narrative
       - name: Test public narrative boundary guard
