@@ -143,6 +143,48 @@ test('all 35 accepted declarations have verified Git blob provenance and canonic
   );
 });
 
+test('root blob provenance includes merged side history but rejects an unmerged branch', () => {
+  const root = path.join(temporary, 'merged-root-history');
+  fs.mkdirSync(root);
+  git(root, ['init', '--quiet', '--initial-branch=main']);
+  git(root, ['config', 'user.name', 'Synthetic Test Fixture']);
+  git(root, ['config', 'user.email', 'fixture@example.test']);
+  const file = path.join(root, 'package.json');
+  json(file, { devDependencies: { '@aikdna/kdna-cli': '999.0.0' } });
+  git(root, ['add', 'package.json']);
+  git(root, ['commit', '--quiet', '-m', 'Create current synthetic declaration']);
+  git(root, ['checkout', '--quiet', '-b', 'accepted']);
+  json(file, { devDependencies: { '@aikdna/kdna-cli': '0.36.1' } });
+  git(root, ['commit', '--quiet', '-am', 'Record accepted synthetic declaration']);
+  const row = {
+    repository: 'kdna',
+    manifest: 'package.json',
+    section: 'devDependencies',
+    packageName: '@aikdna/kdna-cli',
+    declared: '0.36.1',
+    source_manifest_blob: git(root, ['rev-parse', 'HEAD:package.json']),
+    manifest_sha256: createHash('sha256').update(fs.readFileSync(file)).digest('hex'),
+  };
+  git(root, ['checkout', '--quiet', 'main']);
+  json(path.join(root, 'scripts/compatibility-bindings.json'), {
+    schema_version: '1.0.0',
+    bindings: [row],
+  });
+  json(path.join(root, 'ecosystem-manifest.json'), { components: [] });
+  assert.throws(() => readCompatibilityBindings(root, repositories, [row]), /HEAD history/u);
+  git(root, [
+    'merge',
+    '--quiet',
+    '--no-ff',
+    '-s',
+    'ours',
+    'accepted',
+    '-m',
+    'Merge accepted history',
+  ]);
+  assert.equal(readCompatibilityBindings(root, repositories, [row]).size, 1);
+});
+
 test('root blob provenance survives a rewritten commit in a fresh main-only clone', () => {
   const source = path.join(temporary, 'rebase-source');
   const cloned = path.join(temporary, 'rebase-main-only');

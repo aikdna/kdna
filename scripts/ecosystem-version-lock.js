@@ -362,7 +362,7 @@ function readCompatibilityBindings(controlRoot, reposRoot, expectedBindings = EX
       // Commit IDs change during a protected rebase merge. Blob IDs and exact
       // paths survive, but an object in another ref or the object database alone
       // is insufficient: the manifest must occur in HEAD's reachable history.
-      const ancestors = git(root, ['rev-list', 'HEAD', '--', row.manifest])
+      const ancestors = git(root, ['rev-list', '--full-history', 'HEAD', '--', row.manifest])
         .toString()
         .trim()
         .split('\n')
