@@ -283,6 +283,10 @@ test('ecosystem workflow checkouts stay pinned to accepted or explicitly scoped 
     // the dependency fix. Only the smoke workflow may consume it; the manifest
     // keeps the accepted published coordinate and publish.yml keeps that pin.
     ['core-smoke.yml:aikdna/kdna-cli', '14a317f19289b79d1c42da70a20b83334c32b8b7'],
+    // Same shape for the MCP server: the smoke workflow rehearses the merged
+    // revision that carries the dependency fix; the accepted coordinate stays in
+    // the manifest and in publish.yml.
+    ['core-smoke.yml:aikdna/kdna-skills', '8084e8c889834a142e4e1c2a59ac75059b42e0d3'],
   ]);
 
   for (const workflowName of ['core-smoke.yml', 'publish.yml']) {

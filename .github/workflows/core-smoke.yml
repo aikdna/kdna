@@ -64,9 +64,14 @@ jobs:
           path: .ecosystem-repos/kdna-remote-server
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          # Candidate-only smoke input: the merged revision that carries the
+          # dependency fix. The manifest keeps the accepted coordinate and
+          # publish.yml keeps checking out that one, so full history is
+          # requested for the manifest evidence check.
           repository: aikdna/kdna-skills
-          ref: 9c3fa00128d87a7146e353c9cfde202a5f391f99
+          ref: 8084e8c889834a142e4e1c2a59ac75059b42e0d3
           path: .ecosystem-repos/kdna-skills
+          fetch-depth: 0
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           # Creation candidate-only smoke input. The public release/publish
