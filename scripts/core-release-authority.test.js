@@ -307,18 +307,24 @@ test('trusted Git environment removes hostile inherited Git controls', () => {
   assert.equal(environment.GITHUB_TOKEN, undefined);
 });
 
-test('read-only Git environment excludes inherited execution and repository controls', () => {
-  const environment = cleanReadOnlyGitEnvironment();
-  assert.deepEqual(environment, {
-    GIT_CONFIG_NOSYSTEM: '1',
-    GIT_CONFIG_GLOBAL: os.devNull,
-    GIT_CONFIG_SYSTEM: os.devNull,
-    GIT_CONFIG_COUNT: '0',
-    GIT_NO_REPLACE_OBJECTS: '1',
-    GIT_OPTIONAL_LOCKS: '0',
-    LC_ALL: 'C',
-    LANG: 'C',
-  });
+test('read-only Git environment isolates controls and uses Git-compatible null paths', () => {
+  const descriptor = Object.getOwnPropertyDescriptor(os, 'devNull');
+  // Node's Windows device namespace is not a Git configuration-file path.
+  Object.defineProperty(os, 'devNull', { value: String.raw`\\.\nul` });
+  try {
+    assert.deepEqual(cleanReadOnlyGitEnvironment(), {
+      GIT_CONFIG_NOSYSTEM: '1',
+      GIT_CONFIG_GLOBAL: '/dev/null',
+      GIT_CONFIG_SYSTEM: '/dev/null',
+      GIT_CONFIG_COUNT: '0',
+      GIT_NO_REPLACE_OBJECTS: '1',
+      GIT_OPTIONAL_LOCKS: '0',
+      LC_ALL: 'C',
+      LANG: 'C',
+    });
+  } finally {
+    Object.defineProperty(os, 'devNull', descriptor);
+  }
 });
 
 test('private temp creation canonicalizes a symlinked system temp root', (t) => {

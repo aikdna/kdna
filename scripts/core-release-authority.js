@@ -388,8 +388,9 @@ function makePrivateTemp(prefix, root = canonicalTempRoot()) {
 function cleanReadOnlyGitEnvironment() {
   return {
     GIT_CONFIG_NOSYSTEM: '1',
-    GIT_CONFIG_GLOBAL: os.devNull,
-    GIT_CONFIG_SYSTEM: os.devNull,
+    // Git for Windows maps this path to nul in both access() and fopen().
+    GIT_CONFIG_GLOBAL: '/dev/null',
+    GIT_CONFIG_SYSTEM: '/dev/null',
     GIT_CONFIG_COUNT: '0',
     GIT_NO_REPLACE_OBJECTS: '1',
     GIT_OPTIONAL_LOCKS: '0',
