@@ -341,6 +341,34 @@ test('private temp creation canonicalizes a symlinked system temp root', (t) => 
   assert.equal(fs.realpathSync(child), child);
 });
 
+test('private temp root rejects dot-prefixed repository children but accepts external roots', (t) => {
+  const fixture = makePrivateTemp('kdna-core-temp-boundary-');
+  t.after(() => fs.rmSync(fixture, { recursive: true, force: true }));
+  const repository = path.join(fixture, 'repository');
+  const scripts = path.join(repository, 'scripts');
+  fs.mkdirSync(scripts, { recursive: true });
+  for (const filename of ['core-release-authority.js', 'ecosystem-gate-stages.js']) {
+    fs.copyFileSync(path.join(REPO_ROOT, 'scripts', filename), path.join(scripts, filename));
+  }
+  const isolated = require(path.join(scripts, 'core-release-authority.js'));
+  const internal = path.join(repository, '..name');
+  fs.mkdirSync(internal, { mode: 0o700 });
+  assert.throws(() => isolated.canonicalTempRoot(internal), /outside the repository/u);
+  assert.throws(
+    () => isolated.makePrivateTemp('kdna-must-not-create-', internal),
+    /outside the repository/u,
+  );
+  assert.deepEqual(fs.readdirSync(internal), []);
+  const sibling = path.join(fixture, 'sibling');
+  fs.mkdirSync(sibling, { mode: 0o700 });
+  for (const root of [fixture, sibling]) {
+    assert.equal(isolated.canonicalTempRoot(root), root);
+    const created = isolated.makePrivateTemp('kdna-external-child-', root);
+    assert.equal(path.dirname(created), root);
+    assert.equal(fs.statSync(created).mode & 0o777, 0o700);
+  }
+});
+
 test('private temp creation rejects a writable non-sticky root', (t) => {
   const root = makePrivateTemp('kdna-core-insecure-temp-root-');
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
