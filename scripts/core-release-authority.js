@@ -302,7 +302,8 @@ function canonicalTempRoot(candidate = os.tmpdir()) {
   );
   const relative = path.relative(fs.realpathSync(REPO_ROOT), resolved);
   assert(
-    relative !== '' && (relative.startsWith('..') || path.isAbsolute(relative)),
+    relative !== '' &&
+      (relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)),
     'system temp root must be outside the repository',
   );
   if (typeof process.geteuid === 'function') {
