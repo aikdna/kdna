@@ -1,5 +1,9 @@
 # 团队与组织试点
 
+> 本页命令固定于已发布的 Runtime CLI **0.36.1** 与 Studio CLI **0.11.0**。
+> 旧版资产、LoadPlan/Runtime Capsule 和 project/card API 仅适用于这组版本。
+> 当前源码请从 [Core/Read](./core-read-current-status.md) 和 [Studio](https://github.com/aikdna/kdna-studio-cli#readme) 进入；当前实现不接纳这些旧版输入，也不支持本页旧式加载与 project/card 流程；同名的 `inspect`、`validate` 使用不同的当前契约。
+
 组织是 KDNA 的一种使用场景，不是 KDNA 的定义。本指南用于验证：一份明确的判断资产能否跨模型保留，并改善一个边界清晰的决策情境。
 
 ## 先选择一个清晰判断
@@ -12,10 +16,10 @@
 
 使用公开 Studio 工具链创建范围明确的资产。Human Review 和 Evidence 是可选层；只有组织希望发布相应声明时才需要。
 
+先按[创作指南](./30-minute-authoring-guide.md)完成项目、判断卡片、明确确认与导出，得到 `./pilot.kdna`。空项目不能直接导出。然后用同组已发布版本验证：
+
 ```bash
-npm install -g @aikdna/kdna-studio-cli @aikdna/kdna-cli
-kdna-studio create ./pilot --name @example/pilot
-kdna-studio export ./pilot --out ./pilot.kdna
+npm install -g @aikdna/kdna-cli@0.36.1
 kdna validate ./pilot.kdna
 kdna plan-load ./pilot.kdna
 kdna load ./pilot.kdna --profile=compact --as=prompt

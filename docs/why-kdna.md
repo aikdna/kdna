@@ -59,7 +59,9 @@ does not silently invoke Cluster routing.
 ## Open Creation, Contracted Consumption
 
 Open protocol does not mean raw consumption. Authors use the KDNA toolchain to
-create and package assets. Compatible Agent runtimes follow:
+create and package assets. Current source consumers use public Core admission
+and Read under independently trusted Host providers. The published CLI 0.36.1
+loading line instead follows:
 
 ```text
 inspect → LoadPlan → authorization → load/project → Runtime Capsule → Agent
@@ -67,19 +69,25 @@ inspect → LoadPlan → authorization → load/project → Runtime Capsule → 
 
 Direct ZIP extraction, CBOR decoding, or raw payload parsing is a developer
 inspection path, not a compatible Agent consumption path. This distinction is
-what allows the same asset model to support public, licensed, and remote access.
+part of the published loading line's public, licensed and remote access contract.
+Those access modes do not enable encrypted admission in current Core/Read.
 
 ## What “Verifiable” Means
 
-KDNA can verify format, integrity, provenance, authorization state, and
-optional evidence claims. It does not verify that a judgment is true or that
+Each implementation verifies only its declared version contract. Current Core
+admission establishes technical validity of captured bytes; it does not
+authenticate provenance or grant permission. The published loading line also
+contains version-specific integrity, provenance and authorization checks. It does not verify that a judgment is true or that
 an author should be trusted. Consumers choose which assets and evidence fit
 their own context.
 
-## Try It
+## Try the published CLI 0.36.1 line
+
+For current source, use [Core/Read](./core-read-current-status.md). The walkthrough below keeps
+its older loading contract and matching assets.
 
 ```bash
-npm install -g @aikdna/kdna-cli
+npm install -g @aikdna/kdna-cli@0.36.1
 kdna demo judgment ./judgment
 kdna pack ./judgment ./judgment.kdna
 kdna validate ./judgment.kdna --runtime

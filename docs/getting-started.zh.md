@@ -1,15 +1,19 @@
 # KDNA 快速上手指南
 
+> 本页命令固定于已发布的 Runtime CLI **0.36.1** 与 Studio CLI **0.11.0**。
+> 旧版资产、LoadPlan/Runtime Capsule 和 project/card API 仅适用于这组版本。
+> 当前源码请从 [Core/Read](./core-read-current-status.md) 和 [Studio](https://github.com/aikdna/kdna-studio-cli#readme) 进入；当前实现不接纳这些旧版输入，也不支持本页旧式加载与 project/card 流程；同名的 `inspect`、`validate` 使用不同的当前契约。
+
 > [English](./getting-started.md)
 
-KDNA 有一条默认已验证路径：通过 Studio CLI 创建范围明确的 `.kdna` 资产，用运行时 CLI 校验，规划授权与就绪状态，再为 Agent 加载 Runtime Capsule。
+本页演示上述已发布版本的路径：通过 Studio CLI 创建范围明确的 `.kdna` 资产，用运行时 CLI 校验，规划授权与就绪状态，再为 Agent 加载 Runtime Capsule。
 
 ---
 
 ## 安装工具链
 
 ```bash
-npm install -g @aikdna/kdna-cli @aikdna/kdna-studio-cli
+npm install -g @aikdna/kdna-cli@0.36.1 @aikdna/kdna-studio-cli@0.11.0
 ```
 
 现在有两个命令可用：
@@ -100,13 +104,13 @@ kdna load ./minimal.kdna --profile=compact --as=prompt
 
 ## 高级工作流
 
-当前预发布基础路径刻意保持很小：创建或生成 packaged `.kdna`
+本页固定的已发布版本路径保持较小：创建或生成 packaged `.kdna`
 文件，校验，规划加载，然后加载。高级创作者命令、Agent 适配器命令和
 legacy 兼容命令统一记录在 [status.md](./status.md)。
 
 ---
 
-## 当前边界
+## 本页已发布版本的边界
 
 - KDNA Core 定义文件格式、校验、打包、解包和加载契约。
 - `kdna validate` 证明结构、schema、payload、checksum、load contract 是否成立。

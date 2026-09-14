@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import {
   auditRepository,
@@ -109,4 +112,22 @@ test('fails when a required guardrail disappears', () => {
 
 test('current repository passes the narrative boundary audit', () => {
   assert.deepEqual(auditRepository(), { violations: [], missingGuardrails: [] });
+});
+
+test('integration guidance keeps current scope, unverified Host delivery and historical contract boundaries', () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+  for (const boundary of [
+    'Current source adapters',
+    'do not establish native Host installation',
+    'not the command contract of the',
+  ]) {
+    const missing = findMissingGuardrails((relative) => {
+      const content = fs.readFileSync(path.join(root, relative), 'utf8');
+      return relative === 'docs/integrations.md' ? content.replace(boundary, '') : content;
+    });
+    assert.ok(
+      missing.some((item) => item.path === 'docs/integrations.md' && item.snippet === boundary),
+      boundary,
+    );
+  }
 });

@@ -1,7 +1,8 @@
 # Agent 适配器行为边界
 
-> 当前合同方向。仓库中的 `kdna-loader` 在实现和安装流程通过本边界复验前，仍是
-> Unassessed，不能作为发布权威。
+> 共同的选择、可见性与权限边界适用于各版本；下方 LoadPlan 顺序仅属于已发布 CLI 0.36.1。
+> 当前源码使用 Core admission 与公开 Read，参见 [Core/Read](./core-read-current-status.md)
+> 和 [Skills/MCP](https://github.com/aikdna/kdna-skills#readme)。源码测试不能证明原生 Host 交付或真实采用。
 
 ## 适配器不是权威
 
@@ -13,7 +14,7 @@ Agent 适配器只能加载：
 它不能扫描全局资产库、根据任务类别推导授权或从已安装资产中自主选择。发现不
 等于同意。
 
-## 必须顺序
+## 已发布 CLI 0.36.1 的顺序
 
 ```text
 明确选择或 Host 已批准附加

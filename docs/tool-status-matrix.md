@@ -1,6 +1,7 @@
 # KDNA Tool Status Matrix
 
-> Last updated: 2026-09-13. Matches `@aikdna/kdna-cli@0.36.1`.
+> Source descriptions reviewed: 2026-09-14. The published command inventory
+> remains the 2026-09-13 observation of `@aikdna/kdna-cli@0.36.1`.
 > `Released` means the command is present in the published package; it is not a
 > claim that the overall pre-release protocol/toolchain has reached GA.
 > The unreleased corrective source candidate withdraws asset-level
@@ -13,6 +14,37 @@
 > below exits 2 with `command is not in the approved allowlist`. Read that
 > message as "this command is not in *this* published version", not as a
 > statement that the capability never existed.
+
+## Current Core/Read source (`@aikdna/kdna-cli@0.38.0-rc.component-semantics.1`)
+
+The [CLI source candidate](https://github.com/aikdna/kdna-cli#readme) is **not an
+npm release**. It delegates admission and disclosure to its exact bound public
+Core and Read graph. These commands are independent of the published loading
+line below:
+
+| Command | Purpose |
+|---|---|
+| `kdna inspect <asset.kdna>` | Technical metadata and digests, no disclosure content |
+| `kdna validate <asset.kdna>` | Admission status and public diagnostics |
+| `kdna read <asset.kdna> --mode catalog\|whole_asset\|exact_selection --budget <bytes> [--allow-read]` | Authorized public Read disclosure |
+| `kdna read <asset.kdna> --session [--allow-read]` | One public ReadRequest JSON object per input line |
+
+`plan` and `load` return explicit unavailable results. Retired authoring,
+packing, conversion and execution commands are not supported. Read defaults to
+denial; explicit local read permission is not action authorization. Do not mix
+this command set, assets or dependency graph with the published walkthrough.
+
+## Current Studio source (`@aikdna/kdna-studio-cli@0.13.0-rc.components.1`)
+
+The [Studio CLI source](https://github.com/aikdna/kdna-studio-cli#readme) owns
+`session`, `verify --bundle` and `read --bundle`. It consumes the exact current
+Studio/Core/Read graph. Live selection/adoption, saved-byte verification and
+static reopening are distinct results; a test callback or serialized evidence
+does not establish human adoption or restore live authority. The published
+project/card commands below remain historical APIs with their own versions.
+No registry publication or native Host support is implied by this source entry.
+
+## Published command inventory
 
 ## Runtime CLI (`@aikdna/kdna-cli@0.36.1`)
 
@@ -43,23 +75,6 @@ The local-store and signing commands above are historical published facts, not
 the canonical product model. New use starts from an explicit `.kdna` file or an
 exact user-approved Host attachment. Installing a version, marking an active
 version, or finding a Skill does not authorize or apply judgment.
-
-## Unreleased Core/Read Candidate (`@aikdna/kdna-cli@0.38.0-rc.component-semantics.1`)
-
-The source candidate in this repository is **not published**. Its command set is
-smaller than the published line and delegates admission and disclosure to the
-pinned public Core and Read packages:
-
-| Command | Purpose |
-|---|---|
-| `kdna inspect <asset.kdna>` | Technical metadata and digests, no disclosure content |
-| `kdna validate <asset.kdna>` | Admission status and public diagnostics |
-| `kdna read <asset.kdna> --mode catalog\|whole_asset\|exact_selection --budget <bytes> [--allow-read]` | Authorized public Read disclosure |
-| `kdna read <asset.kdna> --session [--allow-read]` | One public ReadRequest JSON object per input line |
-
-`plan` and `load` return an explicit unavailable result until public Plan
-admission and execution exist. Do not mix the two command sets in one
-walkthrough.
 
 ## Studio (`@aikdna/kdna-studio-cli@0.11.0`)
 
@@ -94,7 +109,7 @@ same template. The checked-in `templates/minimal-domain` view exports through
 
 | Package | Status |
 |---|---|
-| `@aikdna/kdna-core@0.20.0` | Released pre-release runtime SDK |
+| `@aikdna/kdna-core@0.22.0` | Published pre-release runtime SDK; 2026-09-13 registry observation in the version matrix |
 | `@aikdna/kdna-eval@0.3.2` | Released Experimental evaluation toolkit; issuer-scoped evidence is not KDNA Core authority |
 | `@aikdna/kdna@0.14.0` | Released, maintained Legacy compatibility bridge for CLI 0.36.1; new integrations use CLI and Core directly |
 
@@ -107,9 +122,9 @@ private development status is not part of the open protocol's tool matrix.
 
 | Package | Public release | Status |
 |---|---|---|
-| `kdna-core-swift` | `0.20.0` | Pre-release runtime; conformance is pinned to the current Core fixture commit. |
-| `kdna-studio-swift` | `0.4.0` | Pre-release authoring kernel; the published release predates current Swift Core integration and awaits recertification. |
-| `kdna-app-shared` | `0.5.0` | Pre-release application integration; the published release predates Swift Core 0.20.0 and awaits recertification. |
+| `kdna-core-swift` | `0.20.0` | Historical release inputs stay separate. Current Core/Read source has macOS verification and generic iOS compilation, not device runtime or native Host acceptance. |
+| `kdna-studio-swift` | `0.4.0` | Historical release predates current Core/Read. Current authoring source has its own bound inputs and verification entry in the owning README; this does not re-certify the old release. |
+| `kdna-app-shared` | `0.5.0` | Historical release predates current Read presentation. Current source has macOS builds/tests/consumers and generic iOS compilation; that does not re-certify the old release or prove device runtime. |
 
 ## Editor and Legacy Coordinates
 

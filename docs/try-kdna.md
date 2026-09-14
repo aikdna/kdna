@@ -1,14 +1,18 @@
 # Try KDNA in 5 Minutes
 
+> Commands on this page use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
+> Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
+> For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
+
 Two paths. Start with the verified lifecycle, then author your own judgment.
 
-## Path A: Verify the current lifecycle (recommended first)
+## Path A: Verify the published CLI 0.36.1 lifecycle
 
 Generate an asset with the installed CLI, validate it, and load a
 toolchain-produced Runtime Capsule.
 
 ```bash
-npm install -g @aikdna/kdna-cli
+npm install -g @aikdna/kdna-cli@0.36.1
 
 kdna demo judgment ./judgment
 kdna pack ./judgment ./judgment.kdna
@@ -30,7 +34,7 @@ it was attached, with controls to disable, switch, or roll back it.
 Understand the format by building the smallest valid `.kdna` file.
 
 ```bash
-npm install -g @aikdna/kdna-cli
+npm install -g @aikdna/kdna-cli@0.36.1
 kdna demo minimal ./minimal
 kdna pack   ./minimal ./minimal.kdna
 kdna validate ./minimal.kdna
@@ -44,7 +48,7 @@ This proves the format works end-to-end. The output will be minimal — one plac
 
 - **Load into your AI agent**: [15-minute agent guide](./15-minute-agent-guide.md)
 - **Create your own domain**: [30-minute authoring guide](./30-minute-authoring-guide.md)
-- **Current AIKDNA reference display**: [kdna-assets](https://github.com/aikdna/kdna-assets) (current-format technical references, not content endorsements or the default onboarding path)
+- **Current AIKDNA reference display**: [kdna-assets](https://github.com/aikdna/kdna-assets) (versioned historical references and a separate current-contract candidate; no content endorsement)
 - **Current status**: [docs/status.md](./status.md)
 
 ## What KDNA Is

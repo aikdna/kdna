@@ -30,8 +30,8 @@ time it was written; it is not silently reinterpreted here.
 
 ## What the candidates implement
 
-The package READMEs are the normative description of each candidate surface and
-are not duplicated on this page. In short, as of the status date:
+The package READMEs describe each candidate's implemented surface; the versioned
+specifications remain the normative authority. As of the status date:
 
 - Core `0.24.0-rc.component-semantics.2` exposes root `admitBytes`, `/node`
   `admitNode`, `/browser` `admitBrowser`, `/components`
@@ -43,6 +43,10 @@ are not duplicated on this page. In short, as of the status date:
   types, and produces exactly four output channels.
 - Both packages fail closed on unsupported critical semantics and expose a
   named rejection with sanitized diagnostics.
+- Encryption, signature and checksums-document admission are unavailable.
+  Published-line signing or encryption examples do not establish support in
+  these candidates. Runtime Capsule/Plan admission and execution are separate,
+  unavailable surfaces.
 
 The exact entry-point tables, limits and boundary statements live in
 [`packages/kdna-core/README.md`](../packages/kdna-core/README.md) and
@@ -87,8 +91,12 @@ These are not implied by the paragraphs above and each needs its own evidence:
 - External verification services, durable Host policy and identity.
 - Cross-language parity (Swift, Python and other native implementations).
 - Registry publication, release notes and download artifacts.
-- Any real asset acceptance: the current reference assets are rejected by this
-  graph, so a working sample set must be created and accepted on its own bytes.
+- Asset and adoption claims: the two preserved historical reference assets are
+  rejected by this graph. The assets repository separately records a current
+  `@aikdna/verification-scope@0.1.5` candidate; its technical observations and
+  Agent-authored/adopted status do not establish human review or content quality.
+  See the [asset README](https://github.com/aikdna/kdna-assets#readme) for its
+  exact bytes, licensing and unpublished state.
 
 ## Where this material lives
 
