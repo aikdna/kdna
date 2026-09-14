@@ -6,6 +6,11 @@
 
 ## Lifecycle Map
 
+The version and capability descriptions below are the recorded 2026-07-21
+maintenance snapshot. Current source versions and verified scope are tracked
+in [Component reception status](./component-reception-status.md) and each
+repository README; historical release coordinates do not describe current source.
+
 | Surface | Lifecycle | Maintenance claim |
 |---|---|---|
 | Protocol, schemas, conformance fixtures | Pre-release | Format and loader contract changes require tests and public evidence. |
@@ -16,12 +21,12 @@
 | Public `.kdna` reference assets | Experimental | Current technical references require metadata, SHA sidecars, public URLs, and public-surface checks; they are not content endorsements or the default onboarding path. |
 | Agent loader skill and MCP server | Unassessed / Experimental | Loader mission retained; explicit-file/user-approved attachment, visibility, and control require independent recertification. |
 | Web packages and scaffolder | Pre-release / Experimental | Published integration surfaces for upload, inspect, plan-load, load, and activation proxying. |
-| Swift runtime, Studio Swift, and app-shared package | Pre-release | Swift Core has a current 0.20.0 conformance release; Studio Swift 0.4.0 and App Shared 0.5.0 remain published but require current-runtime recertification before stronger claims. |
+| Swift runtime, Studio Swift, and app-shared package | Pre-release | The recorded Swift Core 0.20.0 conformance release; Studio Swift 0.4.0 and App Shared 0.5.0 remain published but require current-runtime recertification before stronger claims. |
 | `kdna-vscode` | Unassessed integration | The editor mission remains part of the ecosystem; current source maturity and exact compatibility await owner-reviewed recertification. |
 | `@aikdna/agent` | Legacy / Deprecated | Frozen source only; new integrations use explicit Core/CLI file loading while Agent adapters are recertified. |
 | `@aikdna/kdna-artifact-engine` and `@aikdna/kdna-fidelity-core` | Legacy / Deprecated | Historical draft implementations; not part of the current Runtime Capsule toolchain. |
 
-The machine-readable lifecycle and release-status inventory is
+The machine-readable published-line lifecycle and release-status inventory is
 [`ecosystem-manifest.json`](../ecosystem-manifest.json). Its schema distinguishes
 active packages, the compatibility bridge, deprecated coordinates, source-only
 applications, and exact release artifacts.

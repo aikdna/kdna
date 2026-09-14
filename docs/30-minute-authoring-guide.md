@@ -1,16 +1,20 @@
 # Create your first KDNA judgment asset in 30 minutes
 
+> Commands on this page use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
+> Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
+> For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
+
 ## What this guide covers
 
 This guide shows how to use the official KDNA Studio toolchain to create
 your own `.kdna` judgment asset — starting from scratch and ending with a
 validated, packable asset.
 
-## Current status
+## Published-line status
 
 | Layer | Status | What it means |
 |---|---|---|
-| KDNA Asset Container | pre-release | `.kdna` container, `mimetype`, `kdna.json`, `payload.kdnab`, and `checksums.json` are the current local asset path; exact-version contracts remain authoritative. |
+| KDNA Asset Container | pre-release | `.kdna` container, `mimetype`, `kdna.json`, `payload.kdnab`, and `checksums.json` belong to this published local asset path; exact-version contracts remain authoritative. |
 | Runtime CLI | pre-release | `kdna inspect`, `kdna validate`, `kdna plan-load`, `kdna load`, `kdna pack`, and `kdna unpack` work for local assets. |
 | Studio authoring CLI | pre-release | `kdna-studio` is the official authoring path, but commands and UX may still change between releases. |
 | Agent / MCP loading | preview | Loader and MCP paths use the same LoadPlan-first contract, but agent-specific integration quality varies by runtime. |
@@ -19,7 +23,7 @@ validated, packable asset.
 ## Step 1: Install the Studio CLI
 
 ```bash
-npm install -g @aikdna/kdna-studio-cli
+npm install -g @aikdna/kdna-studio-cli@0.11.0 @aikdna/kdna-cli@0.36.1
 kdna-studio --help
 ```
 
@@ -73,7 +77,7 @@ kdna-studio card approve my_expertise --all \
   --statement "I confirm this judgment for export."
 ```
 
-The current Studio CLI export workflow requires approved cards so the exported
+The Studio CLI 0.11.0 export workflow requires approved cards so the exported
 file carries explicit release evidence. That approval is Studio provenance; it
 does not make Human Lock a KDNA Core format-validity requirement.
 

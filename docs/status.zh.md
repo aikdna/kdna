@@ -6,15 +6,21 @@
 ## 产品定位
 
 KDNA 是开放的判断资产协议。任何人、Agent 或工具都可以创建 `.kdna` 文件。
-KDNA Core 校验结构、完整性、来源声明和授权事实；它不判断内容是否正确、专业、
-有用或值得采用。
+Core 入场建立捕获字节的技术有效性，不认证作者、不判断内容质量，不代表采用，
+也不授予读取或行动权限。
 
 当前默认消费路径从一份明确选择的文件或一项精确、经用户批准的 Host 附加项开始：
 
 ```text
-inspect → validate → LoadPlan → authorization → load/project
-→ Runtime Capsule → Agent Host
+明确字节 → Core 入场 → 私有 snapshot / Canonical IR
+→ 独立可信 control / Host provider 下的公开 Read
+→ read_envelope | admission_rejection | no_body_control | transport_failure
 ```
+
+这是当前源码实现的边界，见 [Core/Read 指引](./core-read-current-status.md) 与
+各包 README。加密、签名、checksums 文档入场、Runtime Capsule / Plan 入场与执行
+在当前实现中不可用。已发布 CLI 0.36.1 的 LoadPlan / Runtime Capsule 线保留自己的
+合同，不能把旧资产、接口或测试结果直接视为当前兼容。
 
 协议不要求全局资产库、安装步骤、自动发现或 Agent Skill。保存或发现文件不等于
 授权；授权不等于每个任务都适用；加载成功不等于 Agent 已遵循，也不保证结果更好。
@@ -25,14 +31,26 @@ inspect → validate → LoadPlan → authorization → load/project
 
 | 层级 | 状态 | 含义 |
 |---|---|---|
-| `.kdna` 容器与 JS Core | Pre-release / 参考实现 | 当前格式、校验与加载合同，精确版本仍需按发布证据判断 |
-| Runtime CLI | Pre-release | `inspect`、`validate`、`plan-load`、`load`、`pack`、`unpack` |
-| Studio 创作工具链 | Pre-release | 项目、判断卡、编译和 `.kdna` 导出 |
-| 加密、授权、签名与撤销 | Pre-release / Candidate | 技术原语不等于内容认证或托管商业服务 |
-| Remote / Activation 服务器 | Experimental | 可自托管参考实现，不代表 AIKDNA 提供线上服务 |
+| `.kdna` 容器与 JS Core | Pre-release / 参考实现 | 当前源码提供入场、snapshot 与 Read；版本化格式/加载规范不等于全部能力已实现 |
+| Runtime CLI | Pre-release | 当前源码为 `inspect`、`validate`、`read`；CLI 0.36.1 的加载/打包命令属于已发布旧线 |
+| Studio 创作工具链 | Pre-release | 当前 typed session、保存 bundle 复验与明确 Read；project/card 属于已发布 Studio CLI 0.11.0 |
+| 加密、授权、签名与撤销 | 按精确版本判断 | 当前 Core 不支持加密/签名容器入场；已发布 Core 0.22.0 的能力不继承到当前候选 |
+| Remote / Activation 参考实现 | Experimental | Remote 为 HTTP Read handler；Activation 为同进程 store observer，无独立 server/CLI，不代表托管服务 |
 | 多资产、路由、评测表面 | Experimental | 待重新认证的高级实现，不属于默认路径 |
 | Swift、Web、React、编辑器和 Agent 适配 | 各自独立 | 必须检查精确版本、依赖坐标和证据 |
 | `kdna-loader` Skill | Unassessed | 使命保留；旧的广泛发现与静默加载模型不是当前 Host 合同 |
+
+## 从哪里开始
+
+当前源码使用 [Core/Read 指引](./core-read-current-status.md)、
+[CLI README](https://github.com/aikdna/kdna-cli#readme) 和
+[Studio CLI README](https://github.com/aikdna/kdna-studio-cli#readme) 的精确依赖与入口。
+源码可用不代表 npm 发布、真人采用或原生 Host 验收。
+
+需要重现旧发布线时，使用 [Start Here](./start-here.md#5-minute-quick-start) 中固定
+CLI 0.36.1 的示例；创作使用 [完整教程](./30-minute-authoring-guide.md) 中固定的
+Studio CLI 0.11.0。必须添加完整判断卡并确认判断后才能导出，空项目不能导出。
+不混用当前候选；完整坐标与能力范围见 [版本矩阵](./version-and-capability-matrix.md)。
 
 ## 用户与 Host 边界
 

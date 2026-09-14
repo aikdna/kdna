@@ -97,7 +97,11 @@ const REQUIRED_GUARDRAILS = new Map([
   ],
   [
     'docs/integrations.md',
-    ['Current supported technical path', '**Unassessed**', 'not the current product contract'],
+    [
+      'Current source adapters',
+      'do not establish native Host installation',
+      'not the command contract of the',
+    ],
   ],
   [
     'docs/local-kdna-home-spec.md',

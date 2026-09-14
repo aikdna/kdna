@@ -1,5 +1,9 @@
 # Team and Organization Pilot
 
+> Commands on this page use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
+> Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
+> For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
+
 Organizations are one KDNA use case, not the definition of KDNA. This guide
 checks whether an explicit judgment asset remains identifiable, authorized,
 bounded, and inspectable when it is used across named Hosts and model changes.
@@ -18,10 +22,10 @@ Use the public Studio toolchain to create a scoped asset. Human review and
 Evidence are optional unless the organization wants to make a corresponding
 claim.
 
+Complete the [authoring guide](./30-minute-authoring-guide.md), including judgment material, explicit confirmation and export, to produce `./pilot.kdna`. An empty project cannot be exported. Then verify with the matching published runtime:
+
 ```bash
-npm install -g @aikdna/kdna-studio-cli @aikdna/kdna-cli
-kdna-studio create ./pilot --name @example/pilot
-kdna-studio export ./pilot --out ./pilot.kdna
+npm install -g @aikdna/kdna-cli@0.36.1
 kdna validate ./pilot.kdna
 kdna plan-load ./pilot.kdna
 kdna load ./pilot.kdna --profile=compact --as=prompt

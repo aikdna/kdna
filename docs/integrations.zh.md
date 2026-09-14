@@ -1,30 +1,32 @@
 # KDNA Agent 集成
 
-## 当前支持的技术路径
+> 本页命令固定于已发布的 Runtime CLI **0.36.1** 与 Studio CLI **0.11.0**。
+> 旧版资产、LoadPlan/Runtime Capsule 和 project/card API 仅适用于这组版本。
+> 当前源码请从 [Core/Read](./core-read-current-status.md) 和 [Studio](https://github.com/aikdna/kdna-studio-cli#readme) 进入；当前实现不接纳这些旧版输入，也不支持本页旧式加载与 project/card 流程；同名的 `inspect`、`validate` 使用不同的当前契约。
 
-所有兼容 Host 都可以从同一份明确的 `.kdna` 文件开始：
+## 当前源码适配器
+
+当前 [Skills/MCP 源码](https://github.com/aikdna/kdna-skills#readme)通过精确绑定的
+Core/Read/CLI 依赖图提供显式本地目录、选择和公开 Read，没有旧式加载回退。
+本地源码和打包 stdio 检查不证明原生 Host 安装、交付或语义采用；这些需要各自的验证。
+
+从用户明确选择的文件或 Host 批准的精确附加关系开始，显示资产身份与作用域，
+保留用户控制。文件存在或适配器安装不能产生使用权限。
+
+## 已发布 CLI 0.36.1 的手动交接
+
+下面是单独的旧版流程，用于生成 Runtime Capsule：
 
 ```bash
-npm install -g @aikdna/kdna-cli
+npm install -g @aikdna/kdna-cli@0.36.1
 kdna validate ./asset.kdna --runtime
 kdna plan-load ./asset.kdna --json
 kdna load ./asset.kdna --profile=compact --as=json
 ```
 
-Host 得到 Runtime Capsule。这只证明技术交付，不证明模型已经采用其中判断，也不
-证明结果更好。
+命令成功只证明 Capsule 已输出到 stdout；Host 接收与模型采用需要另外观察。
+`inspect → plan-load → load` 仅属于这组已发布版本，不是当前 Skills/MCP 的命令合同。
 
-## Agent 适配器
-
-`kdna-skills` 为 Codex、Claude Code、OpenCode、Cursor 和兼容 Host 保存 Skill 与
-MCP 适配使命，但当前 loader Skill 的发布成熟度是 **Unassessed**。过去“全局自动
-发现并静默加载”的模型不是当前产品合同。
-
-合格适配器必须从用户明确选择的文件，或 Host 批准的精确工作区/应用/会话附加
-关系开始；必须调用 `inspect → plan-load → load`，通过 Host 状态显示当前资产身份
-和作用域，也不能从文件存在推导使用权。
-
-在该流程重新验收前，请使用上面的显式 CLI/Core 路径，或在 Host 中直接集成同一
-合同。`kdna setup` 成功不能证明 Agent 集成正确。
-
-目标边界见 [Agent 适配器行为](./loader-behavior.zh.md)。
+`kdna setup`、Skill 文件存在、全局发现或静默加载都不能证明 Host 集成正确。
+共同的选择和权限边界，以及带版本的旧版顺序，见
+[Agent 适配器行为](./loader-behavior.zh.md)。

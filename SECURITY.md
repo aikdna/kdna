@@ -40,9 +40,27 @@ Install official KDNA software only from these coordinates:
 If you find a package that impersonates these names or coordinates, please
 report it through the private channels above.
 
-## Asset Signatures
+## Current source security boundary
 
-`.kdna` assets support the optional `signature.kdsig` bundle
+The current [Core](./packages/kdna-core/README.md) and
+[Read](./packages/kdna-read/README.md) candidates admit captured bytes into a
+private snapshot and disclose content only through public Read with independent
+trusted control and Host providers. Technical admission does not authenticate
+an author, establish content quality or grant action permission.
+
+Encryption, signature and checksums-document admission are unavailable in this
+implementation; unsupported metadata fails closed. Runtime Capsule/Plan
+admission and execution are also unavailable. Those limits do not withdraw the
+versioned specifications or change the supported-release policy above.
+
+## Published Core 0.22.0 asset signatures
+
+The following properties belong to the published `@aikdna/kdna-core@0.22.0`
+implementation and its matching assets. Current Core/Read source does not export
+these signing APIs or admit signed containers. Historical conformance vectors
+remain evidence for their own pinned line.
+
+In the published Core 0.22.0 line, `.kdna` assets support the optional `signature.kdsig` bundle
 (`kdsig.ed25519`, RFC-0021 M1). Security properties:
 
 - Verification is offline and fail-closed: a malformed, unsupported, or

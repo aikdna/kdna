@@ -1,8 +1,10 @@
 # Agent Adapter Behavior
 
-> Current contract direction. The checked-in `kdna-loader` adapter remains
-> unassessed for release until its implementation and installation flow are
-> verified against this boundary.
+> Selection, visibility and authority boundaries apply across versions. The
+> LoadPlan sequence below belongs to published CLI 0.36.1. Current source uses
+> Core admission and public Read: see [Core/Read](./core-read-current-status.md)
+> and [Skills/MCP](https://github.com/aikdna/kdna-skills#readme). Source tests
+> do not establish native Host delivery or real adoption.
 
 ## The adapter is not the authority
 
@@ -15,7 +17,7 @@ An Agent adapter may load only:
 It must not scan a global asset store, infer authorization from a task category,
 or select an arbitrary installed asset. Discovery is not consent.
 
-## Required sequence
+## Published CLI 0.36.1 sequence
 
 ```text
 explicit selection or Host-approved attachment

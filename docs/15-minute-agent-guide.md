@@ -1,6 +1,10 @@
 # Load a KDNA file into an AI Host
 
-This guide demonstrates the current portable path: validate one explicitly
+> Commands on this page use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
+> Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
+> For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
+
+This guide demonstrates the published CLI 0.36.1 path: validate one explicitly
 selected `.kdna` file, inspect the load decision, and hand the resulting
 Runtime Capsule to a Host. It does not require a global asset library or an
 Agent-installed Skill.
@@ -8,7 +12,7 @@ Agent-installed Skill.
 ## Prerequisites
 
 - Node.js 22 or later
-- `npm install -g @aikdna/kdna-cli`
+- `npm install -g @aikdna/kdna-cli@0.36.1`
 - a `.kdna` file that the user selected for this task, session, app, or project
 
 ## Validate and plan
@@ -39,22 +43,26 @@ switch, or roll back the attachment.
 
 ## Use in Codex, Claude Code, or OpenCode
 
-The protocol path is the same in every Host:
+This published-line handoff uses the following steps in each Host. Actual
+Host behavior must be verified independently:
 
 1. the user selects a `.kdna` file, or approves an exact Host attachment;
 2. the Host calls `plan-load` and then `load`;
 3. the Host supplies only the toolchain-produced projection to the model;
 4. the Host shows which asset is active and keeps user controls available.
 
-The `kdna-loader` repository retains an Agent-adapter mission, but its current
-Skill is **Unassessed**. Global discovery, broad task triggers, autonomous asset
-selection, and hidden use are not the recommended integration path and are not
-proof of protocol conformance.
+The current `kdna-loader` adapter lives in
+[`kdna-skills`](https://github.com/aikdna/kdna-skills#readme) and uses its exact
+public Core/Read source graph. Native Host delivery and semantic adoption remain
+unassessed; the older Capsule sequence above is not a fallback in that adapter.
+Global discovery, broad task triggers, arbitrary asset selection and hidden use
+do not establish permission or protocol conformance.
 
 ## What this proves
 
-This path can prove that a selected file was validated, authorized, projected,
-and delivered. It does not prove that its judgments are true, that the model
+With corresponding Host evidence, this path can demonstrate validation,
+authorization, projection and delivery for the selected file. CLI output alone
+proves only that the projection was generated. It does not prove that its judgments are true, that the model
 followed them, or that the result is better.
 
 ## Package-byte note

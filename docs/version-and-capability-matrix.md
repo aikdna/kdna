@@ -1,9 +1,10 @@
 # KDNA Version and Capability Matrix
 
-> Last verified: 2026-09-13.
+> Source descriptions reviewed: 2026-09-14. Registry observations below remain
+> dated 2026-09-13; this source review is not a new registry check.
 >
 > This page keeps two coordinate families apart: the **currently published**
-> npm line and the **unpublished local release candidates**. Package versions,
+> npm line and the **current source candidates that have no registry release**. Package versions,
 > protocol versions and API coordinates answer different questions, and sharing
 > a number does not equate their meanings. Nothing here merges them into one
 > marketing version, and a row is only as strong as the observation recorded
@@ -24,8 +25,8 @@ Consequences a reader should apply before installing anything:
   number does not describe a published artifact.
 - "One component accepts a new tuple" is not evidence that another component,
   language or Host does.
-- A local source tree is not registry evidence; no `latest` or `published`
-  claim follows from a working copy.
+- Public Git source and a local source tree are not registry evidence; no
+  registry `latest` or package-release claim follows from either.
 
 ## How a change propagates
 
@@ -78,16 +79,18 @@ These coordinates are **not published at all** (registry returns 404):
 A reader must not assume a package exists because a repository, a README or a
 working copy exists.
 
-## 2. Unpublished local release candidates
+## 2. Current source candidates
 
-Values below are the `version` fields of the source working tree. Every row is
-**unpublished**: no registry tag, no tarball and no download URL is claimed.
+Values below identify source candidates, not registry releases. Public Git
+source or checked-in dependency archives can exist without a registry tag.
+Use each owning README and its exact bound inputs; no row claims an npm release,
+installation acceptance, human adoption or native Host coverage.
 
-| Package | Local candidate version | Publication state |
+| Package | Source candidate version | Publication state |
 |---|---:|---|
 | `@aikdna/kdna-core` | `0.24.0-rc.component-semantics.2` | Unpublished candidate |
 | `@aikdna/kdna-read` | `0.3.0-rc.component-semantics.2` | Unpublished candidate |
-| `@aikdna/kdna-cli` | `0.38.0-rc.component-semantics.1` | Unpublished candidate |
+| `@aikdna/kdna-cli` | `0.38.0-rc.component-semantics.1` | Unpublished candidate (`private`) |
 | `@aikdna/kdna-studio-core` | `4.0.0-rc.components.1` | Unpublished candidate (`private`) |
 | `@aikdna/kdna-studio-cli` | `0.13.0-rc.components.1` | Unpublished candidate |
 | `@aikdna/kdna-web-server` | `0.5.0-rc.component-semantics.1` | Unpublished candidate |
@@ -99,8 +102,10 @@ Values below are the `version` fields of the source working tree. Every row is
 | `@aikdna/kdna-activation-server` | `0.4.0-rc.component-semantics.1` | Unpublished candidate |
 | `kdna-vscode` | `0.3.0` | Unpublished local candidate |
 
-Two candidates declare `private: true`, so publishing one requires a
-deliberate coordinate change in the same release, not a version bump alone.
+Rows marked `private` describe package metadata, not repository visibility.
+Those packages require a separately reviewed publication configuration; a
+version bump alone does not publish the candidate. Companion implementation
+entry points are indexed in [Component reception status](./component-reception-status.md).
 The component definition referenced across the candidate graph is
 `sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3`.
 
@@ -141,8 +146,10 @@ them; it is not current compatibility.
 This matrix therefore makes no "the new line reads the old assets" claim. The
 candidate implements no legacy decoder, no conversion and no dual read; a
 complete old or unrelated tuple yields an explicit unsupported-version
-rejection. A future sample set must be created and accepted as its own bytes
-rather than by rewriting the registered reference assets.
+rejection. The separately added `@aikdna/verification-scope@0.1.5` current-contract candidate
+has its own exact bytes and observations in the assets README. It is Agent-authored
+and Agent-adopted with no human review and no Release coordinate; this does not
+upgrade the two historical references or certify the candidate's content quality.
 
 Which assets the **published** line accepts is not restated here (UNKNOWN);
 verify it against the exact published artifact rather than against this page.
@@ -159,7 +166,7 @@ unverified, not failing, and not inherited from a neighboring component.
 | Web Host / Web Client / React | Node.js 22 or newer; React 18.3.1 for the React candidate (declared peer range `>=18 <20`) | Web Host, Web Client and React READMEs |
 | Demo viewer | Next 16.3.5, React 19.2.7, Playwright WebKit 1.61.1, loopback only | `aikdna/kdna-demo-web-viewer` README |
 | VS Code extension | VS Code 1.130.0 or newer, trusted workspace, unpublished local candidate | `aikdna/kdna-vscode` README |
-| Swift Core/Read | installed macOS arm64 toolchain only | `aikdna/kdna-core-swift` README |
+| Swift Core/Read | macOS arm64 native verification and generic iOS device compilation; iOS runtime/native Host are not established | `aikdna/kdna-core-swift` README |
 
 Node execution of a browser entry is not browser-engine evidence, and a
 successful local build is not a platform-coverage claim.
@@ -168,17 +175,18 @@ successful local build is not a platform-coverage claim.
 
 | Not supported in the candidate line | Alternative path |
 |---|---|
-| Installing any candidate from the registry | Build from the exact local source candidate; every candidate is unpublished |
+| Installing a current candidate from the registry | Use its exact public source and bound inputs; source availability does not establish registry publication |
 | Reading an old or unrelated version tuple | None. Rejection is terminal; re-create the asset under the current design |
 | ZIP64, data descriptors, unsupported codecs, CBOR tags/indefinite forms, bytestring payloads | Fail closed by design; repackage the input in the supported bounded ZIP32/CBOR subset |
-| Encryption, signature and checksums-document admission | Authorized separately; no metadata claim is treated as cryptographic verification |
+| Encryption, signature and checksums-document admission | Unavailable in current Core/Read; no permission flag or metadata claim enables these capabilities |
 | Runtime Capsule / Consumption Plan admission, durable Host policy, external verification services | Separately owned responsibilities with their own evidence |
 | Cross-language parity (Swift, Python, other native shells) | Per-language candidates report their own verified environments |
 | Transparent upgrade of the published line | None is promised. Maintaining the Active line and publishing a separate new implementation are distinct responsibilities |
 
-For the currently installable path, use the published line: the Active design
-in `SPEC-INDEX.md` with the published CLI coordinate, as described in
-[`docs/status.md`](./status.md).
+For the recorded npm workflow, use the exact published CLI 0.36.1 coordinate
+and its matching assets, as described in [`docs/status.md`](./status.md).
+For current source, start with [Core/Read](./core-read-current-status.md) and the
+owning companion README. The versioned normative status above remains unchanged.
 
 ## 7. Per-component reception status
 

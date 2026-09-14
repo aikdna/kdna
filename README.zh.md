@@ -1,4 +1,4 @@
-> **预发布生态——正在核对精确合同与公开叙事**
+> **预发布生态——按精确版本区分源码与发布合同**
 >
 > KDNA 是判断资产格式与生态。本仓库负责协议和 Core Runtime；其余公开仓库负责
 > 创建、消费、授权、Apple、Web、Agent、编辑器和开发者集成。仓库使命、成熟度、
@@ -16,18 +16,9 @@ KDNA 是开放的判断资产格式与运行协议。个人、团队、组织、
 普通文档中。KDNA 只在判断需要独立文件与共享加载合同时增加价值，不宣称垄断
 判断，也不承诺让模型更聪明或让输出自动更好。
 
-KDNA Core 校验结构、完整性、来源声明和授权事实；它不决定资产内容是否真实、
-正确、专业、优质或值得采用。兼容 Agent 消费遵循：
-
-```text
-明确文件或已授权附加
-→ inspect
-→ LoadPlan
-→ authorization / integrity / compatibility
-→ load/project
-→ Runtime Capsule
-→ Host / Agent
-```
+Core 入场建立捕获字节的技术有效性，不认证作者、不判断内容质量，不代表采用，
+也不授予读取或行动权限。当前源码通过 Core 私有 snapshot 和公开 Read，在独立可信
+Host 边界内披露内容。已发布 CLI 0.36.1 保留其独立的 LoadPlan / Runtime Capsule 合同。
 
 直接解压或解析原始 payload 不是兼容的 Agent 消费路径。
 
@@ -39,12 +30,26 @@ KDNA Core 校验结构、完整性、来源声明和授权事实；它不决定�
 >
 > 当前状态与路线图 → [Status](./docs/status.zh.md) · [Public Roadmap](./docs/public-roadmap.md)
 
-## 五分钟技术路径
+## 当前源码：Core 入场与 Read
 
-当前推荐路径直接使用一份 `.kdna` 文件，不要求先建立全局资产库：
+先阅读 [Core/Read 源码指引](./docs/core-read-current-status.md)、
+[Core](./packages/kdna-core/README.md) 和 [Read](./packages/kdna-read/README.md)
+的精确输入与 API。Core `0.24.0-rc.component-semantics.2` 对不可变字节入场，生成
+Canonical IR 并签发私有 snapshot。Read `0.3.0-rc.component-semantics.2` 明确区分
+`read_envelope`、`admission_rejection`、`no_body_control` 和 `transport_failure`。
+披露需要独立可信的 control / Host provider；读取结果不授予行动权限。
+
+这些是源码候选，不是 npm 发布。当前 Core/Read 不支持加密、签名和 checksums 文档
+入场，也不支持 Runtime Capsule / Plan 入场及执行。规范或历史示例的存在不代表实现
+已经支持。[当前 CLI 源码](https://github.com/aikdna/kdna-cli#readme) 提供明确文件的
+`inspect`、`validate`、`read`，须使用其精确绑定的依赖图。
+
+## 已发布 CLI 0.36.1 的五分钟路径
+
+下面保留已发布线的独立示例，安装固定版本，不与当前 Core/Read 源码或资产混用：
 
 ```bash
-npm install -g @aikdna/kdna-cli
+npm install -g @aikdna/kdna-cli@0.36.1
 
 kdna demo judgment ./judgment
 kdna pack ./judgment ./judgment.kdna
@@ -60,21 +65,30 @@ kdna load ./judgment.kdna --profile=compact --as=json
 > `kdna`）。只安装 PyPI 的 `aikdna`——绝不要 `pip install kdna`。
 > 见 [SECURITY.md](./SECURITY.md)。
 
-这条路径证明容器能够被当前工具链验证、规划和投影，不证明模型已经采用资产，
-也不证明资产内容正确或结果更好。
+这条旧线示例的结果只描述 CLI 0.36.1 的验证、规划和投影，不证明当前 Core/Read
+接受相同资产，不证明模型已经采用资产，也不证明内容正确或结果更好。
 
 ## `.kdna` 是什么
 
 一份 `.kdna` 是单文件、可携带的判断资产。当前容器包含公开 manifest、结构化
-判断 payload、完整性摘要，以及按精确版本合同支持的可选加密、签名、来源和
-谱系信息。
+判断 payload、身份和谱系信息。加密、签名和 checksums 文档属于相应版本的格式
+合同；当前 Core 源码在入场时明确拒绝这些尚不可用的能力。格式规范不等于当前实现清单。
 
 创作项目、展开 JSON、Registry 页面、receipt 和评价报告都可以围绕资产工作，
 但不是 `.kdna` 分发对象本身。
 
-## 资产的签名与验签
+## 已发布 Core 0.22.0 的签名示例
 
-`.kdna` 资产可以携带可选的 `signature.kdsig` 签名包（`kdsig.ed25519`，
+本节只适用于 `@aikdna/kdna-core@0.22.0` 及其配套旧线资产，请在独立项目固定安装：
+
+```sh
+npm install --save-exact @aikdna/kdna-core@0.22.0
+```
+
+当前 Core 源码不导出这些签名 API，并拒绝已签名容器。签名规范和历史向量保留各自
+版本语义，不能据此推定当前候选支持。
+
+在已发布 Core 0.22.0 中，`.kdna` 资产可以携带可选的 `signature.kdsig` 签名包（`kdsig.ed25519`，
 [RFC-0021](./rfcs/RFC-0021-signature-track.md) M1）。Ed25519 签名覆盖规范化
 内容摘要（[CANONICALIZATION.md](./docs/CANONICALIZATION.md)），验签完全离线，
 加载全程 fail-closed：验签失败的资产会被拒绝，绝不会降级为「未签名」。
@@ -102,11 +116,12 @@ await verifyKDNASignature('./judgment.signed.kdna', {
 });
 ```
 
-未签名资产仍然有效，验签返回 `state: 'absent'`；调用方也可以强制要求签名。
+仅缺少签名不会使该发布线资产无效；验签返回 `state: 'absent'`，调用方也可以强制要求签名。
 有效签名只证明完整性与绑定到密钥的来源，绝不证明判断正确、专业或安全。
-Python SDK（`python-sdk/`）签名与验签同一线格式，两个实现共享
+历史 JS 与 Python 实现共享
 [`conformance/signature/`](./conformance/signature/README.md) 下的确定性
-known-answer 向量。
+known-answer 向量。[当前 Python 源码](./python-sdk/README.md) 有独立的 Core/Read
+边界，不继承历史签名能力。
 
 ## 本机与 Agent 使用边界
 
@@ -114,14 +129,15 @@ known-answer 向量。
 事实。KDNA 协议不要求“安装资产”才能使用；`~/.kdna`、项目 `.kdna/`、Store、
 Registry、Skill 和 MCP 都只是产品实现选择。
 
-当前稳定的技术入口是显式文件的 `validate → plan-load → load`。Agent 适配器的
+当前源码技术入口是明确文件的 Core 入场与 Read；`validate → plan-load → load`
+属于已发布 CLI 0.36.1。Agent 适配器的
 最终产品模型仍在收敛：它只能执行用户明确选择或 Host 已授权的资产，不能从全机
 任意资产中自主选择并隐藏使用。当前采用的资产身份、版本、作用域和原因必须可查，
 并可停用、切换和回滚。
 
 ## Core 负责与不负责
 
-Core 负责：
+本仓库的版本化规范负责以下合同；规范存在不代表当前源码已经实现全部能力：
 
 - 容器、Schema、Payload 与必需条目；
 - 身份、版本、digest、兼容与可选谱系；
@@ -139,10 +155,12 @@ Core 不负责：
 
 ## 创作自己的资产
 
-Studio 是创作工具，不是格式合法性的唯一入口。当前命令行创作路径：
+Studio 是创作工具，不是格式合法性的唯一入口。当前创作源码及其独立采用、保存和
+复验边界见 [Studio CLI](https://github.com/aikdna/kdna-studio-cli#readme)。
+下面保留 Studio CLI 0.11.0 与 Runtime CLI 0.36.1 的已发布创作路径：
 
 ```bash
-npm install -g @aikdna/kdna-studio-cli @aikdna/kdna-cli
+npm install -g @aikdna/kdna-studio-cli@0.11.0 @aikdna/kdna-cli@0.36.1
 kdna-studio create my-domain --name @yourscope/my-domain
 kdna-studio card add my-domain axiom \
   --field one_sentence="一条有明确取舍含义的判断" \

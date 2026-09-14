@@ -1,17 +1,21 @@
 # Getting Started with KDNA
 
+> Commands on this page use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
+> Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
+> For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
+
 > [中文版](./getting-started.zh.md)
 
-KDNA has one default verified path: create a scoped `.kdna` asset through
+In this published-line walkthrough, create a scoped `.kdna` asset through
 Studio CLI, validate it with the runtime CLI, plan authorization and readiness,
-then load a Runtime Capsule for the Agent.
+and then load a Runtime Capsule for the Agent.
 
 ---
 
 ## Install the toolchain
 
 ```bash
-npm install -g @aikdna/kdna-cli @aikdna/kdna-studio-cli
+npm install -g @aikdna/kdna-cli@0.36.1 @aikdna/kdna-studio-cli@0.11.0
 ```
 
 Two commands are now available:

@@ -1,34 +1,38 @@
 # KDNA Agent Integrations
 
-## Current supported technical path
+> Commands on this page use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
+> Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
+> For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
 
-All compatible Hosts can start from the same explicit `.kdna` file:
+## Current source adapters
+
+The current [Skills and MCP source](https://github.com/aikdna/kdna-skills#readme)
+uses explicit local catalog, selection and public Read through its exact bound
+Core/Read/CLI graph. It has no legacy loading fallback. Local source and packed
+stdio checks do not establish native Host installation, delivery or semantic
+adoption; those remain separate verification requirements.
+
+Start from an explicit user-selected file or an exact Host-approved attachment.
+Expose the asset identity and scope, preserve user controls, and never infer
+permission from file presence or adapter installation.
+
+## Published CLI 0.36.1 manual handoff
+
+This separate older-line workflow generates a Runtime Capsule:
 
 ```bash
-npm install -g @aikdna/kdna-cli
+npm install -g @aikdna/kdna-cli@0.36.1
 kdna validate ./asset.kdna --runtime
 kdna plan-load ./asset.kdna --json
 kdna load ./asset.kdna --profile=compact --as=json
 ```
 
-The Host receives a Runtime Capsule. This proves technical delivery only; it
-does not prove that the model followed the judgment or that the result is
-better.
+A successful command produces a Capsule on stdout. Host receipt and model
+adoption require their own observations. The `inspect → plan-load → load`
+sequence belongs to this published line; it is not the command contract of the
+current Skills/MCP adapter.
 
-## Agent adapters
-
-`kdna-skills` contains Skill and MCP adapters for Codex, Claude Code, OpenCode,
-Cursor, and compatible Hosts. The repository mission is retained, but the
-loader Skill is currently **Unassessed** for release. The previous global
-auto-discovery and silent-loading model is not the current product contract.
-
-A conforming adapter must start from an explicit user-selected file or an exact
-Host-approved workspace/application/session attachment. It must use
-`inspect → plan-load → load`, expose active identity and scope through Host
-status, and never infer authority from a file's presence.
-
-Until that adapter flow is recertified, use the explicit CLI/Core path above or
-integrate the same calls directly in the Host. Do not rely on `kdna setup` as
-proof that an Agent integration is correct.
-
-See [Agent Adapter Behavior](./loader-behavior.md) for the target boundary.
+Do not treat `kdna setup`, Skill-file presence, global discovery or silent
+loading as proof of a correct Host integration. See
+[Agent Adapter Behavior](./loader-behavior.md) for the shared selection and
+authority boundaries and the versioned published sequence.

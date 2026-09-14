@@ -1,13 +1,17 @@
 # KDNA 5-Minute Guide
 
-This page is kept as a stable link. The current first-run guide is:
+> Commands on this page use published Runtime CLI **0.36.1** and Studio CLI **0.11.0**.
+> Earlier assets, LoadPlan/Runtime Capsule and project/card APIs belong to those versions.
+> For current source, start with [Core/Read](./core-read-current-status.md) and [Studio](https://github.com/aikdna/kdna-studio-cli#readme); the current implementation rejects these older inputs and does not support this loading or project/card workflow. Its `inspect` and `validate` commands have a different contract.
+
+This page is kept as a stable link. The published-line walkthrough is:
 
 → [Try KDNA in 5 Minutes](./try-kdna.md)
 
-## Current 5-Minute Path
+## Published CLI 0.36.1 path
 
 ```bash
-npm install -g @aikdna/kdna-cli
+npm install -g @aikdna/kdna-cli@0.36.1
 kdna demo minimal ./minimal
 kdna pack ./minimal ./minimal.kdna
 kdna validate ./minimal.kdna
