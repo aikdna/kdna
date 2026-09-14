@@ -270,60 +270,71 @@ test('canonical schema-2 manifest inventories every public repository, co-locate
   );
 });
 
-test('ecosystem workflow checkouts stay pinned to accepted or explicitly scoped candidate commits', () => {
+test('ecosystem workflows keep exact source smoke and accepted publication pins separate', () => {
   const canonical = JSON.parse(
     fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
   );
   const components = canonical.components.filter(
     (entry) => entry.local_path && entry.local_path !== '.' && entry.source_commit,
   );
-  const candidateSmokePins = new Map([
-    ['core-smoke.yml:aikdna/kdna-core-swift', '5a8e2bb5db92d8a9118e1668cf6f1414c4aed5c9'],
-    // Scoped candidate smoke input for the CLI: the merged revision that carries
-    // the dependency fix. Only the smoke workflow may consume it; the manifest
-    // keeps the accepted published coordinate and publish.yml keeps that pin.
-    ['core-smoke.yml:aikdna/kdna-cli', '14a317f19289b79d1c42da70a20b83334c32b8b7'],
-    // Same shape for the MCP server: the smoke workflow rehearses the merged
-    // revision that carries the dependency fix; the accepted coordinate stays in
-    // the manifest and in publish.yml.
-    ['core-smoke.yml:aikdna/kdna-skills', '8084e8c889834a142e4e1c2a59ac75059b42e0d3'],
-  ]);
-
-  for (const workflowName of ['core-smoke.yml', 'publish.yml']) {
+  const source = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, 'scripts/ecosystem-source-inventory.json'), 'utf8'),
+  );
+  const acceptedPins = new Map(components.map((entry) => [entry.repository, entry.source_commit]));
+  const sourcePins = new Map(
+    source.repositories
+      .filter((entry) => entry.repository !== 'aikdna/kdna')
+      .map((entry) => [entry.repository, entry.commit]),
+  );
+  assert.equal(sourcePins.size, 15);
+  sourcePins.set('aikdna/kdna-vscode', acceptedPins.get('aikdna/kdna-vscode'));
+  function assertPins(workflow, expectedPins) {
+    const seen = new Set();
+    for (const match of workflow.matchAll(/^\s*repository: (\S+)\s*$/gmu)) {
+      const repository = match[1];
+      assert.ok(expectedPins.has(repository), 'unexpected workflow repository');
+      assert.ok(!seen.has(repository), 'duplicate workflow repository');
+      const nextStep = workflow.indexOf('\n      - ', match.index + match[0].length);
+      const block = workflow.slice(match.index, nextStep < 0 ? undefined : nextStep);
+      const ref = /^\s*ref: (\S+)\s*$/mu.exec(block);
+      assert.equal(
+        ref?.[1],
+        expectedPins.get(repository),
+        'workflow commit differs from its inventory',
+      );
+      seen.add(repository);
+    }
+    assert.deepEqual([...seen].sort(), [...expectedPins.keys()].sort());
+  }
+  for (const [workflowName, expectedPins] of [
+    ['core-smoke.yml', sourcePins],
+    ['publish.yml', acceptedPins],
+  ]) {
     const workflow = fs.readFileSync(
-      path.join(repoRoot, '.github', 'workflows', workflowName),
+      path.join(repoRoot, '.github/workflows', workflowName),
       'utf8',
     );
-    for (const entry of components) {
-      const repositoryMarker = `repository: ${entry.repository}`;
-      let offset = 0;
-      let occurrences = 0;
-      while ((offset = workflow.indexOf(repositoryMarker, offset)) >= 0) {
-        const nextStep = workflow.indexOf('\n      - ', offset);
-        const checkoutBlock = workflow.slice(offset, nextStep >= 0 ? nextStep : workflow.length);
-        const expectedCommit =
-          candidateSmokePins.get(`${workflowName}:${entry.repository}`) ?? entry.source_commit;
-        assert.match(
-          checkoutBlock,
-          new RegExp(`^\\s*ref: ${expectedCommit}\\s*$`, 'mu'),
-          `${workflowName} must check out ${entry.repository} at its accepted or scoped candidate commit`,
-        );
-        occurrences += 1;
-        offset += repositoryMarker.length;
-      }
-      assert.equal(
-        occurrences,
-        1,
-        `${workflowName} must check out ${entry.repository} exactly once`,
+    assert.equal(expectedPins.size, 16);
+    assertPins(workflow, expectedPins);
+    for (const commit of expectedPins.values()) {
+      assert.throws(() =>
+        assertPins(workflow.replace(`ref: ${commit}`, `ref: ${'0'.repeat(40)}`), expectedPins),
       );
     }
+    const duplicate =
+      '\n      - uses: actions/checkout\n        with:\n          repository: aikdna/kdna-cli\n          ref: ' +
+      expectedPins.get('aikdna/kdna-cli') +
+      '\n';
+    assert.throws(() => assertPins(workflow + duplicate, expectedPins), /duplicate/u);
+    assert.throws(
+      () =>
+        assertPins(
+          workflow.replace('repository: aikdna/kdna-cli', 'repository: aikdna/unreviewed'),
+          expectedPins,
+        ),
+      /unexpected/u,
+    );
   }
-
-  assert.equal(
-    candidateSmokePins.has('publish.yml:aikdna/kdna-core-swift'),
-    false,
-    'publish workflow cannot consume a candidate-only Swift pin',
-  );
 });
 
 test('candidate Core conformance anchor carries the declared candidate package version', (t) => {
