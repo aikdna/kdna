@@ -54,6 +54,7 @@ const EXPECTED_COMPAT_CHECKOUTS = JSON.parse(
 const SMOKE_SCOPED_CANDIDATE_PINS = new Map([
   ['aikdna/kdna-core-swift', '5a8e2bb5db92d8a9118e1668cf6f1414c4aed5c9'],
   ['aikdna/kdna-cli', '14a317f19289b79d1c42da70a20b83334c32b8b7'],
+  ['aikdna/kdna-skills', '8084e8c889834a142e4e1c2a59ac75059b42e0d3'],
 ]);
 
 function releaseInput(overrides = {}) {
