@@ -4,7 +4,7 @@
   "scope": "@aikdna/kdna-monorepo public repository",
   "authority": "Declaration of what must be tracked, what may be present untracked, and what may be present ignored. Verified against real git state by scripts/check-inventory.cjs; it is not a self-report.",
   "why": "A broad .gitignore pattern can hide a file that must travel with the repository, so the loss is invisible to `git status` and to any review that counts status lines. This declaration makes that ignore surface explicit and checkable, and it keeps internal acceptance material out of the public surface.",
-  "tracked_count": 1384,
+  "tracked_count": 1385,
   "must_track_globs": [
     "python-sdk/kdna/core/_schemas/*.json",
     "packages/kdna-core/schema/*.json",
