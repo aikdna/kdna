@@ -860,7 +860,7 @@
           "name": "@aikdna/kdna-read",
           "version": "0.3.0-rc.component-semantics.2",
           "member_count": 36,
-          "members_sha256": "397742c8b0e06c2829dd904b7023d2d3aa70af4674ec491e8684a3bd6070840f",
+          "members_sha256": "b8b947230e532ae130fdcf7eeb2146510272910b073c80078c71d6a0334f3c8c",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -5317,6 +5317,14 @@
           "archive_mode": 420,
           "source_pack_mode": 420,
           "kind": "documentation"
+        },
+        {
+          "path": "src/pipeline.js",
+          "archive_sha256": "c7533f4b630b0eef20e11f29c99162b338f7e68823fd0af154c4c961bcfeb1d0",
+          "source_pack_sha256": "1232c82850afe86f67854b121bbe4bd4c066517afcf4877b8eadd7a91157a9f9",
+          "archive_mode": 420,
+          "source_pack_mode": 420,
+          "kind": "package-content"
         }
       ]
     },
