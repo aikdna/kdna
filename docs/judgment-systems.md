@@ -73,7 +73,11 @@ A **judgment** is a single act of classification, distinction, trade-off, or dec
 
 A **judgment system** is a connected structure of recurring judgments: core principles, concept boundaries, default stances, common misunderstandings, risk boundaries, scenario signals, examples and counterexamples, reasoning paths, self-checks, and evolution rules.
 
-A judgment system does not only say what is right once. It helps an agent repeatedly judge a class of situations. KDNA is designed to encode **judgment systems**, not isolated opinions.
+A judgment system keeps helping across a class of situations rather than
+answering once. KDNA carries **judgment assets**: an asset can be one simple but
+complete judgment, or a judgment system, and both are valid forms. What KDNA is
+not designed to carry is an assertion with no necessary context — an empty claim
+that names no scope, no basis, and no consequence.
 
 ---
 

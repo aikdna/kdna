@@ -1,8 +1,12 @@
 # KDNA Core Narrative and Boundaries
 
-**Status:** current public product definition. Read exact wire behavior from
+**Status:** current public product definition. This page spans three version
+states — the current Core/Read source candidates, the published CLI 0.36.1
+loading line, and historical contracts kept in the specifications — and each
+section below names the state it describes. Read exact wire behavior from
 [SPEC.md](../SPEC.md), adopted specifications, schemas, fixtures, and the release
-artifacts for the version you use.
+artifacts for the version you use. See
+[Core and Read: current implementation status](./core-read-current-status.md).
 
 ## Definition
 
@@ -39,6 +43,15 @@ KDNA Core may verify:
 - LoadPlan and Runtime Capsule structure;
 - whether a compatible implementation preserved required semantics.
 
+Which items a given implementation verifies is version-specific. Current Core
+`0.24.0-rc.component-semantics.2` admission covers container and schema
+conformance, identity, version, digest and compatibility coordinates, and it
+establishes the technical validity of the captured bytes. It does not certify
+provenance, grant authorization, or implement encryption, signature and
+checksums-document admission or LoadPlan and Runtime Capsule admission. The
+published CLI 0.36.1 line and the historical specifications define their own
+integrity, provenance and authorization checks under their own contracts.
+
 KDNA Core does not verify:
 
 - factual or moral correctness of the asset;
@@ -60,7 +73,31 @@ The canonical distributed asset is one `.kdna` file. Authoring workspaces,
 expanded JSON, catalog pages, receipts, and evaluation reports are related
 objects, not substitutes for the distributed asset.
 
-A compatible Agent consumption path is:
+### Current source candidates: Core admission then Read
+
+The compatible consumption path for the current source candidates is Core
+admission then Read. It is not a LoadPlan or Runtime Capsule flow:
+
+```text
+explicit file or authorized attachment
+→ Core admission: container, manifest, payload, Canonical IR, private snapshot
+→ Read request admission under an independently trusted Host provider
+→ read_envelope | admission_rejection | no_body_control | transport_failure
+→ Host delivery
+→ Agent use
+```
+
+Core `0.24.0-rc.component-semantics.2` and Read
+`0.3.0-rc.component-semantics.2` are source candidates, not npm releases.
+Admission establishes the technical validity of the captured bytes; it does not
+authenticate provenance, grant authorization, or enable cryptographic admission.
+Disclosure requires the embedding's independently trusted control and Host
+providers. See
+[Core and Read: current implementation status](./core-read-current-status.md).
+
+### Published CLI 0.36.1 line: LoadPlan then Runtime Capsule
+
+The published loading line keeps its own path:
 
 ```text
 explicit file or authorized attachment
@@ -73,9 +110,12 @@ explicit file or authorized attachment
 → Agent use
 ```
 
-Agents and applications consume the Runtime Capsule. Generic ZIP extraction or
-raw payload decoding is a developer/audit action, not a compatible Agent
-runtime.
+In that published line, agents and applications consume the Runtime Capsule.
+LoadPlan and Runtime Capsule admission are unavailable in the current Core/Read
+implementation.
+
+Generic ZIP extraction or raw payload decoding is a developer/audit action in
+either state, not a compatible Agent runtime.
 
 ## Local use and user authority
 
@@ -135,7 +175,8 @@ not need to make such a claim.
 One asset is the atomic and default path:
 
 ```text
-select one .kdna → plan-load → load → use
+current Core/Read:     select one .kdna → Core admission → Read → use
+published CLI 0.36.1:  select one .kdna → inspect → plan-load → load → use
 ```
 
 Multi-asset composition is an explicit advanced product capability. It must

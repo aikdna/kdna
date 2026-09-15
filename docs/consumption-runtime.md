@@ -3,6 +3,23 @@
 The default consumption path begins with one explicit `.kdna` file or one exact
 Host attachment that the user has already approved.
 
+## Current source candidates: Core admission then Read
+
+The current source candidates follow Core admission then Read. This
+implementation has no LoadPlan or Runtime Capsule step:
+
+```text
+explicit file / approved attachment
+→ Core admission
+→ Read request admission under independently trusted Host providers
+→ read_envelope | admission_rejection | no_body_control | transport_failure
+→ Host delivery and visible active state
+```
+
+## Published CLI 0.36.1 line: LoadPlan then Runtime Capsule
+
+The published loading line follows its own path:
+
 ```text
 explicit file / approved attachment
 → inspect and validate
@@ -14,8 +31,8 @@ explicit file / approved attachment
 
 Possession, saving, attachment, authorization, applicability, and loading are
 separate events. Finding a file does not authorize it. Authorization does not
-make it applicable to every task. Capsule delivery does not prove behavioral
-conformity or a better result.
+make it applicable to every task. Delivering a Runtime Capsule or a Read
+envelope does not prove behavioral conformity or a better result.
 
 ## Host policy
 

@@ -24,8 +24,12 @@ KDNA makes the following judgment content first-class in one asset:
 
 KDNA does not replace data governance, memory, private compute, RAG,
 evaluation infrastructure, fine-tuning, Skills, Prompts, Policies, or
-workflows. The same judgment can remain in any of them. KDNA adds value when it
-needs independent identity, integrity, authorization, loading, and lifecycle.
+workflows. The same judgment can remain in any of them. KDNA adds more than one
+kind of value: the creation process itself — clarifying the judgment, forming
+it, and expressing it — is value, and publishing it makes the standard visible
+and usable to others. Independent identity, integrity, authorization, loading,
+and lifecycle add a further layer when the judgment needs them. Reuse and
+loading are not the only sources of value.
 
 ## Whose Judgment?
 
