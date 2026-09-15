@@ -56,6 +56,12 @@ async function runRead(admit,input,candidate,controlProvider,host){
  const delivered=await deliverResult(prepared,id,hosts.get(host)?.deliver);
  if(delivered===prepared&&pendingHandles.has(prepared)){
   const {hostState,handles}=pendingHandles.get(prepared);
+  // A long-lived host keeps one registry across reads. Expired handles are still rejected by the
+  // host gate (expiry is checked by timestamp, not by presence), but they would otherwise accumulate
+  // without bound in a long session. Drop the ones that can no longer be used before registering the
+  // new ones, so a host's live registry is bounded by its unexpired handles.
+  const current_ms=prepared.envelope?.receipt?.disclosed_at;
+  if(typeof current_ms==='number')for(const [handle_id,registered] of hostState.handles)if(current_ms>=registered.expires_at)hostState.handles.delete(handle_id);
   for(const handle of handles)hostState.handles.set(handle.handle_id,freeze(clone(handle)));
  }
  pendingHandles.delete(prepared);
