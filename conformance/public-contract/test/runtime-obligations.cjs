@@ -133,9 +133,18 @@ function optionalAsset() {
 }
 const schema = req('ajv/dist/2020.js');
 const ajv = new schema({ strict: false, validateFormats: false });
-const readSchema = JSON.parse(
-  fs.readFileSync(path.join(readDir, 'schema/read-contract-0.1.schema.json')),
+// The current Read contract schema is whichever one the package publishes, not a
+// file name frozen here. packages/kdna-read/package.json "files" declares exactly
+// one read-contract schema, and the package is the authority for its own name.
+const readSchemaFiles = JSON.parse(
+  fs.readFileSync(path.join(readDir, 'package.json'), 'utf8'),
+).files.filter((file) => /^schema\/read-contract-.*\.schema\.json$/.test(file));
+assert.equal(
+  readSchemaFiles.length,
+  1,
+  'the Read package must publish exactly one current contract schema',
 );
+const readSchema = JSON.parse(fs.readFileSync(path.join(readDir, readSchemaFiles[0])));
 delete readSchema.$id;
 readSchema.$ref = '#/$defs/ReadCallResult';
 const validateRead = ajv.compile(readSchema);
@@ -1168,9 +1177,32 @@ async function main() {
         controls(),
         h.provider,
       );
-      assert.equal(result.envelope.diagnostics[0].code, 'READ_CORE_CAPABILITY_UNAVAILABLE');
-      assert.equal(h.count(), 0);
-      return result;
+      // packages/kdna-read/README.md: Browser Read accepts a retained Core
+      // snapshot for expansion; src/browser.js reuses the private snapshot
+      // identity instead of re-admitting browser bytes.
+      assert.equal(result.channel, 'read_envelope');
+      assert.equal(result.envelope.status, 'ready');
+      assert.equal(result.envelope.contract, tuple.read);
+      assert.deepEqual(result.envelope.diagnostics, []);
+      assert.ok(validateRead(result), JSON.stringify(validateRead.errors));
+      assert.equal(h.count(), 2);
+      // The capability is the same-Core retained snapshot, not any
+      // snapshot-shaped object: a structured clone stays foreign and is
+      // rejected before the Host sees it.
+      const foreign = await req('@aikdna/kdna-read/browser').readBrowser(
+        JSON.parse(JSON.stringify(r.snapshot)),
+        F.candidate(tuple, a),
+        controls(),
+        h.provider,
+      );
+      assert.equal(foreign.envelope.diagnostics[0].code, 'READ_INPUT_INVALID');
+      assert.equal(h.count(), 2);
+      return {
+        contract: result.envelope.contract,
+        host_observations: h.count(),
+        foreign_snapshot_rejection: foreign.envelope.diagnostics[0].code,
+        retained_snapshot_accepted: true,
+      };
     },
     'Node execution of browser capability branch; not browser engine',
   );

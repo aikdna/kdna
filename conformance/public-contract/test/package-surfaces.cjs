@@ -30,6 +30,72 @@ const surfaces = {
     'createTrustedReadControlProvider',
   ],
 };
+// The sandbox loads the accepted packages plus the dependencies those packages
+// declare in their own package.json. The generated validators import Ajv's own
+// runtime helpers ("ajv/dist/runtime/equal", "ajv/dist/runtime/ucs2length"), so a
+// sandbox that admits only the two package directories rejects the real graph.
+function packageRootOf(entry, workspaceRoots = []) {
+  for (const root of workspaceRoots) if (entry.startsWith(root + path.sep)) return root;
+  let dir = path.dirname(entry);
+  for (;;) {
+    const parent = path.dirname(dir);
+    if (path.basename(parent) === 'node_modules') return dir;
+    if (
+      path.basename(parent).startsWith('@') &&
+      path.basename(path.dirname(parent)) === 'node_modules'
+    )
+      return dir;
+    if (parent === dir) throw Error('Cannot locate the package root of ' + entry);
+    dir = parent;
+  }
+}
+function declaredDependencyRoots(startDirs) {
+  const roots = [],
+    visited = new Set(),
+    queue = [...startDirs];
+  while (queue.length > 0) {
+    const dir = queue.shift();
+    if (visited.has(dir)) continue;
+    visited.add(dir);
+    const manifest = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8')),
+      dependencyRequire = Module.createRequire(path.join(dir, 'package.json'));
+    for (const name of [
+      ...Object.keys(manifest.dependencies ?? {}),
+      ...Object.keys(manifest.optionalDependencies ?? {}),
+    ]) {
+      let root;
+      // An absent optional dependency cannot be loaded either, so it is not a root.
+      try {
+        root = packageRootOf(dependencyRequire.resolve(name));
+      } catch {
+        continue;
+      }
+      roots.push(root);
+      queue.push(root);
+    }
+  }
+  return roots;
+}
+const graphRoots = [...new Set([coreDir, readDir, ...declaredDependencyRoots([coreDir, readDir])])];
+// A browser bundle never runs a dependency's Node-only branch: the bundler
+// applies the package's own "browser" map before loading the file. The sandbox
+// does the same for the object form of that field, so the graph it loads is the
+// graph the shipped browser artifact is built from. `false` means an empty module.
+function browserFieldTarget(specifier, fromFile, resolve) {
+  const owner = packageRootOf(fromFile, [coreDir, readDir]),
+    manifest = JSON.parse(fs.readFileSync(path.join(owner, 'package.json'), 'utf8')),
+    browser = manifest.browser,
+    keys = [specifier];
+  if (typeof manifest.name === 'string' && specifier.startsWith(manifest.name + '/'))
+    keys.push('./' + specifier.slice(manifest.name.length + 1));
+  if (!specifier.startsWith('.') && !specifier.startsWith('node:'))
+    keys.push('./' + path.relative(owner, resolve.resolve(specifier)).split(path.sep).join('/'));
+  if (browser && typeof browser === 'object' && !Array.isArray(browser))
+    for (const key of keys)
+      if (Object.hasOwn(browser, key))
+        return browser[key] === false ? null : path.resolve(owner, browser[key]);
+  return resolve.resolve(specifier);
+}
 function browserSandbox() {
   const context = vm.createContext({ TextEncoder, TextDecoder });
   const modules = new Map(),
@@ -41,7 +107,7 @@ function browserSandbox() {
       throw Error('Node dependency forbidden ' + file);
     }
     assert.ok(
-      file.startsWith(coreDir + path.sep) || file.startsWith(readDir + path.sep),
+      graphRoots.some((root) => file === root || file.startsWith(root + path.sep)),
       'Only new Core/Read graph',
     );
     if (modules.has(file)) return modules.get(file).exports;
@@ -49,7 +115,10 @@ function browserSandbox() {
     const module = { exports: {} };
     modules.set(file, module);
     if (file.endsWith('.json')) {
-      module.exports = JSON.parse(fs.readFileSync(file, 'utf8'));
+      // Emulate require() inside the sandbox realm: host-parsed JSON would carry the
+      // host realm's Object.prototype and the package's own strict-input copy would
+      // reject it before any browser behavior ran.
+      module.exports = vm.runInContext('JSON.parse', context)(fs.readFileSync(file, 'utf8'));
       return module.exports;
     }
     const resolve = Module.createRequire(file);
@@ -58,7 +127,15 @@ function browserSandbox() {
       context,
       { filename: file },
     );
-    factory((name) => load(resolve.resolve(name)), module, module.exports);
+    factory(
+      (name) => {
+        const target = browserFieldTarget(name, file, resolve);
+        if (target === null) return {};
+        return load(target);
+      },
+      module,
+      module.exports,
+    );
     return module.exports;
   }
   return { load, context, loaded, blocked };
@@ -113,7 +190,11 @@ async function main() {
     });
     const typed = vm.runInContext('new Uint8Array(1)', sandbox.context);
     const result = await browser.readBrowser(typed, candidate, control, host);
-    assert.equal(result.envelope.diagnostics[0].code, 'READ_CORE_CAPABILITY_UNAVAILABLE');
+    // A byte array is a real browser input, not an unsupported capability: Core
+    // admission runs in the sandbox and rejects the one-byte container as invalid
+    // before any Host callback. The obligation is the fail-closed ordering below.
+    assert.equal(result.channel, 'read_envelope');
+    assert.equal(result.envelope.diagnostics[0].code, 'READ_CORE_INVALID');
     assert.equal(calls, 0);
     assert.equal(
       read.project(read.admitReadRequest(candidate, control).admitted_request, {}).diagnostics[0]
