@@ -274,7 +274,38 @@ export async function run(
   return { results, failures, legacy };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+// Entry guard. Both sides are compared through realpath so an invocation through
+// a symlinked or aliased directory still RUNS the health check (and can never
+// exit 0 silently, which is the failure mode this guard exists to prevent). An
+// import is not the entry point and must not run the main function.
+function entryGuardOutcome() {
+  if (!process.argv[1]) return 'import';
+  const selfPath = fileURLToPath(import.meta.url);
+  let invokedReal = null;
+  let selfReal = null;
+  try {
+    invokedReal = fs.realpathSync(process.argv[1]);
+  } catch {
+    invokedReal = null;
+  }
+  try {
+    selfReal = fs.realpathSync(selfPath);
+  } catch {
+    selfReal = null;
+  }
+  if (invokedReal && selfReal && invokedReal === selfReal) return 'entry';
+  if (path.resolve(process.argv[1]) === path.resolve(selfPath)) return 'unresolved-entry';
+  return 'import';
+}
+
+const entryGuard = entryGuardOutcome();
+if (entryGuard === 'unresolved-entry') {
+  console.error(
+    'KDNA_PUBLISH_HEALTH_ENTRY_GUARD_FAILED: refusing to run under an unresolved entry path',
+  );
+  process.exit(2);
+}
+if (entryGuard === 'entry') {
   const outcome = await run();
   process.exitCode = outcome.failures === 0 ? 0 : 1;
 }
