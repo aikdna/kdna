@@ -243,7 +243,38 @@ function rootFromArgs(args) {
   throw new Error('usage: generate-container-negative-fixtures.mjs [--root <directory>]');
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+// Entry guard. Both sides are compared through realpath so an invocation through
+// a symlinked or aliased directory still RUNS the generator (and can never exit
+// 0 silently, which is the failure mode this guard exists to prevent). An import
+// is not the entry point and must not run the main function.
+function entryGuardOutcome() {
+  if (!process.argv[1]) return 'import';
+  const selfPath = fileURLToPath(import.meta.url);
+  let invokedReal = null;
+  let selfReal = null;
+  try {
+    invokedReal = fs.realpathSync(process.argv[1]);
+  } catch {
+    invokedReal = null;
+  }
+  try {
+    selfReal = fs.realpathSync(selfPath);
+  } catch {
+    selfReal = null;
+  }
+  if (invokedReal && selfReal && invokedReal === selfReal) return 'entry';
+  if (path.resolve(process.argv[1]) === path.resolve(selfPath)) return 'unresolved-entry';
+  return 'import';
+}
+
+const entryGuard = entryGuardOutcome();
+if (entryGuard === 'unresolved-entry') {
+  console.error(
+    'KDNA_CONTAINER_NEGATIVE_FIXTURES_ENTRY_GUARD_FAILED: refusing to run under an unresolved entry path',
+  );
+  process.exit(2);
+}
+if (entryGuard === 'entry') {
   await generateContainerFixtures(rootFromArgs(process.argv.slice(2)));
   console.log('Container negative and licensed fixtures regenerated');
 }

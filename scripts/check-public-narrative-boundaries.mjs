@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, realpathSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -184,7 +184,38 @@ export function auditRepository() {
   return { violations, missingGuardrails: findMissingGuardrails() };
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+// Entry guard. Both sides are compared through realpath so an invocation through
+// a symlinked or aliased directory still RUNS the audit (and can never exit 0
+// silently, which is the failure mode this guard exists to prevent). An import is
+// not the entry point and must not run the main function.
+function entryGuardOutcome() {
+  if (!process.argv[1]) return 'import';
+  const selfPath = fileURLToPath(import.meta.url);
+  let invokedReal = null;
+  let selfReal = null;
+  try {
+    invokedReal = realpathSync(process.argv[1]);
+  } catch {
+    invokedReal = null;
+  }
+  try {
+    selfReal = realpathSync(selfPath);
+  } catch {
+    selfReal = null;
+  }
+  if (invokedReal && selfReal && invokedReal === selfReal) return 'entry';
+  if (resolve(process.argv[1]) === resolve(selfPath)) return 'unresolved-entry';
+  return 'import';
+}
+
+const entryGuard = entryGuardOutcome();
+if (entryGuard === 'unresolved-entry') {
+  console.error(
+    'KDNA_PUBLIC_NARRATIVE_ENTRY_GUARD_FAILED: refusing to run under an unresolved entry path',
+  );
+  process.exit(2);
+}
+if (entryGuard === 'entry') {
   const result = auditRepository();
   if (result.violations.length || result.missingGuardrails.length) {
     console.error('public narrative boundary check failed');

@@ -225,14 +225,14 @@
   ],
   "scripts": [
     {
-      "bytes": 23594,
+      "bytes": 24439,
       "path": "scripts/public-contract/generate.mjs",
-      "sha256": "48ca96463ec96038f47c947ff376bd75c78a3ab5504782e3b6f9d092bf6729f9"
+      "sha256": "89f486a5ffd9ed04732412d9c4e7001251732a7e72dba20a0715010a18f9460b"
     },
     {
-      "bytes": 4636,
+      "bytes": 5444,
       "path": "scripts/public-contract/verify.mjs",
-      "sha256": "91b2c4aea45d7d2d169d3b4ab3866556ed79b6c936f9c730320889241149c14f"
+      "sha256": "87f14ee879bbbf1861c4f3e57c7ec6b5c9fc468b4cdfe724bb10683754814201"
     }
   ],
   "source": {
