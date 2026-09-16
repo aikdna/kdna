@@ -1,9 +1,21 @@
 # KDNA Conformance Test Suite
 
-This suite lets third-party implementations prove the current asset-first KDNA
-contract. There is one current Container, Runtime Capsule, Consumption Plan,
-Agent Host, and Judgment Trace path. No legacy adapter or parallel runtime
-generation is part of the conformance claim.
+This suite lets third-party implementations prove an asset-first KDNA contract.
+It spans three version states, and each entry below says which one it covers:
+
+| State | Consumer path | Where it is described |
+| --- | --- | --- |
+| Current source candidate | Core admission → Read | `docs/core-read-current-status.md` and the Core/Read package READMEs |
+| Published `kdna-cli` 0.36.1 line | LoadPlan → Runtime Capsule | the published package and its own contract version |
+| Historical contract (frozen) | the 0.1 Container/Capsule chain | `SPECINDEX` and the frozen specifications |
+
+The Container, Runtime Capsule, Consumption Plan, Agent Host and Judgment Trace
+path described below belongs to the published 0.36.1 line and the historical
+contract; the current source candidate uses Core admission and Read instead.
+Keep the two apart when you pick an entry point: the suites in this directory
+below the "DSP095 public-contract candidate" section verify the published and
+historical contracts, and the public-contract suite verifies the current one.
+No legacy adapter or parallel runtime generation is part of either claim.
 
 Conformance means:
 
@@ -51,6 +63,9 @@ Passing is a technical compatibility signal. It is not a content-quality,
 recommendation, trust, certification, or endorsement claim.
 
 ## Current evidence sets
+
+These evidence sets verify the published 0.36.1 line and the frozen historical
+contract, not the current source candidate.
 
 | Directory | Evidence |
 | --- | --- |
