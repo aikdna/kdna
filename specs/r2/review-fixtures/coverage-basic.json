@@ -1,0 +1,1577 @@
+{
+  "review_only": true,
+  "notation": "R1 complete author-semantic view; container/runtime/version tuple deliberately not asserted",
+  "M": {
+    "asset_id": "review-coverage",
+    "asset_uid": "review-coverage-uid",
+    "version": "r1-paper",
+    "judgment_version": "r1-paper",
+    "title": "基础类别审查例集",
+    "summary": "16个完整纸面议题，仅检查类别职责和必需角色。",
+    "languages": [
+      "zh-CN"
+    ],
+    "created_at": "2026-09-23T00:00:00Z",
+    "updated_at": "2026-09-23T00:00:00Z",
+    "lineage": [],
+    "history": {
+      "coverage": "complete",
+      "statement": "仅本次纸面构造的起始版本，不是正式资产沿革",
+      "entries": []
+    }
+  },
+  "P": {
+    "asset": {
+      "asset_id": "review-coverage",
+      "asset_version": "r1-paper",
+      "judgment_version": "r1-paper"
+    },
+    "actors": [
+      {
+        "id": "author",
+        "kind": "person",
+        "name": "纸面作者"
+      }
+    ],
+    "scope": {
+      "statement": "定义审查用构造情境，不进入业务资产目录"
+    },
+    "declarations": {
+      "highest_question": {
+        "value": "盒子现在是什么状态？",
+        "state": "provided"
+      },
+      "boundaries": {
+        "value": null,
+        "state": "none"
+      }
+    },
+    "kernel": {
+      "purpose": {
+        "kind": "summary"
+      },
+      "foundation_refs": []
+    },
+    "judgments": [
+      {
+        "id": "m01",
+        "focus": "盒子现在是什么状态？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "status",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m01-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "observation"
+          },
+          "components": [
+            {
+              "id": "m01-c1",
+              "method": {
+                "term": "observation"
+              },
+              "role": "观察依据",
+              "statement": "本纸面情境给出的观察记录：盒盖抬起，盒内可见底板且没有物品。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "m01-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "盒盖打开着，里面没有物品。"
+          }
+        }
+      },
+      {
+        "id": "m02",
+        "focus": "这枚标记属于哪一类？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "classification",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m02-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "recognition"
+          },
+          "components": [
+            {
+              "id": "m02-c1",
+              "method": {
+                "term": "recognition"
+              },
+              "role": "识别特征",
+              "statement": "所给标记有三条直边和三个角。",
+              "material_refs": []
+            },
+            {
+              "id": "m02-c2",
+              "method": {
+                "term": "recognition"
+              },
+              "role": "类别定义",
+              "statement": "本例三角形为三条直边围成的封闭图形；圆形无直边。",
+              "material_refs": []
+            },
+            {
+              "id": "m02-c3",
+              "method": {
+                "term": "recognition"
+              },
+              "role": "匹配办法",
+              "statement": "三条直边围合匹配三角形，排除无直边的圆形。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "m02-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "它属于三角形标记。"
+          }
+        }
+      },
+      {
+        "id": "m03",
+        "focus": "怎样评价这个标题？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "rule",
+        "answer_kind": "evaluation",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "authored",
+          "statement": "先核准确和清晰，再说明吸引力；吸引力不能抵消误导。",
+          "qualification_refs": []
+        },
+        "result_contract": {
+          "id": "m03-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "criteria_comparison"
+          },
+          "components": [
+            {
+              "id": "m03-c1",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "判断标准",
+              "statement": "准确是不增加正文未支持的事实；清晰是对象与主题明确；吸引力是对目标读者有继续阅读的理由。",
+              "material_refs": []
+            },
+            {
+              "id": "m03-c2",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "对照办法",
+              "statement": "逐项对应标题与正文，复述主题，再核对目标读者的需求。",
+              "material_refs": []
+            },
+            {
+              "id": "m03-c3",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "归结办法",
+              "statement": "交付三项的优缺点说明；发现误导必须指出，不能用吸引力抵消，不凭空打分。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "formation_rule": {
+          "statement": "先核准确和清晰，再说明吸引力；吸引力不能抵消误导。",
+          "condition_refs": [],
+          "output_contract_ref": "m03-out"
+        }
+      },
+      {
+        "id": "m04",
+        "focus": "A与B之间选哪个？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "selection",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m04-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "tradeoff"
+          },
+          "components": [
+            {
+              "id": "m04-c1",
+              "method": {
+                "term": "tradeoff"
+              },
+              "role": "候选方案",
+              "statement": "A花100单位两天完成；B花80单位三天完成。",
+              "material_refs": []
+            },
+            {
+              "id": "m04-c2",
+              "method": {
+                "term": "tradeoff"
+              },
+              "role": "比较因素",
+              "statement": "仅比较成本和时间，作者允许三天内完成。",
+              "material_refs": []
+            },
+            {
+              "id": "m04-c3",
+              "method": {
+                "term": "tradeoff"
+              },
+              "role": "取舍原则",
+              "statement": "都在三天内时优先成本低者，因此选B；超过三天则本例原则不适用。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "m04-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "选择B，接受多等一天以节省二十个计价单位。"
+          }
+        }
+      },
+      {
+        "id": "m05",
+        "focus": "小明能进入本例的读书会吗？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "determination",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m05-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "inference"
+          },
+          "components": [
+            {
+              "id": "m05-c1",
+              "method": {
+                "term": "inference"
+              },
+              "role": "判断前提",
+              "statement": "本例规则：报名并同意规则者可入会；纸面记录小明已报名且同意规则。",
+              "material_refs": []
+            },
+            {
+              "id": "m05-c2",
+              "method": {
+                "term": "inference"
+              },
+              "role": "推导关系",
+              "statement": "小明同时满足两个必要条件，因此按该规则可入会；不推断现实活动授权。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "m05-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "可以，小明满足已声明的入会条件。"
+          }
+        }
+      },
+      {
+        "id": "m06",
+        "focus": "这些材料中哪些适用于户外海报？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "applicability",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m06-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "elimination"
+          },
+          "components": [
+            {
+              "id": "m06-c1",
+              "method": {
+                "term": "elimination"
+              },
+              "role": "候选范围",
+              "statement": "仅比较A和B；纸面说明A遇水失效，B适用本例预计的雨淋条件。",
+              "material_refs": []
+            },
+            {
+              "id": "m06-c2",
+              "method": {
+                "term": "elimination"
+              },
+              "role": "排除条件",
+              "statement": "本例户外海报会遇雨，排除明确遇水失效者。",
+              "material_refs": []
+            },
+            {
+              "id": "m06-c3",
+              "method": {
+                "term": "elimination"
+              },
+              "role": "保留办法",
+              "statement": "A被排除，B按其声明保留；未声明耐候的其他材料不推断适用。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "m06-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "仅B适用；A明确怕水。"
+          }
+        }
+      },
+      {
+        "id": "m07",
+        "focus": "纸面电路的灯为何不亮？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "diagnosis",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m07-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "causal_analysis"
+          },
+          "components": [
+            {
+              "id": "m07-c1",
+              "method": {
+                "term": "causal_analysis"
+              },
+              "role": "待解释现象",
+              "statement": "纸面串联电路的灯不亮；记录电源正常、灯泡完好、开关断开。",
+              "material_refs": []
+            },
+            {
+              "id": "m07-c2",
+              "method": {
+                "term": "causal_analysis"
+              },
+              "role": "原因关系",
+              "statement": "串联路径被断开的开关切断，灯无电流；结论仅依上述排他记录，不用于真实电气检修。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "m07-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "按给定电路记录，原因是开关断开。"
+          }
+        }
+      },
+      {
+        "id": "m08",
+        "focus": "按给定速率四小时产量约多少？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "estimate",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m08-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "calculation"
+          },
+          "components": [
+            {
+              "id": "m08-c1",
+              "method": {
+                "term": "calculation"
+              },
+              "role": "输入与含义",
+              "statement": "给定模型速率每小时5到6件，时长4小时，不含停工。",
+              "material_refs": []
+            },
+            {
+              "id": "m08-c2",
+              "method": {
+                "term": "calculation"
+              },
+              "role": "计算关系",
+              "statement": "产量=速率×时长，区间端点分别为20与24件；不是置信区间或实际产量。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "m08-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "按每小时五到六件估计，四小时产出二十到二十四件。"
+          }
+        }
+      },
+      {
+        "id": "m09",
+        "focus": "若人数每轮翻倍，两轮后会有几人？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "prediction",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m09-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "simulation"
+          },
+          "components": [
+            {
+              "id": "m09-c1",
+              "method": {
+                "term": "simulation"
+              },
+              "role": "起点条件",
+              "statement": "起点3人，讨论未来两轮。",
+              "material_refs": []
+            },
+            {
+              "id": "m09-c2",
+              "method": {
+                "term": "simulation"
+              },
+              "role": "变化假设",
+              "statement": "每轮人数乘2且没有退出；这是本例假设。",
+              "material_refs": []
+            },
+            {
+              "id": "m09-c3",
+              "method": {
+                "term": "simulation"
+              },
+              "role": "演变关系",
+              "statement": "第一轮6人，第二轮12人；假设不成立时不能保留此预测。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "m09-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "在每轮翻倍且无人离开的假设下，两轮后有十二人。"
+          }
+        }
+      },
+      {
+        "id": "m10",
+        "focus": "本例资料支持采用哪一条编辑原则？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "stance",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m10-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "evidence_analysis"
+          },
+          "components": [
+            {
+              "id": "m10-c1",
+              "method": {
+                "term": "evidence_analysis"
+              },
+              "role": "所用材料",
+              "statement": "本例给定两条纸面记录：未核实版本含错字且需更正；核实版本在已查项目无此错误。",
+              "material_refs": []
+            },
+            {
+              "id": "m10-c2",
+              "method": {
+                "term": "evidence_analysis"
+              },
+              "role": "材料与判断的联系",
+              "statement": "作者把减少可避免更正作为本次取舍依据，采用先核实；两条记录不证明所有场景都更优。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "m10-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "采用先核实再发布的原则。"
+          }
+        }
+      },
+      {
+        "id": "m11",
+        "focus": "本段“轻装”是什么意思？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "interpretation",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m11-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "interpretation"
+          },
+          "components": [
+            {
+              "id": "m11-c1",
+              "method": {
+                "term": "interpretation"
+              },
+              "role": "解读对象",
+              "statement": "给定原句：项目过多时先停次要工作，团队才能轻装前进。",
+              "material_refs": []
+            },
+            {
+              "id": "m11-c2",
+              "method": {
+                "term": "interpretation"
+              },
+              "role": "解释关系",
+              "statement": "上下文谈工作数量，因此把轻装理解为减少不必要任务，不作行李解读。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "m11-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "这里的“轻装”指减少不必要任务，不是行李重量。"
+          }
+        }
+      },
+      {
+        "id": "m12",
+        "focus": "收到这次阅读反馈后，应怎样调整下一次安排？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "rule",
+        "answer_kind": "adjustment",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "authored",
+          "statement": "本次完成且轻松就加五分钟，吃力就减五分钟；缺反馈先补齐。",
+          "qualification_refs": []
+        },
+        "result_contract": {
+          "id": "m12-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "feedback"
+          },
+          "components": [
+            {
+              "id": "m12-c1",
+              "method": {
+                "term": "feedback"
+              },
+              "role": "调整目标",
+              "statement": "使每日阅读可以稳定完成，不追求时长最大。",
+              "material_refs": []
+            },
+            {
+              "id": "m12-c2",
+              "method": {
+                "term": "feedback"
+              },
+              "role": "反馈信号",
+              "statement": "采用方提供本次当前安排分钟数、这一次是否完成，以及感受是轻松、普通还是吃力；缺记录就先补本次输入，不冒充已完成。",
+              "material_refs": []
+            },
+            {
+              "id": "m12-c3",
+              "method": {
+                "term": "feedback"
+              },
+              "role": "调整办法",
+              "statement": "输入齐全后，先看感受：吃力则减五分钟但最低五分钟；不吃力且完成并感到轻松则加五分钟；其余保持。只返回这一次调整建议；以后再用时由采用方重新提供输入，本题不保存跨轮状态或调度日程。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "formation_rule": {
+          "statement": "用本次提供的当前安排和一次完成反馈给出下一次建议，不保存跨次状态或安排持续运行。缺必要输入先补齐；输入齐全时，吃力则减五分钟但最低五分钟，不吃力且完成并感到轻松则加五分钟，其余保持。",
+          "condition_refs": [],
+          "output_contract_ref": "m12-out"
+        }
+      },
+      {
+        "id": "m13",
+        "focus": "如何把整理抽屉的办法用于整理任务？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "rule",
+        "answer_kind": "guidance",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "authored",
+          "statement": "像给物品分抽屉一样，按用途分任务组，再给每组固定入口。",
+          "qualification_refs": []
+        },
+        "result_contract": {
+          "id": "m13-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "analogy"
+          },
+          "components": [
+            {
+              "id": "m13-c1",
+              "method": {
+                "term": "analogy"
+              },
+              "role": "参照对象",
+              "statement": "按物品用途分抽屉，并固定每类存放位置。",
+              "material_refs": []
+            },
+            {
+              "id": "m13-c2",
+              "method": {
+                "term": "analogy"
+              },
+              "role": "对应关系",
+              "statement": "物品对应任务，用途对应工作目的，抽屉对应任务组；任务会跨组，不能强制每项只能单属。",
+              "material_refs": []
+            },
+            {
+              "id": "m13-c3",
+              "method": {
+                "term": "analogy"
+              },
+              "role": "借用办法",
+              "statement": "先按主要目的分组，再设固定入口；跨组任务用引用关联，不复制为不同任务。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "formation_rule": {
+          "statement": "像给物品分抽屉一样，按用途分任务组，再给每组固定入口。",
+          "condition_refs": [],
+          "output_contract_ref": "m13-out"
+        }
+      },
+      {
+        "id": "m14",
+        "focus": "我偏爱哪个颜色？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "preference",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m14-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "feeling"
+          },
+          "components": [
+            {
+              "id": "m14-c1",
+              "method": {
+                "term": "feeling"
+              },
+              "role": "个人感受",
+              "statement": "作者在本纸面情境明确说：我偏爱蓝色。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "m14-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "我偏爱蓝色。"
+          }
+        }
+      },
+      {
+        "id": "m15",
+        "focus": "在作者的整理习惯中先做什么？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "ranking",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m15-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "experience"
+          },
+          "components": [
+            {
+              "id": "m15-c1",
+              "method": {
+                "term": "experience"
+              },
+              "role": "经验要点",
+              "statement": "本例作者陈述自己采用过的顺序为清空、归类、固定位置，并愿意继续按此顺序整理；没有提供次数或成功率。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "m15-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "先清空桌面，再归类，最后决定固定位置。"
+          }
+        }
+      },
+      {
+        "id": "m16",
+        "focus": "在本作品中，这个新图形叫什么？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "other",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "m16-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "other"
+          },
+          "components": [
+            {
+              "id": "m16-c1",
+              "method": {
+                "term": "other"
+              },
+              "role": "方法说明",
+              "statement": "由本作品作者明确为新图形设定名称“月舟”。",
+              "material_refs": []
+            },
+            {
+              "id": "m16-c2",
+              "method": {
+                "term": "other"
+              },
+              "role": "判断依据",
+              "statement": "本例作者对自己作品的命名声明，范围只在本作品；没有声称其他人必须采用。",
+              "material_refs": []
+            },
+            {
+              "id": "m16-c3",
+              "method": {
+                "term": "other"
+              },
+              "role": "作用关系",
+              "statement": "将明确声明绑定到本作品此图形，回答其本作品称呼；不扩成客观类别或普遍词义。",
+              "material_refs": []
+            }
+          ],
+          "bindings": [],
+          "other": {
+            "name": "作者约定",
+            "definition": "具名作者在自己的作品中建立称呼约定",
+            "exclusion_reason": "依据是明确设定权与声明，不是从观察、证据、经验推导名称，也未表达情感或比较候选"
+          }
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "answer_other": {
+          "name": "命名约定",
+          "definition": "作者为作品内的新对象设定名称",
+          "exclusion_reason": "没有识别既有类别或解释已有词义；不是选择既定候选、偏爱某名或评价名称优劣，而是设定本作品的称呼"
+        },
+        "result": {
+          "contract_ref": "m16-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "本作品中，这个新图形叫“月舟”。"
+          }
+        }
+      }
+    ],
+    "contracts": [],
+    "conditions": [],
+    "shared_declarations": [],
+    "materials": [],
+    "reasons": [],
+    "sources": [],
+    "source_uses": [],
+    "resources": [],
+    "relationships": [],
+    "dependencies": [],
+    "examples": [],
+    "exceptions": [],
+    "misuse": [],
+    "reading_order": [
+      "m01",
+      "m02",
+      "m03",
+      "m04",
+      "m05",
+      "m06",
+      "m07",
+      "m08",
+      "m09",
+      "m10",
+      "m11",
+      "m12",
+      "m13",
+      "m14",
+      "m15",
+      "m16"
+    ],
+    "extensions": [],
+    "asset_capability": "mixed"
+  }
+}

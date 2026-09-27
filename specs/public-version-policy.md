@@ -1,62 +1,118 @@
-# Public version policy — component semantics revision
+# Public version policy — R2
 
-Status: **UNPUBLISHED_CANDIDATE**. The unique semantic source and its generated closure define the proposed public component revision. Implementation, independent acceptance, exact consumer rebinding and publication remain separate. Historical source and acceptance retain their original scope.
+Status: UNPUBLISHED_CANDIDATE. This policy specifies the issued coordinates for the isolated R2 implementation. Generated identity, implementation tests, independent acceptance, installed consumers, live landing and publication are separate evidence. No package label implies these later outcomes.
 
-## Chosen version axes
+## Exact supported combination
 
-The new runtime accepts exactly the complete tuple below. Wire/profile/API coordinates and package versions are separate axes; sharing a number does not equate their meanings.
-
-| Axis / tuple key | Chosen design coordinate |
+| Tuple key | Coordinate |
 |---|---|
-| Container / container | `0.2.0` |
-| Payload profile / payload_profile | `kdna.payload.judgment` |
-| Payload version / payload_version | `0.2.0` |
-| Core public API / core | `kdna.core/0.3.0` |
-| Canonical IR / ir | `kdna.canonical-ir/0.2.0` |
-| Runtime Capsule / runtime | `kdna.runtime-capsule/0.2.0` |
-| Consumption Plan / plan | `kdna.consumption-plan/0.2.0` |
-| Agent Host / host | `kdna.agent-host/0.2.0` |
-| Judgment Trace / trace | `kdna.judgment-trace/0.2.0` |
-| Read API / read | `kdna.read/0.2.0` |
+| container | `0.5.0` |
+| payload_profile | `kdna.payload.judgment` |
+| payload_version | `0.5.1` |
+| core | `kdna.core/0.8.2` |
+| ir | `kdna.canonical-ir/0.6.1` |
+| runtime | `kdna.runtime-capsule/0.3.1` |
+| plan | `kdna.consumption-plan/0.3.1` |
+| host | `kdna.agent-host/0.3.1` |
+| trace | `kdna.judgment-trace/0.3.1` |
+| read | `kdna.read/0.6.4` |
 
-The local candidate packages are `@aikdna/kdna-core@0.24.0-rc.component-semantics.2` and `@aikdna/kdna-read@0.3.0-rc.component-semantics.2`. Read declares the exact Core peer. Package exports and installed resolution must be independently checked against their exact artifacts. Registry availability and publication are unverified; no published artifact is overwritten.
+The local package candidates are `@aikdna/kdna-core@0.36.0-rc.r2.7` and `@aikdna/kdna-read@0.11.0-rc.r2.7`. Read requires that exact Core. The complete source, actual packed artifact and independently installed consumer must be bound together. A directory package.json is not proof of the package actually loaded.
 
-All four digest profiles have profile_version `0.2.0`: A `kdna.digest-basis.container-bytes`, C `kdna.digest-basis.content-tree`, E `kdna.digest-basis.runtime-entry-set`, and P `kdna.canonicalization.runtime-capsule-jcs`. Their closed byte-domain rules are in [public-contract-decisions.json](public-contract-decisions.json), not inherited from an implementation's similarly named function. The package-set handoff design record uses `kdna.package-set-handoff/0.1.0` and binds the complete new tuple; it is not another Read mode or a cross-asset semantic-merge API.
+The container framing remains 0.5.0. The Manifest contract is selected by the existing fields `(format_version, compatibility.profile, compatibility.profile_version)`: `(0.5.0, kdna.payload.judgment, 0.5.1)`. It maps to `urn:kdna:schema:manifest:container:0.5.0:profile:kdna.payload.judgment:0.5.1`, generated as `schema/manifest-container-0.5.0-judgment-0.5.1.schema.json` and mirrored in Core. No schema URI, package version, loader-minimum field, body appearance or caller assertion selects a different schema.
 
-## Acceptance and rejection
+Historical Manifest, payload, IR, Read, execution and transport schemas keep their original bytes/IDs. `public-semantic-source.json.historical_artifacts` inventories them; the active generation graph excludes them. In particular, the former `manifest-0.2.schema.json` path is neither overwritten with new required fields nor turned into a forwarding alias. Same framing version does not imply identical Manifest obligations.
 
-A successful request and its admitted snapshot must both have the exact ten-field tuple. Missing tuple object, unknown object properties or non-string version scalars are READ_INPUT_INVALID. Before enum validation obscures the reason, compare string-valued coordinates: any new version-valued coordinate together with a missing or different version coordinate yields READ_MIXED_VERSION_TUPLE. The invariant payload_profile name is excluded from detecting a new version family. A complete old or unrelated tuple yields READ_UNSUPPORTED_VERSION. A wrong payload_profile on an otherwise new tuple is a mixed tuple and is never reinterpreted. Request/snapshot mismatch is likewise mixed when either belongs to the new family. No legacy decoder, conversion, dual read or fallback follows a rejection. Historical labels in negative vectors are synthetic unsupported inputs, not a claim that old releases exported those API coordinates.
+The five runtime/plan/host/trace 0.3 schemas replace the active 0.2 combination because they embed the complete tuple and, for Capsules, IR nodes. Runtime behavior still supplies static authored judgment and requires an independent Host for real action; no new asynchronous or remote-submission API is implied.
 
-This revision keeps Container/Payload 0.2 and the existing A/C/E/P domains. It changes Core results and the method IR/Read value, adds fixed typed finite component interpretation, and makes explicit presence and interpretation failure observable. The Core/IR/Read coordinates therefore change together. D_public binds the complete public component definition; it is separate from C and from the frozen reference definition digest. Consumers bind the complete tuple and exact generated closure. They must not infer compatibility from unchanged wire bytes or package minor versions.
+Read transport admission uses `kdna.read-transport-admission/0.2.1`, `urn:kdna:schema:read-transport-admission:0.2.1`, and `specs/read-transport-admission-0.2.1.schema.json`. Package-set handoff uses `kdna.package-set-handoff/0.2.1`. These are direct tuple/Read bindings, not extra VersionTuple axes. A/C/E/P canonicalization profiles and unchanged encryption, signing and authorization algorithm identities retain their existing meanings.
 
-## Existing 0.1 lifecycle remains intact
+## Rejection before interpretation
 
-All existing entries above the new design appendix in SPEC-INDEX remain Active at their original coordinates. Their Active → Deprecated → Removed policy and minimum 12-month deprecation window remain unchanged. This design issues no deprecation notice and starts no clock. Any future notice must identify the old coordinate, scope, issuer, date and earliest removal date under separate authority. New implementation acceptance requires one new semantic path with explicit old-input rejection. Maintaining the old normative line and publishing a separate new implementation are distinct responsibilities; neither creates a promise that one runtime reads both.
+The new consumer admits only the exact new complete tuple. Exact historical tuples are classified as `READ_UNSUPPORTED_VERSION` before testing whether any shared version axis is current, so the shared container 0.5.0 cannot turn a valid old tuple into a mixed tuple. Truly mixed coordinates use `READ_MIXED_VERSION_TUPLE`; malformed required structures or scalar types use the relevant input/structure diagnostic. Unknown complete unrelated versions are unsupported. No rejection triggers a historical decoder or automatic rewrite. Old packages retain responsibility for their own original coordinates.
 
-## Evidence required for consumer rebinding
+Unknown critical semantics block all four new Read modes. The old line's catalog-only behavior remains historical, with its original proof limits. It does not authorize the new runtime to replace questions with IDs or disclose an incomplete catalog.
 
-Each consumer receipt must keep these fields separate; absent observation is explicitly UNVERIFIED, never copied from a neighboring field:
+## Explicit content migration
 
-| Evidence field | What it can establish |
+Migration is a reviewed authored revision, never field invention. Full questions, the three single classifications, mechanism roles and their content, core expressions, scopes, conditions, qualified references, typed ports/instances, results, examples and history must be supplied and checked against the actual intended content. Old label/mode/nature content is explicitly mapped or retained as history; it is not silently discarded or copied into a new semantic role. A missing question is not fixed by appending a question mark; a core answer is not a first paragraph. Incomplete necessary topics prevent a complete-asset claim. A complete formation rule does not require a fabricated present input or execution result.
+
+The component binding uses `kdna.component-semantics/2` version 2.0.0 with component/adoption extension IDs `/2`. Component.method always names an R2 basic method; typed taxonomy/candidate/discriminator profile identity lives in its explicit carrier. Profile contents retain their semantics. Changed native declarations and definitions require new digests; unchanged typed content may retain its content digest. Old `/1` carriers are never implicitly upgraded under the new tuple. Ordinary R2 components need no typed carrier.
+
+The full mapping is in [R2 definitions](r2/README.md), particularly FIELD-DICTIONARY, COMPOSITION, REFERENCE-REGISTRY and PUBLIC-PROJECTION. Natural-language fidelity, actual observed records, real author adoption, formal business assets, Reader experience and release remain separately reviewed. This policy issues no deprecation notice or change to historical support commitments.
+
+R2 dependent Schema bindings use new identities while retaining their base algorithms:
+
+| Module | Current Schema |
 |---|---|
-| README assertion and captured bytes | What a document states; not the current release |
-| Manifest package name/version/dependency range and exact bytes | Declared metadata; not installed resolution |
-| Source repository, exact HEAD, dirty state and file SHA map | Local source identity; not registry bytes |
-| Accepted contract tuple plus exact normative aggregate | Which semantics and generated closure were accepted |
-| Lock/resolution environment, direct and transitive graph | Which dependency resolution was actually observed |
-| Resolved artifact locator, byte count and SHA-256 | Identity of the actual artifact consumed |
-| Registry/tag observation with time and provenance | Observed publication metadata; not a substitute for artifact bytes |
-| Remote artifact bytes, hash, retrieval source and time | What was remotely received at that observation |
-| Consumer test/acceptance receipt | Which actual implementation behavior was verified against those inputs |
+| Protection admission /1 | `urn:kdna:schema:protection-admission:1.0.0:binding:r2:7` |
+| External grant issuer /1 | `urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:7` |
+| Protected source /1 | `urn:kdna:schema:protected-source:1.0.0:binding:r2:7` |
+| PackageSet Node 0.2 | `urn:kdna:schema:package-set-node:0.2.1` |
 
-A frozen local baseline is not registry evidence. No latest or published assertion follows from local artifacts. A source, schema, digest domain, resolution or artifact change invalidates the affected consumer receipt and its dependents; rebinding requires a new exact receipt without silently retargeting an accepted hash.
+Each binding is explicit in the unique source and participates in its normal definition
+digest. Fixed tuple/package constants and reachable diagnostics are part of its identity.
+Old same-purpose Schema files retain their exact bytes; a retained /1 algorithm name
+alone does not establish compatibility with the R2 combination.
 
-## Single source and consumer order
+The optional static policy carrier is now `kdna.static-policy/2`, version `2.0.0`.
+Its complete new definition includes empty native `condition_refs`, exclusion of a
+competing native policy, and the exact derived IR node field
+`IRNode_judgment.static_policy_interpretation`. The original `/1` definition and digest
+remain historical; old carriers and mixed definitions reject in the new tuple.
 
-`specs/public-semantic-source.json` is the sole machine semantics. `scripts/public-contract/generate.mjs` derives schemas, vocabulary, diagnostics, Core/Read TypeScript surfaces, the component definition document and test seed mirrors. `specs/public-generation-manifest.json` binds exact inputs and outputs. Public prose explains those definitions; consumer mirrors cannot add their own rules.
+Current Read schema: [read-contract-0.6.4.schema.json](read-contract-0.6.4.schema.json), `urn:kdna:schema:read:0.6.4`.
 
-Core alone interprets finite taxonomy, candidate-set and discriminator-set content. Read projects the resulting typed method value and applies the current Host gate and full final-envelope budget. `/components` exposes only a fixed read-only contract descriptor. Static adoption records do not authenticate an actor or confer execution permission.
+## Current native binding successor (S12-REPAIR-NATIVE-01)
 
-Independent acceptance of the direct public Core/Read artifacts precedes Reader and language consumers. Formal creation separately binds actual alternatives, an actual selected actor response, the complete candidate and one-use execution context, then verifies freshly saved bytes through public Core. Language SDKs, Studio, CLI/Agent and affected application consumers must rebind their actual direct dependencies. They do not wait for all consumers to finish and do not redefine public semantics.
+The RC7 repair uses a strict disjoint MethodBinding: an opt-in CS2 component uses
+its existing own-judgment target_ref and complete all-role digest; a component
+without that opt-in uses local typed target {kind,id}. The native target kinds
+are actor, judgment, reason, source, source_use, resource, material, relationship,
+dependency, contract, component, boundary, exception and misuse. No asset field
+or newly registered plan/policy/revision kind is admitted. component_ref remains
+owned by the declaring judgment. Duplicate component/role/target bindings reject;
+different roles retain their authored meaning. Component-to-target mandatory
+edges participate in the existing fixed-point Read and Plan/Capsule closures.
+No legacy target ID is guessed or automatically migrated.
 
-Real browser execution, Swift/Python parity, actual revised official assets, Reader design, real Agent tasks and publication each need their own evidence. Synthetic fixture hashes or a successful generator do not establish these results. Existing accepted unaffected behavior is retained at its original exact dependency graph.
+Runtime/plan/host/trace now use 0.3.1 artifacts because their exact embedded tuple
+changed. The framing and static execution algorithms are unchanged. All previous
+schemas, including the accepted RC6 execution schemas and fixed wrappers, keep their original
+bytes and IDs. The RC6 complete tuple is unsupported in this new consumer, while
+its historical Stage1 acceptance remains recorded. This repair record is neither
+phase acceptance nor publication. Current source-map and target_lines navigation
+must identify this full RC7 combination and its sole public semantic source.
+
+## Candidate history (not current)
+
+### RC2 candidate correction
+
+Historical S12-D006 kept the initial R2 Core0.8.0 target tuple while issuing Core 0.36.0-rc.r2.2 and Read 0.11.0-rc.r2.2. The three fixed protection-admission, protected-source and issuer wrappers advance to binding:r2:2 and retain binding1 schemas as unaccepted rc1 history. Other unaccepted R2 schema targets are corrected to the accepted R2 definitions, with explicit rc1-to-rc2 content/digest differences. These drafts are neither identical nor claimed mutually compatible. Pre-R2 historical public schema bytes remain unchanged.
+
+### R2 RC3 installation boundary (S12-D011 revision2)
+
+The historical RC3 candidate pair was Core `0.36.0-rc.r2.3` and Read `0.11.0-rc.r2.3` with an exact peer. Its Core semantic coordinate is `kdna.core/0.8.1`; other R2 tuple axes are unchanged. Frozen RC1/RC2 Core `0.8.0` combinations are unaccepted historical candidates, not supported alternatives. A complete old request tuple is `READ_UNSUPPORTED_VERSION`; an actual mixed tuple is `READ_MIXED_VERSION_TUPLE`.
+
+The ordinary pipeline checks independent generated package-version expectations after request/version admission and before Core input admission or Host observation. Public `project` performs the same check before content. A mismatch returns `READ_CORE_CAPABILITY_UNAVAILABLE` without content, new handles or Host observation, using existing refusal and control-budget rules. The genuine Core snapshot full-tuple comparison remains mandatory: changing package metadata alone cannot make an old implementation a current Core. The old Read pipeline also refuses the new Core snapshot through its existing tuple comparison.
+
+No public callable, signature, diagnostic or payload selector is added. `inspectSnapshot(snapshot)` and Core-internal branding keep their existing roles. Protected/PackageSet descriptor and authorization checks remain required. The browser graph uses package metadata and generated data only, not Node-only inspection. Data-only analysis remains a schema-only helper. This boundary does not repair old-old combinations or authenticate malicious replacement of all runtime code. Fixed protection/source/issuer wrappers used binding:r2:3; binding1/2 bytes remain immutable unaccepted history.
+
+
+### R2 RC4 Browser correction (S12-D012)
+
+The historical RC4 exact pair was Core `0.36.0-rc.r2.4` / Read `0.11.0-rc.r2.4`, with Core `kdna.core/0.8.1` and Read `kdna.read/0.6.1`. Only the Read tuple axis changes from RC3. Both packages compile the entire new tuple; ordinary installation checks and genuine snapshot comparisons remain separate. Metadata-only changes cannot make RC3 and RC4 compatible. The complete old RC3 tuple is unsupported; no old decoder is selected.
+
+Its Read schema was `read-contract-0.6.1.schema.json`, id `urn:kdna:schema:read:0.6.1`. The former 0.6 source and package mirror retain fixed RC3 bytes as unaccepted history. Protection/source/issuer wrappers use binding:r2:4; binding1-3 remain unchanged. Other unaccepted R2 draft schemas regenerate their complete reachable types with an explicit difference ledger.
+
+Read treats an unavailable Node environment as absence of its optional measurement switches, preserving existing defaults and Node switch meanings. It does not inject a process shim, activate the historical catalog-only path, change omission semantics or reduce full-envelope budgeting. Browser bundle checks in a Web API VM are distinct from native browser and OS acceptance. Current package README identities must match actual package metadata, exact peer and compiled tuple.
+
+### R2 RC5 current-navigation candidate (S12-D013)
+
+The frozen RC5 exact pair was Core `0.36.0-rc.r2.5` / Read `0.11.0-rc.r2.5`, Core `kdna.core/0.8.1`, Read `kdna.read/0.6.2`, with Read Schema `read-contract-0.6.2.schema.json`, id `urn:kdna:schema:read:0.6.2`, and binding:r2:5 wrappers. Its failed full-page navigation review and all original bytes remain unchanged. D015 corrected six package-external documents in a separate candidate; its conditional same-tar route stopped when the actual packed Read README required correction. D016 retains those navigation edits under the new RC6 identity; neither candidate has independent stage acceptance from this record.
+
+## Current packed-documentation and installation combination (S12-D016)
+
+Historical observation from S12-D016; superseded by RC7, with original record preserved:
+
+Prior Read0.6, Read0.6.1 and Read0.6.2 source/mirror bytes and binding1–5 wrappers are fixed history.

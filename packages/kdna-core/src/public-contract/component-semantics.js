@@ -3,7 +3,7 @@
 const {canonicalJson,utf8,compareUtf8,copyJson,freeze,reject,scalarString}=require('./strict-input.js');
 const {digest}=require('./digests.js');
 const {validate}=require('./validate.js');
-const {types,component_semantics:registry}=require('./generated-contract.json');
+const {types,component_semantics:registry,static_policy}=require('./generated-contract.json');
 const definition=registry.definition, D=registry.definition_digest;
 const H=value=>digest(utf8(canonicalJson(value)));
 if(H(definition)!==D)throw new Error('COMPONENT_DEFINITION_INTEGRITY');
@@ -28,7 +28,7 @@ function jsonValue(value,kind,j=null,c=null){
 }
 // Walk only positions typed as Extension. Extension.value is opaque here.
 // Discriminated unions may share fields; an extension object is visited once.
-function visitExtensions(payload,callback){
+function visitExtensions(value,callback,rootType='Payload'){
  const seen=new WeakSet();
  function walk(value,shape,path){
   if(!value||typeof value!=='object')return;
@@ -41,15 +41,22 @@ function visitExtensions(payload,callback){
   }
   if(shape.properties)for(const [key,child]of Object.entries(shape.properties))if(Object.hasOwn(value,key))walk(value[key],child,[...path,key]);
   if(Array.isArray(value)&&shape.items)value.forEach((v,i)=>walk(v,shape.items,[...path,i]));
-  for(const branch of [...(shape.oneOf??shape.anyOf??[]),...(shape.allOf??[])])walk(value,branch,path);
+  for(const branch of [...(shape.oneOf??[]),...(shape.anyOf??[]),...(shape.allOf??[])])walk(value,branch,path);
  }
- walk(payload,types.Payload,[]);
+ walk(value,types[rootType],[]);
+}
+function checkInterpretationComplete(payload,visit=visitExtensions){
+ // An unknown extension cannot decide whether other, known obligations pass.
+ // Call only after all deterministic checks, including the IR closure, finish.
+ visit(payload,extension=>{
+  if(extension.critical&&!kinds.has(extension.id)&&extension.id!==static_policy.definition.carrier.id)reject('READ_UNSUPPORTED_CRITICAL');
+ });
 }
 function checkNativeMethods(payload){
  const required=new Map(definition.native_method_requirements.map(x=>[x.term,x]));
- for(const j of payload.judgments){
+ for(const [index,j] of payload.judgments.entries()){
   const m=j.method;if(!m||m.method.extension)continue;const r=required.get(m.method.term);if(!r)continue;
-  if(r.component_types.some(type=>!m.components.some(c=>c.method.term===type&&!c.method.extension))||r.binding_roles.some(role=>!m.bindings.some(b=>b.role===role)))reject('READ_CORE_INVALID');
+  if(r.component_types.some(type=>!m.components.some(c=>c.method.term===type&&!c.method.extension))||r.binding_roles.some(role=>!m.bindings.some(b=>b.role===role)))reject('READ_CORE_INVALID',{subject:j.id,field:'/payload/judgments/'+index+'/method'});
  }
 }
 function text(value,max,j,c){if(typeof value!=='string'||!value.length||value.trim()!==value||!scalarString(value,max))failure('content',j,c);}
@@ -103,15 +110,15 @@ function plainProfile(type,content,j,c){
  }
  return null;
 }
-function resolveComponents(payload){
+function resolveComponents(payload,visit=visitExtensions){
  const byJudgment=new Map(payload.judgments.map(j=>[j.id,j]));
  const selected=new Map(),presences=new Map(),allValues=[];let aggregate=null,totalBytes=0;
  if(payload.judgments.reduce((n,j)=>n+(j.method?.components.length??0),0)>limits.components_per_payload)failure('limit');
  for(const j of payload.judgments)if(j.method)presences.set(j.id,{components_state:'declared',bindings_state:'declared'});
  const seenPresence=new Set();
- visitExtensions(payload,(extension,path)=>{
+ visit(payload,(extension,path)=>{
   const registered=kinds.get(extension.id);
-  if(!registered){if(extension.critical)reject('READ_INTERPRETATION_INCOMPLETE');return;}
+  if(!registered)return;
   const judgmentPosition=path.length===4&&path[0]==='judgments'&&path[2]==='extensions';
   const payloadPosition=path.length===2&&path[0]==='extensions';
   const j=judgmentPosition?payload.judgments[path[1]]:null;
@@ -132,16 +139,20 @@ function resolveComponents(payload){
   if(!j.method||value.judgment_ref!==j.id)failure('reference',j.id);
   const component=j.method.components.find(c=>c.id===value.component_ref);
   if(!component)failure('reference',j.id);
-  const c=component.id, profile=profiles.get(component.method.term);
-  if(selected.has(c)||component.method.extension||!profile||value.component_type!==component.method.term||value.profile_id!==profile||value.contract_id!==definition.id||value.contract_version!==definition.version||value.definition_digest!==D)failure('declaration',j.id,c);
+  const c=component.id, profile=profiles.get(value.component_type);
+  if(selected.has(c)||component.method.extension||!profile||value.profile_id!==profile||value.contract_id!==definition.id||value.contract_version!==definition.version||value.definition_digest!==D)failure('declaration',j.id,c);
   let bytes;try{bytes=utf8(canonicalJson(value.content)).length;}catch{failure('content',j.id,c);}totalBytes+=bytes;
   if(bytes>limits.content_canonical_bytes||totalBytes>limits.opted_in_total_canonical_bytes)failure('limit',j.id,c);
-  const body=plainProfile(component.method.term,value.content,j.id,c);
+  const body=plainProfile(value.component_type,value.content,j.id,c);
   try{validate('ComponentSemanticsCarrier',value);}catch{failure('declaration',j.id,c);}
   if(value.content_digest!==H(value.content))failure('binding',j.id,c);
   if(value.statement_origin==='mechanical_content_representation'&&component.statement!==canonicalJson(value.content))failure('declaration',j.id,c);
   if(value.component_declaration_digest!==H({component,statement_origin:value.statement_origin}))failure('binding',j.id,c);
-  const bindings=j.method.bindings.filter(b=>b.component_ref===c).slice().sort((a,b)=>compareUtf8(a.role,b.role)||compareUtf8(a.target_ref,b.target_ref));
+  const bindings=j.method.bindings.filter(b=>b.component_ref===c).slice();
+  // All bindings belong to the claim. Reject a typed native target before
+  // sorting/digesting; never filter it out of the all-role profile digest.
+  if(bindings.some(b=>Object.hasOwn(b,'target')))failure('binding',j.id,c);
+  bindings.sort((a,b)=>compareUtf8(a.role,b.role)||compareUtf8(a.target_ref,b.target_ref));
   const seen=new Set();for(const b of bindings){if(b.target_ref!==j.id||seen.has(canonicalJson(b)))failure('binding',j.id,c);seen.add(canonicalJson(b));}
   if(value.bindings_digest!==H(bindings))failure('binding',j.id,c);
   selected.set(c,{value,body,owner:j.id});allValues.push(value);
@@ -160,11 +171,14 @@ function resolveComponents(payload){
   const proposals=[...new Set(allValues.map(x=>x.adoption_proposal_digest))].sort(compareUtf8);
   if(aggregate.contract_id!==definition.id||aggregate.contract_version!==definition.version||aggregate.definition_digest!==D||aggregate.declaration_set_digest!==H(allValues)||aggregate.proposal_set_digest!==H(proposals))failure('adoption');
  }
+ for(const j of payload.judgments)for(const binding of j.method.bindings){
+  if(Object.hasOwn(binding,'target_ref')&&!selected.has(binding.component_ref))failure('binding',j.id,binding.component_ref);
+ }
  const methods=new Map();
  for(const [id,j]of byJudgment){
   if(!j.method)continue;
   const entries=j.method.components.map(component=>{
-   const common={judgment_ref:id,component_ref:component.id,component_type:component.method.term,definition_digest:D};const entry=selected.get(component.id);
+   const common={judgment_ref:id,component_ref:component.id,component_type:selected.get(component.id)?.value.component_type??null,definition_digest:D};const entry=selected.get(component.id);
    if(!entry)return {...common,status:'undeclared',declaration_digest:null,content_digest:null,profile_id:null,component_declaration_digest:null,statement_origin:null,bindings_digest:null,adoption_proposal_digest:null,authored_content:null,body:null};
    const value=entry.value;
    return {...common,status:'supported',declaration_digest:H(value),content_digest:value.content_digest,profile_id:value.profile_id,component_declaration_digest:value.component_declaration_digest,statement_origin:value.statement_origin,bindings_digest:value.bindings_digest,adoption_proposal_digest:value.adoption_proposal_digest,authored_content:copyJson(value.content),body:entry.body};
@@ -174,4 +188,4 @@ function resolveComponents(payload){
  return methods;
 }
 function getComponentSemanticsContract(){return freeze(copyJson(registry));}
-module.exports={resolveComponents,checkNativeMethods,getComponentSemanticsContract};
+module.exports={resolveComponents,checkNativeMethods,getComponentSemanticsContract,visitExtensions,checkInterpretationComplete};

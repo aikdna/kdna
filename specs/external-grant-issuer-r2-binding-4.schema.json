@@ -1,0 +1,625 @@
+{
+  "$defs": {
+    "AssetCapability": {
+      "enum": [
+        "asserted_answers",
+        "result_forming_rules",
+        "mixed"
+      ],
+      "type": "string"
+    },
+    "Digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "IssuerAdmissionObservation": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "asset_capability": {
+              "$ref": "#/$defs/AssetCapability"
+            },
+            "interpretation": {
+              "const": "complete",
+              "type": "string"
+            },
+            "status": {
+              "const": "accepted",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "asset_capability",
+            "interpretation"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "asset_capability": {
+              "$ref": "#/$defs/AssetCapability"
+            },
+            "interpretation": {
+              "const": "blocked",
+              "type": "string"
+            },
+            "status": {
+              "const": "catalog_only",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "asset_capability",
+            "interpretation"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "IssuerAssetDigests": {
+      "additionalProperties": false,
+      "properties": {
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "A",
+        "C",
+        "E"
+      ],
+      "type": "object"
+    },
+    "IssuerCoreRejectedObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "core": {
+          "additionalProperties": false,
+          "properties": {
+            "reason": {
+              "$ref": "#/$defs/ReadDiagnosticCode"
+            },
+            "status": {
+              "const": "rejected",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "reason"
+          ],
+          "type": "object"
+        },
+        "stage": {
+          "enum": [
+            "asset"
+          ]
+        },
+        "status": {
+          "const": "core_rejected",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "core",
+        "stage"
+      ],
+      "type": "object"
+    },
+    "IssuerDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "exports": {
+          "items": false,
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "const": "getExternalGrantIssuerContract",
+              "type": "string"
+            },
+            {
+              "const": "issueExternalKeyGrantForAsset",
+              "type": "string"
+            }
+          ],
+          "type": "array"
+        },
+        "id": {
+          "const": "kdna.external-grant-issuer/1",
+          "type": "string"
+        },
+        "implementation": {
+          "additionalProperties": false,
+          "properties": {
+            "package": {
+              "const": "@aikdna/kdna-core",
+              "type": "string"
+            },
+            "version": {
+              "const": "0.36.0-rc.r2.4",
+              "type": "string"
+            }
+          },
+          "required": [
+            "package",
+            "version"
+          ],
+          "type": "object"
+        },
+        "limits": {
+          "additionalProperties": false,
+          "properties": {
+            "container_bytes": {
+              "const": 26214400
+            },
+            "grant_bytes": {
+              "const": 1048576
+            },
+            "max_concurrent": {
+              "const": 4
+            },
+            "timeout_ms_max": {
+              "const": 60000
+            }
+          },
+          "required": [
+            "container_bytes",
+            "grant_bytes",
+            "timeout_ms_max",
+            "max_concurrent"
+          ],
+          "type": "object"
+        },
+        "version": {
+          "const": "1.0.0",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest",
+        "implementation",
+        "exports",
+        "limits"
+      ],
+      "type": "object"
+    },
+    "IssuerFailedObservation": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "ISSUER_INPUT_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "input"
+              ]
+            },
+            "status": {
+              "const": "issuer_failed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "ISSUER_ASSET_PROFILE_UNSUPPORTED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "asset"
+              ]
+            },
+            "status": {
+              "const": "issuer_failed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "ISSUER_ASSET_AUTHENTICATION_FAILED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "asset",
+                "integrity"
+              ]
+            },
+            "status": {
+              "const": "issuer_failed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "ISSUER_KEY_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "issuer_key"
+              ]
+            },
+            "status": {
+              "const": "issuer_failed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "ISSUER_GRANT_OPTIONS_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "input",
+                "grant"
+              ]
+            },
+            "status": {
+              "const": "issuer_failed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "ISSUER_OUTPUT_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "input",
+                "asset",
+                "integrity",
+                "issuer_key",
+                "grant"
+              ]
+            },
+            "status": {
+              "const": "issuer_failed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "IssuerGrantObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "byte_length": {
+          "maximum": 1048576,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "byte_length",
+        "digest"
+      ],
+      "type": "object"
+    },
+    "IssuerIdentityObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uri",
+          "maxLength": 256,
+          "type": "string"
+        },
+        "public_key": {
+          "pattern": "^ed25519:[A-Za-z0-9_-]{43}$",
+          "type": "string"
+        },
+        "signing_key_id": {
+          "pattern": "^[A-Za-z0-9._:@/-]{1,256}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "signing_key_id",
+        "public_key"
+      ],
+      "type": "object"
+    },
+    "IssuerIssuedObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "admission": {
+          "$ref": "#/$defs/IssuerAdmissionObservation"
+        },
+        "asset": {
+          "$ref": "#/$defs/IssuerAssetDigests"
+        },
+        "grant": {
+          "$ref": "#/$defs/IssuerGrantObservation"
+        },
+        "issuer": {
+          "$ref": "#/$defs/IssuerIdentityObservation"
+        },
+        "proof": {
+          "const": "issuer_output_not_account_or_read_authority",
+          "type": "string"
+        },
+        "status": {
+          "const": "issued",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "grant",
+        "asset",
+        "issuer",
+        "admission",
+        "proof"
+      ],
+      "type": "object"
+    },
+    "IssuerOptions": {
+      "additionalProperties": false,
+      "properties": {
+        "account_id": {
+          "pattern": "^[A-Za-z0-9._:@/-]{1,256}$",
+          "type": "string"
+        },
+        "device_agreement_public_key": {
+          "pattern": "^x25519:[A-Za-z0-9_-]{43}$",
+          "type": "string"
+        },
+        "device_id": {
+          "pattern": "^[A-Za-z0-9._:@/-]{1,256}$",
+          "type": "string"
+        },
+        "device_signing_public_key": {
+          "pattern": "^ed25519:[A-Za-z0-9_-]{43}$",
+          "type": "string"
+        },
+        "entitlement_id": {
+          "pattern": "^[A-Za-z0-9._:@/-]{1,256}$",
+          "type": "string"
+        },
+        "entitlement_profile": {
+          "enum": [
+            "account",
+            "org"
+          ]
+        },
+        "expires_at_ms": {
+          "maximum": 253402300799999,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "grant_id": {
+          "pattern": "^[A-Za-z0-9._:@/-]{1,256}$",
+          "type": "string"
+        },
+        "issued_at_ms": {
+          "maximum": 253402300799999,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "issuer": {
+          "format": "uri",
+          "maxLength": 256,
+          "type": "string"
+        },
+        "offline_grace_until_ms": {
+          "maximum": 253402300799999,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "refresh_after_ms": {
+          "maximum": 253402300799999,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "signing_key_id": {
+          "pattern": "^[A-Za-z0-9._:@/-]{1,256}$",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "revoked",
+            "expired"
+          ]
+        },
+        "status_version": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "timeout_ms": {
+          "maximum": 60000,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "issuer",
+        "signing_key_id",
+        "account_id",
+        "entitlement_id",
+        "entitlement_profile",
+        "device_id",
+        "device_agreement_public_key",
+        "device_signing_public_key",
+        "grant_id",
+        "status",
+        "status_version",
+        "issued_at_ms",
+        "refresh_after_ms",
+        "offline_grace_until_ms",
+        "expires_at_ms",
+        "timeout_ms"
+      ],
+      "type": "object"
+    },
+    "IssuerResultObservation": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/IssuerIssuedObservation"
+        },
+        {
+          "$ref": "#/$defs/IssuerCoreRejectedObservation"
+        },
+        {
+          "$ref": "#/$defs/IssuerFailedObservation"
+        }
+      ]
+    },
+    "IssuerSignaturePolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "expectedPublicKeyHex": {
+          "oneOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "requireSignature": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "requireSignature",
+        "expectedPublicKeyHex"
+      ],
+      "type": "object"
+    },
+    "ReadDiagnosticCode": {
+      "enum": [
+        "READ_INPUT_INVALID",
+        "READ_SNAPSHOT_UNATTESTED",
+        "READ_CORE_CAPABILITY_UNAVAILABLE",
+        "READ_UNSUPPORTED_VERSION",
+        "READ_MIXED_VERSION_TUPLE",
+        "READ_CORE_INVALID",
+        "READ_INTERPRETATION_INCOMPLETE",
+        "READ_STATIC_POLICY_INVALID",
+        "READ_ASSET_MISMATCH",
+        "READ_ASSET_VERSION_MISMATCH",
+        "READ_SELECTION_NOT_FOUND",
+        "READ_SELECTION_AMBIGUOUS",
+        "READ_HANDLE_UNTRUSTED",
+        "READ_HANDLE_VERSION_MISMATCH",
+        "READ_HANDLE_STALE",
+        "READ_HANDLE_ASSET_MISMATCH",
+        "READ_HANDLE_SCOPE_MISMATCH",
+        "READ_HOST_CONTEXT_UNTRUSTED",
+        "READ_HOST_EPOCH_MISMATCH",
+        "READ_HOST_TIME_INVALID",
+        "READ_HANDLE_EXPIRED",
+        "READ_HOST_CONTEXT_EXPIRED",
+        "READ_HOST_DENIED",
+        "READ_SCOPE_DENIED",
+        "READ_PROJECTION_INVALID",
+        "READ_BUDGET_INSUFFICIENT",
+        "READ_COMPONENT_DECLARATION_INVALID",
+        "READ_COMPONENT_CONTENT_INVALID",
+        "READ_COMPONENT_REFERENCE_INVALID",
+        "READ_COMPONENT_GRAPH_CYCLE",
+        "READ_COMPONENT_LIMIT_EXCEEDED",
+        "READ_COMPONENT_BINDING_INVALID",
+        "READ_COMPONENT_ADOPTION_INVALID",
+        "READ_METHOD_PRESENCE_INVALID",
+        "READ_R2_STRUCTURE_INVALID",
+        "READ_R2_REFERENCE_INVALID",
+        "READ_R2_METHOD_INVALID",
+        "READ_R2_PLAN_INVALID",
+        "READ_R2_POLICY_INVALID",
+        "READ_R2_SCOPE_INVALID",
+        "READ_R2_EXAMPLE_INVALID",
+        "READ_R2_HISTORY_INVALID",
+        "READ_UNSUPPORTED_CRITICAL",
+        "READ_UNRESOLVED_EXTERNAL"
+      ],
+      "type": "string"
+    }
+  },
+  "$id": "urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:4",
+  "$ref": "#/$defs/IssuerResultObservation",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Issuer observations only; JSON validation is not authentication or account authority. grantBytes is a separately checked Uint8Array runtime field.",
+  "title": "IssuerResultObservation"
+}

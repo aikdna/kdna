@@ -8,6 +8,7 @@ const cbor = require('cbor-x');
 const JsonSchema2020 = require('ajv/dist/2020.js');
 
 const core = require('../src');
+const LOADER_VERSION = require('../package.json').version;
 const fixture = require('./fixtures/golden-single-asset.json');
 const minimalFormatFixture = require('./fixtures/core-format-minimal.json');
 const officialCreationOutputFixture = require('./fixtures/official-creation-output.json');
@@ -427,7 +428,7 @@ test('committed CBOR validates and loads exact self-check shapes without silent 
       signature_state: 'absent',
       signature_evidence: null,
       load_contract_valid: true,
-      loader_version: '0.22.0',
+      loader_version: LOADER_VERSION,
       min_loader_version: '0.20.0',
       loader_compatible: true,
       overall_valid: true,
@@ -446,7 +447,7 @@ test('committed CBOR validates and loads exact self-check shapes without silent 
       payload: 'payload.kdnab',
       payload_encrypted: false,
       profile: 'kdna.payload.judgment',
-      loader_version: '0.22.0',
+      loader_version: LOADER_VERSION,
       min_loader_version: '0.20.0',
       loader_compatible: true,
       load_contract_default_profile: 'compact',

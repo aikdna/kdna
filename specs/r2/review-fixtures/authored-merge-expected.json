@@ -1,0 +1,319 @@
+{
+  "review_only": true,
+  "kind": "paper_expectations_not_runtime_trace",
+  "asset_fixture": "authored-merge.json",
+  "assumed_condition_results": {
+    "cond1": true,
+    "cond2": true,
+    "cond3": true
+  },
+  "input_contract_ref": {
+    "kind": "contract",
+    "id": "merge-input"
+  },
+  "native_merge_input": [
+    {
+      "producer": {
+        "kind": "candidate",
+        "id": "optionB"
+      },
+      "entry_refs": [
+        {
+          "kind": "branch_entry",
+          "id": "entryB"
+        }
+      ],
+      "value": {
+        "kind": "text",
+        "value": "B"
+      }
+    },
+    {
+      "producer": {
+        "kind": "candidate",
+        "id": "optionA"
+      },
+      "entry_refs": [
+        {
+          "kind": "branch_entry",
+          "id": "entryA"
+        },
+        {
+          "kind": "branch_entry",
+          "id": "entryA2"
+        }
+      ],
+      "value": {
+        "kind": "text",
+        "value": "A"
+      }
+    }
+  ],
+  "merge_output": {
+    "kind": "text",
+    "value": "B"
+  },
+  "branch_output": {
+    "kind": "text",
+    "value": "B"
+  },
+  "final_binding": {
+    "from": {
+      "node_ref": {
+        "kind": "plan_node",
+        "id": "merge-branch"
+      },
+      "port": "result",
+      "field_path": []
+    },
+    "field_path": []
+  },
+  "expected_outcome": {
+    "kind": "complete",
+    "policy_ref": {
+      "kind": "policy",
+      "id": "p-merge"
+    },
+    "result": {
+      "contract_ref": "merge-out",
+      "result_type": {
+        "term": "text"
+      },
+      "value": {
+        "kind": "text",
+        "value": "B"
+      }
+    },
+    "emissions": [
+      {
+        "producer": {
+          "kind": "candidate",
+          "id": "optionB"
+        },
+        "entry_refs": [
+          {
+            "kind": "branch_entry",
+            "id": "entryB"
+          }
+        ],
+        "value": {
+          "kind": "text",
+          "value": "B"
+        }
+      },
+      {
+        "producer": {
+          "kind": "candidate",
+          "id": "optionA"
+        },
+        "entry_refs": [
+          {
+            "kind": "branch_entry",
+            "id": "entryA"
+          },
+          {
+            "kind": "branch_entry",
+            "id": "entryA2"
+          }
+        ],
+        "value": {
+          "kind": "text",
+          "value": "A"
+        }
+      }
+    ]
+  },
+  "variants": [
+    {
+      "change": {
+        "combine.duplicates": "preserve"
+      },
+      "expected_native_input": [
+        {
+          "producer": {
+            "kind": "candidate",
+            "id": "optionB"
+          },
+          "entry_refs": [
+            {
+              "kind": "branch_entry",
+              "id": "entryB"
+            }
+          ],
+          "value": {
+            "kind": "text",
+            "value": "B"
+          }
+        },
+        {
+          "producer": {
+            "kind": "candidate",
+            "id": "optionA"
+          },
+          "entry_refs": [
+            {
+              "kind": "branch_entry",
+              "id": "entryA"
+            }
+          ],
+          "value": {
+            "kind": "text",
+            "value": "A"
+          }
+        },
+        {
+          "producer": {
+            "kind": "candidate",
+            "id": "optionA"
+          },
+          "entry_refs": [
+            {
+              "kind": "branch_entry",
+              "id": "entryA2"
+            }
+          ],
+          "value": {
+            "kind": "text",
+            "value": "A"
+          }
+        }
+      ],
+      "expected_result": {
+        "kind": "text",
+        "value": "B"
+      }
+    },
+    {
+      "change": {
+        "combine.order": "declaration"
+      },
+      "expected_native_input": [
+        {
+          "producer": {
+            "kind": "candidate",
+            "id": "optionA"
+          },
+          "entry_refs": [
+            {
+              "kind": "branch_entry",
+              "id": "entryA"
+            },
+            {
+              "kind": "branch_entry",
+              "id": "entryA2"
+            }
+          ],
+          "value": {
+            "kind": "text",
+            "value": "A"
+          }
+        },
+        {
+          "producer": {
+            "kind": "candidate",
+            "id": "optionB"
+          },
+          "entry_refs": [
+            {
+              "kind": "branch_entry",
+              "id": "entryB"
+            }
+          ],
+          "value": {
+            "kind": "text",
+            "value": "B"
+          }
+        }
+      ],
+      "expected_result": {
+        "kind": "text",
+        "value": "A"
+      }
+    },
+    {
+      "change": {
+        "candidates.optionB.value": {
+          "kind": "text",
+          "value": "A"
+        }
+      },
+      "expected_native_input": [
+        {
+          "producer": {
+            "kind": "candidate",
+            "id": "optionB"
+          },
+          "entry_refs": [
+            {
+              "kind": "branch_entry",
+              "id": "entryB"
+            }
+          ],
+          "value": {
+            "kind": "text",
+            "value": "A"
+          }
+        },
+        {
+          "producer": {
+            "kind": "candidate",
+            "id": "optionA"
+          },
+          "entry_refs": [
+            {
+              "kind": "branch_entry",
+              "id": "entryA"
+            },
+            {
+              "kind": "branch_entry",
+              "id": "entryA2"
+            }
+          ],
+          "value": {
+            "kind": "text",
+            "value": "A"
+          }
+        }
+      ],
+      "expected_result": {
+        "kind": "text",
+        "value": "A"
+      },
+      "reason": "同值不同生产者仍是两项"
+    }
+  ],
+  "negative_cases": [
+    {
+      "change": "删authored.order或duplicates",
+      "expected": "定义不完整，拒绝，不猜默认"
+    },
+    {
+      "change": "order=priority但两条priority相同或缺失",
+      "expected": "拒绝不确定顺序"
+    },
+    {
+      "change": "merge输入端口改指普通ResultContract",
+      "expected": "类型不符，拒绝，不把原生Emission当SemanticValue"
+    },
+    {
+      "change": "输入包成ValueList或ValueRecord或JSON文本",
+      "expected": "专用输入值结构不符，拒绝，不自动解包"
+    },
+    {
+      "change": "最终结果或候选改指EmissionListContract",
+      "expected": "用途错误，拒绝"
+    },
+    {
+      "change": "通过普通link或literal给专用端口再供一次值",
+      "expected": "违反唯一供给，拒绝"
+    },
+    {
+      "change": "cond1未知",
+      "expected": "defer，merge不取得部分输入"
+    },
+    {
+      "change": "全部条件false",
+      "expected": "on_no_match，merge不取得空列表"
+    }
+  ]
+}

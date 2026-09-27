@@ -23,16 +23,22 @@ async function observe(provider,request,snapshot,view){
   if(state.revocations.has(denial))return {error:'READ_HOST_DENIED'};
   return {value,state};
 }
-function scopeBody(body,request,context){
+function scopeBody(body,request,context,view){
   const allowed=new Set(context.scope),content=body.content;
-  if(content.closure.some(x=>!allowed.has(x.id)))return false;
-  content.declarations=content.declarations.filter(x=>allowed.has(x.id));
-  content.catalog=content.catalog.filter(x=>allowed.has(x.node_ref));
-  content.provenance.declarations=content.provenance.declarations.filter(x=>allowed.has(x.id));
-  if(!content.provenance.declarations.some(x=>x.role==='provenance'||x.value.state==='provided')){content.provenance.confirmation='not_evaluated';content.provenance.verifier_id=null;content.provenance.evidence_ref=null;}
-  content.relationships=content.relationships.filter(r=>content.closure.some(n=>n.role==='relationship'&&n.value.id===r.id&&allowed.has(n.id)));
-  content.references=content.references.filter(x=>allowed.has(x.source_node)&&allowed.has(x.target_node));
+  if(content.closure.some(x=>!allowed.has(x.id))||content.declarations.some(x=>!allowed.has(x.id)))return false;
+  // R2 mode completeness is all-or-reject. Filtering an unauthorized question
+  // or asset index entry would falsely report an incomplete inventory as whole.
+  if(content.catalog.some(x=>!allowed.has(x.node_ref)))return false;
+  if(content.asset_index.length){
+    if(!view)return false;
+    const targets=new Map(view.ir.nodes.map(node=>[jcs(node.target),node]));
+    if(content.asset_index.some(item=>{const node=targets.get(jcs(item.target));return !node||!allowed.has(node.id);}))return false;
+  }
+  if(content.provenance.declarations.some(x=>!allowed.has(x.id)))return false;
+  if(content.references.some(x=>!allowed.has(x.source_node)||!allowed.has(x.target_node)))return false;
+  if(content.expansion_handles.some(h=>h.scope.some(id=>!allowed.has(id))))return false;
   body.omissions=body.omissions.filter(x=>allowed.has(x.target));
   return true;
 }
+
 module.exports={handleRegistered,observe,scopeBody};

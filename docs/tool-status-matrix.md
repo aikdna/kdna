@@ -1,48 +1,62 @@
 # KDNA Tool Status Matrix
 
-> Source descriptions reviewed: 2026-09-14. The published command inventory
+> CLI, Studio and MCP local source descriptions reviewed: 2026-09-23. The published command inventory
 > remains the 2026-09-13 observation of `@aikdna/kdna-cli@0.36.1`.
 > `Released` means the command is present in the published package; it is not a
 > claim that the overall pre-release protocol/toolchain has reached GA.
-> The unreleased corrective source candidate withdraws asset-level
-> sign/verify/revoke commands rather than selecting among incompatible
-> signature contracts, and narrows the runtime surface further. This table
-> records the exact published 0.36.1 fact and does not claim that the candidate
-> has already been published.
+> Current local candidates have their own exact bindings and command forms.
+> This table preserves the published 0.36.1 observation and does not claim
+> that current candidate bytes have been published or are on remote `main`.
 >
 > **The published command set is a strict allowlist.** Any command not listed
 > below exits 2 with `command is not in the approved allowlist`. Read that
 > message as "this command is not in *this* published version", not as a
 > statement that the capability never existed.
 
-## Current Core/Read source (`@aikdna/kdna-cli@0.38.0-rc.component-semantics.1`)
+## Current Runtime CLI source (`@aikdna/kdna-cli@0.40.0-rc.protection.1`)
 
 The [CLI source candidate](https://github.com/aikdna/kdna-cli#readme) is **not an
-npm release**. It delegates admission and disclosure to its exact bound public
-Core and Read graph. These commands are independent of the published loading
-line below:
+npm release**. Its [binding](https://github.com/aikdna/kdna-cli/blob/main/public-contract-binding.json)
+pins Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`, not the
+protocol repository's Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1`.
+Use Node >=22 and the complete locked delivery described by the CLI README.
+The [source entry](./core-read-current-status.md#choose-and-obtain-one-matching-delivery)
+separates local candidates, remote source and published history.
 
 | Command | Purpose |
 |---|---|
 | `kdna inspect <asset.kdna>` | Technical metadata and digests, no disclosure content |
 | `kdna validate <asset.kdna>` | Admission status and public diagnostics |
-| `kdna read <asset.kdna> --mode catalog\|whole_asset\|exact_selection --budget <bytes> [--allow-read]` | Authorized public Read disclosure |
-| `kdna read <asset.kdna> --session [--allow-read]` | One public ReadRequest JSON object per input line |
+| `kdna read <asset.kdna> --mode catalog\|whole_asset\|exact_selection --budget <bytes> [--allow-read]` | Authorized public Read disclosure; exact selection also requires asset ID/version and judgment ID |
+| `kdna read <asset.kdna> --session [--allow-read]` | One public ReadRequest JSON object per input line; expand uses the same session |
+| `kdna plan <asset.kdna> --asset-id <id> --asset-version <version> --judgment-id <id> --task <text> --allow-read` | Supply a static consumption Plan; save the successful response's `plan` member for load |
+| `kdna load <asset.kdna> --plan <plan.json> --allow-read` | Admit the Plan and supply the bound Runtime Capsule; optional `--capsule` verifies a supplied Capsule |
 
-`plan` and `load` return explicit unavailable results. Retired authoring,
-packing, conversion and execution commands are not supported. Read defaults to
-denial; explicit local read permission is not action authorization. Do not mix
-this command set, assets or dependency graph with the published walkthrough.
+`plan` and `load` are available static supply operations. Their result keeps
+`proof: static_supply_not_execution` and `action_authorized: false`.
+Retired authoring, packing, conversion and execution commands are unsupported.
+Read defaults to denial; explicit local read permission is not action authority.
+For protected/credential command forms and their additional owned secret-FD
+boundary, use the CLI README. Their presence does not prove production native
+credential storage. Never mix these forms with `plan-load` or the published
+`load --profile=compact --as=json` syntax below.
 
-## Current Studio source (`@aikdna/kdna-studio-cli@0.13.0-rc.components.1`)
+## Current Studio source (`@aikdna/kdna-studio-cli@0.17.0-rc.material-edit.1`)
 
-The [Studio CLI source](https://github.com/aikdna/kdna-studio-cli#readme) owns
-`session`, `verify --bundle` and `read --bundle`. It consumes the exact current
-Studio/Core/Read graph. Live selection/adoption, saved-byte verification and
-static reopening are distinct results; a test callback or serialized evidence
-does not establish human adoption or restore live authority. The published
-project/card commands below remain historical APIs with their own versions.
-No registry publication or native Host support is implied by this source entry.
+The [Studio CLI source](https://github.com/aikdna/kdna-studio-cli#readme) binds
+Studio Core `4.5.0-rc.material-edit.1`, Core `0.35.0-rc.source.1` and Read
+`0.10.0-rc.source.1` in its
+[archive/member declarations](https://github.com/aikdna/kdna-studio-cli/blob/main/src/public-bindings.json).
+Use Node >=22 and the [fixed complete source delivery](./core-read-current-status.md#choose-and-obtain-one-matching-delivery), including its lock and vendor archives; the standalone npm archive is not that delivery. This local unpublished update does not update official remote source or npm releases.
+Its source commands include `session`, `draft`, `revision`, `verify --bundle` and
+`read --bundle`. Bounded `revision` requires an externally named predecessor
+and expected digest, a later version/timestamp, a new output directory and
+fresh live selection and confirmation; use the [terminal revision guide](https://github.com/aikdna/kdna-studio-cli/blob/main/docs/TERMINAL_AGENT_CREATION.md#saved-source-revision) in the matching source delivery. Draft persistence does not restore a live adoption session:
+selection, current preview and fresh confirmation are still required.
+Live adoption, saved-byte verification and static reopening are distinct
+results; a test callback or serialized evidence is not human acceptance.
+The published project/card commands below retain their own versions.
+Source availability does not establish publication or native Host support.
 
 ## Published command inventory
 
@@ -103,7 +117,7 @@ same template. The checked-in `templates/minimal-domain` view exports through
 | Component | Status |
 |---|---|
 | `kdna-loader` skill | **Unassessed** — mission retained; the previous broad-discovery and silent-loading model is not the current Host contract. |
-| MCP server adapter | Experimental |
+| MCP server adapter | Local unpublished MCP `0.8.1-rc.combination.1` with CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`; [canonical entry](https://github.com/aikdna/kdna-skills#readme). Named Host delivery, semantic adoption and real human acceptance remain `not_run`. |
 
 ## Package Boundaries
 

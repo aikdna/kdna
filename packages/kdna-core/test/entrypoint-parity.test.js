@@ -42,7 +42,7 @@ function representativeTypesSource(importSpecifier) {
   ].join('\n');
 }
 
-test('CJS and ESM root entrypoints expose identical named values', async () => {
+test('legacy source CJS and ESM entrypoints expose identical named values', async () => {
   const esm = await import(pathToFileURL(path.join(PACKAGE_ROOT, 'src', 'index.mjs')).href);
   const cjsNames = sorted(Object.keys(core));
   const esmNames = sorted(Object.keys(esm).filter((name) => name !== 'default'));
@@ -53,7 +53,7 @@ test('CJS and ESM root entrypoints expose identical named values', async () => {
   }
 });
 
-test('TypeScript value declarations exactly match the runtime root API', () => {
+test('legacy source TypeScript value declarations exactly match its runtime API', () => {
   const program = ts.createProgram([TYPES_PATH], {
     noEmit: true,
     strict: true,
@@ -75,11 +75,11 @@ test('TypeScript value declarations exactly match the runtime root API', () => {
   assert.deepEqual(sorted(declaredValues), sorted(Object.keys(core)));
 });
 
-test('TypeScript consumes representative crypto, Work Pack, and external-grant APIs', () => {
+test('TypeScript consumes legacy source crypto, Work Pack, and external-grant APIs', () => {
   const tmp = fs.mkdtempSync(path.join(PACKAGE_ROOT, 'test', 'tmp-types-'));
   try {
     const checkPath = path.join(tmp, 'check.ts');
-    fs.writeFileSync(checkPath, representativeTypesSource('../..'));
+    fs.writeFileSync(checkPath, representativeTypesSource('../../src/types'));
     runTsc([
       '--noEmit',
       '--strict',

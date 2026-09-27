@@ -2,13 +2,13 @@
 
 const { entryName, reject } = require('./strict-input.js');
 const decoder = new TextDecoder('utf-8', { fatal: true });
-const LIMITS = Object.freeze({ container: 25 * 1024 * 1024, entries: 128, entry: 5 * 1024 * 1024, total: 12 * 1024 * 1024, ratio: 100 });
+const LIMITS = Object.freeze({ container: 25 * 1024 * 1024, entries: 128, entry: 8 * 1024 * 1024, total: 12 * 1024 * 1024, ratio: 100 });
 const CRC_TABLE = Uint32Array.from({ length: 256 }, (_, n) => {
   for (let i = 0; i < 8; i++) n = n & 1 ? 0xedb88320 ^ (n >>> 1) : n >>> 1;
   return n >>> 0;
 });
 function crc32(bytes) { let n = 0xffffffff; for (const b of bytes) n = CRC_TABLE[(n ^ b) & 255] ^ (n >>> 8); return (n ^ 0xffffffff) >>> 0; }
-function parseContainer(bytes, inflate) {
+function parseContainer(bytes, inflate, metadata) {
   if (!(bytes instanceof Uint8Array) || bytes.length < 22 || bytes.length > LIMITS.container) reject('READ_CORE_INVALID');
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   const need = (at, count) => { if (!Number.isSafeInteger(at) || at < 0 || at + count > bytes.length) reject('READ_CORE_INVALID'); };
@@ -44,7 +44,9 @@ function parseContainer(bytes, inflate) {
     else reject('READ_CORE_CAPABILITY_UNAVAILABLE');
     if (decoded.length !== size || crc32(decoded) !== crc) reject('READ_CORE_INVALID');
     if (i === 0 && (name !== 'mimetype' || local !== 0 || method !== 0)) reject('READ_CORE_INVALID');
-    entries[name] = decoded; offset += 46 + length + extra + comment;
+    entries[name] = decoded;
+    if (metadata) metadata.push({ name, type: 'file', mode });
+    offset += 46 + length + extra + comment;
   }
   ranges.sort((a,b)=>a[0]-b[0]);
   let physicalEnd=0;

@@ -18,9 +18,7 @@ Core 入场建立捕获字节的技术有效性，不认证作者、不判断内
 ```
 
 这是当前源码实现的边界，见 [Core/Read 指引](./core-read-current-status.md) 与
-各包 README。加密、签名、checksums 文档入场、Runtime Capsule / Plan 入场与执行
-在当前实现中不可用。已发布 CLI 0.36.1 的 LoadPlan / Runtime Capsule 线保留自己的
-合同，不能把旧资产、接口或测试结果直接视为当前兼容。
+各包 README。当前 R2 的 Core `/execution` 提供原生 0.3.1 Plan/Capsule 入场及显式 Host 参考 API。普通 root/browser 入场拒绝加密、签名和 checksums 文档；[显式 Node 保护入口](../specs/protection-admission.md) 有独立输入和可信 provider 边界。已发布 CLI 0.36.1 保留自己的合同；旧资产、接口或测试结果不能直接视为当前兼容。
 
 协议不要求全局资产库、安装步骤、自动发现或 Agent Skill。保存或发现文件不等于
 授权；授权不等于每个任务都适用；加载成功不等于 Agent 已遵循，也不保证结果更好。
@@ -32,9 +30,9 @@ Core 入场建立捕获字节的技术有效性，不认证作者、不判断内
 | 层级 | 状态 | 含义 |
 |---|---|---|
 | `.kdna` 容器与 JS Core | Pre-release / 参考实现 | 当前源码提供入场、snapshot 与 Read；版本化格式/加载规范不等于全部能力已实现 |
-| Runtime CLI | Pre-release | 当前源码为 `inspect`、`validate`、`read`；CLI 0.36.1 的加载/打包命令属于已发布旧线 |
+| Runtime CLI | Pre-release | 当前源码提供 `inspect`、`validate`、`read`、静态 `plan` / `load --plan`；CLI 0.36.1 的加载/打包命令属于已发布旧线 |
 | Studio 创作工具链 | Pre-release | 当前 typed session、保存 bundle 复验与明确 Read；project/card 属于已发布 Studio CLI 0.11.0 |
-| 加密、授权、签名与撤销 | 按精确版本判断 | 当前 Core 不支持加密/签名容器入场；已发布 Core 0.22.0 的能力不继承到当前候选 |
+| 加密、授权、签名与撤销 | 按精确版本判断 | 普通 root/browser 入场保留保护拒绝；显式 Node 入口按单独合同处理；旧发布能力不自动继承 |
 | Remote / Activation 参考实现 | Experimental | Remote 为 HTTP Read handler；Activation 为同进程 store observer，无独立 server/CLI，不代表托管服务 |
 | 多资产、路由、评测表面 | Experimental | 待重新认证的高级实现，不属于默认路径 |
 | Swift、Web、React、编辑器和 Agent 适配 | 各自独立 | 必须检查精确版本、依赖坐标和证据 |

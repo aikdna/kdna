@@ -173,78 +173,325 @@
     "reject": 77
   },
   "expected_notation": "ReadCallResult four discriminants and all null sibling fields are exact assertions. Old symbolic IR cases and lawful Envelope-size stage cases use an explicitly labelled assertion projection inside envelope; observation_scope is test notation, never a wire field. New admission rejection/control/transport payloads are full closed values. Root project returns ReadProjection, not a fictitious ReadCallResult. Digest/Writer/declaration/package-set primitive cases explicitly mark read_call_result=null and keep their own operation assertions; wrapping them in a ReadEnvelope would invent a public disclosure operation. All original 54 IDs remain; every Read adapter case has the new result layer.",
-  "fixture_rules": "Named fixture preconditions are test-authority assumptions, never accepted serialized Core/Host authority. An override is a dotted-path replacement; {$delete:true} deletes that one field. Fixture metadata is not serialized public input. Resolve overrides ending in tuple_ref first, expand each named tuple into the enclosing tuple property and remove tuple_ref, then apply all remaining dotted overrides. Resolve request.handle_ref=issued-handle:1 to the final fixture.handle and remove handle_ref before decoding the public request. The default node scenario uses a captured Uint8Array whose Core adapter result is the declared fixture; the root scenario passes that Core snapshot directly. Browser input representation is explicit. Fixture Core/Host witness labels, admission state and registry flags are test-authority observations, not fields supplied by asset callers. Unmentioned Host correlation identifiers match the resolved request/snapshot. A registry_matches_overridden_handle=true case means an actually issued older/different record, not attacker-editing a live record. Core data arrays describe Core-owned IR read nodes by stable ID; generated Canonical IR schema fixtures will supply exact nodes. Modes preserve listed order; assertion fields not listed in an expected object are outside that vector observation, never default success.",
+  "fixture_rules": "Named fixture preconditions are test-authority assumptions, never accepted serialized Core/Host authority. An override is a dotted-path replacement; {$delete:true} deletes that one field. Fixture metadata is not serialized public input. Resolve overrides ending in tuple_ref first, expand each named tuple into the enclosing tuple property and remove tuple_ref, then apply all remaining dotted overrides. Resolve request.handle_ref=issued-handle:1 to the final fixture.handle and remove handle_ref before decoding the public request. The default node scenario uses a captured Uint8Array whose Core adapter result is the declared fixture; the root scenario passes that Core snapshot directly. Browser input representation is explicit. Fixture Core/Host witness labels, admission state and registry flags are test-authority observations, not fields supplied by asset callers. Unmentioned Host correlation identifiers match the resolved request/snapshot. A registry_matches_overridden_handle=true case means an actually issued older/different record, not attacker-editing a live record. Core data arrays describe Core-owned IR read nodes by stable ID; generated Canonical IR schema fixtures will supply exact nodes. Modes preserve listed order; assertion fields not listed in an expected object are outside that vector observation, never default success. Current R2 authored_asset is admitted by the official Core before any test overrides. Node aliases are assertion and named Host-scope notation only; original Core IR ids remain unchanged. Setup Core calls and real A/C/IR evidence are disclosed separately from pipeline counters. Asset-anchor optional material handles use exact typed Ref and complete Core expansion scope.",
   "fixtures": {
     "admitted-a": {
-      "A": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
-      "C": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
-      "assessment": {
-        "assessor_id": null,
-        "evidence_ref": null,
-        "kind": null,
-        "state": "not_evaluated"
-      },
       "asset": {
         "asset_id": "asset:a",
         "asset_version": "1.0.0",
         "judgment_version": "1.0.0"
       },
-      "catalog": [
-        {
-          "judgment_id": "j:1",
-          "label": "One",
-          "node_ref": "node:j1"
-        },
-        {
-          "judgment_id": "j:2",
-          "label": "Two",
-          "node_ref": "node:j2"
-        }
-      ],
-      "confirmation": "claimed_unverified",
-      "core_state": "valid",
-      "core_witness": "ISSUED_BY_CORE_FIXTURE_AUTHORITY",
-      "declarations": [
-        "decl:a"
-      ],
-      "expansion_targets": [
-        {
-          "scope": [
-            "optional:1",
-            "boundary:1"
+      "authored_asset": {
+        "manifest": {
+          "asset_id": "asset:a",
+          "asset_type": "fixture",
+          "asset_uid": "uid:a",
+          "compatibility": {
+            "min_loader_version": "0.36.0",
+            "profile": "kdna.payload.judgment",
+            "profile_version": "0.5.1"
+          },
+          "created_at": "2026-09-06T00:00:00Z",
+          "creator": {
+            "kind": "agent",
+            "name": "Fixture assertion"
+          },
+          "format_version": "0.5.0",
+          "history": {
+            "coverage": "complete",
+            "entries": [],
+            "statement": "Initial engineering fixture only."
+          },
+          "judgment_version": "1.0.0",
+          "languages": [
+            "en"
           ],
-          "selection": {
+          "lineage": [],
+          "payload": {
+            "encoding": "cbor",
+            "encrypted": false,
+            "path": "payload.kdnab"
+          },
+          "runtime": {
+            "mandatory_entries": []
+          },
+          "summary": "Synthetic asset for isolated contract regression checks.",
+          "title": "From-zero conformance asset",
+          "updated_at": "2026-09-06T00:00:00Z",
+          "version": "1.0.0"
+        },
+        "payload": {
+          "actors": [
+            {
+              "id": "actor:fixture",
+              "kind": "agent",
+              "name": "Fixture actor"
+            }
+          ],
+          "asset": {
             "asset_id": "asset:a",
             "asset_version": "1.0.0",
-            "judgment_id": "j:1"
+            "judgment_version": "1.0.0"
           },
-          "target": "optional:1"
+          "asset_capability": "asserted_answers",
+          "conditions": [],
+          "contracts": [],
+          "declarations": {
+            "boundaries": {
+              "state": "none",
+              "value": null
+            },
+            "highest_question": {
+              "state": "provided",
+              "value": "What does this engineering fixture declare?"
+            }
+          },
+          "dependencies": [],
+          "examples": [],
+          "exceptions": [],
+          "extensions": [],
+          "judgments": [
+            {
+              "answer_kind": "preference",
+              "boundaries": {
+                "state": "provided",
+                "value": [
+                  {
+                    "applies_to": {
+                      "judgment_refs": [
+                        "j:1"
+                      ],
+                      "kind": "judgments"
+                    },
+                    "declared_by": "actor:fixture",
+                    "effect": "limit",
+                    "exception_refs": [],
+                    "id": "b:1",
+                    "statement": "Fixture boundary"
+                  }
+                ]
+              },
+              "content_uses": [],
+              "core_expression": {
+                "kind": "authored",
+                "qualification_refs": [],
+                "statement": "Synthetic authored answer 0"
+              },
+              "exceptions": {
+                "state": "none",
+                "value": null
+              },
+              "extensions": [],
+              "focus": "One",
+              "form": "conclusion",
+              "id": "j:1",
+              "inputs": [],
+              "material_refs": [],
+              "method": {
+                "bindings": [],
+                "components": [
+                  {
+                    "id": "component:1",
+                    "material_refs": [],
+                    "method": {
+                      "term": "feeling"
+                    },
+                    "role": "个人感受",
+                    "statement": "Synthetic subjective basis for regression testing."
+                  }
+                ],
+                "method": {
+                  "term": "feeling"
+                }
+              },
+              "misuse": {
+                "state": "none",
+                "value": null
+              },
+              "parent_ref": null,
+              "ports": [],
+              "reason_refs": [],
+              "result": {
+                "contract_ref": "contract:1",
+                "result_type": {
+                  "term": "text",
+                  "vocabulary": "core"
+                },
+                "value": {
+                  "kind": "text",
+                  "value": "Authored result 0"
+                }
+              },
+              "result_contract": {
+                "allowed_result_types": [
+                  {
+                    "term": "text",
+                    "vocabulary": "core"
+                  }
+                ],
+                "form": {
+                  "term": "scalar",
+                  "vocabulary": "core"
+                },
+                "id": "contract:1",
+                "maximum": 1,
+                "minimum": 1,
+                "shape": {
+                  "kind": "scalar",
+                  "scalar_type": "text"
+                }
+              },
+              "scope": {
+                "statement": "Bounded scope 0"
+              },
+              "subject": {
+                "actor_ids": [
+                  "actor:fixture"
+                ],
+                "statement": "Example subject"
+              }
+            },
+            {
+              "answer_kind": "preference",
+              "boundaries": {
+                "state": "none",
+                "value": null
+              },
+              "content_uses": [],
+              "core_expression": {
+                "kind": "authored",
+                "qualification_refs": [],
+                "statement": "Synthetic authored answer 1"
+              },
+              "exceptions": {
+                "state": "none",
+                "value": null
+              },
+              "extensions": [],
+              "focus": "Two",
+              "form": "conclusion",
+              "id": "j:2",
+              "inputs": [],
+              "material_refs": [],
+              "method": {
+                "bindings": [],
+                "components": [
+                  {
+                    "id": "component:2",
+                    "material_refs": [],
+                    "method": {
+                      "term": "feeling"
+                    },
+                    "role": "个人感受",
+                    "statement": "Synthetic subjective basis for regression testing."
+                  }
+                ],
+                "method": {
+                  "term": "feeling"
+                }
+              },
+              "misuse": {
+                "state": "none",
+                "value": null
+              },
+              "parent_ref": null,
+              "ports": [],
+              "reason_refs": [],
+              "result": {
+                "contract_ref": "contract:2",
+                "result_type": {
+                  "term": "text",
+                  "vocabulary": "core"
+                },
+                "value": {
+                  "kind": "text",
+                  "value": "Authored result 1"
+                }
+              },
+              "result_contract": {
+                "allowed_result_types": [
+                  {
+                    "term": "text",
+                    "vocabulary": "core"
+                  }
+                ],
+                "form": {
+                  "term": "scalar",
+                  "vocabulary": "core"
+                },
+                "id": "contract:2",
+                "maximum": 1,
+                "minimum": 1,
+                "shape": {
+                  "kind": "scalar",
+                  "scalar_type": "text"
+                }
+              },
+              "scope": {
+                "statement": "Bounded scope 1"
+              },
+              "subject": {
+                "actor_ids": [
+                  "actor:fixture"
+                ],
+                "statement": "Example subject"
+              }
+            }
+          ],
+          "kernel": {
+            "foundation_refs": [],
+            "purpose": {
+              "kind": "summary"
+            }
+          },
+          "materials": [
+            {
+              "id": "m:optional",
+              "kind": "example",
+              "source_refs": [],
+              "statement": "Fixture optional material"
+            }
+          ],
+          "misuse": [],
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.5.1",
+          "reading_order": [
+            "j:1",
+            "j:2"
+          ],
+          "reasons": [],
+          "relationships": [],
+          "resources": [],
+          "scope": {
+            "statement": "Asset scope"
+          },
+          "shared_declarations": [],
+          "source_uses": [],
+          "sources": []
         }
-      ],
+      },
+      "core_state": "valid",
+      "core_witness": "ISSUED_BY_CORE_FIXTURE_AUTHORITY",
       "handle": {
-        "A": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
-        "C": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
-        "asset_id": "asset:a",
-        "asset_version": "1.0.0",
-        "core_version": "kdna.core/0.3.0",
+        "anchor": {
+          "kind": "asset"
+        },
+        "core_version": "kdna.core/0.8.2",
         "expires_at": 1500,
         "handle_id": "handle:1",
         "host_epoch": "epoch:1",
         "host_id": "host:1",
-        "ir_version": "kdna.canonical-ir/0.2.0",
+        "ir_version": "kdna.canonical-ir/0.6.1",
         "issued_at": 900,
-        "read_version": "kdna.read/0.2.0",
+        "read_version": "kdna.read/0.6.4",
         "scope": [
-          "optional:1",
-          "boundary:1"
+          "decl:a",
+          "optional:1"
         ],
-        "selection": {
-          "asset_id": "asset:a",
-          "asset_version": "1.0.0",
-          "judgment_id": "j:1"
-        },
-        "snapshot_id": "snapshot:a:1",
-        "target": "optional:1"
+        "target": {
+          "id": "m:optional",
+          "kind": "material"
+        }
       },
       "handle_registered_exactly": true,
       "host": {
@@ -257,40 +504,143 @@
         "revoked": false,
         "scope": [
           "decl:a",
+          "actor:fixture",
+          "optional:1",
           "node:j1",
-          "scope:1",
-          "boundary:1",
+          "contract:1",
           "result:1",
+          "component:1",
+          "boundary:1",
           "node:j2",
-          "scope:2",
+          "contract:2",
           "result:2",
-          "optional:1"
+          "component:2"
         ],
         "witness": "ISSUED_BY_HOST_FIXTURE_AUTHORITY"
       },
-      "host_correlation": "All context request/snapshot/A/C/decision/policy identifiers match the resolved request and fixture unless explicitly overridden.",
       "interpretation": "complete",
-      "ir_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
-      "mandatory_closures": {
-        "j:1": [
-          "node:j1",
-          "scope:1",
-          "boundary:1",
-          "result:1"
-        ],
-        "j:2": [
-          "node:j2",
-          "scope:2",
-          "result:2"
-        ]
-      },
-      "runtime_entry_names": [
-        "kdna.json",
-        "payload.kdnab"
+      "node_aliases": [
+        {
+          "id": "decl:a",
+          "target": {
+            "id": "uid:a",
+            "kind": "asset"
+          }
+        },
+        {
+          "id": "actor:fixture",
+          "target": {
+            "id": "actor:fixture",
+            "kind": "actor"
+          }
+        },
+        {
+          "id": "optional:1",
+          "target": {
+            "id": "m:optional",
+            "kind": "material"
+          }
+        },
+        {
+          "id": "node:j1",
+          "target": {
+            "id": "j:1",
+            "kind": "judgment"
+          }
+        },
+        {
+          "id": "contract:1",
+          "target": {
+            "id": "contract:1",
+            "kind": "contract"
+          }
+        },
+        {
+          "id": "result:1",
+          "target": {
+            "id": "j:1",
+            "kind": "result"
+          }
+        },
+        {
+          "id": "component:1",
+          "target": {
+            "id": "component:1",
+            "kind": "component"
+          }
+        },
+        {
+          "id": "boundary:1",
+          "target": {
+            "id": "b:1",
+            "kind": "boundary"
+          }
+        },
+        {
+          "id": "node:j2",
+          "target": {
+            "id": "j:2",
+            "kind": "judgment"
+          }
+        },
+        {
+          "id": "contract:2",
+          "target": {
+            "id": "contract:2",
+            "kind": "contract"
+          }
+        },
+        {
+          "id": "result:2",
+          "target": {
+            "id": "j:2",
+            "kind": "result"
+          }
+        },
+        {
+          "id": "component:2",
+          "target": {
+            "id": "component:2",
+            "kind": "component"
+          }
+        }
       ],
-      "snapshot_id": "snapshot:a:1",
       "tuple": {
-        "container": "0.2.0",
+        "container": "0.5.0",
+        "core": "kdna.core/0.8.2",
+        "host": "kdna.agent-host/0.3.1",
+        "ir": "kdna.canonical-ir/0.6.1",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.5.1",
+        "plan": "kdna.consumption-plan/0.3.1",
+        "read": "kdna.read/0.6.4",
+        "runtime": "kdna.runtime-capsule/0.3.1",
+        "trace": "kdna.judgment-trace/0.3.1"
+      }
+    }
+  },
+  "historical_rejection_controls": [
+    {
+      "expected": "READ_UNSUPPORTED_VERSION",
+      "id": "PREVIOUS-CURRENT-TUPLE",
+      "tuple": {
+        "container": "0.5.0",
+        "core": "kdna.core/0.7.0",
+        "host": "kdna.agent-host/0.2.0",
+        "ir": "kdna.canonical-ir/0.5.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.4.0",
+        "plan": "kdna.consumption-plan/0.2.0",
+        "read": "kdna.read/0.5.0",
+        "runtime": "kdna.runtime-capsule/0.2.0",
+        "trace": "kdna.judgment-trace/0.2.0"
+      }
+    },
+    {
+      "expected": "READ_UNSUPPORTED_VERSION",
+      "id": "PREVIOUS-ADM-VERSION-BEFORE-MODE",
+      "tuple": {
+        "container": "0.1.0",
         "core": "kdna.core/0.3.0",
         "host": "kdna.agent-host/0.2.0",
         "ir": "kdna.canonical-ir/0.2.0",
@@ -300,13 +650,12 @@
         "read": "kdna.read/0.2.0",
         "runtime": "kdna.runtime-capsule/0.2.0",
         "trace": "kdna.judgment-trace/0.2.0"
-      },
-      "writer": "not_evaluated"
+      }
     }
-  },
-  "implementation": "NOT_IMPLEMENTED",
+  ],
+  "implementation": "REFERENCE_IMPLEMENTATION",
   "kind": "CONTRACT_VECTORS_NOT_RUNTIME_EVIDENCE",
-  "normative_conformance": "NOT_CLAIMED",
+  "normative_conformance": "SEPARATE_EXECUTION_RECEIPT_REQUIRED",
   "original_54_ids_preserved": [
     "READ-WHOLE",
     "READ-CATALOG",
@@ -363,21 +712,21 @@
     "SET-CROSS-REFERENCE",
     "SET-AMBIGUOUS"
   ],
-  "repair_epoch": "OPEN-W1-ADMISSION-REJECTION-01",
+  "repair_epoch": "R2_CURRENT_FIXTURES_20260927",
   "rule_reference_base": "specs/",
-  "status": "NOT_RUN",
+  "status": "EXECUTABLE_EXPECTATIONS",
   "tuple_fixtures": {
     "new": {
-      "container": "0.2.0",
-      "core": "kdna.core/0.3.0",
-      "host": "kdna.agent-host/0.2.0",
-      "ir": "kdna.canonical-ir/0.2.0",
+      "container": "0.5.0",
+      "core": "kdna.core/0.8.2",
+      "host": "kdna.agent-host/0.3.1",
+      "ir": "kdna.canonical-ir/0.6.1",
       "payload_profile": "kdna.payload.judgment",
-      "payload_version": "0.2.0",
-      "plan": "kdna.consumption-plan/0.2.0",
-      "read": "kdna.read/0.2.0",
-      "runtime": "kdna.runtime-capsule/0.2.0",
-      "trace": "kdna.judgment-trace/0.2.0"
+      "payload_version": "0.5.1",
+      "plan": "kdna.consumption-plan/0.3.1",
+      "read": "kdna.read/0.6.4",
+      "runtime": "kdna.runtime-capsule/0.3.1",
+      "trace": "kdna.judgment-trace/0.3.1"
     },
     "old": {
       "container": "0.1.0",
@@ -390,6 +739,18 @@
       "read": "historical-read",
       "runtime": "kdna.runtime-capsule/0.1.0",
       "trace": "historical-judgment-trace"
+    },
+    "previous_current": {
+      "container": "0.5.0",
+      "core": "kdna.core/0.7.0",
+      "host": "kdna.agent-host/0.2.0",
+      "ir": "kdna.canonical-ir/0.5.0",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.4.0",
+      "plan": "kdna.consumption-plan/0.2.0",
+      "read": "kdna.read/0.5.0",
+      "runtime": "kdna.runtime-capsule/0.2.0",
+      "trace": "kdna.judgment-trace/0.2.0"
     }
   },
   "vectors": [
@@ -405,19 +766,122 @@
           "control": null,
           "envelope": {
             "action_authorization": "not_evaluated",
+            "asset_index_targets": [
+              {
+                "id": "uid:a",
+                "kind": "asset"
+              },
+              {
+                "id": "actor:fixture",
+                "kind": "actor"
+              },
+              {
+                "id": "m:optional",
+                "kind": "material"
+              },
+              {
+                "id": "j:1",
+                "kind": "judgment"
+              },
+              {
+                "id": "contract:1",
+                "kind": "contract"
+              },
+              {
+                "id": "j:1",
+                "kind": "result"
+              },
+              {
+                "id": "component:1",
+                "kind": "component"
+              },
+              {
+                "id": "b:1",
+                "kind": "boundary"
+              },
+              {
+                "id": "j:2",
+                "kind": "judgment"
+              },
+              {
+                "id": "contract:2",
+                "kind": "contract"
+              },
+              {
+                "id": "j:2",
+                "kind": "result"
+              },
+              {
+                "id": "component:2",
+                "kind": "component"
+              }
+            ],
             "catalog": [
               "j:1",
               "j:2"
             ],
-            "closure": [],
+            "closure": [
+              "decl:a"
+            ],
             "declarations": [
               "decl:a"
             ],
+            "expansion_handle_targets": [
+              {
+                "id": "actor:fixture",
+                "kind": "actor"
+              },
+              {
+                "id": "m:optional",
+                "kind": "material"
+              },
+              {
+                "id": "j:1",
+                "kind": "judgment"
+              },
+              {
+                "id": "contract:1",
+                "kind": "contract"
+              },
+              {
+                "id": "j:1",
+                "kind": "result"
+              },
+              {
+                "id": "component:1",
+                "kind": "component"
+              },
+              {
+                "id": "b:1",
+                "kind": "boundary"
+              },
+              {
+                "id": "j:2",
+                "kind": "judgment"
+              },
+              {
+                "id": "contract:2",
+                "kind": "contract"
+              },
+              {
+                "id": "j:2",
+                "kind": "result"
+              },
+              {
+                "id": "component:2",
+                "kind": "component"
+              }
+            ],
             "observation_scope": "assertion_projection_not_complete_envelope",
+            "omission_batches": [],
             "omission_reasons": {
-              "node:j1": "not_in_mode",
-              "node:j2": "not_in_mode"
+              "node:j1": "not_requested",
+              "node:j2": "not_requested"
             },
+            "omission_targets": [
+              "node:j1",
+              "node:j2"
+            ],
             "read_permission": "allowed",
             "selected": null,
             "status": "ready"
@@ -452,6 +916,7 @@
         }
       },
       "kind": "accept",
+      "migration_basis": "R10: global asset declaration body is supplied, every public target remains discoverable; unsupplied judgment bodies have actual deferred handles and not_requested omissions.",
       "rules": [
         "read-contract.md#r03"
       ]
@@ -475,11 +940,22 @@
             "closure": [],
             "declarations": [],
             "observation_scope": "assertion_projection_not_complete_envelope",
+            "omission_batches": [
+              {
+                "count": 2,
+                "expandable": false,
+                "field": "judgment",
+                "handle_id": null,
+                "reason": "not_in_mode",
+                "target_kind": "judgment"
+              }
+            ],
             "omission_reasons": {
-              "decl:a": "not_in_mode",
-              "node:j1": "not_in_mode",
-              "node:j2": "not_in_mode"
+              "decl:a": "not_in_mode"
             },
+            "omission_targets": [
+              "decl:a"
+            ],
             "status": "ready"
           },
           "transport_failure": null
@@ -512,6 +988,7 @@
         }
       },
       "kind": "accept",
+      "migration_basis": "R10 catalog: asset index is explicitly omitted at its asset target, and only a homogeneous two-judgment body omission batch is disclosed.",
       "rules": [
         "read-contract.md#r03"
       ]
@@ -532,16 +1009,23 @@
               "j:1"
             ],
             "closure": [
+              "decl:a",
+              "actor:fixture",
               "node:j1",
-              "scope:1",
-              "boundary:1",
-              "result:1"
+              "contract:1",
+              "result:1",
+              "component:1",
+              "boundary:1"
             ],
             "confirmation": "claimed_unverified",
+            "expansion_handle_targets": [],
             "observation_scope": "assertion_projection_not_complete_envelope",
             "omission_reasons": {
-              "node:j2": "outside_selection"
+              "decl:a": "not_in_mode"
             },
+            "omission_targets": [
+              "decl:a"
+            ],
             "selected": "j:1",
             "status": "ready"
           },
@@ -572,6 +1056,7 @@
         }
       },
       "kind": "accept",
+      "migration_basis": "R01/R07/R10 and S12-D007: complete typed selected closure includes asset, actor, contract, result, method and boundary; unrelated judgment is not listed; reading_order is explicitly omitted.",
       "rules": [
         "read-contract.md#r03",
         "read-contract.md#r05"
@@ -1256,9 +1741,17 @@
         "host_provider": "trusted-fixture-provider",
         "overrides": {
           "fixture.host.scope": [
+            "decl:a",
+            "actor:fixture",
+            "optional:1",
             "node:j1",
-            "scope:1",
-            "result:1"
+            "contract:1",
+            "result:1",
+            "component:1",
+            "node:j2",
+            "contract:2",
+            "result:2",
+            "component:2"
           ]
         },
         "request": {
@@ -1295,12 +1788,27 @@
           "control": null,
           "envelope": {
             "action_authorization": "not_evaluated",
+            "asset_index_targets": [
+              {
+                "id": "uid:a",
+                "kind": "asset"
+              },
+              {
+                "id": "m:optional",
+                "kind": "material"
+              }
+            ],
             "current_host_check": true,
             "expanded_nodes": [
-              "optional:1",
-              "boundary:1"
+              "decl:a",
+              "optional:1"
             ],
+            "expansion_handle_targets": [],
             "observation_scope": "assertion_projection_not_complete_envelope",
+            "omission_targets": [
+              "decl:a"
+            ],
+            "selected": null,
             "status": "ready"
           },
           "transport_failure": null
@@ -1313,7 +1821,8 @@
         "host_provider": "trusted-fixture-provider",
         "overrides": {
           "request.handle_ref": "issued-handle:1",
-          "request.mode": "expand"
+          "request.mode": "expand",
+          "request.selection": null
         },
         "request": {
           "budget_bytes": 1000000,
@@ -1333,6 +1842,7 @@
         }
       },
       "kind": "accept",
+      "migration_basis": "R10 and S12-D008: material uses its own asset anchor and supplies exact material plus mandatory asset owner, without borrowing an unrelated judgment boundary or expanding optional neighbors.",
       "rules": [
         "read-contract.md#r05"
       ]
@@ -1367,7 +1877,8 @@
         "overrides": {
           "fixture.handle_registered_exactly": false,
           "request.handle_ref": "issued-handle:1",
-          "request.mode": "expand"
+          "request.mode": "expand",
+          "request.selection": null
         },
         "request": {
           "budget_bytes": 1000000,
@@ -1422,7 +1933,8 @@
           "fixture.handle.read_version": "kdna.read/0.0.9",
           "registry_matches_overridden_handle": true,
           "request.handle_ref": "issued-handle:1",
-          "request.mode": "expand"
+          "request.mode": "expand",
+          "request.selection": null
         },
         "request": {
           "budget_bytes": 1000000,
@@ -1477,7 +1989,8 @@
           "fixture.handle.snapshot_id": "snapshot:a:old",
           "registry_matches_overridden_handle": true,
           "request.handle_ref": "issued-handle:1",
-          "request.mode": "expand"
+          "request.mode": "expand",
+          "request.selection": null
         },
         "request": {
           "budget_bytes": 1000000,
@@ -1532,7 +2045,8 @@
           "fixture.handle.asset_id": "asset:b",
           "registry_matches_overridden_handle": true,
           "request.handle_ref": "issued-handle:1",
-          "request.mode": "expand"
+          "request.mode": "expand",
+          "request.selection": null
         },
         "request": {
           "budget_bytes": 1000000,
@@ -1589,7 +2103,8 @@
           ],
           "registry_matches_overridden_handle": true,
           "request.handle_ref": "issued-handle:1",
-          "request.mode": "expand"
+          "request.mode": "expand",
+          "request.selection": null
         },
         "request": {
           "budget_bytes": 1000000,
@@ -1643,7 +2158,8 @@
         "overrides": {
           "fixture.host.current_ms": 1500,
           "request.handle_ref": "issued-handle:1",
-          "request.mode": "expand"
+          "request.mode": "expand",
+          "request.selection": null
         },
         "request": {
           "budget_bytes": 1000000,
@@ -1698,7 +2214,8 @@
           "fixture.host.host_epoch": "epoch:2",
           "registry_retains_old_epoch_record": true,
           "request.handle_ref": "issued-handle:1",
-          "request.mode": "expand"
+          "request.mode": "expand",
+          "request.selection": null
         },
         "request": {
           "budget_bytes": 1000000,
@@ -2443,16 +2960,16 @@
           "request_id": "request:1",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "complete_final_success_envelope_bytes": 8192,
@@ -3099,16 +3616,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -3169,16 +3686,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -3239,16 +3756,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -3309,16 +3826,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -3379,16 +3896,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -3449,16 +3966,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -3519,16 +4036,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -3588,16 +4105,16 @@
           "mode": "catalog",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -3658,16 +4175,16 @@
           "request_id": null,
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -3728,16 +4245,16 @@
           "request_id": 7,
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -3798,16 +4315,16 @@
           "request_id": "",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -3868,16 +4385,16 @@
           "request_id": "id\u0001private",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -3938,16 +4455,16 @@
           "request_id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -4008,16 +4525,16 @@
           "request_id": "汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -4079,16 +4596,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -4149,16 +4666,16 @@
           "request_id": "private\npath",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -4222,16 +4739,16 @@
           "request_id": null,
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           },
           "z-secret": "raw-z"
         },
@@ -4349,16 +4866,16 @@
           "mode": "catalog",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -4419,16 +4936,16 @@
           "request_id": "",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -4652,16 +5169,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -4713,16 +5230,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -4774,16 +5291,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -4835,16 +5352,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -4905,16 +5422,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -4975,16 +5492,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -5036,16 +5553,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -5095,16 +5612,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -5153,16 +5670,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -5213,16 +5730,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "complete_rejection_bytes": 2048,
@@ -5279,16 +5796,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "complete_rejection_bytes": 2048,
@@ -5345,16 +5862,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "complete_rejection_bytes": 2048,
@@ -5410,16 +5927,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "complete_rejection_bytes": 2048,
@@ -5474,16 +5991,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "complete_admission_rejection_bytes": 306,
@@ -5536,16 +6053,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -5601,16 +6118,16 @@
           "request_id": "request:safe",
           "selection": null,
           "tuple": {
-            "container": "0.2.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "container": "0.5.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "control_provider": {
@@ -5675,15 +6192,15 @@
           "selection": null,
           "tuple": {
             "container": "0.1.0",
-            "core": "kdna.core/0.3.0",
-            "host": "kdna.agent-host/0.2.0",
-            "ir": "kdna.canonical-ir/0.2.0",
+            "core": "kdna.core/0.8.2",
+            "host": "kdna.agent-host/0.3.1",
+            "ir": "kdna.canonical-ir/0.6.1",
             "payload_profile": "kdna.payload.judgment",
-            "payload_version": "0.2.0",
-            "plan": "kdna.consumption-plan/0.2.0",
-            "read": "kdna.read/0.2.0",
-            "runtime": "kdna.runtime-capsule/0.2.0",
-            "trace": "kdna.judgment-trace/0.2.0"
+            "payload_version": "0.5.1",
+            "plan": "kdna.consumption-plan/0.3.1",
+            "read": "kdna.read/0.6.4",
+            "runtime": "kdna.runtime-capsule/0.3.1",
+            "trace": "kdna.judgment-trace/0.3.1"
           }
         },
         "complete_rejection_bytes": 2048,
@@ -5693,6 +6210,7 @@
         }
       },
       "kind": "reject",
+      "migration_basis": "Historical former tuple is now wholly unsupported. A current tuple with a single old container remains genuinely mixed and must reject before decoding malformed mode; original tuple is retained in historical_rejection_controls.",
       "rules": [
         "read-contract.md#r02",
         "read-contract.md#r04"

@@ -1,6 +1,76 @@
 'use strict';
 
-const { canonicalJson, parseJson, entryName, compareUtf8, utf8, reject } = require('./strict-input.js');
+const { canonicalJson, parseJson, entryName, compareUtf8, utf8, scalarString, reject } = require('./strict-input.js');
+
+// Streaming canonical-JSON byte stream.
+//
+// `canonicalJson()` materialises the whole encoding as one string, and `utf8()`
+// then applies the author-input string cap (MAX_STRING_BYTES, 1 MiB) to it. That
+// cap exists to bound *authored* input; applying it to an internally derived
+// structure (the Canonical IR) wrongly limited how many issues an asset may
+// carry. This encoder emits the identical byte sequence in chunks so the digest
+// can be computed incrementally, with no cap and no giant intermediate string.
+//
+// Byte equality with canonicalJson() is a hard requirement: the two must produce
+// the same SHA-256 for every value. It is asserted by the conformance probe
+// (impl/probes/core-ir-ceiling.cjs) and by the Core case runner.
+function* canonicalChunks(value) {
+  if (Array.isArray(value)) {
+    yield '[';
+    for (let i = 0; i < value.length; i++) {
+      if (i) yield ',';
+      yield* canonicalChunks(value[i]);
+    }
+    yield ']';
+    return;
+  }
+  if (value && typeof value === 'object') {
+    const keys = Object.keys(value).sort();
+    yield '{';
+    for (let i = 0; i < keys.length; i++) {
+      if (i) yield ',';
+      yield JSON.stringify(keys[i]);
+      yield ':';
+      yield* canonicalChunks(value[keys[i]]);
+    }
+    yield '}';
+    return;
+  }
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) reject();
+    yield JSON.stringify(value);
+    return;
+  }
+  if (typeof value === 'string') {
+    // Author strings keep their own cap: this only avoids the cap on the
+    // *serialisation as a whole*, never on an individual authored value.
+    if (!scalarString(value)) reject();
+    yield JSON.stringify(value);
+    return;
+  }
+  if (value === null || typeof value === 'boolean') {
+    yield JSON.stringify(value);
+    return;
+  }
+  reject();
+}
+
+function digestCanonical(value) {
+  const { sha256 } = require('@noble/hashes/sha256');
+  const hasher = sha256.create();
+  const encoder = new TextEncoder();
+  const FLUSH_AT = 1 << 16;
+  let buffer = '';
+  for (const chunk of canonicalChunks(value)) {
+    buffer += chunk;
+    if (buffer.length >= FLUSH_AT) {
+      hasher.update(encoder.encode(buffer));
+      buffer = '';
+    }
+  }
+  if (buffer.length > 0) hasher.update(encoder.encode(buffer));
+  return 'sha256:' + Array.from(hasher.digest(), (n) => n.toString(16).padStart(2, '0')).join('');
+}
 
 // Hashing is loaded only at the Core bytes boundary, never by Read's pure root.
 function digest(bytes) {
@@ -76,4 +146,4 @@ function evidence(key, observed, expected = null, expectedSource = null) {
   return { basis, profile, profile_version: '0.2.0', algorithm: 'SHA-256', observed, comparison: comparison(observed, expected, expectedSource) };
 }
 function capsuleDigest(capsule) { return digest(utf8(canonicalJson(capsule))); }
-module.exports = { digest, concat, word, contentTreePreimage, runtimeEntryPreimage, runtimeEntryNames, comparison, evidence, capsuleDigest };
+module.exports = { digest, digestCanonical, canonicalChunks, concat, word, contentTreePreimage, runtimeEntryPreimage, runtimeEntryNames, comparison, evidence, capsuleDigest };

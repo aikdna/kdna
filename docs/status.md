@@ -19,9 +19,13 @@ explicit bytes → Core admission → private snapshot / Canonical IR
 ```
 
 See the [current Core/Read guide](./core-read-current-status.md) and exact package
-READMEs. Encryption, signatures and checksums-document admission, Runtime Capsule
-and Plan admission, and execution are unavailable in this implementation. The
-published CLI 0.36.1 line separately retains `inspect → LoadPlan → authorization
+READMEs. Current R2 Core `/execution` supplies native 0.3.1 static Plan/Capsule
+admission and explicitly configured Host reference APIs. Ordinary root, Node and
+browser admission refuse encrypted, signed and checksums-bearing containers;
+[explicit Node protection](../specs/protection-admission.md) has separate inputs
+and trusted providers. These APIs do not establish production identity, durable
+authorization, confirmed output delivery or native Host acceptance. The published
+CLI 0.36.1 line separately retains `inspect → LoadPlan → authorization
 → load/project → Runtime Capsule`; its assets and APIs are not silently upgraded.
 
 A single explicitly selected file or exact user-approved attachment is the
@@ -32,14 +36,14 @@ an Agent-installed Skill are not protocol requirements.
 
 | Layer | Status | Public meaning |
 |---|---|---|
-| KDNA Asset Container | Pre-release | Versioned manifest, payload and container rules; current Core rejects encryption, signature and checksums-document admission |
+| KDNA Asset Container | Pre-release | Versioned manifest, payload and container rules; ordinary Core admission refuses protected inputs, while explicit Node protection follows its separate contract |
 | Local public-asset runtime | Pre-release | Current CLI source: `inspect`, `validate`, `read`; published CLI 0.36.1 keeps its loading/packing contract |
 | Authoring toolchain | Pre-release | Current typed Studio session, saved-bundle verification and explicit Read; project/card APIs belong to published Studio CLI 0.11.0 |
-| Licensed access | Candidate | Versioned authorization/encryption contracts remain; current Core does not implement encrypted-container admission |
+| Licensed access | Candidate | Explicit Node protection admits supported encrypted containers under trusted providers; production accounts and service adoption require separate evidence |
 | Remote access | Candidate | Current Read adapters require deployment-owned context and policy; published remote loading has a separate contract |
 | Remote and activation references | Experimental | Remote supplies an HTTP Read handler; Activation supplies a co-located store observer, with no standalone server/CLI or AIKDNA-hosted service |
-| Signing and revocation | Version-specific | Published Core 0.22.0 signature behavior is separate; current Core rejects signed containers and supplies no revocation service |
-| Single-asset consumption runtime | Pre-release | Current public Read disclosure; published planning, Capsule and trace surfaces retain their version contracts |
+| Signing and revocation | Version-specific | Published Core 0.22.0 signing APIs remain historical. Ordinary Core admission refuses signatures; explicit Node integrity and grant-status checks follow the protection contract and do not establish a production revocation service |
+| Single-asset consumption runtime | Pre-release | Current public Read plus optional native 0.3.1 static Plan/Capsule admission and configured Host reference APIs; published loading and trace surfaces retain their own contracts |
 | Cluster and policy runtime | Experimental | Published advanced surfaces under product recertification; not the default path |
 | JS Core | Reference implementation | Primary public conformance implementation |
 | Eval package | Experimental | Issuer-scoped replay, budget, and consumption evaluation; not Core authority |
