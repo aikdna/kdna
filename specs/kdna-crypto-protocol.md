@@ -8,6 +8,18 @@ Account/device grants are defined separately by RFC-0019. Asset signing is
 withdrawn from the Preview, and runtime watermarking remains an unimplemented
 server-side design.
 
+**Current adoption boundary (grammar.3):** the public Core entry points reject
+encrypted payloads, `manifest.encryption`, `signature.kdsig`, and
+`checksums.json` with `READ_CORE_CAPABILITY_UNAVAILABLE`. References below to
+capabilities "present in Core", LoadPlan, receipts, or verified checksums describe
+their design or retained compatibility implementation, not grammar.3 admission.
+"Withdrawn from the Preview" is a runtime capability limit, not removal of a
+protocol feature or a deprecation notice. RFC-0018/0019 remain Draft; retained
+helpers, vectors, an account entitlement, and a production account/device grant
+service are separate claims. See [Protection adoption boundary](protection-adoption.md)
+for exact profile identities, digest bindings and the next integration's evidence
+requirements. No old profile or support commitment is replaced by this note.
+
 This document defines how `.kdna` entries are encrypted and how licensed or
 remote access may be authorized. It does not define an asset-signature
 contract, a production entitlement service, or a stable CLI command surface.

@@ -1,163 +1,97 @@
 'use strict';
 
-const { reject, canonicalJson, utf8, copyJson } = require('./strict-input.js');
+const { canonicalJson, utf8, copyJson, compareUtf8 } = require('./strict-input.js');
 const { digest } = require('./digests.js');
 const { versionTuple } = require('./generated-contract.json');
 const { validate } = require('./validate.js');
-const {resolveComponents,checkNativeMethods}=require('./component-semantics.js');
+const { resolveComponents, visitExtensions, checkInterpretationComplete } = require('./component-semantics.js');
+const { resolveStaticPolicies } = require('./static-policy-semantics.js');
+const { validateR2 } = require('./r2-semantics.js');
+const { ref, values } = require('./r2-registry.js');
+const { validateResult, resultShape } = require('./r2-values.js');
 
-function unique(items, key = 'id') {
-  const map = new Map();
-  for (const item of items) { if (map.has(item[key])) reject('READ_CORE_INVALID'); map.set(item[key], item); }
-  return map;
-}
-function bounds(value) { if (value.maximum !== null && value.maximum < value.minimum) reject('READ_CORE_INVALID'); }
-function resultShape(shape, value) {
-  if (shape.kind === 'scalar') { if (value.kind !== shape.scalar_type) reject('READ_CORE_INVALID'); return; }
-  if (shape.kind === 'list') {
-    bounds(shape);
-    if (value.kind !== 'list' || value.items.length < shape.minimum || (shape.maximum !== null && value.items.length > shape.maximum)) reject('READ_CORE_INVALID');
-    for (const item of value.items) resultShape(shape.item_shape, item);
-    return;
-  }
-  if (value.kind !== 'record') reject('READ_CORE_INVALID');
-  const fields = unique(shape.fields, 'name'), actual = unique(value.fields, 'name');
-  for (const field of fields.values()) { if (field.required && !actual.has(field.name)) reject('READ_CORE_INVALID'); }
-  for (const field of actual.values()) { if (!fields.has(field.name)) reject('READ_CORE_INVALID'); resultShape(fields.get(field.name).shape, field.value); }
-}
-function validateShape(shape) {
-  if(shape.kind==='list'){bounds(shape);validateShape(shape.item_shape);}
-  if(shape.kind==='record'){unique(shape.fields,'name');for(const field of shape.fields)validateShape(field.shape);}
-}
-function validateResult(judgment) {
-  const contract = judgment.result_contract; bounds(contract);validateShape(contract.shape);
-  if (judgment.result) {
-    const result = judgment.result;
-    if (result.contract_ref !== contract.id || !contract.allowed_result_types.some(x => canonicalJson(x) === canonicalJson(result.result_type))) reject('READ_CORE_INVALID');
-    resultShape(contract.shape, result.value);
-    const count = result.value.kind === 'list' ? result.value.items.length : 1;
-    if (count < contract.minimum || (contract.maximum !== null && count > contract.maximum)) reject('READ_CORE_INVALID');
-  }
-  if (judgment.formation_rule && judgment.formation_rule.output_contract_ref !== contract.id) reject('READ_CORE_INVALID');
-}
-function buildIR(manifest, payload, entries) {
-  const definitions = new Map(), byKind = {}, nodes = [], references = [], catalog = [], ownNodes = new Map();
-  function register(kind, records) {
-    const map = unique(records); byKind[kind] = map;
-    for (const [id, record] of map) { if (definitions.has(id)) reject('READ_CORE_INVALID'); definitions.set(id, { kind, record }); }
-  }
-  for (const [kind, key] of [['actor','actors'],['judgment','judgments'],['reason','reasons'],['source','sources'],['source_use','source_uses'],['resource','resources'],['material','materials'],['relationship','relationships'],['dependency','dependencies']]) register(kind, payload[key] ?? []);
-  register('result_contract', payload.judgments.map(j => j.result_contract));
-  register('method_component',payload.judgments.flatMap(j=>j.method?.components??[]));
-  register('boundary',[...(payload.declarations?.boundaries?.state==='provided'?payload.declarations.boundaries.value:[]),...payload.judgments.flatMap(j=>j.boundaries?.state==='provided'?j.boundaries.value:[])]);
-  register('exception',payload.judgments.flatMap(j=>j.exceptions?.state==='provided'?j.exceptions.value:[]));
-  register('misuse',payload.judgments.flatMap(j=>j.misuse?.state==='provided'?j.misuse.value:[]));
-  const requireRef = (id, kind) => { const value = definitions.get(id); if (!value || (kind && value.kind !== kind)) reject('READ_CORE_INVALID'); return value; };
-  for (const j of payload.judgments) {
-    validateResult(j);
-    for (const id of j.subject.actor_ids) requireRef(id, 'actor');
-    for (const id of j.reason_refs ?? []) if(requireRef(id, 'reason').record.judgment_ref!==j.id)reject('READ_CORE_INVALID');
-    for (const id of j.material_refs ?? []) requireRef(id, 'material');
-    if (j.method) {
-      const components = unique(j.method.components);
-      for (const b of j.method.bindings) { if (!components.has(b.component_ref)) reject('READ_CORE_INVALID'); requireRef(b.target_ref); }
+const ROLES = Object.freeze({asset:'asset_declaration',contract:'result_contract',component:'method_component',unit:'method_unit',plan:'method_plan',plan_node:'method_instance',policy:'conditional_policy',branch_entry:'branch'});
+function buildIR(manifest,payload,entries) {
+  const registry = validateR2(manifest,payload,entries);
+  const visit = (value,callback) => {
+    visitExtensions(manifest,(extension,path) => callback(extension,['manifest',...path]),'Manifest');
+    visitExtensions(value,callback);
+  };
+  const methodValues = resolveComponents(payload,visit);
+  // The versioned static-policy carrier preserves its first-match meaning.
+  // It is never implicitly rewritten as an R2 all-matches or authored policy.
+  const policyValues = resolveStaticPolicies(payload,visit,(judgment,candidate) => validateResult({...judgment,result:{contract_ref:judgment.result_contract.id,result_type:candidate.result_type,value:candidate.value}}));
+  const assetValue = {};
+  for (const name of ['asset_id','asset_uid','version','judgment_version','title','summary','languages','created_at','updated_at','creator','license','access','description','keywords','lineage','encryption','entitlement']) if (Object.hasOwn(manifest,name)) assetValue[name] = copyJson(manifest[name]);
+  for (const name of ['scope','kernel','reading_order','cohesion','attributions','content_risk','extensions']) if (Object.hasOwn(payload,name)) assetValue[name] = copyJson(payload[name]);
+  // Child targets have their own permission and delivery identity. A parent
+  // overview must not smuggle deferred history or scoped boundary bodies inline.
+  assetValue.history = {coverage:manifest.history.coverage,statement:manifest.history.statement};
+  assetValue.declarations = {highest_question:copyJson(payload.declarations.highest_question)};
+  if (payload.declarations.boundaries) assetValue.declarations.boundaries = {state:payload.declarations.boundaries.state};
+  registry.get(registry.asset).value = assetValue;
+  const nodes = [], nodeMap = new Map(), references = [];
+  const stableId = (role,identity) => role + ':' + digest(utf8(canonicalJson([payload.asset,identity]))).slice(7,47);
+  for (const record of registry.ordered) {
+    const role = record.value?.kind === 'emission_list' && record.target.kind === 'contract' ? 'emission_list_contract' : ROLES[record.target.kind] ?? record.target.kind;
+    const node = {id:stableId(role,record.target),role,target:copyJson(record.target),owner:copyJson(record.owner),owner_judgment_id:record.judgment,value:copyJson(record.value)};
+    if (record.activation) node.activation = copyJson(record.activation);
+    if (record.target.kind === 'judgment') {
+      node.method_interpretation = copyJson(methodValues.get(record.target.id));
+      if (policyValues.has(record.target.id)) node.static_policy_interpretation = copyJson(policyValues.get(record.target.id));
     }
-    for (const condition of j.formation_rule?.conditions ?? []) {const c=condition.kind==='external_evaluator'?condition.declaration:condition;if(c.kind==='structured')for(const operand of c.operands)if(operand.kind==='dependency'){const d=requireRef(operand.dependency_ref,'dependency').record;if(d.consumer_judgment_ref!==j.id)reject('READ_CORE_INVALID');}}
-    for(const x of j.exceptions?.state==='provided'?j.exceptions.value:[])if(x.boundary_ref!==null)requireRef(x.boundary_ref,'boundary');
+    nodes.push(node); nodeMap.set(registry.identity(record.target),node);
   }
-  for(const r of payload.reasons??[]){requireRef(r.judgment_ref,'judgment');for(const ref of r.component_refs)requireRef(ref,'method_component');}
-  for (const b of [payload.declarations?.boundaries, ...payload.judgments.map(j => j.boundaries)]) if (b?.state === 'provided') for (const item of b.value) requireRef(item.declared_by, 'actor');
-  for (const item of payload.attributions?.state === 'provided' ? payload.attributions.value : []) for (const id of item.actor_ids) requireRef(id, 'actor');
-  for (const m of payload.materials ?? []) { if (m.resource_ref) requireRef(m.resource_ref, 'resource'); for (const id of m.source_refs) requireRef(id, 'source'); }
-  for (const resource of payload.resources ?? []) if (!entries[resource.entry] || digest(entries[resource.entry]) !== resource.digest) reject('READ_CORE_INVALID');
-  for (const use of payload.source_uses ?? []) { requireRef(use.source_ref, 'source'); requireRef(use.target_ref, use.target_kind); }
-  for (const relation of payload.relationships ?? []) for (const participant of relation.participants) requireRef(participant.judgment_ref, 'judgment');
-  for (const dependency of payload.dependencies ?? []) {
-    requireRef(dependency.consumer_judgment_ref, 'judgment');
-    if (dependency.producer.kind === 'judgment_result') {
-      const producer = requireRef(dependency.producer.judgment_ref, 'judgment').record;
-      if (producer.result_contract.id !== dependency.producer.result_contract_ref) reject('READ_CORE_INVALID');
-    } else requireRef(dependency.producer.source_ref, 'source');
-  }
-  checkNativeMethods(payload);
-  const methodValues=resolveComponents(payload);
-  const nodeId = (role, identity) => role + ':' + digest(utf8(canonicalJson([payload.asset, identity]))).slice(7, 47);
-  const sourceNodes = new Map();
-  function node(role, identity, value, owner = null) {
-    const item = { id: nodeId(role, identity), role, owner_judgment_id: owner, value: copyJson(value) };
-    nodes.push(item);
-    if (owner !== null) { if (!ownNodes.has(owner)) ownNodes.set(owner, []); ownNodes.get(owner).push(item.id); }
-    return item;
-  }
-  const assetDeclaration = Object.fromEntries(['title','creator','license','summary','description','language','access'].filter(k => Object.hasOwn(manifest,k)).map(k => [k,manifest[k]]));
-  for(const key of ['content_risk','extensions'])if(Object.hasOwn(payload,key))assetDeclaration[key]=copyJson(payload[key]);
-  node('asset_declaration','asset',assetDeclaration);
-  node('scope','asset-scope',payload.scope);
-  if (payload.declarations) node('declaration','authored-declarations',payload.declarations);
-  if (payload.cohesion) node('cohesion','cohesion',payload.cohesion);
-  if (Object.hasOwn(payload,'attributions')) node('attribution','attributions',payload.attributions);
-  for (const [kind, key] of [['actor','actors'],['reason','reasons'],['source','sources'],['source_use','source_uses'],['resource','resources'],['material','materials'],['relationship','relationships'],['dependency','dependencies']]) for (const value of payload[key] ?? []) sourceNodes.set(value.id,node(kind,value.id,value));
-  for (const j of payload.judgments) {
-    const main = node('judgment',j.id,j,j.id); sourceNodes.set(j.id,main);
-    catalog.push({ judgment_id:j.id,label:j.label ?? j.focus,node_ref:main.id });
-    node('subject',j.id,j.subject,j.id); node('scope',j.id,j.scope,j.id); sourceNodes.set(j.result_contract.id,node('result_contract',j.result_contract.id,j.result_contract,j.id));
-    if (j.result) node('result',j.id,j.result,j.id);
-    if (j.formation_rule) node('formation_rule',j.id,j.formation_rule,j.id);
-    if (j.method) {const n=node('method',j.id,methodValues.get(j.id),j.id);for(const c of j.method.components)sourceNodes.set(c.id,n);}
-    for (const [key,role] of [['boundaries','boundary'],['exceptions','exception'],['misuse','misuse']]) if (j[key]?.state === 'provided') j[key].value.forEach((x,i)=>sourceNodes.set(x.id,node(role,j.id+':'+i,x,j.id)));
-  }
-  const referenceRoles = require('./generated-contract.json').types.ReferenceRole.enum;
-  function reference(from,to,mandatory,role='mandatory_support') {
-    if (!referenceRoles.includes(role)) reject('READ_CORE_INVALID');
-    references.push({ id:nodeId('reference',from+'\0'+to+'\0'+role),source_node:from,target_node:to,role,mandatory });
-  }
-  const assetIds = nodes.filter(x=>x.owner_judgment_id===null&&['asset_declaration','declaration','scope','cohesion','attribution'].includes(x.role)).map(x=>x.id);
-  // Asset-level boundary declarations are carried in their typed declaration node.
-  const declarationNode=nodes.find(n=>n.role==='declaration'&&n.owner_judgment_id===null);
-  for(const boundary of payload.declarations?.boundaries?.state==='provided'?payload.declarations.boundaries.value:[])sourceNodes.set(boundary.id,declarationNode);
-  function closedIds(judgmentId,extraDependency=null){
-    const selected=new Set(assetIds),visited=new Set();
-    function add(id){
-      if(visited.has(id))return;visited.add(id);
-      const definition=definitions.get(id),n=sourceNodes.get(id);
-      if(!definition||!n)reject('READ_CORE_INVALID');selected.add(n.id);
-      const r=definition.record;
-      if(definition.kind==='judgment'){
-        for(const own of ownNodes.get(id))selected.add(own);
-        for(const ref of [...r.subject.actor_ids,...(r.reason_refs??[]),...(r.material_refs??[])])add(ref);
-        // Including an owned node is not enough: traverse its registered identity
-        // so exception boundaries and method-component source uses also close.
-        add(r.result_contract.id);
-        for(const component of r.method?.components??[])add(component.id);
-        for(const key of ['boundaries','exceptions','misuse']){
-          for(const declaration of r[key]?.state==='provided'?r[key].value:[])add(declaration.id);
-        }
-        for(const b of r.method?.bindings??[])add(b.target_ref);
-        for(const c of r.formation_rule?.conditions??[]){const d=c.kind==='external_evaluator'?c.declaration:c;for(const operand of d.operands??[])if(operand.kind==='dependency')add(operand.dependency_ref);}
-        for(const dependency of payload.dependencies??[])if(dependency.consumer_judgment_ref===id&&dependency.required)add(dependency.id);
-        for(const relation of payload.relationships??[])if(relation.participants.some(p=>p.judgment_ref===id))add(relation.id);
-      }else if(definition.kind==='reason'){add(r.judgment_ref);for(const ref of r.component_refs)add(ref);}
-      else if(definition.kind==='material'){if(r.resource_ref)add(r.resource_ref);for(const ref of r.source_refs)add(ref);}
-      else if(definition.kind==='method_component'||definition.kind==='result_contract'){if(n.owner_judgment_id)add(n.owner_judgment_id);}
-      else if(definition.kind==='source_use'){add(r.source_ref);add(r.target_ref);}
-      else if(definition.kind==='dependency'){add(r.consumer_judgment_ref);add(r.producer.kind==='judgment_result'?r.producer.judgment_ref:r.producer.source_ref);}
-      else if(definition.kind==='relationship')for(const member of r.participants)add(member.judgment_ref);
-      else if(definition.kind==='boundary')add(r.declared_by);
-      else if(definition.kind==='exception'&&r.boundary_ref!==null)add(r.boundary_ref);
-      for(const use of payload.source_uses??[])if(use.target_ref===id)add(use.id);
+  const nodeFor = target => nodeMap.get(registry.identity(target));
+  for (const record of registry.ordered) for (const [targetKey,roles] of registry.referenceRoles.get(registry.identity(record.target))) {
+    const from = nodeFor(record.target), to = nodeMap.get(targetKey);
+    if (from.id === to.id) continue;
+    const meanings=[...roles].map(([declaredRole,mandatory])=>({declaredRole,mandatory,role:declaredRole??(mandatory?'mandatory_support':'optional_expansion')})).sort((a,b)=>compareUtf8(a.role,b.role));
+    for(const {declaredRole,mandatory,role} of meanings) {
+      const identity=[record.target,to.target,mandatory];
+      if(declaredRole!==null)identity.push(declaredRole);
+      references.push({id:stableId('reference',identity),source_node:from.id,target_node:to.id,role,mandatory});
     }
-    for(const boundary of payload.declarations?.boundaries?.state==='provided'?payload.declarations.boundaries.value:[])add(boundary.declared_by);
-    for(const claim of payload.attributions?.state==='provided'?payload.attributions.value:[])for(const actor of claim.actor_ids)add(actor);
-    add(judgmentId);if(extraDependency)add(extraDependency);
-    return nodes.filter(n=>selected.has(n.id)).map(n=>n.id);
   }
-  const selection=id=>({asset_id:payload.asset.asset_id,asset_version:payload.asset.asset_version,judgment_id:id});
-  const mandatory_closures=payload.judgments.map(j=>({selection:selection(j.id),node_ids:closedIds(j.id)}));
-  for(const closure of mandatory_closures){const from=sourceNodes.get(closure.selection.judgment_id).id;for(const id of closure.node_ids)if(id!==from)reference(from,id,true);}
-  const expansion_targets=(payload.dependencies??[]).filter(d=>!d.required).map(d=>({selection:selection(d.consumer_judgment_ref),target:sourceNodes.get(d.id).id,scope:closedIds(d.consumer_judgment_ref,d.id)}));
-  for(const target of expansion_targets)reference(sourceNodes.get(target.selection.judgment_id).id,target.target,false,'optional_expansion');
-  const ir={contract:versionTuple.ir,tuple:versionTuple,asset:payload.asset,nodes,catalog,references,relationships:payload.relationships??[],mandatory_closures,expansion_targets};
+  const selection = id => ({asset_id:payload.asset.asset_id,asset_version:payload.asset.asset_version,judgment_id:id});
+  const catalog = payload.judgments.map(j => ({judgment_id:j.id,focus:j.focus,node_ref:nodeFor(ref('judgment',j.id)).id,parent_ref:j.parent_ref,...(j.lifecycle?{lifecycle:copyJson(j.lifecycle)}:{})}));
+  const mandatory_closures = payload.judgments.map(j => ({selection:selection(j.id),node_ids:registry.closure([registry.asset,ref('judgment',j.id)]).map(record => nodeFor(record.target).id)}));
+  const globalSeeds = [registry.asset,...payload.relationships.map(x => ref('relationship',x.id)),...payload.dependencies.map(x => ref('dependency',x.id))];
+  // Organization records are complete in whole_asset. Merely listing a
+  // dependency does not request its producer body; exact_selection separately
+  // traverses a required dependency through the typed graph above.
+  const globalRecords = registry.closure([registry.asset,...values(payload.declarations.boundaries).map(b => ref('boundary',b.id))]);
+  const globalIds = new Set(globalRecords.map(record => nodeFor(record.target).id));
+  for (const target of globalSeeds) globalIds.add(nodeFor(target).id);
+  const asset_closure = nodes.filter(n => globalIds.has(n.id)).map(n => n.id);
+  function display(record) {
+    const v = record.value;
+    if (record.target.kind === 'judgment') return v.focus;
+    if (record.target.kind === 'asset') return v.title;
+    if (record.target.kind === 'material' && v.kind === 'definition') return v.term;
+    if (record.target.kind === 'example') return v.title;
+    return v.name ?? v.role ?? record.target.kind + ':' + record.target.id;
+  }
+  const asset_index = registry.ordered.map(record => ({target:copyJson(record.target),owner:copyJson(record.owner),display_name:display(record),node_ref:nodeFor(record.target).id}));
+  const expansion_targets = [];
+  const scopeFor = seeds => registry.closure(seeds).map(record => nodeFor(record.target).id);
+  for (const record of registry.ordered) expansion_targets.push({anchor:{kind:'asset'},target:copyJson(record.target),scope:scopeFor([registry.asset,record.target])});
+  // A question discovers its necessary closure and the optional references of
+  // those objects. Asset ownership alone is not a relationship to every question.
+  // Do not traverse optional edges recursively: an optional related question's
+  // own optional neighborhood belongs to that question or the asset anchor.
+  for (const judgment of payload.judgments) {
+    const seeds = [registry.asset,ref('judgment',judgment.id)], mandatory = registry.closure(seeds);
+    const available = new Set(mandatory.map(record => registry.identity(record.target)));
+    for (const record of mandatory) {
+      if (record.target.kind === 'asset') continue;
+      for (const targetKey of registry.edges.get(registry.identity(record.target)).keys()) available.add(targetKey);
+    }
+    for (const record of registry.ordered) if (available.has(registry.identity(record.target))) expansion_targets.push({anchor:{kind:'judgment',selection:selection(judgment.id)},target:copyJson(record.target),scope:scopeFor([...seeds,record.target])});
+  }
+  const ir = {contract:versionTuple.ir,tuple:versionTuple,asset:payload.asset,nodes,catalog,references,relationships:payload.relationships,mandatory_closures,expansion_targets,asset_closure,asset_index,unresolved_external:registry.unresolved};
   validate('CanonicalIR',ir);
+  checkInterpretationComplete(payload,visit);
   return ir;
 }
 module.exports = { buildIR, validateResult, resultShape };

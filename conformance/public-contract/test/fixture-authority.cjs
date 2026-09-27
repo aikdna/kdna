@@ -3,7 +3,7 @@
 // accepts caller-supplied snapshot data. The only issuer input is a frozen seed ID.
 const fs = require('node:fs');
 const path = require('node:path');
-const seed = JSON.parse(fs.readFileSync(path.join(__dirname, '../vectors.generated.json'), 'utf8'));
+const seed = JSON.parse(fs.readFileSync(path.join(__dirname, '../../public-contract-decision-vectors.json'), 'utf8'));
 const cases = new Map(seed.vectors.map((v) => [v.id, structuredClone(v.input)]));
 const clone = structuredClone;
 function replace(root, key, value) {
@@ -46,93 +46,42 @@ function resolve(id) {
   return input;
 }
 function fixture(id, coreDir) {
-  const input = resolve(id);
-  if (!input.fixture) throw Error('Case does not name a Core fixture');
-  const f = input.fixture,
-    { evidence } = require(path.join(coreDir, 'src/public-contract/digests.js'));
-  const nodes = [];
-  const node = (id, role, value, owner = null) =>
-    nodes.push({ id, role, value, owner_judgment_id: owner });
-  node('decl:a', 'attribution', {
-    state: 'provided',
-    value: [{ role: 'creator', actor_ids: ['actor:fixture'], statement: 'Fixture assertion' }],
-  });
-  for (const item of f.catalog) {
-    const n = item.judgment_id === 'j:1' ? 1 : 2;
-    const contract = {
-      id: 'contract:' + n,
-      form: { term: 'statement' },
-      shape: { kind: 'scalar', scalar_type: 'text' },
-      minimum: 1,
-      maximum: 1,
-      allowed_result_types: [{ term: 'statement' }],
-    };
-    const result = {
-      contract_ref: contract.id,
-      result_type: { term: 'statement' },
-      value: { kind: 'text', value: 'Fixture result' },
-    };
-    node(
-      item.node_ref,
-      'judgment',
-      {
-        id: item.judgment_id,
-        focus: item.label,
-        subject: { actor_ids: ['actor:fixture'], statement: 'Fixture subject' },
-        scope: { statement: 'Fixture scope' },
-        result_contract: contract,
-        result,
-      },
-      item.judgment_id,
-    );
-    node('scope:' + n, 'scope', { statement: 'Fixture scope' }, item.judgment_id);
-    if (n === 1)
-      node(
-        'boundary:1',
-        'boundary',
-        { id: 'b:1', effect: 'limit', statement: 'Fixture boundary', declared_by: 'actor:fixture' },
-        item.judgment_id,
-      );
-    node('result:' + n, 'result', result, item.judgment_id);
+  const input=resolve(id);
+  if(!input.fixture)throw Error('Case does not name a Core fixture');
+  const f=input.fixture;
+  const {createRequire}=require('node:module'), req=createRequire(path.join(coreDir,'package.json'));
+  const F=require('./bytes-fixtures.cjs');
+  // The seed names a complete current authored source. Core computes every Ref,
+  // owner, closure, index, digest and stable wrapper id before test premises.
+  const bytes=F.encode(f.authored_asset,req);
+  const admitted=req('@aikdna/kdna-core').admitBytes(bytes);
+  if(admitted.status!=='accepted')throw Error('Fixture source rejected: '+JSON.stringify(admitted));
+  const view=req('@aikdna/kdna-core/read-boundary').inspectSnapshot(admitted.snapshot);
+  const {validate}=require(path.join(coreDir,'src/public-contract/validate.js'));
+  validate('CanonicalIR',view.ir);
+  const schemaControls=[];
+  for(const field of ['target','owner','asset_index','asset_closure']) {
+    const invalid=clone(view.ir);
+    if(field==='target'||field==='owner')delete invalid.nodes[0][field];else delete invalid[field];
+    let rejected=false;try{validate('CanonicalIR',invalid);}catch{rejected=true;}
+    if(!rejected)throw Error('Current IR schema failed to reject missing '+field);
+    schemaControls.push({missing:field,rejected:true});
   }
-  node(
-    'optional:1',
-    'material',
-    { id: 'm:optional', kind: 'example', statement: 'Fixture optional material', source_refs: [] },
-    'j:1',
-  );
-  const ir = {
-    contract: f.tuple.ir,
-    tuple: f.tuple,
-    asset: f.asset,
-    nodes,
-    catalog: f.catalog,
-    references: [],
-    relationships: [],
-    mandatory_closures: Object.entries(f.mandatory_closures).map(([judgment_id, node_ids]) => ({
-      selection: { asset_id: f.asset.asset_id, asset_version: f.asset.asset_version, judgment_id },
-      node_ids,
-    })),
-    expansion_targets: f.expansion_targets,
-  };
-  // The current fixture is data-schema checked independently of its test witness.
-  const { validate } = require(path.join(coreDir, 'src/public-contract/validate.js'));
-  if (f.tuple.ir === seed.tuple_fixtures.new.ir) validate('CanonicalIR', ir);
-  const view = {
-    snapshot_id: f.snapshot_id,
-    tuple: f.tuple,
-    asset: f.asset,
-    digests: { A: evidence('A', f.A), C: evidence('C', f.C), E: evidence('E', f.A) },
-    ir,
-    ir_digest: f.ir_digest,
-    runtime_entry_names: f.runtime_entry_names,
-    expansion_targets: f.expansion_targets,
-  };
-  const { issueSnapshot } = require(path.join(coreDir, 'src/public-contract/brand.js'));
-  const snapshot =
-    f.core_witness === 'ISSUED_BY_CORE_FIXTURE_AUTHORITY'
-      ? issueSnapshot(view)
-      : clone({ ...view, admission: {} });
-  return { input, snapshot, view };
+  const {canonicalJson}=require(path.join(coreDir,'src/public-contract/strict-input.js'));
+  const same=(a,b)=>canonicalJson(a)===canonicalJson(b);
+  if(!Object.keys(view.tuple).every(k=>view.tuple[k]===seed.tuple_fixtures.new[k]))throw Error('Current seed tuple drift');
+  const byAlias=new Map(),byId=new Map();
+  for(const alias of f.node_aliases){
+    const nodes=view.ir.nodes.filter(n=>same(n.target,alias.target));
+    if(nodes.length!==1||byAlias.has(alias.id)||byId.has(nodes[0].id))throw Error('Fixture alias is not unique');
+    byAlias.set(alias.id,nodes[0].id);byId.set(nodes[0].id,alias.id);
+  }
+  if(byId.size!==view.ir.nodes.length)throw Error('Fixture alias inventory incomplete');
+  const actualId=id=>{if(!byAlias.has(id))throw Error('Unknown named fixture node '+id);return byAlias.get(id);};
+  f.host.scope=f.host.scope.map(actualId);
+  f.handle={asset_id:view.asset.asset_id,asset_version:view.asset.asset_version,A:view.digests.A.observed,C:view.digests.C.observed,snapshot_id:view.snapshot_id,...f.handle,scope:f.handle.scope.map(actualId)};
+  if(input.request.handle)input.request.handle=clone(f.handle);
+  const snapshot=f.core_witness==='ISSUED_BY_CORE_FIXTURE_AUTHORITY'?admitted.snapshot:clone({...view,admission:{}});
+  return {input,snapshot,view,aliasId:id=>byId.get(id)??id,setup:{source_admission:'accepted',source_bytes:bytes.length,core_calls:1,canonical_ir_schema:'valid',negative_schema_controls:schemaControls,ir_digest:view.ir_digest,A:view.digests.A.observed,C:view.digests.C.observed,actual_tuple:view.tuple,declared_premise_tuple:f.tuple,identity:'real_core_snapshot_ids_preserved',proof_limit:'This builds the test premise; mocked pipeline admission and finite handle registry cases remain explicit stage tests.'}};
 }
 module.exports = { resolve, fixture };

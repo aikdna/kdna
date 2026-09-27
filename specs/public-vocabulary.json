@@ -1,6 +1,77 @@
 {
   "entries": [
     {
+      "definition": "StaticPolicyStrategy/properties/kind",
+      "kind": "literal",
+      "values": [
+        "priority"
+      ]
+    },
+    {
+      "definition": "StaticPolicyStrategy/properties/direction",
+      "kind": "enum",
+      "values": [
+        "higher-first",
+        "lower-first"
+      ]
+    },
+    {
+      "definition": "StaticPolicyFallback/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "candidate"
+      ]
+    },
+    {
+      "definition": "StaticPolicyFallback/oneOf/1/properties/kind",
+      "kind": "literal",
+      "values": [
+        "no_match"
+      ]
+    },
+    {
+      "definition": "StaticPolicyCarrier/properties/contract_id",
+      "kind": "literal",
+      "values": [
+        "kdna.static-policy/2"
+      ]
+    },
+    {
+      "definition": "StaticPolicyCarrier/properties/contract_version",
+      "kind": "literal",
+      "values": [
+        "2.0.0"
+      ]
+    },
+    {
+      "definition": "StaticPolicyInterpretation/properties/contract_id",
+      "kind": "literal",
+      "values": [
+        "kdna.static-policy/2"
+      ]
+    },
+    {
+      "definition": "StaticPolicyInterpretation/properties/contract_version",
+      "kind": "literal",
+      "values": [
+        "2.0.0"
+      ]
+    },
+    {
+      "definition": "StaticPolicyInterpretation/properties/status",
+      "kind": "literal",
+      "values": [
+        "supported"
+      ]
+    },
+    {
+      "definition": "IRNode_static_policy/properties/role",
+      "kind": "literal",
+      "values": [
+        "static_policy"
+      ]
+    },
+    {
       "definition": "AuthoredUnprovidedState",
       "kind": "enum",
       "values": [
@@ -124,7 +195,8 @@
         "source_use",
         "provenance",
         "mandatory_support",
-        "optional_expansion"
+        "optional_expansion",
+        "lifecycle_replacement"
       ]
     },
     {
@@ -141,7 +213,7 @@
       "definition": "VersionTuple/properties/container",
       "kind": "literal",
       "values": [
-        "0.2.0"
+        "0.5.0"
       ]
     },
     {
@@ -155,56 +227,56 @@
       "definition": "VersionTuple/properties/payload_version",
       "kind": "literal",
       "values": [
-        "0.2.0"
+        "0.5.1"
       ]
     },
     {
       "definition": "VersionTuple/properties/core",
       "kind": "literal",
       "values": [
-        "kdna.core/0.3.0"
+        "kdna.core/0.8.2"
       ]
     },
     {
       "definition": "VersionTuple/properties/ir",
       "kind": "literal",
       "values": [
-        "kdna.canonical-ir/0.2.0"
+        "kdna.canonical-ir/0.6.1"
       ]
     },
     {
       "definition": "VersionTuple/properties/runtime",
       "kind": "literal",
       "values": [
-        "kdna.runtime-capsule/0.2.0"
+        "kdna.runtime-capsule/0.3.1"
       ]
     },
     {
       "definition": "VersionTuple/properties/plan",
       "kind": "literal",
       "values": [
-        "kdna.consumption-plan/0.2.0"
+        "kdna.consumption-plan/0.3.1"
       ]
     },
     {
       "definition": "VersionTuple/properties/host",
       "kind": "literal",
       "values": [
-        "kdna.agent-host/0.2.0"
+        "kdna.agent-host/0.3.1"
       ]
     },
     {
       "definition": "VersionTuple/properties/trace",
       "kind": "literal",
       "values": [
-        "kdna.judgment-trace/0.2.0"
+        "kdna.judgment-trace/0.3.1"
       ]
     },
     {
       "definition": "VersionTuple/properties/read",
       "kind": "literal",
       "values": [
-        "kdna.read/0.2.0"
+        "kdna.read/0.6.4"
       ]
     },
     {
@@ -419,13 +491,30 @@
       ]
     },
     {
+      "definition": "MethodUse/allOf/0/if/properties/method/properties/term",
+      "kind": "literal",
+      "values": [
+        "other"
+      ]
+    },
+    {
+      "definition": "MethodUse/allOf/1/if/properties/method/properties/term",
+      "kind": "literal",
+      "values": [
+        "composite"
+      ]
+    },
+    {
       "definition": "SourceTargetKind",
       "kind": "enum",
       "values": [
         "judgment",
         "reason",
         "material",
-        "method_component"
+        "method_component",
+        "example",
+        "example_result",
+        "shared_declaration"
       ]
     },
     {
@@ -437,6 +526,27 @@
         "premise",
         "example",
         "attachment"
+      ]
+    },
+    {
+      "definition": "Material/allOf/0/if/properties/kind",
+      "kind": "literal",
+      "values": [
+        "definition"
+      ]
+    },
+    {
+      "definition": "Material/allOf/1/if/properties/kind",
+      "kind": "literal",
+      "values": [
+        "foundation"
+      ]
+    },
+    {
+      "definition": "Material/allOf/2/if/properties/kind",
+      "kind": "literal",
+      "values": [
+        "premise"
       ]
     },
     {
@@ -454,6 +564,62 @@
       ]
     },
     {
+      "definition": "Dependency/allOf/0/if/properties/producer/properties/kind",
+      "kind": "literal",
+      "values": [
+        "judgment_result"
+      ]
+    },
+    {
+      "definition": "Judgment/allOf/0/if/properties/form",
+      "kind": "literal",
+      "values": [
+        "conclusion"
+      ]
+    },
+    {
+      "definition": "Judgment/allOf/1/if/properties/form",
+      "kind": "literal",
+      "values": [
+        "rule"
+      ]
+    },
+    {
+      "definition": "Judgment/allOf/2/if/properties/answer_kind",
+      "kind": "literal",
+      "values": [
+        "composite"
+      ]
+    },
+    {
+      "definition": "Judgment/allOf/3/if/properties/answer_kind",
+      "kind": "literal",
+      "values": [
+        "other"
+      ]
+    },
+    {
+      "definition": "Judgment/allOf/4/if/properties/core_expression/properties/kind",
+      "kind": "literal",
+      "values": [
+        "result_text"
+      ]
+    },
+    {
+      "definition": "Judgment/allOf/4/then/properties/form",
+      "kind": "literal",
+      "values": [
+        "conclusion"
+      ]
+    },
+    {
+      "definition": "Judgment/allOf/4/then/properties/result/properties/value/properties/kind",
+      "kind": "literal",
+      "values": [
+        "text"
+      ]
+    },
+    {
       "definition": "Payload/properties/profile",
       "kind": "literal",
       "values": [
@@ -464,7 +630,7 @@
       "definition": "Payload/properties/profile_version",
       "kind": "literal",
       "values": [
-        "0.2.0"
+        "0.5.1"
       ]
     },
     {
@@ -478,7 +644,7 @@
       "definition": "Compatibility/properties/profile_version",
       "kind": "literal",
       "values": [
-        "0.2.0"
+        "0.5.1"
       ]
     },
     {
@@ -506,7 +672,7 @@
       "definition": "Manifest/properties/format_version",
       "kind": "literal",
       "values": [
-        "0.2.0"
+        "0.5.0"
       ]
     },
     {
@@ -679,6 +845,7 @@
         "READ_MIXED_VERSION_TUPLE",
         "READ_CORE_INVALID",
         "READ_INTERPRETATION_INCOMPLETE",
+        "READ_STATIC_POLICY_INVALID",
         "READ_ASSET_MISMATCH",
         "READ_ASSET_VERSION_MISMATCH",
         "READ_SELECTION_NOT_FOUND",
@@ -704,7 +871,17 @@
         "READ_COMPONENT_LIMIT_EXCEEDED",
         "READ_COMPONENT_BINDING_INVALID",
         "READ_COMPONENT_ADOPTION_INVALID",
-        "READ_METHOD_PRESENCE_INVALID"
+        "READ_METHOD_PRESENCE_INVALID",
+        "READ_R2_STRUCTURE_INVALID",
+        "READ_R2_REFERENCE_INVALID",
+        "READ_R2_METHOD_INVALID",
+        "READ_R2_PLAN_INVALID",
+        "READ_R2_POLICY_INVALID",
+        "READ_R2_SCOPE_INVALID",
+        "READ_R2_EXAMPLE_INVALID",
+        "READ_R2_HISTORY_INVALID",
+        "READ_UNSUPPORTED_CRITICAL",
+        "READ_UNRESOLVED_EXTERNAL"
       ]
     },
     {
@@ -824,7 +1001,7 @@
       "definition": "CanonicalIR/properties/contract",
       "kind": "literal",
       "values": [
-        "kdna.canonical-ir/0.2.0"
+        "kdna.canonical-ir/0.6.1"
       ]
     },
     {
@@ -912,7 +1089,7 @@
       "definition": "ReadEnvelopeReady/properties/contract",
       "kind": "literal",
       "values": [
-        "kdna.read/0.2.0"
+        "kdna.read/0.6.4"
       ]
     },
     {
@@ -933,7 +1110,7 @@
       "definition": "ReadEnvelopeRejected/properties/contract",
       "kind": "literal",
       "values": [
-        "kdna.read/0.2.0"
+        "kdna.read/0.6.4"
       ]
     },
     {
@@ -1103,13 +1280,24 @@
         "handle.core_version",
         "handle.ir_version",
         "handle.read_version",
-        "handle.selection",
         "handle.target",
         "handle.scope",
         "handle.issued_at",
         "handle.expires_at",
         "handle.host_id",
-        "handle.host_epoch"
+        "handle.host_epoch",
+        "handle.anchor",
+        "handle.anchor.kind",
+        "handle.anchor.selection",
+        "handle.anchor.selection.asset_id",
+        "handle.anchor.selection.asset_version",
+        "handle.anchor.selection.judgment_id",
+        "handle.target.kind",
+        "handle.target.id",
+        "handle.target.asset",
+        "handle.target.asset.asset_id",
+        "handle.target.asset.asset_version",
+        "handle.target.asset.judgment_version"
       ]
     },
     {
@@ -1307,7 +1495,7 @@
       "definition": "PackageSetHandoff/properties/contract",
       "kind": "literal",
       "values": [
-        "kdna.package-set-handoff/0.1.0"
+        "kdna.package-set-handoff/0.2.1"
       ]
     },
     {
@@ -1726,10 +1914,9 @@
     },
     {
       "definition": "ComponentStatementOrigin",
-      "kind": "enum",
+      "kind": "literal",
       "values": [
-        "authored",
-        "mechanical_content_representation"
+        "authored"
       ]
     },
     {
@@ -1741,11 +1928,39 @@
       ]
     },
     {
+      "definition": "ComponentSemanticsCarrier/properties/contract_id",
+      "kind": "literal",
+      "values": [
+        "kdna.component-semantics/2"
+      ]
+    },
+    {
+      "definition": "ComponentSemanticsCarrier/properties/contract_version",
+      "kind": "literal",
+      "values": [
+        "2.0.0"
+      ]
+    },
+    {
       "definition": "ComponentAdoptionKind",
       "kind": "enum",
       "values": [
         "human_claim_unverified",
         "delegated_agent_editorial"
+      ]
+    },
+    {
+      "definition": "ComponentAdoptionCarrier/properties/contract_id",
+      "kind": "literal",
+      "values": [
+        "kdna.component-semantics/2"
+      ]
+    },
+    {
+      "definition": "ComponentAdoptionCarrier/properties/contract_version",
+      "kind": "literal",
+      "values": [
+        "2.0.0"
       ]
     },
     {
@@ -1871,21 +2086,21 @@
       "definition": "ComponentSemanticsDescriptor/properties/contract_id",
       "kind": "literal",
       "values": [
-        "kdna.component-semantics/1"
+        "kdna.component-semantics/2"
       ]
     },
     {
       "definition": "ComponentSemanticsDescriptor/properties/contract_version",
       "kind": "literal",
       "values": [
-        "1.0.0"
+        "2.0.0"
       ]
     },
     {
       "definition": "ComponentSemanticsDescriptor/properties/definition_digest",
       "kind": "literal",
       "values": [
-        "sha256:3087cd19542e72322aec19b3015c916d2cfb074fa42e3fd76b3756bb4f097de3"
+        "sha256:779760994a3c7c730bd524e1d1d8d6f7c1fd8628bde55bcf3fa98ddd02051c28"
       ]
     },
     {
@@ -1934,7 +2149,7 @@
       "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/component/properties/id",
       "kind": "literal",
       "values": [
-        "kdna.component-semantics/1"
+        "kdna.component-semantics/2"
       ]
     },
     {
@@ -1955,7 +2170,7 @@
       "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/component/properties/definition",
       "kind": "literal",
       "values": [
-        "Explicit adoption of KDNA public component semantics 1.0.0."
+        "Explicit adoption of KDNA public component semantics 2.0.0."
       ]
     },
     {
@@ -1969,7 +2184,7 @@
       "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/adoption/properties/id",
       "kind": "literal",
       "values": [
-        "kdna.component-adoption/1"
+        "kdna.component-adoption/2"
       ]
     },
     {
@@ -1990,7 +2205,7 @@
       "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/adoption/properties/definition",
       "kind": "literal",
       "values": [
-        "Static component adoption record for KDNA public component semantics 1.0.0."
+        "Static component adoption record for KDNA public component semantics 2.0.0."
       ]
     },
     {
@@ -1998,41 +2213,6 @@
       "kind": "literal",
       "values": [
         "ComponentAdoptionCarrier"
-      ]
-    },
-    {
-      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/presence/properties/id",
-      "kind": "literal",
-      "values": [
-        "kdna.method-declaration-presence/1"
-      ]
-    },
-    {
-      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/presence/properties/location",
-      "kind": "literal",
-      "values": [
-        "Judgment.extensions"
-      ]
-    },
-    {
-      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/presence/properties/critical",
-      "kind": "literal",
-      "values": [
-        true
-      ]
-    },
-    {
-      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/presence/properties/definition",
-      "kind": "literal",
-      "values": [
-        "Authored method field presence for KDNA public component semantics 1.0.0."
-      ]
-    },
-    {
-      "definition": "ComponentSemanticsDescriptor/properties/carriers/properties/presence/properties/decoded_type",
-      "kind": "literal",
-      "values": [
-        "MethodPresenceCarrier"
       ]
     },
     {
@@ -2090,20 +2270,2000 @@
       "values": [
         8192
       ]
+    },
+    {
+      "definition": "JudgmentForm",
+      "kind": "enum",
+      "values": [
+        "conclusion",
+        "rule"
+      ]
+    },
+    {
+      "definition": "AssetCapability",
+      "kind": "enum",
+      "values": [
+        "asserted_answers",
+        "result_forming_rules",
+        "mixed"
+      ]
+    },
+    {
+      "definition": "TermVocabulary",
+      "kind": "enum",
+      "values": [
+        "core",
+        "author"
+      ]
+    },
+    {
+      "definition": "JudgmentLifecycle/properties/status",
+      "kind": "enum",
+      "values": [
+        "active",
+        "deprecated",
+        "superseded",
+        "withdrawn"
+      ]
+    },
+    {
+      "definition": "OmissionBatchReason",
+      "kind": "enum",
+      "values": [
+        "not_in_mode",
+        "outside_selection"
+      ]
+    },
+    {
+      "definition": "OmissionTargetKind",
+      "kind": "enum",
+      "values": [
+        "judgment",
+        "declaration",
+        "material",
+        "reason",
+        "source",
+        "method_component",
+        "relationship",
+        "dependency",
+        "asset",
+        "result",
+        "contract",
+        "condition",
+        "component",
+        "unit",
+        "plan",
+        "plan_node",
+        "policy",
+        "branch_entry",
+        "candidate",
+        "shared_declaration",
+        "boundary",
+        "exception",
+        "misuse",
+        "source_use",
+        "resource",
+        "example",
+        "example_result",
+        "revision",
+        "actor",
+        "asset_index"
+      ]
+    },
+    {
+      "definition": "OmissionBatch/properties/state",
+      "kind": "literal",
+      "values": [
+        "explicitly_omitted_batch"
+      ]
+    },
+    {
+      "definition": "OmissionBatch/allOf/0/if/properties/expandable",
+      "kind": "literal",
+      "values": [
+        true
+      ]
+    },
+    {
+      "definition": "OmissionBatch/allOf/1/if/properties/expandable",
+      "kind": "literal",
+      "values": [
+        false
+      ]
+    },
+    {
+      "definition": "ReadEnvelopeCatalogOnly/properties/contract",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.6.4"
+      ]
+    },
+    {
+      "definition": "ReadEnvelopeCatalogOnly/properties/status",
+      "kind": "literal",
+      "values": [
+        "catalog_only"
+      ]
+    },
+    {
+      "definition": "ReadEnvelopeCatalogOnly/properties/diagnostics/items/allOf/1/properties/code",
+      "kind": "literal",
+      "values": [
+        "READ_INTERPRETATION_INCOMPLETE"
+      ]
+    },
+    {
+      "definition": "CoreAdmissionCatalogOnly/properties/status",
+      "kind": "literal",
+      "values": [
+        "catalog_only"
+      ]
+    },
+    {
+      "definition": "CoreAdmissionCatalogOnly/properties/diagnostics/items/allOf/1/properties/code",
+      "kind": "literal",
+      "values": [
+        "READ_INTERPRETATION_INCOMPLETE"
+      ]
+    },
+    {
+      "definition": "PublicExecutionIntent/properties/use",
+      "kind": "literal",
+      "values": [
+        "reasoning_support"
+      ]
+    },
+    {
+      "definition": "PublicRuntimeCapsule/properties/contract",
+      "kind": "literal",
+      "values": [
+        "kdna.runtime-capsule/0.3.1"
+      ]
+    },
+    {
+      "definition": "PublicRuntimeCapsule/properties/kind",
+      "kind": "literal",
+      "values": [
+        "static_judgment_supply"
+      ]
+    },
+    {
+      "definition": "PublicConsumptionPlan/properties/contract",
+      "kind": "literal",
+      "values": [
+        "kdna.consumption-plan/0.3.1"
+      ]
+    },
+    {
+      "definition": "PublicAgentHostRequest/properties/contract",
+      "kind": "literal",
+      "values": [
+        "kdna.agent-host/0.3.1"
+      ]
+    },
+    {
+      "definition": "PublicAgentHostRequest/properties/operation",
+      "kind": "literal",
+      "values": [
+        "consume_judgment"
+      ]
+    },
+    {
+      "definition": "PublicExecutionFailure",
+      "kind": "enum",
+      "values": [
+        "EXECUTION_INPUT_INVALID",
+        "EXECUTION_SCHEMA_INVALID",
+        "EXECUTION_VERSION_UNSUPPORTED",
+        "EXECUTION_SOURCE_UNATTESTED",
+        "EXECUTION_BINDING_INVALID",
+        "EXECUTION_UNRESOLVED_EXTERNAL",
+        "EXECUTION_SELECTION_INVALID",
+        "EXECUTION_BUDGET_EXCEEDED",
+        "EXECUTION_HOST_INVALID",
+        "EXECUTION_HOST_DENIED",
+        "EXECUTION_HOST_EXPIRED",
+        "EXECUTION_DELIVERY_INVALID",
+        "EXECUTION_PROVIDER_FAILED",
+        "EXECUTION_REPLAY",
+        "EXECUTION_OUTCOME_FAILED"
+      ]
+    },
+    {
+      "definition": "PublicExecutionStatus",
+      "kind": "enum",
+      "values": [
+        "completed",
+        "denied",
+        "failed"
+      ]
+    },
+    {
+      "definition": "PublicAgentHostReceipt/properties/contract",
+      "kind": "literal",
+      "values": [
+        "kdna.agent-host/0.3.1"
+      ]
+    },
+    {
+      "definition": "PublicAgentHostReceipt/properties/output_delivery",
+      "kind": "literal",
+      "values": [
+        "not_confirmed"
+      ]
+    },
+    {
+      "definition": "PublicExecutionEvent/properties/kind",
+      "kind": "enum",
+      "values": [
+        "request_admitted",
+        "delivery_verified",
+        "execution_authorized",
+        "outcome_observed",
+        "output_authorized",
+        "completed",
+        "denied",
+        "failed"
+      ]
+    },
+    {
+      "definition": "PublicExecutionEvent/properties/source",
+      "kind": "enum",
+      "values": [
+        "reference_host",
+        "authorization_provider",
+        "delivery_provider",
+        "outcome_provider"
+      ]
+    },
+    {
+      "definition": "PublicJudgmentTrace/properties/contract",
+      "kind": "literal",
+      "values": [
+        "kdna.judgment-trace/0.3.1"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/0/properties/container",
+      "kind": "literal",
+      "values": [
+        "0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/0/properties/payload_profile",
+      "kind": "literal",
+      "values": [
+        "kdna.payload.judgment"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/0/properties/payload_version",
+      "kind": "literal",
+      "values": [
+        "0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/0/properties/core",
+      "kind": "literal",
+      "values": [
+        "kdna.core/0.4.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/0/properties/ir",
+      "kind": "literal",
+      "values": [
+        "kdna.canonical-ir/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/0/properties/runtime",
+      "kind": "literal",
+      "values": [
+        "kdna.runtime-capsule/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/0/properties/plan",
+      "kind": "literal",
+      "values": [
+        "kdna.consumption-plan/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/0/properties/host",
+      "kind": "literal",
+      "values": [
+        "kdna.agent-host/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/0/properties/trace",
+      "kind": "literal",
+      "values": [
+        "kdna.judgment-trace/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/0/properties/read",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/1/properties/container",
+      "kind": "literal",
+      "values": [
+        "0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/1/properties/payload_profile",
+      "kind": "literal",
+      "values": [
+        "kdna.payload.judgment"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/1/properties/payload_version",
+      "kind": "literal",
+      "values": [
+        "0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/1/properties/core",
+      "kind": "literal",
+      "values": [
+        "kdna.core/0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/1/properties/ir",
+      "kind": "literal",
+      "values": [
+        "kdna.canonical-ir/0.4.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/1/properties/runtime",
+      "kind": "literal",
+      "values": [
+        "kdna.runtime-capsule/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/1/properties/plan",
+      "kind": "literal",
+      "values": [
+        "kdna.consumption-plan/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/1/properties/host",
+      "kind": "literal",
+      "values": [
+        "kdna.agent-host/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/1/properties/trace",
+      "kind": "literal",
+      "values": [
+        "kdna.judgment-trace/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/1/properties/read",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.4.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/2/properties/container",
+      "kind": "literal",
+      "values": [
+        "0.4.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/2/properties/payload_profile",
+      "kind": "literal",
+      "values": [
+        "kdna.payload.judgment"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/2/properties/payload_version",
+      "kind": "literal",
+      "values": [
+        "0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/2/properties/core",
+      "kind": "literal",
+      "values": [
+        "kdna.core/0.6.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/2/properties/ir",
+      "kind": "literal",
+      "values": [
+        "kdna.canonical-ir/0.4.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/2/properties/runtime",
+      "kind": "literal",
+      "values": [
+        "kdna.runtime-capsule/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/2/properties/plan",
+      "kind": "literal",
+      "values": [
+        "kdna.consumption-plan/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/2/properties/host",
+      "kind": "literal",
+      "values": [
+        "kdna.agent-host/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/2/properties/trace",
+      "kind": "literal",
+      "values": [
+        "kdna.judgment-trace/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/2/properties/read",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.4.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/3/properties/container",
+      "kind": "literal",
+      "values": [
+        "0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/3/properties/payload_profile",
+      "kind": "literal",
+      "values": [
+        "kdna.payload.judgment"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/3/properties/payload_version",
+      "kind": "literal",
+      "values": [
+        "0.4.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/3/properties/core",
+      "kind": "literal",
+      "values": [
+        "kdna.core/0.7.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/3/properties/ir",
+      "kind": "literal",
+      "values": [
+        "kdna.canonical-ir/0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/3/properties/runtime",
+      "kind": "literal",
+      "values": [
+        "kdna.runtime-capsule/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/3/properties/plan",
+      "kind": "literal",
+      "values": [
+        "kdna.consumption-plan/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/3/properties/host",
+      "kind": "literal",
+      "values": [
+        "kdna.agent-host/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/3/properties/trace",
+      "kind": "literal",
+      "values": [
+        "kdna.judgment-trace/0.2.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/3/properties/read",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/4/properties/container",
+      "kind": "literal",
+      "values": [
+        "0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/4/properties/payload_profile",
+      "kind": "literal",
+      "values": [
+        "kdna.payload.judgment"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/4/properties/payload_version",
+      "kind": "literal",
+      "values": [
+        "0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/4/properties/core",
+      "kind": "literal",
+      "values": [
+        "kdna.core/0.8.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/4/properties/ir",
+      "kind": "literal",
+      "values": [
+        "kdna.canonical-ir/0.6.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/4/properties/runtime",
+      "kind": "literal",
+      "values": [
+        "kdna.runtime-capsule/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/4/properties/plan",
+      "kind": "literal",
+      "values": [
+        "kdna.consumption-plan/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/4/properties/host",
+      "kind": "literal",
+      "values": [
+        "kdna.agent-host/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/4/properties/trace",
+      "kind": "literal",
+      "values": [
+        "kdna.judgment-trace/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/4/properties/read",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.6.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/5/properties/container",
+      "kind": "literal",
+      "values": [
+        "0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/5/properties/payload_profile",
+      "kind": "literal",
+      "values": [
+        "kdna.payload.judgment"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/5/properties/payload_version",
+      "kind": "literal",
+      "values": [
+        "0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/5/properties/core",
+      "kind": "literal",
+      "values": [
+        "kdna.core/0.8.1"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/5/properties/ir",
+      "kind": "literal",
+      "values": [
+        "kdna.canonical-ir/0.6.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/5/properties/runtime",
+      "kind": "literal",
+      "values": [
+        "kdna.runtime-capsule/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/5/properties/plan",
+      "kind": "literal",
+      "values": [
+        "kdna.consumption-plan/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/5/properties/host",
+      "kind": "literal",
+      "values": [
+        "kdna.agent-host/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/5/properties/trace",
+      "kind": "literal",
+      "values": [
+        "kdna.judgment-trace/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/5/properties/read",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.6.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/6/properties/container",
+      "kind": "literal",
+      "values": [
+        "0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/6/properties/payload_profile",
+      "kind": "literal",
+      "values": [
+        "kdna.payload.judgment"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/6/properties/payload_version",
+      "kind": "literal",
+      "values": [
+        "0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/6/properties/core",
+      "kind": "literal",
+      "values": [
+        "kdna.core/0.8.1"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/6/properties/ir",
+      "kind": "literal",
+      "values": [
+        "kdna.canonical-ir/0.6.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/6/properties/runtime",
+      "kind": "literal",
+      "values": [
+        "kdna.runtime-capsule/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/6/properties/plan",
+      "kind": "literal",
+      "values": [
+        "kdna.consumption-plan/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/6/properties/host",
+      "kind": "literal",
+      "values": [
+        "kdna.agent-host/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/6/properties/trace",
+      "kind": "literal",
+      "values": [
+        "kdna.judgment-trace/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/6/properties/read",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.6.1"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/7/properties/container",
+      "kind": "literal",
+      "values": [
+        "0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/7/properties/payload_profile",
+      "kind": "literal",
+      "values": [
+        "kdna.payload.judgment"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/7/properties/payload_version",
+      "kind": "literal",
+      "values": [
+        "0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/7/properties/core",
+      "kind": "literal",
+      "values": [
+        "kdna.core/0.8.1"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/7/properties/ir",
+      "kind": "literal",
+      "values": [
+        "kdna.canonical-ir/0.6.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/7/properties/runtime",
+      "kind": "literal",
+      "values": [
+        "kdna.runtime-capsule/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/7/properties/plan",
+      "kind": "literal",
+      "values": [
+        "kdna.consumption-plan/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/7/properties/host",
+      "kind": "literal",
+      "values": [
+        "kdna.agent-host/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/7/properties/trace",
+      "kind": "literal",
+      "values": [
+        "kdna.judgment-trace/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/7/properties/read",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.6.2"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/8/properties/container",
+      "kind": "literal",
+      "values": [
+        "0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/8/properties/payload_profile",
+      "kind": "literal",
+      "values": [
+        "kdna.payload.judgment"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/8/properties/payload_version",
+      "kind": "literal",
+      "values": [
+        "0.5.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/8/properties/core",
+      "kind": "literal",
+      "values": [
+        "kdna.core/0.8.1"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/8/properties/ir",
+      "kind": "literal",
+      "values": [
+        "kdna.canonical-ir/0.6.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/8/properties/runtime",
+      "kind": "literal",
+      "values": [
+        "kdna.runtime-capsule/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/8/properties/plan",
+      "kind": "literal",
+      "values": [
+        "kdna.consumption-plan/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/8/properties/host",
+      "kind": "literal",
+      "values": [
+        "kdna.agent-host/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/8/properties/trace",
+      "kind": "literal",
+      "values": [
+        "kdna.judgment-trace/0.3.0"
+      ]
+    },
+    {
+      "definition": "UnsupportedVersionTuple/anyOf/8/properties/read",
+      "kind": "literal",
+      "values": [
+        "kdna.read/0.6.3"
+      ]
+    },
+    {
+      "definition": "ProtectionEntitlement/properties/profile",
+      "kind": "enum",
+      "values": [
+        "password",
+        "account",
+        "org"
+      ]
+    },
+    {
+      "definition": "Ref/properties/kind",
+      "kind": "enum",
+      "values": [
+        "asset",
+        "judgment",
+        "result",
+        "contract",
+        "condition",
+        "component",
+        "unit",
+        "plan",
+        "plan_node",
+        "policy",
+        "branch_entry",
+        "candidate",
+        "material",
+        "shared_declaration",
+        "boundary",
+        "exception",
+        "misuse",
+        "reason",
+        "source",
+        "source_use",
+        "resource",
+        "relationship",
+        "dependency",
+        "example",
+        "example_result",
+        "revision",
+        "actor"
+      ]
+    },
+    {
+      "definition": "AssetRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "asset"
+      ]
+    },
+    {
+      "definition": "JudgmentRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "judgment"
+      ]
+    },
+    {
+      "definition": "ResultRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "result"
+      ]
+    },
+    {
+      "definition": "ContractRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "contract"
+      ]
+    },
+    {
+      "definition": "ConditionRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "condition"
+      ]
+    },
+    {
+      "definition": "ComponentRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "component"
+      ]
+    },
+    {
+      "definition": "UnitRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "unit"
+      ]
+    },
+    {
+      "definition": "PlanRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "plan"
+      ]
+    },
+    {
+      "definition": "PlanNodeRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "plan_node"
+      ]
+    },
+    {
+      "definition": "PolicyRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "policy"
+      ]
+    },
+    {
+      "definition": "BranchEntryRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "branch_entry"
+      ]
+    },
+    {
+      "definition": "CandidateRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "candidate"
+      ]
+    },
+    {
+      "definition": "MaterialRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "material"
+      ]
+    },
+    {
+      "definition": "SharedDeclarationRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "shared_declaration"
+      ]
+    },
+    {
+      "definition": "BoundaryRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "boundary"
+      ]
+    },
+    {
+      "definition": "ExceptionRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "exception"
+      ]
+    },
+    {
+      "definition": "MisuseRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "misuse"
+      ]
+    },
+    {
+      "definition": "ReasonRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "reason"
+      ]
+    },
+    {
+      "definition": "SourceRefTarget/properties/kind",
+      "kind": "enum",
+      "values": [
+        "source"
+      ]
+    },
+    {
+      "definition": "SourceUseRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "source_use"
+      ]
+    },
+    {
+      "definition": "ResourceRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "resource"
+      ]
+    },
+    {
+      "definition": "RelationshipRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "relationship"
+      ]
+    },
+    {
+      "definition": "DependencyRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "dependency"
+      ]
+    },
+    {
+      "definition": "ExampleRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "example"
+      ]
+    },
+    {
+      "definition": "ExampleResultRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "example_result"
+      ]
+    },
+    {
+      "definition": "RevisionRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "revision"
+      ]
+    },
+    {
+      "definition": "ActorRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "actor"
+      ]
+    },
+    {
+      "definition": "QualificationRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "condition",
+        "boundary",
+        "material",
+        "shared_declaration"
+      ]
+    },
+    {
+      "definition": "ComponentContentRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "result",
+        "material",
+        "shared_declaration",
+        "reason",
+        "component"
+      ]
+    },
+    {
+      "definition": "ContentUseTargetRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "material",
+        "shared_declaration"
+      ]
+    },
+    {
+      "definition": "ConditionOwnerRef/properties/kind",
+      "kind": "enum",
+      "values": [
+        "asset",
+        "judgment",
+        "policy",
+        "exception"
+      ]
+    },
+    {
+      "definition": "QualifiedJudgmentRef/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "local"
+      ]
+    },
+    {
+      "definition": "AppliesTo/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "asset"
+      ]
+    },
+    {
+      "definition": "AppliesTo/oneOf/1/properties/kind",
+      "kind": "literal",
+      "values": [
+        "judgments"
+      ]
+    },
+    {
+      "definition": "AnswerKind",
+      "kind": "enum",
+      "values": [
+        "determination",
+        "classification",
+        "evaluation",
+        "status",
+        "diagnosis",
+        "estimate",
+        "prediction",
+        "applicability",
+        "ranking",
+        "selection",
+        "adjustment",
+        "interpretation",
+        "stance",
+        "preference",
+        "guidance",
+        "composite",
+        "other"
+      ]
+    },
+    {
+      "definition": "BaseAnswerKind",
+      "kind": "enum",
+      "values": [
+        "determination",
+        "classification",
+        "evaluation",
+        "status",
+        "diagnosis",
+        "estimate",
+        "prediction",
+        "applicability",
+        "ranking",
+        "selection",
+        "adjustment",
+        "interpretation",
+        "stance",
+        "preference",
+        "guidance",
+        "other"
+      ]
+    },
+    {
+      "definition": "MethodKind",
+      "kind": "enum",
+      "values": [
+        "observation",
+        "recognition",
+        "criteria_comparison",
+        "tradeoff",
+        "inference",
+        "elimination",
+        "causal_analysis",
+        "calculation",
+        "simulation",
+        "evidence_analysis",
+        "interpretation",
+        "feedback",
+        "analogy",
+        "feeling",
+        "experience",
+        "composite",
+        "other"
+      ]
+    },
+    {
+      "definition": "BaseMethodKind",
+      "kind": "enum",
+      "values": [
+        "observation",
+        "recognition",
+        "criteria_comparison",
+        "tradeoff",
+        "inference",
+        "elimination",
+        "causal_analysis",
+        "calculation",
+        "simulation",
+        "evidence_analysis",
+        "interpretation",
+        "feedback",
+        "analogy",
+        "feeling",
+        "experience",
+        "other"
+      ]
+    },
+    {
+      "definition": "RoleName",
+      "kind": "enum",
+      "values": [
+        "个人感受",
+        "体验说明",
+        "偏好变化",
+        "经验要点",
+        "参考经历",
+        "适用情形",
+        "例外情况",
+        "观察依据",
+        "判定口径",
+        "观察限制",
+        "识别特征",
+        "类别定义",
+        "匹配办法",
+        "易混淆情况",
+        "判断标准",
+        "对照办法",
+        "归结办法",
+        "底线要求",
+        "候选方案",
+        "比较因素",
+        "取舍原则",
+        "不可兼得之处",
+        "优先变化",
+        "判断前提",
+        "推导关系",
+        "关键假设",
+        "候选范围",
+        "排除条件",
+        "保留办法",
+        "特殊情况处理",
+        "待解释现象",
+        "原因关系",
+        "候选原因",
+        "区分依据",
+        "反向情况",
+        "输入与含义",
+        "计算关系",
+        "计算假设",
+        "取值边界",
+        "误差说明",
+        "起点条件",
+        "变化假设",
+        "演变关系",
+        "情景分叉",
+        "转折信号",
+        "所用材料",
+        "材料与判断的联系",
+        "反向材料",
+        "材料取舍",
+        "解读对象",
+        "解释关系",
+        "相关语境",
+        "理解线索",
+        "替代解读",
+        "调整目标",
+        "反馈信号",
+        "调整办法",
+        "停止条件",
+        "冲突处理",
+        "参照对象",
+        "对应关系",
+        "借用办法",
+        "关键差异",
+        "不可迁移之处",
+        "方法说明",
+        "判断依据",
+        "作用关系",
+        "补充说明",
+        "适用限制"
+      ]
+    },
+    {
+      "definition": "MethodKindRef/properties/vocabulary",
+      "kind": "literal",
+      "values": [
+        "core"
+      ]
+    },
+    {
+      "definition": "BaseMethodKindRef/properties/vocabulary",
+      "kind": "literal",
+      "values": [
+        "core"
+      ]
+    },
+    {
+      "definition": "AnswerPart/allOf/0/if/properties/kind",
+      "kind": "literal",
+      "values": [
+        "other"
+      ]
+    },
+    {
+      "definition": "CoreExpression/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "result_text"
+      ]
+    },
+    {
+      "definition": "CoreExpression/oneOf/1/properties/kind",
+      "kind": "literal",
+      "values": [
+        "authored"
+      ]
+    },
+    {
+      "definition": "JudgmentPort/properties/direction",
+      "kind": "enum",
+      "values": [
+        "input",
+        "output"
+      ]
+    },
+    {
+      "definition": "JudgmentPort/allOf/0/if/properties/direction",
+      "kind": "literal",
+      "values": [
+        "input"
+      ]
+    },
+    {
+      "definition": "JudgmentPort/allOf/1/if/properties/direction",
+      "kind": "literal",
+      "values": [
+        "output"
+      ]
+    },
+    {
+      "definition": "MethodUnit/allOf/0/if/properties/method",
+      "kind": "literal",
+      "values": [
+        "other"
+      ]
+    },
+    {
+      "definition": "InputBindingSource/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "input"
+      ]
+    },
+    {
+      "definition": "InputBindingSource/oneOf/1/properties/kind",
+      "kind": "literal",
+      "values": [
+        "literal"
+      ]
+    },
+    {
+      "definition": "InputBindingSource/oneOf/2/properties/kind",
+      "kind": "literal",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "definition": "Termination/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "condition"
+      ]
+    },
+    {
+      "definition": "Termination/oneOf/1/properties/kind",
+      "kind": "literal",
+      "values": [
+        "ongoing"
+      ]
+    },
+    {
+      "definition": "PlanUseNode/properties/kind",
+      "kind": "literal",
+      "values": [
+        "use"
+      ]
+    },
+    {
+      "definition": "PlanJudgmentUseNode/properties/kind",
+      "kind": "literal",
+      "values": [
+        "judgment_use"
+      ]
+    },
+    {
+      "definition": "PlanSequenceNode/properties/kind",
+      "kind": "literal",
+      "values": [
+        "sequence"
+      ]
+    },
+    {
+      "definition": "PlanParallelNode/properties/kind",
+      "kind": "literal",
+      "values": [
+        "parallel"
+      ]
+    },
+    {
+      "definition": "PlanBranchNode/properties/kind",
+      "kind": "literal",
+      "values": [
+        "branch"
+      ]
+    },
+    {
+      "definition": "PlanFeedbackNode/properties/kind",
+      "kind": "literal",
+      "values": [
+        "feedback"
+      ]
+    },
+    {
+      "definition": "EmissionSource/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "candidate"
+      ]
+    },
+    {
+      "definition": "EmissionSource/oneOf/1/properties/kind",
+      "kind": "literal",
+      "values": [
+        "output"
+      ]
+    },
+    {
+      "definition": "CollectCombine/properties/kind",
+      "kind": "literal",
+      "values": [
+        "collect"
+      ]
+    },
+    {
+      "definition": "CollectCombine/properties/duplicates",
+      "kind": "enum",
+      "values": [
+        "preserve",
+        "producer_identity"
+      ]
+    },
+    {
+      "definition": "CollectCombine/properties/order",
+      "kind": "enum",
+      "values": [
+        "declaration",
+        "priority"
+      ]
+    },
+    {
+      "definition": "AuthoredCombine/properties/kind",
+      "kind": "literal",
+      "values": [
+        "authored"
+      ]
+    },
+    {
+      "definition": "AuthoredCombine/properties/duplicates",
+      "kind": "enum",
+      "values": [
+        "preserve",
+        "producer_identity"
+      ]
+    },
+    {
+      "definition": "AuthoredCombine/properties/order",
+      "kind": "enum",
+      "values": [
+        "declaration",
+        "priority"
+      ]
+    },
+    {
+      "definition": "PolicyDisposition/properties/kind",
+      "kind": "literal",
+      "values": [
+        "disposition"
+      ]
+    },
+    {
+      "definition": "PolicyDisposition/properties/code",
+      "kind": "enum",
+      "values": [
+        "defer",
+        "not_applicable",
+        "conflict"
+      ]
+    },
+    {
+      "definition": "PolicyTerminal/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "value"
+      ]
+    },
+    {
+      "definition": "PolicyUndetermined/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "defer"
+      ]
+    },
+    {
+      "definition": "PolicyUndetermined/oneOf/1/properties/kind",
+      "kind": "literal",
+      "values": [
+        "partial"
+      ]
+    },
+    {
+      "definition": "ConditionalPolicy/properties/match",
+      "kind": "enum",
+      "values": [
+        "first_match",
+        "all_matches"
+      ]
+    },
+    {
+      "definition": "ConditionalPolicy/allOf/0/if/properties/match",
+      "kind": "literal",
+      "values": [
+        "first_match"
+      ]
+    },
+    {
+      "definition": "ConditionalPolicy/allOf/0/then/properties/on_undetermined/properties/kind",
+      "kind": "literal",
+      "values": [
+        "defer"
+      ]
+    },
+    {
+      "definition": "ConditionalPolicy/allOf/1/if/properties/match",
+      "kind": "literal",
+      "values": [
+        "all_matches"
+      ]
+    },
+    {
+      "definition": "ConditionalPolicy/allOf/2/if/properties/combine/properties/kind",
+      "kind": "literal",
+      "values": [
+        "authored"
+      ]
+    },
+    {
+      "definition": "ConditionalPolicy/allOf/2/then/properties/on_undetermined/properties/kind",
+      "kind": "literal",
+      "values": [
+        "defer"
+      ]
+    },
+    {
+      "definition": "ConditionalPolicy/allOf/3/if/properties/on_undetermined/properties/kind",
+      "kind": "literal",
+      "values": [
+        "partial"
+      ]
+    },
+    {
+      "definition": "ConditionalPolicy/allOf/3/then/properties/match",
+      "kind": "literal",
+      "values": [
+        "all_matches"
+      ]
+    },
+    {
+      "definition": "ConditionalPolicy/allOf/3/then/properties/combine/properties/kind",
+      "kind": "literal",
+      "values": [
+        "collect"
+      ]
+    },
+    {
+      "definition": "EmissionListContract/properties/kind",
+      "kind": "literal",
+      "values": [
+        "emission_list"
+      ]
+    },
+    {
+      "definition": "PolicyCompleteOutcome/properties/kind",
+      "kind": "literal",
+      "values": [
+        "complete"
+      ]
+    },
+    {
+      "definition": "PolicyPartialOutcome/properties/kind",
+      "kind": "literal",
+      "values": [
+        "partial"
+      ]
+    },
+    {
+      "definition": "ContentUse/properties/role",
+      "kind": "enum",
+      "values": [
+        "adopt",
+        "discuss",
+        "oppose"
+      ]
+    },
+    {
+      "definition": "KernelPurpose/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "summary"
+      ]
+    },
+    {
+      "definition": "KernelPurpose/oneOf/1/properties/kind",
+      "kind": "literal",
+      "values": [
+        "authored"
+      ]
+    },
+    {
+      "definition": "SharedTextDeclaration/properties/kind",
+      "kind": "enum",
+      "values": [
+        "worldview",
+        "value_order"
+      ]
+    },
+    {
+      "definition": "SharedRoleDeclaration/properties/kind",
+      "kind": "literal",
+      "values": [
+        "role"
+      ]
+    },
+    {
+      "definition": "SharedRoleDeclaration/properties/value/allOf/1/anyOf/0/properties/acts_as/properties/state",
+      "kind": "literal",
+      "values": [
+        "provided"
+      ]
+    },
+    {
+      "definition": "SharedRoleDeclaration/properties/value/allOf/1/anyOf/1/properties/does_not_act_as/properties/state",
+      "kind": "literal",
+      "values": [
+        "provided"
+      ]
+    },
+    {
+      "definition": "SharedRoleDeclaration/properties/value/allOf/1/anyOf/2/properties/responsibility/properties/state",
+      "kind": "literal",
+      "values": [
+        "provided"
+      ]
+    },
+    {
+      "definition": "ExceptionEffect/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "waive"
+      ]
+    },
+    {
+      "definition": "ExceptionEffect/oneOf/1/properties/kind",
+      "kind": "literal",
+      "values": [
+        "replace_limit"
+      ]
+    },
+    {
+      "definition": "ExampleValueResult/properties/kind",
+      "kind": "enum",
+      "values": [
+        "expected",
+        "observed"
+      ]
+    },
+    {
+      "definition": "ExampleValueResult/allOf/0/if/properties/kind",
+      "kind": "literal",
+      "values": [
+        "expected"
+      ]
+    },
+    {
+      "definition": "ExampleDispositionResult/properties/kind",
+      "kind": "literal",
+      "values": [
+        "disposition"
+      ]
+    },
+    {
+      "definition": "ExamplePartialResult/properties/kind",
+      "kind": "literal",
+      "values": [
+        "partial"
+      ]
+    },
+    {
+      "definition": "ExamplePartialResult/properties/observation_kind",
+      "kind": "enum",
+      "values": [
+        "expected",
+        "observed"
+      ]
+    },
+    {
+      "definition": "Example/properties/kind",
+      "kind": "enum",
+      "values": [
+        "illustrative",
+        "observed"
+      ]
+    },
+    {
+      "definition": "Example/allOf/0/if/properties/kind",
+      "kind": "literal",
+      "values": [
+        "illustrative"
+      ]
+    },
+    {
+      "definition": "Example/allOf/0/then/properties/results/items/allOf/0/not/properties/kind",
+      "kind": "literal",
+      "values": [
+        "observed"
+      ]
+    },
+    {
+      "definition": "Example/allOf/0/then/properties/results/items/allOf/1/not/properties/observation_kind",
+      "kind": "literal",
+      "values": [
+        "observed"
+      ]
+    },
+    {
+      "definition": "HistoryDeclaration/properties/coverage",
+      "kind": "enum",
+      "values": [
+        "complete",
+        "partial"
+      ]
+    },
+    {
+      "definition": "ExpansionAnchor/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "asset"
+      ]
+    },
+    {
+      "definition": "ExpansionAnchor/oneOf/1/properties/kind",
+      "kind": "literal",
+      "values": [
+        "judgment"
+      ]
+    },
+    {
+      "definition": "TargetDescriptor/properties/body_delivery",
+      "kind": "enum",
+      "values": [
+        "inline",
+        "deferred"
+      ]
+    },
+    {
+      "definition": "TargetDescriptor/allOf/0/if/properties/body_delivery",
+      "kind": "literal",
+      "values": [
+        "deferred"
+      ]
+    },
+    {
+      "definition": "BoundaryActivation/oneOf/0/properties/kind",
+      "kind": "literal",
+      "values": [
+        "always"
+      ]
+    },
+    {
+      "definition": "BoundaryActivation/oneOf/1/properties/kind",
+      "kind": "literal",
+      "values": [
+        "exception"
+      ]
+    },
+    {
+      "definition": "IRNode_method_component/properties/role",
+      "kind": "literal",
+      "values": [
+        "method_component"
+      ]
+    },
+    {
+      "definition": "IRNode_method_unit/properties/role",
+      "kind": "literal",
+      "values": [
+        "method_unit"
+      ]
+    },
+    {
+      "definition": "IRNode_method_plan/properties/role",
+      "kind": "literal",
+      "values": [
+        "method_plan"
+      ]
+    },
+    {
+      "definition": "IRNode_method_instance/properties/role",
+      "kind": "literal",
+      "values": [
+        "method_instance"
+      ]
+    },
+    {
+      "definition": "IRNode_conditional_policy/properties/role",
+      "kind": "literal",
+      "values": [
+        "conditional_policy"
+      ]
+    },
+    {
+      "definition": "IRNode_branch/properties/role",
+      "kind": "literal",
+      "values": [
+        "branch"
+      ]
+    },
+    {
+      "definition": "IRNode_candidate/properties/role",
+      "kind": "literal",
+      "values": [
+        "candidate"
+      ]
+    },
+    {
+      "definition": "IRNode_condition/properties/role",
+      "kind": "literal",
+      "values": [
+        "condition"
+      ]
+    },
+    {
+      "definition": "IRNode_shared_declaration/properties/role",
+      "kind": "literal",
+      "values": [
+        "shared_declaration"
+      ]
+    },
+    {
+      "definition": "IRNode_example/properties/role",
+      "kind": "literal",
+      "values": [
+        "example"
+      ]
+    },
+    {
+      "definition": "IRNode_example_result/properties/role",
+      "kind": "literal",
+      "values": [
+        "example_result"
+      ]
+    },
+    {
+      "definition": "IRNode_revision/properties/role",
+      "kind": "literal",
+      "values": [
+        "revision"
+      ]
+    },
+    {
+      "definition": "IRNode_emission_list_contract/properties/role",
+      "kind": "literal",
+      "values": [
+        "emission_list_contract"
+      ]
+    },
+    {
+      "definition": "IRHistoryOverview/properties/coverage",
+      "kind": "enum",
+      "values": [
+        "complete",
+        "partial"
+      ]
+    },
+    {
+      "definition": "IRBoundaryDeclarationOverview/properties/state",
+      "kind": "enum",
+      "values": [
+        "provided",
+        "unknown",
+        "none",
+        "not_applicable"
+      ]
+    },
+    {
+      "definition": "NativeMethodBindingTarget/properties/kind",
+      "kind": "enum",
+      "values": [
+        "actor",
+        "judgment",
+        "reason",
+        "source",
+        "source_use",
+        "resource",
+        "material",
+        "relationship",
+        "dependency",
+        "contract",
+        "component",
+        "boundary",
+        "exception",
+        "misuse"
+      ]
     }
   ],
   "format": "kdna.public-vocabulary/1",
-  "status": "UNPUBLISHED_DESIGN_TARGET",
+  "status": "UNPUBLISHED_R2_IMPLEMENTATION_CANDIDATE",
   "version_tuple": {
-    "container": "0.2.0",
-    "core": "kdna.core/0.3.0",
-    "host": "kdna.agent-host/0.2.0",
-    "ir": "kdna.canonical-ir/0.2.0",
+    "container": "0.5.0",
+    "core": "kdna.core/0.8.2",
+    "host": "kdna.agent-host/0.3.1",
+    "ir": "kdna.canonical-ir/0.6.1",
     "payload_profile": "kdna.payload.judgment",
-    "payload_version": "0.2.0",
-    "plan": "kdna.consumption-plan/0.2.0",
-    "read": "kdna.read/0.2.0",
-    "runtime": "kdna.runtime-capsule/0.2.0",
-    "trace": "kdna.judgment-trace/0.2.0"
+    "payload_version": "0.5.1",
+    "plan": "kdna.consumption-plan/0.3.1",
+    "read": "kdna.read/0.6.4",
+    "runtime": "kdna.runtime-capsule/0.3.1",
+    "trace": "kdna.judgment-trace/0.3.1"
   }
 }

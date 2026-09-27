@@ -34,15 +34,9 @@ Host 边界内披露内容。已发布 CLI 0.36.1 保留其独立的 LoadPlan / 
 
 先阅读 [Core/Read 源码指引](./docs/core-read-current-status.md)、
 [Core](./packages/kdna-core/README.md) 和 [Read](./packages/kdna-read/README.md)
-的精确输入与 API。Core `0.24.0-rc.component-semantics.2` 对不可变字节入场，生成
-Canonical IR 并签发私有 snapshot。Read `0.3.0-rc.component-semantics.2` 明确区分
-`read_envelope`、`admission_rejection`、`no_body_control` 和 `transport_failure`。
-披露需要独立可信的 control / Host provider；读取结果不授予行动权限。
+的精确输入与 API。当前未发布 R2 源码组合为 Core `0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7`，Read 要求精确 Core peer。完整语义坐标见 [版本策略](./specs/public-version-policy.md) 与 [规范索引](./SPEC-INDEX.md)。Core 对不可变字节入场，生成 Canonical IR 并签发私有 snapshot。Read 明确区分 `read_envelope`、`admission_rejection`、`no_body_control` 和 `transport_failure`；披露需要独立可信的 control / Host provider，读取结果不授予行动权限。
 
-这些是源码候选，不是 npm 发布。当前 Core/Read 不支持加密、签名和 checksums 文档
-入场，也不支持 Runtime Capsule / Plan 入场及执行。规范或历史示例的存在不代表实现
-已经支持。[当前 CLI 源码](https://github.com/aikdna/kdna-cli#readme) 提供明确文件的
-`inspect`、`validate`、`read`，须使用其精确绑定的依赖图。
+Core `/execution` 提供原生 0.3.1 Plan/Capsule 入场与显式 Host 参考 API。普通 root/browser 入场保留加密、签名和 checksums 文档拒绝；[显式 Node 保护入口](./specs/protection-admission.md) 有自己的输入和可信 provider 边界。源码存在不等于独立接受、原生环境或真实服务可用。CLI、MCP、Studio 仍按各自精确依赖图使用，不能从本仓版本推断已重绑定。
 
 ## 已发布 CLI 0.36.1 的五分钟路径
 
@@ -72,7 +66,7 @@ kdna load ./judgment.kdna --profile=compact --as=json
 
 一份 `.kdna` 是单文件、可携带的判断资产。当前容器包含公开 manifest、结构化
 判断 payload、身份和谱系信息。加密、签名和 checksums 文档属于相应版本的格式
-合同；当前 Core 源码在入场时明确拒绝这些尚不可用的能力。格式规范不等于当前实现清单。
+合同；普通 root/browser 入场拒绝这些输入，显式 Node 保护入口按其合同处理。格式规范不等于平台、服务或独立接受清单。
 
 创作项目、展开 JSON、Registry 页面、receipt 和评价报告都可以围绕资产工作，
 但不是 `.kdna` 分发对象本身。
@@ -85,7 +79,7 @@ kdna load ./judgment.kdna --profile=compact --as=json
 npm install --save-exact @aikdna/kdna-core@0.22.0
 ```
 
-当前 Core 源码不导出这些签名 API，并拒绝已签名容器。签名规范和历史向量保留各自
+当前 Core 普通 root 入口不导出这些历史签名 API，普通入场拒绝已签名容器。签名规范和历史向量保留各自
 版本语义，不能据此推定当前候选支持。
 
 在已发布 Core 0.22.0 中，`.kdna` 资产可以携带可选的 `signature.kdsig` 签名包（`kdsig.ed25519`，

@@ -1,6 +1,6 @@
 # KDNA Core Specification
 
-Status: stable current contract
+Status: Active original 0.1 contract. The unpublished grammar.3 implementation and native execution 0.2 contract are separately indexed in [SPEC-INDEX](SPEC-INDEX.md#current-unpublished-grammar3-candidate); the 0.1 normative line below is preserved.
 
 Container coordinate: `format_version: "0.1.0"`
 

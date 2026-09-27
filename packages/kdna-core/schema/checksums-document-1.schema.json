@@ -1,0 +1,97 @@
+{
+  "$defs": {
+    "ChecksumsDocument1": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "sha256",
+          "type": "string"
+        },
+        "covered_entries": {
+          "items": {
+            "$ref": "#/$defs/EntryName"
+          },
+          "maxItems": 128,
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "digest_profile": {
+          "const": "kdna.digest-basis.runtime-entry-set",
+          "type": "string"
+        },
+        "digest_profile_version": {
+          "const": "0.2.0",
+          "type": "string"
+        },
+        "entries": {
+          "items": {
+            "$ref": "#/$defs/ChecksumsEntry1"
+          },
+          "maxItems": 128,
+          "minItems": 2,
+          "type": "array"
+        },
+        "entry_set_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "profile": {
+          "const": "kdna.checksums.document/1",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "1.0.0",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile",
+        "profile_version",
+        "algorithm",
+        "digest_profile",
+        "digest_profile_version",
+        "covered_entries",
+        "entries",
+        "entry_set_digest"
+      ],
+      "type": "object"
+    },
+    "ChecksumsEntry1": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {
+          "maximum": 8388608,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "name": {
+          "$ref": "#/$defs/EntryName"
+        }
+      },
+      "required": [
+        "name",
+        "bytes",
+        "digest"
+      ],
+      "type": "object"
+    },
+    "Digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "EntryName": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))(?!.*//)(?!.*[/]$)[^\\\\\\u0000-\\u001f\\u007f-\\u009f]+$",
+      "type": "string"
+    }
+  },
+  "$id": "urn:kdna:checksums-document:1.0.0",
+  "$ref": "#/$defs/ChecksumsDocument1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Protection observation structure. Opaque authorities have no JSON representation. Observation validation never proves authentication or runtime acceptance.",
+  "title": "ChecksumsDocument1"
+}

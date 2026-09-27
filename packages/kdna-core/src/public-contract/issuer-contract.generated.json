@@ -1,0 +1,964 @@
+{
+  "api_typescript": "export type IssuerSecrets = { readonly issuerRootKey: Uint8Array; readonly issuerSigningPrivateKeyPkcs8: Uint8Array; readonly signaturePolicy: IssuerSignaturePolicy };\nexport type IssuanceResult = (IssuerIssuedObservation & { readonly grantBytes: Uint8Array }) | IssuerCoreRejectedObservation | IssuerFailedObservation;\nexport declare function getExternalGrantIssuerContract(): IssuerDescriptor;\nexport declare function issueExternalKeyGrantForAsset(input: string | Uint8Array, options: IssuerOptions, secrets: IssuerSecrets): Promise<IssuanceResult>;\n",
+  "definition_digest": "sha256:1a0d188ee15e5dedc6bb1176a2659f0fa0b05072ab8dc1641f1e79a0900467f9",
+  "derived_runtime_enforcement": {
+    "ISSUER-AUTHENTICATION": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/grant-issuer.js:1-125"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "issuer definitions keep exact result arms and two callables"
+          ],
+          "gate": "issuer-definition"
+        },
+        {
+          "cases": [
+            "public-grant-issuer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    "ISSUER-CAPTURE": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/grant-issuer.js:1-125"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "issuer definitions keep exact result arms and two callables"
+          ],
+          "gate": "issuer-definition"
+        },
+        {
+          "cases": [
+            "public-grant-issuer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    "ISSUER-GRANT": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/grant-issuer.js:1-125"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "issuer definitions keep exact result arms and two callables"
+          ],
+          "gate": "issuer-definition"
+        },
+        {
+          "cases": [
+            "public-grant-issuer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    "ISSUER-LIFETIME": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/grant-issuer.js:1-125"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "issuer definitions keep exact result arms and two callables"
+          ],
+          "gate": "issuer-definition"
+        },
+        {
+          "cases": [
+            "public-grant-issuer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    "ISSUER-RESULT": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/grant-issuer.js:1-125"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "issuer definitions keep exact result arms and two callables"
+          ],
+          "gate": "issuer-definition"
+        },
+        {
+          "cases": [
+            "public-grant-issuer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    "ISSUER-SEMANTICS": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/grant-issuer.js:1-125"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "issuer definitions keep exact result arms and two callables"
+          ],
+          "gate": "issuer-definition"
+        },
+        {
+          "cases": [
+            "public-grant-issuer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    }
+  },
+  "id": "kdna.external-grant-issuer/1",
+  "non_schema_rules": [
+    {
+      "applies_to": [
+        "IssuerResultObservation"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "independent issuer module; account and device service final transaction remains separate",
+      "future_owner": "Core issuer and trusted account service",
+      "id": "ISSUER-CAPTURE",
+      "requirement": "Reserve one of four slots before observing mutable arguments. Reject proxies, accessors, extra keys and shared buffers; capture arguments and secrets before first await. Bound same-handle container reads. Retain owned slot until outstanding I/O and handle closure settle."
+    },
+    {
+      "applies_to": [
+        "IssuerResultObservation"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "independent issuer module; account and device service final transaction remains separate",
+      "future_owner": "Core issuer and trusted account service",
+      "id": "ISSUER-AUTHENTICATION",
+      "requirement": "Authenticate actual captured encrypted bytes through shared bounded container, Manifest, protection declaration, original A/C/E self binding, integrity, canonical envelope, issuer-root AEAD and plaintext digest. No caller A/Manifest/envelope/plaintext/CEK verification carrier."
+    },
+    {
+      "applies_to": [
+        "IssuerResultObservation"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "independent issuer module; account and device service final transaction remains separate",
+      "future_owner": "Core issuer and trusted account service",
+      "id": "ISSUER-SEMANTICS",
+      "requirement": "Use the single validated Payload and interpretation seam. accepted/complete and genuine unknown-critical catalog_only/blocked are distinct. Issue neither snapshot nor operation, and project only finite capability/status."
+    },
+    {
+      "applies_to": [
+        "IssuerResultObservation"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "independent issuer module; account and device service final transaction remains separate",
+      "future_owner": "Core issuer and trusted account service",
+      "id": "ISSUER-GRANT",
+      "requirement": "Only authenticated internally owned Manifest/envelope/A/root reach the unchanged RFC19 helper; all signed time/status/id options are explicit. Check grant schema/signature/context and raw output digest. No new primitive or old wire/profile changes."
+    },
+    {
+      "applies_to": [
+        "IssuerResultObservation"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "independent issuer module; account and device service final transaction remains separate",
+      "future_owner": "Core issuer and trusted account service",
+      "id": "ISSUER-RESULT",
+      "requirement": "Closed observation union and exact Uint8Array runtime wrapper. No plaintext, IR, catalog text, content-bearing diagnostics or secret in public output/failure. Grant metadata is disclosed. Issuer public key is an observation, not identity or account/Read/action authority."
+    },
+    {
+      "applies_to": [
+        "IssuerResultObservation"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "independent issuer module; account and device service final transaction remains separate",
+      "future_owner": "Core issuer and trusted account service",
+      "id": "ISSUER-LIFETIME",
+      "requirement": "One absolute internal monotonic deadline spans capture, await, crypto and output. The synchronous unchanged RFC19 helper is one non-preemptible unit, checked before and after, and again before publishing success. Timeout returns no grant but does not claim interruption of internal computation. Late I/O never signs or frees slots early. Service final authorization is separate."
+    }
+  ],
+  "proof_limits": [
+    "Candidate implementation and schema validity are not independent acceptance.",
+    "No native store, service or account authority is implemented here."
+  ],
+  "root": "IssuerResultObservation",
+  "rule_coverage": {
+    "ISSUER-AUTHENTICATION": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "issuer definitions keep exact result arms and two callables"
+          ],
+          "gate": "issuer-definition"
+        },
+        {
+          "cases": [
+            "public-grant-issuer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/grant-issuer.js:1-125"
+      ]
+    },
+    "ISSUER-CAPTURE": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "issuer definitions keep exact result arms and two callables"
+          ],
+          "gate": "issuer-definition"
+        },
+        {
+          "cases": [
+            "public-grant-issuer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/grant-issuer.js:1-125"
+      ]
+    },
+    "ISSUER-GRANT": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "issuer definitions keep exact result arms and two callables"
+          ],
+          "gate": "issuer-definition"
+        },
+        {
+          "cases": [
+            "public-grant-issuer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/grant-issuer.js:1-125"
+      ]
+    },
+    "ISSUER-LIFETIME": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "issuer definitions keep exact result arms and two callables"
+          ],
+          "gate": "issuer-definition"
+        },
+        {
+          "cases": [
+            "public-grant-issuer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/grant-issuer.js:1-125"
+      ]
+    },
+    "ISSUER-RESULT": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "issuer definitions keep exact result arms and two callables"
+          ],
+          "gate": "issuer-definition"
+        },
+        {
+          "cases": [
+            "public-grant-issuer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/grant-issuer.js:1-125"
+      ]
+    },
+    "ISSUER-SEMANTICS": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "issuer definitions keep exact result arms and two callables"
+          ],
+          "gate": "issuer-definition"
+        },
+        {
+          "cases": [
+            "public-grant-issuer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/grant-issuer.js:1-125"
+      ]
+    }
+  },
+  "rules": {
+    "ISSUER-AUTHENTICATION": "Authenticate actual captured encrypted bytes through shared bounded container, Manifest, protection declaration, original A/C/E self binding, integrity, canonical envelope, issuer-root AEAD and plaintext digest. No caller A/Manifest/envelope/plaintext/CEK verification carrier.",
+    "ISSUER-CAPTURE": "Reserve one of four slots before observing mutable arguments. Reject proxies, accessors, extra keys and shared buffers; capture arguments and secrets before first await. Bound same-handle container reads. Retain owned slot until outstanding I/O and handle closure settle.",
+    "ISSUER-GRANT": "Only authenticated internally owned Manifest/envelope/A/root reach the unchanged RFC19 helper; all signed time/status/id options are explicit. Check grant schema/signature/context and raw output digest. No new primitive or old wire/profile changes.",
+    "ISSUER-LIFETIME": "One absolute internal monotonic deadline spans capture, await, crypto and output. The synchronous unchanged RFC19 helper is one non-preemptible unit, checked before and after, and again before publishing success. Timeout returns no grant but does not claim interruption of internal computation. Late I/O never signs or frees slots early. Service final authorization is separate.",
+    "ISSUER-RESULT": "Closed observation union and exact Uint8Array runtime wrapper. No plaintext, IR, catalog text, content-bearing diagnostics or secret in public output/failure. Grant metadata is disclosed. Issuer public key is an observation, not identity or account/Read/action authority.",
+    "ISSUER-SEMANTICS": "Use the single validated Payload and interpretation seam. accepted/complete and genuine unknown-critical catalog_only/blocked are distinct. Issue neither snapshot nor operation, and project only finite capability/status."
+  },
+  "runtime_enforcement_claims": {
+    "ISSUER-AUTHENTICATION": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    },
+    "ISSUER-CAPTURE": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    },
+    "ISSUER-GRANT": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    },
+    "ISSUER-LIFETIME": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    },
+    "ISSUER-RESULT": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    },
+    "ISSUER-SEMANTICS": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    }
+  },
+  "runtime_exports": [
+    "getExternalGrantIssuerContract",
+    "issueExternalKeyGrantForAsset"
+  ],
+  "runtime_not_implemented": [],
+  "schema_binding": {
+    "package_versions": {
+      "@aikdna/kdna-core": "0.36.0-rc.r2.7",
+      "@aikdna/kdna-read": "0.11.0-rc.r2.7"
+    },
+    "version_tuple": {
+      "container": "0.5.0",
+      "core": "kdna.core/0.8.2",
+      "host": "kdna.agent-host/0.3.1",
+      "ir": "kdna.canonical-ir/0.6.1",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.5.1",
+      "plan": "kdna.consumption-plan/0.3.1",
+      "read": "kdna.read/0.6.4",
+      "runtime": "kdna.runtime-capsule/0.3.1",
+      "trace": "kdna.judgment-trace/0.3.1"
+    }
+  },
+  "schema_id": "urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:7",
+  "schema_path": "specs/external-grant-issuer-r2-binding-7.schema.json",
+  "status": "IMPLEMENTATION_CANDIDATE_NOT_ACCEPTED",
+  "types": {
+    "IssuerAdmissionObservation": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "asset_capability": {
+              "$ref": "#/$defs/AssetCapability"
+            },
+            "interpretation": {
+              "const": "complete",
+              "type": "string"
+            },
+            "status": {
+              "const": "accepted",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "asset_capability",
+            "interpretation"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "asset_capability": {
+              "$ref": "#/$defs/AssetCapability"
+            },
+            "interpretation": {
+              "const": "blocked",
+              "type": "string"
+            },
+            "status": {
+              "const": "catalog_only",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "asset_capability",
+            "interpretation"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "IssuerAssetDigests": {
+      "additionalProperties": false,
+      "properties": {
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "A",
+        "C",
+        "E"
+      ],
+      "type": "object"
+    },
+    "IssuerCoreRejectedObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "core": {
+          "additionalProperties": false,
+          "properties": {
+            "reason": {
+              "$ref": "#/$defs/ReadDiagnosticCode"
+            },
+            "status": {
+              "const": "rejected",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "reason"
+          ],
+          "type": "object"
+        },
+        "stage": {
+          "enum": [
+            "asset"
+          ]
+        },
+        "status": {
+          "const": "core_rejected",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "core",
+        "stage"
+      ],
+      "type": "object"
+    },
+    "IssuerDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "exports": {
+          "items": false,
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "const": "getExternalGrantIssuerContract",
+              "type": "string"
+            },
+            {
+              "const": "issueExternalKeyGrantForAsset",
+              "type": "string"
+            }
+          ],
+          "type": "array"
+        },
+        "id": {
+          "const": "kdna.external-grant-issuer/1",
+          "type": "string"
+        },
+        "implementation": {
+          "additionalProperties": false,
+          "properties": {
+            "package": {
+              "const": "@aikdna/kdna-core",
+              "type": "string"
+            },
+            "version": {
+              "const": "0.36.0-rc.r2.7",
+              "type": "string"
+            }
+          },
+          "required": [
+            "package",
+            "version"
+          ],
+          "type": "object"
+        },
+        "limits": {
+          "additionalProperties": false,
+          "properties": {
+            "container_bytes": {
+              "const": 26214400
+            },
+            "grant_bytes": {
+              "const": 1048576
+            },
+            "max_concurrent": {
+              "const": 4
+            },
+            "timeout_ms_max": {
+              "const": 60000
+            }
+          },
+          "required": [
+            "container_bytes",
+            "grant_bytes",
+            "timeout_ms_max",
+            "max_concurrent"
+          ],
+          "type": "object"
+        },
+        "version": {
+          "const": "1.0.0",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest",
+        "implementation",
+        "exports",
+        "limits"
+      ],
+      "type": "object"
+    },
+    "IssuerFailedObservation": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "ISSUER_INPUT_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "input"
+              ]
+            },
+            "status": {
+              "const": "issuer_failed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "ISSUER_ASSET_PROFILE_UNSUPPORTED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "asset"
+              ]
+            },
+            "status": {
+              "const": "issuer_failed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "ISSUER_ASSET_AUTHENTICATION_FAILED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "asset",
+                "integrity"
+              ]
+            },
+            "status": {
+              "const": "issuer_failed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "ISSUER_KEY_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "issuer_key"
+              ]
+            },
+            "status": {
+              "const": "issuer_failed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "ISSUER_GRANT_OPTIONS_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "input",
+                "grant"
+              ]
+            },
+            "status": {
+              "const": "issuer_failed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "ISSUER_OUTPUT_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "input",
+                "asset",
+                "integrity",
+                "issuer_key",
+                "grant"
+              ]
+            },
+            "status": {
+              "const": "issuer_failed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "IssuerGrantObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "byte_length": {
+          "maximum": 1048576,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "byte_length",
+        "digest"
+      ],
+      "type": "object"
+    },
+    "IssuerIdentityObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uri",
+          "maxLength": 256,
+          "type": "string"
+        },
+        "public_key": {
+          "pattern": "^ed25519:[A-Za-z0-9_-]{43}$",
+          "type": "string"
+        },
+        "signing_key_id": {
+          "pattern": "^[A-Za-z0-9._:@/-]{1,256}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "signing_key_id",
+        "public_key"
+      ],
+      "type": "object"
+    },
+    "IssuerIssuedObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "admission": {
+          "$ref": "#/$defs/IssuerAdmissionObservation"
+        },
+        "asset": {
+          "$ref": "#/$defs/IssuerAssetDigests"
+        },
+        "grant": {
+          "$ref": "#/$defs/IssuerGrantObservation"
+        },
+        "issuer": {
+          "$ref": "#/$defs/IssuerIdentityObservation"
+        },
+        "proof": {
+          "const": "issuer_output_not_account_or_read_authority",
+          "type": "string"
+        },
+        "status": {
+          "const": "issued",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "grant",
+        "asset",
+        "issuer",
+        "admission",
+        "proof"
+      ],
+      "type": "object"
+    },
+    "IssuerOptions": {
+      "additionalProperties": false,
+      "properties": {
+        "account_id": {
+          "pattern": "^[A-Za-z0-9._:@/-]{1,256}$",
+          "type": "string"
+        },
+        "device_agreement_public_key": {
+          "pattern": "^x25519:[A-Za-z0-9_-]{43}$",
+          "type": "string"
+        },
+        "device_id": {
+          "pattern": "^[A-Za-z0-9._:@/-]{1,256}$",
+          "type": "string"
+        },
+        "device_signing_public_key": {
+          "pattern": "^ed25519:[A-Za-z0-9_-]{43}$",
+          "type": "string"
+        },
+        "entitlement_id": {
+          "pattern": "^[A-Za-z0-9._:@/-]{1,256}$",
+          "type": "string"
+        },
+        "entitlement_profile": {
+          "enum": [
+            "account",
+            "org"
+          ]
+        },
+        "expires_at_ms": {
+          "maximum": 253402300799999,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "grant_id": {
+          "pattern": "^[A-Za-z0-9._:@/-]{1,256}$",
+          "type": "string"
+        },
+        "issued_at_ms": {
+          "maximum": 253402300799999,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "issuer": {
+          "format": "uri",
+          "maxLength": 256,
+          "type": "string"
+        },
+        "offline_grace_until_ms": {
+          "maximum": 253402300799999,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "refresh_after_ms": {
+          "maximum": 253402300799999,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "signing_key_id": {
+          "pattern": "^[A-Za-z0-9._:@/-]{1,256}$",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "revoked",
+            "expired"
+          ]
+        },
+        "status_version": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "timeout_ms": {
+          "maximum": 60000,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "issuer",
+        "signing_key_id",
+        "account_id",
+        "entitlement_id",
+        "entitlement_profile",
+        "device_id",
+        "device_agreement_public_key",
+        "device_signing_public_key",
+        "grant_id",
+        "status",
+        "status_version",
+        "issued_at_ms",
+        "refresh_after_ms",
+        "offline_grace_until_ms",
+        "expires_at_ms",
+        "timeout_ms"
+      ],
+      "type": "object"
+    },
+    "IssuerResultObservation": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/IssuerIssuedObservation"
+        },
+        {
+          "$ref": "#/$defs/IssuerCoreRejectedObservation"
+        },
+        {
+          "$ref": "#/$defs/IssuerFailedObservation"
+        }
+      ]
+    },
+    "IssuerSignaturePolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "expectedPublicKeyHex": {
+          "oneOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "requireSignature": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "requireSignature",
+        "expectedPublicKeyHex"
+      ],
+      "type": "object"
+    }
+  },
+  "version": "1.0.0"
+}

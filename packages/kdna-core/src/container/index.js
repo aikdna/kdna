@@ -134,6 +134,15 @@ let _ajv = null;
 let _validators = null;
 
 function loadPackagedSchemas() {
+  // Legacy container-profile schemas (the Active 0.1 line: manifest.schema.json and
+  // payload-profile.schema.json, plus the bundle/checksums/load-contract set). These
+  // are NOT the current public admission schemas: current-line admission lives in
+  // src/public-contract/ (admitBytes/admitNode bound to manifest-0.2.schema.json and
+  // payload-profile-0.2.schema.json, i.e. urn:kdna:schema:manifest:0.4.0 /
+  // urn:kdna:schema:payload:0.3.0). Keeping both pairs side by side is deliberate; a
+  // legacy validate() verdict of schema_valid:false / payload_valid:false on an asset
+  // authored for the current coordinate is the expected legacy answer, not a defect
+  // of this function or of the current admission path.
   return {
     manifestSchema: require('../../schema/manifest.schema.json'),
     payloadSchema: require('../../schema/payload-profile.schema.json'),
@@ -1474,6 +1483,11 @@ function inspect(inputPath, _opts = {}) {
   return out;
 }
 
+// Validates one container against the LEGACY container profile above. It is not the
+// current public admission path and it is not a published package subpath — ask
+// `@aikdna/kdna-core` (admitBytes) or `@aikdna/kdna-core/node` (admitNode) instead.
+// Exposed here for the legacy router/packaged-asset paths and the container fixture
+// tests only.
 function validate(inputPath, _opts = {}) {
   const layout = readInputLayout(inputPath);
   return runValidate(layout);

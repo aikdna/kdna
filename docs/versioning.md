@@ -1,5 +1,7 @@
 # KDNA Versioning Guide
 
+Historical versioning examples. This page does not select the current public runtime. Current exact protocol coordinates, package bindings and rejection rules are in [public version policy](../specs/public-version-policy.md). Older field names and examples below remain historical.
+
 When you publish a KDNA domain, versions matter. A careless version bump erodes trust; a disciplined one builds it.
 
 ## Version Numbers

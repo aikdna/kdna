@@ -96,7 +96,7 @@ test('remote Runtime subpath types expose one packaged input and no policy optio
       checkPath,
       [
         "import { loadRemoteRuntimeAsset, KDNARemoteRuntimeInput } from '@aikdna/kdna-core/remote-runtime';",
-        "import type { KDNARuntimeCapsule } from '@aikdna/kdna-core';",
+        'type KDNARuntimeCapsule = ReturnType<typeof loadRemoteRuntimeAsset>;',
         'declare const input: KDNARemoteRuntimeInput;',
         'const capsule: KDNARuntimeCapsule = loadRemoteRuntimeAsset(input);',
         '// @ts-expect-error Remote Runtime callers cannot override projection policy',

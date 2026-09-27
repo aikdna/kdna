@@ -12,7 +12,7 @@
   "observations": "Only declared expected fields; frozen seed expectations are never runtime implementation inputs.",
   "seed": {
     "path": "conformance/public-contract-decision-vectors.json",
-    "sha256": "5c22f92527fd93c85c04a1d28d3790455ea5cd06c0df94c56f8fd7446be9e843"
+    "sha256": "ddeb1ce30044575b6a22508716e95b4c8134c300fe2962d292011fed96595ad3"
   },
   "source": "specs/public-semantic-source.json"
 }

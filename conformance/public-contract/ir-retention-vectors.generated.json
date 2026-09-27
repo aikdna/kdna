@@ -106,7 +106,7 @@
       ]
     },
     {
-      "expectation": "READ_INTERPRETATION_INCOMPLETE",
+      "expectation": "READ_UNSUPPORTED_CRITICAL",
       "id": "EXTENSIONS-CRITICAL",
       "variants": [
         {
