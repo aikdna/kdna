@@ -10,6 +10,7 @@ const addFormats = require('ajv-formats');
 const { inspect } = require('../packages/kdna-core/src/container');
 const { sameFilesystemIdentity } = require('./filesystem-identity');
 const { resolveConformanceAnchor } = require('./conformance-anchor');
+const conformanceAnchors = require('./conformance-anchors.json');
 const {
   compareSemver,
   currentAssetIndexInventory,
@@ -243,6 +244,32 @@ function assertPackageManifest(component, packageRecord, pkg, origin) {
   }
 }
 
+function historicalCorePackage(packageRecord, declaredCommit, resolvedCommit) {
+  const anchor = conformanceAnchors.anchors.find((entry) => entry.commit === declaredCommit);
+  if (!anchor || !Object.hasOwn(anchor, 'historical_fixture')) return null;
+  const fixture = anchor.historical_fixture;
+  const exactKeys = (value, keys) =>
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    JSON.stringify(Object.keys(value).sort()) === JSON.stringify([...keys].sort());
+  if (
+    !exactKeys(fixture, ['scope', 'core_package']) ||
+    fixture.scope !== 'historical-contract-fixture' ||
+    !exactKeys(fixture.core_package, ['package_json', 'package_name', 'version']) ||
+    fixture.core_package.package_json !== packageRecord.package_json ||
+    fixture.core_package.package_name !== packageRecord.package_name ||
+    typeof fixture.core_package.version !== 'string' ||
+    fixture.core_package.version.length === 0
+  ) {
+    throw new Error('registered historical conformance fixture identity is invalid');
+  }
+  if (gitText(repoRoot, ['rev-parse', `${resolvedCommit}^{tree}`]) !== anchor.tree) {
+    throw new Error('registered historical conformance fixture tree differs');
+  }
+  return { ...packageRecord, version: fixture.core_package.version };
+}
+
 function assertCheckout(component, root) {
   if (!root || component.local_path === '.') return;
   try {
@@ -461,7 +488,12 @@ if (validateSchema()) {
             `Core conformance_commit must descend from release tag ${publishedTag}: ${coreConformanceCommit}`,
           );
         } else {
-          const candidatePackage = JSON.parse(
+          const historicalPackageRecord = historicalCorePackage(
+            corePackageRecord,
+            coreConformanceCommit,
+            resolvedCoreConformanceCommit,
+          );
+          const anchoredPackage = JSON.parse(
             gitBytes(repoRoot, [
               'show',
               `${resolvedCoreConformanceCommit}:${corePackageRecord.package_json}`,
@@ -469,10 +501,15 @@ if (validateSchema()) {
           );
           assertPackageManifest(
             coreComponent,
-            corePackageRecord,
-            candidatePackage,
+            historicalPackageRecord || corePackageRecord,
+            anchoredPackage,
             'conformance_commit',
           );
+          if (historicalPackageRecord) {
+            console.log(
+              `historical conformance fixture: ${coreConformanceCommit}; Core ${historicalPackageRecord.version}; current source candidate ${corePackageRecord.version} is checked separately, not certified by this anchor`,
+            );
+          }
         }
       } else if (publishedCommit !== coreConformanceCommit) {
         fail(

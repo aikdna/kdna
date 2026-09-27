@@ -117,8 +117,17 @@ function writeManifest(root, components) {
   return manifestPath;
 }
 
-function runValidator(manifestPath, reposRoot) {
-  return spawnSync(process.execPath, [validator], {
+function runValidator(manifestPath, reposRoot, anchorFixture) {
+  const args =
+    anchorFixture === undefined
+      ? [validator]
+      : [
+          '-e',
+          `const filename = require.resolve(${JSON.stringify(path.join(repoRoot, 'scripts', 'conformance-anchors.json'))});
+require.cache[filename] = { id: filename, filename, loaded: true, exports: ${JSON.stringify(anchorFixture)} };
+require(${JSON.stringify(validator)});`,
+        ];
+  return spawnSync(process.execPath, args, {
     encoding: 'utf8',
     env: {
       ...process.env,
@@ -337,7 +346,7 @@ test('ecosystem workflows keep exact source smoke and accepted publication pins 
   }
 });
 
-test('candidate Core conformance anchor carries the declared candidate package version', (t) => {
+test('unregistered candidate Core conformance anchors retain strict ancestry and version checks', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-core-anchor-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const canonical = JSON.parse(
@@ -383,6 +392,104 @@ test('candidate Core conformance anchor carries the declared candidate package v
   const publishedTagResult = runValidator(manifestPath);
   assert.equal(publishedTagResult.status, 1);
   assert.match(publishedTagResult.stderr, /package version mismatch/u);
+});
+
+test('registered historical fixture preserves its own Core identity without certifying the current candidate', async (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-manifest-historical-anchor-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const canonical = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, 'ecosystem-manifest.json'), 'utf8'),
+  );
+  const core = canonical.components.find((entry) => entry.repository === 'aikdna/kdna');
+  const current = core.packages.find((entry) => entry.npm_package === '@aikdna/kdna-core');
+  const proof = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, 'scripts', 'conformance-anchors.json'), 'utf8'),
+  );
+  assert.equal(proof.anchors.length, 1);
+  assert.equal(proof.anchors[0].commit, core.conformance_commit);
+  assert.notEqual(proof.anchors[0].historical_fixture.core_package.version, current.version);
+  const manifestPath = writeManifest(root, [core]);
+  const positive = runValidator(manifestPath);
+  assert.equal(positive.status, 0, positive.stderr);
+  assert.match(positive.stdout, /historical conformance fixture:/u);
+  assert.match(positive.stdout, /current source candidate .* not certified by this anchor/u);
+
+  const mutations = [
+    [
+      'wrong historical version',
+      (p) => {
+        p.anchors[0].historical_fixture.core_package.version = current.version;
+      },
+      /conformance_commit package version mismatch/u,
+    ],
+    [
+      'wrong exact tree',
+      (p) => {
+        p.anchors[0].tree = '0'.repeat(40);
+      },
+      /recorded conformance tree|historical conformance fixture tree/u,
+    ],
+    [
+      'unknown scope',
+      (p) => {
+        p.anchors[0].historical_fixture.scope = 'current-candidate';
+      },
+      /historical conformance fixture identity is invalid/u,
+    ],
+    [
+      'extra fixture claim',
+      (p) => {
+        p.anchors[0].historical_fixture.current_candidate_accepted = true;
+      },
+      /historical conformance fixture identity is invalid/u,
+    ],
+    [
+      'extra package claim',
+      (p) => {
+        p.anchors[0].historical_fixture.core_package.accepted = true;
+      },
+      /historical conformance fixture identity is invalid/u,
+    ],
+    [
+      'wrong package path',
+      (p) => {
+        p.anchors[0].historical_fixture.core_package.package_json = 'package.json';
+      },
+      /historical conformance fixture identity is invalid/u,
+    ],
+    [
+      'missing historical registration',
+      (p) => {
+        delete p.anchors[0].historical_fixture;
+      },
+      /conformance_commit package version mismatch/u,
+    ],
+  ];
+  for (const [name, mutate, diagnostic] of mutations) {
+    await t.test(name, () => {
+      const changed = JSON.parse(JSON.stringify(proof));
+      mutate(changed);
+      const result = runValidator(manifestPath, undefined, changed);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, diagnostic);
+    });
+  }
+  await t.test('historical registration cannot hide current package version drift', () => {
+    const changed = JSON.parse(JSON.stringify(core));
+    changed.packages.find((entry) => entry.npm_package === '@aikdna/kdna-core').version = '999.0.0';
+    const result = runValidator(writeManifest(root, [changed]));
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /checkout package version mismatch/u);
+  });
+  await t.test('active published Core still requires its exact release tag anchor', () => {
+    const changed = JSON.parse(JSON.stringify(core));
+    const pkg = changed.packages.find((entry) => entry.npm_package === '@aikdna/kdna-core');
+    pkg.release_status = 'active';
+    pkg.version = pkg.published_version;
+    const result = runValidator(writeManifest(root, [changed]));
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /Core conformance_commit must equal release tag/u);
+  });
 });
 
 test('asset inventory is an exact two-way projection of index/current.json', (t) => {

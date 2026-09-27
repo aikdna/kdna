@@ -8,6 +8,7 @@ const { spawnSync } = require('node:child_process');
 const {
   checkCurrentNavigation,
   markdownLinks,
+  headingText,
   DOCUMENTS,
 } = require('./check-current-r2-navigation.cjs');
 const root = path.resolve(__dirname, '..');
@@ -482,6 +483,14 @@ test('heading fragments discard complete and unmatched markup without becoming H
     ['Angles <<>> and > tail', 'angles--and--tail'],
     ['[Linked title](https://example.test/path)', 'linked-title'],
     ['Unicode 中文 e\u0301', 'unicode-中文-e\u0301'],
+    ['Deeper <scr<scr<script>ipt>ipt> text', 'deeper-iptipt-text'],
+    ['Two <b>one</b> <i>two</i>', 'two-one-two'],
+    ['Tail <a<b<c', 'tail-abc'],
+    ['End >>中文<<é', 'end-中文é'],
+    ['[<em>Linked 中文</em>](https://example.test/path)', 'linked-中文'],
+    ['[Same](https://example.test/a)', 'same'],
+    ['<em>Same</em>', 'same-1'],
+    ['Same', 'same-2'],
   ];
   const additions = cases
     .map(([heading, fragment]) => `\n## ${heading}\n\n[Check](#${fragment})\n`)
@@ -503,6 +512,41 @@ test('heading fragments discard complete and unmatched markup without becoming H
   assert.ok(
     rejected.issues.some((issue) => issue.name.includes('anchor:#unclosed-script-missing')),
   );
+});
+test('heading projection consumes original characters once, including long unclosed tag segments', () => {
+  for (const size of [1, 32, 4096, 131072]) {
+    const input = '<'.repeat(size) + '正文🔒e\u0301';
+    let traversals = 0;
+    let visits = 0;
+    const onePass = {
+      *[Symbol.iterator]() {
+        traversals += 1;
+        assert.equal(traversals, 1, 'the projection must not rescan the input');
+        for (const character of input) {
+          visits += 1;
+          yield character;
+        }
+      },
+    };
+    assert.equal(headingText(onePass), '正文🔒e\u0301');
+    assert.equal(visits, size + 5);
+    assert.equal(headingText(input + '> retained'), ' retained');
+  }
+});
+test('heading projection never reconstructs angle brackets across consumed segments', () => {
+  for (const [input, expected] of [
+    ['<scr<script>ipt>', 'ipt'],
+    ['<scrip<ignored>t>alert(1)</script>', 'talert(1)'],
+    ['x<unclosed<y', 'xunclosedy'],
+    ['<<>>', ''],
+    ['a>b<c', 'abc'],
+    ['a<tag>文</tag>e\u0301', 'a文e\u0301'],
+  ]) {
+    const projected = headingText(input);
+    assert.equal(projected, expected);
+    assert.equal(projected.includes('<'), false);
+    assert.equal(projected.includes('>'), false);
+  }
 });
 test('a new stale current statement inside a history section is not exempted with the retained paragraph', () => {
   const result = changedDocument('specs/public-version-policy.md', (text) =>

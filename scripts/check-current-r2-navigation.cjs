@@ -179,14 +179,29 @@ function unfenced(text) {
     })
     .join('\n');
 }
+// Navigation projection, not an HTML sanitizer. Each input character is visited once.
+// A closing angle consumes the pending tag segment. An unterminated segment keeps
+// its text but not its angle brackets, matching the existing heading-fragment rule.
+function headingText(text) {
+  const visible = [];
+  let pending = null;
+  for (const character of text) {
+    if (character === '<') {
+      pending ??= [];
+    } else if (character === '>') {
+      pending = null;
+    } else {
+      (pending ?? visible).push(character);
+    }
+  }
+  return visible.join('') + (pending === null ? '' : pending.join(''));
+}
 function anchors(text) {
   const result = new Set(),
     counts = new Map();
   for (const match of unfenced(text).matchAll(/^ {0,3}#{1,6}\s+(.+?)\s*#*\s*$/gm)) {
     // Project heading text to a fragment identifier, never an HTML rendering.
-    // Remove unmatched angle brackets too, so tag removal cannot reconstruct markup.
-    const base = match[1]
-      .replace(/<[^>]*>|[<>]/g, '')
+    const base = headingText(match[1])
       .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
       .toLowerCase()
       .replace(/[^\p{L}\p{N}\p{M}_\-\s]/gu, '')
@@ -1010,6 +1025,7 @@ module.exports = {
   validateCurrentTarget,
   checkCurrentNavigation,
   markdownLinks,
+  headingText,
   DOCUMENTS,
 };
 if (require.main === module) {

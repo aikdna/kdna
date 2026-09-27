@@ -123,9 +123,9 @@
       "manifest": "packages/kdna-read/package.json",
       "section": "peerDependencies",
       "packageName": "@aikdna/kdna-core",
-      "declared": "0.24.0-rc.component-semantics.2",
-      "manifest_sha256": "90bcf759f87c707cb9d47db5de7ed7b796508868d9b66c09df501f175a3a86a6",
-      "source_manifest_blob": "3c8d824309c9887567446f7fcb91485a8a679917"
+      "declared": "0.36.0-rc.r2.7",
+      "manifest_sha256": "aebc8d37dabeeed8341d1370191cf96927b953850dcac2012cdc37614adff693",
+      "source_manifest_blob": "457d5722fb78c63153b4cd11c27456fc28a5dbaa"
     },
     {
       "repository": "kdna-activation-server",

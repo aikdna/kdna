@@ -421,7 +421,7 @@ test('validate: bad checksum has exactly one structured digest failure', () => {
     signature_state: 'absent',
     signature_evidence: null,
     load_contract_valid: true,
-    loader_version: '0.24.0-rc.component-semantics.2',
+    loader_version: require('../../packages/kdna-core/package.json').version,
     min_loader_version: '0.20.0',
     loader_compatible: true,
     overall_valid: false,
