@@ -52,7 +52,9 @@ const { createTrustedReadControlProvider, createTrustedHostReadProvider } = req(
 );
 const { canonicalJson } = require(path.join(coreDir, 'src/public-contract/strict-input.js'));
 const { parseContainer } = require(path.join(coreDir, 'src/public-contract/container.js'));
-const { versionTuple: tuple } = require(path.join(coreDir, 'src/public-contract/generated-contract.json'));
+const { versionTuple: tuple } = require(
+  path.join(coreDir, 'src/public-contract/generated-contract.json'),
+);
 const { admitReadRequest } = require(path.join(readDir, 'src/admission.js'));
 const { project } = require(path.join(readDir, 'src/project.js'));
 
@@ -64,18 +66,99 @@ const sha256 = (bytes) => 'sha256:' + createHash('sha256').update(bytes).digest(
 // ---------------------------------------------------------------------------
 // Deterministic synthetic prose with a per-issue seed.
 const LEX = [
-  '证据', '来源', '检索', '判断', '条件', '边界', '例外', '误用', '范围', '主体',
-  '方法', '组件', '候选', '分类', '鉴别', '对比', '权重', '优先级', '阈值', '样本',
-  '观测', '推断', '前提', '结论', '规则', '形成', '约束', '风险', '冲突', '一致',
-  '缺失', '冗余', '冗余度', '召回', '精度', '分辨率', '语料', '注解', '标签', '锚点',
-  '预算', '配额', '时延', '吞吐', '回退', '重试', '幂等', '审计', '回执', '签名',
-  '权威', '授权', '披露', '撤回', '撤销', '冻结', '版本', '坐标', '迁移', '兼容',
-  '本地', '远程', '宿主', '读取', '投影', '闭包', '折叠', '省略', '批量', '逐条',
-  '可复算', '可验证', '不可逆', '有界', '无状态', '确定性', '概率', '分布', '偏置', '方差',
-  '审查', '复核', '归档', '发布', '回滚', '降级', '隔离', '限流', '熔断', '补偿',
+  '证据',
+  '来源',
+  '检索',
+  '判断',
+  '条件',
+  '边界',
+  '例外',
+  '误用',
+  '范围',
+  '主体',
+  '方法',
+  '组件',
+  '候选',
+  '分类',
+  '鉴别',
+  '对比',
+  '权重',
+  '优先级',
+  '阈值',
+  '样本',
+  '观测',
+  '推断',
+  '前提',
+  '结论',
+  '规则',
+  '形成',
+  '约束',
+  '风险',
+  '冲突',
+  '一致',
+  '缺失',
+  '冗余',
+  '冗余度',
+  '召回',
+  '精度',
+  '分辨率',
+  '语料',
+  '注解',
+  '标签',
+  '锚点',
+  '预算',
+  '配额',
+  '时延',
+  '吞吐',
+  '回退',
+  '重试',
+  '幂等',
+  '审计',
+  '回执',
+  '签名',
+  '权威',
+  '授权',
+  '披露',
+  '撤回',
+  '撤销',
+  '冻结',
+  '版本',
+  '坐标',
+  '迁移',
+  '兼容',
+  '本地',
+  '远程',
+  '宿主',
+  '读取',
+  '投影',
+  '闭包',
+  '折叠',
+  '省略',
+  '批量',
+  '逐条',
+  '可复算',
+  '可验证',
+  '不可逆',
+  '有界',
+  '无状态',
+  '确定性',
+  '概率',
+  '分布',
+  '偏置',
+  '方差',
+  '审查',
+  '复核',
+  '归档',
+  '发布',
+  '回滚',
+  '降级',
+  '隔离',
+  '限流',
+  '熔断',
+  '补偿',
 ];
 function rng(seed) {
-  let s = (seed >>> 0) || 0x9e3779b9;
+  let s = seed >>> 0 || 0x9e3779b9;
   return () => {
     s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
     return s / 4294967296;
@@ -83,7 +166,8 @@ function rng(seed) {
 }
 function trimToBytes(text, bytes) {
   if (Buffer.byteLength(text, 'utf8') <= bytes) return text;
-  let out = '', used = 0;
+  let out = '',
+    used = 0;
   for (const ch of text) {
     const size = Buffer.byteLength(ch, 'utf8');
     if (used + size > bytes) break;
@@ -278,7 +362,9 @@ async function main() {
   report.encode_ms = ms(tEncode);
   const bigFile = path.join(outDir, 'grammar2-150-issues-2levels.kdna');
   fs.writeFileSync(bigFile, bigBytes);
-  const entries = parseContainer(bigBytes, (data, max) => inflateRawSync(data, { maxOutputLength: max }));
+  const entries = parseContainer(bigBytes, (data, max) =>
+    inflateRawSync(data, { maxOutputLength: max }),
+  );
   report.asset = {
     path: bigFile,
     file_bytes: bigBytes.length,
@@ -313,7 +399,12 @@ async function main() {
   // --- 3. the same 150 issues with an unknown critical semantic ----------
   const carrierAsset = buildAsset(150, 'asset:bytes');
   carrierAsset.asset.payload.extensions = [
-    { id: 'ext:unknown-d5', critical: true, definition: 'Unknown critical semantic', value: { kind: 'text', value: 'opaque' } },
+    {
+      id: 'ext:unknown-d5',
+      critical: true,
+      definition: 'Unknown critical semantic',
+      value: { kind: 'text', value: 'opaque' },
+    },
   ];
   const carrierBytes = encode(carrierAsset.asset, { deflate: true });
   const tCarrier = hr();
@@ -345,8 +436,7 @@ async function main() {
     sha256: sha256(repeatedBytes),
     payload_entry_bytes: repeatedEntries['payload.kdnab'].length,
     authored_utf8_bytes: repeated.authored,
-    deflate_ratio_vs_per_issue_text:
-      repeatedBytes.length / report.asset.file_bytes,
+    deflate_ratio_vs_per_issue_text: repeatedBytes.length / report.asset.file_bytes,
   };
 
   // --- 4. catalog mode ---------------------------------------------------
@@ -354,7 +444,13 @@ async function main() {
   report.catalog_mode = await timedRead(bigBytes, catalogRequest);
 
   // --- 5. exact_selection on a deep second-level sub-issue ---------------
-  const deepRequest = F.candidate(tuple, big.asset, 'exact_selection', 'j:149', TRANSPORT_RESPONSE_BYTES);
+  const deepRequest = F.candidate(
+    tuple,
+    big.asset,
+    'exact_selection',
+    'j:149',
+    TRANSPORT_RESPONSE_BYTES,
+  );
   report.exact_selection = await timedRead(bigBytes, deepRequest);
 
   // --- 6. folding on vs off, same asset, same selection ------------------
@@ -385,7 +481,13 @@ async function main() {
   const smallBytes = encode(small.asset, { deflate: true });
   const smallFile = path.join(outDir, 'grammar2-30-issues-2levels-control.kdna');
   fs.writeFileSync(smallFile, smallBytes);
-  const smallRequest = F.candidate(tuple, small.asset, 'exact_selection', 'j:29', TRANSPORT_RESPONSE_BYTES);
+  const smallRequest = F.candidate(
+    tuple,
+    small.asset,
+    'exact_selection',
+    'j:29',
+    TRANSPORT_RESPONSE_BYTES,
+  );
   report.control_small_asset = {
     path: smallFile,
     file_bytes: smallBytes.length,
@@ -415,13 +517,43 @@ async function main() {
   // measurement above runs the real, uncached chain.
   const ladder = [];
   for (const budget of [
-    TRANSPORT_RESPONSE_BYTES, MIB, 256 * 1024, 128 * 1024, 64 * 1024, 53667, 53666, 53665,
-    53664, 53663, 53660, 53650, 49152, 32 * 1024, 16 * 1024, 4096, 1024, 900, 849, 848, 847,
-    846, 845, 840, 512, 256, 64, 0,
+    TRANSPORT_RESPONSE_BYTES,
+    MIB,
+    256 * 1024,
+    128 * 1024,
+    64 * 1024,
+    53667,
+    53666,
+    53665,
+    53664,
+    53663,
+    53660,
+    53650,
+    49152,
+    32 * 1024,
+    16 * 1024,
+    4096,
+    1024,
+    900,
+    849,
+    848,
+    847,
+    846,
+    845,
+    840,
+    512,
+    256,
+    64,
+    0,
   ]) {
     const host = hostProvider();
     const t0 = hr();
-    const result = await readNode(bigBytes, { ...deepRequest, budget_bytes: budget }, controlProvider(), host);
+    const result = await readNode(
+      bigBytes,
+      { ...deepRequest, budget_bytes: budget },
+      controlProvider(),
+      host,
+    );
     ladder.push({ budget_bytes: budget, ms: ms(t0), ...readSummary(result) });
   }
   report.budget_ladder = ladder;

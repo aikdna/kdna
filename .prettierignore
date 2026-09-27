@@ -27,3 +27,56 @@ conformance/public-contract/ir-retention-vectors.generated.json
 conformance/public-contract/adapter-contract.json
 scripts/public-contract/generate.mjs
 scripts/public-contract/verify.mjs
+
+# Each exact exception below is verified by check-format-ownership.cjs before
+# format:check runs Prettier. Generated output and historical bytes have owners.
+# BEGIN checked byte ownership
+conformance/envelope-aead/envelope-aead-vector-04-scrypt-multi-slot.json
+conformance/envelope-aead/envelope-aead-vector-05-mixed-multi-slot.json
+scripts/public-contract/cross-entry-check.mjs
+scripts/public-contract/proof-inventory.mjs
+scripts/public-contract/selected-context.mjs
+specs/canonical-ir-0.6.1.schema.json
+specs/canonical-ir-0.6.schema.json
+specs/checksums-document-1.schema.json
+specs/envelope-aead.schema.json
+specs/external-grant-issuer-r2-binding-1.schema.json
+specs/external-grant-issuer-r2-binding-2.schema.json
+specs/external-grant-issuer-r2-binding-3.schema.json
+specs/external-grant-issuer-r2-binding-4.schema.json
+specs/external-grant-issuer-r2-binding-5.schema.json
+specs/external-grant-issuer-r2-binding-6.schema.json
+specs/external-grant-issuer-r2-binding-7.schema.json
+specs/external-grant-issuer.d.ts
+specs/external-grant-issuer.schema.json
+specs/package-set-node-0.2.1.schema.json
+specs/package-set-node-0.2.schema.json
+specs/package-set-node.d.ts
+specs/package-set-node.schema.json
+specs/protected-source-r2-binding-1.schema.json
+specs/protected-source-r2-binding-2.schema.json
+specs/protected-source-r2-binding-3.schema.json
+specs/protected-source-r2-binding-4.schema.json
+specs/protected-source-r2-binding-5.schema.json
+specs/protected-source-r2-binding-6.schema.json
+specs/protected-source-r2-binding-7.schema.json
+specs/protected-source.d.ts
+specs/protected-source.schema.json
+specs/protection-admission-r2-binding-1.schema.json
+specs/protection-admission-r2-binding-2.schema.json
+specs/protection-admission-r2-binding-3.schema.json
+specs/protection-admission-r2-binding-4.schema.json
+specs/protection-admission-r2-binding-5.schema.json
+specs/protection-admission-r2-binding-6.schema.json
+specs/protection-admission-r2-binding-7.schema.json
+specs/protection-admission.d.ts
+specs/protection-admission.schema.json
+specs/public-diagnostics.json
+specs/read-contract-0.6.1.schema.json
+specs/read-contract-0.6.2.schema.json
+specs/read-contract-0.6.3.schema.json
+specs/read-contract-0.6.4.schema.json
+specs/read-contract-0.6.schema.json
+specs/read-transport-admission-0.2.1.schema.json
+specs/read-transport-admission-0.2.schema.json
+# END checked byte ownership

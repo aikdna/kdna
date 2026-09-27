@@ -8,9 +8,7 @@
     "judgment_version": "r1-paper",
     "title": "方案取舍的完整纸面审查例",
     "summary": "比较方案优先序、稳定性判断及两种主体取舍。",
-    "languages": [
-      "zh-CN"
-    ],
+    "languages": ["zh-CN"],
     "created_at": "2026-09-23T00:00:00Z",
     "updated_at": "2026-09-23T00:00:00Z",
     "lineage": [],
@@ -30,9 +28,7 @@
               "id": "e0"
             }
           ],
-          "actor_refs": [
-            "author"
-          ]
+          "actor_refs": ["author"]
         }
       ]
     }
@@ -84,9 +80,7 @@
         "id": "qA",
         "focus": "A与B的优先次序和风险分别是什么？",
         "subject": {
-          "actor_ids": [
-            "jia"
-          ],
+          "actor_ids": ["jia"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -261,11 +255,7 @@
             {
               "id": "check",
               "method": "criteria_comparison",
-              "component_refs": [
-                "check-c1",
-                "check-c2",
-                "check-c3"
-              ],
+              "component_refs": ["check-c1", "check-c2", "check-c3"],
               "inputs": [
                 {
                   "name": "item",
@@ -290,11 +280,7 @@
             {
               "id": "merge",
               "method": "tradeoff",
-              "component_refs": [
-                "merge-c1",
-                "merge-c2",
-                "merge-c3"
-              ],
+              "component_refs": ["merge-c1", "merge-c2", "merge-c3"],
               "inputs": [
                 {
                   "name": "left",
@@ -335,11 +321,7 @@
             {
               "id": "completeness",
               "method": "criteria_comparison",
-              "component_refs": [
-                "complete-c1",
-                "complete-c2",
-                "complete-c3"
-              ],
+              "component_refs": ["complete-c1", "complete-c2", "complete-c3"],
               "inputs": [
                 {
                   "name": "priority",
@@ -601,9 +583,7 @@
             ]
           }
         },
-        "material_refs": [
-          "d1"
-        ],
+        "material_refs": ["d1"],
         "reason_refs": [],
         "content_uses": [
           {
@@ -672,9 +652,7 @@
         "id": "qB",
         "focus": "乙怎样判断方案是否稳定？",
         "subject": {
-          "actor_ids": [
-            "yi"
-          ],
+          "actor_ids": ["yi"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -740,9 +718,7 @@
           ],
           "bindings": []
         },
-        "material_refs": [
-          "d1"
-        ],
+        "material_refs": ["d1"],
         "reason_refs": [],
         "content_uses": [
           {
@@ -779,9 +755,7 @@
         "id": "qC",
         "focus": "甲与乙的取舍有什么区别？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -1009,41 +983,27 @@
         "id": "sA",
         "kind": "value_order",
         "subject": {
-          "actor_ids": [
-            "jia"
-          ],
+          "actor_ids": ["jia"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "applies_to": {
           "kind": "judgments",
-          "judgment_refs": [
-            "qA"
-          ]
+          "judgment_refs": ["qA"]
         },
-        "value": [
-          "三工作日内交付",
-          "在期限内优先成本更低"
-        ]
+        "value": ["三工作日内交付", "在期限内优先成本更低"]
       },
       {
         "id": "sB",
         "kind": "value_order",
         "subject": {
-          "actor_ids": [
-            "yi"
-          ],
+          "actor_ids": ["yi"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "applies_to": {
           "kind": "judgments",
-          "judgment_refs": [
-            "qB"
-          ]
+          "judgment_refs": ["qB"]
         },
-        "value": [
-          "先保证备援稳定",
-          "速度不能抵消缺备援"
-        ]
+        "value": ["先保证备援稳定", "速度不能抵消缺备援"]
       }
     ],
     "materials": [
@@ -1055,10 +1015,7 @@
         "source_refs": [],
         "applies_to": {
           "kind": "judgments",
-          "judgment_refs": [
-            "qA",
-            "qB"
-          ]
+          "judgment_refs": ["qA", "qB"]
         }
       },
       {
@@ -1163,11 +1120,7 @@
     ],
     "exceptions": [],
     "misuse": [],
-    "reading_order": [
-      "qA",
-      "qB",
-      "qC"
-    ],
+    "reading_order": ["qA", "qB", "qC"],
     "extensions": [],
     "asset_capability": "mixed"
   }

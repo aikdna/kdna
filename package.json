@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "eslint packages/kdna-core/src/",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format:check": "node scripts/check-format-ownership.cjs && node --test scripts/check-format-ownership.test.cjs && prettier --check .",
     "lint:examples": "node scripts/validate-examples.js",
     "validate:examples": "node scripts/validate-examples.js",
     "validate:runtime-contract": "node scripts/validate-runtime-contract.js",

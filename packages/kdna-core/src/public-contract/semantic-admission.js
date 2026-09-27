@@ -2,7 +2,7 @@
 
 const { reject, freeze } = require('./strict-input.js');
 const { decodePayload } = require('./cbor.js');
-const { digest, digestCanonical, runtimeEntryNames, evidence } = require('./digests.js');
+const { digestCanonical, runtimeEntryNames, evidence } = require('./digests.js');
 const { validate } = require('./validate.js');
 const { buildIR } = require('./canonical-ir.js');
 const { issueSnapshot } = require('./brand.js');
@@ -27,11 +27,8 @@ function assertContentBindings(manifest, C) {
   if ((manifest.content_digest && manifest.content_digest !== C) || (manifest.authoring?.content_digest && manifest.authoring.content_digest !== C)) reject('READ_CORE_INVALID');
 }
 function interpretValidatedPayload(manifest,payload,entries) {
-  try { return {status:'accepted',ir:buildIR(manifest,payload,entries)}; }
-  catch(error) {
-    // R2 never issues a catalog carrier for uninterpreted critical semantics.
-    throw error;
-  }
+  // R2 never issues a catalog carrier for uninterpreted critical semantics.
+  return {status:'accepted',ir:buildIR(manifest,payload,entries)};
 }
 function finishAdmission(manifest, payload, entries, { A, C, E }, expectedE = null) {
   const digests = {

@@ -8,9 +8,7 @@
     "judgment_version": "r1-paper",
     "title": "跨题反馈纸面例",
     "summary": "保存逐轮观察与调整办法，不自动执行日程。",
-    "languages": [
-      "zh-CN"
-    ],
+    "languages": ["zh-CN"],
     "created_at": "2026-09-23T00:00:00Z",
     "updated_at": "2026-09-23T00:00:00Z",
     "lineage": [],
@@ -57,9 +55,7 @@
         "id": "qSignal",
         "focus": "本轮实际完成了多少分钟？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -165,9 +161,7 @@
         "id": "qAdjust",
         "focus": "本轮反馈后下轮安排多少分钟？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -309,9 +303,7 @@
         "id": "qLoop",
         "focus": "怎样按每轮反馈持续调整阅读安排？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -585,11 +577,7 @@
     "examples": [],
     "exceptions": [],
     "misuse": [],
-    "reading_order": [
-      "qLoop",
-      "qSignal",
-      "qAdjust"
-    ],
+    "reading_order": ["qLoop", "qSignal", "qAdjust"],
     "extensions": [],
     "asset_capability": "result_forming_rules"
   }

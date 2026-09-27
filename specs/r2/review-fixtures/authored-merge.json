@@ -8,9 +8,7 @@
     "judgment_version": "r2-paper",
     "title": "多条命中后按固定顺序合并的纸面例",
     "summary": "先排序和处理重复，再按作者规则选择输入第一项，保留完整发射追溯。",
-    "languages": [
-      "zh-CN"
-    ],
+    "languages": ["zh-CN"],
     "created_at": "2026-09-23T00:00:00Z",
     "updated_at": "2026-09-23T00:00:00Z",
     "lineage": [],
@@ -57,9 +55,7 @@
         "id": "qMerge",
         "focus": "多个建议同时成立时，本例采用哪一个？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -119,10 +115,7 @@
             {
               "id": "take-first",
               "method": "inference",
-              "component_refs": [
-                "merge-premise",
-                "merge-rule"
-              ],
+              "component_refs": ["merge-premise", "merge-rule"],
               "inputs": [
                 {
                   "name": "emissions",
@@ -389,9 +382,7 @@
     "examples": [],
     "exceptions": [],
     "misuse": [],
-    "reading_order": [
-      "qMerge"
-    ],
+    "reading_order": ["qMerge"],
     "extensions": [],
     "asset_capability": "result_forming_rules"
   }

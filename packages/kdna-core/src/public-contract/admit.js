@@ -14,6 +14,7 @@ function rejected(reason,componentFailure=null,detail=null) {
   const states={core:interpretationFailure?'valid':reason==='READ_CORE_INVALID'?'invalid':'not_evaluated',interpretation:interpretationFailure?'blocked':'not_evaluated'};
   // Only coordinates from the same Core validation are retained. Never return
   // rejected source values or treat authoring diagnostics as a second gate.
+  // eslint-disable-next-line no-control-regex -- Intentionally reject C0 and DEL in diagnostic coordinates.
   const safe=value=>typeof value==='string'&&value.length<=1024&&value.isWellFormed()&&!/[\u0000-\u001f\u007f]/.test(value)?value:null;
   const subject=safe(detail?.subject),field=safe(detail?.field);
   return freeze({status:'rejected',reason,states,component_failure:componentCodes.includes(reason)?componentFailure:null,diagnostics:[{code:reason,stage:reason==='READ_INPUT_INVALID'||reason==='READ_CORE_CAPABILITY_UNAVAILABLE'?'input':'core',severity:'error',subject,field}]});

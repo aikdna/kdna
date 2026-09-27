@@ -2,29 +2,143 @@
   "format": "kdna.protection-runtime-cases/1",
   "status": "IMPLEMENTER_CASE_MAP_NOT_ACCEPTANCE",
   "cases": [
-    {"id":"PP-C01","suites":["protection-installed.cjs","public-protection-admission.test.js","public-protection-operation.test.js"],"boundary":"Actual old/new plain root/node/browser/source/Read and pure execution; no authority inferred"},
-    {"id":"PP-C02","suites":["public-protection-admission.test.js"],"boundary":"128 original declaration vectors plus all ordinary/source entrypoints"},
-    {"id":"PP-C03","suites":["public-admission-regressions.test.js","public-protection-admission.test.js","protected-read.test.js"],"boundary":"Old request/input/Manifest precedence; protected semantic rejection after authentication"},
-    {"id":"PP-C04","suites":["public-protection-admission.test.js","protection-installed.cjs"],"boundary":"One instrumented shared semantic decode; real source full IR equality except explicitly selected access declaration"},
-    {"id":"PP-C05","suites":["public-protection-operation.test.js","protected-read.test.js"],"boundary":"Pure availability is not live authority; disposal and controlled expiry"},
-    {"id":"PP-C06","suites":["protected-read.test.js","protected-delivery.test.js"],"boundary":"Both Host awaits; handles only after successful current delivery"},
-    {"id":"PP-C07","suites":["protected-delivery.test.js"],"boundary":"Host disclosure versus physical sink; expiry and outer settle"},
-    {"id":"PP-C08","suites":["public-protection-operation.test.js","protection-installed.cjs"],"boundary":"Copied/cross-operation/checkpoint/duplicate actual Core instance"},
-    {"id":"PP-C09","suites":["public-protection-admission.test.js","protected-read.test.js"],"boundary":"Password authenticated unknown-critical carrier; actual protected catalog Read and disposal"},
-    {"id":"PP-C10","suites":["public-protection-operation.test.js","public-execution.test.js"],"boundary":"Pure plan/capsule/request disposal guards do not sample clock or revoke prior copies"},
-    {"id":"PP-C11","suites":["public-protection-producer.test.js"],"boundary":"Original-byte checksum rows/order/digests/duplicates/bounds and old-coordinate rejection"},
-    {"id":"PP-C12","suites":["public-protection-crypto.test.js"],"boundary":"Fixed legacy digest/signature payload/bundle bytes and case/Unicode preimage oracle"},
-    {"id":"PP-C13","suites":["public-protection-producer.test.js"],"boundary":"Signature requirement/pin/C substitution/declared checksums invalid"},
-    {"id":"PP-C14","suites":["public-protection-producer.test.js","protection-installed.cjs"],"boundary":"Explicit source production, both C fields or preserved absence, exact saved public re-admission"},
-    {"id":"PP-C15","suites":["public-protection-crypto.test.js","public-protection-producer.test.js"],"boundary":"CBOR canonicality, all frozen KDF parameters, selected slot, original size bounds, fixed KATs"},
-    {"id":"PP-C16","suites":["public-protection-grant.test.js","protection-installed.cjs"],"boundary":"Pinned identity/device/final A, actual issuer/device wrap and repack rejection"},
-    {"id":"PP-C17","suites":["public-protection-grant.test.js","public-protection-operation.test.js","protected-delivery.test.js"],"boundary":"Supplied atomic provider contract, rollback and cross-device shared revoke; persistent account store/restart implementation belongs to B2"},
-    {"id":"PP-C18","suites":["protected-read.test.js","protected-delivery.test.js","public-protection-grant.test.js"],"boundary":"Grant and Host authority independent; full prepared-body scope comparison"},
-    {"id":"PP-C19","suites":["public-protection-producer.test.js","protection-installed.cjs"],"boundary":"Integrity-only plain explicit admission, no entitlement inference"},
-    {"id":"PP-C20","suites":["public-protection-admission.test.js","public-protection-operation.test.js","protected-read.test.js","protected-delivery.test.js","protection-definition.test.mjs"],"boundary":"Closed results, body-free failure, binding-only checked time, prior version envelopes"},
-    {"id":"PP-C21","suites":["protected-delivery.test.js"],"boundary":"Actual confirmed send survives later failure with known/null current clock time"},
-    {"id":"PP-C22","suites":["protected-delivery.test.js"],"boundary":"False/throw/Promise/thenable after physical send remain outcome_unknown"},
-    {"id":"PP-C23","suites":["protected-delivery.test.js"],"boundary":"Reservation, pre-effect atomic consumption, concurrent/reentrant/reused token sends once"}
+    {
+      "id": "PP-C01",
+      "suites": [
+        "protection-installed.cjs",
+        "public-protection-admission.test.js",
+        "public-protection-operation.test.js"
+      ],
+      "boundary": "Actual old/new plain root/node/browser/source/Read and pure execution; no authority inferred"
+    },
+    {
+      "id": "PP-C02",
+      "suites": ["public-protection-admission.test.js"],
+      "boundary": "128 original declaration vectors plus all ordinary/source entrypoints"
+    },
+    {
+      "id": "PP-C03",
+      "suites": [
+        "public-admission-regressions.test.js",
+        "public-protection-admission.test.js",
+        "protected-read.test.js"
+      ],
+      "boundary": "Old request/input/Manifest precedence; protected semantic rejection after authentication"
+    },
+    {
+      "id": "PP-C04",
+      "suites": ["public-protection-admission.test.js", "protection-installed.cjs"],
+      "boundary": "One instrumented shared semantic decode; real source full IR equality except explicitly selected access declaration"
+    },
+    {
+      "id": "PP-C05",
+      "suites": ["public-protection-operation.test.js", "protected-read.test.js"],
+      "boundary": "Pure availability is not live authority; disposal and controlled expiry"
+    },
+    {
+      "id": "PP-C06",
+      "suites": ["protected-read.test.js", "protected-delivery.test.js"],
+      "boundary": "Both Host awaits; handles only after successful current delivery"
+    },
+    {
+      "id": "PP-C07",
+      "suites": ["protected-delivery.test.js"],
+      "boundary": "Host disclosure versus physical sink; expiry and outer settle"
+    },
+    {
+      "id": "PP-C08",
+      "suites": ["public-protection-operation.test.js", "protection-installed.cjs"],
+      "boundary": "Copied/cross-operation/checkpoint/duplicate actual Core instance"
+    },
+    {
+      "id": "PP-C09",
+      "suites": ["public-protection-admission.test.js", "protected-read.test.js"],
+      "boundary": "Password authenticated unknown-critical carrier; actual protected catalog Read and disposal"
+    },
+    {
+      "id": "PP-C10",
+      "suites": ["public-protection-operation.test.js", "public-execution.test.js"],
+      "boundary": "Pure plan/capsule/request disposal guards do not sample clock or revoke prior copies"
+    },
+    {
+      "id": "PP-C11",
+      "suites": ["public-protection-producer.test.js"],
+      "boundary": "Original-byte checksum rows/order/digests/duplicates/bounds and old-coordinate rejection"
+    },
+    {
+      "id": "PP-C12",
+      "suites": ["public-protection-crypto.test.js"],
+      "boundary": "Fixed legacy digest/signature payload/bundle bytes and case/Unicode preimage oracle"
+    },
+    {
+      "id": "PP-C13",
+      "suites": ["public-protection-producer.test.js"],
+      "boundary": "Signature requirement/pin/C substitution/declared checksums invalid"
+    },
+    {
+      "id": "PP-C14",
+      "suites": ["public-protection-producer.test.js", "protection-installed.cjs"],
+      "boundary": "Explicit source production, both C fields or preserved absence, exact saved public re-admission"
+    },
+    {
+      "id": "PP-C15",
+      "suites": ["public-protection-crypto.test.js", "public-protection-producer.test.js"],
+      "boundary": "CBOR canonicality, all frozen KDF parameters, selected slot, original size bounds, fixed KATs"
+    },
+    {
+      "id": "PP-C16",
+      "suites": ["public-protection-grant.test.js", "protection-installed.cjs"],
+      "boundary": "Pinned identity/device/final A, actual issuer/device wrap and repack rejection"
+    },
+    {
+      "id": "PP-C17",
+      "suites": [
+        "public-protection-grant.test.js",
+        "public-protection-operation.test.js",
+        "protected-delivery.test.js"
+      ],
+      "boundary": "Supplied atomic provider contract, rollback and cross-device shared revoke; persistent account store/restart implementation belongs to B2"
+    },
+    {
+      "id": "PP-C18",
+      "suites": [
+        "protected-read.test.js",
+        "protected-delivery.test.js",
+        "public-protection-grant.test.js"
+      ],
+      "boundary": "Grant and Host authority independent; full prepared-body scope comparison"
+    },
+    {
+      "id": "PP-C19",
+      "suites": ["public-protection-producer.test.js", "protection-installed.cjs"],
+      "boundary": "Integrity-only plain explicit admission, no entitlement inference"
+    },
+    {
+      "id": "PP-C20",
+      "suites": [
+        "public-protection-admission.test.js",
+        "public-protection-operation.test.js",
+        "protected-read.test.js",
+        "protected-delivery.test.js",
+        "protection-definition.test.mjs"
+      ],
+      "boundary": "Closed results, body-free failure, binding-only checked time, prior version envelopes"
+    },
+    {
+      "id": "PP-C21",
+      "suites": ["protected-delivery.test.js"],
+      "boundary": "Actual confirmed send survives later failure with known/null current clock time"
+    },
+    {
+      "id": "PP-C22",
+      "suites": ["protected-delivery.test.js"],
+      "boundary": "False/throw/Promise/thenable after physical send remain outcome_unknown"
+    },
+    {
+      "id": "PP-C23",
+      "suites": ["protected-delivery.test.js"],
+      "boundary": "Reservation, pre-effect atomic consumption, concurrent/reentrant/reused token sends once"
+    }
   ],
   "limits": "This map indexes executable cases. Actual raw logs and package/source fingerprints bind observations; it is not independent acceptance or a whole-platform account/storage claim."
 }

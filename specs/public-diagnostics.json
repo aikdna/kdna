@@ -531,8 +531,8 @@
       "id": "PUBLIC-DIGESTS",
       "implementation_sites": [
         "packages/kdna-core/src/public-contract/digests.js:1-149",
-        "packages/kdna-core/src/public-contract/admit.js:1-38",
-        "packages/kdna-core/src/public-contract/semantic-admission.js:1-49"
+        "packages/kdna-core/src/public-contract/admit.js:1-39",
+        "packages/kdna-core/src/public-contract/semantic-admission.js:1-46"
       ],
       "owner": "Core",
       "proof": [
@@ -847,7 +847,7 @@
       "implementation_sites": [
         "packages/kdna-core/src/public-contract/package-set.js:1-60",
         "packages/kdna-core/src/public-contract/package-set-node.js:1-83",
-        "packages/kdna-core/src/public-contract/package-set-admission.js:1-515",
+        "packages/kdna-core/src/public-contract/package-set-admission.js:1-514",
         "packages/kdna-read/src/package-set-node.js:1-389",
         "packages/kdna-read/src/package-set-host.js:1-294"
       ],
@@ -913,7 +913,7 @@
       "id": "PUBLIC-EXTENSIONS",
       "implementation_sites": [
         "packages/kdna-core/src/public-contract/component-semantics.js:1-191",
-        "packages/kdna-core/src/public-contract/semantic-admission.js:1-49"
+        "packages/kdna-core/src/public-contract/semantic-admission.js:1-46"
       ],
       "owner": "Core",
       "proof": [
@@ -949,8 +949,8 @@
       "id": "PUBLIC-CONTAINER",
       "implementation_sites": [
         "packages/kdna-core/src/public-contract/container.js:1-58",
-        "packages/kdna-core/src/public-contract/admit.js:1-38",
-        "packages/kdna-core/src/public-contract/semantic-admission.js:1-49"
+        "packages/kdna-core/src/public-contract/admit.js:1-39",
+        "packages/kdna-core/src/public-contract/semantic-admission.js:1-46"
       ],
       "owner": "Core",
       "proof": [

@@ -25,25 +25,18 @@
                 "$ref": "#/$defs/WidgetKind"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           },
           "WidgetKind": {
             "type": "string",
-            "enum": [
-              "alpha",
-              "beta"
-            ]
+            "enum": ["alpha", "beta"]
           }
         },
         "non_schema_rules": [
           {
             "id": "PUBLIC-SAMPLE",
-            "applies_to": [
-              "Widget"
-            ],
+            "applies_to": ["Widget"],
             "requirement": "sample obligation",
             "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
             "future_owner": "Core",
@@ -88,25 +81,18 @@
                 "$ref": "#/$defs/WidgetKind"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           },
           "WidgetKind": {
             "type": "string",
-            "enum": [
-              "alpha",
-              "beta"
-            ]
+            "enum": ["alpha", "beta"]
           }
         },
         "non_schema_rules": [
           {
             "id": "PUBLIC-SAMPLE",
-            "applies_to": [
-              "Widget"
-            ],
+            "applies_to": ["Widget"],
             "requirement": "sample obligation",
             "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
             "future_owner": "Core",
@@ -130,9 +116,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "text"
-            ],
+            "required": ["text"],
             "additionalProperties": false
           }
         },
@@ -167,25 +151,18 @@
                 "$ref": "#/$defs/WidgetKind"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           },
           "WidgetKind": {
             "type": "string",
-            "enum": [
-              "alpha",
-              "beta"
-            ]
+            "enum": ["alpha", "beta"]
           }
         },
         "non_schema_rules": [
           {
             "id": "PUBLIC-SAMPLE",
-            "applies_to": [
-              "Widget"
-            ],
+            "applies_to": ["Widget"],
             "requirement": "sample obligation",
             "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
             "future_owner": "Core",
@@ -204,9 +181,7 @@
           "path": "/non_schema_rules/-",
           "value": {
             "id": "PUBLIC-SAMPLE-TWO",
-            "applies_to": [
-              "WidgetKind"
-            ],
+            "applies_to": ["WidgetKind"],
             "requirement": "second sample obligation",
             "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
             "future_owner": "Core",
@@ -237,25 +212,18 @@
                 "$ref": "#/$defs/WidgetKind"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           },
           "WidgetKind": {
             "type": "string",
-            "enum": [
-              "alpha",
-              "beta"
-            ]
+            "enum": ["alpha", "beta"]
           }
         },
         "non_schema_rules": [
           {
             "id": "PUBLIC-SAMPLE",
-            "applies_to": [
-              "Widget"
-            ],
+            "applies_to": ["Widget"],
             "requirement": "sample obligation",
             "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
             "future_owner": "Core",
@@ -298,25 +266,18 @@
                 "$ref": "#/$defs/WidgetKind"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           },
           "WidgetKind": {
             "type": "string",
-            "enum": [
-              "alpha",
-              "beta"
-            ]
+            "enum": ["alpha", "beta"]
           }
         },
         "non_schema_rules": [
           {
             "id": "PUBLIC-SAMPLE",
-            "applies_to": [
-              "Widget"
-            ],
+            "applies_to": ["Widget"],
             "requirement": "sample obligation",
             "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
             "future_owner": "Core",
@@ -333,11 +294,7 @@
         {
           "op": "replace",
           "path": "/types/WidgetKind/enum",
-          "value": [
-            "alpha",
-            "beta",
-            "gamma"
-          ]
+          "value": ["alpha", "beta", "gamma"]
         }
       ]
     },
@@ -363,25 +320,18 @@
                 "$ref": "#/$defs/WidgetKind"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           },
           "WidgetKind": {
             "type": "string",
-            "enum": [
-              "alpha",
-              "beta"
-            ]
+            "enum": ["alpha", "beta"]
           }
         },
         "non_schema_rules": [
           {
             "id": "PUBLIC-SAMPLE",
-            "applies_to": [
-              "Widget"
-            ],
+            "applies_to": ["Widget"],
             "requirement": "sample obligation",
             "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
             "future_owner": "Core",
@@ -419,9 +369,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           }
         },
@@ -454,9 +402,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           }
         },
@@ -476,9 +422,7 @@
           "path": "/non_schema_rules/-",
           "value": {
             "id": "REJECT-ALL",
-            "applies_to": [
-              "Widget"
-            ],
+            "applies_to": ["Widget"],
             "requirement": "Reject every previously valid asset, including every Widget. No optional opt-in.",
             "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
             "future_owner": "Core",
@@ -504,9 +448,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           }
         },
@@ -526,9 +468,7 @@
           "path": "/non_schema_rules/-",
           "value": {
             "id": "REJECT-ALL",
-            "applies_to": [
-              "Widget"
-            ],
+            "applies_to": ["Widget"],
             "requirement": "Reject every old asset.",
             "compatible": true,
             "review": {
@@ -556,9 +496,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           }
         },
@@ -602,9 +540,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           }
         },
@@ -645,9 +581,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           }
         },
@@ -689,9 +623,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           }
         },
@@ -730,9 +662,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           }
         },
@@ -770,9 +700,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           }
         },
@@ -811,9 +739,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           }
         },
@@ -852,9 +778,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id"
-            ],
+            "required": ["id"],
             "additionalProperties": false
           }
         },

@@ -13,7 +13,7 @@
     "schema_path": "specs/checksums-document-1.schema.json",
     "version": "1.0.0"
   },
-  "definition_digest": "sha256:d9923ffde4f0b4596076b99b9e758a9c77c83fe616e10a9e91a2bcdd265d8b2b",
+  "definition_digest": "sha256:0c84c6fb73b3f6fbb453a7b7494baba81249814d6a9a6f72719ce219392751ab",
   "delivery_history": {
     "acknowledgement": "Only literal synchronous true confirms the configured trusted transport handoff. False/throw/thenable/invalid return leaves outcome_unknown. Never await or execute an untrusted then method to improve the result. Callback itself may already have sent data.",
     "disposal": "Disposal closes authority and clears secrets best effort but retains the redacted per-token delivery history while its token/owning Read remains reachable, so a later failure cannot erase past attempts.",
@@ -132,7 +132,7 @@
       "generator_machine_check_gap": null,
       "implementation_sites": [
         "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
-        "packages/kdna-core/src/public-contract/semantic-admission.js:1-49",
+        "packages/kdna-core/src/public-contract/semantic-admission.js:1-46",
         "packages/kdna-core/src/public-contract/protection-producer.js:1-75",
         "packages/kdna-core/src/public-contract/protection-integrity.js:1-51"
       ],
@@ -173,7 +173,7 @@
       "generator_machine_check": "none",
       "generator_machine_check_gap": null,
       "implementation_sites": [
-        "packages/kdna-core/src/public-contract/admit.js:1-38",
+        "packages/kdna-core/src/public-contract/admit.js:1-39",
         "packages/kdna-core/src/public-contract/protection-declaration.js:1-75",
         "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
         "packages/kdna-core/src/public-contract/protection-producer.js:1-75",
@@ -665,7 +665,7 @@
       "runtime_uncovered": [],
       "runtime_units": [
         "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
-        "packages/kdna-core/src/public-contract/semantic-admission.js:1-49",
+        "packages/kdna-core/src/public-contract/semantic-admission.js:1-46",
         "packages/kdna-core/src/public-contract/protection-producer.js:1-75",
         "packages/kdna-core/src/public-contract/protection-integrity.js:1-51"
       ]
@@ -703,7 +703,7 @@
       "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
       "runtime_uncovered": [],
       "runtime_units": [
-        "packages/kdna-core/src/public-contract/admit.js:1-38",
+        "packages/kdna-core/src/public-contract/admit.js:1-39",
         "packages/kdna-core/src/public-contract/protection-declaration.js:1-75",
         "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
         "packages/kdna-core/src/public-contract/protection-producer.js:1-75",

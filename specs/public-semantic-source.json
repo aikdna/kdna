@@ -15183,8 +15183,8 @@
         "generator_uncovered": [],
         "runtime_units": [
           "packages/kdna-core/src/public-contract/digests.js:1-149",
-          "packages/kdna-core/src/public-contract/admit.js:1-38",
-          "packages/kdna-core/src/public-contract/semantic-admission.js:1-49"
+          "packages/kdna-core/src/public-contract/admit.js:1-39",
+          "packages/kdna-core/src/public-contract/semantic-admission.js:1-46"
         ],
         "runtime_uncovered": [],
         "proof": [
@@ -15449,7 +15449,7 @@
         "runtime_units": [
           "packages/kdna-core/src/public-contract/package-set.js:1-60",
           "packages/kdna-core/src/public-contract/package-set-node.js:1-83",
-          "packages/kdna-core/src/public-contract/package-set-admission.js:1-515",
+          "packages/kdna-core/src/public-contract/package-set-admission.js:1-514",
           "packages/kdna-read/src/package-set-node.js:1-389",
           "packages/kdna-read/src/package-set-host.js:1-294"
         ],
@@ -15505,7 +15505,7 @@
         "generator_uncovered": [],
         "runtime_units": [
           "packages/kdna-core/src/public-contract/component-semantics.js:1-191",
-          "packages/kdna-core/src/public-contract/semantic-admission.js:1-49"
+          "packages/kdna-core/src/public-contract/semantic-admission.js:1-46"
         ],
         "runtime_uncovered": [],
         "proof": [
@@ -15536,8 +15536,8 @@
         "generator_uncovered": [],
         "runtime_units": [
           "packages/kdna-core/src/public-contract/container.js:1-58",
-          "packages/kdna-core/src/public-contract/admit.js:1-38",
-          "packages/kdna-core/src/public-contract/semantic-admission.js:1-49"
+          "packages/kdna-core/src/public-contract/admit.js:1-39",
+          "packages/kdna-core/src/public-contract/semantic-admission.js:1-46"
         ],
         "runtime_uncovered": [],
         "proof": [
@@ -19086,7 +19086,7 @@
         "machine_checkers": [],
         "generator_uncovered": [],
         "runtime_units": [
-          "packages/kdna-core/src/public-contract/admit.js:1-38",
+          "packages/kdna-core/src/public-contract/admit.js:1-39",
           "packages/kdna-core/src/public-contract/protection-declaration.js:1-75",
           "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
           "packages/kdna-core/src/public-contract/protection-producer.js:1-75",
@@ -19111,7 +19111,7 @@
         "generator_uncovered": [],
         "runtime_units": [
           "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
-          "packages/kdna-core/src/public-contract/semantic-admission.js:1-49",
+          "packages/kdna-core/src/public-contract/semantic-admission.js:1-46",
           "packages/kdna-core/src/public-contract/protection-producer.js:1-75",
           "packages/kdna-core/src/public-contract/protection-integrity.js:1-51"
         ],

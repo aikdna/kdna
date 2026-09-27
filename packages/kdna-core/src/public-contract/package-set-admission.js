@@ -7,9 +7,8 @@
 // that makes a member observation genuine. It never exports the internal
 // decider, and no caller-supplied JSON value can stand in for an observation.
 const { types: utilTypes } = require('node:util');
-const { inflateRawSync } = require('node:zlib');
 const { copyJson, canonicalJson, freeze, identifier } = require('./strict-input.js');
-const { issueSnapshot, inspectSnapshot } = require('./brand.js');
+const { inspectSnapshot } = require('./brand.js');
 const { decidePackageSet, verifyHandoffBindings } = require('./package-set.js');
 const { inspectAdmittedPlan } = require('./execution.js');
 const contract = require('./package-set-contract.generated.json');
@@ -101,7 +100,7 @@ function asDigest(value, code) {
   return value;
 }
 
-function capturePackageMember(value, index) {
+function capturePackageMember(value) {
   const captured = ownDataFields(value, 'PackageMember', 'invalid_read_request');
   try {
     return {
@@ -487,7 +486,7 @@ function verifyHandoff(handoff, admission, plan, deliveredRead) {
   if (planView === null) return freeze({ status: 'rejected', diagnostic: 'handoff_invalid' });
   if (canonicalJson(planView.source) !== canonicalJson({ asset: selectedView.asset, digests: selectedView.digests, ir_digest: selectedView.ir_digest })) return freeze({ status: 'rejected', diagnostic: 'handoff_invalid' });
   const snapshots = state.members.filter(member => member.snapshot).map(member => ({ member_id: member.member_id, snapshot: member.snapshot }));
-  let correlated = false;
+  let correlated;
   try {
     correlated = verifyHandoffBindings(wire, { snapshots, deliveredRead, observeAdmittedPlan: () => plan });
   } catch {

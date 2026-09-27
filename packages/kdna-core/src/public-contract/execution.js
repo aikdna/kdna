@@ -239,7 +239,7 @@ function createExecutionHost(configuration) {
         const events = [];
         function event(kind, evidence_id = null, time = now()) { events.push({ sequence: events.length, at: time, kind, source: eventSources[kind], evidence_id }); }
         event('request_admitted');
-        let authorization = null, delivery = null, output = null, failure = null, status = 'completed';
+        let authorization, delivery, output, failure = null, status = 'completed';
         function authorize(phase) {
           const response = exactRecord(provider(config.authorize, { ...summary, phase }), ['decision', 'authorization_id', 'request_digest', 'host_id', 'host_epoch', 'issued_at', 'expires_at']);
           if (!['allow', 'deny'].includes(response.decision) || !identifier(response.authorization_id) || response.request_digest !== requestDigest || response.host_id !== config.host_id || response.host_epoch !== config.host_epoch || !uint(response.issued_at) || !uint(response.expires_at)) fail('EXECUTION_HOST_INVALID');

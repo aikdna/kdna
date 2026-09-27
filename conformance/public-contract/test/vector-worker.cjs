@@ -23,7 +23,7 @@ const counters = {
   dom_calls: 0,
   path_opens: 0,
 };
-let aliasId=id=>id;
+let aliasId = (id) => id;
 let raw,
   admission,
   record,
@@ -69,15 +69,17 @@ function readResultObservation(value) {
             declarations: c.declarations.map((x) => aliasId(x.id)),
             closure: c.closure.map((x) => aliasId(x.id)),
             selected: c.selected?.judgment_id ?? null,
-            asset_index_targets:c.asset_index.map(x=>x.target),
-            expansion_handle_targets:c.expansion_handles.map(x=>x.target),
+            asset_index_targets: c.asset_index.map((x) => x.target),
+            expansion_handle_targets: c.expansion_handles.map((x) => x.target),
             expanded_nodes: c.closure.map((x) => aliasId(x.id)),
             // R10 (`specs/read-contract.md:456-476`) records one homogeneous omission
             // set either per entry or as one `OmissionBatch` count record. The two
             // channels below keep them apart instead of letting a folded record land
             // under an `undefined` key: per-entry targets stay in omission_reasons,
             // and the folded kind/count ledger is carried in omission_batches.
-            omission_targets:e.omissions.filter(x=>x.state==='explicitly_omitted').map(x=>aliasId(x.target)),
+            omission_targets: e.omissions
+              .filter((x) => x.state === 'explicitly_omitted')
+              .map((x) => aliasId(x.target)),
             omission_reasons: Object.fromEntries(
               e.omissions
                 .filter((x) => x.state === 'explicitly_omitted')
@@ -123,8 +125,8 @@ async function fixtureRead() {
   evidenceRoute = 'test_authority_fixture';
   const f = fixture(id, coreDir),
     x = f.input;
-  aliasId=f.aliasId;
-  extra.fixture_setup_evidence=f.setup;
+  aliasId = f.aliasId;
+  extra.fixture_setup_evidence = f.setup;
   const coreResult = () => {
     if (x.fixture.core_state === 'invalid') return rejectedCoreFixture('READ_CORE_INVALID');
     if (x.fixture.interpretation !== 'complete')
@@ -190,7 +192,7 @@ async function fixtureRead() {
       Date.now = before;
     }
     return {
-      fixture_setup_evidence:f.setup,
+      fixture_setup_evidence: f.setup,
       api_result_kind: 'ReadProjection',
       read_call_result: null,
       admission_required: !!record,
@@ -266,11 +268,23 @@ async function fixtureRead() {
     raw = await req('@aikdna/kdna-read/' + x.entry)[
       x.entry === 'browser' ? 'readBrowser' : 'readNode'
     ](value, x.request, provider, host);
-  const Ajv=req('ajv/dist/2020').default,ajv=new Ajv({strict:true,strictTypes:false,strictRequired:false,validateFormats:false,allErrors:true});req('ajv-formats')(ajv);
-  const schemaPath=path.basename(require(path.join(coreDir,'src/public-contract/generated-contract.json')).r2_semantics.schema_paths.ReadCallResult);
-  const validateCall=ajv.compile(require(path.join(readDir,'schema',schemaPath)));
-  if(!validateCall(raw))throw Error('ReadCallResult schema: '+JSON.stringify(validateCall.errors));
-  extra.fixture_setup_evidence.final_read_schema='valid';
+  const Ajv = req('ajv/dist/2020').default,
+    ajv = new Ajv({
+      strict: true,
+      strictTypes: false,
+      strictRequired: false,
+      validateFormats: false,
+      allErrors: true,
+    });
+  req('ajv-formats')(ajv);
+  const schemaPath = path.basename(
+    require(path.join(coreDir, 'src/public-contract/generated-contract.json')).r2_semantics
+      .schema_paths.ReadCallResult,
+  );
+  const validateCall = ajv.compile(require(path.join(readDir, 'schema', schemaPath)));
+  if (!validateCall(raw))
+    throw Error('ReadCallResult schema: ' + JSON.stringify(validateCall.errors));
+  extra.fixture_setup_evidence.final_read_schema = 'valid';
   return readResultObservation(raw);
 }
 function entries(value) {
@@ -434,12 +448,28 @@ async function transportOperation() {
   return readResultObservation(raw);
 }
 async function main() {
-  const historical=JSON.parse(require('node:fs').readFileSync(path.join(__dirname,'../../public-contract-decision-vectors.json'),'utf8')).historical_rejection_controls;
-  const historicalControls=historical.map(c=>{
-    const result=actualAdmission({request_id:'historical:'+c.id,tuple:c.tuple,budget_bytes:1000000,mode:{unsafe:'must-not-decode'},selection:null,handle:null},control({state:'authenticated',admission_response_limit_bytes:1000000}));
-    const saved=read('brands').requests.get(result.admitted_request);
-    if(saved?.version_rejection!==c.expected||saved.request!==null)throw Error('Historical precedence control failed '+c.id);
-    return {id:c.id,diagnostic:saved.version_rejection,mode_not_decoded:true};
+  const historical = JSON.parse(
+    require('node:fs').readFileSync(
+      path.join(__dirname, '../../public-contract-decision-vectors.json'),
+      'utf8',
+    ),
+  ).historical_rejection_controls;
+  const historicalControls = historical.map((c) => {
+    const result = actualAdmission(
+      {
+        request_id: 'historical:' + c.id,
+        tuple: c.tuple,
+        budget_bytes: 1000000,
+        mode: { unsafe: 'must-not-decode' },
+        selection: null,
+        handle: null,
+      },
+      control({ state: 'authenticated', admission_response_limit_bytes: 1000000 }),
+    );
+    const saved = read('brands').requests.get(result.admitted_request);
+    if (saved?.version_rejection !== c.expected || saved.request !== null)
+      throw Error('Historical precedence control failed ' + c.id);
+    return { id: c.id, diagnostic: saved.version_rejection, mode_not_decoded: true };
   });
   let observation;
   if (input.fixture) observation = await fixtureRead();
@@ -550,7 +580,15 @@ async function main() {
     observation = readResultObservation(raw);
   } else observation = digestOperation();
   process.stdout.write(
-    JSON.stringify({ id, historical_controls:historicalControls, evidence_route: evidenceRoute, observation, raw, counters, extra }) + '\n',
+    JSON.stringify({
+      id,
+      historical_controls: historicalControls,
+      evidence_route: evidenceRoute,
+      observation,
+      raw,
+      counters,
+      extra,
+    }) + '\n',
   );
 }
 main().catch((error) => {

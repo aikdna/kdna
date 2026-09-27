@@ -104,7 +104,7 @@
     {
       "bytes": 44065,
       "path": "specs/public-diagnostics.json",
-      "sha256": "a078efd8bc53df99a6f3e162b038a62a534a83ac16e714ac9e2d23718e23b0a3"
+      "sha256": "74bb58f6488848de2ac8046b2cea6dd6a9f9295ecca6426ddaf18f2ca8d94960"
     },
     {
       "bytes": 93743,
@@ -122,7 +122,7 @@
       "sha256": "0639b42438b8f8d6343c7ca2209d86af87377f7709013b3cb8ad57cedb1f5fc5"
     }
   ],
-  "derived_aggregate_sha256": "37ec0d3009d74330ec81ec93ac00120f33bd10fdbf7044a38a62cc1f22d28ad5",
+  "derived_aggregate_sha256": "f5642247027834345412e9b8390d35655867aaceba49cdea5cbddcbf35aaf9a1",
   "excluded": [
     "specs/public-generation-manifest.json",
     "docs/audits/2026-09-06-open-wave1-machine-source-implementation.json",
@@ -642,7 +642,7 @@
     {
       "bytes": 44065,
       "path": "packages/kdna-core/schema/public-diagnostics.json",
-      "sha256": "a078efd8bc53df99a6f3e162b038a62a534a83ac16e714ac9e2d23718e23b0a3"
+      "sha256": "74bb58f6488848de2ac8046b2cea6dd6a9f9295ecca6426ddaf18f2ca8d94960"
     },
     {
       "bytes": 93743,
@@ -737,7 +737,7 @@
     {
       "bytes": 86775,
       "path": "packages/kdna-core/src/public-contract/protection-contract.generated.json",
-      "sha256": "a2c4e7310a8fd018bc7d4d923ce6ecc864751ee68d169bea5d40b189e8337a5c"
+      "sha256": "100a4dc4e2f00325be4d4d6814b38137ec32c799fc3e2636caa2732b14eca53b"
     },
     {
       "bytes": 15836,
@@ -832,7 +832,7 @@
     {
       "bytes": 6354,
       "path": "packages/kdna-read/src/protection-node.js",
-      "sha256": "5ad2dc07a9ee1e8ca0e06501bc038b0a8097d9282ab2798e32f45228173c1f85"
+      "sha256": "67c69d688c6d052bc76ea4c6106888fe0dae0f530627cf13cc031e1d5446309e"
     },
     {
       "bytes": 2445,
@@ -932,7 +932,7 @@
   "source": {
     "bytes": 781190,
     "path": "specs/public-semantic-source.json",
-    "sha256": "0995d556d1a2bfb393d83ff810a70801f69562a9aec9932dd14dd0660a9a9f00"
+    "sha256": "b9be283f826dcd0173f63f1a85b5025c342a3b232c6379545a352dec4117dbec"
   },
   "status": "UNPUBLISHED_GENERATED_STRUCTURE",
   "tools": {

@@ -14,16 +14,25 @@ import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const SOURCE = JSON.parse(fs.readFileSync(path.join(ROOT, 'specs/public-semantic-source.json'), 'utf8'));
-const CORE_CONTRACT = path.join(ROOT, 'packages/kdna-core/src/public-contract/package-set-contract.generated.json');
+const SOURCE = JSON.parse(
+  fs.readFileSync(path.join(ROOT, 'specs/public-semantic-source.json'), 'utf8'),
+);
+const CORE_CONTRACT = path.join(
+  ROOT,
+  'packages/kdna-core/src/public-contract/package-set-contract.generated.json',
+);
 const READ_CONTRACT = path.join(ROOT, 'packages/kdna-read/src/package-set-contract.generated.json');
 const SCHEMA = path.join(ROOT, SOURCE.package_set_node.schema_path);
-const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
-const ordered = value =>
+const sha = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
+const ordered = (value) =>
   Array.isArray(value)
     ? value.map(ordered)
     : value && typeof value === 'object'
-      ? Object.fromEntries(Object.keys(value).sort().map(key => [key, ordered(value[key])]))
+      ? Object.fromEntries(
+          Object.keys(value)
+            .sort()
+            .map((key) => [key, ordered(value[key])]),
+        )
       : value;
 
 test('the module descriptor is consistent across both packages and binds its own definition', () => {
@@ -37,10 +46,20 @@ test('the module descriptor is consistent across both packages and binds its own
   assert.equal(core.descriptor.module_version, SOURCE.package_set_node.module_version);
   assert.equal(core.descriptor.core_version, SOURCE.engineering.package_versions.core);
   assert.equal(core.descriptor.read_version, SOURCE.engineering.package_versions.read);
-  assert.deepEqual(core.descriptor.core_callables, SOURCE.engineering.core_surface['package-set-node']);
-  assert.deepEqual(core.descriptor.read_callables, SOURCE.engineering.read_surface['package-set-node']);
+  assert.deepEqual(
+    core.descriptor.core_callables,
+    SOURCE.engineering.core_surface['package-set-node'],
+  );
+  assert.deepEqual(
+    core.descriptor.read_callables,
+    SOURCE.engineering.read_surface['package-set-node'],
+  );
   assert.deepEqual(core.descriptor.local_failures, SOURCE.package_set_node.local_failures);
-  assert.equal('SET_MEMBER_UNAUTHORIZED' === core.descriptor.local_failures[0], false, 'a wire code is never a local code');
+  assert.equal(
+    'SET_MEMBER_UNAUTHORIZED' === core.descriptor.local_failures[0],
+    false,
+    'a wire code is never a local code',
+  );
 });
 
 test('the generated schema closes every exported record and no local code reaches the wire', () => {
@@ -57,8 +76,10 @@ test('the generated schema closes every exported record and no local code reache
       assert.deepEqual([...schema.$defs[name].required].sort(), [...node.required].sort(), name);
     }
   }
-  const diagnostics = JSON.parse(fs.readFileSync(path.join(ROOT, 'specs/public-diagnostics.json'), 'utf8'));
-  const wire = new Set(diagnostics.entries.map(entry => entry.code));
+  const diagnostics = JSON.parse(
+    fs.readFileSync(path.join(ROOT, 'specs/public-diagnostics.json'), 'utf8'),
+  );
+  const wire = new Set(diagnostics.entries.map((entry) => entry.code));
   for (const code of declared.local_failures) assert.equal(wire.has(code), false, code);
 });
 
@@ -89,7 +110,8 @@ test('every module record the runtime captures has a generated closed key set', 
   for (const [name, entry] of Object.entries(core.key_sets)) {
     assert.deepEqual(entry.keys, [...entry.keys].sort(), name + ' keys are sorted');
     assert.equal(new Set(entry.keys).size, entry.keys.length, name + ' keys are unique');
-    for (const key of entry.required) assert.equal(entry.keys.includes(key), true, name + '.' + key);
+    for (const key of entry.required)
+      assert.equal(entry.keys.includes(key), true, name + '.' + key);
   }
 });
 
@@ -108,9 +130,21 @@ test('the declared module outputs are exactly the files the generator emitted', 
   }
   const validator = require(path.join(ROOT, declared.validator_path));
   const schema = JSON.parse(fs.readFileSync(SCHEMA, 'utf8'));
-  for (const name of declared.exports) assert.equal(typeof validator[name] === 'function' || typeof validator[name] === 'object', true, name);
+  for (const name of declared.exports)
+    assert.equal(
+      typeof validator[name] === 'function' || typeof validator[name] === 'object',
+      true,
+      name,
+    );
   assert.deepEqual(
-    schema.$defs[declared.root].anyOf.map(branch => branch.$ref),
-    ['PackageSet', 'PackageSetHandoff', 'PackageSetMemberObservationRequest', 'PackageSetMemberObservation', 'PackageSetReadObservation', 'PackageSetNodeDescriptor'].map(name => '#/$defs/' + name)
+    schema.$defs[declared.root].anyOf.map((branch) => branch.$ref),
+    [
+      'PackageSet',
+      'PackageSetHandoff',
+      'PackageSetMemberObservationRequest',
+      'PackageSetMemberObservation',
+      'PackageSetReadObservation',
+      'PackageSetNodeDescriptor',
+    ].map((name) => '#/$defs/' + name),
   );
 });

@@ -8,9 +8,7 @@
     "judgment_version": "r1-paper",
     "title": "基础类别审查例集",
     "summary": "16个完整纸面议题，仅检查类别职责和必需角色。",
-    "languages": [
-      "zh-CN"
-    ],
+    "languages": ["zh-CN"],
     "created_at": "2026-09-23T00:00:00Z",
     "updated_at": "2026-09-23T00:00:00Z",
     "lineage": [],
@@ -57,9 +55,7 @@
         "id": "m01",
         "focus": "盒子现在是什么状态？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -138,9 +134,7 @@
         "id": "m02",
         "focus": "这枚标记属于哪一类？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -237,9 +231,7 @@
         "id": "m03",
         "focus": "怎样评价这个标题？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -333,9 +325,7 @@
         "id": "m04",
         "focus": "A与B之间选哪个？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -432,9 +422,7 @@
         "id": "m05",
         "focus": "小明能进入本例的读书会吗？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -522,9 +510,7 @@
         "id": "m06",
         "focus": "这些材料中哪些适用于户外海报？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -621,9 +607,7 @@
         "id": "m07",
         "focus": "纸面电路的灯为何不亮？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -711,9 +695,7 @@
         "id": "m08",
         "focus": "按给定速率四小时产量约多少？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -801,9 +783,7 @@
         "id": "m09",
         "focus": "若人数每轮翻倍，两轮后会有几人？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -900,9 +880,7 @@
         "id": "m10",
         "focus": "本例资料支持采用哪一条编辑原则？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -990,9 +968,7 @@
         "id": "m11",
         "focus": "本段“轻装”是什么意思？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -1080,9 +1056,7 @@
         "id": "m12",
         "focus": "收到这次阅读反馈后，应怎样调整下一次安排？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -1176,9 +1150,7 @@
         "id": "m13",
         "focus": "如何把整理抽屉的办法用于整理任务？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -1272,9 +1244,7 @@
         "id": "m14",
         "focus": "我偏爱哪个颜色？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -1353,9 +1323,7 @@
         "id": "m15",
         "focus": "在作者的整理习惯中先做什么？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -1434,9 +1402,7 @@
         "id": "m16",
         "focus": "在本作品中，这个新图形叫什么？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {

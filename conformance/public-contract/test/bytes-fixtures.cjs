@@ -48,10 +48,22 @@ function blank(tuple, count = 1, opts = {}) {
       scope: { statement: 'Bounded scope ' + i },
       answer_kind: 'preference',
       parent_ref: null,
-      core_expression: { kind: 'authored', statement: 'Synthetic authored answer ' + i, qualification_refs: [] },
+      core_expression: {
+        kind: 'authored',
+        statement: 'Synthetic authored answer ' + i,
+        qualification_refs: [],
+      },
       method: {
         method: { term: 'feeling' },
-        components: [{ id: 'component:' + i, method: { term: 'feeling' }, role: '个人感受', material_refs: [], statement: 'Synthetic subjective basis for regression testing.' }],
+        components: [
+          {
+            id: 'component:' + i,
+            method: { term: 'feeling' },
+            role: '个人感受',
+            material_refs: [],
+            statement: 'Synthetic subjective basis for regression testing.',
+          },
+        ],
         bindings: [],
       },
       material_refs: [],
@@ -92,7 +104,10 @@ function blank(tuple, count = 1, opts = {}) {
     },
     actors: [],
     scope: { statement: 'Asset scope' },
-    declarations: { highest_question: { state: 'provided', value: 'What does this engineering fixture declare?' }, boundaries: { state: 'none', value: null } },
+    declarations: {
+      highest_question: { state: 'provided', value: 'What does this engineering fixture declare?' },
+      boundaries: { state: 'none', value: null },
+    },
     kernel: { purpose: { kind: 'summary' }, foundation_refs: [] },
     contracts: [],
     conditions: [],
@@ -122,9 +137,11 @@ function blank(tuple, count = 1, opts = {}) {
 
 function optionsCapability(forms, opts) {
   if (typeof opts.formCapability === 'string') return opts.formCapability;
-  if (forms.length === 0 || forms.some((form) => form !== 'conclusion' && form !== 'rule')) return 'asserted_answers';
+  if (forms.length === 0 || forms.some((form) => form !== 'conclusion' && form !== 'rule'))
+    return 'asserted_answers';
   const distinct = [...new Set(forms)];
-  if (distinct.length === 1) return distinct[0] === 'conclusion' ? 'asserted_answers' : 'result_forming_rules';
+  if (distinct.length === 1)
+    return distinct[0] === 'conclusion' ? 'asserted_answers' : 'result_forming_rules';
   return 'mixed';
 }
 function crc(bytes) {

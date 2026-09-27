@@ -8,9 +8,7 @@
     "judgment_version": "r1-paper",
     "title": "方法多输出的纸面例",
     "summary": "保存独立检查项的收集及待判身份，不宣称整体合格。",
-    "languages": [
-      "zh-CN"
-    ],
+    "languages": ["zh-CN"],
     "created_at": "2026-09-23T00:00:00Z",
     "updated_at": "2026-09-23T00:00:00Z",
     "lineage": [],
@@ -57,9 +55,7 @@
         "id": "qb",
         "focus": "怎样汇总封面和页码的检查记录？",
         "subject": {
-          "actor_ids": [
-            "author"
-          ],
+          "actor_ids": ["author"],
           "statement": "本审查情境中的作者；非真实客户或专业业务判断"
         },
         "scope": {
@@ -133,11 +129,7 @@
             {
               "id": "u1",
               "method": "criteria_comparison",
-              "component_refs": [
-                "output-c1",
-                "output-c2",
-                "output-c3"
-              ],
+              "component_refs": ["output-c1", "output-c2", "output-c3"],
               "inputs": [
                 {
                   "name": "log",
@@ -448,9 +440,7 @@
     "examples": [],
     "exceptions": [],
     "misuse": [],
-    "reading_order": [
-      "qb"
-    ],
+    "reading_order": ["qb"],
     "extensions": [],
     "asset_capability": "result_forming_rules"
   }
