@@ -1,0 +1,1484 @@
+{
+  "$defs": {
+    "AssetCapability": {
+      "enum": [
+        "asserted_answers",
+        "result_forming_rules",
+        "mixed"
+      ],
+      "type": "string"
+    },
+    "CoreAdmissionRejected": {
+      "additionalProperties": false,
+      "properties": {
+        "component_failure": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CoreComponentFailure"
+            },
+            {
+              "const": null,
+              "type": "null"
+            }
+          ]
+        },
+        "diagnostics": {
+          "items": {
+            "$ref": "#/$defs/ReadDiagnostic"
+          },
+          "maxItems": 1,
+          "minItems": 1,
+          "type": "array"
+        },
+        "reason": {
+          "$ref": "#/$defs/ReadDiagnosticCode"
+        },
+        "states": {
+          "$ref": "#/$defs/CoreStaticStates"
+        },
+        "status": {
+          "const": "rejected",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "reason",
+        "diagnostics",
+        "states",
+        "component_failure"
+      ],
+      "type": "object"
+    },
+    "CoreComponentFailure": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "const": null,
+          "type": "null"
+        },
+        "code": {
+          "enum": [
+            "READ_COMPONENT_DECLARATION_INVALID",
+            "READ_COMPONENT_CONTENT_INVALID",
+            "READ_COMPONENT_REFERENCE_INVALID",
+            "READ_COMPONENT_GRAPH_CYCLE",
+            "READ_COMPONENT_LIMIT_EXCEEDED",
+            "READ_COMPONENT_BINDING_INVALID",
+            "READ_COMPONENT_ADOPTION_INVALID",
+            "READ_METHOD_PRESENCE_INVALID"
+          ],
+          "type": "string"
+        },
+        "component_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "const": null,
+              "type": "null"
+            }
+          ]
+        },
+        "judgment_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "const": null,
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "const": "invalid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "judgment_ref",
+        "component_ref",
+        "status",
+        "body",
+        "code"
+      ],
+      "type": "object"
+    },
+    "CoreStaticStates": {
+      "additionalProperties": false,
+      "properties": {
+        "core": {
+          "$ref": "#/$defs/TechnicalState"
+        },
+        "interpretation": {
+          "$ref": "#/$defs/InterpretationState"
+        }
+      },
+      "required": [
+        "core",
+        "interpretation"
+      ],
+      "type": "object"
+    },
+    "Digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "Identifier": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$",
+      "type": "string"
+    },
+    "InterpretationState": {
+      "enum": [
+        "not_evaluated",
+        "complete",
+        "degraded",
+        "blocked"
+      ],
+      "type": "string"
+    },
+    "ProtectedSourceCatalog": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "const": 0,
+          "type": "integer"
+        },
+        "capability": {
+          "$ref": "#/$defs/SourceCapability"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/ProtectionDisclosure"
+        },
+        "identity": {
+          "$ref": "#/$defs/ProtectedSourceDigests"
+        },
+        "status": {
+          "const": "catalog_only",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "capability",
+        "identity",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "type": "object"
+    },
+    "ProtectedSourceDelivered": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "const": 0,
+          "type": "integer"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/ProtectionDisclosure"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ProtectionReceipt"
+        },
+        "source_identity": {
+          "$ref": "#/$defs/ProtectedSourceDigests"
+        },
+        "status": {
+          "const": "source_delivered",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "receipt",
+        "disclosure",
+        "source_identity",
+        "body",
+        "body_bytes"
+      ],
+      "type": "object"
+    },
+    "ProtectedSourceDigests": {
+      "additionalProperties": false,
+      "properties": {
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "A",
+        "C",
+        "E"
+      ],
+      "type": "object"
+    },
+    "ProtectedSourceObservation": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ProtectedSourceDelivered"
+        },
+        {
+          "$ref": "#/$defs/ProtectedSourceCatalog"
+        },
+        {
+          "$ref": "#/$defs/SourceCoreRejected"
+        },
+        {
+          "$ref": "#/$defs/SourceFailed"
+        }
+      ]
+    },
+    "ProtectedSourceRevisionPreviewResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/SourcePreviewValid"
+        },
+        {
+          "$ref": "#/$defs/SourcePreviewRejected"
+        }
+      ]
+    },
+    "ProtectionAuthorization": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "none",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "password_possession",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "device_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "entitlement_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "entitlement_profile": {
+              "enum": [
+                "account",
+                "org"
+              ],
+              "type": "string"
+            },
+            "expires_at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "issuer": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "kind": {
+              "const": "external_grant",
+              "type": "string"
+            },
+            "mode": {
+              "enum": [
+                "online",
+                "offline"
+              ],
+              "type": "string"
+            },
+            "offline_grace_until_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "refresh_after_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "signing_key_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "status_version": {
+              "$ref": "#/$defs/UInt"
+            }
+          },
+          "required": [
+            "kind",
+            "account_id",
+            "entitlement_profile",
+            "device_id",
+            "status_version",
+            "refresh_after_ms",
+            "expires_at_ms",
+            "offline_grace_until_ms",
+            "mode",
+            "issuer",
+            "entitlement_id",
+            "signing_key_id"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ProtectionContractIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "id": {
+          "const": "kdna.protection-admission/1",
+          "type": "string"
+        },
+        "version": {
+          "const": "1.0.0",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "type": "object"
+    },
+    "ProtectionDiagnostic": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_INPUT_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "input"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_DECLARATION_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "declaration"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_PROFILE_UNSUPPORTED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "declaration",
+                "envelope",
+                "integrity"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_ENVELOPE_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "envelope"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_KDF_UNAVAILABLE",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "kdf"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_CREDENTIAL_REQUIRED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "credential"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_AUTHENTICATION_FAILED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authentication"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_CHECKSUMS_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "integrity"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_SIGNATURE_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "integrity"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_SIGNATURE_PIN_MISMATCH",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "integrity"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_GRANT_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "grant"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_GRANT_BINDING_MISMATCH",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "grant"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_AUTHORIZATION_EXPIRED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_AUTHORIZATION_REVOKED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_REFRESH_REQUIRED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_STATE_ROLLBACK",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_PROVIDER_FAILED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_DECLARATION_CONFLICT",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authorization"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_OPERATION_UNTRUSTED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "input"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_OPERATION_DISPOSED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "input",
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ProtectionDisclosure": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "external_commit": {
+              "$ref": "#/$defs/ProtectionExternalCommitNotInvoked"
+            },
+            "kind": {
+              "const": "none",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "external_commit"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "external_commit": {
+              "$ref": "#/$defs/ProtectionExternalCommit"
+            },
+            "kind": {
+              "const": "trusted_host",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "at_ms",
+            "external_commit"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ProtectionExternalCommit": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ProtectionExternalCommitNotInvoked"
+        },
+        {
+          "$ref": "#/$defs/ProtectionExternalCommitUnknown"
+        },
+        {
+          "$ref": "#/$defs/ProtectionExternalCommitConfirmed"
+        }
+      ]
+    },
+    "ProtectionExternalCommitConfirmed": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "confirmed_at_ms": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/UInt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "const": "confirmed",
+          "type": "string"
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms",
+        "confirmed_at_ms"
+      ],
+      "type": "object"
+    },
+    "ProtectionExternalCommitNotInvoked": {
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "const": "not_invoked",
+          "type": "string"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "type": "object"
+    },
+    "ProtectionExternalCommitUnknown": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "state": {
+          "const": "outcome_unknown",
+          "type": "string"
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms"
+      ],
+      "type": "object"
+    },
+    "ProtectionIntegrity": {
+      "additionalProperties": false,
+      "properties": {
+        "checksums": {
+          "enum": [
+            "absent",
+            "verified_document_1"
+          ],
+          "type": "string"
+        },
+        "signature": {
+          "enum": [
+            "absent",
+            "verified_self_key",
+            "verified_pinned_key"
+          ],
+          "type": "string"
+        },
+        "signature_content_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "const": null,
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "checksums",
+        "signature",
+        "signature_content_digest"
+      ],
+      "type": "object"
+    },
+    "ProtectionProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "enum": [
+            "kdna.envelope.aead",
+            "kdna.envelope.external-grant"
+          ],
+          "type": "string"
+        },
+        "version": {
+          "const": "0.1.0",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "version"
+      ],
+      "type": "object"
+    },
+    "ProtectionReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        },
+        "authorization": {
+          "$ref": "#/$defs/ProtectionAuthorization"
+        },
+        "checked_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "contract": {
+          "$ref": "#/$defs/ProtectionContractIdentity"
+        },
+        "encryption": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ProtectionProfile"
+            },
+            {
+              "const": null,
+              "type": "null"
+            }
+          ]
+        },
+        "entry": {
+          "const": "payload.kdnab",
+          "type": "string"
+        },
+        "integrity": {
+          "$ref": "#/$defs/ProtectionIntegrity"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "plaintext_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "const": null,
+              "type": "null"
+            }
+          ]
+        },
+        "proof": {
+          "const": "observation_not_authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contract",
+        "operation_id",
+        "A",
+        "C",
+        "E",
+        "entry",
+        "encryption",
+        "plaintext_digest",
+        "integrity",
+        "authorization",
+        "checked_at_ms",
+        "proof"
+      ],
+      "type": "object"
+    },
+    "ReadDiagnostic": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/ReadDiagnosticCode"
+        },
+        "field": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "severity": {
+          "enum": [
+            "error",
+            "warning"
+          ],
+          "type": "string"
+        },
+        "stage": {
+          "$ref": "#/$defs/ReadStage"
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "stage",
+        "severity",
+        "subject",
+        "field"
+      ],
+      "type": "object"
+    },
+    "ReadDiagnosticCode": {
+      "enum": [
+        "READ_INPUT_INVALID",
+        "READ_SNAPSHOT_UNATTESTED",
+        "READ_CORE_CAPABILITY_UNAVAILABLE",
+        "READ_UNSUPPORTED_VERSION",
+        "READ_MIXED_VERSION_TUPLE",
+        "READ_CORE_INVALID",
+        "READ_INTERPRETATION_INCOMPLETE",
+        "READ_STATIC_POLICY_INVALID",
+        "READ_ASSET_MISMATCH",
+        "READ_ASSET_VERSION_MISMATCH",
+        "READ_SELECTION_NOT_FOUND",
+        "READ_SELECTION_AMBIGUOUS",
+        "READ_HANDLE_UNTRUSTED",
+        "READ_HANDLE_VERSION_MISMATCH",
+        "READ_HANDLE_STALE",
+        "READ_HANDLE_ASSET_MISMATCH",
+        "READ_HANDLE_SCOPE_MISMATCH",
+        "READ_HOST_CONTEXT_UNTRUSTED",
+        "READ_HOST_EPOCH_MISMATCH",
+        "READ_HOST_TIME_INVALID",
+        "READ_HANDLE_EXPIRED",
+        "READ_HOST_CONTEXT_EXPIRED",
+        "READ_HOST_DENIED",
+        "READ_SCOPE_DENIED",
+        "READ_PROJECTION_INVALID",
+        "READ_BUDGET_INSUFFICIENT",
+        "READ_COMPONENT_DECLARATION_INVALID",
+        "READ_COMPONENT_CONTENT_INVALID",
+        "READ_COMPONENT_REFERENCE_INVALID",
+        "READ_COMPONENT_GRAPH_CYCLE",
+        "READ_COMPONENT_LIMIT_EXCEEDED",
+        "READ_COMPONENT_BINDING_INVALID",
+        "READ_COMPONENT_ADOPTION_INVALID",
+        "READ_METHOD_PRESENCE_INVALID",
+        "READ_R2_STRUCTURE_INVALID",
+        "READ_R2_REFERENCE_INVALID",
+        "READ_R2_METHOD_INVALID",
+        "READ_R2_PLAN_INVALID",
+        "READ_R2_POLICY_INVALID",
+        "READ_R2_SCOPE_INVALID",
+        "READ_R2_EXAMPLE_INVALID",
+        "READ_R2_HISTORY_INVALID",
+        "READ_UNSUPPORTED_CRITICAL",
+        "READ_UNRESOLVED_EXTERNAL"
+      ],
+      "type": "string"
+    },
+    "ReadStage": {
+      "enum": [
+        "input",
+        "version",
+        "core",
+        "selection",
+        "handle",
+        "host",
+        "projection",
+        "budget"
+      ],
+      "type": "string"
+    },
+    "SourceCapability": {
+      "additionalProperties": false,
+      "properties": {
+        "asset_capability": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AssetCapability"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "interpretation": {
+          "const": "blocked",
+          "type": "string"
+        },
+        "revision": {
+          "const": false,
+          "type": "boolean"
+        },
+        "source_opening": {
+          "const": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_opening",
+        "revision",
+        "interpretation",
+        "asset_capability"
+      ],
+      "type": "object"
+    },
+    "SourceCoreRejected": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "const": 0,
+          "type": "integer"
+        },
+        "core": {
+          "$ref": "#/$defs/CoreAdmissionRejected"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/ProtectionDisclosure"
+        },
+        "stage": {
+          "const": "admission",
+          "type": "string"
+        },
+        "status": {
+          "const": "core_rejected",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "stage",
+        "core",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "type": "object"
+    },
+    "SourceDiagnostic": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "enum": [
+            "SOURCE_INPUT_INVALID",
+            "SOURCE_HOST_UNTRUSTED",
+            "SOURCE_EXPECTED_ASSET_MISMATCH",
+            "SOURCE_HOST_DENIED",
+            "SOURCE_PERMISSION_REJECTED",
+            "SOURCE_CONTEXT_UNTRUSTED",
+            "SOURCE_CONTEXT_CLOSED",
+            "SOURCE_DEADLINE_EXCEEDED",
+            "SOURCE_PROVIDER_FAILED",
+            "SOURCE_HANDOFF_UNKNOWN",
+            "SOURCE_CAPABILITY_UNAVAILABLE",
+            "SOURCE_DRAFT_INVALID",
+            "SOURCE_INTERPRETATION_INCOMPLETE",
+            "SOURCE_POLICY_INVALID",
+            "SOURCE_OUTPUT_INVALID"
+          ],
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "input",
+            "admission",
+            "authorization",
+            "semantic",
+            "return",
+            "output"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "stage"
+      ],
+      "type": "object"
+    },
+    "SourceFailed": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "const": 0,
+          "type": "integer"
+        },
+        "diagnostic": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/SourceDiagnostic"
+            },
+            {
+              "$ref": "#/$defs/ProtectionDiagnostic"
+            }
+          ]
+        },
+        "disclosure": {
+          "$ref": "#/$defs/ProtectionDisclosure"
+        },
+        "status": {
+          "const": "source_failed",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "type": "object"
+    },
+    "SourceHostObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "asset_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "context_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "current_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "epoch": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "expires_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "permission": {
+          "enum": [
+            "allowed",
+            "denied"
+          ],
+          "type": "string"
+        },
+        "revoked": {
+          "type": "boolean"
+        },
+        "scope": {
+          "const": "complete_source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "context_id",
+        "epoch",
+        "asset_digest",
+        "permission",
+        "scope",
+        "current_ms",
+        "expires_at_ms",
+        "revoked"
+      ],
+      "type": "object"
+    },
+    "SourcePreviewRejected": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "const": 0,
+          "type": "integer"
+        },
+        "diagnostic": {
+          "$ref": "#/$defs/SourceDiagnostic"
+        },
+        "status": {
+          "const": "preview_rejected",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic",
+        "body",
+        "body_bytes"
+      ],
+      "type": "object"
+    },
+    "SourcePreviewValid": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "const": 0,
+          "type": "integer"
+        },
+        "status": {
+          "const": "preview_valid",
+          "type": "string"
+        },
+        "validation": {
+          "$ref": "#/$defs/SourcePreviewValidation"
+        }
+      },
+      "required": [
+        "status",
+        "validation",
+        "body",
+        "body_bytes"
+      ],
+      "type": "object"
+    },
+    "SourcePreviewValidation": {
+      "additionalProperties": false,
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/ProtectionContractIdentity"
+        },
+        "edits_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "implementation": {
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "const": "@aikdna/kdna-core",
+              "type": "string"
+            },
+            "version": {
+              "const": "0.36.0-rc.r2.5",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "version"
+          ],
+          "type": "object"
+        },
+        "original_payload_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "policy_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "proof": {
+          "const": "semantic_validation_not_ciphertext_admission",
+          "type": "string"
+        },
+        "semantic_status": {
+          "const": "valid",
+          "type": "string"
+        },
+        "source_A": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "contract",
+        "implementation",
+        "source_A",
+        "original_payload_digest",
+        "edits_digest",
+        "policy_digest",
+        "semantic_status",
+        "proof"
+      ],
+      "type": "object"
+    },
+    "TechnicalState": {
+      "enum": [
+        "not_evaluated",
+        "valid",
+        "invalid"
+      ],
+      "type": "string"
+    },
+    "Text": {
+      "type": "string"
+    },
+    "UInt": {
+      "maximum": 9007199254740991,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "$id": "urn:kdna:schema:protected-source:1.0.0:binding:r2:5",
+  "$ref": "#/$defs/ProtectedSourceObservation",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Protected-source observations only. Opaque authorities have no JSON representation; validating an observation proves no permission, no delivery and no authority.",
+  "title": "ProtectedSourceObservation"
+}

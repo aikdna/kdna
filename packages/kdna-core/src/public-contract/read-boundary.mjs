@@ -1,1 +1,1 @@
-export { inspectSnapshot } from './read-boundary.js';
+export { inspectSnapshot, isProtectedSnapshot } from './read-boundary.js';

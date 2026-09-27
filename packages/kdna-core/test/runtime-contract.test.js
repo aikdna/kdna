@@ -8,13 +8,12 @@ const os = require('node:os');
 const path = require('node:path');
 const {
   installPackedCoreOffline,
-  representativeTypesSource,
   runNpmWithCache,
   runTsc,
   withTempNpmCache,
 } = require('./package-test-helpers');
 
-const core = require('../src');
+const core = { ...require('../src/runtime-capsule'), ...require('../src/runtime-contract') };
 const PACKAGE_ROOT = path.resolve(__dirname, '..');
 const REPO_ROOT = path.resolve(PACKAGE_ROOT, '..', '..');
 const golden = core.parseRuntimeContractJson(
@@ -703,13 +702,13 @@ test('all stable runtime contract exports are symmetric across CJS, ESM, and dec
   }
 });
 
-test('TypeScript declarations compile for stable Runtime Contract public calls', () => {
+test('TypeScript declarations compile for legacy source Runtime Contract calls', () => {
   const tmp = fs.mkdtempSync(path.join(PACKAGE_ROOT, 'test', 'tmp-execution-types-'));
   try {
     fs.writeFileSync(
       path.join(tmp, 'check.ts'),
       [
-        "import { parseRuntimeContractJson, validateConsumptionPlan, buildPreHostBudgetBlockedTrace, validatePreHostBudgetBlockedTrace, KDNAConsumptionPlan, KDNAJudgmentTrace, KDNARuntimePairContext, KDNAAgentHostValidationContext, KDNARuntimeCapsule } from '../..';",
+        "import { parseRuntimeContractJson, validateConsumptionPlan, buildPreHostBudgetBlockedTrace, validatePreHostBudgetBlockedTrace, KDNAConsumptionPlan, KDNAJudgmentTrace, KDNARuntimePairContext, KDNAAgentHostValidationContext, KDNARuntimeCapsule } from '../../src/types';",
         'const value = parseRuntimeContractJson("{}");',
         'declare const plan: KDNAConsumptionPlan;',
         'declare const trace: KDNAJudgmentTrace;',
@@ -744,7 +743,7 @@ test('TypeScript declarations compile for stable Runtime Contract public calls',
   }
 });
 
-test('npm pack cold install validates the stable Runtime Contract, entrypoints, and types while offline', { timeout: 120000 }, () => {
+test('npm pack cold install validates retained internal Runtime Contract and current public entrypoints while offline', { timeout: 120000 }, () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kdna-core-cold-'));
   try {
     installPackedCoreOffline(tmp);
@@ -765,22 +764,23 @@ test('npm pack cold install validates the stable Runtime Contract, entrypoints, 
       "const assert = require('node:assert/strict');",
       "const fs = require('node:fs');",
       "const core = require('@aikdna/kdna-core');",
+      "const legacy = require(require('node:path').join(require('node:path').dirname(require.resolve('@aikdna/kdna-core/package.json')), 'src/runtime-contract.js'));",
       "const remoteRuntime = require('@aikdna/kdna-core/remote-runtime');",
       "assert.deepEqual(Object.keys(remoteRuntime), ['loadRemoteRuntimeAsset']);",
       "assert.equal(core.loadRemoteRuntimeAsset, undefined);",
       "assert.throws(() => require('@aikdna/kdna-core/src/container/index.js'), (error) => error && error.code === 'ERR_PACKAGE_PATH_NOT_EXPORTED');",
       "const raw = fs.readFileSync('golden.json');",
-      'const golden = core.parseRuntimeContractJson(raw);',
-      'const result = core.validateConsumptionPlan(golden.plan, { trustedPlanDigest: golden.plan.integrity.plan_digest });',
+      'const golden = legacy.parseRuntimeContractJson(raw);',
+      'const result = legacy.validateConsumptionPlan(golden.plan, { trustedPlanDigest: golden.plan.integrity.plan_digest });',
       "if (!result.valid) throw new Error(result.code);",
-      "if (core.computeConsumptionPlanDigest(golden.plan) !== golden.plan.integrity.plan_digest) throw new Error('digest mismatch');",
+      "if (legacy.computeConsumptionPlanDigest(golden.plan) !== golden.plan.integrity.plan_digest) throw new Error('digest mismatch');",
       'const limitedPlan = structuredClone(golden.plan);',
       'limitedPlan.budget.max_projection_chars = 1;',
-      'limitedPlan.integrity.plan_digest = core.computeConsumptionPlanDigest(limitedPlan);',
+      'limitedPlan.integrity.plan_digest = legacy.computeConsumptionPlanDigest(limitedPlan);',
       "const executionContext = { plan: limitedPlan, trustedPlanDigest: limitedPlan.integrity.plan_digest, capabilities: golden.capabilities, coreCapsuleVersions: ['0.1.0'] };",
-      "const blocked = core.buildPreHostBudgetBlockedTrace({ trace_id: 'trace_0123456789abcdef', timestamp: '2026-07-15T00:00:00.000Z', capsule: golden.request.capsule }, executionContext);",
+      "const blocked = legacy.buildPreHostBudgetBlockedTrace({ trace_id: 'trace_0123456789abcdef', timestamp: '2026-07-15T00:00:00.000Z', capsule: golden.request.capsule }, executionContext);",
       "if (blocked.budget.comparison.projection_chars !== 'exceeded' || blocked.capsule_delivery_evidence.request_id !== null || blocked.host_receipt !== null) throw new Error('packed pre-Host budget evidence mismatch');",
-      'const blockedResult = core.validatePreHostBudgetBlockedTrace(blocked, { ...executionContext, capsule: golden.request.capsule });',
+      'const blockedResult = legacy.validatePreHostBudgetBlockedTrace(blocked, { ...executionContext, capsule: golden.request.capsule });',
       "if (!blockedResult.valid) throw new Error(blockedResult.code);",
       "Promise.all([import('@aikdna/kdna-core'), import('@aikdna/kdna-core/remote-runtime')]).then(([esm, remoteEsm]) => {",
       "  const cjsNames = Object.keys(core).sort();",
@@ -810,7 +810,11 @@ test('npm pack cold install validates the stable Runtime Contract, entrypoints, 
     fs.writeFileSync(
       checkPath,
       [
-        representativeTypesSource('@aikdna/kdna-core'),
+        "import { admitBytes } from '@aikdna/kdna-core';",
+        "const admitted = admitBytes(new Uint8Array());",
+        "const rejected: 'accepted' | 'catalog_only' | 'rejected' = admitted.status;",
+        '// @ts-expect-error the current public root does not restore legacy Runtime APIs',
+        "import { parseRuntimeContractJson } from '@aikdna/kdna-core';",
         "import { loadRemoteRuntimeAsset } from '@aikdna/kdna-core/remote-runtime';",
         'declare const remoteInput: string | Uint8Array;',
         'const remoteCapsule = loadRemoteRuntimeAsset(remoteInput);',

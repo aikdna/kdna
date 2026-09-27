@@ -1,125 +1,126 @@
 {
   "document_kind": "PUBLIC_DESIGN_DECISIONS_NOT_MACHINE_SEMANTIC_SOURCE",
-  "status": "UNPUBLISHED_DESIGN_TARGET",
-  "implementation": "NOT_IMPLEMENTED",
+  "status": "UNPUBLISHED_CANDIDATE",
+  "implementation": "REFERENCE_IMPLEMENTATION",
   "epoch": "OPEN-W1-ADMISSION-REJECTION-01",
   "owner": "Open-A single normative writer under Open commander",
-  "acceptance": "PENDING_INDEPENDENT_AND_SUPER_DIRECTOR",
+  "acceptance": "SEPARATE_BYTE_BOUND_RECEIPT",
   "version_policy": {
-    "status": "UNPUBLISHED_DESIGN_TARGET",
+    "status": "UNPUBLISHED_CANDIDATE",
+    "line": "r2.rc7",
     "supported_tuple": {
-      "container": "0.2.0",
+      "container": "0.5.0",
       "payload_profile": "kdna.payload.judgment",
-      "payload_version": "0.2.0",
-      "core": "kdna.core/0.3.0",
-      "ir": "kdna.canonical-ir/0.2.0",
-      "runtime": "kdna.runtime-capsule/0.2.0",
-      "plan": "kdna.consumption-plan/0.2.0",
-      "host": "kdna.agent-host/0.2.0",
-      "trace": "kdna.judgment-trace/0.2.0",
-      "read": "kdna.read/0.2.0"
+      "payload_version": "0.5.1",
+      "core": "kdna.core/0.8.2",
+      "ir": "kdna.canonical-ir/0.6.1",
+      "runtime": "kdna.runtime-capsule/0.3.1",
+      "plan": "kdna.consumption-plan/0.3.1",
+      "host": "kdna.agent-host/0.3.1",
+      "trace": "kdna.judgment-trace/0.3.1",
+      "read": "kdna.read/0.6.4"
     },
-    "old_line": "0.1 ACTIVE; no deprecation notice; separate old implementation responsibility",
+    "old_line": "Historical artifacts retain their original coordinate meanings; this new implementation admits only the issued R2 tuple.",
     "reject_old": "READ_UNSUPPORTED_VERSION",
     "reject_mixed": "READ_MIXED_VERSION_TUPLE",
-    "matching": "Exact set of ten successful tuple fields. Missing tuple object=input-invalid; all-old complete family=unsupported; any new version-valued coordinate with any missing/different tuple coordinate=mixed (shared payload_profile is excluded from new-family detection); unrelated complete family=unsupported.",
+    "matching": "Exact ten-field current tuple accepted; exact complete target_lines historical tuples unsupported before shared-axis checks; a partly current or mixed tuple rejected as mixed; unrelated complete tuples with no current version-valued coordinate unsupported. Invariant payload_profile alone never establishes a version family.",
     "design_axes": [
       {
         "axis": "container",
-        "target": "0.2.0",
-        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "target": "0.5.0",
+        "status": "UNPUBLISHED_CANDIDATE",
         "source_head": "UNVERIFIED",
-        "normative_aggregate": "NOT_IMPLEMENTED",
+        "normative_aggregate": "SEE_GENERATED_MANIFEST_AND_BYTE_BOUND_ACCEPTANCE",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
         "remote_bytes": "UNVERIFIED"
       },
       {
         "axis": "payload",
-        "target": "kdna.payload.judgment/0.2.0",
-        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "target": "kdna.payload.judgment/0.5.1",
+        "status": "UNPUBLISHED_CANDIDATE",
         "source_head": "UNVERIFIED",
-        "normative_aggregate": "NOT_IMPLEMENTED",
+        "normative_aggregate": "SEE_GENERATED_MANIFEST_AND_BYTE_BOUND_ACCEPTANCE",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
         "remote_bytes": "UNVERIFIED"
       },
       {
         "axis": "core_api",
-        "target": "kdna.core/0.2.0",
-        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "target": "kdna.core/0.8.2",
+        "status": "UNPUBLISHED_CANDIDATE",
         "source_head": "UNVERIFIED",
-        "normative_aggregate": "NOT_IMPLEMENTED",
+        "normative_aggregate": "SEE_GENERATED_MANIFEST_AND_BYTE_BOUND_ACCEPTANCE",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
         "remote_bytes": "UNVERIFIED"
       },
       {
         "axis": "canonical_ir",
-        "target": "kdna.canonical-ir/0.1.0",
-        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "target": "kdna.canonical-ir/0.6.1",
+        "status": "UNPUBLISHED_CANDIDATE",
         "source_head": "UNVERIFIED",
-        "normative_aggregate": "NOT_IMPLEMENTED",
+        "normative_aggregate": "SEE_GENERATED_MANIFEST_AND_BYTE_BOUND_ACCEPTANCE",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
         "remote_bytes": "UNVERIFIED"
       },
       {
         "axis": "runtime_capsule",
-        "target": "kdna.runtime-capsule/0.2.0",
-        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "target": "kdna.runtime-capsule/0.3.1",
+        "status": "UNPUBLISHED_CANDIDATE",
         "source_head": "UNVERIFIED",
-        "normative_aggregate": "NOT_IMPLEMENTED",
+        "normative_aggregate": "SEE_GENERATED_MANIFEST_AND_BYTE_BOUND_ACCEPTANCE",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
         "remote_bytes": "UNVERIFIED"
       },
       {
         "axis": "consumption_plan",
-        "target": "kdna.consumption-plan/0.2.0",
-        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "target": "kdna.consumption-plan/0.3.1",
+        "status": "UNPUBLISHED_CANDIDATE",
         "source_head": "UNVERIFIED",
-        "normative_aggregate": "NOT_IMPLEMENTED",
+        "normative_aggregate": "SEE_GENERATED_MANIFEST_AND_BYTE_BOUND_ACCEPTANCE",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
         "remote_bytes": "UNVERIFIED"
       },
       {
         "axis": "agent_host",
-        "target": "kdna.agent-host/0.2.0",
-        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "target": "kdna.agent-host/0.3.1",
+        "status": "UNPUBLISHED_CANDIDATE",
         "source_head": "UNVERIFIED",
-        "normative_aggregate": "NOT_IMPLEMENTED",
+        "normative_aggregate": "SEE_GENERATED_MANIFEST_AND_BYTE_BOUND_ACCEPTANCE",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
         "remote_bytes": "UNVERIFIED"
       },
       {
         "axis": "trace",
-        "target": "kdna.judgment-trace/0.2.0",
-        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "target": "kdna.judgment-trace/0.3.1",
+        "status": "UNPUBLISHED_CANDIDATE",
         "source_head": "UNVERIFIED",
-        "normative_aggregate": "NOT_IMPLEMENTED",
+        "normative_aggregate": "SEE_GENERATED_MANIFEST_AND_BYTE_BOUND_ACCEPTANCE",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
         "remote_bytes": "UNVERIFIED"
       },
       {
         "axis": "read",
-        "target": "kdna.read/0.1.0",
-        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "target": "kdna.read/0.6.4",
+        "status": "UNPUBLISHED_CANDIDATE",
         "source_head": "UNVERIFIED",
-        "normative_aggregate": "NOT_IMPLEMENTED",
+        "normative_aggregate": "SEE_GENERATED_MANIFEST_AND_BYTE_BOUND_ACCEPTANCE",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
         "remote_bytes": "UNVERIFIED"
       },
       {
         "axis": "package_set_handoff",
-        "target": "kdna.package-set-handoff/0.1.0",
-        "status": "UNPUBLISHED_DESIGN_TARGET",
+        "target": "kdna.package-set-handoff/0.2.1",
+        "status": "UNPUBLISHED_CANDIDATE",
         "source_head": "UNVERIFIED",
-        "normative_aggregate": "NOT_IMPLEMENTED",
+        "normative_aggregate": "SEE_GENERATED_MANIFEST_AND_BYTE_BOUND_ACCEPTANCE",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
         "remote_bytes": "UNVERIFIED"
@@ -129,23 +130,30 @@
       {
         "name": "@aikdna/kdna-core",
         "path": "packages/kdna-core",
-        "candidate_version": "0.23.0",
-        "current_source_version": "0.22.0",
-        "status": "UNPUBLISHED_DESIGN_TARGET",
-        "implementation": "NOT_IMPLEMENTED",
+        "line": "r2.rc7",
+        "candidate_version": "0.36.0-rc.r2.7",
+        "current_source_version": "0.36.0-rc.r2.7",
+        "current_source_version_observed": "2026-09-24",
+        "status": "UNPUBLISHED_CANDIDATE",
+        "implementation": "REFERENCE_IMPLEMENTATION",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
-        "remote_bytes": "UNVERIFIED"
+        "remote_bytes": "UNVERIFIED",
+        "note": "Isolated local R2 candidate label; acceptance, artifacts and release require separately bound evidence."
       },
       {
         "name": "@aikdna/kdna-read",
         "path": "packages/kdna-read",
-        "candidate_version": "0.1.0",
-        "status": "UNPUBLISHED_DESIGN_TARGET",
-        "implementation": "NOT_IMPLEMENTED",
+        "line": "r2.rc7",
+        "candidate_version": "0.11.0-rc.r2.7",
+        "current_source_version": "0.11.0-rc.r2.7",
+        "current_source_version_observed": "2026-09-24",
+        "status": "UNPUBLISHED_CANDIDATE",
+        "implementation": "REFERENCE_IMPLEMENTATION",
         "resolved_artifact_sha256": "UNVERIFIED",
         "registry_tag": "UNVERIFIED",
-        "remote_bytes": "UNVERIFIED"
+        "remote_bytes": "UNVERIFIED",
+        "note": "Isolated local R2 candidate label; acceptance, artifacts and release require separately bound evidence."
       }
     ]
   },
@@ -428,6 +436,32 @@
         "C Agent/MCP/Creation",
         "D HTTP/Remote/Activation; no Reader/KW writes"
       ]
+    },
+    {
+      "id": "PUB08",
+      "chosen": "non_schema_rules[].enforcement records only whether the generator machine-checks a rule: IMPLEMENTED_CROSS_ENTRY_CHECK means a machine check exists and the rule id is bound to the implementation's closed id list, and NOT_IMPLEMENTED_NON_SCHEMA means the generator performs no machine check for that rule while stating nothing about runtime enforcement. Per-rule verdicts are DERIVED, not authored: engineering.rule_coverage is a declarative table of facts per rule (machine_checkers: ids of the closed machine-checked list that cover it; generator_uncovered: clauses that machine check leaves out; runtime_units: path[:lines] implementation citations; runtime_uncovered: clauses no runtime in this repository enforces; proof: the gate and case ids that observed the behaviour), and the generator computes generator_machine_check and runtime_enforcement from it as full, partial or none. engineering.runtime_enforcement_claims in the source carries the same two verdicts only as a cross-checked assertion: generation fails when a claim disagrees with the derived value, so a hand-edited verdict cannot survive. The guards that make the facts checkable are: every machine checker id must be in the closed machine-checked list; every runtime unit must be an existing source file with every cited line inside that file's real line count; every proof entry must name a known gate and case ids that exist in that gate; engineering.runtime_not_implemented must be exactly the set of rules with no runtime unit, so no rule can be silently unenforced; and a rule whose machine check is full must be runtime-enforced in full. Current per-rule coverage is generated in public-diagnostics.json. Source case inventory parses real call expressions, excluding comments and strings, but does not assert those calls executed. One residue is explicitly a human judgement and is not presented as machine-guaranteed: the completeness of generator_uncovered and runtime_uncovered, because a claim about what some code does not do cannot be derived from code existence; the machine guarantees only that every such claim is attached to a resolvable citation and that the verdict follows from the declarations.",
+      "rejected": [
+        "reading NOT_IMPLEMENTED_NON_SCHEMA as 'the runtime does not implement this rule'",
+        "renaming or deleting the existing enforcement value inside the grammar.2 coordinate (the restricted additive window classifies that as REQUIRES_NEW_COORDINATE)",
+        "writing a coverage verdict by hand instead of deriving it, or letting a claim and the derivation disagree",
+        "one value standing for two facts, such as a boolean runtime flag that hides a partially covered requirement, or an unnamed subject on a machine-check flag",
+        "a citation that only proves a file exists: a directory, a non-source file, a line number past the end of the file, a gate that does not exist, or a case id that gate does not contain"
+      ],
+      "deferred": [
+        "whether a future coordinate renames the legacy marker",
+        "whether a future coordinate adds the runtime mechanisms that would turn the four partial runtime verdicts into full ones",
+        "whether the completeness of the uncovered-clause lists can ever be made machine-checkable rather than a reviewed human judgement"
+      ],
+      "basis": [
+        "window-check.mjs classification of the marker rename as REQUIRES_NEW_COORDINATE",
+        "L1 rounds 1-2 per-rule reconciliation: 18 generator-unchecked rules, each with runtime enforcement evidence",
+        "specs/public-version-policy.md restricted additive window: adding a data registry under engineering is in-window",
+        "L1 round-4/5 registry review: subject naming, three-valued coverage, split implementation/proof citations, and derivation from a declarative coverage table"
+      ],
+      "downstream": [
+        "specs/public-diagnostics.json and packages/kdna-core/schema/public-diagnostics.json carry the derived generator_machine_check, generator_machine_check_gap, runtime_enforcement, runtime_enforcement_gap, implementation_sites and structured proof per rule",
+        "no consumer must change to keep reading enforcement; consumers that need runtime truth read the derived fields"
+      ]
     }
   ],
   "read_contract": "read-contract.md",
@@ -439,6 +473,7 @@
     "READ_MIXED_VERSION_TUPLE",
     "READ_CORE_INVALID",
     "READ_INTERPRETATION_INCOMPLETE",
+    "READ_STATIC_POLICY_INVALID",
     "READ_ASSET_MISMATCH",
     "READ_ASSET_VERSION_MISMATCH",
     "READ_SELECTION_NOT_FOUND",
@@ -476,9 +511,47 @@
     "READ_COMPONENT_LIMIT_EXCEEDED",
     "READ_COMPONENT_BINDING_INVALID",
     "READ_COMPONENT_ADOPTION_INVALID",
-    "READ_METHOD_PRESENCE_INVALID"
+    "READ_METHOD_PRESENCE_INVALID",
+    "READ_ANALYSIS_ASSET_MISMATCH",
+    "READ_ANALYSIS_ENVELOPE_INVALID",
+    "READ_ANALYSIS_INPUT_INVALID",
+    "READ_ANALYSIS_NODE_CONFLICT",
+    "READ_ANALYSIS_READY_REQUIRED",
+    "READ_ANALYSIS_REFERENCE_AMBIGUOUS",
+    "READ_ANALYSIS_REFERENCE_UNRESOLVED",
+    "READ_ANALYSIS_RELATIONSHIP_AMBIGUOUS",
+    "READ_ANALYSIS_SELECTED_CONTENT_REQUIRED",
+    "READ_ANALYSIS_SELECTION_BINDING_INVALID",
+    "READ_ANALYSIS_SELECTION_MISMATCH",
+    "READ_ANALYSIS_SOURCE_AMBIGUOUS",
+    "READ_ANALYSIS_TUPLE_MISMATCH",
+    "EXECUTION_INPUT_INVALID",
+    "EXECUTION_SCHEMA_INVALID",
+    "EXECUTION_VERSION_UNSUPPORTED",
+    "EXECUTION_SOURCE_UNATTESTED",
+    "EXECUTION_BINDING_INVALID",
+    "EXECUTION_UNRESOLVED_EXTERNAL",
+    "EXECUTION_SELECTION_INVALID",
+    "EXECUTION_BUDGET_EXCEEDED",
+    "EXECUTION_HOST_INVALID",
+    "EXECUTION_HOST_DENIED",
+    "EXECUTION_HOST_EXPIRED",
+    "EXECUTION_DELIVERY_INVALID",
+    "EXECUTION_PROVIDER_FAILED",
+    "EXECUTION_REPLAY",
+    "EXECUTION_OUTCOME_FAILED",
+    "READ_R2_STRUCTURE_INVALID",
+    "READ_R2_REFERENCE_INVALID",
+    "READ_R2_METHOD_INVALID",
+    "READ_R2_PLAN_INVALID",
+    "READ_R2_POLICY_INVALID",
+    "READ_R2_SCOPE_INVALID",
+    "READ_R2_EXAMPLE_INVALID",
+    "READ_R2_HISTORY_INVALID",
+    "READ_UNSUPPORTED_CRITICAL",
+    "READ_UNRESOLVED_EXTERNAL"
   ],
-  "source_of_future_machine_semantics": "specs/public-semantic-source.json (PLANNED_NOT_PRESENT)",
+  "source_of_future_machine_semantics": "specs/public-semantic-source.json (PRESENT: 768992 bytes, sha256 24b3c4e75648c3f56908831c84015558125d58d0fc1b640453f88e380573b249)",
   "evidence_policy": {
     "W0_machine": {
       "path": "docs/audits/OPEN-WAVE0-PUBLIC-BASELINE.json",
@@ -492,7 +565,7 @@
     "private_inputs": "Only accepted technical propositions inherited through W0; no private research/session/asset body copied"
   },
   "aggregate_policy": "Return SHA256 of sorted six-file rows {path,bytes,sha256}, compact UTF-8 JSON, row keys in that order, no LF. Full exact bytes of each of six artifacts, including SPEC-INDEX new bytes. Aggregate stored only in formal return/temp receipt, never in one of the six files; not full normative/generated closure.",
-  "vector_contract": "conformance/public-contract-decision-vectors.json; all NOT_RUN",
+  "vector_contract": "conformance/public-contract-decision-vectors.json; executable expectations. Observed results and proof limits live in byte-bound acceptance receipts.",
   "not_proved": [
     "Core/Read implementation",
     "generated normative closure",
@@ -541,6 +614,7 @@
     "READ_MIXED_VERSION_TUPLE": "read",
     "READ_CORE_INVALID": "read",
     "READ_INTERPRETATION_INCOMPLETE": "read",
+    "READ_STATIC_POLICY_INVALID": "read",
     "READ_ASSET_MISMATCH": "read",
     "READ_ASSET_VERSION_MISMATCH": "read",
     "READ_SELECTION_NOT_FOUND": "read",
@@ -578,7 +652,45 @@
     "READ_COMPONENT_LIMIT_EXCEEDED": "Core component static interpretation",
     "READ_COMPONENT_BINDING_INVALID": "Core component static interpretation",
     "READ_COMPONENT_ADOPTION_INVALID": "Core component static interpretation",
-    "READ_METHOD_PRESENCE_INVALID": "Core component static interpretation"
+    "READ_METHOD_PRESENCE_INVALID": "Core component static interpretation",
+    "READ_ANALYSIS_ASSET_MISMATCH": "read_analysis_data_validation",
+    "READ_ANALYSIS_ENVELOPE_INVALID": "read_analysis_data_validation",
+    "READ_ANALYSIS_INPUT_INVALID": "read_analysis_data_validation",
+    "READ_ANALYSIS_NODE_CONFLICT": "read_analysis_data_validation",
+    "READ_ANALYSIS_READY_REQUIRED": "read_analysis_data_validation",
+    "READ_ANALYSIS_REFERENCE_AMBIGUOUS": "read_analysis_data_validation",
+    "READ_ANALYSIS_REFERENCE_UNRESOLVED": "read_analysis_data_validation",
+    "READ_ANALYSIS_RELATIONSHIP_AMBIGUOUS": "read_analysis_data_validation",
+    "READ_ANALYSIS_SELECTED_CONTENT_REQUIRED": "read_analysis_data_validation",
+    "READ_ANALYSIS_SELECTION_BINDING_INVALID": "read_analysis_data_validation",
+    "READ_ANALYSIS_SELECTION_MISMATCH": "read_analysis_data_validation",
+    "READ_ANALYSIS_SOURCE_AMBIGUOUS": "read_analysis_data_validation",
+    "READ_ANALYSIS_TUPLE_MISMATCH": "read_analysis_data_validation",
+    "EXECUTION_INPUT_INVALID": "execution",
+    "EXECUTION_SCHEMA_INVALID": "execution",
+    "EXECUTION_VERSION_UNSUPPORTED": "execution",
+    "EXECUTION_SOURCE_UNATTESTED": "execution",
+    "EXECUTION_BINDING_INVALID": "execution",
+    "EXECUTION_SELECTION_INVALID": "execution",
+    "EXECUTION_BUDGET_EXCEEDED": "execution",
+    "EXECUTION_HOST_INVALID": "execution",
+    "EXECUTION_HOST_DENIED": "execution",
+    "EXECUTION_HOST_EXPIRED": "execution",
+    "EXECUTION_DELIVERY_INVALID": "execution",
+    "EXECUTION_PROVIDER_FAILED": "execution",
+    "EXECUTION_REPLAY": "execution",
+    "EXECUTION_OUTCOME_FAILED": "execution",
+    "READ_R2_STRUCTURE_INVALID": "semantic",
+    "READ_R2_REFERENCE_INVALID": "semantic",
+    "READ_R2_METHOD_INVALID": "semantic",
+    "READ_R2_PLAN_INVALID": "semantic",
+    "READ_R2_POLICY_INVALID": "semantic",
+    "READ_R2_SCOPE_INVALID": "semantic",
+    "READ_R2_EXAMPLE_INVALID": "semantic",
+    "READ_R2_HISTORY_INVALID": "semantic",
+    "READ_UNSUPPORTED_CRITICAL": "semantic",
+    "READ_UNRESOLVED_EXTERNAL": "semantic",
+    "EXECUTION_UNRESOLVED_EXTERNAL": "execution"
   },
   "admission_first_error_order": [
     "representation",
@@ -616,5 +728,320 @@
     "definition_digest": "sha256:901319e594515f1a60a2a3b82c6900d54bbcfbfb7814f6cc356fa9d1b979924b",
     "wire_unchanged": "0.2.0",
     "scope": "Finite CS1 interpretation and explicit public mapping; existing assets and prior accepted graph retained. New static records do not prove external adoption."
+  },
+  "grammar_3_decisions": {
+    "focus": "Authored question or decision problem; answer or rule stays in result/formation_rule.statement. No natural-language punctuation validator.",
+    "catalog_label": "Explicit label else exact judgment ID, never authored body fallback.",
+    "lifecycle": "Complete AssetIdentity and judgment_id; local resolution/acyclicity/mandatory closure; external declaration unresolved and unverified. active/withdrawn forbid replacements, superseded requires them, deprecated permits them. Absence implies no state.",
+    "execution": "Native 0.2 formats and configured Host reference implementation; untrusted wire cannot mint admission, permission or authenticated execution evidence.",
+    "version": "New grammar.3 tuple for changed lifecycle shape and constraints; no implicit conversion or old tuple reads."
+  },
+  "r2_version_decision": {
+    "id": "S12-D001",
+    "status": "ISSUED_FOR_ISOLATED_IMPLEMENTATION_NOT_ACCEPTANCE",
+    "manifest_schema": {
+      "id": "urn:kdna:schema:manifest:container:0.5.0:profile:kdna.payload.judgment:0.5.1",
+      "path": "schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
+      "package_path": "packages/kdna-core/schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
+      "selector": {
+        "format_version": "0.5.0",
+        "compatibility.profile": "kdna.payload.judgment",
+        "compatibility.profile_version": "0.5.0"
+      },
+      "old_schema_preserved_byte_for_byte": true,
+      "no_new_manifest_selector_field": true
+    },
+    "additional_coordinate_impacts": {
+      "read_transport_admission": {
+        "contract": "kdna.read-transport-admission/0.2.1",
+        "schema_id": "urn:kdna:schema:read-transport-admission:0.2.1",
+        "new_spec_schema": "specs/read-transport-admission-0.2.1.schema.json",
+        "new_package_schema": "packages/kdna-read/schema/read-transport-admission-0.2.1.schema.json"
+      },
+      "package_set_handoff": {
+        "contract": "kdna.package-set-handoff/0.2.1",
+        "tuple": {
+          "container": "0.5.0",
+          "payload_profile": "kdna.payload.judgment",
+          "payload_version": "0.5.0",
+          "core": "kdna.core/0.8.0",
+          "ir": "kdna.canonical-ir/0.6.1",
+          "runtime": "kdna.runtime-capsule/0.3.1",
+          "plan": "kdna.consumption-plan/0.3.1",
+          "host": "kdna.agent-host/0.3.1",
+          "trace": "kdna.judgment-trace/0.3.1",
+          "read": "kdna.read/0.6.0"
+        }
+      }
+    },
+    "historical_note": "D001 initial R2 coordinate; current Core coordinate and dependent actual tuple superseded by S12-D011 revision2. Manifest selector and other axes remain."
+  },
+  "r2_dependent_binding_decision": {
+    "id": "S12-D003",
+    "at": "2026-09-23T15:33:54.749283+00:00",
+    "status": "ISSUED_FOR_ISOLATED_IMPLEMENTATION_NOT_ACCEPTANCE",
+    "commander_thread_id": "01a0bc83-1463-7a11-b7ef-9eac7dbca720",
+    "executor_thread_id": "01a0cecc-e50e-7a20-865d-58fcbeb9a78e",
+    "protection": {
+      "id": "kdna.protection-admission/1",
+      "version": "1.0.0",
+      "schema_id": "urn:kdna:schema:protection-admission:1.0.0:binding:r2:2",
+      "schema_path": "specs/protection-admission-r2-binding-2.schema.json",
+      "retained_old_path": "specs/protection-admission.schema.json"
+    },
+    "package_set_node": {
+      "contract": "kdna.package-set-node/0.2.1",
+      "module_version": "0.2.0",
+      "schema_id": "urn:kdna:schema:package-set-node:0.2.1",
+      "schema_path": "specs/package-set-node-0.2.1.schema.json",
+      "retained_old_path": "specs/package-set-node.schema.json"
+    },
+    "external_grant_issuer": {
+      "id": "kdna.external-grant-issuer/1",
+      "version": "1.0.0",
+      "schema_id": "urn:kdna:schema:external-grant-issuer:1.0.0:binding:r2:2",
+      "schema_path": "specs/external-grant-issuer-r2-binding-2.schema.json",
+      "retained_old_path": "specs/external-grant-issuer.schema.json"
+    },
+    "binding": {
+      "version_tuple": {
+        "container": "0.5.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.5.0",
+        "core": "kdna.core/0.8.0",
+        "ir": "kdna.canonical-ir/0.6.1",
+        "runtime": "kdna.runtime-capsule/0.3.1",
+        "plan": "kdna.consumption-plan/0.3.1",
+        "host": "kdna.agent-host/0.3.1",
+        "trace": "kdna.judgment-trace/0.3.1",
+        "read": "kdna.read/0.6.0"
+      },
+      "package_versions": {
+        "@aikdna/kdna-core": "0.36.0-rc.r2.2",
+        "@aikdna/kdna-read": "0.11.0-rc.r2.2"
+      }
+    },
+    "protected_source": "Retain /1 and existing schema coordinate only if generated reachable schema meaning/bytes unchanged; runtime integration still requires evidence.",
+    "live_writes_authorized": false,
+    "stage1_accepted": false,
+    "stage2_accepted": false,
+    "details": "DECISION.md",
+    "inputs": "INPUTS.json"
+  },
+  "r2_additional_decision_D004": {
+    "id": "S12-D004",
+    "at": "2026-09-23T15:43:59.975301+00:00",
+    "status": "ISSUED_FOR_ISOLATED_IMPLEMENTATION_NOT_ACCEPTANCE",
+    "commander_thread_id": "01a0bc83-1463-7a11-b7ef-9eac7dbca720",
+    "executor_thread_id": "01a0cecc-e50e-7a20-865d-58fcbeb9a78e",
+    "supersedes": "S12-D003 conditional retention of protected-source schema coordinate; rest unchanged",
+    "protected_source": {
+      "id": "kdna.protected-source/1",
+      "version": "1.0.0",
+      "schema_id": "urn:kdna:schema:protected-source:1.0.0:binding:r2:2",
+      "schema_path": "specs/protected-source-r2-binding-2.schema.json",
+      "retained_old_path": "specs/protected-source.schema.json"
+    },
+    "binding": {
+      "version_tuple": {
+        "container": "0.5.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.5.0",
+        "core": "kdna.core/0.8.0",
+        "ir": "kdna.canonical-ir/0.6.1",
+        "runtime": "kdna.runtime-capsule/0.3.1",
+        "plan": "kdna.consumption-plan/0.3.1",
+        "host": "kdna.agent-host/0.3.1",
+        "trace": "kdna.judgment-trace/0.3.1",
+        "read": "kdna.read/0.6.0"
+      },
+      "package_versions": {
+        "@aikdna/kdna-core": "0.36.0-rc.r2.2",
+        "@aikdna/kdna-read": "0.11.0-rc.r2.2"
+      }
+    },
+    "live_writes_authorized": false,
+    "stage1_accepted": false,
+    "stage2_accepted": false,
+    "details": "DECISION.md",
+    "inputs": "INPUTS.json"
+  },
+  "r2_additional_decision_D005": {
+    "id": "S12-D005",
+    "at": "2026-09-23T15:47:24.246797+00:00",
+    "status": "ISSUED_FOR_ISOLATED_IMPLEMENTATION_NOT_ACCEPTANCE",
+    "commander_thread_id": "01a0bc83-1463-7a11-b7ef-9eac7dbca720",
+    "executor_thread_id": "01a0cecc-e50e-7a20-865d-58fcbeb9a78e",
+    "definition": {
+      "id": "kdna.static-policy/2",
+      "version": "2.0.0",
+      "carrier_id": "kdna.static-policy/2",
+      "carrier_location": "Judgment.extensions",
+      "critical": true
+    },
+    "projection": "IRNode_judgment.static_policy_interpretation; typed IR-owned field, not new authored Judgment field and not a new Ref kind",
+    "formation_requirements": "owning judgment form=rule; formation_rule.condition_refs explicit []; native formation_rule.policy absent; actual matching result contract",
+    "legacy_id": "kdna.static-policy/1",
+    "legacy_digest": "sha256:a28980e46f5f24a9a5190fcd380b813f996db307603620d3f2ab1a14ffb679bb",
+    "live_writes_authorized": false,
+    "stage1_accepted": false,
+    "stage2_accepted": false,
+    "details": "DECISION.md",
+    "inputs": "INPUTS.json"
+  },
+  "r2_candidate_corrections": {
+    "D006": "Distinct Core0.36.0-rc.r2.2/Read0.11.0-rc.r2.2 and fixed wrapper binding2; unchanged target Tuple; retain unaccepted rc1 artifacts.",
+    "D007": "Catalog-only related questions are not automatic full-body requests.",
+    "D008": "Explicit expansion supplies only exact target and necessary closure.",
+    "D009": "Common deterministic selected context; Capsule catalog/omissions; full source and projected digest bindings.",
+    "D010": "Body-free EXECUTION_UNRESOLVED_EXTERNAL for mandatory external content absent from selected supply."
+  },
+  "r2_installation_boundary_decision_D011": {
+    "decision": "S12-D011 revision2",
+    "versionTuple": {
+      "container": "0.5.0",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.5.0",
+      "core": "kdna.core/0.8.2",
+      "ir": "kdna.canonical-ir/0.6.1",
+      "runtime": "kdna.runtime-capsule/0.3.1",
+      "plan": "kdna.consumption-plan/0.3.1",
+      "host": "kdna.agent-host/0.3.1",
+      "trace": "kdna.judgment-trace/0.3.1",
+      "read": "kdna.read/0.6.0"
+    },
+    "package_versions": {
+      "core": "0.36.0-rc.r2.3",
+      "read": "0.11.0-rc.r2.3"
+    },
+    "guard": {
+      "decision": "S12-D011 revision2",
+      "failure": "READ_CORE_CAPABILITY_UNAVAILABLE",
+      "order": "After valid request/version admission, before Core input admission and Host observation; direct project before body supply.",
+      "metadata": "Actual Core and Read package names, exact versions and exact Read peer must match independent generated expectations.",
+      "runtime": "The existing genuine branded snapshot full VersionTuple comparison is separately mandatory; metadata-only changes cannot replace the compiled Core coordinate.",
+      "proof_limit": "Installation mismatch guard, not authentication of arbitrarily replaced package code; historical old-old combinations remain unchanged."
+    },
+    "public_surface": "No public callable, signature, type or diagnostic added; inspectSnapshot and private Core brand remain unchanged.",
+    "history": "RC1/RC2 are unaccepted superseded candidates; all frozen artifacts and fixed binding1/2 bytes retained."
+  },
+  "r2_browser_read_decision_D012": {
+    "decision": "S12-D012",
+    "versionTuple": {
+      "container": "0.5.0",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.5.0",
+      "core": "kdna.core/0.8.2",
+      "ir": "kdna.canonical-ir/0.6.1",
+      "runtime": "kdna.runtime-capsule/0.3.1",
+      "plan": "kdna.consumption-plan/0.3.1",
+      "host": "kdna.agent-host/0.3.1",
+      "trace": "kdna.judgment-trace/0.3.1",
+      "read": "kdna.read/0.6.1"
+    },
+    "package_versions": {
+      "core": "0.36.0-rc.r2.4",
+      "read": "0.11.0-rc.r2.4"
+    },
+    "guard": {
+      "decision": "S12-D011 revision2 plus S12-D012",
+      "failure": "READ_CORE_CAPABILITY_UNAVAILABLE",
+      "order": "After valid request/version admission, before Core input admission and Host observation; direct project before body supply.",
+      "metadata": "Actual Core and Read package names, exact versions and exact Read peer must match independent generated expectations.",
+      "runtime": "The existing genuine branded snapshot full VersionTuple comparison is separately mandatory; metadata-only changes cannot replace the compiled Core and Read coordinates.",
+      "proof_limit": "Installation mismatch guard, not authentication of arbitrarily replaced package code; historical old-old combinations remain unchanged."
+    },
+    "read_schema_id": "urn:kdna:schema:read:0.6.1",
+    "repair": "Optional Node environment access defaults safely in Browser; no shim or public API change.",
+    "history": "RC1-RC3 frozen originals, old Read0.6 and binding1-3 remain unaccepted history; exact old RC3 tuple unsupported."
+  },
+  "r2_current_navigation_decision_D013": {
+    "decision": "S12-D013",
+    "versionTuple": {
+      "container": "0.5.0",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.5.0",
+      "core": "kdna.core/0.8.2",
+      "ir": "kdna.canonical-ir/0.6.1",
+      "runtime": "kdna.runtime-capsule/0.3.1",
+      "plan": "kdna.consumption-plan/0.3.1",
+      "host": "kdna.agent-host/0.3.1",
+      "trace": "kdna.judgment-trace/0.3.1",
+      "read": "kdna.read/0.6.2"
+    },
+    "package_versions": {
+      "core": "0.36.0-rc.r2.5",
+      "read": "0.11.0-rc.r2.5"
+    },
+    "schema_roots": {
+      "Manifest": "schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
+      "Payload": "schema/payload-profile-0.5.1.schema.json",
+      "CanonicalIR": "specs/canonical-ir-0.6.1.schema.json",
+      "ReadCallResult": "specs/read-contract-0.6.2.schema.json",
+      "PublicRuntimeCapsule": "schema/runtime-capsule-0.3.1.schema.json",
+      "PublicConsumptionPlan": "schema/consumption-plan-0.3.1.schema.json",
+      "PublicAgentHostRequest": "schema/agent-host-request-0.3.1.schema.json",
+      "PublicAgentHostReceipt": "schema/agent-host-receipt-0.3.1.schema.json",
+      "PublicJudgmentTrace": "schema/judgment-trace-0.3.1.schema.json",
+      "ProtectionDefinitionObservation": "specs/protection-admission-r2-binding-5.schema.json",
+      "PackageSetNodeSurface": "specs/package-set-node-0.2.1.schema.json",
+      "IssuerResultObservation": "specs/external-grant-issuer-r2-binding-5.schema.json",
+      "ProtectedSourceObservation": "specs/protected-source-r2-binding-5.schema.json"
+    },
+    "read_schema_id": "urn:kdna:schema:read:0.6.2",
+    "guard": {
+      "decision": "S12-D011 revision2 plus S12-D012 and S12-D013",
+      "failure": "READ_CORE_CAPABILITY_UNAVAILABLE",
+      "order": "After valid request/version admission, before Core input admission and Host observation; direct project before body supply.",
+      "metadata": "Actual Core and Read package names, exact versions and exact Read peer must match independent generated expectations.",
+      "runtime": "The existing genuine branded snapshot full VersionTuple comparison is separately mandatory; metadata-only changes cannot replace the compiled Core and Read coordinates.",
+      "proof_limit": "Installation mismatch guard, not authentication of arbitrarily replaced package code; historical old-old combinations remain unchanged."
+    },
+    "history": "RC1-RC4 frozen original bytes remain unaccepted history. Complete RC4 tuple unsupported. Read0.6/0.6.1 and binding1-4 schemas remain fixed."
+  },
+  "r2_packed_documentation_decision_D016": {
+    "decision": "S12-D016",
+    "versionTuple": {
+      "container": "0.5.0",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.5.0",
+      "core": "kdna.core/0.8.2",
+      "ir": "kdna.canonical-ir/0.6.1",
+      "runtime": "kdna.runtime-capsule/0.3.1",
+      "plan": "kdna.consumption-plan/0.3.1",
+      "host": "kdna.agent-host/0.3.1",
+      "trace": "kdna.judgment-trace/0.3.1",
+      "read": "kdna.read/0.6.4"
+    },
+    "package_versions": {
+      "core": "0.36.0-rc.r2.7",
+      "read": "0.11.0-rc.r2.7"
+    },
+    "schema_roots": {
+      "Manifest": "schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
+      "Payload": "schema/payload-profile-0.5.1.schema.json",
+      "CanonicalIR": "specs/canonical-ir-0.6.1.schema.json",
+      "ReadCallResult": "specs/read-contract-0.6.4.schema.json",
+      "PublicRuntimeCapsule": "schema/runtime-capsule-0.3.1.schema.json",
+      "PublicConsumptionPlan": "schema/consumption-plan-0.3.1.schema.json",
+      "PublicAgentHostRequest": "schema/agent-host-request-0.3.1.schema.json",
+      "PublicAgentHostReceipt": "schema/agent-host-receipt-0.3.1.schema.json",
+      "PublicJudgmentTrace": "schema/judgment-trace-0.3.1.schema.json",
+      "ProtectionDefinitionObservation": "specs/protection-admission-r2-binding-7.schema.json",
+      "PackageSetNodeSurface": "specs/package-set-node-0.2.1.schema.json",
+      "IssuerResultObservation": "specs/external-grant-issuer-r2-binding-7.schema.json",
+      "ProtectedSourceObservation": "specs/protected-source-r2-binding-7.schema.json"
+    },
+    "read_schema_id": "urn:kdna:schema:read:0.6.4",
+    "guard": {
+      "decision": "S12-D011 revision2 plus S12-D012, S12-D013 and S12-D016",
+      "failure": "READ_CORE_CAPABILITY_UNAVAILABLE",
+      "order": "After valid request/version admission, before Core input admission and Host observation; direct project before body supply.",
+      "metadata": "Actual Core and Read package names, exact versions and exact Read peer must match independent generated expectations.",
+      "runtime": "The existing genuine branded snapshot full VersionTuple comparison is separately mandatory; metadata-only changes cannot replace the compiled Core and Read coordinates.",
+      "proof_limit": "Installation mismatch guard, not authentication of arbitrarily replaced package code; historical old-old combinations remain unchanged."
+    },
+    "meaning": "Identity and accurate current packed documentation only. Catalog reading mode remains supported; catalog_only envelope status rejected at current schema before binding comparisons. No algorithm or callable change.",
+    "history": "RC1-RC5 frozen unaccepted; Read0.6/0.6.1/0.6.2 and bindings1-5 retain original bytes; complete RC5 tuple unsupported. D015 navigation fixes retained; conditional same-tar route stopped."
   }
 }

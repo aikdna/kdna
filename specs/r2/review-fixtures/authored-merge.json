@@ -1,0 +1,398 @@
+{
+  "review_only": true,
+  "notation": "R2 complete author-semantic paper view; no container tuple or runtime execution claimed",
+  "M": {
+    "asset_id": "review-authored-merge",
+    "asset_uid": "review-authored-merge-uid",
+    "version": "r2-paper",
+    "judgment_version": "r2-paper",
+    "title": "多条命中后按固定顺序合并的纸面例",
+    "summary": "先排序和处理重复，再按作者规则选择输入第一项，保留完整发射追溯。",
+    "languages": [
+      "zh-CN"
+    ],
+    "created_at": "2026-09-23T00:00:00Z",
+    "updated_at": "2026-09-23T00:00:00Z",
+    "lineage": [],
+    "history": {
+      "coverage": "complete",
+      "statement": "仅本次纸面构造的起始版本，不是正式资产沿革",
+      "entries": []
+    }
+  },
+  "P": {
+    "asset": {
+      "asset_id": "review-authored-merge",
+      "asset_version": "r2-paper",
+      "judgment_version": "r2-paper"
+    },
+    "actors": [
+      {
+        "id": "author",
+        "kind": "person",
+        "name": "纸面作者"
+      }
+    ],
+    "scope": {
+      "statement": "定义审查用构造情境，不进入业务资产目录"
+    },
+    "declarations": {
+      "highest_question": {
+        "value": "多个建议同时成立时，本例采用哪一个？",
+        "state": "provided"
+      },
+      "boundaries": {
+        "value": null,
+        "state": "none"
+      }
+    },
+    "kernel": {
+      "purpose": {
+        "kind": "summary"
+      },
+      "foundation_refs": []
+    },
+    "judgments": [
+      {
+        "id": "qMerge",
+        "focus": "多个建议同时成立时，本例采用哪一个？",
+        "subject": {
+          "actor_ids": [
+            "author"
+          ],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "rule",
+        "answer_kind": "selection",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "authored",
+          "statement": "按已声明优先次序处理成立建议，同一生产者合并后，采用第一项。",
+          "qualification_refs": []
+        },
+        "result_contract": {
+          "id": "merge-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "inference"
+          },
+          "components": [
+            {
+              "id": "merge-premise",
+              "method": {
+                "term": "inference"
+              },
+              "role": "判断前提",
+              "statement": "本例作者明确以较小priority优先，重复生产者合并，所有成立且无冲突的建议组成一个完整有序输入；没有任何首项之外的隐含评分。",
+              "material_refs": []
+            },
+            {
+              "id": "merge-rule",
+              "method": {
+                "term": "inference"
+              },
+              "role": "推导关系",
+              "statement": "输入非空且已经按policy排好顺序。取原生Emission列表第一项的value作为selected，原样保留其文本；不把整个Emission或追溯信息拼进答案。",
+              "material_refs": []
+            }
+          ],
+          "bindings": [],
+          "units": [
+            {
+              "id": "take-first",
+              "method": "inference",
+              "component_refs": [
+                "merge-premise",
+                "merge-rule"
+              ],
+              "inputs": [
+                {
+                  "name": "emissions",
+                  "meaning": "p-merge本次完整有序发射输入，采用专用合同",
+                  "contract_ref": {
+                    "kind": "contract",
+                    "id": "merge-input"
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "name": "selected",
+                  "meaning": "第一项的原始文本值",
+                  "contract_ref": {
+                    "kind": "contract",
+                    "id": "merge-out"
+                  }
+                }
+              ]
+            }
+          ],
+          "plan": {
+            "id": "merge-plan",
+            "root": {
+              "kind": "plan_node",
+              "id": "merge-branch"
+            },
+            "nodes": [
+              {
+                "id": "merge-branch",
+                "kind": "branch",
+                "policy_ref": {
+                  "kind": "policy",
+                  "id": "p-merge"
+                }
+              },
+              {
+                "id": "merge-first",
+                "kind": "use",
+                "unit_ref": {
+                  "kind": "unit",
+                  "id": "take-first"
+                },
+                "input_bindings": []
+              }
+            ],
+            "links": [],
+            "result_bindings": [
+              {
+                "from": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "merge-branch"
+                  },
+                  "port": "result",
+                  "field_path": []
+                },
+                "field_path": []
+              }
+            ]
+          }
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "formation_rule": {
+          "statement": "条件齐全后，按优先数从小到大排列成立条目，合并同一生产者并保留全部命中身份，然后采用第一项值。未知条件先补齐，零成立先补建议。",
+          "condition_refs": [],
+          "output_contract_ref": "merge-out",
+          "policy": {
+            "id": "p-merge",
+            "result_contract_ref": {
+              "kind": "contract",
+              "id": "merge-out"
+            },
+            "candidates": [
+              {
+                "id": "optionA",
+                "contract_ref": {
+                  "kind": "contract",
+                  "id": "item"
+                },
+                "value": {
+                  "kind": "text",
+                  "value": "A"
+                }
+              },
+              {
+                "id": "optionB",
+                "contract_ref": {
+                  "kind": "contract",
+                  "id": "item"
+                },
+                "value": {
+                  "kind": "text",
+                  "value": "B"
+                }
+              }
+            ],
+            "entries": [
+              {
+                "id": "entryA",
+                "when": {
+                  "kind": "condition",
+                  "id": "cond1"
+                },
+                "then": {
+                  "kind": "candidate",
+                  "candidate_ref": {
+                    "kind": "candidate",
+                    "id": "optionA"
+                  }
+                },
+                "priority": 20
+              },
+              {
+                "id": "entryB",
+                "when": {
+                  "kind": "condition",
+                  "id": "cond2"
+                },
+                "then": {
+                  "kind": "candidate",
+                  "candidate_ref": {
+                    "kind": "candidate",
+                    "id": "optionB"
+                  }
+                },
+                "priority": 10
+              },
+              {
+                "id": "entryA2",
+                "when": {
+                  "kind": "condition",
+                  "id": "cond3"
+                },
+                "then": {
+                  "kind": "candidate",
+                  "candidate_ref": {
+                    "kind": "candidate",
+                    "id": "optionA"
+                  }
+                },
+                "priority": 30
+              }
+            ],
+            "match": "all_matches",
+            "combine": {
+              "kind": "authored",
+              "merge_node_ref": {
+                "kind": "plan_node",
+                "id": "merge-first"
+              },
+              "input_port": "emissions",
+              "output_port": "selected",
+              "duplicates": "producer_identity",
+              "order": "priority"
+            },
+            "exclusive_sets": [],
+            "on_no_match": {
+              "kind": "disposition",
+              "code": "defer",
+              "statement": "没有成立建议，先补齐建议，不向合并方法传空列表。"
+            },
+            "on_conflict": {
+              "kind": "disposition",
+              "code": "conflict",
+              "statement": "冲突时停止合并并处理冲突。"
+            },
+            "on_undetermined": {
+              "kind": "defer",
+              "statement": "先取得所有条件判断，不能把未知当false。"
+            }
+          }
+        }
+      }
+    ],
+    "contracts": [
+      {
+        "id": "item",
+        "form": {
+          "term": "scalar"
+        },
+        "shape": {
+          "kind": "scalar",
+          "scalar_type": "text"
+        },
+        "minimum": 1,
+        "maximum": 1,
+        "allowed_result_types": [
+          {
+            "term": "text"
+          }
+        ]
+      },
+      {
+        "id": "merge-input",
+        "kind": "emission_list",
+        "policy_ref": {
+          "kind": "policy",
+          "id": "p-merge"
+        }
+      }
+    ],
+    "conditions": [
+      {
+        "id": "cond1",
+        "owner_ref": {
+          "kind": "judgment",
+          "id": "qMerge"
+        },
+        "expression": {
+          "kind": "interpreted",
+          "statement": "建议A的入口一满足本例采用前提"
+        }
+      },
+      {
+        "id": "cond2",
+        "owner_ref": {
+          "kind": "judgment",
+          "id": "qMerge"
+        },
+        "expression": {
+          "kind": "interpreted",
+          "statement": "建议B满足本例采用前提"
+        }
+      },
+      {
+        "id": "cond3",
+        "owner_ref": {
+          "kind": "judgment",
+          "id": "qMerge"
+        },
+        "expression": {
+          "kind": "interpreted",
+          "statement": "建议A的入口二满足本例采用前提"
+        }
+      }
+    ],
+    "shared_declarations": [],
+    "materials": [],
+    "reasons": [],
+    "sources": [],
+    "source_uses": [],
+    "resources": [],
+    "relationships": [],
+    "dependencies": [],
+    "examples": [],
+    "exceptions": [],
+    "misuse": [],
+    "reading_order": [
+      "qMerge"
+    ],
+    "extensions": [],
+    "asset_capability": "result_forming_rules"
+  }
+}

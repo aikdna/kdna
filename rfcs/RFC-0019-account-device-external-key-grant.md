@@ -1,9 +1,17 @@
 # RFC-0019: Account/device external key grants
 
-- Status: Draft
+- Status: Draft — pre-release candidate
 - Profile: `kdna.envelope.external-grant`
 - Grant: `kdna.grant.external-key`
 - Applies to: `access: "licensed"` with `entitlement.profile: "account"` or `"org"`
+
+This draft defines a distinct external-grant wire contract; an index entry,
+retained helper, or schema does not promote it to a stable published profile.
+The current grammar.3 Core public admission rejects protected inputs. Retained
+`external-key-grant.js` behavior is compatibility implementation evidence, not
+proof of a grammar.3 consumer, persistent SecretStore, or deployed issuer.
+[Protection adoption boundary](../specs/protection-adoption.md) records these
+separate claims and the requirements for a future explicit integration.
 
 ## 1. Problem and non-goals
 
@@ -97,7 +105,8 @@ licensed
 <entitlement_profile>
 ```
 
-The second line is the stable external-grant contract version. The canonical
+The second line is the exact external-grant candidate contract version; it is
+not a stable-publication claim. The canonical
 package `asset_digest` cannot appear in this AAD because it
 includes the encrypted entry and would create a digest cycle. The signed grant
 binds that final digest after packaging. The AAD instead binds immutable asset
@@ -174,12 +183,27 @@ A runtime MUST perform these checks before plaintext parsing:
 7. derive the device KEK and AES-KW unwrap the CEK;
 8. verify the envelope AAD and AES-GCM tag;
 9. verify `plaintext_digest`; and
-10. parse the payload and emit a Runtime Capsule.
+10. pass the authenticated plaintext through the Core admission and semantic
+    validation path for the explicitly supported payload/container line before
+    producing that line's consumer output. The retained 0.1 path produces a
+    Runtime Capsule; grammar.3 requires genuine Core admission before Read or
+    native execution and has no protected-input integration yet.
 
 No step may be skipped because a caller supplies `status: active`. A LoadPlan may
 report `ready` for an account profile only when produced from a verified,
 in-memory external-grant session. A plain status string is diagnostic only and
-MUST NOT authorize account assets.
+MUST NOT authorize account assets. This is a requirement on the retained
+LoadPlan line, not a grant of grammar.3 snapshot authority to an old session.
+A future grammar.3 integration MUST keep the original encrypted container A,
+its verified grant and exact entry binding attached to the authenticated
+plaintext admission; repacking plaintext and presenting its new A as the
+original asset is forbidden. The digest and authority boundaries in
+[Protection adoption boundary](../specs/protection-adoption.md) apply.
+
+The helper accepts caller-supplied clock and minimum status observations. A
+conforming client/service integration must still implement the challenge,
+SecretStore persistence, trusted-time and anti-rollback duties in sections 4–5;
+helper success alone does not prove those external responsibilities.
 
 ## 7. Rotation and revocation
 

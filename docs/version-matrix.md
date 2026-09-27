@@ -1,5 +1,7 @@
 # KDNA Version Matrix
 
+Historical versioning examples. This page does not select the current public runtime. Current exact protocol coordinates, package bindings and rejection rules are in [public version policy](../specs/public-version-policy.md). Older field names and examples below remain historical.
+
 KDNA has one current distribution format. Package versions, asset versions,
 judgment versions, and wire fields describe different things and MUST NOT be
 presented as competing KDNA formats.

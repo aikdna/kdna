@@ -6,8 +6,8 @@ const MAX_DEPTH = 64;
 const MAX_VALUES = 100000;
 const MAX_STRING_BYTES = 1024 * 1024;
 
-function reject(reason = 'READ_INPUT_INVALID') {
-  throw Object.assign(new Error(reason), { reason });
+function reject(reason = 'READ_INPUT_INVALID', diagnostic = null) {
+  throw Object.assign(new Error(reason), { reason, diagnostic });
 }
 
 function scalarString(value, maximum = MAX_STRING_BYTES, controls = true) {

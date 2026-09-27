@@ -1,27 +1,29 @@
 {
   "document_kind": "PUBLIC_DESIGN_SOURCE_PLAN_NOT_GENERATOR_INPUT",
-  "status": "UNPUBLISHED_COMPONENT_SEMANTICS_CANDIDATE",
+  "status": "UNPUBLISHED_CANDIDATE",
   "single_machine_editable_source": {
     "path": "specs/public-semantic-source.json",
-    "writer": "Open-A",
+    "writer": "R2 isolated implementation",
     "status": "PRESENT_UNPUBLISHED",
-    "scope": "public type/rule/scalar/vocabulary/diagnostic/IR/Read definitions, version registry, canonical generation metadata and generated vector specifications; finite component grammar, binding, interpretation and explicit field presence"
+    "scope": "Complete accepted R2 types, rules, vocabulary, diagnostics, tuple, component /2 binding, native execution 0.3, protection and issuer R2 bindings, PackageSet Node 0.2, generated derivatives and bounded proof inventory."
   },
   "design_inputs": [
     "specs/public-contract-decisions.json",
     "specs/public-version-policy.md",
     "specs/read-contract.md",
-    "conformance/public-contract-decision-vectors.json"
+    "conformance/public-contract-decision-vectors.json",
+    "specs/execution-contract-0.3.md",
+    "specs/r2/README.md"
   ],
-  "design_input_rule": "These are human-reviewed design requirements and independent seed examples, not parallel editable machine semantics or generators. The next authorized source must encode the accepted choices. Derived targets only originate from that one source; disagreements stop generation, never prefer a consumer mirror.",
+  "design_input_rule": "Human-reviewed requirements and seed examples bind the unique machine semantic source; generated derivatives originate only there. Differences stop generation. Source presence is not runtime or independent acceptance evidence.",
   "edges": [
     {
       "source": "specs/public-semantic-source.json",
-      "target": "schema/manifest-0.2.schema.json",
+      "target": "schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
       "writer": "A",
       "role": "generated derivative, never separately hand-authored semantics",
-      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
-      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact.",
       "invalidation_closure": [
         "source types/rules/scalars/vocabulary/version changes",
         "all affected derived schemas/types/diagnostics/vectors",
@@ -31,11 +33,11 @@
     },
     {
       "source": "specs/public-semantic-source.json",
-      "target": "schema/payload-profile-0.2.schema.json",
+      "target": "schema/payload-profile-0.5.1.schema.json",
       "writer": "A",
       "role": "generated derivative, never separately hand-authored semantics",
-      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
-      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact.",
       "invalidation_closure": [
         "source types/rules/scalars/vocabulary/version changes",
         "all affected derived schemas/types/diagnostics/vectors",
@@ -45,11 +47,11 @@
     },
     {
       "source": "specs/public-semantic-source.json",
-      "target": "specs/canonical-ir.schema.json",
+      "target": "specs/canonical-ir-0.6.1.schema.json",
       "writer": "A",
       "role": "generated derivative, never separately hand-authored semantics",
-      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
-      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact.",
       "invalidation_closure": [
         "source types/rules/scalars/vocabulary/version changes",
         "all affected derived schemas/types/diagnostics/vectors",
@@ -59,11 +61,11 @@
     },
     {
       "source": "specs/public-semantic-source.json",
-      "target": "specs/read-contract.schema.json",
+      "target": "specs/read-contract-0.6.4.schema.json",
       "writer": "A",
       "role": "generated derivative, never separately hand-authored semantics",
-      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
-      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact.",
       "invalidation_closure": [
         "source types/rules/scalars/vocabulary/version changes",
         "all affected derived schemas/types/diagnostics/vectors",
@@ -76,8 +78,8 @@
       "target": "specs/public-diagnostics.json",
       "writer": "A",
       "role": "generated derivative, never separately hand-authored semantics",
-      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
-      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact.",
       "invalidation_closure": [
         "source types/rules/scalars/vocabulary/version changes",
         "all affected derived schemas/types/diagnostics/vectors",
@@ -90,8 +92,8 @@
       "target": "specs/public-vocabulary.json",
       "writer": "A",
       "role": "generated derivative, never separately hand-authored semantics",
-      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
-      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact.",
       "invalidation_closure": [
         "source types/rules/scalars/vocabulary/version changes",
         "all affected derived schemas/types/diagnostics/vectors",
@@ -104,8 +106,8 @@
       "target": "packages/kdna-core/src/public-contract/types.d.ts",
       "writer": "A",
       "role": "generated derivative, never separately hand-authored semantics",
-      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
-      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact.",
       "invalidation_closure": [
         "source types/rules/scalars/vocabulary/version changes",
         "all affected derived schemas/types/diagnostics/vectors",
@@ -118,8 +120,8 @@
       "target": "conformance/public-contract/**",
       "writer": "A",
       "role": "generated derivative, never separately hand-authored semantics",
-      "generation_status": "PRESENT_UNPUBLISHED_GENERATED",
-      "current_path_note": "Generated in DSP095; runtime and RC independent acceptance remain separate.",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact.",
       "invalidation_closure": [
         "source types/rules/scalars/vocabulary/version changes",
         "all affected derived schemas/types/diagnostics/vectors",
@@ -201,20 +203,128 @@
     },
     {
       "source": "specs/public-semantic-source.json#/component_semantics",
-      "target": "specs/component-semantics.md",
+      "target": "specs/component-semantics-2.md",
       "role": "generated definition explanation, no independently editable semantics"
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "schema/runtime-capsule-0.3.1.schema.json",
+      "writer": "generator",
+      "role": "Native 0.3 execution schema derivative",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "invalidation_closure": [
+        "source definitions",
+        "Core declarations and validator",
+        "execution consumers and acceptance receipts"
+      ],
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact."
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "schema/consumption-plan-0.3.1.schema.json",
+      "writer": "generator",
+      "role": "Native 0.3 execution schema derivative",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "invalidation_closure": [
+        "source definitions",
+        "Core declarations and validator",
+        "execution consumers and acceptance receipts"
+      ],
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact."
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "schema/agent-host-request-0.3.1.schema.json",
+      "writer": "generator",
+      "role": "Native 0.3 execution schema derivative",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "invalidation_closure": [
+        "source definitions",
+        "Core declarations and validator",
+        "execution consumers and acceptance receipts"
+      ],
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact."
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "schema/agent-host-receipt-0.3.1.schema.json",
+      "writer": "generator",
+      "role": "Native 0.3 execution schema derivative",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "invalidation_closure": [
+        "source definitions",
+        "Core declarations and validator",
+        "execution consumers and acceptance receipts"
+      ],
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact."
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "schema/judgment-trace-0.3.1.schema.json",
+      "writer": "generator",
+      "role": "Native 0.3 execution schema derivative",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE",
+      "invalidation_closure": [
+        "source definitions",
+        "Core declarations and validator",
+        "execution consumers and acceptance receipts"
+      ],
+      "current_path_note": "Current R2 derivative; old same-purpose schema retained as a historical artifact."
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "specs/read-transport-admission-0.2.1.schema.json",
+      "writer": "generator",
+      "role": "R2 generated derivative; historical same-purpose schema retained",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE"
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "specs/protection-admission-r2-binding-7.schema.json",
+      "writer": "generator",
+      "role": "R2 generated derivative; historical same-purpose schema retained",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE"
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "specs/external-grant-issuer-r2-binding-7.schema.json",
+      "writer": "generator",
+      "role": "R2 generated derivative; historical same-purpose schema retained",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE"
+    },
+    {
+      "source": "specs/public-semantic-source.json",
+      "target": "specs/package-set-node-0.2.1.schema.json",
+      "writer": "generator",
+      "role": "R2 generated derivative; historical same-purpose schema retained",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE"
+    },
+    {
+      "source": "specs/public-semantic-source.json#/protected_source",
+      "target": "specs/protected-source-r2-binding-7.schema.json",
+      "role": "R2 binding with exact package/tuple and diagnostic closure; old schema retained"
+    },
+    {
+      "source": "specs/public-semantic-source.json#/static_policy",
+      "target": "specs/static-policy-2.md",
+      "role": "Generated /2 complete definition; /1 historical bytes retained"
+    },
+    {
+      "source": "specs/public-semantic-source.json#/protection_admission/checksums",
+      "target": "specs/checksums-document-1.schema.json",
+      "writer": "generator",
+      "role": "Current protection checksums schema derivative; legacy checksums schema retained",
+      "generation_status": "R2_CANDIDATE_REQUIRES_GENERATION_CHECK_AND_INDEPENDENT_ACCEPTANCE"
     }
   ],
   "handwritten_decision_vectors": "Current contract-decision-vectors are frozen acceptance input seeds, not the generated conformance/public-contract/** output authority. Implementations may not rewrite these expected results to pass.",
   "normative_aggregate": "BOUND_BY_specs/public-generation-manifest.json_NOT_ACCEPTANCE",
-  "decision_artifact_aggregate": "Six-file exact byte map returned separately, not a full normative/generated closure.",
+  "decision_artifact_aggregate": "Definition and implementation inputs are bound by explicit manifests; no old six-file aggregate represents R2 closure.",
   "role_sequence": [
-    "A design acceptance → one semantic source/generated normative aggregate → JS Core/Read",
-    "B Swift/CLI/Python after A; same-repo Python sequential; B E-OBS-01 environment evidence",
-    "D App Shared prerequisite → C Studio Swift",
-    "C Agent/MCP/Studio and D remaining consumers only after exact dependency acceptance"
+    "Stage 1: R2 public source and generated contracts, Core and Read; actual pack independent review and commander acceptance",
+    "Stage 2 after Stage 1 acceptance: real 2A-2D language, CLI, SDK, Agent and service consumers, bound to accepted artifacts"
   ],
-  "current_authority": "Single public semantic source with component semantics, Core/IR/Read 0.3/0.2/0.2; acceptance and publication separate.",
+  "current_authority": "Single public semantic source implements the full accepted R2 definition and S12-D001/D002/D003 bindings. Public normative artifacts are distinct from historical proof and stage acceptance. No consumer may redefine R2.",
   "ir_retention": {
     "authority": "OPEN-IR-RETENTION-DISPOSITION",
     "carrier": "IRNode_asset_declaration.value / PublicAssetDeclaration",

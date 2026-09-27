@@ -31,21 +31,36 @@ published line.
 
 ## Current source entry
 
-Read the [current Core/Read guide](./core-read-current-status.md), then the exact
-[Core](../packages/kdna-core/README.md) and
-[Read](../packages/kdna-read/README.md) package READMEs. Core admits captured
-bytes into a private snapshot and Canonical IR. Read exposes four distinct
-channels: `read_envelope`, `admission_rejection`, `no_body_control` and
-`transport_failure`. Read permission comes from the embedding's trusted
-providers and grants no action authority.
+Start with the [matching-source and installation guide](./core-read-current-status.md#choose-and-obtain-one-matching-delivery).
+Its 2026-09-23 local source combinations are distinct:
 
-The current [CLI source](https://github.com/aikdna/kdna-cli#readme) offers
-explicit-file `inspect`, `validate` and `read` with its exact bound source graph.
-These candidates are not registry packages. Encryption, signatures and checksum
-documents are unavailable at current Core admission; Plan and Runtime Capsule
-admission and execution are also unavailable. Old-line demos and APIs must stay
-with their matching published implementation. See the
-[version matrix](./version-and-capability-matrix.md) before choosing an input.
+- This protocol repository: Core `0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7` (unpublished R2).
+- [Runtime CLI](https://github.com/aikdna/kdna-cli#readme): CLI `0.40.0-rc.protection.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`.
+- [Canonical Loader/MCP](https://github.com/aikdna/kdna-skills#readme): MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1`.
+
+Obtain the complete matching delivery and its lock/archives before installing;
+these rows do not establish npm publication or the contents of remote `main`.
+Missing inputs cannot be replaced by a global CLI or `latest`. Node >=20 is
+required by Core/Read; these CLI/MCP graphs require Node >=22. The owning
+installation guide supplies the full recipe and any narrower reproduction versions.
+
+Core admits captured bytes into a private snapshot and Canonical IR. Read
+exposes `read_envelope`, `admission_rejection`, `no_body_control` and
+`transport_failure`. Permission comes from the embedding's trusted providers
+and grants no action authority. The runtime CLI offers `inspect`, `validate`,
+`read`, static `plan` and `load --plan`; a supplied Plan/Capsule is not model
+execution. Ordinary root/browser admission retains protection refusals;
+explicit [Node protection](../specs/protection-admission.md) has separate inputs
+and trusted providers. Native integration and production service acceptance
+do not follow from an API being present.
+
+For Agent consumption, follow the
+[canonical Loader](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md)
+and its exact CLI 0.39.1/MCP combination. The protocol repository's
+[bundled Skill](../skills/README.md) is a historical CLI 0.36.1 compatibility copy.
+Host delivery, semantic adoption and real human acceptance remain `not_run`;
+Skill placement and transport examples do not establish native activation.
+Old-line demos and APIs stay with their matching published implementation below.
 
 ## 5-Minute Quick Start
 
@@ -135,7 +150,7 @@ using a particular API:
 | Repo | Role |
 |------|------|
 | [kdna](https://github.com/aikdna/kdna) | Official KDNA Core spec, toolchain entry, schemas, docs |
-| [kdna-cli](https://github.com/aikdna/kdna-cli) | Current source: inspect, validate and Read; published CLI 0.36.1 retains packing/loading |
+| [kdna-cli](https://github.com/aikdna/kdna-cli) | Current source: inspect, validate, Read and static Plan/Capsule; published CLI 0.36.1 retains its separate packing/loading API |
 | [kdna-eval](https://github.com/aikdna/kdna/tree/main/packages/kdna-eval) | Replay, budget, and consumption-evaluation primitives |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | Authoring CLI for creating and exporting `.kdna` assets |
 | [kdna-skills](https://github.com/aikdna/kdna-skills) | Agent and MCP adapter mission; current loader Skill is Unassessed |

@@ -1,7 +1,7 @@
 'use strict';
 const {contextSchema,remoteSchema}=require('./transport-validators.generated.js');
 const config=require('./transport-contract.json');
-const {clone,freeze,jcs,correlation,identifier}=require('./util.js');
+const {clone,freeze,jcs,correlation,identifier,anchorFor}=require('./util.js');
 const {inspectCandidate}=require('./admission.js');
 const {parseTransportJSON}=require('./transport-json.js');
 const responseGet=typeof Response==='function'?Object.fromEntries(['url','status','headers','body','bodyUsed','redirected','type'].map(k=>[k,Object.getOwnPropertyDescriptor(Response.prototype,k).get])):null;
@@ -11,6 +11,14 @@ const readerRead=typeof ReadableStreamDefaultReader==='function'?ReadableStreamD
 const readerCancel=typeof ReadableStreamDefaultReader==='function'?ReadableStreamDefaultReader.prototype.cancel:null;
 const readerRelease=typeof ReadableStreamDefaultReader==='function'?ReadableStreamDefaultReader.prototype.releaseLock:null;
 const encoder=new TextEncoder(),associations=new Map();
+// Host-profile per-call ceilings (specs/public-semantic-source.json ->
+// engineering.host_retained_session_profile.limits): response_bytes_per_call_maximum
+// and control_response_bytes_per_call_maximum. They bound the bytes a Host serves
+// for one read call, not what a caller may declare: the generated context schema
+// still admits the contract-wide 8 MiB ceiling
+// (transport_admission.limits.response_bytes), and the tighter per-call cap then
+// binds the served bytes.
+const responseBytesPerCallMaximum=1048576,controlResponseBytesPerCallMaximum=4096;
 const fail=code=>{throw Error(code);};
 const eq=(a,b)=>jcs(a)===jcs(b);
 const ensure=(ok,code='READ_TRANSPORT_BINDING_MISMATCH')=>{if(!ok)fail(code);};
@@ -18,21 +26,25 @@ const byteCount=(s,n)=>Number.isSafeInteger(Number(s))&&Number(s)===n;
 function compareEnvelope(body,c,record,n){
   ensure(record&&body.request_id===record.request_id&&body.receipt.request_id===record.request_id);
   ensure(body.budget.limit_bytes===record.budget_bytes&&byteCount(body.budget.actual_bytes,n)&&n<=body.budget.limit_bytes);
-  if(body.status!=='ready'){
-    ensure(body.tuple===null||eq(body.tuple,c.expected_tuple));
-    if(c.expected_snapshot_id!==null&&body.receipt.snapshot_id!==null)ensure(body.receipt.snapshot_id===c.expected_snapshot_id);
-    return;
+  // Failure envelopes can withhold identity fields. Compare what the wire
+  // actually exposes before branching, including catalog-only carriers.
+  ensure(body.tuple===null||eq(body.tuple,c.expected_tuple));
+  ensure(body.asset===null||eq(body.asset,c.expected_asset));
+  if(body.digests!==null)for(const k of ['A','C','E'])ensure(body.digests[k].observed===c.expected_digests[k]);
+  if(body.snapshot_id!==null&&body.receipt.snapshot_id!==null)ensure(body.snapshot_id===body.receipt.snapshot_id);
+  if(c.expected_snapshot_id!==null){
+    if(body.snapshot_id!==null)ensure(body.snapshot_id===c.expected_snapshot_id);
+    if(body.receipt.snapshot_id!==null)ensure(body.receipt.snapshot_id===c.expected_snapshot_id);
   }
+  if(body.status!=='ready')return;
   const request=record.request;ensure(request&&!record.version_rejection);
-  ensure(eq(body.tuple,c.expected_tuple)&&eq(body.asset,c.expected_asset));
-  for(const k of ['A','C','E'])ensure(body.digests[k].observed===c.expected_digests[k]);
-  ensure(c.expected_snapshot_id===null||body.snapshot_id===c.expected_snapshot_id);
   ensure(body.receipt.snapshot_id===body.snapshot_id&&byteCount(body.budget.required_bytes,n));
   const content=body.content;ensure(eq(content.selected,request.selection));
   if(request.selection){
     ensure(request.selection.asset_id===body.asset.asset_id&&request.selection.asset_version===body.asset.asset_version);
-    ensure(content.catalog.length===1&&content.catalog[0].judgment_id===request.selection.judgment_id);
-    const selectedId=request.selection.judgment_id,selectedRef=content.catalog[0].node_ref;
+    const selectedCatalog=content.catalog.filter(item=>item.judgment_id===request.selection.judgment_id);
+    ensure(selectedCatalog.length===1);
+    const selectedId=request.selection.judgment_id,selectedRef=selectedCatalog[0].node_ref;
     // exact_selection discloses its judgment. An expand target may omit it;
     // check that identity only when received fields actually disclose it.
     const selectedNodes=content.closure.filter(node=>node.id===selectedRef);
@@ -45,16 +57,35 @@ function compareEnvelope(body,c,record,n){
       ensure(selectedNode.id===selectedRef&&selectedNode.role==='judgment'&&
         selectedNode.owner_judgment_id===selectedId&&selectedNode.value.id===selectedId);
     }
-  }else ensure(content.closure.length===0&&content.expansion_handles.length===0);
-  if(request.mode==='catalog')ensure(content.declarations.length===0);
+  }
+  if(request.mode==='catalog')ensure(content.declarations.length===0&&content.closure.length===0&&content.expansion_handles.length===0&&content.asset_index.length===0);
+  const catalogIds=new Set();
+  for(const item of content.catalog){ensure(!catalogIds.has(item.judgment_id));catalogIds.add(item.judgment_id);
+    const node=content.closure.find(n=>n.id===item.node_ref);if(node)ensure(node.role==='judgment'&&node.value.id===item.judgment_id&&node.value.focus===item.focus);
+  }
   const handleIds=new Set();
   for(const h of content.expansion_handles){
     ensure(!handleIds.has(h.handle_id));handleIds.add(h.handle_id);
     ensure(h.asset_id===body.asset.asset_id&&h.asset_version===body.asset.asset_version&&h.A===c.expected_digests.A&&h.C===c.expected_digests.C&&h.snapshot_id===body.snapshot_id);
-    ensure(h.core_version===body.tuple.core&&h.ir_version===body.tuple.ir&&h.read_version===body.tuple.read&&eq(h.selection,request.selection));
+    ensure(h.core_version===body.tuple.core&&h.ir_version===body.tuple.ir&&h.read_version===body.tuple.read&&eq(h.anchor,anchorFor(request)));
     ensure(h.issued_at<h.expires_at&&h.host_id===body.receipt.host_id&&h.host_epoch===body.receipt.host_epoch);
   }
-  if(request.handle){const h=request.handle;ensure(h.snapshot_id===body.snapshot_id&&h.A===c.expected_digests.A&&h.C===c.expected_digests.C&&h.asset_id===body.asset.asset_id&&h.asset_version===body.asset.asset_version&&eq(h.selection,request.selection));ensure(h.core_version===body.tuple.core&&h.ir_version===body.tuple.ir&&h.read_version===body.tuple.read);ensure(eq([...h.scope].sort(),content.closure.map(x=>x.id).sort()));ensure(h.host_id===body.receipt.host_id&&h.host_epoch===body.receipt.host_epoch);}
+  const supplied=[...content.declarations,...content.closure];
+  const indexTargets=new Set();
+  for(const descriptor of content.asset_index){
+    const key=jcs(descriptor.target);ensure(!indexTargets.has(key));indexTargets.add(key);
+    if(descriptor.body_delivery==='inline')ensure(supplied.some(node=>eq(node.target,descriptor.target)));
+    else{const handle=content.expansion_handles.find(h=>h.handle_id===descriptor.handle_id);ensure(handle&&eq(handle.target,descriptor.target));}
+  }
+  if(request.handle){
+    const h=request.handle;
+    ensure(h.snapshot_id===body.snapshot_id&&h.A===c.expected_digests.A&&h.C===c.expected_digests.C&&h.asset_id===body.asset.asset_id&&h.asset_version===body.asset.asset_version&&eq(h.anchor,anchorFor(request)));
+    ensure(h.core_version===body.tuple.core&&h.ir_version===body.tuple.ir&&h.read_version===body.tuple.read);
+    ensure(eq([...h.scope].sort(),content.closure.map(x=>x.id).sort()));
+    ensure(content.closure.some(node=>eq(node.target,h.target)));
+    ensure(h.host_id===body.receipt.host_id&&h.host_epoch===body.receipt.host_epoch);
+  }
+
 }
 async function boundedBody(body,maxBytes,declared,ms){
   if(body===null){ensure(declared===null||declared===0,'READ_TRANSPORT_HTTP_MISMATCH');return new Uint8Array();}
@@ -92,16 +123,17 @@ async function admitReadTransportResponse(response,context){
     const length=header('content-length'),transfer=header('transfer-encoding'),encoding=header('content-encoding');
     ensure(encoding===null||encoding.toLowerCase()==='identity','READ_TRANSPORT_HTTP_MISMATCH');// WebKit exposes decoded chunked responses as Transfer-Encoding: Identity.
     ensure(!(length!==null&&transfer!==null),'READ_TRANSPORT_HTTP_MISMATCH');ensure(transfer===null||['chunked','identity'].includes(transfer.toLowerCase()),'READ_TRANSPORT_HTTP_MISMATCH');
-    let declared=null;if(length!==null){ensure(/^(0|[1-9][0-9]*)$/.test(length)&&Number.isSafeInteger(Number(length)),'READ_TRANSPORT_HTTP_MISMATCH');declared=Number(length);ensure(declared<=c.max_response_bytes,'READ_TRANSPORT_LIMIT_EXCEEDED');}
-    const hasJSON=channel==='read_envelope'||channel==='admission_rejection',contentType=header('content-type');
+    const hasJSON=channel==='read_envelope'||channel==='admission_rejection',perCallBytes=channel==='read_envelope'?Math.min(c.max_response_bytes,responseBytesPerCallMaximum):channel==='admission_rejection'?Math.min(c.max_response_bytes,c.admission_response_limit_bytes,controlResponseBytesPerCallMaximum):c.max_response_bytes;
+    let declared=null;if(length!==null){ensure(/^(0|[1-9][0-9]*)$/.test(length)&&Number.isSafeInteger(Number(length)),'READ_TRANSPORT_HTTP_MISMATCH');declared=Number(length);ensure(declared<=perCallBytes,'READ_TRANSPORT_LIMIT_EXCEEDED');}
+    const contentType=header('content-type');
     if(hasJSON){ensure(contentType!==null&&/^application\/json\s*;\s*charset=utf-8$/i.test(contentType)&&code===null&&cause===null,'READ_TRANSPORT_HTTP_MISMATCH');ensure(channel==='read_envelope'?[200,422].includes(state.status):state.status===422,'READ_TRANSPORT_HTTP_MISMATCH');}
     else{ensure((channel==='no_body_control'&&state.status===413)||(channel==='transport_failure'&&state.status===502),'READ_TRANSPORT_HTTP_MISMATCH');ensure(contentType===null&&(declared===null||declared===0),'READ_TRANSPORT_HTTP_MISMATCH');}
-    const bytes=await boundedBody(state.body,hasJSON?c.max_response_bytes:0,declared,Math.min(c.max_read_ms,Math.max(1,c.expires_at_ms-Date.now())));scope.bounded_bytes=true;ensure(Date.now()<c.expires_at_ms,'READ_TRANSPORT_ASSOCIATION_STALE');
+    const bytes=await boundedBody(state.body,hasJSON?perCallBytes:0,declared,Math.min(c.max_read_ms,Math.max(1,c.expires_at_ms-Date.now())));scope.bounded_bytes=true;ensure(Date.now()<c.expires_at_ms,'READ_TRANSPORT_ASSOCIATION_STALE');
     let data=null;if(hasJSON){let text;try{text=new TextDecoder('utf-8',{fatal:true,ignoreBOM:true}).decode(bytes);}catch{fail('READ_TRANSPORT_JSON_INVALID');}data=parseTransportJSON(text,true);scope.strict_json=true;}
     const remote={channel,http_status:state.status,byte_length:bytes.length,body:data,headers:hasJSON?null:{code,semantic_cause:cause}};
     ensure(remoteSchema(remote),'READ_TRANSPORT_SCHEMA_INVALID');scope.schema=true;
     if(channel==='read_envelope'){ensure(state.status===(data.status==='ready'?200:422),'READ_TRANSPORT_HTTP_MISMATCH');compareEnvelope(data,c,record,bytes.length);}
-    else if(channel==='admission_rejection'){ensure(admissionError&&eq(data.diagnostic,admissionError)&&eq(data.correlation,c.correlation));ensure(data.control_budget.limit_bytes===c.admission_response_limit_bytes&&byteCount(data.control_budget.actual_bytes,bytes.length)&&bytes.length<=c.admission_response_limit_bytes);}
+    else if(channel==='admission_rejection'){ensure(admissionError&&eq(data.diagnostic,admissionError)&&eq(data.correlation,c.correlation));ensure(data.control_budget.limit_bytes===c.admission_response_limit_bytes&&byteCount(data.control_budget.actual_bytes,bytes.length)&&bytes.length<=perCallBytes);}
     else if(channel==='no_body_control'){if(code==='READ_ADMISSION_RESPONSE_TOO_SMALL')ensure(admissionError&&cause==='READ_INPUT_INVALID');else ensure(record!==null);}
     ensure(Date.now()<c.expires_at_ms,'READ_TRANSPORT_ASSOCIATION_STALE');scope.fetch_visible_http=true;scope.observable_bindings=true;
     return freeze({...common,status:'accepted',association,response:remote,rejection:null});

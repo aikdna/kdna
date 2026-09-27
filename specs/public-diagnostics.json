@@ -43,6 +43,12 @@
       "stage": "core"
     },
     {
+      "code": "READ_STATIC_POLICY_INVALID",
+      "condition": "An opt-in static-policy declaration violates its fixed definition, ownership, result-contract binding, supported strategy, local references, explicit conditions or bounded content limits. No rule is evaluated and no candidate is promoted to an actual result.",
+      "scope": "read",
+      "stage": "core"
+    },
+    {
       "code": "READ_ASSET_MISMATCH",
       "condition": "Selector asset_id differs from admitted asset",
       "scope": "read",
@@ -245,6 +251,249 @@
       "condition": "Wrong, duplicate, noncritical, ownerless, redundant or contradictory method declaration presence mapping.",
       "scope": "Core component static interpretation",
       "stage": "core"
+    },
+    {
+      "code": "READ_ANALYSIS_ASSET_MISMATCH",
+      "meaning": "asset mismatch",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "READ_ANALYSIS_ENVELOPE_INVALID",
+      "meaning": "envelope invalid",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "READ_ANALYSIS_INPUT_INVALID",
+      "meaning": "input invalid",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "READ_ANALYSIS_NODE_CONFLICT",
+      "meaning": "node conflict",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "READ_ANALYSIS_READY_REQUIRED",
+      "meaning": "ready required",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "READ_ANALYSIS_REFERENCE_AMBIGUOUS",
+      "meaning": "reference ambiguous",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "READ_ANALYSIS_REFERENCE_UNRESOLVED",
+      "meaning": "reference unresolved",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "READ_ANALYSIS_RELATIONSHIP_AMBIGUOUS",
+      "meaning": "relationship ambiguous",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "READ_ANALYSIS_SELECTED_CONTENT_REQUIRED",
+      "meaning": "selected content required",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "READ_ANALYSIS_SELECTION_BINDING_INVALID",
+      "meaning": "selection binding invalid",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "READ_ANALYSIS_SELECTION_MISMATCH",
+      "meaning": "selection mismatch",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "READ_ANALYSIS_SOURCE_AMBIGUOUS",
+      "meaning": "source ambiguous",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "READ_ANALYSIS_TUPLE_MISMATCH",
+      "meaning": "tuple mismatch",
+      "proof_limit": "Data-only analysis input/correlation diagnostic; no admission, identity, authorization, disclosure or execution claim.",
+      "scope": "read_analysis_data_validation"
+    },
+    {
+      "code": "EXECUTION_INPUT_INVALID",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "Input is not a strict JSON value or call configuration.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_SCHEMA_INVALID",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "Input violates the closed execution schema.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_VERSION_UNSUPPORTED",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "The exact execution VersionTuple is unsupported.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_SOURCE_UNATTESTED",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "A genuine independent source, Plan, Capsule or Request admission is absent.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_BINDING_INVALID",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "Exact identity, digest, provenance or stage correlation does not match.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_UNRESOLVED_EXTERNAL",
+      "content_disclosure": "No rejected input, asset body or success token is returned; no external content is fetched.",
+      "meaning": "External content required by the selected supplied closure remains unresolved; complete static execution supply is unavailable.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_SELECTION_INVALID",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "Selection does not resolve exactly one admitted mandatory closure.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_BUDGET_EXCEEDED",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "A complete required capsule, output, trace or response exceeds its named budget.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_HOST_INVALID",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "Configured Host or supplied external Host observation is invalid.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_HOST_DENIED",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "Configured external authorization provider denied this operation.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_HOST_EXPIRED",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "Configured external authorization observation is expired or not yet valid.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_DELIVERY_INVALID",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "Independent incoming delivery evidence does not match producer and observed capsule digests.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_PROVIDER_FAILED",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "A required configured external provider failed or returned an invalid observation.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_REPLAY",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "Request or run identity has already been consumed in this Host instance, or its bounded reservation table is full.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "EXECUTION_OUTCOME_FAILED",
+      "content_disclosure": "No rejected input or asset body is echoed.",
+      "meaning": "The configured outcome provider reported failure.",
+      "scope": "execution",
+      "severity": "error"
+    },
+    {
+      "code": "READ_R2_STRUCTURE_INVALID",
+      "condition": "Formal judgment, required collections, result or authored core structure is incomplete or invalid.",
+      "scope": "semantic",
+      "stage": "core"
+    },
+    {
+      "code": "READ_R2_REFERENCE_INVALID",
+      "condition": "Typed reference has a duplicate identity, wrong kind, missing local target or invalid ownership.",
+      "scope": "semantic",
+      "stage": "core"
+    },
+    {
+      "code": "READ_R2_METHOD_INVALID",
+      "condition": "Closed method category, role content, other explanation or actual composite method composition is invalid.",
+      "scope": "semantic",
+      "stage": "core"
+    },
+    {
+      "code": "READ_R2_PLAN_INVALID",
+      "condition": "Plan control tree, use identity, input supply, flow, feedback or final result bindings are invalid.",
+      "scope": "semantic",
+      "stage": "core"
+    },
+    {
+      "code": "READ_R2_POLICY_INVALID",
+      "condition": "Conditional policy, producer contracts, authored emission input or partial outcome obligations are invalid.",
+      "scope": "semantic",
+      "stage": "core"
+    },
+    {
+      "code": "READ_R2_SCOPE_INVALID",
+      "condition": "Declaration adoption, material scope, boundary authorization or exception ownership is invalid.",
+      "scope": "semantic",
+      "stage": "core"
+    },
+    {
+      "code": "READ_R2_EXAMPLE_INVALID",
+      "condition": "Example identity, result type, contract, version or comparison relationship is invalid.",
+      "scope": "semantic",
+      "stage": "core"
+    },
+    {
+      "code": "READ_R2_HISTORY_INVALID",
+      "condition": "Declared history or a revision target/previous identity is invalid.",
+      "scope": "semantic",
+      "stage": "core"
+    },
+    {
+      "code": "READ_UNSUPPORTED_CRITICAL",
+      "condition": "Unknown critical semantics prevent all four Read modes for this version.",
+      "scope": "semantic",
+      "stage": "core"
+    },
+    {
+      "code": "READ_UNRESOLVED_EXTERNAL",
+      "condition": "Required fixed-version external semantics have not been obtained; complete semantic delivery is unavailable.",
+      "scope": "semantic",
+      "stage": "projection"
     }
   ],
   "format": "kdna.public-diagnostics/1",
@@ -252,99 +501,789 @@
     {
       "boundary": "raw admission before schema",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-BYTES",
-      "owner": "Core"
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/strict-input.js:13,26,30,45,104,147",
+        "packages/kdna-core/src/public-contract/cbor.js:12-77"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "BYTES-UNICODE-LIMITS",
+            "BYTES-REAL-UTC-CALENDAR",
+            "BYTES-DENSE-JSON-VALUES",
+            "CBOR-NEGATIVE-INTEGER-PRECISION"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "digest admission and Host received-Capsule observation",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-DIGESTS",
-      "owner": "Core"
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/digests.js:1-149",
+        "packages/kdna-core/src/public-contract/admit.js:1-38",
+        "packages/kdna-core/src/public-contract/semantic-admission.js:1-49"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "DIGEST-C-E-DOMAINS"
+          ],
+          "gate": "decision-vectors"
+        },
+        {
+          "cases": [
+            "DIGEST-A-C-E-INDEPENDENT",
+            "DIGEST-DETACHED-HOST-RECEIVED"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "single resolver and IR construction",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-GRAPH",
-      "owner": "Core"
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/r2-registry.js:1-103",
+        "packages/kdna-core/src/public-contract/r2-semantics.js:1-313",
+        "packages/kdna-core/src/public-contract/canonical-ir.js:1-97",
+        "packages/kdna-read/src/project.js:1-117"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "public-native-bindings.test.js",
+            "r2-base-rule-obligations.test.js",
+            "r2-core.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "public-native-bindings.test.js",
+            "r2-public-read.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        },
+        {
+          "cases": [
+            "BUDGET-FINAL-FULL-BODY-EXACT-MINUS-ONE",
+            "ECR02-INDIRECT-EXCEPTION-BINDING-DEDUP",
+            "ECR02-OWNED-METHOD-SOURCE-USE",
+            "GRAPH-CYCLE-RETAINED",
+            "GRAPH-DUPLICATE-DANGLING-ROLE",
+            "GRAPH-UPSTREAM-SOURCE-USE-RESOURCE",
+            "MODES-SCOPE-NO-ADJACENT-OMISSION-LEAK"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "static result and condition interpretation",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-RESULT",
-      "owner": "Core"
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/r2-values.js:1-90",
+        "packages/kdna-core/src/public-contract/r2-semantics.js:1-313"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "r2-base-rule-obligations.test.js",
+            "r2-core.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "RESULT-FORMATION-STATIC-NO-EXECUTION",
+            "RESULT-RECURSIVE-SHAPE-CARDINALITY"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "Writer profile evaluation, separately from Core structure",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-AUTHORSHIP",
-      "owner": "Creation and Core"
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/r2-semantics.js:1-313",
+        "packages/kdna-core/src/public-contract/cross-entry.js:1-448",
+        "packages/kdna-core/src/public-contract/r2-registry.js:1-103"
+      ],
+      "owner": "Creation and Core",
+      "proof": [
+        {
+          "cases": [
+            "r2-base-rule-obligations.test.js",
+            "r2-core.test.js",
+            "r2-execution.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "AUTHORSHIP-ABSENCE-DECLARED-STATES"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_structural_authorship_enforcement_not_content_fidelity",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "admitReadRequest",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-ADMISSION",
-      "owner": "Read"
+      "implementation_sites": [
+        "packages/kdna-read/src/admission.js:1-70"
+      ],
+      "owner": "Read",
+      "proof": [
+        {
+          "cases": [
+            "ADMISSION-ORDER-PRIVATE-BRAND"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "admission/control-envelope adapter",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-CONTROL",
-      "owner": "Read and transport"
+      "implementation_sites": [
+        "packages/kdna-read/src/transport.js:1-142",
+        "packages/kdna-read/src/budget-decision.js:1-17"
+      ],
+      "owner": "Read and transport",
+      "proof": [
+        {
+          "cases": [
+            "r2-transport-analysis.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        },
+        {
+          "cases": [
+            "BUDGET-FINAL-FULL-BODY-EXACT-MINUS-ONE",
+            "CONTROL-INVALID-ZERO-NO-BODY",
+            "DELIVERY-CAUSE-ALL-CHANNELS"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "complete final-body encoder and budget selection",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-BUDGET",
-      "owner": "Read"
+      "implementation_sites": [
+        "packages/kdna-read/src/budget.js:1-19",
+        "packages/kdna-read/src/project.js:1-117"
+      ],
+      "owner": "Read",
+      "proof": [
+        {
+          "cases": [
+            "BUDGET-FINAL-FULL-BODY-EXACT-MINUS-ONE",
+            "CONTROL-INVALID-ZERO-NO-BODY",
+            "DELIVERY-CAUSE-ALL-CHANNELS"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "trusted embedding current disclosure boundary",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-HOST",
-      "owner": "Host and Read"
+      "implementation_sites": [
+        "packages/kdna-read/src/host-gate.js:1-44",
+        "packages/kdna-read/src/embedding.js:1-5"
+      ],
+      "owner": "Host and Read",
+      "proof": [
+        {
+          "cases": [
+            "handle-lifecycle.test.js",
+            "r2-public-read.test.js",
+            "r2-read-rule-obligations.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        },
+        {
+          "cases": [
+            "HOST-FRESH-DENIAL-NO-LEAK",
+            "HOST-HANDLE-DELIVERY-REGISTRY-EPOCH",
+            "HOST-NEW-ADMISSION-INVALIDATES-HANDLE",
+            "HOST-REVOCATION-TOMBSTONE-LIFT"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_host_boundary_enforcement_under_trusted_provider_premise",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "single Core projection with Host-facing adapters",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-MODES",
-      "owner": "Core and Read"
+      "implementation_sites": [
+        "packages/kdna-read/src/project.js:1-117",
+        "packages/kdna-read/src/pipeline.js:1-109"
+      ],
+      "owner": "Core and Read",
+      "proof": [
+        {
+          "cases": [
+            "public-contract.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "public-closure-omissions.test.js",
+            "public-native-bindings.test.js",
+            "r2-public-read.test.js",
+            "r2-transport-analysis.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        },
+        {
+          "cases": [
+            "BROWSER-BRANDED-SNAPSHOT-CAPABILITY",
+            "MODES-ONE-TWENTY-HUNDRED-PARITY",
+            "MODES-SCOPE-NO-ADJACENT-OMISSION-LEAK"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "state correlation after independently observed stages",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-STATES",
-      "owner": "Read and Host"
+      "implementation_sites": [
+        "packages/kdna-read/src/budget.js:4",
+        "packages/kdna-read/src/authority.js:1-7",
+        "packages/kdna-read/src/delivery.js:1-9"
+      ],
+      "owner": "Read and Host",
+      "proof": [
+        {
+          "cases": [
+            "STATES-NO-INVENTED-AUTHORITY"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "package-set admission and distinct runtime handoff",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-PACKAGE-SET",
-      "owner": "Core and Host"
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/package-set.js:1-60",
+        "packages/kdna-core/src/public-contract/package-set-node.js:1-83",
+        "packages/kdna-core/src/public-contract/package-set-admission.js:1-515",
+        "packages/kdna-read/src/package-set-node.js:1-389",
+        "packages/kdna-read/src/package-set-host.js:1-294"
+      ],
+      "owner": "Core and Host",
+      "proof": [
+        {
+          "cases": [
+            "public-package-set-node.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "package-set-node.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        },
+        {
+          "cases": [
+            "PACKAGE-HANDOFF-CORRELATION-NO-EXECUTION",
+            "PACKAGE-SET-ORDER-EXACT-BINDINGS"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "unforgeable runtime branding",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-OPAQUE",
-      "owner": "Core, Read, embedding"
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/brand.js:1-14",
+        "packages/kdna-read/src/brands.js:1-3"
+      ],
+      "owner": "Core, Read, embedding",
+      "proof": [
+        {
+          "cases": [
+            "OPAQUE-BRAND-IMMUTABLE-COPY"
+          ],
+          "gate": "runtime-obligations"
+        },
+        {
+          "cases": [
+            "CORE-CARRIER-NOT-SNAPSHOT-T1"
+          ],
+          "gate": "catalog-only-runtime"
+        }
+      ],
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "type-aware extension semantic firewall",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-EXTENSIONS",
-      "owner": "Core"
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/component-semantics.js:1-191",
+        "packages/kdna-core/src/public-contract/semantic-admission.js:1-49"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "public-admission-regressions.test.js",
+            "public-components.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "r2-public-read.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        },
+        {
+          "cases": [
+            "EXTENSIONS-CRITICAL-FIREWALL"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "container/crypto admission before Read",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-CONTAINER",
-      "owner": "Core"
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/container.js:1-58",
+        "packages/kdna-core/src/public-contract/admit.js:1-38",
+        "packages/kdna-core/src/public-contract/semantic-admission.js:1-49"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "public-contract.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "CHECKSUMS-METADATA-CAPABILITY",
+            "CONTAINER-BOUNDS-DUPLICATE-TRAVERSAL",
+            "CONTAINER-CODEC-CRC-ENTRY-ALLOWLIST",
+            "CONTAINER-REAL-NODE-PATH-ERRORS"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     },
     {
       "boundary": "typed extension interpretation and pre-compiler/saved-byte comparison",
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
       "id": "PUBLIC-COMPONENT-SEMANTICS",
-      "owner": "Core and formal Creation"
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/component-semantics.js:1-191"
+      ],
+      "owner": "Core and formal Creation",
+      "proof": [
+        {
+          "cases": [
+            "public-components.test.js",
+            "r2-core.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_CS2_structural_and_digest_enforcement_not_creation_fidelity",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    {
+      "boundary": "single cross-entry checker over an admitted payload",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "id": "PUBLIC-FORM-CONSISTENCY",
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/cross-entry.js:1-448",
+        "packages/kdna-core/src/public-contract/r2-semantics.js:1-313"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "r2-base-rule-obligations.test.js",
+            "r2-core.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "RESULT-FORMATION-STATIC-NO-EXECUTION"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    {
+      "boundary": "single cross-entry checker over an admitted payload",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "id": "PUBLIC-ASSET-CAPABILITY",
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/cross-entry.js:1-448",
+        "packages/kdna-core/src/public-contract/r2-semantics.js:1-313"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "r2-base-rule-obligations.test.js",
+            "r2-core.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "RESULT-FORMATION-STATIC-NO-EXECUTION"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    {
+      "boundary": "single cross-entry checker over an admitted payload",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "id": "PUBLIC-TERM-UNIQUENESS",
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/cross-entry.js:1-448"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "r2-core.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    {
+      "boundary": "single cross-entry checker over an admitted payload",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "id": "PUBLIC-PARENT-CLOSURE",
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/r2-semantics.js:1-313",
+        "packages/kdna-core/src/public-contract/cross-entry.js:1-448"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "r2-base-rule-obligations.test.js",
+            "r2-core.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    {
+      "boundary": "single cross-entry checker over an admitted payload",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "id": "PUBLIC-TERM-VOCABULARY",
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/r2-semantics.js:1-313",
+        "packages/kdna-core/src/public-contract/cross-entry.js:1-448"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "public-components.test.js",
+            "r2-core.test.js",
+            "r2-execution.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    {
+      "boundary": "single cross-entry checker over an admitted payload",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "id": "PUBLIC-NAVIGATION-LABEL",
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/r2-semantics.js:1-313",
+        "packages/kdna-core/src/public-contract/cross-entry.js:1-448"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "public-admission-regressions.test.js",
+            "r2-core.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_exact_authored_focus_copy_not_linguistic_fidelity",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    {
+      "boundary": "single Core projection carrier plus the Host-facing Read adapter",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "id": "PUBLIC-CATALOG-CRITICAL-EXEMPTION",
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/component-semantics.js:1-191"
+      ],
+      "owner": "Core and Read",
+      "proof": [
+        {
+          "cases": [
+            "public-admission-regressions.test.js",
+            "public-components.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "r2-public-read.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    {
+      "boundary": "single Read projection with Host-facing adapters",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "id": "PUBLIC-OMISSION-FOLD",
+      "implementation_sites": [
+        "packages/kdna-read/src/omissions.js:1-92"
+      ],
+      "owner": "Read",
+      "proof": [
+        {
+          "cases": [
+            "public-closure-omissions.test.js",
+            "r2-browser-environment.test.js",
+            "r2-read-rule-obligations.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    {
+      "boundary": "single cross-entry checker over an admitted payload",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "id": "PUBLIC-UNIQUE-IDENTITY",
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/r2-registry.js:1-103",
+        "packages/kdna-core/src/public-contract/cross-entry.js:1-448"
+      ],
+      "owner": "Core",
+      "proof": [
+        {
+          "cases": [
+            "public-native-bindings.test.js",
+            "r2-base-rule-obligations.test.js",
+            "r2-core.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "GRAPH-DUPLICATE-DANGLING-ROLE"
+          ],
+          "gate": "runtime-obligations"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    {
+      "boundary": "Whole-asset semantic admission and mandatory reading closure",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "id": "PUBLIC-LIFECYCLE",
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/cross-entry.js:1-448",
+        "packages/kdna-core/src/public-contract/canonical-ir.js:1-97",
+        "packages/kdna-core/src/public-contract/r2-semantics.js:1-313",
+        "packages/kdna-core/src/public-contract/r2-registry.js:1-103"
+      ],
+      "owner": "Core and Canonical IR",
+      "proof": [
+        {
+          "cases": [
+            "public-lifecycle.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    {
+      "boundary": "Native execution admission and configured Host observation boundary",
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "id": "PUBLIC-EXECUTION",
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/execution.js:1-310"
+      ],
+      "owner": "Core execution reference and deployment Host",
+      "proof": [
+        {
+          "cases": [
+            "public-execution.test.js",
+            "r2-execution.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_execution_boundary_enforcement_under_trusted_host_premise",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
     }
   ],
-  "status": "UNPUBLISHED_DESIGN_TARGET"
+  "status": "UNPUBLISHED_R2_IMPLEMENTATION_CANDIDATE"
 }

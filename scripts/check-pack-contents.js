@@ -17,6 +17,14 @@ const packAllowlists = JSON.parse(
   fs.readFileSync(path.join(__dirname, 'pack-allowlists.json'), 'utf8'),
 );
 const corePackAllowlist = packAllowlists.packages['@aikdna/kdna-core'];
+const readPackAllowlist = packAllowlists.packages['@aikdna/kdna-read'];
+const readDir = path.join(root, 'packages', 'kdna-read');
+// An absent row is a finding, never a silent pass: the Read public surface is
+// asserted by the same exact-set rule as the Core surface.
+if (!readPackAllowlist || !Array.isArray(readPackAllowlist.members)) {
+  console.error('Missing reviewed @aikdna/kdna-read member allowlist');
+  process.exit(1);
+}
 const requiredCompatFiles = [
   'bin/kdna.js',
   'bin/kdna-lint.js',
@@ -65,5 +73,9 @@ function checkPackage(label, cwd, { required = [], exact = null } = {}) {
 checkPackage('@aikdna/kdna-core', coreDir, {
   required: ['LICENSE', 'NOTICE'],
   exact: corePackAllowlist.members,
+});
+checkPackage('@aikdna/kdna-read', readDir, {
+  required: ['LICENSE', 'NOTICE'],
+  exact: readPackAllowlist.members,
 });
 checkPackage('@aikdna/kdna', compatDir, { required: requiredCompatFiles });

@@ -1,0 +1,55 @@
+{
+  "id": "envelope-aead-vector-04-scrypt-multi-slot",
+  "description": "Two different scrypt KEKs independently wrap one CEK; either explicitly selected slot decrypts the same plaintext.",
+  "inputs": {
+    "cek": "REREREREREREREREREREREREREREREREREREREREREQ=",
+    "plaintext": "KDNA envelope-aead-vector-04-scrypt-multi-slot: one CEK, independently wrapped slots.",
+    "aad": "kdna.envelope.aead\n0.1.0\nurn:uuid:00000000-0000-4000-8000-000000000004\nkdna:fixture:multislot-4\n1.0.0\npayload.kdnab\nlicensed\npassword",
+    "credentials": [
+      "vector-4-primary",
+      "vector-4-recovery"
+    ]
+  },
+  "expected": {
+    "keks": [
+      "hD3SqTazdLoXzEYXisjan2HsSeSepWNewMhbNecDELs=",
+      "NwJEDJf59SBT+mcetrX8WTPJUj9ycQvJoWGj07cbPOg="
+    ],
+    "envelope": {
+      "profile": "kdna.envelope.aead",
+      "profile_version": "0.1.0",
+      "alg": "AES-256-GCM",
+      "key_wrapping": "AES-256-KW",
+      "kdf_profile": "scrypt-sha256",
+      "key_slots": [
+        {
+          "slot": "password",
+          "kdf_profile": "scrypt-sha256",
+          "kdf_params": {
+            "N": 32768,
+            "r": 8,
+            "p": 1,
+            "salt": "QEBAQEBAQEBAQEBAQEBAQA=="
+          },
+          "wrap": "AES-256-KW",
+          "wrapped_key": "dZGSbitAHlijaAxLntnZ1NP5xdO2uagQ3fV0oOLMYu+AxclVUda0zw=="
+        },
+        {
+          "slot": "recovery",
+          "kdf_profile": "scrypt-sha256",
+          "kdf_params": {
+            "N": 32768,
+            "r": 8,
+            "p": 1,
+            "salt": "QUFBQUFBQUFBQUFBQUFBQQ=="
+          },
+          "wrap": "AES-256-KW",
+          "wrapped_key": "ReFab0+PYozBvdBzHdbTU6+IOW047Jn9byvej3yaRTpjWu5s6/tM6Q=="
+        }
+      ],
+      "iv": "ZGRkZGRkZGRkZGRk",
+      "tag": "8VA8RtxVLSbGPKkSZ1PsJg==",
+      "ciphertext": "DlBWRdZvHSgCFmSiwH1Vqcigmklg9Z6R5pAsZAr1wAhFmZ9bqNVzlEe3KE8EZgnCUlnMFGNAAwEbx7lCuoXb4iVwGpix3uBecteGoVSMY+UNRFjjsQ=="
+    }
+  }
+}

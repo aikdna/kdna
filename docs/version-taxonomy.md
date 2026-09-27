@@ -19,12 +19,14 @@ Removed generation-labelled names are historical vocabulary, not aliases for
 current responsibilities. They MUST NOT appear in current identifiers,
 filenames, routes, examples, release tags, or narrative.
 
+Current exact tuple and package bindings are defined by the [public version policy](../specs/public-version-policy.md). This repair is an unpublished candidate, not release or phase acceptance.
+
 ## Compatibility Coordinates
 
 | Coordinate | Current value | Scope |
 |---|---:|---|
-| `format_version` | `0.1.0` | KDNA Asset Container contract |
-| `compatibility.profile_version` | `0.1.0` | Selected payload profile contract |
+| `format_version` | `0.5.0` | KDNA Asset Container contract |
+| `compatibility.profile_version` | `0.5.1` | Selected payload profile contract |
 | `contract_version` | contract-specific SemVer | Runtime, plan, trace, or evidence object |
 | `protocol_version` | protocol-specific SemVer | Host exchange contract |
 

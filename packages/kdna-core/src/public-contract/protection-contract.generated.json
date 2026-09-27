@@ -1,0 +1,2348 @@
+{
+  "api_typescript": "export type ProtectedSignaturePolicy = { readonly requireSignature: boolean; readonly expectedPublicKeyHex: string | null };\nexport type ProtectionGrantExpectations = { readonly issuer: string; readonly signing_key_id: string; readonly issuer_public_key: string; readonly account_id: string; readonly entitlement_id: string; readonly entitlement_profile: 'account' | 'org'; readonly device_id: string; readonly device_agreement_public_key: string; readonly device_signing_public_key: string };\nexport type ProtectedCredential = { readonly kind: 'none' } | { readonly kind: 'password'; readonly password: Uint8Array; readonly slotIndex?: number } | { readonly kind: 'external-grant'; readonly grantBytes: Uint8Array; readonly deviceAgreementPrivateKeyPkcs8: Uint8Array; readonly mode: 'online' | 'offline'; readonly expected: ProtectionGrantExpectations };\nexport type ProtectedAdmissionOptions = { readonly credential: ProtectedCredential; readonly signaturePolicy: ProtectedSignaturePolicy };\nexport type ProtectionStateScope = { readonly issuer: string; readonly account_id: string; readonly entitlement_id: string };\nexport type ProtectionHighWater = { readonly scope: ProtectionStateScope; readonly highest_status_version: number; readonly status: 'active' | 'revoked' | 'expired'; readonly last_trusted_time_ms: number; readonly revision: number };\nexport type ProtectionStateAdvance = { readonly scope: ProtectionStateScope; readonly device_id: string; readonly verified: { readonly grant_digest: string; readonly status_version: number; readonly status: 'active' | 'revoked' | 'expired'; readonly observed_at_ms: number } };\nexport type ProtectionRefreshContext = ProtectionStateScope & { readonly device_id: string; readonly A: string; readonly grant_id: string; readonly status_version: number; readonly purpose: 'authorization' | 'projection' | 'host_handoff' | 'transport_commit' };\nexport type TrustedProtectionProvider = { readonly kind: 'local'; readonly clock: () => number } | { readonly kind: 'external'; readonly clock: () => number; readonly capabilities: { readonly offline: boolean; readonly status_refresh: boolean; readonly revocation: boolean }; readonly readAdvance: (input: ProtectionStateAdvance) => Promise<ProtectionHighWater>; readonly refresh?: (context: ProtectionRefreshContext) => Promise<Uint8Array> };\nexport type ProtectionPhase = 'projection' | 'host_observation' | 'host_handoff' | 'read_return' | 'transport_commit' | 'execution';\nexport type ProtectionCurrent = { readonly status: 'current'; readonly receipt: ProtectionReceipt };\nexport type ProtectionObserved = ProtectionCurrent & { readonly checkpoint: ProtectionCheckpoint };\nexport type ProtectionSource = { readonly kind: 'snapshot'; readonly snapshot: CanonicalReadSnapshot } | { readonly kind: 'catalog'; readonly catalog: CoreAdmissionCatalogOnly };\nexport type ProtectionBindingResult = { readonly status: 'bound'; readonly binding: ProtectionBinding } | ProtectedAdmissionFailed;\nexport type ProtectedExportOptions = ({ readonly kind: 'integrity' } | { readonly kind: 'password'; readonly asset_uid: string; readonly entitlement: { readonly profile: 'password'; readonly offline?: boolean; readonly revocable?: boolean }; readonly slots: ReadonlyArray<{ readonly slot: string; readonly kdf_profile: 'scrypt-sha256' | 'argon2id' }> } | { readonly kind: 'external-grant'; readonly asset_uid: string; readonly entitlement: { readonly profile: 'account' | 'org'; readonly offline?: boolean; readonly revocable?: boolean }; readonly key_ref: string; readonly issuer_key_id: string }) & { readonly checksums: boolean; readonly signature: 'none' | 'ed25519' };\nexport type ProtectedProducerSecrets = { readonly passwords: ReadonlyArray<{ readonly slot: string; readonly password: Uint8Array }>; readonly signingSeed?: Uint8Array; readonly issuerRootKey?: never } | { readonly issuerRootKey: Uint8Array; readonly signingSeed?: Uint8Array; readonly passwords?: never } | { readonly signingSeed?: Uint8Array; readonly issuerRootKey?: never; readonly passwords?: never };\nexport type ProtectedExportResult = { readonly status: 'produced'; readonly bytes: Uint8Array; readonly evidence: ProtectedExportEvidence } | ProtectedCoreRejected | ProtectedAdmissionFailed;\nexport declare function getProtectionContract(): ProtectionRuntimeDescriptor;\nexport declare function admitProtectedNode(input: string | Uint8Array, options: ProtectedAdmissionOptions, provider: TrustedProtectionProvider): Promise<ProtectedAdmissionResult>;\nexport declare function bindProtectionOperation(operation: ProtectionOperation): ProtectionBindingResult;\nexport declare function disposeProtectionOperation(operation: ProtectionOperation): void;\nexport declare function protectSourceBytes(input: Uint8Array, options: ProtectedExportOptions, secrets: ProtectedProducerSecrets): Promise<ProtectedExportResult>;\n",
+  "capability_shapes": {
+    "ProtectionBinding": "{ readonly source: () => ProtectionSource | ProtectedAdmissionFailed; readonly observe: (phase: ProtectionPhase) => Promise<ProtectionObserved | ProtectionCurrentFailure>; readonly assertCurrent: (checkpoint: ProtectionCheckpoint) => ProtectionCurrent | ProtectionCurrentFailure }"
+  },
+  "checksums": {
+    "document_bytes": 1048576,
+    "entries_representation": "ordered array of closed {name,bytes,digest} rows; unique name checked independently of JSON object shape",
+    "entry_bytes": 8388608,
+    "entry_count": 128,
+    "id": "kdna.checksums.document/1",
+    "root": "ChecksumsDocument1",
+    "schema_path": "specs/checksums-document-1.schema.json",
+    "version": "1.0.0"
+  },
+  "definition_digest": "sha256:d9923ffde4f0b4596076b99b9e758a9c77c83fe616e10a9e91a2bcdd265d8b2b",
+  "delivery_history": {
+    "acknowledgement": "Only literal synchronous true confirms the configured trusted transport handoff. False/throw/thenable/invalid return leaves outcome_unknown. Never await or execute an untrusted then method to improve the result. Callback itself may already have sent data.",
+    "disposal": "Disposal closes authority and clears secrets best effort but retains the redacted per-token delivery history while its token/owning Read remains reachable, so a later failure cannot erase past attempts.",
+    "limits": "not_invoked only means this token has not invoked this API transport callback. It is not proof that the trusted Host did not send its already received body through another route. confirmed means configured handoff acknowledgement, not confirmed remote receipt; outcome_unknown may include partial or full external disclosure.",
+    "monotonicity": "History is not_invoked until side-effect invocation; then outcome_unknown; then confirmed only on actual acknowledgement. Never downgrade or discard attempt_id/times after throw, expiry, revocation, disposal, repeated call or final Read failure. Returned observations are frozen values at their return time; later observations report accumulated state. A retained earlier not_invoked observation cannot prove later nondisclosure.",
+    "outer_settlement": "A prepared token can initiate commit only while its owning Host callback is active. Callback settlement closes unused authority. If a commit remains reserved or awaits authorization/scope when the outer callback settles, the owning Read returns body-free delivery_failed with zero new handles; later promise resolution/rejection cannot invoke a side effect. Preserve consumed history. Host-only true succeeds only when no failed or pending commit exists.",
+    "reentrancy": "Private in-flight reservation is taken at commit entry before calling any external provider/clock callback; same-token concurrent or reentrant entry cannot start another observation or attempt. Recheck token/generation at every await. Before side-effect invocation, atomically consume token and install outcome_unknown. A pre-invocation failure closes this prepared token with not_invoked. No automatic retry; later calls return existing history only.",
+    "scope": "Exactly one prepared token belongs to each protected Read attempt. Every post-preparation success/failure and commit result reports the same accumulated private history. Deferred new delivery requires a new protected Read with fresh checks and cannot replace an earlier token/history. Once commit fails or is outcome_unknown, later Host true cannot promote that Read to ready. Host-only success with not_invoked makes no external-delivery claim. Separate operations never import caller-supplied history.",
+    "scope_recheck": "Compare the full prepared body to the existing scopeBody result on a clone; filtering any content requires a new Read, even when scopeBody returns true. Final local checks after clock callbacks recheck disposed and generation.",
+    "states": [
+      "not_invoked",
+      "outcome_unknown",
+      "confirmed"
+    ],
+    "times": "Host at_ms <= attempted_at_ms <= confirmed_at_ms when available. attempted_at_ms is captured by the final trusted local check immediately before consumption. Record confirmed_at_ms from the next valid trusted-clock sample after literal true; if clock fails/rolls back, preserve confirmed with null and return a body-free provider failure. A committed success requires non-null confirmed_at_ms equal to committed_at_ms. No known timestamp may later become null.",
+    "transition": "available -> consumed/outcome_unknown is one synchronous private transition after awaited authorization/scope observations and final local checks, before calling the transport side-effect callback. No external code runs inside that transition."
+  },
+  "derived_runtime_enforcement": {
+    "PROTECTION-AUTHORITY": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/brand.js:1-18",
+        "packages/kdna-core/src/public-contract/execution.js:1-310",
+        "packages/kdna-core/src/public-contract/protection-operation.js:1-79",
+        "packages/kdna-read/src/protection-node.js:1-65",
+        "packages/kdna-read/src/protected-delivery.js:1-84",
+        "packages/kdna-read/src/pipeline.js:1-109"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-admission.test.js",
+            "public-protection-operation.test.js",
+            "public-protection-proof.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "protected-delivery.test.js",
+            "protected-read.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_same_instance_and_trusted_host_composition_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    "PROTECTION-CHECKSUMS": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/protection-integrity.js:1-51"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-producer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    "PROTECTION-DECLARATIONS": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/protection-declaration.js:1-74",
+        "packages/kdna-core/src/public-contract/protection-grant.js:1-85"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-admission.test.js",
+            "public-protection-grant.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    "PROTECTION-DELIVERY": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-read/src/protection-node.js:1-65",
+        "packages/kdna-read/src/protected-delivery.js:1-84",
+        "packages/kdna-read/src/pipeline.js:1-109"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-proof.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "protected-delivery.test.js",
+            "protected-read.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_local_handoff_history_enforcement_not_remote_receipt",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    "PROTECTION-DIGESTS": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
+        "packages/kdna-core/src/public-contract/semantic-admission.js:1-49",
+        "packages/kdna-core/src/public-contract/protection-producer.js:1-75",
+        "packages/kdna-core/src/public-contract/protection-integrity.js:1-51"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-admission.test.js",
+            "public-protection-crypto.test.js",
+            "public-protection-producer.test.js",
+            "public-protection-proof.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    "PROTECTION-GRANTS": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/protection-grant.js:1-85",
+        "packages/kdna-core/src/public-contract/protection-operation.js:1-79"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-grant.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    "PROTECTION-PRESENCE": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/admit.js:1-38",
+        "packages/kdna-core/src/public-contract/protection-declaration.js:1-75",
+        "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
+        "packages/kdna-core/src/public-contract/protection-producer.js:1-75",
+        "packages/kdna-core/src/public-contract/protection-crypto.js:1-91",
+        "packages/kdna-core/src/public-contract/protection-envelope-codec.js:1-78"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-admission.test.js",
+            "public-protection-producer.test.js",
+            "public-protection-proof.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    },
+    "PROTECTION-RESULTS": {
+      "generator_machine_check": "none",
+      "generator_machine_check_gap": null,
+      "implementation_sites": [
+        "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
+        "packages/kdna-core/src/public-contract/protection-operation.js:1-79",
+        "packages/kdna-read/src/protection-node.js:1-65",
+        "packages/kdna-read/src/protected-delivery.js:1-84",
+        "packages/kdna-read/src/pipeline.js:1-109"
+      ],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-admission.test.js",
+            "public-protection-operation.test.js",
+            "public-protection-proof.test.js",
+            "r2-protection-core.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "protected-delivery.test.js",
+            "protected-read.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_enforcement": "full",
+      "runtime_enforcement_gap": null
+    }
+  },
+  "diagnostic_stages": {
+    "PROTECTION_AUTHENTICATION_FAILED": [
+      "authentication"
+    ],
+    "PROTECTION_AUTHORIZATION_EXPIRED": [
+      "authorization",
+      "projection",
+      "host_handoff",
+      "transport_commit"
+    ],
+    "PROTECTION_AUTHORIZATION_REVOKED": [
+      "authorization",
+      "projection",
+      "host_handoff",
+      "transport_commit"
+    ],
+    "PROTECTION_CHECKSUMS_INVALID": [
+      "integrity"
+    ],
+    "PROTECTION_CREDENTIAL_REQUIRED": [
+      "credential"
+    ],
+    "PROTECTION_DECLARATION_CONFLICT": [
+      "authorization"
+    ],
+    "PROTECTION_DECLARATION_INVALID": [
+      "declaration"
+    ],
+    "PROTECTION_ENVELOPE_INVALID": [
+      "envelope"
+    ],
+    "PROTECTION_GRANT_BINDING_MISMATCH": [
+      "grant"
+    ],
+    "PROTECTION_GRANT_INVALID": [
+      "grant"
+    ],
+    "PROTECTION_INPUT_INVALID": [
+      "input"
+    ],
+    "PROTECTION_KDF_UNAVAILABLE": [
+      "kdf"
+    ],
+    "PROTECTION_OPERATION_DISPOSED": [
+      "input",
+      "authorization",
+      "projection",
+      "host_handoff",
+      "transport_commit"
+    ],
+    "PROTECTION_OPERATION_UNTRUSTED": [
+      "input"
+    ],
+    "PROTECTION_PROFILE_UNSUPPORTED": [
+      "declaration",
+      "envelope",
+      "integrity"
+    ],
+    "PROTECTION_PROVIDER_FAILED": [
+      "authorization",
+      "projection",
+      "host_handoff",
+      "transport_commit"
+    ],
+    "PROTECTION_REFRESH_REQUIRED": [
+      "authorization",
+      "projection",
+      "host_handoff",
+      "transport_commit"
+    ],
+    "PROTECTION_SIGNATURE_INVALID": [
+      "integrity"
+    ],
+    "PROTECTION_SIGNATURE_PIN_MISMATCH": [
+      "integrity"
+    ],
+    "PROTECTION_STATE_ROLLBACK": [
+      "authorization",
+      "projection",
+      "host_handoff",
+      "transport_commit"
+    ]
+  },
+  "historical_runtime_package_proposal": {
+    "packages": {
+      "core": "0.35.0-rc.source.1",
+      "read": "0.10.0-rc.source.1"
+    },
+    "status": "pre-R2 proposal only; not a current package selector"
+  },
+  "id": "kdna.protection-admission/1",
+  "legacy_inputs": [
+    {
+      "bytes": 20894,
+      "path": "packages/kdna-core/src/asset-reader.js",
+      "sha256": "ae352e29213013f22c4496bed06474e0f36369934f74dc0ad47ec83f24eedfb9"
+    },
+    {
+      "bytes": 10873,
+      "path": "packages/kdna-core/src/signature.js",
+      "sha256": "e1583088d70724dab0548f336bfbea9ed2b532a8390330ff11fa548181b792c0"
+    },
+    {
+      "bytes": 2668,
+      "path": "docs/CANONICALIZATION.md",
+      "sha256": "858a83dadab797c4dd15a06ba628d96a7ff5cd901c01213e8247f481fa62f8d2"
+    },
+    {
+      "bytes": 2570,
+      "path": "schema/checksums.schema.json",
+      "sha256": "7fd1f5d5a98a2f0a4d311a6ebba7d13d0e00253ab042098ac0aeec9e31c4d4e8"
+    },
+    {
+      "bytes": 7713,
+      "path": "specs/envelope-aead.schema.json",
+      "sha256": "a95f89c4902f8ddad4f7a406fd3f3af36e2d8adeab15ea655e96c38e9c4dde44"
+    },
+    {
+      "bytes": 1194,
+      "path": "specs/external-grant-envelope.schema.json",
+      "sha256": "245697c461cecf4fd68877d50d4489127f0375f99fda6f5ead41971d8776f6ca"
+    },
+    {
+      "bytes": 3191,
+      "path": "specs/external-key-grant.schema.json",
+      "sha256": "d0281a11ba405360bc45bd4894dcdfbed3a85664566af987b7147d5622ffb749"
+    },
+    {
+      "bytes": 23173,
+      "path": "rfcs/RFC-0018-envelope-aead.md",
+      "sha256": "7ffd215c7d2167f4c301218c6a2823d8699dc202105241aafc606965bb66a8de"
+    },
+    {
+      "bytes": 11078,
+      "path": "rfcs/RFC-0019-account-device-external-key-grant.md",
+      "sha256": "5a15015da541518d75e01da09bd31b0aaf69236be29db202ce49a2a14b20d061"
+    },
+    {
+      "bytes": 7345,
+      "path": "conformance/signature/vectors.json",
+      "sha256": "1bba5dc5cacdb13e211be11a6383056305588bbc51666bb21345ecc32e63aed3"
+    }
+  ],
+  "non_schema_rules": [
+    {
+      "applies_to": [
+        "Manifest",
+        "ProtectionEntitlement"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_owner": "Core/Read protection integration and trusted Host",
+      "id": "PROTECTION-PRESENCE",
+      "requirement": "Manifest entitlement is optional. Absence adds no credential, lease, offline or revocable default. With presence, access must be licensed, payload encrypted true, encryption exactly payload.kdnab and profile/version must match password->kdna.envelope.aead/0.1.0 or account/org->kdna.envelope.external-grant/0.1.0. Apply to every bytes/source/producer path before payload disclosure. Existing protection markers preserve ordinary capability rejection; new malformed entitlement-only plaintext rejects as Core invalid."
+    },
+    {
+      "applies_to": [
+        "Manifest",
+        "ProtectionEntitlement"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_owner": "Core/Read protection integration and trusted Host",
+      "id": "PROTECTION-DIGESTS",
+      "requirement": "A/C/E retain original container/member byte domains. Authenticated plaintext enters the one existing Payload semantic path once. Both existing Manifest content_digest and authoring.content_digest must be refreshed, not removed. Final Manifest precedes E/checksums; legacy signature follows checksums; final A precedes external grant issuance. signature_content_digest is the independent frozen kdsig0.1 domain, not C."
+    },
+    {
+      "applies_to": [
+        "Manifest",
+        "ProtectionEntitlement"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_owner": "Core/Read protection integration and trusted Host",
+      "id": "PROTECTION-AUTHORITY",
+      "requirement": "Protected admission returns full IR only to a trusted Core caller already authorized to receive it. Same-instance opaque operations govern later controlled operations, not recall of copied IR. Pure inspect/project/Plan/Capsule do not gain clock/store/network I/O or online authority. All new controlled Reads/actions/transport commits need current protection plus independent Host scope/action checks. Disposed, cross-instance or serialized objects do not restore private authority."
+    },
+    {
+      "applies_to": [
+        "Manifest",
+        "ProtectionEntitlement"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_owner": "Core/Read protection integration and trusted Host",
+      "id": "PROTECTION-DELIVERY",
+      "requirement": "Final check then callback invocation discloses body to trusted Host. Awaiting callback across expiry cannot erase that disclosure. External transport commit separately obtains current operation validity and current Host scope. In one synchronous private transition before invoking the side-effect callback, consume the prepared token and record a unique attempt as outcome_unknown. The callback acknowledgement true confirms only its configured trusted transport handoff boundary, never remote receipt. False, throw or any thenable remains outcome_unknown even if bytes were sent. Reentrant or later reuse cannot invoke the callback again, create a new attempt or downgrade prior history. Confirmed history survives subsequent Host failure, expiry, revocation and provider error; a valid monotonic current-invocation post-ack sample is preserved even when authorization fails; an invalid, rollback, unavailable or uncalled post-ack clock records confirmed_at_ms null in the body-free failure, never an invented timestamp. Failure carries no prepared body, no ready/delivered result, and registers no new handle. No automatic retry or restoration of consumed authority. Delayed transport must acquire a distinct authorized prepared delivery at its actual handoff; no result claims global nondisclosure by a trusted Host outside this API."
+    },
+    {
+      "applies_to": [
+        "Manifest",
+        "ProtectionEntitlement"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_owner": "Core/Read protection integration and trusted Host",
+      "id": "PROTECTION-RESULTS",
+      "requirement": "R2-bound closed result unions separate actual Core failure and protection/delivery failures. All four Read modes reject unknown critical semantics with READ_UNSUPPORTED_CRITICAL; no catalog_only admission or delivery arm is active. Diagnostic references are bound to the complete R2 tuple and package combination by schema_binding. Historical pre-R2 schemas and the complete original definition remain separate and unchanged. JSON observations and receipts never create operation authority. request_failed may carry the actual rejected Read envelope only from request version dispatch (READ_MIXED_VERSION_TUPLE or READ_UNSUPPORTED_VERSION at stage version, original not_evaluated states, empty source coordinates, not_delivered receipt and exact budget). Tiny budgets preserve no_body_control. No bind/Host action or ProtectionReceipt occurs. Schema-valid later-stage rejection alone does not qualify. Binding observe/assertCurrent failures use closed ProtectionCurrentFailure with checked_at_ms UInt|null, sampled only in the current invocation. Each clock attempt resets the observation; valid monotonic samples survive later authorization/disposal rejection, while invalid/rollback/unavailable/uncalled samples are null. A timestamp is observation, not authority. Public failures project only status and diagnostic."
+    },
+    {
+      "applies_to": [
+        "Manifest",
+        "ProtectionEntitlement"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_owner": "Core/Read protection integration and trusted Host",
+      "id": "PROTECTION-DECLARATIONS",
+      "requirement": "offline/revocable absent remain unprovided. offline=false forbids offline grant use; offline=true requires a verified signed grace window and integration offline capability and does not create a window. revocable=true requires external grant plus trusted issuer status/refresh/revocation capability; password possession alone conflicts. revocable=false states no requested revocation feature and never disables actual issuer revoke/expiry. Capability conflicts reject, never silently ignore. Canonical password admission in this local Node module conflicts with offline=false because possession is locally usable."
+    },
+    {
+      "applies_to": [
+        "Manifest",
+        "ProtectionEntitlement"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_owner": "Core/Read protection integration and trusted Host",
+      "id": "PROTECTION-CHECKSUMS",
+      "requirement": "checksums.document/1 is a new closed document. Raw duplicate JSON keys reject; 1 MiB document cap, 2..128 entries, names <=4096 UTF8 bytes, member bytes <=8 MiB, total original container limits unchanged. Entries and covered_entries are the same strictly UTF8-sorted exact runtimeEntryNames set. Each entry bytes/digest matches original raw bytes. E0.2 equals entry_set_digest; A and checksums/signature themselves are not covered. Old0.1 is not relabeled."
+    },
+    {
+      "applies_to": [
+        "Manifest",
+        "ProtectionEntitlement"
+      ],
+      "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_owner": "Core/Read protection integration and trusted Host",
+      "id": "PROTECTION-GRANTS",
+      "requirement": "Trusted expectation binds account_id, exact entitlement_id, account/org entitlement profile, device ID and both distinct device public keys, asset UID/ID/version, captured original A, entry, ciphertext digest, key_ref, issuer asset key ID and pinned issuer signing key ID. Never trust grant self-asserted expectation. Per exact issuer/account_id/entitlement_id high-water shared across devices, per-device records keyed separately, all verified status/time updates atomic. Provider/clock rollback/store failures close. Offline use only explicitly requested within signed grace/expiry and authored allowance; no instant disconnected revocation promise."
+    }
+  ],
+  "paths": [
+    {
+      "current_authorization": "none; no clock/store/network",
+      "disclosure": "already disclosed at protected admission",
+      "operation": "pure inspection of previously disclosed IR",
+      "path": "inspectSnapshot",
+      "private_guard": "same Core brand; disposed association returns null"
+    },
+    {
+      "current_authorization": "none; no clock/store/network",
+      "disclosure": "does not authorize new external transmission",
+      "operation": "pure transformation of previously disclosed IR",
+      "path": "Read root project",
+      "private_guard": "same Core snapshot brand; disposed association rejects using existing projection error"
+    },
+    {
+      "current_authorization": "protected snapshot must use protected Read",
+      "disclosure": "no protected body or new handle",
+      "operation": "new asynchronous Read",
+      "path": "ordinary readBrowser(snapshot)",
+      "private_guard": "genuine protected snapshot conservatively returns READ_CORE_CAPABILITY_UNAVAILABLE before Host callback"
+    },
+    {
+      "current_authorization": "ordinary capability rejection remains",
+      "disclosure": "no protected body",
+      "operation": "existing bytes admission",
+      "path": "ordinary admitBytes/admitNode/admitBrowser/readNode/readBrowser(bytes)",
+      "private_guard": "new invalid entitlement-only combination is READ_CORE_INVALID before payload; protection marker keeps existing capability precedence"
+    },
+    {
+      "current_authorization": "same ordinary validation on input and final output",
+      "disclosure": "no protection bypass",
+      "operation": "existing source admission/producer",
+      "path": "openSourceBytes/packSourceBytes",
+      "private_guard": "entitlement-only plaintext invalid; protected markers unsupported"
+    },
+    {
+      "current_authorization": "none; not execution authorization",
+      "disclosure": "already disclosed data; external delivery needs current protected commit",
+      "operation": "pure static supply/transformation",
+      "path": "create/admitConsumptionPlan; inspectAdmittedPlan",
+      "private_guard": "existing brand checks; new protected association retained privately; disposed snapshot rejects with existing input code"
+    },
+    {
+      "current_authorization": "none; not execution authorization",
+      "disclosure": "retained bytes cannot be recalled",
+      "operation": "pure static supply/transformation",
+      "path": "create/admitRuntimeCapsule; inspectRuntimeCapsule",
+      "private_guard": "existing brand checks and private protected association; copied capsule has no operation authority"
+    },
+    {
+      "current_authorization": "trusted Host must check the bound protection operation at actual action boundary and its own action policy",
+      "disclosure": "protected commit before any external disclosure",
+      "operation": "new controlled execution authorization",
+      "path": "AgentHost request/execute using protected Plan/Capsule",
+      "private_guard": "old active string/Plan/Capsule cannot replace current grant; ordinary pure validators do not authorize execution"
+    },
+    {
+      "current_authorization": "trusted provider before projection, after each awaited Host observation, immediately before callback and return/handle registration",
+      "disclosure": "full IR only to trusted Core caller; scoped body to trusted Host",
+      "operation": "new controlled Read",
+      "path": "readProtectedNode accepted operation",
+      "private_guard": "same instance live operation and matching snapshot; no caller plaintext or verification flag"
+    },
+    {
+      "current_authorization": "fresh operation and two Host scope observations",
+      "disclosure": "register only after current successful delivery",
+      "operation": "new controlled expansion",
+      "path": "expand handle",
+      "private_guard": "handle matches original operation,A,C,snapshot,Host and expiry; serialization does not recreate registry"
+    },
+    {
+      "current_authorization": "protection and Host checks do not waive semantic completeness",
+      "disclosure": "no IR, snapshot, selected body, expansion handle or successful catalog-only envelope",
+      "operation": "rejection before protected Read delivery",
+      "path": "unknown critical semantics in all four modes",
+      "private_guard": "Core returns READ_UNSUPPORTED_CRITICAL with no snapshot or catalog-only carrier"
+    },
+    {
+      "current_authorization": "callback receives body after final check; external commit rechecks operation and current Host scope",
+      "disclosure": "Host invocation already discloses; external attempt/confirmation persists through all later failures. Confirmation means configured trusted transport handoff, not remote receipt. Failure body:null does not mean not sent.",
+      "operation": "two separate controlled disclosures",
+      "path": "Host callback and commitProtectedTransport",
+      "private_guard": "Before invoking the external side-effect callback, atomically consume one-use prepared delivery and record outcome_unknown; reentrant/later reuse returns existing history without callback, new attempt or downgrade. Observations do not restore authority."
+    }
+  ],
+  "proof_limits": [
+    "Definitions, static examples and generated shapes only; no protected runtime capability.",
+    "Opaque runtime types compile to false in JSON Schema; an observation validates no brand or grant.",
+    "Old source/schema/generator results do not prove ordinary runtime presence rejection until B1.",
+    "Independent restricted-window semantic review pending; no automatic IN_WINDOW claim."
+  ],
+  "r2_interpretation": "Unknown critical semantics reject in all modes; no ProtectedAdmissionCatalogOnly result/observation arm.",
+  "read_api_typescript": "import type { CanonicalReadSnapshot, CoreAdmissionCatalogOnly, ReadRequest, ReadCallResult, HostReadContextData, TrustedReadControlProvider } from '@aikdna/kdna-core';\nimport type { ProtectionOperation, ProtectionPreparedDelivery, ProtectedReadResult, ProtectedTransportCommitResult, ProtectedHostReadProvider } from '@aikdna/kdna-core/protection-node';\nexport type * from '@aikdna/kdna-core/protection-node';\nexport type ProtectedHostObservation = HostReadContextData & { readonly current_ms: number; readonly revoked?: boolean; readonly lift_denial?: boolean };\nexport type ProtectedHostObservationContext = { readonly request: ReadRequest; readonly snapshot: CanonicalReadSnapshot | CoreAdmissionCatalogOnly };\nexport type ProtectedHostCallbacks = { readonly observe: (context: ProtectedHostObservationContext) => ProtectedHostObservation | Promise<ProtectedHostObservation>; readonly deliver: (result: ReadCallResult, prepared: ProtectionPreparedDelivery) => boolean | Promise<boolean> };\nexport type TrustedProtectedTransport = { readonly observeScope: (context: ProtectedHostObservationContext) => ProtectedHostObservation | Promise<ProtectedHostObservation>; readonly commit: (result: ReadCallResult) => boolean };\nexport declare function createTrustedProtectedHostReadProvider(callbacks: ProtectedHostCallbacks): ProtectedHostReadProvider;\nexport declare function readProtectedNode(operation: ProtectionOperation, request: unknown, control: TrustedReadControlProvider, host: ProtectedHostReadProvider): Promise<ProtectedReadResult>;\nexport declare function commitProtectedTransport(operation: ProtectionOperation, prepared: ProtectionPreparedDelivery, transport: TrustedProtectedTransport): Promise<ProtectedTransportCommitResult>;\n",
+  "root": "ProtectionDefinitionObservation",
+  "rule_coverage": {
+    "PROTECTION-AUTHORITY": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-admission.test.js",
+            "public-protection-operation.test.js",
+            "public-protection-proof.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "protected-delivery.test.js",
+            "protected-read.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_same_instance_and_trusted_host_composition_enforcement",
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/brand.js:1-18",
+        "packages/kdna-core/src/public-contract/execution.js:1-310",
+        "packages/kdna-core/src/public-contract/protection-operation.js:1-79",
+        "packages/kdna-read/src/protection-node.js:1-65",
+        "packages/kdna-read/src/protected-delivery.js:1-84",
+        "packages/kdna-read/src/pipeline.js:1-109"
+      ]
+    },
+    "PROTECTION-CHECKSUMS": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-producer.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/protection-integrity.js:1-51"
+      ]
+    },
+    "PROTECTION-DECLARATIONS": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-admission.test.js",
+            "public-protection-grant.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/protection-declaration.js:1-74",
+        "packages/kdna-core/src/public-contract/protection-grant.js:1-85"
+      ]
+    },
+    "PROTECTION-DELIVERY": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-proof.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "protected-delivery.test.js",
+            "protected-read.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_local_handoff_history_enforcement_not_remote_receipt",
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-read/src/protection-node.js:1-65",
+        "packages/kdna-read/src/protected-delivery.js:1-84",
+        "packages/kdna-read/src/pipeline.js:1-109"
+      ]
+    },
+    "PROTECTION-DIGESTS": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-admission.test.js",
+            "public-protection-crypto.test.js",
+            "public-protection-producer.test.js",
+            "public-protection-proof.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
+        "packages/kdna-core/src/public-contract/semantic-admission.js:1-49",
+        "packages/kdna-core/src/public-contract/protection-producer.js:1-75",
+        "packages/kdna-core/src/public-contract/protection-integrity.js:1-51"
+      ]
+    },
+    "PROTECTION-GRANTS": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-grant.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/protection-grant.js:1-85",
+        "packages/kdna-core/src/public-contract/protection-operation.js:1-79"
+      ]
+    },
+    "PROTECTION-PRESENCE": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-admission.test.js",
+            "public-protection-producer.test.js",
+            "public-protection-proof.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/admit.js:1-38",
+        "packages/kdna-core/src/public-contract/protection-declaration.js:1-75",
+        "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
+        "packages/kdna-core/src/public-contract/protection-producer.js:1-75",
+        "packages/kdna-core/src/public-contract/protection-crypto.js:1-91",
+        "packages/kdna-core/src/public-contract/protection-envelope-codec.js:1-78"
+      ]
+    },
+    "PROTECTION-RESULTS": {
+      "generator_uncovered": [],
+      "machine_checkers": [],
+      "proof": [
+        {
+          "cases": [
+            "public-protection-admission.test.js",
+            "public-protection-operation.test.js",
+            "public-protection-proof.test.js",
+            "r2-protection-core.test.js"
+          ],
+          "gate": "kdna-core-suite"
+        },
+        {
+          "cases": [
+            "protected-delivery.test.js",
+            "protected-read.test.js"
+          ],
+          "gate": "kdna-read-suite"
+        }
+      ],
+      "proof_scope": "current_rc7_independently_reviewed_engineering_enforcement",
+      "runtime_uncovered": [],
+      "runtime_units": [
+        "packages/kdna-core/src/public-contract/protection-admission.js:1-94",
+        "packages/kdna-core/src/public-contract/protection-operation.js:1-79",
+        "packages/kdna-read/src/protection-node.js:1-65",
+        "packages/kdna-read/src/protected-delivery.js:1-84",
+        "packages/kdna-read/src/pipeline.js:1-109"
+      ]
+    }
+  },
+  "rules": {
+    "PROTECTION-AUTHORITY": "Protected admission returns full IR only to a trusted Core caller already authorized to receive it. Same-instance opaque operations govern later controlled operations, not recall of copied IR. Pure inspect/project/Plan/Capsule do not gain clock/store/network I/O or online authority. All new controlled Reads/actions/transport commits need current protection plus independent Host scope/action checks. Disposed, cross-instance or serialized objects do not restore private authority.",
+    "PROTECTION-CHECKSUMS": "checksums.document/1 is a new closed document. Raw duplicate JSON keys reject; 1 MiB document cap, 2..128 entries, names <=4096 UTF8 bytes, member bytes <=8 MiB, total original container limits unchanged. Entries and covered_entries are the same strictly UTF8-sorted exact runtimeEntryNames set. Each entry bytes/digest matches original raw bytes. E0.2 equals entry_set_digest; A and checksums/signature themselves are not covered. Old0.1 is not relabeled.",
+    "PROTECTION-DECLARATIONS": "offline/revocable absent remain unprovided. offline=false forbids offline grant use; offline=true requires a verified signed grace window and integration offline capability and does not create a window. revocable=true requires external grant plus trusted issuer status/refresh/revocation capability; password possession alone conflicts. revocable=false states no requested revocation feature and never disables actual issuer revoke/expiry. Capability conflicts reject, never silently ignore. Canonical password admission in this local Node module conflicts with offline=false because possession is locally usable.",
+    "PROTECTION-DELIVERY": "Final check then callback invocation discloses body to trusted Host. Awaiting callback across expiry cannot erase that disclosure. External transport commit separately obtains current operation validity and current Host scope. In one synchronous private transition before invoking the side-effect callback, consume the prepared token and record a unique attempt as outcome_unknown. The callback acknowledgement true confirms only its configured trusted transport handoff boundary, never remote receipt. False, throw or any thenable remains outcome_unknown even if bytes were sent. Reentrant or later reuse cannot invoke the callback again, create a new attempt or downgrade prior history. Confirmed history survives subsequent Host failure, expiry, revocation and provider error; a valid monotonic current-invocation post-ack sample is preserved even when authorization fails; an invalid, rollback, unavailable or uncalled post-ack clock records confirmed_at_ms null in the body-free failure, never an invented timestamp. Failure carries no prepared body, no ready/delivered result, and registers no new handle. No automatic retry or restoration of consumed authority. Delayed transport must acquire a distinct authorized prepared delivery at its actual handoff; no result claims global nondisclosure by a trusted Host outside this API.",
+    "PROTECTION-DIGESTS": "A/C/E retain original container/member byte domains. Authenticated plaintext enters the one existing Payload semantic path once. Both existing Manifest content_digest and authoring.content_digest must be refreshed, not removed. Final Manifest precedes E/checksums; legacy signature follows checksums; final A precedes external grant issuance. signature_content_digest is the independent frozen kdsig0.1 domain, not C.",
+    "PROTECTION-GRANTS": "Trusted expectation binds account_id, exact entitlement_id, account/org entitlement profile, device ID and both distinct device public keys, asset UID/ID/version, captured original A, entry, ciphertext digest, key_ref, issuer asset key ID and pinned issuer signing key ID. Never trust grant self-asserted expectation. Per exact issuer/account_id/entitlement_id high-water shared across devices, per-device records keyed separately, all verified status/time updates atomic. Provider/clock rollback/store failures close. Offline use only explicitly requested within signed grace/expiry and authored allowance; no instant disconnected revocation promise.",
+    "PROTECTION-PRESENCE": "Manifest entitlement is optional. Absence adds no credential, lease, offline or revocable default. With presence, access must be licensed, payload encrypted true, encryption exactly payload.kdnab and profile/version must match password->kdna.envelope.aead/0.1.0 or account/org->kdna.envelope.external-grant/0.1.0. Apply to every bytes/source/producer path before payload disclosure. Existing protection markers preserve ordinary capability rejection; new malformed entitlement-only plaintext rejects as Core invalid.",
+    "PROTECTION-RESULTS": "R2-bound closed result unions separate actual Core failure and protection/delivery failures. All four Read modes reject unknown critical semantics with READ_UNSUPPORTED_CRITICAL; no catalog_only admission or delivery arm is active. Diagnostic references are bound to the complete R2 tuple and package combination by schema_binding. Historical pre-R2 schemas and the complete original definition remain separate and unchanged. JSON observations and receipts never create operation authority. request_failed may carry the actual rejected Read envelope only from request version dispatch (READ_MIXED_VERSION_TUPLE or READ_UNSUPPORTED_VERSION at stage version, original not_evaluated states, empty source coordinates, not_delivered receipt and exact budget). Tiny budgets preserve no_body_control. No bind/Host action or ProtectionReceipt occurs. Schema-valid later-stage rejection alone does not qualify. Binding observe/assertCurrent failures use closed ProtectionCurrentFailure with checked_at_ms UInt|null, sampled only in the current invocation. Each clock attempt resets the observation; valid monotonic samples survive later authorization/disposal rejection, while invalid/rollback/unavailable/uncalled samples are null. A timestamp is observation, not authority. Public failures project only status and diagnostic."
+  },
+  "runtime_enforcement_claims": {
+    "PROTECTION-AUTHORITY": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    },
+    "PROTECTION-CHECKSUMS": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    },
+    "PROTECTION-DECLARATIONS": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    },
+    "PROTECTION-DELIVERY": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    },
+    "PROTECTION-DIGESTS": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    },
+    "PROTECTION-GRANTS": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    },
+    "PROTECTION-PRESENCE": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    },
+    "PROTECTION-RESULTS": {
+      "generator_machine_check": "none",
+      "runtime_enforcement": "full"
+    }
+  },
+  "runtime_exports": [
+    "Core/protection-node:getProtectionContract",
+    "Core/protection-node:admitProtectedNode",
+    "Core/protection-node:bindProtectionOperation",
+    "Core/protection-node:disposeProtectionOperation",
+    "Core/protection-node:protectSourceBytes",
+    "Core/read-boundary:isProtectedSnapshot",
+    "Read/protection-node:createTrustedProtectedHostReadProvider",
+    "Read/protection-node:readProtectedNode",
+    "Read/protection-node:commitProtectedTransport"
+  ],
+  "runtime_not_implemented": [],
+  "schema_binding": {
+    "package_versions": {
+      "@aikdna/kdna-core": "0.36.0-rc.r2.7",
+      "@aikdna/kdna-read": "0.11.0-rc.r2.7"
+    },
+    "version_tuple": {
+      "container": "0.5.0",
+      "core": "kdna.core/0.8.2",
+      "host": "kdna.agent-host/0.3.1",
+      "ir": "kdna.canonical-ir/0.6.1",
+      "payload_profile": "kdna.payload.judgment",
+      "payload_version": "0.5.1",
+      "plan": "kdna.consumption-plan/0.3.1",
+      "read": "kdna.read/0.6.4",
+      "runtime": "kdna.runtime-capsule/0.3.1",
+      "trace": "kdna.judgment-trace/0.3.1"
+    }
+  },
+  "schema_id": "urn:kdna:schema:protection-admission:1.0.0:binding:r2:7",
+  "schema_path": "specs/protection-admission-r2-binding-7.schema.json",
+  "specification": {
+    "bytes": 37918,
+    "path": "specs/protection-admission.md",
+    "sha256": "995681e3836abc3087c98adfd5d18bba59de3d6ee31d3a351438bd43b8c732ba"
+  },
+  "status": "B1_IMPLEMENTATION_CANDIDATE_NOT_ACCEPTED",
+  "types": {
+    "ChecksumsDocument1": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "sha256",
+          "type": "string"
+        },
+        "covered_entries": {
+          "items": {
+            "$ref": "#/$defs/EntryName"
+          },
+          "maxItems": 128,
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "digest_profile": {
+          "const": "kdna.digest-basis.runtime-entry-set",
+          "type": "string"
+        },
+        "digest_profile_version": {
+          "const": "0.2.0",
+          "type": "string"
+        },
+        "entries": {
+          "items": {
+            "$ref": "#/$defs/ChecksumsEntry1"
+          },
+          "maxItems": 128,
+          "minItems": 2,
+          "type": "array"
+        },
+        "entry_set_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "profile": {
+          "const": "kdna.checksums.document/1",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "1.0.0",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile",
+        "profile_version",
+        "algorithm",
+        "digest_profile",
+        "digest_profile_version",
+        "covered_entries",
+        "entries",
+        "entry_set_digest"
+      ],
+      "type": "object"
+    },
+    "ChecksumsEntry1": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {
+          "maximum": 8388608,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "name": {
+          "$ref": "#/$defs/EntryName"
+        }
+      },
+      "required": [
+        "name",
+        "bytes",
+        "digest"
+      ],
+      "type": "object"
+    },
+    "ProtectedAdmissionAccepted": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/ProtectionOperation"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ProtectionReceipt"
+        },
+        "snapshot": {
+          "$ref": "#/$defs/CanonicalReadSnapshot"
+        },
+        "status": {
+          "const": "accepted",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "snapshot",
+        "operation",
+        "receipt"
+      ],
+      "type": "object"
+    },
+    "ProtectedAdmissionCatalogOnly": {
+      "additionalProperties": false,
+      "properties": {
+        "catalog": {
+          "$ref": "#/$defs/CoreAdmissionCatalogOnly"
+        },
+        "operation": {
+          "$ref": "#/$defs/ProtectionOperation"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ProtectionReceipt"
+        },
+        "status": {
+          "const": "catalog_only",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "catalog",
+        "operation",
+        "receipt"
+      ],
+      "type": "object"
+    },
+    "ProtectedAdmissionFailed": {
+      "additionalProperties": false,
+      "properties": {
+        "diagnostic": {
+          "$ref": "#/$defs/ProtectionDiagnostic"
+        },
+        "status": {
+          "const": "protection_failed",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic"
+      ],
+      "type": "object"
+    },
+    "ProtectedAdmissionObservation": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "receipt": {
+              "$ref": "#/$defs/ProtectionReceipt"
+            },
+            "snapshot_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "status": {
+              "const": "accepted",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "snapshot_id",
+            "receipt"
+          ],
+          "type": "object"
+        },
+        {
+          "$ref": "#/$defs/ProtectedCoreRejected"
+        },
+        {
+          "$ref": "#/$defs/ProtectedAdmissionFailed"
+        }
+      ]
+    },
+    "ProtectedAdmissionResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ProtectedAdmissionAccepted"
+        },
+        {
+          "$ref": "#/$defs/ProtectedCoreRejected"
+        },
+        {
+          "$ref": "#/$defs/ProtectedAdmissionFailed"
+        }
+      ]
+    },
+    "ProtectedCoreRejected": {
+      "additionalProperties": false,
+      "properties": {
+        "core": {
+          "$ref": "#/$defs/CoreAdmissionRejected"
+        },
+        "stage": {
+          "enum": [
+            "container",
+            "manifest",
+            "payload",
+            "interpretation"
+          ],
+          "type": "string"
+        },
+        "status": {
+          "const": "core_rejected",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "stage",
+        "core"
+      ],
+      "type": "object"
+    },
+    "ProtectedExportEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/ProtectionContractIdentity"
+        },
+        "entry": {
+          "const": "payload.kdnab",
+          "type": "string"
+        },
+        "implementation": {
+          "additionalProperties": false,
+          "properties": {
+            "package": {
+              "const": "@aikdna/kdna-core",
+              "type": "string"
+            },
+            "version": {
+              "const": "0.36.0-rc.r2.7",
+              "type": "string"
+            }
+          },
+          "required": [
+            "package",
+            "version"
+          ],
+          "type": "object"
+        },
+        "integrity": {
+          "$ref": "#/$defs/ProtectionIntegrity"
+        },
+        "output": {
+          "additionalProperties": false,
+          "properties": {
+            "A": {
+              "$ref": "#/$defs/Digest"
+            },
+            "C": {
+              "$ref": "#/$defs/Digest"
+            },
+            "E": {
+              "$ref": "#/$defs/Digest"
+            }
+          },
+          "required": [
+            "A",
+            "C",
+            "E"
+          ],
+          "type": "object"
+        },
+        "profile": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ProtectionProfile"
+            },
+            {
+              "const": null,
+              "type": "null"
+            }
+          ]
+        },
+        "proof": {
+          "const": "producer_observation_not_consumer_admission",
+          "type": "string"
+        },
+        "source_A": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "contract",
+        "implementation",
+        "source_A",
+        "output",
+        "profile",
+        "entry",
+        "integrity",
+        "proof"
+      ],
+      "type": "object"
+    },
+    "ProtectedHostReadProvider": false,
+    "ProtectedReadAdmissionFailed": {
+      "additionalProperties": false,
+      "properties": {
+        "admission": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ProtectedCoreRejected"
+            },
+            {
+              "$ref": "#/$defs/ProtectedAdmissionFailed"
+            }
+          ]
+        },
+        "status": {
+          "const": "admission_failed",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "admission"
+      ],
+      "type": "object"
+    },
+    "ProtectedReadDeliveryFailed": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "const": null,
+          "type": "null"
+        },
+        "body_bytes": {
+          "const": 0,
+          "type": "integer"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/ProtectionDisclosure"
+        },
+        "reason": {
+          "enum": [
+            "host_callback_failed",
+            "transport_commit_failed"
+          ],
+          "type": "string"
+        },
+        "status": {
+          "const": "delivery_failed",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "reason",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "type": "object"
+    },
+    "ProtectedReadFailed": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "const": null,
+          "type": "null"
+        },
+        "body_bytes": {
+          "const": 0,
+          "type": "integer"
+        },
+        "diagnostic": {
+          "$ref": "#/$defs/ProtectionDiagnostic"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/ProtectionDisclosure"
+        },
+        "status": {
+          "const": "protection_failed",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "type": "object"
+    },
+    "ProtectedReadRequestFailed": {
+      "additionalProperties": false,
+      "properties": {
+        "result": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Call_admission_rejection"
+            },
+            {
+              "$ref": "#/$defs/Call_no_body_control"
+            },
+            {
+              "$ref": "#/$defs/Call_transport_failure"
+            },
+            {
+              "$ref": "#/$defs/ProtectedRequestVersionRejected"
+            }
+          ]
+        },
+        "status": {
+          "const": "request_failed",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "result"
+      ],
+      "type": "object"
+    },
+    "ProtectedReadResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ProtectedReadReturned"
+        },
+        {
+          "$ref": "#/$defs/ProtectedReadAdmissionFailed"
+        },
+        {
+          "$ref": "#/$defs/ProtectedReadFailed"
+        },
+        {
+          "$ref": "#/$defs/ProtectedReadDeliveryFailed"
+        },
+        {
+          "$ref": "#/$defs/ProtectedReadRequestFailed"
+        }
+      ]
+    },
+    "ProtectedReadReturned": {
+      "additionalProperties": false,
+      "properties": {
+        "disclosure": {
+          "$ref": "#/$defs/ProtectionDisclosure"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ProtectionReceipt"
+        },
+        "result": {
+          "$ref": "#/$defs/ReadCallResult"
+        },
+        "status": {
+          "const": "read_result",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "result",
+        "receipt",
+        "disclosure"
+      ],
+      "type": "object"
+    },
+    "ProtectedRequestVersionRejected": {
+      "additionalProperties": false,
+      "properties": {
+        "admission_rejection": {
+          "const": null,
+          "type": "null"
+        },
+        "channel": {
+          "const": "read_envelope",
+          "type": "string"
+        },
+        "control": {
+          "const": null,
+          "type": "null"
+        },
+        "envelope": {
+          "$ref": "#/$defs/ReadEnvelopeRejected"
+        },
+        "transport_failure": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "channel",
+        "envelope",
+        "admission_rejection",
+        "control",
+        "transport_failure"
+      ],
+      "type": "object"
+    },
+    "ProtectedTransportCommitResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ProtectedTransportCommitted"
+        },
+        {
+          "$ref": "#/$defs/ProtectedReadFailed"
+        },
+        {
+          "$ref": "#/$defs/ProtectedReadDeliveryFailed"
+        }
+      ]
+    },
+    "ProtectedTransportCommitted": {
+      "additionalProperties": false,
+      "properties": {
+        "committed_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/ProtectionConfirmedDisclosure"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "status": {
+          "const": "committed",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "operation_id",
+        "committed_at_ms",
+        "disclosure"
+      ],
+      "type": "object"
+    },
+    "ProtectionAuthorization": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "none",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "password_possession",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "device_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "entitlement_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "entitlement_profile": {
+              "enum": [
+                "account",
+                "org"
+              ],
+              "type": "string"
+            },
+            "expires_at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "issuer": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "kind": {
+              "const": "external_grant",
+              "type": "string"
+            },
+            "mode": {
+              "enum": [
+                "online",
+                "offline"
+              ],
+              "type": "string"
+            },
+            "offline_grace_until_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "refresh_after_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "signing_key_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "status_version": {
+              "$ref": "#/$defs/UInt"
+            }
+          },
+          "required": [
+            "kind",
+            "account_id",
+            "entitlement_profile",
+            "device_id",
+            "status_version",
+            "refresh_after_ms",
+            "expires_at_ms",
+            "offline_grace_until_ms",
+            "mode",
+            "issuer",
+            "entitlement_id",
+            "signing_key_id"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ProtectionBinding": false,
+    "ProtectionCheckpoint": false,
+    "ProtectionConfirmedDisclosure": {
+      "additionalProperties": false,
+      "properties": {
+        "at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "external_commit": {
+          "additionalProperties": false,
+          "properties": {
+            "attempt_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "attempted_at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "confirmed_at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "state": {
+              "const": "confirmed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "state",
+            "attempt_id",
+            "attempted_at_ms",
+            "confirmed_at_ms"
+          ],
+          "type": "object"
+        },
+        "kind": {
+          "const": "trusted_host",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "external_commit"
+      ],
+      "type": "object"
+    },
+    "ProtectionContractIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "id": {
+          "const": "kdna.protection-admission/1",
+          "type": "string"
+        },
+        "version": {
+          "const": "1.0.0",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "type": "object"
+    },
+    "ProtectionCurrentFailure": {
+      "additionalProperties": false,
+      "properties": {
+        "checked_at_ms": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/UInt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "diagnostic": {
+          "$ref": "#/$defs/ProtectionDiagnostic"
+        },
+        "status": {
+          "const": "protection_failed",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic",
+        "checked_at_ms"
+      ],
+      "type": "object"
+    },
+    "ProtectionDefinitionObservation": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "admission_observation",
+              "type": "string"
+            },
+            "value": {
+              "$ref": "#/$defs/ProtectedAdmissionObservation"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "read_result",
+              "type": "string"
+            },
+            "value": {
+              "$ref": "#/$defs/ProtectedReadResult"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ProtectionDiagnostic": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_INPUT_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "input"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_DECLARATION_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "declaration"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_PROFILE_UNSUPPORTED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "declaration",
+                "envelope",
+                "integrity"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_ENVELOPE_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "envelope"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_KDF_UNAVAILABLE",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "kdf"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_CREDENTIAL_REQUIRED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "credential"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_AUTHENTICATION_FAILED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authentication"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_CHECKSUMS_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "integrity"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_SIGNATURE_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "integrity"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_SIGNATURE_PIN_MISMATCH",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "integrity"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_GRANT_INVALID",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "grant"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_GRANT_BINDING_MISMATCH",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "grant"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_AUTHORIZATION_EXPIRED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_AUTHORIZATION_REVOKED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_REFRESH_REQUIRED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_STATE_ROLLBACK",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_PROVIDER_FAILED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_DECLARATION_CONFLICT",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "authorization"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_OPERATION_UNTRUSTED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "input"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "const": "PROTECTION_OPERATION_DISPOSED",
+              "type": "string"
+            },
+            "stage": {
+              "enum": [
+                "input",
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ProtectionDisclosure": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "external_commit": {
+              "$ref": "#/$defs/ProtectionExternalCommitNotInvoked"
+            },
+            "kind": {
+              "const": "none",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "external_commit"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "external_commit": {
+              "$ref": "#/$defs/ProtectionExternalCommit"
+            },
+            "kind": {
+              "const": "trusted_host",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "at_ms",
+            "external_commit"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ProtectionExternalCommit": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ProtectionExternalCommitNotInvoked"
+        },
+        {
+          "$ref": "#/$defs/ProtectionExternalCommitUnknown"
+        },
+        {
+          "$ref": "#/$defs/ProtectionExternalCommitConfirmed"
+        }
+      ]
+    },
+    "ProtectionExternalCommitConfirmed": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "confirmed_at_ms": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/UInt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "const": "confirmed",
+          "type": "string"
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms",
+        "confirmed_at_ms"
+      ],
+      "type": "object"
+    },
+    "ProtectionExternalCommitNotInvoked": {
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "const": "not_invoked",
+          "type": "string"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "type": "object"
+    },
+    "ProtectionExternalCommitUnknown": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "state": {
+          "const": "outcome_unknown",
+          "type": "string"
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms"
+      ],
+      "type": "object"
+    },
+    "ProtectionIntegrity": {
+      "additionalProperties": false,
+      "properties": {
+        "checksums": {
+          "enum": [
+            "absent",
+            "verified_document_1"
+          ],
+          "type": "string"
+        },
+        "signature": {
+          "enum": [
+            "absent",
+            "verified_self_key",
+            "verified_pinned_key"
+          ],
+          "type": "string"
+        },
+        "signature_content_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "const": null,
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "checksums",
+        "signature",
+        "signature_content_digest"
+      ],
+      "type": "object"
+    },
+    "ProtectionOperation": false,
+    "ProtectionPreparedDelivery": false,
+    "ProtectionProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "enum": [
+            "kdna.envelope.aead",
+            "kdna.envelope.external-grant"
+          ],
+          "type": "string"
+        },
+        "version": {
+          "const": "0.1.0",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "version"
+      ],
+      "type": "object"
+    },
+    "ProtectionReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        },
+        "authorization": {
+          "$ref": "#/$defs/ProtectionAuthorization"
+        },
+        "checked_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "contract": {
+          "$ref": "#/$defs/ProtectionContractIdentity"
+        },
+        "encryption": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ProtectionProfile"
+            },
+            {
+              "const": null,
+              "type": "null"
+            }
+          ]
+        },
+        "entry": {
+          "const": "payload.kdnab",
+          "type": "string"
+        },
+        "integrity": {
+          "$ref": "#/$defs/ProtectionIntegrity"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "plaintext_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "const": null,
+              "type": "null"
+            }
+          ]
+        },
+        "proof": {
+          "const": "observation_not_authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contract",
+        "operation_id",
+        "A",
+        "C",
+        "E",
+        "entry",
+        "encryption",
+        "plaintext_digest",
+        "integrity",
+        "authorization",
+        "checked_at_ms",
+        "proof"
+      ],
+      "type": "object"
+    },
+    "ProtectionRuntimeDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "capabilities": {
+          "items": {
+            "enum": [
+              "protected_admission",
+              "protected_operation",
+              "protected_production"
+            ],
+            "type": "string"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "contract": {
+          "$ref": "#/$defs/ProtectionContractIdentity"
+        },
+        "implementation": {
+          "additionalProperties": false,
+          "properties": {
+            "package": {
+              "const": "@aikdna/kdna-core",
+              "type": "string"
+            },
+            "version": {
+              "const": "0.36.0-rc.r2.7",
+              "type": "string"
+            }
+          },
+          "required": [
+            "package",
+            "version"
+          ],
+          "type": "object"
+        },
+        "kdfs": {
+          "items": {
+            "enum": [
+              "scrypt-sha256",
+              "argon2id"
+            ],
+            "type": "string"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "profiles": {
+          "items": {
+            "enum": [
+              "kdna.envelope.aead/0.1.0",
+              "kdna.envelope.external-grant/0.1.0",
+              "kdna.checksums.document/1@1.0.0",
+              "kdsig.ed25519/0.1.0"
+            ],
+            "type": "string"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "contract",
+        "implementation",
+        "profiles",
+        "kdfs",
+        "capabilities"
+      ],
+      "type": "object"
+    }
+  },
+  "version": "1.0.0"
+}

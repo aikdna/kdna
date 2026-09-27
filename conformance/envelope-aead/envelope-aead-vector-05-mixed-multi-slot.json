@@ -1,0 +1,56 @@
+{
+  "id": "envelope-aead-vector-05-mixed-multi-slot",
+  "description": "Argon2id primary and explicit scrypt recovery slot independently wrap the same CEK. Unsupported primary rejects; it never auto-selects recovery.",
+  "inputs": {
+    "cek": "RUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUU=",
+    "plaintext": "KDNA envelope-aead-vector-05-mixed-multi-slot: one CEK, independently wrapped slots.",
+    "aad": "kdna.envelope.aead\n0.1.0\nurn:uuid:00000000-0000-4000-8000-000000000005\nkdna:fixture:multislot-5\n1.0.0\npayload.kdnab\nlicensed\npassword",
+    "credentials": [
+      "vector-5-primary",
+      "vector-5-recovery"
+    ]
+  },
+  "expected": {
+    "keks": [
+      "HNd4tzrXqEWgRjSfWrj4s8Os0NX0xfpAuaT4q8t9Z0k=",
+      "c6tkfD6nIATDbHiRk3h9Z5RZtSoqEkxBpa+ZVlPoOdc="
+    ],
+    "envelope": {
+      "profile": "kdna.envelope.aead",
+      "profile_version": "0.1.0",
+      "alg": "AES-256-GCM",
+      "key_wrapping": "AES-256-KW",
+      "kdf_profile": "argon2id",
+      "key_slots": [
+        {
+          "slot": "password",
+          "kdf_profile": "argon2id",
+          "kdf_params": {
+            "t": 3,
+            "m": 65536,
+            "p": 4,
+            "dkLen": 32,
+            "salt": "UFBQUFBQUFBQUFBQUFBQUA=="
+          },
+          "wrap": "AES-256-KW",
+          "wrapped_key": "mXy4NwtSSIyYWzI7UmdMEwtwCEPG5nWdmgP0ZpN8yPLL46exoVRkgw=="
+        },
+        {
+          "slot": "recovery",
+          "kdf_profile": "scrypt-sha256",
+          "kdf_params": {
+            "N": 32768,
+            "r": 8,
+            "p": 1,
+            "salt": "UVFRUVFRUVFRUVFRUVFRUQ=="
+          },
+          "wrap": "AES-256-KW",
+          "wrapped_key": "KkFuk8faVtJgD+pYgTufB7FDs6L+00Wt9xPU00/N9JzkWfMWv3wdQw=="
+        }
+      ],
+      "iv": "ZWVlZWVlZWVlZWVl",
+      "tag": "lwI1uAXkgmqlq9jz9sZquA==",
+      "ciphertext": "oRMDIdaCB/bYWc1UQkdquYfBKfqJB7Z5tcb/kGvnUNHQhMYv/FamcqXterolAH5Q5MCMTREBj/WF/M+Q7+8k+z6H2bAknjLnD8r6soz7psuAf/JF"
+    }
+  }
+}

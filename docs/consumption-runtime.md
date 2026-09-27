@@ -6,7 +6,10 @@ Host attachment that the user has already approved.
 ## Current source candidates: Core admission then Read
 
 The current source candidates follow Core admission then Read. This
-implementation has no LoadPlan or Runtime Capsule step:
+ordinary Read path does not require a Plan/Capsule step. The separate current
+[execution contract](../specs/execution-contract-0.3.md) defines static 0.3.1
+Plan/Capsule supply and the configured Host reference APIs; they grant no action
+authority by themselves:
 
 ```text
 explicit file / approved attachment

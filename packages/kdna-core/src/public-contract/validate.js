@@ -27,7 +27,24 @@ function validateScalars(value, shape, depth = 0) {
   }
 }
 function validate(name, value) {
-  if (!validators[name](value)) reject('READ_CORE_INVALID');
+  if (name === 'Manifest' && value && typeof value === 'object') {
+    const c = value.compatibility;
+    // The existing three fields choose the authored semantic contract; neither
+    // a package version nor a caller-provided schema URI is a selector.
+    if (typeof value.format_version === 'string' && c && typeof c.profile === 'string' && typeof c.profile_version === 'string') {
+      const t = contract.versionTuple;
+      if (value.format_version !== t.container || c.profile !== t.payload_profile || c.profile_version !== t.payload_version) reject('READ_UNSUPPORTED_VERSION');
+    }
+  }
+
+  if (!validators[name](value)) {
+    const error=validators[name].errors?.[0],root=name==='Payload'?'/payload':name==='Manifest'?'/manifest':'/'+name;
+    const pointer=error?.instancePath??'';
+    // A required property's name comes from the trusted schema; arbitrary
+    // unknown keys and rejected values are deliberately not copied out.
+    const missing=error?.keyword==='required'?'/'+String(error.params.missingProperty).replace(/~/g,'~0').replace(/\//g,'~1'):'';
+    reject('READ_CORE_INVALID',{subject:null,field:root+pointer+missing});
+  }
   validateScalars(value, contract.types[name]);
   return value;
 }

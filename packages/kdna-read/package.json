@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-read",
-  "version": "0.3.0-rc.component-semantics.2",
+  "version": "0.11.0-rc.r2.7",
   "description": "Public KDNA Read projection and Host disclosure boundary.",
   "type": "commonjs",
   "main": "src/index.js",
@@ -27,6 +27,11 @@
       "import": "./src/embedding.mjs",
       "require": "./src/embedding.js"
     },
+    "./analysis": {
+      "types": "./src/analysis.d.ts",
+      "import": "./src/analysis.mjs",
+      "require": "./src/analysis.js"
+    },
     "./types": {
       "types": "./src/types.d.ts"
     },
@@ -35,18 +40,35 @@
       "types": "./src/transport.d.ts",
       "import": "./src/transport.mjs",
       "require": "./src/transport.js"
+    },
+    "./protection-node": {
+      "types": "./src/protection-node.d.ts",
+      "import": "./src/protection-node.mjs",
+      "require": "./src/protection-node.js"
+    },
+    "./package-set-node": {
+      "types": "./src/package-set-node.d.ts",
+      "import": "./src/package-set-node.mjs",
+      "require": "./src/package-set-node.js"
     }
   },
   "files": [
     "src/",
-    "schema/read-contract-0.2.schema.json",
+    "schema/read-contract-0.3.schema.json",
     "README.md",
     "LICENSE",
     "NOTICE",
-    "schema/read-transport-admission-0.1.schema.json"
+    "schema/read-transport-admission-0.1.schema.json",
+    "schema/read-contract-0.6.schema.json",
+    "schema/read-transport-admission-0.2.schema.json",
+    "schema/read-contract-0.6.1.schema.json",
+    "schema/read-contract-0.6.2.schema.json",
+    "schema/read-contract-0.6.3.schema.json",
+    "schema/read-transport-admission-0.2.1.schema.json",
+    "schema/read-contract-0.6.4.schema.json"
   ],
   "peerDependencies": {
-    "@aikdna/kdna-core": "0.24.0-rc.component-semantics.2"
+    "@aikdna/kdna-core": "0.36.0-rc.r2.7"
   },
   "engines": {
     "node": ">=20"

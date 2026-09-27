@@ -44,7 +44,7 @@
           "type": "string"
         },
         "profile_version": {
-          "const": "0.2.0",
+          "const": "0.4.0",
           "type": "string"
         }
       },
@@ -222,8 +222,11 @@
         "encryption": {
           "$ref": "#/$defs/EncryptionDescriptor"
         },
+        "entitlement": {
+          "$ref": "#/$defs/ProtectionEntitlement"
+        },
         "format_version": {
-          "const": "0.2.0",
+          "const": "0.5.0",
           "type": "string"
         },
         "judgment_version": {
@@ -236,8 +239,13 @@
           "minItems": 0,
           "type": "array"
         },
-        "language": {
-          "$ref": "#/$defs/Identifier"
+        "languages": {
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
         },
         "license": {
           "$ref": "#/$defs/License"
@@ -360,6 +368,29 @@
       ],
       "type": "object"
     },
+    "ProtectionEntitlement": {
+      "additionalProperties": false,
+      "properties": {
+        "offline": {
+          "type": "boolean"
+        },
+        "profile": {
+          "enum": [
+            "password",
+            "account",
+            "org"
+          ],
+          "type": "string"
+        },
+        "revocable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "profile"
+      ],
+      "type": "object"
+    },
     "RuntimeMandatoryEntryName": {
       "allOf": [
         {
@@ -409,12 +440,22 @@
         },
         "term": {
           "$ref": "#/$defs/Identifier"
+        },
+        "vocabulary": {
+          "$ref": "#/$defs/TermVocabulary"
         }
       },
       "required": [
         "term"
       ],
       "type": "object"
+    },
+    "TermVocabulary": {
+      "enum": [
+        "core",
+        "author"
+      ],
+      "type": "string"
     },
     "Text": {
       "type": "string"
@@ -554,7 +595,7 @@
       "$ref": "#/$defs/Identifier"
     }
   },
-  "$id": "urn:kdna:schema:manifest:0.2.0",
+  "$id": "urn:kdna:schema:manifest:0.5.0",
   "$ref": "#/$defs/Manifest",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Generated from the single public semantic source. Structural validity is not trusted admission or runtime authorization.",
