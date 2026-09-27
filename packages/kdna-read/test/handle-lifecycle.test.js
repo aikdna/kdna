@@ -1,9 +1,10 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),path=require('node:path');
+const {bindDependencyPorts}=require('./r2-test-model.js');
 const F=require('../../../conformance/public-contract/test/bytes-fixtures.cjs');
-const runtime=process.env.KDNA_PUBLIC_RUNTIME??path.resolve(__dirname,'../../..'),{req,coreDir}=F.runtime(runtime);
+const runtime=process.env.KDNA_PUBLIC_RUNTIME??path.resolve(__dirname,'../../..'),{req,coreDir,readDir}=F.runtime(runtime);
 const {readNode}=req('@aikdna/kdna-read/node'),embed=req('@aikdna/kdna-read/embedding'),tuple=require(path.join(coreDir,'src/public-contract/generated-contract.json')).versionTuple;
-const {hosts}=require('../src/brands.js');
+const {hosts}=require(path.join(readDir,'src/brands.js'));
 
 // A long-lived host keeps one handle registry across reads. Expired handles must stop accumulating:
 // after a read whose window has passed, the registry should not still hold the older handle. Expiry is
@@ -11,7 +12,7 @@ const {hosts}=require('../src/brands.js');
 test('a long-lived host registry does not accumulate expired expansion handles',async()=>{
  const {admitBrowser}=req('@aikdna/kdna-core/browser'),{readBrowser}=req('@aikdna/kdna-read/browser'),{inspectSnapshot}=req('@aikdna/kdna-core/read-boundary'),asset=F.blank(tuple,2);
  asset.payload.dependencies=[{id:'dependency:optional',producer:{kind:'judgment_result',judgment_ref:'j:1',result_contract_ref:'result-contract:1'},consumer_judgment_ref:'j:0',input_role:'context',data_type:{term:'text'},required:false,purpose:'Optional support'}];
- const bytes=F.encode(asset,req,{deflate:true}),admitted=admitBrowser(bytes);assert.equal(admitted.status,'accepted');
+ const bytes=F.encode(bindDependencyPorts(asset),req,{deflate:true}),admitted=admitBrowser(bytes);assert.equal(admitted.status,'accepted');
  const WINDOW=1000,READS=50;let calls=0;
  const host=embed.createTrustedHostReadProvider({observe:({request,snapshot})=>{calls++;const v=inspectSnapshot(snapshot),current_ms=WINDOW*calls;
   return {host_id:'host:test',host_epoch:'epoch:1',decision_id:'decision:'+calls,request_id:request.request_id,snapshot_id:v.snapshot_id,A:v.digests.A.observed,C:v.digests.C.observed,scope:v.ir.nodes.map(n=>n.id),issued_at:current_ms-WINDOW,expires_at:current_ms+WINDOW,current_ms,decision:'allow',policy_id:'policy:test'};}}),
@@ -37,7 +38,7 @@ test('a long-lived host registry does not accumulate expired expansion handles',
 test('an expired handle is still rejected even though the registry is pruned',async()=>{
  const {admitBrowser}=req('@aikdna/kdna-core/browser'),{readBrowser}=req('@aikdna/kdna-read/browser'),{inspectSnapshot}=req('@aikdna/kdna-core/read-boundary'),asset=F.blank(tuple,2);
  asset.payload.dependencies=[{id:'dependency:optional',producer:{kind:'judgment_result',judgment_ref:'j:1',result_contract_ref:'result-contract:1'},consumer_judgment_ref:'j:0',input_role:'context',data_type:{term:'text'},required:false,purpose:'Optional support'}];
- const bytes=F.encode(asset,req,{deflate:true}),admitted=admitBrowser(bytes);assert.equal(admitted.status,'accepted');
+ const bytes=F.encode(bindDependencyPorts(asset),req,{deflate:true}),admitted=admitBrowser(bytes);assert.equal(admitted.status,'accepted');
  let calls=0,current=1000;
  const host=embed.createTrustedHostReadProvider({observe:({request,snapshot})=>{calls++;const v=inspectSnapshot(snapshot);return {host_id:'host:test',host_epoch:'epoch:1',decision_id:'decision:'+calls,request_id:request.request_id,snapshot_id:v.snapshot_id,A:v.digests.A.observed,C:v.digests.C.observed,scope:v.ir.nodes.map(n=>n.id),issued_at:current-900,expires_at:current+100,current_ms:current,decision:'allow',policy_id:'policy:test'};}}),
   control=embed.createTrustedReadControlProvider(()=>({admission_response_limit_bytes:1000000})),request=F.candidate(tuple,asset);

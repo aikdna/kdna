@@ -1,0 +1,544 @@
+[
+  {
+    "id": "STRUCT-ACCEPT-manifest-minimal",
+    "schema": "schema/manifest-0.2.schema.json",
+    "data": {
+      "format_version": "0.5.0",
+      "asset_id": "asset:structure-cases",
+      "asset_uid": "uid:structure-cases",
+      "asset_type": "fixture",
+      "title": "Structural conformance case asset",
+      "version": "1.0.0",
+      "judgment_version": "1.0.0",
+      "created_at": "2026-09-19T00:00:00Z",
+      "updated_at": "2026-09-19T00:00:00Z",
+      "compatibility": {
+        "min_loader_version": "0.26.0-rc.grammar.1",
+        "profile": "kdna.payload.judgment",
+        "profile_version": "0.4.0"
+      },
+      "payload": {
+        "path": "payload.kdnab",
+        "encoding": "cbor",
+        "encrypted": false
+      },
+      "runtime": {
+        "mandatory_entries": []
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "STRUCT-ACCEPT-manifest-two-languages",
+    "schema": "schema/manifest-0.2.schema.json",
+    "data": {
+      "format_version": "0.5.0",
+      "asset_id": "asset:structure-cases",
+      "asset_uid": "uid:structure-cases",
+      "asset_type": "fixture",
+      "title": "Structural conformance case asset",
+      "version": "1.0.0",
+      "judgment_version": "1.0.0",
+      "created_at": "2026-09-19T00:00:00Z",
+      "updated_at": "2026-09-19T00:00:00Z",
+      "languages": ["zh-CN", "en"],
+      "compatibility": {
+        "min_loader_version": "0.26.0-rc.grammar.1",
+        "profile": "kdna.payload.judgment",
+        "profile_version": "0.4.0"
+      },
+      "payload": {
+        "path": "payload.kdnab",
+        "encoding": "cbor",
+        "encrypted": false
+      },
+      "runtime": {
+        "mandatory_entries": []
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "STRUCT-REJECT-manifest-singular-language",
+    "schema": "schema/manifest-0.2.schema.json",
+    "data": {
+      "format_version": "0.5.0",
+      "asset_id": "asset:structure-cases",
+      "asset_uid": "uid:structure-cases",
+      "asset_type": "fixture",
+      "title": "Structural conformance case asset",
+      "version": "1.0.0",
+      "judgment_version": "1.0.0",
+      "created_at": "2026-09-19T00:00:00Z",
+      "updated_at": "2026-09-19T00:00:00Z",
+      "language": "zh-CN",
+      "compatibility": {
+        "min_loader_version": "0.26.0-rc.grammar.1",
+        "profile": "kdna.payload.judgment",
+        "profile_version": "0.4.0"
+      },
+      "payload": {
+        "path": "payload.kdnab",
+        "encoding": "cbor",
+        "encrypted": false
+      },
+      "runtime": {
+        "mandatory_entries": []
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "STRUCT-REJECT-manifest-languages-empty",
+    "schema": "schema/manifest-0.2.schema.json",
+    "data": {
+      "format_version": "0.5.0",
+      "asset_id": "asset:structure-cases",
+      "asset_uid": "uid:structure-cases",
+      "asset_type": "fixture",
+      "title": "Structural conformance case asset",
+      "version": "1.0.0",
+      "judgment_version": "1.0.0",
+      "created_at": "2026-09-19T00:00:00Z",
+      "updated_at": "2026-09-19T00:00:00Z",
+      "languages": [],
+      "compatibility": {
+        "min_loader_version": "0.26.0-rc.grammar.1",
+        "profile": "kdna.payload.judgment",
+        "profile_version": "0.4.0"
+      },
+      "payload": {
+        "path": "payload.kdnab",
+        "encoding": "cbor",
+        "encrypted": false
+      },
+      "runtime": {
+        "mandatory_entries": []
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "STRUCT-ACCEPT-payload-one-conclusion",
+    "schema": "schema/payload-profile-0.2.schema.json",
+    "definition": "Payload",
+    "data": {
+      "profile": "kdna.payload.judgment",
+      "profile_version": "0.4.0",
+      "asset": {
+        "asset_id": "asset:structure-cases",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "actors": [],
+      "scope": {
+        "statement": "Asset scope"
+      },
+      "asset_capability": "asserted_answers",
+      "judgments": [
+        {
+          "id": "j:0",
+          "label": "Issue 0",
+          "focus": "Explicit issue 0",
+          "subject": {
+            "actor_ids": [],
+            "statement": "Example subject"
+          },
+          "scope": {
+            "statement": "Bounded scope 0"
+          },
+          "form": "conclusion",
+          "result_contract": {
+            "id": "result-contract:0",
+            "form": {
+              "term": "text",
+              "vocabulary": "core"
+            },
+            "shape": {
+              "kind": "scalar",
+              "scalar_type": "text"
+            },
+            "minimum": 1,
+            "maximum": 1,
+            "allowed_result_types": [
+              {
+                "term": "text",
+                "vocabulary": "core"
+              }
+            ]
+          },
+          "result": {
+            "contract_ref": "result-contract:0",
+            "result_type": {
+              "term": "text",
+              "vocabulary": "core"
+            },
+            "value": {
+              "kind": "text",
+              "value": "Authored result 0"
+            }
+          }
+        }
+      ]
+    },
+    "valid": true
+  },
+  {
+    "id": "STRUCT-REJECT-payload-missing-asset-capability",
+    "schema": "schema/payload-profile-0.2.schema.json",
+    "definition": "Payload",
+    "data": {
+      "profile": "kdna.payload.judgment",
+      "profile_version": "0.4.0",
+      "asset": {
+        "asset_id": "asset:structure-cases",
+        "asset_version": "1.0.0",
+        "judgment_version": "1.0.0"
+      },
+      "actors": [],
+      "scope": {
+        "statement": "Asset scope"
+      },
+      "judgments": [
+        {
+          "id": "j:0",
+          "label": "Issue 0",
+          "focus": "Explicit issue 0",
+          "subject": {
+            "actor_ids": [],
+            "statement": "Example subject"
+          },
+          "scope": {
+            "statement": "Bounded scope 0"
+          },
+          "form": "conclusion",
+          "result_contract": {
+            "id": "result-contract:0",
+            "form": {
+              "term": "text",
+              "vocabulary": "core"
+            },
+            "shape": {
+              "kind": "scalar",
+              "scalar_type": "text"
+            },
+            "minimum": 1,
+            "maximum": 1,
+            "allowed_result_types": [
+              {
+                "term": "text",
+                "vocabulary": "core"
+              }
+            ]
+          },
+          "result": {
+            "contract_ref": "result-contract:0",
+            "result_type": {
+              "term": "text",
+              "vocabulary": "core"
+            },
+            "value": {
+              "kind": "text",
+              "value": "Authored result 0"
+            }
+          }
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "id": "STRUCT-REJECT-judgment-missing-form",
+    "schema": "schema/payload-profile-0.2.schema.json",
+    "definition": "Judgment",
+    "data": {
+      "id": "j:0",
+      "label": "Issue 0",
+      "focus": "Explicit issue 0",
+      "subject": {
+        "actor_ids": [],
+        "statement": "Example subject"
+      },
+      "scope": {
+        "statement": "Bounded scope 0"
+      },
+      "result_contract": {
+        "id": "result-contract:0",
+        "form": {
+          "term": "text",
+          "vocabulary": "core"
+        },
+        "shape": {
+          "kind": "scalar",
+          "scalar_type": "text"
+        },
+        "minimum": 1,
+        "maximum": 1,
+        "allowed_result_types": [
+          {
+            "term": "text",
+            "vocabulary": "core"
+          }
+        ]
+      },
+      "result": {
+        "contract_ref": "result-contract:0",
+        "result_type": {
+          "term": "text",
+          "vocabulary": "core"
+        },
+        "value": {
+          "kind": "text",
+          "value": "Authored result 0"
+        }
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "STRUCT-REJECT-conclusion-without-result",
+    "schema": "schema/payload-profile-0.2.schema.json",
+    "definition": "Judgment",
+    "data": {
+      "id": "j:0",
+      "label": "Issue 0",
+      "focus": "Explicit issue 0",
+      "subject": {
+        "actor_ids": [],
+        "statement": "Example subject"
+      },
+      "scope": {
+        "statement": "Bounded scope 0"
+      },
+      "form": "conclusion",
+      "result_contract": {
+        "id": "result-contract:0",
+        "form": {
+          "term": "text",
+          "vocabulary": "core"
+        },
+        "shape": {
+          "kind": "scalar",
+          "scalar_type": "text"
+        },
+        "minimum": 1,
+        "maximum": 1,
+        "allowed_result_types": [
+          {
+            "term": "text",
+            "vocabulary": "core"
+          }
+        ]
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "STRUCT-REJECT-rule-carrying-a-result",
+    "schema": "schema/payload-profile-0.2.schema.json",
+    "definition": "Judgment",
+    "data": {
+      "id": "j:0",
+      "label": "Issue 0",
+      "focus": "Explicit issue 0",
+      "subject": {
+        "actor_ids": [],
+        "statement": "Example subject"
+      },
+      "scope": {
+        "statement": "Bounded scope 0"
+      },
+      "form": "rule",
+      "result_contract": {
+        "id": "result-contract:0",
+        "form": {
+          "term": "text",
+          "vocabulary": "core"
+        },
+        "shape": {
+          "kind": "scalar",
+          "scalar_type": "text"
+        },
+        "minimum": 1,
+        "maximum": 1,
+        "allowed_result_types": [
+          {
+            "term": "text",
+            "vocabulary": "core"
+          }
+        ]
+      },
+      "formation_rule": {
+        "statement": "When the situation matches, answer per the contract.",
+        "conditions": [],
+        "output_contract_ref": "result-contract:0"
+      },
+      "result": {
+        "contract_ref": "result-contract:0",
+        "result_type": {
+          "term": "text",
+          "vocabulary": "core"
+        },
+        "value": {
+          "kind": "text",
+          "value": "Authored result 0"
+        }
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "STRUCT-ACCEPT-rule-with-formation-rule",
+    "schema": "schema/payload-profile-0.2.schema.json",
+    "definition": "Judgment",
+    "data": {
+      "id": "j:0",
+      "label": "Issue 0",
+      "focus": "Explicit issue 0",
+      "subject": {
+        "actor_ids": [],
+        "statement": "Example subject"
+      },
+      "scope": {
+        "statement": "Bounded scope 0"
+      },
+      "form": "rule",
+      "result_contract": {
+        "id": "result-contract:0",
+        "form": {
+          "term": "text",
+          "vocabulary": "core"
+        },
+        "shape": {
+          "kind": "scalar",
+          "scalar_type": "text"
+        },
+        "minimum": 1,
+        "maximum": 1,
+        "allowed_result_types": [
+          {
+            "term": "text",
+            "vocabulary": "core"
+          }
+        ]
+      },
+      "formation_rule": {
+        "statement": "When the situation matches, answer per the contract.",
+        "conditions": [],
+        "output_contract_ref": "result-contract:0"
+      }
+    },
+    "valid": true
+  },
+  {
+    "id": "STRUCT-ACCEPT-omission-batch-not-expandable",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "OmissionBatch",
+    "data": {
+      "state": "explicitly_omitted_batch",
+      "target_kind": "judgment",
+      "field": "judgments[].result",
+      "reason": "not_in_mode",
+      "count": 3,
+      "expandable": false,
+      "handle_id": null
+    },
+    "valid": true
+  },
+  {
+    "id": "STRUCT-REJECT-omission-batch-count-one",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "OmissionBatch",
+    "data": {
+      "state": "explicitly_omitted_batch",
+      "target_kind": "judgment",
+      "field": "judgments[].result",
+      "reason": "not_in_mode",
+      "count": 1,
+      "expandable": false,
+      "handle_id": null
+    },
+    "valid": false
+  },
+  {
+    "id": "STRUCT-REJECT-omission-batch-expandable-with-null-handle",
+    "schema": "specs/read-contract.schema.json",
+    "definition": "OmissionBatch",
+    "data": {
+      "state": "explicitly_omitted_batch",
+      "target_kind": "judgment",
+      "field": "judgments[].result",
+      "reason": "outside_selection",
+      "count": 5,
+      "expandable": true,
+      "handle_id": null
+    },
+    "valid": false
+  },
+  {
+    "id": "STRUCT-REJECT-rule-missing-result_contract",
+    "schema": "schema/payload-profile-0.2.schema.json",
+    "definition": "Judgment",
+    "data": {
+      "id": "j:0",
+      "label": "Issue 0",
+      "focus": "Explicit issue 0",
+      "subject": {
+        "actor_ids": [],
+        "statement": "Example subject"
+      },
+      "scope": {
+        "statement": "Bounded scope 0"
+      },
+      "form": "rule",
+      "formation_rule": {
+        "statement": "When the situation matches, answer per the contract.",
+        "conditions": [],
+        "output_contract_ref": "result-contract:0"
+      }
+    },
+    "valid": false
+  },
+  {
+    "id": "STRUCT-REJECT-rule-missing-output_contract_ref",
+    "schema": "schema/payload-profile-0.2.schema.json",
+    "definition": "Judgment",
+    "data": {
+      "id": "j:0",
+      "label": "Issue 0",
+      "focus": "Explicit issue 0",
+      "subject": {
+        "actor_ids": [],
+        "statement": "Example subject"
+      },
+      "scope": {
+        "statement": "Bounded scope 0"
+      },
+      "form": "rule",
+      "result_contract": {
+        "id": "result-contract:0",
+        "form": {
+          "term": "text",
+          "vocabulary": "core"
+        },
+        "shape": {
+          "kind": "scalar",
+          "scalar_type": "text"
+        },
+        "minimum": 1,
+        "maximum": 1,
+        "allowed_result_types": [
+          {
+            "term": "text",
+            "vocabulary": "core"
+          }
+        ]
+      },
+      "formation_rule": {
+        "statement": "When the situation matches, answer per the contract.",
+        "conditions": []
+      }
+    },
+    "valid": false
+  }
+]

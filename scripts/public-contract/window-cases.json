@@ -1,0 +1,811 @@
+{
+  "format": "kdna.restricted-additive-window-cases/1",
+  "decision": "A1 restricted additive window (private/kdna-rebuild-plan-20260919/02-决策记录-20260919.md)",
+  "note": "Minimal source pairs exercise structural classification and non-passing semantic/evidence review verdicts. CASES_MATCH means the classifier matched its expectations, never that every source pair was accepted. No natural-language compatibility evidence is trusted by this command.",
+  "cases": [
+    {
+      "id": "WIN-1-optional-property",
+      "expected": "NEEDS_SEMANTIC_REVIEW",
+      "why": "Optional presence is an additive structural candidate; unchanged old-asset meaning and absence semantics still require independent proof.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.5.0",
+          "ir": "kdna.canonical-ir/0.4.0",
+          "read": "kdna.read/0.4.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "$ref": "#/$defs/WidgetKind"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          },
+          "WidgetKind": {
+            "type": "string",
+            "enum": ["alpha", "beta"]
+          }
+        },
+        "non_schema_rules": [
+          {
+            "id": "PUBLIC-SAMPLE",
+            "applies_to": ["Widget"],
+            "requirement": "sample obligation",
+            "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+            "future_owner": "Core",
+            "future_boundary": "sample boundary"
+          }
+        ],
+        "engineering": {
+          "package_versions": {
+            "core": "0.26.0-rc.grammar.1"
+          }
+        }
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/types/Widget/properties/note",
+          "value": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    {
+      "id": "WIN-2-reachable-new-type",
+      "expected": "NEEDS_SEMANTIC_REVIEW",
+      "why": "Reachability proves a binding exists, not unchanged interpretation or runtime compatibility.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.5.0",
+          "ir": "kdna.canonical-ir/0.4.0",
+          "read": "kdna.read/0.4.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "$ref": "#/$defs/WidgetKind"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          },
+          "WidgetKind": {
+            "type": "string",
+            "enum": ["alpha", "beta"]
+          }
+        },
+        "non_schema_rules": [
+          {
+            "id": "PUBLIC-SAMPLE",
+            "applies_to": ["Widget"],
+            "requirement": "sample obligation",
+            "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+            "future_owner": "Core",
+            "future_boundary": "sample boundary"
+          }
+        ],
+        "engineering": {
+          "package_versions": {
+            "core": "0.26.0-rc.grammar.1"
+          }
+        }
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/types/WidgetDetail",
+          "value": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": ["text"],
+            "additionalProperties": false
+          }
+        },
+        {
+          "op": "add",
+          "path": "/types/Widget/properties/detail",
+          "value": {
+            "$ref": "#/$defs/WidgetDetail"
+          }
+        }
+      ]
+    },
+    {
+      "id": "WIN-3-appended-non-schema-rule",
+      "expected": "NEEDS_SEMANTIC_REVIEW",
+      "why": "A new obligation can invalidate existing assets without changing an old rule row; it is never auto-approved from shape.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.5.0",
+          "ir": "kdna.canonical-ir/0.4.0",
+          "read": "kdna.read/0.4.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "$ref": "#/$defs/WidgetKind"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          },
+          "WidgetKind": {
+            "type": "string",
+            "enum": ["alpha", "beta"]
+          }
+        },
+        "non_schema_rules": [
+          {
+            "id": "PUBLIC-SAMPLE",
+            "applies_to": ["Widget"],
+            "requirement": "sample obligation",
+            "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+            "future_owner": "Core",
+            "future_boundary": "sample boundary"
+          }
+        ],
+        "engineering": {
+          "package_versions": {
+            "core": "0.26.0-rc.grammar.1"
+          }
+        }
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/non_schema_rules/-",
+          "value": {
+            "id": "PUBLIC-SAMPLE-TWO",
+            "applies_to": ["WidgetKind"],
+            "requirement": "second sample obligation",
+            "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+            "future_owner": "Core",
+            "future_boundary": "sample boundary"
+          }
+        }
+      ]
+    },
+    {
+      "id": "NEW-1-required-grows",
+      "expected": "REQUIRES_NEW_COORDINATE",
+      "why": "Any change to a required list invalidates every existing valid document that omitted the field.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.5.0",
+          "ir": "kdna.canonical-ir/0.4.0",
+          "read": "kdna.read/0.4.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "$ref": "#/$defs/WidgetKind"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          },
+          "WidgetKind": {
+            "type": "string",
+            "enum": ["alpha", "beta"]
+          }
+        },
+        "non_schema_rules": [
+          {
+            "id": "PUBLIC-SAMPLE",
+            "applies_to": ["Widget"],
+            "requirement": "sample obligation",
+            "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+            "future_owner": "Core",
+            "future_boundary": "sample boundary"
+          }
+        ],
+        "engineering": {
+          "package_versions": {
+            "core": "0.26.0-rc.grammar.1"
+          }
+        }
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/types/Widget/required/-",
+          "value": "kind"
+        }
+      ]
+    },
+    {
+      "id": "NEW-2-enum-widens",
+      "expected": "REQUIRES_NEW_COORDINATE",
+      "why": "Changing an existing enum value set changes the meaning of a shared coordinate, even when only values are added.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.5.0",
+          "ir": "kdna.canonical-ir/0.4.0",
+          "read": "kdna.read/0.4.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "$ref": "#/$defs/WidgetKind"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          },
+          "WidgetKind": {
+            "type": "string",
+            "enum": ["alpha", "beta"]
+          }
+        },
+        "non_schema_rules": [
+          {
+            "id": "PUBLIC-SAMPLE",
+            "applies_to": ["Widget"],
+            "requirement": "sample obligation",
+            "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+            "future_owner": "Core",
+            "future_boundary": "sample boundary"
+          }
+        ],
+        "engineering": {
+          "package_versions": {
+            "core": "0.26.0-rc.grammar.1"
+          }
+        }
+      },
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/types/WidgetKind/enum",
+          "value": ["alpha", "beta", "gamma"]
+        }
+      ]
+    },
+    {
+      "id": "NEW-3-version-tuple-moves",
+      "expected": "REQUIRES_NEW_COORDINATE",
+      "why": "The version tuple is the coordinate itself; moving it is by definition a new coordinate.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.5.0",
+          "ir": "kdna.canonical-ir/0.4.0",
+          "read": "kdna.read/0.4.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "$ref": "#/$defs/WidgetKind"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          },
+          "WidgetKind": {
+            "type": "string",
+            "enum": ["alpha", "beta"]
+          }
+        },
+        "non_schema_rules": [
+          {
+            "id": "PUBLIC-SAMPLE",
+            "applies_to": ["Widget"],
+            "requirement": "sample obligation",
+            "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+            "future_owner": "Core",
+            "future_boundary": "sample boundary"
+          }
+        ],
+        "engineering": {
+          "package_versions": {
+            "core": "0.26.0-rc.grammar.1"
+          }
+        }
+      },
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/versionTuple/core",
+          "value": "kdna.core/0.6.0"
+        }
+      ]
+    },
+    {
+      "id": "IDENTICAL-source",
+      "expected": "IN_WINDOW",
+      "why": "Identical parsed sources establish absence of a source revision, not correctness or acceptance.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.6.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          }
+        },
+        "non_schema_rules": [],
+        "accepted_designs": [
+          {
+            "path": "specs/example.md",
+            "bytes": 10,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "engineering": {}
+      },
+      "patch": []
+    },
+    {
+      "id": "REVIEW-reject-all-old-assets",
+      "expected": "NEEDS_SEMANTIC_REVIEW",
+      "why": "The audit counterexample must not receive IN_WINDOW even though its destructive meaning lives in a newly appended row.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.6.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          }
+        },
+        "non_schema_rules": [],
+        "accepted_designs": [
+          {
+            "path": "specs/example.md",
+            "bytes": 10,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "engineering": {}
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/non_schema_rules/-",
+          "value": {
+            "id": "REJECT-ALL",
+            "applies_to": ["Widget"],
+            "requirement": "Reject every previously valid asset, including every Widget. No optional opt-in.",
+            "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
+            "future_owner": "Core",
+            "future_boundary": "admission"
+          }
+        }
+      ]
+    },
+    {
+      "id": "REVIEW-forged-compatible-claim",
+      "expected": "NEEDS_SEMANTIC_REVIEW",
+      "why": "Self-asserted booleans and prose are not verifiable compatibility evidence.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.6.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          }
+        },
+        "non_schema_rules": [],
+        "accepted_designs": [
+          {
+            "path": "specs/example.md",
+            "bytes": 10,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "engineering": {}
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/non_schema_rules/-",
+          "value": {
+            "id": "REJECT-ALL",
+            "applies_to": ["Widget"],
+            "requirement": "Reject every old asset.",
+            "compatible": true,
+            "review": {
+              "status": "PASS",
+              "all_old_assets_preserved": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "EVIDENCE-pin-only",
+      "expected": "EVIDENCE_UPDATE_REVIEW_REQUIRED",
+      "why": "Changed referenced byte identity requires independent content review, not an automatic coordinate change or waiver.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.6.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          }
+        },
+        "non_schema_rules": [],
+        "accepted_designs": [
+          {
+            "path": "specs/example.md",
+            "bytes": 10,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "engineering": {}
+      },
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/accepted_designs/0/bytes",
+          "value": 11
+        },
+        {
+          "op": "replace",
+          "path": "/accepted_designs/0/sha256",
+          "value": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ]
+    },
+    {
+      "id": "EVIDENCE-observational-engineering",
+      "expected": "EVIDENCE_UPDATE_REVIEW_REQUIRED",
+      "why": "An added declaration of runtime enforcement is a claim that still needs observed evidence.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.6.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          }
+        },
+        "non_schema_rules": [],
+        "accepted_designs": [
+          {
+            "path": "specs/example.md",
+            "bytes": 10,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "engineering": {}
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/engineering/runtime_enforcement_claims",
+          "value": {
+            "PUBLIC-SAMPLE": "full"
+          }
+        }
+      ]
+    },
+    {
+      "id": "REVIEW-engineering-is-not-inert",
+      "expected": "NEEDS_SEMANTIC_REVIEW",
+      "why": "Engineering contains generated runtime definitions; a new arbitrary registry cannot auto-pass.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.6.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          }
+        },
+        "non_schema_rules": [],
+        "accepted_designs": [
+          {
+            "path": "specs/example.md",
+            "bytes": 10,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "engineering": {}
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/engineering/review",
+          "value": {
+            "compatible": true,
+            "status": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "id": "REVIEW-added-description",
+      "expected": "NEEDS_SEMANTIC_REVIEW",
+      "why": "Prose may change interpretation; adding a description cannot prove it is inert.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.6.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          }
+        },
+        "non_schema_rules": [],
+        "accepted_designs": [
+          {
+            "path": "specs/example.md",
+            "bytes": 10,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "engineering": {}
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/types/Widget/description",
+          "value": "Every old Widget must now be rejected."
+        }
+      ]
+    },
+    {
+      "id": "NEW-removed-property",
+      "expected": "REQUIRES_NEW_COORDINATE",
+      "why": "Removing an existing field stays outside the restricted window.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.6.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          }
+        },
+        "non_schema_rules": [],
+        "accepted_designs": [
+          {
+            "path": "specs/example.md",
+            "bytes": 10,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "engineering": {}
+      },
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/types/Widget/properties/id"
+        }
+      ]
+    },
+    {
+      "id": "NEW-existing-leaf",
+      "expected": "REQUIRES_NEW_COORDINATE",
+      "why": "An existing member type cannot be changed in place.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.6.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          }
+        },
+        "non_schema_rules": [],
+        "accepted_designs": [
+          {
+            "path": "specs/example.md",
+            "bytes": 10,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "engineering": {}
+      },
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/types/Widget/properties/id/type",
+          "value": "integer"
+        }
+      ]
+    },
+    {
+      "id": "NEW-required-shrinks",
+      "expected": "REQUIRES_NEW_COORDINATE",
+      "why": "Any existing required-set change needs a new coordinate, including relaxation.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.6.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          }
+        },
+        "non_schema_rules": [],
+        "accepted_designs": [
+          {
+            "path": "specs/example.md",
+            "bytes": 10,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "engineering": {}
+      },
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/types/Widget/required",
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "NEW-closed-object-policy",
+      "expected": "REQUIRES_NEW_COORDINATE",
+      "why": "Opening an existing closed object remains a coordinate change.",
+      "base": {
+        "format": "kdna.public-semantic-source/1",
+        "versionTuple": {
+          "core": "kdna.core/0.6.0"
+        },
+        "types": {
+          "Widget": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          }
+        },
+        "non_schema_rules": [],
+        "accepted_designs": [
+          {
+            "path": "specs/example.md",
+            "bytes": 10,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "engineering": {}
+      },
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/types/Widget/additionalProperties",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "INDETERMINATE-empty-inputs",
+      "expected": "INDETERMINATE",
+      "why": "Identical malformed inputs do not establish a valid comparison.",
+      "base": {},
+      "next": {}
+    }
+  ]
+}

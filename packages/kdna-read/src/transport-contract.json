@@ -1,5 +1,5 @@
 {
-  "contract": "kdna.read-transport-admission/0.1.0",
+  "contract": "kdna.read-transport-admission/0.2.1",
   "diagnostic_codes": [
     "READ_TRANSPORT_RESPONSE_INVALID",
     "READ_TRANSPORT_CONTEXT_INVALID",

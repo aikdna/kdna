@@ -1,0 +1,1127 @@
+{
+  "review_only": true,
+  "notation": "R1 complete author-semantic view; container/runtime/version tuple deliberately not asserted",
+  "M": {
+    "asset_id": "review-complex",
+    "asset_uid": "review-complex-uid",
+    "version": "r1-paper",
+    "judgment_version": "r1-paper",
+    "title": "方案取舍的完整纸面审查例",
+    "summary": "比较方案优先序、稳定性判断及两种主体取舍。",
+    "languages": ["zh-CN"],
+    "created_at": "2026-09-23T00:00:00Z",
+    "updated_at": "2026-09-23T00:00:00Z",
+    "lineage": [],
+    "history": {
+      "coverage": "partial",
+      "statement": "仅保存本轮对案例说明的修订，不声称掌握假设旧版全部历史。",
+      "entries": [
+        {
+          "id": "h0",
+          "version": "r1-paper",
+          "judgment_version": "r1-paper",
+          "at": "2026-09-23T00:00:00Z",
+          "summary": "只澄清示意身份，未升级案例采用的外部旧版。",
+          "affected_refs": [
+            {
+              "kind": "example",
+              "id": "e0"
+            }
+          ],
+          "actor_refs": ["author"]
+        }
+      ]
+    }
+  },
+  "P": {
+    "asset": {
+      "asset_id": "review-complex",
+      "asset_version": "r1-paper",
+      "judgment_version": "r1-paper"
+    },
+    "actors": [
+      {
+        "id": "author",
+        "kind": "person",
+        "name": "纸面作者"
+      },
+      {
+        "id": "jia",
+        "kind": "person",
+        "name": "纸面甲"
+      },
+      {
+        "id": "yi",
+        "kind": "person",
+        "name": "纸面乙"
+      }
+    ],
+    "scope": {
+      "statement": "定义审查用构造情境，不进入业务资产目录"
+    },
+    "declarations": {
+      "highest_question": {
+        "value": "如何在明确期限和不同取舍下理解这些方案？",
+        "state": "provided"
+      },
+      "boundaries": {
+        "value": null,
+        "state": "none"
+      }
+    },
+    "kernel": {
+      "purpose": {
+        "kind": "summary"
+      },
+      "foundation_refs": []
+    },
+    "judgments": [
+      {
+        "id": "qA",
+        "focus": "A与B的优先次序和风险分别是什么？",
+        "subject": {
+          "actor_ids": ["jia"],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "composite",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "authored",
+          "statement": "B优先于A，二者在本例均为低风险。",
+          "qualification_refs": [
+            {
+              "kind": "material",
+              "id": "d1"
+            }
+          ]
+        },
+        "result_contract": {
+          "id": "qa-out",
+          "form": {
+            "term": "record"
+          },
+          "shape": {
+            "kind": "record",
+            "fields": [
+              {
+                "name": "priority",
+                "required": true,
+                "shape": {
+                  "kind": "scalar",
+                  "scalar_type": "text"
+                }
+              },
+              {
+                "name": "risk",
+                "required": true,
+                "shape": {
+                  "kind": "scalar",
+                  "scalar_type": "text"
+                }
+              }
+            ]
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "record"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "composite"
+          },
+          "components": [
+            {
+              "id": "check-c1",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "判断标准",
+              "statement": "交付不超过三工作日且有备用者低风险；成本按给定计价单位保留。",
+              "material_refs": [
+                {
+                  "kind": "material",
+                  "id": "d1"
+                }
+              ]
+            },
+            {
+              "id": "check-c2",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "对照办法",
+              "statement": "逐个核对输入days是否不超过3和backup是否为真，读取cost。",
+              "material_refs": [
+                {
+                  "kind": "material",
+                  "id": "d1"
+                }
+              ]
+            },
+            {
+              "id": "check-c3",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "归结办法",
+              "statement": "形成assessment，含原成本、是否准入和风险文字；超期不准入，有备用且准入才为低风险。",
+              "material_refs": [
+                {
+                  "kind": "material",
+                  "id": "d1"
+                }
+              ]
+            },
+            {
+              "id": "merge-c1",
+              "method": {
+                "term": "tradeoff"
+              },
+              "role": "候选方案",
+              "statement": "check-left与check-right送来的A、B评估。",
+              "material_refs": [
+                {
+                  "kind": "material",
+                  "id": "d1"
+                }
+              ]
+            },
+            {
+              "id": "merge-c2",
+              "method": {
+                "term": "tradeoff"
+              },
+              "role": "比较因素",
+              "statement": "先是否准入，再风险，再成本；同档成本相同保持并列。",
+              "material_refs": [
+                {
+                  "kind": "material",
+                  "id": "d1"
+                }
+              ]
+            },
+            {
+              "id": "merge-c3",
+              "method": {
+                "term": "tradeoff"
+              },
+              "role": "取舍原则",
+              "statement": "准入且低风险者优先，在同风险内成本低者靠前；完整保留两者风险。",
+              "material_refs": [
+                {
+                  "kind": "material",
+                  "id": "d1"
+                }
+              ]
+            },
+            {
+              "id": "complete-c1",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "判断标准",
+              "statement": "交付前每个入选方案须同时出现在优先序和风险说明中，不能只给排序漏风险。",
+              "material_refs": []
+            },
+            {
+              "id": "complete-c2",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "对照办法",
+              "statement": "将排序中A、B与风险说明中的对象逐一核对，缺项就停止交付并补齐。",
+              "material_refs": []
+            },
+            {
+              "id": "complete-c3",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "归结办法",
+              "statement": "两部分对象齐全才交付priority与risk两个必需字段；本例A、B均齐全，保留原顺序与风险，不重排。",
+              "material_refs": []
+            }
+          ],
+          "bindings": [],
+          "units": [
+            {
+              "id": "check",
+              "method": "criteria_comparison",
+              "component_refs": ["check-c1", "check-c2", "check-c3"],
+              "inputs": [
+                {
+                  "name": "item",
+                  "meaning": "item",
+                  "contract_ref": {
+                    "kind": "contract",
+                    "id": "item-input"
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "name": "assessment",
+                  "meaning": "assessment",
+                  "contract_ref": {
+                    "kind": "contract",
+                    "id": "assessment"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "merge",
+              "method": "tradeoff",
+              "component_refs": ["merge-c1", "merge-c2", "merge-c3"],
+              "inputs": [
+                {
+                  "name": "left",
+                  "meaning": "left",
+                  "contract_ref": {
+                    "kind": "contract",
+                    "id": "assessment"
+                  }
+                },
+                {
+                  "name": "right",
+                  "meaning": "right",
+                  "contract_ref": {
+                    "kind": "contract",
+                    "id": "assessment"
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "name": "priority",
+                  "meaning": "priority",
+                  "contract_ref": {
+                    "kind": "contract",
+                    "id": "text-port"
+                  }
+                },
+                {
+                  "name": "risk",
+                  "meaning": "risk",
+                  "contract_ref": {
+                    "kind": "contract",
+                    "id": "text-port"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "completeness",
+              "method": "criteria_comparison",
+              "component_refs": ["complete-c1", "complete-c2", "complete-c3"],
+              "inputs": [
+                {
+                  "name": "priority",
+                  "meaning": "priority",
+                  "contract_ref": {
+                    "kind": "contract",
+                    "id": "text-port"
+                  }
+                },
+                {
+                  "name": "risk",
+                  "meaning": "risk",
+                  "contract_ref": {
+                    "kind": "contract",
+                    "id": "text-port"
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "name": "checked",
+                  "meaning": "checked",
+                  "contract_ref": {
+                    "kind": "contract",
+                    "id": "qa-out"
+                  }
+                }
+              ]
+            }
+          ],
+          "plan": {
+            "id": "plan-A",
+            "root": {
+              "kind": "plan_node",
+              "id": "root"
+            },
+            "nodes": [
+              {
+                "id": "root",
+                "kind": "sequence",
+                "children": [
+                  {
+                    "kind": "plan_node",
+                    "id": "parallel-checks"
+                  },
+                  {
+                    "kind": "plan_node",
+                    "id": "merge-use"
+                  },
+                  {
+                    "kind": "plan_node",
+                    "id": "check-complete"
+                  }
+                ]
+              },
+              {
+                "id": "parallel-checks",
+                "kind": "parallel",
+                "children": [
+                  {
+                    "kind": "plan_node",
+                    "id": "check-left"
+                  },
+                  {
+                    "kind": "plan_node",
+                    "id": "check-right"
+                  }
+                ]
+              },
+              {
+                "id": "check-left",
+                "kind": "use",
+                "unit_ref": {
+                  "kind": "unit",
+                  "id": "check"
+                },
+                "input_bindings": [
+                  {
+                    "port": "item",
+                    "from": {
+                      "kind": "literal",
+                      "value": {
+                        "kind": "record",
+                        "fields": [
+                          {
+                            "name": "cost",
+                            "value": {
+                              "kind": "number",
+                              "value": 100
+                            }
+                          },
+                          {
+                            "name": "days",
+                            "value": {
+                              "kind": "number",
+                              "value": 2
+                            }
+                          },
+                          {
+                            "name": "backup",
+                            "value": {
+                              "kind": "boolean",
+                              "value": true
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "check-right",
+                "kind": "use",
+                "unit_ref": {
+                  "kind": "unit",
+                  "id": "check"
+                },
+                "input_bindings": [
+                  {
+                    "port": "item",
+                    "from": {
+                      "kind": "literal",
+                      "value": {
+                        "kind": "record",
+                        "fields": [
+                          {
+                            "name": "cost",
+                            "value": {
+                              "kind": "number",
+                              "value": 80
+                            }
+                          },
+                          {
+                            "name": "days",
+                            "value": {
+                              "kind": "number",
+                              "value": 3
+                            }
+                          },
+                          {
+                            "name": "backup",
+                            "value": {
+                              "kind": "boolean",
+                              "value": true
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "merge-use",
+                "kind": "use",
+                "unit_ref": {
+                  "kind": "unit",
+                  "id": "merge"
+                },
+                "input_bindings": []
+              },
+              {
+                "id": "check-complete",
+                "kind": "use",
+                "unit_ref": {
+                  "kind": "unit",
+                  "id": "completeness"
+                },
+                "input_bindings": []
+              }
+            ],
+            "links": [
+              {
+                "from": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "check-left"
+                  },
+                  "port": "assessment",
+                  "field_path": []
+                },
+                "to": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "merge-use"
+                  },
+                  "port": "left",
+                  "field_path": []
+                }
+              },
+              {
+                "from": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "check-right"
+                  },
+                  "port": "assessment",
+                  "field_path": []
+                },
+                "to": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "merge-use"
+                  },
+                  "port": "right",
+                  "field_path": []
+                }
+              },
+              {
+                "from": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "merge-use"
+                  },
+                  "port": "priority",
+                  "field_path": []
+                },
+                "to": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "check-complete"
+                  },
+                  "port": "priority",
+                  "field_path": []
+                }
+              },
+              {
+                "from": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "merge-use"
+                  },
+                  "port": "risk",
+                  "field_path": []
+                },
+                "to": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "check-complete"
+                  },
+                  "port": "risk",
+                  "field_path": []
+                }
+              }
+            ],
+            "result_bindings": [
+              {
+                "from": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "check-complete"
+                  },
+                  "port": "checked",
+                  "field_path": []
+                },
+                "field_path": []
+              }
+            ]
+          }
+        },
+        "material_refs": ["d1"],
+        "reason_refs": [],
+        "content_uses": [
+          {
+            "target": {
+              "kind": "shared_declaration",
+              "id": "sA"
+            },
+            "role": "adopt",
+            "statement": "本题采用甲的三天内低成本原则。"
+          }
+        ],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "qa-out",
+          "result_type": {
+            "term": "record"
+          },
+          "value": {
+            "kind": "record",
+            "fields": [
+              {
+                "name": "priority",
+                "value": {
+                  "kind": "text",
+                  "value": "B优先于A"
+                }
+              },
+              {
+                "name": "risk",
+                "value": {
+                  "kind": "text",
+                  "value": "A、B均低风险"
+                }
+              }
+            ]
+          }
+        },
+        "answer_parts": [
+          {
+            "id": "priority",
+            "kind": "ranking",
+            "output_field": "priority"
+          },
+          {
+            "id": "risk",
+            "kind": "evaluation",
+            "output_field": "risk"
+          }
+        ]
+      },
+      {
+        "id": "qB",
+        "focus": "乙怎样判断方案是否稳定？",
+        "subject": {
+          "actor_ids": ["yi"],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "rule",
+        "answer_kind": "evaluation",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "authored",
+          "statement": "先看备援是否可用；更快完成不能抵消备援缺失。",
+          "qualification_refs": []
+        },
+        "result_contract": {
+          "id": "qB-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "criteria_comparison"
+          },
+          "components": [
+            {
+              "id": "qB-c1",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "判断标准",
+              "statement": "备援可用为稳定性必要条件，速度只作补充信息。",
+              "material_refs": []
+            },
+            {
+              "id": "qB-c2",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "对照办法",
+              "statement": "核对方案备援声明和交付周期定义，缺少必要声明先补信息。",
+              "material_refs": []
+            },
+            {
+              "id": "qB-c3",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "归结办法",
+              "statement": "备援可用则在本例稳定性维度认可，缺失则指出风险，不以速度抵消。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": ["d1"],
+        "reason_refs": [],
+        "content_uses": [
+          {
+            "target": {
+              "kind": "shared_declaration",
+              "id": "sB"
+            },
+            "role": "adopt",
+            "statement": "只在乙的稳定性评价中采用。"
+          }
+        ],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "formation_rule": {
+          "statement": "先看备援是否可用；更快完成不能抵消备援缺失。",
+          "condition_refs": [],
+          "output_contract_ref": "qB-out"
+        }
+      },
+      {
+        "id": "qC",
+        "focus": "甲与乙的取舍有什么区别？",
+        "subject": {
+          "actor_ids": ["author"],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "interpretation",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "qC-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "interpretation"
+          },
+          "components": [
+            {
+              "id": "qC-c1",
+              "method": {
+                "term": "interpretation"
+              },
+              "role": "解读对象",
+              "statement": "本例sA与sB两份声明。",
+              "material_refs": []
+            },
+            {
+              "id": "qC-c2",
+              "method": {
+                "term": "interpretation"
+              },
+              "role": "解释关系",
+              "statement": "甲的顺序是期限再成本，乙以备援为先；本题只比较，不代表采用或调和。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [
+          {
+            "target": {
+              "kind": "shared_declaration",
+              "id": "sA"
+            },
+            "role": "discuss",
+            "statement": "比较此声明的含义，不采用为本题自身决策标准。"
+          },
+          {
+            "target": {
+              "kind": "shared_declaration",
+              "id": "sB"
+            },
+            "role": "discuss",
+            "statement": "比较此声明的含义，不采用为本题自身决策标准。"
+          }
+        ],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "qC-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "甲在期限内重成本，乙优先确保备援；两种立场没有自动合并。"
+          }
+        }
+      }
+    ],
+    "contracts": [
+      {
+        "id": "item-input",
+        "form": {
+          "term": "record"
+        },
+        "shape": {
+          "kind": "record",
+          "fields": [
+            {
+              "name": "cost",
+              "required": true,
+              "shape": {
+                "kind": "scalar",
+                "scalar_type": "number"
+              }
+            },
+            {
+              "name": "days",
+              "required": true,
+              "shape": {
+                "kind": "scalar",
+                "scalar_type": "number"
+              }
+            },
+            {
+              "name": "backup",
+              "required": true,
+              "shape": {
+                "kind": "scalar",
+                "scalar_type": "boolean"
+              }
+            }
+          ]
+        },
+        "minimum": 1,
+        "maximum": 1,
+        "allowed_result_types": [
+          {
+            "term": "record"
+          }
+        ]
+      },
+      {
+        "id": "assessment",
+        "form": {
+          "term": "record"
+        },
+        "shape": {
+          "kind": "record",
+          "fields": [
+            {
+              "name": "cost",
+              "required": true,
+              "shape": {
+                "kind": "scalar",
+                "scalar_type": "number"
+              }
+            },
+            {
+              "name": "eligible",
+              "required": true,
+              "shape": {
+                "kind": "scalar",
+                "scalar_type": "boolean"
+              }
+            },
+            {
+              "name": "risk",
+              "required": true,
+              "shape": {
+                "kind": "scalar",
+                "scalar_type": "text"
+              }
+            }
+          ]
+        },
+        "minimum": 1,
+        "maximum": 1,
+        "allowed_result_types": [
+          {
+            "term": "record"
+          }
+        ]
+      },
+      {
+        "id": "text-port",
+        "form": {
+          "term": "scalar"
+        },
+        "shape": {
+          "kind": "scalar",
+          "scalar_type": "text"
+        },
+        "minimum": 1,
+        "maximum": 1,
+        "allowed_result_types": [
+          {
+            "term": "text"
+          }
+        ]
+      },
+      {
+        "id": "example-out",
+        "form": {
+          "term": "scalar"
+        },
+        "shape": {
+          "kind": "scalar",
+          "scalar_type": "text"
+        },
+        "minimum": 1,
+        "maximum": 1,
+        "allowed_result_types": [
+          {
+            "term": "text"
+          }
+        ]
+      }
+    ],
+    "conditions": [],
+    "shared_declarations": [
+      {
+        "id": "sA",
+        "kind": "value_order",
+        "subject": {
+          "actor_ids": ["jia"],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "applies_to": {
+          "kind": "judgments",
+          "judgment_refs": ["qA"]
+        },
+        "value": ["三工作日内交付", "在期限内优先成本更低"]
+      },
+      {
+        "id": "sB",
+        "kind": "value_order",
+        "subject": {
+          "actor_ids": ["yi"],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "applies_to": {
+          "kind": "judgments",
+          "judgment_refs": ["qB"]
+        },
+        "value": ["先保证备援稳定", "速度不能抵消缺备援"]
+      }
+    ],
+    "materials": [
+      {
+        "id": "d1",
+        "kind": "definition",
+        "term": "交付周期",
+        "statement": "从确认需求到完成交付所计工作日数，不含自然日。",
+        "source_refs": [],
+        "applies_to": {
+          "kind": "judgments",
+          "judgment_refs": ["qA", "qB"]
+        }
+      },
+      {
+        "id": "d0",
+        "kind": "definition",
+        "term": "复核周期",
+        "statement": "同一判断两次定期复核的间隔工作日数。",
+        "source_refs": [],
+        "applies_to": {
+          "kind": "asset"
+        }
+      }
+    ],
+    "reasons": [],
+    "sources": [
+      {
+        "id": "src0",
+        "identity": "本夹具作者提供的纸面记录：旧例以三日为期限，预期B优先。"
+      }
+    ],
+    "source_uses": [
+      {
+        "id": "su0",
+        "role": "example",
+        "source_ref": "src0",
+        "target_kind": "example",
+        "target_ref": "e0"
+      }
+    ],
+    "resources": [],
+    "relationships": [
+      {
+        "id": "rel1",
+        "kind": {
+          "term": "complement"
+        },
+        "direction": "directed",
+        "participants": [
+          {
+            "judgment_ref": "qB",
+            "role": {
+              "term": "supplement"
+            }
+          },
+          {
+            "judgment_ref": "qA",
+            "role": {
+              "term": "base"
+            }
+          }
+        ],
+        "operator": {
+          "term": "complements"
+        },
+        "effect": {
+          "term": "adds_perspective"
+        },
+        "statement": "乙的稳定性评价提供另一取舍视角，不自动替代甲的排序。"
+      }
+    ],
+    "dependencies": [],
+    "examples": [
+      {
+        "id": "e0",
+        "title": "采用外部旧版规则的纸面例",
+        "kind": "illustrative",
+        "context": "假设旧版按三日内成本低者优先；本例仅保存演示，不宣称真实任务发生。",
+        "input_refs": [],
+        "adopted_judgments": [
+          {
+            "asset": {
+              "asset_id": "review-older",
+              "asset_version": "v1-paper",
+              "judgment_version": "v1-paper"
+            },
+            "judgment_id": "old-q"
+          }
+        ],
+        "application": "按该纸面旧版原则比较A100单位两日与B80单位三日。",
+        "results": [
+          {
+            "id": "er0",
+            "kind": "expected",
+            "value": {
+              "kind": "text",
+              "value": "B优先于A"
+            },
+            "contract_ref": {
+              "kind": "contract",
+              "id": "example-out"
+            }
+          }
+        ],
+        "source_refs": [
+          {
+            "kind": "source",
+            "id": "src0"
+          }
+        ],
+        "material_refs": []
+      }
+    ],
+    "exceptions": [],
+    "misuse": [],
+    "reading_order": ["qA", "qB", "qC"],
+    "extensions": [],
+    "asset_capability": "mixed"
+  }
+}

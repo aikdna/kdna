@@ -56,11 +56,26 @@ component records `component_version`, `release_tag`, and `release_commit`
 separately, because its accepted source checkout may be newer than its current
 public release. For an active published Core line, the ecosystem conformance
 anchor is fixed to the exact Git commit behind its declared release tag. While
-Core is explicitly recorded as a newer `candidate`, the anchor may instead be
-the exact candidate commit: it must descend from the published tag and its
-package version must equal the candidate version, including a SemVer
-prerelease candidate version. Component and artifact anchors cannot select a
-different Core commit.
+Core is explicitly recorded as a newer `candidate`, an unregistered anchor
+must descend from the published tag and contain the exact candidate package
+version, including its SemVer prerelease. The separately registered historical
+fixture anchor in `scripts/conformance-anchors.json` retains its original
+commit and exact tree, with an explicit `historical-contract-fixture` scope
+and the Core package identity actually present in that tree. The validator
+checks that closed identity against the fixed historical Git bytes; it does
+not substitute the current candidate version. Reachability, the published-tag
+ancestor requirement, and the exact-tree check still apply. This exception is
+limited to that registered historical identity and does not alter the active
+published Core rule. Component and artifact anchors cannot select a different
+Core commit.
+
+The registered historical fixture does not certify the current candidate or
+renew any repository, artifact, or workflow acceptance. Current `candidate`
+coordinates still match their source package manifests, while
+`scripts/ecosystem-source-inventory.json` and its source gate separately bind
+current source trees, package contents, and actual CI observations. Advancing
+the candidate source does not rewrite the historical anchor or claim that all
+17 repositories have been revalidated against it.
 
 ## Consumer Rules
 

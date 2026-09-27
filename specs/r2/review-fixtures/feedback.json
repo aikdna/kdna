@@ -1,0 +1,584 @@
+{
+  "review_only": true,
+  "notation": "R1 complete author-semantic view; container/runtime/version tuple deliberately not asserted",
+  "M": {
+    "asset_id": "review-feedback",
+    "asset_uid": "review-feedback-uid",
+    "version": "r1-paper",
+    "judgment_version": "r1-paper",
+    "title": "跨题反馈纸面例",
+    "summary": "保存逐轮观察与调整办法，不自动执行日程。",
+    "languages": ["zh-CN"],
+    "created_at": "2026-09-23T00:00:00Z",
+    "updated_at": "2026-09-23T00:00:00Z",
+    "lineage": [],
+    "history": {
+      "coverage": "complete",
+      "statement": "仅本次纸面构造的起始版本，不是正式资产沿革",
+      "entries": []
+    }
+  },
+  "P": {
+    "asset": {
+      "asset_id": "review-feedback",
+      "asset_version": "r1-paper",
+      "judgment_version": "r1-paper"
+    },
+    "actors": [
+      {
+        "id": "author",
+        "kind": "person",
+        "name": "纸面作者"
+      }
+    ],
+    "scope": {
+      "statement": "定义审查用构造情境，不进入业务资产目录"
+    },
+    "declarations": {
+      "highest_question": {
+        "value": "怎样按每轮反馈持续调整阅读安排？",
+        "state": "provided"
+      },
+      "boundaries": {
+        "value": null,
+        "state": "none"
+      }
+    },
+    "kernel": {
+      "purpose": {
+        "kind": "summary"
+      },
+      "foundation_refs": []
+    },
+    "judgments": [
+      {
+        "id": "qSignal",
+        "focus": "本轮实际完成了多少分钟？",
+        "subject": {
+          "actor_ids": ["author"],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "rule",
+        "answer_kind": "status",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "authored",
+          "statement": "如实记录本轮实际完成分钟数，未取得记录时先补记录。",
+          "qualification_refs": []
+        },
+        "result_contract": {
+          "id": "qSignal-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "number"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "number"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "observation"
+          },
+          "components": [
+            {
+              "id": "qSignal-c1",
+              "method": {
+                "term": "observation"
+              },
+              "role": "观察依据",
+              "statement": "使用本轮实际完成分钟记录，原样给出数值；缺记录不把计划分钟数当完成分钟数。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [
+          {
+            "name": "actual_minutes",
+            "meaning": "actual_minutes",
+            "direction": "input",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "number-port"
+            },
+            "input_role": "actual_minutes"
+          },
+          {
+            "name": "result",
+            "meaning": "本题全部数值结果",
+            "direction": "output",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "qSignal-out"
+            },
+            "result_field": null
+          }
+        ],
+        "inputs": [
+          {
+            "name": "actual_minutes",
+            "meaning": "actual_minutes",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "number-port"
+            }
+          }
+        ],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "formation_rule": {
+          "statement": "如实记录本轮实际完成分钟数，未取得记录时先补记录。",
+          "condition_refs": [],
+          "output_contract_ref": "qSignal-out"
+        }
+      },
+      {
+        "id": "qAdjust",
+        "focus": "本轮反馈后下轮安排多少分钟？",
+        "subject": {
+          "actor_ids": ["author"],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "rule",
+        "answer_kind": "adjustment",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "authored",
+          "statement": "完成分钟少于当前安排就减五分钟，最低五分钟，否则保持。",
+          "qualification_refs": []
+        },
+        "result_contract": {
+          "id": "qAdjust-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "number"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "number"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "feedback"
+          },
+          "components": [
+            {
+              "id": "qAdjust-c1",
+              "method": {
+                "term": "feedback"
+              },
+              "role": "调整目标",
+              "statement": "保持能够持续完成的阅读安排，当前安排至少五分钟。",
+              "material_refs": []
+            },
+            {
+              "id": "qAdjust-c2",
+              "method": {
+                "term": "feedback"
+              },
+              "role": "反馈信号",
+              "statement": "本轮实际完成分钟signal和本轮安排current，均为本次明确输入。",
+              "material_refs": []
+            },
+            {
+              "id": "qAdjust-c3",
+              "method": {
+                "term": "feedback"
+              },
+              "role": "调整办法",
+              "statement": "signal小于current时next=max(5,current-5)，否则next=current；缺输入先补齐，不自动改日历。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [
+          {
+            "name": "current",
+            "meaning": "current",
+            "direction": "input",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "number-port"
+            },
+            "input_role": "current"
+          },
+          {
+            "name": "signal",
+            "meaning": "signal",
+            "direction": "input",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "number-port"
+            },
+            "input_role": "signal"
+          },
+          {
+            "name": "result",
+            "meaning": "本题全部数值结果",
+            "direction": "output",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "qAdjust-out"
+            },
+            "result_field": null
+          }
+        ],
+        "inputs": [
+          {
+            "name": "current",
+            "meaning": "current",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "number-port"
+            }
+          },
+          {
+            "name": "signal",
+            "meaning": "signal",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "number-port"
+            }
+          }
+        ],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "formation_rule": {
+          "statement": "完成分钟少于当前安排就减五分钟，最低五分钟，否则保持。",
+          "condition_refs": [],
+          "output_contract_ref": "qAdjust-out"
+        }
+      },
+      {
+        "id": "qLoop",
+        "focus": "怎样按每轮反馈持续调整阅读安排？",
+        "subject": {
+          "actor_ids": ["author"],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "rule",
+        "answer_kind": "adjustment",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "authored",
+          "statement": "从二十分钟开始，每轮据实际完成情况给出下一轮建议；缺反馈先补记录。",
+          "qualification_refs": []
+        },
+        "result_contract": {
+          "id": "qLoop-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "number"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "number"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "composite"
+          },
+          "components": [],
+          "bindings": [],
+          "units": [],
+          "plan": {
+            "id": "feedback-plan",
+            "root": {
+              "kind": "plan_node",
+              "id": "F"
+            },
+            "nodes": [
+              {
+                "id": "F",
+                "kind": "feedback",
+                "body": {
+                  "kind": "plan_node",
+                  "id": "body"
+                },
+                "state": [
+                  {
+                    "name": "minutes",
+                    "contract_ref": {
+                      "kind": "contract",
+                      "id": "number-port"
+                    },
+                    "initial": {
+                      "kind": "number",
+                      "value": 20
+                    }
+                  }
+                ],
+                "updates": [
+                  {
+                    "from": {
+                      "node_ref": {
+                        "kind": "plan_node",
+                        "id": "apply-adjust"
+                      },
+                      "port": "result",
+                      "field_path": []
+                    },
+                    "state_slot": "minutes",
+                    "next_input": {
+                      "node_ref": {
+                        "kind": "plan_node",
+                        "id": "apply-adjust"
+                      },
+                      "port": "current",
+                      "field_path": []
+                    }
+                  }
+                ],
+                "termination": {
+                  "kind": "ongoing",
+                  "handling": "每轮只交付已完成本轮的下轮建议，作者可结束，不自动无限执行。"
+                },
+                "output": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "apply-adjust"
+                  },
+                  "port": "result",
+                  "field_path": []
+                },
+                "on_missing_feedback": "补本轮实际记录前不形成新建议，不能把旧记录冒充本轮。"
+              },
+              {
+                "id": "body",
+                "kind": "sequence",
+                "children": [
+                  {
+                    "kind": "plan_node",
+                    "id": "read-signal"
+                  },
+                  {
+                    "kind": "plan_node",
+                    "id": "apply-adjust"
+                  }
+                ]
+              },
+              {
+                "id": "read-signal",
+                "kind": "judgment_use",
+                "judgment_ref": {
+                  "kind": "local",
+                  "judgment_id": "qSignal"
+                },
+                "input_bindings": [
+                  {
+                    "port": "actual_minutes",
+                    "from": {
+                      "kind": "input",
+                      "name": "actual_minutes"
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "apply-adjust",
+                "kind": "judgment_use",
+                "judgment_ref": {
+                  "kind": "local",
+                  "judgment_id": "qAdjust"
+                },
+                "input_bindings": [
+                  {
+                    "port": "current",
+                    "from": {
+                      "kind": "state",
+                      "feedback_ref": {
+                        "kind": "plan_node",
+                        "id": "F"
+                      },
+                      "slot": "minutes"
+                    }
+                  }
+                ]
+              }
+            ],
+            "links": [
+              {
+                "from": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "read-signal"
+                  },
+                  "port": "result",
+                  "field_path": []
+                },
+                "to": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "apply-adjust"
+                  },
+                  "port": "signal",
+                  "field_path": []
+                }
+              }
+            ],
+            "result_bindings": [
+              {
+                "from": {
+                  "node_ref": {
+                    "kind": "plan_node",
+                    "id": "F"
+                  },
+                  "port": "result",
+                  "field_path": []
+                },
+                "field_path": []
+              }
+            ]
+          }
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [
+          {
+            "name": "actual_minutes",
+            "meaning": "actual_minutes",
+            "direction": "input",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "number-port"
+            },
+            "input_role": "actual_minutes"
+          },
+          {
+            "name": "result",
+            "meaning": "本题全部数值结果",
+            "direction": "output",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "qLoop-out"
+            },
+            "result_field": null
+          }
+        ],
+        "inputs": [
+          {
+            "name": "actual_minutes",
+            "meaning": "actual_minutes",
+            "contract_ref": {
+              "kind": "contract",
+              "id": "number-port"
+            }
+          }
+        ],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "formation_rule": {
+          "statement": "从二十分钟开始，每轮据实际完成情况给出下一轮建议；缺反馈先补记录。",
+          "condition_refs": [],
+          "output_contract_ref": "qLoop-out"
+        }
+      }
+    ],
+    "contracts": [
+      {
+        "id": "number-port",
+        "form": {
+          "term": "scalar"
+        },
+        "shape": {
+          "kind": "scalar",
+          "scalar_type": "number"
+        },
+        "minimum": 1,
+        "maximum": 1,
+        "allowed_result_types": [
+          {
+            "term": "number"
+          }
+        ]
+      }
+    ],
+    "conditions": [],
+    "shared_declarations": [],
+    "materials": [],
+    "reasons": [],
+    "sources": [],
+    "source_uses": [],
+    "resources": [],
+    "relationships": [],
+    "dependencies": [],
+    "examples": [],
+    "exceptions": [],
+    "misuse": [],
+    "reading_order": ["qLoop", "qSignal", "qAdjust"],
+    "extensions": [],
+    "asset_capability": "result_forming_rules"
+  }
+}

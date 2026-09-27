@@ -28,7 +28,106 @@ function repositoryUrl(value, repository, hostname) {
   return url;
 }
 
-function validateCheckRuns(record, commit, runs, requireExpected = true) {
+function actionsRunId(record, run) {
+  assert.ok(Number.isSafeInteger(run.id) && run.id > 0, 'invalid Actions check ID');
+  const html = repositoryUrl(run.html_url, record.repository, 'github.com');
+  const suffix = html.pathname.slice(record.repository.length + 1);
+  const match = suffix.match(new RegExp(`^/actions/runs/([1-9][0-9]*)/job/${run.id}$`, 'u'));
+  assert.ok(match, 'Actions check URL identity differs');
+  const id = Number(match[1]);
+  assert.ok(Number.isSafeInteger(id), 'invalid Actions run ID');
+  return id;
+}
+
+function maintenanceCandidate(record, run) {
+  return (
+    run.name === 'Dependabot' &&
+    run.app?.id === 15368 &&
+    run.app.slug === 'github-actions' &&
+    !record.ci.required.some((item) => item.name === run.name)
+  );
+}
+
+function validateMaintenanceRun(record, check, action) {
+  assert.ok(action && typeof action === 'object', 'Dependabot Actions run metadata is missing');
+  const id = actionsRunId(record, check);
+  const api = `https://api.github.com/repos/${record.repository}`;
+  const html = `https://github.com/${record.repository}`;
+  assert.equal(check.details_url, check.html_url, 'maintenance check details URL differs');
+  assert.equal(action.id, id, 'maintenance Actions run ID differs');
+  assert.equal(action.url, `${api}/actions/runs/${id}`, 'maintenance API URL differs');
+  assert.equal(action.html_url, `${html}/actions/runs/${id}`, 'maintenance HTML URL differs');
+  assert.equal(action.head_sha, record.ci.head, 'maintenance head differs');
+  assert.equal(action.head_commit?.id, record.ci.head, 'maintenance commit differs');
+  assert.equal(action.head_commit?.tree_id, record.tree, 'maintenance tree differs');
+  assert.ok(
+    Number.isSafeInteger(check.check_suite?.id) && check.check_suite.id > 0,
+    'maintenance check suite identity is missing',
+  );
+  assert.equal(action.check_suite_id, check.check_suite.id, 'maintenance check suite differs');
+  assert.equal(action.check_suite_url, `${api}/check-suites/${check.check_suite.id}`);
+  assert.ok(Number.isSafeInteger(action.workflow_id) && action.workflow_id > 0);
+  assert.equal(action.workflow_url, `${api}/actions/workflows/${action.workflow_id}`);
+  assert.equal(action.jobs_url, `${api}/actions/runs/${id}/jobs`);
+  assert.equal(
+    action.path,
+    'dynamic/dependabot/dependabot-updates',
+    'not a Dependabot update path',
+  );
+  assert.equal(action.event, 'dynamic', 'not a Dependabot update event');
+  assert.equal(action.status, 'completed', 'maintenance Actions run is unfinished');
+  assert.equal(action.conclusion, check.conclusion, 'maintenance conclusion differs');
+  assert.ok(
+    ['success', 'failure'].includes(action.conclusion),
+    'unsupported maintenance conclusion',
+  );
+  assert.ok(Number.isSafeInteger(action.run_attempt) && action.run_attempt > 0);
+  for (const actor of [action.actor, action.triggering_actor]) {
+    assert.equal(actor?.login, 'dependabot[bot]', 'maintenance actor login differs');
+    assert.equal(actor.id, 49699333, 'maintenance actor ID differs');
+    assert.equal(actor.type, 'Bot', 'maintenance actor type differs');
+    assert.equal(actor.url, 'https://api.github.com/users/dependabot%5Bbot%5D');
+    assert.equal(actor.html_url, 'https://github.com/apps/dependabot');
+  }
+  for (const repository of [action.repository, action.head_repository]) {
+    assert.equal(repository?.full_name, record.repository, 'maintenance repository differs');
+    assert.equal(repository.name, record.repository.split('/')[1]);
+    assert.equal(repository.owner?.login, record.repository.split('/')[0]);
+    assert.ok(Number.isSafeInteger(repository.id) && repository.id > 0);
+    assert.equal(repository.url, api, 'maintenance repository API URL differs');
+    assert.equal(repository.html_url, html, 'maintenance repository HTML URL differs');
+    assert.equal(repository.fork, false, 'maintenance repository is a fork');
+  }
+  assert.equal(
+    action.repository.id,
+    action.head_repository.id,
+    'maintenance repository ID differs',
+  );
+  return {
+    classification: 'dependabot-automated-update',
+    code_acceptance: false,
+    update_failure_unresolved: check.conclusion === 'failure',
+    actions_run: {
+      id,
+      url: action.html_url,
+      api_url: action.url,
+      check_suite_id: action.check_suite_id,
+      workflow_id: action.workflow_id,
+      path: action.path,
+      event: action.event,
+      run_attempt: action.run_attempt,
+      repository_id: action.repository.id,
+      actor: { id: action.actor.id, login: action.actor.login, type: action.actor.type },
+      triggering_actor: {
+        id: action.triggering_actor.id,
+        login: action.triggering_actor.login,
+        type: action.triggering_actor.type,
+      },
+    },
+  };
+}
+
+function validateCheckRuns(record, commit, runs, requireExpected = true, actions = new Map()) {
   repositoryName(record.repository);
   assert.match(record.commit, SHA);
   assert.match(record.tree, SHA);
@@ -54,6 +153,7 @@ function validateCheckRuns(record, commit, runs, requireExpected = true) {
   const seen = new Set();
   const unexecuted = [];
   const checks = [];
+  const maintenance = [];
   for (const run of runs) {
     assert.ok(
       Number.isSafeInteger(run.id) && run.id > 0 && !ids.has(run.id),
@@ -68,21 +168,31 @@ function validateCheckRuns(record, commit, runs, requireExpected = true) {
     assert.equal(APPS.get(run.app.id), run.app.slug, 'unrecognized observed CI application');
     const suffix = html.pathname.slice(record.repository.length + 1);
     if (run.app.id === 15368) {
-      assert.match(
-        suffix,
-        new RegExp(`^/actions/runs/[1-9][0-9]*/job/${run.id}$`, 'u'),
-        'Actions check URL identity differs',
-      );
+      actionsRunId(record, run);
     } else {
       assert.equal(suffix, `/runs/${run.id}`, 'security check URL identity differs');
     }
     assert.equal(run.status, 'completed', `CI check is unfinished: ${run.name}`);
+    const observed = {
+      id: run.id,
+      name: run.name,
+      head: run.head_sha,
+      app: { id: run.app.id, slug: run.app.slug },
+      conclusion: run.conclusion,
+      url: run.html_url,
+    };
     if (required.has(run.name)) {
       const app = required.get(run.name);
       assert.equal(run.app.id, app.id, 'required CI application ID differs');
       assert.equal(run.app.slug, app.slug, 'required CI application identity differs');
       assert.equal(run.conclusion, 'success', `required CI check did not succeed: ${run.name}`);
       seen.add(run.name);
+    } else if (maintenanceCandidate(record, run)) {
+      maintenance.push({
+        ...observed,
+        ...validateMaintenanceRun(record, run, actions.get(actionsRunId(record, run))),
+      });
+      continue;
     } else {
       if (run.conclusion !== 'success')
         unexecuted.push({ name: run.name, conclusion: run.conclusion, url: run.html_url });
@@ -92,14 +202,7 @@ function validateCheckRuns(record, commit, runs, requireExpected = true) {
         `observed CI check failed, was cancelled, or did not execute: ${run.name}`,
       );
     }
-    checks.push({
-      id: run.id,
-      name: run.name,
-      head: run.head_sha,
-      app: { id: run.app.id, slug: run.app.slug },
-      conclusion: run.conclusion,
-      url: run.html_url,
-    });
+    checks.push(observed);
   }
   if (requireExpected)
     assert.deepEqual(
@@ -115,6 +218,8 @@ function validateCheckRuns(record, commit, runs, requireExpected = true) {
     execution: 'remote-check-runs',
     required_checks: [...seen].sort(),
     checks,
+    maintenance_checks: maintenance,
+    maintenance_failures_unresolved: maintenance.some((check) => check.update_failure_unresolved),
     unexecuted_optional_checks: unexecuted,
   };
 }
@@ -124,6 +229,7 @@ async function githubJson(endpoint) {
   const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
   if (token) {
     const response = await fetch(`https://api.github.com/${endpoint}`, {
+      redirect: 'error',
       headers: {
         Accept: 'application/vnd.github+json',
         Authorization: `Bearer ${token}`,
@@ -137,7 +243,7 @@ async function githubJson(endpoint) {
     assert.ok(Buffer.byteLength(text) <= 8 * 1024 * 1024, 'GitHub CI response exceeds its bound');
     return JSON.parse(text);
   }
-  const result = spawnSync('gh', ['api', endpoint], {
+  const result = spawnSync('gh', ['api', '--hostname', 'github.com', endpoint], {
     encoding: 'utf8',
     timeout: 30000,
     maxBuffer: 8 * 1024 * 1024,
@@ -184,7 +290,14 @@ async function queryChecks(record, request, requireExpected) {
           checks: [],
         };
       }
-      return validateCheckRuns(record, commit, runs, requireExpected);
+      const actions = new Map();
+      for (const run of runs)
+        if (maintenanceCandidate(record, run)) {
+          const id = actionsRunId(record, run);
+          if (!actions.has(id))
+            actions.set(id, await request(`repos/${record.repository}/actions/runs/${id}`));
+        }
+      return validateCheckRuns(record, commit, runs, requireExpected, actions);
     }
     assert.ok(response.check_runs.length > 0, 'CI check inventory is truncated');
   }

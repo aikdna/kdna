@@ -30,6 +30,14 @@
       ],
       "type": "string"
     },
+    "AssetCapability": {
+      "enum": [
+        "asserted_answers",
+        "result_forming_rules",
+        "mixed"
+      ],
+      "type": "string"
+    },
     "AssetIdentity": {
       "additionalProperties": false,
       "properties": {
@@ -538,7 +546,55 @@
     },
     "Judgment": {
       "additionalProperties": false,
-      "anyOf": [
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "form": {
+                "const": "conclusion"
+              }
+            },
+            "required": [
+              "form"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "formation_rule"
+              ]
+            },
+            "required": [
+              "result",
+              "result_contract"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "form": {
+                "const": "rule"
+              }
+            },
+            "required": [
+              "form"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "result"
+              ]
+            },
+            "required": [
+              "formation_rule",
+              "result_contract"
+            ]
+          }
+        }
+      ],
+      "oneOf": [
         {
           "required": [
             "result"
@@ -567,6 +623,9 @@
         "focus": {
           "$ref": "#/$defs/NonEmptyText"
         },
+        "form": {
+          "$ref": "#/$defs/JudgmentForm"
+        },
         "formation_rule": {
           "$ref": "#/$defs/FormationRule"
         },
@@ -575,6 +634,9 @@
         },
         "label": {
           "$ref": "#/$defs/Text"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/JudgmentLifecycle"
         },
         "material_refs": {
           "items": {
@@ -595,6 +657,9 @@
         },
         "nature": {
           "$ref": "#/$defs/TermRef"
+        },
+        "parent_ref": {
+          "$ref": "#/$defs/Identifier"
         },
         "reason_refs": {
           "items": {
@@ -622,7 +687,45 @@
         "focus",
         "subject",
         "scope",
-        "result_contract"
+        "form"
+      ],
+      "type": "object"
+    },
+    "JudgmentForm": {
+      "enum": [
+        "conclusion",
+        "rule"
+      ],
+      "type": "string"
+    },
+    "JudgmentLifecycle": {
+      "additionalProperties": false,
+      "properties": {
+        "statement": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "deprecated",
+            "superseded",
+            "withdrawn"
+          ],
+          "type": "string"
+        },
+        "superseded_by": {
+          "items": {
+            "$ref": "#/$defs/JudgmentReplacementTarget"
+          },
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "status",
+        "superseded_by",
+        "statement"
       ],
       "type": "object"
     },
@@ -644,6 +747,22 @@
         "kind",
         "judgment_ref",
         "result_contract_ref"
+      ],
+      "type": "object"
+    },
+    "JudgmentReplacementTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "judgment_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "asset",
+        "judgment_id"
       ],
       "type": "object"
     },
@@ -729,6 +848,9 @@
           "uniqueItems": true
         },
         "statement": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "term": {
           "$ref": "#/$defs/NonEmptyText"
         }
       },
@@ -899,6 +1021,9 @@
         "asset": {
           "$ref": "#/$defs/AssetIdentity"
         },
+        "asset_capability": {
+          "$ref": "#/$defs/AssetCapability"
+        },
         "attributions": {
           "$ref": "#/$defs/AttributionDeclaration"
         },
@@ -944,7 +1069,7 @@
           "type": "string"
         },
         "profile_version": {
-          "const": "0.2.0",
+          "const": "0.4.0",
           "type": "string"
         },
         "reasons": {
@@ -992,7 +1117,8 @@
         "asset",
         "actors",
         "scope",
-        "judgments"
+        "judgments",
+        "asset_capability"
       ],
       "type": "object"
     },
@@ -1548,12 +1674,22 @@
         },
         "term": {
           "$ref": "#/$defs/Identifier"
+        },
+        "vocabulary": {
+          "$ref": "#/$defs/TermVocabulary"
         }
       },
       "required": [
         "term"
       ],
       "type": "object"
+    },
+    "TermVocabulary": {
+      "enum": [
+        "core",
+        "author"
+      ],
+      "type": "string"
     },
     "Text": {
       "type": "string"
@@ -1786,7 +1922,7 @@
       "$ref": "#/$defs/Identifier"
     }
   },
-  "$id": "urn:kdna:schema:payload:0.2.0",
+  "$id": "urn:kdna:schema:payload:0.4.0",
   "$ref": "#/$defs/Payload",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Generated from the single public semantic source. Structural validity is not trusted admission or runtime authorization.",

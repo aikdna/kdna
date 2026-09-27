@@ -1,0 +1,324 @@
+{
+  "review_only": true,
+  "notation": "R1 complete author-semantic view; container/runtime/version tuple deliberately not asserted",
+  "M": {
+    "asset_id": "review-branches",
+    "asset_uid": "review-branches-uid",
+    "version": "r1-paper",
+    "judgment_version": "r1-paper",
+    "title": "多条并用的纸面例",
+    "summary": "保存独立检查项的收集及待判身份，不宣称整体合格。",
+    "languages": ["zh-CN"],
+    "created_at": "2026-09-23T00:00:00Z",
+    "updated_at": "2026-09-23T00:00:00Z",
+    "lineage": [],
+    "history": {
+      "coverage": "complete",
+      "statement": "仅本次纸面构造的起始版本，不是正式资产沿革",
+      "entries": []
+    }
+  },
+  "P": {
+    "asset": {
+      "asset_id": "review-branches",
+      "asset_version": "r1-paper",
+      "judgment_version": "r1-paper"
+    },
+    "actors": [
+      {
+        "id": "author",
+        "kind": "person",
+        "name": "纸面作者"
+      }
+    ],
+    "scope": {
+      "statement": "定义审查用构造情境，不进入业务资产目录"
+    },
+    "declarations": {
+      "highest_question": {
+        "value": "怎样汇总封面和页码的检查记录？",
+        "state": "provided"
+      },
+      "boundaries": {
+        "value": null,
+        "state": "none"
+      }
+    },
+    "kernel": {
+      "purpose": {
+        "kind": "summary"
+      },
+      "foundation_refs": []
+    },
+    "judgments": [
+      {
+        "id": "qb",
+        "focus": "怎样汇总封面和页码的检查记录？",
+        "subject": {
+          "actor_ids": ["author"],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "rule",
+        "answer_kind": "evaluation",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "authored",
+          "statement": "收集已经确认的独立检查记录，未判项单列，不据此宣布整本书合格。",
+          "qualification_refs": []
+        },
+        "result_contract": {
+          "id": "qb-out",
+          "form": {
+            "term": "list"
+          },
+          "shape": {
+            "kind": "list",
+            "item_shape": {
+              "kind": "scalar",
+              "scalar_type": "text"
+            },
+            "minimum": 0,
+            "maximum": 3
+          },
+          "minimum": 0,
+          "maximum": 3,
+          "allowed_result_types": [
+            {
+              "term": "list"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "criteria_comparison"
+          },
+          "components": [
+            {
+              "id": "m03-c1",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "判断标准",
+              "statement": "封面文字和页码分别按本例确认记录核对，项目互不否决。",
+              "material_refs": []
+            },
+            {
+              "id": "m03-c2",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "对照办法",
+              "statement": "逐项读实际核对记录，未取得记录标为未判；相同封面记录可从两个独立入口指向同一候选身份。",
+              "material_refs": []
+            },
+            {
+              "id": "m03-c3",
+              "method": {
+                "term": "criteria_comparison"
+              },
+              "role": "归结办法",
+              "statement": "全部已确认项按声明顺序收集，同候选身份只留一个值并保留命中条目；不同候选同字面仍保留。",
+              "material_refs": []
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "formation_rule": {
+          "statement": "收集已经确认的独立检查记录，未判项单列，不据此宣布整本书合格。",
+          "condition_refs": [],
+          "output_contract_ref": "qb-out",
+          "policy": {
+            "id": "policy-b",
+            "result_contract_ref": {
+              "kind": "contract",
+              "id": "qb-out"
+            },
+            "candidates": [
+              {
+                "id": "cover",
+                "contract_ref": {
+                  "kind": "contract",
+                  "id": "item"
+                },
+                "value": {
+                  "kind": "text",
+                  "value": "核对完成"
+                }
+              },
+              {
+                "id": "page",
+                "contract_ref": {
+                  "kind": "contract",
+                  "id": "item"
+                },
+                "value": {
+                  "kind": "text",
+                  "value": "核对完成"
+                }
+              }
+            ],
+            "entries": [
+              {
+                "id": "e1",
+                "when": {
+                  "kind": "condition",
+                  "id": "cond1"
+                },
+                "then": {
+                  "kind": "candidate",
+                  "candidate_ref": {
+                    "kind": "candidate",
+                    "id": "cover"
+                  }
+                }
+              },
+              {
+                "id": "e2",
+                "when": {
+                  "kind": "condition",
+                  "id": "cond2"
+                },
+                "then": {
+                  "kind": "candidate",
+                  "candidate_ref": {
+                    "kind": "candidate",
+                    "id": "cover"
+                  }
+                }
+              },
+              {
+                "id": "e3",
+                "when": {
+                  "kind": "condition",
+                  "id": "cond3"
+                },
+                "then": {
+                  "kind": "candidate",
+                  "candidate_ref": {
+                    "kind": "candidate",
+                    "id": "page"
+                  }
+                }
+              }
+            ],
+            "match": "all_matches",
+            "combine": {
+              "kind": "collect",
+              "item_contract_ref": {
+                "kind": "contract",
+                "id": "item"
+              },
+              "duplicates": "producer_identity",
+              "order": "declaration"
+            },
+            "exclusive_sets": [],
+            "on_no_match": {
+              "kind": "disposition",
+              "code": "defer",
+              "statement": "没有已成立核对记录，先实际核对。"
+            },
+            "on_conflict": {
+              "kind": "disposition",
+              "code": "conflict",
+              "statement": "记录冲突时停止汇总并核对原记录。"
+            },
+            "on_undetermined": {
+              "kind": "partial",
+              "independence": "封面与页码各自独立，未判项不能撤销其他项目的核对记录，不包含整书否决。",
+              "statement": "只报告确认项目，待判条目单列。"
+            }
+          }
+        }
+      }
+    ],
+    "contracts": [
+      {
+        "id": "item",
+        "form": {
+          "term": "scalar"
+        },
+        "shape": {
+          "kind": "scalar",
+          "scalar_type": "text"
+        },
+        "minimum": 1,
+        "maximum": 1,
+        "allowed_result_types": [
+          {
+            "term": "text"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "cond1",
+        "owner_ref": {
+          "kind": "judgment",
+          "id": "qb"
+        },
+        "expression": {
+          "kind": "interpreted",
+          "statement": "封面入口一有已完成核对记录"
+        }
+      },
+      {
+        "id": "cond2",
+        "owner_ref": {
+          "kind": "judgment",
+          "id": "qb"
+        },
+        "expression": {
+          "kind": "interpreted",
+          "statement": "封面入口二指向同一已完成核对记录"
+        }
+      },
+      {
+        "id": "cond3",
+        "owner_ref": {
+          "kind": "judgment",
+          "id": "qb"
+        },
+        "expression": {
+          "kind": "interpreted",
+          "statement": "页码有已完成核对记录"
+        }
+      }
+    ],
+    "shared_declarations": [],
+    "materials": [],
+    "reasons": [],
+    "sources": [],
+    "source_uses": [],
+    "resources": [],
+    "relationships": [],
+    "dependencies": [],
+    "examples": [],
+    "exceptions": [],
+    "misuse": [],
+    "reading_order": ["qb"],
+    "extensions": [],
+    "asset_capability": "result_forming_rules"
+  }
+}

@@ -2,12 +2,12 @@
   "name": "@aikdna/kdna-monorepo",
   "version": "0.7.0",
   "private": true,
-  "description": "KDNA Core \u2014 official KDNA judgment-asset format, runtime loading contract, and official toolchain.",
+  "description": "KDNA Core — official KDNA judgment-asset format, runtime loading contract, and official toolchain.",
   "type": "commonjs",
   "scripts": {
     "lint": "eslint packages/kdna-core/src/",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format:check": "node scripts/check-format-ownership.cjs && node --test scripts/check-format-ownership.test.cjs && prettier --check .",
     "lint:examples": "node scripts/validate-examples.js",
     "validate:examples": "node scripts/validate-examples.js",
     "validate:runtime-contract": "node scripts/validate-runtime-contract.js",
@@ -74,7 +74,9 @@
     "test:compatibility-policy": "node --test scripts/ecosystem-version-lock.test.js scripts/compatibility-bindings.test.js",
     "test:integration-policy": "npm run test:compatibility-policy && npm run test:source-policy",
     "test:source-policy": "node --test scripts/ecosystem-source-ci.test.js scripts/ecosystem-source-graph.test.js",
-    "ecosystem-source-gate": "node scripts/ecosystem-source-gate.js"
+    "ecosystem-source-gate": "node scripts/ecosystem-source-gate.js",
+    "check:r2-navigation": "node scripts/check-current-r2-navigation.cjs",
+    "test:r2-navigation": "node --test scripts/check-current-r2-navigation.test.cjs"
   },
   "license": "Apache-2.0",
   "repository": {

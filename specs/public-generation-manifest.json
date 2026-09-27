@@ -1,34 +1,39 @@
 {
   "accepted_designs": [
     {
-      "bytes": 4870,
+      "bytes": 2150,
       "path": "SPEC-INDEX.md",
-      "sha256": "34d6a900d065ff4239dd6c8359cbdb9c7b0ee56caa91713e6761c41997515091"
+      "sha256": "34d88e807a3fc8a88bff9fa52a2432e7f0cd14f7cff896f0e5701ae41519649e"
     },
     {
-      "bytes": 183385,
+      "bytes": 198940,
       "path": "conformance/public-contract-decision-vectors.json",
-      "sha256": "5c22f92527fd93c85c04a1d28d3790455ea5cd06c0df94c56f8fd7446be9e843"
+      "sha256": "ddeb1ce30044575b6a22508716e95b4c8134c300fe2962d292011fed96595ad3"
     },
     {
-      "bytes": 26818,
+      "bytes": 52359,
       "path": "specs/public-contract-decisions.json",
-      "sha256": "7ebbfff1588872659482d41e067b3033d54e7a1b0873c051ec36b64733b4893c"
+      "sha256": "72d5c490b4982c4e9dde0e67f5914c0ee85dc8aba42157a793a6cde764886c0f"
     },
     {
-      "bytes": 11770,
+      "bytes": 17300,
       "path": "specs/public-source-map.json",
-      "sha256": "ca31b1d316b74d4384c5843e3fa245dc1bba87d3be9e4922a0d4ff754e102cbf"
+      "sha256": "cdc0aa01185280c00479d7aa7e429ad743026f74840552edd52bb0c94d0867e9"
     },
     {
-      "bytes": 7459,
+      "bytes": 12576,
       "path": "specs/public-version-policy.md",
-      "sha256": "3f144259b3ef8eef60728c75a8533147f40ccca556710257ad139bf7d6072418"
+      "sha256": "39d82934376446c915c6c0cb367e853109312bdb6d1ce4e61121a7b1dbc2575d"
     },
     {
-      "bytes": 52305,
+      "bytes": 10938,
       "path": "specs/read-contract.md",
-      "sha256": "5a7de907855d52ee143a0c969c16a803aefb97062c56010c99546a135ef84dc4"
+      "sha256": "b7d9979703c5b4795ffd10e5e348bcb7232fd47ba6ab5a07e803c9d7c185acdb"
+    },
+    {
+      "bytes": 19907,
+      "path": "specs/execution-contract-0.3.md",
+      "sha256": "1a84fae1ac849033fd6f7e310ccafaf675543e8b5d6383368d1258792f889f7d"
     }
   ],
   "algorithm": {
@@ -37,88 +42,622 @@
   },
   "derived": [
     {
-      "bytes": 12100,
-      "path": "schema/manifest-0.2.schema.json",
-      "sha256": "5d0be457f4a59f8debf6f1c2e4b16adfb468b1024abd71da92fc2f652acd2cea"
+      "bytes": 6542,
+      "path": "schema/agent-host-receipt-0.3.1.schema.json",
+      "sha256": "d6a5888402af549f69c30171f510677197ff5d414719865f15dc97541fb2aa0e"
     },
     {
-      "bytes": 37803,
-      "path": "schema/payload-profile-0.2.schema.json",
-      "sha256": "388dbf1104737e6859cc86d448761136b252a672fa4a5cac91d3ea32e50f4182"
+      "bytes": 3024,
+      "path": "schema/agent-host-request-0.3.1.schema.json",
+      "sha256": "d06c0cad6e04ddaefbfd48b9790ad7cf3c4f2ff988ed73f0dbf31fd67d32d8df"
     },
     {
-      "bytes": 82538,
-      "path": "specs/canonical-ir.schema.json",
-      "sha256": "9ba2ea3a86bd722f076d4218238bfdf34d53355601c226a419a29a0edf9a6a79"
+      "bytes": 9929,
+      "path": "schema/consumption-plan-0.3.1.schema.json",
+      "sha256": "2052439e9c0d4dd19c842b17b4c1c3ff7afd82606ede5c8e778485347ea86109"
     },
     {
-      "bytes": 10803,
+      "bytes": 10845,
+      "path": "schema/judgment-trace-0.3.1.schema.json",
+      "sha256": "24a1719699dcf165e6d6e4ac7c7ac6962e1f19b7f208851c1fd2fc12febc8943"
+    },
+    {
+      "bytes": 16760,
+      "path": "schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
+      "sha256": "508d2571398ecc589959a20eedb18e8872087536e8a6c5612072d7009a8a85eb"
+    },
+    {
+      "bytes": 107892,
+      "path": "schema/payload-profile-0.5.1.schema.json",
+      "sha256": "771f92035b761592e6424cfbf956342a1b0dc03751e3b7a9ca5bc7d1a1240a17"
+    },
+    {
+      "bytes": 174333,
+      "path": "schema/runtime-capsule-0.3.1.schema.json",
+      "sha256": "ae4cf42f8200d8fde183b3f0b76d14920a295537420e540b9a2f0d7c996a1d7a"
+    },
+    {
+      "bytes": 180265,
+      "path": "specs/canonical-ir-0.6.1.schema.json",
+      "sha256": "6ee5a69d4aa2a171ea08da0810595aa23066e32c4962248ba1aa08b2a11bbe21"
+    },
+    {
+      "bytes": 2485,
+      "path": "specs/checksums-document-1.schema.json",
+      "sha256": "b0fe8251e9247b5aab4330beab76ace10aa7d427872580f7cb2bdf45912def0e"
+    },
+    {
+      "bytes": 15366,
+      "path": "specs/external-grant-issuer-r2-binding-7.schema.json",
+      "sha256": "0df4e31e1988f1b5338fecac558f1e1d07a738bd6217f70dff45ff27b5e5840b"
+    },
+    {
+      "bytes": 34580,
+      "path": "specs/protected-source-r2-binding-7.schema.json",
+      "sha256": "10c0882b293a9325734f673316f6420fe53de78907704b0e8f0ca89e3f3aa4ef"
+    },
+    {
+      "bytes": 248785,
+      "path": "specs/protection-admission-r2-binding-7.schema.json",
+      "sha256": "80abd08b59a5f7c6851946935550d70474792f7fdb700fc88a87339c961bf683"
+    },
+    {
+      "bytes": 44065,
       "path": "specs/public-diagnostics.json",
-      "sha256": "9739063ea50d59e519e38826fa81613c04719f86fd13ea09897c294cab22372d"
+      "sha256": "74bb58f6488848de2ac8046b2cea6dd6a9f9295ecca6426ddaf18f2ca8d94960"
     },
     {
-      "bytes": 46151,
+      "bytes": 93743,
       "path": "specs/public-vocabulary.json",
-      "sha256": "ced620d18015887fe352f3309e4fb059cf92799cb1c5c0a7f8ff51d56ba70a2b"
+      "sha256": "54ffc0590e98d83214f0d4e9725ddce9b20e646600a53ecdd4f31938304ecee6"
     },
     {
-      "bytes": 124359,
-      "path": "specs/read-contract.schema.json",
-      "sha256": "47517ef119fa778c43820c8b6507fdd5a36e8a493bdc03dde1c9bbb92aa8ba30"
+      "bytes": 241535,
+      "path": "specs/read-contract-0.6.4.schema.json",
+      "sha256": "902d3c1d1e3c80c9a1af9cd9f8743756efa6cebda4e72b7d1d897a8f066811d3"
     },
     {
-      "bytes": 110832,
-      "path": "specs/read-transport-admission.schema.json",
-      "sha256": "6060273a80c46c9132ed2cdab9fd7a1854ccfb29aea19578fa1dfd2025d0b9ec"
+      "bytes": 211983,
+      "path": "specs/read-transport-admission-0.2.1.schema.json",
+      "sha256": "0639b42438b8f8d6343c7ca2209d86af87377f7709013b3cb8ad57cedb1f5fc5"
     }
   ],
-  "derived_aggregate_sha256": "d2a2d74a43410392bb9ae66bdbdad091a13bc535e5051f7d38a179240720d4e8",
+  "derived_aggregate_sha256": "f5642247027834345412e9b8390d35655867aaceba49cdea5cbddcbf35aaf9a1",
   "excluded": [
     "specs/public-generation-manifest.json",
     "docs/audits/2026-09-06-open-wave1-machine-source-implementation.json",
     "docs/audits/2026-09-06-open-wave1-machine-source-independent-acceptance.md"
   ],
   "format": "kdna.public-generation-manifest/1",
+  "historical_artifacts": [
+    {
+      "bytes": 6499,
+      "path": "packages/kdna-core/schema/agent-host-receipt-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "4cd3305c8717580fb3e79c45c5cdbdd640f728515f7bd84c4b24fb57235acfbd"
+    },
+    {
+      "bytes": 3022,
+      "path": "packages/kdna-core/schema/agent-host-request-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "6de69242887180d8a4044491d3d77c58be445112a3a1856879ee03b45f80cc3f"
+    },
+    {
+      "bytes": 90592,
+      "path": "packages/kdna-core/schema/canonical-ir-0.3.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "cfc485e551d15f37493c075eda69be92666a9f807014f439002c171050b60abf"
+    },
+    {
+      "bytes": 9927,
+      "path": "packages/kdna-core/schema/consumption-plan-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "07185f118a9f338188b70c84aebeee37d9a262fa6c69456d00d7ea29249b5a11"
+    },
+    {
+      "bytes": 10843,
+      "path": "packages/kdna-core/schema/judgment-trace-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "d7923fac4a8aa22e17b9807d13d697ba4b0cd5541c5994177611f29d0585b80b"
+    },
+    {
+      "bytes": 12949,
+      "path": "packages/kdna-core/schema/manifest-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "9628ef73522a930a455693461661563f7a17b94da8d4e4d018cc36feecf06ac2"
+    },
+    {
+      "bytes": 40665,
+      "path": "packages/kdna-core/schema/payload-profile-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "baf644eb6a15eef04ef1e2e610d303587a6b153ce0538fd668d0bddc6a0a8493"
+    },
+    {
+      "bytes": 85013,
+      "path": "packages/kdna-core/schema/runtime-capsule-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "f0e4596806ff035b735417e2295d2db506ff8d778ccc300f494efcd9d168263b"
+    },
+    {
+      "bytes": 141853,
+      "path": "packages/kdna-read/schema/read-contract-0.3.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "4b134694cc3979e9c2585096f66e33853cb565dc9881acad3e0aa8c00b125f3f"
+    },
+    {
+      "bytes": 123600,
+      "path": "packages/kdna-read/schema/read-transport-admission-0.1.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "97fa82e8a6cb60d1fc23f9cae5561ac0e0e839c9dc71a60c701bedcf77a470b4"
+    },
+    {
+      "bytes": 6499,
+      "path": "schema/agent-host-receipt-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "4cd3305c8717580fb3e79c45c5cdbdd640f728515f7bd84c4b24fb57235acfbd"
+    },
+    {
+      "bytes": 3022,
+      "path": "schema/agent-host-request-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "6de69242887180d8a4044491d3d77c58be445112a3a1856879ee03b45f80cc3f"
+    },
+    {
+      "bytes": 9927,
+      "path": "schema/consumption-plan-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "07185f118a9f338188b70c84aebeee37d9a262fa6c69456d00d7ea29249b5a11"
+    },
+    {
+      "bytes": 10843,
+      "path": "schema/judgment-trace-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "d7923fac4a8aa22e17b9807d13d697ba4b0cd5541c5994177611f29d0585b80b"
+    },
+    {
+      "bytes": 12949,
+      "path": "schema/manifest-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "9628ef73522a930a455693461661563f7a17b94da8d4e4d018cc36feecf06ac2"
+    },
+    {
+      "bytes": 40665,
+      "path": "schema/payload-profile-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "baf644eb6a15eef04ef1e2e610d303587a6b153ce0538fd668d0bddc6a0a8493"
+    },
+    {
+      "bytes": 85013,
+      "path": "schema/runtime-capsule-0.2.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "f0e4596806ff035b735417e2295d2db506ff8d778ccc300f494efcd9d168263b"
+    },
+    {
+      "bytes": 90592,
+      "path": "specs/canonical-ir.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "cfc485e551d15f37493c075eda69be92666a9f807014f439002c171050b60abf"
+    },
+    {
+      "bytes": 8721,
+      "path": "specs/component-semantics.md",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "57cf168629cb6271ec462e94f373843d594f732a3618acf1d6107c76dcb17a94"
+    },
+    {
+      "bytes": 15000,
+      "path": "specs/external-grant-issuer.schema.json",
+      "reason": "Prior dependent schema coordinate, excluded from active generation by S12-D003.",
+      "sha256": "9a2a3b898ee2fc3e62278467708c8f06227e84e9ba234bba8ddf77c7894f3c62"
+    },
+    {
+      "bytes": 12762,
+      "path": "specs/package-set-node.schema.json",
+      "reason": "Prior dependent schema coordinate, excluded from active generation by S12-D003.",
+      "sha256": "05cf356c8bb8cddbdf947e0674bd84cbe1eec7954e24dd7a180f2c12e6d64651"
+    },
+    {
+      "bytes": 34214,
+      "path": "specs/protected-source.schema.json",
+      "reason": "D004 diagnostic closure uses a new R2 schema binding; old schema remains byte-identical.",
+      "sha256": "2d3bb705ba32572902e46e8bace113e98bf0fa8ff6d1e924c30a081cb1267160"
+    },
+    {
+      "bytes": 159442,
+      "path": "specs/protection-admission.schema.json",
+      "reason": "Prior dependent schema coordinate, excluded from active generation by S12-D003.",
+      "sha256": "055ec47a7156c85b7353e3c9bfa3892307b90febf864597f5968715f63a3291e"
+    },
+    {
+      "bytes": 141853,
+      "path": "specs/read-contract.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "4b134694cc3979e9c2585096f66e33853cb565dc9881acad3e0aa8c00b125f3f"
+    },
+    {
+      "bytes": 123600,
+      "path": "specs/read-transport-admission.schema.json",
+      "reason": "Prior semantic coordinate; excluded from active generation by S12-D001 or S12-D002.",
+      "sha256": "97fa82e8a6cb60d1fc23f9cae5561ac0e0e839c9dc71a60c701bedcf77a470b4"
+    },
+    {
+      "bytes": 3904,
+      "path": "specs/static-policy.md",
+      "reason": "S12-D005: historical static-policy /1 definition; current native binding is /2 at specs/static-policy-2.md.",
+      "sha256": "52854df63970c2bd2c81e4fe13dbe85adfae5fcc61747576b3d6cf4aa06f7a43"
+    },
+    {
+      "bytes": 246851,
+      "path": "specs/protection-admission-r2-binding-1.schema.json",
+      "reason": "S12-D006: fixed wrapper binding1 retained byte-for-byte as unaccepted rc1 history, not a previously accepted public baseline.",
+      "sha256": "4b2ea4d7787fb3f2c58256b7da3d914d177ff8d42e8318a1b87e5f33b1109784",
+      "status": "UNACCEPTED_RC1_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 34580,
+      "path": "specs/protected-source-r2-binding-1.schema.json",
+      "reason": "S12-D006: fixed wrapper binding1 retained byte-for-byte as unaccepted rc1 history, not a previously accepted public baseline.",
+      "sha256": "97379484c7b0f1ae1518fc0d0dbf46d9343c83b513738002b381406605645ece",
+      "status": "UNACCEPTED_RC1_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 15366,
+      "path": "specs/external-grant-issuer-r2-binding-1.schema.json",
+      "reason": "S12-D006: fixed wrapper binding1 retained byte-for-byte as unaccepted rc1 history, not a previously accepted public baseline.",
+      "sha256": "9a5790c6fdbacf318c7611244c70374952677f38cc91eeb3f1572c87ea7acfda",
+      "status": "UNACCEPTED_RC1_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 247425,
+      "path": "specs/protection-admission-r2-binding-2.schema.json",
+      "reason": "S12-D011 revision2: fixed wrapper binding2 retained byte-for-byte as unaccepted RC2 history, not a previously accepted public baseline.",
+      "sha256": "234a58929d967e0215ab7d3e7e0cfe19be6800ac97d8e32178abc372066437c7",
+      "status": "UNACCEPTED_RC2_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 34580,
+      "path": "specs/protected-source-r2-binding-2.schema.json",
+      "reason": "S12-D011 revision2: fixed wrapper binding2 retained byte-for-byte as unaccepted RC2 history, not a previously accepted public baseline.",
+      "sha256": "fda225df86acf208846051e6cf4cd7218c6a3159ef5c53024c01d668a93e8e20",
+      "status": "UNACCEPTED_RC2_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 15366,
+      "path": "specs/external-grant-issuer-r2-binding-2.schema.json",
+      "reason": "S12-D011 revision2: fixed wrapper binding2 retained byte-for-byte as unaccepted RC2 history, not a previously accepted public baseline.",
+      "sha256": "932f559b69515e4862407e67f70b7e0b7cc901967397e36789f78412bb7cc507",
+      "status": "UNACCEPTED_RC2_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 233959,
+      "path": "specs/read-contract-0.6.schema.json",
+      "reason": "S12-D012: retain fixed RC3 original bytes; not an accepted release or current generation target.",
+      "sha256": "67796cb65baa2efe467bd2e846c1bce7715808c9be3d70707a27256b319af00a",
+      "status": "UNACCEPTED_RC3_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 233959,
+      "path": "packages/kdna-read/schema/read-contract-0.6.schema.json",
+      "reason": "S12-D012: retain fixed RC3 original bytes; not an accepted release or current generation target.",
+      "sha256": "67796cb65baa2efe467bd2e846c1bce7715808c9be3d70707a27256b319af00a",
+      "status": "UNACCEPTED_RC3_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 247425,
+      "path": "specs/protection-admission-r2-binding-3.schema.json",
+      "reason": "S12-D012: retain fixed RC3 original bytes; not an accepted release or current generation target.",
+      "sha256": "f93d52a604221cfbb3d211014f31434983d4932d77cefcaf54576a54f4ea0a95",
+      "status": "UNACCEPTED_RC3_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 34580,
+      "path": "specs/protected-source-r2-binding-3.schema.json",
+      "reason": "S12-D012: retain fixed RC3 original bytes; not an accepted release or current generation target.",
+      "sha256": "1e02ac77798c8f916c16b1f64b7b2d233ea11dd871b971c0d13b86f39157721a",
+      "status": "UNACCEPTED_RC3_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 15366,
+      "path": "specs/external-grant-issuer-r2-binding-3.schema.json",
+      "reason": "S12-D012: retain fixed RC3 original bytes; not an accepted release or current generation target.",
+      "sha256": "febcd532aac2d935f7372055d53df6d520bad1e77ccff4fad9af7401e292f8f6",
+      "status": "UNACCEPTED_RC3_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 235513,
+      "path": "specs/read-contract-0.6.1.schema.json",
+      "reason": "S12-D013: fixed RC4 original bytes, not current generation or accepted release.",
+      "sha256": "d6e9b2ab275b5695f9b2b65ab8f23b1bfdcaaf7145cdad799854c2d76df0ecea",
+      "status": "UNACCEPTED_RC4_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 235513,
+      "path": "packages/kdna-read/schema/read-contract-0.6.1.schema.json",
+      "reason": "S12-D013: fixed RC4 original bytes, not current generation or accepted release.",
+      "sha256": "d6e9b2ab275b5695f9b2b65ab8f23b1bfdcaaf7145cdad799854c2d76df0ecea",
+      "status": "UNACCEPTED_RC4_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 247425,
+      "path": "specs/protection-admission-r2-binding-4.schema.json",
+      "reason": "S12-D013: fixed RC4 original bytes, not current generation or accepted release.",
+      "sha256": "e82dcc5b4ea9dd0d7b569976e57fe29226cddb513948fa2b144aa7f66c1f8707",
+      "status": "UNACCEPTED_RC4_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 34580,
+      "path": "specs/protected-source-r2-binding-4.schema.json",
+      "reason": "S12-D013: fixed RC4 original bytes, not current generation or accepted release.",
+      "sha256": "3a9d54b4dd461ac61c9184374d1b20e1a997f935ac855ebb0f762d377084c2d4",
+      "status": "UNACCEPTED_RC4_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 15366,
+      "path": "specs/external-grant-issuer-r2-binding-4.schema.json",
+      "reason": "S12-D013: fixed RC4 original bytes, not current generation or accepted release.",
+      "sha256": "cd2de1b48caa1bff0434d747abd8f3bab199bde6b434fd09ffe2693d88cf2b3f",
+      "status": "UNACCEPTED_RC4_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 237067,
+      "path": "specs/read-contract-0.6.2.schema.json",
+      "reason": "S12-D016: fixed RC5 original bytes, not current generation or accepted release.",
+      "sha256": "d06f584bf7115b3f47f2f19db5f8c0f6c1739ec490f4a27149188e3e05718c15",
+      "status": "UNACCEPTED_RC5_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 237067,
+      "path": "packages/kdna-read/schema/read-contract-0.6.2.schema.json",
+      "reason": "S12-D016: fixed RC5 original bytes, not current generation or accepted release.",
+      "sha256": "d06f584bf7115b3f47f2f19db5f8c0f6c1739ec490f4a27149188e3e05718c15",
+      "status": "UNACCEPTED_RC5_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 247425,
+      "path": "specs/protection-admission-r2-binding-5.schema.json",
+      "reason": "S12-D016: fixed RC5 original bytes, not current generation or accepted release.",
+      "sha256": "39d309067f528f777aa3a6ebbdd3815b01b5eda6d6eb0255a3f67253761a6793",
+      "status": "UNACCEPTED_RC5_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 34580,
+      "path": "specs/protected-source-r2-binding-5.schema.json",
+      "reason": "S12-D016: fixed RC5 original bytes, not current generation or accepted release.",
+      "sha256": "156b44670d86f8e95d3ce4caf067180f055c64187d1c970c395981b232e05beb",
+      "status": "UNACCEPTED_RC5_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 15366,
+      "path": "specs/external-grant-issuer-r2-binding-5.schema.json",
+      "reason": "S12-D016: fixed RC5 original bytes, not current generation or accepted release.",
+      "sha256": "0a65860a0524e76921b6310f3fadc5007f3ee4ac9bd86dd86e655de5d3b1bf7f",
+      "status": "UNACCEPTED_RC5_CANDIDATE_HISTORY"
+    },
+    {
+      "bytes": 178905,
+      "path": "specs/canonical-ir-0.6.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "37aac664a5aeddcb9f133d8f39ee99256517c062af11830cb10e098977d86adb"
+    },
+    {
+      "bytes": 15366,
+      "path": "specs/external-grant-issuer-r2-binding-6.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "66f03c1ee0a567a7693f6aa6c0c30a6cce368f4beff462ba684ce45677de1a2c"
+    },
+    {
+      "bytes": 12754,
+      "path": "specs/package-set-node-0.2.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "425367de91e93bff2c3032811c87f785a8cf95d023b62fb2a6526f5cc07baf18"
+    },
+    {
+      "bytes": 34580,
+      "path": "specs/protected-source-r2-binding-6.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "6128c0eb8ad782b16f3690ee556aaeac9777e3334d0ead1c39b2f64ce675b5ff"
+    },
+    {
+      "bytes": 247425,
+      "path": "specs/protection-admission-r2-binding-6.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "6872b17f27540fff8d109fe5174d4755b3fd98c6283f51e869f9c2f9ff37b4ea"
+    },
+    {
+      "bytes": 238621,
+      "path": "specs/read-contract-0.6.3.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "8b2b61274fbe504b96e86cb411e33d8790b56fd85f15d389e21969731b09721b"
+    },
+    {
+      "bytes": 210623,
+      "path": "specs/read-transport-admission-0.2.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "5657316ede4018b7cbae1def965426b2d39a1435e23b295a1a5e9f480df4d8a2"
+    },
+    {
+      "bytes": 6540,
+      "path": "schema/agent-host-receipt-0.3.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "9be937673e26341e7a9208dfef9fe822b494a44bb8f9b4bc174a2d960a75a7a1"
+    },
+    {
+      "bytes": 3022,
+      "path": "schema/agent-host-request-0.3.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "af52aca09fc3189070d451daba9fd4f61173a08eaf42b4d49914c90f1e8d770a"
+    },
+    {
+      "bytes": 9927,
+      "path": "schema/consumption-plan-0.3.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "3c11c3ad1bac8de9952cc2efb7585e5f08a0b8fbb644277d6a698c028943ed09"
+    },
+    {
+      "bytes": 10843,
+      "path": "schema/judgment-trace-0.3.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "9b61a1c034141780c057fa17edec2a1309b8086aec147e05b5813035e925f018"
+    },
+    {
+      "bytes": 16760,
+      "path": "schema/manifest-container-0.5.0-judgment-0.5.0.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "9544e27d1045bdbb0ecbc01928fecb1ee9e2f6db78c8c627b086c34838af4fae"
+    },
+    {
+      "bytes": 106532,
+      "path": "schema/payload-profile-0.5.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "1b56ea9288f91089500c3d288babd18287fd2db2bfcb127b9821d12add294814"
+    },
+    {
+      "bytes": 172971,
+      "path": "schema/runtime-capsule-0.3.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "10a15aa7dc658128bbb8a3e347e577c780cc7ef93b7b69cc75ebf0fd61c2cdd2"
+    },
+    {
+      "bytes": 6540,
+      "path": "packages/kdna-core/schema/agent-host-receipt-0.3.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "9be937673e26341e7a9208dfef9fe822b494a44bb8f9b4bc174a2d960a75a7a1"
+    },
+    {
+      "bytes": 3022,
+      "path": "packages/kdna-core/schema/agent-host-request-0.3.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "af52aca09fc3189070d451daba9fd4f61173a08eaf42b4d49914c90f1e8d770a"
+    },
+    {
+      "bytes": 178905,
+      "path": "packages/kdna-core/schema/canonical-ir-0.6.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "37aac664a5aeddcb9f133d8f39ee99256517c062af11830cb10e098977d86adb"
+    },
+    {
+      "bytes": 9927,
+      "path": "packages/kdna-core/schema/consumption-plan-0.3.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "3c11c3ad1bac8de9952cc2efb7585e5f08a0b8fbb644277d6a698c028943ed09"
+    },
+    {
+      "bytes": 10843,
+      "path": "packages/kdna-core/schema/judgment-trace-0.3.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "9b61a1c034141780c057fa17edec2a1309b8086aec147e05b5813035e925f018"
+    },
+    {
+      "bytes": 16760,
+      "path": "packages/kdna-core/schema/manifest-container-0.5.0-judgment-0.5.0.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "9544e27d1045bdbb0ecbc01928fecb1ee9e2f6db78c8c627b086c34838af4fae"
+    },
+    {
+      "bytes": 106532,
+      "path": "packages/kdna-core/schema/payload-profile-0.5.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "1b56ea9288f91089500c3d288babd18287fd2db2bfcb127b9821d12add294814"
+    },
+    {
+      "bytes": 172971,
+      "path": "packages/kdna-core/schema/runtime-capsule-0.3.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "10a15aa7dc658128bbb8a3e347e577c780cc7ef93b7b69cc75ebf0fd61c2cdd2"
+    },
+    {
+      "bytes": 238621,
+      "path": "packages/kdna-read/schema/read-contract-0.6.3.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "8b2b61274fbe504b96e86cb411e33d8790b56fd85f15d389e21969731b09721b"
+    },
+    {
+      "bytes": 210623,
+      "path": "packages/kdna-read/schema/read-transport-admission-0.2.schema.json",
+      "reason": "S12-REPAIR-NATIVE-01: previous RC6 schema identity retained byte-for-byte; current native binding uses a new schema path and ID.",
+      "sha256": "5657316ede4018b7cbae1def965426b2d39a1435e23b295a1a5e9f480df4d8a2"
+    }
+  ],
   "integration": [
     {
       "bytes": 736,
       "path": "conformance/public-contract/adapter-contract.json",
-      "sha256": "6feea9d439a736d3c162f65f31b7488ad1edbf3f14ff8261cbdcedfd9e4005c4"
+      "sha256": "7d67a6eaa3d4de51ac4c51eff375067ea8171f890d2a84bdf4f796a03190f2ee"
     },
     {
-      "bytes": 3038,
+      "bytes": 3033,
       "path": "conformance/public-contract/ir-retention-vectors.generated.json",
-      "sha256": "e63292245b9c22622da67457901ef438f8dc625b90714f7edeaef0dbe7101980"
+      "sha256": "233f1fcd7965ed7d9ddbfcd8c17ad5aaf774ea036a5a9ffd7345d6030aac4346"
     },
     {
-      "bytes": 183385,
+      "bytes": 198940,
       "path": "conformance/public-contract/vectors.generated.json",
-      "sha256": "d28ac6e5737469306397121650d4a738cd0cc555fb407f063274a7d500ec0dfc"
+      "sha256": "24fba003f9b5caf82172a8106a8bca0a4869b7b53ef0b1dba3fafa979d2a3317"
     },
     {
-      "bytes": 82538,
-      "path": "packages/kdna-core/schema/canonical-ir-0.2.schema.json",
-      "sha256": "9ba2ea3a86bd722f076d4218238bfdf34d53355601c226a419a29a0edf9a6a79"
+      "bytes": 6542,
+      "path": "packages/kdna-core/schema/agent-host-receipt-0.3.1.schema.json",
+      "sha256": "d6a5888402af549f69c30171f510677197ff5d414719865f15dc97541fb2aa0e"
     },
     {
-      "bytes": 12100,
-      "path": "packages/kdna-core/schema/manifest-0.2.schema.json",
-      "sha256": "5d0be457f4a59f8debf6f1c2e4b16adfb468b1024abd71da92fc2f652acd2cea"
+      "bytes": 3024,
+      "path": "packages/kdna-core/schema/agent-host-request-0.3.1.schema.json",
+      "sha256": "d06c0cad6e04ddaefbfd48b9790ad7cf3c4f2ff988ed73f0dbf31fd67d32d8df"
     },
     {
-      "bytes": 37803,
-      "path": "packages/kdna-core/schema/payload-profile-0.2.schema.json",
-      "sha256": "388dbf1104737e6859cc86d448761136b252a672fa4a5cac91d3ea32e50f4182"
+      "bytes": 180265,
+      "path": "packages/kdna-core/schema/canonical-ir-0.6.1.schema.json",
+      "sha256": "6ee5a69d4aa2a171ea08da0810595aa23066e32c4962248ba1aa08b2a11bbe21"
     },
     {
-      "bytes": 10803,
+      "bytes": 2485,
+      "path": "packages/kdna-core/schema/checksums-document-1.schema.json",
+      "sha256": "b0fe8251e9247b5aab4330beab76ace10aa7d427872580f7cb2bdf45912def0e"
+    },
+    {
+      "bytes": 9929,
+      "path": "packages/kdna-core/schema/consumption-plan-0.3.1.schema.json",
+      "sha256": "2052439e9c0d4dd19c842b17b4c1c3ff7afd82606ede5c8e778485347ea86109"
+    },
+    {
+      "bytes": 7713,
+      "path": "packages/kdna-core/schema/envelope-aead.schema.json",
+      "sha256": "a95f89c4902f8ddad4f7a406fd3f3af36e2d8adeab15ea655e96c38e9c4dde44"
+    },
+    {
+      "bytes": 10845,
+      "path": "packages/kdna-core/schema/judgment-trace-0.3.1.schema.json",
+      "sha256": "24a1719699dcf165e6d6e4ac7c7ac6962e1f19b7f208851c1fd2fc12febc8943"
+    },
+    {
+      "bytes": 16760,
+      "path": "packages/kdna-core/schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
+      "sha256": "508d2571398ecc589959a20eedb18e8872087536e8a6c5612072d7009a8a85eb"
+    },
+    {
+      "bytes": 107892,
+      "path": "packages/kdna-core/schema/payload-profile-0.5.1.schema.json",
+      "sha256": "771f92035b761592e6424cfbf956342a1b0dc03751e3b7a9ca5bc7d1a1240a17"
+    },
+    {
+      "bytes": 44065,
       "path": "packages/kdna-core/schema/public-diagnostics.json",
-      "sha256": "9739063ea50d59e519e38826fa81613c04719f86fd13ea09897c294cab22372d"
+      "sha256": "74bb58f6488848de2ac8046b2cea6dd6a9f9295ecca6426ddaf18f2ca8d94960"
     },
     {
-      "bytes": 46151,
+      "bytes": 93743,
       "path": "packages/kdna-core/schema/public-vocabulary.json",
-      "sha256": "ced620d18015887fe352f3309e4fb059cf92799cb1c5c0a7f8ff51d56ba70a2b"
+      "sha256": "54ffc0590e98d83214f0d4e9725ddce9b20e646600a53ecdd4f31938304ecee6"
+    },
+    {
+      "bytes": 174333,
+      "path": "packages/kdna-core/schema/runtime-capsule-0.3.1.schema.json",
+      "sha256": "ae4cf42f8200d8fde183b3f0b76d14920a295537420e540b9a2f0d7c996a1d7a"
+    },
+    {
+      "bytes": 1194,
+      "path": "packages/kdna-core/src/public-contract/authoring-node.d.ts",
+      "sha256": "bb10ed4bd83b6e80043cbc249296009b3d3055cebb63f75608c332fd487fd91c"
     },
     {
       "bytes": 213,
@@ -126,19 +665,44 @@
       "sha256": "910d2b4e703e18a4d2bd3f4c97eb8e13302a54cfb27f9eaf436706848703a12f"
     },
     {
-      "bytes": 217,
+      "bytes": 458,
       "path": "packages/kdna-core/src/public-contract/components.d.ts",
-      "sha256": "7312f83dcb5ba467ccd4bb1275dbca8a6086df14433c9a3bbb70c0a7886a5b82"
+      "sha256": "f845f4d0e2bbd82a858a04628524cf7d3222296b3a5d980deb9b4c82b5de3339"
     },
     {
-      "bytes": 176729,
+      "bytes": 1842124,
+      "path": "packages/kdna-core/src/public-contract/execution-validators.generated.js",
+      "sha256": "a22f237569dae3854be31a85519658ac5549b5796cb8c3b4ec869771fa990593"
+    },
+    {
+      "bytes": 5878,
+      "path": "packages/kdna-core/src/public-contract/execution.d.ts",
+      "sha256": "bcaf3a2b91dcba7fb618d987f41fc3530d65fb1f21d5d00c24408895ac14e653"
+    },
+    {
+      "bytes": 355019,
       "path": "packages/kdna-core/src/public-contract/generated-contract.json",
-      "sha256": "ec8a2616a768f5523e8852487e757f6f9560d1933ea3a9ee90ead69fe1120f4d"
+      "sha256": "96fa29d4042abb9b234d1e6dad286e038e3b490db1f1b4e6cedd94f4d3bc8e08"
     },
     {
-      "bytes": 120044,
+      "bytes": 192071,
       "path": "packages/kdna-core/src/public-contract/handoff-validator.generated.js",
-      "sha256": "ad7da5140d21cc32a3b7ded4c6a61fdeef123af57d89ab7d18f8438ccc8c301b"
+      "sha256": "e2272d9ea38fa00559a04e3dedc36bb700c27bfbba35c26cf349a12641edd585"
+    },
+    {
+      "bytes": 28514,
+      "path": "packages/kdna-core/src/public-contract/issuer-contract.generated.json",
+      "sha256": "4ba21b759d21cefaf88d3c8ade50ab4543ff1e767055484836c5db1d1fad952f"
+    },
+    {
+      "bytes": 129336,
+      "path": "packages/kdna-core/src/public-contract/issuer-validators.generated.js",
+      "sha256": "5cbea6f414af9210d45c3e502a84b16889f3056fff455e038bf53ed8030ccce5"
+    },
+    {
+      "bytes": 4058,
+      "path": "packages/kdna-core/src/public-contract/key-grant-issuer-node.d.ts",
+      "sha256": "26c545ca7db98dfe1b19396b439f1811bd2936aa47dd1d5d8305fb56c76ce46e"
     },
     {
       "bytes": 214,
@@ -146,29 +710,84 @@
       "sha256": "e43a1dca3f401ccb8a24457add8012f0e5289ffb75905646c39da36dce8d2136"
     },
     {
-      "bytes": 221,
+      "bytes": 19818,
+      "path": "packages/kdna-core/src/public-contract/package-set-contract.generated.json",
+      "sha256": "1d75527d9c7fbbea54ba1da01a955d5dc365d1c495d9c9ae692fa42ec9fdf598"
+    },
+    {
+      "bytes": 5639,
+      "path": "packages/kdna-core/src/public-contract/package-set-node.d.ts",
+      "sha256": "748df74b61b63da851a7e07da54826fb36ec471512943d4bf31ed3fb67b7d94e"
+    },
+    {
+      "bytes": 174871,
+      "path": "packages/kdna-core/src/public-contract/package-set-validators.generated.js",
+      "sha256": "8ccdab12114aaff97625589c32ff394469e88a020dd9f9e86e74c33a25ac813d"
+    },
+    {
+      "bytes": 349389,
+      "path": "packages/kdna-core/src/public-contract/protected-source-contract.generated.json",
+      "sha256": "3e67680ef9ce1229156fe927e1fa4e750174522aab79b19afafb329f8dac34ca"
+    },
+    {
+      "bytes": 10233,
+      "path": "packages/kdna-core/src/public-contract/protected-source-node.d.ts",
+      "sha256": "ade6dc12f0488cc41518ba0a41f887fcaea4e349026ad0a3db62ec6387b904e1"
+    },
+    {
+      "bytes": 86775,
+      "path": "packages/kdna-core/src/public-contract/protection-contract.generated.json",
+      "sha256": "100a4dc4e2f00325be4d4d6814b38137ec32c799fc3e2636caa2732b14eca53b"
+    },
+    {
+      "bytes": 15836,
+      "path": "packages/kdna-core/src/public-contract/protection-node.d.ts",
+      "sha256": "5bc3927d044eaeafbb9826753e9355b781b42d18251af11c31696544d4677a30"
+    },
+    {
+      "bytes": 4241525,
+      "path": "packages/kdna-core/src/public-contract/protection-validators.generated.js",
+      "sha256": "7e14f400e2cc90d293566327f61930810d73da8b80d3d84d3eed2e6bc009e678"
+    },
+    {
+      "bytes": 294,
       "path": "packages/kdna-core/src/public-contract/read-boundary.d.ts",
-      "sha256": "670e6de064c631da99cd79fe666cb5efa5b348067744bdbfad52f4759853b152"
+      "sha256": "8fcfc384e227c4924df5f9ce1057469265f62ae2ed948310d2eed1fb655f307d"
     },
     {
-      "bytes": 49180,
+      "bytes": 2445,
+      "path": "packages/kdna-core/src/public-contract/selected-context.generated.js",
+      "sha256": "5ea0d9f7205cf721555682229a7f6148cd9f91638f5686884d739885be604473"
+    },
+    {
+      "bytes": 319024,
+      "path": "packages/kdna-core/src/public-contract/source-validators.generated.js",
+      "sha256": "1e116f1ec74b96c8d79cdbc3ed935fce3e6cab3f51e8c2e7cb1be473d82e6587"
+    },
+    {
+      "bytes": 515,
+      "path": "packages/kdna-core/src/public-contract/static-policy.d.ts",
+      "sha256": "fc355a5dad8cfddd9edfc77ddabf208d6f0e9b3e1c10767d7a3a4c8e1e24f1a9"
+    },
+    {
+      "bytes": 88832,
       "path": "packages/kdna-core/src/public-contract/types.d.ts",
-      "sha256": "b9fc68a180bba5ed2e9e699190318714725d6d506f3ace5ae3e1ac6a7138e44f"
+      "sha256": "1301fb4d8af59f14e6fb0924d50f046c4a22cc2b7248bf9047595653a9a64659"
     },
     {
-      "bytes": 1801615,
+      "bytes": 3873967,
       "path": "packages/kdna-core/src/public-contract/validators.generated.js",
-      "sha256": "5c5cbf99ce24e88d0a1db005049f861e9bd2997b6a663665177609ab9ea1f4e0"
+      "sha256": "bdb943e14f82e61744a5794ed8c233864e551d8ef23aa9ecfc108b0e98f9f265"
     },
     {
-      "bytes": 124359,
-      "path": "packages/kdna-read/schema/read-contract-0.2.schema.json",
-      "sha256": "47517ef119fa778c43820c8b6507fdd5a36e8a493bdc03dde1c9bbb92aa8ba30"
+      "bytes": 241535,
+      "path": "packages/kdna-read/schema/read-contract-0.6.4.schema.json",
+      "sha256": "902d3c1d1e3c80c9a1af9cd9f8743756efa6cebda4e72b7d1d897a8f066811d3"
     },
     {
-      "bytes": 110832,
-      "path": "packages/kdna-read/schema/read-transport-admission-0.1.schema.json",
-      "sha256": "6060273a80c46c9132ed2cdab9fd7a1854ccfb29aea19578fa1dfd2025d0b9ec"
+      "bytes": 211983,
+      "path": "packages/kdna-read/schema/read-transport-admission-0.2.1.schema.json",
+      "sha256": "0639b42438b8f8d6343c7ca2209d86af87377f7709013b3cb8ad57cedb1f5fc5"
     },
     {
       "bytes": 414,
@@ -176,9 +795,9 @@
       "sha256": "ffed4b5806dee908feac2beca8704cd6a3b79d1ab11706d5acfdc32e3fe9cea1"
     },
     {
-      "bytes": 873,
+      "bytes": 926,
       "path": "packages/kdna-read/src/embedding.d.ts",
-      "sha256": "179c22a6002139b90dd711d8fbabbe3425789cf49d73ad85682467bc23c5848a"
+      "sha256": "b9c06f411c035e26c6ef79fc8de430ea47d9986e6dbf3c5885cb16429ed57884"
     },
     {
       "bytes": 496,
@@ -186,24 +805,54 @@
       "sha256": "62f043a30eb38c2d7f9a0ce93a773e45cfe269e723a555d70681ff05470edb58"
     },
     {
+      "bytes": 75,
+      "path": "packages/kdna-read/src/installation.generated.json",
+      "sha256": "ab90ed23a2a300973693e68018336a79b61f5c1102910e293ce46238581dc2c4"
+    },
+    {
       "bytes": 359,
       "path": "packages/kdna-read/src/node.d.ts",
       "sha256": "5733ca8c8be900ff68c48f5b8f58f9c9b577f2368382430be23c4af4be9ac30b"
     },
     {
-      "bytes": 1144,
-      "path": "packages/kdna-read/src/transport-contract.json",
-      "sha256": "3ea2795e38fbfa97a37f148bccdaa8e78f8754892cacc63902c9deac2374c2dc"
+      "bytes": 7550,
+      "path": "packages/kdna-read/src/package-set-contract.generated.json",
+      "sha256": "f17a58012f5913dc69f3cff5921f1053e1f0005a6cfdfc954eff45c609655bfe"
     },
     {
-      "bytes": 887080,
+      "bytes": 2267,
+      "path": "packages/kdna-read/src/package-set-node.d.ts",
+      "sha256": "d7f381d0fac1c9c909fb3a5e7f45d9b6c010e852bc23b44d189e0b9ec6925318"
+    },
+    {
+      "bytes": 1777,
+      "path": "packages/kdna-read/src/protection-node.d.ts",
+      "sha256": "653eeb563ec356113a9a9de4c2dbdbd9647714919c17f01d9ee33c5de1d44564"
+    },
+    {
+      "bytes": 6354,
+      "path": "packages/kdna-read/src/protection-node.js",
+      "sha256": "67c69d688c6d052bc76ea4c6106888fe0dae0f530627cf13cc031e1d5446309e"
+    },
+    {
+      "bytes": 2445,
+      "path": "packages/kdna-read/src/selected-context.generated.js",
+      "sha256": "5ea0d9f7205cf721555682229a7f6148cd9f91638f5686884d739885be604473"
+    },
+    {
+      "bytes": 1144,
+      "path": "packages/kdna-read/src/transport-contract.json",
+      "sha256": "765e53d46b0c7df1ca0cd187be9c2e0cb228a90a45dbf2d6ef1887316e1f41d2"
+    },
+    {
+      "bytes": 1624741,
       "path": "packages/kdna-read/src/transport-validators.generated.js",
-      "sha256": "150d3265b18d1d3d7943a3a2a6e9d8ede2de58cfc140c95caacdced7cf3f1f57"
+      "sha256": "0d019b5ec390bb9f2f336e9435bfbda0adbbdf50b1421c1f72d7fa7eceef72d3"
     },
     {
       "bytes": 4950,
       "path": "packages/kdna-read/src/transport.d.ts",
-      "sha256": "d0c160d4fd1ad8555ed26c1396e688d87bb904195ed29c5528e75ed70403504a"
+      "sha256": "525da44e67ce69a9fe1d71372c41af053dc5b9d0344e28f4532608f1c1916b93"
     },
     {
       "bytes": 106,
@@ -211,43 +860,87 @@
       "sha256": "be0b080421d40be4402e628ba63f4c47b83b19dfec1811802ca31bc11aacc839"
     },
     {
-      "bytes": 8721,
-      "path": "specs/component-semantics.md",
-      "sha256": "57cf168629cb6271ec462e94f373843d594f732a3618acf1d6107c76dcb17a94"
+      "bytes": 8517,
+      "path": "specs/component-semantics-2.md",
+      "sha256": "3167cd76b7510c1a6276799e31538da25fc5f6944a090fe600ade36e7c97b76c"
+    },
+    {
+      "bytes": 4098,
+      "path": "specs/external-grant-issuer.d.ts",
+      "sha256": "3bbb4ac1462f63dec0bf6436734709848e840b5e1ffe471147abd003a7705689"
+    },
+    {
+      "bytes": 12754,
+      "path": "specs/package-set-node-0.2.1.schema.json",
+      "sha256": "71ed0a43f519fb37e58496d209316d8072abe0e7fa5f722f027286d3030dc1c7"
+    },
+    {
+      "bytes": 2319,
+      "path": "specs/package-set-node.d.ts",
+      "sha256": "5297023267fa8fcd2af739db6c6d1960e8473d57a608ec71241f446a6a2393aa"
+    },
+    {
+      "bytes": 10473,
+      "path": "specs/protected-source.d.ts",
+      "sha256": "57886a03c2fd2e8d110194852e8d17dab40b38253ab509cb68463d9e21fd014c"
+    },
+    {
+      "bytes": 15876,
+      "path": "specs/protection-admission.d.ts",
+      "sha256": "0283eeff038a2399977bbf10bc3f65371fd8ca30aadedf7d4dc4ee9d60eeaae0"
+    },
+    {
+      "bytes": 6219,
+      "path": "specs/static-policy-2.md",
+      "sha256": "006e7d42fa82e65973d7894751ea0d83360321c811dbbf05d925d15c6faf7379"
     }
   ],
   "proof_limits": [
-    "Schema compilation/validation only; non-schema obligations not implemented",
-    "No Core/Read/Host runtime or 94-seed execution",
-    "No full generated vectors/JS-language types/SDK parity",
-    "No publication, registry availability, Reader product or Open Complete",
-    "Opaque runtime-only types deliberately compile to false for all JSON values; their data views never confer trust"
+    "Reference implementations exist for Core, Read and native 0.2 execution contracts. Generated schemas and source-site/case inventories do not prove semantic correctness or that cases ran.",
+    "Independent acceptance must bind exact source and generated bytes, package artifacts, runtime and explicit observations.",
+    "Host reference providers supply deployment-owned authorization and delivery observations; data validation does not authenticate external claims or establish real model effects.",
+    "No publication, registry availability, toolchain, formal asset, Reader product, native OS, cross-language or production service acceptance follows.",
+    "Opaque runtime-only types compile to false for every JSON value; data views never confer trust."
   ],
   "scripts": [
     {
-      "bytes": 24439,
+      "bytes": 72812,
       "path": "scripts/public-contract/generate.mjs",
-      "sha256": "89f486a5ffd9ed04732412d9c4e7001251732a7e72dba20a0715010a18f9460b"
+      "sha256": "a8bb36031228ef0bc6453ed49ef34e97f6feb32185a31f0210983e52be2aba3d"
     },
     {
       "bytes": 5444,
       "path": "scripts/public-contract/verify.mjs",
       "sha256": "87f14ee879bbbf1861c4f3e57c7ec6b5c9fc468b4cdfe724bb10683754814201"
+    },
+    {
+      "bytes": 905,
+      "path": "scripts/public-contract/proof-inventory.mjs",
+      "sha256": "f07fa9f06e3b9044b63002ddffad8dd7c2afc60b010f56236a321105466f057c"
+    },
+    {
+      "bytes": 10789,
+      "path": "scripts/public-contract/cross-entry-check.mjs",
+      "sha256": "451a76c69302d1ab5463942fcdae6ab944f9bf21091e71f29b042795e280e314"
+    },
+    {
+      "bytes": 2463,
+      "path": "scripts/public-contract/selected-context.mjs",
+      "sha256": "6caed19beab784868afda381d1e921ff0327bf17c1842ae1390637c767066b94"
     }
   ],
   "source": {
-    "bytes": 252196,
+    "bytes": 781190,
     "path": "specs/public-semantic-source.json",
-    "sha256": "9e6a4a2cbd0b239a55eb3744649a53a1191df167d2d7b4b1b35b535406976c72"
+    "sha256": "b9be283f826dcd0173f63f1a85b5025c342a3b232c6379545a352dec4117dbec"
   },
   "status": "UNPUBLISHED_GENERATED_STRUCTURE",
   "tools": {
     "declared_validator": {
       "ajv": "8.20.0",
       "no_installation_claim": true,
-      "node": "26.5.0",
+      "node": "26.5.1",
       "schema_validator": "Ajv2020"
-    },
-    "generator_node": "26.5.0"
+    }
   }
 }

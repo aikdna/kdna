@@ -45,12 +45,25 @@ standalone registry installation.
 
 Platform and repository-specific tests are queried from GitHub for an exact
 reviewed tree. A normal rebase may change the commit while preserving that tree.
-Every required check must be present; all observed checks, including duplicates,
-additional checks and post-merge checks, must have completed successfully.
-Failed, cancelled, skipped, neutral, missing required or unfinished checks block
-the result. An absent post-merge run inventory is disclosed rather than counted
+Every required check must be present; all observed code and security checks,
+including duplicates, additional checks and post-merge checks, must have completed
+successfully. Failed, cancelled, skipped, neutral, missing required or unfinished
+code checks block the result. An absent post-merge run inventory is disclosed rather than counted
 as another execution. The report retains the repository, commit, tree,
 application identity and individual check URLs.
+
+The report separates non-required automatic Dependabot update jobs into
+`maintenance_checks`. A name alone cannot establish that classification: the
+GitHub Actions application, exact check and Actions run URLs, head and tree,
+repository and head repository, check suite, dynamic Dependabot workflow path
+and event, and both the actor and triggering actor must match the authenticated
+Actions run response. Both actors must be the exact Dependabot bot identity.
+Missing metadata, failed queries and identity mismatches block the gate. This
+classification covers only completed `success` or `failure` update jobs; other
+states fail closed. Required jobs and CodeQL/security checks remain code gates.
+The original update conclusion and URL remain in the report, with an explicit
+`update_failure_unresolved` flag for a failed update. A successful source gate
+does not resolve that maintenance failure or count the update as code acceptance.
 
 These remote executions are recorded separately from local package inspection
 and this repository's real test suite, example validation, dependency audit and
@@ -82,8 +95,10 @@ shown in the workflow, and install the workflow's fixed Python dependencies.
 Set `KDNA_TRUSTED_NPM_TARBALL` to the authenticated npm archive outside the
 repositories. Set `KDNA_SOURCE_REPOS_ROOT` to the directory containing the exact
 external checkouts, and `KDNA_PYTHON` to the prepared Python interpreter. GitHub
-check queries use `GH_TOKEN` or `GITHUB_TOKEN`; an authenticated GitHub CLI is the
-local fallback. Then run:
+check queries use `GH_TOKEN` or `GITHUB_TOKEN` with contents, checks and Actions
+read access; an authenticated GitHub CLI pinned to `github.com` is the local
+fallback when no token is provided. A token query failure never falls back to
+anonymous access or skips verification. Then run:
 
 ```bash
 node scripts/ecosystem-source-gate.js --work-dir ../source-check-result

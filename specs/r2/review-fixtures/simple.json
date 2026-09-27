@@ -1,0 +1,154 @@
+{
+  "review_only": true,
+  "notation": "R1 complete author-semantic view; container/runtime/version tuple deliberately not asserted",
+  "M": {
+    "asset_id": "review-simple",
+    "asset_uid": "review-simple-uid",
+    "version": "r1-paper",
+    "judgment_version": "r1-paper",
+    "title": "水果偏好纸面例",
+    "summary": "完整保存一句偏好，不增加心理原因。",
+    "languages": ["zh-CN"],
+    "created_at": "2026-09-23T00:00:00Z",
+    "updated_at": "2026-09-23T00:00:00Z",
+    "lineage": [],
+    "history": {
+      "coverage": "complete",
+      "statement": "仅本次纸面构造的起始版本，不是正式资产沿革",
+      "entries": []
+    }
+  },
+  "P": {
+    "asset": {
+      "asset_id": "review-simple",
+      "asset_version": "r1-paper",
+      "judgment_version": "r1-paper"
+    },
+    "actors": [
+      {
+        "id": "author",
+        "kind": "person",
+        "name": "纸面作者"
+      }
+    ],
+    "scope": {
+      "statement": "定义审查用构造情境，不进入业务资产目录"
+    },
+    "declarations": {
+      "highest_question": {
+        "value": "我喜欢哪些水果，不喜欢哪些？",
+        "state": "provided"
+      },
+      "boundaries": {
+        "value": null,
+        "state": "none"
+      }
+    },
+    "kernel": {
+      "purpose": {
+        "kind": "summary"
+      },
+      "foundation_refs": []
+    },
+    "judgments": [
+      {
+        "id": "pref",
+        "focus": "我喜欢哪些水果，不喜欢哪些？",
+        "subject": {
+          "actor_ids": ["author"],
+          "statement": "本审查情境中的作者；非真实客户或专业业务判断"
+        },
+        "scope": {
+          "statement": "仅本纸面情境，按所列信息理解，不外推真实人群或业务"
+        },
+        "form": "conclusion",
+        "answer_kind": "preference",
+        "parent_ref": null,
+        "core_expression": {
+          "kind": "result_text"
+        },
+        "result_contract": {
+          "id": "pref-out",
+          "form": {
+            "term": "scalar"
+          },
+          "shape": {
+            "kind": "scalar",
+            "scalar_type": "text"
+          },
+          "minimum": 1,
+          "maximum": 1,
+          "allowed_result_types": [
+            {
+              "term": "text"
+            }
+          ]
+        },
+        "method": {
+          "method": {
+            "term": "feeling"
+          },
+          "components": [
+            {
+              "id": "pref-c1",
+              "method": {
+                "term": "feeling"
+              },
+              "role": "个人感受",
+              "material_refs": [],
+              "content_ref": {
+                "kind": "result",
+                "id": "pref"
+              }
+            }
+          ],
+          "bindings": []
+        },
+        "material_refs": [],
+        "reason_refs": [],
+        "content_uses": [],
+        "ports": [],
+        "inputs": [],
+        "boundaries": {
+          "value": null,
+          "state": "none"
+        },
+        "exceptions": {
+          "value": null,
+          "state": "none"
+        },
+        "misuse": {
+          "value": null,
+          "state": "none"
+        },
+        "extensions": [],
+        "result": {
+          "contract_ref": "pref-out",
+          "result_type": {
+            "term": "text"
+          },
+          "value": {
+            "kind": "text",
+            "value": "我喜欢苹果，不喜欢香蕉。"
+          }
+        }
+      }
+    ],
+    "contracts": [],
+    "conditions": [],
+    "shared_declarations": [],
+    "materials": [],
+    "reasons": [],
+    "sources": [],
+    "source_uses": [],
+    "resources": [],
+    "relationships": [],
+    "dependencies": [],
+    "examples": [],
+    "exceptions": [],
+    "misuse": [],
+    "reading_order": ["pref"],
+    "extensions": [],
+    "asset_capability": "asserted_answers"
+  }
+}

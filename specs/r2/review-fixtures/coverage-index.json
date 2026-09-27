@@ -1,0 +1,130 @@
+[
+  {
+    "topic": "m01",
+    "method": "observation",
+    "answer": "status",
+    "mandatory_roles": ["观察依据"],
+    "neighbor_exclusion": "观察记录当前状态，不推测未来或原因",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m02",
+    "method": "recognition",
+    "answer": "classification",
+    "mandatory_roles": ["识别特征", "类别定义", "匹配办法"],
+    "neighbor_exclusion": "按类别归属，不给优劣评分",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m03",
+    "method": "criteria_comparison",
+    "answer": "evaluation",
+    "mandatory_roles": ["判断标准", "对照办法", "归结办法"],
+    "neighbor_exclusion": "完整评价规则，不因指导使用就归guidance",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m04",
+    "method": "tradeoff",
+    "answer": "selection",
+    "mandatory_roles": ["候选方案", "比较因素", "取舍原则"],
+    "neighbor_exclusion": "最终只交选择，不因比较过程归composite",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m05",
+    "method": "inference",
+    "answer": "determination",
+    "mandatory_roles": ["判断前提", "推导关系"],
+    "neighbor_exclusion": "是否满足为判定，不是诊断原因",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m06",
+    "method": "elimination",
+    "answer": "applicability",
+    "mandatory_roles": ["候选范围", "排除条件", "保留办法"],
+    "neighbor_exclusion": "判断适用范围，不把剩余一个自动说成偏好",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m07",
+    "method": "causal_analysis",
+    "answer": "diagnosis",
+    "mandatory_roles": ["待解释现象", "原因关系"],
+    "neighbor_exclusion": "归因诊断，不只是报告灯不亮的状态",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m08",
+    "method": "calculation",
+    "answer": "estimate",
+    "mandatory_roles": ["输入与含义", "计算关系"],
+    "neighbor_exclusion": "给定模型的数量估计，不声称未来预测或实测",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m09",
+    "method": "simulation",
+    "answer": "prediction",
+    "mandatory_roles": ["起点条件", "变化假设", "演变关系"],
+    "neighbor_exclusion": "未来情景预测，不是当前数量估计",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m10",
+    "method": "evidence_analysis",
+    "answer": "stance",
+    "mandatory_roles": ["所用材料", "材料与判断的联系"],
+    "neighbor_exclusion": "保存作者采用的立场，不冒充普遍因果证明",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m11",
+    "method": "interpretation",
+    "answer": "interpretation",
+    "mandatory_roles": ["解读对象", "解释关系"],
+    "neighbor_exclusion": "解释文本含义，不把相关语境当分类标签",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m12",
+    "method": "feedback",
+    "answer": "adjustment",
+    "mandatory_roles": ["调整目标", "反馈信号", "调整办法"],
+    "neighbor_exclusion": "调整当前安排，不只是预测完成率；没有声明机器执行",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m13",
+    "method": "analogy",
+    "answer": "guidance",
+    "mandatory_roles": ["参照对象", "对应关系", "借用办法"],
+    "neighbor_exclusion": "借明确对应迁移方法；仅提过去经历不算类比",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m14",
+    "method": "feeling",
+    "answer": "preference",
+    "mandatory_roles": ["个人感受"],
+    "neighbor_exclusion": "感受不需要补心理原因，不等于客观评价",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m15",
+    "method": "experience",
+    "answer": "ranking",
+    "mandatory_roles": ["经验要点"],
+    "neighbor_exclusion": "明确顺序的结论，不编经历；排序不等于选一个",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  },
+  {
+    "topic": "m16",
+    "method": "other",
+    "answer": "other",
+    "mandatory_roles": ["方法说明", "判断依据", "作用关系"],
+    "neighbor_exclusion": "作者新设名称约定，不是归入已有类别、解读旧词义或表达喜好；其他的具体定义和排除理由不可缺",
+    "negative": "删除任一必需角色或将正文替换成角色名，拒绝正式成题；不能由消费者补写"
+  }
+]

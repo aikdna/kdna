@@ -23,7 +23,7 @@
           "package_json": "packages/kdna-core/package.json",
           "package_name": "@aikdna/kdna-core",
           "npm_package": "@aikdna/kdna-core",
-          "version": "0.24.0-rc.component-semantics.2",
+          "version": "0.36.0-rc.r2.7",
           "published_version": "0.22.0",
           "lifecycle": "Pre-release",
           "release_status": "candidate",

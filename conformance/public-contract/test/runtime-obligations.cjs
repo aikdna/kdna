@@ -21,6 +21,7 @@ const ci = (n) =>
     ),
   ri = (n) => require(path.join(readDir, 'src', n + '.js'));
 const tuple = ci('generated-contract').versionTuple,
+  limits = ci('generated-contract').resource_limits,
   u = ri('util'),
   S = ci('strict-input'),
   D = ci('digests');
@@ -72,6 +73,45 @@ function rejected(asset, reason = 'READ_CORE_INVALID', options) {
   assert.equal(result.reason, reason);
   return { bytes: bytes.length, A: D.digest(bytes), result };
 }
+// R2 fails closed on unsupported critical extensions. No snapshot, catalog-only
+// carrier or disclosed body may be manufactured from that rejected asset.
+function interpretationBlocked(asset, options) {
+  const bytes = F.encode(asset, req, options),
+    result = core.admitBytes(bytes);
+  assert.equal(result.status, 'rejected', JSON.stringify(result));
+  assert.equal(result.reason, 'READ_UNSUPPORTED_CRITICAL');
+  assert.equal(Object.hasOwn(result, 'snapshot'), false);
+  assert.deepEqual(result.states, { core: 'valid', interpretation: 'blocked' });
+  assert.equal(result.diagnostics.length, 1);
+  assert.equal(result.diagnostics[0].code, 'READ_UNSUPPORTED_CRITICAL');
+  return { bytes: bytes.length, A: D.digest(bytes), result };
+}
+// R10 (`specs/read-contract.md:456-476`, normative on this line) makes a homogeneous
+// omission set recordable either per entry or as one `OmissionBatch` count record, and
+// `specs/read-contract.md:460` keeps both encodings legal. The obligation a case here
+// records is the projection decision, so it holds in either encoding; a folded record
+// must still be a legal batch, and it is tied to the target kind of the identity it
+// replaced because a batch never names identities (`specs/read-contract.md:464`).
+function omittedForReason(envelope, target, reason, targetKind) {
+  const kinds = readSchema.$defs.OmissionTargetKind.enum,
+    reasons = readSchema.$defs.OmissionBatchReason.enum;
+  return envelope.omissions.some((record) => {
+    if (record.state === 'explicitly_omitted')
+      return record.target === target && record.reason === reason;
+    return (
+      record.state === 'explicitly_omitted_batch' &&
+      record.target_kind === targetKind &&
+      record.field === targetKind &&
+      record.reason === reason &&
+      kinds.includes(record.target_kind) &&
+      reasons.includes(record.reason) &&
+      Number.isInteger(record.count) &&
+      record.count >= 2 &&
+      typeof record.expandable === 'boolean' &&
+      (record.handle_id === null || typeof record.handle_id === 'string')
+    );
+  });
+}
 function host(callback, deliver) {
   let count = 0;
   const provider = embed.createTrustedHostReadProvider({
@@ -112,39 +152,112 @@ function assertBudget(result) {
   assert.equal(e.budget.actual_bytes.length, 16);
   return Number(e.budget.actual_bytes);
 }
+function addDependency(asset, { id, producer, consumer, role, required, purpose }) {
+  const from = asset.payload.judgments.find((j) => j.id === producer);
+  const to = asset.payload.judgments.find((j) => j.id === consumer);
+  const contract = { kind: 'contract', id: from.result_contract.id };
+  const output = 'output:' + id,
+    input = 'input:' + id;
+  from.ports.push({
+    name: output,
+    meaning: 'Declared result output.',
+    direction: 'output',
+    contract_ref: contract,
+    result_field: null,
+  });
+  to.inputs.push({ name: role, meaning: purpose, contract_ref: contract });
+  to.ports.push({
+    name: input,
+    meaning: purpose,
+    direction: 'input',
+    input_role: role,
+    contract_ref: contract,
+  });
+  asset.payload.dependencies.push({
+    id,
+    producer: {
+      kind: 'judgment_result',
+      judgment_ref: producer,
+      result_contract_ref: from.result_contract.id,
+    },
+    producer_port: output,
+    consumer_judgment_ref: consumer,
+    consumer_port: input,
+    input_role: role,
+    data_type: { term: 'text' },
+    required,
+    purpose,
+  });
+}
 function optionalAsset() {
   const a = F.blank(tuple, 2);
-  a.payload.dependencies = [
-    {
-      id: 'dependency:optional',
-      producer: {
-        kind: 'judgment_result',
-        judgment_ref: 'j:1',
-        result_contract_ref: 'result-contract:1',
-      },
-      consumer_judgment_ref: 'j:0',
-      input_role: 'context',
-      data_type: { term: 'text' },
-      required: false,
-      purpose: 'Optional source judgment',
-    },
-  ];
+  addDependency(a, {
+    id: 'dependency:optional',
+    producer: 'j:1',
+    consumer: 'j:0',
+    role: 'context',
+    required: false,
+    purpose: 'Optional source judgment',
+  });
   return a;
+}
+function addException(asset, judgmentId, assetOwned = false) {
+  const p = asset.payload,
+    judgment = p.judgments.find((j) => j.id === judgmentId);
+  const scope = { kind: 'judgments', judgment_refs: [judgmentId] };
+  const b = {
+    id: 'boundary:required',
+    effect: 'limit',
+    statement: 'Required qualification',
+    declared_by: 'actor:boundary',
+    applies_to: scope,
+    exception_refs: ['exception:selected'],
+  };
+  const e = {
+    id: 'exception:selected',
+    statement: 'Explicit conditional exception',
+    boundary_ref: b.id,
+    applies_to: scope,
+    when: { kind: 'condition', id: 'condition:exception' },
+    effect: { kind: 'waive' },
+  };
+  p.actors.push({ id: 'actor:boundary', kind: 'person', name: 'Engineering boundary author' });
+  if (assetOwned) p.declarations.boundaries = { state: 'provided', value: [b] };
+  else judgment.boundaries = { state: 'provided', value: [b] };
+  judgment.exceptions = { state: 'provided', value: [e] };
+  p.conditions.push({
+    id: 'condition:exception',
+    owner_ref: { kind: 'exception', id: e.id },
+    expression: {
+      kind: 'interpreted',
+      statement: 'Author-supplied qualification, never evaluated by Core or Read.',
+    },
+  });
+  return { boundary: b, exception: e };
 }
 const schema = req('ajv/dist/2020.js');
 const ajv = new schema({ strict: false, validateFormats: false });
-// The current Read contract schema is whichever one the package publishes, not a
-// file name frozen here. packages/kdna-read/package.json "files" declares exactly
-// one read-contract schema, and the package is the authority for its own name.
+// Published packages retain historical schemas. Select the single schema whose
+// complete tuple matches the runtime under test, never an arbitrary first file.
 const readSchemaFiles = JSON.parse(
   fs.readFileSync(path.join(readDir, 'package.json'), 'utf8'),
 ).files.filter((file) => /^schema\/read-contract-.*\.schema\.json$/.test(file));
+const currentReadSchemas = readSchemaFiles
+  .map((file) => JSON.parse(fs.readFileSync(path.join(readDir, file))))
+  .filter((schema) => {
+    const properties = schema.$defs?.VersionTuple?.properties;
+    return (
+      properties &&
+      Object.keys(properties).length === Object.keys(tuple).length &&
+      Object.entries(tuple).every(([key, value]) => properties[key]?.const === value)
+    );
+  });
 assert.equal(
-  readSchemaFiles.length,
+  currentReadSchemas.length,
   1,
-  'the Read package must publish exactly one current contract schema',
+  'the Read package must publish exactly one schema for the current complete tuple',
 );
-const readSchema = JSON.parse(fs.readFileSync(path.join(readDir, readSchemaFiles[0])));
+const readSchema = currentReadSchemas[0];
 delete readSchema.$id;
 readSchema.$ref = '#/$defs/ReadCallResult';
 const validateRead = ajv.compile(readSchema);
@@ -157,9 +270,10 @@ async function main() {
       const variants = [];
       for (const variant of test.variants) {
         const asset = optionalAsset();
+        for (const key of ['content_risk', 'extensions']) delete asset.payload[key];
         Object.assign(asset.payload, structuredClone(variant));
-        if (test.expectation === 'READ_INTERPRETATION_INCOMPLETE') {
-          variants.push(rejected(asset, 'READ_INTERPRETATION_INCOMPLETE'));
+        if (test.expectation === 'READ_UNSUPPORTED_CRITICAL') {
+          variants.push(interpretationBlocked(asset));
           continue;
         }
         const a = accepted(asset),
@@ -171,7 +285,6 @@ async function main() {
         const modes = {};
         for (const mode of ['whole_asset', 'catalog', 'exact_selection']) {
           const request = F.candidate(tuple, asset, mode),
-            projection = project(a.snapshot, request),
             h = host(),
             result = await ri('pipeline').runRead(
               async () => a.result,
@@ -185,15 +298,18 @@ async function main() {
           if (mode === 'catalog') {
             assert.deepEqual(result.envelope.content.declarations, []);
             assert.ok(
-              result.envelope.omissions.some(
-                (o) => o.target === declaration.id && o.reason === 'not_in_mode',
-              ),
+              omittedForReason(result.envelope, declaration.id, 'not_in_mode', 'declaration'),
+              JSON.stringify(result.envelope.omissions),
             );
-          } else
-            assert.deepEqual(
-              result.envelope.content.declarations.find((n) => n.id === declaration.id).value,
-              declaration.value,
-            );
+          } else {
+            const shown = result.envelope.content.declarations.find(
+              (n) => n.id === declaration.id,
+            ).value;
+            for (const key of ['content_risk', 'extensions']) {
+              assert.equal(Object.hasOwn(shown, key), Object.hasOwn(variant, key));
+              if (Object.hasOwn(variant, key)) assert.deepEqual(shown[key], variant[key]);
+            }
+          }
           modes[mode] = {
             content: result.envelope.content,
             content_digest: D.capsuleDigest(result.envelope.content),
@@ -212,10 +328,13 @@ async function main() {
               h.provider,
             );
             assert.equal(expanded.envelope.status, 'ready');
-            assert.deepEqual(
-              expanded.envelope.content.declarations.find((n) => n.id === declaration.id).value,
-              declaration.value,
-            );
+            const shown = expanded.envelope.content.declarations.find(
+              (n) => n.id === declaration.id,
+            ).value;
+            for (const key of ['content_risk', 'extensions']) {
+              assert.equal(Object.hasOwn(shown, key), Object.hasOwn(variant, key));
+              if (Object.hasOwn(variant, key)) assert.deepEqual(shown[key], variant[key]);
+            }
             modes.expand = {
               content_digest: D.capsuleDigest(expanded.envelope.content),
               actual_bytes: assertBudget(expanded),
@@ -232,7 +351,7 @@ async function main() {
           modes,
         });
       }
-      if (test.expectation !== 'READ_INTERPRETATION_INCOMPLETE')
+      if (test.expectation !== 'READ_UNSUPPORTED_CRITICAL')
         for (let i = 1; i < variants.length; i++) {
           assert.notEqual(variants[0].ir_digest, variants[i].ir_digest);
           for (const mode of ['whole_asset', 'exact_selection', 'expand'])
@@ -254,7 +373,7 @@ async function main() {
         }
       return { expectation: test.expectation, variants };
     });
-  await check('PAYLOAD-TOP-LEVEL-REAL-IR-CARRIERS', 'PUBLIC-GRAPH', () => {
+  await check('PAYLOAD-TOP-LEVEL-REAL-IR-CARRIERS', 'PUBLIC-GRAPH', async () => {
     const a = optionalAsset(),
       p = a.payload,
       attachment = Buffer.from('top-level carrier evidence');
@@ -301,14 +420,16 @@ async function main() {
     p.relationships = [
       {
         id: 'relation:1',
+        // grammar.1 `PUBLIC-TERM-VOCABULARY` closes the governed positions against
+        // engineering.core_terms; a coined term must declare vocabulary:"author".
         kind: { term: 'support' },
         direction: 'directed',
         participants: [
-          { judgment_ref: 'j:0', role: { term: 'source' } },
-          { judgment_ref: 'j:1', role: { term: 'target' } },
+          { judgment_ref: 'j:0', role: { term: 'supporter' } },
+          { judgment_ref: 'j:1', role: { term: 'claim' } },
         ],
-        operator: { term: 'support' },
-        effect: { term: 'support' },
+        operator: { term: 'supports' },
+        effect: { term: 'offers_support' },
         statement: 'Authored relationship',
       },
     ];
@@ -335,6 +456,13 @@ async function main() {
     const r = accepted(a, { entries: { 'attachments/carrier.txt': attachment } }),
       ir = r.view.ir,
       rows = [];
+    const projection = await readNode(
+      r.bytes,
+      F.candidate(tuple, a, 'whole_asset'),
+      controls(),
+      host().provider,
+    );
+    assert.equal(projection.envelope.status, 'ready');
     const collections = {
       actors: 'actor',
       judgments: 'judgment',
@@ -345,6 +473,12 @@ async function main() {
       materials: 'material',
       relationships: 'relationship',
       dependencies: 'dependency',
+      shared_declarations: 'shared_declaration',
+      contracts: 'result_contract',
+      conditions: 'condition',
+      exceptions: 'exception',
+      misuse: 'misuse',
+      examples: 'example',
     };
     for (const key of Object.keys(ci('generated-contract').types.Payload.properties)) {
       assert.ok(Object.hasOwn(p, key), key + ' fixture present');
@@ -357,35 +491,45 @@ async function main() {
         observed = ir.asset;
       } else if (collections[key]) {
         carrier = 'nodes[role=' + collections[key] + '].value';
-        observed = ir.nodes.filter((n) => n.role === collections[key]).map((n) => n.value);
-      } else if (key === 'content_risk' || key === 'extensions') {
+        observed = ir.nodes
+          .filter(
+            (n) => n.role === collections[key] && (key !== 'contracts' || n.owner.kind === 'asset'),
+          )
+          .map((n) => n.value);
+      } else if (key === 'asset_capability') {
+        carrier = 'Read.content.asset_capability';
+        observed = projection.envelope.content.asset_capability;
+      } else {
+        assert.ok(
+          [
+            'scope',
+            'kernel',
+            'reading_order',
+            'declarations',
+            'cohesion',
+            'attributions',
+            'content_risk',
+            'extensions',
+          ].includes(key),
+          key + ' mapped',
+        );
         carrier = 'nodes[role=asset_declaration].value.' + key;
         observed = ir.nodes.find((n) => n.role === 'asset_declaration').value[key];
-      } else {
-        const role = {
-          scope: 'scope',
-          declarations: 'declaration',
-          cohesion: 'cohesion',
-          attributions: 'attribution',
-        }[key];
-        assert.ok(role, key + ' mapped');
-        carrier = 'nodes[role=' + role + ',owner=null].value';
-        observed = ir.nodes.find((n) => n.role === role && n.owner_judgment_id === null).value;
       }
       assert.deepEqual(observed, p[key]);
       rows.push({ field: key, carrier, status: 'EXACT_VALUE_MATCH', observed });
     }
-    const projection = project(r.snapshot, F.candidate(tuple, a, 'whole_asset'));
-    // R03 whole_asset discloses asset declarations and catalog, with no judgment bodies.
-    assert.deepEqual(projection.body.content.closure, []);
-    assert.deepEqual(projection.body.content.catalog, ir.catalog);
-    assert.deepEqual(
-      projection.body.content.declarations,
-      ir.nodes.filter(
-        (n) =>
-          n.owner_judgment_id === null &&
-          ['asset_declaration', 'scope', 'declaration', 'cohesion', 'attribution'].includes(n.role),
-      ),
+    // Whole-asset overview carries exactly the asset closure; full judgment
+    // bodies remain available through their explicit index targets.
+    assert.deepEqual(projection.envelope.content.catalog, ir.catalog);
+    const overview = [
+      ...projection.envelope.content.declarations,
+      ...projection.envelope.content.closure,
+    ];
+    assert.deepEqual(new Set(overview.map((n) => n.id)), new Set(ir.asset_closure));
+    assert.equal(
+      overview.some((n) => n.role === 'judgment'),
+      false,
     );
     return {
       A: r.view.digests.A.observed,
@@ -522,21 +666,14 @@ async function main() {
         target_ref: 'j:0',
       },
     ];
-    a.payload.dependencies = [
-      {
-        id: 'dependency:1',
-        producer: {
-          kind: 'judgment_result',
-          judgment_ref: 'j:1',
-          result_contract_ref: 'result-contract:1',
-        },
-        consumer_judgment_ref: 'j:0',
-        input_role: 'upstream',
-        data_type: { term: 'text' },
-        required: true,
-        purpose: 'Required evidence',
-      },
-    ];
+    addDependency(a, {
+      id: 'dependency:1',
+      producer: 'j:1',
+      consumer: 'j:0',
+      role: 'upstream',
+      required: true,
+      purpose: 'Required evidence',
+    });
     const r = accepted(a, { entries: { 'attachments/source.txt': bytes } }),
       closure = r.view.ir.mandatory_closures[0],
       nodes = r.view.ir.nodes.filter((n) => closure.node_ids.includes(n.id));
@@ -583,19 +720,15 @@ async function main() {
   });
   await check('GRAPH-CYCLE-RETAINED', 'PUBLIC-GRAPH', () => {
     const a = F.blank(tuple, 2);
-    a.payload.dependencies = [0, 1].map((i) => ({
-      id: 'd:' + i,
-      producer: {
-        kind: 'judgment_result',
-        judgment_ref: 'j:' + (1 - i),
-        result_contract_ref: 'result-contract:' + (1 - i),
-      },
-      consumer_judgment_ref: 'j:' + i,
-      input_role: 'input',
-      data_type: { term: 'text' },
-      required: true,
-      purpose: 'Declared cycle',
-    }));
+    for (const i of [0, 1])
+      addDependency(a, {
+        id: 'd:' + i,
+        producer: 'j:' + (1 - i),
+        consumer: 'j:' + i,
+        role: 'input',
+        required: true,
+        purpose: 'Declared cycle',
+      });
     const r = accepted(a);
     for (const closure of r.view.ir.mandatory_closures)
       assert.equal(
@@ -647,11 +780,23 @@ async function main() {
     const a = F.blank(tuple);
     const j = a.payload.judgments[0];
     delete j.result;
+    // grammar.1 `PUBLIC-FORM-CONSISTENCY` (specs/public-semantic-source.json) makes
+    // `form` the discriminator: a formation rule requires form:"rule" and forbids
+    // `result`. Before grammar.1 this case only deleted `result`.
+    j.form = 'rule';
+    // The declared capability must agree with the forms (PUBLIC-ASSET-CAPABILITY):
+    // one rule-form judgment is `result_forming_rules`, not the fixture default.
+    a.payload.asset_capability = 'result_forming_rules';
     j.formation_rule = {
       statement: 'Static rule',
       output_contract_ref: j.result_contract.id,
-      conditions: [{ kind: 'interpreted', statement: 'globalThis.__shouldNeverRun = true' }],
+      condition_refs: [{ kind: 'condition', id: 'condition:static' }],
     };
+    a.payload.conditions.push({
+      id: 'condition:static',
+      owner_ref: { kind: 'judgment', id: j.id },
+      expression: { kind: 'interpreted', statement: 'globalThis.__shouldNeverRun = true' },
+    });
     globalThis.__shouldNeverRun = false;
     accepted(a);
     assert.equal(globalThis.__shouldNeverRun, false);
@@ -662,25 +807,31 @@ async function main() {
     const results = [];
     for (const state of ['unknown', 'none', 'not_applicable']) {
       const a = F.blank(tuple);
-      a.payload.declarations = { highest_question: { state, value: null } };
       a.payload.attributions = { state, value: null };
+      a.payload.declarations.boundaries = { state, value: null };
       const r = accepted(a),
         p = project(r.snapshot, F.candidate(tuple, a));
-      assert.deepEqual(
-        r.view.ir.nodes.find((n) => n.role === 'declaration').value,
-        a.payload.declarations,
-      );
-      assert.deepEqual(
-        r.view.ir.nodes.find((n) => n.role === 'attribution').value,
-        a.payload.attributions,
-      );
+      const declaration = r.view.ir.nodes.find((n) => n.role === 'asset_declaration').value;
+      assert.deepEqual(declaration.attributions, a.payload.attributions);
+      assert.deepEqual(declaration.declarations.boundaries, { state });
       assert.equal(p.body.content.provenance.confirmation, 'not_evaluated');
-      results.push({ state, missing: p.body.content.missing });
+      const bad = structuredClone(a);
+      bad.payload.declarations.highest_question = { state, value: null };
+      const negative = rejected(bad);
+      assert.ok(
+        negative.result.diagnostics.some(
+          (d) => d.field === '/payload/declarations/highest_question/state',
+        ),
+      );
+      results.push({ state, missing: p.body.content.missing, invalid_highest_question: negative });
     }
     const a = F.blank(tuple),
       r = accepted(a);
     assert.equal(
-      r.view.ir.nodes.some((n) => n.role === 'declaration'),
+      Object.hasOwn(
+        r.view.ir.nodes.find((n) => n.role === 'asset_declaration').value,
+        'attributions',
+      ),
       false,
     );
     const result = ci('authorship').assessAuthorship({}, ['highest_question'], 'valid');
@@ -858,7 +1009,10 @@ async function main() {
     let answer = await readNode(r.bytes, F.candidate(tuple, a), controls(), h.provider);
     assert.equal(answer.envelope.status, 'ready');
     assert.equal(answer.envelope.content.catalog.length, 1);
-    assert.equal(answer.envelope.omissions.length, 0);
+    const adjacent = r.view.ir.nodes.filter((n) => n.owner_judgment_id === 'j:1').map((n) => n.id);
+    for (const id of adjacent)
+      assert.equal(JSON.stringify(answer.envelope.omissions).includes(id), false);
+    assert.equal(JSON.stringify(answer.envelope.omissions).includes('j:1'), false);
     const limited = host((data, count, request, snapshot) => ({
       ...data,
       scope: snapshot.ir.nodes.filter((n) => n.role !== 'result_contract').map((n) => n.id),
@@ -1024,7 +1178,7 @@ async function main() {
         value: { kind: 'text', value: 'execute()' },
       },
     ];
-    const result = rejected(a, 'READ_INTERPRETATION_INCOMPLETE');
+    const result = interpretationBlocked(a);
     const b = F.blank(tuple);
     b.payload.judgments[0].authorized = true;
     return [result, rejected(b)];
@@ -1063,7 +1217,9 @@ async function main() {
     );
     results.push(
       rejected(a, 'READ_CORE_INVALID', {
-        entries: { 'attachments/large': new Uint8Array(5 * 1024 * 1024 + 1) },
+        // The bound is the declared one, not a number frozen at the pre-grammar.2
+        // 5 MiB: `resource_limits.entry_bytes` is 8 MiB on this coordinate.
+        entries: { 'attachments/large': new Uint8Array(limits.entry_bytes + 1) },
       }),
     );
     const many = Object.fromEntries(
@@ -1102,15 +1258,22 @@ async function main() {
           controls(),
           h.provider,
         );
-      // Finite independently-admitted-Plan stage premise. This deliberately does
-      // not assert a public Plan wire shape or a Plan validator implementation.
-      const plan = {
-        contract: tuple.plan,
-        finite_test_stage_observation:
-          'complete opaque Plan bytes supplied by independent Host admission',
-      };
+      const execution = req('@aikdna/kdna-core/execution');
+      const admission = execution.createConsumptionPlan(r.snapshot, {
+        plan_id: 'plan:handoff',
+        intent: { task: 'Read handoff correlation', use: 'reasoning_support' },
+        selection: request.selection,
+        budget: {
+          capsule_bytes: 1000000,
+          output_bytes: 100000,
+          response_bytes: 1000000,
+          trace_events: 16,
+        },
+      });
+      assert.equal(admission.status, 'admitted');
+      const plan = execution.inspectAdmittedPlan(admission.plan);
       const handoff = {
-        contract: 'kdna.package-set-handoff/0.1.0',
+        contract: 'kdna.package-set-handoff/0.2.1',
         tuple,
         set_id: 'set:1',
         members: [
@@ -1133,7 +1296,7 @@ async function main() {
       const context = {
           snapshots: [{ member_id: 'member:1', snapshot: r.snapshot }],
           deliveredRead: result,
-          observeAdmittedPlan: () => plan,
+          observeAdmittedPlan: () => admission.plan,
         },
         verify = ci('package-set').verifyHandoffBindings;
       assert.equal(verify(handoff, context), true);
@@ -1224,59 +1387,39 @@ async function main() {
   });
   for (const location of ['same', 'cross', 'asset', 'null', 'missing'])
     await check('ECR02-EXCEPTION-' + location.toUpperCase(), 'PUBLIC-GRAPH', async () => {
-      const a = F.blank(tuple, 3),
-        p = a.payload;
-      const boundaryValue = {
-        id: 'boundary:required',
-        effect: 'limit',
-        statement: 'Required qualification',
-        declared_by: 'actor:boundary',
-      };
-      p.actors = [{ id: 'actor:boundary', kind: 'person', name: 'Boundary author' }];
-      if (location === 'asset')
-        p.declarations = { boundaries: { state: 'provided', value: [boundaryValue] } };
-      else
-        p.judgments[location === 'same' ? 0 : 1].boundaries = {
-          state: 'provided',
-          value: [boundaryValue],
-        };
-      p.judgments[0].exceptions = {
-        state: 'provided',
-        value: [
-          {
-            id: 'exception:selected',
-            statement: 'Authored exception',
-            boundary_ref:
-              location === 'null'
-                ? null
-                : location === 'missing'
-                  ? 'boundary:absent'
-                  : boundaryValue.id,
-          },
-        ],
-      };
-      if (location === 'missing') return rejected(a);
+      const a = F.blank(tuple, 3);
+      const values = addException(a, 'j:0', location === 'asset' || location === 'cross');
       const admitted = accepted(a),
-        view = admitted.view,
-        closure = view.ir.mandatory_closures[0],
+        view = admitted.view;
+      if (['cross', 'null', 'missing'].includes(location)) {
+        const bad = structuredClone(a);
+        if (location === 'cross') {
+          const b = bad.payload.declarations.boundaries.value[0];
+          bad.payload.declarations.boundaries = { state: 'none', value: null };
+          b.applies_to = { kind: 'judgments', judgment_refs: ['j:1'] };
+          bad.payload.judgments[1].boundaries = { state: 'provided', value: [b] };
+        } else
+          bad.payload.judgments[0].exceptions.value[0].boundary_ref =
+            location === 'null' ? null : 'boundary:absent';
+        const negative = rejected(bad);
+        assert.ok(
+          negative.result.diagnostics.some((d) =>
+            /\/(?:exceptions|boundaries)(?:\/|$)/.test(d.field ?? ''),
+          ),
+          JSON.stringify(negative.result),
+        );
+        if (location !== 'cross') return { location, valid_control: view.ir_digest, negative };
+      }
+      const closure = view.ir.mandatory_closures[0],
         nodes = view.ir.nodes.filter((n) => closure.node_ids.includes(n.id));
-      const requiredBoundary = view.ir.nodes.find((n) =>
-          location === 'asset'
-            ? n.role === 'declaration'
-            : n.role === 'boundary' && n.value.id === boundaryValue.id,
-        ),
-        author = view.ir.nodes.find((n) => n.role === 'actor' && n.value.id === 'actor:boundary');
+      for (const role of ['boundary', 'exception', 'condition', 'actor'])
+        assert.ok(
+          nodes.some((n) => n.role === role),
+          role,
+        );
       assert.deepEqual(
         nodes.filter((n) => n.role === 'judgment').map((n) => n.value.id),
         ['j:0'],
-      );
-      assert.equal(
-        nodes.some((n) => n.id === requiredBoundary.id),
-        location !== 'null',
-      );
-      assert.equal(
-        nodes.some((n) => n.id === author.id),
-        location !== 'null',
       );
       assert.equal(new Set(closure.node_ids).size, closure.node_ids.length);
       const full = await readNode(
@@ -1288,12 +1431,12 @@ async function main() {
       assert.equal(full.envelope.status, 'ready');
       assert.equal(full.envelope.receipt.delivery, 'delivered');
       assertBudget(full);
-      const exclusions =
-          location === 'null'
-            ? [[requiredBoundary.id, author.id]]
-            : [[requiredBoundary.id], [author.id], [requiredBoundary.id, author.id]],
-        observations = [];
-      for (const excluded of exclusions) {
+      const boundary = nodes.find(
+        (n) => n.target.kind === 'boundary' && n.target.id === values.boundary.id,
+      );
+      const author = nodes.find((n) => n.role === 'actor');
+      const observations = [];
+      for (const excluded of [[boundary.id], [author.id], [boundary.id, author.id]]) {
         const h = host((data) => ({
           ...data,
           scope: data.scope.filter((id) => !excluded.includes(id)),
@@ -1304,20 +1447,15 @@ async function main() {
           controls(),
           h.provider,
         );
-        if (location === 'null') assert.equal(result.envelope.status, 'ready');
-        else {
-          assert.equal(result.envelope.status, 'rejected');
-          assert.equal(result.envelope.diagnostics[0].code, 'READ_SCOPE_DENIED');
-          assert.equal(result.envelope.content, null);
-        }
+        assert.equal(result.envelope.status, 'rejected');
+        assert.equal(result.envelope.diagnostics[0].code, 'READ_SCOPE_DENIED');
+        assert.equal(result.envelope.content, null);
         observations.push({ excluded, result });
       }
       return {
         location,
         A: view.digests.A.observed,
         closure: closure.node_ids,
-        roles: nodes.map((n) => n.role),
-        full_scope: full,
         observations,
         no_adjacent_judgment: true,
       };
@@ -1325,13 +1463,7 @@ async function main() {
   await check('ECR02-OWNED-METHOD-SOURCE-USE', 'PUBLIC-GRAPH', async () => {
     const a = F.blank(tuple, 2),
       p = a.payload;
-    p.judgments[0].method = {
-      method: { term: 'method' },
-      components: [
-        { id: 'component:1', method: { term: 'method' }, statement: 'Authored component' },
-      ],
-      bindings: [],
-    };
+    p.judgments[0].method.components[0].statement = 'Authored component with source evidence';
     p.sources = [{ id: 'source:component', identity: 'Necessary method evidence' }];
     p.source_uses = [
       {
@@ -1339,13 +1471,13 @@ async function main() {
         role: 'support',
         source_ref: 'source:component',
         target_kind: 'method_component',
-        target_ref: 'component:1',
+        target_ref: 'component:0',
       },
     ];
     const admitted = accepted(a),
       closure = admitted.view.ir.mandatory_closures[0],
       nodes = admitted.view.ir.nodes.filter((n) => closure.node_ids.includes(n.id));
-    for (const role of ['method', 'source', 'source_use'])
+    for (const role of ['method_component', 'source', 'source_use'])
       assert.ok(
         nodes.some((n) => n.role === role),
         role,
@@ -1372,44 +1504,32 @@ async function main() {
     };
   });
   await check('ECR02-INDIRECT-EXCEPTION-BINDING-DEDUP', 'PUBLIC-GRAPH', () => {
-    const a = F.blank(tuple, 3),
-      p = a.payload;
-    p.actors = [{ id: 'actor:boundary', kind: 'person', name: 'Boundary author' }];
-    p.judgments[2].boundaries = {
-      state: 'provided',
-      value: [
-        {
-          id: 'boundary:required',
-          effect: 'limit',
-          statement: 'Qualification',
-          declared_by: 'actor:boundary',
-        },
-      ],
-    };
-    p.judgments[1].exceptions = {
-      state: 'provided',
-      value: [
-        {
-          id: 'exception:indirect',
-          statement: 'Referenced exception',
-          boundary_ref: 'boundary:required',
-        },
-      ],
-    };
-    p.judgments[0].method = {
-      method: { term: 'method' },
-      components: [
-        { id: 'component:1', method: { term: 'method' }, statement: 'Method component' },
-      ],
-      bindings: [
-        { component_ref: 'component:1', role: 'qualification', target_ref: 'exception:indirect' },
-        { component_ref: 'component:1', role: 'same-support', target_ref: 'boundary:required' },
-      ],
-    };
+    const a = F.blank(tuple, 3);
+    addException(a, 'j:2', true);
+    // The support scope remains j:2. It is referenced, never adopted as j:0 permission.
+    const bare = accepted(a),
+      bareIds = bare.view.ir.mandatory_closures[0].node_ids;
+    for (const role of ['exception', 'condition', 'boundary', 'actor'])
+      assert.ok(
+        !bare.view.ir.nodes.some((n) => bareIds.includes(n.id) && n.role === role),
+        role + ' without native binding',
+      );
+    a.payload.judgments[0].method.bindings = [
+      {
+        component_ref: 'component:0',
+        role: 'qualification',
+        target: { kind: 'exception', id: 'exception:selected' },
+      },
+      {
+        component_ref: 'component:0',
+        role: 'second-distinct-role',
+        target: { kind: 'exception', id: 'exception:selected' },
+      },
+    ];
     const admitted = accepted(a),
-      closure = admitted.view.ir.mandatory_closures[0],
-      nodes = admitted.view.ir.nodes.filter((n) => closure.node_ids.includes(n.id));
-    for (const role of ['exception', 'boundary', 'actor'])
+      closure = admitted.view.ir.mandatory_closures[0];
+    const nodes = admitted.view.ir.nodes.filter((n) => closure.node_ids.includes(n.id));
+    for (const role of ['exception', 'condition', 'boundary', 'actor'])
       assert.ok(
         nodes.some((n) => n.role === role),
         role,
@@ -1419,10 +1539,20 @@ async function main() {
       nodes.filter((n) => n.role === 'judgment').map((n) => n.value.id),
       ['j:0'],
     );
+    const invalid = structuredClone(a);
+    invalid.payload.judgments[0].method.bindings = [
+      { component_ref: 'component:0', role: 'qualification', target_ref: 'exception:selected' },
+    ];
+    const negative = rejected(invalid);
+    assert.ok(
+      negative.result.diagnostics.some((d) => d.field === '/payload/judgments/0/method/bindings'),
+    );
     return {
       closure: closure.node_ids,
       roles: nodes.map((n) => n.role),
+      native_only_positive_control: true,
       no_adjacent_judgment: true,
+      invalid_untyped_binding: negative,
     };
   });
   await check(
@@ -1431,46 +1561,24 @@ async function main() {
     async () => {
       const a = F.blank(tuple, 3),
         p = a.payload;
-      p.actors = [{ id: 'actor:boundary', kind: 'person', name: 'Boundary author' }];
-      p.judgments[2].boundaries = {
-        state: 'provided',
-        value: [
-          {
-            id: 'boundary:required',
-            effect: 'limit',
-            statement: 'Qualification',
-            declared_by: 'actor:boundary',
-          },
-        ],
-      };
-      p.judgments[1].exceptions = {
-        state: 'provided',
-        value: [
-          {
-            id: 'exception:upstream',
-            statement: 'Upstream exception',
-            boundary_ref: 'boundary:required',
-          },
-        ],
-      };
-      p.dependencies = [
-        {
-          id: 'dependency:optional',
-          producer: {
-            kind: 'judgment_result',
-            judgment_ref: 'j:1',
-            result_contract_ref: 'result-contract:1',
-          },
-          consumer_judgment_ref: 'j:0',
-          input_role: 'context',
-          data_type: { term: 'text' },
-          required: false,
-          purpose: 'Optional supporting judgment',
-        },
-      ];
+      addException(a, 'j:1', true);
+      addDependency(a, {
+        id: 'dependency:optional',
+        producer: 'j:1',
+        consumer: 'j:0',
+        role: 'context',
+        required: false,
+        purpose: 'Optional supporting judgment',
+      });
       const admitted = accepted(a),
         view = admitted.view,
-        target = view.ir.expansion_targets[0],
+        target = view.ir.expansion_targets.find(
+          (t) =>
+            t.anchor.kind === 'judgment' &&
+            t.anchor.selection.judgment_id === 'j:0' &&
+            t.target.kind === 'dependency' &&
+            t.target.id === 'dependency:optional',
+        ),
         support = view.ir.nodes.filter((n) => target.scope.includes(n.id));
       for (const role of ['exception', 'boundary', 'actor'])
         assert.ok(
@@ -1498,7 +1606,9 @@ async function main() {
           ),
         request = F.candidate(tuple, a),
         initial = await run(request),
-        handle = initial.envelope.content.expansion_handles[0];
+        handle = initial.envelope.content.expansion_handles.find(
+          (h) => h.target.kind === 'dependency' && h.target.id === 'dependency:optional',
+        );
       assert.ok(handle);
       const full = await run({ ...request, mode: 'expand', handle });
       assert.equal(full.envelope.status, 'ready');

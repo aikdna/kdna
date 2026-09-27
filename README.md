@@ -8,6 +8,8 @@
 
 # KDNA
 
+The current local implementation is the unpublished **R2** candidate. Its complete static tuple, native execution 0.3.1 formats and reference APIs are linked from [SPEC-INDEX](SPEC-INDEX.md#kdna-public-specification-index). Historical contracts retain their own coordinates and are not current implementation selectors. Publication and downstream rebinding remain separate.
+
 > **KDNA gives reusable judgment its own identity and lifecycle.**
 >
 > KDNA is an open judgment-asset format and protocol. Individuals, teams,
@@ -41,7 +43,7 @@ unpacking or decoding asset internals is not a compatible consumption path.
 >
 > This repo owns the **KDNA Core** specifications, schemas and reference implementation. Published packages and current source candidates have separate version contracts; source availability does not establish registry publication.
 
-[![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE) [![Maturity: Pre-release](https://img.shields.io/badge/maturity-Pre--release-orange)](#maturity)
+[![npm](https://img.shields.io/npm/v/@aikdna/kdna-cli)](https://www.npmjs.com/package/@aikdna/kdna-cli) [![CI](https://github.com/aikdna/kdna/actions/workflows/validate.yml/badge.svg)](https://github.com/aikdna/kdna/actions/workflows/validate.yml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE) [![Maturity: Pre-release](https://img.shields.io/badge/maturity-Pre--release-orange)](./docs/maturity.md)
 
 > **Maturity: Pre-release** — the container, toolchain, and integrations are
 > being reconciled against their exact public contracts. Component maturity
@@ -51,23 +53,39 @@ unpacking or decoding asset internals is not a compatible consumption path.
 > notes before use. See
 > [`docs/maturity.md`](./docs/maturity.md).
 
-## Current source: Core admission and Read
+## Current source: choose the matching implementation
 
-Start with the [Core/Read source guide](./docs/core-read-current-status.md) and
-the exact [Core](./packages/kdna-core/README.md) and
-[Read](./packages/kdna-read/README.md) package inputs. Core
-`0.24.0-rc.component-semantics.2` admits immutable bytes, constructs Canonical IR
-and issues a private snapshot. Read `0.3.0-rc.component-semantics.2` reports
-`read_envelope`, `admission_rejection`, `no_body_control` or `transport_failure`.
-Disclosure requires the embedding's trusted control and Host providers; it
-does not authorize an action.
+The [Core/Read source guide](./docs/core-read-current-status.md) records the
+**2026-09-23 local source** identities and how to obtain a matching delivery.
+These are unpublished candidates; this page does not establish that remote
+`main` or npm contains these bytes.
 
-These are source candidates, not npm releases. Encryption, signature and
-checksums-document admission, Runtime Capsule/Plan admission and execution are
-unavailable in this Core/Read implementation. A schema or historical example
-does not enable those capabilities. The [current CLI source](https://github.com/aikdna/kdna-cli#readme)
-provides explicit-file `inspect`, `validate` and `read`; use its exact bound
-dependency graph. Keep old-line assets and APIs in their original environment.
+| Entry | Exact local package combination | Use |
+| --- | --- | --- |
+| This repository | Core `0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7` (exact Core peer) | Public admission, Read and explicit reference subpaths; Node >=20 |
+| [Runtime CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.40.0-rc.protection.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | Explicit-file `inspect`, `validate`, `read`, static `plan` and `load`; Node >=22 |
+| [Canonical Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | Operator-bound local Read adapter; Node >=22; Host adoption unassessed |
+
+The package combinations differ deliberately. Use each entry's own manifest,
+lock, binding and complete dependency archives; do not replace its CLI or Core
+with a newer sibling or a registry package having a similar name. The canonical
+[Loader Skill](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md)
+belongs to the Loader/MCP combination. This repository's
+[`skills/`](./skills/README.md) directory is a historical compatibility copy.
+
+Core admits immutable bytes and issues a private snapshot. Read disclosure
+requires the embedding's trusted control and Host providers and grants no
+action authority. Current R2 Core has native 0.3.1 Plan/Capsule admission
+and explicit Host reference APIs. The current Runtime CLI can supply a static
+Plan and Capsule; it does not execute a model or authorize actions. Ordinary
+root/browser admission retains protection refusals; explicit Node protection
+entries have their own [contract](./specs/protection-admission.md) and do not
+establish production accounts, native credential storage or Host acceptance.
+
+For creation, follow the separate
+[Studio CLI installation](https://github.com/aikdna/kdna-studio-cli#readme) and
+[Creator Skill](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/SKILL.md).
+Do not infer a complete creation-to-consumption acceptance from any version row.
 
 ## Published CLI 0.36.1 walkthrough
 
@@ -78,8 +96,8 @@ published workflow; it is not a current Core/Read quickstart.
 This walkthrough is pinned to `@aikdna/kdna-cli@0.36.1`. The
 commands below are part of that package's allowlist and were last re-run
 against it on 2026-09-13. The unreleased Core/Read source candidate in this
-repository has a different, narrower command set and rejects assets produced by
-the published line, so do not mix the two. See
+repository has different command forms and a different asset contract; assets
+produced by the published line are not current R2 inputs. Do not mix the two. See
 [tool status matrix](./docs/tool-status-matrix.md) for the per-command picture.
 
 ```bash
@@ -104,21 +122,28 @@ kdna load ./judgment.kdna --profile=compact --as=json
 > name remains `kdna`). Install only `aikdna` from PyPI — never
 > `pip install kdna`. See [SECURITY.md](./SECURITY.md).
 
-The asset repository preserves two historical reference assets. Their recorded
-published-CLI validation does not transfer to current Core/Read, which rejects
-them with `READ_CORE_INVALID`. Its separate current-contract
-`@aikdna/verification-scope@0.1.5` candidate has no Release coordinate or human
-review. See the [asset README](https://github.com/aikdna/kdna-assets#readme) for
-exact bytes, observations and licenses. Listing is not endorsement.
+The asset repository's historical `references/public` corpus and
+`index/current.json` are retained solely as isolated engineering regression
+inputs as of 2026-09-23. They are not the current formal business asset
+collection; the current single formal work is created and independently
+accepted separately. See [engineering isolation](https://github.com/aikdna/kdna-assets/blob/main/references/public/ENGINEERING-ONLY.md).
 
-→ [Full 5-minute guide](./docs/try-kdna.md) · [Public reference display](https://github.com/aikdna/kdna-assets)
+The two preserved historical references retain their original bytes and
+licenses. Their recorded published-CLI validation does not transfer to the
+current asset-adapter graph, which rejects them with `READ_CORE_INVALID`.
+The earlier-contract `@aikdna/verification-scope@0.1.5` candidate is likewise
+an engineering input, with no Release coordinate or human review. See the
+[asset README](https://github.com/aikdna/kdna-assets#readme) for exact bytes,
+observations and licenses. Listing is not endorsement.
+
+→ [Full 5-minute guide](./docs/try-kdna.md) · [Historical engineering reference inputs](https://github.com/aikdna/kdna-assets)
 
 ## What is a KDNA file?
 
 A `.kdna` file is a single, portable container. The following list describes
 features of the published format contract, not the capabilities of every Core
-implementation. In particular, current Core/Read rejects encryption, signatures
-and checksums documents at admission. The published container contract includes:
+implementation. In particular, ordinary current Core/Read root/browser admission rejects
+protected inputs; explicit Node protection uses its separately bound contract. The published container contract includes:
 
 - a **public manifest** (`kdna.json`) — the asset's identity and metadata
 - a **judgment payload** (`payload.kdnab`) — the actual structured judgment data
@@ -137,7 +162,7 @@ that exact version's checks; it is not acceptance by a different implementation.
 Core format validity and Creation Engine acceptance are separate results. The
 published Creation Output Boundary describes writer checksum and scoped
 authoring requirements under its own contract; those requirements do not enable
-checksum admission in the current Core candidate or redefine its accepted inputs. See [Creation Output Boundary](./specs/creation-output-boundary.md).
+checksum admission in ordinary current Core APIs or redefine their accepted inputs. See [Creation Output Boundary](./specs/creation-output-boundary.md).
 
 ## Published Core 0.22.0 signing example
 
@@ -148,8 +173,9 @@ published-line assets. Install that exact version in a separate project:
 npm install --save-exact @aikdna/kdna-core@0.22.0
 ```
 
-The current Core source does not export these signing APIs and rejects signed
-containers. The signing specification and historical vectors remain valid
+The current Core root does not export these historical signing APIs; ordinary
+admission rejects signed containers. The explicit Node protection entry is a
+separate API and does not make this example a current-source recipe. The signing specification and historical vectors remain valid
 records of their own version contract.
 
 In the published Core 0.22.0 line, a `.kdna` asset can carry an optional `signature.kdsig` bundle
@@ -268,8 +294,9 @@ its source version, protocol coordinate and publication state are separate facts
 | **KDNA Eval** | Experimental replay, budget, and consumption-evaluation primitives | `packages/kdna-eval/` + `@aikdna/kdna-eval` |
 
 The table above retains the published loading-line roles. Current Core/Read
-source uses admission and Read as described above; the direct-file
-`validate → plan-load → load` path belongs to published CLI 0.36.1. The historical global package-store and
+source uses admission, Read and static `plan → load --plan` as described above;
+the direct-file `validate → plan-load → load --profile=compact --as=json` path
+belongs to published CLI 0.36.1. The historical global package-store and
 auto-discovery Skill experience is not a protocol requirement and is under
 product recertification; it must not be treated as the default KDNA user model.
 
@@ -319,7 +346,7 @@ changes require an RFC and an explicit migration path.
 | [kdna-cli](https://github.com/aikdna/kdna-cli) | `@aikdna/kdna-cli` | KDNA runtime CLI |
 | [kdna-studio-cli](https://github.com/aikdna/kdna-studio-cli) | `@aikdna/kdna-studio-cli` | AI-powered authoring CLI |
 | [kdna-studio-core](https://github.com/aikdna/kdna-studio-core) | `@aikdna/kdna-studio-core` | Studio SDK for creators |
-| [kdna-skills](https://github.com/aikdna/kdna-skills) | `kdna-loader` (Unassessed); `@aikdna/kdna-mcp-server@0.5.0` (Experimental) | Agent and MCP adapter mission; not automatic judgment authority |
+| [kdna-skills](https://github.com/aikdna/kdna-skills) | `kdna-loader` (Unassessed); local MCP `0.8.1-rc.combination.1`; historical npm MCP `0.5.0` | Agent and MCP adapter mission; not automatic judgment authority |
 | [kdna-assets](https://github.com/aikdna/kdna-assets) | — | Public asset releases |
 | [kdna-core-swift](https://github.com/aikdna/kdna-core-swift) | Historical Swift release `0.20.0`; current source has its own binding | Current Core/Read source has macOS validation and generic iOS compilation; device runtime and native Host remain separate |
 | [kdna-studio-swift](https://github.com/aikdna/kdna-studio-swift) | Historical Swift release `0.4.0`; current source has its own binding | Apple authoring kernel; historical release compatibility and current-source verification are separate, described by the owning README |

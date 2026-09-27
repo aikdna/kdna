@@ -1,0 +1,261 @@
+[
+  {
+    "id": "G1-ACCEPT-conclusion",
+    "expect": "accepted",
+    "count": 1,
+    "note": "Baseline: a conclusion-form judgment with its result and contract, declared asset_capability asserted_answers."
+  },
+  {
+    "id": "G1-ACCEPT-two-conclusions",
+    "expect": "accepted",
+    "count": 2,
+    "note": "Scope check for the uniqueness rules: two judgments with distinct ids and distinct result-contract ids are legal."
+  },
+  {
+    "id": "G1-REJECT-question-with-no-answer-and-no-form",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "dropForm": true,
+    "edits": [{ "pointer": "/payload/judgments/0/result", "remove": true }],
+    "note": "The historically observed shape: a question, a result contract and no answer at all, with no declared form. Required form is missing and neither result nor formation_rule exists."
+  },
+  {
+    "id": "G1-REJECT-conclusion-without-result",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "form": "conclusion",
+    "edits": [{ "pointer": "/payload/judgments/0/result", "remove": true }],
+    "note": "form=conclusion must carry an actual result."
+  },
+  {
+    "id": "G1-REJECT-rule-carrying-a-result",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "form": "rule",
+    "edits": [
+      {
+        "pointer": "/payload/judgments/0/formation_rule",
+        "value": {
+          "statement": "when the situation matches, answer per the contract",
+          "conditions": [],
+          "output_contract_ref": "result-contract:0"
+        }
+      }
+    ],
+    "note": "form=rule forbids a result; this asset carries both."
+  },
+  {
+    "id": "G1-REJECT-capability-contradicts-forms",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "form": "conclusion",
+    "capability": "result_forming_rules",
+    "note": "Asset-level capability must equal the closed mapping of the declared issue forms."
+  },
+  {
+    "id": "G1-REJECT-singular-language-field",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "edits": [{ "pointer": "/manifest/language", "value": "zh-CN" }],
+    "note": "The deprecated singular language field is rejected by the closed Manifest, not silently ignored."
+  },
+  {
+    "id": "G1-REJECT-author-coined-relationship-kind",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "count": 2,
+    "edits": [
+      {
+        "pointer": "/payload/relationships",
+        "value": [
+          {
+            "id": "relationship:1",
+            "kind": { "term": "adopted-upstream-result" },
+            "direction": "directed",
+            "operator": { "term": "adopts" },
+            "effect": { "term": "upstream-result-required" },
+            "participants": [
+              { "judgment_ref": "j:0", "role": { "term": "adopter" } },
+              { "judgment_ref": "j:1", "role": { "term": "adopted-source" } }
+            ]
+          }
+        ]
+      }
+    ],
+    "note": "The four flagship assets' own vocabulary: a coined relationship word with no core_terms entry and no vocabulary:author declaration."
+  },
+  {
+    "id": "G1-ACCEPT-author-declared-relationship-kind",
+    "expect": "accepted",
+    "count": 2,
+    "edits": [
+      {
+        "pointer": "/payload/relationships",
+        "value": [
+          {
+            "id": "relationship:1",
+            "kind": { "term": "adopted-upstream-result", "vocabulary": "author" },
+            "direction": "directed",
+            "operator": { "term": "adopts", "vocabulary": "author" },
+            "effect": { "term": "upstream-result-required", "vocabulary": "author" },
+            "participants": [
+              { "judgment_ref": "j:0", "role": { "term": "adopter", "vocabulary": "author" } },
+              {
+                "judgment_ref": "j:1",
+                "role": { "term": "adopted-source", "vocabulary": "author" }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "note": "Same words, now explicitly declared as authored: accepted and never silently reinterpreted as core meanings. This is the mechanism that keeps coined vocabulary expressible."
+  },
+  {
+    "id": "G1-REJECT-parent-ref-cycle",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "count": 2,
+    "edits": [
+      { "pointer": "/payload/judgments/0/parent_ref", "value": "j:1" },
+      { "pointer": "/payload/judgments/1/parent_ref", "value": "j:0" }
+    ],
+    "note": "Two-node parent cycle."
+  },
+  {
+    "id": "G1-REJECT-parent-ref-dangling",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "count": 2,
+    "edits": [{ "pointer": "/payload/judgments/0/parent_ref", "value": "j:missing" }],
+    "note": "parent_ref must resolve inside the same admitted asset."
+  },
+  {
+    "id": "G1-ACCEPT-three-level-parent-chain",
+    "expect": "accepted",
+    "count": 3,
+    "edits": [
+      { "pointer": "/payload/judgments/1/parent_ref", "value": "j:0" },
+      { "pointer": "/payload/judgments/2/parent_ref", "value": "j:1" }
+    ],
+    "note": "Three-level hierarchy; hierarchy is address structure only and inherits no scope or boundary."
+  },
+  {
+    "id": "G1-REJECT-duplicate-judgment-id",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "count": 2,
+    "edits": [{ "pointer": "/payload/judgments/1/id", "value": "j:0" }],
+    "note": "First-verification falsification F4: a duplicate id used to overwrite a parent edge and mask a cycle."
+  },
+  {
+    "id": "G1-REJECT-duplicate-extension-id",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "edits": [
+      {
+        "pointer": "/payload/extensions",
+        "value": [
+          {
+            "id": "x:dup",
+            "critical": false,
+            "definition": "first",
+            "value": { "kind": "text", "value": "a" }
+          },
+          {
+            "id": "x:dup",
+            "critical": false,
+            "definition": "second",
+            "value": { "kind": "text", "value": "b" }
+          }
+        ]
+      }
+    ],
+    "note": "Second-verification falsification IV2-1: extensions is an id-bearing top-level collection."
+  },
+  {
+    "id": "G1-REJECT-duplicate-result-contract-id",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "count": 2,
+    "edits": [
+      { "pointer": "/payload/judgments/1/result_contract/id", "value": "result-contract:0" }
+    ],
+    "note": "IV2-1, most consequential instance: contract_ref resolution becomes ambiguous and no other layer would notice."
+  },
+  {
+    "id": "G1-REJECT-label-equals-focus",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "edits": [{ "pointer": "/payload/judgments/0/label", "value": "Explicit issue 0" }],
+    "note": "Navigation label must not be byte-identical to the question text."
+  },
+  {
+    "id": "G1-REJECT-duplicate-definition-term",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "edits": [
+      {
+        "pointer": "/payload/materials",
+        "value": [
+          {
+            "id": "material:1",
+            "kind": "definition",
+            "term": "reader task",
+            "statement": "def one",
+            "source_refs": []
+          },
+          {
+            "id": "material:2",
+            "kind": "definition",
+            "term": "reader task",
+            "statement": "def two",
+            "source_refs": []
+          }
+        ]
+      }
+    ],
+    "note": "One word may be defined once per asset."
+  },
+  {
+    "id": "G1-REJECT-missing-capability",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "dropCapability": true,
+    "note": "An asset must declare whether it carries answers, rules or both."
+  },
+  {
+    "id": "G1-REJECT-missing-form",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "dropForm": true,
+    "note": "An issue must declare its authored form."
+  },
+  {
+    "id": "G1-REJECT-form-outside-the-closed-enum",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "form": "policy",
+    "note": "An unregistered form value fails closed at the cross-entry layer too, not only at the schema layer."
+  },
+  {
+    "id": "G1-REJECT-empty-definition-term",
+    "expect": "rejected",
+    "reason": "READ_CORE_INVALID",
+    "edits": [
+      {
+        "pointer": "/payload/materials",
+        "value": [
+          {
+            "id": "material:1",
+            "kind": "definition",
+            "term": "",
+            "statement": "def one",
+            "source_refs": []
+          }
+        ]
+      }
+    ],
+    "note": "A definition term must be a non-empty string; the cross-entry rule owns this as well as the schema."
+  }
+]

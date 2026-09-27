@@ -1,9 +1,21 @@
 ---
 name: kdna-loader
-description: Validate and load one explicit KDNA .kdna file when the user asks to use that file or the Host supplies an exact user-approved attachment. Do not discover, install, auto-select, or silently apply assets.
+description: Historical CLI 0.36.1 compatibility copy only. Validate and load one explicit KDNA .kdna file when the user asks to use that file or the Host supplies an exact user-approved attachment. Do not discover, install, auto-select, or silently apply assets.
 ---
 
-# KDNA Loader
+# KDNA Loader — historical CLI 0.36.1 copy
+
+> **Version boundary:** Unassessed compatibility copy for
+> `@aikdna/kdna-cli@0.36.1` and its matching published-line assets. The commands
+> below are historical and are not the current grammar.3 CLI API.
+
+For current use, follow the canonical
+[kdna-skills installation entry](https://github.com/aikdna/kdna-skills#readme)
+and [Loader Skill](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md).
+Use their exact local runtime graph; do not run this copy's commands with a
+current candidate, add a fallback, or treat copying this file as Host activation.
+Only continue below when the chosen installation is explicitly CLI 0.36.1 and
+the file belongs to that line. No current Host support is established here.
 
 This adapter consumes one explicit KDNA judgment asset through the official
 KDNA CLI/Core boundary. It does not define the KDNA protocol or decide which

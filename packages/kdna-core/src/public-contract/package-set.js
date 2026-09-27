@@ -11,7 +11,7 @@ function decidePackageSet(set,admitted,grants,operation,crossAssetReference){
  if(ids.some(id=>!admitted.some(a=>a.member_id===id)))return reject('SET_MEMBER_MISSING');
  if(admitted.some(a=>!ids.includes(a.member_id)))return reject('SET_MEMBER_EXTRA');
  if(new Set(ids).size!==ids.length||new Set(admitted.map(a=>a.member_id)).size!==admitted.length)return reject('SET_MEMBER_DUPLICATE');
- if(canonicalJson(set.tuple)!==canonicalJson(versionTuple))return reject(Object.keys(versionTuple).some(k=>k!=='payload_profile'&&set.tuple[k]===versionTuple[k])?'READ_MIXED_VERSION_TUPLE':'READ_UNSUPPORTED_VERSION');
+ if(canonicalJson(set.tuple)!==canonicalJson(versionTuple)){const historical=require('./generated-contract.json').types.UnsupportedVersionTuple.anyOf.some(shape=>canonicalJson(set.tuple)===canonicalJson(Object.fromEntries(Object.entries(shape.properties).map(([k,v])=>[k,v.const]))));if(historical)return reject('READ_UNSUPPORTED_VERSION');return reject(Object.keys(versionTuple).some(k=>k!=='payload_profile'&&set.tuple[k]===versionTuple[k])?'READ_MIXED_VERSION_TUPLE':'READ_UNSUPPORTED_VERSION');}
  if(members.some(m=>{const a=admitted.find(a=>a.member_id===m.member_id);return a.core!=='valid'||a.A!==m.A||a.asset_id!==m.asset_id||a.asset_version!==m.asset_version;}))return reject('READ_CORE_INVALID');
  if(operation!=='isolated_read'||crossAssetReference)return reject('UNSUPPORTED_CROSS_ASSET_SEMANTIC_MERGE');
  const matches=admitted.filter(a=>a.asset_id===set.selection.asset_id&&a.asset_version===set.selection.asset_version).flatMap(a=>a.judgment_ids.filter(id=>id===set.selection.judgment_id).map(()=>a.member_id));
@@ -32,7 +32,7 @@ function verifyHandoffBindings(handoff,{snapshots,deliveredRead,observeAdmittedP
    handoffValidator=require('./handoff-validator.generated.js');
   }
   const value=copyJson(handoff);if(!handoffValidator(value))return false;
-  const {inspectSnapshot}=require('./brand.js'),{capsuleDigest}=require('./digests.js'),{compareUtf8,identifier}=require('./strict-input.js');
+  const {inspectSnapshot}=require('./brand.js'),{digestCanonical}=require('./digests.js'),{compareUtf8,identifier}=require('./strict-input.js');
   if(!identifier(value.set_id)||!identifier(value.host_id)||!identifier(value.host_epoch)||!identifier(value.read_receipt_id))return false;
   if(value.members.length!==snapshots.length||new Set(value.members.map(x=>x.member_id)).size!==value.members.length)return false;
   for(let i=0;i<value.members.length;i++){
@@ -44,9 +44,17 @@ function verifyHandoffBindings(handoff,{snapshots,deliveredRead,observeAdmittedP
   const read=deliveredRead?.channel==='read_envelope'?deliveredRead.envelope:null;
   if(!read||read.status!=='ready'||read.receipt.delivery!=='delivered'||read.receipt.receipt_id!==value.read_receipt_id||read.receipt.host_id!==value.host_id||read.receipt.host_epoch!==value.host_epoch||canonicalJson(read.content.selected)!==canonicalJson(value.selection))return false;
   if(!value.members.some(m=>m.snapshot_id===read.snapshot_id&&m.A===read.digests.A.observed&&m.C===read.digests.C.observed))return false;
-  if(capsuleDigest(read.content.closure)!==value.closure_digest)return false;
-  const plan=observeAdmittedPlan();if(plan===null||plan===undefined||typeof plan.then==='function')return false;
-  return capsuleDigest(plan)===value.plan_digest;
+  if(digestCanonical(read.content.closure)!==value.closure_digest)return false;
+  // A JSON Plan or a callback returning one proves no admission. The public
+  // execution API issues this identity only after independent snapshot binding.
+  const {inspectAdmittedPlan}=require('./execution.js');
+  const plan=inspectAdmittedPlan(observeAdmittedPlan());if(plan===null)return false;
+  const selected=snapshots.map(x=>inspectSnapshot(x.snapshot)).filter(x=>x?.snapshot_id===read.snapshot_id);
+  if(selected.length!==1)return false;
+  const source=selected[0];
+  if(canonicalJson(plan.tuple)!==canonicalJson(value.tuple)||canonicalJson(plan.selection)!==canonicalJson(value.selection)||plan.closure_digest!==value.closure_digest)return false;
+  if(canonicalJson(plan.source)!==canonicalJson({asset:source.asset,digests:source.digests,ir_digest:source.ir_digest}))return false;
+  return digestCanonical(plan)===value.plan_digest;
  }catch{return false;}
 }
 module.exports.verifyHandoffBindings=verifyHandoffBindings;

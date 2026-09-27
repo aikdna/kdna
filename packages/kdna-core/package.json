@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-core",
-  "version": "0.24.0-rc.component-semantics.2",
+  "version": "0.36.0-rc.r2.7",
   "description": "Public KDNA Core with bounded component interpretation and Canonical IR.",
   "engines": {
     "node": ">=20"
@@ -9,6 +9,11 @@
   "main": "src/public-contract/index.js",
   "module": "src/public-contract/index.mjs",
   "exports": {
+    "./authoring-node": {
+      "types": "./src/public-contract/authoring-node.d.ts",
+      "import": "./src/public-contract/authoring-node.mjs",
+      "require": "./src/public-contract/authoring-node.js"
+    },
     ".": {
       "types": "./src/public-contract/types.d.ts",
       "import": "./src/public-contract/index.mjs",
@@ -30,15 +35,50 @@
       "require": "./src/public-contract/read-boundary.js"
     },
     "./package.json": "./package.json",
+    "./static-policy": {
+      "types": "./src/public-contract/static-policy.d.ts",
+      "import": "./src/public-contract/static-policy.mjs",
+      "require": "./src/public-contract/static-policy.js"
+    },
     "./components": {
       "types": "./src/public-contract/components.d.ts",
       "import": "./src/public-contract/components.mjs",
       "require": "./src/public-contract/components.js"
+    },
+    "./remote-runtime": {
+      "types": "./src/remote-runtime.d.ts",
+      "import": "./src/remote-runtime.mjs",
+      "require": "./src/remote-runtime.js"
+    },
+    "./execution": {
+      "types": "./src/public-contract/execution.d.ts",
+      "import": "./src/public-contract/execution.mjs",
+      "require": "./src/public-contract/execution.js"
+    },
+    "./protection-node": {
+      "types": "./src/public-contract/protection-node.d.ts",
+      "import": "./src/public-contract/protection-node.mjs",
+      "require": "./src/public-contract/protection-node.js"
+    },
+    "./protected-source-node": {
+      "types": "./src/public-contract/protected-source-node.d.ts",
+      "import": "./src/public-contract/protected-source-node.mjs",
+      "require": "./src/public-contract/protected-source-node.js"
+    },
+    "./key-grant-issuer-node": {
+      "types": "./src/public-contract/key-grant-issuer-node.d.ts",
+      "import": "./src/public-contract/key-grant-issuer-node.mjs",
+      "require": "./src/public-contract/key-grant-issuer-node.js"
+    },
+    "./package-set-node": {
+      "types": "./src/public-contract/package-set-node.d.ts",
+      "import": "./src/public-contract/package-set-node.mjs",
+      "require": "./src/public-contract/package-set-node.js"
     }
   },
   "types": "src/public-contract/types.d.ts",
   "scripts": {
-    "test": "node --test test/public-contract.test.js test/public-components.test.js",
+    "test": "node --test test/public-*.test.js test/r2-core.test.js test/r2-execution.test.js test/r2-protection-core.test.js test/r2-base-rule-obligations.test.js",
     "prepublishOnly": "npm run release:check",
     "release:check": "node ../../scripts/check-post-cutover-naming.mjs && node scripts/check-release-readiness.js",
     "publish:guard": "node scripts/check-publish-duplicate.js"
@@ -47,12 +87,63 @@
     "src/public-contract/",
     "schema/manifest-0.2.schema.json",
     "schema/payload-profile-0.2.schema.json",
-    "schema/canonical-ir-0.2.schema.json",
+    "schema/canonical-ir-0.3.schema.json",
+    "schema/agent-host-capabilities.schema.json",
+    "schema/agent-host-receipt.schema.json",
+    "schema/agent-host-request.schema.json",
+    "schema/bundle-profile.schema.json",
+    "schema/consumption-plan.schema.json",
+    "schema/checksums.schema.json",
+    "schema/digest-evidence.schema.json",
+    "schema/external-grant-envelope.schema.json",
+    "schema/external-key-grant.schema.json",
+    "schema/judgment-trace.schema.json",
+    "schema/load-contract.schema.json",
+    "schema/manifest.schema.json",
+    "schema/payload-profile.schema.json",
+    "schema/runtime-capsule.schema.json",
     "schema/public-diagnostics.json",
     "schema/public-vocabulary.json",
     "README.md",
     "LICENSE",
-    "NOTICE"
+    "NOTICE",
+    "src/asset-reader.js",
+    "src/container-dispatcher.js",
+    "src/container/index.js",
+    "src/crypto-profile.js",
+    "src/external-key-grant.js",
+    "src/loader-compatibility.js",
+    "src/runtime-api.js",
+    "src/runtime-capsule.js",
+    "src/signature.js",
+    "src/remote-runtime.js",
+    "src/remote-runtime.mjs",
+    "src/remote-runtime.d.ts",
+    "src/legacy-runtime-types.d.ts",
+    "src/runtime-contract.js",
+    "schema/runtime-capsule-0.2.schema.json",
+    "schema/consumption-plan-0.2.schema.json",
+    "schema/agent-host-request-0.2.schema.json",
+    "schema/agent-host-receipt-0.2.schema.json",
+    "schema/judgment-trace-0.2.schema.json",
+    "schema/envelope-aead.schema.json",
+    "schema/checksums-document-1.schema.json",
+    "schema/manifest-container-0.5.0-judgment-0.5.0.schema.json",
+    "schema/payload-profile-0.5.schema.json",
+    "schema/canonical-ir-0.6.schema.json",
+    "schema/runtime-capsule-0.3.schema.json",
+    "schema/consumption-plan-0.3.schema.json",
+    "schema/agent-host-request-0.3.schema.json",
+    "schema/agent-host-receipt-0.3.schema.json",
+    "schema/judgment-trace-0.3.schema.json",
+    "schema/manifest-container-0.5.0-judgment-0.5.1.schema.json",
+    "schema/payload-profile-0.5.1.schema.json",
+    "schema/canonical-ir-0.6.1.schema.json",
+    "schema/runtime-capsule-0.3.1.schema.json",
+    "schema/consumption-plan-0.3.1.schema.json",
+    "schema/agent-host-request-0.3.1.schema.json",
+    "schema/agent-host-receipt-0.3.1.schema.json",
+    "schema/judgment-trace-0.3.1.schema.json"
   ],
   "keywords": [
     "kdna",

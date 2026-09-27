@@ -1,0 +1,366 @@
+{
+  "core_contract_digest": "sha256:1d75527d9c7fbbea54ba1da01a955d5dc365d1c495d9c9ae692fa42ec9fdf598",
+  "descriptor": {
+    "claims": "claims_not_authenticated",
+    "contract": "kdna.package-set-node/0.2.1",
+    "core_callables": [
+      "getPackageSetContract",
+      "validatePackageSetStructure",
+      "createTrustedPackageSetMemberProvider",
+      "admitPackageSetNode",
+      "recheckPackageSet",
+      "inspectAdmittedPackageSet",
+      "verifyPackageSetHandoff"
+    ],
+    "core_version": "0.36.0-rc.r2.7",
+    "definition_digest": "sha256:3b64c648ed8d2f10076ed6311f45917700df15dbc17590c1e820d64b73d83e66",
+    "limits": {
+      "maxMembers": 10000,
+      "maxTotalSourceBytes": 104857600
+    },
+    "local_failures": [
+      "invalid_limits",
+      "member_limit_exceeded",
+      "source_bytes_limit_exceeded",
+      "invalid_member_source",
+      "invalid_read_request",
+      "provider_invalid",
+      "provider_failed",
+      "provider_observation_invalid",
+      "cancelled",
+      "core_unavailable",
+      "delivery_unconfirmed",
+      "handoff_invalid"
+    ],
+    "module_version": "0.2.1",
+    "read_callables": [
+      "getPackageReadContract",
+      "createTrustedPackageReadProvider",
+      "readPackageSetNode",
+      "sealPackageSetHandoff",
+      "admitPackageSetHandoff"
+    ],
+    "read_version": "0.11.0-rc.r2.7"
+  },
+  "key_sets": {
+    "HandoffMember": {
+      "keys": [
+        "A",
+        "C",
+        "asset_id",
+        "asset_version",
+        "member_id",
+        "snapshot_id"
+      ],
+      "required": [
+        "A",
+        "C",
+        "asset_id",
+        "asset_version",
+        "member_id",
+        "snapshot_id"
+      ]
+    },
+    "HostReadContextData": {
+      "keys": [
+        "A",
+        "C",
+        "decision",
+        "decision_id",
+        "expires_at",
+        "host_epoch",
+        "host_id",
+        "issued_at",
+        "policy_id",
+        "request_id",
+        "scope",
+        "snapshot_id"
+      ],
+      "required": [
+        "A",
+        "C",
+        "decision",
+        "decision_id",
+        "expires_at",
+        "host_epoch",
+        "host_id",
+        "issued_at",
+        "policy_id",
+        "request_id",
+        "scope",
+        "snapshot_id"
+      ]
+    },
+    "PackageMember": {
+      "keys": [
+        "A",
+        "asset_id",
+        "asset_version",
+        "member_id"
+      ],
+      "required": [
+        "A",
+        "asset_id",
+        "asset_version",
+        "member_id"
+      ]
+    },
+    "PackageSet": {
+      "keys": [
+        "members",
+        "selection",
+        "set_id"
+      ],
+      "required": [
+        "members",
+        "selection",
+        "set_id"
+      ]
+    },
+    "PackageSetAdmissionInput": {
+      "keys": [
+        "limits",
+        "members",
+        "operation",
+        "set",
+        "tuple"
+      ],
+      "required": [
+        "limits",
+        "members",
+        "operation",
+        "set",
+        "tuple"
+      ]
+    },
+    "PackageSetHandoff": {
+      "keys": [
+        "closure_digest",
+        "contract",
+        "host_epoch",
+        "host_id",
+        "members",
+        "plan_digest",
+        "read_receipt_id",
+        "selection",
+        "set_id",
+        "tuple"
+      ],
+      "required": [
+        "closure_digest",
+        "contract",
+        "host_epoch",
+        "host_id",
+        "members",
+        "plan_digest",
+        "read_receipt_id",
+        "selection",
+        "set_id",
+        "tuple"
+      ]
+    },
+    "PackageSetLimits": {
+      "keys": [
+        "maxMembers",
+        "maxTotalSourceBytes"
+      ],
+      "required": [
+        "maxMembers",
+        "maxTotalSourceBytes"
+      ]
+    },
+    "PackageSetMemberObservation": {
+      "keys": [
+        "decisions"
+      ],
+      "required": [
+        "decisions"
+      ]
+    },
+    "PackageSetMemberObservationRequest": {
+      "keys": [
+        "members",
+        "operation",
+        "phase",
+        "selection",
+        "set_id"
+      ],
+      "required": [
+        "members",
+        "operation",
+        "phase",
+        "selection",
+        "set_id"
+      ]
+    },
+    "PackageSetMemberObservationRow": {
+      "keys": [
+        "A",
+        "asset_id",
+        "asset_version",
+        "current_ms",
+        "decision",
+        "decision_id",
+        "expires_at",
+        "host_epoch",
+        "host_id",
+        "issued_at",
+        "member_id"
+      ],
+      "required": [
+        "A",
+        "asset_id",
+        "asset_version",
+        "current_ms",
+        "decision",
+        "decision_id",
+        "expires_at",
+        "host_epoch",
+        "host_id",
+        "issued_at",
+        "member_id"
+      ]
+    },
+    "PackageSetMemberProviderConfig": {
+      "keys": [
+        "host_epoch",
+        "host_id",
+        "observe"
+      ],
+      "required": [
+        "host_epoch",
+        "host_id",
+        "observe"
+      ]
+    },
+    "PackageSetMemberSource": {
+      "keys": [
+        "bytes",
+        "member_id"
+      ],
+      "required": [
+        "bytes",
+        "member_id"
+      ]
+    },
+    "PackageSetNodeDescriptor": {
+      "keys": [
+        "claims",
+        "contract",
+        "core_callables",
+        "core_version",
+        "definition_digest",
+        "limits",
+        "local_failures",
+        "module_version",
+        "read_callables",
+        "read_version"
+      ],
+      "required": [
+        "claims",
+        "contract",
+        "core_callables",
+        "core_version",
+        "definition_digest",
+        "limits",
+        "local_failures",
+        "module_version",
+        "read_callables",
+        "read_version"
+      ]
+    },
+    "PackageSetReadHostObservation": {
+      "keys": [
+        "current_ms"
+      ],
+      "required": [
+        "current_ms"
+      ]
+    },
+    "PackageSetReadInput": {
+      "keys": [
+        "limits",
+        "members",
+        "operation",
+        "request",
+        "set",
+        "signal",
+        "tuple"
+      ],
+      "required": [
+        "limits",
+        "members",
+        "operation",
+        "request",
+        "set",
+        "tuple"
+      ]
+    },
+    "PackageSetReadObservation": {
+      "keys": [
+        "context",
+        "current_ms"
+      ],
+      "required": [
+        "context",
+        "current_ms"
+      ]
+    },
+    "PackageSetReadProviderConfig": {
+      "keys": [
+        "host_epoch",
+        "host_id",
+        "members",
+        "observeRead",
+        "sink"
+      ],
+      "required": [
+        "host_epoch",
+        "host_id",
+        "members",
+        "observeRead"
+      ]
+    },
+    "Selection": {
+      "keys": [
+        "asset_id",
+        "asset_version",
+        "judgment_id"
+      ],
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_id"
+      ]
+    },
+    "VersionTuple": {
+      "keys": [
+        "container",
+        "core",
+        "host",
+        "ir",
+        "payload_profile",
+        "payload_version",
+        "plan",
+        "read",
+        "runtime",
+        "trace"
+      ],
+      "required": [
+        "container",
+        "core",
+        "host",
+        "ir",
+        "payload_profile",
+        "payload_version",
+        "plan",
+        "read",
+        "runtime",
+        "trace"
+      ]
+    }
+  },
+  "proof_limits": "The generated records, the two public subpaths and their definition digest are structural. They are not execution permission, not disclosure authority, not a protected PackageSet, not a cross-language oracle and not an installed-consumer receipt.",
+  "schema_id": "urn:kdna:schema:package-set-node:0.2.1",
+  "schema_path": "specs/package-set-node-0.2.1.schema.json"
+}

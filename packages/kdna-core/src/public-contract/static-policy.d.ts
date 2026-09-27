@@ -1,0 +1,2 @@
+// Generated from specs/public-semantic-source.json.
+export declare function getStaticPolicyContract(): { readonly "contract_id": "kdna.static-policy/2"; readonly "contract_version": "2.0.0"; readonly "definition_digest": "sha256:c3f8aec755b58fe98deb201ce5b9f30cd729e1b10bf636608b87e863f6c7cf92"; readonly "carrier": { readonly "id": "kdna.static-policy/2"; readonly "location": "Judgment.extensions"; readonly "critical": true; readonly "definition": "Explicit adoption of KDNA public static policy 2.0.0."; }; };

@@ -1,46 +1,10 @@
 /**
- * Stable kdna.envelope.aead conformance runner.
+ * RFC-0018 draft envelope conformance, using local Node.js algorithms only.
+ * This is not a Core consumer, container admission, or account-service test.
  *
- * Re-derives the three frozen test vectors under
- * `conformance/envelope-aead/` from their declared inputs
- * and asserts equality with the declared expected outputs. This is
- * the canonical "is this implementation correct?" check for
- * `kdna.envelope.aead`.
- *
- * Vector inventory:
- *   01 — scrypt-sha256 basic round-trip
- *   02 — scrypt-sha256 multi-entry AAD binding
- *   03 — argon2id basic round-trip
- *
- * Each vector is a self-contained JSON file with:
- *   - `id`, `description`
- *   - `inputs` (password, salt, iv, cek, plaintext, aad, kdf_params)
- *   - `expected.kek` (base64)
- *   - `expected.envelope` (or `envelope_entry_1` / `envelope_entry_2`
- *     for the multi-entry case)
- *   - `expected.ciphertext_entry_1_eq_entry_2` (vector 02 only)
- *
- * The runner performs the following checks per vector:
- *   1. KDF derivation: derive KEK from password + salt, compare to
- *      expected.kek. Proves the KDF implementation matches the
- *      test-vector inputs.
- *   2. AEAD round-trip: unwrap the CEK from wrapped_key, decrypt
- *      ciphertext with CEK + IV + AAD, compare to plaintext. Proves
- *      the AES-256-KW and AES-256-GCM pipelines are wired together
- *      correctly.
- *   3. Envelope shape: assert envelope.profile, alg, key_wrapping,
- *      kdf_profile, key_slots structure match RFC-0018.
- *   4. AAD binding (vector 02 only): assert that swapping AADs
- *      between entry 1 and entry 2 produces divergent tags. This
- *      is the cross-entry swap invariant.
- *   5. JSON Schema validation: assert the envelope validates
- *      against `specs/envelope-aead.schema.json`. Proves
- *      the envelope shape is conformant to the spec.
- *
- * Run:
- *   node conformance/envelope-aead.mjs
- *   # or via npm:
- *   npm run conformance:envelope-aead
+ * node conformance/envelope-aead.mjs --argon2id=auto|disabled|required
+ * The JSON report separates decryption, expected rejection, schema validation,
+ * and operations not run. Optional-algorithm absence never counts as decryption.
  */
 
 import assert from 'node:assert/strict';
@@ -51,307 +15,498 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const Ajv = require('ajv');
-const addFormats = require('ajv-formats');
-
-let argon2id;
-try {
-  ({ argon2id } = require('@noble/hashes/argon2.js'));
-} catch {
-  // argon2id support is optional per RFC-0018 R4.2; vector 03 will
-  // skip rather than fail if @noble/hashes is not installed.
-}
-
+const Ajv2020 = require('ajv/dist/2020');
 const root = path.dirname(fileURLToPath(import.meta.url));
 const vectorsDir = path.join(root, 'envelope-aead');
 const schemaPath = path.join(root, '..', 'specs', 'envelope-aead.schema.json');
+const validateSchema = new Ajv2020({ allErrors: true, strict: false }).compile(
+  JSON.parse(fs.readFileSync(schemaPath, 'utf8')),
+);
+const KDF_PROFILES = ['scrypt-sha256', 'argon2id'];
+const KW_IV = Buffer.from('a6a6a6a6a6a6a6a6', 'hex');
 
-// ── KDF implementations (mirror kdna-core crypto-profile.js) ───────
-
-function deriveKekScrypt(password, params) {
-  const { N, r, p, salt } = params;
-  return crypto.scryptSync(Buffer.from(password, 'utf8'), Buffer.from(salt, 'base64'), 32, {
-    N,
-    r,
-    p,
-    maxmem: 128 * 1024 * 1024,
-  });
+export class EnvelopeError extends Error {
+  constructor(code, message, field) {
+    super(message);
+    this.name = 'EnvelopeError';
+    this.code = code;
+    if (field !== undefined) this.field = field;
+  }
 }
 
-function deriveKekArgon2id(password, params) {
-  if (!argon2id) {
-    throw new Error(
-      'argon2id vector cannot run: @noble/hashes not installed. ' +
-        'Install with `npm install @noble/hashes` to enable vector 03.',
+function fail(code, message, field) {
+  throw new EnvelopeError(code, message, field);
+}
+
+function checkMode(mode) {
+  if (!['auto', 'required', 'disabled'].includes(mode)) {
+    fail('KDNA_CONFORMANCE_ARGUMENT', 'argon2id must be auto, required, or disabled');
+  }
+}
+
+let optionalArgon2id;
+let argon2idProbed = false;
+function probeArgon2id() {
+  if (!argon2idProbed) {
+    try {
+      ({ argon2id: optionalArgon2id } = require('@noble/hashes/argon2.js'));
+      if (typeof optionalArgon2id !== 'function') {
+        throw new Error('@noble/hashes/argon2.js does not export argon2id');
+      }
+    } catch (error) {
+      // Only absence of the optional module is an unsupported capability.
+      // Broken installed modules must fail the run, not turn into a skip.
+      if (
+        error.code !== 'MODULE_NOT_FOUND' ||
+        !error.message.includes("Cannot find module '@noble/hashes/argon2.js'")
+      ) {
+        throw error;
+      }
+    }
+    argon2idProbed = true;
+  }
+  return optionalArgon2id;
+}
+
+export function getArgon2idCapability(mode = 'auto') {
+  checkMode(mode);
+  if (mode === 'disabled') return { supported: false, reason: 'DISABLED' };
+  return probeArgon2id()
+    ? { supported: true, reason: 'DEPENDENCY_AVAILABLE' }
+    : { supported: false, reason: 'DEPENDENCY_MISSING' };
+}
+
+function decodedBase64(value, field, length, code = 'KDNA_ENVELOPE_FIELD_LENGTH') {
+  const bytes = typeof value === 'string' ? Buffer.from(value, 'base64') : null;
+  if (
+    !bytes ||
+    bytes.toString('base64') !== value ||
+    (length !== undefined && bytes.length !== length)
+  ) {
+    fail(
+      code,
+      `${field} must be canonical base64${length === undefined ? '' : ` of ${length} bytes`}`,
+      field,
     );
   }
-  const { t, m, p, salt, dkLen = 32 } = params;
+  return bytes;
+}
+
+function checkKdfProfile(profile) {
+  if (!KDF_PROFILES.includes(profile)) {
+    fail('KDNA_KDF_UNSUPPORTED', `Unsupported KDF profile: ${String(profile)}`);
+  }
+}
+
+function validateKdfParams(slot) {
+  checkKdfProfile(slot?.kdf_profile);
+  const params = slot.kdf_params;
+  const fixed =
+    slot.kdf_profile === 'scrypt-sha256'
+      ? { N: 32768, r: 8, p: 1 }
+      : { t: 3, m: 65536, p: 4, dkLen: 32 };
+  const fields = [...Object.keys(fixed), 'salt'];
+  if (
+    !params ||
+    typeof params !== 'object' ||
+    Array.isArray(params) ||
+    Object.keys(params).length !== fields.length ||
+    Object.keys(params).some((key) => !fields.includes(key)) ||
+    Object.entries(fixed).some(([key, value]) => params[key] !== value)
+  ) {
+    fail('KDNA_KDF_PARAMS_INVALID', `Invalid fixed parameters for ${slot.kdf_profile}`);
+  }
+  decodedBase64(params.salt, 'salt', 16, 'KDNA_KDF_PARAMS_INVALID');
+}
+
+export function validateEnvelopeSchema(envelope) {
+  return {
+    valid: validateSchema(envelope),
+    errors: structuredClone(validateSchema.errors ?? []),
+  };
+}
+
+// All envelope and parameter checks happen before either KDF allocates memory.
+// Both known KDFs are shape-checked even if this build disables Argon2id.
+export function validateEnvelope(envelope, { slotIndex = 0 } = {}) {
+  if (envelope?.profile !== 'kdna.envelope.aead') {
+    fail(
+      'KDNA_ENVELOPE_PROFILE_UNSUPPORTED',
+      `Unsupported profile: ${String(envelope?.profile)}; supported: kdna.envelope.aead`,
+    );
+  }
+  if (envelope.profile_version !== '0.1.0') {
+    fail(
+      'KDNA_ENVELOPE_VERSION_UNSUPPORTED',
+      `Unsupported profile version: ${String(envelope.profile_version)}; supported: 0.1.0`,
+    );
+  }
+  if (envelope.alg !== 'AES-256-GCM') {
+    fail('KDNA_ENVELOPE_ALG_UNSUPPORTED', 'Only AES-256-GCM is supported');
+  }
+  if (envelope.key_wrapping !== 'AES-256-KW') {
+    fail('KDNA_ENVELOPE_WRAP_UNSUPPORTED', 'Only AES-256-KW is supported');
+  }
+  if (
+    !Array.isArray(envelope.key_slots) ||
+    envelope.key_slots.length === 0 ||
+    !Number.isInteger(slotIndex) ||
+    slotIndex < 0 ||
+    slotIndex >= envelope.key_slots.length
+  ) {
+    fail('KDNA_ENVELOPE_NO_SLOTS', 'No key slot exists at the selected index');
+  }
+  checkKdfProfile(envelope.kdf_profile);
+  for (const slot of envelope.key_slots) checkKdfProfile(slot?.kdf_profile);
+  if (envelope.kdf_profile !== envelope.key_slots[0].kdf_profile) {
+    fail('KDNA_ENVELOPE_KDF_MISMATCH', 'Envelope KDF must match the primary key slot');
+  }
+  decodedBase64(envelope.iv, 'iv', 12);
+  decodedBase64(envelope.tag, 'tag', 16);
+  decodedBase64(envelope.ciphertext, 'ciphertext');
+  for (const slot of envelope.key_slots) {
+    if (slot.wrap !== 'AES-256-KW') {
+      fail('KDNA_ENVELOPE_WRAP_UNSUPPORTED', 'Only AES-256-KW slot wrapping is supported');
+    }
+    decodedBase64(slot.wrapped_key, 'wrapped_key', 40);
+    validateKdfParams(slot);
+  }
+  if (!validateEnvelopeSchema(envelope).valid) {
+    fail('KDNA_ENVELOPE_SHAPE_INVALID', 'Envelope does not match the RFC-0018 schema');
+  }
+  const slot = envelope.key_slots[slotIndex];
+  return { slot, selection: { slotIndex, slot: slot.slot, kdf_profile: slot.kdf_profile } };
+}
+
+export function deriveKek(password, slot, { argon2id = 'auto' } = {}) {
+  checkMode(argon2id);
+  validateKdfParams(slot);
+  if (typeof password !== 'string') {
+    fail('KDNA_KDF_PARAMS_INVALID', 'The supplied password must be a UTF-8 string');
+  }
+  const params = slot.kdf_params;
+  const passwordBytes = Buffer.from(password, 'utf8');
+  const salt = Buffer.from(params.salt, 'base64');
+  if (slot.kdf_profile === 'scrypt-sha256') {
+    return crypto.scryptSync(passwordBytes, salt, 32, {
+      N: params.N,
+      r: params.r,
+      p: params.p,
+      maxmem: 128 * 1024 * 1024,
+    });
+  }
+  const capability = getArgon2idCapability(argon2id);
+  if (!capability.supported) {
+    fail('KDNA_KDF_UNSUPPORTED', `argon2id is unsupported: ${capability.reason}`);
+  }
   return Buffer.from(
-    argon2id(Buffer.from(password, 'utf8'), Buffer.from(salt, 'base64'), {
-      t,
-      m,
-      p,
-      dkLen,
+    probeArgon2id()(passwordBytes, salt, {
+      t: params.t,
+      m: params.m,
+      p: params.p,
+      dkLen: params.dkLen,
     }),
   );
 }
 
-// ── AES-256-KW (RFC 3394) — local implementation ───────────────────
-
-const KW_IV = Buffer.from('a6a6a6a6a6a6a6a6', 'hex');
-
 function aesKwUnwrap(key, ciphertext) {
-  if (key.length !== 32) throw new Error('AES-256-KW requires 32-byte key');
-  if (ciphertext.length !== 40) throw new Error('AES-256-KW ciphertext must be 40 bytes');
+  if (!Buffer.isBuffer(key) || key.length !== 32) {
+    fail('KDNA_ENVELOPE_FIELD_LENGTH', 'KEK must be 32 bytes', 'kek');
+  }
   const n = ciphertext.length / 8 - 1;
-  const r = new Array(n + 1);
-  for (let i = 0; i <= n; i++) r[i] = ciphertext.subarray(i * 8, (i + 1) * 8);
+  const blocks = Array.from({ length: n + 1 }, (_, i) =>
+    Buffer.from(ciphertext.subarray(i * 8, (i + 1) * 8)),
+  );
   for (let j = 5; j >= 0; j--) {
     for (let i = n; i >= 1; i--) {
-      const t = BigInt(n) * BigInt(j) + BigInt(i);
       const tBuf = Buffer.alloc(8);
-      tBuf.writeBigUInt64BE(t);
-      for (let k = 0; k < 8; k++) r[0][k] ^= tBuf[k];
-      const input = Buffer.concat([r[0], r[i]]);
+      tBuf.writeBigUInt64BE(BigInt(n * j + i));
+      for (let k = 0; k < 8; k++) blocks[0][k] ^= tBuf[k];
       const decipher = crypto.createDecipheriv('aes-256-ecb', key, null);
       decipher.setAutoPadding(false);
-      const b = Buffer.concat([decipher.update(input), decipher.final()]);
-      r[0] = b.subarray(0, 8);
-      r[i] = b.subarray(8, 16);
+      const b = Buffer.concat([
+        decipher.update(Buffer.concat([blocks[0], blocks[i]])),
+        decipher.final(),
+      ]);
+      blocks[0] = b.subarray(0, 8);
+      blocks[i] = b.subarray(8, 16);
     }
   }
-  if (!r[0].equals(KW_IV)) throw new Error('AES-256-KW unwrap: integrity check failed');
-  const result = Buffer.alloc(n * 8);
-  for (let i = 1; i <= n; i++) r[i].copy(result, (i - 1) * 8);
-  return result;
-}
-
-// ── Vector loaders ──────────────────────────────────────────────────
-
-function loadVector(id) {
-  const p = path.join(vectorsDir, `${id}.json`);
-  return JSON.parse(fs.readFileSync(p, 'utf8'));
-}
-
-function deriveKek(vector) {
-  const { password, kdf_profile } = vector.inputs;
-  if (kdf_profile === 'scrypt-sha256' || vector.inputs.scrypt_params) {
-    return deriveKekScrypt(password, vector.inputs.scrypt_params);
+  if (!crypto.timingSafeEqual(blocks[0], KW_IV)) {
+    fail('KDNA_KW_INTEGRITY', 'AES-256-KW integrity check failed');
   }
-  if (kdf_profile === 'argon2id' || vector.inputs.argon2_params) {
-    return deriveKekArgon2id(password, vector.inputs.argon2_params);
-  }
-  throw new Error(`unknown kdf_profile: ${kdf_profile}`);
+  return Buffer.concat(blocks.slice(1));
 }
 
-function unwrapAndDecrypt(envelope, kek, aad) {
-  // Use the first slot's wrapped_key. (All slots share the same
-  // wrapped CEK bytes per RFC-0018 R3.)
-  const slot = envelope.key_slots[0];
+export function unwrapAndDecrypt(envelope, kek, aad, { slotIndex = 0 } = {}) {
+  const { slot, selection } = validateEnvelope(envelope, { slotIndex });
   const cek = aesKwUnwrap(kek, Buffer.from(slot.wrapped_key, 'base64'));
-  const decipher = crypto.createDecipheriv('aes-256-gcm', cek, Buffer.from(envelope.iv, 'base64'));
-  decipher.setAAD(aad);
-  decipher.setAuthTag(Buffer.from(envelope.tag, 'base64'));
-  return {
-    cek,
-    plaintext: Buffer.concat([
+  let plaintext;
+  try {
+    const decipher = crypto.createDecipheriv(
+      'aes-256-gcm',
+      cek,
+      Buffer.from(envelope.iv, 'base64'),
+    );
+    decipher.setAAD(aad);
+    decipher.setAuthTag(Buffer.from(envelope.tag, 'base64'));
+    plaintext = Buffer.concat([
       decipher.update(Buffer.from(envelope.ciphertext, 'base64')),
       decipher.final(),
-    ]),
-  };
+    ]);
+  } catch {
+    fail('KDNA_GCM_AUTH_FAILED', 'AES-256-GCM authentication failed');
+  }
+  return { cek, plaintext, selection };
 }
 
-// ── Per-vector check functions ──────────────────────────────────────
-
-function checkScryptBasic() {
-  const v = loadVector('envelope-aead-vector-01-scrypt-basic');
-  const kek = deriveKek(v);
-  const expectedKek = Buffer.from(v.expected.kek, 'base64');
-  assert.equal(
-    kek.toString('base64'),
-    expectedKek.toString('base64'),
-    'vector 01: derived KEK does not match expected KEK',
-  );
-
-  const { cek, plaintext } = unwrapAndDecrypt(
-    v.expected.envelope,
-    kek,
-    Buffer.from(v.inputs.aad, 'utf8'),
-  );
-  assert.equal(
-    cek.toString('base64'),
-    v.inputs.cek,
-    'vector 01: unwrapped CEK does not match the declared CEK',
-  );
-  assert.equal(
-    plaintext.toString('utf8'),
-    v.inputs.plaintext,
-    'vector 01: decrypted plaintext does not match the declared plaintext',
-  );
-
-  // Envelope shape
-  const env = v.expected.envelope;
-  assert.equal(env.profile, 'kdna.envelope.aead');
-  assert.equal(env.profile_version, '0.1.0');
-  assert.equal(env.alg, 'AES-256-GCM');
-  assert.equal(env.key_wrapping, 'AES-256-KW');
-  assert.equal(env.kdf_profile, 'scrypt-sha256');
-  assert.equal(env.key_slots.length, 1);
-  assert.equal(env.key_slots[0].kdf_profile, 'scrypt-sha256');
-  assert.equal(env.key_slots[0].wrap, 'AES-256-KW');
-  return 'vector 01 scrypt-sha256 basic: KEK + CEK + plaintext all match';
+export function decryptEnvelope(
+  envelope,
+  password,
+  aad,
+  { slotIndex = 0, argon2id = 'auto' } = {},
+) {
+  const { slot } = validateEnvelope(envelope, { slotIndex });
+  const kek = deriveKek(password, slot, { argon2id });
+  return unwrapAndDecrypt(envelope, kek, aad, { slotIndex });
 }
 
-function checkScryptMultiEntryAad() {
-  const v = loadVector('envelope-aead-vector-02-scrypt-multi-entry-aad');
-  const kek = deriveKek(v);
-  assert.equal(
-    kek.toString('base64'),
-    Buffer.from(v.expected.kek, 'base64').toString('base64'),
-    'vector 02: derived KEK does not match expected KEK',
-  );
-  assert.equal(v.expected.envelope_entry_1.profile_version, '0.1.0');
-  assert.equal(v.expected.envelope_entry_2.profile_version, '0.1.0');
+function loadVector(number) {
+  const names = fs
+    .readdirSync(vectorsDir)
+    .filter((name) => name.startsWith(`envelope-aead-vector-${number}-`) && name.endsWith('.json'));
+  assert.equal(names.length, 1, `expected exactly one vector ${number}`);
+  return JSON.parse(fs.readFileSync(path.join(vectorsDir, names[0]), 'utf8'));
+}
 
-  // Both envelopes decrypt to the same plaintext.
-  const r1 = unwrapAndDecrypt(
-    v.expected.envelope_entry_1,
-    kek,
-    Buffer.from(v.inputs.aad_entry_1, 'utf8'),
-  );
-  const r2 = unwrapAndDecrypt(
-    v.expected.envelope_entry_2,
-    kek,
-    Buffer.from(v.inputs.aad_entry_2, 'utf8'),
-  );
-  assert.equal(
-    r1.plaintext.toString('utf8'),
-    v.inputs.plaintext,
-    'vector 02: entry 1 plaintext mismatch',
-  );
-  assert.equal(
-    r2.plaintext.toString('utf8'),
-    v.inputs.plaintext,
-    'vector 02: entry 2 plaintext mismatch',
-  );
+function tamperBase64(value) {
+  const bytes = Buffer.from(value, 'base64');
+  bytes[0] ^= 1;
+  return bytes.toString('base64');
+}
 
-  // GCM invariant: same CEK + IV + plaintext → same ciphertext.
-  assert.equal(
-    v.expected.envelope_entry_1.ciphertext,
-    v.expected.envelope_entry_2.ciphertext,
-    'vector 02: GCM invariant — ciphertexts should be equal (GCM is a stream cipher; AAD affects tag only)',
-  );
+export function runKdnaEnvelopeAeadConformance({ argon2id = 'auto' } = {}) {
+  checkMode(argon2id);
+  const capability = getArgon2idCapability(argon2id);
+  const vectors = ['01', '02', '03', '04', '05'].map(loadVector);
+  const [basic, aadVector, optional, multi, mixed] = vectors;
+  const results = [];
 
-  // AAD binding: different entry_path AADs → different tags.
-  assert.equal(
-    v.expected.ciphertext_entry_1_eq_entry_2,
-    true,
-    'vector 02: declared ciphertext_entry_1_eq_entry_2 invariant violated',
-  );
-  assert.equal(
-    v.expected.tag_entry_1_eq_entry_2,
-    false,
-    'vector 02: declared tag_entry_1_eq_entry_2 invariant violated (tags MUST differ when AADs differ)',
-  );
+  function expectReject(id, attempt, code, selection) {
+    assert.throws(attempt, (error) => error instanceof EnvelopeError && error.code === code, id);
+    results.push({ id, status: 'REJECTED_EXPECTED', code, ...(selection ? { selection } : {}) });
+  }
+  function checkDecrypt(id, vector, envelope, password, aad, expectedKek, slotIndex = 0) {
+    const { slot, selection } = validateEnvelope(envelope, { slotIndex });
+    if (slot.kdf_profile === 'argon2id' && !capability.supported) {
+      results.push({ id, status: 'NOT_RUN', reason: capability.reason, selection });
+      expectReject(
+        `${id}:unsupported`,
+        () => decryptEnvelope(envelope, password, Buffer.from(aad), { slotIndex, argon2id }),
+        'KDNA_KDF_UNSUPPORTED',
+        selection,
+      );
+      return;
+    }
+    const kek = deriveKek(password, slot, { argon2id });
+    assert.ok(kek.toString('base64') === expectedKek, `${id}: derived KEK mismatch`);
+    const result = unwrapAndDecrypt(envelope, kek, Buffer.from(aad), { slotIndex });
+    assert.ok(result.cek.toString('base64') === vector.inputs.cek, `${id}: unwrapped CEK mismatch`);
+    assert.ok(
+      result.plaintext.toString('utf8') === vector.inputs.plaintext,
+      `${id}: plaintext mismatch`,
+    );
+    results.push({ id, status: 'DECRYPTED', selection });
+  }
 
-  // Cross-AAD swap must fail GCM auth.
-  let swapRejected = false;
-  try {
-    unwrapAndDecrypt(v.expected.envelope_entry_1, kek, Buffer.from(v.inputs.aad_entry_2, 'utf8'));
-  } catch (e) {
-    swapRejected = true;
+  for (const vector of vectors) {
+    const envelopes = vector.expected.envelope
+      ? [vector.expected.envelope]
+      : [vector.expected.envelope_entry_1, vector.expected.envelope_entry_2];
+    for (const [index, envelope] of envelopes.entries()) {
+      const schema = validateEnvelopeSchema(envelope);
+      assert.equal(schema.valid, true, `${vector.id}[${index}]: ${JSON.stringify(schema.errors)}`);
+      validateEnvelope(envelope);
+      results.push({ id: `${vector.id}:schema:${index}`, status: 'VALIDATED' });
+    }
+  }
+  checkDecrypt(
+    basic.id,
+    basic,
+    basic.expected.envelope,
+    basic.inputs.password,
+    basic.inputs.aad,
+    basic.expected.kek,
+  );
+  for (const index of [1, 2]) {
+    checkDecrypt(
+      `${aadVector.id}:entry:${index}`,
+      aadVector,
+      aadVector.expected[`envelope_entry_${index}`],
+      aadVector.inputs.password,
+      aadVector.inputs[`aad_entry_${index}`],
+      aadVector.expected.kek,
+    );
   }
   assert.equal(
-    swapRejected,
-    true,
-    'vector 02: cross-AAD swap MUST be rejected by GCM auth (proves AAD binding is enforced, not just computed)',
+    aadVector.expected.envelope_entry_1.ciphertext,
+    aadVector.expected.envelope_entry_2.ciphertext,
   );
-  return 'vector 02 scrypt-sha256 multi-entry AAD: both entries decrypt, tags diverge, cross-AAD swap rejected';
-}
-
-function checkArgon2idBasic() {
-  const v = loadVector('envelope-aead-vector-03-argon2id-basic');
-  if (!argon2id) {
-    return 'vector 03 argon2id basic: SKIPPED (@noble/hashes not installed; install with `npm install @noble/hashes` to enable)';
-  }
-  const kek = deriveKek(v);
-  assert.equal(
-    kek.toString('base64'),
-    Buffer.from(v.expected.kek, 'base64').toString('base64'),
-    'vector 03: derived KEK does not match expected KEK',
+  assert.notEqual(aadVector.expected.envelope_entry_1.tag, aadVector.expected.envelope_entry_2.tag);
+  assert.equal(aadVector.expected.ciphertext_entry_1_eq_entry_2, true);
+  assert.equal(aadVector.expected.tag_entry_1_eq_entry_2, false);
+  expectReject(
+    'vector-02:cross-entry-AAD',
+    () =>
+      decryptEnvelope(
+        aadVector.expected.envelope_entry_1,
+        aadVector.inputs.password,
+        Buffer.from(aadVector.inputs.aad_entry_2),
+      ),
+    'KDNA_GCM_AUTH_FAILED',
   );
-
-  const { cek, plaintext } = unwrapAndDecrypt(
-    v.expected.envelope,
-    kek,
-    Buffer.from(v.inputs.aad, 'utf8'),
+  checkDecrypt(
+    optional.id,
+    optional,
+    optional.expected.envelope,
+    optional.inputs.password,
+    optional.inputs.aad,
+    optional.expected.kek,
   );
-  assert.equal(
-    cek.toString('base64'),
-    v.inputs.cek,
-    'vector 03: unwrapped CEK does not match the declared CEK',
-  );
-  assert.equal(
-    plaintext.toString('utf8'),
-    v.inputs.plaintext,
-    'vector 03: decrypted plaintext does not match the declared plaintext',
-  );
-
-  const env = v.expected.envelope;
-  assert.equal(env.profile, 'kdna.envelope.aead');
-  assert.equal(env.profile_version, '0.1.0');
-  assert.equal(env.kdf_profile, 'argon2id');
-  assert.equal(env.key_slots[0].kdf_profile, 'argon2id');
-  return 'vector 03 argon2id basic: KEK + CEK + plaintext all match';
-}
-
-// ── JSON Schema validation (all three vectors) ─────────────────────
-
-function checkSchemaValidation() {
-  const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
-  const ajv = new Ajv({ allErrors: true, strict: false, validateSchema: false });
-  addFormats(ajv);
-  const validate = ajv.compile(schema);
-
-  const vectors = [
-    'envelope-aead-vector-01-scrypt-basic',
-    'envelope-aead-vector-02-scrypt-multi-entry-aad',
-    'envelope-aead-vector-03-argon2id-basic',
-  ];
-
-  for (const id of vectors) {
-    const v = loadVector(id);
-    const envelopes = v.expected.envelope
-      ? [v.expected.envelope]
-      : [v.expected.envelope_entry_1, v.expected.envelope_entry_2];
-    for (let i = 0; i < envelopes.length; i++) {
-      const env = envelopes[i];
-      const valid = validate(env);
-      assert.equal(
-        valid,
-        true,
-        `${id} envelope[${i}]: schema validation failed:\n${ajv.errorsText(validate.errors)}`,
+  for (const vector of [multi, mixed]) {
+    assert.equal(vector.expected.envelope.key_slots.length, 2);
+    assert.ok(
+      vector.expected.keks[0] !== vector.expected.keks[1],
+      `${vector.id}: expected distinct KEKs`,
+    );
+    assert.notEqual(
+      vector.expected.envelope.key_slots[0].wrapped_key,
+      vector.expected.envelope.key_slots[1].wrapped_key,
+      `${vector.id}: distinct wraps of the same CEK`,
+    );
+    for (const slotIndex of [0, 1]) {
+      checkDecrypt(
+        `${vector.id}:slot:${slotIndex}`,
+        vector,
+        vector.expected.envelope,
+        vector.inputs.credentials[slotIndex],
+        vector.inputs.aad,
+        vector.expected.keks[slotIndex],
+        slotIndex,
       );
     }
   }
-  return 'all 4 envelope objects validate against kdna.envelope.aead schema';
+
+  const envelope = multi.expected.envelope;
+  const aad = Buffer.from(multi.inputs.aad);
+  const password = multi.inputs.credentials[0];
+  expectReject(
+    'multi-slot:wrong-password',
+    () => decryptEnvelope(envelope, `${password}-wrong`, aad),
+    'KDNA_KW_INTEGRITY',
+  );
+  expectReject(
+    'multi-slot:wrong-slot-credential',
+    () => decryptEnvelope(envelope, password, aad, { slotIndex: 1 }),
+    'KDNA_KW_INTEGRITY',
+  );
+  const copied = structuredClone(envelope);
+  copied.key_slots[1].wrapped_key = copied.key_slots[0].wrapped_key;
+  expectReject(
+    'multi-slot:copied-wrapped-bytes',
+    () => decryptEnvelope(copied, multi.inputs.credentials[1], aad, { slotIndex: 1 }),
+    'KDNA_KW_INTEGRITY',
+  );
+  for (const field of ['wrapped_key', 'tag', 'ciphertext', 'iv']) {
+    const tampered = structuredClone(envelope);
+    const target = field === 'wrapped_key' ? tampered.key_slots[0] : tampered;
+    target[field] = tamperBase64(target[field]);
+    expectReject(
+      `multi-slot:tampered-${field}`,
+      () => decryptEnvelope(tampered, password, aad),
+      field === 'wrapped_key' ? 'KDNA_KW_INTEGRITY' : 'KDNA_GCM_AUTH_FAILED',
+    );
+  }
+  expectReject(
+    'multi-slot:tampered-AAD',
+    () => decryptEnvelope(envelope, password, Buffer.from(`${multi.inputs.aad}-wrong`)),
+    'KDNA_GCM_AUTH_FAILED',
+  );
+  expectReject(
+    'argon2id:disabled-single-slot',
+    () =>
+      decryptEnvelope(
+        optional.expected.envelope,
+        optional.inputs.password,
+        Buffer.from(optional.inputs.aad),
+        { argon2id: 'disabled' },
+      ),
+    'KDNA_KDF_UNSUPPORTED',
+    { slotIndex: 0 },
+  );
+  expectReject(
+    'argon2id:disabled-primary-no-fallback',
+    () =>
+      decryptEnvelope(
+        mixed.expected.envelope,
+        mixed.inputs.credentials[1],
+        Buffer.from(mixed.inputs.aad),
+        { argon2id: 'disabled' },
+      ),
+    'KDNA_KDF_UNSUPPORTED',
+    { slotIndex: 0 },
+  );
+  const explicit = decryptEnvelope(
+    mixed.expected.envelope,
+    mixed.inputs.credentials[1],
+    Buffer.from(mixed.inputs.aad),
+    { slotIndex: 1, argon2id: 'disabled' },
+  );
+  assert.ok(
+    explicit.cek.toString('base64') === mixed.inputs.cek,
+    'explicit secondary: CEK mismatch',
+  );
+  assert.ok(
+    explicit.plaintext.toString('utf8') === mixed.inputs.plaintext,
+    'explicit secondary: plaintext mismatch',
+  );
+  results.push({
+    id: 'argon2id:disabled-explicit-secondary',
+    status: 'DECRYPTED',
+    selection: explicit.selection,
+  });
+
+  const counts = Object.fromEntries(
+    ['DECRYPTED', 'REJECTED_EXPECTED', 'NOT_RUN', 'VALIDATED'].map((status) => [
+      status,
+      results.filter((result) => result.status === status).length,
+    ]),
+  );
+  return {
+    scope: 'LOCAL_ALGORITHM_ONLY',
+    profile: 'kdna.envelope.aead',
+    profile_version: '0.1.0',
+    mode: argon2id,
+    capabilities: {
+      'scrypt-sha256': true,
+      argon2id: capability.supported,
+      argon2idReason: capability.reason,
+    },
+    baseConformance: 'PASS',
+    argon2idConformance: capability.supported ? 'PASS' : 'NOT_RUN',
+    ok: argon2id !== 'required' || capability.supported,
+    ...(argon2id === 'required' && !capability.supported ? { error: 'KDNA_KDF_UNSUPPORTED' } : {}),
+    counts,
+    results,
+    limits: [
+      'No Core canonical consumer or container admission is exercised.',
+      'Vector 02 reuses a nonce for an analytical AAD counterexample; it is not production encryption guidance.',
+      'NOT_RUN is not a successful decryption or an Argon2id conformance result.',
+    ],
+  };
 }
 
-// ── Main ────────────────────────────────────────────────────────────
-
-export function runKdnaEnvelopeAeadConformance() {
-  const results = [];
-  results.push(checkScryptBasic());
-  results.push(checkScryptMultiEntryAad());
-  results.push(checkArgon2idBasic());
-  results.push(checkSchemaValidation());
-  return results;
-}
-
-// Entry guard. Both sides are compared through realpath so an invocation through
-// a symlinked or aliased directory still RUNS the conformance suite (and can
-// never exit 0 silently, which is the failure mode this guard exists to
-// prevent). An import is not the entry point and must not run it.
+// Compare real paths so aliased CLI invocations execute, while imports stay quiet.
 function entryGuardOutcome() {
   if (!process.argv[1]) return 'import';
   const selfPath = fileURLToPath(import.meta.url);
@@ -377,10 +532,31 @@ if (entryGuard === 'unresolved-entry') {
   console.error(
     'KDNA_ENVELOPE_AEAD_ENTRY_GUARD_FAILED: refusing to run under an unresolved entry path',
   );
-  process.exit(2);
+  process.exitCode = 2;
 }
 if (entryGuard === 'entry') {
-  const results = runKdnaEnvelopeAeadConformance();
-  for (const r of results) console.log(`  PASS ${r}`);
-  console.log(`KDNA envelope-aead conformance passed (3 vectors, 1 schema)`);
+  try {
+    const args = process.argv.slice(2);
+    if (args.length > 1 || (args.length === 1 && !args[0].startsWith('--argon2id='))) {
+      fail(
+        'KDNA_CONFORMANCE_ARGUMENT',
+        'Usage: node conformance/envelope-aead.mjs [--argon2id=auto|disabled|required]',
+      );
+    }
+    const report = runKdnaEnvelopeAeadConformance({
+      argon2id: args[0]?.slice('--argon2id='.length) ?? 'auto',
+    });
+    console.log(JSON.stringify(report, null, 2));
+    if (!report.ok) process.exitCode = 1;
+  } catch (error) {
+    console.error(
+      JSON.stringify({
+        scope: 'LOCAL_ALGORITHM_ONLY',
+        ok: false,
+        error: error.code ?? 'KDNA_CONFORMANCE_FAILED',
+        message: error.message,
+      }),
+    );
+    process.exitCode = 1;
+  }
 }

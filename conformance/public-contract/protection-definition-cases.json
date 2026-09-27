@@ -1,0 +1,4709 @@
+{
+  "status": "STATIC_DEFINITION_VECTORS_NOT_RUNTIME_RESULTS",
+  "cases": [
+    {
+      "id": "absent-False-absent-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "prior_plaintext_absence",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-absent-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-absent-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-absent-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-password-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "password"
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-password-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-password-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-password-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-account-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "account"
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-account-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-account-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-account-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-org-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "org"
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-org-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-org-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-False-org-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-absent-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-absent-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-absent-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-absent-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-password-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "password"
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-password-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-password-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-password-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-account-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "account"
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-account-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-account-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-account-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-org-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "org"
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-org-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-org-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "absent-True-org-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-absent-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public"
+      },
+      "schema_valid": true,
+      "definition_disposition": "prior_plaintext_absence",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-absent-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-absent-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-absent-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-password-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "password"
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-password-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-password-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-password-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-account-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "account"
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-account-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-account-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-account-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-org-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "org"
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-org-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-org-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-False-org-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-absent-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public"
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-absent-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-absent-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-absent-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-password-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "password"
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-password-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-password-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-password-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-account-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "account"
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-account-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-account-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-account-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-org-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "org"
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-org-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-org-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "public-True-org-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "public",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-absent-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote"
+      },
+      "schema_valid": true,
+      "definition_disposition": "prior_plaintext_absence",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-absent-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-absent-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-absent-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-password-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "password"
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-password-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-password-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-password-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-account-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "account"
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-account-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-account-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-account-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-org-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "org"
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-org-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-org-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-False-org-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-absent-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote"
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-absent-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-absent-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-absent-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-password-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "password"
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-password-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-password-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-password-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-account-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "account"
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-account-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-account-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-account-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-org-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "org"
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-org-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-org-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "remote-True-org-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "remote",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-absent-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed"
+      },
+      "schema_valid": true,
+      "definition_disposition": "prior_plaintext_absence",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-absent-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-absent-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-absent-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-password-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "password"
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-password-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-password-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-password-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-account-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "account"
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-account-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-account-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-account-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-org-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "org"
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-org-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-org-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-False-org-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": false
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-absent-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed"
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-absent-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-absent-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-absent-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "protected_profile_requires_explicit_binding_or_is_unsupported",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-password-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "password"
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-password-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "valid_protected_declaration_not_runtime_acceptance",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-password-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-password-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "password"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-account-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "account"
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-account-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-account-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "valid_protected_declaration_not_runtime_acceptance",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-account-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "account"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-org-absent",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "org"
+        }
+      },
+      "schema_valid": false,
+      "definition_disposition": "manifest_invalid",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-org-canonical",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.aead",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-org-external",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.envelope.external-grant",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "valid_protected_declaration_not_runtime_acceptance",
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "licensed-True-org-legacy",
+      "manifest": {
+        "format_version": "0.5.0",
+        "asset_id": "asset:protection-plan",
+        "asset_uid": "uid:protection-plan",
+        "asset_type": "fixture",
+        "title": "Explicit protected input",
+        "version": "1.0.0",
+        "judgment_version": "1.0.0",
+        "created_at": "2026-09-20T00:00:00Z",
+        "updated_at": "2026-09-20T00:00:00Z",
+        "compatibility": {
+          "min_loader_version": "0.29.0-rc.authoring.2",
+          "profile": "kdna.payload.judgment",
+          "profile_version": "0.4.0"
+        },
+        "payload": {
+          "path": "payload.kdnab",
+          "encoding": "cbor",
+          "encrypted": true
+        },
+        "runtime": {
+          "mandatory_entries": []
+        },
+        "access": "licensed",
+        "entitlement": {
+          "profile": "org"
+        },
+        "encryption": {
+          "profile": "kdna.encryption.password",
+          "profile_version": "0.1.0",
+          "encrypted_entries": ["payload.kdnab"]
+        }
+      },
+      "schema_valid": true,
+      "definition_disposition": "invalid_protection_declaration",
+      "runtime_status": "NOT_EXECUTED"
+    }
+  ]
+}
