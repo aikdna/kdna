@@ -66,9 +66,8 @@
           "package_name": "@aikdna/kdna",
           "npm_package": "@aikdna/kdna",
           "version": "0.14.0",
-          "published_version": "0.13.2",
           "lifecycle": "Legacy",
-          "release_status": "candidate",
+          "release_status": "compatibility",
           "dependency_policy": "current",
           "known_limitations": [
             "maintained migration bridge; new integrations should install the CLI and Core packages directly"
