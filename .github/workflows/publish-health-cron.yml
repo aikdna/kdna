@@ -1,12 +1,27 @@
 # publish-health-cron.yml — Daily drift check for the npm pipeline.
 #
-# Verifies that for every tracked package, the public release surfaces agree:
-#   1. main HEAD version (from package.json on main)
-#   2. npm latest version and SLSA provenance
-#   3. exact canonical package tag (or one version-bound historical coordinate)
-#   4. package.json version at the tagged commit
-#   5. npm gitHead binding when the registry exposes it
-#   6. published, non-prerelease GitHub Release existence
+# Verifies that for every tracked package, the PUBLISHED release surfaces agree
+# with each other and with the released coordinate declared in
+# release-health-policy.json. The job FAILS when any of these breaks:
+#   1. npm latest version differs from the declared released version
+#   2. published non-prerelease GitHub Release existence (or the canonical tag)
+#   3. package.json version at the tagged commit
+#   4. npm gitHead binding when the registry exposes it
+#   5. SLSA provenance
+#
+# The live `main` HEAD version (from package.json on main) is ADVISORY. Owner
+# decision D8 (option 2, 2026-09-28) reclassified "main leads the published
+# surface": in-flight, unpublished source is not part of the published surface,
+# so it is reported in this summary as `advisory: main ahead of published`
+# instead of failing the job. The advisory stays visible in the table and in the
+# summary line; it is never dropped.
+#
+# Rationale: the gate's contract is "the published surfaces agree". A version
+# that has not been published cannot disagree with the published surface.
+# Cost: the FAILURE-level alert for "main has moved ahead of the published
+# surface" is retired — that state now only warns — so an abandoned in-flight
+# coordinate stops turning the cron red. All published-surface checks above keep
+# failing, so real drift still fails the job.
 #
 # Delegates the public package audit to scripts/publish-health.mjs and keeps
 # ecosystem-version-lock plus validate-public-truth as independent gates.

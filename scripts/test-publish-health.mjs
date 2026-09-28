@@ -8,6 +8,7 @@ import { createRequire } from 'node:module';
 import {
   candidateTags,
   canonicalTag,
+  classifyReleaseSurface,
   expectedMainVersion,
   fetchHeaders,
   legacyTagDigest,
@@ -90,6 +91,53 @@ test('maintained compatibility health monitors the exact published source', () =
   assert.equal(compat.version, '0.13.2');
   assert.equal(expectedMainVersion(compat), '0.14.0');
   assert.equal(compat.candidate_version, '0.14.0');
+});
+
+test('a live main that leads the published surface is advisory, not a failure', () => {
+  const aligned = {
+    npmVersion: '1.0.0',
+    expectedVersion: '1.0.0',
+    mainVersion: '1.0.0',
+    mainExpectedVersion: '1.0.0',
+    releasePresent: true,
+    taggedSourceVersion: '1.0.0',
+    sourceBound: true,
+    provenance: true,
+  };
+  assert.deepEqual(classifyReleaseSurface(aligned), { failures: [], advisories: [] });
+
+  // Owner decision D8 (option 2): unpublished in-flight main is a warning.
+  assert.deepEqual(classifyReleaseSurface({ ...aligned, mainVersion: '2.0.0-rc.1' }), {
+    failures: [],
+    advisories: ['advisory: main ahead of published'],
+  });
+
+  // Every published-surface check still fails, independently of main.
+  const drifted = {
+    ...aligned,
+    npmVersion: '0.9.0',
+    releasePresent: false,
+    taggedSourceVersion: '0.9.0',
+    sourceBound: false,
+    provenance: false,
+  };
+  const publishedSurfaceFailures = [
+    'manifest/npm version mismatch',
+    'release tag or published Release missing',
+    'tag/manifest version mismatch',
+    'npm gitHead/tag commit mismatch',
+    'SLSA provenance missing',
+  ];
+  assert.deepEqual(classifyReleaseSurface(drifted), {
+    failures: publishedSurfaceFailures,
+    advisories: [],
+  });
+
+  // A row kept red by a published-surface failure still shows the advisory.
+  assert.deepEqual(classifyReleaseSurface({ ...drifted, mainVersion: '2.0.0-rc.1' }), {
+    failures: publishedSurfaceFailures,
+    advisories: ['advisory: main ahead of published'],
+  });
 });
 
 test('candidate health requires a SemVer version newer than its incumbent', () => {
