@@ -143,8 +143,7 @@
       "repository": "aikdna/kdna",
       "package_json": "packages/kdna/package.json",
       "npm_package": "@aikdna/kdna",
-      "version": "0.13.2",
-      "candidate_version": "0.14.0",
+      "version": "0.14.0",
       "canonical_tag": {
         "type": "prefix",
         "value": "compat/"
