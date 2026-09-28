@@ -163,6 +163,6 @@
     "ajv-formats": "3.0.1",
     "cbor-x": "1.6.5",
     "@noble/hashes": "1.8.0",
-    "pako": "2.1.0"
+    "pako": "3.0.2"
   }
 }
