@@ -20,6 +20,9 @@
       "canonical_tag": {
         "type": "prefix",
         "value": "v"
+      },
+      "legacy_release_tag_sha256": {
+        "0.5.0": "d1f62539db82b51da84bda2f4885db5e847db8389183be41389efd0ae6edab94"
       }
     },
     {
