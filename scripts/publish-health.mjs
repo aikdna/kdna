@@ -1,4 +1,31 @@
 #!/usr/bin/env node
+/*
+ * publish-health — the daily gate over the published npm surface.
+ *
+ * Contract: the published surfaces must agree with each other and with the
+ * declared released coordinate in release-health-policy.json. The gate FAILS
+ * when any of these published-surface checks breaks:
+ *   1. npm `latest` differs from the declared released version;
+ *   2. the canonical tag or a published, non-prerelease GitHub Release is
+ *      missing;
+ *   3. package.json at the tagged commit differs from the declared version;
+ *   4. the registry `gitHead` does not bind to the tagged commit;
+ *   5. SLSA provenance is missing.
+ *
+ * Reclassified as ADVISORY (2026-09-28, Owner decision D8 = option (2)): a live
+ * `main` HEAD that leads the published surface is in-flight, unpublished source,
+ * not a published-surface inconsistency. It is reported in the job summary as
+ * `advisory: main ahead of published` and no longer fails the job. The advisory
+ * stays visible in the table; it is never silently dropped.
+ *
+ * Rationale: the gate's contract is "the published surfaces agree with each
+ * other". Source that has not been published is not part of the published
+ * surface, so comparing it there conflates in-flight work with drift.
+ * Cost: the FAILURE-level alert for "main has moved ahead of the published
+ * surface" is gone — that condition now only warns, so a genuinely abandoned
+ * in-flight coordinate no longer turns the cron red. Every published-surface
+ * check above keeps failing, so real drift is still caught.
+ */
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -15,6 +42,10 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const policyPath = path.join(repoRoot, 'release-health-policy.json');
 const stableSemver = /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/u;
 const slsaPredicate = 'https://slsa.dev/provenance/v1';
+// The exact advisory label that stands in for the retired
+// `main/manifest version mismatch` failure. It is intentionally prefixed so a
+// reader of the job summary can tell a warning from a failure.
+const MAIN_AHEAD_ADVISORY = 'advisory: main ahead of published';
 
 // The published coordinate stays strict `x.y.z`; the candidate source that
 // has not passed registry acceptance may be a SemVer prerelease, so ordering
@@ -188,6 +219,25 @@ async function selectRelease(entry, version) {
   return findLegacyRelease(entry, version);
 }
 
+// Classify the observed surfaces into hard failures (published-surface
+// inconsistencies) and advisories (in-flight main leading the published
+// surface). Pure on purpose: the contract is testable without the network.
+export function classifyReleaseSurface(surface) {
+  const failures = [];
+  const advisories = [];
+  if (surface.npmVersion !== surface.expectedVersion) {
+    failures.push('manifest/npm version mismatch');
+  }
+  if (surface.mainVersion !== surface.mainExpectedVersion) advisories.push(MAIN_AHEAD_ADVISORY);
+  if (!surface.releasePresent) failures.push('release tag or published Release missing');
+  if (surface.taggedSourceVersion && surface.taggedSourceVersion !== surface.expectedVersion) {
+    failures.push('tag/manifest version mismatch');
+  }
+  if (!surface.sourceBound) failures.push('npm gitHead/tag commit mismatch');
+  if (!surface.provenance) failures.push('SLSA provenance missing');
+  return { failures, advisories };
+}
+
 async function auditPackage(entry) {
   const registry = await fetchJson(
     `https://registry.npmjs.org/${encodeURIComponent(entry.npm_package)}/latest`,
@@ -212,15 +262,16 @@ async function auditPackage(entry) {
   const sourceBound =
     !registry.gitHead || !release ? Boolean(release) : registry.gitHead === release.commit;
 
-  const failures = [];
-  if (npmVersion !== expectedVersion) failures.push('manifest/npm version mismatch');
-  if (source.version !== mainExpectedVersion) failures.push('main/manifest version mismatch');
-  if (!release) failures.push('release tag or published Release missing');
-  if (taggedSource && taggedSource.version !== expectedVersion) {
-    failures.push('tag/manifest version mismatch');
-  }
-  if (!sourceBound) failures.push('npm gitHead/tag commit mismatch');
-  if (!provenance) failures.push('SLSA provenance missing');
+  const { failures, advisories } = classifyReleaseSurface({
+    npmVersion,
+    expectedVersion,
+    mainVersion: source.version,
+    mainExpectedVersion,
+    releasePresent: Boolean(release),
+    taggedSourceVersion: taggedSource ? taggedSource.version : null,
+    sourceBound,
+    provenance,
+  });
 
   return {
     entry,
@@ -230,6 +281,7 @@ async function auditPackage(entry) {
     release,
     provenance,
     failures,
+    advisories,
   };
 }
 
@@ -249,6 +301,7 @@ export async function run(
         release: null,
         provenance: false,
         failures: [error.message],
+        advisories: [],
       });
     }
   }
@@ -262,16 +315,24 @@ export async function run(
         ? `historical release for ${result.expectedVersion}`
         : result.release.tag
       : '?';
-    const status = result.failures.length ? result.failures.join('; ') : 'ok';
+    // Failures first, then the advisory, so a row that is both failing and
+    // advisory shows the failure it is blocked on plus the visible warning.
+    const status = [...result.failures, ...result.advisories].join('; ') || 'ok';
     console.log(
       `| ${result.entry.npm_package} | ${result.expectedVersion || '?'} | ${result.mainVersion || '?'} | ${result.npmVersion || '?'} | ${release} | ${result.provenance ? 'SLSA v1' : 'missing'} | ${status} |`,
     );
   }
 
   const failures = results.reduce((total, result) => total + result.failures.length, 0);
+  const advisories = results.reduce((total, result) => total + result.advisories.length, 0);
+  const redRows = results.filter((result) => result.failures.length).length;
+  const advisoryRows = results.filter((result) => result.advisories.length).length;
   const legacy = results.filter((result) => result.release?.legacy).length;
   console.log(`\nFailures: ${failures}. Exact grandfathered legacy coordinates: ${legacy}.`);
-  return { results, failures, legacy };
+  console.log(
+    `Advisories: ${advisories}. Red rows: ${redRows}. Advisory rows: ${advisoryRows}. Tracked packages: ${results.length}.`,
+  );
+  return { results, failures, advisories, legacy };
 }
 
 // Entry guard. Both sides are compared through realpath so an invocation through
