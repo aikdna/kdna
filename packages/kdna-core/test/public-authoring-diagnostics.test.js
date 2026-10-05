@@ -31,5 +31,5 @@ test('new authoring workflow scopes the single-candidate policy without changing
  assert.ok(policy.rules.some(x=>x.includes('creation.6')&&x.includes('never upgraded')));
  const crypto=require('node:crypto');const {definition_digest,...definition}=policy;const canonical=JSON.stringify(definition, function(key,value){return value&&typeof value==='object'&&!Array.isArray(value)?Object.fromEntries(Object.keys(value).sort().map(k=>[k,value[k]])):value;});
  assert.equal(definition_digest,'sha256:'+crypto.createHash('sha256').update(canonical).digest('hex'));assert.throws(()=>policy.rules.push('weakened'));assert.ok(policy.rules.some(x=>x.includes('actual producer or consumer implementation identity')));
- assert.equal(req('@aikdna/kdna-core/components').getComponentSemanticsContract().definition_digest,'sha256:779760994a3c7c730bd524e1d1d8d6f7c1fd8628bde55bcf3fa98ddd02051c28');
+ assert.equal(req('@aikdna/kdna-core/components').getComponentSemanticsContract().definition_digest,'sha256:37e857cc4e43f7283a51ee6abe1f6e8401803902e8dc47f6d14d712aa7d7b089');
 });
