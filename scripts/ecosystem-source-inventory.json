@@ -587,7 +587,7 @@
         {
           "path": "packages/kdna-core/package.json",
           "name": "@aikdna/kdna-core",
-          "version": "0.36.0-rc.r2.7"
+          "version": "0.36.0"
         },
         {
           "path": "packages/kdna-eval/package.json",
@@ -597,7 +597,7 @@
         {
           "path": "packages/kdna-read/package.json",
           "name": "@aikdna/kdna-read",
-          "version": "0.11.0-rc.r2.7"
+          "version": "0.11.0"
         },
         {
           "path": "packages/kdna/package.json",
@@ -634,7 +634,7 @@
           "path": "packages/kdna-read/package.json",
           "section": "peerDependencies",
           "name": "@aikdna/kdna-core",
-          "declared": "0.36.0-rc.r2.7"
+          "declared": "0.36.0"
         },
         {
           "path": "packages/kdna/package.json",
@@ -657,7 +657,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "dec643f22ae829101562428bc1caee7a46e2ed989bbcd204127641cba9e0c5b4",
+          "sha256": "6157d29bbffd5266b515d9cb00dab4caca2c6883ac8df9c02aa4e455fd5c9698",
           "local_archives": []
         }
       ],
@@ -762,9 +762,9 @@
         {
           "directory": "packages/kdna-core",
           "name": "@aikdna/kdna-core",
-          "version": "0.36.0-rc.r2.7",
+          "version": "0.36.0",
           "member_count": 427,
-          "members_sha256": "01b0c9df4cac3d1ca2e03dba5b85e71cb8c667b7aaead22f68b6267d7336cc88",
+          "members_sha256": "93202f5a9e307adc867362ea645da87d87f2135c316477f14bcc194ab6128ffa",
           "paths": [
             "LICENSE",
             "NOTICE",
@@ -1247,9 +1247,9 @@
         {
           "directory": "packages/kdna-read",
           "name": "@aikdna/kdna-read",
-          "version": "0.11.0-rc.r2.7",
+          "version": "0.11.0",
           "member_count": 90,
-          "members_sha256": "bc66f44783fa2df9c12037954e915534a2b65a25e088470a894ee20a2138b410",
+          "members_sha256": "8bccb594ad8c2f08757d5e9fd48e8a9836cbe186ce3b49576ef3d46073bab841",
           "paths": [
             "LICENSE",
             "NOTICE",

@@ -1,0 +1,114 @@
+# Candidate build — env-free surface only (FROZEN first-stable-batch C-A1).
+#
+# This workflow builds candidate evidence for independent byte acceptance
+# BEFORE the release event. It deliberately contains NO release, NO token and
+# NO OIDC steps: the release-context-gated steps (authority check/prepare/
+# smoke/guard and the scoped readiness checks) are skipped by name below and
+# are executed only by the real release chain under a true release event.
+#
+# Env-free proof: a grep over this file for the release / token / OIDC
+# vocabulary returns no match (assertion command recorded in the batch
+# review package).
+name: Candidate build
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Candidate package (core, read, or both)'
+        type: choice
+        options:
+          - both
+          - core
+          - read
+        default: both
+      ref:
+        description: 'Git ref to build (commit SHA or branch)'
+        type: string
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  candidate-core:
+    if: ${{ inputs.package == 'core' || inputs.package == 'both' }}
+    runs-on: macos-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+      - name: Select the outside-repository trusted npm release
+        run: |
+          echo "KDNA_TRUSTED_NPM_TARBALL=$RUNNER_TEMP/npm-11.17.0.tgz" >> "$GITHUB_ENV"
+      - name: Fetch and authenticate the audited npm release bytes
+        run: >-
+          node scripts/core-release-authority.js provision-npm
+          --artifact "$RUNNER_TEMP/npm-11.17.0.tgz"
+      - name: Verify the isolated npm CLI and extraction boundary
+        run: node scripts/core-release-authority.js verify-npm
+      - run: node scripts/core-release-authority.js trusted-npm ci --ignore-scripts
+      - name: Record the release-context-gated steps skipped in this candidate run
+        run: |
+          echo "SKIP authority check: requires the real release event context (validateReleaseContext); executed by the release chain."
+          echo "SKIP authority prepare: same requirement; the retained artifact is built by the release chain."
+          echo "SKIP authority smoke: same requirement; executed by the release chain."
+          echo "SKIP authority guard: same requirement; executed by the release chain."
+          echo "SKIP scoped readiness checks: GitHub-Actions release context required; executed by the release chain."
+      - run: node scripts/core-release-authority.js trusted-npm run audit:post-cutover
+      - run: node scripts/core-release-authority.js trusted-npm --workspace @aikdna/kdna-core test
+      - run: node --test scripts/core-release-authority.test.js
+      - run: node scripts/core-release-authority.js trusted-npm run validate:protocol-fixtures
+      - run: node scripts/core-release-authority.js trusted-npm run validate:runtime-contract
+      - run: node scripts/core-release-authority.js trusted-npm run conformance
+      - name: Build the candidate Core evidence pack
+        run: node scripts/core-release-authority.js trusted-npm run release:evidence -- --package=core
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: kdna-core-candidate-evidence
+          path: release-evidence/
+      - name: Remove transient trusted toolchain
+        if: always()
+        run: rm -f "$KDNA_TRUSTED_NPM_TARBALL"
+
+  candidate-read:
+    if: ${{ inputs.package == 'read' || inputs.package == 'both' }}
+    runs-on: macos-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+      - name: Select the outside-repository trusted npm release
+        run: |
+          echo "KDNA_TRUSTED_NPM_TARBALL=$RUNNER_TEMP/npm-11.17.0.tgz" >> "$GITHUB_ENV"
+      - name: Fetch and authenticate the audited npm release bytes
+        run: >-
+          node scripts/core-release-authority.js provision-npm
+          --artifact "$RUNNER_TEMP/npm-11.17.0.tgz"
+      - name: Verify the isolated npm CLI and extraction boundary
+        run: node scripts/core-release-authority.js verify-npm
+      - run: node scripts/core-release-authority.js trusted-npm ci --ignore-scripts
+      - name: Record the release-context-gated steps skipped in this candidate run
+        run: |
+          echo "SKIP scoped readiness checks: GitHub-Actions release context required; executed by the release chain."
+      - run: node scripts/core-release-authority.js trusted-npm run audit:post-cutover
+      - run: node scripts/core-release-authority.js trusted-npm --workspace @aikdna/kdna-read test
+      - name: Build the candidate Read evidence pack
+        run: node scripts/core-release-authority.js trusted-npm run release:evidence -- --package=read
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: kdna-read-candidate-evidence
+          path: release-evidence/
+      - name: Remove transient trusted toolchain
+        if: always()
+        run: rm -f "$KDNA_TRUSTED_NPM_TARBALL"

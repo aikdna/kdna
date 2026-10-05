@@ -1,6 +1,6 @@
 {
   "name": "@aikdna/kdna-core",
-  "version": "0.36.0-rc.r2.7",
+  "version": "0.36.0",
   "description": "Public KDNA Core with bounded component interpretation and Canonical IR.",
   "engines": {
     "node": ">=20"

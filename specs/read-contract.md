@@ -54,7 +54,7 @@ Schema and structural validation establish representability and consistent decla
 
 ## Current installation boundary (S12-D011 revision2, D012, D013 and D016)
 
-The current exact pair is Core `0.36.0-rc.r2.7` and Read `0.11.0-rc.r2.7`, with an exact Core peer. Both compile the complete current tuple, including Core `kdna.core/0.8.2` and Read `kdna.read/0.6.4`. RC1–RC5 are frozen unaccepted historical candidates. A complete old request tuple is `READ_UNSUPPORTED_VERSION`; an actual mixed tuple is `READ_MIXED_VERSION_TUPLE`.
+The current exact pair is Core `0.36.0` and Read `0.11.0`, with an exact Core peer. Both compile the complete current tuple, including Core `kdna.core/0.8.2` and Read `kdna.read/0.6.4`. RC1–RC5 are frozen unaccepted historical candidates. A complete old request tuple is `READ_UNSUPPORTED_VERSION`; an actual mixed tuple is `READ_MIXED_VERSION_TUPLE`.
 
 The ordinary pipeline checks independent generated package-version expectations after request/version admission and before Core input admission or Host observation. Public `project` performs the same check before content. A mismatch returns `READ_CORE_CAPABILITY_UNAVAILABLE` without content, new handles or Host observation, using existing refusal and control-budget rules. The genuine Core snapshot full-tuple comparison remains mandatory: changing package metadata alone cannot make an old implementation a current Core. The old Read pipeline also refuses the new Core snapshot through its existing tuple comparison.
 

@@ -149,6 +149,7 @@ function candidateIncumbentPackages(manifest) {
     .filter(
       ({ packageRecord }) =>
         packageRecord?.release_status === 'candidate' &&
+        packageRecord?.published_version !== undefined &&
         typeof packageRecord?.npm_package === 'string',
     )
     .map(({ component, packageRecord }) => ({

@@ -62,7 +62,7 @@ These are unpublished candidates; this page does not establish that remote
 
 | Entry | Exact local package combination | Use |
 | --- | --- | --- |
-| This repository | Core `0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7` (exact Core peer) | Public admission, Read and explicit reference subpaths; Node >=20 |
+| This repository | Core `0.36.0` / Read `0.11.0` (exact Core peer) | Public admission, Read and explicit reference subpaths; Node >=20 |
 | [Native asset CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.39.0-rc.native-sections.2` / exact Core `0.36.0-rc.r2.7` and Read `0.11.0-rc.r2.7` archives | `create`, `inspect`, `validate`, retained `read`, `source-open`, `source-pack`; Node >=22; unpublished |
 | [Canonical Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | Operator-bound local Read adapter; Node >=22; Host adoption unassessed |
 

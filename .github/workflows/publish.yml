@@ -203,6 +203,77 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+  publish-read:
+    if: >-
+      github.repository == 'aikdna/kdna' &&
+      github.event_name == 'release' &&
+      github.event.action == 'published' &&
+      github.event.release.draft == false &&
+      github.event.release.prerelease == false &&
+      startsWith(github.event.release.tag_name, 'read/')
+    runs-on: macos-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      RELEASE_EVENT_ACTION: ${{ github.event.action }}
+      RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+      RELEASE_IS_DRAFT: ${{ github.event.release.draft }}
+      RELEASE_IS_PRERELEASE: ${{ github.event.release.prerelease }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          ref: ${{ github.event.release.tag_name }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+      - name: Select the outside-repository trusted npm release
+        run: |
+          echo "KDNA_TRUSTED_NPM_TARBALL=$RUNNER_TEMP/npm-11.17.0.tgz" >> "$GITHUB_ENV"
+      - name: Fetch and authenticate the audited npm release bytes
+        run: >-
+          node scripts/core-release-authority.js provision-npm
+          --artifact "$RUNNER_TEMP/npm-11.17.0.tgz"
+      - name: Verify the isolated npm CLI and extraction boundary
+        run: node scripts/core-release-authority.js verify-npm
+      - run: node scripts/core-release-authority.js trusted-npm ci --ignore-scripts
+      - name: Verify exact read tag and source commit
+        run: >-
+          node scripts/core-release-authority.js trusted-npm
+          --workspace @aikdna/kdna-read run release:check
+      - run: node scripts/core-release-authority.js trusted-npm --workspace @aikdna/kdna-read test
+      - name: Build and retain the exact Read package artifact
+        run: node scripts/core-release-authority.js trusted-npm run release:evidence -- --package=read
+      - name: Verify read release evidence
+        run: >-
+          node scripts/core-release-authority.js trusted-npm
+          --workspace @aikdna/kdna-read run release:evidence:check
+      - name: Select the verified Read artifact
+        run: |
+          ARTIFACT_PATH=$(node -p "require('./release-evidence/artifact-manifest.json').artifacts[0].artifact_path")
+          echo "READ_RELEASE_ARTIFACT=$ARTIFACT_PATH" >> "$GITHUB_ENV"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: kdna-read-release-evidence
+          path: release-evidence/
+      - name: Publish @aikdna/kdna-read
+        run: |
+          VERSION=$(node -p "require('./packages/kdna-read/package.json').version")
+          if npm view "@aikdna/kdna-read@$VERSION" version >/dev/null 2>&1; then
+            echo "@aikdna/kdna-read@$VERSION is already published; skipping."
+            exit 0
+          fi
+          node scripts/core-release-authority.js trusted-npm-auth publish "./$READ_RELEASE_ARTIFACT" --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Remove transient Read release outputs
+        if: always()
+        run: >-
+          rm -f "$KDNA_TRUSTED_NPM_TARBALL"
+
   publish-compat:
     if: >-
       github.repository == 'aikdna/kdna' &&

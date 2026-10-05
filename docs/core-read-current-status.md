@@ -7,9 +7,9 @@
 ## Current source and coordinates
 
 The actual local package manifests are
-[`@aikdna/kdna-core@0.36.0-rc.r2.7`](../packages/kdna-core/package.json) and
-[`@aikdna/kdna-read@0.11.0-rc.r2.7`](../packages/kdna-read/package.json).
-Read declares the exact Core peer `0.36.0-rc.r2.7`; both declare Node >=20.
+[`@aikdna/kdna-core@0.36.0`](../packages/kdna-core/package.json) and
+[`@aikdna/kdna-read@0.11.0`](../packages/kdna-read/package.json).
+Read declares the exact Core peer `0.36.0`; both declare Node >=20.
 These are source identities. Exact archives, installed dependency graphs and
 consumer behavior still require their own byte-bound evidence.
 
@@ -33,7 +33,7 @@ acceptance tied to its prior bytes; a version label alone cannot renew it.
 
 | Local entry (2026-09-23) | Package combination | Binding/install entry |
 | --- | --- | --- |
-| Core/Read source | Core `0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7` | The package manifests above; Node >=20; Read's exact Core peer must resolve to the same Core instance |
+| Core/Read source | Core `0.36.0` / Read `0.11.0` | The package manifests above; Node >=20; Read's exact Core peer must resolve to the same Core instance |
 | Runtime CLI | CLI `0.40.0-rc.protection.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | [CLI README](https://github.com/aikdna/kdna-cli#readme), [binding](https://github.com/aikdna/kdna-cli/blob/main/public-contract-binding.json), [archive inventory](https://github.com/aikdna/kdna-cli/blob/main/release-surface/dependency-archives.json); Node >=22 |
 | Loader/MCP | MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | [MCP manifest](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/package.json), [complete local installation](https://github.com/aikdna/kdna-skills/blob/main/mcp-server/README.md), [canonical Loader](https://github.com/aikdna/kdna-skills/blob/main/kdna-loader/SKILL.md); Node >=22 |
 | Studio creation and bounded source revision | Studio CLI `0.17.0-rc.material-edit.1` / Studio Core `4.5.0-rc.material-edit.1` / Core `0.35.0-rc.source.1` / Read `0.10.0-rc.source.1` | [Studio installation](https://github.com/aikdna/kdna-studio-cli#readme), [archive/member binding](https://github.com/aikdna/kdna-studio-cli/blob/main/src/public-bindings.json), [Creator](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/SKILL.md); Node >=22; use the complete source identity below and its installation conditions |

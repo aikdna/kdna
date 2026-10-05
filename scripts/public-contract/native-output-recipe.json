@@ -1,7 +1,7 @@
 {
   "format": "kdna.native-output-recipe/1",
   "source": "specs/public-semantic-source.json",
-  "input_sha256": "4b39c37c7a6f18ade567fb6248e6488af94737c0f4a08f25ef4751399e5315ec",
+  "input_sha256": "fdcb204c8942ddc10ed5d8d6658a9317102822b5b9c500bc07e5086d5668fc9f",
   "base_type_order": [
     "StaticPolicyCandidate",
     "StaticPolicyEntry",
@@ -2886,15 +2886,15 @@
     },
     {
       "pointer": "/protected_source",
-      "digest": "sha256:848d4afbb80130e12217c0d86ef5d6a21e5e032687d47c3837dc8341f25981fe"
+      "digest": "sha256:86abadc6c0276ce39ae09bb02ac75b732da2858450397f93c79def6f85841897"
     },
     {
       "pointer": "/protection_admission",
-      "digest": "sha256:0c84c6fb73b3f6fbb453a7b7494baba81249814d6a9a6f72719ce219392751ab"
+      "digest": "sha256:fc6e6b3108e15c8caf84de08d3bb77d96138c1dcff6d67e0d9ca450f10e7b797"
     },
     {
       "pointer": "/external_grant_issuer",
-      "digest": "sha256:1a0d188ee15e5dedc6bb1176a2659f0fa0b05072ab8dc1641f1e79a0900467f9"
+      "digest": "sha256:eedb408131beb2769f8791c6372b70cf0df2dbfffc2e017d3933d52898483ae5"
     }
   ],
   "base_json_projections": [
