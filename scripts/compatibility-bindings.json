@@ -124,8 +124,8 @@
       "section": "peerDependencies",
       "packageName": "@aikdna/kdna-core",
       "declared": "0.36.0",
-      "manifest_sha256": "979995383918d563bdd6e016fdfceccbed675f5f5cafff8907b78350542ec4c4",
-      "source_manifest_blob": "95fdadf6f9c69c3d3a41fba9b732fd51a4cdb81e"
+      "manifest_sha256": "f85aeb2336ced9583f1a51eb1c6230d951549f955321a256e0bd946603b9843d",
+      "source_manifest_blob": "1c3f7c200a18cbdf970e1bb4cc9ab0c4660fec58"
     },
     {
       "repository": "kdna-activation-server",
