@@ -99,6 +99,11 @@
     "node": ">=20"
   },
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aikdna/kdna.git",
+    "directory": "packages/kdna-read"
+  },
   "scripts": {
     "test": "node --test test/*.test.js",
     "release:check:prerelease": "node ../../scripts/check-release-prerelease-readiness.mjs --package=packages/kdna-read --label=read",
