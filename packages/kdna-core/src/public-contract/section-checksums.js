@@ -45,7 +45,7 @@ async function prepareScopedChecksums(capture,manifest){
  const declared=manifest.runtime.mandatory_entries;C.need(Array.isArray(declared)&&new Set(declared).size===declared.length,'SECTION_RUNTIME_DECLARATION');
  for(const name of declared)C.need(C.strict.entryName(name)&&members.has(name)&&!['checksums.json','signature.kdsig','mimetype','build-receipt.json'].includes(name)&&!name.startsWith('reports/')&&!name.startsWith('authoring/'),'SECTION_RUNTIME_MEMBER_MISSING');
  const names=[...new Set(['kdna.json',...capture.rows.filter(r=>r.name.startsWith('sections/')).map(r=>r.name),...declared])].sort(C.utf8);
- let field=firstDifference(value.covered_entries,names,'/checksums.json/covered_entries');if(field)invalid(field);
+ const field=firstDifference(value.covered_entries,names,'/checksums.json/covered_entries');if(field)invalid(field);
  if(value.entries.length!==names.length)invalid('/checksums.json/entries');
  names.forEach((name,i)=>{if(value.entries[i].name!==name)invalid('/checksums.json/entries/'+i+'/name',name);if(value.entries[i].bytes!==members.get(name).size)invalid('/checksums.json/entries/'+i+'/bytes',name);});
  return {value,names,document_digest:digest(raw)};

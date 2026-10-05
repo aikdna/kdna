@@ -46,10 +46,12 @@ const TREE_LIMITS = Object.freeze({
   segmentBytes: 255,
 });
 const TAR_LIMITS = Object.freeze({
-  packedBytes: 64 * 1024 * 1024,
-  files: 1024,
-  fileBytes: 32 * 1024 * 1024,
-  totalBytes: 128 * 1024 * 1024,
+  // The current source packs and generated validator artifacts exceed the
+  // former conservative tar bounds; follow the actual current packed sizes.
+  packedBytes: 256 * 1024 * 1024,
+  files: 10_000,
+  fileBytes: 64 * 1024 * 1024,
+  totalBytes: 256 * 1024 * 1024,
 });
 const JSON_LIMITS = Object.freeze({ bytes: 8 * 1024 * 1024, depth: 64 });
 

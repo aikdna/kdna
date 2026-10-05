@@ -46,6 +46,6 @@ async function admitSectionBytesBrowser(input,admitted,authority){
   const result=Object.freeze({status:'accepted',snapshot,input_observation});
   snapshots.set(snapshot,view);byteOrigins.add(snapshot);return result;
  }catch(error){const held=F.info(error);return failure(classify(held?.code??'READ_CORE_CAPABILITY_UNAVAILABLE'),held?.code??'READ_CORE_CAPABILITY_UNAVAILABLE',held?.diagnostic??null);}
- finally{if(capture)await capture.close();owned=null;}
+ finally{if(capture)await capture.close();}
 }
 module.exports={admitSectionBytesBrowser};

@@ -11,7 +11,7 @@ const {isDeepStrictEqual}=require('node:util');
 
 function packPublic(source,edits,policy,captureId,requestDigest){
   const entries={...source.entries};
-  let manifest=source.manifest,payload=source.payload;
+  let manifest,payload=source.payload;
   if(Object.keys(edits).length){
     manifest=structuredClone(edits.manifest??source.manifest);
     payload=structuredClone(edits.payload??source.payload);

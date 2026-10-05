@@ -87,7 +87,6 @@ async function admitSectionBytesNode(input,admitted,authority){
   return failure(classify(code),code,nativeFailure||semanticFailure?error?.diagnostic:null);
  }finally{
   if(capture)await capture.close();
-  owned=null;
  }
 }
 module.exports={createNativeSectionByteReadAuthority,admitSectionBytesNode};

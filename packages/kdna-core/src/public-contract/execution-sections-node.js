@@ -38,8 +38,7 @@ function scalarRefs(value, shape) {
   }
 }
 function schema(type, input) {
-  let value;
-  value = json(input);
+  const value = json(input);
   if (!kinds.includes(type)) fail('EXECUTION_INPUT_INVALID');
   if (value?.tuple && !same(value.tuple, contract.versionTuple)) fail('EXECUTION_VERSION_UNSUPPORTED');
   if (typeof value?.definition_digest === 'string' && value.definition_digest !== definitionDigest) fail('EXECUTION_VERSION_UNSUPPORTED');

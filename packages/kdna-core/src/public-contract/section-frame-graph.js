@@ -15,7 +15,7 @@ function restoreWholeFrames(entries,publicManifest){
     }
     let ti=0;
     for(const table of Object.keys(C.tableKeys)) {
-      let rows=[],part=0; const key=C.tableKeys[table];
+      const rows=[];let part=0; const key=C.tableKeys[table];
       while(ti<manifest.tables.length&&manifest.tables[ti].table===table) {
         const row=manifest.tables[ti++]; C.shape('Representation06TableDirectoryRow',row);
         C.need(row.part===part&&row.section_id===`table:${table}:${part}`,'TABLE_PART_SEQUENCE');
