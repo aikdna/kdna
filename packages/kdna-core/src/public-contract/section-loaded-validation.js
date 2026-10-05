@@ -1,0 +1,29 @@
+'use strict';
+const crypto=require('node:crypto'),Ajv=require('ajv/dist/2020.js'),C=require('./section-common.js'),original=require('./generated-contract.json'),{validateScalars}=require('./validate.js'),{assertScopedPayload}=require('./cross-entry.js'),{digestCanonical}=require('./digests.js'),{scanFrame}=require('./section-structure-scanner.js');
+const {resolveComponents,visitExtensions,checkInterpretationComplete}=require('./component-semantics.js'),{resolveStaticPolicies}=require('./static-policy-semantics.js'),{validateResult}=require('./r2-values.js');
+const ajv=new Ajv({strict:false,allErrors:false,validateFormats:false}),validators=new Map();
+function validateAuthored(shape,value,path){const identity=JSON.stringify(shape);let validate=validators.get(identity);if(!validate){validate=ajv.compile({$schema:'https://json-schema.org/draft/2020-12/schema',$defs:original.types,...shape});validators.set(identity,validate);}C.strict.assertStrictJson(value);if(!validate(value)){const e=validate.errors[0],missing=e.keyword==='required'?'/'+String(e.params.missingProperty).replace(/~/g,'~0').replace(/\//g,'~1'):'';C.strict.reject('READ_CORE_INVALID',{subject:null,field:path+(e.instancePath??'')+missing});}validateScalars(value,shape);}
+async function readInterpretationInputs(capture,layout,structure){
+ const judgments=new Map(),frames=[];for(const row of layout.ordered){if(row.kind!=='topic')continue;const hash=crypto.createHash('sha256');const scan=await capture.structureAfterAuthorization(row,read=>scanFrame(row.length_bytes,async(offset,count)=>{const b=await read(offset,count),h=Buffer.alloc(16);h.writeBigUInt64BE(BigInt(offset));h.writeBigUInt64BE(BigInt(count),8);hash.update(h).update(b);return b;},{interpretationInputs:true}),'interpretation');
+ C.need(scan.partial.kind==='topic'&&scan.partial.section_id===row.section_id,'SECTION_INTERPRETATION_FRAME');const j=scan.partial.records.filter(n=>n.target.kind==='judgment');C.need(j.length===1&&j[0].target.id===row.section_id.slice(6)&&j[0].value.id===j[0].target.id,'SECTION_INTERPRETATION_JUDGMENT');judgments.set(j[0].value.id,j[0].value);frames.push({section_id:row.section_id,member:row.member,offset_bytes:row.offset_bytes,length_bytes:row.length_bytes,observed_ranges_digest:'sha256:'+hash.digest('hex'),observed_read_bytes:scan.read_bytes,read_calls:scan.reads.length,skipped_text_bytes:scan.skipped_text_bytes,frame_digest_status:'not_checked',unread_text_status:'not_checked'});
+ }
+ const ordered=layout.meta.catalog.map(x=>judgments.get(x.judgment_id));C.need(ordered.every(Boolean),'SECTION_INTERPRETATION_SET');return {judgments:ordered,frames};
+}
+function validateLoadedSchema(payload,loadedJudgments,interpretation){
+ const properties=original.types.Payload.properties,required=original.types.Payload.required??[];
+ for(const key of required)if(!['asset_capability','judgments'].includes(key))C.need(Object.hasOwn(payload,key),'SECTION_PAYLOAD_REQUIRED');
+ for(const [key,value]of Object.entries(payload)){if(key==='judgments'||key==='asset_capability')continue;C.need(properties[key],'SECTION_PAYLOAD_FIELD');validateAuthored(properties[key],value,'/payload/'+key);}
+ for(let i=0;i<payload.judgments.length;i++){const j=payload.judgments[i];if(loadedJudgments.has(j.id))validateAuthored({$ref:'#/$defs/Judgment'},j,'/payload/judgments/'+i);}
+ for(let i=0;i<interpretation.judgments.length;i++){const j=interpretation.judgments[i],shape=original.types.Judgment;for(const key of ['method','extensions','result_contract','formation_rule','parent_ref','lifecycle'])if(Object.hasOwn(j,key)){const child=shape.properties[key];C.need(child,'SECTION_ORIGINAL_TYPE_MISSING');validateAuthored(child,j[key],'/payload/judgments/'+i+'/'+key);}}
+ assertScopedPayload(payload,original.core_terms,loadedJudgments,interpretation.judgments);
+}
+function validateLoadedInterpretation(payload,nodes,loadedJudgments,interpretation,manifest,captureId){
+ const input={...payload,judgments:interpretation.judgments},visit=(value,callback)=>{visitExtensions(manifest,(e,p)=>callback(e,['manifest',...p]),'Manifest');visitExtensions(value,callback);};
+ visit(input,(extension,path)=>validateAuthored({$ref:'#/$defs/Extension'},extension,'/'+(path[0]==='manifest'?'':'payload/')+path.join('/')));
+ const methods=resolveComponents(input,visit),policies=resolveStaticPolicies(input,visit,(j,candidate)=>validateResult({...j,result:{contract_ref:j.result_contract.id,result_type:candidate.result_type,value:candidate.value}}));
+ for(const n of nodes){if(n.target.kind!=='judgment'||!loadedJudgments.has(n.target.id))continue;C.need(digestCanonical(n.method_interpretation)===digestCanonical(methods.get(n.target.id)),'SECTION_METHOD_INTERPRETATION_MISMATCH');C.need(digestCanonical(n.static_policy_interpretation??null)===digestCanonical(policies.get(n.target.id)??null),'SECTION_STATIC_INTERPRETATION_MISMATCH');}
+ checkInterpretationComplete(input,visit);
+ const componentIds=new Set(Object.values(original.component_semantics.definition.carriers).map(x=>x.id));let component=false,staticPolicy=false;visit(input,e=>{if(componentIds.has(e.id))component=true;if(e.id===original.static_policy.definition.carrier.id)staticPolicy=true;});
+ const observation={profile:'kdna.scoped-interpretation-inputs/0.1.0-candidate',capture_id:captureId,frames:interpretation.frames,observed_paths:['judgment.id','judgment.method','judgment.extensions','judgment.result_contract','judgment.formation_rule','judgment.parent_ref','judgment.lifecycle','all_typed_Extension_positions'],shared_component_adoption:component?'verified_from_complete_actual_declarations':'absent',static_policy_aggregate:staticPolicy?'verified_from_complete_actual_declarations':'absent',unrelated_topic_domain:'not_checked'};C.validate('InterpretationInputsObservation06',observation);return observation;
+}
+module.exports={readInterpretationInputs,validateLoadedSchema,validateLoadedInterpretation};

@@ -144,11 +144,7 @@
 ## 8. 来源与改动身份
 
 历史依据：
-- /Users/aikdna/sandboxes/kdna-reader-ui-owner-final-20260901/docs/DESIGN-DECISIONS.md:23–43（三维角色、语义来源）。
-- /Users/aikdna/sandboxes/kdna-reader-ui-owner-final-20260901/app.js:116–139（历史形态和回答类型）。
-- /Users/aikdna/sandboxes/kdna-reader-ui-owner-final-20260901/contract.js:309–535（历史方法和组件职责）。
-- /Users/aikdna/sandboxes/kdna-reader-ui-owner-final-20260901/docs/READABILITY-COVERAGE-AND-GAPS.md:27、43、61（复合、未声明方法等历史缺口）。
-- /Users/aikdna/open/kdna-whitepaper/docs/foundations/judgment-model.md:44、48–54（形成/论证/检验区别、议题复杂度）。
+- kdna-whitepaper/docs/foundations/judgment-model.md:44、48–54（形成/论证/检验区别、议题复杂度）。
 
 上一稿提出的 16 个回答类型、17 个方法标签及 5/7 阅读组织规则均为方案，并非既有协议或用户逐项批准的标准。本次撤回原 M17，将偏好的判断依据明确为主观感受；其余类别仍须围绕表达和保存作者的判断、品味与标准来整理。本次只改定义稿，没有改变任何公共协议字节、产品代码或正式资产。
 
@@ -391,7 +387,7 @@ C05 曾把五句导语加在长 statement 开头，工作包明确允许“原�
 
 ### 14.1 本轮核到的既有能力与边界
 
-唯一公共语义源仍是 /Users/aikdna/open/kdna/specs/public-semantic-source.json；本节是对照分析，不是第二套 wire Schema。只读研究证明其中写了什么，不替代实际运行或交付验收。
+唯一公共语义源仍是本仓 specs/public-semantic-source.json；本节是对照分析，不是第二套 wire Schema。只读研究证明其中写了什么，不替代实际运行或交付验收。
 
 | 现有定义 | 现有内容 | 与本轮定义的关系 |
 |---|---|---|
@@ -427,7 +423,7 @@ Reader 的直观检查仍是：左边问什么，题头回答什么，三个标�
 - public-semantic-source.json:7693：JudgmentLifecycle；PUBLIC-PARENT-CLOSURE 与 PUBLIC-LIFECYCLE 保留无隐式继承及状态缺省限制。
 - public-semantic-source.json:11330：static-policy 1 的完整有界合同。
 - public-semantic-source.json:11623：现有专门组件合同及三个内容 profile。
-- /Users/aikdna/open/kdna-whitepaper/docs/foundations/judgment-model.md:31–54：表达内容与关系、形成/论证/检验区分、议题不是组件数上限。
-- /Users/aikdna/open/kdna-whitepaper/docs/foundations/authoring.md:139–141、162–166：实际用途所需内容、必要语义与私人创作输入的区别。
+- kdna-whitepaper/docs/foundations/judgment-model.md:31–54：表达内容与关系、形成/论证/检验区分、议题不是组件数上限。
+- kdna-whitepaper/docs/foundations/authoring.md:139–141、162–166：实际用途所需内容、必要语义与私人创作输入的区别。
 
 本轮只更新本定义稿、反馈记录和只读来源索引。没有运行测试、重新打开执行任务、修改公共协议/工具/Reader/正式 095，亦未宣布工程恢复或完成验收。

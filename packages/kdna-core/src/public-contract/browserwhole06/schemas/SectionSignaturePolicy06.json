@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:browserwhole06:SectionSignaturePolicy06",
+  "title": "SectionSignaturePolicy06",
+  "description": "Source-bound browser whole data, ingress and whole-admission implementation candidate; runtime acceptance and retained Read are separate.",
+  "$ref": "#/$defs/SectionSignaturePolicy06",
+  "$defs": {
+    "SectionSignaturePolicy06": {
+      "type": "object",
+      "properties": {
+        "requireSignature": {
+          "type": "boolean"
+        },
+        "expectedPublicKeyHex": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "requireSignature",
+        "expectedPublicKeyHex"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

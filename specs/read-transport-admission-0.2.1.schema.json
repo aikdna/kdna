@@ -363,6 +363,17 @@
       ],
       "type": "object"
     },
+    "AssetType": {
+      "enum": [
+        "domain",
+        "cluster",
+        "tool",
+        "sample",
+        "fixture",
+        "bundle"
+      ],
+      "type": "string"
+    },
     "Attribution": {
       "additionalProperties": false,
       "properties": {
@@ -6699,6 +6710,9 @@
         },
         "asset_id": {
           "$ref": "#/$defs/Identifier"
+        },
+        "asset_type": {
+          "$ref": "#/$defs/AssetType"
         },
         "asset_uid": {
           "$ref": "#/$defs/Identifier"

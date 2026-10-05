@@ -207,14 +207,14 @@
 
 ## 9. 来源与本轮写入边界
 
-- /Users/aikdna/open/kdna/specs/public-semantic-source.json:1531，AuthoredDeclarations。
+- specs/public-semantic-source.json:1531，AuthoredDeclarations。
 - 同文件:2079，Material；2141，Relationship；2218，Dependency。
 - 同文件:2408，Cohesion；2436，Payload。
 - 同文件:2653，ManifestLineage；2700，Manifest；6256，PublicAssetDeclaration。
 - 同文件:8741 / 8907 / 8918 / 8929，声明不可合成、词名唯一、父子不继承、词表约束；9976，当前工程核心词表。
-- /Users/aikdna/open/kdna-whitepaper/docs/foundations/judgment-model.md:31–54，共同基础、内容角色和真实系统关系。
-- /Users/aikdna/open/kdna-whitepaper/docs/products/reader.md:38–68，既有呈现与公共读取职责；后续 Owner 明确反馈优先于此页较早表述。
-- /Users/aikdna/open/kdna/specs/container.md:88–155，仅作为文档版本漂移证据，非当前字段权威。
+- kdna-whitepaper/docs/foundations/judgment-model.md:31–54，共同基础、内容角色和真实系统关系。
+- kdna-whitepaper/docs/products/reader.md:38–68，既有呈现与公共读取职责；后续 Owner 明确反馈优先于此页较早表述。
+- specs/container.md:88–155，仅作为文档版本漂移证据，非当前字段权威。
 
 实际只写本定义稿、单议题稿的交叉入口、Owner 反馈记录和只读来源索引。公共协议、工具链、正式资产、Reader 和根 CURRENT 状态均未修改；未构建、测试、安装、启动 Agent 或恢复自动化。
 

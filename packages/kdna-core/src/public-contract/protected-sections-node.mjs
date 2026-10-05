@@ -1,0 +1,2 @@
+import api from './protected-sections-node.js';
+export const {admitProtectedPayloadRequest,inspectProtectedPayloadRequest,createProtectedPayloadReadAuthority,admitProtectedSectionNode,inspectProtectedPayloadSnapshot,bindProtectedPayloadRequest,disposeProtectedSectionOperation}=api;

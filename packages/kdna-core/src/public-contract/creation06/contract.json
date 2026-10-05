@@ -1,0 +1,2090 @@
+{
+  "candidate_only": true,
+  "source": {
+    "path": "specs/public-semantic-source.json",
+    "bytes": 1435436,
+    "sha256": "4b39c37c7a6f18ade567fb6248e6488af94737c0f4a08f25ef4751399e5315ec"
+  },
+  "historical_original_source": {
+    "scope": "historical_original_contract_source_identity_not_current_generator_input",
+    "bytes": 1342455,
+    "sha256": "3e03a87da8c6aa214d4f84fb1178893f93fce03abb3a60189a2572cd9466fc66",
+    "coordinate": "urn:kdna:source:sha256:3e03a87da8c6aa214d4f84fb1178893f93fce03abb3a60189a2572cd9466fc66"
+  },
+  "module": {
+    "version": {
+      "contract_id": "kdna.creation-sections/0.1.0-candidate",
+      "contract_version": "0.1.0-candidate",
+      "output_tuple": {
+        "container": "0.6.0",
+        "payload_profile": "kdna.payload.judgment",
+        "payload_version": "0.5.1",
+        "core": "kdna.core/0.8.2",
+        "ir": "kdna.canonical-ir/0.6.1",
+        "runtime": "kdna.runtime-capsule/0.3.1",
+        "plan": "kdna.consumption-plan/0.3.1",
+        "host": "kdna.agent-host/0.3.1",
+        "trace": "kdna.judgment-trace/0.3.1",
+        "read": "kdna.read/0.7.0-candidate"
+      },
+      "package": "New isolated Core subpath @aikdna/kdna-core/creation-sections-node; four CJS/ESM/type exports backed by one same-instance module. Existing APIs, old675 types, versions and consumers remain exact. New API/schema/source definition, not a change to assets, Payload fields or their semantics.",
+      "definition_digest": "definition_digest is sha256: followed by lowercase SHA-256 hex of the existing strict canonicalJson UTF-8 encoding of this complete installed public module value. This field states the rule and does not embed a self-referential digest. The original full source identity and the projected product identity are bound separately; matching this module digest does not bind external types, resolved values, schema/API closure or installed package bytes.",
+      "precedence": "This adds construction without predecessor to its own subpath only. It does not remove predecessor requirements from authoring-node/source-sections-node, manufacture representation_origin, migrate old components, or reinterpret existing receipts."
+    },
+    "input_contract": {
+      "shape": "NativeCreationInput06 is exactly manifest:NativeCreationManifest06,payload:Payload,members:ReadonlyArray<NativeCreationMember06>. This is caller-authored data, not a serialized snapshot, source bundle, admitted IR or file path. NativeCreationManifest06 reuses every remaining Manifest06Candidate property definition, required status and absence rules after removing only format_version,payload,representation_metadata,representation_origin,encryption,entitlement. No author field is synthesized from a default.",
+      "public_scope": "This first route emits unprotected public sections06. access absent or public is supported and preserved as supplied. A syntactically valid licensed/remote access declaration is SOURCE_CAPABILITY_UNAVAILABLE/input, never silently changed to public or classified as an invalid asset. Protection, entitlement, predecessor provenance, caller-provided descriptor/metadata are outside this input shape, not lost fields from a claimed accepted Manifest. Such supplied extra fields are SOURCE_INPUT_INVALID/input. Protected creation proceeds only through a later explicit operation on actual produced bytes via existing APIs.",
+      "members": "Each member is an own-data object with exactly name,type=file,mode,bytes. bytes is an owned copy of a genuine non-shared, non-detached Uint8Array or Buffer, with original guarded-byte prototype/accessor rules. No ArrayBuffer, other view, proxy/getter conversion, sparse number array, implicit string/base64 decode or filesystem path. Name satisfies original EntryName and output name rules. This route supports ordinary attachments/ files, preserving their exact name/type/mode/decoded bytes and caller member order. Unreferenced but profile-legal attachments are retained. Duplicate names, unsafe names or non-file/mode-invalid input refuse; never overwrite or drop. Legal reserved representation/integrity names (mimetype,kdna.json,payload.kdnab,sections/*,checksums.json,signature.kdsig) or other out-of-profile names are constructor capability refusals, not reclassification of an existing valid asset.",
+      "member_mode": "Before any bit operation, writer conversion or output, require Number.isInteger(mode), 0<=mode<=65535, and (mode & 0170000) in {0,0100000}; otherwise SOURCE_INPUT_INVALID/input. This is the actual unsigned16 ZIP external-attribute mode and existing regular-file Unix type boundary, not a change to generic UInt. Preserve exact accepted mode without normalization: mode0 and33188 are legal;65536 and98724 must not be allowed to truncate to0 or33188 through the original (mode*65536)>>>0 writer. No extra executable policy or symlink support.",
+      "resources": "Original Payload.resources, all four original Resource fields id/entry/digest/media_type, material links and mandatory refs remain exact. Existing actual Resource validation runs on copied decoded attachment bytes and the fixed generated mimetype bytes. Resource entries naming generated kdna.json,sections/*,payload.kdnab,checksums.json or signature.kdsig are explicitly unsupported by this first constructor: SOURCE_CAPABILITY_UNAVAILABLE/semantic and no output. In particular current accepted R02 pack-resource input remains legal for open/pack but is not universally reconstructible by this constructor. Never retarget/delete a Resource or accept its expected digest as observed bytes. Missing supported attachment, wrong digest or original resource domain mismatch is an original semantic refusal.",
+      "runtime_mandatory": "Preserve runtime object and mandatory_entries exactly, including array order and absence of extra properties. For this bounded route each entry must name actual supplied attachment bytes or kdna.json. Missing supported attachment is an original manifest/output membership refusal; representation-dependent or unsupported reserved names return SOURCE_CAPABILITY_UNAVAILABLE/semantic. Generated section packs are included in actual E by the existing sections E profile independent of this authored list. No dedupe, sorting, automatic pack insertion, replacement of payload.kdnab or inherited fake mandatory entry. RuntimeMandatoryEntryName schema stays unchanged.",
+      "ownership": "Synchronously validate and detach strict Manifest/Payload own JSON data and every member byte sequence before the first callback/await. Validate all descriptors without invoking user accessors. Keep original finite-number, Unicode, depth64, single-string1MiB, collection10000, own-data/prototype/symbol/sparse-array/cycle and safe byte-accounting rules. UInt fields separately retain original safe-integer semantics. Ordinary authored JSON numbers do not gain a safe-integer restriction. copyJson/canonicalJson retain the original256MiB graph bound; there is no new textual JSON overload and no aggregate8MiB logical Payload limit for public06. Caller mutations after invocation cannot change the authorized input, including member mode/name/bytes or Manifest self-C declarations. Never mutate caller input, even on failure.",
+      "identity": "manifest_digest and payload_digest are SHA256JCS of the complete detached input Manifest and Payload respectively, not observed asset A/C or a canonical-IR digest. input.members is the original-order inventory of actual copied supplied members (name,type,mode,size,sha256); member_bytes is their safe summed decoded byte count. input_digest=SHA256JCS(NativeCreationInputObservation06). This definition retains optional absence and array order; JSON object key order is not authored semantic order."
+    },
+    "request_authority_lifecycle": {
+      "admission": "admitNativeCreationRequest takes strict unknown own JSON, exact closed request shape and CandidateVersionTuple06. Invalid shape returns existing source_failed SOURCE_INPUT_INVALID/input; recognized mixed/unsupported tuple returns original version Core rejection carrier with no output. No callback for rejected request. The opaque token and authority use private same-module branding; inspect returns frozen admitted request or null. A copied/foreign token or callback masquerading as authority refuses SOURCE_INPUT_INVALID/input. No fake source_A or required existing file.",
+      "permission": "createNativeCreationAuthority accepts exactly a callable trusted local callback and brands it. At every createSectionAssetNode call, after owned input validation/hash and before semantic IR building/CBOR/frame/container production, call this exact native authority with a detached immutable NativeCreationAuthorityContext06. Context includes the actual installed contract, current request/request_digest, actual input inventory+input_digest and full owned authored Manifest, explicit complete public-byte production intent and not_observed adoption. Only literal true permits this invocation. False/non-true => SOURCE_PERMISSION_REJECTED/authorization; callback throw/unknown failure => SOURCE_CAPABILITY_UNAVAILABLE/authorization. No error.code or arbitrary SyntaxError authenticates a known diagnosis. Current input/request digest cannot be swapped by callback mutation.",
+      "pregrant": "The input was explicitly passed in memory by the caller. Copying/shape checking and hashing those values before authority is owned input preparation, not hidden file capture or decryption permission. No input file access, old source admission, credential/provider access, IR compilation, frame/container serialization or output occurs before true. The authority may verify exact input digests against its own trusted application state; a digest does not itself prove adoption or ownership.",
+      "reuse": "Admitted request tokens can be reused for new calls; each obtains its own detached input, fixed deadline and fresh authority decision. Tokens authorize nothing on their own. No new single-use token, retained session, Host expiry or action permission. Release per-call strong references after settlement; no global draft/input/file cache.",
+      "deadline": "timeout_ms is required1..60000 for this API. On entry, once the genuine admitted request is found and before copying user input, capture original Date.now current and fixed deadline=start+timeout_ms using safe arithmetic. Preserve original source-route comparison: reject when now>deadline (equality allowed), never reset or extend after an await. Check after input preparation, immediately before and after authority await, before/after expensive validation/build/output admission and before returning bytes. A late true cannot start later production; SOURCE_DEADLINE_EXCEEDED at authorization if that await was late, at semantic/output/return at the corresponding checkpoint. This is cooperative deadline checking, not preemption of an already synchronous primitive, and not a performance acceptance claim.",
+      "adoption": "Technical creation permission is neither Human/Agent editorial adoption nor creator identity/ownership/action execution. No synthetic replies, rehashed audit log, Read permission, checksum/signature, successful Core admission or authoring callback is promoted to adoption. Preserve original authoring_workflow and SDK adoption/save evidence duties. This Core route returns bytes and technical evidence only; actual persistent save/consumer readback and editorial adoption are separate obligations."
+    },
+    "manifest_output_mapping": [
+      {
+        "path": "/format_version",
+        "rule": "Add exact0.6.0; absent in authored input. No old05 bytes or descriptor is manufactured as a predecessor."
+      },
+      {
+        "path": "/payload",
+        "rule": "Add exact unencrypted SectionPayloadDescriptor06 from actual native section frames/tables/ranges/hash. Preserve original authored Payload in complete value, absence, scalar type and every array order; no envelope/whole logical payload member in output."
+      },
+      {
+        "path": "/representation_metadata",
+        "rule": "Add existing metadata codec projection derived from the complete original validated canonical IR, with the original registry node order, catalog, all references/relationships, mandatory_closures,asset_closure,asset_index,unresolved_external and actual output member routing. These embed semantic authored values, not arbitrary replaceable noise. Their complete decoded values must equal the original derivation; frame hashes/tables/IR claim come from actual bytes, not expectation."
+      },
+      {
+        "path": "/representation_origin",
+        "rule": "Keep absent: there is no source file, original A/C, prior Payload descriptor or conversion receipt. It is not an input field and must not be invented."
+      },
+      {
+        "path": "/runtime/mandatory_entries",
+        "rule": "Preserve exactly, subject to supported actual-member scope in input_contract.runtime_mandatory. Do not insert/sort/dedupe generated pack names or remove any caller value."
+      },
+      {
+        "path": "/content_digest",
+        "rule": "If supplied as a schema-valid digest, explicitly refresh to actual output C0.2 under original canonical-content exclusions; if absent keep absent. This declared constructor binding refresh is visible in authority Manifest/input_digest and evidence manifest_actions. It is not an input authenticity claim."
+      },
+      {
+        "path": "/authoring/content_digest",
+        "rule": "Same present-only explicit actual C0.2 refresh. Keep authoring absent if absent. If both C declarations exist, both equal the same actual output C; preserve the authoring container and all other authored fields."
+      },
+      {
+        "path": "/* other authored fields",
+        "rule": "Copy exact values, optional absence and array order. Never auto-change asset_id/uid/type,version/judgment_version,title,creator,timestamps,compatibility,runtime,access,license,summary,description,keywords,lineage,languages,history or any Payload/component/condition/relationship value. No timestamp now(), ID generation, oldcomponent migration or default empty objects."
+      }
+    ],
+    "construction_and_validation": {
+      "order": [
+        "Strict request+native authority identity and owned authored input boundary; compute fixed request/input observations.",
+        "Fresh exact input authority true under fixed deadline.",
+        "Validate full authored Manifest shape, existing Payload schema, manifest/payload identity and supported resource/runtime scope; apply original complete R2 rules/resources/interpretation/components/static policies/critical extensions without weakening or selected-only projection.",
+        "Derive complete canonical IR using original rules and actual copied member data; native tuple adaptation is only the existing06 IR representation tuple. Build real topic/volume/xref/table frames and sections packs with existing metadata codec rules.",
+        "Create actual public06 Manifest and fixed mimetype plus actual generated packs and copied attachments; perform declared present-only self-C refresh using original C profile, then serialize under original ZIP rules.",
+        "Run actual complete native06 output validation/admission logic on produced bytes, including physical schema, all frames/table coverage/hash, reconstructed Payload/full original domain/IR, original required resources and self-C. This internal check must produce actual A/C/E0.3 and complete IR digest. Compare full reconstructed Payload and all retained authored Manifest paths to detached inputs, plus exact member bytes/modes and complete expected derived semantic metadata.",
+        "Recheck fixed deadline and return owned actual bytes plus closed evidence. All failures return no bytes/body null/body_bytes0; no partial asset result."
+      ],
+      "bootstrap": "An internal semantic input view may combine owned authored Manifest fields and the deterministic representation-independent fields needed by original validators. It is derived implementation data, never an admitted old or native snapshot. Do not invoke an old05 writer/old branded admission to create and relabel an intermediate05 container. The actual output is06 from its first serialization. Original semantic/interpretation rules are retained and final actual06 complete re-admission is mandatory; unresolved derivation or necessary unsupported resource mapping refuses rather than skipping a rule.",
+      "payload_cbor": "Logical Payload may be deterministically encoded for an internal equality check, but it is not a physical payload.kdnab member and not a new aggregate8MiB gate. Payload complete value preservation is required, not equality with a nonexistent input CBOR encoding. Original authored object key insertion order is not an added encoding requirement. Existing supported scalar/array order, types and absence are never normalized.",
+      "integrity": "The initial output has no checksums.json or signature.kdsig, and no caller such member is silently stripped because it is outside the declared input support. A/C/E and evidence are actual observations, not cryptographic authorization. Explicit later checksum/signature/protection operations on these saved/returned real bytes use their already accepted APIs and full original policies; no output signer or credential is inferred from Manifest metadata.",
+      "layout": "Use current source-route-frame-writer and metadata codec rules or a same-source generated implementation preserving their exact semantic derivation. Do not impose a new topic partition or author ordering rule. Generated members have existing file modes; copied attachment modes exact. Output ZIP starts with fixed mimetype then kdna.json and real generated packs and caller attachments in their input order, with no overwritten reserved entry. The existing parser, last-EOCD behavior, CRC/name/mode and coverage rules all apply."
+    },
+    "limits": {
+      "physical": {
+        "member": 8388608,
+        "total_decoded": 12582912,
+        "container": 26214400,
+        "entries": 128
+      },
+      "measurement": "Apply all four original06 limits to actual completed output members/bytes, including generated Manifest, metadata, packs, tables, mimetype and attachments, not just caller member count or an estimated payload. Allocation-safe early checks may reject a proven unavoidable overflow using the same bounds, never lower thresholds. Exact accepted/+1 controls must distinguish structural/capacity fixtures from fully semantic accepted assets. Original strict graph256MiB, depth64,string1MiB,array10000 guards remain separate. There is no new public06 logical Payload8MiB aggregate and no protected-source20MiB bound. Generated output may hit these unchanged limits; no fallback05 format, truncation or hidden content pruning."
+    },
+    "evidence": {
+      "bindings": "request_digest=SHA256JCS(actual admitted NativeCreationRequest06). Evidence input/input_digest equal those actually disclosed to the granted authority. output.A/C/E and output_ir_digest come from complete actual output native validation, with E_profile runtime-entry-set/0.3.0-candidate. No fabricated request/capture/snapshot IDs, source_A or old0.2 E relabeling.",
+      "manifest_actions": "Exactly three ordered added actions /format_version,/payload,/representation_metadata, followed by refreshed /content_digest if present and /authoring/content_digest if present. No other action or duplicate is allowed. /representation_origin stays absent and runtime list is unchanged. Evidence inventory lists every actual output member in physical order with name,type,mode,size,sha256.",
+      "claim": "Produced means technical bytes plus producer observation only. It is not a transferable admitted token, consumer read result, external delivery/transport confirmation, publication, real adoption, formal asset quality or ownership. The caller must actually save bytes and use current genuine public Core/Read for any downstream claim."
+    },
+    "diagnostics": {
+      "boundary": "Use SourceRouteFailure06 and SourceRouteCoreRejected06 without changing their types or code/stage meaning. Input shape/foreign token errors SOURCE_INPUT_INVALID/input; recognized unsupported route scope SOURCE_CAPABILITY_UNAVAILABLE at input or semantic as stated; authority false SOURCE_PERMISSION_REJECTED/authorization; unknown callback/internal failures SOURCE_CAPABILITY_UNAVAILABLE at the observed stage. Exact deadline SOURCE_DEADLINE_EXCEEDED at its observed checkpoint. No catch-all converts unknown exceptions into authored invalid.",
+      "original_validation": "Known original schema/domain/interpretation/version/physical failures keep original CoreAdmissionRejected reason/diagnostics in core_rejected with correct stage input/admission/output, disclosure none and body null0. Do not declare oldSDK payload valid by stripping declarations. An internally constructed result shape failure is an internal capability failure, not invalid caller data. Output re-admission refusal cannot produce bytes."
+    },
+    "generation_roots": [
+      "NativeCreationManifest06",
+      "NativeCreationRequest06",
+      "AdmittedNativeCreationRequest06",
+      "NativeCreationAuthority06",
+      "NativeCreationContract06",
+      "NativeCreationInputObservation06",
+      "NativeCreationAuthorityContext06",
+      "NativeCreationManifestAction06",
+      "NativeCreationEvidence06",
+      "NativeCreationRequestAdmission06"
+    ],
+    "artifacts": {
+      "typescript": "candidate/creation06/types.d.ts",
+      "validators": "candidate/creation06/validators.cjs",
+      "contract": "candidate/creation06/contract.json",
+      "api": "candidate/creation06/api.d.ts",
+      "generation_manifest": "candidate/creation06/generation-manifest.json"
+    },
+    "native_exports": [
+      "admitNativeCreationRequest",
+      "inspectNativeCreationRequest",
+      "createNativeCreationAuthority",
+      "createSectionAssetNode"
+    ],
+    "declaration_installation": "Core creation-sections-node.d.ts explicitly imports all named JSON/opaque types from ./creation06/types.js and Payload from ./types.js, re-exports the named creation JSON/opaque types, and declares the binary input/output below in that same installed file. ESM and CJS public entry points expose precisely the same four runtime functions. The reference api.d.ts fragment is a template, not proof of installed TS closure. Complete reachable old definitions are generated into creation06 only; no replacement of existing public definitions/modules due to source-context provenance changes. Private WeakMap token identity remains same installed instance; no Read or consumer package additions.",
+    "api_typescript": "import type { Payload } from './types.js';\nimport type { NativeCreationManifest06, NativeCreationRequest06, AdmittedNativeCreationRequest06, NativeCreationAuthority06, NativeCreationAuthorityContext06, NativeCreationRequestAdmission06, NativeCreationEvidence06, SourceRouteFailure06, SourceRouteCoreRejected06 } from './creation06/types.js';\nexport type { NativeCreationManifest06, NativeCreationRequest06, AdmittedNativeCreationRequest06, NativeCreationAuthority06, NativeCreationAuthorityContext06, NativeCreationRequestAdmission06, NativeCreationEvidence06 } from './creation06/types.js';\nexport type NativeCreationMember06 = Readonly<{ name: string; type: 'file'; mode: number; bytes: Uint8Array }>;\nexport type NativeCreationInput06 = Readonly<{ manifest: NativeCreationManifest06; payload: Payload; members: ReadonlyArray<NativeCreationMember06> }>;\nexport type NativeCreationResult06 = Readonly<{ status: 'produced'; bytes: Uint8Array; evidence: NativeCreationEvidence06 }> | SourceRouteFailure06 | SourceRouteCoreRejected06;\nexport declare function admitNativeCreationRequest(candidate: unknown): NativeCreationRequestAdmission06;\nexport declare function inspectNativeCreationRequest(request: AdmittedNativeCreationRequest06): Readonly<NativeCreationRequest06> | null;\nexport declare function createNativeCreationAuthority(callback: (context: Readonly<NativeCreationAuthorityContext06>) => boolean | Promise<boolean>): NativeCreationAuthority06;\nexport declare function createSectionAssetNode(input: NativeCreationInput06, request: AdmittedNativeCreationRequest06, authority: NativeCreationAuthority06): Promise<NativeCreationResult06>;\n",
+    "prospective_runtime_controls": [
+      "No predecessor file or snapshot: authored small/R01 actual fromscratch creation, saved actual Core whole+Read and source reopen; complete Payload/Manifest permitted paths/IR/metadata/all members checked against frozen independent pre-input values.",
+      "Actual optional field absence/empty/history/reading_order, nonempty relationships/conditions/required context/material/source_use/attachment and extra unused legal attachment preserved; never compare only counts.",
+      "R02 accepted existing pack-resource route remains accepted there; new constructor exact capability refusal without retarget/drop or successful partial output.",
+      "Missing/wrong/tampered supported resource and nonexistent condition/relationship endpoint, identity mismatch, unknown critical/component incompatibility refuse at actual original rule. SDK07 old writer generation mismatch remains separately recorded.",
+      "Self-C absent/root-only/authoring-only/both, actual independent C calculation and present-only refresh; authoring container absence preserved.",
+      "Real owned inputs/bytes and cross-await mutation; all own-data/accessor/prototype/Unicode/cycle/sparse/finite/UInt and file-mode/reserved/duplicate-name boundaries.",
+      "Fresh authority allow/deny/throw/thenable and token/authority foreign clones, fixeddeadline before/after grant, exact/+1 late callback; no filesystem/credential/IR-build/output before grant.",
+      "Actual output four capacity gates exact/+1 including added Manifest/packs; distinguish semantic production from controlled shape/size-only input.",
+      "Correct request/input/output digest/evidence inventory and complete closure; no fake native brand/adoption. New CJS/ESM/strict TS constructor input and opaque-token positive/negative tests; actual output whole/retained/execution consumers separately reuse genuine admissions.",
+      "Verify exact installed package and tar identity, CJS/ESM and strict type closure, and the affected Core/Read behavior. Runtime evidence alone does not establish formal asset quality or consumer adaptation."
+    ],
+    "not_claimed": [
+      "A route definition alone does not prove implementation, installed consumer behavior, publication or human acceptance.",
+      "No consumer/SDK component mapping, browser creation, protected fromscratch envelope, arbitrary current-file roundtrip guarantee, signer/broker/network/file publication or adoption.",
+      "No performance improvement, capacity maximum, independently authored large asset or global deadline guarantee is asserted."
+    ]
+  },
+  "types": {
+    "AccessMode": {
+      "type": "string",
+      "enum": [
+        "public",
+        "licensed",
+        "remote"
+      ]
+    },
+    "ActorKind": {
+      "type": "string",
+      "enum": [
+        "person",
+        "organization",
+        "collective",
+        "anonymous",
+        "asset_native",
+        "agent"
+      ]
+    },
+    "AdmittedNativeCreationRequest06": false,
+    "AssetIdentity": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_version"
+      ],
+      "additionalProperties": false
+    },
+    "AssetType": {
+      "type": "string",
+      "enum": [
+        "domain",
+        "cluster",
+        "tool",
+        "sample",
+        "fixture",
+        "bundle"
+      ]
+    },
+    "Boolean": {
+      "type": "boolean"
+    },
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "Compatibility": {
+      "type": "object",
+      "properties": {
+        "min_loader_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "profile_version": {
+          "const": "0.5.1",
+          "type": "string"
+        }
+      },
+      "required": [
+        "min_loader_version",
+        "profile",
+        "profile_version"
+      ],
+      "additionalProperties": false
+    },
+    "CoreAdmissionRejected": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "rejected"
+        },
+        "reason": {
+          "$ref": "#/$defs/ReadDiagnosticCode"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReadDiagnostic"
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "states": {
+          "$ref": "#/$defs/CoreStaticStates"
+        },
+        "component_failure": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CoreComponentFailure"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        }
+      },
+      "required": [
+        "status",
+        "reason",
+        "diagnostics",
+        "states",
+        "component_failure"
+      ],
+      "additionalProperties": false
+    },
+    "CoreComponentFailure": {
+      "type": "object",
+      "properties": {
+        "judgment_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        },
+        "component_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        },
+        "status": {
+          "type": "string",
+          "const": "invalid"
+        },
+        "body": {
+          "type": "null",
+          "const": null
+        },
+        "code": {
+          "type": "string",
+          "enum": [
+            "READ_COMPONENT_DECLARATION_INVALID",
+            "READ_COMPONENT_CONTENT_INVALID",
+            "READ_COMPONENT_REFERENCE_INVALID",
+            "READ_COMPONENT_GRAPH_CYCLE",
+            "READ_COMPONENT_LIMIT_EXCEEDED",
+            "READ_COMPONENT_BINDING_INVALID",
+            "READ_COMPONENT_ADOPTION_INVALID",
+            "READ_METHOD_PRESENCE_INVALID"
+          ]
+        }
+      },
+      "required": [
+        "judgment_ref",
+        "component_ref",
+        "status",
+        "body",
+        "code"
+      ],
+      "additionalProperties": false
+    },
+    "CoreStaticStates": {
+      "type": "object",
+      "properties": {
+        "core": {
+          "$ref": "#/$defs/TechnicalState"
+        },
+        "interpretation": {
+          "$ref": "#/$defs/InterpretationState"
+        }
+      },
+      "required": [
+        "core",
+        "interpretation"
+      ],
+      "additionalProperties": false
+    },
+    "Creator": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "name": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "kind": {
+          "$ref": "#/$defs/ActorKind"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "EntryName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^(?!/)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))(?!.*//)(?!.*[/]$)[^\\\\\\u0000-\\u001f\\u007f-\\u009f]+$"
+    },
+    "Extension": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "critical": {
+          "$ref": "#/$defs/Boolean"
+        },
+        "definition": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "value": {
+          "$ref": "#/$defs/SemanticValue"
+        }
+      },
+      "required": [
+        "id",
+        "critical",
+        "definition",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "FiniteNumber": {
+      "type": "number"
+    },
+    "HistoryDeclaration": {
+      "type": "object",
+      "properties": {
+        "coverage": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "partial"
+          ]
+        },
+        "statement": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RevisionEntry"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "coverage",
+        "statement",
+        "entries"
+      ],
+      "additionalProperties": false
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "InterpretationState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "complete",
+        "degraded",
+        "blocked"
+      ]
+    },
+    "License": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "uri": {
+          "$ref": "#/$defs/NonEmptyText"
+        }
+      },
+      "required": [
+        "identifier"
+      ],
+      "additionalProperties": false
+    },
+    "ManifestAuthoring": {
+      "type": "object",
+      "properties": {
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "content_digest"
+      ],
+      "additionalProperties": false
+    },
+    "ManifestLineage": {
+      "type": "object",
+      "properties": {
+        "source_asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "source_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "relationship": {
+          "$ref": "#/$defs/TermRef"
+        }
+      },
+      "required": [
+        "source_asset_id",
+        "source_version",
+        "relationship"
+      ],
+      "additionalProperties": false
+    },
+    "ManifestRuntime": {
+      "type": "object",
+      "properties": {
+        "mandatory_entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RuntimeMandatoryEntryName"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "mandatory_entries"
+      ],
+      "additionalProperties": false
+    },
+    "NativeCreationAuthority06": false,
+    "NativeCreationAuthorityContext06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/NativeCreationContract06"
+        },
+        "request": {
+          "$ref": "#/$defs/NativeCreationRequest06"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "input_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "input": {
+          "$ref": "#/$defs/NativeCreationInputObservation06"
+        },
+        "manifest": {
+          "$ref": "#/$defs/NativeCreationManifest06"
+        },
+        "intent": {
+          "type": "string",
+          "const": "encode_exact_owned_authored_input_as_public_sections06"
+        },
+        "adoption": {
+          "type": "string",
+          "const": "not_observed"
+        },
+        "output_delivery": {
+          "type": "string",
+          "const": "return_bytes_only"
+        }
+      },
+      "required": [
+        "contract",
+        "request",
+        "request_digest",
+        "input_digest",
+        "input",
+        "manifest",
+        "intent",
+        "adoption",
+        "output_delivery"
+      ],
+      "additionalProperties": false
+    },
+    "NativeCreationContract06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "kdna.creation-sections/0.1.0-candidate"
+        },
+        "version": {
+          "type": "string",
+          "const": "0.1.0-candidate"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NativeCreationEvidence06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/NativeCreationContract06"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "input_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "input": {
+          "$ref": "#/$defs/NativeCreationInputObservation06"
+        },
+        "output": {
+          "$ref": "#/$defs/SourceRouteDigests06"
+        },
+        "E_profile": {
+          "type": "string",
+          "const": "kdna.digest-basis.runtime-entry-set/0.3.0-candidate"
+        },
+        "output_ir_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "manifest_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NativeCreationManifestAction06"
+          },
+          "minItems": 3,
+          "maxItems": 5
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceRouteMemberInventory06"
+          },
+          "minItems": 3,
+          "maxItems": 128
+        },
+        "payload_preservation": {
+          "type": "string",
+          "const": "complete_value_absence_array_order"
+        },
+        "proof": {
+          "type": "string",
+          "const": "producer_observation_not_consumer_admission"
+        },
+        "output_delivery": {
+          "type": "string",
+          "const": "not_published"
+        },
+        "adoption": {
+          "type": "string",
+          "const": "not_observed"
+        }
+      },
+      "required": [
+        "contract",
+        "request_digest",
+        "input_digest",
+        "input",
+        "output",
+        "E_profile",
+        "output_ir_digest",
+        "manifest_actions",
+        "members",
+        "payload_preservation",
+        "proof",
+        "output_delivery",
+        "adoption"
+      ],
+      "additionalProperties": false
+    },
+    "NativeCreationInputObservation06": {
+      "type": "object",
+      "properties": {
+        "manifest_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "payload_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceRouteMemberInventory06"
+          },
+          "minItems": 0,
+          "maxItems": 128
+        },
+        "member_bytes": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "manifest_digest",
+        "payload_digest",
+        "members",
+        "member_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "NativeCreationManifest06": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_uid": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_type": {
+          "$ref": "#/$defs/AssetType"
+        },
+        "title": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "compatibility": {
+          "$ref": "#/$defs/Compatibility"
+        },
+        "runtime": {
+          "$ref": "#/$defs/ManifestRuntime"
+        },
+        "creator": {
+          "$ref": "#/$defs/Creator"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "authoring": {
+          "$ref": "#/$defs/ManifestAuthoring"
+        },
+        "access": {
+          "$ref": "#/$defs/AccessMode"
+        },
+        "license": {
+          "$ref": "#/$defs/License"
+        },
+        "summary": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "description": {
+          "$ref": "#/$defs/Text"
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "minItems": 0
+        },
+        "lineage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ManifestLineage"
+          },
+          "minItems": 0
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "history": {
+          "$ref": "#/$defs/HistoryDeclaration"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_uid",
+        "asset_type",
+        "title",
+        "version",
+        "judgment_version",
+        "created_at",
+        "updated_at",
+        "compatibility",
+        "runtime",
+        "summary",
+        "languages",
+        "history"
+      ],
+      "additionalProperties": false
+    },
+    "NativeCreationManifestAction06": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "enum": [
+            "/format_version",
+            "/payload",
+            "/representation_metadata",
+            "/content_digest",
+            "/authoring/content_digest"
+          ]
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "added",
+            "refreshed"
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    "NativeCreationRequest06": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tuple": {
+          "$ref": "#/$defs/CandidateVersionTuple06"
+        },
+        "operation": {
+          "type": "string",
+          "const": "create_public_asset"
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        }
+      },
+      "required": [
+        "request_id",
+        "tuple",
+        "operation",
+        "timeout_ms"
+      ],
+      "additionalProperties": false
+    },
+    "NativeCreationRequestAdmission06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "admitted_request"
+            },
+            "request": {
+              "$ref": "#/$defs/AdmittedNativeCreationRequest06"
+            }
+          },
+          "required": [
+            "status",
+            "request"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/$defs/SourceRouteFailure06"
+        },
+        {
+          "$ref": "#/$defs/SourceRouteCoreRejected06"
+        }
+      ]
+    },
+    "NonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "OriginalProtectionDiagnosticFor06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_INPUT_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "input"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_DECLARATION_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "declaration"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_PROFILE_UNSUPPORTED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "declaration",
+                "envelope",
+                "integrity"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_ENVELOPE_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "envelope"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_KDF_UNAVAILABLE"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "kdf"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_CREDENTIAL_REQUIRED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "credential"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_AUTHENTICATION_FAILED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authentication"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_CHECKSUMS_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "integrity"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_SIGNATURE_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "integrity"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_SIGNATURE_PIN_MISMATCH"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "integrity"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_GRANT_INVALID"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "grant"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_GRANT_BINDING_MISMATCH"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "grant"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_AUTHORIZATION_EXPIRED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_AUTHORIZATION_REVOKED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_REFRESH_REQUIRED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_STATE_ROLLBACK"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_PROVIDER_FAILED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_DECLARATION_CONFLICT"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "authorization"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_OPERATION_UNTRUSTED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "input"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "const": "PROTECTION_OPERATION_DISPOSED"
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "input",
+                "authorization",
+                "projection",
+                "host_handoff",
+                "transport_commit"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "stage"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "OriginalProtectionDisclosureFor06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "none"
+            },
+            "external_commit": {
+              "$ref": "#/$defs/OriginalProtectionExternalCommitNotInvokedFor06"
+            }
+          },
+          "required": [
+            "kind",
+            "external_commit"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "trusted_host"
+            },
+            "at_ms": {
+              "$ref": "#/$defs/UInt"
+            },
+            "external_commit": {
+              "$ref": "#/$defs/OriginalProtectionExternalCommitFor06"
+            }
+          },
+          "required": [
+            "kind",
+            "at_ms",
+            "external_commit"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "OriginalProtectionExternalCommitConfirmedFor06": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "confirmed"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        },
+        "confirmed_at_ms": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/UInt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms",
+        "confirmed_at_ms"
+      ],
+      "additionalProperties": false
+    },
+    "OriginalProtectionExternalCommitFor06": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/OriginalProtectionExternalCommitNotInvokedFor06"
+        },
+        {
+          "$ref": "#/$defs/OriginalProtectionExternalCommitUnknownFor06"
+        },
+        {
+          "$ref": "#/$defs/OriginalProtectionExternalCommitConfirmedFor06"
+        }
+      ]
+    },
+    "OriginalProtectionExternalCommitNotInvokedFor06": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "not_invoked"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "OriginalProtectionExternalCommitUnknownFor06": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "outcome_unknown"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempted_at_ms": {
+          "$ref": "#/$defs/UInt"
+        }
+      },
+      "required": [
+        "state",
+        "attempt_id",
+        "attempted_at_ms"
+      ],
+      "additionalProperties": false
+    },
+    "ReadDiagnostic": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/ReadDiagnosticCode"
+        },
+        "stage": {
+          "$ref": "#/$defs/ReadStage"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning"
+          ]
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "field": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "stage",
+        "severity",
+        "subject",
+        "field"
+      ],
+      "additionalProperties": false
+    },
+    "ReadDiagnosticCode": {
+      "type": "string",
+      "enum": [
+        "READ_INPUT_INVALID",
+        "READ_SNAPSHOT_UNATTESTED",
+        "READ_CORE_CAPABILITY_UNAVAILABLE",
+        "READ_UNSUPPORTED_VERSION",
+        "READ_MIXED_VERSION_TUPLE",
+        "READ_CORE_INVALID",
+        "READ_INTERPRETATION_INCOMPLETE",
+        "READ_STATIC_POLICY_INVALID",
+        "READ_ASSET_MISMATCH",
+        "READ_ASSET_VERSION_MISMATCH",
+        "READ_SELECTION_NOT_FOUND",
+        "READ_SELECTION_AMBIGUOUS",
+        "READ_HANDLE_UNTRUSTED",
+        "READ_HANDLE_VERSION_MISMATCH",
+        "READ_HANDLE_STALE",
+        "READ_HANDLE_ASSET_MISMATCH",
+        "READ_HANDLE_SCOPE_MISMATCH",
+        "READ_HOST_CONTEXT_UNTRUSTED",
+        "READ_HOST_EPOCH_MISMATCH",
+        "READ_HOST_TIME_INVALID",
+        "READ_HANDLE_EXPIRED",
+        "READ_HOST_CONTEXT_EXPIRED",
+        "READ_HOST_DENIED",
+        "READ_SCOPE_DENIED",
+        "READ_PROJECTION_INVALID",
+        "READ_BUDGET_INSUFFICIENT",
+        "READ_COMPONENT_DECLARATION_INVALID",
+        "READ_COMPONENT_CONTENT_INVALID",
+        "READ_COMPONENT_REFERENCE_INVALID",
+        "READ_COMPONENT_GRAPH_CYCLE",
+        "READ_COMPONENT_LIMIT_EXCEEDED",
+        "READ_COMPONENT_BINDING_INVALID",
+        "READ_COMPONENT_ADOPTION_INVALID",
+        "READ_METHOD_PRESENCE_INVALID",
+        "READ_R2_STRUCTURE_INVALID",
+        "READ_R2_REFERENCE_INVALID",
+        "READ_R2_METHOD_INVALID",
+        "READ_R2_PLAN_INVALID",
+        "READ_R2_POLICY_INVALID",
+        "READ_R2_SCOPE_INVALID",
+        "READ_R2_EXAMPLE_INVALID",
+        "READ_R2_HISTORY_INVALID",
+        "READ_UNSUPPORTED_CRITICAL",
+        "READ_UNRESOLVED_EXTERNAL"
+      ]
+    },
+    "ReadStage": {
+      "type": "string",
+      "enum": [
+        "input",
+        "version",
+        "core",
+        "selection",
+        "handle",
+        "host",
+        "projection",
+        "budget"
+      ]
+    },
+    "Ref": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "asset",
+            "judgment",
+            "result",
+            "contract",
+            "condition",
+            "component",
+            "unit",
+            "plan",
+            "plan_node",
+            "policy",
+            "branch_entry",
+            "candidate",
+            "material",
+            "shared_declaration",
+            "boundary",
+            "exception",
+            "misuse",
+            "reason",
+            "source",
+            "source_use",
+            "resource",
+            "relationship",
+            "dependency",
+            "example",
+            "example_result",
+            "revision",
+            "actor"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "RevisionEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "summary": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "affected_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "previous": {
+          "$ref": "#/$defs/RevisionRef"
+        },
+        "actor_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "judgment_version",
+        "at",
+        "summary",
+        "affected_refs",
+        "actor_refs"
+      ],
+      "additionalProperties": false
+    },
+    "RevisionRef": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "revision"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "RuntimeMandatoryEntryName": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/EntryName"
+        },
+        {
+          "not": {
+            "enum": [
+              "checksums.json",
+              "signature.kdsig",
+              "mimetype"
+            ]
+          }
+        },
+        {
+          "pattern": "^(?!build-receipt\\.json$)(?!reports/)(?!authoring/)"
+        }
+      ]
+    },
+    "SemanticValue": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ValueText"
+        },
+        {
+          "$ref": "#/$defs/ValueNumber"
+        },
+        {
+          "$ref": "#/$defs/ValueBoolean"
+        },
+        {
+          "$ref": "#/$defs/ValueNull"
+        },
+        {
+          "$ref": "#/$defs/ValueList"
+        },
+        {
+          "$ref": "#/$defs/ValueRecord"
+        }
+      ]
+    },
+    "SourceRouteCoreRejected06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "core_rejected"
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "input",
+            "capture",
+            "admission",
+            "output"
+          ]
+        },
+        "core": {
+          "$ref": "#/$defs/CoreAdmissionRejected"
+        },
+        "disclosure": {
+          "$ref": "#/$defs/OriginalProtectionDisclosureFor06"
+        },
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "stage",
+        "core",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteDiagnostic06": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "SOURCE_INPUT_INVALID",
+            "SOURCE_HOST_UNTRUSTED",
+            "SOURCE_EXPECTED_ASSET_MISMATCH",
+            "SOURCE_HOST_DENIED",
+            "SOURCE_PERMISSION_REJECTED",
+            "SOURCE_CONTEXT_UNTRUSTED",
+            "SOURCE_CONTEXT_CLOSED",
+            "SOURCE_DEADLINE_EXCEEDED",
+            "SOURCE_PROVIDER_FAILED",
+            "SOURCE_HANDOFF_UNKNOWN",
+            "SOURCE_CAPABILITY_UNAVAILABLE",
+            "SOURCE_DRAFT_INVALID",
+            "SOURCE_INTERPRETATION_INCOMPLETE",
+            "SOURCE_POLICY_INVALID",
+            "SOURCE_OUTPUT_INVALID"
+          ]
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "input",
+            "admission",
+            "authorization",
+            "semantic",
+            "return",
+            "output"
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "stage"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteDigests06": {
+      "type": "object",
+      "properties": {
+        "A": {
+          "$ref": "#/$defs/Digest"
+        },
+        "C": {
+          "$ref": "#/$defs/Digest"
+        },
+        "E": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "A",
+        "C",
+        "E"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteFailure06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "source_failed"
+        },
+        "diagnostic": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/SourceRouteDiagnostic06"
+            },
+            {
+              "$ref": "#/$defs/OriginalProtectionDiagnosticFor06"
+            }
+          ]
+        },
+        "disclosure": {
+          "$ref": "#/$defs/OriginalProtectionDisclosureFor06"
+        },
+        "body": {
+          "type": "null"
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "diagnostic",
+        "disclosure",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRouteMemberInventory06": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/EntryName"
+        },
+        "type": {
+          "type": "string",
+          "const": "file"
+        },
+        "mode": {
+          "$ref": "#/$defs/UInt"
+        },
+        "size": {
+          "$ref": "#/$defs/UInt"
+        },
+        "sha256": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "mode",
+        "size",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "TechnicalState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "valid",
+        "invalid"
+      ]
+    },
+    "TermRef": {
+      "type": "object",
+      "properties": {
+        "term": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "extension": {
+          "$ref": "#/$defs/Extension"
+        },
+        "vocabulary": {
+          "$ref": "#/$defs/TermVocabulary"
+        }
+      },
+      "required": [
+        "term"
+      ],
+      "additionalProperties": false
+    },
+    "TermVocabulary": {
+      "type": "string",
+      "enum": [
+        "core",
+        "author"
+      ]
+    },
+    "Text": {
+      "type": "string"
+    },
+    "Timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$"
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "ValueBoolean": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "boolean",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/Boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "ValueField": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "value": {
+          "$ref": "#/$defs/SemanticValue"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "ValueList": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "list",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SemanticValue"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "kind",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "ValueNull": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "null",
+          "type": "string"
+        },
+        "value": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "ValueNumber": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "number",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/FiniteNumber"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "ValueRecord": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "record",
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ValueField"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "kind",
+        "fields"
+      ],
+      "additionalProperties": false
+    },
+    "ValueText": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "text",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/Text"
+        }
+      },
+      "required": [
+        "kind",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+import type { Payload } from './types.js';
+import type { NativeCreationManifest06, NativeCreationRequest06, AdmittedNativeCreationRequest06, NativeCreationAuthority06, NativeCreationAuthorityContext06, NativeCreationRequestAdmission06, NativeCreationEvidence06, SourceRouteFailure06, SourceRouteCoreRejected06 } from './creation06/types.js';
+export type { NativeCreationManifest06, NativeCreationRequest06, AdmittedNativeCreationRequest06, NativeCreationAuthority06, NativeCreationAuthorityContext06, NativeCreationRequestAdmission06, NativeCreationEvidence06 } from './creation06/types.js';
+export type NativeCreationMember06 = Readonly<{ name: string; type: 'file'; mode: number; bytes: Uint8Array }>;
+export type NativeCreationInput06 = Readonly<{ manifest: NativeCreationManifest06; payload: Payload; members: ReadonlyArray<NativeCreationMember06> }>;
+export type NativeCreationResult06 = Readonly<{ status: 'produced'; bytes: Uint8Array; evidence: NativeCreationEvidence06 }> | SourceRouteFailure06 | SourceRouteCoreRejected06;
+export declare function admitNativeCreationRequest(candidate: unknown): NativeCreationRequestAdmission06;
+export declare function inspectNativeCreationRequest(request: AdmittedNativeCreationRequest06): Readonly<NativeCreationRequest06> | null;
+export declare function createNativeCreationAuthority(callback: (context: Readonly<NativeCreationAuthorityContext06>) => boolean | Promise<boolean>): NativeCreationAuthority06;
+export declare function createSectionAssetNode(input: NativeCreationInput06, request: AdmittedNativeCreationRequest06, authority: NativeCreationAuthority06): Promise<NativeCreationResult06>;

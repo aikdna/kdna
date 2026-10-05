@@ -2100,7 +2100,7 @@
       "definition": "ComponentSemanticsDescriptor/properties/definition_digest",
       "kind": "literal",
       "values": [
-        "sha256:779760994a3c7c730bd524e1d1d8d6f7c1fd8628bde55bcf3fa98ddd02051c28"
+        "sha256:37e857cc4e43f7283a51ee6abe1f6e8401803902e8dc47f6d14d712aa7d7b089"
       ]
     },
     {
@@ -2219,7 +2219,7 @@
       "definition": "ComponentSemanticsDescriptor/properties/limits/properties/components_per_payload",
       "kind": "literal",
       "values": [
-        256
+        1024
       ]
     },
     {
@@ -2247,7 +2247,7 @@
       "definition": "ComponentSemanticsDescriptor/properties/limits/properties/opted_in_total_canonical_bytes",
       "kind": "literal",
       "values": [
-        196608
+        524288
       ]
     },
     {

@@ -1,0 +1,1153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:retained06:RetainedSectionVerification06",
+  "title": "RetainedSectionVerification06",
+  "description": "Candidate retained structural data only; native origins/preparations require same-instance brand.",
+  "$ref": "#/$defs/RetainedSectionVerification06",
+  "$defs": {
+    "CapturedInput06": {
+      "type": "object",
+      "properties": {
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "input_byte_length": {
+          "$ref": "#/$defs/UInt"
+        },
+        "manifest_bytes_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "zip_directory_bytes_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "table_frames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CheckedSection06"
+          },
+          "minItems": 0
+        },
+        "identity_scope": {
+          "type": "string",
+          "const": "observed_metadata_and_loaded_sections_only"
+        }
+      },
+      "required": [
+        "capture_id",
+        "input_byte_length",
+        "manifest_bytes_digest",
+        "zip_directory_bytes_digest",
+        "table_frames",
+        "identity_scope"
+      ],
+      "additionalProperties": false
+    },
+    "CatalogVerification06": {
+      "type": "object",
+      "properties": {
+        "capture": {
+          "$ref": "#/$defs/CapturedInput06"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "checked_sections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CheckedSection06"
+          },
+          "minItems": 0
+        },
+        "unchecked_sections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "uniqueItems": true
+        },
+        "routing_integrity": {
+          "type": "string",
+          "const": "checked"
+        },
+        "runtime_entry_digest": {
+          "$ref": "#/$defs/ScopedRuntimeEntryDigest06"
+        },
+        "whole_container_digest": {
+          "type": "object",
+          "properties": {
+            "profile": {
+              "type": "string",
+              "const": "kdna.digest-basis.container-bytes/0.2.0"
+            },
+            "status": {
+              "type": "string",
+              "const": "not_checked"
+            },
+            "claimed_digest": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Digest"
+                },
+                {
+                  "type": "null",
+                  "const": null
+                }
+              ]
+            }
+          },
+          "required": [
+            "profile",
+            "status",
+            "claimed_digest"
+          ],
+          "additionalProperties": false
+        },
+        "whole_content_digest": {
+          "type": "object",
+          "properties": {
+            "profile": {
+              "type": "string",
+              "const": "kdna.digest-basis.content-tree/0.2.0"
+            },
+            "status": {
+              "type": "string",
+              "const": "not_checked"
+            },
+            "claimed_digest": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Digest"
+                },
+                {
+                  "type": "null",
+                  "const": null
+                }
+              ]
+            }
+          },
+          "required": [
+            "profile",
+            "status",
+            "claimed_digest"
+          ],
+          "additionalProperties": false
+        },
+        "ir_digest": {
+          "type": "object",
+          "properties": {
+            "profile": {
+              "type": "string",
+              "const": "CanonicalIR:SHA-256(RFC8785):existing-digestCanonical"
+            },
+            "status": {
+              "type": "string",
+              "const": "not_checked"
+            },
+            "claimed_digest": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Digest"
+                },
+                {
+                  "type": "null",
+                  "const": null
+                }
+              ]
+            }
+          },
+          "required": [
+            "profile",
+            "status",
+            "claimed_digest"
+          ],
+          "additionalProperties": false
+        },
+        "mode": {
+          "type": "string",
+          "const": "catalog"
+        },
+        "semantic_status": {
+          "type": "string",
+          "const": "metadata_only"
+        },
+        "checksum_integrity": {
+          "$ref": "#/$defs/ScopedChecksumVerification06"
+        },
+        "signature_integrity": {
+          "$ref": "#/$defs/SectionSignatureVerification06"
+        }
+      },
+      "required": [
+        "capture",
+        "request_digest",
+        "checked_sections",
+        "unchecked_sections",
+        "routing_integrity",
+        "runtime_entry_digest",
+        "whole_container_digest",
+        "whole_content_digest",
+        "ir_digest",
+        "mode",
+        "semantic_status",
+        "checksum_integrity",
+        "signature_integrity"
+      ],
+      "additionalProperties": false
+    },
+    "CheckedSection06": {
+      "type": "object",
+      "properties": {
+        "section_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "member": {
+          "$ref": "#/$defs/EntryName"
+        },
+        "offset_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "length_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "section_id",
+        "member",
+        "offset_bytes",
+        "length_bytes",
+        "digest"
+      ],
+      "additionalProperties": false
+    },
+    "ChecksumsEntry06": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/EntryName"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8388608
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "name",
+        "bytes",
+        "digest"
+      ],
+      "additionalProperties": false
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "EntryName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^(?!/)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))(?!.*//)(?!.*[/]$)[^\\\\\\u0000-\\u001f\\u007f-\\u009f]+$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "ObservedRuntimeEntryDigest06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "verified"
+        },
+        "profile": {
+          "type": "string",
+          "const": "kdna.digest-basis.runtime-entry-set/0.3.0-candidate"
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "member_names": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntryName"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "status",
+        "profile",
+        "digest",
+        "member_names"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedSectionContract06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "kdna.retained-sections"
+        },
+        "version": {
+          "type": "string",
+          "const": "0.1.0-candidate"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedSectionOrigin06": {
+      "type": "object",
+      "properties": {
+        "snapshot_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "whole",
+            "catalog"
+          ]
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "admission_request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "verification_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "checked_sections_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "kind",
+        "capture_id",
+        "admission_request_digest",
+        "verification_digest",
+        "checked_sections_digest"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedSectionSignaturePolicyCheck06": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "type": "string",
+          "const": "immutable_origin_signature_receipt"
+        },
+        "policy": {
+          "$ref": "#/$defs/SectionSignaturePolicy06"
+        },
+        "policy_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "origin_receipt_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "result": {
+          "type": "string",
+          "const": "satisfied"
+        },
+        "new_signature_verification": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "basis",
+        "policy",
+        "policy_digest",
+        "origin_receipt_digest",
+        "result",
+        "new_signature_verification"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedSectionVerification06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/RetainedSectionContract06"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "origin": {
+          "$ref": "#/$defs/RetainedSectionOrigin06"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "intent_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "whole_asset",
+            "catalog",
+            "exact_selection",
+            "expand"
+          ]
+        },
+        "origin_verification": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/WholeVerification06"
+            },
+            {
+              "$ref": "#/$defs/CatalogVerification06"
+            }
+          ]
+        },
+        "signature_policy_check": {
+          "$ref": "#/$defs/RetainedSectionSignaturePolicyCheck06"
+        },
+        "new_capture": {
+          "type": "boolean",
+          "const": false
+        },
+        "io": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SectionIOSingleRange06"
+          },
+          "minItems": 0,
+          "maxItems": 0
+        },
+        "new_domain_validation": {
+          "type": "boolean",
+          "const": false
+        },
+        "new_digest_computation": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "contract",
+        "operation_id",
+        "origin",
+        "request_digest",
+        "intent_digest",
+        "mode",
+        "origin_verification",
+        "signature_policy_check",
+        "new_capture",
+        "io",
+        "new_domain_validation",
+        "new_digest_computation"
+      ],
+      "additionalProperties": false
+    },
+    "ScopedChecksumMemberObservation06": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/EntryName"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8388608
+        },
+        "expected_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "observed_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "name",
+        "bytes",
+        "expected_digest",
+        "observed_digest"
+      ],
+      "additionalProperties": false
+    },
+    "ScopedChecksumVerification06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "absent"
+            }
+          },
+          "required": [
+            "status"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "checked_members_document_2"
+            },
+            "profile": {
+              "type": "string",
+              "const": "kdna.checksums.document/2"
+            },
+            "profile_version": {
+              "type": "string",
+              "const": "2.0.0-candidate"
+            },
+            "declaration_status": {
+              "type": "string",
+              "const": "shape_and_directory_checked"
+            },
+            "document_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "covered_entries": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/EntryName"
+              },
+              "minItems": 2,
+              "maxItems": 128,
+              "uniqueItems": true
+            },
+            "checked_entries": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ScopedChecksumMemberObservation06"
+              },
+              "maxItems": 128,
+              "minItems": 1,
+              "uniqueItems": true
+            },
+            "unchecked_entries": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ChecksumsEntry06"
+              },
+              "maxItems": 128,
+              "uniqueItems": true
+            },
+            "entry_set_digest": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "const": "not_checked"
+                    },
+                    "expected_digest": {
+                      "$ref": "#/$defs/Digest"
+                    },
+                    "observed_digest": {
+                      "type": "null",
+                      "const": null
+                    },
+                    "comparison": {
+                      "type": "string",
+                      "const": "not_compared"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "const": "members_unchecked"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "expected_digest",
+                    "observed_digest",
+                    "comparison",
+                    "reason"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "const": "verified"
+                    },
+                    "expected_digest": {
+                      "$ref": "#/$defs/Digest"
+                    },
+                    "observed_digest": {
+                      "$ref": "#/$defs/Digest"
+                    },
+                    "comparison": {
+                      "type": "string",
+                      "const": "matched"
+                    },
+                    "basis": {
+                      "type": "string",
+                      "const": "actual_complete_member_bytes"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "expected_digest",
+                    "observed_digest",
+                    "comparison",
+                    "basis"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "capture_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "request_digest": {
+              "$ref": "#/$defs/Digest"
+            }
+          },
+          "required": [
+            "status",
+            "profile",
+            "profile_version",
+            "declaration_status",
+            "document_digest",
+            "covered_entries",
+            "checked_entries",
+            "unchecked_entries",
+            "entry_set_digest",
+            "capture_id",
+            "request_digest"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ScopedRuntimeEntryDigest06": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/UnobservedRuntimeEntryDigest06"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "verified"
+            },
+            "profile": {
+              "type": "string",
+              "const": "kdna.digest-basis.runtime-entry-set/0.3.0-candidate"
+            },
+            "digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "member_names": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/EntryName"
+              },
+              "minItems": 2,
+              "maxItems": 128,
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "status",
+            "profile",
+            "digest",
+            "member_names"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "SectionChecksumVerification06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "absent"
+            }
+          },
+          "required": [
+            "status"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "verified_document_2"
+            },
+            "profile": {
+              "type": "string",
+              "const": "kdna.checksums.document/2"
+            },
+            "profile_version": {
+              "type": "string",
+              "const": "2.0.0-candidate"
+            },
+            "document_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "expected_entry_set_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "observed_entry_set_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "covered_entries": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/EntryName"
+              },
+              "minItems": 2,
+              "maxItems": 128,
+              "uniqueItems": true
+            },
+            "capture_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "request_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "observed_A": {
+              "$ref": "#/$defs/Digest"
+            },
+            "observed_C": {
+              "$ref": "#/$defs/Digest"
+            }
+          },
+          "required": [
+            "status",
+            "profile",
+            "profile_version",
+            "document_digest",
+            "expected_entry_set_digest",
+            "observed_entry_set_digest",
+            "covered_entries",
+            "capture_id",
+            "request_digest",
+            "observed_A",
+            "observed_C"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "SectionIOSingleRange06": {
+      "type": "object",
+      "properties": {
+        "offset_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "length_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "zip_end",
+            "zip_directory",
+            "zip_local_header",
+            "zip_local_name",
+            "mimetype",
+            "manifest",
+            "whole_after_authorization",
+            "zip_directory_header",
+            "zip_directory_name",
+            "section_table_after_authorization",
+            "section_content_after_authorization",
+            "resource_after_authorization",
+            "section_structure_after_authorization",
+            "zip_locator_local_signature",
+            "zip_locator_local_header",
+            "zip_locator_directory_signature",
+            "zip_locator_directory_header",
+            "zip_locator_directory_name",
+            "zip_locator_local_name",
+            "zip_locator_eocd",
+            "zip_comment",
+            "checksum_document_after_authorization",
+            "checksum_member_after_authorization",
+            "signature_document_after_authorization",
+            "signature_member_after_authorization"
+          ]
+        }
+      },
+      "required": [
+        "offset_bytes",
+        "length_bytes",
+        "purpose"
+      ],
+      "additionalProperties": false
+    },
+    "SectionSignatureMember06": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/EntryName"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8388608
+        },
+        "raw_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "signature_basis_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "name",
+        "bytes",
+        "raw_digest",
+        "signature_basis_digest"
+      ],
+      "additionalProperties": false
+    },
+    "SectionSignaturePolicy06": {
+      "type": "object",
+      "properties": {
+        "requireSignature": {
+          "type": "boolean"
+        },
+        "expectedPublicKeyHex": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "requireSignature",
+        "expectedPublicKeyHex"
+      ],
+      "additionalProperties": false
+    },
+    "SectionSignatureVerification06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "absent"
+            },
+            "read_intent_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "policy": {
+              "$ref": "#/$defs/SectionSignaturePolicy06"
+            },
+            "policy_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "capture_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "request_digest": {
+              "$ref": "#/$defs/Digest"
+            }
+          },
+          "required": [
+            "status",
+            "read_intent_digest",
+            "policy",
+            "policy_digest",
+            "capture_id",
+            "request_digest"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "verified_self_key",
+                "verified_pinned_key"
+              ]
+            },
+            "read_intent_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "policy": {
+              "$ref": "#/$defs/SectionSignaturePolicy06"
+            },
+            "policy_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "capture_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "request_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "profile": {
+              "type": "string",
+              "const": "kdsig.ed25519"
+            },
+            "profile_version": {
+              "type": "string",
+              "const": "0.1.0"
+            },
+            "algorithm": {
+              "type": "string",
+              "const": "ed25519"
+            },
+            "signature_document_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "expected_signature_content_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "observed_signature_content_digest": {
+              "$ref": "#/$defs/Digest"
+            },
+            "public_key": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            "key_fingerprint": {
+              "$ref": "#/$defs/Digest"
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SectionSignatureMember06"
+              },
+              "minItems": 2,
+              "maxItems": 128
+            },
+            "excluded_members": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/EntryName"
+              },
+              "minItems": 0,
+              "maxItems": 128
+            }
+          },
+          "required": [
+            "status",
+            "read_intent_digest",
+            "policy",
+            "policy_digest",
+            "capture_id",
+            "request_digest",
+            "profile",
+            "profile_version",
+            "algorithm",
+            "signature_document_digest",
+            "expected_signature_content_digest",
+            "observed_signature_content_digest",
+            "public_key",
+            "key_fingerprint",
+            "members",
+            "excluded_members"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "UnobservedRuntimeEntryDigest06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "not_checked"
+        },
+        "profile": {
+          "type": "string",
+          "const": "kdna.digest-basis.runtime-entry-set/0.3.0-candidate"
+        },
+        "claimed_digest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null",
+              "const": null
+            }
+          ]
+        }
+      },
+      "required": [
+        "status",
+        "profile",
+        "claimed_digest"
+      ],
+      "additionalProperties": false
+    },
+    "WholeVerification06": {
+      "type": "object",
+      "properties": {
+        "capture": {
+          "$ref": "#/$defs/CapturedInput06"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "checked_sections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CheckedSection06"
+          },
+          "minItems": 0
+        },
+        "unchecked_sections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "maxItems": 0
+        },
+        "routing_integrity": {
+          "type": "string",
+          "const": "checked"
+        },
+        "runtime_entry_digest": {
+          "$ref": "#/$defs/ObservedRuntimeEntryDigest06"
+        },
+        "whole_container_digest": {
+          "type": "object",
+          "properties": {
+            "profile": {
+              "type": "string",
+              "const": "kdna.digest-basis.container-bytes/0.2.0"
+            },
+            "status": {
+              "type": "string",
+              "const": "verified"
+            },
+            "digest": {
+              "$ref": "#/$defs/Digest"
+            }
+          },
+          "required": [
+            "profile",
+            "status",
+            "digest"
+          ],
+          "additionalProperties": false
+        },
+        "whole_content_digest": {
+          "type": "object",
+          "properties": {
+            "profile": {
+              "type": "string",
+              "const": "kdna.digest-basis.content-tree/0.2.0"
+            },
+            "status": {
+              "type": "string",
+              "const": "verified"
+            },
+            "digest": {
+              "$ref": "#/$defs/Digest"
+            }
+          },
+          "required": [
+            "profile",
+            "status",
+            "digest"
+          ],
+          "additionalProperties": false
+        },
+        "ir_digest": {
+          "type": "object",
+          "properties": {
+            "profile": {
+              "type": "string",
+              "const": "CanonicalIR:SHA-256(RFC8785):existing-digestCanonical"
+            },
+            "status": {
+              "type": "string",
+              "const": "verified"
+            },
+            "digest": {
+              "$ref": "#/$defs/Digest"
+            }
+          },
+          "required": [
+            "profile",
+            "status",
+            "digest"
+          ],
+          "additionalProperties": false
+        },
+        "mode": {
+          "type": "string",
+          "const": "whole_asset"
+        },
+        "semantic_status": {
+          "type": "string",
+          "const": "verified_whole_graph"
+        },
+        "checksum_integrity": {
+          "$ref": "#/$defs/SectionChecksumVerification06"
+        },
+        "signature_integrity": {
+          "$ref": "#/$defs/SectionSignatureVerification06"
+        }
+      },
+      "required": [
+        "capture",
+        "request_digest",
+        "checked_sections",
+        "unchecked_sections",
+        "routing_integrity",
+        "runtime_entry_digest",
+        "whole_container_digest",
+        "whole_content_digest",
+        "ir_digest",
+        "mode",
+        "semantic_status",
+        "checksum_integrity",
+        "signature_integrity"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

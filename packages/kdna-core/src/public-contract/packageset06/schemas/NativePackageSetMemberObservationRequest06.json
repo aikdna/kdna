@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:packageset06:NativePackageSetMemberObservationRequest06",
+  "title": "NativePackageSetMemberObservationRequest06",
+  "description": "Native PackageSet structural data only; member, byte, retained Read and action authorities remain independent actual brands.",
+  "$ref": "#/$defs/NativePackageSetMemberObservationRequest06",
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativePackageSetMemberObservationRequest06": {
+      "type": "object",
+      "properties": {
+        "set_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "members": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/PackageMember"
+          }
+        },
+        "selection": {
+          "$ref": "#/$defs/Selection"
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "isolated_read",
+            "semantic_merge",
+            "cross_asset_reference"
+          ]
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "initial",
+            "read"
+          ]
+        }
+      },
+      "required": [
+        "set_id",
+        "members",
+        "selection",
+        "operation",
+        "phase"
+      ],
+      "additionalProperties": false
+    },
+    "PackageMember": {
+      "type": "object",
+      "properties": {
+        "member_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "member_id",
+        "asset_id",
+        "asset_version",
+        "A"
+      ],
+      "additionalProperties": false
+    },
+    "Selection": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_id"
+      ],
+      "additionalProperties": false
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  }
+}

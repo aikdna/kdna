@@ -153,6 +153,8 @@ function check() {
         ROOT,
         '--out-dir',
         ROOT,
+        '--dependency-root',
+        ROOT,
         '--check',
       ],
       { cwd: ROOT, encoding: 'utf8', timeout: 60000, maxBuffer: 4 * 1024 * 1024 },

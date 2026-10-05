@@ -1,5 +1,5 @@
 'use strict';
-// B3 validation-only revision preview.
+// Validation-only revision preview.
 //
 // This is the semantic step shared by preview and produce. It validates a PROPOSED
 // decoded Payload against a Manifest through the one existing Core semantic path,

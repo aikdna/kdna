@@ -1,0 +1,3153 @@
+{
+  "format": "kdna.native-output-recipe/1",
+  "source": "specs/public-semantic-source.json",
+  "input_sha256": "4b39c37c7a6f18ade567fb6248e6488af94737c0f4a08f25ef4751399e5315ec",
+  "base_type_order": [
+    "StaticPolicyCandidate",
+    "StaticPolicyEntry",
+    "StaticPolicyStrategy",
+    "StaticPolicyFallback",
+    "StaticPolicyRule",
+    "StaticPolicyCarrier",
+    "StaticPolicyInterpretation",
+    "IRNode_static_policy",
+    "Identifier",
+    "Text",
+    "NonEmptyText",
+    "UInt",
+    "FiniteNumber",
+    "Boolean",
+    "Digest",
+    "FixedByteCount",
+    "EntryName",
+    "VersionLabel",
+    "Timestamp",
+    "AuthoredUnprovidedState",
+    "TechnicalState",
+    "InterpretationState",
+    "WriterState",
+    "ConfirmationState",
+    "ReadPermission",
+    "ActorKind",
+    "AccessMode",
+    "AssetType",
+    "BoundaryEffect",
+    "ReasonRole",
+    "RelationDirection",
+    "ReferenceRole",
+    "RiskState",
+    "VersionTuple",
+    "AssetIdentity",
+    "Selection",
+    "ValueText",
+    "ValueNumber",
+    "ValueBoolean",
+    "ValueNull",
+    "ValueList",
+    "ValueField",
+    "ValueRecord",
+    "SemanticValue",
+    "Extension",
+    "TermRef",
+    "Actor",
+    "Subject",
+    "ScopeDimension",
+    "Scope",
+    "Boundary",
+    "Exception",
+    "Misuse",
+    "BoundaryDeclarationProvided",
+    "BoundaryDeclarationUnprovided",
+    "BoundaryDeclaration",
+    "ExceptionDeclarationProvided",
+    "ExceptionDeclarationUnprovided",
+    "ExceptionDeclaration",
+    "MisuseDeclarationProvided",
+    "MisuseDeclarationUnprovided",
+    "MisuseDeclaration",
+    "TextDeclarationProvided",
+    "TextDeclarationUnprovided",
+    "TextDeclaration",
+    "TextListDeclarationProvided",
+    "TextListDeclarationUnprovided",
+    "TextListDeclaration",
+    "RoleDeclarationValue",
+    "RoleDeclarationProvided",
+    "RoleDeclarationUnprovided",
+    "RoleDeclaration",
+    "AuthoredDeclarations",
+    "ScalarKind",
+    "ScalarShape",
+    "ListShape",
+    "ShapeField",
+    "RecordShape",
+    "ResultShape",
+    "ResultContract",
+    "Result",
+    "InterpretedCondition",
+    "PredicateOperator",
+    "DependencyOperand",
+    "LiteralOperand",
+    "ConditionOperand",
+    "StructuredCondition",
+    "EvaluatorCondition",
+    "Condition",
+    "FormationRule",
+    "MethodComponent",
+    "MethodBinding",
+    "MethodUse",
+    "Reason",
+    "SourceRef",
+    "SourceTargetKind",
+    "SourceUse",
+    "Resource",
+    "MaterialKind",
+    "Material",
+    "RelationParticipant",
+    "Relationship",
+    "JudgmentProducer",
+    "SourceProducer",
+    "Dependency",
+    "Judgment",
+    "Cohesion",
+    "Payload",
+    "Creator",
+    "Compatibility",
+    "PayloadDescriptor",
+    "ManifestRuntime",
+    "ManifestAuthoring",
+    "License",
+    "ManifestLineage",
+    "EncryptionDescriptor",
+    "Manifest",
+    "ExpectedSourceKind",
+    "ExpectedSource",
+    "NoComparison",
+    "ComparedState",
+    "Compared",
+    "Comparison",
+    "DigestA",
+    "DigestC",
+    "DigestE",
+    "DigestP",
+    "DigestEvidence",
+    "AssetDigests",
+    "ReadDiagnosticCode",
+    "ReadStage",
+    "ReadDiagnostic",
+    "IRReference",
+    "IRRelationship",
+    "ProvenanceClaim",
+    "IRNode_judgment",
+    "IRNode_scope",
+    "IRNode_boundary",
+    "IRNode_result",
+    "IRNode_formation_rule",
+    "IRNode_declaration",
+    "IRNode_provenance",
+    "IRNode_reason",
+    "IRNode_source",
+    "IRNode_material",
+    "IRNode_relationship",
+    "IRNode_dependency",
+    "IRNode_diagnostic",
+    "IRReadNode",
+    "CatalogItem",
+    "MandatoryClosure",
+    "ExpansionTarget",
+    "CanonicalIR",
+    "ExpansionHandle",
+    "Missing",
+    "OmissionReason",
+    "Omission",
+    "Provenance",
+    "ReadContent",
+    "AssessmentNotEvaluated",
+    "AssessmentKind",
+    "AssessmentReported",
+    "Assessment",
+    "ResponsibilityStates",
+    "DeliveryState",
+    "ReadReceipt",
+    "ReadBudget",
+    "ReadEnvelopeReady",
+    "ReadEnvelopeRejected",
+    "ReadEnvelope",
+    "Request_whole_asset",
+    "Request_catalog",
+    "Request_exact_selection",
+    "Request_expand",
+    "ReadRequest",
+    "ProjectionBody",
+    "Projected",
+    "ProjectionRejected",
+    "ReadProjection",
+    "AdmissionReason",
+    "AdmissionField",
+    "AdmissionDiagnostic",
+    "ValidatedCorrelation",
+    "UnavailableCorrelation",
+    "ReadCorrelation",
+    "ControlBudget",
+    "ReadAdmissionRejection",
+    "ControlSignal",
+    "ReadNoBodyControl",
+    "ReadTransportFailure",
+    "Call_read_envelope",
+    "Call_admission_rejection",
+    "Call_no_body_control",
+    "Call_transport_failure",
+    "ReadCallResult",
+    "CoreAdmissionWitness",
+    "AdmittedReadRequest",
+    "TrustedReadControlProvider",
+    "HostReadWitness",
+    "CanonicalReadSnapshotData",
+    "HostReadContextData",
+    "PackageMember",
+    "HandoffMember",
+    "PackageSet",
+    "PackageSetHandoff",
+    "SourceUseRole",
+    "ReadyStates",
+    "ReadyReceipt",
+    "RejectedReceipt",
+    "PureReadContent",
+    "AdmissionNoBodyControl",
+    "EnvelopeNoBodyControl",
+    "Ms",
+    "DiagnosticCode",
+    "Stage",
+    "ReadSemanticCode",
+    "AdmittedRequestReadyRecord",
+    "VersionRejectionCode",
+    "AdmittedRequestVersionRecord",
+    "AdmittedRequestRecord",
+    "CanonicalReadSnapshot",
+    "HostReadContext",
+    "TrustedControlObservation",
+    "Admission_admitted_request",
+    "Admission_admission_rejection",
+    "Admission_no_body_control",
+    "Admission_transport_failure",
+    "ReadAdmissionResult",
+    "PureConfirmationState",
+    "PureProvenance",
+    "VerifiedProvenance",
+    "UnverifiedConfirmationState",
+    "OtherProvenance",
+    "AttributionRole",
+    "Attribution",
+    "AttributionProvided",
+    "AttributionUnprovided",
+    "AttributionDeclaration",
+    "PublicAssetDeclaration",
+    "IRNode_actor",
+    "IRNode_subject",
+    "IRNode_attribution",
+    "IRNode_resource",
+    "IRNode_source_use",
+    "IRNode_result_contract",
+    "IRNode_method",
+    "IRNode_exception",
+    "IRNode_misuse",
+    "IRNode_cohesion",
+    "IRNode_asset_declaration",
+    "RuntimeMandatoryEntryName",
+    "CoreAdmissionAccepted",
+    "CoreAdmissionRejected",
+    "CoreAdmissionResult",
+    "TrustedHostReadProvider",
+    "ComponentItemKey",
+    "ComponentItem",
+    "ComponentBroaderEdge",
+    "ComponentContrast",
+    "ComponentDiscriminator",
+    "TaxonomyContent",
+    "CandidateSetContent",
+    "DiscriminatorContent",
+    "ComponentContent",
+    "CandidateIndexItem",
+    "TaxonomyBody",
+    "CandidateSetBody",
+    "DiscriminatorBody",
+    "ComponentBody",
+    "ComponentStatementOrigin",
+    "MethodFieldPresence",
+    "MethodDeclarationPresence",
+    "MethodPresenceCarrier",
+    "ComponentSemanticsCarrier",
+    "ComponentAdoptionKind",
+    "ComponentAdoptionCarrier",
+    "ComponentInterpretationSupported",
+    "ComponentInterpretationUndeclared",
+    "ComponentInterpretation",
+    "MethodReadValue",
+    "CoreStaticStates",
+    "CoreComponentFailure",
+    "ComponentSemanticsDescriptor",
+    "JudgmentForm",
+    "AssetCapability",
+    "TermVocabulary",
+    "JudgmentLifecycle",
+    "OmissionBatchReason",
+    "OmissionTargetKind",
+    "OmissionBatch",
+    "OmissionRecord",
+    "ReadEnvelopeCatalogOnly",
+    "CoreAdmissionCatalogOnly",
+    "JudgmentReplacementTarget",
+    "PublicExecutionSource",
+    "PublicExecutionIntent",
+    "PublicExecutionBudget",
+    "PublicRuntimeCapsule",
+    "PublicConsumptionPlan",
+    "PublicAgentHostRequest",
+    "PublicExecutionAuthorization",
+    "PublicExecutionDelivery",
+    "PublicExecutionOutput",
+    "PublicExecutionFailure",
+    "PublicExecutionStatus",
+    "PublicAgentHostReceipt",
+    "PublicExecutionEvent",
+    "PublicJudgmentTrace",
+    "UnsupportedVersionTuple",
+    "ProtectionEntitlement",
+    "Ref",
+    "AssetRef",
+    "JudgmentRef",
+    "ResultRef",
+    "ContractRef",
+    "ConditionRef",
+    "ComponentRef",
+    "UnitRef",
+    "PlanRef",
+    "PlanNodeRef",
+    "PolicyRef",
+    "BranchEntryRef",
+    "CandidateRef",
+    "MaterialRef",
+    "SharedDeclarationRef",
+    "BoundaryRef",
+    "ExceptionRef",
+    "MisuseRef",
+    "ReasonRef",
+    "SourceRefTarget",
+    "SourceUseRef",
+    "ResourceRef",
+    "RelationshipRef",
+    "DependencyRef",
+    "ExampleRef",
+    "ExampleResultRef",
+    "RevisionRef",
+    "ActorRef",
+    "QualificationRef",
+    "ComponentContentRef",
+    "ContentUseTargetRef",
+    "ConditionOwnerRef",
+    "QualifiedJudgmentRef",
+    "AppliesTo",
+    "AnswerKind",
+    "BaseAnswerKind",
+    "MethodKind",
+    "BaseMethodKind",
+    "RoleName",
+    "MethodKindRef",
+    "BaseMethodKindRef",
+    "OtherDefinition",
+    "AnswerPart",
+    "CoreExpression",
+    "Port",
+    "InputDefinition",
+    "JudgmentPort",
+    "MethodUnit",
+    "Endpoint",
+    "InputBindingSource",
+    "InputBinding",
+    "FlowLink",
+    "ResultBinding",
+    "StateSlot",
+    "FeedbackUpdate",
+    "Termination",
+    "PlanUseNode",
+    "PlanJudgmentUseNode",
+    "PlanSequenceNode",
+    "PlanParallelNode",
+    "PlanBranchNode",
+    "PlanFeedbackNode",
+    "PlanNode",
+    "Plan",
+    "ConditionalCandidate",
+    "EmissionSource",
+    "BranchEntry",
+    "Producer",
+    "CollectCombine",
+    "AuthoredCombine",
+    "PolicyCombine",
+    "PolicyDisposition",
+    "PolicyTerminal",
+    "PolicyUndetermined",
+    "ConditionalPolicy",
+    "ConditionalPlan",
+    "EmissionListContract",
+    "AuxiliaryContract",
+    "Emission",
+    "EmissionListValue",
+    "PolicyCompleteOutcome",
+    "PolicyPartialOutcome",
+    "PolicyOutcome",
+    "ContentUse",
+    "KernelPurpose",
+    "Kernel",
+    "SharedTextDeclaration",
+    "SharedRoleDeclaration",
+    "ScopedDeclaration",
+    "ConditionDefinition",
+    "BoundaryBody",
+    "ExceptionEffect",
+    "ExampleValueResult",
+    "ExampleDispositionResult",
+    "ExamplePartialResult",
+    "ExampleResult",
+    "Example",
+    "RevisionEntry",
+    "HistoryDeclaration",
+    "ExpansionAnchor",
+    "IRTargetDescriptor",
+    "TargetDescriptor",
+    "UnresolvedExternalReference",
+    "BoundaryActivation",
+    "IRNode_method_component",
+    "IRNode_method_unit",
+    "IRNode_method_plan",
+    "IRNode_method_instance",
+    "IRNode_conditional_policy",
+    "IRNode_branch",
+    "IRNode_candidate",
+    "IRNode_condition",
+    "IRNode_shared_declaration",
+    "IRNode_example",
+    "IRNode_example_result",
+    "IRNode_revision",
+    "IRNode_emission_list_contract",
+    "IRHistoryOverview",
+    "IRBoundaryDeclarationOverview",
+    "IRAuthoredDeclarationsOverview",
+    "NativeMethodBindingTarget"
+  ],
+  "owners": [
+    {
+      "id": "sections",
+      "source_module_pointer": "/representation_candidate",
+      "roots_pointer": "/representation_candidate/schema_roots",
+      "schema_dialect_pointer": "/schema_dialect",
+      "original_schema_description": "CANDIDATE ONLY: structural data schema does not mint Core admission, Host authority or verification proof.",
+      "validator_header": "// Candidate-only generated validators; not installed or accepted runtime.\n",
+      "schemas": [
+        {
+          "name": "Manifest06Candidate",
+          "schema_id": "urn:kdna:candidate:representation06:Manifest06Candidate",
+          "package_target": null
+        },
+        {
+          "name": "RepresentationMetadata06",
+          "schema_id": "urn:kdna:candidate:representation06:RepresentationMetadata06",
+          "package_target": null
+        },
+        {
+          "name": "DataFrame06Candidate",
+          "schema_id": "urn:kdna:candidate:representation06:DataFrame06Candidate",
+          "package_target": null
+        },
+        {
+          "name": "ReadRequest06Candidate",
+          "schema_id": "urn:kdna:candidate:representation06:ReadRequest06Candidate",
+          "package_target": null
+        },
+        {
+          "name": "Verification06Candidate",
+          "schema_id": "urn:kdna:candidate:representation06:Verification06Candidate",
+          "package_target": null
+        },
+        {
+          "name": "SectionSnapshotData06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionSnapshotData06",
+          "package_target": null
+        },
+        {
+          "name": "SectionReadWitness06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionReadWitness06",
+          "package_target": null
+        },
+        {
+          "name": "AdmittedSectionReadRequest06",
+          "schema_id": "urn:kdna:candidate:representation06:AdmittedSectionReadRequest06",
+          "package_target": null
+        },
+        {
+          "name": "SectionReadUnsupported06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionReadUnsupported06",
+          "package_target": null
+        },
+        {
+          "name": "CanonicalIR06Candidate",
+          "schema_id": "urn:kdna:candidate:representation06:CanonicalIR06Candidate",
+          "package_target": null
+        },
+        {
+          "name": "CapturedInput06",
+          "schema_id": "urn:kdna:candidate:representation06:CapturedInput06",
+          "package_target": null
+        },
+        {
+          "name": "UnsupportedVerification06",
+          "schema_id": "urn:kdna:candidate:representation06:UnsupportedVerification06",
+          "package_target": null
+        },
+        {
+          "name": "StoredRepresentationMetadata06",
+          "schema_id": "urn:kdna:candidate:representation06:StoredRepresentationMetadata06",
+          "package_target": null
+        },
+        {
+          "name": "RepresentationOrigin06",
+          "schema_id": "urn:kdna:candidate:representation06:RepresentationOrigin06",
+          "package_target": null
+        },
+        {
+          "name": "ObservedRuntimeEntryDigest06",
+          "schema_id": "urn:kdna:candidate:representation06:ObservedRuntimeEntryDigest06",
+          "package_target": null
+        },
+        {
+          "name": "WholeSectionSnapshotData06",
+          "schema_id": "urn:kdna:candidate:representation06:WholeSectionSnapshotData06",
+          "package_target": null
+        },
+        {
+          "name": "WholeSectionSnapshot06",
+          "schema_id": "urn:kdna:candidate:representation06:WholeSectionSnapshot06",
+          "package_target": null
+        },
+        {
+          "name": "SectionReadAuthority06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionReadAuthority06",
+          "package_target": null
+        },
+        {
+          "name": "Representation06DataSectionRow",
+          "schema_id": "urn:kdna:candidate:representation06:Representation06DataSectionRow",
+          "package_target": null
+        },
+        {
+          "name": "Representation06TopicRow",
+          "schema_id": "urn:kdna:candidate:representation06:Representation06TopicRow",
+          "package_target": null
+        },
+        {
+          "name": "Representation06NodeSectionRow",
+          "schema_id": "urn:kdna:candidate:representation06:Representation06NodeSectionRow",
+          "package_target": null
+        },
+        {
+          "name": "SectionAdmissionUnsupported06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionAdmissionUnsupported06",
+          "package_target": null
+        },
+        {
+          "name": "SectionAdmissionRejected06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionAdmissionRejected06",
+          "package_target": null
+        },
+        {
+          "name": "AssetDigests06",
+          "schema_id": "urn:kdna:candidate:representation06:AssetDigests06",
+          "package_target": null
+        },
+        {
+          "name": "WholeReadEnvelopeReady06",
+          "schema_id": "urn:kdna:candidate:representation06:WholeReadEnvelopeReady06",
+          "package_target": null
+        },
+        {
+          "name": "ReadEnvelopeRejected06",
+          "schema_id": "urn:kdna:candidate:representation06:ReadEnvelopeRejected06",
+          "package_target": null
+        },
+        {
+          "name": "SectionReadCallResult06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionReadCallResult06",
+          "package_target": null
+        },
+        {
+          "name": "CatalogSectionSnapshot06",
+          "schema_id": "urn:kdna:candidate:representation06:CatalogSectionSnapshot06",
+          "package_target": null
+        },
+        {
+          "name": "ScopedSectionSnapshot06",
+          "schema_id": "urn:kdna:candidate:representation06:ScopedSectionSnapshot06",
+          "package_target": null
+        },
+        {
+          "name": "CatalogSectionSnapshotData06",
+          "schema_id": "urn:kdna:candidate:representation06:CatalogSectionSnapshotData06",
+          "package_target": null
+        },
+        {
+          "name": "SectionHostObservation06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionHostObservation06",
+          "package_target": null
+        },
+        {
+          "name": "CatalogReadEnvelope06",
+          "schema_id": "urn:kdna:candidate:representation06:CatalogReadEnvelope06",
+          "package_target": null
+        },
+        {
+          "name": "SelectedReadEnvelope06",
+          "schema_id": "urn:kdna:candidate:representation06:SelectedReadEnvelope06",
+          "package_target": null
+        },
+        {
+          "name": "StructuralPartitionObservation06",
+          "schema_id": "urn:kdna:candidate:representation06:StructuralPartitionObservation06",
+          "package_target": null
+        },
+        {
+          "name": "InterpretationInputsObservation06",
+          "schema_id": "urn:kdna:candidate:representation06:InterpretationInputsObservation06",
+          "package_target": null
+        },
+        {
+          "name": "SectionExpansionAnchor06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionExpansionAnchor06",
+          "package_target": null
+        },
+        {
+          "name": "SectionExpansionOrigin06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionExpansionOrigin06",
+          "package_target": null
+        },
+        {
+          "name": "SectionExpansionHandle06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionExpansionHandle06",
+          "package_target": null
+        },
+        {
+          "name": "SectionExpansionTarget06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionExpansionTarget06",
+          "package_target": null
+        },
+        {
+          "name": "ExpandedVerification06",
+          "schema_id": "urn:kdna:candidate:representation06:ExpandedVerification06",
+          "package_target": null
+        },
+        {
+          "name": "ExpandedReadEnvelope06",
+          "schema_id": "urn:kdna:candidate:representation06:ExpandedReadEnvelope06",
+          "package_target": null
+        },
+        {
+          "name": "ChecksumsDocument06",
+          "schema_id": "urn:kdna:candidate:representation06:ChecksumsDocument06",
+          "package_target": null
+        },
+        {
+          "name": "SectionChecksumVerification06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionChecksumVerification06",
+          "package_target": null
+        },
+        {
+          "name": "SectionChecksumProducerEvidence06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionChecksumProducerEvidence06",
+          "package_target": null
+        },
+        {
+          "name": "ScopedChecksumMemberObservation06",
+          "schema_id": "urn:kdna:candidate:representation06:ScopedChecksumMemberObservation06",
+          "package_target": null
+        },
+        {
+          "name": "ScopedChecksumVerification06",
+          "schema_id": "urn:kdna:candidate:representation06:ScopedChecksumVerification06",
+          "package_target": null
+        },
+        {
+          "name": "ScopedRuntimeEntryDigest06",
+          "schema_id": "urn:kdna:candidate:representation06:ScopedRuntimeEntryDigest06",
+          "package_target": null
+        },
+        {
+          "name": "SectionSignaturePolicy06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionSignaturePolicy06",
+          "package_target": null
+        },
+        {
+          "name": "SectionSignatureMember06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionSignatureMember06",
+          "package_target": null
+        },
+        {
+          "name": "SectionSignatureVerification06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionSignatureVerification06",
+          "package_target": null
+        },
+        {
+          "name": "SectionSignatureProducerOptions06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionSignatureProducerOptions06",
+          "package_target": null
+        },
+        {
+          "name": "SectionSignatureProducerEvidence06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionSignatureProducerEvidence06",
+          "package_target": null
+        },
+        {
+          "name": "SectionSignatureReadMember06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionSignatureReadMember06",
+          "package_target": null
+        },
+        {
+          "name": "SectionSignatureReadIntent06",
+          "schema_id": "urn:kdna:candidate:representation06:SectionSignatureReadIntent06",
+          "package_target": null
+        },
+        {
+          "name": "AdmittedProtectedPayloadRequest06",
+          "schema_id": "urn:kdna:candidate:representation06:AdmittedProtectedPayloadRequest06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionAuthorizationFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionAuthorizationFor06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionConfirmedDisclosureFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionConfirmedDisclosureFor06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionContractIdentityFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionContractIdentityFor06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionCurrentFailureFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionCurrentFailureFor06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionDiagnosticFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionDiagnosticFor06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionDisclosureFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionDisclosureFor06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionExternalCommitConfirmedFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionExternalCommitConfirmedFor06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionExternalCommitFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionExternalCommitFor06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionExternalCommitNotInvokedFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionExternalCommitNotInvokedFor06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionExternalCommitUnknownFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionExternalCommitUnknownFor06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionIntegrityFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionIntegrityFor06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionProfileFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionProfileFor06",
+          "package_target": null
+        },
+        {
+          "name": "OriginalProtectionReceiptFor06",
+          "schema_id": "urn:kdna:candidate:representation06:OriginalProtectionReceiptFor06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedEnvelope06_catalog",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedEnvelope06_catalog",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedEnvelope06_exact_selection",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedEnvelope06_exact_selection",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedEnvelope06_expand",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedEnvelope06_expand",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedEnvelope06_whole_asset",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedEnvelope06_whole_asset",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedManifest06Candidate",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedManifest06Candidate",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadAdmissionAccepted06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadAdmissionAccepted06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadAdmissionCoreRejected06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadAdmissionCoreRejected06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadAdmissionProtectionFailed06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadAdmissionProtectionFailed06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadAdmissionResult06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadAdmissionResult06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadAuthorityContext06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadAuthorityContext06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadBinding06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadBinding06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadCallEnvelope06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadCallEnvelope06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadCallResult06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadCallResult06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadCapture06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadCapture06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadCatalogContent06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadCatalogContent06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadDeliveryFailed06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadDeliveryFailed06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadDeliveryToken06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadDeliveryToken06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadEnvelope06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadEnvelope06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadExpandedContent06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadExpandedContent06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadHostContext06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadHostContext06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadHostObservation06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadHostObservation06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadIO06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadIO06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadIORange06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadIORange06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadMemberIntent06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadMemberIntent06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadObservation06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadObservation06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadOperation06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadOperation06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadReadAuthority06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadReadAuthority06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadReadFailed06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadReadFailed06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadReadIntent06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadReadIntent06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadReadProof06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadReadProof06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadReadRequestFailed06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadReadRequestFailed06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadReadResult06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadReadResult06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadReadReturned06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadReadReturned06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadRejectedEnvelope06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadRejectedEnvelope06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadRequest06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadRequest06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadRequestAdmission06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadRequestAdmission06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadRequestAdmitted06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadRequestAdmitted06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadSelectedContent06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadSelectedContent06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadSnapshot06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadSnapshot06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadSnapshotData06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadSnapshotData06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadTransportCommitResult06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadTransportCommitResult06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadTransportCommitted06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadTransportCommitted06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedRequest06_catalog",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedRequest06_catalog",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedRequest06_exact_selection",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedRequest06_exact_selection",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedRequest06_expand",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedRequest06_expand",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedRequest06_whole_asset",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedRequest06_whole_asset",
+          "package_target": null
+        },
+        {
+          "name": "TrustedProtectedPayloadHost06",
+          "schema_id": "urn:kdna:candidate:representation06:TrustedProtectedPayloadHost06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadExpansionHandle06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadExpansionHandle06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadReceipt06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadReceipt06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadRequestRejectedCall06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadRequestRejectedCall06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadSetHandle06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadSetHandle06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedPayloadWholeHandle06",
+          "schema_id": "urn:kdna:candidate:representation06:ProtectedPayloadWholeHandle06",
+          "package_target": null
+        }
+      ],
+      "root_count": 120,
+      "type_closure_count": 483,
+      "ajv_options": {
+        "strict": true,
+        "strictTypes": false,
+        "strictRequired": false,
+        "validateFormats": false,
+        "allErrors": true,
+        "code": {
+          "source": true,
+          "lines": true
+        }
+      },
+      "typescript": {
+        "generated": true,
+        "prefixItems_support": false,
+        "opaque_brands_declared_here": [
+          "AdmittedProtectedPayloadRequest06",
+          "AdmittedSectionReadRequest06",
+          "CatalogSectionSnapshot06",
+          "ProtectedPayloadDeliveryToken06",
+          "ProtectedPayloadOperation06",
+          "ProtectedPayloadReadAuthority06",
+          "ProtectedPayloadSnapshot06",
+          "ScopedSectionSnapshot06",
+          "SectionReadAuthority06",
+          "SectionReadWitness06",
+          "TrustedProtectedPayloadHost06",
+          "WholeSectionSnapshot06"
+        ],
+        "import_export_rows": [],
+        "original_header": "// Candidate-only generated structural types. Runtime proofs require native opaque witnesses."
+      },
+      "members": [
+        "packages/kdna-core/src/public-contract/sections/validators.cjs",
+        "packages/kdna-core/src/public-contract/sections/types.d.ts",
+        "packages/kdna-core/src/public-contract/sections/contract.json",
+        "packages/kdna-core/src/public-contract/sections/generation-manifest.json"
+      ],
+      "apis": [
+        {
+          "role": "protected-core",
+          "source_pointer": "/representation_candidate/a15_protection/api_typescript",
+          "active_facade_target": "packages/kdna-core/src/public-contract/protected-sections-node.d.ts",
+          "type_imports": {
+            "roots_pointer": "/representation_candidate/a15_protection/generation_roots",
+            "from": "./sections/types.js",
+            "export_star": true
+          }
+        },
+        {
+          "role": "protected-read",
+          "source_pointer": "/representation_candidate/a15_protection/read_api_typescript",
+          "active_facade_target": "packages/kdna-read/src/protected-sections-node.d.ts"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "source_module_pointer": "/representation_candidate/a15_source_producer",
+      "roots_pointer": "/representation_candidate/a15_source_producer/generation_roots",
+      "schema_dialect_pointer": "/schema_dialect",
+      "original_schema_description": "Candidate source API structural data; opaque authorities are native-only.",
+      "validator_header": "",
+      "schemas": [
+        {
+          "name": "AdmittedSourceOperationRequest06",
+          "schema_id": "urn:kdna:candidate:source06:AdmittedSourceOperationRequest06",
+          "package_target": null
+        },
+        {
+          "name": "NativeSourceOperationAuthority06",
+          "schema_id": "urn:kdna:candidate:source06:NativeSourceOperationAuthority06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedSectionSourceCommit06",
+          "schema_id": "urn:kdna:candidate:source06:ProtectedSectionSourceCommit06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedSectionSourceDelivered06",
+          "schema_id": "urn:kdna:candidate:source06:ProtectedSectionSourceDelivered06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedSectionSourceDeliveryToken06",
+          "schema_id": "urn:kdna:candidate:source06:ProtectedSectionSourceDeliveryToken06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedSectionSourceHostContext06",
+          "schema_id": "urn:kdna:candidate:source06:ProtectedSectionSourceHostContext06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedSectionSourceHostObservation06",
+          "schema_id": "urn:kdna:candidate:source06:ProtectedSectionSourceHostObservation06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedSectionSourceObservation06",
+          "schema_id": "urn:kdna:candidate:source06:ProtectedSectionSourceObservation06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedSectionSourcePreview06",
+          "schema_id": "urn:kdna:candidate:source06:ProtectedSectionSourcePreview06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedSectionSourceRevisionContext06",
+          "schema_id": "urn:kdna:candidate:source06:ProtectedSectionSourceRevisionContext06",
+          "package_target": null
+        },
+        {
+          "name": "ProtectedSourceRouteContract06",
+          "schema_id": "urn:kdna:candidate:source06:ProtectedSourceRouteContract06",
+          "package_target": null
+        },
+        {
+          "name": "SourceInputProfile06",
+          "schema_id": "urn:kdna:candidate:source06:SourceInputProfile06",
+          "package_target": null
+        },
+        {
+          "name": "SourceOperationAuthorityContext06",
+          "schema_id": "urn:kdna:candidate:source06:SourceOperationAuthorityContext06",
+          "package_target": null
+        },
+        {
+          "name": "SourceOperationIntent06",
+          "schema_id": "urn:kdna:candidate:source06:SourceOperationIntent06",
+          "package_target": null
+        },
+        {
+          "name": "SourceOperationKind06",
+          "schema_id": "urn:kdna:candidate:source06:SourceOperationKind06",
+          "package_target": null
+        },
+        {
+          "name": "SourceOperationRequest06",
+          "schema_id": "urn:kdna:candidate:source06:SourceOperationRequest06",
+          "package_target": null
+        },
+        {
+          "name": "SourceOperationRequestAdmission06",
+          "schema_id": "urn:kdna:candidate:source06:SourceOperationRequestAdmission06",
+          "package_target": null
+        },
+        {
+          "name": "SourceOuterCapture06",
+          "schema_id": "urn:kdna:candidate:source06:SourceOuterCapture06",
+          "package_target": null
+        },
+        {
+          "name": "SourceRouteContract06",
+          "schema_id": "urn:kdna:candidate:source06:SourceRouteContract06",
+          "package_target": null
+        },
+        {
+          "name": "SourceRouteCoreRejected06",
+          "schema_id": "urn:kdna:candidate:source06:SourceRouteCoreRejected06",
+          "package_target": null
+        },
+        {
+          "name": "SourceRouteDiagnostic06",
+          "schema_id": "urn:kdna:candidate:source06:SourceRouteDiagnostic06",
+          "package_target": null
+        },
+        {
+          "name": "SourceRouteDigests06",
+          "schema_id": "urn:kdna:candidate:source06:SourceRouteDigests06",
+          "package_target": null
+        },
+        {
+          "name": "SourceRouteFailure06",
+          "schema_id": "urn:kdna:candidate:source06:SourceRouteFailure06",
+          "package_target": null
+        },
+        {
+          "name": "SourceRouteMemberInventory06",
+          "schema_id": "urn:kdna:candidate:source06:SourceRouteMemberInventory06",
+          "package_target": null
+        },
+        {
+          "name": "SourceRouteObservation06",
+          "schema_id": "urn:kdna:candidate:source06:SourceRouteObservation06",
+          "package_target": null
+        },
+        {
+          "name": "SourceRouteProductionEvidence06",
+          "schema_id": "urn:kdna:candidate:source06:SourceRouteProductionEvidence06",
+          "package_target": null
+        },
+        {
+          "name": "TrustedProtectedSectionSourceHost06",
+          "schema_id": "urn:kdna:candidate:source06:TrustedProtectedSectionSourceHost06",
+          "package_target": null
+        }
+      ],
+      "root_count": 27,
+      "type_closure_count": 55,
+      "ajv_options": {
+        "strict": true,
+        "strictTypes": false,
+        "strictRequired": false,
+        "validateFormats": false,
+        "allErrors": true,
+        "code": {
+          "source": true,
+          "lines": true
+        }
+      },
+      "typescript": {
+        "generated": true,
+        "prefixItems_support": false,
+        "opaque_brands_declared_here": [
+          "AdmittedSourceOperationRequest06",
+          "NativeSourceOperationAuthority06",
+          "ProtectedSectionSourceDeliveryToken06",
+          "ProtectedSectionSourceRevisionContext06",
+          "TrustedProtectedSectionSourceHost06"
+        ],
+        "import_export_rows": [],
+        "original_header": "// Candidate source-route types. Opaque brands require native creation."
+      },
+      "members": [
+        "packages/kdna-core/src/public-contract/source06/validators.cjs",
+        "packages/kdna-core/src/public-contract/source06/types.d.ts",
+        "packages/kdna-core/src/public-contract/source06/contract.json"
+      ],
+      "apis": [
+        {
+          "role": "core",
+          "source_pointer": "/representation_candidate/a15_source_producer/api_typescript",
+          "active_facade_target": "packages/kdna-core/src/public-contract/source-sections-node.d.ts"
+        }
+      ]
+    },
+    {
+      "id": "retained",
+      "source_module_pointer": "/representation_candidate/a16_retained_read",
+      "roots_pointer": "/representation_candidate/a16_retained_read/generation_roots",
+      "schema_dialect_pointer": "/schema_dialect",
+      "original_schema_description": "Candidate retained structural data only; native origins/preparations require same-instance brand.",
+      "validator_header": "",
+      "schemas": [
+        {
+          "name": "AdmittedRetainedSectionRequest06",
+          "schema_id": "urn:kdna:candidate:retained06:AdmittedRetainedSectionRequest06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/AdmittedRetainedSectionRequest06.schema.json"
+        },
+        {
+          "name": "PreparedRetainedSectionRead06",
+          "schema_id": "urn:kdna:candidate:retained06:PreparedRetainedSectionRead06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/PreparedRetainedSectionRead06.schema.json"
+        },
+        {
+          "name": "RetainedCall06_read_envelope",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedCall06_read_envelope",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedCall06_read_envelope.schema.json"
+        },
+        {
+          "name": "RetainedContent06_catalog",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedContent06_catalog",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedContent06_catalog.schema.json"
+        },
+        {
+          "name": "RetainedContent06_exact_selection",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedContent06_exact_selection",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedContent06_exact_selection.schema.json"
+        },
+        {
+          "name": "RetainedContent06_expand",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedContent06_expand",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedContent06_expand.schema.json"
+        },
+        {
+          "name": "RetainedContent06_whole_asset",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedContent06_whole_asset",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedContent06_whole_asset.schema.json"
+        },
+        {
+          "name": "RetainedEnvelope06_catalog",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedEnvelope06_catalog",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedEnvelope06_catalog.schema.json"
+        },
+        {
+          "name": "RetainedEnvelope06_exact_selection",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedEnvelope06_exact_selection",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedEnvelope06_exact_selection.schema.json"
+        },
+        {
+          "name": "RetainedEnvelope06_expand",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedEnvelope06_expand",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedEnvelope06_expand.schema.json"
+        },
+        {
+          "name": "RetainedEnvelope06_whole_asset",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedEnvelope06_whole_asset",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedEnvelope06_whole_asset.schema.json"
+        },
+        {
+          "name": "RetainedReadEnvelopeRejected06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedReadEnvelopeRejected06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedReadEnvelopeRejected06.schema.json"
+        },
+        {
+          "name": "RetainedRequest06_catalog",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedRequest06_catalog",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedRequest06_catalog.schema.json"
+        },
+        {
+          "name": "RetainedRequest06_exact_selection",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedRequest06_exact_selection",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedRequest06_exact_selection.schema.json"
+        },
+        {
+          "name": "RetainedRequest06_expand",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedRequest06_expand",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedRequest06_expand.schema.json"
+        },
+        {
+          "name": "RetainedRequest06_whole_asset",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedRequest06_whole_asset",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedRequest06_whole_asset.schema.json"
+        },
+        {
+          "name": "RetainedSectionAuthorityContext06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionAuthorityContext06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionAuthorityContext06.schema.json"
+        },
+        {
+          "name": "RetainedSectionContract06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionContract06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionContract06.schema.json"
+        },
+        {
+          "name": "RetainedSectionDetail06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionDetail06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionDetail06.schema.json"
+        },
+        {
+          "name": "RetainedSectionFailure06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionFailure06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionFailure06.schema.json"
+        },
+        {
+          "name": "RetainedSectionHandle06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionHandle06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionHandle06.schema.json"
+        },
+        {
+          "name": "RetainedSectionHostObservation06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionHostObservation06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionHostObservation06.schema.json"
+        },
+        {
+          "name": "RetainedSectionOrigin06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionOrigin06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionOrigin06.schema.json"
+        },
+        {
+          "name": "RetainedSectionPreparationData06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionPreparationData06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionPreparationData06.schema.json"
+        },
+        {
+          "name": "RetainedSectionPreparationResult06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionPreparationResult06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionPreparationResult06.schema.json"
+        },
+        {
+          "name": "RetainedSectionReadAuthority06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionReadAuthority06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionReadAuthority06.schema.json"
+        },
+        {
+          "name": "RetainedSectionReadCallResult06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionReadCallResult06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionReadCallResult06.schema.json"
+        },
+        {
+          "name": "RetainedSectionReadEnvelope06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionReadEnvelope06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionReadEnvelope06.schema.json"
+        },
+        {
+          "name": "RetainedSectionReadIntent06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionReadIntent06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionReadIntent06.schema.json"
+        },
+        {
+          "name": "RetainedSectionRequest06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionRequest06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionRequest06.schema.json"
+        },
+        {
+          "name": "RetainedSectionRequestAdmission06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionRequestAdmission06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionRequestAdmission06.schema.json"
+        },
+        {
+          "name": "RetainedSectionSignaturePolicyCheck06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionSignaturePolicyCheck06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionSignaturePolicyCheck06.schema.json"
+        },
+        {
+          "name": "RetainedSectionVerification06",
+          "schema_id": "urn:kdna:candidate:retained06:RetainedSectionVerification06",
+          "package_target": "packages/kdna-core/src/public-contract/retained/RetainedSectionVerification06.schema.json"
+        }
+      ],
+      "root_count": 33,
+      "type_closure_count": 365,
+      "ajv_options": {
+        "strict": true,
+        "strictTypes": false,
+        "strictRequired": false,
+        "validateFormats": false,
+        "allErrors": true,
+        "code": {
+          "source": true,
+          "lines": true
+        }
+      },
+      "typescript": {
+        "generated": true,
+        "prefixItems_support": false,
+        "opaque_brands_declared_here": [
+          "AdmittedRetainedSectionRequest06",
+          "PreparedRetainedSectionRead06",
+          "RetainedSectionReadAuthority06"
+        ],
+        "import_export_rows": [],
+        "original_header": "// Candidate retained route types; opaque identities require native creation."
+      },
+      "members": [
+        "packages/kdna-core/src/public-contract/retained/validators.cjs",
+        "packages/kdna-core/src/public-contract/retained/types.d.ts",
+        "packages/kdna-core/src/public-contract/retained/contract.json",
+        "packages/kdna-core/src/public-contract/retained/generation-manifest.json",
+        "packages/kdna-core/src/public-contract/retained/api.d.ts",
+        "packages/kdna-core/src/public-contract/retained/read-api.d.ts"
+      ],
+      "apis": [
+        {
+          "role": "core",
+          "source_pointer": "/representation_candidate/a16_retained_read/api_typescript",
+          "active_facade_target": "packages/kdna-core/src/public-contract/retained-sections-node.d.ts"
+        },
+        {
+          "role": "read",
+          "source_pointer": "/representation_candidate/a16_retained_read/read_api_typescript",
+          "active_facade_target": "packages/kdna-read/src/retained-sections-node.d.ts"
+        }
+      ]
+    },
+    {
+      "id": "execution",
+      "source_module_pointer": "/representation_candidate/a17_native_execution",
+      "roots_pointer": "/representation_candidate/a17_native_execution/generation_roots",
+      "schema_dialect_pointer": "/schema_dialect",
+      "original_schema_description": "Candidate native execution data only; native admitted brands and independent action authorization are required.",
+      "validator_header": "",
+      "schemas": [
+        {
+          "name": "AdmittedNativeAgentHostRequest06",
+          "schema_id": "urn:kdna:candidate:execution06:AdmittedNativeAgentHostRequest06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/AdmittedNativeAgentHostRequest06.schema.json"
+        },
+        {
+          "name": "AdmittedNativeConsumptionPlan06",
+          "schema_id": "urn:kdna:candidate:execution06:AdmittedNativeConsumptionPlan06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/AdmittedNativeConsumptionPlan06.schema.json"
+        },
+        {
+          "name": "AdmittedNativeRuntimeCapsule06",
+          "schema_id": "urn:kdna:candidate:execution06:AdmittedNativeRuntimeCapsule06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/AdmittedNativeRuntimeCapsule06.schema.json"
+        },
+        {
+          "name": "NativeAgentHostReceipt06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeAgentHostReceipt06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeAgentHostReceipt06.schema.json"
+        },
+        {
+          "name": "NativeAgentHostRequest06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeAgentHostRequest06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeAgentHostRequest06.schema.json"
+        },
+        {
+          "name": "NativeAgentHostRequestAdmission06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeAgentHostRequestAdmission06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeAgentHostRequestAdmission06.schema.json"
+        },
+        {
+          "name": "NativeConsumptionPlan06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeConsumptionPlan06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeConsumptionPlan06.schema.json"
+        },
+        {
+          "name": "NativeConsumptionPlanAdmission06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeConsumptionPlanAdmission06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeConsumptionPlanAdmission06.schema.json"
+        },
+        {
+          "name": "NativeExecutionAuthorizationObservation06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionAuthorizationObservation06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionAuthorizationObservation06.schema.json"
+        },
+        {
+          "name": "NativeExecutionDeliveryObservation06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionDeliveryObservation06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionDeliveryObservation06.schema.json"
+        },
+        {
+          "name": "NativeExecutionFailure06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionFailure06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionFailure06.schema.json"
+        },
+        {
+          "name": "NativeExecutionHostResult06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionHostResult06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionHostResult06.schema.json"
+        },
+        {
+          "name": "NativeExecutionOutcomeObservation06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionOutcomeObservation06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionOutcomeObservation06.schema.json"
+        },
+        {
+          "name": "NativeExecutionPlanOptions06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionPlanOptions06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionPlanOptions06.schema.json"
+        },
+        {
+          "name": "NativeExecutionReceiptValidation06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionReceiptValidation06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionReceiptValidation06.schema.json"
+        },
+        {
+          "name": "NativeExecutionRejection06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionRejection06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionRejection06.schema.json"
+        },
+        {
+          "name": "NativeExecutionRequestObservation06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionRequestObservation06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionRequestObservation06.schema.json"
+        },
+        {
+          "name": "NativeExecutionRequestOptions06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionRequestOptions06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionRequestOptions06.schema.json"
+        },
+        {
+          "name": "NativeExecutionResponseBody06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionResponseBody06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionResponseBody06.schema.json"
+        },
+        {
+          "name": "NativeExecutionResponseValidation06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionResponseValidation06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionResponseValidation06.schema.json"
+        },
+        {
+          "name": "NativeExecutionSource06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionSource06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionSource06.schema.json"
+        },
+        {
+          "name": "NativeExecutionTraceValidation06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionTraceValidation06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionTraceValidation06.schema.json"
+        },
+        {
+          "name": "NativeExecutionVersionTuple06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeExecutionVersionTuple06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeExecutionVersionTuple06.schema.json"
+        },
+        {
+          "name": "NativeJudgmentTrace06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeJudgmentTrace06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeJudgmentTrace06.schema.json"
+        },
+        {
+          "name": "NativeRuntimeCapsule06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeRuntimeCapsule06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeRuntimeCapsule06.schema.json"
+        },
+        {
+          "name": "NativeRuntimeCapsuleAdmission06",
+          "schema_id": "urn:kdna:candidate:execution06:NativeRuntimeCapsuleAdmission06",
+          "package_target": "packages/kdna-core/src/public-contract/execution06/NativeRuntimeCapsuleAdmission06.schema.json"
+        }
+      ],
+      "root_count": 26,
+      "type_closure_count": 307,
+      "ajv_options": {
+        "strict": true,
+        "strictTypes": false,
+        "strictRequired": false,
+        "validateFormats": false,
+        "allErrors": true,
+        "code": {
+          "source": true,
+          "lines": true
+        }
+      },
+      "typescript": {
+        "generated": true,
+        "prefixItems_support": false,
+        "opaque_brands_declared_here": [
+          "AdmittedNativeAgentHostRequest06",
+          "AdmittedNativeConsumptionPlan06",
+          "AdmittedNativeRuntimeCapsule06"
+        ],
+        "import_export_rows": [],
+        "original_header": "// Candidate native execution types. Wire structure never authenticates claims or action permission."
+      },
+      "members": [
+        "packages/kdna-core/src/public-contract/execution06/validators.cjs",
+        "packages/kdna-core/src/public-contract/execution06/types.d.ts",
+        "packages/kdna-core/src/public-contract/execution06/contract.json",
+        "packages/kdna-core/src/public-contract/execution06/generation-manifest.json",
+        "packages/kdna-core/src/public-contract/execution06/api.d.ts"
+      ],
+      "apis": [
+        {
+          "role": "core",
+          "source_pointer": "/representation_candidate/a17_native_execution/api_typescript",
+          "active_facade_target": "packages/kdna-core/src/public-contract/execution-sections-node.d.ts"
+        }
+      ]
+    },
+    {
+      "id": "creation",
+      "source_module_pointer": "/representation_candidate/a18_native_creation",
+      "roots_pointer": "/representation_candidate/a18_native_creation/generation_roots",
+      "schema_dialect_pointer": "/schema_dialect",
+      "original_schema_description": "Native creation structural data only; opaque requests and creation permission require actual native brands.",
+      "validator_header": "",
+      "schemas": [
+        {
+          "name": "NativeCreationManifest06",
+          "schema_id": "urn:kdna:candidate:creation06:NativeCreationManifest06",
+          "package_target": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationManifest06.json"
+        },
+        {
+          "name": "NativeCreationRequest06",
+          "schema_id": "urn:kdna:candidate:creation06:NativeCreationRequest06",
+          "package_target": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationRequest06.json"
+        },
+        {
+          "name": "AdmittedNativeCreationRequest06",
+          "schema_id": "urn:kdna:candidate:creation06:AdmittedNativeCreationRequest06",
+          "package_target": "packages/kdna-core/src/public-contract/creation06/schemas/AdmittedNativeCreationRequest06.json"
+        },
+        {
+          "name": "NativeCreationAuthority06",
+          "schema_id": "urn:kdna:candidate:creation06:NativeCreationAuthority06",
+          "package_target": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationAuthority06.json"
+        },
+        {
+          "name": "NativeCreationContract06",
+          "schema_id": "urn:kdna:candidate:creation06:NativeCreationContract06",
+          "package_target": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationContract06.json"
+        },
+        {
+          "name": "NativeCreationInputObservation06",
+          "schema_id": "urn:kdna:candidate:creation06:NativeCreationInputObservation06",
+          "package_target": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationInputObservation06.json"
+        },
+        {
+          "name": "NativeCreationAuthorityContext06",
+          "schema_id": "urn:kdna:candidate:creation06:NativeCreationAuthorityContext06",
+          "package_target": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationAuthorityContext06.json"
+        },
+        {
+          "name": "NativeCreationManifestAction06",
+          "schema_id": "urn:kdna:candidate:creation06:NativeCreationManifestAction06",
+          "package_target": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationManifestAction06.json"
+        },
+        {
+          "name": "NativeCreationEvidence06",
+          "schema_id": "urn:kdna:candidate:creation06:NativeCreationEvidence06",
+          "package_target": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationEvidence06.json"
+        },
+        {
+          "name": "NativeCreationRequestAdmission06",
+          "schema_id": "urn:kdna:candidate:creation06:NativeCreationRequestAdmission06",
+          "package_target": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationRequestAdmission06.json"
+        }
+      ],
+      "root_count": 10,
+      "type_closure_count": 66,
+      "ajv_options": {
+        "strict": true,
+        "strictTypes": false,
+        "strictRequired": false,
+        "validateFormats": false,
+        "allErrors": true,
+        "code": {
+          "source": true,
+          "lines": true
+        }
+      },
+      "typescript": {
+        "generated": true,
+        "prefixItems_support": false,
+        "opaque_brands_declared_here": [
+          "AdmittedNativeCreationRequest06",
+          "NativeCreationAuthority06"
+        ],
+        "import_export_rows": [],
+        "original_header": "// Source-bound creation structural types; opaque authorities require native construction."
+      },
+      "members": [
+        "packages/kdna-core/src/public-contract/creation06/validators.cjs",
+        "packages/kdna-core/src/public-contract/creation06/types.d.ts",
+        "packages/kdna-core/src/public-contract/creation06/contract.json",
+        "packages/kdna-core/src/public-contract/creation06/generation-manifest.json",
+        "packages/kdna-core/src/public-contract/creation06/api.d.ts"
+      ],
+      "apis": [
+        {
+          "role": "core",
+          "source_pointer": "/representation_candidate/a18_native_creation/api_typescript",
+          "active_facade_target": "packages/kdna-core/src/public-contract/creation-sections-node.d.ts"
+        }
+      ]
+    },
+    {
+      "id": "sectionbytes",
+      "source_module_pointer": "/representation_candidate/a19_owned_byte_whole",
+      "roots_pointer": "/representation_candidate/a19_owned_byte_whole/roots",
+      "schema_dialect_pointer": "/schema_dialect",
+      "original_schema_description": "Native owned-byte admission structural data only; opaque requests and byte-read authority require actual native brands.",
+      "validator_header": "",
+      "schemas": [
+        {
+          "name": "NativeSectionByteContract06",
+          "schema_id": "urn:kdna:candidate:sectionbytes06:NativeSectionByteContract06",
+          "package_target": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteContract06.json"
+        },
+        {
+          "name": "NativeSectionByteObservation06",
+          "schema_id": "urn:kdna:candidate:sectionbytes06:NativeSectionByteObservation06",
+          "package_target": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteObservation06.json"
+        },
+        {
+          "name": "NativeSectionByteAuthorityContext06",
+          "schema_id": "urn:kdna:candidate:sectionbytes06:NativeSectionByteAuthorityContext06",
+          "package_target": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteAuthorityContext06.json"
+        },
+        {
+          "name": "NativeSectionByteReadAuthority06",
+          "schema_id": "urn:kdna:candidate:sectionbytes06:NativeSectionByteReadAuthority06",
+          "package_target": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteReadAuthority06.json"
+        },
+        {
+          "name": "NativeSectionByteAccepted06",
+          "schema_id": "urn:kdna:candidate:sectionbytes06:NativeSectionByteAccepted06",
+          "package_target": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteAccepted06.json"
+        },
+        {
+          "name": "NativeSectionByteRejected06",
+          "schema_id": "urn:kdna:candidate:sectionbytes06:NativeSectionByteRejected06",
+          "package_target": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteRejected06.json"
+        },
+        {
+          "name": "NativeSectionByteAdmissionResult06",
+          "schema_id": "urn:kdna:candidate:sectionbytes06:NativeSectionByteAdmissionResult06",
+          "package_target": "packages/kdna-core/src/public-contract/sectionbytes/schemas/NativeSectionByteAdmissionResult06.json"
+        }
+      ],
+      "root_count": 7,
+      "type_closure_count": 27,
+      "ajv_options": {
+        "strict": true,
+        "strictTypes": false,
+        "strictRequired": false,
+        "validateFormats": false,
+        "allErrors": true,
+        "code": {
+          "source": true,
+          "lines": true
+        }
+      },
+      "typescript": {
+        "generated": true,
+        "prefixItems_support": false,
+        "opaque_brands_declared_here": ["NativeSectionByteReadAuthority06"],
+        "import_export_rows": [
+          {
+            "action": "import",
+            "names": ["WholeSectionSnapshot06"],
+            "coordinate": "../sections/types.js"
+          },
+          {
+            "action": "export",
+            "names": ["WholeSectionSnapshot06"],
+            "coordinate": "../sections/types.js"
+          }
+        ],
+        "original_header": "// Source-bound owned-byte admission structural types; opaque byte-read authorities require native construction."
+      },
+      "members": [
+        "packages/kdna-core/src/public-contract/sectionbytes/validators.cjs",
+        "packages/kdna-core/src/public-contract/sectionbytes/types.d.ts",
+        "packages/kdna-core/src/public-contract/sectionbytes/contract.json",
+        "packages/kdna-core/src/public-contract/sectionbytes/generation-manifest.json",
+        "packages/kdna-core/src/public-contract/sectionbytes/api.d.ts"
+      ],
+      "apis": [
+        {
+          "role": "core",
+          "source_pointer": "/representation_candidate/a19_owned_byte_whole/api/core_declaration",
+          "active_facade_target": "packages/kdna-core/src/public-contract/sections-bytes-node.d.ts"
+        }
+      ]
+    },
+    {
+      "id": "packageset",
+      "source_module_pointer": "/representation_candidate/a19_native_packageset",
+      "roots_pointer": "/representation_candidate/a19_native_packageset/roots",
+      "schema_dialect_pointer": "/schema_dialect",
+      "original_schema_description": "Native PackageSet structural data only; member, byte, retained Read and action authorities remain independent actual brands.",
+      "validator_header": "",
+      "schemas": [
+        {
+          "name": "NativePackageSetContract06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetContract06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetContract06.json"
+        },
+        {
+          "name": "NativePackageSetLimits06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetLimits06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetLimits06.json"
+        },
+        {
+          "name": "NativePackageSetOperation06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetOperation06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetOperation06.json"
+        },
+        {
+          "name": "NativePackageSetLocalFailure06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetLocalFailure06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetLocalFailure06.json"
+        },
+        {
+          "name": "TrustedNativePackageSetMemberProvider06",
+          "schema_id": "urn:kdna:candidate:packageset06:TrustedNativePackageSetMemberProvider06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/TrustedNativePackageSetMemberProvider06.json"
+        },
+        {
+          "name": "AdmittedNativePackageSet06",
+          "schema_id": "urn:kdna:candidate:packageset06:AdmittedNativePackageSet06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/AdmittedNativePackageSet06.json"
+        },
+        {
+          "name": "TrustedNativePackageReadProvider06",
+          "schema_id": "urn:kdna:candidate:packageset06:TrustedNativePackageReadProvider06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/TrustedNativePackageReadProvider06.json"
+        },
+        {
+          "name": "DeliveredNativePackageRead06",
+          "schema_id": "urn:kdna:candidate:packageset06:DeliveredNativePackageRead06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/DeliveredNativePackageRead06.json"
+        },
+        {
+          "name": "NativePackageSetMemberObservationRequest06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetMemberObservationRequest06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetMemberObservationRequest06.json"
+        },
+        {
+          "name": "NativePackageSetMemberObservationRow06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetMemberObservationRow06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetMemberObservationRow06.json"
+        },
+        {
+          "name": "NativePackageSetMemberObservation06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetMemberObservation06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetMemberObservation06.json"
+        },
+        {
+          "name": "NativePackageSetDecisionAllowed06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetDecisionAllowed06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetDecisionAllowed06.json"
+        },
+        {
+          "name": "NativePackageSetDecisionRejected06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetDecisionRejected06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetDecisionRejected06.json"
+        },
+        {
+          "name": "NativePackageSetDecision06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetDecision06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetDecision06.json"
+        },
+        {
+          "name": "NativePackageSetStructureResult06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetStructureResult06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetStructureResult06.json"
+        },
+        {
+          "name": "NativePackageSetMemberSnapshot06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetMemberSnapshot06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetMemberSnapshot06.json"
+        },
+        {
+          "name": "NativePackageSetView06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetView06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetView06.json"
+        },
+        {
+          "name": "NativePackageSetMemberFailure06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetMemberFailure06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetMemberFailure06.json"
+        },
+        {
+          "name": "NativePackageSetAdmissionResult06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetAdmissionResult06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetAdmissionResult06.json"
+        },
+        {
+          "name": "NativePackageSetRecheckResult06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetRecheckResult06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetRecheckResult06.json"
+        },
+        {
+          "name": "NativePackageSetHandoff06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetHandoff06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetHandoff06.json"
+        },
+        {
+          "name": "NativePackageSetHandoffResult06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetHandoffResult06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetHandoffResult06.json"
+        },
+        {
+          "name": "NativePackageSetReadResult06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetReadResult06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetReadResult06.json"
+        },
+        {
+          "name": "NativePackageSetDescriptor06",
+          "schema_id": "urn:kdna:candidate:packageset06:NativePackageSetDescriptor06",
+          "package_target": "packages/kdna-core/src/public-contract/packageset06/schemas/NativePackageSetDescriptor06.json"
+        }
+      ],
+      "root_count": 24,
+      "type_closure_count": 387,
+      "ajv_options": {
+        "strict": true,
+        "strictTypes": false,
+        "strictRequired": false,
+        "validateFormats": false,
+        "allErrors": true,
+        "code": {
+          "source": true,
+          "lines": true
+        }
+      },
+      "typescript": {
+        "generated": true,
+        "prefixItems_support": true,
+        "opaque_brands_declared_here": [
+          "AdmittedNativePackageSet06",
+          "DeliveredNativePackageRead06",
+          "TrustedNativePackageReadProvider06",
+          "TrustedNativePackageSetMemberProvider06"
+        ],
+        "import_export_rows": [
+          {
+            "action": "import",
+            "names": ["WholeSectionSnapshot06"],
+            "coordinate": "../sections/types.js"
+          },
+          {
+            "action": "export",
+            "names": ["WholeSectionSnapshot06"],
+            "coordinate": "../sections/types.js"
+          }
+        ],
+        "original_header": "// Source-bound native PackageSet structural types; opaque authority/admission/delivery types require native construction."
+      },
+      "members": [
+        "packages/kdna-core/src/public-contract/packageset06/validators.cjs",
+        "packages/kdna-core/src/public-contract/packageset06/types.d.ts",
+        "packages/kdna-core/src/public-contract/packageset06/contract.json",
+        "packages/kdna-core/src/public-contract/packageset06/generation-manifest.json",
+        "packages/kdna-core/src/public-contract/packageset06/api.d.ts",
+        "packages/kdna-core/src/public-contract/packageset06/read-api.d.ts"
+      ],
+      "apis": [
+        {
+          "role": "core",
+          "source_pointer": "/representation_candidate/a19_native_packageset/api/core_declaration",
+          "active_facade_target": "packages/kdna-core/src/public-contract/package-set-sections-node.d.ts"
+        },
+        {
+          "role": "read",
+          "source_pointer": "/representation_candidate/a19_native_packageset/api/read_declaration",
+          "active_facade_target": "packages/kdna-read/src/package-set-sections-node.d.ts"
+        }
+      ]
+    },
+    {
+      "id": "browserwhole",
+      "source_module_pointer": "/representation_candidate/a20_browser_whole",
+      "roots_pointer": "/representation_candidate/a20_browser_whole/roots",
+      "schema_dialect_pointer": "/schema_dialect",
+      "original_schema_description": "Source-bound browser whole data, ingress and whole-admission implementation candidate; runtime acceptance and retained Read are separate.",
+      "validator_header": "",
+      "schemas": [
+        {
+          "name": "NativeBrowserSectionByteContract06",
+          "schema_id": "urn:kdna:candidate:browserwhole06:NativeBrowserSectionByteContract06",
+          "package_target": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteContract06.json"
+        },
+        {
+          "name": "NativeBrowserSectionByteObservation06",
+          "schema_id": "urn:kdna:candidate:browserwhole06:NativeBrowserSectionByteObservation06",
+          "package_target": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteObservation06.json"
+        },
+        {
+          "name": "NativeBrowserSectionByteAuthorityContext06",
+          "schema_id": "urn:kdna:candidate:browserwhole06:NativeBrowserSectionByteAuthorityContext06",
+          "package_target": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteAuthorityContext06.json"
+        },
+        {
+          "name": "NativeBrowserSectionByteReadAuthority06",
+          "schema_id": "urn:kdna:candidate:browserwhole06:NativeBrowserSectionByteReadAuthority06",
+          "package_target": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteReadAuthority06.json"
+        },
+        {
+          "name": "NativeBrowserSectionByteAccepted06",
+          "schema_id": "urn:kdna:candidate:browserwhole06:NativeBrowserSectionByteAccepted06",
+          "package_target": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteAccepted06.json"
+        },
+        {
+          "name": "NativeBrowserSectionByteRejected06",
+          "schema_id": "urn:kdna:candidate:browserwhole06:NativeBrowserSectionByteRejected06",
+          "package_target": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteRejected06.json"
+        },
+        {
+          "name": "NativeBrowserSectionByteAdmissionResult06",
+          "schema_id": "urn:kdna:candidate:browserwhole06:NativeBrowserSectionByteAdmissionResult06",
+          "package_target": "packages/kdna-core/src/public-contract/browserwhole06/schemas/NativeBrowserSectionByteAdmissionResult06.json"
+        },
+        {
+          "name": "Request06_whole_asset",
+          "schema_id": "urn:kdna:candidate:browserwhole06:Request06_whole_asset",
+          "package_target": "packages/kdna-core/src/public-contract/browserwhole06/schemas/Request06_whole_asset.json"
+        },
+        {
+          "name": "SectionSignaturePolicy06",
+          "schema_id": "urn:kdna:candidate:browserwhole06:SectionSignaturePolicy06",
+          "package_target": "packages/kdna-core/src/public-contract/browserwhole06/schemas/SectionSignaturePolicy06.json"
+        }
+      ],
+      "root_count": 9,
+      "type_closure_count": 27,
+      "ajv_options": {
+        "strict": true,
+        "strictTypes": false,
+        "strictRequired": false,
+        "validateFormats": false,
+        "allErrors": true,
+        "code": {
+          "source": true,
+          "lines": true
+        }
+      },
+      "typescript": {
+        "generated": true,
+        "prefixItems_support": true,
+        "opaque_brands_declared_here": ["NativeBrowserSectionByteReadAuthority06"],
+        "import_export_rows": [
+          {
+            "action": "import",
+            "names": ["WholeSectionSnapshot06"],
+            "coordinate": "../sections/types.js"
+          },
+          {
+            "action": "export",
+            "names": ["WholeSectionSnapshot06"],
+            "coordinate": "../sections/types.js"
+          }
+        ],
+        "original_header": "// Source-bound browser whole types; existing requests and snapshots retain their original nominal owner."
+      },
+      "members": [
+        "packages/kdna-core/src/public-contract/browserwhole06/validators.cjs",
+        "packages/kdna-core/src/public-contract/browserwhole06/types.d.ts",
+        "packages/kdna-core/src/public-contract/browserwhole06/contract.json",
+        "packages/kdna-core/src/public-contract/browserwhole06/api.d.ts",
+        "packages/kdna-core/src/public-contract/browserwhole06/planned-whole-api.d.ts",
+        "packages/kdna-core/src/public-contract/browserwhole06/descriptor.json"
+      ],
+      "apis": [
+        {
+          "role": "core",
+          "source_pointer": "/representation_candidate/a20_browser_whole/api/core_declaration",
+          "active_facade_target": null
+        },
+        {
+          "role": "planned",
+          "source_pointer": "/representation_candidate/a20_browser_whole/api/planned_whole_declaration",
+          "active_facade_target": null
+        }
+      ]
+    },
+    {
+      "id": "retained-browser",
+      "source_module_pointer": "/representation_candidate/a21_retained_browser",
+      "roots_pointer": "/representation_candidate/a21_retained_browser/generation_roots",
+      "schema_dialect_pointer": "/schema_dialect",
+      "original_schema_description": "Exact original retained and signature-policy types for the source-defined browser adapter. Original wire identities and opaque owners remain unchanged.",
+      "validator_header": "",
+      "schemas": [
+        {
+          "name": "RetainedSectionRequest06",
+          "schema_id": "urn:kdna:candidate:retained-browser06:RetainedSectionRequest06",
+          "package_target": "packages/kdna-core/src/public-contract/retained-browser06/schemas/RetainedSectionRequest06.json"
+        },
+        {
+          "name": "SectionSignaturePolicy06",
+          "schema_id": "urn:kdna:candidate:retained-browser06:SectionSignaturePolicy06",
+          "package_target": "packages/kdna-core/src/public-contract/retained-browser06/schemas/SectionSignaturePolicy06.json"
+        },
+        {
+          "name": "RetainedSectionFailure06",
+          "schema_id": "urn:kdna:candidate:retained-browser06:RetainedSectionFailure06",
+          "package_target": "packages/kdna-core/src/public-contract/retained-browser06/schemas/RetainedSectionFailure06.json"
+        },
+        {
+          "name": "RetainedSectionAuthorityContext06",
+          "schema_id": "urn:kdna:candidate:retained-browser06:RetainedSectionAuthorityContext06",
+          "package_target": "packages/kdna-core/src/public-contract/retained-browser06/schemas/RetainedSectionAuthorityContext06.json"
+        },
+        {
+          "name": "RetainedSectionPreparationData06",
+          "schema_id": "urn:kdna:candidate:retained-browser06:RetainedSectionPreparationData06",
+          "package_target": "packages/kdna-core/src/public-contract/retained-browser06/schemas/RetainedSectionPreparationData06.json"
+        },
+        {
+          "name": "RetainedSectionHostObservation06",
+          "schema_id": "urn:kdna:candidate:retained-browser06:RetainedSectionHostObservation06",
+          "package_target": "packages/kdna-core/src/public-contract/retained-browser06/schemas/RetainedSectionHostObservation06.json"
+        },
+        {
+          "name": "RetainedSectionReadCallResult06",
+          "schema_id": "urn:kdna:candidate:retained-browser06:RetainedSectionReadCallResult06",
+          "package_target": "packages/kdna-core/src/public-contract/retained-browser06/schemas/RetainedSectionReadCallResult06.json"
+        }
+      ],
+      "root_count": 7,
+      "type_closure_count": 360,
+      "ajv_options": {
+        "strict": true,
+        "strictTypes": false,
+        "strictRequired": false,
+        "validateFormats": false,
+        "allErrors": true,
+        "code": {
+          "source": true,
+          "lines": true
+        }
+      },
+      "typescript": {
+        "generated": false,
+        "prefixItems_support": false,
+        "opaque_brands_declared_here": [],
+        "import_export_rows": [],
+        "original_header": null
+      },
+      "members": [
+        "packages/kdna-core/src/public-contract/retained-browser06/validators.cjs",
+        "packages/kdna-core/src/public-contract/retained-browser06/contract.json",
+        "packages/kdna-core/src/public-contract/retained-browser06/read-api.d.ts",
+        "packages/kdna-core/src/public-contract/retained-browser06/core-api.d.ts",
+        "packages/kdna-core/src/public-contract/retained-browser06/descriptor.json"
+      ],
+      "apis": [
+        {
+          "role": "core",
+          "source_pointer": "/representation_candidate/a21_retained_browser/api/core_declaration",
+          "active_facade_target": "packages/kdna-core/src/public-contract/retained-sections-browser.d.ts"
+        },
+        {
+          "role": "read",
+          "source_pointer": "/representation_candidate/a21_retained_browser/api/read_declaration",
+          "active_facade_target": "packages/kdna-read/src/retained-sections-browser.d.ts"
+        }
+      ]
+    }
+  ],
+  "module_projections": [
+    {
+      "pointer": "/representation_candidate",
+      "output": "packages/kdna-core/src/public-contract/sections/contract.json",
+      "input_digest": "sha256:ff94dcfd09bc366ee8fad3e4a40798bfc9dc2dd08dc3449652a774fc68a964b0",
+      "operations": [
+        {
+          "action": "replace",
+          "pointer": "/A08_runtime_common_contract/APIs/Core",
+          "expected_before_sha256": "sha256:beae9270a877365ab4d7daa17dd97b35cfdaf9f5a1bb527921b32388dcf9e23d",
+          "value": "@aikdna/kdna-core/sections-node candidate export (CJS/ESM/TS): admitSectionRequest, inspectSectionRequest, createSectionReadAuthority, admitSectionNode, inspectWholeSectionSnapshot. inspectSectionRequest returns immutable admitted data only for token in exact private request WeakMap, otherwise null; no JSON brand fabrication.; bindSectionExpansionRequest applies with the private lineage rules in a10_expand."
+        },
+        {
+          "action": "replace",
+          "pointer": "/A08_runtime_common_contract/Read_whole_runtime/handles",
+          "expected_before_sha256": "sha256:7d283826ed9377158b09170702dc1bbd233cf35458da99ed297354c999ce2b90",
+          "value": "Preserve original exact first-match scope and truthful A/C whole handles; commit native origin link together with handle only after successful delivery. Native section expansion uses this native origin and a new scoped proof, not legacy-tuple token fabrication."
+        },
+        {
+          "action": "replace",
+          "pointer": "/A08_runtime_common_contract/capture_profile",
+          "expected_before_sha256": "sha256:80f92972b5981c1dab7cd5b75441a4f516eee6655d3eac04565d6bc417aa4521",
+          "value": "The ZIP capture profile supports existing section-container EOCD comment interpretation by a same-descriptor, metadata-only forward route proof before reading any comment range. Preserve the zero-comment final22 fast path. For nonzero/absent final EOCD, walk bounded fixed local headers and central-directory headers, skipping compressed member content by checked length. Validate contiguous complete member coverage, names/local-central agreement and all original guards before identifying the EOCD/comment boundary. Only a proved comment span may be read as a block; never prefetch an arbitrary65KiB tail crossing valid content. Preserve original last signature+comment-to-EOF candidate choice, with no structural-failure fallback. Routing probes are untrusted structural observations until checked; malformed offsets may cause small header probes to overlap physical content, without decoding or materializing it. This is not a blanket promise of zero raw overlap on every malformed input. Full body reads/decoding/materialization remain after native permission/protection; all reads are recorded. Details and race obligations in a11_zip_comment."
+        },
+        {
+          "action": "replace",
+          "pointer": "/A08_runtime_common_contract/permitted_members/marker_gate",
+          "expected_before_sha256": "sha256:f1e709af0c53b71ef93ba483773c4c31ba1fb9ddc66a5f01f3f67c168040eb2b",
+          "value": "Whole document2 integrity and mode-specific scoped member comparison preserve native authorization and explicit unchecked E/member boundaries. Signature/protection support remains governed by the independent exact subcontracts below."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a09_scoped_proof/expand",
+          "expected_before_sha256": "sha256:0c08529b83a931ae73611af7d19cd29f8a2506ff260fbc861d07dcbe1f97fb16",
+          "value": "The a10_expand contract requires actual optional-scope proof and native-origin lifecycle before usable handles; schema shape alone does not establish either."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a09_scoped_proof/partial_handles",
+          "expected_before_sha256": "sha256:5d1a72216ab2722dedcc24967ed9a64bf052041efe048fd9ebcfe36c40bf9e9f",
+          "value": "Native expansion permits closed SectionExpansionHandle06 and deferred descriptors only after actual exact-scope proof, two Host observations, complete budget and successful delivery. No unobserved A/C fields."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a10_expand/proof_boundary",
+          "expected_before_sha256": "sha256:87ef3baee5b45b5ab8e84bb107a377453456a8302f1c519992be7767218823d3",
+          "value": "Source/generator probes do not mint native authority or prove runtime behavior. Additional optional proof I/O and memory/session charges must be reported rather than hidden behind selected-body size. ZIP-comment capture support does not alter expansion permissions or source continuity."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a11_zip_comment/race",
+          "expected_before_sha256": "sha256:22fbe0e7636cb277f5f2b021ec6d450f122a539490c1d993a67fd3e5fd7dda43",
+          "value": "One fd, original initial dev/ino/size/mtimeNs/ctimeNs. Check same stat after routing/comment observation and before/after every authorized read. Whole compares the originally observed EOCD plus comment bytes against authorized full bytes, in addition to directory/manifest checks. Scoped continuation retains same fd/stat/metadata identity and native expansion private-origin source continuity; comment mutation does not inherit admission or a handle."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a13_checksums_scoped/cost_and_IO/known_cost",
+          "expected_before_sha256": "sha256:65c61e1b165ffcb34fc584395d5d5145041bdd7214466f6a2ba8c9651967aab7",
+          "value": "Integrity verification can reread complete touched packs. All-topic structure and interpretation scans may touch all packs on large inputs; additional raw integrity I/O can approach all members. No lightweight or performance benefit is asserted; report actual reads and repeats."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a13_checksums_scoped/document_observation/when",
+          "expected_before_sha256": "sha256:479d34134931c1a83619bb8e2e1d1c1710bf152259bb2edc69abef92c46fbadd",
+          "value": "After actual native authorization on the same opened FD. No newly introduced pregrant checksum/pack member read, decoding or body materialization is permitted. Existing bounded ZIP metadata/header/name probes remain exactly as accepted: valid measured layouts avoid pack overlap; malformed untrusted layout claims do not create a universal physical zero-overlap guarantee. Capture remains bound to the same stat identity before and after every checksum member read."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a13_checksums_scoped/historical_scope",
+          "expected_before_sha256": "sha256:1b9948280c182b6f97d3b1f377b860dc87c5567198971dab1677987db947f5d6",
+          "value": "The a13_checksums_scoped contract defines the mode-specific exception to unconditional partial E not_checked wording in field_retention.snapshot.digests, capture_identity_rules.limit, a10_expand.expanded_output and a11_zip_comment.identity. That wording still applies to every no-checksum or incomplete-coverage request. Only complete actual checksummed-member observation plus E framing permits genuine E observation without observing A/C/full IR or whole-domain validity. Existing 0.5, whole, A/C/IR and document1/E0.2 meanings remain unchanged."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a13_checksums_scoped/producer",
+          "expected_before_sha256": "sha256:365d72046340ad715da0121ce2c0cca3e457fa9d8cd773eb35607f24c5cc035a",
+          "value": "Public createSectionChecksumsNode remains the producer. No new document format, external trust, signatures, encryption or source mutation."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a13_checksums_scoped/required_controls/4",
+          "expected_before_sha256": "sha256:c9170d1e156fa0a1da8616cea92b2937f407350a66e489437c9a23bfc78a2966",
+          "value": "No checksums remains absent and original E not_checked; whole checksum behavior unchanged."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a14_signature/actual_observation/authorization",
+          "expected_before_sha256": "sha256:aa9f5cf5ed0538c6565996b3f843e6989ce4202b547f0412e43d0f376f099663",
+          "value": "Only already allowed bounded metadata/ZIP/mimetype/manifest capture occurs before native grant. Bounded malformed ZIP structural probes retain their exact qualified physical-overlap scope; no new pregrant signature/pack/attachment materialization, whole pre-read or signature inference."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a14_signature/checksum_composition/signed_with_document2",
+          "expected_before_sha256": "sha256:d8dfe2189a1bcb00cb79390780899267ba6917f6cc62168650591e46a0299e28",
+          "value": "The signed scoped path has to obtain every E member as a subset of actual signature-covered members. In this NEW signed combination explicitly execute complete document2 row/name/order/length/digest comparisons AND original E0.3 framing from those actual bytes, rather than inferring E from signature success. Only those actual comparisons may use the all-covered verified scoped-checksum branch. Any row/E mismatch rejects. Existing checksummed-but-unsigned scoped touched-set behavior is unchanged."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a14_signature/exact_domain/concrete_non_equivalence",
+          "expected_before_sha256": "sha256:6a635be6a718f1b685a1e1d90db5ba8a5da4567c181403411ebf243748ce7aea",
+          "value": "An ordinary nonmandatory attachment can be outside E while remaining inside the signature domain. checksums.json is also inside the signature domain while outside C/E. Complete E proof alone is insufficient."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a14_signature/precedence/1",
+          "expected_before_sha256": "sha256:a8694af2b4ba7b6eda4d4bdc2815b4a64c642e4f976ed2b3f1809c5e58d3d65a",
+          "value": "Only the new signed+document2 composition extends scoped raw integrity comparisons to all E members with actual calculation; unsigned behavior is unchanged. Signed-no-document2 scoped E not_checked describes a computation not made, not a claim of byte non-observation."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a14_signature/precedence/2",
+          "expected_before_sha256": "sha256:85bef7cc5141e7077ab60f9f3e96dd91d9fac08829211f964990f813c6de93e7",
+          "value": "Original05 source and all existing domain types/protection/crypto/permission meaning remain unchanged. Existing retained production Host profile is not claimed implemented. Closed JSON observation never mints native authority or signature policy."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a15_protection/admission_and_authority/output_contract_gate",
+          "expected_before_sha256": "sha256:7be0607226a4c08a308c073ec2f631abe1b68c3c5abbb7bc50b43381955a305e",
+          "value": "This successor includes actual current-R2 closed mode/source/native pairing, authority/capture/range intent, success/failure/proof/budget/Host/transport/multi-selection handle contracts and CJS/ESM/types roots. It deliberately has no new future incomplete-interpretation native arm."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a15_protection/admission_and_authority/pregrant",
+          "expected_before_sha256": "sha256:9f31d4c93bf7888e059b05c55835288cf42571ed4fc9922412180ee17969cfb1",
+          "value": "Only original approved bounded ZIP metadata probes and retained public manifest declarations, with bounded ZIP malformed-probe overlap limits. No payload envelope/content materialization, credentials work or private-derived metadata before exact whole-protected-read intent is granted."
+        },
+        {
+          "action": "delete",
+          "pointer": "/a15_protection/authority_basis",
+          "expected_before_sha256": "sha256:e1b1727e7ee05252bf0c348affa80e7f6e2379079620cff56f8868e3acb8a683"
+        },
+        {
+          "action": "replace",
+          "pointer": "/a15_protection/closed_contract_rules/IO",
+          "expected_before_sha256": "sha256:08eb7e39c4aea16f40393b2a0e269c3bf6ac955f64e7b9e908fae110e443a928",
+          "value": "ProtectedPayloadIO06 lists every actual physical read in order, including repeats. All data-bearing protected reads occur after their exact grant; Bounded ZIP structural probes retain prior malformed-overlap caveat. No frame/table purposes or checked_sections are invented when none exists. Full acquisition computes actual A and enforces all four format limits; retained projections report no new physicalIO unless actually performed."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a15_protection/closed_contract_rules/catalog_reachability",
+          "expected_before_sha256": "sha256:3c186e2d7b5f2c5dceac83f9d889d80ef190d3a9f893155affd5cd7f72e26e0c",
+          "value": "The current R2 interpreter returns accepted plus complete buildIR or throws. This protected route defines no interpretation-incomplete/catalog-native fallback arm. Unknown critical semantics retain READ_UNSUPPORTED_CRITICAL; unknown internal failures remain capability failures. Explicit catalog mode projects a genuinely complete native protected snapshot. Historical unused protection-wrapper arms are not exposed as new support."
+        },
+        {
+          "action": "delete",
+          "pointer": "/a15_protection/decision",
+          "expected_before_sha256": "sha256:f8909ae459ef65300d7f4cc0fbf53ee50ebb9b4839ba25ac3b2422bc6f8c7b44"
+        },
+        {
+          "action": "replace",
+          "pointer": "/a15_protection/limits/alternative_B",
+          "expected_before_sha256": "sha256:70fa91c5ddece8e8eb0d4b72dc439b1b201807563a1013aa8a687ca40f6b4332",
+          "value": "If an envelope were physically split, each real member8MiB, all real decoded members12MiB, physical25MiB and count128 would still apply. No reconstructed-envelope or plaintext aggregate8MiB guard is added. This contract does not implement a split-envelope parser or decoder adaptation."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a15_protection/limits/visibility",
+          "expected_before_sha256": "sha256:0843f5155185b4c1a302184d225f670512d6ee221c4df9566ca55d203f7d76ee",
+          "value": "Public proof/cost_model and capability diagnostics disclose full encrypted-member authentication and complete authored validation for each requested mode. Neither member cost nor an envelope mapping establishes performance acceptance."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a15_protection/modes/expand/io",
+          "expected_before_sha256": "sha256:bdc04bd892128c92041563ca1e2bed5b7f341f7ea41c1bcf815a96914090c374",
+          "value": "Retain and revalidate exact original operation/snapshot; genuine sameHost registered full-value JSON handle. Operation refresh reauthenticates exact payload as original rules require. No fresh-path expansion capture lineage substitutes for protected operation."
+        },
+        {
+          "action": "replace",
+          "pointer": "/a15_protection/originals_unchanged/0",
+          "expected_before_sha256": "sha256:08f816fb7f08e2e04d8fec2cf566e4772c805f290a7785da35ad7f2e15981ab9",
+          "value": "All existing domain types and all existing candidate types"
+        },
+        {
+          "action": "replace",
+          "pointer": "/a15_protection/originals_unchanged/3",
+          "expected_before_sha256": "sha256:24f44bb061f0acf087c843ee5cc11e92b548be504225c6fb949c35708d7f78df",
+          "value": "Public06 section/schema/checksum2/signature rules; original05 format and APIs"
+        },
+        {
+          "action": "delete",
+          "pointer": "/a15_source_producer",
+          "expected_before_sha256": "sha256:12d1b3ffb099e443cad7985a11f8296bd55910a6ad318540fc5821fa9dcc7292"
+        },
+        {
+          "action": "delete",
+          "pointer": "/a16_retained_read",
+          "expected_before_sha256": "sha256:4ddb74911ca9e354f6e8848df0d6d8d4d5a2fb0eed9ef16fdf73faa7d4926565"
+        },
+        {
+          "action": "delete",
+          "pointer": "/a17_native_execution",
+          "expected_before_sha256": "sha256:69762298080825b0ea101d3da92294f16bc463e1e8f83ce89260b523cb799fc9"
+        },
+        {
+          "action": "delete",
+          "pointer": "/a18_native_creation",
+          "expected_before_sha256": "sha256:187ba3f38e845c6d61080461e72dcc759e149b37663f1b0ed557c8e613ff2ab9"
+        },
+        {
+          "action": "delete",
+          "pointer": "/a19_native_packageset",
+          "expected_before_sha256": "sha256:b2e8386077afd3f77e0fb770c211eeecafef9fd766ebfb69bfe4df4c98b6f0fc"
+        },
+        {
+          "action": "delete",
+          "pointer": "/a19_owned_byte_whole",
+          "expected_before_sha256": "sha256:016e095c413e779bbe470a052a8541519f3483f3d3e1ac41f2019abf1e7d3cbc"
+        },
+        {
+          "action": "delete",
+          "pointer": "/a20_browser_whole",
+          "expected_before_sha256": "sha256:47dab8d724862202983dd4f41058eac46b5fa81e551a463e937be3941a9c5444"
+        },
+        {
+          "action": "delete",
+          "pointer": "/a21_retained_browser",
+          "expected_before_sha256": "sha256:a6f932f9c7dcc4e1a826ba71205703bceb84572f7218b292faf1bb4ec75a9b96"
+        },
+        {
+          "action": "delete",
+          "pointer": "/aggregate_decision/supersedes",
+          "expected_before_sha256": "sha256:b95289911d6842dfa0a8070f19bdd866a32a6af3e204113262af783ffeed0a1b"
+        },
+        {
+          "action": "delete",
+          "pointer": "/candidate_only",
+          "expected_before_sha256": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        {
+          "action": "replace",
+          "pointer": "/carrier_and_witness_rules/ready",
+          "expected_before_sha256": "sha256:31e00c6817e0c72d51ecb442d35f0c586afa60c6b380fd7acb3469dbaf8459b0",
+          "value": "A native WholeSectionSnapshot06 is issued only after actual source, capture, authority, semantic, domain, resource, A/C/E06 and IR checks. JSON/schema objects do not mint native authority; each partial/API/Host path requires its own actual runtime proof."
+        },
+        {
+          "action": "delete",
+          "pointer": "/no_acceptance_inheritance",
+          "expected_before_sha256": "sha256:e68620a545a0da8eca23e2a2f9797e87a13cf33f7db82e877c55d24501e4d68f"
+        },
+        {
+          "action": "replace",
+          "pointer": "/request_decision/authority",
+          "expected_before_sha256": "sha256:0060180c037241b0dc5368ff821e970df850465f14865f2756e7cee3df9604d3",
+          "value": "Exact selection admits a nonempty same-asset judgment set, normalizes it to catalog order, and applies one request budget to the complete union."
+        },
+        {
+          "action": "delete",
+          "pointer": "/request_decision/wire_change_record/prior_authority",
+          "expected_before_sha256": "sha256:b12398aae4677dc91450af06705111ab36f4852791af3e1c64e6582636751d0b"
+        },
+        {
+          "action": "replace",
+          "pointer": "/request_decision/wire_change_record/semantics",
+          "expected_before_sha256": "sha256:02313e0fd2053fbd999a2d24430373ba5377c1adc2d261df5a41d90fba87fd68",
+          "value": "A one-element set preserves single-judgment capability; the explicit array wire shape remains distinct from the prior single-judgment field."
+        },
+        {
+          "action": "delete",
+          "pointer": "/sole_final_authority",
+          "expected_before_sha256": "sha256:9eef11bc72032a9dc450338dfd53cd6b85fe39bfaae8a56aa1a839992cbd69de"
+        }
+      ],
+      "output_digest": "sha256:e81ecfdc9357500275e10767e34a09b3fc8ce2e3d80df35653a639500c3ebf7f",
+      "historical_original_source": {
+        "scope": "historical_original_contract_source_identity_not_current_generator_input",
+        "bytes": 1137319,
+        "sha256": "73bfbb4dcb176623c471b05883dffdbed42e183651194d1f36c60e858c522fce",
+        "coordinate": "urn:kdna:source:sha256:73bfbb4dcb176623c471b05883dffdbed42e183651194d1f36c60e858c522fce"
+      }
+    },
+    {
+      "pointer": "/representation_candidate/a15_source_producer",
+      "output": "packages/kdna-core/src/public-contract/source06/contract.json",
+      "input_digest": "sha256:12d1b3ffb099e443cad7985a11f8296bd55910a6ad318540fc5821fa9dcc7292",
+      "operations": [
+        {
+          "action": "delete",
+          "pointer": "/candidate_only",
+          "expected_before_sha256": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        {
+          "action": "replace",
+          "pointer": "/contract_observation/meaning",
+          "expected_before_sha256": "sha256:6d86d8bf0ac92dab5d1a4e210b283f3d6cabcc506b114e912f22f21ffbf4bc61",
+          "value": "Identifies the exact route definition represented by this receipt. It is an observation, not native authority, editing permission, source admission, a release or acceptance decision."
+        },
+        {
+          "action": "delete",
+          "pointer": "/counterexample",
+          "expected_before_sha256": "sha256:ca625ae7f68b10482a9bbc4e09f943155143b35272c0c3d5672d8eb6e1a5f4e9"
+        },
+        {
+          "action": "replace",
+          "pointer": "/request_and_authority/capture",
+          "expected_before_sha256": "sha256:cd6244bb2db1776e6efca981ae774c927ae545bf30c0f17848ca9d48f3cc6d70",
+          "value": "Reuse approved same-FD bounded ZIP metadata probes and bounded ZIP malformed-layout overlap caveat. Before grant observe outer Manifest/directory only, no full A, no materialized payload, no credentials/provider/secret callback. Unsupported compression stays capability rejection before intent schema; capture has no A field. Caller path content changes and byte-input ownership retain original protected-source checks."
+        }
+      ],
+      "output_digest": "sha256:c64a8fa0c317fb630078cebe04bac174d485a6490f199822cb5fe08d90504b2c",
+      "historical_original_source": {
+        "scope": "historical_original_contract_source_identity_not_current_generator_input",
+        "bytes": 1186782,
+        "sha256": "01fbb94b5507aa920e297b89730256d383f699aac6f15a8964be985748f0db5c",
+        "coordinate": "urn:kdna:source:sha256:01fbb94b5507aa920e297b89730256d383f699aac6f15a8964be985748f0db5c"
+      }
+    },
+    {
+      "pointer": "/representation_candidate/a16_retained_read",
+      "output": "packages/kdna-core/src/public-contract/retained/contract.json",
+      "input_digest": "sha256:4ddb74911ca9e354f6e8848df0d6d8d4d5a2fb0eed9ef16fdf73faa7d4926565",
+      "operations": [
+        {
+          "action": "delete",
+          "pointer": "/counterexample",
+          "expected_before_sha256": "sha256:fd6d601ba0def15e77aa76feb7ee5e3e024bc9ebb5bf8148fd2ed44d83b680ef"
+        },
+        {
+          "action": "replace",
+          "pointer": "/declaration_installation/exports",
+          "expected_before_sha256": "sha256:4fefa7839eb842a7516a0b93c4e61f34e8f8a72acf32349d464b63a33b78bb2a",
+          "value": "Both package exports[./retained-sections-node] include types, require and import conditions. Core and Read CJS/ESM wrappers resolve the same Core brand implementation. Strict CTS/MTS public consumers and forged/private-type negatives verify installed closure; schema generation alone does not prove it."
+        },
+        {
+          "action": "delete",
+          "pointer": "/execution_subarc",
+          "expected_before_sha256": "sha256:1eb1ef4ec222ec3b51e75c9c97dfd85cb31cfbb6c3db892f0f7ec21e16e0b6a5"
+        },
+        {
+          "action": "replace",
+          "pointer": "/scope_matrix/scoped_native_origin/future",
+          "expected_before_sha256": "sha256:0d674de665e58502fee1eb34afbcf8a2758601ac68d139908ebf1fdea4114141",
+          "value": "No additional local-closure reuse or all-partial overload is implied by this contract."
+        },
+        {
+          "action": "replace",
+          "pointer": "/version/definition_digest",
+          "expected_before_sha256": "sha256:2cadf1343b5262ac3e6e42682eafdeaf7875f0cced946bb2a69f03134652e04b",
+          "value": "definition_digest is sha256: followed by lowercase SHA-256 hex of the existing strict canonicalJson UTF-8 encoding of this complete installed public module value. This field states the rule and does not embed a self-referential digest. The original full source identity and the projected product identity are bound separately; matching this module digest does not bind external types, resolved values, schema/API closure or installed package bytes."
+        },
+        {
+          "action": "replace",
+          "pointer": "/version/package_identity",
+          "expected_before_sha256": "sha256:d779533effd377fbaad4552a06ff8c417c3187af9328a51cb4da0f252e0b64ef",
+          "value": "The Core/Read subpaths require exact generated, installed and packed identities and one same-instance Core brand. A route descriptor alone does not establish publication or consumer binding."
+        }
+      ],
+      "output_digest": "sha256:017807a18e4a3bd671e1098a2ec0b63268577396a5f0b88b85bad662b10e0d83",
+      "historical_original_source": {
+        "scope": "historical_original_contract_source_identity_not_current_generator_input",
+        "bytes": 1256756,
+        "sha256": "2f51ddf22da42fdb7f5e2b099321fd90a657c235dc647d39238576a558f6f61b",
+        "coordinate": "urn:kdna:source:sha256:2f51ddf22da42fdb7f5e2b099321fd90a657c235dc647d39238576a558f6f61b"
+      }
+    },
+    {
+      "pointer": "/representation_candidate/a17_native_execution",
+      "output": "packages/kdna-core/src/public-contract/execution06/contract.json",
+      "input_digest": "sha256:69762298080825b0ea101d3da92294f16bc463e1e8f83ce89260b523cb799fc9",
+      "operations": [
+        {
+          "action": "replace",
+          "pointer": "/declaration_installation/module",
+          "expected_before_sha256": "sha256:4e7c780767e30ee543489991869606557c917d4bb914073f899c29e1fff0e3a7",
+          "value": "The CJS, ESM and public type entry points expose the same functions and resolve the same Core instance. A generated API template alone does not prove installed type closure; public strict CTS/MTS positive and foreign/JSON/legacy-brand negative consumption are required."
+        },
+        {
+          "action": "replace",
+          "pointer": "/version/definition_digest",
+          "expected_before_sha256": "sha256:2e70b2cfbf7321fd7c2b07811b850ab878ad7ef684ef5ece866f18d5cefa21e3",
+          "value": "definition_digest is sha256: followed by lowercase SHA-256 hex of the existing strict canonicalJson UTF-8 encoding of this complete installed public module value. This field states the rule and does not embed a self-referential digest. The original full source identity and the projected product identity are bound separately; matching this module digest does not bind external types, resolved values, schema/API closure or installed package bytes."
+        }
+      ],
+      "output_digest": "sha256:cd08928b40dd39d92f515ef358922a62b3c4a3a80f2a9e0eca566f4e4a0e1a28",
+      "historical_original_source": {
+        "scope": "historical_original_contract_source_identity_not_current_generator_input",
+        "bytes": 1306202,
+        "sha256": "db7c7b2d54834726f9cc1b708e91e1968616b0a6bea7edc657b61fa33cdbf26c",
+        "coordinate": "urn:kdna:source:sha256:db7c7b2d54834726f9cc1b708e91e1968616b0a6bea7edc657b61fa33cdbf26c"
+      }
+    },
+    {
+      "pointer": "/representation_candidate/a18_native_creation",
+      "output": "packages/kdna-core/src/public-contract/creation06/contract.json",
+      "input_digest": "sha256:187ba3f38e845c6d61080461e72dcc759e149b37663f1b0ed557c8e613ff2ab9",
+      "operations": [
+        {
+          "action": "replace",
+          "pointer": "/declaration_installation",
+          "expected_before_sha256": "sha256:1fd6c4b560d959eaabcd657a0b021a7fd2ab9e7d6f881bc338cdc7f4b168191b",
+          "value": "Core creation-sections-node.d.ts explicitly imports all named JSON/opaque types from ./creation06/types.js and Payload from ./types.js, re-exports the named creation JSON/opaque types, and declares the binary input/output below in that same installed file. ESM and CJS public entry points expose precisely the same four runtime functions. The reference api.d.ts fragment is a template, not proof of installed TS closure. Complete reachable old definitions are generated into creation06 only; no replacement of existing public definitions/modules due to source-context provenance changes. Private WeakMap token identity remains same installed instance; no Read or consumer package additions."
+        },
+        {
+          "action": "replace",
+          "pointer": "/evidence/claim",
+          "expected_before_sha256": "sha256:cb2d210b5b2122d50ddf9c12355fbf12012cc5773e3030ad96099904892a710d",
+          "value": "Produced means technical bytes plus producer observation only. It is not a transferable admitted token, consumer read result, external delivery/transport confirmation, publication, real adoption, formal asset quality or ownership. The caller must actually save bytes and use current genuine public Core/Read for any downstream claim."
+        },
+        {
+          "action": "replace",
+          "pointer": "/version/definition_digest",
+          "expected_before_sha256": "sha256:76aa5e2643de57c84907613eebe9f783097d001f6fde06575d17bca33dfce549",
+          "value": "definition_digest is sha256: followed by lowercase SHA-256 hex of the existing strict canonicalJson UTF-8 encoding of this complete installed public module value. This field states the rule and does not embed a self-referential digest. The original full source identity and the projected product identity are bound separately; matching this module digest does not bind external types, resolved values, schema/API closure or installed package bytes."
+        },
+        {
+          "action": "replace",
+          "pointer": "/version/precedence",
+          "expected_before_sha256": "sha256:ffce4c0288a09b175632cb51b33138d4cde9673652b1cf2befdc9f3dd5804c37",
+          "value": "This adds construction without predecessor to its own subpath only. It does not remove predecessor requirements from authoring-node/source-sections-node, manufacture representation_origin, migrate old components, or reinterpret existing receipts."
+        }
+      ],
+      "output_digest": "sha256:4bbe953d5c103024a70a1f8ad6d5f9512d7a362f5af7a3be66fff3cbe770620d",
+      "historical_original_source": {
+        "scope": "historical_original_contract_source_identity_not_current_generator_input",
+        "bytes": 1342455,
+        "sha256": "3e03a87da8c6aa214d4f84fb1178893f93fce03abb3a60189a2572cd9466fc66",
+        "coordinate": "urn:kdna:source:sha256:3e03a87da8c6aa214d4f84fb1178893f93fce03abb3a60189a2572cd9466fc66"
+      }
+    },
+    {
+      "pointer": "/representation_candidate/a19_owned_byte_whole",
+      "output": "packages/kdna-core/src/public-contract/sectionbytes/contract.json",
+      "input_digest": "sha256:016e095c413e779bbe470a052a8541519f3483f3d3e1ac41f2019abf1e7d3cbc",
+      "operations": [
+        {
+          "action": "delete",
+          "pointer": "/acceptance/prospective",
+          "expected_before_sha256": "sha256:7f8d5fc75f96d993b50e2f5946e4da0c11d207a5ed120545648ce26ec70bf684"
+        },
+        {
+          "action": "add",
+          "pointer": "/acceptance/validation_requirements",
+          "value": [
+            "Old05 controls remain unchanged; real owned native06 whole positive must match independent entire current path IR/value/order/absence/A/C/E except named random capture/snapshot/request-bound receipts.",
+            "Actual authored small and rich attachment/lineage/self-C output bytes; ZIP comment/max-comment and last-candidate negative route; STORE/DEFLATE controls.",
+            "Caller mutation during grant proves stable owned copy; invalid proxy/getter/subclass/shared/detached/over25 input rejects before grant with no side effects.",
+            "Authority deny/throw/foreign/weak pin controls, pregrant actual memoryaccess ledger versus decode/hash stages, zero asset-source path/fs use; separately record actual process module/dependency loading without claiming process-wide zero I/O or concealing lazy reads.",
+            "Checksums/signed optionalattachment positives and exact negative classifications; original critical/Resource/component failures retain priority.",
+            "True same-instance new whole→retained exact/registeredexpand and nativeplan/capsule positive; action/output deny separate; JSON/foreign/partial/protected negatives.",
+            "Exact four physical gates as reachable plus preserved original limits, no unproven object/platform/performance inference.",
+            "Node execution does not establish browser support; portable/browser exports and PackageSet mapping require their own closed contracts and runtime evidence."
+          ],
+          "expected_absent": true
+        },
+        {
+          "action": "replace",
+          "pointer": "/accounting/budget",
+          "expected_before_sha256": "sha256:e235f1e1381b4d2da2388a1c159ded729e757cc81e5bff61802ce83a2d9180f6",
+          "value": "Original request budget_bytes remains bound in request_digest; this Core admission neither delivers a Read envelope nor treats that budget as asset/decode/memory limit. Subsequent Read performs original exact complete-envelope budgeting; native execution plan/capsule/output budgets remain separate. No new timeout field/clock contract is invented in this minimal admission surface."
+        },
+        {
+          "action": "replace",
+          "pointer": "/admission/reuse",
+          "expected_before_sha256": "sha256:dc88ea848dd15e86a116f58eb1bf9d693200c16da118d2bf1f50ddcfcbb7cfa8",
+          "value": "The genuine whole snapshot may feed retained-read and native-execution APIs under their existing independent authorities and immutable-origin rules. A byte origin is not a fresh path origin: bindSectionExpansionRequest refuses it with READ_HANDLE_STALE rather than admitting an unrelated file. Retained expansion uses the immutable snapshot route and actual Host handle registration."
+        },
+        {
+          "action": "replace",
+          "pointer": "/authorization/pregrant",
+          "expected_before_sha256": "sha256:bdc9b7903516483c09ad40416e266f6a1be90999031a8d1b0d287127721f792a",
+          "value": "Ownership copy necessarily observes every supplied raw byte; it is explicitly counted, not concealed as metadata-only I/O. Possession/copy is not permission for body decoding or disclosure. Only original approved bounded ZIP probes, mimetype and raw Manifest parsing occur before grant; retain bounded ZIP malformed-layout overlap caveat. No pack/table/body inflate/CBOR/domain, optional member materialization, checksum/signature read/verify or A/C/E/IR calculation before literal true grant."
+        },
+        {
+          "action": "delete",
+          "pointer": "/candidate_only",
+          "expected_before_sha256": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        {
+          "action": "delete",
+          "pointer": "/problem/actual",
+          "expected_before_sha256": "sha256:00a4c1aefbba83b922f45ebde72184be196405acd186a5fb431a1f69cce85381"
+        }
+      ],
+      "output_digest": "sha256:8358dfe622117bb88866d7f72ca15e21961a87b37e108978ed05015b102277ef",
+      "historical_original_source": {
+        "scope": "historical_original_contract_source_identity_not_current_generator_input",
+        "bytes": 1363765,
+        "sha256": "10813b230b757c8cf84cade945803d059cac9fe6010b23ff487ad4f6ab3ae52f",
+        "coordinate": "urn:kdna:source:sha256:10813b230b757c8cf84cade945803d059cac9fe6010b23ff487ad4f6ab3ae52f"
+      }
+    },
+    {
+      "pointer": "/representation_candidate/a19_native_packageset",
+      "output": "packages/kdna-core/src/public-contract/packageset06/contract.json",
+      "input_digest": "sha256:b2e8386077afd3f77e0fb770c211eeecafef9fd766ebfb69bfe4df4c98b6f0fc",
+      "operations": [
+        {
+          "action": "replace",
+          "pointer": "/admission/brand",
+          "expected_before_sha256": "sha256:5371cb4417eab239a8d2c6952118349194070de4dbe5e36758097adb71da294b",
+          "value": "Whole snapshots come only from same-instance admitSectionBytesNode, never inspect JSON or serialized brands. Inspect view exposes original tokens and readonly values; no new snapshot issuance, no modified original verification/request/integrity history. Whole verification status, actual A/C/E0.3 and complete IR remain those actually observed by owned-byte admission."
+        },
+        {
+          "action": "replace",
+          "pointer": "/admission/failure_mapping",
+          "expected_before_sha256": "sha256:8e8e930aa5cbb08a6916206cd2be33e66bf34fa6eb33946e5b45a3f87cb8729e",
+          "value": "At member-validity position, first actual member failure in source order is returned verbatim as member_failure with local_failure=member_admission_failed, decision=null. This preserves owned-byte admission authorization/capability/integrity/input stages and never calls permission denial an invalid asset. An accepted whole whose actual asset/version/A contradicts declared member returns READ_CORE_INVALID without altering actual digest. Earlier R07 presence/authorization/duplicate/version failures retain priority and member_failure=null. Unexpected internal exception is core_unavailable, never fabricated READ_CORE_INVALID."
+        },
+        {
+          "action": "replace",
+          "pointer": "/admission/steps/2",
+          "expected_before_sha256": "sha256:dd7fa568fb98c1e6e19a36051ed3958982228e3e0935688c6ccc7a717060f6d0",
+          "value": "Sequential genuine owned-byte whole admission in original source-array order, preserving every actual success or failure and its diagnostics; do not expose partial admitted set."
+        },
+        {
+          "action": "replace",
+          "pointer": "/api/unit_order/0",
+          "expected_before_sha256": "sha256:61e8082424999abd0a9adfae0307ba41f43c5877b265b64fb350558a66d42990",
+          "value": "Core seven APIs plus shared carriers and registry."
+        },
+        {
+          "action": "replace",
+          "pointer": "/authority/byte_grant",
+          "expected_before_sha256": "sha256:3bb4ee97a16115be2d09a51a624e6ebafd4d9b17aa9891700c1121e83f34e57a",
+          "value": "Each member carries its independently genuine admitted SectionReadRequest06 in whole_asset mode and NativeSectionByteReadAuthority06. Owned-byte admission metadata observation, signature policy and grant run once per supplied member; no implicit true callback, no inferred byte permission from a membership row. All initial members are owned before any of these callbacks."
+        },
+        {
+          "action": "replace",
+          "pointer": "/authority/lifetime",
+          "expected_before_sha256": "sha256:25ee9207be6685b0e76b93794c00446b0d928c97402b53abb23fc8ef237fa5b9",
+          "value": "Membership provider is retained privately by admitted set and reused for explicit rechecks. A prior successful observation is not an infinite lease. New Read uses independent genuine retained-read authority and Host observations; Read never implies action/output permission. Original synchronous member clock monotonic rule remains separate from retained-read Host time rules."
+        },
+        {
+          "action": "replace",
+          "pointer": "/compatibility/versions",
+          "expected_before_sha256": "sha256:9c08b458a5002fa2379a172769e07ce489da0601c1095dfd6a11e0fd11cf6b29",
+          "value": "New module0.1.0-candidate and handoff0.3.0-candidate only. Original asset tuple/oldPackageSet0.2.1/oldexecution tuple types and old APIs unchanged. Retained-read and native-execution tuple roles explicit, no protocol meaning/permissions/resource limits changed."
+        },
+        {
+          "action": "replace",
+          "pointer": "/handoff/opaque",
+          "expected_before_sha256": "sha256:68e9de12cff5ea620b006d3c198f65ef8ad94aed955fa5a3093ef2979b1a2383",
+          "value": "Core verify requires actual same-instance native admission, genuine AdmittedNativeConsumptionPlan06 and genuine DeliveredNativePackageRead06 paired privately to that exact admission. Read seal/admit use that same delivered brand. No publicly supplied ready result or serialized token can stand in for the private observation. Core/Read share exactly one registry through a private unexported binding."
+        },
+        {
+          "action": "replace",
+          "pointer": "/handoff/selection_plan",
+          "expected_before_sha256": "sha256:1e88e86296fdded846551cdac3e776d3258c94c2df6c695c5d267531c2483e33",
+          "value": "Set Selection and exact retained selected set must agree after singleton normalization. Native Plan selection must equal {asset_id,asset_version,judgment_ids:[judgment_id]} exactly normalized; no multi or different judgment. Plan.source exact {asset:view.asset,origin_tuple:view.tuple,digests:view.digests,ir_digest:view.verification.ir_digest.digest}; verify original full-IR proof status, no recomputation from selected subset."
+        },
+        {
+          "action": "replace",
+          "pointer": "/input/immutable",
+          "expected_before_sha256": "sha256:ff134fc8413e7bed0490aea70729bfdb53be6152fb043a82cc267e5e8fcd752d",
+          "value": "Subsequent caller mutations/detachment of original buffers/arrays/record fields or provider config cannot change this captured operation. Two real owned copy layers exist: the outer PackageSet synchronously owns ALL sources before callbacks, and each sequential admitSectionBytesNode independently copies that owned slice again under unchanged owned-byte admission rules. Both buffers can be live concurrently; decode/canonical temporaries may also exist. Count each supplied original visible source length once for the 100MiB source limit, never call that sum a heap/peak-memory ceiling or promise no extra copies. After each awaited owned-byte admission settles, release that member outer raw strong reference; after any failure or final return release all remaining outer raw references in finally. Owned-byte admission internal copy lifetime and release remain its original rules. Retained admission stores genuine whole tokens/metadata, not raw PackageSet source buffers; no secure-erasure claim or mutation of caller bytes. No asset-source file reads or fabricated path/FD/mtime. Dependency/module loads are separate actual I/O."
+        },
+        {
+          "action": "replace",
+          "pointer": "/read/after_sink",
+          "expected_before_sha256": "sha256:11b2ff714a0e5caa16921ee88d6cc2eff152135a8885f8c15f0f1d4779a7707f",
+          "value": "Fresh membership check, awaited actual Host post-sink observation with full retained-read time/currentness/scope/decision/epoch binding, fresh membership check. Return true to retained-read delivery only if all hold; otherwise no delivered token. Final post-await cancelled/member check before mint/return."
+        },
+        {
+          "action": "replace",
+          "pointer": "/read/entry",
+          "expected_before_sha256": "sha256:581d2804f5029506ff5d3e9ef183d163f4718d78682adf3c42243d6f8f91ff82",
+          "value": "readNativePackageSet accepts an already admitted native PackageSet and genuine retained-read admitted request+authority. No raw-member overload, duplicate decode or changed selection. Request must be exact_selection, normalized judgment_ids exactly one equal set.selection, same asset/version/native tuple and handle=null. A larger selection/other mode is invalid_read_request before authority/Host/sink. signal if supplied must be genuine AbortSignal; preaborted yields cancelled with zero callbacks."
+        },
+        {
+          "action": "replace",
+          "pointer": "/read/handles",
+          "expected_before_sha256": "sha256:c1c17b1b7aaec348c3cf0b76a227e358fca9ed8f9894414615503858f9e9d991",
+          "value": "Preserve actual retained-read handle registration facts and same-Host restrictions. New PackageSet route does not expose a PackageSet expand or grant a generic reuse session. No unauthorized fresh path expansion from byte origin."
+        },
+        {
+          "action": "replace",
+          "pointer": "/read/host",
+          "expected_before_sha256": "sha256:d3ba0acc945a9d25c65d4ef4485e1f64c06c038791ae9d2b4ebdf5bf2d7ac4ef",
+          "value": "Use same-instance original retained-read trusted Host/private lifecycle. Pin configured read provider host_id/epoch to original admitted member-provider identity. Every returned RetainedSectionHostObservation06 must pin these plus actual operation/request/request_digest/origin/intent/asset/tuple and exact scope/policy required by retained Read; no fabricated old HostReadContext. Callback unknown exception is provider_failed; malformed result provider_observation_invalid; original retained-read semantic Host rejection remains its genuine read result."
+        },
+        {
+          "action": "replace",
+          "pointer": "/read/permission_sequence",
+          "expected_before_sha256": "sha256:45552f07d7fd89664d9d348c1f78a79eea9d723bdbdf8b09ec26fd62282ec7bb",
+          "value": "Validate all brands and fixed provider identity first; fresh membership recheck before retained-read preparation. prepareRetainedSectionRead selected original whole with actual requested retained authority/policy. Recheck membership after this awaited authorization and before Host creation. Denied prepare returns exact preparation_failure, local_failure=read_preparation_failed; no Host/sink."
+        },
+        {
+          "action": "replace",
+          "pointer": "/read/result",
+          "expected_before_sha256": "sha256:a0a65ff0a0e55c14e216ae300370de9ce829f6f60c6b975df0a5e8be17963fc6",
+          "value": "Read result preserves exact original retained content/full value/absence/order/refs/provenance and retained-read response-byte accounting. NativePackageSetReadResult06 is an operation wrapper, not part of Read envelope budget. preparation_failure only for actual retained-read preparation rejection, else null. delivered nonnull only on successful ready plus confirmed sink/final checks; read_result may truthfully remain ready when wrapper later rejects. registered_handles/IDs reflect actual registration before final rejection; none/registered correlates to count; host_closed true on failed operation. member_observations/reader_observations count actual calls, never projections."
+        },
+        {
+          "action": "replace",
+          "pointer": "/read/tokens",
+          "expected_before_sha256": "sha256:27af6e1b3a4e215777b6406d65887875b765739ba045c6c383ef49da11e74519",
+          "value": "PreparedRetainedSectionRead06 is consumed once synchronously before first Host await. It is private to this call; close and release refs on failure. The final delivered PackageRead token is private and minted only after actual ready result, sink strict true, retained-read completed delivery, current member checks and no first-cause rejection. It is a reusable historical correlation token, not a current permission lease; no new single-use handoff condition."
+        },
+        {
+          "action": "replace",
+          "pointer": "/scope/existing",
+          "expected_before_sha256": "sha256:09da881fcfe84edd17afb45a25ee24d5fa57119df2de46599a4b7d8b12135b25",
+          "value": "Existing top-level type definitions, the legacy package_set_node subtree and its APIs remain unchanged. Fresh-path and retained-read identities/policies remain distinct."
+        }
+      ],
+      "output_digest": "sha256:1fe24efdd2de7f2a73b8e8ad07ed8eb6f80d762c586451d43c37334ca6ef90f1",
+      "historical_original_source": {
+        "scope": "historical_original_contract_source_identity_not_current_generator_input",
+        "bytes": 1411559,
+        "sha256": "1a3f09b44aaeac9fd3d18687fdcde6a3c0aba1e1b6e2ee155ce0d03ebaae38bf",
+        "coordinate": "urn:kdna:source:sha256:1a3f09b44aaeac9fd3d18687fdcde6a3c0aba1e1b6e2ee155ce0d03ebaae38bf"
+      }
+    },
+    {
+      "pointer": "/representation_candidate/a20_browser_whole",
+      "output": "packages/kdna-core/src/public-contract/browserwhole06/contract.json",
+      "input_digest": "sha256:47dab8d724862202983dd4f41058eac46b5fa81e551a463e937be3941a9c5444",
+      "operations": [],
+      "output_digest": "sha256:47dab8d724862202983dd4f41058eac46b5fa81e551a463e937be3941a9c5444",
+      "historical_original_source": {
+        "scope": "historical_original_contract_source_identity_not_current_generator_input",
+        "bytes": 1429178,
+        "sha256": "1665951d36e80b3cea2d499de3d7fdb4ec9b0ec58926fa6809569066c3231e2c",
+        "coordinate": "urn:kdna:source:sha256:1665951d36e80b3cea2d499de3d7fdb4ec9b0ec58926fa6809569066c3231e2c"
+      }
+    },
+    {
+      "pointer": "/representation_candidate/a21_retained_browser",
+      "output": "packages/kdna-core/src/public-contract/retained-browser06/contract.json",
+      "input_digest": "sha256:a6f932f9c7dcc4e1a826ba71205703bceb84572f7218b292faf1bb4ec75a9b96",
+      "operations": [],
+      "output_digest": "sha256:a6f932f9c7dcc4e1a826ba71205703bceb84572f7218b292faf1bb4ec75a9b96",
+      "historical_original_source": {
+        "scope": "historical_original_contract_source_identity_not_current_generator_input",
+        "bytes": 1441241,
+        "sha256": "4b646e32745ffc847bd9d22941a7bfe49d937a57009d4290b0e3cc4613610da1",
+        "coordinate": "urn:kdna:source:sha256:4b646e32745ffc847bd9d22941a7bfe49d937a57009d4290b0e3cc4613610da1"
+      }
+    }
+  ],
+  "registered_preimages": [
+    {
+      "pointer": "/component_semantics/definition",
+      "digest": "sha256:37e857cc4e43f7283a51ee6abe1f6e8401803902e8dc47f6d14d712aa7d7b089"
+    },
+    {
+      "pointer": "/static_policy/definition",
+      "digest": "sha256:c3f8aec755b58fe98deb201ce5b9f30cd729e1b10bf636608b87e863f6c7cf92"
+    },
+    {
+      "pointer": "/protected_source",
+      "digest": "sha256:848d4afbb80130e12217c0d86ef5d6a21e5e032687d47c3837dc8341f25981fe"
+    },
+    {
+      "pointer": "/protection_admission",
+      "digest": "sha256:0c84c6fb73b3f6fbb453a7b7494baba81249814d6a9a6f72719ce219392751ab"
+    },
+    {
+      "pointer": "/external_grant_issuer",
+      "digest": "sha256:1a0d188ee15e5dedc6bb1176a2659f0fa0b05072ab8dc1641f1e79a0900467f9"
+    }
+  ],
+  "base_json_projections": [
+    {
+      "output": "packages/kdna-core/schema/public-vocabulary.json",
+      "operations": []
+    },
+    {
+      "output": "packages/kdna-core/src/public-contract/generated-contract.json",
+      "operations": [
+        {
+          "action": "delete",
+          "pointer": "/r2_semantics/component_binding_decision",
+          "expected_before_sha256": "sha256:865157a17b06b60640c19d61d4c985cc2b483cba08573bb0681dec3b6d0a2ae1"
+        },
+        {
+          "action": "delete",
+          "pointer": "/r2_semantics/dependent_schema_decision",
+          "expected_before_sha256": "sha256:30a9f503df4a2ed0c402c3fd9f2c33b6ebbd9da76b19c15d5056e45c3d1f2345"
+        },
+        {
+          "action": "delete",
+          "pointer": "/r2_semantics/implementation_proof_status",
+          "expected_before_sha256": "sha256:764d51ee0239be82125d23ec8b4a88df98d349260d5d1b08b659ecc0ec19c582"
+        },
+        {
+          "action": "delete",
+          "pointer": "/r2_semantics/native_binding/decision",
+          "expected_before_sha256": "sha256:8f9a2b9ba108d44396a526503f83b7be1f5109f5b8b622817c757e225ed9585f"
+        },
+        {
+          "action": "replace",
+          "pointer": "/r2_semantics/profile_component_roles/rule",
+          "expected_before_sha256": "sha256:51411463fa1f9c51340f0f484bca3fa7763a0fe5b75b8a4fa651ef7a3f78d369",
+          "value": "Native component method is its actual basic method and role; CS2 independently names the preserved typed content profile. CS1 is historical and is not implicitly migrated."
+        },
+        {
+          "action": "delete",
+          "pointer": "/r2_semantics/protected_source_binding_decision",
+          "expected_before_sha256": "sha256:c64b96546467078d24a6d9e9c07827cd56a31833e0053c07e8edbb275379de5b"
+        },
+        {
+          "action": "replace",
+          "pointer": "/r2_semantics/rules/R08_ORGANIZATION",
+          "expected_before_sha256": "sha256:6649db2b15fac91149dcb0b6a11d76c6eca576f70210112a357fbea79c13819e",
+          "value": "Only the four fixed relationship kind/direction/role/operator/effect tuples are core meanings. Read support/qualify upstream for target, both conflict sides, and all required dependency producers; complements expose peer question and require a separate required dependency for necessary input. Input/output ports and contracts agree. Parent forest and optional reading order do not imply execution. catalog-only counterparts retain their full question and relation but receive no automatic full-body descriptor or handle under either broad or narrow Host scope; use an outside_selection nonexpandable judgment-body omission. Necessary counterparts are never demoted."
+        },
+        {
+          "action": "replace",
+          "pointer": "/r2_semantics/rules/R09_EXAMPLES_HISTORY",
+          "expected_before_sha256": "sha256:b6e7a09917fd915f54a0a237e2040402f8172bed73867f8a1ab34f4d2d4da3b3",
+          "value": "Asset-owned examples/results and revisions are independently discoverable. Illustrative has no observed result. Observed may omit public sources but means actual author-side record, never independent verification. Comparisons target same-example expected result with same contract. Partial remains partial. Revisions use exact typed targets; deleted/old objects fix an external old identity. Unknown history is partial and timestamps are declared, not filesystem derived. history overview is coverage/statement only and boundary declaration overview is state only; independently registered child bodies cannot be copied into parent declarations or provenance. expanding a revision preserves authored affected_refs without automatically reading affected optional targets or replaying cases."
+        },
+        {
+          "action": "replace",
+          "pointer": "/r2_semantics/rules/R10_READ",
+          "expected_before_sha256": "sha256:ee68b714034a58a0be182d8e67b21e49f04536e9775627625d5d333b75bbad91",
+          "value": "Each public target has one stable Ref and owner; closure is fixed-point typed dependency traversal, with denied/unsupported/budget/external failure distinguished. Whole asset has complete discovery, global content and valid deferred handles; catalog supplies authorized focus only; exact/expand provide required semantics. Asset handles need no borrowed judgment. Unknown critical semantics reject all four modes. whole_asset retains complete discovery. A selected asset context omits whole-asset reading_order and restricts foundation_refs to supplied applicable targets with explicit field omissions; applicable common foundations remain required full bodies. Expand indexes the exact target and necessary closure only, with authored optional refs intact. Determine these mode roles before Host checks; never use generic permission-based index filtering or conceal required scope denial as an omission. Read selected context and Execution Plan/Capsule share the one deterministic generated projection. Capsule supplies required catalog and unfolded deterministic omissions as well as complete closure/references/relationships; original snapshot identity and full projected closure digest remain distinct exact bindings. sourceSelection refuses complete Plan/Capsule supply with EXECUTION_UNRESOLVED_EXTERNAL when any actual supplied target has a mandatory unresolved external edge. Optional edges and required edges owned only by unsupplied other-topic targets do not block this selection; no resolver, placeholder or automatic fetch is provided."
+        },
+        {
+          "action": "delete",
+          "pointer": "/r2_semantics/selected_context/authority",
+          "expected_before_sha256": "sha256:1b383001f3545dda86047d591eb40a062df57178e8f40ebb08a8f7ccb39838d4"
+        },
+        {
+          "action": "delete",
+          "pointer": "/r2_semantics/status",
+          "expected_before_sha256": "sha256:ff6261cd0056c59fbd50890babdf460c9ef3d2129ce0baa33e98567514380993"
+        },
+        {
+          "action": "delete",
+          "pointer": "/r2_semantics/version_decision",
+          "expected_before_sha256": "sha256:f0e45bc271b038ec8591cccc30b151bca7434882a79a530150eca574b8f288a7"
+        }
+      ]
+    },
+    {
+      "output": "packages/kdna-core/src/public-contract/protected-source-contract.generated.json",
+      "operations": [
+        {
+          "action": "delete",
+          "pointer": "/status",
+          "expected_before_sha256": "sha256:95c4dd16c21aed70bd3cec9fc4649a5213f1d6b93437cb0a86230459e6bbc808"
+        }
+      ]
+    },
+    {
+      "output": "packages/kdna-core/src/public-contract/protection-contract.generated.json",
+      "operations": [
+        {
+          "action": "replace",
+          "pointer": "/non_schema_rules/0/future_boundary",
+          "expected_before_sha256": "sha256:6d9d055edd9abfe0c4ecaf6c2023f15ff595e3b19db1f0b2989fd9f15b775358",
+          "value": "Source observations alone do not prove actual protected Node runtime behavior."
+        },
+        {
+          "action": "replace",
+          "pointer": "/non_schema_rules/1/future_boundary",
+          "expected_before_sha256": "sha256:6d9d055edd9abfe0c4ecaf6c2023f15ff595e3b19db1f0b2989fd9f15b775358",
+          "value": "Source observations alone do not prove actual protected Node runtime behavior."
+        },
+        {
+          "action": "replace",
+          "pointer": "/non_schema_rules/2/future_boundary",
+          "expected_before_sha256": "sha256:6d9d055edd9abfe0c4ecaf6c2023f15ff595e3b19db1f0b2989fd9f15b775358",
+          "value": "Source observations alone do not prove actual protected Node runtime behavior."
+        },
+        {
+          "action": "replace",
+          "pointer": "/non_schema_rules/3/future_boundary",
+          "expected_before_sha256": "sha256:6d9d055edd9abfe0c4ecaf6c2023f15ff595e3b19db1f0b2989fd9f15b775358",
+          "value": "Source observations alone do not prove actual protected Node runtime behavior."
+        },
+        {
+          "action": "replace",
+          "pointer": "/non_schema_rules/4/future_boundary",
+          "expected_before_sha256": "sha256:6d9d055edd9abfe0c4ecaf6c2023f15ff595e3b19db1f0b2989fd9f15b775358",
+          "value": "Source observations alone do not prove actual protected Node runtime behavior."
+        },
+        {
+          "action": "replace",
+          "pointer": "/non_schema_rules/5/future_boundary",
+          "expected_before_sha256": "sha256:6d9d055edd9abfe0c4ecaf6c2023f15ff595e3b19db1f0b2989fd9f15b775358",
+          "value": "Source observations alone do not prove actual protected Node runtime behavior."
+        },
+        {
+          "action": "replace",
+          "pointer": "/non_schema_rules/6/future_boundary",
+          "expected_before_sha256": "sha256:6d9d055edd9abfe0c4ecaf6c2023f15ff595e3b19db1f0b2989fd9f15b775358",
+          "value": "Source observations alone do not prove actual protected Node runtime behavior."
+        },
+        {
+          "action": "replace",
+          "pointer": "/non_schema_rules/7/future_boundary",
+          "expected_before_sha256": "sha256:6d9d055edd9abfe0c4ecaf6c2023f15ff595e3b19db1f0b2989fd9f15b775358",
+          "value": "Source observations alone do not prove actual protected Node runtime behavior."
+        },
+        {
+          "action": "replace",
+          "pointer": "/proof_limits/0",
+          "expected_before_sha256": "sha256:8a07c88fe1baec47fd7aaba72b42316f8c03434328d931faae017db272a521f7",
+          "value": "Definitions, static examples and generated shapes alone do not prove protected runtime capability."
+        },
+        {
+          "action": "replace",
+          "pointer": "/proof_limits/2",
+          "expected_before_sha256": "sha256:75ee3531ea3031df8f27012ac849ffab93416169dc1b7c008f8620d18b46d841",
+          "value": "Source/schema/generator results alone do not prove ordinary runtime presence rejection."
+        },
+        {
+          "action": "replace",
+          "pointer": "/proof_limits/3",
+          "expected_before_sha256": "sha256:8dac606be048c7dbe6c40e1ca635d7c1b2e23869f597236b9caa1bf858213a2c",
+          "value": "A contract observation alone does not prove actual restricted-window semantic behavior."
+        },
+        {
+          "action": "delete",
+          "pointer": "/status",
+          "expected_before_sha256": "sha256:b56a47b907d289868fc763e3eac3d1a3ba5ca47524697905228d2ee230e070ff"
+        }
+      ]
+    }
+  ],
+  "source_facade_adapter": {
+    "additional_imports": [
+      {
+        "action": "import",
+        "names": [
+          "SourceRouteObservation06",
+          "SourceRouteFailure06",
+          "SourceRouteCoreRejected06",
+          "SourceRouteProductionEvidence06",
+          "SourceOperationRequestAdmission06",
+          "AdmittedSourceOperationRequest06",
+          "SourceOperationRequest06",
+          "SourceOperationAuthorityContext06",
+          "NativeSourceOperationAuthority06"
+        ],
+        "coordinate": "./source06/types.js"
+      },
+      {
+        "action": "import",
+        "names": [
+          "SourceRouteDigests06",
+          "SourceRouteMemberInventory06",
+          "ProtectedSectionSourceHostObservation06",
+          "ProtectedSectionSourceHostContext06",
+          "ProtectedSectionSourceDeliveryToken06",
+          "ProtectedSectionSourceRevisionContext06",
+          "TrustedProtectedSectionSourceHost06",
+          "ProtectedSectionSourceObservation06",
+          "ProtectedSectionSourceCommit06",
+          "SourceRouteDiagnostic06"
+        ],
+        "coordinate": "./source06/types.js"
+      },
+      {
+        "action": "import",
+        "names": ["ProtectedSectionSourcePreview06"],
+        "coordinate": "./source06/types.js"
+      },
+      {
+        "action": "export",
+        "names": ["*"],
+        "coordinate": "./source06/types.js"
+      }
+    ]
+  },
+  "sections_mirrors": [
+    "packages/kdna-read/src/sections/validators.cjs",
+    "packages/kdna-read/src/sections/types.d.ts",
+    "packages/kdna-read/src/sections/contract.json",
+    "packages/kdna-read/src/sections/generation-manifest.json",
+    "packages/kdna-core/src/public-contract/browser-native/sections/contract.json"
+  ],
+  "whole_dispatch": {
+    "roots": [
+      "Manifest06Candidate",
+      "StoredRepresentationMetadata06",
+      "RepresentationMetadata06",
+      "Representation06TableDirectoryRow",
+      "Representation06DataSectionRow",
+      "Representation06TopicRow",
+      "Representation06NodeSectionRow",
+      "ExperimentalStoredXrefFrame06",
+      "ExpansionTarget",
+      "IRReadNode",
+      "CanonicalIR06Candidate",
+      "WholeSectionSnapshotData06",
+      "ChecksumsDocument06",
+      "SectionSignaturePolicy06",
+      "SectionSignatureReadIntent06",
+      "SectionSignatureVerification06"
+    ],
+    "directory": "packages/kdna-core/src/public-contract/browser-native",
+    "options": {
+      "strict": false,
+      "allErrors": false,
+      "validateFormats": false,
+      "code": {
+        "source": true,
+        "lines": true
+      }
+    }
+  },
+  "base_mirrors": [
+    {
+      "source": "packages/kdna-core/src/public-contract/generated-contract.json",
+      "output": "packages/kdna-core/src/public-contract/browser-native/generated-contract.json"
+    },
+    {
+      "source": "packages/kdna-core/src/public-contract/validators.generated.js",
+      "output": "packages/kdna-core/src/public-contract/browser-native/validators.generated.js"
+    }
+  ]
+}

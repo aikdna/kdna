@@ -2,7 +2,7 @@
 const fs = require('node:fs/promises');
 const { LIMITS } = require('./container.js');
 async function capture(path) {
- const handle=await fs.open(path,'r');
+ const handle=await fs.open(path,fs.constants.O_RDONLY | fs.constants.O_NONBLOCK);
  try {
   const stat=await handle.stat();
   if(!stat.isFile()||stat.size>LIMITS.container)throw Error('Invalid bounded file');

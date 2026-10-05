@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:execution06:NativeConsumptionPlanAdmission06",
+  "title": "NativeConsumptionPlanAdmission06",
+  "description": "Candidate native execution data only; native admitted brands and independent action authorization are required.",
+  "$ref": "#/$defs/NativeConsumptionPlanAdmission06",
+  "$defs": {
+    "AdmittedNativeConsumptionPlan06": false,
+    "NativeConsumptionPlanAdmission06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "admitted"
+            },
+            "plan": {
+              "$ref": "#/$defs/AdmittedNativeConsumptionPlan06"
+            }
+          },
+          "required": [
+            "status",
+            "plan"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/$defs/NativeExecutionRejection06"
+        }
+      ]
+    },
+    "NativeExecutionFailure06": {
+      "type": "string",
+      "enum": [
+        "EXECUTION_INPUT_INVALID",
+        "EXECUTION_SCHEMA_INVALID",
+        "EXECUTION_VERSION_UNSUPPORTED",
+        "EXECUTION_SOURCE_UNATTESTED",
+        "EXECUTION_BINDING_INVALID",
+        "EXECUTION_UNRESOLVED_EXTERNAL",
+        "EXECUTION_SELECTION_INVALID",
+        "EXECUTION_BUDGET_EXCEEDED",
+        "EXECUTION_HOST_INVALID",
+        "EXECUTION_HOST_DENIED",
+        "EXECUTION_HOST_EXPIRED",
+        "EXECUTION_DELIVERY_INVALID",
+        "EXECUTION_PROVIDER_FAILED",
+        "EXECUTION_REPLAY",
+        "EXECUTION_OUTCOME_FAILED",
+        "EXECUTION_SOURCE_UNSUPPORTED",
+        "EXECUTION_CAPABILITY_UNAVAILABLE"
+      ]
+    },
+    "NativeExecutionRejection06": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "rejected"
+        },
+        "code": {
+          "$ref": "#/$defs/NativeExecutionFailure06"
+        },
+        "body": {
+          "type": "null",
+          "const": null
+        },
+        "body_bytes": {
+          "type": "integer",
+          "const": 0
+        }
+      },
+      "required": [
+        "status",
+        "code",
+        "body",
+        "body_bytes"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

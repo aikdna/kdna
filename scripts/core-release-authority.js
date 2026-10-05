@@ -37,16 +37,21 @@ const STABLE_SEMVER_RE = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/u;
 const UTF8 = new TextDecoder('utf-8', { fatal: true });
 const TREE_LIMITS = Object.freeze({
   files: 10_000,
-  fileBytes: 16 * 1024 * 1024,
-  totalBytes: 128 * 1024 * 1024,
+  // Current generated validator artifacts exceed 16 MiB per file and the
+  // generated tree exceeds the former 128 MiB total; the bounds follow the
+  // actual current generated sizes instead of a smaller conservative set.
+  fileBytes: 64 * 1024 * 1024,
+  totalBytes: 256 * 1024 * 1024,
   pathBytes: 1024,
   segmentBytes: 255,
 });
 const TAR_LIMITS = Object.freeze({
-  packedBytes: 64 * 1024 * 1024,
-  files: 1024,
-  fileBytes: 32 * 1024 * 1024,
-  totalBytes: 128 * 1024 * 1024,
+  // The current source packs and generated validator artifacts exceed the
+  // former conservative tar bounds; follow the actual current packed sizes.
+  packedBytes: 256 * 1024 * 1024,
+  files: 10_000,
+  fileBytes: 64 * 1024 * 1024,
+  totalBytes: 256 * 1024 * 1024,
 });
 const JSON_LIMITS = Object.freeze({ bytes: 8 * 1024 * 1024, depth: 64 });
 

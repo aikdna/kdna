@@ -377,7 +377,7 @@
         "ProtectionEntitlement"
       ],
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
-      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_boundary": "Source observations alone do not prove actual protected Node runtime behavior.",
       "future_owner": "Core/Read protection integration and trusted Host",
       "id": "PROTECTION-PRESENCE",
       "requirement": "Manifest entitlement is optional. Absence adds no credential, lease, offline or revocable default. With presence, access must be licensed, payload encrypted true, encryption exactly payload.kdnab and profile/version must match password->kdna.envelope.aead/0.1.0 or account/org->kdna.envelope.external-grant/0.1.0. Apply to every bytes/source/producer path before payload disclosure. Existing protection markers preserve ordinary capability rejection; new malformed entitlement-only plaintext rejects as Core invalid."
@@ -388,7 +388,7 @@
         "ProtectionEntitlement"
       ],
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
-      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_boundary": "Source observations alone do not prove actual protected Node runtime behavior.",
       "future_owner": "Core/Read protection integration and trusted Host",
       "id": "PROTECTION-DIGESTS",
       "requirement": "A/C/E retain original container/member byte domains. Authenticated plaintext enters the one existing Payload semantic path once. Both existing Manifest content_digest and authoring.content_digest must be refreshed, not removed. Final Manifest precedes E/checksums; legacy signature follows checksums; final A precedes external grant issuance. signature_content_digest is the independent frozen kdsig0.1 domain, not C."
@@ -399,7 +399,7 @@
         "ProtectionEntitlement"
       ],
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
-      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_boundary": "Source observations alone do not prove actual protected Node runtime behavior.",
       "future_owner": "Core/Read protection integration and trusted Host",
       "id": "PROTECTION-AUTHORITY",
       "requirement": "Protected admission returns full IR only to a trusted Core caller already authorized to receive it. Same-instance opaque operations govern later controlled operations, not recall of copied IR. Pure inspect/project/Plan/Capsule do not gain clock/store/network I/O or online authority. All new controlled Reads/actions/transport commits need current protection plus independent Host scope/action checks. Disposed, cross-instance or serialized objects do not restore private authority."
@@ -410,7 +410,7 @@
         "ProtectionEntitlement"
       ],
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
-      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_boundary": "Source observations alone do not prove actual protected Node runtime behavior.",
       "future_owner": "Core/Read protection integration and trusted Host",
       "id": "PROTECTION-DELIVERY",
       "requirement": "Final check then callback invocation discloses body to trusted Host. Awaiting callback across expiry cannot erase that disclosure. External transport commit separately obtains current operation validity and current Host scope. In one synchronous private transition before invoking the side-effect callback, consume the prepared token and record a unique attempt as outcome_unknown. The callback acknowledgement true confirms only its configured trusted transport handoff boundary, never remote receipt. False, throw or any thenable remains outcome_unknown even if bytes were sent. Reentrant or later reuse cannot invoke the callback again, create a new attempt or downgrade prior history. Confirmed history survives subsequent Host failure, expiry, revocation and provider error; a valid monotonic current-invocation post-ack sample is preserved even when authorization fails; an invalid, rollback, unavailable or uncalled post-ack clock records confirmed_at_ms null in the body-free failure, never an invented timestamp. Failure carries no prepared body, no ready/delivered result, and registers no new handle. No automatic retry or restoration of consumed authority. Delayed transport must acquire a distinct authorized prepared delivery at its actual handoff; no result claims global nondisclosure by a trusted Host outside this API."
@@ -421,7 +421,7 @@
         "ProtectionEntitlement"
       ],
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
-      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_boundary": "Source observations alone do not prove actual protected Node runtime behavior.",
       "future_owner": "Core/Read protection integration and trusted Host",
       "id": "PROTECTION-RESULTS",
       "requirement": "R2-bound closed result unions separate actual Core failure and protection/delivery failures. All four Read modes reject unknown critical semantics with READ_UNSUPPORTED_CRITICAL; no catalog_only admission or delivery arm is active. Diagnostic references are bound to the complete R2 tuple and package combination by schema_binding. Historical pre-R2 schemas and the complete original definition remain separate and unchanged. JSON observations and receipts never create operation authority. request_failed may carry the actual rejected Read envelope only from request version dispatch (READ_MIXED_VERSION_TUPLE or READ_UNSUPPORTED_VERSION at stage version, original not_evaluated states, empty source coordinates, not_delivered receipt and exact budget). Tiny budgets preserve no_body_control. No bind/Host action or ProtectionReceipt occurs. Schema-valid later-stage rejection alone does not qualify. Binding observe/assertCurrent failures use closed ProtectionCurrentFailure with checked_at_ms UInt|null, sampled only in the current invocation. Each clock attempt resets the observation; valid monotonic samples survive later authorization/disposal rejection, while invalid/rollback/unavailable/uncalled samples are null. A timestamp is observation, not authority. Public failures project only status and diagnostic."
@@ -432,7 +432,7 @@
         "ProtectionEntitlement"
       ],
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
-      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_boundary": "Source observations alone do not prove actual protected Node runtime behavior.",
       "future_owner": "Core/Read protection integration and trusted Host",
       "id": "PROTECTION-DECLARATIONS",
       "requirement": "offline/revocable absent remain unprovided. offline=false forbids offline grant use; offline=true requires a verified signed grace window and integration offline capability and does not create a window. revocable=true requires external grant plus trusted issuer status/refresh/revocation capability; password possession alone conflicts. revocable=false states no requested revocation feature and never disables actual issuer revoke/expiry. Capability conflicts reject, never silently ignore. Canonical password admission in this local Node module conflicts with offline=false because possession is locally usable."
@@ -443,7 +443,7 @@
         "ProtectionEntitlement"
       ],
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
-      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_boundary": "Source observations alone do not prove actual protected Node runtime behavior.",
       "future_owner": "Core/Read protection integration and trusted Host",
       "id": "PROTECTION-CHECKSUMS",
       "requirement": "checksums.document/1 is a new closed document. Raw duplicate JSON keys reject; 1 MiB document cap, 2..128 entries, names <=4096 UTF8 bytes, member bytes <=8 MiB, total original container limits unchanged. Entries and covered_entries are the same strictly UTF8-sorted exact runtimeEntryNames set. Each entry bytes/digest matches original raw bytes. E0.2 equals entry_set_digest; A and checksums/signature themselves are not covered. Old0.1 is not relabeled."
@@ -454,7 +454,7 @@
         "ProtectionEntitlement"
       ],
       "enforcement": "NOT_IMPLEMENTED_NON_SCHEMA",
-      "future_boundary": "implemented new protection Node module; source observations require independent B1 runtime acceptance",
+      "future_boundary": "Source observations alone do not prove actual protected Node runtime behavior.",
       "future_owner": "Core/Read protection integration and trusted Host",
       "id": "PROTECTION-GRANTS",
       "requirement": "Trusted expectation binds account_id, exact entitlement_id, account/org entitlement profile, device ID and both distinct device public keys, asset UID/ID/version, captured original A, entry, ciphertext digest, key_ref, issuer asset key ID and pinned issuer signing key ID. Never trust grant self-asserted expectation. Per exact issuer/account_id/entitlement_id high-water shared across devices, per-device records keyed separately, all verified status/time updates atomic. Provider/clock rollback/store failures close. Offline use only explicitly requested within signed grace/expiry and authored allowance; no instant disconnected revocation promise."
@@ -547,10 +547,10 @@
     }
   ],
   "proof_limits": [
-    "Definitions, static examples and generated shapes only; no protected runtime capability.",
+    "Definitions, static examples and generated shapes alone do not prove protected runtime capability.",
     "Opaque runtime types compile to false in JSON Schema; an observation validates no brand or grant.",
-    "Old source/schema/generator results do not prove ordinary runtime presence rejection until B1.",
-    "Independent restricted-window semantic review pending; no automatic IN_WINDOW claim."
+    "Source/schema/generator results alone do not prove ordinary runtime presence rejection.",
+    "A contract observation alone does not prove actual restricted-window semantic behavior."
   ],
   "r2_interpretation": "Unknown critical semantics reject in all modes; no ProtectedAdmissionCatalogOnly result/observation arm.",
   "read_api_typescript": "import type { CanonicalReadSnapshot, CoreAdmissionCatalogOnly, ReadRequest, ReadCallResult, HostReadContextData, TrustedReadControlProvider } from '@aikdna/kdna-core';\nimport type { ProtectionOperation, ProtectionPreparedDelivery, ProtectedReadResult, ProtectedTransportCommitResult, ProtectedHostReadProvider } from '@aikdna/kdna-core/protection-node';\nexport type * from '@aikdna/kdna-core/protection-node';\nexport type ProtectedHostObservation = HostReadContextData & { readonly current_ms: number; readonly revoked?: boolean; readonly lift_denial?: boolean };\nexport type ProtectedHostObservationContext = { readonly request: ReadRequest; readonly snapshot: CanonicalReadSnapshot | CoreAdmissionCatalogOnly };\nexport type ProtectedHostCallbacks = { readonly observe: (context: ProtectedHostObservationContext) => ProtectedHostObservation | Promise<ProtectedHostObservation>; readonly deliver: (result: ReadCallResult, prepared: ProtectionPreparedDelivery) => boolean | Promise<boolean> };\nexport type TrustedProtectedTransport = { readonly observeScope: (context: ProtectedHostObservationContext) => ProtectedHostObservation | Promise<ProtectedHostObservation>; readonly commit: (result: ReadCallResult) => boolean };\nexport declare function createTrustedProtectedHostReadProvider(callbacks: ProtectedHostCallbacks): ProtectedHostReadProvider;\nexport declare function readProtectedNode(operation: ProtectionOperation, request: unknown, control: TrustedReadControlProvider, host: ProtectedHostReadProvider): Promise<ProtectedReadResult>;\nexport declare function commitProtectedTransport(operation: ProtectionOperation, prepared: ProtectionPreparedDelivery, transport: TrustedProtectedTransport): Promise<ProtectedTransportCommitResult>;\n",
@@ -824,7 +824,6 @@
     "path": "specs/protection-admission.md",
     "sha256": "995681e3836abc3087c98adfd5d18bba59de3d6ee31d3a351438bd43b8c732ba"
   },
-  "status": "B1_IMPLEMENTATION_CANDIDATE_NOT_ACCEPTED",
   "types": {
     "ChecksumsDocument1": {
       "additionalProperties": false,

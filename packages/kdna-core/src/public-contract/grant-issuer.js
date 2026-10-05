@@ -65,7 +65,7 @@ function captureArguments(input,options,secrets,owned){
 async function captureFile(file,checkpoint,owned){
  let handle;
  try{
-  checkpoint();handle=await fs.open(file,'r');checkpoint();
+  checkpoint();handle=await fs.open(file,fs.constants.O_RDONLY | fs.constants.O_NONBLOCK);checkpoint();
   const stat=await handle.stat();checkpoint();if(!stat.isFile()||stat.size>MAX_BYTES)fail('INPUT_INVALID','input');
   const chunks=[];let total=0;
   for(;;){checkpoint();const chunk=Buffer.alloc(Math.min(65536,MAX_BYTES+1-total));owned.push(chunk);

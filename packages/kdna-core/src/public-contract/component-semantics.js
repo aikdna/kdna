@@ -1,6 +1,6 @@
 'use strict';
 
-const {canonicalJson,utf8,compareUtf8,copyJson,freeze,reject,scalarString}=require('./strict-input.js');
+const {canonicalJson,utf8,compareUtf8,copyJson,freeze,reject,scalarString}=require('./canonical-json-shim.js');
 const {digest}=require('./digests.js');
 const {validate}=require('./validate.js');
 const {types,component_semantics:registry,static_policy}=require('./generated-contract.json');

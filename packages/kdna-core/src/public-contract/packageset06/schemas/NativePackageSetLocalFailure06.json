@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:packageset06:NativePackageSetLocalFailure06",
+  "title": "NativePackageSetLocalFailure06",
+  "description": "Native PackageSet structural data only; member, byte, retained Read and action authorities remain independent actual brands.",
+  "$ref": "#/$defs/NativePackageSetLocalFailure06",
+  "$defs": {
+    "NativePackageSetLocalFailure06": {
+      "type": "string",
+      "enum": [
+        "invalid_limits",
+        "member_limit_exceeded",
+        "source_bytes_limit_exceeded",
+        "invalid_member_source",
+        "invalid_read_request",
+        "provider_invalid",
+        "provider_failed",
+        "provider_observation_invalid",
+        "cancelled",
+        "core_unavailable",
+        "delivery_unconfirmed",
+        "handoff_invalid",
+        "member_admission_failed",
+        "read_preparation_failed"
+      ]
+    }
+  }
+}

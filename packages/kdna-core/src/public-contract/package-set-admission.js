@@ -7,7 +7,7 @@
 // that makes a member observation genuine. It never exports the internal
 // decider, and no caller-supplied JSON value can stand in for an observation.
 const { types: utilTypes } = require('node:util');
-const { copyJson, canonicalJson, freeze, identifier } = require('./strict-input.js');
+const { copyJson, canonicalJson, freeze, identifier } = require('./canonical-json-shim.js');
 const { inspectSnapshot } = require('./brand.js');
 const { decidePackageSet, verifyHandoffBindings } = require('./package-set.js');
 const { inspectAdmittedPlan } = require('./execution.js');

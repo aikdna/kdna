@@ -47,7 +47,6 @@
   },
   "schema_id": "urn:kdna:schema:protected-source:1.0.0:binding:r2:7",
   "schema_path": "specs/protected-source-r2-binding-7.schema.json",
-  "status": "B3_IMPLEMENTATION_CANDIDATE_NOT_ACCEPTED",
   "types": {
     "AccessMode": {
       "enum": [
@@ -2266,14 +2265,14 @@
           "type": "string"
         },
         "definition_digest": {
-          "const": "sha256:779760994a3c7c730bd524e1d1d8d6f7c1fd8628bde55bcf3fa98ddd02051c28",
+          "const": "sha256:37e857cc4e43f7283a51ee6abe1f6e8401803902e8dc47f6d14d712aa7d7b089",
           "type": "string"
         },
         "limits": {
           "additionalProperties": false,
           "properties": {
             "components_per_payload": {
-              "const": 256,
+              "const": 1024,
               "type": "integer"
             },
             "content_canonical_bytes": {
@@ -2293,7 +2292,7 @@
               "type": "integer"
             },
             "opted_in_total_canonical_bytes": {
-              "const": 196608,
+              "const": 524288,
               "type": "integer"
             },
             "taxonomy_path_edges": {
@@ -10871,6 +10870,9 @@
         },
         "asset_id": {
           "$ref": "#/$defs/Identifier"
+        },
+        "asset_type": {
+          "$ref": "#/$defs/AssetType"
         },
         "asset_uid": {
           "$ref": "#/$defs/Identifier"

@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:packageset06:NativePackageSetStructureResult06",
+  "title": "NativePackageSetStructureResult06",
+  "description": "Native PackageSet structural data only; member, byte, retained Read and action authorities remain independent actual brands.",
+  "$ref": "#/$defs/NativePackageSetStructureResult06",
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativePackageSetStructureResult06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "valid"
+            },
+            "value": {
+              "$ref": "#/$defs/PackageSet"
+            },
+            "proof": {
+              "type": "string",
+              "const": "claims_not_authenticated"
+            }
+          },
+          "required": [
+            "status",
+            "value",
+            "proof"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "rejected"
+            },
+            "diagnostic": {
+              "type": "string",
+              "const": "READ_INPUT_INVALID"
+            },
+            "merged_ir": {
+              "type": "boolean",
+              "const": false
+            },
+            "action_authorized": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "status",
+            "diagnostic",
+            "merged_ir",
+            "action_authorized"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "PackageMember": {
+      "type": "object",
+      "properties": {
+        "member_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "A": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "member_id",
+        "asset_id",
+        "asset_version",
+        "A"
+      ],
+      "additionalProperties": false
+    },
+    "PackageSet": {
+      "type": "object",
+      "properties": {
+        "set_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PackageMember"
+          },
+          "minItems": 1
+        },
+        "selection": {
+          "$ref": "#/$defs/Selection"
+        }
+      },
+      "required": [
+        "set_id",
+        "members",
+        "selection"
+      ],
+      "additionalProperties": false
+    },
+    "Selection": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_id"
+      ],
+      "additionalProperties": false
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  }
+}

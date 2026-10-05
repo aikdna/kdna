@@ -74,6 +74,56 @@
       "types": "./src/public-contract/package-set-node.d.ts",
       "import": "./src/public-contract/package-set-node.mjs",
       "require": "./src/public-contract/package-set-node.js"
+    },
+    "./sections-node": {
+      "types": "./src/public-contract/sections-node.d.ts",
+      "import": "./src/public-contract/sections-node.mjs",
+      "require": "./src/public-contract/sections-node.js"
+    },
+    "./protected-sections-node": {
+      "types": "./src/public-contract/protected-sections-node.d.ts",
+      "import": "./src/public-contract/protected-sections-node.mjs",
+      "require": "./src/public-contract/protected-sections-node.js"
+    },
+    "./source-sections-node": {
+      "types": "./src/public-contract/source-sections-node.d.ts",
+      "import": "./src/public-contract/source-sections-node.mjs",
+      "require": "./src/public-contract/source-sections-node.js"
+    },
+    "./retained-sections-node": {
+      "types": "./src/public-contract/retained-sections-node.d.ts",
+      "require": "./src/public-contract/retained-sections-node.js",
+      "import": "./src/public-contract/retained-sections-node.mjs"
+    },
+    "./execution-sections-node": {
+      "types": "./src/public-contract/execution-sections-node.d.ts",
+      "require": "./src/public-contract/execution-sections-node.js",
+      "import": "./src/public-contract/execution-sections-node.mjs"
+    },
+    "./creation-sections-node": {
+      "types": "./src/public-contract/creation-sections-node.d.ts",
+      "require": "./src/public-contract/creation-sections-node.js",
+      "import": "./src/public-contract/creation-sections-node.mjs"
+    },
+    "./sections-bytes-node": {
+      "types": "./src/public-contract/sections-bytes-node.d.ts",
+      "import": "./src/public-contract/sections-bytes-node.mjs",
+      "require": "./src/public-contract/sections-bytes-node.js"
+    },
+    "./package-set-sections-node": {
+      "types": "./src/public-contract/package-set-sections-node.d.ts",
+      "import": "./src/public-contract/package-set-sections-node.mjs",
+      "require": "./src/public-contract/package-set-sections-node.js"
+    },
+    "./sections-bytes-browser": {
+      "types": "./src/public-contract/browserwhole06/api.d.ts",
+      "import": "./src/public-contract/sections-bytes-browser.mjs",
+      "require": "./src/public-contract/sections-bytes-browser.js"
+    },
+    "./retained-sections-browser": {
+      "types": "./src/public-contract/retained-sections-browser.d.ts",
+      "import": "./src/public-contract/retained-sections-browser.mjs",
+      "require": "./src/public-contract/retained-sections-browser.js"
     }
   },
   "types": "src/public-contract/types.d.ts",
@@ -81,7 +131,8 @@
     "test": "node --test test/public-*.test.js test/r2-core.test.js test/r2-execution.test.js test/r2-protection-core.test.js test/r2-base-rule-obligations.test.js",
     "prepublishOnly": "npm run release:check",
     "release:check": "node ../../scripts/check-post-cutover-naming.mjs && node scripts/check-release-readiness.js",
-    "publish:guard": "node scripts/check-publish-duplicate.js"
+    "publish:guard": "node scripts/check-publish-duplicate.js",
+    "release:check:prerelease": "node ../../scripts/check-release-prerelease-readiness.mjs --package=packages/kdna-core --label=core"
   },
   "files": [
     "src/public-contract/",

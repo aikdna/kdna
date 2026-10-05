@@ -1,0 +1,15 @@
+'use strict';
+const C=require('./section-common.js'),{digestCanonical}=require('./digests.js');
+const origins=new WeakMap(),same=(a,b)=>digestCanonical(a)===digestCanonical(b);
+function originValue(view){const c=view.verification.capture;return {snapshot_id:view.snapshot_id,request_digest:view.request_digest??view.verification.request_digest,capture_id:c.capture_id,input_byte_length:c.input_byte_length,manifest_bytes_digest:c.manifest_bytes_digest,zip_directory_bytes_digest:c.zip_directory_bytes_digest,checked_sections_digest:digestCanonical(view.verification.checked_sections)};}
+function retain(snapshot,view,capture){origins.set(snapshot,{view,sourceIdentity:capture.sourceIdentity(),origin:C.strict.freeze(originValue(view))});}
+function bind(snapshot,request){
+ const record=origins.get(snapshot);C.need(record&&request.mode==='expand','READ_HANDLE_UNTRUSTED');const view=record.view,h=request.handle,whole=view.verification.mode==='whole_asset';
+ C.need(same(request.tuple,view.tuple),'READ_HANDLE_VERSION_MISMATCH');let selection=null,anchor;
+ if(whole){C.need(h.binding_kind===undefined&&h.snapshot_id===view.snapshot_id&&h.A===view.digests.A.observed&&h.C===view.digests.C.observed,'READ_HANDLE_STALE');C.need(h.asset_id===view.asset.asset_id&&h.asset_version===view.asset.asset_version&&h.core_version===view.tuple.core&&h.ir_version===view.tuple.ir&&h.read_version===view.tuple.read,'READ_HANDLE_VERSION_MISMATCH');C.need(h.anchor.kind==='asset'&&request.selection===null,'READ_HANDLE_ASSET_MISMATCH');anchor={kind:'asset'};}
+ else {C.need(view.verification.mode==='exact_selection'&&h.binding_kind==='section_capture','READ_HANDLE_UNTRUSTED');C.need(same(h.asset,view.asset)&&same(h.tuple,view.tuple)&&same(h.origin,record.origin),'READ_HANDLE_STALE');C.need(h.anchor.kind==='selection_set'&&request.selection&&request.selection.asset_id===view.asset.asset_id&&request.selection.asset_version===view.asset.asset_version,'READ_HANDLE_ASSET_MISMATCH');const ids=new Set(request.selection.judgment_ids);selection={...request.selection,judgment_ids:view.catalog.filter(x=>ids.has(x.judgment_id)).map(x=>x.judgment_id)};C.need(ids.size===selection.judgment_ids.length&&same(selection,h.anchor.selection),'READ_HANDLE_ASSET_MISMATCH');anchor=h.anchor;}
+ const targets=whole?view.ir.expansion_targets:view.expansion_targets,proof=targets.find(x=>same(x.anchor,anchor)&&same(x.target,h.target));C.need(proof&&same(proof.scope,h.scope),'READ_HANDLE_SCOPE_MISMATCH');
+ return {request:{...request,selection},record,target:structuredClone(h.target),scope:structuredClone(proof.scope),anchor:structuredClone(anchor)};
+}
+function checkCapture(binding,capture){const o=binding.record.origin,c=capture.identity;C.need(capture.sourceIdentity()===binding.record.sourceIdentity&&c.input_byte_length===o.input_byte_length&&c.manifest_bytes_digest===o.manifest_bytes_digest&&c.zip_directory_bytes_digest===o.zip_directory_bytes_digest,'READ_HANDLE_STALE');}
+module.exports={retain,bind,checkCapture,originValue};

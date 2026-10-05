@@ -548,3 +548,165 @@ test('a generation token injected only into any publishable tarball surface fail
   assert.equal(violations.length, roots.length);
   assert.ok(violations.every((violation) => violation.surface === 'packed-tarball'));
 });
+
+function writeTarHeaderWithSize(header, name, size) {
+  Buffer.from(name, 'utf8').copy(header, 0);
+  writeTarOctal(header, 100, 8, 0o644);
+  writeTarOctal(header, 108, 8, 0);
+  writeTarOctal(header, 116, 8, 0);
+  writeTarOctal(header, 124, 12, size);
+  writeTarOctal(header, 136, 12, 0);
+  header.fill(0x20, 148, 156);
+  header[156] = 48;
+  header.write('ustar\0', 257, 6, 'ascii');
+  header.write('00', 263, 2, 'ascii');
+  writeTarOctal(
+    header,
+    148,
+    8,
+    header.reduce((sum, byte) => sum + byte, 0),
+  );
+}
+
+function buildTarStream(entries) {
+  const blocks = [];
+  for (const { name, content } of entries) {
+    const header = Buffer.alloc(512);
+    writeTarHeaderWithSize(header, name, content.length);
+    blocks.push(header, content, Buffer.alloc((512 - (content.length % 512)) % 512));
+  }
+  blocks.push(Buffer.alloc(1024));
+  return Buffer.concat(blocks);
+}
+
+function pseudoRandomBytes(size) {
+  const bytes = Buffer.allocUnsafe(size);
+  let state = 0x12345678;
+  let index = 0;
+  for (; index + 4 <= size; index += 4) {
+    state ^= state << 13;
+    state >>>= 0;
+    state ^= state >>> 17;
+    state ^= state << 5;
+    state >>>= 0;
+    bytes.writeUInt32LE(state, index);
+  }
+  for (let tail = size - (size % 4); tail < size; tail += 1) {
+    bytes[tail] = (state >>> (8 * (tail % 4))) & 0xff;
+  }
+  return bytes;
+}
+
+// ~7x-compressible content (random head + zero tail per 32-byte chunk): stays inside the
+// packed-archive cap (25 MiB) and the ratio guard (200), so fixtures actually reach the
+// inner tar/ZIP limits rather than tripping assertArchiveSize. (Repeated large blocks do
+// not work: deflate only matches within a 32 KiB window.)
+function moderateBytes(size, factor = 8) {
+  const chunk = 32;
+  const keep = Math.max(1, Math.round(chunk / factor));
+  const bytes = Buffer.allocUnsafe(size);
+  let state = 0x9e3779b9;
+  for (let start = 0; start < size; start += chunk) {
+    const end = Math.min(start + chunk, size);
+    const head = Math.min(start + keep, end);
+    for (let index = start; index < head; index += 1) {
+      state ^= state << 13;
+      state >>>= 0;
+      state ^= state >>> 17;
+      state ^= state << 5;
+      state >>>= 0;
+      bytes[index] = state & 0xff;
+    }
+    bytes.fill(0, head, end);
+  }
+  return bytes;
+}
+
+test('npm tar parser accepts entries inside the declared capacity envelope', () => {
+  const many = Array.from({ length: 300 }, (_, index) => ({
+    name: `package/f-${index}.bin`,
+    content: pseudoRandomBytes(64),
+  }));
+  assert.equal(
+    safeNpmTarballEntries(gzipSync(buildTarStream(many)), 'fixtures/entries-300.tgz').length,
+    300,
+  );
+  const member = [{ name: 'package/big.bin', content: pseudoRandomBytes(10 * 1024 * 1024) }];
+  safeNpmTarballEntries(gzipSync(buildTarStream(member)), 'fixtures/member-10mib.tgz');
+  const total = Array.from({ length: 4 }, (_, index) => ({
+    name: `package/part-${index}.bin`,
+    content: moderateBytes(10 * 1024 * 1024),
+  }));
+  safeNpmTarballEntries(gzipSync(buildTarStream(total)), 'fixtures/total-40mib.tgz');
+});
+
+test('npm tar parser fails closed beyond the declared capacity envelope', () => {
+  const tooMany = Array.from({ length: 513 }, (_, index) => ({
+    name: `package/f-${index}.bin`,
+    content: pseudoRandomBytes(16),
+  }));
+  assert.throws(
+    () => safeNpmTarballEntries(gzipSync(buildTarStream(tooMany)), 'fixtures/entries-513.tgz'),
+    /tar entry count exceeds 512/u,
+  );
+  const tooLargeMember = [
+    { name: 'package/huge.bin', content: moderateBytes(48 * 1024 * 1024 + 1) },
+  ];
+  assert.throws(
+    () =>
+      safeNpmTarballEntries(gzipSync(buildTarStream(tooLargeMember)), 'fixtures/member-48mib1.tgz'),
+    /tar entry is truncated or too large/u,
+  );
+  const tooLargeTotal = Array.from({ length: 5 }, (_, index) => ({
+    name: `package/part-${index}.bin`,
+    content: moderateBytes(Math.ceil((128 * 1024 * 1024 + 1) / 5)),
+  }));
+  assert.throws(
+    () =>
+      safeNpmTarballEntries(gzipSync(buildTarStream(tooLargeTotal)), 'fixtures/total-128mib1.tgz'),
+    /tarball cannot be decompressed|expanded-size or compression-ratio/u,
+  );
+  const beyondMaxOutput = [{ name: 'package/huge.bin', content: moderateBytes(136 * 1024 * 1024) }];
+  assert.throws(
+    () =>
+      safeNpmTarballEntries(
+        gzipSync(buildTarStream(beyondMaxOutput)),
+        'fixtures/member-136mib.tgz',
+      ),
+    /tarball cannot be decompressed/u,
+  );
+  const ratioBomb = [{ name: 'package/zeros.bin', content: Buffer.alloc(4 * 1024 * 1024) }];
+  assert.throws(
+    () => safeNpmTarballEntries(gzipSync(buildTarStream(ratioBomb)), 'fixtures/ratio-bomb.tgz'),
+    /expanded-size or compression-ratio limits/u,
+  );
+});
+
+test('KDNA ZIP parser limits are unchanged (257 entries, 8 MiB + 1 member, 32 MiB + 1 total)', () => {
+  const tooMany = buildZip(
+    Array.from({ length: 257 }, (_, index) => ({
+      name: `entry-${index}`,
+      content: Buffer.alloc(0),
+    })),
+  );
+  assert.throws(
+    () => safeZipEntries(tooMany, 'fixtures/hostile.kdna'),
+    /ZIP entry count exceeds 256/u,
+  );
+  const oversized = buildZip([{ name: 'oversized', content: Buffer.alloc(8 * 1024 * 1024 + 1) }]);
+  assert.throws(
+    () => safeZipEntries(oversized, 'fixtures/hostile.kdna'),
+    /ZIP entry exceeds size or compression-ratio limits/u,
+  );
+  const total = buildZip(
+    Array.from({ length: 5 }, (_, index) => ({
+      name: `part-${index}`,
+      method: 8,
+      content: moderateBytes(7 * 1024 * 1024),
+    })),
+  );
+  assert.throws(
+    () => safeZipEntries(total, 'fixtures/hostile.kdna'),
+    /ZIP expanded size exceeds 33554432/u,
+  );
+});

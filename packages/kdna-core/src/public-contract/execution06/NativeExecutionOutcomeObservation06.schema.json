@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:execution06:NativeExecutionOutcomeObservation06",
+  "title": "NativeExecutionOutcomeObservation06",
+  "description": "Candidate native execution data only; native admitted brands and independent action authorization are required.",
+  "$ref": "#/$defs/NativeExecutionOutcomeObservation06",
+  "$defs": {
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativeExecutionOutcomeObservation06": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "observation_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "status": {
+              "type": "string",
+              "const": "completed"
+            },
+            "output": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "observation_id",
+            "status",
+            "output"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "observation_id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "status": {
+              "type": "string",
+              "const": "failed"
+            },
+            "output": {
+              "type": "null",
+              "const": null
+            }
+          },
+          "required": [
+            "observation_id",
+            "status",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

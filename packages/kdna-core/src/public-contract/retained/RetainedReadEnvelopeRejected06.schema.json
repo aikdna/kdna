@@ -1,0 +1,612 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:retained06:RetainedReadEnvelopeRejected06",
+  "title": "RetainedReadEnvelopeRejected06",
+  "description": "Candidate retained structural data only; native origins/preparations require same-instance brand.",
+  "$ref": "#/$defs/RetainedReadEnvelopeRejected06",
+  "$defs": {
+    "Assessment": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/AssessmentNotEvaluated"
+        },
+        {
+          "$ref": "#/$defs/AssessmentReported"
+        }
+      ]
+    },
+    "AssessmentKind": {
+      "type": "string",
+      "enum": [
+        "semantic_understanding",
+        "external_evaluation"
+      ]
+    },
+    "AssessmentNotEvaluated": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "const": "not_evaluated",
+          "type": "string"
+        },
+        "kind": {
+          "const": null,
+          "type": "null"
+        },
+        "assessor_id": {
+          "const": null,
+          "type": "null"
+        },
+        "evidence_ref": {
+          "const": null,
+          "type": "null"
+        }
+      },
+      "required": [
+        "state",
+        "kind",
+        "assessor_id",
+        "evidence_ref"
+      ],
+      "additionalProperties": false
+    },
+    "AssessmentReported": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "const": "reported",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/AssessmentKind"
+        },
+        "assessor_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "state",
+        "kind",
+        "assessor_id",
+        "evidence_ref"
+      ],
+      "additionalProperties": false
+    },
+    "Boolean": {
+      "type": "boolean"
+    },
+    "CandidateVersionTuple06": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "const": "0.6.0",
+          "type": "string"
+        },
+        "payload_profile": {
+          "const": "kdna.payload.judgment",
+          "type": "string"
+        },
+        "payload_version": {
+          "const": "0.5.1",
+          "type": "string"
+        },
+        "core": {
+          "const": "kdna.core/0.8.2",
+          "type": "string"
+        },
+        "ir": {
+          "const": "kdna.canonical-ir/0.6.1",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "kdna.runtime-capsule/0.3.1",
+          "type": "string"
+        },
+        "plan": {
+          "const": "kdna.consumption-plan/0.3.1",
+          "type": "string"
+        },
+        "host": {
+          "const": "kdna.agent-host/0.3.1",
+          "type": "string"
+        },
+        "trace": {
+          "const": "kdna.judgment-trace/0.3.1",
+          "type": "string"
+        },
+        "read": {
+          "const": "kdna.read/0.7.0-candidate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "payload_profile",
+        "payload_version",
+        "core",
+        "ir",
+        "runtime",
+        "plan",
+        "host",
+        "trace",
+        "read"
+      ],
+      "additionalProperties": false
+    },
+    "ConfirmationState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "claimed_unverified",
+        "verified",
+        "rejected"
+      ]
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "FixedByteCount": {
+      "type": "string",
+      "pattern": "^[0-9]{16}$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "InterpretationState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "complete",
+        "degraded",
+        "blocked"
+      ]
+    },
+    "Omission": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "const": "explicitly_omitted",
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "field": {
+          "$ref": "#/$defs/Text"
+        },
+        "reason": {
+          "$ref": "#/$defs/OmissionReason"
+        },
+        "expandable": {
+          "$ref": "#/$defs/Boolean"
+        },
+        "handle_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "target",
+        "field",
+        "reason",
+        "expandable",
+        "handle_id"
+      ],
+      "additionalProperties": false
+    },
+    "OmissionReason": {
+      "type": "string",
+      "enum": [
+        "not_requested",
+        "not_in_mode",
+        "outside_selection"
+      ]
+    },
+    "ReadBudget": {
+      "type": "object",
+      "properties": {
+        "limit_bytes": {
+          "$ref": "#/$defs/UInt"
+        },
+        "required_bytes": {
+          "$ref": "#/$defs/FixedByteCount"
+        },
+        "actual_bytes": {
+          "$ref": "#/$defs/FixedByteCount"
+        }
+      },
+      "required": [
+        "limit_bytes",
+        "required_bytes",
+        "actual_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "ReadDiagnostic": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/ReadDiagnosticCode"
+        },
+        "stage": {
+          "$ref": "#/$defs/ReadStage"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning"
+          ]
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "field": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "stage",
+        "severity",
+        "subject",
+        "field"
+      ],
+      "additionalProperties": false
+    },
+    "ReadDiagnosticCode": {
+      "type": "string",
+      "enum": [
+        "READ_INPUT_INVALID",
+        "READ_SNAPSHOT_UNATTESTED",
+        "READ_CORE_CAPABILITY_UNAVAILABLE",
+        "READ_UNSUPPORTED_VERSION",
+        "READ_MIXED_VERSION_TUPLE",
+        "READ_CORE_INVALID",
+        "READ_INTERPRETATION_INCOMPLETE",
+        "READ_STATIC_POLICY_INVALID",
+        "READ_ASSET_MISMATCH",
+        "READ_ASSET_VERSION_MISMATCH",
+        "READ_SELECTION_NOT_FOUND",
+        "READ_SELECTION_AMBIGUOUS",
+        "READ_HANDLE_UNTRUSTED",
+        "READ_HANDLE_VERSION_MISMATCH",
+        "READ_HANDLE_STALE",
+        "READ_HANDLE_ASSET_MISMATCH",
+        "READ_HANDLE_SCOPE_MISMATCH",
+        "READ_HOST_CONTEXT_UNTRUSTED",
+        "READ_HOST_EPOCH_MISMATCH",
+        "READ_HOST_TIME_INVALID",
+        "READ_HANDLE_EXPIRED",
+        "READ_HOST_CONTEXT_EXPIRED",
+        "READ_HOST_DENIED",
+        "READ_SCOPE_DENIED",
+        "READ_PROJECTION_INVALID",
+        "READ_BUDGET_INSUFFICIENT",
+        "READ_COMPONENT_DECLARATION_INVALID",
+        "READ_COMPONENT_CONTENT_INVALID",
+        "READ_COMPONENT_REFERENCE_INVALID",
+        "READ_COMPONENT_GRAPH_CYCLE",
+        "READ_COMPONENT_LIMIT_EXCEEDED",
+        "READ_COMPONENT_BINDING_INVALID",
+        "READ_COMPONENT_ADOPTION_INVALID",
+        "READ_METHOD_PRESENCE_INVALID",
+        "READ_R2_STRUCTURE_INVALID",
+        "READ_R2_REFERENCE_INVALID",
+        "READ_R2_METHOD_INVALID",
+        "READ_R2_PLAN_INVALID",
+        "READ_R2_POLICY_INVALID",
+        "READ_R2_SCOPE_INVALID",
+        "READ_R2_EXAMPLE_INVALID",
+        "READ_R2_HISTORY_INVALID",
+        "READ_UNSUPPORTED_CRITICAL",
+        "READ_UNRESOLVED_EXTERNAL"
+      ]
+    },
+    "ReadPermission": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "allowed",
+        "denied"
+      ]
+    },
+    "ReadStage": {
+      "type": "string",
+      "enum": [
+        "input",
+        "version",
+        "core",
+        "selection",
+        "handle",
+        "host",
+        "projection",
+        "budget"
+      ]
+    },
+    "RejectedReceipt": {
+      "type": "object",
+      "properties": {
+        "receipt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "snapshot_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "host_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "host_epoch": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "decision_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disclosed_at": {
+          "type": "null",
+          "const": null
+        },
+        "delivery": {
+          "type": "string",
+          "const": "not_delivered"
+        }
+      },
+      "required": [
+        "receipt_id",
+        "request_id",
+        "snapshot_id",
+        "host_id",
+        "host_epoch",
+        "decision_id",
+        "disclosed_at",
+        "delivery"
+      ],
+      "additionalProperties": false
+    },
+    "ResponsibilityStates": {
+      "type": "object",
+      "properties": {
+        "core": {
+          "$ref": "#/$defs/TechnicalState"
+        },
+        "interpretation": {
+          "$ref": "#/$defs/InterpretationState"
+        },
+        "writer": {
+          "$ref": "#/$defs/WriterState"
+        },
+        "confirmation": {
+          "$ref": "#/$defs/ConfirmationState"
+        },
+        "read_permission": {
+          "$ref": "#/$defs/ReadPermission"
+        },
+        "action_authorization": {
+          "const": "not_evaluated",
+          "type": "string"
+        }
+      },
+      "required": [
+        "core",
+        "interpretation",
+        "writer",
+        "confirmation",
+        "read_permission",
+        "action_authorization"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedReadEnvelopeRejected06": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/RetainedSectionContract06"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "status": {
+          "const": "rejected",
+          "type": "string"
+        },
+        "tuple": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CandidateVersionTuple06"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "asset": {
+          "const": null,
+          "type": "null"
+        },
+        "snapshot_id": {
+          "const": null,
+          "type": "null"
+        },
+        "digests": {
+          "const": null,
+          "type": "null"
+        },
+        "content": {
+          "const": null,
+          "type": "null"
+        },
+        "states": {
+          "$ref": "#/$defs/ResponsibilityStates"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReadDiagnostic"
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "omissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Omission"
+          },
+          "maxItems": 0
+        },
+        "assessment": {
+          "$ref": "#/$defs/Assessment"
+        },
+        "receipt": {
+          "$ref": "#/$defs/RejectedReceipt"
+        },
+        "budget": {
+          "$ref": "#/$defs/ReadBudget"
+        },
+        "retained_detail": {
+          "$ref": "#/$defs/RetainedSectionDetail06"
+        }
+      },
+      "required": [
+        "contract",
+        "request_id",
+        "status",
+        "tuple",
+        "asset",
+        "snapshot_id",
+        "digests",
+        "content",
+        "states",
+        "diagnostics",
+        "omissions",
+        "assessment",
+        "receipt",
+        "budget",
+        "retained_detail"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedSectionContract06": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "kdna.retained-sections"
+        },
+        "version": {
+          "type": "string",
+          "const": "0.1.0-candidate"
+        },
+        "definition_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_digest"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedSectionDetail06": {
+      "type": "string",
+      "enum": [
+        "input_invalid",
+        "version_unsupported",
+        "mixed_tuple",
+        "origin_untrusted",
+        "origin_protected",
+        "origin_scope_insufficient",
+        "authority_untrusted",
+        "authority_denied",
+        "signature_policy_unsatisfied",
+        "handle_invalid",
+        "host_invalid",
+        "budget_insufficient",
+        "internal_capability_unavailable"
+      ]
+    },
+    "TechnicalState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "valid",
+        "invalid"
+      ]
+    },
+    "Text": {
+      "type": "string"
+    },
+    "UInt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "WriterState": {
+      "type": "string",
+      "enum": [
+        "not_evaluated",
+        "sufficient",
+        "insufficient"
+      ]
+    }
+  }
+}

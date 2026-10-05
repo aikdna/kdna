@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:packageset06:TrustedNativePackageSetMemberProvider06",
+  "title": "TrustedNativePackageSetMemberProvider06",
+  "description": "Native PackageSet structural data only; member, byte, retained Read and action authorities remain independent actual brands.",
+  "$ref": "#/$defs/TrustedNativePackageSetMemberProvider06",
+  "$defs": {
+    "TrustedNativePackageSetMemberProvider06": false
+  }
+}

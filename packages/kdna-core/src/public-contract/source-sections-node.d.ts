@@ -1,0 +1,31 @@
+export type * from './source06/types.js';
+import type { SourceRouteObservation06, SourceRouteFailure06, SourceRouteCoreRejected06, SourceRouteProductionEvidence06, SourceOperationRequestAdmission06, AdmittedSourceOperationRequest06, SourceOperationRequest06, SourceOperationAuthorityContext06, NativeSourceOperationAuthority06 } from './source06/types.js';
+import type { Manifest06Candidate, ProtectedManifest06Candidate, CandidateVersionTuple06 } from './sections/types.js';
+import type { Payload } from './types.js';
+import type { ProtectedAdmissionOptions, TrustedProtectionProvider, ProtectedExportOptions, ProtectedProducerSecrets } from './protection-node.js';
+import type { ProtectedSourcePolicy, ProtectedSourceEdits, ProtectedSourceProviderRequest, ProtectedSourceOutputSecrets } from './protected-source-node.js';
+export type NativeSourceMember06 = Readonly<{ name: string; type: 'file'; mode: number; bytes: Uint8Array }>;
+export type NativeSourceBundle06 = Readonly<{ observation: SourceRouteObservation06; manifest: Manifest06Candidate | ProtectedManifest06Candidate; payload: Payload; original_members: ReadonlyArray<NativeSourceMember06>; logical_payload: Readonly<{ entry: 'payload.kdnab'; bytes: Uint8Array; encoding: 'derived_deterministic_cbor' | 'original_decrypted_cbor' }> }>;
+export type NativePublicSourceResult06 = Readonly<{ status: 'source_opened'; source: NativeSourceBundle06 }> | SourceRouteFailure06 | SourceRouteCoreRejected06;
+export type NativeSourceProduced06 = Readonly<{ status: 'produced'; bytes: Uint8Array; evidence: SourceRouteProductionEvidence06 }> | SourceRouteFailure06 | SourceRouteCoreRejected06;
+export type NativeSourceSecretRequest06 = Readonly<{ source_A: string; output_policy_digest: string; kind: 'password' | 'external-grant' | 'integrity'; signature: 'none' | 'ed25519' }>;
+export declare function admitSourceOperationRequest(candidate: unknown): SourceOperationRequestAdmission06;
+export declare function inspectSourceOperationRequest(request: AdmittedSourceOperationRequest06): Readonly<SourceOperationRequest06> | null;
+export declare function createNativeSourceOperationAuthority(callback: (context: Readonly<SourceOperationAuthorityContext06>) => boolean | Promise<boolean>): NativeSourceOperationAuthority06;
+export declare function openSectionSourceNode(input: string | Uint8Array, request: AdmittedSourceOperationRequest06, authority: NativeSourceOperationAuthority06): Promise<NativePublicSourceResult06>;
+export declare function packSectionSourceNode(input: string | Uint8Array, request: AdmittedSourceOperationRequest06, authority: NativeSourceOperationAuthority06, edits: ProtectedSourceEdits): Promise<NativeSourceProduced06>;
+
+export declare function protectSectionSourceNode(input: string | Uint8Array, request: AdmittedSourceOperationRequest06, authority: NativeSourceOperationAuthority06, options: ProtectedExportOptions, outputSecretProvider: (request: NativeSourceSecretRequest06) => ProtectedProducerSecrets | Promise<ProtectedProducerSecrets>): Promise<NativeSourceProduced06>;
+
+import type { SourceRouteDigests06, SourceRouteMemberInventory06, ProtectedSectionSourceHostObservation06, ProtectedSectionSourceHostContext06, ProtectedSectionSourceDeliveryToken06, ProtectedSectionSourceRevisionContext06, TrustedProtectedSectionSourceHost06, ProtectedSectionSourceObservation06, ProtectedSectionSourceCommit06, SourceRouteDiagnostic06 } from './source06/types.js';
+export type ProtectedNativeSourceBundle06 = Readonly<{ identity: SourceRouteDigests06; manifest: ProtectedManifest06Candidate; payload: Payload; original_members: ReadonlyArray<NativeSourceMember06>; original_inventory: ReadonlyArray<SourceRouteMemberInventory06>; plaintext_payload: Readonly<{ entry: 'payload.kdnab'; bytes: Uint8Array; sha256: string }>; prior_snapshot: import('./sections/types.js').ProtectedPayloadSnapshot06; host_observation: ProtectedSectionSourceHostObservation06; proof_limits: ReadonlyArray<string>; observation: SourceRouteObservation06 }>;
+export type ProtectedSectionSourceHostCallbacks06 = Readonly<{ observe: (context: Readonly<ProtectedSectionSourceHostContext06>) => ProtectedSectionSourceHostObservation06 | Promise<ProtectedSectionSourceHostObservation06>; deliver: (bundle: ProtectedNativeSourceBundle06, prepared: ProtectedSectionSourceDeliveryToken06, revision: ProtectedSectionSourceRevisionContext06) => boolean | Promise<boolean> }>;
+export type ProtectedSectionSourceTransport06 = Readonly<{ observeScope: () => ProtectedSectionSourceHostObservation06 | Promise<ProtectedSectionSourceHostObservation06>; commit: (bundle: ProtectedNativeSourceBundle06 | null) => boolean }>;
+export type ProtectedSectionSourceRevisionResult06 = Readonly<{ status: 'revision_produced'; bytes: Uint8Array; evidence: SourceRouteProductionEvidence06; body_bytes: number }> | Readonly<{ status: 'revision_rejected'; diagnostic: SourceRouteDiagnostic06; body: null; body_bytes: 0 }>;
+export declare function createTrustedProtectedSectionSourceHost(callbacks: ProtectedSectionSourceHostCallbacks06): TrustedProtectedSectionSourceHost06;
+export declare function withProtectedSectionSourceNode(input: string | Uint8Array, request: AdmittedSourceOperationRequest06, authority: NativeSourceOperationAuthority06, options: ProtectedAdmissionOptions, provider: TrustedProtectionProvider, host: TrustedProtectedSectionSourceHost06): Promise<ProtectedSectionSourceObservation06>;
+export declare function commitProtectedSectionSourceTransport(prepared: ProtectedSectionSourceDeliveryToken06, transport: ProtectedSectionSourceTransport06): Promise<ProtectedSectionSourceCommit06>;
+
+import type { ProtectedSectionSourcePreview06 } from './source06/types.js';
+export declare function previewProtectedSectionSourceRevision(context: ProtectedSectionSourceRevisionContext06, edits: ProtectedSourceEdits, policy: ProtectedSourcePolicy): Promise<ProtectedSectionSourcePreview06>;
+export declare function produceProtectedSectionSourceRevision(context: ProtectedSectionSourceRevisionContext06, edits: ProtectedSourceEdits, policy: ProtectedSourcePolicy, outputSecretProvider: (request: ProtectedSourceProviderRequest) => ProtectedSourceOutputSecrets | Promise<ProtectedSourceOutputSecrets>): Promise<ProtectedSectionSourceRevisionResult06>;

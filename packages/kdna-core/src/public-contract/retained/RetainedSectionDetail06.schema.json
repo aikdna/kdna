@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:retained06:RetainedSectionDetail06",
+  "title": "RetainedSectionDetail06",
+  "description": "Candidate retained structural data only; native origins/preparations require same-instance brand.",
+  "$ref": "#/$defs/RetainedSectionDetail06",
+  "$defs": {
+    "RetainedSectionDetail06": {
+      "type": "string",
+      "enum": [
+        "input_invalid",
+        "version_unsupported",
+        "mixed_tuple",
+        "origin_untrusted",
+        "origin_protected",
+        "origin_scope_insufficient",
+        "authority_untrusted",
+        "authority_denied",
+        "signature_policy_unsatisfied",
+        "handle_invalid",
+        "host_invalid",
+        "budget_insufficient",
+        "internal_capability_unavailable"
+      ]
+    }
+  }
+}

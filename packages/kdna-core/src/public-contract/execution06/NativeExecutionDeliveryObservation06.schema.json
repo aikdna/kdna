@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:execution06:NativeExecutionDeliveryObservation06",
+  "title": "NativeExecutionDeliveryObservation06",
+  "description": "Candidate native execution data only; native admitted brands and independent action authorization are required.",
+  "$ref": "#/$defs/NativeExecutionDeliveryObservation06",
+  "$defs": {
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "NativeExecutionDeliveryObservation06": {
+      "type": "object",
+      "properties": {
+        "delivery_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "producer_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "delivery_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "delivery_id",
+        "request_digest",
+        "producer_digest",
+        "delivery_digest"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

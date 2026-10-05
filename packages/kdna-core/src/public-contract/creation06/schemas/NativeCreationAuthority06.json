@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:creation06:NativeCreationAuthority06",
+  "title": "NativeCreationAuthority06",
+  "description": "Native creation structural data only; opaque requests and creation permission require actual native brands.",
+  "$ref": "#/$defs/NativeCreationAuthority06",
+  "$defs": {
+    "NativeCreationAuthority06": false
+  }
+}

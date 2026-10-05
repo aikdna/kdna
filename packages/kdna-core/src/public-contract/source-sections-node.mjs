@@ -1,0 +1,11 @@
+import api from './source-sections-node.js';
+export const {admitSourceOperationRequest,inspectSourceOperationRequest,createNativeSourceOperationAuthority,openSectionSourceNode,packSectionSourceNode}=api;
+
+export const protectSectionSourceNode = api.protectSectionSourceNode;
+
+export const createTrustedProtectedSectionSourceHost = api.createTrustedProtectedSectionSourceHost;
+export const withProtectedSectionSourceNode = api.withProtectedSectionSourceNode;
+export const commitProtectedSectionSourceTransport = api.commitProtectedSectionSourceTransport;
+
+export const previewProtectedSectionSourceRevision = api.previewProtectedSectionSourceRevision;
+export const produceProtectedSectionSourceRevision = api.produceProtectedSectionSourceRevision;

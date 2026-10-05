@@ -1,0 +1,198 @@
+{
+  "format": "kdna.native-generation-manifest/1",
+  "candidate_only": true,
+  "source": {
+    "path": "specs/public-semantic-source.json",
+    "bytes": 1435436,
+    "sha256": "4b39c37c7a6f18ade567fb6248e6488af94737c0f4a08f25ef4751399e5315ec"
+  },
+  "producer": {
+    "recipe": {
+      "path": "scripts/public-contract/native-output-recipe.json",
+      "bytes": 155707,
+      "sha256": "0dbcd0c924e4365dd5375233967907519bd87308e577eb05c065d301096e3dfd"
+    },
+    "scripts": [
+      {
+        "path": "scripts/public-contract/generate-native.mjs",
+        "bytes": 6966,
+        "sha256": "2385330076357ac83182d77e0a1f7bf683003aaae276103919862811db36da3d"
+      },
+      {
+        "path": "scripts/public-contract/native-renderer.mjs",
+        "bytes": 19534,
+        "sha256": "05a359837c3c61d18ecc3fe109387ade921daf25eb12a8530e7a5b7550dfe1c7"
+      },
+      {
+        "path": "scripts/public-contract/generation-writer.mjs",
+        "bytes": 5909,
+        "sha256": "5f2b95585cfb99084af9ad03a2e95926d7a445c12f25ed29ede05aa6d17bac98"
+      },
+      {
+        "path": "scripts/public-contract/generate.mjs",
+        "bytes": 72318,
+        "sha256": "cd1914a7fd684fc033f635bd331bb5491446222352097fec72dc05982e0e4661"
+      }
+    ]
+  },
+  "owner": "creation",
+  "module_digest": "sha256:4bbe953d5c103024a70a1f8ad6d5f9512d7a362f5af7a3be66fff3cbe770620d",
+  "roots": [
+    "NativeCreationManifest06",
+    "NativeCreationRequest06",
+    "AdmittedNativeCreationRequest06",
+    "NativeCreationAuthority06",
+    "NativeCreationContract06",
+    "NativeCreationInputObservation06",
+    "NativeCreationAuthorityContext06",
+    "NativeCreationManifestAction06",
+    "NativeCreationEvidence06",
+    "NativeCreationRequestAdmission06"
+  ],
+  "reachable_types": [
+    "AccessMode",
+    "ActorKind",
+    "AdmittedNativeCreationRequest06",
+    "AssetIdentity",
+    "AssetType",
+    "Boolean",
+    "CandidateVersionTuple06",
+    "Compatibility",
+    "CoreAdmissionRejected",
+    "CoreComponentFailure",
+    "CoreStaticStates",
+    "Creator",
+    "Digest",
+    "EntryName",
+    "Extension",
+    "FiniteNumber",
+    "HistoryDeclaration",
+    "Identifier",
+    "InterpretationState",
+    "License",
+    "ManifestAuthoring",
+    "ManifestLineage",
+    "ManifestRuntime",
+    "NativeCreationAuthority06",
+    "NativeCreationAuthorityContext06",
+    "NativeCreationContract06",
+    "NativeCreationEvidence06",
+    "NativeCreationInputObservation06",
+    "NativeCreationManifest06",
+    "NativeCreationManifestAction06",
+    "NativeCreationRequest06",
+    "NativeCreationRequestAdmission06",
+    "NonEmptyText",
+    "OriginalProtectionDiagnosticFor06",
+    "OriginalProtectionDisclosureFor06",
+    "OriginalProtectionExternalCommitConfirmedFor06",
+    "OriginalProtectionExternalCommitFor06",
+    "OriginalProtectionExternalCommitNotInvokedFor06",
+    "OriginalProtectionExternalCommitUnknownFor06",
+    "ReadDiagnostic",
+    "ReadDiagnosticCode",
+    "ReadStage",
+    "Ref",
+    "RevisionEntry",
+    "RevisionRef",
+    "RuntimeMandatoryEntryName",
+    "SemanticValue",
+    "SourceRouteCoreRejected06",
+    "SourceRouteDiagnostic06",
+    "SourceRouteDigests06",
+    "SourceRouteFailure06",
+    "SourceRouteMemberInventory06",
+    "TechnicalState",
+    "TermRef",
+    "TermVocabulary",
+    "Text",
+    "Timestamp",
+    "UInt",
+    "ValueBoolean",
+    "ValueField",
+    "ValueList",
+    "ValueNull",
+    "ValueNumber",
+    "ValueRecord",
+    "ValueText",
+    "VersionLabel"
+  ],
+  "artifacts": [
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationManifest06.json",
+      "bytes": 14261,
+      "sha256": "b118a177d72452cf5c1025644c9734f58d8d539ffa5d84402170fdaa4beb17cc"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationRequest06.json",
+      "bytes": 2499,
+      "sha256": "955982c1d4344358f1619ce2cdde43cf78218078b34ee1c809e09f243dabfe54"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/AdmittedNativeCreationRequest06.json",
+      "bytes": 428,
+      "sha256": "324dd685836f27ecf8be381fa3d9e3b2fd78015141576cafeee42e715f921044"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationAuthority06.json",
+      "bytes": 404,
+      "sha256": "342b3555465c82977aaf0e27ee2b4a00b6233091a5d5214025378296baa8c737"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationContract06.json",
+      "bytes": 959,
+      "sha256": "8da6366b0a2b00df0cd04d808e70d630ae188e9ea099c19d79c01baf26950933"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationInputObservation06.json",
+      "bytes": 2057,
+      "sha256": "8643f5442f8a1c894516ba4623eaa6a698329d30ae95ba55f43266e88c1619c1"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationAuthorityContext06.json",
+      "bytes": 19326,
+      "sha256": "304879518257322c218592a7f6d578a2cd42778ec555e38cd40670c2c012dd8e"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationManifestAction06.json",
+      "bytes": 969,
+      "sha256": "e7228c360e04894fdd5d3fba3ceaa6ae5ceb4e3d95f33bc1d62dbb91c8fb64ed"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationEvidence06.json",
+      "bytes": 5445,
+      "sha256": "7ebd8cb288c3e7d770c1017cef56833200af094e78d96045e3b85638dc145b60"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/schemas/NativeCreationRequestAdmission06.json",
+      "bytes": 22887,
+      "sha256": "2fb30f47f2022c60136ab421c839d7e752befea61fe57dfaca625e8c36bca2ed"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/validators.cjs",
+      "bytes": 548763,
+      "sha256": "2e3f98c131c8f5c38b16398dad53cb01fec0a75aecfba958d7369e43d6aa572d"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/types.d.ts",
+      "bytes": 14764,
+      "sha256": "aa539b6b68ac4ab163261ea84ee2b2f433e35153f357342f55b8cca9bc9e8e74"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/contract.json",
+      "bytes": 71166,
+      "sha256": "8c9a7e090f9621c23efb8063102713ceefa9dae9905a8cec0914c4fae1b63cc0"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation06/api.d.ts",
+      "bytes": 1645,
+      "sha256": "eb643395d4bf068618cc5f76e41f70d7fd8ba426e358243300d21b3e879e317f"
+    },
+    {
+      "path": "packages/kdna-core/src/public-contract/creation-sections-node.d.ts",
+      "bytes": 1645,
+      "sha256": "eb643395d4bf068618cc5f76e41f70d7fd8ba426e358243300d21b3e879e317f"
+    }
+  ],
+  "scope": "Generated structure and provenance only; runtime admission and authorization require actual native implementations."
+}

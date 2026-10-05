@@ -8,6 +8,7 @@ const {tuple,clone,freeze,diagnostic,assessment,jcs,anchorFor}=require('./util.j
 const CAPABILITIES=require('../schema/read-contract-0.6.4.schema.json').$defs.AssetCapability.enum;
 const reject=code=>({status:'rejected',body:null,diagnostics:[diagnostic(code)]});
 const same=(left,right)=>jcs(left)===jcs(right);
+const closureMemo=new WeakMap();
 function assetCapability(view){
   const declared=view.asset_capability??view.ir.asset_capability;
   if(CAPABILITIES.includes(declared))return declared;
@@ -53,7 +54,10 @@ function closureFor(request,view){
     const target=expansionFor(request,view);
     return target?{node_ids:target.scope,unresolved_external:target.unresolved_external??[]}:null;
   }
-  return view.ir.mandatory_closures.find(x=>same(x.selection,request.selection))??null;
+  // Memoize each admitted view’s selection closure by its canonical selection key.
+
+  let memo=closureMemo.get(view);if(!memo){memo=new Map();for(const row of view.ir.mandatory_closures)memo.set(jcs(row.selection),row);closureMemo.set(view,memo);}
+  return memo.get(jcs(request.selection))??null;
 }
 function projectionFailure(request,view){
   const closure=closureFor(request,view);

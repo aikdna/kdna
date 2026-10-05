@@ -63,8 +63,16 @@ These are unpublished candidates; this page does not establish that remote
 | Entry | Exact local package combination | Use |
 | --- | --- | --- |
 | This repository | Core `0.36.0-rc.r2.7` / Read `0.11.0-rc.r2.7` (exact Core peer) | Public admission, Read and explicit reference subpaths; Node >=20 |
-| [Runtime CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.40.0-rc.protection.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | Explicit-file `inspect`, `validate`, `read`, static `plan` and `load`; Node >=22 |
+| [Native asset CLI](https://github.com/aikdna/kdna-cli#readme) | CLI `0.39.0-rc.native-sections.2` / exact Core `0.36.0-rc.r2.7` and Read `0.11.0-rc.r2.7` archives | `create`, `inspect`, `validate`, retained `read`, `source-open`, `source-pack`; Node >=22; unpublished |
 | [Canonical Loader/MCP](https://github.com/aikdna/kdna-skills#readme) | MCP `0.8.1-rc.combination.1` / CLI `0.39.1-rc.combination.1` / Core `0.34.0-rc.combination.1` / Read `0.9.0-rc.combination.1` | Operator-bound local Read adapter; Node >=22; Host adoption unassessed |
+
+The source row and the native CLI archive row have distinct byte identities.
+The CLI binds container `0.6.0` and native public export targets in its exact
+archives; a live Core/Read checkout with the same package versions is not
+automatically that implementation. The CLI's
+[native delivery guide](https://github.com/aikdna/kdna-cli/blob/main/docs/native-delivery.md)
+records its archive coordinates and offline host graph. This does not change
+the live source's independent specification, tuple or exports.
 
 The package combinations differ deliberately. Use each entry's own manifest,
 lock, binding and complete dependency archives; do not replace its CLI or Core
@@ -76,13 +84,19 @@ belongs to the Loader/MCP combination. This repository's
 Core admits immutable bytes and issues a private snapshot. Read disclosure
 requires the embedding's trusted control and Host providers and grants no
 action authority. Current R2 Core has native 0.3.1 Plan/Capsule admission
-and explicit Host reference APIs. The current Runtime CLI can supply a static
-Plan and Capsule; it does not execute a model or authorize actions. Ordinary
+and explicit Host reference APIs. The native asset CLI instead supplies explicit
+creation, Read and public Source operations; its Plan/load commands remain
+unavailable. The older protection CLI candidate has its own static Plan/Capsule
+contract. No row here executes a model or authorizes actions. Ordinary
 root/browser admission retains protection refusals; explicit Node protection
 entries have their own [contract](./specs/protection-admission.md) and do not
 establish production accounts, native credential storage or Host acceptance.
 
-For creation, follow the separate
+For the native asset archive combination, start with the
+[authored CLI example](https://github.com/aikdna/kdna-cli/blob/main/examples/team-update/README.md).
+It describes a separate prepared example; the guide is not evidence of a run,
+human confirmation or a complete Agent workflow. The independent creation
+toolchain retains its separate
 [Studio CLI installation](https://github.com/aikdna/kdna-studio-cli#readme) and
 [Creator Skill](https://github.com/aikdna/kdna-skills/blob/main/kdna-creator/SKILL.md).
 Do not infer a complete creation-to-consumption acceptance from any version row.
@@ -293,8 +307,10 @@ its source version, protocol coordinate and publication state are separate facts
 | **KDNA SDK** | Embeddable library for integrations | `packages/kdna-core/` |
 | **KDNA Eval** | Experimental replay, budget, and consumption-evaluation primitives | `packages/kdna-eval/` + `@aikdna/kdna-eval` |
 
-The table above retains the published loading-line roles. Current Core/Read
-source uses admission, Read and static `plan → load --plan` as described above;
+The table above retains the published loading-line roles. The native asset CLI
+uses `create → read` and explicit Source revision as described above. Core/Read
+reference Plan/Capsule APIs remain independent; they do not enable Plan/load in
+that CLI. The
 the direct-file `validate → plan-load → load --profile=compact --as=json` path
 belongs to published CLI 0.36.1. The historical global package-store and
 auto-discovery Skill experience is not a protocol requirement and is under

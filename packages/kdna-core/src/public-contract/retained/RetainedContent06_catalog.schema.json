@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:retained06:RetainedContent06_catalog",
+  "title": "RetainedContent06_catalog",
+  "description": "Candidate retained structural data only; native origins/preparations require same-instance brand.",
+  "$ref": "#/$defs/RetainedContent06_catalog",
+  "$defs": {
+    "AssetIdentity": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset_version": {
+          "$ref": "#/$defs/VersionLabel"
+        },
+        "judgment_version": {
+          "$ref": "#/$defs/VersionLabel"
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_version",
+        "judgment_version"
+      ],
+      "additionalProperties": false
+    },
+    "CatalogItem": {
+      "type": "object",
+      "properties": {
+        "judgment_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "node_ref": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "parent_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "focus": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/JudgmentLifecycle"
+        }
+      },
+      "required": [
+        "judgment_id",
+        "focus",
+        "node_ref",
+        "parent_ref"
+      ],
+      "additionalProperties": false
+    },
+    "IRTargetDescriptor": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "$ref": "#/$defs/Ref"
+        },
+        "owner": {
+          "$ref": "#/$defs/Ref"
+        },
+        "display_name": {
+          "$ref": "#/$defs/NonEmptyText"
+        },
+        "node_ref": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "target",
+        "owner",
+        "display_name",
+        "node_ref"
+      ],
+      "additionalProperties": false
+    },
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f\\ud800-\\udfff]+$"
+    },
+    "JudgmentLifecycle": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "deprecated",
+            "superseded",
+            "withdrawn"
+          ]
+        },
+        "superseded_by": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/JudgmentReplacementTarget"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "statement": {
+          "$ref": "#/$defs/NonEmptyText"
+        }
+      },
+      "required": [
+        "status",
+        "superseded_by",
+        "statement"
+      ],
+      "additionalProperties": false
+    },
+    "JudgmentReplacementTarget": {
+      "type": "object",
+      "properties": {
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        },
+        "judgment_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "asset",
+        "judgment_id"
+      ],
+      "additionalProperties": false
+    },
+    "NonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "Ref": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "asset",
+            "judgment",
+            "result",
+            "contract",
+            "condition",
+            "component",
+            "unit",
+            "plan",
+            "plan_node",
+            "policy",
+            "branch_entry",
+            "candidate",
+            "material",
+            "shared_declaration",
+            "boundary",
+            "exception",
+            "misuse",
+            "reason",
+            "source",
+            "source_use",
+            "resource",
+            "relationship",
+            "dependency",
+            "example",
+            "example_result",
+            "revision",
+            "actor"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "asset": {
+          "$ref": "#/$defs/AssetIdentity"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "RetainedContent06_catalog": {
+      "type": "object",
+      "properties": {
+        "catalog": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CatalogItem"
+          },
+          "minItems": 0
+        },
+        "asset_index": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IRTargetDescriptor"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "catalog",
+        "asset_index"
+      ],
+      "additionalProperties": false
+    },
+    "VersionLabel": {
+      "$ref": "#/$defs/Identifier"
+    }
+  }
+}

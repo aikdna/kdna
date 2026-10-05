@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kdna:candidate:creation06:NativeCreationManifestAction06",
+  "title": "NativeCreationManifestAction06",
+  "description": "Native creation structural data only; opaque requests and creation permission require actual native brands.",
+  "$ref": "#/$defs/NativeCreationManifestAction06",
+  "$defs": {
+    "NativeCreationManifestAction06": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "enum": [
+            "/format_version",
+            "/payload",
+            "/representation_metadata",
+            "/content_digest",
+            "/authoring/content_digest"
+          ]
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "added",
+            "refreshed"
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "action"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
