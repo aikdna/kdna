@@ -1,7 +1,7 @@
 {
   "format": "kdna.native-output-recipe/1",
   "source": "specs/public-semantic-source.json",
-  "input_sha256": "fdcb204c8942ddc10ed5d8d6658a9317102822b5b9c500bc07e5086d5668fc9f",
+  "input_sha256": "28018561bd66bfadf909e7ba22ad23cc4b41359db45565351757d506275f743b",
   "base_type_order": [
     "StaticPolicyCandidate",
     "StaticPolicyEntry",

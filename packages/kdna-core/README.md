@@ -1,6 +1,6 @@
 # KDNA Core — R2 candidate
 
-Unpublished `R2` source candidate: actual source package `0.36.0`, Core `kdna.core/0.8.2`, Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, with native Capsule/Plan/Host/Trace `0.3.1`. The published incumbent is `0.22.0`; this source candidate is not a published replacement. See the [specification index](../../SPEC-INDEX.md), the [execution contract](../../specs/execution-contract-0.3.md) and the [PackageSet node surface](../../specs/package-set-node.md). Implementation, independent byte-bound acceptance, installed consumer rebinding and publication are separate.
+Published stable release: actual source package `0.36.0`, Core `kdna.core/0.8.2`, Container `0.5.0`, Payload `0.5.1`, Canonical IR `0.6.1`, with native Capsule/Plan/Host/Trace `0.3.1`. The published release is `0.36.0`; it supersedes the `0.22.0` incumbent. See the [specification index](../../SPEC-INDEX.md), the [execution contract](../../specs/execution-contract-0.3.md) and the [PackageSet node surface](../../specs/package-set-node.md). Implementation, independent byte-bound acceptance, installed consumer rebinding and publication are separate.
 
 This source description follows [`package.json`](package.json).
 Read source `0.11.0` declares this exact Core peer. Runtime CLI

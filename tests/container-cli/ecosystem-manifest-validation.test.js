@@ -355,6 +355,10 @@ test('unregistered candidate Core conformance anchors retain strict ancestry and
   );
   const core = canonical.components.find((entry) => entry.repository === 'aikdna/kdna');
   const corePackage = core.packages.find((entry) => entry.npm_package === '@aikdna/kdna-core');
+  // This scenario exercises the candidate-anchor rules; the in-tree record is
+  // released, so restore the pre-release candidate shape in memory.
+  corePackage.release_status = 'candidate';
+  corePackage.published_version = '0.22.0';
   assert.equal(corePackage.release_status, 'candidate');
   // The anchor must descend from the published tag: an older release commit is
   // rejected before the candidate package version is even compared.
@@ -406,7 +410,13 @@ test('registered historical fixture preserves its own Core identity without cert
   const proof = JSON.parse(
     fs.readFileSync(path.join(repoRoot, 'scripts', 'conformance-anchors.json'), 'utf8'),
   );
+  // This scenario exercises the registered historical fixture against the
+  // candidate-anchor rules; the in-tree record is released, so restore the
+  // pre-release candidate shape and its historical fixture anchor in memory.
   assert.equal(proof.anchors.length, 1);
+  current.release_status = 'candidate';
+  current.published_version = '0.22.0';
+  core.conformance_commit = proof.anchors[0].commit;
   assert.equal(proof.anchors[0].commit, core.conformance_commit);
   assert.notEqual(proof.anchors[0].historical_fixture.core_package.version, current.version);
   const manifestPath = writeManifest(root, [core]);

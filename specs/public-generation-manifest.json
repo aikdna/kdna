@@ -11,9 +11,9 @@
       "sha256": "ddeb1ce30044575b6a22508716e95b4c8134c300fe2962d292011fed96595ad3"
     },
     {
-      "bytes": 50638,
+      "bytes": 50602,
       "path": "specs/public-contract-decisions.json",
-      "sha256": "bf38a9d456fa955764029525e44a6508022270e671bc3cae42286174c3b44d70"
+      "sha256": "f8430cad0b8dd2cd9e4a918737924fa3e819aef0b9def1787e46a5d48da326d3"
     },
     {
       "bytes": 17230,
@@ -935,9 +935,9 @@
     }
   ],
   "source": {
-    "bytes": 1435348,
+    "bytes": 1435345,
     "path": "specs/public-semantic-source.json",
-    "sha256": "fdcb204c8942ddc10ed5d8d6658a9317102822b5b9c500bc07e5086d5668fc9f"
+    "sha256": "28018561bd66bfadf909e7ba22ad23cc4b41359db45565351757d506275f743b"
   },
   "status": "UNPUBLISHED_GENERATED_STRUCTURE",
   "tools": {
@@ -952,7 +952,7 @@
     "recipe": {
       "path": "scripts/public-contract/native-output-recipe.json",
       "bytes": 155707,
-      "sha256": "bea4b4a4d426e1b3b23ffb818715712b87114ce32d1db80ab2a24f8efca87a60"
+      "sha256": "ea953902450caad189fc9daa21d606aebb6c577945191a093c449cd1d1f48f33"
     },
     "base_types": 431,
     "canonical_types": 723

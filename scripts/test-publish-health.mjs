@@ -27,7 +27,7 @@ const ecosystemManifest = JSON.parse(
 
 test('release-health policy is complete, unique, and structurally valid', () => {
   assert.equal(validatePolicy(policy), policy);
-  assert.equal(policy.packages.length, 14);
+  assert.equal(policy.packages.length, 15);
   assert.deepEqual(
     new Set(policy.packages.map((entry) => entry.npm_package)),
     new Set([
@@ -42,6 +42,7 @@ test('release-health policy is complete, unique, and structurally valid', () => 
       '@aikdna/kdna-react',
       'create-kdna-web-app',
       '@aikdna/kdna-core',
+      '@aikdna/kdna-read',
       '@aikdna/kdna-eval',
       '@aikdna/kdna-conformance',
       '@aikdna/kdna',
